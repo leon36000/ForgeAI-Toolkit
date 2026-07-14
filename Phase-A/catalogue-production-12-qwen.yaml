@@ -1,0 +1,42 @@
+# Lot production-12 — F23 (P2), membre: qwen (Qwen3.7-Max), 2026-07-14
+# contre-vérification croisée 10% (deepseek, rotation — longcat timeout) : 2/4 OK,
+# 2 défauts corrigés : bitsandbytes (« Making LLMs accessible via… ») et datatrove (« unleash » pas « streamline »)
+# claim: UNVERIFIED
+lot: production-12
+traductions:
+  - {nom: "Sequential Thinking", en: "Reference server for sequential/step-by-step reasoning."}
+  - {nom: "Serena", en: "MCP toolkit for semantic retrieval and code editing."}
+  - {nom: "Servers Archived", en: "Legacy reference servers (Slack, GitHub, Postgres...) that are no longer maintained."}
+  - {nom: "Slack MCP (korotovsky)", en: "Powerful Slack MCP server (DMs, smart history, GovSlack)."}
+  - {nom: "Smithery", en: "MCP registry/marketplace connecting agents to thousands of tools (managed auth and sessions)."}
+  - {nom: "Supabase MCP", en: "Connects Supabase to AI assistants."}
+  - {nom: "Swift SDK", en: "Official Swift SDK for MCP servers and clients."}
+  - {nom: "Tavily MCP", en: "MCP server for real-time web search, extraction, and crawling."}
+  - {nom: "ToolSDK Awesome MCP Registry", en: "Structured JSON registry/database of MCP servers and packages (OAuth2.1, DCR...)."}
+  - {nom: "TypeScript SDK", en: "Official TypeScript SDK for MCP servers and clients."}
+  - {nom: "Accelerate", en: "A simple way to launch, train, and use PyTorch models on almost any hardware or distributed setup (FSDP, DeepSpeed, fp8)."}
+  - {nom: "Adapters", en: "Unified library for modular and parameter-efficient transfer learning (adapters)."}
+  - {nom: "alignment-handbook", en: "Robust recipes for aligning language models with human and AI preferences."}
+  - {nom: "Alpa", en: "Training and serving large-scale neural networks with automatic parallelization."}
+  - {nom: "AReaL", en: "RL bridge for LLM-based agent applications, designed to be simple and flexible."}
+  - {nom: "Argilla", en: "Collaborative tool for AI engineers and domain experts to build high-quality datasets."}
+  - {nom: "ART (Agent Reinforcement Trainer)", en: "Training multi-step agents for real-world tasks via GRPO (Qwen, GPT-OSS, Llama...)."}
+  - {nom: "Axolotl", en: "All-in-one fine-tuning tool supporting numerous architectures and methods (LoRA/QLoRA, full, DPO...)."}
+  - {nom: "bigcode-dataset", en: "Code dataset preparation tools for the BigCode project (The Stack)."}
+  - {nom: "bitsandbytes", en: "Making LLMs accessible via k-bit quantization (8-bit/4-bit NF4) for PyTorch."}
+  - {nom: "BMTrain", en: "Efficient training (pre-training and fine-tuning) for large models."}
+  - {nom: "Colossal-AI", en: "System aimed at making large AI models cheaper, faster, and more accessible (multi-dimensional parallelism)."}
+  - {nom: "Composer", en: "MosaicML library to accelerate and optimize model training."}
+  - {nom: "Cosmopedia", en: "Large-scale generation of synthetic training data (Cosmopedia dataset)."}
+  - {nom: "DALI", en: "GPU-accelerated library of data processing building blocks to accelerate deep learning training and inference."}
+  - {nom: "Data-Juicer", en: "Data processing for and with foundation models (100+ operators)."}
+  - {nom: "datasets", en: "The largest hub of ready-to-use datasets with fast, efficient data manipulation."}
+  - {nom: "datatrove", en: "Customizable, platform-agnostic pipeline building blocks to unleash data processing."}
+  - {nom: "DeepSpeed", en: "Deep learning optimization library (ZeRO, offload, pipeline) making distributed training and inference simple, efficient, and highly performant."}
+  - {nom: "Distil-Whisper", en: "Distilled Whisper variant for ASR: 6x faster, 50% smaller, within 1% WER."}
+  - {nom: "distilabel", en: "Synthetic data and AI feedback framework for fast, reliable, and scalable pipelines."}
+  - {nom: "Dolma", en: "Dataset and tools to generate and inspect OLMo pre-training data."}
+  - {nom: "DPO (référence)", en: "Reference implementation of Direct Preference Optimization."}
+  - {nom: "EasyLM", en: "All-in-one JAX/Flax solution to pre-train, fine-tune, evaluate, and serve LLMs."}
+  - {nom: "EETQ", en: "Simple and efficient quantization for Transformers."}
+  - {nom: "evolutionary-model-merge", en: "Official repository for evolutionary optimization of model merging recipes (Sakana AI)."}
