@@ -1,0 +1,30 @@
+# Lot production-02b — F23 (P2), membre: qwen (Qwen3.7-Max), 2026-07-14
+# contre-vérification croisée 10% (longcat) : 4/5 OK, 1 défaut (Letta, ambiguïté grammaticale)
+# → correction appliquée ci-dessous et journalisée au registre | claim: UNVERIFIED
+lot: production-02b
+traductions:
+  - {nom: "Laminar", en: "Open-source observability platform designed for AI agents (YC S24)."}
+  - {nom: "LangChain", en: "The most widely used agent engineering platform for composing chains, tools, and LLMs."}
+  - {nom: "LangExtract", en: "Python library for structured information extraction via LLMs with source grounding (Google)."}
+  - {nom: "Langflow", en: "Visual interface tool for building and deploying AI agents and workflows."}
+  - {nom: "LangGraph Swarm", en: "Multi-agent \"swarm\" pattern implementation for LangGraph."}
+  - {nom: "Letta (ex-MemGPT)", en: "Platform for stateful agents with advanced memory that learn and self-improve."}
+  - {nom: "LiveKit Agents", en: "Framework for real-time voice AI agents."}
+  - {nom: "Llama Agents / Workflows", en: "Event-driven, async-first, and step-based control of agent execution flows."}
+  - {nom: "LlamaDeploy", en: "Deploy agentic workflows (run-llama) to production."}
+  - {nom: "LMQL", en: "Language for efficient, constraint-guided LLM programming (ETH)."}
+  - {nom: "Magentic-One", en: "AutoGen's generalist multi-agent system with a dual-ledger orchestrator (task ledger + progress ledger). Implemented in the autogen repository."}
+  - {nom: "Magentic-UI", en: "Experimental Microsoft agent (derived from Magentic-One) operating the browser and local file system."}
+  - {nom: "Marvin", en: "Prefect's \"ambient intelligence\" library."}
+  - {nom: "Mastra", en: "Modern TypeScript framework for AI-driven applications and agents."}
+  - {nom: "MCP Servers", en: "Collection of reference servers for the Model Context Protocol."}
+  - {nom: "MetaGPT", en: "Multi-agent framework simulating an AI software company (natural language programming). Actual repository now under FoundationAgents."}
+  - {nom: "MetaGPT (voir §1)", en: "Multi-agent software company simulation."}
+  - {nom: "Microsoft Agent Framework", en: "Unified Microsoft framework (Python/.NET) merging AutoGen and Semantic Kernel for agents and multi-agent workflows."}
+  - {nom: "Microsoft UFO", en: "Multi-agent system for UI control (\"UFO³: the Digital Agent Galaxy\")."}
+  - {nom: "Motorhead", en: "Memory and information retrieval server for LLMs."}
+  - {nom: "MS-Agent (ModelScope)", en: "Lightweight framework for the agentic execution of complex tasks."}
+  - {nom: "OASIS", en: "Social interaction simulations with up to one million agents (CAMEL)."}
+  - {nom: "OmniParser", en: "Screen parsing tool for purely vision-based GUI agents."}
+  - {nom: "Open Deep Research", en: "LangChain's open-source deep research agent."}
+  - {nom: "Open Interpreter", en: "Lightweight coding agent for open models (Deepseek, Kimi, Qwen)."}
