@@ -35,7 +35,7 @@ jobs:
       - name: Tests + couverture (critères de sortie P1)
         run: |
           pytest -q --cov=src/forgeai --cov-report=term --cov-fail-under=85
-          pytest -q --cov=src/forgeai/core/registre.py --cov-report=term --cov-fail-under=95 tests/test_registre.py
+          coverage report --include="*/forgeai/core/registre.py" --fail-under=95
 
   gitleaks:
     runs-on: ubuntu-latest
