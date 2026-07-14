@@ -150,6 +150,27 @@ def wizard_ci(args: argparse.Namespace) -> int:
     return 0
 
 
+def _node_status(args: argparse.Namespace) -> int:
+    from forgeai.network.nodes import ClusterError, cluster_status
+    try:
+        nodes = cluster_status(SubprocessRunner())
+    except ClusterError as exc:
+        print(f"ECHEC: {exc}", file=sys.stderr)
+        return 8
+    ready = [n for n in nodes if n["ready"]]
+    for n in nodes:
+        print(f"  {n['name']}: ready={n['ready']} roles={n['roles']} gpu={n['gpu_allocatable']}")
+    print(f"{len(ready)}/{len(nodes)} nœuds Ready")
+    if args.witness:
+        entry = registre.append(Path(args.registre), "jonction_prouvee", "node-status", {
+            "total": len(nodes), "ready": len(ready),
+            "nodes": [{"name": n["name"], "ready": n["ready"], "roles": n["roles"]}
+                      for n in nodes],
+        })
+        print(f"NODE_WITNESS={entry['hash']}")
+    return 0
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(prog="forgeai")
     sub = parser.add_subparsers(dest="cmd", required=True)
@@ -157,6 +178,14 @@ def main(argv: list[str] | None = None) -> int:
     p_hw = sub.add_parser("hardware", help="détection hardware (S01)")
     p_hw.set_defaults(func=lambda a: print(
         HardwareDetector(SubprocessRunner()).full_report().to_json()) or 0)
+
+    p_node = sub.add_parser("node", help="multi-nœuds (P2)")
+    node_sub = p_node.add_subparsers(dest="node_cmd", required=True)
+    p_status = node_sub.add_parser("status", help="état du cluster + preuve (F22)")
+    p_status.add_argument("--registre", default=str(DEFAULT_REGISTRE))
+    p_status.add_argument("--witness", action="store_true",
+                          help="scelle l'état au registre hash-chaîné")
+    p_status.set_defaults(func=_node_status)
 
     p_wiz = sub.add_parser("wizard", help="wizard bout-en-bout")
     p_wiz.add_argument("--ci", action="store_true", required=True)
