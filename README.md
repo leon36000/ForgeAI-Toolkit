@@ -30,3 +30,20 @@ pytest                                      # tests
 ```
 
 Tout passe par PR. Zéro commit direct sur `main` une fois la branch protection active.
+
+## État de la mission (2026-07-14)
+
+**P1 PROUVÉE** — machine nue → RAG fonctionnel, sur les deux backends :
+
+```bash
+PYTHONPATH=src python3 -m forgeai wizard --ci \
+  --document tests/fixtures/rag/faits_forgeai.txt \
+  --question "Quelle version minimale de Python est exigée par le ForgeAI Toolkit ?" \
+  --expected-fact "3.10" --workdir run/p1 --teardown          # backend Compose
+# … --backend k3s                                              # parité K3s
+```
+
+Preuves scellées : `Registres/mission.jsonl` (chaîne sha256 vérifiée) — e2e Compose
+`CI_WITNESS=2a0b6221…`, e2e K3s `CI_WITNESS=bf9e40c7…`. Couverture 93 % (registre 97 %),
+revue aveugle code 3/3 APPROVE (vendors non-Anthropic). P2 (multi-nœuds, 742 traductions EN)
+attend la levée de la revue sécurité multi-nœuds (BLOCKED journalisé).

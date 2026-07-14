@@ -1,0 +1,13 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "critique",
+   "description": "Conflit S06 (Compose) vs S07 (K3s) sur nœud unique.",
+   "preuve": "Déployer les deux sur un profil Minimal (S02) garantit des collisions réseau (ports/CIDR) et bloque S09."
+  }
+ ],
+ "date": "2026-07-14",
+ "heure": "scellé round 1",
+ "source_route": "forge-model-bridge"
+}

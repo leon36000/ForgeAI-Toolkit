@@ -1,0 +1,23 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "majeure",
+   "description": "Chemin critique omet S03 (load+hash catalogue) pourtant prérequis strict de S04 assemblage.",
+   "preuve": "Chemin critique S01→S02→S04→… alors que P1 liste S03 avant S04"
+  },
+  {
+   "severite": "majeure",
+   "description": "S07 K3s hors chemin critique alors que P1 revendique rendu double backend + tests de parité obligatoires.",
+   "preuve": "chemin critique s'arrête à S06 côté déploiement"
+  },
+  {
+   "severite": "mineure",
+   "description": "Dette qualité/hash possible au load P1 avec 742 traductions dues.",
+   "preuve": "catalogue 1021 briques FR/EN"
+  }
+ ],
+ "date": "2026-07-14",
+ "heure": "scellé round 1",
+ "source_route": "forge-model-bridge"
+}

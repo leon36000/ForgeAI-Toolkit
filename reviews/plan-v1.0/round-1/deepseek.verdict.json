@@ -1,0 +1,13 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "critique",
+   "description": "Le plan exige couverture ≥85% avec zéro stub, mais 742 traductions EN dues sur 1021 briques : S08/S09 ne peuvent couvrir les entités EN non traduites sans stubs ou données factices, violant la règle zéro stub.",
+   "preuve": "Catalogue 1021 briques FR/EN (742 traductions EN dues, pilote 10 validé)"
+  }
+ ],
+ "date": "2026-07-14",
+ "heure": "scellé round 1",
+ "source_route": "forge-model-bridge"
+}

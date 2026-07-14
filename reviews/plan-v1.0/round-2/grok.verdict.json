@@ -1,0 +1,18 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "description": "Incohérence de séquence : le digest liste encore S06→S07→S08 alors que S07 est hors chemin critique.",
+   "preuve": "digest vs résolution (3)-(4)"
+  },
+  {
+   "severite": "mineure",
+   "description": "Portée des tests de parité S07 non explicitée (runtime seul vs parité e2e).",
+   "preuve": "« parité sur preuves successives » sans critère d'équivalence e2e"
+  }
+ ],
+ "date": "2026-07-14",
+ "heure": "scellé round 2",
+ "source_route": "forge-model-bridge"
+}

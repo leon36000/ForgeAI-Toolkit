@@ -1,0 +1,27 @@
+# Livrable Phase A — lot pilote de traduction catalogue (§1 plan maître, tâche Qwen)
+# membre: qwen (Qwen3.7-Max via forge-model-bridge, provider_id=Qwen3.7-Max)
+# date: 2026-07-14 | statut: DONE (pilote 10/742) | claim: UNVERIFIED
+# note Fable: pilote validant la rubrique avant fan-out des 742 entrées (Dynamic Workflows §7).
+#   Contre-vérification croisée LongCat requise avant merge du premier lot de production.
+lot: pilote-01
+traductions:
+  - nom: "Activepieces"
+    en: "AI/agent/MCP automation (~400 MCP servers for agents)."
+  - nom: "AG2 (ex-AutoGen)"
+    en: 'Community fork of AutoGen presenting itself as an open-source "AgentOS".'
+  - nom: "Agency Swarm"
+    en: "Reliable multi-agent orchestration framework (VRSEN)."
+  - nom: "Agent Protocol (LangChain)"
+    en: "Standardized API protocol for agent interaction."
+  - nom: "AgentGPT"
+    en: "Assemble, configure, and deploy autonomous AI agents in the browser."
+  - nom: "agentic-doc"
+    en: "Python library for agentic document extraction (Landing AI)."
+  - nom: "AgentOps"
+    en: "Python SDK for agent monitoring, LLM cost tracking, and benchmarking (integrates CrewAI, Agno, OpenAI Agents SDK, etc.)."
+  - nom: "agents (aiwaves-cn)"
+    en: "Open-source framework for self-evolving and data-centric language agents."
+  - nom: "AgentScope"
+    en: 'Framework for building and running "visible, understandable, and reliable" agents.'
+  - nom: "AgentVerse"
+    en: "Deployment of multiple LLM agents (task-solving and simulation frameworks)."

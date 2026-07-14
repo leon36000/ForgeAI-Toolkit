@@ -1,0 +1,9 @@
+Le ForgeAI Toolkit est un déployeur d'infrastructures d'intelligence artificielle agentiques.
+
+Le ForgeAI Toolkit exige Python 3.10 ou supérieur pour fonctionner.
+
+Le catalogue maître unifié du ForgeAI Toolkit contient exactement 1021 briques logicielles réparties par catégories.
+
+Le moteur d'inférence par défaut du profil Minimal est Ollama, choisi pour sa simplicité de déploiement sur machine nue.
+
+La licence du projet ForgeAI Toolkit est Apache 2.0, choisie pour sa clause de protection des brevets.
