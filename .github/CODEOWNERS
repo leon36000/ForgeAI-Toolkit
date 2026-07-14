@@ -1,0 +1,18 @@
+# CODEOWNERS — signature Fable requise par-dessus les gates verts (Plan Maître §6, story B-22).
+# Toute PR requiert la revue du·des propriétaire·s ci-dessous une fois la branch protection
+# activée (gate serveur : à poser par Nathan — action T3). Complète, ne remplace pas, la
+# revue aveugle 3 modèles / 3 vendors (§3, gouvernance de contenu).
+
+# Défaut : tout le repo
+*                       @leon36000
+
+# Canon et gouvernance — sensibles, revue obligatoire
+/CANON/                 @leon36000
+/manifests/             @leon36000
+/Registres/             @leon36000
+/reviews/               @leon36000
+/.github/               @leon36000
+
+# Cœur du produit
+/src/                   @leon36000
+/scripts/               @leon36000
