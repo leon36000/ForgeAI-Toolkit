@@ -24,8 +24,13 @@ def test_catalogue_reel_integre_et_complet():
     assert verify_catalogue(CATALOGUE)
     bricks = load_catalogue(CATALOGUE)
     assert len(bricks) == 1021
-    pending = [b for b in bricks if b.description_en is None]
-    assert len(pending) == 742 + 231  # traductions dues + entrées Atlas à enrichir
+    # Le compte des traductions en attente décroît à chaque lot appliqué (P2-F23) :
+    # cohérence structurelle data-driven plutôt que valeur figée.
+    data = json.loads(CATALOGUE.read_text(encoding="utf-8"))
+    pending_flags = sum(1 for e in data["entries"] if e["en_pending"] or e["atlas_only"])
+    pending_bricks = sum(1 for b in bricks if b.description_en is None)
+    assert pending_bricks == pending_flags
+    assert sum(1 for e in data["entries"] if e["en_pending"]) <= 742  # jamais de régression
 
 
 def test_alteration_detectee(tmp_path):

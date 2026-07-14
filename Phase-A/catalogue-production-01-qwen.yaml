@@ -1,0 +1,29 @@
+# Lot de production 01 — traduction catalogue (P2-F23), membre: qwen (Qwen3.7-Max)
+# date: 2026-07-14 | contre-vérification croisée 10% (3/3 OK, longcat) | claim: UNVERIFIED
+lot: production-01
+traductions:
+  - {nom: "Agno (ex-Phidata / AgentOS)", en: "Platform to build, run, and manage your own agent platform (includes AgentOS; phidata was renamed Agno)."}
+  - {nom: "AI Scientist", en: "Multi-agent system for fully automated scientific discovery (Sakana AI)."}
+  - {nom: "Apache Airflow", en: "Platform to programmatically create, schedule, and monitor workflows."}
+  - {nom: "Archon", en: "First open-source \"harness builder\" to make AI coding deterministic and reproducible."}
+  - {nom: "Arize Phoenix", en: "AI observability and evaluation."}
+  - {nom: "AutoAgent", en: "Fully automated, zero-code LLM agent framework (HKUDS)."}
+  - {nom: "AutoGen (Microsoft)", en: "Programming framework for Microsoft's multi-agent agentic AI."}
+  - {nom: "AutoGPT", en: "Pioneering, accessible autonomous AI project for building and deploying agents."}
+  - {nom: "BabyAGI", en: "Pioneering experimental autonomous system for LLM-driven task management."}
+  - {nom: "BAML", en: "\"The programming language for agents\" (BoundaryML)."}
+  - {nom: "BeeAI Framework", en: "Production-ready AI agents in Python and TypeScript (IBM/i-am-bee)."}
+  - {nom: "browser-use", en: "Make websites accessible to AI agents and automate online tasks."}
+  - {nom: "CAMEL", en: "\"First and best\" multi-agent framework, focused on agent scaling laws."}
+  - {nom: "ChatDev", en: "LLM-driven multi-agent collaboration for software development (\"dev all through LLM\")."}
+  - {nom: "Cloudflare Agents", en: "Build and deploy AI agents on Cloudflare."}
+  - {nom: "Conductor (Orkes)", en: "Microservices orchestration engine."}
+  - {nom: "ControlFlow", en: "Take control of your AI agents (Prefect, archived)."}
+  - {nom: "CrewAI", en: "Orchestration framework for role-playing autonomous agents for collaborative intelligence."}
+  - {nom: "Dagster", en: "Orchestration platform for the development, production, and observation of data assets."}
+  - {nom: "Daytona", en: "Secure and elastic infrastructure to run AI-generated code."}
+  - {nom: "DB-GPT", en: "Open-source agentic AI assistant for data (AI + Data products)."}
+  - {nom: "DBOS Transact (Python)", en: "Database-backed durable Python workflows."}
+  - {nom: "DeepAgents (LangChain)", en: "LangChain's batteries-included agent \"harness\"."}
+  - {nom: "DeerFlow", en: "Long-horizon SuperAgent harness (research, code, creation) with sandboxes, memory, and sub-agents (ByteDance)."}
+  - {nom: "Devika", en: "First open-source implementation of an agentic software engineer."}
