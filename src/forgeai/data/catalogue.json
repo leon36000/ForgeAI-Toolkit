@@ -5437,26 +5437,38 @@
    "verify_method": "gh-api repos/... (source objective)"
   },
   {
-   "atlas_only": true,
+   "atlas_only": false,
    "atlas_status": "ACCEPTÉ - RAPIDE",
    "category": "RAG, vecteurs, ingestion et mémoire agentique",
-   "description_en": null,
-   "description_fr": "Entrée Atlas (ACCEPTÉ - RAPIDE) — description à enrichir depuis le tableau source.",
+   "description_en": "Lightweight multilingual reranker (BAAI), based on bge-m3, for RAG reranking.",
+   "description_fr": "Reranker multilingue léger (BAAI), basé sur bge-m3, pour le reclassement RAG.",
    "en_pending": false,
+   "flag": "MODELE-HF",
    "id": "bge-reranker-v2-m3",
+   "license": "Apache-2.0",
+   "maintenance": "active",
    "name": "BGE Reranker v2-m3",
-   "source_url": null
+   "source_url": "https://huggingface.co/BAAI/bge-reranker-v2-m3",
+   "verified": true,
+   "verified_at": "2026-07-14",
+   "verify_method": "huggingface HTTP 200"
   },
   {
-   "atlas_only": true,
+   "atlas_only": false,
    "atlas_status": "ACCEPTÉ - SECONDAIRE",
    "category": "RAG, vecteurs, ingestion et mémoire agentique",
-   "description_en": null,
-   "description_fr": "Entrée Atlas (ACCEPTÉ - SECONDAIRE) — description à enrichir depuis le tableau source.",
+   "description_en": "Multilingual embedding model (BAAI): multi-functionality (dense/sparse/multi-vector), long context up to 8192 tokens.",
+   "description_fr": "Modèle d'embedding multilingue (BAAI) : multi-fonctionnel (dense/creux/multi-vecteur), contexte long jusqu'à 8192 tokens.",
    "en_pending": false,
+   "flag": "MODELE-HF",
    "id": "bge-m3",
+   "license": "MIT",
+   "maintenance": "active",
    "name": "BGE-M3",
-   "source_url": null
+   "source_url": "https://huggingface.co/BAAI/bge-m3",
+   "verified": true,
+   "verified_at": "2026-07-14",
+   "verify_method": "huggingface HTTP 200"
   },
   {
    "atlas_only": true,
@@ -6798,15 +6810,21 @@
    "verify_method": "gh-api repos/... (source objective)"
   },
   {
-   "atlas_only": true,
+   "atlas_only": false,
    "atlas_status": "REMPLACÉ",
    "category": "RAG, vecteurs, ingestion et mémoire agentique",
-   "description_en": null,
-   "description_fr": "Entrée Atlas (REMPLACÉ) — description à enrichir depuis le tableau source.",
+   "description_en": "Open text embedding model (Nomic), 8192 context, fully open weights/data/code.",
+   "description_fr": "Modèle d'embedding de texte ouvert (Nomic), contexte 8192, poids/données/code entièrement ouverts.",
    "en_pending": false,
+   "flag": "MODELE-HF",
    "id": "nomic-embed-v1-x",
+   "license": "Apache-2.0",
+   "maintenance": "active",
    "name": "Nomic Embed v1.x",
-   "source_url": null
+   "source_url": "https://huggingface.co/nomic-ai/nomic-embed-text-v1",
+   "verified": true,
+   "verified_at": "2026-07-14",
+   "verify_method": "huggingface HTTP 200"
   },
   {
    "atlas_only": false,
@@ -7218,26 +7236,38 @@
    "verify_method": "gh-api repos/... (source objective)"
   },
   {
-   "atlas_only": true,
+   "atlas_only": false,
    "atlas_status": "ACCEPTÉ - PRINCIPAL",
    "category": "RAG, vecteurs, ingestion et mémoire agentique",
-   "description_en": null,
-   "description_fr": "Entrée Atlas (ACCEPTÉ - PRINCIPAL) — description à enrichir depuis le tableau source.",
+   "description_en": "Embedding model from the Qwen3 series (Alibaba), multilingual, multiple sizes.",
+   "description_fr": "Modèle d'embedding de la série Qwen3 (Alibaba), multilingue, plusieurs tailles.",
    "en_pending": false,
+   "flag": "MODELE-HF",
    "id": "qwen3-embedding",
+   "license": "Apache-2.0",
+   "maintenance": "active",
    "name": "Qwen3 Embedding",
-   "source_url": null
+   "source_url": "https://huggingface.co/Qwen/Qwen3-Embedding-0.6B",
+   "verified": true,
+   "verified_at": "2026-07-14",
+   "verify_method": "huggingface HTTP 200"
   },
   {
-   "atlas_only": true,
+   "atlas_only": false,
    "atlas_status": "ACCEPTÉ - PRINCIPAL",
    "category": "RAG, vecteurs, ingestion et mémoire agentique",
-   "description_en": null,
-   "description_fr": "Entrée Atlas (ACCEPTÉ - PRINCIPAL) — description à enrichir depuis le tableau source.",
+   "description_en": "Reranker from the Qwen3 series (Alibaba) for search and RAG.",
+   "description_fr": "Reranker de la série Qwen3 (Alibaba) pour la recherche et le RAG.",
    "en_pending": false,
+   "flag": "MODELE-HF",
    "id": "qwen3-reranker",
+   "license": "Apache-2.0",
+   "maintenance": "active",
    "name": "Qwen3 Reranker",
-   "source_url": null
+   "source_url": "https://huggingface.co/Qwen/Qwen3-Reranker-0.6B",
+   "verified": true,
+   "verified_at": "2026-07-14",
+   "verify_method": "huggingface HTTP 200"
   },
   {
    "atlas_only": false,
