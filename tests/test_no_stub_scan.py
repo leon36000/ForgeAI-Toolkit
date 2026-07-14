@@ -71,3 +71,13 @@ def test_classe_exception_idiomatique_autorisee(tmp_path):
 def test_code_sain_passe(tmp_path):
     source = "def somme(a, b):\n    return a + b\n"
     assert not _scan_source(tmp_path, source)
+
+
+def test_membre_de_protocol_autorise(tmp_path):
+    source = (
+        "from typing import Protocol\n\n"
+        "class Runner(Protocol):\n"
+        '    def run(self, argv: list[str]) -> tuple[int, str]:\n'
+        '        """Contrat d\'interface."""\n'
+    )
+    assert not _scan_source(tmp_path, source)

@@ -89,12 +89,28 @@ def _call_is_justified(node: ast.Call) -> bool:
     return any(isinstance(p, str) and JUSTIFICATION_TOKEN in p for p in parts)
 
 
+def _protocol_function_lines(tree: ast.Module) -> set[int]:
+    """Lignes des fonctions membres de classes Protocol (interfaces, pas stubs)."""
+    lines: set[int] = set()
+    for node in ast.walk(tree):
+        if isinstance(node, ast.ClassDef) and any(
+            (isinstance(b, ast.Name) and b.id == "Protocol")
+            or (isinstance(b, ast.Attribute) and b.attr == "Protocol")
+            for b in node.bases
+        ):
+            for item in node.body:
+                if isinstance(item, (ast.FunctionDef, ast.AsyncFunctionDef)):
+                    lines.add(item.lineno)
+    return lines
+
+
 def scan_python(path: Path, text: str) -> list[str]:
     violations = []
     try:
         tree = ast.parse(text)
     except SyntaxError as exc:
         return [f"{path}:{exc.lineno}: fichier Python non analysable ({exc.msg})"]
+    protocol_lines = _protocol_function_lines(tree)
     for node in ast.walk(tree):
         if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
             decorated_abstract = any(
@@ -102,6 +118,8 @@ def scan_python(path: Path, text: str) -> list[str]:
                 or (isinstance(d, ast.Attribute) and "abstract" in d.attr)
                 for d in node.decorator_list
             )
+            if node.lineno in protocol_lines:
+                continue
             if not decorated_abstract and _body_is_empty(node.body):
                 violations.append(
                     f"{path}:{node.lineno}: corps vide dans la fonction '{node.name}'"
