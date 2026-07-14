@@ -387,15 +387,23 @@
    "verify_method": "gh-api repos/... (source objective)"
   },
   {
-   "atlas_only": true,
+   "atlas_only": false,
    "atlas_status": "REFUSÉ",
    "category": "Orchestration, agents et interfaces",
-   "description_en": null,
-   "description_fr": "Entrée Atlas (REFUSÉ) — description à enrichir depuis le tableau source.",
+   "description_en": "AutoGPT is the vision of accessible AI for everyone, to use and to build on. Our mission is to provide the tools, so that you can focus on what matters.",
+   "description_fr": "",
    "en_pending": false,
+   "flag": "PUBLIC-INSTALLABLE",
+   "fr_pending": true,
    "id": "autogpt-platform",
+   "license": "NOASSERTION",
+   "maintenance": "active",
    "name": "AutoGPT Platform",
-   "source_url": null
+   "popularity": "★185533 (gh-api 2026-07-14)",
+   "source_url": "https://github.com/Significant-Gravitas/AutoGPT",
+   "verified": true,
+   "verified_at": "2026-07-14",
+   "verify_method": "gh-api repos/... (source objective)"
   },
   {
    "atlas_only": false,
@@ -542,15 +550,23 @@
    "verify_method": "gh-api repos/... (source objective)"
   },
   {
-   "atlas_only": true,
+   "atlas_only": false,
    "atlas_status": "ACCEPTÉ",
    "category": "Orchestration, agents et interfaces",
-   "description_en": null,
-   "description_fr": "Entrée Atlas (ACCEPTÉ) — description à enrichir depuis le tableau source.",
+   "description_en": "Lightweight coding agent that runs in your terminal",
+   "description_fr": "",
    "en_pending": false,
+   "flag": "PUBLIC-INSTALLABLE",
+   "fr_pending": true,
    "id": "codex-cli",
+   "license": "Apache-2.0",
+   "maintenance": "active",
    "name": "Codex CLI",
-   "source_url": null
+   "popularity": "★98040 (gh-api 2026-07-14)",
+   "source_url": "https://github.com/openai/codex",
+   "verified": true,
+   "verified_at": "2026-07-14",
+   "verify_method": "gh-api repos/... (source objective)"
   },
   {
    "atlas_only": false,
@@ -2689,15 +2705,23 @@
    "source_url": null
   },
   {
-   "atlas_only": true,
+   "atlas_only": false,
    "atlas_status": "ACCEPTÉ",
    "category": "Orchestration, agents et interfaces",
-   "description_en": null,
-   "description_fr": "Entrée Atlas (ACCEPTÉ) — description à enrichir depuis le tableau source.",
+   "description_en": "binary releases of VS Code without MS branding/telemetry/licensing",
+   "description_fr": "",
    "en_pending": false,
+   "flag": "PUBLIC-INSTALLABLE",
+   "fr_pending": true,
    "id": "vscodium",
+   "license": "MIT",
+   "maintenance": "active",
    "name": "VSCodium",
-   "source_url": null
+   "popularity": "★32344 (gh-api 2026-07-14)",
+   "source_url": "https://github.com/VSCodium/vscodium",
+   "verified": true,
+   "verified_at": "2026-07-14",
+   "verify_method": "gh-api repos/... (source objective)"
   },
   {
    "atlas_only": true,
@@ -2855,15 +2879,23 @@
    "verify_method": "gh-api repos/... (source objective)"
   },
   {
-   "atlas_only": true,
+   "atlas_only": false,
    "atlas_status": "REFUSÉ",
    "category": "Inférence, serving et gateway modèles",
-   "description_en": null,
-   "description_fr": "Entrée Atlas (REFUSÉ) — description à enrichir depuis le tableau source.",
+   "description_en": "Superfast AI decision making and intelligent processing of multi-modal data.",
+   "description_fr": "",
    "en_pending": false,
+   "flag": "PUBLIC-INSTALLABLE",
+   "fr_pending": true,
    "id": "aurelio-semantic-router",
+   "license": "MIT",
+   "maintenance": "active",
    "name": "Aurelio Semantic Router",
-   "source_url": null
+   "popularity": "★3706 (gh-api 2026-07-14)",
+   "source_url": "https://github.com/aurelio-labs/semantic-router",
+   "verified": true,
+   "verified_at": "2026-07-14",
+   "verify_method": "gh-api repos/... (source objective)"
   },
   {
    "atlas_only": false,
@@ -3039,15 +3071,23 @@
    "verify_method": "gh-api repos/... (source objective)"
   },
   {
-   "atlas_only": true,
+   "atlas_only": false,
    "atlas_status": "REFUSÉ",
    "category": "Inférence, serving et gateway modèles",
-   "description_en": null,
-   "description_fr": "Entrée Atlas (REFUSÉ) — description à enrichir depuis le tableau source.",
+   "description_en": "Local AI API Platform",
+   "description_fr": "",
    "en_pending": false,
+   "flag": "PUBLIC-INSTALLABLE",
+   "fr_pending": true,
    "id": "cortex-jan-server",
+   "license": "Apache-2.0",
+   "maintenance": "archived",
    "name": "Cortex / Jan Server",
-   "source_url": null
+   "popularity": "★2755 (gh-api 2026-07-14)",
+   "source_url": "https://github.com/janhq/cortex.cpp",
+   "verified": true,
+   "verified_at": "2026-07-14",
+   "verify_method": "gh-api repos/... (source objective)"
   },
   {
    "atlas_only": false,
@@ -4015,15 +4055,23 @@
    "verify_method": "gh-api repos/... (source objective)"
   },
   {
-   "atlas_only": true,
+   "atlas_only": false,
    "atlas_status": "REFUSÉ",
    "category": "Inférence, serving et gateway modèles",
-   "description_en": null,
-   "description_fr": "Entrée Atlas (REFUSÉ) — description à enrichir depuis le tableau source.",
+   "description_en": "[EMNLP'23, ACL'24] To speed up LLMs' inference and enhance LLM's perceive of key information, compress the prompt and KV-Cache, which achieves up to 20x compression with minimal performance loss.",
+   "description_fr": "",
    "en_pending": false,
+   "flag": "PUBLIC-INSTALLABLE",
+   "fr_pending": true,
    "id": "llmlingua-2",
+   "license": "MIT",
+   "maintenance": "active",
    "name": "LLMLingua-2",
-   "source_url": null
+   "popularity": "★6435 (gh-api 2026-07-14)",
+   "source_url": "https://github.com/microsoft/LLMLingua",
+   "verified": true,
+   "verified_at": "2026-07-14",
+   "verify_method": "gh-api repos/... (source objective)"
   },
   {
    "atlas_only": true,
@@ -4913,15 +4961,23 @@
    "verify_method": "gh-api repos/... (source objective)"
   },
   {
-   "atlas_only": true,
+   "atlas_only": false,
    "atlas_status": "REFUSÉ",
    "category": "Inférence, serving et gateway modèles",
-   "description_en": null,
-   "description_fr": "Entrée Atlas (REFUSÉ) — description à enrichir depuis le tableau source.",
+   "description_en": "TensorRT LLM provides users with an easy-to-use Python API to define Large Language Models (LLMs) and supports state-of-the-art optimizations to perform inference efficiently on NVIDIA GPUs. TensorRT LLM also contains components to create Python and C++ runtimes that orchestrate the inference execution in a performant way.",
+   "description_fr": "",
    "en_pending": false,
+   "flag": "PUBLIC-INSTALLABLE",
+   "fr_pending": true,
    "id": "tensorrt-llm-direct",
+   "license": "NOASSERTION",
+   "maintenance": "active",
    "name": "TensorRT-LLM direct",
-   "source_url": null
+   "popularity": "★14116 (gh-api 2026-07-14)",
+   "source_url": "https://github.com/NVIDIA/TensorRT-LLM",
+   "verified": true,
+   "verified_at": "2026-07-14",
+   "verify_method": "gh-api repos/... (source objective)"
   },
   {
    "atlas_only": false,

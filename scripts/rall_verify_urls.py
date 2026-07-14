@@ -74,6 +74,16 @@ def main() -> None:
         stars = info.get("stars")
         if stars is not None:
             e["popularity"] = f"★{stars} (gh-api {today})"
+        # Entrée Atlas (placeholder) : remplace la description par celle du dépôt
+        # officiel (EN sourcé) et marque le FR à traduire (même pipeline que les 742).
+        if e.get("atlas_only"):
+            gh_desc = (info.get("desc") or "").strip()
+            if gh_desc:
+                e["description_en"] = gh_desc
+                e["description_fr"] = ""
+                e["fr_pending"] = True
+            e["atlas_only"] = False
+            e["en_pending"] = False
         ok += 1
 
     payload = json.dumps(data, ensure_ascii=False, sort_keys=True, indent=1)
