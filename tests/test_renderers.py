@@ -59,6 +59,20 @@ def test_k3s_nodeport_dans_la_plage():
     assert all(30000 <= p <= 32767 for p in ports)
 
 
+def test_k3s_nodeports_sans_collision_de_modulo():
+    plan = _plan()
+    # 21434 et 24202 ont le même reste modulo 2768 → collision sans correctif
+    colliding = tuple(
+        ServiceSpec(name=f"svc{i}", image="img:1", host_port=port, container_port=80)
+        for i, port in enumerate((21434, 24202))
+    )
+    plan = DeploymentPlan(plan_id="t", profile="minimal-cpu", target=plan.target,
+                          services=colliding, model="m", embed_model="e")
+    ports = [int(line.split(":")[1]) for line in render_k3s(plan).splitlines()
+             if "nodePort:" in line]
+    assert len(ports) == len(set(ports)) == 2
+
+
 def test_aucun_secret_dans_les_manifestes():
     plan = _plan()
     for rendered in (render_compose(plan), render_k3s(plan)):

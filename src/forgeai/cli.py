@@ -8,6 +8,7 @@ erreur avec code de sortie non nul — jamais de faux succès.
 from __future__ import annotations
 
 import argparse
+import socket
 import sys
 import time
 from pathlib import Path
@@ -17,13 +18,20 @@ from forgeai.catalogue.loader import load_catalogue, verify_catalogue
 from forgeai.core import registre
 from forgeai.core.models import RenderTarget
 from forgeai.core.runner import SubprocessRunner
-from forgeai.deploy.compose import DeployError, compose_down, compose_up, wait_healthy
+from forgeai.deploy.compose import (
+    DeployError,
+    compose_down,
+    compose_up,
+    http_ok,
+    wait_healthy,
+)
+from forgeai.deploy.k3s import k3s_apply, k3s_delete_namespace, k3s_wait_deployments
 from forgeai.hardware.detect import HardwareDetector
 from forgeai.planner.assemble import assemble_plan
 from forgeai.planner.profile import ProfileError, derive_profile
 from forgeai.rag.client import RagClient
 from forgeai.renderers.compose import render_compose
-from forgeai.renderers.k3s import render_k3s
+from forgeai.renderers.k3s import NAMESPACE, node_port_for, render_k3s
 
 REPO_ROOT = Path(__file__).resolve().parent.parent.parent
 DEFAULT_CATALOGUE = REPO_ROOT / "catalogue" / "catalogue.json"
@@ -66,19 +74,43 @@ def wizard_ci(args: argparse.Namespace) -> int:
     _step("S05 bootstrap sécurisé")
     bootstrap_secrets(workdir)
 
-    _step("S06 rendu + déploiement Docker Compose")
+    backend = args.backend
     compose_file = workdir / "docker-compose.yaml"
     compose_file.write_text(render_compose(plan), encoding="utf-8")
-    (workdir / "k3s.yaml").write_text(render_k3s(plan), encoding="utf-8")
-    compose_up(compose_file)
+    local_node = socket.gethostname().lower()
+    (workdir / "k3s.yaml").write_text(render_k3s(plan, node=local_node), encoding="utf-8")
+
+    if backend == "compose":
+        _step("S06 rendu + déploiement Docker Compose")
+        compose_up(compose_file)
+        rag_ports = ports
+    else:
+        _step(f"S07 rendu + déploiement K3s (nodeSelector: {local_node} — Minimal single-node)")
+        k3s_apply(workdir / "k3s.yaml")
+        k3s_wait_deployments(NAMESPACE, timeout_s=args.health_timeout)
+        used_node_ports: set[int] = set()
+        rag_ports = {s.name: node_port_for(s, used_node_ports) for s in plan.services}
+        print(f"  NodePorts: {rag_ports}")
     try:
-        health = wait_healthy(plan, timeout_s=args.health_timeout)
+        if backend == "compose":
+            health = wait_healthy(plan, timeout_s=args.health_timeout)
+        else:
+            deadline = time.monotonic() + args.health_timeout
+            health = {name: "waiting" for name in rag_ports}
+            probes = {"ollama": "/api/tags", "vector-store": "/readyz"}
+            while time.monotonic() < deadline and set(health.values()) != {"healthy"}:
+                for name, port in rag_ports.items():
+                    if http_ok(f"http://127.0.0.1:{port}{probes[name]}"):
+                        health[name] = "healthy"
+                time.sleep(2.0)
+            if set(health.values()) != {"healthy"}:
+                raise DeployError(f"Healthchecks K3s incomplets : {health}")
         print(f"  santé: {health}")
 
         _step("S08 modèles + ingestion du document de preuve")
         rag = RagClient(
-            ollama_url=f"http://127.0.0.1:{ports['ollama']}",
-            qdrant_url=f"http://127.0.0.1:{ports['vector-store']}",
+            ollama_url=f"http://127.0.0.1:{rag_ports['ollama']}",
+            qdrant_url=f"http://127.0.0.1:{rag_ports['vector-store']}",
             llm_model=plan.model,
             embed_model=plan.embed_model,
         )
@@ -100,11 +132,15 @@ def wizard_ci(args: argparse.Namespace) -> int:
     finally:
         if args.teardown:
             _step("teardown (backends séquentiels — règle round 1)")
-            compose_down(compose_file, volumes=args.teardown_volumes)
+            if backend == "compose":
+                compose_down(compose_file, volumes=args.teardown_volumes)
+            else:
+                k3s_delete_namespace(NAMESPACE)
 
     _step("S10 preuve au registre hash-chaîné")
     entry = registre.append(Path(args.registre), "preuve_e2e", "wizard-ci", {
-        "plan_id": plan.plan_id, "profile": profile, "services": ports,
+        "backend": backend,
+        "plan_id": plan.plan_id, "profile": profile, "services": rag_ports,
         "model": plan.model, "chunks": chunks, "question": args.question,
         "fait_attendu": args.expected_fact, "reponse": answer,
         "duree_s": round(time.monotonic() - started, 1),
@@ -124,6 +160,7 @@ def main(argv: list[str] | None = None) -> int:
 
     p_wiz = sub.add_parser("wizard", help="wizard bout-en-bout")
     p_wiz.add_argument("--ci", action="store_true", required=True)
+    p_wiz.add_argument("--backend", choices=["compose", "k3s"], default="compose")
     p_wiz.add_argument("--workdir", default="run")
     p_wiz.add_argument("--catalogue", default=str(DEFAULT_CATALOGUE))
     p_wiz.add_argument("--overlay", default=str(DEFAULT_OVERLAY))

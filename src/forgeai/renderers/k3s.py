@@ -11,16 +11,27 @@ from forgeai.core.models import DeploymentPlan, ServiceSpec
 NAMESPACE = "forgeai-minimal"
 
 
-def node_port_for(svc: ServiceSpec) -> int:
-    """Mappe le port hôte du plan vers la plage NodePort (30000-32767)."""
-    return 30000 + (svc.host_port % 2768)
+def node_port_for(svc: ServiceSpec, used: set[int] | None = None) -> int:
+    """Mappe le port hôte vers la plage NodePort (30000-32767), sans collision :
+    en cas de conflit de modulo entre services, incrémente jusqu'au port libre
+    (objection majeure levée en revue de code P1, corrigée)."""
+    port = 30000 + (svc.host_port % 2768)
+    if used is not None:
+        while port in used:
+            port = 30000 + ((port - 30000 + 1) % 2768)
+        used.add(port)
+    return port
 
 
-def _deployment(svc: ServiceSpec) -> str:
+def _deployment(svc: ServiceSpec, node: str | None = None,
+                node_port: int | None = None) -> str:
     gpu_limits = """
           resources:
             limits:
               nvidia.com/gpu: "1"ifgpu""".replace("ifgpu", "") if svc.gpu else ""
+    node_selector = (f"""
+      nodeSelector:
+        kubernetes.io/hostname: {node}""" if node else "")
     volume_mount, volume_def = "", ""
     if svc.volumes:
         claim = svc.volumes[0].split(":", 1)[0]
@@ -46,7 +57,7 @@ spec:
   template:
     metadata:
       labels: {{app: {svc.name}}}
-    spec:
+    spec:{node_selector}
       containers:
         - name: {svc.name}
           image: {svc.image}
@@ -64,16 +75,18 @@ spec:
   ports:
     - port: {svc.container_port}
       targetPort: {svc.container_port}
-      nodePort: {node_port_for(svc)}
+      nodePort: {node_port if node_port is not None else node_port_for(svc)}
 """
 
 
-def render_k3s(plan: DeploymentPlan) -> str:
+def render_k3s(plan: DeploymentPlan, node: str | None = None) -> str:
+    """`node` épingle les pods sur un hôte (profil Minimal = single-node par contrat)."""
     parts = [f"""# Généré par ForgeAI Toolkit — plan {plan.plan_id} (profil {plan.profile})
 apiVersion: v1
 kind: Namespace
 metadata:
   name: {NAMESPACE}
 """]
-    parts += [_deployment(svc) for svc in plan.services]
+    used: set[int] = set()
+    parts += [_deployment(svc, node, node_port_for(svc, used)) for svc in plan.services]
     return "".join(parts)

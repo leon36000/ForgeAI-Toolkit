@@ -1,0 +1,23 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "description": "Couvrir les 7% restants (chemins d'erreur)",
+   "preuve": "couverture 93%"
+  },
+  {
+   "severite": "mineure",
+   "description": "Persistance des permissions 0600 selon driver de stockage K3s",
+   "preuve": "secrets"
+  },
+  {
+   "severite": "mineure",
+   "description": "Politique de rotation des secrets à exposer en CLI",
+   "preuve": "token_hex(32)"
+  }
+ ],
+ "date": "2026-07-14",
+ "source_route": "forge-model-bridge",
+ "cible": "code P1 (auteur: fable — reviewers non-Anthropic obligatoires)"
+}

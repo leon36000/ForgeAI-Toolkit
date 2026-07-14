@@ -27,8 +27,11 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - run: pip install pytest
-      - run: pytest -q
+      - run: pip install pytest pytest-cov
+      - name: Tests + couverture (critères de sortie P1)
+        run: |
+          pytest -q --cov=src/forgeai --cov-report=term --cov-fail-under=85
+          pytest -q --cov=src/forgeai/core/registre.py --cov-report=term --cov-fail-under=95 tests/test_registre.py
 
   gitleaks:
     runs-on: ubuntu-latest

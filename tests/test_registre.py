@@ -3,6 +3,8 @@ import json
 import sys
 from pathlib import Path
 
+import pytest
+
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
 import registre
@@ -49,3 +51,40 @@ def test_verify_detecte_une_entree_supprimee(tmp_path):
 
 def test_registre_vide_est_valide(tmp_path):
     assert registre.verify(tmp_path / "absent.jsonl") is None
+
+
+def test_cli_append_puis_verify(tmp_path, monkeypatch, capsys):
+    reg = tmp_path / "r.jsonl"
+    monkeypatch.setattr(sys, "argv",
+                        ["registre.py", "append", str(reg), "--type", "t",
+                         "--actor", "a", "--payload-json", '{"k": 1}'])
+    registre.main()
+    assert json.loads(capsys.readouterr().out)["seq"] == 1
+
+    monkeypatch.setattr(sys, "argv", ["registre.py", "verify", str(reg)])
+    with pytest.raises(SystemExit) as exc:
+        registre.main()
+    assert exc.value.code == 0
+    assert "chaîne intègre" in capsys.readouterr().out
+
+
+def test_cli_verify_detecte_la_falsification(tmp_path, monkeypatch, capsys):
+    reg = tmp_path / "r.jsonl"
+    registre.append(reg, "t", "a", {"n": 1})
+    lines = reg.read_text(encoding="utf-8").splitlines()
+    entry = json.loads(lines[0])
+    entry["actor"] = "usurpé"
+    reg.write_text(json.dumps(entry, sort_keys=True, ensure_ascii=False,
+                              separators=(",", ":")) + "\n", encoding="utf-8")
+    monkeypatch.setattr(sys, "argv", ["registre.py", "verify", str(reg)])
+    with pytest.raises(SystemExit) as exc:
+        registre.main()
+    assert exc.value.code == 1
+    assert "ECHEC" in capsys.readouterr().out
+
+
+def test_ligne_json_invalide_rejetee(tmp_path):
+    reg = tmp_path / "r.jsonl"
+    reg.write_text("{pas du json\n", encoding="utf-8")
+    with pytest.raises(SystemExit, match="JSON invalide"):
+        registre.verify(reg)
