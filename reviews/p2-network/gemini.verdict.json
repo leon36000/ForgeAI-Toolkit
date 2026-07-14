@@ -1,0 +1,17 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "description": "L'orchestrateur doit exiger une confirmation de succès sur 100% des nœuds avant commit_rotation, sinon les nœuds temporairement hors ligne perdent l'accès.",
+   "preuve": "design délègue la vérification exhaustive à l'appelant",
+   "resolu": false,
+   "suite": "à implémenter dans F25 (orchestration wizard multi-nœuds)"
+  }
+ ],
+ "round": 2,
+ "note": "critique de lockout du round 1 LEVÉE par la rotation deux-temps",
+ "date": "2026-07-14",
+ "source_route": "forge-model-bridge",
+ "cible": "code P2 network (auteur fable → reviewers non-Anthropic)"
+}
