@@ -15,9 +15,10 @@ from forgeai.catalogue.loader import (
     verify_catalogue,
 )
 
-REPO = Path(__file__).resolve().parent.parent
-CATALOGUE = REPO / "catalogue" / "catalogue.json"
-DEPLOY = REPO / "catalogue" / "deploy-minimal.json"
+from forgeai.resources import catalogue_path, deploy_overlay_path
+
+CATALOGUE = catalogue_path()
+DEPLOY = deploy_overlay_path()
 
 
 def test_catalogue_reel_integre_et_complet():

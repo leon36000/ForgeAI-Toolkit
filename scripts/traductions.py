@@ -20,7 +20,7 @@ import sys
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parent.parent
-CATALOGUE = REPO / "catalogue" / "catalogue.json"
+CATALOGUE = REPO / "src" / "forgeai" / "data" / "catalogue.json"
 
 LOT_INLINE_RE = re.compile(r'nom: "((?:[^"\\]|\\.)*)",\s*en: "((?:[^"\\]|\\.)*)"')
 LOT_BLOCK_RE = re.compile(r'- nom: "([^"]+)"\n\s+en: (?:"((?:[^"\\]|\\.)*)"|\'([^\']+)\')')

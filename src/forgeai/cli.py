@@ -8,6 +8,7 @@ erreur avec code de sortie non nul — jamais de faux succès.
 from __future__ import annotations
 
 import argparse
+import os
 import socket
 import sys
 import time
@@ -32,11 +33,24 @@ from forgeai.planner.profile import ProfileError, derive_profile
 from forgeai.rag.client import RagClient
 from forgeai.renderers.compose import render_compose
 from forgeai.renderers.k3s import NAMESPACE, node_port_for, render_k3s
+from forgeai.resources import catalogue_path, deploy_overlay_path
 
-REPO_ROOT = Path(__file__).resolve().parent.parent.parent
-DEFAULT_CATALOGUE = REPO_ROOT / "catalogue" / "catalogue.json"
-DEFAULT_OVERLAY = REPO_ROOT / "catalogue" / "deploy-minimal.json"
-DEFAULT_REGISTRE = REPO_ROOT / "Registres" / "mission.jsonl"
+# Données embarquées dans le paquet → portables après pip install (P3).
+DEFAULT_CATALOGUE = catalogue_path()
+DEFAULT_OVERLAY = deploy_overlay_path()
+
+
+def default_registre() -> Path:
+    """Emplacement portable et persistant du registre (revue P3, convergence
+    Gemini+Qwen) : $FORGEAI_HOME si défini, sinon ~/.forgeai/ — jamais lié au
+    répertoire courant (fragile, éphémère depuis /tmp). `--registre` reste
+    disponible pour un registre projet-local."""
+    home = os.environ.get("FORGEAI_HOME")
+    base = Path(home) if home else Path.home() / ".forgeai"
+    return base / "Registres" / "mission.jsonl"
+
+
+DEFAULT_REGISTRE = default_registre()
 
 
 def _step(label: str) -> None:
@@ -75,6 +89,18 @@ def wizard_ci(args: argparse.Namespace) -> int:
     bootstrap_secrets(workdir)
 
     backend = args.backend
+    if not args.skip_preflight:
+        from forgeai.deploy.compose import http_ok
+        from forgeai.preflight import available_backends, run_checks
+        backends = available_backends(
+            run_checks(SubprocessRunner(), HardwareDetector(SubprocessRunner()), http_ok))
+        if backend not in backends:
+            print(f"ABORT: backend '{backend}' indisponible sur cette machine. "
+                  f"Backends prêts : {backends or 'aucun'}. "
+                  f"Lancez `forgeai doctor` pour le détail, ou --skip-preflight pour forcer.",
+                  file=sys.stderr)
+            return 6
+
     compose_file = workdir / "docker-compose.yaml"
     compose_file.write_text(render_compose(plan), encoding="utf-8")
     local_node = socket.gethostname().lower()
@@ -150,6 +176,26 @@ def wizard_ci(args: argparse.Namespace) -> int:
     return 0
 
 
+_STATUS_MARK = {"ok": "OK ", "degraded": "!! ", "missing": "-- "}
+
+
+def _doctor(args: argparse.Namespace) -> int:
+    from forgeai.deploy.compose import http_ok
+    from forgeai.preflight import available_backends, run_checks
+    checks = run_checks(SubprocessRunner(), HardwareDetector(SubprocessRunner()), http_ok)
+    print("[forgeai doctor] état de votre environnement :")
+    for c in checks:
+        print(f"  [{_STATUS_MARK.get(c.status, '?  ')}] {c.name:9} — {c.detail}")
+        print(f"              → {c.enables}")
+    backends = available_backends(checks)
+    if backends:
+        print(f"\nBackends de déploiement disponibles : {', '.join(backends)}")
+    else:
+        print("\nAucun backend de déploiement prêt. Installez Docker (le plus simple) "
+              "ou configurez un cluster K3s, puis relancez `forgeai doctor`.")
+    return 0
+
+
 def _node_status(args: argparse.Namespace) -> int:
     from forgeai.network.nodes import ClusterError, cluster_status
     try:
@@ -179,6 +225,9 @@ def main(argv: list[str] | None = None) -> int:
     p_hw.set_defaults(func=lambda a: print(
         HardwareDetector(SubprocessRunner()).full_report().to_json()) or 0)
 
+    p_doctor = sub.add_parser("doctor", help="préflight : ce que votre machine peut faire")
+    p_doctor.set_defaults(func=_doctor)
+
     p_node = sub.add_parser("node", help="multi-nœuds (P2)")
     node_sub = p_node.add_subparsers(dest="node_cmd", required=True)
     p_status = node_sub.add_parser("status", help="état du cluster + preuve (F22)")
@@ -200,6 +249,8 @@ def main(argv: list[str] | None = None) -> int:
     p_wiz.add_argument("--health-timeout", type=float, default=180.0)
     p_wiz.add_argument("--teardown", action="store_true")
     p_wiz.add_argument("--teardown-volumes", action="store_true")
+    p_wiz.add_argument("--skip-preflight", action="store_true",
+                       help="ne pas vérifier la disponibilité du backend avant déploiement")
     p_wiz.set_defaults(func=wizard_ci)
 
     args = parser.parse_args(argv)

@@ -19,3 +19,8 @@ __pycache__/
 
 # Artefacts d exécution locale
 run/
+
+# Artefacts de build
+dist/
+build/
+*.egg-info/

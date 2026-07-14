@@ -9,8 +9,9 @@ from forgeai.bootstrap.secrets import bootstrap_secrets
 from forgeai.core.models import RenderTarget
 from forgeai.planner.assemble import assemble_plan, find_free_port
 
-REPO = Path(__file__).resolve().parent.parent
-DEPLOY = REPO / "catalogue" / "deploy-minimal.json"
+from forgeai.resources import deploy_overlay_path
+
+DEPLOY = deploy_overlay_path()
 
 
 def test_plan_minimal_assemble_deux_services():

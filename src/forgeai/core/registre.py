@@ -53,6 +53,7 @@ def append(path: Path, type_: str, actor: str, payload: dict) -> dict:
     }
     entry["hash"] = _entry_hash(entry)
     line = json.dumps(entry, sort_keys=True, ensure_ascii=False, separators=(",", ":"))
+    path.parent.mkdir(parents=True, exist_ok=True)  # ex. ~/.forgeai/Registres/ (P3)
     with path.open("a", encoding="utf-8") as fh:
         fh.write(line + "\n")
     return entry

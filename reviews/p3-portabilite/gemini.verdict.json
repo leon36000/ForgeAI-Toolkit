@@ -1,0 +1,15 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "description": "Registre via Path.cwd() : droits d'écriture / état éphémère.",
+   "preuve": "cli.py",
+   "resolu": true,
+   "resolution": "corrigé : default_registre() = $FORGEAI_HOME sinon ~/.forgeai/; append crée le parent; test ajouté"
+  }
+ ],
+ "date": "2026-07-14",
+ "source_route": "forge-model-bridge",
+ "cible": "code P3 portabilité (auteur fable → reviewers non-Anthropic)"
+}

@@ -1,0 +1,15 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "description": "Registre lié à Path.cwd(), persistance absente.",
+   "preuve": "éphémère depuis /tmp",
+   "resolu": true,
+   "resolution": "idem — ~/.forgeai/ persistant"
+  }
+ ],
+ "date": "2026-07-14",
+ "source_route": "forge-model-bridge",
+ "cible": "code P3 portabilité (auteur fable → reviewers non-Anthropic)"
+}
