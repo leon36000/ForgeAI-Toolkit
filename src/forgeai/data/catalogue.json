@@ -926,15 +926,23 @@
    "verify_method": "gh-api repos/... (source objective)"
   },
   {
-   "atlas_only": true,
+   "atlas_only": false,
    "atlas_status": "REFUSÉ",
    "category": "Orchestration, agents et interfaces",
-   "description_en": null,
-   "description_fr": "Entrée Atlas (REFUSÉ) — description à enrichir depuis le tableau source.",
+   "description_en": "An open-source, code-first Python toolkit for building, evaluating, and deploying sophisticated AI agents with flexibility and control.",
+   "description_fr": "",
    "en_pending": false,
+   "flag": "PUBLIC-INSTALLABLE",
+   "fr_pending": true,
    "id": "google-adk",
+   "license": "Apache-2.0",
+   "maintenance": "active",
    "name": "Google ADK",
-   "source_url": null
+   "popularity": "★20610 (gh-api 2026-07-14)",
+   "source_url": "https://github.com/google/adk-python",
+   "verified": true,
+   "verified_at": "2026-07-14",
+   "verify_method": "gh-api repos/... (source objective)"
   },
   {
    "atlas_only": false,
@@ -1275,15 +1283,23 @@
    "verify_method": "gh-api repos/... (source objective)"
   },
   {
-   "atlas_only": true,
+   "atlas_only": false,
    "atlas_status": "ACCEPTÉ - NOYAU K3S",
    "category": "Orchestration, agents et interfaces",
-   "description_en": null,
-   "description_fr": "Entrée Atlas (ACCEPTÉ - NOYAU K3S) — description à enrichir depuis le tableau source.",
+   "description_en": "Cloud Native Agentic AI | Discord: https://bit.ly/kagentdiscord",
+   "description_fr": "",
    "en_pending": false,
+   "flag": "PUBLIC-INSTALLABLE",
+   "fr_pending": true,
    "id": "kagent",
+   "license": "Apache-2.0",
+   "maintenance": "active",
    "name": "kagent",
-   "source_url": null
+   "popularity": "★3301 (gh-api 2026-07-14)",
+   "source_url": "https://github.com/kagent-dev/kagent",
+   "verified": true,
+   "verified_at": "2026-07-14",
+   "verify_method": "gh-api repos/... (source objective)"
   },
   {
    "atlas_only": false,
@@ -1358,15 +1374,23 @@
    "verify_method": "gh-api repos/... (source objective)"
   },
   {
-   "atlas_only": true,
+   "atlas_only": false,
    "atlas_status": "REMPLACÉ",
    "category": "Orchestration, agents et interfaces",
-   "description_en": null,
-   "description_fr": "Entrée Atlas (REMPLACÉ) — description à enrichir depuis le tableau source.",
+   "description_en": "The batteries-included agent harness.",
+   "description_fr": "",
    "en_pending": false,
+   "flag": "PUBLIC-INSTALLABLE",
+   "fr_pending": true,
    "id": "langchain-deepagents",
+   "license": "MIT",
+   "maintenance": "active",
    "name": "LangChain DeepAgents",
-   "source_url": null
+   "popularity": "★26235 (gh-api 2026-07-14)",
+   "source_url": "https://github.com/langchain-ai/deepagents",
+   "verified": true,
+   "verified_at": "2026-07-14",
+   "verify_method": "gh-api repos/... (source objective)"
   },
   {
    "atlas_only": false,
@@ -2970,15 +2994,23 @@
    "verify_method": "gh-api repos/... (source objective)"
   },
   {
-   "atlas_only": true,
+   "atlas_only": false,
    "atlas_status": "ACCEPTÉ - CIBLE",
    "category": "Inférence, serving et gateway modèles",
-   "description_en": null,
-   "description_fr": "Entrée Atlas (ACCEPTÉ - CIBLE) — description à enrichir depuis le tableau source.",
+   "description_en": "Fastest enterprise AI gateway (50x faster than LiteLLM) with adaptive load balancer, cluster mode, guardrails, 1000+ models support & <100 µs overhead at 5k RPS.",
+   "description_fr": "",
    "en_pending": false,
+   "flag": "PUBLIC-INSTALLABLE",
+   "fr_pending": true,
    "id": "bifrost-gateway",
+   "license": "Apache-2.0",
+   "maintenance": "active",
    "name": "Bifrost Gateway",
-   "source_url": null
+   "popularity": "★6517 (gh-api 2026-07-14)",
+   "source_url": "https://github.com/maximhq/bifrost",
+   "verified": true,
+   "verified_at": "2026-07-14",
+   "verify_method": "gh-api repos/... (source objective)"
   },
   {
    "atlas_only": false,
@@ -6276,15 +6308,23 @@
    "verify_method": "gh-api repos/... (source objective)"
   },
   {
-   "atlas_only": true,
+   "atlas_only": false,
    "atlas_status": "REFUSÉ",
    "category": "RAG, vecteurs, ingestion et mémoire agentique",
-   "description_en": null,
-   "description_fr": "Entrée Atlas (REFUSÉ) — description à enrichir depuis le tableau source.",
+   "description_en": "Platform for stateful agents: AI with advanced memory that can learn and self-improve over time.",
+   "description_fr": "",
    "en_pending": false,
+   "flag": "PUBLIC-INSTALLABLE",
+   "fr_pending": true,
    "id": "letta",
+   "license": "Apache-2.0",
+   "maintenance": "active",
    "name": "Letta",
-   "source_url": null
+   "popularity": "★23793 (gh-api 2026-07-14)",
+   "source_url": "https://github.com/letta-ai/letta",
+   "verified": true,
+   "verified_at": "2026-07-14",
+   "verify_method": "gh-api repos/... (source objective)"
   },
   {
    "atlas_only": false,
@@ -6395,26 +6435,42 @@
    "verify_method": "gh-api repos/... (source objective)"
   },
   {
-   "atlas_only": true,
+   "atlas_only": false,
    "atlas_status": "REFUSÉ",
    "category": "RAG, vecteurs, ingestion et mémoire agentique",
-   "description_en": null,
-   "description_fr": "Entrée Atlas (REFUSÉ) — description à enrichir depuis le tableau source.",
+   "description_en": "A lightning-fast search engine API bringing AI-powered hybrid search to your sites and applications.",
+   "description_fr": "",
    "en_pending": false,
+   "flag": "PUBLIC-INSTALLABLE",
+   "fr_pending": true,
    "id": "meilisearch",
+   "license": "NOASSERTION",
+   "maintenance": "active",
    "name": "Meilisearch",
-   "source_url": null
+   "popularity": "★58588 (gh-api 2026-07-14)",
+   "source_url": "https://github.com/meilisearch/meilisearch",
+   "verified": true,
+   "verified_at": "2026-07-14",
+   "verify_method": "gh-api repos/... (source objective)"
   },
   {
-   "atlas_only": true,
+   "atlas_only": false,
    "atlas_status": "REMPLACÉ",
    "category": "RAG, vecteurs, ingestion et mémoire agentique",
-   "description_en": null,
-   "description_fr": "Entrée Atlas (REMPLACÉ) — description à enrichir depuis le tableau source.",
+   "description_en": "Universal memory layer for AI Agents",
+   "description_fr": "",
    "en_pending": false,
+   "flag": "PUBLIC-INSTALLABLE",
+   "fr_pending": true,
    "id": "mem0-local",
+   "license": "Apache-2.0",
+   "maintenance": "active",
    "name": "Mem0 local",
-   "source_url": null
+   "popularity": "★60826 (gh-api 2026-07-14)",
+   "source_url": "https://github.com/mem0ai/mem0",
+   "verified": true,
+   "verified_at": "2026-07-14",
+   "verify_method": "gh-api repos/... (source objective)"
   },
   {
    "atlas_only": true,
@@ -6807,26 +6863,42 @@
    "verify_method": "gh-api repos/... (source objective)"
   },
   {
-   "atlas_only": true,
+   "atlas_only": false,
    "atlas_status": "ACCEPTÉ",
    "category": "RAG, vecteurs, ingestion et mémoire agentique",
-   "description_en": null,
-   "description_fr": "Entrée Atlas (ACCEPTÉ) — description à enrichir depuis le tableau source.",
+   "description_en": "The Open Context Layer for Data and AI ,  OpenMetadata is the open platform for building trusted data context and business semantics for humans, AI assistants, and agents.",
+   "description_fr": "",
    "en_pending": false,
+   "flag": "PUBLIC-INSTALLABLE",
+   "fr_pending": true,
    "id": "openmetadata",
+   "license": "Apache-2.0",
+   "maintenance": "active",
    "name": "OpenMetadata",
-   "source_url": null
+   "popularity": "★14474 (gh-api 2026-07-14)",
+   "source_url": "https://github.com/open-metadata/OpenMetadata",
+   "verified": true,
+   "verified_at": "2026-07-14",
+   "verify_method": "gh-api repos/... (source objective)"
   },
   {
-   "atlas_only": true,
+   "atlas_only": false,
    "atlas_status": "REFUSÉ",
    "category": "RAG, vecteurs, ingestion et mémoire agentique",
-   "description_en": null,
-   "description_fr": "Entrée Atlas (REFUSÉ) — description à enrichir depuis le tableau source.",
+   "description_en": "🔎 Open source distributed and RESTful search engine.",
+   "description_fr": "",
    "en_pending": false,
+   "flag": "PUBLIC-INSTALLABLE",
+   "fr_pending": true,
    "id": "opensearch-pour-rag",
+   "license": "Apache-2.0",
+   "maintenance": "active",
    "name": "OpenSearch pour RAG",
-   "source_url": null
+   "popularity": "★13477 (gh-api 2026-07-14)",
+   "source_url": "https://github.com/opensearch-project/OpenSearch",
+   "verified": true,
+   "verified_at": "2026-07-14",
+   "verify_method": "gh-api repos/... (source objective)"
   },
   {
    "atlas_only": false,
@@ -7460,15 +7532,23 @@
    "verify_method": "gh-api repos/... (source objective)"
   },
   {
-   "atlas_only": true,
+   "atlas_only": false,
    "atlas_status": "ACCEPTÉ - NOYAU CODE",
    "category": "RAG, vecteurs, ingestion et mémoire agentique",
-   "description_en": null,
-   "description_fr": "Entrée Atlas (ACCEPTÉ - NOYAU CODE) — description à enrichir depuis le tableau source.",
+   "description_en": "An incremental parsing system for programming tools",
+   "description_fr": "",
    "en_pending": false,
+   "flag": "PUBLIC-INSTALLABLE",
+   "fr_pending": true,
    "id": "tree-sitter",
+   "license": "MIT",
+   "maintenance": "active",
    "name": "Tree-sitter",
-   "source_url": null
+   "popularity": "★26243 (gh-api 2026-07-14)",
+   "source_url": "https://github.com/tree-sitter/tree-sitter",
+   "verified": true,
+   "verified_at": "2026-07-14",
+   "verify_method": "gh-api repos/... (source objective)"
   },
   {
    "atlas_only": false,
@@ -8342,15 +8422,23 @@
    "verify_method": "gh-api repos/... (source objective)"
   },
   {
-   "atlas_only": true,
+   "atlas_only": false,
    "atlas_status": "REFUSÉ",
    "category": "MCP et protocoles d'interopérabilité",
-   "description_en": null,
-   "description_fr": "Entrée Atlas (REFUSÉ) — description à enrichir depuis le tableau source.",
+   "description_en": "This is MCP server for Claude that gives it terminal control, file system search and diff file editing capabilities",
+   "description_fr": "",
    "en_pending": false,
+   "flag": "PUBLIC-INSTALLABLE",
+   "fr_pending": true,
    "id": "desktop-commander",
+   "license": "MIT",
+   "maintenance": "active",
    "name": "Desktop Commander",
-   "source_url": null
+   "popularity": "★8249 (gh-api 2026-07-14)",
+   "source_url": "https://github.com/wonderwhy-er/DesktopCommanderMCP",
+   "verified": true,
+   "verified_at": "2026-07-14",
+   "verify_method": "gh-api repos/... (source objective)"
   },
   {
    "atlas_only": false,
@@ -8595,15 +8683,23 @@
    "source_url": null
   },
   {
-   "atlas_only": true,
+   "atlas_only": false,
    "atlas_status": "ACCEPTÉ",
    "category": "MCP et protocoles d'interopérabilité",
-   "description_en": null,
-   "description_fr": "Entrée Atlas (ACCEPTÉ) — description à enrichir depuis le tableau source.",
+   "description_en": "GitHub's official MCP Server",
+   "description_fr": "",
    "en_pending": false,
+   "flag": "PUBLIC-INSTALLABLE",
+   "fr_pending": true,
    "id": "github-mcp-officiel",
+   "license": "MIT",
+   "maintenance": "active",
    "name": "GitHub MCP officiel",
-   "source_url": null
+   "popularity": "★31438 (gh-api 2026-07-14)",
+   "source_url": "https://github.com/github/github-mcp-server",
+   "verified": true,
+   "verified_at": "2026-07-14",
+   "verify_method": "gh-api repos/... (source objective)"
   },
   {
    "atlas_only": false,
@@ -8671,26 +8767,42 @@
    "verify_method": "gh-api repos/... (source objective)"
   },
   {
-   "atlas_only": true,
+   "atlas_only": false,
    "atlas_status": "REFUSÉ",
    "category": "MCP et protocoles d'interopérabilité",
-   "description_en": null,
-   "description_fr": "Entrée Atlas (REFUSÉ) — description à enrichir depuis le tableau source.",
+   "description_en": "MCP server for enabling LLM applications to perform deep research via the MCP protocol",
+   "description_fr": "",
    "en_pending": false,
+   "flag": "PUBLIC-INSTALLABLE",
+   "fr_pending": true,
    "id": "gpt-researcher-mcp",
+   "license": "MIT",
+   "maintenance": "active",
    "name": "GPT Researcher MCP",
-   "source_url": null
+   "popularity": "★354 (gh-api 2026-07-14)",
+   "source_url": "https://github.com/assafelovic/gptr-mcp",
+   "verified": true,
+   "verified_at": "2026-07-14",
+   "verify_method": "gh-api repos/... (source objective)"
   },
   {
-   "atlas_only": true,
+   "atlas_only": false,
    "atlas_status": "ACCEPTÉ",
    "category": "MCP et protocoles d'interopérabilité",
-   "description_en": null,
-   "description_fr": "Entrée Atlas (ACCEPTÉ) — description à enrichir depuis le tableau source.",
+   "description_en": "MCP server for Grafana",
+   "description_fr": "",
    "en_pending": false,
+   "flag": "PUBLIC-INSTALLABLE",
+   "fr_pending": true,
    "id": "grafana-mcp",
+   "license": "Apache-2.0",
+   "maintenance": "active",
    "name": "Grafana MCP",
-   "source_url": null
+   "popularity": "★3233 (gh-api 2026-07-14)",
+   "source_url": "https://github.com/grafana/mcp-grafana",
+   "verified": true,
+   "verified_at": "2026-07-14",
+   "verify_method": "gh-api repos/... (source objective)"
   },
   {
    "atlas_only": false,
@@ -9396,15 +9508,23 @@
    "verify_method": "gh-api repos/... (source objective)"
   },
   {
-   "atlas_only": true,
+   "atlas_only": false,
    "atlas_status": "ACCEPTÉ SOUS CONDITIONS",
    "category": "MCP et protocoles d'interopérabilité",
-   "description_en": null,
-   "description_fr": "Entrée Atlas (ACCEPTÉ SOUS CONDITIONS) — description à enrichir depuis le tableau source.",
+   "description_en": "Playwright MCP server",
+   "description_fr": "",
    "en_pending": false,
+   "flag": "PUBLIC-INSTALLABLE",
+   "fr_pending": true,
    "id": "playwright-mcp",
+   "license": "Apache-2.0",
+   "maintenance": "active",
    "name": "Playwright MCP",
-   "source_url": null
+   "popularity": "★35077 (gh-api 2026-07-14)",
+   "source_url": "https://github.com/microsoft/playwright-mcp",
+   "verified": true,
+   "verified_at": "2026-07-14",
+   "verify_method": "gh-api repos/... (source objective)"
   },
   {
    "atlas_only": false,
@@ -9508,15 +9628,23 @@
    "verify_method": "gh-api repos/... (source objective)"
   },
   {
-   "atlas_only": true,
+   "atlas_only": false,
    "atlas_status": "ACCEPTÉ",
    "category": "MCP et protocoles d'interopérabilité",
-   "description_en": null,
-   "description_fr": "Entrée Atlas (ACCEPTÉ) — description à enrichir depuis le tableau source.",
+   "description_en": "An official Qdrant Model Context Protocol (MCP) server implementation",
+   "description_fr": "",
    "en_pending": false,
+   "flag": "PUBLIC-INSTALLABLE",
+   "fr_pending": true,
    "id": "qdrant-mcp-officiel",
+   "license": "Apache-2.0",
+   "maintenance": "active",
    "name": "Qdrant MCP officiel",
-   "source_url": null
+   "popularity": "★1463 (gh-api 2026-07-14)",
+   "source_url": "https://github.com/qdrant/mcp-server-qdrant",
+   "verified": true,
+   "verified_at": "2026-07-14",
+   "verify_method": "gh-api repos/... (source objective)"
   },
   {
    "atlas_only": false,
@@ -9754,15 +9882,23 @@
    "source_url": "https://smithery.ai/"
   },
   {
-   "atlas_only": true,
+   "atlas_only": false,
    "atlas_status": "ACCEPTÉ SOUS GATE",
    "category": "MCP et protocoles d'interopérabilité",
-   "description_en": null,
-   "description_fr": "Entrée Atlas (ACCEPTÉ SOUS GATE) — description à enrichir depuis le tableau source.",
+   "description_en": "One-stop shop for building AI-powered products and businesses with Stripe.",
+   "description_fr": "",
    "en_pending": false,
+   "flag": "PUBLIC-INSTALLABLE",
+   "fr_pending": true,
    "id": "stripe-mcp",
+   "license": "MIT",
+   "maintenance": "active",
    "name": "Stripe MCP",
-   "source_url": null
+   "popularity": "★1670 (gh-api 2026-07-14)",
+   "source_url": "https://github.com/stripe/ai",
+   "verified": true,
+   "verified_at": "2026-07-14",
+   "verify_method": "gh-api repos/... (source objective)"
   },
   {
    "atlas_only": false,
@@ -13811,15 +13947,23 @@
    "verify_method": "gh-api repos/... (source objective)"
   },
   {
-   "atlas_only": true,
+   "atlas_only": false,
    "atlas_status": "ACCEPTÉ - NOYAU",
    "category": "Évaluation, observabilité, guardrails et sécurité",
-   "description_en": null,
-   "description_fr": "Entrée Atlas (ACCEPTÉ - NOYAU) — description à enrichir depuis le tableau source.",
+   "description_en": "eBPF-based Networking, Security, and Observability",
+   "description_fr": "",
    "en_pending": false,
+   "flag": "PUBLIC-INSTALLABLE",
+   "fr_pending": true,
    "id": "cilium-network-policies",
+   "license": "Apache-2.0",
+   "maintenance": "active",
    "name": "Cilium Network Policies",
-   "source_url": null
+   "popularity": "★24714 (gh-api 2026-07-14)",
+   "source_url": "https://github.com/cilium/cilium",
+   "verified": true,
+   "verified_at": "2026-07-14",
+   "verify_method": "gh-api repos/... (source objective)"
   },
   {
    "atlas_only": false,
@@ -13869,15 +14013,23 @@
    "source_url": null
   },
   {
-   "atlas_only": true,
+   "atlas_only": false,
    "atlas_status": "ACCEPTÉ - NOYAU",
    "category": "Évaluation, observabilité, guardrails et sécurité",
-   "description_en": null,
-   "description_fr": "Entrée Atlas (ACCEPTÉ - NOYAU) — description à enrichir depuis le tableau source.",
+   "description_en": "Code signing and transparency for containers and binaries",
+   "description_fr": "",
    "en_pending": false,
+   "flag": "PUBLIC-INSTALLABLE",
+   "fr_pending": true,
    "id": "cosign-sigstore",
+   "license": "Apache-2.0",
+   "maintenance": "active",
    "name": "Cosign / Sigstore",
-   "source_url": null
+   "popularity": "★6127 (gh-api 2026-07-14)",
+   "source_url": "https://github.com/sigstore/cosign",
+   "verified": true,
+   "verified_at": "2026-07-14",
+   "verify_method": "gh-api repos/... (source objective)"
   },
   {
    "atlas_only": false,
