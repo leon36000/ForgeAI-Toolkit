@@ -218,3 +218,31 @@ stories:
       - "pre-commit : no-stub-scan + gitleaks + lint en hook git local"
       - "SubagentStop : aucun subagent ne clôt sans preuve au registre; post-merge : canon/docs à jour ou rejet"
     codeur: fable
+  - id: B-24
+    exigence: "directive périmètre §1 (confinement)"
+    titre: Hook d'enforcement — confinement filesystem au workspace
+    phase: P2-gouvernance
+    severite: majeure
+    criteres:
+      - "hook (PreToolUse/wrapper) bloquant tout accès en lecture/écriture hors du repo pendant les sessions agents"
+      - "test : une tentative d'accès hors workspace est refusée et journalisée au registre"
+    codeur: fable
+  - id: B-25
+    exigence: "directive périmètre §2 (R-ALL)"
+    titre: Pipeline R-ALL — dossier de recherche vérifié pour les 1014 entrées
+    phase: P2-continu
+    severite: critique
+    criteres:
+      - "script d'outillage : file d'entrées → dossier (source URL testée, licence, maintenance, install épinglable, description FR/EN, branchements, flag PUBLIC-INSTALLABLE/INTROUVABLE)"
+      - "champs verified_at + methode ajoutés au schéma catalogue; sha256 régénéré par lot"
+      - "contre-vérification croisée 3 modèles par lot; retrait uniquement sur dossier INTROUVABLE au registre"
+    codeur: fable+qwen+longcat
+  - id: B-26
+    exigence: "directive périmètre §2 (collisions)"
+    titre: Gate catalogue — désambiguïsation des noms en collision
+    phase: P2-gouvernance
+    severite: majeure
+    criteres:
+      - "champ disambiguation au schéma; noms en collision portent le qualificatif org/repo"
+      - "gate CI : échec si deux entrées partagent un nom sans qualificatif (test avec collision simulée)"
+    codeur: fable
