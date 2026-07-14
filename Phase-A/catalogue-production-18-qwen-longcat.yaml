@@ -1,0 +1,41 @@
+# Lot production-18 — F23 (P2), membres: qwen (18a-b) + longcat (18c-d, relais 429), 2026-07-14 | claim: UNVERIFIED
+lot: production-18
+traductions:
+  - {nom: "HF Evaluate", en: "Hugging Face library for easily evaluating models and datasets (metrics)."}
+  - {nom: "HumanEval", en: "OpenAI's landmark benchmark for evaluating code-generating LLMs."}
+  - {nom: "Ignite", en: "Firecracker micro-VM manager by Weaveworks (container-like experience)."}
+  - {nom: "Inspect AI", en: "UK AI Safety Institute framework for evaluating large language models."}
+  - {nom: "jailbreak_llms", en: "Dataset of 15,140 prompts (including 1,405 jailbreaks) collected from Reddit, Discord, and the web (CCS'24)."}
+  - {nom: "JailbreakBench", en: "Open benchmark for LLM jailbreak robustness (NeurIPS 2024)."}
+  - {nom: "Kata Containers", en: "Standard lightweight VM implementation combining VM security with container speed."}
+  - {nom: "KernelBench", en: "Benchmark and toolkit evaluating the ability of LLMs to write GPU kernels (CUDA)."}
+  - {nom: "Laminar (lmnr)", en: "Open-source observability platform dedicated to AI agents (YC S24)."}
+  - {nom: "LangFair", en: "Python library for evaluating LLM bias and fairness at the use-case level (CVS Health)."}
+  - {nom: "Langfuse (prompts)", en: "Prompt management and versioning integrated into the Langfuse AI engineering platform."}
+  - {nom: "Langfuse JS/TS SDK", en: "Langfuse JavaScript/TypeScript SDK for tracing LLM apps."}
+  - {nom: "Langfuse Python SDK", en: "Langfuse Python SDK for instrumenting LLM apps (decorators / low-level API)."}
+  - {nom: "Langtrace", en: "End-to-end observability tool based on OpenTelemetry for LLM applications (Scale3 Labs)."}
+  - {nom: "Langtrace Python SDK", en: "Langtrace Python SDK for instrumenting LLM applications."}
+  - {nom: "Langtrace TypeScript SDK", en: "Langtrace Node.js/TypeScript SDK."}
+  - {nom: "LangWatch", en: "Platform for LLM evaluations and AI agent testing."}
+  - {nom: "lighteval", en: "Hugging Face's all-in-one toolkit for evaluating LLMs across multiple inference backends."}
+  - {nom: "LiveBench", en: "Challenging and contamination-free LLM benchmark with regularly refreshed questions."}
+  - {nom: "LiveCodeBench", en: "Holistic and contamination-free evaluation of LLMs on coding tasks."}
+  - {nom: "Llama Models (Llama Guard)", en: "Official utilities for Llama models, including the Llama Guard moderation models."}
+  - {nom: "LLM Guard", en: "ProtectAI's security toolkit for securing LLM interactions (sanitization, detection)."}
+  - {nom: "llm-attacks", en: "Universal and transferable attacks on aligned LLMs (GCG)."}
+  - {nom: "llm-sandbox", en: "Portable and lightweight LLM sandbox runtime (code interpreter) in Python."}
+  - {nom: "lm-evaluation-harness", en: "EleutherAI's reference framework for few-shot evaluation of LLMs across hundreds of tasks; the foundation of the Open LLM Leaderboard."}
+  - {nom: "lm-format-enforcer", en: "Enforces the output format of an LLM (JSON Schema, regex) during decoding."}
+  - {nom: "Lunary (JS)", en: "Lunary JavaScript client for analytics and logging of AI apps."}
+  - {nom: "Lunary (Python)", en: "Lunary Python client: analytics, monitoring, and evaluations for GenAI apps."}
+  - {nom: "Metaflow", en: "Netflix framework for building, managing, and deploying AI/ML systems."}
+  - {nom: "METR Task Standard", en: "Standard for defining evaluation tasks for agent capabilities (METR)."}
+  - {nom: "microsandbox", en: "Local-first, fast, and easy microVM runtime for executing untrusted code."}
+  - {nom: "MLE-bench", en: "OpenAI benchmark measuring agent performance in ML engineering (Kaggle competitions)."}
+  - {nom: "MLflow", en: "Open-source platform for agents, LLMs and ML models, including tracing and evaluation."}
+  - {nom: "MLPerf Inference", en: "Reference implementations of MLCommons inference benchmarks."}
+  - {nom: "MMLU (test)", en: "Original \"Measuring Massive Multitask Language Understanding\" benchmark (ICLR 2021)."}
+  - {nom: "MMLU-Pro", en: "More robust and challenging multitask comprehension benchmark than MMLU (NeurIPS 2024)."}
+  - {nom: "modelscan", en: "Protection against model serialization attacks (ProtectAI)."}
+  - {nom: "OLMES", en: "Reproducible and flexible LLM evaluation standard from AllenAI."}
