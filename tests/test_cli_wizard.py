@@ -31,8 +31,25 @@ class FakeRag:
                 "context_used": True}
 
 
+class FakeDetector:
+    """Le runner CI (disque < 25 Go libres) ferait échouer la dérivation de profil :
+    ces tests visent le câblage du CLI — la détection réelle a ses tests dédiés."""
+
+    def __init__(self, runner):
+        self.runner = runner
+
+    def full_report(self):
+        from forgeai.core.models import Disk, HardwareProfile
+        return HardwareProfile(
+            cpu_model="ci", cpu_cores=4, cpu_arch="x86_64", ram_gb=32.0,
+            os_name="Linux CI",
+            disks=(Disk(path="/", total_gb=1000.0, free_gb=500.0),),
+        )
+
+
 @pytest.fixture
 def wired(monkeypatch, tmp_path):
+    monkeypatch.setattr(cli, "HardwareDetector", FakeDetector)
     monkeypatch.setattr(cli, "compose_up", lambda f: None)
     monkeypatch.setattr(cli, "compose_down", lambda f, volumes=False: None)
     monkeypatch.setattr(cli, "wait_healthy",
