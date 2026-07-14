@@ -1,0 +1,18 @@
+# Lot production-05b — F23 (P2), membre: qwen (Qwen3.7-Max), 2026-07-14 | claim: UNVERIFIED
+lot: production-05b
+traductions:
+  - {nom: "Mooncake", en: "Serving platform (powering Moonshot AI's Kimi): KVCache-centric disaggregated architecture (separate prefill/decode)."}
+  - {nom: "NanoFlow", en: "Throughput-oriented serving framework via intra-device operation overlapping (compute/memory/network)."}
+  - {nom: "NCCL", en: "Optimized multi-GPU collective communication primitives (all-reduce, all-gather); essential for tensor parallelism."}
+  - {nom: "Neural Compressor", en: "SOTA model compression (INT8/FP8/INT4/MXFP4/NVFP4, sparsity) for PyTorch, TensorFlow, and ONNX Runtime (Intel)."}
+  - {nom: "New API", en: "Unified model aggregation/distribution hub; converts various LLMs to OpenAI/Claude/Gemini formats (derived from One API)."}
+  - {nom: "Nosana CLI", en: "Nosana network CLI: GPU workload orchestration on a decentralized compute network."}
+  - {nom: "Nunchaku", en: "4-bit inference engine (SVDQuant) for diffusion models and LLMs, absorbing outliers via low-rank components."}
+  - {nom: "NVIDIA Dynamo", en: "Datacenter-scale distributed inference serving framework (KV-aware routing, disaggregated prefill/decode serving)."}
+  - {nom: "NVIDIA GPU Operator", en: "Operator that provisions, configures, and manages GPUs in Kubernetes (drivers, toolkit, device plugin, monitoring)."}
+  - {nom: "NVIDIA k8s-device-plugin", en: "Kubernetes device plugin to expose and allocate NVIDIA GPUs to pods."}
+  - {nom: "OME (Open Model Engine)", en: "Kubernetes operator for LLM serving, GPU scheduling, and model lifecycle management (SGLang, vLLM, TensorRT-LLM, Triton)."}
+  - {nom: "One API", en: "LLM API key management and redistribution system unifying multiple providers under a single API (single binary, Docker)."}
+  - {nom: "ONNX", en: "Open interoperability standard for ML models (exchange format between frameworks and runtimes)."}
+  - {nom: "ONNX Runtime", en: "High-performance cross-platform ML inference (and training) accelerator (CUDA, TensorRT, ROCm providers...)."}
+  - {nom: "OpenLLM", en: "Runs any open-source LLM (DeepSeek, Llama...) as an OpenAI-compatible API endpoint in the cloud."}
