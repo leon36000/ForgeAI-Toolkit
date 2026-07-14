@@ -1,0 +1,20 @@
+# Lot production-06a — F23 (P2), membre: qwen (Qwen3.7-Max), 2026-07-14 | claim: UNVERIFIED
+lot: production-06a
+traductions:
+  - {nom: "Text Embeddings Inference (TEI)", en: "Ultra-fast inference solution for text embedding models (HF)."}
+  - {nom: "Text Generation Inference (TGI)", en: "Hugging Face text generation inference server (production); *archived*."}
+  - {nom: "text-generation-webui", en: "Open-source desktop app for local LLMs (text, vision, tool-calling, OpenAI/Anthropic-compatible API). Renamed `oobabooga/textgen`."}
+  - {nom: "TorchServe", en: "Server for serving, optimizing, and scaling PyTorch models in production; *archived*."}
+  - {nom: "Triton (langage/compilateur)", en: "Language and compiler for writing highly performant GPU kernels in Python (foundation for many inference kernels)."}
+  - {nom: "Triton Inference Server", en: "NVIDIA multi-framework inference server (TensorRT, PyTorch, ONNX, etc.) for cloud and edge, with dynamic batching."}
+  - {nom: "vLLM production-stack", en: "vLLM reference stack for cluster-scale, K8s-native deployment, optimized by the community."}
+  - {nom: "vLLM Semantic Router", en: "Smart 'Mixture-of-Models' router for efficient inference on heterogeneous LLMs (semantic query routing)."}
+  - {nom: "vllm-ascend", en: "Community-maintained hardware plugin for running vLLM on Huawei Ascend NPUs."}
+  - {nom: "Volcano", en: "Cloud-native batch system (CNCF) for gang-scheduling AI/HPC workloads on Kubernetes."}
+  - {nom: "WG Serving", en: "Kubernetes working group dedicated to model serving; recommendations, patterns, and inference projects."}
+  - {nom: "whisper.cpp", en: "C/C++ port of OpenAI's Whisper model for portable ASR inference (CPU/GPU, ggml backends)."}
+  - {nom: "Xinference", en: "Unified inference API for open-source models (text, voice, multimodal) on cloud, on-prem, or laptop."}
+  - {nom: "ZLUDA", en: "CUDA implementation for non-NVIDIA GPUs (enables running CUDA binaries on other hardware)."}
+  - {nom: "zml", en: "High-performance inference runtime (Zig + OpenXLA/MLIR): 'any model, any hardware'."}
+  - {nom: "A-MEM", en: "Self-organized agentic memory for LLM agents (dynamic memory structuring)."}
+  - {nom: "Annoy", en: "Spotify's C++/Python library for memory/disk-optimized approximate nearest neighbor search."}

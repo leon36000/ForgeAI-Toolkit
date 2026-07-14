@@ -1,0 +1,21 @@
+# Lot production-06b — F23 (P2), membre: qwen (Qwen3.7-Max), 2026-07-14
+# contre-vérification croisée 10% (longcat) : 4/4 OK | claim: UNVERIFIED
+lot: production-06b
+traductions:
+  - {nom: "AnythingLLM", en: "All-in-one local-first application for agents, chat, and document RAG supporting numerous LLMs and vector databases."}
+  - {nom: "ARES", en: "Automated evaluation framework for RAG systems (Stanford)."}
+  - {nom: "Autoflow", en: "Conversational Graph RAG knowledge base built on TiDB Serverless Vector Storage."}
+  - {nom: "AutoGen", en: "Microsoft's agentic framework for multi-agent systems, including task ledgers (e.g., Magentic-One)."}
+  - {nom: "Chonkie", en: "Ultra-lightweight and fast chunking library for preparing texts for RAG pipelines."}
+  - {nom: "Chroma", en: "AI-native embedded vector database, widely used for rapid prototyping of RAG applications in Python/JS."}
+  - {nom: "cognee", en: "Open-source AI memory platform providing agents with long-term memory via a self-hosted graph engine."}
+  - {nom: "Cognita", en: "TrueFoundry's modular, open-source RAG framework for building production applications (archived)."}
+  - {nom: "ColBERT", en: "State-of-the-art late-interaction neural retrieval (Stanford)."}
+  - {nom: "contrastors", en: "PyTorch framework for contrastive training of embedding models (Nomic)."}
+  - {nom: "Deep Lake", en: "AI data runtime for agents: serverless multimodal datalake enabling scalable retrieval and training."}
+  - {nom: "DeepKE", en: "Open-source toolkit for knowledge graph extraction and construction (EMNLP 2022)."}
+  - {nom: "DocLayout-YOLO", en: "Fast document layout analysis model (YOLO) with diverse synthetic data."}
+  - {nom: "Donut", en: "OCR-free document understanding Transformer (Donut) by NAVER Clova (ECCV 2022)."}
+  - {nom: "dsRAG", en: "High-performance retrieval engine for unstructured data."}
+  - {nom: "Elysia", en: "Python package and backend for Weaviate's Elysia agentic platform."}
+  - {nom: "FAISS", en: "Meta's library for efficient similarity search and clustering of dense vectors."}
