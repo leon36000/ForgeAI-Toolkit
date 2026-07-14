@@ -1,0 +1,22 @@
+# Routes gateway testées — checklist §9 étape 3 (test de connexion réel : prompt PONG)
+# Gateway : forge-model-bridge → LiteLLM 127.0.0.1:4000 (conteneur serveur-litellm)
+# provider_id = valeur à passer à mcp__forge-model-bridge__ask_cloud_model
+# Testé le 2026-07-14, preuve : Registres/mission.jsonl seq 2
+version: 1
+gateway:
+  bridge: forge-model-bridge
+  routeur: http://127.0.0.1:4000 (LiteLLM, auth par clé — jamais en HTTP direct depuis les agents)
+  sante: {status: ok, models: 36}
+routes:
+  - {membre: glm,      provider_id: glm52,          modele_reponse: GLM-5.2,        statut: ok}
+  - {membre: deepseek, provider_id: deepseek,       modele_reponse: DeepSeek-V4-Pro, statut: ok}
+  - {membre: kimi,     provider_id: kimi,           modele_reponse: Kimi-2.7,       statut: ok}
+  - {membre: composer, provider_id: composer,       modele_reponse: Composer-2.5,   statut: ok}
+  - {membre: longcat,  provider_id: LongCat-2.0,    modele_reponse: LongCat-2.0,    statut: ok,
+     note: "raccourci roster 'longcat' (forge-quality-longcat) renvoie 400 — utiliser l'alias passthrough"}
+  - {membre: gemini,   provider_id: Gemini-3.1-Pro, modele_reponse: Gemini-3.1-Pro, statut: ok,
+     note: "fallback disponible: Gemini-3.1-Pro-OR"}
+  - {membre: grok,     provider_id: Grok-4.5,       modele_reponse: Grok-4.5,       statut: ok}
+  - {membre: qwen,     provider_id: Qwen3.7-Max,    modele_reponse: Qwen3.7-Max,    statut: ok,
+     note: "variante directe Alibaba disponible: Qwen3.7-Max-Alibaba"}
+  - {membre: mimo,     provider_id: MiMo-Pro-V2,    modele_reponse: MiMo-Pro-V2,    statut: ok}

@@ -38,32 +38,32 @@ membres:
   - id: grok
     modele: Grok 4.5
     vendor: xai-cursor
-    provider_id: null   # à résoudre au test des routes (alias LiteLLM passthrough)
+    provider_id: Grok-4.5
     phase_a: Spécification des tests (matrice de couverture par fonctionnalité)
     phase_b: Codeur parallèle sur stories indépendantes (git worktrees)
     contrainte: jamais apparié en revue avec composer (même vendor)
   - id: gemini
     modele: Gemini 3.1 Pro
     vendor: google
-    provider_id: null   # à résoudre au test des routes (alias LiteLLM passthrough)
+    provider_id: Gemini-3.1-Pro
     phase_a: Revue UX/design du wizard + diagrammes d'architecture
     phase_b: Reviewer aveugle no 2 (multimodal)
   - id: qwen
     modele: Qwen 3.7 Max
     vendor: alibaba
-    provider_id: qwen37max   # roster - non configuré à ce jour
+    provider_id: Qwen3.7-Max
     phase_a: Enrichissement du catalogue (742 descriptions EN + revue des 231 entrées)
     phase_b: Mainteneur du catalogue bilingue
   - id: longcat
     modele: LongCat 2.0
     vendor: meituan
-    provider_id: longcat
+    provider_id: LongCat-2.0
     phase_a: Second lot de descriptions + revue critique du protocole multi-nœuds
     phase_b: Reviewer aveugle no 3 (pool de rotation) + second-opinion sécurité
   - id: mimo
     modele: MiMo 2.5 Pro
     vendor: xiaomi
-    provider_id: null   # à résoudre au test des routes (alias LiteLLM passthrough)
+    provider_id: MiMo-Pro-V2
     phase_a: Consolidation MASTER-PLAN + manifestes YAML machine-lisibles (contexte 1M)
     phase_b: Synthétiseur de preuves — rapports d'étape pour Fable
 regles_revue:
