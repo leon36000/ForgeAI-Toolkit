@@ -1,0 +1,28 @@
+# Lot production-03a — F23 (P2), membre: qwen (Qwen3.7-Max), 2026-07-14 | claim: UNVERIFIED
+lot: production-03a
+traductions:
+  - {nom: "Open Interpreter 01", en: "#1 open-source voice interface for desktop, mobile, and ESP32 chips."}
+  - {nom: "OpenAdapt", en: "Open-source adapter between multimodal models and desktop/web GUIs (record & replay)."}
+  - {nom: "OpenAI Agents SDK", en: "OpenAI's lightweight and powerful framework for multi-agent workflows."}
+  - {nom: "OpenAI Swarm", en: "Educational framework for lightweight and ergonomic multi-agent orchestration."}
+  - {nom: "OpenHands (ex-OpenDevin)", en: "AI-driven development platform."}
+  - {nom: "OpenLLMetry", en: "Open-source observability for GenAI/LLM applications, based on OpenTelemetry."}
+  - {nom: "OpenManus", en: "Open-source generalist agent (reimplementation of Manus)."}
+  - {nom: "Opik", en: "Debugging, evaluation, and monitoring for LLM, RAG apps, and agentic workflows (Comet)."}
+  - {nom: "Outlines", en: "Structured output generation for LLMs. Actual repo: dottxt-ai/outlines."}
+  - {nom: "OWL", en: "Optimized Workforce Learning: generalist multi-agent assistance for real-world task automation (CAMEL)."}
+  - {nom: "Pipecat", en: "Open-source framework for voice and multimodal conversational AI."}
+  - {nom: "Pipedream", en: "Connect APIs quickly (free for developers)."}
+  - {nom: "Playwright", en: "Web testing and automation framework (Chromium/Firefox/WebKit) used by agents."}
+  - {nom: "Promptflow", en: "Build production-grade LLM apps (prototyping, testing, prod, monitoring) — Microsoft."}
+  - {nom: "PromptTools", en: "Open-source tools for prompt testing and experimentation (LLMs and vector databases)."}
+  - {nom: "Prompty", en: "Asset format and class for creating, managing, debugging, and evaluating LLM prompts (Microsoft)."}
+  - {nom: "PydanticAI", en: "\"Pydantic-style\" AI agent framework with strong typing."}
+  - {nom: "PySpur", en: "Visual playground for agentic workflows, rapid iteration on agents."}
+  - {nom: "Qwen-Agent", en: "Agent framework and applications built on Qwen (Function Calling, MCP, Code Interpreter, RAG)."}
+  - {nom: "RagaAI Catalyst", en: "Python SDK for agent observability, monitoring, and evaluation (multi-agent tracing)."}
+  - {nom: "RD-Agent", en: "Automation of data-and-model R&D processes by agents (Microsoft)."}
+  - {nom: "Restack", en: "Framework for autonomous agents and durable workflows (official Python examples)."}
+  - {nom: "Roo Code", en: "Full team of AI dev agents in the code editor."}
+  - {nom: "Semantic Kernel", en: "Microsoft SDK to quickly integrate LLMs into applications."}
+  - {nom: "Sim Studio", en: "Build, deploy, and orchestrate AI agents; central intelligence layer."}
