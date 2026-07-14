@@ -1,0 +1,40 @@
+# Lot production-15 — F23 (P2), membre: qwen (Qwen3.7-Max), 2026-07-14
+# contre-vérification croisée 10% (longcat) : 4/4 OK | claim: UNVERIFIED
+lot: production-15
+traductions:
+  - {nom: "Stanford Alpaca", en: "Code and data to train Alpaca models and generate the instruction dataset."}
+  - {nom: "Streaming", en: "MosaicML data streaming library for efficient neural network training."}
+  - {nom: "TextBrewer", en: "PyTorch knowledge distillation toolkit for NLP."}
+  - {nom: "torchao", en: "PyTorch-native quantization and sparsity for training and inference."}
+  - {nom: "torchft", en: "Fault tolerance for PyTorch (HSDP, LocalSGD, DiLoCo, Streaming DiLoCo)."}
+  - {nom: "torchgpipe", en: "GPipe implementation (pipeline parallelism) in PyTorch."}
+  - {nom: "torchtitan", en: "PyTorch-native platform for training generative AI models (FSDP2, 3D/4D parallelism)."}
+  - {nom: "torchtune", en: "PyTorch-native post-training library (SFT, LoRA, QLoRA, DPO, etc.)."}
+  - {nom: "Transformer Engine", en: "Transformer acceleration library for NVIDIA GPUs (FP8/FP4 on Hopper/Ada/Blackwell)."}
+  - {nom: "Transformers", en: "State-of-the-art model definition framework (text, vision, audio, multimodal) for inference and training."}
+  - {nom: "TRL", en: "Training transformer language models via reinforcement learning (SFT, DPO, GRPO, PPO)."}
+  - {nom: "trlx", en: "Repository for distributed training of language models via RLHF."}
+  - {nom: "UltraFeedback", en: "Large-scale, fine-grained, and diverse preference dataset (+ models)."}
+  - {nom: "Unsloth", en: "2x+ faster, memory-efficient fine-tuning and inference for open models (Gemma, Qwen, DeepSeek, gpt-oss...)."}
+  - {nom: "veRL", en: "verl/HybridFlow: Flexible and efficient RL post-training framework."}
+  - {nom: "veScale", en: "ByteDance's distributed PyTorch for hyper-scale LLM and RL training."}
+  - {nom: "Wanda", en: "Simple and effective LLM pruning approach (Weights and activations)."}
+  - {nom: "XTuner", en: "Next-generation training/fine-tuning engine designed for very large MoE models."}
+  - {nom: "0xfurai/claude-code-subagents", en: "Collection of 100+ production-ready dev subagents."}
+  - {nom: "agent-rules", en: "Rules and knowledge base (CLAUDE.md, Cursor rules) to work better with agents like Claude Code or Cursor."}
+  - {nom: "Agentic Project Management (APM)", en: "Framework for managing complex projects with spec-driven multi-agent workflows."}
+  - {nom: "AGENTS.md", en: "Simple, open format to guide coding agents via an `AGENTS.md` file at the repository root."}
+  - {nom: "ai-dev-tasks", en: "Simple task management system to drive AI dev agents (PRD → task list → execution)."}
+  - {nom: "aichat", en: "All-in-one LLM CLI tool: shell assistant, chat REPL, RAG, AI tools and agents, multi-provider."}
+  - {nom: "aicommits", en: "CLI that automatically writes your git commit messages using AI."}
+  - {nom: "Amazon Q Developer CLI", en: "Agentic chat experience in the AWS terminal for building applications in natural language."}
+  - {nom: "Anthropic Skills", en: "Official public repository of Anthropic's Agent Skills."}
+  - {nom: "anthropic-cookbooks", en: "Collection of notebooks and recipes showcasing effective uses of Claude (context and tooling patterns)."}
+  - {nom: "awesome-claude-agents", en: "Orchestrated team of dev subagents, powered by Claude Code."}
+  - {nom: "awesome-claude-code", en: "Hand-picked collection of the best resources for Claude Code: skills, subagents, status lines, dev tooling, and plugins."}
+  - {nom: "awesome-claude-code-subagents (VoltAgent)", en: "Collection of 100+ specialized Claude Code subagents covering a wide range of use cases."}
+  - {nom: "awesome-cursorrules", en: "`.cursorrules` configuration files that enhance the Cursor editor with custom rules and behaviors."}
+  - {nom: "CCPlugins", en: "Claude Code command framework designed to save time (\"senior engineer\" behavior by default)."}
+  - {nom: "CCPM", en: "Project management skill system for agents, using GitHub Issues and git worktrees for parallel agent execution."}
+  - {nom: "ChatGPT-CodeReview", en: "Code review bot powered by ChatGPT, triggered on pull requests."}
+  - {nom: "Claude Agent SDK (Python)", en: "Official Python SDK for building agents based on Claude Code / Claude Agent."}
