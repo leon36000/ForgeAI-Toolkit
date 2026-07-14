@@ -1,0 +1,40 @@
+# Lot production-09 — F23 (P2), membre: qwen (Qwen3.7-Max), 2026-07-14
+# contre-vérification croisée 10% (longcat) : 4/4 OK | claim: UNVERIFIED
+lot: production-09
+traductions:
+  - {nom: "SGPT", en: "GPT-based sentence embeddings for semantic search."}
+  - {nom: "sqlite-vec", en: "SQLite vector search extension running anywhere (browser, mobile, server)."}
+  - {nom: "Superduper", en: "End-to-end framework for building custom AI applications and agents directly on your databases."}
+  - {nom: "SurfSense", en: "Open-source \"NotebookLM\" for competitive intelligence, equipping agents with research capabilities."}
+  - {nom: "Surya", en: "OCR, layout analysis, reading order, and table recognition in 90+ languages."}
+  - {nom: "textract", en: "Text extraction from almost any document type."}
+  - {nom: "TruLens", en: "Evaluation and tracing tool for LLM experiments and AI agents, useful for measuring RAG quality."}
+  - {nom: "txtai", en: "All-in-one AI framework for semantic search, LLM orchestration, and model workflows."}
+  - {nom: "txtai RAG", en: "Reference RAG application built on txtai combining search and LLMs over your data."}
+  - {nom: "Unstract", en: "LLM-powered no-code platform for unstructured data extraction for APIs and ETL pipelines."}
+  - {nom: "Unstructured", en: "Open-source ETL solution transforming complex documents into clean structured data for LLMs."}
+  - {nom: "USearch", en: "Ultra-lightweight search and clustering engine for vectors and arbitrary objects, multi-language."}
+  - {nom: "Vanna", en: "Agentic Text-to-SQL framework: chat with your SQL database via RAG (archived)."}
+  - {nom: "VectorChord", en: "Scalable, fast, and disk-friendly vector search in Postgres, successor to pgvecto.rs."}
+  - {nom: "Verba", en: "Weaviate's \"Golden RAGtriever\" RAG chatbot, ready-to-use for chatting with your documents (archived)."}
+  - {nom: "Vespa", en: "Yahoo/Vespa.ai AI search platform combining vector search, text, and ML ranking at scale."}
+  - {nom: "Weaviate", en: "Open-source vector database combining vector search, structured filtering, and hybrid search."}
+  - {nom: "Weaviate Recipes", en: "Collection of end-to-end notebooks illustrating Weaviate's features and integrations."}
+  - {nom: "Zerox", en: "OCR and document extraction using vision models."}
+  - {nom: "A2A (Agent2Agent)", en: "Open interoperability and communication protocol for agentic applications."}
+  - {nom: "A2A Inspector", en: "Validation tools for A2A agents."}
+  - {nom: "A2A JavaScript SDK", en: "Official JavaScript SDK for the Agent2Agent protocol."}
+  - {nom: "A2A Python SDK", en: "Official Python SDK for the Agent2Agent protocol."}
+  - {nom: "A2A Samples", en: "Usage examples for the Agent2Agent protocol."}
+  - {nom: "ACP (BeeAI / i-am-bee)", en: "Open communication protocol between AI agents, applications, and humans."}
+  - {nom: "AG-UI", en: "Agent-User Interaction Protocol: connecting agents to frontend applications."}
+  - {nom: "agents.json", en: "Specification for describing agent-compatible APIs (Wildcard AI)."}
+  - {nom: "AGNTCY Agent Connect Protocol Spec", en: "Specification for the AGNTCY initiative's Agent Connect Protocol."}
+  - {nom: "AGNTCY Directory (dir)", en: "Distributed announcement and discovery of multi-agent systems."}
+  - {nom: "AGNTCY Identity", en: "Onboarding, creation, and verification of identities for agents, MCP servers, and multi-agent systems."}
+  - {nom: "AGNTCY SLIM", en: "Secure, low-latency interactive messaging between agents."}
+  - {nom: "Arcade", en: "MCP server framework and tool development library for agents."}
+  - {nom: "awesome-mcp-servers (punkpeye)", en: "Large community-curated list of MCP servers."}
+  - {nom: "awesome-mcp-servers (wong2)", en: "Curated list of MCP servers (powers mcp.so)."}
+  - {nom: "AWS MCP Servers", en: "Open-source MCP servers for AWS (AWS Labs)."}
+  - {nom: "Blender MCP", en: "Open-source MCP server for controlling Blender with an LLM."}
