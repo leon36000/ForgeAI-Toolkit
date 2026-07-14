@@ -1,0 +1,19 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "critique",
+   "description": "Faux-vert Section A : 10 invariants CONFORME mais Section D avoue enforcement absent (branch protection, CODEOWNERS, commits, hooks).",
+   "preuve": "Section D"
+  },
+  {
+   "severite": "majeure",
+   "description": "13 ABSENTE sans story pour DM-5b, DA-1/2/3/4, DM-2, OC-1.",
+   "preuve": "Section C 23 stories"
+  }
+ ],
+ "date": "2026-07-14",
+ "round": 1,
+ "source_route": "forge-model-bridge",
+ "cible": "Rapport de conformité v2.0"
+}

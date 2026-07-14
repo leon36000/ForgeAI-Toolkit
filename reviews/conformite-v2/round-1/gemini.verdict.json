@@ -1,0 +1,14 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "critique",
+   "description": "Impossible de garantir gates T3/revues aveugles CONFORME si l'enforcement Git/GitHub est inexistant.",
+   "preuve": "contradiction A vs D"
+  }
+ ],
+ "date": "2026-07-14",
+ "round": 1,
+ "source_route": "forge-model-bridge",
+ "cible": "Rapport de conformité v2.0"
+}

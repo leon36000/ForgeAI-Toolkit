@@ -1,0 +1,220 @@
+# Backlog des stories correctives — issu du rapport de conformité v2.0 intégrale
+# (Rapports/conformite-v2.0-integrale.md, Section C). Insertion dans le phasage v2 sans
+# casser les stories en cours. Chaque story : critères d'acceptation TESTABLES (§8bis).
+# claim: UNVERIFIED jusqu'à revue aveugle 3 vendors (PARTIE 7 §5).
+version: 1
+source: CANON/plan-integral.md (v2.0-INTÉGRALE, PARTIE 7)
+etat_p1: COUVERTE (mergée main) — détection, profil Minimal, catalogue 1021 bilingue, double backend, e2e prouvé
+phases_produit:
+  P2: Templates + moteurs + stratégie/modèles/branchement + IDE (le gros de la surface produit)
+  P2.5: Multi-nœuds + Tailscale (précède K3s multi-nœuds)
+  P3: K3s + GitOps + import/export + token economy
+  P4: Drivers GPU avancés (install/update, Intel/OpenVINO)
+  P5: Catalogue communautaire (plugins) + UI web + cycle de recherche
+
+stories:
+  - id: B-01
+    exigence: ID-3
+    titre: Flag défaut ⭐ par catégorie dans le catalogue
+    phase: P2
+    severite: majeure
+    criteres:
+      - "chaque catégorie du catalogue a exactement une brique flaggée default=true"
+      - "forgeai catalogue --defaults liste une brique ⭐ par catégorie, sortie testée"
+    codeur: qwen
+  - id: B-02
+    exigence: ID-4
+    titre: Wizard TUI Textual d'après spec-tui-composer.md
+    phase: P2
+    severite: majeure
+    criteres:
+      - "10 écrans SCR-01..SCR-10 navigables au clavier (extra [tui] déjà déclaré au pyproject)"
+      - "test headless Textual Pilot : parcours complet Minimal → manifeste écrit"
+      - "corrections UX Gemini intégrées : bascule langue in-place, friction FORCER, résumé pré-déploiement"
+    codeur: composer
+  - id: B-03
+    exigence: ID-5
+    titre: i18n de l'interface (locales FR/EN)
+    phase: P2
+    severite: mineure
+    criteres:
+      - "messages du wizard chargés depuis des fichiers de locale fr/en"
+      - "test : bascule de langue change tous les libellés visibles, zéro chaîne codée en dur"
+    codeur: qwen
+  - id: B-04
+    exigence: DM-2
+    titre: Cycle de vie des drivers GPU (detect+install+update) NVIDIA/AMD/Intel
+    phase: P4
+    severite: majeure
+    criteres:
+      - "détecte l'état des drivers par vendor; propose install/màj; opération journalisée au registre avec rollback"
+      - "chemin Intel : OpenVINO/device plugins; AMD RDNA4 : Vulkan forcé, ROCm jamais proposé"
+      - "test : sur fixtures de sortie réelle, la matrice recommande le bon operator/runtime"
+    codeur: fable
+  - id: B-05
+    exigence: DM-3
+    titre: Écran d'ajout de nœud (IP/user/mot de passe éphémère)
+    phase: P2.5
+    severite: majeure
+    criteres:
+      - "écran IP + user + (mot de passe | clé SSH); mot de passe utilisé une fois au bootstrap, JAMAIS écrit sur disque"
+      - "bascule immédiate sur la clé ed25519 (network/keys.py existant); registre journalise IP/user/empreinte, jamais le secret"
+      - "test : le secret n'apparaît dans aucun fichier ni registre après bootstrap"
+    codeur: fable
+  - id: B-06
+    exigence: DM-3
+    titre: Installation automatique de Tailscale par nœud
+    phase: P2.5
+    severite: majeure
+    criteres:
+      - "install Tailscale (version épinglée du catalogue); auth key en mémoire seulement; services inter-nœuds liés au tailnet"
+      - "option LAN-seulement offerte; test : plan de jonction conforme EX-2/EX-3 (bootstrap.py existant)"
+    codeur: fable
+  - id: B-07
+    exigence: DM-3
+    titre: Sondage matériel distant par nœud
+    phase: P2.5
+    severite: majeure
+    criteres:
+      - "l'Étape 0 (détection) s'exécute sur le nœud distant via SSH; fiche matérielle écrite au registre"
+      - "matrice backend par nœud dérivée de la fiche (réutilise planner/profile)"
+    codeur: fable
+  - id: B-08
+    exigence: DM-5
+    titre: Phase Modèles locaux (téléchargement/déploiement/test)
+    phase: P2
+    severite: critique
+    criteres:
+      - "liste filtrée par VRAM du nœud cible ET backend déterminé; téléchargement hash-vérifié journalisé"
+      - "déploiement sur le moteur du nœud; test de complétion réel → réponse non vide = GREEN"
+    codeur: kimi
+  - id: B-09
+    exigence: DM-5
+    titre: Phase Modèles cloud (provenance + clé API + test)
+    phase: P2
+    severite: critique
+    criteres:
+      - "menu de provenances connues embarqué (direct fournisseur, OpenRouter, NIM, DeepInfra, autre)"
+      - "clé API : mémoire seulement, vault chiffré, JAMAIS journalisée en clair; registre = empreinte seule"
+      - "test de connexion réel obligatoire avant validation de la route; échec = message clair, pas de route cassée ajoutée"
+    codeur: fable
+  - id: B-10
+    exigence: DM-5b
+    titre: Phase Stratégie modèle (Cerveau unique / Équipe / Hybride)
+    phase: P2
+    severite: majeure
+    criteres:
+      - "écran de choix; le choix détermine le nombre de slots de la phase Modèles; écrit au canon du projet"
+      - "changement ultérieur = diff de reconfiguration explicite, jamais silencieux (test)"
+    codeur: composer
+  - id: B-11
+    exigence: DM-6
+    titre: Branchement automatique brique→gateway
+    phase: P2
+    severite: critique
+    criteres:
+      - "aucune brique ne pointe vers un modèle : tout via le gateway unique; câblage auto par rôle de brique"
+      - "preuve de branchement : test traversant réel par brique câblée (pas une présence de config)"
+    codeur: fable
+  - id: B-12
+    exigence: DM-6
+    titre: Prompt caching configuré au gateway par route
+    phase: P2
+    severite: majeure
+    criteres:
+      - "chaque route porte cache: true/false + TTL/clé préfixe; forgeai route configure <nom> modifie sans édition manuelle"
+    codeur: fable
+  - id: B-13
+    exigence: CD-1
+    titre: Template Dev Agentic (37 briques bilingues)
+    phase: P2
+    severite: majeure
+    criteres:
+      - "template-dev-agentic.json : 37 briques, défauts ⭐, filtrage hardware sur l'inférence"
+      - "déploiement Express du template → système complet fonctionnel, test e2e traversant"
+    codeur: kimi
+  - id: B-14
+    exigence: CD-1
+    titre: Templates RAG souverain / Lab fine-tuning / Production souveraine
+    phase: P3
+    severite: majeure
+    criteres:
+      - "chaque template déploie un système COMPLET fonctionnel (jamais des morceaux), e2e vert par template"
+    codeur: kimi
+  - id: B-15
+    exigence: CD-3
+    titre: Système de plugin brique + gate de vérification
+    phase: P5
+    severite: majeure
+    criteres:
+      - "chaque brique = plugin; contribution externe vérifiée (existence GitHub + licence + healthcheck) avant merge"
+      - "test : une brique soumise sans healthcheck valide est refusée par le gate"
+    codeur: kimi
+  - id: B-16
+    exigence: CD-4
+    titre: Import/export de setup (forge export/import)
+    phase: P3
+    severite: majeure
+    criteres:
+      - "forge export → bundle versionné hash-vérifié : briques+versions, stratégie modèle, routes SANS clés, config nœuds anonymisée, canon"
+      - "forge import recrée le setup sur une autre machine, re-demande uniquement les secrets; test round-trip"
+    codeur: fable
+  - id: B-17
+    exigence: DA-1
+    titre: Branchement IDE/CLI automatique (config injectée)
+    phase: P2
+    severite: majeure
+    criteres:
+      - "config générée+injectée pour l'IDE choisi (Cline/Cursor/Claude Code/OpenCode/Aider); l'IDE parle au stack local dès l'ouverture (test)"
+    codeur: composer
+  - id: B-18
+    exigence: DA-2
+    titre: Préconfiguration MCP/skills/BMAD/hooks dans l'IDE livré
+    phase: P2
+    severite: majeure
+    criteres:
+      - "serveurs MCP du stack + skills allowlistés + BMAD/prompt manager + hooks gouvernance préconfigurés et vérifiés au démarrage IDE"
+    codeur: composer
+  - id: B-19
+    exigence: DA-3
+    titre: Ralph Wiggum loop préconfigurée avec garde-fous
+    phase: P2
+    severite: mineure
+    criteres:
+      - "loop disponible (plugin Anthropic + /loop natif) avec budget d'itérations max, condition de complétion vérifiable, journal au registre"
+    codeur: composer
+  - id: B-20
+    exigence: DA-4
+    titre: Token economy (budgets par agent/mission au gateway)
+    phase: P3
+    severite: majeure
+    criteres:
+      - "budget par agent : quota + alerte + coupure; consommation mesurée et journalisée; rapport de mission testable"
+    codeur: fable
+  - id: B-21
+    exigence: OC-1
+    titre: Cycle de recherche multi-modèles pour réévaluer les ⭐
+    phase: P5
+    severite: mineure
+    criteres:
+      - "procédure récurrente par catégorie; chaque changement de défaut journalisé avec preuve comparative"
+    codeur: mimo
+  - id: B-22
+    exigence: "invariants §6 (Section D)"
+    titre: Substrat GitHub — branch protection + CODEOWNERS + commits signés
+    phase: P2-gouvernance
+    severite: majeure
+    t3: true
+    criteres:
+      - "branch protection sur main : gates CI requis + 3 revues + signature; CODEOWNERS matérialisé; commits/tags signés"
+      - "note : réglages GitHub + clé GPG = décision/action Nathan (T3)"
+    codeur: fable+nathan
+  - id: B-23
+    exigence: "invariants §7 (Section D)"
+    titre: Hooks locaux (pre-commit / SubagentStop / post-merge)
+    phase: P2-gouvernance
+    severite: majeure
+    criteres:
+      - "pre-commit : no-stub-scan + gitleaks + lint en hook git local"
+      - "SubagentStop : aucun subagent ne clôt sans preuve au registre; post-merge : canon/docs à jour ou rejet"
+    codeur: fable
