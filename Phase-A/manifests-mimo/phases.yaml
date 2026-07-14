@@ -1,0 +1,54 @@
+# Livrable Phase A — consolidation manifestes (§1 plan maître, tâche MiMo)
+# membre: mimo (MiMo-Pro-V2 via forge-model-bridge, provider_id=MiMo-Pro-V2)
+# date: 2026-07-14 | statut: DONE (brouillon pour plan-freeze) | claim: UNVERIFIED
+# Réserves Fable (à corriger au plan-freeze, journalisées) :
+#  - champ "codeur" (core/infra/rag/catalogue) ≠ assignations roles.yaml (kimi/grok/composer/fable) — à réaligner sur stories-kimi.md
+#  - la consolidation MASTER-PLAN complète reste partielle : annexes v2.1/v2.2/v2.3 absentes du dossier (manque documenté au registre)
+version: 1
+phases:
+  - id: P1
+    nom: Détection + Minimal single-node
+    objectif: machine nue → RAG fonctionnel prouvé (réponse contenant un fait du document ingéré)
+    stories:
+      - {id: S01, titre: hardware discovery, codeur: core, taille: M}
+      - {id: S02, titre: dérivation profil Minimal, codeur: core, taille: S}
+      - {id: S03, titre: catalogue load+hash, codeur: catalogue, taille: M}
+      - {id: S04, titre: assemblage stack RAG, codeur: core, taille: L}
+      - {id: S05, titre: bootstrap sécurisé local, codeur: infra, taille: L}
+      - {id: S06, titre: deploy Compose, codeur: infra, taille: M}
+      - {id: S07, titre: deploy K3s, codeur: infra, taille: L}
+      - {id: S08, titre: ingestion RAG, codeur: rag, taille: M}
+      - {id: S09, titre: preuve e2e RAG, codeur: rag, taille: M}
+      - {id: S10, titre: wizard --ci bout-en-bout, codeur: core, taille: L}
+    fonctionnalites_livrables:
+      - {id: F11, description: hardware discovery complet (CPU/RAM/GPU/disque/OS), preuve_e2e: "forgeai hardware --json → clés cpu,ram,gpu,disk,os présentes"}
+      - {id: F12, description: catalogue 1021 briques chargé + hash-chain validée, preuve_e2e: "forgeai catalogue --verify → exit 0 + hash racine affiché"}
+      - {id: F13, description: stack RAG assemblée et déployée via Compose, preuve_e2e: "docker compose ps → tous services healthy"}
+      - {id: F14, description: document ingéré indexé dans vector store, preuve_e2e: "forgeai rag ingest doc.txt → confirmation embedding + count"}
+      - {id: F15, description: réponse RAG contenant un fait du document ingéré (no hallucination), preuve_e2e: "forgeai rag query 'question sur doc.txt' → réponse avec citation source factuelle"}
+      - {id: F16, description: wizard --ci bout-en-bout sans interaction, preuve_e2e: "forgeai wizard --ci --profile minimal → exit 0 + rapport JSON"}
+    criteres_sortie:
+      - pytest --cov ≥ 85 % global, ≥ 95 % registry et gates
+      - "S09 prouvé : registre e2e contient fait vérifiable extrait du document source"
+      - tous les gates.yaml green sur le chemin critique S01→S10
+      - aucun stub restant dans le périmètre P1 (no-stub-scan clean)
+  - id: P2
+    nom: Multi-nœuds + catalogue complet
+    preconditions:
+      - revue sécurité multi-nœuds levée (route reviewer actuellement BLOCKED)
+      - phase P1 validée (tous critères_sortie P1 satisfaits)
+    fonctionnalites_livrables:
+      - {id: F21, description: bootstrap nœud secondaire ed25519 + Tailscale, preuve_e2e: "forgeai node join --token X → clé pub ed25519 enregistrée + ping Tailscale OK"}
+      - {id: F22, description: jonction nœud prouvée (registre hash-chain cross-node), preuve_e2e: "forgeai node status → 2 nœuds, hashes concordants"}
+      - {id: F23, description: fan-out 742 traductions EN complètes, preuve_e2e: "forgeai catalogue --lang en --count → 742"}
+      - {id: F24, description: enrichissement 231 entrées Atlas manquantes, preuve_e2e: "forgeai catalogue --atlas --count → 0 entrée pending"}
+      - {id: F25, description: sélection multi-nœuds dans wizard, preuve_e2e: "forgeai wizard --ci --nodes 2 → rapport JSON avec allocation nœuds"}
+  - id: P3
+    nom: Gouvernance complète + release
+    preconditions:
+      - P2 validée
+    fonctionnalites_livrables:
+      - {id: F31, description: profils Standard et Avancé fonctionnels, preuve_e2e: "forgeai wizard --ci --profile standard → exit 0"}
+      - {id: F32, description: hooks post-merge canon installés, preuve_e2e: "forgeai hooks --verify → tous hooks canon présents et exécutables"}
+      - {id: F33, description: packaging PyPI publishable, preuve_e2e: "forgeai --version → version cohérente ; twine check dist/* → PASSED"}
+      - {id: F34, description: docs Diataxis complètes (tutorial/how-to/reference/explanation), preuve_e2e: "forgeai docs --audit → 0 page manquante"}

@@ -1,6 +1,7 @@
-# Claude Code session-local
+# Claude Code session-local (cockpit Forge — pas le produit)
 .claude/worktrees/
 .claude/settings.local.json
+.mcp.json
 CLAUDE.local.md
 
 # Python
