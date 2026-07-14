@@ -1,0 +1,17 @@
+# CODEOWNERS — signature du·des propriétaire·s requise par-dessus les gates verts
+# (Plan Maître §6, story B-22). Complète la revue aveugle 3 modèles/3 vendors (§3) — elle
+# ne la remplace pas. Activé côté serveur par la branch protection (require_code_owner_reviews).
+
+# Défaut : tout le repo
+*                       @leon36000
+
+# Canon et gouvernance — sensibles
+/CANON/                 @leon36000
+/manifests/             @leon36000
+/Registres/             @leon36000
+/reviews/               @leon36000
+/.github/               @leon36000
+
+# Cœur du produit
+/src/                   @leon36000
+/scripts/               @leon36000
