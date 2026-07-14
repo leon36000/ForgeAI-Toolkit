@@ -27,10 +27,14 @@ phases:
       - {id: F14, description: document ingéré indexé dans vector store, preuve_e2e: "forgeai rag ingest doc.txt → confirmation embedding + count"}
       - {id: F15, description: réponse RAG contenant un fait du document ingéré (no hallucination), preuve_e2e: "forgeai rag query 'question sur doc.txt' → réponse avec citation source factuelle"}
       - {id: F16, description: wizard --ci bout-en-bout sans interaction, preuve_e2e: "forgeai wizard --ci --profile minimal → exit 0 + rapport JSON"}
+    regles_execution:
+      - "S06/S07 : backends séquentiels sur le même nœud, teardown complet entre les deux (jamais simultanés — résolution objection critique round 1)"
+      - "catalogue P1 : FR source complète, fallback FR si EN absente; 742 traductions = état de données documenté (pas un stub); complétion = P2 F23 (résolution objection critique round 1)"
+      - "chemin critique corrigé : S01→S02→S03→S04→S05→S06→S08→S09→S10; S07 hors chemin critique mais critère de sortie P1"
     criteres_sortie:
       - pytest --cov ≥ 85 % global, ≥ 95 % registry et gates
       - "S09 prouvé : registre e2e contient fait vérifiable extrait du document source"
-      - tous les gates.yaml green sur le chemin critique S01→S10
+      - tous les gates green; S06 ET S07 prouvés séquentiellement (double backend)
       - aucun stub restant dans le périmètre P1 (no-stub-scan clean)
   - id: P2
     nom: Multi-nœuds + catalogue complet

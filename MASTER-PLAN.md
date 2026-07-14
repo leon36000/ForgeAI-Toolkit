@@ -68,8 +68,22 @@ Détail : `Phase-A/architecture-glm.md`.
 | S09 | Preuve e2e : réponse contenant un fait ingéré | kimi |
 | S10 | Wizard --ci bout-en-bout + preuve au registre | fable |
 
-**Chemin critique** : S01 → S02 → S04 → S05 → S06 → S08 → S09 → S10.
-**Sortie P1** : couverture ≥85 % (95 % registre/gates), S09 prouvé au registre, gates verts, zéro stub.
+**Chemin critique (corrigé round 1)** : S01 → S02 → S03 → S04 → S05 → S06 → S08 → S09 → S10.
+S07 (K3s) est hors chemin critique (parallélisable après S05) mais **reste un critère de sortie P1** :
+le rendu double backend n'est prouvé que si Compose ET K3s passent leur preuve e2e.
+
+**Règles de résolution du round 1 (objections critiques résolues) :**
+1. **Backends séquentiels, jamais simultanés** : S06 et S07 s'exécutent l'un après l'autre sur le
+   même nœud avec teardown complet entre les deux (`down -v` / suppression namespace). La parité
+   Compose/K3s se mesure sur preuves successives — aucune collision ports/CIDR possible.
+2. **Traductions manquantes ≠ stub** : P1 charge le catalogue en FR (langue source complète),
+   fallback FR quand l'EN manque; les 742 entrées en attente portent un statut de données explicite
+   hérité du catalogue maître — c'est un état documenté, pas un marqueur de code inachevé, et le
+   no-stub-scan ne porte que sur le code. La preuve e2e S08/S09 ingère un document de test et
+   interroge son contenu : elle ne dépend d'aucune traduction. Complétion EN = P2 (F23).
+
+**Sortie P1** : couverture ≥85 % (95 % registre/gates), S09 prouvé au registre, S06 ET S07 prouvés
+séquentiellement, gates verts, zéro stub.
 
 ### P2 — Multi-nœuds + catalogue complet
 Préconditions : P1 validée + revue sécurité multi-nœuds levée (BLOCKED actuel).
