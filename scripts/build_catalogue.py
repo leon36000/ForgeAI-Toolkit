@@ -40,6 +40,7 @@ def _blocks(text: str) -> list[list[str]]:
 def parse_catalogue(text: str) -> list[dict]:
     raw: list[dict] = []
     category = "non classé"
+    stranded_name: str | None = None
     for block in _blocks(text):
         header = CATEGORY_RE.match(block[0])
         if header:
@@ -53,14 +54,35 @@ def parse_catalogue(text: str) -> list[dict]:
             # marqueurs et la fin de description s'appliquent à l'entrée précédente.
             if raw and not raw[-1]["_closed"]:
                 _absorb(raw[-1], block)
+            elif (len(block) == 1 and len(block[0]) < 60
+                  and not block[0].endswith((".", "]", ":"))):
+                # Nom orphelin isolé par un saut de page (l'entrée précédente est
+                # close) : retenu pour le bloc Source:/Atlas: qui suit.
+                stranded_name = block[0]
             continue
 
-        entry = {
-            "name": block[0], "category": category, "atlas_status": "",
-            "source_url": None, "desc_lines": [], "en_pending": False,
-            "atlas_only": False, "_closed": False,
-        }
-        _absorb(entry, block[1:])
+        if block[0].startswith(("Source:", "Atlas:")):
+            # Nom orphelin : soit retenu depuis le bloc solo précédent, soit
+            # absorbé en fin de description de l'entrée précédente.
+            name = stranded_name
+            if name is None and raw and raw[-1]["desc_lines"]:
+                candidate = raw[-1]["desc_lines"][-1]
+                if len(candidate) < 60 and not candidate.endswith((".", "]", ":")):
+                    name = raw[-1]["desc_lines"].pop()
+            entry = {
+                "name": name or block[0], "category": category, "atlas_status": "",
+                "source_url": None, "desc_lines": [], "en_pending": False,
+                "atlas_only": False, "_closed": False,
+            }
+            _absorb(entry, block)
+        else:
+            entry = {
+                "name": block[0], "category": category, "atlas_status": "",
+                "source_url": None, "desc_lines": [], "en_pending": False,
+                "atlas_only": False, "_closed": False,
+            }
+            _absorb(entry, block[1:])
+        stranded_name = None
         raw.append(entry)
 
     return [_finalize(e) for e in raw]
@@ -122,6 +144,10 @@ def main() -> None:
         problems.append(f"EN en attente {pending} ≠ 742")
     if atlas_only != 231:
         problems.append(f"Atlas seul {atlas_only} ≠ 231")
+    malformed = [e["name"] for e in entries
+                 if e["name"].startswith(("Source:", "Atlas:", "["))]
+    if malformed:
+        problems.append(f"{len(malformed)} noms malformés (artefacts de coupure de page)")
     if problems:
         print("ECHEC validation invariants:", "; ".join(problems))
         sys.exit(1)

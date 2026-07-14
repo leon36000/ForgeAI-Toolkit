@@ -1899,9 +1899,9 @@
    "description_en": null,
    "description_fr": "Framework ML minimaliste en Rust, orienté inférence performante et déploiement léger (HF).",
    "en_pending": true,
-   "id": "source-r-pertoire-v-rifi-github-api-https-github-com-huggingface-candle",
-   "name": "Source: répertoire (vérifié GitHub API) — https://github.com/huggingface/candle",
-   "source_url": null
+   "id": "candle",
+   "name": "candle",
+   "source_url": "https://github.com/huggingface/candle"
   },
   {
    "atlas_only": false,
@@ -2031,9 +2031,9 @@
    "description_en": null,
    "description_fr": "Bibliothèque Microsoft basée sur DeepSpeed pour une inférence basse latence et haut débit.",
    "en_pending": true,
-   "id": "source-r-pertoire-v-rifi-github-api-https-github-com-deepspeedai-deepspeed-mii",
-   "name": "Source: répertoire (vérifié GitHub API) — https://github.com/deepspeedai/DeepSpeed-MII",
-   "source_url": null
+   "id": "deepspeed-mii",
+   "name": "DeepSpeed-MII",
+   "source_url": "https://github.com/deepspeedai/DeepSpeed-MII"
   },
   {
    "atlas_only": false,
@@ -2548,9 +2548,9 @@
    "description_en": null,
    "description_fr": "Plateforme d'inférence avancée et simple pour LLM sur Kubernetes.",
    "en_pending": true,
-   "id": "source-r-pertoire-v-rifi-github-api-https-github-com-inftyai-llmaz",
-   "name": "Source: répertoire (vérifié GitHub API) — https://github.com/InftyAI/llmaz",
-   "source_url": null
+   "id": "llmaz",
+   "name": "llmaz",
+   "source_url": "https://github.com/InftyAI/llmaz"
   },
   {
    "atlas_only": true,
@@ -2680,9 +2680,9 @@
    "description_en": null,
    "description_fr": "Plateforme de serving (derrière Kimi de Moonshot AI) : architecture désagrégée KVCache-centric (prefill/decode séparés).",
    "en_pending": true,
-   "id": "source-r-pertoire-v-rifi-github-api-https-github-com-kvcache-ai-mooncake",
-   "name": "Source: répertoire (vérifié GitHub API) — https://github.com/kvcache-ai/Mooncake",
-   "source_url": null
+   "id": "mooncake",
+   "name": "Mooncake",
+   "source_url": "https://github.com/kvcache-ai/Mooncake"
   },
   {
    "atlas_only": false,
@@ -2807,14 +2807,14 @@
   },
   {
    "atlas_only": false,
-   "atlas_status": "",
+   "atlas_status": "ACCEPTÉ",
    "category": "Inférence, serving et gateway modèles",
    "description_en": "Turnkey tool to run LLMs locally with model management and an OpenAI-compatible API.",
    "description_fr": "Outil clé en main pour exécuter des LLM en local (Kimi, GLM, DeepSeek, Qwen, Gemma…) avec gestion des modèles et API compatible OpenAI.",
    "en_pending": false,
-   "id": "atlas-accept-v-rifi-dans-les-2-sources-https-github-com-ollama-ollama",
-   "name": "Atlas: ACCEPTÉ · Vérifié dans les 2 sources — https://github.com/ollama/ollama",
-   "source_url": null
+   "id": "ollama",
+   "name": "Ollama",
+   "source_url": "https://github.com/ollama/ollama"
   },
   {
    "atlas_only": false,
@@ -6013,9 +6013,9 @@
    "description_en": null,
    "description_fr": "Point unique pour gérer et se connecter à tous ses serveurs MCP.",
    "en_pending": true,
-   "id": "source-r-pertoire-v-rifi-github-api-https-github-com-mcpjungle-mcpjungle",
-   "name": "Source: répertoire (vérifié GitHub API) — https://github.com/mcpjungle/MCPJungle",
-   "source_url": null
+   "id": "mcpjungle",
+   "name": "MCPJungle",
+   "source_url": "https://github.com/mcpjungle/MCPJungle"
   },
   {
    "atlas_only": false,
@@ -6145,9 +6145,9 @@
    "description_en": null,
    "description_fr": "Serveur MCP officiel Playwright pour l'automatisation navigateur.",
    "en_pending": true,
-   "id": "source-r-pertoire-v-rifi-github-api-https-github-com-microsoft-playwright-mcp",
-   "name": "Source: répertoire (vérifié GitHub API) — https://github.com/microsoft/playwright-mcp",
-   "source_url": null
+   "id": "playwright-mcp-microsoft",
+   "name": "Playwright MCP (Microsoft)",
+   "source_url": "https://github.com/microsoft/playwright-mcp"
   },
   {
    "atlas_only": false,
@@ -6277,9 +6277,9 @@
    "description_en": null,
    "description_fr": "Dépôt officiel des serveurs MCP de référence et exemples.",
    "en_pending": true,
-   "id": "source-r-pertoire-v-rifi-github-api-https-github-com-modelcontextprotocol-servers",
-   "name": "Source: répertoire (vérifié GitHub API) — https://github.com/modelcontextprotocol/servers",
-   "source_url": null
+   "id": "reference-servers-d-p-t-principal",
+   "name": "Reference Servers (dépôt principal)",
+   "source_url": "https://github.com/modelcontextprotocol/servers"
   },
   {
    "atlas_only": false,
@@ -6409,9 +6409,9 @@
    "description_en": null,
    "description_fr": "SDK Swift officiel pour serveurs et clients MCP.",
    "en_pending": true,
-   "id": "source-r-pertoire-v-rifi-github-api-https-github-com-modelcontextprotocol-swift-sdk",
-   "name": "Source: répertoire (vérifié GitHub API) — https://github.com/modelcontextprotocol/swift-sdk",
-   "source_url": null
+   "id": "swift-sdk",
+   "name": "Swift SDK",
+   "source_url": "https://github.com/modelcontextprotocol/swift-sdk"
   },
   {
    "atlas_only": false,
@@ -6574,9 +6574,9 @@
    "description_en": null,
    "description_fr": "Système visant à rendre les grands modèles IA moins chers, plus rapides et plus accessibles (parallélisme multi-dimensionnel).",
    "en_pending": true,
-   "id": "source-r-pertoire-v-rifi-github-api-https-github-com-hpcaitech-colossalai",
-   "name": "Source: répertoire (vérifié GitHub API) — https://github.com/hpcaitech/ColossalAI",
-   "source_url": null
+   "id": "colossal-ai",
+   "name": "Colossal-AI",
+   "source_url": "https://github.com/hpcaitech/ColossalAI"
   },
   {
    "atlas_only": false,
@@ -8340,13 +8340,13 @@
   },
   {
    "atlas_only": true,
-   "atlas_status": "",
+   "atlas_status": "ACCEPTÉ - NOYAU",
    "category": "Harness de codage, méthodologies et gouvernance",
    "description_en": null,
-   "description_fr": "Entrée Atlas (statut inconnu) — description à enrichir depuis le tableau source.",
+   "description_fr": "Entrée Atlas (ACCEPTÉ - NOYAU) — description à enrichir depuis le tableau source.",
    "en_pending": false,
-   "id": "atlas-accept-noyau",
-   "name": "Atlas: ACCEPTÉ - NOYAU",
+   "id": "iar-e-postgresql-ledger",
+   "name": "IAR-E PostgreSQL Ledger",
    "source_url": null
   },
   {
@@ -8472,14 +8472,14 @@
   },
   {
    "atlas_only": false,
-   "atlas_status": "",
+   "atlas_status": "ACCEPTÉ",
    "category": "Harness de codage, méthodologies et gouvernance",
    "description_en": "Open CLI/IDE coding agent wired to your gateway; no parallel memory or MCP of its own.",
    "description_fr": "Agent de codage open-source pour le terminal.",
    "en_pending": false,
-   "id": "atlas-accept-v-rifi-dans-les-2-sources-https-github-com-anomalyco-opencode",
-   "name": "Atlas: ACCEPTÉ · Vérifié dans les 2 sources — https://github.com/anomalyco/opencode",
-   "source_url": null
+   "id": "opencode",
+   "name": "OpenCode",
+   "source_url": "https://github.com/anomalyco/opencode"
   },
   {
    "atlas_only": false,
@@ -11024,13 +11024,13 @@
   },
   {
    "atlas_only": true,
-   "atlas_status": "",
+   "atlas_status": "MODÈLE",
    "category": "Auto-amélioration et recherche expérimentale",
    "description_en": null,
-   "description_fr": "Entrée Atlas (statut inconnu) — description à enrichir depuis le tableau source.",
+   "description_fr": "Entrée Atlas (MODÈLE) — description à enrichir depuis le tableau source.",
    "en_pending": false,
-   "id": "atlas-mod-le",
-   "name": "Atlas: MODÈLE",
+   "id": "gpt-oss-20b-120b",
+   "name": "GPT-OSS 20B/120B",
    "source_url": null
   },
   {
