@@ -1,0 +1,29 @@
+# Lot production-02a — F23 (P2), membre: qwen (Qwen3.7-Max), 2026-07-14
+# contre-vérification croisée 10% : voir lot 02b (échantillonnage sur les deux) | claim: UNVERIFIED
+lot: production-02a
+traductions:
+  - {nom: "Devon", en: "Open-source AI pair programmer."}
+  - {nom: "Dify", en: "Production-ready platform for agentic workflow development."}
+  - {nom: "E2B Fragments", en: "Next.js template for fully AI-generated applications (by E2B)."}
+  - {nom: "ell", en: "Language model programming library (prompts as functions)."}
+  - {nom: "Flowise", en: "Build AI agents visually."}
+  - {nom: "Gemini CLI", en: "Open-source AI agent bringing Gemini to the terminal (Google)."}
+  - {nom: "Google ADK (Python)", en: "Google's code-first Python toolkit to build, evaluate, and deploy agents."}
+  - {nom: "Google ADK Samples", en: "Collection of sample agents built with the Agent Development Kit."}
+  - {nom: "Goose", en: "Extensible open-source AI agent (installs, runs, edits, tests) with any LLM. block/goose repo now under aaif-goose."}
+  - {nom: "GPT Researcher", en: "Autonomous agent conducting in-depth research on any data via various LLMs."}
+  - {nom: "gpt-engineer", en: "CLI platform to experiment with code generation (precursor to Lovable)."}
+  - {nom: "GPTScript", en: "Build AI assistants that interact with your systems."}
+  - {nom: "GraphRAG", en: "Graph-based modular RAG system (Microsoft)."}
+  - {nom: "Guardrails", en: "Add guardrails (validation, structuring) around LLMs."}
+  - {nom: "Guidance", en: "Guidance language to control large language models."}
+  - {nom: "Hatchet", en: "Orchestration engine for background tasks, AI agents, and durable workflows."}
+  - {nom: "Haystack", en: "Open-source AI orchestration framework for production LLM applications (RAG, agents, modular pipelines)."}
+  - {nom: "HumanLayer", en: "Have coding agents solve complex problems in complex codebases."}
+  - {nom: "Inngest", en: "(see AgentKit) event-driven durable execution engine for agents."}
+  - {nom: "Inngest AgentKit", en: "Build multi-agent networks in TypeScript with deterministic routing and MCP tooling."}
+  - {nom: "Instructor", en: "Structured outputs for LLMs (Pydantic-based)."}
+  - {nom: "JARVIS / HuggingGPT", en: "System connecting LLMs to the ML community to orchestrate models."}
+  - {nom: "Julep", en: "Durable and composable AI agents (flows resume after crash, safe retry)."}
+  - {nom: "Kestra", en: "Event-driven orchestration and scheduling platform for mission-critical applications."}
+  - {nom: "Lagent", en: "InternLM's lightweight framework for building LLM-based agents."}

@@ -1,0 +1,42 @@
+# Lot production-13 — F23 (P2), membre: qwen (Qwen3.7-Max), 2026-07-14
+# contre-vérification croisée 10% (longcat) : 4/4 OK
+# correction Fable : nom « GPTQ (référence) » recopié à l'identique (la sortie brute l'avait traduit)
+# claim: UNVERIFIED
+lot: production-13
+traductions:
+  - {nom: "FairScale", en: "PyTorch extensions for high-performance and large-scale training (legacy FSDP, sharding)."}
+  - {nom: "FastChat", en: "Open platform for training, serving, and evaluating LLMs (repository for Vicuna and Chatbot Arena)."}
+  - {nom: "FP6-LLM", en: "Efficient GPU support for LLM inference with x-bit quantization (FP6, FP5)."}
+  - {nom: "FuseAI / FuseLLM", en: "FuseAI project for knowledge fusion across heterogeneous LLMs."}
+  - {nom: "FusionBench", en: "Comprehensive benchmark and toolkit for deep model fusion."}
+  - {nom: "GPT-NeoX", en: "Implementation of model-parallel autoregressive transformers on GPUs, based on Megatron and DeepSpeed."}
+  - {nom: "GPTQ (référence)", en: "Code for the ICLR 2023 paper \"GPTQ: Accurate Post-training Quantization of Generative Pretrained Transformers\"."}
+  - {nom: "GPTQ-for-LLaMa", en: "4-bit quantization for LLaMA via GPTQ."}
+  - {nom: "H2O LLM Studio", en: "No-code framework and GUI for LLM fine-tuning."}
+  - {nom: "HALOs", en: "Extensible library of human-aware loss functions (DPO, KTO, PPO, ORPO...)."}
+  - {nom: "Hivemind", en: "Decentralized deep learning in PyTorch, designed to train models across thousands of volunteers."}
+  - {nom: "HQQ", en: "Official implementation of Half-Quadratic Quantization (calibration-free)."}
+  - {nom: "InternEvo", en: "Lightweight, open-source training framework supporting pre-training without heavy dependencies."}
+  - {nom: "JAX-Toolbox", en: "Suite of NVIDIA tools and containers for large-scale JAX training."}
+  - {nom: "kernl", en: "Run PyTorch transformer models several times faster on GPU with a single line of code."}
+  - {nom: "kvpress", en: "Simplified KV cache compression for LLMs."}
+  - {nom: "LazyMergekit", en: "User-friendly Colab wrapper around mergekit, distributed in mlabonne's llm-course."}
+  - {nom: "Levanter", en: "Readable, scalable, and reproducible foundation models using Named Tensors and JAX."}
+  - {nom: "Liger-Kernel", en: "Efficient Triton kernels for LLM training (memory and speed optimizations)."}
+  - {nom: "Lilac", en: "Better data curation for LLMs (exploration, clustering, filtering)."}
+  - {nom: "LLaMA-Factory", en: "Unified and efficient fine-tuning for 100+ LLMs and VLMs (LoRA, QLoRA, full, GUI)."}
+  - {nom: "llama.cpp (GGUF)", en: "C/C++ LLM inference; defines and implements the quantized GGUF format (Q4/Q5/Q8...)."}
+  - {nom: "LLM Foundry", en: "LLM training code for Databricks/MosaicML foundation models."}
+  - {nom: "llm-course", en: "Course for getting into LLMs with roadmaps and Colab notebooks (includes LazyMergekit, AutoQuant)."}
+  - {nom: "LLM-KICK", en: "Study/benchmark \"Compressing LLMs: The Truth is Rarely Pure and Never Simple\" (ICLR 2024)."}
+  - {nom: "LLM-Pruner", en: "Structural pruning of LLMs (NeurIPS 2023), supports Llama-2/3, BLOOM, Vicuna..."}
+  - {nom: "LLMDataHub", en: "Quick guide to popular instruction-tuning datasets."}
+  - {nom: "LMFlow", en: "Extensible toolkit for fine-tuning and inference of large foundation models."}
+  - {nom: "LoRA (loralib)", en: "Reference implementation of \"LoRA: Low-Rank Adaptation of Large Language Models\"."}
+  - {nom: "MaxText", en: "Simple, high-performance, and scalable LLM in JAX (optimized for TPU/GPU)."}
+  - {nom: "MegaBlocks", en: "Efficient training of Mixture-of-Experts (MoE) models in PyTorch."}
+  - {nom: "Megatron-Energon", en: "Megatron's multimodal data loader for large-scale training."}
+  - {nom: "Megatron-LM", en: "NVIDIA research framework for training transformers at massive scale (tensor/pipeline/sequence parallelism)."}
+  - {nom: "mergekit", en: "Tools for merging large pre-trained language models (TIES, DARE, SLERP, task arithmetic...)."}
+  - {nom: "MergeLM", en: "Codebase for language model merging (DARE, ICML 2024)."}
+  - {nom: "modded-nanogpt", en: "NanoGPT (124M) training optimization — speed records (Muon optimizer)."}

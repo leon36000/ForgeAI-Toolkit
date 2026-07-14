@@ -1,0 +1,42 @@
+# Lot production-17 — F23 (P2), membre: qwen (Qwen3.7-Max), 2026-07-14
+# contre-vérification croisée 10% (longcat) : 4/4 OK | claim: UNVERIFIED
+lot: production-17
+traductions:
+  - {nom: "Void", en: "Open-source code editor with built-in AI agent (alternative to Cursor)."}
+  - {nom: "wshobson/agents", en: "Marketplace of multi-harness agentic plugins for Claude Code, Codex CLI, Cursor, OpenCode, GitHub Copilot, and Gemini CLI."}
+  - {nom: "Zed", en: "High-performance, multiplayer code editor with AI agents, by the creators of Atom."}
+  - {nom: "Adversarial Robustness Toolbox (ART)", en: "Python library for ML security: evasion, poisoning, extraction, inference (Red/Blue teams)."}
+  - {nom: "Agenta", en: "Open-source LLMOps platform: prompt playground, prompt management, evaluation, and observability."}
+  - {nom: "AgentBench", en: "Comprehensive benchmark for evaluating LLMs as agents (ICLR'24)."}
+  - {nom: "AgentEvals", en: "Out-of-the-box evaluators for agent trajectories (LangChain)."}
+  - {nom: "agentic_security", en: "Agentic LLM vulnerability scanner / AI red teaming toolkit."}
+  - {nom: "AIF360", en: "Comprehensive set of fairness metrics and bias mitigation algorithms (IBM/Trusted-AI)."}
+  - {nom: "AlpacaEval", en: "Human-validated automatic evaluator for instruction-following models."}
+  - {nom: "Apptainer", en: "Application containers for Linux (formerly Singularity), focused on HPC and unprivileged execution."}
+  - {nom: "Arena-Hard-Auto", en: "Automated LLM benchmark from LMArena/LMSYS, correlated with human preferences."}
+  - {nom: "BIG-bench", en: "Collaborative 'Beyond the Imitation Game' benchmark for measuring LLM capabilities."}
+  - {nom: "BIG-Bench Extra Hard (BBEH)", en: "Highly difficult extension of BIG-Bench by Google DeepMind."}
+  - {nom: "BIG-Bench-Hard", en: "Subset of the most difficult tasks from BIG-Bench with chain-of-thought analysis."}
+  - {nom: "bigcode-evaluation-harness", en: "Evaluation framework for autoregressive code generation models."}
+  - {nom: "bubblewrap", en: "Low-level unprivileged sandboxing tool used by Flatpak."}
+  - {nom: "CleverHans", en: "Adversarial example library for building attacks, defenses, and benchmarks."}
+  - {nom: "Cloud Hypervisor", en: "Virtual machine monitor for modern cloud workloads (CPU/memory hotplug)."}
+  - {nom: "Dagger", en: "Automation engine to build, test, and deliver code in containers (local, CI, cloud)."}
+  - {nom: "DeepTeam", en: "Red teaming framework for LLMs and AI agents (by the authors of DeepEval)."}
+  - {nom: "Dioptra", en: "NIST software for characterizing and testing the robustness of AI technologies."}
+  - {nom: "E2B Code Interpreter", en: "Python & JS/TS SDK for executing AI-generated code in a sandbox."}
+  - {nom: "E2B Desktop", en: "Graphical desktop sandbox for LLMs (secure computer use)."}
+  - {nom: "E2B Infra", en: "Infrastructure powering E2B Cloud (Firecracker micro-VMs)."}
+  - {nom: "EasyJailbreak", en: "Easy-to-use Python framework for generating adversarial jailbreak prompts."}
+  - {nom: "envbox", en: "Image for running unprivileged containers capable of running dockerd/systemd on Kubernetes."}
+  - {nom: "EvalPlus", en: "Rigorous evaluation of LLM-generated code (HumanEval+ / MBPP+), NeurIPS 2023 & COLM 2024."}
+  - {nom: "Evidently", en: "ML and LLM observability framework: evaluate, test, and monitor any AI-driven system."}
+  - {nom: "Firecracker", en: "Secure and fast microVMs for serverless computing (AWS Lambda)."}
+  - {nom: "garak", en: "NVIDIA's LLM vulnerability scanner (jailbreak, injection, and data leakage probes)."}
+  - {nom: "Giskard", en: "Open-source library for evaluating and testing LLM agents (vulnerability and bias scanning)."}
+  - {nom: "GPQA", en: "\"Google-proof\" PhD-level question-answering benchmark."}
+  - {nom: "Grafana Beyla", en: "eBPF auto-instrumentation for web applications and network metrics."}
+  - {nom: "Guardrails AI", en: "Adding guardrails (validation, structuring, correction) to large language models."}
+  - {nom: "gVisor", en: "Google's application kernel providing enhanced isolation for containers."}
+  - {nom: "HarmBench", en: "Standardized evaluation framework for automated red teaming and robust refusal."}
+  - {nom: "HELM", en: "Stanford CRFM's \"Holistic Evaluation of Language Models\" framework, evaluating models across multiple scenarios and metrics."}

@@ -1,0 +1,18 @@
+# Lot production-05a — F23 (P2), membre: qwen (Qwen3.7-Max), 2026-07-14 | claim: UNVERIFIED
+lot: production-05a
+traductions:
+  - {nom: "LightLLM", en: "Python LLM inference and serving framework: lightweight, scalable, high-speed (TokenAttention, async router)."}
+  - {nom: "llama-swap", en: "Reliable model-swapping proxy for any OpenAI/Anthropic-compatible server (llama.cpp, vLLM, etc.)."}
+  - {nom: "llamafile", en: "LLM distribution and execution in a single cross-platform executable file (llama.cpp + Cosmopolitan Libc)."}
+  - {nom: "llm-awq", en: "Reference implementation of AWQ (Activation-aware Weight Quantization) for LLM compression/acceleration (MLSys 2024)."}
+  - {nom: "llm-compressor", en: "Transformers-compatible library to apply various compressions (quantization) to LLMs for optimized deployment with vLLM."}
+  - {nom: "llm-d", en: "State-of-the-art inference serving on Kubernetes with modern accelerators (Red Hat/Google/IBM; disaggregation, smart routing)."}
+  - {nom: "LLMariner", en: "Scalable generative AI platform on Kubernetes with OpenAI-compatible APIs."}
+  - {nom: "llmaz", en: "Advanced yet simple LLM inference platform on Kubernetes."}
+  - {nom: "LMCache", en: "Fastest KV cache layer for LLMs: reuses/shares KV cache (RAM, disk) to accelerate prefill and long contexts."}
+  - {nom: "LMDeploy", en: "LLM compression, deployment, and serving toolkit (InternLM team); features highly optimized TurboMind engine."}
+  - {nom: "LocalAI", en: "Open-source AI engine: runs LLM, vision, voice, image, and video on any hardware (no GPU required), OpenAI-compatible API."}
+  - {nom: "LoRAX", en: "Multi-LoRA inference server capable of serving thousands of fine-tuned adapters on a single GPU."}
+  - {nom: "Marlin", en: "FP16×INT4 inference kernel achieving ~4× speedup up to medium batch sizes; integrated into vLLM."}
+  - {nom: "mistral.rs", en: "Fast and flexible LLM inference engine written in Rust; multimodal, quantization, OpenAI-compatible API."}
+  - {nom: "MLC-LLM", en: "Universal deployment engine via ML compilation (Apache TVM); targets GPU, mobile, WebGPU, and CPU."}

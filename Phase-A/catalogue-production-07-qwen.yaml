@@ -1,0 +1,40 @@
+# Lots production-07a-d — F23 (P2), membre: qwen (Qwen3.7-Max), 2026-07-14
+# contre-vérification croisée 10% (longcat) : 3/4 OK, 1 défaut terminologique corrigé
+# (« PageRank personnalisé » → « Personalized PageRank », terme PPR — appliqué à Fast GraphRAG et HippoRAG)
+# claim: UNVERIFIED
+lot: production-07
+traductions:
+  - {nom: "Fast GraphRAG", en: "GraphRAG that intelligently adapts to use cases, data, and queries (Personalized PageRank)."}
+  - {nom: "FastEmbed", en: "Qdrant's fast, lightweight Python library for generating state-of-the-art embeddings without heavy dependencies."}
+  - {nom: "FastGPT", en: "LLM-based knowledge base platform: data processing, RAG retrieval, and visual workflow orchestration."}
+  - {nom: "fastRAG", en: "Efficient Retrieval-Augmented Generation framework by Intel Labs (archived)."}
+  - {nom: "FlagEmbedding (BGE)", en: "BGE models for retrieval and retrieval-augmented LLMs, including embeddings and rerankers."}
+  - {nom: "GritLM", en: "Generative Representational Instruction Tuning: a single model for generation and embeddings."}
+  - {nom: "HippoRAG", en: "Human memory-inspired RAG framework combining knowledge graphs and Personalized PageRank (NeurIPS 2024)."}
+  - {nom: "hnswlib", en: "Header-only C++/Python library implementing the HNSW algorithm for fast ANN."}
+  - {nom: "HuixiangDou", en: "LLM-based technical assistant optimized for group chat scenarios with knowledge memory."}
+  - {nom: "Infinity (DB)", en: "AI-native database for LLM applications offering ultra-fast hybrid search (dense/sparse vector, tensor, full-text)."}
+  - {nom: "Infinity (serveur)", en: "High-throughput, low-latency serving engine for embeddings, rerankers, CLIP/CLAP, and ColPali."}
+  - {nom: "iText2KG", en: "Incremental knowledge graph construction from text using LLMs."}
+  - {nom: "Jina (serve)", en: "Jina AI framework for building multimodal AI applications, including embedding services."}
+  - {nom: "Jina Reader", en: "Converts any URL into LLM-friendly input via a simple prefix (r.jina.ai)."}
+  - {nom: "KG-RAG", en: "RAG based on a biomedical knowledge graph for knowledge-intensive tasks."}
+  - {nom: "Khoj", en: "Self-hostable AI 'second brain': answers from the web or your docs, custom agents, and deep research."}
+  - {nom: "kotaemon", en: "Open-source RAG tool with a turnkey interface for chatting with your documents."}
+  - {nom: "LanceDB", en: "Embedded, open-source vector database for multimodal AI, built on the Lance columnar format."}
+  - {nom: "LangMem", en: "LangChain SDK helping agents manage long-term memory (extraction and recall)."}
+  - {nom: "Late Chunking", en: "Code and evaluation of Jina AI's \"late chunking\" technique (chunk pooling)."}
+  - {nom: "LayoutParser", en: "Unified deep learning toolkit for document image analysis."}
+  - {nom: "LightRAG", en: "Simple and fast RAG combining knowledge graphs and vector retrieval (EMNLP 2025)."}
+  - {nom: "llmgraph", en: "Building knowledge graphs from sources using LLMs."}
+  - {nom: "Marker", en: "Rapidly converts PDFs to Markdown + JSON with high accuracy."}
+  - {nom: "MarkItDown", en: "Microsoft Python tool converting files and Office documents to Markdown."}
+  - {nom: "Marqo", en: "End-to-end search and discovery engine (text and image) with built-in embedding generation."}
+  - {nom: "MegaParse", en: "File parser optimized for LLM ingestion (PDF, DOCX, PPTX) with zero information loss."}
+  - {nom: "Memary", en: "Open-source memory layer for autonomous agents, powered by a knowledge graph."}
+  - {nom: "Memobase", en: "User profile-based long-term memory for AI chatbot applications."}
+  - {nom: "MemoRAG", en: "RAG with a memory data interface for general-purpose applications."}
+  - {nom: "Memoripy", en: "AI memory layer with short- and long-term storage, semantic clustering, and optional memory decay."}
+  - {nom: "MemOS", en: "Self-evolving Memory OS for LLMs and agents: ultra-persistent memory, hybrid retrieval, and skill reuse."}
+  - {nom: "Milvus", en: "High-performance, cloud-native vector database for scalable ANN search across billions of vectors."}
+  - {nom: "MinerU", en: "Transforms complex documents (PDF, Office) into Markdown/JSON ready for LLMs and agentic workflows."}

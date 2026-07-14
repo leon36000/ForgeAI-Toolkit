@@ -1,0 +1,29 @@
+# Lot production-04b — F23 (P2), membre: qwen (Qwen3.7-Max), 2026-07-14
+# contre-vérification croisée 10% (longcat) : 5/5 OK | claim: UNVERIFIED
+lot: production-04b
+traductions:
+  - {nom: "FlashMLA", en: "Efficient Multi-head Latent Attention (MLA) kernels for Hopper GPUs; accelerates DeepSeek inference."}
+  - {nom: "FlexLLMGen (FlexGen)", en: "Throughput-oriented LLM inference on a single GPU via aggressive offloading (memory, disk); *archived*."}
+  - {nom: "Gateway API Inference Extension", en: "Kubernetes Gateway API extension for LLM inference routing (InferencePool, model-aware load balancing)."}
+  - {nom: "ggml", en: "C tensor library for ML (CPU/CUDA/Metal/Vulkan backends); foundation for llama.cpp and whisper.cpp."}
+  - {nom: "gguf-parser-go", en: "Parses GGUF files and estimates memory usage and max throughput (tokens/s) before deployment."}
+  - {nom: "GPTQModel", en: "LLM quantization toolkit (compression) with NVIDIA/AMD/Intel HW acceleration via HF, vLLM, and SGLang."}
+  - {nom: "GPUStack", en: "GPU cluster manager for high-performance AI serving (vLLM, SGLang) and on-demand SSH-accessible GPU instances."}
+  - {nom: "GuideLLM", en: "Evaluates and optimizes LLM deployments for real-world inference requirements (serving benchmarking)."}
+  - {nom: "Helicone", en: "Open-source LLM observability platform (proxy): monitoring, evaluation, and experimentation in one line of code."}
+  - {nom: "Higress", en: "AI-native API Gateway (based on Envoy/Istio): LLM routing, semantic caching, key management, and token usage tracking."}
+  - {nom: "ik_llama.cpp", en: "llama.cpp fork with additional SOTA quantizations and improved performance (especially for MoE and CPU)."}
+  - {nom: "Infinity", en: "High-throughput/low-latency serving engine for embeddings, reranking, CLIP, CLAP, and ColPali."}
+  - {nom: "IREE", en: "Retargetable MLIR-based ML compiler and runtime (GPU/CPU/mobile targets); optimized low-level deployment."}
+  - {nom: "Jan", en: "Open-source ChatGPT alternative that runs 100% offline on your computer."}
+  - {nom: "JittorLLMs", en: "LLM inference library (Jittor framework): high performance, low hardware requirements, strong Chinese language support."}
+  - {nom: "KAITO", en: "Kubernetes AI Toolchain Operator: automates the deployment and tuning of AI/LLM models on K8s (Azure/CNCF)."}
+  - {nom: "kgateway", en: "Cloud-native API Gateway and AI Gateway (formerly Gloo) based on Envoy, with LLM routing capabilities."}
+  - {nom: "KoboldCpp", en: "Easy GGUF model execution with KoboldAI UI, single-file, no installation required (based on llama.cpp)."}
+  - {nom: "Kong Gateway", en: "API Gateway and AI Gateway (AI Proxy/AI Gateway plugins to route, cache, and govern LLM traffic)."}
+  - {nom: "KServe", en: "Standardized generative and predictive inference platform on Kubernetes, multi-framework and scalable (down to scale-to-zero)."}
+  - {nom: "KTransformers", en: "Flexible heterogeneous GPU+CPU inference/fine-tuning framework; enables serving giant MoEs (DeepSeek) with smart offloading."}
+  - {nom: "KubeAI", en: "AI inference operator for Kubernetes: simple serving of VLMs, LLMs, embeddings, and speech-to-text (integrates former Lingo)."}
+  - {nom: "KubeRay", en: "Toolkit for running Ray applications on Kubernetes (RayCluster/RayService/RayJob operator)."}
+  - {nom: "Kueue", en: "Kubernetes-native job queueing; batch/AI workload scheduling with resource quota management (GPU)."}
+  - {nom: "LeaderWorkerSet (LWS)", en: "Kubernetes API for deploying a group of pods as a replication unit; key for multi-node distributed inference."}

@@ -1,0 +1,28 @@
+# Lot production-04a — F23 (P2), membre: qwen (Qwen3.7-Max), 2026-07-14 | claim: UNVERIFIED
+lot: production-04a
+traductions:
+  - {nom: "AutoAWQ", en: "Implements the AWQ algorithm (4-bit quantization) with ~2× inference speedup; *archived*."}
+  - {nom: "AutoGPTQ", en: "User-friendly LLM quantization package based on the GPTQ algorithm; *archived*."}
+  - {nom: "BentoML", en: "Framework for serving AI apps: inference APIs, job queues, multi-model pipelines, and LLM apps."}
+  - {nom: "candle", en: "Minimalist Rust ML framework focused on high-performance inference and lightweight deployment (HF)."}
+  - {nom: "chatglm.cpp", en: "C++ implementation of ChatGLM/GLM-4 models for efficient CPU/GPU inference."}
+  - {nom: "CodeFlare Operator", en: "Operator for installing and managing the lifecycle of the CodeFlare distributed workload stack (Ray/Kueue) on OpenShift/K8s."}
+  - {nom: "Const-me/Whisper", en: "High-performance GPGPU inference for the Whisper model (DirectCompute, Windows)."}
+  - {nom: "Cortex (cortex.cpp)", en: "Local AI API platform (engine behind Jan); *archived*."}
+  - {nom: "CTranslate2", en: "Fast inference engine for Transformer models (translation, Whisper, LLMs); CPU/GPU optimizations and quantization."}
+  - {nom: "CUDA Samples", en: "Code samples for CUDA Toolkit features (reference for NVIDIA GPU development)."}
+  - {nom: "CUTLASS", en: "CUDA templates and Python DSL for high-performance linear algebra (GEMM) on NVIDIA GPUs."}
+  - {nom: "DeepEP", en: "Efficient expert-parallel communication library for MoE (DeepSeek): low-latency dispatch/combine."}
+  - {nom: "DeepGEMM", en: "Clean and efficient GPU BLAS/GEMM kernel library (FP8), optimized for MoE inference."}
+  - {nom: "DeepSparse", en: "Sparsity-aware deep learning inference runtime for CPU; *archived*."}
+  - {nom: "DeepSpeed-MII", en: "Microsoft library based on DeepSpeed for low-latency, high-throughput inference."}
+  - {nom: "distributed-llama", en: "Distributed LLM inference: federates multiple home devices into a cluster to accelerate inference (tensor parallelism)."}
+  - {nom: "dstack", en: "Vendor-agnostic orchestration for training, inference, and agentic workloads on NVIDIA/AMD/TPU (clouds, K8s, bare metal)."}
+  - {nom: "Envoy AI Gateway", en: "Manages unified access to generative AI services, built on Envoy Gateway (routing, quotas, resilience)."}
+  - {nom: "ExLlamaV2", en: "Fast inference library for local LLMs on consumer GPUs; flexible EXL2 quantization."}
+  - {nom: "ExLlamaV3", en: "Successor to ExLlamaV2: optimized quantization and inference library (EXL3 format) for consumer GPUs."}
+  - {nom: "exo", en: "Local edge AI execution by federating heterogeneous devices (phones, laptops, GPUs) into a unified cluster."}
+  - {nom: "fastllm", en: "High-performance LLM inference library with no backend dependencies; supports tensor parallelism and MoE (DeepSeek)."}
+  - {nom: "FlagGems", en: "LLM operator library written in Triton (portable, high-performance kernels)."}
+  - {nom: "FlashAttention", en: "Fast, memory-efficient exact attention kernels (IO-aware); foundational building block for modern LLM engines."}
+  - {nom: "FlashInfer", en: "Kernel library for LLM serving (attention, sampling, KV cache management); used by vLLM/SGLang."}

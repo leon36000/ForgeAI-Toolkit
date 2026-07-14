@@ -1,0 +1,42 @@
+# Lot production-08 — F23 (P2), membres: qwen (08a) + longcat (08b-f, partage §1), 2026-07-14
+# contre-vérifications croisées mutuelles : longcat→qwen 4/4 OK (lot 07);
+# qwen→longcat 2/3 OK + 1 défaut corrigé (RAG Cookbooks : « prêtes à l'emploi » restauré, « proven » retiré)
+# + normalisation format 08f (noms extraits). claim: UNVERIFIED
+lot: production-08
+traductions:
+  - {nom: "MiniRAG", en: "Simplified RAG designed for small open-source language models (ACL 2026)."}
+  - {nom: "ModernBERT", en: "Modernized BERT encoder (architecture and scale) serving as a foundation for high-performance embeddings."}
+  - {nom: "MTEB", en: "Leading benchmark for evaluating embeddings across numerous languages and modalities."}
+  - {nom: "NaLLM", en: "Neo4j project exploring the combined use of LLMs and knowledge graphs (archived)."}
+  - {nom: "nano-graphrag", en: "Minimalist GraphRAG implementation, easy to understand and modify."}
+  - {nom: "Neo4j", en: "Leading graph database, the foundation for Neo4j's GenAI/GraphRAG solutions."}
+  - {nom: "Neo4j LLM Graph Builder", en: "Neo4j Labs tool for building knowledge graphs from unstructured data using LLMs."}
+  - {nom: "nlm-ingestor", en: "Ingestion server (llmsherpa API) with parsers for various file formats."}
+  - {nom: "OmniParse", en: "Ingests, parses, and optimizes any data format (documents, multimedia) for GenAI frameworks."}
+  - {nom: "Onyx (ex-Danswer)", en: "Open-source enterprise AI chat platform with RAG connected to your knowledge sources (formerly Danswer)."}
+  - {nom: "Open-Parse", en: "Enhanced file parsing for LLMs, featuring visual document segmentation."}
+  - {nom: "Orama", en: "Comprehensive search engine and RAG pipeline (<2KB) running in the browser, on-server, or at the edge (full-text, vector, hybrid)."}
+  - {nom: "PaperQA", en: "High-precision RAG for answering questions on scientific documents with citations."}
+  - {nom: "ParadeDB", en: "Unified Postgres for application data, full-text search, and vector retrieval (pg_search extension)."}
+  - {nom: "Parsr", en: "Transforms PDFs, documents, and images into enriched structured data."}
+  - {nom: "PathRAG", en: "Path-based RAG in the knowledge graph to reduce redundancy."}
+  - {nom: "Pathway LLM App", en: "Ready-to-use cloud templates for RAG, AI pipelines, and enterprise search with real-time data."}
+  - {nom: "PDF-Extract-Kit", en: "Complete toolkit for high-quality PDF content extraction."}
+  - {nom: "PdfPig", en: "Reading PDF text content in C# (port of PdfBox)."}
+  - {nom: "pdfplumber", en: "Python library for detailed text and table extraction from PDFs."}
+  - {nom: "pgvecto.rs", en: "Postgres extension in Rust for scalable, low-latency, and hybrid vector search."}
+  - {nom: "pgvector", en: "PostgreSQL extension adding the vector type and similarity search directly in Postgres."}
+  - {nom: "PrimeQA", en: "Reference repository for research and development of multilingual question-answering systems."}
+  - {nom: "PyLate", en: "Training and retrieval for late interaction models (ColBERT), by LightOn."}
+  - {nom: "pypdf", en: "Pure-Python PDF library for splitting, merging, cropping, and transforming pages."}
+  - {nom: "Pyserini", en: "Python toolkit for reproducible information retrieval (sparse and dense representations)."}
+  - {nom: "QAnything", en: "NetEase Youdao's local Q&A system based on any document type."}
+  - {nom: "R2R", en: "Production-ready AI retrieval system: Agentic RAG with RESTful API, ingestion, and knowledge graphs."}
+  - {nom: "RAG Cookbooks", en: "Collection of ready-to-use advanced RAG recipes and techniques."}
+  - {nom: "RAG-Anything", en: "All-in-one multimodal RAG framework (text, images, tables, formulas) built on LightRAG."}
+  - {nom: "RAG_Techniques", en: "Reference repository featuring many advanced RAG techniques as tutorial notebooks."}
+  - {nom: "RAGatouille", en: "Easily use and train late-interaction retrieval methods (ColBERT) in a RAG pipeline."}
+  - {nom: "RAGFlow", en: "Leading open-source RAG engine merging RAG and agent capabilities with deep document understanding."}
+  - {nom: "RAGLite", en: "Lightweight RAG Python toolkit running on DuckDB or PostgreSQL."}
+  - {nom: "Reasoning on Graphs (RoG)", en: "Faithful and interpretable LLM reasoning on knowledge graphs (ICLR 2024)."}
+  - {nom: "Sentence Transformers", en: "Reference library for state-of-the-art embeddings, retrieval, and reranking (ex-UKPLab)."}

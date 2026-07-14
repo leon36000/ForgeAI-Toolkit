@@ -1,0 +1,42 @@
+# Lot production-16 — F23 (P2), membre: qwen (Qwen3.7-Max), 2026-07-14
+# contre-vérification croisée 10% (longcat) : 4/4 OK | claim: UNVERIFIED
+lot: production-16
+traductions:
+  - {nom: "Claude Code Agent Farm", en: "Orchestration framework running 20+ Claude Code agents in parallel: automated bug fixing, best-practice sweeps, lock-based coordination, tmux monitoring."}
+  - {nom: "Claude Code Router", en: "Uses Claude Code as a coding infrastructure foundation by routing to any model while benefiting from Anthropic updates."}
+  - {nom: "Claude Squad", en: "Manages multiple terminal agents (Claude Code, Codex, OpenCode, Amp) in parallel, each in its own worktree."}
+  - {nom: "claude-code-action", en: "Anthropic's official GitHub Action for running Claude Code in CI/CD workflows."}
+  - {nom: "claude-code-hooks-mastery", en: "Resources and examples for mastering Claude Code hooks."}
+  - {nom: "claude-code-lsps", en: "Claude Code plugin marketplace providing LSP servers."}
+  - {nom: "claude-code-templates", en: "CLI tool to configure and monitor Claude Code (templates, agents, commands, analytics)."}
+  - {nom: "claude-flow", en: "Agent meta-harness: deploys multi-agent 'swarms', coordinates autonomous workflows, with adaptive memory, self-learning intelligence, and RAG integration."}
+  - {nom: "context-engineering-intro", en: "Introduction to 'context engineering' (beyond vibe coding): strategies to make AI coding assistants actually work, focused on Claude Code."}
+  - {nom: "Continue", en: "Open-source coding agent for VS Code and JetBrains."}
+  - {nom: "Crush", en: "Glamorous agentic coding agent for the terminal, by Charm."}
+  - {nom: "Crystal (Nimbalyst)", en: "Desktop application for launching multiple Codex and Claude Code sessions in parallel across git worktrees, comparing approaches, and managing AI workflows."}
+  - {nom: "dl-ezo/claude-code-sub-agents", en: "Comprehensive collection of 35 specialized subagents for end-to-end software development automation."}
+  - {nom: "GPT-Pilot", en: "\"The first true AI developer\": builds apps step-by-step with human supervision."}
+  - {nom: "gptme", en: "Terminal-based agent equipped with local tools: writes code, uses the terminal, browses the web; a foundation for persistent autonomous agents."}
+  - {nom: "GSD Core (redux)", en: "Community-maintained \"open-gsd\" fork of the GSD (\"Git. Ship. Done - Core\") system, created following governance concerns regarding the original repository."}
+  - {nom: "iannuttall/claude-agents", en: "Custom subagents for use with Claude Code."}
+  - {nom: "Kilo Code", en: "All-in-one agentic engineering platform to build, ship, and iterate with an open-source coding agent."}
+  - {nom: "my-claude-code-setup", en: "Starter configuration template and CLAUDE.md \"memory bank\" system for Claude Code."}
+  - {nom: "OpenAI Codex CLI", en: "Lightweight coding agent from OpenAI that runs in the terminal."}
+  - {nom: "opencode (ex-Claudia)", en: "GUI application and toolkit for Claude Code: custom agent creation, interactive sessions, secure background agents."}
+  - {nom: "OpenCommit", en: "Generates commit messages with an LLM in ~1s; compatible with Claude, GPT, other providers, and local Ollama models."}
+  - {nom: "Pheromind", en: "Agentic coding framework orchestrating autonomous, spec-driven development through pheromone-inspired coordination (stigmergy) among agents."}
+  - {nom: "Plandex", en: "Open-source AI coding agent designed for large projects and real-world tasks."}
+  - {nom: "PR-Agent (Qodo)", en: "\"The Original Open-Source PR Reviewer\": automatically analyzes and comments on pull requests (description, review, suggestions)."}
+  - {nom: "PRPs-agentic-eng", en: "Prompts, workflows, and \"agentic engineering\" methods based on PRPs (Product Requirement Prompts) to provide rich context to agents."}
+  - {nom: "Qwen Code", en: "Open-source terminal coding agent by the Qwen team (Gemini CLI fork)."}
+  - {nom: "ShellGPT", en: "LLM-powered command-line productivity tool to get tasks done faster."}
+  - {nom: "shippie (ex code-review-gpt)", en: "Extensible code review and QA agent that integrates into CI pipelines."}
+  - {nom: "smol developer", en: "First library enabling you to embed a developer agent into your own application."}
+  - {nom: "sub-agents (Sub Agent Manager)", en: "Simple manager to add Claude Code sub-agents with custom hooks and slash commands."}
+  - {nom: "SuperClaude Framework", en: "Configuration framework that enhances Claude Code with specialized commands, cognitive personas, and development methodologies."}
+  - {nom: "superpowers-marketplace", en: "Curated marketplace for Claude Code plugins (superpowers ecosystem)."}
+  - {nom: "Sweep", en: "AI coding assistant (now for JetBrains) that turns issues and requests into pull requests."}
+  - {nom: "Tabby", en: "Self-hosted AI coding assistant (Copilot alternative)."}
+  - {nom: "Task Master (claude-task-master)", en: "AI-powered task management system integrable with Cursor, Lovable, Windsurf, Roo, etc.: breaks down a PRD into ordered and tracked tasks and subtasks."}
+  - {nom: "trailofbits/skills-curated", en: "Curated and community-vetted marketplace for Claude Code plugins (Trail of Bits)."}
+  - {nom: "Vibe Kanban", en: "Kanban-style interface to get 10x more out of Claude Code, Codex, or any coding agent by orchestrating and parallelizing tasks."}

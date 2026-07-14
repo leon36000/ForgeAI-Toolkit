@@ -1,0 +1,43 @@
+# Lot production-19 (FINAL) — F23 (P2), membre: qwen (Qwen3.7-Max), 2026-07-14
+# contre-vérification croisée 10% (longcat) : 3/4 OK, 1 défaut stylistique corrigé
+# (ps-fuzz : « harden the robustness » pléonasme → « test and harden GenAI apps »)
+# claim: UNVERIFIED
+lot: production-19
+traductions:
+  - {nom: "Open-Prompt-Injection", en: "Benchmark for prompt injection attacks and defenses in LLMs."}
+  - {nom: "OpenCompass", en: "LLM evaluation platform supporting numerous models across 100+ datasets."}
+  - {nom: "OpenEvals", en: "Ready-to-use LangChain evaluators for LLM applications."}
+  - {nom: "OpenInference", en: "OpenTelemetry instrumentation for AI observability (specification + integrations)."}
+  - {nom: "OpenLIT", en: "AI engineering platform: native OTel LLM observability, GPU monitoring, guardrails, evals, and prompt management."}
+  - {nom: "OpenLIT (prompts)", en: "Prompt management module (Prompt Hub) and secrets vault within OpenLIT."}
+  - {nom: "OpenLLMetry / Traceloop", en: "Open-source observability for GenAI/LLM applications based on OpenTelemetry."}
+  - {nom: "OpenTelemetry Python Contrib", en: "OpenTelemetry instrumentations for Python modules (foundation for many LLM SDKs)."}
+  - {nom: "Outlines Core", en: "Rust core of Outlines for faster structured generation."}
+  - {nom: "Patronus MCP Server", en: "Patronus AI MCP server for LLM application evaluation."}
+  - {nom: "Pezzo", en: "Developer-first open-source LLMOps platform: prompt design, versioning, and instant delivery."}
+  - {nom: "PINT Benchmark", en: "Benchmark for prompt injection detection systems (Lakera)."}
+  - {nom: "prompt-injection-defenses", en: "Comprehensive list of all practical and proposed defenses against prompt injection (tldrsec)."}
+  - {nom: "Promptify", en: "Prompt engineering, prompt versioning, and structured output generation."}
+  - {nom: "promptmap", en: "Security scanner for custom LLM applications (prompt injection)."}
+  - {nom: "ps-fuzz (Prompt Fuzzer)", en: "System prompt fuzzing to test and harden GenAI apps."}
+  - {nom: "PyRIT", en: "Microsoft/Azure's 'Python Risk Identification Tool' for generative AI red teaming."}
+  - {nom: "Rebuff", en: "Prompt injection detector (ProtectAI)."}
+  - {nom: "RewardBench", en: "First evaluation tool for reward models (AllenAI)."}
+  - {nom: "runc", en: "CLI tool for launching containers according to the OCI specification (foundation of isolation)."}
+  - {nom: "safety-eval", en: "Simple evaluation of generative models and safety classifiers (AllenAI)."}
+  - {nom: "SandboxFusion", en: "ByteDance's multi-language code execution sandbox for LLM evaluation."}
+  - {nom: "SigNoz", en: "Open-source observability platform natively supporting OpenTelemetry (logs, traces, metrics); alternative to Datadog."}
+  - {nom: "simple-evals", en: "OpenAI's lightweight library of benchmark evaluations (MMLU, MATH, GPQA, etc.)."}
+  - {nom: "SWE-bench", en: "Benchmark measuring the ability of LLMs to resolve real GitHub issues."}
+  - {nom: "tau-bench", en: "Benchmark evaluating agents in tool-agent-user interactions (Sierra)."}
+  - {nom: "terminal-bench", en: "Benchmark evaluating LLMs on complex terminal tasks (Harbor project / laude-institute)."}
+  - {nom: "torcheval", en: "High-performance collection of PyTorch model metrics with a metric creation interface."}
+  - {nom: "UpTrain", en: "Unified open-source platform to evaluate and improve GenAI applications (20+ checks)."}
+  - {nom: "Vectara Hallucination Leaderboard", en: "Leaderboard comparing LLM hallucination rates during short document summarization."}
+  - {nom: "Vigil", en: "Detection of prompt injections, jailbreaks, and risky LLM inputs."}
+  - {nom: "VLMEvalKit", en: "Evaluation toolkit for large multimodal models (220+ LMMs, 80+ benchmarks)."}
+  - {nom: "W&B Weave", en: "Weights & Biases toolkit for developing AI applications (tracing, evals)."}
+  - {nom: "WebArena", en: "Realistic web environment for building and evaluating autonomous agents."}
+  - {nom: "Whistleblower", en: "Offensive testing tool against system prompt leakage and capability discovery via API."}
+  - {nom: "whylogs", en: "Data logging library for ML models and pipelines (data quality, drift)."}
+  - {nom: "ZenML", en: "Unified AI platform from pipelines to agents, with tracking and orchestration."}

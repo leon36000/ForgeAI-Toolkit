@@ -1,0 +1,24 @@
+# Lot production-05c — F23 (P2), membre: qwen (Qwen3.7-Max), 2026-07-14
+# contre-vérification croisée 10% (longcat) : 5/5 OK | claim: UNVERIFIED
+lot: production-05c
+traductions:
+  - {nom: "OpenVINO", en: "Open-source Intel toolkit for optimizing and deploying AI inference (CPU, Intel GPU, NPU)."}
+  - {nom: "Optimum", en: "HF tools to accelerate Transformers/Diffusers inference and training via hardware optimization (ONNX, TensorRT, etc.)."}
+  - {nom: "Optimum-Intel", en: "Optimum extension to accelerate inference with Intel tools (OpenVINO, Neural Compressor)."}
+  - {nom: "Optimum-NVIDIA", en: "Optimum extension for accelerated inference on NVIDIA GPUs (via TensorRT-LLM)."}
+  - {nom: "Portkey Gateway", en: "Ultra-fast AI Gateway with built-in guardrails; routes to 1,600+ LLMs via a single API."}
+  - {nom: "PowerInfer", en: "High-speed LLM serving for local deployment, leveraging hot/cold neuron activation to hybridize CPU/GPU."}
+  - {nom: "RamaLama", en: "Developer tool simplifying local model serving from any source via containers (OCI)."}
+  - {nom: "Ray", en: "Distributed AI compute engine (runtime + libraries); Ray Serve provides scalable model serving."}
+  - {nom: "RayLLM", en: "LLM serving on Ray; *archived* (features migrated elsewhere)."}
+  - {nom: "ROCm", en: "AMD's open-source software stack for GPU computing (AMD's CUDA equivalent); backend for many engines."}
+  - {nom: "ROCm/vllm", en: "vLLM fork/adaptation optimized for AMD GPUs (ROCm)."}
+  - {nom: "RouteLLM", en: "Framework for serving and evaluating LLM routers to reduce costs without quality loss."}
+  - {nom: "run:ai Model Streamer", en: "Fast model weight loading to GPU memory (streaming) to reduce cold start times."}
+  - {nom: "S-LoRA", en: "Research system for serving thousands of concurrent LoRA adapters; *archived*."}
+  - {nom: "Seldon Core", en: "MLOps framework to package, deploy, monitor, and manage thousands of ML models in production on Kubernetes."}
+  - {nom: "SkyPilot", en: "Runs, manages, and scales AI workloads on any infra (Kubernetes, Slurm, 20+ clouds, on-prem) via a single system; cost/spot optimization."}
+  - {nom: "SpecForge", en: "Training of speculative decoding models and seamless porting to SGLang serving."}
+  - {nom: "tabbyAPI", en: "Official API server for ExLlama(V2/V3), OpenAI-compatible, lightweight, and fast."}
+  - {nom: "TensorRT", en: "NVIDIA SDK for high-performance deep learning inference on GPUs (graph optimization, quantization, fused kernels)."}
+  - {nom: "TensorZero", en: "Open-source LLMOps platform unifying LLM gateway, observability, evaluation, optimization, and experimentation; *archived*."}

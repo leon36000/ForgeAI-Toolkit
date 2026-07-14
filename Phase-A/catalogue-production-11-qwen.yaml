@@ -1,0 +1,40 @@
+# Lot production-11 — F23 (P2), membre: qwen (Qwen3.7-Max), 2026-07-14
+# contre-vérification croisée 10% (longcat) : 4/4 OK | claim: UNVERIFIED
+lot: production-11
+traductions:
+  - {nom: "mcp-golang (Metoro)", en: "Write MCP servers in just a few lines of Go."}
+  - {nom: "mcp-k8s-go", en: "MCP server for connecting to Kubernetes."}
+  - {nom: "mcp-playwright (ExecuteAutomation)", en: "Community Playwright MCP server (browser + API)."}
+  - {nom: "mcp-proxy (sparfenyuk)", en: "Bridge between MCP Streamable HTTP and stdio transports."}
+  - {nom: "mcp-proxy (TBXark)", en: "Proxy aggregating multiple MCP servers behind a single HTTP server."}
+  - {nom: "mcp-proxy-server (adamwattis)", en: "Proxy aggregating multiple MCP servers through a single interface."}
+  - {nom: "mcp-scan (Invariant Labs → Snyk)", en: "Security scanner for AI agents, MCP servers, and agent skills."}
+  - {nom: "MCP-Security-Checklist (SlowMist)", en: "Comprehensive security checklist for MCP-based AI tools."}
+  - {nom: "mcp-security-scanner (sidhpurwala)", en: "Scans a running MCP server to produce a vulnerability and misconfiguration report."}
+  - {nom: "MCP-Shield", en: "Security scanner for MCP servers."}
+  - {nom: "mcp-use", en: "Fullstack framework for developing MCP apps (ChatGPT/Claude) and MCP servers."}
+  - {nom: "mcp.so", en: "Large community collection of third-party MCP servers."}
+  - {nom: "mcpfinder", en: "MCP server that discovers, evaluates, and installs 25K+ servers (Official Registry, Glama, Smithery)."}
+  - {nom: "MCPJungle", en: "Unified hub to manage and connect to all your MCP servers."}
+  - {nom: "mcpo", en: "Simple and secure MCP-to-OpenAPI proxy."}
+  - {nom: "MCPSafetyScanner", en: "Agent-based automated MCP security auditing and remediation (arXiv 2504.03767)."}
+  - {nom: "mcptools (f)", en: "CLI for interacting with MCP servers over stdio and HTTP transports."}
+  - {nom: "Memory", en: "Reference knowledge graph memory server."}
+  - {nom: "MetaMCP", en: "MCP aggregator, orchestrator, middleware, and gateway in a single container."}
+  - {nom: "Microsoft MCP Servers", en: "Catalog of official Microsoft MCP servers."}
+  - {nom: "MongoDB MCP Server", en: "MCP server for MongoDB and Atlas."}
+  - {nom: "Neon MCP Server", en: "MCP server for the Neon management API and databases."}
+  - {nom: "OpenAI Agents SDK (Python)", en: "Lightweight and powerful framework for multi-agent workflows (MCP support)."}
+  - {nom: "Pinecone Assistant MCP", en: "MCP server for Pinecone Assistant."}
+  - {nom: "Playwright MCP (Microsoft)", en: "Official Playwright MCP server for browser automation."}
+  - {nom: "Postgres MCP Pro", en: "Configurable read/write access and PostgreSQL performance analysis."}
+  - {nom: "PulseMCP", en: "Directory of MCP servers, clients, and use cases + newsletter."}
+  - {nom: "PulseMCP Server", en: "MCP server to help find servers listed on PulseMCP.com."}
+  - {nom: "Python SDK", en: "Official Python SDK for building MCP servers and clients."}
+  - {nom: "Qdrant MCP", en: "Official Qdrant MCP server (memory/semantic search)."}
+  - {nom: "Quickstart Resources", en: "Example servers and clients from MCP tutorials."}
+  - {nom: "Redis MCP Server", en: "Official Redis MCP server (natural language interface)."}
+  - {nom: "Reference Servers (dépôt principal)", en: "Official repository for reference and example MCP servers."}
+  - {nom: "Ruby SDK", en: "Official Ruby SDK for the Model Context Protocol."}
+  - {nom: "Rust SDK", en: "Official Rust SDK for the Model Context Protocol."}
+  - {nom: "sample-mcp-security-scanner (AWS)", en: "MCP server integrating Checkov, Semgrep, and Bandit for code security analysis."}

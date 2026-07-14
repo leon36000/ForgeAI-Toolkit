@@ -1,0 +1,40 @@
+# Lot production-14 — F23 (P2), membre: qwen (Qwen3.7-Max), 2026-07-14
+# contre-vérification croisée 10% (longcat) : 4/4 OK | claim: UNVERIFIED
+lot: production-14
+traductions:
+  - {nom: "Model Soups", en: "Averaging the weights of multiple fine-tuned models to improve accuracy without inference cost."}
+  - {nom: "ms-swift", en: "PEFT or full-parameter fine-tuning (CPT/SFT/DPO/GRPO) for 600+ LLMs and 300+ MLLMs (ModelScope)."}
+  - {nom: "nanoGPT", en: "The simplest and fastest repository for training and fine-tuning medium-sized GPTs."}
+  - {nom: "nanotron", en: "Minimalist training of large language models with 3D parallelism."}
+  - {nom: "NeMo-Curator", en: "Scalable toolkit for data preprocessing and curation for LLMs."}
+  - {nom: "NeMo-RL", en: "Scalable toolkit for efficient model reinforcement."}
+  - {nom: "NVIDIA Apex", en: "PyTorch extension: tools for mixed precision and distributed training."}
+  - {nom: "NVIDIA NeMo", en: "Scalable generative framework for LLMs, multimodal, and Speech AI (ASR/TTS)."}
+  - {nom: "OAT", en: "Research-oriented framework for online LLM alignment (RL, preference learning)."}
+  - {nom: "OLMo", en: "Modeling, training, evaluation, and inference code for AllenAI's OLMo open models."}
+  - {nom: "OmniQuant", en: "Simple and powerful quantization technique for LLMs (ICLR 2024 spotlight)."}
+  - {nom: "OneFlow", en: "Deep learning framework designed to be user-friendly, scalable, and efficient."}
+  - {nom: "open-instruct", en: "AllenAI's post-training codebase (SFT, DPO, RLVR, etc.)."}
+  - {nom: "open-r1", en: "Fully open reproduction of DeepSeek-R1 (reasoning RL)."}
+  - {nom: "OpenFlamingo", en: "Open-source framework for training large multimodal models."}
+  - {nom: "OpenRLHF", en: "Simple, scalable, and high-performance agentic RL framework based on Ray (PPO, DAPO, REINFORCE++, VLM, vLLM, Async RL)."}
+  - {nom: "optimum-quanto", en: "PyTorch quantization backend for Optimum."}
+  - {nom: "PEFT", en: "Hugging Face's state-of-the-art parameter-efficient fine-tuning methods (LoRA, IA3, prefix-tuning, etc.)."}
+  - {nom: "Petals", en: "BitTorrent-style at-home LLM execution; fine-tuning and inference up to 10x faster than offloading."}
+  - {nom: "picotron", en: "Minimalist 4D-parallel distributed training framework designed for educational purposes."}
+  - {nom: "PRIME", en: "Scalable RL solution for advanced reasoning in language models (prime-rl)."}
+  - {nom: "private-transformers", en: "Codebase facilitating differentially private training of transformers."}
+  - {nom: "PyTorch (FSDP)", en: "Tensor and dynamic neural network framework with GPU acceleration; includes FSDP (Fully Sharded Data Parallel)."}
+  - {nom: "PyTorch/XLA", en: "Enables PyTorch on XLA devices (e.g., Google TPUs)."}
+  - {nom: "QuaRot", en: "End-to-end 4-bit LLM inference via rotations (NeurIPS 2024)."}
+  - {nom: "QuIP#", en: "2-bit quantization with lattices and incoherence (QuIP-sharp)."}
+  - {nom: "RedPajama-Data", en: "Code to prepare large LLM training datasets (LLaMA reproduction)."}
+  - {nom: "RL4LMs", en: "Modular RL library for fine-tuning language models on human preferences."}
+  - {nom: "rllm", en: "RL framework for LLMs/agents (Agentica)."}
+  - {nom: "slime", en: "LLM post-training framework for RL Scaling (THUDM)."}
+  - {nom: "smol-course", en: "Hands-on course on alignment and fine-tuning of small models."}
+  - {nom: "SmoothQuant", en: "Accurate and efficient post-training quantization (W8A8) for LLMs (ICML 2023)."}
+  - {nom: "SparseGPT", en: "Code for the ICML 2023 paper: accurate one-shot pruning of massive LLMs."}
+  - {nom: "SparseML", en: "Libraries applying sparsification recipes to neural networks (smaller/faster models)."}
+  - {nom: "squeakily", en: "Library for cleaning and filtering language datasets."}
+  - {nom: "SqueezeLLM", en: "Dense-and-sparse quantization (ICML 2024)."}

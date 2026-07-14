@@ -1,0 +1,29 @@
+# Lot production-03b — F23 (P2), membre: qwen (Qwen3.7-Max), 2026-07-14
+# contre-vérification croisée 10% (longcat) : 5/5 OK | claim: UNVERIFIED
+lot: production-03b
+traductions:
+  - {nom: "smolagents", en: "Hugging Face's minimalist library for agents that 'think in code'."}
+  - {nom: "Stagehand", en: "SDK for browser agents (Browserbase)."}
+  - {nom: "STORM", en: "LLM-powered knowledge curation system that generates long-form reports with citations (Stanford OVAL)."}
+  - {nom: "Strands Agents", en: "Open-source SDK (Python/TS) for production agents, any model/any cloud. The sdk-python repo has been renamed to harness-sdk."}
+  - {nom: "Suna (Kortix)", en: "'Company AI Command Center', an open-source general-purpose agent."}
+  - {nom: "Superagent", en: "Protects AI applications against prompt injections, data leaks, and harmful outputs."}
+  - {nom: "SuperAGI", en: "Dev-first open-source framework for autonomous AI agents."}
+  - {nom: "Swarms (kyegomez)", en: "Enterprise-grade, production-ready multi-agent orchestration framework."}
+  - {nom: "SWE-agent", en: "Takes a GitHub issue and attempts to automatically fix it using the chosen LLM (NeurIPS 2024)."}
+  - {nom: "TaskingAI", en: "Open-source platform for developing AI-native applications."}
+  - {nom: "Temporal", en: "Durable workflow orchestration service (used for agents)."}
+  - {nom: "TEN Framework", en: "Open-source framework for conversational voice AI agents."}
+  - {nom: "TextGrad", en: "'Automatic differentiation' via text: backpropagation of textual gradients (published in Nature)."}
+  - {nom: "TinyTroupe", en: "LLM-powered multi-agent persona simulation for business insights and creativity."}
+  - {nom: "Trigger.dev", en: "Build and deploy fully managed AI agents and workflows."}
+  - {nom: "UI-TARS", en: "Pioneering automated GUI interaction with native agents (ByteDance)."}
+  - {nom: "Vercel AI SDK", en: "TypeScript AI toolkit from the creators of Next.js for applications and agents."}
+  - {nom: "Windmill", en: "Open-source developer platform turning scripts into webhooks, workflows, and UIs (alternative to Retool/Temporal)."}
+  - {nom: "XAgent", en: "Autonomous LLM agent for solving complex tasks (OpenBMB)."}
+  - {nom: "Zep", en: "Memory layer for agents (examples and integrations)."}
+  - {nom: "AIBrix", en: "Cost-effective and modular GenAI infrastructure components for inference (routing, autoscaling, distributed KV cache)."}
+  - {nom: "Apache TVM", en: "Open-source ML compilation framework (multi-target optimization and codegen); foundation of MLC-LLM."}
+  - {nom: "Aphrodite Engine", en: "Large-scale LLM inference engine (forked from vLLM), optimized for serving Hugging Face models in production."}
+  - {nom: "AQLM", en: "Extreme LLM compression via Additive Quantization and PV-Tuning."}
+  - {nom: "Arch (archgw / Plano)", en: "AI-native proxy and data plane for agentic apps: orchestration, safety, observability, and intelligent LLM routing."}

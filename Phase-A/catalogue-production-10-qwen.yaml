@@ -1,0 +1,40 @@
+# Lot production-10 — F23 (P2), membre: qwen (Qwen3.7-Max), 2026-07-14
+# contre-vérification croisée 10% (longcat) : 4/4 OK | claim: UNVERIFIED
+lot: production-10
+traductions:
+  - {nom: "Browserbase MCP", en: "Cloud browser control via Browserbase and Stagehand."}
+  - {nom: "C# SDK", en: "Official C# SDK, maintained in collaboration with Microsoft."}
+  - {nom: "Chroma MCP", en: "MCP server providing Chroma database capabilities."}
+  - {nom: "Cloudflare MCP", en: "Official Cloudflare MCP servers."}
+  - {nom: "Composio", en: "1000+ toolkits, tool search, context management, auth, and sandboxed workbench for agents."}
+  - {nom: "Context7", en: "Up-to-date code documentation for LLMs and AI editors."}
+  - {nom: "create-python-server", en: "Python MCP server skeleton generator."}
+  - {nom: "Damn Vulnerable MCP Server", en: "Intentionally vulnerable MCP server for security training."}
+  - {nom: "Docker MCP Gateway", en: "Official Docker `docker mcp` CLI plugin / MCP gateway."}
+  - {nom: "Docker MCP Registry", en: "Official Docker MCP registry."}
+  - {nom: "Elasticsearch MCP", en: "Official MCP server for Elasticsearch."}
+  - {nom: "Exa MCP", en: "MCP server for web search and crawling via Exa."}
+  - {nom: "FastMCP (Python)", en: "Fast and Pythonic way to build MCP servers and clients (v2, now at PrefectHQ)."}
+  - {nom: "FastMCP (TypeScript)", en: "TypeScript framework for building MCP servers."}
+  - {nom: "Fetch", en: "Reference server for fetching and converting web pages."}
+  - {nom: "Figma Context MCP", en: "Provides Figma layout information to coding agents."}
+  - {nom: "Filesystem", en: "Reference server for secure filesystem access."}
+  - {nom: "Firecrawl MCP", en: "Official Firecrawl MCP server (web scraping and search)."}
+  - {nom: "Git", en: "Reference server for reading and writing Git repositories."}
+  - {nom: "GitHub MCP Server", en: "Official GitHub MCP server."}
+  - {nom: "Glama MCP Servers", en: "Comprehensive open-source registry of MCP servers and clients (updated daily)."}
+  - {nom: "Go SDK", en: "Official Go SDK, maintained in collaboration with Google."}
+  - {nom: "Goose (Block)", en: "Open-source AI agent extensible via MCP (install, run, edit, test)."}
+  - {nom: "IBM MCP Context Forge", en: "AI gateway, registry, and proxy unifying MCP, A2A, and REST/gRPC with guardrails."}
+  - {nom: "Java SDK", en: "Official Java SDK, maintained with Spring AI."}
+  - {nom: "Kotlin SDK", en: "Official Kotlin SDK, maintained with JetBrains."}
+  - {nom: "LangChain MCP Adapters", en: "Adapters connecting LangChain to MCP servers."}
+  - {nom: "Lasso mcp-gateway", en: "Plugin-based gateway orchestrating other MCPs for enterprise agents."}
+  - {nom: "llms.txt", en: "/llms.txt file helping language models use a website."}
+  - {nom: "MCP Hub (ravitemer)", en: "Centralized MCP server manager with dynamic management and monitoring."}
+  - {nom: "MCP Inspector", en: "Visual tool for testing and debugging MCP servers."}
+  - {nom: "MCP Registry (officiel)", en: "Official community registry service for MCP servers."}
+  - {nom: "MCP Specification", en: "Official specification and documentation for the Model Context Protocol."}
+  - {nom: "mcp-cli (wong2)", en: "Command-line inspector for the Model Context Protocol."}
+  - {nom: "mcp-funnel (chris-schra)", en: "Proxy filtering out unused MCP tools to reduce token load (\"tree-shaking\" for MCP)."}
+  - {nom: "mcp-go (mark3labs)", en: "Go implementation of MCP, integrating LLMs ↔ data/tools."}
