@@ -53,6 +53,14 @@ def test_registre_vide_est_valide(tmp_path):
     assert registre.verify(tmp_path / "absent.jsonl") is None
 
 
+def test_append_cree_le_repertoire_parent(tmp_path):
+    # ex. ~/.forgeai/Registres/ inexistant au premier lancement (portabilité P3)
+    reg = tmp_path / "nouveau" / "Registres" / "mission.jsonl"
+    entry = registre.append(reg, "t", "a", {"n": 1})
+    assert reg.exists()
+    assert entry["seq"] == 1
+
+
 def test_cli_append_puis_verify(tmp_path, monkeypatch, capsys):
     reg = tmp_path / "r.jsonl"
     monkeypatch.setattr(sys, "argv",
