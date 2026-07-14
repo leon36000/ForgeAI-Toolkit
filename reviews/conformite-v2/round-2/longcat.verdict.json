@@ -1,0 +1,14 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "description": "Aucune faille critique; rapport honnête (écarts explicites A+D) et exploitable (13 ABSENTE comblées, table de couverture vérifiée).",
+   "preuve": "Sections A,B,C,D"
+  }
+ ],
+ "date": "2026-07-14",
+ "round": 2,
+ "source_route": "forge-model-bridge",
+ "cible": "Rapport de conformité v2.0 (corrigé)"
+}
