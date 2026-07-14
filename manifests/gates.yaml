@@ -1,0 +1,64 @@
+# Livrable Phase A — consolidation manifestes (§1 plan maître, tâche MiMo)
+# membre: mimo (MiMo-Pro-V2 via forge-model-bridge, provider_id=MiMo-Pro-V2)
+# date: 2026-07-14 | statut: DONE (brouillon pour plan-freeze) | claim: UNVERIFIED
+# Corrections Fable APPLIQUÉES sur la sortie brute MiMo (déviations journalisées au registre, à re-valider en revue aveugle) :
+#  - G09 : sortie brute disait « 3/3 APPROVE » — réaligné sur §3/§8 (revue scellée ×3 → tally déterministe, critique non résolue = bloqué)
+#  - G11 : sortie brute réutilisait le seuil 7/9 (qui appartient au consensus de plan-freeze §4) — réécrit en contrat de fin de phase §8
+#  - G04 : sortie brute proposait un grep — remplacé par le scanner réel scripts/no_stub_scan.py (AST + marqueurs)
+version: 1
+gates:
+  - id: G01
+    outil: ruff
+    declencheur: pre-commit
+    bloquant: true
+    regle: "ruff check --select ALL --exit-non-zero-on-fix : score A, zero violations"
+  - id: G02
+    outil: mypy
+    declencheur: pr
+    bloquant: true
+    regle: "mypy --strict --no-error-summary : exit 0, zero erreurs"
+  - id: G03
+    outil: pytest
+    declencheur: pr
+    bloquant: true
+    regle: "pytest --cov=forgeai --cov-fail-under=85 ; pytest --cov=forgeai/registry --cov-fail-under=95 ; pytest --cov=forgeai/gates --cov-fail-under=95"
+  - id: G04
+    outil: no-stub-scan
+    declencheur: pr
+    bloquant: true
+    regle: "scripts/no_stub_scan.py --all : exit 0 requis (marqueurs interdits + AST corps vides/faux vert, périmètre src scripts tests .github)"
+  - id: G05
+    outil: gitleaks
+    declencheur: pre-commit
+    bloquant: true
+    regle: "gitleaks detect --no-git : 0 leak détecté"
+  - id: G06
+    outil: trivy
+    declencheur: pr
+    bloquant: true
+    regle: "trivy fs --severity HIGH,CRITICAL --exit-code 1 . : 0 vulnérabilité HIGH/CRITICAL"
+  - id: G07
+    outil: hash-catalogue
+    declencheur: pr
+    bloquant: true
+    regle: "forgeai catalogue --verify : hash racine identique au registre ; toute divergence = FAIL"
+  - id: G08
+    outil: no-fake-done
+    declencheur: pr
+    bloquant: true
+    regle: "toute story marquée DONE dans PR sans entrée registre preuve_e2e correspondante = FAIL automatique"
+  - id: G09
+    outil: revue-aveugle
+    declencheur: merge
+    bloquant: true
+    regle: "revue aveugle scellée par 3 modèles / 3 vendors distincts (verdicts reviews/<étape>/<modèle>.verdict.json) → tally déterministe par script ; objection critique non résolue = bloqué"
+  - id: G10
+    outil: signature-fable
+    declencheur: merge
+    bloquant: true
+    regle: "chaque story livrée signée (auteur + hash contenu + timestamp) dans registre JSONL ; signature manquante = FAIL"
+  - id: G11
+    outil: tally
+    declencheur: fin-de-phase
+    bloquant: true
+    regle: "fin de phase : chaque fonctionnalité de phases.yaml a test e2e vert + preuve au registre ; rapport MiMo compilé ; validation d'étape Fable sur pièces"
