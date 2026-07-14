@@ -3,6 +3,20 @@
 Déployeur de référence d'infrastructures IA agentiques : wizard hardware-aware,
 catalogue 1021 entrées bilingue (FR/EN), multi-nœuds (Tailscale), gouvernance intégrée.
 
+## Installation (n'importe quelle machine, Python ≥3.10)
+
+```bash
+pip install forgeai-toolkit          # cœur sans aucune dépendance (stdlib pur)
+pip install "forgeai-toolkit[tui]"   # + wizard interactif Textual (optionnel)
+
+forgeai doctor                       # que peut faire VOTRE machine ?
+```
+
+`forgeai doctor` sonde votre environnement (CPU/GPU, Docker, kubectl/cluster, Ollama)
+et rapporte quels profils et backends de déploiement sont disponibles — le Toolkit
+s'adapte à ce que vous avez, sans exiger de stack particulière. Le catalogue voyage
+dans le paquet : aucune donnée externe requise.
+
 Construit via la méthodologie **BMAD**, exécuté par une équipe de modèles orchestrée
 dans Claude Code (Fable = orchestrateur/juge), routée par le gateway LiteLLM local
 (`forge-model-bridge`). Plan de référence : [CANON/PLAN-MAITRE-EXECUTION-BMAD-v1.0.md](CANON/PLAN-MAITRE-EXECUTION-BMAD-v1.0.md).

@@ -63,7 +63,8 @@ def _argv(tmp_path, registre_path, **extra):
     argv = ["wizard", "--ci", "--workdir", str(tmp_path / "run"),
             "--registre", str(registre_path), "--document", str(DOC),
             "--question", "Quelle version de Python ?",
-            "--expected-fact", extra.pop("fact", "3.10"), "--teardown"]
+            "--expected-fact", extra.pop("fact", "3.10"),
+            "--teardown", "--skip-preflight"]
     for key, value in extra.items():
         argv += [key, value]
     return argv

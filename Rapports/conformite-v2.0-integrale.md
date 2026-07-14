@@ -60,7 +60,7 @@ Statuts : **COUVERTE** (implémentée + preuve) · **PARTIELLE** (amorcée, inco
 | DM-5 modèles local+cloud, provenance + clé API | **ABSENTE** | aucune phase de gestion de modèles (téléchargement/config/test); overlay fige `qwen2.5:0.5b` en dur |
 | DM-5b phase Stratégie modèle | **ABSENTE** | aucun écran Cerveau unique / Équipe / Hybride |
 | DM-6 branchement auto via gateway, cache | **ABSENTE** | aucune phase de câblage brique→gateway; prompt caching non géré |
-| CD-1 stacks par domaine | **PARTIELLE** | overlay Minimal RAG seul (`catalogue/deploy-minimal.json`); templates Dev Agentic / RAG / Lab / Production absents |
+| CD-1 stacks par domaine | **PARTIELLE** | overlay Minimal RAG seul (`src/forgeai/data/deploy-minimal.json`); templates Dev Agentic / RAG / Lab / Production absents |
 | CD-2 stack branché complet | **PARTIELLE** | Minimal RAG (ollama + qdrant + rag-api) prouvé; harnesses/ledgers/guardrails/mémoire non déployés |
 | CD-3 modulable (plugin) | **PARTIELLE** | catalogue data-driven (1021 briques); pas de système de plugin ni de pipeline de contribution vérifiée |
 | CD-4 import/export | **ABSENTE** | `forge export`/`import` non implémentés |
