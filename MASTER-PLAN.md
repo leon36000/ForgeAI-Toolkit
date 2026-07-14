@@ -68,9 +68,14 @@ Détail : `Phase-A/architecture-glm.md`.
 | S09 | Preuve e2e : réponse contenant un fait ingéré | kimi |
 | S10 | Wizard --ci bout-en-bout + preuve au registre | fable |
 
-**Chemin critique (corrigé round 1)** : S01 → S02 → S03 → S04 → S05 → S06 → S08 → S09 → S10.
-S07 (K3s) est hors chemin critique (parallélisable après S05) mais **reste un critère de sortie P1** :
-le rendu double backend n'est prouvé que si Compose ET K3s passent leur preuve e2e.
+**Chemin critique (corrigé rounds 1-2)** : S01 → S02 → S03 → S04 → S05 → S06 → S08 → S09 → S10.
+S07 (K3s) est hors chemin critique mais **reste un critère de sortie P1**, prouvé par la
+**séquence de parité complète** (amendement round 2, objection Gemini intégrée) : après la preuve
+Compose (S06→S08→S09) et son teardown complet, la même séquence tourne sur K3s —
+S07 → S08′ (ingestion) → S09′ (question/réponse) → teardown. La parité e2e exige que les deux
+backends répondent correctement à la même question sur le même document. S07 n'est PAS un
+prérequis de S08 (graphe : S08 dépend de S06); la validation P1 est un événement de fin de phase
+qui exige les DEUX preuves.
 
 **Règles de résolution du round 1 (objections critiques résolues) :**
 1. **Backends séquentiels, jamais simultanés** : S06 et S07 s'exécutent l'un après l'autre sur le

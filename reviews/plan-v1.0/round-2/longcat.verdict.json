@@ -1,0 +1,13 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "critique",
+   "description": "S07 critère de sortie P1 mais absent du chemin critique : S08 s'exécuterait avant la validation de P1 par S07.",
+   "preuve": "chemin critique omet S07"
+  }
+ ],
+ "date": "2026-07-14",
+ "heure": "scellé round 2",
+ "source_route": "forge-model-bridge"
+}
