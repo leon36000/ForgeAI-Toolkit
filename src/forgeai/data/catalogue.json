@@ -10908,17 +10908,6 @@
    "description_en": null,
    "description_fr": "Entrée Atlas (MODÈLE) — description à enrichir depuis le tableau source.",
    "en_pending": false,
-   "id": "mod-les-ia-et-routes-r-f-rence-non-installables-comme-briques",
-   "name": "Modèles IA et routes (référence — non installables comme briques) —",
-   "source_url": null
-  },
-  {
-   "atlas_only": true,
-   "atlas_status": "MODÈLE",
-   "category": "Auto-amélioration et recherche expérimentale",
-   "description_en": null,
-   "description_fr": "Entrée Atlas (MODÈLE) — description à enrichir depuis le tableau source.",
-   "en_pending": false,
    "id": "codestral",
    "name": "Codestral",
    "source_url": null
@@ -11152,72 +11141,6 @@
    "en_pending": false,
    "id": "qwen3-coder-next",
    "name": "Qwen3-Coder-Next",
-   "source_url": null
-  },
-  {
-   "atlas_only": true,
-   "atlas_status": "ACCEPTÉ",
-   "category": "Auto-amélioration et recherche expérimentale",
-   "description_en": null,
-   "description_fr": "Entrée Atlas (ACCEPTÉ) — description à enrichir depuis le tableau source.",
-   "en_pending": false,
-   "id": "services-internes-bespoke-r-f-rence-sp-cifiques-un-projet-non",
-   "name": "Services internes bespoke (référence — spécifiques à un projet, non",
-   "source_url": null
-  },
-  {
-   "atlas_only": true,
-   "atlas_status": "ACCEPTÉ",
-   "category": "Auto-amélioration et recherche expérimentale",
-   "description_en": null,
-   "description_fr": "Entrée Atlas (ACCEPTÉ) — description à enrichir depuis le tableau source.",
-   "en_pending": false,
-   "id": "command-center-tools-catalog-api",
-   "name": "Command Center tools catalog API",
-   "source_url": null
-  },
-  {
-   "atlas_only": true,
-   "atlas_status": "ACCEPTÉ SOUS GATE",
-   "category": "Auto-amélioration et recherche expérimentale",
-   "description_en": null,
-   "description_fr": "Entrée Atlas (ACCEPTÉ SOUS GATE) — description à enrichir depuis le tableau source.",
-   "en_pending": false,
-   "id": "command-center-write-switches",
-   "name": "Command Center write switches",
-   "source_url": null
-  },
-  {
-   "atlas_only": true,
-   "atlas_status": "ACCEPTÉ",
-   "category": "Auto-amélioration et recherche expérimentale",
-   "description_en": null,
-   "description_fr": "Entrée Atlas (ACCEPTÉ) — description à enrichir depuis le tableau source.",
-   "en_pending": false,
-   "id": "control-center-live-status",
-   "name": "Control Center live status",
-   "source_url": null
-  },
-  {
-   "atlas_only": true,
-   "atlas_status": "ACCEPTÉ - PRIORITAIRE",
-   "category": "Auto-amélioration et recherche expérimentale",
-   "description_en": null,
-   "description_fr": "Entrée Atlas (ACCEPTÉ - PRIORITAIRE) — description à enrichir depuis le tableau source.",
-   "en_pending": false,
-   "id": "control-center-read-only-backend",
-   "name": "Control Center read-only backend",
-   "source_url": null
-  },
-  {
-   "atlas_only": true,
-   "atlas_status": "ACCEPTÉ",
-   "category": "Auto-amélioration et recherche expérimentale",
-   "description_en": null,
-   "description_fr": "Entrée Atlas (ACCEPTÉ) — description à enrichir depuis le tableau source.",
-   "en_pending": false,
-   "id": "forge-command-center",
-   "name": "Forge Command Center",
    "source_url": null
   },
   {

@@ -24,7 +24,10 @@ DEPLOY = deploy_overlay_path()
 def test_catalogue_reel_integre_et_complet():
     assert verify_catalogue(CATALOGUE)
     bricks = load_catalogue(CATALOGUE)
-    assert len(bricks) == 1021
+    # 1021 − 5 services bespoke Command/Control Center (retrait autorisé Nathan,
+    # prompt maître 2026-07-14) − 2 artefacts d'en-tête = 1014. Preuve : registre
+    # type retrait_bespoke. Toute autre évolution passe par R-ALL (dossier sourcé).
+    assert len(bricks) == 1014
     # Le compte des traductions en attente décroît à chaque lot appliqué (P2-F23) :
     # cohérence structurelle data-driven plutôt que valeur figée.
     data = json.loads(CATALOGUE.read_text(encoding="utf-8"))
