@@ -1,0 +1,17 @@
+# Claude Code session-local
+.claude/worktrees/
+.claude/settings.local.json
+CLAUDE.local.md
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+.coverage
+.mypy_cache/
+.ruff_cache/
+
+# OS / editors
+.DS_Store
+*.swp

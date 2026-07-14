@@ -1,0 +1,74 @@
+# Équipe de mission ForgeAI Toolkit — §1 du plan maître (CANON/PLAN-MAITRE-EXECUTION-BMAD-v1.0.md)
+# provider_id = raccourci roster forge-model-bridge (LiteLLM 127.0.0.1:4000).
+# route_status passe à "ok" après test de connexion réel (checklist §9, étape 3) → manifests/routes.yaml
+version: 1
+membres:
+  - id: fable
+    modele: Claude Fable 5 (instance Claude Code, session lead)
+    vendor: anthropic
+    provider_id: null   # Fable EST la session — pas de route bridge
+    phase_a: Validation finale du plan après consensus; arbitre des objections
+    phase_b: Orchestrateur de mission + juge/validateur d'étapes + codeur du difficile
+    contrainte: ne se relit jamais lui-même — reviewers non-Anthropic obligatoires sur son code
+  - id: glm
+    modele: GLM-5.2
+    vendor: zhipu
+    provider_id: glm52
+    phase_a: Architecture technique détaillée (modules, schémas de données, API des hooks)
+    phase_b: Architecte permanent — revue d'architecture de chaque story avant codage
+  - id: deepseek
+    modele: DeepSeek V4 Pro
+    vendor: deepseek
+    provider_id: deepseek
+    phase_a: Registre des risques + mitigations; revue critique du PRD
+    phase_b: Juge/critique indépendant — reviewer aveugle no 1
+  - id: kimi
+    modele: Kimi K2.7 Code
+    vendor: moonshot
+    provider_id: kimi
+    phase_a: Découpage du plan en stories BMAD exécutables
+    phase_b: Codeur des missions longues multi-fichiers
+  - id: composer
+    modele: Composer 2.5
+    vendor: xai-cursor
+    provider_id: composer
+    phase_a: Spécification du TUI (écrans du wizard, flux d'interaction)
+    phase_b: Codeur des itérations rapides TUI/UX
+    contrainte: jamais apparié en revue avec grok (même vendor)
+  - id: grok
+    modele: Grok 4.5
+    vendor: xai-cursor
+    provider_id: null   # à résoudre au test des routes (alias LiteLLM passthrough)
+    phase_a: Spécification des tests (matrice de couverture par fonctionnalité)
+    phase_b: Codeur parallèle sur stories indépendantes (git worktrees)
+    contrainte: jamais apparié en revue avec composer (même vendor)
+  - id: gemini
+    modele: Gemini 3.1 Pro
+    vendor: google
+    provider_id: null   # à résoudre au test des routes (alias LiteLLM passthrough)
+    phase_a: Revue UX/design du wizard + diagrammes d'architecture
+    phase_b: Reviewer aveugle no 2 (multimodal)
+  - id: qwen
+    modele: Qwen 3.7 Max
+    vendor: alibaba
+    provider_id: qwen37max   # roster - non configuré à ce jour
+    phase_a: Enrichissement du catalogue (742 descriptions EN + revue des 231 entrées)
+    phase_b: Mainteneur du catalogue bilingue
+  - id: longcat
+    modele: LongCat 2.0
+    vendor: meituan
+    provider_id: longcat
+    phase_a: Second lot de descriptions + revue critique du protocole multi-nœuds
+    phase_b: Reviewer aveugle no 3 (pool de rotation) + second-opinion sécurité
+  - id: mimo
+    modele: MiMo 2.5 Pro
+    vendor: xiaomi
+    provider_id: null   # à résoudre au test des routes (alias LiteLLM passthrough)
+    phase_a: Consolidation MASTER-PLAN + manifestes YAML machine-lisibles (contexte 1M)
+    phase_b: Synthétiseur de preuves — rapports d'étape pour Fable
+regles_revue:
+  seuil_consensus: "7/9 APPROVE et zéro objection critique non résolue"
+  vendors_par_story: 3   # trois reviewers, trois vendors différents
+  paires_interdites:
+    - [composer, grok]
+  code_fable_reviewers: non-anthropic uniquement (deepseek, gemini, longcat, kimi, qwen, mimo)

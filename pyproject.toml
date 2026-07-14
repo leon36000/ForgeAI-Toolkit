@@ -1,0 +1,9 @@
+[project]
+name = "forgeai-toolkit"
+version = "0.0.1"
+description = "Déployeur de référence d'infrastructures IA agentiques — wizard hardware-aware, catalogue bilingue, multi-nœuds, gouvernance intégrée"
+requires-python = ">=3.10"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
