@@ -16,3 +16,6 @@ __pycache__/
 # OS / editors
 .DS_Store
 *.swp
+
+# Artefacts d exécution locale
+run/
