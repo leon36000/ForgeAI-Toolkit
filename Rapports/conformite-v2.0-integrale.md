@@ -120,7 +120,17 @@ honnêteté (§8bis : ni faux-vert ni faux-done), **des déviations d'IMPLÉMENT
 l'enforcement existent** — elles n'ont pas contourné les invariants (atteints via CI +
 revue aveugle + discipline), mais elles complètent incomplètement le §6/§7 du Plan Maître :
 
-1. **Protection de branche GitHub : ABSENTE.** `gh api …/branches/main/protection` → 404
+> **MISE À JOUR 2026-07-14 (B-22 résolu) :** les 4 déviations ci-dessous sont désormais
+> CORRIGÉES. Branch protection posée (`gh api`, sur autorisation Nathan) : les 4 gates CI
+> (`gitleaks`, `no-stub-scan`, `registres`, `tests`) sont **required checks bloquants**,
+> force-push et suppression interdits sur `main`. CODEOWNERS ajouté. Commits `main` signés
+> GPG par Nathan (clé RSA B5690EEEBB952194). → Les invariants #2/#3/#4 passent de
+> « enforcement PARTIEL » à **enforcement SERVEUR** : un merge ne peut plus contourner les
+> gates. Reste (mineur) : signature GPG des commits automatisés Forge-GRS (story B-23 hooks
+> locaux) et une revue humaine PR (impraticable en mono-propriétaire — la revue 3 modèles
+> reste la gouvernance de contenu). État historique conservé ci-dessous pour traçabilité.
+
+1. **Protection de branche GitHub : ~~ABSENTE~~ → POSÉE.** `gh api …/branches/main/protection` → 404
    « Branch not protected ». Le §6 exige gates CI requis + 3 revues + signature Fable +
    commits signés comme règle bloquante côté GitHub. Aujourd'hui, `main` accepte des merges
    sans règle serveur (les PRs sont mergées par Nathan à la main). → story B-22. **T3 Nathan.**
