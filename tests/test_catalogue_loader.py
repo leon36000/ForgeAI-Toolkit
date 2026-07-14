@@ -24,10 +24,15 @@ DEPLOY = deploy_overlay_path()
 def test_catalogue_reel_integre_et_complet():
     assert verify_catalogue(CATALOGUE)
     bricks = load_catalogue(CATALOGUE)
-    # 1021 − 5 services bespoke Command/Control Center (retrait autorisé Nathan,
-    # prompt maître 2026-07-14) − 2 artefacts d'en-tête = 1014. Preuve : registre
-    # type retrait_bespoke. Toute autre évolution passe par R-ALL (dossier sourcé).
-    assert len(bricks) == 1014
+    # Base : 1021 − 7 (retrait autorisé Command/Control Center + artefacts, registre
+    # retrait_bespoke) = 1014. R-ALL peut ensuite AJOUTER des briques vérifiées
+    # (dossier sourcé) ou en retirer sur preuve INTROUVABLE — donc borne, pas égalité.
+    assert len(bricks) >= 1014
+    # Aucune entrée vérifiée R-ALL ne doit être sans source (règle de rigueur).
+    data = json.loads(CATALOGUE.read_text(encoding="utf-8"))
+    for e in data["entries"]:
+        if e.get("verified"):
+            assert e.get("source_url", "").startswith("http"), e["name"]
     # Le compte des traductions en attente décroît à chaque lot appliqué (P2-F23) :
     # cohérence structurelle data-driven plutôt que valeur figée.
     data = json.loads(CATALOGUE.read_text(encoding="utf-8"))

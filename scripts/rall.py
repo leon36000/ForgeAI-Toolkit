@@ -98,14 +98,27 @@ def cmd_apply(paths: list[Path]) -> None:
     by_name = {e["name"]: e for e in data["entries"]}
     errs = []
     for nom, d in dossiers.items():
-        if nom not in by_name:
-            errs.append(f"{nom}: absent du catalogue")
+        # Entrée nouvelle : autorisée SEULEMENT avec category + dossier PUBLIC complet.
+        if nom not in by_name and not d.get("category"):
+            errs.append(f"{nom}: absent du catalogue (ajout d'une brique nouvelle → "
+                        f"champ 'category' requis)")
         errs += _validate(d)
     if errs:
         print("ECHEC R-ALL apply :", *errs, sep="\n  ")
         raise SystemExit(1)
     today = date.today().isoformat()
+    ajouts = 0
     for nom, d in dossiers.items():
+        if nom not in by_name:  # création d'une brique vérifiée
+            e = {
+                "id": re.sub(r"[^a-z0-9]+", "-", nom.lower()).strip("-"),
+                "name": nom, "category": d["category"], "atlas_status": "",
+                "source_url": d["source_url"], "atlas_only": False, "en_pending": False,
+                "description_fr": "", "description_en": None,
+            }
+            data["entries"].append(e)
+            by_name[nom] = e
+            ajouts += 1
         e = by_name[nom]
         e["verified"] = True
         e["verified_at"] = today
@@ -124,8 +137,8 @@ def cmd_apply(paths: list[Path]) -> None:
     digest = _save(data)
     reste = sum(1 for e in data["entries"] if not e.get("verified"))
     introuv = sum(1 for e in data["entries"] if e.get("flag") == "INTROUVABLE-APRES-RECHERCHE")
-    print(f"OK {len(dossiers)} dossiers appliqués | vérifiées manquantes: {reste} "
-          f"| introuvables (à retirer sur preuve): {introuv} | sha256: {digest[:16]}…")
+    print(f"OK {len(dossiers)} dossiers ({ajouts} ajouts) | total: {len(data['entries'])} "
+          f"| vérifiées manquantes: {reste} | introuvables: {introuv} | sha256: {digest[:16]}…")
 
 
 def cmd_stats() -> None:
@@ -136,23 +149,23 @@ def cmd_stats() -> None:
 
 
 def cmd_collisions() -> None:
+    """Gate B-26 : deux entrées ne doivent JAMAIS partager un nom d'affichage
+    identique sans qualificatif. Une collision est une égalité de nom normalisé
+    (pas un simple préfixe partagé — « Apache Airflow » et « Apache TVM » sont
+    des noms distincts, pas une collision)."""
     data = _load()
-    base: dict[str, list[str]] = {}
+    by_norm: dict[str, list[dict]] = {}
     for e in data["entries"]:
-        key = re.split(r"[ /(]", e["name"])[0].lower()
-        base.setdefault(key, []).append(e["name"])
-    dup = {k: v for k, v in base.items() if len(v) > 1
-           and not all(e_has_disambig(data, n) for n in v)}
-    for k, v in sorted(dup.items()):
-        print(f"COLLISION '{k}': {v}")
-    sys.exit(1 if dup else 0)
-
-
-def e_has_disambig(data: dict, name: str) -> bool:
-    for e in data["entries"]:
-        if e["name"] == name:
-            return bool(e.get("disambiguation"))
-    return False
+        key = e["name"].strip().lower()
+        by_norm.setdefault(key, []).append(e)
+    collisions = {
+        k: v for k, v in by_norm.items()
+        if len(v) > 1 and not all(e.get("disambiguation") for e in v)
+    }
+    for k, entries in sorted(collisions.items()):
+        print(f"COLLISION '{entries[0]['name']}' × {len(entries)} "
+              f"sans qualificatif — ajouter un champ disambiguation")
+    sys.exit(1 if collisions else 0)
 
 
 def main() -> None:

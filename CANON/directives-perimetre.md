@@ -38,6 +38,16 @@ de nom annulé avant commit — registre `directive_perimetre`).
 vérifiable. Une affirmation sans preuve est traitée comme un stub — bloquée par le même
 gate.**
 
+### 3bis. Arbitrage : source objective > mémoire de modèle (leçon R-ALL-1, registre `rall_lot`)
+Les modèles de contre-vérification n'ont **pas** de navigation : leur cutoff est antérieur.
+Un vote « fabrication / n'existe pas » fondé sur leur mémoire est **lui-même** l'erreur que
+R-ALL interdit — ce n'est pas une preuve. En cas de désaccord entre une source live et un
+avis de modèle, **on tranche par la source la plus objective disponible** (API GitHub
+`gh api repos/<org>/<repo>`, qui renvoie licence/étoiles/date structurées), jamais à
+l'opinion. Cas fondateur : deepseek+qwen ont voté DOUTE sur 4 briques réelles (Hermes Agent,
+OpenClaw, mission-control, hermes-workspace) — l'API GitHub les a toutes confirmées, et a en
+prime corrigé une licence (OpenClaw = NOASSERTION, pas MIT confirmé).
+
 ## 4. Phases du wizard (rappel de vision consolidé)
 0 Détection matérielle → 1 Profil (Minimal/Standard/Complet/Personnalisé) → 2 Template
 domaine → 2b Nœuds multi-machines (IP+user+mdp/clé, ed25519, Tailscale) → 3 Stratégie
