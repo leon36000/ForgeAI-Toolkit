@@ -18,6 +18,7 @@ SECRET = "sk-cli-secret-NEVER-LEAK-99"
 
 class _OpenAIStub(BaseHTTPRequestHandler):
     received_auth: list[str] = []
+    logs: list[str] = []
 
     def do_POST(self):
         self.received_auth.append(self.headers.get("Authorization", ""))
@@ -30,8 +31,9 @@ class _OpenAIStub(BaseHTTPRequestHandler):
         self.end_headers()
         self.wfile.write(body)
 
-    def log_message(self, *a):  # silence
-        pass
+    def log_message(self, fmt, *args):
+        # Capture au lieu d'écrire sur stderr (n'encombre pas la sortie pytest).
+        type(self).logs.append(fmt % args if args else fmt)
 
 
 @pytest.fixture
