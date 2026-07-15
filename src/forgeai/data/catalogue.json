@@ -1746,15 +1746,23 @@
    "verify_method": "gh-api repos/... (source objective)"
   },
   {
-   "atlas_only": true,
+   "atlas_only": false,
    "atlas_status": "REMPLACÉ",
    "category": "Orchestration, agents et interfaces",
-   "description_en": null,
-   "description_fr": "Entrée Atlas (REMPLACÉ) — description à enrichir depuis le tableau source.",
+   "description_en": "Multi-agent 'first AI software company' framework (MetaGPT). MGX = the team's hosted product.",
+   "description_fr": "Cadre multi-agents « première société de logiciels IA » (MetaGPT). MGX = produit hébergé de la même équipe.",
+   "disambiguation": "MGX (mgx.dev) est le produit hébergé ; le cadre OSS est FoundationAgents/MetaGPT.",
    "en_pending": false,
+   "flag": "PUBLIC-INSTALLABLE",
    "id": "metagpt-x-mgx",
+   "license": "MIT",
+   "maintenance": "active",
    "name": "MetaGPT X / MGX",
-   "source_url": null
+   "popularity": "★69377 (gh-api 2026-07-14)",
+   "source_url": "https://github.com/FoundationAgents/MetaGPT",
+   "verified": true,
+   "verified_at": "2026-07-14",
+   "verify_method": "gh-api repos/... (source objective)"
   },
   {
    "atlas_only": false,
@@ -6473,15 +6481,23 @@
    "verify_method": "gh-api repos/... (source objective)"
   },
   {
-   "atlas_only": true,
+   "atlas_only": false,
    "atlas_status": "REFUSÉ",
    "category": "RAG, vecteurs, ingestion et mémoire agentique",
-   "description_en": null,
-   "description_fr": "Entrée Atlas (REFUSÉ) — description à enrichir depuis le tableau source.",
+   "description_en": "Universal memory layer for AI agents (Mem0). 'Pro' = the project's hosted tier.",
+   "description_fr": "Couche mémoire universelle pour agents IA (Mem0). « Pro » = offre hébergée du même projet.",
+   "disambiguation": "« Pro » désigne l'offre SaaS payante ; le cœur OSS est mem0ai/mem0.",
    "en_pending": false,
+   "flag": "PUBLIC-INSTALLABLE",
    "id": "mem0-pro",
+   "license": "Apache-2.0",
+   "maintenance": "active",
    "name": "Mem0 Pro",
-   "source_url": null
+   "popularity": "★60839 (gh-api 2026-07-14)",
+   "source_url": "https://github.com/mem0ai/mem0",
+   "verified": true,
+   "verified_at": "2026-07-14",
+   "verify_method": "gh-api repos/... (source objective)"
   },
   {
    "atlas_only": false,
@@ -6604,15 +6620,22 @@
    "verify_method": "gh-api repos/... (source objective)"
   },
   {
-   "atlas_only": true,
+   "atlas_only": false,
    "atlas_status": "ACCEPTÉ - PRINCIPAL",
    "category": "RAG, vecteurs, ingestion et mémoire agentique",
-   "description_en": null,
-   "description_fr": "Entrée Atlas (ACCEPTÉ - PRINCIPAL) — description à enrichir depuis le tableau source.",
+   "description_en": "Self-evolving memory OS for LLMs/agents (MemOS).",
+   "description_fr": "Système de mémoire auto-évolutif pour LLM/agents (MemOS).",
    "en_pending": false,
+   "flag": "PUBLIC-INSTALLABLE",
    "id": "memos-2-0",
+   "license": "Apache-2.0",
+   "maintenance": "active",
    "name": "MemOS 2.0",
-   "source_url": null
+   "popularity": "★10211 (gh-api 2026-07-14)",
+   "source_url": "https://github.com/MemTensor/MemOS",
+   "verified": true,
+   "verified_at": "2026-07-14",
+   "verify_method": "gh-api repos/... (source objective)"
   },
   {
    "atlas_only": false,
@@ -16932,15 +16955,22 @@
    "verify_method": "gh-api repos/... (source objective)"
   },
   {
-   "atlas_only": true,
+   "atlas_only": false,
    "atlas_status": "ACCEPTÉ - CONCEPT",
    "category": "Auto-amélioration et recherche expérimentale",
-   "description_en": null,
-   "description_fr": "Entrée Atlas (ACCEPTÉ - CONCEPT) — description à enrichir depuis le tableau source.",
+   "description_en": "Open-ended self-improving agents (Darwin Gödel Machine paper).",
+   "description_fr": "Agents auto-améliorants à évolution ouverte (papier Darwin Gödel Machine).",
    "en_pending": false,
+   "flag": "PUBLIC-INSTALLABLE",
    "id": "darwin-g-del-machine-dgm",
+   "license": "Apache-2.0",
+   "maintenance": "active",
    "name": "Darwin Gödel Machine (DGM)",
-   "source_url": null
+   "popularity": "★2178 (gh-api 2026-07-14)",
+   "source_url": "https://github.com/jennyzzt/dgm",
+   "verified": true,
+   "verified_at": "2026-07-14",
+   "verify_method": "gh-api repos/... (source objective)"
   },
   {
    "atlas_only": true,
