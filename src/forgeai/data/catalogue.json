@@ -623,15 +623,21 @@
    "verify_method": "gh-api repos/... (source objective)"
   },
   {
-   "atlas_only": true,
+   "atlas_only": false,
    "atlas_status": "ACCEPTÉ",
    "category": "Orchestration, agents et interfaces",
-   "description_en": null,
-   "description_fr": "Entrée Atlas (ACCEPTÉ) — description à enrichir depuis le tableau source.",
+   "description_en": "AI code editor (proprietary app/service).",
+   "description_fr": "Éditeur de code IA (application/service propriétaire).",
    "en_pending": false,
+   "flag": "SERVICE-HEBERGE",
    "id": "cursor",
+   "license": "service propriétaire/hébergé",
+   "maintenance": "active",
    "name": "Cursor",
-   "source_url": null
+   "source_url": "https://cursor.com",
+   "verified": true,
+   "verified_at": "2026-07-14",
+   "verify_method": "URL officielle HTTP 200"
   },
   {
    "atlas_only": false,
@@ -4391,15 +4397,21 @@
    "verify_method": "gh-api repos/... (source objective)"
   },
   {
-   "atlas_only": true,
+   "atlas_only": false,
    "atlas_status": "ACCEPTÉ - DEV",
    "category": "Inférence, serving et gateway modèles",
-   "description_en": null,
-   "description_fr": "Entrée Atlas (ACCEPTÉ - DEV) — description à enrichir depuis le tableau source.",
+   "description_en": "Reproducible AI development environment (NVIDIA), local workstation and cloud.",
+   "description_fr": "Environnement de développement IA reproductible (NVIDIA), poste local et cloud.",
    "en_pending": false,
+   "flag": "SERVICE-HEBERGE",
    "id": "nvidia-ai-workbench",
+   "license": "service propriétaire/hébergé",
+   "maintenance": "active",
    "name": "NVIDIA AI Workbench",
-   "source_url": null
+   "source_url": "https://www.nvidia.com/en-us/deep-learning-ai/solutions/data-science/workbench/",
+   "verified": true,
+   "verified_at": "2026-07-14",
+   "verify_method": "URL officielle HTTP 200"
   },
   {
    "atlas_only": false,
@@ -4456,15 +4468,21 @@
    "verify_method": "gh-api repos/... (source objective)"
   },
   {
-   "atlas_only": true,
+   "atlas_only": false,
    "atlas_status": "ACCEPTÉ - SPÉCIALISÉ",
    "category": "Inférence, serving et gateway modèles",
-   "description_en": null,
-   "description_fr": "Entrée Atlas (ACCEPTÉ - SPÉCIALISÉ) — description à enrichir depuis le tableau source.",
+   "description_en": "NVIDIA inference microservices (optimized model containers), hosted and deployable.",
+   "description_fr": "Microservices d'inférence NVIDIA (conteneurs de modèles optimisés), hébergés et déployables.",
    "en_pending": false,
+   "flag": "SERVICE-HEBERGE",
    "id": "nvidia-nim",
+   "license": "service propriétaire/hébergé",
+   "maintenance": "active",
    "name": "NVIDIA NIM",
-   "source_url": null
+   "source_url": "https://build.nvidia.com",
+   "verified": true,
+   "verified_at": "2026-07-14",
+   "verify_method": "URL officielle HTTP 200"
   },
   {
    "atlas_only": false,
@@ -4593,15 +4611,21 @@
    "verify_method": "gh-api repos/... (source objective)"
   },
   {
-   "atlas_only": true,
+   "atlas_only": false,
    "atlas_status": "ACCEPTÉ - FALLBACK",
    "category": "Inférence, serving et gateway modèles",
-   "description_en": null,
-   "description_fr": "Entrée Atlas (ACCEPTÉ - FALLBACK) — description à enrichir depuis le tableau source.",
+   "description_en": "Aggregator/router unifying many LLM providers behind an OpenAI-compatible API.",
+   "description_fr": "Agrégateur/routeur d'API LLM unifiant de nombreux fournisseurs sous une API compatible OpenAI.",
    "en_pending": false,
+   "flag": "SERVICE-HEBERGE",
    "id": "openrouter",
+   "license": "service propriétaire/hébergé",
+   "maintenance": "active",
    "name": "OpenRouter",
-   "source_url": null
+   "source_url": "https://openrouter.ai",
+   "verified": true,
+   "verified_at": "2026-07-14",
+   "verify_method": "URL officielle HTTP 200"
   },
   {
    "atlas_only": false,
@@ -5390,15 +5414,21 @@
    "verify_method": "gh-api repos/... (source objective)"
   },
   {
-   "atlas_only": true,
+   "atlas_only": false,
    "atlas_status": "REFUSÉ",
    "category": "RAG, vecteurs, ingestion et mémoire agentique",
-   "description_en": null,
-   "description_fr": "Entrée Atlas (REFUSÉ) — description à enrichir depuis le tableau source.",
+   "description_en": "Hosted data governance and catalog platform.",
+   "description_fr": "Plateforme hébergée de gouvernance et de catalogue de données.",
    "en_pending": false,
+   "flag": "SERVICE-HEBERGE",
    "id": "atlan",
+   "license": "service propriétaire/hébergé",
+   "maintenance": "active",
    "name": "Atlan",
-   "source_url": null
+   "source_url": "https://atlan.com",
+   "verified": true,
+   "verified_at": "2026-07-14",
+   "verify_method": "URL officielle HTTP 200"
   },
   {
    "atlas_only": false,
@@ -5598,15 +5628,21 @@
    "verify_method": "gh-api repos/... (source objective)"
   },
   {
-   "atlas_only": true,
+   "atlas_only": false,
    "atlas_status": "REFUSÉ",
    "category": "RAG, vecteurs, ingestion et mémoire agentique",
-   "description_en": null,
-   "description_fr": "Entrée Atlas (REFUSÉ) — description à enrichir depuis le tableau source.",
+   "description_en": "Hosted reranking service (Cohere) to improve RAG relevance.",
+   "description_fr": "Service de reranking hébergé (Cohere) pour améliorer la pertinence du RAG.",
    "en_pending": false,
+   "flag": "SERVICE-HEBERGE",
    "id": "cohere-rerank",
+   "license": "service propriétaire/hébergé",
+   "maintenance": "active",
    "name": "Cohere Rerank",
-   "source_url": null
+   "source_url": "https://cohere.com/rerank",
+   "verified": true,
+   "verified_at": "2026-07-14",
+   "verify_method": "URL officielle HTTP 200"
   },
   {
    "atlas_only": false,
@@ -7863,23 +7899,35 @@
    "atlas_only": false,
    "atlas_status": "",
    "category": "Modèles d'embeddings et de reranking",
-   "description_en": "Cohere's first multimodal embedding model (text, image, interleaved documents). Cloud option.",
-   "description_fr": "Premier modèle d'embedding multimodal de Cohere (texte, image, documents entrelacés). Option cloud.",
+   "description_en": "Hosted multimodal embeddings service (Cohere).",
+   "description_fr": "Service d'embeddings multimodaux hébergé (Cohere).",
    "en_pending": false,
+   "flag": "SERVICE-HEBERGE",
    "id": "cohere-embed-v4-multimodal",
+   "license": "service propriétaire/hébergé",
+   "maintenance": "active",
    "name": "Cohere Embed v4 Multimodal",
-   "source_url": "https://cohere.com/embed"
+   "source_url": "https://cohere.com/embed",
+   "verified": true,
+   "verified_at": "2026-07-14",
+   "verify_method": "URL officielle HTTP 200"
   },
   {
    "atlas_only": false,
    "atlas_status": "",
    "category": "Modèles d'embeddings et de reranking",
-   "description_en": "Unified text/image/video/audio/PDF embedding into one shared 3,072-dim vector space. Cloud option.",
-   "description_fr": "Embedding unifié texte/image/vidéo/audio/PDF dans un espace vectoriel partagé à 3072 dimensions. Option cloud.",
+   "description_en": "Google's hosted embeddings service (Gemini API).",
+   "description_fr": "Service d'embeddings hébergé de Google (API Gemini).",
    "en_pending": false,
+   "flag": "SERVICE-HEBERGE",
    "id": "google-gemini-embedding",
+   "license": "service propriétaire/hébergé",
+   "maintenance": "active",
    "name": "Google Gemini Embedding",
-   "source_url": "https://ai.google.dev/gemini-api/docs/embeddings"
+   "source_url": "https://ai.google.dev/gemini-api/docs/embeddings",
+   "verified": true,
+   "verified_at": "2026-07-14",
+   "verify_method": "URL officielle HTTP 200"
   },
   {
    "atlas_only": false,
@@ -7975,12 +8023,18 @@
    "atlas_only": false,
    "atlas_status": "",
    "category": "Modèles d'embeddings et de reranking",
-   "description_en": "Specialized cloud embedding family (legal, finance, code), outperforms generic models by 10-15% in-domain. Cloud option, not self-hosted.",
-   "description_fr": "Famille d'embeddings cloud spécialisés (droit, finance, code), surclasse les modèles génériques de 10-15% sur leur domaine. Option cloud, pas self-hosted.",
+   "description_en": "Hosted embeddings and rerankers service (Voyage AI), voyage-4 family.",
+   "description_fr": "Service hébergé d'embeddings et de rerankers (Voyage AI), famille voyage-4.",
    "en_pending": false,
+   "flag": "SERVICE-HEBERGE",
    "id": "voyage-ai-voyage-4-family",
+   "license": "service propriétaire/hébergé",
+   "maintenance": "active",
    "name": "Voyage AI (voyage-4 family)",
-   "source_url": "https://www.voyageai.com"
+   "source_url": "https://www.voyageai.com",
+   "verified": true,
+   "verified_at": "2026-07-14",
+   "verify_method": "URL officielle HTTP 200"
   },
   {
    "atlas_only": false,
@@ -9374,12 +9428,18 @@
    "atlas_only": false,
    "atlas_status": "",
    "category": "MCP et protocoles d'interopérabilité",
-   "description_en": "Large community collection of third-party MCP servers.",
-   "description_fr": "Grande collection communautaire de serveurs MCP tiers.",
+   "description_en": "Hosted community directory of third-party MCP servers.",
+   "description_fr": "Annuaire communautaire hébergé de serveurs MCP tiers.",
    "en_pending": false,
+   "flag": "SERVICE-HEBERGE",
    "id": "mcp-so",
+   "license": "service propriétaire/hébergé",
+   "maintenance": "active",
    "name": "mcp.so",
-   "source_url": "https://mcp.so/"
+   "source_url": "https://mcp.so",
+   "verified": true,
+   "verified_at": "2026-07-14",
+   "verify_method": "URL officielle HTTP 200"
   },
   {
    "atlas_only": false,
@@ -9656,12 +9716,18 @@
    "atlas_only": false,
    "atlas_status": "",
    "category": "MCP et protocoles d'interopérabilité",
-   "description_en": "Directory of MCP servers, clients, and use cases + newsletter.",
-   "description_fr": "Annuaire de serveurs, clients et cas d'usage MCP + newsletter.",
+   "description_en": "Hosted directory of MCP servers and clients + newsletter.",
+   "description_fr": "Annuaire hébergé de serveurs et clients MCP + newsletter.",
    "en_pending": false,
+   "flag": "SERVICE-HEBERGE",
    "id": "pulsemcp",
+   "license": "service propriétaire/hébergé",
+   "maintenance": "active",
    "name": "PulseMCP",
-   "source_url": "https://www.pulsemcp.com/"
+   "source_url": "https://www.pulsemcp.com",
+   "verified": true,
+   "verified_at": "2026-07-14",
+   "verify_method": "URL officielle HTTP 403-antibot"
   },
   {
    "atlas_only": false,
@@ -9964,12 +10030,18 @@
    "atlas_only": false,
    "atlas_status": "",
    "category": "MCP et protocoles d'interopérabilité",
-   "description_en": "MCP registry/marketplace connecting agents to thousands of tools (managed auth and sessions).",
-   "description_fr": "Registre/marketplace MCP connectant les agents à des milliers d'outils (auth et sessions gérées).",
+   "description_en": "Hosted MCP server registry/marketplace.",
+   "description_fr": "Registre/marketplace hébergé de serveurs MCP.",
    "en_pending": false,
+   "flag": "SERVICE-HEBERGE",
    "id": "smithery",
+   "license": "service propriétaire/hébergé",
+   "maintenance": "active",
    "name": "Smithery",
-   "source_url": "https://smithery.ai/"
+   "source_url": "https://smithery.ai",
+   "verified": true,
+   "verified_at": "2026-07-14",
+   "verify_method": "URL officielle HTTP 200"
   },
   {
    "atlas_only": false,
@@ -14024,15 +14096,21 @@
    "verify_method": "gh-api repos/... (source objective)"
   },
   {
-   "atlas_only": true,
+   "atlas_only": false,
    "atlas_status": "REFUSÉ",
    "category": "Évaluation, observabilité, guardrails et sécurité",
-   "description_en": null,
-   "description_fr": "Entrée Atlas (REFUSÉ) — description à enrichir depuis le tableau source.",
+   "description_en": "Hosted LLM evaluation and observability platform.",
+   "description_fr": "Plateforme hébergée d'évaluation et d'observabilité LLM.",
    "en_pending": false,
+   "flag": "SERVICE-HEBERGE",
    "id": "braintrust",
+   "license": "service propriétaire/hébergé",
+   "maintenance": "active",
    "name": "Braintrust",
-   "source_url": null
+   "source_url": "https://www.braintrust.dev",
+   "verified": true,
+   "verified_at": "2026-07-14",
+   "verify_method": "URL officielle HTTP 200"
   },
   {
    "atlas_only": false,
@@ -14164,15 +14242,21 @@
    "verify_method": "gh-api repos/... (source objective)"
   },
   {
-   "atlas_only": true,
+   "atlas_only": false,
    "atlas_status": "REFUSÉ",
    "category": "Évaluation, observabilité, guardrails et sécurité",
-   "description_en": null,
-   "description_fr": "Entrée Atlas (REFUSÉ) — description à enrichir depuis le tableau source.",
+   "description_en": "LLM observability module of the Datadog platform (hosted).",
+   "description_fr": "Module d'observabilité LLM de la plateforme Datadog (hébergée).",
    "en_pending": false,
+   "flag": "SERVICE-HEBERGE",
    "id": "datadog-llm-observability",
+   "license": "service propriétaire/hébergé",
+   "maintenance": "active",
    "name": "Datadog LLM Observability",
-   "source_url": null
+   "source_url": "https://www.datadoghq.com/product/llm-observability",
+   "verified": true,
+   "verified_at": "2026-07-14",
+   "verify_method": "URL officielle HTTP 200"
   },
   {
    "atlas_only": false,
@@ -14355,15 +14439,21 @@
    "verify_method": "gh-api repos/... (source objective)"
   },
   {
-   "atlas_only": true,
+   "atlas_only": false,
    "atlas_status": "REFUSÉ",
    "category": "Évaluation, observabilité, guardrails et sécurité",
-   "description_en": null,
-   "description_fr": "Entrée Atlas (REFUSÉ) — description à enrichir depuis le tableau source.",
+   "description_en": "Hosted ML/LLM observability and monitoring platform.",
+   "description_fr": "Plateforme hébergée d'observabilité et de monitoring ML/LLM.",
    "en_pending": false,
+   "flag": "SERVICE-HEBERGE",
    "id": "fiddler-ai",
+   "license": "service propriétaire/hébergé",
+   "maintenance": "active",
    "name": "Fiddler AI",
-   "source_url": null
+   "source_url": "https://www.fiddler.ai",
+   "verified": true,
+   "verified_at": "2026-07-14",
+   "verify_method": "URL officielle HTTP 200"
   },
   {
    "atlas_only": false,
@@ -14395,15 +14485,21 @@
    "source_url": null
   },
   {
-   "atlas_only": true,
+   "atlas_only": false,
    "atlas_status": "REFUSÉ",
    "category": "Évaluation, observabilité, guardrails et sécurité",
-   "description_en": null,
-   "description_fr": "Entrée Atlas (REFUSÉ) — description à enrichir depuis le tableau source.",
+   "description_en": "Hosted LLM evaluation and observability platform.",
+   "description_fr": "Plateforme hébergée d'évaluation et d'observabilité LLM.",
    "en_pending": false,
+   "flag": "SERVICE-HEBERGE",
    "id": "galileo-ai",
+   "license": "service propriétaire/hébergé",
+   "maintenance": "active",
    "name": "Galileo AI",
-   "source_url": null
+   "source_url": "https://galileo.ai",
+   "verified": true,
+   "verified_at": "2026-07-14",
+   "verify_method": "URL officielle HTTP 200"
   },
   {
    "atlas_only": false,
@@ -14770,15 +14866,21 @@
    "verify_method": "gh-api repos/... (source objective)"
   },
   {
-   "atlas_only": true,
+   "atlas_only": false,
    "atlas_status": "ACCEPTÉ - PREMIUM",
    "category": "Évaluation, observabilité, guardrails et sécurité",
-   "description_en": null,
-   "description_fr": "Entrée Atlas (ACCEPTÉ - PREMIUM) — description à enrichir depuis le tableau source.",
+   "description_en": "Hosted LLM security service (prompt-injection detection, guardrails).",
+   "description_fr": "Service hébergé de sécurité LLM (détection d'injection de prompt, garde-fous).",
    "en_pending": false,
+   "flag": "SERVICE-HEBERGE",
    "id": "lakera-guard",
+   "license": "service propriétaire/hébergé",
+   "maintenance": "active",
    "name": "Lakera Guard",
-   "source_url": null
+   "source_url": "https://www.lakera.ai",
+   "verified": true,
+   "verified_at": "2026-07-14",
+   "verify_method": "URL officielle HTTP 200"
   },
   {
    "atlas_only": false,
@@ -14871,15 +14973,21 @@
    "verify_method": "gh-api repos/... (source objective)"
   },
   {
-   "atlas_only": true,
+   "atlas_only": false,
    "atlas_status": "REFUSÉ",
    "category": "Évaluation, observabilité, guardrails et sécurité",
-   "description_en": null,
-   "description_fr": "Entrée Atlas (REFUSÉ) — description à enrichir depuis le tableau source.",
+   "description_en": "Hosted LLM observability and evaluation platform (LangChain).",
+   "description_fr": "Plateforme hébergée d'observabilité et d'évaluation LLM (LangChain).",
    "en_pending": false,
+   "flag": "SERVICE-HEBERGE",
    "id": "langsmith",
+   "license": "service propriétaire/hébergé",
+   "maintenance": "active",
    "name": "LangSmith",
-   "source_url": null
+   "source_url": "https://www.langchain.com/langsmith",
+   "verified": true,
+   "verified_at": "2026-07-14",
+   "verify_method": "URL officielle HTTP 200"
   },
   {
    "atlas_only": false,
