@@ -259,6 +259,28 @@ def _model_add_cloud(args: argparse.Namespace) -> int:
     return 0
 
 
+def _model_add_local(args: argparse.Namespace) -> int:
+    from forgeai.core.runner import SubprocessRunner
+    from forgeai.models.local import (LocalModel, LocalModelError, UrllibFetcher, add_local)
+    from forgeai.models.probe import UrllibTransport
+    model = LocalModel(name=args.name, engine=args.engine,
+                       vram_required_mb=args.vram_required_mb, model_ref=args.model_ref,
+                       download_url=args.url, sha256=args.sha256)
+    reg = Path(args.registre)
+    try:
+        result = add_local(
+            model, Path(args.dest), args.engine_url,
+            vram_mb=args.vram_mb, engines={args.engine},
+            fetcher=UrllibFetcher(), runner=SubprocessRunner(timeout_s=args.timeout),
+            transport=UrllibTransport(),
+            journal=lambda step, data: registre.append(reg, step, "model-local", data))
+    except LocalModelError as exc:
+        print(f"ECHEC MODELE LOCAL: {exc}", file=sys.stderr)
+        return 9
+    print(f"[forgeai] modèle local '{model.name}' {result.light} — {model.engine}/{model.model_ref}")
+    return 0
+
+
 def _model_list(args: argparse.Namespace) -> int:
     routes = RouteStore(Path(args.home)).list()
     if not routes:
@@ -379,6 +401,19 @@ def main(argv: list[str] | None = None) -> int:
     p_add.add_argument("--home", default=str(default_models_home()))
     p_add.add_argument("--registre", default=str(DEFAULT_REGISTRE))
     p_add.set_defaults(func=_model_add_cloud)
+    p_local = model_sub.add_parser("add-local", help="télécharge (hash-vérifié)+déploie+teste un modèle local")
+    p_local.add_argument("--name", required=True)
+    p_local.add_argument("--engine", required=True, choices=["ollama", "llamacpp", "vllm"])
+    p_local.add_argument("--model-ref", required=True)
+    p_local.add_argument("--url", required=True)
+    p_local.add_argument("--sha256", required=True)
+    p_local.add_argument("--vram-required-mb", type=int, required=True)
+    p_local.add_argument("--vram-mb", type=int, required=True, help="VRAM du nœud cible")
+    p_local.add_argument("--engine-url", required=True, help="endpoint compatible OpenAI du moteur")
+    p_local.add_argument("--dest", default=str(default_models_home() / "local"))
+    p_local.add_argument("--timeout", type=float, default=600.0)
+    p_local.add_argument("--registre", default=str(DEFAULT_REGISTRE))
+    p_local.set_defaults(func=_model_add_local)
     p_list = model_sub.add_parser("list", help="liste les routes (jamais les clés)")
     p_list.add_argument("--home", default=str(default_models_home()))
     p_list.set_defaults(func=_model_list)
