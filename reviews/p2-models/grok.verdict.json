@@ -1,0 +1,13 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {"severite": "moyen", "sur": "vault", "texte": "scrypt N=2^14 trop faible pour attaque offline sur blob volé", "disposition": "RETENU — relevé à 2^16"},
+  {"severite": "moyen", "sur": "local", "texte": "TOCTOU / écriture non-atomique avant vérif", "disposition": "RETENU — .part + renommage atomique"},
+  {"severite": "faible", "sur": "vault", "texte": "CTR-HMAC custom (correct en EtM + nonces/salts aléatoires + vérif tag avant déchiffrement) mais préférer AEAD standard", "disposition": "ASSUME — invariant portabilité dependencies=[] interdit AES-GCM stdlib; compromis documenté au docstring"}
+ ],
+ "date": "2026-07-15",
+ "source_route": "forge-model-bridge",
+ "model": "Grok-4.5",
+ "note": "confirme explicitement la construction crypto correcte (EtM + aléas + ordre vérif/déchiffrement)",
+ "cible": "sous-système models/ P2 (auteur fable → reviewer non-Anthropic, aveugle)"
+}

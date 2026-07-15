@@ -1,0 +1,12 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {"severite": "eleve", "sur": "local", "texte": "TOCTOU : écriture sur disque avant vérification (race condition)", "disposition": "RETENU — .part + renommage atomique"},
+  {"severite": "moyen", "sur": "vault", "texte": "scrypt N=2^14 trop faible face au bruteforce hors-ligne", "disposition": "RETENU — relevé à 2^16"},
+  {"severite": "faible", "sur": "vault", "texte": "CTR-HMAC artisanal (débordement de compteur théorique, peu performant)", "disposition": "ASSUME — compteur 8 octets: débordement à 2^69 octets (irréaliste pour une clé d'API); AEAD stdlib indisponible (portabilité)"}
+ ],
+ "date": "2026-07-15",
+ "source_route": "forge-model-bridge",
+ "model": "Gemini-3.1-Pro",
+ "cible": "sous-système models/ P2 (auteur fable → reviewer non-Anthropic, aveugle)"
+}
