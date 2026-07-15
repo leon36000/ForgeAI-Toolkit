@@ -28,6 +28,8 @@ from forgeai.deploy.compose import (
 )
 from forgeai.deploy.k3s import k3s_apply, k3s_delete_namespace, k3s_wait_deployments
 from forgeai.hardware.detect import HardwareDetector
+from forgeai.models.routes import RouteError, RouteStore
+from forgeai.models.probe import probe_route
 from forgeai.planner.assemble import assemble_plan
 from forgeai.planner.profile import ProfileError, derive_profile
 from forgeai.rag.client import RagClient
@@ -217,6 +219,69 @@ def _node_status(args: argparse.Namespace) -> int:
     return 0
 
 
+def default_models_home() -> Path:
+    home = os.environ.get("FORGEAI_HOME")
+    base = Path(home) if home else Path.home() / ".forgeai"
+    return base / "models"
+
+
+def _read_secret(env_var: str | None, prompt: str) -> str:
+    """Lit un secret depuis une variable d'environnement (CI) ou une invite sans écho.
+    JAMAIS depuis argv (fuite dans la liste des processus / l'historique shell)."""
+    if env_var:
+        value = os.environ.get(env_var, "")
+        if not value:
+            raise RouteError(f"variable d'environnement '{env_var}' vide ou absente")
+        return value
+    import getpass
+    return getpass.getpass(prompt)
+
+
+def _model_add_cloud(args: argparse.Namespace) -> int:
+    store = RouteStore(Path(args.home))
+    try:
+        api_key = _read_secret(args.api_key_env, f"Clé API pour {args.name} : ")
+        passphrase = _read_secret(args.passphrase_env, "Passphrase du coffre : ")
+        route, result = store.add_cloud(
+            args.name, args.provenance, args.model_id, api_key, passphrase,
+            base_url=args.base_url)
+    except RouteError as exc:
+        print(f"ECHEC ROUTE: {exc}", file=sys.stderr)  # message clair, aucune clé
+        return 9
+    registre.append(Path(args.registre), "route_cloud_ajoutee", "model-cloud", {
+        "name": route.name, "provenance": route.provenance,
+        "model_id": route.model_id, "base_url": route.base_url,
+        "key_fingerprint": route.key_fingerprint,  # empreinte SEULE, jamais la clé
+    })
+    print(f"[forgeai] route '{route.name}' {result.light} — {route.provenance} "
+          f"/ {route.model_id} (clé {route.key_fingerprint})")
+    return 0
+
+
+def _model_list(args: argparse.Namespace) -> int:
+    routes = RouteStore(Path(args.home)).list()
+    if not routes:
+        print("(aucune route cloud)")
+        return 0
+    for r in routes:  # jamais de clé, empreinte seulement
+        print(f"{r.name:24} {r.provenance:12} {r.model_id:32} {r.key_fingerprint}")
+    return 0
+
+
+def _model_test(args: argparse.Namespace) -> int:
+    store = RouteStore(Path(args.home))
+    try:
+        route = store.get(args.name)
+        passphrase = _read_secret(args.passphrase_env, "Passphrase du coffre : ")
+        api_key = store.vault.get(route.name, passphrase)
+    except (RouteError, KeyError) as exc:
+        print(f"ECHEC: {exc}", file=sys.stderr)
+        return 9
+    result = probe_route(route.base_url, route.model_id, api_key)
+    print(f"[forgeai] route '{route.name}' : {result.light} — {result.detail}")
+    return 0 if result.ok else 9
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(prog="forgeai")
     sub = parser.add_subparsers(dest="cmd", required=True)
@@ -252,6 +317,30 @@ def main(argv: list[str] | None = None) -> int:
     p_wiz.add_argument("--skip-preflight", action="store_true",
                        help="ne pas vérifier la disponibilité du backend avant déploiement")
     p_wiz.set_defaults(func=wizard_ci)
+
+    p_model = sub.add_parser("model", help="routes modèle cloud/local (DM-5)")
+    model_sub = p_model.add_subparsers(dest="model_cmd", required=True)
+    p_add = model_sub.add_parser("add-cloud", help="ajoute une route cloud (test réel requis)")
+    p_add.add_argument("--name", required=True)
+    p_add.add_argument("--provenance", required=True,
+                       choices=["openrouter", "deepinfra", "nim", "direct", "autre"])
+    p_add.add_argument("--model-id", required=True)
+    p_add.add_argument("--base-url", default=None,
+                       help="requis pour provenance direct/autre (endpoint compatible OpenAI)")
+    p_add.add_argument("--api-key-env", default=None,
+                       help="variable d'env portant la clé (sinon invite sans écho) — jamais en argv")
+    p_add.add_argument("--passphrase-env", default=None)
+    p_add.add_argument("--home", default=str(default_models_home()))
+    p_add.add_argument("--registre", default=str(DEFAULT_REGISTRE))
+    p_add.set_defaults(func=_model_add_cloud)
+    p_list = model_sub.add_parser("list", help="liste les routes (jamais les clés)")
+    p_list.add_argument("--home", default=str(default_models_home()))
+    p_list.set_defaults(func=_model_list)
+    p_test = model_sub.add_parser("test", help="re-teste une route existante")
+    p_test.add_argument("--name", required=True)
+    p_test.add_argument("--passphrase-env", default=None)
+    p_test.add_argument("--home", default=str(default_models_home()))
+    p_test.set_defaults(func=_model_test)
 
     args = parser.parse_args(argv)
     try:
