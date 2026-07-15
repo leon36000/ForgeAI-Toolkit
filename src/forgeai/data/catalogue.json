@@ -91,15 +91,21 @@
    "verify_method": "gh-api repos/... (source objective)"
   },
   {
-   "atlas_only": true,
+   "atlas_only": false,
    "atlas_status": "ACCEPTÉ - BLUEPRINT",
    "category": "Orchestration, agents et interfaces",
    "description_en": null,
-   "description_fr": "Entrée Atlas (ACCEPTÉ - BLUEPRINT) — description à enrichir depuis le tableau source.",
-   "en_pending": false,
+   "description_fr": "Plateforme d'agents (produit hébergé ; connecteurs MCP/UI publics).",
+   "en_pending": true,
+   "flag": "SERVICE-HEBERGE",
    "id": "agentailor",
+   "license": "service propriétaire (Agentailor)",
+   "maintenance": "active",
    "name": "Agentailor",
-   "source_url": null
+   "source_url": "https://github.com/agentailor",
+   "verified": true,
+   "verified_at": "2026-07-14",
+   "verify_method": "gh-search org/produit (source objective)"
   },
   {
    "atlas_only": false,
@@ -2391,15 +2397,22 @@
    "verify_method": "gh-api repos/... (source objective)"
   },
   {
-   "atlas_only": true,
+   "atlas_only": false,
    "atlas_status": "REFUSÉ",
    "category": "Orchestration, agents et interfaces",
-   "description_en": null,
-   "description_fr": "Entrée Atlas (REFUSÉ) — description à enrichir depuis le tableau source.",
+   "description_en": "Governed infrastructure for internal tools and AI agents",
+   "description_fr": "Infrastructure gouvernée pour outils internes et agents IA.",
    "en_pending": false,
+   "flag": "PUBLIC-INSTALLABLE",
    "id": "rootcx",
+   "license": "NOASSERTION",
+   "maintenance": "active",
    "name": "RootCX",
-   "source_url": null
+   "popularity": "★46 (gh-api 2026-07-14)",
+   "source_url": "https://github.com/RootCX/RootCX",
+   "verified": true,
+   "verified_at": "2026-07-14",
+   "verify_method": "gh-search + gh-api (source objective)"
   },
   {
    "atlas_only": false,
@@ -4179,15 +4192,22 @@
    "verify_method": "gh-api repos/... (source objective)"
   },
   {
-   "atlas_only": true,
+   "atlas_only": false,
    "atlas_status": "REFUSÉ",
    "category": "Inférence, serving et gateway modèles",
-   "description_en": null,
-   "description_fr": "Entrée Atlas (REFUSÉ) — description à enrichir depuis le tableau source.",
+   "description_en": "Zero-config local LLM optimization for Ollama, LM Studio, and Apple Silicon MLX. Reduces TTFT by 40%, wall time for local agents by 46%, and RAM usage by 3x.",
+   "description_fr": "Optimisation zéro-config de LLM locaux (Ollama, LM Studio, Apple Silicon).",
    "en_pending": false,
+   "flag": "PUBLIC-INSTALLABLE",
    "id": "local-llm-autotune",
+   "license": "MIT",
+   "maintenance": "active",
    "name": "local-llm-autotune",
-   "source_url": null
+   "popularity": "★31 (gh-api 2026-07-14)",
+   "source_url": "https://github.com/tanavc1/local-llm-autotune",
+   "verified": true,
+   "verified_at": "2026-07-14",
+   "verify_method": "gh-search + gh-api (source objective)"
   },
   {
    "atlas_only": false,
@@ -5499,15 +5519,21 @@
    "verify_method": "huggingface HTTP 200"
   },
   {
-   "atlas_only": true,
+   "atlas_only": false,
    "atlas_status": "REFUSÉ",
    "category": "RAG, vecteurs, ingestion et mémoire agentique",
    "description_en": null,
-   "description_fr": "Entrée Atlas (REFUSÉ) — description à enrichir depuis le tableau source.",
-   "en_pending": false,
+   "description_fr": "Découpage sémantique propriétaire (Blockify d'Iternal) — produit hébergé.",
+   "en_pending": true,
+   "flag": "SERVICE-HEBERGE",
    "id": "blockify-semantic-chunker",
+   "license": "service propriétaire (Iternal)",
+   "maintenance": "active",
    "name": "Blockify Semantic Chunker",
-   "source_url": null
+   "source_url": "https://iternal.ai/blockify",
+   "verified": true,
+   "verified_at": "2026-07-14",
+   "verify_method": "gh-search org/produit (source objective)"
   },
   {
    "atlas_only": true,
@@ -6572,15 +6598,21 @@
    "verify_method": "gh-api repos/... (source objective)"
   },
   {
-   "atlas_only": true,
+   "atlas_only": false,
    "atlas_status": "REFUSÉ",
    "category": "RAG, vecteurs, ingestion et mémoire agentique",
    "description_en": null,
-   "description_fr": "Entrée Atlas (REFUSÉ) — description à enrichir depuis le tableau source.",
-   "en_pending": false,
+   "description_fr": "Mémoire hébergée pour agents (client/skills publics, service propriétaire).",
+   "en_pending": true,
+   "flag": "SERVICE-HEBERGE",
    "id": "memorylake",
+   "license": "service propriétaire (MemoryLake)",
+   "maintenance": "active",
    "name": "MemoryLake",
-   "source_url": null
+   "source_url": "https://github.com/memorylake-ai",
+   "verified": true,
+   "verified_at": "2026-07-14",
+   "verify_method": "gh-search org/produit (source objective)"
   },
   {
    "atlas_only": false,
@@ -8422,15 +8454,22 @@
    "verify_method": "gh-api repos/... (source objective)"
   },
   {
-   "atlas_only": true,
+   "atlas_only": false,
    "atlas_status": "REFUSÉ",
    "category": "MCP et protocoles d'interopérabilité",
    "description_en": null,
-   "description_fr": "Entrée Atlas (REFUSÉ) — description à enrichir depuis le tableau source.",
-   "en_pending": false,
+   "description_fr": "Serveur MCP reliant Claude à un coffre Obsidian (second cerveau).",
+   "en_pending": true,
+   "flag": "PUBLIC-INSTALLABLE",
    "id": "claudesidian-mcp",
+   "license": "MIT",
+   "maintenance": "active",
    "name": "Claudesidian MCP",
-   "source_url": null
+   "popularity": "★2538 (gh-api 2026-07-14)",
+   "source_url": "https://github.com/heyitsnoah/claudesidian",
+   "verified": true,
+   "verified_at": "2026-07-14",
+   "verify_method": "gh-search + gh-api (source objective)"
   },
   {
    "atlas_only": false,
@@ -12266,15 +12305,22 @@
    "verify_method": "gh-api repos/... (source objective)"
   },
   {
-   "atlas_only": true,
+   "atlas_only": false,
    "atlas_status": "ACCEPTÉ",
    "category": "Harness de codage, méthodologies et gouvernance",
-   "description_en": null,
-   "description_fr": "Entrée Atlas (ACCEPTÉ) — description à enrichir depuis le tableau source.",
+   "description_en": "Evolve your language agent with Agentic Context Engineering (ACE)",
+   "description_fr": "Ingénierie de contexte agentique (ACE) — fait évoluer le contexte d'un agent-langage.",
    "en_pending": false,
+   "flag": "PUBLIC-INSTALLABLE",
    "id": "ace-context-engineering",
+   "license": "Apache-2.0",
+   "maintenance": "active",
    "name": "ACE Context Engineering",
-   "source_url": null
+   "popularity": "★1210 (gh-api 2026-07-14)",
+   "source_url": "https://github.com/ace-agent/ace",
+   "verified": true,
+   "verified_at": "2026-07-14",
+   "verify_method": "gh-search + gh-api (source objective)"
   },
   {
    "atlas_only": false,
@@ -13097,15 +13143,23 @@
    "source_url": null
   },
   {
-   "atlas_only": true,
+   "atlas_only": false,
    "atlas_status": "ACCEPTÉ",
    "category": "Harness de codage, méthodologies et gouvernance",
-   "description_en": null,
-   "description_fr": "Entrée Atlas (ACCEPTÉ) — description à enrichir depuis le tableau source.",
+   "description_en": "A Model Context Protocol (MCP) server implementation for remote memory bank management, inspired by Cline Memory Bank.",
+   "description_fr": "Serveur MCP « memory bank » (impl. du motif Cline de mémoire persistante).",
+   "disambiguation": "Impl. MCP du motif « memory bank » popularisé par Cline (pas un dépôt Cline officiel).",
    "en_pending": false,
+   "flag": "PUBLIC-INSTALLABLE",
    "id": "memory-bank",
+   "license": "MIT",
+   "maintenance": "active",
    "name": "memory-bank",
-   "source_url": null
+   "popularity": "★915 (gh-api 2026-07-14)",
+   "source_url": "https://github.com/alioshr/memory-bank-mcp",
+   "verified": true,
+   "verified_at": "2026-07-14",
+   "verify_method": "gh-search + gh-api (source objective)"
   },
   {
    "atlas_only": true,
@@ -16973,15 +17027,22 @@
    "verify_method": "gh-api repos/... (source objective)"
   },
   {
-   "atlas_only": true,
+   "atlas_only": false,
    "atlas_status": "ACCEPTÉ - BASELINE",
    "category": "Auto-amélioration et recherche expérimentale",
-   "description_en": null,
-   "description_fr": "Entrée Atlas (ACCEPTÉ - BASELINE) — description à enrichir depuis le tableau source.",
+   "description_en": "🧬 The Huxley-Gödel Machine",
+   "description_fr": "Machine de Gödel de Huxley — évolution d'agents auto-améliorants (impl. de référence).",
    "en_pending": false,
+   "flag": "PUBLIC-INSTALLABLE",
    "id": "huxley-g-del-machine-hgm",
+   "license": "Apache-2.0",
+   "maintenance": "active",
    "name": "Huxley-Gödel Machine (HGM)",
-   "source_url": null
+   "popularity": "★402 (gh-api 2026-07-14)",
+   "source_url": "https://github.com/metauto-ai/HGM",
+   "verified": true,
+   "verified_at": "2026-07-14",
+   "verify_method": "gh-search + gh-api (source objective)"
   },
   {
    "atlas_only": true,
