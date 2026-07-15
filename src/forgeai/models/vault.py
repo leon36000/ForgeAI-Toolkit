@@ -1,0 +1,119 @@
+"""Coffre de secrets chiffré — stdlib PUR (invariant portabilité `dependencies=[]`).
+
+Menace couverte : protection AU REPOS des clés d'API sur la machine de l'utilisateur
+(inspection de disque, commit accidentel, fuite de sauvegarde). PAS un HSM.
+
+Construction (chiffrement authentifié, primitives stdlib vérifiées — aucune primitive
+maison) :
+  clé  = scrypt(passphrase, salt, n=2^14, r=8, p=1, dklen=64) → enc_key(32) | mac_key(32)
+  flux = HMAC-SHA256(enc_key, nonce || compteur_be64) par blocs (mode CTR)
+  ct   = plaintext XOR flux
+  tag  = HMAC-SHA256(mac_key, salt || nonce || ct)          (chiffrer-puis-MAC)
+  blob = MAGIC | salt(16) | nonce(16) | tag(32) | ct
+Unicité (salt, nonce) aléatoires par scellement → pas de réutilisation de flux.
+Vérification du tag en temps constant (hmac.compare_digest) avant tout déchiffrement.
+"""
+from __future__ import annotations
+
+import hashlib
+import hmac
+import os
+import secrets
+from pathlib import Path
+
+MAGIC = b"FGV1"
+_SALT = 16
+_NONCE = 16
+_TAG = 32
+_SCRYPT = dict(n=2 ** 14, r=8, p=1, dklen=64)
+
+
+class VaultError(Exception):
+    """Tag invalide : passphrase erronée ou données altérées."""
+
+
+def _keystream(enc_key: bytes, nonce: bytes, length: int) -> bytes:
+    out = bytearray()
+    counter = 0
+    while len(out) < length:
+        block = hmac.new(enc_key, nonce + counter.to_bytes(8, "big"), hashlib.sha256).digest()
+        out.extend(block)
+        counter += 1
+    return bytes(out[:length])
+
+
+def _derive(passphrase: str, salt: bytes) -> tuple[bytes, bytes]:
+    full = hashlib.scrypt(passphrase.encode("utf-8"), salt=salt, **_SCRYPT)
+    return full[:32], full[32:]
+
+
+def seal(plaintext: bytes, passphrase: str) -> bytes:
+    """Scelle `plaintext` sous `passphrase` → blob auto-porteur (salt+nonce+tag+ct)."""
+    salt = secrets.token_bytes(_SALT)
+    nonce = secrets.token_bytes(_NONCE)
+    enc_key, mac_key = _derive(passphrase, salt)
+    ct = bytes(a ^ b for a, b in zip(plaintext, _keystream(enc_key, nonce, len(plaintext))))
+    tag = hmac.new(mac_key, salt + nonce + ct, hashlib.sha256).digest()
+    return MAGIC + salt + nonce + tag + ct
+
+
+def unseal(blob: bytes, passphrase: str) -> bytes:
+    """Ouvre un blob scellé. Lève VaultError si tag invalide (mauvaise passphrase/altéré)."""
+    if len(blob) < len(MAGIC) + _SALT + _NONCE + _TAG or not blob.startswith(MAGIC):
+        raise VaultError("format de coffre invalide")
+    off = len(MAGIC)
+    salt = blob[off:off + _SALT]; off += _SALT
+    nonce = blob[off:off + _NONCE]; off += _NONCE
+    tag = blob[off:off + _TAG]; off += _TAG
+    ct = blob[off:]
+    enc_key, mac_key = _derive(passphrase, salt)
+    expected = hmac.new(mac_key, salt + nonce + ct, hashlib.sha256).digest()
+    if not hmac.compare_digest(tag, expected):
+        raise VaultError("tag invalide : passphrase erronée ou coffre altéré")
+    return bytes(a ^ b for a, b in zip(ct, _keystream(enc_key, nonce, len(ct))))
+
+
+def fingerprint(secret: str) -> str:
+    """Empreinte NON réversible d'un secret — pour le registre/affichage. Jamais le secret."""
+    return "sha256:" + hashlib.sha256(secret.encode("utf-8")).hexdigest()[:16]
+
+
+class Vault:
+    """Coffre fichier (un blob par clé logique). Fichier 0600, répertoire 0700."""
+
+    def __init__(self, path: Path) -> None:
+        self.path = Path(path)
+
+    def _load(self) -> dict[str, str]:
+        import json
+        if not self.path.exists():
+            return {}
+        return json.loads(self.path.read_text(encoding="utf-8"))
+
+    def _save(self, data: dict[str, str]) -> None:
+        import base64
+        import json
+        self.path.parent.mkdir(parents=True, exist_ok=True)
+        os.chmod(self.path.parent, 0o700)
+        payload = json.dumps(data, ensure_ascii=False, indent=1)
+        self.path.write_text(payload, encoding="utf-8")
+        os.chmod(self.path, 0o600)
+
+    def put(self, name: str, secret: str, passphrase: str) -> str:
+        """Scelle `secret` sous `name`. Retourne l'empreinte (jamais le secret)."""
+        import base64
+        data = self._load()
+        blob = seal(secret.encode("utf-8"), passphrase)
+        data[name] = base64.b64encode(blob).decode("ascii")
+        self._save(data)
+        return fingerprint(secret)
+
+    def get(self, name: str, passphrase: str) -> str:
+        import base64
+        data = self._load()
+        if name not in data:
+            raise KeyError(name)
+        return unseal(base64.b64decode(data[name]), passphrase).decode("utf-8")
+
+    def names(self) -> list[str]:
+        return sorted(self._load())
