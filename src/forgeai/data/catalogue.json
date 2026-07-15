@@ -918,17 +918,6 @@
    "verify_method": "gh-api repos/... (source objective)"
   },
   {
-   "atlas_only": true,
-   "atlas_status": "ACCEPTÉ",
-   "category": "Orchestration, agents et interfaces",
-   "description_en": null,
-   "description_fr": "Entrée Atlas (ACCEPTÉ) — description à enrichir depuis le tableau source.",
-   "en_pending": false,
-   "id": "forge-council",
-   "name": "forge-council",
-   "source_url": null
-  },
-  {
    "atlas_only": false,
    "atlas_status": "",
    "category": "Orchestration, agents et interfaces",
@@ -4229,17 +4218,6 @@
    "verify_method": "gh-api repos/... (source objective)"
   },
   {
-   "atlas_only": true,
-   "atlas_status": "REMPLACÉ",
-   "category": "Inférence, serving et gateway modèles",
-   "description_en": null,
-   "description_fr": "Entrée Atlas (REMPLACÉ) — description à enrichir depuis le tableau source.",
-   "en_pending": false,
-   "id": "march-trie-kv-cache",
-   "name": "March Trie KV-cache",
-   "source_url": null
-  },
-  {
    "atlas_only": false,
    "atlas_status": "",
    "category": "Inférence, serving et gateway modèles",
@@ -4757,17 +4735,6 @@
    "verified": true,
    "verified_at": "2026-07-14",
    "verify_method": "gh-api repos/... (source objective)"
-  },
-  {
-   "atlas_only": true,
-   "atlas_status": "ACCEPTÉ - NOYAU",
-   "category": "Inférence, serving et gateway modèles",
-   "description_en": null,
-   "description_fr": "Entrée Atlas (ACCEPTÉ - NOYAU) — description à enrichir depuis le tableau source.",
-   "en_pending": false,
-   "id": "premium-cost-gate",
-   "name": "premium_cost_gate",
-   "source_url": null
   },
   {
    "atlas_only": false,
@@ -5546,17 +5513,6 @@
    "source_url": null
   },
   {
-   "atlas_only": true,
-   "atlas_status": "REMPLACÉ",
-   "category": "RAG, vecteurs, ingestion et mémoire agentique",
-   "description_en": null,
-   "description_fr": "Entrée Atlas (REMPLACÉ) — description à enrichir depuis le tableau source.",
-   "en_pending": false,
-   "id": "cache-s-mantique-litellm-qdrant",
-   "name": "Cache sémantique LiteLLM-Qdrant",
-   "source_url": null
-  },
-  {
    "atlas_only": false,
    "atlas_status": "ACCEPTÉ - PRINCIPAL CODE",
    "category": "RAG, vecteurs, ingestion et mémoire agentique",
@@ -5876,39 +5832,6 @@
    "verify_method": "gh-api repos/... (source objective)"
   },
   {
-   "atlas_only": true,
-   "atlas_status": "FUSIONNÉ",
-   "category": "RAG, vecteurs, ingestion et mémoire agentique",
-   "description_en": null,
-   "description_fr": "Entrée Atlas (FUSIONNÉ) — description à enrichir depuis le tableau source.",
-   "en_pending": false,
-   "id": "evermind-evermemos",
-   "name": "EverMind / EverMemOS",
-   "source_url": null
-  },
-  {
-   "atlas_only": true,
-   "atlas_status": "ACCEPTÉ - MIROIR CANONIQUE",
-   "category": "RAG, vecteurs, ingestion et mémoire agentique",
-   "description_en": null,
-   "description_fr": "Entrée Atlas (ACCEPTÉ - MIROIR CANONIQUE) — description à enrichir depuis le tableau source.",
-   "en_pending": false,
-   "id": "everos",
-   "name": "EverOS",
-   "source_url": null
-  },
-  {
-   "atlas_only": true,
-   "atlas_status": "REMPLACÉ",
-   "category": "RAG, vecteurs, ingestion et mémoire agentique",
-   "description_en": null,
-   "description_fr": "Entrée Atlas (REMPLACÉ) — description à enrichir depuis le tableau source.",
-   "en_pending": false,
-   "id": "experience-learning-yaml",
-   "name": "Experience Learning YAML",
-   "source_url": null
-  },
-  {
    "atlas_only": false,
    "atlas_status": "",
    "category": "RAG, vecteurs, ingestion et mémoire agentique",
@@ -6156,17 +6079,6 @@
    "verified": true,
    "verified_at": "2026-07-14",
    "verify_method": "gh-api repos/... (source objective)"
-  },
-  {
-   "atlas_only": true,
-   "atlas_status": "REMPLACÉ",
-   "category": "RAG, vecteurs, ingestion et mémoire agentique",
-   "description_en": null,
-   "description_fr": "Entrée Atlas (REMPLACÉ) — description à enrichir depuis le tableau source.",
-   "en_pending": false,
-   "id": "hybrid-retrieve-py",
-   "name": "hybrid_retrieve.py",
-   "source_url": null
   },
   {
    "atlas_only": false,
@@ -7225,17 +7137,6 @@
    "verified": true,
    "verified_at": "2026-07-14",
    "verify_method": "gh-api repos/... (source objective)"
-  },
-  {
-   "atlas_only": true,
-   "atlas_status": "ACCEPTÉ - PRIORITAIRE",
-   "category": "RAG, vecteurs, ingestion et mémoire agentique",
-   "description_en": null,
-   "description_fr": "Entrée Atlas (ACCEPTÉ - PRIORITAIRE) — description à enrichir depuis le tableau source.",
-   "en_pending": false,
-   "id": "projectmem",
-   "name": "Projectmem",
-   "source_url": null
   },
   {
    "atlas_only": false,
@@ -8574,17 +8475,6 @@
    "verify_method": "gh-api repos/... (source objective)"
   },
   {
-   "atlas_only": true,
-   "atlas_status": "ACCEPTÉ - NOYAU",
-   "category": "MCP et protocoles d'interopérabilité",
-   "description_en": null,
-   "description_fr": "Entrée Atlas (ACCEPTÉ - NOYAU) — description à enrichir depuis le tableau source.",
-   "en_pending": false,
-   "id": "contextforge",
-   "name": "ContextForge",
-   "source_url": null
-  },
-  {
    "atlas_only": false,
    "atlas_status": "",
    "category": "MCP et protocoles d'interopérabilité",
@@ -8858,17 +8748,6 @@
    "verify_method": "gh-api repos/... (source objective)"
   },
   {
-   "atlas_only": true,
-   "atlas_status": "ACCEPTÉ - NOYAU",
-   "category": "MCP et protocoles d'interopérabilité",
-   "description_en": null,
-   "description_fr": "Entrée Atlas (ACCEPTÉ - NOYAU) — description à enrichir depuis le tableau source.",
-   "en_pending": false,
-   "id": "forge-memory-mcp",
-   "name": "Forge Memory MCP",
-   "source_url": null
-  },
-  {
    "atlas_only": false,
    "atlas_status": "",
    "category": "MCP et protocoles d'interopérabilité",
@@ -9082,17 +8961,6 @@
    "verify_method": "gh-api repos/... (source objective)"
   },
   {
-   "atlas_only": true,
-   "atlas_status": "REFUSÉ",
-   "category": "MCP et protocoles d'interopérabilité",
-   "description_en": null,
-   "description_fr": "Entrée Atlas (REFUSÉ) — description à enrichir depuis le tableau source.",
-   "en_pending": false,
-   "id": "kubectl-apply-direct",
-   "name": "kubectl apply direct",
-   "source_url": null
-  },
-  {
    "atlas_only": false,
    "atlas_status": "ACCEPTÉ SOUS CONDITIONS",
    "category": "MCP et protocoles d'interopérabilité",
@@ -9183,17 +9051,6 @@
    "verified": true,
    "verified_at": "2026-07-14",
    "verify_method": "gh-api repos/... (source objective)"
-  },
-  {
-   "atlas_only": true,
-   "atlas_status": "ACCEPTÉ - RECLASSÉ",
-   "category": "MCP et protocoles d'interopérabilité",
-   "description_en": null,
-   "description_fr": "Entrée Atlas (ACCEPTÉ - RECLASSÉ) — description à enrichir depuis le tableau source.",
-   "en_pending": false,
-   "id": "mcp-access-profiles",
-   "name": "MCP access profiles",
-   "source_url": null
   },
   {
    "atlas_only": false,
@@ -12397,17 +12254,6 @@
    "source_url": null
   },
   {
-   "atlas_only": true,
-   "atlas_status": "ACCEPTÉ - ARCHIVE",
-   "category": "Harness de codage, méthodologies et gouvernance",
-   "description_en": null,
-   "description_fr": "Entrée Atlas (ACCEPTÉ - ARCHIVE) — description à enrichir depuis le tableau source.",
-   "en_pending": false,
-   "id": "active-memory-locked-v5",
-   "name": "ACTIVE_MEMORY_LOCKED_V5",
-   "source_url": null
-  },
-  {
    "atlas_only": false,
    "atlas_status": "",
    "category": "Harness de codage, méthodologies et gouvernance",
@@ -12586,28 +12432,6 @@
    "verified": true,
    "verified_at": "2026-07-14",
    "verify_method": "gh-api repos/... (source objective)"
-  },
-  {
-   "atlas_only": true,
-   "atlas_status": "ACCEPTÉ",
-   "category": "Harness de codage, méthodologies et gouvernance",
-   "description_en": null,
-   "description_fr": "Entrée Atlas (ACCEPTÉ) — description à enrichir depuis le tableau source.",
-   "en_pending": false,
-   "id": "artifact-ledger",
-   "name": "Artifact Ledger",
-   "source_url": null
-  },
-  {
-   "atlas_only": true,
-   "atlas_status": "ACCEPTÉ - NOYAU",
-   "category": "Harness de codage, méthodologies et gouvernance",
-   "description_en": null,
-   "description_fr": "Entrée Atlas (ACCEPTÉ - NOYAU) — description à enrichir depuis le tableau source.",
-   "en_pending": false,
-   "id": "audit-canon-skill",
-   "name": "audit-canon-skill",
-   "source_url": null
   },
   {
    "atlas_only": false,
@@ -12982,17 +12806,6 @@
    "verify_method": "gh-api repos/... (source objective)"
   },
   {
-   "atlas_only": true,
-   "atlas_status": "ACCEPTÉ - NOYAU",
-   "category": "Harness de codage, méthodologies et gouvernance",
-   "description_en": null,
-   "description_fr": "Entrée Atlas (ACCEPTÉ - NOYAU) — description à enrichir depuis le tableau source.",
-   "en_pending": false,
-   "id": "context-pack-compiler",
-   "name": "Context Pack Compiler",
-   "source_url": null
-  },
-  {
    "atlas_only": false,
    "atlas_status": "",
    "category": "Harness de codage, méthodologies et gouvernance",
@@ -13065,28 +12878,6 @@
    "verify_method": "gh-api repos/... (source objective)"
   },
   {
-   "atlas_only": true,
-   "atlas_status": "ACCEPTÉ - NOYAU",
-   "category": "Harness de codage, méthodologies et gouvernance",
-   "description_en": null,
-   "description_fr": "Entrée Atlas (ACCEPTÉ - NOYAU) — description à enrichir depuis le tableau source.",
-   "en_pending": false,
-   "id": "current-state-yml-state-ledger",
-   "name": "current-state.yml / State Ledger",
-   "source_url": null
-  },
-  {
-   "atlas_only": true,
-   "atlas_status": "ACCEPTÉ - NOYAU",
-   "category": "Harness de codage, méthodologies et gouvernance",
-   "description_en": null,
-   "description_fr": "Entrée Atlas (ACCEPTÉ - NOYAU) — description à enrichir depuis le tableau source.",
-   "en_pending": false,
-   "id": "decision-ledger",
-   "name": "Decision Ledger",
-   "source_url": null
-  },
-  {
    "atlas_only": false,
    "atlas_status": "",
    "category": "Harness de codage, méthodologies et gouvernance",
@@ -13103,50 +12894,6 @@
    "verified": true,
    "verified_at": "2026-07-14",
    "verify_method": "gh-api repos/... (source objective)"
-  },
-  {
-   "atlas_only": true,
-   "atlas_status": "ACCEPTÉ",
-   "category": "Harness de codage, méthodologies et gouvernance",
-   "description_en": null,
-   "description_fr": "Entrée Atlas (ACCEPTÉ) — description à enrichir depuis le tableau source.",
-   "en_pending": false,
-   "id": "do-not-forget-canon",
-   "name": "DO-NOT-FORGET / CANON",
-   "source_url": null
-  },
-  {
-   "atlas_only": true,
-   "atlas_status": "ACCEPTÉ",
-   "category": "Harness de codage, méthodologies et gouvernance",
-   "description_en": null,
-   "description_fr": "Entrée Atlas (ACCEPTÉ) — description à enrichir depuis le tableau source.",
-   "en_pending": false,
-   "id": "execution-ledger",
-   "name": "Execution Ledger",
-   "source_url": null
-  },
-  {
-   "atlas_only": true,
-   "atlas_status": "ACCEPTÉ",
-   "category": "Harness de codage, méthodologies et gouvernance",
-   "description_en": null,
-   "description_fr": "Entrée Atlas (ACCEPTÉ) — description à enrichir depuis le tableau source.",
-   "en_pending": false,
-   "id": "find-skills-skill-registry",
-   "name": "Find Skills / Skill Registry",
-   "source_url": null
-  },
-  {
-   "atlas_only": true,
-   "atlas_status": "ACCEPTÉ",
-   "category": "Harness de codage, méthodologies et gouvernance",
-   "description_en": null,
-   "description_fr": "Entrée Atlas (ACCEPTÉ) — description à enrichir depuis le tableau source.",
-   "en_pending": false,
-   "id": "forge-quality-phase-a-skill",
-   "name": "forge-quality-phase-a-skill",
-   "source_url": null
   },
   {
    "atlas_only": false,
@@ -13288,17 +13035,6 @@
   },
   {
    "atlas_only": true,
-   "atlas_status": "ACCEPTÉ - NOYAU",
-   "category": "Harness de codage, méthodologies et gouvernance",
-   "description_en": null,
-   "description_fr": "Entrée Atlas (ACCEPTÉ - NOYAU) — description à enrichir depuis le tableau source.",
-   "en_pending": false,
-   "id": "iar-e-postgresql-ledger",
-   "name": "IAR-E PostgreSQL Ledger",
-   "source_url": null
-  },
-  {
-   "atlas_only": true,
    "atlas_status": "ACCEPTÉ",
    "category": "Harness de codage, méthodologies et gouvernance",
    "description_en": null,
@@ -13360,17 +13096,6 @@
    "source_url": null
   },
   {
-   "atlas_only": true,
-   "atlas_status": "ACCEPTÉ",
-   "category": "Harness de codage, méthodologies et gouvernance",
-   "description_en": null,
-   "description_fr": "Entrée Atlas (ACCEPTÉ) — description à enrichir depuis le tableau source.",
-   "en_pending": false,
-   "id": "model-ledger",
-   "name": "Model Ledger",
-   "source_url": null
-  },
-  {
    "atlas_only": false,
    "atlas_status": "",
    "category": "Harness de codage, méthodologies et gouvernance",
@@ -13387,28 +13112,6 @@
    "verified": true,
    "verified_at": "2026-07-14",
    "verify_method": "gh-api repos/... (source objective)"
-  },
-  {
-   "atlas_only": true,
-   "atlas_status": "ACCEPTÉ - NOYAU",
-   "category": "Harness de codage, méthodologies et gouvernance",
-   "description_en": null,
-   "description_fr": "Entrée Atlas (ACCEPTÉ - NOYAU) — description à enrichir depuis le tableau source.",
-   "en_pending": false,
-   "id": "nathan-gates",
-   "name": "Nathan Gates",
-   "source_url": null
-  },
-  {
-   "atlas_only": true,
-   "atlas_status": "ACCEPTÉ - NOYAU",
-   "category": "Harness de codage, méthodologies et gouvernance",
-   "description_en": null,
-   "description_fr": "Entrée Atlas (ACCEPTÉ - NOYAU) — description à enrichir depuis le tableau source.",
-   "en_pending": false,
-   "id": "no-fake-done-check",
-   "name": "no-fake-done-check",
-   "source_url": null
   },
   {
    "atlas_only": true,
@@ -13572,17 +13275,6 @@
    "description_en": null,
    "description_fr": "Entrée Atlas (ACCEPTÉ - NOYAU) — description à enrichir depuis le tableau source.",
    "en_pending": false,
-   "id": "proof-ledger",
-   "name": "Proof Ledger",
-   "source_url": null
-  },
-  {
-   "atlas_only": true,
-   "atlas_status": "ACCEPTÉ - NOYAU",
-   "category": "Harness de codage, méthodologies et gouvernance",
-   "description_en": null,
-   "description_fr": "Entrée Atlas (ACCEPTÉ - NOYAU) — description à enrichir depuis le tableau source.",
-   "en_pending": false,
    "id": "proof-driven-agentic-sdlc",
    "name": "Proof-Driven Agentic SDLC",
    "source_url": null
@@ -13622,17 +13314,6 @@
    "verified": true,
    "verified_at": "2026-07-14",
    "verify_method": "gh-api repos/... (source objective)"
-  },
-  {
-   "atlas_only": true,
-   "atlas_status": "ACCEPTÉ",
-   "category": "Harness de codage, méthodologies et gouvernance",
-   "description_en": null,
-   "description_fr": "Entrée Atlas (ACCEPTÉ) — description à enrichir depuis le tableau source.",
-   "en_pending": false,
-   "id": "rag-retrieve-context",
-   "name": "rag-retrieve-context",
-   "source_url": null
   },
   {
    "atlas_only": true,
@@ -13680,28 +13361,6 @@
    "verified": true,
    "verified_at": "2026-07-14",
    "verify_method": "gh-api repos/... (source objective)"
-  },
-  {
-   "atlas_only": true,
-   "atlas_status": "ACCEPTÉ",
-   "category": "Harness de codage, méthodologies et gouvernance",
-   "description_en": null,
-   "description_fr": "Entrée Atlas (ACCEPTÉ) — description à enrichir depuis le tableau source.",
-   "en_pending": false,
-   "id": "skills-runtime-selection",
-   "name": "skills-runtime-selection",
-   "source_url": null
-  },
-  {
-   "atlas_only": true,
-   "atlas_status": "ACCEPTÉ",
-   "category": "Harness de codage, méthodologies et gouvernance",
-   "description_en": null,
-   "description_fr": "Entrée Atlas (ACCEPTÉ) — description à enrichir depuis le tableau source.",
-   "en_pending": false,
-   "id": "sleep-time-consolidation",
-   "name": "Sleep-time Consolidation",
-   "source_url": null
   },
   {
    "atlas_only": false,
@@ -13792,17 +13451,6 @@
    "verified": true,
    "verified_at": "2026-07-14",
    "verify_method": "gh-api repos/... (source objective)"
-  },
-  {
-   "atlas_only": true,
-   "atlas_status": "ACCEPTÉ",
-   "category": "Harness de codage, méthodologies et gouvernance",
-   "description_en": null,
-   "description_fr": "Entrée Atlas (ACCEPTÉ) — description à enrichir depuis le tableau source.",
-   "en_pending": false,
-   "id": "supply-chain-ledger",
-   "name": "Supply-chain Ledger",
-   "source_url": null
   },
   {
    "atlas_only": false,
@@ -17265,17 +16913,6 @@
    "source_url": null
   },
   {
-   "atlas_only": true,
-   "atlas_status": "ACCEPTÉ - CIBLE",
-   "category": "Blueprints, starters et plateformes spécialisées",
-   "description_en": null,
-   "description_fr": "Entrée Atlas (ACCEPTÉ - CIBLE) — description à enrichir depuis le tableau source.",
-   "en_pending": false,
-   "id": "stack-forge-clean-foundation",
-   "name": "Stack FORGE Clean Foundation",
-   "source_url": null
-  },
-  {
    "atlas_only": false,
    "atlas_status": "ACCEPTÉ - DEV",
    "category": "Blueprints, starters et plateformes spécialisées",
@@ -17380,39 +17017,6 @@
    "en_pending": false,
    "id": "devstral-small-2-24b",
    "name": "Devstral Small 2 24B",
-   "source_url": null
-  },
-  {
-   "atlas_only": true,
-   "atlas_status": "ROUTE",
-   "category": "Auto-amélioration et recherche expérimentale",
-   "description_en": null,
-   "description_fr": "Entrée Atlas (ROUTE) — description à enrichir depuis le tableau source.",
-   "en_pending": false,
-   "id": "forge-orchestrate-chat",
-   "name": "forge-orchestrate-chat",
-   "source_url": null
-  },
-  {
-   "atlas_only": true,
-   "atlas_status": "ROUTE",
-   "category": "Auto-amélioration et recherche expérimentale",
-   "description_en": null,
-   "description_fr": "Entrée Atlas (ROUTE) — description à enrichir depuis le tableau source.",
-   "en_pending": false,
-   "id": "forge-rag-chat",
-   "name": "forge-rag-chat",
-   "source_url": null
-  },
-  {
-   "atlas_only": true,
-   "atlas_status": "ROUTE",
-   "category": "Auto-amélioration et recherche expérimentale",
-   "description_en": null,
-   "description_fr": "Entrée Atlas (ROUTE) — description à enrichir depuis le tableau source.",
-   "en_pending": false,
-   "id": "forge-super-forge-cloud-forge-lowpower-forge-nim-scheduler",
-   "name": "forge-super/forge-cloud-*/forge-lowpower/forge-nim-scheduler",
    "source_url": null
   },
   {
