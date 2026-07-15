@@ -30,6 +30,7 @@ from forgeai.deploy.k3s import k3s_apply, k3s_delete_namespace, k3s_wait_deploym
 from forgeai.hardware.detect import HardwareDetector
 from forgeai.models.routes import RouteError, RouteStore
 from forgeai.models.probe import probe_route
+from forgeai.models.gateway import GatewayConfig, GatewayError, GatewayStore
 from forgeai.planner.assemble import assemble_plan
 from forgeai.planner.profile import ProfileError, derive_profile
 from forgeai.rag.client import RagClient
@@ -282,6 +283,51 @@ def _model_test(args: argparse.Namespace) -> int:
     return 0 if result.ok else 9
 
 
+def _gateway_set_url(args: argparse.Namespace) -> int:
+    try:
+        cfg = GatewayConfig(args.url, key_env=args.key_env)
+    except GatewayError as exc:
+        print(f"ECHEC GATEWAY: {exc}", file=sys.stderr)
+        return 10
+    GatewayStore(Path(args.home)).set_gateway(cfg)
+    registre.append(Path(args.registre), "gateway_configure", "gateway",
+                    {"base_url": cfg.base_url, "key_env": cfg.key_env})
+    print(f"[forgeai] gateway unique = {cfg.base_url} (clé via ${{{cfg.key_env}}})")
+    return 0
+
+
+def _gateway_wire(args: argparse.Namespace) -> int:
+    store = GatewayStore(Path(args.home))
+    try:
+        wiring = store.wire(args.brick, args.role, args.route)
+    except GatewayError as exc:
+        print(f"ECHEC CABLAGE: {exc}", file=sys.stderr)
+        return 10
+    registre.append(Path(args.registre), "brique_cablee_gateway", "gateway",
+                    {"brick": wiring.brick_id, "role": wiring.role,
+                     "base_url": wiring.env["OPENAI_API_BASE"],
+                     "model": wiring.env["OPENAI_MODEL"]})  # jamais de clé
+    print(f"[forgeai] brique '{wiring.brick_id}' ({wiring.role}) → gateway "
+          f"{wiring.env['OPENAI_API_BASE']} modèle {wiring.env['OPENAI_MODEL']}")
+    return 0
+
+
+def _gateway_verify(args: argparse.Namespace) -> int:
+    try:
+        violations = GatewayStore(Path(args.home)).verify()
+    except GatewayError as exc:
+        print(f"ECHEC GATEWAY: {exc}", file=sys.stderr)
+        return 10
+    if violations:
+        print("VIOLATION INVARIANT DM-6 (brique ne passant pas par le gateway unique) :",
+              file=sys.stderr)
+        for v in violations:
+            print(f"  - {v}", file=sys.stderr)
+        return 10
+    print("[forgeai] invariant gateway OK — toutes les briques câblées passent par le gateway unique")
+    return 0
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(prog="forgeai")
     sub = parser.add_subparsers(dest="cmd", required=True)
@@ -341,6 +387,25 @@ def main(argv: list[str] | None = None) -> int:
     p_test.add_argument("--passphrase-env", default=None)
     p_test.add_argument("--home", default=str(default_models_home()))
     p_test.set_defaults(func=_model_test)
+
+    p_gw = sub.add_parser("gateway", help="branchement brique→gateway unique (DM-6)")
+    gw_sub = p_gw.add_subparsers(dest="gw_cmd", required=True)
+    p_gw_url = gw_sub.add_parser("set-url", help="définit le gateway unique")
+    p_gw_url.add_argument("--url", required=True)
+    p_gw_url.add_argument("--key-env", default="FORGEAI_GATEWAY_KEY")
+    p_gw_url.add_argument("--home", default=str(default_models_home()))
+    p_gw_url.add_argument("--registre", default=str(DEFAULT_REGISTRE))
+    p_gw_url.set_defaults(func=_gateway_set_url)
+    p_gw_wire = gw_sub.add_parser("wire", help="câble une brique (par rôle→route) vers le gateway")
+    p_gw_wire.add_argument("--brick", required=True)
+    p_gw_wire.add_argument("--role", required=True)
+    p_gw_wire.add_argument("--route", required=True)
+    p_gw_wire.add_argument("--home", default=str(default_models_home()))
+    p_gw_wire.add_argument("--registre", default=str(DEFAULT_REGISTRE))
+    p_gw_wire.set_defaults(func=_gateway_wire)
+    p_gw_ver = gw_sub.add_parser("verify", help="vérifie l'invariant (aucune brique hors gateway)")
+    p_gw_ver.add_argument("--home", default=str(default_models_home()))
+    p_gw_ver.set_defaults(func=_gateway_verify)
 
     args = parser.parse_args(argv)
     try:
