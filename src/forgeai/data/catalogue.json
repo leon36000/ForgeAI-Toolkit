@@ -270,15 +270,21 @@
    "verify_method": "gh-api repos/... (source objective)"
   },
   {
-   "atlas_only": true,
+   "atlas_only": false,
    "atlas_status": "REFUSÉ",
    "category": "Orchestration, agents et interfaces",
    "description_en": null,
-   "description_fr": "Entrée Atlas (REFUSÉ) — description à enrichir depuis le tableau source.",
-   "en_pending": false,
+   "description_fr": "Studio d'agents IA (produit hébergé).",
+   "en_pending": true,
+   "flag": "SERVICE-HEBERGE",
    "id": "ainative-studio",
+   "license": "service propriétaire (AINative)",
+   "maintenance": "active",
    "name": "AINative Studio",
-   "source_url": null
+   "source_url": "https://ainative.studio",
+   "verified": true,
+   "verified_at": "2026-07-14",
+   "verify_method": "produit hébergé (source directe)"
   },
   {
    "atlas_only": false,
@@ -333,17 +339,6 @@
    "verified": true,
    "verified_at": "2026-07-14",
    "verify_method": "gh-api repos/... (source objective)"
-  },
-  {
-   "atlas_only": true,
-   "atlas_status": "ACCEPTÉ - EXTERNE",
-   "category": "Orchestration, agents et interfaces",
-   "description_en": null,
-   "description_fr": "Entrée Atlas (ACCEPTÉ - EXTERNE) — description à enrichir depuis le tableau source.",
-   "en_pending": false,
-   "id": "atoms",
-   "name": "Atoms",
-   "source_url": null
   },
   {
    "atlas_only": false,
@@ -1178,17 +1173,6 @@
    "verified": true,
    "verified_at": "2026-07-14",
    "verify_method": "web:github (WebFetch dépôt officiel, 2026-07-14 — MIT, Python, v0.18.2) + gh-api repos/... (source objective, 2026-07-14)"
-  },
-  {
-   "atlas_only": true,
-   "atlas_status": "ACCEPTÉ - NOYAU",
-   "category": "Orchestration, agents et interfaces",
-   "description_en": null,
-   "description_fr": "Entrée Atlas (ACCEPTÉ - NOYAU) — description à enrichir depuis le tableau source.",
-   "en_pending": false,
-   "id": "hermes-orchestrator",
-   "name": "Hermes Orchestrator",
-   "source_url": null
   },
   {
    "atlas_only": false,
@@ -2260,17 +2244,6 @@
    "verify_method": "gh-api repos/... (source objective)"
   },
   {
-   "atlas_only": true,
-   "atlas_status": "ACCEPTÉ - PRINCIPAL",
-   "category": "Orchestration, agents et interfaces",
-   "description_en": null,
-   "description_fr": "Entrée Atlas (ACCEPTÉ - PRINCIPAL) — description à enrichir depuis le tableau source.",
-   "en_pending": false,
-   "id": "pydantic-deep-agents-vstorm",
-   "name": "Pydantic Deep Agents (Vstorm)",
-   "source_url": null
-  },
-  {
    "atlas_only": false,
    "atlas_status": "",
    "category": "Orchestration, agents et interfaces",
@@ -2757,17 +2730,6 @@
    "verify_method": "gh-api repos/... (source objective)"
   },
   {
-   "atlas_only": true,
-   "atlas_status": "REFUSÉ",
-   "category": "Orchestration, agents et interfaces",
-   "description_en": null,
-   "description_fr": "Entrée Atlas (REFUSÉ) — description à enrichir depuis le tableau source.",
-   "en_pending": false,
-   "id": "vercel-eve",
-   "name": "Vercel Eve",
-   "source_url": null
-  },
-  {
    "atlas_only": false,
    "atlas_status": "ACCEPTÉ",
    "category": "Orchestration, agents et interfaces",
@@ -2785,17 +2747,6 @@
    "verified": true,
    "verified_at": "2026-07-14",
    "verify_method": "gh-api repos/... (source objective)"
-  },
-  {
-   "atlas_only": true,
-   "atlas_status": "ACCEPTÉ - BLUEPRINT",
-   "category": "Orchestration, agents et interfaces",
-   "description_en": null,
-   "description_fr": "Entrée Atlas (ACCEPTÉ - BLUEPRINT) — description à enrichir depuis le tableau source.",
-   "en_pending": false,
-   "id": "vstorm-full-stack-ai-agent-template",
-   "name": "Vstorm Full-Stack AI Agent Template",
-   "source_url": null
   },
   {
    "atlas_only": false,
@@ -3611,17 +3562,6 @@
    "verify_method": "gh-api repos/... (source objective)"
   },
   {
-   "atlas_only": true,
-   "atlas_status": "ACCEPTÉ",
-   "category": "Inférence, serving et gateway modèles",
-   "description_en": null,
-   "description_fr": "Entrée Atlas (ACCEPTÉ) — description à enrichir depuis le tableau source.",
-   "en_pending": false,
-   "id": "headroom",
-   "name": "Headroom",
-   "source_url": null
-  },
-  {
    "atlas_only": false,
    "atlas_status": "REFUSÉ",
    "category": "Inférence, serving et gateway modèles",
@@ -4143,17 +4083,6 @@
    "verified": true,
    "verified_at": "2026-07-14",
    "verify_method": "gh-api repos/... (source objective)"
-  },
-  {
-   "atlas_only": true,
-   "atlas_status": "REFUSÉ",
-   "category": "Inférence, serving et gateway modèles",
-   "description_en": null,
-   "description_fr": "Entrée Atlas (REFUSÉ) — description à enrichir depuis le tableau source.",
-   "en_pending": false,
-   "id": "llmtrim",
-   "name": "llmtrim",
-   "source_url": null
   },
   {
    "atlas_only": false,
@@ -5536,17 +5465,6 @@
    "verify_method": "gh-search org/produit (source objective)"
   },
   {
-   "atlas_only": true,
-   "atlas_status": "ACCEPTÉ - NOYAU",
-   "category": "RAG, vecteurs, ingestion et mémoire agentique",
-   "description_en": null,
-   "description_fr": "Entrée Atlas (ACCEPTÉ - NOYAU) — description à enrichir depuis le tableau source.",
-   "en_pending": false,
-   "id": "bm25-dense-rrf",
-   "name": "BM25 + dense + RRF",
-   "source_url": null
-  },
-  {
    "atlas_only": false,
    "atlas_status": "ACCEPTÉ - PRINCIPAL CODE",
    "category": "RAG, vecteurs, ingestion et mémoire agentique",
@@ -5600,17 +5518,6 @@
    "verified": true,
    "verified_at": "2026-07-14",
    "verify_method": "gh-api repos/... (source objective)"
-  },
-  {
-   "atlas_only": true,
-   "atlas_status": "REFUSÉ",
-   "category": "RAG, vecteurs, ingestion et mémoire agentique",
-   "description_en": null,
-   "description_fr": "Entrée Atlas (REFUSÉ) — description à enrichir depuis le tableau source.",
-   "en_pending": false,
-   "id": "codegraph",
-   "name": "CodeGraph",
-   "source_url": null
   },
   {
    "atlas_only": false,
@@ -5992,39 +5899,6 @@
    "verify_method": "gh-api repos/... (source objective)"
   },
   {
-   "atlas_only": true,
-   "atlas_status": "REFUSÉ",
-   "category": "RAG, vecteurs, ingestion et mémoire agentique",
-   "description_en": null,
-   "description_fr": "Entrée Atlas (REFUSÉ) — description à enrichir depuis le tableau source.",
-   "en_pending": false,
-   "id": "forgetful",
-   "name": "Forgetful",
-   "source_url": null
-  },
-  {
-   "atlas_only": true,
-   "atlas_status": "REFUSÉ",
-   "category": "RAG, vecteurs, ingestion et mémoire agentique",
-   "description_en": null,
-   "description_fr": "Entrée Atlas (REFUSÉ) — description à enrichir depuis le tableau source.",
-   "en_pending": false,
-   "id": "gortex",
-   "name": "Gortex",
-   "source_url": null
-  },
-  {
-   "atlas_only": true,
-   "atlas_status": "ACCEPTÉ",
-   "category": "RAG, vecteurs, ingestion et mémoire agentique",
-   "description_en": null,
-   "description_fr": "Entrée Atlas (ACCEPTÉ) — description à enrichir depuis le tableau source.",
-   "en_pending": false,
-   "id": "graphify",
-   "name": "Graphify",
-   "source_url": null
-  },
-  {
    "atlas_only": false,
    "atlas_status": "ACCEPTÉ - NOYAU",
    "category": "RAG, vecteurs, ingestion et mémoire agentique",
@@ -6149,17 +6023,6 @@
    "verified": true,
    "verified_at": "2026-07-14",
    "verify_method": "gh-api repos/... (source objective)"
-  },
-  {
-   "atlas_only": true,
-   "atlas_status": "REFUSÉ",
-   "category": "RAG, vecteurs, ingestion et mémoire agentique",
-   "description_en": null,
-   "description_fr": "Entrée Atlas (REFUSÉ) — description à enrichir depuis le tableau source.",
-   "en_pending": false,
-   "id": "infinity-context",
-   "name": "infinity-context",
-   "source_url": null
   },
   {
    "atlas_only": false,
@@ -7517,15 +7380,22 @@
    "verify_method": "gh-api repos/... (source objective)"
   },
   {
-   "atlas_only": true,
+   "atlas_only": false,
    "atlas_status": "ACCEPTÉ - NOYAU CODE",
    "category": "RAG, vecteurs, ingestion et mémoire agentique",
-   "description_en": null,
-   "description_fr": "Entrée Atlas (ACCEPTÉ - NOYAU CODE) — description à enrichir depuis le tableau source.",
+   "description_en": "Code AI platform with Code Search & Cody",
+   "description_fr": "Plateforme Code AI (recherche de code à l'échelle). Instantané public du code source.",
    "en_pending": false,
+   "flag": "PUBLIC-INSTALLABLE",
    "id": "sourcegraph",
+   "license": "NOASSERTION",
+   "maintenance": "active",
    "name": "Sourcegraph",
-   "source_url": null
+   "popularity": "★10294 (gh-api 2026-07-14)",
+   "source_url": "https://github.com/sourcegraph/sourcegraph-public-snapshot",
+   "verified": true,
+   "verified_at": "2026-07-14",
+   "verify_method": "gh-api (source objective)"
   },
   {
    "atlas_only": false,
@@ -7853,17 +7723,6 @@
    "verify_method": "gh-api repos/... (source objective)"
   },
   {
-   "atlas_only": true,
-   "atlas_status": "REFUSÉ",
-   "category": "RAG, vecteurs, ingestion et mémoire agentique",
-   "description_en": null,
-   "description_fr": "Entrée Atlas (REFUSÉ) — description à enrichir depuis le tableau source.",
-   "en_pending": false,
-   "id": "zerodb",
-   "name": "ZeroDB",
-   "source_url": null
-  },
-  {
    "atlas_only": false,
    "atlas_status": "",
    "category": "RAG, vecteurs, ingestion et mémoire agentique",
@@ -7970,17 +7829,6 @@
    "atlas_only": false,
    "atlas_status": "",
    "category": "Modèles d'embeddings et de reranking",
-   "description_en": "677M params, MTEB v2 71.7 — best quality-to-size ratio in its class.",
-   "description_fr": "677M paramètres, MTEB v2 71.7 — meilleur ratio qualité/taille de sa catégorie.",
-   "en_pending": false,
-   "id": "jina-embeddings-v5",
-   "name": "Jina Embeddings v5",
-   "source_url": "https://huggingface.co/jinaai"
-  },
-  {
-   "atlas_only": false,
-   "atlas_status": "",
-   "category": "Modèles d'embeddings et de reranking",
    "description_en": "8B embedding model (NVIDIA, Llama-based) for retrieval.",
    "description_fr": "Modèle d'embedding 8B (NVIDIA, base Llama) pour la récupération.",
    "en_pending": false,
@@ -7993,17 +7841,6 @@
    "verified": true,
    "verified_at": "2026-07-14",
    "verify_method": "huggingface HTTP 200"
-  },
-  {
-   "atlas_only": false,
-   "atlas_status": "",
-   "category": "Modèles d'embeddings et de reranking",
-   "description_en": "Microsoft embedding model, MTEB v2 74.3 for the 27B variant.",
-   "description_fr": "Modèle d'embedding Microsoft, MTEB v2 74.3 pour la variante 27B.",
-   "en_pending": false,
-   "id": "microsoft-harrier-oss-v1",
-   "name": "Microsoft Harrier-OSS-v1",
-   "source_url": "https://huggingface.co/microsoft"
   },
   {
    "atlas_only": false,
@@ -8490,17 +8327,6 @@
    "verify_method": "gh-api repos/... (source objective)"
   },
   {
-   "atlas_only": true,
-   "atlas_status": "ACCEPTÉ",
-   "category": "MCP et protocoles d'interopérabilité",
-   "description_en": null,
-   "description_fr": "Entrée Atlas (ACCEPTÉ) — description à enrichir depuis le tableau source.",
-   "en_pending": false,
-   "id": "codetree-mcp",
-   "name": "CodeTree MCP",
-   "source_url": null
-  },
-  {
    "atlas_only": false,
    "atlas_status": "",
    "category": "MCP et protocoles d'interopérabilité",
@@ -8887,12 +8713,18 @@
    "atlas_only": false,
    "atlas_status": "",
    "category": "MCP et protocoles d'interopérabilité",
-   "description_en": "Comprehensive open-source registry of MCP servers and clients (updated daily).",
-   "description_fr": "Registre open-source complet de serveurs/clients MCP (mis à jour quotidiennement).",
-   "en_pending": false,
+   "description_en": null,
+   "description_fr": "Annuaire/hébergeur de serveurs MCP (service).",
+   "en_pending": true,
+   "flag": "SERVICE-HEBERGE",
    "id": "glama-mcp-servers",
+   "license": "service propriétaire (Glama)",
+   "maintenance": "active",
    "name": "Glama MCP Servers",
-   "source_url": "https://glama.ai/mcp/servers"
+   "source_url": "https://glama.ai/mcp/servers",
+   "verified": true,
+   "verified_at": "2026-07-14",
+   "verify_method": "produit hébergé (source directe)"
   },
   {
    "atlas_only": false,
@@ -12684,17 +12516,6 @@
    "verify_method": "gh-api repos/... (source objective)"
   },
   {
-   "atlas_only": true,
-   "atlas_status": "ACCEPTÉ",
-   "category": "Harness de codage, méthodologies et gouvernance",
-   "description_en": null,
-   "description_fr": "Entrée Atlas (ACCEPTÉ) — description à enrichir depuis le tableau source.",
-   "en_pending": false,
-   "id": "civ-pattern",
-   "name": "CIV Pattern",
-   "source_url": null
-  },
-  {
    "atlas_only": false,
    "atlas_status": "",
    "category": "Harness de codage, méthodologies et gouvernance",
@@ -13038,17 +12859,6 @@
    "verify_method": "gh-api repos/... (source objective)"
   },
   {
-   "atlas_only": true,
-   "atlas_status": "REFUSÉ",
-   "category": "Harness de codage, méthodologies et gouvernance",
-   "description_en": null,
-   "description_fr": "Entrée Atlas (REFUSÉ) — description à enrichir depuis le tableau source.",
-   "en_pending": false,
-   "id": "gsd-core",
-   "name": "GSD Core",
-   "source_url": null
-  },
-  {
    "atlas_only": false,
    "atlas_status": "",
    "category": "Harness de codage, méthodologies et gouvernance",
@@ -13103,17 +12913,6 @@
    "verify_method": "gh-api repos/... (source objective)"
   },
   {
-   "atlas_only": true,
-   "atlas_status": "ACCEPTÉ",
-   "category": "Harness de codage, méthodologies et gouvernance",
-   "description_en": null,
-   "description_fr": "Entrée Atlas (ACCEPTÉ) — description à enrichir depuis le tableau source.",
-   "en_pending": false,
-   "id": "karpathy-guidelines",
-   "name": "Karpathy Guidelines",
-   "source_url": null
-  },
-  {
    "atlas_only": false,
    "atlas_status": "",
    "category": "Harness de codage, méthodologies et gouvernance",
@@ -13130,17 +12929,6 @@
    "verified": true,
    "verified_at": "2026-07-14",
    "verify_method": "gh-api repos/... (source objective)"
-  },
-  {
-   "atlas_only": true,
-   "atlas_status": "ACCEPTÉ",
-   "category": "Harness de codage, méthodologies et gouvernance",
-   "description_en": null,
-   "description_fr": "Entrée Atlas (ACCEPTÉ) — description à enrichir depuis le tableau source.",
-   "en_pending": false,
-   "id": "matt-pocock-skills",
-   "name": "Matt Pocock Skills",
-   "source_url": null
   },
   {
    "atlas_only": false,
@@ -13162,17 +12950,6 @@
    "verify_method": "gh-search + gh-api (source objective)"
   },
   {
-   "atlas_only": true,
-   "atlas_status": "ACCEPTÉ - CONCEPT",
-   "category": "Harness de codage, méthodologies et gouvernance",
-   "description_en": null,
-   "description_fr": "Entrée Atlas (ACCEPTÉ - CONCEPT) — description à enrichir depuis le tableau source.",
-   "en_pending": false,
-   "id": "metagpt-sop",
-   "name": "MetaGPT SOP",
-   "source_url": null
-  },
-  {
    "atlas_only": false,
    "atlas_status": "",
    "category": "Harness de codage, méthodologies et gouvernance",
@@ -13189,17 +12966,6 @@
    "verified": true,
    "verified_at": "2026-07-14",
    "verify_method": "gh-api repos/... (source objective)"
-  },
-  {
-   "atlas_only": true,
-   "atlas_status": "REFUSÉ",
-   "category": "Harness de codage, méthodologies et gouvernance",
-   "description_en": null,
-   "description_fr": "Entrée Atlas (REFUSÉ) — description à enrichir depuis le tableau source.",
-   "en_pending": false,
-   "id": "nvidia-style-skills-agency-persona-conversion",
-   "name": "NVIDIA-style skills / agency-persona-conversion",
-   "source_url": null
   },
   {
    "atlas_only": false,
@@ -13346,17 +13112,6 @@
    "verify_method": "gh-api repos/... (source objective)"
   },
   {
-   "atlas_only": true,
-   "atlas_status": "ACCEPTÉ - NOYAU",
-   "category": "Harness de codage, méthodologies et gouvernance",
-   "description_en": null,
-   "description_fr": "Entrée Atlas (ACCEPTÉ - NOYAU) — description à enrichir depuis le tableau source.",
-   "en_pending": false,
-   "id": "proof-driven-agentic-sdlc",
-   "name": "Proof-Driven Agentic SDLC",
-   "source_url": null
-  },
-  {
    "atlas_only": false,
    "atlas_status": "",
    "category": "Harness de codage, méthodologies et gouvernance",
@@ -13391,17 +13146,6 @@
    "verified": true,
    "verified_at": "2026-07-14",
    "verify_method": "gh-api repos/... (source objective)"
-  },
-  {
-   "atlas_only": true,
-   "atlas_status": "RECLASSÉ",
-   "category": "Harness de codage, méthodologies et gouvernance",
-   "description_en": null,
-   "description_fr": "Entrée Atlas (RECLASSÉ) — description à enrichir depuis le tableau source.",
-   "en_pending": false,
-   "id": "rarv-loki-like",
-   "name": "RARV / Loki-like",
-   "source_url": null
   },
   {
    "atlas_only": false,
@@ -13584,17 +13328,6 @@
    "verify_method": "gh-api repos/... (source objective)"
   },
   {
-   "atlas_only": true,
-   "atlas_status": "ACCEPTÉ - PRIORITAIRE",
-   "category": "Harness de codage, méthodologies et gouvernance",
-   "description_en": null,
-   "description_fr": "Entrée Atlas (ACCEPTÉ - PRIORITAIRE) — description à enrichir depuis le tableau source.",
-   "en_pending": false,
-   "id": "tdad",
-   "name": "TDAD",
-   "source_url": null
-  },
-  {
    "atlas_only": false,
    "atlas_status": "",
    "category": "Harness de codage, méthodologies et gouvernance",
@@ -13721,15 +13454,22 @@
    "verify_method": "gh-api repos/... (source objective)"
   },
   {
-   "atlas_only": true,
+   "atlas_only": false,
    "atlas_status": "ACCEPTÉ - EXTRAIT",
    "category": "Évaluation, observabilité, guardrails et sécurité",
-   "description_en": null,
-   "description_fr": "Entrée Atlas (ACCEPTÉ - EXTRAIT) — description à enrichir depuis le tableau source.",
+   "description_en": "Agent benchmarking harness (AutoGPT ecosystem), pip-installable.",
+   "description_fr": "Harnais de benchmark d'agents (écosystème AutoGPT), installable via pip.",
    "en_pending": false,
+   "flag": "PUBLIC-INSTALLABLE",
    "id": "agbenchmark",
+   "install": "pip: agbenchmark",
+   "license": "voir PyPI (écosystème AutoGPT)",
+   "maintenance": "active",
    "name": "AGBenchmark",
-   "source_url": null
+   "source_url": "https://pypi.org/project/agbenchmark/",
+   "verified": true,
+   "verified_at": "2026-07-14",
+   "verify_method": "PyPI HTTP 200 (pip installable)"
   },
   {
    "atlas_only": false,
@@ -14324,17 +14064,6 @@
    "verified": true,
    "verified_at": "2026-07-14",
    "verify_method": "gh-api repos/... (source objective)"
-  },
-  {
-   "atlas_only": true,
-   "atlas_status": "ACCEPTÉ SOUS CONDITIONS",
-   "category": "Évaluation, observabilité, guardrails et sécurité",
-   "description_en": null,
-   "description_fr": "Entrée Atlas (ACCEPTÉ SOUS CONDITIONS) — description à enrichir depuis le tableau source.",
-   "en_pending": false,
-   "id": "ga-guard",
-   "name": "GA Guard",
-   "source_url": null
   },
   {
    "atlas_only": false,
@@ -15938,15 +15667,22 @@
    "verify_method": "gh-api repos/... (source objective)"
   },
   {
-   "atlas_only": true,
+   "atlas_only": false,
    "atlas_status": "ACCEPTÉ",
    "category": "Évaluation, observabilité, guardrails et sécurité",
-   "description_en": null,
-   "description_fr": "Entrée Atlas (ACCEPTÉ) — description à enrichir depuis le tableau source.",
+   "description_en": "Device Metrics Exporter exports metrics from AMD devices (GPUs) to collectors like Prometheus.",
+   "description_fr": "Exportateur de métriques GPU AMD (ROCm Device Metrics Exporter) pour Prometheus.",
    "en_pending": false,
+   "flag": "PUBLIC-INSTALLABLE",
    "id": "rocm-exporter",
+   "license": "Apache-2.0",
+   "maintenance": "active",
    "name": "ROCm exporter",
-   "source_url": null
+   "popularity": "★61 (gh-api 2026-07-14)",
+   "source_url": "https://github.com/ROCm/device-metrics-exporter",
+   "verified": true,
+   "verified_at": "2026-07-14",
+   "verify_method": "gh-api (source objective)"
   },
   {
    "atlas_only": false,
@@ -16671,15 +16407,21 @@
    "verify_method": "gh-api repos/... (source objective)"
   },
   {
-   "atlas_only": true,
+   "atlas_only": false,
    "atlas_status": "ACCEPTÉ SOUS GATE",
    "category": "Infrastructure, Kubernetes, IaC et livraison",
    "description_en": null,
-   "description_fr": "Entrée Atlas (ACCEPTÉ SOUS GATE) — description à enrichir depuis le tableau source.",
-   "en_pending": false,
+   "description_fr": "Génération d'infrastructure-as-code gouvernée à partir d'app/cloud (StackGen, ex-appCD).",
+   "en_pending": true,
+   "flag": "SERVICE-HEBERGE",
    "id": "stackgen",
+   "license": "service propriétaire (StackGen)",
+   "maintenance": "active",
    "name": "StackGen",
-   "source_url": null
+   "source_url": "https://stackgen.com",
+   "verified": true,
+   "verified_at": "2026-07-14",
+   "verify_method": "site produit (HTTP 200)"
   },
   {
    "atlas_only": false,
@@ -16949,17 +16691,6 @@
    "verify_method": "gh-api repos/... (source objective)"
   },
   {
-   "atlas_only": true,
-   "atlas_status": "ACCEPTÉ - BLUEPRINT DE RESET",
-   "category": "Blueprints, starters et plateformes spécialisées",
-   "description_en": null,
-   "description_fr": "Entrée Atlas (ACCEPTÉ - BLUEPRINT DE RESET) — description à enrichir depuis le tableau source.",
-   "en_pending": false,
-   "id": "hwdsl2-self-hosted-ai-stack",
-   "name": "hwdsl2 self-hosted-ai-stack",
-   "source_url": null
-  },
-  {
    "atlas_only": false,
    "atlas_status": "REFUSÉ",
    "category": "Blueprints, starters et plateformes spécialisées",
@@ -16979,15 +16710,21 @@
    "verify_method": "gh-api repos/... (source objective)"
   },
   {
-   "atlas_only": true,
+   "atlas_only": false,
    "atlas_status": "REFUSÉ",
    "category": "Blueprints, starters et plateformes spécialisées",
    "description_en": null,
-   "description_fr": "Entrée Atlas (REFUSÉ) — description à enrichir depuis le tableau source.",
-   "en_pending": false,
+   "description_fr": "Assistant de code IA Cody (produit commercial Sourcegraph ; dépôt OSS autonome retiré).",
+   "en_pending": true,
+   "flag": "SERVICE-HEBERGE",
    "id": "sourcegraph-cody",
+   "license": "service propriétaire (Sourcegraph)",
+   "maintenance": "active",
    "name": "Sourcegraph Cody",
-   "source_url": null
+   "source_url": "https://sourcegraph.com/cody",
+   "verified": true,
+   "verified_at": "2026-07-14",
+   "verify_method": "produit hébergé (source directe)"
   },
   {
    "atlas_only": false,
@@ -17043,28 +16780,6 @@
    "verified": true,
    "verified_at": "2026-07-14",
    "verify_method": "gh-search + gh-api (source objective)"
-  },
-  {
-   "atlas_only": true,
-   "atlas_status": "ACCEPTÉ SOUS CONDITIONS",
-   "category": "Auto-amélioration et recherche expérimentale",
-   "description_en": null,
-   "description_fr": "Entrée Atlas (ACCEPTÉ SOUS CONDITIONS) — description à enrichir depuis le tableau source.",
-   "en_pending": false,
-   "id": "hyperagents-dgm-h",
-   "name": "HyperAgents / DGM-H",
-   "source_url": null
-  },
-  {
-   "atlas_only": true,
-   "atlas_status": "ACCEPTÉ - CIBLE ÉVALUATION",
-   "category": "Auto-amélioration et recherche expérimentale",
-   "description_en": null,
-   "description_fr": "Entrée Atlas (ACCEPTÉ - CIBLE ÉVALUATION) — description à enrichir depuis le tableau source.",
-   "en_pending": false,
-   "id": "red-queen-g-del-machine-rqgm",
-   "name": "Red Queen Gödel Machine (RQGM)",
-   "source_url": null
   },
   {
    "atlas_only": false,
@@ -17152,17 +16867,6 @@
    "verify_method": "site fournisseur (HTTP)"
   },
   {
-   "atlas_only": true,
-   "atlas_status": "MODÈLE",
-   "category": "Auto-amélioration et recherche expérimentale",
-   "description_en": null,
-   "description_fr": "Entrée Atlas (MODÈLE) — description à enrichir depuis le tableau source.",
-   "en_pending": false,
-   "id": "gemma-4-26b-31b",
-   "name": "Gemma 4 26B/31B",
-   "source_url": null
-  },
-  {
    "atlas_only": false,
    "atlas_status": "MODÈLE",
    "category": "Auto-amélioration et recherche expérimentale",
@@ -17212,17 +16916,6 @@
    "verified": true,
    "verified_at": "2026-07-14",
    "verify_method": "site fournisseur (HTTP)"
-  },
-  {
-   "atlas_only": true,
-   "atlas_status": "MODÈLE",
-   "category": "Auto-amélioration et recherche expérimentale",
-   "description_en": null,
-   "description_fr": "Entrée Atlas (MODÈLE) — description à enrichir depuis le tableau source.",
-   "en_pending": false,
-   "id": "holo-3-1-9b",
-   "name": "Holo 3.1 9B",
-   "source_url": null
   },
   {
    "atlas_only": false,
@@ -17327,17 +17020,6 @@
    "verify_method": "site fournisseur (HTTP)"
   },
   {
-   "atlas_only": true,
-   "atlas_status": "MODÈLE",
-   "category": "Auto-amélioration et recherche expérimentale",
-   "description_en": null,
-   "description_fr": "Entrée Atlas (MODÈLE) — description à enrichir depuis le tableau source.",
-   "en_pending": false,
-   "id": "ornith-35b",
-   "name": "Ornith 35B",
-   "source_url": null
-  },
-  {
    "atlas_only": false,
    "atlas_status": "MODÈLE",
    "category": "Auto-amélioration et recherche expérimentale",
@@ -17355,26 +17037,21 @@
    "verify_method": "huggingface HTTP 200"
   },
   {
-   "atlas_only": true,
+   "atlas_only": false,
    "atlas_status": "MODÈLE",
    "category": "Auto-amélioration et recherche expérimentale",
-   "description_en": null,
-   "description_fr": "Entrée Atlas (MODÈLE) — description à enrichir depuis le tableau source.",
+   "description_en": "Qwen3-Coder-Next code model (Alibaba), public weights.",
+   "description_fr": "Modèle de code Qwen3-Coder-Next (Alibaba), poids publics.",
    "en_pending": false,
+   "flag": "MODELE-HF",
    "id": "qwen3-coder-next",
+   "license": "voir carte HuggingFace",
+   "maintenance": "active",
    "name": "Qwen3-Coder-Next",
-   "source_url": null
-  },
-  {
-   "atlas_only": true,
-   "atlas_status": "ACCEPTÉ - CIBLE",
-   "category": "Auto-amélioration et recherche expérimentale",
-   "description_en": null,
-   "description_fr": "Entrée Atlas (ACCEPTÉ - CIBLE) — description à enrichir depuis le tableau source.",
-   "en_pending": false,
-   "id": "forge-control-plane",
-   "name": "Forge Control Plane",
-   "source_url": null
+   "source_url": "https://huggingface.co/Qwen/Qwen3-Coder-Next",
+   "verified": true,
+   "verified_at": "2026-07-14",
+   "verify_method": "huggingface HTTP 200"
   },
   {
    "atlas_only": false,
