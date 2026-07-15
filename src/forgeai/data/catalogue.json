@@ -17009,15 +17009,21 @@
    "source_url": null
   },
   {
-   "atlas_only": true,
+   "atlas_only": false,
    "atlas_status": "MODÈLE",
    "category": "Auto-amélioration et recherche expérimentale",
-   "description_en": null,
-   "description_fr": "Entrée Atlas (MODÈLE) — description à enrichir depuis le tableau source.",
+   "description_en": "Agentic code model (Mistral Devstral Small, 24B).",
+   "description_fr": "Modèle de code agentique (Mistral Devstral Small, 24B).",
    "en_pending": false,
+   "flag": "MODELE-HF",
    "id": "devstral-small-2-24b",
+   "license": "voir carte HuggingFace",
+   "maintenance": "active",
    "name": "Devstral Small 2 24B",
-   "source_url": null
+   "source_url": "https://huggingface.co/mistralai/Devstral-Small-2507",
+   "verified": true,
+   "verified_at": "2026-07-14",
+   "verify_method": "huggingface HTTP 200"
   },
   {
    "atlas_only": true,
@@ -17053,15 +17059,21 @@
    "source_url": null
   },
   {
-   "atlas_only": true,
+   "atlas_only": false,
    "atlas_status": "MODÈLE",
    "category": "Auto-amélioration et recherche expérimentale",
-   "description_en": null,
-   "description_fr": "Entrée Atlas (MODÈLE) — description à enrichir depuis le tableau source.",
+   "description_en": "Open model from OpenAI (gpt-oss series), 20B/120B sizes, public weights.",
+   "description_fr": "Modèle ouvert d'OpenAI (série gpt-oss), tailles 20B/120B, poids publics.",
    "en_pending": false,
+   "flag": "MODELE-HF",
    "id": "gpt-oss-20b-120b",
+   "license": "voir carte HuggingFace",
+   "maintenance": "active",
    "name": "GPT-OSS 20B/120B",
-   "source_url": null
+   "source_url": "https://huggingface.co/openai/gpt-oss-20b",
+   "verified": true,
+   "verified_at": "2026-07-14",
+   "verify_method": "huggingface HTTP 200"
   },
   {
    "atlas_only": true,
@@ -17108,15 +17120,21 @@
    "source_url": null
   },
   {
-   "atlas_only": true,
+   "atlas_only": false,
    "atlas_status": "MODÈLE",
    "category": "Auto-amélioration et recherche expérimentale",
-   "description_en": null,
-   "description_fr": "Entrée Atlas (MODÈLE) — description à enrichir depuis le tableau source.",
+   "description_en": "Reasoning model (Mistral Magistral Small, 24B).",
+   "description_fr": "Modèle de raisonnement (Mistral Magistral Small, 24B).",
    "en_pending": false,
+   "flag": "MODELE-HF",
    "id": "magistral-small-24b",
+   "license": "voir carte HuggingFace",
+   "maintenance": "active",
    "name": "Magistral Small 24B",
-   "source_url": null
+   "source_url": "https://huggingface.co/mistralai/Magistral-Small-2506",
+   "verified": true,
+   "verified_at": "2026-07-14",
+   "verify_method": "huggingface HTTP 200"
   },
   {
    "atlas_only": true,
@@ -17130,15 +17148,21 @@
    "source_url": null
   },
   {
-   "atlas_only": true,
+   "atlas_only": false,
    "atlas_status": "MODÈLE",
    "category": "Auto-amélioration et recherche expérimentale",
-   "description_en": null,
-   "description_fr": "Entrée Atlas (MODÈLE) — description à enrichir depuis le tableau source.",
+   "description_en": "General-purpose model (Mistral Small, 24B).",
+   "description_fr": "Modèle généraliste (Mistral Small, 24B).",
    "en_pending": false,
+   "flag": "MODELE-HF",
    "id": "mistral-24b-mistral-small-4",
+   "license": "voir carte HuggingFace",
+   "maintenance": "active",
    "name": "Mistral 24B / Mistral Small 4",
-   "source_url": null
+   "source_url": "https://huggingface.co/mistralai/Mistral-Small-24B-Base-2501",
+   "verified": true,
+   "verified_at": "2026-07-14",
+   "verify_method": "huggingface HTTP 200"
   },
   {
    "atlas_only": true,
@@ -17163,15 +17187,21 @@
    "source_url": null
   },
   {
-   "atlas_only": true,
+   "atlas_only": false,
    "atlas_status": "MODÈLE",
    "category": "Auto-amélioration et recherche expérimentale",
-   "description_en": null,
-   "description_fr": "Entrée Atlas (MODÈLE) — description à enrichir depuis le tableau source.",
+   "description_en": "Small code model (Alibaba Qwen2.5-Coder, 1.5B) for lightweight tasks.",
+   "description_fr": "Petit modèle de code (Alibaba Qwen2.5-Coder, 1.5B) pour tâches légères.",
    "en_pending": false,
+   "flag": "MODELE-HF",
    "id": "qwen2-5-coder-1-5b",
+   "license": "voir carte HuggingFace",
+   "maintenance": "active",
    "name": "Qwen2.5 Coder 1.5B",
-   "source_url": null
+   "source_url": "https://huggingface.co/Qwen/Qwen2.5-Coder-1.5B",
+   "verified": true,
+   "verified_at": "2026-07-14",
+   "verify_method": "huggingface HTTP 200"
   },
   {
    "atlas_only": true,
