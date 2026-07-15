@@ -37,7 +37,12 @@ from pathlib import Path
 
 REPO = Path(__file__).resolve().parent.parent
 CATALOGUE = REPO / "src" / "forgeai" / "data" / "catalogue.json"
-VALID_FLAGS = {"PUBLIC-INSTALLABLE", "INTROUVABLE-APRES-RECHERCHE"}
+# PUBLIC-INSTALLABLE : dépôt github installable (licence+install+role requis).
+# MODELE-HF : modèle public (HuggingFace/repo modèle) — pas une brique installable.
+# SERVICE-HEBERGE : service/route hébergé (OpenRouter, NIM, API fournisseur) — pas auto-installable.
+# INTROUVABLE-APRES-RECHERCHE : aucune source publique après recherche (dossier au registre).
+VALID_FLAGS = {"PUBLIC-INSTALLABLE", "MODELE-HF", "SERVICE-HEBERGE",
+               "INTROUVABLE-APRES-RECHERCHE"}
 
 # Parseur du sous-ensemble YAML des lots (blocs "- nom:" … champs indentés).
 _ENTRY_RE = re.compile(r"- nom:\s*\"((?:[^\"\\]|\\.)*)\"((?:\n[ \t]+\w[\w-]*:.*)*)", re.M)
@@ -80,6 +85,10 @@ def _validate(d: dict) -> list[str]:
         for champ in ("license", "description_fr", "install", "role"):
             if not d.get(champ, "").strip():
                 errs.append(f"{d['nom']}: champ '{champ}' requis pour PUBLIC-INSTALLABLE")
+    elif flag in ("MODELE-HF", "SERVICE-HEBERGE"):
+        # Public mais non-installable-brique : source + description suffisent (pas d'install/role).
+        if not d.get("description_fr", "").strip():
+            errs.append(f"{d['nom']}: description_fr requise pour {flag}")
     return errs
 
 

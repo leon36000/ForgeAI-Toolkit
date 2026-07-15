@@ -27,7 +27,7 @@ def test_catalogue_reel_integre_et_complet():
     # Base : 1021 − 7 (retrait autorisé Command/Control Center + artefacts, registre
     # retrait_bespoke) = 1014. R-ALL peut ensuite AJOUTER des briques vérifiées
     # (dossier sourcé) ou en retirer sur preuve INTROUVABLE — donc borne, pas égalité.
-    assert len(bricks) >= 1014
+    assert len(bricks) >= 940  # 1021 − Command/Control Center − INTROUVABLE bespoke (registre retrait_bespoke); décroît sur preuve
     # Aucune entrée vérifiée R-ALL ne doit être sans source (règle de rigueur).
     data = json.loads(CATALOGUE.read_text(encoding="utf-8"))
     for e in data["entries"]:

@@ -63,9 +63,17 @@ def test_apply_reel_sur_le_catalogue(tmp_path, monkeypatch):
     shutil.copy(rall.CATALOGUE, work)
     shutil.copy(rall.CATALOGUE.with_suffix(".sha256"), tmp_path / "catalogue.sha256")
     monkeypatch.setattr(rall, "CATALOGUE", work)
-    # prend une entrée atlas_only réelle et l'enrichit
+    # Injecte un placeholder atlas_only synthétique (le catalogue réel n'en contient
+    # plus une fois R-ALL terminé : le test valide le comportement d'apply, pas l'état
+    # d'avancement du catalogue).
     data = json.loads(work.read_text(encoding="utf-8"))
-    cible = next(e["name"] for e in data["entries"] if e.get("atlas_only"))
+    cible = "Brique Placeholder Test R-ALL"
+    data["entries"].append({
+        "id": "brique-placeholder-test-r-all", "name": cible, "category": "test",
+        "atlas_status": "", "source_url": None, "atlas_only": True, "en_pending": False,
+        "description_fr": "", "description_en": None,
+    })
+    work.write_text(json.dumps(data, ensure_ascii=False, indent=1), encoding="utf-8")
     lot = _lot(tmp_path, f'''lot: t
 dossiers:
   - nom: "{cible}"
