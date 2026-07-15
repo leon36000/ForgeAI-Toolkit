@@ -16976,37 +16976,55 @@
    "source_url": null
   },
   {
-   "atlas_only": true,
+   "atlas_only": false,
    "atlas_status": "MODÈLE",
    "category": "Auto-amélioration et recherche expérimentale",
-   "description_en": null,
-   "description_fr": "Entrée Atlas (MODÈLE) — description à enrichir depuis le tableau source.",
+   "description_en": "Mistral Codestral code model (22B), public weights.",
+   "description_fr": "Modèle de code Mistral Codestral (22B), poids publics.",
    "en_pending": false,
+   "flag": "MODELE-HF",
    "id": "codestral",
+   "license": "MNPL (Mistral, voir carte HF)",
+   "maintenance": "active",
    "name": "Codestral",
-   "source_url": null
+   "source_url": "https://huggingface.co/mistralai/Codestral-22B-v0.1",
+   "verified": true,
+   "verified_at": "2026-07-14",
+   "verify_method": "huggingface HTTP 200"
   },
   {
-   "atlas_only": true,
+   "atlas_only": false,
    "atlas_status": "MODÈLE",
    "category": "Auto-amélioration et recherche expérimentale",
-   "description_en": null,
-   "description_fr": "Entrée Atlas (MODÈLE) — description à enrichir depuis le tableau source.",
+   "description_en": "Composer code-editing model (Cursor) via API.",
+   "description_fr": "Modèle d'édition de code Composer (Cursor) via API.",
    "en_pending": false,
+   "flag": "SERVICE-HEBERGE",
    "id": "composer-2-5",
+   "license": "service propriétaire (Cursor)",
+   "maintenance": "active",
    "name": "Composer 2.5",
-   "source_url": null
+   "source_url": "https://cursor.com",
+   "verified": true,
+   "verified_at": "2026-07-14",
+   "verify_method": "site fournisseur (HTTP)"
   },
   {
-   "atlas_only": true,
+   "atlas_only": false,
    "atlas_status": "MODÈLE",
    "category": "Auto-amélioration et recherche expérimentale",
-   "description_en": null,
-   "description_fr": "Entrée Atlas (MODÈLE) — description à enrichir depuis le tableau source.",
+   "description_en": "DeepSeek model via API (V4 series).",
+   "description_fr": "Modèle DeepSeek via API (série V4).",
    "en_pending": false,
+   "flag": "SERVICE-HEBERGE",
    "id": "deepseek-v4-pro",
+   "license": "service propriétaire (DeepSeek)",
+   "maintenance": "active",
    "name": "DeepSeek V4 Pro",
-   "source_url": null
+   "source_url": "https://www.deepseek.com",
+   "verified": true,
+   "verified_at": "2026-07-14",
+   "verify_method": "site fournisseur (HTTP)"
   },
   {
    "atlas_only": false,
@@ -17026,15 +17044,21 @@
    "verify_method": "huggingface HTTP 200"
   },
   {
-   "atlas_only": true,
+   "atlas_only": false,
    "atlas_status": "MODÈLE",
    "category": "Auto-amélioration et recherche expérimentale",
-   "description_en": null,
-   "description_fr": "Entrée Atlas (MODÈLE) — description à enrichir depuis le tableau source.",
+   "description_en": "Gemini Pro model via Google AI API.",
+   "description_fr": "Modèle Gemini Pro via API Google AI.",
    "en_pending": false,
+   "flag": "SERVICE-HEBERGE",
    "id": "gemini-3-1-pro",
+   "license": "service propriétaire (Google)",
+   "maintenance": "active",
    "name": "Gemini 3.1 Pro",
-   "source_url": null
+   "source_url": "https://ai.google.dev",
+   "verified": true,
+   "verified_at": "2026-07-14",
+   "verify_method": "site fournisseur (HTTP)"
   },
   {
    "atlas_only": true,
@@ -17048,15 +17072,21 @@
    "source_url": null
   },
   {
-   "atlas_only": true,
+   "atlas_only": false,
    "atlas_status": "MODÈLE",
    "category": "Auto-amélioration et recherche expérimentale",
-   "description_en": null,
-   "description_fr": "Entrée Atlas (MODÈLE) — description à enrichir depuis le tableau source.",
+   "description_en": "Code/reasoning model via Z.ai API (GLM family).",
+   "description_fr": "Modèle de code/raisonnement via API Z.ai (famille GLM).",
    "en_pending": false,
+   "flag": "SERVICE-HEBERGE",
    "id": "glm-5-2",
+   "license": "service propriétaire (Z.ai (Zhipu))",
+   "maintenance": "active",
    "name": "GLM-5.2",
-   "source_url": null
+   "source_url": "https://z.ai",
+   "verified": true,
+   "verified_at": "2026-07-14",
+   "verify_method": "site fournisseur (HTTP)"
   },
   {
    "atlas_only": false,
@@ -17076,15 +17106,21 @@
    "verify_method": "huggingface HTTP 200"
   },
   {
-   "atlas_only": true,
+   "atlas_only": false,
    "atlas_status": "MODÈLE",
    "category": "Auto-amélioration et recherche expérimentale",
-   "description_en": null,
-   "description_fr": "Entrée Atlas (MODÈLE) — description à enrichir depuis le tableau source.",
+   "description_en": "Grok code executor via xAI API.",
+   "description_fr": "Exécuteur de code Grok via API xAI.",
    "en_pending": false,
+   "flag": "SERVICE-HEBERGE",
    "id": "grok-build-xai-executor",
+   "license": "service propriétaire (xAI)",
+   "maintenance": "active",
    "name": "Grok build / xAI executor",
-   "source_url": null
+   "source_url": "https://x.ai",
+   "verified": true,
+   "verified_at": "2026-07-14",
+   "verify_method": "site fournisseur (HTTP)"
   },
   {
    "atlas_only": true,
@@ -17098,26 +17134,38 @@
    "source_url": null
   },
   {
-   "atlas_only": true,
+   "atlas_only": false,
    "atlas_status": "MODÈLE",
    "category": "Auto-amélioration et recherche expérimentale",
-   "description_en": null,
-   "description_fr": "Entrée Atlas (MODÈLE) — description à enrichir depuis le tableau source.",
+   "description_en": "Kimi code model via Moonshot API.",
+   "description_fr": "Modèle de code Kimi via API Moonshot.",
    "en_pending": false,
+   "flag": "SERVICE-HEBERGE",
    "id": "kimi-k2-7-code",
+   "license": "service propriétaire (Moonshot AI)",
+   "maintenance": "active",
    "name": "Kimi K2.7 Code",
-   "source_url": null
+   "source_url": "https://www.moonshot.ai",
+   "verified": true,
+   "verified_at": "2026-07-14",
+   "verify_method": "site fournisseur (HTTP)"
   },
   {
-   "atlas_only": true,
+   "atlas_only": false,
    "atlas_status": "MODÈLE",
    "category": "Auto-amélioration et recherche expérimentale",
-   "description_en": null,
-   "description_fr": "Entrée Atlas (MODÈLE) — description à enrichir depuis le tableau source.",
+   "description_en": "LongCat model via API.",
+   "description_fr": "Modèle LongCat via API.",
    "en_pending": false,
+   "flag": "SERVICE-HEBERGE",
    "id": "longcat-2-0",
+   "license": "service propriétaire (Meituan)",
+   "maintenance": "active",
    "name": "LongCat 2.0",
-   "source_url": null
+   "source_url": "https://longcat.ai",
+   "verified": true,
+   "verified_at": "2026-07-14",
+   "verify_method": "site fournisseur (HTTP)"
   },
   {
    "atlas_only": false,
@@ -17137,15 +17185,21 @@
    "verify_method": "huggingface HTTP 200"
   },
   {
-   "atlas_only": true,
+   "atlas_only": false,
    "atlas_status": "MODÈLE",
    "category": "Auto-amélioration et recherche expérimentale",
-   "description_en": null,
-   "description_fr": "Entrée Atlas (MODÈLE) — description à enrichir depuis le tableau source.",
+   "description_en": "MiniMax model (M series) via API.",
+   "description_fr": "Modèle MiniMax (série M) via API.",
    "en_pending": false,
+   "flag": "SERVICE-HEBERGE",
    "id": "minimax-m3",
+   "license": "service propriétaire (MiniMax)",
+   "maintenance": "active",
    "name": "Minimax M3",
-   "source_url": null
+   "source_url": "https://www.minimax.io",
+   "verified": true,
+   "verified_at": "2026-07-14",
+   "verify_method": "site fournisseur (HTTP)"
   },
   {
    "atlas_only": false,
@@ -17165,15 +17219,21 @@
    "verify_method": "huggingface HTTP 200"
   },
   {
-   "atlas_only": true,
+   "atlas_only": false,
    "atlas_status": "ROUTE",
    "category": "Auto-amélioration et recherche expérimentale",
-   "description_en": null,
-   "description_fr": "Entrée Atlas (ROUTE) — description à enrichir depuis le tableau source.",
+   "description_en": "Multi-provider gateway (unified model routes).",
+   "description_fr": "Passerelle multi-fournisseurs (routes de modèles unifiées).",
    "en_pending": false,
+   "flag": "SERVICE-HEBERGE",
    "id": "openrouter-routes",
+   "license": "service propriétaire (OpenRouter)",
+   "maintenance": "active",
    "name": "OpenRouter routes",
-   "source_url": null
+   "source_url": "https://openrouter.ai",
+   "verified": true,
+   "verified_at": "2026-07-14",
+   "verify_method": "site fournisseur (HTTP)"
   },
   {
    "atlas_only": true,
