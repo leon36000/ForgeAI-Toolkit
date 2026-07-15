@@ -31,6 +31,7 @@ from forgeai.hardware.detect import HardwareDetector
 from forgeai.models.routes import RouteError, RouteStore
 from forgeai.models.probe import probe_route
 from forgeai.models.gateway import GatewayConfig, GatewayError, GatewayStore
+from forgeai.models.strategy import StrategyError, StrategyStore, resolve_spec
 from forgeai.planner.assemble import assemble_plan
 from forgeai.planner.profile import ProfileError, derive_profile
 from forgeai.rag.client import RagClient
@@ -350,6 +351,40 @@ def _gateway_verify(args: argparse.Namespace) -> int:
     return 0
 
 
+def _strategy_set(args: argparse.Namespace) -> int:
+    store = StrategyStore(Path(args.home))
+    try:
+        roles = [r for r in (args.roles.split(",") if args.roles else []) if r]
+        spec = resolve_spec(args.strategy, roles or None)
+    except StrategyError as exc:
+        print(f"ECHEC STRATEGIE: {exc}", file=sys.stderr)
+        return 10
+    diff = store.plan_change(spec)
+    already = store.get() is not None
+    if already and diff.is_change and not args.confirm:
+        print("Reconfiguration de la stratégie modèle — changement de slots :", file=sys.stderr)
+        print(diff.render(), file=sys.stderr)
+        print("Rien n'a été modifié. Relancez avec --confirm pour appliquer explicitement.",
+              file=sys.stderr)
+        return 10
+    store.save(spec)
+    registre.append(Path(args.registre), "strategie_modele", "strategy",
+                    {"strategy": spec.strategy, "slots": list(spec.slots),
+                     "slot_count": spec.slot_count})
+    print(f"[forgeai] stratégie '{spec.strategy}' — {spec.slot_count} slot(s) : "
+          f"{', '.join(spec.slots)}")
+    return 0
+
+
+def _strategy_show(args: argparse.Namespace) -> int:
+    spec = StrategyStore(Path(args.home)).get()
+    if spec is None:
+        print("(aucune stratégie configurée)")
+        return 0
+    print(f"stratégie : {spec.strategy} | {spec.slot_count} slot(s) : {', '.join(spec.slots)}")
+    return 0
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(prog="forgeai")
     sub = parser.add_subparsers(dest="cmd", required=True)
@@ -441,6 +476,21 @@ def main(argv: list[str] | None = None) -> int:
     p_gw_ver = gw_sub.add_parser("verify", help="vérifie l'invariant (aucune brique hors gateway)")
     p_gw_ver.add_argument("--home", default=str(default_models_home()))
     p_gw_ver.set_defaults(func=_gateway_verify)
+
+    p_strat = sub.add_parser("strategy", help="stratégie modèle Cerveau/Équipe/Hybride (DM-5b)")
+    strat_sub = p_strat.add_subparsers(dest="strat_cmd", required=True)
+    p_s_set = strat_sub.add_parser("set", help="choisit la stratégie (détermine le nb de slots)")
+    p_s_set.add_argument("--strategy", required=True,
+                         choices=["cerveau-unique", "equipe", "hybride"])
+    p_s_set.add_argument("--roles", default=None, help="rôles personnalisés séparés par des virgules")
+    p_s_set.add_argument("--confirm", action="store_true",
+                         help="applique une reconfiguration (changement de slots) explicitement")
+    p_s_set.add_argument("--home", default=str(default_models_home()))
+    p_s_set.add_argument("--registre", default=str(DEFAULT_REGISTRE))
+    p_s_set.set_defaults(func=_strategy_set)
+    p_s_show = strat_sub.add_parser("show", help="affiche la stratégie courante")
+    p_s_show.add_argument("--home", default=str(default_models_home()))
+    p_s_show.set_defaults(func=_strategy_show)
 
     args = parser.parse_args(argv)
     try:
