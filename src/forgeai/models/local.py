@@ -75,15 +75,22 @@ def _sha256_file(path: Path, chunk: int = 1 << 20) -> str:
 
 
 def download_verified(model: LocalModel, dest_dir: Path, fetcher: Fetcher) -> Path:
-    """Télécharge puis VÉRIFIE l'empreinte. Mismatch → supprime le fichier et lève."""
+    """Télécharge puis VÉRIFIE l'empreinte. Mismatch → supprime et lève.
+
+    Revue aveugle 3 vendors (TOCTOU) : on télécharge dans un fichier temporaire `.part`,
+    on vérifie, PUIS on renomme atomiquement vers la destination finale. Ainsi le fichier
+    présent à `dest` est toujours exactement l'artefact vérifié (pas de fenêtre de
+    substitution entre vérification et usage)."""
     dest = Path(dest_dir) / f"{model.name}.bin"
-    fetcher.fetch(model.download_url, dest)
-    actual = _sha256_file(dest)
+    tmp = dest.with_suffix(".part")
+    fetcher.fetch(model.download_url, tmp)
+    actual = _sha256_file(tmp)
     if actual != model.sha256:
-        dest.unlink(missing_ok=True)  # artefact corrompu/altéré : ne jamais conserver
+        tmp.unlink(missing_ok=True)  # artefact corrompu/altéré : ne jamais conserver
         raise LocalModelError(
             f"empreinte SHA-256 invalide pour {model.name} : "
             f"attendu {model.sha256[:12]}…, obtenu {actual[:12]}… (fichier supprimé)")
+    tmp.replace(dest)  # renommage atomique de l'artefact VÉRIFIÉ
     return dest
 
 

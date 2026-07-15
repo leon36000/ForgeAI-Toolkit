@@ -15,7 +15,7 @@ routes:
   - {membre: longcat,  provider_id: LongCat-2.0,    modele_reponse: LongCat-2.0,    statut: ok,
      note: "raccourci roster 'longcat' (forge-quality-longcat) renvoie 400 — utiliser l'alias passthrough"}
   - {membre: gemini,   provider_id: Gemini-3.1-Pro, modele_reponse: Gemini-3.1-Pro, statut: ok,
-     note: "fallback disponible: Gemini-3.1-Pro-OR"}
+     note: "Google AI Studio (GEMINI_API_KEY) — pas OpenRouter; fallback OR: Gemini-3.1-Pro-OR"}
   - {membre: grok,     provider_id: Grok-4.5,       modele_reponse: Grok-4.5,       statut: ok}
   - {membre: qwen,     provider_id: Qwen3.7-Max,    modele_reponse: Qwen3.7-Max,    statut: ok,
      note: "variante directe Alibaba disponible: Qwen3.7-Max-Alibaba"}

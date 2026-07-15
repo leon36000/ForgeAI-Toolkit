@@ -3,6 +3,12 @@
 Menace couverte : protection AU REPOS des clés d'API sur la machine de l'utilisateur
 (inspection de disque, commit accidentel, fuite de sauvegarde). PAS un HSM.
 
+Compromis assumé (revue aveugle 3 vendors) : l'invariant portabilité `dependencies=[]`
+interdit une lib AEAD standard (AES-GCM/ChaCha20-Poly1305 absents de la stdlib). La
+construction EtM(HMAC-CTR) est saine pour cette menace (salt+nonce aléatoires par
+scellement, tag vérifié en temps constant AVANT déchiffrement). Si la contrainte de
+portabilité est un jour relâchée, migrer vers `cryptography` (Fernet/AES-GCM).
+
 Construction (chiffrement authentifié, primitives stdlib vérifiées — aucune primitive
 maison) :
   clé  = scrypt(passphrase, salt, n=2^14, r=8, p=1, dklen=64) → enc_key(32) | mac_key(32)
@@ -25,7 +31,9 @@ MAGIC = b"FGV1"
 _SALT = 16
 _NONCE = 16
 _TAG = 32
-_SCRYPT = dict(n=2 ** 14, r=8, p=1, dklen=64)
+# Revue aveugle 3 vendors (DeepSeek/Grok/Gemini) : N=2^14 jugé bas pour une attaque
+# hors-ligne sur blob volé (cible « au repos ») → relevé à 2^16 (~67 Mo, <1 s, portable).
+_SCRYPT = dict(n=2 ** 16, r=8, p=1, dklen=64, maxmem=128 * 1024 * 1024)
 
 
 class VaultError(Exception):

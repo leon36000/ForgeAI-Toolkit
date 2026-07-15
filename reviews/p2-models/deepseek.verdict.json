@@ -1,0 +1,16 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {"severite": "critique", "sur": "vault", "texte": "keystream HMAC sans AES, bit-flip non détecté", "disposition": "REFUTE — chiffrer-puis-MAC (tag sur salt+nonce+ct, vérifié avant déchiffrement) détecte tout bit-flip"},
+  {"severite": "critique", "sur": "vault", "texte": "déchiffrement avant vérification du tag (oracle)", "disposition": "REFUTE — unseal lève sur compare_digest AVANT le XOR de déchiffrement"},
+  {"severite": "critique", "sur": "vault", "texte": "réutilisation de nonce/keystream", "disposition": "REFUTE — salt aléatoire par scellement → enc_key unique; keystream = f(enc_key(salt), nonce)"},
+  {"severite": "critique", "sur": "vault", "texte": "MAC ne couvre pas le keystream, nonce modifiable", "disposition": "REFUTE — tag couvre le nonce; l'attaquant ne peut recalculer le tag sans mac_key"},
+  {"severite": "moyen", "sur": "vault", "texte": "scrypt N=2^14 faible", "disposition": "RETENU — relevé à 2^16"},
+  {"severite": "critique", "sur": "gateway", "texte": "fuite de clé dans les messages de violation", "disposition": "REFUTE — le message n'inclut PAS la valeur de la clé"},
+  {"severite": "moyen", "sur": "local", "texte": "TOCTOU sur le fichier téléchargé", "disposition": "RETENU — download vers .part, vérif, puis renommage atomique"}
+ ],
+ "date": "2026-07-15",
+ "source_route": "forge-model-bridge",
+ "model": "DeepSeek-V4-Pro",
+ "cible": "sous-système models/ P2 (auteur fable → reviewer non-Anthropic, aveugle)"
+}
