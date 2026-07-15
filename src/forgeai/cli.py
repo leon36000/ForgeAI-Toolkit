@@ -30,6 +30,7 @@ from forgeai.deploy.k3s import k3s_apply, k3s_delete_namespace, k3s_wait_deploym
 from forgeai.hardware.detect import HardwareDetector
 from forgeai.models.routes import RouteError, RouteStore
 from forgeai.models.probe import probe_route
+from forgeai.models.gateway import GatewayConfig, GatewayError, GatewayStore
 from forgeai.planner.assemble import assemble_plan
 from forgeai.planner.profile import ProfileError, derive_profile
 from forgeai.rag.client import RagClient
@@ -258,6 +259,28 @@ def _model_add_cloud(args: argparse.Namespace) -> int:
     return 0
 
 
+def _model_add_local(args: argparse.Namespace) -> int:
+    from forgeai.core.runner import SubprocessRunner
+    from forgeai.models.local import (LocalModel, LocalModelError, UrllibFetcher, add_local)
+    from forgeai.models.probe import UrllibTransport
+    model = LocalModel(name=args.name, engine=args.engine,
+                       vram_required_mb=args.vram_required_mb, model_ref=args.model_ref,
+                       download_url=args.url, sha256=args.sha256)
+    reg = Path(args.registre)
+    try:
+        result = add_local(
+            model, Path(args.dest), args.engine_url,
+            vram_mb=args.vram_mb, engines={args.engine},
+            fetcher=UrllibFetcher(), runner=SubprocessRunner(timeout_s=args.timeout),
+            transport=UrllibTransport(),
+            journal=lambda step, data: registre.append(reg, step, "model-local", data))
+    except LocalModelError as exc:
+        print(f"ECHEC MODELE LOCAL: {exc}", file=sys.stderr)
+        return 9
+    print(f"[forgeai] modèle local '{model.name}' {result.light} — {model.engine}/{model.model_ref}")
+    return 0
+
+
 def _model_list(args: argparse.Namespace) -> int:
     routes = RouteStore(Path(args.home)).list()
     if not routes:
@@ -280,6 +303,51 @@ def _model_test(args: argparse.Namespace) -> int:
     result = probe_route(route.base_url, route.model_id, api_key)
     print(f"[forgeai] route '{route.name}' : {result.light} — {result.detail}")
     return 0 if result.ok else 9
+
+
+def _gateway_set_url(args: argparse.Namespace) -> int:
+    try:
+        cfg = GatewayConfig(args.url, key_env=args.key_env)
+    except GatewayError as exc:
+        print(f"ECHEC GATEWAY: {exc}", file=sys.stderr)
+        return 10
+    GatewayStore(Path(args.home)).set_gateway(cfg)
+    registre.append(Path(args.registre), "gateway_configure", "gateway",
+                    {"base_url": cfg.base_url, "key_env": cfg.key_env})
+    print(f"[forgeai] gateway unique = {cfg.base_url} (clé via ${{{cfg.key_env}}})")
+    return 0
+
+
+def _gateway_wire(args: argparse.Namespace) -> int:
+    store = GatewayStore(Path(args.home))
+    try:
+        wiring = store.wire(args.brick, args.role, args.route)
+    except GatewayError as exc:
+        print(f"ECHEC CABLAGE: {exc}", file=sys.stderr)
+        return 10
+    registre.append(Path(args.registre), "brique_cablee_gateway", "gateway",
+                    {"brick": wiring.brick_id, "role": wiring.role,
+                     "base_url": wiring.env["OPENAI_API_BASE"],
+                     "model": wiring.env["OPENAI_MODEL"]})  # jamais de clé
+    print(f"[forgeai] brique '{wiring.brick_id}' ({wiring.role}) → gateway "
+          f"{wiring.env['OPENAI_API_BASE']} modèle {wiring.env['OPENAI_MODEL']}")
+    return 0
+
+
+def _gateway_verify(args: argparse.Namespace) -> int:
+    try:
+        violations = GatewayStore(Path(args.home)).verify()
+    except GatewayError as exc:
+        print(f"ECHEC GATEWAY: {exc}", file=sys.stderr)
+        return 10
+    if violations:
+        print("VIOLATION INVARIANT DM-6 (brique ne passant pas par le gateway unique) :",
+              file=sys.stderr)
+        for v in violations:
+            print(f"  - {v}", file=sys.stderr)
+        return 10
+    print("[forgeai] invariant gateway OK — toutes les briques câblées passent par le gateway unique")
+    return 0
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -333,6 +401,19 @@ def main(argv: list[str] | None = None) -> int:
     p_add.add_argument("--home", default=str(default_models_home()))
     p_add.add_argument("--registre", default=str(DEFAULT_REGISTRE))
     p_add.set_defaults(func=_model_add_cloud)
+    p_local = model_sub.add_parser("add-local", help="télécharge (hash-vérifié)+déploie+teste un modèle local")
+    p_local.add_argument("--name", required=True)
+    p_local.add_argument("--engine", required=True, choices=["ollama", "llamacpp", "vllm"])
+    p_local.add_argument("--model-ref", required=True)
+    p_local.add_argument("--url", required=True)
+    p_local.add_argument("--sha256", required=True)
+    p_local.add_argument("--vram-required-mb", type=int, required=True)
+    p_local.add_argument("--vram-mb", type=int, required=True, help="VRAM du nœud cible")
+    p_local.add_argument("--engine-url", required=True, help="endpoint compatible OpenAI du moteur")
+    p_local.add_argument("--dest", default=str(default_models_home() / "local"))
+    p_local.add_argument("--timeout", type=float, default=600.0)
+    p_local.add_argument("--registre", default=str(DEFAULT_REGISTRE))
+    p_local.set_defaults(func=_model_add_local)
     p_list = model_sub.add_parser("list", help="liste les routes (jamais les clés)")
     p_list.add_argument("--home", default=str(default_models_home()))
     p_list.set_defaults(func=_model_list)
@@ -341,6 +422,25 @@ def main(argv: list[str] | None = None) -> int:
     p_test.add_argument("--passphrase-env", default=None)
     p_test.add_argument("--home", default=str(default_models_home()))
     p_test.set_defaults(func=_model_test)
+
+    p_gw = sub.add_parser("gateway", help="branchement brique→gateway unique (DM-6)")
+    gw_sub = p_gw.add_subparsers(dest="gw_cmd", required=True)
+    p_gw_url = gw_sub.add_parser("set-url", help="définit le gateway unique")
+    p_gw_url.add_argument("--url", required=True)
+    p_gw_url.add_argument("--key-env", default="FORGEAI_GATEWAY_KEY")
+    p_gw_url.add_argument("--home", default=str(default_models_home()))
+    p_gw_url.add_argument("--registre", default=str(DEFAULT_REGISTRE))
+    p_gw_url.set_defaults(func=_gateway_set_url)
+    p_gw_wire = gw_sub.add_parser("wire", help="câble une brique (par rôle→route) vers le gateway")
+    p_gw_wire.add_argument("--brick", required=True)
+    p_gw_wire.add_argument("--role", required=True)
+    p_gw_wire.add_argument("--route", required=True)
+    p_gw_wire.add_argument("--home", default=str(default_models_home()))
+    p_gw_wire.add_argument("--registre", default=str(DEFAULT_REGISTRE))
+    p_gw_wire.set_defaults(func=_gateway_wire)
+    p_gw_ver = gw_sub.add_parser("verify", help="vérifie l'invariant (aucune brique hors gateway)")
+    p_gw_ver.add_argument("--home", default=str(default_models_home()))
+    p_gw_ver.set_defaults(func=_gateway_verify)
 
     args = parser.parse_args(argv)
     try:
