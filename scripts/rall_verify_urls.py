@@ -78,12 +78,16 @@ def main() -> None:
         # officiel (EN sourcé) et marque le FR à traduire (même pipeline que les 742).
         if e.get("atlas_only"):
             gh_desc = (info.get("desc") or "").strip()
+            e["atlas_only"] = False
             if gh_desc:
                 e["description_en"] = gh_desc
                 e["description_fr"] = ""
                 e["fr_pending"] = True
-            e["atlas_only"] = False
-            e["en_pending"] = False
+                e["en_pending"] = False
+            else:
+                # Dépôt sans description : vérifié, mais EN reste à rédiger (invariant
+                # description_en None ⟺ en_pending préservé).
+                e["en_pending"] = True
         ok += 1
 
     payload = json.dumps(data, ensure_ascii=False, sort_keys=True, indent=1)
