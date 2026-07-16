@@ -1,0 +1,22 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severity": "faible",
+   "file": "scripts/reviews_gate.py",
+   "desc": "Absence de vérification explicite du nombre exact de 3 verdicts par dossier ; le gate repose entièrement sur tally(), qui pourrait accepter plus de 3 verdicts si tous sont APPROVE et même prompt_sha256, contournant la règle '3/3'.",
+   "line": null,
+   "preuve": "Le code check() appelle tally(verdicts) sans vérifier len(verdicts)==3."
+  },
+  {
+   "severity": "faible",
+   "file": "scripts/reviews_gate.py",
+   "desc": "Gestion d'erreur absente en cas de fichier verdict JSON malformé : une exception non capturée fera échouer le gate sans message clair, ce qui bloque le merge mais peut rendre le diagnostic difficile.",
+   "line": null,
+   "preuve": "json.loads(p.read_text(...)) sans try/except."
+  }
+ ],
+ "date_heure": "",
+ "prompt_sha256": "3fd5e7b402f6b7abe5a960681cf88783e09b689604302ec54eb92eebee5f29c4",
+ "reviewer_model": "DeepSeek-V4-Pro"
+}
