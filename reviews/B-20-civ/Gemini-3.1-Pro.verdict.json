@@ -1,0 +1,19 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severity": "faible",
+   "file": "src/forgeai/models/budget.py",
+   "line": 69,
+   "desc": "La méthode _load ne gère pas l'exception json.JSONDecodeError dans le cas où le fichier budgets.json est un JSON invalide, ce qui provoquera un crash de l'application au lieu de lever proprement une BudgetError."
+  },
+  {
+   "severity": "faible",
+   "file": "tests/test_models_budget.py",
+   "line": 73,
+   "desc": "Import dupliqué du module pytest."
+  }
+ ],
+ "prompt_sha256": "ac58d68286a1f73fa379f274333207a1fe952f8babe2489a1e61d0e241ffbfb2",
+ "reviewer_model": "Gemini-3.1-Pro"
+}
