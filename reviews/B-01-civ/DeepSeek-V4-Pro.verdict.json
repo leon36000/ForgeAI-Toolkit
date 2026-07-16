@@ -1,0 +1,13 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severity": "faible",
+   "file": "src/forgeai/cli.py",
+   "line": null,
+   "desc": "Affichage possible de 'None' lorsque l'entrée a popularity = null (clé présente avec valeur None). La méthode get('popularity', '') ne protège que l'absence de clé, pas la valeur None explicite issue de JSON null."
+  }
+ ],
+ "prompt_sha256": "537492ebb4550863589876b32a91e6efa6e58133780f6e847741e2c6d21a442f",
+ "reviewer_model": "DeepSeek-V4-Pro"
+}
