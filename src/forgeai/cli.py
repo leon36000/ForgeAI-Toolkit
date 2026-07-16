@@ -403,6 +403,39 @@ def _route_configure(args: argparse.Namespace) -> int:
     return 0
 
 
+def _budget_set(args: argparse.Namespace) -> int:
+    from forgeai.models.budget import BudgetTracker, BudgetError
+    home = Path(args.home)
+    try:
+        BudgetTracker(home).set_budget(args.agent, args.quota, args.alert)
+    except BudgetError as exc:
+        print(f"ECHEC BUDGET: {exc}", file=sys.stderr)
+        return 10
+    registre.append(Path(args.registre), "budget_defini", "budget",
+                    {"agent": args.agent, "quota_tokens": args.quota,
+                     "alert_ratio": args.alert})
+    print(f"[forgeai] budget '{args.agent}' défini — "
+          f"quota={args.quota} tokens, alerte à {args.alert:.0%}")
+    return 0
+
+
+def _budget_status(args: argparse.Namespace) -> int:
+    from forgeai.models.budget import BudgetTracker, BudgetError
+    home = Path(args.home)
+    try:
+        if args.agent:
+            states = [BudgetTracker(home).status(args.agent)]
+        else:
+            states = BudgetTracker(home).report()
+    except BudgetError as exc:
+        print(f"ECHEC BUDGET: {exc}", file=sys.stderr)
+        return 10
+    for s in states:
+        print(f"{s.agent}: {s.used_tokens}/{s.quota_tokens} tokens "
+              f"({s.ratio:.1%}) — {s.etat}")
+    return 0
+
+
 def _catalogue(args: argparse.Namespace) -> int:
     import json
     catalogue_path = Path(args.catalogue)
@@ -542,6 +575,20 @@ def main(argv: list[str] | None = None) -> int:
     p_rcfg.add_argument("--home", default=str(default_models_home()))
     p_rcfg.add_argument("--registre", default=str(DEFAULT_REGISTRE))
     p_rcfg.set_defaults(func=_route_configure)
+
+    p_budget = sub.add_parser("budget", help="gestion des budgets agents (B-20)")
+    budget_sub = p_budget.add_subparsers(dest="budget_cmd", required=True)
+    p_budget_set = budget_sub.add_parser("set", help="définit le quota d'un agent")
+    p_budget_set.add_argument("--agent", required=True)
+    p_budget_set.add_argument("--quota", type=int, required=True)
+    p_budget_set.add_argument("--alert", type=float, default=0.8)
+    p_budget_set.add_argument("--home", default=str(default_models_home()))
+    p_budget_set.add_argument("--registre", default=str(DEFAULT_REGISTRE))
+    p_budget_set.set_defaults(func=_budget_set)
+    p_budget_status = budget_sub.add_parser("status", help="état des budgets agents")
+    p_budget_status.add_argument("--agent", default=None)
+    p_budget_status.add_argument("--home", default=str(default_models_home()))
+    p_budget_status.set_defaults(func=_budget_status)
 
     p_cat = sub.add_parser("catalogue", help="explore le catalogue de briques")
     p_cat.add_argument("--defaults", action="store_true",
