@@ -1,0 +1,26 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "majeure",
+   "fichier": "scripts/sentinelle_sweep.py",
+   "description": "Faux négatifs dans la détection des symboles sans test : la recherche de référence de test par regex correspondra au nom du symbole dans les commentaires, les chaînes de caractères ou tout autre contexte non exécutable d'un fichier de test. Un symbole mentionné dans un commentaire (ex: # TODO: tester foo) sera considéré à tort comme testé et ne sera pas signalé.",
+   "preuve": "Ligne du regex : `pat = re.compile(r\"\\b\" + re.escape(symbol) + r\"\\b\")` ; Ligne d'usage pour les tests : `if not find_usages(sym, [test_root], set()):`"
+  },
+  {
+   "severite": "majeure",
+   "fichier": "scripts/sentinelle_sweep.py",
+   "description": "Faux positifs dans les surfaces non vérifiées : la recherche d'usages par regex correspondra au nom du symbole dans les commentaires ou les chaînes de caractères d'autres fichiers sources, signalant une 'surface à vérifier' qui n'est pas un usage réel du code.",
+   "preuve": "Ligne du regex : `pat = re.compile(r\"\\b\" + re.escape(symbol) + r\"\\b\")` ; Ligne d'usage pour les surfaces : `ext = find_usages(sym, src_roots, changed_res)`"
+  },
+  {
+   "severite": "mineure",
+   "fichier": "scripts/sentinelle_sweep.py",
+   "description": "Silence sur l'échec de la commande git : si la commande `git diff` échoue (par exemple, la référence n'existe pas ou le dépôt est corrompu), `stdout` sera vide et le script considérera qu'il n'y a aucun fichier modifié, sans avertir l'utilisateur ni remonter d'erreur.",
+   "preuve": "Ligne : `out = subprocess.run([\"git\", \"diff\", \"--name-only\", f\"{ref}...HEAD\"], capture_output=True, text=True, cwd=REPO).stdout` (aucune vérification de `returncode` ni de `stderr`)"
+  }
+ ],
+ "date_heure": "2024-05-20T10:00:00Z",
+ "prompt_sha256": "7ae74805d163c2d1a5dd6c4cf58acf3e22c3fefc0d30bb0d363826f3af5a81ea",
+ "reviewer_model": "LongCat-2.0"
+}

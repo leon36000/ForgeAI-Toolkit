@@ -34,11 +34,29 @@ def _rel(p: Path) -> str:
         return str(p)
 
 
+def _is_under(p: Path, root: Path) -> bool:
+    """Vrai si `p` est situé sous `root` — comparaison de chemins résolus (pas de test sur
+    le nom absolu, qui casserait si le dépôt est cloné sous un dossier nommé « tests »)."""
+    p, root = p.resolve(), root.resolve()
+    return p == root or root in p.parents
+
+
+def _read(pyfile: Path) -> str | None:
+    """Lit un fichier en tolérant l'encodage (evite UnicodeDecodeError sur fichiers non-utf8)."""
+    try:
+        return pyfile.read_text(encoding="utf-8", errors="replace")
+    except OSError:
+        return None
+
+
 def defined_symbols(pyfile: Path) -> set[str]:
     """Symboles PUBLICS de haut niveau (def/class, hors _privés) définis dans le fichier."""
+    text = _read(pyfile)
+    if text is None:
+        return set()
     try:
-        tree = ast.parse(pyfile.read_text(encoding="utf-8"))
-    except (SyntaxError, OSError):
+        tree = ast.parse(text)
+    except SyntaxError:
         return set()
     names = set()
     for node in tree.body:
@@ -53,17 +71,18 @@ def _py_files(root: Path):
 
 
 def find_usages(symbol: str, roots: list[Path], exclude: set[Path]) -> list[Path]:
+    # Heuristique regex (mot entier). Limite ASSUMÉE : un nom en commentaire/chaîne compte
+    # comme usage (faux positif possible) — acceptable pour un RAPPORT consultatif de la
+    # Sentinelle (elle signale des surfaces à vérifier, elle ne bloque pas).
     pat = re.compile(r"\b" + re.escape(symbol) + r"\b")
     hits = []
     for root in roots:
         for py in _py_files(root):
             if py.resolve() in exclude:
                 continue
-            try:
-                if pat.search(py.read_text(encoding="utf-8")):
-                    hits.append(py)
-            except OSError:
-                continue
+            text = _read(py)
+            if text is not None and pat.search(text):
+                hits.append(py)
     return hits
 
 
@@ -72,7 +91,7 @@ def sweep(changed: list[Path], src_roots: list[Path], test_root: Path) -> dict:
     surfaces: dict[str, list[str]] = {}      # symbole → fichiers externes (non ouverts) qui l'utilisent
     untested: list[str] = []                 # symboles publics du changeset sans réf. de test
     for f in changed:
-        if f.suffix != ".py" or "tests" in f.parts:
+        if f.suffix != ".py" or _is_under(f, test_root):
             continue
         for sym in defined_symbols(f):
             ext = find_usages(sym, src_roots, changed_res)

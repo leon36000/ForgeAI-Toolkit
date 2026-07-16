@@ -68,3 +68,25 @@ def test_symboles_prives_ignores(tmp_path):
     res = sweep_mod.sweep([a], [src], tests)
     # les symboles _privés ne sont pas des surfaces d'API publique
     assert res["surfaces_non_verifiees"] == {} and res["symboles_publics_sans_test"] == []
+
+
+def test_depot_sous_dossier_nomme_tests_nest_pas_ignore(tmp_path):
+    # bug CRITIQUE corrige : le filtre ne doit PAS se baser sur le nom absolu ("tests" ancetre)
+    src = tmp_path / "tests" / "pkg"        # chemin contenant "tests" comme ancetre
+    a = _mk(src, "mod_a.py", "def foo():\n    return 1\n")
+    _mk(src, "mod_b.py", "def bar():\n    return foo()\n")
+    test_root = tmp_path / "realtests"      # le VRAI dossier de tests est ailleurs
+    test_root.mkdir()
+    res = sweep_mod.sweep([a], [src], test_root)
+    assert "foo" in res["surfaces_non_verifiees"]   # mod_a n'a PAS ete ignore a tort
+
+
+def test_fichier_non_utf8_ne_casse_pas(tmp_path):
+    # bug ELEVE corrige : UnicodeDecodeError tolere
+    src = tmp_path / "src"
+    a = _mk(src, "mod_a.py", "def foo():\n    return 1\n")
+    (src / "binaire.py").write_bytes(b"\xff\xfe def foo(): pass \x80\x81")
+    test_root = tmp_path / "tests"
+    test_root.mkdir()
+    res = sweep_mod.sweep([a], [src], test_root)   # ne doit lever aucune exception
+    assert isinstance(res, dict)

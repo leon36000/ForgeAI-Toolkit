@@ -1,0 +1,19 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severity": "eleve",
+   "file": "scripts/sentinelle_sweep.py",
+   "line": 48,
+   "desc": "La fonction defined_symbols attrape seulement SyntaxError et OSError ; UnicodeDecodeError (fichier illisible pour cause d'encodage) n'est pas intercepté. Le script plantera au lieu de traiter le fichier comme illisible, ce qui contredit l'exigence de gestion robuste."
+  },
+  {
+   "severity": "moyen",
+   "file": "scripts/sentinelle_sweep.py",
+   "line": null,
+   "desc": "La recherche d'usages par regex (\\b) ne filtre pas les commentaires ni les chaînes de caractères, ce qui peut créer des faux positifs et signaler des surfaces inexactes."
+  }
+ ],
+ "prompt_sha256": "7ae74805d163c2d1a5dd6c4cf58acf3e22c3fefc0d30bb0d363826f3af5a81ea",
+ "reviewer_model": "DeepSeek-V4-Pro"
+}
