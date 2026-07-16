@@ -1,14 +1,7 @@
 {
- "verdict": "REJECT",
- "objections": [
-  {
-   "severite": "majeure",
-   "fichier": "N/A",
-   "description": "Le critère d'acceptation 1 exige qu'un champ 'disambiguation' existe au schéma, mais le diff ne contient aucune modification d'un fichier de schéma (ex. JSON Schema ou modèle de données) pour déclarer ce nouveau champ.",
-   "preuve": "Absence de modification de fichier de schéma dans le diff fourni."
-  }
- ],
- "date_heure": "2024-05-24T15:30:00Z",
- "prompt_sha256": "fbdbca4d580f0edea1e950d8d32b9b54264218671177176937e75dd75de306e6",
+ "verdict": "APPROVE",
+ "objections": [],
+ "date_heure": "2023-10-24T12:00:00Z",
+ "prompt_sha256": "0c770c77bba3cbddf7cf309ef57bedf34ab01867e49361218a9e62de9b3589ff",
  "reviewer_model": "Gemini-3.1-Pro"
 }
