@@ -1,19 +1,6 @@
 {
- "verdict": "REJECT",
- "objections": [
-  {
-   "severity": "critique",
-   "file": "scripts/sentinelle_sweep.py",
-   "line": 71,
-   "desc": "La condition '\"tests\" in f.parts' évalue le chemin absolu du fichier. Si le dépôt est cloné dans un dossier parent nommé 'tests' (ex: /home/user/tests/repo/), tous les fichiers sources seront ignorés, causant des faux négatifs massifs. Il faut vérifier cette condition sur le chemin relatif au dépôt."
-  },
-  {
-   "severity": "eleve",
-   "file": "scripts/sentinelle_sweep.py",
-   "line": 38,
-   "desc": "L'appel à 'read_text(encoding=\"utf-8\")' peut lever une 'UnicodeDecodeError' (qui hérite de ValueError, et non de OSError). Cette exception n'est pas attrapée par 'except (SyntaxError, OSError):' et fera crasher le script sur des fichiers mal encodés, violant le critère de gestion des fichiers illisibles (le même problème est présent ligne 59)."
-  }
- ],
- "prompt_sha256": "7ae74805d163c2d1a5dd6c4cf58acf3e22c3fefc0d30bb0d363826f3af5a81ea",
+ "verdict": "APPROVE",
+ "objections": [],
+ "prompt_sha256": "f04eebaa5f352e09da2a76c1cb448920a0731ab52284a9bd0369f20ec5f67544",
  "reviewer_model": "Gemini-3.1-Pro"
 }
