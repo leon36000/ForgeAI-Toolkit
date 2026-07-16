@@ -35,8 +35,8 @@ def test_hybride_mixte():
 
 
 def test_roles_personnalises():
-    spec = resolve_spec("equipe", ["a", "b", "a", " c "])  # dédup + strip
-    assert spec.slots == ("a", "b", "c")
+    spec = resolve_spec("cerveau-unique", ["a", "a", " a "])  # dédup + strip
+    assert spec.slots == ("a",)
 
 
 def test_cerveau_unique_refuse_plusieurs_roles():
@@ -108,3 +108,15 @@ def test_cli_changement_jamais_silencieux(tmp_path, capsys):
     assert main(["strategy", "set", "--strategy", "cerveau-unique", "--confirm",
                  "--home", str(home), "--registre", str(reg)]) == 0
     assert StrategyStore(home).get().strategy == "cerveau-unique"
+
+
+def test_roles_perso_mauvais_nombre_rejete():
+    with pytest.raises(StrategyError):
+        resolve_spec("equipe", ["a", "b", "c"])
+    with pytest.raises(StrategyError):
+        resolve_spec("hybride", ["x", "y"])
+
+
+def test_roles_perso_bon_nombre_ok():
+    assert resolve_spec("equipe", ["a", "b", "c", "d"]).slots == ("a", "b", "c", "d")
+    assert resolve_spec("hybride", ["p", "q", "r"]).slot_count == 3

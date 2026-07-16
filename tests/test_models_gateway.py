@@ -169,3 +169,23 @@ def test_cli_gateway_flux_complet(tmp_path, gateway_server, monkeypatch, capsys)
     assert "sk-provider-secret-XYZ" not in wirings
     assert "${FORGEAI_GATEWAY_KEY}" in wirings
     assert "sk-provider-secret-XYZ" not in registre.read_text()
+
+
+def test_assert_brique_fournisseur_et_cle_en_clair():
+    rogue = BrickWiring(
+        brick_id="rogue",
+        role="chat",
+        env={
+            "OPENAI_API_BASE": "https://api.openai.com/v1",
+            "OPENAI_API_KEY": "cle-en-clair-interdite",
+            "OPENAI_MODEL": "m",
+        },
+    )
+    violations = assert_via_gateway([rogue], GW)
+    has_provider = any(
+        "fournisseur" in v.lower() or "api.openai.com" in v.lower() for v in violations
+    )
+    has_clear = any("clair" in v.lower() for v in violations)
+    assert has_provider, violations
+    assert has_clear, violations
+    assert len(violations) >= 2, violations

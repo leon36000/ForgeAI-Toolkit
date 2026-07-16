@@ -104,7 +104,9 @@ class Vault:
         self.path.parent.mkdir(parents=True, exist_ok=True)
         os.chmod(self.path.parent, 0o700)
         payload = json.dumps(data, ensure_ascii=False, indent=1)
-        self.path.write_text(payload, encoding="utf-8")
+        fd = os.open(self.path, os.O_WRONLY | os.O_CREAT | os.O_TRUNC, 0o600)
+        with os.fdopen(fd, "w", encoding="utf-8") as f:
+            f.write(payload)
         os.chmod(self.path, 0o600)
 
     def put(self, name: str, secret: str, passphrase: str) -> str:

@@ -12,6 +12,7 @@ Tout est journalisable via un callback `journal` (empreinte, jamais de secret).
 from __future__ import annotations
 
 import hashlib
+import os
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Callable, Protocol
@@ -42,7 +43,7 @@ def filter_available(models: list[LocalModel], vram_mb: int,
 
 
 class Fetcher(Protocol):
-    def fetch(self, url: str, dest: Path) -> int:
+    def fetch(self, url: str, dest: Path, timeout: float = 300.0) -> int:
         """Écrit l'artefact de `url` vers `dest`, retourne le nombre d'octets."""
 
 
@@ -52,11 +53,11 @@ class UrllibFetcher:
     def __init__(self, chunk: int = 1 << 20) -> None:
         self.chunk = chunk
 
-    def fetch(self, url: str, dest: Path) -> int:
+    def fetch(self, url: str, dest: Path, timeout: float = 300.0) -> int:
         import urllib.request
         total = 0
         dest.parent.mkdir(parents=True, exist_ok=True)
-        with urllib.request.urlopen(url) as resp, dest.open("wb") as fh:
+        with urllib.request.urlopen(url, timeout=timeout) as resp, dest.open("wb") as fh:
             while True:
                 buf = resp.read(self.chunk)
                 if not buf:
@@ -81,7 +82,13 @@ def download_verified(model: LocalModel, dest_dir: Path, fetcher: Fetcher) -> Pa
     on vérifie, PUIS on renomme atomiquement vers la destination finale. Ainsi le fichier
     présent à `dest` est toujours exactement l'artefact vérifié (pas de fenêtre de
     substitution entre vérification et usage)."""
+    if "/" in model.name or os.sep in model.name or ".." in model.name:
+        raise LocalModelError(f"nom de modèle invalide : {model.name}")
     dest = Path(dest_dir) / f"{model.name}.bin"
+    dest_resolved = dest.resolve()
+    dest_dir_resolved = Path(dest_dir).resolve()
+    if not dest_resolved.is_relative_to(dest_dir_resolved):
+        raise LocalModelError(f"nom de modèle invalide : {model.name}")
     tmp = dest.with_suffix(".part")
     fetcher.fetch(model.download_url, tmp)
     actual = _sha256_file(tmp)
@@ -136,11 +143,15 @@ def add_local(model: LocalModel, dest_dir: Path, engine_url: str, *,
     path = download_verified(model, dest_dir, fetcher)
     _log("modele_local_telecharge", {"name": model.name, "sha256": model.sha256,
                                      "octets": path.stat().st_size})
-    deploy(model, runner)
-    _log("modele_local_deploye", {"name": model.name, "engine": model.engine,
-                                  "ref": model.model_ref})
-    result = check_completion(engine_url, model.model_ref, transport)
-    if not result.ok:
-        raise LocalModelError(f"test de complétion {result.light} : {result.detail}")
-    _log("modele_local_valide", {"name": model.name, "light": result.light})
-    return result
+    try:
+        deploy(model, runner)
+        _log("modele_local_deploye", {"name": model.name, "engine": model.engine,
+                                      "ref": model.model_ref})
+        result = check_completion(engine_url, model.model_ref, transport)
+        if not result.ok:
+            raise LocalModelError(f"test de complétion {result.light} : {result.detail}")
+        _log("modele_local_valide", {"name": model.name, "light": result.light})
+        return result
+    except Exception:
+        path.unlink(missing_ok=True)
+        raise

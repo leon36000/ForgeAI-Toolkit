@@ -136,3 +136,11 @@ def test_route_dupliquee_refusee(tmp_path):
     store.add_cloud("r", "openrouter", "m", SECRET, "pp", transport=GREEN)
     with pytest.raises(RouteError):
         store.add_cloud("r", "openrouter", "m", SECRET, "pp", transport=GREEN)
+
+
+def test_vault_cree_0600_sans_chmod(tmp_path, monkeypatch):
+    import forgeai.models.vault as vault_mod
+    monkeypatch.setattr(vault_mod.os, "chmod", lambda *a, **k: None)
+    v = Vault(tmp_path / "v" / "vault.json")
+    v.put("k", "secret", "pp")
+    assert stat.S_IMODE(os.stat(v.path).st_mode) == 0o600
