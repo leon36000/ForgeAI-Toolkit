@@ -151,3 +151,51 @@ def test_cli_add_local_vram_fail_fast(tmp_path, capsys):
     assert rc == 9
     assert "ECHEC MODELE LOCAL" in capsys.readouterr().err
     assert not dest.exists() or list(dest.glob("*.bin")) == []
+
+
+def test_add_local_nettoie_si_deploy_echoue(tmp_path):
+    try:
+        add_local(
+            _model(),
+            tmp_path,
+            "http://localhost:11434",
+            vram_mb=4000,
+            engines={"ollama"},
+            fetcher=FixtureFetcher(),
+            runner=FixtureRunner({}),
+            transport=FixtureTransport(),
+        )
+        assert False, "aurait dû lever LocalModelError"
+    except LocalModelError:
+        pass
+    assert not list(tmp_path.glob("*.bin"))
+
+
+def test_fetch_passe_un_timeout(monkeypatch, tmp_path):
+    from forgeai.models.local import UrllibFetcher
+    captured = {}
+
+    def fake_urlopen(url, **kwargs):
+        captured["timeout"] = kwargs.get("timeout")
+        raise RuntimeError("stop")
+
+    monkeypatch.setattr("urllib.request.urlopen", fake_urlopen)
+    fetcher = UrllibFetcher()
+    try:
+        fetcher.fetch("http://x", tmp_path / "out.bin")
+    except RuntimeError:
+        pass
+    assert captured.get("timeout") is not None and captured["timeout"] > 0
+
+
+def test_download_rejette_nom_traversal(tmp_path):
+    import dataclasses
+    model = dataclasses.replace(_model(), name="../evil")
+    try:
+        download_verified(model, tmp_path, FixtureFetcher())
+        assert False, "aurait dû lever LocalModelError"
+    except LocalModelError:
+        pass
+    escaped = (tmp_path / "../evil.bin").resolve()
+    assert not escaped.exists()
+    assert not list(tmp_path.glob("*.bin"))

@@ -1,0 +1,13 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severity": "eleve",
+   "file": "src/forgeai/models/local.py",
+   "line": 134,
+   "desc": "Absence de nettoyage du fichier téléchargé (path) en cas d'échec de deploy() ou de check_completion(). Si une de ces étapes échoue, le fichier reste sur le disque, ce qui viole le critère 4 exigeant 'rien à demi-installé'."
+  }
+ ],
+ "prompt_sha256": "51201f9b88c559b2ea3b66838337b1ca4ebf73ae1f87040d6f9f6a16ecc6d607",
+ "reviewer_model": "Gemini-3.1-Pro"
+}

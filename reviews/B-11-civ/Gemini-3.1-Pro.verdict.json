@@ -1,0 +1,13 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severity": "critique",
+   "file": "src/forgeai/models/gateway.py",
+   "line": 89,
+   "desc": "L'instruction 'continue' dans assert_via_gateway empêche la vérification de l'hôte fournisseur et de la clé en clair si l'URL de base diffère du gateway. De plus, si l'URL correspond au gateway, la vérification 'host in _PROVIDER_HOSTS' est toujours fausse (déjà bloquée par GatewayConfig). Le critère 3 n'est donc pas respecté car les détections sont soit ignorées, soit inatteignables."
+  }
+ ],
+ "prompt_sha256": "3c3861b98d2d0ff5dc6b9c064fd93d2fe509edeac1953d18cc29d56f9738641b",
+ "reviewer_model": "Gemini-3.1-Pro"
+}

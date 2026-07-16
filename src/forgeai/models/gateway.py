@@ -87,7 +87,6 @@ def assert_via_gateway(wirings: list[BrickWiring], gateway: GatewayConfig) -> li
         base = w.env.get("OPENAI_API_BASE") or w.env.get("OPENAI_BASE_URL") or ""
         if base != gateway.base_url:
             violations.append(f"{w.brick_id}: pointe vers '{base}' ≠ gateway unique")
-            continue
         host = urlparse(base).hostname
         if host in _PROVIDER_HOSTS:
             violations.append(f"{w.brick_id}: pointe vers un hôte fournisseur '{host}'")

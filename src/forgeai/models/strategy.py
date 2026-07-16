@@ -38,12 +38,15 @@ class StrategySpec:
 def resolve_spec(strategy: str, custom_roles: list[str] | None = None) -> StrategySpec:
     if strategy not in _DEFAULT_SLOTS:
         raise StrategyError(f"stratégie inconnue '{strategy}' (choix : {', '.join(STRATEGIES)})")
+    expected = len(_DEFAULT_SLOTS[strategy])
     if custom_roles:
         slots = tuple(dict.fromkeys(r.strip() for r in custom_roles if r.strip()))
         if not slots:
             raise StrategyError("liste de rôles vide")
-        if strategy == "cerveau-unique" and len(slots) != 1:
-            raise StrategyError("cerveau-unique n'admet qu'un seul slot")
+        if len(slots) != expected:
+            raise StrategyError(
+                f"la stratégie '{strategy}' impose {expected} slot(s), {len(slots)} fourni(s)"
+            )
     else:
         slots = _DEFAULT_SLOTS[strategy]
     return StrategySpec(strategy=strategy, slots=slots)

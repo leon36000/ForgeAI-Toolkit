@@ -1,0 +1,13 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severity": "moyen",
+   "file": "src/forgeai/models/vault.py",
+   "line": 101,
+   "desc": "Dans Vault._save, le fichier est créé avec les permissions par défaut (ex: 0644) via write_text avant que os.chmod(0o600) ne soit appliqué. Cela crée une race condition (CWE-732) permettant potentiellement la lecture du coffre chiffré par d'autres utilisateurs locaux pendant un court instant."
+  }
+ ],
+ "prompt_sha256": "90344a5905940c31178ce283b7baa05203cd312665bce61a53933c72bd72c4bc",
+ "reviewer_model": "Gemini-3.1-Pro"
+}

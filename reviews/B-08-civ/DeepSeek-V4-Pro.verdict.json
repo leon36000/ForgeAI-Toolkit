@@ -1,0 +1,13 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severity": "faible",
+   "file": "src/forgeai/models/local.py",
+   "line": 118,
+   "desc": "La fonction check_completion repose sur probe_route pour valider une réponse non vide, mais l'implémentation de probe_route n'est pas fournie. L'exigence d'une réponse non vide (critère 4) ne peut être vérifiée dans ce diff."
+  }
+ ],
+ "prompt_sha256": "51201f9b88c559b2ea3b66838337b1ca4ebf73ae1f87040d6f9f6a16ecc6d607",
+ "reviewer_model": "DeepSeek-V4-Pro"
+}
