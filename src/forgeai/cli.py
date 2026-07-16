@@ -446,7 +446,7 @@ def _catalogue(args: argparse.Namespace) -> int:
         defaults = [e for e in entries if e.get("default") is True]
         defaults.sort(key=lambda e: (e.get("category", ""), e.get("name", "")))
         for e in defaults:
-            print(f"⭐ {e.get('name')} — {e.get('category')} ({e.get('popularity', '')})")
+            print(f"⭐ {e.get('name')} — {e.get('category')} ({e.get('popularity') or ''})")
         return 0
 
     categories = sorted({e.get("category", "") for e in entries})

@@ -70,7 +70,6 @@ def test_report(tmp_path):
     assert report[1].used_tokens == 50
 
 
-import pytest
 from forgeai.cli import main
 
 
@@ -83,3 +82,10 @@ def test_cli_budget_set_status(tmp_path, capsys):
                  "--home", str(home)]) == 0
     captured = capsys.readouterr()
     assert "coder" in captured.out
+
+
+def test_budgets_json_corrompu_leve_budgeterror(tmp_path):
+    from forgeai.models.budget import BudgetTracker, BudgetError
+    (tmp_path / "budgets.json").write_text("{ pas du json valide", encoding="utf-8")
+    with pytest.raises(BudgetError):
+        BudgetTracker(tmp_path).status("x")
