@@ -1,0 +1,13 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severity": "faible",
+   "file": "src/forgeai/models/budget.py",
+   "line": null,
+   "desc": "Le message d'erreur pour l'alert_ratio dit 'strictement entre 0 et 1', mais la condition accepte 1 (0 < alert <= 1). Le message devrait refléter l'inclusion de 1."
+  }
+ ],
+ "prompt_sha256": "ac58d68286a1f73fa379f274333207a1fe952f8babe2489a1e61d0e241ffbfb2",
+ "reviewer_model": "DeepSeek-V4-Pro"
+}
