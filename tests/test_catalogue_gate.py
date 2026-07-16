@@ -86,3 +86,36 @@ def test_main_retourne_0_sur_catalogue_reel(capsys):
     assert ret == 0
     assert "CATALOGUE-GATE : OK" in out
     assert err == "" or "CATALOGUE-GATE" not in err  # pas d'erreur
+
+
+def test_disambiguation_declaree_au_schema():
+    from scripts.catalogue_gate import load_schema, default_schema_path
+    schema = load_schema(default_schema_path())
+    assert "disambiguation" in schema.get("properties", {}), \
+        "le champ 'disambiguation' doit être déclaré au schéma d'entrée"
+
+
+def test_catalogue_reel_conforme_au_schema():
+    from scripts.catalogue_gate import (
+        load_entries, load_schema, default_catalogue_path,
+        default_schema_path, schema_violations,
+    )
+    entries = load_entries(default_catalogue_path())
+    schema = load_schema(default_schema_path())
+    assert schema_violations(entries, schema) == []
+
+
+def test_champ_non_declare_detecte():
+    from scripts.catalogue_gate import schema_violations
+    schema = {"properties": {"id": {}, "name": {}}, "required": ["id"],
+              "additionalProperties": False}
+    v = schema_violations([{"id": "a", "name": "n", "champ_inconnu": "x"}], schema)
+    assert any("non déclaré" in s for s in v)
+
+
+def test_champ_requis_manquant_detecte():
+    from scripts.catalogue_gate import schema_violations
+    schema = {"properties": {"id": {}, "name": {}}, "required": ["id", "name"],
+              "additionalProperties": False}
+    v = schema_violations([{"id": "a"}], schema)
+    assert any("requis manquant" in s for s in v)

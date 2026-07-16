@@ -78,6 +78,35 @@ def default_catalogue_path() -> Path:
     )
 
 
+def default_schema_path() -> Path:
+    """Retourne le chemin du schéma d'entrée packagé (source de vérité des champs)."""
+    return default_catalogue_path().with_name("catalogue.schema.json")
+
+
+def load_schema(path: Path) -> Dict[str, Any]:
+    """Charge le JSON Schema d'une entrée de catalogue."""
+    with path.open(encoding="utf-8") as fh:
+        return json.load(fh)
+
+
+def schema_violations(entries: List[Dict[str, Any]], schema: Dict[str, Any]) -> List[str]:
+    """Conformité au schéma : champs déclarés (si additionalProperties=false) et requis présents.
+    Rend le champ 'disambiguation' (et tout autre) explicitement DÉCLARÉ au schéma."""
+    props = set(schema.get("properties", {}))
+    required = set(schema.get("required", []))
+    allow_extra = schema.get("additionalProperties", True)
+    violations: List[str] = []
+    for entry in entries:
+        who = entry.get("id") or entry.get("name", "?")
+        keys = set(entry)
+        if allow_extra is False:
+            for k in keys - props:
+                violations.append(f"champ non déclaré au schéma : '{k}' (entrée '{who}')")
+        for r in required - keys:
+            violations.append(f"champ requis manquant : '{r}' (entrée '{who}')")
+    return sorted(violations)
+
+
 def main(argv: Optional[List[str]] = None) -> int:
     """Point d'entrée CLI."""
     parser = argparse.ArgumentParser(description="Gate de désambiguïsation du catalogue")
@@ -92,6 +121,8 @@ def main(argv: Optional[List[str]] = None) -> int:
 
     entries = load_entries(path)
     violations = find_violations(entries)
+    schema = load_schema(default_schema_path())
+    violations = sorted(violations + schema_violations(entries, schema))
 
     if violations:
         for v in violations:
