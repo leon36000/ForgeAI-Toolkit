@@ -144,3 +144,109 @@ def test_vault_cree_0600_sans_chmod(tmp_path, monkeypatch):
     v = Vault(tmp_path / "v" / "vault.json")
     v.put("k", "secret", "pp")
     assert stat.S_IMODE(os.stat(v.path).st_mode) == 0o600
+
+
+import json
+
+from forgeai.models.routes import CloudRoute, RouteError, RouteStore
+
+
+def test_cloudroute_defauts_cache():
+    route = CloudRoute(
+        name="n",
+        provenance="openrouter",
+        base_url="http://x/v1",
+        model_id="m",
+        key_fingerprint="sha256:abcd",
+        created_at="2026-07-16",
+    )
+    assert route.cache is False
+    assert route.cache_ttl_s is None
+    assert route.cache_prefix is None
+    assert "cache" in route.public_dict()
+
+
+def test_routes_json_ancien_format_se_charge(tmp_path):
+    route_dict = {
+        "name": "r",
+        "provenance": "openrouter",
+        "base_url": "https://openrouter.ai/api/v1",
+        "model_id": "m",
+        "key_fingerprint": "sha256:abcd",
+        "created_at": "2026-07-16",
+    }
+    (tmp_path / "routes.json").write_text(
+        json.dumps([route_dict]), encoding="utf-8"
+    )
+    routes = RouteStore(tmp_path).list()
+    assert len(routes) == 1
+    assert routes[0].cache is False
+
+
+def test_configure_cache_met_a_jour_et_persiste(tmp_path):
+    route_dict = {
+        "name": "r",
+        "provenance": "openrouter",
+        "base_url": "https://openrouter.ai/api/v1",
+        "model_id": "m",
+        "key_fingerprint": "sha256:abcd",
+        "created_at": "2026-07-16",
+    }
+    (tmp_path / "routes.json").write_text(
+        json.dumps([route_dict]), encoding="utf-8"
+    )
+    store = RouteStore(tmp_path)
+    updated = store.configure_cache("r", True, 3600, "px")
+    assert updated.cache is True
+    assert updated.cache_ttl_s == 3600
+    assert updated.cache_prefix == "px"
+    reloaded = RouteStore(tmp_path).get("r")
+    assert reloaded.cache is True
+    assert reloaded.cache_ttl_s == 3600
+    assert reloaded.cache_prefix == "px"
+
+
+def test_configure_cache_ttl_negatif_rejete(tmp_path):
+    route_dict = {
+        "name": "r",
+        "provenance": "openrouter",
+        "base_url": "https://openrouter.ai/api/v1",
+        "model_id": "m",
+        "key_fingerprint": "sha256:abcd",
+        "created_at": "2026-07-16",
+    }
+    (tmp_path / "routes.json").write_text(
+        json.dumps([route_dict]), encoding="utf-8"
+    )
+    with pytest.raises(RouteError):
+        RouteStore(tmp_path).configure_cache("r", True, -1)
+
+
+def test_configure_cache_route_inconnue(tmp_path):
+    (tmp_path / "routes.json").write_text(json.dumps([]), encoding="utf-8")
+    with pytest.raises(RouteError):
+        RouteStore(tmp_path).configure_cache("absente", True)
+
+
+def test_cli_route_configure(tmp_path):
+    import json
+    from forgeai.cli import main
+    from forgeai.models.routes import RouteStore
+
+    home = tmp_path / "models"
+    home.mkdir()
+    reg = tmp_path / "registre.jsonl"
+    (home / "routes.json").write_text(json.dumps([{
+        "name": "r",
+        "provenance": "direct",
+        "model_id": "m",
+        "base_url": "http://example/v1",
+        "key_fingerprint": "fp",
+        "created_at": "2026-07-16",
+    }]))
+
+    rc = main(["route", "configure", "r", "--cache", "--ttl", "3600",
+               "--prefix", "px", "--home", str(home), "--registre", str(reg)])
+    assert rc == 0
+    route = RouteStore(home).get("r")
+    assert route.cache is True and route.cache_ttl_s == 3600 and route.cache_prefix == "px"

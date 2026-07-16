@@ -10,12 +10,13 @@ routes.json ne contient que des métadonnées + l'empreinte ; les secrets vivent
 from __future__ import annotations
 
 import json
-from dataclasses import asdict, dataclass
+from dataclasses import asdict, dataclass, replace
 from datetime import date
 from pathlib import Path
 
 from .probe import ProbeResult, Transport, UrllibTransport, probe_route
 from .vault import Vault, fingerprint
+
 
 # Provenances connues → URL de base compatible OpenAI. "direct"/"autre" exigent --base-url.
 PROVENANCES: dict[str, str | None] = {
@@ -39,6 +40,9 @@ class CloudRoute:
     model_id: str
     key_fingerprint: str
     created_at: str
+    cache: bool = False
+    cache_ttl_s: int | None = None
+    cache_prefix: str | None = None
 
     def public_dict(self) -> dict:
         """Vue sérialisable — NE contient aucun secret (empreinte seulement)."""
@@ -62,6 +66,10 @@ class RouteStore:
         self.home.mkdir(parents=True, exist_ok=True)
         self.routes_path.write_text(
             json.dumps(routes, ensure_ascii=False, indent=1), encoding="utf-8")
+
+    def _route_from_dict(self, r: dict) -> CloudRoute:
+        known = {f.name for f in CloudRoute.__dataclass_fields__.values()}
+        return CloudRoute(**{k: v for k, v in r.items() if k in known})
 
     def resolve_base_url(self, provenance: str, base_url: str | None) -> str:
         if provenance not in PROVENANCES:
@@ -96,10 +104,25 @@ class RouteStore:
         return route, result
 
     def list(self) -> list[CloudRoute]:
-        return [CloudRoute(**r) for r in self._load()]
+        return [self._route_from_dict(r) for r in self._load()]
 
     def get(self, name: str) -> CloudRoute:
         for r in self._load():
             if r["name"] == name:
-                return CloudRoute(**r)
+                return self._route_from_dict(r)
         raise RouteError(f"route '{name}' introuvable")
+
+    def configure_cache(self, name: str, enabled: bool, ttl_s: int | None = None,
+                        prefix: str | None = None) -> CloudRoute:
+        if ttl_s is not None and ttl_s < 0:
+            raise RouteError("ttl_s doit être positif ou nul")
+        routes = self._load()
+        index = next((i for i, r in enumerate(routes) if r["name"] == name), None)
+        if index is None:
+            raise RouteError(f"route '{name}' introuvable")
+        old_route = self._route_from_dict(routes[index])
+        new_route = replace(old_route, cache=enabled, cache_ttl_s=ttl_s,
+                            cache_prefix=prefix)
+        routes[index] = new_route.public_dict()
+        self._save(routes)
+        return new_route
