@@ -46,3 +46,10 @@ jobs:
       - uses: gitleaks/gitleaks-action@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  reviews-sealed:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Gate D9 — revues aveugles scellées liantes = APPROVE 3/3
+        run: python3 scripts/reviews_gate.py

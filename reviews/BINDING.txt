@@ -1,0 +1,12 @@
+# Revues aveugles scellées LIANTES (gate D9 : scripts/reviews_gate.py).
+# Chaque dossier listé DOIT dépouiller en APPROVE 3/3 (prompt_sha256 identique + 3 vendors
+# distincts). Une story ajoute son dossier ici quand sa revue passe ; une revue superseded
+# (code remédié + re-revu) est retirée. Les revues historiques/legacy restent au dépôt pour
+# la traçabilité mais ne sont PAS liantes.
+#
+# B-08/B-10/B-11-civ (REJECT) : historiques — défauts corrigés par BC-models-civ (APPROVE),
+#   donc NON liants (superseded). Voir registre revue_scellee seq 88-93.
+B-09-civ
+B-12-civ
+BC-models-civ
+D9-gate-civ
