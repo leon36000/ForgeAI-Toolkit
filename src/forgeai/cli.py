@@ -38,6 +38,7 @@ from forgeai.rag.client import RagClient
 from forgeai.renderers.compose import render_compose
 from forgeai.renderers.k3s import NAMESPACE, node_port_for, render_k3s
 from forgeai.resources import catalogue_path, deploy_overlay_path
+from forgeai.i18n import t, set_locale, get_translator
 
 # Données embarquées dans le paquet → portables après pip install (P3).
 DEFAULT_CATALOGUE = catalogue_path()
@@ -66,11 +67,11 @@ def wizard_ci(args: argparse.Namespace) -> int:
     workdir.mkdir(parents=True, exist_ok=True)
     started = time.monotonic()
 
-    _step("S01 détection hardware")
+    _step(t("wizard.s01"))
     hw = HardwareDetector(SubprocessRunner()).full_report()
     (workdir / "hardware.json").write_text(hw.to_json(), encoding="utf-8")
 
-    _step("S02 dérivation du profil")
+    _step(t("wizard.s02"))
     try:
         profile = derive_profile(hw)
     except ProfileError as exc:
@@ -78,18 +79,18 @@ def wizard_ci(args: argparse.Namespace) -> int:
         return 7
     print(f"  profil: {profile}")
 
-    _step("S03 vérification du catalogue (hash)")
+    _step(t("wizard.s03"))
     digest = verify_catalogue(Path(args.catalogue))
     bricks = load_catalogue(Path(args.catalogue))
     print(f"  {len(bricks)} briques, sha256 {digest[:16]}…")
 
-    _step("S04 assemblage du plan Minimal")
+    _step(t("wizard.s04"))
     plan = assemble_plan(profile, Path(args.overlay))
     (workdir / "plan.json").write_text(plan.to_json(), encoding="utf-8")
     ports = {s.name: s.host_port for s in plan.services}
     print(f"  services: {ports} | modèle: {plan.model}")
 
-    _step("S05 bootstrap sécurisé")
+    _step(t("wizard.s05"))
     bootstrap_secrets(workdir)
 
     backend = args.backend
@@ -111,7 +112,7 @@ def wizard_ci(args: argparse.Namespace) -> int:
     (workdir / "k3s.yaml").write_text(render_k3s(plan, node=local_node), encoding="utf-8")
 
     if backend == "compose":
-        _step("S06 rendu + déploiement Docker Compose")
+        _step(t("wizard.s06"))
         compose_up(compose_file)
         rag_ports = ports
     else:
@@ -137,7 +138,7 @@ def wizard_ci(args: argparse.Namespace) -> int:
                 raise DeployError(f"Healthchecks K3s incomplets : {health}")
         print(f"  santé: {health}")
 
-        _step("S08 modèles + ingestion du document de preuve")
+        _step(t("wizard.s08"))
         rag = RagClient(
             ollama_url=f"http://127.0.0.1:{rag_ports['ollama']}",
             qdrant_url=f"http://127.0.0.1:{rag_ports['vector-store']}",
@@ -149,7 +150,7 @@ def wizard_ci(args: argparse.Namespace) -> int:
         chunks = rag.ingest(doc, source=Path(args.document).name)
         print(f"  {chunks} chunks ingérés")
 
-        _step("S09 question → réponse → vérification du fait")
+        _step(t("wizard.s09"))
         result = rag.ask(args.question)
         answer = result["answer"]
         print(f"  Q: {args.question}")
@@ -161,13 +162,13 @@ def wizard_ci(args: argparse.Namespace) -> int:
             return 9
     finally:
         if args.teardown:
-            _step("teardown (backends séquentiels — règle round 1)")
+            _step(t("wizard.teardown"))
             if backend == "compose":
                 compose_down(compose_file, volumes=args.teardown_volumes)
             else:
                 k3s_delete_namespace(NAMESPACE)
 
-    _step("S10 preuve au registre hash-chaîné")
+    _step(t("wizard.s10"))
     entry = registre.append(Path(args.registre), "preuve_e2e", "wizard-ci", {
         "backend": backend,
         "plan_id": plan.plan_id, "profile": profile, "services": rag_ports,
@@ -446,16 +447,22 @@ def _catalogue(args: argparse.Namespace) -> int:
         defaults = [e for e in entries if e.get("default") is True]
         defaults.sort(key=lambda e: (e.get("category", ""), e.get("name", "")))
         for e in defaults:
-            print(f"⭐ {e.get('name')} — {e.get('category')} ({e.get('popularity', '')})")
+            pop = e.get("popularity")
+            pop = "" if pop is None else pop   # n'affiche pas "None"; ne masque pas une valeur 0
+            print(t("catalogue.default_line", name=e.get("name"),
+                    category=e.get("category"), popularity=pop))
         return 0
 
     categories = sorted({e.get("category", "") for e in entries})
-    print(f"Catalogue : {len(entries)} briques, {len(categories)} catégorie(s)")
+    print(t("catalogue.summary", n=len(entries), k=len(categories)))
     return 0
 
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(prog="forgeai")
+    parser.add_argument("--lang", choices=get_translator().available() or ["fr", "en"],
+                        default=os.environ.get("FORGEAI_LANG", "fr"),
+                        help="langue de l'interface (défaut: fr ; ou $FORGEAI_LANG)")
     sub = parser.add_subparsers(dest="cmd", required=True)
 
     p_hw = sub.add_parser("hardware", help="détection hardware (S01)")
@@ -598,6 +605,7 @@ def main(argv: list[str] | None = None) -> int:
     p_cat.set_defaults(func=_catalogue)
 
     args = parser.parse_args(argv)
+    set_locale(args.lang)   # bascule la langue de l'interface avant dispatch
     try:
         return args.func(args)
     except DeployError as exc:
