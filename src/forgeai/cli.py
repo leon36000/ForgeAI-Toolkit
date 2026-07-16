@@ -64,12 +64,16 @@ def _step(label: str) -> None:
     print(f"[forgeai] {label}", flush=True)
 
 
-def _k3s_probe_paths(plan) -> dict[str, str]:
+def _k3s_probe_paths(plan, rag_ports=None) -> dict[str, str]:
     """Chemins de health-check par service, dérivés DU PLAN (jamais codés en dur).
-    Seuls les services portant un healthcheck_url sont gatés en santé — un service
-    sans probe n'entraîne plus de KeyError (finding Sentinelle)."""
-    return {s.name: urlparse(s.healthcheck_url).path
-            for s in plan.services if s.healthcheck_url}
+    Seuls les services portant un healthcheck_url — ET exposés dans `rag_ports` si fourni —
+    sont gatés en santé. Un service sans probe (ou non exposé) n'entraîne aucun KeyError,
+    ni sur le chemin ni sur le port (finding Sentinelle)."""
+    paths = {s.name: urlparse(s.healthcheck_url).path
+             for s in plan.services if s.healthcheck_url}
+    if rag_ports is not None:
+        paths = {name: path for name, path in paths.items() if name in rag_ports}
+    return paths
 
 
 def wizard_ci(args: argparse.Namespace) -> int:
@@ -137,7 +141,7 @@ def wizard_ci(args: argparse.Namespace) -> int:
             health = wait_healthy(plan, timeout_s=args.health_timeout)
         else:
             deadline = time.monotonic() + args.health_timeout
-            probe_paths = _k3s_probe_paths(plan)
+            probe_paths = _k3s_probe_paths(plan, rag_ports)
             health = {name: "waiting" for name in probe_paths}
             while probe_paths and time.monotonic() < deadline and set(health.values()) != {"healthy"}:
                 for name, path in probe_paths.items():

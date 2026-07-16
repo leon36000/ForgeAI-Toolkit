@@ -27,3 +27,17 @@ def test_probe_paths_service_avec_healthcheck_inclus():
     services = [ServiceSpec("brique-x", "img", 29000, 9000,
                             healthcheck_url="http://127.0.0.1:29000/health")]
     assert _k3s_probe_paths(_plan(services)) == {"brique-x": "/health"}
+
+
+def test_probe_paths_filtre_services_hors_rag_ports():
+    """Garde défensive : un service avec healthcheck mais absent de rag_ports est filtré,
+    donc l'accès rag_ports[name] dans la boucle ne peut jamais lever de KeyError."""
+    services = [
+        ServiceSpec("ollama", "img", 21434, 11434,
+                    healthcheck_url="http://127.0.0.1:21434/api/tags"),
+        ServiceSpec("absent", "img", 29999, 9999,
+                    healthcheck_url="http://127.0.0.1:29999/health"),
+    ]
+    paths = _k3s_probe_paths(_plan(services), rag_ports={"ollama": 30001})
+    assert paths == {"ollama": "/api/tags"}
+    assert "absent" not in paths
