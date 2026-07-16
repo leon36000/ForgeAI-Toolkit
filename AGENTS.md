@@ -29,5 +29,41 @@ python3 scripts/no_stub_scan.py --all
 pytest
 ```
 
-## Canon externe
-Canon Serveur (lecture seule) : `/media/pc1/Storage/Serveur/docs/CANON/`
+## Architecture (`src/forgeai/`)
+- `hardware/`, `planner/`, `preflight` — détection matérielle → profil → plan Minimal.
+- `catalogue/` + `data/catalogue.json` — 948 briques R-ALL (vérifiées + bilingues), chargées
+  par `importlib.resources` (portable après `pip install`, `dependencies=[]` stdlib pur).
+- `deploy/`, `renderers/` — Compose + K3s ; `network/` — multi-nœuds (clés ed25519, bootstrap).
+- `rag/` — client RAG e2e (preuve P1). `core/` — models, registre hash-chaîné, runner injectable.
+- **`models/`** — cœur modèles/gateway (DM-5/DM-6) : `vault` (coffre chiffré stdlib), `probe`
+  (test connexion réel, transport injectable), `routes` (routes cloud + cache par route, clés au
+  coffre jamais en clair), `gateway` (invariant « aucune brique ne pointe un modèle »), `local`
+  (download hash-vérifié + déploiement + test), `strategy` (Cerveau/Équipe/Hybride → slots).
+- `cli.py` — `forgeai` : hardware, doctor, node, wizard, **model add-cloud/add-local/list/test**,
+  **gateway set-url/wire/verify**, **strategy set/show**, **route configure**.
+
+## Pipeline de développement (Étape 5 — opérationnel, prouvé BC-models/B-12/D9)
+1. Story BMAD (`stories/<ID>.md`, critères testables) + revue d'archi si la structure est touchée
+   (`crew_dispatch.py --model crew-architect`).
+2. **Codeur de la table par appel-direct** — `~/proof-method/scripts/crew_dispatch.py --model
+   crew-coder-long|bulk --spec … --context …` (le subagent natif `codeur-*` échoue : passthrough
+   non câblé). **Le crew génère, l'Orchestrateur applique + teste + itère. L'Orchestrateur ne
+   code jamais les stories.** TDD strict : test ROUGE sur l'ancien code AVANT le correctif.
+3. Gates : `pytest`, `no_stub_scan.py --all` (après `git add`).
+4. **Revue aveugle scellée 3/3** — `~/proof-method/scripts/civ_review.py --story reviews/<ID>
+   --pack <pack>` (prompt byte-identique aux `CIV_MODELS`, 16k tokens, scelle `prompt_sha256`) →
+   `scripts/revue.py tally reviews/<ID>` (dépouillement déterministe : 3 vendors distincts ≠
+   vendor du codeur, même sha, APPROVE-ssi-tous). **Artefact de revue = diff git**, jamais des
+   snippets recollés. Pack via `pack_build.sh story diff out` (PROOF_COMPRESS=0).
+5. Signature Orchestrateur par-dessus (gates verts + revue APPROVE) → PR → merge (CODEOWNERS = Nathan).
+6. Gate CI **`reviews-sealed`** (`scripts/reviews_gate.py` + `reviews/BINDING.txt`) : bloque tout
+   merge où une revue liante n'est pas APPROVE 3/3.
+
+Env bridge/revue : base LiteLLM sur `http://localhost:4000` ; la clé d'API LiteLLM est lue
+du conteneur `serveur-litellm` via `docker inspect` (jamais en clair au dépôt — voir CLAUDE.md).
+
+## Périmètre
+Confinement au repo (directive `CANON/directives-perimetre.md`) : aucune source produit hors du
+dépôt ; le produit ne dépend d'aucun fichier de la machine (portabilité). L'outillage de
+gouvernance (`~/proof-method`, `forge-model-bridge`/LiteLLM) est autorisé pour CONSTRUIRE le
+toolkit, jamais embarqué dans le produit livré.
