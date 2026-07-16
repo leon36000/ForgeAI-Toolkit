@@ -1,0 +1,22 @@
+{
+  "wizard.s01": "S01 hardware detection",
+  "wizard.s02": "S02 profile derivation",
+  "wizard.s03": "S03 catalogue verification (hash)",
+  "wizard.s04": "S04 Minimal plan assembly",
+  "wizard.s05": "S05 secure bootstrap",
+  "wizard.s06": "S06 Docker Compose rendering + deployment",
+  "wizard.s07": "S07 K3s rendering + deployment (nodeSelector: {node} — Minimal single-node)",
+  "wizard.s08": "S08 models + proof document ingestion",
+  "wizard.s09": "S09 question → answer → fact verification",
+  "wizard.s10": "S10 proof to hash-chained registry",
+  "wizard.teardown": "teardown (sequential backends — round 1 rule)",
+  "catalogue.summary": "Catalog: {n} bricks, {k} category(ies)",
+  "catalogue.default_line": "⭐ {name} — {category} ({popularity})",
+  "app.welcome": "Welcome to ForgeAI Toolkit",
+  "app.language": "Language",
+  "nav.next": "Next",
+  "nav.back": "Back",
+  "nav.quit": "Quit",
+  "action.deploy": "Deploy",
+  "summary.title": "Pre-deployment summary"
+}

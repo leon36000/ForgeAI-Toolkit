@@ -65,7 +65,10 @@ class BudgetTracker:
         if not self._path.exists():
             return {}
         with self._path.open("r", encoding="utf-8") as fh:
-            data = json.load(fh)
+            try:
+                data = json.load(fh)
+            except json.JSONDecodeError:
+                raise BudgetError("budgets.json corrompu")
         if not isinstance(data, dict):
             raise BudgetError("Fichier de budgets corrompu.")
         return data
@@ -88,7 +91,7 @@ class BudgetTracker:
         if quota_tokens < 0:
             raise BudgetError("Le quota de tokens doit être positif ou nul.")
         if not (0 < alert_ratio <= 1):
-            raise BudgetError("Le seuil d'alerte doit être strictement entre 0 et 1.")
+            raise BudgetError("alert_ratio doit être dans l'intervalle ]0, 1]")
 
         self._data[agent] = {
             "quota_tokens": int(quota_tokens),
