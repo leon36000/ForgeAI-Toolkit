@@ -24,3 +24,4 @@ run/
 dist/
 build/
 *.egg-info/
+stories/

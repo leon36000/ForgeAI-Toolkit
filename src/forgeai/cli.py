@@ -385,6 +385,24 @@ def _strategy_show(args: argparse.Namespace) -> int:
     return 0
 
 
+def _route_configure(args: argparse.Namespace) -> int:
+    store = RouteStore(Path(args.home))
+    enabled = args.cache
+    ttl_s = args.ttl
+    prefix = args.prefix
+    try:
+        store.configure_cache(args.name, enabled, ttl_s, prefix)
+    except RouteError as exc:
+        print(f"ECHEC ROUTE: {exc}", file=sys.stderr)
+        return 9
+    registre.append(Path(args.registre), "route_cache_configuree", "route",
+                    {"name": args.name, "cache": enabled,
+                     "cache_ttl_s": ttl_s, "cache_prefix": prefix})
+    print(f"[forgeai] route '{args.name}' configurée — "
+          f"cache={'activé' if enabled else 'désactivé'}, ttl={ttl_s}s, prefix={prefix}")
+    return 0
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(prog="forgeai")
     sub = parser.add_subparsers(dest="cmd", required=True)
@@ -491,6 +509,21 @@ def main(argv: list[str] | None = None) -> int:
     p_s_show = strat_sub.add_parser("show", help="affiche la stratégie courante")
     p_s_show.add_argument("--home", default=str(default_models_home()))
     p_s_show.set_defaults(func=_strategy_show)
+
+    p_route = sub.add_parser("route", help="configure les routes (B-12)")
+    route_sub = p_route.add_subparsers(dest="route_cmd", required=True)
+    p_rcfg = route_sub.add_parser("configure", help="configure le cache d'une route")
+    p_rcfg.add_argument("name", help="nom de la route")
+    cache_group = p_rcfg.add_mutually_exclusive_group()
+    cache_group.add_argument("--cache", dest="cache", action="store_true", default=True,
+                             help="activer le cache (défaut)")
+    cache_group.add_argument("--no-cache", dest="cache", action="store_false",
+                             help="désactiver le cache")
+    p_rcfg.add_argument("--ttl", type=int, default=None, help="durée de vie du cache en secondes")
+    p_rcfg.add_argument("--prefix", default=None, help="préfixe de cache")
+    p_rcfg.add_argument("--home", default=str(default_models_home()))
+    p_rcfg.add_argument("--registre", default=str(DEFAULT_REGISTRE))
+    p_rcfg.set_defaults(func=_route_configure)
 
     args = parser.parse_args(argv)
     try:
