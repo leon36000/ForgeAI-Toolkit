@@ -39,6 +39,7 @@ from forgeai.renderers.compose import render_compose
 from forgeai.renderers.k3s import NAMESPACE, node_port_for, render_k3s
 from forgeai.resources import catalogue_path, deploy_overlay_path
 from forgeai.i18n import t, set_locale, available_locales
+from forgeai.ide import SUPPORTED_IDES
 
 # Données embarquées dans le paquet → portables après pip install (P3).
 DEFAULT_CATALOGUE = catalogue_path()
@@ -437,6 +438,40 @@ def _budget_status(args: argparse.Namespace) -> int:
     return 0
 
 
+def _ide_list(args: argparse.Namespace) -> int:
+    from forgeai.ide import list_ides
+    for ide in list_ides():
+        print(ide)
+    return 0
+
+
+def _ide_configure(args: argparse.Namespace) -> int:
+    from forgeai.ide import generate_ide_config, write_ide_config, IDEError
+    from forgeai.models.gateway import GatewayStore, GatewayError
+    if args.gateway_url:
+        gateway_url, key_env = args.gateway_url, args.key_env
+    else:
+        try:
+            gw = GatewayStore(Path(args.home)).get_gateway()
+        except GatewayError as exc:
+            print(f"ECHEC IDE: gateway non configuré ({exc}) — fournir --gateway-url",
+                  file=sys.stderr)
+            return 12
+        gateway_url, key_env = gw.base_url, gw.key_env
+    try:
+        cfg = generate_ide_config(args.ide, gateway_url, args.model, key_env=key_env)
+    except IDEError as exc:
+        print(f"ECHEC IDE: {exc}", file=sys.stderr)
+        return 12
+    path = write_ide_config(cfg, args.dest)
+    print(f"[forgeai] config {args.ide} écrite → {path}")
+    print(f"  gateway {gateway_url} | modèle {args.model} | clé via ${{{key_env}}}")
+    registre.append(Path(args.registre), "ide_configure", "ide",
+                    {"ide": args.ide, "path": str(path), "gateway": gateway_url,
+                     "model": args.model})
+    return 0
+
+
 def _export(args: argparse.Namespace) -> int:
     from forgeai.portability import export_setup, PortabilityError
     try:
@@ -645,6 +680,21 @@ def main(argv: list[str] | None = None) -> int:
     p_import.add_argument("--force", action="store_true", help="écrase les fichiers existants")
     p_import.add_argument("--registre", default=str(DEFAULT_REGISTRE))
     p_import.set_defaults(func=_import)
+
+    p_ide = sub.add_parser("ide", help="branche un IDE/CLI sur le gateway local (B-17)")
+    ide_sub = p_ide.add_subparsers(dest="ide_cmd", required=True)
+    p_ide_list = ide_sub.add_parser("list", help="liste les IDE supportés")
+    p_ide_list.set_defaults(func=_ide_list)
+    p_ide_cfg = ide_sub.add_parser("configure", help="génère+écrit la config de branchement IDE")
+    p_ide_cfg.add_argument("--ide", required=True, choices=list(SUPPORTED_IDES))
+    p_ide_cfg.add_argument("--model", required=True)
+    p_ide_cfg.add_argument("--dest", default=".", help="répertoire cible (défaut: courant)")
+    p_ide_cfg.add_argument("--gateway-url", default=None,
+                           help="URL du gateway (sinon lue depuis la config gateway)")
+    p_ide_cfg.add_argument("--key-env", default="FORGEAI_GATEWAY_KEY")
+    p_ide_cfg.add_argument("--home", default=str(default_models_home()))
+    p_ide_cfg.add_argument("--registre", default=str(DEFAULT_REGISTRE))
+    p_ide_cfg.set_defaults(func=_ide_configure)
 
     p_cat = sub.add_parser("catalogue", help="explore le catalogue de briques")
     p_cat.add_argument("--defaults", action="store_true",
