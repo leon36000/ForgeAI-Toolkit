@@ -13,6 +13,7 @@ import socket
 import sys
 import time
 from pathlib import Path
+from urllib.parse import urlparse
 
 from forgeai.bootstrap.secrets import bootstrap_secrets
 from forgeai.catalogue.loader import load_catalogue, verify_catalogue
@@ -61,6 +62,18 @@ DEFAULT_REGISTRE = default_registre()
 
 def _step(label: str) -> None:
     print(f"[forgeai] {label}", flush=True)
+
+
+def _k3s_probe_paths(plan, rag_ports=None) -> dict[str, str]:
+    """Chemins de health-check par service, dérivés DU PLAN (jamais codés en dur).
+    Seuls les services portant un healthcheck_url — ET exposés dans `rag_ports` si fourni —
+    sont gatés en santé. Un service sans probe (ou non exposé) n'entraîne aucun KeyError,
+    ni sur le chemin ni sur le port (finding Sentinelle)."""
+    paths = {s.name: urlparse(s.healthcheck_url).path
+             for s in plan.services if s.healthcheck_url}
+    if rag_ports is not None:
+        paths = {name: path for name, path in paths.items() if name in rag_ports}
+    return paths
 
 
 def wizard_ci(args: argparse.Namespace) -> int:
@@ -128,14 +141,14 @@ def wizard_ci(args: argparse.Namespace) -> int:
             health = wait_healthy(plan, timeout_s=args.health_timeout)
         else:
             deadline = time.monotonic() + args.health_timeout
-            health = {name: "waiting" for name in rag_ports}
-            probes = {"ollama": "/api/tags", "vector-store": "/readyz"}
-            while time.monotonic() < deadline and set(health.values()) != {"healthy"}:
-                for name, port in rag_ports.items():
-                    if http_ok(f"http://127.0.0.1:{port}{probes[name]}"):
+            probe_paths = _k3s_probe_paths(plan, rag_ports)
+            health = {name: "waiting" for name in probe_paths}
+            while probe_paths and time.monotonic() < deadline and set(health.values()) != {"healthy"}:
+                for name, path in probe_paths.items():
+                    if http_ok(f"http://127.0.0.1:{rag_ports[name]}{path}"):
                         health[name] = "healthy"
                 time.sleep(2.0)
-            if set(health.values()) != {"healthy"}:
+            if probe_paths and set(health.values()) != {"healthy"}:
                 raise DeployError(f"Healthchecks K3s incomplets : {health}")
         print(f"  santé: {health}")
 
