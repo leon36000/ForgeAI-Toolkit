@@ -1,0 +1,25 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severity": "moyen",
+   "file": "src/forgeai/models/local.py",
+   "line": 58,
+   "desc": "L'appel à urllib.request.urlopen(url) ne spécifie pas de timeout. Un serveur distant muet ou une anomalie réseau bloquera le thread de téléchargement indéfiniment, risquant de paralyser le worker de déploiement."
+  },
+  {
+   "severity": "moyen",
+   "file": "src/forgeai/models/local.py",
+   "line": 76,
+   "desc": "Le nom du modèle model.name est concaténé directement dans le chemin de destination sans sanitization. Si le catalogue de modèles n'est pas strictement contrôlé, un nom contenant des séquences de type '../' pourrait entraîner une écriture hors de dest_dir (Path Traversal)."
+  },
+  {
+   "severity": "faible",
+   "file": "src/forgeai/models/local.py",
+   "line": 105,
+   "desc": "Le critère 4 exige une réponse non vide, mais l'implémentation de probe_route n'étant pas dans le diff, on ne peut pas vérifier statiquement qu'elle échoue explicitement sur une complétion vide (doute non vérifiable)."
+  }
+ ],
+ "prompt_sha256": "51201f9b88c559b2ea3b66838337b1ca4ebf73ae1f87040d6f9f6a16ecc6d607",
+ "reviewer_model": "Qwen3.7-Max"
+}

@@ -1,0 +1,13 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severity": "eleve",
+   "file": "src/forgeai/models/gateway.py",
+   "line": 82,
+   "desc": "Le `continue` ligne 82 empêche la détection spécifique d'un hôte fournisseur et d'une clé en clair lorsqu'une brique pointe vers une URL autre que le gateway. Si une brique est configurée avec une URL fournisseur et une clé en clair, la condition `base != gateway.base_url` est vraie, le code ajoute une violation générique et passe à la suivante. Les vérifications `host in _PROVIDER_HOSTS` et `not key.startswith('${')` sont ainsi court-circuitées dans le cas de figure exact qu'elles doivent détecter, violant le critère d'acceptation 3. De plus, si `base == gateway.base_url`, le host est celui du gateway (garanti non-fournisseur), rendant la vérification d'hôte fournisseur inatteignable."
+  }
+ ],
+ "prompt_sha256": "3c3861b98d2d0ff5dc6b9c064fd93d2fe509edeac1953d18cc29d56f9738641b",
+ "reviewer_model": "Qwen3.7-Max"
+}

@@ -1,0 +1,13 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severity": "critique",
+   "file": "src/forgeai/models/strategy.py",
+   "line": null,
+   "desc": "La fonction resolve_spec n'impose pas le nombre de slots requis par les stratégies 'equipe' (4) et 'hybride' (3) lorsque des rôles personnalisés sont fournis, contrairement à l'exigence stipulant que le choix de stratégie détermine le nombre de slots. Actuellement, tout nombre de rôles est accepté, ce qui peut produire des configurations inattendues."
+  }
+ ],
+ "prompt_sha256": "e5fa4db80f6fa2fae2e00c4551ae55cfcd4a5be82086457a94470412518b3598",
+ "reviewer_model": "DeepSeek-V4-Pro"
+}
