@@ -1,11 +1,15 @@
 """
-Portability module for ForgeAI stack setup export/import.
+Export/import portable du setup du stack-modèles de ForgeAI Toolkit.
 
-Guarantees:
-- Bundles NEVER contain secrets (vault.json is excluded). Only key_fingerprint travels.
-- Integrity is protected by a deterministic SHA‑256 hash of canonicalised JSON.
-- Import never writes vault.json – secret provisioning is a separate manual step.
-- Round‑trip is proven by content‑identicality of all setup files after import.
+INVARIANT :
+- Le bundle N'INCLUT JAMAIS de secrets (vault.json est exclu).
+- Les clés d'API ne sont jamais exportées en clair (seul key_fingerprint est conservé).
+- Chaque bundle est hashé (SHA-256) et la vérification est fail-closed : toute altération,
+  nom de fichier suspect ou version incompatible déclenche PortabilityError.
+- L'import recrée les fichiers de configuration mais ne restaure PAS les secrets ; la
+  liste `secrets_to_reprovision` indique les routes nécessitant une nouvelle saisie de clé.
+- L'opération garantit un round-trip prouvé : export → import produit des fichiers identiques
+  (hors secrets).
 """
 
 import hashlib
@@ -15,67 +19,98 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional
 
 BUNDLE_VERSION = 1
-SETUP_FILES = ("routes.json", "gateway.json", "wirings.json", "strategy.json", "budgets.json")
+SETUP_FILES = (
+    "routes.json",
+    "gateway.json",
+    "wirings.json",
+    "strategy.json",
+    "budgets.json",
+)
 EXCLUDED_FILES = frozenset({"vault.json"})
+SAFE_ROUTE_FIELDS = frozenset(
+    {
+        "name",
+        "provenance",
+        "base_url",
+        "model_id",
+        "key_fingerprint",
+        "created_at",
+        "cache",
+        "cache_ttl_s",
+        "cache_prefix",
+    }
+)
 
 
 class PortabilityError(Exception):
-    """Raised when the bundle is invalid, tampered, or an operation is unsafe."""
+    """Erreur levée lors d'une opération de portabilité (export/import)."""
 
 
 def _canonical(payload: dict) -> str:
-    """Deterministic JSON serialisation for hash computation."""
+    """Sérialise un dict de manière déterministe (tri des clés, sans espaces)."""
     return json.dumps(payload, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
 
 
 def bundle_sha256(files: dict) -> str:
-    """SHA‑256 hash of the logical bundle payload (version + files)."""
-    envelope = {"version": BUNDLE_VERSION, "files": files}
-    return hashlib.sha256(_canonical(envelope).encode("utf-8")).hexdigest()
+    """Calcule le SHA-256 d'un bundle (dict contenant version + files)."""
+    payload = {"version": BUNDLE_VERSION, "files": files}
+    return hashlib.sha256(_canonical(payload).encode()).hexdigest()
 
 
-def export_setup(home: str, out_path: Optional[str] = None) -> dict:
+def _safe_name(fname: str) -> bool:
+    """Vérifie qu'un nom de fichier est dans la liste blanche et ne sort pas du répertoire."""
+    return (
+        fname in SETUP_FILES
+        and fname not in EXCLUDED_FILES
+        and fname == Path(fname).name  # pas de chemin, pas de '..'
+    )
+
+
+def _validate_route(route: dict) -> None:
+    """Lève PortabilityError si un champ de route hors liste blanche contient une valeur non vide."""
+    for key, value in route.items():
+        if key not in SAFE_ROUTE_FIELDS and value:
+            raise PortabilityError(
+                f"champ de route hors schéma connu (rejeté par sécurité) : '{key}'"
+            )
+
+
+def export_setup(home, out_path=None) -> dict:
     """
-    Export the current model‑stack setup into a portable, tamper‑proof bundle.
+    Exporte le setup du stack (sans les secrets) vers un bundle.
 
     Args:
-        home: Path to the forge‑home directory containing the setup files.
-        out_path: If given, write the bundle JSON to this path.
+        home: répertoire racine (str ou Path) contenant les fichiers de configuration.
+        out_path (optionnel): chemin de sortie pour écrire le bundle JSON.
 
     Returns:
-        The bundle dictionary.
+        dict représentant le bundle (version, created_at, files, sha256).
 
     Raises:
-        PortabilityError: If a route contains a plain‑text secret or if an
-            excluded file would be included.
+        PortabilityError si un secret est détecté en clair ou si un fichier exclu est présent.
     """
     home = Path(home)
-    files: Dict[str, Any] = {}
+    files = {}
 
     for fname in SETUP_FILES:
-        src = home / fname
-        if src.exists():
-            content = json.loads(src.read_text(encoding="utf-8"))
+        fpath = home / fname
+        if fpath.is_file():
+            if fname in EXCLUDED_FILES:
+                raise PortabilityError(
+                    f"fichier interdit à l'export : {fname}"
+                )
+            content = json.loads(fpath.read_text(encoding="utf-8"))
+            # Validation spécifique pour routes.json
+            if fname == "routes.json":
+                routes = content if isinstance(content, list) else []
+                for route in routes:
+                    _validate_route(route)
             files[fname] = content
 
-    # Guard: excluded files must never be part of the bundle.
-    if forbidden := EXCLUDED_FILES.intersection(files.keys()):
-        raise PortabilityError(
-            f"Forbidden files would be exported: {', '.join(forbidden)}"
-        )
-
-    # Guard: no plain‑text secrets in routes.
-    routes_content = files.get("routes.json")
-    if isinstance(routes_content, list):
-        for idx, route in enumerate(routes_content):
-            if not isinstance(route, dict):
-                continue
-            for forbidden_key in ("api_key", "key", "secret"):
-                if forbidden_key in route and route[forbidden_key]:
-                    raise PortabilityError(
-                        f"Route at index {idx} contains a plain‑text '{forbidden_key}'. "
-                        "Secrets must never be exported in clear."
-                    )
+    # Vérification garde-fou supplémentaire : aucun fichier hors whitelist ne doit apparaître
+    for excluded in EXCLUDED_FILES:
+        if excluded in files:
+            raise PortabilityError(f"fichier exclu présent dans le bundle : {excluded}")
 
     bundle = {
         "version": BUNDLE_VERSION,
@@ -84,68 +119,86 @@ def export_setup(home: str, out_path: Optional[str] = None) -> dict:
         "sha256": bundle_sha256(files),
     }
 
-    if out_path is not None:
-        out = Path(out_path)
-        out.parent.mkdir(parents=True, exist_ok=True)
-        out.write_text(
-            json.dumps(bundle, ensure_ascii=False, indent=1) + "\n",
-            encoding="utf-8",
-        )
+    if out_path:
+        Path(out_path).write_text(json.dumps(bundle, indent=1), encoding="utf-8")
 
     return bundle
 
 
 def verify_bundle(bundle: dict) -> None:
     """
-    Verify that a bundle has the expected version and hash integrity.
+    Vérifie l'intégrité du bundle : version compatible, hash cohérent, fichiers autorisés.
 
-    Raises PortabilityError on mismatch or tampering.
+    Raises:
+        PortabilityError en cas d'anomalie.
     """
     if bundle.get("version") != BUNDLE_VERSION:
         raise PortabilityError(
-            f"Incompatible bundle version: {bundle.get('version')} "
-            f"(expected {BUNDLE_VERSION})"
+            f"version de bundle incompatible : attendue {BUNDLE_VERSION}, reçue {bundle.get('version')}"
         )
 
-    expected = bundle_sha256(bundle["files"])
-    if bundle["sha256"] != expected:
-        raise PortabilityError("Bundle integrity check failed – hash mismatch.")
+    files = bundle.get("files")
+    if not isinstance(files, dict):
+        raise PortabilityError("le bundle ne contient pas de champ 'files' valide")
+
+    expected_sha = bundle_sha256(files)
+    if bundle.get("sha256") != expected_sha:
+        raise PortabilityError("hash SHA-256 invalide : le bundle a peut-être été altéré")
+
+    # Vérification des noms de fichiers autorisés (défense contre les chemins arbitraires)
+    for fname in files:
+        if not _safe_name(fname):
+            raise PortabilityError(
+                f"nom de fichier non autorisé dans le bundle : '{fname}'"
+            )
 
 
-def load_bundle(path: str) -> dict:
-    """Load a bundle from disk and verify its integrity."""
-    raw = Path(path).read_text(encoding="utf-8")
-    bundle = json.loads(raw)
+def load_bundle(path) -> dict:
+    """
+    Charge et vérifie un bundle JSON.
+
+    Returns:
+        dict du bundle.
+
+    Raises:
+        PortabilityError si le JSON est invalide ou la vérification échoue.
+    """
+    with open(path, encoding="utf-8") as f:
+        bundle = json.load(f)
     verify_bundle(bundle)
     return bundle
 
 
 def secrets_to_reprovision(bundle: dict) -> List[str]:
     """
-    Return sorted list of route names that have a key_fingerprint and therefore
-    require the operator to re‑enter the secret on the target machine.
+    Retourne la liste triée des noms de routes qui nécessitent une nouvelle saisie de secret.
+
+    Se base sur routes.json du bundle ; une route est concernée si `key_fingerprint` est non vide.
     """
-    routes = bundle.get("files", {}).get("routes.json", [])
-    if not isinstance(routes, list):
+    routes_file = bundle.get("files", {}).get("routes.json")
+    if not isinstance(routes_file, list):
         return []
-    names = []
-    for route in routes:
-        if isinstance(route, dict) and route.get("key_fingerprint"):
-            names.append(route.get("name", "unnamed"))
-    return sorted(names)
+    return sorted(
+        route["name"] for route in routes_file
+        if isinstance(route, dict) and route.get("key_fingerprint")
+    )
 
 
-def import_setup(bundle_path: str, home: str, *, force: bool = False) -> dict:
+def import_setup(bundle_path, home, *, force=False) -> dict:
     """
-    Import a portable bundle into a forge‑home directory.
+    Importe un bundle dans le répertoire `home`.
 
-    The bundle is first verified. Existing files are only overwritten when
-    ``force=True``. vault.json is NEVER written.
+    Args:
+        bundle_path: chemin du fichier bundle JSON.
+        home: répertoire cible (créé s'il n'existe pas).
+        force: si True, écrase les fichiers existants sans erreur.
 
-    Returns a report dict with:
-        restored: list of restored file names
-        secrets_to_reprovision: routes whose secrets must be re‑entered
-        home: the target home directory
+    Returns:
+        dict avec les clés 'restored', 'secrets_to_reprovision', 'home'.
+
+    Raises:
+        PortabilityError si un fichier existe déjà et que `force` est False,
+        ou si le bundle est invalide.
     """
     bundle = load_bundle(bundle_path)
     home = Path(home)
@@ -153,16 +206,15 @@ def import_setup(bundle_path: str, home: str, *, force: bool = False) -> dict:
 
     restored = []
     for fname, content in bundle["files"].items():
+        # Défense en profondeur : ignorer les noms dangereux (déjà vérifié dans load_bundle)
+        if not _safe_name(fname):
+            continue
         dest = home / fname
         if dest.exists() and not force:
             raise PortabilityError(
-                f"File already exists: {dest}. "
-                "Use force=True to overwrite."
+                f"le fichier existe déjà : {dest}. Relancez avec --force (force=True) pour écraser."
             )
-        dest.write_text(
-            json.dumps(content, ensure_ascii=False, indent=1) + "\n",
-            encoding="utf-8",
-        )
+        dest.write_text(json.dumps(content, indent=1), encoding="utf-8")
         restored.append(fname)
 
     return {

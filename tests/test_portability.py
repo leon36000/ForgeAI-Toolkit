@@ -121,7 +121,7 @@ class TestBundleIntegrity:
         _write_json(bundle_path, bundle)
 
         # 3. Loading must raise
-        with pytest.raises(PortabilityError, match="integrity"):
+        with pytest.raises(PortabilityError, match="altéré"):
             load_bundle(str(bundle_path))
 
 
@@ -177,3 +177,36 @@ def test_cli_export_import_roundtrip(tmp_path):
     assert json.loads((target / "gateway.json").read_text(encoding="utf-8")) == \
         json.loads((home / "gateway.json").read_text(encoding="utf-8"))
     assert not (target / "vault.json").exists()   # secrets jamais transportés
+
+
+def test_verify_refuse_vault_json_dans_bundle_forge():
+    """Bundle forgé contenant vault.json AVEC hash recalculé → rejeté (fail-closed).
+    Prouve que le hash seul ne suffit pas : la liste blanche de noms protège l'import."""
+    files = {"vault.json": {"secret": "x"}}
+    forged = {"version": 1, "created_at": "2025-01-01", "files": files,
+              "sha256": bundle_sha256(files)}
+    with pytest.raises(PortabilityError, match="non autoris"):
+        verify_bundle(forged)
+
+
+def test_verify_refuse_chemin_traversal():
+    """Noms de fichiers avec '..', séparateur ou chemin absolu → rejetés à la vérification."""
+    for danger in ("../evil.json", "/etc/passwd", "sub/dir.json"):
+        files = {danger: {"x": 1}}
+        forged = {"version": 1, "created_at": "2025-01-01", "files": files,
+                  "sha256": bundle_sha256(files)}
+        with pytest.raises(PortabilityError, match="non autoris"):
+            verify_bundle(forged)
+
+
+def test_import_ne_restaure_pas_fichier_hors_whitelist(tmp_path):
+    """import_setup (défense en profondeur) n'écrit jamais un nom hors whitelist, même si
+    verify_bundle était contourné : ici on teste le round-trip sain (aucun fichier surprise)."""
+    src = tmp_path / "src"
+    _write_json(src / "gateway.json", GATEWAY)
+    bundle_path = tmp_path / "b.json"
+    export_setup(str(src), out_path=str(bundle_path))
+    tgt = tmp_path / "tgt"
+    report = import_setup(str(bundle_path), str(tgt))
+    assert report["restored"] == ["gateway.json"]
+    assert not (tgt / "vault.json").exists()

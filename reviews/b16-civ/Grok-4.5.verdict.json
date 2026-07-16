@@ -1,0 +1,20 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "critique",
+   "fichier": "src/forgeai/portability.py",
+   "description": "import_setup n'applique aucune liste blanche sur les noms de fichiers du bundle : tout entrée de bundle['files'] est écrite sous home (y compris vault.json, chemins relatifs type '../…', ou chemins absolus). Cela viole le critère « n'écrit jamais vault.json » et permet une écriture arbitraire si le hash est recalculé pour un bundle malveillant.",
+   "preuve": "import_setup: for fname, content in bundle[\"files\"].items(): dest = home / fname … dest.write_text(…) — aucun filtre SETUP_FILES/EXCLUDED_FILES, pas de rejet de vault.json ni de normalisation/interdiction de '..' ou de chemins absolus (Path(home)/\"/etc/x\" → /etc/x)."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "src/forgeai/portability.py",
+   "description": "Message d'erreur d'écrasement orienté API Python (« Use force=True ») alors que l'interface utilisateur CLI expose --force ; message peu actionnable pour l'opérateur CLI.",
+   "preuve": "raise PortabilityError(f\"File already exists: {dest}. Use force=True to overwrite.\")"
+  }
+ ],
+ "date_heure": "2026-03-28T12:00:00Z",
+ "prompt_sha256": "fa00404ce9c9f2cc99c7b4969d1d5e079d0c69d6a0d3a5ab1b5036f42ce8c818",
+ "reviewer_model": "Grok-4.5"
+}

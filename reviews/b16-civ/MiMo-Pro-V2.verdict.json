@@ -1,0 +1,26 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "src/forgeai/portability.py",
+   "description": "La détection de secrets dans les routes repose sur une liste de noms de champs interdits (api_key, key, secret) ; tout autre champ sensible (bearer_token, password, credential…) serait exporté silencieusement. Une approche allowlist (noms de champs connus-sûrs) serait plus robuste.",
+   "preuve": "portability.py lignes 61-68 : `for forbidden_key in (\"api_key\", \"key\", \"secret\"):` — seuls ces trois noms sont filtrés."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "src/forgeai/portability.py",
+   "description": "Le garde-fou EXCLUDED_FILES.intersection(files.keys()) est du code mort en pratique car la boucle ne parcourt que SETUP_FILES qui ne contient jamais vault.json. La défense-en-profondeur est louable mais aucun test ne valide le mécanisme du garde en isolé (ex. ajout accidentel de vault.json dans SETUP_FILES).",
+   "preuve": "portability.py ligne 33 SETUP_FILES = (…5 fichiers…) ; ligne 48 `if forbidden := EXCLUDED_FILES.intersection(files.keys())` — jamais atteint par le chemin normal."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "tests/test_portability.py",
+   "description": "Le test CLI round-trip (test_cli_export_import_roundtrip) ne crée pas de routes.json, donc le rejet de clé en clair n'est pas vérifié via le chemin CLI. Le test couvre l'import/export CLI de base mais pas la garde sécurité des routes.",
+   "preuve": "test_portability.py lignes 146-179 : le home de test contient gateway.json, strategy.json, vault.json mais PAS de routes.json."
+  }
+ ],
+ "date_heure": "2025-01-15T14:32:00Z",
+ "prompt_sha256": "fa00404ce9c9f2cc99c7b4969d1d5e079d0c69d6a0d3a5ab1b5036f42ce8c818",
+ "reviewer_model": "MiMo-Pro-V2"
+}
