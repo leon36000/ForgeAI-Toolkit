@@ -24,6 +24,13 @@ jobs:
       - name: Intégrité des chaînes de hash
         run: python3 scripts/registre.py verify Registres/*.jsonl
 
+  catalogue:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Gate B-26 — désambiguïsation du catalogue (id unique, collisions qualifiées)
+        run: python3 scripts/catalogue_gate.py
+
   tests:
     runs-on: ubuntu-latest
     steps:
