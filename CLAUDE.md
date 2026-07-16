@@ -5,6 +5,12 @@ La constitution globale (~/.claude/CLAUDE.md) et les hooks git globaux s'appliqu
 La méthode PROPRE de ce projet (AGENTS.md ci-dessus : §8bis no-stub, registre.py, revue scellée,
 CLAIMS UNVERIFIED, T3=Nathan) est CONSERVÉE — elle est une instance PROOF mature, non remplacée.
 
+## Framework (rappel — actif globalement, rien à installer ici)
+Superpowers est un plugin GLOBAL actif pour cette session (brainstorming → writing-plans →
+subagent-driven → TDD). Les overrides PROOF s'appliquent : le skill `proof-review` REMPLACE la
+self-review inline de Superpowers (hook `PreToolUse Agent|Task` bloque le « Senior Code Reviewer »),
+et chaque subagent reçoit la discipline PROOF (hook `SubagentStart`). Complétion ⇒ skill `proof-done`.
+
 ## Réconciliation (adoption pleine, décision Nathan)
 - **Livreur de revue** : la pièce qui manquait est fournie par le canon —
   `~/proof-method/scripts/civ_review.py`. Il livre le prompt byte-identique aux N reviewers,
