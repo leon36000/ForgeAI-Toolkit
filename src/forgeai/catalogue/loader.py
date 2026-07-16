@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import re
 from pathlib import Path
 
 from forgeai.core.models import Brick
@@ -59,3 +60,30 @@ def minimal_stack(deploy_path: Path) -> list[dict]:
         if missing:
             raise CatalogueError(f"Service {svc.get('name', '?')} : champs manquants {missing}")
     return services
+
+
+def parse_stars(popularity: str | None) -> int:
+    """Extrait l'entier d'étoiles d'une chaîne de popularité."""
+    if popularity is None:
+        return 0
+    match = re.search(r"★\s*(\d+)", popularity)
+    if match is None:
+        return 0
+    return int(match.group(1))
+
+
+def category_defaults(entries: list[dict]) -> dict[str, str]:
+    """Retourne, pour chaque catégorie, le nom de l'entrée par défaut.
+
+    L'entrée par défaut est celle ayant le plus d'étoiles ; en cas d'égalité,
+    le départage se fait par ordre alphabétique croissant du nom.
+    """
+    defaults: dict[str, tuple[int, str]] = {}
+    for entry in entries:
+        category = entry["category"]
+        name = entry["name"]
+        stars = parse_stars(entry.get("popularity"))
+        current = defaults.get(category)
+        if current is None or stars > current[0] or (stars == current[0] and name < current[1]):
+            defaults[category] = (stars, name)
+    return {category: name for category, (_, name) in defaults.items()}

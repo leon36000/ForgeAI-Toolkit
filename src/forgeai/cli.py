@@ -403,6 +403,24 @@ def _route_configure(args: argparse.Namespace) -> int:
     return 0
 
 
+def _catalogue(args: argparse.Namespace) -> int:
+    import json
+    catalogue_path = Path(args.catalogue)
+    raw = json.loads(catalogue_path.read_text(encoding="utf-8"))
+    entries = raw if isinstance(raw, list) else raw.get("entries", [])
+
+    if args.defaults:
+        defaults = [e for e in entries if e.get("default") is True]
+        defaults.sort(key=lambda e: (e.get("category", ""), e.get("name", "")))
+        for e in defaults:
+            print(f"⭐ {e.get('name')} — {e.get('category')} ({e.get('popularity', '')})")
+        return 0
+
+    categories = sorted({e.get("category", "") for e in entries})
+    print(f"Catalogue : {len(entries)} briques, {len(categories)} catégorie(s)")
+    return 0
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(prog="forgeai")
     sub = parser.add_subparsers(dest="cmd", required=True)
@@ -524,6 +542,13 @@ def main(argv: list[str] | None = None) -> int:
     p_rcfg.add_argument("--home", default=str(default_models_home()))
     p_rcfg.add_argument("--registre", default=str(DEFAULT_REGISTRE))
     p_rcfg.set_defaults(func=_route_configure)
+
+    p_cat = sub.add_parser("catalogue", help="explore le catalogue de briques")
+    p_cat.add_argument("--defaults", action="store_true",
+                       help="liste la brique par défaut de chaque catégorie")
+    p_cat.add_argument("--catalogue", default=str(DEFAULT_CATALOGUE),
+                       help="chemin vers le catalogue JSON")
+    p_cat.set_defaults(func=_catalogue)
 
     args = parser.parse_args(argv)
     try:

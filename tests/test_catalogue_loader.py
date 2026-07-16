@@ -73,3 +73,78 @@ def test_overlay_service_incomplet_rejete(tmp_path):
     bad.write_text('{"services": [{"name": "x"}]}', encoding="utf-8")
     with pytest.raises(CatalogueError, match="champs manquants"):
         minimal_stack(bad)
+
+
+from forgeai.catalogue.loader import category_defaults, parse_stars
+
+
+def test_parse_stars_formats():
+    assert parse_stars("★957 (gh-api 2026-07-14)") == 957
+    assert parse_stars("★24787 (x)") == 24787
+    assert parse_stars(None) == 0
+    assert parse_stars("service propriétaire") == 0
+
+
+def test_category_defaults_un_par_categorie():
+    entries = [
+        {"name": "a1", "category": "A", "popularity": "★10 (x)"},
+        {"name": "a2", "category": "A", "popularity": "★20 (x)"},
+        {"name": "b1", "category": "B", "popularity": "★5 (x)"},
+        {"name": "b2", "category": "B", "popularity": "★15 (x)"},
+    ]
+    defaults = category_defaults(entries)
+    assert len(defaults) == 2
+    assert set(defaults.keys()) == {"A", "B"}
+
+
+def test_category_defaults_choisit_max_etoiles():
+    entries = [
+        {"name": "x", "category": "A", "popularity": "★10 (x)"},
+        {"name": "y", "category": "A", "popularity": "★99 (x)"},
+    ]
+    defaults = category_defaults(entries)
+    assert defaults["A"] == "y"
+
+
+def test_category_defaults_departage_par_nom():
+    entries = [
+        {"name": "zeta", "category": "A", "popularity": "★50 (x)"},
+        {"name": "alpha", "category": "A", "popularity": "★50 (x)"},
+    ]
+    defaults = category_defaults(entries)
+    assert defaults["A"] == "alpha"
+
+
+import json
+from pathlib import Path
+
+import pytest
+
+CATALOGUE_PATH = Path(__file__).resolve().parents[1] / "src" / "forgeai" / "data" / "catalogue.json"
+
+
+def test_catalogue_exactement_un_defaut_par_categorie():
+    data = json.loads(CATALOGUE_PATH.read_text(encoding="utf-8"))
+    entries = data if isinstance(data, list) else data.get("entries", [])
+
+    by_category: dict[str, list[dict]] = {}
+    for entry in entries:
+        by_category.setdefault(entry.get("category", ""), []).append(entry)
+
+    for category, items in by_category.items():
+        defaults = [e for e in items if e.get("default") is True]
+        assert len(defaults) == 1, (
+            f"Catégorie {category!r} : {len(defaults)} entrée(s) default (attendu 1)"
+        )
+
+
+def test_cli_catalogue_defaults(capsys):
+    from forgeai.cli import main
+
+    rc = main(["catalogue", "--defaults"])
+    captured = capsys.readouterr()
+
+    assert rc == 0
+    assert any("⭐" in line for line in captured.out.splitlines()), (
+        f"Aucune ligne avec ⭐ dans la sortie :\n{captured.out}"
+    )
