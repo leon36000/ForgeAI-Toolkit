@@ -89,3 +89,10 @@ def test_budgets_json_corrompu_leve_budgeterror(tmp_path):
     (tmp_path / "budgets.json").write_text("{ pas du json valide", encoding="utf-8")
     with pytest.raises(BudgetError):
         BudgetTracker(tmp_path).status("x")
+
+
+def test_set_budget_message_alert_ratio_reflete_intervalle(tmp_path):
+    from forgeai.models.budget import BudgetTracker, BudgetError
+    with pytest.raises(BudgetError) as exc:
+        BudgetTracker(tmp_path).set_budget("a", 100, alert_ratio=1.5)
+    assert "]0, 1]" in str(exc.value)

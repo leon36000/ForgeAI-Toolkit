@@ -1,0 +1,20 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "critique",
+   "fichier": "tests/test_models_budget.py",
+   "description": "L'import de `pytest` est supprimé dans le diff (ligne 73) mais `pytest.raises` est utilisé dans le nouveau test ajouté (ligne 89). En l'absence d'un autre import de `pytest` en haut du fichier, cela provoquera une `NameError` à l'exécution du test, ce qui constitue une régression critique.",
+   "preuve": "Ligne 73 : `-import pytest` ; Ligne 89 : `with pytest.raises(BudgetError):`"
+  },
+  {
+   "severite": "mineure",
+   "fichier": "src/forgeai/cli.py",
+   "description": "L'expression `e.get('popularity') or ''` (ligne 449) ne se limite pas à remplacer `None` par une chaîne vide : elle convertit également toute valeur falsy (comme une popularité valide de `0`) en chaîne vide, ce qui constitue une régression potentielle par rapport à l'affichage attendu.",
+   "preuve": "Ligne 449 : `({e.get('popularity') or ''})`"
+  }
+ ],
+ "date_heure": "2024-05-20T14:30:00Z",
+ "prompt_sha256": "0dd58fc2ab96380c089419fc1c9df02fa65d4a5f459604c29b01f1bec0043a89",
+ "reviewer_model": "LongCat-2.0"
+}
