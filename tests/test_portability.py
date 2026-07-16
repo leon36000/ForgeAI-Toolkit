@@ -184,7 +184,7 @@ def test_verify_refuse_vault_json_dans_bundle_forge():
     Prouve que le hash seul ne suffit pas : la liste blanche de noms protège l'import."""
     files = {"vault.json": {"secret": "x"}}
     forged = {"version": 1, "created_at": "2025-01-01", "files": files,
-              "sha256": bundle_sha256(files)}
+              "sha256": bundle_sha256(files, "2025-01-01")}
     with pytest.raises(PortabilityError, match="non autoris"):
         verify_bundle(forged)
 
@@ -194,7 +194,7 @@ def test_verify_refuse_chemin_traversal():
     for danger in ("../evil.json", "/etc/passwd", "sub/dir.json"):
         files = {danger: {"x": 1}}
         forged = {"version": 1, "created_at": "2025-01-01", "files": files,
-                  "sha256": bundle_sha256(files)}
+                  "sha256": bundle_sha256(files, "2025-01-01")}
         with pytest.raises(PortabilityError, match="non autoris"):
             verify_bundle(forged)
 

@@ -1,7 +1,26 @@
 {
- "verdict": "APPROVE",
- "objections": [],
- "date_heure": "2024-05-21T10:00:00Z",
- "prompt_sha256": "fa00404ce9c9f2cc99c7b4969d1d5e079d0c69d6a0d3a5ab1b5036f42ce8c818",
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "majeure",
+   "fichier": "src/forgeai/portability.py",
+   "description": "Si le fichier routes.json est malformé (dictionnaire au lieu d'une liste), la validation des secrets est silencieusement contournée et le contenu est exporté tel quel, ce qui peut fuiter des clés en clair en violation du critère 'Aucun secret ne sort'.",
+   "preuve": "Lignes 105-108 : `routes = content if isinstance(content, list) else []` ignore la validation si content est un dict, puis `files[fname] = content` l'exporte sans lever d'erreur."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "src/forgeai/portability.py",
+   "description": "L'import n'est pas atomique. Si `force=False` et qu'un fichier ultérieur dans la boucle existe déjà, les premiers fichiers auront déjà été écrits, laissant le système dans un état partiellement importé.",
+   "preuve": "Lignes 211-218 : La vérification `dest.exists()` et l'écriture `dest.write_text()` se font dans la même boucle, fichier par fichier."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "src/forgeai/portability.py",
+   "description": "Le hash SHA-256 du bundle ne couvre pas le champ `created_at`. Une altération de la date de création dans le bundle ne sera pas détectée par la vérification d'intégrité.",
+   "preuve": "Lignes 56-57 : `payload = {\"version\": BUNDLE_VERSION, \"files\": files}` omet `created_at` lors du calcul du hash."
+  }
+ ],
+ "date_heure": "2024-05-24T12:00:00Z",
+ "prompt_sha256": "abb8438ca6232e6cf6d2defec83c1366947fef2f4609d35a04e8161ff8b0308e",
  "reviewer_model": "Gemini-3.1-Pro"
 }
