@@ -1,19 +1,6 @@
 {
  "verdict": "APPROVE",
- "objections": [
-  {
-   "severity": "moyen",
-   "file": "src/forgeai/cli.py",
-   "line": 449,
-   "desc": "L'expression `e.get('popularity') or ''` supprime aussi la valeur 0 (popularité nulle), ce qui constitue un changement de comportement non documenté. Une popularité valide de 0 n'est plus affichée."
-  },
-  {
-   "severity": "moyen",
-   "file": "tests/test_models_budget.py",
-   "line": null,
-   "desc": "Le message d'erreur de `set_budget` a été modifié sans mise à jour correspondante des tests. Si un test vérifie l'ancien message, il échouera après la correction."
-  }
- ],
- "prompt_sha256": "0dd58fc2ab96380c089419fc1c9df02fa65d4a5f459604c29b01f1bec0043a89",
+ "objections": [],
+ "prompt_sha256": "610aeb2ee8cfdba72985e9f108900189447d18bffc11120496de024ebe2f2ad1",
  "reviewer_model": "DeepSeek-V4-Pro"
 }
