@@ -1,0 +1,14 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "src/forgeai/ide/__init__.py",
+   "description": "Pour aider, key_env est ignoré : aucune référence ${key_env} n'est émise, seul un commentaire fixe « $OPENAI_API_KEY » est écrit. Écart mineur vs le périmètre « clé = ${key_env} » et vs le message CLI qui affiche key_env ; l'AC2 (pas de clé en clair, générateur ne reçoit que le nom) reste respectée.",
+   "preuve": "lignes aider de generate_ide_config : content = (f\"openai-api-base: {gateway_url}\\n\" f\"model: openai/{model}\\n\" \"# clé via $OPENAI_API_KEY\\n\") — key_env n'apparaît pas ; test_aucune_cle_en_clair special-case aider sur OPENAI_API_KEY"
+  }
+ ],
+ "date_heure": "2026-03-28T15:30:00Z",
+ "prompt_sha256": "c5f2c4472e318f947183aa6f73feefa882d752d4469445e2062e3fc4761ccd18",
+ "reviewer_model": "Grok-4.5"
+}
