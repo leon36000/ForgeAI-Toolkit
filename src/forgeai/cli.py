@@ -38,6 +38,7 @@ from forgeai.rag.client import RagClient
 from forgeai.renderers.compose import render_compose
 from forgeai.renderers.k3s import NAMESPACE, node_port_for, render_k3s
 from forgeai.resources import catalogue_path, deploy_overlay_path
+from forgeai.i18n import t, set_locale, available_locales
 
 # Données embarquées dans le paquet → portables après pip install (P3).
 DEFAULT_CATALOGUE = catalogue_path()
@@ -66,11 +67,11 @@ def wizard_ci(args: argparse.Namespace) -> int:
     workdir.mkdir(parents=True, exist_ok=True)
     started = time.monotonic()
 
-    _step("S01 détection hardware")
+    _step(t("wizard.s01"))
     hw = HardwareDetector(SubprocessRunner()).full_report()
     (workdir / "hardware.json").write_text(hw.to_json(), encoding="utf-8")
 
-    _step("S02 dérivation du profil")
+    _step(t("wizard.s02"))
     try:
         profile = derive_profile(hw)
     except ProfileError as exc:
@@ -78,18 +79,18 @@ def wizard_ci(args: argparse.Namespace) -> int:
         return 7
     print(f"  profil: {profile}")
 
-    _step("S03 vérification du catalogue (hash)")
+    _step(t("wizard.s03"))
     digest = verify_catalogue(Path(args.catalogue))
     bricks = load_catalogue(Path(args.catalogue))
     print(f"  {len(bricks)} briques, sha256 {digest[:16]}…")
 
-    _step("S04 assemblage du plan Minimal")
+    _step(t("wizard.s04"))
     plan = assemble_plan(profile, Path(args.overlay))
     (workdir / "plan.json").write_text(plan.to_json(), encoding="utf-8")
     ports = {s.name: s.host_port for s in plan.services}
     print(f"  services: {ports} | modèle: {plan.model}")
 
-    _step("S05 bootstrap sécurisé")
+    _step(t("wizard.s05"))
     bootstrap_secrets(workdir)
 
     backend = args.backend
@@ -111,11 +112,11 @@ def wizard_ci(args: argparse.Namespace) -> int:
     (workdir / "k3s.yaml").write_text(render_k3s(plan, node=local_node), encoding="utf-8")
 
     if backend == "compose":
-        _step("S06 rendu + déploiement Docker Compose")
+        _step(t("wizard.s06"))
         compose_up(compose_file)
         rag_ports = ports
     else:
-        _step(f"S07 rendu + déploiement K3s (nodeSelector: {local_node} — Minimal single-node)")
+        _step(t("wizard.s07", node=local_node))
         k3s_apply(workdir / "k3s.yaml")
         k3s_wait_deployments(NAMESPACE, timeout_s=args.health_timeout)
         used_node_ports: set[int] = set()
@@ -137,7 +138,7 @@ def wizard_ci(args: argparse.Namespace) -> int:
                 raise DeployError(f"Healthchecks K3s incomplets : {health}")
         print(f"  santé: {health}")
 
-        _step("S08 modèles + ingestion du document de preuve")
+        _step(t("wizard.s08"))
         rag = RagClient(
             ollama_url=f"http://127.0.0.1:{rag_ports['ollama']}",
             qdrant_url=f"http://127.0.0.1:{rag_ports['vector-store']}",
@@ -149,7 +150,7 @@ def wizard_ci(args: argparse.Namespace) -> int:
         chunks = rag.ingest(doc, source=Path(args.document).name)
         print(f"  {chunks} chunks ingérés")
 
-        _step("S09 question → réponse → vérification du fait")
+        _step(t("wizard.s09"))
         result = rag.ask(args.question)
         answer = result["answer"]
         print(f"  Q: {args.question}")
@@ -161,13 +162,13 @@ def wizard_ci(args: argparse.Namespace) -> int:
             return 9
     finally:
         if args.teardown:
-            _step("teardown (backends séquentiels — règle round 1)")
+            _step(t("wizard.teardown"))
             if backend == "compose":
                 compose_down(compose_file, volumes=args.teardown_volumes)
             else:
                 k3s_delete_namespace(NAMESPACE)
 
-    _step("S10 preuve au registre hash-chaîné")
+    _step(t("wizard.s10"))
     entry = registre.append(Path(args.registre), "preuve_e2e", "wizard-ci", {
         "backend": backend,
         "plan_id": plan.plan_id, "profile": profile, "services": rag_ports,
@@ -436,6 +437,39 @@ def _budget_status(args: argparse.Namespace) -> int:
     return 0
 
 
+def _export(args: argparse.Namespace) -> int:
+    from forgeai.portability import export_setup, PortabilityError
+    try:
+        bundle = export_setup(args.home, args.out)
+    except PortabilityError as exc:
+        print(f"ECHEC EXPORT: {exc}", file=sys.stderr)
+        return 11
+    files = sorted(bundle["files"])
+    print(f"[forgeai] setup exporté → {args.out}")
+    print(f"  fichiers: {', '.join(files) or 'aucun'} | sha256 {bundle['sha256'][:16]}…")
+    registre.append(Path(args.registre), "setup_exporte", "portability",
+                    {"out": args.out, "fichiers": files, "sha256": bundle["sha256"]})
+    return 0
+
+
+def _import(args: argparse.Namespace) -> int:
+    from forgeai.portability import import_setup, PortabilityError
+    try:
+        report = import_setup(args.bundle, args.home, force=args.force)
+    except PortabilityError as exc:
+        print(f"ECHEC IMPORT: {exc}", file=sys.stderr)
+        return 11
+    print(f"[forgeai] setup importé dans {report['home']}")
+    print(f"  restaurés: {', '.join(report['restored']) or 'aucun'}")
+    secrets = report["secrets_to_reprovision"]
+    if secrets:
+        print(f"  secrets à re-saisir (clés jamais incluses): {', '.join(secrets)}")
+    registre.append(Path(args.registre), "setup_importe", "portability",
+                    {"home": report["home"], "restaures": report["restored"],
+                     "secrets_a_resaisir": secrets})
+    return 0
+
+
 def _catalogue(args: argparse.Namespace) -> int:
     import json
     catalogue_path = Path(args.catalogue)
@@ -446,16 +480,25 @@ def _catalogue(args: argparse.Namespace) -> int:
         defaults = [e for e in entries if e.get("default") is True]
         defaults.sort(key=lambda e: (e.get("category", ""), e.get("name", "")))
         for e in defaults:
-            print(f"⭐ {e.get('name')} — {e.get('category')} ({e.get('popularity', '')})")
+            pop = e.get("popularity")
+            pop = "" if pop is None else pop   # n'affiche pas "None"; ne masque pas une valeur 0
+            print(t("catalogue.default_line", name=e.get("name"),
+                    category=e.get("category"), popularity=pop))
         return 0
 
     categories = sorted({e.get("category", "") for e in entries})
-    print(f"Catalogue : {len(entries)} briques, {len(categories)} catégorie(s)")
+    print(t("catalogue.summary", n=len(entries), k=len(categories)))
     return 0
 
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(prog="forgeai")
+    _langs = available_locales() or ["fr", "en"]
+    _default_lang = os.environ.get("FORGEAI_LANG", "fr")
+    if _default_lang not in _langs:   # env invalide → défaut sûr, jamais de crash au démarrage
+        _default_lang = "fr"
+    parser.add_argument("--lang", choices=_langs, default=_default_lang,
+                        help="langue de l'interface (défaut: fr ; ou $FORGEAI_LANG)")
     sub = parser.add_subparsers(dest="cmd", required=True)
 
     p_hw = sub.add_parser("hardware", help="détection hardware (S01)")
@@ -590,6 +633,19 @@ def main(argv: list[str] | None = None) -> int:
     p_budget_status.add_argument("--home", default=str(default_models_home()))
     p_budget_status.set_defaults(func=_budget_status)
 
+    p_export = sub.add_parser("export", help="exporte le setup portable, sans secrets (B-16)")
+    p_export.add_argument("--out", required=True, help="chemin du bundle à écrire")
+    p_export.add_argument("--home", default=str(default_models_home()))
+    p_export.add_argument("--registre", default=str(DEFAULT_REGISTRE))
+    p_export.set_defaults(func=_export)
+
+    p_import = sub.add_parser("import", help="importe un bundle de setup (re-demande les secrets) (B-16)")
+    p_import.add_argument("--bundle", required=True, help="chemin du bundle à importer")
+    p_import.add_argument("--home", default=str(default_models_home()))
+    p_import.add_argument("--force", action="store_true", help="écrase les fichiers existants")
+    p_import.add_argument("--registre", default=str(DEFAULT_REGISTRE))
+    p_import.set_defaults(func=_import)
+
     p_cat = sub.add_parser("catalogue", help="explore le catalogue de briques")
     p_cat.add_argument("--defaults", action="store_true",
                        help="liste la brique par défaut de chaque catégorie")
@@ -598,6 +654,7 @@ def main(argv: list[str] | None = None) -> int:
     p_cat.set_defaults(func=_catalogue)
 
     args = parser.parse_args(argv)
+    set_locale(args.lang)   # bascule la langue de l'interface avant dispatch
     try:
         return args.func(args)
     except DeployError as exc:
