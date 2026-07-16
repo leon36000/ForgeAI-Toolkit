@@ -5,6 +5,7 @@
   "wizard.s04": "S04 assemblage du plan Minimal",
   "wizard.s05": "S05 bootstrap sécurisé",
   "wizard.s06": "S06 rendu + déploiement Docker Compose",
+  "wizard.s07": "S07 rendu + déploiement K3s (nodeSelector: {node} — Minimal single-node)",
   "wizard.s08": "S08 modèles + ingestion du document de preuve",
   "wizard.s09": "S09 question → réponse → vérification du fait",
   "wizard.s10": "S10 preuve au registre hash-chaîné",

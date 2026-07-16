@@ -38,7 +38,7 @@ from forgeai.rag.client import RagClient
 from forgeai.renderers.compose import render_compose
 from forgeai.renderers.k3s import NAMESPACE, node_port_for, render_k3s
 from forgeai.resources import catalogue_path, deploy_overlay_path
-from forgeai.i18n import t, set_locale, get_translator
+from forgeai.i18n import t, set_locale, available_locales
 
 # Données embarquées dans le paquet → portables après pip install (P3).
 DEFAULT_CATALOGUE = catalogue_path()
@@ -116,7 +116,7 @@ def wizard_ci(args: argparse.Namespace) -> int:
         compose_up(compose_file)
         rag_ports = ports
     else:
-        _step(f"S07 rendu + déploiement K3s (nodeSelector: {local_node} — Minimal single-node)")
+        _step(t("wizard.s07", node=local_node))
         k3s_apply(workdir / "k3s.yaml")
         k3s_wait_deployments(NAMESPACE, timeout_s=args.health_timeout)
         used_node_ports: set[int] = set()
@@ -460,8 +460,11 @@ def _catalogue(args: argparse.Namespace) -> int:
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(prog="forgeai")
-    parser.add_argument("--lang", choices=get_translator().available() or ["fr", "en"],
-                        default=os.environ.get("FORGEAI_LANG", "fr"),
+    _langs = available_locales() or ["fr", "en"]
+    _default_lang = os.environ.get("FORGEAI_LANG", "fr")
+    if _default_lang not in _langs:   # env invalide → défaut sûr, jamais de crash au démarrage
+        _default_lang = "fr"
+    parser.add_argument("--lang", choices=_langs, default=_default_lang,
                         help="langue de l'interface (défaut: fr ; ou $FORGEAI_LANG)")
     sub = parser.add_subparsers(dest="cmd", required=True)
 
