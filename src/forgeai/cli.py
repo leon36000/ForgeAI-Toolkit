@@ -485,6 +485,44 @@ def _ide_configure(args: argparse.Namespace) -> int:
     return 0
 
 
+def _ide_mcp(args: argparse.Namespace) -> int:
+    from forgeai.ide import IDEError, write_ide_config
+    from forgeai.ide.bootstrap import generate_mcp_config, McpServer
+    try:
+        servers = []
+        for spec in args.server:
+            if "=" not in spec:
+                print(f"ECHEC IDE: --server attend name=url (reçu '{spec}')", file=sys.stderr)
+                return 12
+            name, url = spec.split("=", 1)
+            servers.append(McpServer(name=name, url=url, transport=args.transport))
+        cfg = generate_mcp_config(args.ide, servers)
+    except IDEError as exc:
+        print(f"ECHEC IDE: {exc}", file=sys.stderr)
+        return 12
+    path = write_ide_config(cfg, args.dest)
+    print(f"[forgeai] config MCP {args.ide} écrite → {path} ({len(servers)} serveur(s))")
+    registre.append(Path(args.registre), "ide_mcp", "ide",
+                    {"ide": args.ide, "path": str(path), "servers": [s.name for s in servers]})
+    return 0
+
+
+def _ide_governance(args: argparse.Namespace) -> int:
+    from forgeai.ide import IDEError, write_ide_config
+    from forgeai.ide.bootstrap import generate_governance_config
+    try:
+        cfg = generate_governance_config(skills=args.skill, hooks=args.hook, ide=args.ide)
+    except IDEError as exc:
+        print(f"ECHEC IDE: {exc}", file=sys.stderr)
+        return 12
+    path = write_ide_config(cfg, args.dest)
+    print(f"[forgeai] config gouvernance {args.ide} écrite → {path} "
+          f"({len(args.skill)} skill(s), {len(args.hook)} hook(s))")
+    registre.append(Path(args.registre), "ide_governance", "ide",
+                    {"ide": args.ide, "path": str(path), "skills": args.skill, "hooks": args.hook})
+    return 0
+
+
 def _export(args: argparse.Namespace) -> int:
     from forgeai.portability import export_setup, PortabilityError
     try:
@@ -708,6 +746,22 @@ def main(argv: list[str] | None = None) -> int:
     p_ide_cfg.add_argument("--home", default=str(default_models_home()))
     p_ide_cfg.add_argument("--registre", default=str(DEFAULT_REGISTRE))
     p_ide_cfg.set_defaults(func=_ide_configure)
+    p_ide_mcp = ide_sub.add_parser("mcp", help="préconfigure les serveurs MCP du stack (B-18)")
+    p_ide_mcp.add_argument("--ide", required=True, choices=list(SUPPORTED_IDES))
+    p_ide_mcp.add_argument("--server", action="append", required=True, metavar="NAME=URL",
+                           help="serveur MCP name=url (répétable)")
+    p_ide_mcp.add_argument("--transport", choices=["http", "sse"], default="http")
+    p_ide_mcp.add_argument("--dest", default=".")
+    p_ide_mcp.add_argument("--registre", default=str(DEFAULT_REGISTRE))
+    p_ide_mcp.set_defaults(func=_ide_mcp)
+    p_ide_gov = ide_sub.add_parser("governance",
+                                   help="préconfigure skills allowlist + hooks gouvernance (claude-code) (B-18)")
+    p_ide_gov.add_argument("--ide", default="claude-code", choices=list(SUPPORTED_IDES))
+    p_ide_gov.add_argument("--skill", action="append", default=[], help="skill allowlisté (répétable)")
+    p_ide_gov.add_argument("--hook", action="append", default=[], help="hook de gouvernance (répétable)")
+    p_ide_gov.add_argument("--dest", default=".")
+    p_ide_gov.add_argument("--registre", default=str(DEFAULT_REGISTRE))
+    p_ide_gov.set_defaults(func=_ide_governance)
 
     p_cat = sub.add_parser("catalogue", help="explore le catalogue de briques")
     p_cat.add_argument("--defaults", action="store_true",
