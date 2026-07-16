@@ -436,6 +436,39 @@ def _budget_status(args: argparse.Namespace) -> int:
     return 0
 
 
+def _export(args: argparse.Namespace) -> int:
+    from forgeai.portability import export_setup, PortabilityError
+    try:
+        bundle = export_setup(args.home, args.out)
+    except PortabilityError as exc:
+        print(f"ECHEC EXPORT: {exc}", file=sys.stderr)
+        return 11
+    files = sorted(bundle["files"])
+    print(f"[forgeai] setup exporté → {args.out}")
+    print(f"  fichiers: {', '.join(files) or 'aucun'} | sha256 {bundle['sha256'][:16]}…")
+    registre.append(Path(args.registre), "setup_exporte", "portability",
+                    {"out": args.out, "fichiers": files, "sha256": bundle["sha256"]})
+    return 0
+
+
+def _import(args: argparse.Namespace) -> int:
+    from forgeai.portability import import_setup, PortabilityError
+    try:
+        report = import_setup(args.bundle, args.home, force=args.force)
+    except PortabilityError as exc:
+        print(f"ECHEC IMPORT: {exc}", file=sys.stderr)
+        return 11
+    print(f"[forgeai] setup importé dans {report['home']}")
+    print(f"  restaurés: {', '.join(report['restored']) or 'aucun'}")
+    secrets = report["secrets_to_reprovision"]
+    if secrets:
+        print(f"  secrets à re-saisir (clés jamais incluses): {', '.join(secrets)}")
+    registre.append(Path(args.registre), "setup_importe", "portability",
+                    {"home": report["home"], "restaures": report["restored"],
+                     "secrets_a_resaisir": secrets})
+    return 0
+
+
 def _catalogue(args: argparse.Namespace) -> int:
     import json
     catalogue_path = Path(args.catalogue)
@@ -589,6 +622,19 @@ def main(argv: list[str] | None = None) -> int:
     p_budget_status.add_argument("--agent", default=None)
     p_budget_status.add_argument("--home", default=str(default_models_home()))
     p_budget_status.set_defaults(func=_budget_status)
+
+    p_export = sub.add_parser("export", help="exporte le setup portable, sans secrets (B-16)")
+    p_export.add_argument("--out", required=True, help="chemin du bundle à écrire")
+    p_export.add_argument("--home", default=str(default_models_home()))
+    p_export.add_argument("--registre", default=str(DEFAULT_REGISTRE))
+    p_export.set_defaults(func=_export)
+
+    p_import = sub.add_parser("import", help="importe un bundle de setup (re-demande les secrets) (B-16)")
+    p_import.add_argument("--bundle", required=True, help="chemin du bundle à importer")
+    p_import.add_argument("--home", default=str(default_models_home()))
+    p_import.add_argument("--force", action="store_true", help="écrase les fichiers existants")
+    p_import.add_argument("--registre", default=str(DEFAULT_REGISTRE))
+    p_import.set_defaults(func=_import)
 
     p_cat = sub.add_parser("catalogue", help="explore le catalogue de briques")
     p_cat.add_argument("--defaults", action="store_true",
