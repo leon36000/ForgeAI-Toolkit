@@ -215,6 +215,26 @@ def _doctor(args: argparse.Namespace) -> int:
     return 0
 
 
+def _node_add(args: argparse.Namespace) -> int:
+    from forgeai.network.node_add import add_node, SshBootstrapper, NodeAddError
+    from forgeai.core.runner import SubprocessRunner
+    passwd = os.environ.get(args.password_env)
+    if not passwd:
+        print(f"ECHEC NODE: variable d'env '{args.password_env}' vide ou absente "
+              f"(le mot de passe ne passe jamais en argv)", file=sys.stderr)
+        return 12
+    try:
+        rec = add_node(args.ip, args.user, passwd,
+                       pubkey=Path(args.pubkey), privkey=Path(args.privkey),
+                       bootstrapper=SshBootstrapper(), runner=SubprocessRunner(),
+                       registre_path=Path(args.registre))
+    except NodeAddError as exc:
+        print(f"ECHEC NODE: {exc}", file=sys.stderr)
+        return 12
+    print(f"[forgeai] nœud ajouté — {rec.user}@{rec.ip} | empreinte {rec.key_fingerprint}")
+    return 0
+
+
 def _node_status(args: argparse.Namespace) -> int:
     from forgeai.network.nodes import ClusterError, cluster_status
     try:
@@ -627,6 +647,15 @@ def main(argv: list[str] | None = None) -> int:
     p_status.add_argument("--witness", action="store_true",
                           help="scelle l'état au registre hash-chaîné")
     p_status.set_defaults(func=_node_status)
+    p_node_add = node_sub.add_parser("add", help="ajoute un nœud : bootstrap clé, secret éphémère (B-05)")
+    p_node_add.add_argument("--ip", required=True)
+    p_node_add.add_argument("--user", required=True)
+    p_node_add.add_argument("--password-env", required=True, dest="password_env",
+                            help="variable d'env portant le mot de passe éphémère (jamais en argv)")
+    p_node_add.add_argument("--pubkey", required=True)
+    p_node_add.add_argument("--privkey", required=True)
+    p_node_add.add_argument("--registre", default=str(DEFAULT_REGISTRE))
+    p_node_add.set_defaults(func=_node_add)
 
     p_wiz = sub.add_parser("wizard", help="wizard bout-en-bout")
     p_wiz.add_argument("--ci", action="store_true", required=True)
