@@ -26,3 +26,5 @@ Le `healthcheck` doit être une **chaîne non vide** OU un **objet** portant une
 tout autre type (liste, nombre…) est refusé (`healthcheck de type invalide`).
 
 Les champs `id`, `name`, `source_url`, `license` doivent être des **chaînes** (typage strict).
+
+`source_url` doit pointer vers **GitHub** (`github.com`) — critère « existence GitHub ».

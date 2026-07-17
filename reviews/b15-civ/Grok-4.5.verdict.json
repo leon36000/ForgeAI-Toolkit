@@ -1,20 +1,7 @@
 {
  "verdict": "APPROVE",
- "objections": [
-  {
-   "severite": "mineure",
-   "fichier": "scripts/plugin_gate.py",
-   "description": "Un source_url truthy non-string (nombre, liste, bool) n'est ni signalé « source_url invalide » ni passé à existence_check ; le gate peut donc accepter une source non URL.",
-   "preuve": "validate_plugin L36-L38 et L49-L52 : les gardes `isinstance(src, str)` court-circuitent le rejet https et le check d'existence si source_url n'est pas une str (ex. 42 ou [\"https://...\"])."
-  },
-  {
-   "severite": "mineure",
-   "fichier": "scripts/plugin_gate.py",
-   "description": "main ne capture pas PluginError / erreurs d'I/O de load_plugin : JSON invalide ou fichier absent provoque une traceback au lieu d'un code 1 et d'un message de violation.",
-   "preuve": "main L72 : `plugin = load_plugin(args.plugin)` sans try/except ; load_plugin L60-L67 lève PluginError (JSON invalide / non-objet) ou laisse remonter OSError."
-  }
- ],
- "date_heure": "2026-03-28T12:00:00Z",
- "prompt_sha256": "c1da8515d11c32d1bfee9890e2c39594fc12caa2be82176f9fd1b69dd03db43e",
+ "objections": [],
+ "date_heure": "2026-03-28T14:30:00Z",
+ "prompt_sha256": "3c3de855be9cce5ad71d9d15091fb5b0151bcbf5f540ce41475b673a20096ddf",
  "reviewer_model": "Grok-4.5"
 }

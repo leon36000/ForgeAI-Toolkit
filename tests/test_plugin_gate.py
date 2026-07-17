@@ -89,3 +89,10 @@ def test_champs_string_type_strict_refuse():
     p2 = _valid_plugin()
     p2["license"] = 123
     assert any("doit être une chaîne" in x for x in validate_plugin(p2, existence_check=lambda u: True))
+
+
+def test_source_url_non_github_refuse():
+    """Le critère exige GitHub : une URL https mais non-GitHub (ex. GitLab) est refusée."""
+    p = _valid_plugin()
+    p["source_url"] = "https://gitlab.com/o/x"
+    assert any("github" in x.lower() for x in validate_plugin(p, existence_check=lambda u: True))

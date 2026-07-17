@@ -34,10 +34,13 @@ def validate_plugin(plugin: dict, *, existence_check=None) -> list[str]:
         elif field in string_fields and not isinstance(val, str):
             violations.append(f"champ '{field}' doit être une chaîne")
 
-    # source_url doit être une chaîne https://
+    # source_url : chaîne https:// pointant vers un dépôt GitHub (critère « existence GitHub »)
     src = plugin.get("source_url")
-    if isinstance(src, str) and src and not src.startswith("https://"):
-        violations.append("source_url invalide (https requis)")
+    if isinstance(src, str) and src:
+        if not src.startswith("https://"):
+            violations.append("source_url invalide (https requis)")
+        elif "github.com" not in src:
+            violations.append("source_url doit être un dépôt GitHub (github.com)")
 
     # healthcheck : chaîne non vide OU objet {"type": ...} — tout autre type est refusé
     hc = plugin.get("healthcheck")
