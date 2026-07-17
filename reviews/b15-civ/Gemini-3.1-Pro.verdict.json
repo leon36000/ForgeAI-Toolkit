@@ -1,7 +1,14 @@
 {
  "verdict": "APPROVE",
- "objections": [],
- "date_heure": "2023-10-24T12:00:00Z",
- "prompt_sha256": "3c3de855be9cce5ad71d9d15091fb5b0151bcbf5f540ce41475b673a20096ddf",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "scripts/plugin_gate.py",
+   "description": "L'exception PluginError (définie pour encapsuler les erreurs de parsing JSON) est levée par load_plugin mais n'est jamais attrapée dans main, ce qui provoque un crash avec stacktrace au lieu d'un arrêt propre si le fichier est invalide.",
+   "preuve": "Lignes 69-70 : raise PluginError(...) et Ligne 79 : plugin = load_plugin(args.plugin) appelé sans bloc try/except."
+  }
+ ],
+ "date_heure": "2024-05-28T14:30:00Z",
+ "prompt_sha256": "1e7593722c39a2f661eadfbeedbb92219d7f7b6226ae7c63523c3be83b587717",
  "reviewer_model": "Gemini-3.1-Pro"
 }
