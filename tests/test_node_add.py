@@ -128,17 +128,17 @@ def test_install_appele_avec_mot_de_passe(tmp_path: Path) -> None:
 
     fake = FakeBootstrapper(verify_return=True)
     runner = FixtureRunner({"ssh-keygen -lf " + str(pubkey): "256 SHA256:def456 comment"})
-    passwd = "my-secret"
+    mdp = "my-secret"
 
-    add_node("10.0.0.4", "admin", passwd,
+    add_node("10.0.0.4", "admin", mdp,
              pubkey=pubkey, privkey=privkey, bootstrapper=fake,
              runner=runner, registre_path=registre)
 
     assert len(fake.install_calls) == 1
-    ip, user, passwd, key = fake.install_calls[0]
+    ip, user, sent, key = fake.install_calls[0]
     assert ip == "10.0.0.4"
     assert user == "admin"
-    assert passwd == passwd  # Le mot de passe a bien été transmis
+    assert sent == mdp  # la valeur transmise au bootstrapper est bien le secret d'origine
 
 
 def test_key_fingerprint_extrait_sha256(tmp_path: Path) -> None:
