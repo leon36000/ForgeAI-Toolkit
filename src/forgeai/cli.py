@@ -636,6 +636,53 @@ def _import(args: argparse.Namespace) -> int:
     return 0
 
 
+def _template_list(args: argparse.Namespace) -> int:
+    from forgeai.templates import list_templates
+    for t in list_templates():
+        print(t)
+    return 0
+
+
+def _template_show(args: argparse.Namespace) -> int:
+    import json
+    from forgeai.templates import load_template, validate_template, TemplateError
+    try:
+        tmpl = load_template(args.name)
+    except TemplateError as exc:
+        print(f"ECHEC TEMPLATE: {exc}", file=sys.stderr)
+        return 12
+    entries = json.loads(Path(args.catalogue).read_text(encoding="utf-8")).get("entries", [])
+    violations = validate_template(tmpl, entries)
+    print(f"Template '{tmpl['name']}' — {len(tmpl.get('bricks', []))} briques")
+    print(f"  {tmpl.get('description_fr', '')}")
+    if violations:
+        for v in violations:
+            print(f"  ⚠ {v}", file=sys.stderr)
+        return 13
+    print("  ✓ conforme (toutes au catalogue, bilingues)")
+    return 0
+
+
+def _template_resolve(args: argparse.Namespace) -> int:
+    from forgeai.templates import load_template, resolve_template, deployable_bricks, TemplateError
+    try:
+        tmpl = load_template(args.name)
+    except TemplateError as exc:
+        print(f"ECHEC TEMPLATE: {exc}", file=sys.stderr)
+        return 12
+    has_gpu = not args.no_gpu
+    resolved = resolve_template(tmpl, has_gpu=has_gpu)
+    deployable = deployable_bricks(tmpl, has_gpu=has_gpu)
+    print(f"Template '{tmpl['name']}' résolu ({'GPU' if has_gpu else 'CPU'}) : "
+          f"{len(resolved)} briques, {len(deployable)} déployables (cœur runtime Express)")
+    for b in deployable:
+        print(f"  ⚙ {b['id']} ({b.get('role', '?')})")
+    registre.append(Path(args.registre), "template_resolve", "template",
+                    {"template": tmpl["name"], "has_gpu": has_gpu, "bricks": len(resolved),
+                     "deployable": [b["id"] for b in deployable]})
+    return 0
+
+
 def _catalogue(args: argparse.Namespace) -> int:
     import json
     catalogue_path = Path(args.catalogue)
@@ -884,6 +931,21 @@ def main(argv: list[str] | None = None) -> int:
     p_loop_run.add_argument("--until", required=True, help="commande de complétion (exit 0 = terminé)")
     p_loop_run.add_argument("--registre", default=str(DEFAULT_REGISTRE))
     p_loop_run.set_defaults(func=_loop_run)
+
+    p_tmpl = sub.add_parser("template", help="templates de déploiement — systèmes complets curés (B-13)")
+    tmpl_sub = p_tmpl.add_subparsers(dest="template_cmd", required=True)
+    p_tmpl_list = tmpl_sub.add_parser("list", help="liste les templates disponibles")
+    p_tmpl_list.set_defaults(func=_template_list)
+    p_tmpl_show = tmpl_sub.add_parser("show", help="affiche + valide un template contre le catalogue")
+    p_tmpl_show.add_argument("name")
+    p_tmpl_show.add_argument("--catalogue", default=str(DEFAULT_CATALOGUE))
+    p_tmpl_show.set_defaults(func=_template_show)
+    p_tmpl_res = tmpl_sub.add_parser("resolve", help="résout le template (filtrage hardware) → cœur déployable")
+    p_tmpl_res.add_argument("name")
+    p_tmpl_res.add_argument("--no-gpu", action="store_true", dest="no_gpu",
+                            help="machine sans GPU : exclut les briques gpu-only (ex. vLLM)")
+    p_tmpl_res.add_argument("--registre", default=str(DEFAULT_REGISTRE))
+    p_tmpl_res.set_defaults(func=_template_resolve)
 
     args = parser.parse_args(argv)
     set_locale(args.lang)   # bascule la langue de l'interface avant dispatch

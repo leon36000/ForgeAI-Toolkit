@@ -1,0 +1,266 @@
+{
+ "name": "dev-agentic",
+ "description_fr": "Système Dev Agentic complet : inférence locale + gateway, orchestration d'agents, RAG/mémoire, serveurs MCP, harnais de codage et méthodologies, évaluation/observabilité.",
+ "description_en": "Complete Dev Agentic system: local inference + gateway, agent orchestration, RAG/memory, MCP servers, coding harness and methodologies, evaluation/observability.",
+ "bricks": [
+  {
+   "id": "ollama",
+   "role": "inference",
+   "deployable": true,
+   "requires_gpu": false,
+   "default": true
+  },
+  {
+   "id": "llama-cpp",
+   "role": "inference",
+   "deployable": true,
+   "requires_gpu": false,
+   "default": false
+  },
+  {
+   "id": "vllm",
+   "role": "inference",
+   "deployable": true,
+   "requires_gpu": true,
+   "default": false
+  },
+  {
+   "id": "localai",
+   "role": "inference",
+   "deployable": true,
+   "requires_gpu": false,
+   "default": false
+  },
+  {
+   "id": "litellm",
+   "role": "gateway",
+   "deployable": true,
+   "requires_gpu": false,
+   "default": false
+  },
+  {
+   "id": "open-webui",
+   "role": "ui",
+   "deployable": false,
+   "requires_gpu": false,
+   "default": false
+  },
+  {
+   "id": "openclaw",
+   "role": "orchestration",
+   "deployable": false,
+   "requires_gpu": false,
+   "default": true
+  },
+  {
+   "id": "hermes-agent",
+   "role": "orchestration",
+   "deployable": false,
+   "requires_gpu": false,
+   "default": false
+  },
+  {
+   "id": "langchain",
+   "role": "orchestration",
+   "deployable": false,
+   "requires_gpu": false,
+   "default": false
+  },
+  {
+   "id": "langflow",
+   "role": "orchestration",
+   "deployable": false,
+   "requires_gpu": false,
+   "default": false
+  },
+  {
+   "id": "dify",
+   "role": "orchestration",
+   "deployable": false,
+   "requires_gpu": false,
+   "default": false
+  },
+  {
+   "id": "n8n",
+   "role": "orchestration",
+   "deployable": false,
+   "requires_gpu": false,
+   "default": false
+  },
+  {
+   "id": "autogpt",
+   "role": "orchestration",
+   "deployable": false,
+   "requires_gpu": false,
+   "default": false
+  },
+  {
+   "id": "markitdown",
+   "role": "rag",
+   "deployable": false,
+   "requires_gpu": false,
+   "default": true
+  },
+  {
+   "id": "firecrawl",
+   "role": "rag",
+   "deployable": false,
+   "requires_gpu": false,
+   "default": false
+  },
+  {
+   "id": "ragflow",
+   "role": "rag",
+   "deployable": false,
+   "requires_gpu": false,
+   "default": false
+  },
+  {
+   "id": "crawl4ai",
+   "role": "rag",
+   "deployable": false,
+   "requires_gpu": false,
+   "default": false
+  },
+  {
+   "id": "anythingllm",
+   "role": "rag",
+   "deployable": false,
+   "requires_gpu": false,
+   "default": false
+  },
+  {
+   "id": "mem0-pro",
+   "role": "rag",
+   "deployable": false,
+   "requires_gpu": false,
+   "default": false
+  },
+  {
+   "id": "awesome-mcp-servers-punkpeye",
+   "role": "mcp",
+   "deployable": false,
+   "requires_gpu": false,
+   "default": true
+  },
+  {
+   "id": "filesystem-mcp",
+   "role": "mcp",
+   "deployable": false,
+   "requires_gpu": false,
+   "default": false
+  },
+  {
+   "id": "git-mcp-officiel",
+   "role": "mcp",
+   "deployable": false,
+   "requires_gpu": false,
+   "default": false
+  },
+  {
+   "id": "reference-mcp-servers-fetch",
+   "role": "mcp",
+   "deployable": false,
+   "requires_gpu": false,
+   "default": false
+  },
+  {
+   "id": "reference-mcp-servers-memory",
+   "role": "mcp",
+   "deployable": false,
+   "requires_gpu": false,
+   "default": false
+  },
+  {
+   "id": "sequential-thinking-mcp",
+   "role": "mcp",
+   "deployable": false,
+   "requires_gpu": false,
+   "default": false
+  },
+  {
+   "id": "superpowers",
+   "role": "coding",
+   "deployable": false,
+   "requires_gpu": false,
+   "default": true
+  },
+  {
+   "id": "claude-code",
+   "role": "coding",
+   "deployable": false,
+   "requires_gpu": false,
+   "default": false
+  },
+  {
+   "id": "opencode",
+   "role": "coding",
+   "deployable": false,
+   "requires_gpu": false,
+   "default": false
+  },
+  {
+   "id": "anthropic-skills",
+   "role": "coding",
+   "deployable": false,
+   "requires_gpu": false,
+   "default": false
+  },
+  {
+   "id": "github-spec-kit",
+   "role": "coding",
+   "deployable": false,
+   "requires_gpu": false,
+   "default": false
+  },
+  {
+   "id": "openhands",
+   "role": "coding",
+   "deployable": false,
+   "requires_gpu": false,
+   "default": false
+  },
+  {
+   "id": "grafana",
+   "role": "eval",
+   "deployable": false,
+   "requires_gpu": false,
+   "default": true
+  },
+  {
+   "id": "prometheus",
+   "role": "eval",
+   "deployable": false,
+   "requires_gpu": false,
+   "default": false
+  },
+  {
+   "id": "langfuse-prompts",
+   "role": "eval",
+   "deployable": false,
+   "requires_gpu": false,
+   "default": false
+  },
+  {
+   "id": "trivy",
+   "role": "eval",
+   "deployable": false,
+   "requires_gpu": false,
+   "default": false
+  },
+  {
+   "id": "redis",
+   "role": "data",
+   "deployable": false,
+   "requires_gpu": false,
+   "default": true
+  },
+  {
+   "id": "cohere-embed-v4-multimodal",
+   "role": "embedding",
+   "deployable": false,
+   "requires_gpu": false,
+   "default": true
+  }
+ ]
+}
