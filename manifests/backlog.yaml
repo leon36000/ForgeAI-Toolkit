@@ -24,13 +24,69 @@ stories:
     codeur: qwen
   - id: B-02
     exigence: ID-4
-    titre: Wizard TUI Textual d'après spec-tui-composer.md
-    phase: P2
+    titre: Interface web ForgeAI (épic — décomposée dans CANON/spec-web-ui.md) — remplace la piste TUI
+    phase: P5
+    severite: majeure
+    sous_stories: [B-02a, B-02b, B-02c, B-02d, B-02e, B-02f]
+    criteres:
+      - "décision Nathan 2026-07-17 : web (navigateur), stdlib auto-suffisant hors-ligne; design system avant le code (ID-4)"
+      - "surface web = adaptateur mince sur le moteur prouvé (wizard_ci et al.) ; aucune logique métier dupliquée"
+      - "auto-suffisance : stdlib pure, assets embarqués, zéro fetch réseau, bind 127.0.0.1 (test air-gap)"
+      - "CS-1 : un nouvel utilisateur déploie un stack de bout en bout via le navigateur, sans CLI, hors-ligne"
+    codeur: composer+qwen+fable+kimi
+  - id: B-02a
+    exigence: ID-4
+    titre: Socle serveur web stdlib + /api/detect + accueil
+    phase: P5
     severite: majeure
     criteres:
-      - "10 écrans SCR-01..SCR-10 navigables au clavier (extra [tui] déjà déclaré au pyproject)"
-      - "test headless Textual Pilot : parcours complet Minimal → manifeste écrit"
-      - "corrections UX Gemini intégrées : bascule langue in-place, friction FORCER, résumé pré-déploiement"
+      - "forgeai web [--host 127.0.0.1] [--port] [--no-browser] ; GET /api/detect → 200 JSON matériel ; GET / → coquille d'app"
+      - "auto-suffisance testée : assets sans référence réseau externe (zéro http(s):// non-localhost, zéro CDN) ; route inconnue → 404"
+    codeur: composer
+  - id: B-02b
+    exigence: ID-4
+    titre: Page Profil & Template (filtrée matériel, reco pré-sélectionnée)
+    phase: P5
+    severite: majeure
+    criteres:
+      - "GET /api/profiles + /api/templates → 4 templates réels avec nb de briques ; filtrage matériel exclut GPU-only sans GPU"
+      - "test : la page servie contient les cartes de template et pré-sélectionne la reco"
+    codeur: qwen
+  - id: B-02c
+    exigence: ID-4
+    titre: Page Modèles & IDE (test de connexion réel, clé jamais en clair)
+    phase: P5
+    severite: majeure
+    criteres:
+      - "GET /api/models (jamais les clés) ; POST add-cloud/add-local/test avec test de connexion réel ; GET /api/ides + configure (B-17/18)"
+      - "test : la clé API n'apparaît dans aucun fichier ni registre (référence d'environnement + empreinte seule)"
+    codeur: fable
+  - id: B-02d
+    exigence: ID-4
+    titre: Pages Multi-nœuds (IP/user/mot de passe éphémère → ed25519)
+    phase: P5
+    severite: majeure
+    criteres:
+      - "POST /api/nodes (IP/user/mot de passe → clé, éphémère) ; probe distant ; statut cluster (réutilise B-05/06/07)"
+      - "test : ni registre ni fichier ne portent le mot de passe — empreinte + référence d'environnement seulement"
+    codeur: fable
+  - id: B-02e
+    exigence: ID-4
+    titre: Résumé pré-déploiement + Déploiement + Preuve (SSE)
+    phase: P5
+    severite: majeure
+    criteres:
+      - "POST /api/plan/preview → services/ports/disque/durée ; résumé modifiable + friction FORCER ; run_deploy extrait de wizard_ci"
+      - "test : backend dry-run émet des événements d'étape ordonnés + preuve terminale ; chemin d'échec émet BLOCKED avec raison"
+    codeur: kimi
+  - id: B-02f
+    exigence: ID-4
+    titre: Design system + i18n in-place + thème + accessibilité
+    phase: P5
+    severite: mineure
+    criteres:
+      - "tokens CSS ; sombre/clair (prefers-color-scheme + bascule) ; FR/EN in-place sans reload ; navigation clavier + ARIA + contraste AA"
+      - "test : bascule langue met à jour les libellés sans reload ; couverture i18n FR=EN sur les clés utilisées"
     codeur: composer
   - id: B-03
     exigence: ID-5
