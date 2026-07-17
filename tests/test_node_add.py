@@ -155,14 +155,8 @@ def test_cli_node_add_secret_via_env_jamais_journalise(tmp_path, monkeypatch):
     import forgeai.network.node_add as na
     from forgeai.cli import main
 
-    class _FakeBoot:
-        def install_key(self, ip, user, passwd, pubkey):
-            pass
-
-        def verify_key(self, ip, user, privkey):
-            return True
-
-    monkeypatch.setattr(na, "SshBootstrapper", lambda *a, **k: _FakeBoot())
+    # Réutilise FakeBootstrapper (corps réels, pas un stub) au lieu d'un fake ad hoc vide.
+    monkeypatch.setattr(na, "SshBootstrapper", lambda *a, **k: FakeBootstrapper(verify_return=True))
     monkeypatch.setattr(na, "key_fingerprint", lambda pubkey, runner: "SHA256:FAKEFP")
 
     pub = tmp_path / "k.pub"
