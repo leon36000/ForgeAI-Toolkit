@@ -1,0 +1,112 @@
+{
+ "name": "lab-fine-tuning",
+ "description_fr": "Lab fine-tuning : entrainement/fine-tuning, quantization/fusion, datasets, suivi d'experiences, inference de test.",
+ "description_en": "Fine-tuning lab: training/fine-tuning, quantization/merging, datasets, experiment tracking, test inference.",
+ "bricks": [
+  {
+   "id": "transformers",
+   "role": "training",
+   "deployable": false,
+   "requires_gpu": true,
+   "default": true
+  },
+  {
+   "id": "unsloth",
+   "role": "training",
+   "deployable": false,
+   "requires_gpu": true,
+   "default": false
+  },
+  {
+   "id": "llama-factory",
+   "role": "training",
+   "deployable": false,
+   "requires_gpu": true,
+   "default": false
+  },
+  {
+   "id": "deepspeed",
+   "role": "training",
+   "deployable": false,
+   "requires_gpu": true,
+   "default": false
+  },
+  {
+   "id": "pytorch-fsdp",
+   "role": "training",
+   "deployable": false,
+   "requires_gpu": true,
+   "default": false
+  },
+  {
+   "id": "llama-cpp-gguf",
+   "role": "quantization",
+   "deployable": false,
+   "requires_gpu": false,
+   "default": false
+  },
+  {
+   "id": "lazymergekit",
+   "role": "fusion",
+   "deployable": false,
+   "requires_gpu": false,
+   "default": false
+  },
+  {
+   "id": "llm-course",
+   "role": "methodology",
+   "deployable": false,
+   "requires_gpu": false,
+   "default": false
+  },
+  {
+   "id": "ollama",
+   "role": "inference",
+   "deployable": true,
+   "requires_gpu": false,
+   "default": true
+  },
+  {
+   "id": "llama-cpp",
+   "role": "inference",
+   "deployable": true,
+   "requires_gpu": false,
+   "default": false
+  },
+  {
+   "id": "minio",
+   "role": "data",
+   "deployable": true,
+   "requires_gpu": false,
+   "default": false
+  },
+  {
+   "id": "postgresql",
+   "role": "data",
+   "deployable": true,
+   "requires_gpu": false,
+   "default": false
+  },
+  {
+   "id": "mlflow",
+   "role": "eval",
+   "deployable": true,
+   "requires_gpu": false,
+   "default": false
+  },
+  {
+   "id": "langfuse-prompts",
+   "role": "eval",
+   "deployable": false,
+   "requires_gpu": false,
+   "default": false
+  },
+  {
+   "id": "trivy",
+   "role": "security",
+   "deployable": false,
+   "requires_gpu": false,
+   "default": false
+  }
+ ]
+}
