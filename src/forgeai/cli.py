@@ -215,6 +215,19 @@ def _doctor(args: argparse.Namespace) -> int:
     return 0
 
 
+def _node_probe(args: argparse.Namespace) -> int:
+    from forgeai.network.remote_probe import probe_remote_node, SshRunner, RemoteProbeError
+    runner = SshRunner(args.user, args.node_host, args.keyfile)
+    try:
+        probe = probe_remote_node(args.node_host, runner=runner, registre_path=args.registre)
+    except RemoteProbeError as exc:
+        print(f"ECHEC PROBE: {exc}", file=sys.stderr)
+        return 12
+    print(f"[forgeai] sonde '{probe.node_host}' — profil {probe.profile} | "
+          f"backends {', '.join(probe.backends) or 'aucun'}")
+    return 0
+
+
 def _node_tailscale(args: argparse.Namespace) -> int:
     from forgeai.network.tailscale import render_node_network, TailscaleError
     from forgeai.network.bootstrap import BootstrapError
@@ -687,6 +700,12 @@ def main(argv: list[str] | None = None) -> int:
     p_node_ts.add_argument("--lan-only", action="store_true", dest="lan_only")
     p_node_ts.add_argument("--registre", default=str(DEFAULT_REGISTRE))
     p_node_ts.set_defaults(func=_node_tailscale)
+    p_node_probe = node_sub.add_parser("probe", help="sonde matérielle distante d'un nœud via SSH (B-07)")
+    p_node_probe.add_argument("--node-host", required=True, dest="node_host")
+    p_node_probe.add_argument("--user", required=True)
+    p_node_probe.add_argument("--keyfile", required=True, help="clé privée SSH d'accès au nœud")
+    p_node_probe.add_argument("--registre", default=str(DEFAULT_REGISTRE))
+    p_node_probe.set_defaults(func=_node_probe)
 
     p_wiz = sub.add_parser("wizard", help="wizard bout-en-bout")
     p_wiz.add_argument("--ci", action="store_true", required=True)
