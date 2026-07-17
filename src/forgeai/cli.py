@@ -523,6 +523,32 @@ def _ide_governance(args: argparse.Namespace) -> int:
     return 0
 
 
+def _loop_run(args: argparse.Namespace) -> int:
+    import shlex
+    import subprocess
+    from forgeai.loop import run_loop, make_command_step, make_command_check, LoopError
+
+    def runner(cmd: str) -> int:
+        return subprocess.run(shlex.split(cmd)).returncode
+
+    def on_iter(i: int, done: bool) -> None:
+        print(f"  itération {i}/{args.max_iter} — {'complété' if done else 'en cours'}")
+
+    step = make_command_step(args.step, runner)
+    is_complete = make_command_check(args.until, runner)
+    try:
+        result = run_loop(step, is_complete, args.max_iter, on_iteration=on_iter)
+    except LoopError as exc:
+        print(f"ECHEC LOOP: {exc}", file=sys.stderr)
+        return 12
+    registre.append(Path(args.registre), "ralph_loop", "loop",
+                    {"max_iterations": args.max_iter, "completed": result.completed,
+                     "iterations": result.iterations, "reason": result.reason,
+                     "step": args.step, "until": args.until})
+    print(f"[forgeai] boucle terminée — {result.reason} après {result.iterations} itération(s)")
+    return 0 if result.completed else 13
+
+
 def _export(args: argparse.Namespace) -> int:
     from forgeai.portability import export_setup, PortabilityError
     try:
@@ -769,6 +795,16 @@ def main(argv: list[str] | None = None) -> int:
     p_cat.add_argument("--catalogue", default=str(DEFAULT_CATALOGUE),
                        help="chemin vers le catalogue JSON")
     p_cat.set_defaults(func=_catalogue)
+
+    p_loop = sub.add_parser("loop", help="boucle d'agent gouvernée : budget+complétion+journal (B-19)")
+    loop_sub = p_loop.add_subparsers(dest="loop_cmd", required=True)
+    p_loop_run = loop_sub.add_parser("run", help="répète --step jusqu'à --until (exit 0) ou budget")
+    p_loop_run.add_argument("--max-iter", type=int, required=True, dest="max_iter",
+                            help="budget d'itérations maximum")
+    p_loop_run.add_argument("--step", required=True, help="commande exécutée à chaque itération")
+    p_loop_run.add_argument("--until", required=True, help="commande de complétion (exit 0 = terminé)")
+    p_loop_run.add_argument("--registre", default=str(DEFAULT_REGISTRE))
+    p_loop_run.set_defaults(func=_loop_run)
 
     args = parser.parse_args(argv)
     set_locale(args.lang)   # bascule la langue de l'interface avant dispatch
