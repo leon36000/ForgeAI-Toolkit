@@ -215,6 +215,27 @@ def _doctor(args: argparse.Namespace) -> int:
     return 0
 
 
+def _node_tailscale(args: argparse.Namespace) -> int:
+    from forgeai.network.tailscale import render_node_network, TailscaleError
+    from forgeai.network.bootstrap import BootstrapError
+    try:
+        plan = render_node_network(args.controller_host, args.node_host, args.hostkey,
+                                   tailscale_version=args.version, tailscale_tag=args.tag,
+                                   lan_only=args.lan_only)
+    except (TailscaleError, BootstrapError) as exc:
+        print(f"ECHEC TAILSCALE: {exc}", file=sys.stderr)
+        return 12
+    mode = "LAN-seulement" if plan.lan_only else "tailnet"
+    print(f"[forgeai] plan réseau '{plan.node_host}' — {mode}")
+    print(f"  install: {' '.join(plan.install_argv)}")
+    if plan.up_argv:
+        print(f"  up: {' '.join(plan.up_argv)}")
+    registre.append(Path(args.registre), "node_network", "network",
+                    {"node_host": plan.node_host, "lan_only": plan.lan_only,
+                     "tailscale_version": args.version, "up": plan.up_argv, "acl": plan.acl})
+    return 0
+
+
 def _node_add(args: argparse.Namespace) -> int:
     from forgeai.network.node_add import add_node, SshBootstrapper, NodeAddError
     from forgeai.core.runner import SubprocessRunner
@@ -656,6 +677,16 @@ def main(argv: list[str] | None = None) -> int:
     p_node_add.add_argument("--privkey", required=True)
     p_node_add.add_argument("--registre", default=str(DEFAULT_REGISTRE))
     p_node_add.set_defaults(func=_node_add)
+    p_node_ts = node_sub.add_parser("tailscale",
+                                    help="plan réseau Tailscale d'un nœud : version épinglée, LAN-only (B-06)")
+    p_node_ts.add_argument("--node-host", required=True, dest="node_host")
+    p_node_ts.add_argument("--controller-host", required=True, dest="controller_host")
+    p_node_ts.add_argument("--hostkey", required=True, help="empreinte 'SHA256:...' de la clé d'hôte (EX-1)")
+    p_node_ts.add_argument("--version", required=True, help="version Tailscale épinglée (pas 'latest')")
+    p_node_ts.add_argument("--tag", default="tag:forgeai-node")
+    p_node_ts.add_argument("--lan-only", action="store_true", dest="lan_only")
+    p_node_ts.add_argument("--registre", default=str(DEFAULT_REGISTRE))
+    p_node_ts.set_defaults(func=_node_tailscale)
 
     p_wiz = sub.add_parser("wizard", help="wizard bout-en-bout")
     p_wiz.add_argument("--ci", action="store_true", required=True)
