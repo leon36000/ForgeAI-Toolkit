@@ -36,11 +36,14 @@ def validate_plugin(plugin: dict, *, existence_check=None) -> list[str]:
     if src and isinstance(src, str) and not src.startswith("https://"):
         violations.append("source_url invalide (https requis)")
 
-    # healthcheck dict sans type
+    # healthcheck : chaîne non vide OU objet {"type": ...} — tout autre type est refusé
     hc = plugin.get("healthcheck")
-    if isinstance(hc, dict) and hc:
-        if not hc.get("type"):
-            violations.append("healthcheck sans type")
+    if hc:  # l'absence/vide est déjà couverte par les champs requis
+        if isinstance(hc, dict):
+            if not hc.get("type"):
+                violations.append("healthcheck sans type")
+        elif not isinstance(hc, str):
+            violations.append("healthcheck de type invalide (chaîne ou objet {type} attendu)")
 
     # vérification d’existence GitHub si demandée et source_url valide
     if existence_check is not None and src and isinstance(src, str) and src.startswith("https://"):

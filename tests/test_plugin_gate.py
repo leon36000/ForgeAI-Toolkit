@@ -71,3 +71,11 @@ def test_main_offline_plugin_valide(tmp_path):
     p.write_text(json.dumps(_valid_plugin()))
     rc = main(["--plugin", str(p), "--offline"])
     assert rc == 0
+
+
+def test_healthcheck_type_invalide_refuse():
+    """Un healthcheck ni chaîne ni objet (ex. liste) est refusé (resserrage revue)."""
+    p = _valid_plugin()
+    p["healthcheck"] = ["ni-str-ni-dict"]
+    v = validate_plugin(p, existence_check=lambda u: True)
+    assert any("healthcheck de type invalide" in x for x in v)

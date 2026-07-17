@@ -21,3 +21,6 @@ code 1.
 
 La fonction `validate_plugin(plugin, existence_check=…)` accepte un vérificateur d'existence
 INJECTABLE (réel en production, factice en test — aucune requête réseau dans les tests).
+
+Le `healthcheck` doit être une **chaîne non vide** OU un **objet** portant une clé `type` non vide ;
+tout autre type (liste, nombre…) est refusé (`healthcheck de type invalide`).
