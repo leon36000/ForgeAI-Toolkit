@@ -24,3 +24,5 @@ INJECTABLE (réel en production, factice en test — aucune requête réseau dan
 
 Le `healthcheck` doit être une **chaîne non vide** OU un **objet** portant une clé `type` non vide ;
 tout autre type (liste, nombre…) est refusé (`healthcheck de type invalide`).
+
+Les champs `id`, `name`, `source_url`, `license` doivent être des **chaînes** (typage strict).

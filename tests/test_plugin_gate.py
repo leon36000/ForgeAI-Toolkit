@@ -79,3 +79,13 @@ def test_healthcheck_type_invalide_refuse():
     p["healthcheck"] = ["ni-str-ni-dict"]
     v = validate_plugin(p, existence_check=lambda u: True)
     assert any("healthcheck de type invalide" in x for x in v)
+
+
+def test_champs_string_type_strict_refuse():
+    """Un champ chaîne fourni avec un mauvais type (liste/entier) est refusé."""
+    p = _valid_plugin()
+    p["source_url"] = ["https://github.com/o/x"]  # liste au lieu d'une chaîne
+    assert any("doit être une chaîne" in x for x in validate_plugin(p, existence_check=lambda u: True))
+    p2 = _valid_plugin()
+    p2["license"] = 123
+    assert any("doit être une chaîne" in x for x in validate_plugin(p2, existence_check=lambda u: True))

@@ -25,15 +25,18 @@ def default_existence_check(url: str) -> bool:
 def validate_plugin(plugin: dict, *, existence_check=None) -> list[str]:
     violations = []
 
-    # champs requis absents ou vides
+    # champs requis absents ou vides + typage strict des champs chaîne
+    string_fields = ("id", "name", "source_url", "license")
     for field in REQUIRED_FIELDS:
         val = plugin.get(field)
         if not val:
             violations.append(f"champ requis manquant : '{field}'")
+        elif field in string_fields and not isinstance(val, str):
+            violations.append(f"champ '{field}' doit être une chaîne")
 
-    # source_url doit commencer par https://
-    src = plugin.get("source_url", "")
-    if src and isinstance(src, str) and not src.startswith("https://"):
+    # source_url doit être une chaîne https://
+    src = plugin.get("source_url")
+    if isinstance(src, str) and src and not src.startswith("https://"):
         violations.append("source_url invalide (https requis)")
 
     # healthcheck : chaîne non vide OU objet {"type": ...} — tout autre type est refusé
