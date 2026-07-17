@@ -198,6 +198,32 @@ def wizard_ci(args: argparse.Namespace) -> int:
 _STATUS_MARK = {"ok": "OK ", "degraded": "!! ", "missing": "-- "}
 
 
+def _gpu_drivers(args: argparse.Namespace) -> int:
+    from forgeai.hardware.drivers import detect_driver_state, plan_driver_op, DriverError
+    from forgeai.core.runner import SubprocessRunner
+    try:
+        state = detect_driver_state(args.vendor, SubprocessRunner())
+        rec = state.recommendation
+        print(f"[forgeai] driver {args.vendor} — présent: {state.present} "
+              f"v{state.version or '-'}")
+        rocm = " (ROCm jamais proposé)" if args.vendor == "amd" else ""
+        print(f"  recommandation : runtime {rec.runtime}, operator {rec.operator}{rocm}")
+        payload = {"vendor": args.vendor, "present": state.present, "version": state.version,
+                   "runtime": rec.runtime, "operator": rec.operator,
+                   "rocm_allowed": rec.rocm_allowed}
+        if args.action:
+            plan = plan_driver_op(args.vendor, args.action)
+            print(f"  plan {args.action} : {' '.join(plan.install_argv)}")
+            print(f"  rollback : {' '.join(plan.rollback_argv)}")
+            payload["plan"] = {"action": plan.action, "install": plan.install_argv,
+                               "rollback": plan.rollback_argv}
+    except DriverError as exc:
+        print(f"ECHEC GPU: {exc}", file=sys.stderr)
+        return 12
+    registre.append(Path(args.registre), "gpu_drivers", "hardware", payload)
+    return 0
+
+
 def _doctor(args: argparse.Namespace) -> int:
     from forgeai.deploy.compose import http_ok
     from forgeai.preflight import available_backends, run_checks
@@ -720,6 +746,15 @@ def main(argv: list[str] | None = None) -> int:
 
     p_doctor = sub.add_parser("doctor", help="préflight : ce que votre machine peut faire")
     p_doctor.set_defaults(func=_doctor)
+
+    p_gpu = sub.add_parser("gpu", help="cycle de vie des drivers GPU NVIDIA/AMD/Intel (B-04)")
+    gpu_sub = p_gpu.add_subparsers(dest="gpu_cmd", required=True)
+    p_gpu_drv = gpu_sub.add_parser("drivers", help="détecte + recommande (+ plan install/update)")
+    p_gpu_drv.add_argument("--vendor", required=True, choices=["nvidia", "amd", "intel"])
+    p_gpu_drv.add_argument("--action", choices=["install", "update"], default=None,
+                           help="produit aussi un plan install/update avec rollback")
+    p_gpu_drv.add_argument("--registre", default=str(DEFAULT_REGISTRE))
+    p_gpu_drv.set_defaults(func=_gpu_drivers)
 
     p_node = sub.add_parser("node", help="multi-nœuds (P2)")
     node_sub = p_node.add_subparsers(dest="node_cmd", required=True)
