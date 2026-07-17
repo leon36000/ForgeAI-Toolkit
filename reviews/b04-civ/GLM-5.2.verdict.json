@@ -1,0 +1,26 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "src/forgeai/hardware/drivers.py",
+   "description": "Le rollback AMD et Intel utilise --reinstall du même paquet plutôt qu'un vrai retour à une version/stade antérieur. Pour NVIDIA, le rollback downgrade de 550 à 535 (vrai rollback), mais pour AMD (mesa-vulkan-drivers --reinstall) et Intel (intel-opencl-icd --reinstall), on réinstalle simplement le même paquet. Le critère d'acceptation exige 'rollback non vide, distinct de l'install' — les argv sont techniquement distincts (présence du flag --reinstall), mais sémantiquement ce n'est pas un rollback.",
+   "preuve": "drivers.py lignes 96-101 : rollback_argv = [\"apt-get\", \"install\", \"-y\", \"--reinstall\", \"mesa-vulkan-drivers\"] pour AMD ; lignes 102-103 : rollback_argv = [\"apt-get\", \"install\", \"-y\", \"--reinstall\", \"intel-opencl-icd\"] pour Intel. À comparer avec NVIDIA lignes 89-92 qui downgrade vers nvidia-driver-535."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "tests/test_drivers.py",
+   "description": "Aucun test ne vérifie que le rollback est distinct de l'install pour AMD et Intel. Seul NVIDIA est testé via test_nvidia_rollback_differe_de_install. Le critère d'acceptation exige 'rollback distinct de l'install' pour tous les vendors.",
+   "preuve": "test_drivers.py : test_nvidia_rollback_differe_de_install (lignes 63-67) ne couvre que NVIDIA. test_plan_a_toujours_un_rollback (lignes 57-59) vérifie seulement que rollback_argv est non vide, pas qu'il diffère d'install_argv."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "tests/test_drivers.py",
+   "description": "Le test CLI ne couvre que le chemin AMD. Aucun test CLI pour NVIDIA ou Intel, ni pour le cas sans --action (détection seule).",
+   "preuve": "test_drivers.py : test_cli_gpu_drivers_amd (lignes 69-78) est le seul test CLI ; il utilise --vendor amd --action install."
+  }
+ ],
+ "date_heure": "2025-01-24T12:00:00Z",
+ "prompt_sha256": "29fcd66a8405f43b523d9581c99a056b62bba31d29c175c73bf3e704837a7f69",
+ "reviewer_model": "GLM-5.2"
+}
