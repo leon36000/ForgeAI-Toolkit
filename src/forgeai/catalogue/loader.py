@@ -80,6 +80,8 @@ def category_defaults(entries: list[dict]) -> dict[str, str]:
     """
     defaults: dict[str, tuple[int, str]] = {}
     for entry in entries:
+        if entry.get("default_eligible") is False:
+            continue  # brique de couverture (option) : jamais candidate au défaut ⭐
         category = entry["category"]
         name = entry["name"]
         stars = parse_stars(entry.get("popularity"))
