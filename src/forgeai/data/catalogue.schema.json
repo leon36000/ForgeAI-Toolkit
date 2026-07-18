@@ -23,25 +23,74 @@
   "verify_method"
  ],
  "properties": {
-  "id": {"type": "string", "description": "identifiant unique de la brique"},
-  "name": {"type": "string", "description": "nom affiché (peut porter un qualificatif org/repo)"},
-  "disambiguation": {"type": "string", "description": "qualificatif distinguant deux briques de même name en collision"},
-  "category": {"type": "string"},
-  "description_fr": {"type": "string"},
-  "description_en": {"type": "string"},
-  "en_pending": {"type": "boolean"},
-  "license": {"type": "string"},
-  "maintenance": {"type": "string"},
-  "popularity": {"type": "string"},
-  "source_url": {"type": "string"},
-  "flag": {"type": "string"},
-  "role": {"type": "string"},
-  "install": {"type": "string"},
-  "default": {"type": ["boolean", "null"]},
-  "atlas_only": {"type": "boolean"},
-  "atlas_status": {"type": "string"},
-  "verified": {"type": "boolean"},
-  "verified_at": {"type": "string"},
-  "verify_method": {"type": "string"}
+  "id": {
+   "type": "string",
+   "description": "identifiant unique de la brique"
+  },
+  "name": {
+   "type": "string",
+   "description": "nom affiché (peut porter un qualificatif org/repo)"
+  },
+  "disambiguation": {
+   "type": "string",
+   "description": "qualificatif distinguant deux briques de même name en collision"
+  },
+  "category": {
+   "type": "string"
+  },
+  "description_fr": {
+   "type": "string"
+  },
+  "description_en": {
+   "type": "string"
+  },
+  "en_pending": {
+   "type": "boolean"
+  },
+  "license": {
+   "type": "string"
+  },
+  "maintenance": {
+   "type": "string"
+  },
+  "popularity": {
+   "type": "string"
+  },
+  "source_url": {
+   "type": "string"
+  },
+  "flag": {
+   "type": "string"
+  },
+  "role": {
+   "type": "string"
+  },
+  "install": {
+   "type": "string"
+  },
+  "default": {
+   "type": [
+    "boolean",
+    "null"
+   ]
+  },
+  "atlas_only": {
+   "type": "boolean"
+  },
+  "atlas_status": {
+   "type": "string"
+  },
+  "verified": {
+   "type": "boolean"
+  },
+  "verified_at": {
+   "type": "string"
+  },
+  "verify_method": {
+   "type": "string"
+  },
+  "default_eligible": {
+   "type": "boolean"
+  }
  }
 }

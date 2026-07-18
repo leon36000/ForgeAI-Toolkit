@@ -68,6 +68,7 @@ def test_gap_categories_sont_reelles():
     assert nouvelles == set(), f"catégories inexistantes introduites : {nouvelles}"
 
 
-def test_catalogue_compte_981():
-    """948 (base) + 33 (GAP) = 981 entrées après IMPL-2."""
-    assert len(_entries()) == 981
+def test_catalogue_compte_min_981():
+    """948 (base) + 33 (GAP IMPL-2) = 981 au minimum ; le catalogue ne fait que croître
+    (des lots ultérieurs ajoutent d'autres briques — compteur exact = fragile)."""
+    assert len(_entries()) >= 981
