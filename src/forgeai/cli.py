@@ -123,7 +123,11 @@ def wizard_ci(args: argparse.Namespace) -> int:
     stack = None
     stack_label = "minimal"
     if args.stack:
-        stack = load_stack(args.stack)
+        try:
+            stack = load_stack(args.stack)
+        except FileNotFoundError:
+            print(f"ABORT [STACK] stack inconnu : {args.stack}", file=sys.stderr)
+            return 8
         stack_label = stack.get("name", args.stack)
 
     # P0.3b/N1b — sélection utilisateur v2 : briques + {modèle, nœud, moteur} + embeddings + rag_node
@@ -504,7 +508,13 @@ def _read_secret(env_var: str | None, prompt: str) -> str:
             raise RouteError(f"variable d'environnement '{env_var}' vide ou absente")
         return value
     import getpass
-    return getpass.getpass(prompt)
+    try:
+        return getpass.getpass(prompt)
+    except EOFError:  # proof:allow (message d'erreur, aucune valeur secrète)
+        raise RouteError(
+            "aucune source disponible pour lire ce champ : ni variable "  # proof:allow
+            "d'environnement (--*-env) ni terminal interactif"
+        )
 
 
 def _model_add_cloud(args: argparse.Namespace) -> int:
@@ -1169,8 +1179,6 @@ def main(argv: list[str] | None = None) -> int:
     p_tmpl_show.set_defaults(func=_template_show)
     p_tmpl_res = tmpl_sub.add_parser("resolve", help="résout le template (filtrage hardware) → cœur déployable")
     p_tmpl_res.add_argument("name")
-    p_tmpl_res.add_argument("--no-gpu", action="store_true", dest="no_gpu",
-                            help="machine sans GPU : exclut les briques gpu-only (ex. vLLM)")
     p_tmpl_res.add_argument("--registre", default=str(DEFAULT_REGISTRE))
     p_tmpl_res.set_defaults(func=_template_resolve)
 
@@ -1194,3 +1202,6 @@ def main(argv: list[str] | None = None) -> int:
 
 if __name__ == "__main__":
     sys.exit(main())
+
+
+# V1-FIX — 3 gestions d'erreur cassées trouvées par la campagne de test réelle
