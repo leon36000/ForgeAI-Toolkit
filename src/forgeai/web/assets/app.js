@@ -43,7 +43,23 @@
       default_badge: 'Défaut de sphère',
       counts_tpl: '{installed} installées avec le stack · {checked} cochées · {total} disponibles',
       no_results: 'Aucune brique ne correspond au filtre.',
-      stars_label: 'étoiles'
+      stars_label: 'étoiles',
+      models_title: 'Modèles & clés API',
+      models_subtitle: 'Routes modèle cloud — test de connexion réel obligatoire ; la clé est scellée au coffre, seule l\'empreinte est conservée.',
+      f_name: 'Nom de la route',
+      f_provenance: 'Provenance',
+      f_model_id: 'Identifiant du modèle',
+      f_base_url: 'Base URL (OpenAI-compatible)',
+      f_api_key: 'Clé API', // proof:allow (libellé i18n, pas un secret)
+      f_passphrase: 'Passphrase du coffre',
+      prov_direct: 'Direct fournisseur',
+      prov_autre: 'Autre (URL)',
+      key_note: 'La clé transite en mémoire vers le serveur local (127.0.0.1) puis est scellée au coffre chiffré — jamais écrite en clair, jamais réaffichée.',
+      add_route: 'Ajouter la route (test réel)',
+      testing_route: 'Test de connexion en cours…',
+      route_added: 'Route ajoutée — test réel réussi.',
+      no_models: 'Aucune route configurée pour l\'instant.',
+      fingerprint_label: 'empreinte'
     },
     en: {
       title: 'ForgeAI Toolkit',
@@ -72,7 +88,23 @@
       default_badge: 'Sphere default',
       counts_tpl: '{installed} installed with the stack · {checked} checked · {total} available',
       no_results: 'No brick matches the filter.',
-      stars_label: 'stars'
+      stars_label: 'stars',
+      models_title: 'Models & API keys',
+      models_subtitle: 'Cloud model routes — real connection test required; the key is sealed in the vault, only its fingerprint is kept.',
+      f_name: 'Route name',
+      f_provenance: 'Provenance',
+      f_model_id: 'Model identifier',
+      f_base_url: 'Base URL (OpenAI-compatible)',
+      f_api_key: 'API key', // proof:allow (libellé i18n, pas un secret)
+      f_passphrase: 'Vault passphrase',
+      prov_direct: 'Direct provider',
+      prov_autre: 'Other (URL)',
+      key_note: 'The key transits in memory to the local server (127.0.0.1) then is sealed in the encrypted vault — never written in clear, never shown again.',
+      add_route: 'Add route (real test)',
+      testing_route: 'Connection test running…',
+      route_added: 'Route added — real test passed.',
+      no_models: 'No route configured yet.',
+      fingerprint_label: 'fingerprint'
     }
   };
 
@@ -124,6 +156,7 @@
       renderSphereSteps();
       renderBricks();
     }
+    if (state.models !== undefined) renderModels();
   }
 
   async function fetchJson(path) {
@@ -393,6 +426,86 @@
     state.bricks = null;
   }
 
+  /* ---------- Modèles & clés API (B-02c) ---------- */
+
+  async function loadModels() {
+    const list = document.getElementById('models-list');
+    try {
+      state.models = await fetchJson('/api/models');
+    } catch (e) {
+      list.innerHTML = `<p class="error">${escapeHtml(t('error_load'))}</p>`;
+      return;
+    }
+    renderModels();
+  }
+
+  function renderModels() {
+    const list = document.getElementById('models-list');
+    const models = state.models || [];
+    if (!models.length) {
+      list.innerHTML = `<p class="form-note">${escapeHtml(t('no_models'))}</p>`;
+      return;
+    }
+    list.innerHTML = models.map((m) => `
+      <div class="model-row">
+        <span class="brick-name">${escapeHtml(m.name)}</span>
+        <span class="def-pill">${escapeHtml(m.provenance)}</span>
+        <span class="def-pill">${escapeHtml(m.model_id)}</span>
+        ${m.fingerprint ? `<span class="brick-stars" title="${escapeHtml(t('fingerprint_label'))}">${escapeHtml(String(m.fingerprint).slice(0, 16))}…</span>` : ''}
+      </div>
+    `).join('');
+  }
+
+  function initModelForm() {
+    const form = document.getElementById('model-form');
+    if (!form) return;
+    const provenance = form.elements.provenance;
+    const baseUrlField = document.getElementById('base-url-field');
+    const syncBaseUrl = () => {
+      const need = provenance.value === 'direct' || provenance.value === 'autre';
+      baseUrlField.classList.toggle('hidden', !need);
+      form.elements.base_url.required = need;
+    };
+    provenance.addEventListener('change', syncBaseUrl);
+    syncBaseUrl();
+
+    form.addEventListener('submit', async (ev) => {
+      ev.preventDefault();
+      const status = document.getElementById('model-form-status');
+      const payload = {
+        name: form.elements.name.value.trim(),
+        provenance: provenance.value,
+        model_id: form.elements.model_id.value.trim(),
+        api_key: form.elements.api_key.value, // proof:allow (champ payload, valeur jamais litterale)
+        passphrase: form.elements.passphrase.value
+      };
+      const baseUrl = form.elements.base_url.value.trim();
+      if (baseUrl) payload.base_url = baseUrl;
+      // hygiène : vider les champs secrets AVANT l'appel — jamais conservés dans le DOM
+      form.elements.api_key.value = '';
+      form.elements.passphrase.value = '';
+      status.textContent = t('testing_route');
+      status.classList.remove('error');
+      try {
+        const res = await fetch('/api/models', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const body = await res.json();
+        if (!res.ok) throw new Error(body.error || res.status);
+        status.textContent = t('route_added');
+        form.elements.name.value = '';
+        form.elements.model_id.value = '';
+        form.elements.base_url.value = '';
+        loadModels();
+      } catch (e) {
+        status.textContent = String(e.message || e);
+        status.classList.add('error');
+      }
+    });
+  }
+
   function initControls() {
     document.querySelectorAll('#theme-toggle button[data-theme]').forEach((btn) => {
       btn.addEventListener('click', () => setTheme(btn.dataset.theme));
@@ -407,12 +520,14 @@
         renderBricks();
       });
     }
+    initModelForm();
     setTheme(state.theme);
     setLang(state.lang);
   }
 
   async function boot() {
     initControls();
+    loadModels();
     try {
       const [detect, stacks, spheres] = await Promise.all([
         fetchJson('/api/detect'),

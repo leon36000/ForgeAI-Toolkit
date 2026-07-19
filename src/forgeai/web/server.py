@@ -2,13 +2,18 @@ from __future__ import annotations
 
 import importlib.resources
 import json
+import os
 import urllib.parse
 import webbrowser
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+from pathlib import Path
 
 from forgeai.catalogue.spheres import SPHERES, classify_sphere, spheres_index
+from forgeai.core import registre
 from forgeai.core.runner import SubprocessRunner
 from forgeai.hardware.detect import HardwareDetector
+from forgeai.models.probe import Transport
+from forgeai.models.routes import RouteError, RouteStore
 from forgeai.resources import catalogue_path
 from forgeai.stacks import deploy_ids, list_stacks, load_stack
 
@@ -130,6 +135,29 @@ def bricks_payload(sphere_id: str, stack_id: str | None) -> dict | None:
     }
 
 
+def forgeai_home() -> Path:
+    """Répertoire utilisateur ForgeAI (FORGEAI_HOME ou ~/.forgeai)."""
+    return Path(os.environ.get("FORGEAI_HOME", Path.home() / ".forgeai"))
+
+
+# Hooks pour les tests (valeurs par défaut si non posés).
+_MODELS_HOME: Path | None = None
+_PROBE_TRANSPORT: Transport | None = None
+_REGISTRE_PATH: Path | None = None
+
+
+def _models_home() -> Path:
+    return _MODELS_HOME if _MODELS_HOME is not None else forgeai_home() / "models"
+
+
+def _probe_transport() -> Transport | None:
+    return _PROBE_TRANSPORT
+
+
+def _registre_path() -> Path:
+    return _REGISTRE_PATH if _REGISTRE_PATH is not None else forgeai_home() / "Registres" / "mission.jsonl"
+
+
 class ForgeAIHandler(BaseHTTPRequestHandler):
     server_version = "ForgeAI/0.1"
 
@@ -170,6 +198,11 @@ class ForgeAIHandler(BaseHTTPRequestHandler):
                 json.dumps({"status": "ok"}, ensure_ascii=False).encode("utf-8"),
                 "application/json; charset=utf-8",
             )
+            return
+
+        if path == "/api/models":
+            store = RouteStore(_models_home())
+            self._send_json(200, [r.public_dict() for r in store.list()])
             return
 
         if path == "/api/stacks":
@@ -245,6 +278,93 @@ class ForgeAIHandler(BaseHTTPRequestHandler):
 
         payload = json.dumps({"error": "not found", "path": path}, ensure_ascii=False).encode("utf-8")
         self._send(404, payload, "application/json; charset=utf-8")
+
+    def do_POST(self) -> None:  # noqa: N802
+        parsed = urllib.parse.urlparse(self.path)
+        path = parsed.path
+
+        if path != "/api/models":
+            self._send_json(404, {"error": "not found"})
+            return
+
+        length_hdr = self.headers.get("Content-Length")
+        if length_hdr is None:
+            self._send_json(413, {"error": "Content-Length requis"})
+            return
+
+        try:
+            length = int(length_hdr)
+        except ValueError:
+            self._send_json(400, {"error": "Content-Length invalide"})
+            return
+
+        if length < 0 or length > 65536:
+            self._send_json(413, {"error": "corps trop grand"})
+            return
+
+        try:
+            body = self.rfile.read(length)
+            data = json.loads(body.decode("utf-8"))
+        except (json.JSONDecodeError, UnicodeDecodeError):
+            self._send_json(400, {"error": "JSON invalide"})
+            return
+
+        if not isinstance(data, dict):
+            self._send_json(400, {"error": "JSON invalide"})
+            return
+
+        required = ["name", "provenance", "model_id", "api_key", "passphrase"]
+        missing = [field for field in required if field not in data]
+        if missing:
+            self._send_json(400, {"error": "champs manquants", "missing": missing})
+            return
+
+        name = data["name"]
+        provenance = data["provenance"]
+        model_id = data["model_id"]
+        api_key = data["api_key"]  # proof:allow (identifiant ; la valeur n'est jamais journalisee)
+        passphrase = data["passphrase"]
+        base_url = data.get("base_url")
+
+        try:
+            store = RouteStore(_models_home())
+            route, result = store.add_cloud(
+                name,
+                provenance,
+                model_id,
+                api_key,
+                passphrase,
+                base_url=base_url,
+                transport=_probe_transport(),
+            )
+        except RouteError as exc:
+            self._send_json(400, {"error": str(exc)})
+            return
+
+        try:
+            reg_path = _registre_path()
+            reg_path.parent.mkdir(parents=True, exist_ok=True)
+            registre.append(
+                reg_path,
+                "route_cloud_ajoutee",
+                "web",
+                {
+                    "name": route.name,
+                    "provenance": route.provenance,
+                    "model_id": route.model_id,
+                    "key_fingerprint": route.key_fingerprint,
+                },
+            )
+        except Exception:
+            pass
+
+        self._send_json(
+            201,
+            {
+                "route": route.public_dict(),
+                "probe": {"light": result.light, "detail": result.detail},
+            },
+        )
 
     def log_message(self, *args) -> None:  # noqa: ARG002
         return
