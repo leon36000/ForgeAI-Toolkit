@@ -3,6 +3,10 @@ from __future__ import annotations
 import importlib.resources
 import json
 import os
+import subprocess
+import sys
+import threading
+import time
 import urllib.parse
 import webbrowser
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
@@ -11,12 +15,14 @@ from pathlib import Path
 from forgeai.catalogue.spheres import SPHERES, classify_sphere, spheres_index
 from forgeai.core import registre
 from forgeai.core.runner import SubprocessRunner, CommandRunner
+from forgeai.deploy.compose import http_ok
 from forgeai.hardware.detect import HardwareDetector
 from forgeai.models.probe import Transport
 from forgeai.models.routes import RouteError, RouteStore
 from forgeai.network.keys import generate_keypair, KeyError_
 from forgeai.network.node_add import add_node, Bootstrapper, NodeAddError, SshBootstrapper
 from forgeai.network.nodes import cluster_status, ClusterError
+from forgeai.preflight import available_backends, run_checks
 from forgeai.resources import catalogue_path
 from forgeai.stacks import deploy_ids, list_stacks, load_stack
 
@@ -151,6 +157,17 @@ _REGISTRE_PATH: Path | None = None
 _NODE_BOOTSTRAPPER: Bootstrapper | None = None
 _NODE_KEYS_DIR: Path | None = None
 
+# Hook déploiement : remplace la commande wizard par défaut dans les tests.
+_DEPLOY_CMD: list[str] | None = None
+
+_DEPLOY_STATE = {
+    "proc": None,
+    "lines": [],
+    "done": False,
+    "exit_code": None,
+    "lock": threading.Lock(),
+}
+
 
 def _models_home() -> Path:
     return _MODELS_HOME if _MODELS_HOME is not None else forgeai_home() / "models"
@@ -174,6 +191,31 @@ def _node_keys(runner: CommandRunner) -> tuple[Path, Path]:
     return public, private
 
 
+def _available_backends() -> list[str]:
+    return available_backends(
+        run_checks(SubprocessRunner(), HardwareDetector(SubprocessRunner()), http_ok)
+    )
+
+
+def _summary_payload(stack_id: str) -> dict:
+    stack = load_stack(stack_id)
+    profile = HardwareDetector(SubprocessRunner()).full_report()
+    return {
+        "stack": {
+            "id": stack.get("id", stack_id),
+            "name": stack.get("name", stack_id),
+            "n_deploy": len(deploy_ids(stack)),
+        },
+        "hardware": {
+            "cpu_model": getattr(profile, "cpu_model", ""),
+            "gpus": len(getattr(profile, "gpus", [])),
+            "ram_gb": getattr(profile, "ram_gb", 0),
+        },
+        "backends": _available_backends(),
+        "chassis": len(chassis_ids()),
+    }
+
+
 class ForgeAIHandler(BaseHTTPRequestHandler):
     server_version = "ForgeAI/0.1"
 
@@ -186,6 +228,35 @@ class ForgeAIHandler(BaseHTTPRequestHandler):
 
     def _send_json(self, code: int, obj: object) -> None:
         self._send(code, _json_body(obj), "application/json; charset=utf-8")
+
+    def _read_json_body(self, max_length: int = 65536) -> dict | None:
+        length_hdr = self.headers.get("Content-Length")
+        if length_hdr is None:
+            self._send_json(413, {"error": "Content-Length requis"})
+            return None
+
+        try:
+            length = int(length_hdr)
+        except ValueError:
+            self._send_json(400, {"error": "Content-Length invalide"})
+            return None
+
+        if length < 0 or length > max_length:
+            self._send_json(413, {"error": "corps trop grand"})
+            return None
+
+        try:
+            body = self.rfile.read(length)
+            data = json.loads(body.decode("utf-8"))
+        except (json.JSONDecodeError, UnicodeDecodeError):
+            self._send_json(400, {"error": "JSON invalide"})
+            return None
+
+        if not isinstance(data, dict):
+            self._send_json(400, {"error": "JSON invalide"})
+            return None
+
+        return data
 
     def do_GET(self) -> None:  # noqa: N802
         parsed = urllib.parse.urlparse(self.path)
@@ -286,6 +357,57 @@ class ForgeAIHandler(BaseHTTPRequestHandler):
             self._send_json(200, payload)
             return
 
+        if path == "/api/summary":
+            query = urllib.parse.parse_qs(parsed.query)
+            stack_list = query.get("stack")
+            if not stack_list:
+                self._send_json(400, {"error": "stack requis"})
+                return
+            stack_id = stack_list[0]
+            try:
+                self._send_json(200, _summary_payload(stack_id))
+            except FileNotFoundError:
+                self._send_json(404, {"error": "stack not found"})
+            return
+
+        if path == "/api/deploy/events":
+            self.send_response(200)
+            self.send_header("Content-Type", "text/event-stream")
+            self.send_header("Cache-Control", "no-cache")
+            self.end_headers()
+
+            if _DEPLOY_STATE["proc"] is None:
+                payload = json.dumps({"exit_code": None}, ensure_ascii=False)
+                try:
+                    self.wfile.write(f"event: end\ndata: {payload}\n\n".encode("utf-8"))
+                    self.wfile.flush()
+                except (BrokenPipeError, ConnectionResetError):
+                    pass
+                return
+
+            idx = 0
+            while True:
+                with _DEPLOY_STATE["lock"]:
+                    lines = _DEPLOY_STATE["lines"]
+                    done = _DEPLOY_STATE["done"]
+                    exit_code = _DEPLOY_STATE["exit_code"]
+                    while idx < len(lines):
+                        try:
+                            self.wfile.write(f"data: {lines[idx]}\n\n".encode("utf-8"))
+                            self.wfile.flush()
+                        except (BrokenPipeError, ConnectionResetError):
+                            return
+                        idx += 1
+                    if done:
+                        payload = json.dumps({"exit_code": exit_code}, ensure_ascii=False)
+                        try:
+                            self.wfile.write(f"event: end\ndata: {payload}\n\n".encode("utf-8"))
+                            self.wfile.flush()
+                        except (BrokenPipeError, ConnectionResetError):
+                            pass
+                        return
+                time.sleep(0.2)
+
         if path == "/api/nodes/status":
             runner = SubprocessRunner()
             try:
@@ -309,30 +431,8 @@ class ForgeAIHandler(BaseHTTPRequestHandler):
         path = parsed.path
 
         if path == "/api/nodes":
-            length_hdr = self.headers.get("Content-Length")
-            if length_hdr is None:
-                self._send_json(413, {"error": "Content-Length requis"})
-                return
-
-            try:
-                length = int(length_hdr)
-            except ValueError:
-                self._send_json(400, {"error": "Content-Length invalide"})
-                return
-
-            if length < 0 or length > 65536:
-                self._send_json(413, {"error": "corps trop grand"})
-                return
-
-            try:
-                body = self.rfile.read(length)
-                data = json.loads(body.decode("utf-8"))
-            except (json.JSONDecodeError, UnicodeDecodeError):
-                self._send_json(400, {"error": "JSON invalide"})
-                return
-
-            if not isinstance(data, dict):
-                self._send_json(400, {"error": "JSON invalide"})
+            data = self._read_json_body()
+            if data is None:
                 return
 
             required = ["ip", "user", "password"]
@@ -387,34 +487,96 @@ class ForgeAIHandler(BaseHTTPRequestHandler):
             )
             return
 
+        if path == "/api/deploy":
+            data = self._read_json_body()
+            if data is None:
+                return
+
+            required = ["stack", "backend", "confirm"]
+            missing = [field for field in required if field not in data]
+            if missing:
+                self._send_json(400, {"error": "champs manquants", "missing": missing})
+                return
+
+            stack_id = data["stack"]
+            backend = data["backend"]
+            confirm = data["confirm"]
+
+            if confirm != "FORCER":
+                self._send_json(400, {"error": "confirmation 'FORCER' requise"})
+                return
+
+            if backend not in {"compose", "k3s"}:
+                self._send_json(400, {"error": "backend invalide"})
+                return
+
+            try:
+                load_stack(stack_id)
+            except FileNotFoundError:
+                self._send_json(404, {"error": "stack not found"})
+                return
+
+            with _DEPLOY_STATE["lock"]:
+                proc = _DEPLOY_STATE["proc"]
+                if proc is not None and proc.poll() is None:
+                    self._send_json(409, {"error": "déploiement déjà en cours"})
+                    return
+
+                _DEPLOY_STATE["lines"].clear()
+                _DEPLOY_STATE["done"] = False
+                _DEPLOY_STATE["exit_code"] = None
+
+                cmd = _DEPLOY_CMD if _DEPLOY_CMD is not None else [
+                    sys.executable,
+                    "-m",
+                    "forgeai",
+                    "wizard",
+                    "--ci",
+                    "--workdir",
+                    str(forgeai_home() / "deploy"),
+                    "--backend",
+                    backend,
+                ]
+
+                new_proc = subprocess.Popen(
+                    cmd,
+                    stdout=subprocess.PIPE,
+                    stderr=subprocess.STDOUT,
+                    text=True,
+                    bufsize=1,
+                )
+                _DEPLOY_STATE["proc"] = new_proc
+
+            def _reader() -> None:
+                try:
+                    for line in new_proc.stdout:
+                        with _DEPLOY_STATE["lock"]:
+                            _DEPLOY_STATE["lines"].append(line.rstrip("\r\n"))
+                    new_proc.wait()
+                    with _DEPLOY_STATE["lock"]:
+                        _DEPLOY_STATE["exit_code"] = new_proc.returncode
+                        _DEPLOY_STATE["done"] = True
+                except Exception:
+                    with _DEPLOY_STATE["lock"]:
+                        if new_proc.returncode is None:
+                            try:
+                                new_proc.kill()
+                                new_proc.wait()
+                            except Exception:
+                                pass
+                        _DEPLOY_STATE["exit_code"] = new_proc.returncode if new_proc.returncode is not None else -1
+                        _DEPLOY_STATE["done"] = True
+
+            threading.Thread(target=_reader, daemon=True).start()
+            self._send_json(202, {"started": True})
+            return
+
         if path != "/api/models":
             self._send_json(404, {"error": "not found"})
             return
 
-        length_hdr = self.headers.get("Content-Length")
-        if length_hdr is None:
-            self._send_json(413, {"error": "Content-Length requis"})
-            return
-
-        try:
-            length = int(length_hdr)
-        except ValueError:
-            self._send_json(400, {"error": "Content-Length invalide"})
-            return
-
-        if length < 0 or length > 65536:
-            self._send_json(413, {"error": "corps trop grand"})
-            return
-
-        try:
-            body = self.rfile.read(length)
-            data = json.loads(body.decode("utf-8"))
-        except (json.JSONDecodeError, UnicodeDecodeError):
-            self._send_json(400, {"error": "JSON invalide"})
-            return
-
-        if not isinstance(data, dict):
-            self._send_json(400, {"error": "JSON invalide"})
+        data = self._read_json_body()
+        if data is None:
             return
 
         required = ["name", "provenance", "model_id", "api_key", "passphrase"]

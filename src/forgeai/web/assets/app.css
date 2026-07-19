@@ -326,3 +326,12 @@ code {
 .form-actions { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
 .form-status { font-size: 12.5px; }
 .form-status.error { color: #E5533D; }
+
+/* ---------- Résumé & Déploiement (B-02e) ---------- */
+.deploy-log {
+  margin-top: 12px; padding: 12px 14px; border-radius: 10px;
+  border: 1px solid var(--line, #38434F); background: #10151B; color: #C9D4DE;
+  font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 12px;
+  line-height: 1.55; max-height: 320px; overflow-y: auto; white-space: pre-wrap;
+}
+:root[data-theme="light"] .deploy-log { background: #1A2027; }

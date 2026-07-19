@@ -45,6 +45,28 @@
       <div id="bricks-list" class="bricks-list" aria-live="polite"></div>
     </section>
 
+    <section id="deploy" class="card hidden">
+      <h2 data-i18n="deploy_title">Résumé &amp; Déploiement</h2>
+      <p data-i18n="deploy_subtitle">Vérifiez le résumé, puis tapez FORCER pour lancer le déploiement réel — chaque étape est prouvée en direct.</p>
+      <div id="deploy-summary" class="models-list" aria-live="polite"></div>
+      <form id="deploy-form" class="model-form" autocomplete="off">
+        <div class="form-grid">
+          <label><span data-i18n="f_backend">Backend</span>
+            <select name="backend">
+              <option value="compose">Docker Compose</option>
+              <option value="k3s">K3s</option>
+            </select></label>
+          <label><span data-i18n="f_confirm">Confirmation (tapez FORCER)</span>
+            <input name="confirm" required placeholder="FORCER" autocomplete="off" spellcheck="false"></label>
+        </div>
+        <div class="form-actions">
+          <button type="submit" class="btn" data-i18n="launch_deploy">Déployer le stack</button>
+          <span id="deploy-form-status" class="form-status" aria-live="polite"></span>
+        </div>
+      </form>
+      <pre id="deploy-log" class="deploy-log hidden" aria-live="polite"></pre>
+    </section>
+
     <section id="nodes" class="card">
       <h2 data-i18n="nodes_title">Nœuds — cluster multi-machines</h2>
       <p data-i18n="nodes_subtitle">Ajoutez un nœud avec son IP, utilisateur et mot de passe — utilisé une seule fois au bootstrap, puis bascule sur clé ed25519. Jamais écrit sur disque.</p>

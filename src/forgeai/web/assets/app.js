@@ -69,7 +69,21 @@
       add_node: 'Ajouter le nœud',
       adding_node: 'Bootstrap du nœud en cours…',
       node_added: 'Nœud ajouté — bascule clé ed25519 réussie.',
-      no_nodes: 'Aucun nœud dans le cluster pour l\'instant.'
+      no_nodes: 'Aucun nœud dans le cluster pour l\'instant.',
+      deploy_title: 'Résumé & Déploiement',
+      deploy_subtitle: 'Vérifiez le résumé, puis tapez FORCER pour lancer le déploiement réel — chaque étape est prouvée en direct.',
+      f_backend: 'Backend',
+      f_confirm: 'Confirmation (tapez FORCER)',
+      launch_deploy: 'Déployer le stack',
+      deploy_running: 'Déploiement en cours — journal live ci-dessous.',
+      deploy_done_ok: 'Déploiement terminé — code 0 (prouvé).',
+      deploy_done_fail: 'Déploiement en échec — code {code}. Journal ci-dessus.',
+      deploy_need_forcer: 'Tapez exactement FORCER pour confirmer.',
+      s_stack: 'Stack',
+      s_bricks: 'briques déployées',
+      s_backends: 'Backends prêts',
+      s_chassis: 'châssis commun',
+      s_none: 'aucun'
     },
     en: {
       title: 'ForgeAI Toolkit',
@@ -124,7 +138,21 @@
       add_node: 'Add node',
       adding_node: 'Node bootstrap running…',
       node_added: 'Node added — ed25519 key switch succeeded.',
-      no_nodes: 'No node in the cluster yet.'
+      no_nodes: 'No node in the cluster yet.',
+      deploy_title: 'Summary & Deployment',
+      deploy_subtitle: 'Check the summary, then type FORCER to start the real deployment — every step is proven live.',
+      f_backend: 'Backend',
+      f_confirm: 'Confirmation (type FORCER)',
+      launch_deploy: 'Deploy the stack',
+      deploy_running: 'Deployment running — live log below.',
+      deploy_done_ok: 'Deployment finished — exit code 0 (proven).',
+      deploy_done_fail: 'Deployment failed — exit code {code}. Log above.',
+      deploy_need_forcer: 'Type exactly FORCER to confirm.',
+      s_stack: 'Stack',
+      s_bricks: 'deployed bricks',
+      s_backends: 'Ready backends',
+      s_chassis: 'shared chassis',
+      s_none: 'none'
     }
   };
 
@@ -178,6 +206,7 @@
     }
     if (state.models !== undefined) renderModels();
     if (state.nodes !== undefined) renderNodes();
+    if (state.summary) renderSummary();
   }
 
   async function fetchJson(path) {
@@ -272,6 +301,7 @@
       state.stackDetail = full;
       renderDetail(summary, full);
       showBricksSection();
+      showDeploySection();
     } catch (e) {
       const detail = document.getElementById('stack-detail');
       detail.classList.remove('hidden');
@@ -290,6 +320,7 @@
     detail.classList.add('hidden');
     detail.innerHTML = '';
     hideBricksSection();
+    hideDeploySection();
   }
 
   function renderDetail(summary, full) {
@@ -477,6 +508,112 @@
     `).join('');
   }
 
+  /* ---------- Résumé & Déploiement (B-02e) ---------- */
+
+  async function loadSummary() {
+    if (!state.selectedId) return;
+    const box = document.getElementById('deploy-summary');
+    try {
+      state.summary = await fetchJson(`/api/summary?stack=${encodeURIComponent(state.selectedId)}`);
+    } catch (e) {
+      box.innerHTML = `<p class="error">${escapeHtml(t('error_load'))}</p>`;
+      return;
+    }
+    renderSummary();
+  }
+
+  function renderSummary() {
+    const box = document.getElementById('deploy-summary');
+    const s = state.summary;
+    if (!s) { box.innerHTML = ''; return; }
+    const backends = (s.backends && s.backends.length) ? s.backends.join(', ') : t('s_none');
+    box.innerHTML = `
+      <div class="model-row">
+        <span class="brick-name">${escapeHtml(t('s_stack'))}: ${escapeHtml(s.stack.name)}</span>
+        <span class="def-pill">${s.stack.n_deploy} ${escapeHtml(t('s_bricks'))}</span>
+        <span class="def-pill">${s.chassis} ${escapeHtml(t('s_chassis'))}</span>
+      </div>
+      <div class="model-row">
+        <span class="brick-name">${escapeHtml(t('hardware_cpu'))}: ${escapeHtml(s.hardware.cpu_model || '—')}</span>
+        <span class="def-pill">GPU: ${s.hardware.gpus}</span>
+        <span class="def-pill">RAM: ${escapeHtml(String(s.hardware.ram_gb))} GB</span>
+      </div>
+      <div class="model-row">
+        <span class="brick-name">${escapeHtml(t('s_backends'))}: ${escapeHtml(backends)}</span>
+      </div>
+    `;
+  }
+
+  function showDeploySection() {
+    document.getElementById('deploy').classList.remove('hidden');
+    loadSummary();
+  }
+
+  function hideDeploySection() {
+    document.getElementById('deploy').classList.add('hidden');
+    state.summary = null;
+  }
+
+  function streamDeployLog() {
+    const log = document.getElementById('deploy-log');
+    const status = document.getElementById('deploy-form-status');
+    log.classList.remove('hidden');
+    log.textContent = '';
+    const es = new EventSource('/api/deploy/events');
+    es.onmessage = (ev) => {
+      log.textContent += ev.data + '\n';
+      log.scrollTop = log.scrollHeight;
+    };
+    es.addEventListener('end', (ev) => {
+      es.close();
+      let code = null;
+      try { code = JSON.parse(ev.data).exit_code; } catch (e) { /* fin sans code */ }
+      if (code === 0) {
+        status.textContent = t('deploy_done_ok');
+        status.classList.remove('error');
+      } else {
+        status.textContent = t('deploy_done_fail').replace('{code}', String(code));
+        status.classList.add('error');
+      }
+    });
+    es.onerror = () => { es.close(); };
+  }
+
+  function initDeployForm() {
+    const form = document.getElementById('deploy-form');
+    if (!form) return;
+    form.addEventListener('submit', async (ev) => {
+      ev.preventDefault();
+      const status = document.getElementById('deploy-form-status');
+      const confirm = form.elements.confirm.value.trim();
+      if (confirm !== 'FORCER') {
+        status.textContent = t('deploy_need_forcer');
+        status.classList.add('error');
+        return;
+      }
+      status.classList.remove('error');
+      status.textContent = t('deploy_running');
+      try {
+        const res = await fetch('/api/deploy', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            stack: state.selectedId,
+            backend: form.elements.backend.value,
+            confirm: confirm
+          })
+        });
+        const body = await res.json();
+        if (!res.ok) throw new Error(body.error || res.status);
+        form.elements.confirm.value = '';
+        streamDeployLog();
+      } catch (e) {
+        status.textContent = String(e.message || e);
+        status.classList.add('error');
+      }
+    });
+  }
+
   /* ---------- Nœuds (B-02d) ---------- */
 
   async function loadNodes() {
@@ -609,6 +746,7 @@
     }
     initModelForm();
     initNodeForm();
+    initDeployForm();
     setTheme(state.theme);
     setLang(state.lang);
   }
