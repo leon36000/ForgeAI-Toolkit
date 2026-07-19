@@ -86,14 +86,15 @@ def test_wizard_node_auto_dry_run(tmp_path: Path) -> None:
 
 
 def test_wizard_node_cible_dry_run(tmp_path: Path) -> None:
-    if socket.gethostname().lower() == "worker-2":
-        pytest.skip("le hostname local est worker-2 ; impossible de prouver le ciblage distant")
-    res = _run_wizard("--node", "worker-2", workdir=tmp_path)
+    # Cible construite pour être GARANTIE différente du hostname local : le test
+    # prouve le ciblage distant sur n'importe quelle machine, sans skip.
+    cible = socket.gethostname().lower() + "-autre-noeud"
+    res = _run_wizard("--node", cible, workdir=tmp_path)
     assert res.returncode == 0, res.stderr
     k3s_yaml = tmp_path / "run" / "k3s.yaml"
     assert k3s_yaml.exists()
     text = k3s_yaml.read_text(encoding="utf-8")
-    assert "kubernetes.io/hostname: worker-2" in text
+    assert f"kubernetes.io/hostname: {cible}" in text
 
 
 def test_wizard_node_invalide(tmp_path: Path) -> None:
@@ -212,8 +213,7 @@ def test_web_deploy_node_invalide(live_server) -> None:
 def test_summary_nodes(live_server) -> None:
     # Choisit un stack réellement présent pour éviter un 404.
     code, stacks = _get_json(live_server, "/api/stacks")
-    if code != 200 or not stacks:
-        pytest.skip("aucun stack disponible pour tester /api/summary")
+    assert code == 200 and stacks, "les 6 stacks embarqués doivent toujours être servis"
     stack_id = stacks[0]["id"]
     code, payload = _get_json(live_server, f"/api/summary?stack={stack_id}")
     assert code == 200
