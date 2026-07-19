@@ -982,6 +982,15 @@ def main(argv: list[str] | None = None) -> int:
     p_tmpl_res.add_argument("--registre", default=str(DEFAULT_REGISTRE))
     p_tmpl_res.set_defaults(func=_template_resolve)
 
+    p_web = sub.add_parser("web", help="interface web locale (stdlib, hors-ligne) — B-02a")
+    p_web.add_argument("--host", default="127.0.0.1",
+                       help="bind (défaut 127.0.0.1 — jamais exposé sans action explicite)")
+    p_web.add_argument("--port", type=int, default=8765)
+    p_web.add_argument("--no-browser", action="store_true", dest="no_browser",
+                       help="ne pas ouvrir le navigateur automatiquement")
+    from forgeai.web import web_command
+    p_web.set_defaults(func=web_command)
+
     args = parser.parse_args(argv)
     set_locale(args.lang)   # bascule la langue de l'interface avant dispatch
     try:
