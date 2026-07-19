@@ -34,7 +34,10 @@
       wiring_title: 'Câblage synergique',
       close: 'Fermer',
       error_load: 'Impossible de charger les données.',
-      select_stack: 'Sélectionnez un profil pour voir le détail.',
+      aria_lang: 'Langue',
+      aria_theme: 'Thème',
+      aria_spheres: 'Sous-étapes par sphère',
+      aria_filter: 'Filtrer',
       bricks_title: 'Briques additionnelles',
       bricks_subtitle: 'Catalogue complet, classé par sphère. Les briques du stack sont pré-cochées ; le châssis commun est verrouillé.',
       search_placeholder: 'Filtrer les briques…',
@@ -103,7 +106,10 @@
       wiring_title: 'Synergistic wiring',
       close: 'Close',
       error_load: 'Unable to load data.',
-      select_stack: 'Select a profile to view details.',
+      aria_lang: 'Language',
+      aria_theme: 'Theme',
+      aria_spheres: 'Sub-steps by sphere',
+      aria_filter: 'Filter',
       bricks_title: 'Additional bricks',
       bricks_subtitle: 'Full catalogue, sorted by sphere. Stack bricks are pre-checked; the shared chassis is locked.',
       search_placeholder: 'Filter bricks…',
@@ -189,6 +195,18 @@
         el.textContent = i18n[lang][key];
       }
     });
+    document.querySelectorAll('[data-i18n-aria]').forEach((el) => {
+      const key = el.dataset.i18nAria;
+      if (i18n[lang][key]) {
+        el.setAttribute('aria-label', i18n[lang][key]);
+      }
+    });
+    document.querySelectorAll('[data-i18n-placeholder]').forEach((el) => {
+      const key = el.dataset.i18nPlaceholder;
+      if (i18n[lang][key]) {
+        el.placeholder = i18n[lang][key];
+      }
+    });
     renderHardware();
     renderStacks();
     if (state.selectedId) {
@@ -198,8 +216,6 @@
         renderDetail(stack, full);
       }
     }
-    const search = document.getElementById('brick-search');
-    if (search) search.placeholder = t('search_placeholder');
     if (state.bricks) {
       renderSphereSteps();
       renderBricks();
