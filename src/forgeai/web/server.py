@@ -3,6 +3,7 @@ from __future__ import annotations
 import importlib.resources
 import json
 import re
+import shutil
 import subprocess
 import sys
 import threading
@@ -23,6 +24,7 @@ from forgeai.models.routes import RouteError, RouteStore
 from forgeai.network.keys import generate_keypair, KeyError_
 from forgeai.network.node_add import add_node, Bootstrapper, NodeAddError, SshBootstrapper
 from forgeai.network.nodes import cluster_status, ClusterError
+from forgeai.network.prepare import sonder_noeud, plan_preparation, preparer_noeud, PrepareError
 from forgeai.preflight import available_backends, run_checks
 from forgeai.resources import catalogue_path, forgeai_home
 from forgeai.stacks import deploy_ids, list_stacks, load_stack
@@ -185,6 +187,8 @@ _DEPLOY_STATE = {
     "exit_code": None,
     "lock": threading.Lock(),
 }
+
+_PREPARE_STATE: dict[str, dict] = {}
 
 
 def _models_home() -> Path:
@@ -482,6 +486,55 @@ class ForgeAIHandler(BaseHTTPRequestHandler):
                 self._send_json(200, {"nodes": [], "detail": str(exc)})
             return
 
+        if path == "/api/nodes/receptacles":
+            runner = SubprocessRunner()
+            helm_present = shutil.which("helm") is not None
+            nodes_out: list[dict] = []
+            detail: str | None = None
+            try:
+                nodes = cluster_status(runner)
+                for n in nodes:
+                    try:
+                        etat = sonder_noeud(runner, n["name"])
+                    except PrepareError:
+                        etat = {
+                            "hostname": n["name"],
+                            "ready": None,
+                            "gpu_nvidia": 0,
+                            "gpu_amd": 0,
+                            "arch": "",
+                            "labels": {},
+                        }
+                    plan = plan_preparation(etat, helm_present)
+                    labels = etat.get("labels", {})
+                    current = labels.get("forgeai/receptacle")
+                    pret = current in ("pret", "pret-cpu")
+                    restantes = sum(1 for s in plan if s.get("commande") is not None)
+                    nodes_out.append(
+                        {
+                            "hostname": etat["hostname"],
+                            "ready": etat["ready"],
+                            "gpu_nvidia": etat["gpu_nvidia"],
+                            "gpu_amd": etat["gpu_amd"],
+                            "receptacle_actuel": current,
+                            "pret": pret,
+                            "etapes_restantes": restantes,
+                        }
+                    )
+            except ClusterError as exc:
+                detail = str(exc)
+            if detail is not None:
+                self._send_json(200, {"nodes": [], "detail": detail})
+            else:
+                self._send_json(200, {"nodes": nodes_out})
+            return
+
+        if path.startswith("/api/nodes/prepare/"):
+            host = path[len("/api/nodes/prepare/") :]
+            state = _PREPARE_STATE.get(host, {"done": False})
+            self._send_json(200, state)
+            return
+
         basename = path.rsplit("/", 1)[-1]
         data = _asset_bytes(basename)
         if data is not None:
@@ -550,6 +603,41 @@ class ForgeAIHandler(BaseHTTPRequestHandler):
                     }
                 },
             )
+            return
+
+        if path == "/api/nodes/prepare":
+            data = self._read_json_body()
+            if data is None:
+                return
+
+            if "host" not in data:
+                self._send_json(400, {"error": "host requis"})
+                return
+
+            host = data["host"]
+            if not _NODE_RE.match(host):
+                self._send_json(400, {"error": "host invalide"})
+                return
+
+            def _run_prepare() -> None:
+                state = {"done": False, "resultat": None, "erreur": None}
+                _PREPARE_STATE[host] = state
+                try:
+                    runner = SubprocessRunner()
+                    helm_present = shutil.which("helm") is not None
+                    result = preparer_noeud(
+                        runner, host, appliquer=True, helm_present=helm_present
+                    )
+                    state["resultat"] = result
+                except PrepareError as exc:
+                    state["erreur"] = str(exc)
+                except Exception as exc:  # noqa: BLE001
+                    state["erreur"] = f"erreur interne: {exc}"
+                finally:
+                    state["done"] = True
+
+            threading.Thread(target=_run_prepare, daemon=True).start()
+            self._send_json(202, {"started": True, "host": host})
             return
 
         if path == "/api/deploy":

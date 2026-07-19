@@ -441,6 +441,35 @@ def _node_add(args: argparse.Namespace) -> int:
     return 0
 
 
+def _node_prepare(args: argparse.Namespace) -> int:
+    """Prépare un nœud Kubernetes en réceptacle ForgeAI (dry-run par défaut)."""
+    import shutil
+    from forgeai.network.prepare import PrepareError, preparer_noeud
+
+    runner = SubprocessRunner()
+    helm_present = shutil.which("helm") is not None
+    try:
+        result = preparer_noeud(
+            runner, args.hostname, appliquer=args.apply, helm_present=helm_present
+        )
+    except PrepareError as exc:
+        print(f"ECHEC PREPARATION: {exc}", file=sys.stderr)
+        return 11
+
+    etapes = result["etapes"]
+    for i, etape in enumerate(etapes, 1):
+        statut = etape.get("statut", "planifiee")
+        print(f"[{i}/{len(etapes)}] {etape['titre_fr']} — {statut}")
+
+    print(f"[forgeai] nœud '{result['hostname']}' -> réceptacle {result['receptacle']}")
+    registre.append(Path(args.registre), "node_prepare", "node", {
+        "hostname": result["hostname"],
+        "receptacle": result["receptacle"],
+        "etapes": [{"id": e["id"], "statut": e.get("statut", "planifiee")} for e in etapes],
+    })
+    return 0
+
+
 def _node_status(args: argparse.Namespace) -> int:
     from forgeai.network.nodes import ClusterError, cluster_status
     try:
@@ -930,6 +959,16 @@ def main(argv: list[str] | None = None) -> int:
     p_node_probe.add_argument("--keyfile", required=True, help="clé privée SSH d'accès au nœud")
     p_node_probe.add_argument("--registre", default=str(DEFAULT_REGISTRE))
     p_node_probe.set_defaults(func=_node_probe)
+    p_node_prepare = node_sub.add_parser(
+        "prepare", help="prépare un nœud en réceptacle GPU/CPU (dry-run par défaut)"
+    )
+    p_node_prepare.add_argument("hostname", help="nom du nœud Kubernetes")
+    p_node_prepare.add_argument(
+        "--apply", action="store_true",
+        help="applique le plan (sans ce flag, seul le plan est affiché)"
+    )
+    p_node_prepare.add_argument("--registre", default=str(DEFAULT_REGISTRE))
+    p_node_prepare.set_defaults(func=_node_prepare)
 
     p_wiz = sub.add_parser("wizard", help="wizard bout-en-bout")
     p_wiz.add_argument("--ci", action="store_true", required=True)
