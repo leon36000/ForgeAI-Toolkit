@@ -46,7 +46,7 @@ Option globale : `--lang {fr,en}` (i18n, B-03, défaut: fr ou `$FORGEAI_LANG`).
 - **core/** models, registre (JSONL hash-chaîné), runner.
 
 ## Gouvernance (auto-appliquée)
-- **Gates CI** (`.github/workflows/gates.yml`, `quality-gates-python`) : `no-stub-scan`, `registres` (intégrité hash-chaîne), `catalogue` (désambiguïsation B-26), `tests` (couverture ≥85 %, registre ≥95 %), `gitleaks`, `reviews-sealed` (D9 : chaque dossier de `reviews/BINDING.txt` = APPROVE 3/3, vendors distincts).
+- **Gates CI** (`.github/workflows/gates.yml`) : `no-stub-scan`, `registres` (intégrité hash-chaîne), `catalogue` (désambiguïsation B-26), `tests` (couverture ≥85 %, registre ≥95 %), `gitleaks`, `reviews-sealed` (D9 : chaque dossier de `reviews/BINDING.txt` = APPROVE 3/3, vendors distincts).
 - **Hooks locaux** (globaux) : pre-commit (no-stub + secrets + docs-drift), post-merge.
 - **Sentinelle** : balayage continu multi-vendor hors session (findings au registre).
 - **Registre** `Registres/mission.jsonl` : append-only, hash-chaîné, une entrée `revue_scellee` par story livrée (sceau `prompt_sha256` + 3 vendors).
