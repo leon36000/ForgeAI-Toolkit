@@ -77,6 +77,13 @@ def test_v2_rag_node_compose_refuse(tmp_path: Path) -> None:
     assert "mono-machine" in res.stderr
 
 
+def test_v2_rag_node_auto_compose_accepte(tmp_path: Path) -> None:
+    """Objection revue N1b : auto == la seule machine en compose — jamais rejeté."""
+    sel = {"rag_node": "auto", "models": None}  # null JSON toléré aussi
+    res = _run_wizard(sel, tmp_path, "--backend", "compose")
+    assert res.returncode == 0, res.stdout + res.stderr
+
+
 def test_v2_rag_node_k3s_place(tmp_path: Path) -> None:
     sel = {"rag_node": "worker-x"}
     res = _run_wizard(sel, tmp_path, "--backend", "k3s")

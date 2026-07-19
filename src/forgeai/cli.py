@@ -143,9 +143,9 @@ def wizard_ci(args: argparse.Namespace) -> int:
 
         try:
             sel = json.loads(Path(args.selection).read_text(encoding="utf-8"))
-            selection_bricks = [str(b) for b in sel.get("bricks", [])]
-            selection_models = [_normalise(m, "vllm") for m in sel.get("models", [])]
-            selection_embeddings = [_normalise(m, "llama-cpp") for m in sel.get("embeddings", [])]
+            selection_bricks = [str(b) for b in (sel.get("bricks") or [])]
+            selection_models = [_normalise(m, "vllm") for m in (sel.get("models") or [])]
+            selection_embeddings = [_normalise(m, "llama-cpp") for m in (sel.get("embeddings") or [])]
             rag_node = sel.get("rag_node")
         except (OSError, ValueError, AttributeError) as exc:
             print(f"ABORT [SEL] sélection illisible : {exc}", file=sys.stderr)
@@ -187,9 +187,10 @@ def wizard_ci(args: argparse.Namespace) -> int:
         if rag_node is not None:
             rag_node = str(rag_node)
             if rag_node not in ("local", "auto") and not node_re.match(rag_node):
-                print(f"ABORT [SEL] rag_node invalide", file=sys.stderr)
+                print(f"ABORT [SEL] rag_node invalide : {rag_node!r}", file=sys.stderr)
                 return 8
-            if args.backend == "compose" and rag_node not in ("local",):
+            if args.backend == "compose" and rag_node not in ("local", "auto"):
+                # auto == la seule machine en compose ; seul un hostname DISTANT est impossible
                 print("ABORT [RAG] compose est mono-machine : utilisez le backend k3s "
                       "pour placer le RAG sur un autre nœud", file=sys.stderr)
                 return 9
