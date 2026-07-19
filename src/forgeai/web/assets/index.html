@@ -10,11 +10,11 @@
   <header class="app-header">
     <h1 data-i18n="title">ForgeAI Toolkit</h1>
     <div class="controls">
-      <div id="lang-toggle" class="toggle-group" role="group" aria-label="Langue">
+      <div id="lang-toggle" class="toggle-group" role="group" aria-label="Langue" data-i18n-aria="aria_lang">
         <button class="btn toggle" data-lang="fr" aria-pressed="false">FR</button>
         <button class="btn toggle" data-lang="en" aria-pressed="false">EN</button>
       </div>
-      <div id="theme-toggle" class="toggle-group" role="group" aria-label="Thème">
+      <div id="theme-toggle" class="toggle-group" role="group" aria-label="Thème" data-i18n-aria="aria_theme">
         <button class="btn toggle" data-theme="light" data-i18n="theme_light">Clair</button>
         <button class="btn toggle" data-theme="dark" data-i18n="theme_dark">Sombre</button>
       </div>
@@ -37,9 +37,9 @@
     <section id="bricks" class="hidden">
       <h2 data-i18n="bricks_title">Briques additionnelles</h2>
       <p data-i18n="bricks_subtitle">Catalogue complet, classé par sphère. Les briques du stack sont pré-cochées ; le châssis commun est verrouillé.</p>
-      <nav id="sphere-steps" class="sphere-steps" aria-label="Sous-étapes par sphère"></nav>
+      <nav id="sphere-steps" class="sphere-steps" aria-label="Sous-étapes par sphère" data-i18n-aria="aria_spheres"></nav>
       <div class="bricks-toolbar">
-        <input id="brick-search" type="search" placeholder="Filtrer les briques…" aria-label="Filtrer">
+        <input id="brick-search" type="search" placeholder="Filtrer les briques…" aria-label="Filtrer" data-i18n-aria="aria_filter">
         <span id="bricks-counts" class="bricks-counts" aria-live="polite"></span>
       </div>
       <div id="bricks-list" class="bricks-list" aria-live="polite"></div>
@@ -64,7 +64,7 @@
           <span id="deploy-form-status" class="form-status" aria-live="polite"></span>
         </div>
       </form>
-      <pre id="deploy-log" class="deploy-log hidden" aria-live="polite"></pre>
+      <pre id="deploy-log" class="deploy-log hidden" role="log" aria-live="polite"></pre>
     </section>
 
     <section id="nodes" class="card">

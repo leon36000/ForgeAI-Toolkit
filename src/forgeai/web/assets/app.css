@@ -335,3 +335,14 @@ code {
   line-height: 1.55; max-height: 320px; overflow-y: auto; white-space: pre-wrap;
 }
 :root[data-theme="light"] .deploy-log { background: #1A2027; }
+
+/* ---------- A11y (B-02f) ---------- */
+:focus-visible {
+  outline: 2px solid var(--accent, #EA6A2E);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+.btn:focus-visible, .stack-card:focus-visible, .sphere-step:focus-visible {
+  outline: 2px solid var(--accent, #EA6A2E);
+  outline-offset: 2px;
+}
