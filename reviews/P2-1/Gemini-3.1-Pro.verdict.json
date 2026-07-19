@@ -1,0 +1,14 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "src/forgeai/resources.py",
+   "description": "L'implémentation unifiée de forgeai_home retourne le répertoire courant (Path('')) si la variable d'environnement FORGEAI_HOME est définie mais vide. Cela contredit la docstring conservée dans cli.py ('jamais lié au répertoire courant'). L'ancienne version de cli.py gérait correctement ce cas avec 'if home:'.",
+   "preuve": "return Path(os.environ.get(\"FORGEAI_HOME\", Path.home() / \".forgeai\"))"
+  }
+ ],
+ "date_heure": "2026-07-19T12:00:00Z",
+ "prompt_sha256": "09ceafdf2e95d55ce46a705839bd39a54b4eb7517500aba6bf22e5fe246c749c",
+ "reviewer_model": "Gemini-3.1-Pro"
+}

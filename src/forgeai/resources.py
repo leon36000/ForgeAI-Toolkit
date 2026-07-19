@@ -6,6 +6,7 @@ jamais un chemin relatif au dépôt de développement.
 """
 from __future__ import annotations
 
+import os
 from importlib.resources import as_file, files
 from pathlib import Path
 
@@ -26,3 +27,8 @@ def catalogue_path() -> Path:
 
 def deploy_overlay_path() -> Path:
     return data_path("deploy-minimal.json")
+
+
+def forgeai_home() -> Path:
+    """Résolveur UNIQUE de FORGEAI_HOME : $FORGEAI_HOME sinon ~/.forgeai."""
+    return Path(os.environ.get("FORGEAI_HOME", Path.home() / ".forgeai"))
