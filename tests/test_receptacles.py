@@ -127,7 +127,7 @@ def test_plan_gpu_expose(profiles: dict[str, tuple[int, str]]) -> None:
     etat = sonder_noeud(runner, "gpu-expose")
     plan = plan_preparation(etat, helm_present=True)
     ids = [s["id"] for s in plan]
-    assert ids == ["verifier-gpu", "label-pret"]
+    assert ids == ["verifier-gpu-nvidia", "label-pret"]
     assert plan[0]["action"] == "verifier"
     assert plan[0]["commande"] is None
     assert plan[1]["action"] == "label"
@@ -251,3 +251,32 @@ def test_api_receptacles_graceful() -> None:
     finally:
         server.shutdown()
         server.server_close()
+
+
+def test_plan_amd_expose_symetrique() -> None:
+    """Objection revue N3 : AMD exposé doit VÉRIFIER (pas helm), comme NVIDIA."""
+    etat = {"hostname": "n-amd", "ready": True, "gpu_nvidia": 0, "gpu_amd": 2,
+            "arch": "amd64", "labels": {}}
+    plan = plan_preparation(etat, helm_present=True)
+    ids = [s["id"] for s in plan]
+    assert ids == ["verifier-gpu-amd", "label-pret"]
+    assert not any(s["action"] == "helm" for s in plan)
+
+
+def test_plan_amd_non_expose_helm() -> None:
+    """Objection revue N3 : AMD probable non exposé -> helm AMD."""
+    etat = {"hostname": "n-amd2", "ready": True, "gpu_nvidia": 0, "gpu_amd": 0,
+            "arch": "amd64", "labels": {"feature.node.kubernetes.io/pci-1002.present": "true"}}
+    plan = plan_preparation(etat, helm_present=True)
+    helm = next(s for s in plan if s["action"] == "helm")
+    assert helm["id"] == "helm-amd"
+    assert "rocm.github.io" in " ".join(helm["commande"])
+
+
+def test_statut_attente_si_helm_manquant() -> None:
+    """Objection revue N3 : sans helm, JAMAIS étiqueté prêt — statut attente-installation."""
+    etat = {"hostname": "n-x", "ready": True, "gpu_nvidia": 0, "gpu_amd": 0,
+            "arch": "amd64", "labels": {"feature.node.kubernetes.io/pci-10de.present": "true"}}
+    plan = plan_preparation(etat, helm_present=False)
+    assert not any(s["id"] in ("label-pret", "label-cpu") for s in plan)
+    assert any(s["id"] == "helm-nvidia-manuel" for s in plan)

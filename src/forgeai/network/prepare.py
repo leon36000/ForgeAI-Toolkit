@@ -102,133 +102,72 @@ def plan_preparation(etat: dict, helm_present: bool) -> list[dict]:
         )
         return steps
 
-    if gpu_nvidia > 0:
-        steps.append(
-            {
-                "id": "verifier-gpu",
-                "titre_fr": "Vérifier le GPU NVIDIA déjà exposé",
+    helm_cmds = {
+        "nvidia": ["helm", "upgrade", "--install", "gpu-operator", "gpu-operator",
+                   "--repo", "https://helm.ngc.nvidia.com/nvidia",
+                   "-n", "gpu-operator", "--create-namespace"],
+        "amd": ["helm", "upgrade", "--install", "amd-gpu-operator", "gpu-operator",
+                "--repo", "https://rocm.github.io/gpu-operator",
+                "-n", "kube-amd-gpu", "--create-namespace"],
+    }
+    # Symétrie stricte NVIDIA/AMD (objection unanime revue N3) :
+    # exposé -> vérifier ; probable non exposé -> helm (ou note manuelle SANS étiquette prêt).
+    vendors = (
+        ("nvidia", gpu_nvidia, _nvidia_probable(labels)),
+        ("amd", gpu_amd, _amd_probable(labels)),
+    )
+    installation_manuelle = False
+    for vendor, exposes, probable in vendors:
+        if exposes > 0:
+            steps.append({
+                "id": f"verifier-gpu-{vendor}",
+                "titre_fr": f"Vérifier le GPU {vendor.upper()} déjà exposé",
                 "action": "verifier",
                 "commande": None,
-                "pourquoi_fr": (
-                    f"Le nœud expose déjà {gpu_nvidia} GPU(s) NVIDIA ; "
-                    "aucun opérateur n'est nécessaire."
-                ),
-            }
-        )
-    elif _nvidia_probable(labels) and gpu_nvidia == 0:
-        helm_cmd = [
-            "helm",
-            "upgrade",
-            "--install",
-            "gpu-operator",
-            "gpu-operator",
-            "--repo",
-            "https://helm.ngc.nvidia.com/nvidia",
-            "-n",
-            "gpu-operator",
-            "--create-namespace",
-        ]
-        if helm_present:
-            steps.append(
-                {
-                    "id": "helm-nvidia",
-                    "titre_fr": "Installer NVIDIA GPU Operator",
+                "pourquoi_fr": (f"Le nœud expose déjà {exposes} GPU(s) {vendor.upper()} ; "
+                                "aucun opérateur n'est nécessaire."),
+            })
+        elif probable:
+            if helm_present:
+                steps.append({
+                    "id": f"helm-{vendor}",
+                    "titre_fr": f"Installer {vendor.upper()} GPU Operator",
                     "action": "helm",
-                    "commande": helm_cmd,
-                    "pourquoi_fr": (
-                        "Un GPU NVIDIA est détecté mais n'est pas exposé comme ressource "
-                        "kubernetes ; l'opérateur provisionne le device-plugin."
-                    ),
-                }
-            )
-        else:
-            steps.append(
-                {
-                    "id": "helm-nvidia-manuel",
-                    "titre_fr": "Installer NVIDIA GPU Operator (helm manuel)",
+                    "commande": helm_cmds[vendor],
+                    "pourquoi_fr": (f"Un GPU {vendor.upper()} est détecté mais non exposé comme "
+                                    "ressource kubernetes ; l'opérateur provisionne le device-plugin."),
+                })
+            else:
+                installation_manuelle = True
+                steps.append({
+                    "id": f"helm-{vendor}-manuel",
+                    "titre_fr": f"Installer {vendor.upper()} GPU Operator (helm manuel)",
                     "action": "aucune",
                     "commande": None,
-                    "pourquoi_fr": (
-                        "helm n'est pas installé localement. Commande à exécuter manuellement : "
-                        + " ".join(helm_cmd)
-                    ),
-                }
-            )
+                    "pourquoi_fr": ("helm n'est pas installé localement. Commande à exécuter "
+                                    "manuellement : " + " ".join(helm_cmds[vendor])),
+                })
 
-    if gpu_amd > 0:
-        helm_cmd = [
-            "helm",
-            "upgrade",
-            "--install",
-            "amd-gpu-operator",
-            "gpu-operator",
-            "--repo",
-            "https://rocm.github.io/gpu-operator",
-            "-n",
-            "kube-amd-gpu",
-            "--create-namespace",
-        ]
-        if helm_present:
-            steps.append(
-                {
-                    "id": "helm-amd",
-                    "titre_fr": "Installer AMD GPU Operator",
-                    "action": "helm",
-                    "commande": helm_cmd,
-                    "pourquoi_fr": (
-                        f"Le nœud déclare {gpu_amd} GPU(s) AMD ; l'opérateur AMD est requis."
-                    ),
-                }
-            )
-        else:
-            steps.append(
-                {
-                    "id": "helm-amd-manuel",
-                    "titre_fr": "Installer AMD GPU Operator (helm manuel)",
-                    "action": "aucune",
-                    "commande": None,
-                    "pourquoi_fr": (
-                        "helm n'est pas installé localement. Commande à exécuter manuellement : "
-                        + " ".join(helm_cmd)
-                    ),
-                }
-            )
-
-    # Déterminer l'étiquette finale.
-    if gpu_nvidia > 0 or _nvidia_probable(labels) or gpu_amd > 0 or _amd_probable(labels):
-        steps.append(
-            {
-                "id": "label-pret",
-                "titre_fr": "Étiqueter le nœud comme réceptacle prêt",
-                "action": "label",
-                "commande": [
-                    "kubectl",
-                    "label",
-                    "node",
-                    hostname,
-                    "forgeai/receptacle=pret",
-                    "--overwrite",
-                ],
-                "pourquoi_fr": "Le nœud est prêt à accueillir des charges GPU.",
-            }
-        )
-    else:
-        steps.append(
-            {
-                "id": "label-cpu",
-                "titre_fr": "Étiqueter le nœud comme réceptacle CPU",
-                "action": "label",
-                "commande": [
-                    "kubectl",
-                    "label",
-                    "node",
-                    hostname,
-                    "forgeai/receptacle=pret-cpu",
-                    "--overwrite",
-                ],
-                "pourquoi_fr": "Aucun GPU détecté ; le nœud est un réceptacle edge CPU valide.",
-            }
-        )
+    gpu_present = any(exposes > 0 or probable for _, exposes, probable in vendors)
+    if not gpu_present:
+        steps.append({
+            "id": "label-cpu",
+            "titre_fr": "Étiqueter le nœud comme réceptacle CPU",
+            "action": "label",
+            "commande": ["kubectl", "label", "node", hostname,
+                         "forgeai/receptacle=pret-cpu", "--overwrite"],
+            "pourquoi_fr": "Aucun GPU détecté ; le nœud est un réceptacle edge CPU valide.",
+        })
+    elif not installation_manuelle:
+        steps.append({
+            "id": "label-pret",
+            "titre_fr": "Étiqueter le nœud comme réceptacle prêt",
+            "action": "label",
+            "commande": ["kubectl", "label", "node", hostname,
+                         "forgeai/receptacle=pret", "--overwrite"],
+            "pourquoi_fr": "Le nœud est prêt à accueillir des charges GPU.",
+        })
+    # installation manuelle en attente : PAS d'étiquette « prêt » (honnêteté du statut)
 
     return steps
 
@@ -269,6 +208,8 @@ def preparer_noeud(
         receptacle = "non"
     elif any(s["id"] == "label-cpu" for s in plan):
         receptacle = "pret-cpu"
+    elif any(s["id"].endswith("-manuel") for s in plan):
+        receptacle = "attente-installation"  # helm manquant : jamais « prêt » à tort
     else:
         receptacle = "pret"
 
