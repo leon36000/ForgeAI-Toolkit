@@ -8,7 +8,11 @@
     stacks: [],
     spheres: [],
     recommendedId: null,
-    selectedId: null
+    selectedId: null,
+    sphereId: 'S1',
+    bricks: null,
+    overrides: {},
+    search: ''
   };
 
   const i18n = {
@@ -30,7 +34,16 @@
       wiring_title: 'Câblage synergique',
       close: 'Fermer',
       error_load: 'Impossible de charger les données.',
-      select_stack: 'Sélectionnez un profil pour voir le détail.'
+      select_stack: 'Sélectionnez un profil pour voir le détail.',
+      bricks_title: 'Briques additionnelles',
+      bricks_subtitle: 'Catalogue complet, classé par sphère. Les briques du stack sont pré-cochées ; le châssis commun est verrouillé.',
+      search_placeholder: 'Filtrer les briques…',
+      installed_badge: 'Installé avec le stack',
+      locked_badge: 'Châssis — verrouillé',
+      default_badge: 'Défaut de sphère',
+      counts_tpl: '{installed} installées avec le stack · {checked} cochées · {total} disponibles',
+      no_results: 'Aucune brique ne correspond au filtre.',
+      stars_label: 'étoiles'
     },
     en: {
       title: 'ForgeAI Toolkit',
@@ -50,7 +63,16 @@
       wiring_title: 'Synergistic wiring',
       close: 'Close',
       error_load: 'Unable to load data.',
-      select_stack: 'Select a profile to view details.'
+      select_stack: 'Select a profile to view details.',
+      bricks_title: 'Additional bricks',
+      bricks_subtitle: 'Full catalogue, sorted by sphere. Stack bricks are pre-checked; the shared chassis is locked.',
+      search_placeholder: 'Filter bricks…',
+      installed_badge: 'Installed with the stack',
+      locked_badge: 'Chassis — locked',
+      default_badge: 'Sphere default',
+      counts_tpl: '{installed} installed with the stack · {checked} checked · {total} available',
+      no_results: 'No brick matches the filter.',
+      stars_label: 'stars'
     }
   };
 
@@ -95,6 +117,12 @@
       if (stack && full) {
         renderDetail(stack, full);
       }
+    }
+    const search = document.getElementById('brick-search');
+    if (search) search.placeholder = t('search_placeholder');
+    if (state.bricks) {
+      renderSphereSteps();
+      renderBricks();
     }
   }
 
@@ -189,6 +217,7 @@
       const full = await fetchJson(`/api/stacks/${encodeURIComponent(stackId)}`);
       state.stackDetail = full;
       renderDetail(summary, full);
+      showBricksSection();
     } catch (e) {
       const detail = document.getElementById('stack-detail');
       detail.classList.remove('hidden');
@@ -206,6 +235,7 @@
     const detail = document.getElementById('stack-detail');
     detail.classList.add('hidden');
     detail.innerHTML = '';
+    hideBricksSection();
   }
 
   function renderDetail(summary, full) {
@@ -247,6 +277,122 @@
     document.getElementById('stack-detail-close').addEventListener('click', closeDetail);
   }
 
+  /* ---------- Briques additionnelles (IMPL-4) ---------- */
+
+  function overrideKey() {
+    return state.selectedId || '_none_';
+  }
+
+  function isChecked(brick) {
+    if (brick.locked) return true;
+    const ov = state.overrides[overrideKey()];
+    if (ov && Object.prototype.hasOwnProperty.call(ov, brick.id)) return ov[brick.id];
+    return brick.installed;
+  }
+
+  function renderSphereSteps() {
+    const nav = document.getElementById('sphere-steps');
+    nav.innerHTML = state.spheres.map((sp) => `
+      <button class="sphere-step${sp.id === state.sphereId ? ' active' : ''}" data-sphere="${escapeHtml(sp.id)}"
+              aria-pressed="${sp.id === state.sphereId}">
+        <span class="sphere-num">${sp.num}</span>
+        <span class="sphere-label">${escapeHtml(state.lang === 'en' ? sp.name_en : sp.name_fr)}</span>
+        <span class="sphere-count">${sp.count}</span>
+      </button>
+    `).join('');
+    nav.querySelectorAll('.sphere-step').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        state.sphereId = btn.dataset.sphere;
+        loadBricks();
+      });
+    });
+  }
+
+  async function loadBricks() {
+    renderSphereSteps();
+    const list = document.getElementById('bricks-list');
+    list.innerHTML = `<p>${escapeHtml(t('loading'))}</p>`;
+    try {
+      const stackQ = state.selectedId ? `&stack=${encodeURIComponent(state.selectedId)}` : '';
+      state.bricks = await fetchJson(`/api/bricks?sphere=${encodeURIComponent(state.sphereId)}${stackQ}`);
+    } catch (e) {
+      state.bricks = null;
+      list.innerHTML = `<p class="error">${escapeHtml(t('error_load'))}</p>`;
+      return;
+    }
+    renderBricks();
+  }
+
+  function renderCounts(shown) {
+    const el = document.getElementById('bricks-counts');
+    if (!state.bricks) { el.textContent = ''; return; }
+    const bricks = state.bricks.bricks;
+    const installed = bricks.filter((b) => b.installed).length;
+    const checked = bricks.filter((b) => isChecked(b)).length;
+    el.textContent = t('counts_tpl')
+      .replace('{installed}', installed)
+      .replace('{checked}', checked)
+      .replace('{total}', state.bricks.total) + (shown < bricks.length ? ` (${shown}/${bricks.length})` : '');
+  }
+
+  function renderBricks() {
+    const list = document.getElementById('bricks-list');
+    if (!state.bricks) { list.innerHTML = ''; renderCounts(0); return; }
+    const q = state.search.trim().toLowerCase();
+    const visible = state.bricks.bricks.filter((b) => {
+      if (!q) return true;
+      const desc = state.lang === 'en' ? b.description_en : b.description_fr;
+      return (b.id + ' ' + b.name + ' ' + (desc || '')).toLowerCase().includes(q);
+    });
+    renderCounts(visible.length);
+    if (!visible.length) {
+      list.innerHTML = `<p>${escapeHtml(t('no_results'))}</p>`;
+      return;
+    }
+    list.innerHTML = visible.map((b) => {
+      const desc = state.lang === 'en' ? b.description_en : b.description_fr;
+      const checked = isChecked(b);
+      const badges = [
+        b.installed ? `<span class="badge-installed">${escapeHtml(t('installed_badge'))}</span>` : '',
+        b.locked ? `<span class="badge-locked">${escapeHtml(t('locked_badge'))}</span>` : '',
+        b.default ? `<span class="badge-default">${escapeHtml(t('default_badge'))}</span>` : ''
+      ].join('');
+      return `
+        <label class="brick-row${b.installed ? ' installed' : ''}${b.locked ? ' locked' : ''}">
+          <input type="checkbox" data-brick-id="${escapeHtml(b.id)}"
+                 ${checked ? 'checked' : ''} ${b.locked ? 'disabled' : ''}
+                 aria-label="${escapeHtml(b.name)}">
+          <span class="brick-main">
+            <span class="brick-head">
+              <span class="brick-name">${escapeHtml(b.name)}</span>
+              <span class="brick-stars" title="${escapeHtml(t('stars_label'))}">★ ${b.stars}</span>
+              ${badges}
+            </span>
+            <span class="brick-desc">${escapeHtml(desc || '')}</span>
+          </span>
+        </label>
+      `;
+    }).join('');
+    list.querySelectorAll('input[type="checkbox"]:not([disabled])').forEach((cb) => {
+      cb.addEventListener('change', () => {
+        const key = overrideKey();
+        if (!state.overrides[key]) state.overrides[key] = {};
+        state.overrides[key][cb.dataset.brickId] = cb.checked;
+        renderCounts(visible.length);
+      });
+    });
+  }
+
+  function showBricksSection() {
+    document.getElementById('bricks').classList.remove('hidden');
+    loadBricks();
+  }
+
+  function hideBricksSection() {
+    document.getElementById('bricks').classList.add('hidden');
+    state.bricks = null;
+  }
+
   function initControls() {
     document.querySelectorAll('#theme-toggle button[data-theme]').forEach((btn) => {
       btn.addEventListener('click', () => setTheme(btn.dataset.theme));
@@ -254,6 +400,13 @@
     document.querySelectorAll('#lang-toggle button[data-lang]').forEach((btn) => {
       btn.addEventListener('click', () => setLang(btn.dataset.lang));
     });
+    const search = document.getElementById('brick-search');
+    if (search) {
+      search.addEventListener('input', () => {
+        state.search = search.value;
+        renderBricks();
+      });
+    }
     setTheme(state.theme);
     setLang(state.lang);
   }

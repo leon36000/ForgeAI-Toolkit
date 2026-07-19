@@ -33,6 +33,17 @@
       <div id="stacks-grid" class="stacks-grid"></div>
       <div id="stack-detail" class="stack-detail hidden" aria-live="polite"></div>
     </section>
+
+    <section id="bricks" class="hidden">
+      <h2 data-i18n="bricks_title">Briques additionnelles</h2>
+      <p data-i18n="bricks_subtitle">Catalogue complet, classé par sphère. Les briques du stack sont pré-cochées ; le châssis commun est verrouillé.</p>
+      <nav id="sphere-steps" class="sphere-steps" aria-label="Sous-étapes par sphère"></nav>
+      <div class="bricks-toolbar">
+        <input id="brick-search" type="search" placeholder="Filtrer les briques…" aria-label="Filtrer">
+        <span id="bricks-counts" class="bricks-counts" aria-live="polite"></span>
+      </div>
+      <div id="bricks-list" class="bricks-list" aria-live="polite"></div>
+    </section>
   </main>
 
   <script src="app.js"></script>
