@@ -126,16 +126,28 @@ def wizard_ci(args: argparse.Namespace) -> int:
         stack = load_stack(args.stack)
         stack_label = stack.get("name", args.stack)
 
-    # P0.3b — sélection utilisateur (briques cochées + modèles choisis dans l'UI)
+    # P0.3b/N1b — sélection utilisateur v2 : briques + {modèle, nœud, moteur} + embeddings + rag_node
     selection_bricks: list[str] = []
-    selection_models: list[str] = []
+    selection_models: list[dict] = []
+    selection_embeddings: list[dict] = []
+    rag_node: str | None = None
     if getattr(args, "selection", None):
         from importlib import resources as _res
+
+        def _normalise(entree, engine_defaut: str) -> dict:
+            if isinstance(entree, str):
+                return {"hf_id": entree, "node": "auto", "engine": engine_defaut}
+            return {"hf_id": str(entree.get("hf_id", "")),
+                    "node": str(entree.get("node", "auto")),
+                    "engine": str(entree.get("engine", engine_defaut))}
+
         try:
             sel = json.loads(Path(args.selection).read_text(encoding="utf-8"))
             selection_bricks = [str(b) for b in sel.get("bricks", [])]
-            selection_models = [str(m) for m in sel.get("models", [])]
-        except (OSError, ValueError) as exc:
+            selection_models = [_normalise(m, "vllm") for m in sel.get("models", [])]
+            selection_embeddings = [_normalise(m, "llama-cpp") for m in sel.get("embeddings", [])]
+            rag_node = sel.get("rag_node")
+        except (OSError, ValueError, AttributeError) as exc:
             print(f"ABORT [SEL] sélection illisible : {exc}", file=sys.stderr)
             return 8
         ids_catalogue = {e.id for e in bricks}
@@ -146,10 +158,41 @@ def wizard_ci(args: argparse.Namespace) -> int:
         registre_modeles = json.loads(
             (_res.files("forgeai.data") / "modeles-locaux.json").read_text(encoding="utf-8"))
         hf_ids = {m["hf_id"] for m in registre_modeles["modeles"]}
-        inconnus_m = sorted(m for m in selection_models if m not in hf_ids)
+        familles = {m["hf_id"]: m["famille"] for m in registre_modeles["modeles"]}
+        moteurs = {m["id"] for m in json.loads(
+            (_res.files("forgeai.data") / "moteurs-inference.json").read_text(encoding="utf-8"))["moteurs"]}
+        node_re = re.compile(r"^[a-z0-9]([a-z0-9.-]{0,62})$")
+
+        toutes = selection_models + selection_embeddings
+        inconnus_m = sorted(e["hf_id"] for e in toutes if e["hf_id"] not in hf_ids)
         if inconnus_m:
             print(f"ABORT [SEL] modèles inconnus au registre : {inconnus_m}", file=sys.stderr)
             return 8
+        mauvais_moteurs = sorted({e["engine"] for e in toutes} - moteurs)
+        if mauvais_moteurs:
+            print(f"ABORT [SEL] moteurs inconnus au registre des moteurs : {mauvais_moteurs}",
+                  file=sys.stderr)
+            return 8
+        mauvais_noeuds = sorted({e["node"] for e in toutes if e["node"] not in ("local", "auto")
+                                 and not node_re.match(e["node"])})
+        if mauvais_noeuds:
+            print(f"ABORT [SEL] nœuds invalides : {mauvais_noeuds}", file=sys.stderr)
+            return 8
+        pas_embed = sorted(e["hf_id"] for e in selection_embeddings
+                           if familles.get(e["hf_id"]) != "embeddings-rerank")
+        if pas_embed:
+            print(f"ABORT [SEL] entrées 'embeddings' hors famille embeddings-rerank : {pas_embed}",
+                  file=sys.stderr)
+            return 8
+        if rag_node is not None:
+            rag_node = str(rag_node)
+            if rag_node not in ("local", "auto") and not node_re.match(rag_node):
+                print(f"ABORT [SEL] rag_node invalide", file=sys.stderr)
+                return 8
+            if args.backend == "compose" and rag_node not in ("local",):
+                print("ABORT [RAG] compose est mono-machine : utilisez le backend k3s "
+                      "pour placer le RAG sur un autre nœud", file=sys.stderr)
+                return 9
 
     _step(t("wizard.s04"))
     plan = assemble_plan(profile, Path(args.overlay), stack=stack,
@@ -166,11 +209,15 @@ def wizard_ci(args: argparse.Namespace) -> int:
             "stack": args.stack,
             "bricks": selection_bricks,
             "models": selection_models,
+            "embeddings": selection_embeddings,
+            "rag_node": rag_node or "local",
             "deployables": deployables,
             "provisionnement_futur": [b for b in selection_bricks if b not in specs_ids],
         }, ensure_ascii=False, indent=1), encoding="utf-8")
+        cible_rag = rag_node or "local"
         print(f"  sélection: {len(selection_bricks)} briques "
-              f"({len(deployables)} déployables maintenant) + {len(selection_models)} modèles")
+              f"({len(deployables)} déployables maintenant) + {len(selection_models)} modèles "
+              f"+ {len(selection_embeddings)} embeddings | RAG -> {cible_rag}")
 
     _step(t("wizard.s05"))
     bootstrap_secrets(workdir)
@@ -179,6 +226,9 @@ def wizard_ci(args: argparse.Namespace) -> int:
     compose_file.write_text(render_compose(plan), encoding="utf-8")
 
     node_arg = args.node
+    if rag_node is not None:
+        # N1b — le placement du RAG choisi dans la sélection prime sur --node
+        node_arg = rag_node
     probe_host = getattr(args, "probe_host", "127.0.0.1")
 
     if node_arg == "auto":
@@ -195,7 +245,8 @@ def wizard_ci(args: argparse.Namespace) -> int:
 
     if args.dry_run:
         print(f"DRY-RUN OK: {len(plan.services)} services, stack={stack_label}, node={node_label}, "
-              f"selection={len(selection_bricks)}+{len(selection_models)}", flush=True)
+              f"selection={len(selection_bricks)}+{len(selection_models)}+{len(selection_embeddings)}, "
+              f"rag={(rag_node or 'local')}", flush=True)
         return 0
 
     backend = args.backend
