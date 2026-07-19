@@ -32,9 +32,10 @@
       <button class="step-item" data-step="1"><span class="step-num">1</span><span class="step-name" data-i18n="step_hardware">Matériel</span></button>
       <button class="step-item" data-step="2"><span class="step-num">2</span><span class="step-name" data-i18n="step_stack">Stack</span></button>
       <button class="step-item" data-step="3"><span class="step-num">3</span><span class="step-name" data-i18n="step_models">Modèles IA</span></button>
-      <button class="step-item" data-step="4"><span class="step-num">4</span><span class="step-name" data-i18n="step_bricks">Briques</span></button>
-      <button class="step-item" data-step="5"><span class="step-num">5</span><span class="step-name" data-i18n="step_nodes">Nœuds</span></button>
-      <button class="step-item" data-step="6"><span class="step-num">6</span><span class="step-name" data-i18n="step_deploy">Déploiement</span></button>
+      <button class="step-item" data-step="4"><span class="step-num">4</span><span class="step-name" data-i18n="step_embeddings">Embeddings</span></button>
+      <button class="step-item" data-step="5"><span class="step-num">5</span><span class="step-name" data-i18n="step_bricks">Briques</span></button>
+      <button class="step-item" data-step="6"><span class="step-num">6</span><span class="step-name" data-i18n="step_nodes">Nœuds</span></button>
+      <button class="step-item" data-step="7"><span class="step-num">7</span><span class="step-name" data-i18n="step_deploy">Déploiement</span></button>
     </nav>
 
     <main id="app">
@@ -103,8 +104,19 @@
         </details>
       </section>
 
-      <!-- Étape 4 : Briques -->
-      <section id="bricks" class="step-panel hidden" data-step-panel="4">
+      <!-- Étape 4 : Embeddings -->
+      <section id="embeddings-step" class="step-panel hidden" data-step-panel="4">
+        <h2 data-i18n="embeddings_step_title">Embeddings &amp; Rerankers</h2>
+        <p class="step-lede" data-i18n="embeddings_step_lede">Les modèles d'encodage et de reclassement du RAG — déployables sur n'importe quel nœud, moteur au choix.</p>
+        <div class="models-toolbar">
+          <input id="embedding-search" type="search" placeholder="Filtrer les embeddings…" data-i18n-placeholder="embedding_search_placeholder" aria-label="Filtrer" data-i18n-aria="aria_filter_embeddings">
+          <span id="embeddings-counts" class="bricks-counts" aria-live="polite"></span>
+        </div>
+        <div id="embeddings-list" class="models-grid" aria-live="polite"></div>
+      </section>
+
+      <!-- Étape 5 : Briques -->
+      <section id="bricks" class="step-panel hidden" data-step-panel="5">
         <h2 data-i18n="bricks_title">Briques additionnelles</h2>
         <p class="step-lede" data-i18n="bricks_subtitle">Catalogue complet, classé par sphère. Les briques du stack sont pré-cochées ; le châssis commun est verrouillé.</p>
         <nav id="sphere-steps" class="sphere-steps" aria-label="Sous-étapes par sphère" data-i18n-aria="aria_spheres"></nav>
@@ -115,8 +127,8 @@
         <div id="bricks-list" class="bricks-list" aria-live="polite"></div>
       </section>
 
-      <!-- Étape 5 : Nœuds -->
-      <section id="nodes" class="step-panel hidden" data-step-panel="5">
+      <!-- Étape 6 : Nœuds -->
+      <section id="nodes" class="step-panel hidden" data-step-panel="6">
         <h2 data-i18n="nodes_title">Nœuds — cluster multi-machines</h2>
         <p class="step-lede" data-i18n="nodes_subtitle">Ajoutez un nœud avec son IP, utilisateur et mot de passe — utilisé une seule fois au bootstrap, puis bascule sur clé ed25519. Jamais écrit sur disque.</p>
         <div id="nodes-list" class="models-list" aria-live="polite"></div>
@@ -137,8 +149,8 @@
         </form>
       </section>
 
-      <!-- Étape 6 : Déploiement -->
-      <section id="deploy" class="step-panel hidden" data-step-panel="6">
+      <!-- Étape 7 : Déploiement -->
+      <section id="deploy" class="step-panel hidden" data-step-panel="7">
         <h2 data-i18n="deploy_title">Résumé &amp; Déploiement</h2>
         <p class="step-lede" data-i18n="deploy_subtitle">Vérifiez le résumé, puis tapez FORCER pour lancer le déploiement réel — chaque étape est prouvée en direct.</p>
         <div id="deploy-summary" class="models-list" aria-live="polite"></div>
@@ -151,6 +163,11 @@
               </select></label>
             <label><span data-i18n="f_node_target">Nœud cible</span>
               <select name="node" id="deploy-node-select">
+                <option value="local" data-i18n="node_local">Local (cette machine)</option>
+                <option value="auto" data-i18n="node_auto">Auto — scheduler du cluster</option>
+              </select></label>
+            <label><span data-i18n="f_rag_node">Nœud du RAG</span>
+              <select name="rag_node" id="deploy-rag-select">
                 <option value="local" data-i18n="node_local">Local (cette machine)</option>
                 <option value="auto" data-i18n="node_auto">Auto — scheduler du cluster</option>
               </select></label>
