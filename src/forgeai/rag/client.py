@@ -7,6 +7,7 @@ maître : la réponse à une question DOIT contenir un fait du document ingéré
 from __future__ import annotations
 
 import json
+import urllib.error
 import urllib.request
 from dataclasses import dataclass
 
@@ -65,8 +66,15 @@ class RagClient:
         return result["embeddings"]
 
     def ensure_collection(self, dim: int) -> None:
-        _put(f"{self.qdrant_url}/collections/{self.collection}",
-             {"vectors": {"size": dim, "distance": "Cosine"}})
+        """Idempotente : 409 = la collection existe déjà (re-run du wizard sur une
+        machine ayant déjà déployé) — cas légitime, pas une erreur (corrective #49,
+        trouvée au premier déploiement UI réel du 2026-07-19)."""
+        try:
+            _put(f"{self.qdrant_url}/collections/{self.collection}",
+                 {"vectors": {"size": dim, "distance": "Cosine"}})
+        except urllib.error.HTTPError as exc:
+            if exc.code != 409:
+                raise
 
     def ingest(self, text: str, source: str) -> int:
         chunks = chunk_text(text)
