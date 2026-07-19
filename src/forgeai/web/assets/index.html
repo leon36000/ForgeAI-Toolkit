@@ -5,20 +5,36 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ForgeAI Toolkit</title>
   <link rel="stylesheet" href="app.css">
-  <script src="app.js" defer></script>
 </head>
 <body>
-  <header class="topbar">
-    <h1>ForgeAI Toolkit</h1>
-    <div class="actions">
-      <button id="lang-toggle" type="button" aria-label="Changer de langue">FR</button>
-      <button id="theme-toggle" type="button" aria-label="Changer de thème">🌙</button>
+  <header class="app-header">
+    <h1 data-i18n="title">ForgeAI Toolkit</h1>
+    <div class="controls">
+      <div id="lang-toggle" class="toggle-group" role="group" aria-label="Langue">
+        <button class="btn toggle" data-lang="fr" aria-pressed="false">FR</button>
+        <button class="btn toggle" data-lang="en" aria-pressed="false">EN</button>
+      </div>
+      <div id="theme-toggle" class="toggle-group" role="group" aria-label="Thème">
+        <button class="btn toggle" data-theme="light" data-i18n="theme_light">Clair</button>
+        <button class="btn toggle" data-theme="dark" data-i18n="theme_dark">Sombre</button>
+      </div>
     </div>
   </header>
+
   <main id="app">
-    <section id="hardware" class="card" aria-live="polite">
-      <p class="loading" data-i18n="loading">Chargement de la détection matérielle…</p>
+    <section id="hardware" class="card">
+      <h2 data-i18n="hardware_title">Matériel détecté</h2>
+      <div id="hardware-content"><p data-i18n="loading">Chargement…</p></div>
+    </section>
+
+    <section id="stacks">
+      <h2 data-i18n="stacks_title">Profils de déploiement</h2>
+      <p data-i18n="stacks_subtitle">Choisissez le stack synergique à déployer.</p>
+      <div id="stacks-grid" class="stacks-grid"></div>
+      <div id="stack-detail" class="stack-detail hidden" aria-live="polite"></div>
     </section>
   </main>
+
+  <script src="app.js"></script>
 </body>
 </html>

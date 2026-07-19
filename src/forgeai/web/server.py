@@ -6,8 +6,11 @@ import urllib.parse
 import webbrowser
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
+from forgeai.catalogue.spheres import SPHERES, spheres_index
 from forgeai.core.runner import SubprocessRunner
 from forgeai.hardware.detect import HardwareDetector
+from forgeai.resources import catalogue_path
+from forgeai.stacks import deploy_ids, list_stacks, load_stack
 
 
 _MIME_TYPES = {
@@ -42,6 +45,14 @@ def hardware_json() -> str:
     return HardwareDetector(SubprocessRunner()).full_report().to_json()
 
 
+def _catalogue_entries() -> list[dict]:
+    return json.loads(catalogue_path().read_text(encoding="utf-8")).get("entries", [])
+
+
+def _json_body(obj: object) -> bytes:
+    return json.dumps(obj, ensure_ascii=False).encode("utf-8")
+
+
 class ForgeAIHandler(BaseHTTPRequestHandler):
     server_version = "ForgeAI/0.1"
 
@@ -51,6 +62,9 @@ class ForgeAIHandler(BaseHTTPRequestHandler):
         self.send_header("Content-Length", str(len(body)))
         self.end_headers()
         self.wfile.write(body)
+
+    def _send_json(self, code: int, obj: object) -> None:
+        self._send(code, _json_body(obj), "application/json; charset=utf-8")
 
     def do_GET(self) -> None:  # noqa: N802
         path = urllib.parse.urlparse(self.path).path
@@ -78,6 +92,56 @@ class ForgeAIHandler(BaseHTTPRequestHandler):
                 json.dumps({"status": "ok"}, ensure_ascii=False).encode("utf-8"),
                 "application/json; charset=utf-8",
             )
+            return
+
+        if path == "/api/stacks":
+            stack_ids = list_stacks()
+            ordered = [sid for sid in stack_ids if sid != "tout-en-un"]
+            if "tout-en-un" in stack_ids:
+                ordered.append("tout-en-un")
+            summaries = []
+            for sid in ordered:
+                stack = load_stack(sid)
+                summaries.append(
+                    {
+                        "id": stack.get("id", sid),
+                        "name": stack.get("name", sid),
+                        "description_fr": stack.get("description_fr", ""),
+                        "description_en": stack.get("description_en", ""),
+                        "n_deploy": len(deploy_ids(stack)),
+                        "defaults": stack.get("default_by_sphere", {}),
+                        "surface": stack.get("surface"),
+                    }
+                )
+            self._send_json(200, summaries)
+            return
+
+        if path.startswith("/api/stacks/"):
+            sid = path[len("/api/stacks/") :]
+            if not sid or "/" in sid:
+                self._send_json(404, {"error": "stack not found"})
+                return
+            try:
+                stack = load_stack(sid)
+                self._send_json(200, stack)
+            except FileNotFoundError:
+                self._send_json(404, {"error": "stack not found"})
+            return
+
+        if path == "/api/spheres":
+            entries = _catalogue_entries()
+            index = spheres_index(entries)
+            spheres = [
+                {
+                    "id": sphere.id,
+                    "num": sphere.num,
+                    "name_fr": sphere.name_fr,
+                    "name_en": sphere.name_en,
+                    "count": len(index.get(sphere.id, [])),
+                }
+                for sphere in sorted(SPHERES, key=lambda s: s.num)
+            ]
+            self._send_json(200, spheres)
             return
 
         basename = path.rsplit("/", 1)[-1]
