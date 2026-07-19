@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import re
 from dataclasses import dataclass
 
 
@@ -26,6 +27,7 @@ SPHERES: tuple[Sphere, ...] = (
     Sphere(12, "S12", "Observabilité", "Observability"),
     Sphere(13, "S13", "Évaluation", "Evaluation"),
     Sphere(14, "S14", "Déploiement", "Deployment"),
+    Sphere(15, "VOIX", "Voix — temps réel", "Voice — real-time"),
 )
 
 SPHERE_IDS = frozenset(s.id for s in SPHERES)
@@ -42,6 +44,13 @@ _BASE: dict[str, str] = {
     "Mémoire / contexte": "S6",
 }
 
+_VOICE_RE = re.compile(
+    r"\b("
+    r"pipecat|livekit|whisper|parakeet|kokoro|xtts|f5-tts|chatts|tts|stt|vad|voix|voice|speech|audio\s+temps\s+réel"
+    r")\b",
+    flags=re.IGNORECASE,
+)
+
 
 def _contains_any(text: str, keywords: set[str]) -> bool:
     return any(kw in text for kw in keywords)
@@ -52,6 +61,9 @@ def classify_sphere(entry: dict) -> str:
     text = " ".join(
         str(entry.get(k, "")) for k in ("id", "name", "description_fr", "description_en")
     ).lower()
+
+    if _VOICE_RE.search(text):
+        return "VOIX"
 
     if cat == "Inférence, serving et gateway modèles":
         gateway_kws = {

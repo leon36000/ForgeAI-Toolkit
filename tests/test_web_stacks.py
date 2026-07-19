@@ -73,7 +73,7 @@ def test_api_spheres(server_url):
     status, body, _ = _get(server_url, "/api/spheres")
     assert status == 200
     spheres = json.loads(body)
-    assert len(spheres) == 14
+    assert len(spheres) == 15
     nums = [s["num"] for s in spheres]
     assert nums == sorted(nums)
     total = sum(s["count"] for s in spheres)
