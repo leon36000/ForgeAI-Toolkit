@@ -18,9 +18,9 @@ def _entries() -> list[dict]:
 
 
 def test_14_spheres() -> None:
-    assert len(SPHERES) == 14
+    assert len(SPHERES) == 15
     assert {s.id for s in SPHERES} == SPHERE_IDS
-    assert len(SPHERE_IDS) == 14
+    assert len(SPHERE_IDS) == 15
 
 
 def test_catalogue_reel_tout_classe() -> None:
