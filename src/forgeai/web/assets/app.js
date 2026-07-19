@@ -17,206 +17,21 @@
     modelsChosen: {},
     bricks: null,
     overrides: {},
-    search: ''
+    search: '',
+    i18nTables: {}
   };
 
-  const i18n = {
-    fr: {
-      title: 'ForgeAI Toolkit',
-      hardware_title: 'Matériel détecté',
-      loading: 'Chargement…',
-      stacks_title: 'Profils de déploiement',
-      stacks_subtitle: 'Choisissez le stack synergique à déployer.',
-      theme_light: 'Clair',
-      theme_dark: 'Sombre',
-      hardware_cpu: 'Processeur',
-      hardware_gpu: 'GPU',
-      hardware_ram: 'Mémoire',
-      hardware_no_gpu: 'Aucun GPU détecté',
-      recommended: 'Recommandé',
-      n_deploy_label: 'briques',
-      defaults_title: 'Défauts par sphère',
-      wiring_title: 'Câblage synergique',
-      close: 'Fermer',
-      error_load: 'Impossible de charger les données.',
-      aria_lang: 'Langue',
-      aria_theme: 'Thème',
-      aria_spheres: 'Sous-étapes par sphère',
-      aria_filter: 'Filtrer',
-      bricks_title: 'Briques additionnelles',
-      bricks_subtitle: 'Catalogue complet, classé par sphère. Les briques du stack sont pré-cochées ; le châssis commun est verrouillé.',
-      search_placeholder: 'Filtrer les briques…',
-      installed_badge: 'Installé avec le stack',
-      locked_badge: 'Châssis — verrouillé',
-      default_badge: 'Défaut de sphère',
-      counts_tpl: '{installed} installées avec le stack · {checked} cochées · {total} disponibles',
-      no_results: 'Aucune brique ne correspond au filtre.',
-      stars_label: 'étoiles',
-      models_title: 'Modèles & clés API',
-      models_subtitle: 'Routes modèle cloud — test de connexion réel obligatoire ; la clé est scellée au coffre, seule l\'empreinte est conservée.',
-      f_name: 'Nom de la route',
-      f_provenance: 'Provenance',
-      f_model_id: 'Identifiant du modèle',
-      f_base_url: 'Base URL (OpenAI-compatible)',
-      f_api_key: 'Clé API', // proof:allow (libellé i18n, pas un secret)
-      f_passphrase: 'Passphrase du coffre',
-      prov_direct: 'Direct fournisseur',
-      prov_autre: 'Autre (URL)',
-      key_note: 'La clé transite en mémoire vers le serveur local (127.0.0.1) puis est scellée au coffre chiffré — jamais écrite en clair, jamais réaffichée.',
-      add_route: 'Ajouter la route (test réel)',
-      testing_route: 'Test de connexion en cours…',
-      route_added: 'Route ajoutée — test réel réussi.',
-      no_models: 'Aucune route configurée pour l\'instant.',
-      fingerprint_label: 'empreinte',
-      nodes_title: 'Nœuds — cluster multi-machines',
-      nodes_subtitle: 'Ajoutez un nœud avec son IP, utilisateur et mot de passe — utilisé une seule fois au bootstrap, puis bascule sur clé ed25519. Jamais écrit sur disque.',
-      f_node_ip: 'Adresse IP',
-      f_node_user: 'Utilisateur',
-      f_node_password: 'Mot de passe (éphémère)', // proof:allow (libellé i18n)
-      node_key_note: '🔑 Le mot de passe sert une seule fois : installation de la clé publique, bascule immédiate sur ed25519, puis seule l\'empreinte est journalisée au registre.',
-      add_node: 'Ajouter le nœud',
-      adding_node: 'Bootstrap du nœud en cours…',
-      node_added: 'Nœud ajouté — bascule clé ed25519 réussie.',
-      no_nodes: 'Aucun nœud dans le cluster pour l\'instant.',
-      deploy_title: 'Résumé & Déploiement',
-      deploy_subtitle: 'Vérifiez le résumé, puis tapez FORCER pour lancer le déploiement réel — chaque étape est prouvée en direct.',
-      f_backend: 'Backend',
-      f_confirm: 'Confirmation (tapez FORCER)',
-      launch_deploy: 'Déployer le stack',
-      deploy_running: 'Déploiement en cours — journal live ci-dessous.',
-      deploy_done_ok: 'Déploiement terminé — code 0 (prouvé).',
-      deploy_done_fail: 'Déploiement en échec — code {code}. Journal ci-dessus.',
-      deploy_need_forcer: 'Tapez exactement FORCER pour confirmer.',
-      s_stack: 'Stack',
-      s_bricks: 'briques déployées',
-      s_backends: 'Backends prêts',
-      s_chassis: 'châssis commun',
-      s_none: 'aucun',
-      f_node_target: 'Nœud cible',
-      node_local: 'Local (cette machine)',
-      node_auto: 'Auto — scheduler du cluster',
-      tagline: 'Installateur d\'infrastructure IA souveraine',
-      step_hardware: 'Matériel',
-      step_stack: 'Stack',
-      step_models: 'Modèles IA',
-      step_bricks: 'Briques',
-      step_nodes: 'Nœuds',
-      step_deploy: 'Déploiement',
-      hardware_lede: 'Votre machine est analysée automatiquement — le reste de l\'installation s\'adapte à ce qu\'elle peut faire tourner.',
-      models_step_title: 'Modèles IA',
-      models_step_lede: 'Tous les modèles open-weight — petits, moyens, gros — déployables sur n\'importe quel nœud du réseau. Aucun n\'est masqué : choisissez librement, chaque nœud cible affiche s\'il peut le servir.',
-      tier_all: 'Tous',
-      tier_small: 'Petits',
-      tier_medium: 'Moyens',
-      tier_large: 'Gros',
-      model_search_placeholder: 'Filtrer les modèles…',
-      aria_tier: 'Taille',
-      aria_filter_models: 'Filtrer',
-      aria_steps: 'Étapes d\'installation',
-      nav_prev: '← Précédent',
-      nav_next: 'Suivant →',
-      need_stack_first: 'Choisissez d\'abord un stack à l\'étape 2.'
-    },
-    en: {
-      title: 'ForgeAI Toolkit',
-      hardware_title: 'Detected hardware',
-      loading: 'Loading…',
-      stacks_title: 'Deployment profiles',
-      stacks_subtitle: 'Choose the synergistic stack to deploy.',
-      theme_light: 'Light',
-      theme_dark: 'Dark',
-      hardware_cpu: 'CPU',
-      hardware_gpu: 'GPU',
-      hardware_ram: 'Memory',
-      hardware_no_gpu: 'No GPU detected',
-      recommended: 'Recommended',
-      n_deploy_label: 'bricks',
-      defaults_title: 'Defaults by sphere',
-      wiring_title: 'Synergistic wiring',
-      close: 'Close',
-      error_load: 'Unable to load data.',
-      aria_lang: 'Language',
-      aria_theme: 'Theme',
-      aria_spheres: 'Sub-steps by sphere',
-      aria_filter: 'Filter',
-      bricks_title: 'Additional bricks',
-      bricks_subtitle: 'Full catalogue, sorted by sphere. Stack bricks are pre-checked; the shared chassis is locked.',
-      search_placeholder: 'Filter bricks…',
-      installed_badge: 'Installed with the stack',
-      locked_badge: 'Chassis — locked',
-      default_badge: 'Sphere default',
-      counts_tpl: '{installed} installed with the stack · {checked} checked · {total} available',
-      no_results: 'No brick matches the filter.',
-      stars_label: 'stars',
-      models_title: 'Models & API keys',
-      models_subtitle: 'Cloud model routes — real connection test required; the key is sealed in the vault, only its fingerprint is kept.',
-      f_name: 'Route name',
-      f_provenance: 'Provenance',
-      f_model_id: 'Model identifier',
-      f_base_url: 'Base URL (OpenAI-compatible)',
-      f_api_key: 'API key', // proof:allow (libellé i18n, pas un secret)
-      f_passphrase: 'Vault passphrase',
-      prov_direct: 'Direct provider',
-      prov_autre: 'Other (URL)',
-      key_note: 'The key transits in memory to the local server (127.0.0.1) then is sealed in the encrypted vault — never written in clear, never shown again.',
-      add_route: 'Add route (real test)',
-      testing_route: 'Connection test running…',
-      route_added: 'Route added — real test passed.',
-      no_models: 'No route configured yet.',
-      fingerprint_label: 'fingerprint',
-      nodes_title: 'Nodes — multi-machine cluster',
-      nodes_subtitle: 'Add a node with its IP, user and password — used once at bootstrap, then switches to an ed25519 key. Never written to disk.',
-      f_node_ip: 'IP address',
-      f_node_user: 'User',
-      f_node_password: 'Password (ephemeral)', // proof:allow (libellé i18n)
-      node_key_note: '🔑 The password is used once: public key install, immediate switch to ed25519, then only the fingerprint is logged to the ledger.',
-      add_node: 'Add node',
-      adding_node: 'Node bootstrap running…',
-      node_added: 'Node added — ed25519 key switch succeeded.',
-      no_nodes: 'No node in the cluster yet.',
-      deploy_title: 'Summary & Deployment',
-      deploy_subtitle: 'Check the summary, then type FORCER to start the real deployment — every step is proven live.',
-      f_backend: 'Backend',
-      f_confirm: 'Confirmation (type FORCER)',
-      launch_deploy: 'Deploy the stack',
-      deploy_running: 'Deployment running — live log below.',
-      deploy_done_ok: 'Deployment finished — exit code 0 (proven).',
-      deploy_done_fail: 'Deployment failed — exit code {code}. Log above.',
-      deploy_need_forcer: 'Type exactly FORCER to confirm.',
-      s_stack: 'Stack',
-      s_bricks: 'deployed bricks',
-      s_backends: 'Ready backends',
-      s_chassis: 'shared chassis',
-      s_none: 'none',
-      f_node_target: 'Target node',
-      node_local: 'Local (this machine)',
-      node_auto: 'Auto — cluster scheduler',
-      tagline: 'Sovereign AI infrastructure installer',
-      step_hardware: 'Hardware',
-      step_stack: 'Stack',
-      step_models: 'AI Models',
-      step_bricks: 'Bricks',
-      step_nodes: 'Nodes',
-      step_deploy: 'Deployment',
-      hardware_lede: 'Your machine is analyzed automatically — the rest of the install adapts to what it can run.',
-      models_step_title: 'AI Models',
-      models_step_lede: 'All open-weight models — small, medium, large — deployable to any node on the network. None is hidden: choose freely, each target node shows whether it can serve it.',
-      tier_all: 'All',
-      tier_small: 'Small',
-      tier_medium: 'Medium',
-      tier_large: 'Large',
-      model_search_placeholder: 'Filter models…',
-      aria_tier: 'Size',
-      aria_filter_models: 'Filter',
-      aria_steps: 'Install steps',
-      nav_prev: '← Previous',
-      nav_next: 'Next →',
-      need_stack_first: 'Choose a stack first at step 2.'
+  async function loadI18n(lang) {
+    if (state.i18nTables[lang]) return;
+    try {
+      state.i18nTables[lang] = await fetchJson(`/api/i18n/${encodeURIComponent(lang)}`);
+    } catch (e) {
+      state.i18nTables[lang] = {};
     }
-  };
+  }
 
   function t(key) {
-    return i18n[state.lang][key] || key;
+    return (state.i18nTables[state.lang] || {})[key] || key;
   }
 
   function escapeHtml(str) {
@@ -236,28 +51,30 @@
     });
   }
 
-  function setLang(lang) {
+  async function setLang(lang) {
+    await loadI18n(lang);
     state.lang = lang;
     document.documentElement.lang = lang;
     document.querySelectorAll('#lang-toggle button[data-lang]').forEach((btn) => {
       btn.setAttribute('aria-pressed', String(btn.dataset.lang === lang));
     });
+    const table = state.i18nTables[lang] || {};
     document.querySelectorAll('[data-i18n]').forEach((el) => {
       const key = el.dataset.i18n;
-      if (i18n[lang][key]) {
-        el.textContent = i18n[lang][key];
+      if (table[key]) {
+        el.textContent = table[key];
       }
     });
     document.querySelectorAll('[data-i18n-aria]').forEach((el) => {
       const key = el.dataset.i18nAria;
-      if (i18n[lang][key]) {
-        el.setAttribute('aria-label', i18n[lang][key]);
+      if (table[key]) {
+        el.setAttribute('aria-label', table[key]);
       }
     });
     document.querySelectorAll('[data-i18n-placeholder]').forEach((el) => {
       const key = el.dataset.i18nPlaceholder;
-      if (i18n[lang][key]) {
-        el.placeholder = i18n[lang][key];
+      if (table[key]) {
+        el.placeholder = table[key];
       }
     });
     renderHardware();
@@ -371,7 +188,7 @@
       renderDetail(summary, full);
       state.bricks = null;
       state.summary = null;
-      goToStep(state.step); // rafraîchit rail + verrous (stack désormais choisi)
+      goToStep(state.step);
     } catch (e) {
       const detail = document.getElementById('stack-detail');
       detail.classList.remove('hidden');
@@ -813,7 +630,6 @@
         user: form.elements.user.value.trim(),
         password: form.elements.password.value // proof:allow (champ payload, valeur jamais litterale)
       };
-      // hygiène : mot de passe vidé du DOM AVANT l'appel — strictement éphémère
       form.elements.password.value = '';
       status.textContent = t('adding_node');
       status.classList.remove('error');
@@ -861,7 +677,6 @@
       };
       const baseUrl = form.elements.base_url.value.trim();
       if (baseUrl) payload.base_url = baseUrl;
-      // hygiène : vider les champs secrets AVANT l'appel — jamais conservés dans le DOM
       form.elements.api_key.value = '';
       form.elements.passphrase.value = '';
       status.textContent = t('testing_route');
@@ -963,6 +778,8 @@
   async function boot() {
     initControls();
     initStepper();
+    await loadI18n(state.lang);
+    loadI18n(state.lang === 'fr' ? 'en' : 'fr');
     loadModels();
     loadNodes();
     try {

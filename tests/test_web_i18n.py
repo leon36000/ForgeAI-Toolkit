@@ -3,10 +3,16 @@
 Fige les invariants : chaque clé utilisée (data-i18n, data-i18n-aria, t('…')) existe
 dans les DEUX dictionnaires ; fr et en portent exactement les mêmes clés ; aucune clé
 morte ; aucun attribut accentué en dur sans mécanisme de traduction."""
+import json
 import re
+import threading
+import time
+import urllib.request
 from pathlib import Path
 
+
 ASSETS = Path(__file__).parent.parent / "src" / "forgeai" / "web" / "assets"
+DATA_LOCALES = Path(__file__).parent.parent / "src" / "forgeai" / "data" / "locales"
 
 
 def _html() -> str:
@@ -27,12 +33,9 @@ def _used_keys() -> set[str]:
 
 
 def _dict_keys() -> tuple[set[str], set[str]]:
-    js = _js()
-    fr_block = js.split("\n    fr: {")[1].split("\n    },")[0]
-    en_block = js.split("\n    en: {")[1].split("\n    }\n  };")[0]
-    fr = set(re.findall(r"^\s+([a-z_]+):", fr_block, re.M))
-    en = set(re.findall(r"^\s+([a-z_]+):", en_block, re.M))
-    return fr, en
+    fr = json.loads((DATA_LOCALES / "fr.json").read_text(encoding="utf-8"))["web"]
+    en = json.loads((DATA_LOCALES / "en.json").read_text(encoding="utf-8"))["web"]
+    return set(fr.keys()), set(en.keys())
 
 
 def test_toutes_les_cles_utilisees_sont_traduites():
@@ -88,3 +91,29 @@ def test_focus_visible_present():
 
 def test_log_deploiement_role_log():
     assert 'role="log"' in _html(), "le journal de déploiement doit porter role=log"
+
+
+def test_app_js_sans_dictionnaire_embarque():
+    """Ancré en début de ligne (le substring nu piégeait modelsChosen: {})."""
+    js = _js()
+    assert not re.search(r"^\s+(fr|en): \{\s*$", js, re.M), (
+        "app.js ne doit plus contenir de dictionnaire fr/en embarqué")
+
+
+def test_api_sert_toutes_les_cles_utilisees():
+    """Serveur réel : /api/i18n/fr et /en couvrent TOUTES les clés utilisées par l'UI."""
+    from forgeai.web.server import build_server
+
+    srv = build_server("127.0.0.1", 0)
+    threading.Thread(target=srv.serve_forever, daemon=True).start()
+    base = f"http://127.0.0.1:{srv.server_address[1]}"
+    used = _used_keys()
+    try:
+        for lang in ("fr", "en"):
+            with urllib.request.urlopen(f"{base}/api/i18n/{lang}", timeout=10) as resp:
+                table = json.loads(resp.read().decode("utf-8"))
+            manquantes = sorted(used - set(table))
+            assert not manquantes, f"clés absentes de /api/i18n/{lang} : {manquantes}"
+    finally:
+        srv.shutdown()
+        srv.server_close()
