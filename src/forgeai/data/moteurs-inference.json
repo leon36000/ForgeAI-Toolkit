@@ -1,0 +1,12 @@
+{"_doc": "Moteurs d'inférence proposés au CHOIX (jamais imposé). Chaque id existe au catalogue (sourcé).",
+ "version": "2026-07-19",
+ "moteurs": [
+  {"id": "vllm", "name": "vLLM", "gpu_vendors": ["nvidia", "amd"], "backends": ["cuda", "rocm"], "usage_fr": "serving haut débit multi-GPU, PagedAttention"},
+  {"id": "sglang", "name": "SGLang", "gpu_vendors": ["nvidia", "amd"], "backends": ["cuda", "rocm"], "usage_fr": "serving rapide, RadixAttention, bon MoE"},
+  {"id": "llama-cpp", "name": "llama.cpp", "gpu_vendors": ["nvidia", "amd", "intel", "apple", "cpu"], "backends": ["cuda", "vulkan", "rocm", "metal", "sycl", "cpu"], "usage_fr": "GGUF partout : Vulkan/ROCm/CPU/edge, offload hybride"},
+  {"id": "ollama", "name": "Ollama", "gpu_vendors": ["nvidia", "amd", "apple", "cpu"], "backends": ["cuda", "rocm", "metal", "cpu"], "usage_fr": "simplicité locale, pull/run en une commande"},
+  {"id": "tensorrt-llm", "name": "TensorRT-LLM", "gpu_vendors": ["nvidia"], "backends": ["tensorrt"], "usage_fr": "latence minimale sur NVIDIA (moteurs compilés)"},
+  {"id": "lorax", "name": "LoRAX", "gpu_vendors": ["nvidia"], "backends": ["cuda"], "usage_fr": "multi-adaptateurs LoRA sur un seul modèle de base"},
+  {"id": "lmdeploy", "name": "LMDeploy", "gpu_vendors": ["nvidia"], "backends": ["cuda", "turbomind"], "usage_fr": "quantif W4A16, serving InternLM/Qwen efficace"},
+  {"id": "mlc-llm", "name": "MLC LLM", "gpu_vendors": ["nvidia", "amd", "intel", "apple"], "backends": ["vulkan", "metal", "webgpu", "cuda", "rocm"], "usage_fr": "compilation universelle (Vulkan/WebGPU), edge et navigateur"}
+ ]}

@@ -23,7 +23,7 @@ def node_port_for(svc: ServiceSpec, used: set[int] | None = None) -> int:
     return port
 
 
-def _deployment(svc: ServiceSpec, node: str | None = None,
+def _deployment(svc: ServiceSpec, effective_node: str | None = None,
                 node_port: int | None = None) -> str:
     gpu_limits = """
           resources:
@@ -31,7 +31,8 @@ def _deployment(svc: ServiceSpec, node: str | None = None,
               nvidia.com/gpu: "1"ifgpu""".replace("ifgpu", "") if svc.gpu else ""
     node_selector = (f"""
       nodeSelector:
-        kubernetes.io/hostname: {node}""" if node else "")
+        kubernetes.io/hostname: {effective_node}"""
+                   if effective_node and effective_node != "auto" else "")
     volume_mount, volume_def = "", ""
     if svc.volumes:
         claim = svc.volumes[0].split(":", 1)[0]
@@ -80,7 +81,9 @@ spec:
 
 
 def render_k3s(plan: DeploymentPlan, node: str | None = None) -> str:
-    """`node` épingle les pods sur un hôte (profil Minimal = single-node par contrat)."""
+    """`node` épingle les pods sur un hôte (profil Minimal = single-node par contrat).
+    Chaque service peut surcharger ce nœud via `svc.node` ; `svc.node == "auto"`
+    laisse le scheduler décider pour ce service."""
     parts = [f"""# Généré par ForgeAI Toolkit — plan {plan.plan_id} (profil {plan.profile})
 apiVersion: v1
 kind: Namespace
@@ -88,5 +91,7 @@ metadata:
   name: {NAMESPACE}
 """]
     used: set[int] = set()
-    parts += [_deployment(svc, node, node_port_for(svc, used)) for svc in plan.services]
+    for svc in plan.services:
+        effective_node = svc.node if svc.node is not None else node
+        parts.append(_deployment(svc, effective_node, node_port_for(svc, used)))
     return "".join(parts)

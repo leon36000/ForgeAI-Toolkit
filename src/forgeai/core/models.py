@@ -74,6 +74,7 @@ class ServiceSpec:
     env: dict[str, str] = field(default_factory=dict)
     healthcheck_url: Optional[str] = None
     gpu: bool = False
+    node: Optional[str] = None  # nœud cible de CE service (hostname K3s) ; None = suit le nœud global du plan ou le scheduler
 
 
 @dataclass(frozen=True)

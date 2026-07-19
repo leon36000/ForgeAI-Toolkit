@@ -322,6 +322,15 @@ class ForgeAIHandler(BaseHTTPRequestHandler):
             self._send_json(200, data)
             return
 
+        if path == "/api/engines":
+            try:
+                data = json.loads(_read_data_text("moteurs-inference.json"))
+            except (FileNotFoundError, ModuleNotFoundError, json.JSONDecodeError):
+                self._send_json(500, {"error": "engines registry unavailable"})
+                return
+            self._send_json(200, data)
+            return
+
         if path == "/api/models":
             store = RouteStore(_models_home())
             self._send_json(200, [r.public_dict() for r in store.list()])
