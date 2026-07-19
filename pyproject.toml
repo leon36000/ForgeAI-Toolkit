@@ -14,7 +14,7 @@ requires-python = ">=3.10"
 dependencies = []
 
 [project.optional-dependencies]
-tui = ["textual>=0.60"]          # wizard interactif (le mode --ci n'en a pas besoin)
+# (extra [tui] retiré — pivot acté : l'interface v1 est la web-app stdlib `forgeai web`, cf. CANON/spec-web-ui.md)
 dev = ["pytest>=8", "pytest-cov>=5", "ruff>=0.5", "mypy>=1.10"]
 
 [project.scripts]
@@ -27,7 +27,8 @@ package-dir = {"" = "src"}
 where = ["src"]
 
 [tool.setuptools.package-data]
-"forgeai.data" = ["*.json", "*.sha256", "locales/*.json", "templates/*.json"]
+"forgeai.data" = ["*.json", "*.sha256", "locales/*.json", "templates/*.json", "stacks/*.json"]
+"forgeai.web" = ["assets/*"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
