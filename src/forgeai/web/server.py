@@ -146,6 +146,12 @@ def bricks_payload(sphere_id: str, stack_id: str | None) -> dict | None:
     }
 
 
+
+def _read_data_text(name: str) -> str:
+    from importlib import resources
+    return (resources.files("forgeai.data") / name).read_text(encoding="utf-8")
+
+
 def forgeai_home() -> Path:
     """Répertoire utilisateur ForgeAI (FORGEAI_HOME ou ~/.forgeai)."""
     return Path(os.environ.get("FORGEAI_HOME", Path.home() / ".forgeai"))
@@ -293,6 +299,13 @@ class ForgeAIHandler(BaseHTTPRequestHandler):
                 json.dumps({"status": "ok"}, ensure_ascii=False).encode("utf-8"),
                 "application/json; charset=utf-8",
             )
+            return
+
+        if path == "/api/models/local":
+            # Registre des modeles open-weight verifies HF — expose TEL QUEL :
+            # aucun filtrage par materiel local (directive permanente), l'UI informe seulement.
+            data = json.loads(_read_data_text("modeles-locaux.json"))
+            self._send_json(200, data)
             return
 
         if path == "/api/models":

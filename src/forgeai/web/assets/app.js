@@ -10,6 +10,11 @@
     recommendedId: null,
     selectedId: null,
     sphereId: 'S1',
+    step: 1,
+    localModels: null,
+    modelTier: 'tous',
+    modelSearch: '',
+    modelsChosen: {},
     bricks: null,
     overrides: {},
     search: ''
@@ -89,7 +94,28 @@
       s_none: 'aucun',
       f_node_target: 'Nœud cible',
       node_local: 'Local (cette machine)',
-      node_auto: 'Auto — scheduler du cluster'
+      node_auto: 'Auto — scheduler du cluster',
+      tagline: 'Installateur d\'infrastructure IA souveraine',
+      step_hardware: 'Matériel',
+      step_stack: 'Stack',
+      step_models: 'Modèles IA',
+      step_bricks: 'Briques',
+      step_nodes: 'Nœuds',
+      step_deploy: 'Déploiement',
+      hardware_lede: 'Votre machine est analysée automatiquement — le reste de l\'installation s\'adapte à ce qu\'elle peut faire tourner.',
+      models_step_title: 'Modèles IA',
+      models_step_lede: 'Tous les modèles open-weight — petits, moyens, gros — déployables sur n\'importe quel nœud du réseau. Aucun n\'est masqué : choisissez librement, chaque nœud cible affiche s\'il peut le servir.',
+      tier_all: 'Tous',
+      tier_small: 'Petits',
+      tier_medium: 'Moyens',
+      tier_large: 'Gros',
+      model_search_placeholder: 'Filtrer les modèles…',
+      aria_tier: 'Taille',
+      aria_filter_models: 'Filtrer',
+      aria_steps: 'Étapes d\'installation',
+      nav_prev: '← Précédent',
+      nav_next: 'Suivant →',
+      need_stack_first: 'Choisissez d\'abord un stack à l\'étape 2.'
     },
     en: {
       title: 'ForgeAI Toolkit',
@@ -164,7 +190,28 @@
       s_none: 'none',
       f_node_target: 'Target node',
       node_local: 'Local (this machine)',
-      node_auto: 'Auto — cluster scheduler'
+      node_auto: 'Auto — cluster scheduler',
+      tagline: 'Sovereign AI infrastructure installer',
+      step_hardware: 'Hardware',
+      step_stack: 'Stack',
+      step_models: 'AI Models',
+      step_bricks: 'Bricks',
+      step_nodes: 'Nodes',
+      step_deploy: 'Deployment',
+      hardware_lede: 'Your machine is analyzed automatically — the rest of the install adapts to what it can run.',
+      models_step_title: 'AI Models',
+      models_step_lede: 'All open-weight models — small, medium, large — deployable to any node on the network. None is hidden: choose freely, each target node shows whether it can serve it.',
+      tier_all: 'All',
+      tier_small: 'Small',
+      tier_medium: 'Medium',
+      tier_large: 'Large',
+      model_search_placeholder: 'Filter models…',
+      aria_tier: 'Size',
+      aria_filter_models: 'Filter',
+      aria_steps: 'Install steps',
+      nav_prev: '← Previous',
+      nav_next: 'Next →',
+      need_stack_first: 'Choose a stack first at step 2.'
     }
   };
 
@@ -322,8 +369,9 @@
       const full = await fetchJson(`/api/stacks/${encodeURIComponent(stackId)}`);
       state.stackDetail = full;
       renderDetail(summary, full);
-      showBricksSection();
-      showDeploySection();
+      state.bricks = null;
+      state.summary = null;
+      goToStep(state.step); // rafraîchit rail + verrous (stack désormais choisi)
     } catch (e) {
       const detail = document.getElementById('stack-detail');
       detail.classList.remove('hidden');
@@ -341,8 +389,7 @@
     const detail = document.getElementById('stack-detail');
     detail.classList.add('hidden');
     detail.innerHTML = '';
-    hideBricksSection();
-    hideDeploySection();
+    goToStep(2);
   }
 
   function renderDetail(summary, full) {
@@ -639,6 +686,7 @@
             stack: state.selectedId,
             backend: form.elements.backend.value,
             node: form.elements.node ? form.elements.node.value : 'local',
+            models: Object.keys(state.modelsChosen),
             confirm: confirm
           })
         });
@@ -651,6 +699,73 @@
         status.classList.add('error');
       }
     });
+  }
+
+
+  /* ---------- Étape Modèles IA (P0.3) — 113 modèles vérifiés HF, zéro masquage ---------- */
+
+  async function loadLocalModels() {
+    if (state.localModels) { renderLocalModels(); return; }
+    const box = document.getElementById('local-models-list');
+    box.innerHTML = `<p>${escapeHtml(t('loading'))}</p>`;
+    try {
+      state.localModels = await fetchJson('/api/models/local');
+    } catch (e) {
+      box.innerHTML = `<p class="error">${escapeHtml(t('error_load'))}</p>`;
+      return;
+    }
+    renderLocalModels();
+  }
+
+  function renderLocalModels() {
+    const box = document.getElementById('local-models-list');
+    if (!state.localModels) return;
+    const q = state.modelSearch.trim().toLowerCase();
+    const visibles = state.localModels.modeles.filter((m) => {
+      if (state.modelTier !== 'tous' && m.tier !== state.modelTier) return false;
+      if (!q) return true;
+      return (m.hf_id + ' ' + m.name + ' ' + m.famille + ' ' + (m.notes_fr || '')).toLowerCase().includes(q);
+    });
+    const counts = document.getElementById('models-counts');
+    if (counts) counts.textContent = `${visibles.length}/${state.localModels.total}`;
+    box.innerHTML = visibles.map((m) => {
+      const chosen = !!state.modelsChosen[m.hf_id];
+      return `
+        <label class="brick-row${chosen ? ' installed' : ''}">
+          <input type="checkbox" data-model-id="${escapeHtml(m.hf_id)}" ${chosen ? 'checked' : ''}
+                 aria-label="${escapeHtml(m.name)}">
+          <span class="brick-main">
+            <span class="brick-head">
+              <span class="brick-name">${escapeHtml(m.name)}</span>
+              <span class="def-pill">${escapeHtml(m.tier)}</span>
+              <span class="def-pill">${escapeHtml(String(m.params_b))}B</span>
+              ${m.vram_q4_gb ? `<span class="brick-stars">Q4 ~${escapeHtml(String(m.vram_q4_gb))} GB</span>` : ''}
+              ${m.gguf ? '<span class="badge-default">GGUF</span>' : ''}
+            </span>
+            <span class="brick-desc">${escapeHtml(m.notes_fr || '')}</span>
+            <span class="brick-stars">${escapeHtml(m.famille)} · ${escapeHtml(m.license)} · ${escapeHtml(m.hf_id)}</span>
+          </span>
+        </label>`;
+    }).join('');
+    box.querySelectorAll('input[type="checkbox"]').forEach((cb) => {
+      cb.addEventListener('change', () => {
+        if (cb.checked) state.modelsChosen[cb.dataset.modelId] = true;
+        else delete state.modelsChosen[cb.dataset.modelId];
+      });
+    });
+  }
+
+  function initModelStep() {
+    document.querySelectorAll('#tier-filter button[data-tier]').forEach((b) => {
+      b.addEventListener('click', () => {
+        state.modelTier = b.dataset.tier;
+        document.querySelectorAll('#tier-filter button[data-tier]').forEach((x) =>
+          x.setAttribute('aria-pressed', String(x === b)));
+        renderLocalModels();
+      });
+    });
+    const search = document.getElementById('model-search');
+    if (search) search.addEventListener('input', () => { state.modelSearch = search.value; renderLocalModels(); });
   }
 
   /* ---------- Nœuds (B-02d) ---------- */
@@ -769,6 +884,58 @@
     });
   }
 
+
+  /* ---------- Installateur par étapes (P0.3) ---------- */
+
+  const TOTAL_STEPS = 6;
+  const NEEDS_STACK = new Set([3, 4, 6]);
+
+  function stepAllowed(n) {
+    if (NEEDS_STACK.has(n) && !state.selectedId) return false;
+    return n >= 1 && n <= TOTAL_STEPS;
+  }
+
+  function goToStep(n) {
+    if (!stepAllowed(n)) {
+      const hint = document.getElementById('step-hint');
+      if (hint) { hint.textContent = t('need_stack_first'); hint.classList.add('error'); }
+      return;
+    }
+    state.step = n;
+    document.querySelectorAll('[data-step-panel]').forEach((p) => {
+      p.classList.toggle('hidden', Number(p.dataset.stepPanel) !== n);
+    });
+    document.querySelectorAll('.step-item').forEach((b) => {
+      const sn = Number(b.dataset.step);
+      b.classList.toggle('active', sn === n);
+      b.classList.toggle('done', sn < n);
+      b.classList.toggle('locked', !stepAllowed(sn));
+      b.setAttribute('aria-pressed', String(sn === n));
+    });
+    const hint = document.getElementById('step-hint');
+    if (hint) { hint.textContent = ''; hint.classList.remove('error'); }
+    const prev = document.getElementById('btn-prev');
+    const next = document.getElementById('btn-next');
+    if (prev) prev.disabled = n === 1;
+    if (next) next.disabled = n === TOTAL_STEPS;
+    window.scrollTo({ top: 0, behavior: 'instant' });
+    if (n === 3) loadLocalModels();
+    if (n === 4 && state.selectedId && !state.bricks) loadBricks();
+    if (n === 6 && state.selectedId && !state.summary) { loadSummary(); populateNodeChoices(); }
+    if (n === 5) loadNodes();
+  }
+
+  function initStepper() {
+    document.querySelectorAll('.step-item').forEach((b) => {
+      b.addEventListener('click', () => goToStep(Number(b.dataset.step)));
+    });
+    const prev = document.getElementById('btn-prev');
+    const next = document.getElementById('btn-next');
+    if (prev) prev.addEventListener('click', () => goToStep(state.step - 1));
+    if (next) next.addEventListener('click', () => goToStep(state.step + 1));
+    goToStep(1);
+  }
+
   function initControls() {
     document.querySelectorAll('#theme-toggle button[data-theme]').forEach((btn) => {
       btn.addEventListener('click', () => setTheme(btn.dataset.theme));
@@ -784,6 +951,7 @@
       });
     }
     initModelForm();
+    initModelStep();
     initNodeForm();
     initDeployForm();
     setTheme(state.theme);
@@ -792,6 +960,7 @@
 
   async function boot() {
     initControls();
+    initStepper();
     loadModels();
     loadNodes();
     try {
