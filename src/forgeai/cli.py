@@ -91,9 +91,16 @@ def wizard_ci(args: argparse.Namespace) -> int:
     try:
         profile = derive_profile(hw)
     except ProfileError as exc:
-        print(f"ABORT [{exc.code}] {exc}", file=sys.stderr)
-        return 7
-    print(f"  profil: {profile}")
+        if getattr(args, "dry_run", False):
+            # dry-run = valider l'assemblage/rendu du plan, pas la machine COURANTE :
+            # le plan peut viser un AUTRE nœud du réseau (exigence universelle).
+            profile = "Minimal"
+            print(f"  profil: Minimal (repli dry-run — machine courante sous les minima : {exc})")
+        else:
+            print(f"ABORT [{exc.code}] {exc}", file=sys.stderr)
+            return 7
+    else:
+        print(f"  profil: {profile}")
 
     _step(t("wizard.s03"))
     digest = verify_catalogue(Path(args.catalogue))
