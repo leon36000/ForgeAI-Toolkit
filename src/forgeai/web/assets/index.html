@@ -44,6 +44,39 @@
       </div>
       <div id="bricks-list" class="bricks-list" aria-live="polite"></div>
     </section>
+
+    <section id="models" class="card">
+      <h2 data-i18n="models_title">Modèles &amp; clés API</h2>
+      <p data-i18n="models_subtitle">Routes modèle cloud — test de connexion réel obligatoire ; la clé est scellée au coffre, seule l'empreinte est conservée.</p>
+      <div id="models-list" class="models-list" aria-live="polite"></div>
+      <form id="model-form" class="model-form" autocomplete="off">
+        <div class="form-grid">
+          <label><span data-i18n="f_name">Nom de la route</span>
+            <input name="name" required placeholder="openrouter-glm"></label>
+          <label><span data-i18n="f_provenance">Provenance</span>
+            <select name="provenance">
+              <option value="openrouter">OpenRouter</option>
+              <option value="deepinfra">DeepInfra</option>
+              <option value="nim">NVIDIA NIM</option>
+              <option value="direct" data-i18n="prov_direct">Direct fournisseur</option>
+              <option value="autre" data-i18n="prov_autre">Autre (URL)</option>
+            </select></label>
+          <label><span data-i18n="f_model_id">Identifiant du modèle</span>
+            <input name="model_id" required placeholder="z-ai/glm-4.6"></label>
+          <label id="base-url-field" class="hidden"><span data-i18n="f_base_url">Base URL (OpenAI-compatible)</span>
+            <input name="base_url" placeholder="api.exemple.com/v1"></label>
+          <label><span data-i18n="f_api_key">Clé API</span>
+            <input name="api_key" type="password" required autocomplete="new-password"></label>
+          <label><span data-i18n="f_passphrase">Passphrase du coffre</span>
+            <input name="passphrase" type="password" required autocomplete="new-password"></label>
+        </div>
+        <p class="form-note" data-i18n="key_note">La clé transite en mémoire vers le serveur local (127.0.0.1) puis est scellée au coffre chiffré — jamais écrite en clair, jamais réaffichée.</p>
+        <div class="form-actions">
+          <button type="submit" class="btn" data-i18n="add_route">Ajouter la route (test réel)</button>
+          <span id="model-form-status" class="form-status" aria-live="polite"></span>
+        </div>
+      </form>
+    </section>
   </main>
 
   <script src="app.js"></script>

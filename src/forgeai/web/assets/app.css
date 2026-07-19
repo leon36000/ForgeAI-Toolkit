@@ -305,3 +305,24 @@ code {
 .badge-installed { background: color-mix(in srgb, var(--accent, #EA6A2E) 18%, transparent); color: var(--accent, #EA6A2E); }
 .badge-locked { border: 1px solid var(--line, #38434F); opacity: .85; }
 .badge-default { background: color-mix(in srgb, #2E9E5B 18%, transparent); color: #2E9E5B; }
+
+/* ---------- Modèles & clés API (B-02c) ---------- */
+.models-list { display: flex; flex-direction: column; gap: 6px; margin: 10px 0; }
+.model-row {
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  padding: 8px 12px; border-radius: 10px;
+  border: 1px solid var(--line, #38434F); background: var(--panel, #1A2027);
+}
+.model-form { margin-top: 12px; }
+.form-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 12px;
+}
+.form-grid label { display: flex; flex-direction: column; gap: 4px; font-size: 12.5px; }
+.form-grid input, .form-grid select {
+  padding: 8px 10px; border-radius: 8px;
+  border: 1px solid var(--line, #38434F); background: var(--panel, #1A2027); color: inherit;
+}
+.form-note { font-size: 12px; opacity: .7; margin: 10px 0 6px; }
+.form-actions { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.form-status { font-size: 12.5px; }
+.form-status.error { color: #E5533D; }
