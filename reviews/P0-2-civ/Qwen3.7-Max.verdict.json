@@ -1,0 +1,26 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "src/forgeai/cli.py",
+   "description": "La regex `_NODE_RE` limite la longueur totale du hostname à 63 caractères (`{0,62}` + 1 caractère initial). Bien que cela corresponde à la limite d'un label DNS unique, un FQDN complet peut légalement faire jusqu'à 253 caractères. C'est généralement suffisant pour des noms de nœuds K8s, mais cela pourrait rejeter des hostnames longs valides.",
+   "preuve": "_NODE_RE = re.compile(r\"^[a-z0-9]([a-z0-9.-]{0,62})$\", re.ASCII)"
+  },
+  {
+   "severite": "mineure",
+   "fichier": "src/forgeai/web/server.py",
+   "description": "Absence de vérification du type de `node` avant l'appel à `_NODE_RE.match()`. Si un client envoie un type non-string (ex: `\"node\": 123`), cela lèvera une `TypeError` (HTTP 500) au lieu de retourner l'erreur de validation attendue (HTTP 400).",
+   "preuve": "node = data.get(\"node\", \"local\")\nif node not in (\"local\", \"auto\") and not _NODE_RE.match(node):"
+  },
+  {
+   "severite": "mineure",
+   "fichier": "tests/test_multinoeud.py",
+   "description": "Présence d'une ligne de code mort (placeholder) immédiatement écrasée par l'assignation suivante.",
+   "preuve": "k3s_yaml = Path(live_server.server_address[0])  # placeholder\n# Le workdir du wizard est FORGEAI_HOME/deploy.\nhome = Path(os.environ[\"FORGEAI_HOME\"])\nk3s_yaml = home / \"deploy\" / \"k3s.yaml\""
+  }
+ ],
+ "date_heure": "2023-10-25T10:00:00Z",
+ "prompt_sha256": "6374e99a0895ea770f6efda19ee8d0fcea85b8750046051c6d7abe1f5f4f4a2d",
+ "reviewer_model": "Qwen3.7-Max"
+}
