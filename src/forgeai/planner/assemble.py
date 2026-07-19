@@ -65,6 +65,7 @@ def assemble_plan(
     *,
     target: RenderTarget = RenderTarget.COMPOSE,
     stack: dict | None = None,
+    extra_bricks: tuple[str, ...] = (),
     is_free=port_is_free,
 ) -> DeploymentPlan:
     overlay = json.loads(deploy_overlay.read_text(encoding="utf-8"))
@@ -84,11 +85,14 @@ def assemble_plan(
             gpu=bool(svc.get("gpu_capable")) and profile == "minimal-gpu-cuda",
         ))
 
-    if stack is not None:
+    if stack is not None or extra_bricks:
         specs = _load_deploy_specs()
         existing_names = {s.name for s in services}
         used_ports = {s.host_port for s in services}
-        for brick_id in deploy_ids(stack):
+        candidats = list(deploy_ids(stack)) if stack is not None else []
+        # briques cochées par l'utilisateur (P0.3b) : même mécanique, dédupliquée
+        candidats += [b for b in extra_bricks if b not in candidats]
+        for brick_id in candidats:
             if brick_id in existing_names:
                 continue
             spec = specs.get(brick_id)

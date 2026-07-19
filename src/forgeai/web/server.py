@@ -167,6 +167,13 @@ _NODE_KEYS_DIR: Path | None = None
 
 # Hook déploiement : remplace la commande wizard par défaut dans les tests.
 _DEPLOY_CMD: list[str] | None = None
+_SELECTION_ITEM_RE = re.compile(r"^[A-Za-z0-9._/:-]{1,200}$")
+
+
+def _selection_valide(lst: object) -> bool:
+    """Validation de FORME seulement (P0.3b) — l'existence est validée par le wizard."""
+    return (isinstance(lst, list) and len(lst) <= 2000
+            and all(isinstance(x, str) and _SELECTION_ITEM_RE.match(x) for x in lst))
 
 _DEPLOY_STATE = {
     "proc": None,
@@ -536,6 +543,12 @@ class ForgeAIHandler(BaseHTTPRequestHandler):
                 self._send_json(400, {"error": "node invalide"})
                 return
 
+            bricks_sel = data.get("bricks", [])
+            models_sel = data.get("models", [])
+            if not _selection_valide(bricks_sel) or not _selection_valide(models_sel):
+                self._send_json(400, {"error": "selection invalide"})
+                return
+
             try:
                 load_stack(stack_id)
             except FileNotFoundError:
@@ -569,6 +582,14 @@ class ForgeAIHandler(BaseHTTPRequestHandler):
                         "--stack",
                         stack_id,
                     ]
+                    if bricks_sel or models_sel:
+                        workdir = forgeai_home() / "deploy"
+                        workdir.mkdir(parents=True, exist_ok=True)
+                        sel_path = workdir / "selection-demande.json"
+                        sel_path.write_text(json.dumps(
+                            {"bricks": bricks_sel, "models": models_sel},
+                            ensure_ascii=False), encoding="utf-8")
+                        cmd += ["--selection", str(sel_path)]
                     if data.get("dry_run"):
                         cmd.append("--dry-run")
 

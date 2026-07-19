@@ -8,6 +8,7 @@ erreur avec code de sortie non nul — jamais de faux succès.
 from __future__ import annotations
 
 import argparse
+import json
 import importlib.resources
 import os
 import re
@@ -127,11 +128,51 @@ def wizard_ci(args: argparse.Namespace) -> int:
         stack = load_stack(args.stack)
         stack_label = stack.get("name", args.stack)
 
+    # P0.3b — sélection utilisateur (briques cochées + modèles choisis dans l'UI)
+    selection_bricks: list[str] = []
+    selection_models: list[str] = []
+    if getattr(args, "selection", None):
+        from importlib import resources as _res
+        try:
+            sel = json.loads(Path(args.selection).read_text(encoding="utf-8"))
+            selection_bricks = [str(b) for b in sel.get("bricks", [])]
+            selection_models = [str(m) for m in sel.get("models", [])]
+        except (OSError, ValueError) as exc:
+            print(f"ABORT [SEL] sélection illisible : {exc}", file=sys.stderr)
+            return 8
+        ids_catalogue = {e.id for e in bricks}
+        inconnues = sorted(b for b in selection_bricks if b not in ids_catalogue)
+        if inconnues:
+            print(f"ABORT [SEL] briques inconnues au catalogue : {inconnues}", file=sys.stderr)
+            return 8
+        registre_modeles = json.loads(
+            (_res.files("forgeai.data") / "modeles-locaux.json").read_text(encoding="utf-8"))
+        hf_ids = {m["hf_id"] for m in registre_modeles["modeles"]}
+        inconnus_m = sorted(m for m in selection_models if m not in hf_ids)
+        if inconnus_m:
+            print(f"ABORT [SEL] modèles inconnus au registre : {inconnus_m}", file=sys.stderr)
+            return 8
+
     _step(t("wizard.s04"))
-    plan = assemble_plan(profile, Path(args.overlay), stack=stack)
+    plan = assemble_plan(profile, Path(args.overlay), stack=stack,
+                         extra_bricks=tuple(selection_bricks))
     (workdir / "plan.json").write_text(plan.to_json(), encoding="utf-8")
     ports = {s.name: s.host_port for s in plan.services}
     print(f"  stack: {stack_label} | services: {ports} | modèle: {plan.model}")
+    if getattr(args, "selection", None):
+        from importlib import resources as _res
+        specs_ids = set(json.loads(
+            (_res.files("forgeai.data") / "deploy-specs.json").read_text(encoding="utf-8")))
+        deployables = [b for b in selection_bricks if b in specs_ids]
+        (workdir / "selection.json").write_text(json.dumps({
+            "stack": args.stack,
+            "bricks": selection_bricks,
+            "models": selection_models,
+            "deployables": deployables,
+            "provisionnement_futur": [b for b in selection_bricks if b not in specs_ids],
+        }, ensure_ascii=False, indent=1), encoding="utf-8")
+        print(f"  sélection: {len(selection_bricks)} briques "
+              f"({len(deployables)} déployables maintenant) + {len(selection_models)} modèles")
 
     _step(t("wizard.s05"))
     bootstrap_secrets(workdir)
@@ -155,7 +196,8 @@ def wizard_ci(args: argparse.Namespace) -> int:
     (workdir / "k3s.yaml").write_text(render_k3s(plan, node=effective_node), encoding="utf-8")
 
     if args.dry_run:
-        print(f"DRY-RUN OK: {len(plan.services)} services, stack={stack_label}, node={node_label}", flush=True)
+        print(f"DRY-RUN OK: {len(plan.services)} services, stack={stack_label}, node={node_label}, "
+              f"selection={len(selection_bricks)}+{len(selection_models)}", flush=True)
         return 0
 
     backend = args.backend
@@ -855,6 +897,8 @@ def main(argv: list[str] | None = None) -> int:
                        help="cible K3s : 'local' (hostname courant), 'auto' (scheduler libre), ou hostname exact")
     p_wiz.add_argument("--probe-host", default="127.0.0.1", dest="probe_host",
                        help="hôte de sondage santé/RAG (défaut 127.0.0.1)")
+    p_wiz.add_argument("--selection", default=None,
+                       help="JSON {bricks:[ids], models:[hf_ids]} — sélection UI validée puis tracée (selection.json)")
     p_wiz.add_argument("--dry-run", action="store_true",
                        help="génère les manifestes et s'arrête sans déployer")
     p_wiz.add_argument("--registre", default=str(DEFAULT_REGISTRE))

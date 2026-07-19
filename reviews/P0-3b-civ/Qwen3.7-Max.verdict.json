@@ -1,0 +1,14 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "src/forgeai/cli.py",
+   "description": "Si le fichier JSON de sélection contient une liste ou une chaîne au lieu d'un dictionnaire, `sel.get()` lèvera une `AttributeError` non capturée par le bloc `except (OSError, ValueError)`, provoquant un crash (exit 1) au lieu d'un exit 8 propre avec le message 'sélection illisible'.",
+   "preuve": "Lignes 138-141 : `sel = json.loads(...)` puis `sel.get(...)` sans vérification de type ou capture de `AttributeError`/`TypeError`."
+  }
+ ],
+ "date_heure": "2024-10-24T12:00:00Z",
+ "prompt_sha256": "7562c2769fb4b29284efcb7032735ed8ed6c681fbe8d9facfe6c1852b0ad23bc",
+ "reviewer_model": "Qwen3.7-Max"
+}

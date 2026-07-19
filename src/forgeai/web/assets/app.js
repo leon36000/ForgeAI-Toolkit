@@ -687,6 +687,8 @@
             backend: form.elements.backend.value,
             node: form.elements.node ? form.elements.node.value : 'local',
             models: Object.keys(state.modelsChosen),
+            bricks: Object.entries(state.overrides[overrideKey()] || {})
+              .filter(([, coche]) => coche).map(([id]) => id),
             confirm: confirm
           })
         });
