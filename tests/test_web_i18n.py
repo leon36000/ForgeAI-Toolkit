@@ -28,8 +28,8 @@ def _used_keys() -> set[str]:
 
 def _dict_keys() -> tuple[set[str], set[str]]:
     js = _js()
-    fr_block = js.split("fr: {")[1].split("\n    },")[0]
-    en_block = js.split("en: {")[1].split("\n    }\n  };")[0]
+    fr_block = js.split("\n    fr: {")[1].split("\n    },")[0]
+    en_block = js.split("\n    en: {")[1].split("\n    }\n  };")[0]
     fr = set(re.findall(r"^\s+([a-z_]+):", fr_block, re.M))
     en = set(re.findall(r"^\s+([a-z_]+):", en_block, re.M))
     return fr, en

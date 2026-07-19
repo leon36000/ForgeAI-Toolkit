@@ -8,7 +8,13 @@
 </head>
 <body>
   <header class="app-header">
-    <h1 data-i18n="title">ForgeAI Toolkit</h1>
+    <div class="brand">
+      <span class="brand-mark" aria-hidden="true">⬢</span>
+      <div class="brand-text">
+        <h1 data-i18n="title">ForgeAI Toolkit</h1>
+        <p class="brand-tagline" data-i18n="tagline">Installateur d'infrastructure IA souveraine</p>
+      </div>
+    </div>
     <div class="controls">
       <div id="lang-toggle" class="toggle-group" role="group" aria-label="Langue" data-i18n-aria="aria_lang">
         <button class="btn toggle" data-lang="fr" aria-pressed="false">FR</button>
@@ -21,111 +27,151 @@
     </div>
   </header>
 
-  <main id="app">
-    <section id="hardware" class="card">
-      <h2 data-i18n="hardware_title">Matériel détecté</h2>
-      <div id="hardware-content"><p data-i18n="loading">Chargement…</p></div>
-    </section>
+  <div class="installer">
+    <nav id="step-rail" class="step-rail" aria-label="Étapes d'installation" data-i18n-aria="aria_steps">
+      <button class="step-item" data-step="1"><span class="step-num">1</span><span class="step-name" data-i18n="step_hardware">Matériel</span></button>
+      <button class="step-item" data-step="2"><span class="step-num">2</span><span class="step-name" data-i18n="step_stack">Stack</span></button>
+      <button class="step-item" data-step="3"><span class="step-num">3</span><span class="step-name" data-i18n="step_models">Modèles IA</span></button>
+      <button class="step-item" data-step="4"><span class="step-num">4</span><span class="step-name" data-i18n="step_bricks">Briques</span></button>
+      <button class="step-item" data-step="5"><span class="step-num">5</span><span class="step-name" data-i18n="step_nodes">Nœuds</span></button>
+      <button class="step-item" data-step="6"><span class="step-num">6</span><span class="step-name" data-i18n="step_deploy">Déploiement</span></button>
+    </nav>
 
-    <section id="stacks">
-      <h2 data-i18n="stacks_title">Profils de déploiement</h2>
-      <p data-i18n="stacks_subtitle">Choisissez le stack synergique à déployer.</p>
-      <div id="stacks-grid" class="stacks-grid"></div>
-      <div id="stack-detail" class="stack-detail hidden" aria-live="polite"></div>
-    </section>
+    <main id="app">
+      <!-- Étape 1 : Matériel -->
+      <section id="hardware" class="step-panel" data-step-panel="1">
+        <h2 data-i18n="hardware_title">Matériel détecté</h2>
+        <p class="step-lede" data-i18n="hardware_lede">Votre machine est analysée automatiquement — le reste de l'installation s'adapte à ce qu'elle peut faire tourner.</p>
+        <div id="hardware-content" class="card"><p data-i18n="loading">Chargement…</p></div>
+      </section>
 
-    <section id="bricks" class="hidden">
-      <h2 data-i18n="bricks_title">Briques additionnelles</h2>
-      <p data-i18n="bricks_subtitle">Catalogue complet, classé par sphère. Les briques du stack sont pré-cochées ; le châssis commun est verrouillé.</p>
-      <nav id="sphere-steps" class="sphere-steps" aria-label="Sous-étapes par sphère" data-i18n-aria="aria_spheres"></nav>
-      <div class="bricks-toolbar">
-        <input id="brick-search" type="search" placeholder="Filtrer les briques…" data-i18n-placeholder="search_placeholder" aria-label="Filtrer" data-i18n-aria="aria_filter">
-        <span id="bricks-counts" class="bricks-counts" aria-live="polite"></span>
+      <!-- Étape 2 : Stack -->
+      <section id="stacks" class="step-panel hidden" data-step-panel="2">
+        <h2 data-i18n="stacks_title">Profils de déploiement</h2>
+        <p class="step-lede" data-i18n="stacks_subtitle">Choisissez le stack synergique à déployer.</p>
+        <div id="stacks-grid" class="stacks-grid"></div>
+        <div id="stack-detail" class="stack-detail hidden" aria-live="polite"></div>
+      </section>
+
+      <!-- Étape 3 : Modèles IA (locaux à déployer + routes cloud optionnelles) -->
+      <section id="models-step" class="step-panel hidden" data-step-panel="3">
+        <h2 data-i18n="models_step_title">Modèles IA</h2>
+        <p class="step-lede" data-i18n="models_step_lede">Tous les modèles open-weight — petits, moyens, gros — déployables sur n'importe quel nœud du réseau. Aucun n'est masqué : choisissez librement, chaque nœud cible affiche s'il peut le servir.</p>
+        <div class="models-toolbar">
+          <div id="tier-filter" class="toggle-group" role="group" aria-label="Taille" data-i18n-aria="aria_tier">
+            <button class="btn toggle" data-tier="tous" aria-pressed="true" data-i18n="tier_all">Tous</button>
+            <button class="btn toggle" data-tier="petit" aria-pressed="false" data-i18n="tier_small">Petits</button>
+            <button class="btn toggle" data-tier="moyen" aria-pressed="false" data-i18n="tier_medium">Moyens</button>
+            <button class="btn toggle" data-tier="gros" aria-pressed="false" data-i18n="tier_large">Gros</button>
+          </div>
+          <input id="model-search" type="search" placeholder="Filtrer les modèles…" data-i18n-placeholder="model_search_placeholder" aria-label="Filtrer" data-i18n-aria="aria_filter_models">
+          <span id="models-counts" class="bricks-counts" aria-live="polite"></span>
+        </div>
+        <div id="local-models-list" class="models-grid" aria-live="polite"></div>
+
+        <details class="cloud-block">
+          <summary data-i18n="models_title">Modèles cloud &amp; clés API (optionnel)</summary>
+          <p class="form-note" data-i18n="models_subtitle">Routes modèle cloud — test de connexion réel obligatoire ; la clé est scellée au coffre, seule l'empreinte est conservée.</p>
+          <div id="models-list" class="models-list" aria-live="polite"></div>
+          <form id="model-form" class="model-form" autocomplete="off">
+            <div class="form-grid">
+              <label><span data-i18n="f_name">Nom de la route</span>
+                <input name="name" required placeholder="openrouter-glm"></label>
+              <label><span data-i18n="f_provenance">Provenance</span>
+                <select name="provenance">
+                  <option value="openrouter">OpenRouter</option>
+                  <option value="deepinfra">DeepInfra</option>
+                  <option value="nim">NVIDIA NIM</option>
+                  <option value="direct" data-i18n="prov_direct">Direct fournisseur</option>
+                  <option value="autre" data-i18n="prov_autre">Autre (URL)</option>
+                </select></label>
+              <label><span data-i18n="f_model_id">Identifiant du modèle</span>
+                <input name="model_id" required placeholder="z-ai/glm-4.6"></label>
+              <label id="base-url-field" class="hidden"><span data-i18n="f_base_url">Base URL (OpenAI-compatible)</span>
+                <input name="base_url" placeholder="api.exemple.com/v1"></label>
+              <label><span data-i18n="f_api_key">Clé API</span>
+                <input name="api_key" type="password" required autocomplete="new-password"></label>
+              <label><span data-i18n="f_passphrase">Passphrase du coffre</span>
+                <input name="passphrase" type="password" required autocomplete="new-password"></label>
+            </div>
+            <p class="form-note" data-i18n="key_note">La clé transite en mémoire vers le serveur local (127.0.0.1) puis est scellée au coffre chiffré — jamais écrite en clair, jamais réaffichée.</p>
+            <div class="form-actions">
+              <button type="submit" class="btn" data-i18n="add_route">Ajouter la route (test réel)</button>
+              <span id="model-form-status" class="form-status" aria-live="polite"></span>
+            </div>
+          </form>
+        </details>
+      </section>
+
+      <!-- Étape 4 : Briques -->
+      <section id="bricks" class="step-panel hidden" data-step-panel="4">
+        <h2 data-i18n="bricks_title">Briques additionnelles</h2>
+        <p class="step-lede" data-i18n="bricks_subtitle">Catalogue complet, classé par sphère. Les briques du stack sont pré-cochées ; le châssis commun est verrouillé.</p>
+        <nav id="sphere-steps" class="sphere-steps" aria-label="Sous-étapes par sphère" data-i18n-aria="aria_spheres"></nav>
+        <div class="bricks-toolbar">
+          <input id="brick-search" type="search" placeholder="Filtrer les briques…" data-i18n-placeholder="search_placeholder" aria-label="Filtrer" data-i18n-aria="aria_filter">
+          <span id="bricks-counts" class="bricks-counts" aria-live="polite"></span>
+        </div>
+        <div id="bricks-list" class="bricks-list" aria-live="polite"></div>
+      </section>
+
+      <!-- Étape 5 : Nœuds -->
+      <section id="nodes" class="step-panel hidden" data-step-panel="5">
+        <h2 data-i18n="nodes_title">Nœuds — cluster multi-machines</h2>
+        <p class="step-lede" data-i18n="nodes_subtitle">Ajoutez un nœud avec son IP, utilisateur et mot de passe — utilisé une seule fois au bootstrap, puis bascule sur clé ed25519. Jamais écrit sur disque.</p>
+        <div id="nodes-list" class="models-list" aria-live="polite"></div>
+        <form id="node-form" class="model-form card" autocomplete="off">
+          <div class="form-grid">
+            <label><span data-i18n="f_node_ip">Adresse IP</span>
+              <input name="ip" required placeholder="192.168.1.31" spellcheck="false"></label>
+            <label><span data-i18n="f_node_user">Utilisateur</span>
+              <input name="user" required placeholder="forge" spellcheck="false"></label>
+            <label><span data-i18n="f_node_password">Mot de passe (éphémère)</span>
+              <input name="password" type="password" required autocomplete="new-password"></label>
+          </div>
+          <p class="form-note" data-i18n="node_key_note">🔑 Le mot de passe sert une seule fois : installation de la clé publique, bascule immédiate sur ed25519, puis seule l'empreinte est journalisée au registre.</p>
+          <div class="form-actions">
+            <button type="submit" class="btn" data-i18n="add_node">Ajouter le nœud</button>
+            <span id="node-form-status" class="form-status" aria-live="polite"></span>
+          </div>
+        </form>
+      </section>
+
+      <!-- Étape 6 : Déploiement -->
+      <section id="deploy" class="step-panel hidden" data-step-panel="6">
+        <h2 data-i18n="deploy_title">Résumé &amp; Déploiement</h2>
+        <p class="step-lede" data-i18n="deploy_subtitle">Vérifiez le résumé, puis tapez FORCER pour lancer le déploiement réel — chaque étape est prouvée en direct.</p>
+        <div id="deploy-summary" class="models-list" aria-live="polite"></div>
+        <form id="deploy-form" class="model-form card" autocomplete="off">
+          <div class="form-grid">
+            <label><span data-i18n="f_backend">Backend</span>
+              <select name="backend">
+                <option value="compose">Docker Compose</option>
+                <option value="k3s">K3s</option>
+              </select></label>
+            <label><span data-i18n="f_node_target">Nœud cible</span>
+              <select name="node" id="deploy-node-select">
+                <option value="local" data-i18n="node_local">Local (cette machine)</option>
+                <option value="auto" data-i18n="node_auto">Auto — scheduler du cluster</option>
+              </select></label>
+            <label><span data-i18n="f_confirm">Confirmation (tapez FORCER)</span>
+              <input name="confirm" required placeholder="FORCER" autocomplete="off" spellcheck="false"></label>
+          </div>
+          <div class="form-actions">
+            <button type="submit" class="btn btn-primary" data-i18n="launch_deploy">Déployer le stack</button>
+            <span id="deploy-form-status" class="form-status" aria-live="polite"></span>
+          </div>
+        </form>
+        <pre id="deploy-log" class="deploy-log hidden" role="log" aria-live="polite"></pre>
+      </section>
+
+      <div class="step-nav">
+        <button id="btn-prev" class="btn" data-i18n="nav_prev">← Précédent</button>
+        <span id="step-hint" class="form-status" aria-live="polite"></span>
+        <button id="btn-next" class="btn btn-primary" data-i18n="nav_next">Suivant →</button>
       </div>
-      <div id="bricks-list" class="bricks-list" aria-live="polite"></div>
-    </section>
-
-    <section id="deploy" class="card hidden">
-      <h2 data-i18n="deploy_title">Résumé &amp; Déploiement</h2>
-      <p data-i18n="deploy_subtitle">Vérifiez le résumé, puis tapez FORCER pour lancer le déploiement réel — chaque étape est prouvée en direct.</p>
-      <div id="deploy-summary" class="models-list" aria-live="polite"></div>
-      <form id="deploy-form" class="model-form" autocomplete="off">
-        <div class="form-grid">
-          <label><span data-i18n="f_backend">Backend</span>
-            <select name="backend">
-              <option value="compose">Docker Compose</option>
-              <option value="k3s">K3s</option>
-            </select></label>
-          <label><span data-i18n="f_node_target">Nœud cible</span>
-            <select name="node" id="deploy-node-select">
-              <option value="local" data-i18n="node_local">Local (cette machine)</option>
-              <option value="auto" data-i18n="node_auto">Auto — scheduler du cluster</option>
-            </select></label>
-          <label><span data-i18n="f_confirm">Confirmation (tapez FORCER)</span>
-            <input name="confirm" required placeholder="FORCER" autocomplete="off" spellcheck="false"></label>
-        </div>
-        <div class="form-actions">
-          <button type="submit" class="btn" data-i18n="launch_deploy">Déployer le stack</button>
-          <span id="deploy-form-status" class="form-status" aria-live="polite"></span>
-        </div>
-      </form>
-      <pre id="deploy-log" class="deploy-log hidden" role="log" aria-live="polite"></pre>
-    </section>
-
-    <section id="nodes" class="card">
-      <h2 data-i18n="nodes_title">Nœuds — cluster multi-machines</h2>
-      <p data-i18n="nodes_subtitle">Ajoutez un nœud avec son IP, utilisateur et mot de passe — utilisé une seule fois au bootstrap, puis bascule sur clé ed25519. Jamais écrit sur disque.</p>
-      <div id="nodes-list" class="models-list" aria-live="polite"></div>
-      <form id="node-form" class="model-form" autocomplete="off">
-        <div class="form-grid">
-          <label><span data-i18n="f_node_ip">Adresse IP</span>
-            <input name="ip" required placeholder="192.168.1.31" spellcheck="false"></label>
-          <label><span data-i18n="f_node_user">Utilisateur</span>
-            <input name="user" required placeholder="forge" spellcheck="false"></label>
-          <label><span data-i18n="f_node_password">Mot de passe (éphémère)</span>
-            <input name="password" type="password" required autocomplete="new-password"></label>
-        </div>
-        <p class="form-note" data-i18n="node_key_note">🔑 Le mot de passe sert une seule fois : installation de la clé publique, bascule immédiate sur ed25519, puis seule l'empreinte est journalisée au registre.</p>
-        <div class="form-actions">
-          <button type="submit" class="btn" data-i18n="add_node">Ajouter le nœud</button>
-          <span id="node-form-status" class="form-status" aria-live="polite"></span>
-        </div>
-      </form>
-    </section>
-
-    <section id="models" class="card">
-      <h2 data-i18n="models_title">Modèles &amp; clés API</h2>
-      <p data-i18n="models_subtitle">Routes modèle cloud — test de connexion réel obligatoire ; la clé est scellée au coffre, seule l'empreinte est conservée.</p>
-      <div id="models-list" class="models-list" aria-live="polite"></div>
-      <form id="model-form" class="model-form" autocomplete="off">
-        <div class="form-grid">
-          <label><span data-i18n="f_name">Nom de la route</span>
-            <input name="name" required placeholder="openrouter-glm"></label>
-          <label><span data-i18n="f_provenance">Provenance</span>
-            <select name="provenance">
-              <option value="openrouter">OpenRouter</option>
-              <option value="deepinfra">DeepInfra</option>
-              <option value="nim">NVIDIA NIM</option>
-              <option value="direct" data-i18n="prov_direct">Direct fournisseur</option>
-              <option value="autre" data-i18n="prov_autre">Autre (URL)</option>
-            </select></label>
-          <label><span data-i18n="f_model_id">Identifiant du modèle</span>
-            <input name="model_id" required placeholder="z-ai/glm-4.6"></label>
-          <label id="base-url-field" class="hidden"><span data-i18n="f_base_url">Base URL (OpenAI-compatible)</span>
-            <input name="base_url" placeholder="api.exemple.com/v1"></label>
-          <label><span data-i18n="f_api_key">Clé API</span>
-            <input name="api_key" type="password" required autocomplete="new-password"></label>
-          <label><span data-i18n="f_passphrase">Passphrase du coffre</span>
-            <input name="passphrase" type="password" required autocomplete="new-password"></label>
-        </div>
-        <p class="form-note" data-i18n="key_note">La clé transite en mémoire vers le serveur local (127.0.0.1) puis est scellée au coffre chiffré — jamais écrite en clair, jamais réaffichée.</p>
-        <div class="form-actions">
-          <button type="submit" class="btn" data-i18n="add_route">Ajouter la route (test réel)</button>
-          <span id="model-form-status" class="form-status" aria-live="polite"></span>
-        </div>
-      </form>
-    </section>
-  </main>
+    </main>
+  </div>
 
   <script src="app.js"></script>
 </body>
