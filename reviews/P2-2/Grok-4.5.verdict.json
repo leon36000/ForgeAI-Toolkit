@@ -1,0 +1,14 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "CANON/ETAT-SYSTEME.md",
+   "description": "Les routes API du pack exposent littéralement `/api/i` et non `/api/i18n` ; le diff documente les deux (`/api/i`, `/api/i18n`) et le critère exige `/api/i18n`. Écart non tranché par l'extrait brut (extraction possiblement tronquée), bien que le fact-check orchestrateur rapporte 0 manquant / 0 périmé.",
+   "preuve": "Pack Preuves CAPTURÉES → Routes API web: \"/api/health \"/api/i \"/api/models ...\" (pas de token `/api/i18n`) ; diff ETAT-SYSTEME.md section web: `/api/i`, `/api/i18n` ; fact-check: ETAT manquants: aucun | PERIMES presents: aucun"
+  }
+ ],
+ "date_heure": "2026-07-19T21:45:00Z",
+ "prompt_sha256": "fe07f7624f478e01ecc8d407e5631218a6805b41323a629b46db4e389bdbe502",
+ "reviewer_model": "Grok-4.5"
+}
