@@ -21,6 +21,7 @@ def _used_keys() -> set[str]:
     html, js = _html(), _js()
     keys = set(re.findall(r'data-i18n="([a-z_]+)"', html))
     keys |= set(re.findall(r'data-i18n-aria="([a-z_]+)"', html))
+    keys |= set(re.findall(r'data-i18n-placeholder="([a-z_]+)"', html))
     keys |= set(re.findall(r"\bt\('([a-z_]+)'\)", js))
     return keys
 
@@ -53,24 +54,31 @@ def test_aucune_cle_morte():
     assert dead == set(), f"clés définies mais jamais utilisées : {sorted(dead)}"
 
 
+FR_MARKERS = r"[éèêàçœùîôÉÈÊÀÇ]|\b(le|la|les|des|un|une|du|de la|tapez|ajoutez|choisissez)\b"
+
+
 def test_aucun_attribut_accentue_sans_mecanisme():
-    """Tout placeholder/aria-label contenant un caractère accentué (donc du français en dur)
-    doit porter data-i18n-aria sur le même élément (le placeholder de recherche est traduit
-    par setLang via t('search_placeholder'))."""
+    """Tout aria-label ou placeholder portant du français (accents OU mots outils français)
+    doit porter le mécanisme de traduction correspondant sur le même élément :
+    data-i18n-aria pour aria-label, data-i18n-placeholder pour placeholder."""
     html = _html()
+    mechanism = {"aria-label": "data-i18n-aria", "placeholder": "data-i18n-placeholder"}
     for m in re.finditer(r"<[^>]+>", html):
         tag = m.group(0)
-        attrs = dict(re.findall(r'(aria-label|placeholder|data-i18n-aria)="([^"]*)"', tag))
-        for attr in ("aria-label",):
+        attrs = dict(re.findall(
+            r'(aria-label|placeholder|data-i18n-aria|data-i18n-placeholder)="([^"]*)"', tag))
+        for attr, needed in mechanism.items():
             value = attrs.get(attr, "")
-            if re.search(r"[éèêàçœÉÈÊÀÇ]", value):
-                assert "data-i18n-aria" in attrs, f"{attr} FR en dur sans data-i18n-aria : {tag}"
+            if re.search(FR_MARKERS, value, re.IGNORECASE):
+                assert needed in attrs, f"{attr} FR en dur sans {needed} : {tag}"
 
 
-def test_setlang_traduit_les_aria():
+def test_setlang_traduit_aria_et_placeholder():
     js = _js()
     assert "data-i18n-aria" in _html()
+    assert "data-i18n-placeholder" in _html()
     assert "i18nAria" in js, "setLang doit traduire les attributs data-i18n-aria"
+    assert "i18nPlaceholder" in js, "setLang doit traduire les attributs data-i18n-placeholder"
 
 
 def test_focus_visible_present():

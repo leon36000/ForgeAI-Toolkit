@@ -201,6 +201,12 @@
         el.setAttribute('aria-label', i18n[lang][key]);
       }
     });
+    document.querySelectorAll('[data-i18n-placeholder]').forEach((el) => {
+      const key = el.dataset.i18nPlaceholder;
+      if (i18n[lang][key]) {
+        el.placeholder = i18n[lang][key];
+      }
+    });
     renderHardware();
     renderStacks();
     if (state.selectedId) {
@@ -210,8 +216,6 @@
         renderDetail(stack, full);
       }
     }
-    const search = document.getElementById('brick-search');
-    if (search) search.placeholder = t('search_placeholder');
     if (state.bricks) {
       renderSphereSteps();
       renderBricks();

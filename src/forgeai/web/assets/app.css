@@ -342,7 +342,3 @@ code {
   outline-offset: 2px;
   border-radius: 4px;
 }
-.btn:focus-visible, .stack-card:focus-visible, .sphere-step:focus-visible {
-  outline: 2px solid var(--accent, #EA6A2E);
-  outline-offset: 2px;
-}
