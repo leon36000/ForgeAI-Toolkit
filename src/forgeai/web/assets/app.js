@@ -451,7 +451,7 @@
         <span class="brick-name">${escapeHtml(m.name)}</span>
         <span class="def-pill">${escapeHtml(m.provenance)}</span>
         <span class="def-pill">${escapeHtml(m.model_id)}</span>
-        ${m.fingerprint ? `<span class="brick-stars" title="${escapeHtml(t('fingerprint_label'))}">${escapeHtml(String(m.fingerprint).slice(0, 16))}…</span>` : ''}
+        ${m.key_fingerprint ? `<span class="brick-stars" title="${escapeHtml(t('fingerprint_label'))}">${escapeHtml(String(m.key_fingerprint).slice(0, 16))}…</span>` : ''}
       </div>
     `).join('');
   }

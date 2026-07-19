@@ -341,6 +341,10 @@ class ForgeAIHandler(BaseHTTPRequestHandler):
             self._send_json(400, {"error": str(exc)})
             return
 
+        # Journalisation best-effort : la route EST créée (clé scellée) même si le
+        # registre échoue, mais l'échec est SIGNALÉ au client (objection revue B-02c —
+        # jamais avalé en silence).
+        registre_journalise = True
         try:
             reg_path = _registre_path()
             reg_path.parent.mkdir(parents=True, exist_ok=True)
@@ -356,13 +360,14 @@ class ForgeAIHandler(BaseHTTPRequestHandler):
                 },
             )
         except Exception:
-            pass
+            registre_journalise = False
 
         self._send_json(
             201,
             {
                 "route": route.public_dict(),
                 "probe": {"light": result.light, "detail": result.detail},
+                "registre_journalise": registre_journalise,
             },
         )
 
