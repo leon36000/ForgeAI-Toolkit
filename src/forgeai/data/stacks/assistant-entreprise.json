@@ -1,0 +1,175 @@
+{
+ "id": "assistant-entreprise",
+ "name": "Assistant d'entreprise / Copilote",
+ "description_fr": "Copilote d'entreprise multi-tenant : chat + recherche entreprise permission-aware (ACL), RAG durci profond et memoire multi-couches, Hermes comme cerveau unifiant, gouvernance par tenant au gateway.",
+ "description_en": "Multi-tenant enterprise copilot: chat + permission-aware enterprise search (ACL), hardened deep RAG and multi-layer memory, Hermes as the unifying brain, per-tenant governance at the gateway.",
+ "base_rag_durci": true,
+ "deploy_by_sphere": {
+  "S1": [
+   "k3s",
+   "nvidia-gpu-operator",
+   "kueue",
+   "longhorn",
+   "cloudnativepg",
+   "traefik",
+   "cilium-hubble",
+   "velero"
+  ],
+  "S2": [
+   "vllm",
+   "ollama",
+   "text-embeddings-inference-tei",
+   "infinity",
+   "llama-cpp"
+  ],
+  "S3": [
+   "bge-m3",
+   "bge-reranker-v2-m3",
+   "qwen3-embedding",
+   "colbert",
+   "pylate",
+   "sentence-transformers"
+  ],
+  "S4": [
+   "litellm",
+   "redis"
+  ],
+  "S5": [
+   "hermes-agent",
+   "hermes-workspace",
+   "hermes-orchestrator",
+   "superpowers",
+   "open-webui",
+   "onyx-ex-danswer",
+   "dify",
+   "langgraph",
+   "langchain",
+   "n8n",
+   "llamaindex",
+   "instructor",
+   "outlines",
+   "guidance",
+   "browser-use",
+   "playwright"
+  ],
+  "S6": [
+   "qdrant",
+   "neo4j",
+   "mem0-local",
+   "graphiti",
+   "zep",
+   "letta",
+   "cognee",
+   "langmem"
+  ],
+  "S7": [
+   "ragflow",
+   "docling",
+   "mineru",
+   "unstructured",
+   "chonkie",
+   "late-chunking",
+   "dspy",
+   "llmlingua-2",
+   "graphrag",
+   "lightrag",
+   "meilisearch",
+   "firecrawl",
+   "crawl4ai"
+  ],
+  "S8": [
+   "mcp-servers",
+   "ibm-mcp-context-forge",
+   "filesystem-mcp",
+   "github-mcp-officiel",
+   "slack-mcp-korotovsky",
+   "postgres-mcp-pro",
+   "qdrant-mcp-officiel",
+   "fastmcp-python",
+   "mcp-scan-invariant-labs-snyk"
+  ],
+  "S9": [
+   "nemo-guardrails",
+   "microsoft-presidio",
+   "llama-guard",
+   "llm-guard",
+   "guardrails-ai",
+   "rebuff",
+   "garak"
+  ],
+  "S10": [
+   "openbao",
+   "external-secrets-operator",
+   "spiffe-spire",
+   "keycloak",
+   "cert-manager",
+   "kyverno",
+   "opa-rego",
+   "gvisor",
+   "e2b-code-interpreter"
+  ],
+  "S11": [
+   "langfuse",
+   "mlflow",
+   "openmeter",
+   "immudb",
+   "openmetadata"
+  ],
+  "S12": [
+   "arize-phoenix",
+   "opentelemetry-collector",
+   "prometheus",
+   "grafana",
+   "loki",
+   "tempo"
+  ],
+  "S13": [
+   "ragas",
+   "deepeval",
+   "promptfoo",
+   "giskard"
+  ],
+  "S14": [
+   "argo-cd",
+   "kustomize",
+   "kserve",
+   "kubeai"
+  ]
+ },
+ "default_by_sphere": {
+  "S1": "k3s",
+  "S2": "vllm",
+  "S3": "bge-m3",
+  "S4": "litellm",
+  "S5": "hermes-agent",
+  "S6": "qdrant",
+  "S7": "ragflow",
+  "S8": "mcp-servers",
+  "S9": "nemo-guardrails",
+  "S10": "openbao",
+  "S11": "langfuse",
+  "S12": "arize-phoenix",
+  "S13": "ragas",
+  "S14": "argo-cd"
+ },
+ "wiring": [
+  "surfaces (hermes-workspace + open-webui + onyx-ex-danswer(ACL) + dify) -> outils via MCP (mcpo / ibm-mcp-context-forge) -> connecteurs entreprise S8 : chaque surface parle OpenAI-compat",
+  "hermes-agent -> litellm via any-OpenAI-backend : Hermes pointe son backend sur le gateway (cerveau unifiant)",
+  "ragflow(spine RAG) <- ingest docling/mineru/unstructured -> chunk chonkie/late-chunking -> microsoft-presidio de-id -> embed bge-m3 (text-embeddings-inference-tei) -> qdrant(payload/tenant) + neo4j(KG)",
+  "query RAG : dspy rewrite -> hybride dense+BM25(meilisearch)+colbert -> RRF -> rerank bge-reranker-v2-m3 -> llmlingua-2 -> graphrag/lightrag",
+  "memoire : mem0-local/graphiti/zep/letta/cognee/langmem sur qdrant+neo4j (couches par type, complementaires)",
+  "nemo-guardrails INPUT (jailbreak/PII + llama-guard + rebuff + llm-guard) -> litellm(PIVOT) -> nemo-guardrails OUTPUT (guardrails-ai)",
+  "litellm PIVOT : cle virtuelle=team (budget/quota) + microsoft-presidio rail + cache redis + callback langfuse -> vllm /v1/chat/completions (dev: ollama)",
+  "tool-exec sandbox gvisor / e2b-code-interpreter ; secrets openbao -> external-secrets-operator ; mTLS spiffe-spire",
+  "audit/obs : langfuse(trace+cout/tenant) + otel(opentelemetry-collector)->prometheus/grafana/loki/tempo + openmeter + immudb ; gate CI ragas+deepeval+promptfoo+garak -> argo-cd"
+ ],
+ "config_critique": {
+  "LITELLM_HIERARCHY": "Organization->Team->User->Key ; budgets+rate-limits par niveau ; cles virtuelles=spend tracking ; callback Langfuse",
+  "LITELLM_GUARDRAIL_PRESIDIO": "pii_masking_v2 rail natif au gateway",
+  "QDRANT_MULTITENANCY": "collection partagee unique + partition par payload (cle tenant) + is_tenant=true ; Tiered Multitenancy (Qdrant 1.16) gros tenants en shards dedies",
+  "PRESIDIO_3_POINTS": "ingestion RAG de-id + rail LiteLLM gateway + rails NeMo input/output/retrieval",
+  "VLLM_OLLAMA_SWAP": "OpenAI-compat, swap prod<->dev = 2 variables d'env",
+  "ONYX_ACL_SYNC": "sync ACL Slack/GDrive/Confluence/SharePoint par connecteur (l'utilisateur ne voit que ses docs autorises)"
+ },
+ "surface": "hermes-workspace"
+}

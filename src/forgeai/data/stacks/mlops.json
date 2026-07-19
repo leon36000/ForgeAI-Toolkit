@@ -1,0 +1,177 @@
+{
+ "id": "mlops",
+ "name": "MLOps / Fine-tuning (usine a modeles)",
+ "description_fr": "Usine a modeles : pipeline dataset->fine-tune(LoRA/QLoRA/RL)->quantize->merge->eval->registry->serve(vLLM/LoRAX)->gateway, tracking MLflow+W&B en surcouche train->eval, gate CI deterministe (modelscan+trivy+garak+lm-eval) avant promotion, GitOps Argo CD.",
+ "description_en": "Model factory: dataset->fine-tune(LoRA/QLoRA/RL)->quantize->merge->eval->registry->serve(vLLM/LoRAX)->gateway pipeline, MLflow+W&B tracking over train->eval, deterministic CI gate (modelscan+trivy+garak+lm-eval) before promotion, Argo CD GitOps.",
+ "base_rag_durci": true,
+ "deploy_by_sphere": {
+  "S1": [
+   "k3s",
+   "volcano",
+   "kueue",
+   "ray",
+   "kuberay",
+   "nvidia-gpu-operator",
+   "skypilot"
+  ],
+  "S2": [
+   "vllm",
+   "lorax",
+   "sglang",
+   "lmdeploy",
+   "ollama",
+   "text-embeddings-inference-tei",
+   "infinity"
+  ],
+  "S3": [
+   "transformers",
+   "datasets",
+   "llama-factory",
+   "unsloth",
+   "axolotl",
+   "peft",
+   "trl",
+   "deepspeed",
+   "pytorch-fsdp",
+   "accelerate",
+   "liger-kernel",
+   "bitsandbytes",
+   "autoawq",
+   "llm-compressor",
+   "mergekit",
+   "sentence-transformers",
+   "bge-m3",
+   "bge-reranker-v2-m3"
+  ],
+  "S4": [
+   "litellm",
+   "llmlingua-2"
+  ],
+  "S5": [
+   "zenml",
+   "apache-airflow",
+   "dagster",
+   "hermes-agent",
+   "superpowers"
+  ],
+  "S6": [
+   "qdrant",
+   "milvus",
+   "faiss",
+   "mem0"
+  ],
+  "S7": [
+   "ragflow",
+   "data-juicer",
+   "distilabel",
+   "argilla",
+   "datatrove",
+   "nemo-curator",
+   "docling",
+   "unstructured",
+   "chonkie"
+  ],
+  "S8": [
+   "mcp-servers",
+   "composio",
+   "fastmcp-python",
+   "qdrant-mcp-officiel"
+  ],
+  "S9": [
+   "garak",
+   "modelscan",
+   "deepteam",
+   "guardrails-ai",
+   "nemo-guardrails",
+   "microsoft-presidio",
+   "pyrit"
+  ],
+  "S10": [
+   "openbao",
+   "external-secrets-operator",
+   "cert-manager",
+   "trivy",
+   "cosign-sigstore",
+   "e2b-code-interpreter"
+  ],
+  "S11": [
+   "mlflow",
+   "bentoml",
+   "openmetadata",
+   "immudb"
+  ],
+  "S12": [
+   "weights-biases",
+   "langfuse",
+   "arize-phoenix",
+   "prometheus",
+   "grafana",
+   "loki",
+   "tempo",
+   "nvidia-dcgm-exporter",
+   "evidently"
+  ],
+  "S13": [
+   "lm-evaluation-harness",
+   "deepeval",
+   "ragas",
+   "giskard",
+   "promptfoo",
+   "opencompass",
+   "mteb",
+   "guidellm",
+   "dspy",
+   "textgrad"
+  ],
+  "S14": [
+   "argo-cd",
+   "kserve",
+   "seldon-core",
+   "kustomize",
+   "terraform-opentofu",
+   "velero",
+   "minio",
+   "postgresql",
+   "cloudnativepg",
+   "redis",
+   "kafka",
+   "nats-jetstream"
+  ]
+ },
+ "default_by_sphere": {
+  "S1": "k3s",
+  "S2": "vllm",
+  "S3": "transformers",
+  "S4": "litellm",
+  "S5": "zenml",
+  "S6": "qdrant",
+  "S7": "data-juicer",
+  "S8": "mcp-servers",
+  "S9": "garak",
+  "S10": "openbao",
+  "S11": "mlflow",
+  "S12": "weights-biases",
+  "S13": "lm-evaluation-harness",
+  "S14": "argo-cd"
+ },
+ "wiring": [
+  "dataset : minio + postgresql/cloudnativepg (backend registry/tracking) -> curate data-juicer/distilabel/argilla/datatrove/nemo-curator ; ingestion docling/unstructured->chonkie",
+  "fine-tune : llama-factory/unsloth/axolotl -> peft + trl (SFT/DPO/GRPO) ; backend deepspeed/pytorch-fsdp + accelerate + liger-kernel ; pods GPU k3s + volcano/kueue/ray/kuberay ; autolog weights-biases + mlflow",
+  "quantize : bitsandbytes (train 4-bit) | autoawq/llm-compressor (W4A16 -> vLLM natif) -> merge mergekit (TIES/DARE/SLERP)",
+  "eval : lm-evaluation-harness + deepeval/ragas + mteb (embeddings) + guidellm (serving) ; garak/deepteam/pyrit red-team ; modelscan scanne .safetensors ; evidently baseline drift ; dspy/textgrad optimisent sur metriques ; code genere en sandbox e2b-code-interpreter",
+  "registry : mlflow Registry (None->Staging->Prod, artefacts->minio) | bentoml store ; promotion signee cosign-sigstore ; audit immudb ; lineage openmetadata",
+  "serve : vllm --enable-lora | lorax (multi-adaptateurs) | lmdeploy (AWQ) | GGUF->ollama ; K8s kserve/seldon-core",
+  "gateway : litellm (cle virtuelle/version, callback langfuse) ; llmlingua-2 compresse le contexte",
+  "obs/drift : mlflow -> tracking+registry (sert S12 tracking ET S11 registry) ; weights-biases + langfuse (traces) + evidently (drift) + nvidia-dcgm-exporter/prometheus/grafana/loki/tempo -> re-train",
+  "GitOps : argo-cd sync kserve/bentoml ; secrets openbao + external-secrets-operator ; gate CI deterministe modelscan+trivy+garak+lm-eval AVANT promo Staging->Prod (echec seuil => blocage)"
+ ],
+ "config_critique": {
+  "MLFLOW": "MLFLOW_TRACKING_URI + backend PostgreSQL/CloudNativePG + artifact-store MinIO (MLFLOW_S3_ENDPOINT_URL, creds OpenBao/ESO) ; sert registry (S11) ET tracking (S12)",
+  "LLAMA_FACTORY": "dataset_info.json + template ; report_to=[wandb,mlflow] ; export adaptateur merge",
+  "VLLM_LORA": "--enable-lora --max-lora-rank 64 (ou LoRAX pour des milliers d'adaptateurs/GPU) ; poids PVC RO",
+  "QUANT_SERVE_CHAIN": "llm-compressor -> W4A16 consomme nativement par vLLM (chaine quant->serve validee)",
+  "GPU_GANG_SCHED": "k3s + volcano/kueue gang-scheduling multi-GPU ; nvidia-gpu-operator AVANT vLLM",
+  "CI_PROMOTION_GATE": "modelscan (artefact) + trivy (image) + garak/deepteam (red-team) + lm-eval/deepeval (seuils) AVANT promo Staging->Prod ; echec seuil => blocage"
+ },
+ "surface": "mlflow"
+}

@@ -1,0 +1,130 @@
+{
+ "id": "support-conversationnel",
+ "name": "Support client / Conversationnel (chat + voix)",
+ "description_fr": "Support client omnicanal chat + voix temps reel (voix-a-voix < 800 ms) : pipeline Pipecat (VAD/turn/STT/TTS) sur transport LiveKit (WebRTC+SIP/PSTN), PII bidirectionnelle native au gateway LiteLLM+Presidio, RAG durci expose en MCP, memoire multi-couches a stores distincts.",
+ "description_en": "Omnichannel chat + real-time voice customer support (voice-to-voice < 800 ms): Pipecat pipeline (VAD/turn/STT/TTS) on LiveKit transport (WebRTC+SIP/PSTN), bidirectional PII native to the LiteLLM+Presidio gateway, hardened RAG exposed over MCP, multi-layer memory on distinct stores.",
+ "base_rag_durci": true,
+ "deploy_by_sphere": {
+  "S1": [
+   "k3s",
+   "nvidia-gpu-operator",
+   "longhorn",
+   "cloudnativepg"
+  ],
+  "S2": [
+   "vllm",
+   "sglang",
+   "lmcache",
+   "text-embeddings-inference-tei"
+  ],
+  "S3": [
+   "bge-m3",
+   "bge-reranker-v2-m3"
+  ],
+  "S4": [
+   "litellm",
+   "redis"
+  ],
+  "S5": [
+   "langgraph",
+   "pydanticai",
+   "hermes-agent",
+   "superpowers",
+   "open-webui",
+   "chatwoot"
+  ],
+  "S6": [
+   "zep",
+   "graphiti",
+   "mem0",
+   "qdrant",
+   "neo4j",
+   "infinity"
+  ],
+  "S7": [
+   "ragflow"
+  ],
+  "S8": [
+   "mcp-servers",
+   "composio",
+   "docker-mcp-gateway",
+   "fastmcp-python"
+  ],
+  "S9": [
+   "nemo-guardrails",
+   "microsoft-presidio",
+   "llm-guard",
+   "llama-guard"
+  ],
+  "S10": [
+   "openbao",
+   "external-secrets-operator",
+   "gvisor",
+   "firecracker"
+  ],
+  "S11": [
+   "immudb",
+   "opa-rego",
+   "openmeter"
+  ],
+  "S12": [
+   "langfuse",
+   "evidently",
+   "whisperx"
+  ],
+  "S13": [
+   "ragas",
+   "deepeval",
+   "promptfoo"
+  ],
+  "S14": [
+   "argo-cd",
+   "kserve",
+   "kustomize"
+  ],
+  "VOIX": [
+   "livekit",
+   "pipecat",
+   "silero-vad",
+   "smart-turn",
+   "faster-whisper",
+   "kokoro"
+  ]
+ },
+ "default_by_sphere": {
+  "S1": "k3s",
+  "S2": "vllm",
+  "S3": "bge-m3",
+  "S4": "litellm",
+  "S5": "langgraph",
+  "S6": "qdrant",
+  "S7": "ragflow",
+  "S8": "mcp-servers",
+  "S9": "nemo-guardrails",
+  "S10": "openbao",
+  "S11": "immudb",
+  "S12": "langfuse",
+  "S13": "ragas",
+  "S14": "argo-cd",
+  "VOIX": "pipecat"
+ },
+ "wiring": [
+  "transport livekit (WebRTC + SIP/PSTN natif) -> pipecat cree le bot et gere le pipeline VAD/LLM/TTS par-dessus",
+  "turn-taking : silero-vad detecte le silence PUIS smart-turn (~65 ms, semantique on-device) predit la fin d'enonce ; complementaires",
+  "STT faster-whisper int8 streaming (CTranslate2) -> langgraph/pydanticai (cerveau, + hermes-agent/superpowers) ; nemo-guardrails Colang pour dialogue deterministe auth/remboursement",
+  "gateway litellm (cles virtuelles/tenant, budget, cache redis, callback langfuse) -> vllm (+ sglang RadixAttention prefixe systeme+RAG en cache ; lmcache KV) -> TTS kokoro streaming (~28-200 ms 1er frame)",
+  "PII BIDIR : microsoft-presidio via guardrail litellm scope=both (pre_call input + post_call output + restore + logging_only) ; aussi FrameProcessor Pipecat sur le transcript avant tout log",
+  "ragflow (deep-doc, hybrid bge-m3 + bge-reranker-v2-m3, citations) sur moteur infinity, expose via RAGFlow MCP a pipecat/langgraph",
+  "memoire a 2 stores distincts : zep/graphiti (KG temporel, neo4j) + mem0 (faits, qdrant) ; write-back en fin d'appel ; qdrant sert mem0 (PAS ragflow, PAS zep)",
+  "outils CRM/commande/ticket/stripe : mcp-servers/composio via docker-mcp-gateway allow-list + sandbox gvisor/firecracker",
+  "surfaces open-webui + chatwoot (omnicanal, CSAT, handoff humain) ; obs langfuse (masking PII, scores containment/CSAT/sentiment) + evidently (drift) + whisperx (QA nocturne diarizee) ; ledger immudb (PII/consentement)"
+ ],
+ "config_critique": {
+  "VOICE_LATENCY_BUDGET": "< 800 ms voix-a-voix : silero+smart-turn ~65 ms -> faster-whisper int8 ~100-150 ms -> LLM TTFT sglang RadixAttention+lmcache ~200-300 ms -> kokoro 1er frame ~28-200 ms",
+  "PRESIDIO_SCOPE_BOTH": "presidio_filter_scope=both, pre_call+post_call, restore (retablit la valeur reelle pour l'appelant), logging_only (masque avant log)",
+  "RAGFLOW_BACKEND": "moteur retrieval = Infinity ou Elasticsearch (PAS Qdrant) ; expose serveur MCP + API HTTP",
+  "GRAPHITI_BACKEND": "KG temporel sur Neo4j/FalkorDB (PAS Qdrant) ; mem0 sur Qdrant : 2 couches, 2 stores, 0 conflit",
+  "SGLANG_PREFIX_CACHE": "RadixAttention met en cache le prefixe systeme+RAG ; lmcache reutilise le KV entre tours"
+ },
+ "surface": "chatwoot"
+}
