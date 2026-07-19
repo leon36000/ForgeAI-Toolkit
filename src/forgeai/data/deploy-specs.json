@@ -1,0 +1,13 @@
+{
+  "_doc": "registre extensible brique→conteneur ; v1 châssis minimal ; toute nouvelle image doit être sourcée en revue",
+  "litellm": {
+    "image": "ghcr.io/berriai/litellm:main-stable",
+    "container_port": 4000,
+    "health_path": "/health/liveness"
+  },
+  "redis": {
+    "image": "redis:7-alpine",
+    "container_port": 6379,
+    "health_path": null
+  }
+}

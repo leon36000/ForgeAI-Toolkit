@@ -8,6 +8,7 @@ erreur avec code de sortie non nul — jamais de faux succès.
 from __future__ import annotations
 
 import argparse
+import importlib.resources
 import os
 import socket
 import sys
@@ -41,6 +42,7 @@ from forgeai.renderers.k3s import NAMESPACE, node_port_for, render_k3s
 from forgeai.resources import catalogue_path, deploy_overlay_path
 from forgeai.i18n import t, set_locale, available_locales
 from forgeai.ide import SUPPORTED_IDES
+from forgeai.stacks import load_stack
 
 # Données embarquées dans le paquet → portables après pip install (P3).
 DEFAULT_CATALOGUE = catalogue_path()
@@ -98,14 +100,29 @@ def wizard_ci(args: argparse.Namespace) -> int:
     bricks = load_catalogue(Path(args.catalogue))
     print(f"  {len(bricks)} briques, sha256 {digest[:16]}…")
 
+    stack = None
+    stack_label = "minimal"
+    if args.stack:
+        stack = load_stack(args.stack)
+        stack_label = stack.get("name", args.stack)
+
     _step(t("wizard.s04"))
-    plan = assemble_plan(profile, Path(args.overlay))
+    plan = assemble_plan(profile, Path(args.overlay), stack=stack)
     (workdir / "plan.json").write_text(plan.to_json(), encoding="utf-8")
     ports = {s.name: s.host_port for s in plan.services}
-    print(f"  services: {ports} | modèle: {plan.model}")
+    print(f"  stack: {stack_label} | services: {ports} | modèle: {plan.model}")
 
     _step(t("wizard.s05"))
     bootstrap_secrets(workdir)
+
+    compose_file = workdir / "docker-compose.yaml"
+    compose_file.write_text(render_compose(plan), encoding="utf-8")
+    local_node = socket.gethostname().lower()
+    (workdir / "k3s.yaml").write_text(render_k3s(plan, node=local_node), encoding="utf-8")
+
+    if args.dry_run:
+        print(f"DRY-RUN OK: {len(plan.services)} services, stack={stack_label}", flush=True)
+        return 0
 
     backend = args.backend
     if not args.skip_preflight:
@@ -119,11 +136,6 @@ def wizard_ci(args: argparse.Namespace) -> int:
                   f"Lancez `forgeai doctor` pour le détail, ou --skip-preflight pour forcer.",
                   file=sys.stderr)
             return 6
-
-    compose_file = workdir / "docker-compose.yaml"
-    compose_file.write_text(render_compose(plan), encoding="utf-8")
-    local_node = socket.gethostname().lower()
-    (workdir / "k3s.yaml").write_text(render_k3s(plan, node=local_node), encoding="utf-8")
 
     if backend == "compose":
         _step(t("wizard.s06"))
@@ -160,8 +172,16 @@ def wizard_ci(args: argparse.Namespace) -> int:
             embed_model=plan.embed_model,
         )
         rag.pull_models()
-        doc = Path(args.document).read_text(encoding="utf-8")
-        chunks = rag.ingest(doc, source=Path(args.document).name)
+
+        if args.document:
+            doc_path = Path(args.document)
+            source_name = doc_path.name
+        else:
+            doc_path = importlib.resources.files("forgeai.data") / "smoke" / "verification.md"
+            source_name = "verification.md"
+        doc = doc_path.read_text(encoding="utf-8")
+
+        chunks = rag.ingest(doc, source=source_name)
         print(f"  {chunks} chunks ingérés")
 
         _step(t("wizard.s09"))
@@ -795,10 +815,15 @@ def main(argv: list[str] | None = None) -> int:
     p_wiz.add_argument("--workdir", default="run")
     p_wiz.add_argument("--catalogue", default=str(DEFAULT_CATALOGUE))
     p_wiz.add_argument("--overlay", default=str(DEFAULT_OVERLAY))
+    p_wiz.add_argument("--stack", default=None,
+                       help="stack à déployer (défaut : plan minimal)")
+    p_wiz.add_argument("--dry-run", action="store_true",
+                       help="génère les manifestes et s'arrête sans déployer")
     p_wiz.add_argument("--registre", default=str(DEFAULT_REGISTRE))
-    p_wiz.add_argument("--document", required=True)
-    p_wiz.add_argument("--question", required=True)
-    p_wiz.add_argument("--expected-fact", required=True)
+    p_wiz.add_argument("--document", default=None,
+                       help="document de test (défaut : smoke embarqué)")
+    p_wiz.add_argument("--question", default="Quelle est la capitale de la France ?")
+    p_wiz.add_argument("--expected-fact", default="Paris")
     p_wiz.add_argument("--health-timeout", type=float, default=180.0)
     p_wiz.add_argument("--teardown", action="store_true")
     p_wiz.add_argument("--teardown-volumes", action="store_true")

@@ -526,17 +526,23 @@ class ForgeAIHandler(BaseHTTPRequestHandler):
                 _DEPLOY_STATE["done"] = False
                 _DEPLOY_STATE["exit_code"] = None
 
-                cmd = _DEPLOY_CMD if _DEPLOY_CMD is not None else [
-                    sys.executable,
-                    "-m",
-                    "forgeai",
-                    "wizard",
-                    "--ci",
-                    "--workdir",
-                    str(forgeai_home() / "deploy"),
-                    "--backend",
-                    backend,
-                ]
+                cmd = _DEPLOY_CMD
+                if cmd is None:
+                    cmd = [
+                        sys.executable,
+                        "-m",
+                        "forgeai",
+                        "wizard",
+                        "--ci",
+                        "--workdir",
+                        str(forgeai_home() / "deploy"),
+                        "--backend",
+                        backend,
+                        "--stack",
+                        stack_id,
+                    ]
+                    if data.get("dry_run"):
+                        cmd.append("--dry-run")
 
                 new_proc = subprocess.Popen(
                     cmd,
