@@ -759,49 +759,47 @@ def _import(args: argparse.Namespace) -> int:
 
 
 def _template_list(args: argparse.Namespace) -> int:
-    from forgeai.templates import list_templates
-    for t in list_templates():
-        print(t)
+    from forgeai.templates import DEPRECATION_NOTE, LEGACY_ALIASES, list_templates
+    print(DEPRECATION_NOTE)
+    inverses = {v: k for k, v in LEGACY_ALIASES.items()}
+    for stack_id in list_templates():
+        alias = f" (alias hérité : {inverses[stack_id]})" if stack_id in inverses else ""
+        print(f"{stack_id}{alias}")
     return 0
 
 
 def _template_show(args: argparse.Namespace) -> int:
-    import json
-    from forgeai.templates import load_template, validate_template, TemplateError
+    from forgeai.stacks import deploy_ids
+    from forgeai.templates import DEPRECATION_NOTE, TemplateError, load_template, resolve_alias
     try:
-        tmpl = load_template(args.name)
+        stack = load_template(args.name)
+        stack_id = resolve_alias(args.name)
     except TemplateError as exc:
         print(f"ECHEC TEMPLATE: {exc}", file=sys.stderr)
         return 12
-    entries = json.loads(Path(args.catalogue).read_text(encoding="utf-8")).get("entries", [])
-    violations = validate_template(tmpl, entries)
-    print(f"Template '{tmpl['name']}' — {len(tmpl.get('bricks', []))} briques")
-    print(f"  {tmpl.get('description_fr', '')}")
-    if violations:
-        for v in violations:
-            print(f"  ⚠ {v}", file=sys.stderr)
-        return 13
-    print("  ✓ conforme (toutes au catalogue, bilingues)")
+    print(DEPRECATION_NOTE)
+    print(f"Stack '{stack.get('name', stack_id)}' — {len(deploy_ids(stack))} briques déployées")
+    print(f"  {stack.get('description_fr', '')}")
     return 0
 
 
 def _template_resolve(args: argparse.Namespace) -> int:
-    from forgeai.templates import load_template, resolve_template, deployable_bricks, TemplateError
+    from forgeai.stacks import deploy_ids
+    from forgeai.templates import DEPRECATION_NOTE, TemplateError, load_template, resolve_alias
     try:
-        tmpl = load_template(args.name)
+        stack = load_template(args.name)
+        stack_id = resolve_alias(args.name)
     except TemplateError as exc:
         print(f"ECHEC TEMPLATE: {exc}", file=sys.stderr)
         return 12
-    has_gpu = not args.no_gpu
-    resolved = resolve_template(tmpl, has_gpu=has_gpu)
-    deployable = deployable_bricks(tmpl, has_gpu=has_gpu)
-    print(f"Template '{tmpl['name']}' résolu ({'GPU' if has_gpu else 'CPU'}) : "
-          f"{len(resolved)} briques, {len(deployable)} déployables (cœur runtime Express)")
-    for b in deployable:
-        print(f"  ⚙ {b['id']} ({b.get('role', '?')})")
+    print(DEPRECATION_NOTE)
+    ids = deploy_ids(stack)
+    print(f"Stack '{stack.get('name', stack_id)}' : {len(ids)} briques déployées "
+          f"(déploiement : forgeai wizard --ci --stack {stack_id})")
+    for brick_id in ids:
+        print(f"  ⚙ {brick_id}")
     registre.append(Path(args.registre), "template_resolve", "template",
-                    {"template": tmpl["name"], "has_gpu": has_gpu, "bricks": len(resolved),
-                     "deployable": [b["id"] for b in deployable]})
+                    {"template": args.name, "stack": stack_id, "bricks": len(ids)})
     return 0
 
 
@@ -1074,7 +1072,7 @@ def main(argv: list[str] | None = None) -> int:
     p_loop_run.add_argument("--registre", default=str(DEFAULT_REGISTRE))
     p_loop_run.set_defaults(func=_loop_run)
 
-    p_tmpl = sub.add_parser("template", help="templates de déploiement — systèmes complets curés (B-13)")
+    p_tmpl = sub.add_parser("template", help="alias hérités vers les stacks (fusion P1 — un seul système de profils)")
     tmpl_sub = p_tmpl.add_subparsers(dest="template_cmd", required=True)
     p_tmpl_list = tmpl_sub.add_parser("list", help="liste les templates disponibles")
     p_tmpl_list.set_defaults(func=_template_list)

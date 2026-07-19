@@ -1,60 +1,44 @@
-import json
-from pathlib import Path
+"""Alias hérités « templates » → stacks (P1, fusion décidée le 2026-07-19).
+
+Le système des templates (B-13/B-14) et celui des stacks (IMPL-3) faisaient double
+emploi (constat d'audit). Décision : UN SEUL système — les stacks. Les commandes
+`forge template …` restent rétro-compatibles via ce mapping ; les JSON dupliqués
+(data/templates/) ont été retirés.
+"""
+from __future__ import annotations
+
+from forgeai.stacks import list_stacks, load_stack
+
+# Noms hérités → stack équivalent (périmètre validé en fusion)
+LEGACY_ALIASES: dict[str, str] = {
+    "dev-agentic": "agentique",
+    "rag-souverain": "assistant-entreprise",
+    "lab-fine-tuning": "mlops",
+    "production-souveraine": "tout-en-un",
+}
+
+DEPRECATION_NOTE = ("note: les templates sont fusionnés dans les stacks — "
+                    "utilisez `forgeai web` ou les ids de stacks directement")
 
 
 class TemplateError(Exception):
-    """Erreur spécifique aux templates."""
+    """Nom hérité ou stack inconnu."""
 
 
-def templates_dir() -> Path:
-    return Path(__file__).resolve().parent / "data" / "templates"
+def resolve_alias(name: str) -> str:
+    """Nom hérité ou id de stack → id de stack ; TemplateError sinon."""
+    stack_id = LEGACY_ALIASES.get(name, name)
+    if stack_id not in list_stacks():
+        connus = sorted(set(LEGACY_ALIASES) | set(list_stacks()))
+        raise TemplateError(f"'{name}' inconnu — noms acceptés : {connus}")
+    return stack_id
 
 
 def list_templates() -> list[str]:
-    try:
-        files = list(templates_dir().glob("*.json"))
-    except FileNotFoundError:
-        return []
-    stems = sorted(f.stem for f in files if f.is_file())
-    return stems
+    """Les stacks (système unique), noms hérités affichés comme alias."""
+    return sorted(list_stacks())
 
 
 def load_template(name: str) -> dict:
-    template_path = templates_dir() / f"{name}.json"
-    if not template_path.is_file():
-        raise TemplateError(f"Template '{name}' introuvable.")
-    with open(template_path, encoding="utf-8") as f:
-        return json.load(f)
-
-
-def validate_template(template: dict, catalogue_entries: list[dict]) -> list[str]:
-    catalogue_index = {entry["id"]: entry for entry in catalogue_entries}
-    violations = []
-    for brick in template.get("bricks", []):
-        bid = brick.get("id")
-        if bid is None:
-            continue  # situation anormale, pas de règle prévue
-        entry = catalogue_index.get(bid)
-        if entry is None:
-            violations.append(f"brique inconnue au catalogue : '{bid}'")
-        else:
-            desc_fr = entry.get("description_fr", "")
-            desc_en = entry.get("description_en", "")
-            if not desc_fr or not desc_en:
-                violations.append(f"brique non bilingue : '{bid}'")
-    return sorted(set(violations))
-
-
-def resolve_template(template: dict, *, has_gpu: bool) -> list[dict]:
-    bricks = template.get("bricks", [])
-    resolved = []
-    for brick in bricks:
-        if brick.get("requires_gpu", False) and not has_gpu:
-            continue
-        resolved.append(brick)
-    return resolved
-
-
-def deployable_bricks(template: dict, *, has_gpu: bool) -> list[dict]:
-    resolved = resolve_template(template, has_gpu=has_gpu)
-    return [b for b in resolved if b.get("deployable", False)]
+    """Charge le STACK correspondant au nom (hérité ou direct)."""
+    return load_stack(resolve_alias(name))
