@@ -30,10 +30,19 @@ def test_parite_cles_fr_en() -> None:
         f"Différence de clés fr/en : "
         f"only_fr={set(fr) - set(en)}, only_en={set(en) - set(fr)}"
     )
-    for k, v in fr.items():
-        assert isinstance(v, str) and v.strip(), f"fr[{k!r}] vide ou blanche"
-    for k, v in en.items():
-        assert isinstance(v, str) and v.strip(), f"en[{k!r}] vide ou blanche"
+    def _verifie(prefix: str, table: dict) -> None:
+        for k, v in table.items():
+            if isinstance(v, dict):
+                # section imbriquée (ex. "web", i18n unifiée P1.2) : mêmes règles
+                _verifie(f"{prefix}[{k!r}]", v)
+            else:
+                assert isinstance(v, str) and v.strip(), f"{prefix}[{k!r}] vide ou blanche"
+
+    _verifie("fr", fr)
+    _verifie("en", en)
+    # parité aussi DANS la section web
+    if "web" in fr or "web" in en:
+        assert set(fr.get("web", {})) == set(en.get("web", {})), "section web désalignée fr/en"
 
 
 def test_bascule_change_les_libelles() -> None:

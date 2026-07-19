@@ -308,6 +308,23 @@ class ForgeAIHandler(BaseHTTPRequestHandler):
             )
             return
 
+        if path.startswith("/api/i18n/"):
+            lang = path[len("/api/i18n/") :]
+            if lang not in {"fr", "en"}:
+                self._send_json(404, {"error": "locale not found"})
+                return
+            try:
+                locale_data = json.loads(_read_data_text(f"locales/{lang}.json"))
+            except (FileNotFoundError, ModuleNotFoundError, json.JSONDecodeError):
+                self._send_json(500, {"error": "locale unavailable"})
+                return
+            web = locale_data.get("web")
+            if not isinstance(web, dict):
+                self._send_json(500, {"error": "locale invalid"})
+                return
+            self._send_json(200, web)
+            return
+
         if path == "/api/models/local":
             # Registre des modeles open-weight verifies HF — expose TEL QUEL :
             # aucun filtrage par materiel local (directive permanente), l'UI informe seulement.
