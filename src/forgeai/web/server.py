@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import importlib.resources
 import json
-import os
 import re
 import subprocess
 import sys
@@ -13,6 +12,7 @@ import webbrowser
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 
+from forgeai.catalogue.loader import parse_stars
 from forgeai.catalogue.spheres import SPHERES, classify_sphere, spheres_index
 from forgeai.core import registre
 from forgeai.core.runner import SubprocessRunner, CommandRunner
@@ -24,19 +24,8 @@ from forgeai.network.keys import generate_keypair, KeyError_
 from forgeai.network.node_add import add_node, Bootstrapper, NodeAddError, SshBootstrapper
 from forgeai.network.nodes import cluster_status, ClusterError
 from forgeai.preflight import available_backends, run_checks
-from forgeai.resources import catalogue_path
+from forgeai.resources import catalogue_path, forgeai_home
 from forgeai.stacks import deploy_ids, list_stacks, load_stack
-
-try:
-    from forgeai.catalogue.loader import parse_stars
-except Exception:  # pragma: no cover
-    import re
-
-    def parse_stars(popularity: str | None) -> int:
-        if popularity is None:
-            return 0
-        match = re.search(r"★\s*(\d+)", popularity)
-        return int(match.group(1)) if match else 0
 
 
 _MIME_TYPES = {
@@ -98,6 +87,12 @@ def chassis_ids() -> frozenset[str]:
     return _CHASSIS_CACHE
 
 
+def recommended_stack_id(detect: dict) -> str:
+    """Règle serveur unique de recommandation de stack."""
+    gpus = detect.get("gpus", [])
+    return "agentique" if isinstance(gpus, list) and len(gpus) >= 1 else "assistant-entreprise"
+
+
 def bricks_payload(sphere_id: str, stack_id: str | None) -> dict | None:
     """Catalogue d'une sphère, enrichi de l'état par rapport à un stack optionnel."""
     valid_spheres = {s.id for s in SPHERES}
@@ -150,11 +145,6 @@ def bricks_payload(sphere_id: str, stack_id: str | None) -> dict | None:
 def _read_data_text(name: str) -> str:
     from importlib import resources
     return (resources.files("forgeai.data") / name).read_text(encoding="utf-8")
-
-
-def forgeai_home() -> Path:
-    """Répertoire utilisateur ForgeAI (FORGEAI_HOME ou ~/.forgeai)."""
-    return Path(os.environ.get("FORGEAI_HOME", Path.home() / ".forgeai"))
 
 
 # Hooks pour les tests (valeurs par défaut si non posés).
@@ -335,6 +325,14 @@ class ForgeAIHandler(BaseHTTPRequestHandler):
         if path == "/api/models":
             store = RouteStore(_models_home())
             self._send_json(200, [r.public_dict() for r in store.list()])
+            return
+
+        if path == "/api/stacks/recommended":
+            try:
+                detect = json.loads(hardware_json())
+                self._send_json(200, {"recommended_id": recommended_stack_id(detect)})
+            except Exception as exc:  # noqa: BLE001
+                self._send_json(500, {"error": str(exc)})
             return
 
         if path == "/api/stacks":

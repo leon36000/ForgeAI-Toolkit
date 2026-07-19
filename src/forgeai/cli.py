@@ -41,7 +41,7 @@ from forgeai.planner.profile import ProfileError, derive_profile
 from forgeai.rag.client import RagClient
 from forgeai.renderers.compose import render_compose
 from forgeai.renderers.k3s import NAMESPACE, node_port_for, render_k3s
-from forgeai.resources import catalogue_path, deploy_overlay_path
+from forgeai.resources import catalogue_path, deploy_overlay_path, forgeai_home
 from forgeai.i18n import t, set_locale, available_locales
 from forgeai.ide import SUPPORTED_IDES
 from forgeai.stacks import load_stack
@@ -56,9 +56,7 @@ def default_registre() -> Path:
     Gemini+Qwen) : $FORGEAI_HOME si défini, sinon ~/.forgeai/ — jamais lié au
     répertoire courant (fragile, éphémère depuis /tmp). `--registre` reste
     disponible pour un registre projet-local."""
-    home = os.environ.get("FORGEAI_HOME")
-    base = Path(home) if home else Path.home() / ".forgeai"
-    return base / "Registres" / "mission.jsonl"
+    return forgeai_home() / "Registres" / "mission.jsonl"
 
 
 DEFAULT_REGISTRE = default_registre()
@@ -413,9 +411,7 @@ def _node_status(args: argparse.Namespace) -> int:
 
 
 def default_models_home() -> Path:
-    home = os.environ.get("FORGEAI_HOME")
-    base = Path(home) if home else Path.home() / ".forgeai"
-    return base / "models"
+    return forgeai_home() / "models"
 
 
 def _read_secret(env_var: str | None, prompt: str) -> str:
