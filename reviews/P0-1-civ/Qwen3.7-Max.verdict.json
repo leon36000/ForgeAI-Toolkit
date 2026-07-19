@@ -1,0 +1,14 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "tests/test_deploy_reel.py",
+   "description": "Modification directe de os.environ sans restauration dans test_web_deploy_dry_run_e2e, ce qui peut polluer l'environnement des tests suivants. L'utilisation de monkeypatch.setenv ou d'un context manager est préférable pour garantir l'isolation des tests.",
+   "preuve": "os.environ[\"PYTHONPATH\"] = str(SRC) (ligne 111)"
+  }
+ ],
+ "date_heure": "2026-07-19T14:30:00Z",
+ "prompt_sha256": "0cc0b9a836648ecab7881d049aff6ba4d18322c89f320c68cf52b04ede457bd7",
+ "reviewer_model": "Qwen3.7-Max"
+}

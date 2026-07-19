@@ -27,7 +27,7 @@ package-dir = {"" = "src"}
 where = ["src"]
 
 [tool.setuptools.package-data]
-"forgeai.data" = ["*.json", "*.sha256", "locales/*.json", "templates/*.json", "stacks/*.json"]
+"forgeai.data" = ["*.json", "*.sha256", "locales/*.json", "templates/*.json", "stacks/*.json", "smoke/*.md"]
 "forgeai.web" = ["assets/*"]
 
 [tool.pytest.ini_options]
