@@ -41,7 +41,8 @@ def test_wizard_selection_dry_run(tmp_path: Path) -> None:
     assert "selection=2+1" in res.stdout
     manifest = json.loads((tmp_path / "run" / "selection.json").read_text(encoding="utf-8"))
     assert manifest["bricks"] == ["qdrant", "litellm"]
-    assert manifest["models"] == ["Qwen/Qwen3.6-27B"]
+    assert manifest["models"] == [
+        {"hf_id": "Qwen/Qwen3.6-27B", "node": "auto", "engine": "vllm"}]  # v2 normalisé
     assert "litellm" in manifest["deployables"]
 
 
@@ -110,7 +111,8 @@ def test_web_deploy_selection_e2e(live) -> None:
     assert _attendre_fin() == 0
     manifest = json.loads((home / "deploy" / "selection.json").read_text(encoding="utf-8"))
     assert manifest["bricks"] == ["qdrant"]
-    assert manifest["models"] == ["Qwen/Qwen3.6-27B"]
+    assert manifest["models"] == [
+        {"hf_id": "Qwen/Qwen3.6-27B", "node": "auto", "engine": "vllm"}]  # v2 normalisé
 
 
 def test_web_deploy_selection_invalide(live) -> None:

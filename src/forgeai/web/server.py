@@ -161,9 +161,22 @@ _SELECTION_ITEM_RE = re.compile(r"^[A-Za-z0-9._/:-]{1,200}$")
 
 
 def _selection_valide(lst: object) -> bool:
-    """Validation de FORME seulement (P0.3b) — l'existence est validée par le wizard."""
-    return (isinstance(lst, list) and len(lst) <= 2000
-            and all(isinstance(x, str) and _SELECTION_ITEM_RE.match(x) for x in lst))
+    """Validation de FORME seulement (P0.3b/N1b) — l'existence est validée par le wizard.
+    Accepte des chaînes nues ou des objets {hf_id, node, engine} (sélection v2)."""
+    if not isinstance(lst, list) or len(lst) > 2000:
+        return False
+    for x in lst:
+        if isinstance(x, str):
+            if not _SELECTION_ITEM_RE.match(x):
+                return False
+        elif isinstance(x, dict):
+            for cle in ("hf_id", "node", "engine"):
+                v = x.get(cle, "auto" if cle != "hf_id" else None)
+                if v is None or not isinstance(v, str) or not _SELECTION_ITEM_RE.match(v):
+                    return False
+        else:
+            return False
+    return True
 
 _DEPLOY_STATE = {
     "proc": None,
@@ -569,8 +582,15 @@ class ForgeAIHandler(BaseHTTPRequestHandler):
 
             bricks_sel = data.get("bricks", [])
             models_sel = data.get("models", [])
-            if not _selection_valide(bricks_sel) or not _selection_valide(models_sel):
+            embeddings_sel = data.get("embeddings", [])
+            rag_node = data.get("rag_node")
+            if (not _selection_valide(bricks_sel) or not _selection_valide(models_sel)
+                    or not _selection_valide(embeddings_sel)):
                 self._send_json(400, {"error": "selection invalide"})
+                return
+            if rag_node is not None and (not isinstance(rag_node, str)
+                    or (rag_node not in ("local", "auto") and not _NODE_RE.match(rag_node))):
+                self._send_json(400, {"error": "rag_node invalide"})
                 return
 
             try:
@@ -606,13 +626,16 @@ class ForgeAIHandler(BaseHTTPRequestHandler):
                         "--stack",
                         stack_id,
                     ]
-                    if bricks_sel or models_sel:
+                    if bricks_sel or models_sel or embeddings_sel or rag_node:
                         workdir = forgeai_home() / "deploy"
                         workdir.mkdir(parents=True, exist_ok=True)
                         sel_path = workdir / "selection-demande.json"
-                        sel_path.write_text(json.dumps(
-                            {"bricks": bricks_sel, "models": models_sel},
-                            ensure_ascii=False), encoding="utf-8")
+                        contenu = {"bricks": bricks_sel, "models": models_sel,
+                                   "embeddings": embeddings_sel}
+                        if rag_node is not None:
+                            contenu["rag_node"] = rag_node
+                        sel_path.write_text(json.dumps(contenu, ensure_ascii=False),
+                                            encoding="utf-8")
                         cmd += ["--selection", str(sel_path)]
                     if data.get("dry_run"):
                         cmd.append("--dry-run")
