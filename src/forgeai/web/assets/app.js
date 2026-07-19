@@ -629,7 +629,9 @@
       return (m.hf_id + ' ' + m.name + ' ' + m.famille + ' ' + (m.notes_fr || '')).toLowerCase().includes(q);
     });
     const counts = document.getElementById('models-counts');
-    if (counts) counts.textContent = `${visibles.length}/${state.localModels.total}`;
+    // dénominateur = hors embeddings (symétrie avec l'étape dédiée)
+    const totalLlm = state.localModels.modeles.filter((m) => m.famille !== 'embeddings-rerank').length;
+    if (counts) counts.textContent = `${visibles.length}/${totalLlm}`;
     box.innerHTML = visibles.map((m) => {
       const chosenObj = state.modelsChosen[m.hf_id];
       const chosen = !!chosenObj;
@@ -718,7 +720,9 @@
       return (m.hf_id + ' ' + m.name + ' ' + m.famille + ' ' + (m.notes_fr || '')).toLowerCase().includes(q);
     });
     const counts = document.getElementById('embeddings-counts');
-    if (counts) counts.textContent = `${visibles.length}/${state.localModels.total}`;
+    // dénominateur = les embeddings SEULEMENT (objection revue N2 — jamais le total global)
+    const totalEmb = state.localModels.modeles.filter((m) => m.famille === 'embeddings-rerank').length;
+    if (counts) counts.textContent = `${visibles.length}/${totalEmb}`;
     box.innerHTML = visibles.map((m) => {
       const chosenObj = state.embeddingsChosen[m.hf_id];
       const chosen = !!chosenObj;
