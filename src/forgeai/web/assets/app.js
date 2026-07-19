@@ -15,10 +15,14 @@
     modelTier: 'tous',
     modelSearch: '',
     modelsChosen: {},
+    embeddingsChosen: {},
+    engines: null,
+    embeddingSearch: '',
     bricks: null,
     overrides: {},
     search: '',
-    i18nTables: {}
+    i18nTables: {},
+    embeddingsLoaded: false
   };
 
   async function loadI18n(lang) {
@@ -93,6 +97,8 @@
     if (state.models !== undefined) renderModels();
     if (state.nodes !== undefined) renderNodes();
     if (state.summary) renderSummary();
+    if (state.localModels) renderLocalModels();
+    if (state.embeddingsLoaded) renderEmbeddings();
   }
 
   async function fetchJson(path) {
@@ -122,7 +128,7 @@
     container.innerHTML = `
       <ul class="detail-list">
         <li><strong>${escapeHtml(t('hardware_cpu'))}:</strong> ${escapeHtml(d.cpu_model || '—')}</li>
-        <li><strong>${escapeHtml(t('hardware_gpu'))}:</strong> ${gpus.length}</li>
+        <li><strong>${escapeHtml(t('hardware_gpu'))}:</strong> ${escapeHtml(gpus.length)}</li>
         <li><strong>${escapeHtml(t('hardware_ram'))}:</strong> ${escapeHtml(d.ram_gb !== undefined ? d.ram_gb + ' GB' : '—')}</li>
       </ul>
       <ul class="detail-list">${gpuHtml}</ul>
@@ -407,6 +413,7 @@
     }
     renderSummary();
     populateNodeChoices();
+    populateRagChoices();
   }
 
   function renderSummary() {
@@ -437,6 +444,27 @@
     const keep = new Set(['local', 'auto']);
     [...sel.options].forEach((o) => { if (!keep.has(o.value)) o.remove(); });
     (state.summary.nodes || []).forEach((n) => {
+      const name = typeof n === 'string' ? n : (n.name || n.hostname);
+      if (!name) return;
+      const opt = document.createElement('option');
+      opt.value = name;
+      opt.textContent = name;
+      sel.appendChild(opt);
+    });
+  }
+
+  function populateRagChoices() {
+    const sel = document.getElementById('deploy-rag-select');
+    if (!sel) return;
+    const keep = new Set(['local', 'auto']);
+    [...sel.options].forEach((o) => { if (!keep.has(o.value)) o.remove(); });
+    let nodes = [];
+    if (state.summary && Array.isArray(state.summary.nodes)) {
+      nodes = state.summary.nodes;
+    } else if (state.nodes && Array.isArray(state.nodes.nodes)) {
+      nodes = state.nodes.nodes;
+    }
+    nodes.forEach((n) => {
       const name = typeof n === 'string' ? n : (n.name || n.hostname);
       if (!name) return;
       const opt = document.createElement('option');
@@ -503,9 +531,11 @@
             stack: state.selectedId,
             backend: form.elements.backend.value,
             node: form.elements.node ? form.elements.node.value : 'local',
-            models: Object.keys(state.modelsChosen),
+            models: Object.entries(state.modelsChosen).map(([hf_id, v]) => ({hf_id, node: v.node, engine: v.engine})),
+            embeddings: Object.entries(state.embeddingsChosen).map(([hf_id, v]) => ({hf_id, node: v.node, engine: v.engine})),
             bricks: Object.entries(state.overrides[overrideKey()] || {})
               .filter(([, coche]) => coche).map(([id]) => id),
+            rag_node: form.elements.rag_node.value,
             confirm: confirm
           })
         });
@@ -521,10 +551,60 @@
   }
 
 
-  /* ---------- Étape Modèles IA (P0.3) — 113 modèles vérifiés HF, zéro masquage ---------- */
+  /* ---------- Modèles IA, Embeddings & moteurs (P0.3 / N2b) ---------- */
+
+  async function loadEngines() {
+    if (state.engines) return;
+    try {
+      const reponse = await fetchJson('/api/engines');
+      state.engines = reponse.moteurs || [];
+    } catch (e) {
+      state.engines = [];
+    }
+  }
+
+  async function ensureNodes() {
+    if (state.summary && Array.isArray(state.summary.nodes)) return;
+    if (state.nodes) return;
+    try {
+      state.nodes = await fetchJson('/api/nodes/status');
+    } catch (e) {
+      state.nodes = { nodes: [] };
+    }
+  }
+
+  function nodeOptions(selected) {
+    const opts = [
+      `<option value="local"${selected === 'local' ? ' selected' : ''}>local</option>`,
+      `<option value="auto"${selected === 'auto' ? ' selected' : ''}>auto</option>`
+    ];
+    let nodes = [];
+    if (state.summary && Array.isArray(state.summary.nodes)) {
+      nodes = state.summary.nodes;
+    } else if (state.nodes && Array.isArray(state.nodes.nodes)) {
+      nodes = state.nodes.nodes;
+    }
+    nodes.forEach((n) => {
+      const name = typeof n === 'string' ? n : (n.name || n.hostname);
+      if (!name) return;
+      opts.push(`<option value="${escapeHtml(name)}"${selected === name ? ' selected' : ''}>${escapeHtml(name)}</option>`);
+    });
+    return opts.join('');
+  }
+
+  function engineOptions(selected) {
+    if (!state.engines || !state.engines.length) {
+      return `<option value="">${escapeHtml(t('loading'))}</option>`;
+    }
+    return state.engines.map((eng) => {
+      const id = eng.id || eng.engine_id || String(eng);
+      const label = eng.name || id;
+      return `<option value="${escapeHtml(id)}"${selected === id ? ' selected' : ''}>${escapeHtml(label)}</option>`;
+    }).join('');
+  }
 
   async function loadLocalModels() {
-    if (state.localModels) { renderLocalModels(); return; }
+    if (state.localModels) { await ensureNodes(); renderLocalModels(); return; }
     const box = document.getElementById('local-models-list');
     box.innerHTML = `<p>${escapeHtml(t('loading'))}</p>`;
     try {
@@ -533,6 +613,8 @@
       box.innerHTML = `<p class="error">${escapeHtml(t('error_load'))}</p>`;
       return;
     }
+    await loadEngines();
+    await ensureNodes();
     renderLocalModels();
   }
 
@@ -541,14 +623,20 @@
     if (!state.localModels) return;
     const q = state.modelSearch.trim().toLowerCase();
     const visibles = state.localModels.modeles.filter((m) => {
+      if (m.famille === 'embeddings-rerank') return false;
       if (state.modelTier !== 'tous' && m.tier !== state.modelTier) return false;
       if (!q) return true;
       return (m.hf_id + ' ' + m.name + ' ' + m.famille + ' ' + (m.notes_fr || '')).toLowerCase().includes(q);
     });
     const counts = document.getElementById('models-counts');
-    if (counts) counts.textContent = `${visibles.length}/${state.localModels.total}`;
+    // dénominateur = hors embeddings (symétrie avec l'étape dédiée)
+    const totalLlm = state.localModels.modeles.filter((m) => m.famille !== 'embeddings-rerank').length;
+    if (counts) counts.textContent = `${visibles.length}/${totalLlm}`;
     box.innerHTML = visibles.map((m) => {
-      const chosen = !!state.modelsChosen[m.hf_id];
+      const chosenObj = state.modelsChosen[m.hf_id];
+      const chosen = !!chosenObj;
+      const nodeVal = chosenObj ? (chosenObj.node || 'local') : 'local';
+      const engineVal = chosenObj ? (chosenObj.engine || 'vllm') : 'vllm';
       return `
         <label class="brick-row${chosen ? ' installed' : ''}">
           <input type="checkbox" data-model-id="${escapeHtml(m.hf_id)}" ${chosen ? 'checked' : ''}
@@ -560,16 +648,142 @@
               <span class="def-pill">${escapeHtml(String(m.params_b))}B</span>
               ${m.vram_q4_gb ? `<span class="brick-stars">Q4 ~${escapeHtml(String(m.vram_q4_gb))} GB</span>` : ''}
               ${m.gguf ? '<span class="badge-default">GGUF</span>' : ''}
+              ${chosen ? `<span class="badge-default">${escapeHtml(t('chosen_badge'))}</span>` : ''}
             </span>
             <span class="brick-desc">${escapeHtml(m.notes_fr || '')}</span>
             <span class="brick-stars">${escapeHtml(m.famille)} · ${escapeHtml(m.license)} · ${escapeHtml(m.hf_id)}</span>
+            <span class="place-row">
+              <span class="place-label">${escapeHtml(t('f_target_node'))}</span>
+              <select class="place-select" data-model-node="${escapeHtml(m.hf_id)}" aria-label="${escapeHtml(t('f_target_node'))}">
+                ${nodeOptions(nodeVal)}
+              </select>
+              <span class="place-label">${escapeHtml(t('f_engine'))}</span>
+              <select class="place-select" data-model-engine="${escapeHtml(m.hf_id)}" aria-label="${escapeHtml(t('f_engine'))}">
+                ${engineOptions(engineVal)}
+              </select>
+            </span>
           </span>
         </label>`;
     }).join('');
     box.querySelectorAll('input[type="checkbox"]').forEach((cb) => {
       cb.addEventListener('change', () => {
-        if (cb.checked) state.modelsChosen[cb.dataset.modelId] = true;
-        else delete state.modelsChosen[cb.dataset.modelId];
+        const id = cb.dataset.modelId;
+        if (cb.checked) {
+          const nodeSel = box.querySelector(`select[data-model-node="${CSS.escape(id)}"]`);
+          const engineSel = box.querySelector(`select[data-model-engine="${CSS.escape(id)}"]`);
+          state.modelsChosen[id] = {
+            node: nodeSel ? nodeSel.value : 'local',
+            engine: engineSel ? engineSel.value : 'vllm'
+          };
+        } else {
+          delete state.modelsChosen[id];
+        }
+        renderLocalModels();
+      });
+    });
+    box.querySelectorAll('select[data-model-node]').forEach((sel) => {
+      sel.addEventListener('change', () => {
+        const id = sel.dataset.modelNode;
+        if (!state.modelsChosen[id]) return;
+        state.modelsChosen[id].node = sel.value;
+      });
+    });
+    box.querySelectorAll('select[data-model-engine]').forEach((sel) => {
+      sel.addEventListener('change', () => {
+        const id = sel.dataset.modelEngine;
+        if (!state.modelsChosen[id]) return;
+        state.modelsChosen[id].engine = sel.value;
+      });
+    });
+  }
+
+  async function loadEmbeddings() {
+    const box = document.getElementById('embeddings-list');
+    if (!state.localModels) {
+      box.innerHTML = `<p>${escapeHtml(t('loading'))}</p>`;
+      await loadLocalModels();
+      if (!state.localModels) return;
+    }
+    await loadEngines();
+    await ensureNodes();
+    state.embeddingsLoaded = true;
+    renderEmbeddings();
+  }
+
+  function renderEmbeddings() {
+    const box = document.getElementById('embeddings-list');
+    if (!state.localModels) { box.innerHTML = ''; return; }
+    const q = state.embeddingSearch.trim().toLowerCase();
+    const visibles = state.localModels.modeles.filter((m) => {
+      if (m.famille !== 'embeddings-rerank') return false;
+      if (!q) return true;
+      return (m.hf_id + ' ' + m.name + ' ' + m.famille + ' ' + (m.notes_fr || '')).toLowerCase().includes(q);
+    });
+    const counts = document.getElementById('embeddings-counts');
+    // dénominateur = les embeddings SEULEMENT (objection revue N2 — jamais le total global)
+    const totalEmb = state.localModels.modeles.filter((m) => m.famille === 'embeddings-rerank').length;
+    if (counts) counts.textContent = `${visibles.length}/${totalEmb}`;
+    box.innerHTML = visibles.map((m) => {
+      const chosenObj = state.embeddingsChosen[m.hf_id];
+      const chosen = !!chosenObj;
+      const nodeVal = chosenObj ? (chosenObj.node || 'local') : 'local';
+      const engineVal = chosenObj ? (chosenObj.engine || 'llama-cpp') : 'llama-cpp';
+      return `
+        <label class="brick-row${chosen ? ' installed' : ''}">
+          <input type="checkbox" data-embedding-id="${escapeHtml(m.hf_id)}" ${chosen ? 'checked' : ''}
+                 aria-label="${escapeHtml(m.name)}">
+          <span class="brick-main">
+            <span class="brick-head">
+              <span class="brick-name">${escapeHtml(m.name)}</span>
+              <span class="def-pill">${escapeHtml(m.tier)}</span>
+              <span class="def-pill">${escapeHtml(String(m.params_b))}B</span>
+              ${m.vram_q4_gb ? `<span class="brick-stars">Q4 ~${escapeHtml(String(m.vram_q4_gb))} GB</span>` : ''}
+              ${m.gguf ? '<span class="badge-default">GGUF</span>' : ''}
+              ${chosen ? `<span class="badge-default">${escapeHtml(t('chosen_badge'))}</span>` : ''}
+            </span>
+            <span class="brick-desc">${escapeHtml(m.notes_fr || '')}</span>
+            <span class="brick-stars">${escapeHtml(m.famille)} · ${escapeHtml(m.license)} · ${escapeHtml(m.hf_id)}</span>
+            <span class="place-row">
+              <span class="place-label">${escapeHtml(t('f_target_node'))}</span>
+              <select class="place-select" data-embedding-node="${escapeHtml(m.hf_id)}" aria-label="${escapeHtml(t('f_target_node'))}">
+                ${nodeOptions(nodeVal)}
+              </select>
+              <span class="place-label">${escapeHtml(t('f_engine'))}</span>
+              <select class="place-select" data-embedding-engine="${escapeHtml(m.hf_id)}" aria-label="${escapeHtml(t('f_engine'))}">
+                ${engineOptions(engineVal)}
+              </select>
+            </span>
+          </span>
+        </label>`;
+    }).join('');
+    box.querySelectorAll('input[type="checkbox"]').forEach((cb) => {
+      cb.addEventListener('change', () => {
+        const id = cb.dataset.embeddingId;
+        if (cb.checked) {
+          const nodeSel = box.querySelector(`select[data-embedding-node="${CSS.escape(id)}"]`);
+          const engineSel = box.querySelector(`select[data-embedding-engine="${CSS.escape(id)}"]`);
+          state.embeddingsChosen[id] = {
+            node: nodeSel ? nodeSel.value : 'local',
+            engine: engineSel ? engineSel.value : 'llama-cpp'
+          };
+        } else {
+          delete state.embeddingsChosen[id];
+        }
+        renderEmbeddings();
+      });
+    });
+    box.querySelectorAll('select[data-embedding-node]').forEach((sel) => {
+      sel.addEventListener('change', () => {
+        const id = sel.dataset.embeddingNode;
+        if (!state.embeddingsChosen[id]) return;
+        state.embeddingsChosen[id].node = sel.value;
+      });
+    });
+    box.querySelectorAll('select[data-embedding-engine]').forEach((sel) => {
+      sel.addEventListener('change', () => {
+        const id = sel.dataset.embeddingEngine;
+        if (!state.embeddingsChosen[id]) return;
+        state.embeddingsChosen[id].engine = sel.value;
       });
     });
   }
@@ -585,6 +799,11 @@
     });
     const search = document.getElementById('model-search');
     if (search) search.addEventListener('input', () => { state.modelSearch = search.value; renderLocalModels(); });
+  }
+
+  function initEmbeddingStep() {
+    const search = document.getElementById('embedding-search');
+    if (search) search.addEventListener('input', () => { state.embeddingSearch = search.value; renderEmbeddings(); });
   }
 
   /* ---------- Nœuds (B-02d) ---------- */
@@ -702,10 +921,10 @@
   }
 
 
-  /* ---------- Installateur par étapes (P0.3) ---------- */
+  /* ---------- Installateur par étapes (P0.3 / N2b) ---------- */
 
-  const TOTAL_STEPS = 6;
-  const NEEDS_STACK = new Set([3, 4, 6]);
+  const TOTAL_STEPS = 7;
+  const NEEDS_STACK = new Set([3, 4, 5, 7]);
 
   function stepAllowed(n) {
     if (NEEDS_STACK.has(n) && !state.selectedId) return false;
@@ -736,10 +955,11 @@
     if (prev) prev.disabled = n === 1;
     if (next) next.disabled = n === TOTAL_STEPS;
     window.scrollTo({ top: 0, behavior: 'instant' });
-    if (n === 3) loadLocalModels();
-    if (n === 4 && state.selectedId && !state.bricks) loadBricks();
-    if (n === 6 && state.selectedId && !state.summary) { loadSummary(); populateNodeChoices(); }
-    if (n === 5) loadNodes();
+    if (n === 3) { loadEngines(); loadLocalModels(); }
+    if (n === 4) loadEmbeddings();
+    if (n === 5 && state.selectedId && !state.bricks) loadBricks();
+    if (n === 6) loadNodes();
+    if (n === 7 && state.selectedId && !state.summary) { loadSummary(); populateNodeChoices(); populateRagChoices(); }
   }
 
   function initStepper() {
@@ -769,6 +989,7 @@
     }
     initModelForm();
     initModelStep();
+    initEmbeddingStep();
     initNodeForm();
     initDeployForm();
     setTheme(state.theme);
