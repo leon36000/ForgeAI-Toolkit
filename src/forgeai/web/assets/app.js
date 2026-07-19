@@ -59,7 +59,17 @@
       testing_route: 'Test de connexion en cours…',
       route_added: 'Route ajoutée — test réel réussi.',
       no_models: 'Aucune route configurée pour l\'instant.',
-      fingerprint_label: 'empreinte'
+      fingerprint_label: 'empreinte',
+      nodes_title: 'Nœuds — cluster multi-machines',
+      nodes_subtitle: 'Ajoutez un nœud avec son IP, utilisateur et mot de passe — utilisé une seule fois au bootstrap, puis bascule sur clé ed25519. Jamais écrit sur disque.',
+      f_node_ip: 'Adresse IP',
+      f_node_user: 'Utilisateur',
+      f_node_password: 'Mot de passe (éphémère)', // proof:allow (libellé i18n)
+      node_key_note: '🔑 Le mot de passe sert une seule fois : installation de la clé publique, bascule immédiate sur ed25519, puis seule l\'empreinte est journalisée au registre.',
+      add_node: 'Ajouter le nœud',
+      adding_node: 'Bootstrap du nœud en cours…',
+      node_added: 'Nœud ajouté — bascule clé ed25519 réussie.',
+      no_nodes: 'Aucun nœud dans le cluster pour l\'instant.'
     },
     en: {
       title: 'ForgeAI Toolkit',
@@ -104,7 +114,17 @@
       testing_route: 'Connection test running…',
       route_added: 'Route added — real test passed.',
       no_models: 'No route configured yet.',
-      fingerprint_label: 'fingerprint'
+      fingerprint_label: 'fingerprint',
+      nodes_title: 'Nodes — multi-machine cluster',
+      nodes_subtitle: 'Add a node with its IP, user and password — used once at bootstrap, then switches to an ed25519 key. Never written to disk.',
+      f_node_ip: 'IP address',
+      f_node_user: 'User',
+      f_node_password: 'Password (ephemeral)', // proof:allow (libellé i18n)
+      node_key_note: '🔑 The password is used once: public key install, immediate switch to ed25519, then only the fingerprint is logged to the ledger.',
+      add_node: 'Add node',
+      adding_node: 'Node bootstrap running…',
+      node_added: 'Node added — ed25519 key switch succeeded.',
+      no_nodes: 'No node in the cluster yet.'
     }
   };
 
@@ -157,6 +177,7 @@
       renderBricks();
     }
     if (state.models !== undefined) renderModels();
+    if (state.nodes !== undefined) renderNodes();
   }
 
   async function fetchJson(path) {
@@ -456,6 +477,72 @@
     `).join('');
   }
 
+  /* ---------- Nœuds (B-02d) ---------- */
+
+  async function loadNodes() {
+    const list = document.getElementById('nodes-list');
+    if (!list) return;
+    try {
+      state.nodes = await fetchJson('/api/nodes/status');
+    } catch (e) {
+      list.innerHTML = `<p class="error">${escapeHtml(t('error_load'))}</p>`;
+      return;
+    }
+    renderNodes();
+  }
+
+  function renderNodes() {
+    const list = document.getElementById('nodes-list');
+    if (!list) return;
+    const nodes = (state.nodes && state.nodes.nodes) || [];
+    if (!nodes.length) {
+      list.innerHTML = `<p class="form-note">${escapeHtml(t('no_nodes'))}</p>`;
+      return;
+    }
+    list.innerHTML = nodes.map((n) => `
+      <div class="model-row">
+        <span class="brick-name">${escapeHtml(n.name || n.hostname || n.ip || '?')}</span>
+        ${n.ip ? `<span class="def-pill">${escapeHtml(n.ip)}</span>` : ''}
+        ${n.status ? `<span class="def-pill">${escapeHtml(n.status)}</span>` : ''}
+        ${n.roles ? `<span class="def-pill">${escapeHtml(String(n.roles))}</span>` : ''}
+      </div>
+    `).join('');
+  }
+
+  function initNodeForm() {
+    const form = document.getElementById('node-form');
+    if (!form) return;
+    form.addEventListener('submit', async (ev) => {
+      ev.preventDefault();
+      const status = document.getElementById('node-form-status');
+      const payload = {
+        ip: form.elements.ip.value.trim(),
+        user: form.elements.user.value.trim(),
+        password: form.elements.password.value // proof:allow (champ payload, valeur jamais litterale)
+      };
+      // hygiène : mot de passe vidé du DOM AVANT l'appel — strictement éphémère
+      form.elements.password.value = '';
+      status.textContent = t('adding_node');
+      status.classList.remove('error');
+      try {
+        const res = await fetch('/api/nodes', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const body = await res.json();
+        if (!res.ok) throw new Error(body.error || res.status);
+        status.textContent = `${t('node_added')} (${body.node.key_fingerprint})`;
+        form.elements.ip.value = '';
+        form.elements.user.value = '';
+        loadNodes();
+      } catch (e) {
+        status.textContent = String(e.message || e);
+        status.classList.add('error');
+      }
+    });
+  }
+
   function initModelForm() {
     const form = document.getElementById('model-form');
     if (!form) return;
@@ -521,6 +608,7 @@
       });
     }
     initModelForm();
+    initNodeForm();
     setTheme(state.theme);
     setLang(state.lang);
   }
@@ -528,6 +616,7 @@
   async function boot() {
     initControls();
     loadModels();
+    loadNodes();
     try {
       const [detect, stacks, spheres] = await Promise.all([
         fetchJson('/api/detect'),

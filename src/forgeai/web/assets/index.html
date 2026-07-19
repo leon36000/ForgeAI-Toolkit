@@ -45,6 +45,27 @@
       <div id="bricks-list" class="bricks-list" aria-live="polite"></div>
     </section>
 
+    <section id="nodes" class="card">
+      <h2 data-i18n="nodes_title">Nœuds — cluster multi-machines</h2>
+      <p data-i18n="nodes_subtitle">Ajoutez un nœud avec son IP, utilisateur et mot de passe — utilisé une seule fois au bootstrap, puis bascule sur clé ed25519. Jamais écrit sur disque.</p>
+      <div id="nodes-list" class="models-list" aria-live="polite"></div>
+      <form id="node-form" class="model-form" autocomplete="off">
+        <div class="form-grid">
+          <label><span data-i18n="f_node_ip">Adresse IP</span>
+            <input name="ip" required placeholder="192.168.1.31" spellcheck="false"></label>
+          <label><span data-i18n="f_node_user">Utilisateur</span>
+            <input name="user" required placeholder="forge" spellcheck="false"></label>
+          <label><span data-i18n="f_node_password">Mot de passe (éphémère)</span>
+            <input name="password" type="password" required autocomplete="new-password"></label>
+        </div>
+        <p class="form-note" data-i18n="node_key_note">🔑 Le mot de passe sert une seule fois : installation de la clé publique, bascule immédiate sur ed25519, puis seule l'empreinte est journalisée au registre.</p>
+        <div class="form-actions">
+          <button type="submit" class="btn" data-i18n="add_node">Ajouter le nœud</button>
+          <span id="node-form-status" class="form-status" aria-live="polite"></span>
+        </div>
+      </form>
+    </section>
+
     <section id="models" class="card">
       <h2 data-i18n="models_title">Modèles &amp; clés API</h2>
       <p data-i18n="models_subtitle">Routes modèle cloud — test de connexion réel obligatoire ; la clé est scellée au coffre, seule l'empreinte est conservée.</p>

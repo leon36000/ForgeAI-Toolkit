@@ -10,10 +10,13 @@ from pathlib import Path
 
 from forgeai.catalogue.spheres import SPHERES, classify_sphere, spheres_index
 from forgeai.core import registre
-from forgeai.core.runner import SubprocessRunner
+from forgeai.core.runner import SubprocessRunner, CommandRunner
 from forgeai.hardware.detect import HardwareDetector
 from forgeai.models.probe import Transport
 from forgeai.models.routes import RouteError, RouteStore
+from forgeai.network.keys import generate_keypair, KeyError_
+from forgeai.network.node_add import add_node, Bootstrapper, NodeAddError, SshBootstrapper
+from forgeai.network.nodes import cluster_status, ClusterError
 from forgeai.resources import catalogue_path
 from forgeai.stacks import deploy_ids, list_stacks, load_stack
 
@@ -145,6 +148,9 @@ _MODELS_HOME: Path | None = None
 _PROBE_TRANSPORT: Transport | None = None
 _REGISTRE_PATH: Path | None = None
 
+_NODE_BOOTSTRAPPER: Bootstrapper | None = None
+_NODE_KEYS_DIR: Path | None = None
+
 
 def _models_home() -> Path:
     return _MODELS_HOME if _MODELS_HOME is not None else forgeai_home() / "models"
@@ -156,6 +162,16 @@ def _probe_transport() -> Transport | None:
 
 def _registre_path() -> Path:
     return _REGISTRE_PATH if _REGISTRE_PATH is not None else forgeai_home() / "Registres" / "mission.jsonl"
+
+
+def _node_keys(runner: CommandRunner) -> tuple[Path, Path]:
+    """Retourne la paire de clés active, la génère si elle est absente."""
+    key_dir = _NODE_KEYS_DIR if _NODE_KEYS_DIR is not None else forgeai_home() / "keys"
+    private = key_dir / "forgeai_ed25519"
+    public = private.with_suffix(".pub")
+    if not private.exists() or not public.exists():
+        generate_keypair(key_dir, runner)
+    return public, private
 
 
 class ForgeAIHandler(BaseHTTPRequestHandler):
@@ -270,6 +286,15 @@ class ForgeAIHandler(BaseHTTPRequestHandler):
             self._send_json(200, payload)
             return
 
+        if path == "/api/nodes/status":
+            runner = SubprocessRunner()
+            try:
+                nodes = cluster_status(runner)
+                self._send_json(200, {"nodes": nodes})
+            except ClusterError as exc:
+                self._send_json(200, {"nodes": [], "detail": str(exc)})
+            return
+
         basename = path.rsplit("/", 1)[-1]
         data = _asset_bytes(basename)
         if data is not None:
@@ -282,6 +307,85 @@ class ForgeAIHandler(BaseHTTPRequestHandler):
     def do_POST(self) -> None:  # noqa: N802
         parsed = urllib.parse.urlparse(self.path)
         path = parsed.path
+
+        if path == "/api/nodes":
+            length_hdr = self.headers.get("Content-Length")
+            if length_hdr is None:
+                self._send_json(413, {"error": "Content-Length requis"})
+                return
+
+            try:
+                length = int(length_hdr)
+            except ValueError:
+                self._send_json(400, {"error": "Content-Length invalide"})
+                return
+
+            if length < 0 or length > 65536:
+                self._send_json(413, {"error": "corps trop grand"})
+                return
+
+            try:
+                body = self.rfile.read(length)
+                data = json.loads(body.decode("utf-8"))
+            except (json.JSONDecodeError, UnicodeDecodeError):
+                self._send_json(400, {"error": "JSON invalide"})
+                return
+
+            if not isinstance(data, dict):
+                self._send_json(400, {"error": "JSON invalide"})
+                return
+
+            required = ["ip", "user", "password"]
+            missing = [field for field in required if field not in data]
+            if missing:
+                self._send_json(400, {"error": "champs manquants", "missing": missing})
+                return
+
+            ip = data["ip"]
+            user = data["user"]
+            password = data["password"]  # proof:allow (identifiant ; valeur jamais journalisee)
+
+            try:
+                runner = SubprocessRunner()
+                pubkey, privkey = _node_keys(runner)
+                bootstrapper = _NODE_BOOTSTRAPPER if _NODE_BOOTSTRAPPER is not None else SshBootstrapper()
+                record = add_node(
+                    ip,
+                    user,
+                    password,
+                    pubkey=pubkey,
+                    privkey=privkey,
+                    bootstrapper=bootstrapper,
+                    runner=runner,
+                    registre_path=_registre_path(),
+                )
+            except NodeAddError as exc:
+                self._send_json(400, {"error": str(exc)})
+                return
+            except KeyError_:
+                self._send_json(500, {"error": "erreur de gestion des clés"})
+                return
+            except FileNotFoundError as exc:
+                # outil requis absent (ex. sshpass, ssh-keygen) — réponse propre,
+                # jamais de crash silencieux du handler (preuve navigateur B-02d)
+                self._send_json(500, {"error": f"outil requis absent : {exc.filename or exc}"})
+                return
+            except Exception:
+                # aucune valeur soumise n'est reflétée
+                self._send_json(500, {"error": "erreur interne lors de l'ajout du nœud"})
+                return
+
+            self._send_json(
+                201,
+                {
+                    "node": {
+                        "ip": record.ip,
+                        "user": record.user,
+                        "key_fingerprint": record.key_fingerprint,
+                    }
+                },
+            )
+            return
 
         if path != "/api/models":
             self._send_json(404, {"error": "not found"})
