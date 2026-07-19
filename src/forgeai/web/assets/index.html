@@ -56,6 +56,11 @@
               <option value="compose">Docker Compose</option>
               <option value="k3s">K3s</option>
             </select></label>
+          <label><span data-i18n="f_node_target">Nœud cible</span>
+            <select name="node" id="deploy-node-select">
+              <option value="local" data-i18n="node_local">Local (cette machine)</option>
+              <option value="auto" data-i18n="node_auto">Auto — scheduler du cluster</option>
+            </select></label>
           <label><span data-i18n="f_confirm">Confirmation (tapez FORCER)</span>
             <input name="confirm" required placeholder="FORCER" autocomplete="off" spellcheck="false"></label>
         </div>

@@ -3,6 +3,7 @@ from __future__ import annotations
 import importlib.resources
 import json
 import os
+import re
 import subprocess
 import sys
 import threading
@@ -47,6 +48,7 @@ _MIME_TYPES = {
 }
 
 _CHASSIS_CACHE: frozenset[str] | None = None
+_NODE_RE = re.compile(r"^[a-z0-9]([a-z0-9.-]{0,62})$", re.ASCII)
 
 
 def _mime(name: str) -> str:
@@ -200,6 +202,11 @@ def _available_backends() -> list[str]:
 def _summary_payload(stack_id: str) -> dict:
     stack = load_stack(stack_id)
     profile = HardwareDetector(SubprocessRunner()).full_report()
+    nodes: list[str] = []
+    try:
+        nodes = [n["name"] for n in cluster_status(SubprocessRunner())]
+    except ClusterError:
+        pass
     return {
         "stack": {
             "id": stack.get("id", stack_id),
@@ -213,6 +220,7 @@ def _summary_payload(stack_id: str) -> dict:
         },
         "backends": _available_backends(),
         "chassis": len(chassis_ids()),
+        "nodes": nodes,
     }
 
 
@@ -510,6 +518,11 @@ class ForgeAIHandler(BaseHTTPRequestHandler):
                 self._send_json(400, {"error": "backend invalide"})
                 return
 
+            node = data.get("node", "local")
+            if node not in ("local", "auto") and not _NODE_RE.match(node):
+                self._send_json(400, {"error": "node invalide"})
+                return
+
             try:
                 load_stack(stack_id)
             except FileNotFoundError:
@@ -538,6 +551,8 @@ class ForgeAIHandler(BaseHTTPRequestHandler):
                         str(forgeai_home() / "deploy"),
                         "--backend",
                         backend,
+                        "--node",
+                        node,
                         "--stack",
                         stack_id,
                     ]

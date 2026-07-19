@@ -86,7 +86,10 @@
       s_bricks: 'briques déployées',
       s_backends: 'Backends prêts',
       s_chassis: 'châssis commun',
-      s_none: 'aucun'
+      s_none: 'aucun',
+      f_node_target: 'Nœud cible',
+      node_local: 'Local (cette machine)',
+      node_auto: 'Auto — scheduler du cluster'
     },
     en: {
       title: 'ForgeAI Toolkit',
@@ -158,7 +161,10 @@
       s_bricks: 'deployed bricks',
       s_backends: 'Ready backends',
       s_chassis: 'shared chassis',
-      s_none: 'none'
+      s_none: 'none',
+      f_node_target: 'Target node',
+      node_local: 'Local (this machine)',
+      node_auto: 'Auto — cluster scheduler'
     }
   };
 
@@ -536,6 +542,7 @@
       return;
     }
     renderSummary();
+    populateNodeChoices();
   }
 
   function renderSummary() {
@@ -558,6 +565,21 @@
         <span class="brick-name">${escapeHtml(t('s_backends'))}: ${escapeHtml(backends)}</span>
       </div>
     `;
+  }
+
+  function populateNodeChoices() {
+    const sel = document.getElementById('deploy-node-select');
+    if (!sel || !state.summary) return;
+    const keep = new Set(['local', 'auto']);
+    [...sel.options].forEach((o) => { if (!keep.has(o.value)) o.remove(); });
+    (state.summary.nodes || []).forEach((n) => {
+      const name = typeof n === 'string' ? n : (n.name || n.hostname);
+      if (!name) return;
+      const opt = document.createElement('option');
+      opt.value = name;
+      opt.textContent = name;
+      sel.appendChild(opt);
+    });
   }
 
   function showDeploySection() {
@@ -616,6 +638,7 @@
           body: JSON.stringify({
             stack: state.selectedId,
             backend: form.elements.backend.value,
+            node: form.elements.node ? form.elements.node.value : 'local',
             confirm: confirm
           })
         });

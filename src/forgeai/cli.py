@@ -10,6 +10,7 @@ from __future__ import annotations
 import argparse
 import importlib.resources
 import os
+import re
 import socket
 import sys
 import time
@@ -60,6 +61,19 @@ def default_registre() -> Path:
 
 
 DEFAULT_REGISTRE = default_registre()
+
+_NODE_RE = re.compile(r"^[a-z0-9]([a-z0-9.-]{0,62})$", re.ASCII)
+
+
+def _node_type(value: str) -> str:
+    """Validateur argparse pour --node : local, auto, ou hostname RFC 1123."""
+    if value in ("local", "auto"):
+        return value
+    if not _NODE_RE.match(value):
+        raise argparse.ArgumentTypeError(
+            f"node invalide : '{value}' (attendu 'local', 'auto' ou un hostname minuscule)"
+        )
+    return value
 
 
 def _step(label: str) -> None:
@@ -124,11 +138,24 @@ def wizard_ci(args: argparse.Namespace) -> int:
 
     compose_file = workdir / "docker-compose.yaml"
     compose_file.write_text(render_compose(plan), encoding="utf-8")
-    local_node = socket.gethostname().lower()
-    (workdir / "k3s.yaml").write_text(render_k3s(plan, node=local_node), encoding="utf-8")
+
+    node_arg = args.node
+    probe_host = getattr(args, "probe_host", "127.0.0.1")
+
+    if node_arg == "auto":
+        effective_node = None
+        node_label = "scheduler libre"
+    elif node_arg == "local":
+        effective_node = socket.gethostname().lower()
+        node_label = effective_node
+    else:
+        effective_node = node_arg
+        node_label = node_arg
+
+    (workdir / "k3s.yaml").write_text(render_k3s(plan, node=effective_node), encoding="utf-8")
 
     if args.dry_run:
-        print(f"DRY-RUN OK: {len(plan.services)} services, stack={stack_label}", flush=True)
+        print(f"DRY-RUN OK: {len(plan.services)} services, stack={stack_label}, node={node_label}", flush=True)
         return 0
 
     backend = args.backend
@@ -149,7 +176,7 @@ def wizard_ci(args: argparse.Namespace) -> int:
         compose_up(compose_file)
         rag_ports = ports
     else:
-        _step(t("wizard.s07", node=local_node))
+        _step(t("wizard.s07", node=node_label))
         k3s_apply(workdir / "k3s.yaml")
         k3s_wait_deployments(NAMESPACE, timeout_s=args.health_timeout)
         used_node_ports: set[int] = set()
@@ -164,7 +191,7 @@ def wizard_ci(args: argparse.Namespace) -> int:
             health = {name: "waiting" for name in probe_paths}
             while probe_paths and time.monotonic() < deadline and set(health.values()) != {"healthy"}:
                 for name, path in probe_paths.items():
-                    if http_ok(f"http://127.0.0.1:{rag_ports[name]}{path}"):
+                    if http_ok(f"http://{probe_host}:{rag_ports[name]}{path}"):
                         health[name] = "healthy"
                 time.sleep(2.0)
             if probe_paths and set(health.values()) != {"healthy"}:
@@ -173,8 +200,8 @@ def wizard_ci(args: argparse.Namespace) -> int:
 
         _step(t("wizard.s08"))
         rag = RagClient(
-            ollama_url=f"http://127.0.0.1:{rag_ports['ollama']}",
-            qdrant_url=f"http://127.0.0.1:{rag_ports['vector-store']}",
+            ollama_url=f"http://{probe_host}:{rag_ports['ollama']}",
+            qdrant_url=f"http://{probe_host}:{rag_ports['vector-store']}",
             llm_model=plan.model,
             embed_model=plan.embed_model,
         )
@@ -824,6 +851,10 @@ def main(argv: list[str] | None = None) -> int:
     p_wiz.add_argument("--overlay", default=str(DEFAULT_OVERLAY))
     p_wiz.add_argument("--stack", default=None,
                        help="stack à déployer (défaut : plan minimal)")
+    p_wiz.add_argument("--node", type=_node_type, default="local",
+                       help="cible K3s : 'local' (hostname courant), 'auto' (scheduler libre), ou hostname exact")
+    p_wiz.add_argument("--probe-host", default="127.0.0.1", dest="probe_host",
+                       help="hôte de sondage santé/RAG (défaut 127.0.0.1)")
     p_wiz.add_argument("--dry-run", action="store_true",
                        help="génère les manifestes et s'arrête sans déployer")
     p_wiz.add_argument("--registre", default=str(DEFAULT_REGISTRE))
