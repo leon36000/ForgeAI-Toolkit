@@ -1,0 +1,145 @@
+{
+ "id": "agentique",
+ "name": "Agentique (agents autonomes outilles)",
+ "description_fr": "Agents autonomes en boucle event-stream (User->Agent->LLM->Action->Runtime sandbox->Observation), harness Hermes + Superpowers + OpenClaw, outils MCP untrusted en sandbox derriere guardrails, memoire agent 4 couches distincte du RAG.",
+ "description_en": "Autonomous agents on an event-stream loop (User->Agent->LLM->Action->sandbox Runtime->Observation), Hermes + Superpowers + OpenClaw harness, untrusted MCP tools sandboxed behind guardrails, 4-layer agent memory kept distinct from RAG.",
+ "base_rag_durci": true,
+ "deploy_by_sphere": {
+  "S1": [
+   "k3s",
+   "nvidia-gpu-operator",
+   "kueue",
+   "volcano",
+   "longhorn",
+   "cloudnativepg"
+  ],
+  "S2": [
+   "vllm",
+   "sglang",
+   "ollama",
+   "text-embeddings-inference-tei",
+   "infinity"
+  ],
+  "S3": [
+   "bge-m3",
+   "bge-reranker-v2-m3",
+   "sentence-transformers"
+  ],
+  "S4": [
+   "litellm",
+   "redis",
+   "routellm",
+   "vllm-semantic-router"
+  ],
+  "S5": [
+   "hermes-agent",
+   "hermes-workspace",
+   "superpowers",
+   "openclaw",
+   "langgraph",
+   "n8n",
+   "openhands",
+   "langchain"
+  ],
+  "S6": [
+   "mem0",
+   "graphiti",
+   "zep",
+   "letta",
+   "cognee",
+   "langmem",
+   "qdrant",
+   "neo4j"
+  ],
+  "S7": [
+   "ragflow",
+   "lightrag",
+   "graphrag",
+   "markitdown",
+   "docling",
+   "mineru"
+  ],
+  "S8": [
+   "mcp-servers",
+   "langchain-mcp-adapters",
+   "fastmcp-python",
+   "filesystem-mcp",
+   "github-mcp-officiel",
+   "ibm-mcp-context-forge"
+  ],
+  "S9": [
+   "nemo-guardrails",
+   "llama-guard",
+   "llamafirewall",
+   "promptguard",
+   "rebuff",
+   "garak"
+  ],
+  "S10": [
+   "e2b-code-interpreter",
+   "gvisor",
+   "firecracker",
+   "openbao",
+   "external-secrets-operator",
+   "cosign-sigstore",
+   "trivy"
+  ],
+  "S11": [
+   "openmeter",
+   "immudb",
+   "opa-rego",
+   "kyverno"
+  ],
+  "S12": [
+   "langfuse",
+   "arize-phoenix"
+  ],
+  "S13": [
+   "ragas",
+   "deepeval",
+   "swe-bench",
+   "promptfoo"
+  ],
+  "S14": [
+   "argo-cd",
+   "kserve",
+   "kubeai"
+  ]
+ },
+ "default_by_sphere": {
+  "S1": "k3s",
+  "S2": "vllm",
+  "S3": "bge-m3",
+  "S4": "litellm",
+  "S5": "hermes-agent",
+  "S6": "mem0",
+  "S7": "ragflow",
+  "S8": "mcp-servers",
+  "S9": "nemo-guardrails",
+  "S10": "e2b-code-interpreter",
+  "S11": "immudb",
+  "S12": "langfuse",
+  "S13": "ragas",
+  "S14": "argo-cd"
+ },
+ "wiring": [
+  "boucle agent (openhands event-stream) : User->hermes-agent->litellm->Action->runtime sandbox->Observation->Agent ; patterns orchestrator-workers / evaluator-optimizer",
+  "harness : superpowers (methodo/skills IMPOSES) + openclaw + hermes-agent (runtime) ; couches distinctes qui composent",
+  "langgraph = sous-graphes stateful (checkpoint redis, HITL) ; n8n = triggers/integrations declenchant langgraph en HTTP",
+  "tout appel -> litellm (virtual-key/budget par agent) -> vllm/sglang (prod) + ollama (dev) ; routellm/vllm-semantic-router pour le cout",
+  "kueue/volcano ordonnancent le GPU entre vllm/sglang/ollama (time-share) ; poids sur PVC RO ; readiness /health",
+  "spine retrieval : bge-m3 (text-embeddings-inference-tei/infinity) + bge-reranker-v2-m3 + qdrant ; ragflow expose en tool MCP a l'agent ; lightrag/graphrag routes par type de requete",
+  "memoire agent (S6, 4 couches) mem0(perso)+graphiti/zep(KG temporel)+letta(runtime paging)+cognee(doc->KG) sur qdrant+neo4j : distincte du plan RAG (memoire = read-write stateful, RAG = read-only)",
+  "outils MCP untrusted derriere guardrails/allow-list (nemo-guardrails + llama-guard/llamafirewall/promptguard) en sandbox e2b-code-interpreter/gvisor/firecracker ; secrets external-secrets-operator/openbao",
+  "obs/eval/gouv : langfuse trace chaque step ; CI ragas/deepeval/swe-bench ; metering openmeter + ledger immudb ; images signees cosign-sigstore + scan trivy -> argo-cd GitOps"
+ ],
+ "config_critique": {
+  "LITELLM_VIRTUAL_KEY": "1 cle virtuelle par agent : budget + quota + fallback + callback Langfuse",
+  "AGENT_TOOLS_UNTRUSTED": "tout tool MCP = untrusted -> allow-list nemo-guardrails + llamafirewall AVANT execution",
+  "SANDBOX_EXEC": "chaque Action code s'execute en sandbox e2b-code-interpreter / gvisor / firecracker (jamais sur l'hote)",
+  "GPU_TIMESHARE": "kueue/volcano gang-scheduling ; vllm(prod) et ollama(dev) partagent le GPU en time-share, pas en conflit",
+  "LANGGRAPH_CHECKPOINT": "checkpoint Redis + human-in-the-loop (HITL) sur les sous-graphes stateful",
+  "SUPPLY_CHAIN_GATE": "cosign-sigstore (signature image) + trivy (scan) AVANT argo-cd sync"
+ },
+ "surface": "hermes-agent"
+}

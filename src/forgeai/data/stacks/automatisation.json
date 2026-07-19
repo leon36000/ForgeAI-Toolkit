@@ -1,0 +1,141 @@
+{
+ "id": "automatisation",
+ "name": "Automatisation / Workflows",
+ "description_fr": "Automatisation d'entreprise pilotee par n8n (hub) : orchestrateurs par couche (LangGraph raisonnement, Temporal durabilite, Windmill code, Dify LLM-app), connecteurs via MCP natif, RAG hybride vecteur+graphe, memoire 5 couches, bus evenementiel Kafka/NATS.",
+ "description_en": "n8n-hub-driven enterprise automation: orchestrators layered by role (LangGraph reasoning, Temporal durability, Windmill code, Dify LLM-app), connectors via native MCP, hybrid vector+graph RAG, 5-layer memory, Kafka/NATS event bus.",
+ "base_rag_durci": true,
+ "deploy_by_sphere": {
+  "S1": [
+   "k3s",
+   "nvidia-gpu-operator",
+   "longhorn",
+   "traefik"
+  ],
+  "S2": [
+   "vllm",
+   "ollama",
+   "text-embeddings-inference-tei",
+   "infinity"
+  ],
+  "S3": [
+   "bge-m3",
+   "bge-reranker-v2-m3"
+  ],
+  "S4": [
+   "litellm",
+   "redis"
+  ],
+  "S5": [
+   "n8n",
+   "langgraph",
+   "temporal",
+   "windmill",
+   "dify",
+   "langflow",
+   "flowise",
+   "hermes-agent",
+   "superpowers"
+  ],
+  "S6": [
+   "qdrant",
+   "valkey",
+   "mem0",
+   "zep",
+   "graphiti",
+   "langmem",
+   "letta",
+   "pgvector",
+   "cognee",
+   "memos",
+   "hipporag",
+   "neo4j"
+  ],
+  "S7": [
+   "ragflow",
+   "lightrag",
+   "graphrag",
+   "llamaindex",
+   "docling",
+   "mineru",
+   "firecrawl",
+   "unstructured",
+   "chonkie",
+   "late-chunking",
+   "llmlingua-2"
+  ],
+  "S8": [
+   "mcp-servers",
+   "composio",
+   "pipedream",
+   "arcade",
+   "langchain-mcp-adapters",
+   "metamcp",
+   "ibm-mcp-context-forge"
+  ],
+  "S9": [
+   "nemo-guardrails",
+   "microsoft-presidio"
+  ],
+  "S10": [
+   "openbao",
+   "external-secrets-operator"
+  ],
+  "S11": [
+   "opa-rego",
+   "kyverno",
+   "immudb",
+   "openmeter"
+  ],
+  "S12": [
+   "langfuse"
+  ],
+  "S13": [
+   "promptfoo",
+   "ragas",
+   "deepeval"
+  ],
+  "S14": [
+   "argo-cd",
+   "kserve",
+   "kafka",
+   "nats-jetstream",
+   "postgresql",
+   "minio"
+  ]
+ },
+ "default_by_sphere": {
+  "S1": "k3s",
+  "S2": "vllm",
+  "S3": "bge-m3",
+  "S4": "litellm",
+  "S5": "n8n",
+  "S6": "qdrant",
+  "S7": "ragflow",
+  "S8": "mcp-servers",
+  "S9": "nemo-guardrails",
+  "S10": "openbao",
+  "S11": "opa-rego",
+  "S12": "langfuse",
+  "S13": "promptfoo",
+  "S14": "argo-cd"
+ },
+ "wiring": [
+  "protocole unifiant = MCP + HTTP/API : trigger (webhook/cron/MCP/A2A) -> n8n -> {AI-Agent node | HTTP->langgraph | HTTP->dify | temporal (long)} -> litellm -> vllm/ollama",
+  "n8n(hub, 500+ integrations) <-> langgraph (agents longs/stateful via HTTP) : separation raisonnement (langgraph) / integration systeme (n8n)",
+  "temporal = durable execution des taches critiques/longues (Signals/Queries HITL) ; garde SEPARE de langgraph (imbriquer perd la replayability)",
+  "windmill = jobs code (Python/TS/Go/Bash) ; dify = LLM-app/RAG UI via API ; langflow/flowise = builders optionnels",
+  "connecteurs : composio/pipedream/arcade via nodes MCP natifs n8n (MCP Client Tool + MCP Server Trigger) ; langchain-mcp-adapters cote langgraph ; metamcp/ibm-mcp-context-forge = gateway MCP",
+  "RAG hybride : ingestion docling/mineru/firecrawl/unstructured -> chunk chonkie/late-chunking -> embed bge-m3 (text-embeddings-inference-tei) -> qdrant(dense)+BM25+KG(ragflow GraphRAG/lightrag) -> rerank bge-reranker-v2-m3 -> llmlingua-2 -> litellm",
+  "memoire 5 couches : valkey(court-terme) + mem0(extraction faits) + zep/graphiti(KG temporel) + langmem(long-terme LangGraph) + letta(runtime stateful) ; cognee/memos/hipporag en option",
+  "guardrails nemo-guardrails + microsoft-presidio (wrap I/O) ; secrets openbao->external-secrets-operator ; bus kafka/nats-jetstream (triggers/fan-out) + postgresql + minio (artefacts)",
+  "gouvernance/deploy : opa-rego/kyverno (gate T3) ; promptfoo+ragas+deepeval (CI) ; langfuse (callbacks litellm) ; argo-cd GitOps"
+ ],
+ "config_critique": {
+  "N8N_MCP_NATIVE": "MCP Client Tool (consommer serveurs MCP) + MCP Server Trigger (exposer les workflows n8n comme outils MCP)",
+  "N8N_TO_LANGGRAPH": "n8n HTTP Request node -> agent LangGraph deploye -> resultats routes vers les systemes metier",
+  "TEMPORAL_GRANULARITY": "Temporal = substrat de durabilite ; NE PAS wrapper un run LangGraph entier dans une seule activite (perd la replayability fine)",
+  "LITELLM_ROUTE": "LiteLLM :4000 route+fallback+budget+cache -> vLLM(prod)/Ollama(dev)",
+  "EVENT_BUS": "Kafka/NATS-JetStream pour triggers/fan-out et re-train event-driven"
+ },
+ "surface": "n8n"
+}
