@@ -1,0 +1,20 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "src/forgeai/web/server.py",
+   "description": "Si le JSON d'API envoie \"node\": null (ou un non-string), _NODE_RE.match(node) lève TypeError au lieu d'un 400 contrôlé — le validateur suppose un str.",
+   "preuve": "server.py: node = data.get(\"node\", \"local\") puis `if node not in (\"local\", \"auto\") and not _NODE_RE.match(node)` sans isinstance(node, str)"
+  },
+  {
+   "severite": "mineure",
+   "fichier": "src/forgeai/web/server.py",
+   "description": "L'API web transmet --node au wizard mais n'expose/propage pas --probe-host ; un déploiement K3s ciblant un nœud distant depuis l'UI garde le sondage santé/RAG sur 127.0.0.1 (défaut CLI).",
+   "preuve": "diff server.py: argv ajoute \"--node\", node uniquement ; pas de probe_host dans le payload ni dans la ligne de commande ; cli.py utilise probe_host seulement si passé en CLI"
+  }
+ ],
+ "date_heure": "2026-03-22T12:00:00Z",
+ "prompt_sha256": "6374e99a0895ea770f6efda19ee8d0fcea85b8750046051c6d7abe1f5f4f4a2d",
+ "reviewer_model": "Grok-4.5"
+}
