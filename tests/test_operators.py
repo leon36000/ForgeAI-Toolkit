@@ -84,3 +84,35 @@ def test_operateur_inconnu_leve():
 def test_registre_operateurs_couvre_le_chassis():
     for name in ("external-secrets-operator", "argo-cd", "kserve"):
         assert name in OPERATORS and OPERATORS[name].crd and OPERATORS[name].chart
+
+
+# --- commande CLI `forgeai operators` (handler couvert : adopt / install / inconnu) ---
+def _cli_operators(monkeypatch, plan_result, name=None):
+    import forgeai.cli as cli
+    monkeypatch.setattr(cli, "SubprocessRunner", lambda: object())
+    if isinstance(plan_result, dict):
+        monkeypatch.setattr("forgeai.deploy.operators.plan", lambda n, r: plan_result)
+    argv = ["operators"] + ([name] if name else [])
+    return cli.main(argv)
+
+
+def test_cli_operators_adopte(monkeypatch, capsys):
+    from forgeai.deploy.operators import OperatorStatus
+    st = OperatorStatus("external-secrets-operator", True, "helm", "external-secrets-2.7.0")
+    rc = _cli_operators(monkeypatch, {"action": "adopt", "status": st, "commands": []},
+                        name="external-secrets-operator")
+    assert rc == 0 and "ADOPTÉ" in capsys.readouterr().out
+
+
+def test_cli_operators_absent_montre_plan(monkeypatch, capsys):
+    from forgeai.deploy.operators import OperatorStatus
+    st = OperatorStatus("argo-cd", False, None, None)
+    plan_res = {"action": "install", "status": st,
+                "commands": [["helm", "repo", "add", "argo", "url"]]}
+    rc = _cli_operators(monkeypatch, plan_res, name="argo-cd")
+    assert rc == 0 and "ABSENT" in capsys.readouterr().out
+
+
+def test_cli_operators_inconnu_retourne_erreur(monkeypatch, capsys):
+    rc = _cli_operators(monkeypatch, None, name="inexistant-xyz")
+    assert rc == 8
