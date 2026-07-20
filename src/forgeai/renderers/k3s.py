@@ -6,22 +6,18 @@ Kubernetes : le port hôte est décalé dans la plage NodePort de façon déterm
 """
 from __future__ import annotations
 
-import re
-
 from forgeai.core.models import DeploymentPlan, ServiceSpec
 
 NAMESPACE = "forgeai-minimal"
 _NODEPORT_SPAN = 2768  # 30000..32767
 
-# Caractères qui casseraient/injecteraient le manifeste YAML s'ils étaient interpolés tels quels
-# (newline, retour chariot, tab, contrôle). Les valeurs légitimes (noms k8s RFC 1123, images,
-# hostnames, chemins) n'en contiennent jamais ; on refuse le reste (défense en profondeur).
-_UNSAFE_YAML = re.compile(r"[\x00-\x1f\x7f]")
-
 
 def _safe(value: str, field: str) -> str:
-    """Refuse une valeur interpolée au YAML si elle porte un caractère d'injection (Sentinelle)."""
-    if _UNSAFE_YAML.search(value):
+    """Refuse une valeur interpolée au YAML si elle porte un caractère de contrôle/newline
+    (injection de manifeste, finding Sentinelle). Les valeurs légitimes (noms k8s RFC 1123,
+    images, hostnames, chemins) n'en contiennent jamais ; on refuse le reste (défense en profondeur).
+    Vérif par point de code (pas de regex de contrôle) pour rester lisible et sans surprise."""
+    if any(ord(ch) < 0x20 or ord(ch) == 0x7f for ch in value):
         raise ValueError(f"valeur non sûre pour un manifeste Kubernetes ({field}) : {value!r}")
     return value
 
