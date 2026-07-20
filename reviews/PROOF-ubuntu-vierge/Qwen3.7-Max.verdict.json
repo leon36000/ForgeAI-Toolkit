@@ -1,0 +1,14 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "scripts/proof/prove_ubuntu_vierge.sh",
+   "description": "La boucle d'attente de dockerd ne retourne pas un code d'erreur non-nul si le daemon échoue à démarrer dans le temps imparti, car la dernière commande exécutée en cas d'échec est `sleep 2` (exit 0). Le script échouera à l'étape suivante, mais sans diagnostic immédiat sur dockerd.",
+   "preuve": "Ligne 38 : docker exec \"$C\" bash -c 'for i in $(seq 1 20); do docker info >/dev/null 2>&1 && { echo dockerd-OK; break; }; sleep 2; done'"
+  }
+ ],
+ "date_heure": "2026-07-20T06:55:00+00:00",
+ "prompt_sha256": "959a4ec0006b900f433e4499d95b01b3ad828b42bc394e89c4b880c98201880a",
+ "reviewer_model": "Qwen3.7-Max"
+}
