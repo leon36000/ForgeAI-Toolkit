@@ -518,6 +518,26 @@ def _doctor(args: argparse.Namespace) -> int:
     return 0
 
 
+def _operators(args: argparse.Namespace) -> int:
+    """Opérateurs K8s du châssis : détecte l'existant (ADOPTE) ou propose l'install Helm."""
+    from forgeai.deploy.operators import OPERATORS, plan
+    runner = SubprocessRunner()
+    names = [args.name] if getattr(args, "name", None) else list(OPERATORS)
+    print("[forgeai operators] détection sur le cluster courant (jamais de réinstallation) :")
+    for name in names:
+        if name not in OPERATORS:
+            print(f"  {name} : inconnu (connus : {', '.join(sorted(OPERATORS))})", file=sys.stderr)
+            return 8
+        p = plan(name, runner)
+        st = p["status"]
+        if p["action"] == "adopt":
+            print(f"  [ADOPTÉ] {name} — déjà présent ({st.source}, {st.version or 'CRD'}) ; intact")
+        else:
+            print(f"  [ABSENT] {name} — installable via Helm : "
+                  f"{' ; '.join(' '.join(c) for c in p['commands'])}")
+    return 0
+
+
 def _node_probe(args: argparse.Namespace) -> int:
     from forgeai.network.remote_probe import probe_remote_node, SshRunner, RemoteProbeError
     runner = SshRunner(args.user, args.node_host, args.keyfile)
@@ -1092,6 +1112,11 @@ def main(argv: list[str] | None = None) -> int:
 
     p_doctor = sub.add_parser("doctor", help="préflight : ce que votre machine peut faire")
     p_doctor.set_defaults(func=_doctor)
+
+    p_ops = sub.add_parser("operators",
+                           help="opérateurs K8s du châssis : détecter+adopter l'existant ou installer (Helm)")
+    p_ops.add_argument("name", nargs="?", help="opérateur précis (défaut : tous les opérateurs connus)")
+    p_ops.set_defaults(func=_operators)
 
     p_gpu = sub.add_parser("gpu", help="cycle de vie des drivers GPU NVIDIA/AMD/Intel (B-04)")
     gpu_sub = p_gpu.add_subparsers(dest="gpu_cmd", required=True)
