@@ -1,0 +1,14 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "critique",
+   "fichier": "src/forgeai/cli.py",
+   "description": "Le diff fourni n'implémente pas du tout la story demandée (choix k3s/k8s et type de service NodePort/LoadBalancer). Il ajoute à la place une fonctionnalité d'évaluation RAG déterministe (E6).",
+   "preuve": "+from forgeai.eval import rag_eval\n+    eval_witness = None  # E6 — score d'éval RAG déterministe (« optimal » mesuré)"
+  }
+ ],
+ "date_heure": "2026-07-20T12:58:48.687783+00:00",
+ "prompt_sha256": "522b5ecd90c8a2776756de8348d4beb34ab75e272bb3e249a0a72ee5e146ee4b",
+ "reviewer_model": "Gemini-3.1-Pro"
+}

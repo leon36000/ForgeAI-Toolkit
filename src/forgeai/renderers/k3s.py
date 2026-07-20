@@ -23,8 +23,20 @@ def node_port_for(svc: ServiceSpec, used: set[int] | None = None) -> int:
     return port
 
 
+def _service_ports(svc: ServiceSpec, service_type: str, node_port: int | None) -> str:
+    """Bloc `ports:` du Service selon le type. NodePort épingle un port hôte (k3s/edge) ;
+    LoadBalancer expose port/targetPort et laisse le cluster/cloud assigner l'accès externe."""
+    base = f"""
+    - port: {svc.container_port}
+      targetPort: {svc.container_port}"""
+    if service_type == "NodePort":
+        port = node_port if node_port is not None else node_port_for(svc)
+        return base + f"\n      nodePort: {port}"
+    return base
+
+
 def _deployment(svc: ServiceSpec, effective_node: str | None = None,
-                node_port: int | None = None) -> str:
+                node_port: int | None = None, service_type: str = "NodePort") -> str:
     gpu_limits = """
           resources:
             limits:
@@ -71,19 +83,17 @@ metadata:
   name: {svc.name}
   namespace: {NAMESPACE}
 spec:
-  type: NodePort
+  type: {service_type}
   selector: {{app: {svc.name}}}
-  ports:
-    - port: {svc.container_port}
-      targetPort: {svc.container_port}
-      nodePort: {node_port if node_port is not None else node_port_for(svc)}
+  ports:{_service_ports(svc, service_type, node_port)}
 """
 
 
-def render_k3s(plan: DeploymentPlan, node: str | None = None) -> str:
-    """`node` épingle les pods sur un hôte (profil Minimal = single-node par contrat).
-    Chaque service peut surcharger ce nœud via `svc.node` ; `svc.node == "auto"`
-    laisse le scheduler décider pour ce service."""
+def render_k3s(plan: DeploymentPlan, node: str | None = None,
+               service_type: str = "NodePort") -> str:
+    """Manifestes Kubernetes STANDARD (valables k3s ET k8s — même API). `node` épingle les pods
+    sur un hôte (profil Minimal = single-node) ; `svc.node == "auto"` laisse le scheduler décider.
+    `service_type` : NodePort (défaut, portable partout, k3s/edge) ou LoadBalancer (cloud/k8s)."""
     parts = [f"""# Généré par ForgeAI Toolkit — plan {plan.plan_id} (profil {plan.profile})
 apiVersion: v1
 kind: Namespace
@@ -93,5 +103,5 @@ metadata:
     used: set[int] = set()
     for svc in plan.services:
         effective_node = svc.node if svc.node is not None else node
-        parts.append(_deployment(svc, effective_node, node_port_for(svc, used)))
+        parts.append(_deployment(svc, effective_node, node_port_for(svc, used), service_type))
     return "".join(parts)

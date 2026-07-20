@@ -75,3 +75,4 @@ E4
 E5
 E6
 E6-reseal
+K-CHOICE-v2

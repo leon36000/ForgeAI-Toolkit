@@ -4,9 +4,9 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
 
+from forgeai import preflight
 from forgeai.core.runner import FixtureRunner
 from forgeai.hardware.detect import HardwareDetector
-from forgeai import preflight
 
 FIXTURES = Path(__file__).parent / "fixtures" / "hardware"
 
@@ -85,7 +85,8 @@ def test_machine_avec_cluster_active_k3s():
     checks = preflight.run_checks(
         ToolRunner(present_commands={"docker", "kubectl"}),
         _hw_detector(), http_ok=lambda url: False)
-    assert set(preflight.available_backends(checks)) == {"compose", "k3s"}
+    # kubectl+cluster joignables -> k3s ET k8s (mêmes manifestes Kubernetes ; choix utilisateur)
+    assert set(preflight.available_backends(checks)) == {"compose", "k3s", "k8s"}
 
 
 def test_ollama_detecte_si_repond():

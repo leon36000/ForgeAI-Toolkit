@@ -1,0 +1,14 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "critique",
+   "fichier": "src/forgeai/cli.py",
+   "description": "Le diff fourni ne correspond pas à la story K-CHOICE. Il n'implémente aucun des critères d'acceptation (choix k3s/k8s, NodePort/LoadBalancer, render_k3s, available_backends). Le code ajouté concerne uniquement l'évaluation RAG (rag_eval), ce qui est totalement hors sujet par rapport aux objectifs de la story.",
+   "preuve": "Le diff ne contient que l'import `from forgeai.eval import rag_eval` et l'appel `rag_eval.evaluate(answer, doc, args.expected_fact)`. Aucune modification liée à l'ajout des backends Kubernetes, au wizard `--backend` ou aux types de services n'est présente dans ce patch."
+  }
+ ],
+ "date_heure": "2026-07-20T12:59:15.859667+00:00",
+ "prompt_sha256": "522b5ecd90c8a2776756de8348d4beb34ab75e272bb3e249a0a72ee5e146ee4b",
+ "reviewer_model": "Qwen3.7-Max"
+}

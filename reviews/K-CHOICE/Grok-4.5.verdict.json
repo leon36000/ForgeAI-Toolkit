@@ -1,0 +1,26 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "critique",
+   "fichier": "src/forgeai/cli.py",
+   "description": "Le diff ne implémente pas la story K-CHOICE (choix k3s/k8s + service-type NodePort/LoadBalancer). Il ajoute uniquement une éval RAG déterministe (E6: import rag_eval, eval_witness, score groundedness/fait) sans aucune modification de render_k3s(service_type), available_backends, ni des flags wizard --backend/--service-type.",
+   "preuve": "hunks ajoutés: 'from forgeai.eval import rag_eval', 'eval_witness = rag_eval.evaluate(...)', champ 'rag_eval': eval_witness — aucun hunk sur render_k3s, NodePort/LoadBalancer, available_backends ou --service-type"
+  },
+  {
+   "severite": "critique",
+   "fichier": "PREUVE D'EXÉCUTION",
+   "description": "Critère 4 non satisfait: les dry-run server sur les manifestes k3s/k8s NodePort et k8s LoadBalancer sont tous REFUSÉS (namespace forgeai-minimal absent). Seul un apply réel dans un ns jetable distinct (forgeai-kchoice-proof) réussit; la validation dry-run exigée échoue.",
+   "preuve": "sortie: 'k3s-nodeport -> REFUSÉ: namespaces \"forgeai-minimal\" not found' (idem k8s-nodeport, k8s-lb); le détail LB montre 'namespace/forgeai-minimal created (server dry run)' puis NotFound sur les autres objets du même manifeste"
+  },
+  {
+   "severite": "majeure",
+   "fichier": "diff intégral",
+   "description": "Aucun code soumis ne démontre render_k3s(plan, service_type) NodePort (nodePort 30000-32767) vs LoadBalancer (sans nodePort figé), ni l'exposition available_backends k3s ET k8s, ni wizard --backend {k3s,k8s} + --service-type.",
+   "preuve": "diff limité à cli.py lignes RAG/E6; pas de fichier renderers/k3s.py, pas de parser --service-type, pas de available_backends dans le diff"
+  }
+ ],
+ "date_heure": "2026-07-20T12:58:59.091284+00:00",
+ "prompt_sha256": "522b5ecd90c8a2776756de8348d4beb34ab75e272bb3e249a0a72ee5e146ee4b",
+ "reviewer_model": "Grok-4.5"
+}

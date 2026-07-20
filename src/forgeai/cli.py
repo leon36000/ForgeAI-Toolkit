@@ -293,7 +293,9 @@ def wizard_ci(args: argparse.Namespace) -> int:
         effective_node = node_arg
         node_label = node_arg
 
-    (workdir / "k3s.yaml").write_text(render_k3s(plan, node=effective_node), encoding="utf-8")
+    (workdir / "k3s.yaml").write_text(
+        render_k3s(plan, node=effective_node,
+                   service_type=getattr(args, "service_type", "NodePort")), encoding="utf-8")
 
     if args.dry_run:
         print(f"DRY-RUN OK: {len(plan.services)} services, stack={stack_label}, node={node_label}, "
@@ -1155,7 +1157,13 @@ def main(argv: list[str] | None = None) -> int:
 
     p_wiz = sub.add_parser("wizard", help="wizard bout-en-bout")
     p_wiz.add_argument("--ci", action="store_true", required=True)
-    p_wiz.add_argument("--backend", choices=["compose", "k3s"], default="compose")
+    p_wiz.add_argument("--backend", choices=["compose", "k3s", "k8s"], default="compose",
+                       help="cible de déploiement : compose (mono-machine), k3s (léger/edge) "
+                            "ou k8s (Kubernetes standard) — k3s/k8s partagent les mêmes manifestes")
+    p_wiz.add_argument("--service-type", dest="service_type",
+                       choices=["NodePort", "LoadBalancer"], default="NodePort",
+                       help="exposition des services k3s/k8s : NodePort (portable, défaut) ou "
+                            "LoadBalancer (cloud). Sans effet en compose.")
     p_wiz.add_argument("--workdir", default="run")
     p_wiz.add_argument("--catalogue", default=str(DEFAULT_CATALOGUE))
     p_wiz.add_argument("--overlay", default=str(DEFAULT_OVERLAY))
