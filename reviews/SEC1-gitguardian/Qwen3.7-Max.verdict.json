@@ -1,0 +1,14 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "majeure",
+   "fichier": ".gitguardian.yaml",
+   "description": "Omission du fichier de catalogue dans les chemins ignorés. La story exige explicitement d'ajouter `src/forgeai/data/catalogue.json` dans `secret.ignored_paths`.",
+   "preuve": "Diff de `.gitguardian.yaml` (lignes +3 à +7) : `ignored_paths` liste `tests/fixtures/**`, `**/*.md`, `LICENSE` et `.gitignore`, mais `src/forgeai/data/catalogue.json` est absent."
+  }
+ ],
+ "date_heure": "2026-07-20T15:00:00Z",
+ "prompt_sha256": "83539dc5ffa36f342799fd997db928ad5945797f39d108846e9b34b7a11592ab",
+ "reviewer_model": "Qwen3.7-Max"
+}

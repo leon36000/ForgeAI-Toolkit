@@ -45,6 +45,18 @@ pytest                                      # tests
 
 Tout passe par PR. Zéro commit direct sur `main` une fois la branch protection active.
 
+## Développement (sécurité pre-commit)
+
+Activez la vérification locale des secrets avant chaque commit :
+
+```bash
+pip install -e ".[dev]"
+pre-commit install
+ggshield auth login   # authentification interactive locale — NE JAMAIS committer de token
+```
+
+**Important :** Le token d'authentification GitGuardian (`GITGUARDIAN_API_KEY` ou équivalent) est strictement local. Ne le committez jamais et ne le placez jamais en clair dans le dépôt ni dans une variable d'environnement partagée.
+
 ## État de la mission (2026-07-14)
 
 **P1 PROUVÉE** — machine nue → RAG fonctionnel, sur les deux backends :

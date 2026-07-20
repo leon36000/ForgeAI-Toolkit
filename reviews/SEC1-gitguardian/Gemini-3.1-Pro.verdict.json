@@ -1,0 +1,14 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "majeure",
+   "fichier": ".gitguardian.yaml",
+   "description": "Le chemin 'src/forgeai/data/catalogue.json' est absent de la liste 'ignored_paths' alors qu'il est explicitement requis dans le périmètre minimum de la story.",
+   "preuve": "+    - \"tests/fixtures/**\"\n+    - \"**/*.md\"\n+    - \"LICENSE\"\n+    - \".gitignore\""
+  }
+ ],
+ "date_heure": "2024-05-21T14:30:00Z",
+ "prompt_sha256": "83539dc5ffa36f342799fd997db928ad5945797f39d108846e9b34b7a11592ab",
+ "reviewer_model": "Gemini-3.1-Pro"
+}

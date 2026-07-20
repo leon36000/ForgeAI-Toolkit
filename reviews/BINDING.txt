@@ -64,3 +64,4 @@ E1b
 E2a
 FIX-preflight-compose
 PROOF-ubuntu-vierge
+SEC1-gitguardian-v2
