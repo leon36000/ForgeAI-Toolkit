@@ -68,3 +68,4 @@ SEC1-gitguardian-v2
 E2b
 E2c
 E3a
+E3b

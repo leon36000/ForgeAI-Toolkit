@@ -41,6 +41,7 @@ from forgeai.planner.assemble import assemble_plan
 from forgeai.planner.profile import ProfileError, derive_profile
 from forgeai.rag.client import RagClient
 from forgeai.rag.hardened import HardenedRagClient
+from forgeai.secrets.vault import read as vault_read, store as vault_store
 from forgeai.renderers.compose import render_compose
 from forgeai.renderers.k3s import NAMESPACE, node_port_for, render_k3s
 from forgeai.resources import catalogue_path, deploy_overlay_path, forgeai_home
@@ -51,6 +52,7 @@ from forgeai.stacks import load_stack
 # Données embarquées dans le paquet → portables après pip install (P3).
 DEFAULT_CATALOGUE = catalogue_path()
 DATA_PKG = "forgeai.data"  # package des données embarquées (specs, overlays, smoke docs, locales)
+VAULT_SECRET_PATH = "forgeai/litellm"  # chemin KV v2 openbao de la master key passerelle (E3b)
 DEFAULT_OVERLAY = deploy_overlay_path()
 
 
@@ -114,7 +116,7 @@ def wizard_ci(args: argparse.Namespace) -> int:
         if args.overlay == str(DEFAULT_OVERLAY):
             args.overlay = str(importlib.resources.files(DATA_PKG) / "deploy-hardened.json")
         rag_durci_bricks = ("text-embeddings-inference-tei",
-                            "text-embeddings-inference-reranker", "litellm", "redis")
+                            "text-embeddings-inference-reranker", "litellm", "redis", "openbao")
         if args.document is None:
             args.document = str(
                 importlib.resources.files(DATA_PKG) / "smoke" / "verification-durci.md")
@@ -342,12 +344,22 @@ def wizard_ci(args: argparse.Namespace) -> int:
                     # valeur : sans espaces ni guillemets (sinon la clé passe au Bearer avec ses
                     # quotes -> 401 côté passerelle, finding CodeRabbit #80).
                     env_vals[ekey.strip()] = eval_.strip().strip('"').strip("'")
+            # E3b — openbao branché comme coffre PORTEUR : on écrit la master key de la passerelle
+            # dans le coffre, puis on la RELIT ; c'est la valeur relue qui authentifie la passerelle.
+            # Conséquence : si openbao est absent/en panne, la lecture échoue et le RAG n'a pas de clé
+            # (le coffre est dans le chemin critique, pas un simple double de .env).
+            gateway_key = env_vals.get("FORGEAI_LITELLM_KEY", "")
+            bao_url = _svc_url(probe_host, rag_ports['openbao'])
+            bao_token = env_vals.get("FORGEAI_BAO_TOKEN", "")
+            vault_store(bao_url, bao_token, VAULT_SECRET_PATH, {"master_key": gateway_key})
+            gateway_key = vault_read(bao_url, bao_token, VAULT_SECRET_PATH).get("master_key", "")
+            print(f"  coffre openbao: master key écrite puis relue ({'ok' if gateway_key else 'VIDE'})")
             rag = HardenedRagClient(
                 ollama_url=_svc_url(probe_host, rag_ports['ollama']),
                 qdrant_url=_svc_url(probe_host, rag_ports['vector-store']),
                 tei_url=_svc_url(probe_host, rag_ports['text-embeddings-inference-tei']),
                 gateway_url=_svc_url(probe_host, rag_ports['litellm']),
-                gateway_key=env_vals.get("FORGEAI_LITELLM_KEY", ""),
+                gateway_key=gateway_key,
                 reranker_url=_svc_url(probe_host, rag_ports['text-embeddings-inference-reranker']),
                 llm_model=plan.model,
                 embed_model=plan.embed_model,
