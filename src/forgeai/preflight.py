@@ -46,7 +46,10 @@ def check_docker(runner: CommandRunner) -> Check:
     if not _tool_present(runner, ["docker", "info"]):
         return Check("docker", DEGRADED, "docker installé mais démon injoignable",
                      "démarrer le démon Docker pour déployer via Compose")
-    return Check("docker", OK, "docker opérationnel", "déploiement backend Compose")
+    if not _tool_present(runner, ["docker", "compose", "version"]):
+        return Check("docker", DEGRADED, "docker démon OK mais plugin compose (v2) absent",
+                     "installer le plugin docker compose (paquet docker-compose-v2)")
+    return Check("docker", OK, "docker + compose opérationnels", "déploiement backend Compose")
 
 
 def check_kubectl(runner: CommandRunner) -> Check:
