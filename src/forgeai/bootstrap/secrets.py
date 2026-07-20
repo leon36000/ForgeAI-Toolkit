@@ -11,7 +11,9 @@ import os
 import secrets as pysecrets
 from pathlib import Path
 
-ENV_KEYS = ("FORGEAI_API_TOKEN", "QDRANT_SERVICE_KEY")
+# FORGEAI_LITELLM_KEY ajoutée EN FIN (ligne 0 = FORGEAI_API_TOKEN préservée, cf. test permissions) :
+# master key de la passerelle LiteLLM du profil RAG durci (E2c). Interpolée dans le compose.
+ENV_KEYS = ("FORGEAI_API_TOKEN", "QDRANT_SERVICE_KEY", "FORGEAI_LITELLM_KEY")
 
 
 def bootstrap_secrets(out_dir: Path, regen: bool = False) -> dict[str, Path]:
