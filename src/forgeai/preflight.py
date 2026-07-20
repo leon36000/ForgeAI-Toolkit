@@ -8,8 +8,8 @@ active — sans jamais planter si un composant manque.
 from __future__ import annotations
 
 import platform
+from collections.abc import Callable
 from dataclasses import dataclass
-from typing import Callable
 
 from forgeai.core.runner import CommandRunner
 from forgeai.hardware.detect import HardwareDetector
@@ -99,5 +99,8 @@ def available_backends(checks: list[Check]) -> list[str]:
     if by_name.get("docker") == OK:
         backends.append("compose")
     if by_name.get("kubectl") == OK:
+        # k3s et k8s partagent l'API Kubernetes (kubectl + manifestes standard) : un cluster
+        # joignable active les DEUX ; l'utilisateur choisit son distro/exposition (NodePort/LB).
         backends.append("k3s")
+        backends.append("k8s")
     return backends
