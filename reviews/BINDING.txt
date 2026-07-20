@@ -76,3 +76,4 @@ E5
 E6
 E6-reseal
 K-CHOICE-v2
+K-CHOICE-hardening
