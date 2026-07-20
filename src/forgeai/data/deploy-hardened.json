@@ -1,0 +1,28 @@
+{
+  "profile": "hardened",
+  "engine_default": "ollama",
+  "services": [
+    {
+      "name": "ollama",
+      "brick_id": "ollama",
+      "image": "ollama/ollama:latest",
+      "container_port": 11434,
+      "volume": "forgeai-ollama-models:/root/.ollama",
+      "healthcheck_path": "/api/tags",
+      "gpu_capable": true
+    },
+    {
+      "name": "vector-store",
+      "brick_id": "qdrant",
+      "image": "qdrant/qdrant:v1.18.3",
+      "container_port": 6333,
+      "volume": "forgeai-qdrant-durci-data:/qdrant/storage",
+      "healthcheck_path": "/readyz",
+      "gpu_capable": false
+    }
+  ],
+  "models": {
+    "llm": "qwen2.5:0.5b",
+    "embed": "bge-m3"
+  }
+}
