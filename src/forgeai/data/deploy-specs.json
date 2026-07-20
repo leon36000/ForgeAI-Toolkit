@@ -66,8 +66,8 @@
   },
   "immudb": {
     "image": "codenotary/immudb:1.11.1",
-    "container_port": 3322,
-    "health_path": null,
+    "container_port": 8080,
+    "health_path": "/",
     "volumes": [
       "forgeai-immudb-data:/var/lib/immudb"
     ],

@@ -11,9 +11,12 @@ import os
 import secrets as pysecrets
 from pathlib import Path
 
-# FORGEAI_LITELLM_KEY ajoutée EN FIN (ligne 0 = FORGEAI_API_TOKEN préservée, cf. test permissions) :
-# master key de la passerelle LiteLLM du profil RAG durci (E2c). Interpolée dans le compose.
-ENV_KEYS = ("FORGEAI_API_TOKEN", "QDRANT_SERVICE_KEY", "FORGEAI_LITELLM_KEY")
+# Secrets ajoutés EN FIN (ligne 0 = FORGEAI_API_TOKEN préservée, cf. test permissions) :
+# - FORGEAI_LITELLM_KEY : master key de la passerelle LiteLLM du profil RAG durci (E2c).
+# - FORGEAI_BAO_TOKEN   : dev-root-token du coffre openbao (E3b) — interpolé en ${FORGEAI_BAO_TOKEN}
+#   dans le compose (BAO_DEV_ROOT_TOKEN_ID) et utilisé par le wizard pour écrire/relire la master key.
+# Tous deux interpolés dans le compose, jamais en clair dans un manifeste rendu.
+ENV_KEYS = ("FORGEAI_API_TOKEN", "QDRANT_SERVICE_KEY", "FORGEAI_LITELLM_KEY", "FORGEAI_BAO_TOKEN")
 
 
 def bootstrap_secrets(out_dir: Path, regen: bool = False) -> dict[str, Path]:

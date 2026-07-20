@@ -41,6 +41,8 @@ from forgeai.planner.assemble import assemble_plan
 from forgeai.planner.profile import ProfileError, derive_profile
 from forgeai.rag.client import RagClient
 from forgeai.rag.hardened import HardenedRagClient
+from forgeai.secrets.vault import read as vault_read, store as vault_store
+from forgeai.audit import immudb as ledger
 from forgeai.renderers.compose import render_compose
 from forgeai.renderers.k3s import NAMESPACE, node_port_for, render_k3s
 from forgeai.resources import catalogue_path, deploy_overlay_path, forgeai_home
@@ -51,6 +53,13 @@ from forgeai.stacks import load_stack
 # Données embarquées dans le paquet → portables après pip install (P3).
 DEFAULT_CATALOGUE = catalogue_path()
 DATA_PKG = "forgeai.data"  # package des données embarquées (specs, overlays, smoke docs, locales)
+VAULT_SECRET_PATH = "forgeai/litellm"  # chemin KV v2 openbao de la master key passerelle (E3b)
+IMMUDB_COLLECTION = "forgeai_audit"  # collection immudb du ledger d'audit du déploiement (E3c)
+# immudb dev-chassis : identifiants PUBLICS par défaut d'immudb (documentés mondialement, pas un
+# secret forgeai). La valeur d'immudb ici = l'immuabilité tamper-evident, pas le contrôle d'accès
+# local/LAN ; la rotation du mot de passe admin relève du durcissement production (hors E3c).
+IMMUDB_USER = "immudb"
+IMMUDB_PASSWORD = "immudb"  # noqa: S105  proof:allow — défaut PUBLIC immudb (dev), pas un secret
 DEFAULT_OVERLAY = deploy_overlay_path()
 
 
@@ -114,7 +123,8 @@ def wizard_ci(args: argparse.Namespace) -> int:
         if args.overlay == str(DEFAULT_OVERLAY):
             args.overlay = str(importlib.resources.files(DATA_PKG) / "deploy-hardened.json")
         rag_durci_bricks = ("text-embeddings-inference-tei",
-                            "text-embeddings-inference-reranker", "litellm", "redis")
+                            "text-embeddings-inference-reranker", "litellm", "redis", "openbao",
+                            "immudb")
         if args.document is None:
             args.document = str(
                 importlib.resources.files(DATA_PKG) / "smoke" / "verification-durci.md")
@@ -302,6 +312,7 @@ def wizard_ci(args: argparse.Namespace) -> int:
                   file=sys.stderr)
             return 6
 
+    immudb_witness = None  # E3c — témoin d'inscription au ledger d'audit immudb (RAG durci)
     if backend == "compose":
         _step(t("wizard.s06"))
         compose_up(compose_file)
@@ -342,12 +353,22 @@ def wizard_ci(args: argparse.Namespace) -> int:
                     # valeur : sans espaces ni guillemets (sinon la clé passe au Bearer avec ses
                     # quotes -> 401 côté passerelle, finding CodeRabbit #80).
                     env_vals[ekey.strip()] = eval_.strip().strip('"').strip("'")
+            # E3b — openbao branché comme coffre PORTEUR : on écrit la master key de la passerelle
+            # dans le coffre, puis on la RELIT ; c'est la valeur relue qui authentifie la passerelle.
+            # Conséquence : si openbao est absent/en panne, la lecture échoue et le RAG n'a pas de clé
+            # (le coffre est dans le chemin critique, pas un simple double de .env).
+            gateway_key = env_vals.get("FORGEAI_LITELLM_KEY", "")
+            bao_url = _svc_url(probe_host, rag_ports['openbao'])
+            bao_token = env_vals.get("FORGEAI_BAO_TOKEN", "")
+            vault_store(bao_url, bao_token, VAULT_SECRET_PATH, {"master_key": gateway_key})
+            gateway_key = vault_read(bao_url, bao_token, VAULT_SECRET_PATH).get("master_key", "")
+            print(f"  coffre openbao: master key écrite puis relue ({'ok' if gateway_key else 'VIDE'})")
             rag = HardenedRagClient(
                 ollama_url=_svc_url(probe_host, rag_ports['ollama']),
                 qdrant_url=_svc_url(probe_host, rag_ports['vector-store']),
                 tei_url=_svc_url(probe_host, rag_ports['text-embeddings-inference-tei']),
                 gateway_url=_svc_url(probe_host, rag_ports['litellm']),
-                gateway_key=env_vals.get("FORGEAI_LITELLM_KEY", ""),
+                gateway_key=gateway_key,
                 reranker_url=_svc_url(probe_host, rag_ports['text-embeddings-inference-reranker']),
                 llm_model=plan.model,
                 embed_model=plan.embed_model,
@@ -382,6 +403,25 @@ def wizard_ci(args: argparse.Namespace) -> int:
             print(f"ECHEC: le fait attendu « {args.expected_fact} » est absent de la réponse",
                   file=sys.stderr)
             return 9
+
+        # E3c — immudb branché comme ledger d'audit IMMUABLE : on inscrit l'événement
+        # « déploiement RAG durci vérifié » dans le ledger append-only d'immudb, puis on relit sa
+        # piste de révisions (transactionId + revision = preuve d'inscription inviolable, horodatée
+        # côté serveur). immudb porteur : sans le ledger, le déploiement vérifié n'est pas attesté.
+        if rag_durci and "immudb" in rag_ports:
+            immu_url = _svc_url(probe_host, rag_ports["immudb"])
+            token = ledger.open_session(immu_url, IMMUDB_USER, IMMUDB_PASSWORD)
+            ledger.ensure_collection(immu_url, token, IMMUDB_COLLECTION, [
+                {"name": "event", "type": "STRING"}, {"name": "fact", "type": "STRING"},
+                {"name": "plan_id", "type": "STRING"}])
+            rec = ledger.record(immu_url, token, IMMUDB_COLLECTION, {
+                "event": "rag_durci_verified", "fact": args.expected_fact,
+                "question": args.question, "plan_id": plan.plan_id, "source": source_name})
+            revisions = ledger.history(immu_url, token, IMMUDB_COLLECTION, rec["documentId"])
+            immudb_witness = {"tx": rec["transactionId"], "doc": rec["documentId"],
+                              "revisions": len(revisions)}
+            print(f"  ledger immudb: audit inscrit tx={rec['transactionId']} "
+                  f"doc={rec['documentId'][:16]}… révisions={len(revisions)}")
     finally:
         if args.teardown:
             _step(t("wizard.teardown"))
@@ -396,6 +436,7 @@ def wizard_ci(args: argparse.Namespace) -> int:
         "plan_id": plan.plan_id, "profile": profile, "services": rag_ports,
         "model": plan.model, "chunks": chunks, "question": args.question,
         "fait_attendu": args.expected_fact, "reponse": answer,
+        "immudb_audit": immudb_witness,  # E3c — témoin ledger immuable (tx/doc/révisions) ou None
         "duree_s": round(time.monotonic() - started, 1),
     })
     print(f"CI_WITNESS={entry['hash']}")

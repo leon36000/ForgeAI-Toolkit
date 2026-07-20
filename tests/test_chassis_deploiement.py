@@ -69,13 +69,15 @@ def _minimal_overlay(tmp_path: Path) -> Path:
 # - litellm /health/liveliness : confirmé HTTP 200 sur le conteneur en marche
 #   (berriai/litellm) — la graphie "liveliness" est l'endpoint officiel, pas un typo.
 # - qdrant /readyz, TEI /health, openbao /v1/sys/health : endpoints documentés.
-# redis et immudb n'exposent pas de HTTP → health_path null (sonde par port/TCP).
+# redis n'expose pas de HTTP → health_path null (sonde par port/TCP).
+# immudb (E3c) : publie le port 8080 (API document v2 REST + console) ; la racine "/" répond 200
+#   quand le serveur est prêt (le gRPC 3322 n'est pas publié — le client forgeai est REST/stdlib).
 HEALTH_PATHS_ATTENDUS = {
     "litellm": "/health/liveliness",
     "redis": None,
     "qdrant": "/readyz",
     "text-embeddings-inference-tei": "/health",
-    "immudb": None,
+    "immudb": "/",
     "openbao": "/v1/sys/health",
 }
 
