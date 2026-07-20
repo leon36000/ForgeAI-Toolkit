@@ -1,13 +1,67 @@
 {
-  "_doc": "registre extensible brique→conteneur ; v1 châssis minimal ; toute nouvelle image doit être sourcée en revue",
+  "_doc": "Specs de déploiement réelles par brique (image vérifiée + config + wiring). Socle CPU branché.",
   "litellm": {
     "image": "ghcr.io/berriai/litellm:main-stable",
     "container_port": 4000,
-    "health_path": "/health/liveness"
+    "health_path": "/health/liveliness",
+    "volumes": [],
+    "env": {
+      "LITELLM_MASTER_KEY": "${FORGEAI_LITELLM_KEY}"
+    },
+    "depends": [
+      "ollama"
+    ]
   },
   "redis": {
-    "image": "redis:7-alpine",
+    "image": "redis:7.4.9",
     "container_port": 6379,
-    "health_path": null
+    "health_path": null,
+    "volumes": [
+      "forgeai-redis-data:/data"
+    ],
+    "env": {},
+    "depends": []
+  },
+  "qdrant": {
+    "image": "qdrant/qdrant:v1.18.3",
+    "container_port": 6333,
+    "health_path": "/readyz",
+    "volumes": [
+      "forgeai-qdrant-data:/qdrant/storage"
+    ],
+    "env": {},
+    "depends": []
+  },
+  "text-embeddings-inference-tei": {
+    "image": "ghcr.io/huggingface/text-embeddings-inference:cpu-1.9",
+    "container_port": 80,
+    "health_path": "/health",
+    "volumes": [
+      "forgeai-tei-data:/data"
+    ],
+    "env": {
+      "MODEL_ID": "BAAI/bge-m3"
+    },
+    "depends": []
+  },
+  "immudb": {
+    "image": "codenotary/immudb:1.11.1",
+    "container_port": 3322,
+    "health_path": null,
+    "volumes": [
+      "forgeai-immudb-data:/var/lib/immudb"
+    ],
+    "env": {},
+    "depends": []
+  },
+  "openbao": {
+    "image": "openbao/openbao:2.6.0",
+    "container_port": 8200,
+    "health_path": "/v1/sys/health",
+    "volumes": [],
+    "env": {
+      "BAO_DEV_ROOT_TOKEN_ID": "${FORGEAI_BAO_TOKEN}"
+    },
+    "depends": []
   }
 }
