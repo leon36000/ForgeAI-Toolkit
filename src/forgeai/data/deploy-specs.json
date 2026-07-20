@@ -52,6 +52,18 @@
     },
     "depends": []
   },
+  "text-embeddings-inference-reranker": {
+    "image": "ghcr.io/huggingface/text-embeddings-inference:cpu-1.9",
+    "container_port": 80,
+    "health_path": "/health",
+    "volumes": [
+      "forgeai-tei-reranker-data:/data"
+    ],
+    "env": {
+      "MODEL_ID": "BAAI/bge-reranker-v2-m3"
+    },
+    "depends": []
+  },
   "immudb": {
     "image": "codenotary/immudb:1.11.1",
     "container_port": 3322,

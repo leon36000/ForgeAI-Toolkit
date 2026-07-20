@@ -1,8 +1,10 @@
-"""Story E2a — client RAG DURCI : embed via TEI, génération via la passerelle LiteLLM.
+"""Client RAG DURCI (stories E2a + E2b).
 
-Hérite de RagClient (DRY : chunk_text/ensure_collection/ingest/_search réutilisés) et surcharge
-uniquement le chemin durci : les embeddings passent par TEI (bge-m3, 1024-dim), la génération par
-la passerelle LiteLLM authentifiée (Bearer). La clé Bearer n'est JAMAIS journalisée.
+Hérite de RagClient (DRY) et surcharge le chemin durci :
+  - embeddings via TEI (bge-m3), génération via la passerelle LiteLLM authentifiée (E2a) ;
+  - rerank optionnel via une 2e instance TEI (bge-reranker-v2-m3, endpoint /rerank) inséré entre
+    le retrieval Qdrant élargi et la génération (E2b). `reranker_url` vide == chemin E2a inchangé.
+La clé Bearer n'est JAMAIS journalisée.
 """
 from __future__ import annotations
 
@@ -36,6 +38,7 @@ class HardenedRagClient(RagClient):
     gateway_url: str = ""
     gateway_key: str = ""
     collection: str = "forgeai-rag-durci"
+    reranker_url: str = ""
 
     def __post_init__(self) -> None:
         if not self.tei_url or not self.gateway_url or not self.gateway_key:
@@ -45,10 +48,31 @@ class HardenedRagClient(RagClient):
         """POST TEI /embed {'inputs': [...]} -> liste BRUTE de vecteurs (un par entrée)."""
         return _post(f"{self.tei_url}/embed", {"inputs": texts})
 
-    def ask(self, question: str, top_k: int = 3) -> dict:
-        hits = self._search(question, top_k)
+    def _rerank(self, query: str, hits: list[dict]) -> list[dict]:
+        """Réordonne les hits via le service de reranking externe."""
+        ranked = _post(
+            f"{self.reranker_url}/rerank",
+            {"query": query, "texts": [h["payload"]["text"] for h in hits]},
+        )
+        ordered = [
+            hits[it["index"]]
+            for it in ranked
+            if isinstance(it.get("index"), int) and 0 <= it["index"] < len(hits)
+        ]
+        return ordered or hits
+
+    def ask(self, question: str, top_k: int = 3, candidates: int = 20) -> dict:
+        """Retrieval (élargi à `candidates` si rerank actif) -> rerank optionnel -> top_k ->
+        génération via la passerelle. Retrieval vide -> réponse vide sans fabrication (jamais
+        de POST /rerank sur un retrieval vide : contrôle négatif préservé)."""
+        k = candidates if self.reranker_url else top_k
+        hits = self._search(question, k)
         if not hits:
             return {"answer": "", "sources": [], "context_used": False}
+        if self.reranker_url:
+            hits = self._rerank(question, hits)[:top_k]
+        else:
+            hits = hits[:top_k]
         context = "\n---\n".join(h["payload"]["text"] for h in hits)
         prompt = (
             "Réponds à la question UNIQUEMENT à partir du contexte fourni, "
