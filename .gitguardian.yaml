@@ -2,6 +2,7 @@ version: 2
 secret:  # proof:allow — clé de schéma GitGuardian v2 (pas un secret), voir docs/ggshield
   ignored_paths:
     - "tests/fixtures/**"
+    - "src/forgeai/data/catalogue.json"
     - "**/*.md"
     - "LICENSE"
     - ".gitignore"
