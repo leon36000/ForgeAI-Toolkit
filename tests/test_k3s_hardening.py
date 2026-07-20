@@ -63,3 +63,17 @@ def test_valeur_avec_newline_refusee(champ):
 def test_node_avec_newline_refuse():
     with pytest.raises(ValueError):
         render_k3s(_plan([_svc()]), node="node\nmalicious: true")
+
+
+# 4) service_type : le renderer ne fait pas confiance à son appelant -> allowlist stricte
+def test_service_type_invalide_refuse():
+    with pytest.raises(ValueError):
+        render_k3s(_plan([_svc()]), service_type="NodePort\n  hostNetwork: true")
+    with pytest.raises(ValueError):
+        render_k3s(_plan([_svc()]), service_type="Bidon")
+
+
+def test_service_types_valides_ok():
+    for st in ("NodePort", "LoadBalancer"):
+        out = render_k3s(_plan([_svc()]), service_type=st)
+        assert f"type: {st}" in out

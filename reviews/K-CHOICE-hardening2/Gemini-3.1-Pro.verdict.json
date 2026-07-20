@@ -1,0 +1,14 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "critique",
+   "fichier": "N/A",
+   "description": "Le diff fourni est entièrement vide. Les modifications annoncées dans la story (ajout de l'allowlist _SERVICE_TYPES et levée de ValueError pour service_type) ne sont pas présentes et ne peuvent donc pas être évaluées.",
+   "preuve": "Section ## DIFF INTÉGRAL : ```diff\n``` (aucun contenu)"
+  }
+ ],
+ "date_heure": "2026-07-20T14:45:39.698594+00:00",
+ "prompt_sha256": "8a499b1415e681b85a692e40b401845722b95cfc171c8d8c703335e227115bdc",
+ "reviewer_model": "Gemini-3.1-Pro"
+}

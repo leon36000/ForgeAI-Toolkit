@@ -10,6 +10,10 @@ from forgeai.core.models import DeploymentPlan, ServiceSpec
 
 NAMESPACE = "forgeai-minimal"
 _NODEPORT_SPAN = 2768  # 30000..32767
+# Le renderer ne fait pas confiance à son appelant : `service_type` est restreint à ces valeurs
+# (interpolé brut au manifeste ; une valeur arbitraire injecterait du YAML). Le wizard le contraint
+# par argparse, mais render_k3s est une API publique -> allowlist ici (finding Sentinelle).
+_SERVICE_TYPES = frozenset({"NodePort", "LoadBalancer"})
 
 
 def _safe(value: str, field: str) -> str:
@@ -113,6 +117,9 @@ def render_k3s(plan: DeploymentPlan, node: str | None = None,
     """Manifestes Kubernetes STANDARD (valables k3s ET k8s — même API). `node` épingle les pods
     sur un hôte (profil Minimal = single-node) ; `svc.node == "auto"` laisse le scheduler décider.
     `service_type` : NodePort (défaut, portable partout, k3s/edge) ou LoadBalancer (cloud/k8s)."""
+    if service_type not in _SERVICE_TYPES:
+        raise ValueError(
+            f"service_type invalide : {service_type!r} (attendu {sorted(_SERVICE_TYPES)})")
     parts = [f"""# Généré par ForgeAI Toolkit — plan {plan.plan_id} (profil {plan.profile})
 apiVersion: v1
 kind: Namespace
