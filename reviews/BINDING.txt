@@ -69,4 +69,6 @@ E2b
 E2c
 E3a
 QA1-coderabbit
+E3b
+E3c
 QA2-sonarcloud
