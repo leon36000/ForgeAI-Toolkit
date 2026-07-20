@@ -67,3 +67,4 @@ PROOF-ubuntu-vierge
 SEC1-gitguardian-v2
 E2b
 E2c
+QA1-coderabbit-v2 (contenu identique à QA1-coderabbit, déjà 3/3 APPROVE)

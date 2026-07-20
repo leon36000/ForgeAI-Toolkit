@@ -1,0 +1,20 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": ".coderabbit.yaml",
+   "description": "Critère 3 non vérifiable depuis le diff : l'exécution de `python3 scripts/no_stub_scan.py --all` ne peut pas être confirmée par relecture du diff seul. Le diff n'ajoute qu'un fichier YAML, mais l'exécution réelle du script n'est pas prouvée.",
+   "preuve": "Aucune sortie de commande no_stub_scan fournie dans le contexte de revue"
+  },
+  {
+   "severite": "mineure",
+   "fichier": ".coderabbit.yaml",
+   "description": "Critère 4 non vérifiable depuis le diff : l'exécution de `pytest` ne peut pas être confirmée par relecture du diff seul. Le diff n'ajoute qu'un fichier YAML, mais l'exécution réelle de la suite de tests n'est pas prouvée.",
+   "preuve": "Aucune sortie de commande pytest fournie dans le contexte de revue"
+  }
+ ],
+ "date_heure": "2026-07-20T08:54:56.427304+00:00",
+ "prompt_sha256": "25f2a8a78a58f23bcebc80567add2e843e73f626140f01115968e5b076ef4668",
+ "reviewer_model": "LongCat-2.0"
+}
