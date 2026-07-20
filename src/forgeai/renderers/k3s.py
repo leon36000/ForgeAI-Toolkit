@@ -15,7 +15,7 @@ _NODEPORT_SPAN = 2768  # 30000..32767
 def _safe(value: str, field: str) -> str:
     """Refuse une valeur interpolée au YAML si elle porte un caractère de contrôle/newline
     (injection de manifeste, finding Sentinelle). Les valeurs légitimes (noms k8s RFC 1123,
-    images, hostnames, chemins) n'en contiennent jamais ; on refuse le reste (défense en profondeur).
+    images, hostnames, chemins) n'en portent jamais ; on refuse le reste (défense en profondeur).
     Vérif par point de code (pas de regex de contrôle) pour rester lisible et sans surprise."""
     if any(ord(ch) < 0x20 or ord(ch) == 0x7f for ch in value):
         raise ValueError(f"valeur non sûre pour un manifeste Kubernetes ({field}) : {value!r}")
