@@ -50,6 +50,7 @@ from forgeai.stacks import load_stack
 
 # Données embarquées dans le paquet → portables après pip install (P3).
 DEFAULT_CATALOGUE = catalogue_path()
+DATA_PKG = "forgeai.data"  # package des données embarquées (specs, overlays, smoke docs, locales)
 DEFAULT_OVERLAY = deploy_overlay_path()
 
 
@@ -93,6 +94,13 @@ def _k3s_probe_paths(plan, rag_ports=None) -> dict[str, str]:
     return paths
 
 
+def _svc_url(host: str, port: int) -> str:
+    """URL d'un service LOCAL du socle déployé (127.0.0.1 / hôte LAN, ports Docker publiés).
+    Le trafic est local/LAN entre briques du même déploiement — pas de transmission réseau
+    externe ; le TLS inter-briques est hors périmètre de la série E."""
+    return f"http://{host}:{port}"  # NOSONAR S5332 — service local/LAN, cf. docstring
+
+
 def wizard_ci(args: argparse.Namespace) -> int:
     workdir = Path(args.workdir)
     workdir.mkdir(parents=True, exist_ok=True)
@@ -104,12 +112,12 @@ def wizard_ci(args: argparse.Namespace) -> int:
     rag_durci_bricks: tuple[str, ...] = ()
     if rag_durci:
         if args.overlay == str(DEFAULT_OVERLAY):
-            args.overlay = str(importlib.resources.files("forgeai.data") / "deploy-hardened.json")
+            args.overlay = str(importlib.resources.files(DATA_PKG) / "deploy-hardened.json")
         rag_durci_bricks = ("text-embeddings-inference-tei",
                             "text-embeddings-inference-reranker", "litellm")
         if args.document is None:
             args.document = str(
-                importlib.resources.files("forgeai.data") / "smoke" / "verification-durci.md")
+                importlib.resources.files(DATA_PKG) / "smoke" / "verification-durci.md")
         if args.question == "Quelle est la capitale de la France ?":
             args.question = ("Comment s'appelle le protocole de synchronisation interne "
                              "de ForgeAI Toolkit ?")
@@ -180,11 +188,11 @@ def wizard_ci(args: argparse.Namespace) -> int:
             print(f"ABORT [SEL] briques inconnues au catalogue : {inconnues}", file=sys.stderr)
             return 8
         registre_modeles = json.loads(
-            (_res.files("forgeai.data") / "modeles-locaux.json").read_text(encoding="utf-8"))
+            (_res.files(DATA_PKG) / "modeles-locaux.json").read_text(encoding="utf-8"))
         hf_ids = {m["hf_id"] for m in registre_modeles["modeles"]}
         familles = {m["hf_id"]: m["famille"] for m in registre_modeles["modeles"]}
         moteurs = {m["id"] for m in json.loads(
-            (_res.files("forgeai.data") / "moteurs-inference.json").read_text(encoding="utf-8"))["moteurs"]}
+            (_res.files(DATA_PKG) / "moteurs-inference.json").read_text(encoding="utf-8"))["moteurs"]}
         node_re = re.compile(r"^[a-z0-9]([a-z0-9.-]{0,62})$")
 
         toutes = selection_models + selection_embeddings
@@ -228,7 +236,7 @@ def wizard_ci(args: argparse.Namespace) -> int:
     if getattr(args, "selection", None):
         from importlib import resources as _res
         specs_ids = set(json.loads(
-            (_res.files("forgeai.data") / "deploy-specs.json").read_text(encoding="utf-8")))
+            (_res.files(DATA_PKG) / "deploy-specs.json").read_text(encoding="utf-8")))
         deployables = [b for b in selection_bricks if b in specs_ids]
         (workdir / "selection.json").write_text(json.dumps({
             "stack": args.stack,
@@ -326,24 +334,28 @@ def wizard_ci(args: argparse.Namespace) -> int:
             env_vals: dict[str, str] = {}
             env_path = workdir / ".env"
             if env_path.exists():
-                for line in env_path.read_text(encoding="utf-8").splitlines():
-                    if "=" in line:
-                        ekey, eval_ = line.split("=", 1)
-                        env_vals[ekey] = eval_
+                for raw_line in env_path.read_text(encoding="utf-8").splitlines():
+                    line = raw_line.strip()
+                    if not line or line.startswith("#") or "=" not in line:
+                        continue
+                    ekey, eval_ = line.split("=", 1)
+                    # valeur : sans espaces ni guillemets (sinon la clé passe au Bearer avec ses
+                    # quotes -> 401 côté passerelle, finding CodeRabbit #80).
+                    env_vals[ekey.strip()] = eval_.strip().strip('"').strip("'")
             rag = HardenedRagClient(
-                ollama_url=f"http://{probe_host}:{rag_ports['ollama']}",
-                qdrant_url=f"http://{probe_host}:{rag_ports['vector-store']}",
-                tei_url=f"http://{probe_host}:{rag_ports['text-embeddings-inference-tei']}",
-                gateway_url=f"http://{probe_host}:{rag_ports['litellm']}",
+                ollama_url=_svc_url(probe_host, rag_ports['ollama']),
+                qdrant_url=_svc_url(probe_host, rag_ports['vector-store']),
+                tei_url=_svc_url(probe_host, rag_ports['text-embeddings-inference-tei']),
+                gateway_url=_svc_url(probe_host, rag_ports['litellm']),
                 gateway_key=env_vals.get("FORGEAI_LITELLM_KEY", ""),
-                reranker_url=f"http://{probe_host}:{rag_ports['text-embeddings-inference-reranker']}",
+                reranker_url=_svc_url(probe_host, rag_ports['text-embeddings-inference-reranker']),
                 llm_model=plan.model,
                 embed_model=plan.embed_model,
             )
         else:
             rag = RagClient(
-                ollama_url=f"http://{probe_host}:{rag_ports['ollama']}",
-                qdrant_url=f"http://{probe_host}:{rag_ports['vector-store']}",
+                ollama_url=_svc_url(probe_host, rag_ports['ollama']),
+                qdrant_url=_svc_url(probe_host, rag_ports['vector-store']),
                 llm_model=plan.model,
                 embed_model=plan.embed_model,
             )
@@ -353,7 +365,7 @@ def wizard_ci(args: argparse.Namespace) -> int:
             doc_path = Path(args.document)
             source_name = doc_path.name
         else:
-            doc_path = importlib.resources.files("forgeai.data") / "smoke" / "verification.md"
+            doc_path = importlib.resources.files(DATA_PKG) / "smoke" / "verification.md"
             source_name = "verification.md"
         doc = doc_path.read_text(encoding="utf-8")
 
