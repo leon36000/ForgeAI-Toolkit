@@ -1,0 +1,14 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "src/forgeai/rag/hardened.py",
+   "description": "Le paramètre `context_used` est hardcodé à `True` lors de l'appel à `scan_output` dans `ask()`. Bien que cela reflète la réalité du flux (un early return a lieu si `hits` est vide), cela rend la vérification d'ancrage de `scan_output` inopérante dans le cadre de l'appel LLM, la garde de sortie se limitant de fait à vérifier que la réponse n'est pas vide.",
+   "preuve": "scan_output(answer, context_used=True)"
+  }
+ ],
+ "date_heure": "2026-07-20T10:25:16.349904+00:00",
+ "prompt_sha256": "55f1ea2e3a76757a51f59f4cff9ca91ad09206b1257cc8fff54a007dc10bcfba",
+ "reviewer_model": "Qwen3.7-Max"
+}

@@ -12,6 +12,7 @@ import json
 import urllib.request
 from dataclasses import dataclass
 
+from forgeai.guardrails.io_guard import GuardrailBlocked, scan_input, scan_output
 from forgeai.rag.client import RagClient, _post
 
 
@@ -39,6 +40,7 @@ class HardenedRagClient(RagClient):
     gateway_key: str = ""
     collection: str = "forgeai-rag-durci"
     reranker_url: str = ""
+    guardrails: bool = True  # E4 — garde I/O maison (anti-injection + ancrage) active en durci
 
     def __post_init__(self) -> None:
         if not self.tei_url or not self.gateway_url or not self.gateway_key:
@@ -64,7 +66,16 @@ class HardenedRagClient(RagClient):
     def ask(self, question: str, top_k: int = 3, candidates: int = 20) -> dict:
         """Retrieval (élargi à `candidates` si rerank actif) -> rerank optionnel -> top_k ->
         génération via la passerelle. Retrieval vide -> réponse vide sans fabrication (jamais
-        de POST /rerank sur un retrieval vide : contrôle négatif préservé)."""
+        de POST /rerank sur un retrieval vide : contrôle négatif préservé).
+
+        E4 — guardrails I/O : garde d'ENTRÉE (anti-injection) AVANT tout accès retrieval/LLM ;
+        garde de SORTIE (ancrage) après génération. Bloqué -> réponse refusée `blocked` sans
+        fabrication, aucun appel LLM sur une entrée hostile."""
+        if self.guardrails:
+            try:
+                scan_input(question)
+            except GuardrailBlocked as exc:
+                return {"answer": "", "sources": [], "context_used": False, "blocked": str(exc)}
         k = candidates if self.reranker_url else top_k
         hits = self._search(question, k)
         if not hits:
@@ -85,6 +96,11 @@ class HardenedRagClient(RagClient):
             self.gateway_key,
         )
         answer = response["choices"][0]["message"]["content"].strip()
+        if self.guardrails:
+            try:
+                scan_output(answer, context_used=True)
+            except GuardrailBlocked as exc:
+                return {"answer": "", "sources": [], "context_used": False, "blocked": str(exc)}
         return {
             "answer": answer,
             "sources": sorted({h["payload"]["source"] for h in hits}),
