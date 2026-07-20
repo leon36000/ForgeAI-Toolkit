@@ -29,7 +29,11 @@ from forgeai.renderers.litellm_config import render_litellm_config
 
 pytestmark = pytest.mark.skipif(
     os.environ.get("FORGEAI_E2E") != "1",
-    reason="preuve e2e Docker lourde — activer avec FORGEAI_E2E=1",
+    reason=(
+        "preuve e2e Docker lourde (images/poids ~2,5 Go) — skip par défaut ; "
+        "preuve d'exécution RÉELLE journalisée au registre Registres/mission.jsonl "
+        "(événement tdad_green E2a) ; rejouable avec FORGEAI_E2E=1"
+    ),
 )
 
 MASTER_KEY = "forgeai-e2a-e2e-runkey"  # clé de run éphémère (jamais un secret réel)
