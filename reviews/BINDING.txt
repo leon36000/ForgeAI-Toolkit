@@ -71,3 +71,4 @@ E3a
 QA1-coderabbit
 E3b
 E3c
+QA2-sonarcloud
