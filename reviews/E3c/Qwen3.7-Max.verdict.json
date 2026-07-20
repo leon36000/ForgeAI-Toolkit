@@ -1,0 +1,14 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "src/forgeai/cli.py",
+   "description": "Le schéma de la collection `forgeai_audit` déclare 3 champs (`event`, `fact`, `plan_id`), mais le document inséré via `ledger.record` en contient 5 (`event`, `fact`, `question`, `plan_id`, `source`). Si l'API document v2 d'immudb rejette les champs non définis dans le schéma de la collection, l'inscription échouera en production. Les tests (mock et e2e) n'incluent pas ces champs supplémentaires, laissant ce doute non vérifié.",
+   "preuve": "Lignes 414-419 : `ensure_collection` déclare 3 champs, mais `record` (lignes 420-423) passe un dict avec 5 clés."
+  }
+ ],
+ "date_heure": "2026-07-20T10:06:27.916409+00:00",
+ "prompt_sha256": "c8c339eb8b5bd39238dcfcc5169cf245b7ea06c0ad9cfdbeb9e7e50d2912aac4",
+ "reviewer_model": "Qwen3.7-Max"
+}
