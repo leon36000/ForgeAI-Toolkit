@@ -1,0 +1,20 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "src/forgeai/renderers/k3s.py",
+   "description": "La vérification de saturation `len(used) >= _NODEPORT_SPAN` suppose que l'ensemble `used` ne contient exclusivement que des ports de la plage NodePort (30000-32767). Si `used` contient des ports hors de cette plage, le RuntimeError sera levé à tort. Une vérification plus robuste serait `len(used.intersection(range(30000, 32768))) >= _NODEPORT_SPAN`.",
+   "preuve": "Ligne 28 : `if len(used) >= _NODEPORT_SPAN:`"
+  },
+  {
+   "severite": "mineure",
+   "fichier": "src/forgeai/renderers/k3s.py",
+   "description": "La regex `_UNSAFE_YAML` bloque les caractères de contrôle/newlines mais laisse passer des caractères spéciaux YAML (`:`, `#`, `{`, `}`) qui pourraient malformer le manifeste si les validations amont (RFC 1123) sont défaillantes sur des champs comme `image` ou `volume-path`. Acceptable en défense en profondeur, mais nécessite une vigilance sur les validations amont.",
+   "preuve": "Ligne 16 : `_UNSAFE_YAML = re.compile(r\"[\\x00-\\x1f\\x7f]\")`"
+  }
+ ],
+ "date_heure": "2026-07-20T13:24:08.394535+00:00",
+ "prompt_sha256": "79045950d96263330a47db230adab96b2dfdf23f47dba2a5dd23b1edac620155",
+ "reviewer_model": "Qwen3.7-Max"
+}

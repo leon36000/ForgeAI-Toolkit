@@ -9,16 +9,30 @@ from __future__ import annotations
 from forgeai.core.models import DeploymentPlan, ServiceSpec
 
 NAMESPACE = "forgeai-minimal"
+_NODEPORT_SPAN = 2768  # 30000..32767
+
+
+def _safe(value: str, field: str) -> str:
+    """Refuse une valeur interpolée au YAML si elle porte un caractère de contrôle/newline
+    (injection de manifeste, finding Sentinelle). Les valeurs légitimes (noms k8s RFC 1123,
+    images, hostnames, chemins) n'en portent jamais ; on refuse le reste (défense en profondeur).
+    Vérif par point de code (pas de regex de contrôle) pour rester lisible et sans surprise."""
+    if any(ord(ch) < 0x20 or ord(ch) == 0x7f for ch in value):
+        raise ValueError(f"valeur non sûre pour un manifeste Kubernetes ({field}) : {value!r}")
+    return value
 
 
 def node_port_for(svc: ServiceSpec, used: set[int] | None = None) -> int:
     """Mappe le port hôte vers la plage NodePort (30000-32767), sans collision :
     en cas de conflit de modulo entre services, incrémente jusqu'au port libre
     (objection majeure levée en revue de code P1, corrigée)."""
-    port = 30000 + (svc.host_port % 2768)
+    port = 30000 + (svc.host_port % _NODEPORT_SPAN)
     if used is not None:
+        if len(used) >= _NODEPORT_SPAN:  # plage saturée -> erreur bornée, jamais de boucle infinie
+            raise RuntimeError(
+                f"plage NodePort (30000-32767) saturée : plus de {_NODEPORT_SPAN} services exposés")
         while port in used:
-            port = 30000 + ((port - 30000 + 1) % 2768)
+            port = 30000 + ((port - 30000 + 1) % _NODEPORT_SPAN)
         used.add(port)
     return port
 
@@ -37,18 +51,23 @@ def _service_ports(svc: ServiceSpec, service_type: str, node_port: int | None) -
 
 def _deployment(svc: ServiceSpec, effective_node: str | None = None,
                 node_port: int | None = None, service_type: str = "NodePort") -> str:
+    name = _safe(svc.name, "name")
+    image = _safe(svc.image, "image")
     gpu_limits = """
           resources:
             limits:
               nvidia.com/gpu: "1"ifgpu""".replace("ifgpu", "") if svc.gpu else ""
-    node_selector = (f"""
+    node_selector = ""
+    if effective_node and effective_node != "auto":
+        node_selector = f"""
       nodeSelector:
-        kubernetes.io/hostname: {effective_node}"""
-                   if effective_node and effective_node != "auto" else "")
+        kubernetes.io/hostname: {_safe(effective_node, 'node')}"""
     volume_mount, volume_def = "", ""
     if svc.volumes:
-        claim = svc.volumes[0].split(":", 1)[0]
-        mount_path = svc.volumes[0].split(":", 1)[1]
+        parts = svc.volumes[0].split(":", 1)
+        if len(parts) != 2:  # format attendu 'nom:chemin' -> erreur claire (pas d'IndexError)
+            raise ValueError(f"volume mal formé (attendu 'nom:chemin') : {svc.volumes[0]!r}")
+        claim, mount_path = _safe(parts[0], "volume-claim"), _safe(parts[1], "volume-path")
         volume_mount = f"""
           volumeMounts:
             - name: {claim}
@@ -61,30 +80,30 @@ def _deployment(svc: ServiceSpec, effective_node: str | None = None,
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {svc.name}
+  name: {name}
   namespace: {NAMESPACE}
 spec:
   replicas: 1
   selector:
-    matchLabels: {{app: {svc.name}}}
+    matchLabels: {{app: {name}}}
   template:
     metadata:
-      labels: {{app: {svc.name}}}
+      labels: {{app: {name}}}
     spec:{node_selector}
       containers:
-        - name: {svc.name}
-          image: {svc.image}
+        - name: {name}
+          image: {image}
           ports:
             - containerPort: {svc.container_port}{gpu_limits}{volume_mount}{volume_def}
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: {svc.name}
+  name: {name}
   namespace: {NAMESPACE}
 spec:
   type: {service_type}
-  selector: {{app: {svc.name}}}
+  selector: {{app: {name}}}
   ports:{_service_ports(svc, service_type, node_port)}
 """
 
