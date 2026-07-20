@@ -63,6 +63,24 @@ def test_machine_avec_docker_active_compose():
     assert "k3s" not in preflight.available_backends(checks)
 
 
+def test_docker_sans_plugin_compose_est_degrade():
+    """Ubuntu vierge : le paquet docker.io fournit le CLI docker + daemon mais PAS le plugin
+    `docker compose` v2 (découvert par la preuve Ubuntu vierge, 2026-07-20)."""
+    runner = ToolRunner(present_commands={"docker"}, failing={"docker compose"})
+    check = preflight.check_docker(runner)
+    assert check.status == preflight.DEGRADED
+    assert "compose" in check.detail.lower()
+
+
+def test_compose_indisponible_si_plugin_absent():
+    """Sans le plugin compose, le backend 'compose' ne doit PAS être annoncé disponible
+    (sinon faux positif : le déploiement échoue ensuite à `docker compose up`)."""
+    checks = preflight.run_checks(
+        ToolRunner(present_commands={"docker"}, failing={"docker compose"}),
+        _hw_detector(), http_ok=lambda url: False)
+    assert "compose" not in preflight.available_backends(checks)
+
+
 def test_machine_avec_cluster_active_k3s():
     checks = preflight.run_checks(
         ToolRunner(present_commands={"docker", "kubectl"}),
