@@ -105,16 +105,20 @@ def assemble_plan(
                 f"http://127.0.0.1:{host_port}{health_path}"
                 if health_path else None
             )
+            # On ne conserve que les dépendances réellement présentes dans le plan.
+            depends = tuple(d for d in spec.get("depends", []) if d in existing_names)
             services.append(ServiceSpec(
                 name=brick_id,
                 image=spec["image"],
                 host_port=host_port,
                 container_port=spec["container_port"],
-                volumes=(),
-                env={},
+                volumes=tuple(spec.get("volumes", [])),
+                env=spec.get("env", {}),
                 healthcheck_url=healthcheck_url,
+                depends=depends,
                 gpu=False,
             ))
+            existing_names.add(brick_id)
 
     return DeploymentPlan(
         plan_id=f"p1-{uuid.uuid4().hex[:8]}",
