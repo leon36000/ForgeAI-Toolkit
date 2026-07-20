@@ -69,3 +69,4 @@ E2b
 E2c
 E3a
 QA1-coderabbit
+QA2-sonarcloud
