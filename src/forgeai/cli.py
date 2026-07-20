@@ -36,6 +36,7 @@ from forgeai.models.routes import RouteError, RouteStore
 from forgeai.models.probe import probe_route
 from forgeai.models.gateway import GatewayConfig, GatewayError, GatewayStore
 from forgeai.models.strategy import StrategyError, StrategyStore, resolve_spec
+from forgeai.network.discover import charger_signatures, inventaire, DiscoverError
 from forgeai.planner.assemble import assemble_plan
 from forgeai.planner.profile import ProfileError, derive_profile
 from forgeai.rag.client import RagClient
@@ -470,6 +471,44 @@ def _node_prepare(args: argparse.Namespace) -> int:
         "hostname": result["hostname"],
         "receptacle": result["receptacle"],
         "etapes": [{"id": e["id"], "statut": e.get("statut", "planifiee")} for e in etapes],
+    })
+    return 0
+
+
+def _node_discover(args: argparse.Namespace) -> int:
+    """Découvre l'infrastructure logicielle déjà installée sur le nœud cible."""
+    from forgeai.network.remote_probe import SshRunner
+
+    if args.hostname == "local":
+        runner = SubprocessRunner()
+    else:
+        if not args.user or not args.keyfile:
+            print("ECHEC DISCOVER: --user et --keyfile requis pour un nœud distant",
+                  file=sys.stderr)
+            return 12
+        runner = SshRunner(args.user, args.hostname, args.keyfile)
+
+    try:
+        signatures = charger_signatures()
+        inv = inventaire(runner, signatures)
+    except DiscoverError as exc:
+        print(f"ECHEC DISCOVER: {exc}", file=sys.stderr)
+        return 12
+
+    for svc in inv["services"]:
+        mark = "✓" if svc["detecte"] else "✗"
+        endpoint = f" [{svc['endpoint']}]" if svc.get("endpoint") else ""
+        via = ", ".join(svc.get("via", []))
+        via_str = f" (via {via})" if via else ""
+        print(f"{mark} {svc['id']}{endpoint}{via_str}")
+
+    registre.append(Path(args.registre), "node_discover", "network", {
+        "hostname": args.hostname,
+        "detectes": inv["resume"]["detectes"],
+        "services": [
+            {"id": s["id"], "detecte": s["detecte"], "endpoint": s["endpoint"]}
+            for s in inv["services"]
+        ],
     })
     return 0
 
@@ -979,6 +1018,16 @@ def main(argv: list[str] | None = None) -> int:
     )
     p_node_prepare.add_argument("--registre", default=str(DEFAULT_REGISTRE))
     p_node_prepare.set_defaults(func=_node_prepare)
+    p_node_discover = node_sub.add_parser(
+        "discover", help="découvre l'infrastructure déjà installée sur un nœud"
+    )
+    p_node_discover.add_argument("hostname", help="'local' ou nom d'hôte du nœud distant")
+    p_node_discover.add_argument("--user", default=None,
+                                 help="utilisateur SSH (requis si distant)")
+    p_node_discover.add_argument("--keyfile", default=None,
+                                 help="clé privée SSH (requis si distant)")
+    p_node_discover.add_argument("--registre", default=str(DEFAULT_REGISTRE))
+    p_node_discover.set_defaults(func=_node_discover)
 
     p_wiz = sub.add_parser("wizard", help="wizard bout-en-bout")
     p_wiz.add_argument("--ci", action="store_true", required=True)
@@ -1202,6 +1251,3 @@ def main(argv: list[str] | None = None) -> int:
 
 if __name__ == "__main__":
     sys.exit(main())
-
-
-# V1-FIX — 3 gestions d'erreur cassées trouvées par la campagne de test réelle
