@@ -44,6 +44,7 @@ from forgeai.rag.hardened import HardenedRagClient
 from forgeai.secrets.vault import read as vault_read, store as vault_store
 from forgeai.audit import immudb as ledger
 from forgeai.observability import langfuse as obs
+from forgeai.eval import rag_eval
 from forgeai.renderers.compose import render_compose
 from forgeai.renderers.k3s import NAMESPACE, node_port_for, render_k3s
 from forgeai.resources import catalogue_path, deploy_overlay_path, forgeai_home
@@ -315,6 +316,7 @@ def wizard_ci(args: argparse.Namespace) -> int:
 
     immudb_witness = None  # E3c — témoin d'inscription au ledger d'audit immudb (RAG durci)
     langfuse_witness = None  # E5 — témoin de trace d'observabilité langfuse (RAG durci)
+    eval_witness = None  # E6 — score d'éval RAG déterministe (« optimal » mesuré)
     if backend == "compose":
         _step(t("wizard.s06"))
         compose_up(compose_file)
@@ -406,6 +408,13 @@ def wizard_ci(args: argparse.Namespace) -> int:
                   file=sys.stderr)
             return 9
 
+        # E6 — éval RAG DÉTERMINISTE (« optimal » mesuré) : ancrage lexical de la réponse dans le
+        # document ingéré (source du RAG) + présence du fait. Aucun LLM n'écrit ce score (invariant
+        # PROOF). Le score est journalisé au registre comme mesure objective de qualité.
+        eval_witness = rag_eval.evaluate(answer, doc, args.expected_fact)
+        print(f"  éval RAG (déterministe): groundedness={eval_witness['groundedness']} "
+              f"fait={eval_witness['fact_present']} score_optimal={eval_witness['score']}")
+
         # E3c — immudb branché comme ledger d'audit IMMUABLE : on inscrit l'événement
         # « déploiement RAG durci vérifié » dans le ledger append-only d'immudb, puis on relit sa
         # piste de révisions (transactionId + revision = preuve d'inscription inviolable, horodatée
@@ -453,6 +462,7 @@ def wizard_ci(args: argparse.Namespace) -> int:
         "fait_attendu": args.expected_fact, "reponse": answer,
         "immudb_audit": immudb_witness,  # E3c — témoin ledger immuable (tx/doc/révisions) ou None
         "langfuse_trace": langfuse_witness,  # E5 — témoin observabilité (trace présente) ou None
+        "rag_eval": eval_witness,  # E6 — score d'éval déterministe (groundedness/fait/score) ou None
         "duree_s": round(time.monotonic() - started, 1),
     })
     print(f"CI_WITNESS={entry['hash']}")

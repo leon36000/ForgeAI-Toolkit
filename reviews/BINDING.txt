@@ -73,3 +73,5 @@ E3b
 E3c
 E4
 E5
+E6
+E6-reseal
