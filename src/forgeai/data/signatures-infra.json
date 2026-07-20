@@ -1,0 +1,16 @@
+{
+  "_doc": "Signatures d'infra détectables (binaire / port par défaut officiel / motif d'image conteneur). Ports = valeurs par défaut documentées des projets.",
+  "version": "2026-07-19",
+  "signatures": [
+    {"id": "docker", "binaire": "docker", "port": null, "image": null, "brique": null, "categorie": "runtime"},
+    {"id": "kubectl", "binaire": "kubectl", "port": null, "image": null, "brique": null, "categorie": "orchestration"},
+    {"id": "k3s", "binaire": "k3s", "port": 6443, "image": null, "brique": null, "categorie": "orchestration"},
+    {"id": "helm", "binaire": "helm", "port": null, "image": null, "brique": null, "categorie": "outil"},
+    {"id": "ollama", "binaire": "ollama", "port": 11434, "image": "ollama/ollama", "brique": null, "categorie": "inference"},
+    {"id": "vllm", "binaire": null, "port": 8000, "image": "vllm/vllm-openai", "brique": null, "categorie": "inference"},
+    {"id": "qdrant", "binaire": null, "port": 6333, "image": "qdrant/qdrant", "brique": null, "categorie": "vecteurs"},
+    {"id": "redis", "binaire": "redis-server", "port": 6379, "image": "redis", "brique": null, "categorie": "cache"},
+    {"id": "postgres", "binaire": "psql", "port": 5432, "image": "postgres", "brique": null, "categorie": "base"},
+    {"id": "nvidia", "binaire": "nvidia-smi", "port": null, "image": null, "brique": null, "categorie": "gpu"}
+  ]
+}

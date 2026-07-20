@@ -21,6 +21,7 @@ from forgeai.deploy.compose import http_ok
 from forgeai.hardware.detect import HardwareDetector
 from forgeai.models.probe import Transport
 from forgeai.models.routes import RouteError, RouteStore
+from forgeai.network.discover import charger_signatures, inventaire
 from forgeai.network.keys import generate_keypair, KeyError_
 from forgeai.network.node_add import add_node, Bootstrapper, NodeAddError, SshBootstrapper
 from forgeai.network.nodes import cluster_status, ClusterError
@@ -437,6 +438,20 @@ class ForgeAIHandler(BaseHTTPRequestHandler):
                 self._send_json(200, _summary_payload(stack_id))
             except FileNotFoundError:
                 self._send_json(404, {"error": "stack not found"})
+            return
+
+        if path == "/api/discover":
+            query = urllib.parse.parse_qs(parsed.query)
+            node_list = query.get("node")
+            if not node_list or node_list[0] != "local":
+                self._send_json(400, {"error": "seul 'local' est supporté par cette route"})
+                return
+            try:
+                signatures = charger_signatures()
+                payload = inventaire(SubprocessRunner(), signatures)
+                self._send_json(200, payload)
+            except Exception as exc:  # noqa: BLE001
+                self._send_json(500, {"error": str(exc)})
             return
 
         if path == "/api/deploy/events":
