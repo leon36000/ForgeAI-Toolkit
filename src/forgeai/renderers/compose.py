@@ -39,11 +39,19 @@ def render_compose(plan: DeploymentPlan, project: str = "forgeai-minimal") -> st
             lines.append("    depends_on:")
             for dep in svc.depends:
                 lines.append(f"      - {dep}")
+        if svc.command:
+            lines.append("    command:")
+            for arg in svc.command:
+                lines.append(f"      - \"{arg}\"")
         if svc.volumes:
             lines.append("    volumes:")
             for volume in svc.volumes:
                 lines.append(f"      - {volume}")
-                volumes.add(volume.split(":", 1)[0])
+                source = volume.split(":", 1)[0]
+                # Seuls les volumes NOMMÉS se déclarent en haut ; un bind mount
+                # (chemin hôte commençant par . ou /) ne se déclare jamais.
+                if not source.startswith((".", "/")):
+                    volumes.add(source)
         if svc.gpu:
             lines += [
                 "    deploy:",

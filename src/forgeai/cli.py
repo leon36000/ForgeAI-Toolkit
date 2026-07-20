@@ -231,6 +231,13 @@ def wizard_ci(args: argparse.Namespace) -> int:
     compose_file = workdir / "docker-compose.yaml"
     compose_file.write_text(render_compose(plan), encoding="utf-8")
 
+    # E1b — si LiteLLM est dans le plan, générer sa config (routage modèles→backends)
+    # à côté du compose : le conteneur la monte en lecture seule et démarre avec --config.
+    if any(s.name == "litellm" for s in plan.services):
+        from forgeai.renderers.litellm_config import render_litellm_config
+        (workdir / "litellm-config.yaml").write_text(
+            render_litellm_config(plan), encoding="utf-8")
+
     node_arg = args.node
     if rag_node is not None:
         # N1b — le placement du RAG choisi dans la sélection prime sur --node

@@ -75,6 +75,7 @@ class ServiceSpec:
     healthcheck_url: Optional[str] = None
     gpu: bool = False
     depends: tuple[str, ...] = ()
+    command: tuple[str, ...] = ()  # arguments passés à l'entrypoint du conteneur (ex. litellm --config …)
     node: Optional[str] = None  # nœud cible de CE service (hostname K3s) ; None = suit le nœud global du plan ou le scheduler
 
 

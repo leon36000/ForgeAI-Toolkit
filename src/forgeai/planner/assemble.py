@@ -121,6 +121,7 @@ def assemble_plan(
                 env=spec.get("env", {}),
                 healthcheck_url=healthcheck_url,
                 depends=depends,
+                command=tuple(spec.get("command", [])),
                 gpu=False,
             ))
             existing_names.add(brick_id)

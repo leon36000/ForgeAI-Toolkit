@@ -4,10 +4,18 @@
     "image": "ghcr.io/berriai/litellm:main-stable",
     "container_port": 4000,
     "health_path": "/health/liveliness",
-    "volumes": [],
+    "volumes": [
+      "./litellm-config.yaml:/app/litellm-config.yaml:ro"
+    ],
     "env": {
       "LITELLM_MASTER_KEY": "${FORGEAI_LITELLM_KEY}"
     },
+    "command": [
+      "--config",
+      "/app/litellm-config.yaml",
+      "--port",
+      "4000"
+    ],
     "depends": [
       "ollama"
     ]
