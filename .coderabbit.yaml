@@ -1,0 +1,32 @@
+# yaml-language-server: $schema=https://coderabbit.ai/integrations/schema.v2.json
+language: "en-US"
+
+reviews:
+  profile: "chill"
+  request_changes_workflow: false
+  high_level_summary: true
+  auto_review:
+    enabled: true
+    drafts: false
+  path_filters:
+    - "!src/forgeai/data/**"
+    - "src/forgeai/data/__init__.py"
+    - "!CANON/**"
+    - "!Docs/**"
+    - "!docs/**"
+    - "!Phase-A/**"
+    - "!Rapports/**"
+    - "!Recherche/**"
+    - "!Registres/**"
+    - "!reviews/**"
+    - "!stories/**"
+    - "!build/**"
+    - "!dist/**"
+  pre_merge_checks:
+    docstrings: { mode: "warning" }
+    title: { mode: "warning" }
+    description: { mode: "warning" }
+    issue_assessment: { mode: "warning" }
+
+chat:
+  auto_reply: true
