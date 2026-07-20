@@ -107,6 +107,9 @@ def wired(monkeypatch, tmp_path):
     monkeypatch.setattr(cli.ledger, "ensure_collection", FakeLedger.ensure_collection)
     monkeypatch.setattr(cli.ledger, "record", FakeLedger.record)
     monkeypatch.setattr(cli.ledger, "history", FakeLedger.history)
+    # E5 — langfuse : la trace « atterrit » (le vrai flush async est prouvé par l'e2e)
+    monkeypatch.setattr(cli.obs, "wait_for_trace",
+                        lambda *a, **k: {"id": "tr1", "name": "litellm-acompletion"})
     FakeHardenedRag.last = None
     FakeRag.used = False
     FakeVault.written = {}
@@ -131,14 +134,26 @@ def test_rag_durci_instancie_hardened_client(wired):
     assert not FakeRag.used, "le RAG tout-Ollama NE doit PAS être utilisé en durci"
 
 
-# B2 : le plan durci déploie les 7 services (+ openbao coffre, + immudb ledger)
-def test_rag_durci_plan_sept_services(wired):
+# B2 : le plan durci déploie tous les services du châssis durci (+ postgres + langfuse observabilité)
+def test_rag_durci_plan_chassis_complet(wired):
     tmp_path, reg = wired
     assert _run(tmp_path, reg, "--rag-durci") == 0
     plan = (tmp_path / "run" / "plan.json").read_text(encoding="utf-8")
     for name in ("ollama", "vector-store", "text-embeddings-inference-tei",
-                 "text-embeddings-inference-reranker", "litellm", "openbao", "immudb"):
+                 "text-embeddings-inference-reranker", "litellm", "openbao", "immudb",
+                 "postgres", "langfuse"):
         assert f'"{name}"' in plan, f"{name} doit être au plan durci"
+
+
+# B7 (E5) : la trace d'observabilité langfuse est vérifiée + témoin journalisé au registre
+def test_rag_durci_observabilite_langfuse(wired):
+    tmp_path, reg = wired
+    assert _run(tmp_path, reg, "--rag-durci") == 0
+    import json
+    last = json.loads(reg.read_text(encoding="utf-8").splitlines()[-1])
+    witness = last["payload"]["langfuse_trace"]
+    assert witness and witness["trace_present"] is True
+    assert witness["name"] == "litellm-acompletion"
 
 
 # B6 (E3c) : le déploiement vérifié est inscrit au ledger immuable immudb + témoin au registre

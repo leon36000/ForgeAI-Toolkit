@@ -2,7 +2,7 @@
 
 Émet un `litellm-config.yaml` qui route les modèles du plan vers leurs backends réels :
 le LLM vers Ollama (`ollama_chat/…`), les embeddings vers TEI si présent sinon Ollama. La
-master key n'est JAMAIS une valeur en clair : uniquement la référence `os.environ/LITELLM_MASTER_KEY`.
+master key n'est JAMAIS en clair : uniquement la référence `os.environ/LITELLM_MASTER_KEY`.
 YAML écrit à la main (aucune dépendance PyYAML) puis validé par LiteLLM au démarrage.
 """
 from __future__ import annotations
@@ -52,18 +52,20 @@ def render_litellm_config(plan: DeploymentPlan) -> str:
         ]
     )
 
-    # E3a — si Redis est déployé au plan, LiteLLM l'utilise comme cache de réponses
-    # (branche la brique redis du châssis ; les requêtes identiques ne re-génèrent pas).
-    if any(service.name == "redis" for service in plan.services):
-        lines.extend(
-            [
-                "litellm_settings:",
-                "  cache: true",
-                "  cache_params:",
-                "    type: redis",
-                '    host: "redis"',
-                "    port: 6379",
-            ]
-        )
+    # litellm_settings : bloc UNIQUE agrégeant les branchements optionnels du châssis (un seul
+    # `litellm_settings:` en YAML, sinon la 2e clé écrase la 1re au parse).
+    names = {service.name for service in plan.services}
+    settings: list[str] = []
+    # E3a — Redis au plan -> cache de réponses (requêtes identiques ne re-génèrent pas).
+    if "redis" in names:
+        settings += ["  cache: true", "  cache_params:", "    type: redis",
+                     '    host: "redis"', "    port: 6379"]
+    # E5 — langfuse au plan -> traces d'observabilité via success_callback. LiteLLM lit
+    # LANGFUSE_PUBLIC_KEY / LANGFUSE_SECRET_KEY / LANGFUSE_HOST depuis l'environnement (env_file).
+    if "langfuse" in names:
+        settings += ['  success_callback: ["langfuse"]']
+    if settings:
+        lines.append("litellm_settings:")
+        lines.extend(settings)
 
     return "\n".join(lines) + "\n"

@@ -43,6 +43,7 @@ from forgeai.rag.client import RagClient
 from forgeai.rag.hardened import HardenedRagClient
 from forgeai.secrets.vault import read as vault_read, store as vault_store
 from forgeai.audit import immudb as ledger
+from forgeai.observability import langfuse as obs
 from forgeai.renderers.compose import render_compose
 from forgeai.renderers.k3s import NAMESPACE, node_port_for, render_k3s
 from forgeai.resources import catalogue_path, deploy_overlay_path, forgeai_home
@@ -124,7 +125,7 @@ def wizard_ci(args: argparse.Namespace) -> int:
             args.overlay = str(importlib.resources.files(DATA_PKG) / "deploy-hardened.json")
         rag_durci_bricks = ("text-embeddings-inference-tei",
                             "text-embeddings-inference-reranker", "litellm", "redis", "openbao",
-                            "immudb")
+                            "immudb", "postgres", "langfuse")
         if args.document is None:
             args.document = str(
                 importlib.resources.files(DATA_PKG) / "smoke" / "verification-durci.md")
@@ -313,6 +314,7 @@ def wizard_ci(args: argparse.Namespace) -> int:
             return 6
 
     immudb_witness = None  # E3c — témoin d'inscription au ledger d'audit immudb (RAG durci)
+    langfuse_witness = None  # E5 — témoin de trace d'observabilité langfuse (RAG durci)
     if backend == "compose":
         _step(t("wizard.s06"))
         compose_up(compose_file)
@@ -422,6 +424,19 @@ def wizard_ci(args: argparse.Namespace) -> int:
                               "revisions": len(revisions)}
             print(f"  ledger immudb: audit inscrit tx={rec['transactionId']} "
                   f"doc={rec['documentId'][:16]}… révisions={len(revisions)}")
+
+        # E5 — langfuse branché comme observabilité : la génération RAG passe par la passerelle
+        # LiteLLM qui émet une trace (success_callback langfuse). On VÉRIFIE côté déploiement que la
+        # trace atterrit dans langfuse (le callback flush en asynchrone -> attente bornée).
+        if rag_durci and "langfuse" in rag_ports:
+            lf_url = _svc_url(probe_host, rag_ports["langfuse"])
+            trace = obs.wait_for_trace(lf_url, env_vals.get("FORGEAI_LANGFUSE_PK", ""),
+                                       env_vals.get("FORGEAI_LANGFUSE_SK", ""),
+                                       timeout=90.0, interval=3.0)
+            langfuse_witness = {"trace_present": bool(trace),
+                                "name": trace.get("name") if trace else None}
+            print(f"  observabilité langfuse: trace "
+                  f"{'présente' if trace else 'ABSENTE'} ({langfuse_witness['name']})")
     finally:
         if args.teardown:
             _step(t("wizard.teardown"))
@@ -437,6 +452,7 @@ def wizard_ci(args: argparse.Namespace) -> int:
         "model": plan.model, "chunks": chunks, "question": args.question,
         "fait_attendu": args.expected_fact, "reponse": answer,
         "immudb_audit": immudb_witness,  # E3c — témoin ledger immuable (tx/doc/révisions) ou None
+        "langfuse_trace": langfuse_witness,  # E5 — témoin observabilité (trace présente) ou None
         "duree_s": round(time.monotonic() - started, 1),
     })
     print(f"CI_WITNESS={entry['hash']}")

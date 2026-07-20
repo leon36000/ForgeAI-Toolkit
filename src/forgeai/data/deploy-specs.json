@@ -8,7 +8,10 @@
       "./litellm-config.yaml:/app/litellm-config.yaml:ro"
     ],
     "env": {
-      "LITELLM_MASTER_KEY": "${FORGEAI_LITELLM_KEY}"
+      "LITELLM_MASTER_KEY": "${FORGEAI_LITELLM_KEY}",
+      "LANGFUSE_PUBLIC_KEY": "${FORGEAI_LANGFUSE_PK}",
+      "LANGFUSE_SECRET_KEY": "${FORGEAI_LANGFUSE_SK}",
+      "LANGFUSE_HOST": "http://langfuse:3000"
     },
     "command": [
       "--config",
@@ -83,5 +86,42 @@
       "BAO_DEV_ROOT_TOKEN_ID": "${FORGEAI_BAO_TOKEN}"
     },
     "depends": []
+  },
+  "postgres": {
+    "image": "postgres:15-alpine",
+    "container_port": 5432,
+    "health_path": null,
+    "volumes": [
+      "forgeai-postgres-data:/var/lib/postgresql/data"
+    ],
+    "env": {
+      "POSTGRES_PASSWORD": "${FORGEAI_PG_PASSWORD}",
+      "POSTGRES_DB": "langfuse"
+    },
+    "depends": []
+  },
+  "langfuse": {
+    "image": "langfuse/langfuse:2",
+    "container_port": 3000,
+    "health_path": "/api/public/health",
+    "volumes": [],
+    "env": {
+      "DATABASE_URL": "postgresql://postgres:${FORGEAI_PG_PASSWORD}@postgres:5432/langfuse",
+      "NEXTAUTH_URL": "http://localhost:3000",
+      "NEXTAUTH_SECRET": "${FORGEAI_LANGFUSE_NEXTAUTH_SECRET}",
+      "SALT": "${FORGEAI_LANGFUSE_SALT}",
+      "ENCRYPTION_KEY": "${FORGEAI_LANGFUSE_ENCRYPTION_KEY}",
+      "TELEMETRY_ENABLED": "false",
+      "LANGFUSE_INIT_ORG_ID": "forgeai",
+      "LANGFUSE_INIT_PROJECT_ID": "forgeai-rag",
+      "LANGFUSE_INIT_PROJECT_PUBLIC_KEY": "${FORGEAI_LANGFUSE_PK}",
+      "LANGFUSE_INIT_PROJECT_SECRET_KEY": "${FORGEAI_LANGFUSE_SK}",
+      "LANGFUSE_INIT_USER_EMAIL": "admin@forgeai.local",
+      "LANGFUSE_INIT_USER_NAME": "forgeai",
+      "LANGFUSE_INIT_USER_PASSWORD": "${FORGEAI_LANGFUSE_UI_PASSWORD}"
+    },
+    "depends": [
+      "postgres"
+    ]
   }
 }

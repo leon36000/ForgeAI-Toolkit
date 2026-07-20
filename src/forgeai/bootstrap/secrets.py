@@ -13,10 +13,17 @@ from pathlib import Path
 
 # Secrets ajoutés EN FIN (ligne 0 = FORGEAI_API_TOKEN préservée, cf. test permissions) :
 # - FORGEAI_LITELLM_KEY : master key de la passerelle LiteLLM du profil RAG durci (E2c).
-# - FORGEAI_BAO_TOKEN   : dev-root-token du coffre openbao (E3b) — interpolé en ${FORGEAI_BAO_TOKEN}
-#   dans le compose (BAO_DEV_ROOT_TOKEN_ID) et utilisé par le wizard pour écrire/relire la master key.
-# Tous deux interpolés dans le compose, jamais en clair dans un manifeste rendu.
-ENV_KEYS = ("FORGEAI_API_TOKEN", "QDRANT_SERVICE_KEY", "FORGEAI_LITELLM_KEY", "FORGEAI_BAO_TOKEN")
+# - FORGEAI_BAO_TOKEN   : dev-root-token du coffre openbao (E3b).
+# - FORGEAI_PG_PASSWORD, FORGEAI_LANGFUSE_* : socle observabilité langfuse (E5) — postgres +
+#   clés d'ingestion (pk-lf-/sk-lf-), NextAuth/SALT/ENCRYPTION_KEY (64 hex requis par langfuse).
+# Tous interpolés dans le compose (${…}), jamais en clair dans un manifeste rendu.
+ENV_KEYS = ("FORGEAI_API_TOKEN", "QDRANT_SERVICE_KEY", "FORGEAI_LITELLM_KEY", "FORGEAI_BAO_TOKEN",
+            "FORGEAI_PG_PASSWORD", "FORGEAI_LANGFUSE_NEXTAUTH_SECRET", "FORGEAI_LANGFUSE_SALT",
+            "FORGEAI_LANGFUSE_ENCRYPTION_KEY", "FORGEAI_LANGFUSE_PK", "FORGEAI_LANGFUSE_SK",
+            "FORGEAI_LANGFUSE_UI_PASSWORD")
+
+# Préfixes de format exigés par langfuse pour ses clés d'API (le reste = 256 bits hex).
+_KEY_PREFIX = {"FORGEAI_LANGFUSE_PK": "pk-lf-", "FORGEAI_LANGFUSE_SK": "sk-lf-"}
 
 
 def bootstrap_secrets(out_dir: Path, regen: bool = False) -> dict[str, Path]:
@@ -35,7 +42,7 @@ def bootstrap_secrets(out_dir: Path, regen: bool = False) -> dict[str, Path]:
 
     lines = []
     for key in ENV_KEYS:
-        value = existing.get(key) or pysecrets.token_hex(32)
+        value = existing.get(key) or (_KEY_PREFIX.get(key, "") + pysecrets.token_hex(32))
         lines.append(f"{key}={value}")
     env_path.write_text("\n".join(lines) + "\n", encoding="utf-8")
     os.chmod(env_path, 0o600)
