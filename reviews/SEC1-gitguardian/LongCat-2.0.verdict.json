@@ -1,0 +1,26 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "majeure",
+   "fichier": ".gitguardian.yaml",
+   "description": "Le chemin `src/forgeai/data/catalogue.json` est exigé explicitement par la story (section Périmètre, point 1 : « au minimum [...] les données de catalogue (`src/forgeai/data/catalogue.json`...) ») mais est absent de `secret.ignored_paths`.",
+   "preuve": "diff .gitguardian.yaml lignes 4-7 : ignored_paths liste \"tests/fixtures/**\", \"**/*.md\", \"LICENSE\", \".gitignore\" mais pas \"src/forgeai/data/catalogue.json\"."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "",
+   "description": "Critère 4 non vérifiable depuis le diff : impossible de confirmer que `python3 scripts/no_stub_scan.py --all` passe sans exécuter le script.",
+   "preuve": "critère d'acceptation 4 requiert l'exécution d'un script ; aucune sortie n'est fournie dans le diff."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "",
+   "description": "Critère 5 non vérifiable depuis le diff : impossible de confirmer que `pytest` passe sans exécuter la suite de tests.",
+   "preuve": "critère d'acceptation 5 requiert l'exécution de pytest ; aucune sortie n'est fournie dans le diff."
+  }
+ ],
+ "date_heure": "2026-07-14T10:00:00Z",
+ "prompt_sha256": "83539dc5ffa36f342799fd997db928ad5945797f39d108846e9b34b7a11592ab",
+ "reviewer_model": "LongCat-2.0"
+}
