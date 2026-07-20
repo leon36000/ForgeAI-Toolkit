@@ -1,14 +1,7 @@
 {
  "verdict": "APPROVE",
- "objections": [
-  {
-   "severite": "mineure",
-   "fichier": "src/forgeai/cli.py",
-   "description": "Le parseur de fichier .env est naïf : il ne gère ni les commentaires contenant un signe égal (ex: '# old_key=val'), ni les guillemets autour des valeurs (ex: KEY=\"val\"). Bien que fonctionnel pour le .env strict généré par bootstrap_secrets, cela rend le wizard fragile si l'utilisateur édite manuellement le fichier ou si un autre outil le génère avec des guillemets (ce qui causerait une erreur d'authentification 401 sur la passerelle).",
-   "preuve": "lignes 328-332 : for line in env_path.read_text(...).splitlines(): if '=' in line: ekey, eval_ = line.split('=', 1)"
-  }
- ],
- "date_heure": "2026-07-20T08:45:00+00:00",
- "prompt_sha256": "e777565e98a84c0e6999e2e09ed645708309da92517b4521cec5f422679be91d",
+ "objections": [],
+ "date_heure": "2026-07-20T08:46:13.598107+00:00",
+ "prompt_sha256": "7189bf30d5f43477e6fce7de1b8b51932289a8ad7eb47ee530c63bca3f09cdd1",
  "reviewer_model": "Qwen3.7-Max"
 }
