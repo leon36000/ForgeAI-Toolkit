@@ -44,8 +44,7 @@ def test_groundedness_reproductible():
 
 
 def test_evaluate_reponse_optimale():
-    res = evaluate(question="Comment s'appelle le protocole interne ?",
-                   answer="Le protocole se nomme Vornak-9.",
+    res = evaluate(answer="Le protocole se nomme Vornak-9.",
                    context=CONTEXTE, expected_fact="Vornak-9")
     assert res["fact_present"] is True
     assert res["groundedness"] >= 0.8
@@ -53,8 +52,7 @@ def test_evaluate_reponse_optimale():
 
 
 def test_evaluate_reponse_hallucinee_score_bas():
-    res = evaluate(question="Comment s'appelle le protocole interne ?",
-                   answer="La capitale de la France est Paris.",
+    res = evaluate(answer="La capitale de la France est Paris.",
                    context=CONTEXTE, expected_fact="Vornak-9")
     assert res["fact_present"] is False
     assert res["score"] < 0.5, "hallucination hors-contexte + fait absent -> score bas"

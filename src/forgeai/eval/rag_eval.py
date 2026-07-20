@@ -28,9 +28,15 @@ _WORD = re.compile(r"[a-zà-ÿ0-9][a-zà-ÿ0-9\-]*", re.IGNORECASE)
 
 
 def _content_words(text: str) -> list[str]:
-    """Mots de contenu normalisés (minuscule, hors stopwords) d'un texte."""
-    return [w for w in (m.group(0).lower() for m in _WORD.finditer(text or ""))
-            if w not in _STOPWORDS]
+    """Mots de contenu normalisés (minuscule, hors stopwords) d'un texte. Forme explicite."""
+    words: list[str] = []
+    if not text:
+        return words
+    for match in _WORD.finditer(text):
+        word = match.group(0).lower()
+        if word not in _STOPWORDS:
+            words.append(word)
+    return words
 
 
 def groundedness(answer: str, context: str) -> float:
@@ -39,20 +45,26 @@ def groundedness(answer: str, context: str) -> float:
     1.0 = chaque mot porteur de la réponse figure dans le contexte (réponse ancrée) ;
     proche de 0 = la réponse invente hors-contexte. Réponse vide -> 0.0 (rien d'ancré à créditer).
     """
-    ans = _content_words(answer)
-    if not ans:
+    answer_words = _content_words(answer)
+    if not answer_words:
         return 0.0
-    ctx = set(_content_words(context))
-    return sum(1 for w in ans if w in ctx) / len(ans)
+    context_words = set(_content_words(context))
+    matched = 0
+    for word in answer_words:
+        if word in context_words:
+            matched += 1
+    return matched / len(answer_words)
 
 
-def evaluate(question: str, answer: str, context: str, expected_fact: str) -> dict:
+def evaluate(answer: str, context: str, expected_fact: str) -> dict:
     """Score composite déterministe du RAG : ancrage + présence du fait attendu.
 
     Retourne {groundedness, fact_present, score} avec score ∈ [0,1] = moyenne pondérée
     (ancrage 0.6, fait présent 0.4). Aucun LLM, aucun aléa : rejouable à l'identique.
     """
     g = groundedness(answer, context)
-    fact_present = bool(expected_fact) and expected_fact.lower() in (answer or "").lower()
+    answer_text = answer.lower() if answer else ""
+    fact = expected_fact.lower() if expected_fact else ""
+    fact_present = bool(fact) and fact in answer_text
     score = round(0.6 * g + 0.4 * (1.0 if fact_present else 0.0), 4)
     return {"groundedness": round(g, 4), "fact_present": fact_present, "score": score}

@@ -411,7 +411,7 @@ def wizard_ci(args: argparse.Namespace) -> int:
         # E6 — éval RAG DÉTERMINISTE (« optimal » mesuré) : ancrage lexical de la réponse dans le
         # document ingéré (source du RAG) + présence du fait. Aucun LLM n'écrit ce score (invariant
         # PROOF). Le score est journalisé au registre comme mesure objective de qualité.
-        eval_witness = rag_eval.evaluate(args.question, answer, doc, args.expected_fact)
+        eval_witness = rag_eval.evaluate(answer, doc, args.expected_fact)
         print(f"  éval RAG (déterministe): groundedness={eval_witness['groundedness']} "
               f"fait={eval_witness['fact_present']} score_optimal={eval_witness['score']}")
 
