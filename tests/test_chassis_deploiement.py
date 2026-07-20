@@ -65,6 +65,21 @@ def _minimal_overlay(tmp_path: Path) -> Path:
     return overlay
 
 
+# Valeurs de healthcheck VÉRIFIÉES contre la réalité (endpoints canoniques) :
+# - litellm /health/liveliness : confirmé HTTP 200 sur le conteneur en marche
+#   (berriai/litellm) — la graphie "liveliness" est l'endpoint officiel, pas un typo.
+# - qdrant /readyz, TEI /health, openbao /v1/sys/health : endpoints documentés.
+# redis et immudb n'exposent pas de HTTP → health_path null (sonde par port/TCP).
+HEALTH_PATHS_ATTENDUS = {
+    "litellm": "/health/liveliness",
+    "redis": None,
+    "qdrant": "/readyz",
+    "text-embeddings-inference-tei": "/health",
+    "immudb": None,
+    "openbao": "/v1/sys/health",
+}
+
+
 def test_specs_socle_present():
     specs = _load_deploy_specs()
     for brick in SOCLE_BRICKS:
@@ -73,6 +88,17 @@ def test_specs_socle_present():
         assert "image" in spec, f"{brick} : champ image manquant"
         assert "container_port" in spec, f"{brick} : champ container_port manquant"
         assert ":" in spec["image"], f"{brick} : image sans tag"
+
+
+def test_specs_health_path_exacts():
+    """Verrouille la VALEUR exacte de chaque health_path (pas juste sa présence)."""
+    specs = _load_deploy_specs()
+    for brick, attendu in HEALTH_PATHS_ATTENDUS.items():
+        spec = specs[brick]
+        assert "health_path" in spec, f"{brick} : champ health_path manquant"
+        assert spec["health_path"] == attendu, (
+            f"{brick} : health_path={spec['health_path']!r}, attendu {attendu!r}"
+        )
 
 
 def test_assemble_consomme_env_depends(tmp_path: Path):
@@ -124,7 +150,8 @@ def test_compose_emet_environment_depends():
     yaml = render_compose(plan)
 
     assert "environment:" in yaml
-    assert "K: v" in yaml
+    # Valeur entre guillemets (protège les caractères YAML spéciaux).
+    assert 'K: "v"' in yaml
     assert "depends_on:" in yaml
     assert "- redis" in yaml
 
@@ -143,6 +170,30 @@ def test_compose_socle_branché(tmp_path: Path):
     assert "image: qdrant/qdrant:v1.18.3" in yaml
     assert "depends_on:" in yaml
     assert "- ollama" in yaml
+    # Le secret de wiring est une référence env quotée, jamais une valeur en clair.
+    assert 'LITELLM_MASTER_KEY: "${FORGEAI_LITELLM_KEY}"' in yaml
+
+
+def test_depends_ordre_independant(tmp_path: Path, monkeypatch):
+    """Une dépendance vers une brique traitée PLUS TARD survit au filtrage."""
+    from forgeai.planner import assemble as asm
+
+    fake_specs = {
+        # alpha (traité en premier) dépend de beta (ajouté après lui).
+        "alpha": {"image": "alpha:1", "container_port": 9001, "depends": ["beta"]},
+        "beta": {"image": "beta:1", "container_port": 9002, "depends": []},
+    }
+    monkeypatch.setattr(asm, "_load_deploy_specs", lambda: fake_specs)
+    overlay = _minimal_overlay(tmp_path)
+    plan = asm.assemble_plan(
+        profile="minimal-cpu",
+        deploy_overlay=overlay,
+        extra_bricks=("alpha", "beta"),
+    )
+    by_name = {s.name: s for s in plan.services}
+    assert "alpha" in by_name and "beta" in by_name
+    # La dépendance alpha→beta n'est PAS perdue malgré l'ordre de traitement.
+    assert "beta" in by_name["alpha"].depends
 
 
 def test_retrocompat_minimal(tmp_path: Path):

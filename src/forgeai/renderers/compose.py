@@ -30,7 +30,11 @@ def render_compose(plan: DeploymentPlan, project: str = "forgeai-minimal") -> st
         if svc.env:
             lines.append("    environment:")
             for key, value in svc.env.items():
-                lines.append(f"      {key}: {value}")
+                # Valeur toujours entre guillemets : protège les caractères YAML
+                # spéciaux (:, #, espaces) ; l'interpolation ${VAR} de compose
+                # opère avant le parse YAML, donc reste effective ici.
+                safe = str(value).replace("\\", "\\\\").replace('"', '\\"')
+                lines.append(f'      {key}: "{safe}"')
         if svc.depends:
             lines.append("    depends_on:")
             for dep in svc.depends:
