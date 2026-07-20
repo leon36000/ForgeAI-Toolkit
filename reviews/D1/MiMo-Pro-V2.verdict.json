@@ -1,0 +1,20 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "src/forgeai/network/discover.py",
+   "description": "`_sonder` appelle `charger_signatures()` en interne (ligne 58) alors que `inventaire()` reçoit déjà les signatures en paramètre. Cela crée un couplage caché : les tests de `inventaire` avec des signatures personnalisées sonderont en réalité les vraies signatures embarquées, ce qui fonctionne par accident (FakeRunner absorbe les commandes inconnues) mais empêche une isolation stricte.",
+   "preuve": "discover.py L58: `signatures = charger_signatures()` dans `_sonder`, alors que `inventaire` L96 reçoit `signatures: list[dict]` en paramètre et passe `runner` à `_sonder(runner)` sans transmettre les signatures."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "src/forgeai/cli.py",
+   "description": "La story prescrit « CommandRunner (local) / SshRunner (distant) injectables » mais le code utilise `SubprocessRunner` comme runner local (L481). Fonctionnellement équivalent et cohérent avec le reste du codebase, mais non conforme au nommage du critère.",
+   "preuve": "cli.py L481: `runner = SubprocessRunner()` — le critère D1.2 mentionne explicitement `CommandRunner`."
+  }
+ ],
+ "date_heure": "2026-07-19T23:45:00Z",
+ "prompt_sha256": "a61975bae9e6a8c69d1c99b3981ddafaab02e6c8cc96fd144f0477761e58cb38",
+ "reviewer_model": "MiMo-Pro-V2"
+}
