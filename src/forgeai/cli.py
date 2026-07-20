@@ -40,6 +40,7 @@ from forgeai.network.discover import charger_signatures, inventaire, DiscoverErr
 from forgeai.planner.assemble import assemble_plan
 from forgeai.planner.profile import ProfileError, derive_profile
 from forgeai.rag.client import RagClient
+from forgeai.rag.hardened import HardenedRagClient
 from forgeai.renderers.compose import render_compose
 from forgeai.renderers.k3s import NAMESPACE, node_port_for, render_k3s
 from forgeai.resources import catalogue_path, deploy_overlay_path, forgeai_home
@@ -49,6 +50,7 @@ from forgeai.stacks import load_stack
 
 # Données embarquées dans le paquet → portables après pip install (P3).
 DEFAULT_CATALOGUE = catalogue_path()
+DATA_PKG = "forgeai.data"  # package des données embarquées (specs, overlays, smoke docs, locales)
 DEFAULT_OVERLAY = deploy_overlay_path()
 
 
@@ -92,10 +94,35 @@ def _k3s_probe_paths(plan, rag_ports=None) -> dict[str, str]:
     return paths
 
 
+def _svc_url(host: str, port: int) -> str:
+    """URL d'un service LOCAL du socle déployé (127.0.0.1 / hôte LAN, ports Docker publiés).
+    Le trafic est local/LAN entre briques du même déploiement — pas de transmission réseau
+    externe ; le TLS inter-briques est hors périmètre de la série E."""
+    return f"http://{host}:{port}"  # NOSONAR S5332 — service local/LAN, cf. docstring
+
+
 def wizard_ci(args: argparse.Namespace) -> int:
     workdir = Path(args.workdir)
     workdir.mkdir(parents=True, exist_ok=True)
     started = time.monotonic()
+
+    # E2c — profil RAG DURCI : le flag bascule le wizard sur embed TEI + génération passerelle +
+    # rerank. Applique overlay durci, briques forcées et défauts d'ancrage OOD (non surchargés).
+    rag_durci = getattr(args, "rag_durci", False)
+    rag_durci_bricks: tuple[str, ...] = ()
+    if rag_durci:
+        if args.overlay == str(DEFAULT_OVERLAY):
+            args.overlay = str(importlib.resources.files(DATA_PKG) / "deploy-hardened.json")
+        rag_durci_bricks = ("text-embeddings-inference-tei",
+                            "text-embeddings-inference-reranker", "litellm")
+        if args.document is None:
+            args.document = str(
+                importlib.resources.files(DATA_PKG) / "smoke" / "verification-durci.md")
+        if args.question == "Quelle est la capitale de la France ?":
+            args.question = ("Comment s'appelle le protocole de synchronisation interne "
+                             "de ForgeAI Toolkit ?")
+        if args.expected_fact == "Paris":
+            args.expected_fact = "Vornak-9"
 
     _step(t("wizard.s01"))
     hw = HardwareDetector(SubprocessRunner()).full_report()
@@ -161,11 +188,11 @@ def wizard_ci(args: argparse.Namespace) -> int:
             print(f"ABORT [SEL] briques inconnues au catalogue : {inconnues}", file=sys.stderr)
             return 8
         registre_modeles = json.loads(
-            (_res.files("forgeai.data") / "modeles-locaux.json").read_text(encoding="utf-8"))
+            (_res.files(DATA_PKG) / "modeles-locaux.json").read_text(encoding="utf-8"))
         hf_ids = {m["hf_id"] for m in registre_modeles["modeles"]}
         familles = {m["hf_id"]: m["famille"] for m in registre_modeles["modeles"]}
         moteurs = {m["id"] for m in json.loads(
-            (_res.files("forgeai.data") / "moteurs-inference.json").read_text(encoding="utf-8"))["moteurs"]}
+            (_res.files(DATA_PKG) / "moteurs-inference.json").read_text(encoding="utf-8"))["moteurs"]}
         node_re = re.compile(r"^[a-z0-9]([a-z0-9.-]{0,62})$")
 
         toutes = selection_models + selection_embeddings
@@ -202,14 +229,14 @@ def wizard_ci(args: argparse.Namespace) -> int:
 
     _step(t("wizard.s04"))
     plan = assemble_plan(profile, Path(args.overlay), stack=stack,
-                         extra_bricks=tuple(selection_bricks))
+                         extra_bricks=tuple(selection_bricks) + rag_durci_bricks)
     (workdir / "plan.json").write_text(plan.to_json(), encoding="utf-8")
     ports = {s.name: s.host_port for s in plan.services}
     print(f"  stack: {stack_label} | services: {ports} | modèle: {plan.model}")
     if getattr(args, "selection", None):
         from importlib import resources as _res
         specs_ids = set(json.loads(
-            (_res.files("forgeai.data") / "deploy-specs.json").read_text(encoding="utf-8")))
+            (_res.files(DATA_PKG) / "deploy-specs.json").read_text(encoding="utf-8")))
         deployables = [b for b in selection_bricks if b in specs_ids]
         (workdir / "selection.json").write_text(json.dumps({
             "stack": args.stack,
@@ -303,19 +330,42 @@ def wizard_ci(args: argparse.Namespace) -> int:
         print(f"  santé: {health}")
 
         _step(t("wizard.s08"))
-        rag = RagClient(
-            ollama_url=f"http://{probe_host}:{rag_ports['ollama']}",
-            qdrant_url=f"http://{probe_host}:{rag_ports['vector-store']}",
-            llm_model=plan.model,
-            embed_model=plan.embed_model,
-        )
+        if rag_durci:
+            env_vals: dict[str, str] = {}
+            env_path = workdir / ".env"
+            if env_path.exists():
+                for raw_line in env_path.read_text(encoding="utf-8").splitlines():
+                    line = raw_line.strip()
+                    if not line or line.startswith("#") or "=" not in line:
+                        continue
+                    ekey, eval_ = line.split("=", 1)
+                    # valeur : sans espaces ni guillemets (sinon la clé passe au Bearer avec ses
+                    # quotes -> 401 côté passerelle, finding CodeRabbit #80).
+                    env_vals[ekey.strip()] = eval_.strip().strip('"').strip("'")
+            rag = HardenedRagClient(
+                ollama_url=_svc_url(probe_host, rag_ports['ollama']),
+                qdrant_url=_svc_url(probe_host, rag_ports['vector-store']),
+                tei_url=_svc_url(probe_host, rag_ports['text-embeddings-inference-tei']),
+                gateway_url=_svc_url(probe_host, rag_ports['litellm']),
+                gateway_key=env_vals.get("FORGEAI_LITELLM_KEY", ""),
+                reranker_url=_svc_url(probe_host, rag_ports['text-embeddings-inference-reranker']),
+                llm_model=plan.model,
+                embed_model=plan.embed_model,
+            )
+        else:
+            rag = RagClient(
+                ollama_url=_svc_url(probe_host, rag_ports['ollama']),
+                qdrant_url=_svc_url(probe_host, rag_ports['vector-store']),
+                llm_model=plan.model,
+                embed_model=plan.embed_model,
+            )
         rag.pull_models()
 
         if args.document:
             doc_path = Path(args.document)
             source_name = doc_path.name
         else:
-            doc_path = importlib.resources.files("forgeai.data") / "smoke" / "verification.md"
+            doc_path = importlib.resources.files(DATA_PKG) / "smoke" / "verification.md"
             source_name = "verification.md"
         doc = doc_path.read_text(encoding="utf-8")
 
@@ -1042,6 +1092,9 @@ def main(argv: list[str] | None = None) -> int:
     p_wiz.add_argument("--workdir", default="run")
     p_wiz.add_argument("--catalogue", default=str(DEFAULT_CATALOGUE))
     p_wiz.add_argument("--overlay", default=str(DEFAULT_OVERLAY))
+    p_wiz.add_argument("--rag-durci", dest="rag_durci", action="store_true",
+                       help="déploie le RAG DURCI : embed TEI + rerank + génération via la "
+                            "passerelle LiteLLM (overlay hardened, ancrage OOD par défaut)")
     p_wiz.add_argument("--stack", default=None,
                        help="stack à déployer (défaut : plan minimal)")
     p_wiz.add_argument("--node", type=_node_type, default="local",

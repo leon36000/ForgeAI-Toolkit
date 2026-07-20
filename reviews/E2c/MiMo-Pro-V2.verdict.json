@@ -1,0 +1,14 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "src/forgeai/cli.py",
+   "description": "Le parseur de fichier .env (lignes 330‑348) est naïf : il ne gère pas les commentaires contenant un signe égal (ex : `# old_key=val`), ni les guillemets autour des valeurs (ex : `KEY=\"val\"`). Bien que fonctionnel pour le `.env` strict généré par `bootstrap_secrets`, cela rend le wizard fragile si l'utilisateur édite manuellement le fichier ou si un autre outil le génère avec des guillemets (ce qui causerait une erreur d'authentification 401 sur la passerelle). Cette fragilité est documentée comme dette dans la note de l'orchestrateur (`note_mineure : parseur .env naif`) et ne bloque pas le périmètre fonctionnel de E2c, mais constitue un point de robustesse à améliorer.",
+   "preuve": "lignes 330‑348 du diff : `for raw_line in env_path.read_text(encoding=\"utf-8\").splitlines(): line = raw_line.strip(); if not line or line.startswith(\"#\") or \"=\" not in line: continue; ekey, eval_ = line.split(\"=\", 1); env_vals[ekey.strip()] = eval_.strip().strip('\"').strip(\"'\")` — ne gère pas les commentaires inline avec `=` ni les valeurs avec espaces non entourées de guillemets."
+  }
+ ],
+ "date_heure": "2026-07-20T08:45:54.281715+00:00",
+ "prompt_sha256": "7189bf30d5f43477e6fce7de1b8b51932289a8ad7eb47ee530c63bca3f09cdd1",
+ "reviewer_model": "MiMo-Pro-V2"
+}
