@@ -1,0 +1,20 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "tests/test_wizard_rag_durci.py",
+   "description": "E3a ajoute redis à rag_durci_bricks (cli.py) donc le plan --rag-durci inclut 6 services ; le test B2 et son libellé vérifient encore seulement les 5 services pré-E3a et n'assertent pas la présence de redis au plan.",
+   "preuve": "cli.py: rag_durci_bricks = (..., \"litellm\", \"redis\") ; test_wizard_rag_durci.py: for name in (\"ollama\", \"vector-store\", \"text-embeddings-inference-tei\", \"text-embeddings-inference-reranker\", \"litellm\") — redis absent de l'assertion ; commentaire « cinq services »."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "tests/",
+   "description": "B3 (e2e cache HIT, 2 requêtes identiques) n'a pas de test automatisé versionné dans le diff (contrairement à E2b qui committe test_rag_rerank_e2e.py). La preuve repose uniquement sur l'entrée registre tdad_green E3a (timings 36619ms vs 5ms).",
+   "preuve": "diff: seuls test_cache_redis_active_si_redis_au_plan et test_pas_de_cache_sans_redis ajoutés dans test_litellm_config.py ; aucun tests/test_*cache*e2e*.py ; Registres/mission.jsonl seq 178 payload.preuve_e2e décrit le CACHE-HIT sans artefact de test rejouable dans l'arbre."
+  }
+ ],
+ "date_heure": "2026-07-20T09:04:35.654663+00:00",
+ "prompt_sha256": "2a6af37cd9e9a7ec5fae7bf4c5248e59e10ab94978bcec9602dd785d005a4ea4",
+ "reviewer_model": "Grok-4.5"
+}

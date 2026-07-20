@@ -52,4 +52,18 @@ def render_litellm_config(plan: DeploymentPlan) -> str:
         ]
     )
 
+    # E3a — si Redis est déployé au plan, LiteLLM l'utilise comme cache de réponses
+    # (branche la brique redis du châssis ; les requêtes identiques ne re-génèrent pas).
+    if any(service.name == "redis" for service in plan.services):
+        lines.extend(
+            [
+                "litellm_settings:",
+                "  cache: true",
+                "  cache_params:",
+                "    type: redis",
+                '    host: "redis"',
+                "    port: 6379",
+            ]
+        )
+
     return "\n".join(lines) + "\n"

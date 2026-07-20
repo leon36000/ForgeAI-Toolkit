@@ -114,7 +114,7 @@ def wizard_ci(args: argparse.Namespace) -> int:
         if args.overlay == str(DEFAULT_OVERLAY):
             args.overlay = str(importlib.resources.files(DATA_PKG) / "deploy-hardened.json")
         rag_durci_bricks = ("text-embeddings-inference-tei",
-                            "text-embeddings-inference-reranker", "litellm")
+                            "text-embeddings-inference-reranker", "litellm", "redis")
         if args.document is None:
             args.document = str(
                 importlib.resources.files(DATA_PKG) / "smoke" / "verification-durci.md")

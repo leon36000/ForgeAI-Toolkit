@@ -23,6 +23,23 @@ def _make_plan(services: tuple[ServiceSpec, ...] = ()) -> DeploymentPlan:
     )
 
 
+def _redis() -> ServiceSpec:
+    return ServiceSpec(name="redis", image="redis:7.4.9", host_port=16379, container_port=6379)
+
+
+# E3a : redis au plan -> LiteLLM active le cache Redis
+def test_cache_redis_active_si_redis_au_plan() -> None:
+    yaml = render_litellm_config(_make_plan((_ollama(), _redis())))
+    assert "litellm_settings:" in yaml
+    assert "cache:" in yaml and "type: redis" in yaml
+    assert 'host: "redis"' in yaml and "port: 6379" in yaml
+
+
+def test_pas_de_cache_sans_redis() -> None:
+    yaml = render_litellm_config(_make_plan((_ollama(),)))
+    assert "litellm_settings:" not in yaml, "sans redis, pas de cache (E1b/E2b inchangé)"
+
+
 def test_llm_route_ollama() -> None:
     yaml = render_litellm_config(_make_plan((_ollama(),)))
     assert 'model_name: "llama3.1:8b"' in yaml
