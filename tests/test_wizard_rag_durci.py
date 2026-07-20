@@ -156,6 +156,17 @@ def test_rag_durci_observabilite_langfuse(wired):
     assert witness["name"] == "litellm-acompletion"
 
 
+# B8 (E6) : l'éval RAG déterministe (« optimal ») est calculée + journalisée au registre
+def test_rag_durci_eval_optimal(wired):
+    tmp_path, reg = wired
+    assert _run(tmp_path, reg, "--rag-durci") == 0
+    import json
+    witness = json.loads(reg.read_text(encoding="utf-8").splitlines()[-1])["payload"]["rag_eval"]
+    # la réponse « Vornak-9 » est ancrée dans le document ingéré + le fait est présent
+    assert witness and witness["fact_present"] is True
+    assert witness["groundedness"] >= 0.5 and witness["score"] >= 0.6
+
+
 # B6 (E3c) : le déploiement vérifié est inscrit au ledger immuable immudb + témoin au registre
 def test_rag_durci_audit_immudb(wired):
     tmp_path, reg = wired
