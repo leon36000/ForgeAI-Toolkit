@@ -1,0 +1,65 @@
+"""Tests E1b — génération de la config LiteLLM (routage réel vers les backends)."""
+from forgeai.core.models import DeploymentPlan, RenderTarget, ServiceSpec
+from forgeai.renderers.litellm_config import render_litellm_config
+
+
+def _ollama() -> ServiceSpec:
+    return ServiceSpec(
+        name="ollama",
+        image="ollama/ollama:latest",
+        host_port=21434,
+        container_port=11434,
+    )
+
+
+def _make_plan(services: tuple[ServiceSpec, ...] = ()) -> DeploymentPlan:
+    return DeploymentPlan(
+        plan_id="test-plan",
+        profile="minimal-cpu",
+        target=RenderTarget.COMPOSE,
+        services=services,
+        model="llama3.1:8b",
+        embed_model="nomic-embed-text:latest",
+    )
+
+
+def test_llm_route_ollama() -> None:
+    yaml = render_litellm_config(_make_plan((_ollama(),)))
+    assert 'model_name: "llama3.1:8b"' in yaml
+    assert "ollama_chat/llama3.1:8b" in yaml
+    assert 'api_base: "http://ollama:11434"' in yaml
+
+
+def test_embed_ollama_par_defaut() -> None:
+    yaml = render_litellm_config(_make_plan((_ollama(),)))
+    assert 'model: "ollama/nomic-embed-text:latest"' in yaml
+    assert 'api_base: "http://ollama:11434"' in yaml
+
+
+def test_embed_bascule_tei() -> None:
+    tei = ServiceSpec(
+        name="text-embeddings-inference-tei",
+        image="ghcr.io/huggingface/text-embeddings-inference:cpu-1.9",
+        host_port=8080,
+        container_port=80,
+    )
+    yaml = render_litellm_config(_make_plan((_ollama(), tei)))
+    assert 'model: "openai/nomic-embed-text:latest"' in yaml
+    assert 'api_base: "http://text-embeddings-inference-tei/v1"' in yaml
+    assert 'api_key: "dummy"' in yaml  # proof:allow — placeholder inerte, pas un secret
+
+
+def test_master_key_reference_env() -> None:
+    yaml = render_litellm_config(_make_plan((_ollama(),)))
+    assert "os.environ/LITELLM_MASTER_KEY" in yaml
+    for line in yaml.splitlines():
+        if line.strip().startswith("master_key:"):
+            assert "os.environ/LITELLM_MASTER_KEY" in line
+            assert "sk-" not in line
+
+
+def test_yaml_valide() -> None:
+    yaml = render_litellm_config(_make_plan((_ollama(),)))
+    assert "model_list:" in yaml
+    assert "general_settings:" in yaml
+    assert "\t" not in yaml

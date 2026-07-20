@@ -92,6 +92,10 @@ def assemble_plan(
         candidats = list(deploy_ids(stack)) if stack is not None else []
         # briques cochées par l'utilisateur (P0.3b) : même mécanique, dédupliquée
         candidats += [b for b in extra_bricks if b not in candidats]
+        # Ensemble FINAL des noms du plan (préexistants + briques à venir ayant
+        # une spec). Filtrer les dépendances contre lui rend le résultat
+        # indépendant de l'ordre de traitement des briques.
+        planned_names = set(existing_names) | {b for b in candidats if b in specs}
         for brick_id in candidats:
             if brick_id in existing_names:
                 continue
@@ -105,16 +109,22 @@ def assemble_plan(
                 f"http://127.0.0.1:{host_port}{health_path}"
                 if health_path else None
             )
+            # On ne conserve que les dépendances réellement présentes dans le
+            # plan final (indépendant de l'ordre de traitement des briques).
+            depends = tuple(d for d in spec.get("depends", []) if d in planned_names)
             services.append(ServiceSpec(
                 name=brick_id,
                 image=spec["image"],
                 host_port=host_port,
                 container_port=spec["container_port"],
-                volumes=(),
-                env={},
+                volumes=tuple(spec.get("volumes", [])),
+                env=spec.get("env", {}),
                 healthcheck_url=healthcheck_url,
+                depends=depends,
+                command=tuple(spec.get("command", [])),
                 gpu=False,
             ))
+            existing_names.add(brick_id)
 
     return DeploymentPlan(
         plan_id=f"p1-{uuid.uuid4().hex[:8]}",
