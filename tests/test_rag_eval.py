@@ -38,9 +38,11 @@ def test_groundedness_bornee_0_1():
 
 
 def test_groundedness_reproductible():
-    # déterministe : même entrée -> même score (aucun LLM, aucun aléa)
+    # déterministe : plusieurs appels sur la même entrée -> un score STABLE et une valeur connue
     a, c = "Le protocole se nomme Vornak-9.", CONTEXTE
-    assert groundedness(a, c) == groundedness(a, c)
+    scores = {groundedness(a, c) for _ in range(5)}
+    assert len(scores) == 1, "score instable entre appels (non déterministe)"
+    assert scores.pop() == 1.0, "valeur déterministe attendue (tous les mots ancrés)"
 
 
 def test_evaluate_reponse_optimale():
