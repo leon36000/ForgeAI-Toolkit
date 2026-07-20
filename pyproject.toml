@@ -15,7 +15,7 @@ dependencies = []
 
 [project.optional-dependencies]
 # (extra [tui] retiré — pivot acté : l'interface v1 est la web-app stdlib `forgeai web`, cf. CANON/spec-web-ui.md)
-dev = ["pytest>=8", "pytest-cov>=5", "ruff>=0.5", "mypy>=1.10"]
+dev = ["pytest>=8", "pytest-cov>=5", "ruff>=0.5", "mypy>=1.10", "ggshield>=1.52", "pre-commit>=3.2"]
 
 [project.scripts]
 forgeai = "forgeai.cli:main"
