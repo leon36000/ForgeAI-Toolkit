@@ -349,6 +349,14 @@ class ForgeAIHandler(BaseHTTPRequestHandler):
             self._send_json(200, data)
             return
 
+        if path == "/api/engines/compatible":
+            # S6 : liste de choix FILTRÉE par vendor du nœud (?vendor=amd|nvidia|intel|cpu).
+            # S'appuie sur forgeai.engines.compatible_engines (moteurs-inference.json gpu_vendors).
+            from forgeai.engines import compatible_engines
+            vendor = (urllib.parse.parse_qs(parsed.query).get("vendor") or [""])[0]
+            self._send_json(200, {"vendor": vendor, "moteurs": compatible_engines(vendor)})
+            return
+
         if path == "/api/models":
             store = RouteStore(_models_home())
             self._send_json(200, [r.public_dict() for r in store.list()])
