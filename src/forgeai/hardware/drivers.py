@@ -1,3 +1,4 @@
+import re
 from dataclasses import dataclass
 
 VENDORS = ("nvidia", "amd", "intel")
@@ -35,22 +36,39 @@ class DriverOpPlan:
 
 
 def _amd_runtimes(model: str | None) -> tuple[str, ...]:
-    """Choix de runtimes AMD selon le modèle détecté (insensible à la casse)."""
+    """Choix de runtimes AMD selon le modèle détecté (insensible à la casse, par mots entiers)."""
     if model:
         lowered = model.lower()
-        rocm_markers = ("instinct", "cdna", "mi", "gfx9")
-        if any(marker in lowered for marker in rocm_markers):
+        tokens = re.findall(r"[a-z0-9]+", lowered)
+
+        def _is_mi(token: str) -> bool:
+            return bool(re.fullmatch(r"mi\d+[a-z0-9]*", token))
+
+        rocm_markers = (
+            "instinct",
+            "cdna",
+        )
+        if any(
+            token in rocm_markers
+            or _is_mi(token)
+            or token.startswith("gfx9")
+            for token in tokens
+        ):
             return ("rocm", "vulkan")
-        vulkan_markers = ("radeon", "rx", "rdna", "gfx10", "gfx11")
-        if any(marker in lowered for marker in vulkan_markers):
+
+        vulkan_markers = ("radeon", "rx", "rdna")
+        if any(
+            token in vulkan_markers
+            or token.startswith("gfx10")
+            or token.startswith("gfx11")
+            for token in tokens
+        ):
             return ("vulkan", "rocm")
+
     return ("vulkan", "rocm")
 
 
 def recommend_driver(vendor: str, *, model: str | None = None) -> DriverRecommendation:
-    if vendor not in VENDORS:
-        raise DriverError(f"Unknown vendor: {vendor}")
-
     if vendor == "nvidia":
         return DriverRecommendation(
             vendor="nvidia",

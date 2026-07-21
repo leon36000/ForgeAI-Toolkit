@@ -60,6 +60,24 @@ def test_amd_defaut_vulkan_si_arch_inconnue():
     assert "rocm" in rec.runtimes, "ROCm reste OFFERT même si non défaut"
 
 
+# --- Adversarial (objection revue Qwen majeure) : le marqueur 'mi' ne doit PAS
+#     matcher en sous-chaîne ('family', 'mini', 'omni'...) et forcer ROCm à tort ---
+def test_amd_radeon_sous_chaine_mi_reste_vulkan():
+    for model in ("AMD Radeon RX 6800 family", "Radeon RX 7600 mini", "AMD Radeon RX 9070"):
+        rec = recommend_driver("amd", model=model)
+        assert rec.runtime == "vulkan", (
+            f"{model!r} (Radeon/RDNA) doit rester Vulkan, pas ROCm — obtenu {rec.runtime}"
+        )
+
+
+def test_amd_mi_serie_reste_rocm():
+    for model in ("AMD Instinct MI250", "AMD Instinct MI300X", "Instinct MI325X"):
+        rec = recommend_driver("amd", model=model)
+        assert rec.runtime == "rocm", (
+            f"{model!r} (Instinct/CDNA) doit être ROCm — obtenu {rec.runtime}"
+        )
+
+
 # --- NVIDIA : CUDA défaut mais Vulkan universel offert -----------------------------
 def test_nvidia_defaut_cuda_offre_vulkan():
     rec = recommend_driver("nvidia")
