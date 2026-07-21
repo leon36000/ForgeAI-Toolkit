@@ -57,29 +57,68 @@ def _deployment(svc: ServiceSpec, effective_node: str | None = None,
                 node_port: int | None = None, service_type: str = "NodePort") -> str:
     name = _safe(svc.name, "name")
     image = _safe(svc.image, "image")
-    gpu_limits = """
-          resources:
-            limits:
-              nvidia.com/gpu: "1"ifgpu""".replace("ifgpu", "") if svc.gpu else ""
+    # GPU par vendor (S3) : nvidia -> ressource device-plugin ; amd/intel -> passthrough hostPath
+    # des devices noyau + privileged (marche sur un nœud NU, sans device-plugin installé).
+    vendor = (svc.gpu_vendor or "nvidia") if svc.gpu else None
+    resources_block, security_block, gpu_mounts, gpu_vols = "", "", [], []
+    if vendor == "nvidia":
+        resources_block = (
+            "\n          resources:"
+            "\n            limits:"
+            '\n              nvidia.com/gpu: "1"'
+        )
+    elif vendor == "amd":
+        security_block = """
+          securityContext:
+            privileged: true"""
+        gpu_mounts = [("dev-kfd", "/dev/kfd"), ("dev-dri", "/dev/dri")]
+        gpu_vols = list(gpu_mounts)
+    elif vendor == "intel":
+        security_block = """
+          securityContext:
+            privileged: true"""
+        gpu_mounts = [("dev-dri", "/dev/dri")]
+        gpu_vols = list(gpu_mounts)
     node_selector = ""
     if effective_node and effective_node != "auto":
         node_selector = f"""
       nodeSelector:
         kubernetes.io/hostname: {_safe(effective_node, 'node')}"""
-    volume_mount, volume_def = "", ""
-    if svc.volumes:
-        parts = svc.volumes[0].split(":", 1)
+    # Fusion volume data + devices GPU en UN bloc volumeMounts et UN bloc volumes (sinon clé YAML
+    # dupliquée). mounts: (claim, mountPath) ; vols: (claim, hostPath|None) — None => emptyDir data.
+    mounts, vols = [], []
+    for volume in svc.volumes:  # TOUS les volumes data (plus seulement le premier — finding revue)
+        parts = volume.split(":", 1)
         if len(parts) != 2:  # format attendu 'nom:chemin' -> erreur claire (pas d'IndexError)
-            raise ValueError(f"volume mal formé (attendu 'nom:chemin') : {svc.volumes[0]!r}")
+            raise ValueError(f"volume mal formé (attendu 'nom:chemin') : {volume!r}")
         claim, mount_path = _safe(parts[0], "volume-claim"), _safe(parts[1], "volume-path")
-        volume_mount = f"""
-          volumeMounts:
-            - name: {claim}
-              mountPath: {mount_path}"""
-        volume_def = f"""
-      volumes:
-        - name: {claim}
-          emptyDir: {{}}"""
+        mounts.append((claim, mount_path))
+        vols.append((claim, None))
+    for claim, path in gpu_mounts:
+        mounts.append((claim, path))
+    for claim, path in gpu_vols:
+        vols.append((claim, path))
+    volume_mount = ""
+    if mounts:
+        items = "".join(
+            f"\n            - name: {c}\n              mountPath: {m}" for c, m in mounts)
+        volume_mount = f"\n          volumeMounts:{items}"
+    volume_def = ""
+    if vols:
+        items = ""
+        for claim, hostpath in vols:
+            if hostpath is None:
+                items += f"\n        - name: {claim}\n          emptyDir: {{}}"
+            else:
+                items += (f"\n        - name: {claim}"
+                          f"\n          hostPath:\n            path: {hostpath}")
+        volume_def = f"\n      volumes:{items}"
+    # command → args k8s (parité avec le renderer compose) ; chaque arg passé par _safe (injection).
+    command_block = ""
+    if svc.command:
+        items = "".join(f"\n            - \"{_safe(str(a), 'arg')}\"" for a in svc.command)
+        command_block = f"\n          args:{items}"
+    container_extra = f"{command_block}{resources_block}{security_block}{volume_mount}{volume_def}"
     return f"""---
 apiVersion: apps/v1
 kind: Deployment
@@ -98,7 +137,7 @@ spec:
         - name: {name}
           image: {image}
           ports:
-            - containerPort: {svc.container_port}{gpu_limits}{volume_mount}{volume_def}
+            - containerPort: {svc.container_port}{container_extra}
 ---
 apiVersion: v1
 kind: Service
