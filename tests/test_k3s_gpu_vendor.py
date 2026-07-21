@@ -66,6 +66,16 @@ def test_k3s_gpu_sans_vendor_reste_nvidia():
     assert 'nvidia.com/gpu: "1"' in out
 
 
+def test_k3s_tous_les_volumes_rendus():
+    # finding revue : TOUS les volumes data doivent être rendus, pas seulement le premier.
+    svc = ServiceSpec(name="e", image="i", host_port=1, container_port=1,
+                      volumes=("data:/a", "cache:/b"))
+    out = render_k3s(_plan(svc))
+    assert "/a" in out and "/b" in out
+    assert "name: data" in out and "name: cache" in out
+    assert out.count("volumeMounts:") == 1 and out.count("\n      volumes:") == 1
+
+
 def test_k3s_command_rendu_en_args():
     # parité compose : svc.command doit apparaître comme `args:` k8s (serving llama.cpp etc.)
     svc = ServiceSpec(name="e", image="i", host_port=1, container_port=1,

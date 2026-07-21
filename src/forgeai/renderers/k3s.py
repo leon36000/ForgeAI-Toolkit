@@ -62,10 +62,11 @@ def _deployment(svc: ServiceSpec, effective_node: str | None = None,
     vendor = (svc.gpu_vendor or "nvidia") if svc.gpu else None
     resources_block, security_block, gpu_mounts, gpu_vols = "", "", [], []
     if vendor == "nvidia":
-        resources_block = """
-          resources:
-            limits:
-              nvidia.com/gpu: "1\""""
+        resources_block = (
+            "\n          resources:"
+            "\n            limits:"
+            '\n              nvidia.com/gpu: "1"'
+        )
     elif vendor == "amd":
         security_block = """
           securityContext:
@@ -86,10 +87,10 @@ def _deployment(svc: ServiceSpec, effective_node: str | None = None,
     # Fusion volume data + devices GPU en UN bloc volumeMounts et UN bloc volumes (sinon clé YAML
     # dupliquée). mounts: (claim, mountPath) ; vols: (claim, hostPath|None) — None => emptyDir data.
     mounts, vols = [], []
-    if svc.volumes:
-        parts = svc.volumes[0].split(":", 1)
+    for volume in svc.volumes:  # TOUS les volumes data (plus seulement le premier — finding revue)
+        parts = volume.split(":", 1)
         if len(parts) != 2:  # format attendu 'nom:chemin' -> erreur claire (pas d'IndexError)
-            raise ValueError(f"volume mal formé (attendu 'nom:chemin') : {svc.volumes[0]!r}")
+            raise ValueError(f"volume mal formé (attendu 'nom:chemin') : {volume!r}")
         claim, mount_path = _safe(parts[0], "volume-claim"), _safe(parts[1], "volume-path")
         mounts.append((claim, mount_path))
         vols.append((claim, None))
