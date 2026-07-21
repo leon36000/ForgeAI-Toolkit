@@ -28,13 +28,27 @@ def derive_profile(hw: HardwareProfile) -> str:
         raise ProfileError(
             f"Disque libre insuffisant : {free} Go < {MIN_DISK_FREE_GB} Go requis")
 
-    for gpu in hw.gpus:
-        if gpu.vendor == "nvidia" and gpu.vram_mb >= 8192:
-            return "minimal-gpu-cuda"
-    for gpu in hw.gpus:
-        if gpu.vendor == "amd" and gpu.vram_mb >= 8192:
-            return "minimal-gpu-rocm"
-    for gpu in hw.gpus:
-        if gpu.vendor == "intel" and gpu.vram_mb >= 4096:
-            return "minimal-gpu-intel"
+    # VRAM inconnue (vram_mb == 0, ex. dGPU AMD/Intel vus par lspci) : on se fie à la
+    # PRÉSENCE du vendor. NVIDIA reste strict (nvidia-smi donne toujours la VRAM réelle,
+    # donc 0 = pas de GPU utilisable). Un iGPU AMD faible (VRAM 0) est ignoré : ROCm ne
+    # cible pas les APU intégrés — seul un dGPU AMD à VRAM inconnue déclenche le profil.
+    def _is_igpu(name: str) -> bool:
+        low = name.lower()
+        return "igpu" in low or "integrated" in low
+
+    def _usable(gpu) -> bool:
+        if gpu.vendor == "nvidia":
+            return gpu.vram_mb >= 8192
+        if gpu.vendor == "amd":
+            return gpu.vram_mb >= 8192 or (gpu.vram_mb == 0 and not _is_igpu(gpu.name))
+        if gpu.vendor == "intel":
+            return gpu.vram_mb >= 4096 or gpu.vram_mb == 0
+        return False
+
+    usable = [g for g in hw.gpus if _usable(g)]
+    for vendor, profile in (("nvidia", "minimal-gpu-cuda"),
+                            ("amd", "minimal-gpu-rocm"),
+                            ("intel", "minimal-gpu-intel")):
+        if any(g.vendor == vendor for g in usable):
+            return profile
     return "minimal-cpu"

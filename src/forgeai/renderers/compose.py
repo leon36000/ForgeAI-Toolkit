@@ -53,15 +53,22 @@ def render_compose(plan: DeploymentPlan, project: str = "forgeai-minimal") -> st
                 if not source.startswith((".", "/")):
                     volumes.add(source)
         if svc.gpu:
-            lines += [
-                "    deploy:",
-                "      resources:",
-                "        reservations:",
-                "          devices:",
-                "            - driver: nvidia",
-                "              count: 1",
-                "              capabilities: [gpu]",
-            ]
+            vendor = svc.gpu_vendor or "nvidia"
+            if vendor == "amd":
+                # ROCm : accès direct aux devices noyau (pas de driver compose nvidia)
+                lines += ["    devices:", "      - /dev/kfd", "      - /dev/dri"]
+            elif vendor == "intel":
+                lines += ["    devices:", "      - /dev/dri"]
+            else:  # nvidia (défaut, rétrocompatible)
+                lines += [
+                    "    deploy:",
+                    "      resources:",
+                    "        reservations:",
+                    "          devices:",
+                    "            - driver: nvidia",
+                    "              count: 1",
+                    "              capabilities: [gpu]",
+                ]
     if volumes:
         lines.append("volumes:")
         for volume in sorted(volumes):
