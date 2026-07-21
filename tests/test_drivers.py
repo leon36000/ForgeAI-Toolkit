@@ -1,15 +1,12 @@
 import pytest
+from forgeai.core.runner import FixtureRunner
 from forgeai.hardware.drivers import (
-    DriverError,
     VENDORS,
-    DriverRecommendation,
-    DriverState,
-    DriverOpPlan,
-    recommend_driver,
+    DriverError,
     detect_driver_state,
     plan_driver_op,
+    recommend_driver,
 )
-from forgeai.core.runner import FixtureRunner
 
 
 def test_recommend_par_vendor():
@@ -18,21 +15,25 @@ def test_recommend_par_vendor():
     assert nvidia.operator == "nvidia-gpu-operator"
 
     amd = recommend_driver("amd")
-    assert amd.runtime == "vulkan"
-    assert amd.rocm_allowed is False
+    assert amd.runtime == "vulkan"  # arch inconnue -> defaut Vulkan (sur)
+    assert amd.rocm_allowed is True  # S1 : ROCm debloque (offert au choix)
 
     intel = recommend_driver("intel")
     assert intel.runtime == "openvino"
     assert intel.operator == "intel-device-plugins"
 
 
-def test_amd_rocm_jamais_propose():
+def test_amd_rocm_debloque_host_install_reste_vulkan():
+    """S1 : ROCm est DÉBLOQUÉ (offert au choix), mais l'install driver HÔTE par défaut
+    reste Vulkan (mesa) — l'install des drivers ROCm est gérée côté cluster par l'AMD
+    GPU Operator (network/prepare.py), pas par apt hôte. Frontière de périmètre S1."""
     rec = recommend_driver("amd")
-    assert rec.rocm_allowed is False
+    assert rec.rocm_allowed is True
+    assert "rocm" in rec.runtimes  # ROCm bien proposé
 
     plan = plan_driver_op("amd", "install")
     all_argv = plan.install_argv + plan.rollback_argv
-    assert not any("rocm" in arg.lower() for arg in all_argv)
+    assert not any("rocm" in arg.lower() for arg in all_argv)  # host apt reste vulkan (S1)
 
 
 def test_vendor_inconnu_leve():

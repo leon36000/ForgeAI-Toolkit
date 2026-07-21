@@ -14,6 +14,7 @@ class DriverRecommendation:
     operator: str
     rocm_allowed: bool
     notes: str
+    runtimes: tuple[str, ...]
 
 
 @dataclass(frozen=True)
@@ -33,9 +34,23 @@ class DriverOpPlan:
     notes: str
 
 
-def recommend_driver(vendor: str) -> DriverRecommendation:
+def _amd_runtimes(model: str | None) -> tuple[str, ...]:
+    """Choix de runtimes AMD selon le modèle détecté (insensible à la casse)."""
+    if model:
+        lowered = model.lower()
+        rocm_markers = ("instinct", "cdna", "mi", "gfx9")
+        if any(marker in lowered for marker in rocm_markers):
+            return ("rocm", "vulkan")
+        vulkan_markers = ("radeon", "rx", "rdna", "gfx10", "gfx11")
+        if any(marker in lowered for marker in vulkan_markers):
+            return ("vulkan", "rocm")
+    return ("vulkan", "rocm")
+
+
+def recommend_driver(vendor: str, *, model: str | None = None) -> DriverRecommendation:
     if vendor not in VENDORS:
         raise DriverError(f"Unknown vendor: {vendor}")
+
     if vendor == "nvidia":
         return DriverRecommendation(
             vendor="nvidia",
@@ -43,24 +58,30 @@ def recommend_driver(vendor: str) -> DriverRecommendation:
             operator="nvidia-gpu-operator",
             rocm_allowed=False,
             notes="",
+            runtimes=("cuda", "vulkan"),
         )
-    elif vendor == "amd":
+
+    if vendor == "amd":
+        runtimes = _amd_runtimes(model)
         return DriverRecommendation(
             vendor="amd",
-            runtime="vulkan",
-            operator="none",
-            rocm_allowed=False,
-            notes="Vulkan forcé, ROCm non proposé",
+            runtime=runtimes[0],
+            operator="amd-gpu-operator",
+            rocm_allowed=True,
+            notes="ROCm + Vulkan au choix ; défaut selon l'architecture",
+            runtimes=runtimes,
         )
-    elif vendor == "intel":
+
+    if vendor == "intel":
         return DriverRecommendation(
             vendor="intel",
             runtime="openvino",
             operator="intel-device-plugins",
             rocm_allowed=False,
             notes="",
+            runtimes=("openvino", "vulkan"),
         )
-    # Dead branch – kept for completeness
+
     raise DriverError(f"Unknown vendor: {vendor}")
 
 
@@ -108,7 +129,7 @@ def plan_driver_op(vendor: str, action: str, *, version: str | None = None) -> D
     elif vendor == "amd":
         install_argv = ["apt-get", "install", "-y", "mesa-vulkan-drivers", "vulkan-tools"]
         rollback_argv = ["apt-get", "install", "-y", "--reinstall", "mesa-vulkan-drivers"]
-        notes = "Vulkan forcé, ROCm non proposé"
+        notes = "ROCm + Vulkan au choix ; défaut selon l'architecture"
     else:  # intel
         install_argv = ["apt-get", "install", "-y", "intel-opencl-icd"]
         rollback_argv = ["apt-get", "install", "-y", "--reinstall", "intel-opencl-icd"]
