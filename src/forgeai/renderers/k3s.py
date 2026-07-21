@@ -118,7 +118,16 @@ def _deployment(svc: ServiceSpec, effective_node: str | None = None,
     if svc.command:
         items = "".join(f"\n            - \"{_safe(str(a), 'arg')}\"" for a in svc.command)
         command_block = f"\n          args:{items}"
-    container_extra = f"{command_block}{resources_block}{security_block}{volume_mount}{volume_def}"
+    # env → bloc env k8s (parité compose) ; valeurs littérales (k8s n'expanse pas ${...}).
+    env_block = ""
+    if svc.env:
+        items = "".join(
+            f"\n            - name: {_safe(str(k), 'env-key')}"
+            f"\n              value: \"{_safe(str(v), 'env-val')}\""
+            for k, v in svc.env.items())
+        env_block = f"\n          env:{items}"
+    container_extra = (command_block + env_block + resources_block
+                       + security_block + volume_mount + volume_def)
     return f"""---
 apiVersion: apps/v1
 kind: Deployment

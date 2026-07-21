@@ -142,5 +142,31 @@
       "8080"
     ],
     "depends": []
+  },
+  "cpu-zendnn": {
+    "image": "amdih/zendnn_zentorch:vllm_v0.23.0_zentorch_v2.11.0.2_ubuntu22.04_v2.11.0.2",
+    "container_port": 8000,
+    "health_path": "/health",
+    "gpu": false,
+    "volumes": [],
+    "env": {
+      "ZENDNNL_MATMUL_ALGO": "1",
+      "TORCHINDUCTOR_FREEZING": "1",
+      "VLLM_USE_AOT_COMPILE": "0",
+      "TORCHINDUCTOR_AUTOGRAD_CACHE": "0",
+      "VLLM_CPU_KVCACHE_SPACE": "8"
+    },
+    "command": [
+      "vllm",
+      "serve",
+      "Qwen/Qwen2.5-0.5B-Instruct",
+      "--dtype",
+      "bfloat16",
+      "--host",
+      "0.0.0.0",
+      "--port",
+      "8000"
+    ],
+    "depends": []
   }
 }
