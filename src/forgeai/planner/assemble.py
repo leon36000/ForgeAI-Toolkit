@@ -19,6 +19,19 @@ from forgeai.stacks import deploy_ids
 PREFERRED_PORT_OFFSET = 10000  # 11434 → 21434 : évite les stacks existantes
 CHASSIS_PORT_START = 8100
 
+# Profils GPU → vendor pour la réservation (S2). cpu/inconnu → pas de vendor.
+_GPU_PROFILES = {"minimal-gpu-cuda", "minimal-gpu-rocm", "minimal-gpu-intel"}
+_PROFILE_VENDOR = {
+    "minimal-gpu-cuda": "nvidia",
+    "minimal-gpu-rocm": "amd",
+    "minimal-gpu-intel": "intel",
+}
+
+
+def _profile_vendor(profile: str) -> str | None:
+    """Vendor GPU d'un profil de déploiement (None hors profil GPU)."""
+    return _PROFILE_VENDOR.get(profile)
+
 
 def port_is_free(port: int, host: str = "127.0.0.1") -> bool:
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
@@ -72,6 +85,7 @@ def assemble_plan(
     services = []
     for svc in minimal_stack(deploy_overlay):
         host_port = find_free_port(svc["container_port"] + PREFERRED_PORT_OFFSET, is_free)
+        svc_gpu = bool(svc.get("gpu_capable")) and profile in _GPU_PROFILES
         services.append(ServiceSpec(
             name=svc["name"],
             image=svc["image"],
@@ -82,7 +96,8 @@ def assemble_plan(
                 f"http://127.0.0.1:{host_port}{svc['healthcheck_path']}"
                 if svc.get("healthcheck_path") else None
             ),
-            gpu=bool(svc.get("gpu_capable")) and profile == "minimal-gpu-cuda",
+            gpu=svc_gpu,
+            gpu_vendor=_profile_vendor(profile) if svc_gpu else None,
         ))
 
     if stack is not None or extra_bricks:
@@ -112,6 +127,7 @@ def assemble_plan(
             # On ne conserve que les dépendances réellement présentes dans le
             # plan final (indépendant de l'ordre de traitement des briques).
             depends = tuple(d for d in spec.get("depends", []) if d in planned_names)
+            brick_gpu = bool(spec.get("gpu", False))
             services.append(ServiceSpec(
                 name=brick_id,
                 image=spec["image"],
@@ -122,7 +138,8 @@ def assemble_plan(
                 healthcheck_url=healthcheck_url,
                 depends=depends,
                 command=tuple(spec.get("command", [])),
-                gpu=False,
+                gpu=brick_gpu,
+                gpu_vendor=_profile_vendor(profile) if brick_gpu else None,
             ))
             existing_names.add(brick_id)
 
