@@ -217,6 +217,20 @@ def wizard_ci(args: argparse.Namespace) -> int:
             print(f"ABORT [SEL] moteurs inconnus au registre des moteurs : {mauvais_moteurs}",
                   file=sys.stderr)
             return 8
+        # S4 : « au choix » FILTRÉ — un moteur incompatible avec le vendor du nœud cible est refusé
+        # (ex. tensorrt-llm sur un nœud AMD). Le vendor est lu des entrées BRUTES (non persisté au
+        # manifeste) ; une entrée sans vendor connu est ignorée (pas de faux rejet).
+        def _paires_vendor(brut, engine_defaut):
+            return [{"engine": str(e.get("engine", engine_defaut)), "vendor": str(e["vendor"])}
+                    for e in (brut or []) if isinstance(e, dict) and e.get("vendor")]
+        from forgeai.engines import incompatible_selections
+        incompat = incompatible_selections(
+            _paires_vendor(sel.get("models"), "vllm")
+            + _paires_vendor(sel.get("embeddings"), "llama-cpp"))
+        if incompat:
+            print(f"ABORT [SEL] moteur incompatible avec le vendor du nœud : {incompat}",
+                  file=sys.stderr)
+            return 8
         mauvais_noeuds = sorted({e["node"] for e in toutes if e["node"] not in ("local", "auto")
                                  and not node_re.match(e["node"])})
         if mauvais_noeuds:

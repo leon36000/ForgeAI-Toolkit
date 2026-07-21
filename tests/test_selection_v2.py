@@ -63,6 +63,15 @@ def test_v2_moteur_inconnu(tmp_path: Path) -> None:
     assert "moteur-fantome" in res.stderr
 
 
+def test_v2_moteur_incompatible_vendor(tmp_path: Path) -> None:
+    # S4 : moteur nvidia-only (tensorrt-llm) assigné à un nœud AMD => ABORT [SEL] (choix filtré).
+    sel = {"models": [{"hf_id": "Qwen/Qwen3.6-27B", "node": "worker-amd",
+                       "engine": "tensorrt-llm", "vendor": "amd"}]}
+    res = _run_wizard(sel, tmp_path)
+    assert res.returncode == 8, res.stdout + res.stderr
+    assert "incompatible avec le vendor" in res.stderr
+
+
 def test_v2_embedding_mauvaise_famille(tmp_path: Path) -> None:
     sel = {"embeddings": [{"hf_id": "Qwen/Qwen3.6-27B", "node": "auto", "engine": "llama-cpp"}]}
     res = _run_wizard(sel, tmp_path)
