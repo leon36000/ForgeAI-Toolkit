@@ -123,5 +123,24 @@
     "depends": [
       "postgres"
     ]
+  },
+  "llama-cpp-vulkan": {
+    "image": "ghcr.io/ggml-org/llama.cpp:server-vulkan",
+    "container_port": 8080,
+    "health_path": "/health",
+    "gpu": true,
+    "volumes": [],
+    "env": {},
+    "command": [
+      "-hf",
+      "Qwen/Qwen2.5-0.5B-Instruct-GGUF:Q8_0",
+      "-ngl",
+      "99",
+      "--host",
+      "0.0.0.0",
+      "--port",
+      "8080"
+    ],
+    "depends": []
   }
 }
