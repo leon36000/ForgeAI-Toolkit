@@ -2,6 +2,7 @@
 cible est rejeté à la sélection. Source de vérité : moteurs-inference.json (gpu_vendors par moteur).
 Ex. tensorrt-llm (nvidia-only) sur un nœud AMD => refusé. Une entrée sans vendor connu = ignorée.
 """
+import json
 import sys
 from pathlib import Path
 
@@ -48,3 +49,16 @@ def test_incompatible_selections():
         {"engine": "vllm", "vendor": ""},             # vendor inconnu -> ignoré (pas de faux rejet)
     ]
     assert incompatible_selections(sels) == ["tensorrt-llm@amd"]
+
+
+def test_cli_incompat_en_process(tmp_path):
+    """Couvre la validation cli.py EN PROCESS (comptée par la couverture, contrairement au test
+    sous-processus) : un moteur nvidia-only sur un nœud vendor 'amd' -> ABORT [SEL], exit 8."""
+    import forgeai.cli as cli
+    sel = tmp_path / "sel.json"
+    sel.write_text(json.dumps({"models": [{
+        "hf_id": "Qwen/Qwen3.6-27B", "node": "worker-amd",
+        "engine": "tensorrt-llm", "vendor": "amd"}]}), encoding="utf-8")
+    rc = cli.main(["wizard", "--ci", "--dry-run", "--stack", "agentique",
+                   "--workdir", str(tmp_path / "run"), "--selection", str(sel)])
+    assert rc == 8
