@@ -77,6 +77,30 @@ def test_api_engines() -> None:
         server.server_close()
 
 
+def test_api_engines_compatible_filtre_par_vendor() -> None:
+    # S6 : le choix FILTRÉ exposé à l'UI — /api/engines/compatible?vendor=amd
+    server = build_server("127.0.0.1", 0)
+    thread = threading.Thread(target=server.serve_forever, daemon=True)
+    thread.start()
+    try:
+        host, port = server.server_address
+        conn = HTTPConnection(host, port)
+        conn.request("GET", "/api/engines/compatible?vendor=amd")
+        response = conn.getresponse()
+        assert response.status == 200
+        data = json.loads(response.read().decode("utf-8"))
+        assert data["vendor"] == "amd"
+        assert "llama-cpp" in data["moteurs"] and "vllm" in data["moteurs"]
+        assert "tensorrt-llm" not in data["moteurs"]  # nvidia-only exclu du choix AMD
+        # vendor nvidia : tensorrt-llm réapparaît
+        conn.request("GET", "/api/engines/compatible?vendor=nvidia")
+        nv = json.loads(conn.getresponse().read().decode("utf-8"))
+        assert "tensorrt-llm" in nv["moteurs"]
+    finally:
+        server.shutdown()
+        server.server_close()
+
+
 def test_choix_jamais_impose() -> None:
     moteurs = _read_data_json("moteurs-inference.json")
     vendors: set[str] = set()
