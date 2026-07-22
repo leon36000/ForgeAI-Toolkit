@@ -1,0 +1,14 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "src/forgeai/web/server.py",
+   "description": "La dict comprehension dans `_node_vendors_by_host` itère sur tous les résultats de `cluster.read_probes` sans filtrage explicite par type de sonde (ex. `node_hardware`). Si `read_probes` retourne d'autres types de sondes possédant un champ `node_host`, elles pourraient écraser les vendors GPU avec des listes vides. Le test unitaire ne sème que des entrées `node_hardware`, ce qui masque ce risque potentiel.",
+   "preuve": "Lignes 210-213 : `for probe in cluster.read_probes(registre_path)` sans condition de filtrage sur le type de sonde."
+  }
+ ],
+ "date_heure": "2026-07-22T16:05:38.457886+00:00",
+ "prompt_sha256": "fb4c13aa061cc54d1ce4c278d479ab1a2dd3522a4960516be4cfbb1c0521419c",
+ "reviewer_model": "Qwen3.7-Max"
+}
