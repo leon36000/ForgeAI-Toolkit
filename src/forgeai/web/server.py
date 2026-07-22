@@ -204,6 +204,17 @@ def _registre_path() -> Path:
     return _REGISTRE_PATH if _REGISTRE_PATH is not None else forgeai_home() / "Registres" / "mission.jsonl"
 
 
+def _node_vendors_by_host(registre_path: Path) -> dict[str, list[str]]:
+    """S6b — corrèle nom d'hôte -> vendors GPU distincts depuis les sondes `node_hardware` du
+    registre (réutilise cluster.read_probes/node_vendors de S7). Registre absent => {} (jamais
+    d'exception). Sert à enrichir /api/nodes/status pour que l'UI filtre les moteurs par vendor."""
+    from forgeai import cluster
+    return {
+        probe.get("node_host"): cluster.node_vendors(probe.get("hardware", {}))
+        for probe in cluster.read_probes(registre_path)
+    }
+
+
 def _node_keys(runner: CommandRunner) -> tuple[Path, Path]:
     """Retourne la paire de clés active, la génère si elle est absente."""
     key_dir = _NODE_KEYS_DIR if _NODE_KEYS_DIR is not None else forgeai_home() / "keys"
@@ -504,9 +515,16 @@ class ForgeAIHandler(BaseHTTPRequestHandler):
             runner = SubprocessRunner()
             try:
                 nodes = cluster_status(runner)
-                self._send_json(200, {"nodes": nodes})
             except ClusterError as exc:
                 self._send_json(200, {"nodes": [], "detail": str(exc)})
+                return
+            # S6b : enrichit chaque nœud de son/ses vendor(s) GPU (sondes node_hardware du
+            # registre) pour que le dropdown moteur de l'UI se filtre par vendor. Nœud sans
+            # sonde => vendors:[] (le champ existe toujours, jamais absent ni None).
+            vendors_by_host = _node_vendors_by_host(_registre_path())
+            for node in nodes:
+                node["vendors"] = vendors_by_host.get(node.get("name"), [])
+            self._send_json(200, {"nodes": nodes})
             return
 
         if path == "/api/nodes/receptacles":

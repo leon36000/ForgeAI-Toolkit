@@ -592,11 +592,24 @@
     return opts.join('');
   }
 
-  function engineOptions(selected) {
+  // Vendor GPU du nœud sélectionné (via /api/nodes/status enrichi, S6b). null si
+  // local/auto/mixte/inconnu => aucun filtrage (fallback : tous les moteurs).
+  function vendorForNode(nodeName) {
+    const F = window.ForgeAIEngineFilter;
+    if (!F) return null;
+    const nodes = (state.nodes && state.nodes.nodes) || (state.summary && state.summary.nodes) || [];
+    return F.nodeVendorForFilter(nodes, nodeName);
+  }
+
+  function engineOptions(selected, vendor) {
     if (!state.engines || !state.engines.length) {
       return `<option value="">${escapeHtml(t('loading'))}</option>`;
     }
-    return state.engines.map((eng) => {
+    // S6b : ne proposer que les moteurs compatibles avec le vendor du nœud (module pur testé).
+    // La sélection courante reste toujours visible (jamais de saut de valeur silencieux).
+    const F = window.ForgeAIEngineFilter;
+    const engines = F ? F.engineChoices(state.engines, vendor, selected) : state.engines;
+    return engines.map((eng) => {
       const id = eng.id || eng.engine_id || String(eng);
       const label = eng.name || id;
       return `<option value="${escapeHtml(id)}"${selected === id ? ' selected' : ''}>${escapeHtml(label)}</option>`;
@@ -659,7 +672,7 @@
               </select>
               <span class="place-label">${escapeHtml(t('f_engine'))}</span>
               <select class="place-select" data-model-engine="${escapeHtml(m.hf_id)}" aria-label="${escapeHtml(t('f_engine'))}">
-                ${engineOptions(engineVal)}
+                ${engineOptions(engineVal, vendorForNode(nodeVal))}
               </select>
             </span>
           </span>
@@ -686,6 +699,7 @@
         const id = sel.dataset.modelNode;
         if (!state.modelsChosen[id]) return;
         state.modelsChosen[id].node = sel.value;
+        renderLocalModels();  // S6b : re-filtre le dropdown moteur selon le vendor du nœud choisi
       });
     });
     box.querySelectorAll('select[data-model-engine]').forEach((sel) => {
@@ -750,7 +764,7 @@
               </select>
               <span class="place-label">${escapeHtml(t('f_engine'))}</span>
               <select class="place-select" data-embedding-engine="${escapeHtml(m.hf_id)}" aria-label="${escapeHtml(t('f_engine'))}">
-                ${engineOptions(engineVal)}
+                ${engineOptions(engineVal, vendorForNode(nodeVal))}
               </select>
             </span>
           </span>
@@ -777,6 +791,7 @@
         const id = sel.dataset.embeddingNode;
         if (!state.embeddingsChosen[id]) return;
         state.embeddingsChosen[id].node = sel.value;
+        renderEmbeddings();  // S6b : re-filtre le dropdown moteur selon le vendor du nœud choisi
       });
     });
     box.querySelectorAll('select[data-embedding-engine]').forEach((sel) => {
