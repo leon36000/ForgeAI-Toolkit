@@ -565,6 +565,22 @@ def _node_probe(args: argparse.Namespace) -> int:
     return 0
 
 
+def _node_cluster(args: argparse.Namespace) -> int:
+    # S7 : vue cluster agrégée « quel vendor GPU sur quels nœuds » depuis les sondes du registre.
+    from forgeai.cluster import cluster_view, read_probes
+    view = cluster_view(read_probes(args.registre))
+    if not view["nodes"]:
+        print("[forgeai] vue cluster : aucune sonde node_hardware au registre")
+        return 0
+    print("[forgeai] vue cluster — vendors GPU par nœud :")
+    for n in view["nodes"]:
+        print(f"  {n['node']} : profil {n['profile']} | vendors {', '.join(n['vendors']) or 'aucun'}")
+    print("[forgeai] quel vendor où :")
+    for vendor, hosts in sorted(view["vendors"].items()):
+        print(f"  {vendor} -> {', '.join(hosts)}")
+    return 0
+
+
 def _node_tailscale(args: argparse.Namespace) -> int:
     from forgeai.network.tailscale import render_node_network, TailscaleError
     from forgeai.network.bootstrap import BootstrapError
@@ -1193,6 +1209,10 @@ def main(argv: list[str] | None = None) -> int:
                                  help="clé privée SSH (requis si distant)")
     p_node_discover.add_argument("--registre", default=str(DEFAULT_REGISTRE))
     p_node_discover.set_defaults(func=_node_discover)
+    p_node_cluster = node_sub.add_parser(
+        "cluster", help="vue cluster agrégée : quel vendor GPU sur quels nœuds (S7)")
+    p_node_cluster.add_argument("--registre", default=str(DEFAULT_REGISTRE))
+    p_node_cluster.set_defaults(func=_node_cluster)
 
     p_wiz = sub.add_parser("wizard", help="wizard bout-en-bout")
     p_wiz.add_argument("--ci", action="store_true", required=True)
