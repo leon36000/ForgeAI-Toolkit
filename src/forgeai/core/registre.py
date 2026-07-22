@@ -10,8 +10,10 @@ Usage :
     registre.py verify <fichier.jsonl> [...]
 """
 import argparse
+import fcntl
 import hashlib
 import json
+import os
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
@@ -25,37 +27,51 @@ def _entry_hash(entry: dict) -> str:
     return hashlib.sha256(blob.encode("utf-8")).hexdigest()
 
 
-def _read_entries(path: Path) -> list[dict]:
-    if not path.exists():
-        return []
+def _parse_entries_from_text(text: str, source: str = "") -> list[dict]:
+    prefix = f"{source}:" if source else "ligne "
     entries = []
-    for lineno, line in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):
+    for lineno, line in enumerate(text.splitlines(), 1):
         line = line.strip()
         if not line:
             continue
         try:
             entries.append(json.loads(line))
         except json.JSONDecodeError as exc:
-            raise SystemExit(f"{path}:{lineno}: JSON invalide — {exc}")
+            raise SystemExit(f"{prefix}{lineno}: JSON invalide — {exc}")
     return entries
 
 
+def _read_entries(path: Path) -> list[dict]:
+    if not path.exists():
+        return []
+    # `path` = emplacement du registre choisi par l'app/l'opérateur (jamais une entrée HTTP) ;
+    # correctif de concurrence, aucun chemin dérivé d'input → faux positif path-traversal.
+    return _parse_entries_from_text(path.read_text(encoding="utf-8"), source=str(path))  # NOSONAR
+
+
 def append(path: Path, type_: str, actor: str, payload: dict) -> dict:
-    entries = _read_entries(path)
-    prev_hash = entries[-1]["hash"] if entries else GENESIS
-    entry = {
-        "seq": len(entries) + 1,
-        "ts": datetime.now(timezone.utc).isoformat(timespec="seconds"),
-        "type": type_,
-        "actor": actor,
-        "payload": payload,
-        "prev_hash": prev_hash,
-    }
-    entry["hash"] = _entry_hash(entry)
-    line = json.dumps(entry, sort_keys=True, ensure_ascii=False, separators=(",", ":"))
     path.parent.mkdir(parents=True, exist_ok=True)  # ex. ~/.forgeai/Registres/ (P3)
-    with path.open("a", encoding="utf-8") as fh:
+    # `path` = registre app/opérateur (pas d'entrée HTTP) ; chemin non dérivé d'input.
+    with path.open("a+", encoding="utf-8") as fh:  # NOSONAR
+        fcntl.flock(fh.fileno(), fcntl.LOCK_EX)
+        fh.seek(0)
+        entries = _parse_entries_from_text(fh.read(), source=str(path))
+        prev_hash = entries[-1]["hash"] if entries else GENESIS
+        entry = {
+            "seq": len(entries) + 1,
+            "ts": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+            "type": type_,
+            "actor": actor,
+            "payload": payload,
+            "prev_hash": prev_hash,
+        }
+        entry["hash"] = _entry_hash(entry)
+        line = json.dumps(entry, sort_keys=True, ensure_ascii=False, separators=(",", ":"))
+        fh.seek(0, os.SEEK_END)
         fh.write(line + "\n")
+        fh.flush()
+        os.fsync(fh.fileno())
+        fcntl.flock(fh.fileno(), fcntl.LOCK_UN)
     return entry
 
 
