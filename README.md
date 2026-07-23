@@ -7,9 +7,9 @@ catalogue 1021 entrées bilingue (FR/EN), multi-nœuds (Tailscale), gouvernance 
 
 ```bash
 pip install forgeai-toolkit          # cœur sans aucune dépendance (stdlib pur)
-pip install "forgeai-toolkit[tui]"   # + wizard interactif Textual (optionnel)
 
 forgeai doctor                       # que peut faire VOTRE machine ?
+forgeai web                          # interface web (stdlib, aucune dépendance)
 ```
 
 `forgeai doctor` sonde votre environnement (CPU/GPU, Docker, kubectl/cluster, Ollama)
@@ -57,7 +57,9 @@ ggshield auth login   # authentification interactive locale — NE JAMAIS commit
 
 **Important :** Le token d'authentification GitGuardian (`GITGUARDIAN_API_KEY` ou équivalent) est strictement local. Ne le committez jamais et ne le placez jamais en clair dans le dépôt ni dans une variable d'environnement partagée.
 
-## État de la mission (2026-07-14)
+## État de la mission
+
+_État courant : voir le registre `Registres/mission.jsonl` (chaîne sha256 vérifiée)._
 
 **P1 PROUVÉE** — machine nue → RAG fonctionnel, sur les deux backends :
 
