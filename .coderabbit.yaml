@@ -13,7 +13,6 @@ reviews:
     - "src/forgeai/data/__init__.py"
     - "!CANON/**"
     - "!Docs/**"
-    - "!docs/**"
     - "!Phase-A/**"
     - "!Rapports/**"
     - "!Recherche/**"
