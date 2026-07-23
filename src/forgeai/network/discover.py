@@ -76,7 +76,8 @@ def _sonder(runner) -> dict[str, Any]:
     for sig in signatures:
         binaire = sig.get("binaire")
         if binaire:
-            code, _ = runner.run(["sh", "-c", f"command -v {binaire}"])
+            # binaire passé en paramètre positionnel ($1) — jamais interprété comme syntaxe shell
+            code, _ = runner.run(["sh", "-c", 'command -v "$1"', "sh", binaire])
             binaires[sig["id"]] = code == 0
 
     conteneurs: list[dict[str, str]] = []

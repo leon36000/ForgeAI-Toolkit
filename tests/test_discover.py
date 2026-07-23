@@ -46,8 +46,8 @@ def test_signatures_briques_au_catalogue() -> None:
 def test_inventaire_detecte_ollama_qdrant() -> None:
     runner = FakeRunner(
         {
-            "sh -c command -v docker": (0, "/usr/bin/docker"),
-            "sh -c command -v ollama": (0, "/usr/bin/ollama"),
+            'sh -c command -v "$1" sh docker': (0, "/usr/bin/docker"),
+            'sh -c command -v "$1" sh ollama': (0, "/usr/bin/ollama"),
             "docker ps --format": (
                 0,
                 "ollama/ollama|ollama|0.0.0.0:11434->11434/tcp",
@@ -93,7 +93,7 @@ def test_inventaire_absents() -> None:
 def test_tolerant_commande_absente() -> None:
     runner = FakeRunner(
         {
-            "sh -c command -v docker": (0, "/usr/bin/docker"),
+            'sh -c command -v "$1" sh docker': (0, "/usr/bin/docker"),
             "docker ps --format": (127, ""),
             "ss -tlnH": (0, ""),
             "nvidia-smi -L": (127, ""),
