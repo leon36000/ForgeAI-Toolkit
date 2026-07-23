@@ -11,7 +11,6 @@ import argparse
 import json
 import importlib.resources
 import os
-import re
 import socket
 import sys
 import time
@@ -21,13 +20,12 @@ from urllib.parse import urlparse
 from forgeai.bootstrap.secrets import bootstrap_secrets
 from forgeai.catalogue.loader import load_catalogue, verify_catalogue
 from forgeai.core import registre
-from forgeai.core.models import RenderTarget
 from forgeai.core.runner import SubprocessRunner
+from forgeai.core.validation import NODE_NAME_RE
 from forgeai.deploy.compose import (
     DeployError,
     compose_down,
     compose_up,
-    http_ok,
     wait_healthy,
 )
 from forgeai.deploy.k3s import k3s_apply, k3s_delete_namespace, k3s_wait_deployments
@@ -75,7 +73,7 @@ def default_registre() -> Path:
 
 DEFAULT_REGISTRE = default_registre()
 
-_NODE_RE = re.compile(r"^[a-z0-9]([a-z0-9.-]{0,62})$", re.ASCII)
+_NODE_RE = NODE_NAME_RE  # source unique partagée (FAI-0016)
 
 
 def _node_type(value: str) -> str:
@@ -205,7 +203,7 @@ def wizard_ci(args: argparse.Namespace) -> int:
         familles = {m["hf_id"]: m["famille"] for m in registre_modeles["modeles"]}
         moteurs = {m["id"] for m in json.loads(
             (_res.files(DATA_PKG) / "moteurs-inference.json").read_text(encoding="utf-8"))["moteurs"]}
-        node_re = re.compile(r"^[a-z0-9]([a-z0-9.-]{0,62})$")
+        node_re = NODE_NAME_RE  # source unique partagée (FAI-0016)
 
         toutes = selection_models + selection_embeddings
         inconnus_m = sorted(e["hf_id"] for e in toutes if e["hf_id"] not in hf_ids)

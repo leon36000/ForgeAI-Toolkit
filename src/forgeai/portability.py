@@ -20,7 +20,7 @@ import json
 import hashlib
 from pathlib import Path
 from datetime import date
-from typing import Optional, List
+from typing import List
 
 BUNDLE_VERSION = 1
 SETUP_FILES = ("routes.json", "gateway.json", "wirings.json", "strategy.json", "budgets.json")

@@ -16,7 +16,7 @@ from pathlib import Path
 
 from forgeai.models._locking import file_lock
 from .probe import ProbeResult, Transport, UrllibTransport, probe_route
-from .vault import Vault, fingerprint
+from .vault import Vault
 
 
 # Provenances connues → URL de base compatible OpenAI. "direct"/"autre" exigent --base-url.

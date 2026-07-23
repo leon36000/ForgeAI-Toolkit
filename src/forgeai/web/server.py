@@ -20,6 +20,7 @@ from forgeai.catalogue.loader import parse_stars
 from forgeai.catalogue.spheres import SPHERES, classify_sphere, spheres_index
 from forgeai.core import registre
 from forgeai.core.runner import SubprocessRunner, CommandRunner
+from forgeai.core.validation import NODE_NAME_RE
 from forgeai.deploy.compose import http_ok
 from forgeai.hardware.detect import HardwareDetector
 from forgeai.models.probe import Transport
@@ -43,7 +44,7 @@ _MIME_TYPES = {
 }
 
 _CHASSIS_CACHE: frozenset[str] | None = None
-_NODE_RE = re.compile(r"^[a-z0-9]([a-z0-9.-]{0,62})$", re.ASCII)
+_NODE_RE = NODE_NAME_RE  # source unique partagée (FAI-0016)
 
 
 def _mime(name: str) -> str:
