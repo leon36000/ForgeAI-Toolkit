@@ -118,3 +118,44 @@ def test_normalize_host():
     assert _normalize_host("LocalHost") == "localhost"
     assert _normalize_host(None) is None
     assert _normalize_host("") is None
+
+
+# --- FAI-0001b — le jeton valide prime sur Host/Origin/Sec-Fetch-Site (accès distant authentifié) ---
+def test_authorize_mutation_jeton_prioritaire():
+    """FAI-0001b : un Bearer valide autorise immédiatement, même hors loopback (ROUGE avant correctif)."""
+    def am(**kw):
+        base = dict(origin=None, host="127.0.0.1", auth_header=None,
+                    bind_host="127.0.0.1", token=None)
+        return authorize_mutation(**{**base, **kw})
+
+    # accès distant authentifié : Host hors de `allowed` (bind 0.0.0.0) mais Bearer valide → autorisé
+    assert authorize_mutation(origin=None, host="192.168.1.5:8765", auth_header="Bearer t",
+                              bind_host="0.0.0.0", token="t", sec_fetch_site=None) == (True, 0)
+    # le jeton prime sur Sec-Fetch-Site cross-site
+    assert authorize_mutation(origin=None, host="127.0.0.1:8765", auth_header="Bearer t",
+                              bind_host="127.0.0.1", token="t", sec_fetch_site="cross-site") == (True, 0)
+    # le jeton prime sur un Origin cross-origin
+    assert am(origin="http://evil.test", host="127.0.0.1:8765",
+              auth_header="Bearer t", token="t") == (True, 0)
+    # jeton défini mais absent, même en loopback → 401
+    assert am(host="127.0.0.1:8765", auth_header=None, token="t") == (False, 401)
+    # jeton défini mais invalide, même en loopback → 401
+    assert am(host="127.0.0.1:8765", auth_header="Bearer x", token="t") == (False, 401)
+    # sans jeton configuré, aucun contournement réintroduit : les contrôles actuels s'appliquent
+    assert am(host="192.168.1.5:8765", bind_host="0.0.0.0") == (False, 403)
+    assert am(sec_fetch_site="cross-site") == (False, 403)
+
+
+def test_live_distant_authentifie_passe(live, monkeypatch):
+    """E2E FAI-0001b : POST « distant » (Host hors loopback, bind 0.0.0.0) + Bearer valide → pas 403."""
+    monkeypatch.setattr("forgeai.web.server._WEB_TOKEN", "s3cr3t", raising=False)
+    monkeypatch.setattr("forgeai.web.server._WEB_BIND_HOST", "0.0.0.0", raising=False)
+    base, _ = live
+    code, _ = _post(base, "/api/deploy",
+                    {"Host": "192.168.1.5:8765", "Authorization": "Bearer s3cr3t"},
+                    {"stack": "agentique", "backend": "compose"})
+    assert code != 403, f"accès distant authentifié ne doit pas être refusé par le garde, reçu {code}"
+    # sans le jeton, le même POST distant reste refusé (anti-rebinding intact quand le jeton manque)
+    code_sans, _ = _post(base, "/api/deploy", {"Host": "192.168.1.5:8765"},
+                         {"stack": "agentique", "backend": "compose"})
+    assert code_sans == 401, f"jeton défini mais absent → 401, reçu {code_sans}"
