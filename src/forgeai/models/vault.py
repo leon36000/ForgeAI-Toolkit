@@ -101,7 +101,6 @@ class Vault:
         return json.loads(self.path.read_text(encoding="utf-8"))
 
     def _save(self, data: dict[str, str]) -> None:
-        import base64
         import json
         self.path.parent.mkdir(parents=True, exist_ok=True)
         os.chmod(self.path.parent, 0o700)
