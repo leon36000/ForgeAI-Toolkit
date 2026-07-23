@@ -283,13 +283,22 @@ def authorize_mutation(*, origin: str | None, host: str | None, auth_header: str
                        sec_fetch_site: str | None = None) -> tuple[bool, int]:
     """Autorise une requête MUTANTE. Retour (autorisé, code_si_refus) : 403 CSRF/rebinding, 401 jeton.
 
+    - jeton (prioritaire) : si `token` est défini, un `Authorization: Bearer <token>` valide
+      (comparaison temps constant) autorise IMMÉDIATEMENT — `Authorization` n'est pas un en-tête
+      CORS-safelisted, donc un Bearer valide ne peut pas être un vecteur CSRF/rebinding ; c'est ce
+      qui rend possible l'accès distant authentifié (--host 0.0.0.0). Jeton défini mais absent ou
+      invalide → 401, sans autre contrôle ;
     - anti-CSRF (métadonnées navigateur) : `Sec-Fetch-Site` cross-site/same-site → refus, MÊME si Origin
       est absent (les navigateurs modernes envoient cet en-tête sur toutes les requêtes) ;
     - anti-CSRF (repli) : si Origin présent, son hôte doit être loopback ou l'hôte lié ;
-    - anti DNS-rebinding : le Host doit être loopback ou l'hôte lié ;
-    - jeton : si `token` défini, exiger `Authorization: Bearer <token>` (comparaison temps constant).
+    - anti DNS-rebinding : le Host doit être loopback ou l'hôte lié.
     Les clients non-navigateur (CLI, tests) n'envoient pas Sec-Fetch-Site → non pénalisés (ne sont pas
     un vecteur CSRF : pas de « confused deputy »)."""
+    if token:
+        if hmac.compare_digest(auth_header or "", "Bearer " + token):
+            return (True, 0)
+        return (False, 401)
+
     if sec_fetch_site and sec_fetch_site.strip().lower() in {"cross-site", "same-site", "cross-origin"}:
         return (False, 403)
 
@@ -305,11 +314,6 @@ def authorize_mutation(*, origin: str | None, host: str | None, auth_header: str
 
     if not host or _normalize_host(host) not in allowed:
         return (False, 403)
-
-    if token:
-        expected = "Bearer " + token
-        if not hmac.compare_digest(auth_header or "", expected):
-            return (False, 401)
 
     return (True, 0)
 
