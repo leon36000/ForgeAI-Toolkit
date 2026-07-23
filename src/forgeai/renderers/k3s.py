@@ -9,6 +9,7 @@ from __future__ import annotations
 import os
 import re
 import textwrap
+from urllib.parse import urlsplit
 
 from forgeai.core.models import DeploymentPlan, ServiceSpec
 
@@ -19,6 +20,8 @@ _DEFAULT_PVC_SIZE = "10Gi"
 # (interpolé brut au manifeste ; une valeur arbitraire injecterait du YAML). Le wizard le contraint
 # par argparse, mais render_k3s est une API publique -> allowlist ici (finding Sentinelle).
 _SERVICE_TYPES = frozenset({"NodePort", "LoadBalancer"})
+# Services internes du profil Minimal : exposés en ClusterIP, pas en NodePort/LoadBalancer.
+_INTERNAL_SERVICES = frozenset({"redis", "qdrant", "vector-store", "immudb", "openbao", "postgres", "tei"})
 
 _SECRET_NAME = "forgeai-secrets"
 _SECRET_REF = re.compile(r"\$\{(FORGEAI_[A-Za-z0-9_]+)\}")
@@ -61,6 +64,60 @@ def _service_ports(svc: ServiceSpec, service_type: str, node_port: int | None) -
     return base
 
 
+def _resources_block(vendor: str | None) -> str:
+    """Bloc resources toujours présent ; ajoute la ressource nvidia.com/gpu si besoin."""
+    block = (
+        "\n          resources:"
+        "\n            requests:"
+        "\n              cpu: 100m"
+        "\n              memory: 128Mi"
+        "\n            limits:"
+        '\n              cpu: "1"'
+        "\n              memory: 1Gi"
+    )
+    if vendor == "nvidia":
+        block += '\n              nvidia.com/gpu: "1"'
+    return block
+
+
+def _security_block(vendor: str | None) -> str:
+    """Durcissement du securityContext. Les conteneurs GPU amd/intel nécessitent privileged
+    pour le passthrough de devices et sont exclus du durcissement standard.
+    runAsNonRoot ET capabilities.drop:[ALL] ne sont PAS émis : de nombreuses images tournent en
+    root et ont besoin de capabilities (ex. redis chown /data) ; les forcer ferait échouer les
+    pods — PREUVE RUNTIME (K3s réel) : redis:7-alpine avec drop:[ALL] -> CrashLoopBackOff
+    « chown: Operation not permitted ». Un runAsUser spécifique par image est hors périmètre.
+    Durcissement retenu (vérifié : redis atteint Ready) = allowPrivilegeEscalation:false +
+    seccompProfile RuntimeDefault."""
+    if vendor in ("amd", "intel"):
+        return "\n          securityContext:\n            privileged: true"
+    return (
+        "\n          securityContext:"
+        "\n            allowPrivilegeEscalation: false"
+        "\n            seccompProfile:"
+        "\n              type: RuntimeDefault"
+    )
+
+
+def _probes_block(svc: ServiceSpec) -> str:
+    """Liveness + readiness : httpGet si healthcheck_url renseigné, sinon tcpSocket."""
+    port = svc.container_port
+    health_url = getattr(svc, "healthcheck_url", None) or ""
+    if health_url:
+        path = _safe(urlsplit(health_url).path or "/", "healthcheck-path")
+        probe = f"httpGet:\n              path: {path}\n              port: {port}"
+    else:
+        probe = f"tcpSocket:\n              port: {port}"
+    return (
+        f"\n          livenessProbe:\n            {probe}\n"
+        f"            initialDelaySeconds: 10\n"
+        f"            periodSeconds: 10\n"
+        f"          readinessProbe:\n            {probe}\n"
+        f"            initialDelaySeconds: 10\n"
+        f"            periodSeconds: 10"
+    )
+
+
 def _deployment(svc: ServiceSpec, effective_node: str | None = None,
                 node_port: int | None = None, service_type: str = "NodePort",
                 config_files: dict[str, str] | None = None) -> str:
@@ -69,30 +126,15 @@ def _deployment(svc: ServiceSpec, effective_node: str | None = None,
     # GPU par vendor (S3) : nvidia -> ressource device-plugin ; amd/intel -> passthrough hostPath
     # des devices noyau + privileged (marche sur un nœud NU, sans device-plugin installé).
     vendor = (svc.gpu_vendor or "nvidia") if svc.gpu else None
-    resources_block, security_block, gpu_mounts, gpu_vols = "", "", [], []
-    if vendor == "nvidia":
-        resources_block = (
-            "\n          resources:"
-            "\n            limits:"
-            '\n              nvidia.com/gpu: "1"'
-        )
-    elif vendor == "amd":
-        security_block = """
-          securityContext:
-            privileged: true"""
-        gpu_mounts = [("dev-kfd", "/dev/kfd"), ("dev-dri", "/dev/dri")]
-        gpu_vols = list(gpu_mounts)
-    elif vendor == "intel":
-        security_block = """
-          securityContext:
-            privileged: true"""
-        gpu_mounts = [("dev-dri", "/dev/dri")]
-        gpu_vols = list(gpu_mounts)
+    resources_block = _resources_block(vendor)
+    security_block = _security_block(vendor)
+    probes_block = _probes_block(svc)
     node_selector = ""
     if effective_node and effective_node != "auto":
         node_selector = f"""
       nodeSelector:
         kubernetes.io/hostname: {_safe(effective_node, 'node')}"""
+    effective_type = "ClusterIP" if svc.name in _INTERNAL_SERVICES else service_type
     # Fusion volume data + devices GPU + fichiers config (ConfigMap) en UN bloc volumeMounts
     # et UN bloc volumes (sinon clé YAML dupliquée).
     # mounts: (name, mountPath, subPath|None, readOnly)
@@ -148,6 +190,15 @@ def _deployment(svc: ServiceSpec, effective_node: str | None = None,
         else:
             raise ValueError(
                 f"volume mal formé (attendu 'nom:chemin' ou './fichier:chemin:mode') : {volume!r}")
+    # Montages GPU hostPath (amd/intel) ajoutés au même bloc volumeMounts.
+    gpu_mounts: list[tuple[str, str]] = []
+    gpu_vols: list[tuple[str, str]] = []
+    if vendor == "amd":
+        gpu_mounts = [("dev-kfd", "/dev/kfd"), ("dev-dri", "/dev/dri")]
+        gpu_vols = list(gpu_mounts)
+    elif vendor == "intel":
+        gpu_mounts = [("dev-dri", "/dev/dri")]
+        gpu_vols = list(gpu_mounts)
     for claim, path in gpu_mounts:
         mounts.append((claim, path, None, False))
     for claim, path in gpu_vols:
@@ -180,7 +231,7 @@ def _deployment(svc: ServiceSpec, effective_node: str | None = None,
     # command → args k8s (parité avec le renderer compose) ; chaque arg passé par _safe (injection).
     command_block = ""
     if svc.command:
-        items = "".join(f"\n            - \"{_safe(str(a), 'arg')}\"" for a in svc.command)
+        items = "".join(f'\n            - "{_safe(str(a), "arg")}"' for a in svc.command)
         command_block = f"\n          args:{items}"
     # env → bloc env k8s (parité compose) ; ${FORGEAI_*} devient secretKeyRef ou $(VAR).
     env_block = ""
@@ -232,8 +283,9 @@ def _deployment(svc: ServiceSpec, effective_node: str | None = None,
                     f"\n              value: \"{_safe(str(v), 'env-val')}\""
                 )
         env_block = f"\n          env:{items}"
-    container_extra = (command_block + env_block + resources_block
-                       + security_block + volume_mount + volume_def)
+    container_extra = (command_block + env_block + resources_block + security_block
+                       + probes_block + volume_mount + volume_def)
+    sa_block = "\n      serviceAccountName: forgeai-sa\n      automountServiceAccountToken: false"
     return "".join(configmap_docs) + "".join(pvc_docs) + f"""---
 apiVersion: apps/v1
 kind: Deployment
@@ -247,7 +299,7 @@ spec:
   template:
     metadata:
       labels: {{app: {name}}}
-    spec:{node_selector}
+    spec:{node_selector}{sa_block}
       containers:
         - name: {name}
           image: {image}
@@ -260,9 +312,9 @@ metadata:
   name: {name}
   namespace: {NAMESPACE}
 spec:
-  type: {service_type}
+  type: {effective_type}
   selector: {{app: {name}}}
-  ports:{_service_ports(svc, service_type, node_port)}
+  ports:{_service_ports(svc, effective_type, node_port)}
 """
 
 
@@ -282,6 +334,26 @@ apiVersion: v1
 kind: Namespace
 metadata:
   name: {NAMESPACE}
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: forgeai-sa
+  namespace: {NAMESPACE}
+automountServiceAccountToken: false
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: forgeai-default
+  namespace: {NAMESPACE}
+spec:
+  podSelector: {{}}
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - podSelector: {{}}
 """]
     used: set[int] = set()
     for svc in plan.services:
