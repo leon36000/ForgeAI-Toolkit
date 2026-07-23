@@ -1,0 +1,14 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "src/forgeai/web/server.py",
+   "description": "Si le serveur est démarré avec `bind_host=\"0.0.0.0\"` pour écouter sur toutes les interfaces, la liste `allowed` n'inclura que `0.0.0.0` (en plus des loopbacks). Une requête légitime accédant à l'IP réseau de la machine (ex: `192.168.1.5`) enverra `Host: 192.168.1.5`, ce qui entraînera un rejet 403 par le contrôle anti-rebinding, rendant l'accès distant impossible sans proxy inverse.",
+   "preuve": "Lignes 296-298 : `bind_hostname = _normalize_host(bind_host); if bind_hostname: allowed.add(bind_hostname)` combiné à la ligne 304 : `if not host or _normalize_host(host) not in allowed: return (False, 403)`"
+  }
+ ],
+ "date_heure": "2026-07-23T00:30:10.418551+00:00",
+ "prompt_sha256": "3d83f100f00f1b94d49084c4e6baf159512129bb897cc045b52c901d01fad0ad",
+ "reviewer_model": "Gemini-3.1-Pro"
+}
