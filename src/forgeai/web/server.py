@@ -8,6 +8,7 @@ import re
 import shutil
 import subprocess
 import sys
+import tempfile
 import threading
 import time
 import urllib.parse
@@ -224,6 +225,60 @@ def _prepare_state_get(host: str) -> dict:
     """Lit l'état (verrouillé) et renvoie une COPIE défensive (jamais l'objet partagé)."""
     with _PREPARE_LOCK:
         return dict(_PREPARE_STATE.get(host, {"done": False}))
+
+
+def _deploy_state_path() -> Path:
+    return forgeai_home() / "deploy" / "deploy-state.json"
+
+
+def _persist_deploy_state() -> None:
+    """Snapshot de l'état reportable sur disque (best-effort, hors lock de l'appelant)."""
+    try:
+        with _DEPLOY_STATE["lock"]:
+            snapshot = {
+                "done": _DEPLOY_STATE["done"],
+                "exit_code": _DEPLOY_STATE["exit_code"],
+                "lines": list(_DEPLOY_STATE["lines"]),
+            }
+        path = _deploy_state_path()
+        path.parent.mkdir(parents=True, exist_ok=True)
+        # Fichier temporaire UNIQUE par écriture : deux persists concurrents (le `_reader` de
+        # l'ancien deploy qui se termine + le persist initial d'un nouveau deploy) écriraient
+        # sinon le MÊME .tmp et corromperaient le JSON avant `os.replace`. mkstemp garantit un
+        # nom distinct ; `os.replace` est atomique (dernier écrivain gagne, jamais de corruption).
+        fd, tmp_str = tempfile.mkstemp(dir=str(path.parent), prefix=".deploy-state.", suffix=".tmp")
+        tmp = Path(tmp_str)
+        try:
+            with os.fdopen(fd, "w", encoding="utf-8") as fh:
+                json.dump(snapshot, fh, ensure_ascii=False)
+            os.replace(str(tmp), str(path))
+        except Exception:
+            tmp.unlink(missing_ok=True)  # nettoie le tmp orphelin ; fd déjà fermé par le with
+            raise
+    except Exception:
+        pass
+
+
+def _load_deploy_state() -> None:
+    """Restaure le dernier état reportable depuis le disque au démarrage du serveur."""
+    path = _deploy_state_path()
+    try:
+        if not path.exists():
+            return
+        data = json.loads(path.read_text(encoding="utf-8"))
+        if not isinstance(data, dict):
+            return
+        lines = data.get("lines")
+        done = data.get("done")
+        exit_code = data.get("exit_code")
+        if not isinstance(lines, list) or not isinstance(done, bool):
+            return
+        with _DEPLOY_STATE["lock"]:
+            _DEPLOY_STATE["lines"] = list(lines)
+            _DEPLOY_STATE["done"] = done
+            _DEPLOY_STATE["exit_code"] = exit_code
+    except Exception:
+        pass
 
 
 def _models_home() -> Path:
@@ -569,8 +624,19 @@ class ForgeAIHandler(BaseHTTPRequestHandler):
             self.end_headers()
 
             if _DEPLOY_STATE["proc"] is None:
-                payload = json.dumps({"exit_code": None}, ensure_ascii=False)
+                # Aucun process vivant : soit aucun deploy n'a tourné, soit l'état a été
+                # restauré du disque après un restart (proc perdu, statut reportable). On
+                # rejoue les lignes mémorisées puis on clôt avec l'exit_code connu (#139).
+                with _DEPLOY_STATE["lock"]:
+                    lines = list(_DEPLOY_STATE["lines"])
+                    done = _DEPLOY_STATE["done"]
+                    exit_code = _DEPLOY_STATE["exit_code"]
+                payload = json.dumps(
+                    {"exit_code": exit_code if done else None}, ensure_ascii=False
+                )
                 try:
+                    for line in lines:
+                        self.wfile.write(f"data: {line}\n\n".encode("utf-8"))
                     self.wfile.write(f"event: end\ndata: {payload}\n\n".encode("utf-8"))
                     self.wfile.flush()
                 except (BrokenPipeError, ConnectionResetError):
@@ -845,6 +911,21 @@ class ForgeAIHandler(BaseHTTPRequestHandler):
                 _DEPLOY_STATE["done"] = False
                 _DEPLOY_STATE["exit_code"] = None
 
+                # Trace de gouvernance AVANT le spawn : un crash du backend en cours de
+                # déploiement laisse ainsi une trace `deploy_started` au registre (best-effort ;
+                # on tient déjà le lock deploy, l'except appende directement sans le reprendre).
+                try:
+                    registre.append(
+                        _registre_path(),
+                        "deploy_started",
+                        "web",
+                        {"stack": stack_id, "backend": backend, "node": node},
+                    )
+                except Exception:
+                    _DEPLOY_STATE["lines"].append(
+                        "avertissement: échec traçage registre deploy_started"
+                    )
+
                 cmd = _DEPLOY_CMD
                 if cmd is None:
                     cmd = [
@@ -885,6 +966,8 @@ class ForgeAIHandler(BaseHTTPRequestHandler):
                 )
                 _DEPLOY_STATE["proc"] = new_proc
 
+            _persist_deploy_state()
+
             def _reader() -> None:
                 try:
                     for line in new_proc.stdout:
@@ -894,6 +977,7 @@ class ForgeAIHandler(BaseHTTPRequestHandler):
                     with _DEPLOY_STATE["lock"]:
                         _DEPLOY_STATE["exit_code"] = new_proc.returncode
                         _DEPLOY_STATE["done"] = True
+                    _persist_deploy_state()
                 except Exception:
                     with _DEPLOY_STATE["lock"]:
                         if new_proc.returncode is None:
@@ -904,6 +988,7 @@ class ForgeAIHandler(BaseHTTPRequestHandler):
                                 pass
                         _DEPLOY_STATE["exit_code"] = new_proc.returncode if new_proc.returncode is not None else -1
                         _DEPLOY_STATE["done"] = True
+                    _persist_deploy_state()
 
             threading.Thread(target=_reader, daemon=True).start()
             self._send_json(202, {"started": True})
@@ -982,6 +1067,7 @@ class ForgeAIHandler(BaseHTTPRequestHandler):
 def build_server(host: str = "127.0.0.1", port: int = 8765) -> ThreadingHTTPServer:
     global _WEB_BIND_HOST
     _WEB_BIND_HOST = host  # le garde de mutation autorise Host/Origin = loopback OU cet hôte lié
+    _load_deploy_state()  # reporte le dernier statut de deploy connu après un restart (#139)
     return ThreadingHTTPServer((host, port), ForgeAIHandler)
 
 
