@@ -55,7 +55,9 @@ def test_k3s_nodeport_dans_la_plage():
     k3s = render_k3s(_plan())
     ports = [int(line.split(":")[1]) for line in k3s.splitlines()
              if "nodePort:" in line]
-    assert len(ports) == 2
+    # FAI-0004 : vector-store est un datastore interne -> ClusterIP (pas de nodePort) ;
+    # seul ollama (non interne) reste exposé en NodePort.
+    assert len(ports) == 1
     assert all(30000 <= p <= 32767 for p in ports)
 
 
@@ -77,7 +79,11 @@ def test_aucun_secret_dans_les_manifestes():
     plan = _plan()
     for rendered in (render_compose(plan), render_k3s(plan)):
         assert "FORGEAI_API_TOKEN=" not in rendered
-        assert "token" not in rendered.lower().replace("env_file", "")
+        # FAI-0004 : `automountServiceAccountToken` est un nom de champ (durcissement), pas un
+        # secret — on le retire du filet naïf « token » qui cible les VALEURS de secret.
+        assert "token" not in (rendered.lower()
+                               .replace("env_file", "")
+                               .replace("automountserviceaccounttoken", ""))
 
 
 @pytest.mark.skipif(shutil.which("docker") is None,
