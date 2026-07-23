@@ -12,6 +12,7 @@ import threading
 import time
 import urllib.parse
 import webbrowser
+from functools import lru_cache
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 
@@ -68,8 +69,14 @@ def hardware_json() -> str:
     return HardwareDetector(SubprocessRunner()).full_report().to_json()
 
 
+@lru_cache(maxsize=1)  # parse mémoïsé (paquet immuable) — 1 seul parse/process (FAI-0014)
+def _catalogue_entries_cached() -> tuple[dict, ...]:
+    return tuple(json.loads(catalogue_path().read_text(encoding="utf-8")).get("entries", []))
+
+
 def _catalogue_entries() -> list[dict]:
-    return json.loads(catalogue_path().read_text(encoding="utf-8")).get("entries", [])
+    # copie superficielle : le cache (tuple immuable) résiste aux mutations d'appelant
+    return list(_catalogue_entries_cached())
 
 
 def _json_body(obj: object) -> bytes:
@@ -147,6 +154,7 @@ def bricks_payload(sphere_id: str, stack_id: str | None) -> dict | None:
 
 
 
+@lru_cache(maxsize=None)  # données immuables du paquet — cache par nom (FAI-0014)
 def _read_data_text(name: str) -> str:
     from importlib import resources
     return (resources.files("forgeai.data") / name).read_text(encoding="utf-8")

@@ -1,0 +1,14 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "src/forgeai/web/server.py",
+   "description": "La copie superficielle protège la structure de la liste (ajout/retrait) mais pas les dictionnaires internes. Un appelant mutant un dict (ex: entries[0]['k']='v') corromprait le cache process-wide. Le test ne valide que la mutation de la liste. Le compromis perf/sécurité est acceptable (une deep-copy annulerait le gain), mais le contrat lecture-seule n'est pas structurellement total pour les éléments.",
+   "preuve": "server.py L76: `return list(_catalogue_entries_cached())` ; test_server_cache.py L23: `a.append(...)` (aucun test de mutation de dict interne type `a[0]['x'] = 'y'`)."
+  }
+ ],
+ "date_heure": "2026-07-23T19:35:19.657963+00:00",
+ "prompt_sha256": "9ff4756d76defd423c252e8762be59cf2b0dc775f1bf297de1b99738ee8d7015",
+ "reviewer_model": "Qwen3.7-Max"
+}
