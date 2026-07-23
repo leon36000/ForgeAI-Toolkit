@@ -7,6 +7,7 @@ Kubernetes : le port hôte est décalé dans la plage NodePort de façon déterm
 from __future__ import annotations
 
 import os
+import re
 import textwrap
 
 from forgeai.core.models import DeploymentPlan, ServiceSpec
@@ -17,6 +18,9 @@ _NODEPORT_SPAN = 2768  # 30000..32767
 # (interpolé brut au manifeste ; une valeur arbitraire injecterait du YAML). Le wizard le contraint
 # par argparse, mais render_k3s est une API publique -> allowlist ici (finding Sentinelle).
 _SERVICE_TYPES = frozenset({"NodePort", "LoadBalancer"})
+
+_SECRET_NAME = "forgeai-secrets"
+_SECRET_REF = re.compile(r"\$\{(FORGEAI_[A-Za-z0-9_]+)\}")
 
 
 def _safe(value: str, field: str) -> str:
@@ -161,13 +165,55 @@ def _deployment(svc: ServiceSpec, effective_node: str | None = None,
     if svc.command:
         items = "".join(f"\n            - \"{_safe(str(a), 'arg')}\"" for a in svc.command)
         command_block = f"\n          args:{items}"
-    # env → bloc env k8s (parité compose) ; valeurs littérales (k8s n'expanse pas ${...}).
+    # env → bloc env k8s (parité compose) ; ${FORGEAI_*} devient secretKeyRef ou $(VAR).
     env_block = ""
     if svc.env:
-        items = "".join(
-            f"\n            - name: {_safe(str(k), 'env-key')}"
-            f"\n              value: \"{_safe(str(v), 'env-val')}\""
-            for k, v in svc.env.items())
+        items = ""
+        # 1. clés auxiliaires pour références embarquées, dans l'ordre d'apparition, sans doublon
+        aux_keys: list[str] = []
+        seen_aux: set[str] = set()
+        for _, v in svc.env.items():
+            val = str(v).strip()
+            if _SECRET_REF.fullmatch(val):
+                continue
+            for m in _SECRET_REF.finditer(val):
+                key = m.group(1)
+                if key not in seen_aux:
+                    seen_aux.add(key)
+                    aux_keys.append(key)
+        # 2. variables auxiliaires émises en premier
+        for key in aux_keys:
+            items += (
+                f"\n            - name: {_safe(key, 'env-key')}"
+                f"\n              valueFrom:"
+                f"\n                secretKeyRef:"
+                f"\n                  name: {_safe(_SECRET_NAME, 'secret-name')}"
+                f"\n                  key: {_safe(key, 'secret-key')}"
+            )
+        # 3. variables réelles
+        for k, v in svc.env.items():
+            val = str(v).strip()
+            m = _SECRET_REF.fullmatch(val)
+            if m:
+                key = m.group(1)
+                items += (
+                    f"\n            - name: {_safe(str(k), 'env-key')}"
+                    f"\n              valueFrom:"
+                    f"\n                secretKeyRef:"
+                    f"\n                  name: {_safe(_SECRET_NAME, 'secret-name')}"
+                    f"\n                  key: {_safe(key, 'secret-key')}"
+                )
+            elif _SECRET_REF.search(val):
+                rewritten = _SECRET_REF.sub(lambda match: f"$({match.group(1)})", str(v))
+                items += (
+                    f"\n            - name: {_safe(str(k), 'env-key')}"
+                    f"\n              value: \"{_safe(rewritten, 'env-val')}\""
+                )
+            else:
+                items += (
+                    f"\n            - name: {_safe(str(k), 'env-key')}"
+                    f"\n              value: \"{_safe(str(v), 'env-val')}\""
+                )
         env_block = f"\n          env:{items}"
     container_extra = (command_block + env_block + resources_block
                        + security_block + volume_mount + volume_def)
