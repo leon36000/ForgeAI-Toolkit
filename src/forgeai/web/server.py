@@ -12,6 +12,7 @@ import threading
 import time
 import urllib.parse
 import webbrowser
+from collections import OrderedDict
 from functools import lru_cache
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
@@ -205,7 +206,24 @@ _DEPLOY_STATE = {
     "lock": threading.Lock(),
 }
 
-_PREPARE_STATE: dict[str, dict] = {}
+_PREPARE_STATE: "OrderedDict[str, dict]" = OrderedDict()
+_PREPARE_LOCK = threading.Lock()
+_PREPARE_MAX = 256  # borne mémoire : au-delà, éviction du plus ancien (LRU)
+
+
+def _prepare_state_set(host: str, state: dict) -> None:
+    """Écrit l'état de préparation d'un hôte (verrouillé, borné LRU)."""
+    with _PREPARE_LOCK:
+        _PREPARE_STATE[host] = state
+        _PREPARE_STATE.move_to_end(host)
+        while len(_PREPARE_STATE) > _PREPARE_MAX:
+            _PREPARE_STATE.popitem(last=False)
+
+
+def _prepare_state_get(host: str) -> dict:
+    """Lit l'état (verrouillé) et renvoie une COPIE défensive (jamais l'objet partagé)."""
+    with _PREPARE_LOCK:
+        return dict(_PREPARE_STATE.get(host, {"done": False}))
 
 
 def _models_home() -> Path:
@@ -643,7 +661,7 @@ class ForgeAIHandler(BaseHTTPRequestHandler):
 
         if path.startswith("/api/nodes/prepare/"):
             host = path[len("/api/nodes/prepare/") :]
-            state = _PREPARE_STATE.get(host, {"done": False})
+            state = _prepare_state_get(host)
             self._send_json(200, state)
             return
 
@@ -752,21 +770,19 @@ class ForgeAIHandler(BaseHTTPRequestHandler):
                 return
 
             def _run_prepare() -> None:
-                state = {"done": False, "resultat": None, "erreur": None}
-                _PREPARE_STATE[host] = state
+                _prepare_state_set(host, {"done": False, "resultat": None, "erreur": None})
+                resultat, erreur = None, None
                 try:
                     runner = SubprocessRunner()
                     helm_present = shutil.which("helm") is not None
-                    result = preparer_noeud(
+                    resultat = preparer_noeud(
                         runner, host, appliquer=True, helm_present=helm_present
                     )
-                    state["resultat"] = result
                 except PrepareError as exc:
-                    state["erreur"] = str(exc)
+                    erreur = str(exc)
                 except Exception as exc:  # noqa: BLE001
-                    state["erreur"] = f"erreur interne: {exc}"
-                finally:
-                    state["done"] = True
+                    erreur = f"erreur interne: {exc}"
+                _prepare_state_set(host, {"done": True, "resultat": resultat, "erreur": erreur})
 
             threading.Thread(target=_run_prepare, daemon=True).start()
             self._send_json(202, {"started": True, "host": host})
