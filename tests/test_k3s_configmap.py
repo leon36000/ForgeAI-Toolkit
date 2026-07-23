@@ -96,7 +96,8 @@ def test_fail_fast_sans_config_files():
 def test_non_regression_volume_data():
     out = render_k3s(_plan_redis(), config_files=None)
 
-    assert "emptyDir: {}" in out
+    assert "kind: PersistentVolumeClaim" in out
+    assert "persistentVolumeClaim" in out
     assert "forgeai-redis-data" in out
     assert "kind: ConfigMap" not in out
 
