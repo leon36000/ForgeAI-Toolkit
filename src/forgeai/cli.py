@@ -284,12 +284,17 @@ def wizard_ci(args: argparse.Namespace) -> int:
     compose_file = workdir / "docker-compose.yaml"
     compose_file.write_text(render_compose(plan), encoding="utf-8")
 
+    config_files: dict[str, str] = {}
+
     # E1b — si LiteLLM est dans le plan, générer sa config (routage modèles→backends)
     # à côté du compose : le conteneur la monte en lecture seule et démarre avec --config.
+    # FAI-0006 : le contenu est aussi passé à render_k3s pour émettre un ConfigMap (k8s ne
+    # sait pas monter un fichier hôte).
     if any(s.name == "litellm" for s in plan.services):
         from forgeai.renderers.litellm_config import render_litellm_config
-        (workdir / "litellm-config.yaml").write_text(
-            render_litellm_config(plan), encoding="utf-8")
+        litellm_config = render_litellm_config(plan)
+        (workdir / "litellm-config.yaml").write_text(litellm_config, encoding="utf-8")
+        config_files["litellm-config.yaml"] = litellm_config
 
     node_arg = args.node
     if rag_node is not None:
@@ -309,7 +314,8 @@ def wizard_ci(args: argparse.Namespace) -> int:
 
     (workdir / "k3s.yaml").write_text(
         render_k3s(plan, node=effective_node,
-                   service_type=getattr(args, "service_type", "NodePort")), encoding="utf-8")
+                   service_type=getattr(args, "service_type", "NodePort"),
+                   config_files=config_files or None), encoding="utf-8")
 
     if args.dry_run:
         print(f"DRY-RUN OK: {len(plan.services)} services, stack={stack_label}, node={node_label}, "

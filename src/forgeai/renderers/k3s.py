@@ -6,6 +6,9 @@ Kubernetes : le port hôte est décalé dans la plage NodePort de façon déterm
 """
 from __future__ import annotations
 
+import os
+import textwrap
+
 from forgeai.core.models import DeploymentPlan, ServiceSpec
 
 NAMESPACE = "forgeai-minimal"
@@ -54,7 +57,8 @@ def _service_ports(svc: ServiceSpec, service_type: str, node_port: int | None) -
 
 
 def _deployment(svc: ServiceSpec, effective_node: str | None = None,
-                node_port: int | None = None, service_type: str = "NodePort") -> str:
+                node_port: int | None = None, service_type: str = "NodePort",
+                config_files: dict[str, str] | None = None) -> str:
     name = _safe(svc.name, "name")
     image = _safe(svc.image, "image")
     # GPU par vendor (S3) : nvidia -> ressource device-plugin ; amd/intel -> passthrough hostPath
@@ -84,34 +88,73 @@ def _deployment(svc: ServiceSpec, effective_node: str | None = None,
         node_selector = f"""
       nodeSelector:
         kubernetes.io/hostname: {_safe(effective_node, 'node')}"""
-    # Fusion volume data + devices GPU en UN bloc volumeMounts et UN bloc volumes (sinon clé YAML
-    # dupliquée). mounts: (claim, mountPath) ; vols: (claim, hostPath|None) — None => emptyDir data.
-    mounts, vols = [], []
-    for volume in svc.volumes:  # TOUS les volumes data (plus seulement le premier — finding revue)
-        parts = volume.split(":", 1)
-        if len(parts) != 2:  # format attendu 'nom:chemin' -> erreur claire (pas d'IndexError)
-            raise ValueError(f"volume mal formé (attendu 'nom:chemin') : {volume!r}")
-        claim, mount_path = _safe(parts[0], "volume-claim"), _safe(parts[1], "volume-path")
-        mounts.append((claim, mount_path))
-        vols.append((claim, None))
+    # Fusion volume data + devices GPU + fichiers config (ConfigMap) en UN bloc volumeMounts
+    # et UN bloc volumes (sinon clé YAML dupliquée).
+    # mounts: (name, mountPath, subPath|None, readOnly)
+    # vols:   (name, payload, kind) avec kind dans {"emptyDir", "hostPath", "configMap"}
+    mounts, vols, configmap_docs = [], [], []
+    for volume in svc.volumes:
+        segs = volume.split(":")
+        if len(segs) == 3 and segs[0].startswith(("./", "/")):
+            source, target, mode = segs[0], segs[1], segs[2]
+            source = _safe(source, "config-source")
+            target = _safe(target, "config-target")
+            mode = _safe(mode, "config-mode")
+            basename = os.path.basename(source)
+            if config_files is None or basename not in config_files:
+                raise ValueError(
+                    f"bind-mount de fichier config non fourni dans config_files : {source!r}")
+            cm_name = basename.rsplit(".", 1)[0].lower().replace(".", "-")
+            content = config_files[basename]
+            indented = textwrap.indent(content, "    ")
+            if not indented.endswith("\n"):
+                indented += "\n"
+            configmap_docs.append(
+                f"---\n"
+                f"apiVersion: v1\n"
+                f"kind: ConfigMap\n"
+                f"metadata:\n"
+                f"  name: {cm_name}\n"
+                f"  namespace: {NAMESPACE}\n"
+                f"data:\n"
+                f"  {basename}: |\n"
+                f"{indented}"
+            )
+            mounts.append((cm_name, target, basename, mode == "ro"))
+            vols.append((cm_name, cm_name, "configMap"))
+        elif len(segs) == 2:
+            claim, mount_path = _safe(segs[0], "volume-claim"), _safe(segs[1], "volume-path")
+            mounts.append((claim, mount_path, None, False))
+            vols.append((claim, None, "emptyDir"))
+        else:
+            raise ValueError(
+                f"volume mal formé (attendu 'nom:chemin' ou './fichier:chemin:mode') : {volume!r}")
     for claim, path in gpu_mounts:
-        mounts.append((claim, path))
+        mounts.append((claim, path, None, False))
     for claim, path in gpu_vols:
-        vols.append((claim, path))
+        vols.append((claim, path, "hostPath"))
     volume_mount = ""
     if mounts:
-        items = "".join(
-            f"\n            - name: {c}\n              mountPath: {m}" for c, m in mounts)
+        items = ""
+        for claim, mount_path, sub_path, read_only in mounts:
+            items += f"\n            - name: {claim}\n              mountPath: {mount_path}"
+            if sub_path:
+                items += f"\n              subPath: {sub_path}"
+            if read_only:
+                items += "\n              readOnly: true"
         volume_mount = f"\n          volumeMounts:{items}"
     volume_def = ""
     if vols:
         items = ""
-        for claim, hostpath in vols:
-            if hostpath is None:
+        for claim, payload, kind in vols:
+            if kind == "emptyDir":
                 items += f"\n        - name: {claim}\n          emptyDir: {{}}"
-            else:
+            elif kind == "hostPath":
                 items += (f"\n        - name: {claim}"
-                          f"\n          hostPath:\n            path: {hostpath}")
+                          f"\n          hostPath:\n            path: {payload}")
+            elif kind == "configMap":
+                items += (f"\n        - name: {claim}"
+                          f"\n          configMap:\n            name: {payload}")
         volume_def = f"\n      volumes:{items}"
     # command → args k8s (parité avec le renderer compose) ; chaque arg passé par _safe (injection).
     command_block = ""
@@ -128,7 +171,7 @@ def _deployment(svc: ServiceSpec, effective_node: str | None = None,
         env_block = f"\n          env:{items}"
     container_extra = (command_block + env_block + resources_block
                        + security_block + volume_mount + volume_def)
-    return f"""---
+    return "".join(configmap_docs) + f"""---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -161,10 +204,13 @@ spec:
 
 
 def render_k3s(plan: DeploymentPlan, node: str | None = None,
-               service_type: str = "NodePort") -> str:
+               service_type: str = "NodePort",
+               config_files: dict[str, str] | None = None) -> str:
     """Manifestes Kubernetes STANDARD (valables k3s ET k8s — même API). `node` épingle les pods
     sur un hôte (profil Minimal = single-node) ; `svc.node == "auto"` laisse le scheduler décider.
-    `service_type` : NodePort (défaut, portable partout, k3s/edge) ou LoadBalancer (cloud/k8s)."""
+    `service_type` : NodePort (défaut, portable partout, k3s/edge) ou LoadBalancer (cloud/k8s).
+    `config_files` : mapping {basename: contenu} pour les bind-mounts de fichiers de config
+    (ex. litellm-config.yaml) émis comme ConfigMap et montés via subPath."""
     if service_type not in _SERVICE_TYPES:
         raise ValueError(
             f"service_type invalide : {service_type!r} (attendu {sorted(_SERVICE_TYPES)})")
@@ -177,5 +223,6 @@ metadata:
     used: set[int] = set()
     for svc in plan.services:
         effective_node = svc.node if svc.node is not None else node
-        parts.append(_deployment(svc, effective_node, node_port_for(svc, used), service_type))
+        parts.append(_deployment(svc, effective_node, node_port_for(svc, used), service_type,
+                                 config_files))
     return "".join(parts)
