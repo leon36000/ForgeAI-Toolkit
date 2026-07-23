@@ -14,6 +14,7 @@ from dataclasses import asdict, dataclass, replace
 from datetime import date
 from pathlib import Path
 
+from forgeai.models._locking import file_lock
 from .probe import ProbeResult, Transport, UrllibTransport, probe_route
 from .vault import Vault, fingerprint
 
@@ -98,9 +99,12 @@ class RouteStore:
         route = CloudRoute(name=name, provenance=provenance, base_url=resolved,
                            model_id=model_id, key_fingerprint=fp,
                            created_at=date.today().isoformat())
-        routes = self._load()
-        routes.append(route.public_dict())
-        self._save(routes)
+        with file_lock(self.routes_path):
+            routes = self._load()
+            if any(r["name"] == name for r in routes):
+                raise RouteError(f"route '{name}' existe déjà")
+            routes.append(route.public_dict())
+            self._save(routes)
         return route, result
 
     def list(self) -> list[CloudRoute]:
