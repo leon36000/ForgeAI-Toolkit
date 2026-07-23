@@ -24,4 +24,8 @@ run/
 dist/
 build/
 *.egg-info/
-stories/
+# stories/ : specs de story = artefacts de gouvernance versionnés (référencés au registre) ;
+# le reste du dossier est éphémère. NB : ignorer le CONTENU (stories/*), pas le dossier, pour
+# que l'exception !stories/*.md fonctionne (git ne réinclut pas sous un dossier exclu).
+stories/*
+!stories/*.md
