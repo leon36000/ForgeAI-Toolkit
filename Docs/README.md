@@ -12,5 +12,7 @@ Racine **unique** de la documentation (le dossier `docs/` en minuscules a été 
   - [`proof-ubuntu-vierge.md`](reference/proof-ubuntu-vierge.md) — preuve de déploiement « Ubuntu vierge »
 - `explanation/` — architecture et décisions
   - [`ADR-0001-structure-docs.md`](explanation/ADR-0001-structure-docs.md) — dossier de doc unique (Docs/)
+  - [`epic-FAI-0005-openbao-production.md`](explanation/epic-FAI-0005-openbao-production.md) — design validé
+    (scellé 3/3) de la production openbao hors mode DEV (epic #108, build en pause)
 
 Un merge touchant une API publique sans mise à jour de doc/canon est rejeté (§7 du plan maître).
