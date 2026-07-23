@@ -27,6 +27,8 @@ import os
 import secrets
 from pathlib import Path
 
+from forgeai.models._locking import file_lock
+
 MAGIC = b"FGV1"
 _SALT = 16
 _NONCE = 16
@@ -112,10 +114,11 @@ class Vault:
     def put(self, name: str, secret: str, passphrase: str) -> str:
         """Scelle `secret` sous `name`. Retourne l'empreinte (jamais le secret)."""
         import base64
-        data = self._load()
-        blob = seal(secret.encode("utf-8"), passphrase)
-        data[name] = base64.b64encode(blob).decode("ascii")
-        self._save(data)
+        with file_lock(self.path):
+            data = self._load()
+            blob = seal(secret.encode("utf-8"), passphrase)
+            data[name] = base64.b64encode(blob).decode("ascii")
+            self._save(data)
         return fingerprint(secret)
 
     def get(self, name: str, passphrase: str) -> str:
