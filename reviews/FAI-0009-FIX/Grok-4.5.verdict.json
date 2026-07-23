@@ -1,0 +1,26 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "src/forgeai/stacks.py",
+   "description": "La garde denylist ('..' en sous-chaîne) rejette aussi des stack_id légitimes contenant '..' (ex: ver..1). Pas une faille, mais faux positif possible.",
+   "preuve": "ligne +31: if not stack_id or \"/\" in stack_id or \"\\\\\" in stack_id or \"..\" in stack_id"
+  },
+  {
+   "severite": "mineure",
+   "fichier": "src/forgeai/stacks.py",
+   "description": "Pas de defense en profondeur type resolve()+relative_to(stacks_dir) : un symlink déjà présent dans stacks_dir/ pourrait encore faire lire hors arbre. Hors modèle de menace immédiat (il faudrait déjà écrire dans stacks/), mais contournement résiduel non couvert.",
+   "preuve": "ligne +33: path = stacks_dir() / f\"{stack_id}.json\" — aucun appel à resolve()/is_relative_to"
+  },
+  {
+   "severite": "mineure",
+   "fichier": "tests/test_stack_traversal.py",
+   "description": "stack_id vide non exercé dans la boucle hostile ; seul le code le couvre.",
+   "preuve": "ligne test: for hostile in [\"../secret\", \"../../etc/passwd\", \"a/b\", \"..\\\\secret\"] — pas de \"\""
+  }
+ ],
+ "date_heure": "2026-07-23T08:49:34.360718+00:00",
+ "prompt_sha256": "b1dfb77e0065f5c090648ab910a2521d8886fea020fe62da6a516abbfe16975d",
+ "reviewer_model": "Grok-4.5"
+}
