@@ -68,6 +68,21 @@ class SshBootstrapper:
             return False
 
 
+# fullmatch (pas .match + `$`) : `$` matcherait un newline final → une cible `admin\n` passerait.
+# fullmatch exige la chaîne ENTIÈRE. Le point est admis dans le user (comptes `first.last`).
+_SSH_USER_RE = re.compile(r"[A-Za-z0-9_][A-Za-z0-9_.-]{0,31}")
+_SSH_HOST_RE = re.compile(r"[A-Za-z0-9_.:][A-Za-z0-9_.:-]{0,253}")
+
+
+def validate_ssh_target(ip: str, user: str) -> None:
+    """Valide que `ip` et `user` sont des valeurs sûres pour l'argv SSH (jamais de tiret en
+    tête = option ssh, ni espace/newline/métacaractère). Le message n'écho pas la charge."""
+    if not _SSH_USER_RE.fullmatch(user):
+        raise NodeAddError("user SSH invalide")
+    if not _SSH_HOST_RE.fullmatch(ip):
+        raise NodeAddError("ip SSH invalide")
+
+
 def key_fingerprint(pubkey: Path, runner: CommandRunner) -> str:
     """Retourne l'empreinte SHA256 de la clé publique."""
     retcode, output = runner.run(["ssh-keygen", "-lf", str(pubkey)])
@@ -87,6 +102,8 @@ def add_node(ip: str, user: str, passwd: str, *,
     Le mot de passe est utilisé une seule fois pour l'installation de la clé
     puis n'est jamais conservé.
     """
+    validate_ssh_target(ip, user)
+
     # 1. Installation unique avec le mot de passe (passe par l'environnement mémoire)
     bootstrapper.install_key(ip, user, passwd, pubkey)
 
