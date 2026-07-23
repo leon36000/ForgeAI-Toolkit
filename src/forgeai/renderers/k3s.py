@@ -14,6 +14,7 @@ from forgeai.core.models import DeploymentPlan, ServiceSpec
 
 NAMESPACE = "forgeai-minimal"
 _NODEPORT_SPAN = 2768  # 30000..32767
+_DEFAULT_PVC_SIZE = "10Gi"
 # Le renderer ne fait pas confiance à son appelant : `service_type` est restreint à ces valeurs
 # (interpolé brut au manifeste ; une valeur arbitraire injecterait du YAML). Le wizard le contraint
 # par argparse, mais render_k3s est une API publique -> allowlist ici (finding Sentinelle).
@@ -95,8 +96,8 @@ def _deployment(svc: ServiceSpec, effective_node: str | None = None,
     # Fusion volume data + devices GPU + fichiers config (ConfigMap) en UN bloc volumeMounts
     # et UN bloc volumes (sinon clé YAML dupliquée).
     # mounts: (name, mountPath, subPath|None, readOnly)
-    # vols:   (name, payload, kind) avec kind dans {"emptyDir", "hostPath", "configMap"}
-    mounts, vols, configmap_docs = [], [], []
+    # vols:   (name, payload, kind) avec kind dans {"pvc", "hostPath", "configMap"}
+    mounts, vols, configmap_docs, pvc_docs = [], [], [], []
     for volume in svc.volumes:
         segs = volume.split(":")
         if len(segs) == 3 and segs[0].startswith(("./", "/")):
@@ -129,7 +130,21 @@ def _deployment(svc: ServiceSpec, effective_node: str | None = None,
         elif len(segs) == 2:
             claim, mount_path = _safe(segs[0], "volume-claim"), _safe(segs[1], "volume-path")
             mounts.append((claim, mount_path, None, False))
-            vols.append((claim, None, "emptyDir"))
+            vols.append((claim, None, "pvc"))
+            pvc_docs.append(
+                f"---\n"
+                f"apiVersion: v1\n"
+                f"kind: PersistentVolumeClaim\n"
+                f"metadata:\n"
+                f"  name: {claim}\n"
+                f"  namespace: {NAMESPACE}\n"
+                f"spec:\n"
+                f"  accessModes:\n"
+                f"    - ReadWriteOnce\n"
+                f"  resources:\n"
+                f"    requests:\n"
+                f"      storage: {_DEFAULT_PVC_SIZE}\n"
+            )
         else:
             raise ValueError(
                 f"volume mal formé (attendu 'nom:chemin' ou './fichier:chemin:mode') : {volume!r}")
@@ -151,8 +166,10 @@ def _deployment(svc: ServiceSpec, effective_node: str | None = None,
     if vols:
         items = ""
         for claim, payload, kind in vols:
-            if kind == "emptyDir":
-                items += f"\n        - name: {claim}\n          emptyDir: {{}}"
+            if kind == "pvc":
+                items += (f"\n        - name: {claim}"
+                          f"\n          persistentVolumeClaim:"
+                          f"\n            claimName: {claim}")
             elif kind == "hostPath":
                 items += (f"\n        - name: {claim}"
                           f"\n          hostPath:\n            path: {payload}")
@@ -217,7 +234,7 @@ def _deployment(svc: ServiceSpec, effective_node: str | None = None,
         env_block = f"\n          env:{items}"
     container_extra = (command_block + env_block + resources_block
                        + security_block + volume_mount + volume_def)
-    return "".join(configmap_docs) + f"""---
+    return "".join(configmap_docs) + "".join(pvc_docs) + f"""---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
