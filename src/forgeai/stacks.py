@@ -28,6 +28,8 @@ def list_stacks() -> list[str]:
 
 
 def load_stack(stack_id: str) -> dict:
+    if not stack_id or "/" in stack_id or "\\" in stack_id or ".." in stack_id:
+        raise FileNotFoundError(f"stack invalide : {stack_id}")
     path = stacks_dir() / f"{stack_id}.json"
     if not path.exists():
         raise FileNotFoundError(f"stack inconnu : {stack_id}")
