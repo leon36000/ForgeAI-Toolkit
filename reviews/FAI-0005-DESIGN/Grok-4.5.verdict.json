@@ -1,0 +1,14 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "conception v6 §B",
+   "description": "Détection non-initialisé vs scellé par seul code de sortie de `bao status` factuellement incorrecte : un coffre non-initialisé renvoie aussi exit 2 (comme sealed), pas une erreur distincte « 489 ». Sans parse de la sortie (grep Initialized / sealed), KEY_GRACE (300s) s'applique à tort pendant l'init au lieu de INIT_DEADLINE (600s). Contournable en pure shell sans jq (grep sur sortie texte) + restart unless-stopped — pas une impasse d'architecture ; à corriger à l'implémentation S3.",
+   "preuve": "§B ligne : « bao status (code sortie : 0=unsealed, 2=sealed ; erreur/489 non-init) » ; comportement CLI Vault/OpenBao : exit 0=unsealed, 2=sealed OU uninitialized (Initialized=false, Sealed=true), 1=erreur."
+  }
+ ],
+ "date_heure": "2026-07-23T23:47:04.589299+00:00",
+ "prompt_sha256": "1aa94be0a15af13c1a59e5e02b86f7126e3f03e10d2689471c02e67ef08c3e14",
+ "reviewer_model": "Grok-4.5"
+}
