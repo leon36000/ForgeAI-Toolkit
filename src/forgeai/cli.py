@@ -26,6 +26,7 @@ from forgeai.deploy.compose import (
     DeployError,
     compose_down,
     compose_up,
+    http_ok,
     wait_healthy,
 )
 from forgeai.deploy.k3s import k3s_apply, k3s_delete_namespace, k3s_wait_deployments
@@ -131,7 +132,6 @@ def _provision_openbao_compose(compose_file: Path, workdir: Path, bao_url: str) 
     Prépare le key-store hôte (root ISOLÉ hors du répertoire monté à l'unsealer), démarre openbao + son
     unsealer seuls, attend la joignabilité (process up, même scellé), init/unseal via le cœur S2, renvoie
     le token applicatif scopé (jamais le root). Isolé pour être mocké en bloc dans les tests du wizard."""
-    from forgeai.deploy.compose import http_ok
     keys_dir = prepare_key_store(workdir / "openbao-keys")
     key_store = FileKeyStore(keys_dir, workdir / "secrets" / "openbao_root")
     secret_store = FileSecretStore(workdir / "secrets" / "openbao_app_token.json")
@@ -362,7 +362,6 @@ def wizard_ci(args: argparse.Namespace) -> int:
 
     backend = args.backend
     if not args.skip_preflight:
-        from forgeai.deploy.compose import http_ok
         from forgeai.preflight import available_backends, run_checks
         backends = available_backends(
             run_checks(SubprocessRunner(), HardwareDetector(SubprocessRunner()), http_ok))
@@ -574,7 +573,6 @@ def _gpu_drivers(args: argparse.Namespace) -> int:
 
 
 def _doctor(args: argparse.Namespace) -> int:
-    from forgeai.deploy.compose import http_ok
     from forgeai.preflight import available_backends, run_checks
     checks = run_checks(SubprocessRunner(), HardwareDetector(SubprocessRunner()), http_ok)
     print("[forgeai doctor] état de votre environnement :")
