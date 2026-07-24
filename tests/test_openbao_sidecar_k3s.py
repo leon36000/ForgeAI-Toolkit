@@ -21,7 +21,12 @@ except ImportError:  # pragma: no cover
 from forgeai.core.models import ServiceSpec
 from forgeai.renderers.k3s import _UNSEAL_SCRIPT, _deployment
 
-pytestmark = pytest.mark.skipif(yaml is None, reason="PyYAML absent (dépendance de test) — validation YAML")
+pytestmark = pytest.mark.skipif(
+    yaml is None,
+    reason=("PyYAML est une dépendance de TEST (le paquet runtime reste sans dépendance) : ces tests "
+            "TOURNENT en CI et en dev avec l'extra `dev` (preuve scellée S3 au Registres/mission.jsonl) ; "
+            "ils ne SKIPPENT que dans un environnement nu sans la dépendance de test."),
+)
 
 _OPENBAO = ServiceSpec(
     name="openbao",

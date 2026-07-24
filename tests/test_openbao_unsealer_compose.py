@@ -23,7 +23,12 @@ from forgeai.core.models import DeploymentPlan, RenderTarget, ServiceSpec
 from forgeai.renderers._openbao import UNSEAL_SCRIPT
 from forgeai.renderers.compose import render_compose
 
-pytestmark = pytest.mark.skipif(yaml is None, reason="PyYAML absent (dépendance de test) — validation YAML")
+pytestmark = pytest.mark.skipif(
+    yaml is None,
+    reason=("PyYAML est une dépendance de TEST (le paquet runtime reste sans dépendance) : ces tests "
+            "TOURNENT en CI et en dev avec l'extra `dev` (preuve scellée S4 au Registres/mission.jsonl) ; "
+            "ils ne SKIPPENT que dans un environnement nu sans la dépendance de test."),
+)
 
 _OPENBAO = ServiceSpec(
     name="openbao", image="openbao/openbao:2.6.0", host_port=8200, container_port=8200,
