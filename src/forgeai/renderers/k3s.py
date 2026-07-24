@@ -12,6 +12,7 @@ import textwrap
 from urllib.parse import urlsplit
 
 from forgeai.core.models import DeploymentPlan, ServiceSpec
+from forgeai.renderers._openbao import UNSEAL_SCRIPT as _UNSEAL_SCRIPT
 
 NAMESPACE = "forgeai-minimal"
 _NODEPORT_SPAN = 2768  # 30000..32767
@@ -25,46 +26,6 @@ _INTERNAL_SERVICES = frozenset({"redis", "qdrant", "vector-store", "immudb", "op
 
 _SECRET_NAME = "forgeai-secrets"
 _SECRET_REF = re.compile(r"\$\{(FORGEAI_[A-Za-z0-9_]+)\}")
-
-# Sidecar de re-unseal openbao (epic FAI-0005 S3) : boucle POSIX sh (busybox de l'image openbao).
-# RE-DESCELLE le coffre chaque fois qu'il est scellé (1er démarrage ET restart : le storage fichier
-# repart scellé). N'INITIALISE PAS (l'init privilégié = flux de déploiement, S5). Lit la clé montée
-# RO (Secret). `UNSEAL_MAX_ITERS` borne la boucle pour les tests (0/absent = infini en prod).
-# Aucune fuite de la clé (jamais echo). Sans jq : parse `bao status` via grep/awk (busybox).
-_UNSEAL_SCRIPT = r"""ADDR="${BAO_ADDR:-http://127.0.0.1:8200}"
-MAX_ITERS="${UNSEAL_MAX_ITERS:-0}"
-i=0
-key_empty_since=-1
-while true; do
-  if [ "$MAX_ITERS" -gt 0 ] && [ "$i" -ge "$MAX_ITERS" ]; then
-    echo "openbao-unsealer: max iters atteint, sortie"; exit 0
-  fi
-  out=$(bao status -address="$ADDR" 2>/dev/null || true)
-  if [ -z "$out" ]; then
-    sleep 5; i=$((i + 1)); continue          # openbao pas encore joignable
-  fi
-  initialized=$(echo "$out" | grep -i '^Initialized' | awk '{print $NF}')
-  sealed=$(echo "$out" | grep -i '^Sealed' | awk '{print $NF}')
-  if [ "$initialized" = "false" ]; then
-    if [ "$i" -ge 120 ]; then                 # 120*5s = 600s : init (flux de déploiement) absente
-      echo "openbao-unsealer: non initialisé après 600s"; exit 1
-    fi
-  elif [ "$sealed" = "true" ]; then
-    if [ -s /keys/unseal_key ]; then
-      key_empty_since=-1
-      bao operator unseal -address="$ADDR" "$(cat /keys/unseal_key)" >/dev/null 2>&1 || true
-    else
-      if [ "$key_empty_since" -lt 0 ]; then key_empty_since=$i; fi
-      if [ $(( i - key_empty_since )) -ge 60 ]; then   # 60*5s = 300s de grâce (propagation kubelet)
-        echo "openbao-unsealer: clé d'unseal absente (coffre cassé)"; exit 1
-      fi
-    fi
-  else
-    key_empty_since=-1                    # descellé -> no-op, reset compteur de grâce
-  fi
-  sleep 5; i=$((i + 1))
-done
-"""
 
 
 def _safe(value: str, field: str) -> str:
