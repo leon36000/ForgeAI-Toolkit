@@ -26,6 +26,13 @@ class OpenBaoInitError(RuntimeError):
 _POLICY_HCL = (
     'path "secret/data/forgeai/*" { capabilities = ["create","read","update","delete"] }\n'
     'path "secret/metadata/forgeai/*" { capabilities = ["read","list","delete"] }\n'
+    # Le token applicatif est émis `no_default_policy` (scopé) : il doit porter EXPLICITEMENT ses
+    # capacités d'AUTO-GESTION, sinon lookup-self/renew-self échouent en 403 — le renouvellement
+    # périodique (720h) serait alors IMPOSSIBLE => expiration silencieuse du token (l'impasse même que
+    # le design met en garde). Prouvé par la preuve e2e S6 (403 sans ces lignes). revoke-self inutile :
+    # la rotation est faite par le root (openbao_init), pas par le token lui-même.
+    'path "auth/token/lookup-self" { capabilities = ["read"] }\n'
+    'path "auth/token/renew-self" { capabilities = ["update"] }\n'
 )
 
 # ---------------------------------------------------------------------------

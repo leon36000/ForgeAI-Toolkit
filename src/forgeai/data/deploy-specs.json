@@ -82,7 +82,7 @@
     "container_port": 8200,
     "health_path": "/v1/sys/health",
     "volumes": [
-      "forgeai-openbao-data:/openbao/data",
+      "forgeai-openbao-data:/openbao/file",
       "./openbao.hcl:/openbao/config/openbao.hcl:ro"
     ],
     "env": {},

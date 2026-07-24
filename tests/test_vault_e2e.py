@@ -6,7 +6,7 @@ réels openbao + litellm). Reproductible :
     FORGEAI_E2E=1 python3 -m pytest tests/test_vault_e2e.py -s
 
 PRODUCTION (plus de mode DEV) : openbao démarre SCELLÉ, non initialisé (storage fichier + openbao.hcl,
-mlock actif via IPC_LOCK). Le flux de déploiement RÉEL `forgeai.deploy.openbao_flow.initialize_openbao`
+disable_mlock — posture conteneur standard). Le flux de déploiement RÉEL `forgeai.deploy.openbao_flow.initialize_openbao`
 (cœur S2 `ensure_openbao_ready`) l'initialise, le descelle et émet un token applicatif SCOPÉ (policy
 forgeai-app) — JAMAIS le root. Prouve, via le CODE RÉEL du wizard --rag-durci :
   1. AMORÇAGE : openbao scellé -> initialize_openbao -> descellé + token applicatif (root ISOLÉ du store) ;
@@ -90,19 +90,21 @@ def test_openbao_prod_store_master_key_e2e(tmp_path: Path):
         (importlib.resources.files("forgeai.data") / "openbao.hcl").read_text(encoding="utf-8"),
         encoding="utf-8",
     )
-    data_dir = tmp_path / "openbao-data"
-    data_dir.mkdir()
+    # Volume NOMMÉ (pas un bind-mount hôte) : docker recopie les droits de /openbao/file (UID 100
+    # openbao) sur le volume neuf -> inscriptible. Un bind-mount hôte serait possédé par le runner
+    # (≠ UID 100) et openbao ne pourrait PAS y écrire (leçon e2e S6).
+    subprocess.run(["docker", "volume", "rm", "s5-bao-data"], capture_output=True, text=True)
 
     subprocess.run(["docker", "rm", "-f", "s5-bao-test", "s5-litellm-test"],
                    capture_output=True, text=True)
     subprocess.run(["docker", "network", "create", "s5-test-net"], capture_output=True, text=True)
     try:
-        # openbao PRODUCTION : storage fichier + openbao.hcl + mlock (IPC_LOCK) — démarre SCELLÉ.
+        # openbao PRODUCTION : storage fichier /openbao/file + openbao.hcl (disable_mlock) — démarre SCELLÉ.
         subprocess.run([
             "docker", "run", "-d", "--name", "s5-bao-test", "--network", "s5-test-net",
-            "--cap-add=IPC_LOCK", "-p", "18201:8200",
+            "-p", "18201:8200",
             "-v", f"{hcl}:/openbao/config/openbao.hcl:ro",
-            "-v", f"{data_dir}:/openbao/data",
+            "-v", "s5-bao-data:/openbao/file",
             "openbao/openbao:2.6.0", "server", "-config=/openbao/config/openbao.hcl",
         ], check=True, capture_output=True, text=True, timeout=120)
         subprocess.run([
@@ -154,4 +156,5 @@ def test_openbao_prod_store_master_key_e2e(tmp_path: Path):
     finally:
         subprocess.run(["docker", "rm", "-f", "s5-bao-test", "s5-litellm-test"],
                        capture_output=True, text=True)
+        subprocess.run(["docker", "volume", "rm", "s5-bao-data"], capture_output=True, text=True)
         subprocess.run(["docker", "network", "rm", "s5-test-net"], capture_output=True, text=True)

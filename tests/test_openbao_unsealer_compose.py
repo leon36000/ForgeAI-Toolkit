@@ -21,7 +21,7 @@ from forgeai.renderers.compose import render_compose
 _OPENBAO = ServiceSpec(
     name="openbao", image="openbao/openbao:2.6.0", host_port=8200, container_port=8200,
     healthcheck_url="http://127.0.0.1:8200/v1/sys/health",
-    volumes=("forgeai-openbao-data:/openbao/data",),
+    volumes=("forgeai-openbao-data:/openbao/file",),
     command=("server", "-config=/openbao/config/openbao.hcl"),
 )
 _LITELLM = ServiceSpec(

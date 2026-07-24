@@ -22,7 +22,7 @@ _OPENBAO = ServiceSpec(
     container_port=8200,
     healthcheck_url="http://127.0.0.1:8200/v1/sys/health",
     volumes=[
-        "forgeai-openbao-data:/openbao/data",
+        "forgeai-openbao-data:/openbao/file",
         "./openbao.hcl:/openbao/config/openbao.hcl:ro",
     ],
     command=["server", "-config=/openbao/config/openbao.hcl"],

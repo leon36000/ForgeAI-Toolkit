@@ -12,7 +12,7 @@ openbao_svc = ServiceSpec(
     host_port=8200,
     healthcheck_url="http://127.0.0.1:8200/v1/sys/health",
     volumes=[
-        "forgeai-openbao-data:/openbao/data",
+        "forgeai-openbao-data:/openbao/file",
         "./openbao.hcl:/openbao/config/openbao.hcl:ro",
     ],
     command=["server", "-config=/openbao/config/openbao.hcl"],
@@ -40,7 +40,7 @@ plan = DeploymentPlan(
 class TestOpenbaoK3s:
     manifest = render_k3s(
         plan,
-        config_files={"openbao.hcl": 'storage "file" {\n  path = "/openbao/data"\n}'},
+        config_files={"openbao.hcl": 'storage "file" {\n  path = "/openbao/file"\n}'},
     )
 
     def test_openbao_liveness_has_sealedcode(self):
@@ -56,14 +56,17 @@ class TestOpenbaoK3s:
         # On vérifie qu'il n'y a PAS de query params sur la readiness
         assert ready + "?" not in self.manifest
 
-    def test_openbao_has_ipc_lock(self):
-        assert "IPC_LOCK" in self.manifest
+    def test_openbao_no_ipc_lock(self):
+        # Moindre privilège : PAS d'IPC_LOCK. L'image lance `bao` en non-root sans file-cap -> la
+        # capability resterait inopérante (mlock inactif, prouvé e2e S6) ; le coffre utilise
+        # disable_mlock (openbao.hcl) + swap-off au nœud. Aucune capability privilégiée inutile.
+        assert "IPC_LOCK" not in self.manifest
 
     def test_openbao_configmap_mounted(self):
         assert "configMap:\n            name: openbao" in self.manifest
 
     def test_openbao_pvc(self):
-        # Le volume `forgeai-openbao-data:/openbao/data` (2 segments) est rendu en PVC nommé.
+        # Le volume `forgeai-openbao-data:/openbao/file` (2 segments) est rendu en PVC nommé.
         assert "kind: PersistentVolumeClaim" in self.manifest
         assert "name: forgeai-openbao-data" in self.manifest
 
@@ -93,11 +96,13 @@ class TestOpenbaoK3s:
 class TestOpenbaoCompose:
     output = render_compose(plan)
 
-    def test_openbao_cap_add_ipc_lock(self):
+    def test_openbao_no_cap_add_ipc_lock(self):
+        # PAS de cap_add IPC_LOCK (inopérant en non-root, mlock inactif — prouvé e2e S6) ; le coffre
+        # tourne avec disable_mlock (openbao.hcl) + swap-off au nœud. Moindre privilège.
         idx = self.output.index("openbao:")
         openbao_block = self.output[idx:]
-        assert "cap_add:" in openbao_block
-        assert "IPC_LOCK" in openbao_block
+        assert "cap_add:" not in openbao_block
+        assert "IPC_LOCK" not in openbao_block
 
     def test_openbao_healthcheck_bao_status(self):
         assert 'test: ["CMD", "bao", "status", "-address=http://127.0.0.1:8200"]' in self.output

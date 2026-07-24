@@ -38,15 +38,15 @@ def test_prepare_key_store_creates_and_chmod(tmp_path) -> None:
     d = tmp_path / "keys"
     assert prepare_key_store(d) == d
     assert d.is_dir()
-    assert oct(d.stat().st_mode & 0o777) == "0o700"
+    assert oct(d.stat().st_mode & 0o777) == "0o755"
 
 
 def test_prepare_key_store_idempotent(tmp_path) -> None:
     d = tmp_path / "keys"
     d.mkdir(parents=True)
-    os.chmod(d, 0o755)  # mauvaises permissions au départ
+    os.chmod(d, 0o700)  # trop restrictif au départ (l'unsealer non-root ne pourrait pas traverser)
     prepare_key_store(d)
-    assert oct(d.stat().st_mode & 0o777) == "0o700"
+    assert oct(d.stat().st_mode & 0o777) == "0o755"
 
 
 # --- 2. FileKeyStore (isolation du root) ------------------------------------
@@ -70,8 +70,8 @@ def test_file_key_store_write_read_and_root_isolation(tmp_path) -> None:
     assert unseal == "UNSEAL" and "ROOT" not in unseal
     assert root_path.read_text(encoding="utf-8").strip() == "ROOT"
 
-    # 0600 sur les deux fichiers de secret
-    assert stat.S_IMODE((keys_dir / "unseal_key").stat().st_mode) == 0o600
+    # unseal_key 0644 (lisible par le conteneur unsealer non-root) ; root_token 0600 (owner seul, isolé)
+    assert stat.S_IMODE((keys_dir / "unseal_key").stat().st_mode) == 0o644
     assert stat.S_IMODE(root_path.stat().st_mode) == 0o600
 
 
