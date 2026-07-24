@@ -40,11 +40,17 @@ class FileKeyStore:
         return {"unseal_key": unseal, "root_token": root}
 
     def write(self, data: dict) -> None:
-        # Écrit d'abord le root (chemin séparé), puis l'unseal_key (répertoire monté) — chacun 0600.
+        # root_token -> 0600, ISOLÉ dans un fichier séparé jamais monté à l'unsealer (owner seul).
         self._root_path.parent.mkdir(parents=True, exist_ok=True)
-        _write_secret_file(self._root_path, data["root_token"])
+        _write_file(self._root_path, data["root_token"], 0o600)
+        # unseal_key -> 0644 : le conteneur openbao-unsealer tourne sous l'UID NON-root de l'image
+        # (≠ UID de l'opérateur qui écrit), via un bind-mount hôte -> il ne pourrait PAS lire un 0600
+        # possédé par l'opérateur (prouvé e2e S6 : re-unseal muet après restart). La clé d'unseal est
+        # co-localisée avec le STORAGE scellé sur le même hôte (MÊME frontière de confiance : qui lit
+        # l'hôte a déjà les deux) -> 0644 n'élargit pas la surface au-delà du contrôle d'accès au nœud
+        # (documenté). Le ROOT reste 0600 et isolé (l'unsealer ne le voit jamais).
         self._unseal_path.parent.mkdir(parents=True, exist_ok=True)
-        _write_secret_file(self._unseal_path, data["unseal_key"])
+        _write_file(self._unseal_path, data["unseal_key"], 0o644)
 
 
 class FileSecretStore:
@@ -61,22 +67,25 @@ class FileSecretStore:
 
     def write(self, data: dict) -> None:
         self._path.parent.mkdir(parents=True, exist_ok=True)
-        _write_secret_file(self._path, json.dumps(dict(data)))
+        _write_file(self._path, json.dumps(dict(data)), 0o600)  # token opérateur, owner seul
 
 
-def _write_secret_file(path: Path, content: str) -> None:
-    """Écrit un secret en 0600 (jamais lisible par d'autres utilisateurs)."""
+def _write_file(path: Path, content: str, mode: int) -> None:
+    """Écrit `content` avec le mode donné (0600 pour les secrets owner-seul ; 0644 pour l'unseal_key
+    que le conteneur unsealer non-root doit lire)."""
     path.write_text(content if content.endswith("\n") else content + "\n", encoding="utf-8")
-    os.chmod(path, 0o600)
+    os.chmod(path, mode)
 
 
 def prepare_key_store(keys_dir: Path) -> Path:
-    """Pré-crée le répertoire des clés (0700) AVANT le démarrage d'openbao (le bind-mount hôte doit
-    exister et appartenir à l'opérateur ; sinon docker le crée root et le flux Python ne peut plus écrire).
-    Idempotent : ne touche pas au contenu s'il existe déjà (create-if-absent). Renvoie le chemin."""
+    """Pré-crée le répertoire des clés AVANT le démarrage d'openbao (le bind-mount hôte doit exister et
+    appartenir à l'opérateur ; sinon docker le crée root et le flux Python ne peut plus écrire). Mode
+    0755 : le conteneur openbao-unsealer (UID NON-root de l'image ≠ opérateur) doit TRAVERSER le
+    répertoire pour lire /keys/unseal_key ; un 0700 le lui interdirait (prouvé e2e S6). Le répertoire ne
+    contient QUE l'unseal_key (le root est ailleurs, 0600). Idempotent (create-if-absent). Renvoie le chemin."""
     d = Path(keys_dir)
     d.mkdir(parents=True, exist_ok=True)
-    os.chmod(d, 0o700)
+    os.chmod(d, 0o755)
     return d
 
 

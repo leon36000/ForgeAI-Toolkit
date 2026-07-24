@@ -81,7 +81,7 @@ def _resources_block(vendor: str | None) -> str:
     return block
 
 
-def _security_block(vendor: str | None, svc_name: str | None = None) -> str:
+def _security_block(vendor: str | None) -> str:
     """Durcissement du securityContext. Les conteneurs GPU amd/intel nécessitent privileged
     pour le passthrough de devices et sont exclus du durcissement standard.
     runAsNonRoot ET capabilities.drop:[ALL] ne sont PAS émis : de nombreuses images tournent en
@@ -98,9 +98,10 @@ def _security_block(vendor: str | None, svc_name: str | None = None) -> str:
         "\n            seccompProfile:"
         "\n              type: RuntimeDefault"
     )
-    # openbao (mode production) : mlock actif -> requiert la capability IPC_LOCK.
-    if svc_name == "openbao":
-        block += "\n            capabilities:\n              add:\n                - IPC_LOCK"
+    # openbao : PAS de capability IPC_LOCK. L'image lance `bao` en non-root sans file-cap -> IPC_LOCK
+    # n'entre jamais dans le set EFFECTIVE du process (mlock inopérant, prouvé e2e S6) ; accorder une
+    # capability privilégiée inutile violerait le moindre privilège. Le coffre tourne avec
+    # disable_mlock (openbao.hcl) + swap-off au nœud (contrôle compensatoire opérateur documenté).
     return block
 
 
@@ -177,7 +178,7 @@ def _deployment(svc: ServiceSpec, effective_node: str | None = None,
     # des devices noyau + privileged (marche sur un nœud NU, sans device-plugin installé).
     vendor = (svc.gpu_vendor or "nvidia") if svc.gpu else None
     resources_block = _resources_block(vendor)
-    security_block = _security_block(vendor, svc.name)
+    security_block = _security_block(vendor)
     probes_block = _probes_block(svc)
     node_selector = ""
     if effective_node and effective_node != "auto":

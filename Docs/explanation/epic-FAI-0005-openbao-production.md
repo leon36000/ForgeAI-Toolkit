@@ -76,18 +76,20 @@ dans `.env`/secret consommateur après init. `openbao-unsealer` `depends_on: ope
 + `restart: unless-stopped` ; consommateurs `service_healthy` (= unsealed).
 
 ## E. Config HCL + manifests (S1)
-`storage "file" {path="/openbao/data"}` ; `listener "tcp" {address="0.0.0.0:8200", tls_disable=1}` ;
-`api_addr="http://openbao:8200"` ; **mlock actif** (pas de disable_mlock) + capability **IPC_LOCK** ; openbao
+`storage "file" {path="/openbao/file"}` (répertoire PRÉ-CRÉÉ inscriptible par l'UID openbao de l'image ;
+`/openbao/data` serait possédé par root sur un volume neuf → non inscriptible, corrigé S6) ; `listener "tcp"
+{address="0.0.0.0:8200", tls_disable=1}` ;
+`api_addr="http://openbao:8200"` ; **disable_mlock** (posture conteneur standard — `bao` tourne en non-root sans file-cap, un IPC_LOCK resterait inopérant/CapEff=0 ; contrôle compensatoire = swap-off au nœud, prouvé e2e S6) ; openbao
 **single-replica** ; volume persistant data ; liveness `?standbyok=true&sealedcode=200&uninitcode=200`,
 readiness strict. Détails S1 : ENTRYPOINT image (valider `command:["server","-config=..."]`), UID + droits /openbao/data.
 
 ## Décomposition (DAG) — chacune PROOF + scellé 3/3, base main
-- **S1** deploy-specs + renderers : HCL/volume/probes/IPC_LOCK/single-replica ; retrait dev token. Rollback documenté.
+- **S1** deploy-specs + renderers : HCL/volume(/openbao/file)/probes/single-replica ; disable_mlock (pas d'IPC_LOCK) ; retrait dev token. Rollback documenté.
 - **S2** cœur Python `ensure_openbao_ready` (réconciliation état désiré, fail-fast, token reuse/revoke, policy PUT) — pur, injecté, tests exhaustifs. ∥ S1.
-- **S3** sidecar re-unseal (asset shell + rendu) + câblage k3s (sidecar, Secrets placeholder pré-créés, port-forward init, probes, IPC_LOCK). Dépend S1+S2.
+- **S3** sidecar re-unseal (asset shell + rendu) + câblage k3s (sidecar, Secrets placeholder pré-créés, port-forward init, probes). Dépend S1+S2.
 - **S4** câblage compose (unsealer service, bind-mount clés hôte séparé, healthcheck unsealed, restart unless-stopped, depends_on). Dépend S1+S2.
 - **S5** intégration flux de déploiement (pré-création Secrets → apply openbao → init → apply consommateurs) + `bootstrap/secrets.py` sans dev-root + migration `Docs/how-to/openbao-migration.md` + `test_vault_e2e.py`→prod. Dépend S3+S4.
-- **S6** preuve e2e réelle : init+unseal+KV+round-trip + **restart→re-unseal auto→KV OK** + **mlock actif prouvé** + token scopé (root≠app). Dépend S5.
+- **S6** preuve e2e réelle : init+unseal+KV+round-trip + **restart→re-unseal auto→KV OK** + **posture mlock : disable_mlock + non-root + swap-off** + token scopé (root≠app). Dépend S5.
 
 ## Frontières T3 (Nathan) + compromis DOCUMENTÉS (acceptés)
 - etcd at-rest encryption (k3s) = prérequis opérateur documenté ; gestion clés d'un déploiement vivant.
@@ -98,4 +100,4 @@ readiness strict. Détails S1 : ENTRYPOINT image (valider `command:["server","-c
   ⚠️ COHÉRENCE : le token N'EST JAMAIS « non-expirant » — S2/S5 DOIVENT implémenter le renew-self (sinon
   impasse : expiration silencieuse). Seul le root (dans key_store, non distribué) n'expire pas.
 
-## Vérification : chaque story gates+scellé 3/3+registre ; S6 = init+unseal+**survie restart**+**mlock actif** prouvés. Rollback S1/S3/S4. Zéro secret réel committé (gitleaks EVIDENCE=0).
+## Vérification : chaque story gates+scellé 3/3+registre ; S6 = init+unseal+**survie restart**+**posture mlock (disable_mlock/non-root/swap-off)** prouvés. Rollback S1/S3/S4. Zéro secret réel committé (gitleaks EVIDENCE=0).

@@ -9,10 +9,10 @@
 
 | | mode DEV (avant) | PRODUCTION (FAI-0005) |
 |---|---|---|
-| Stockage | en mémoire (perdu au restart) | fichier `/openbao/data` (volume persistant) |
+| Stockage | en mémoire (perdu au restart) | fichier `/openbao/file` (volume persistant, répertoire inscriptible par l'UID openbao de l'image) |
 | Descellement | automatique | init/unseal orchestrés (clé d'unseal persistée à côté) |
 | Token | `BAO_DEV_ROOT_TOKEN_ID` root, dans `.env` (`FORGEAI_BAO_TOKEN`) | token applicatif **scopé** (policy `forgeai-app`, périodique 720h), émis au déploiement, jamais le root |
-| mlock | inactif | actif (capability `IPC_LOCK`) |
+| mlock | inactif | `disable_mlock = true` (posture conteneur standard, défaut du chart Helm Vault) + **swap désactivé au nœud** (contrôle compensatoire opérateur) |
 | Descellement au restart | sans objet | service/sidecar `openbao-unsealer` (re-descelle depuis l'unique item `unseal_key`) |
 
 `FORGEAI_BAO_TOKEN` **n'est plus généré** par `bootstrap/secrets.py` : le token applicatif est créé au
@@ -85,3 +85,9 @@ l'ancien lors d'une rotation.
   = **seules** créances de récupération. À sauvegarder de façon sûre, hors du dépôt (jamais committées).
 - Perte de la clé d'unseal = coffre irrécupérable (compromis souverain accepté : pas de KMS cloud).
 - Chiffrement at-rest du storage (etcd k3s / volume compose) = prérequis opérateur documenté (frontière T3).
+- **Swap désactivé au nœud** (`swapoff -a` / pas de swap, ou swap chiffré) = contrôle compensatoire du
+  `disable_mlock`. En conteneur, l'image officielle lance `bao` en utilisateur non-root sans file-capability :
+  une capability `IPC_LOCK` resterait inopérante (elle n'entre pas dans le set EFFECTIVE du process, mlock
+  ne verrouillerait rien — prouvé e2e S6). La posture standard (défaut du chart Helm HashiCorp Vault) est
+  donc `disable_mlock = true` + garantir que la mémoire du coffre ne peut PAS être swappée sur disque au
+  niveau du nœud. Prérequis opérateur (frontière T3).

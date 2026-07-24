@@ -36,7 +36,11 @@ def _openbao_unsealer_block(image: str) -> list[str]:
         "      - |",
     ]
     # Corps du block scalar `|` : indenté à 8 espaces (strictement > la colonne du `-` à 6).
-    out += [f"        {line}" for line in UNSEAL_SCRIPT.strip("\n").splitlines()]
+    # docker compose INTERPOLE $VAR / ${VAR} dans le fichier compose AVANT de le passer au conteneur :
+    # chaque `$` du script shell est échappé en `$$` (compose recolle `$$` -> `$`) pour que le script
+    # reçoive ses variables intactes (sinon $i, $ADDR, ${BAO_ADDR:-…} deviendraient vides). Le sidecar
+    # k3s n'a PAS besoin de cet échappement (k8s ne fait qu'une expansion `$(VAR)` d'env connues).
+    out += [f"        {line.replace('$', '$$')}" for line in UNSEAL_SCRIPT.strip("\n").splitlines()]
     return out
 
 
@@ -109,12 +113,12 @@ def render_compose(plan: DeploymentPlan, project: str = "forgeai-minimal") -> st
                     "              count: 1",
                     "              capabilities: [gpu]",
                 ]
-        # openbao (production) : mlock -> cap_add IPC_LOCK ; healthcheck = coffre DESCELLÉ
-        # (`bao status` : 0 unsealed / 2 scellé) -> support de depends_on service_healthy (S4).
+        # openbao (production) : healthcheck = coffre DESCELLÉ (`bao status` : 0 unsealed / 2 scellé)
+        # -> support de depends_on service_healthy (S4). PAS de cap_add IPC_LOCK : l'image lance `bao`
+        # en non-root sans file-cap, la capability n'entre jamais dans le set EFFECTIVE (mlock inopérant,
+        # prouvé e2e S6) ; le coffre tourne avec disable_mlock (openbao.hcl) + swap-off au nœud.
         if svc.name == "openbao":
             lines += [
-                "    cap_add:",
-                "      - IPC_LOCK",
                 "    healthcheck:",
                 '      test: ["CMD", "bao", "status", "-address=http://127.0.0.1:8200"]',
                 "      interval: 10s",
