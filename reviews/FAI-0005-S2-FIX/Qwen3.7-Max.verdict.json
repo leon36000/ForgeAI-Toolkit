@@ -1,0 +1,14 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "src/forgeai/secrets/openbao_init.py",
+   "description": "Le message d'erreur de ValueError (json.JSONDecodeError) inclut la représentation de l'exception ({exc}), qui peut contenir un extrait du corps de la réponse. Bien que peu probable, cela pourrait théoriquement fuiter des données sensibles si le corps JSON malformé contient des secrets, ce qui contredit légèrement la règle 'Secrets JAMAIS dans un message d'erreur'.",
+   "preuve": "Lignes 68-70: `except ValueError as exc: raise OpenBaoInitError(f\"openbao {method} {path} -> réponse illisible ({exc})\") from None`"
+  }
+ ],
+ "date_heure": "2026-07-24T01:45:25.638091+00:00",
+ "prompt_sha256": "ffa45e017d2fb6dd5762c94bfb7854b037de74b52afdbced7fbd21233f21b9e9",
+ "reviewer_model": "Qwen3.7-Max"
+}
