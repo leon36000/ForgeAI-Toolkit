@@ -38,7 +38,7 @@ def test_prepare_key_store_creates_and_chmod(tmp_path) -> None:
     d = tmp_path / "keys"
     assert prepare_key_store(d) == d
     assert d.is_dir()
-    assert oct(d.stat().st_mode & 0o777) == "0o755"
+    assert oct(d.stat().st_mode & 0o777) == "0o711"
 
 
 def test_prepare_key_store_idempotent(tmp_path) -> None:
@@ -46,7 +46,7 @@ def test_prepare_key_store_idempotent(tmp_path) -> None:
     d.mkdir(parents=True)
     os.chmod(d, 0o700)  # trop restrictif au départ (l'unsealer non-root ne pourrait pas traverser)
     prepare_key_store(d)
-    assert oct(d.stat().st_mode & 0o777) == "0o755"
+    assert oct(d.stat().st_mode & 0o777) == "0o711"
 
 
 # --- 2. FileKeyStore (isolation du root) ------------------------------------

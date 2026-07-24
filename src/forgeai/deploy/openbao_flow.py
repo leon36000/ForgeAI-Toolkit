@@ -80,12 +80,16 @@ def _write_file(path: Path, content: str, mode: int) -> None:
 def prepare_key_store(keys_dir: Path) -> Path:
     """Pré-crée le répertoire des clés AVANT le démarrage d'openbao (le bind-mount hôte doit exister et
     appartenir à l'opérateur ; sinon docker le crée root et le flux Python ne peut plus écrire). Mode
-    0755 : le conteneur openbao-unsealer (UID NON-root de l'image ≠ opérateur) doit TRAVERSER le
-    répertoire pour lire /keys/unseal_key ; un 0700 le lui interdirait (prouvé e2e S6). Le répertoire ne
-    contient QUE l'unseal_key (le root est ailleurs, 0600). Idempotent (create-if-absent). Renvoie le chemin."""
+    0o711 : le conteneur openbao-unsealer (UID NON-root de l'image ≠ opérateur) doit TRAVERSER le
+    répertoire pour lire /keys/unseal_key par son nom (un 0700 le lui interdirait, prouvé e2e S6) SANS
+    pouvoir le LISTER (pas de bit read pour les autres). Le répertoire ne contient QUE l'unseal_key (le
+    root est ailleurs, 0600). Idempotent (create-if-absent). Renvoie le chemin."""
     d = Path(keys_dir)
     d.mkdir(parents=True, exist_ok=True)
-    os.chmod(d, 0o755)
+    # 0o711 : traversable par l'UID non-root du conteneur unsealer (pour lire /keys/unseal_key par son
+    # nom) MAIS non LISTABLE par les autres (pas de bit read). Risque accepté et documenté (S2612) : la
+    # clé d'unseal est co-localisée avec le storage scellé sur le même hôte (même frontière de confiance).
+    os.chmod(d, 0o711)  # nosec B103
     return d
 
 
