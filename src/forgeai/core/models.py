@@ -93,6 +93,26 @@ class ServiceSpec:
     command: tuple[str, ...] = ()  # arguments passés à l'entrypoint du conteneur (ex. litellm --config …)
     node: Optional[str] = None  # nœud cible de CE service (hostname K3s) ; None = suit le nœud global du plan ou le scheduler
 
+    def __post_init__(self) -> None:
+        # SEC-YAML-INJECT — suivi de #151 : ces scalaires atteignent en brut le YAML/Compose.
+        # Le renderer compose n'a pas de `_safe`, donc défense à la source = couverture de
+        # tous les renderers ; dataclass frozen : lecture de self.* autorisée en __post_init__.
+        _rejeter_caracteres_de_controle("name", self.name)
+        _rejeter_caracteres_de_controle("image", self.image)
+        if self.healthcheck_url is not None:
+            _rejeter_caracteres_de_controle("healthcheck_url", self.healthcheck_url)
+        if self.node is not None:
+            _rejeter_caracteres_de_controle("node", self.node)
+        for i, volume in enumerate(self.volumes):
+            _rejeter_caracteres_de_controle(f"volumes[{i}]", volume)
+        for i, arg in enumerate(self.command):
+            _rejeter_caracteres_de_controle(f"command[{i}]", arg)
+        for i, dep in enumerate(self.depends):
+            _rejeter_caracteres_de_controle(f"depends[{i}]", dep)
+        for cle, valeur in self.env.items():
+            _rejeter_caracteres_de_controle("env (clé)", cle)
+            _rejeter_caracteres_de_controle(f"env[{cle}]", valeur)
+
 
 @dataclass(frozen=True)
 class DeploymentPlan:
