@@ -95,7 +95,10 @@ class FakeLedger:
 @pytest.fixture
 def wired(monkeypatch, tmp_path):
     monkeypatch.setattr(cli, "HardwareDetector", FakeDetector)
-    monkeypatch.setattr(cli, "compose_up", lambda f: None)
+    monkeypatch.setattr(cli, "compose_up", lambda f, services=None: None)
+    # FAI-0005 S5 : amorçage openbao PROD mocké en bloc (init/unseal réels prouvés en unit + e2e S6) ;
+    # renvoie un token applicatif scopé factice, consommé par le round-trip coffre ci-dessous.
+    monkeypatch.setattr(cli, "_provision_openbao_compose", lambda cf, wd, url: "APP-TOKEN-FAKE")
     monkeypatch.setattr(cli, "compose_down", lambda f, volumes=False: None)
     monkeypatch.setattr(cli, "wait_healthy",
                         lambda plan, timeout_s: {s.name: "healthy" for s in plan.services})
@@ -192,7 +195,9 @@ def test_rag_durci_gateway_key_via_coffre(wired):
     assert ecrite, "la master key doit être écrite au coffre"
     # …et c'est la valeur RELUE du coffre qui authentifie la passerelle (openbao porteur)
     assert FakeHardenedRag.last["gateway_key"] == ecrite
-    assert FakeVault.written["token"], "le dev-root-token openbao doit être fourni au coffre"
+    # PROD (FAI-0005 S5) : le coffre est authentifié par le token applicatif SCOPÉ émis à l'amorçage
+    # (policy forgeai-app), plus par un dev-root pré-partagé.
+    assert FakeVault.written["token"] == "APP-TOKEN-FAKE"
 
 
 # B3 : défauts OOD appliqués (doc + question + fait Vornak-9) si non surchargés
@@ -203,14 +208,15 @@ def test_rag_durci_defauts_ood(wired, capsys):
     assert "Vornak-9" in out
 
 
-# B4 : bootstrap génère FORGEAI_LITELLM_KEY + FORGEAI_BAO_TOKEN, ligne 0 (FORGEAI_API_TOKEN) préservée
+# B4 : bootstrap génère FORGEAI_LITELLM_KEY, ligne 0 (FORGEAI_API_TOKEN) préservée. PROD (FAI-0005 S5) :
+# PLUS de FORGEAI_BAO_TOKEN pré-partagé — le token openbao est émis au déploiement (runtime-managed).
 def test_bootstrap_genere_litellm_key(tmp_path):
     bootstrap_secrets(tmp_path)
     env = (tmp_path / ".env").read_text(encoding="utf-8")
     assert "FORGEAI_LITELLM_KEY" in ENV_KEYS
     assert "FORGEAI_LITELLM_KEY=" in env
-    assert "FORGEAI_BAO_TOKEN" in ENV_KEYS  # E3b — dev-root-token du coffre openbao
-    assert "FORGEAI_BAO_TOKEN=" in env
+    assert "FORGEAI_BAO_TOKEN" not in ENV_KEYS  # openbao PROD : aucun dev-root-token en .env
+    assert "FORGEAI_BAO_TOKEN=" not in env
     assert env.splitlines()[0].startswith("FORGEAI_API_TOKEN="), "ligne 0 préservée (test permissions)"
 
 
