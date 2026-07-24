@@ -1,0 +1,20 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "src/forgeai/secrets/openbao_init.py",
+   "description": "key_shares/key_threshold > 1 non supportés : le code ne stocke et n'utilise qu'une seule clé (keys[0]) pour le déscellement. Si key_threshold > 1, l'appel unique à /v1/sys/unseal échouera car il faut soumettre key_threshold parts distinctes. Les valeurs par défaut (1/1) fonctionnent correctement.",
+   "preuve": "Ligne ~118 : unseal_key = keys[0] ; Ligne ~130-135 : payload={\"key\": unseal_key} — un seul appel unseal au lieu de key_threshold appels avec des clés distinctes."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "src/forgeai/secrets/openbao_init.py",
+   "description": "Variables status_init, status_unseal, status_mounts assignées mais jamais lues. Le code repose intégralement sur le transport pour lever une exception sur status >= 400. Si un transport injecté ne lève pas, les codes d'erreur HTTP seraient silencieusement ignorés.",
+   "preuve": "Ligne ~108 : status_init, init_resp = request(...) — status_init jamais vérifié ; Ligne ~130 : status_unseal, unseal_resp = ... — idem ; Ligne ~140 : status_mounts, mounts_body = ... — idem. Seul lookup_status (ligne ~171) est effectivement comparé."
+  }
+ ],
+ "date_heure": "2026-07-24T01:46:17.322135+00:00",
+ "prompt_sha256": "ffa45e017d2fb6dd5762c94bfb7854b037de74b52afdbced7fbd21233f21b9e9",
+ "reviewer_model": "MiMo-Pro-V2"
+}
