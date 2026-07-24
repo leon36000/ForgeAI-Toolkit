@@ -15,6 +15,7 @@ import urllib.error
 import urllib.request
 
 _KV_PREFIX = "/v1/secret/data/"
+_RENEW_SELF = "/v1/auth/token/renew-self"
 
 
 class VaultError(RuntimeError):
@@ -52,3 +53,13 @@ def read(base_url: str, token: str, path: str, *, timeout: float = 10.0) -> dict
     """Lit et retourne le dict de secrets au chemin KV v2 `path`. Lève VaultError si absent."""
     doc = _request("GET", _kv_url(base_url, path), token, None, timeout)
     return doc.get("data", {}).get("data", {})
+
+
+def renew_self(base_url: str, token: str, *, timeout: float = 10.0) -> int:
+    """Renouvelle le token applicatif périodique (renew-self). Renvoie le TTL restant (secondes)
+    après renouvellement. Lève VaultError si le renouvellement échoue (jamais le token dans le message).
+    Un token périodique (period=720h) reste valide indéfiniment TANT QU'il est renouvelé dans sa période ;
+    ce renouvellement proactif le garantit (un token non-root a toujours un TTL, seul le root n'expire pas)."""
+    url = f"{base_url.rstrip('/')}{_RENEW_SELF}"
+    doc = _request("POST", url, token, {}, timeout)
+    return int(doc.get("auth", {}).get("lease_duration", 0))

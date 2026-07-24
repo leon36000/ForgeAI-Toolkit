@@ -25,8 +25,11 @@ def _compose(args: list[str], compose_file: Path) -> subprocess.CompletedProcess
     )
 
 
-def compose_up(compose_file: Path) -> None:
-    proc = _compose(["up", "-d"], compose_file)
+def compose_up(compose_file: Path, services: list[str] | None = None) -> None:
+    """Démarre les services (détaché). `services` limite le démarrage à un sous-ensemble — utilisé par
+    l'amorçage openbao (démarrer openbao + son unsealer AVANT les consommateurs qui attendent
+    service_healthy = coffre descellé, sinon interblocage au premier boot). None = tous les services."""
+    proc = _compose(["up", "-d", *(services or [])], compose_file)
     if proc.returncode != 0:
         raise DeployError(f"docker compose up a échoué :\n{proc.stderr[-2000:]}")
 
