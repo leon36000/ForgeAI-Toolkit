@@ -80,7 +80,7 @@ def _resources_block(vendor: str | None) -> str:
     return block
 
 
-def _security_block(vendor: str | None) -> str:
+def _security_block(vendor: str | None, svc_name: str | None = None) -> str:
     """Durcissement du securityContext. Les conteneurs GPU amd/intel nécessitent privileged
     pour le passthrough de devices et sont exclus du durcissement standard.
     runAsNonRoot ET capabilities.drop:[ALL] ne sont PAS émis : de nombreuses images tournent en
@@ -91,18 +91,44 @@ def _security_block(vendor: str | None) -> str:
     seccompProfile RuntimeDefault."""
     if vendor in ("amd", "intel"):
         return "\n          securityContext:\n            privileged: true"
-    return (
+    block = (
         "\n          securityContext:"
         "\n            allowPrivilegeEscalation: false"
         "\n            seccompProfile:"
         "\n              type: RuntimeDefault"
     )
+    # openbao (mode production) : mlock actif -> requiert la capability IPC_LOCK.
+    if svc_name == "openbao":
+        block += "\n            capabilities:\n              add:\n                - IPC_LOCK"
+    return block
 
 
 def _probes_block(svc: ServiceSpec) -> str:
-    """Liveness + readiness : httpGet si healthcheck_url renseigné, sinon tcpSocket."""
+    """Liveness + readiness : httpGet si healthcheck_url renseigné, sinon tcpSocket.
+    openbao (production) démarre SCELLÉ (/v1/sys/health -> 503 scellé, 501 non-init) : liveness
+    TOLÉRANTE (sealedcode=200&uninitcode=200 : le process vit même scellé -> pas de CrashLoop
+    avant unseal) ; readiness STRICTE (200 seulement unsealed -> les consommateurs attendent)."""
     port = svc.container_port
     health_url = getattr(svc, "healthcheck_url", None) or ""
+    if svc.name == "openbao":
+        if health_url:
+            base_path = _safe(urlsplit(health_url).path or "/", "healthcheck-path")
+            liveness_path = _safe(
+                f"{base_path}?standbyok=true&sealedcode=200&uninitcode=200", "liveness-path")
+            live_get = f"httpGet:\n              path: {liveness_path}\n              port: {port}"
+            ready_get = f"httpGet:\n              path: {base_path}\n              port: {port}"
+            liveness_probe, readiness_probe = live_get, ready_get
+        else:
+            liveness_probe = f"tcpSocket:\n              port: {port}"
+            readiness_probe = liveness_probe
+        return (
+            f"\n          livenessProbe:\n            {liveness_probe}\n"
+            f"            initialDelaySeconds: 10\n"
+            f"            periodSeconds: 10\n"
+            f"          readinessProbe:\n            {readiness_probe}\n"
+            f"            initialDelaySeconds: 10\n"
+            f"            periodSeconds: 10"
+        )
     if health_url:
         path = _safe(urlsplit(health_url).path or "/", "healthcheck-path")
         probe = f"httpGet:\n              path: {path}\n              port: {port}"
@@ -127,7 +153,7 @@ def _deployment(svc: ServiceSpec, effective_node: str | None = None,
     # des devices noyau + privileged (marche sur un nœud NU, sans device-plugin installé).
     vendor = (svc.gpu_vendor or "nvidia") if svc.gpu else None
     resources_block = _resources_block(vendor)
-    security_block = _security_block(vendor)
+    security_block = _security_block(vendor, svc.name)
     probes_block = _probes_block(svc)
     node_selector = ""
     if effective_node and effective_node != "auto":
