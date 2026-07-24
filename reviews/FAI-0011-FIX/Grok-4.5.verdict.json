@@ -1,0 +1,20 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "tests/test_deploy_specs_pinned.py",
+   "description": "Le test ignore silencieusement l'absence de deploy-minimal.json et deploy-hardened.json (seul deploy-specs.json est obligatoire). Une suppression/renommage accidentel de ces fichiers ferait passer le gate sans vérifier leurs images.",
+   "preuve": "L53-L56: if not path.exists(): if filename == \"deploy-specs.json\": pytest.fail(...); continue"
+  },
+  {
+   "severite": "mineure",
+   "fichier": "src/forgeai/data/deploy-specs.json",
+   "description": "Authenticité des digests (résolution réelle via imagetools, manifest-list multi-arch) non vérifiable depuis le diff seul ; le gate ne contrôle que le format @sha256:[0-9a-f]{64}, pas l'existence registry ni la correspondance tag↔digest.",
+   "preuve": "tests/test_deploy_specs_pinned.py L16: _DIGEST_RE = re.compile(r\".+@sha256:[0-9a-f]{64}\") ; L58-L59: contrôle purement syntaxique ; aucune preuve d'exécution imagetools dans le diff"
+  }
+ ],
+ "date_heure": "2026-07-24T00:00:00.405618+00:00",
+ "prompt_sha256": "1cb225378a3bc30ee3998fc6fb5baff032d4f249b7de48fba6297b1e835ac699",
+ "reviewer_model": "Grok-4.5"
+}

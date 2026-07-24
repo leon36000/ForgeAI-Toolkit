@@ -1,7 +1,7 @@
 {
   "_doc": "Specs de déploiement réelles par brique (image vérifiée + config + wiring). Socle CPU branché.",
   "litellm": {
-    "image": "ghcr.io/berriai/litellm:main-stable",
+    "image": "ghcr.io/berriai/litellm:main-stable@sha256:a1745e629abfb17d434426ff48b115f54f4f4c4a0f5af241de569e93c63c411e",
     "container_port": 4000,
     "health_path": "/health/liveliness",
     "volumes": [
@@ -24,7 +24,7 @@
     ]
   },
   "redis": {
-    "image": "redis:7.4.9",
+    "image": "redis:7.4.9@sha256:a8f08480e1f88f2647fed492d1178c06abb0d0c1fbf02c682a61e2f483fb3954",
     "container_port": 6379,
     "health_path": null,
     "volumes": [
@@ -34,7 +34,7 @@
     "depends": []
   },
   "qdrant": {
-    "image": "qdrant/qdrant:v1.18.3",
+    "image": "qdrant/qdrant:v1.18.3@sha256:0bd98fa7977f1e75694779359ca4e212822e5a71334e28421182f72f209d5286",
     "container_port": 6333,
     "health_path": "/readyz",
     "volumes": [
@@ -44,7 +44,7 @@
     "depends": []
   },
   "text-embeddings-inference-tei": {
-    "image": "ghcr.io/huggingface/text-embeddings-inference:cpu-1.9",
+    "image": "ghcr.io/huggingface/text-embeddings-inference:cpu-1.9@sha256:ad950d30878eceb72aaf32024d26fa2b1d04a75304fa0b4776b49aa1941fea07",
     "container_port": 80,
     "health_path": "/health",
     "volumes": [
@@ -56,7 +56,7 @@
     "depends": []
   },
   "text-embeddings-inference-reranker": {
-    "image": "ghcr.io/huggingface/text-embeddings-inference:cpu-1.9",
+    "image": "ghcr.io/huggingface/text-embeddings-inference:cpu-1.9@sha256:ad950d30878eceb72aaf32024d26fa2b1d04a75304fa0b4776b49aa1941fea07",
     "container_port": 80,
     "health_path": "/health",
     "volumes": [
@@ -68,7 +68,7 @@
     "depends": []
   },
   "immudb": {
-    "image": "codenotary/immudb:1.11.1",
+    "image": "codenotary/immudb:1.11.1@sha256:1053c2c254473670412b6f7257f61b6c09469b9b53b50c02bc7378ba775dc429",
     "container_port": 8080,
     "health_path": "/",
     "volumes": [
@@ -78,7 +78,7 @@
     "depends": []
   },
   "openbao": {
-    "image": "openbao/openbao:2.6.0",
+    "image": "openbao/openbao:2.6.0@sha256:900bb64d0671cd1d82b693c56206f7263b582445f3a3bb6ba6e5213f524a6653",
     "container_port": 8200,
     "health_path": "/v1/sys/health",
     "volumes": [],
@@ -88,7 +88,7 @@
     "depends": []
   },
   "postgres": {
-    "image": "postgres:15-alpine",
+    "image": "postgres:15-alpine@sha256:3d0f7584ed7d04e27fa050d6683a74746608faf21f202be78460d679cc56461f",
     "container_port": 5432,
     "health_path": null,
     "volumes": [
@@ -101,7 +101,7 @@
     "depends": []
   },
   "langfuse": {
-    "image": "langfuse/langfuse:2",
+    "image": "langfuse/langfuse:2@sha256:85c278dcab96c15db94191a5c1664f85aba2d7fb6771a00e99681c902c4b7015",
     "container_port": 3000,
     "health_path": "/api/public/health",
     "volumes": [],
@@ -125,7 +125,7 @@
     ]
   },
   "llama-cpp-vulkan": {
-    "image": "ghcr.io/ggml-org/llama.cpp:server-vulkan",
+    "image": "ghcr.io/ggml-org/llama.cpp:server-vulkan@sha256:d3f031d5c6bc815174acc05b4cd960e989df6fca600f703028dca21c33896bd1",
     "container_port": 8080,
     "health_path": "/health",
     "gpu": true,
@@ -144,7 +144,7 @@
     "depends": []
   },
   "cpu-zendnn": {
-    "image": "amdih/zendnn_zentorch:vllm_v0.23.0_zentorch_v2.11.0.2_ubuntu22.04_v2.11.0.2",
+    "image": "amdih/zendnn_zentorch:vllm_v0.23.0_zentorch_v2.11.0.2_ubuntu22.04_v2.11.0.2@sha256:ab88b340d290bf8c247b5963f0db83405e5f338b94c24afbb25bf1cb0d100f64",
     "container_port": 8000,
     "health_path": "/health",
     "gpu": false,
@@ -170,7 +170,7 @@
     "depends": []
   },
   "intel-openvino": {
-    "image": "openvino/model_server:latest",
+    "image": "openvino/model_server:latest@sha256:19cda71ccab73930d0a65e48ea27c3464ce2c00cec326f0831457ae525831321",
     "container_port": 8000,
     "health_path": "/v3/models",
     "gpu": false,

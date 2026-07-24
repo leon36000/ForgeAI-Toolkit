@@ -5,7 +5,7 @@
     {
       "name": "ollama",
       "brick_id": "ollama",
-      "image": "ollama/ollama:latest",
+      "image": "ollama/ollama:latest@sha256:ec24bcaa2a810eb74171ce7c517813ef4821ed678988845e8d76cf62467036d4",
       "container_port": 11434,
       "volume": "forgeai-ollama-models:/root/.ollama",
       "healthcheck_path": "/api/tags",
@@ -14,7 +14,7 @@
     {
       "name": "vector-store",
       "brick_id": "qdrant",
-      "image": "qdrant/qdrant:v1.18.3",
+      "image": "qdrant/qdrant:v1.18.3@sha256:0bd98fa7977f1e75694779359ca4e212822e5a71334e28421182f72f209d5286",
       "container_port": 6333,
       "volume": "forgeai-qdrant-durci-data:/qdrant/storage",
       "healthcheck_path": "/readyz",
