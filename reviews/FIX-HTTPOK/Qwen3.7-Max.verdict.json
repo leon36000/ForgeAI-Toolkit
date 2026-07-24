@@ -1,0 +1,14 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "tests/test_cli_wizard.py",
+   "description": "Le test de régression ne passe pas explicitement l'argument `--skip-preflight` à `_argv`. Bien que le `monkeypatch.setattr` sur `cli.http_ok` agisse comme une garde structurelle (échoue si l'import n'est pas au niveau module), il ne garantit pas que le chemin d'exécution runtime levant le NameError (la boucle de santé k3s avec preflight sauté) soit effectivement emprunté. Ajouter `--skip-preflight` aux arguments explicites assurerait une couverture comportementale complète de la régression.",
+   "preuve": "code = cli.main(_argv(tmp_path, registre_path, **{\"--backend\": \"k3s\"}))"
+  }
+ ],
+ "date_heure": "2026-07-24T10:43:40.427880+00:00",
+ "prompt_sha256": "5402542b7c2e85b24bcc71d1a250809f4d84bc53055e4b5f973fa8cf7322eff6",
+ "reviewer_model": "Qwen3.7-Max"
+}
