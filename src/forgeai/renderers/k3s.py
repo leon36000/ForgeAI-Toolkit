@@ -26,6 +26,46 @@ _INTERNAL_SERVICES = frozenset({"redis", "qdrant", "vector-store", "immudb", "op
 _SECRET_NAME = "forgeai-secrets"
 _SECRET_REF = re.compile(r"\$\{(FORGEAI_[A-Za-z0-9_]+)\}")
 
+# Sidecar de re-unseal openbao (epic FAI-0005 S3) : boucle POSIX sh (busybox de l'image openbao).
+# RE-DESCELLE le coffre chaque fois qu'il est scellé (1er démarrage ET restart : le storage fichier
+# repart scellé). N'INITIALISE PAS (l'init privilégié = flux de déploiement, S5). Lit la clé montée
+# RO (Secret). `UNSEAL_MAX_ITERS` borne la boucle pour les tests (0/absent = infini en prod).
+# Aucune fuite de la clé (jamais echo). Sans jq : parse `bao status` via grep/awk (busybox).
+_UNSEAL_SCRIPT = r"""ADDR="${BAO_ADDR:-http://127.0.0.1:8200}"
+MAX_ITERS="${UNSEAL_MAX_ITERS:-0}"
+i=0
+key_empty_since=-1
+while true; do
+  if [ "$MAX_ITERS" -gt 0 ] && [ "$i" -ge "$MAX_ITERS" ]; then
+    echo "openbao-unsealer: max iters atteint, sortie"; exit 0
+  fi
+  out=$(bao status -address="$ADDR" 2>/dev/null || true)
+  if [ -z "$out" ]; then
+    sleep 5; i=$((i + 1)); continue          # openbao pas encore joignable
+  fi
+  initialized=$(echo "$out" | grep -i '^Initialized' | awk '{print $NF}')
+  sealed=$(echo "$out" | grep -i '^Sealed' | awk '{print $NF}')
+  if [ "$initialized" = "false" ]; then
+    if [ "$i" -ge 120 ]; then                 # 120*5s = 600s : init (flux de déploiement) absente
+      echo "openbao-unsealer: non initialisé après 600s"; exit 1
+    fi
+  elif [ "$sealed" = "true" ]; then
+    if [ -s /keys/unseal_key ]; then
+      key_empty_since=-1
+      bao operator unseal -address="$ADDR" "$(cat /keys/unseal_key)" >/dev/null 2>&1 || true
+    else
+      if [ "$key_empty_since" -lt 0 ]; then key_empty_since=$i; fi
+      if [ $(( i - key_empty_since )) -ge 60 ]; then   # 60*5s = 300s de grâce (propagation kubelet)
+        echo "openbao-unsealer: clé d'unseal absente (coffre cassé)"; exit 1
+      fi
+    fi
+  else
+    key_empty_since=-1                    # descellé -> no-op, reset compteur de grâce
+  fi
+  sleep 5; i=$((i + 1))
+done
+"""
+
 
 def _safe(value: str, field: str) -> str:
     """Refuse une valeur interpolée au YAML si elle porte un caractère de contrôle/newline
@@ -144,6 +184,29 @@ def _probes_block(svc: ServiceSpec) -> str:
     )
 
 
+def _openbao_sidecar_block(image: str) -> str:
+    """2e conteneur du POD openbao : re-descelle le coffre depuis la clé montée (Secret RO).
+    Même image openbao (binaire `bao`) ; ne monte QUE `openbao-keys` (jamais les données ni
+    le root). Item de `containers:` (indent 8). _UNSEAL_SCRIPT injecté dans
+    un block scalar YAML `|` (indent 14 espaces)."""
+    script = textwrap.indent(_UNSEAL_SCRIPT, " " * 14).rstrip("\n")
+    return (
+        "\n        - name: openbao-unsealer"
+        f"\n          image: {_safe(image, 'image')}"
+        "\n          command:"
+        "\n            - /bin/sh"
+        "\n            - -c"
+        "\n            - |"
+        f"\n{script}"
+        "\n          volumeMounts:"
+        "\n            - name: openbao-keys"
+        "\n              mountPath: /keys"
+        "\n              readOnly: true"
+        "\n          securityContext:"
+        "\n            allowPrivilegeEscalation: false"
+    )
+
+
 def _deployment(svc: ServiceSpec, effective_node: str | None = None,
                 node_port: int | None = None, service_type: str = "NodePort",
                 config_files: dict[str, str] | None = None) -> str:
@@ -229,6 +292,11 @@ def _deployment(svc: ServiceSpec, effective_node: str | None = None,
         mounts.append((claim, path, None, False))
     for claim, path in gpu_vols:
         vols.append((claim, path, "hostPath"))
+    # openbao : volume Secret des clés d'unseal — ajouté aux `vols` du POD (donc au bloc volumes:)
+    # MAIS PAS aux `mounts` (le conteneur principal ne monte JAMAIS les clés ; seul le sidecar
+    # de re-unseal les monte, cf. _openbao_sidecar_block).
+    if svc.name == "openbao":
+        vols.append(("openbao-keys", "forgeai-openbao-keys", "secret"))
     volume_mount = ""
     if mounts:
         items = ""
@@ -253,6 +321,17 @@ def _deployment(svc: ServiceSpec, effective_node: str | None = None,
             elif kind == "configMap":
                 items += (f"\n        - name: {claim}"
                           f"\n          configMap:\n            name: {payload}")
+            elif kind == "secret":
+                # openbao : Secret des clés d'unseal ; `optional: true` -> le POD démarre même si le
+                # Secret pas encore peuplé (le flux de déploiement le pré-crée, S5). `items`
+                # -> seul unseal_key est exposé au sidecar (jamais le root token).
+                items += (f"\n        - name: {claim}"
+                          f"\n          secret:"  # proof:allow — kind de volume k8s (pas un secret en dur)
+                          f"\n            secretName: {payload}"
+                          f"\n            optional: true"
+                          f"\n            items:"
+                          f"\n              - key: unseal_key"
+                          f"\n                path: unseal_key")
         volume_def = f"\n      volumes:{items}"
     # command → args k8s (parité avec le renderer compose) ; chaque arg passé par _safe (injection).
     command_block = ""
@@ -309,8 +388,12 @@ def _deployment(svc: ServiceSpec, effective_node: str | None = None,
                     f"\n              value: \"{_safe(str(v), 'env-val')}\""
                 )
         env_block = f"\n          env:{items}"
+    # openbao : le sidecar s'insère ENTRE le conteneur principal (volume_mount, indent 10)
+    # et le bloc `volumes:` du POD (volume_def, indent 6) — sinon le 2e conteneur tomberait après
+    # `volumes:` = YAML invalide.
+    sidecar_block = _openbao_sidecar_block(image) if svc.name == "openbao" else ""
     container_extra = (command_block + env_block + resources_block + security_block
-                       + probes_block + volume_mount + volume_def)
+                       + probes_block + volume_mount + sidecar_block + volume_def)
     sa_block = "\n      serviceAccountName: forgeai-sa\n      automountServiceAccountToken: false"
     return "".join(configmap_docs) + "".join(pvc_docs) + f"""---
 apiVersion: apps/v1
