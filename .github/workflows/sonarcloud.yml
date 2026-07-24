@@ -21,7 +21,7 @@ jobs:
           python-version: "3.12"
 
       - name: Install test deps
-        run: pip install pytest pytest-cov
+        run: pip install pytest pytest-cov pyyaml
 
       - name: Tests + coverage (XML for SonarCloud)
         run: pytest -q --cov=src/forgeai --cov-report=xml:coverage.xml

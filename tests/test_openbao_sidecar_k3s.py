@@ -11,9 +11,17 @@ import stat
 import subprocess
 import sys
 
-import yaml
+import pytest
+
+try:  # PyYAML = dépendance de TEST seulement (le paquet runtime reste sans dépendance) ; skip si absent.
+    import yaml
+except ImportError:  # pragma: no cover
+    yaml = None
+
 from forgeai.core.models import ServiceSpec
 from forgeai.renderers.k3s import _UNSEAL_SCRIPT, _deployment
+
+pytestmark = pytest.mark.skipif(yaml is None, reason="PyYAML absent (dépendance de test) — validation YAML")
 
 _OPENBAO = ServiceSpec(
     name="openbao",

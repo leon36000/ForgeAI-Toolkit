@@ -10,13 +10,20 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
-import yaml
+import pytest
+
+try:  # PyYAML = dépendance de TEST seulement (le paquet runtime reste sans dépendance) ; skip si absent.
+    import yaml
+except ImportError:  # pragma: no cover
+    yaml = None
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
 
 from forgeai.core.models import DeploymentPlan, RenderTarget, ServiceSpec
 from forgeai.renderers._openbao import UNSEAL_SCRIPT
 from forgeai.renderers.compose import render_compose
+
+pytestmark = pytest.mark.skipif(yaml is None, reason="PyYAML absent (dépendance de test) — validation YAML")
 
 _OPENBAO = ServiceSpec(
     name="openbao", image="openbao/openbao:2.6.0", host_port=8200, container_port=8200,
