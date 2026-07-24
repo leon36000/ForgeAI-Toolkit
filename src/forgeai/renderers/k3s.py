@@ -12,6 +12,7 @@ import textwrap
 from urllib.parse import urlsplit
 
 from forgeai.core.models import DeploymentPlan, ServiceSpec
+from forgeai.renderers._openbao import UNSEAL_SCRIPT as _UNSEAL_SCRIPT
 
 NAMESPACE = "forgeai-minimal"
 _NODEPORT_SPAN = 2768  # 30000..32767
@@ -91,18 +92,45 @@ def _security_block(vendor: str | None) -> str:
     seccompProfile RuntimeDefault."""
     if vendor in ("amd", "intel"):
         return "\n          securityContext:\n            privileged: true"
-    return (
+    block = (
         "\n          securityContext:"
         "\n            allowPrivilegeEscalation: false"
         "\n            seccompProfile:"
         "\n              type: RuntimeDefault"
     )
+    # openbao : PAS de capability IPC_LOCK. L'image lance `bao` en non-root sans file-cap -> IPC_LOCK
+    # n'entre jamais dans le set EFFECTIVE du process (mlock inopérant, prouvé e2e S6) ; accorder une
+    # capability privilégiée inutile violerait le moindre privilège. Le coffre tourne avec
+    # disable_mlock (openbao.hcl) + swap-off au nœud (contrôle compensatoire opérateur documenté).
+    return block
 
 
 def _probes_block(svc: ServiceSpec) -> str:
-    """Liveness + readiness : httpGet si healthcheck_url renseigné, sinon tcpSocket."""
+    """Liveness + readiness : httpGet si healthcheck_url renseigné, sinon tcpSocket.
+    openbao (production) démarre SCELLÉ (/v1/sys/health -> 503 scellé, 501 non-init) : liveness
+    TOLÉRANTE (sealedcode=200&uninitcode=200 : le process vit même scellé -> pas de CrashLoop
+    avant unseal) ; readiness STRICTE (200 seulement unsealed -> les consommateurs attendent)."""
     port = svc.container_port
     health_url = getattr(svc, "healthcheck_url", None) or ""
+    if svc.name == "openbao":
+        if health_url:
+            base_path = _safe(urlsplit(health_url).path or "/", "healthcheck-path")
+            liveness_path = _safe(
+                f"{base_path}?standbyok=true&sealedcode=200&uninitcode=200", "liveness-path")
+            live_get = f"httpGet:\n              path: {liveness_path}\n              port: {port}"
+            ready_get = f"httpGet:\n              path: {base_path}\n              port: {port}"
+            liveness_probe, readiness_probe = live_get, ready_get
+        else:
+            liveness_probe = f"tcpSocket:\n              port: {port}"
+            readiness_probe = liveness_probe
+        return (
+            f"\n          livenessProbe:\n            {liveness_probe}\n"
+            f"            initialDelaySeconds: 10\n"
+            f"            periodSeconds: 10\n"
+            f"          readinessProbe:\n            {readiness_probe}\n"
+            f"            initialDelaySeconds: 10\n"
+            f"            periodSeconds: 10"
+        )
     if health_url:
         path = _safe(urlsplit(health_url).path or "/", "healthcheck-path")
         probe = f"httpGet:\n              path: {path}\n              port: {port}"
@@ -115,6 +143,29 @@ def _probes_block(svc: ServiceSpec) -> str:
         f"          readinessProbe:\n            {probe}\n"
         f"            initialDelaySeconds: 10\n"
         f"            periodSeconds: 10"
+    )
+
+
+def _openbao_sidecar_block(image: str) -> str:
+    """2e conteneur du POD openbao : re-descelle le coffre depuis la clé montée (Secret RO).
+    Même image openbao (binaire `bao`) ; ne monte QUE `openbao-keys` (jamais les données ni
+    le root). Item de `containers:` (indent 8). _UNSEAL_SCRIPT injecté dans
+    un block scalar YAML `|` (indent 14 espaces)."""
+    script = textwrap.indent(_UNSEAL_SCRIPT, " " * 14).rstrip("\n")
+    return (
+        "\n        - name: openbao-unsealer"
+        f"\n          image: {_safe(image, 'image')}"
+        "\n          command:"
+        "\n            - /bin/sh"
+        "\n            - -c"
+        "\n            - |"
+        f"\n{script}"
+        "\n          volumeMounts:"
+        "\n            - name: openbao-keys"
+        "\n              mountPath: /keys"
+        "\n              readOnly: true"
+        "\n          securityContext:"
+        "\n            allowPrivilegeEscalation: false"
     )
 
 
@@ -203,6 +254,11 @@ def _deployment(svc: ServiceSpec, effective_node: str | None = None,
         mounts.append((claim, path, None, False))
     for claim, path in gpu_vols:
         vols.append((claim, path, "hostPath"))
+    # openbao : volume Secret des clés d'unseal — ajouté aux `vols` du POD (donc au bloc volumes:)
+    # MAIS PAS aux `mounts` (le conteneur principal ne monte JAMAIS les clés ; seul le sidecar
+    # de re-unseal les monte, cf. _openbao_sidecar_block).
+    if svc.name == "openbao":
+        vols.append(("openbao-keys", "forgeai-openbao-keys", "secret"))
     volume_mount = ""
     if mounts:
         items = ""
@@ -227,6 +283,17 @@ def _deployment(svc: ServiceSpec, effective_node: str | None = None,
             elif kind == "configMap":
                 items += (f"\n        - name: {claim}"
                           f"\n          configMap:\n            name: {payload}")
+            elif kind == "secret":
+                # openbao : Secret des clés d'unseal ; `optional: true` -> le POD démarre même si le
+                # Secret pas encore peuplé (le flux de déploiement le pré-crée, S5). `items`
+                # -> seul unseal_key est exposé au sidecar (jamais le root token).
+                items += (f"\n        - name: {claim}"
+                          f"\n          secret:"  # proof:allow — kind de volume k8s (pas un secret en dur)
+                          f"\n            secretName: {payload}"
+                          f"\n            optional: true"
+                          f"\n            items:"
+                          f"\n              - key: unseal_key"
+                          f"\n                path: unseal_key")
         volume_def = f"\n      volumes:{items}"
     # command → args k8s (parité avec le renderer compose) ; chaque arg passé par _safe (injection).
     command_block = ""
@@ -283,8 +350,12 @@ def _deployment(svc: ServiceSpec, effective_node: str | None = None,
                     f"\n              value: \"{_safe(str(v), 'env-val')}\""
                 )
         env_block = f"\n          env:{items}"
+    # openbao : le sidecar s'insère ENTRE le conteneur principal (volume_mount, indent 10)
+    # et le bloc `volumes:` du POD (volume_def, indent 6) — sinon le 2e conteneur tomberait après
+    # `volumes:` = YAML invalide.
+    sidecar_block = _openbao_sidecar_block(image) if svc.name == "openbao" else ""
     container_extra = (command_block + env_block + resources_block + security_block
-                       + probes_block + volume_mount + volume_def)
+                       + probes_block + volume_mount + sidecar_block + volume_def)
     sa_block = "\n      serviceAccountName: forgeai-sa\n      automountServiceAccountToken: false"
     return "".join(configmap_docs) + "".join(pvc_docs) + f"""---
 apiVersion: apps/v1

@@ -40,6 +40,13 @@ from forgeai.planner.profile import ProfileError, derive_profile
 from forgeai.rag.client import RagClient
 from forgeai.rag.hardened import HardenedRagClient
 from forgeai.secrets.vault import read as vault_read, store as vault_store
+from forgeai.deploy.openbao_flow import (
+    FileKeyStore,
+    FileSecretStore,
+    initialize_openbao,
+    prepare_key_store,
+    wait_reachable,
+)
 from forgeai.audit import immudb as ledger
 from forgeai.observability import langfuse as obs
 from forgeai.eval import rag_eval
@@ -108,6 +115,29 @@ def _svc_url(host: str, port: int) -> str:
     Le trafic est local/LAN entre briques du même déploiement — pas de transmission réseau
     externe ; le TLS inter-briques est hors périmètre de la série E."""
     return f"http://{host}:{port}"  # NOSONAR S5332 — service local/LAN, cf. docstring
+
+
+# openbao PRODUCTION (FAI-0005 S5) : chemin de santé tolérant au coffre scellé (le process vit scellé).
+_OPENBAO_HEALTH = "/v1/sys/health?standbyok=true&sealedcode=200&uninitcode=200"
+
+
+def _has_openbao(plan) -> bool:
+    return any(s.name == "openbao" for s in plan.services)
+
+
+def _provision_openbao_compose(compose_file: Path, workdir: Path, bao_url: str) -> str:
+    """Amorçage openbao PRODUCTION (compose) AVANT les consommateurs — sans lui ils resteraient bloqués
+    en `depends_on service_healthy` (le healthcheck = coffre descellé, or c'est l'init qui descelle).
+    Prépare le key-store hôte (root ISOLÉ hors du répertoire monté à l'unsealer), démarre openbao + son
+    unsealer seuls, attend la joignabilité (process up, même scellé), init/unseal via le cœur S2, renvoie
+    le token applicatif scopé (jamais le root). Isolé pour être mocké en bloc dans les tests du wizard."""
+    from forgeai.deploy.compose import http_ok
+    keys_dir = prepare_key_store(workdir / "openbao-keys")
+    key_store = FileKeyStore(keys_dir, workdir / "secrets" / "openbao_root")
+    secret_store = FileSecretStore(workdir / "secrets" / "openbao_app_token.json")
+    compose_up(compose_file, services=["openbao", "openbao-unsealer"])
+    wait_reachable(f"{bao_url}{_OPENBAO_HEALTH}", probe=http_ok)
+    return initialize_openbao(bao_url, key_store, secret_store)
 
 
 def wizard_ci(args: argparse.Namespace) -> int:
@@ -294,6 +324,15 @@ def wizard_ci(args: argparse.Namespace) -> int:
         (workdir / "litellm-config.yaml").write_text(litellm_config, encoding="utf-8")
         config_files["litellm-config.yaml"] = litellm_config
 
+    # FAI-0005 (S1) — si openbao est dans le plan (mode PRODUCTION), fournir sa config HCL
+    # (storage fichier) : écrite à côté du compose (bind-mount RO) ET passée en ConfigMap k3s.
+    # Asset statique ; l'init/unseal du coffre est orchestré en S3/S4/S5, pas ici.
+    if any(s.name == "openbao" for s in plan.services):
+        openbao_hcl = (importlib.resources.files(DATA_PKG) / "openbao.hcl").read_text(
+            encoding="utf-8")
+        (workdir / "openbao.hcl").write_text(openbao_hcl, encoding="utf-8")
+        config_files["openbao.hcl"] = openbao_hcl
+
     node_arg = args.node
     if rag_node is not None:
         # N1b — le placement du RAG choisi dans la sélection prime sur --node
@@ -337,12 +376,26 @@ def wizard_ci(args: argparse.Namespace) -> int:
     immudb_witness = None  # E3c — témoin d'inscription au ledger d'audit immudb (RAG durci)
     langfuse_witness = None  # E5 — témoin de trace d'observabilité langfuse (RAG durci)
     eval_witness = None  # E6 — score d'éval RAG déterministe (« optimal » mesuré)
+    openbao_app_token = ""  # FAI-0005 S5 : token applicatif scopé émis à l'amorçage (jamais le root)
     if backend == "compose":
         _step(t("wizard.s06"))
+        if rag_durci and _has_openbao(plan):
+            # openbao PROD : init/unseal AVANT les consommateurs (qui attendent service_healthy =
+            # coffre descellé ; sans amorçage préalable = interblocage au premier boot).
+            openbao_app_token = _provision_openbao_compose(
+                compose_file, workdir, _svc_url(probe_host, ports["openbao"]))
         compose_up(compose_file)
         rag_ports = ports
     else:
         _step(t("wizard.s07", node=node_label))
+        if rag_durci and _has_openbao(plan):
+            # openbao est ClusterIP (interne, #113) : l'amorçage PROD k3s exige un port-forward
+            # opérateur -> openbao. Flux documenté (Docs/how-to/openbao-migration.md) ; échec RAPIDE
+            # ici plutôt qu'un `wait deployments` bloqué indéfiniment sur un coffre jamais descellé.
+            raise DeployError(
+                "openbao production sur k3s : l'amorçage passe par le flux opérateur "
+                "(port-forward + forge, cf. Docs/how-to/openbao-migration.md) — pas encore câblé "
+                "au wizard k3s. Utiliser le backend compose pour un déploiement RAG durci clé en main.")
         k3s_apply(workdir / "k3s.yaml")
         k3s_wait_deployments(NAMESPACE, timeout_s=args.health_timeout)
         used_node_ports: set[int] = set()
@@ -382,10 +435,11 @@ def wizard_ci(args: argparse.Namespace) -> int:
             # Conséquence : si openbao est absent/en panne, la lecture échoue et le RAG n'a pas de clé
             # (le coffre est dans le chemin critique, pas un simple double de .env).
             gateway_key = env_vals.get("FORGEAI_LITELLM_KEY", "")
+            # PRODUCTION : le token n'est plus un dev-root pré-partagé du .env — c'est le token
+            # applicatif SCOPÉ émis par l'amorçage (_provision_openbao_compose), policy forgeai-app.
             bao_url = _svc_url(probe_host, rag_ports['openbao'])
-            bao_token = env_vals.get("FORGEAI_BAO_TOKEN", "")
-            vault_store(bao_url, bao_token, VAULT_SECRET_PATH, {"master_key": gateway_key})
-            gateway_key = vault_read(bao_url, bao_token, VAULT_SECRET_PATH).get("master_key", "")
+            vault_store(bao_url, openbao_app_token, VAULT_SECRET_PATH, {"master_key": gateway_key})
+            gateway_key = vault_read(bao_url, openbao_app_token, VAULT_SECRET_PATH).get("master_key", "")
             print(f"  coffre openbao: master key écrite puis relue ({'ok' if gateway_key else 'VIDE'})")
             rag = HardenedRagClient(
                 ollama_url=_svc_url(probe_host, rag_ports['ollama']),
