@@ -294,6 +294,15 @@ def wizard_ci(args: argparse.Namespace) -> int:
         (workdir / "litellm-config.yaml").write_text(litellm_config, encoding="utf-8")
         config_files["litellm-config.yaml"] = litellm_config
 
+    # FAI-0005 (S1) — si openbao est dans le plan (mode PRODUCTION), fournir sa config HCL
+    # (storage fichier) : écrite à côté du compose (bind-mount RO) ET passée en ConfigMap k3s.
+    # Asset statique ; l'init/unseal du coffre est orchestré en S3/S4/S5, pas ici.
+    if any(s.name == "openbao" for s in plan.services):
+        openbao_hcl = (importlib.resources.files(DATA_PKG) / "openbao.hcl").read_text(
+            encoding="utf-8")
+        (workdir / "openbao.hcl").write_text(openbao_hcl, encoding="utf-8")
+        config_files["openbao.hcl"] = openbao_hcl
+
     node_arg = args.node
     if rag_node is not None:
         # N1b — le placement du RAG choisi dans la sélection prime sur --node
