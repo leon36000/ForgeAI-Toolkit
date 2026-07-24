@@ -69,6 +69,18 @@ def render_compose(plan: DeploymentPlan, project: str = "forgeai-minimal") -> st
                     "              count: 1",
                     "              capabilities: [gpu]",
                 ]
+        # openbao (production) : mlock -> cap_add IPC_LOCK ; healthcheck = coffre DESCELLÉ
+        # (`bao status` : 0 unsealed / 2 scellé) -> support de depends_on service_healthy (S4).
+        if svc.name == "openbao":
+            lines += [
+                "    cap_add:",
+                "      - IPC_LOCK",
+                "    healthcheck:",
+                '      test: ["CMD", "bao", "status", "-address=http://127.0.0.1:8200"]',
+                "      interval: 10s",
+                "      timeout: 3s",
+                "      retries: 30",
+            ]
     if volumes:
         lines.append("volumes:")
         for volume in sorted(volumes):

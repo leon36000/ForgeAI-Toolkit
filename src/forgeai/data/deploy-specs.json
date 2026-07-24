@@ -81,10 +81,12 @@
     "image": "openbao/openbao:2.6.0@sha256:900bb64d0671cd1d82b693c56206f7263b582445f3a3bb6ba6e5213f524a6653",
     "container_port": 8200,
     "health_path": "/v1/sys/health",
-    "volumes": [],
-    "env": {
-      "BAO_DEV_ROOT_TOKEN_ID": "${FORGEAI_BAO_TOKEN}"
-    },
+    "volumes": [
+      "forgeai-openbao-data:/openbao/data",
+      "./openbao.hcl:/openbao/config/openbao.hcl:ro"
+    ],
+    "env": {},
+    "command": ["server", "-config=/openbao/config/openbao.hcl"],
     "depends": []
   },
   "postgres": {
