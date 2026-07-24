@@ -94,11 +94,18 @@ def test_wizard_ci_k3s_skip_preflight_ne_nameerror_pas(wired, monkeypatch, capsy
     défini. `monkeypatch.setattr(cli, "http_ok", ...)` EXIGE d'ailleurs que l'attribut existe au module
     (impossible avant le fix) — double garde. Le chemin k3s complet doit rendre RC=0 et sceller la preuve."""
     tmp_path, registre_path = wired
+    # Toutes les fonctions kubectl du chemin k3s sont mockées -> test indépendant de tout cluster.
     monkeypatch.setattr(cli, "k3s_apply", lambda manifest: None)
     monkeypatch.setattr(cli, "k3s_wait_deployments", lambda ns, timeout_s: None)
-    monkeypatch.setattr(cli, "http_ok", lambda url, timeout_s=3.0: True)  # santé k3s OK immédiatement
+    monkeypatch.setattr(cli, "k3s_delete_namespace", lambda ns: None)  # teardown --teardown
+    # http_ok enregistre ses appels : preuve DIRECTE que la ligne de la boucle de santé k3s s'exécute
+    # (avant le fix, http_ok n'était pas au module -> NameError ; monkeypatch.setattr l'exige d'ailleurs).
+    appels_http_ok: list[str] = []
+    monkeypatch.setattr(cli, "http_ok",
+                        lambda url, timeout_s=3.0: (appels_http_ok.append(url), True)[1])
     code = cli.main(_argv(tmp_path, registre_path, **{"--backend": "k3s"}))
-    assert code == 0, "le chemin k3s --skip-preflight ne doit PLUS lever de NameError sur http_ok"
+    assert appels_http_ok, "http_ok doit être APPELÉ dans la boucle de santé k3s (aucune NameError)"
+    assert code == 0, "le chemin k3s --skip-preflight complet doit réussir (RC=0)"
     entry = json.loads(registre_path.read_text(encoding="utf-8").splitlines()[-1])
     assert entry["type"] == "preuve_e2e"
     assert entry["payload"]["backend"] == "k3s"
