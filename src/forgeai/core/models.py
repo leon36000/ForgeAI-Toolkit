@@ -2,9 +2,23 @@
 from __future__ import annotations
 
 import json
+import unicodedata
 from dataclasses import asdict, dataclass, field
 from enum import Enum
 from typing import Any, Optional
+
+
+def _rejeter_caracteres_de_controle(nom_champ: str, valeur: str) -> None:
+    """Lève ValueError si `valeur` contient un caractère de contrôle Unicode (catégorie Cc,
+    soit \\x00–\\x1f et \\x7f — couvre \\n, \\r, \\t). Ces champs sont interpolés en brut dans
+    le YAML/Compose rendu (renderers/k3s.py, renderers/compose.py) ; un caractère de contrôle
+    y permettrait d'injecter des documents arbitraires. Le message nomme le champ fautif mais
+    ne reproduit PAS la valeur complète (anti-fuite du payload dans les logs)."""
+    for position, caractere in enumerate(valeur):
+        if unicodedata.category(caractere) == "Cc":
+            raise ValueError(
+                f"champ '{nom_champ}' contient un caractère de contrôle "
+                f"à la position {position} : {caractere!r}")
 
 
 class RenderTarget(Enum):
@@ -88,6 +102,16 @@ class DeploymentPlan:
     services: tuple[ServiceSpec, ...]
     model: str  # modèle LLM par défaut (décision T3 : Ollama)
     embed_model: str
+
+    def __post_init__(self) -> None:
+        # SEC-YAML-INJECT — durcissement à la source : ces scalaires atteignent en brut le
+        # YAML/Compose rendu. Rejet (pas nettoyage) des caractères de contrôle, dès la
+        # construction, pour protéger tous les renderers actuels et futurs (dataclass frozen :
+        # lecture de self.* autorisée en __post_init__).
+        _rejeter_caracteres_de_controle("plan_id", self.plan_id)
+        _rejeter_caracteres_de_controle("profile", self.profile)
+        _rejeter_caracteres_de_controle("model", self.model)
+        _rejeter_caracteres_de_controle("embed_model", self.embed_model)
 
     def to_json(self) -> str:
         data = asdict(self)
