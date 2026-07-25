@@ -197,6 +197,24 @@
         "dossier": "reviews/HW-010",
         "note": "NVIDIA present-mais-non-qualifie refuse au lieu de disparaitre (P1, FAI-U-010). APPROVE 3/3. Debloque HW-037 (avec CLI-036)."
       }
+    },
+    {
+      "package": "RES-012A",
+      "merge_commit": "14d9e3ad7c34ae58c4c02875a4230bb0499d1835",
+      "pr_number": 177,
+      "merged_at": "2026-07-25T22:40:22Z",
+      "review": {
+        "result": "APPROVE",
+        "ratio": "3/3",
+        "vendors": [
+          "google",
+          "qwen3.6-40b",
+          "deepseek"
+        ],
+        "prompt_sha256": "c4ef55fd0eb7278964d405b186e49e669cd360625e4aa6ab900d3702c36d431e",
+        "dossier": "reviews/RES-012A",
+        "note": "ADR schema de ressources par service (DESIGN_FIRST, FAI-U-012). APPROVE 3/3. Debloque RES-012B (impl) apres approbation Nathan."
+      }
     }
   ]
 }
