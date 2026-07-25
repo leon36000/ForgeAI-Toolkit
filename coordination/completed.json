@@ -1,5 +1,19 @@
 {
   "_schema": "completed-v1",
   "_description": "Packages fusionnés dans origin/main avec SHA de merge prouvé.",
-  "completed": []
+  "completed": [
+    {
+      "package": "ORCH-001",
+      "merge_commit": "f8928ab0649ca741a90307e8ebd7793e3ad92729",
+      "pr_number": 155,
+      "merged_at": "2026-07-25T05:56:38Z",
+      "review": {
+        "result": "APPROVE",
+        "ratio": "3/3",
+        "vendors": ["deepseek", "google", "meituan"],
+        "prompt_sha256": "5d0854ebc316b3537b9f9d701b99c4d3cb7c64ddf22a53bfd911fb166a7d7470",
+        "dossier": "reviews/ORCH-001/civ2"
+      }
+    }
+  ]
 }
