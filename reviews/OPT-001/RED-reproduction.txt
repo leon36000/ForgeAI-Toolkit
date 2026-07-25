@@ -1,0 +1,36 @@
+...FFF                                                                   [100%]
+=================================== FAILURES ===================================
+_____________________ test_hardware_json_memoise_avec_ttl ______________________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7ea5555c3d40>
+
+    def test_hardware_json_memoise_avec_ttl(monkeypatch):
+>       server._hardware_cache_clear()
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'forgeai.web.server' has no attribute '_hardware_cache_clear'
+
+tests/test_server_cache.py:48: AttributeError
+_____________________ test_hardware_cache_expire_apres_ttl _____________________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7ea5555c2600>
+
+    def test_hardware_cache_expire_apres_ttl(monkeypatch):
+>       server._hardware_cache_clear()
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'forgeai.web.server' has no attribute '_hardware_cache_clear'
+
+tests/test_server_cache.py:71: AttributeError
+______________ test_hardware_cache_clear_force_une_nouvelle_sonde ______________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7ea5555c08f0>
+
+    def test_hardware_cache_clear_force_une_nouvelle_sonde(monkeypatch):
+>       server._hardware_cache_clear()
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'forgeai.web.server' has no attribute '_hardware_cache_clear'
+
+tests/test_server_cache.py:95: AttributeError
+=========================== short test summary info ============================
+FAILED tests/test_server_cache.py::test_hardware_json_memoise_avec_ttl - Attr...
+FAILED tests/test_server_cache.py::test_hardware_cache_expire_apres_ttl - Att...
+FAILED tests/test_server_cache.py::test_hardware_cache_clear_force_une_nouvelle_sonde

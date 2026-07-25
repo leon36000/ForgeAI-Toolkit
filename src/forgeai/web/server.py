@@ -68,8 +68,87 @@ def _asset_bytes(name: str) -> bytes | None:
         return None
 
 
+# OPT-001 (OBS-A060-1) — sondes matérielles + backends relancées à CHAQUE requête.
+# Mesuré : /api/summary 940→1583 ms (dont _available_backends 801 ms) vs 1 ms /api/stacks ;
+# saturation ~8 clients (p99>1 s à 16). Un seul cache TTL thread-safe, invalidation explicite.
+_HARDWARE_TTL_S = 60.0  # matériel stable ; TTL borné pour hotplug/driver
+
+_hardware_profile_cache = None
+_hardware_profile_cache_time: float = 0.0
+
+_backends_cache: list[str] | None = None
+_backends_cache_time: float = 0.0
+
+# RLock (réentrant) : `_available_backends` appelle `_hardware_report()` en tenant déjà le verrou ;
+# un Lock simple provoquerait un INTERBLOCAGE (prouvé par test_backends_et_hardware_sans_interblocage).
+_hardware_lock = threading.RLock()
+
+
+def _hardware_cache_clear() -> None:
+    """Purge explicite du cache matériel et du cache backends."""
+    global _hardware_profile_cache, _hardware_profile_cache_time
+    global _backends_cache, _backends_cache_time
+    with _hardware_lock:
+        _hardware_profile_cache = None
+        _hardware_profile_cache_time = 0.0
+        _backends_cache = None
+        _backends_cache_time = 0.0
+
+
+def _hardware_report():
+    """HardwareProfile mémoïsé (TTL) — source unique des sondes matérielles."""
+    global _hardware_profile_cache, _hardware_profile_cache_time
+    now = time.monotonic()
+    cache = _hardware_profile_cache
+    if cache is not None and now - _hardware_profile_cache_time < _HARDWARE_TTL_S:
+        return cache
+    with _hardware_lock:
+        now = time.monotonic()
+        if (
+            _hardware_profile_cache is not None
+            and now - _hardware_profile_cache_time < _HARDWARE_TTL_S
+        ):
+            return _hardware_profile_cache
+        report = HardwareDetector(SubprocessRunner()).full_report()
+        _hardware_profile_cache = report
+        _hardware_profile_cache_time = now
+        return report
+
+
 def hardware_json() -> str:
-    return HardwareDetector(SubprocessRunner()).full_report().to_json()
+    """JSON mémoïsé de /api/detect."""
+    return _hardware_report().to_json()
+
+
+class _CachedDetector:
+    """Adaptateur : expose l'interface `full_report()` en servant le cache (aucune sonde)."""
+
+    def full_report(self):
+        return _hardware_report()
+
+
+def _available_backends() -> list[str]:
+    """Backends disponibles mémoïsés (TTL), avec copie défensive."""
+    global _backends_cache, _backends_cache_time
+    now = time.monotonic()
+    cache = _backends_cache
+    if cache is not None and now - _backends_cache_time < _HARDWARE_TTL_S:
+        return list(cache)
+    with _hardware_lock:
+        now = time.monotonic()
+        if (
+            _backends_cache is not None
+            and now - _backends_cache_time < _HARDWARE_TTL_S
+        ):
+            return list(_backends_cache)
+        # `run_checks` attend un DÉTECTEUR (il appelle .full_report()) : on lui passe un adaptateur
+        # qui sert le rapport DÉJÀ mémoïsé — évite la 3e sonde matérielle redondante.
+        backends = available_backends(
+            run_checks(SubprocessRunner(), _CachedDetector(), http_ok)
+        )
+        _backends_cache = backends
+        _backends_cache_time = now
+        return list(backends)
 
 
 @lru_cache(maxsize=1)  # parse mémoïsé (paquet immuable) — 1 seul parse/process (FAI-0014)
@@ -314,15 +393,9 @@ def _node_keys(runner: CommandRunner) -> tuple[Path, Path]:
     return public, private
 
 
-def _available_backends() -> list[str]:
-    return available_backends(
-        run_checks(SubprocessRunner(), HardwareDetector(SubprocessRunner()), http_ok)
-    )
-
-
 def _summary_payload(stack_id: str) -> dict:
     stack = load_stack(stack_id)
-    profile = HardwareDetector(SubprocessRunner()).full_report()
+    profile = _hardware_report()  # OPT-001 : mêmes sondes, mémoïsées
     nodes: list[str] = []
     try:
         nodes = [n["name"] for n in cluster_status(SubprocessRunner())]
