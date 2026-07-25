@@ -93,6 +93,12 @@
     rigueur (§8bis, une inexactitude technique connue ne doit jamais être livrée à Nathan sans
     correction, même si le processus formel de revue l'a déjà validée). Un round 4 de
     confirmation a été lancé après correction pour vérifier l'absence de régression.
+11quinquies. **Revue aveugle scellée round 4** (`reviews/SECRET-020A/civ4/*.verdict.json`,
+    `prompt_sha256=6d2ccc0a8d646639df0a111eea42f1f7ebbca35bdc8e590afe804f5829f255d7`) :
+    **APPROVE 3/3, zéro objection** (`DeepSeek-V4-Pro`, `Gemini-3.1-Pro`, `LongCat-2.0`). Le
+    correctif `usermod -aG` du round 3 est confirmé stable — aucune régression, aucune nouvelle
+    objection technique. Proof appended au ledger (`Registres/PATCH-SECRET-020A.jsonl`, seq 4).
+    L'ADR est désormais considéré techniquement stable après 4 rounds de revue aveugle scellée.
 12. Vérifié le scope avant commit : diff limité à `CANON/**`, `Docs/**`,
     `stories/SECRET-020A.md`, `reviews/SECRET-020A/**`, `Registres/PATCH-SECRET-020A.jsonl` —
     **zéro fichier `src/forgeai/**` modifié** (conforme au mandat `DESIGN_FIRST`).
@@ -177,12 +183,19 @@ FULL_GATES: no_stub_scan.py --all OK ; gitleaks detect OK (0 fuite) ; git diff -
   origin/main -- src/forgeai/ vide (0 changement produit).
 SECURITY_SCANS: gitleaks OK ; analyse manuelle de la surface de menace documentée dans l'ADR.
 EVIDENCE_PATH: CANON/adr/ADR-SECRET-020A-openbao-unseal-permissions.md,
-  AUDIT-REFERENCE/ORIGINAL-ISSUES/FAI-U-020.md, reviews/SECRET-020A/civ/*.verdict.json
+  AUDIT-REFERENCE/ORIGINAL-ISSUES/FAI-U-020.md, reviews/SECRET-020A/civ/*.verdict.json,
+  reviews/SECRET-020A/civ2/*.verdict.json, reviews/SECRET-020A/civ3/*.verdict.json,
+  reviews/SECRET-020A/civ4/*.verdict.json
 ROLLBACK_RESULT: Revert du commit — aucune donnée/schéma modifié (ADR pur), rollback trivial.
 LIMITATIONS: Implémentation du correctif recommandé (chown/chmod + motif atomique) hors
   périmètre de ce package, à assigner séparément après approbation de l'ADR.
+REVIEW_STATUS: 4 rounds de revue aveugle scellée. Round 1 REJECT 2/3 (chown-vers-GID-image
+  invalide POSIX, corrigé par group_add). Round 2 REJECT tally (objection mineure documentaire,
+  clarifiée). Round 3 APPROVE 3/3 avec 2 objections mineures factuelles fondées (usermod -aG
+  manquant, corrigé malgré la tally déjà verte). Round 4 APPROVE 3/3, zéro objection —
+  confirmation de stabilité post-correctif.
 OPEN_RISKS: Approbation explicite de Nathan requise avant que l'ADR soit considéré DONE
-  (critère d'acceptation distinct de la revue aveugle 3/3, non encore obtenue au moment de la
-  rédaction de ce rapport).
+  (critère d'acceptation distinct de la revue aveugle 3/3 — désormais satisfaite techniquement
+  au round 4, mais l'approbation humaine de Nathan reste un gate séparé et non encore obtenue).
 READY_FOR_PR: YES
 ```
