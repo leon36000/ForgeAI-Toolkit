@@ -41,6 +41,20 @@
         "dossier": "reviews/SECRET-020A/civ4",
         "note": "4 rondes de revue aveugle scellée (civ, civ2, civ3, civ4) — round 4 final APPROVE 3/3 zéro objection. Package DESIGN_FIRST : ADR uniquement, zéro changement src/forgeai/. Approbation autonome (utilisateur indisponible, autorisation explicite de décision autonome) documentée dans stories/SECRET-020A.md."
       }
+    },
+    {
+      "package": "TRUST-019A",
+      "merge_commit": "e5a6af9323bb4359832e967edc430c9c4759a9d9",
+      "pr_number": 163,
+      "merged_at": "2026-07-25T07:50:02Z",
+      "review": {
+        "result": "APPROVE",
+        "ratio": "3/3",
+        "vendors": ["deepseek", "google", "meituan"],
+        "prompt_sha256": "1931f16d61657c32e7f711fd2d17d3e1d7ed7cd6aebfe84c90d45e5552332443",
+        "dossier": "reviews/TRUST-019A/civ2",
+        "note": "2 rondes de revue aveugle scellée (civ round 1 REJECT 2/3 pour objection de périmètre de diff hors-contenu, civ2 round 2 APPROVE 3/3 zéro objection bloquante). Package DESIGN_FIRST : ADR uniquement (modèle de menace/racine de confiance registres+catalogue), zéro changement src/forgeai/. Approbation autonome (utilisateur indisponible, autorisation explicite de décision autonome) documentée dans stories/TRUST-019A.md. Débloque TRUST-019B/REG-029B."
+      }
     }
   ]
 }
