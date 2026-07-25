@@ -179,6 +179,24 @@
         "dossier": "reviews/RAG-004A",
         "note": "ADR contrat d'ancrage (DESIGN_FIRST, FAI-U-004). APPROVE 3/3 (2e tour, 1er tronque refute). Debloque RAG-005 (impl) apres approbation Nathan."
       }
+    },
+    {
+      "package": "HW-010",
+      "merge_commit": "7c2c1a8eec4a8b009db7a40c0521865f3f581823",
+      "pr_number": 174,
+      "merged_at": "2026-07-25T22:29:54Z",
+      "review": {
+        "result": "APPROVE",
+        "ratio": "3/3",
+        "vendors": [
+          "google",
+          "qwen3.6-40b",
+          "deepseek"
+        ],
+        "prompt_sha256": "053d74032951ed6e13bfd6c5849ff40aea538299bc87f2072f880000bcf179c5",
+        "dossier": "reviews/HW-010",
+        "note": "NVIDIA present-mais-non-qualifie refuse au lieu de disparaitre (P1, FAI-U-010). APPROVE 3/3. Debloque HW-037 (avec CLI-036)."
+      }
     }
   ]
 }
