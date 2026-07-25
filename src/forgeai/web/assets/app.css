@@ -381,7 +381,16 @@ code {
   background: color-mix(in srgb, var(--accent) 22%, transparent);
   border-color: var(--accent);
 }
+.step-item.failed .step-num {
+  border-color: var(--accent);
+  border-style: double;
+  font-weight: 900;
+}
 .step-item.locked { opacity: .45; cursor: not-allowed; }
+.step-status-text {
+  margin-left: auto; font-size: 11px; opacity: .7; white-space: nowrap; flex: none;
+}
+.step-item.failed .step-status-text { opacity: 1; font-weight: 700; }
 
 .step-panel > h2 { margin: 4px 0 6px; font-size: 21px; }
 .step-lede { margin: 0 0 18px; font-size: 13.5px; opacity: .75; max-width: 70ch; line-height: 1.5; }
