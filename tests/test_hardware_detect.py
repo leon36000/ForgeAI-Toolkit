@@ -136,5 +136,5 @@ def test_machine_reellement_sans_gpu_reste_cpu():
     """Garde : une machine SANS aucun GPU (ni nvidia-smi ni lspci) reste minimal-cpu,
     sans lever (le refus ne concerne QUE les GPU présents-mais-non-qualifiés)."""
     gpus = _detector(**{"nvidia-smi": "", "lspci": ""}).detect_gpus()
-    assert gpus == ()
+    assert not gpus  # aucun GPU (tuple vide)
     assert derive_profile(_hw(gpus)) == "minimal-cpu"

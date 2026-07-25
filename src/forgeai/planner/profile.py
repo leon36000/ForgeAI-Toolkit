@@ -1,3 +1,15 @@
+"""Story P1-S02 — dérivation déterministe du profil de déploiement (codeur : fable).
+
+Seuils Minimal : RAM ≥ 4 Go, disque libre ≥ 25 Go (critères stories-kimi).
+Variantes : minimal-gpu-cuda (NVIDIA ≥ 8 Go VRAM), minimal-gpu-rocm (AMD ≥ 8 Go),
+minimal-gpu-intel (Intel ≥ 4 Go), sinon minimal-cpu. Échec = ProfileError avec
+code ERR_HW_MIN — le wizard bascule alors en « détection forcée » (mitigation R-01).
+
+HW-010 (FAI-U-010) : un GPU NVIDIA marqué « [unqualified] » (vu par lspci, nvidia-smi
+KO -> VRAM inconnue, non nulle) ne disparaît pas silencieusement en minimal-cpu ;
+si aucun GPU utilisable n'est trouvé, derive_profile lève ProfileError orientant
+vers la vérification du driver/runtime NVIDIA.
+"""
 from __future__ import annotations
 
 from forgeai.core.models import HardwareProfile
