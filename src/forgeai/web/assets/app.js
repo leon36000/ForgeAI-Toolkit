@@ -22,7 +22,9 @@
     overrides: {},
     search: '',
     i18nTables: {},
-    embeddingsLoaded: false
+    embeddingsLoaded: false,
+    detectError: false,
+    deployStatus: null // null=jamais lancé | 'running' | 'ok' | 'failed' (UI-039, preuve backend)
   };
 
   async function loadI18n(lang) {
@@ -99,6 +101,7 @@
     if (state.summary) renderSummary();
     if (state.localModels) renderLocalModels();
     if (state.embeddingsLoaded) renderEmbeddings();
+    applyStepStatuses(); // UI-039 : libellés textuels de statut traduits (fonction hoistée)
   }
 
   async function fetchJson(path) {
@@ -295,9 +298,11 @@
     } catch (e) {
       state.bricks = null;
       list.innerHTML = `<p class="error">${escapeHtml(t('error_load'))}</p>`;
+      applyStepStatuses();
       return;
     }
     renderBricks();
+    applyStepStatuses(); // UI-039 : preuve étape 5 (chargement backend réel) mise à jour
   }
 
   function renderCounts(shown) {
@@ -498,6 +503,7 @@
       es.close();
       let code = null;
       try { code = JSON.parse(ev.data).exit_code; } catch (e) { /* fin sans code */ }
+      state.deployStatus = code === 0 ? 'ok' : 'failed'; // UI-039 : preuve backend réelle, jamais positionnelle
       if (code === 0) {
         status.textContent = t('deploy_done_ok');
         status.classList.remove('error');
@@ -505,6 +511,7 @@
         status.textContent = t('deploy_done_fail').replace('{code}', String(code));
         status.classList.add('error');
       }
+      applyStepStatuses();
     });
     es.onerror = () => { es.close(); };
   }
@@ -523,6 +530,8 @@
       }
       status.classList.remove('error');
       status.textContent = t('deploy_running');
+      state.deployStatus = 'running'; // UI-039 : jamais 'done' tant que l'exit_code n'est pas connu
+      applyStepStatuses();
       try {
         const res = await fetch('/api/deploy', {
           method: 'POST',
@@ -692,6 +701,7 @@
           delete state.modelsChosen[id];
         }
         renderLocalModels();
+        applyStepStatuses(); // UI-039 : preuve étape 3 mise à jour immédiatement
       });
     });
     box.querySelectorAll('select[data-model-node]').forEach((sel) => {
@@ -784,6 +794,7 @@
           delete state.embeddingsChosen[id];
         }
         renderEmbeddings();
+        applyStepStatuses(); // UI-039 : preuve étape 4 mise à jour immédiatement
       });
     });
     box.querySelectorAll('select[data-embedding-node]').forEach((sel) => {
@@ -830,9 +841,11 @@
       state.nodes = await fetchJson('/api/nodes/status');
     } catch (e) {
       list.innerHTML = `<p class="error">${escapeHtml(t('error_load'))}</p>`;
+      applyStepStatuses();
       return;
     }
     renderNodes();
+    applyStepStatuses(); // UI-039 : preuve étape 6 (chargement backend réel) mise à jour
   }
 
   function renderNodes() {
@@ -936,14 +949,135 @@
   }
 
 
-  /* ---------- Installateur par étapes (P0.3 / N2b) ---------- */
+  /* ---------- Installateur par étapes (P0.3 / N2b / UI-039) ---------- */
 
   const TOTAL_STEPS = 7;
   const NEEDS_STACK = new Set([3, 4, 5, 7]);
 
+  // FAI-U-039 : marqueur textuel par statut d'étape — jamais uniquement une couleur.
+  // Vocabulaire indépendant de la langue (symbole + jeton technique), pour ne pas
+  // dupliquer une traduction hors périmètre (locales fr.json/en.json interdites ici)
+  // ni recréer un dictionnaire fr/en embarqué (invariant test_ui_n2b::test_pas_de_dico_embarque).
+  const STEP_STATUS_SYMBOL = {
+    locked: '\u{1F512}',
+    pending: '\u25CB',
+    active: '\u25CF',
+    done: '\u2713',
+    failed: '\u2717'
+  };
+
+  function stepStatusLabel(status) {
+    const symbol = STEP_STATUS_SYMBOL[status] || '';
+    return (symbol + ' ' + status).trim();
+  }
+
   function stepAllowed(n) {
     if (NEEDS_STACK.has(n) && !state.selectedId) return false;
     return n >= 1 && n <= TOTAL_STEPS;
+  }
+
+  // Rassemble la PREUVE backend réelle disponible côté client pour chaque étape.
+  // Aucune position/index n'entre dans ce calcul (cause racine de FAI-U-039).
+  function collectEvidence() {
+    return {
+      hardwareOk: Boolean(state.detect) && Object.keys(state.detect).length > 0 && !state.detectError,
+      hardwareFailed: Boolean(state.detectError),
+      stackChosen: Boolean(state.selectedId),
+      modelsChosenCount: Object.keys(state.modelsChosen || {}).length,
+      embeddingsChosenCount: Object.keys(state.embeddingsChosen || {}).length,
+      bricksLoaded: Boolean(state.bricks),
+      nodesLoaded: Boolean(
+        (state.nodes && Array.isArray(state.nodes.nodes)) ||
+        (state.summary && Array.isArray(state.summary.nodes))
+      ),
+      deployStatus: state.deployStatus || null
+    };
+  }
+
+  // Fonctions PURES (aucune I/O, aucun DOM) : testables hors navigateur (Node), à l'image de
+  // engine_filter.js/S6b. Le contrat de preuve par étape, dérivé de `collectEvidence()` :
+  //   1 Matériel    -> détection backend reçue sans erreur
+  //   2 Stack       -> une stack a été choisie
+  //   3 Modèles IA  -> au moins un modèle choisi
+  //   4 Embeddings  -> au moins un embedding choisi
+  //   5 Briques     -> liste de briques chargée depuis le backend
+  //   6 Nœuds       -> statut des nœuds chargé depuis le backend
+  //   7 Déploiement -> exit_code backend == 0 (jamais "visité" seul)
+  function computeStepEvidence(n, ev) {
+    if (!ev) return false;
+    switch (n) {
+      case 1: return Boolean(ev.hardwareOk);
+      case 2: return Boolean(ev.stackChosen);
+      case 3: return ev.modelsChosenCount > 0;
+      case 4: return ev.embeddingsChosenCount > 0;
+      case 5: return Boolean(ev.bricksLoaded);
+      case 6: return Boolean(ev.nodesLoaded);
+      case 7: return ev.deployStatus === 'ok';
+      default: return false;
+    }
+  }
+
+  // Une étape échouée (preuve backend négative) n'est JAMAIS confondue avec "non exécutée" :
+  // statut dédié 'failed', distinct de 'pending' et de 'done'.
+  function computeStepFailure(n, ev) {
+    if (!ev) return false;
+    if (n === 1) return Boolean(ev.hardwareFailed);
+    if (n === 7) return ev.deployStatus === 'failed';
+    return false;
+  }
+
+  // Dérive le statut final d'une étape à partir de la SEULE preuve backend (jamais de la
+  // position). Déterministe et idempotent : rejouable à l'identique après un rafraîchissement
+  // dès lors que la même preuve est retransmise par le backend (cf. syncDeployStatus()).
+  function computeStepStatus(n, currentStep, ev, allowed) {
+    if (computeStepFailure(n, ev)) return 'failed';
+    if (!allowed) return 'locked';
+    if (computeStepEvidence(n, ev)) return 'done';
+    if (n === currentStep) return 'active';
+    return 'pending';
+  }
+
+  // (Re)applique les statuts d'étape sur le rail SANS changer de panneau — appelable après
+  // tout événement qui change la preuve (chargement, sélection, fin de déploiement, changement
+  // de langue) pour que le rail reflète toujours l'état réel, jamais un flag "visité" figé.
+  function applyStepStatuses() {
+    const ev = collectEvidence();
+    document.querySelectorAll('.step-item').forEach((b) => {
+      const sn = Number(b.dataset.step);
+      const status = computeStepStatus(sn, state.step, ev, stepAllowed(sn));
+      b.classList.toggle('active', status === 'active');
+      b.classList.toggle('done', status === 'done');
+      b.classList.toggle('failed', status === 'failed');
+      b.classList.toggle('locked', status === 'locked');
+      b.setAttribute('aria-pressed', String(sn === state.step));
+      b.dataset.stepStatus = status;
+      let label = b.querySelector('.step-status-text');
+      if (!label) {
+        label = document.createElement('span');
+        label.className = 'step-status-text';
+        b.appendChild(label);
+      }
+      label.textContent = stepStatusLabel(status);
+    });
+  }
+
+  // Interroge le backend pour l'état RÉEL du dernier déploiement (SSE /api/deploy/events,
+  // rejoue l'historique + clôture avec l'exit_code connu même si aucun process n'est vivant,
+  // cf. server.py). Appelé au boot pour que le rail reflète le vrai statut dès l'affichage,
+  // y compris après un rafraîchissement/redémarrage de page pendant/après un déploiement.
+  function syncDeployStatus() {
+    if (typeof EventSource === 'undefined') return;
+    try {
+      const es = new EventSource('/api/deploy/events');
+      es.addEventListener('end', (ev) => {
+        es.close();
+        let code = null;
+        try { code = JSON.parse(ev.data).exit_code; } catch (e) { /* fin sans code connu */ }
+        state.deployStatus = code === null ? null : (code === 0 ? 'ok' : 'failed');
+        applyStepStatuses();
+      });
+      es.onerror = () => { es.close(); };
+    } catch (e) { /* EventSource indisponible (environnement restreint) */ }
   }
 
   function goToStep(n) {
@@ -956,13 +1090,7 @@
     document.querySelectorAll('[data-step-panel]').forEach((p) => {
       p.classList.toggle('hidden', Number(p.dataset.stepPanel) !== n);
     });
-    document.querySelectorAll('.step-item').forEach((b) => {
-      const sn = Number(b.dataset.step);
-      b.classList.toggle('active', sn === n);
-      b.classList.toggle('done', sn < n);
-      b.classList.toggle('locked', !stepAllowed(sn));
-      b.setAttribute('aria-pressed', String(sn === n));
-    });
+    applyStepStatuses();
     const hint = document.getElementById('step-hint');
     if (hint) { hint.textContent = ''; hint.classList.remove('error'); }
     const prev = document.getElementById('btn-prev');
@@ -986,6 +1114,7 @@
     if (prev) prev.addEventListener('click', () => goToStep(state.step - 1));
     if (next) next.addEventListener('click', () => goToStep(state.step + 1));
     goToStep(1);
+    syncDeployStatus();
   }
 
   function initControls() {
@@ -1031,10 +1160,12 @@
       state.recommendedId = gpuCount >= 1 ? 'agentique' : 'assistant-entreprise';
     } catch (e) {
       state.detect = state.detect || {};
+      state.detectError = true; // UI-039 : échec réel, jamais confondu avec "done"
       document.getElementById('stacks-grid').innerHTML = `<p class="error">${escapeHtml(t('error_load'))}</p>`;
     }
     renderHardware();
     renderStacks();
+    applyStepStatuses(); // UI-039 : (re)dérive l'état des étapes depuis la preuve backend réelle
   }
 
   boot();
