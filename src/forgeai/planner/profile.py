@@ -32,15 +32,21 @@ def derive_profile(hw: HardwareProfile) -> str:
     # PRÉSENCE du vendor. NVIDIA reste strict (nvidia-smi donne toujours la VRAM réelle,
     # donc 0 = pas de GPU utilisable). Un iGPU AMD faible (VRAM 0) est ignoré : ROCm ne
     # cible pas les APU intégrés — seul un dGPU AMD à VRAM inconnue déclenche le profil.
-    def _is_igpu(name: str) -> bool:
+    # La distinction iGPU/dGPU repose sur le marqueur canonique « [integrated] » émis par
+    # detect.py à partir de l'identifiant PCI « vendor:device » (HW-009).
+    def _est_integre(name: str) -> bool:
         low = name.lower()
+        # source d'autorité : marqueur canonique émis par detect.py à partir de l'identifiant PCI
+        if "[integrated]" in low:
+            return True
+        # repli défensif (noms explicites éventuels)
         return "igpu" in low or "integrated" in low
 
     def _usable(gpu) -> bool:
         if gpu.vendor == "nvidia":
             return gpu.vram_mb >= 8192
         if gpu.vendor == "amd":
-            return gpu.vram_mb >= 8192 or (gpu.vram_mb == 0 and not _is_igpu(gpu.name))
+            return gpu.vram_mb >= 8192 or (gpu.vram_mb == 0 and not _est_integre(gpu.name))
         if gpu.vendor == "intel":
             return gpu.vram_mb >= 4096 or gpu.vram_mb == 0
         return False

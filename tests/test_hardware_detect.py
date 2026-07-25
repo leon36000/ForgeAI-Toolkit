@@ -78,3 +78,35 @@ def test_full_report_serialise_en_json():
     profile = _detector().full_report()
     data = json.loads(profile.to_json())
     assert {"cpu_model", "cpu_cores", "ram_gb", "gpus", "disks", "os_name"} <= set(data)
+
+
+# --- HW-009 (FAI-U-009) : classification iGPU par PCI, pas par sous-chaîne de nom ---
+from forgeai.core.models import Disk, HardwareProfile  # noqa: E402
+from forgeai.planner.profile import derive_profile  # noqa: E402
+
+
+def _hw(gpus):
+    return HardwareProfile(cpu_model="x", cpu_cores=8, cpu_arch="x86_64", ram_gb=46.0,
+                           os_name="Linux", gpus=tuple(gpus),
+                           disks=(Disk(path="/", total_gb=500.0, free_gb=400.0),))
+
+
+def test_igpu_amd_reel_non_promu_en_dgpu():
+    """lspci réel : AMD [1002:13c0] = iGPU Raphael, VRAM inconnue. Le nom produit par lspci
+    ('Advanced Micro Devices, Inc. ... Device') ne contient JAMAIS 'igpu'/'integrated' :
+    l'ancienne heuristique de sous-chaîne le PROMEUT à tort en dGPU (minimal-gpu-rocm).
+    Après classification PCI, l'iGPU est exclu -> minimal-cpu."""
+    gpus = _detector(**{"nvidia-smi": ""}).detect_gpus()
+    amd = [g for g in gpus if g.vendor == "amd"]
+    assert amd, "iGPU AMD 13c0 non détecté"
+    assert derive_profile(_hw(gpus)) == "minimal-cpu"  # RED avant fix (retourne rocm)
+
+
+def test_dgpu_amd_discret_reste_utilisable():
+    """Garde de précision : un dGPU AMD discret (Navi 31 [1002:744c], VRAM inconnue via lspci)
+    NE doit PAS être exclu par erreur -> minimal-gpu-rocm reste."""
+    lspci = (FIXTURES / "lspci_nn_amd_dgpu.txt").read_text(encoding="utf-8")
+    gpus = _detector(**{"nvidia-smi": "", "lspci": lspci}).detect_gpus()
+    amd = [g for g in gpus if g.vendor == "amd"]
+    assert amd and amd[0].vram_mb == 0
+    assert derive_profile(_hw(gpus)) == "minimal-gpu-rocm"

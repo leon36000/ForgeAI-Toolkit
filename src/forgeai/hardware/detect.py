@@ -1,20 +1,31 @@
-"""Story P1-S01 — détection hardware multi-vendor (codeur : fable).
-
-Sources user-space, sans privilèges : lscpu -J (CPU), /proc/meminfo (RAM),
-df (disque), nvidia-smi (GPU NVIDIA), lspci -nn (GPU AMD/Intel en repli).
-Chaque source défaillante dégrade proprement — jamais d'exception fatale (CA :
-« échec d'une source n'empêche pas le reste »).
-"""
 from __future__ import annotations
 
 import json
 import platform
+import re
 from pathlib import Path
 
 from forgeai.core.models import GPU, Disk, HardwareProfile
 from forgeai.core.runner import CommandRunner
 
 _PCI_VENDORS = {"1002": "amd", "8086": "intel", "10de": "nvidia"}
+
+# iGPU/APU connus, par identifiant PCI « vendor:device » en minuscules. ROCm ne
+# cible pas ces puces intégrées : elles ne doivent jamais être promues en dGPU.
+# Liste extensible — ajouter ici tout nouvel iGPU rencontré sur le terrain.
+_INTEGRATED_PCI_DEVICE_IDS = frozenset({
+    "1002:13c0",  # Raphael (APU Ryzen 7000)
+    "1002:164e",  # Renoir
+    "1002:1636",
+    "1002:15bf",
+    "1002:15c8",
+    "1002:1681",
+    "1002:164c",
+    "1002:1900",
+    "1002:13fe",
+    "1002:15d8",
+    "1002:15dd",  # AMD APU/iGPU connus (extensible)
+})
 
 
 class HardwareDetector:
@@ -105,11 +116,20 @@ class HardwareDetector:
         for line in out.splitlines():
             if "VGA compatible controller" not in line and "3D controller" not in line:
                 continue
-            for pci_id, vendor in _PCI_VENDORS.items():
-                if f"[{pci_id}:" in line:
-                    name = line.split("controller", 1)[-1].split(":", 1)[-1].split("[")[0].strip()
-                    gpus.append(GPU(vendor=vendor, name=name or "unknown", vram_mb=0))
-                    break
+            ids = re.findall(r"\[([0-9a-fA-F]{4}):([0-9a-fA-F]{4})\]", line)
+            if not ids:
+                continue
+            vendor_hex, device_hex = ids[-1]
+            vendor_hex = vendor_hex.lower()
+            device_hex = device_hex.lower()
+            vendor = _PCI_VENDORS.get(vendor_hex)
+            if vendor is None:
+                continue
+            base = line.split("controller", 1)[-1].split(":", 1)[-1].split("[")[0].strip()
+            name = f"{base or 'unknown'} [{vendor_hex}:{device_hex}]"
+            if f"{vendor_hex}:{device_hex}" in _INTEGRATED_PCI_DEVICE_IDS:
+                name += " [integrated]"
+            gpus.append(GPU(vendor=vendor, name=name, vram_mb=0))
         return gpus
 
     def full_report(self) -> HardwareProfile:

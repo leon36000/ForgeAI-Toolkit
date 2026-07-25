@@ -1,0 +1,22 @@
+F.                                                                       [100%]
+=================================== FAILURES ===================================
+_____________________ test_igpu_amd_reel_non_promu_en_dgpu _____________________
+
+    def test_igpu_amd_reel_non_promu_en_dgpu():
+        """lspci réel : AMD [1002:13c0] = iGPU Raphael, VRAM inconnue. Le nom produit par lspci
+        ('Advanced Micro Devices, Inc. ... Device') ne contient JAMAIS 'igpu'/'integrated' :
+        l'ancienne heuristique de sous-chaîne le PROMEUT à tort en dGPU (minimal-gpu-rocm).
+        Après classification PCI, l'iGPU est exclu -> minimal-cpu."""
+        gpus = _detector(**{"nvidia-smi": ""}).detect_gpus()
+        amd = [g for g in gpus if g.vendor == "amd"]
+        assert amd, "iGPU AMD 13c0 non détecté"
+>       assert derive_profile(_hw(gpus)) == "minimal-cpu"  # RED avant fix (retourne rocm)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: assert 'minimal-gpu-rocm' == 'minimal-cpu'
+E         
+E         - minimal-cpu
+E         + minimal-gpu-rocm
+
+tests/test_hardware_detect.py:102: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_hardware_detect.py::test_igpu_amd_reel_non_promu_en_dgpu - ...
