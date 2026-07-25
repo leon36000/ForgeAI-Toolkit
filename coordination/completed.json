@@ -14,6 +14,19 @@
         "prompt_sha256": "5d0854ebc316b3537b9f9d701b99c4d3cb7c64ddf22a53bfd911fb166a7d7470",
         "dossier": "reviews/ORCH-001/civ2"
       }
+    },
+    {
+      "package": "SAST-042",
+      "merge_commit": "466f3116e270a0865a43570f8ce3463894638971",
+      "pr_number": 157,
+      "merged_at": "2026-07-25T06:31:59Z",
+      "review": {
+        "result": "APPROVE",
+        "ratio": "3/3",
+        "vendors": ["deepseek", "google", "meituan"],
+        "prompt_sha256": "3b405453929d58560e28c699cf672b84108b4763440142c85c4fdcb125f656a2",
+        "dossier": "reviews/SAST-042/civ"
+      }
     }
   ]
 }
