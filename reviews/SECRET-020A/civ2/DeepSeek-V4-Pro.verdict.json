@@ -1,0 +1,14 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "stories/SECRET-020A.md",
+   "description": "Le rapport indique que les fichiers reviews/SECRET-020A/** et Registres/PATCH-SECRET-020A.jsonl font partie du changement, mais le diff fourni ne contient que CANON/adr/ADR-SECRET-020A-openbao-unseal-permissions.md et stories/SECRET-020A.md. Les références de l'ADR à ces fichiers de preuve ne sont donc pas vérifiables dans le contenu du diff, créant une incohérence documentaire.",
+   "preuve": "Le diff ne montre que l'ajout des deux fichiers mentionnés, aucun contenu pour reviews/ ou Registres/ n'est présent."
+  }
+ ],
+ "date_heure": "2026-07-25T06:52:48.104348+00:00",
+ "prompt_sha256": "b023fdabe0008f47e6e14fc666037535733c20de1b699dd7dd2a699a1825857f",
+ "reviewer_model": "DeepSeek-V4-Pro"
+}

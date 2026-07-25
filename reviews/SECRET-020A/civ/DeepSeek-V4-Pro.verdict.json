@@ -1,0 +1,20 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "critique",
+   "fichier": "CANON/adr/ADR-SECRET-020A-openbao-unseal-permissions.md",
+   "description": "La solution recommandée (chown du fichier et du répertoire au GID 1000) exige que l'utilisateur exécutant le script ait la capacité de changer le groupe d'un fichier lui appartenant vers un groupe dont il n'est pas membre (CAP_FOWNER ou appartenance préalable au groupe). L'ADR n'analyse pas cette contrainte de privilège ni ne propose de mécanisme de repli si l'opération échoue pour un utilisateur non privilégié, rendant la solution irréalisable dans le cas général décrit par la surface de menace (hôte partagé sans élévation).",
+   "preuve": "CANON/adr/ADR-SECRET-020A-openbao-unseal-permissions.md, ligne ≈45 (bloc 4.1) : 'chown du fichier unseal_key (et du répertoire keys_dir) au GID 1000 (groupe de l'utilisateur openbao dans l'image), en conservant l'opérateur comme propriétaire (UID).'"
+  },
+  {
+   "severite": "mineure",
+   "fichier": "CANON/adr/ADR-SECRET-020A-openbao-unseal-permissions.md",
+   "description": "L'affirmation de l'UID/GID fixe de l'image (1000:1000) repose sur une recherche externe dont la preuve n'est pas incluse dans le diff. Elle est donc non vérifiable avec les seuls éléments fournis.",
+   "preuve": "CANON/adr/ADR-SECRET-020A-openbao-unseal-permissions.md, section 4.1, référence au Dockerfile officiel sans citation du contenu vérifié."
+  }
+ ],
+ "date_heure": "2026-07-25T06:44:23.729588+00:00",
+ "prompt_sha256": "1ece4acf23673ccb8c10a8fc79c355c791243d19c312f253635682000760ba69",
+ "reviewer_model": "DeepSeek-V4-Pro"
+}

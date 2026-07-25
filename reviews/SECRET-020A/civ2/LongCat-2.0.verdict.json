@@ -1,0 +1,14 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "stories/SECRET-020A.md",
+   "description": "Le rapport final liste 4 entrées dans FILES_CHANGED (CANON/adr/ADR-SECRET-020A-openbao-unseal-permissions.md, stories/SECRET-020A.md, reviews/SECRET-020A/**, Registres/PATCH-SECRET-020A.jsonl) mais le diff fourni ne contient que 2 fichiers. Les chemins reviews/SECRET-020A/** et Registres/PATCH-SECRET-020A.jsonl sont absents du diff, ce qui crée une incohérence entre le rapport et le contenu réel du commit tel que présenté.",
+   "preuve": "Le diff commence à 'diff --git a/CANON/adr/ADR-SECRET-020A-openbao-unseal-permissions.md' et 'diff --git a/stories/SECRET-020A.md' — seuls deux fichiers sont représentés. Aucun 'diff --git' pour reviews/SECRET-020A/** ni Registres/PATCH-SECRET-020A.jsonl n'est présent dans le diff."
+  }
+ ],
+ "date_heure": "2026-07-25T06:52:48.244920+00:00",
+ "prompt_sha256": "b023fdabe0008f47e6e14fc666037535733c20de1b699dd7dd2a699a1825857f",
+ "reviewer_model": "LongCat-2.0"
+}

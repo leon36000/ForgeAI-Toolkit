@@ -1,0 +1,14 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "CANON/adr/ADR-SECRET-020A-openbao-unseal-permissions.md",
+   "description": "L'ADR indique que l'opérateur est automatiquement membre du groupe créé au bootstrap ('ayant lui-même créé/reçu ce groupe au bootstrap, il en est déjà membre'), mais la commande d'exemple 'groupadd forgeai-openbao' se contente de créer le groupe sans y ajouter l'utilisateur. Pour que le 'chown' ultérieur par l'opérateur non-privilégié fonctionne sans erreur EPERM, le bootstrap doit explicitement inclure l'ajout de l'utilisateur au groupe (par exemple via 'usermod -aG forgeai-openbao <opérateur>').",
+   "preuve": "Lignes 71-79 : 'créer un groupe système dédié, p. ex. groupadd forgeai-openbao [...] ayant lui-même créé/reçu ce groupe au bootstrap, il en est déjà membre'"
+  }
+ ],
+ "date_heure": "2026-07-25T06:55:33.068654+00:00",
+ "prompt_sha256": "056ac17e7df6e10089e975ca11b1a4ac580717c022763f5cdff164289511890d",
+ "reviewer_model": "Gemini-3.1-Pro"
+}

@@ -1,0 +1,14 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "stories/SECRET-020A.md",
+   "description": "Le champ FILES_CHANGED du rapport final liste des fichiers (reviews/SECRET-020A/**, Registres/PATCH-SECRET-020A.jsonl) qui sont absents du diff fourni pour cette revue.",
+   "preuve": "Ligne 'FILES_CHANGED: CANON/adr/ADR-SECRET-020A-openbao-unseal-permissions.md, stories/SECRET-020A.md, reviews/SECRET-020A/**, Registres/PATCH-SECRET-020A.jsonl' comparée au contenu effectif du diff."
+  }
+ ],
+ "date_heure": "2026-07-25T06:52:11.786688+00:00",
+ "prompt_sha256": "b023fdabe0008f47e6e14fc666037535733c20de1b699dd7dd2a699a1825857f",
+ "reviewer_model": "Gemini-3.1-Pro"
+}
