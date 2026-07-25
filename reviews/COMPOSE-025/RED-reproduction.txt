@@ -1,0 +1,61 @@
+FF                                                                       [100%]
+=================================== FAILURES ===================================
+____________ test_compose_durcissement_no_new_privileges_par_defaut ____________
+
+    def test_compose_durcissement_no_new_privileges_par_defaut():
+        out = render_compose(_plan())
+        # un bloc security_opt: no-new-privileges:true par service (2 services applicatifs)
+>       assert out.count("no-new-privileges:true") >= 2, out
+E       AssertionError: # Généré par ForgeAI Toolkit — plan p1-test (profil minimal-gpu-cuda)
+E         name: forgeai-minimal
+E         # réseau par défaut : chaque service est joignable par son nom
+E         services:
+E           ollama:
+E             image: ollama/ollama:latest
+E             restart: unless-stopped
+E             env_file: .env
+E             ports:
+E               - "127.0.0.1:21434:11434"
+E             volumes:
+E               - vol-a:/root/.ollama
+E             deploy:
+E               resources:
+E                 reservations:
+E                   devices:
+E                     - driver: nvidia
+E                       count: 1
+E                       capabilities: [gpu]
+E           vector-store:
+E             image: qdrant/qdrant:v1.13.4
+E             restart: unless-stopped
+E             env_file: .env
+E             ports:
+E               - "127.0.0.1:26333:6333"
+E             volumes:
+E               - vol-b:/qdrant/storage
+E         volumes:
+E           vol-a:
+E           vol-b:
+E         
+E       assert 0 >= 2
+E        +  where 0 = <built-in method count of str object at 0x33740650>('no-new-privileges:true')
+E        +    where <built-in method count of str object at 0x33740650> = '# Généré par ForgeAI Toolkit — plan p1-test (profil minimal-gpu-cuda)\nname: forgeai-minimal\n# réseau par défaut : c...   ports:\n      - "127.0.0.1:26333:6333"\n    volumes:\n      - vol-b:/qdrant/storage\nvolumes:\n  vol-a:\n  vol-b:\n'.count
+
+tests/test_renderers.py:108: AssertionError
+_____________ test_compose_no_new_privileges_couvre_chaque_service _____________
+
+    def test_compose_no_new_privileges_couvre_chaque_service():
+        plan = _plan()
+        out = render_compose(plan)
+        blocs = out.split("\n  ")  # segmentation grossière par service (indent 2)
+        for svc in plan.services:
+            seg = next((b for b in blocs if b.startswith(f"{svc.name}:")), None)
+            assert seg is not None, f"service {svc.name} absent"
+>           assert "no-new-privileges:true" in seg, f"{svc.name} sans no-new-privileges"
+E           AssertionError: ollama sans no-new-privileges
+E           assert 'no-new-privileges:true' in 'ollama:'
+
+tests/test_renderers.py:119: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_renderers.py::test_compose_durcissement_no_new_privileges_par_defaut
+FAILED tests/test_renderers.py::test_compose_no_new_privileges_couvre_chaque_service

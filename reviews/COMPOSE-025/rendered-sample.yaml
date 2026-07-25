@@ -1,0 +1,16 @@
+# Généré par ForgeAI Toolkit — plan c25 (profil minimal-cpu)
+name: forgeai-minimal
+# réseau par défaut : chaque service est joignable par son nom
+services:
+  ollama:
+    image: ollama/ollama:latest
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    env_file: .env
+    ports:
+      - "127.0.0.1:21434:11434"
+    volumes:
+      - vol-a:/root/.ollama
+volumes:
+  vol-a:
