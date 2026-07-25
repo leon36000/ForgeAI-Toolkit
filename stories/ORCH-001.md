@@ -189,4 +189,29 @@ Second round lancé sur le diff intégrant le correctif `scope_guard.py`. Round
 interrompu techniquement (processus arrière-plan clos avant complétion) ; un round
 propre a été relancé après la correction de périmètre ci-dessus.
 
+**Résultat round 2 : APPROVE 3/3.** Dossier `reviews/ORCH-001/civ2/`, dépouillement
+déterministe (`scripts/revue.py tally reviews/ORCH-001/civ2`) : `result=APPROVE,
+reason="3/3 APPROVE"`, 3 vendors distincts confirmés (deepseek, google, meituan),
+`prompt_sha256=5d0854eb…`, zéro objection. Consignée au registre scopé :
+`Registres/PATCH-ORCH-001.jsonl` seq 3.
+
+**`reviews/BINDING.txt` volontairement non modifié** : ce fichier n'est pas dans
+`allowed_paths` d'ORCH-001 et sa modification (rendre une revue *liante* pour le gate
+CI `reviews-sealed`) est une décision de gouvernance qui dépasse le périmètre de cette
+story — elle revient au mainteneur/CODEOWNERS lors de la fusion. La preuve APPROVE 3/3
+est disponible et vérifiable indépendamment dans `reviews/ORCH-001/civ2/`.
+
+## État final
+
+- Tous les gates CI automatisés sont verts (11/11) sur le dernier commit poussé.
+- Revue aveugle scellée : REJECT 2/3 (round 1, défaut réel corrigé) → **APPROVE 3/3**
+  (round 2, dossier `reviews/ORCH-001/civ2/`).
+- Registre `Registres/PATCH-ORCH-001.jsonl` : 3 entrées, chaîne intègre.
+- `Registres/mission.jsonl` : chaîne intègre, non modifiée par cette story (254 entrées,
+  état `origin/main`).
+- Périmètre respecté : `git diff origin/main...HEAD --stat` ne montre aucun fichier
+  hors `allowed_paths`.
+- Reste hors de mon autorité d'agent : ajout à `reviews/BINDING.txt` (gouvernance) et
+  fusion de la PR (gate humain, CODEOWNERS = Nathan).
+
 
