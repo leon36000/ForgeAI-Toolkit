@@ -27,6 +27,20 @@
         "prompt_sha256": "3b405453929d58560e28c699cf672b84108b4763440142c85c4fdcb125f656a2",
         "dossier": "reviews/SAST-042/civ"
       }
+    },
+    {
+      "package": "SECRET-020A",
+      "merge_commit": "026533bd330889d8183bd2755c41444ef01a1ac8",
+      "pr_number": 160,
+      "merged_at": "2026-07-25T07:13:54Z",
+      "review": {
+        "result": "APPROVE",
+        "ratio": "3/3",
+        "vendors": ["deepseek", "google", "meituan"],
+        "prompt_sha256": "6d2ccc0a8d646639df0a111eea42f1f7ebbca35bdc8e590afe804f5829f255d7",
+        "dossier": "reviews/SECRET-020A/civ4",
+        "note": "4 rondes de revue aveugle scellée (civ, civ2, civ3, civ4) — round 4 final APPROVE 3/3 zéro objection. Package DESIGN_FIRST : ADR uniquement, zéro changement src/forgeai/. Approbation autonome (utilisateur indisponible, autorisation explicite de décision autonome) documentée dans stories/SECRET-020A.md."
+      }
     }
   ]
 }
