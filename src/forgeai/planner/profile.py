@@ -4,6 +4,11 @@ Seuils Minimal : RAM ≥ 4 Go, disque libre ≥ 25 Go (critères stories-kimi).
 Variantes : minimal-gpu-cuda (NVIDIA ≥ 8 Go VRAM), minimal-gpu-rocm (AMD ≥ 8 Go),
 minimal-gpu-intel (Intel ≥ 4 Go), sinon minimal-cpu. Échec = ProfileError avec
 code ERR_HW_MIN — le wizard bascule alors en « détection forcée » (mitigation R-01).
+
+HW-010 (FAI-U-010) : un GPU NVIDIA marqué « [unqualified] » (vu par lspci, nvidia-smi
+KO -> VRAM inconnue, non nulle) ne disparaît pas silencieusement en minimal-cpu ;
+si aucun GPU utilisable n'est trouvé, derive_profile lève ProfileError orientant
+vers la vérification du driver/runtime NVIDIA.
 """
 from __future__ import annotations
 
@@ -20,6 +25,19 @@ class ProfileError(Exception):
 
 
 def derive_profile(hw: HardwareProfile) -> str:
+    """Dérive le profil de déploiement minimal à partir du profil matériel.
+
+    Seuils Minimal : RAM ≥ 4 Go, disque libre ≥ 25 Go.
+    Variantes GPU : minimal-gpu-cuda (NVIDIA ≥ 8 Go VRAM),
+    minimal-gpu-rocm (AMD ≥ 8 Go), minimal-gpu-intel (Intel ≥ 4 Go).
+    Échec matériel = ProfileError(code ERR_HW_MIN).
+
+    HW-010 : un GPU NVIDIA visible par lspci mais non qualifié (marqueur
+    [unqualified] dans le nom, c'est-à-dire nvidia-smi absent ou en échec)
+    n'est pas silencieusement ignoré : s'il est présent et qu'aucun GPU
+    utilisable n'est trouvé, une ProfileError oriente l'utilisateur vers
+    le driver/runtime NVIDIA.
+    """
     if hw.ram_gb < MIN_RAM_GB:
         raise ProfileError(
             f"RAM insuffisante : {hw.ram_gb} Go < {MIN_RAM_GB} Go requis")
@@ -57,4 +75,14 @@ def derive_profile(hw: HardwareProfile) -> str:
                             ("intel", "minimal-gpu-intel")):
         if any(g.vendor == vendor for g in usable):
             return profile
+
+    # HW-010 : refuser de faire disparaître un NVIDIA présent mais non qualifié.
+    non_qualifies = [g for g in hw.gpus if g.vendor == "nvidia" and "[unqualified]" in g.name]
+    if not usable and non_qualifies:
+        raise ProfileError(
+            "GPU NVIDIA présent mais non qualifié : nvidia-smi indisponible "
+            "(driver/runtime NVIDIA). VRAM inconnue (non nulle). Vérifiez l'installation du driver "
+            "NVIDIA (`nvidia-smi`) puis relancez — le déploiement d'un workload GPU est refusé tant "
+            "que le GPU n'est pas qualifié.")
+
     return "minimal-cpu"

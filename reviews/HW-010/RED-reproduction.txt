@@ -1,0 +1,21 @@
+.F.                                                                      [100%]
+=================================== FAILURES ===================================
+____________ test_nvidia_present_mais_non_qualifie_ne_disparait_pas ____________
+
+    def test_nvidia_present_mais_non_qualifie_ne_disparait_pas():
+        """FAI-U-010 : nvidia-smi cassé/absent -> VRAM inconnue via lspci. Le GPU NVIDIA
+        [10de:2b85] reste INVENTORIÉ (présence PCI), et le plan REFUSE de dégrader
+        silencieusement en minimal-cpu : derive_profile lève ProfileError avec un diagnostic
+        orientant vers la vérification driver/runtime (VRAM inconnue != 0 réel)."""
+        import pytest
+        from forgeai.planner.profile import ProfileError
+        lspci = (FIXTURES / "lspci_nn_nvidia_only.txt").read_text(encoding="utf-8")
+        gpus = _detector(**{"nvidia-smi": "", "lspci": lspci}).detect_gpus()
+        nv = [g for g in gpus if g.vendor == "nvidia"]
+        assert nv, "GPU NVIDIA a disparu quand nvidia-smi échoue (régression FAI-U-010)"
+>       with pytest.raises(ProfileError) as exc:
+E       Failed: DID NOT RAISE ProfileError
+
+tests/test_hardware_detect.py:126: Failed
+=========================== short test summary info ============================
+FAILED tests/test_hardware_detect.py::test_nvidia_present_mais_non_qualifie_ne_disparait_pas
