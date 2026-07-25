@@ -1,0 +1,14 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "CANON/adr/ADR-SECRET-020A-openbao-unseal-permissions.md",
+   "description": "La procédure de bootstrap §4.1 contient une ambiguïté qui pourrait entraîner une erreur EPERM. Le texte 'ayant lui-même créé/reçu ce groupe au bootstrap, il en est déjà membre' suggère que la création du groupe suffit à y faire appartenir l'opérateur, ce qui n'est pas vrai (groupadd n'ajoute pas l'utilisateur). Sans ajout explicite (usermod -aG), le chown ultérieur vers forgeai-openbao échouera car l'opérateur ne sera pas membre du groupe. L'ADR doit clarifier que le bootstrap inclut l'ajout de l'opérateur au groupe.",
+   "preuve": "Section §4.1, étape 2 : « l'opérateur reste PROPRIÉTAIRE ... ayant lui-même créé/reçu ce groupe au bootstrap, il en est déjà membre — aucune contrainte EPERM ». La sémantique Linux/POSIX ne confère pas automatiquement l'appartenance au groupe lors de groupadd."
+  }
+ ],
+ "date_heure": "2026-07-25T06:56:23.241127+00:00",
+ "prompt_sha256": "056ac17e7df6e10089e975ca11b1a4ac580717c022763f5cdff164289511890d",
+ "reviewer_model": "DeepSeek-V4-Pro"
+}

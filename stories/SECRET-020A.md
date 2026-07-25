@@ -81,13 +81,26 @@
     ambiguïté pour un reviewer qui ne dispose que du pack sans le contexte méthodologique.
     **Corrigé (round 3)** : ajout de la note explicite ci-dessus dans ce document, expliquant
     l'exclusion intentionnelle plutôt que de la présenter comme une omission.
+11quater. **Revue aveugle scellée round 3** (`reviews/SECRET-020A/civ3/*.verdict.json`,
+    `prompt_sha256=056ac17e7df6e10089e975ca11b1a4ac580717c022763f5cdff164289511890d`) :
+    **APPROVE 3/3** (tally strict satisfait). Néanmoins, 2 des 3 reviewers (`DeepSeek-V4-Pro`,
+    `Gemini-3.1-Pro`) ont soulevé une objection `mineure` **factuellement fondée** dans l'ADR
+    §4.1 : la formulation « ayant lui-même créé/reçu ce groupe au bootstrap, il en est déjà
+    membre » était **incorrecte** — `groupadd` crée un groupe système mais n'y ajoute AUCUN
+    membre automatiquement ; sans un `usermod -aG forgeai-openbao <opérateur>` explicite (avec
+    nouvelle session pour que l'appartenance prenne effet), le `chown` de l'étape 2 échouerait
+    avec `EPERM` en pratique. **Corrigé dans l'ADR §4.1** malgré la tally déjà `APPROVE` — par
+    rigueur (§8bis, une inexactitude technique connue ne doit jamais être livrée à Nathan sans
+    correction, même si le processus formel de revue l'a déjà validée). Un round 4 de
+    confirmation a été lancé après correction pour vérifier l'absence de régression.
 12. Vérifié le scope avant commit : diff limité à `CANON/**`, `Docs/**`,
     `stories/SECRET-020A.md`, `reviews/SECRET-020A/**`, `Registres/PATCH-SECRET-020A.jsonl` —
     **zéro fichier `src/forgeai/**` modifié** (conforme au mandat `DESIGN_FIRST`).
 13. Gates exécutés : `no_stub_scan.py --all`, `gitleaks detect` (aucune fuite),
     `git diff --stat origin/main -- src/forgeai/` (vide).
-14. **Revue aveugle scellée** — voir `reviews/SECRET-020A/civ/` (round 1) et
-    `reviews/SECRET-020A/civ2/` (round 2) pour le détail complet des verdicts scellés
+14. **Revue aveugle scellée** — voir `reviews/SECRET-020A/civ/` (round 1),
+    `reviews/SECRET-020A/civ2/` (round 2), `reviews/SECRET-020A/civ3/` (round 3, APPROVE 3/3)
+    et `civ4/` (round 4, confirmation post-correction) pour le détail complet des verdicts scellés
     (recommandation non-liante ; l'approbation finale requise reste celle de Nathan, distincte
     du consensus des reviewers).
 

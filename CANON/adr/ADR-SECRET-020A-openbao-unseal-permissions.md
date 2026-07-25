@@ -5,11 +5,16 @@
 - **Package** : `SECRET-020A` (`DESIGN_FIRST` — aucune implémentation dans cette branche).
 - **Finding source** : `FAI-U-020` (`ACCEPTED_EVIDENCE`, MEDIUM, confirmé LIVE sur `main` actuel).
 - **Auteurs** : COPILOT (analyse), revue aveugle scellée (recommandation), Nathan (décision).
-- **Historique de revue** : round 1 = REJECT 2/3 (DeepSeek-V4-Pro, Gemini-3.1-Pro — objection
-  critique fondée : le `chown` vers le GID interne fixe de l'image exige que l'opérateur en soit
-  déjà membre, sinon `EPERM` ; APPROVE : LongCat-2.0). §4.1 corrigé en conséquence (groupe hôte
-  dédié + `group_add` Compose, au lieu de dépendre du GID interne de l'image) — voir
-  `reviews/SECRET-020A/` pour les verdicts scellés complets.
+- **Historique de revue** : round 1 = REJECT 2/3 (objection critique fondée : `chown` vers le
+  GID interne fixe de l'image exige appartenance préalable, sinon `EPERM`) → §4.1 corrigé
+  (groupe hôte dédié + `group_add` Compose). round 2 = REJECT tally (2/3 APPROVE, 1 REJECT mais
+  objection classée `mineure` par le reviewer lui-même, `bloquantes: []`) — objection
+  documentaire sur le périmètre du diff de revue, clarifiée dans `stories/SECRET-020A.md`.
+  round 3 = **APPROVE 3/3** (`prompt_sha256=056ac17e7df6e10089e975ca11b1a4ac580717c022763f5cdff164289511890d`)
+  avec 2 objections mineures fondées (groupadd ne rend pas automatiquement l'opérateur membre du
+  groupe — corrigé ci-dessous par l'ajout explicite de `usermod -aG` au bootstrap, malgré la
+  tally déjà `APPROVE`, par rigueur §8bis). Voir `reviews/SECRET-020A/civ/`, `civ2/`, `civ3/`
+  pour les verdicts scellés complets.
 
 ## 1. Contexte
 
@@ -79,14 +84,24 @@ via la clé Compose `group_add` (mécanisme standard Docker pour ajouter un grou
 1. **Bootstrap hôte (une seule fois, opération privilégiée normale d'installation)** : créer un
    groupe système dédié, p. ex. `groupadd forgeai-openbao` (GID attribué par le système, jamais
    codé en dur à `1000` — élimine toute collision avec un GID `1000` déjà utilisé par un autre
-   compte du même hôte, risque identifié dans la version round 1). Cette étape nécessite un
-   privilège root **une seule fois**, au moment de l'installation de ForgeAI — situation
-   strictement analogue à l'ajout d'un opérateur au groupe `docker` lui-même (déjà requis pour
-   utiliser Docker sans `sudo`), donc sans coût opérationnel nouveau par rapport à l'existant.
-2. `chown <opérateur>:forgeai-openbao` sur `unseal_key` et `keys_dir` — **cette fois valide sans
-   privilège supplémentaire** : l'opérateur reste PROPRIÉTAIRE (UID inchangé, chown de groupe
-   uniquement) et, ayant lui-même créé/reçu ce groupe au bootstrap, il en est déjà membre —
-   aucune contrainte `EPERM` (contrairement à un GID arbitraire imposé par l'image).
+   compte du même hôte, risque identifié dans la version round 1), **PUIS ajouter explicitement
+   l'opérateur à ce groupe** : `usermod -aG forgeai-openbao <opérateur>` (correction round 3,
+   suite à objection round 3 2/2 — DeepSeek-V4-Pro, Gemini-3.1-Pro : `groupadd` crée le groupe
+   mais n'y ajoute AUCUN membre automatiquement ; sans cette étape explicite, le `chown` de
+   l'étape 2 échouerait avec `EPERM`, l'ancienne formulation « il en est déjà membre » étant
+   factuellement incorrecte). **Note opérationnelle supplémentaire** : `usermod -aG` ne prend
+   effet que pour les NOUVELLES sessions de l'opérateur (un shell déjà ouvert doit se déconnecter/
+   reconnecter, ou exécuter `newgrp forgeai-openbao`, avant que le `chown` de l'étape 2 ne
+   réussisse) — à documenter explicitement dans le script de bootstrap pour éviter une confusion
+   d'implémentation. Ces deux sous-étapes nécessitent un privilège root **une seule fois**, au
+   moment de l'installation de ForgeAI — situation strictement analogue à l'ajout d'un opérateur
+   au groupe `docker` lui-même (déjà requis pour utiliser Docker sans `sudo`, y compris la même
+   contrainte de nouvelle session), donc sans coût opérationnel nouveau par rapport à l'existant.
+2. `chown <opérateur>:forgeai-openbao` sur `unseal_key` et `keys_dir` — **valide sans privilège
+   supplémentaire UNE FOIS l'étape 1 complétée (groupe créé ET opérateur ajouté, nouvelle session
+   active)** : l'opérateur reste PROPRIÉTAIRE (UID inchangé, chown de groupe uniquement) et,
+   étant désormais membre effectif du groupe, ne rencontre aucune contrainte `EPERM`
+   (contrairement à un GID arbitraire imposé par l'image, tel que rejeté en round 1).
 3. Mode `0640` sur le fichier, `0750` sur `keys_dir` (inchangé par rapport au round 1 — seule la
    méthode d'attribution du groupe change, pas la cible de permission).
 4. **`docker-compose.yml` du service `openbao-unsealer`** : ajouter
