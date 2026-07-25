@@ -98,6 +98,28 @@ def test_compose_valide_par_docker_compose_config(tmp_path):
     assert proc.returncode == 0, proc.stderr
 
 
+# COMPOSE-025 (FAI-U-025) — durcissement conteneur par défaut.
+# `no-new-privileges` est l'analogue compose de `allowPrivilegeEscalation:false` de k3s
+# (renderers/k3s.py:_security_block) : universellement sûr (n'exige ni non-root, ni drop de
+# capabilities), donc appliqué à TOUS les services par défaut. Preuve d'absence = défaut FAI-U-025.
+def test_compose_durcissement_no_new_privileges_par_defaut():
+    out = render_compose(_plan())
+    # un bloc security_opt: no-new-privileges:true par service (2 services applicatifs)
+    assert out.count("no-new-privileges:true") >= 2, out
+    assert "security_opt:" in out
+
+
+def test_compose_no_new_privileges_couvre_chaque_service():
+    # Une directive no-new-privileges par service du plan (aucun openbao ici -> pas d'unsealer).
+    plan = _plan()
+    out = render_compose(plan)
+    assert "openbao" not in {s.name for s in plan.services}
+    # séquence RENDUE exacte : restart immédiatement suivi du bloc de durcissement, une fois/service
+    sequence = "    restart: unless-stopped\n    security_opt:\n      - no-new-privileges:true"
+    assert out.count(sequence) == len(plan.services), out
+    assert out.count("no-new-privileges:true") == len(plan.services)
+
+
 def test_chunking_regroupe_les_paragraphes():
     text = "\n\n".join(f"Paragraphe {i} " + "x" * 100 for i in range(10))
     chunks = chunk_text(text, max_chars=300)

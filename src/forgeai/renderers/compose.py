@@ -21,6 +21,12 @@ def _openbao_unsealer_block(image: str) -> list[str]:
         "  openbao-unsealer:",
         f"    image: {image}",  # même image openbao (binaire `bao` présent)
         "    restart: unless-stopped",
+        # Durcissement universel : empêche toute élévation de privilèges via setuid/sudo/cap.
+        # Équivalent Compose de allowPrivilegeEscalation:false du renderer k3s
+        # (voir renderers/k3s.py::_security_block). Consciemment limité à cette option car
+        # cap_drop:[ALL] / read_only / user cassent certaines images à état (prouvé runtime).
+        "    security_opt:",
+        "      - no-new-privileges:true",
         "    depends_on:",
         "      openbao:",
         "        condition: service_started",
@@ -57,6 +63,12 @@ def render_compose(plan: DeploymentPlan, project: str = "forgeai-minimal") -> st
             f"  {svc.name}:",
             f"    image: {svc.image}",
             "    restart: unless-stopped",
+            # Durcissement universel : empêche toute élévation de privilèges via setuid/sudo/cap.
+            # Équivalent Compose de allowPrivilegeEscalation:false du renderer k3s
+            # (voir renderers/k3s.py::_security_block). Consciemment limité à cette option car
+            # cap_drop:[ALL] / read_only / user cassent certaines images à état (prouvé runtime).
+            "    security_opt:",
+            "      - no-new-privileges:true",
             "    env_file: .env",
             "    ports:",
             f"      - \"127.0.0.1:{svc.host_port}:{svc.container_port}\"",
