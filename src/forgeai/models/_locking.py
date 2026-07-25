@@ -78,7 +78,7 @@ def restore_models_transaction_locked(
     vault_path = Path(vault_path)
     routes_path = home / "routes.json"
     journal_path = home / MODELS_TRANSACTION_JOURNAL
-    rollback_error: BaseException | None = None
+    rollback_error: Exception | None = None
 
     try:
         if snapshot["vault_existed"]:
@@ -89,7 +89,7 @@ def restore_models_transaction_locked(
             )
         else:
             atomic_unlink(vault_path)
-    except BaseException as exc:
+    except (OSError, TypeError, ValueError, KeyError) as exc:
         rollback_error = exc
 
     try:
@@ -101,7 +101,7 @@ def restore_models_transaction_locked(
             )
         else:
             atomic_unlink(routes_path)
-    except BaseException as exc:
+    except (OSError, TypeError, ValueError, KeyError) as exc:
         if rollback_error is None:
             rollback_error = exc
 

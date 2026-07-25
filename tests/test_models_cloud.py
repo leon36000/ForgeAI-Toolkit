@@ -250,8 +250,9 @@ def test_configure_cache_replace_echoue_conserve_ancien_fichier(
         return real_replace(src, dst)
 
     monkeypatch.setattr(os, "replace", fail_route_replace)
+    store = RouteStore(tmp_path)
     with pytest.raises(OSError, match="avant replace routes"):
-        RouteStore(tmp_path).configure_cache("r", True, 60, "cache")
+        store.configure_cache("r", True, 60, "cache")
 
     assert path.read_bytes() == before
     assert RouteStore(tmp_path).get("r").cache is False

@@ -167,10 +167,13 @@ def test_configure_cache_100_ecritures_concurrentes_sont_toutes_persistees(tmp_p
         while not reader_stop.is_set():
             try:
                 persisted = json.loads((home / "routes.json").read_text())
-                assert isinstance(persisted, list)
-            except Exception as exc:
+            except (OSError, UnicodeError, json.JSONDecodeError) as exc:
                 with errors_lock:
                     errors.append(exc)
+                return
+            if not isinstance(persisted, list):
+                with errors_lock:
+                    errors.append(TypeError("routes.json doit contenir une liste"))
                 return
 
     reader_thread = threading.Thread(target=reader)
