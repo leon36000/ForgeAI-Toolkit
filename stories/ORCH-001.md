@@ -174,7 +174,19 @@ Aucun fichier hors `allowed_paths` d'ORCH-001 n'a été touché (les verdicts sc
 rangés sous `reviews/ORCH-001/civ/`, conforme au glob `reviews/ORCH-001/**` déclaré
 dans `ISSUES/ORCH-001.md` — pas de modification unilatérale de mon propre périmètre).
 
-Une seconde revue aveugle scellée sera relancée sur le diff corrigé pour tenter un
-APPROVE 3/3 liant (ajout à `reviews/BINDING.txt` uniquement si 3/3).
+**Correctif de périmètre (auto-détecté) :** l'entrée `revue_scellee` du verdict REJECT
+ci-dessus avait été initialement ajoutée à `Registres/mission.jsonl`, qui n'est **pas**
+dans `allowed_paths` d'ORCH-001 (seul `Registres/PATCH-ORCH-001.jsonl` y figure). Une
+seconde revue aveugle scellée (round 2, voir ci-dessous) a détecté cette violation
+avant même que le tally ne soit dépouillé (objection Gemini-3.1-Pro sur le `.tmp`
+intermédiaire). Correction : `mission.jsonl` restauré à l'état `origin/main`, l'entrée
+`revue_scellee` re-consignée dans `Registres/PATCH-ORCH-001.jsonl` (seq 2, hash-chaîné
+sur seq 1, propre à ORCH-001, strictement dans le périmètre).
+
+## Revue aveugle scellée 2 : en cours sur le diff corrigé
+
+Second round lancé sur le diff intégrant le correctif `scope_guard.py`. Round
+interrompu techniquement (processus arrière-plan clos avant complétion) ; un round
+propre a été relancé après la correction de périmètre ci-dessus.
 
 
