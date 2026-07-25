@@ -55,6 +55,20 @@
         "dossier": "reviews/TRUST-019A/civ2",
         "note": "2 rondes de revue aveugle scellée (civ round 1 REJECT 2/3 pour objection de périmètre de diff hors-contenu, civ2 round 2 APPROVE 3/3 zéro objection bloquante). Package DESIGN_FIRST : ADR uniquement (modèle de menace/racine de confiance registres+catalogue), zéro changement src/forgeai/. Approbation autonome (utilisateur indisponible, autorisation explicite de décision autonome) documentée dans stories/TRUST-019A.md. Débloque TRUST-019B/REG-029B."
       }
+    },
+    {
+      "package": "UI-039",
+      "merge_commit": "8bc36302eb9dc66cc9c2d1fdeff786990b72287b",
+      "pr_number": 166,
+      "merged_at": "2026-07-25T08:27:57Z",
+      "review": {
+        "result": "APPROVE",
+        "ratio": "3/3",
+        "vendors": ["deepseek", "google", "meituan"],
+        "prompt_sha256": "261a572617be46fa96b2a978c04392c593b44a5d256f09c125bb866eb79d14ee",
+        "dossier": "reviews/UI-039",
+        "note": "1 ronde de revue aveugle scellée, APPROVE 3/3 zéro objection. Correctif de code (P3_MEDIUM/S3_LOW) : remplace la dérivation positionnelle de l'état des étapes UI par un contrat de preuve backend à 7 étapes (FAI-U-039), statut failed explicite, reconstruction déterministe après rafraîchissement via SSE existant. Aucune approbation Nathan requise (package non-DESIGN_FIRST/T3). Débloque UI-040."
+      }
     }
   ]
 }
