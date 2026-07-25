@@ -1,0 +1,20 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "majeure",
+   "fichier": "reviews/TRUST-019A/civ/*.verdict.json",
+   "description": "Les verdicts de revue aveugle scellée (3 vendors) exigés par la procédure de la story (section 'Revue aveugle scellée' et le rapport final) sont absents du diff. Le package est incomplet sans ces preuves de revue.",
+   "preuve": "Le diff ne contient aucun fichier sous reviews/TRUST-019A/civ/. Le rapport (stories/TRUST-019A.md) indique pourtant 'reviews/TRUST-019A/civ/*.verdict.json' dans FILES_CHANGED."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "Registres/PATCH-TRUST-019A.jsonl",
+   "description": "Le fichier Registres/PATCH-TRUST-019A.jsonl est listé dans le rapport comme modifié mais n'apparaît pas dans le diff.",
+   "preuve": "Aucun diff pour ce fichier ; le rapport (stories/TRUST-019A.md) le mentionne dans FILES_CHANGED."
+  }
+ ],
+ "date_heure": "2026-07-25T07:34:27.775287+00:00",
+ "prompt_sha256": "fbd6394e5110bd15acfbc32286072cd6f92ae3f8f2df2ecdbb7322d6df97dde8",
+ "reviewer_model": "DeepSeek-V4-Pro"
+}
