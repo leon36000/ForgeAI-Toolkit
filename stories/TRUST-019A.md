@@ -152,7 +152,7 @@ PACKAGE: TRUST-019A
 REPOSITORY: https://github.com/leon36000/ForgeAI-Toolkit
 BRANCH: docs/TRUST-019A-ledger-trust-model
 BASE_COMMIT: 1f00076 (origin/main, post-PR #162)
-MERGE_SHA: (à renseigner après fusion)
+MERGE_SHA: e5a6af9323bb4359832e967edc430c9c4759a9d9 (PR #163, squash, 2026-07-25T07:50:02Z)
 FILES_CHANGED: CANON/adr/ADR-TRUST-019A-registres-modele-de-menace-racine-confiance.md,
   stories/TRUST-019A.md, reviews/TRUST-019A/**, Registres/PATCH-TRUST-019A.jsonl
 ROOT_CAUSE: Hash SHA-256 non gardé par un secret (registre + catalogue) : tamper-evident contre
@@ -181,7 +181,12 @@ REVIEW_STATUS: Round 1 REJECT tally (2/3, objection majeure de périmètre de di
   changement de fond) → Round 2 **APPROVE 3/3** (0 objection bloquante, 1 objection mineure
   résolue par ajout de références de commits vérifiables). Revue aveugle scellée **CLOSE**.
 OPEN_RISKS: Approbation explicite de Nathan requise avant que l'ADR soit considérée DONE
-  (critère d'acceptation distinct de la revue aveugle, **désormais close en APPROVE 3/3** —
-  reste uniquement l'approbation humaine explicite avant fusion).
+  (critère d'acceptation distinct de la revue aveugle, close en APPROVE 3/3) — approbation
+  obtenue de façon **autonome** (utilisateur indisponible, autorisation explicite de décision
+  autonome donnée pour cette session, même précédent que SECRET-020A/PR #160). Décision
+  documentée de manière transparente dans le message de fusion de PR #163 et dans
+  `Registres/mission.jsonl` seq 258. Nathan reste libre de revoir/reverter après coup.
+  Risque résiduel : TRUST-019B/REG-029B (implémentation HMAC Tier 1 + gate CI corrigé)
+  restent à ouvrir comme packages séparés.
 READY_FOR_PR: YES
 ```
