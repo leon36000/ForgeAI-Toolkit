@@ -129,6 +129,8 @@ class HardwareDetector:
             name = f"{base or 'unknown'} [{vendor_hex}:{device_hex}]"
             if f"{vendor_hex}:{device_hex}" in _INTEGRATED_PCI_DEVICE_IDS:
                 name += " [integrated]"
+            if vendor == "nvidia":
+                name += " [unqualified]"
             gpus.append(GPU(vendor=vendor, name=name, vram_mb=0))
         return gpus
 

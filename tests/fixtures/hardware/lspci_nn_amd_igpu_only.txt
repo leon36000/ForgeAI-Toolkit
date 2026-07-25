@@ -1,0 +1,1 @@
+7b:00.0 VGA compatible controller [0300]: Advanced Micro Devices, Inc. [AMD/ATI] Device [1002:13c0] (rev c9)
