@@ -27,7 +27,13 @@ import os
 import secrets
 from pathlib import Path
 
-from forgeai.models._locking import file_lock
+from forgeai.models._locking import (
+    MODELS_TRANSACTION_JOURNAL,
+    MODELS_TRANSACTION_LOCK,
+    atomic_write_text,
+    file_lock,
+    recover_models_transaction_locked,
+)
 
 MAGIC = b"FGV1"
 _SALT = 16
@@ -93,6 +99,8 @@ class Vault:
 
     def __init__(self, path: Path) -> None:
         self.path = Path(path)
+        self.transaction_lock_path = self.path.parent / MODELS_TRANSACTION_LOCK
+        self.transaction_journal_path = self.path.parent / MODELS_TRANSACTION_JOURNAL
 
     def _load(self) -> dict[str, str]:
         import json
@@ -105,27 +113,41 @@ class Vault:
         self.path.parent.mkdir(parents=True, exist_ok=True)
         os.chmod(self.path.parent, 0o700)
         payload = json.dumps(data, ensure_ascii=False, indent=1)
-        fd = os.open(self.path, os.O_WRONLY | os.O_CREAT | os.O_TRUNC, 0o600)
-        with os.fdopen(fd, "w", encoding="utf-8") as f:
-            f.write(payload)
-        os.chmod(self.path, 0o600)
+        atomic_write_text(self.path, payload, mode=0o600)
+
+    def _with_secret(
+        self, name: str, secret: str, passphrase: str
+    ) -> tuple[dict[str, str], str]:
+        """Prépare une nouvelle image du coffre sans l'écrire."""
+        import base64
+
+        data = self._load()
+        blob = seal(secret.encode("utf-8"), passphrase)
+        data[name] = base64.b64encode(blob).decode("ascii")
+        return data, fingerprint(secret)
+
+    def _recover_pending_transaction_locked(self) -> None:
+        recover_models_transaction_locked(self.path.parent, self.path)
 
     def put(self, name: str, secret: str, passphrase: str) -> str:
         """Scelle `secret` sous `name`. Retourne l'empreinte (jamais le secret)."""
-        import base64
-        with file_lock(self.path):
-            data = self._load()
-            blob = seal(secret.encode("utf-8"), passphrase)
-            data[name] = base64.b64encode(blob).decode("ascii")
+        with file_lock(self.transaction_lock_path):
+            self._recover_pending_transaction_locked()
+            data, secret_fingerprint = self._with_secret(name, secret, passphrase)
             self._save(data)
-        return fingerprint(secret)
+        return secret_fingerprint
 
     def get(self, name: str, passphrase: str) -> str:
         import base64
-        data = self._load()
+
+        with file_lock(self.transaction_lock_path):
+            self._recover_pending_transaction_locked()
+            data = self._load()
         if name not in data:
             raise KeyError(name)
         return unseal(base64.b64decode(data[name]), passphrase).decode("utf-8")
 
     def names(self) -> list[str]:
-        return sorted(self._load())
+        with file_lock(self.transaction_lock_path):
+            self._recover_pending_transaction_locked()
+            return sorted(self._load())
