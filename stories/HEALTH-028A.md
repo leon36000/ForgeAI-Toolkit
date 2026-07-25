@@ -1,10 +1,9 @@
 # ADR HEALTH-028A — Contrat de santé non-vacu par service
 
 - **Statut** : Proposé
-- **Date** : 2026-07-25
-- **Décideurs** : équipe ForgeAI (revue architecture)
-- **Finding d'origine** : FAI-U-028 (prouvé)
-- **Package d'implémentation ultérieur** : HEALTH-028B (DESIGN_FIRST → IMPLÉMENTATION séparée)
+- **Décideurs** : équipe architecture ForgeAI
+- **Référence** : finding FAI-U-028 (prouvé), package d'implémentation ultérieur HEALTH-028B
+- **Nature** : DESIGN_FIRST — ce document fixe le contrat ; aucune implémentation n'est livrée ici.
 
 ---
 
@@ -12,181 +11,238 @@
 
 ### 1.1 Le défaut prouvé
 
-`src/forgeai/deploy/compose.py:65` contient :
+`src/forgeai/deploy/compose.py:65` :
 
-```
+```python
 if all(v == "healthy" for v in status.values()):
 ```
 
-Or `status` est construit à la ligne de tête de `wait_healthy` (compose.py, fonction `wait_healthy`) par :
-
-```
-status = {s.name: "waiting" for s in plan.services if s.healthcheck_url}
-```
-
-Lorsque **aucun** service du plan ne porte de `healthcheck_url`, `status == {}`. En Python, `all([]) == True` : la boucle d'attente sort immédiatement et `wait_healthy` retourne `{}` — le déploiement est déclaré **healthy sans qu'aucune sonde n'ait été exécutée**. C'est un **faux READY vacu** : le système affirme une propriété (tous les services sont sains) sur un ensemble vide de preuves.
+Quand `status` est le dictionnaire vide `{}` — c'est-à-dire quand **aucun** service du plan ne porte
+de `healthcheck_url` — `all([])` s'évalue à `True`. Le déploiement est alors déclaré **healthy sans
+qu'aucune sonde ait été exécutée** : c'est un faux READY par vacuité universelle. Le succès du
+déploiement ne dépend plus de l'état réel des briques mais d'un artefact algébrique de `all()`.
 
 ### 1.2 Cause structurelle
 
-`ServiceSpec` (`src/forgeai/core/models.py:89`) n'expose qu'un seul champ de santé :
+`src/forgeai/core/models.py:89` : `ServiceSpec` ne porte qu'un champ
+`healthcheck_url: Optional[str] = None`. Le modèle ne sait exprimer :
 
-```
-healthcheck_url: Optional[str] = None
-```
+- ni qu'un service est **critique** (sa santé conditionne le READY global) ;
+- ni le **type** de vérification (HTTP, TCP, commande interne) ;
+- ni la distinction entre **transport** (le port répond) et **fonctionnel** (l'application répond
+  correctement) ;
+- ni une **politique d'absence** (que vaut la santé d'un service sans sonde ?).
 
-Il n'existe aucune notion de :
+Le renderer k3s (`src/forgeai/renderers/k3s.py`) connaît déjà des services internes
+(`_INTERNAL_SERVICES` : redis, qdrant, immudb, openbao, postgres, tei) dont plusieurs n'ont pas de
+`healthcheck_url` HTTP exploitable — exactement la population qui produit le `status == {}` vacu.
 
-- **santé requise** : rien ne distingue un service critique (LLM, coffre de secrets) d'un service auxiliaire ;
-- **type de sonde** : `healthcheck_url` ne couvre que HTTP ; un service n'exposant que TCP (base de données, coffre scellé) n'a aucun contrat exprimable ;
-- **niveau de préparation** : rien ne distingue « le port répond » (transport) de « l'application répond correctement » (fonctionnel) ;
-- **politique d'absence** : l'absence de sonde est silencieusement équivalente à « sain », ce qui est l'inverse du défaut sûr.
+### 1.3 Exigences
 
-Le durcissement anti-injection existant (`ServiceSpec.__post_init__` → `_rejeter_caracteres_de_controle`, models.py) valide déjà les scalaires ; tout nouveau champ chaîne DOIT passer par le même rejet.
-
-### 1.3 Portée de ce document
-
-Ce package est **DESIGN_FIRST** : il fixe le contrat et la sémantique. Aucune implémentation n'est livrée ici ; HEALTH-028B implémentera et prouvera les critères d'acceptation de la section 8.
+1. Interdire structurellement le READY vacu (`all([]) == True` ne doit plus pouvoir signifier
+   « sain »).
+2. Distinguer criticité, type de probe, et niveau de préparation (transport vs fonctionnel).
+3. Rester sérialisable (dataclass / `asdict` / JSON) et passer par la validation anti-injection
+   existante (`_rejeter_caracteres_de_controle`, models.py).
+4. Préserver la rétro-compatibilité des plans existants avec un défaut **sûr**.
 
 ---
 
 ## 2. Décision
 
-### 2.1 Extension du contrat `ServiceSpec`
+### 2.1 Enums introduits (sérialisables en valeurs `str`)
 
-Quatre champs ajoutés (illustration de types, pas d'implémentation) :
+```python
+class ProbeType(Enum):
+    HTTP = "http"
+    TCP = "tcp"
+    EXEC = "exec"
+    NONE = "none"
+
+class HealthState(Enum):
+    FUNCTIONALLY_READY = "functionally_ready"  # réponse applicative correcte
+    TRANSPORT_READY = "transport_ready"        # transport joignable, applicatif non prouvé
+    UNKNOWN = "unknown"                        # aucune preuve disponible (pas de sonde)
+    FAILED = "failed"                          # preuve d'échec ou contrat violé
+```
+
+### 2.2 Extension de `ServiceSpec` (signature illustrative, pas une implémentation)
 
 ```python
 health_required: bool = False
-probe_type: ProbeType = ProbeType.NONE      # enum sérialisable : "http" | "tcp" | "exec" | "none"
-probe_target: Optional[str] = None          # URL http, "host:port" tcp, ou commande exec
-health_timeout_s: Optional[float] = None    # None = défaut de l'évaluateur
+probe_type: Optional[ProbeType] = None        # None = dérivation depuis healthcheck_url (§2.4)
+probe_target: Optional[Union[str, tuple[str, ...]]] = None  # str pour http/tcp ; argv pour exec (§2.6)
+http_success_codes: tuple[int, ...] = (200,)  # codes HTTP acceptés comme fonctionnels (§2.5)
+health_timeout_s: float = 5.0                 # > 0 obligatoire (§2.7)
+health_interval_s: float = 5.0                # > 0 obligatoire
+health_retries: int = 12                      # > 0 obligatoire
 ```
 
-Règles de cohérence (validées à la construction, en plus de `_rejeter_caracteres_de_controle`) :
+### 2.3 Règle anti-vacuité (règle centrale, non contournable)
 
-- `probe_type == NONE` **implique** `probe_target is None` ;
-- `probe_type != NONE` **implique** `probe_target` non vide ;
-- `health_required == True` et `probe_type == NONE` est une **combinaison invalide** : rejetée dès `__post_init__` (fail-fast, jamais différée au déploiement) ;
-- `healthcheck_url` (existant) reste accepté comme **raccourci legacy** : s'il est renseigné et que `probe_type == NONE`, il est normalisé en `probe_type=HTTP, probe_target=healthcheck_url` (voir §5).
+- Une liste de probes **vide** s'évalue en `UNKNOWN` pour un service `health_required=False`, en
+  `FAILED` pour un service `health_required=True`. **Jamais** healthy.
+- Toute agrégation de verdicts DOIT contenir une garde explicite du cas vide (du type
+  `if not verdicts: return UNKNOWN`). L'usage de `all(...)` sur une collection potentiellement vide
+  est interdit comme test de santé globale ; il remplace `all(v == "healthy" ...)` de
+  compose.py:65 par un test sur une collection **prouvée non vide**.
+- Le verdict global `READY` exige au moins un service évalué : un déploiement de zéro service
+  sondé est `UNKNOWN`, jamais `READY`.
 
-`ProbeType` est un `enum.Enum` à valeurs chaînes (`str, Enum`) afin de rester sérialisable en JSON via `dataclasses.asdict` + conversion de valeur, sans dépendance externe.
+### 2.4 Précédence du raccourci legacy `healthcheck_url`
 
-### 2.2 États de santé
+`healthcheck_url` (models.py:89) est conservé comme **raccourci** de compatibilité :
 
-L'évaluation d'un service produit **exactement un** état terminal ou transitoire :
+1. **`probe_type` explicite prime.** Quand `probe_type` est fourni, il définit seul le type de
+   sonde ; `probe_target` est la cible.
+2. **Dérivation en l'absence de `probe_type`.** Si `probe_type is None` et `healthcheck_url` est
+   renseigné, le contrat effectif est `probe_type=HTTP` + `probe_target=healthcheck_url` avec les
+   défauts `(200,)`, timeout/intervalle/retries par défaut.
+3. **Conflit explicite ⇒ erreur de validation, fail-fast, jamais silencieux.** Exemples de
+   conflits refusés (levée d'erreur à la construction/validation, comme
+   `_rejeter_caracteres_de_controle`) : `healthcheck_url` renseigné avec `probe_type=TCP` ;
+   `healthcheck_url` renseigné avec `probe_type=NONE` ; `probe_type=HTTP` sans cible ni
+   `healthcheck_url`. Un conflit détecté n'est jamais « résolu » par une priorité implicite : il
+   est **rejeté**.
 
-| État | Sens | Terminal ? |
-|---|---|---|
-| `waiting` | sonde pas encore concluante | non |
-| `transport_ready` | le transport répond (TCP ouvert, ou handshake réussi) — **sans preuve applicative** | oui |
-| `functionally_ready` | l'application répond correctement (HTTP 2xx/3xx attendu, ou `exec` exit 0) | oui |
-| `unknown` | aucune sonde définie **et** service non critique | oui |
-| `failed` | sonde définie mais en échec au-delà du timeout, **ou** sonde absente sur service `health_required=True` | oui |
+### 2.5 Codes de succès HTTP configurables
 
-**Règle d'adéquation sonde/état (non contournable)** :
+- `http_success_codes: tuple[int, ...]`, **défaut `(200,)`**, tuple explicite de codes entiers
+  (validation : tuple non vide, chaque code ∈ [100, 599]).
+- Sémantique : `FUNCTIONALLY_READY` ⇔ la sonde HTTP obtient un code **∈ `http_success_codes`**.
+  Un code 2xx autre que ceux listés, ou tout autre code, n'est **pas** fonctionnel.
+- Cas documenté — **openbao** : selon sa configuration, l'endpoint de santé d'un openbao descellé
+  peut répondre 200, mais aussi 429 (standby), 472, 473, 501 (non initialisé) ou 503 (scellé). Le
+  contrat DOIT permettre de déclarer par exemple
+  `http_success_codes=(200, 429, 472, 473, 501, 503)` quand la politique retenue est « joignable
+  et répond selon son état de sceau », ou `(200,)` quand la politique est « descellé et actif ».
+  C'est une décision de plan (assemble.py), pas du moteur : le moteur applique la liste, point.
+- Choix du tuple explicite plutôt qu'une plage (« 2xx ») : précision, sérialisation JSON triviale,
+  et possibilité d'exprimer des ensembles non contigus (cas openbao).
 
-- `probe_type == TCP` ⇒ l'état terminal maximal atteignable est `transport_ready`. Une sonde TCP **ne peut JAMAIS** produire `functionally_ready` : un port ouvert ne prouve rien de l'application.
-- `probe_type == HTTP` ou `EXEC` ⇒ l'état terminal de succès est `functionally_ready`.
-- `probe_type == NONE` ⇒ `unknown` (non critique) ou `failed` (critique) — **jamais** un état `*_ready`.
+### 2.6 Sonde `exec` : ARGV, jamais de shell
 
-### 2.3 Règle anti-vacuité (interdiction du `all([]) == True`)
+- Pour `probe_type=EXEC`, `probe_target` est **`tuple[str, ...]`** : une argv (ex.
+  `("pg_isready", "-U", "forge")`), exécutée **sans shell** — cohérent avec la posture
+  0-injection-shell du produit : **aucun `shell=True`, aucune chaîne de commande interpétée**.
+- Une chaîne `str` comme cible exec est **interdite** et refusée à la validation (fail-fast).
+  Une argv vide est refusée.
+- Chaque élément de l'argv passe `_rejeter_caracteres_de_controle` (comme `command` déjà validé
+  dans `ServiceSpec.__post_init__`).
+- Pour `HTTP` et `TCP`, `probe_target` reste une **chaîne** (URL pour http ; `host:port` pour tcp).
+- Verdict exec : code de sortie 0 ⇒ `FUNCTIONALLY_READY` (une sonde exec exprime un test
+  applicatif) ; code non nul ou timeout ⇒ échec de tentative.
 
-L'évaluateur agrégé (successeur de `wait_healthy`) **DOIT** :
+### 2.7 Validation des temporisations
 
-1. Construire la table d'états sur **tous** les services du plan, pas seulement ceux qui ont une sonde : un service sans sonde reçoit `unknown` (non critique) ou `failed` (critique), jamais une absence silencieuse ;
-2. Refuser le succès sur ensemble vide : un plan dont la table est vide, ou dont **aucun** service n'atteint un état `*_ready`, **ne peut pas** être déclaré sain ;
-3. Définir le succès agrégé comme : **chaque** service est dans un état terminal **et** aucun service n'est `failed` **et** au moins un service est `transport_ready` ou `functionally_ready`. `unknown` n'est acceptable que pour les services non critiques et ne compte pas comme preuve.
+- `health_timeout_s`, `health_interval_s`, `health_retries` : **strictement positifs (> 0)**.
+  Une valeur ≤ 0 lève une erreur de validation à la construction (même style que
+  `_rejeter_caracteres_de_controle`), jamais un clamp silencieux.
 
-Formellement, le succès exige :
+### 2.8 Politique d'absence par criticité
 
-```
-∀ s ∈ plan : état(s) ∈ {transport_ready, functionally_ready, unknown}
-∧ ∃ s ∈ plan : état(s) ∈ {transport_ready, functionally_ready}
-∧ ¬∃ s ∈ plan : état(s) = failed
-```
-
-`all(...)` seul est **insuffisant** ; la condition existentielle (point 2) est obligatoire.
-
-### 2.4 Politique d'absence par criticité
-
-| `health_required` | `probe_type` | État terminal imposé |
-|---|---|---|
-| `False` | `NONE` | `unknown` — toléré, signalé dans le rapport d'état |
-| `False` | `TCP` | `transport_ready` si succès, `failed` si timeout |
-| `False` | `HTTP`/`EXEC` | `functionally_ready` si succès, `failed` si timeout |
-| `True` | `NONE` | **interdit à la construction** (§2.1) — et, défense en profondeur, traité comme `failed` si jamais rencontré à l'évaluation |
-| `True` | `TCP` | `transport_ready` minimum exigé ; `failed` si timeout |
-| `True` | `HTTP`/`EXEC` | `functionally_ready` exigé ; `failed` si timeout |
-
-L'absence de sonde ne produit donc **jamais** un état `*_ready`.
+| Situation | Verdict service |
+|---|---|
+| `health_required=True`, aucune probe effective (NONE ou cible absente) | `FAILED` (jamais healthy) — et validation du plan en erreur (§4.3) |
+| `health_required=False`, aucune probe | `UNKNOWN` (jamais healthy, ne bloque pas READY) |
+| Probe présente, critère non atteint après `health_retries` épuisés | `FAILED` |
 
 ---
 
 ## 3. Machine d'états d'évaluation
 
+### 3.1 Transitions par tentative
+
 ```
-                 ┌─────────┐
-                 │ waiting │ (état initial de tout service sondé)
-                 └────┬────┘
-        ┌─────────────┼──────────────────────┐
-        │ sonde TCP   │ sonde HTTP/EXEC      │ sonde NONE
-        ▼             ▼                      ▼
- ┌──────────────┐  ┌────────────────────┐   ┌─────────────┐
- │transport_    │  │ functionally_ready │   │   unknown   │ (non critique)
- │  ready       │  └────────────────────┘   └─────────────┘
- └──────────────┘                           ┌─────────────┐
-        │ échec après timeout               │   failed    │ (critique)
-        ▼                                   └─────────────┘
- ┌─────────────┐
- │   failed    │
- └─────────────┘
+                 ┌─────────────┐
+   début ──────► │  évaluation  │
+                 └──────┬──────┘
+        ┌───────────────┼───────────────────────────┐
+        ▼               ▼                           ▼
+   probe absente    tentative probe           critère atteint
+        │               │                           │
+        ▼               ▼                           ▼
+  required ?      échec + retries            HTTP : code ∈ http_success_codes
+   ├─ True          restants ?                ⇒ FUNCTIONALLY_READY
+   │  ⇒ FAILED     ├─ oui ⇒ nouvelle         TCP  : connexion établie
+   └─ False        │    tentative             ⇒ TRANSPORT_READY (plafond)
+      ⇒ UNKNOWN    └─ non ⇒ FAILED           EXEC : exit 0 ⇒ FUNCTIONALLY_READY
 ```
 
-Obligations de l'évaluateur (successeur de `wait_healthy`, compose.py) :
+### 3.2 Invariants du moteur
 
-1. **Initialisation totale** : la table d'états contient **chaque** service du plan, initialisé à `waiting` si une sonde existe, sinon directement à `unknown`/`failed` selon la politique d'absence (§2.4). Un service sans sonde n'entre **jamais** dans `waiting`.
-2. **Sortie de boucle** : la boucle d'attente ne se termine en succès que si la condition agrégée du §2.3 est satisfaite — y compris sa clause existentielle. Une table vide ou uniformément `unknown` prolonge l'attente jusqu'au timeout puis conclut en échec explicite (`DeployError` avec la table complète).
-3. **Timeout** : tout service encore `waiting` à l'échéance passe à `failed`. Le rapport d'erreur liste l'état exact de **chaque** service (comportement actuel conservé et étendu).
-4. **Monotonie** : un état terminal n'est jamais révisé ; `transport_ready` ne « monte » pas vers `functionally_ready`.
-5. **Liste vide** : un plan sans aucun service, ou dont toutes les sondes sont absentes, conclut `unknown`/`failed` selon criticité — **jamais** sain. C'est le point exact du défaut compose.py:65, désormais interdit par construction.
+1. **TCP ⇒ plafond `TRANSPORT_READY`.** Une sonde TCP ne produit **jamais**
+   `FUNCTIONALLY_READY`, même en cas de succès répété. Un port ouvert ne prouve pas
+   l'application.
+2. **HTTP ⇒ double seuil.** Connexion TCP établie mais code hors `http_success_codes` :
+   l'état courant est au mieux `TRANSPORT_READY` et la tentative est un échec fonctionnel.
+3. **Garde anti-vacuité avant toute agrégation** : collection vide ⇒ `UNKNOWN` (ou `FAILED` si
+   un service requis est concerné), jamais healthy. Remplace compose.py:65.
+4. **Fail-fast global** : `FAILED` d'un service `health_required=True` termine l'attente en
+   échec sans attendre les autres services.
+
+### 3.3 Verdict global de `wait_healthy`
+
+- `READY` ⇔ **au moins un service évalué** ET tous les services `health_required=True` sont
+  `FUNCTIONALLY_READY` ET aucun service n'est `FAILED`.
+- Conséquence assumée : un service critique déclaré en TCP-only rend READY **inatteignable** —
+  c'est voulu : le plan doit alors soit doter le service d'une sonde HTTP/EXEC, soit le déclarer
+  `health_required=False`. La politique est explicite et visible dans le plan, jamais implicite.
+- Les services non requis en `UNKNOWN` n'empêchent pas READY (ils ne peuvent pas non plus le
+  fabriquer : READY exige au moins un requis fonctionnel, ou — politique minimale — au moins un
+  service sondé non vide ; le point fixe est : **jamais READY sur ensemble vide**).
 
 ---
 
 ## 4. Impact sur le code existant
 
-### 4.1 `src/forgeai/core/models.py` (`ServiceSpec`)
+### 4.1 `src/forgeai/core/models.py`
 
-- Ajout des quatre champs du §2.1, avec valeurs par défaut choisies pour la rétro-compatibilité (§5) : `health_required=False`, `probe_type=NONE`, `probe_target=None`, `health_timeout_s=None`.
-- `__post_init__` : extension des rejets `_rejeter_caracteres_de_controle` à `probe_target` ; ajout des validations de cohérence du §2.1 ; normalisation du raccourci legacy `healthcheck_url` (§5).
-- Sérialisation : le dataclass reste `frozen` ; `dataclasses.asdict` + JSON restent fonctionnels (enum à valeurs chaînes, `Optional` uniquement). Un test de round-trip `asdict → json.dumps → json.loads` est exigé (§8).
+- Ajout des enums `ProbeType`, `HealthState` (valeurs `str` ⇒ sérialisation JSON directe via
+  `asdict` + valeur d'enum).
+- Ajout des champs §2.2 à `ServiceSpec` avec **défauts sûrs** (dataclass frozen : champs avec
+  défaut, en queue, pour ne pas casser les constructions positionnelles existantes).
+- Extension de `__post_init__` : `_rejeter_caracteres_de_controle` sur `probe_target` (chaîne) ou
+  chaque élément d'argv (tuple) ; validations §2.4 (conflits), §2.5 (codes ∈ [100,599], tuple non
+  vide), §2.6 (type de cible selon probe_type), §2.7 (> 0).
+- Round-trip `asdict`/JSON garanti : enums en valeurs, tuples (pas de listes mutables) à la
+  construction.
 
-### 4.2 `assemble.py` (peuplement du contrat)
+### 4.2 `assemble.py` (peuplement du contrat par brique)
 
-Le module qui instancie les `ServiceSpec` DOIT peupler explicitement le contrat par brique :
+Chaque brique du profil Minimal reçoit un contrat explicite au montage du plan, par exemple :
 
-- services critiques de la stack (LLM/Ollama, coffre openbao, routeur liteLLM) : `health_required=True` avec une sonde `HTTP` quand un endpoint applicatif existe, `TCP` sinon (avec la limitation `transport_ready` assumée et documentée) ;
-- openbao : la sonde applicative tolère les codes « scellé / non initialisé » (paramètres `standbyok/sealedcode/uninitcode`, déjà traités côté renderer k3s) — le contrat transporte l'URL, l'évaluateur HTTP accepte les codes configurés ;
-- services auxiliaires : `health_required=False`, sonde si disponible, sinon `NONE` ⇒ `unknown` assumé.
-
-Aucune brique critique ne peut rester à `probe_type=NONE` sans que la construction lève une erreur (§2.1).
+- openbao : HTTP avec `http_success_codes` déclarés selon la politique de sceau retenue
+  (§2.5) — décision de plan documentée, pas implicite ;
+- postgres : EXEC `("pg_isready", ...)` (argv) ;
+- redis/qdrant/tei : TCP (⇒ plafond `TRANSPORT_READY`) ou HTTP selon leurs endpoints, avec
+  `health_required` fixé selon leur criticité dans le profil.
 
 ### 4.3 `validation.py`
 
-- Ajout d'une validation de plan : tout service `health_required=True` possède une sonde cohérente **avant** le rendu ; la validation de plan rejette un plan dont la table d'états serait structurellement incapable de satisfaire la clause existentielle du §2.3 (aucun service sondé dans tout le plan) — sauf plan explicitement dégradé accepté par l'appelant (option documentée, jamais implicite).
-- La validation reste pure (aucune sonde réseau exécutée à cette étape).
+- Erreur de plan : service `health_required=True` sans probe effective (fail-fast à la
+  validation ; l'évaluateur garde le filet `FAILED` en défense en profondeur, §2.8).
+- Erreur de plan : conflit `healthcheck_url` × `probe_type` (§2.4).
+- Avertissement : service du profil Minimal sans contrat (visibilité de la dette, sans bloquer).
 
-### 4.4 `src/forgeai/deploy/compose.py` (`wait_healthy`)
+### 4.4 `src/forgeai/deploy/compose.py:65`
 
-- La ligne compose.py:65 est remplacée par l'évaluation agrégée du §2.3 (implémentation en HEALTH-028B). Le présent ADR impose la sémantique, pas le diff.
+L'agrégation `all(v == "healthy" ...)` est remplacée par l'évaluateur de la machine d'états §3
+(implémentation : HEALTH-028B). La ligne fautive disparaît ; toute future agrégation passe par la
+garde anti-vacuité.
 
 ---
 
 ## 5. Rétro-compatibilité
 
-- Les plans existants construits avec seul `healthcheck_url` continuent de fonctionner : `__post_init__` normalise `healthcheck_url` en `probe_type=HTTP, probe_target=<url>` quand `probe_type` n'est pas fourni. Comportement d'évaluation inchangé pour ces services (`functionally_ready` attendu).
-- Les services existants **sans** `healthcheck_url` changeant de sémantique : ils passent de « implicitement sains » (le défaut) à `unknown`. C'est un **changement de comportement volontaire et documenté** : `unknown` ne bloque pas le succès agrégé pour un service non critique, mais il ne contribue plus à la preuve de santé, et il apparaît dans le rapport d'état.
-- Défaut sûr : tout champ omis retombe sur la politique la plus prudente (`health_required=False` ⇒ `unknown` ; jamais `*_ready` sans sonde).
-- Aucune migration de données : `ServiceSpec` est construit en mémoire à chaque plan ; la sérialisation enrichie est additive.
+- Les constructions existantes de `ServiceSpec` (avec seul `healthcheck_url`) restent valides :
+  dérivation §2.4, défauts `(200,)`, `health_required=False`.
+- **Changement de comportement intentionnel et documenté** : un déploiement dont aucun service
+  n'est sondé n'est plus « healthy par défaut » — il est `UNKNOWN`. C'est précisément la
+  correction du finding FAI-U-028 ; tout plan qui comptait sur le READY vacu était déjà faux.
+- Aucun plan existant valide ne devient invalide à la **construction** ; seuls les plans
+  exprimant un conflit explicite (§2.4) ou des temporisations ≤ 0 sont rejetés — cas qui
+  n'existaient pas dans les plans générés par le wizard.
 
 ---
 
@@ -194,52 +250,61 @@ Aucune brique critique ne peut rester à `probe_type=NONE` sans que la construct
 
 ### Positives
 
-- Élimination du faux READY vacu (FAI-U-028) par construction, pas par convention.
-- Distinction explicite transport/fonctionnel : fini les « healthy » de services TCP dont l'application est en réalité en échec.
-- Criticité déclarée : l'absence de sonde sur un service critique devient une erreur de construction, détectée avant tout déploiement.
-- Rapport d'état exhaustif : chaque service du plan a un état, y compris `unknown`.
-- Couverture de tous les renderers : le contrat vit dans le modèle partagé (models.py), pas dans un renderer.
+- Le faux READY vacu (compose.py:65) devient structurellement impossible.
+- La criticité est explicite dans le plan (`health_required`), auditable, sérialisée avec lui.
+- Distinction transport/fonctionnel : fin des « TCP ouvert = application saine ».
+- Politique HTTP fine (openbao et ses codes multiples) sans heuristique cachée dans le moteur.
+- Sonde exec cohérente avec la posture 0-injection-shell (argv sans shell).
+- Défense en profondeur : validation à la construction (models), au plan (validation), et à
+  l'évaluation (moteur).
 
 ### Négatives / coûts
 
-- `ServiceSpec` gagne quatre champs ; les constructeurs existants doivent être audités (assemble.py) pour peupler la criticité.
-- Changement observable : un plan sans aucune sonde, auparavant « healthy » immédiat, échouera désormais au timeout avec un état explicite. C'est le but, mais cela peut révéler des plans historiquement incomplets (à traiter en peuplant leurs contrats, pas en contournant la règle).
-- Légère complexité d'évaluation (machine à cinq états vs. booléen), jugée acceptable au regard du risque éliminé.
-
-### Alternatives rejetées
-
-1. **Garde locale minimale** (`if not status: raise DeployError` à compose.py:65) : corrige le cas vide mais laisse intacts les autres manques (pas de criticité, pas de transport/fonctionnel, absence silencieuse par service). Insuffisant au regard du finding.
-2. **`health_required` implicite** (tout service sans sonde est `failed`) : trop strict, casse les services auxiliaires légitimement sans sonde ; frein à l'adoption.
-3. **Sondes déclarées au niveau renderer** (k3s/compose) plutôt que dans le modèle : duplique le contrat par cible de rendu et laisse `wait_healthy` sans source de vérité. Rejeté au profit du modèle partagé.
-4. **Traiter TCP comme fonctionnel** : rejeté ; un port ouvert ne prouve pas l'application (contre-exemple : coffre scellé écoutant sur son port).
+- `ServiceSpec` s'alourdit (7 champs) ; assemble.py doit déclarer un contrat par brique
+  (effort une fois, à maintenir avec le catalogue de briques).
+- Un service critique TCP-only ne peut plus « suffire » : exige une décision de plan explicite
+  (coût assumé, c'est le prix de l'honnêteté du verdict).
+- Légère complexité de dérivation legacy (§2.4) à documenter/tester.
 
 ---
 
-## 7. Sérialisation et validation (engagements)
+## 7. Alternatives rejetées
 
-- `ProbeType` sérialisé par sa valeur chaîne (`"http"`, `"tcp"`, `"exec"`, `"none"`).
-- `dataclasses.asdict(spec)` suivi de `json.dumps`/`json.loads` fonctionne sans encodeur custom (les valeurs d'enum `str, Enum` sont des `str`).
-- Tout champ chaîne nouveau (`probe_target`) passe `_rejeter_caracteres_de_controle` en `__post_init__`, à l'identique des champs existants — l'anti-injection SEC-YAML-INJECT (#151) reste intégrale.
-- Aucun secret dans le contrat : `probe_target` est une URL, un `host:port` ou une commande de sonde, jamais un identifiant.
+1. **Corriger compose.py:65 localement** (`if status and all(...)`). Rejeté : ne traite que le
+   symptôme, sans criticité, sans types de probe, sans distinction transport/fonctionnel ; le
+   prochain renderer réintroduira le défaut.
+2. **Sonde TCP implicite pour tout service sans `healthcheck_url`.** Rejeté : transforme le faux
+   READY vacu en faux READY transport — masque les pannes applicatives (violation du plafond
+   TCP §3.2).
+3. **Erreur de validation systématique sur tout service sans probe.** Rejeté : casse la
+   rétro-compatibilité des plans simples ; préféré : `UNKNOWN` + opt-in `health_required`.
+4. **Chaîne shell pour la sonde exec.** Rejeté : incompatible avec la posture 0-injection-shell
+   du produit ; argv tuple sans shell, uniquement (§2.6).
+5. **Plage de codes HTTP (« 2xx ») au lieu d'un tuple explicite.** Rejeté : moins précis,
+   incapable d'exprimer l'ensemble non contigu d'openbao (200/429/472/473/501/503), sérialisation
+   moins directe.
 
 ---
 
 ## 8. Critères d'acceptation (vérifiables par HEALTH-028B)
 
-Le package d'implémentation DEVRA prouver, par tests :
-
-1. **Anti-vacuité** : un plan dont la table d'états est vide, ou dont aucun service n'atteint `transport_ready`/`functionally_ready`, n'est **jamais** déclaré sain ; le succès exige la clause existentielle du §2.3. Régression directe de compose.py:65 : `all([]) == True` ne peut plus produire un succès.
-2. **Criticité** : un service `health_required=True` sans sonde est rejeté à la construction de `ServiceSpec` ; à l'évaluation, toute absence de sonde sur service critique conclut `failed` (défense en profondeur).
-3. **TCP-only** : un service sondé en TCP atteint au maximum `transport_ready`, jamais `functionally_ready`, même si le port répond.
-4. **Politique d'absence** : un service non critique sans sonde termine en `unknown` ; `unknown` seul ne suffit pas au succès agrégé et n'empêche pas le succès si d'autres services prouvent leur santé.
-5. **Timeout exhaustif** : à l'échéance, tout service `waiting` devient `failed` et le `DeployError` rapporte l'état de **chaque** service du plan (y compris les `unknown`).
-6. **Sérialisation** : round-trip `asdict → json → dict` d'un `ServiceSpec` enrichi sans erreur ni perte ; `probe_target` à caractères de contrôle rejeté en `__post_init__`.
-7. **Rétro-compatibilité** : un `ServiceSpec` construit avec seul `healthcheck_url` est normalisé en sonde HTTP et évalué `functionally_ready` en cas de succès, comme avant.
-
----
-
-## 9. Références
-
-- Finding FAI-U-028 (faux READY vacu), défaut : `src/forgeai/deploy/compose.py:65`, champ insuffisant : `src/forgeai/core/models.py:89`.
-- Anti-injection existante : `ServiceSpec.__post_init__` / `_rejeter_caracteres_de_controle` (SEC-YAML-INJECT, #151).
-- Probes openbao tolérantes au scellement : renderer k3s (`_probes_block`) et sidecar/unsealer (`forgeai.renderers._openbao`).
+1. **Anti-vacuité** : une collection de verdicts vide s'évalue `UNKNOWN` (aucun requis) ou
+   `FAILED` (un requis sans probe) — **jamais** healthy. Test : déploiement sans aucune sonde ⇒
+   `wait_healthy` ne retourne pas READY.
+2. **Criticité** : `health_required=True` sans probe effective ⇒ erreur de validation du plan
+   ET `FAILED` à l'évaluation (défense en profondeur).
+3. **Plafond TCP** : une sonde TCP en succès répété produit `TRANSPORT_READY` et jamais
+   `FUNCTIONALLY_READY`.
+4. **Codes HTTP configurables** : `FUNCTIONALLY_READY` ⇔ code ∈ `http_success_codes` ; défaut
+   `(200,)` ; un plan déclarant `(200, 429, 472, 473, 501, 503)` (cas openbao) accepte ces codes.
+5. **Précédence legacy** : `probe_type` explicite prime ; `healthcheck_url` seul dérive
+   HTTP+cible ; conflit explicite (ex. URL fournie + `probe_type=TCP`) ⇒ erreur de validation
+   fail-fast, jamais silencieux.
+6. **Exec argv** : `probe_target` exec est un `tuple[str, ...]` non vide, exécuté sans shell
+   (aucun `shell=True`) ; une chaîne comme cible exec est refusée à la validation.
+7. **Temporisations** : `health_timeout_s`, `health_interval_s`, `health_retries` ≤ 0 ⇒ erreur
+   de validation.
+8. **Modèle** : round-trip `asdict`→JSON→reconstruction ; enums sérialisés en valeurs `str` ;
+   nouveaux champs chaînes/argv passés par `_rejeter_caracteres_de_controle`.
+9. **Régression** : la ligne compose.py:65 (`all(...)` sur collection non gardée) n'existe plus ;
+   tout test de santé globale passe par la garde anti-vacuité.
