@@ -1,0 +1,20 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "critique",
+   "fichier": "CANON/adr/ADR-SECRET-020A-openbao-unseal-permissions.md",
+   "description": "Le design recommande d'appliquer un `chown` au GID 1000. Sous Unix (POSIX), un processus non-privilégié ne peut changer le groupe d'un fichier que vers un groupe dont il est lui-même membre. Si l'opérateur exécutant le script n'est pas root et n'appartient pas au groupe 1000 sur l'hôte, l'opération échouera systématiquement avec une erreur de permission (EPERM), provoquant un crash. Le design ne traite pas cette contrainte bloquante ni ne prévoit de fallback spécifique pour l'erreur EPERM.",
+   "preuve": "Lignes 63-64 : « 1. chown du fichier unseal_key (et du répertoire keys_dir) au GID 1000 (groupe de l'utilisateur openbao dans l'image), en conservant l'opérateur comme propriétaire (UID). »"
+  },
+  {
+   "severite": "mineure",
+   "fichier": "stories/SECRET-020A.md",
+   "description": "Le rapport final liste des fichiers modifiés qui sont absents du diff fourni (Registres/PATCH-SECRET-020A.jsonl et le dossier reviews).",
+   "preuve": "Lignes 104-105 : « FILES_CHANGED: CANON/adr/ADR-SECRET-020A-openbao-unseal-permissions.md, stories/SECRET-020A.md, reviews/SECRET-020A/**, Registres/PATCH-SECRET-020A.jsonl »"
+  }
+ ],
+ "date_heure": "2026-07-25T06:44:00.263547+00:00",
+ "prompt_sha256": "1ece4acf23673ccb8c10a8fc79c355c791243d19c312f253635682000760ba69",
+ "reviewer_model": "Gemini-3.1-Pro"
+}

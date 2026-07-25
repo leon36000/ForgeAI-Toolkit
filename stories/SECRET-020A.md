@@ -52,6 +52,20 @@
 11. Toutes les affirmations factuelles de l'ADR (lignes de code, bind-mounts, absence de
     `fsGroup`/`defaultMode`, motif `vault.py`, digest d'image) ont été re-vérifiées ligne par
     ligne contre le code source réel après rédaction — aucune donnée inventée.
+11bis. **Revue aveugle scellée round 1** (`reviews/SECRET-020A/*.verdict.json`,
+    `prompt_sha256=1ece4acf23673ccb8c10a8fc79c355c791243d19c312f253635682000760ba69`) :
+    **REJECT 2/3** (DeepSeek-V4-Pro, Gemini-3.1-Pro) — objection critique fondée : la
+    recommandation initiale (§4.1) demandait un `chown` du fichier vers le GID interne fixe de
+    l'image (`1000`), ce qui exige en sémantique POSIX que l'opérateur soit déjà membre de ce
+    groupe (sinon `EPERM`) — non traité dans la version initiale. LongCat-2.0 : `APPROVE`
+    (0 objection). **§4.1 corrigé** : remplacement par un groupe hôte dédié créé au bootstrap
+    (GID choisi par ForgeAI, jamais codé en dur) + clé Compose `group_add` (mécanisme Docker
+    standard vérifié, ajoute le conteneur au groupe hôte SANS dépendre du GID interne de
+    l'image) — élimine la contrainte de privilège bloquante ET le risque de collision GID
+    identifié dans la version initiale. Objection mineure de Gemini-3.1-Pro (FILES_CHANGED du
+    rapport listait des chemins hors du diff round 1) — corrigée : ces chemins
+    (`reviews/SECRET-020A/**`, `Registres/PATCH-SECRET-020A.jsonl`) sont ajoutés par le commit
+    round 2 lui-même, désormais présents dans le diff au moment où ce rapport est lu.
 12. Vérifié le scope avant commit : diff limité à `CANON/**`, `Docs/**`,
     `stories/SECRET-020A.md`, `reviews/SECRET-020A/**`, `Registres/PATCH-SECRET-020A.jsonl` —
     **zéro fichier `src/forgeai/**` modifié** (conforme au mandat `DESIGN_FIRST`).
