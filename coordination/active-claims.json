@@ -1,5 +1,5 @@
 {
   "_schema": "active-claims-v1",
-  "_description": "Registre des claims actifs. Une lane ne peut avoir qu'un seul claim concurrent. Modifié uniquement par scripts/coordination/.",
+  "_description": "Registre des claims actifs. Une lane ne peut avoir qu'un seul claim concurrent. Modifié uniquement par scripts/coordination/. Champs attendus par claim: 'package', 'lane', 'branch' (nom exact de la branche de la PR — utilisé par scripts/coordination/scope_guard.py pour n'appliquer que les règles du claim propriétaire de CETTE PR, jamais celles des autres claims concurrents).",
   "claims": []
 }

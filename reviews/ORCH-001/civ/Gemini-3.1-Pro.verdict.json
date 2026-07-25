@@ -1,0 +1,14 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "majeure",
+   "fichier": ".github/workflows/scope-guard.yml",
+   "description": "Le script itère sur TOUS les claims actifs et exige que les fichiers modifiés respectent les `allowed_paths` de CHAQUE claim. Puisque le système autorise jusqu'à 6 claims concurrents (selon AGENTS.md), une PR valide pour son propre package sera systématiquement rejetée si un autre claim est actif, car ses fichiers seront jugés hors scope par rapport à cet autre claim. Le script devrait identifier le claim spécifique à la PR (par exemple via la branche) au lieu d'appliquer les restrictions de tous les claims simultanément.",
+   "preuve": "for claim in claims:\n    ...\n    for f in changed:\n        ...\n        elif allowed and not matches_any(f, allowed):\n            errors.append(f\"HORS SCOPE: {f} n'est pas dans allowed_paths de {pid}\")"
+  }
+ ],
+ "date_heure": "2026-07-25T05:19:08.940861+00:00",
+ "prompt_sha256": "a754a77fe7bbee156a873a0fafc86703299e83bdc34865fd8cfdb406d3e7d795",
+ "reviewer_model": "Gemini-3.1-Pro"
+}

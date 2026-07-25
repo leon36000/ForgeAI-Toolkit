@@ -130,4 +130,51 @@ structure quasi identique (construction de fixtures + assertion sur `main()`).
 
 Résultat : 35/35 tests toujours verts, couverture inchangée à 99 %.
 
+## Revue aveugle scellée 1 : REJECT 2/3 (défaut réel confirmé)
+
+Tous les gates CI automatisés étant verts, une revue aveugle scellée 3 vendors a été
+lancée (`~/proof-method/scripts/civ_review.py`, modèles `DeepSeek-V4-Pro`,
+`Gemini-3.1-Pro`, `LongCat-2.0`, dossier `reviews/ORCH-001/civ`, pack diff verbatim
+81 032 octets). Dépouillement déterministe (`scripts/revue.py tally`) :
+**REJECT — 2/3 APPROVE** (3 vendors distincts confirmés : deepseek, google, meituan ;
+`prompt_sha256=a754a77f…`). Consignée au registre : `Registres/mission.jsonl` seq 255.
+
+**Objection majeure (Gemini-3.1-Pro), confirmée par test RED/GREEN — défaut réel, pas
+un faux positif :** le job `scope-guard` (`.github/workflows/scope-guard.yml`) itérait
+sur **TOUS** les claims actifs et exigeait que les fichiers modifiés respectent les
+`allowed_paths` de **CHAQUE** claim. Puisque jusqu'à 6 claims concurrents sont autorisés
+(AGENTS.md), une PR valide pour son propre package aurait été rejetée à tort dès qu'un
+second claim était actif, ses fichiers n'étant pas dans les `allowed_paths` de cet
+*autre* claim. Non détecté par mes tests initiaux car `coordination/active-claims.json`
+était vide pendant tout le développement (0 claim actif ⇒ branche `SKIP` jamais
+exercée avec ≥2 claims).
+
+**Preuve RED :** rejeu de la logique bugguée (boucle `for claim in claims`) avec 2
+claims concurrents simulés (`ORCH-001`, `HW-037`) et des fichiers modifiés strictement
+dans le périmètre d'`ORCH-001` → la logique bugguée génère bien
+`HORS SCOPE: coordination/work-packages.json n'est pas dans allowed_paths de HW-037`.
+
+**Correction :** extraction de la logique vers un module testable
+`scripts/coordination/scope_guard.py` (fonctions pures `find_claim_for_branch`,
+`check_scope`, `main`). Le guard résout désormais **le seul claim propriétaire de la
+PR courante** via un nouveau champ `branch` sur chaque claim (résolu par
+`GITHUB_HEAD_REF` en CI, `git branch --show-current` en local) et n'applique que les
+règles de CE claim — jamais celles des autres claims concurrents.
+`coordination/active-claims.json` documente le champ `branch` dans sa `_description`.
+`.github/workflows/scope-guard.yml` appelle désormais directement le module.
+
+**Preuve GREEN :** même scénario (2 claims concurrents, fichiers dans le périmètre
+d'ORCH-001) → `check_scope` retourne `[]` (aucune erreur). Suite complète :
+`scripts/coordination/test_scope_guard.py` (23 tests, dont
+`test_check_scope_ignores_other_claims_scope` qui reproduit exactement le scénario du
+rapport). 58/58 tests verts sur `scripts/coordination/`, couverture 99 % (mêmes lignes
+`__main__`/appel subprocess réel non couvertes, conforme à la convention du dépôt).
+
+Aucun fichier hors `allowed_paths` d'ORCH-001 n'a été touché (les verdicts scellés sont
+rangés sous `reviews/ORCH-001/civ/`, conforme au glob `reviews/ORCH-001/**` déclaré
+dans `ISSUES/ORCH-001.md` — pas de modification unilatérale de mon propre périmètre).
+
+Une seconde revue aveugle scellée sera relancée sur le diff corrigé pour tenter un
+APPROVE 3/3 liant (ajout à `reviews/BINDING.txt` uniquement si 3/3).
+
 
