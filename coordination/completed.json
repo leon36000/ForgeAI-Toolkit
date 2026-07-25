@@ -69,6 +69,20 @@
         "dossier": "reviews/UI-039",
         "note": "1 ronde de revue aveugle scellée, APPROVE 3/3 zéro objection. Correctif de code (P3_MEDIUM/S3_LOW) : remplace la dérivation positionnelle de l'état des étapes UI par un contrat de preuve backend à 7 étapes (FAI-U-039), statut failed explicite, reconstruction déterministe après rafraîchissement via SSE existant. Aucune approbation Nathan requise (package non-DESIGN_FIRST/T3). Débloque UI-040."
       }
+    },
+    {
+      "package": "UI-040",
+      "merge_commit": "e036f7f8468b75188363c3b63960fcd0abb30c60",
+      "pr_number": 168,
+      "merged_at": "2026-07-25T09:00:00Z",
+      "review": {
+        "result": "APPROVE",
+        "ratio": "3/3",
+        "vendors": ["deepseek", "google", "meituan"],
+        "prompt_sha256": "5dcc9c73c4900b09b8b5b5baf39a29356ac28ba0fded79d31fefbedd899eae16",
+        "dossier": "reviews/UI-040",
+        "note": "1 ronde de revue aveugle scellée, APPROVE 3/3 zéro objection, obtenu au premier essai. Correctif d'accessibilité (P3_MEDIUM/S3_LOW, FAI-U-040) : skip-link hors-écran/focus + prefers-reduced-motion + couleur --error conforme WCAG AA (>=4.5:1, calcul de luminance relative réel). Aucune approbation Nathan requise (package non-DESIGN_FIRST/T3). Débloque partiellement OPS-031E/DOC-032."
+      }
     }
   ]
 }
