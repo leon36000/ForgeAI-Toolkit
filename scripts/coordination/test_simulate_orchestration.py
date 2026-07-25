@@ -20,76 +20,74 @@ def _packages() -> dict:
     }
 
 
+def _full_wp_packages() -> list[dict]:
+    """Jeu de packages couvrant toutes les branches de run_simulations()."""
+    return [
+        {"id": "ORCH-001", "exclusive_lane": "governance", "dependencies": [], "status": "READY"},
+        {"id": "UI-039", "exclusive_lane": "web-ui", "dependencies": ["ORCH-001"], "status": "READY_AFTER"},
+        {"id": "UI-040", "exclusive_lane": "web-ui", "dependencies": ["UI-039"], "status": "READY_AFTER"},
+        {"id": "CAP-033A", "exclusive_lane": "capability-docs", "dependencies": ["HW-037"], "status": "READY_AFTER"},
+        {"id": "OPS-031E", "exclusive_lane": "web-ui", "dependencies": ["OPS-031C", "UI-040"], "status": "READY_AFTER"},
+        {"id": "DOC-032", "exclusive_lane": "documentation", "dependencies": ["CAP-033A", "OPS-031E", "UI-040"], "status": "READY_AFTER"},
+    ]
+
+
+def _write_wp(tmp_path: Path, packages: list[dict]) -> Path:
+    coord = tmp_path / "coordination"
+    coord.mkdir()
+    (coord / "work-packages.json").write_text(json.dumps({"packages": packages}), encoding="utf-8")
+    return coord
+
+
 def test_build_completed() -> None:
     assert so.build_completed(["A", "B"]) == {"A", "B"}
 
 
-def test_try_claim_unknown_package() -> None:
-    ok, reason = so.try_claim("GHOST", _packages(), {}, set(), set())
-    assert not ok
-    assert "inconnu" in reason
+# ---------------------------------------------------------------------------
+# try_claim(): une matrice paramétrée couvre chaque branche de rejet/acceptation
+# sans dupliquer la structure d'appel entre les tests.
+# ---------------------------------------------------------------------------
+
+TRY_CLAIM_CASES = [
+    pytest.param("GHOST", {}, set(), set(), {}, False, "inconnu", id="package-inconnu"),
+    pytest.param("ORCH-001", {}, {"ORCH-001"}, set(), {}, False, "Double claim", id="double-claim"),
+    pytest.param(
+        "UI-040", {"web-ui": "UI-039"}, {"UI-039"}, {"ORCH-001", "UI-039"}, {}, False, "Lane",
+        id="collision-lane",
+    ),
+    pytest.param("UI-039", {}, set(), set(), {}, False, "Dépendance", id="dependance-manquante"),
+    pytest.param(
+        "ORCH-001", {}, set(), set(),
+        {"origin_main": "abc123", "branch_base": "deadbeef"}, False, "périmée",
+        id="base-perimee",
+    ),
+    pytest.param("LAB-X", {}, set(), set(), {}, False, "BLOCKED_LAB", id="package-bloque-lab"),
+    pytest.param("ORCH-001", {}, set(), set(), {}, True, "OK", id="claim-reussi-sans-deps"),
+    pytest.param("UI-039", {}, set(), {"ORCH-001"}, {}, True, None, id="claim-reussi-deps-completees"),
+]
 
 
-def test_try_claim_double_claim() -> None:
-    ok, reason = so.try_claim("ORCH-001", _packages(), {}, {"ORCH-001"}, set())
-    assert not ok
-    assert "Double claim" in reason
-
-
-def test_try_claim_lane_collision() -> None:
-    ok, reason = so.try_claim(
-        "UI-040", _packages(), {"web-ui": "UI-039"}, {"UI-039"}, {"ORCH-001", "UI-039"}
-    )
-    assert not ok
-    assert "Lane" in reason
-
-
-def test_try_claim_missing_dependency() -> None:
-    ok, reason = so.try_claim("UI-039", _packages(), {}, set(), set())
-    assert not ok
-    assert "Dépendance" in reason
-
-
-def test_try_claim_stale_base() -> None:
-    ok, reason = so.try_claim(
-        "ORCH-001", _packages(), {}, set(), set(),
-        origin_main="abc123", branch_base="deadbeef",
-    )
-    assert not ok
-    assert "périmée" in reason
-
-
-def test_try_claim_blocked_lab() -> None:
-    ok, reason = so.try_claim("LAB-X", _packages(), {}, set(), set())
-    assert not ok
-    assert "BLOCKED_LAB" in reason
-
-
-def test_try_claim_success() -> None:
-    ok, reason = so.try_claim("ORCH-001", _packages(), {}, set(), set())
-    assert ok
-    assert reason == "OK"
-
-
-def test_try_claim_success_after_dependency_completed() -> None:
-    ok, _ = so.try_claim("UI-039", _packages(), {}, set(), {"ORCH-001"})
-    assert ok
+@pytest.mark.parametrize(
+    "pkg_id, active_claims, active_pkgs, completed, extra_kwargs, expected_ok, expected_substr",
+    TRY_CLAIM_CASES,
+)
+def test_try_claim_matrix(
+    pkg_id: str,
+    active_claims: dict,
+    active_pkgs: set,
+    completed: set,
+    extra_kwargs: dict,
+    expected_ok: bool,
+    expected_substr: str | None,
+) -> None:
+    ok, reason = so.try_claim(pkg_id, _packages(), active_claims, active_pkgs, completed, **extra_kwargs)
+    assert ok is expected_ok
+    if expected_substr is not None:
+        assert expected_substr in reason
 
 
 def test_run_simulations_all_pass(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    coord = tmp_path / "coordination"
-    coord.mkdir()
-    wp = {
-        "packages": [
-            {"id": "ORCH-001", "exclusive_lane": "governance", "dependencies": [], "status": "READY"},
-            {"id": "UI-039", "exclusive_lane": "web-ui", "dependencies": ["ORCH-001"], "status": "READY_AFTER"},
-            {"id": "UI-040", "exclusive_lane": "web-ui", "dependencies": ["UI-039"], "status": "READY_AFTER"},
-            {"id": "CAP-033A", "exclusive_lane": "capability-docs", "dependencies": ["HW-037"], "status": "READY_AFTER"},
-            {"id": "OPS-031E", "exclusive_lane": "web-ui", "dependencies": ["OPS-031C", "UI-040"], "status": "READY_AFTER"},
-            {"id": "DOC-032", "exclusive_lane": "documentation", "dependencies": ["CAP-033A", "OPS-031E", "UI-040"], "status": "READY_AFTER"},
-        ]
-    }
-    (coord / "work-packages.json").write_text(json.dumps(wp), encoding="utf-8")
+    coord = _write_wp(tmp_path, _full_wp_packages())
     monkeypatch.setattr(so, "COORD_DIR", coord)
 
     results = so.run_simulations()
@@ -98,25 +96,14 @@ def test_run_simulations_all_pass(tmp_path: Path, monkeypatch: pytest.MonkeyPatc
         assert ok, f"Simulation échouée: {label}"
 
 
-def test_main_returns_zero_on_success(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture) -> None:
-    coord = tmp_path / "coordination"
-    coord.mkdir()
-    wp = {
-        "packages": [
-            {"id": "ORCH-001", "exclusive_lane": "governance", "dependencies": [], "status": "READY"},
-            {"id": "UI-039", "exclusive_lane": "web-ui", "dependencies": ["ORCH-001"], "status": "READY_AFTER"},
-            {"id": "UI-040", "exclusive_lane": "web-ui", "dependencies": ["UI-039"], "status": "READY_AFTER"},
-            {"id": "CAP-033A", "exclusive_lane": "capability-docs", "dependencies": ["HW-037"], "status": "READY_AFTER"},
-            {"id": "OPS-031E", "exclusive_lane": "web-ui", "dependencies": ["OPS-031C", "UI-040"], "status": "READY_AFTER"},
-            {"id": "DOC-032", "exclusive_lane": "documentation", "dependencies": ["CAP-033A", "OPS-031E", "UI-040"], "status": "READY_AFTER"},
-        ]
-    }
-    (coord / "work-packages.json").write_text(json.dumps(wp), encoding="utf-8")
+def test_main_returns_zero_on_success(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture
+) -> None:
+    coord = _write_wp(tmp_path, _full_wp_packages())
     monkeypatch.setattr(so, "COORD_DIR", coord)
 
     assert so.main() == 0
-    out = capsys.readouterr().out
-    assert "10/10 PASS" in out
+    assert "10/10 PASS" in capsys.readouterr().out
 
 
 def test_main_returns_one_when_a_simulation_fails(
@@ -124,10 +111,7 @@ def test_main_returns_one_when_a_simulation_fails(
 ) -> None:
     """Un work-packages.json incomplet (dépendances manquantes) fait échouer certaines
     simulations qui attendaient un succès, donc main() doit retourner 1."""
-    coord = tmp_path / "coordination"
-    coord.mkdir()
-    wp = {"packages": [{"id": "ORCH-001", "exclusive_lane": "governance", "dependencies": [], "status": "READY"}]}
-    (coord / "work-packages.json").write_text(json.dumps(wp), encoding="utf-8")
+    coord = _write_wp(tmp_path, _full_wp_packages()[:1])  # ne garde que ORCH-001
     monkeypatch.setattr(so, "COORD_DIR", coord)
 
     assert so.main() == 1

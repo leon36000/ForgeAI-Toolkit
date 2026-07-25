@@ -113,3 +113,21 @@ n'était mesuré par aucun test (`pytest --cov=src/forgeai` ne couvrait pas ce c
 = blocs `if __name__ == "__main__"`), 35/35 tests verts, collection pytest vérifiée sans
 collision avec la suite `tests/` existante.
 
+## Correctif post-review 2 : duplication SonarCloud
+
+Second push : le job `sonarcloud-scan` a d'abord échoué sur un test flaky préexistant
+hors périmètre (`tests/test_multinoeud.py::test_summary_nodes`, timeout réseau, sans
+rapport avec cette PR) — relancé avec succès. Le quality gate a ensuite signalé
+`Duplication on New Code: 4.1 % (requis ≤ 3 %)` : les 35 tests ajoutés partageaient une
+structure quasi identique (construction de fixtures + assertion sur `main()`).
+
+**Correction :** consolidation via `pytest.mark.parametrize` :
+- `test_validate_coordination.py` : 18 scénarios fusionnés dans une matrice `SCENARIOS`
+  + un seul test paramétré (128 → 46 lignes).
+- `test_simulate_orchestration.py` : 8 cas `try_claim` fusionnés dans `TRY_CLAIM_CASES`
+  + un seul test paramétré ; le fixture de packages dupliqué extrait en fonction
+  partagée `_full_wp_packages()` (76 → 49 lignes).
+
+Résultat : 35/35 tests toujours verts, couverture inchangée à 99 %.
+
+
