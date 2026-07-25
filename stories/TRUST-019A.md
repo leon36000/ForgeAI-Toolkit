@@ -83,8 +83,16 @@
     créerait une auto-révision circulaire. Corrigé en ajoutant la note explicative ci-dessous
     (§ Note sur le périmètre du diff), sans changer l'approche de construction du diff. Un
     round 2 de confirmation a été lancé après cet ajout.
-13. **Revue aveugle scellée round 2** — voir `reviews/TRUST-019A/civ2/*.verdict.json` pour le
-    détail complet.
+13. **Revue aveugle scellée round 2** — **APPROVE 3/3** (DeepSeek-V4-Pro, Gemini-3.1-Pro,
+    LongCat-2.0), vendors distincts `['deepseek', 'google', 'meituan']`, `prompt_sha256`
+    identique aux trois : `1931f16d61657c32e7f711fd2d17d3e1d7ed7cd6aebfe84c90d45e5552332443`.
+    Une seule objection, **mineure et non bloquante** (DeepSeek-V4-Pro) : les références de
+    lignes exactes et l'affirmation « vault.py déjà revue/approuvée » ne sont pas vérifiables
+    depuis le diff seul. Root cause analysée : affirmation factuelle exacte mais son ancrage
+    (commits `36ec4f0`/`7a2406b`/`6b4e265`) n'était pas cité — corrigé en ajoutant ces références
+    de commits vérifiables (`git log --oneline -- src/forgeai/models/vault.py`) directement
+    dans l'ADR §10, sans changer le fond de l'analyse. Preuve : `Registres/PATCH-TRUST-019A.jsonl`
+    seq 2, `reviews/TRUST-019A/civ2/*.verdict.json`.
 14. Vérifié le scope avant chaque commit : diff limité à `CANON/**`, `stories/TRUST-019A.md`,
     `reviews/TRUST-019A/**`, `Registres/PATCH-TRUST-019A.jsonl` — **zéro fichier
     `src/forgeai/**` modifié** (conforme au mandat `DESIGN_FIRST`).
@@ -163,13 +171,17 @@ FULL_GATES: no_stub_scan.py --all OK ; gitleaks detect OK (0 fuite) ; git diff -
 SECURITY_SCANS: gitleaks OK ; analyse manuelle de la surface de menace documentée dans l'ADR
   (y compris vérification réelle de la protection de branche GitHub via l'API).
 EVIDENCE_PATH: CANON/adr/ADR-TRUST-019A-registres-modele-de-menace-racine-confiance.md,
-  AUDIT-REFERENCE/ORIGINAL-ISSUES/FAI-U-019.md, reviews/TRUST-019A/civ/*.verdict.json
+  AUDIT-REFERENCE/ORIGINAL-ISSUES/FAI-U-019.md, reviews/TRUST-019A/civ/*.verdict.json,
+  reviews/TRUST-019A/civ2/*.verdict.json, Registres/PATCH-TRUST-019A.jsonl (seq 1-2)
 ROLLBACK_RESULT: Revert du commit — aucune donnée/schéma modifié (ADR pur), rollback trivial.
 LIMITATIONS: Implémentation du HMAC Tier 1, de la signature ed25519 T3 et de la correction du
   gate CI hors périmètre de ce package, à assigner séparément après approbation de l'ADR. La
   recommandation de configuration dépôt (`enforce_admins`) reste une action humaine hors-code.
+REVIEW_STATUS: Round 1 REJECT tally (2/3, objection majeure de périmètre de diff, résolue sans
+  changement de fond) → Round 2 **APPROVE 3/3** (0 objection bloquante, 1 objection mineure
+  résolue par ajout de références de commits vérifiables). Revue aveugle scellée **CLOSE**.
 OPEN_RISKS: Approbation explicite de Nathan requise avant que l'ADR soit considérée DONE
-  (critère d'acceptation distinct de la revue aveugle — non encore obtenue au moment de la
-  rédaction de ce rapport).
+  (critère d'acceptation distinct de la revue aveugle, **désormais close en APPROVE 3/3** —
+  reste uniquement l'approbation humaine explicite avant fusion).
 READY_FOR_PR: YES
 ```

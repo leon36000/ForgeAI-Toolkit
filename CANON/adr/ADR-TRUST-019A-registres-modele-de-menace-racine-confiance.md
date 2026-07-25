@@ -244,8 +244,19 @@ définitives, engagements externes. Le consensus recommande ; l'humain lève. »
 
 - Code source réel cité : `src/forgeai/core/registre.py` (lignes 24-27, 78-88),
   `src/forgeai/catalogue/loader.py` (lignes 23-31), `src/forgeai/models/vault.py` (construction
-  HMAC-SHA256 déjà revue et approuvée, lignes 45-83), `.github/workflows/gates.yml` (lignes
-  21-26, job `registres`).
+  HMAC-SHA256, lignes 45-83), `.github/workflows/gates.yml` (lignes 21-26, job `registres`).
+  Ces références de lignes ont été revérifiées ligne par ligne contre le fichier réel au moment
+  de la rédaction de cette note (round 2 de revue), postérieurement au diff soumis aux
+  reviewers — d'où leur non-vérifiabilité depuis le diff seul, objection mineure et non
+  bloquante du round 2 (`reviews/TRUST-019A/civ2/DeepSeek-V4-Pro.verdict.json`).
+- L'affirmation « construction HMAC-SHA256 déjà revue et approuvée » (vault.py) renvoie à un
+  fait d'historique Git vérifiable indépendamment de ce diff : commit `36ec4f0`
+  (« feat(models): B-09 routes modèle cloud — provenance + coffre chiffré + test réel (DM-5) »)
+  introduit `vault.py`, puis commit `7a2406b`
+  (« chore(gov): revue aveugle 3 vendors du sous-système models/ + 2 durcissements ») et
+  `6b4e265` (« fix(models): BC-models — corrige les 6 defauts de la revue scellee »)
+  documentent la revue aveugle scellée et sa correction — cf. `reviews/BC-models-civ/`,
+  `reviews/B-12-civ/`. Vérifiable par `git log --oneline -- src/forgeai/models/vault.py`.
 - Reproduction empirique réelle (§2.1, §2.2) exécutée avec les modules réels du dépôt
   (`scripts/registre.py`, `forgeai.catalogue.loader`), aucun mock.
 - Protection de branche `main` vérifiée via l'API GitHub (`allow_force_pushes: false`,

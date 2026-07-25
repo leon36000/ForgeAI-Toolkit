@@ -1,0 +1,14 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "CANON/adr/ADR-TRUST-019A-registres-modele-de-menace-racine-confiance.md",
+   "description": "Les références de lignes exactes (registre.py lignes 78-88, loader.py lignes 23-31, vault.py lignes 45-83, tests/test_registre.py lignes 25-39/79-91) et l'affirmation selon laquelle la construction HMAC de vault.py a été \"déjà revue/approuvée par revue aveugle 3 vendors\" sont des affirmations factuelles externes non vérifiables à partir du diff seul. Bien que plausibles et logiquement cohérentes avec l'architecture décrite, elles ne peuvent pas être confirmées dans le cadre strict de cette revue de diff.",
+   "preuve": "ADR §10 \"Code source réel cité : src/forgeai/core/registre.py (lignes 24-27, 78-88), src/forgeai/catalogue/loader.py (lignes 23-31), src/forgeai/models/vault.py (construction HMAC-SHA256 déjà revue et approuvée, lignes 45-83), .github/workflows/gates.yml (lignes 21-26) ... tests/test_registre.py (couvre l'altération partielle, pas la réécriture totale — confirmé lu intégralement).\""
+  }
+ ],
+ "date_heure": "2026-07-25T07:44:13.014593+00:00",
+ "prompt_sha256": "1931f16d61657c32e7f711fd2d17d3e1d7ed7cd6aebfe84c90d45e5552332443",
+ "reviewer_model": "LongCat-2.0"
+}
