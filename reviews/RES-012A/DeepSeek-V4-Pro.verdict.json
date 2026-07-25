@@ -1,0 +1,14 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "ADR RES-012A",
+   "description": "La validation des unités (5.1) pour la CPU (regex `^\\d+m?$`) autorise la valeur `0` ou `0m`, ce qui peut produire des requêtes de ressources nulles, ouvrant une sur-souscription maximale contraire au modèle de menace T1. Aucune règle explicite n'interdit zéro.",
+   "preuve": "Section 5.1 \"CPU : `^\\d+m?$` — entier éventuellement suffixé m\" ; Section 9 menace T1 : \"Sur-souscription du scheduler : requests fantaisistes → entassement\"."
+  }
+ ],
+ "date_heure": "2026-07-25T22:29:14.184175+00:00",
+ "prompt_sha256": "c4ef55fd0eb7278964d405b186e49e669cd360625e4aa6ab900d3702c36d431e",
+ "reviewer_model": "DeepSeek-V4-Pro"
+}
