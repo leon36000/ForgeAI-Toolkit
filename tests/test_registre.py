@@ -96,3 +96,63 @@ def test_ligne_json_invalide_rejetee(tmp_path):
     reg.write_text("{pas du json\n", encoding="utf-8")
     with pytest.raises(SystemExit, match="JSON invalide"):
         registre.verify(reg)
+
+
+# ── TRUST-019B (FAI-U-019) — Tier 1 : HMAC-SHA256 à clé locale ────────────────
+# ADR TRUST-019A §9 : key_id optionnel par entrée ; verify rétro-compatible avec les
+# entrées Tier 0 (sans key_id -> SHA-256 nu) ; clé générée par commande EXPLICITE en 0600 ;
+# sans racine disponible -> statut UNVERIFIED/échec explicite, jamais silencieusement OK.
+import os
+import stat as _stat
+
+from forgeai.core import registre as core_registre
+
+
+def test_init_key_cree_une_cle_locale_en_0600(tmp_path):
+    """`init_key` (commande explicite, jamais implicite) crée la clé HMAC en 0600."""
+    key_path = tmp_path / "hmac.key"
+    key_id = core_registre.init_key(key_path)
+    assert key_id and isinstance(key_id, str)
+    assert key_path.exists()
+    assert _stat.S_IMODE(os.stat(key_path).st_mode) == 0o600
+    # idempotence : ne régénère pas silencieusement une clé existante
+    assert core_registre.init_key(key_path) == key_id
+
+
+def test_reecriture_integrale_detectee_avec_hmac(tmp_path):
+    """Défaut FAI-U-019 : une réécriture TOTALE cohérente passait verify(). Avec une clé
+    HMAC (Tier 1), l'attaquant sans la clé ne peut pas reforger la chaîne -> DÉTECTÉE."""
+    key_path = tmp_path / "hmac.key"
+    core_registre.init_key(key_path)
+    reg = tmp_path / "r.jsonl"
+    for i in range(3):
+        core_registre.append(reg, "t", "auteur", {"i": i}, key_path=key_path)
+    assert core_registre.verify(reg, key_path=key_path) is None  # chaîne saine
+
+    # l'attaquant réécrit TOUT de façon cohérente, SANS la clé (Tier 0 seulement)
+    entries = [json.loads(l) for l in reg.read_text(encoding="utf-8").splitlines()]
+    reg.unlink()
+    for e in entries:
+        core_registre.append(reg, "t", "attaquant", {**e["payload"], "HOSTILE": True})
+    erreur = core_registre.verify(reg, key_path=key_path)
+    assert erreur, "réécriture intégrale NON détectée (régression FAI-U-019)"
+
+
+def test_sans_cle_les_entrees_hmac_sont_unverified(tmp_path):
+    """Racine indisponible : statut UNVERIFIED explicite, jamais un OK silencieux."""
+    key_path = tmp_path / "hmac.key"
+    core_registre.init_key(key_path)
+    reg = tmp_path / "r.jsonl"
+    core_registre.append(reg, "t", "auteur", {"i": 1}, key_path=key_path)
+    statut = core_registre.verify_status(reg, key_path=None)
+    assert statut == "UNVERIFIED", statut
+
+
+def test_retrocompat_entrees_tier0_sans_key_id(tmp_path):
+    """Entrées historiques (sans key_id) : vérification SHA-256 nue, aucune migration destructive."""
+    reg = tmp_path / "r.jsonl"
+    core_registre.append(reg, "t", "auteur", {"i": 1})          # Tier 0, pas de clé
+    core_registre.append(reg, "t", "auteur", {"i": 2})
+    assert core_registre.verify(reg) is None
+    entries = [json.loads(l) for l in reg.read_text(encoding="utf-8").splitlines()]
+    assert all("key_id" not in e for e in entries)

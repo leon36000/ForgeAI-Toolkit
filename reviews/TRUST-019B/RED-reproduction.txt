@@ -1,0 +1,43 @@
+FFF.                                                                     [100%]
+=================================== FAILURES ===================================
+__________________ test_init_key_cree_une_cle_locale_en_0600 ___________________
+
+tmp_path = PosixPath('/tmp/pytest-of-pc1/pytest-39/test_init_key_cree_une_cle_loc0')
+
+    def test_init_key_cree_une_cle_locale_en_0600(tmp_path):
+        """`init_key` (commande explicite, jamais implicite) crée la clé HMAC en 0600."""
+        key_path = tmp_path / "hmac.key"
+>       key_id = core_registre.init_key(key_path)
+                 ^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'forgeai.core.registre' has no attribute 'init_key'
+
+tests/test_registre.py:114: AttributeError
+_________________ test_reecriture_integrale_detectee_avec_hmac _________________
+
+tmp_path = PosixPath('/tmp/pytest-of-pc1/pytest-39/test_reecriture_integrale_dete0')
+
+    def test_reecriture_integrale_detectee_avec_hmac(tmp_path):
+        """Défaut FAI-U-019 : une réécriture TOTALE cohérente passait verify(). Avec une clé
+        HMAC (Tier 1), l'attaquant sans la clé ne peut pas reforger la chaîne -> DÉTECTÉE."""
+        key_path = tmp_path / "hmac.key"
+>       core_registre.init_key(key_path)
+        ^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'forgeai.core.registre' has no attribute 'init_key'
+
+tests/test_registre.py:126: AttributeError
+________________ test_sans_cle_les_entrees_hmac_sont_unverified ________________
+
+tmp_path = PosixPath('/tmp/pytest-of-pc1/pytest-39/test_sans_cle_les_entrees_hmac0')
+
+    def test_sans_cle_les_entrees_hmac_sont_unverified(tmp_path):
+        """Racine indisponible : statut UNVERIFIED explicite, jamais un OK silencieux."""
+        key_path = tmp_path / "hmac.key"
+>       core_registre.init_key(key_path)
+        ^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'forgeai.core.registre' has no attribute 'init_key'
+
+tests/test_registre.py:144: AttributeError
+=========================== short test summary info ============================
+FAILED tests/test_registre.py::test_init_key_cree_une_cle_locale_en_0600 - At...
+FAILED tests/test_registre.py::test_reecriture_integrale_detectee_avec_hmac
+FAILED tests/test_registre.py::test_sans_cle_les_entrees_hmac_sont_unverified
