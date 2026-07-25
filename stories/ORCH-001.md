@@ -96,3 +96,20 @@ Sans objet : les scripts s'exécutent en < 1 s, aucune régression mesurable.
 - Aucun script de heartbeat automatique (claim TTL) n'est implémenté dans cette story.
   Si un agent crash sans libérer son claim, une intervention manuelle est nécessaire.
   → Issue de suivi à ouvrir après fusion.
+
+## Correctif post-review : couverture SonarCloud
+
+Le premier push a échoué le quality gate SonarCloud (`Coverage on New Code: 0.0%`,
+requis ≥ 80 %), car `scripts/coordination/*.py` est inclus dans `sonar.sources` mais
+n'était mesuré par aucun test (`pytest --cov=src/forgeai` ne couvrait pas ce chemin).
+
+**Correction :**
+- `scripts/coordination/test_validate_coordination.py` (22 tests) et
+  `scripts/coordination/test_simulate_orchestration.py` (13 tests) ajoutés.
+- `.github/workflows/sonarcloud.yml` : la commande pytest couvre désormais
+  `tests/` **et** `scripts/coordination/` (`--cov=src/forgeai --cov=scripts/coordination`).
+
+**Preuve :** couverture locale `scripts/coordination` = 99 % (388 lignes, 2 non couvertes
+= blocs `if __name__ == "__main__"`), 35/35 tests verts, collection pytest vérifiée sans
+collision avec la suite `tests/` existante.
+
