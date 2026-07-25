@@ -161,6 +161,24 @@
         "dossier": "reviews/HW-009",
         "note": "Classification iGPU par identifiant PCI (P1, FAI-U-009). APPROVE 3/3, 0 objection. iGPU AMD [1002:13c0] plus promu en dGPU ; garde dGPU discret [1002:744c]. Debloque HW-010."
       }
+    },
+    {
+      "package": "RAG-004A",
+      "merge_commit": "73e0b3f1cdd84cc82e7ad67f4d55ebf718ad96d5",
+      "pr_number": 175,
+      "merged_at": "2026-07-25T22:21:15Z",
+      "review": {
+        "result": "APPROVE",
+        "ratio": "3/3",
+        "vendors": [
+          "google",
+          "qwen3.6-40b",
+          "deepseek"
+        ],
+        "prompt_sha256": "189b9e9564f9d119cefdc15a87d3f756f7115f08394268f107c364603b43a571",
+        "dossier": "reviews/RAG-004A",
+        "note": "ADR contrat d'ancrage (DESIGN_FIRST, FAI-U-004). APPROVE 3/3 (2e tour, 1er tronque refute). Debloque RAG-005 (impl) apres approbation Nathan."
+      }
     }
   ]
 }
