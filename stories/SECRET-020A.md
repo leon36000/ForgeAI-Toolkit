@@ -63,16 +63,33 @@
     standard vérifié, ajoute le conteneur au groupe hôte SANS dépendre du GID interne de
     l'image) — élimine la contrainte de privilège bloquante ET le risque de collision GID
     identifié dans la version initiale. Objection mineure de Gemini-3.1-Pro (FILES_CHANGED du
-    rapport listait des chemins hors du diff round 1) — corrigée : ces chemins
-    (`reviews/SECRET-020A/**`, `Registres/PATCH-SECRET-020A.jsonl`) sont ajoutés par le commit
-    round 2 lui-même, désormais présents dans le diff au moment où ce rapport est lu.
+    rapport listait des chemins hors du diff round 1, `reviews/SECRET-020A/**` et
+    `Registres/PATCH-SECRET-020A.jsonl`) — le commit round 2 les ajoute au dépôt (ils existent
+    bien sur la branche) mais **restent délibérément hors du diff soumis au pack de revue**
+    (ce sont des preuves DU processus, pas des artefacts À juger PAR le processus — voir
+    "Note sur le périmètre du diff" ci-dessus).
+11ter. **Revue aveugle scellée round 2** (`reviews/SECRET-020A/civ2/*.verdict.json`,
+    `prompt_sha256=b023fdabe0008f47e6e14fc666037535733c20de1b699dd7dd2a699a1825857f`) :
+    **REJECT via tally strict (2/3 APPROVE)** — `DeepSeek-V4-Pro` et `Gemini-3.1-Pro` :
+    `APPROVE` avec une objection mineure identique (incohérence documentaire perçue entre
+    `FILES_CHANGED` et le contenu du diff, cf. note ci-dessus) ; `LongCat-2.0` : `REJECT` mais
+    avec la MÊME unique objection classée `severite: "mineure"` par le reviewer lui-même (aucune
+    objection `bloquante`, `bloquantes: []` au dépouillement `revue.py tally`) — le tally exige
+    l'unanimité stricte (§3 AGENTS.md), donc REJECT formel malgré l'absence de tout défaut
+    critique/élevé réel sur les 3 verdicts. Root cause de l'objection unanime : le pack de revue
+    exclut délibérément `reviews/**`/`Registres/PATCH-*.jsonl` (preuves du processus), créant une
+    ambiguïté pour un reviewer qui ne dispose que du pack sans le contexte méthodologique.
+    **Corrigé (round 3)** : ajout de la note explicite ci-dessus dans ce document, expliquant
+    l'exclusion intentionnelle plutôt que de la présenter comme une omission.
 12. Vérifié le scope avant commit : diff limité à `CANON/**`, `Docs/**`,
     `stories/SECRET-020A.md`, `reviews/SECRET-020A/**`, `Registres/PATCH-SECRET-020A.jsonl` —
     **zéro fichier `src/forgeai/**` modifié** (conforme au mandat `DESIGN_FIRST`).
 13. Gates exécutés : `no_stub_scan.py --all`, `gitleaks detect` (aucune fuite),
     `git diff --stat origin/main -- src/forgeai/` (vide).
-14. **Revue aveugle scellée (round 1)** — voir `reviews/SECRET-020A/README.md` pour le détail
-    (recommandation non-liante ; l'approbation finale requise reste celle de Nathan, distincte).
+14. **Revue aveugle scellée** — voir `reviews/SECRET-020A/civ/` (round 1) et
+    `reviews/SECRET-020A/civ2/` (round 2) pour le détail complet des verdicts scellés
+    (recommandation non-liante ; l'approbation finale requise reste celle de Nathan, distincte
+    du consensus des reviewers).
 
 ## Root cause (analysée, pas seulement supprimée — critère d'acceptation #1)
 
@@ -107,6 +124,23 @@ requis sur ce point — préservation exigée pour toute implémentation future.
   package d'implémentation séparé, créé après approbation de l'ADR.
 - Amélioration K3s `defaultMode: 0440` documentée comme optionnelle/non-bloquante (hors
   périmètre strict de `FAI-U-020`, qui cible uniquement le backend Compose).
+
+## Note sur le périmètre du diff soumis à la revue aveugle (objection mineure round 2, 3/3
+reviewers, `bloquantes: []`)
+
+Le `FILES_CHANGED` du rapport final ci-dessous liste `reviews/SECRET-020A/**` et
+`Registres/PATCH-SECRET-020A.jsonl` comme faisant partie de cette PR — **exact**, ces fichiers
+sont bien committés sur la branche. Ils sont **délibérément exclus** du diff transmis au pack
+de revue (`git diff origin/main...HEAD -- CANON/ stories/SECRET-020A.md`), pour une raison
+structurelle et non une omission : ce sont les **artefacts de preuve du processus de revue
+lui-même** (verdicts scellés d'un round antérieur + ledger horodaté qui les référence) — les
+inclure dans le pack reviendrait à demander aux reviewers de juger, en partie, leur propre
+processus ou celui d'un round précédent, ce qui est hors du périmètre du jugement demandé
+(« analyse l'ARTEFACT pour sa correction et sa sécurité », `CANON/revue-template.md`). Seul le
+contenu de conception (`CANON/adr/**`, `stories/*.md`) est soumis au jugement des reviewers ;
+`reviews/**`/`Registres/PATCH-*.jsonl` sont des PREUVES DU processus, pas des ARTEFACTS À
+JUGER PAR le processus. Cette clarification répond directement à l'objection mineure identique
+soulevée indépendamment par les 3 reviewers du round 2.
 
 ## Rapport final
 
