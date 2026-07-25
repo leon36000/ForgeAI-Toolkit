@@ -1,0 +1,72 @@
+FFF.                                                                     [100%]
+=================================== FAILURES ===================================
+__________ test_placement_par_service_cable_depuis_decision_explicite __________
+
+    def test_placement_par_service_cable_depuis_decision_explicite():
+        """`placement` explicite {service: noeud} -> ServiceSpec.node peuplé pour CE service seulement."""
+>       plan = _plan_minimal(placement={"vector-store": "node-rag"})
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_placement_noeud.py:123: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+kw = {'placement': {'vector-store': 'node-rag'}}
+
+    def _plan_minimal(**kw):
+        from importlib import resources
+        from pathlib import Path
+        from forgeai.planner.assemble import assemble_plan
+        overlay = Path(str(resources.files("forgeai.data") / "deploy-minimal.json"))
+>       return assemble_plan("minimal-cpu", overlay, **kw)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: assemble_plan() got an unexpected keyword argument 'placement'
+
+tests/test_placement_noeud.py:118: TypeError
+________________ test_rag_node_ne_deplace_que_les_services_rag _________________
+
+    def test_rag_node_ne_deplace_que_les_services_rag():
+        """`rag_node` ne relocalise QUE les services RAG définis, jamais tout le plan (défaut FAI-U-026)."""
+>       plan = _plan_minimal(rag_node="node-rag")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_placement_noeud.py:131: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+kw = {'rag_node': 'node-rag'}
+
+    def _plan_minimal(**kw):
+        from importlib import resources
+        from pathlib import Path
+        from forgeai.planner.assemble import assemble_plan
+        overlay = Path(str(resources.files("forgeai.data") / "deploy-minimal.json"))
+>       return assemble_plan("minimal-cpu", overlay, **kw)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: assemble_plan() got an unexpected keyword argument 'rag_node'
+
+tests/test_placement_noeud.py:118: TypeError
+___________________ test_plan_expose_la_raison_du_placement ____________________
+
+    def test_plan_expose_la_raison_du_placement():
+        """Le plan expose la RAISON de chaque placement (traçabilité, critère d'acceptation)."""
+>       plan = _plan_minimal(rag_node="node-rag")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_placement_noeud.py:139: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+kw = {'rag_node': 'node-rag'}
+
+    def _plan_minimal(**kw):
+        from importlib import resources
+        from pathlib import Path
+        from forgeai.planner.assemble import assemble_plan
+        overlay = Path(str(resources.files("forgeai.data") / "deploy-minimal.json"))
+>       return assemble_plan("minimal-cpu", overlay, **kw)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: assemble_plan() got an unexpected keyword argument 'rag_node'
+
+tests/test_placement_noeud.py:118: TypeError
+=========================== short test summary info ============================
+FAILED tests/test_placement_noeud.py::test_placement_par_service_cable_depuis_decision_explicite
+FAILED tests/test_placement_noeud.py::test_rag_node_ne_deplace_que_les_services_rag
+FAILED tests/test_placement_noeud.py::test_plan_expose_la_raison_du_placement

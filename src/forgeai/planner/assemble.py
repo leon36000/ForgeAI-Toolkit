@@ -6,6 +6,7 @@ de l'overlay curé, et fige le tout en DeploymentPlan sérialisable.
 """
 from __future__ import annotations
 
+import dataclasses
 import importlib.resources
 import json
 import socket
@@ -26,6 +27,16 @@ _PROFILE_VENDOR = {
     "minimal-gpu-rocm": "amd",
     "minimal-gpu-intel": "intel",
 }
+
+# Services RAG connus : définition explicite du périmètre relocalisable par rag_node.
+_RAG_SERVICES = frozenset({
+    "vector-store",
+    "rag",
+    "rag-hardened",
+    "tei-embed",
+    "tei-rerank",
+    "embeddings",
+})
 
 
 def _profile_vendor(profile: str) -> str | None:
@@ -72,6 +83,27 @@ def _load_deploy_specs() -> dict[str, dict]:
     return {k: v for k, v in raw.items() if not k.startswith("_")}
 
 
+def _node_for(
+    name: str,
+    placement: dict[str, str] | None,
+    rag_node: str | None,
+) -> tuple[str | None, str | None]:
+    """Détermine le nœud cible d'un service et la raison du placement."""
+    if placement is not None and name in placement:
+        return placement[name], "placement explicite"
+    if rag_node is not None and name in _RAG_SERVICES:
+        return rag_node, "service RAG relocalisé via rag_node"
+    return None, None
+
+
+def _attach_placement_reasons(plan: DeploymentPlan, reasons: dict[str, str]) -> None:
+    """Attache le dict de traçabilité au plan, y compris quand il est vide."""
+    if dataclasses.is_dataclass(plan) and plan.__dataclass_params__.frozen:
+        object.__setattr__(plan, "placement_reasons", reasons)
+    else:
+        plan.placement_reasons = reasons  # type: ignore[attr-defined]
+
+
 def assemble_plan(
     profile: str,
     deploy_overlay: Path,
@@ -80,12 +112,19 @@ def assemble_plan(
     stack: dict | None = None,
     extra_bricks: tuple[str, ...] = (),
     is_free=port_is_free,
+    placement: dict[str, str] | None = None,
+    rag_node: str | None = None,
 ) -> DeploymentPlan:
     overlay = json.loads(deploy_overlay.read_text(encoding="utf-8"))
     services = []
+    placement_reasons: dict[str, str] = {}
+
     for svc in minimal_stack(deploy_overlay):
         host_port = find_free_port(svc["container_port"] + PREFERRED_PORT_OFFSET, is_free)
         svc_gpu = bool(svc.get("gpu_capable")) and profile in _GPU_PROFILES
+        node, reason = _node_for(svc["name"], placement, rag_node)
+        if node is not None:
+            placement_reasons[svc["name"]] = reason
         services.append(ServiceSpec(
             name=svc["name"],
             image=svc["image"],
@@ -98,6 +137,7 @@ def assemble_plan(
             ),
             gpu=svc_gpu,
             gpu_vendor=_profile_vendor(profile) if svc_gpu else None,
+            node=node,
         ))
 
     if stack is not None or extra_bricks:
@@ -128,6 +168,9 @@ def assemble_plan(
             # plan final (indépendant de l'ordre de traitement des briques).
             depends = tuple(d for d in spec.get("depends", []) if d in planned_names)
             brick_gpu = bool(spec.get("gpu", False))
+            node, reason = _node_for(brick_id, placement, rag_node)
+            if node is not None:
+                placement_reasons[brick_id] = reason
             services.append(ServiceSpec(
                 name=brick_id,
                 image=spec["image"],
@@ -140,10 +183,11 @@ def assemble_plan(
                 command=tuple(spec.get("command", [])),
                 gpu=brick_gpu,
                 gpu_vendor=_profile_vendor(profile) if brick_gpu else None,
+                node=node,
             ))
             existing_names.add(brick_id)
 
-    return DeploymentPlan(
+    plan = DeploymentPlan(
         plan_id=f"p1-{uuid.uuid4().hex[:8]}",
         profile=profile,
         target=target,
@@ -151,3 +195,5 @@ def assemble_plan(
         model=overlay["models"]["llm"],
         embed_model=overlay["models"]["embed"],
     )
+    _attach_placement_reasons(plan, placement_reasons)
+    return plan
