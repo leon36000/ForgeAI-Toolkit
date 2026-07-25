@@ -46,6 +46,13 @@
 10. Gates exécutés : `no_stub_scan.py --all` (post-changement), `gitleaks detect` (aucune fuite),
     `git diff --stat origin/main -- src/forgeai/` (vide — preuve qu'aucun fichier produit n'a
     été modifié).
+11. **Revue aveugle scellée (round 1)** — `civ_review.py --story reviews/SAST-042/civ --pack
+    /tmp/sast042-pack.md`, modèles `DeepSeek-V4-Pro, Gemini-3.1-Pro, LongCat-2.0` (3 vendors
+    distincts, aucun n'est le codeur) → **APPROVE 3/3**, `prompt_sha256=3b405453929d5856...`,
+    0 objection bloquante. 1 objection mineure (Gemini) : le rapport bandit compressé
+    (`bandit.json.gz`) empêche une vérification directe ligne-à-ligne dans le diff. Corrigée
+    par l'ajout de `AUDIT-OUTPUT/sast/bandit-summary.txt` (37 lignes `test_id\tfichier:ligne`,
+    en clair, triable et diffable) sans réintroduire le déclenchement du filtre grep secondaire.
 
 ## Tests négatifs
 

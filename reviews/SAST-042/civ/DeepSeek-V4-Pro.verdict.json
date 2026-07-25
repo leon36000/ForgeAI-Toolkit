@@ -1,0 +1,14 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "AUDIT-OUTPUT/sast/bandit.json.gz",
+   "description": "Le rapport bandit est compressé, le contenu exact des 37 signaux n'est pas lisible dans le diff. La classification déclare ces signaux, mais le reviewer ne peut pas vérifier directement la correspondance entre le rapport brut et les clusters. La justification de compression est documentée dans scanner-versions.txt.",
+   "preuve": "Le diff montre 'Binary files /dev/null and b/AUDIT-OUTPUT/sast/bandit.json.gz differ' sans données textuelles exploitables."
+  }
+ ],
+ "date_heure": "2026-07-25T06:15:47.399093+00:00",
+ "prompt_sha256": "3b405453929d58560e28c699cf672b84108b4763440142c85c4fdcb125f656a2",
+ "reviewer_model": "DeepSeek-V4-Pro"
+}
