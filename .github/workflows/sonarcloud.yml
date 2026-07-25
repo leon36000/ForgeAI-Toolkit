@@ -24,7 +24,7 @@ jobs:
         run: pip install pytest pytest-cov pyyaml
 
       - name: Tests + coverage (XML for SonarCloud)
-        run: pytest -q --cov=src/forgeai --cov-report=xml:coverage.xml
+        run: pytest -q tests scripts/coordination --cov=src/forgeai --cov=scripts/coordination --cov-report=xml:coverage.xml
 
       - name: SonarQube Cloud Scan
         uses: SonarSource/sonarqube-scan-action@v8.2.1

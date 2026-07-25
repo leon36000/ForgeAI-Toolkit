@@ -1,0 +1,1040 @@
+{
+  "_schema": "work-packages-v1",
+  "_description": "Registre de tous les packages multi-IDE. Source de vérité pour dépendances, lanes et périmètres.",
+  "canonical_repository": "https://github.com/leon36000/ForgeAI-Toolkit",
+  "default_branch": "main",
+  "audit_commit": "251f0682bf9d0ffde9f7fd7ab6c7c9f5bad1cd3e",
+  "concurrency_limits": {
+    "total": 6,
+    "CODEX": 2,
+    "CLAUDE_CODE": 2,
+    "CURSOR": 1,
+    "VS_CODE": 1,
+    "COPILOT": 1
+  },
+  "packages": [
+    {
+      "id": "ORCH-001",
+      "title": "Installer le plan de contrôle multi-IDE et les garde-fous anti-collision",
+      "status": "READY",
+      "priority": "P0_BLOCKER",
+      "severity": "S1_HIGH",
+      "ide": "COPILOT",
+      "source_ide": "VS_CODE",
+      "exclusive_lane": "governance",
+      "milestone": "M0-ORCHESTRATION",
+      "dependencies": [],
+      "branch": "chore/ORCH-001-multi-ide-control-plane",
+      "allowed_paths": [
+        "AGENTS.md",
+        "CLAUDE.md",
+        ".cursor/**",
+        ".coderabbit.yaml",
+        ".gitguardian.yaml",
+        ".gitignore",
+        ".github/CODEOWNERS",
+        ".github/workflows/gates.yml",
+        ".github/workflows/sonarcloud.yml",
+        ".github/workflows/scope-guard.yml",
+        "coordination/**",
+        "scripts/coordination/**",
+        "stories/ORCH-001.md",
+        "reviews/ORCH-001/**",
+        "Registres/PATCH-ORCH-001.jsonl"
+      ],
+      "forbidden_paths": [
+        "build/**",
+        "dist/**",
+        "**/__pycache__/**",
+        "src/forgeai/data/catalogue.json"
+      ],
+      "labels": [
+        "type:governance",
+        "lane:governance"
+      ],
+      "notes": [
+        "Cette PR doit être fusionnée seule. Aucune branche produit ne démarre avant sa fusion."
+      ]
+    },
+    {
+      "id": "WEB-001",
+      "title": "Rendre l’authentification Web fail-closed sur toute écoute non-loopback",
+      "status": "EXTERNAL",
+      "ide": "CODEX",
+      "source_ide": "CODEX",
+      "exclusive_lane": "",
+      "dependencies": [
+        "ORCH-001"
+      ],
+      "_external": true,
+      "_note": "Package géré par CODEX. Marqué completed via coordination centrale après fusion."
+    },
+    {
+      "id": "DATA-002",
+      "title": "Rendre RouteStore transactionnel, verrouillé et atomique",
+      "status": "EXTERNAL",
+      "ide": "CODEX",
+      "source_ide": "CODEX",
+      "exclusive_lane": "",
+      "dependencies": [
+        "ORCH-001"
+      ],
+      "_external": true,
+      "_note": "Package géré par CODEX. Marqué completed via coordination centrale après fusion."
+    },
+    {
+      "id": "DATA-003",
+      "title": "Créer un writer sécurisé commun et atomique pour les secrets OpenBao",
+      "status": "EXTERNAL",
+      "ide": "CODEX",
+      "source_ide": "CODEX",
+      "exclusive_lane": "",
+      "dependencies": [
+        "ORCH-001"
+      ],
+      "_external": true,
+      "_note": "Package géré par CODEX. Marqué completed via coordination centrale après fusion."
+    },
+    {
+      "id": "RAG-004A",
+      "title": "ADR: définir le contrat de groundedness et ses états vérifiables",
+      "status": "EXTERNAL",
+      "ide": "CLAUDE_CODE",
+      "source_ide": "CLAUDE_CODE",
+      "exclusive_lane": "",
+      "dependencies": [
+        "ORCH-001"
+      ],
+      "_external": true,
+      "_note": "Package géré par CLAUDE_CODE. Marqué completed via coordination centrale après fusion."
+    },
+    {
+      "id": "RAG-005",
+      "title": "Scanner les documents ingérés et le contexte récupéré contre l’injection indirecte",
+      "status": "EXTERNAL",
+      "ide": "CLAUDE_CODE",
+      "source_ide": "CLAUDE_CODE",
+      "exclusive_lane": "",
+      "dependencies": [
+        "RAG-004A"
+      ],
+      "_external": true,
+      "_note": "Package géré par CLAUDE_CODE. Marqué completed via coordination centrale après fusion."
+    },
+    {
+      "id": "RAG-004B",
+      "title": "Appliquer le contrat de groundedness au runtime et aux évaluations",
+      "status": "EXTERNAL",
+      "ide": "CLAUDE_CODE",
+      "source_ide": "CLAUDE_CODE",
+      "exclusive_lane": "",
+      "dependencies": [
+        "RAG-005"
+      ],
+      "_external": true,
+      "_note": "Package géré par CLAUDE_CODE. Marqué completed via coordination centrale après fusion."
+    },
+    {
+      "id": "SSH-007",
+      "title": "Remplacer le TOFU SSH par un enrôlement d’empreinte explicite",
+      "status": "EXTERNAL",
+      "ide": "CODEX",
+      "source_ide": "CODEX",
+      "exclusive_lane": "",
+      "dependencies": [
+        "ORCH-001"
+      ],
+      "_external": true,
+      "_note": "Package géré par CODEX. Marqué completed via coordination centrale après fusion."
+    },
+    {
+      "id": "SSH-021",
+      "title": "Appliquer la validation SSH canonique au remote probe",
+      "status": "EXTERNAL",
+      "ide": "CODEX",
+      "source_ide": "CODEX",
+      "exclusive_lane": "",
+      "dependencies": [
+        "SSH-007"
+      ],
+      "_external": true,
+      "_note": "Package géré par CODEX. Marqué completed via coordination centrale après fusion."
+    },
+    {
+      "id": "K8S-008",
+      "title": "Supprimer les pods AMD/Intel privilégiés et formaliser les devices minimaux",
+      "status": "EXTERNAL",
+      "ide": "CLAUDE_CODE",
+      "source_ide": "CLAUDE_CODE",
+      "exclusive_lane": "",
+      "dependencies": [
+        "ORCH-001"
+      ],
+      "_external": true,
+      "_note": "Package géré par CLAUDE_CODE. Marqué completed via coordination centrale après fusion."
+    },
+    {
+      "id": "K8S-022",
+      "title": "Appliquer un securityContext Restricted par défaut avec exceptions prouvées",
+      "status": "EXTERNAL",
+      "ide": "CLAUDE_CODE",
+      "source_ide": "CLAUDE_CODE",
+      "exclusive_lane": "",
+      "dependencies": [
+        "K8S-008"
+      ],
+      "_external": true,
+      "_note": "Package géré par CLAUDE_CODE. Marqué completed via coordination centrale après fusion."
+    },
+    {
+      "id": "K8S-024",
+      "title": "Étiqueter les namespaces avec Pod Security Admission",
+      "status": "EXTERNAL",
+      "ide": "CLAUDE_CODE",
+      "source_ide": "CLAUDE_CODE",
+      "exclusive_lane": "",
+      "dependencies": [
+        "K8S-022"
+      ],
+      "_external": true,
+      "_note": "Package géré par CLAUDE_CODE. Marqué completed via coordination centrale après fusion."
+    },
+    {
+      "id": "K8S-023",
+      "title": "Construire un vrai default-deny ingress/egress avec allowlists",
+      "status": "EXTERNAL",
+      "ide": "CLAUDE_CODE",
+      "source_ide": "CLAUDE_CODE",
+      "exclusive_lane": "",
+      "dependencies": [
+        "K8S-024"
+      ],
+      "_external": true,
+      "_note": "Package géré par CLAUDE_CODE. Marqué completed via coordination centrale après fusion."
+    },
+    {
+      "id": "RES-012A",
+      "title": "Définir un schéma de ressources par service et profil",
+      "status": "EXTERNAL",
+      "ide": "CLAUDE_CODE",
+      "source_ide": "CLAUDE_CODE",
+      "exclusive_lane": "",
+      "dependencies": [
+        "ORCH-001"
+      ],
+      "_external": true,
+      "_note": "Package géré par CLAUDE_CODE. Marqué completed via coordination centrale après fusion."
+    },
+    {
+      "id": "RES-012B",
+      "title": "Rendre les ressources K3s depuis le schéma validé",
+      "status": "EXTERNAL",
+      "ide": "CLAUDE_CODE",
+      "source_ide": "CLAUDE_CODE",
+      "exclusive_lane": "",
+      "dependencies": [
+        "RES-012A",
+        "K8S-023"
+      ],
+      "_external": true,
+      "_note": "Package géré par CLAUDE_CODE. Marqué completed via coordination centrale après fusion."
+    },
+    {
+      "id": "PLACE-011",
+      "title": "Valider le placement contre l’inventaire réel avant rendu",
+      "status": "EXTERNAL",
+      "ide": "CLAUDE_CODE",
+      "source_ide": "CLAUDE_CODE",
+      "exclusive_lane": "",
+      "dependencies": [
+        "RES-012B"
+      ],
+      "_external": true,
+      "_note": "Package géré par CLAUDE_CODE. Marqué completed via coordination centrale après fusion."
+    },
+    {
+      "id": "PLACE-026A",
+      "title": "Peupler ServiceSpec.node depuis les choix du planificateur",
+      "status": "EXTERNAL",
+      "ide": "CLAUDE_CODE",
+      "source_ide": "CLAUDE_CODE",
+      "exclusive_lane": "",
+      "dependencies": [
+        "ORCH-001"
+      ],
+      "_external": true,
+      "_note": "Package géré par CLAUDE_CODE. Marqué completed via coordination centrale après fusion."
+    },
+    {
+      "id": "PLACE-026B",
+      "title": "Appliquer le placement par service au rendu et aux diagnostics",
+      "status": "EXTERNAL",
+      "ide": "CLAUDE_CODE",
+      "source_ide": "CLAUDE_CODE",
+      "exclusive_lane": "",
+      "dependencies": [
+        "PLACE-026A",
+        "PLACE-011"
+      ],
+      "_external": true,
+      "_note": "Package géré par CLAUDE_CODE. Marqué completed via coordination centrale après fusion."
+    },
+    {
+      "id": "K8S-027",
+      "title": "Ajouter ResourceQuota et LimitRange au namespace",
+      "status": "EXTERNAL",
+      "ide": "CLAUDE_CODE",
+      "source_ide": "CLAUDE_CODE",
+      "exclusive_lane": "",
+      "dependencies": [
+        "PLACE-026B",
+        "RES-012B"
+      ],
+      "_external": true,
+      "_note": "Package géré par CLAUDE_CODE. Marqué completed via coordination centrale après fusion."
+    },
+    {
+      "id": "ERR-041A",
+      "title": "Créer une redaction centrale pour erreurs, logs et états persistés",
+      "status": "EXTERNAL",
+      "ide": "CODEX",
+      "source_ide": "CODEX",
+      "exclusive_lane": "",
+      "dependencies": [
+        "ORCH-001"
+      ],
+      "_external": true,
+      "_note": "Package géré par CODEX. Marqué completed via coordination centrale après fusion."
+    },
+    {
+      "id": "CLI-013",
+      "title": "Créer une frontière d’erreurs CLI cohérente sans traceback brut",
+      "status": "EXTERNAL",
+      "ide": "CODEX",
+      "source_ide": "CODEX",
+      "exclusive_lane": "",
+      "dependencies": [
+        "ERR-041A"
+      ],
+      "_external": true,
+      "_note": "Package géré par CODEX. Marqué completed via coordination centrale après fusion."
+    },
+    {
+      "id": "CLI-036",
+      "title": "Ajouter timeout, annulation et kill d’arbre au runner loop",
+      "status": "EXTERNAL",
+      "ide": "CODEX",
+      "source_ide": "CODEX",
+      "exclusive_lane": "",
+      "dependencies": [
+        "CLI-013"
+      ],
+      "_external": true,
+      "_note": "Package géré par CODEX. Marqué completed via coordination centrale après fusion."
+    },
+    {
+      "id": "WEB-017",
+      "title": "Définir et appliquer la politique d’accès aux GET sensibles",
+      "status": "EXTERNAL",
+      "ide": "CODEX",
+      "source_ide": "CODEX",
+      "exclusive_lane": "",
+      "dependencies": [
+        "WEB-001"
+      ],
+      "_external": true,
+      "_note": "Package géré par CODEX. Marqué completed via coordination centrale après fusion."
+    },
+    {
+      "id": "WEB-015",
+      "title": "Normaliser les erreurs Web sans fuite d’exception interne",
+      "status": "EXTERNAL",
+      "ide": "CODEX",
+      "source_ide": "CODEX",
+      "exclusive_lane": "",
+      "dependencies": [
+        "WEB-017"
+      ],
+      "_external": true,
+      "_note": "Package géré par CODEX. Marqué completed via coordination centrale après fusion."
+    },
+    {
+      "id": "WEB-016",
+      "title": "Ajouter rate limiting et protection anti-bruteforce",
+      "status": "EXTERNAL",
+      "ide": "CODEX",
+      "source_ide": "CODEX",
+      "exclusive_lane": "",
+      "dependencies": [
+        "WEB-015"
+      ],
+      "_external": true,
+      "_note": "Package géré par CODEX. Marqué completed via coordination centrale après fusion."
+    },
+    {
+      "id": "WEB-034A",
+      "title": "Ajouter en-têtes de sécurité et supprimer la bannière Python",
+      "status": "EXTERNAL",
+      "ide": "CODEX",
+      "source_ide": "CODEX",
+      "exclusive_lane": "",
+      "dependencies": [
+        "WEB-016"
+      ],
+      "_external": true,
+      "_note": "Package géré par CODEX. Marqué completed via coordination centrale après fusion."
+    },
+    {
+      "id": "WEB-034B",
+      "title": "Introduire un mode TLS explicite ou refuser les identifiants sur HTTP réseau",
+      "status": "EXTERNAL",
+      "ide": "CODEX",
+      "source_ide": "CODEX",
+      "exclusive_lane": "",
+      "dependencies": [
+        "WEB-034A"
+      ],
+      "_external": true,
+      "_note": "Package géré par CODEX. Marqué completed via coordination centrale après fusion."
+    },
+    {
+      "id": "PERF-030A",
+      "title": "Ajouter un cache matériel TTL cohérent et invalidable",
+      "status": "EXTERNAL",
+      "ide": "CODEX",
+      "source_ide": "CODEX",
+      "exclusive_lane": "",
+      "dependencies": [
+        "WEB-034B"
+      ],
+      "_external": true,
+      "_note": "Package géré par CODEX. Marqué completed via coordination centrale après fusion."
+    },
+    {
+      "id": "PERF-030B",
+      "title": "Ajouter benchmarks et seuils de non-régression de /api/detect",
+      "status": "EXTERNAL",
+      "ide": "CODEX",
+      "source_ide": "CODEX",
+      "exclusive_lane": "",
+      "dependencies": [
+        "PERF-030A"
+      ],
+      "_external": true,
+      "_note": "Package géré par CODEX. Marqué completed via coordination centrale après fusion."
+    },
+    {
+      "id": "REL-038A",
+      "title": "Persister l’état de préparation avec schéma et écriture atomique",
+      "status": "EXTERNAL",
+      "ide": "CODEX",
+      "source_ide": "CODEX",
+      "exclusive_lane": "",
+      "dependencies": [
+        "PERF-030B"
+      ],
+      "_external": true,
+      "_note": "Package géré par CODEX. Marqué completed via coordination centrale après fusion."
+    },
+    {
+      "id": "REL-038B",
+      "title": "Garantir une seule opération active et une réconciliation idempotente",
+      "status": "EXTERNAL",
+      "ide": "CODEX",
+      "source_ide": "CODEX",
+      "exclusive_lane": "",
+      "dependencies": [
+        "REL-038A"
+      ],
+      "_external": true,
+      "_note": "Package géré par CODEX. Marqué completed via coordination centrale après fusion."
+    },
+    {
+      "id": "REL-038C",
+      "title": "Gérer les process groups et nettoyer les orphelins",
+      "status": "EXTERNAL",
+      "ide": "CODEX",
+      "source_ide": "CODEX",
+      "exclusive_lane": "",
+      "dependencies": [
+        "REL-038B"
+      ],
+      "_external": true,
+      "_note": "Package géré par CODEX. Marqué completed via coordination centrale après fusion."
+    },
+    {
+      "id": "OPS-031D",
+      "title": "Introduire des correlation IDs de bout en bout",
+      "status": "EXTERNAL",
+      "ide": "CODEX",
+      "source_ide": "CODEX",
+      "exclusive_lane": "",
+      "dependencies": [
+        "REL-038C"
+      ],
+      "_external": true,
+      "_note": "Package géré par CODEX. Marqué completed via coordination centrale après fusion."
+    },
+    {
+      "id": "OPS-031A",
+      "title": "Ajouter forgeai status et une API de santé re-sondable",
+      "status": "EXTERNAL",
+      "ide": "CODEX",
+      "source_ide": "CODEX",
+      "exclusive_lane": "",
+      "dependencies": [
+        "OPS-031D"
+      ],
+      "_external": true,
+      "_note": "Package géré par CODEX. Marqué completed via coordination centrale après fusion."
+    },
+    {
+      "id": "OPS-031B",
+      "title": "Ajouter forgeai logs avec limites, filtres et redaction",
+      "status": "EXTERNAL",
+      "ide": "CODEX",
+      "source_ide": "CODEX",
+      "exclusive_lane": "",
+      "dependencies": [
+        "OPS-031A",
+        "ERR-041B",
+        "ERR-041C"
+      ],
+      "_external": true,
+      "_note": "Package géré par CODEX. Marqué completed via coordination centrale après fusion."
+    },
+    {
+      "id": "OPS-031C",
+      "title": "Créer un bundle de diagnostic reproductible et redigé",
+      "status": "EXTERNAL",
+      "ide": "CODEX",
+      "source_ide": "CODEX",
+      "exclusive_lane": "",
+      "dependencies": [
+        "OPS-031B"
+      ],
+      "_external": true,
+      "_note": "Package géré par CODEX. Marqué completed via coordination centrale après fusion."
+    },
+    {
+      "id": "OPS-031E",
+      "title": "Ajouter l’interface opérateur Status/Logs/Diagnostic",
+      "status": "READY_AFTER",
+      "priority": "P2_HIGH",
+      "severity": "S2_MEDIUM",
+      "ide": "COPILOT",
+      "source_ide": "CURSOR",
+      "exclusive_lane": "web-ui",
+      "milestone": "M5-UX-DOCS",
+      "dependencies": [
+        "OPS-031C",
+        "UI-040"
+      ],
+      "branch": "feat/OPS-031E-operator-ui",
+      "allowed_paths": [
+        "src/forgeai/web/assets/app.js",
+        "src/forgeai/web/assets/app.css",
+        "src/forgeai/web/assets/index.html",
+        "tests/test_ui_7_etapes.py",
+        "tests/test_ui_n2b.py",
+        "tests/test_ui_s6b.py",
+        "tests/js/**",
+        "stories/OPS-031E.md",
+        "reviews/OPS-031E/**",
+        "Registres/PATCH-OPS-031E.jsonl"
+      ],
+      "forbidden_paths": [
+        "build/**",
+        "dist/**",
+        "**/__pycache__/**",
+        "src/forgeai/data/catalogue.json"
+      ],
+      "labels": [
+        "type:ux",
+        "type:operability",
+        "lane:web-ui"
+      ],
+      "notes": []
+    },
+    {
+      "id": "HW-009",
+      "title": "Classer les iGPU par identifiants PCI et mémoire utilisable",
+      "status": "EXTERNAL",
+      "ide": "CLAUDE_CODE",
+      "source_ide": "CLAUDE_CODE",
+      "exclusive_lane": "",
+      "dependencies": [
+        "ORCH-001"
+      ],
+      "_external": true,
+      "_note": "Package géré par CLAUDE_CODE. Marqué completed via coordination centrale après fusion."
+    },
+    {
+      "id": "HW-010",
+      "title": "Conserver la présence NVIDIA lorsque nvidia-smi/NVML échoue",
+      "status": "EXTERNAL",
+      "ide": "CLAUDE_CODE",
+      "source_ide": "CLAUDE_CODE",
+      "exclusive_lane": "",
+      "dependencies": [
+        "HW-009"
+      ],
+      "_external": true,
+      "_note": "Package géré par CLAUDE_CODE. Marqué completed via coordination centrale après fusion."
+    },
+    {
+      "id": "HW-037",
+      "title": "Aligner la recommandation AMD/ROCm et supprimer le message mort",
+      "status": "EXTERNAL",
+      "ide": "CLAUDE_CODE",
+      "source_ide": "CLAUDE_CODE",
+      "exclusive_lane": "",
+      "dependencies": [
+        "HW-010",
+        "CLI-036"
+      ],
+      "_external": true,
+      "_note": "Package géré par CLAUDE_CODE. Marqué completed via coordination centrale après fusion."
+    },
+    {
+      "id": "COMPOSE-025",
+      "title": "Durcir les services Compose par défaut",
+      "status": "EXTERNAL",
+      "ide": "CLAUDE_CODE",
+      "source_ide": "CLAUDE_CODE",
+      "exclusive_lane": "",
+      "dependencies": [
+        "ORCH-001"
+      ],
+      "_external": true,
+      "_note": "Package géré par CLAUDE_CODE. Marqué completed via coordination centrale après fusion."
+    },
+    {
+      "id": "HEALTH-028A",
+      "title": "Définir un contrat de santé non-vacu par service",
+      "status": "EXTERNAL",
+      "ide": "CLAUDE_CODE",
+      "source_ide": "CLAUDE_CODE",
+      "exclusive_lane": "",
+      "dependencies": [
+        "ORCH-001"
+      ],
+      "_external": true,
+      "_note": "Package géré par CLAUDE_CODE. Marqué completed via coordination centrale après fusion."
+    },
+    {
+      "id": "HEALTH-028B",
+      "title": "Rendre et exécuter les probes fonctionnelles Compose/K3s",
+      "status": "EXTERNAL",
+      "ide": "CLAUDE_CODE",
+      "source_ide": "CLAUDE_CODE",
+      "exclusive_lane": "",
+      "dependencies": [
+        "HEALTH-028A",
+        "COMPOSE-025",
+        "K8S-027"
+      ],
+      "_external": true,
+      "_note": "Package géré par CLAUDE_CODE. Marqué completed via coordination centrale après fusion."
+    },
+    {
+      "id": "ERR-041B",
+      "title": "Rediger stderr dans les déploiements Compose/K3s et deploy-state",
+      "status": "EXTERNAL",
+      "ide": "CODEX",
+      "source_ide": "CODEX",
+      "exclusive_lane": "",
+      "dependencies": [
+        "ERR-041A",
+        "HEALTH-028B"
+      ],
+      "_external": true,
+      "_note": "Package géré par CODEX. Marqué completed via coordination centrale après fusion."
+    },
+    {
+      "id": "ERR-041C",
+      "title": "Rediger stderr et diagnostics SSH",
+      "status": "EXTERNAL",
+      "ide": "CODEX",
+      "source_ide": "CODEX",
+      "exclusive_lane": "",
+      "dependencies": [
+        "ERR-041A",
+        "SSH-021"
+      ],
+      "_external": true,
+      "_note": "Package géré par CODEX. Marqué completed via coordination centrale après fusion."
+    },
+    {
+      "id": "SUPPLY-018",
+      "title": "Épingler, vérifier et licencier les plugins avant exécution",
+      "status": "EXTERNAL",
+      "ide": "CODEX",
+      "source_ide": "CODEX",
+      "exclusive_lane": "",
+      "dependencies": [
+        "ORCH-001"
+      ],
+      "_external": true,
+      "_note": "Package géré par CODEX. Marqué completed via coordination centrale après fusion."
+    },
+    {
+      "id": "TRUST-019A",
+      "title": "ADR: définir le modèle de menace et la racine de confiance des registres",
+      "status": "DESIGN_FIRST",
+      "priority": "P2_HIGH",
+      "severity": "S2_MEDIUM",
+      "ide": "COPILOT",
+      "source_ide": "VS_CODE",
+      "exclusive_lane": "trust-design",
+      "milestone": "M2-SECURITY",
+      "dependencies": [
+        "ORCH-001"
+      ],
+      "branch": "docs/TRUST-019A-ledger-trust-model",
+      "allowed_paths": [
+        "CANON/**",
+        "Docs/**",
+        "stories/TRUST-019A.md",
+        "reviews/TRUST-019A/**",
+        "Registres/PATCH-TRUST-019A.jsonl"
+      ],
+      "forbidden_paths": [
+        "build/**",
+        "dist/**",
+        "**/__pycache__/**",
+        "src/forgeai/data/catalogue.json"
+      ],
+      "labels": [
+        "type:architecture",
+        "type:security",
+        "lane:trust-design"
+      ],
+      "notes": [
+        "Aucun HMAC ou chmod improvisé avant décision."
+      ]
+    },
+    {
+      "id": "TRUST-019B",
+      "title": "Implémenter signatures/checkpoints selon l’ADR de confiance",
+      "status": "EXTERNAL",
+      "ide": "CLAUDE_CODE",
+      "source_ide": "CLAUDE_CODE",
+      "exclusive_lane": "",
+      "dependencies": [
+        "TRUST-019A"
+      ],
+      "_external": true,
+      "_note": "Package géré par CLAUDE_CODE. Marqué completed via coordination centrale après fusion."
+    },
+    {
+      "id": "SECRET-020A",
+      "title": "ADR T3: modèle de permission et unseal OpenBao",
+      "status": "DESIGN_FIRST",
+      "priority": "P2_HIGH",
+      "severity": "S2_MEDIUM",
+      "ide": "COPILOT",
+      "source_ide": "VS_CODE",
+      "exclusive_lane": "openbao-permission-design",
+      "milestone": "M2-SECURITY",
+      "dependencies": [
+        "ORCH-001"
+      ],
+      "branch": "docs/SECRET-020A-openbao-unseal-permissions",
+      "allowed_paths": [
+        "CANON/**",
+        "Docs/**",
+        "stories/SECRET-020A.md",
+        "reviews/SECRET-020A/**",
+        "Registres/PATCH-SECRET-020A.jsonl"
+      ],
+      "forbidden_paths": [
+        "build/**",
+        "dist/**",
+        "**/__pycache__/**",
+        "src/forgeai/data/catalogue.json"
+      ],
+      "labels": [
+        "type:architecture",
+        "type:security",
+        "lane:openbao-permission-design"
+      ],
+      "notes": [
+        "Finding design-sensitive; ne pas appliquer chmod 0600 naïvement."
+      ]
+    },
+    {
+      "id": "SECRET-020B",
+      "title": "Appliquer le modèle de permission OpenBao approuvé",
+      "status": "EXTERNAL",
+      "ide": "CLAUDE_CODE",
+      "source_ide": "CLAUDE_CODE",
+      "exclusive_lane": "",
+      "dependencies": [
+        "SECRET-020A",
+        "DATA-003"
+      ],
+      "_external": true,
+      "_note": "Package géré par CLAUDE_CODE. Marqué completed via coordination centrale après fusion."
+    },
+    {
+      "id": "REG-029A",
+      "title": "Définir la complétude structurée des registres",
+      "status": "EXTERNAL",
+      "ide": "CODEX",
+      "source_ide": "CODEX",
+      "exclusive_lane": "",
+      "dependencies": [
+        "ORCH-001"
+      ],
+      "_external": true,
+      "_note": "Package géré par CODEX. Marqué completed via coordination centrale après fusion."
+    },
+    {
+      "id": "REG-029B",
+      "title": "Ancrer les checkpoints et détecter rollback/troncature",
+      "status": "EXTERNAL",
+      "ide": "CODEX",
+      "source_ide": "CODEX",
+      "exclusive_lane": "",
+      "dependencies": [
+        "REG-029A",
+        "TRUST-019B"
+      ],
+      "_external": true,
+      "_note": "Package géré par CODEX. Marqué completed via coordination centrale après fusion."
+    },
+    {
+      "id": "UI-039",
+      "title": "Rendre les étapes UI basées sur des preuves, jamais sur la position",
+      "status": "READY_AFTER",
+      "priority": "P3_MEDIUM",
+      "severity": "S3_LOW",
+      "ide": "COPILOT",
+      "source_ide": "CURSOR",
+      "exclusive_lane": "web-ui",
+      "milestone": "M5-UX",
+      "dependencies": [
+        "ORCH-001"
+      ],
+      "branch": "fix/UI-039-evidence-backed-step-state",
+      "allowed_paths": [
+        "src/forgeai/web/assets/app.js",
+        "src/forgeai/web/assets/app.css",
+        "tests/test_ui_7_etapes.py",
+        "tests/test_ui_s6b.py",
+        "tests/test_web_deploy.py",
+        "stories/UI-039.md",
+        "reviews/UI-039/**",
+        "Registres/PATCH-UI-039.jsonl"
+      ],
+      "forbidden_paths": [
+        "build/**",
+        "dist/**",
+        "**/__pycache__/**",
+        "src/forgeai/data/catalogue.json"
+      ],
+      "labels": [
+        "type:ux",
+        "type:reliability",
+        "lane:web-ui"
+      ],
+      "notes": []
+    },
+    {
+      "id": "UI-040",
+      "title": "Compléter l’accessibilité de l’interface Web",
+      "status": "READY_AFTER",
+      "priority": "P3_MEDIUM",
+      "severity": "S3_LOW",
+      "ide": "COPILOT",
+      "source_ide": "CURSOR",
+      "exclusive_lane": "web-ui",
+      "milestone": "M5-UX",
+      "dependencies": [
+        "UI-039"
+      ],
+      "branch": "fix/UI-040-web-accessibility",
+      "allowed_paths": [
+        "src/forgeai/web/assets/index.html",
+        "src/forgeai/web/assets/app.css",
+        "src/forgeai/web/assets/app.js",
+        "tests/test_ui_7_etapes.py",
+        "tests/test_ui_n2b.py",
+        "tests/test_web_i18n.py",
+        "stories/UI-040.md",
+        "reviews/UI-040/**",
+        "Registres/PATCH-UI-040.jsonl"
+      ],
+      "forbidden_paths": [
+        "build/**",
+        "dist/**",
+        "**/__pycache__/**",
+        "src/forgeai/data/catalogue.json"
+      ],
+      "labels": [
+        "type:accessibility",
+        "type:ux",
+        "lane:web-ui"
+      ],
+      "notes": []
+    },
+    {
+      "id": "CAP-033A",
+      "title": "Aligner les claims GPU sur les preuves réellement disponibles",
+      "status": "READY_AFTER",
+      "priority": "P2_HIGH",
+      "severity": "S2_MEDIUM",
+      "ide": "COPILOT",
+      "source_ide": "CURSOR",
+      "exclusive_lane": "capability-docs",
+      "milestone": "M5-DOCS",
+      "dependencies": [
+        "HW-037"
+      ],
+      "branch": "docs/CAP-033A-gpu-claims-evidence",
+      "allowed_paths": [
+        "README.md",
+        "AGENTS.md",
+        "MASTER-PLAN.md",
+        "CANON/ETAT-SYSTEME.md",
+        "CANON/exigences-produit.md",
+        "Docs/README.md",
+        "Docs/reference/**",
+        "tests/test_docs_consistency.py",
+        "stories/CAP-033A.md",
+        "reviews/CAP-033A/**",
+        "Registres/PATCH-CAP-033A.jsonl"
+      ],
+      "forbidden_paths": [
+        "build/**",
+        "dist/**",
+        "**/__pycache__/**",
+        "src/forgeai/data/catalogue.json"
+      ],
+      "labels": [
+        "type:documentation",
+        "type:capability-gap",
+        "lane:capability-docs"
+      ],
+      "notes": []
+    },
+    {
+      "id": "LAB-033N",
+      "title": "Qualifier le chemin NVIDIA de bout en bout en laboratoire",
+      "status": "EXTERNAL",
+      "ide": "CLAUDE_CODE",
+      "source_ide": "CLAUDE_CODE",
+      "exclusive_lane": "",
+      "dependencies": [
+        "CAP-033A"
+      ],
+      "_external": true,
+      "_note": "Package géré par CLAUDE_CODE. Marqué completed via coordination centrale après fusion."
+    },
+    {
+      "id": "LAB-033A",
+      "title": "Qualifier le chemin AMD de bout en bout en laboratoire",
+      "status": "EXTERNAL",
+      "ide": "CLAUDE_CODE",
+      "source_ide": "CLAUDE_CODE",
+      "exclusive_lane": "",
+      "dependencies": [
+        "CAP-033A"
+      ],
+      "_external": true,
+      "_note": "Package géré par CLAUDE_CODE. Marqué completed via coordination centrale après fusion."
+    },
+    {
+      "id": "LAB-033I",
+      "title": "Qualifier le chemin Intel de bout en bout en laboratoire",
+      "status": "EXTERNAL",
+      "ide": "CLAUDE_CODE",
+      "source_ide": "CLAUDE_CODE",
+      "exclusive_lane": "",
+      "dependencies": [
+        "CAP-033A"
+      ],
+      "_external": true,
+      "_note": "Package géré par CLAUDE_CODE. Marqué completed via coordination centrale après fusion."
+    },
+    {
+      "id": "DOC-032",
+      "title": "Réconcilier toute la documentation publique avec l’état prouvé",
+      "status": "READY_AFTER",
+      "priority": "P2_HIGH",
+      "severity": "S2_MEDIUM",
+      "ide": "COPILOT",
+      "source_ide": "CURSOR",
+      "exclusive_lane": "documentation",
+      "milestone": "M5-DOCS",
+      "dependencies": [
+        "CAP-033A",
+        "OPS-031E",
+        "UI-040"
+      ],
+      "branch": "docs/DOC-032-product-truth-alignment",
+      "allowed_paths": [
+        "README.md",
+        "AGENTS.md",
+        "MASTER-PLAN.md",
+        "CLAUDE.md",
+        "Docs/**",
+        "CANON/**",
+        "tests/test_docs_consistency.py",
+        "scripts/gate_docs.py",
+        "stories/DOC-032.md",
+        "reviews/DOC-032/**",
+        "Registres/PATCH-DOC-032.jsonl"
+      ],
+      "forbidden_paths": [
+        "build/**",
+        "dist/**",
+        "**/__pycache__/**",
+        "src/forgeai/data/catalogue.json"
+      ],
+      "labels": [
+        "type:documentation",
+        "type:product-truth",
+        "lane:documentation"
+      ],
+      "notes": []
+    },
+    {
+      "id": "SAST-042",
+      "title": "Trier les signaux SAST résiduels sans créer un patch omnibus",
+      "status": "TRIAGE_ONLY",
+      "priority": "P4_LOW",
+      "severity": "S3_LOW",
+      "ide": "COPILOT",
+      "source_ide": "VS_CODE",
+      "exclusive_lane": "governance",
+      "milestone": "M7-TRIAGE",
+      "dependencies": [
+        "ORCH-001"
+      ],
+      "branch": "audit/SAST-042-residual-triage",
+      "allowed_paths": [
+        "AUDIT-OUTPUT/**",
+        "Docs/audit/**",
+        "stories/SAST-042.md",
+        "reviews/SAST-042/**",
+        "Registres/PATCH-SAST-042.jsonl"
+      ],
+      "forbidden_paths": [
+        "build/**",
+        "dist/**",
+        "**/__pycache__/**",
+        "src/forgeai/data/catalogue.json"
+      ],
+      "labels": [
+        "type:security",
+        "type:triage",
+        "lane:governance"
+      ],
+      "notes": [
+        "Cette branche ne doit jamais devenir une branche omnibus de corrections."
+      ]
+    }
+  ]
+}

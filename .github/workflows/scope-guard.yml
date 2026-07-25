@@ -1,0 +1,28 @@
+name: scope-guard
+
+on:
+  pull_request:
+  merge_group:
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  coordination-validation:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Valider la coordination multi-IDE (claims, lanes, deps)
+        run: python3 scripts/coordination/validate_coordination.py
+
+  scope-guard:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Vérifier que les fichiers modifiés sont dans l'allowlist du claim de CETTE PR
+        env:
+          GITHUB_HEAD_REF: ${{ github.head_ref }}
+        run: python3 scripts/coordination/scope_guard.py
