@@ -143,6 +143,24 @@
         "dossier": "reviews/HEALTH-028A",
         "note": "ADR contrat de sante non-vacu (DESIGN_FIRST, FAI-U-028). APPROVE 3/3 au 3e tour (hallucination vault.py refutee au tour 1, 4 objections integrees au tour 2). Debloque HEALTH-028B (impl)."
       }
+    },
+    {
+      "package": "HW-009",
+      "merge_commit": "f1dc27e1f8268d0081cb67798da35d6e43de448e",
+      "pr_number": 172,
+      "merged_at": "2026-07-25T13:36:59Z",
+      "review": {
+        "result": "APPROVE",
+        "ratio": "3/3",
+        "vendors": [
+          "google",
+          "qwen3.6-40b",
+          "deepseek"
+        ],
+        "prompt_sha256": "e4fd911b0464f8fd14352e8c630119176a1c64d6ca70fc1936ce24498ff1a4d8",
+        "dossier": "reviews/HW-009",
+        "note": "Classification iGPU par identifiant PCI (P1, FAI-U-009). APPROVE 3/3, 0 objection. iGPU AMD [1002:13c0] plus promu en dGPU ; garde dGPU discret [1002:744c]. Debloque HW-010."
+      }
     }
   ]
 }
