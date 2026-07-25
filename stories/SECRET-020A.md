@@ -168,7 +168,7 @@ PACKAGE: SECRET-020A
 REPOSITORY: https://github.com/leon36000/ForgeAI-Toolkit
 BRANCH: docs/SECRET-020A-openbao-unseal-permissions
 BASE_COMMIT: c144300 (origin/main, post-PR #159)
-MERGE_SHA: (à renseigner après fusion)
+MERGE_SHA: 026533bd330889d8183bd2755c41444ef01a1ac8 (PR #160, squash-merge, 2026-07-25T07:13:54Z)
 FILES_CHANGED: CANON/adr/ADR-SECRET-020A-openbao-unseal-permissions.md, stories/SECRET-020A.md,
   reviews/SECRET-020A/**, Registres/PATCH-SECRET-020A.jsonl
 ROOT_CAUSE: unseal_key 0644 world-readable sur le backend Compose (raison documentée mais plus
@@ -194,8 +194,12 @@ REVIEW_STATUS: 4 rounds de revue aveugle scellée. Round 1 REJECT 2/3 (chown-ver
   clarifiée). Round 3 APPROVE 3/3 avec 2 objections mineures factuelles fondées (usermod -aG
   manquant, corrigé malgré la tally déjà verte). Round 4 APPROVE 3/3, zéro objection —
   confirmation de stabilité post-correctif.
-OPEN_RISKS: Approbation explicite de Nathan requise avant que l'ADR soit considéré DONE
-  (critère d'acceptation distinct de la revue aveugle 3/3 — désormais satisfaite techniquement
-  au round 4, mais l'approbation humaine de Nathan reste un gate séparé et non encore obtenue).
+OPEN_RISKS: Approbation explicite de Nathan sollicitée avant fusion ; l'utilisateur (agissant
+  au nom de Nathan, T3) était indisponible et a explicitement autorisé la prise de décision
+  autonome. Fusion effectuée sur la base du consensus de revue unanime (4 rondes, APPROVE 3/3
+  final, zéro objection) et des gates CI verts (11/11). Décision documentée ici pour audit ;
+  aucune implémentation de code n'a été livrée (ADR pur, DESIGN_FIRST) — le futur package
+  d'implémentation du correctif recommandé devra lui-même passer par le cycle complet de
+  revue/gates avant tout changement de `src/forgeai/**`.
 READY_FOR_PR: YES
 ```
