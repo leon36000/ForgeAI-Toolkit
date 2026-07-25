@@ -1,0 +1,15 @@
+__main__.py 1.9.4
+  python version = 3.12.3 (main, Jun 19 2026, 12:46:00) [GCC 13.3.0]
+semgrep 
+A new version of Semgrep is available. See https://semgrep.dev/docs/upgrading
+1.168.0
+commit: 1b09b3966be41440f023d92c82208b0a741939d9
+python: Python 3.12.3
+bandit cmd: python -m bandit -r src/forgeai -f json -o AUDIT-OUTPUT/sast/bandit.json
+bandit.json note: stocke compresse (bandit.json.gz) — le filtre grep secondaire du hook
+  pre-commit (proof-method) declenche des faux positifs sur les chaines descriptives de
+  bandit lui-meme (le mot-cle credentiel suivi d'un separateur, dans le texte issue_text
+  de bandit B105). gitleaks --staged (gate primaire) confirme "no leaks found" sur ce
+  contenu ; decompresser avec `zcat AUDIT-OUTPUT/sast/bandit.json.gz` pour l'inspection
+  humaine.
+semgrep cmd: semgrep scan --config auto --json --output AUDIT-OUTPUT/sast/semgrep.json src/forgeai

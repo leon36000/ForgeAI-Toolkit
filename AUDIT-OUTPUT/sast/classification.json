@@ -1,0 +1,300 @@
+{
+  "package": "SAST-042",
+  "base_commit": "1b09b3966be41440f023d92c82208b0a741939d9",
+  "scanners": {
+    "bandit": "1.9.4",
+    "semgrep": "1.168.0"
+  },
+  "totals": {
+    "bandit_results": 37,
+    "semgrep_results": 23,
+    "total_signals": 60,
+    "signals_covered_by_clusters": 60
+  },
+  "clusters": [
+    {
+      "cluster_id": "SAST-042-C1",
+      "rules": [
+        "bandit:B310",
+        "semgrep:python.lang.security.audit.dynamic-urllib-use-detected"
+      ],
+      "signal_count": 20,
+      "sites": [
+        [
+          "src/forgeai/audit/immudb.py",
+          40
+        ],
+        [
+          "src/forgeai/deploy/compose.py",
+          48
+        ],
+        [
+          "src/forgeai/models/local.py",
+          60
+        ],
+        [
+          "src/forgeai/models/probe.py",
+          30
+        ],
+        [
+          "src/forgeai/observability/langfuse.py",
+          30
+        ],
+        [
+          "src/forgeai/rag/client.py",
+          20
+        ],
+        [
+          "src/forgeai/rag/client.py",
+          29
+        ],
+        [
+          "src/forgeai/rag/hardened.py",
+          30
+        ],
+        [
+          "src/forgeai/secrets/openbao_init.py",
+          66
+        ],
+        [
+          "src/forgeai/secrets/vault.py",
+          36
+        ]
+      ],
+      "status": "DUPLICATE+ACCEPTED_RISK",
+      "root_cause": "Usage legitime de urllib.request.urlopen pour appeler des services internes/auto-heberges configures par l'operateur (Ollama, Qdrant, TEI, Langfuse, OpenBao/Vault, immudb, gateway modeles cloud) ou pour telecharger un modele depuis une download_url du catalogue verifie (948 briques), ou un health-check docker compose. Aucune de ces URLs n'est controlee par une entree utilisateur non fiable exposee sur le reseau : elles proviennent de la configuration locale de l'operateur (routes.json, gateway set-url, catalogue.json embarque) — meme frontiere de confiance que l'operateur lui-meme.",
+      "evidence": "Trace des appelants effectuee site par site (10/10) : models/local.py:93 (model.download_url issu du catalogue), models/probe.py:74 (base_url configure via `forgeai route configure`), rag/client.py + rag/hardened.py (ollama_url/qdrant_url/tei_url passes au constructeur par la config locale), secrets/vault.py + secrets/openbao_init.py (base_url Vault/OpenBao local), observability/langfuse.py (base_url Langfuse local), audit/immudb.py (URL immudb local), deploy/compose.py:48 http_ok (health-check sur l'URL du service qu'on vient de deployer soi-meme). 3 sites deja documentes avec `# noqa: S310 — URL locale/LAN du socle` (immudb.py, langfuse.py, secrets/vault.py).",
+      "duplicate_note": "Meme 10 sites signales par bandit (B310) ET semgrep (dynamic-urllib) — 1 seul root cause par site, 2 outils.",
+      "confirms_prior_finding": "FAI-U-042 (ACCEPTED_EVIDENCE) reste valide sur le commit actuel : aucun site nouveau, aucune regression."
+    },
+    {
+      "cluster_id": "SAST-042-C2",
+      "rules": [
+        "semgrep:python.lang.security.audit.insecure-file-permissions"
+      ],
+      "signal_count": 4,
+      "sites": [
+        [
+          "src/forgeai/bootstrap/secrets.py",
+          35
+        ],
+        [
+          "src/forgeai/deploy/openbao_flow.py",
+          92
+        ],
+        [
+          "src/forgeai/models/vault.py",
+          106
+        ],
+        [
+          "src/forgeai/network/keys.py",
+          25
+        ]
+      ],
+      "status": "FALSE_POSITIVE",
+      "root_cause": "La regle semgrep recommande generiquement 0o644 (lecture pour tous) comme 'plus sur' que 0o700/0o711. Pour les 4 sites concernes, les chemins sont des REPERTOIRES DE SECRETS (bootstrap/secrets.py:35 = dossier .env/clefs ; deploy/openbao_flow.py:92 = dossier de l'unseal_key OpenBao ; models/vault.py:106 = dossier du coffre modeles chiffre ; network/keys.py:25 = dossier des cles ed25519 privees). Appliquer la suggestion de la regle (0o644) rendrait ces repertoires LISIBLES PAR TOUS LES UTILISATEURS DU SYSTEME, ce qui serait une REGRESSION DE SECURITE, pas une correction. Les permissions restrictives actuelles (0o700 = proprietaire seul ; 0o711 = traversable mais non listable, documente et justifie en commentaire) sont le comportement correct et deja durci.",
+      "evidence": "openbao_flow.py:92 documente explicitement le choix 0o711 avec commentaire de risque accepte et `# nosec B103`. models/vault.py:106 et network/keys.py:25 utilisent 0o700 pour des repertoires contenant respectivement le coffre de cles API et les cles ed25519 privees — 0o700 est la pratique standard OpenSSH/GPG pour ce type de repertoire."
+    },
+    {
+      "cluster_id": "SAST-042-C3",
+      "rules": [
+        "semgrep:python.lang.compatibility.python37.python37-compatibility-importlib2"
+      ],
+      "signal_count": 9,
+      "sites": [
+        [
+          "src/forgeai/cli.py",
+          12
+        ],
+        [
+          "src/forgeai/cli.py",
+          207
+        ],
+        [
+          "src/forgeai/cli.py",
+          291
+        ],
+        [
+          "src/forgeai/engines.py",
+          10
+        ],
+        [
+          "src/forgeai/network/discover.py",
+          8
+        ],
+        [
+          "src/forgeai/planner/assemble.py",
+          9
+        ],
+        [
+          "src/forgeai/resources.py",
+          10
+        ],
+        [
+          "src/forgeai/web/server.py",
+          4
+        ],
+        [
+          "src/forgeai/web/server.py",
+          162
+        ]
+      ],
+      "status": "FALSE_POSITIVE",
+      "root_cause": "Regle de compatibilite semgrep ciblant Python 3.7 (verifie que importlib.resources est utilise avec l'API historique 3.7). Le projet declare `requires-python = \">=3.10\"` dans pyproject.toml — la compatibilite Python 3.7 n'est pas un objectif du produit. Regle non pertinente pour ce depot (activee automatiquement par `--config auto`, pas selectionnee manuellement).",
+      "evidence": "pyproject.toml ligne 11 : requires-python = \">=3.10\"."
+    },
+    {
+      "cluster_id": "SAST-042-C4",
+      "rules": [
+        "bandit:B105"
+      ],
+      "signal_count": 3,
+      "sites": [
+        [
+          "src/forgeai/cli.py",
+          64
+        ],
+        [
+          "src/forgeai/cli.py",
+          70
+        ],
+        [
+          "src/forgeai/cli.py",
+          378
+        ]
+      ],
+      "status": "FALSE_POSITIVE(x2)+ACCEPTED_RISK(x1)",
+      "root_cause": "cli.py:64 `VAULT_SECRET_PATH = \"forgeai/litellm\"` est un CHEMIN KV OpenBao, pas un mot de passe (FALSE_POSITIVE — heuristique bandit sur nom de variable contenant un mot-cle). cli.py:378 `openbao_app_token = \"\"` est une initialisation a chaine vide avant emission du vrai token au bootstrap (FALSE_POSITIVE — pas de secret code en dur, valeur vide). cli.py:70 `IMMUDB_PASSWORD = \"immudb\"` est le mot de passe PUBLIC par defaut d'immudb en mode dev (documente mondialement par le projet immudb), deja annote `# noqa: S105 proof:allow — defaut PUBLIC immudb (dev), pas un secret` — accepte comme risque documente (ACCEPTED_RISK), le durcissement production etant hors perimetre E3c.",
+      "evidence": "Lignes 60-70 de cli.py lues integralement ; commentaires de justification presents en ligne pour immudb."
+    },
+    {
+      "cluster_id": "SAST-042-C5",
+      "rules": [
+        "bandit:B105"
+      ],
+      "signal_count": 1,
+      "sites": [
+        [
+          "src/forgeai/renderers/k3s.py",
+          27
+        ]
+      ],
+      "status": "FALSE_POSITIVE",
+      "root_cause": "`_SECRET_NAME = \"forgeai-secrets\"` est le NOM d'un objet Kubernetes Secret (identifiant), pas une valeur de mot de passe. Heuristique bandit sur le nom de variable.",
+      "evidence": "renderers/k3s.py ligne 27, contexte complet lu (allowlist de service_type documentee juste au-dessus)."
+    },
+    {
+      "cluster_id": "SAST-042-C6",
+      "rules": [
+        "bandit:B404",
+        "bandit:B603",
+        "bandit:B607"
+      ],
+      "signal_count": 19,
+      "sites": [
+        [
+          "src/forgeai/cli.py",
+          1062
+        ],
+        [
+          "src/forgeai/cli.py",
+          1066
+        ],
+        [
+          "src/forgeai/core/runner.py",
+          9
+        ],
+        [
+          "src/forgeai/core/runner.py",
+          28
+        ],
+        [
+          "src/forgeai/deploy/compose.py",
+          8
+        ],
+        [
+          "src/forgeai/deploy/compose.py",
+          22
+        ],
+        [
+          "src/forgeai/deploy/k3s.py",
+          8
+        ],
+        [
+          "src/forgeai/deploy/k3s.py",
+          15
+        ],
+        [
+          "src/forgeai/deploy/openbao_flow.py",
+          13
+        ],
+        [
+          "src/forgeai/deploy/openbao_flow.py",
+          104
+        ],
+        [
+          "src/forgeai/network/node_add.py",
+          3
+        ],
+        [
+          "src/forgeai/network/node_add.py",
+          48
+        ],
+        [
+          "src/forgeai/network/node_add.py",
+          64
+        ],
+        [
+          "src/forgeai/network/remote_probe.py",
+          7
+        ],
+        [
+          "src/forgeai/network/remote_probe.py",
+          46
+        ],
+        [
+          "src/forgeai/web/server.py",
+          9
+        ],
+        [
+          "src/forgeai/web/server.py",
+          960
+        ]
+      ],
+      "status": "ACCEPTED_RISK",
+      "root_cause": "ForgeAI est un outil d'orchestration/deploiement qui doit legitimement invoquer docker, kubectl, ssh et ssh-copy-id. Les 19 signaux (B404 informational x8, B603 x9, B607 x2) couvrent 9 fichiers. Verification site par site : TOUS les appels utilisent la forme LISTE de subprocess.run/Popen (jamais shell=True, jamais de concatenation de chaine shell). network/node_add.py (ssh-copy-id/ssh) et network/remote_probe.py recoivent ip/user/passwd depuis la configuration operateur du wizard d'ajout de noeud (limite de confiance = l'operateur du cluster, pas un tiers non authentifie). deploy/openbao_flow.py:104 documente explicitement l'invariant 'jamais de secret en argv, visible via ps' (secrets transitent par STDIN/kubectl get). web/server.py:960 construit cmd a partir d'un fichier JSON de selection valide, pas d'une chaine shell brute. B607 (chemin partiel 'docker'/'kubectl') est le comportement standard attendu pour des CLI de conteneurisation dependant du PATH de l'operateur — un chemin absolu casserait la portabilite multi-distribution.",
+      "evidence": "9 fichiers inspectes integralement : deploy/compose.py, deploy/k3s.py, deploy/openbao_flow.py, core/runner.py, network/node_add.py, network/remote_probe.py, web/server.py, cli.py (_loop_run). Aucun shell=True trouve dans src/forgeai (grep confirmatoire)."
+    },
+    {
+      "cluster_id": "SAST-042-C7",
+      "rules": [
+        "bandit:B110"
+      ],
+      "signal_count": 4,
+      "sites": [
+        [
+          "src/forgeai/web/server.py",
+          258
+        ],
+        [
+          "src/forgeai/web/server.py",
+          280
+        ],
+        [
+          "src/forgeai/web/server.py",
+          987
+        ],
+        [
+          "src/forgeai/web/server.py",
+          1085
+        ]
+      ],
+      "status": "ACCEPTED_RISK",
+      "root_cause": "4 sites dans web/server.py : nettoyage best-effort d'un fichier temporaire orphelin, mise a jour d'un etat de deploiement en memoire sous verrou (bookkeeping non critique), nettoyage d'un sous-processus deja termine (kill/wait defensif), et ouverture best-effort du navigateur (confort UX). Aucun de ces 4 sites n'avale une exception liee a l'authentification, l'autorisation ou la validation d'entree — ce sont des chemins de resilience operationnelle ou un echec ne doit jamais faire planter le serveur. Amelioration possible non bloquante : journaliser l'exception plutot que `pass` silencieux (qualite, pas securite).",
+      "evidence": "4 sites lus avec 4-7 lignes de contexte avant/apres chacun."
+    }
+  ],
+  "confirmed_requiring_new_issue": [],
+  "conclusion": "Aucun signal CONFIRMED necessitant une correction de code. Repartition : 1 cluster DUPLICATE+ACCEPTED_RISK (20 signaux, 10 sites, 2 outils), 2 clusters FALSE_POSITIVE (13 signaux : 4 insecure-file-permissions + 9 python37-compat), 1 cluster mixte FALSE_POSITIVE/ACCEPTED_RISK (3 signaux B105 cli.py), 1 cluster FALSE_POSITIVE (1 signal B105 k3s.py), 2 clusters ACCEPTED_RISK (19 signaux subprocess-family + 4 signaux try/except/pass). FAI-U-042 (statut ACCEPTED_EVIDENCE) est confirme toujours valide sur le commit courant : aucune regression, aucun site nouveau par rapport a la description originale du finding.",
+  "sonarqube_pro": "Non disponible depuis cet environnement (projet SonarCloud prive, aucun token d'API accessible ici). Le check CI 'SonarCloud Code Analysis' existant reste la source de verite et est vert sur origin/main. A incorporer si un acces est fourni ulterieurement — non bloquant selon le texte de l'issue ('des que disponibles')."
+}
