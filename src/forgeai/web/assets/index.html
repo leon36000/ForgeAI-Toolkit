@@ -7,6 +7,10 @@
   <link rel="stylesheet" href="app.css">
 </head>
 <body>
+  <a href="#app" class="skip-link">
+    <span class="skip-link-fr">Aller au contenu principal</span>
+    <span class="skip-link-en">Skip to main content</span>
+  </a>
   <header class="app-header">
     <div class="brand">
       <span class="brand-mark" aria-hidden="true">⬢</span>
@@ -38,7 +42,7 @@
       <button class="step-item" data-step="7"><span class="step-num">7</span><span class="step-name" data-i18n="step_deploy">Déploiement</span></button>
     </nav>
 
-    <main id="app">
+    <main id="app" tabindex="-1">
       <!-- Étape 1 : Matériel -->
       <section id="hardware" class="step-panel" data-step-panel="1">
         <h2 data-i18n="hardware_title">Matériel détecté</h2>

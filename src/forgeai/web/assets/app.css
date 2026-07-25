@@ -8,6 +8,10 @@
   --muted: #586069;
   --code-bg: #f0f1f3;
   --shadow: rgba(0, 0, 0, 0.08);
+  /* FAI-U-040 : rouge d'erreur distinct de --accent, choisi pour >= 4.5:1 (WCAG AA texte
+     normal) sur --bg (#f4f5f7, 5.23:1) et --card-bg (#ffffff, 5.71:1). La couleur d'erreur
+     précédente n'atteignait que ~3.4-3.7:1 sur ces fonds (borderline AA, cf. audit FAI-U-040). */
+  --error: #C4291A;
 }
 
 [data-theme="dark"] {
@@ -20,6 +24,50 @@
   --muted: #8b949e;
   --code-bg: #21262d;
   --shadow: rgba(0, 0, 0, 0.25);
+  /* >= 4.5:1 sur --bg (#0d1117, 5.65:1) et --card-bg (#161b22, 5.16:1). */
+  --error: #f85149;
+}
+
+/* FAI-U-040 : skip-link — premier élément focusable au clavier, invisible tant qu'il n'a
+   pas le focus, mène directement au contenu principal (#app) sans passer par tout l'en-tête. */
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  z-index: 1000;
+  padding: 0.6rem 1rem;
+  background: var(--accent);
+  color: #fff;
+  border-radius: 0 0 6px 0;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.skip-link:focus {
+  left: 0;
+}
+
+/* Bascule bilingue du libellé du skip-link sans dictionnaire JS embarqué (invariant
+   test_ui_n2b.py::test_pas_de_dico_embarque) : les deux langues sont présentes en markup,
+   la bascule est purement CSS pilotée par html[lang], déjà maintenu par setLang(). */
+html[lang="en"] .skip-link .skip-link-fr,
+.skip-link .skip-link-en {
+  display: none;
+}
+
+html[lang="en"] .skip-link .skip-link-en {
+  display: inline;
+}
+
+/* FAI-U-040 : prefers-reduced-motion — neutralise les animations/transitions non
+   essentielles pour les utilisateurs ayant activé ce réglage système. */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 
 * {
@@ -241,7 +289,7 @@ code {
 }
 
 .error {
-  color: var(--accent);
+  color: var(--error);
 }
 
 @media (max-width: 640px) {
@@ -325,7 +373,7 @@ code {
 .form-note { font-size: 12px; opacity: .7; margin: 10px 0 6px; }
 .form-actions { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
 .form-status { font-size: 12.5px; }
-.form-status.error { color: #E5533D; }
+.form-status.error { color: var(--error); }
 
 /* ---------- Résumé & Déploiement (B-02e) ---------- */
 .deploy-log {
