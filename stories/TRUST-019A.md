@@ -69,10 +69,44 @@
     fichier `src/forgeai/**` modifié** (conforme au mandat `DESIGN_FIRST`).
 11. Gates exécutés : `no_stub_scan.py --all` OK, `gitleaks detect` (aucune fuite),
     `git diff --stat origin/main -- src/forgeai/` (vide).
-12. **Revue aveugle scellée** — voir `reviews/TRUST-019A/civ/` pour le détail complet des
-    verdicts scellés du round 1 (recommandation non-liante ; l'approbation finale requise reste
-    celle de Nathan, distincte du consensus des reviewers, per `ISSUES/TRUST-019A.md` : « Nathan
-    approuve avant TRUST-019B/REG-029B »).
+12. **Revue aveugle scellée round 1** (`reviews/TRUST-019A/civ/*.verdict.json`,
+    `prompt_sha256=fbd6394e5110bd15acfbc32286072cd6f92ae3f8f2df2ecdbb7322d6df97dde8`) :
+    **REJECT tally (2/3 APPROVE, 1 REJECT)**. `DeepSeek-V4-Pro` a soulevé une objection
+    `majeure` : `reviews/TRUST-019A/civ/*.verdict.json` et `Registres/PATCH-TRUST-019A.jsonl`
+    sont référencés dans `FILES_CHANGED` du rapport final mais absents du diff soumis à la
+    revue. `Gemini-3.1-Pro` et `LongCat-2.0` : APPROVE, zéro objection. Proof appended au ledger
+    (`Registres/PATCH-TRUST-019A.jsonl`, seq 1). **Root cause identique à celle déjà rencontrée
+    et résolue pour `SECRET-020A` round 2** : ces fichiers sont délibérément exclus du diff
+    transmis au pack de revue (`git diff origin/main...HEAD -- CANON/ stories/TRUST-019A.md`)
+    car ce sont les artefacts de preuve du PROCESSUS de revue lui-même (verdicts scellés +
+    ledger horodaté qui les référence), pas des artefacts de CONCEPTION à juger — les inclure
+    créerait une auto-révision circulaire. Corrigé en ajoutant la note explicative ci-dessous
+    (§ Note sur le périmètre du diff), sans changer l'approche de construction du diff. Un
+    round 2 de confirmation a été lancé après cet ajout.
+13. **Revue aveugle scellée round 2** — voir `reviews/TRUST-019A/civ2/*.verdict.json` pour le
+    détail complet.
+14. Vérifié le scope avant chaque commit : diff limité à `CANON/**`, `stories/TRUST-019A.md`,
+    `reviews/TRUST-019A/**`, `Registres/PATCH-TRUST-019A.jsonl` — **zéro fichier
+    `src/forgeai/**` modifié** (conforme au mandat `DESIGN_FIRST`).
+15. Gates exécutés à chaque étape : `no_stub_scan.py --all` OK, `gitleaks detect` (aucune fuite),
+    `git diff --stat origin/main -- src/forgeai/` (vide).
+
+## Note sur le périmètre du diff soumis à la revue aveugle (objection majeure round 1,
+DeepSeek-V4-Pro)
+
+Le `FILES_CHANGED` du rapport final ci-dessous liste `reviews/TRUST-019A/**` et
+`Registres/PATCH-TRUST-019A.jsonl` comme faisant partie de cette PR — **exact**, ces fichiers
+sont bien committés sur la branche. Ils sont **délibérément exclus** du diff transmis au pack
+de revue (`git diff origin/main...HEAD -- CANON/ stories/TRUST-019A.md`), pour une raison
+structurelle et non une omission : ce sont les **artefacts de preuve du processus de revue
+lui-même** (verdicts scellés d'un round antérieur + ledger horodaté qui les référence) — les
+inclure dans le pack reviendrait à demander aux reviewers de juger, en partie, leur propre
+processus ou celui d'un round précédent, ce qui est hors du périmètre du jugement demandé
+(« analyse l'ARTEFACT pour sa correction et sa sécurité », `CANON/revue-template.md`). Seul le
+contenu de conception (`CANON/adr/**`, `stories/*.md`) est soumis au jugement des reviewers ;
+`reviews/**`/`Registres/PATCH-*.jsonl` sont des PREUVES DU processus, pas des ARTEFACTS À JUGER
+PAR le processus. Ce même pattern a déjà été rencontré et résolu de façon identique pour
+`SECRET-020A` (round 2) — précédent directement applicable ici.
 
 ## Root cause (analysée, pas seulement supprimée — critère d'acceptation)
 
