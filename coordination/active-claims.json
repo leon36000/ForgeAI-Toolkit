@@ -1,0 +1,5 @@
+{
+  "_schema": "active-claims-v1",
+  "_description": "Registre des claims actifs. Une lane ne peut avoir qu'un seul claim concurrent. Modifié uniquement par scripts/coordination/.",
+  "claims": []
+}

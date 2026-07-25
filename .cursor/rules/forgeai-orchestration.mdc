@@ -1,0 +1,51 @@
+---
+description: Règles d'orchestration multi-IDE ForgeAI Toolkit (ORCH-001). Appliquées à tous les packages CURSOR.
+globs: ["**/*"]
+alwaysApply: true
+---
+
+# ForgeAI Toolkit — Orchestration multi-IDE (Cursor)
+
+## Avant toute modification
+
+1. Lire `coordination/active-claims.json` — vérifier que ta lane est libre.
+2. Vérifier que toutes les dépendances de ton package sont dans `coordination/completed.json`.
+3. Vérifier que le base commit correspond à `origin/main` courant.
+4. N'ouvrir que les fichiers listés dans `allowed_paths` de ton package.
+
+## Packages CURSOR assignés
+
+| Package | Lane | Dépendances | Branche |
+|---|---|---|---|
+| `OPS-031E` | `web-ui` | OPS-031C, UI-040 | feat/OPS-031E-operator-ui |
+| `UI-039` | `web-ui` | ORCH-001 | fix/UI-039-evidence-backed-step-state |
+| `UI-040` | `web-ui` | UI-039 | fix/UI-040-web-accessibility |
+| `CAP-033A` | `capability-docs` | HW-037 | docs/CAP-033A-gpu-claims-evidence |
+| `DOC-032` | `documentation` | CAP-033A, OPS-031E, UI-040 | docs/DOC-032-product-truth-alignment |
+
+## Contrat commun (§ identiques à AGENTS.md)
+
+- **§8bis — zéro stub** : pas de corps vide, NotImplementedError, données inventées.
+- **Preuve au registre** : toute livraison → entrée dans `Registres/PATCH-<ID>.jsonl`.
+- **Revue aveugle scellée** : 3 vendors distincts ≠ vendor du codeur.
+- **Sorties modèle = CLAIMS non vérifiées** : vérifier avant de merger.
+- **T3 = Nathan** : gate humain final.
+
+## Anti-patterns Cursor
+
+- Modifier le backend/API pour contourner un manque d'API frontend.
+- Réécrire une feuille CSS entière pour une correction partielle.
+- Statut communiqué uniquement par couleur (pas de texte alternatif).
+- Nombre hardcodé du catalogue (utiliser la source canonique).
+- Clôturer une issue accessibilité sans test clavier/reduced-motion/contraste.
+- Démarrer un package si ORCH-001 n'est pas dans `coordination/completed.json`.
+
+## Sécurité
+
+- Aucun secret (token, clé, mot de passe) dans prompt, commentaire, commit ou log.
+- Les hooks ggshield restent actifs; ne pas supprimer `.gitguardian.yaml`.
+
+## Gate de scope (CI)
+
+Le workflow `scope-guard.yml` vérifie que chaque fichier modifié est dans
+l'`allowed_paths` du claim actif. Une violation bloque la PR.

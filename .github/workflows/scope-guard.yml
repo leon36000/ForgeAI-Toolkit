@@ -1,0 +1,86 @@
+name: scope-guard
+
+on:
+  pull_request:
+  merge_group:
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  coordination-validation:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Valider la coordination multi-IDE (claims, lanes, deps)
+        run: python3 scripts/coordination/validate_coordination.py
+
+  scope-guard:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Vérifier que les fichiers modifiés sont dans l'allowlist du package actif
+        run: |
+          python3 - << 'PYEOF'
+          import json, subprocess, sys
+          from pathlib import Path
+
+          coord = Path("coordination")
+          claims_path = coord / "active-claims.json"
+          wp_path = coord / "work-packages.json"
+
+          if not claims_path.exists() or not wp_path.exists():
+              print("SKIP — fichiers de coordination absents (bootstrap initial)")
+              sys.exit(0)
+
+          claims_data = json.loads(claims_path.read_text(encoding="utf-8"))
+          claims = claims_data.get("claims", [])
+          if not claims:
+              print("SKIP — aucun claim actif")
+              sys.exit(0)
+
+          wp_data = json.loads(wp_path.read_text(encoding="utf-8"))
+          pkg_by_id = {p["id"]: p for p in wp_data.get("packages", [])}
+
+          # Fichiers modifiés dans cette PR (vs merge-base)
+          res = subprocess.run(
+              ["git", "diff", "--name-only", "origin/main...HEAD"],
+              capture_output=True, text=True
+          )
+          changed = set(res.stdout.splitlines())
+          if not changed:
+              print("SKIP — aucun fichier modifié")
+              sys.exit(0)
+
+          errors = []
+          for claim in claims:
+              pid = claim.get("package")
+              if not pid or pid not in pkg_by_id:
+                  continue
+              pkg = pkg_by_id[pid]
+              allowed = pkg.get("allowed_paths", [])
+              forbidden = pkg.get("forbidden_paths", [])
+
+              import fnmatch
+
+              def matches_any(path: str, patterns: list) -> bool:
+                  return any(fnmatch.fnmatch(path, p.rstrip("*") + "*") if p.endswith("**")
+                             else fnmatch.fnmatch(path, p) for p in patterns)
+
+              for f in changed:
+                  if matches_any(f, forbidden):
+                      errors.append(f"INTERDIT: {f} est dans forbidden_paths de {pid}")
+                  elif allowed and not matches_any(f, allowed):
+                      errors.append(f"HORS SCOPE: {f} n'est pas dans allowed_paths de {pid}")
+
+          if errors:
+              print("FAIL — violations de périmètre:", file=sys.stderr)
+              for e in errors:
+                  print(f"  • {e}", file=sys.stderr)
+              sys.exit(1)
+
+          print(f"PASS — {len(changed)} fichier(s) modifié(s) dans le périmètre autorisé.")
+          PYEOF

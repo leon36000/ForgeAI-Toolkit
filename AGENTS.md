@@ -67,3 +67,60 @@ Confinement au repo (directive `CANON/directives-perimetre.md`) : aucune source 
 dépôt ; le produit ne dépend d'aucun fichier de la machine (portabilité). L'outillage de
 gouvernance (`~/proof-method`, `forge-model-bridge`/LiteLLM) est autorisé pour CONSTRUIRE le
 toolkit, jamais embarqué dans le produit livré.
+
+## Plan de contrôle multi-IDE (ORCH-001 — actif depuis M0)
+
+Plusieurs IDE/agents corrigent ForgeAI en parallèle selon un contrat commun. Le cockpit est
+**GitHub Copilot / VS Code**; il détient `ORCH-001` et gère les claims, labels, milestones et
+issues. Les autres IDE sont Codex (sécurité/backend), Claude Code (K3s/RAG/hardware) et
+Cursor (UI/accessibilité/docs).
+
+### Source de vérité opérationnelle
+
+```text
+coordination/work-packages.json  — 60 packages, lanes, deps, périmètres
+coordination/active-claims.json  — claims actifs (un par lane exclusive)
+coordination/completed.json      — SHA de merge prouvés
+```
+
+### Invariants non négociables
+
+1. Une issue = une branche = un worktree = un IDE = une PR.
+2. Un claim actif détient un lease sur sa lane et ses chemins (`allowed_paths`).
+3. Toute branche part du dernier `origin/main` **après** fusion de toutes les dépendances.
+4. Pas de stacked PR implicite; merge queue uniquement.
+5. Aucun agent ne modifie `build/**`, `dist/**` ou le catalogue maître sans issue explicite.
+
+### Flux de claim
+
+```text
+ELIGIBLE → CLAIMED → WORKTREE_CREATED → BASELINE_VERIFIED → RED_TEST
+→ IMPLEMENTATION → FOCUSED_TESTS → FULL_GATES → SECURITY_SCANS
+→ REVIEW_PACK → 3 BLIND VERDICTS → FINAL TALLY → PR → MERGE_QUEUE → MERGED
+→ COMPLETED (inscrire dans completed.json) → CLAIM_RELEASED
+```
+
+### Scripts de coordination
+
+```bash
+python3 scripts/coordination/validate_coordination.py   # valide claims + lanes + deps
+python3 scripts/coordination/simulate_orchestration.py  # 10 simulations anti-collision
+```
+
+### Sécurité IDE
+
+- ggshield AI hooks actifs pour les quatre IDE (`.gitguardian.yaml` présent).
+- Aucun secret dans `coordination/**`, prompts, logs ou commits.
+- `.cursor/rules/forgeai-orchestration.mdc` — règles path-scoped Cursor.
+- `CLAUDE.md` — contrat Claude Code (adoption PROOF canonique).
+
+### Concurrence maximale
+
+| IDE | Claims max |
+|---|---|
+| COPILOT (cockpit) | 1 |
+| VS_CODE | 1 |
+| CURSOR | 1 |
+| CODEX | 2 |
+| CLAUDE_CODE | 2 |
+| **Total** | **6** |
