@@ -95,6 +95,204 @@ def test_secrets_directory_is_private_at_its_first_creation(
         raise AssertionError("secret directory was not private at creation")
 
 
+def test_bootstrap_succeeds_under_restrictive_umask_without_relaxing_paths(
+    tmp_path, monkeypatch
+):
+    out_dir = tmp_path / "out"
+    out_dir.mkdir()
+    os.chmod(out_dir, 0o750)
+    original_out_mode = stat.S_IMODE(out_dir.stat().st_mode)
+    secrets_dir = out_dir / "secrets"
+    observed_creation_modes: list[int] = []
+    real_mkdir = os.mkdir
+
+    def observe_real_mkdir(path, mode=0o777, *args, **kwargs):
+        result = real_mkdir(path, mode, *args, **kwargs)
+        if Path(path) == secrets_dir:
+            observed_creation_modes.append(
+                stat.S_IMODE(os.lstat(path).st_mode)
+            )
+        return result
+
+    monkeypatch.setattr(bootstrap_secrets_module.os, "mkdir", observe_real_mkdir)
+    previous_umask = os.umask(0o777)
+    try:
+        first_paths = bootstrap_secrets(out_dir)
+        second_paths = bootstrap_secrets(out_dir)
+    finally:
+        os.umask(previous_umask)
+
+    if not observed_creation_modes:
+        raise AssertionError("secret directory creation was not observed")
+    if any(mode & ~0o700 for mode in observed_creation_modes):
+        raise AssertionError("secret directory creation exposed excess permissions")
+    assert stat.S_IMODE(out_dir.stat().st_mode) == original_out_mode
+    assert stat.S_IMODE(secrets_dir.stat().st_mode) == 0o700
+    for secret_path in (*first_paths.values(), *second_paths.values()):
+        assert stat.S_IMODE(secret_path.stat().st_mode) == 0o600
+
+
+def test_bootstrap_creates_missing_out_dir_under_restrictive_umask(
+    tmp_path, monkeypatch
+):
+    out_dir = tmp_path / "out"
+    secrets_dir = out_dir / "secrets"
+    observed_creation_modes: dict[Path, list[int]] = {
+        out_dir: [],
+        secrets_dir: [],
+    }
+    real_mkdir = os.mkdir
+
+    def observe_real_mkdir(path, mode=0o777, *args, **kwargs):
+        result = real_mkdir(path, mode, *args, **kwargs)
+        candidate = Path(path)
+        if candidate in observed_creation_modes:
+            observed_creation_modes[candidate].append(
+                stat.S_IMODE(os.lstat(candidate).st_mode)
+            )
+        return result
+
+    monkeypatch.setattr(bootstrap_secrets_module.os, "mkdir", observe_real_mkdir)
+    previous_umask = os.umask(0o777)
+    try:
+        first_paths = bootstrap_secrets(out_dir)
+        second_paths = bootstrap_secrets(out_dir)
+    finally:
+        os.umask(previous_umask)
+
+    for candidate, modes in observed_creation_modes.items():
+        if not modes:
+            raise AssertionError(f"directory creation was not observed: {candidate.name}")
+        if any(mode & ~0o700 for mode in modes):
+            raise AssertionError("directory creation exposed excess permissions")
+    assert stat.S_IMODE(out_dir.stat().st_mode) == 0o700
+    assert stat.S_IMODE(secrets_dir.stat().st_mode) == 0o700
+    for secret_path in (*first_paths.values(), *second_paths.values()):
+        assert stat.S_IMODE(secret_path.stat().st_mode) == 0o600
+
+
+def test_bootstrap_creates_nested_out_dir_under_restrictive_umask(
+    tmp_path, monkeypatch
+):
+    out_dir = tmp_path / "a" / "b" / "c"
+    secrets_dir = out_dir / "secrets"
+    created_directories = (
+        tmp_path / "a",
+        tmp_path / "a" / "b",
+        out_dir,
+        secrets_dir,
+    )
+    observed_creation_modes = {
+        candidate: [] for candidate in created_directories
+    }
+    original_tmp_mode = stat.S_IMODE(tmp_path.stat().st_mode)
+    real_mkdir = os.mkdir
+
+    def observe_real_mkdir(path, mode=0o777, *args, **kwargs):
+        result = real_mkdir(path, mode, *args, **kwargs)
+        candidate = Path(path)
+        if candidate in observed_creation_modes:
+            observed_creation_modes[candidate].append(
+                stat.S_IMODE(os.lstat(candidate).st_mode)
+            )
+        return result
+
+    monkeypatch.setattr(bootstrap_secrets_module.os, "mkdir", observe_real_mkdir)
+    previous_umask = os.umask(0o777)
+    try:
+        first_paths = bootstrap_secrets(out_dir)
+        second_paths = bootstrap_secrets(out_dir)
+    finally:
+        os.umask(previous_umask)
+
+    assert stat.S_IMODE(tmp_path.stat().st_mode) == original_tmp_mode
+    for candidate, modes in observed_creation_modes.items():
+        if not modes:
+            raise AssertionError(f"directory creation was not observed: {candidate.name}")
+        if any(mode & ~0o700 for mode in modes):
+            raise AssertionError("directory creation exposed excess permissions")
+        assert stat.S_IMODE(candidate.stat().st_mode) == 0o700
+    for secret_path in (*first_paths.values(), *second_paths.values()):
+        assert stat.S_IMODE(secret_path.stat().st_mode) == 0o600
+
+
+def test_concurrent_first_bootstraps_share_one_lock_under_restrictive_umask(
+    tmp_path, monkeypatch
+):
+    out_dir = tmp_path / "out"
+    lock_path = out_dir / ".bootstrap-secrets.lock"
+    out_created = threading.Event()
+    release_creator = threading.Event()
+    contender_done = threading.Event()
+    observed_lock_inodes: list[int] = []
+    worker_errors: list[str] = []
+    result_digests: list[tuple[bytes, bytes]] = []
+    observation_lock = threading.Lock()
+    real_open = os.open
+    real_mkdir = os.mkdir
+    creator_thread: threading.Thread | None = None
+    contender_thread: threading.Thread | None = None
+
+    def observe_lock_open(path, flags, *args, **kwargs):
+        descriptor = real_open(path, flags, *args, **kwargs)
+        if Path(path) == lock_path:
+            inode = os.fstat(descriptor).st_ino
+            with observation_lock:
+                observed_lock_inodes.append(inode)
+        return descriptor
+
+    def pause_after_out_creation(path, mode=0o777, *args, **kwargs):
+        result = real_mkdir(path, mode, *args, **kwargs)
+        if Path(path) == out_dir and threading.current_thread() is creator_thread:
+            out_created.set()
+            if not release_creator.wait(timeout=5):
+                raise RuntimeError("creator did not resume after out creation")
+        return result
+
+    monkeypatch.setattr(bootstrap_secrets_module.os, "open", observe_lock_open)
+    monkeypatch.setattr(bootstrap_secrets_module.os, "mkdir", pause_after_out_creation)
+
+    def run_bootstrap() -> None:
+        try:
+            paths = bootstrap_secrets(out_dir)
+            digests = (
+                sha256(paths["env"].read_bytes()).digest(),
+                sha256(paths["token_key"].read_bytes()).digest(),
+            )
+            with observation_lock:
+                result_digests.append(digests)
+        except (OSError, RuntimeError) as exc:
+            with observation_lock:
+                worker_errors.append(type(exc).__name__)
+        finally:
+            if threading.current_thread() is contender_thread:
+                contender_done.set()
+
+    creator_thread = threading.Thread(target=run_bootstrap, daemon=True)
+    contender_thread = threading.Thread(target=run_bootstrap, daemon=True)
+    workers = [creator_thread, contender_thread]
+    previous_umask = os.umask(0o777)
+    try:
+        creator_thread.start()
+        assert out_created.wait(timeout=5), "creator did not create out directory"
+        contender_thread.start()
+        assert contender_done.wait(timeout=5), "contender did not finish"
+        release_creator.set()
+        for worker in workers:
+            worker.join(timeout=5)
+    finally:
+        release_creator.set()
+        os.umask(previous_umask)
+
+    assert all(not worker.is_alive() for worker in workers)
+    assert not worker_errors, f"concurrent bootstrap errors: {worker_errors}"
+    if len(result_digests) != 2 or result_digests[0] != result_digests[1]:
+        raise AssertionError("concurrent bootstrap results diverged")
+    if not observed_lock_inodes or len(set(observed_lock_inodes)) != 1:
+        raise AssertionError("concurrent bootstraps used different lock inodes")
+    assert stat.S_IMODE(lock_path.stat().st_mode) == 0o600
+
+
 def test_generated_env_contract_failures_never_disclose_content():
     sentinel = token_hex(20)
     cases = (
@@ -176,6 +374,49 @@ def test_non_regen_refuses_env_symlink_before_reading_referent(
         raise AssertionError("bootstrap read an env symlink referent")
     if sha256(referent.read_bytes()).digest() != referent_digest:
         raise AssertionError("bootstrap changed an env symlink referent")
+
+
+def test_non_regen_env_fifo_symlink_uses_nofollow_nonblocking_open(
+    tmp_path, monkeypatch
+):
+    out_dir = tmp_path / "out"
+    out_dir.mkdir()
+    fifo_referent = tmp_path / "external-env-fifo"
+    os.mkfifo(fifo_referent)
+    env_path = out_dir / ".env"
+    env_path.symlink_to(fifo_referent)
+    observed_flags: list[int] = []
+    path_read_attempted = False
+    real_open = os.open
+    real_read_text = Path.read_text
+
+    def observe_real_open(path, flags, *args, **kwargs):
+        if Path(path) == env_path:
+            observed_flags.append(flags)
+            required = os.O_NOFOLLOW | os.O_NONBLOCK
+            if flags & required != required:
+                raise OSError("unsafe env open flags")
+        return real_open(path, flags, *args, **kwargs)
+
+    def reject_blocking_path_read(path, *args, **kwargs):
+        nonlocal path_read_attempted
+        if Path(path) == env_path:
+            path_read_attempted = True
+            raise OSError("blocking env read refused by test")
+        return real_read_text(path, *args, **kwargs)
+
+    monkeypatch.setattr(vault_module.os, "open", observe_real_open)
+    monkeypatch.setattr(Path, "read_text", reject_blocking_path_read)
+
+    with pytest.raises(OSError):
+        bootstrap_secrets(out_dir)
+
+    if path_read_attempted:
+        raise AssertionError("bootstrap attempted a blocking FIFO read")
+    if len(observed_flags) != 1:
+        raise AssertionError("bootstrap did not perform one bounded env open")
+    assert env_path.is_symlink()
+    assert stat.S_ISFIFO(fifo_referent.stat().st_mode)
 
 
 def test_bootstrap_refuses_secrets_directory_symlink_before_any_write(tmp_path):
