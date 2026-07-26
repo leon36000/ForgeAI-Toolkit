@@ -50,7 +50,7 @@ _INJECTION_PATTERNS: tuple[re.Pattern, ...] = tuple(re.compile(p, re.IGNORECASE)
 
     # Catégorie 3c — Ordres de divulgation de secret (verbe d'ordre + cible sensible)
     # Motif : verbe impératif de divulgation suivi d'une cible sensible (api key, secret, token, etc.).
-    r"\b(?:envoie|r[ée]v[èe]le|affiche|transmets|imprime|donne|retourne|send|output|print|leak|reveal|display|dump|expose|exfiltrate|exfil|return|emit)\s+(?:l[ea]\s+)?(?:api[- ]?key|cl[ée]\s+d'?api|secret|jeton|token|mot\s+de\s+passe|password|credentials|identifiants?|variable\s+d'environnement|environment\s+variable|env\s+var|private\s+key|clef\s+priv[ée]e|clef\s+secr[èe]te|auth[- ]?token|bearer|access[- ]?key)",
+    r"\b(?:envoie|r[ée]v[èe]le|affiche|transmets|imprime|donne|retourne|send|output|print|leak|reveal|display|dump|expose|exfiltrate|exfil|return|emit)\s+(?:l[ea]\s+|the\s+|a\s+|an\s+)?(?:\w+\s+){0,2}(?:api[- ]?key|cl[ée]\s+d'?api|secret|jeton|token|mot\s+de\s+passe|password|credentials|identifiants?|variable\s+d'environnement|environment\s+variable|env\s+var|private\s+key|clef\s+priv[ée]e|clef\s+secr[èe]te|auth[- ]?token|bearer|access[- ]?key)",
     # Motif : verbe de divulgation + formulation « le token », « ton secret », etc. (déterminant possessif/démonstratif).
     r"\b(?:envoie|r[ée]v[èe]le|affiche|transmets|donne|retourne|send|output|print|leak|reveal|display|dump|expose|exfiltrate)\s+(?:le\s+token|le\s+secret|le\s+mot\s+de\s+pass|la\s+cl[ée]|les\s+identifiants|ta\s+cl[ée]|ton\s+secret|votre\s+token|the\s+token|the\s+secret|the\s+password|your\s+token|your\s+secret)",
     # Motif : verbe de divulgation + formulation « X dans/envoyer vers une URL » (exfiltration vers l'extérieur).

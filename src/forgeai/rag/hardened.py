@@ -98,6 +98,13 @@ class HardenedRagClient(RagClient):
             hits = hits[:top_k]
 
         chunks_neutralises: list[str] = []
+        # Chaîne destinée UNIQUEMENT au détecteur : les textes neutralisés joints par un simple
+        # saut de ligne, SANS les lignes de provenance. Celles-ci briseraient la contiguïté que
+        # les motifs exigent (ils attendent `\s+` entre les mots) : une directive répartie sur
+        # deux documents (« Ignore all » / « previous instructions ») se retrouverait séparée par
+        # `\n\n[DOC 2 | source=…]\n`, qui n'est pas de l'espace, et ne serait plus détectée.
+        # Cette chaîne n'est jamais envoyée au modèle ni stockée.
+        textes_pour_detecteur: list[str] = []
         for i, h in enumerate(hits, start=1):
             texte_original = h["payload"]["text"]
             source = h["payload"]["source"]
@@ -113,16 +120,18 @@ class HardenedRagClient(RagClient):
                 texte_final = texte_original
             provenance = f"[DOC {i} | source={source}]"
             chunks_neutralises.append(f"{provenance}\n{texte_final}")
+            textes_pour_detecteur.append(texte_final)
 
         delimiteur = make_delimiter()
         # La garde inspecte le CONTENU des documents, jamais l'enveloppe : scanner le contexte
         # déjà encadré ferait toujours voir le délimiteur qu'on vient nous-mêmes de poser, et la
         # détection de forge se déclencherait à chaque requête (faux positif systématique).
         contenu_documents = "\n\n".join(chunks_neutralises)
+        contenu_pour_detecteur = "\n".join(textes_pour_detecteur)
 
         if self.guardrails:
             try:
-                scan_assembled(contenu_documents, delimiteur)
+                scan_assembled(contenu_pour_detecteur, delimiteur)
             except GuardrailBlocked as exc:
                 return {"answer": "", "sources": [], "context_used": False,
                         "blocked": str(exc), "sanitization_events": evenements}

@@ -211,3 +211,23 @@ def test_document_sain_traverse_sans_evenement(monkeypatch):
     assert "Vornak-9 possede deux lunes." in captures["prompt"]
     assert reponse["context_used"] is True
     assert not reponse["sanitization_events"]
+
+
+def test_injection_fractionnee_detectee_sur_le_chemin_reel(monkeypatch):
+    """Objection CRITIQUE de la revue scellée (3/3, sceau bd3b7a985f60) : `scan_assembled` recevait
+    les chunks AVEC leurs lignes de provenance intercalées. Entre « Ignore all » et « previous
+    instructions » se glissait donc `\\n\\n[DOC 2 | source=…]\\n`, qui n'est pas de l'espace : les
+    motifs, qui exigent `\\s+`, ne matchaient pas. La détection du fractionnement ne fonctionnait
+    QUE dans le test unitaire, qui joignait les fragments par un simple saut de ligne — un chemin
+    qui n'existe pas en production. Ce test exerce le vrai chemin, via `ask()`."""
+    import json
+    from pathlib import Path
+    corpus = json.loads(
+        (Path(__file__).parent / "fixtures" / "rag" / "corpus-adversarial.json").read_text("utf-8")
+    )
+    morceaux = [d for d in corpus["documents"] if d["id"].startswith("fractionne-")]
+    assert len(morceaux) == 2, "le corpus doit porter les deux moitiés de la directive"
+    client, captures = _client_avec_documents(monkeypatch, morceaux)
+    reponse = client.ask("Parle-moi de Vornak-9", top_k=2)
+    assert reponse.get("blocked"), "la directive fractionnée doit être détectée sur le chemin réel"
+    assert "prompt" not in captures, "aucun appel LLM ne doit avoir lieu après détection"
