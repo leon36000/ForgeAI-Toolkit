@@ -84,7 +84,7 @@ def test_secrets_directory_is_private_at_its_first_creation(
             )
         return result
 
-    monkeypatch.setattr(bootstrap_secrets_module.os, "mkdir", observe_real_mkdir)
+    monkeypatch.setattr(vault_module.os, "mkdir", observe_real_mkdir)
     previous_umask = os.umask(0)
     try:
         bootstrap_secrets(out_dir)
@@ -114,7 +114,7 @@ def test_bootstrap_succeeds_under_restrictive_umask_without_relaxing_paths(
             )
         return result
 
-    monkeypatch.setattr(bootstrap_secrets_module.os, "mkdir", observe_real_mkdir)
+    monkeypatch.setattr(vault_module.os, "mkdir", observe_real_mkdir)
     previous_umask = os.umask(0o777)
     try:
         first_paths = bootstrap_secrets(out_dir)
@@ -152,7 +152,7 @@ def test_bootstrap_creates_missing_out_dir_under_restrictive_umask(
             )
         return result
 
-    monkeypatch.setattr(bootstrap_secrets_module.os, "mkdir", observe_real_mkdir)
+    monkeypatch.setattr(vault_module.os, "mkdir", observe_real_mkdir)
     previous_umask = os.umask(0o777)
     try:
         first_paths = bootstrap_secrets(out_dir)
@@ -197,7 +197,7 @@ def test_bootstrap_creates_nested_out_dir_under_restrictive_umask(
             )
         return result
 
-    monkeypatch.setattr(bootstrap_secrets_module.os, "mkdir", observe_real_mkdir)
+    monkeypatch.setattr(vault_module.os, "mkdir", observe_real_mkdir)
     previous_umask = os.umask(0o777)
     try:
         first_paths = bootstrap_secrets(out_dir)
@@ -249,8 +249,8 @@ def test_concurrent_first_bootstraps_share_one_lock_under_restrictive_umask(
                 raise RuntimeError("creator did not resume after out creation")
         return result
 
-    monkeypatch.setattr(bootstrap_secrets_module.os, "open", observe_lock_open)
-    monkeypatch.setattr(bootstrap_secrets_module.os, "mkdir", pause_after_out_creation)
+    monkeypatch.setattr(vault_module.os, "open", observe_lock_open)
+    monkeypatch.setattr(vault_module.os, "mkdir", pause_after_out_creation)
 
     def run_bootstrap() -> None:
         try:
@@ -290,6 +290,86 @@ def test_concurrent_first_bootstraps_share_one_lock_under_restrictive_umask(
         raise AssertionError("concurrent bootstrap results diverged")
     if not observed_lock_inodes or len(set(observed_lock_inodes)) != 1:
         raise AssertionError("concurrent bootstraps used different lock inodes")
+    assert stat.S_IMODE(lock_path.stat().st_mode) == 0o600
+
+
+def test_concurrent_nested_first_bootstraps_restore_restrictive_parent(
+    tmp_path, monkeypatch
+):
+    first_parent = tmp_path / "a"
+    out_dir = first_parent / "b" / "c"
+    lock_path = out_dir / ".bootstrap-secrets.lock"
+    parent_created = threading.Event()
+    release_creator = threading.Event()
+    contender_done = threading.Event()
+    observed_lock_inodes: list[int] = []
+    worker_errors: list[str] = []
+    result_digests: list[tuple[bytes, bytes]] = []
+    observation_lock = threading.Lock()
+    real_open = os.open
+    real_mkdir = os.mkdir
+    creator_thread: threading.Thread | None = None
+    contender_thread: threading.Thread | None = None
+
+    def observe_lock_open(path, flags, *args, **kwargs):
+        descriptor = real_open(path, flags, *args, **kwargs)
+        if Path(path) == lock_path:
+            with observation_lock:
+                observed_lock_inodes.append(os.fstat(descriptor).st_ino)
+        return descriptor
+
+    def pause_after_parent_creation(path, mode=0o777, *args, **kwargs):
+        result = real_mkdir(path, mode, *args, **kwargs)
+        if (
+            Path(path) == first_parent
+            and threading.current_thread() is creator_thread
+        ):
+            parent_created.set()
+            if not release_creator.wait(timeout=5):
+                raise RuntimeError("nested creator did not resume")
+        return result
+
+    monkeypatch.setattr(vault_module.os, "open", observe_lock_open)
+    monkeypatch.setattr(vault_module.os, "mkdir", pause_after_parent_creation)
+
+    def run_bootstrap() -> None:
+        try:
+            paths = bootstrap_secrets(out_dir)
+            digests = (
+                sha256(paths["env"].read_bytes()).digest(),
+                sha256(paths["token_key"].read_bytes()).digest(),
+            )
+            with observation_lock:
+                result_digests.append(digests)
+        except (OSError, RuntimeError) as exc:
+            with observation_lock:
+                worker_errors.append(type(exc).__name__)
+        finally:
+            if threading.current_thread() is contender_thread:
+                contender_done.set()
+
+    creator_thread = threading.Thread(target=run_bootstrap, daemon=True)
+    contender_thread = threading.Thread(target=run_bootstrap, daemon=True)
+    workers = [creator_thread, contender_thread]
+    previous_umask = os.umask(0o777)
+    try:
+        creator_thread.start()
+        assert parent_created.wait(timeout=5), "creator did not create nested parent"
+        contender_thread.start()
+        assert contender_done.wait(timeout=5), "nested contender did not finish"
+        release_creator.set()
+        for worker in workers:
+            worker.join(timeout=5)
+    finally:
+        release_creator.set()
+        os.umask(previous_umask)
+
+    assert all(not worker.is_alive() for worker in workers)
+    assert not worker_errors, f"nested bootstrap errors: {worker_errors}"
+    if len(result_digests) != 2 or result_digests[0] != result_digests[1]:
+        raise AssertionError("nested concurrent bootstrap results diverged")
+    if not observed_lock_inodes or len(set(observed_lock_inodes)) != 1:
+        raise AssertionError("nested bootstraps used different lock inodes")
     assert stat.S_IMODE(lock_path.stat().st_mode) == 0o600
 
 
@@ -488,8 +568,8 @@ def test_existing_token_key_symlink_swap_cannot_touch_external_inode(
             swap_target_once()
         return real_chmod(path, mode, *args, **kwargs)
 
-    monkeypatch.setattr(bootstrap_secrets_module.os, "open", open_after_swap)
-    monkeypatch.setattr(bootstrap_secrets_module.os, "chmod", chmod_after_swap)
+    monkeypatch.setattr(vault_module.os, "open", open_after_swap)
+    monkeypatch.setattr(vault_module.os, "chmod", chmod_after_swap)
 
     with pytest.raises(OSError):
         bootstrap_secrets(out_dir)
@@ -557,7 +637,7 @@ def test_existing_token_key_unlinked_after_open_republishes_without_mutating_ali
                 raise RuntimeError("writer did not resume after descriptor open")
         return descriptor
 
-    monkeypatch.setattr(bootstrap_secrets_module.os, "open", open_then_pause)
+    monkeypatch.setattr(vault_module.os, "open", open_then_pause)
 
     def run_bootstrap() -> None:
         try:
