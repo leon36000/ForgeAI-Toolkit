@@ -1,8 +1,15 @@
-"""Verrouillage fichier inter-process et inter-thread."""
+"""Verrouillage et remplacement atomique de fichiers locaux."""
 
 import fcntl
+import json
+import os
+import stat
+import tempfile
 from contextlib import contextmanager
 from pathlib import Path
+
+MODELS_TRANSACTION_LOCK = ".models-transaction"
+MODELS_TRANSACTION_JOURNAL = ".models-transaction.json"
 
 
 @contextmanager
@@ -10,11 +17,162 @@ def file_lock(path: Path):
     """Context manager de verrou exclusif sur un fichier .lock associé à `path`."""
     path = Path(path)
     path.parent.mkdir(parents=True, exist_ok=True)
-    lock_path = str(path) + ".lock"
-    fd = open(lock_path, "w")
+    lock_path = Path(str(path) + ".lock")
     try:
-        fcntl.flock(fd.fileno(), fcntl.LOCK_EX)
+        existing = lock_path.lstat()
+    except FileNotFoundError:
+        existing = None
+    if existing is not None and not stat.S_ISREG(existing.st_mode):
+        raise OSError(f"le verrou n'est pas un fichier régulier: {lock_path}")
+
+    flags = os.O_RDWR | os.O_CREAT
+    flags |= getattr(os, "O_CLOEXEC", 0)
+    flags |= getattr(os, "O_NOFOLLOW", 0)
+    descriptor = os.open(lock_path, flags, 0o600)
+    locked = False
+    try:
+        if not stat.S_ISREG(os.fstat(descriptor).st_mode):
+            raise OSError(f"le verrou n'est pas un fichier régulier: {lock_path}")
+        fcntl.flock(descriptor, fcntl.LOCK_EX)
+        locked = True
         yield
     finally:
-        fcntl.flock(fd.fileno(), fcntl.LOCK_UN)
-        fd.close()
+        try:
+            if locked:
+                fcntl.flock(descriptor, fcntl.LOCK_UN)
+        finally:
+            os.close(descriptor)
+
+
+def _fsync_directory(path: Path) -> None:
+    """Persiste les changements de nom du répertoire contenant un fichier."""
+    # S2083 est un faux positif ici : `path` est le parent exact de la
+    # destination locale choisie par l'opérateur, et aucun privilège n'est élevé.
+    directory_fd = os.open(path, os.O_RDONLY)  # NOSONAR S2083
+    try:
+        os.fsync(directory_fd)
+    finally:
+        os.close(directory_fd)
+
+
+def atomic_write_text(path: Path, payload: str, *, mode: int = 0o600) -> None:
+    """Écrit, fsync puis remplace `path`; l'ancien fichier reste intact avant replace."""
+    path = Path(path)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    fd, temporary_name = tempfile.mkstemp(
+        dir=path.parent, prefix=f".{path.name}.", suffix=".tmp"
+    )
+    temporary = Path(temporary_name)
+    descriptor_open = True
+    try:
+        os.fchmod(fd, mode)
+        with os.fdopen(fd, "w", encoding="utf-8") as stream:
+            descriptor_open = False
+            stream.write(payload)
+            stream.flush()
+            os.fsync(stream.fileno())
+        # S2083 est un faux positif : le fichier temporaire est créé par
+        # mkstemp dans `path.parent`; remplacer `path` est la fonction explicite
+        # de ce writer local (notamment pour la destination CLI `--out`).
+        os.replace(temporary, path)  # NOSONAR S2083
+        _fsync_directory(path.parent)
+    except BaseException:
+        if descriptor_open:
+            os.close(fd)
+        temporary.unlink(missing_ok=True)
+        raise
+
+
+def atomic_unlink(path: Path) -> None:
+    """Supprime un fichier puis persiste le changement de répertoire."""
+    path = Path(path)
+    try:
+        path.unlink()
+    except FileNotFoundError:
+        return
+    _fsync_directory(path.parent)
+
+
+def _journal_vault_path(home: Path, snapshot: dict) -> Path:
+    """Retourne le nom canonique lexical sans suivre un éventuel symlink injecté."""
+    vault_name = snapshot.get("vault_name", "vault.json")
+    if vault_name != "vault.json":
+        raise ValueError("identité de coffre invalide dans le journal")
+    return Path(os.path.abspath(Path(home) / vault_name))
+
+
+def _paths_identify_same_file(left: Path, right: Path) -> bool:
+    """Compare deux chemins en tenant compte des symlinks, hardlinks et de la casse."""
+    try:
+        return Path(left).samefile(right)
+    except OSError:
+        return Path(left).resolve(strict=False) == Path(right).resolve(strict=False)
+
+
+def _restore_vault_image(path: Path, snapshot: dict) -> None:
+    if snapshot["vault_existed"]:
+        atomic_write_text(
+            path,
+            json.dumps(snapshot["vault"], ensure_ascii=False, indent=1),
+            mode=0o600,
+        )
+    else:
+        atomic_unlink(path)
+
+
+def restore_models_transaction_locked(
+    home: Path, vault_path: Path, snapshot: dict
+) -> None:
+    """Restaure les deux fichiers; conserve le journal si une restauration échoue."""
+    home = Path(home)
+    requested_vault_path = Path(os.path.abspath(vault_path))
+    canonical_vault_path = _journal_vault_path(home, snapshot)
+    if not _paths_identify_same_file(
+        requested_vault_path, canonical_vault_path
+    ):
+        raise ValueError("le coffre demandé ne correspond pas au journal")
+    routes_path = home / "routes.json"
+    journal_path = home / MODELS_TRANSACTION_JOURNAL
+    rollback_error: Exception | None = None
+
+    try:
+        _restore_vault_image(canonical_vault_path, snapshot)
+        if (
+            requested_vault_path != canonical_vault_path
+            and not requested_vault_path.is_symlink()
+        ):
+            _restore_vault_image(requested_vault_path, snapshot)
+    except (OSError, TypeError, ValueError, KeyError) as exc:
+        rollback_error = exc
+
+    try:
+        if snapshot["routes_existed"]:
+            atomic_write_text(
+                routes_path,
+                json.dumps(snapshot["routes"], ensure_ascii=False, indent=1),
+                mode=0o600,
+            )
+        else:
+            atomic_unlink(routes_path)
+    except (OSError, TypeError, ValueError, KeyError) as exc:
+        if rollback_error is None:
+            rollback_error = exc
+
+    if rollback_error is not None:
+        raise rollback_error
+    atomic_unlink(journal_path)
+
+
+def recover_models_transaction_locked(home: Path, vault_path: Path) -> bool:
+    """Récupère le write-ahead journal sous le verrou modèles déjà détenu."""
+    home = Path(home)
+    journal_path = home / MODELS_TRANSACTION_JOURNAL
+    if not journal_path.exists():
+        return False
+    snapshot = json.loads(journal_path.read_text(encoding="utf-8"))
+    if not _paths_identify_same_file(
+        Path(vault_path), _journal_vault_path(home, snapshot)
+    ):
+        return False
+    restore_models_transaction_locked(home, vault_path, snapshot)
+    return True

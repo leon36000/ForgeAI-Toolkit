@@ -228,6 +228,119 @@ def test_configure_cache_route_inconnue(tmp_path):
         RouteStore(tmp_path).configure_cache("absente", True)
 
 
+def test_configure_cache_replace_echoue_conserve_ancien_fichier(
+    tmp_path, monkeypatch
+):
+    route_dict = {
+        "name": "r",
+        "provenance": "openrouter",
+        "base_url": "https://openrouter.ai/api/v1",
+        "model_id": "m",
+        "key_fingerprint": "sha256:abcd",
+        "created_at": "2026-07-16",
+    }
+    path = tmp_path / "routes.json"
+    path.write_text(json.dumps([route_dict]), encoding="utf-8")
+    before = path.read_bytes()
+    real_replace = os.replace
+
+    def fail_route_replace(src, dst):
+        if os.fspath(dst) == os.fspath(path):
+            raise OSError("panne injectee avant replace routes")
+        return real_replace(src, dst)
+
+    monkeypatch.setattr(os, "replace", fail_route_replace)
+    store = RouteStore(tmp_path)
+    with pytest.raises(OSError, match="avant replace routes"):
+        store.configure_cache("r", True, 60, "cache")
+
+    assert path.read_bytes() == before
+    assert RouteStore(tmp_path).get("r").cache is False
+
+
+def test_vault_replace_echoue_conserve_ancien_fichier(tmp_path, monkeypatch):
+    vault = Vault(tmp_path / "vault.json")
+    vault.put("existante", "secret-existant", "pp")
+    before = vault.path.read_bytes()
+    real_replace = os.replace
+
+    def fail_vault_replace(src, dst):
+        if os.fspath(dst) == os.fspath(vault.path):
+            raise OSError("panne injectee avant replace vault")
+        return real_replace(src, dst)
+
+    monkeypatch.setattr(os, "replace", fail_vault_replace)
+    with pytest.raises(OSError, match="avant replace vault"):
+        vault.put("nouvelle", "secret-nouveau", "pp")
+
+    assert vault.path.read_bytes() == before
+    assert vault.names() == ["existante"]
+    assert vault.get("existante", "pp") == "secret-existant"
+
+
+def test_add_cloud_echec_commit_route_compense_la_cle_vault(
+    tmp_path, monkeypatch
+):
+    store = RouteStore(tmp_path)
+
+    def fail_route_commit(routes):
+        raise OSError("commit routes impossible")
+
+    monkeypatch.setattr(store, "_save", fail_route_commit)
+    with pytest.raises(OSError, match="commit routes impossible"):
+        store.add_cloud(
+            "orpheline",
+            "openrouter",
+            "m",
+            SECRET,
+            "pp",
+            transport=GREEN,
+        )
+
+    assert "orpheline" not in store.vault.names()
+    assert store.list() == []
+
+
+def test_add_cloud_rollback_restaure_vault_meme_si_routes_reste_indisponible(
+    tmp_path, monkeypatch
+):
+    store = RouteStore(tmp_path)
+    store.add_cloud(
+        "existante",
+        "openrouter",
+        "m",
+        "secret-existant",
+        "pp",
+        transport=GREEN,
+    )
+    real_replace = os.replace
+
+    def fail_every_route_replace(src, dst):
+        if os.fspath(dst) == os.fspath(store.routes_path):
+            raise OSError("routes indisponible")
+        return real_replace(src, dst)
+
+    monkeypatch.setattr(os, "replace", fail_every_route_replace)
+    with pytest.raises(OSError, match="routes indisponible"):
+        store.add_cloud(
+            "orpheline",
+            "openrouter",
+            "m",
+            "secret-orphelin",
+            "pp",
+            transport=GREEN,
+        )
+
+    assert sorted(store.vault._load()) == ["existante"]
+    assert store.transaction_journal_path.exists()
+
+    monkeypatch.undo()
+    recovered = RouteStore(tmp_path)
+    assert [route.name for route in recovered.list()] == ["existante"]
+    assert recovered.vault.names() == ["existante"]
+    assert not recovered.transaction_journal_path.exists()
+
+
 def test_cli_route_configure(tmp_path):
     import json
     from forgeai.cli import main

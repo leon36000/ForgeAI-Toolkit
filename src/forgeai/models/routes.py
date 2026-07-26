@@ -14,7 +14,16 @@ from dataclasses import asdict, dataclass, replace
 from datetime import date
 from pathlib import Path
 
-from forgeai.models._locking import file_lock
+from forgeai.models._locking import (
+    MODELS_TRANSACTION_JOURNAL,
+    MODELS_TRANSACTION_LOCK,
+    atomic_unlink,
+    atomic_write_text,
+    file_lock,
+    recover_models_transaction_locked,
+    restore_models_transaction_locked,
+)
+
 from .probe import ProbeResult, Transport, UrllibTransport, probe_route
 from .vault import Vault
 
@@ -57,6 +66,9 @@ class RouteStore:
         self.home = Path(home)
         self.routes_path = self.home / "routes.json"
         self.vault = Vault(self.home / "vault.json")
+        self.transaction_lock_path = self.home / MODELS_TRANSACTION_LOCK
+        self.transaction_journal_path = self.home / MODELS_TRANSACTION_JOURNAL
+        self._recover_pending_transaction()
 
     def _load(self) -> list[dict]:
         if not self.routes_path.exists():
@@ -65,8 +77,42 @@ class RouteStore:
 
     def _save(self, routes: list[dict]) -> None:
         self.home.mkdir(parents=True, exist_ok=True)
-        self.routes_path.write_text(
-            json.dumps(routes, ensure_ascii=False, indent=1), encoding="utf-8")
+        atomic_write_text(
+            self.routes_path,
+            json.dumps(routes, ensure_ascii=False, indent=1),
+            mode=0o600,
+        )
+
+    def _transaction_snapshot(
+        self, routes: list[dict], vault: dict[str, str]
+    ) -> dict:
+        return {
+            "routes_existed": self.routes_path.exists(),
+            "routes": routes,
+            "vault_name": self.vault.path.name,
+            "vault_existed": self.vault.path.exists(),
+            "vault": vault,
+        }
+
+    def _write_transaction_journal(self, snapshot: dict) -> None:
+        atomic_write_text(
+            self.transaction_journal_path,
+            json.dumps(snapshot, ensure_ascii=False, sort_keys=True),
+            mode=0o600,
+        )
+
+    def _rollback_transaction(self, snapshot: dict) -> None:
+        restore_models_transaction_locked(self.home, self.vault.path, snapshot)
+
+    def _recover_pending_transaction(self) -> None:
+        if not self.transaction_journal_path.exists():
+            return
+        with file_lock(self.transaction_lock_path):
+            self._recover_pending_transaction_locked()
+
+    def _recover_pending_transaction_locked(self) -> None:
+        """Récupère un write-ahead journal alors que le verrou commun est détenu."""
+        recover_models_transaction_locked(self.home, self.vault.path)
 
     def _route_from_dict(self, r: dict) -> CloudRoute:
         known = {f.name for f in CloudRoute.__dataclass_fields__.values()}
@@ -88,45 +134,68 @@ class RouteStore:
                   passphrase: str, *, base_url: str | None = None,
                   transport: Transport | None = None) -> tuple[CloudRoute, ProbeResult]:
         """Ajoute une route APRÈS test réel. En cas d'échec : RouteError, rien n'est écrit."""
-        if any(r["name"] == name for r in self._load()):
-            raise RouteError(f"route '{name}' existe déjà")
+        with file_lock(self.transaction_lock_path):
+            self._recover_pending_transaction_locked()
+            if any(r["name"] == name for r in self._load()):
+                raise RouteError(f"route '{name}' existe déjà")
         resolved = self.resolve_base_url(provenance, base_url)
         result = probe_route(resolved, model_id, api_key, transport or UrllibTransport())
         if not result.ok:
             # Aucune route cassée n'est ajoutée ; la clé n'a jamais touché le disque.
             raise RouteError(f"test de connexion {result.light} : {result.detail}")
-        fp = self.vault.put(name, api_key, passphrase)  # clé scellée (chiffrée)
-        route = CloudRoute(name=name, provenance=provenance, base_url=resolved,
-                           model_id=model_id, key_fingerprint=fp,
-                           created_at=date.today().isoformat())
-        with file_lock(self.routes_path):
+        with file_lock(self.transaction_lock_path):
+            self._recover_pending_transaction_locked()
             routes = self._load()
             if any(r["name"] == name for r in routes):
                 raise RouteError(f"route '{name}' existe déjà")
-            routes.append(route.public_dict())
-            self._save(routes)
+            previous_vault = self.vault._load()
+            next_vault, fp = self.vault._with_secret(name, api_key, passphrase)
+            route = CloudRoute(
+                name=name,
+                provenance=provenance,
+                base_url=resolved,
+                model_id=model_id,
+                key_fingerprint=fp,
+                created_at=date.today().isoformat(),
+            )
+            snapshot = self._transaction_snapshot(routes, previous_vault)
+            next_routes = [*routes, route.public_dict()]
+            self._write_transaction_journal(snapshot)
+            try:
+                self.vault._save(next_vault)
+                self._save(next_routes)
+            except BaseException:
+                self._rollback_transaction(snapshot)
+                raise
+            atomic_unlink(self.transaction_journal_path)
         return route, result
 
     def list(self) -> list[CloudRoute]:
-        return [self._route_from_dict(r) for r in self._load()]
+        with file_lock(self.transaction_lock_path):
+            self._recover_pending_transaction_locked()
+            return [self._route_from_dict(r) for r in self._load()]
 
     def get(self, name: str) -> CloudRoute:
-        for r in self._load():
-            if r["name"] == name:
-                return self._route_from_dict(r)
+        with file_lock(self.transaction_lock_path):
+            self._recover_pending_transaction_locked()
+            for r in self._load():
+                if r["name"] == name:
+                    return self._route_from_dict(r)
         raise RouteError(f"route '{name}' introuvable")
 
     def configure_cache(self, name: str, enabled: bool, ttl_s: int | None = None,
                         prefix: str | None = None) -> CloudRoute:
         if ttl_s is not None and ttl_s < 0:
             raise RouteError("ttl_s doit être positif ou nul")
-        routes = self._load()
-        index = next((i for i, r in enumerate(routes) if r["name"] == name), None)
-        if index is None:
-            raise RouteError(f"route '{name}' introuvable")
-        old_route = self._route_from_dict(routes[index])
-        new_route = replace(old_route, cache=enabled, cache_ttl_s=ttl_s,
-                            cache_prefix=prefix)
-        routes[index] = new_route.public_dict()
-        self._save(routes)
+        with file_lock(self.transaction_lock_path):
+            self._recover_pending_transaction_locked()
+            routes = self._load()
+            index = next((i for i, r in enumerate(routes) if r["name"] == name), None)
+            if index is None:
+                raise RouteError(f"route '{name}' introuvable")
+            old_route = self._route_from_dict(routes[index])
+            new_route = replace(old_route, cache=enabled, cache_ttl_s=ttl_s,
+                                cache_prefix=prefix)
+            routes[index] = new_route.public_dict()
+            self._save(routes)
         return new_route
