@@ -77,7 +77,8 @@ verrou, y compris après l’arrêt brutal du processus.
 - conservation du chemin canonique lexical lors du rollback afin qu’un symlink
   injecté sur `vault.json` soit remplacé/supprimé sans jamais suivre sa cible ;
 - rejet de toute destination d’export chevauchant un fichier vivant du setup,
-  puis écriture atomique `fsync`/`os.replace` du bundle.
+  y compris alias inode et variantes de casse d’un nom futur, puis écriture
+  atomique `fsync`/`os.replace` du bundle.
 
 ## Extension de périmètre tracée
 
@@ -90,7 +91,7 @@ delta hors allowlist est limité à ce fichier et au chemin réel du défaut.
 
 ## Résultats vérifiés
 
-- 58 tests ciblés : PASS ;
+- 62 tests ciblés : PASS ;
 - 18 tests de concurrence et de panne, avec dix arrêts `SIGKILL` réels
   répartis sur les fenêtres de commit : PASS ;
 - 100 configurations concurrentes, lecteur JSON brut actif et probe hors
@@ -128,8 +129,10 @@ hardlink et les corrections sont incluses dans le nouveau candidat; le pack
 `23ec2b…` est donc superseded et doit être régénéré.
 
 Le tour suivant sur `b3bf0e…` a détecté le suivi dangereux d’un symlink
-canonique pendant un rollback. Un test SIGKILL prouve désormais qu’une cible
-externe reste byte-identique; le pack `b3bf0e…` est superseded à son tour.
+canonique pendant un rollback et les variantes `Routes.json`/`Vault.json` sur
+un volume insensible à la casse. Un test SIGKILL prouve désormais qu’une cible
+externe reste byte-identique et quatre tests CLI couvrent ces alias; le pack
+`b3bf0e…` est superseded à son tour.
 
 ## Rollback
 

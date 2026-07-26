@@ -102,6 +102,10 @@ def test_cli_add_cloud_echec_reseau_rien_ajoute(tmp_path, monkeypatch, capsys):
         "gateway.json",
         ".models-transaction.json",
         ".models-transaction.lock",
+        "Routes.json",
+        "Vault.json",
+        ".Models-Transaction.json",
+        ".Models-Transaction.lock",
     ],
 )
 def test_cli_export_refuse_ecraser_un_fichier_protege(

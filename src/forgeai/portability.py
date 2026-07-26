@@ -25,6 +25,7 @@ from typing import List
 from forgeai.models._locking import (
     MODELS_TRANSACTION_JOURNAL,
     MODELS_TRANSACTION_LOCK,
+    _paths_identify_same_file,
     atomic_write_text,
     file_lock,
     recover_models_transaction_locked,
@@ -82,10 +83,22 @@ def _validate_export_destination(home: Path, out_path: Path | None) -> None:
         MODELS_TRANSACTION_JOURNAL,
         f"{MODELS_TRANSACTION_LOCK}.lock",
     }
-    protected_paths = {
+    protected_paths = [
         (home / name).resolve(strict=False) for name in protected_names
-    }
-    if out_path.resolve(strict=False) in protected_paths:
+    ]
+    resolved_out = out_path.resolve(strict=False)
+    same_directory_case_alias = (
+        _paths_identify_same_file(resolved_out.parent, home.resolve(strict=False))
+        and resolved_out.name.casefold()
+        in {name.casefold() for name in protected_names}
+    )
+    if (
+        same_directory_case_alias
+        or any(
+            _paths_identify_same_file(resolved_out, protected)
+            for protected in protected_paths
+        )
+    ):
         raise PortabilityError(
             "La destination d'export chevauche un fichier protégé du setup"
         )
