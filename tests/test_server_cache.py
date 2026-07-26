@@ -147,7 +147,14 @@ def test_backends_et_hardware_sans_interblocage(monkeypatch):
     Le verrou doit être RÉENTRANT (RLock). Le test échoue par TIMEOUT si la régression revient."""
     import threading as _th
     server._hardware_cache_clear()
-    monkeypatch.setattr(server, "run_checks", lambda *a, **k: {})
+    # Le faux run_checks DOIT appeler full_report() sur le détecteur : c'est CE chemin qui reprend
+    # le verrou (réentrance). Sans cet appel, le test réussirait même avec un Lock simple
+    # (faux positif — constaté en revue et corrigé ici).
+    def _faux_run_checks(runner, detector, http_ok):
+        detector.full_report()   # -> _hardware_report() alors que le verrou est DÉJÀ tenu
+        return {}
+
+    monkeypatch.setattr(server, "run_checks", _faux_run_checks)
     monkeypatch.setattr(server, "available_backends", lambda checks: ["compose"])
 
     fini = _th.Event()
