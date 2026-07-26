@@ -2,6 +2,7 @@
 import os
 import stat
 import sys
+import threading
 from hashlib import sha256
 from pathlib import Path
 from secrets import token_hex
@@ -169,7 +170,7 @@ def test_existing_token_key_symlink_swap_cannot_touch_external_inode(
         raise AssertionError("writer changed the displaced original key content")
 
 
-def test_existing_token_key_hardlink_is_refused_without_touching_external_inode(
+def test_existing_token_key_hardlink_is_safely_broken_without_touching_external_inode(
     tmp_path,
 ):
     out_dir = tmp_path / "out"
@@ -183,10 +184,68 @@ def test_existing_token_key_hardlink_is_refused_without_touching_external_inode(
     key_path = secrets_dir / "forgeai_token.key"
     os.link(external, key_path)
 
-    with pytest.raises(OSError):
-        bootstrap_secrets(out_dir)
+    paths = bootstrap_secrets(out_dir)
 
-    assert key_path.stat().st_ino == external.stat().st_ino
+    assert paths["token_key"] == key_path
+    assert key_path.stat().st_ino != external.stat().st_ino
+    assert stat.S_IMODE(key_path.stat().st_mode) == 0o600
     assert stat.S_IMODE(external.stat().st_mode) == external_mode
     if sha256(external.read_bytes()).digest() != external_digest:
         raise AssertionError("writer changed external hardlink content")
+    if sha256(key_path.read_bytes()).digest() != external_digest:
+        raise AssertionError("writer did not preserve hardlinked key content")
+
+
+def test_existing_token_key_unlinked_after_open_republishes_without_mutating_alias(
+    tmp_path, monkeypatch
+):
+    out_dir = tmp_path / "out"
+    secrets_dir = out_dir / "secrets"
+    secrets_dir.mkdir(parents=True)
+    external = tmp_path / "external-token.key"
+    external.write_text(token_hex(32) + "\n", encoding="utf-8")
+    os.chmod(external, 0o640)
+    external_digest = sha256(external.read_bytes()).digest()
+    external_mode = stat.S_IMODE(external.stat().st_mode)
+    key_path = secrets_dir / "forgeai_token.key"
+    os.link(external, key_path)
+
+    descriptor_opened = threading.Event()
+    resume_writer = threading.Event()
+    writer_errors: list[str] = []
+    real_open = os.open
+
+    def open_then_pause(path, flags, *args, **kwargs):
+        descriptor = real_open(path, flags, *args, **kwargs)
+        if Path(path) == key_path:
+            descriptor_opened.set()
+            if not resume_writer.wait(timeout=5):
+                os.close(descriptor)
+                raise RuntimeError("writer did not resume after descriptor open")
+        return descriptor
+
+    monkeypatch.setattr(bootstrap_secrets_module.os, "open", open_then_pause)
+
+    def run_bootstrap() -> None:
+        try:
+            bootstrap_secrets(out_dir)
+        except (OSError, RuntimeError) as exc:
+            writer_errors.append(type(exc).__name__)
+
+    writer = threading.Thread(target=run_bootstrap, daemon=True)
+    writer.start()
+    assert descriptor_opened.wait(timeout=5), "key descriptor was not opened"
+    key_path.unlink()
+    resume_writer.set()
+    writer.join(timeout=5)
+
+    assert not writer.is_alive(), "bootstrap writer did not stop"
+    assert not writer_errors, f"bootstrap writer errors: {writer_errors}"
+    assert stat.S_IMODE(external.stat().st_mode) == external_mode
+    if sha256(external.read_bytes()).digest() != external_digest:
+        raise AssertionError("writer changed the remaining external alias content")
+    assert key_path.exists(), "bootstrap did not republish the key path"
+    assert key_path.stat().st_ino != external.stat().st_ino
+    assert stat.S_IMODE(key_path.stat().st_mode) == 0o600
+    if sha256(key_path.read_bytes()).digest() != external_digest:
+        raise AssertionError("writer did not preserve the republished key content")

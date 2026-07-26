@@ -13,7 +13,7 @@ from pathlib import Path
 
 from forgeai.models.vault import (
     atomic_write_secret_text,
-    chmod_existing_secret_file,
+    republish_existing_secret_file,
 )
 
 # Secrets ajoutés EN FIN (ligne 0 = FORGEAI_API_TOKEN préservée, cf. test permissions) :
@@ -60,7 +60,7 @@ def bootstrap_secrets(out_dir: Path, regen: bool = False) -> dict[str, Path]:
         )
     else:
         try:
-            chmod_existing_secret_file(key_path, mode=0o600)
+            republish_existing_secret_file(key_path, mode=0o600)
         except FileNotFoundError:
             atomic_write_secret_text(
                 key_path, pysecrets.token_hex(32) + "\n", mode=0o600

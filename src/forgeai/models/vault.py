@@ -64,8 +64,8 @@ def atomic_write_secret_text(
     atomic_write_text(path, payload, mode=mode)
 
 
-def chmod_existing_secret_file(path: Path, *, mode: int = 0o600) -> None:
-    """Corrige le mode d'un secret régulier, sans suivre symlink ni hardlink."""
+def republish_existing_secret_file(path: Path, *, mode: int = 0o600) -> None:
+    """Relit un secret régulier sans suivre de lien, puis le republie atomiquement."""
     no_follow = getattr(os, "O_NOFOLLOW", None)
     if no_follow is None:
         raise OSError("ouverture sans suivi de lien indisponible")
@@ -73,16 +73,23 @@ def chmod_existing_secret_file(path: Path, *, mode: int = 0o600) -> None:
     flags |= getattr(os, "O_CLOEXEC", 0)
     flags |= getattr(os, "O_NONBLOCK", 0)
     # S2083 est un faux positif : cible locale de bootstrap choisie par
-    # l'opérateur, ouverte O_NOFOLLOW puis validée (fstat, fichier régulier,
-    # lien unique) avant toute mutation.
+    # l'opérateur, ouverte O_NOFOLLOW puis validée comme fichier régulier avant
+    # lecture; la publication passe ensuite par le writer atomique.
     descriptor = os.open(Path(path), flags)  # NOSONAR S2083
     try:
         target = os.fstat(descriptor)
-        if not stat.S_ISREG(target.st_mode) or target.st_nlink != 1:
-            raise OSError("refus de corriger un secret lié")
-        os.fchmod(descriptor, mode)
+        if not stat.S_ISREG(target.st_mode):
+            raise OSError("refus de republier un secret non régulier")
+        content = bytearray()
+        while chunk := os.read(descriptor, 8_192):
+            content.extend(chunk)
     finally:
         os.close(descriptor)
+    try:
+        payload = bytes(content).decode("utf-8")
+    except UnicodeDecodeError:
+        raise OSError("secret existant non UTF-8") from None
+    atomic_write_secret_text(path, payload, mode=mode)
 
 
 def _keystream(enc_key: bytes, nonce: bytes, length: int) -> bytes:
