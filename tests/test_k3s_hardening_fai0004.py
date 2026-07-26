@@ -70,9 +70,14 @@ def test_redis_resources_et_hardening():
     assert "RuntimeDefault" in out
 
 
-def test_runAsNonRoot_absent():
+def test_runAsNonRoot_present_desormais():
+    """FAI-0004 documentait l'ABSENCE de runAsNonRoot (les images tournaient en root).
+    SUPERSÉDÉ par FAI-U-022/K8S-022 : le profil PSS restricted est désormais le défaut, et la
+    mesure runtime a établi que drop:[ALL] n'est viable QU'en non-root (root + drop ALL ->
+    « chown: Operation not permitted » sur redis). L'assertion est donc inversée."""
     out = render_k3s(_plan(_redis()))
-    assert "runAsNonRoot" not in out
+    assert "runAsNonRoot: true" in out
+    assert "runAsUser: 999" in out  # uid mesuré de redis
 
 
 def test_redis_probes_tcpSocket():

@@ -1,0 +1,8 @@
+tests/test_k3s_hardening.py:146: KeyError
+=========================== short test summary info ============================
+FAILED tests/test_k3s_hardening.py::test_profil_restricted_est_le_defaut - As...
+FAILED tests/test_k3s_hardening.py::test_root_filesystem_en_lecture_seule_par_defaut
+
+[RED] écarts PSS restricted sur origin/main (2caf246) :
+  - service-quelconque/service-quelconque: capabilities.drop ne contient pas ALL
+  - service-quelconque/service-quelconque: runAsNonRoot absent (ni pod ni conteneur)

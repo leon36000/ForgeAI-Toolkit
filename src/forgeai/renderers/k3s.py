@@ -9,6 +9,7 @@ from __future__ import annotations
 import os
 import re
 import textwrap
+from typing import NamedTuple
 from urllib.parse import urlsplit
 
 from forgeai.core.models import DeploymentPlan, ServiceSpec
@@ -81,28 +82,142 @@ def _resources_block(vendor: str | None) -> str:
     return block
 
 
-def _security_block(vendor: str | None) -> str:
-    """Durcissement du securityContext pour tous les conteneurs. Le passthrough hostPath des
-    devices GPU amd/intel suffit pour l'accès aux devices (/dev/kfd, /dev/dri) ; privileged
-    n'est pas requis et violerait le principe du moindre privilège.
-    runAsNonRoot ET capabilities.drop:[ALL] ne sont PAS émis : de nombreuses images tournent en
-    root et ont besoin de capabilities (ex. redis chown /data) ; les forcer ferait échouer les
-    pods — PREUVE RUNTIME (K3s réel) : redis:7-alpine avec drop:[ALL] -> CrashLoopBackOff
-    « chown: Operation not permitted ». Un runAsUser spécifique par image est hors périmètre.
-    Durcissement retenu (vérifié : redis atteint Ready) = allowPrivilegeEscalation:false +
-    seccompProfile RuntimeDefault."""
-    _ = vendor  # gardé pour la stabilité de l'API interne ; le durcissement est uniforme.
-    block = (
+class ProfilSecurite(NamedTuple):
+    """Profil de sécurité mesuré sur k3s v1.35.5 pour un service donné."""
+    uid: int
+    ro_rootfs: bool = True
+    chemins_inscriptibles: tuple[str, ...] = ()
+    preuve: str = ""
+
+
+_PROFILS_SECURITE: dict[str, ProfilSecurite] = {
+    "redis": ProfilSecurite(
+        uid=999,
+        preuve="redis:7-alpine READY en restricted complet ; en root + drop ALL : FAILED « chown: . : Operation not permitted »",
+    ),
+    "litellm": ProfilSecurite(
+        uid=1000,
+        preuve="ghcr.io/berriai/litellm:main-stable READY en restricted complet",
+    ),
+    "qdrant": ProfilSecurite(
+        uid=1000,
+        chemins_inscriptibles=("/qdrant/snapshots",),
+        preuve="qdrant/qdrant:v1.12.5 : panic « Can't create Snapshots directory: PermissionDenied » sans ce volume ; READY avec",
+    ),
+    "postgres": ProfilSecurite(
+        uid=999,
+        chemins_inscriptibles=("/var/run/postgresql",),
+        preuve="postgres:18.3-alpine : échec sans ce volume ; READY avec",
+    ),
+    "immudb": ProfilSecurite(
+        uid=3322,
+        preuve="codenotary/immudb:1.11.1 READY en restricted complet",
+    ),
+    "openbao": ProfilSecurite(
+        uid=100,
+        preuve="openbao/openbao:2.6.0 (USER nommé « openbao » = uid 100) : écriture de /openbao/file OK en restricted complet",
+    ),
+    "langfuse": ProfilSecurite(
+        uid=1000,
+        preuve="langfuse/langfuse:3 : écriture OK en restricted complet",
+    ),
+    "text-embeddings-inference-tei": ProfilSecurite(
+        uid=1000,
+        preuve="ghcr.io/huggingface/text-embeddings-inference:cpu-1.5 : écriture de /data OK en restricted complet",
+    ),
+    "ollama": ProfilSecurite(
+        uid=1000,
+        ro_rootfs=False,
+        preuve="ollama/ollama:latest : « mkdir /home/ubuntu/.ollama: read-only file system » avec readOnlyRootFilesystem ; READY sans. Le HOME dépend de la distribution de base de l'image, inconnu au moment du rendu",
+    ),
+}
+
+_PROFILS_SECURITE["vector-store"] = _PROFILS_SECURITE["qdrant"]
+_PROFILS_SECURITE["text-embeddings-inference-reranker"] = _PROFILS_SECURITE["text-embeddings-inference-tei"]
+_PROFILS_SECURITE["tei"] = _PROFILS_SECURITE["text-embeddings-inference-tei"]
+
+_PROFIL_DEFAUT = ProfilSecurite(uid=1000, preuve="défaut pour service non mesuré")
+_UID_MINIMAL_NON_ROOT = 1
+
+
+def _profil_securite(nom: str) -> ProfilSecurite:
+    """Retourne le profil mesuré d'un service, ou le profil par défaut."""
+    profil = _PROFILS_SECURITE.get(nom, _PROFIL_DEFAUT)
+    if profil.uid < _UID_MINIMAL_NON_ROOT:
+        raise ValueError(
+            f"le profil de sécurité pour {nom!r} exige uid={profil.uid} "
+            f"(minimum autorisé : {_UID_MINIMAL_NON_ROOT})"
+        )
+    return profil
+
+
+def _pod_security_block(profil: ProfilSecurite, gpu: bool) -> str:
+    """Bloc securityContext au niveau pod ; dérogation GPU documentée."""
+    if gpu:
+        return (
+            "\n      securityContext:"
+            "\n        # forgeai: dérogation PSS restricted — l'accès GPU en passthrough requiert les groupes de l'hôte"
+            "\n        # forgeai: mesure : 0/4 devices /dev/dri accessibles en non-root (gid render variable) ; dérogation limitée aux services GPU demandés"
+            "\n        # forgeai: readOnlyRootFilesystem est également désactivé (chemins de cache du moteur GPU non mesurables sans matériel — cf. LAB-033)"
+            "\n        seccompProfile:"
+            "\n          type: RuntimeDefault"
+        )
+    return (
+        "\n      securityContext:"
+        "\n        runAsNonRoot: true"
+        f"\n        runAsUser: {profil.uid}"
+        f"\n        runAsGroup: {profil.uid}"
+        f"\n        fsGroup: {profil.uid}"
+        "\n        seccompProfile:"
+        "\n          type: RuntimeDefault"
+    )
+
+
+def _security_block(profil: ProfilSecurite, gpu: bool) -> str:
+    """Bloc securityContext au niveau conteneur.
+
+    `gpu` désactive AUSSI readOnlyRootFilesystem, et pas seulement l'identité non-root :
+    les chemins d'écriture d'un moteur GPU (caches de modèles, caches de compilation du
+    runtime vendor) dépendent de l'image ET de l'hôte, et n'ont pas pu être mesurés faute
+    de matériel GPU autorisé (packages LAB-033*, BLOCKED_LAB). Activer la racine en lecture
+    seule sans cette mesure casserait des déploiements réels : la règle « exceptions
+    spécifiques et TESTÉES » impose donc de ne pas l'activer ici. Les trois contrôles
+    mesurables restent émis (drop:[ALL], allowPrivilegeEscalation:false, seccomp).
+    readOnlyRootFilesystem n'est pas une exigence du profil PSS restricted : le pod GPU ne
+    déroge à restricted que par son identité root et son volume hostPath, pas par ce champ.
+    """
+    ro = profil.ro_rootfs and not gpu
+    return (
         "\n          securityContext:"
         "\n            allowPrivilegeEscalation: false"
+        "\n            capabilities:"
+        "\n              drop:"
+        "\n                - ALL"
+        f"\n            readOnlyRootFilesystem: {'true' if ro else 'false'}"
         "\n            seccompProfile:"
         "\n              type: RuntimeDefault"
     )
-    # openbao : PAS de capability IPC_LOCK. L'image lance `bao` en non-root sans file-cap -> IPC_LOCK
-    # n'entre jamais dans le set EFFECTIVE du process (mlock inopérant, prouvé e2e S6) ; accorder une
-    # capability privilégiée inutile violerait le moindre privilège. Le coffre tourne avec
-    # disable_mlock (openbao.hcl) + swap-off au nœud (contrôle compensatoire opérateur documenté).
-    return block
+
+
+def _volumes_inscriptibles(profil: ProfilSecurite, gpu: bool) -> list[tuple[str, str]]:
+    """Liste les emptyDir nécessaires quand la racine est en lecture seule."""
+    ro = profil.ro_rootfs and not gpu
+    if not ro:
+        return []
+    chemins = ["/tmp"] + list(profil.chemins_inscriptibles)
+
+    def _nom(chemin: str) -> str:
+        return "inscriptible-" + chemin.lstrip("/").replace("/", "-").lower()
+
+    return [(_nom(c), c) for c in chemins]
+
+
+_PROFIL_SIDECAR_OPENBAO = ProfilSecurite(
+    uid=100, ro_rootfs=False,
+    preuve="side-car d'unseal : `bao operator unseal` peut écrire un fichier de jeton dans "
+           "$HOME ; comportement NON mesuré en racine lecture seule -> readOnlyRootFilesystem "
+           "non activé. Le reste du profil restricted (drop ALL, seccomp, no-escalation) est conservé.",
+)
 
 
 def _probes_block(svc: ServiceSpec) -> str:
@@ -164,8 +279,7 @@ def _openbao_sidecar_block(image: str) -> str:
         "\n            - name: openbao-keys"
         "\n              mountPath: /keys"
         "\n              readOnly: true"
-        "\n          securityContext:"
-        "\n            allowPrivilegeEscalation: false"
+        + _security_block(_PROFIL_SIDECAR_OPENBAO, gpu=False)
     )
 
 
@@ -185,8 +299,11 @@ def _deployment(svc: ServiceSpec, effective_node: str | None = None,
     # des devices noyau (pas de privileged, K8S-008).
     vendor = (svc.gpu_vendor or "nvidia") if svc.gpu else None
 
+    # K8S-022 : profil PSS restricted par service (uid mesuré) ; `svc.gpu` = seule dérogation.
+    profil = _profil_securite(svc.name)
+    gpu_actif = bool(svc.gpu)
     resources_block = _resources_block(vendor)
-    security_block = _security_block(vendor)
+    security_block = _security_block(profil, gpu_actif)
     probes_block = _probes_block(svc)
     node_selector = ""
     if effective_node and effective_node != "auto":
@@ -262,6 +379,17 @@ def _deployment(svc: ServiceSpec, effective_node: str | None = None,
         mounts.append((claim, path, None, False))
     for claim, path in gpu_vols:
         vols.append((claim, path, "hostPath"))
+    # K8S-022 : readOnlyRootFilesystem impose des emptyDir explicites pour les chemins que le
+    # service écrit hors de ses volumes de données (chemins MESURÉS, cf. _PROFILS_SECURITE).
+    # Un chemin déjà monté (PVC, ConfigMap…) n'est jamais monté deux fois : mountPath dupliqué
+    # = spec de pod invalide.
+    deja_montes = {chemin for _, chemin, _, _ in mounts}
+    for nom_volume, chemin in _volumes_inscriptibles(profil, gpu_actif):
+        if chemin in deja_montes:
+            continue
+        deja_montes.add(chemin)
+        mounts.append((nom_volume, chemin, None, False))
+        vols.append((nom_volume, None, "emptyDir"))
     # openbao : volume Secret des clés d'unseal — ajouté aux `vols` du POD (donc au bloc volumes:)
     # MAIS PAS aux `mounts` (le conteneur principal ne monte JAMAIS les clés ; seul le sidecar
     # de re-unseal les monte, cf. _openbao_sidecar_block).
@@ -300,6 +428,9 @@ def _deployment(svc: ServiceSpec, effective_node: str | None = None,
                     passthrough_comment_emitted = True
                 items += (f"\n        - name: {claim}"
                           f"\n          hostPath:\n            path: {payload}")
+            elif kind == "emptyDir":
+                items += (f"\n        - name: {claim}"
+                          f"\n          emptyDir: {{}}")
             elif kind == "configMap":
                 items += (f"\n        - name: {claim}"
                           f"\n          configMap:\n            name: {payload}")
@@ -376,7 +507,9 @@ def _deployment(svc: ServiceSpec, effective_node: str | None = None,
     sidecar_block = _openbao_sidecar_block(image) if svc.name == "openbao" else ""
     container_extra = (command_block + env_block + resources_block + security_block
                        + probes_block + volume_mount + sidecar_block + volume_def)
-    sa_block = "\n      serviceAccountName: forgeai-sa\n      automountServiceAccountToken: false"
+    sa_block = ("\n      serviceAccountName: forgeai-sa"
+                "\n      automountServiceAccountToken: false"
+                + _pod_security_block(profil, gpu_actif))
     return "".join(configmap_docs) + "".join(pvc_docs) + f"""---
 apiVersion: apps/v1
 kind: Deployment

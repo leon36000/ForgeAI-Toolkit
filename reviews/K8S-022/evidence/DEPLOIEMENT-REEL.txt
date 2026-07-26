@@ -1,0 +1,26 @@
+# Déploiement RÉEL du manifeste rendu — cluster k3s v1.35.5, namespace k8s022-e2e
+# Namespace étiqueté pod-security.kubernetes.io/enforce=restricted (enforcement latest)
+
+## kubectl apply --dry-run=server (schéma + admission)
+toutes ressources 'unchanged (server dry run)' = acceptées
+
+## Pods sous enforcement restricted
+litellm-5569df4674-jsg8c   0/1   CrashLoopBackOff   4 (68s ago)   3m9s
+litellm-66d9dddd76-tprf4   0/1   CrashLoopBackOff   4 (76s ago)   2m58s
+qdrant-7cfc96cb8c-2bd5j    1/1   Running            0             2m58s
+redis-7866489f7f-shkhl     1/1   Running            0             2m58s
+
+## securityContext RÉELLEMENT appliqué (pod redis vivant)
+pod : {"fsGroup":999,"runAsGroup":999,"runAsNonRoot":true,"runAsUser":999,"seccompProfile":{"type":"RuntimeDefault"}}
+conteneur : {"allowPrivilegeEscalation":false,"capabilities":{"drop":["ALL"]},"readOnlyRootFilesystem":true,"seccompProfile":{"type":"RuntimeDefault"}}
+
+## Refus d'admission PSS : AUCUN (aucun événement violat/forbidden/denied)
+
+## litellm OOMKilled : défaut PRÉEXISTANT, sans rapport avec K8S-022 (contre-preuve exécutée)
+Le pod litellm est OOMKilled sous le nouveau profil. Contrôle : le MÊME service rendu depuis
+`origin/main` (2caf246, AVANT ce changement — 0 occurrence de runAsNonRoot/drop dans le manifeste)
+a été déployé dans le namespace `k8s022-ref` : il est **OOMKilled lui aussi**.
+La cause est la limite `memory: 1Gi` de `_resources_block` (identique avant/après), pas le profil
+de sécurité. Le conteneur DÉMARRE (l'admission et le securityContext sont donc corrects) puis est
+tué par le cgroup mémoire. Ce défaut relève du package RES-012B (ressources par service), hors
+périmètre de K8S-022 ; il est signalé ici plutôt que passé sous silence.
