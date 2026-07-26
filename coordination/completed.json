@@ -249,6 +249,60 @@
         "dossier": "reviews/OPT-001",
         "note": "Memoisation sondes materielles/backends (OBS-A060-1/A061) : 330ms -> 0.00ms. APPROVE 3/3 (faux positif du test anti-interblocage detecte en revue puis corrige, preuve bidirectionnelle). DEBLOQUE LA CI."
       }
+    },
+    {
+      "package": "TRUST-019B",
+      "merge_commit": "4774f56ed6fe2bafa53f77d3b8c470a6f9b7891f",
+      "pr_number": 182,
+      "merged_at": "2026-07-26T14:43:19Z",
+      "review": {
+        "result": "APPROVE",
+        "ratio": "3/3",
+        "vendors": [
+          "google",
+          "qwen3.6-40b",
+          "deepseek"
+        ],
+        "prompt_sha256": "a53f8f9cf8d110e06720b57cdf060dbc8f5a814ca3a992c24c125ef0c72426d5",
+        "dossier": "reviews/TRUST-019B",
+        "note": "HMAC-SHA256 cle locale Tier 1 (FAI-U-019). APPROVE 3/3. Reecriture integrale de chaine DETECTEE ; refus du declassement Tier1->Tier0 ; retro-compat Tier0 stricte ; couverture registre 98% (gate 95%). Approbation Nathan obtenue (exigee par ADR TRUST-019A). Limite declaree : ne defend pas contre root ni meme-UID."
+      }
+    },
+    {
+      "package": "OPT-002",
+      "merge_commit": "81ac2be56e175075eb35ea13986b86fb93018c23",
+      "pr_number": 186,
+      "merged_at": "2026-07-26T14:43:49Z",
+      "review": {
+        "result": "APPROVE",
+        "ratio": "3/3",
+        "vendors": [
+          "google",
+          "qwen3.6-40b",
+          "deepseek"
+        ],
+        "prompt_sha256": "3ac0cd4c81c13c2dec658c09620cfc7feb0fa229b6038d9104a0b6f95556bf43",
+        "dossier": "reviews/OPT-002",
+        "note": "Bornage des sondes du chemin web a 3s (suite OPT-001). APPROVE 3/3. Cause racine du blocage CI : timeout 20s/commande applique aux sondes de LECTURE. Preuve : sleep 30 coupe a 3.0s. A DEBLOQUE la merge-queue (TRUST-019B est passe seul apres)."
+      }
+    },
+    {
+      "package": "K8S-008",
+      "merge_commit": "53ca18308ea5a115b7db562e490a12bbf7b248a4",
+      "pr_number": 185,
+      "merged_at": "2026-07-26T14:52:55Z",
+      "review": {
+        "result": "APPROVE",
+        "ratio": "3/3",
+        "vendors": [
+          "google",
+          "qwen3.6-40b",
+          "deepseek"
+        ],
+        "prompt_sha256": "81c3ce4a1b33226e557c1f3f835f8147d38ba6ba4f5694ff5b5d7000893121a5",
+        "dossier": "reviews/K8S-008",
+        "note": "Suppression de privileged:true pour les GPU AMD/Intel (FAI-U-008, CIS 5.2.1). APPROVE 3/3. Durcissement uniforme + refus des vendors inconnus + limitation vendor visible. Perimetre elargi sur decision explicite du cockpit (test_k3s_hardening_fai0004 assertait l anti-comportement d un finding SUPERSEDE)."
+      }
     }
   ]
 }
