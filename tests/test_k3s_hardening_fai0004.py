@@ -123,9 +123,12 @@ def test_gpu_amd_passthrough_pas_de_hardening():
         gpu_vendor="amd",
     )
     out = render_k3s(_plan(amd))
-    assert "privileged: true" in out
+    # K8S-008 (FAI-U-008) SUPERSÈDE l'attente d'origine de FAI-0004 : le passthrough AMD reste
+    # (hostPath /dev/kfd + /dev/dri) mais SANS privileged:true — l'accès aux devices suffit et
+    # privileged était un sur-privilège (CIS 5.2.1). Le securityContext durci s'applique désormais
+    # aussi aux GPU amd/intel. Périmètre élargi accordé par le cockpit pour lever cette contradiction.
+    assert "privileged: true" not in out
     assert "/dev/kfd" in out
     assert "/dev/dri" in out
-    assert "drop:" not in out
-    assert "allowPrivilegeEscalation: false" not in out
+    assert "allowPrivilegeEscalation: false" in out
     assert "nvidia.com/gpu" not in out

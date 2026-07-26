@@ -32,11 +32,28 @@ def test_k3s_nvidia_garde_resource():
     assert "/dev/kfd" not in out
 
 
-def test_k3s_amd_passthrough_kfd_dri_privileged():
+def test_k3s_amd_passthrough_kfd_dri_sans_privileged():
+    # K8S-008 (FAI-U-008) : le passthrough AMD reste (hostPath /dev/kfd + /dev/dri) mais SANS
+    # privileged:true — securityContext durci (allowPrivilegeEscalation:false) + limitation visible.
     out = render_k3s(_plan(_gpu("amd")))
     assert "/dev/kfd" in out and "/dev/dri" in out
-    assert "privileged: true" in out
-    assert "nvidia.com/gpu" not in out
+    assert "privileged: true" not in out
+    assert "allowPrivilegeEscalation: false" in out
+    assert "passthrough hostPath" in out  # limitation vendor visible dans le plan
+
+
+def test_k3s_intel_sans_privileged():
+    out = render_k3s(_plan(_gpu("intel")))
+    assert "/dev/dri" in out and "/dev/kfd" not in out
+    assert "privileged: true" not in out
+    assert "allowPrivilegeEscalation: false" in out
+
+
+def test_k3s_gpu_vendor_inconnu_refuse():
+    # combinaison non supportée : un vendor GPU inconnu est refusé au rendu (pas de privileged muet).
+    import pytest
+    with pytest.raises((ValueError, KeyError)):
+        render_k3s(_plan(_gpu("exotic-vendor")))
 
 
 def test_k3s_intel_passthrough_dri():
