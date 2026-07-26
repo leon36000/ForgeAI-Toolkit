@@ -46,8 +46,16 @@ def test_serviceaccount_and_networkpolicy_emis_une_fois():
     assert out.count("kind: ServiceAccount") == 1
     assert "name: forgeai-sa" in out
     assert out.count("automountServiceAccountToken: false") == 2  # SA + pod spec
-    assert out.count("kind: NetworkPolicy") == 1
-    assert "name: forgeai-default" in out
+    # K8S-023 : le renderer émet désormais PLUSIEURS NetworkPolicies par conception — refus par
+    # défaut, DNS, puis une allowlist par service cible d'une dépendance déclarée. L'intention de
+    # ce test — aucune duplication accidentelle — est préservée et vérifiée précisément : chaque
+    # politique porte un nom unique, et le refus par défaut est émis exactement une fois.
+    noms = [ligne.strip()[len("name: "):] for ligne in out.splitlines()
+            if ligne.strip().startswith("name: forgeai-")]
+    politiques = [n for n in noms if n.startswith("forgeai-default-deny")
+                  or n.startswith("forgeai-allow-")]
+    assert len(politiques) == len(set(politiques)), f"politique dupliquée : {politiques}"
+    assert politiques.count("forgeai-default-deny") == 1
 
 
 def test_redis_clusterip_sans_nodeport():

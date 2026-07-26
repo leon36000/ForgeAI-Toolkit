@@ -581,6 +581,146 @@ def _namespace_block(plan: DeploymentPlan) -> str:
     )
 
 
+def _network_policies(plan: DeploymentPlan) -> str:
+    """Construit les NetworkPolicies du profil Minimal.
+
+    POURQUOI : refus par défaut sur Ingress ET Egress (sinon un pod compromis exfiltre, et tout
+    pod du namespace peut en joindre n'importe quel autre), puis ouverture EXCLUSIVEMENT des
+    flux qu'une dépendance déclarée du plan justifie, plus DNS vers kube-system pour ne pas
+    casser la résolution de noms sans rouvrir l'Internet en 0.0.0.0/0.
+    """
+    parts: list[str] = []
+
+    # 1) Refus par défaut : on déclare Ingress+Egress et on n'émet ni règle ingress ni règle
+    # egress -> Kube interprète « tout refuser ». Ne pas écrire `ingress: []` (règle vide).
+    parts.append("---\n")
+    parts.append("apiVersion: networking.k8s.io/v1\n")
+    parts.append("kind: NetworkPolicy\n")
+    parts.append("metadata:\n")
+    parts.append(f"  name: forgeai-default-deny\n")
+    parts.append(f"  namespace: {NAMESPACE}\n")
+    parts.append("spec:\n")
+    parts.append("  podSelector: {}\n")
+    parts.append("  policyTypes:\n")
+    parts.append("    - Ingress\n")
+    parts.append("    - Egress\n")
+
+    # 2) DNS : on rouvre UNIQUEMENT UDP/53 et TCP/53 vers kube-system.
+    # Aucun ipBlock : sans cela, kube-proxy/CoreDNS joignables et Internet toujours bloqué.
+    parts.append("---\n")
+    parts.append("apiVersion: networking.k8s.io/v1\n")
+    parts.append("kind: NetworkPolicy\n")
+    parts.append("metadata:\n")
+    parts.append(f"  name: forgeai-allow-dns\n")
+    parts.append(f"  namespace: {NAMESPACE}\n")
+    parts.append("spec:\n")
+    parts.append("  podSelector: {}\n")
+    parts.append("  policyTypes:\n")
+    parts.append("    - Egress\n")
+    parts.append("  egress:\n")
+    parts.append("    - to:\n")
+    parts.append("        - namespaceSelector:\n")
+    parts.append("            matchLabels:\n")
+    parts.append("              kubernetes.io/metadata.name: kube-system\n")
+    parts.append("      ports:\n")
+    parts.append("        - protocol: UDP\n")
+    parts.append("          port: 53\n")
+    parts.append("        - protocol: TCP\n")
+    parts.append("          port: 53\n")
+
+    # 3) Une politique par service CIBLE d'au moins une dépendance.
+    # Indexation par nom pour O(1) et conservation de l'ordre d'apparition du plan.
+    by_name: dict[str, ServiceSpec] = {svc.name: svc for svc in plan.services}
+    seen_targets: dict[str, list[str]] = {}  # cible -> dépendants (ordre du plan, sans doublon)
+
+    for dependant in plan.services:
+        for dep_name in dependant.depends:
+            cible = by_name.get(dep_name)
+            # Dépendance pointant un service absent du plan : ignorée silencieusement.
+            # Le plan peut référencer une brique non déployée ; on n'ouvre pas de flux.
+            if cible is None:
+                continue
+            if cible.name not in seen_targets:
+                seen_targets[cible.name] = []
+            if dependant.name not in seen_targets[cible.name]:
+                seen_targets[cible.name].append(dependant.name)
+
+    # Ordre déterministe : ordre d'apparition des cibles dans plan.services.
+    for svc in plan.services:
+        dependants = seen_targets.get(svc.name)
+        if not dependants:
+            continue  # Contrôle négatif : personne ne dépend -> aucune politique, aucun flux.
+
+        target_name = _safe(svc.name, "service.name")
+        parts.append("---\n")
+        parts.append("apiVersion: networking.k8s.io/v1\n")
+        parts.append("kind: NetworkPolicy\n")
+        parts.append("metadata:\n")
+        parts.append(f"  name: forgeai-allow-{target_name}\n")
+        parts.append(f"  namespace: {NAMESPACE}\n")
+        parts.append("spec:\n")
+        parts.append(f"  podSelector:\n")
+        parts.append(f"    matchLabels:\n")
+        parts.append(f"      app: {target_name}\n")
+        parts.append("  policyTypes:\n")
+        parts.append("    - Ingress\n")
+        parts.append("  ingress:\n")
+        parts.append("    - from:\n")
+        for dep in dependants:
+            dep_name = _safe(dep, "dependant.name")
+            parts.append(f"        - podSelector:\n")
+            parts.append(f"            matchLabels:\n")
+            parts.append(f"              app: {dep_name}\n")
+        parts.append(f"      ports:\n")
+        parts.append(f"        - protocol: TCP\n")
+        parts.append(f"          port: {svc.container_port}\n")
+
+    # 4) Politiques d'egress symétriques : Kubernetes exige que la source autorise l'egress
+    # ET la destination l'ingress pour qu'un flux passe. Mesuré sur cluster k3s réel : sans cette
+    # politique, `litellm -> redis:6379` reste bloqué même si `forgeai-allow-redis` ouvre l'ingress.
+    for dep_svc in plan.services:
+        # Collecter les cibles (dans l'ordre du plan, sans doublon) dont dep_svc dépend effectivement
+        cibles: list[str] = []
+        for dep_name in dep_svc.depends:
+            cible_svc = by_name.get(dep_name)
+            if cible_svc is None:
+                continue  # Dépendance pointant un service absent du plan : ignorée
+            if cible_svc.name not in cibles:
+                cibles.append(cible_svc.name)
+        if not cibles:
+            # Contrôle négatif : aucune dépendance présente -> pas de politique
+            continue
+
+        dep_name_safe = _safe(dep_svc.name, "dep.name")
+        parts.append("---\n")
+        parts.append("apiVersion: networking.k8s.io/v1\n")
+        parts.append("kind: NetworkPolicy\n")
+        parts.append("metadata:\n")
+        parts.append(f"  name: forgeai-allow-{dep_name_safe}-egress\n")
+        parts.append(f"  namespace: {NAMESPACE}\n")
+        parts.append("spec:\n")
+        parts.append(f"  podSelector:\n")
+        parts.append(f"    matchLabels:\n")
+        parts.append(f"      app: {dep_name_safe}\n")
+        parts.append("  policyTypes:\n")
+        parts.append("    - Egress\n")
+        parts.append("  egress:\n")
+        for cible_name in cibles:
+            cible_safe = _safe(cible_name, "target.name")
+            cible_svc = by_name[cible_name]  # Garanti présent car filtré plus haut
+            container_port = cible_svc.container_port
+            parts.append("    - to:\n")
+            parts.append(f"        - podSelector:\n")
+            parts.append(f"            matchLabels:\n")
+            parts.append(f"              app: {cible_safe}\n")
+            parts.append("      ports:\n")
+            parts.append(f"        - protocol: TCP\n")
+            parts.append(f"          port: {container_port}\n")
+
+
+    return "".join(parts)
+
+
 def render_k3s(plan: DeploymentPlan, node: str | None = None,
                service_type: str = "NodePort",
                config_files: dict[str, str] | None = None) -> str:
@@ -600,20 +740,11 @@ metadata:
   name: forgeai-sa
   namespace: {NAMESPACE}
 automountServiceAccountToken: false
----
-apiVersion: networking.k8s.io/v1
-kind: NetworkPolicy
-metadata:
-  name: forgeai-default
-  namespace: {NAMESPACE}
-spec:
-  podSelector: {{}}
-  policyTypes:
-    - Ingress
-  ingress:
-    - from:
-        - podSelector: {{}}
 """]
+    # K8S-023 : refus par défaut Ingress ET Egress + allowlists dérivées des dépendances
+    # DÉCLARÉES du plan. Remplace l'unique politique `forgeai-default`, qui laissait l'egress
+    # totalement libre et autorisait un accès intra-namespace universel.
+    parts.append(_network_policies(plan))
     used: set[int] = set()
     for svc in plan.services:
         effective_node = svc.node if svc.node is not None else node
