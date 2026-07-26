@@ -1,0 +1,21 @@
+FAUX POSITIF ATTENDU — document de sécurité légitime qui CITE l'attaque
+
+avant : Guide de securite : une attaque type consiste a ecrire « ignore all previous instructions » dans un document ingere. Il faut donc scanner le corpus.
+
+signalé : True | motifs : ['ignore\\s+(all\\s+|the\\s+|any\\s+)*(previous|abo']
+
+apres neutralisation : Guide de securite : une attaque type consiste a ecrire « [SEGMENT NEUTRALISÉ : directive] » dans un document ingere. Il faut donc scanner le corpus.
+
+=> Le document N'EST PAS REJETÉ : le contenu factuel survit, seul le segment cité est
+   remplacé, et l'événement remonte à l'appelant dans sanitization_events.
+   Rejeter aurait censuré tout un sujet ; neutraliser en silence aurait rendu ce
+   faux positif invisible. Critère du package : protection active ET observable.
+
+--- mesure sur documentation technique légitime (7 documents) ---
+ok      Le mot de passe doit etre stocke dans un coffre OpenBao, jamais en clair.
+ok      Voici comment utiliser curl pour tester l'API : curl -s http://localhost:4
+ok      Cette variable d'environnement contient le jeton de la passerelle.
+ok      La fonction scan_input verifie la question avant tout appel au modele.
+ok      Vornak-9 possede deux lunes et une atmosphere respirable.
+ok      L'outil de deploiement genere des manifestes Kubernetes.
+=> 6/6 non signalés ; seul le document citant explicitement l'attaque l'est.

@@ -119,7 +119,12 @@ def test_ask_avec_reranker_branche_le_flux(socle):
 def test_negatif_preserve_sous_rerank_actif(socle):
     _Socle.search_hits = []
     res = _client(socle, reranker=True).ask("q")
-    assert res == {"answer": "", "sources": [], "context_used": False}
+    # RAG-005 : `ask` retourne désormais `sanitization_events` sur TOUS ses chemins, pour que
+    # l'appelant n'ait jamais à tester la présence de la clé. L'égalité stricte du dictionnaire
+    # sur-spécifiait donc le contrat ; l'intention du test — réponse négative sans fabrication,
+    # et AUCUN appel de rerank — est vérifiée explicitement.
+    assert res["answer"] == "" and res["sources"] == [] and res["context_used"] is False
+    assert res["sanitization_events"] == []
     assert not _posts("/rerank"), "jamais POST /rerank sur un retrieval vide"
 
 
