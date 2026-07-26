@@ -15,6 +15,9 @@ prompt hostile potentiellement volumineux.
 from __future__ import annotations
 
 import re
+from forgeai.eval.rag_eval import groundedness
+from typing import NamedTuple
+import hashlib
 import secrets
 import unicodedata
 from dataclasses import dataclass
@@ -204,3 +207,167 @@ def scan_assembled(context: str, delimiter: str) -> None:
         raise GuardrailBlocked(
             f"Directive détectée dans le contexte assemblé après normalisation : {motifs}."
         )
+
+
+# Seuils de couverture et d'entailment — voir ADR-RAG-004A §3.2 et §3.3.2.
+# I1 « pas de preuve, pas d'ancrage » et I3 « fail-closed » exigent des valeurs
+# conservatives : un span n'est soutenu qu'au-dessus d'un score élevé, et la
+# majorité qualifiée des spans doit l'être pour déclarer l'ensemble grounded.
+SEUIL_COUVERTURE_S = 0.8
+SEUIL_ENTAILMENT_T = 0.6
+
+
+class Passage(NamedTuple):
+    """Unité de contexte minimale passée au vérificateur d'ancrage.
+
+    L'identifiant dérive du TEXTE seul (cf. `depuis_texte`), jamais de la
+    source : deux sources distinctes portant le même passage partagent le même
+    `passage_id`, ce qui garantit la stabilité inter-appels et inter-sources.
+    """
+
+    passage_id: str
+    source: str
+    text: str
+
+    @staticmethod
+    def depuis_texte(text: str, source: str) -> "Passage":
+        """Construit un Passage en dérivant `passage_id` du texte normalisé.
+
+        Normalisation : mise en minuscules, réduction des espaces multiples à
+        un seul, suppression des espaces de bord. Identifiant = préfixe SHA-256
+        hexadécimal de 16 caractères. Déterministe par construction.
+        """
+        texte_normalise = re.sub(r"\s+", " ", text.lower()).strip()
+        passage_id = hashlib.sha256(texte_normalise.encode("utf-8")).hexdigest()[:16]
+        return Passage(passage_id=passage_id, source=source, text=text)
+
+
+class Citation(NamedTuple):
+    """Résultat de la mise en correspondance d'un span avec son meilleur passage."""
+
+    span: str
+    passage_id: str
+    supported: bool
+    score: float
+    reason: str = ""
+
+
+@dataclass(frozen=True)
+class GroundingVerdict:
+    """Verdict d'ancrage : état, couverture, citations, motif.
+
+    `state` ∈ {"grounded", "ungrounded", "unknown"}. `unknown` est un état de
+    premier rang (contexte vide ou réponse non segmentable) et n'est jamais
+    assimilé à `grounded` : un ancrage non prouvable n'est pas un ancrage
+    (invariant I1).
+    """
+
+    state: str
+    coverage: float
+    citations: tuple[Citation, ...]
+    reason: str = ""
+
+
+_SEPARATEURS_SPANS = re.compile(r"[.!?;\n]")
+
+
+def decouper_en_spans(answer: str) -> list[str]:
+    """Découpe déterministe d'une réponse en phrases/propositions.
+
+    Unité = phrase ou proposition (ADR §3.1). Segmentation sur les
+    délimiteurs `.`, `!`, `?`, `;` et sauts de ligne ; segments vides ou
+    réduits aux espaces éliminés ; ordre d'origine conservé.
+    """
+    segments = _SEPARATEURS_SPANS.split(answer)
+    return [segment.strip() for segment in segments if segment.strip()]
+
+
+def verify_grounding(answer: str, passages: list[Passage]) -> GroundingVerdict:
+    """Calcule le verdict d'ancrage d'une réponse contre un ensemble de passages.
+
+    POURQUOI : attester un soutien réel (chaque span couvert par un passage)
+    plutôt que la simple présence d'un retrieval — c'est précisément le défaut
+    que corrige l'ADR-RAG-004A, le booléen pré-cuit de l'appelant étant
+    remplacé par un calcul local et reproductible.
+
+    Invariants respectés :
+      - I1 « pas de preuve, pas d'ancrage » : sans contexte ou sans span
+        segmentable, l'état est `unknown`, jamais `grounded`.
+      - I3 « fail-closed » : en cas de couverture insuffisante, l'état est
+        `ungrounded`, l'appelant (pipeline RAG) devant refuser la réponse.
+
+    Pureté : aucune E/S, aucun réseau, aucun appel LLM, aucun aléa. À entrées
+    égales, verdict strictement identique, ordre des citations inclus
+    (parcours des spans dans l'ordre du découpage ; à score égal entre
+    passages, le premier de la liste est retenu, jamais `max()` sur ensemble
+    non ordonné).
+    """
+    spans = decouper_en_spans(answer)
+
+    if not passages:
+        return GroundingVerdict(
+            state="unknown",
+            coverage=0.0,
+            citations=(),
+            reason="contexte vide",
+        )
+    if not spans:
+        return GroundingVerdict(
+            state="unknown",
+            coverage=0.0,
+            citations=(),
+            reason="réponse non segmentable",
+        )
+
+    citations: list[Citation] = []
+    nb_supportes = 0
+
+    for span in spans:
+        meilleur_score = -1.0
+        meilleur_passage: Passage | None = None
+        for passage in passages:
+            score = groundedness(span, passage.text)
+            if score > meilleur_score:
+                meilleur_score = score
+                meilleur_passage = passage
+
+        # Invariant de déterminisme : à score strictement égal, le premier
+        # passage rencontré reste retenu (pas de remplacement par égalité).
+        supported = meilleur_score >= SEUIL_ENTAILMENT_T
+        if supported:
+            nb_supportes += 1
+            citation = Citation(
+                span=span,
+                passage_id=meilleur_passage.passage_id,
+                supported=True,
+                score=meilleur_score,
+            )
+        else:
+            citation = Citation(
+                span=span,
+                passage_id=meilleur_passage.passage_id,
+                supported=False,
+                score=meilleur_score,
+                reason="entailment insuffisant",
+            )
+        citations.append(citation)
+
+    coverage = round(nb_supportes / len(spans), 4)
+
+    if coverage >= SEUIL_COUVERTURE_S:
+        return GroundingVerdict(
+            state="grounded",
+            coverage=coverage,
+            citations=tuple(citations),
+            reason="",
+        )
+
+    return GroundingVerdict(
+        state="ungrounded",
+        coverage=coverage,
+        citations=tuple(citations),
+        reason=(
+            f"couverture {coverage:.4f} inférieure au seuil "
+            f"{SEUIL_COUVERTURE_S:.2f}"
+        ),
+    )
