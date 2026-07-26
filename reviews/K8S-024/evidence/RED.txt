@@ -1,0 +1,2 @@
+[ROUGE] sur origin/main (8380bc3) — le Namespace rendu ne porte AUCUNE étiquette d'admission :
+  labels du Namespace : None

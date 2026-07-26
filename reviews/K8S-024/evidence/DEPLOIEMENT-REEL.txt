@@ -1,0 +1,19 @@
+# K8S-024 — déploiement RÉEL du manifeste rendu (aucune étiquette posée à la main)
+
+## Namespace créé PAR LE MANIFESTE (étiquettes portées par le rendu lui-même)
+{"kubernetes.io/metadata.name":"k8s024-bis","pod-security.kubernetes.io/audit":"restricted","pod-security.kubernetes.io/audit-version":"v1.25","pod-security.kubernetes.io/enforce":"restricted","pod-security.kubernetes.io/enforce-version":"v1.25","pod-security.kubernetes.io/warn":"restricted","pod-security.kubernetes.io/warn-version":"v1.25"}
+
+## Pods sous enforcement auto-appliqué
+qdrant-7d5f4cdd75-6xc4w   1/1   Running   0     3m33s
+redis-5f7dc98d97-qbcc4    1/1   Running   0     3m33s
+
+## Refus d'admission PodSecurity : AUCUN
+  évènements forbidden/violation : 0
+
+## Volumes inscriptibles émis (correction de la régression K8S-022)
+  inscriptible-qdrant-snapshots
+  inscriptible-qdrant-storage
+  inscriptible-tmp
+
+## AVANT correction (même manifeste, sans /qdrant/storage) : qdrant CrashLoopBackOff
+  Error: Service internal error: Read-only file system (os error 30)

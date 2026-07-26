@@ -1,0 +1,200 @@
+# Généré par ForgeAI Toolkit — plan k8s024 (profil minimal-cpu)
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: k8s024-bis
+  labels:
+    pod-security.kubernetes.io/enforce: restricted
+    pod-security.kubernetes.io/enforce-version: v1.25
+    pod-security.kubernetes.io/audit: restricted
+    pod-security.kubernetes.io/audit-version: v1.25
+    pod-security.kubernetes.io/warn: restricted
+    pod-security.kubernetes.io/warn-version: v1.25
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: forgeai-sa
+  namespace: k8s024-bis
+automountServiceAccountToken: false
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: forgeai-default
+  namespace: k8s024-bis
+spec:
+  podSelector: {}
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - podSelector: {}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: forgeai-redis-data
+  namespace: k8s024-bis
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis
+  namespace: k8s024-bis
+spec:
+  replicas: 1
+  selector:
+    matchLabels: {app: redis}
+  template:
+    metadata:
+      labels: {app: redis}
+    spec:
+      serviceAccountName: forgeai-sa
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 999
+        runAsGroup: 999
+        fsGroup: 999
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: redis
+          image: redis:7-alpine
+          ports:
+            - containerPort: 6379
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: "1"
+              memory: 1Gi
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            readOnlyRootFilesystem: true
+            seccompProfile:
+              type: RuntimeDefault
+          livenessProbe:
+            tcpSocket:
+              port: 6379
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          readinessProbe:
+            tcpSocket:
+              port: 6379
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          volumeMounts:
+            - name: forgeai-redis-data
+              mountPath: /data
+            - name: inscriptible-tmp
+              mountPath: /tmp
+      volumes:
+        - name: forgeai-redis-data
+          persistentVolumeClaim:
+            claimName: forgeai-redis-data
+        - name: inscriptible-tmp
+          emptyDir: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis
+  namespace: k8s024-bis
+spec:
+  type: ClusterIP
+  selector: {app: redis}
+  ports:
+    - port: 6379
+      targetPort: 6379
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: qdrant
+  namespace: k8s024-bis
+spec:
+  replicas: 1
+  selector:
+    matchLabels: {app: qdrant}
+  template:
+    metadata:
+      labels: {app: qdrant}
+    spec:
+      serviceAccountName: forgeai-sa
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: qdrant
+          image: qdrant/qdrant:v1.12.5
+          ports:
+            - containerPort: 6333
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: "1"
+              memory: 1Gi
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            readOnlyRootFilesystem: true
+            seccompProfile:
+              type: RuntimeDefault
+          livenessProbe:
+            tcpSocket:
+              port: 6333
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          readinessProbe:
+            tcpSocket:
+              port: 6333
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          volumeMounts:
+            - name: inscriptible-tmp
+              mountPath: /tmp
+            - name: inscriptible-qdrant-storage
+              mountPath: /qdrant/storage
+            - name: inscriptible-qdrant-snapshots
+              mountPath: /qdrant/snapshots
+      volumes:
+        - name: inscriptible-tmp
+          emptyDir: {}
+        - name: inscriptible-qdrant-storage
+          emptyDir: {}
+        - name: inscriptible-qdrant-snapshots
+          emptyDir: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: qdrant
+  namespace: k8s024-bis
+spec:
+  type: ClusterIP
+  selector: {app: qdrant}
+  ports:
+    - port: 6333
+      targetPort: 6333
+
