@@ -165,7 +165,7 @@ READY_FOR_PR: YES|NO
 
 ARTEFACT — DATA-002-review-final.diff :
 diff --git a/src/forgeai/models/_locking.py b/src/forgeai/models/_locking.py
-index 473d2fd0c66b08591d9cd358be388f98fdd53ae3..7d72e705203b0417efbea4475b6c82847b62a55b 100644
+index 473d2fd0c66b08591d9cd358be388f98fdd53ae3..16d047dea5849959d8aa0846f6fb2226d4e0a24b 100644
 --- a/src/forgeai/models/_locking.py
 +++ b/src/forgeai/models/_locking.py
 @@ -1,9 +1,15 @@
@@ -185,7 +185,7 @@ index 473d2fd0c66b08591d9cd358be388f98fdd53ae3..7d72e705203b0417efbea4475b6c8284
 
  @contextmanager
  def file_lock(path: Path):
-@@ -18,3 +24,110 @@ def file_lock(path: Path):
+@@ -18,3 +24,132 @@ def file_lock(path: Path):
      finally:
          fcntl.flock(fd.fileno(), fcntl.LOCK_UN)
          fd.close()
@@ -243,27 +243,47 @@ index 473d2fd0c66b08591d9cd358be388f98fdd53ae3..7d72e705203b0417efbea4475b6c8284
 +    return (Path(home) / vault_name).resolve(strict=False)
 +
 +
++def _paths_identify_same_file(left: Path, right: Path) -> bool:
++    """Compare deux chemins en tenant compte des symlinks, hardlinks et de la casse."""
++    try:
++        return Path(left).samefile(right)
++    except OSError:
++        return Path(left).resolve(strict=False) == Path(right).resolve(strict=False)
++
++
++def _restore_vault_image(path: Path, snapshot: dict) -> None:
++    if snapshot["vault_existed"]:
++        atomic_write_text(
++            path,
++            json.dumps(snapshot["vault"], ensure_ascii=False, indent=1),
++            mode=0o600,
++        )
++    else:
++        atomic_unlink(path)
++
++
 +def restore_models_transaction_locked(
 +    home: Path, vault_path: Path, snapshot: dict
 +) -> None:
 +    """Restaure les deux fichiers; conserve le journal si une restauration échoue."""
 +    home = Path(home)
-+    vault_path = Path(vault_path).resolve(strict=False)
-+    if vault_path != _journal_vault_path(home, snapshot):
++    requested_vault_path = Path(os.path.abspath(vault_path))
++    canonical_vault_path = _journal_vault_path(home, snapshot)
++    if not _paths_identify_same_file(
++        requested_vault_path, canonical_vault_path
++    ):
 +        raise ValueError("le coffre demandé ne correspond pas au journal")
 +    routes_path = home / "routes.json"
 +    journal_path = home / MODELS_TRANSACTION_JOURNAL
 +    rollback_error: Exception | None = None
 +
 +    try:
-+        if snapshot["vault_existed"]:
-+            atomic_write_text(
-+                vault_path,
-+                json.dumps(snapshot["vault"], ensure_ascii=False, indent=1),
-+                mode=0o600,
-+            )
-+        else:
-+            atomic_unlink(vault_path)
++        _restore_vault_image(canonical_vault_path, snapshot)
++        if (
++            requested_vault_path != canonical_vault_path
++            and not requested_vault_path.is_symlink()
++        ):
++            _restore_vault_image(requested_vault_path, snapshot)
 +    except (OSError, TypeError, ValueError, KeyError) as exc:
 +        rollback_error = exc
 +
@@ -292,7 +312,9 @@ index 473d2fd0c66b08591d9cd358be388f98fdd53ae3..7d72e705203b0417efbea4475b6c8284
 +    if not journal_path.exists():
 +        return False
 +    snapshot = json.loads(journal_path.read_text(encoding="utf-8"))
-+    if Path(vault_path).resolve(strict=False) != _journal_vault_path(home, snapshot):
++    if not _paths_identify_same_file(
++        Path(vault_path), _journal_vault_path(home, snapshot)
++    ):
 +        return False
 +    restore_models_transaction_locked(home, vault_path, snapshot)
 +    return True
@@ -465,10 +487,10 @@ index 78f49a30e283cb47cc706987ce0dc0715e00deb1..b468505cbad2f7d53a8d988a31e1e6e2
 +            self._save(routes)
          return new_route
 diff --git a/src/forgeai/models/vault.py b/src/forgeai/models/vault.py
-index 4c90fd3ecae32ad8a537e48932de6879204529ba..b5b8d86d485aa61860fb37a3ee73b4f837618075 100644
+index 4c90fd3ecae32ad8a537e48932de6879204529ba..54da090d25c1817125618e6f9cc854b8f1146d3d 100644
 --- a/src/forgeai/models/vault.py
 +++ b/src/forgeai/models/vault.py
-@@ -27,7 +27,13 @@ import os
+@@ -27,7 +27,14 @@ import os
  import secrets
  from pathlib import Path
 
@@ -476,6 +498,7 @@ index 4c90fd3ecae32ad8a537e48932de6879204529ba..b5b8d86d485aa61860fb37a3ee73b4f8
 +from forgeai.models._locking import (
 +    MODELS_TRANSACTION_JOURNAL,
 +    MODELS_TRANSACTION_LOCK,
++    _paths_identify_same_file,
 +    atomic_write_text,
 +    file_lock,
 +    recover_models_transaction_locked,
@@ -483,7 +506,7 @@ index 4c90fd3ecae32ad8a537e48932de6879204529ba..b5b8d86d485aa61860fb37a3ee73b4f8
 
  MAGIC = b"FGV1"
  _SALT = 16
-@@ -93,6 +99,8 @@ class Vault:
+@@ -93,6 +100,8 @@ class Vault:
 
      def __init__(self, path: Path) -> None:
          self.path = Path(path)
@@ -492,7 +515,7 @@ index 4c90fd3ecae32ad8a537e48932de6879204529ba..b5b8d86d485aa61860fb37a3ee73b4f8
 
      def _load(self) -> dict[str, str]:
          import json
-@@ -105,27 +113,41 @@ class Vault:
+@@ -105,27 +114,52 @@ class Vault:
          self.path.parent.mkdir(parents=True, exist_ok=True)
          os.chmod(self.path.parent, 0o700)
          payload = json.dumps(data, ensure_ascii=False, indent=1)
@@ -514,7 +537,18 @@ index 4c90fd3ecae32ad8a537e48932de6879204529ba..b5b8d86d485aa61860fb37a3ee73b4f8
 +        return data, fingerprint(secret)
 +
 +    def _recover_pending_transaction_locked(self) -> None:
-+        recover_models_transaction_locked(self.path.parent, self.path)
++        canonical_vault_path = self.path.parent / "vault.json"
++        path_is_canonical_alias = _paths_identify_same_file(
++            self.path, canonical_vault_path
++        )
++        recovery_path = (
++            self.path if path_is_canonical_alias else canonical_vault_path
++        )
++        recovered = recover_models_transaction_locked(
++            self.path.parent, recovery_path
++        )
++        if recovered and path_is_canonical_alias:
++            self.path = canonical_vault_path
 
      def put(self, name: str, secret: str, passphrase: str) -> str:
          """Scelle `secret` sous `name`. Retourne l'empreinte (jamais le secret)."""
@@ -547,10 +581,10 @@ index 4c90fd3ecae32ad8a537e48932de6879204529ba..b5b8d86d485aa61860fb37a3ee73b4f8
 +            self._recover_pending_transaction_locked()
 +            return sorted(self._load())
 diff --git a/src/forgeai/portability.py b/src/forgeai/portability.py
-index f5cb6cd13c6782ca3511c7665ba9240363e65e05..c0882ca27eb131dc788b84cf62890b290c2b874b 100644
+index f5cb6cd13c6782ca3511c7665ba9240363e65e05..fe4f73c989be61cdfbc79b89d82c227eee08659b 100644
 --- a/src/forgeai/portability.py
 +++ b/src/forgeai/portability.py
-@@ -16,12 +16,19 @@ Round-trip prouvé : un export suivi d'un import dans un répertoire vierge
+@@ -16,12 +16,20 @@ Round-trip prouvé : un export suivi d'un import dans un répertoire vierge
  restaure exactement le même état (hors secrets).
  """
 
@@ -563,6 +597,7 @@ index f5cb6cd13c6782ca3511c7665ba9240363e65e05..c0882ca27eb131dc788b84cf62890b29
  from typing import List
 
 +from forgeai.models._locking import (
++    MODELS_TRANSACTION_JOURNAL,
 +    MODELS_TRANSACTION_LOCK,
 +    atomic_write_text,
 +    file_lock,
@@ -572,8 +607,36 @@ index f5cb6cd13c6782ca3511c7665ba9240363e65e05..c0882ca27eb131dc788b84cf62890b29
  BUNDLE_VERSION = 1
  SETUP_FILES = ("routes.json", "gateway.json", "wirings.json", "strategy.json", "budgets.json")
  EXCLUDED_FILES = frozenset({"vault.json"})
-@@ -81,32 +88,39 @@ def export_setup(home, out_path=None) -> dict:
+@@ -66,6 +74,23 @@ def _validate_route(route: dict) -> None:
+         raise PortabilityError(f"Champs non autorisés dans une route : {extra}")
+
+
++def _validate_export_destination(home: Path, out_path: Path | None) -> None:
++    """Interdit qu'un bundle remplace un fichier vivant du setup ou de sa transaction."""
++    if out_path is None:
++        return
++    protected_names = set(SETUP_FILES) | EXCLUDED_FILES | {
++        MODELS_TRANSACTION_JOURNAL,
++        f"{MODELS_TRANSACTION_LOCK}.lock",
++    }
++    protected_paths = {
++        (home / name).resolve(strict=False) for name in protected_names
++    }
++    if out_path.resolve(strict=False) in protected_paths:
++        raise PortabilityError(
++            "La destination d'export chevauche un fichier protégé du setup"
++        )
++
++
+ def export_setup(home, out_path=None) -> dict:
+     """Exporte tous les fichiers de setup (sans secrets) vers un dict bundle.
+
+@@ -79,34 +104,43 @@ def export_setup(home, out_path=None) -> dict:
+     ou si une route contient un secret en clair.
+     """
      home = Path(home)
++    out_path = Path(out_path) if out_path is not None else None
++    _validate_export_destination(home, out_path)
      files = {}
 
 -    for fname in SETUP_FILES:
@@ -638,7 +701,27 @@ index f5cb6cd13c6782ca3511c7665ba9240363e65e05..c0882ca27eb131dc788b84cf62890b29
 
      created_at = date.today().isoformat()
      sha = bundle_sha256(files, created_at)
-@@ -183,28 +197,36 @@ def import_setup(bundle_path, home, *, force=False) -> dict:
+@@ -118,9 +152,16 @@ def export_setup(home, out_path=None) -> dict:
+     }
+
+     if out_path is not None:
+-        out_path = Path(out_path)
+-        with open(out_path, "w", encoding="utf-8") as fh:
+-            json.dump(bundle, fh, indent=1, ensure_ascii=False)
++        try:
++            atomic_write_text(
++                out_path,
++                json.dumps(bundle, indent=1, ensure_ascii=False),
++                mode=0o600,
++            )
++        except OSError as exc:
++            raise PortabilityError(
++                f"Erreur lors de l'écriture du bundle : {exc}"
++            ) from exc
+
+     return bundle
+
+@@ -183,28 +224,36 @@ def import_setup(bundle_path, home, *, force=False) -> dict:
      home = Path(home)
      home.mkdir(parents=True, exist_ok=True)
 
@@ -698,10 +781,10 @@ index f5cb6cd13c6782ca3511c7665ba9240363e65e05..c0882ca27eb131dc788b84cf62890b29
      return {
 diff --git a/stories/DATA-002.md b/stories/DATA-002.md
 new file mode 100644
-index 0000000000000000000000000000000000000000..eab32d1a1cac9f7e08bbcefc15e7db34a5db840f
+index 0000000000000000000000000000000000000000..f3c2517f188805d3249908cadfa30f9cc802a8a7
 --- /dev/null
 +++ b/stories/DATA-002.md
-@@ -0,0 +1,140 @@
+@@ -0,0 +1,155 @@
 +# DATA-002 — Transaction locale RouteStore/Vault
 +
 +## Calibration
@@ -729,7 +812,9 @@ index 0000000000000000000000000000000000000000..eab32d1a1cac9f7e08bbcefc15e7db34
 +   commun et peuvent respectivement écraser une mutation ou publier un état
 +   encore révocable par le journal ;
 +6. la récupération acceptait le chemin de n’importe quelle instance `Vault`,
-+   ce qui permettait à un coffre voisin de consommer le WAL canonique.
++   ce qui permettait à un coffre voisin de consommer le WAL canonique ;
++7. la destination `export --out` pouvait chevaucher les routes, le coffre ou le
++   WAL, et les alias de fichiers pouvaient contourner l’identité canonique.
 +
 +La baseline ciblée existante passe 24 tests en environnement autorisant le
 +loopback, mais elle ne couvre pas ces interleavings ni les pannes avant rename.
@@ -773,7 +858,11 @@ index 0000000000000000000000000000000000000000..eab32d1a1cac9f7e08bbcefc15e7db34
 +- import et export sérialisés avec la transaction RouteStore, récupération du
 +  WAL avant lecture/écriture et remplacements atomiques `0600` à l’import ;
 +- refus de restaurer un WAL vers tout coffre autre que le `vault.json` auquel
-+  le journal est explicitement lié.
++  le journal est explicitement lié ;
++- comparaison d’identité par inode (`samefile`) pour les alias casse/symlink/
++  hardlink, restauration du canon et de l’alias avant suppression du WAL ;
++- rejet de toute destination d’export chevauchant un fichier vivant du setup,
++  puis écriture atomique `fsync`/`os.replace` du bundle.
 +
 +## Extension de périmètre tracée
 +
@@ -786,15 +875,15 @@ index 0000000000000000000000000000000000000000..eab32d1a1cac9f7e08bbcefc15e7db34
 +
 +## Résultats vérifiés
 +
-+- 51 tests ciblés : PASS ;
-+- 16 tests de concurrence et de panne, avec huit arrêts `SIGKILL` réels
++- 57 tests ciblés : PASS ;
++- 17 tests de concurrence et de panne, avec neuf arrêts `SIGKILL` réels
 +  répartis sur les fenêtres de commit : PASS ;
 +- 100 configurations concurrentes, lecteur JSON brut actif et probe hors
 +  verrou : PASS en `0,31 s` ;
 +- suite complète locale du delta final : tous les tests DATA-002 et UI passent ;
 +  l’unique échec restant est le faux serveur `tests/test_immudb.py`, qui
 +  réinitialise la connexion indépendamment de ce diff ; couverture globale
-+  `89,67 %` (seuil `85 %`) ;
++  `89,72 %` (seuil `85 %`) ;
 +- `forgeai/core/registre.py` : `98 %` (seuil `95 %`) ;
 +- no-stub, registres, catalogue et gate des revues existantes : PASS ;
 +- Gitleaks `8.30.1`, scan du worktree complet : aucune fuite.
@@ -817,6 +906,12 @@ index 0000000000000000000000000000000000000000..eab32d1a1cac9f7e08bbcefc15e7db34
 +fournisseurs distincts et ne satisfont donc pas artificiellement une exigence
 +multi-vendeurs.
 +
++Le premier tour final sur le pack `23ec2b…` a encore découvert deux défauts
++importants : collision de `export --out` avec l’état vivant et alias du coffre
++sur volume insensible à la casse. Les reproductions CLI, case-insensitive/
++hardlink et les corrections sont incluses dans le nouveau candidat; le pack
++`23ec2b…` est donc superseded et doit être régénéré.
++
 +## Rollback
 +
 +Le rollback de données est couvert par :
@@ -827,9 +922,12 @@ index 0000000000000000000000000000000000000000..eab32d1a1cac9f7e08bbcefc15e7db34
 +  puis état préexistant ;
 +- récupération depuis une instance `RouteStore` créée avant le crash.
 +
-+Le rollback Git du commit candidat `1b64e62` a été rejoué dans un worktree
-+éphémère isolé. Après inversion complète du patch, les 24 tests ciblés de la
-+base passent ; le worktree de preuve a ensuite été supprimé.
++Le rollback Git du candidat final `de787be544b8bee4d5fea8fa0a9d6c55eabc6d69`
++a été rejoué dans un worktree éphémère isolé : tous les commits de
++`origin/main..HEAD` ont été inversés sans commit, puis `git diff --exit-code
++origin/main` a confirmé une identité exacte. Les 24 tests ciblés de la base
++passent (`sha256:12784721e0280443291002b595b03384e8588476665647b621a862f07297e08f`) ;
++le worktree de preuve a ensuite été supprimé.
 +
 +## Limite plateforme
 +
@@ -842,6 +940,56 @@ index 0000000000000000000000000000000000000000..eab32d1a1cac9f7e08bbcefc15e7db34
 +Le nouveau SHA doit encore repasser SonarQube, GitGuardian, CodeRabbit et la CI.
 +La merge queue n’est pas configurée sur le dépôt ; Nathan a autorisé une fusion
 +directe tracée. Aucun verdict multi-vendeur n’est préfabriqué localement.
+diff --git a/tests/test_models_cli.py b/tests/test_models_cli.py
+index 3043a391f761ccef75ed9ca1584a1d5d7c7598a7..ba4f0b58e3f903a389ab03be1dd0ed348f87a464 100644
+--- a/tests/test_models_cli.py
++++ b/tests/test_models_cli.py
+@@ -92,3 +92,45 @@ def test_cli_add_cloud_echec_reseau_rien_ajoute(tmp_path, monkeypatch, capsys):
+     assert not (home / "routes.json").exists()
+     err = capsys.readouterr().err
+     assert "ECHEC ROUTE" in err and SECRET not in err
++
++
++@pytest.mark.parametrize(
++    "protected_name",
++    [
++        "routes.json",
++        "vault.json",
++        "gateway.json",
++        ".models-transaction.json",
++        ".models-transaction.lock",
++    ],
++)
++def test_cli_export_refuse_ecraser_un_fichier_protege(
++    tmp_path, protected_name, capsys
++):
++    """--out ne peut jamais viser l'état vivant du répertoire exporté."""
++    home = tmp_path / "models"
++    home.mkdir()
++    (home / "routes.json").write_text("[]", encoding="utf-8")
++    (home / "vault.json").write_text('{"sentinelle":"coffre"}', encoding="utf-8")
++    (home / "gateway.json").write_text('{"sentinelle":"gateway"}', encoding="utf-8")
++    protected = home / protected_name
++    before = protected.read_bytes() if protected.exists() else None
++
++    rc = main(
++        [
++            "export",
++            "--home",
++            str(home),
++            "--out",
++            str(protected),
++            "--registre",
++            str(tmp_path / "registre.jsonl"),
++        ]
++    )
++
++    assert rc == 11
++    assert "ECHEC EXPORT" in capsys.readouterr().err
++    if before is None:
++        assert not protected.exists() or protected.read_bytes() == b""
++    else:
++        assert protected.read_bytes() == before
 diff --git a/tests/test_models_cloud.py b/tests/test_models_cloud.py
 index 14e8926294f83c4cdb2a7439ffebb75385c498ec..d0bcb0d938b93eeb71eaf1020c64e62e336b9428 100644
 --- a/tests/test_models_cloud.py
@@ -967,7 +1115,7 @@ index 14e8926294f83c4cdb2a7439ffebb75385c498ec..d0bcb0d938b93eeb71eaf1020c64e62e
      import json
      from forgeai.cli import main
 diff --git a/tests/test_routestore_concurrence.py b/tests/test_routestore_concurrence.py
-index b50267fb75b3efc806be3fc05662d88207cca910..b1bad30cd9d046b509a4b9ee64b5056ee3f5cda7 100644
+index b50267fb75b3efc806be3fc05662d88207cca910..4aa453b6c64b093fc2bdca598e99c881942f23d4 100644
 --- a/tests/test_routestore_concurrence.py
 +++ b/tests/test_routestore_concurrence.py
 @@ -5,13 +5,18 @@ puis la dernière écriture écrase l'autre : des routes ET des clés API scell
@@ -1182,7 +1330,7 @@ index b50267fb75b3efc806be3fc05662d88207cca910..b1bad30cd9d046b509a4b9ee64b5056e
  def test_vault_put_concurrent_ne_perd_aucune_cle(tmp_path):
      """T threads scellent des secrets distincts en parallèle ⇒ tous retrouvables."""
      vault = Vault(tmp_path / "vault.json")
-@@ -66,3 +248,571 @@ def test_vault_put_concurrent_ne_perd_aucune_cle(tmp_path):
+@@ -66,3 +248,600 @@ def test_vault_put_concurrent_ne_perd_aucune_cle(tmp_path):
 
      for i in range(T):
          assert vault.get(f"k-{i}", "pp") == f"secret-{i}"
@@ -1469,7 +1617,7 @@ index b50267fb75b3efc806be3fc05662d88207cca910..b1bad30cd9d046b509a4b9ee64b5056e
 +
 +
 +def test_vault_voisin_ne_detourne_pas_la_recuperation_route_store(tmp_path):
-+    """Un coffre non canonique ne doit ni consommer le WAL ni recevoir son snapshot."""
++    """Un coffre voisin récupère le WAL canonique sans recevoir son snapshot."""
 +    home = tmp_path / "models"
 +    ctx = mp.get_context("fork")
 +    ready = ctx.Event()
@@ -1486,13 +1634,42 @@ index b50267fb75b3efc806be3fc05662d88207cca910..b1bad30cd9d046b509a4b9ee64b5056e
 +    voisin = Vault(home / "autre.json")
 +    voisin.put("voisine", "secret-voisin", "pp")
 +    assert voisin.get("voisine", "pp") == "secret-voisin"
-+    assert (home / ".models-transaction.json").exists()
++    assert not (home / ".models-transaction.json").exists()
 +
 +    recovered = RouteStore(home)
 +    assert recovered.list() == []
 +    assert recovered.vault.names() == []
 +    assert voisin.names() == ["voisine"]
++
++
++def test_alias_hardlink_du_coffre_est_restaure_avant_put(tmp_path):
++    """Un alias du coffre ne conserve ni état révocable ni écriture hors recovery."""
++    home = tmp_path / "models"
++    ctx = mp.get_context("fork")
++    ready = ctx.Event()
++    process = ctx.Process(
++        target=_add_cloud_pause_before_routes_replace, args=(str(home), ready)
++    )
++    process.start()
++    assert ready.wait(timeout=10), "le processus n'a pas atteint le replace routes"
++
++    os.kill(process.pid, signal.SIGKILL)
++    process.join(timeout=5)
++
++    assert process.exitcode == -signal.SIGKILL
++    alias_path = home / "Vault.json"
++    if not alias_path.exists():
++        os.link(home / "vault.json", alias_path)
++    alias = Vault(alias_path)
++    alias.put("acquittee", "secret-durable", "pp")
++
 +    assert not (home / ".models-transaction.json").exists()
++    assert alias.names() == ["acquittee"]
++    assert alias.get("acquittee", "pp") == "secret-durable"
++    recovered = RouteStore(home)
++    assert recovered.list() == []
++    assert recovered.vault.names() == ["acquittee"]
++    assert recovered.vault.get("acquittee", "pp") == "secret-durable"
 +
 +
 +def test_export_recupere_le_wal_avant_de_lire_routes(tmp_path):
