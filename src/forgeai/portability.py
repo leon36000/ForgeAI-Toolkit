@@ -33,7 +33,8 @@ from forgeai.models._locking import (
 
 BUNDLE_VERSION = 1
 SETUP_FILES = ("routes.json", "gateway.json", "wirings.json", "strategy.json", "budgets.json")
-EXCLUDED_FILES = frozenset({"vault.json"})
+VAULT_FILENAME = "vault.json"
+EXCLUDED_FILES = frozenset({VAULT_FILENAME})
 SAFE_ROUTE_FIELDS = {"name", "provenance", "base_url", "model_id", "key_fingerprint",
                      "created_at", "cache", "cache_ttl_s", "cache_prefix"}
 
@@ -124,7 +125,7 @@ def export_setup(home, out_path=None) -> dict:
 
     with file_lock(home / MODELS_TRANSACTION_LOCK):
         # Un export ne peut observer une route encore révocable par un WAL.
-        recover_models_transaction_locked(home, home / "vault.json")
+        recover_models_transaction_locked(home, home / VAULT_FILENAME)
 
         for fname in SETUP_FILES:
             file_path = home / fname
@@ -242,7 +243,7 @@ def import_setup(bundle_path, home, *, force=False) -> dict:
     with file_lock(home / MODELS_TRANSACTION_LOCK):
         # Un import doit d'abord terminer toute transaction RouteStore/Vault
         # interrompue, puis partager le même verrou avec leurs lecteurs/writers.
-        recover_models_transaction_locked(home, home / "vault.json")
+        recover_models_transaction_locked(home, home / VAULT_FILENAME)
 
         # Vérification préalable (si force=False) – aucune écriture avant cette étape
         if not force:
