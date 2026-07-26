@@ -1,0 +1,3 @@
+enforce=restricted -> REFUSÉ : Error from server (Forbidden): error when creating "STDIN": pods "gpu" is forbidden: violates PodSecurity "restricted:latest": restricted volume types (volume "dri" uses restricted volume type "hostPath"), runAsNonRoot !
+enforce=baseline -> REFUSÉ : Error from server (Forbidden): error when creating "STDIN": pods "gpu" is forbidden: violates PodSecurity "baseline:latest": hostPath volumes (volume "dri") 
+enforce=privileged -> ACCEPTÉ

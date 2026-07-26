@@ -147,3 +147,88 @@ def test_root_filesystem_en_lecture_seule_par_defaut():
     # readOnlyRootFilesystem sans /tmp inscriptible casse la plupart des runtimes -> emptyDir explicite
     montages = {m["mountPath"] for m in cont.get("volumeMounts") or []}
     assert "/tmp" in montages
+
+
+# ---------------------------------------------------------------------------
+# K8S-024 / FAI-U-024 — Pod Security Admission : le Namespace rendu doit PORTER le niveau
+# d'enforcement, sinon le profil restricted de K8S-022 n'est jamais APPLIQUÉ par le cluster.
+# Le niveau enforce doit correspondre à ce que les manifests respectent réellement.
+# ---------------------------------------------------------------------------
+_PSA_PREFIXE = "pod-security.kubernetes.io/"
+
+
+def _namespace(manifest: str) -> dict:
+    for doc in yaml.safe_load_all(manifest):
+        if doc and doc.get("kind") == "Namespace":
+            return doc
+    raise AssertionError("aucun Namespace dans le manifeste rendu")
+
+
+def test_namespace_porte_l_admission_pod_security():
+    """Sans ces étiquettes, le cluster n'applique RIEN : le durcissement reste déclaratif."""
+    ns = _namespace(render_k3s(_plan([_svc(name="service-quelconque")])))
+    labels = ns["metadata"].get("labels") or {}
+    assert labels.get(_PSA_PREFIXE + "enforce") == "restricted"
+    assert labels.get(_PSA_PREFIXE + "audit") == "restricted"
+    assert labels.get(_PSA_PREFIXE + "warn") == "restricted"
+
+
+def test_versions_d_admission_epinglees():
+    """`latest` ferait dériver la politique au gré des montées de version du cluster : versions
+    ÉPINGLÉES, comme les images le sont déjà (FAI-0011)."""
+    ns = _namespace(render_k3s(_plan([_svc(name="service-quelconque")])))
+    labels = ns["metadata"].get("labels") or {}
+    for mode in ("enforce", "audit", "warn"):
+        version = labels.get(f"{_PSA_PREFIXE}{mode}-version")
+        assert version and version != "latest", f"{mode}-version doit être épinglée, vu : {version!r}"
+        assert version.startswith("v1."), f"version k8s attendue (vX.Y), vu : {version!r}"
+
+
+def test_enforce_correspond_aux_manifests_rendus():
+    """Le niveau annoncé doit être TENU : un plan sans GPU est conforme restricted, donc enforce
+    reste `restricted`. C'est le lien entre l'étiquette et la réalité du rendu."""
+    out = render_k3s(_plan([_svc(name="service-quelconque")]))
+    assert violations_pss_restricted(out) == []
+    labels = _namespace(out)["metadata"].get("labels") or {}
+    assert labels.get(_PSA_PREFIXE + "enforce") == "restricted"
+
+
+def test_exception_gpu_degrade_enforce_et_reste_visible():
+    """Un service GPU DÉROGE au profil restricted (mesure K8S-022 : non-root = 0/4 devices).
+    Annoncer `enforce: restricted` sur un tel plan serait un mensonge : le cluster REFUSERAIT les
+    pods au déploiement. Niveau réellement tenu, MESURÉ sur cluster k3s v1.35.5 avec le pod GPU réel :
+      enforce=restricted -> REFUSÉ (« restricted volume type hostPath », « runAsNonRoot »)
+      enforce=baseline    -> REFUSÉ (« hostPath volumes (volume "dri") »)
+      enforce=privileged  -> ACCEPTÉ
+    `baseline` interdit lui aussi hostPath : seul `privileged` admet le passthrough de devices.
+    L'exception doit donc être VISIBLE : enforce descendu au seul niveau qui tient, audit ET warn
+    MAINTENUS à restricted pour que l'API server continue de signaler chaque écart."""
+    out = render_k3s(_plan([_svc(name="ollama", gpu=True, gpu_vendor="amd")]))
+    labels = _namespace(out)["metadata"].get("labels") or {}
+    assert labels.get(_PSA_PREFIXE + "enforce") == "privileged"
+    assert labels.get(_PSA_PREFIXE + "audit") == "restricted"
+    assert labels.get(_PSA_PREFIXE + "warn") == "restricted"
+    assert "# forgeai:" in out.split("kind: Namespace")[1].split("---")[0]
+
+
+def test_service_sans_volume_declare_garde_un_chemin_de_donnees_inscriptible():
+    """Régression K8S-022 attrapée par l'E2E de K8S-024 : avec readOnlyRootFilesystem, un service
+    dont le répertoire de données n'est PAS déclaré en volume ne peut plus le créer. Mesuré sur
+    cluster réel : qdrant sans volume -> « Service internal error: Read-only file system (os error
+    30) ». Le profil doit donc fournir un emptyDir de repli sur ce chemin."""
+    out = render_k3s(_plan([_svc(name="qdrant", image="qdrant/qdrant:v1.12.5")]))
+    cont = _deployments(out)[0]["spec"]["template"]["spec"]["containers"][0]
+    montages = {m["mountPath"] for m in cont.get("volumeMounts") or []}
+    assert "/qdrant/storage" in montages
+
+
+def test_le_pvc_prime_sur_l_emptydir_de_repli():
+    """Le repli ne doit JAMAIS masquer les données : quand un volume persistant est déclaré sur le
+    même chemin, il est monté seul (un mountPath dupliqué rendrait d'ailleurs le pod invalide)."""
+    out = render_k3s(_plan([_svc(name="qdrant", image="qdrant/qdrant:v1.12.5",
+                                volumes=("forgeai-qdrant-data:/qdrant/storage",))]))
+    pod = _deployments(out)[0]["spec"]["template"]["spec"]
+    montages = [m["mountPath"] for m in pod["containers"][0].get("volumeMounts") or []]
+    assert montages.count("/qdrant/storage") == 1
+    volume = next(v for v in pod["volumes"] if v["name"] == "forgeai-qdrant-data")
+    assert "persistentVolumeClaim" in volume and "emptyDir" not in volume

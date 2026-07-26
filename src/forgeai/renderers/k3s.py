@@ -101,8 +101,11 @@ _PROFILS_SECURITE: dict[str, ProfilSecurite] = {
     ),
     "qdrant": ProfilSecurite(
         uid=1000,
-        chemins_inscriptibles=("/qdrant/snapshots",),
-        preuve="qdrant/qdrant:v1.12.5 : panic « Can't create Snapshots directory: PermissionDenied » sans ce volume ; READY avec",
+        chemins_inscriptibles=("/qdrant/storage", "/qdrant/snapshots"),
+        preuve="qdrant/qdrant:v1.12.5 : panic « Can't create Snapshots directory: PermissionDenied » "
+               "sans /qdrant/snapshots ; et « Service internal error: Read-only file system (os error 30) » "
+               "sans /qdrant/storage lorsque AUCUN volume de données n'est déclaré (mesuré e2e K8S-024). "
+               "Si un PVC est monté sur ce chemin, l'emptyDir est écarté (garde anti-doublon de montage).",
     ),
     "postgres": ProfilSecurite(
         uid=999,
@@ -542,6 +545,42 @@ spec:
 """
 
 
+_PSA_VERSION = "v1.25"
+
+
+def _namespace_block(plan: DeploymentPlan) -> str:
+    """Émet le Namespace avec les étiquettes Pod Security Admission.
+
+    Sans ces étiquettes, le durcissement des pods reste purement déclaratif :
+    le cluster n'applique aucune politique de sécurité aux pods déployés.
+    """
+    enforce = "privileged" if any(svc.gpu for svc in plan.services) else "restricted"
+
+    comments = ""
+    if enforce == "privileged":
+        comments = (
+            "# forgeai: le niveau enforce est abaissé à privileged car le plan "
+            "demande explicitement le passthrough hostPath des devices GPU.\n"
+            "# forgeai: restricted et baseline refusent tous deux les volumes hostPath ; "
+            "audit et warn restent à restricted pour signaler l'écart.\n"
+        )
+
+    return (
+        "apiVersion: v1\n"
+        "kind: Namespace\n"
+        f"{comments}"
+        "metadata:\n"
+        f"  name: {NAMESPACE}\n"
+        "  labels:\n"
+        f"    pod-security.kubernetes.io/enforce: {enforce}\n"
+        f"    pod-security.kubernetes.io/enforce-version: {_PSA_VERSION}\n"
+        "    pod-security.kubernetes.io/audit: restricted\n"
+        f"    pod-security.kubernetes.io/audit-version: {_PSA_VERSION}\n"
+        "    pod-security.kubernetes.io/warn: restricted\n"
+        f"    pod-security.kubernetes.io/warn-version: {_PSA_VERSION}\n"
+    )
+
+
 def render_k3s(plan: DeploymentPlan, node: str | None = None,
                service_type: str = "NodePort",
                config_files: dict[str, str] | None = None) -> str:
@@ -554,11 +593,7 @@ def render_k3s(plan: DeploymentPlan, node: str | None = None,
         raise ValueError(
             f"service_type invalide : {service_type!r} (attendu {sorted(_SERVICE_TYPES)})")
     parts = [f"""# Généré par ForgeAI Toolkit — plan {plan.plan_id} (profil {plan.profile})
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: {NAMESPACE}
----
+{_namespace_block(plan)}---
 apiVersion: v1
 kind: ServiceAccount
 metadata:
