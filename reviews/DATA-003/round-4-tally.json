@@ -1,0 +1,14 @@
+{
+  "artifact_sha256": "56bd08e30601230edbd06a2f24baa5e2c847be61d3d3a2dd5e6fdf22ff510abd",
+  "completed_reviewers": 0,
+  "not_multi_vendor": true,
+  "prompt_sha256": "d0fe39acc0ba57c4dcc6cbd479a7ad89d3734b010baacb2225be7755e171fdf1",
+  "proof_gate": {
+    "result": "REJECT",
+    "violations": 3
+  },
+  "result": "INVALIDATED_PRE_REVIEW",
+  "review_stop_confirmed": true,
+  "superseded_by_functional_commit": "d4d85d4ac9b18f41686e7622e2a967754d7d4f86",
+  "verdicts": []
+}

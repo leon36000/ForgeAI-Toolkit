@@ -1,0 +1,18 @@
+{
+  "artifact_sha256": "18e15619fa4b173b2775a0a1800561c4a74252888bcf9913d394e9d0e36f2217",
+  "model": "gpt-5.6-terra",
+  "not_fresh_context": true,
+  "not_multi_vendor": true,
+  "objections": [
+    {
+      "desc": "Un répertoire final existant en mode 000 ou 0500 prend la branche de restauration des bits propriétaire avant celle du mode final exact. prepare_key_store peut ainsi laisser keys_dir en 0700 au lieu de 0711, empêchant l'unsealer non propriétaire de traverser le répertoire.",
+      "file": "src/forgeai/models/vault.py",
+      "line": 149,
+      "severity": "eleve"
+    }
+  ],
+  "prompt_sha256": "5224937858772c59dd237e71cd9dd19feb3463cbdbb8606a8c8030bb4e9ed441",
+  "provider": "OpenAI",
+  "role": "concurrency",
+  "verdict": "REJECT"
+}

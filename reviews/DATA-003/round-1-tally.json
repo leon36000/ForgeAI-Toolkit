@@ -1,0 +1,20 @@
+{
+  "blocking_objections": 1,
+  "deterministic_rule": "REJECT if any reviewer returns REJECT or any objection has severity critique/eleve",
+  "model_variants": [
+    "gpt-5.6-sol",
+    "gpt-5.6-terra"
+  ],
+  "not_multi_vendor": true,
+  "prompt_sha256": "17d732917d6348b53c86d99b2bf6e5e560082fa13bb94c72db8da1a99f0552b4",
+  "provider_count": 1,
+  "providers": [
+    "OpenAI"
+  ],
+  "result": "REJECT",
+  "reviewer_count": 3,
+  "verdicts": {
+    "APPROVE": 2,
+    "REJECT": 1
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "artifact_sha256": "024aae326499a30a9e87947bdf2a2c3560b7619df0e86e956d051e44dcc17d11",
+  "candidate": "5da95e6f3c3d9fb75971a4113df4262ae50e6d27",
+  "model": "gpt-5.6-terra",
+  "not_fresh_context": true,
+  "not_multi_vendor": true,
+  "objections": [],
+  "prompt_sha256": "560885a968996ed6d0e571ee96880ab64290c013fa2edc0b7c646211ca70e845",
+  "provider": "OpenAI",
+  "role": "concurrency",
+  "verdict": "APPROVE"
+}

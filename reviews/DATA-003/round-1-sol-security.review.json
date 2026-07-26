@@ -1,0 +1,17 @@
+{
+  "artifact_sha256": "7a114df733df112e9c95f85df629b94de232e884d67d89c698884b6cf1afee42",
+  "model": "gpt-5.6-sol",
+  "not_multi_vendor": true,
+  "objections": [
+    {
+      "desc": "Le chemin existant de forgeai_token.key contourne le writer sécurisé et exécute os.chmod après des vérifications is_symlink/exists séparées. Un remplacement concurrent du fichier par un lien symbolique entre la vérification et chmod fait suivre le lien et modifier les permissions de son référent, donc le refus des symlinks n'est pas garanti.",
+      "file": "src/forgeai/bootstrap/secrets.py",
+      "line": 61,
+      "severity": "eleve"
+    }
+  ],
+  "prompt_sha256": "17d732917d6348b53c86d99b2bf6e5e560082fa13bb94c72db8da1a99f0552b4",
+  "provider": "OpenAI",
+  "role": "security",
+  "verdict": "REJECT"
+}

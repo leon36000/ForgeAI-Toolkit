@@ -1,0 +1,23 @@
+{
+  "artifact_sha256": "7a114df733df112e9c95f85df629b94de232e884d67d89c698884b6cf1afee42",
+  "model": "gpt-5.6-sol",
+  "not_multi_vendor": true,
+  "objections": [
+    {
+      "desc": "Les assertions réécrites par pytest comparent directement le contenu complet des fichiers .env générés; en cas d'échec, la sortie affiche les valeurs secrètes, contrairement au critère d'absence de secrets dans les messages d'assertion.",
+      "file": "tests/test_assemble_and_secrets.py",
+      "line": 61,
+      "severity": "moyen"
+    },
+    {
+      "desc": "Les assertions not in utilisent directement le token et la valeur sentinelle; si la protection régresse, la réécriture d'assertion pytest reproduit ces secrets dans le journal d'échec au lieu d'émettre un message neutre.",
+      "file": "tests/test_vault.py",
+      "line": 110,
+      "severity": "moyen"
+    }
+  ],
+  "prompt_sha256": "17d732917d6348b53c86d99b2bf6e5e560082fa13bb94c72db8da1a99f0552b4",
+  "provider": "OpenAI",
+  "role": "acceptance",
+  "verdict": "APPROVE"
+}

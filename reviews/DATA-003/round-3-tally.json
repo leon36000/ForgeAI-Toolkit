@@ -1,0 +1,15 @@
+{
+  "artifact_sha256": "6b3f7827aaf25621e5e21bcc1459c37e3b74a6e0b0f7c6770a33b665b84a5b9b",
+  "blocking_objections": 3,
+  "completed_reviewers": 2,
+  "not_multi_vendor": true,
+  "provider_count": 1,
+  "prompt_sha256": "f7e9fac9c682086967ba84c4bf997b845b2d899b541eedafc681ea7bfa0d61c4",
+  "result": "REJECT",
+  "round_aborted_after_blocking_rejections": true,
+  "unavailable_requested_model": "gpt-5.5",
+  "verdicts": [
+    "REJECT",
+    "REJECT"
+  ]
+}

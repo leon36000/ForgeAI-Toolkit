@@ -1,0 +1,18 @@
+{
+  "artifact_sha256": "2fa0c3413ec50b266c1b215f5f44343fc73fba33189cba515d518f0800cf7805",
+  "model": "gpt-5.6-terra",
+  "not_fresh_context": true,
+  "not_multi_vendor": true,
+  "objections": [
+    {
+      "desc": "Vault._load() exécute exists()/read_text() avant _save() : un Vault.path symlink vers un FIFO est suivi et bloque l'appel avant que atomic_write_secret_text puisse le refuser.",
+      "file": "src/forgeai/models/vault.py",
+      "line": null,
+      "severity": "moyen"
+    }
+  ],
+  "prompt_sha256": "0409cfc6cd10f754dc36b1098f3ade79421979cfe029938b5953de0d53c97bd1",
+  "provider": "OpenAI",
+  "role": "concurrency",
+  "verdict": "APPROVE"
+}

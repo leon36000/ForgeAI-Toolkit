@@ -1,0 +1,23 @@
+{
+  "artifact_sha256": "6b3f7827aaf25621e5e21bcc1459c37e3b74a6e0b0f7c6770a33b665b84a5b9b",
+  "model": "gpt-5.6-sol",
+  "not_multi_vendor": true,
+  "objections": [
+    {
+      "desc": "secrets_dir.mkdir(exist_ok=True) crée le répertoire avec le mode par défaut avant os.chmod(..., 0o700). Avec un umask permissif, le répertoire est temporairement accessible en écriture; un utilisateur concurrent peut y déposer un forgeai_token.key choisi, que le chemin non-regen republiera ensuite comme secret légitime. La fenêtre write-then-chmod exigée comme supprimée subsiste donc.",
+      "file": "src/forgeai/bootstrap/secrets.py",
+      "line": null,
+      "severity": "eleve"
+    },
+    {
+      "desc": "Un secrets_dir préexistant qui est un lien symbolique vers un répertoire est accepté par mkdir(exist_ok=True), puis os.chmod suit ce lien et modifie le référent; les écritures utilisent ensuite ce répertoire redirigé. Le contrôle lstat du writer ne porte que sur le composant final, donc un lien symbolique dans un composant parent contourne le refus attendu et peut faire sortir les secrets de leur répertoire prévu.",
+      "file": "src/forgeai/bootstrap/secrets.py",
+      "line": null,
+      "severity": "eleve"
+    }
+  ],
+  "prompt_sha256": "f7e9fac9c682086967ba84c4bf997b845b2d899b541eedafc681ea7bfa0d61c4",
+  "provider": "OpenAI",
+  "role": "security-b",
+  "verdict": "REJECT"
+}
