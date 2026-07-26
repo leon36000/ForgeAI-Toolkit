@@ -108,14 +108,21 @@ class HardenedRagClient(RagClient):
         for i, h in enumerate(hits, start=1):
             texte_original = h["payload"]["text"]
             source = h["payload"]["source"]
-            rapport = scan_chunk(texte_original)
-            if rapport.directive_spans:
-                texte_final = neutralize_chunk(texte_original, rapport)
-                evenements.append({
-                    "source": source,
-                    "motifs": list(rapport.motifs),
-                    "spans": len(rapport.directive_spans),
-                })
+            # guardrails=False désactive la réécriture du contenu (scan/neutralisation)
+            # mais PAS la séparation structurelle (provenance, délimiteur) qui reste
+            # toujours appliquée : provenance et remplissage des deux listes ci-dessous
+            # sont des éléments de structure du prompt, pas des gardes.
+            if self.guardrails:
+                rapport = scan_chunk(texte_original)
+                if rapport.directive_spans:
+                    texte_final = neutralize_chunk(texte_original, rapport)
+                    evenements.append({
+                        "source": source,
+                        "motifs": list(rapport.motifs),
+                        "spans": len(rapport.directive_spans),
+                    })
+                else:
+                    texte_final = texte_original
             else:
                 texte_final = texte_original
             provenance = f"[DOC {i} | source={source}]"

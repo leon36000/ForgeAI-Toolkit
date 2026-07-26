@@ -1,0 +1,14 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "src/forgeai/rag/hardened.py",
+   "description": "La neutralisation des chunks (`scan_chunk` et `neutralize_chunk`) est exécutée inconditionnellement, même lorsque `self.guardrails` est `False`. Seuls `scan_input`, `scan_assembled` et `scan_output` respectent ce flag. Si l'intention de `guardrails=False` est de désactiver toutes les interventions basées sur les motifs (par exemple pour récupérer le texte brut lors de tests), la boucle de traitement des chunks devrait également être conditionnée par ce flag.",
+   "preuve": "Lignes 102-117 : la boucle `for i, h in enumerate(hits, start=1):` appelle `scan_chunk` et `neutralize_chunk` sans vérifier `if self.guardrails:` au préalable."
+  }
+ ],
+ "date_heure": "2026-07-26T17:10:49.348139+00:00",
+ "prompt_sha256": "05ce0ed22e222a5d92fa8db228ebd01c8d2d7df18b935d6edc2ca402ba13bb27",
+ "reviewer_model": "Gemini-3.1-Pro"
+}
