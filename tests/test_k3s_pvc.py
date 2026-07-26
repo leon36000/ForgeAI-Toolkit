@@ -56,7 +56,15 @@ def test_pvc_emis_pour_volume_data():
     assert "storage: 10Gi" in out
     assert "persistentVolumeClaim" in out
     assert "claimName: forgeai-redis-data" in out
-    assert "emptyDir" not in out
+    # K8S-022 : le manifeste contient désormais des emptyDir de TRAVAIL (/tmp et chemins
+    # d'écriture mesurés) rendus nécessaires par readOnlyRootFilesystem. L'intention de ce
+    # test — le volume de DONNÉES est un PVC, jamais un volume éphémère — est donc vérifiée
+    # précisément sur ce volume, au lieu de l'absence globale du mot « emptyDir ».
+    bloc_volumes = out.split("\n      volumes:", 1)[1]
+    volume_data = bloc_volumes.split("- name: forgeai-redis-data", 1)[1]
+    volume_data = volume_data.split("\n        - name:", 1)[0]
+    assert "persistentVolumeClaim" in volume_data
+    assert "emptyDir" not in volume_data
 
 
 def test_pvc_avant_deployment():

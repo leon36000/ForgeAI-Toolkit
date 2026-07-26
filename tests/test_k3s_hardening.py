@@ -77,3 +77,73 @@ def test_service_types_valides_ok():
     for st in ("NodePort", "LoadBalancer"):
         out = render_k3s(_plan([_svc()]), service_type=st)
         assert f"type: {st}" in out
+
+
+# ---------------------------------------------------------------------------
+# K8S-022 / FAI-U-022 — le profil Pod Security Standards « restricted » est le DÉFAUT.
+# Validateur réel des règles PSS restricted (k8s >= 1.25) appliqué aux manifests rendus,
+# et non une simple recherche de sous-chaîne : chaque conteneur de chaque Deployment est vérifié.
+# ---------------------------------------------------------------------------
+import yaml
+
+# Volumes autorisés par PSS restricted (les autres, dont hostPath, sont refusés).
+_PSS_VOLUMES_OK = frozenset({
+    "configMap", "csi", "downwardAPI", "emptyDir", "ephemeral",
+    "persistentVolumeClaim", "projected", "secret",
+})
+
+
+def _deployments(manifest: str) -> list[dict]:
+    return [d for d in yaml.safe_load_all(manifest) if d and d.get("kind") == "Deployment"]
+
+
+def violations_pss_restricted(manifest: str) -> list[str]:
+    """Retourne la liste des écarts au profil PSS `restricted`. Vide = conforme."""
+    out: list[str] = []
+    for dep in _deployments(manifest):
+        pod = dep["spec"]["template"]["spec"]
+        psc = pod.get("securityContext") or {}
+        who = dep["metadata"]["name"]
+        for champ in ("hostNetwork", "hostPID", "hostIPC"):
+            if pod.get(champ):
+                out.append(f"{who}: {champ} activé")
+        for vol in pod.get("volumes") or []:
+            kinds = [k for k in vol if k != "name"]
+            for kind in kinds:
+                if kind not in _PSS_VOLUMES_OK:
+                    out.append(f"{who}: type de volume interdit par restricted : {kind}")
+        for cont in pod.get("containers") or []:
+            csc = cont.get("securityContext") or {}
+            cible = f"{who}/{cont['name']}"
+            if csc.get("privileged"):
+                out.append(f"{cible}: privileged")
+            if csc.get("allowPrivilegeEscalation") is not False:
+                out.append(f"{cible}: allowPrivilegeEscalation != false")
+            drop = ((csc.get("capabilities") or {}).get("drop")) or []
+            if "ALL" not in drop:
+                out.append(f"{cible}: capabilities.drop ne contient pas ALL")
+            add = ((csc.get("capabilities") or {}).get("add")) or []
+            if [c for c in add if c != "NET_BIND_SERVICE"]:
+                out.append(f"{cible}: capabilities.add interdites : {add}")
+            if not (csc.get("runAsNonRoot") or psc.get("runAsNonRoot")):
+                out.append(f"{cible}: runAsNonRoot absent (ni pod ni conteneur)")
+            seccomp = (csc.get("seccompProfile") or psc.get("seccompProfile") or {}).get("type")
+            if seccomp not in ("RuntimeDefault", "Localhost"):
+                out.append(f"{cible}: seccompProfile.type = {seccomp!r}")
+    return out
+
+
+def test_profil_restricted_est_le_defaut():
+    """Un service ordinaire (sans exception déclarée) est rendu conforme PSS restricted."""
+    out = render_k3s(_plan([_svc(name="service-quelconque", image="exemple/app:1.0")]))
+    assert violations_pss_restricted(out) == []
+
+
+def test_root_filesystem_en_lecture_seule_par_defaut():
+    out = render_k3s(_plan([_svc(name="service-quelconque", image="exemple/app:1.0")]))
+    dep = _deployments(out)[0]
+    cont = dep["spec"]["template"]["spec"]["containers"][0]
+    assert cont["securityContext"]["readOnlyRootFilesystem"] is True
+    # readOnlyRootFilesystem sans /tmp inscriptible casse la plupart des runtimes -> emptyDir explicite
+    montages = {m["mountPath"] for m in cont.get("volumeMounts") or []}
+    assert "/tmp" in montages

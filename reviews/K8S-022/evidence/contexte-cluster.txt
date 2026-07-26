@@ -1,0 +1,5 @@
+serveur k8s: v1.35.5+k3s1
+pc1-x870e-taichi   v1.35.5+k3s1   Ubuntu 24.04.4 LTS
+pc2-forge-b        v1.35.5+k3s1   Ubuntu 26.04 LTS
+pc3-grs-a          v1.35.5+k3s1   Ubuntu 26.04 LTS
+pc4-grs-b          v1.35.5+k3s1   Ubuntu 26.04 LTS
