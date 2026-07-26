@@ -232,3 +232,114 @@ def test_le_pvc_prime_sur_l_emptydir_de_repli():
     assert montages.count("/qdrant/storage") == 1
     volume = next(v for v in pod["volumes"] if v["name"] == "forgeai-qdrant-data")
     assert "persistentVolumeClaim" in volume and "emptyDir" not in volume
+
+
+# ---------------------------------------------------------------------------
+# K8S-023 / FAI-U-023 — NetworkPolicy : default-deny + allowlists par dépendance.
+# L'unique politique rendue jusqu'ici ne portait que `Ingress` (egress TOTALEMENT libre)
+# et autorisait `from: podSelector: {}` — un accès intra-namespace UNIVERSEL, que le
+# package interdit explicitement.
+# ---------------------------------------------------------------------------
+def _policies(manifest: str) -> list[dict]:
+    return [d for d in yaml.safe_load_all(manifest) if d and d.get("kind") == "NetworkPolicy"]
+
+
+def _plan_dependant():
+    """litellm dépend de redis : une dépendance DÉCLARÉE dont doit dériver l'allowlist."""
+    redis = _svc(name="redis", image="redis:7-alpine", host_port=26379, container_port=6379)
+    litellm = _svc(name="litellm", image="litellm:x", host_port=24000, container_port=4000,
+                   depends=("redis",))
+    return _plan([redis, litellm])
+
+
+def test_default_deny_porte_ingress_ET_egress():
+    """Sans `Egress` dans policyTypes, un pod compromis sort librement : exfiltration ouverte."""
+    politiques = _policies(render_k3s(_plan_dependant()))
+    deny = [p for p in politiques if p["spec"].get("podSelector") == {}]
+    assert deny, "une politique par défaut s'appliquant à TOUS les pods est requise"
+    types = set(deny[0]["spec"].get("policyTypes") or [])
+    assert types == {"Ingress", "Egress"}, f"default-deny incomplet : {types}"
+    assert not deny[0]["spec"].get("ingress"), "la politique par défaut ne doit rien autoriser"
+    assert not deny[0]["spec"].get("egress"), "la politique par défaut ne doit rien autoriser"
+
+
+def test_aucun_acces_intra_namespace_universel():
+    """`from: [{podSelector: {}}]` autorise TOUT pod du namespace à joindre TOUT autre :
+    c'est exactement ce que le package proscrit."""
+    for politique in _policies(render_k3s(_plan_dependant())):
+        for regle in politique["spec"].get("ingress") or []:
+            for origine in regle.get("from") or []:
+                assert origine.get("podSelector") != {}, \
+                    f"accès intra-namespace universel dans {politique['metadata']['name']}"
+
+
+def test_dns_autorise_sans_ouvrir_internet():
+    """Egress refusé par défaut casse la résolution de noms : DNS doit être rouvert
+    explicitement — vers kube-system, sur le port 53, et RIEN d'autre."""
+    politiques = _policies(render_k3s(_plan_dependant()))
+    dns = [p for p in politiques if "dns" in p["metadata"]["name"]]
+    assert dns, "une politique DNS explicite est requise"
+    regles = dns[0]["spec"].get("egress") or []
+    ports = {(pt.get("protocol"), pt.get("port")) for r in regles for pt in (r.get("ports") or [])}
+    assert ports and all(p == 53 for _, p in ports), f"DNS doit se limiter au port 53 : {ports}"
+    for regle in regles:
+        for dest in regle.get("to") or []:
+            assert "ipBlock" not in dest or not dest["ipBlock"].get("cidr", "").endswith("/0"), \
+                "le DNS ne doit pas ouvrir Internet"
+
+
+def test_chaque_dependance_declaree_produit_une_allowlist():
+    """`litellm.depends = ('redis',)` doit produire un flux PERMIS litellm -> redis:6379,
+    et lui seul : chaque flux ouvert correspond à une dépendance du plan."""
+    politiques = _policies(render_k3s(_plan_dependant()))
+    vers_redis = [p for p in politiques
+                  if p["spec"].get("podSelector", {}).get("matchLabels", {}).get("app") == "redis"
+                  and p["spec"].get("ingress")]
+    assert vers_redis, "redis doit porter une politique d'ingress dérivée de la dépendance"
+    origines = [o for p in vers_redis for r in p["spec"]["ingress"] for o in (r.get("from") or [])]
+    apps = {o.get("podSelector", {}).get("matchLabels", {}).get("app") for o in origines}
+    assert apps == {"litellm"}, f"seul le dépendant déclaré doit être autorisé : {apps}"
+    ports = {pt.get("port") for p in vers_redis for r in p["spec"]["ingress"]
+             for pt in (r.get("ports") or [])}
+    assert ports == {6379}, f"le flux doit être borné au port du service cible : {ports}"
+
+
+def test_service_sans_dependant_ne_recoit_aucune_allowlist():
+    """Contrôle négatif : un service dont personne ne dépend ne doit ouvrir aucun flux entrant."""
+    seul = _svc(name="isole", image="x:1", host_port=29999, container_port=9999)
+    politiques = _policies(render_k3s(_plan([seul])))
+    pour_isole = [p for p in politiques
+                  if p["spec"].get("podSelector", {}).get("matchLabels", {}).get("app") == "isole"]
+    assert not any(p["spec"].get("ingress") for p in pour_isole), \
+        "aucun dépendant déclaré : aucun flux entrant ne doit être ouvert"
+
+
+def test_le_dependant_recoit_aussi_une_autorisation_de_sortie():
+    """Défaut MESURÉ sur cluster k3s réel : le flux `litellm -> redis:6379`, pourtant justifié par
+    `litellm.depends = ('redis',)`, était BLOQUÉ. En Kubernetes un flux n'est permis que si
+    l'egress est autorisé À LA SOURCE **et** l'ingress à la destination ; n'ouvrir que la
+    destination laisse le default-deny refuser la sortie du dépendant. La symétrie n'est pas un
+    détail de style, c'est une exigence du modèle réseau."""
+    politiques = _policies(render_k3s(_plan_dependant()))
+    egress_litellm = [p for p in politiques
+                      if p["spec"].get("podSelector", {}).get("matchLabels", {}).get("app") == "litellm"
+                      and "Egress" in (p["spec"].get("policyTypes") or [])
+                      and p["spec"].get("egress")]
+    assert egress_litellm, "le dépendant doit recevoir une autorisation de SORTIE vers sa cible"
+    regles = egress_litellm[0]["spec"]["egress"]
+    cibles = {d.get("podSelector", {}).get("matchLabels", {}).get("app")
+              for r in regles for d in (r.get("to") or [])}
+    assert cibles == {"redis"}, f"la sortie doit être bornée aux cibles déclarées : {cibles}"
+    ports = {pt.get("port") for r in regles for pt in (r.get("ports") or [])}
+    assert ports == {6379}, f"la sortie doit être bornée au port de la cible : {ports}"
+
+
+def test_service_sans_dependance_ne_recoit_aucune_sortie():
+    """Contrôle négatif symétrique : sans dépendance déclarée, aucun egress n'est ouvert et le
+    default-deny continue de confiner le service."""
+    seul = _svc(name="isole", image="x:1", host_port=29999, container_port=9999)
+    politiques = _policies(render_k3s(_plan([seul])))
+    pour_isole = [p for p in politiques
+                  if p["spec"].get("podSelector", {}).get("matchLabels", {}).get("app") == "isole"]
+    assert not any(p["spec"].get("egress") for p in pour_isole), \
+        "aucune dépendance déclarée : aucune sortie ne doit être ouverte"

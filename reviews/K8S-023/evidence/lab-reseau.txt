@@ -1,0 +1,31 @@
+# K8S-023 — test réseau de LABORATOIRE sur cluster k3s v1.35.5 réel
+# Le manifeste rendu est appliqué TEL QUEL ; les flux sont mesurés DEPUIS les pods.
+# Prérequis vérifié au préalable : ce cluster applique effectivement les NetworkPolicy
+# (une politique deny-all y bloque la sortie vers Internet).
+
+politiques : 4
+  forgeai-allow-dns
+  forgeai-allow-litellm-egress
+  forgeai-allow-redis
+  forgeai-default-deny
+  isole-75f588b6b4-wbgpg 0/1 Running
+  litellm-97f44644b-m7lwg 0/1 Running
+  redis-67dfdffb7-w7rm8 1/1 Running
+--- flux PERMIS (dépendance déclarée litellm -> redis) ---
+  litellm -> redis:6379                          -> PASSE    (attendu PASSE   ) conforme
+--- flux INTERDITS ---
+  isole -> redis:6379 (aucune dépendance)       -> BLOQUE   (attendu BLOQUE  ) conforme
+  litellm -> Internet (1.1.1.1)                  -> BLOQUE   (attendu BLOQUE  ) conforme
+  isole -> Internet (1.1.1.1)                    -> BLOQUE   (attendu BLOQUE  ) conforme
+--- DNS (rouvert explicitement, sans ouvrir Internet) ---
+  litellm -> DNS kube-system:53                  -> PASSE    (attendu PASSE   ) conforme
+
+## Première exécution (AVANT correctif) — le laboratoire a invalidé l'implémentation
+  litellm -> redis:6379   -> BLOQUE (attendu PASSE) : allowlist unidirectionnelle.
+  Kubernetes exige la symétrie : egress permis à la SOURCE **et** ingress à la DESTINATION.
+  Les 5 tests de rendu étaient pourtant VERTS — ils vérifiaient la forme, jamais l'effet.
+
+## Faux positif de sonde, distingué du vrai défaut
+  Le DNS était annoncé bloqué. Vérification directe : CoreDNS répondait
+  (redis.np-lab.svc.cluster.local -> 10.43.147.134). La sonde utilisait un nom court non
+  résolvable ; le code était juste. Sonde corrigée, code inchangé.

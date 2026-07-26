@@ -1,0 +1,20 @@
+[ROUGE] sur origin/main (2bbbe4c) — l'unique NetworkPolicy rendue :
+
+  kind: NetworkPolicy
+  metadata: {name: forgeai-default}
+  spec:
+    podSelector: {}
+    policyTypes:
+      - Ingress            <- Egress ABSENT : sortie totalement libre
+    ingress:
+      - from:
+          - podSelector: {}   <- accès intra-namespace UNIVERSEL
+
+Deux failles :
+  (a) `policyTypes` ne porte que `Ingress` -> un pod compromis exfiltre sans entrave ;
+  (b) `from: [{podSelector: {}}]` -> tout pod du namespace joint tout autre pod, ce que
+      l'objectif du package proscrit explicitement (« aucun accès intra-namespace universel »).
+
+Tests rouges : 4 échecs sur 5 (le 5e, contrôle négatif, passait déjà puisque AUCUNE allowlist
+n'existait) — default-deny incomplet, accès universel présent, aucune politique DNS, aucune
+allowlist dérivée des dépendances déclarées.
