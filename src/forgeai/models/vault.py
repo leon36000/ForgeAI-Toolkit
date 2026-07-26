@@ -64,6 +64,24 @@ def atomic_write_secret_text(
     atomic_write_text(path, payload, mode=mode)
 
 
+def chmod_existing_secret_file(path: Path, *, mode: int = 0o600) -> None:
+    """Corrige le mode d'un secret régulier, sans suivre symlink ni hardlink."""
+    no_follow = getattr(os, "O_NOFOLLOW", None)
+    if no_follow is None:
+        raise OSError("ouverture sans suivi de lien indisponible")
+    flags = os.O_RDONLY | no_follow
+    flags |= getattr(os, "O_CLOEXEC", 0)
+    flags |= getattr(os, "O_NONBLOCK", 0)
+    descriptor = os.open(Path(path), flags)
+    try:
+        target = os.fstat(descriptor)
+        if not stat.S_ISREG(target.st_mode) or target.st_nlink != 1:
+            raise OSError("refus de corriger un secret lié")
+        os.fchmod(descriptor, mode)
+    finally:
+        os.close(descriptor)
+
+
 def _keystream(enc_key: bytes, nonce: bytes, length: int) -> bytes:
     out = bytearray()
     counter = 0

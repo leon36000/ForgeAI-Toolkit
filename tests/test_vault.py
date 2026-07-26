@@ -107,8 +107,8 @@ def test_exception_ne_fuit_ni_token_ni_valeur(bao):
         raise AssertionError("aurait dû lever VaultError")
     except VaultError as exc:
         msg = str(exc)
-        assert "TOKEN-CONFIDENTIEL" not in msg
-        assert secret_value not in msg
+        if "TOKEN-CONFIDENTIEL" in msg or secret_value in msg:
+            raise AssertionError("VaultError disclosed a secret input")
 
 
 def test_model_vault_refuses_target_symlink_without_touching_referent(tmp_path):
