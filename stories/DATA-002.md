@@ -85,7 +85,11 @@ verrou, y compris après l’arrêt brutal du processus.
 - rejet de toute destination d’export chevauchant un fichier vivant du setup,
   y compris alias inode, variantes de casse et combinaison variante de casse +
   symlink du nom lexical fourni, puis écriture atomique `fsync`/`os.replace` du
-  bundle.
+  bundle ;
+- constante unique pour `vault.json` dans la portabilité et justification
+  locale des deux sinks S2083 : ils opèrent le chemin explicitement choisi par
+  l’opérateur, sans donnée de requête distante ni élévation de privilège, avec
+  temporaire créé dans le même parent avant `os.replace`.
 
 ## Extension de périmètre tracée
 
@@ -148,6 +152,15 @@ ont été exécutées en RED/GREEN; l’ouverture du verrou est désormais fail-
 et le contrôle de destination conserve le nom fourni. Le pack `f65636…` est
 superseded et une nouvelle revue exacte est obligatoire.
 
+La première CI du candidat durci a ensuite été bloquée par SonarCloud : deux
+S2083 sur `os.open`/`os.replace` et un littéral `vault.json` dupliqué. Les deux
+S2083 sont des faux positifs vérifiés du writer local : le chemin est la
+destination volontaire de la CLI ou le répertoire modèles configuré, le
+temporaire provient de `mkstemp(path.parent)` et aucun privilège supérieur
+n’est acquis. Les suppressions sont limitées aux deux sinks et documentées
+dans le code; le littéral est factorisé. Un nouveau passage SonarCloud doit
+encore confirmer le Quality Gate.
+
 ## Rollback
 
 Le rollback de données est couvert par :
@@ -159,11 +172,11 @@ Le rollback de données est couvert par :
 - récupération depuis une instance `RouteStore` créée avant le crash.
 
 Le rollback Git du candidat fonctionnel final
-`6fa26714a8bd7fa6bdd60db87b7fce561fe7b53c`
+`e566872bf4cc079397e67945bfe9838252dbc6e2`
 a été rejoué dans un worktree éphémère isolé : tous les commits de
 `origin/main..HEAD` ont été inversés sans commit, puis `git diff --exit-code
 origin/main` a confirmé une identité exacte. Les 24 tests ciblés de la base
-passent (`sha256:03b0266c7ace109634ff7cf710bf4d3fd9c177be220281a8ef1a4fe375d276d6`) ;
+passent (`sha256:06a5466e51565836253f8a9a9afa20340aa3c82be1c1ba2c4b49ecdebe36da94`) ;
 le worktree de preuve a ensuite été supprimé.
 
 ## Limite plateforme
