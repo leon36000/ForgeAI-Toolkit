@@ -1,0 +1,4 @@
+  défaut runner (déploiement) : 20.0 s
+  borne sondes web (OPT-002)  : 3.0 s
+  sonde 'sleep 30' bornée     : coupée après 3.0 s (code 127)
+  -> une sonde lente ne peut plus faire exploser le budget d'une requête HTTP
