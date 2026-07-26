@@ -11,6 +11,8 @@ import os
 import secrets as pysecrets
 from pathlib import Path
 
+from forgeai.models.vault import atomic_write_secret_text
+
 # Secrets ajoutés EN FIN (ligne 0 = FORGEAI_API_TOKEN préservée, cf. test permissions) :
 # - FORGEAI_LITELLM_KEY : master key de la passerelle LiteLLM du profil RAG durci (E2c).
 # - FORGEAI_PG_PASSWORD, FORGEAI_LANGFUSE_* : socle observabilité langfuse (E5) — postgres +
@@ -46,12 +48,16 @@ def bootstrap_secrets(out_dir: Path, regen: bool = False) -> dict[str, Path]:
     for key in ENV_KEYS:
         value = existing.get(key) or (_KEY_PREFIX.get(key, "") + pysecrets.token_hex(32))
         lines.append(f"{key}={value}")
-    env_path.write_text("\n".join(lines) + "\n", encoding="utf-8")
-    os.chmod(env_path, 0o600)
+    atomic_write_secret_text(env_path, "\n".join(lines) + "\n", mode=0o600)
 
     key_path = secrets_dir / "forgeai_token.key"
+    if key_path.is_symlink():
+        raise OSError("refus d'utiliser un secret via un lien symbolique")
     if not key_path.exists() or regen:
-        key_path.write_text(pysecrets.token_hex(32) + "\n", encoding="utf-8")
-    os.chmod(key_path, 0o600)
+        atomic_write_secret_text(
+            key_path, pysecrets.token_hex(32) + "\n", mode=0o600
+        )
+    else:
+        os.chmod(key_path, 0o600)
 
     return {"env": env_path, "token_key": key_path}

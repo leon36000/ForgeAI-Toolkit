@@ -25,6 +25,7 @@ import hashlib
 import hmac
 import os
 import secrets
+import stat
 from pathlib import Path
 
 from forgeai.models._locking import (
@@ -47,6 +48,20 @@ _SCRYPT = dict(n=2 ** 16, r=8, p=1, dklen=64, maxmem=128 * 1024 * 1024)
 
 class VaultError(Exception):
     """Tag invalide : passphrase erronée ou données altérées."""
+
+
+def atomic_write_secret_text(
+    path: Path, payload: str, *, mode: int = 0o600
+) -> None:
+    """Remplace un fichier secret atomiquement sans suivre une cible symlink."""
+    path = Path(path)
+    try:
+        target = path.lstat()
+    except FileNotFoundError:
+        target = None
+    if target is not None and stat.S_ISLNK(target.st_mode):
+        raise OSError("refus d'écrire un secret via un lien symbolique")
+    atomic_write_text(path, payload, mode=mode)
 
 
 def _keystream(enc_key: bytes, nonce: bytes, length: int) -> bytes:
@@ -114,7 +129,7 @@ class Vault:
         self.path.parent.mkdir(parents=True, exist_ok=True)
         os.chmod(self.path.parent, 0o700)
         payload = json.dumps(data, ensure_ascii=False, indent=1)
-        atomic_write_text(self.path, payload, mode=0o600)
+        atomic_write_secret_text(self.path, payload, mode=0o600)
 
     def _with_secret(
         self, name: str, secret: str, passphrase: str

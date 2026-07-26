@@ -15,6 +15,7 @@ import time
 from collections.abc import Callable
 from pathlib import Path
 
+from forgeai.models.vault import atomic_write_secret_text
 from forgeai.secrets.openbao_init import ensure_openbao_ready, http_transport
 
 
@@ -73,8 +74,8 @@ class FileSecretStore:
 def _write_file(path: Path, content: str, mode: int) -> None:
     """Écrit `content` avec le mode donné (0600 pour les secrets owner-seul ; 0644 pour l'unseal_key
     que le conteneur unsealer non-root doit lire)."""
-    path.write_text(content if content.endswith("\n") else content + "\n", encoding="utf-8")
-    os.chmod(path, mode)
+    payload = content if content.endswith("\n") else content + "\n"
+    atomic_write_secret_text(path, payload, mode=mode)
 
 
 def prepare_key_store(keys_dir: Path) -> Path:

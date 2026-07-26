@@ -7,18 +7,21 @@ dans keys_dir ; (4) renew_self appelle POST renew-self et ne fuit jamais le toke
 """
 from __future__ import annotations
 
+import base64
 import os
 import stat
+import subprocess
 import sys
+import threading
+from hashlib import sha256
 from pathlib import Path
+from secrets import token_hex
 
 import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
 
-import base64
-import subprocess
-
+from forgeai.deploy import openbao_flow
 from forgeai.deploy.openbao_flow import (
     FileKeyStore,
     FileSecretStore,
@@ -30,7 +33,6 @@ from forgeai.deploy.openbao_flow import (
 )
 from forgeai.secrets.openbao_init import ensure_openbao_ready
 from forgeai.secrets.vault import VaultError, renew_self
-
 
 # --- 1. prepare_key_store ---------------------------------------------------
 
@@ -75,6 +77,21 @@ def test_file_key_store_write_read_and_root_isolation(tmp_path) -> None:
     assert stat.S_IMODE(root_path.stat().st_mode) == 0o600
 
 
+def test_file_key_store_modes_are_independent_of_permissive_umask(tmp_path) -> None:
+    keys_dir = tmp_path / "keys"
+    root_path = tmp_path / "secrets" / "root_token"
+    previous_umask = os.umask(0)
+    try:
+        FileKeyStore(keys_dir, root_path).write(
+            {"unseal_key": "UNSEAL", "root_token": "ROOT"}
+        )
+    finally:
+        os.umask(previous_umask)
+
+    assert stat.S_IMODE((keys_dir / "unseal_key").stat().st_mode) == 0o644
+    assert stat.S_IMODE(root_path.stat().st_mode) == 0o600
+
+
 # --- 3. FileSecretStore -----------------------------------------------------
 
 def test_file_secret_store_roundtrip_and_mode(tmp_path) -> None:
@@ -91,6 +108,169 @@ def test_file_secret_store_overwrite(tmp_path) -> None:
     store.write({"token": "OLD"})
     store.write({"token": "NEW"})
     assert store.read() == {"token": "NEW"}
+
+
+@pytest.mark.parametrize("requested_mode", [0o600, 0o644])
+def test_write_file_failure_before_replace_preserves_old_target_and_cleans_temp(
+    tmp_path, monkeypatch, requested_mode
+) -> None:
+    target = tmp_path / "secret"
+    target.write_text("old-value\n", encoding="utf-8")
+    sentinel = token_hex(32)
+    file_fsynced = False
+    replacement_mode = None
+    real_fsync = os.fsync
+
+    def record_real_fsync(descriptor: int) -> None:
+        nonlocal file_fsynced
+        real_fsync(descriptor)
+        if stat.S_ISREG(os.fstat(descriptor).st_mode):
+            file_fsynced = True
+
+    def fail_before_replace(source, destination) -> None:
+        nonlocal replacement_mode
+        if not file_fsynced:
+            raise AssertionError("replacement attempted before the temporary file was fsynced")
+        replacement_mode = stat.S_IMODE(Path(source).stat().st_mode)
+        raise OSError("injected failure after file fsync")
+
+    monkeypatch.setattr(openbao_flow.os, "fsync", record_real_fsync)
+    monkeypatch.setattr(openbao_flow.os, "replace", fail_before_replace)
+    previous_umask = os.umask(0)
+    try:
+        with pytest.raises(OSError) as caught:
+            openbao_flow._write_file(target, sentinel, requested_mode)
+    finally:
+        os.umask(previous_umask)
+
+    if sentinel in str(caught.value):
+        raise AssertionError("writer exception disclosed the secret payload")
+    assert replacement_mode == requested_mode
+    assert target.read_text(encoding="utf-8") == "old-value\n"
+    assert [entry.name for entry in tmp_path.iterdir()] == ["secret"]
+
+
+def test_write_file_fsyncs_file_then_parent_directory(tmp_path, monkeypatch) -> None:
+    fsync_targets: list[str] = []
+    real_fsync = os.fsync
+
+    def record_real_fsync(descriptor: int) -> None:
+        target_mode = os.fstat(descriptor).st_mode
+        real_fsync(descriptor)
+        fsync_targets.append("directory" if stat.S_ISDIR(target_mode) else "file")
+
+    monkeypatch.setattr(openbao_flow.os, "fsync", record_real_fsync)
+    openbao_flow._write_file(tmp_path / "secret", "non-secret-test-value", 0o600)
+
+    assert fsync_targets == ["file", "directory"]
+
+
+def test_file_secret_store_refuses_target_symlink_without_touching_referent(
+    tmp_path,
+) -> None:
+    referent = tmp_path / "external"
+    referent.write_text("external-old\n", encoding="utf-8")
+    target = tmp_path / "app-token.json"
+    target.symlink_to(referent)
+    original_link = os.readlink(target)
+    sentinel = token_hex(32)
+
+    with pytest.raises(OSError) as caught:
+        FileSecretStore(target).write({"token": sentinel})
+
+    if sentinel in str(caught.value):
+        raise AssertionError("writer exception disclosed the secret payload")
+    assert target.is_symlink()
+    assert os.readlink(target) == original_link
+    assert referent.read_text(encoding="utf-8") == "external-old\n"
+
+
+def test_file_secret_store_replacements_never_expose_partial_content(tmp_path) -> None:
+    target = tmp_path / "app-token.json"
+    store = FileSecretStore(target)
+    token_a = "A" * 65_536
+    token_b = "B" * 65_536
+    complete_a = '{"token": "' + token_a + '"}\n'
+    complete_b = '{"token": "' + token_b + '"}\n'
+    allowed_digests = {
+        sha256(complete_a.encode("utf-8")).digest(),
+        sha256(complete_b.encode("utf-8")).digest(),
+    }
+    store.write({"token": token_a})
+
+    start = threading.Barrier(3)
+    readers_started = [threading.Event(), threading.Event()]
+    stop = threading.Event()
+    observed_digests: set[bytes] = set()
+    read_errors: list[str] = []
+    observation_lock = threading.Lock()
+
+    def reader(started: threading.Event) -> None:
+        try:
+            start.wait()
+            first = sha256(target.read_bytes()).digest()
+            with observation_lock:
+                observed_digests.add(first)
+            started.set()
+            while not stop.is_set():
+                digest = sha256(target.read_bytes()).digest()
+                with observation_lock:
+                    observed_digests.add(digest)
+        except (OSError, RuntimeError) as exc:
+            with observation_lock:
+                read_errors.append(type(exc).__name__)
+            started.set()
+
+    readers = [
+        threading.Thread(target=reader, args=(started,), daemon=True)
+        for started in readers_started
+    ]
+    for thread in readers:
+        thread.start()
+    start.wait()
+    for started in readers_started:
+        assert started.wait(timeout=5), "reader did not reach the synchronized start"
+
+    try:
+        for index in range(1_000):
+            store.write({"token": token_a if index % 2 == 0 else token_b})
+    finally:
+        stop.set()
+        for thread in readers:
+            thread.join(timeout=5)
+
+    assert all(not thread.is_alive() for thread in readers), "reader did not stop"
+    assert not read_errors, f"reader errors: {read_errors}"
+    assert observed_digests
+    unexpected_digests = observed_digests - allowed_digests
+    assert not unexpected_digests, (
+        f"readers observed {len(unexpected_digests)} incomplete content digest(s)"
+    )
+
+
+def test_file_secret_store_unwritable_directory_fails_without_secret_leak(
+    tmp_path,
+) -> None:
+    directory = tmp_path / "locked"
+    directory.mkdir()
+    target = directory / "app-token.json"
+    sentinel = token_hex(32)
+    os.chmod(directory, 0o500)
+    try:
+        try:
+            FileSecretStore(target).write({"token": sentinel})
+        except OSError as exc:
+            if sentinel in str(exc):
+                raise AssertionError("writer exception disclosed the secret payload")
+            assert not target.exists()
+        else:
+            target.unlink(missing_ok=True)
+            effective_uid = getattr(os, "geteuid", lambda: -1)()
+            assert effective_uid == 0, (
+                "non-root process unexpectedly bypassed directory permissions"
+            )
+    finally:
+        os.chmod(directory, 0o700)
 
 
 # --- 4. Bout-en-bout avec le VRAI ensure_openbao_ready (S2) ------------------

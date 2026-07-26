@@ -6,15 +6,18 @@ en-tête `X-Vault-Token`. Le comportement contre un openbao RÉEL est prouvé pa
 au registre. Invariant secrets : ni le token ni la valeur ne doivent apparaître dans une exception.
 """
 import json
+import os
 import sys
 import threading
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from pathlib import Path
+from secrets import token_hex
 
 import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
 
+from forgeai.models.vault import Vault as FileVault
 from forgeai.secrets.vault import VaultError, read, store
 
 TOKEN = "root-token-e3b"
@@ -106,3 +109,21 @@ def test_exception_ne_fuit_ni_token_ni_valeur(bao):
         msg = str(exc)
         assert "TOKEN-CONFIDENTIEL" not in msg
         assert secret_value not in msg
+
+
+def test_model_vault_refuses_target_symlink_without_touching_referent(tmp_path):
+    referent = tmp_path / "external-vault.json"
+    referent.write_text('{"external": "unchanged"}', encoding="utf-8")
+    target = tmp_path / "vault.json"
+    target.symlink_to(referent)
+    original_link = os.readlink(target)
+    sentinel = token_hex(32)
+
+    with pytest.raises(OSError) as caught:
+        FileVault(target).put("cloud-key", sentinel, "test-passphrase")
+
+    if sentinel in str(caught.value):
+        raise AssertionError("vault exception disclosed the secret payload")
+    assert target.is_symlink()
+    assert os.readlink(target) == original_link
+    assert referent.read_text(encoding="utf-8") == '{"external": "unchanged"}'

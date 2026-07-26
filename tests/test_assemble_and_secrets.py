@@ -1,14 +1,16 @@
 """Tests S04 (assemblage) et S05 (bootstrap secrets)."""
+import os
 import stat
 import sys
 from pathlib import Path
+
+import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
 
 from forgeai.bootstrap.secrets import bootstrap_secrets
 from forgeai.core.models import RenderTarget
 from forgeai.planner.assemble import assemble_plan, find_free_port
-
 from forgeai.resources import deploy_overlay_path
 
 DEPLOY = deploy_overlay_path()
@@ -63,3 +65,18 @@ def test_regen_change_les_secrets(tmp_path):
     first = bootstrap_secrets(tmp_path)["env"].read_text(encoding="utf-8")
     regen = bootstrap_secrets(tmp_path, regen=True)["env"].read_text(encoding="utf-8")
     assert first != regen
+
+
+def test_bootstrap_refuses_env_symlink_without_touching_referent(tmp_path):
+    referent = tmp_path / "external-env"
+    referent.write_text("EXTERNAL=unchanged\n", encoding="utf-8")
+    target = tmp_path / ".env"
+    target.symlink_to(referent)
+    original_link = os.readlink(target)
+
+    with pytest.raises(OSError):
+        bootstrap_secrets(tmp_path, regen=True)
+
+    assert target.is_symlink()
+    assert os.readlink(target) == original_link
+    assert referent.read_text(encoding="utf-8") == "EXTERNAL=unchanged\n"
