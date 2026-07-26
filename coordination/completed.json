@@ -303,6 +303,25 @@
         "dossier": "reviews/K8S-008",
         "note": "Suppression de privileged:true pour les GPU AMD/Intel (FAI-U-008, CIS 5.2.1). APPROVE 3/3. Durcissement uniforme + refus des vendors inconnus + limitation vendor visible. Perimetre elargi sur decision explicite du cockpit (test_k3s_hardening_fai0004 assertait l anti-comportement d un finding SUPERSEDE)."
       }
+    },
+    {
+      "package": "K8S-022",
+      "merge_commit": "8380bc3369d13e4cba89b48806b5dfe04fd90494",
+      "pr_number": 188,
+      "merged_at": "2026-07-26T15:52:00Z",
+      "owner": "CLAUDE_CODE",
+      "review": {
+        "result": "APPROVE",
+        "ratio": "3/3",
+        "vendors": [
+          "deepseek",
+          "google",
+          "xai"
+        ],
+        "prompt_sha256": "4ef920f60166",
+        "dossier": "reviews/K8S-022/",
+        "note": "Profil PSS restricted par defaut. Le refus global de drop:[ALL] reposait sur un diagnostic errone (echec redis cause par l'execution en ROOT, pas par la capability) : refute par 30 pods mesures sur k3s v1.35.5 reel. Tous les services du socle atteignent le profil restricted complet avec leur uid mesure et des volumes de travail explicites ; aucune relaxation de securite necessaire. Exception unique et mesuree : services GPU en passthrough hostPath (non-root = 0/4 devices /dev/dri, gid render variable par hote). Preuve finale : manifeste rendu deploye sous namespace enforce=restricted, zero refus d'admission. Objection mineure DeepSeek (derogation GPU sur readOnlyRootFilesystem non justifiee) acceptee et corrigee, puis re-revue 3/3 sur le pack reconstruit. Elargissement de perimetre DECLARE : tests/test_k3s_pvc.py, intention preservee. Deux routes instables journalisees et reassignees via le pool (Qwen3.6-40B, MiMo-V2.5-Pro -> Grok-4.5)."
+      }
     }
   ]
 }
