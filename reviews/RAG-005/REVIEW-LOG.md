@@ -37,3 +37,11 @@ réécrits. Corrigée dans la foulée (test rouge écrit d'abord), avec cette di
 retournant désormais `sanitization_events` sur tous ses chemins, cette égalité sur-spécifiait le
 contrat. L'intention du contrôle négatif (réponse vide sans fabrication **et** aucun appel
 `/rerank`) est vérifiée champ par champ. Déclaré dans la story, la PR et le pack de revue.
+
+## Tour 3 — APPROVE 3/3 (sceau `9fde2fd8fe0c`), **0 objection à tous les niveaux**
+Revue relancée sur l'artefact définitif, journal de revue inclus dans le pack. Les trois vendors
+(`deepseek / google / xai`) approuvent sans réserve. Verdicts déposés dans ce dossier.
+
+Bilan des trois tours : REJECT 3/3 -> APPROVE 3/3 avec 1 mineure -> APPROVE 3/3 sans objection.
+Chaque objection a été soit **corrigée après écriture d'un test rouge**, soit **déclarée** quand
+elle portait sur un élargissement de périmètre assumé. Aucune n'a été écartée sans traitement.
