@@ -1,0 +1,6 @@
+AVANT (main)  : 940 | 1418 | 1583 ms  (croissant, sondes à chaque requête)
+APRÈS OPT-001 : 558 | 670 | 347 | 366 | 602 | 603 ms
+  1er appel (sonde réelle) : 558 ms
+  appels cachés (2..6)     : max 670 ms, médiane 602 ms
+  GAIN sur requêtes cachées: x1 (vs 1er appel avant)
+  32 requêtes / 16 threads : 1367 ms total (23 req/s)
