@@ -104,9 +104,9 @@ def _open_private_directory(path: Path, *, final_mode: int = 0o700) -> int:
     try:
         path.mkdir(mode=final_mode)
     except FileExistsError:
-        pass
-
-    path_state = path.lstat()
+        path_state = path.lstat()
+    else:
+        path_state = path.lstat()
     if not stat.S_ISDIR(path_state.st_mode):
         raise OSError("le chemin sécurisé n'est pas un répertoire")
     if stat.S_IMODE(path_state.st_mode) & 0o500 != 0o500:
@@ -143,14 +143,15 @@ def _prepare_output_directory(path: Path) -> None:
             try:
                 candidate.mkdir(mode=0o700)
             except FileExistsError:
-                pass
+                current = candidate.lstat()
+            else:
+                current = candidate.lstat()
         else:
             if not stat.S_ISDIR(current.st_mode):
                 raise OSError("le chemin de sortie n'est pas un répertoire")
             if not creation_chain_started:
                 continue
 
-        current = candidate.lstat()
         if not stat.S_ISDIR(current.st_mode):
             raise OSError("le chemin de sortie n'est pas un répertoire")
         descriptor = _open_private_directory(candidate)
@@ -226,12 +227,11 @@ def bootstrap_secrets(out_dir: Path, regen: bool = False) -> dict[str, Path]:
                 try:
                     existing_payload = read_secret_text(env_path)
                 except FileNotFoundError:
-                    pass
-                else:
-                    for line in existing_payload.splitlines():
-                        if "=" in line:
-                            key, value = line.split("=", 1)
-                            existing[key] = value
+                    existing_payload = ""
+                for line in existing_payload.splitlines():
+                    if "=" in line:
+                        key, value = line.split("=", 1)
+                        existing[key] = value
 
             lines = []
             for key in ENV_KEYS:
