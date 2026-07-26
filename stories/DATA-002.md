@@ -144,7 +144,8 @@ Le rollback de données est couvert par :
   puis état préexistant ;
 - récupération depuis une instance `RouteStore` créée avant le crash.
 
-Le rollback Git du candidat final `de787be544b8bee4d5fea8fa0a9d6c55eabc6d69`
+Le rollback Git du candidat fonctionnel final
+`11465f8ee0665a46d2fc883845387e93b306040e`
 a été rejoué dans un worktree éphémère isolé : tous les commits de
 `origin/main..HEAD` ont été inversés sans commit, puis `git diff --exit-code
 origin/main` a confirmé une identité exacte. Les 24 tests ciblés de la base
