@@ -341,6 +341,26 @@
         "dossier": "reviews/K8S-024/",
         "note": "Pod Security Admission sur le Namespace rendu : enforce/audit/warn + versions epinglees v1.25 (jamais latest). Sans ces etiquettes le durcissement K8S-022 restait declaratif, le cluster napplaiquait rien. Exception GPU MESUREE : pod GPU hostPath soumis aux 3 niveaux sur k3s v1.35.5 -> restricted REFUSE, baseline REFUSE (hostPath interdit aussi), privileged ACCEPTE ; enforce degrade a privileged uniquement si le plan contient un service GPU, audit/warn maintenus a restricted. REGRESSION K8S-022 CORRIGEE, attrapee par le e2e : service sans volume de donnees declare -> Read-only file system (os error 30) sur qdrant ; /qdrant/storage ajoute aux chemins inscriptibles, le PVC prime sur lemptyDir de repli. Preuve : manifeste rendu applique tel quel, qdrant et redis 1/1 Running, zero refus dadmission. Revue 0 objection. PR mergee en mergeStateStatus=CLEAN (Sonar poste et pass)."
       }
+    },
+    {
+      "package": "RAG-005",
+      "merge_commit": "262a658a21ef9eca8d91cb5ad0495e1cb4d83fd0",
+      "pr_number": 192,
+      "merged_at": "2026-07-26T17:25:00Z",
+      "owner": "CLAUDE_CODE",
+      "review": {
+        "result": "APPROVE",
+        "ratio": "3/3",
+        "tours": 3,
+        "vendors": [
+          "deepseek",
+          "google",
+          "xai"
+        ],
+        "prompt_sha256": "9fde2fd8fe0c",
+        "dossier": "reviews/RAG-005/",
+        "note": "Defense contre lempoisonnement du corpus RAG (injection indirecte OWASP LLM01). Reproduit avant correctif : la directive dun document partait verbatim au LLM et la reponse exfiltree revenait a lutilisateur. Defense STRUCTURELLE dabord (delimiteur a nonce non forgeable, provenance posee par lassembleur, preambule hors balises), neutralisation chirurgicale ensuite (rejeter offrirait un deni de service a lattaquant), observabilite via sanitization_events sur tous les chemins. TROIS TOURS DE REVUE : REJECT 3/3 au tour 1 sur une objection CRITIQUE FONDEE — scan_assembled recevait les documents avec leurs lignes de provenance intercalees, donc la detection du fractionnement ne fonctionnait PAS en production ; mon test unitaire fabriquait son entree et validait un chemin inexistant. Tour 2 APPROVE 3/3 avec une mineure fondee (guardrails=False reecrivait quand meme les documents), corrigee. Tour 3 APPROVE 3/3, ZERO objection. Faux positifs mesures : 6/6 documents techniques legitimes non signales ; le guide citant lattaque est neutralise et observable, pas rejete. Codeurs Kimi-K3/Kimi-2.7/MiniMax-M3, tous distincts du trio de revue : aucun SWAP CIV. Elargissement de perimetre declare sur test_rag_rerank.py."
+      }
     }
   ]
 }
