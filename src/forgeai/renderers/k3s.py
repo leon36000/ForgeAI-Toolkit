@@ -82,16 +82,16 @@ def _resources_block(vendor: str | None) -> str:
 
 
 def _security_block(vendor: str | None) -> str:
-    """Durcissement du securityContext. Les conteneurs GPU amd/intel nécessitent privileged
-    pour le passthrough de devices et sont exclus du durcissement standard.
+    """Durcissement du securityContext pour tous les conteneurs. Le passthrough hostPath des
+    devices GPU amd/intel suffit pour l'accès aux devices (/dev/kfd, /dev/dri) ; privileged
+    n'est pas requis et violerait le principe du moindre privilège.
     runAsNonRoot ET capabilities.drop:[ALL] ne sont PAS émis : de nombreuses images tournent en
     root et ont besoin de capabilities (ex. redis chown /data) ; les forcer ferait échouer les
     pods — PREUVE RUNTIME (K3s réel) : redis:7-alpine avec drop:[ALL] -> CrashLoopBackOff
     « chown: Operation not permitted ». Un runAsUser spécifique par image est hors périmètre.
     Durcissement retenu (vérifié : redis atteint Ready) = allowPrivilegeEscalation:false +
     seccompProfile RuntimeDefault."""
-    if vendor in ("amd", "intel"):
-        return "\n          securityContext:\n            privileged: true"
+    _ = vendor  # gardé pour la stabilité de l'API interne ; le durcissement est uniforme.
     block = (
         "\n          securityContext:"
         "\n            allowPrivilegeEscalation: false"
@@ -174,9 +174,17 @@ def _deployment(svc: ServiceSpec, effective_node: str | None = None,
                 config_files: dict[str, str] | None = None) -> str:
     name = _safe(svc.name, "name")
     image = _safe(svc.image, "image")
+
+    # Vérification explicite du vendor GPU avant tout rendu du bloc GPU.
+    if svc.gpu and svc.gpu_vendor is not None and svc.gpu_vendor not in {"nvidia", "amd", "intel"}:
+        raise ValueError(
+            f"vendor GPU non supporté : {svc.gpu_vendor} — combinaison refusée "
+            f"(nvidia/amd/intel uniquement)"
+        )
     # GPU par vendor (S3) : nvidia -> ressource device-plugin ; amd/intel -> passthrough hostPath
-    # des devices noyau + privileged (marche sur un nœud NU, sans device-plugin installé).
+    # des devices noyau (pas de privileged, K8S-008).
     vendor = (svc.gpu_vendor or "nvidia") if svc.gpu else None
+
     resources_block = _resources_block(vendor)
     security_block = _security_block(vendor)
     probes_block = _probes_block(svc)
@@ -272,12 +280,24 @@ def _deployment(svc: ServiceSpec, effective_node: str | None = None,
     volume_def = ""
     if vols:
         items = ""
+        passthrough_comment_emitted = False
         for claim, payload, kind in vols:
             if kind == "pvc":
                 items += (f"\n        - name: {claim}"
                           f"\n          persistentVolumeClaim:"
                           f"\n            claimName: {claim}")
             elif kind == "hostPath":
+                if vendor in ("amd", "intel") and not passthrough_comment_emitted:
+                    if vendor == "amd":
+                        devices = "/dev/kfd,/dev/dri"
+                    else:
+                        devices = "/dev/dri"
+                    items += (
+                        f"\n        # forgeai: GPU {vendor} en passthrough hostPath "
+                        f"({devices}) — nécessite ces devices sur le nœud ; "
+                        f"pas de device-plugin (limitation vendor)."
+                    )
+                    passthrough_comment_emitted = True
                 items += (f"\n        - name: {claim}"
                           f"\n          hostPath:\n            path: {payload}")
             elif kind == "configMap":

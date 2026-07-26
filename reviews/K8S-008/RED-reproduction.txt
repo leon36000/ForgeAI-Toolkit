@@ -1,0 +1,53 @@
+FFF                                                                      [100%]
+=================================== FAILURES ===================================
+_______________ test_k3s_amd_passthrough_kfd_dri_sans_privileged _______________
+
+    def test_k3s_amd_passthrough_kfd_dri_sans_privileged():
+        # K8S-008 (FAI-U-008) : le passthrough AMD reste (hostPath /dev/kfd + /dev/dri) mais SANS
+        # privileged:true — securityContext durci (allowPrivilegeEscalation:false) + limitation visible.
+        out = render_k3s(_plan(_gpu("amd")))
+        assert "/dev/kfd" in out and "/dev/dri" in out
+>       assert "privileged: true" not in out
+E       AssertionError: assert 'privileged: true' not in '# Généré pa...ort: 32464\n'
+E         
+E         'privileged: true' is contained here:
+E                     privileged: true
+E                     livenessProbe:
+E                       tcpSocket:
+E                         port: 8000
+E                       initialDelaySeconds: 10...
+E         
+E         ...Full output truncated (31 lines hidden), use '-vv' to show
+
+tests/test_k3s_gpu_vendor.py:40: AssertionError
+________________________ test_k3s_intel_sans_privileged ________________________
+
+    def test_k3s_intel_sans_privileged():
+        out = render_k3s(_plan(_gpu("intel")))
+        assert "/dev/dri" in out and "/dev/kfd" not in out
+>       assert "privileged: true" not in out
+E       AssertionError: assert 'privileged: true' not in '# Généré pa...ort: 32464\n'
+E         
+E         'privileged: true' is contained here:
+E                     privileged: true
+E                     livenessProbe:
+E                       tcpSocket:
+E                         port: 8000
+E                       initialDelaySeconds: 10...
+E         
+E         ...Full output truncated (26 lines hidden), use '-vv' to show
+
+tests/test_k3s_gpu_vendor.py:48: AssertionError
+______________________ test_k3s_gpu_vendor_inconnu_refuse ______________________
+
+    def test_k3s_gpu_vendor_inconnu_refuse():
+        # combinaison non supportée : un vendor GPU inconnu est refusé au rendu (pas de privileged muet).
+        import pytest
+>       with pytest.raises((ValueError, KeyError)):
+E       Failed: DID NOT RAISE any of (ValueError, KeyError)
+
+tests/test_k3s_gpu_vendor.py:55: Failed
+=========================== short test summary info ============================
+FAILED tests/test_k3s_gpu_vendor.py::test_k3s_amd_passthrough_kfd_dri_sans_privileged
+FAILED tests/test_k3s_gpu_vendor.py::test_k3s_intel_sans_privileged - Asserti...
+FAILED tests/test_k3s_gpu_vendor.py::test_k3s_gpu_vendor_inconnu_refuse - Fai...
