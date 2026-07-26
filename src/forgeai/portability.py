@@ -87,9 +87,10 @@ def _validate_export_destination(home: Path, out_path: Path | None) -> None:
         (home / name).resolve(strict=False) for name in protected_names
     ]
     resolved_out = out_path.resolve(strict=False)
+    lexical_parent = out_path.parent.resolve(strict=False)
     same_directory_case_alias = (
-        _paths_identify_same_file(resolved_out.parent, home.resolve(strict=False))
-        and resolved_out.name.casefold()
+        _paths_identify_same_file(lexical_parent, home.resolve(strict=False))
+        and out_path.name.casefold()
         in {name.casefold() for name in protected_names}
     )
     if (

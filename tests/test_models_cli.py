@@ -138,3 +138,42 @@ def test_cli_export_refuse_ecraser_un_fichier_protege(
         assert not protected.exists() or protected.read_bytes() == b""
     else:
         assert protected.read_bytes() == before
+
+
+@pytest.mark.parametrize(
+    "protected_name",
+    [
+        "Routes.json",
+        "Vault.json",
+        ".Models-Transaction.json",
+        ".Models-Transaction.lock",
+    ],
+)
+def test_cli_export_refuse_alias_casse_protege_meme_si_symlink(
+    tmp_path, protected_name, capsys
+):
+    """Le nom lexical protégé reste interdit quand le dernier composant est un lien."""
+    home = tmp_path / "models"
+    home.mkdir()
+    external = tmp_path / f"externe-{protected_name.replace('/', '-')}"
+    external_payload = b'{"externe":true}'
+    external.write_bytes(external_payload)
+    protected_alias = home / protected_name
+    protected_alias.symlink_to(external)
+
+    rc = main(
+        [
+            "export",
+            "--home",
+            str(home),
+            "--out",
+            str(protected_alias),
+            "--registre",
+            str(tmp_path / "registre.jsonl"),
+        ]
+    )
+
+    assert rc == 11
+    assert "ECHEC EXPORT" in capsys.readouterr().err
+    assert protected_alias.is_symlink()
+    assert external.read_bytes() == external_payload

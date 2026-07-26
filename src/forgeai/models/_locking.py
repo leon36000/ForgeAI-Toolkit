@@ -3,6 +3,7 @@
 import fcntl
 import json
 import os
+import stat
 import tempfile
 from contextlib import contextmanager
 from pathlib import Path
@@ -16,14 +17,31 @@ def file_lock(path: Path):
     """Context manager de verrou exclusif sur un fichier .lock associé à `path`."""
     path = Path(path)
     path.parent.mkdir(parents=True, exist_ok=True)
-    lock_path = str(path) + ".lock"
-    fd = open(lock_path, "w")
+    lock_path = Path(str(path) + ".lock")
     try:
-        fcntl.flock(fd.fileno(), fcntl.LOCK_EX)
+        existing = lock_path.lstat()
+    except FileNotFoundError:
+        existing = None
+    if existing is not None and not stat.S_ISREG(existing.st_mode):
+        raise OSError(f"le verrou n'est pas un fichier régulier: {lock_path}")
+
+    flags = os.O_RDWR | os.O_CREAT
+    flags |= getattr(os, "O_CLOEXEC", 0)
+    flags |= getattr(os, "O_NOFOLLOW", 0)
+    descriptor = os.open(lock_path, flags, 0o600)
+    locked = False
+    try:
+        if not stat.S_ISREG(os.fstat(descriptor).st_mode):
+            raise OSError(f"le verrou n'est pas un fichier régulier: {lock_path}")
+        fcntl.flock(descriptor, fcntl.LOCK_EX)
+        locked = True
         yield
     finally:
-        fcntl.flock(fd.fileno(), fcntl.LOCK_UN)
-        fd.close()
+        try:
+            if locked:
+                fcntl.flock(descriptor, fcntl.LOCK_UN)
+        finally:
+            os.close(descriptor)
 
 
 def _fsync_directory(path: Path) -> None:

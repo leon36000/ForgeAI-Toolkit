@@ -13,6 +13,8 @@ import signal
 import threading
 from pathlib import Path
 
+import pytest
+
 from forgeai.models._locking import file_lock
 from forgeai.models.routes import RouteError, RouteStore
 from forgeai.models.vault import Vault, fingerprint
@@ -633,6 +635,24 @@ def test_recovery_ne_suit_jamais_un_symlink_vault_externe(tmp_path):
     assert victim.read_text(encoding="utf-8") == victim_payload
     assert not (home / "vault.json").is_symlink()
     assert not (home / ".models-transaction.json").exists()
+
+
+def test_verrou_transaction_refuse_symlink_sans_alterer_la_cible(tmp_path):
+    """L'acquisition du verrou échoue fermée sans suivre ni tronquer un symlink."""
+    home = tmp_path / "models"
+    home.mkdir()
+    victim = tmp_path / "victime-lock.txt"
+    victim_payload = b"contenu-externe-intact"
+    victim.write_bytes(victim_payload)
+    lock_path = home / ".models-transaction.lock"
+    lock_path.symlink_to(victim)
+
+    store = RouteStore(home)
+    with pytest.raises(OSError):
+        store.list()
+
+    assert lock_path.is_symlink()
+    assert victim.read_bytes() == victim_payload
 
 
 def test_export_recupere_le_wal_avant_de_lire_routes(tmp_path):
