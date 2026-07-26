@@ -72,6 +72,7 @@ def _asset_bytes(name: str) -> bytes | None:
 # Mesuré : /api/summary 940→1583 ms (dont _available_backends 801 ms) vs 1 ms /api/stacks ;
 # saturation ~8 clients (p99>1 s à 16). Un seul cache TTL thread-safe, invalidation explicite.
 _HARDWARE_TTL_S = 60.0  # matériel stable ; TTL borné pour hotplug/driver
+_PROBE_TIMEOUT_S = 3.0  # OPT-002 : sondes du chemin HTTP bornées court (20 s reste pour le déploiement)
 
 _hardware_profile_cache = None
 _hardware_profile_cache_time: float = 0.0
@@ -109,7 +110,7 @@ def _hardware_report():
             and now - _hardware_profile_cache_time < _HARDWARE_TTL_S
         ):
             return _hardware_profile_cache
-        report = HardwareDetector(SubprocessRunner()).full_report()
+        report = HardwareDetector(SubprocessRunner(timeout_s=_PROBE_TIMEOUT_S)).full_report()
         _hardware_profile_cache = report
         _hardware_profile_cache_time = now
         return report
@@ -144,7 +145,7 @@ def _available_backends() -> list[str]:
         # `run_checks` attend un DÉTECTEUR (il appelle .full_report()) : on lui passe un adaptateur
         # qui sert le rapport DÉJÀ mémoïsé — évite la 3e sonde matérielle redondante.
         backends = available_backends(
-            run_checks(SubprocessRunner(), _CachedDetector(), http_ok)
+            run_checks(SubprocessRunner(timeout_s=_PROBE_TIMEOUT_S), _CachedDetector(), http_ok)
         )
         _backends_cache = backends
         _backends_cache_time = now
@@ -398,7 +399,7 @@ def _summary_payload(stack_id: str) -> dict:
     profile = _hardware_report()  # OPT-001 : mêmes sondes, mémoïsées
     nodes: list[str] = []
     try:
-        nodes = [n["name"] for n in cluster_status(SubprocessRunner())]
+        nodes = [n["name"] for n in cluster_status(SubprocessRunner(timeout_s=_PROBE_TIMEOUT_S))]
     except ClusterError:
         pass
     return {

@@ -1,0 +1,64 @@
+FFF                                                                      [100%]
+=================================== FAILURES ===================================
+________________ test_sondes_du_chemin_web_ont_un_timeout_court ________________
+
+    def test_sondes_du_chemin_web_ont_un_timeout_court():
+        """Constante dédiée, nettement inférieure au défaut 20 s du runner."""
+        from forgeai.core.runner import SubprocessRunner
+>       assert hasattr(server, "_PROBE_TIMEOUT_S"), "aucune borne dédiée aux sondes du chemin web"
+E       AssertionError: aucune borne dédiée aux sondes du chemin web
+E       assert False
+E        +  where False = hasattr(server, '_PROBE_TIMEOUT_S')
+
+tests/test_server_cache.py:179: AssertionError
+_________________ test_hardware_report_utilise_un_runner_borne _________________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x703bb7d6b980>
+
+    def test_hardware_report_utilise_un_runner_borne(monkeypatch):
+        """La détection matérielle du serveur borne son runner (pas le défaut 20 s)."""
+        server._hardware_cache_clear()
+        vus = {}
+    
+        class _FauxDetecteur:
+            def __init__(self, runner, *a, **k):
+                vus["timeout"] = getattr(runner, "timeout_s", None)
+    
+            def full_report(self):
+                class _P:
+                    def to_json(self_inner):
+                        return "{}"
+                return _P()
+    
+        monkeypatch.setattr(server, "HardwareDetector", _FauxDetecteur)
+        server._hardware_report()
+>       assert vus["timeout"] == server._PROBE_TIMEOUT_S, vus
+                                 ^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'forgeai.web.server' has no attribute '_PROBE_TIMEOUT_S'
+
+tests/test_server_cache.py:201: AttributeError
+_______________ test_available_backends_utilise_un_runner_borne ________________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x703bb7d6a1e0>
+
+    def test_available_backends_utilise_un_runner_borne(monkeypatch):
+        """Les sondes docker/k3s du serveur bornent aussi leur runner."""
+        server._hardware_cache_clear()
+        vus = {}
+    
+        def _faux_run_checks(runner, detector, http_ok):
+            vus["timeout"] = getattr(runner, "timeout_s", None)
+            return {}
+    
+        monkeypatch.setattr(server, "run_checks", _faux_run_checks)
+        monkeypatch.setattr(server, "available_backends", lambda checks: ["compose"])
+        server._available_backends()
+>       assert vus["timeout"] == server._PROBE_TIMEOUT_S, vus
+                                 ^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'forgeai.web.server' has no attribute '_PROBE_TIMEOUT_S'
+
+tests/test_server_cache.py:216: AttributeError
+=========================== short test summary info ============================
+FAILED tests/test_server_cache.py::test_sondes_du_chemin_web_ont_un_timeout_court
+FAILED tests/test_server_cache.py::test_hardware_report_utilise_un_runner_borne
+FAILED tests/test_server_cache.py::test_available_backends_utilise_un_runner_borne

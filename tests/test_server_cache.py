@@ -166,3 +166,68 @@ def test_backends_et_hardware_sans_interblocage(monkeypatch):
     t = _th.Thread(target=_appel, daemon=True)
     t.start()
     assert fini.wait(timeout=10), "INTERBLOCAGE : _available_backends bloqué sur le verrou du cache"
+
+
+# ── OPT-002 — les sondes du CHEMIN WEB doivent être BORNÉES court ─────────────
+# `SubprocessRunner` a un timeout par défaut de 20 s/commande (core/runner.py). Le PREMIER appel
+# (non caché) de /api/summary enchaîne lscpu, lspci, nvidia-smi, df, docker, kubectl : une seule
+# sonde lente dépasse le budget d'une requête HTTP (test client à 10 s) -> échec CI systématique.
+# Spécification : les sondes déclenchées par une REQUÊTE HTTP utilisent un timeout court et borné.
+def test_sondes_du_chemin_web_ont_un_timeout_court():
+    """Constante dédiée, nettement inférieure au défaut 20 s du runner."""
+    from forgeai.core.runner import SubprocessRunner
+    assert hasattr(server, "_PROBE_TIMEOUT_S"), "aucune borne dédiée aux sondes du chemin web"
+    assert 0 < server._PROBE_TIMEOUT_S <= 5.0, server._PROBE_TIMEOUT_S
+    assert server._PROBE_TIMEOUT_S < SubprocessRunner().timeout_s
+
+
+def test_hardware_report_utilise_un_runner_borne(monkeypatch):
+    """La détection matérielle du serveur borne son runner (pas le défaut 20 s)."""
+    server._hardware_cache_clear()
+    vus = {}
+
+    class _FauxDetecteur:
+        def __init__(self, runner, *a, **k):
+            vus["timeout"] = getattr(runner, "timeout_s", None)
+
+        def full_report(self):
+            class _P:
+                def to_json(self_inner):
+                    return "{}"
+            return _P()
+
+    monkeypatch.setattr(server, "HardwareDetector", _FauxDetecteur)
+    server._hardware_report()
+    assert vus["timeout"] == server._PROBE_TIMEOUT_S, vus
+
+
+def test_available_backends_utilise_un_runner_borne(monkeypatch):
+    """Les sondes docker/k3s du serveur bornent aussi leur runner."""
+    server._hardware_cache_clear()
+    vus = {}
+
+    def _faux_run_checks(runner, detector, http_ok):
+        vus["timeout"] = getattr(runner, "timeout_s", None)
+        return {}
+
+    monkeypatch.setattr(server, "run_checks", _faux_run_checks)
+    monkeypatch.setattr(server, "available_backends", lambda checks: ["compose"])
+    server._available_backends()
+    assert vus["timeout"] == server._PROBE_TIMEOUT_S, vus
+
+
+def test_cluster_status_utilise_un_runner_borne(monkeypatch):
+    """3e sonde du chemin web (relevé en revue : elle n'était pas testée) — cluster_status
+    doit aussi recevoir un runner borné, pas le défaut 20 s."""
+    server._hardware_cache_clear()
+    vus = {}
+
+    def _faux_cluster_status(runner):
+        vus["timeout"] = getattr(runner, "timeout_s", None)
+        return [{"name": "node-a"}]
+
+    monkeypatch.setattr(server, "cluster_status", _faux_cluster_status)
+    monkeypatch.setattr(server, "_hardware_report", lambda: type("P", (), {})())
+    monkeypatch.setattr(server, "_available_backends", lambda: ["compose"])
+    server._summary_payload("agentique")
+    assert vus["timeout"] == server._PROBE_TIMEOUT_S, vus
