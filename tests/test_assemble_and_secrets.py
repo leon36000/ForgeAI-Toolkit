@@ -47,15 +47,42 @@ def test_find_free_port_epuise_leve():
         find_free_port(30000, is_free=lambda p: False)
 
 
+def _assert_generated_env_contract(content: str) -> None:
+    if "FORGEAI_API_TOKEN=" not in content:
+        raise AssertionError("generated env is missing API token")
+    token = content.splitlines()[0].split("=", 1)[1]
+    if len(token) != 64:  # 256 bits hex
+        raise AssertionError("generated API token length is invalid")
+
+
 def test_secrets_generes_permissions_0600(tmp_path):
     paths = bootstrap_secrets(tmp_path)
     for p in (paths["env"], paths["token_key"]):
         assert p.exists()
         assert stat.S_IMODE(p.stat().st_mode) == 0o600
     content = paths["env"].read_text(encoding="utf-8")
-    assert "FORGEAI_API_TOKEN=" in content
-    token = content.splitlines()[0].split("=", 1)[1]
-    assert len(token) == 64  # 256 bits hex
+    _assert_generated_env_contract(content)
+
+
+def test_generated_env_contract_failures_never_disclose_content():
+    sentinel = token_hex(20)
+    cases = (
+        (
+            f"UNRELATED={sentinel}\n",
+            "generated env is missing API token",
+        ),
+        (
+            f"FORGEAI_API_TOKEN={sentinel}\n",
+            "generated API token length is invalid",
+        ),
+    )
+    for content, expected_message in cases:
+        with pytest.raises(AssertionError) as caught:
+            _assert_generated_env_contract(content)
+        if sentinel in str(caught.value):
+            raise AssertionError("env contract failure disclosed secret content")
+        if str(caught.value) != expected_message:
+            raise AssertionError("env contract failure was not neutral")
 
 
 def test_bootstrap_idempotent_sans_regen(tmp_path):
