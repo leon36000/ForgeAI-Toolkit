@@ -52,6 +52,19 @@ def test_prepare_key_store_idempotent(tmp_path) -> None:
     assert oct(d.stat().st_mode & 0o777) == "0o711"
 
 
+@pytest.mark.parametrize("initial_mode", [0, 0o500])
+def test_prepare_key_store_restores_exact_mode_from_restrictive_directory(
+    tmp_path, initial_mode
+) -> None:
+    keys_dir = tmp_path / "keys"
+    keys_dir.mkdir()
+    os.chmod(keys_dir, initial_mode)
+
+    prepare_key_store(keys_dir)
+
+    assert stat.S_IMODE(keys_dir.stat().st_mode) == 0o711
+
+
 def test_prepare_key_store_uses_nofollow_descriptor_not_pathname_chmod(
     tmp_path, monkeypatch
 ) -> None:
@@ -149,6 +162,25 @@ def test_file_key_store_modes_are_independent_of_permissive_umask(tmp_path) -> N
         os.umask(previous_umask)
 
     assert stat.S_IMODE((keys_dir / "unseal_key").stat().st_mode) == 0o644
+    assert stat.S_IMODE(root_path.stat().st_mode) == 0o600
+
+
+@pytest.mark.parametrize("initial_mode", [0, 0o500])
+def test_file_key_store_restores_unsealer_access_on_restrictive_keys_directory(
+    tmp_path, initial_mode
+) -> None:
+    keys_dir = tmp_path / "keys"
+    keys_dir.mkdir()
+    os.chmod(keys_dir, initial_mode)
+    root_path = tmp_path / "root-secrets" / "root_token"
+
+    FileKeyStore(keys_dir, root_path).write(
+        {"unseal_key": "UNSEAL", "root_token": "ROOT"}
+    )
+
+    assert stat.S_IMODE(keys_dir.stat().st_mode) == 0o711
+    assert stat.S_IMODE((keys_dir / "unseal_key").stat().st_mode) == 0o644
+    assert stat.S_IMODE(root_path.parent.stat().st_mode) == 0o700
     assert stat.S_IMODE(root_path.stat().st_mode) == 0o600
 
 

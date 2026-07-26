@@ -144,12 +144,12 @@ def prepare_secure_directory(
 
         permissions = stat.S_IMODE(current.st_mode)
         is_final = candidate == path
-        if creation_chain_started:
+        if is_final and not preserve_existing_final:
+            desired_mode = final_mode
+        elif creation_chain_started:
             desired_mode = final_mode if is_final else 0o700
         elif permissions & 0o700 != 0o700:
             desired_mode = permissions | 0o700
-        elif is_final and not preserve_existing_final:
-            desired_mode = final_mode
         else:
             continue
 
