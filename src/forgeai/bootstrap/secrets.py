@@ -11,6 +11,7 @@ import os
 import secrets as pysecrets
 from pathlib import Path
 
+from forgeai.models._locking import file_lock
 from forgeai.models.vault import (
     atomic_write_secret_text,
     republish_existing_secret_file,
@@ -32,38 +33,46 @@ ENV_KEYS = ("FORGEAI_API_TOKEN", "QDRANT_SERVICE_KEY", "FORGEAI_LITELLM_KEY",
 # Préfixes de format exigés par langfuse pour ses clés d'API (le reste = 256 bits hex).
 _KEY_PREFIX = {"FORGEAI_LANGFUSE_PK": "pk-lf-", "FORGEAI_LANGFUSE_SK": "sk-lf-"}
 
+# `file_lock` ajoute le suffixe `.lock`. L'ancre reste volontairement dans
+# `out_dir`, à côté de `secrets/`, afin que l'artefact persistant de coordination
+# n'entre jamais dans le répertoire monté qui ne contient que les secrets.
+_BOOTSTRAP_LOCK_ANCHOR = ".bootstrap-secrets"
+
 
 def bootstrap_secrets(out_dir: Path, regen: bool = False) -> dict[str, Path]:
-    out_dir.mkdir(parents=True, exist_ok=True)
-    secrets_dir = out_dir / "secrets"
-    secrets_dir.mkdir(exist_ok=True)
-    os.chmod(secrets_dir, 0o700)
+    with file_lock(out_dir / _BOOTSTRAP_LOCK_ANCHOR):
+        out_dir.mkdir(parents=True, exist_ok=True)
+        secrets_dir = out_dir / "secrets"
+        secrets_dir.mkdir(exist_ok=True)
+        os.chmod(secrets_dir, 0o700)
 
-    env_path = out_dir / ".env"
-    existing: dict[str, str] = {}
-    if env_path.exists() and not regen:
-        for line in env_path.read_text(encoding="utf-8").splitlines():
-            if "=" in line:
-                key, value = line.split("=", 1)
-                existing[key] = value
+        env_path = out_dir / ".env"
+        existing: dict[str, str] = {}
+        if env_path.exists() and not regen:
+            for line in env_path.read_text(encoding="utf-8").splitlines():
+                if "=" in line:
+                    key, value = line.split("=", 1)
+                    existing[key] = value
 
-    lines = []
-    for key in ENV_KEYS:
-        value = existing.get(key) or (_KEY_PREFIX.get(key, "") + pysecrets.token_hex(32))
-        lines.append(f"{key}={value}")
-    atomic_write_secret_text(env_path, "\n".join(lines) + "\n", mode=0o600)
+        lines = []
+        for key in ENV_KEYS:
+            value = existing.get(key) or (
+                _KEY_PREFIX.get(key, "") + pysecrets.token_hex(32)
+            )
+            lines.append(f"{key}={value}")
+        atomic_write_secret_text(env_path, "\n".join(lines) + "\n", mode=0o600)
 
-    key_path = secrets_dir / "forgeai_token.key"
-    if regen:
-        atomic_write_secret_text(
-            key_path, pysecrets.token_hex(32) + "\n", mode=0o600
-        )
-    else:
-        try:
-            republish_existing_secret_file(key_path, mode=0o600)
-        except FileNotFoundError:
+        key_path = secrets_dir / "forgeai_token.key"
+        if regen:
             atomic_write_secret_text(
                 key_path, pysecrets.token_hex(32) + "\n", mode=0o600
             )
+        else:
+            try:
+                republish_existing_secret_file(key_path, mode=0o600)
+            except FileNotFoundError:
+                atomic_write_secret_text(
+                    key_path, pysecrets.token_hex(32) + "\n", mode=0o600
+                )
 
-    return {"env": env_path, "token_key": key_path}
+        return {"env": env_path, "token_key": key_path}

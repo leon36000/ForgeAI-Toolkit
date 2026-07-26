@@ -3,8 +3,10 @@ import os
 import stat
 import sys
 import threading
+from contextlib import contextmanager
 from hashlib import sha256
 from pathlib import Path
+from queue import Queue
 from secrets import token_hex
 
 import pytest
@@ -14,6 +16,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
 from forgeai.bootstrap import secrets as bootstrap_secrets_module
 from forgeai.bootstrap.secrets import bootstrap_secrets
 from forgeai.core.models import RenderTarget
+from forgeai.models import vault as vault_module
 from forgeai.planner.assemble import assemble_plan, find_free_port
 from forgeai.resources import deploy_overlay_path
 
@@ -249,3 +252,179 @@ def test_existing_token_key_unlinked_after_open_republishes_without_mutating_ali
     assert stat.S_IMODE(key_path.stat().st_mode) == 0o600
     if sha256(key_path.read_bytes()).digest() != external_digest:
         raise AssertionError("writer did not preserve the republished key content")
+
+
+def test_non_regen_snapshot_cannot_overwrite_concurrent_regen_rotation(
+    tmp_path, monkeypatch
+):
+    out_dir = tmp_path / "out"
+    key_path = bootstrap_secrets(out_dir)["token_key"]
+    initial_digest = sha256(key_path.read_bytes()).digest()
+
+    snapshot_captured = threading.Event()
+    resume_non_regen = threading.Event()
+    start_regen = threading.Barrier(2)
+    serialization_state: Queue[str] = Queue()
+    rotated_digests: list[bytes] = []
+    worker_errors: list[str] = []
+    real_read = vault_module.os.read
+    real_atomic_write = bootstrap_secrets_module.atomic_write_secret_text
+    real_file_lock = vault_module.file_lock
+    non_regen_thread: threading.Thread | None = None
+    regen_thread: threading.Thread | None = None
+
+    def read_then_pause(descriptor: int, size: int) -> bytes:
+        chunk = real_read(descriptor, size)
+        if (
+            threading.current_thread() is non_regen_thread
+            and not chunk
+            and not snapshot_captured.is_set()
+        ):
+            snapshot_captured.set()
+            if not resume_non_regen.wait(timeout=5):
+                raise RuntimeError("non-regen bootstrap did not resume after snapshot")
+        return chunk
+
+    @contextmanager
+    def observed_file_lock(path):
+        if threading.current_thread() is regen_thread:
+            serialization_state.put("lock-attempted")
+        with real_file_lock(path):
+            yield
+
+    def observed_atomic_write(path, payload, *, mode=0o600):
+        real_atomic_write(path, payload, mode=mode)
+        if threading.current_thread() is regen_thread and Path(path) == key_path:
+            rotated_digests.append(sha256(payload.encode("utf-8")).digest())
+            serialization_state.put("published")
+
+    monkeypatch.setattr(vault_module.os, "read", read_then_pause)
+    monkeypatch.setattr(
+        bootstrap_secrets_module, "file_lock", observed_file_lock, raising=False
+    )
+    monkeypatch.setattr(
+        bootstrap_secrets_module, "atomic_write_secret_text", observed_atomic_write
+    )
+
+    def run_non_regen() -> None:
+        try:
+            bootstrap_secrets(out_dir)
+        except (OSError, RuntimeError) as exc:
+            worker_errors.append(type(exc).__name__)
+
+    def run_regen() -> None:
+        try:
+            start_regen.wait(timeout=5)
+            bootstrap_secrets(out_dir, regen=True)
+        except (OSError, RuntimeError) as exc:
+            worker_errors.append(type(exc).__name__)
+
+    non_regen_thread = threading.Thread(target=run_non_regen, daemon=True)
+    regen_thread = threading.Thread(target=run_regen, daemon=True)
+    non_regen_thread.start()
+    assert snapshot_captured.wait(timeout=5), "non-regen descriptor snapshot was not captured"
+    regen_thread.start()
+    start_regen.wait(timeout=5)
+
+    state = serialization_state.get(timeout=5)
+    try:
+        if state == "published":
+            if not rotated_digests or rotated_digests[0] == initial_digest:
+                raise AssertionError("regen did not publish a genuinely new token key")
+        elif state != "lock-attempted":
+            raise AssertionError("unexpected bootstrap serialization state")
+    finally:
+        resume_non_regen.set()
+
+    non_regen_thread.join(timeout=5)
+    regen_thread.join(timeout=5)
+    assert not non_regen_thread.is_alive(), "non-regen bootstrap did not stop"
+    assert not regen_thread.is_alive(), "regen bootstrap did not stop"
+    assert not worker_errors, f"bootstrap worker errors: {worker_errors}"
+    if not rotated_digests or rotated_digests[0] == initial_digest:
+        raise AssertionError("regen did not publish a genuinely new token key")
+    if sha256(key_path.read_bytes()).digest() != rotated_digests[0]:
+        raise AssertionError("stale non-regen snapshot replaced the rotated token key")
+
+
+def test_regen_then_non_regen_serialization_preserves_latest_rotation(
+    tmp_path, monkeypatch
+):
+    out_dir = tmp_path / "out"
+    key_path = bootstrap_secrets(out_dir)["token_key"]
+    initial_digest = sha256(key_path.read_bytes()).digest()
+
+    ordering: Queue[str] = Queue()
+    start_non_regen = threading.Barrier(2)
+    non_regen_lock_attempted = threading.Event()
+    resume_regen = threading.Event()
+    rotated_digests: list[bytes] = []
+    worker_errors: list[str] = []
+    real_atomic_write = bootstrap_secrets_module.atomic_write_secret_text
+    real_file_lock = vault_module.file_lock
+    regen_thread: threading.Thread | None = None
+    non_regen_thread: threading.Thread | None = None
+
+    @contextmanager
+    def ordered_file_lock(path):
+        if threading.current_thread() is non_regen_thread:
+            non_regen_lock_attempted.set()
+        with real_file_lock(path):
+            if threading.current_thread() is regen_thread:
+                ordering.put("locked")
+                if not resume_regen.wait(timeout=5):
+                    raise RuntimeError("regen bootstrap did not resume while holding lock")
+            yield
+
+    def observed_atomic_write(path, payload, *, mode=0o600):
+        real_atomic_write(path, payload, mode=mode)
+        if threading.current_thread() is regen_thread and Path(path) == key_path:
+            rotated_digests.append(sha256(payload.encode("utf-8")).digest())
+            ordering.put("key-published")
+
+    monkeypatch.setattr(
+        bootstrap_secrets_module, "file_lock", ordered_file_lock, raising=False
+    )
+    monkeypatch.setattr(
+        bootstrap_secrets_module, "atomic_write_secret_text", observed_atomic_write
+    )
+
+    def run_regen() -> None:
+        try:
+            bootstrap_secrets(out_dir, regen=True)
+        except (OSError, RuntimeError) as exc:
+            worker_errors.append(type(exc).__name__)
+
+    def run_non_regen() -> None:
+        try:
+            start_non_regen.wait(timeout=5)
+            bootstrap_secrets(out_dir)
+        except (OSError, RuntimeError) as exc:
+            worker_errors.append(type(exc).__name__)
+
+    regen_thread = threading.Thread(target=run_regen, daemon=True)
+    non_regen_thread = threading.Thread(target=run_non_regen, daemon=True)
+    regen_thread.start()
+    first_state = ordering.get(timeout=5)
+    if first_state != "locked":
+        regen_thread.join(timeout=5)
+        raise AssertionError("regen bootstrap did not acquire the serialization lock")
+
+    non_regen_thread.start()
+    start_non_regen.wait(timeout=5)
+    assert non_regen_lock_attempted.wait(timeout=5), "non-regen did not attempt the lock"
+    resume_regen.set()
+    regen_thread.join(timeout=5)
+    non_regen_thread.join(timeout=5)
+
+    assert not regen_thread.is_alive(), "regen bootstrap did not stop"
+    assert not non_regen_thread.is_alive(), "non-regen bootstrap did not stop"
+    assert not worker_errors, f"bootstrap worker errors: {worker_errors}"
+    if not rotated_digests or rotated_digests[0] == initial_digest:
+        raise AssertionError("regen did not publish a genuinely new token key")
+    if sha256(key_path.read_bytes()).digest() != rotated_digests[0]:
+        raise AssertionError("last serialized bootstrap did not preserve the rotated token key")
+    if {entry.name for entry in (out_dir / "secrets").iterdir()} != {
+        "forgeai_token.key"
+    }:
+        raise AssertionError("bootstrap lock artifact entered the secret directory")
