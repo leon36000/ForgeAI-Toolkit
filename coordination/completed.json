@@ -322,6 +322,25 @@
         "dossier": "reviews/K8S-022/",
         "note": "Profil PSS restricted par defaut. Le refus global de drop:[ALL] reposait sur un diagnostic errone (echec redis cause par l'execution en ROOT, pas par la capability) : refute par 30 pods mesures sur k3s v1.35.5 reel. Tous les services du socle atteignent le profil restricted complet avec leur uid mesure et des volumes de travail explicites ; aucune relaxation de securite necessaire. Exception unique et mesuree : services GPU en passthrough hostPath (non-root = 0/4 devices /dev/dri, gid render variable par hote). Preuve finale : manifeste rendu deploye sous namespace enforce=restricted, zero refus d'admission. Objection mineure DeepSeek (derogation GPU sur readOnlyRootFilesystem non justifiee) acceptee et corrigee, puis re-revue 3/3 sur le pack reconstruit. Elargissement de perimetre DECLARE : tests/test_k3s_pvc.py, intention preservee. Deux routes instables journalisees et reassignees via le pool (Qwen3.6-40B, MiMo-V2.5-Pro -> Grok-4.5)."
       }
+    },
+    {
+      "package": "K8S-024",
+      "merge_commit": "46d54e7cfb32f8efa1538e1255627a640c550781",
+      "pr_number": 190,
+      "merged_at": "2026-07-26T16:20:00Z",
+      "owner": "CLAUDE_CODE",
+      "review": {
+        "result": "APPROVE",
+        "ratio": "3/3",
+        "vendors": [
+          "deepseek",
+          "google",
+          "xai"
+        ],
+        "prompt_sha256": "a0fa5f29348b",
+        "dossier": "reviews/K8S-024/",
+        "note": "Pod Security Admission sur le Namespace rendu : enforce/audit/warn + versions epinglees v1.25 (jamais latest). Sans ces etiquettes le durcissement K8S-022 restait declaratif, le cluster napplaiquait rien. Exception GPU MESUREE : pod GPU hostPath soumis aux 3 niveaux sur k3s v1.35.5 -> restricted REFUSE, baseline REFUSE (hostPath interdit aussi), privileged ACCEPTE ; enforce degrade a privileged uniquement si le plan contient un service GPU, audit/warn maintenus a restricted. REGRESSION K8S-022 CORRIGEE, attrapee par le e2e : service sans volume de donnees declare -> Read-only file system (os error 30) sur qdrant ; /qdrant/storage ajoute aux chemins inscriptibles, le PVC prime sur lemptyDir de repli. Preuve : manifeste rendu applique tel quel, qdrant et redis 1/1 Running, zero refus dadmission. Revue 0 objection. PR mergee en mergeStateStatus=CLEAN (Sonar poste et pass)."
+      }
     }
   ]
 }
