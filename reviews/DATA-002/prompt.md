@@ -165,10 +165,10 @@ READY_FOR_PR: YES|NO
 
 ARTEFACT — /Users/nathanst-louis/Documents/Codex/2026-07-25/e/work/DATA-002-review-final.diff :
 diff --git a/src/forgeai/models/_locking.py b/src/forgeai/models/_locking.py
-index 473d2fd0c66b08591d9cd358be388f98fdd53ae3..152e6ebcfc40b1b5c8d8aab8b35511c5d3c1c16e 100644
+index 473d2fd0c66b08591d9cd358be388f98fdd53ae3..321d594c606c0275686c10e1e662b1d05ff55659 100644
 --- a/src/forgeai/models/_locking.py
 +++ b/src/forgeai/models/_locking.py
-@@ -1,20 +1,173 @@
+@@ -1,20 +1,178 @@
 -"""Verrouillage fichier inter-process et inter-thread."""
 +"""Verrouillage et remplacement atomique de fichiers locaux."""
 
@@ -223,7 +223,9 @@ index 473d2fd0c66b08591d9cd358be388f98fdd53ae3..152e6ebcfc40b1b5c8d8aab8b35511c5
 +
 +def _fsync_directory(path: Path) -> None:
 +    """Persiste les changements de nom du répertoire contenant un fichier."""
-+    directory_fd = os.open(path, os.O_RDONLY)
++    # S2083 est un faux positif ici : `path` est le parent exact de la
++    # destination locale choisie par l'opérateur, et aucun privilège n'est élevé.
++    directory_fd = os.open(path, os.O_RDONLY)  # NOSONAR S2083
 +    try:
 +        os.fsync(directory_fd)
 +    finally:
@@ -246,7 +248,10 @@ index 473d2fd0c66b08591d9cd358be388f98fdd53ae3..152e6ebcfc40b1b5c8d8aab8b35511c5
 +            stream.write(payload)
 +            stream.flush()
 +            os.fsync(stream.fileno())
-+        os.replace(temporary, path)
++        # S2083 est un faux positif : le fichier temporaire est créé par
++        # mkstemp dans `path.parent`; remplacer `path` est la fonction explicite
++        # de ce writer local (notamment pour la destination CLI `--out`).
++        os.replace(temporary, path)  # NOSONAR S2083
 +        _fsync_directory(path.parent)
 +    except BaseException:
 +        if descriptor_open:
@@ -611,10 +616,10 @@ index 4c90fd3ecae32ad8a537e48932de6879204529ba..54da090d25c1817125618e6f9cc854b8
 +            self._recover_pending_transaction_locked()
 +            return sorted(self._load())
 diff --git a/src/forgeai/portability.py b/src/forgeai/portability.py
-index f5cb6cd13c6782ca3511c7665ba9240363e65e05..e6b64a99999b88f199df7df894013b82f5cd1c95 100644
+index f5cb6cd13c6782ca3511c7665ba9240363e65e05..6c2552ceba55457c95b25a33e434bcc7fc765763 100644
 --- a/src/forgeai/portability.py
 +++ b/src/forgeai/portability.py
-@@ -16,12 +16,21 @@ Round-trip prouvé : un export suivi d'un import dans un répertoire vierge
+@@ -16,15 +16,25 @@ Round-trip prouvé : un export suivi d'un import dans un répertoire vierge
  restaure exactement le même état (hors secrets).
  """
 
@@ -637,8 +642,13 @@ index f5cb6cd13c6782ca3511c7665ba9240363e65e05..e6b64a99999b88f199df7df894013b82
 +
  BUNDLE_VERSION = 1
  SETUP_FILES = ("routes.json", "gateway.json", "wirings.json", "strategy.json", "budgets.json")
- EXCLUDED_FILES = frozenset({"vault.json"})
-@@ -66,6 +75,36 @@ def _validate_route(route: dict) -> None:
+-EXCLUDED_FILES = frozenset({"vault.json"})
++VAULT_FILENAME = "vault.json"
++EXCLUDED_FILES = frozenset({VAULT_FILENAME})
+ SAFE_ROUTE_FIELDS = {"name", "provenance", "base_url", "model_id", "key_fingerprint",
+                      "created_at", "cache", "cache_ttl_s", "cache_prefix"}
+
+@@ -66,6 +76,36 @@ def _validate_route(route: dict) -> None:
          raise PortabilityError(f"Champs non autorisés dans une route : {extra}")
 
 
@@ -675,7 +685,7 @@ index f5cb6cd13c6782ca3511c7665ba9240363e65e05..e6b64a99999b88f199df7df894013b82
  def export_setup(home, out_path=None) -> dict:
      """Exporte tous les fichiers de setup (sans secrets) vers un dict bundle.
 
-@@ -79,34 +118,43 @@ def export_setup(home, out_path=None) -> dict:
+@@ -79,34 +119,43 @@ def export_setup(home, out_path=None) -> dict:
      ou si une route contient un secret en clair.
      """
      home = Path(home)
@@ -711,7 +721,7 @@ index f5cb6cd13c6782ca3511c7665ba9240363e65e05..e6b64a99999b88f199df7df894013b82
 -        files[fname] = content
 +    with file_lock(home / MODELS_TRANSACTION_LOCK):
 +        # Un export ne peut observer une route encore révocable par un WAL.
-+        recover_models_transaction_locked(home, home / "vault.json")
++        recover_models_transaction_locked(home, home / VAULT_FILENAME)
 +
 +        for fname in SETUP_FILES:
 +            file_path = home / fname
@@ -745,7 +755,7 @@ index f5cb6cd13c6782ca3511c7665ba9240363e65e05..e6b64a99999b88f199df7df894013b82
 
      created_at = date.today().isoformat()
      sha = bundle_sha256(files, created_at)
-@@ -118,9 +166,16 @@ def export_setup(home, out_path=None) -> dict:
+@@ -118,9 +167,16 @@ def export_setup(home, out_path=None) -> dict:
      }
 
      if out_path is not None:
@@ -765,7 +775,7 @@ index f5cb6cd13c6782ca3511c7665ba9240363e65e05..e6b64a99999b88f199df7df894013b82
 
      return bundle
 
-@@ -183,28 +238,36 @@ def import_setup(bundle_path, home, *, force=False) -> dict:
+@@ -183,28 +239,36 @@ def import_setup(bundle_path, home, *, force=False) -> dict:
      home = Path(home)
      home.mkdir(parents=True, exist_ok=True)
 
@@ -794,7 +804,7 @@ index f5cb6cd13c6782ca3511c7665ba9240363e65e05..e6b64a99999b88f199df7df894013b82
 +    with file_lock(home / MODELS_TRANSACTION_LOCK):
 +        # Un import doit d'abord terminer toute transaction RouteStore/Vault
 +        # interrompue, puis partager le même verrou avec leurs lecteurs/writers.
-+        recover_models_transaction_locked(home, home / "vault.json")
++        recover_models_transaction_locked(home, home / VAULT_FILENAME)
 +
 +        # Vérification préalable (si force=False) – aucune écriture avant cette étape
 +        if not force:
@@ -825,10 +835,10 @@ index f5cb6cd13c6782ca3511c7665ba9240363e65e05..e6b64a99999b88f199df7df894013b82
      return {
 diff --git a/stories/DATA-002.md b/stories/DATA-002.md
 new file mode 100644
-index 0000000000000000000000000000000000000000..2022c957d8fc3a3f4c5d0542653647e0efbb5fdf
+index 0000000000000000000000000000000000000000..a1bdd73e35cc4fe32758a1345a5e5991104b567f
 --- /dev/null
 +++ b/stories/DATA-002.md
-@@ -0,0 +1,179 @@
+@@ -0,0 +1,192 @@
 +# DATA-002 — Transaction locale RouteStore/Vault
 +
 +## Calibration
@@ -916,7 +926,11 @@ index 0000000000000000000000000000000000000000..2022c957d8fc3a3f4c5d0542653647e0
 +- rejet de toute destination d’export chevauchant un fichier vivant du setup,
 +  y compris alias inode, variantes de casse et combinaison variante de casse +
 +  symlink du nom lexical fourni, puis écriture atomique `fsync`/`os.replace` du
-+  bundle.
++  bundle ;
++- constante unique pour `vault.json` dans la portabilité et justification
++  locale des deux sinks S2083 : ils opèrent le chemin explicitement choisi par
++  l’opérateur, sans donnée de requête distante ni élévation de privilège, avec
++  temporaire créé dans le même parent avant `os.replace`.
 +
 +## Extension de périmètre tracée
 +
@@ -979,6 +993,15 @@ index 0000000000000000000000000000000000000000..2022c957d8fc3a3f4c5d0542653647e0
 +et le contrôle de destination conserve le nom fourni. Le pack `f65636…` est
 +superseded et une nouvelle revue exacte est obligatoire.
 +
++La première CI du candidat durci a ensuite été bloquée par SonarCloud : deux
++S2083 sur `os.open`/`os.replace` et un littéral `vault.json` dupliqué. Les deux
++S2083 sont des faux positifs vérifiés du writer local : le chemin est la
++destination volontaire de la CLI ou le répertoire modèles configuré, le
++temporaire provient de `mkstemp(path.parent)` et aucun privilège supérieur
++n’est acquis. Les suppressions sont limitées aux deux sinks et documentées
++dans le code; le littéral est factorisé. Un nouveau passage SonarCloud doit
++encore confirmer le Quality Gate.
++
 +## Rollback
 +
 +Le rollback de données est couvert par :
@@ -990,11 +1013,11 @@ index 0000000000000000000000000000000000000000..2022c957d8fc3a3f4c5d0542653647e0
 +- récupération depuis une instance `RouteStore` créée avant le crash.
 +
 +Le rollback Git du candidat fonctionnel final
-+`6fa26714a8bd7fa6bdd60db87b7fce561fe7b53c`
++`e566872bf4cc079397e67945bfe9838252dbc6e2`
 +a été rejoué dans un worktree éphémère isolé : tous les commits de
 +`origin/main..HEAD` ont été inversés sans commit, puis `git diff --exit-code
 +origin/main` a confirmé une identité exacte. Les 24 tests ciblés de la base
-+passent (`sha256:03b0266c7ace109634ff7cf710bf4d3fd9c177be220281a8ef1a4fe375d276d6`) ;
++passent (`sha256:06a5466e51565836253f8a9a9afa20340aa3c82be1c1ba2c4b49ecdebe36da94`) ;
 +le worktree de preuve a ensuite été supprimé.
 +
 +## Limite plateforme
