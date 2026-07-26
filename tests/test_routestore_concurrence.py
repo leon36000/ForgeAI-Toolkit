@@ -114,6 +114,28 @@ def _add_cloud_pause_before_routes_replace(home_str: str, ready) -> None:
     )
 
 
+def _add_cloud_pause_before_vault_replace(home_str: str, ready) -> None:
+    """Processus victime : WAL durable, attente avant le premier replace du coffre."""
+    target = Path(home_str) / "vault.json"
+    real_replace = os.replace
+
+    def paused_replace(src, dst):
+        if os.fspath(dst) == os.fspath(target):
+            ready.set()
+            threading.Event().wait()
+        return real_replace(src, dst)
+
+    os.replace = paused_replace
+    RouteStore(Path(home_str)).add_cloud(
+        "orpheline",
+        "openrouter",
+        "m",
+        FAKE_KEY,
+        "pp-coffre",
+        transport=_GreenTransport(),
+    )
+
+
 def _add_cloud_pause_before_journal_unlink(home_str: str, ready) -> None:
     """Processus victime : les deux fichiers sont commités, le journal est encore présent."""
     target = Path(home_str) / ".models-transaction.json"
@@ -584,6 +606,33 @@ def test_alias_hardlink_du_coffre_est_restaure_avant_put(tmp_path):
     assert recovered.list() == []
     assert recovered.vault.names() == ["acquittee"]
     assert recovered.vault.get("acquittee", "pp") == "secret-durable"
+
+
+def test_recovery_ne_suit_jamais_un_symlink_vault_externe(tmp_path):
+    """Le rollback supprime le lien canonique injecté, jamais sa cible externe."""
+    home = tmp_path / "models"
+    victim = tmp_path / "victime.json"
+    victim_payload = '{"ne_pas_toucher":true}'
+    victim.write_text(victim_payload, encoding="utf-8")
+    ctx = mp.get_context("fork")
+    ready = ctx.Event()
+    process = ctx.Process(
+        target=_add_cloud_pause_before_vault_replace, args=(str(home), ready)
+    )
+    process.start()
+    assert ready.wait(timeout=10), "le processus n'a pas atteint le replace coffre"
+
+    (home / "vault.json").symlink_to(victim)
+    os.kill(process.pid, signal.SIGKILL)
+    process.join(timeout=5)
+
+    assert process.exitcode == -signal.SIGKILL
+    recovered = RouteStore(home)
+    assert recovered.list() == []
+    assert recovered.vault.names() == []
+    assert victim.read_text(encoding="utf-8") == victim_payload
+    assert not (home / "vault.json").is_symlink()
+    assert not (home / ".models-transaction.json").exists()
 
 
 def test_export_recupere_le_wal_avant_de_lire_routes(tmp_path):

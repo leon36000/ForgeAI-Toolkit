@@ -71,11 +71,11 @@ def atomic_unlink(path: Path) -> None:
 
 
 def _journal_vault_path(home: Path, snapshot: dict) -> Path:
-    """Résout l'identité du coffre liée au WAL, sans accepter de chemin arbitraire."""
+    """Retourne le nom canonique lexical sans suivre un éventuel symlink injecté."""
     vault_name = snapshot.get("vault_name", "vault.json")
     if vault_name != "vault.json":
         raise ValueError("identité de coffre invalide dans le journal")
-    return (Path(home) / vault_name).resolve(strict=False)
+    return Path(os.path.abspath(Path(home) / vault_name))
 
 
 def _paths_identify_same_file(left: Path, right: Path) -> bool:

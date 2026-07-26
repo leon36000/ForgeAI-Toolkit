@@ -74,6 +74,8 @@ verrou, y compris après l’arrêt brutal du processus.
   le journal est explicitement lié ;
 - comparaison d’identité par inode (`samefile`) pour les alias casse/symlink/
   hardlink, restauration du canon et de l’alias avant suppression du WAL ;
+- conservation du chemin canonique lexical lors du rollback afin qu’un symlink
+  injecté sur `vault.json` soit remplacé/supprimé sans jamais suivre sa cible ;
 - rejet de toute destination d’export chevauchant un fichier vivant du setup,
   puis écriture atomique `fsync`/`os.replace` du bundle.
 
@@ -88,8 +90,8 @@ delta hors allowlist est limité à ce fichier et au chemin réel du défaut.
 
 ## Résultats vérifiés
 
-- 57 tests ciblés : PASS ;
-- 17 tests de concurrence et de panne, avec neuf arrêts `SIGKILL` réels
+- 58 tests ciblés : PASS ;
+- 18 tests de concurrence et de panne, avec dix arrêts `SIGKILL` réels
   répartis sur les fenêtres de commit : PASS ;
 - 100 configurations concurrentes, lecteur JSON brut actif et probe hors
   verrou : PASS en `0,31 s` ;
@@ -124,6 +126,10 @@ importants : collision de `export --out` avec l’état vivant et alias du coffr
 sur volume insensible à la casse. Les reproductions CLI, case-insensitive/
 hardlink et les corrections sont incluses dans le nouveau candidat; le pack
 `23ec2b…` est donc superseded et doit être régénéré.
+
+Le tour suivant sur `b3bf0e…` a détecté le suivi dangereux d’un symlink
+canonique pendant un rollback. Un test SIGKILL prouve désormais qu’une cible
+externe reste byte-identique; le pack `b3bf0e…` est superseded à son tour.
 
 ## Rollback
 
