@@ -1,0 +1,16 @@
+[ROUGE] reproduction exécutée sur origin/main (262a658) — l'ancrage est VACU
+
+  src/forgeai/rag/hardened.py:167   scan_output(answer, context_used=True)   <- booléen codé en dur
+  src/forgeai/rag/hardened.py:175   "context_used": True,
+
+Scénario : contexte « Vornak-9 possede deux lunes. » (source faq.md), LLM factice répondant
+« La capitale de la France est Paris. » — aucun chevauchement lexical avec le contexte.
+
+  réponse retournée    : 'La capitale de la France est Paris.'
+  context_used annoncé : True
+  sources annoncées    : ['faq.md']
+  blocked              : absent
+
+=> Le contrat d'ancrage atteste la PRÉSENCE d'un retrieval, jamais un SOUTIEN réel. C'est
+   exactement le finding FAI-U-004, et le vide qu'ADR-RAG-004A a été écrit pour combler :
+   « Le guardrail de sortie ne reçoit JAMAIS un booléen pré-cuit de l'appelant : il calcule. »

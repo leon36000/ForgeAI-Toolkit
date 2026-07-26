@@ -1,0 +1,4 @@
+=== contrat d'ancrage appliqué (RAG-004B) ===
+  réponse soutenue                   grounding=grounded    coverage=1.0 answer='Vornak-9 possede deux lunes.'   sources=['faq.md']
+  réponse hors-sujet (FAI-U-004)     grounding=ungrounded  coverage=0.0 answer=''                               sources=[]
+  contexte vide                      grounding=unknown     coverage=None answer=''                               sources=[]

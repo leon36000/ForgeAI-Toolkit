@@ -108,10 +108,11 @@ def test_embed_passe_par_tei_format_brut(socle):
 
 # --- B2 : génération via la passerelle avec Bearer ---
 def test_ask_genere_via_passerelle_bearer(socle):
-    _SocleDurci.search_hits = [{"payload": {"text": "contexte durci", "source": "doc.md"}}]
+    _SocleDurci.search_hits = [
+        {"payload": {"text": "Réponse durcie ancrée dans le contexte durci.", "source": "doc.md"}}]
     res = _client(socle).ask("question ?")
     assert res["answer"] == "Réponse durcie ancrée."
-    assert res["context_used"] is True
+    assert res["grounding"] == "grounded"
     chat = _posts_to(socle, "/v1/chat/completions")
     assert chat, "la génération doit passer par la passerelle /v1/chat/completions"
     assert chat[0][3].get("Authorization") == "Bearer forgeai-bearer-test-token-DO-NOT-LEAK"
@@ -119,20 +120,22 @@ def test_ask_genere_via_passerelle_bearer(socle):
     assert "messages" in chat[0][2]
 
 
-# --- B3 : contrôle négatif — sans hit, pas de génération, context_used=false ---
+# --- B3 : contrôle négatif — sans hit, pas de génération, grounding="unknown" ---
 def test_ask_sans_hit_pas_de_generation(socle):
     _SocleDurci.search_hits = []
     res = _client(socle).ask("hors corpus ?")
-    assert res["answer"] == "" and res["sources"] == [] and res["context_used"] is False
+    assert res["answer"] == "" and res["sources"] == [] and res["grounding"] == "unknown"
     assert not _posts_to(socle, "/v1/chat/completions"), "aucune génération sans contexte"
 
 
 # --- B4 : sources triées + dédupliquées ---
 def test_ask_retourne_sources_triees_dedupliquees(socle):
+    # RAG-004B : les passages doivent réellement SOUTENIR la réponse du LLM factice
+    # (« Réponse durcie ancrée. »), sinon le vérificateur d'ancrage refuse — à juste titre.
     _SocleDurci.search_hits = [
-        {"payload": {"text": "a", "source": "z.md"}},
-        {"payload": {"text": "b", "source": "a.md"}},
-        {"payload": {"text": "c", "source": "z.md"}},
+        {"payload": {"text": "Réponse durcie ancrée, extrait a.", "source": "z.md"}},
+        {"payload": {"text": "Réponse durcie ancrée, extrait b.", "source": "a.md"}},
+        {"payload": {"text": "Réponse durcie ancrée, extrait c.", "source": "z.md"}},
     ]
     res = _client(socle).ask("q ?")
     assert res["sources"] == ["a.md", "z.md"]
@@ -206,10 +209,15 @@ def test_directive_du_corpus_ne_parvient_pas_au_llm(monkeypatch):
 def test_document_sain_traverse_sans_evenement(monkeypatch):
     """La protection ne doit pas dégrader le cas normal : aucun événement, réponse ancrée."""
     sain = {"text": "Vornak-9 possede deux lunes.", "source": "faq.md"}
-    client, captures = _client_avec_documents(monkeypatch, [sain])
+    client = _client_reponse_fixe(monkeypatch, [sain], "Vornak-9 possede deux lunes.")
+    captures = {}
+    from forgeai.rag import hardened as H
+    monkeypatch.setattr(H, "_post_bearer", lambda url, payload, bearer, timeout_s=300.0: (
+        captures.__setitem__("prompt", payload["messages"][0]["content"]),
+        {"choices": [{"message": {"content": "Vornak-9 possede deux lunes."}}]})[1])
     reponse = client.ask("Combien de lunes ?")
     assert "Vornak-9 possede deux lunes." in captures["prompt"]
-    assert reponse["context_used"] is True
+    assert reponse["grounding"] == "grounded"
     assert not reponse["sanitization_events"]
 
 
@@ -248,3 +256,56 @@ def test_guardrails_desactives_ne_reecrivent_pas_les_documents(monkeypatch):
     assert reponse["sanitization_events"] == [], "aucun événement quand les gardes sont désactivées"
     assert "<<<DONNEES-" in captures["prompt"], "la séparation structurelle reste toujours appliquée"
     assert "doc.txt" in captures["prompt"], "la provenance reste toujours appliquée"
+
+
+# --- RAG-004B : le contrat d'ancrage sur le CHEMIN RÉEL (leçon de RAG-005) -------------------
+def _client_reponse_fixe(monkeypatch, documents, reponse):
+    """Client durci dont le LLM factice renvoie une réponse imposée, pour éprouver le verdict
+    d'ancrage sur le vrai chemin `ask()` — jamais sur une entrée reconstituée à la main."""
+    from forgeai.rag import hardened as H
+    monkeypatch.setattr(H, "_post_bearer",
+                        lambda url, payload, bearer, timeout_s=300.0:
+                        {"choices": [{"message": {"content": reponse}}]})
+    client = H.HardenedRagClient(
+        ollama_url="http://o", qdrant_url="http://q", llm_model="m", embed_model="e",
+        tei_url="http://t", gateway_url="http://g", gateway_key="k")
+    monkeypatch.setattr(client, "_search", lambda question, k: [
+        {"payload": {"text": d["text"], "source": d["source"]}} for d in documents])
+    return client
+
+
+def test_reponse_hors_sujet_refusee_sur_le_chemin_reel(monkeypatch):
+    """Cas FAI-U-004 exact : contexte « Vornak-9 », réponse « capitale de la France ».
+    Avant RAG-004B ce scénario retournait context_used=True et sources=['faq.md']."""
+    client = _client_reponse_fixe(
+        monkeypatch, [{"text": "Vornak-9 possede deux lunes.", "source": "faq.md"}],
+        "La capitale de la France est Paris.")
+    reponse = client.ask("Quelle est la capitale de la France ?")
+    assert reponse["answer"] == "", "aucune fabrication : la réponse non soutenue est vidée"
+    assert reponse["sources"] == []
+    assert reponse["grounding"] == "ungrounded"
+    assert reponse["blocked"]
+
+
+def test_reponse_soutenue_exposee_avec_son_ancrage(monkeypatch):
+    """Le cas nominal ne doit pas être dégradé : réponse soutenue -> exposée avec preuves."""
+    client = _client_reponse_fixe(
+        monkeypatch, [{"text": "Vornak-9 possede deux lunes.", "source": "faq.md"}],
+        "Vornak-9 possede deux lunes.")
+    reponse = client.ask("Combien de lunes ?")
+    assert reponse["grounding"] == "grounded"
+    assert reponse["answer"]
+    assert reponse["sources"] == ["faq.md"]
+    assert reponse["coverage"] >= 0.8
+    assert any(c["supported"] for c in reponse["citations"])
+
+
+def test_aucune_sortie_ne_porte_context_used_herite(monkeypatch):
+    """Invariant global (ADR §4) : `context_used` est RETIRÉ, remplacé par `grounding`.
+    Aucune sortie ne doit plus porter ce booléen pré-cuit."""
+    client = _client_reponse_fixe(
+        monkeypatch, [{"text": "Vornak-9 possede deux lunes.", "source": "faq.md"}],
+        "Vornak-9 possede deux lunes.")
+    for reponse in (client.ask("q"), _client_reponse_fixe(monkeypatch, [], "x").ask("q")):
+        assert "context_used" not in reponse, "context_used doit avoir disparu de la sortie"
+        assert "grounding" in reponse

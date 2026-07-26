@@ -108,9 +108,14 @@ def test_rerank_reordonne_les_hits(socle):
 
 # B2 : ask avec reranker élargit puis rerank puis top_k puis génère
 def test_ask_avec_reranker_branche_le_flux(socle):
-    _Socle.search_hits = [_hit("distracteur", "d.md"), _hit(f"{CIBLE} bon", "bon.md")]
+    # RAG-004B : le passage retenu par le rerank doit réellement SOUTENIR la réponse du LLM
+    # factice, sinon le vérificateur d'ancrage refuse — c'est le comportement voulu.
+    _Socle.search_hits = [_hit("distracteur", "d.md"),
+                          _hit(f"{CIBLE} bon — {_Socle.chat_answer}", "bon.md")]
     res = _client(socle, reranker=True).ask("q", top_k=1)
-    assert res["context_used"] is True
+    # RAG-004B (ADR-RAG-004A §8) : `context_used` est RETIRÉ au profit de `grounding`, un état
+    # CALCULÉ depuis les passages réellement injectés — l'ancien booléen était affirmé, jamais mesuré.
+    assert res["grounding"] == "grounded"
     assert res["sources"] == ["bon.md"], "après rerank+top_k=1, seul le bon chunk reste"
     assert _posts("/rerank"), "le rerank doit être appelé"
 
@@ -123,7 +128,7 @@ def test_negatif_preserve_sous_rerank_actif(socle):
     # l'appelant n'ait jamais à tester la présence de la clé. L'égalité stricte du dictionnaire
     # sur-spécifiait donc le contrat ; l'intention du test — réponse négative sans fabrication,
     # et AUCUN appel de rerank — est vérifiée explicitement.
-    assert res["answer"] == "" and res["sources"] == [] and res["context_used"] is False
+    assert res["answer"] == "" and res["sources"] == [] and res["grounding"] == "unknown"
     assert res["sanitization_events"] == []
     assert not _posts("/rerank"), "jamais POST /rerank sur un retrieval vide"
 
