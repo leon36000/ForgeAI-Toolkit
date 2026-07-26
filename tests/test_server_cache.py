@@ -214,3 +214,20 @@ def test_available_backends_utilise_un_runner_borne(monkeypatch):
     monkeypatch.setattr(server, "available_backends", lambda checks: ["compose"])
     server._available_backends()
     assert vus["timeout"] == server._PROBE_TIMEOUT_S, vus
+
+
+def test_cluster_status_utilise_un_runner_borne(monkeypatch):
+    """3e sonde du chemin web (relevé en revue : elle n'était pas testée) — cluster_status
+    doit aussi recevoir un runner borné, pas le défaut 20 s."""
+    server._hardware_cache_clear()
+    vus = {}
+
+    def _faux_cluster_status(runner):
+        vus["timeout"] = getattr(runner, "timeout_s", None)
+        return [{"name": "node-a"}]
+
+    monkeypatch.setattr(server, "cluster_status", _faux_cluster_status)
+    monkeypatch.setattr(server, "_hardware_report", lambda: type("P", (), {})())
+    monkeypatch.setattr(server, "_available_backends", lambda: ["compose"])
+    server._summary_payload("agentique")
+    assert vus["timeout"] == server._PROBE_TIMEOUT_S, vus
