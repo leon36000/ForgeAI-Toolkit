@@ -70,12 +70,22 @@ def atomic_unlink(path: Path) -> None:
     _fsync_directory(path.parent)
 
 
+def _journal_vault_path(home: Path, snapshot: dict) -> Path:
+    """Résout l'identité du coffre liée au WAL, sans accepter de chemin arbitraire."""
+    vault_name = snapshot.get("vault_name", "vault.json")
+    if vault_name != "vault.json":
+        raise ValueError("identité de coffre invalide dans le journal")
+    return (Path(home) / vault_name).resolve(strict=False)
+
+
 def restore_models_transaction_locked(
     home: Path, vault_path: Path, snapshot: dict
 ) -> None:
     """Restaure les deux fichiers; conserve le journal si une restauration échoue."""
     home = Path(home)
-    vault_path = Path(vault_path)
+    vault_path = Path(vault_path).resolve(strict=False)
+    if vault_path != _journal_vault_path(home, snapshot):
+        raise ValueError("le coffre demandé ne correspond pas au journal")
     routes_path = home / "routes.json"
     journal_path = home / MODELS_TRANSACTION_JOURNAL
     rollback_error: Exception | None = None
@@ -117,5 +127,7 @@ def recover_models_transaction_locked(home: Path, vault_path: Path) -> bool:
     if not journal_path.exists():
         return False
     snapshot = json.loads(journal_path.read_text(encoding="utf-8"))
+    if Path(vault_path).resolve(strict=False) != _journal_vault_path(home, snapshot):
+        return False
     restore_models_transaction_locked(home, vault_path, snapshot)
     return True

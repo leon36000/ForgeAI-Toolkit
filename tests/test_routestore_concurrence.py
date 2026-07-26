@@ -5,6 +5,7 @@ puis la dernière écriture écrase l'autre : des routes ET des clés API scell�
 Spécification : N ajouts concurrents de routes distinctes ⇒ les N routes sont persistées, et les N
 clés sont retrouvables au coffre. RED avant correctif : lost-update (moins de N).
 """
+import builtins
 import json
 import multiprocessing as mp
 import os
@@ -15,6 +16,7 @@ from pathlib import Path
 from forgeai.models._locking import file_lock
 from forgeai.models.routes import RouteError, RouteStore
 from forgeai.models.vault import Vault, fingerprint
+from forgeai.portability import bundle_sha256, export_setup, import_setup
 
 FAKE_KEY = "sk-fake-DO-NOT-LEAK"
 
@@ -29,6 +31,50 @@ def _add_one(home_str: str, i: int, barrier) -> None:
     store = RouteStore(Path(home_str))
     store.add_cloud(f"route-{i}", "openrouter", "z-ai/glm-4.6", FAKE_KEY, "pp-coffre",
                     transport=_GreenTransport())
+
+
+def _add_named(home_str: str, done) -> None:
+    RouteStore(Path(home_str)).add_cloud(
+        "ajoutee",
+        "openrouter",
+        "m",
+        FAKE_KEY,
+        "pp-coffre",
+        transport=_GreenTransport(),
+    )
+    done.set()
+
+
+def _configure_named(home_str: str, done) -> None:
+    RouteStore(Path(home_str)).configure_cache("existante", True, 60, "cache")
+    done.set()
+
+
+def _import_pause_before_routes_commit(
+    bundle_path: str, home_str: str, ready, release
+) -> None:
+    """Suspend l'import à sa primitive de commit, quel que soit le writer utilisé."""
+    target = Path(home_str) / "routes.json"
+    real_open = builtins.open
+    real_replace = os.replace
+
+    def paused_open(path, mode="r", *args, **kwargs):
+        if os.fspath(path) == os.fspath(target) and "w" in mode:
+            ready.set()
+            if not release.wait(timeout=10):
+                raise RuntimeError("import non libéré")
+        return real_open(path, mode, *args, **kwargs)
+
+    def paused_replace(src, dst):
+        if os.fspath(dst) == os.fspath(target):
+            ready.set()
+            if not release.wait(timeout=10):
+                raise RuntimeError("import non libéré")
+        return real_replace(src, dst)
+
+    builtins.open = paused_open
+    os.replace = paused_replace
+    import_setup(bundle_path, home_str, force=True)
 
 
 def _configure_pause_before_replace(home_str: str, ready) -> None:
@@ -117,6 +163,71 @@ def test_add_cloud_concurrent_ne_perd_aucune_route(tmp_path):
     # chaque clé scellée est retrouvable (le coffre n'a pas non plus perdu d'entrée)
     for i in range(N):
         assert store.vault.get(f"route-{i}", "pp-coffre") == FAKE_KEY
+
+
+def test_import_add_et_configure_partagent_le_verrou_interprocessus(tmp_path):
+    """L'import ne peut écraser ni l'ajout ni la configuration concurrents."""
+    home = tmp_path / "models"
+    home.mkdir()
+    route = {
+        "name": "existante",
+        "provenance": "openrouter",
+        "base_url": "https://openrouter.ai/api/v1",
+        "model_id": "m",
+        "key_fingerprint": "sha256:0000000000000000",
+        "created_at": "2026-07-25",
+        "cache": False,
+        "cache_ttl_s": None,
+        "cache_prefix": None,
+    }
+    (home / "routes.json").write_text(json.dumps([route]), encoding="utf-8")
+    created_at = "2026-07-25"
+    files = {"routes.json": [route]}
+    bundle = {
+        "version": 1,
+        "created_at": created_at,
+        "files": files,
+        "sha256": bundle_sha256(files, created_at),
+    }
+    bundle_path = tmp_path / "bundle.json"
+    bundle_path.write_text(json.dumps(bundle), encoding="utf-8")
+
+    ctx = mp.get_context("fork")
+    import_ready = ctx.Event()
+    release_import = ctx.Event()
+    add_done = ctx.Event()
+    configure_done = ctx.Event()
+    importer = ctx.Process(
+        target=_import_pause_before_routes_commit,
+        args=(str(bundle_path), str(home), import_ready, release_import),
+    )
+    importer.start()
+    assert import_ready.wait(timeout=5), "l'import n'a pas atteint son commit"
+
+    adder = ctx.Process(target=_add_named, args=(str(home), add_done))
+    configurator = ctx.Process(
+        target=_configure_named, args=(str(home), configure_done)
+    )
+    adder.start()
+    configurator.start()
+
+    # Sans verrou commun, les deux RMW finissent avant l'import puis sont écrasés.
+    add_done.wait(timeout=2)
+    configure_done.wait(timeout=2)
+    release_import.set()
+
+    for process in (importer, adder, configurator):
+        process.join(timeout=10)
+        assert not process.is_alive()
+        assert process.exitcode == 0
+
+    persisted = {item.name: item for item in RouteStore(home).list()}
+    assert sorted(persisted) == ["ajoutee", "existante"]
+    assert (
+        persisted["existante"].cache,
+        persisted["existante"].cache_ttl_s,
+        persisted["existante"].cache_prefix,
+    ) == (True, 60, "cache")
 
 
 def test_vault_put_concurrent_ne_perd_aucune_cle(tmp_path):
@@ -417,6 +528,56 @@ def test_vault_put_apres_crash_recupere_avant_nouvelle_ecriture(tmp_path):
     assert recovered.list() == []
     assert recovered.vault.names() == ["apres-crash"]
     assert recovered.vault.get("apres-crash", "pp") == "secret-durable"
+
+
+def test_vault_voisin_ne_detourne_pas_la_recuperation_route_store(tmp_path):
+    """Un coffre non canonique ne doit ni consommer le WAL ni recevoir son snapshot."""
+    home = tmp_path / "models"
+    ctx = mp.get_context("fork")
+    ready = ctx.Event()
+    process = ctx.Process(
+        target=_add_cloud_pause_before_routes_replace, args=(str(home), ready)
+    )
+    process.start()
+    assert ready.wait(timeout=10), "le processus n'a pas atteint le replace routes"
+
+    os.kill(process.pid, signal.SIGKILL)
+    process.join(timeout=5)
+
+    assert process.exitcode == -signal.SIGKILL
+    voisin = Vault(home / "autre.json")
+    voisin.put("voisine", "secret-voisin", "pp")
+    assert voisin.get("voisine", "pp") == "secret-voisin"
+    assert (home / ".models-transaction.json").exists()
+
+    recovered = RouteStore(home)
+    assert recovered.list() == []
+    assert recovered.vault.names() == []
+    assert voisin.names() == ["voisine"]
+    assert not (home / ".models-transaction.json").exists()
+
+
+def test_export_recupere_le_wal_avant_de_lire_routes(tmp_path):
+    """Un export ne doit jamais publier une route encore révocable par le WAL."""
+    home = tmp_path / "models"
+    ctx = mp.get_context("fork")
+    ready = ctx.Event()
+    process = ctx.Process(
+        target=_add_cloud_pause_before_journal_unlink, args=(str(home), ready)
+    )
+    process.start()
+    assert ready.wait(timeout=10), "le processus n'a pas atteint l'unlink du journal"
+
+    os.kill(process.pid, signal.SIGKILL)
+    process.join(timeout=5)
+
+    assert process.exitcode == -signal.SIGKILL
+    assert json.loads((home / "routes.json").read_text())[0]["name"] == "orpheline"
+    assert (home / ".models-transaction.json").exists()
+
+    bundle = export_setup(home)
+    assert "routes.json" not in bundle["files"]
+    assert not (home / ".models-transaction.json").exists()
 
 
 def test_sigkill_apres_routes_replace_est_recupere_avant_precheck_add(tmp_path):

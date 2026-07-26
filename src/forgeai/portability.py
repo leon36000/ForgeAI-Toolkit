@@ -16,11 +16,18 @@ Round-trip prouvé : un export suivi d'un import dans un répertoire vierge
 restaure exactement le même état (hors secrets).
 """
 
-import json
 import hashlib
-from pathlib import Path
+import json
 from datetime import date
+from pathlib import Path
 from typing import List
+
+from forgeai.models._locking import (
+    MODELS_TRANSACTION_LOCK,
+    atomic_write_text,
+    file_lock,
+    recover_models_transaction_locked,
+)
 
 BUNDLE_VERSION = 1
 SETUP_FILES = ("routes.json", "gateway.json", "wirings.json", "strategy.json", "budgets.json")
@@ -81,32 +88,39 @@ def export_setup(home, out_path=None) -> dict:
     home = Path(home)
     files = {}
 
-    for fname in SETUP_FILES:
-        file_path = home / fname
-        if not file_path.exists():
-            continue
+    with file_lock(home / MODELS_TRANSACTION_LOCK):
+        # Un export ne peut observer une route encore révocable par un WAL.
+        recover_models_transaction_locked(home, home / "vault.json")
 
-        # Lecture
-        try:
-            with open(file_path, "r", encoding="utf-8") as fh:
-                content = json.load(fh)
-        except Exception as exc:
-            raise PortabilityError(f"Erreur lors du chargement de {fname} : {exc}") from exc
+        for fname in SETUP_FILES:
+            file_path = home / fname
+            if not file_path.exists():
+                continue
 
-        # Validation stricte pour routes.json
-        if fname == "routes.json":
-            if not isinstance(content, list):
-                raise PortabilityError("routes.json doit être une liste de routes")
-            for route in content:
-                if not isinstance(route, dict):
-                    raise PortabilityError("Chaque élément de routes.json doit être un dict")
-                _validate_route(route)
+            try:
+                with open(file_path, "r", encoding="utf-8") as fh:
+                    content = json.load(fh)
+            except Exception as exc:
+                raise PortabilityError(
+                    f"Erreur lors du chargement de {fname} : {exc}"
+                ) from exc
 
-        # Garde‑fou supplémentaire
-        if fname in EXCLUDED_FILES:
-            raise PortabilityError(f"Le fichier exclu {fname} ne doit jamais être exporté")
+            if fname == "routes.json":
+                if not isinstance(content, list):
+                    raise PortabilityError("routes.json doit être une liste de routes")
+                for route in content:
+                    if not isinstance(route, dict):
+                        raise PortabilityError(
+                            "Chaque élément de routes.json doit être un dict"
+                        )
+                    _validate_route(route)
 
-        files[fname] = content
+            if fname in EXCLUDED_FILES:
+                raise PortabilityError(
+                    f"Le fichier exclu {fname} ne doit jamais être exporté"
+                )
+
+            files[fname] = content
 
     created_at = date.today().isoformat()
     sha = bundle_sha256(files, created_at)
@@ -183,28 +197,36 @@ def import_setup(bundle_path, home, *, force=False) -> dict:
     home = Path(home)
     home.mkdir(parents=True, exist_ok=True)
 
-    # Vérification préalable (si force=False) – aucune écriture avant cette étape
-    if not force:
-        conflicts = []
-        for fname in files:
-            dest = home / fname
-            if dest.exists():
-                conflicts.append(fname)
-        if conflicts:
-            raise PortabilityError(
-                f"Fichiers déjà présents dans {home} : {', '.join(conflicts)}. Utilisez force=True pour écraser."
-            )
-
-    # Écriture effective
     restored = []
-    for fname, content in files.items():
-        # Défense en profondeur : ne jamais écrire un nom hors whitelist (vault.json, '..', absolu)
-        if not _safe_name(fname):
-            continue
-        dest = home / fname
-        with open(dest, "w", encoding="utf-8") as fh:
-            json.dump(content, fh, indent=1, ensure_ascii=False)
-        restored.append(fname)
+    with file_lock(home / MODELS_TRANSACTION_LOCK):
+        # Un import doit d'abord terminer toute transaction RouteStore/Vault
+        # interrompue, puis partager le même verrou avec leurs lecteurs/writers.
+        recover_models_transaction_locked(home, home / "vault.json")
+
+        # Vérification préalable (si force=False) – aucune écriture avant cette étape
+        if not force:
+            conflicts = []
+            for fname in files:
+                dest = home / fname
+                if dest.exists():
+                    conflicts.append(fname)
+            if conflicts:
+                raise PortabilityError(
+                    f"Fichiers déjà présents dans {home} : {', '.join(conflicts)}. "
+                    "Utilisez force=True pour écraser."
+                )
+
+        # Chaque remplacement est atomique; routes.json reste sérialisé avec RouteStore.
+        for fname, content in files.items():
+            # Défense en profondeur : jamais de nom hors whitelist.
+            if not _safe_name(fname):
+                continue
+            atomic_write_text(
+                home / fname,
+                json.dumps(content, indent=1, ensure_ascii=False),
+                mode=0o600,
+            )
+            restored.append(fname)
 
     secrets = secrets_to_reprovision(bundle)
     return {

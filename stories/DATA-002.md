@@ -6,9 +6,9 @@
 - Risque : `T2`
 - Branche : `fix/DATA-002-routestore-atomic-transaction`
 - Base initiale : `c14430057823cdc9eb6f0d5ae22ed84dd8a4b8d1`
-- Base finale après synchronisation : `9ef84cc2bcf2ceacf3cd564ff8eb73a749bbfeeb`
+- Base finale après synchronisation : `7a1fbf1478e3dd89c5fbd0b4fa5e9da25726ac25`
 - Issue : `#164`
-- Claim Codex : actif dans le ledger PROOF externe
+- Claim Codex : tracé dans le ledger PROOF externe
 
 ## Cause racine vérifiée
 
@@ -20,7 +20,12 @@ Le correctif historique `FAI-0010` protège séparément les read-modify-write d
 3. `add_cloud` persiste la clé au coffre avant le commit de la route, sans
    compensation si ce commit échoue ;
 4. les locks distincts de `routes.json` et `vault.json` ne sérialisent pas une
-   opération qui touche les deux ressources.
+   opération qui touche les deux ressources ;
+5. `forgeai import` et `forgeai export` accèdent à `routes.json` hors du verrou
+   commun et peuvent respectivement écraser une mutation ou publier un état
+   encore révocable par le journal ;
+6. la récupération acceptait le chemin de n’importe quelle instance `Vault`,
+   ce qui permettait à un coffre voisin de consommer le WAL canonique.
 
 La baseline ciblée existante passe 24 tests en environnement autorisant le
 loopback, mais elle ne couvre pas ces interleavings ni les pannes avant rename.
@@ -43,7 +48,12 @@ verrou, y compris après l’arrêt brutal du processus.
 - une panne injectée dans `os.replace` ne touche pas l’ancien fichier ;
 - un échec du commit de route ne laisse aucune clé orpheline.
 - un `SIGKILL` entre le remplacement du coffre et celui des routes est récupéré
-  automatiquement à la prochaine ouverture du `RouteStore`.
+  automatiquement à la prochaine ouverture du `RouteStore` ;
+- un import suspendu à son commit écrase un `add_cloud` et un
+  `configure_cache` concurrents ;
+- un `Vault(home/"autre.json")` consomme le WAL de `RouteStore` et laisse la
+  clé canonique orpheline ;
+- un export effectué avant la suppression du WAL publie une route non commitée.
 
 ## Implémentation
 
@@ -52,19 +62,35 @@ verrou, y compris après l’arrêt brutal du processus.
 - écriture temporaire dans le même répertoire, permissions `0600`, `fsync` du
   fichier, `os.replace`, puis `fsync` du répertoire ;
 - write-ahead journal `.models-transaction.json` contenant l’état antérieur
-  chiffré du coffre et les anciennes routes ;
+  chiffré du coffre, les anciennes routes et l’identité canonique `vault.json` ;
 - rollback idempotent après exception ou reprise à la première opération d’une
   instance neuve ou déjà existante ;
-- probe réseau exécuté hors verrou, entre le précontrôle atomique et le commit.
+- probe réseau exécuté hors verrou, entre le précontrôle atomique et le commit ;
+- import et export sérialisés avec la transaction RouteStore, récupération du
+  WAL avant lecture/écriture et remplacements atomiques `0600` à l’import ;
+- refus de restaurer un WAL vers tout coffre autre que le `vault.json` auquel
+  le journal est explicitement lié.
+
+## Extension de périmètre tracée
+
+Trois revues OpenAI indépendantes ont découvert que le writer CLI de production
+`src/forgeai/portability.py` contournait le verrou DATA-002. Ce fichier n’était
+pas dans l’allowlist initiale. L’extension n’a pas été silencieuse : elle a été
+annoncée comme STOP au cockpit, puis couverte par l’autorisation explicite de
+Nathan d’effectuer toutes les corrections nécessaires jusqu’à complétion. Le
+delta hors allowlist est limité à ce fichier et au chemin réel du défaut.
 
 ## Résultats vérifiés
 
-- 39 tests ciblés : PASS ;
-- 13 tests de concurrence et de panne, avec six arrêts `SIGKILL` réels
+- 51 tests ciblés : PASS ;
+- 16 tests de concurrence et de panne, avec huit arrêts `SIGKILL` réels
   répartis sur les fenêtres de commit : PASS ;
 - 100 configurations concurrentes, lecteur JSON brut actif et probe hors
   verrou : PASS en `0,31 s` ;
-- suite complète : PASS, couverture globale `89,70 %` (seuil `85 %`) ;
+- suite complète locale du delta final : tous les tests DATA-002 et UI passent ;
+  l’unique échec restant est le faux serveur `tests/test_immudb.py`, qui
+  réinitialise la connexion indépendamment de ce diff ; couverture globale
+  `89,67 %` (seuil `85 %`) ;
 - `forgeai/core/registre.py` : `98 %` (seuil `95 %`) ;
 - no-stub, registres, catalogue et gate des revues existantes : PASS ;
 - Gitleaks `8.30.1`, scan du worktree complet : aucune fuite.
@@ -78,8 +104,14 @@ La revue de code Codex interne a d’abord rejeté le patch pour deux fenêtres 
 course supplémentaires : une opération `Vault` après crash pouvait être
 acquittée puis annulée, et le premier contrôle de doublon n’était pas atomique
 avec la récupération. Les deux constats ont été reproduits en rouge, corrigés,
-puis re-revus sans constat critique ou important. Cette revue interne ne compte
-pas parmi les trois verdicts multi-vendeurs requis.
+puis re-revus sans constat critique ou important.
+
+Trois autres revues OpenAI indépendantes ont ensuite rejeté le candidat
+`f1b1a825` pour le writer import/export hors transaction, le détournement du WAL
+par un coffre voisin et le pack de revue périmé. Chaque défaut fonctionnel a été
+reproduit en rouge puis corrigé. Ces revues ne sont pas présentées comme trois
+fournisseurs distincts et ne satisfont donc pas artificiellement une exigence
+multi-vendeurs.
 
 ## Rollback
 
@@ -95,7 +127,14 @@ Le rollback Git du commit candidat `1b64e62` a été rejoué dans un worktree
 éphémère isolé. Après inversion complète du patch, les 24 tests ciblés de la
 base passent ; le worktree de preuve a ensuite été supprimé.
 
+## Limite plateforme
+
+Le verrou repose sur `fcntl`, et les tests de crash utilisent `fork`/`SIGKILL` :
+la transaction reste donc explicitement POSIX. Cette contrainte existait avant
+DATA-002 ; aucun support Windows non prouvé n’est revendiqué.
+
 ## Gates encore externes
 
-SonarQube, CodeRabbit/Bugbot, les trois verdicts indépendants et la merge queue
-nécessitent la PR. Aucun verdict n’est préfabriqué localement.
+Le nouveau SHA doit encore repasser SonarQube, GitGuardian, CodeRabbit et la CI.
+La merge queue n’est pas configurée sur le dépôt ; Nathan a autorisé une fusion
+directe tracée. Aucun verdict multi-vendeur n’est préfabriqué localement.

@@ -23,6 +23,7 @@ from forgeai.models._locking import (
     recover_models_transaction_locked,
     restore_models_transaction_locked,
 )
+
 from .probe import ProbeResult, Transport, UrllibTransport, probe_route
 from .vault import Vault
 
@@ -88,6 +89,7 @@ class RouteStore:
         return {
             "routes_existed": self.routes_path.exists(),
             "routes": routes,
+            "vault_name": self.vault.path.name,
             "vault_existed": self.vault.path.exists(),
             "vault": vault,
         }
