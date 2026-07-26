@@ -96,7 +96,7 @@ delta hors allowlist est limité à ce fichier et au chemin réel du défaut.
 - suite complète locale du delta final : tous les tests DATA-002 et UI passent ;
   l’unique échec restant est le faux serveur `tests/test_immudb.py`, qui
   réinitialise la connexion indépendamment de ce diff ; couverture globale
-  `89,67 %` (seuil `85 %`) ;
+  `89,72 %` (seuil `85 %`) ;
 - `forgeai/core/registre.py` : `98 %` (seuil `95 %`) ;
 - no-stub, registres, catalogue et gate des revues existantes : PASS ;
 - Gitleaks `8.30.1`, scan du worktree complet : aucune fuite.
