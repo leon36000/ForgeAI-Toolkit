@@ -1046,6 +1046,17 @@
       "dependencies": [],
       "_external": true,
       "_note": "Package CORRECTIF hors lot initial (suite fonctionnelle d'OPT-001, sans dépendance déclarée pour rester autoportant) : le timeout 20 s/commande du runner s'appliquait aux sondes de LECTURE du chemin HTTP -> le 1er appel non caché de /api/summary dépassait le budget requête et faisait échouer test_summary_nodes sur runner CI. Marqué completed après fusion."
+    },
+    {
+      "id": "OPT-001",
+      "title": "Mémoïser les sondes matérielles et backends du serveur web",
+      "status": "EXTERNAL",
+      "ide": "CLAUDE_CODE",
+      "source_ide": "CLAUDE_CODE",
+      "exclusive_lane": "",
+      "dependencies": [],
+      "_external": true,
+      "_note": "Package CORRECTIF hors lot initial (findings d'audit OBS-A060-1/A061) : /api/detect et /api/summary relançaient des sous-processus à chaque requête. Complété par OPT-002 (bornage des sondes). Marqué completed après fusion (#183)."
     }
   ]
 }

@@ -215,6 +215,40 @@
         "dossier": "reviews/RES-012A",
         "note": "ADR schema de ressources par service (DESIGN_FIRST, FAI-U-012). APPROVE 3/3. Debloque RES-012B (impl) apres approbation Nathan."
       }
+    },
+    {
+      "package": "PLACE-026A",
+      "merge_commit": "7a1fbf1478e3dd89c5fbd0b4fa5e9da25726ac25",
+      "pr_number": 179,
+      "merged_at": "2026-07-26T00:09:52Z",
+      "review": {
+        "result": "APPROVE",
+        "vendors": [
+          "google",
+          "qwen3.6-40b",
+          "deepseek"
+        ],
+        "prompt_sha256": "af4db45e48789dec4d8618d1c1de879e04d301649a19e2497731debc9901003d",
+        "dossier": "reviews/PLACE-026A",
+        "note": "Placement par service cable dans assemble_plan (FAI-U-026). APPROVE 2/3, 0 critique (2 objections mineures refutees par execution). Debloque PLACE-026B."
+      }
+    },
+    {
+      "package": "OPT-001",
+      "merge_commit": "3cc6ec7753a815e3c3d1eb22739fe81c42c62a82",
+      "pr_number": 183,
+      "merged_at": "2026-07-26T00:05:45Z",
+      "review": {
+        "result": "APPROVE",
+        "vendors": [
+          "google",
+          "qwen3.6-40b",
+          "deepseek"
+        ],
+        "prompt_sha256": "3e444840e816bbb31a444771227706efa158e8e8b6bffd8613d0f955533e1466",
+        "dossier": "reviews/OPT-001",
+        "note": "Memoisation sondes materielles/backends (OBS-A060-1/A061) : 330ms -> 0.00ms. APPROVE 3/3 (faux positif du test anti-interblocage detecte en revue puis corrige, preuve bidirectionnelle). DEBLOQUE LA CI."
+      }
     }
   ]
 }
