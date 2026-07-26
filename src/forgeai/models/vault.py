@@ -72,7 +72,10 @@ def chmod_existing_secret_file(path: Path, *, mode: int = 0o600) -> None:
     flags = os.O_RDONLY | no_follow
     flags |= getattr(os, "O_CLOEXEC", 0)
     flags |= getattr(os, "O_NONBLOCK", 0)
-    descriptor = os.open(Path(path), flags)
+    # S2083 est un faux positif : cible locale de bootstrap choisie par
+    # l'opérateur, ouverte O_NOFOLLOW puis validée (fstat, fichier régulier,
+    # lien unique) avant toute mutation.
+    descriptor = os.open(Path(path), flags)  # NOSONAR S2083
     try:
         target = os.fstat(descriptor)
         if not stat.S_ISREG(target.st_mode) or target.st_nlink != 1:
