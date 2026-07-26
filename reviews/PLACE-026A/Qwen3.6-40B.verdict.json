@@ -1,0 +1,20 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "src/forgeai/planner/assemble.py",
+   "description": "La story mentionne explicitement 'params keyword-only placement/rag_node', mais la signature de la fonction assemble_plan dans le diff ne contient pas le séparateur '*' pour forcer ces arguments en keyword-only.",
+   "preuve": "Lignes ajoutées : `+    placement: dict[str, str] | None = None,` et `+    rag_node: str | None = None,` sans `*` intercalaire."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "src/forgeai/planner/assemble.py",
+   "description": "Ajout dynamique de l'attribut 'placement_reasons' sur une instance de dataclass via _attach_placement_reasons. Si la dataclass DeploymentPlan est définie avec slots=True (ce qui est une pratique courante et non visible dans le diff), cela provoquera une AttributeError au runtime.",
+   "preuve": "Lignes : `object.__setattr__(plan, \"placement_reasons\", reasons)` et `plan.placement_reasons = reasons`"
+  }
+ ],
+ "date_heure": "2026-07-25T22:35:08.651928+00:00",
+ "prompt_sha256": "af4db45e48789dec4d8618d1c1de879e04d301649a19e2497731debc9901003d",
+ "reviewer_model": "Qwen3.6-40B"
+}
