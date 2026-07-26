@@ -163,9 +163,9 @@ OPEN_RISKS:
 READY_FOR_PR: YES|NO
 ```
 
-ARTEFACT — DATA-002-review-final.txt :
+ARTEFACT — DATA-002-review-final.diff :
 diff --git a/src/forgeai/models/_locking.py b/src/forgeai/models/_locking.py
-index 473d2fd..7322c69 100644
+index 473d2fd0c66b08591d9cd358be388f98fdd53ae3..7d72e705203b0417efbea4475b6c82847b62a55b 100644
 --- a/src/forgeai/models/_locking.py
 +++ b/src/forgeai/models/_locking.py
 @@ -1,9 +1,15 @@
@@ -185,7 +185,7 @@ index 473d2fd..7322c69 100644
 
  @contextmanager
  def file_lock(path: Path):
-@@ -18,3 +24,98 @@ def file_lock(path: Path):
+@@ -18,3 +24,110 @@ def file_lock(path: Path):
      finally:
          fcntl.flock(fd.fileno(), fcntl.LOCK_UN)
          fd.close()
@@ -235,15 +235,25 @@ index 473d2fd..7322c69 100644
 +    _fsync_directory(path.parent)
 +
 +
++def _journal_vault_path(home: Path, snapshot: dict) -> Path:
++    """Résout l'identité du coffre liée au WAL, sans accepter de chemin arbitraire."""
++    vault_name = snapshot.get("vault_name", "vault.json")
++    if vault_name != "vault.json":
++        raise ValueError("identité de coffre invalide dans le journal")
++    return (Path(home) / vault_name).resolve(strict=False)
++
++
 +def restore_models_transaction_locked(
 +    home: Path, vault_path: Path, snapshot: dict
 +) -> None:
 +    """Restaure les deux fichiers; conserve le journal si une restauration échoue."""
 +    home = Path(home)
-+    vault_path = Path(vault_path)
++    vault_path = Path(vault_path).resolve(strict=False)
++    if vault_path != _journal_vault_path(home, snapshot):
++        raise ValueError("le coffre demandé ne correspond pas au journal")
 +    routes_path = home / "routes.json"
 +    journal_path = home / MODELS_TRANSACTION_JOURNAL
-+    rollback_error: BaseException | None = None
++    rollback_error: Exception | None = None
 +
 +    try:
 +        if snapshot["vault_existed"]:
@@ -254,7 +264,7 @@ index 473d2fd..7322c69 100644
 +            )
 +        else:
 +            atomic_unlink(vault_path)
-+    except BaseException as exc:
++    except (OSError, TypeError, ValueError, KeyError) as exc:
 +        rollback_error = exc
 +
 +    try:
@@ -266,7 +276,7 @@ index 473d2fd..7322c69 100644
 +            )
 +        else:
 +            atomic_unlink(routes_path)
-+    except BaseException as exc:
++    except (OSError, TypeError, ValueError, KeyError) as exc:
 +        if rollback_error is None:
 +            rollback_error = exc
 +
@@ -282,13 +292,15 @@ index 473d2fd..7322c69 100644
 +    if not journal_path.exists():
 +        return False
 +    snapshot = json.loads(journal_path.read_text(encoding="utf-8"))
++    if Path(vault_path).resolve(strict=False) != _journal_vault_path(home, snapshot):
++        return False
 +    restore_models_transaction_locked(home, vault_path, snapshot)
 +    return True
 diff --git a/src/forgeai/models/routes.py b/src/forgeai/models/routes.py
-index 78f49a3..ca17fa6 100644
+index 78f49a30e283cb47cc706987ce0dc0715e00deb1..b468505cbad2f7d53a8d988a31e1e6e2c0ad8192 100644
 --- a/src/forgeai/models/routes.py
 +++ b/src/forgeai/models/routes.py
-@@ -14,7 +14,15 @@ from dataclasses import asdict, dataclass, replace
+@@ -14,7 +14,16 @@ from dataclasses import asdict, dataclass, replace
  from datetime import date
  from pathlib import Path
 
@@ -302,10 +314,11 @@ index 78f49a3..ca17fa6 100644
 +    recover_models_transaction_locked,
 +    restore_models_transaction_locked,
 +)
++
  from .probe import ProbeResult, Transport, UrllibTransport, probe_route
  from .vault import Vault
 
-@@ -57,6 +65,9 @@ class RouteStore:
+@@ -57,6 +66,9 @@ class RouteStore:
          self.home = Path(home)
          self.routes_path = self.home / "routes.json"
          self.vault = Vault(self.home / "vault.json")
@@ -315,7 +328,7 @@ index 78f49a3..ca17fa6 100644
 
      def _load(self) -> list[dict]:
          if not self.routes_path.exists():
-@@ -65,8 +76,41 @@ class RouteStore:
+@@ -65,8 +77,42 @@ class RouteStore:
 
      def _save(self, routes: list[dict]) -> None:
          self.home.mkdir(parents=True, exist_ok=True)
@@ -333,6 +346,7 @@ index 78f49a3..ca17fa6 100644
 +        return {
 +            "routes_existed": self.routes_path.exists(),
 +            "routes": routes,
++            "vault_name": self.vault.path.name,
 +            "vault_existed": self.vault.path.exists(),
 +            "vault": vault,
 +        }
@@ -359,7 +373,7 @@ index 78f49a3..ca17fa6 100644
 
      def _route_from_dict(self, r: dict) -> CloudRoute:
          known = {f.name for f in CloudRoute.__dataclass_fields__.values()}
-@@ -88,45 +132,68 @@ class RouteStore:
+@@ -88,45 +134,68 @@ class RouteStore:
                    passphrase: str, *, base_url: str | None = None,
                    transport: Transport | None = None) -> tuple[CloudRoute, ProbeResult]:
          """Ajoute une route APRÈS test réel. En cas d'échec : RouteError, rien n'est écrit."""
@@ -451,7 +465,7 @@ index 78f49a3..ca17fa6 100644
 +            self._save(routes)
          return new_route
 diff --git a/src/forgeai/models/vault.py b/src/forgeai/models/vault.py
-index 4c90fd3..b5b8d86 100644
+index 4c90fd3ecae32ad8a537e48932de6879204529ba..b5b8d86d485aa61860fb37a3ee73b4f837618075 100644
 --- a/src/forgeai/models/vault.py
 +++ b/src/forgeai/models/vault.py
 @@ -27,7 +27,13 @@ import os
@@ -532,12 +546,162 @@ index 4c90fd3..b5b8d86 100644
 +        with file_lock(self.transaction_lock_path):
 +            self._recover_pending_transaction_locked()
 +            return sorted(self._load())
+diff --git a/src/forgeai/portability.py b/src/forgeai/portability.py
+index f5cb6cd13c6782ca3511c7665ba9240363e65e05..c0882ca27eb131dc788b84cf62890b290c2b874b 100644
+--- a/src/forgeai/portability.py
++++ b/src/forgeai/portability.py
+@@ -16,12 +16,19 @@ Round-trip prouvé : un export suivi d'un import dans un répertoire vierge
+ restaure exactement le même état (hors secrets).
+ """
+
+-import json
+ import hashlib
+-from pathlib import Path
++import json
+ from datetime import date
++from pathlib import Path
+ from typing import List
+
++from forgeai.models._locking import (
++    MODELS_TRANSACTION_LOCK,
++    atomic_write_text,
++    file_lock,
++    recover_models_transaction_locked,
++)
++
+ BUNDLE_VERSION = 1
+ SETUP_FILES = ("routes.json", "gateway.json", "wirings.json", "strategy.json", "budgets.json")
+ EXCLUDED_FILES = frozenset({"vault.json"})
+@@ -81,32 +88,39 @@ def export_setup(home, out_path=None) -> dict:
+     home = Path(home)
+     files = {}
+
+-    for fname in SETUP_FILES:
+-        file_path = home / fname
+-        if not file_path.exists():
+-            continue
+-
+-        # Lecture
+-        try:
+-            with open(file_path, "r", encoding="utf-8") as fh:
+-                content = json.load(fh)
+-        except Exception as exc:
+-            raise PortabilityError(f"Erreur lors du chargement de {fname} : {exc}") from exc
+-
+-        # Validation stricte pour routes.json
+-        if fname == "routes.json":
+-            if not isinstance(content, list):
+-                raise PortabilityError("routes.json doit être une liste de routes")
+-            for route in content:
+-                if not isinstance(route, dict):
+-                    raise PortabilityError("Chaque élément de routes.json doit être un dict")
+-                _validate_route(route)
+-
+-        # Garde‑fou supplémentaire
+-        if fname in EXCLUDED_FILES:
+-            raise PortabilityError(f"Le fichier exclu {fname} ne doit jamais être exporté")
+-
+-        files[fname] = content
++    with file_lock(home / MODELS_TRANSACTION_LOCK):
++        # Un export ne peut observer une route encore révocable par un WAL.
++        recover_models_transaction_locked(home, home / "vault.json")
++
++        for fname in SETUP_FILES:
++            file_path = home / fname
++            if not file_path.exists():
++                continue
++
++            try:
++                with open(file_path, "r", encoding="utf-8") as fh:
++                    content = json.load(fh)
++            except Exception as exc:
++                raise PortabilityError(
++                    f"Erreur lors du chargement de {fname} : {exc}"
++                ) from exc
++
++            if fname == "routes.json":
++                if not isinstance(content, list):
++                    raise PortabilityError("routes.json doit être une liste de routes")
++                for route in content:
++                    if not isinstance(route, dict):
++                        raise PortabilityError(
++                            "Chaque élément de routes.json doit être un dict"
++                        )
++                    _validate_route(route)
++
++            if fname in EXCLUDED_FILES:
++                raise PortabilityError(
++                    f"Le fichier exclu {fname} ne doit jamais être exporté"
++                )
++
++            files[fname] = content
+
+     created_at = date.today().isoformat()
+     sha = bundle_sha256(files, created_at)
+@@ -183,28 +197,36 @@ def import_setup(bundle_path, home, *, force=False) -> dict:
+     home = Path(home)
+     home.mkdir(parents=True, exist_ok=True)
+
+-    # Vérification préalable (si force=False) – aucune écriture avant cette étape
+-    if not force:
+-        conflicts = []
+-        for fname in files:
+-            dest = home / fname
+-            if dest.exists():
+-                conflicts.append(fname)
+-        if conflicts:
+-            raise PortabilityError(
+-                f"Fichiers déjà présents dans {home} : {', '.join(conflicts)}. Utilisez force=True pour écraser."
+-            )
+-
+-    # Écriture effective
+     restored = []
+-    for fname, content in files.items():
+-        # Défense en profondeur : ne jamais écrire un nom hors whitelist (vault.json, '..', absolu)
+-        if not _safe_name(fname):
+-            continue
+-        dest = home / fname
+-        with open(dest, "w", encoding="utf-8") as fh:
+-            json.dump(content, fh, indent=1, ensure_ascii=False)
+-        restored.append(fname)
++    with file_lock(home / MODELS_TRANSACTION_LOCK):
++        # Un import doit d'abord terminer toute transaction RouteStore/Vault
++        # interrompue, puis partager le même verrou avec leurs lecteurs/writers.
++        recover_models_transaction_locked(home, home / "vault.json")
++
++        # Vérification préalable (si force=False) – aucune écriture avant cette étape
++        if not force:
++            conflicts = []
++            for fname in files:
++                dest = home / fname
++                if dest.exists():
++                    conflicts.append(fname)
++            if conflicts:
++                raise PortabilityError(
++                    f"Fichiers déjà présents dans {home} : {', '.join(conflicts)}. "
++                    "Utilisez force=True pour écraser."
++                )
++
++        # Chaque remplacement est atomique; routes.json reste sérialisé avec RouteStore.
++        for fname, content in files.items():
++            # Défense en profondeur : jamais de nom hors whitelist.
++            if not _safe_name(fname):
++                continue
++            atomic_write_text(
++                home / fname,
++                json.dumps(content, indent=1, ensure_ascii=False),
++                mode=0o600,
++            )
++            restored.append(fname)
+
+     secrets = secrets_to_reprovision(bundle)
+     return {
 diff --git a/stories/DATA-002.md b/stories/DATA-002.md
 new file mode 100644
-index 0000000..0a2e0ae
+index 0000000000000000000000000000000000000000..eab32d1a1cac9f7e08bbcefc15e7db34a5db840f
 --- /dev/null
 +++ b/stories/DATA-002.md
-@@ -0,0 +1,100 @@
+@@ -0,0 +1,140 @@
 +# DATA-002 — Transaction locale RouteStore/Vault
 +
 +## Calibration
@@ -546,9 +710,9 @@ index 0000000..0a2e0ae
 +- Risque : `T2`
 +- Branche : `fix/DATA-002-routestore-atomic-transaction`
 +- Base initiale : `c14430057823cdc9eb6f0d5ae22ed84dd8a4b8d1`
-+- Base finale après synchronisation : `9ef84cc2bcf2ceacf3cd564ff8eb73a749bbfeeb`
++- Base finale après synchronisation : `7a1fbf1478e3dd89c5fbd0b4fa5e9da25726ac25`
 +- Issue : `#164`
-+- Claim Codex : actif dans le ledger PROOF externe
++- Claim Codex : tracé dans le ledger PROOF externe
 +
 +## Cause racine vérifiée
 +
@@ -560,7 +724,12 @@ index 0000000..0a2e0ae
 +3. `add_cloud` persiste la clé au coffre avant le commit de la route, sans
 +   compensation si ce commit échoue ;
 +4. les locks distincts de `routes.json` et `vault.json` ne sérialisent pas une
-+   opération qui touche les deux ressources.
++   opération qui touche les deux ressources ;
++5. `forgeai import` et `forgeai export` accèdent à `routes.json` hors du verrou
++   commun et peuvent respectivement écraser une mutation ou publier un état
++   encore révocable par le journal ;
++6. la récupération acceptait le chemin de n’importe quelle instance `Vault`,
++   ce qui permettait à un coffre voisin de consommer le WAL canonique.
 +
 +La baseline ciblée existante passe 24 tests en environnement autorisant le
 +loopback, mais elle ne couvre pas ces interleavings ni les pannes avant rename.
@@ -583,7 +752,12 @@ index 0000000..0a2e0ae
 +- une panne injectée dans `os.replace` ne touche pas l’ancien fichier ;
 +- un échec du commit de route ne laisse aucune clé orpheline.
 +- un `SIGKILL` entre le remplacement du coffre et celui des routes est récupéré
-+  automatiquement à la prochaine ouverture du `RouteStore`.
++  automatiquement à la prochaine ouverture du `RouteStore` ;
++- un import suspendu à son commit écrase un `add_cloud` et un
++  `configure_cache` concurrents ;
++- un `Vault(home/"autre.json")` consomme le WAL de `RouteStore` et laisse la
++  clé canonique orpheline ;
++- un export effectué avant la suppression du WAL publie une route non commitée.
 +
 +## Implémentation
 +
@@ -592,19 +766,35 @@ index 0000000..0a2e0ae
 +- écriture temporaire dans le même répertoire, permissions `0600`, `fsync` du
 +  fichier, `os.replace`, puis `fsync` du répertoire ;
 +- write-ahead journal `.models-transaction.json` contenant l’état antérieur
-+  chiffré du coffre et les anciennes routes ;
++  chiffré du coffre, les anciennes routes et l’identité canonique `vault.json` ;
 +- rollback idempotent après exception ou reprise à la première opération d’une
 +  instance neuve ou déjà existante ;
-+- probe réseau exécuté hors verrou, entre le précontrôle atomique et le commit.
++- probe réseau exécuté hors verrou, entre le précontrôle atomique et le commit ;
++- import et export sérialisés avec la transaction RouteStore, récupération du
++  WAL avant lecture/écriture et remplacements atomiques `0600` à l’import ;
++- refus de restaurer un WAL vers tout coffre autre que le `vault.json` auquel
++  le journal est explicitement lié.
++
++## Extension de périmètre tracée
++
++Trois revues OpenAI indépendantes ont découvert que le writer CLI de production
++`src/forgeai/portability.py` contournait le verrou DATA-002. Ce fichier n’était
++pas dans l’allowlist initiale. L’extension n’a pas été silencieuse : elle a été
++annoncée comme STOP au cockpit, puis couverte par l’autorisation explicite de
++Nathan d’effectuer toutes les corrections nécessaires jusqu’à complétion. Le
++delta hors allowlist est limité à ce fichier et au chemin réel du défaut.
 +
 +## Résultats vérifiés
 +
-+- 39 tests ciblés : PASS ;
-+- 13 tests de concurrence et de panne, avec six arrêts `SIGKILL` réels
++- 51 tests ciblés : PASS ;
++- 16 tests de concurrence et de panne, avec huit arrêts `SIGKILL` réels
 +  répartis sur les fenêtres de commit : PASS ;
 +- 100 configurations concurrentes, lecteur JSON brut actif et probe hors
 +  verrou : PASS en `0,31 s` ;
-+- suite complète : PASS, couverture globale `89,70 %` (seuil `85 %`) ;
++- suite complète locale du delta final : tous les tests DATA-002 et UI passent ;
++  l’unique échec restant est le faux serveur `tests/test_immudb.py`, qui
++  réinitialise la connexion indépendamment de ce diff ; couverture globale
++  `89,67 %` (seuil `85 %`) ;
 +- `forgeai/core/registre.py` : `98 %` (seuil `95 %`) ;
 +- no-stub, registres, catalogue et gate des revues existantes : PASS ;
 +- Gitleaks `8.30.1`, scan du worktree complet : aucune fuite.
@@ -618,8 +808,14 @@ index 0000000..0a2e0ae
 +course supplémentaires : une opération `Vault` après crash pouvait être
 +acquittée puis annulée, et le premier contrôle de doublon n’était pas atomique
 +avec la récupération. Les deux constats ont été reproduits en rouge, corrigés,
-+puis re-revus sans constat critique ou important. Cette revue interne ne compte
-+pas parmi les trois verdicts multi-vendeurs requis.
++puis re-revus sans constat critique ou important.
++
++Trois autres revues OpenAI indépendantes ont ensuite rejeté le candidat
++`f1b1a825` pour le writer import/export hors transaction, le détournement du WAL
++par un coffre voisin et le pack de revue périmé. Chaque défaut fonctionnel a été
++reproduit en rouge puis corrigé. Ces revues ne sont pas présentées comme trois
++fournisseurs distincts et ne satisfont donc pas artificiellement une exigence
++multi-vendeurs.
 +
 +## Rollback
 +
@@ -631,18 +827,26 @@ index 0000000..0a2e0ae
 +  puis état préexistant ;
 +- récupération depuis une instance `RouteStore` créée avant le crash.
 +
-+Le rollback Git du commit sera rejoué dans un worktree éphémère après création
-+du commit, puis les tests ciblés de la base seront exécutés.
++Le rollback Git du commit candidat `1b64e62` a été rejoué dans un worktree
++éphémère isolé. Après inversion complète du patch, les 24 tests ciblés de la
++base passent ; le worktree de preuve a ensuite été supprimé.
++
++## Limite plateforme
++
++Le verrou repose sur `fcntl`, et les tests de crash utilisent `fork`/`SIGKILL` :
++la transaction reste donc explicitement POSIX. Cette contrainte existait avant
++DATA-002 ; aucun support Windows non prouvé n’est revendiqué.
 +
 +## Gates encore externes
 +
-+SonarQube, CodeRabbit/Bugbot, les trois verdicts indépendants et la merge queue
-+nécessitent la PR. Aucun verdict n’est préfabriqué localement.
++Le nouveau SHA doit encore repasser SonarQube, GitGuardian, CodeRabbit et la CI.
++La merge queue n’est pas configurée sur le dépôt ; Nathan a autorisé une fusion
++directe tracée. Aucun verdict multi-vendeur n’est préfabriqué localement.
 diff --git a/tests/test_models_cloud.py b/tests/test_models_cloud.py
-index 14e8926..512da73 100644
+index 14e8926294f83c4cdb2a7439ffebb75385c498ec..d0bcb0d938b93eeb71eaf1020c64e62e336b9428 100644
 --- a/tests/test_models_cloud.py
 +++ b/tests/test_models_cloud.py
-@@ -228,6 +228,118 @@ def test_configure_cache_route_inconnue(tmp_path):
+@@ -228,6 +228,119 @@ def test_configure_cache_route_inconnue(tmp_path):
          RouteStore(tmp_path).configure_cache("absente", True)
 
 
@@ -668,8 +872,9 @@ index 14e8926..512da73 100644
 +        return real_replace(src, dst)
 +
 +    monkeypatch.setattr(os, "replace", fail_route_replace)
++    store = RouteStore(tmp_path)
 +    with pytest.raises(OSError, match="avant replace routes"):
-+        RouteStore(tmp_path).configure_cache("r", True, 60, "cache")
++        store.configure_cache("r", True, 60, "cache")
 +
 +    assert path.read_bytes() == before
 +    assert RouteStore(tmp_path).get("r").cache is False
@@ -762,11 +967,14 @@ index 14e8926..512da73 100644
      import json
      from forgeai.cli import main
 diff --git a/tests/test_routestore_concurrence.py b/tests/test_routestore_concurrence.py
-index b50267f..73ec79e 100644
+index b50267fb75b3efc806be3fc05662d88207cca910..b1bad30cd9d046b509a4b9ee64b5056ee3f5cda7 100644
 --- a/tests/test_routestore_concurrence.py
 +++ b/tests/test_routestore_concurrence.py
-@@ -7,11 +7,14 @@ clés sont retrouvables au coffre. RED avant correctif : lost-update (moins de N
+@@ -5,13 +5,18 @@ puis la dernière écriture écrase l'autre : des routes ET des clés API scell
+ Spécification : N ajouts concurrents de routes distinctes ⇒ les N routes sont persistées, et les N
+ clés sont retrouvables au coffre. RED avant correctif : lost-update (moins de N).
  """
++import builtins
  import json
  import multiprocessing as mp
 +import os
@@ -779,13 +987,58 @@ index b50267f..73ec79e 100644
 +from forgeai.models._locking import file_lock
 +from forgeai.models.routes import RouteError, RouteStore
 +from forgeai.models.vault import Vault, fingerprint
++from forgeai.portability import bundle_sha256, export_setup, import_setup
 
  FAKE_KEY = "sk-fake-DO-NOT-LEAK"
 
-@@ -28,6 +31,74 @@ def _add_one(home_str: str, i: int, barrier) -> None:
+@@ -28,6 +33,118 @@ def _add_one(home_str: str, i: int, barrier) -> None:
                      transport=_GreenTransport())
 
 
++def _add_named(home_str: str, done) -> None:
++    RouteStore(Path(home_str)).add_cloud(
++        "ajoutee",
++        "openrouter",
++        "m",
++        FAKE_KEY,
++        "pp-coffre",
++        transport=_GreenTransport(),
++    )
++    done.set()
++
++
++def _configure_named(home_str: str, done) -> None:
++    RouteStore(Path(home_str)).configure_cache("existante", True, 60, "cache")
++    done.set()
++
++
++def _import_pause_before_routes_commit(
++    bundle_path: str, home_str: str, ready, release
++) -> None:
++    """Suspend l'import à sa primitive de commit, quel que soit le writer utilisé."""
++    target = Path(home_str) / "routes.json"
++    real_open = builtins.open
++    real_replace = os.replace
++
++    def paused_open(path, mode="r", *args, **kwargs):
++        if os.fspath(path) == os.fspath(target) and "w" in mode:
++            ready.set()
++            if not release.wait(timeout=10):
++                raise RuntimeError("import non libéré")
++        return real_open(path, mode, *args, **kwargs)
++
++    def paused_replace(src, dst):
++        if os.fspath(dst) == os.fspath(target):
++            ready.set()
++            if not release.wait(timeout=10):
++                raise RuntimeError("import non libéré")
++        return real_replace(src, dst)
++
++    builtins.open = paused_open
++    os.replace = paused_replace
++    import_setup(bundle_path, home_str, force=True)
++
++
 +def _configure_pause_before_replace(home_str: str, ready) -> None:
 +    """Processus victime : attend indéfiniment juste avant le rename atomique."""
 +    target = Path(home_str) / "routes.json"
@@ -857,7 +1110,79 @@ index b50267f..73ec79e 100644
  def test_add_cloud_concurrent_ne_perd_aucune_route(tmp_path):
      """N process ajoutent des routes distinctes en parallèle ⇒ les N sont persistées."""
      home = tmp_path / "models"
-@@ -66,3 +137,518 @@ def test_vault_put_concurrent_ne_perd_aucune_cle(tmp_path):
+@@ -48,6 +165,71 @@ def test_add_cloud_concurrent_ne_perd_aucune_route(tmp_path):
+         assert store.vault.get(f"route-{i}", "pp-coffre") == FAKE_KEY
+
+
++def test_import_add_et_configure_partagent_le_verrou_interprocessus(tmp_path):
++    """L'import ne peut écraser ni l'ajout ni la configuration concurrents."""
++    home = tmp_path / "models"
++    home.mkdir()
++    route = {
++        "name": "existante",
++        "provenance": "openrouter",
++        "base_url": "https://openrouter.ai/api/v1",
++        "model_id": "m",
++        "key_fingerprint": "sha256:0000000000000000",
++        "created_at": "2026-07-25",
++        "cache": False,
++        "cache_ttl_s": None,
++        "cache_prefix": None,
++    }
++    (home / "routes.json").write_text(json.dumps([route]), encoding="utf-8")
++    created_at = "2026-07-25"
++    files = {"routes.json": [route]}
++    bundle = {
++        "version": 1,
++        "created_at": created_at,
++        "files": files,
++        "sha256": bundle_sha256(files, created_at),
++    }
++    bundle_path = tmp_path / "bundle.json"
++    bundle_path.write_text(json.dumps(bundle), encoding="utf-8")
++
++    ctx = mp.get_context("fork")
++    import_ready = ctx.Event()
++    release_import = ctx.Event()
++    add_done = ctx.Event()
++    configure_done = ctx.Event()
++    importer = ctx.Process(
++        target=_import_pause_before_routes_commit,
++        args=(str(bundle_path), str(home), import_ready, release_import),
++    )
++    importer.start()
++    assert import_ready.wait(timeout=5), "l'import n'a pas atteint son commit"
++
++    adder = ctx.Process(target=_add_named, args=(str(home), add_done))
++    configurator = ctx.Process(
++        target=_configure_named, args=(str(home), configure_done)
++    )
++    adder.start()
++    configurator.start()
++
++    # Sans verrou commun, les deux RMW finissent avant l'import puis sont écrasés.
++    add_done.wait(timeout=2)
++    configure_done.wait(timeout=2)
++    release_import.set()
++
++    for process in (importer, adder, configurator):
++        process.join(timeout=10)
++        assert not process.is_alive()
++        assert process.exitcode == 0
++
++    persisted = {item.name: item for item in RouteStore(home).list()}
++    assert sorted(persisted) == ["ajoutee", "existante"]
++    assert (
++        persisted["existante"].cache,
++        persisted["existante"].cache_ttl_s,
++        persisted["existante"].cache_prefix,
++    ) == (True, 60, "cache")
++
++
+ def test_vault_put_concurrent_ne_perd_aucune_cle(tmp_path):
+     """T threads scellent des secrets distincts en parallèle ⇒ tous retrouvables."""
+     vault = Vault(tmp_path / "vault.json")
+@@ -66,3 +248,571 @@ def test_vault_put_concurrent_ne_perd_aucune_cle(tmp_path):
 
      for i in range(T):
          assert vault.get(f"k-{i}", "pp") == f"secret-{i}"
@@ -891,10 +1216,13 @@ index b50267f..73ec79e 100644
 +        while not reader_stop.is_set():
 +            try:
 +                persisted = json.loads((home / "routes.json").read_text())
-+                assert isinstance(persisted, list)
-+            except Exception as exc:
++            except (OSError, UnicodeError, json.JSONDecodeError) as exc:
 +                with errors_lock:
 +                    errors.append(exc)
++                return
++            if not isinstance(persisted, list):
++                with errors_lock:
++                    errors.append(TypeError("routes.json doit contenir une liste"))
 +                return
 +
 +    reader_thread = threading.Thread(target=reader)
@@ -1138,6 +1466,56 @@ index b50267f..73ec79e 100644
 +    assert recovered.list() == []
 +    assert recovered.vault.names() == ["apres-crash"]
 +    assert recovered.vault.get("apres-crash", "pp") == "secret-durable"
++
++
++def test_vault_voisin_ne_detourne_pas_la_recuperation_route_store(tmp_path):
++    """Un coffre non canonique ne doit ni consommer le WAL ni recevoir son snapshot."""
++    home = tmp_path / "models"
++    ctx = mp.get_context("fork")
++    ready = ctx.Event()
++    process = ctx.Process(
++        target=_add_cloud_pause_before_routes_replace, args=(str(home), ready)
++    )
++    process.start()
++    assert ready.wait(timeout=10), "le processus n'a pas atteint le replace routes"
++
++    os.kill(process.pid, signal.SIGKILL)
++    process.join(timeout=5)
++
++    assert process.exitcode == -signal.SIGKILL
++    voisin = Vault(home / "autre.json")
++    voisin.put("voisine", "secret-voisin", "pp")
++    assert voisin.get("voisine", "pp") == "secret-voisin"
++    assert (home / ".models-transaction.json").exists()
++
++    recovered = RouteStore(home)
++    assert recovered.list() == []
++    assert recovered.vault.names() == []
++    assert voisin.names() == ["voisine"]
++    assert not (home / ".models-transaction.json").exists()
++
++
++def test_export_recupere_le_wal_avant_de_lire_routes(tmp_path):
++    """Un export ne doit jamais publier une route encore révocable par le WAL."""
++    home = tmp_path / "models"
++    ctx = mp.get_context("fork")
++    ready = ctx.Event()
++    process = ctx.Process(
++        target=_add_cloud_pause_before_journal_unlink, args=(str(home), ready)
++    )
++    process.start()
++    assert ready.wait(timeout=10), "le processus n'a pas atteint l'unlink du journal"
++
++    os.kill(process.pid, signal.SIGKILL)
++    process.join(timeout=5)
++
++    assert process.exitcode == -signal.SIGKILL
++    assert json.loads((home / "routes.json").read_text())[0]["name"] == "orpheline"
++    assert (home / ".models-transaction.json").exists()
++
++    bundle = export_setup(home)
++    assert "routes.json" not in bundle["files"]
++    assert not (home / ".models-transaction.json").exists()
 +
 +
 +def test_sigkill_apres_routes_replace_est_recupere_avant_precheck_add(tmp_path):
