@@ -27,7 +27,12 @@ Le correctif historique `FAI-0010` protège séparément les read-modify-write d
 6. la récupération acceptait le chemin de n’importe quelle instance `Vault`,
    ce qui permettait à un coffre voisin de consommer le WAL canonique ;
 7. la destination `export --out` pouvait chevaucher les routes, le coffre ou le
-   WAL, et les alias de fichiers pouvaient contourner l’identité canonique.
+   WAL, et les alias de fichiers pouvaient contourner l’identité canonique ;
+8. l’ouverture du verrou en mode `w` suivait un symlink injecté et tronquait sa
+   cible avant même l’acquisition du verrou ;
+9. la résolution du dernier composant de `export --out` effaçait le nom lexical
+   fourni et permettait à un symlink portant une variante de casse protégée de
+   contourner le contrôle sur un volume sensible à la casse.
 
 La baseline ciblée existante passe 24 tests en environnement autorisant le
 loopback, mais elle ne couvre pas ces interleavings ni les pannes avant rename.
@@ -60,7 +65,8 @@ verrou, y compris après l’arrêt brutal du processus.
 ## Implémentation
 
 - verrou commun `.models-transaction.lock` pour les mutations et lectures
-  `RouteStore`/`Vault` ;
+  `RouteStore`/`Vault`, ouvert sans troncature ni suivi du dernier symlink et
+  validé comme fichier régulier avant `flock` ;
 - écriture temporaire dans le même répertoire, permissions `0600`, `fsync` du
   fichier, `os.replace`, puis `fsync` du répertoire ;
 - write-ahead journal `.models-transaction.json` contenant l’état antérieur
@@ -77,8 +83,9 @@ verrou, y compris après l’arrêt brutal du processus.
 - conservation du chemin canonique lexical lors du rollback afin qu’un symlink
   injecté sur `vault.json` soit remplacé/supprimé sans jamais suivre sa cible ;
 - rejet de toute destination d’export chevauchant un fichier vivant du setup,
-  y compris alias inode et variantes de casse d’un nom futur, puis écriture
-  atomique `fsync`/`os.replace` du bundle.
+  y compris alias inode, variantes de casse et combinaison variante de casse +
+  symlink du nom lexical fourni, puis écriture atomique `fsync`/`os.replace` du
+  bundle.
 
 ## Extension de périmètre tracée
 
@@ -91,15 +98,15 @@ delta hors allowlist est limité à ce fichier et au chemin réel du défaut.
 
 ## Résultats vérifiés
 
-- 62 tests ciblés : PASS ;
-- 18 tests de concurrence et de panne, avec dix arrêts `SIGKILL` réels
+- 67 tests ciblés : PASS ;
+- 19 tests de concurrence et de panne, avec dix arrêts `SIGKILL` réels
   répartis sur les fenêtres de commit : PASS ;
 - 100 configurations concurrentes, lecteur JSON brut actif et probe hors
   verrou : PASS en `0,31 s` ;
 - suite complète locale du delta final : tous les tests DATA-002 et UI passent ;
   l’unique échec restant est le faux serveur `tests/test_immudb.py`, qui
   réinitialise la connexion indépendamment de ce diff ; couverture globale
-  `89,72 %` (seuil `85 %`) ;
+  `89,74 %` (seuil `85 %`) ;
 - `forgeai/core/registre.py` : `98 %` (seuil `95 %`) ;
 - no-stub, registres, catalogue et gate des revues existantes : PASS ;
 - Gitleaks `8.30.1`, scan du worktree complet : aucune fuite.
@@ -134,6 +141,13 @@ un volume insensible à la casse. Un test SIGKILL prouve désormais qu’une cib
 externe reste byte-identique et quatre tests CLI couvrent ces alias; le pack
 `b3bf0e…` est superseded à son tour.
 
+Le tour sur `f65636…` a approuvé la concurrence, puis rejeté deux chemins de
+sécurité encore réels : troncature d’une cible externe par symlink du verrou et
+perte du nom lexical d’un alias casse+symlink à l’export. Les cinq régressions
+ont été exécutées en RED/GREEN; l’ouverture du verrou est désormais fail-closed
+et le contrôle de destination conserve le nom fourni. Le pack `f65636…` est
+superseded et une nouvelle revue exacte est obligatoire.
+
 ## Rollback
 
 Le rollback de données est couvert par :
@@ -145,11 +159,11 @@ Le rollback de données est couvert par :
 - récupération depuis une instance `RouteStore` créée avant le crash.
 
 Le rollback Git du candidat fonctionnel final
-`11465f8ee0665a46d2fc883845387e93b306040e`
+`6fa26714a8bd7fa6bdd60db87b7fce561fe7b53c`
 a été rejoué dans un worktree éphémère isolé : tous les commits de
 `origin/main..HEAD` ont été inversés sans commit, puis `git diff --exit-code
 origin/main` a confirmé une identité exacte. Les 24 tests ciblés de la base
-passent (`sha256:12784721e0280443291002b595b03384e8588476665647b621a862f07297e08f`) ;
+passent (`sha256:03b0266c7ace109634ff7cf710bf4d3fd9c177be220281a8ef1a4fe375d276d6`) ;
 le worktree de preuve a ensuite été supprimé.
 
 ## Limite plateforme
