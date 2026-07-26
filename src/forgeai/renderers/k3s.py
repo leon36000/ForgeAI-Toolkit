@@ -158,6 +158,7 @@ def _pod_security_block(profil: ProfilSecurite, gpu: bool) -> str:
             "\n      securityContext:"
             "\n        # forgeai: dérogation PSS restricted — l'accès GPU en passthrough requiert les groupes de l'hôte"
             "\n        # forgeai: mesure : 0/4 devices /dev/dri accessibles en non-root (gid render variable) ; dérogation limitée aux services GPU demandés"
+            "\n        # forgeai: readOnlyRootFilesystem est également désactivé (chemins de cache du moteur GPU non mesurables sans matériel — cf. LAB-033)"
             "\n        seccompProfile:"
             "\n          type: RuntimeDefault"
         )
@@ -173,7 +174,18 @@ def _pod_security_block(profil: ProfilSecurite, gpu: bool) -> str:
 
 
 def _security_block(profil: ProfilSecurite, gpu: bool) -> str:
-    """Bloc securityContext au niveau conteneur."""
+    """Bloc securityContext au niveau conteneur.
+
+    `gpu` désactive AUSSI readOnlyRootFilesystem, et pas seulement l'identité non-root :
+    les chemins d'écriture d'un moteur GPU (caches de modèles, caches de compilation du
+    runtime vendor) dépendent de l'image ET de l'hôte, et n'ont pas pu être mesurés faute
+    de matériel GPU autorisé (packages LAB-033*, BLOCKED_LAB). Activer la racine en lecture
+    seule sans cette mesure casserait des déploiements réels : la règle « exceptions
+    spécifiques et TESTÉES » impose donc de ne pas l'activer ici. Les trois contrôles
+    mesurables restent émis (drop:[ALL], allowPrivilegeEscalation:false, seccomp).
+    readOnlyRootFilesystem n'est pas une exigence du profil PSS restricted : le pod GPU ne
+    déroge à restricted que par son identité root et son volume hostPath, pas par ce champ.
+    """
     ro = profil.ro_rootfs and not gpu
     return (
         "\n          securityContext:"
