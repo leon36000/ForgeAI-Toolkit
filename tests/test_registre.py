@@ -156,3 +156,104 @@ def test_retrocompat_entrees_tier0_sans_key_id(tmp_path):
     assert core_registre.verify(reg) is None
     entries = [json.loads(l) for l in reg.read_text(encoding="utf-8").splitlines()]
     assert all("key_id" not in e for e in entries)
+
+
+# ── TRUST-019B : couverture des branches d'ERREUR (gate registre = 95 %) ──────
+def test_verify_rejette_une_cle_differente(tmp_path):
+    """key_id d'une AUTRE clé -> refus explicite (pas de vérification silencieuse)."""
+    k1, k2 = tmp_path / "k1.key", tmp_path / "k2.key"
+    core_registre.init_key(k1); core_registre.init_key(k2)
+    reg = tmp_path / "r.jsonl"
+    core_registre.append(reg, "t", "a", {"i": 1}, key_path=k1)
+    err = core_registre.verify(reg, key_path=k2)
+    assert err and "ne correspond pas" in err
+
+
+def test_verify_detecte_une_entree_hmac_alteree(tmp_path):
+    """Payload modifié sur une entrée HMAC -> hash HMAC invalide."""
+    k = tmp_path / "k.key"; core_registre.init_key(k)
+    reg = tmp_path / "r.jsonl"
+    core_registre.append(reg, "t", "a", {"i": 1}, key_path=k)
+    lignes = reg.read_text(encoding="utf-8").splitlines()
+    e = json.loads(lignes[0]); e["payload"] = {"i": 999}
+    reg.write_text(json.dumps(e) + "\n", encoding="utf-8")
+    err = core_registre.verify(reg, key_path=k)
+    assert err and "HMAC invalide" in err
+
+
+def test_verify_detecte_une_entree_tier0_alteree(tmp_path):
+    """Chaîne Tier 0 (sans clé) : altération détectée par le SHA-256 nu."""
+    reg = tmp_path / "r.jsonl"
+    core_registre.append(reg, "t", "a", {"i": 1})
+    e = json.loads(reg.read_text(encoding="utf-8").splitlines()[0])
+    e["payload"] = {"i": 999}
+    reg.write_text(json.dumps(e) + "\n", encoding="utf-8")
+    err = core_registre.verify(reg)
+    assert err and "hash invalide" in err
+
+
+def test_verify_status_sans_fichier_de_cle(tmp_path):
+    """key_path pointant un fichier inexistant -> UNVERIFIED (jamais OK)."""
+    k = tmp_path / "k.key"; core_registre.init_key(k)
+    reg = tmp_path / "r.jsonl"
+    core_registre.append(reg, "t", "a", {"i": 1}, key_path=k)
+    assert core_registre.verify_status(reg, key_path=tmp_path / "absente.key") == "UNVERIFIED"
+
+
+def test_verify_status_cle_illisible(tmp_path):
+    """Clé corrompue (hex invalide) -> UNVERIFIED, pas une exception qui remonte."""
+    k = tmp_path / "k.key"; core_registre.init_key(k)
+    reg = tmp_path / "r.jsonl"
+    core_registre.append(reg, "t", "a", {"i": 1}, key_path=k)
+    k.write_text("pas-du-hex-valide\n", encoding="utf-8")
+    assert core_registre.verify_status(reg, key_path=k) == "UNVERIFIED"
+
+
+def test_verify_status_ok_et_invalid(tmp_path):
+    """OK sur chaîne saine ; INVALID après altération."""
+    k = tmp_path / "k.key"; core_registre.init_key(k)
+    reg = tmp_path / "r.jsonl"
+    core_registre.append(reg, "t", "a", {"i": 1}, key_path=k)
+    assert core_registre.verify_status(reg, key_path=k) == "OK"
+    e = json.loads(reg.read_text(encoding="utf-8").splitlines()[0])
+    e["payload"] = {"i": 42}
+    reg.write_text(json.dumps(e) + "\n", encoding="utf-8")
+    assert core_registre.verify_status(reg, key_path=k) == "INVALID"
+
+
+def test_lignes_vides_ignorees(tmp_path):
+    """Lignes vides tolérées à la lecture (robustesse du parseur JSONL)."""
+    reg = tmp_path / "r.jsonl"
+    core_registre.append(reg, "t", "a", {"i": 1})
+    with reg.open("a", encoding="utf-8") as fh:
+        fh.write("\n")
+    assert core_registre.verify(reg) is None
+
+
+def test_verify_sans_cle_sur_chaine_hmac_signale_unverified(tmp_path):
+    """Entrée portant un key_id mais verify() appelé SANS clé -> message UNVERIFIED explicite."""
+    k = tmp_path / "k.key"; core_registre.init_key(k)
+    reg = tmp_path / "r.jsonl"
+    core_registre.append(reg, "t", "a", {"i": 1}, key_path=k)
+    err = core_registre.verify(reg)          # aucune clé fournie
+    assert err and "UNVERIFIED" in err
+
+
+def test_verify_status_declassement_est_invalid(tmp_path):
+    """Chaîne mixte (entrée sans key_id) alors qu'une clé est fournie -> INVALID (déclassement)."""
+    k = tmp_path / "k.key"; core_registre.init_key(k)
+    reg = tmp_path / "r.jsonl"
+    core_registre.append(reg, "t", "a", {"i": 1}, key_path=k)
+    core_registre.append(reg, "t", "a", {"i": 2})          # Tier 0 glissée dans la chaîne
+    assert core_registre.verify_status(reg, key_path=k) == "INVALID"
+
+
+def test_init_key_echec_ecriture_libere_le_descripteur(tmp_path, monkeypatch):
+    """Si l'écriture de la clé échoue, le descripteur est refermé et l'erreur propagée
+    (pas de fuite de fd, pas de clé partielle silencieuse)."""
+    import pytest
+    def _boom(*a, **k):
+        raise OSError("disque plein")
+    monkeypatch.setattr(core_registre.os, "fdopen", _boom)
+    with pytest.raises(OSError):
+        core_registre.init_key(tmp_path / "k.key")
