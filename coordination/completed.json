@@ -381,6 +381,25 @@
         "dossier": "reviews/RAG-004B/",
         "note": "Contrat dancrage APPLIQUE : lancrage etait affirme par un booleen code en dur (scan_output(answer, context_used=True)), jamais mesure. Reproduit : reponse « capitale de la France » sur contexte « Vornak-9 » -> context_used=True, sources=['faq.md'], aucun blocage. Implemente FIDELEMENT ADR-RAG-004A : Passage(passage_id=sha256 du texte seul), verify_grounding PUR et deterministe, spans/citations/couverture, seuils S=0.8 et T=0.6, etats grounded/ungrounded/unknown (unknown de premier rang, jamais assimile a grounded), liste close, fail-closed, context_used RETIRE au profit de grounding+coverage+citations. Verifie e2e : soutenue -> grounded 1.0 ; hors-sujet -> ungrounded 0.0 reponse videe ; contexte vide -> unknown. APPROVE 3/3 au PREMIER tour, zero objection : le contrat venait de lADR et la lecon de RAG-005 (tester le point dentree public reel) a ete appliquee demblee. Deux defauts attrapes par les tests : regression du crew (perte du if self.guardrails, correctif RAG-005) et fixtures irrealistes rendues realistes plutot que dabaisser les seuils. Elargissement declare sur test_rag_rerank.py. Codeur MiniMax-M3, distinct du trio : aucun SWAP CIV."
       }
+    },
+    {
+      "package": "K8S-023",
+      "merge_commit": "b60e393f897837c5cc74901cac96cbb8a1195227",
+      "pr_number": 196,
+      "merged_at": "2026-07-26T18:35:00Z",
+      "owner": "CLAUDE_CODE",
+      "review": {
+        "result": "APPROVE",
+        "ratio": "3/3",
+        "vendors": [
+          "google",
+          "kimi-k2.6",
+          "xai"
+        ],
+        "prompt_sha256": "23dafab553ba",
+        "dossier": "reviews/K8S-023/",
+        "note": "NetworkPolicy : refus par defaut Ingress+Egress + allowlists derivees des dependances DECLAREES. Lunique politique precedente etait doublement defaillante : policyTypes=[Ingress] seul (egress totalement libre) et from=[{podSelector:{}}] (acces intra-namespace universel). Quatre familles emises : default-deny, allow-dns (UDP/TCP 53 vers kube-system uniquement), allow-<cible> (ingress), allow-<dependant>-egress (sortie). Les allowlists derivent de ServiceSpec.depends deja present : aucun champ ajoute. DEFAUT TROUVE PAR LE LABORATOIRE RESEAU, invisible aux tests de rendu qui etaient tous VERTS : le flux litellm->redis, pourtant justifie par une dependance, etait BLOQUE — Kubernetes exige la symetrie egress a la source ET ingress a la destination ; livre tel quel ce durcissement aurait casse TOUTE communication inter-services. Faux positif de sonde distingue du vrai defaut : le DNS etait annonce bloque alors que CoreDNS repondait ; sonde corrigee, code laisse intact. Laboratoire final sur cluster k3s reel : 5 flux mesures depuis les pods, tous conformes. SWAP CIV DOUBLE : MiniMax-M3 et DeepSeek-V4-Flash ont code, les deux vendors sortent du trio ; Qwen3.8-Max a rendu HTTP 408 (route instable journalisee), reassigne vers Kimi-K2.6. Elargissement declare sur tests/test_k3s_hardening_fai0004.py."
+      }
     }
   ]
 }
