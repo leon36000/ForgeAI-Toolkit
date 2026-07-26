@@ -361,6 +361,26 @@
         "dossier": "reviews/RAG-005/",
         "note": "Defense contre lempoisonnement du corpus RAG (injection indirecte OWASP LLM01). Reproduit avant correctif : la directive dun document partait verbatim au LLM et la reponse exfiltree revenait a lutilisateur. Defense STRUCTURELLE dabord (delimiteur a nonce non forgeable, provenance posee par lassembleur, preambule hors balises), neutralisation chirurgicale ensuite (rejeter offrirait un deni de service a lattaquant), observabilite via sanitization_events sur tous les chemins. TROIS TOURS DE REVUE : REJECT 3/3 au tour 1 sur une objection CRITIQUE FONDEE — scan_assembled recevait les documents avec leurs lignes de provenance intercalees, donc la detection du fractionnement ne fonctionnait PAS en production ; mon test unitaire fabriquait son entree et validait un chemin inexistant. Tour 2 APPROVE 3/3 avec une mineure fondee (guardrails=False reecrivait quand meme les documents), corrigee. Tour 3 APPROVE 3/3, ZERO objection. Faux positifs mesures : 6/6 documents techniques legitimes non signales ; le guide citant lattaque est neutralise et observable, pas rejete. Codeurs Kimi-K3/Kimi-2.7/MiniMax-M3, tous distincts du trio de revue : aucun SWAP CIV. Elargissement de perimetre declare sur test_rag_rerank.py."
       }
+    },
+    {
+      "package": "RAG-004B",
+      "merge_commit": "93c6b4e3b423e5068ca43395ece754a85239cf59",
+      "pr_number": 194,
+      "merged_at": "2026-07-26T17:55:00Z",
+      "owner": "CLAUDE_CODE",
+      "review": {
+        "result": "APPROVE",
+        "ratio": "3/3",
+        "tours": 1,
+        "vendors": [
+          "deepseek",
+          "google",
+          "xai"
+        ],
+        "prompt_sha256": "fe2797b0166a",
+        "dossier": "reviews/RAG-004B/",
+        "note": "Contrat dancrage APPLIQUE : lancrage etait affirme par un booleen code en dur (scan_output(answer, context_used=True)), jamais mesure. Reproduit : reponse « capitale de la France » sur contexte « Vornak-9 » -> context_used=True, sources=['faq.md'], aucun blocage. Implemente FIDELEMENT ADR-RAG-004A : Passage(passage_id=sha256 du texte seul), verify_grounding PUR et deterministe, spans/citations/couverture, seuils S=0.8 et T=0.6, etats grounded/ungrounded/unknown (unknown de premier rang, jamais assimile a grounded), liste close, fail-closed, context_used RETIRE au profit de grounding+coverage+citations. Verifie e2e : soutenue -> grounded 1.0 ; hors-sujet -> ungrounded 0.0 reponse videe ; contexte vide -> unknown. APPROVE 3/3 au PREMIER tour, zero objection : le contrat venait de lADR et la lecon de RAG-005 (tester le point dentree public reel) a ete appliquee demblee. Deux defauts attrapes par les tests : regression du crew (perte du if self.guardrails, correctif RAG-005) et fixtures irrealistes rendues realistes plutot que dabaisser les seuils. Elargissement declare sur test_rag_rerank.py. Codeur MiniMax-M3, distinct du trio : aucun SWAP CIV."
+      }
     }
   ]
 }
