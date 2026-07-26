@@ -31,6 +31,7 @@ from forgeai.deploy.openbao_flow import (
     prepare_key_store,
     wait_reachable,
 )
+from forgeai.models import vault as vault_module
 from forgeai.secrets.openbao_init import ensure_openbao_ready
 from forgeai.secrets.vault import VaultError, renew_self
 
@@ -49,6 +50,65 @@ def test_prepare_key_store_idempotent(tmp_path) -> None:
     os.chmod(d, 0o700)  # trop restrictif au départ (l'unsealer non-root ne pourrait pas traverser)
     prepare_key_store(d)
     assert oct(d.stat().st_mode & 0o777) == "0o711"
+
+
+def test_prepare_key_store_uses_nofollow_descriptor_not_pathname_chmod(
+    tmp_path, monkeypatch
+) -> None:
+    keys_dir = tmp_path / "keys"
+    observed_flags: list[int] = []
+    real_open = os.open
+    real_chmod = os.chmod
+
+    def observe_directory_open(path, flags, *args, **kwargs):
+        descriptor = real_open(path, flags, *args, **kwargs)
+        if Path(path) == keys_dir:
+            observed_flags.append(flags)
+        return descriptor
+
+    def reject_pathname_chmod(path, mode, *args, **kwargs):
+        if Path(path) == keys_dir:
+            raise AssertionError("prepare_key_store used pathname chmod")
+        return real_chmod(path, mode, *args, **kwargs)
+
+    monkeypatch.setattr(vault_module.os, "open", observe_directory_open)
+    monkeypatch.setattr(vault_module.os, "chmod", reject_pathname_chmod)
+    previous_umask = os.umask(0)
+    try:
+        assert prepare_key_store(keys_dir) == keys_dir
+    finally:
+        os.umask(previous_umask)
+
+    required = os.O_NOFOLLOW | os.O_DIRECTORY
+    if len(observed_flags) != 1 or observed_flags[0] & required != required:
+        raise AssertionError("prepare_key_store did not validate one directory descriptor")
+    assert stat.S_IMODE(keys_dir.stat().st_mode) == 0o711
+
+
+def test_prepare_key_store_refuses_symlink_without_changing_referent(
+    tmp_path,
+) -> None:
+    external = tmp_path / "external-keys"
+    external.mkdir()
+    os.chmod(external, 0o750)
+    external_mode = stat.S_IMODE(external.stat().st_mode)
+    marker = external / "marker"
+    marker.write_bytes(token_hex(32).encode("ascii"))
+    marker_digest = sha256(marker.read_bytes()).digest()
+    keys_dir = tmp_path / "keys"
+    keys_dir.symlink_to(external, target_is_directory=True)
+    original_link = os.readlink(keys_dir)
+
+    with pytest.raises(OSError):
+        prepare_key_store(keys_dir)
+
+    assert keys_dir.is_symlink()
+    assert os.readlink(keys_dir) == original_link
+    assert stat.S_IMODE(external.stat().st_mode) == external_mode
+    if {entry.name for entry in external.iterdir()} != {"marker"}:
+        raise AssertionError("prepare_key_store wrote through a symlink")
+    if sha256(marker.read_bytes()).digest() != marker_digest:
+        raise AssertionError("prepare_key_store changed symlink referent content")
 
 
 # --- 2. FileKeyStore (isolation du root) ------------------------------------
@@ -92,6 +152,177 @@ def test_file_key_store_modes_are_independent_of_permissive_umask(tmp_path) -> N
     assert stat.S_IMODE(root_path.stat().st_mode) == 0o600
 
 
+@pytest.mark.parametrize("requested_umask", [0, 0o777])
+def test_file_key_store_parent_modes_are_secure_from_first_creation(
+    tmp_path, monkeypatch, requested_umask
+) -> None:
+    keys_dir = tmp_path / "keys"
+    root_parent = tmp_path / "root-secrets"
+    root_path = root_parent / "root_token"
+    observed_modes: dict[Path, list[int]] = {
+        keys_dir: [],
+        root_parent: [],
+    }
+    real_mkdir = os.mkdir
+
+    def observe_real_mkdir(path, mode=0o777, *args, **kwargs):
+        result = real_mkdir(path, mode, *args, **kwargs)
+        candidate = Path(path)
+        if candidate in observed_modes:
+            observed_modes[candidate].append(
+                stat.S_IMODE(os.lstat(candidate).st_mode)
+            )
+        return result
+
+    monkeypatch.setattr(vault_module.os, "mkdir", observe_real_mkdir)
+    previous_umask = os.umask(requested_umask)
+    try:
+        FileKeyStore(keys_dir, root_path).write(
+            {"unseal_key": "UNSEAL", "root_token": "ROOT"}
+        )
+    finally:
+        os.umask(previous_umask)
+
+    expected_modes = {keys_dir: 0o711, root_parent: 0o700}
+    for candidate, expected_mode in expected_modes.items():
+        modes = observed_modes[candidate]
+        if not modes or any(mode & ~expected_mode for mode in modes):
+            raise AssertionError(
+                f"file key store parent creation was unsafe: {candidate.name}"
+            )
+        assert stat.S_IMODE(candidate.stat().st_mode) == expected_mode
+    assert stat.S_IMODE((keys_dir / "unseal_key").stat().st_mode) == 0o644
+    assert stat.S_IMODE(root_path.stat().st_mode) == 0o600
+
+
+def test_file_key_store_refuses_root_parent_symlink_without_external_change(
+    tmp_path,
+) -> None:
+    external = tmp_path / "external-root"
+    external.mkdir()
+    os.chmod(external, 0o750)
+    external_mode = stat.S_IMODE(external.stat().st_mode)
+    marker = external / "marker"
+    marker.write_bytes(token_hex(32).encode("ascii"))
+    marker_digest = sha256(marker.read_bytes()).digest()
+    root_parent = tmp_path / "root-secrets"
+    root_parent.symlink_to(external, target_is_directory=True)
+
+    with pytest.raises(OSError):
+        FileKeyStore(tmp_path / "keys", root_parent / "root_token").write(
+            {"unseal_key": "UNSEAL", "root_token": "ROOT"}
+        )
+
+    assert stat.S_IMODE(external.stat().st_mode) == external_mode
+    if {entry.name for entry in external.iterdir()} != {"marker"}:
+        raise AssertionError("file key store wrote through root-parent symlink")
+    if sha256(marker.read_bytes()).digest() != marker_digest:
+        raise AssertionError("file key store changed root-parent referent")
+
+
+def test_file_key_store_refuses_keys_parent_symlink_before_secret_write(
+    tmp_path,
+) -> None:
+    external = tmp_path / "external-keys"
+    external.mkdir()
+    os.chmod(external, 0o750)
+    external_mode = stat.S_IMODE(external.stat().st_mode)
+    marker = external / "marker"
+    marker.write_bytes(token_hex(32).encode("ascii"))
+    marker_digest = sha256(marker.read_bytes()).digest()
+    keys_dir = tmp_path / "keys"
+    keys_dir.symlink_to(external, target_is_directory=True)
+    root_path = tmp_path / "root-secrets" / "root_token"
+
+    with pytest.raises(OSError):
+        FileKeyStore(keys_dir, root_path).write(
+            {"unseal_key": "UNSEAL", "root_token": "ROOT"}
+        )
+
+    assert not root_path.exists()
+    assert stat.S_IMODE(external.stat().st_mode) == external_mode
+    if {entry.name for entry in external.iterdir()} != {"marker"}:
+        raise AssertionError("file key store wrote through keys-parent symlink")
+    if sha256(marker.read_bytes()).digest() != marker_digest:
+        raise AssertionError("file key store changed keys-parent referent")
+
+
+def test_file_key_store_read_refuses_target_symlink_before_referent_read(
+    tmp_path, monkeypatch
+) -> None:
+    keys_dir = tmp_path / "keys"
+    keys_dir.mkdir()
+    external = tmp_path / "external-unseal"
+    external.write_text("UNSEAL\n", encoding="utf-8")
+    external_digest = sha256(external.read_bytes()).digest()
+    unseal_path = keys_dir / "unseal_key"
+    unseal_path.symlink_to(external)
+    root_path = tmp_path / "root-secrets" / "root_token"
+    root_path.parent.mkdir()
+    root_path.write_text("ROOT\n", encoding="utf-8")
+    referent_was_read = False
+    real_read_text = Path.read_text
+
+    def observe_completed_read(path, *args, **kwargs):
+        nonlocal referent_was_read
+        content = real_read_text(path, *args, **kwargs)
+        if Path(path) == unseal_path:
+            referent_was_read = True
+        return content
+
+    monkeypatch.setattr(Path, "read_text", observe_completed_read)
+
+    with pytest.raises(OSError):
+        FileKeyStore(keys_dir, root_path).read()
+
+    if referent_was_read:
+        raise AssertionError("file key store read a target-symlink referent")
+    if sha256(external.read_bytes()).digest() != external_digest:
+        raise AssertionError("file key store changed target-symlink referent")
+
+
+def test_file_key_store_read_refuses_fifo_without_blocking(
+    tmp_path, monkeypatch
+) -> None:
+    keys_dir = tmp_path / "keys"
+    keys_dir.mkdir()
+    unseal_path = keys_dir / "unseal_key"
+    unseal_path.write_text("UNSEAL\n", encoding="utf-8")
+    root_path = tmp_path / "root-secrets" / "root_token"
+    root_path.parent.mkdir()
+    os.mkfifo(root_path)
+    observed_flags: list[int] = []
+    path_read_attempted = False
+    real_open = os.open
+    real_read_text = Path.read_text
+
+    def observe_real_open(path, flags, *args, **kwargs):
+        if Path(path) == root_path:
+            observed_flags.append(flags)
+            required = os.O_NOFOLLOW | os.O_NONBLOCK
+            if flags & required != required:
+                raise OSError("unsafe root-token open flags")
+        return real_open(path, flags, *args, **kwargs)
+
+    def reject_blocking_path_read(path, *args, **kwargs):
+        nonlocal path_read_attempted
+        if Path(path) == root_path:
+            path_read_attempted = True
+            raise OSError("blocking root-token read refused by test")
+        return real_read_text(path, *args, **kwargs)
+
+    monkeypatch.setattr(vault_module.os, "open", observe_real_open)
+    monkeypatch.setattr(Path, "read_text", reject_blocking_path_read)
+
+    with pytest.raises(OSError):
+        FileKeyStore(keys_dir, root_path).read()
+
+    if path_read_attempted:
+        raise AssertionError("file key store attempted a blocking FIFO read")
+    if len(observed_flags) != 1:
+        raise AssertionError("file key store did not perform one bounded root open")
+
+
 # --- 3. FileSecretStore -----------------------------------------------------
 
 def test_file_secret_store_roundtrip_and_mode(tmp_path) -> None:
@@ -108,6 +339,129 @@ def test_file_secret_store_overwrite(tmp_path) -> None:
     store.write({"token": "OLD"})
     store.write({"token": "NEW"})
     assert store.read() == {"token": "NEW"}
+
+
+@pytest.mark.parametrize("requested_umask", [0, 0o777])
+def test_file_secret_store_parent_is_secure_from_first_creation(
+    tmp_path, monkeypatch, requested_umask
+) -> None:
+    parent = tmp_path / "app-secrets"
+    target = parent / "app_token.json"
+    observed_creation_modes: list[int] = []
+    real_mkdir = os.mkdir
+
+    def observe_real_mkdir(path, mode=0o777, *args, **kwargs):
+        result = real_mkdir(path, mode, *args, **kwargs)
+        if Path(path) == parent:
+            observed_creation_modes.append(
+                stat.S_IMODE(os.lstat(parent).st_mode)
+            )
+        return result
+
+    monkeypatch.setattr(vault_module.os, "mkdir", observe_real_mkdir)
+    previous_umask = os.umask(requested_umask)
+    try:
+        FileSecretStore(target).write({"token": token_hex(32)})
+    finally:
+        os.umask(previous_umask)
+
+    if not observed_creation_modes or any(
+        mode & ~0o700 for mode in observed_creation_modes
+    ):
+        raise AssertionError("file secret store parent creation was unsafe")
+    assert stat.S_IMODE(parent.stat().st_mode) == 0o700
+    assert stat.S_IMODE(target.stat().st_mode) == 0o600
+
+
+def test_file_secret_store_refuses_parent_symlink_before_external_change(
+    tmp_path,
+) -> None:
+    external = tmp_path / "external-app-secrets"
+    external.mkdir()
+    os.chmod(external, 0o750)
+    external_mode = stat.S_IMODE(external.stat().st_mode)
+    marker = external / "marker"
+    marker.write_bytes(token_hex(32).encode("ascii"))
+    marker_digest = sha256(marker.read_bytes()).digest()
+    parent = tmp_path / "app-secrets"
+    parent.symlink_to(external, target_is_directory=True)
+
+    with pytest.raises(OSError):
+        FileSecretStore(parent / "app_token.json").write(
+            {"token": token_hex(32)}
+        )
+
+    assert stat.S_IMODE(external.stat().st_mode) == external_mode
+    if {entry.name for entry in external.iterdir()} != {"marker"}:
+        raise AssertionError("file secret store wrote through parent symlink")
+    if sha256(marker.read_bytes()).digest() != marker_digest:
+        raise AssertionError("file secret store changed parent-symlink referent")
+
+
+def test_file_secret_store_read_refuses_symlink_before_referent_read(
+    tmp_path, monkeypatch
+) -> None:
+    external = tmp_path / "external-app-token"
+    external.write_text('{"token":"external"}\n', encoding="utf-8")
+    external_digest = sha256(external.read_bytes()).digest()
+    target = tmp_path / "app_token.json"
+    target.symlink_to(external)
+    referent_was_read = False
+    real_read_text = Path.read_text
+
+    def observe_completed_read(path, *args, **kwargs):
+        nonlocal referent_was_read
+        content = real_read_text(path, *args, **kwargs)
+        if Path(path) == target:
+            referent_was_read = True
+        return content
+
+    monkeypatch.setattr(Path, "read_text", observe_completed_read)
+
+    with pytest.raises(OSError):
+        FileSecretStore(target).read()
+
+    if referent_was_read:
+        raise AssertionError("file secret store read a target-symlink referent")
+    if sha256(external.read_bytes()).digest() != external_digest:
+        raise AssertionError("file secret store changed target-symlink referent")
+
+
+def test_file_secret_store_read_refuses_fifo_without_blocking(
+    tmp_path, monkeypatch
+) -> None:
+    target = tmp_path / "app-token.fifo"
+    os.mkfifo(target)
+    observed_flags: list[int] = []
+    path_read_attempted = False
+    real_open = os.open
+    real_read_text = Path.read_text
+
+    def observe_real_open(path, flags, *args, **kwargs):
+        if Path(path) == target:
+            observed_flags.append(flags)
+            required = os.O_NOFOLLOW | os.O_NONBLOCK
+            if flags & required != required:
+                raise OSError("unsafe app-token open flags")
+        return real_open(path, flags, *args, **kwargs)
+
+    def reject_blocking_path_read(path, *args, **kwargs):
+        nonlocal path_read_attempted
+        if Path(path) == target:
+            path_read_attempted = True
+            raise OSError("blocking app-token read refused by test")
+        return real_read_text(path, *args, **kwargs)
+
+    monkeypatch.setattr(vault_module.os, "open", observe_real_open)
+    monkeypatch.setattr(Path, "read_text", reject_blocking_path_read)
+
+    with pytest.raises(OSError):
+        FileSecretStore(target).read()
+
+    if path_read_attempted:
+        raise AssertionError("file secret store attempted a blocking FIFO read")
+    if len(observed_flags) != 1:
+        raise AssertionError("file secret store did not perform one bounded target open")
 
 
 @pytest.mark.parametrize("requested_mode", [0o600, 0o644])
@@ -134,8 +488,8 @@ def test_write_file_failure_before_replace_preserves_old_target_and_cleans_temp(
         replacement_mode = stat.S_IMODE(Path(source).stat().st_mode)
         raise OSError("injected failure after file fsync")
 
-    monkeypatch.setattr(openbao_flow.os, "fsync", record_real_fsync)
-    monkeypatch.setattr(openbao_flow.os, "replace", fail_before_replace)
+    monkeypatch.setattr(vault_module.os, "fsync", record_real_fsync)
+    monkeypatch.setattr(vault_module.os, "replace", fail_before_replace)
     previous_umask = os.umask(0)
     try:
         with pytest.raises(OSError) as caught:
@@ -159,7 +513,7 @@ def test_write_file_fsyncs_file_then_parent_directory(tmp_path, monkeypatch) -> 
         real_fsync(descriptor)
         fsync_targets.append("directory" if stat.S_ISDIR(target_mode) else "file")
 
-    monkeypatch.setattr(openbao_flow.os, "fsync", record_real_fsync)
+    monkeypatch.setattr(vault_module.os, "fsync", record_real_fsync)
     openbao_flow._write_file(tmp_path / "secret", "non-secret-test-value", 0o600)
 
     assert fsync_targets == ["file", "directory"]
