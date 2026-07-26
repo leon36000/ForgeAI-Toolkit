@@ -1,0 +1,14 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "src/forgeai/web/server.py",
+   "description": "_CachedDetector.full_report() retourne l'objet _hardware_profile_cache directement sans copie défensive. Si la fonction run_checks (non visible dans le diff) mute le profil matériel, le cache partagé sera corrompu pour les requêtes suivantes.",
+   "preuve": "Lignes 113-115 : class _CachedDetector: ... def full_report(self): return _hardware_report()."
+  }
+ ],
+ "date_heure": "2026-07-26T00:01:17.321717+00:00",
+ "prompt_sha256": "3e444840e816bbb31a444771227706efa158e8e8b6bffd8613d0f955533e1466",
+ "reviewer_model": "Qwen3.6-40B"
+}
