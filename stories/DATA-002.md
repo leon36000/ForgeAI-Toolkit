@@ -25,7 +25,9 @@ Le correctif historique `FAI-0010` protège séparément les read-modify-write d
    commun et peuvent respectivement écraser une mutation ou publier un état
    encore révocable par le journal ;
 6. la récupération acceptait le chemin de n’importe quelle instance `Vault`,
-   ce qui permettait à un coffre voisin de consommer le WAL canonique.
+   ce qui permettait à un coffre voisin de consommer le WAL canonique ;
+7. la destination `export --out` pouvait chevaucher les routes, le coffre ou le
+   WAL, et les alias de fichiers pouvaient contourner l’identité canonique.
 
 La baseline ciblée existante passe 24 tests en environnement autorisant le
 loopback, mais elle ne couvre pas ces interleavings ni les pannes avant rename.
@@ -69,7 +71,11 @@ verrou, y compris après l’arrêt brutal du processus.
 - import et export sérialisés avec la transaction RouteStore, récupération du
   WAL avant lecture/écriture et remplacements atomiques `0600` à l’import ;
 - refus de restaurer un WAL vers tout coffre autre que le `vault.json` auquel
-  le journal est explicitement lié.
+  le journal est explicitement lié ;
+- comparaison d’identité par inode (`samefile`) pour les alias casse/symlink/
+  hardlink, restauration du canon et de l’alias avant suppression du WAL ;
+- rejet de toute destination d’export chevauchant un fichier vivant du setup,
+  puis écriture atomique `fsync`/`os.replace` du bundle.
 
 ## Extension de périmètre tracée
 
@@ -82,8 +88,8 @@ delta hors allowlist est limité à ce fichier et au chemin réel du défaut.
 
 ## Résultats vérifiés
 
-- 51 tests ciblés : PASS ;
-- 16 tests de concurrence et de panne, avec huit arrêts `SIGKILL` réels
+- 57 tests ciblés : PASS ;
+- 17 tests de concurrence et de panne, avec neuf arrêts `SIGKILL` réels
   répartis sur les fenêtres de commit : PASS ;
 - 100 configurations concurrentes, lecteur JSON brut actif et probe hors
   verrou : PASS en `0,31 s` ;
@@ -112,6 +118,12 @@ par un coffre voisin et le pack de revue périmé. Chaque défaut fonctionnel a 
 reproduit en rouge puis corrigé. Ces revues ne sont pas présentées comme trois
 fournisseurs distincts et ne satisfont donc pas artificiellement une exigence
 multi-vendeurs.
+
+Le premier tour final sur le pack `23ec2b…` a encore découvert deux défauts
+importants : collision de `export --out` avec l’état vivant et alias du coffre
+sur volume insensible à la casse. Les reproductions CLI, case-insensitive/
+hardlink et les corrections sont incluses dans le nouveau candidat; le pack
+`23ec2b…` est donc superseded et doit être régénéré.
 
 ## Rollback
 

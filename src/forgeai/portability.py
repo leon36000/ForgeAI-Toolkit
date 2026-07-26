@@ -23,6 +23,7 @@ from pathlib import Path
 from typing import List
 
 from forgeai.models._locking import (
+    MODELS_TRANSACTION_JOURNAL,
     MODELS_TRANSACTION_LOCK,
     atomic_write_text,
     file_lock,
@@ -73,6 +74,23 @@ def _validate_route(route: dict) -> None:
         raise PortabilityError(f"Champs non autorisés dans une route : {extra}")
 
 
+def _validate_export_destination(home: Path, out_path: Path | None) -> None:
+    """Interdit qu'un bundle remplace un fichier vivant du setup ou de sa transaction."""
+    if out_path is None:
+        return
+    protected_names = set(SETUP_FILES) | EXCLUDED_FILES | {
+        MODELS_TRANSACTION_JOURNAL,
+        f"{MODELS_TRANSACTION_LOCK}.lock",
+    }
+    protected_paths = {
+        (home / name).resolve(strict=False) for name in protected_names
+    }
+    if out_path.resolve(strict=False) in protected_paths:
+        raise PortabilityError(
+            "La destination d'export chevauche un fichier protégé du setup"
+        )
+
+
 def export_setup(home, out_path=None) -> dict:
     """Exporte tous les fichiers de setup (sans secrets) vers un dict bundle.
 
@@ -86,6 +104,8 @@ def export_setup(home, out_path=None) -> dict:
     ou si une route contient un secret en clair.
     """
     home = Path(home)
+    out_path = Path(out_path) if out_path is not None else None
+    _validate_export_destination(home, out_path)
     files = {}
 
     with file_lock(home / MODELS_TRANSACTION_LOCK):
@@ -132,9 +152,16 @@ def export_setup(home, out_path=None) -> dict:
     }
 
     if out_path is not None:
-        out_path = Path(out_path)
-        with open(out_path, "w", encoding="utf-8") as fh:
-            json.dump(bundle, fh, indent=1, ensure_ascii=False)
+        try:
+            atomic_write_text(
+                out_path,
+                json.dumps(bundle, indent=1, ensure_ascii=False),
+                mode=0o600,
+            )
+        except OSError as exc:
+            raise PortabilityError(
+                f"Erreur lors de l'écriture du bundle : {exc}"
+            ) from exc
 
     return bundle
 

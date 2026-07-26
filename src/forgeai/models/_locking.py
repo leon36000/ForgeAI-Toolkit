@@ -78,27 +78,47 @@ def _journal_vault_path(home: Path, snapshot: dict) -> Path:
     return (Path(home) / vault_name).resolve(strict=False)
 
 
+def _paths_identify_same_file(left: Path, right: Path) -> bool:
+    """Compare deux chemins en tenant compte des symlinks, hardlinks et de la casse."""
+    try:
+        return Path(left).samefile(right)
+    except OSError:
+        return Path(left).resolve(strict=False) == Path(right).resolve(strict=False)
+
+
+def _restore_vault_image(path: Path, snapshot: dict) -> None:
+    if snapshot["vault_existed"]:
+        atomic_write_text(
+            path,
+            json.dumps(snapshot["vault"], ensure_ascii=False, indent=1),
+            mode=0o600,
+        )
+    else:
+        atomic_unlink(path)
+
+
 def restore_models_transaction_locked(
     home: Path, vault_path: Path, snapshot: dict
 ) -> None:
     """Restaure les deux fichiers; conserve le journal si une restauration échoue."""
     home = Path(home)
-    vault_path = Path(vault_path).resolve(strict=False)
-    if vault_path != _journal_vault_path(home, snapshot):
+    requested_vault_path = Path(os.path.abspath(vault_path))
+    canonical_vault_path = _journal_vault_path(home, snapshot)
+    if not _paths_identify_same_file(
+        requested_vault_path, canonical_vault_path
+    ):
         raise ValueError("le coffre demandé ne correspond pas au journal")
     routes_path = home / "routes.json"
     journal_path = home / MODELS_TRANSACTION_JOURNAL
     rollback_error: Exception | None = None
 
     try:
-        if snapshot["vault_existed"]:
-            atomic_write_text(
-                vault_path,
-                json.dumps(snapshot["vault"], ensure_ascii=False, indent=1),
-                mode=0o600,
-            )
-        else:
-            atomic_unlink(vault_path)
+        _restore_vault_image(canonical_vault_path, snapshot)
+        if (
+            requested_vault_path != canonical_vault_path
+            and not requested_vault_path.is_symlink()
+        ):
+            _restore_vault_image(requested_vault_path, snapshot)
     except (OSError, TypeError, ValueError, KeyError) as exc:
         rollback_error = exc
 
@@ -127,7 +147,9 @@ def recover_models_transaction_locked(home: Path, vault_path: Path) -> bool:
     if not journal_path.exists():
         return False
     snapshot = json.loads(journal_path.read_text(encoding="utf-8"))
-    if Path(vault_path).resolve(strict=False) != _journal_vault_path(home, snapshot):
+    if not _paths_identify_same_file(
+        Path(vault_path), _journal_vault_path(home, snapshot)
+    ):
         return False
     restore_models_transaction_locked(home, vault_path, snapshot)
     return True

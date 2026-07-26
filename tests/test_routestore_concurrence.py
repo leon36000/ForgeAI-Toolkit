@@ -531,7 +531,7 @@ def test_vault_put_apres_crash_recupere_avant_nouvelle_ecriture(tmp_path):
 
 
 def test_vault_voisin_ne_detourne_pas_la_recuperation_route_store(tmp_path):
-    """Un coffre non canonique ne doit ni consommer le WAL ni recevoir son snapshot."""
+    """Un coffre voisin récupère le WAL canonique sans recevoir son snapshot."""
     home = tmp_path / "models"
     ctx = mp.get_context("fork")
     ready = ctx.Event()
@@ -548,13 +548,42 @@ def test_vault_voisin_ne_detourne_pas_la_recuperation_route_store(tmp_path):
     voisin = Vault(home / "autre.json")
     voisin.put("voisine", "secret-voisin", "pp")
     assert voisin.get("voisine", "pp") == "secret-voisin"
-    assert (home / ".models-transaction.json").exists()
+    assert not (home / ".models-transaction.json").exists()
 
     recovered = RouteStore(home)
     assert recovered.list() == []
     assert recovered.vault.names() == []
     assert voisin.names() == ["voisine"]
+
+
+def test_alias_hardlink_du_coffre_est_restaure_avant_put(tmp_path):
+    """Un alias du coffre ne conserve ni état révocable ni écriture hors recovery."""
+    home = tmp_path / "models"
+    ctx = mp.get_context("fork")
+    ready = ctx.Event()
+    process = ctx.Process(
+        target=_add_cloud_pause_before_routes_replace, args=(str(home), ready)
+    )
+    process.start()
+    assert ready.wait(timeout=10), "le processus n'a pas atteint le replace routes"
+
+    os.kill(process.pid, signal.SIGKILL)
+    process.join(timeout=5)
+
+    assert process.exitcode == -signal.SIGKILL
+    alias_path = home / "Vault.json"
+    if not alias_path.exists():
+        os.link(home / "vault.json", alias_path)
+    alias = Vault(alias_path)
+    alias.put("acquittee", "secret-durable", "pp")
+
     assert not (home / ".models-transaction.json").exists()
+    assert alias.names() == ["acquittee"]
+    assert alias.get("acquittee", "pp") == "secret-durable"
+    recovered = RouteStore(home)
+    assert recovered.list() == []
+    assert recovered.vault.names() == ["acquittee"]
+    assert recovered.vault.get("acquittee", "pp") == "secret-durable"
 
 
 def test_export_recupere_le_wal_avant_de_lire_routes(tmp_path):

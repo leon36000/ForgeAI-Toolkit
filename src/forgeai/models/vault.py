@@ -30,6 +30,7 @@ from pathlib import Path
 from forgeai.models._locking import (
     MODELS_TRANSACTION_JOURNAL,
     MODELS_TRANSACTION_LOCK,
+    _paths_identify_same_file,
     atomic_write_text,
     file_lock,
     recover_models_transaction_locked,
@@ -127,7 +128,18 @@ class Vault:
         return data, fingerprint(secret)
 
     def _recover_pending_transaction_locked(self) -> None:
-        recover_models_transaction_locked(self.path.parent, self.path)
+        canonical_vault_path = self.path.parent / "vault.json"
+        path_is_canonical_alias = _paths_identify_same_file(
+            self.path, canonical_vault_path
+        )
+        recovery_path = (
+            self.path if path_is_canonical_alias else canonical_vault_path
+        )
+        recovered = recover_models_transaction_locked(
+            self.path.parent, recovery_path
+        )
+        if recovered and path_is_canonical_alias:
+            self.path = canonical_vault_path
 
     def put(self, name: str, secret: str, passphrase: str) -> str:
         """Scelle `secret` sous `name`. Retourne l'empreinte (jamais le secret)."""

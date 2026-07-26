@@ -92,3 +92,45 @@ def test_cli_add_cloud_echec_reseau_rien_ajoute(tmp_path, monkeypatch, capsys):
     assert not (home / "routes.json").exists()
     err = capsys.readouterr().err
     assert "ECHEC ROUTE" in err and SECRET not in err
+
+
+@pytest.mark.parametrize(
+    "protected_name",
+    [
+        "routes.json",
+        "vault.json",
+        "gateway.json",
+        ".models-transaction.json",
+        ".models-transaction.lock",
+    ],
+)
+def test_cli_export_refuse_ecraser_un_fichier_protege(
+    tmp_path, protected_name, capsys
+):
+    """--out ne peut jamais viser l'état vivant du répertoire exporté."""
+    home = tmp_path / "models"
+    home.mkdir()
+    (home / "routes.json").write_text("[]", encoding="utf-8")
+    (home / "vault.json").write_text('{"sentinelle":"coffre"}', encoding="utf-8")
+    (home / "gateway.json").write_text('{"sentinelle":"gateway"}', encoding="utf-8")
+    protected = home / protected_name
+    before = protected.read_bytes() if protected.exists() else None
+
+    rc = main(
+        [
+            "export",
+            "--home",
+            str(home),
+            "--out",
+            str(protected),
+            "--registre",
+            str(tmp_path / "registre.jsonl"),
+        ]
+    )
+
+    assert rc == 11
+    assert "ECHEC EXPORT" in capsys.readouterr().err
+    if before is None:
+        assert not protected.exists() or protected.read_bytes() == b""
+    else:
+        assert protected.read_bytes() == before
