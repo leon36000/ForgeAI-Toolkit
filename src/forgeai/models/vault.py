@@ -41,6 +41,7 @@ MAGIC = b"FGV1"
 _SALT = 16
 _NONCE = 16
 _TAG = 32
+_MAX_SECRET_TEXT_BYTES = 1024 * 1024
 # Revue aveugle 3 vendors (DeepSeek/Grok/Gemini) : N=2^14 jugé bas pour une attaque
 # hors-ligne sur blob volé (cible « au repos ») → relevé à 2^16 (~67 Mo, <1 s, portable).
 _SCRYPT = dict(n=2 ** 16, r=8, p=1, dklen=64, maxmem=128 * 1024 * 1024)
@@ -64,8 +65,10 @@ def atomic_write_secret_text(
     atomic_write_text(path, payload, mode=mode)
 
 
-def republish_existing_secret_file(path: Path, *, mode: int = 0o600) -> None:
-    """Relit un secret régulier sans suivre de lien, puis le republie atomiquement."""
+def read_secret_text(
+    path: Path, *, max_bytes: int = _MAX_SECRET_TEXT_BYTES
+) -> str:
+    """Lit un petit fichier secret régulier sans suivre son composant final."""
     no_follow = getattr(os, "O_NOFOLLOW", None)
     if no_follow is None:
         raise OSError("ouverture sans suivi de lien indisponible")
@@ -79,16 +82,27 @@ def republish_existing_secret_file(path: Path, *, mode: int = 0o600) -> None:
     try:
         target = os.fstat(descriptor)
         if not stat.S_ISREG(target.st_mode):
-            raise OSError("refus de republier un secret non régulier")
+            raise OSError("refus de lire un secret non régulier")
+        if target.st_size > max_bytes:
+            raise OSError("fichier secret trop volumineux")
         content = bytearray()
-        while chunk := os.read(descriptor, 8_192):
+        while chunk := os.read(
+            descriptor, min(8_192, max_bytes + 1 - len(content))
+        ):
             content.extend(chunk)
+            if len(content) > max_bytes:
+                raise OSError("fichier secret trop volumineux")
     finally:
         os.close(descriptor)
     try:
-        payload = bytes(content).decode("utf-8")
+        return bytes(content).decode("utf-8")
     except UnicodeDecodeError:
         raise OSError("secret existant non UTF-8") from None
+
+
+def republish_existing_secret_file(path: Path, *, mode: int = 0o600) -> None:
+    """Relit un secret régulier sans suivre de lien, puis le republie atomiquement."""
+    payload = read_secret_text(path)
     atomic_write_secret_text(path, payload, mode=mode)
 
 

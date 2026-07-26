@@ -68,6 +68,33 @@ def test_secrets_generes_permissions_0600(tmp_path):
     _assert_generated_env_contract(content)
 
 
+def test_secrets_directory_is_private_at_its_first_creation(
+    tmp_path, monkeypatch
+):
+    out_dir = tmp_path / "out"
+    secrets_dir = out_dir / "secrets"
+    observed_creation_modes: list[int] = []
+    real_mkdir = os.mkdir
+
+    def observe_real_mkdir(path, mode=0o777, *args, **kwargs):
+        result = real_mkdir(path, mode, *args, **kwargs)
+        if Path(path) == secrets_dir:
+            observed_creation_modes.append(
+                stat.S_IMODE(os.lstat(path).st_mode)
+            )
+        return result
+
+    monkeypatch.setattr(bootstrap_secrets_module.os, "mkdir", observe_real_mkdir)
+    previous_umask = os.umask(0)
+    try:
+        bootstrap_secrets(out_dir)
+    finally:
+        os.umask(previous_umask)
+
+    if observed_creation_modes != [0o700]:
+        raise AssertionError("secret directory was not private at creation")
+
+
 def test_generated_env_contract_failures_never_disclose_content():
     sentinel = token_hex(20)
     cases = (
@@ -116,6 +143,68 @@ def test_bootstrap_refuses_env_symlink_without_touching_referent(tmp_path):
     assert target.is_symlink()
     assert os.readlink(target) == original_link
     assert referent.read_text(encoding="utf-8") == "EXTERNAL=unchanged\n"
+
+
+def test_non_regen_refuses_env_symlink_before_reading_referent(
+    tmp_path, monkeypatch
+):
+    out_dir = tmp_path / "out"
+    out_dir.mkdir()
+    referent = tmp_path / "external-env"
+    referent.write_text(
+        f"FORGEAI_API_TOKEN={token_hex(32)}\n", encoding="utf-8"
+    )
+    referent_digest = sha256(referent.read_bytes()).digest()
+    env_path = out_dir / ".env"
+    env_path.symlink_to(referent)
+    referent_was_read = False
+    real_read_text = Path.read_text
+
+    def observe_completed_read(path, *args, **kwargs):
+        nonlocal referent_was_read
+        content = real_read_text(path, *args, **kwargs)
+        if Path(path) == env_path:
+            referent_was_read = True
+        return content
+
+    monkeypatch.setattr(Path, "read_text", observe_completed_read)
+
+    with pytest.raises(OSError):
+        bootstrap_secrets(out_dir)
+
+    if referent_was_read:
+        raise AssertionError("bootstrap read an env symlink referent")
+    if sha256(referent.read_bytes()).digest() != referent_digest:
+        raise AssertionError("bootstrap changed an env symlink referent")
+
+
+def test_bootstrap_refuses_secrets_directory_symlink_before_any_write(tmp_path):
+    out_dir = tmp_path / "out"
+    out_dir.mkdir()
+    external_dir = tmp_path / "external-secrets"
+    external_dir.mkdir()
+    os.chmod(external_dir, 0o750)
+    external_mode = stat.S_IMODE(external_dir.stat().st_mode)
+    external_key = external_dir / "forgeai_token.key"
+    external_key.write_text(token_hex(32) + "\n", encoding="utf-8")
+    os.chmod(external_key, 0o640)
+    external_key_mode = stat.S_IMODE(external_key.stat().st_mode)
+    external_key_digest = sha256(external_key.read_bytes()).digest()
+    secrets_dir = out_dir / "secrets"
+    secrets_dir.symlink_to(external_dir, target_is_directory=True)
+    original_link = os.readlink(secrets_dir)
+
+    with pytest.raises(OSError):
+        bootstrap_secrets(out_dir)
+
+    assert secrets_dir.is_symlink()
+    assert os.readlink(secrets_dir) == original_link
+    assert stat.S_IMODE(external_dir.stat().st_mode) == external_mode
+    assert stat.S_IMODE(external_key.stat().st_mode) == external_key_mode
+    if sha256(external_key.read_bytes()).digest() != external_key_digest:
+        raise AssertionError("bootstrap changed a secret-directory referent")
+    if (out_dir / ".env").exists():
+        raise AssertionError("bootstrap wrote env before directory validation")
 
 
 def test_existing_token_key_symlink_swap_cannot_touch_external_inode(
