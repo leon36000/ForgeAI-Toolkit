@@ -11,6 +11,7 @@ La même origine (l'UI servie par le serveur) DOIT continuer à fonctionner.
 RED avant correctif : aucun garde → une requête POST cross-origin/rebinding est traitée (pas de 403).
 """
 import json
+import secrets
 import threading
 import urllib.error
 import urllib.request
@@ -36,13 +37,11 @@ def live(monkeypatch):
 @pytest.fixture()
 def live_non_loopback():
     """Serveur lié publiquement, joint via loopback uniquement pour le socket de test."""
-    previous_bind_host = web_server._WEB_BIND_HOST
     srv = build_server("0.0.0.0", 0)
     threading.Thread(target=srv.serve_forever, daemon=True).start()
     port = srv.server_address[1]
     yield f"http://127.0.0.1:{port}"
     srv.shutdown(); srv.server_close()
-    web_server._WEB_BIND_HOST = previous_bind_host
 
 
 def _post(base, path, headers, body=None):
@@ -90,15 +89,28 @@ def test_post_meme_origine_passe_le_garde(live):
     assert code != 403, "la même origine ne doit jamais être refusée par le garde"
 
 
-def test_jeton_exige_si_defini(live, monkeypatch):
+def test_jeton_exige_si_defini(monkeypatch):
     """Si FORGEAI_WEB_TOKEN est défini, une route mutante sans jeton → 401 ; avec le bon jeton → pas 401."""
-    monkeypatch.setattr("forgeai.web.server._WEB_TOKEN", "s3cr3t", raising=False)
-    base, port = live
-    hdr_ok_origin = {"Origin": f"http://127.0.0.1:{port}", "Host": f"127.0.0.1:{port}"}
-    code_sans, _ = _post(base, "/api/deploy", hdr_ok_origin, {"stack": "agentique"})
+    configured_token = secrets.token_urlsafe(32)
+    monkeypatch.setattr(web_server, "_WEB_TOKEN", configured_token)
+    server = build_server("127.0.0.1", 0)
+    threading.Thread(target=server.serve_forever, daemon=True).start()
+    port = server.server_address[1]
+    base = f"http://127.0.0.1:{port}"
+    try:
+        hdr_ok_origin = {"Origin": base, "Host": f"127.0.0.1:{port}"}
+        code_sans, _ = _post(base, "/api/deploy", hdr_ok_origin, {"stack": "agentique"})
+        code_avec, _ = _post(
+            base,
+            "/api/deploy",
+            {**hdr_ok_origin, "Authorization": f"Bearer {configured_token}"},
+            {"stack": "agentique"},
+        )
+    finally:
+        server.shutdown()
+        server.server_close()
+
     assert code_sans == 401, f"sans jeton → 401, reçu {code_sans}"
-    code_avec, _ = _post(base, "/api/deploy",
-                         {**hdr_ok_origin, "Authorization": "Bearer s3cr3t"}, {"stack": "agentique"})
     assert code_avec != 401, "le bon jeton ne doit pas être refusé"
 
 
@@ -119,6 +131,70 @@ def test_authorize_mutation_bind_non_loopback_exige_bearer_sans_jeton_configure(
     ) == (False, 401)
 
 
+@pytest.mark.parametrize(
+    ("host", "expected"),
+    [
+        ("127.0.0.2", True),
+        ("::1", True),
+        ("localhost", True),
+        ("LOCALHOST", True),
+        ("0.0.0.0", False),
+        ("::", False),
+        ("network.example", False),
+        ("*", False),
+    ],
+)
+def test_classification_loopback_du_bind(host, expected):
+    assert web_server._is_loopback_host(host) is expected
+
+
+def test_deux_serveurs_concurrents_conservent_leurs_politiques(monkeypatch):
+    """Un second serveur ne doit pas remplacer le bind ou le jeton du premier."""
+    monkeypatch.setattr(web_server, "_WEB_TOKEN", None)
+    loopback_server = build_server("127.0.0.1", 0)
+
+    network_token = secrets.token_urlsafe(32)
+    monkeypatch.setattr(web_server, "_WEB_TOKEN", network_token)
+    network_server = build_server("0.0.0.0", 0)
+
+    servers = (loopback_server, network_server)
+    for server in servers:
+        threading.Thread(target=server.serve_forever, daemon=True).start()
+
+    loopback_base = f"http://127.0.0.1:{loopback_server.server_address[1]}"
+    network_base = f"http://127.0.0.1:{network_server.server_address[1]}"
+    try:
+        loopback_code, _ = _post(
+            loopback_base,
+            "/api/deploy",
+            {"Host": "127.0.0.1"},
+            {"stack": "agentique"},
+        )
+        network_code_without_auth, _ = _post(
+            network_base,
+            "/api/deploy",
+            {"Host": "127.0.0.1"},
+            {"stack": "agentique"},
+        )
+        network_code_with_auth, _ = _post(
+            network_base,
+            "/api/deploy",
+            {
+                "Host": "127.0.0.1",
+                "Authorization": f"Bearer {network_token}",
+            },
+            {"stack": "agentique"},
+        )
+    finally:
+        for server in servers:
+            server.shutdown()
+            server.server_close()
+
+    assert loopback_code != 401
+    assert network_code_without_auth == 401
+    assert network_code_with_auth != 401
+
+
 # --- Tests unitaires de la fonction pure (branches : IPv6, hôte lié, Host absent, jeton) ---
 def test_authorize_mutation_branches():
     def am(**kw):
@@ -131,7 +207,7 @@ def test_authorize_mutation_branches():
     assert am(origin="http://evil.test", host="127.0.0.1:8765") == (False, 403)  # CSRF
     assert am(host="attacker.test") == (False, 403)  # rebinding
     assert am(host=None) == (False, 403)  # Host absent
-    assert am(host="192.168.1.5:8765", bind_host="192.168.1.5") == (True, 0)  # hôte lié
+    assert am(host="192.168.1.5:8765", bind_host="192.168.1.5") == (False, 401)  # Bearer-only
     assert am(token="t") == (False, 401)  # jeton manquant
     assert am(auth_header="Bearer t", token="t") == (True, 0)  # bon jeton
     assert am(auth_header="Bearer x", token="t") == (False, 401)  # mauvais jeton
@@ -172,20 +248,37 @@ def test_authorize_mutation_jeton_prioritaire():
     # jeton défini mais invalide, même en loopback → 401
     assert am(host="127.0.0.1:8765", auth_header="Bearer x", token="t") == (False, 401)
     # sans jeton configuré, aucun contournement réintroduit : les contrôles actuels s'appliquent
-    assert am(host="192.168.1.5:8765", bind_host="0.0.0.0") == (False, 403)
+    assert am(host="192.168.1.5:8765", bind_host="0.0.0.0") == (False, 401)
     assert am(sec_fetch_site="cross-site") == (False, 403)
 
 
-def test_live_distant_authentifie_passe(live, monkeypatch):
+def test_live_distant_authentifie_passe(monkeypatch):
     """E2E FAI-0001b : POST « distant » (Host hors loopback, bind 0.0.0.0) + Bearer valide → pas 403."""
-    monkeypatch.setattr("forgeai.web.server._WEB_TOKEN", "s3cr3t", raising=False)
-    monkeypatch.setattr("forgeai.web.server._WEB_BIND_HOST", "0.0.0.0", raising=False)
-    base, _ = live
-    code, _ = _post(base, "/api/deploy",
-                    {"Host": "192.168.1.5:8765", "Authorization": "Bearer s3cr3t"},
-                    {"stack": "agentique", "backend": "compose"})
+    configured_token = secrets.token_urlsafe(32)
+    monkeypatch.setattr(web_server, "_WEB_TOKEN", configured_token)
+    server = build_server("0.0.0.0", 0)
+    threading.Thread(target=server.serve_forever, daemon=True).start()
+    base = f"http://127.0.0.1:{server.server_address[1]}"
+    try:
+        code, _ = _post(
+            base,
+            "/api/deploy",
+            {
+                "Host": "192.168.1.5:8765",
+                "Authorization": f"Bearer {configured_token}",
+            },
+            {"stack": "agentique", "backend": "compose"},
+        )
+        code_sans, _ = _post(
+            base,
+            "/api/deploy",
+            {"Host": "192.168.1.5:8765"},
+            {"stack": "agentique", "backend": "compose"},
+        )
+    finally:
+        server.shutdown()
+        server.server_close()
+
     assert code != 403, f"accès distant authentifié ne doit pas être refusé par le garde, reçu {code}"
     # sans le jeton, le même POST distant reste refusé (anti-rebinding intact quand le jeton manque)
-    code_sans, _ = _post(base, "/api/deploy", {"Host": "192.168.1.5:8765"},
-                         {"stack": "agentique", "backend": "compose"})
     assert code_sans == 401, f"jeton défini mais absent → 401, reçu {code_sans}"
