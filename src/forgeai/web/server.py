@@ -829,10 +829,11 @@ class ForgeAIHandler(BaseHTTPRequestHandler):
     def _guard_mutation(self) -> bool:
         """Garde anti-CSRF / anti DNS-rebinding / jeton sur les routes mutantes.
         Envoie 403/401 et retourne False si la requête est refusée."""
+        auth_values = self.headers.get_all("Authorization") or []
         allowed, code = authorize_mutation(
             origin=self.headers.get("Origin"),
             host=self.headers.get("Host"),
-            auth_header=self.headers.get("Authorization"),
+            auth_header=auth_values[0] if len(auth_values) == 1 else None,
             bind_host=self.server.forgeai_bind_host,
             sec_fetch_site=self.headers.get("Sec-Fetch-Site"),
             **{"token": self.server.forgeai_auth_value},

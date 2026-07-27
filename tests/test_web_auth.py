@@ -5,11 +5,13 @@ déclencher les routes mutantes (/api/deploy → subprocess, /api/nodes → ssh,
 Spécification d'un garde sur les requêtes MUTANTES (POST) :
 - rejet 403 si l'en-tête `Origin` est présent et n'est pas la même origine (loopback/hôte lié) → anti-CSRF ;
 - rejet 403 si l'en-tête `Host` n'est pas loopback/hôte lié → anti DNS-rebinding ;
-- si `FORGEAI_WEB_TOKEN` est défini, exiger `Authorization: Bearer <token>` sur les routes mutantes.
+- toute écoute non-loopback exige exactement un `Authorization: Bearer <token>` ; une écoute
+  loopback l'exige aussi si `FORGEAI_WEB_TOKEN` est défini.
 La même origine (l'UI servie par le serveur) DOIT continuer à fonctionner.
 
 RED avant correctif : aucun garde → une requête POST cross-origin/rebinding est traitée (pas de 403).
 """
+import http.client
 import json
 import secrets
 import threading
@@ -112,6 +114,62 @@ def test_jeton_exige_si_defini(monkeypatch):
 
     assert code_sans == 401, f"sans jeton → 401, reçu {code_sans}"
     assert code_avec != 401, "le bon jeton ne doit pas être refusé"
+
+
+@pytest.mark.parametrize(
+    "variant",
+    ["absent", "vide", "prefixe_partiel", "casse", "suffixe", "incorrect"],
+)
+def test_bearer_malforme_est_refuse_sur_bind_non_loopback(monkeypatch, variant):
+    """Chaque forme Bearer malformée échoue avant le traitement d'un corps vide."""
+    configured_token = secrets.token_urlsafe(32)
+    monkeypatch.setattr(web_server, "_WEB_TOKEN", configured_token)
+    malformed = {
+        "absent": None,
+        "vide": f"Bearer {''}",
+        "prefixe_partiel": f"Bear {configured_token}",
+        "casse": f"bearer {configured_token}",
+        "suffixe": f"Bearer {configured_token} suffix",
+        "incorrect": f"Bearer {secrets.token_urlsafe(32)}",
+    }[variant]
+    server = build_server("0.0.0.0", 0)
+    threading.Thread(target=server.serve_forever, daemon=True).start()
+    port = server.server_address[1]
+    try:
+        headers = {"Host": "127.0.0.1"}
+        if malformed is not None:
+            headers["Authorization"] = malformed
+        response = _post(f"http://127.0.0.1:{port}", "/api/deploy", headers, {})
+    finally:
+        server.shutdown()
+        server.server_close()
+
+    assert response == (401, b'{"error": "jeton requis ou invalide"}')
+
+
+def test_deux_authorizations_dont_la_premiere_valide_sont_refusees(monkeypatch):
+    """Une requête HTTP réelle avec Authorization dupliqué est ambiguë et doit échouer."""
+    configured_token = secrets.token_urlsafe(32)
+    monkeypatch.setattr(web_server, "_WEB_TOKEN", configured_token)
+    server = build_server("0.0.0.0", 0)
+    threading.Thread(target=server.serve_forever, daemon=True).start()
+    port = server.server_address[1]
+    connection = http.client.HTTPConnection("127.0.0.1", port, timeout=10)
+    try:
+        connection.putrequest("POST", "/api/deploy")
+        connection.putheader("Content-Type", "application/json")
+        connection.putheader("Content-Length", "2")
+        connection.putheader("Authorization", f"Bearer {configured_token}")
+        connection.putheader("Authorization", f"Bearer {secrets.token_urlsafe(32)}")
+        connection.endheaders(b"{}")
+        reply = connection.getresponse()
+        response = (reply.status, reply.read())
+    finally:
+        connection.close()
+        server.shutdown()
+        server.server_close()
+
+    assert response == (401, b'{"error": "jeton requis ou invalide"}')
 
 
 @pytest.mark.parametrize("path", ["/api/deploy", "/api/nodes", "/api/nodes/prepare", "/api/models"])
