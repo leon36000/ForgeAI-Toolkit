@@ -17,6 +17,7 @@ import urllib.request
 
 import pytest
 
+import forgeai.web.server as web_server
 from forgeai.web.server import authorize_mutation, build_server, _normalize_host
 
 
@@ -30,6 +31,19 @@ def live(monkeypatch):
     port = srv.server_address[1]
     yield f"http://127.0.0.1:{port}", port
     srv.shutdown(); srv.server_close()
+
+
+@pytest.fixture()
+def live_non_loopback(monkeypatch):
+    """Serveur lié publiquement, joint via loopback uniquement pour le socket de test."""
+    monkeypatch.setattr("forgeai.web.server._DEPLOY_CMD", ["python3", "-c", "pass"], raising=False)
+    previous_bind_host = web_server._WEB_BIND_HOST
+    srv = build_server("0.0.0.0", 0)
+    threading.Thread(target=srv.serve_forever, daemon=True).start()
+    port = srv.server_address[1]
+    yield f"http://127.0.0.1:{port}"
+    srv.shutdown(); srv.server_close()
+    web_server._WEB_BIND_HOST = previous_bind_host
 
 
 def _post(base, path, headers, body=None):
@@ -87,6 +101,23 @@ def test_jeton_exige_si_defini(live, monkeypatch):
     code_avec, _ = _post(base, "/api/deploy",
                          {**hdr_ok_origin, "Authorization": "Bearer s3cr3t"}, {"stack": "agentique"})
     assert code_avec != 401, "le bon jeton ne doit pas être refusé"
+
+
+@pytest.mark.parametrize("path", ["/api/deploy", "/api/nodes", "/api/nodes/prepare", "/api/models"])
+def test_bind_non_loopback_exige_bearer_meme_avec_host_loopback(live_non_loopback, path):
+    """Le bind public exige un Bearer, même si le client joint le socket via loopback."""
+    code, _ = _post(live_non_loopback, path, {"Host": "127.0.0.1"}, {})
+    assert code == 401, f"bind non-loopback sans Bearer doit être refusé, reçu {code}"
+
+
+def test_authorize_mutation_bind_non_loopback_exige_bearer_sans_jeton_configure():
+    assert authorize_mutation(
+        origin=None,
+        host="127.0.0.1",
+        auth_header=None,
+        bind_host="0.0.0.0",
+        token=None,
+    ) == (False, 401)
 
 
 # --- Tests unitaires de la fonction pure (branches : IPv6, hôte lié, Host absent, jeton) ---
