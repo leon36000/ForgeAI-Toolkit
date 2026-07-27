@@ -34,9 +34,8 @@ def live(monkeypatch):
 
 
 @pytest.fixture()
-def live_non_loopback(monkeypatch):
+def live_non_loopback():
     """Serveur lié publiquement, joint via loopback uniquement pour le socket de test."""
-    monkeypatch.setattr("forgeai.web.server._DEPLOY_CMD", ["python3", "-c", "pass"], raising=False)
     previous_bind_host = web_server._WEB_BIND_HOST
     srv = build_server("0.0.0.0", 0)
     threading.Thread(target=srv.serve_forever, daemon=True).start()
