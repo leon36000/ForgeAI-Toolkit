@@ -463,7 +463,14 @@ def authorize_mutation(*, origin: str | None, host: str | None, auth_header: str
     Les clients non-navigateur (CLI, tests) n'envoient pas Sec-Fetch-Site → non pénalisés (ne sont pas
     un vecteur CSRF : pas de « confused deputy »)."""
     if token or not _is_loopback_host(bind_host):
-        if token and hmac.compare_digest(auth_header or "", "Bearer " + token):
+        candidate = auth_header or ""
+        expected = "Bearer " + token if token else ""
+        if (
+            token
+            and candidate.isascii()
+            and expected.isascii()
+            and hmac.compare_digest(candidate, expected)
+        ):
             return (True, 0)
         return (False, 401)
 
@@ -1154,7 +1161,7 @@ class ForgeAIHandler(BaseHTTPRequestHandler):
 def build_server(host: str = "127.0.0.1", port: int = 8765) -> ThreadingHTTPServer:
     _load_deploy_state()  # reporte le dernier statut de deploy connu après un restart (#139)
     server = ThreadingHTTPServer((host, port), ForgeAIHandler)
-    server.forgeai_bind_host = host
+    server.forgeai_bind_host = server.server_address[0]
     server.forgeai_auth_value = _WEB_TOKEN
     return server
 
