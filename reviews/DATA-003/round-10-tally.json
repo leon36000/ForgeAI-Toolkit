@@ -1,0 +1,20 @@
+{
+  "artifact_sha256": "2b070d753c38aa693a33e1bde19ca515d86dc6730e68f9ec0c27af12942557ae",
+  "blocking_objections": 0,
+  "candidate": "ffec37712882c60676a72caef5d91c391747c4b9",
+  "completed_reviewers": 3,
+  "distinct_model_variants": 2,
+  "invalidated_by_rebase": true,
+  "not_fresh_context": true,
+  "not_multi_vendor": true,
+  "provider_count": 1,
+  "prompt_sha256": "f27576343bafa76f28bccb027328b678c99d60b0c67ffff5440faea067868567",
+  "reason": "origin/main advanced to 35b0ad6e54f31f33416a7baaa7aa51cbdfccd92f; the approvals remain historical but cannot authorize the rebased head",
+  "result": "INVALIDATED_BY_REBASE",
+  "unavailable_requested_model": "gpt-5.5",
+  "verdicts": [
+    "APPROVE",
+    "APPROVE",
+    "APPROVE"
+  ]
+}

@@ -165,22 +165,22 @@ OPEN_RISKS:
 READY_FOR_PR: YES|NO
 ```
 
-ARTEFACT — .superpowers/sdd/DATA-003/review-35b0ad6..fdf6a20.diff :
-# Review package: 35b0ad6e54f31f33416a7baaa7aa51cbdfccd92f..fdf6a20f965fe48a1e2922491f2e479c801c8a1f
+ARTEFACT — .superpowers/sdd/DATA-003/review-b29793b..ffec377.diff :
+# Review package: b29793bbf538c2320ae6beaee9cc51f62d6713c4..ffec37712882c60676a72caef5d91c391747c4b9
 
 ## Commits
-fdf6a20 [DATA-003] Restaurer le mode exact du key store
-1b34a2d [DATA-003] Sécuriser les parents des stores OpenBao
-7f9c14f [DATA-003] Durcir le coffre et les répertoires imbriqués
-14eb17d [DATA-003] Expliciter les branches de sécurité
-97b436b [DATA-003] Supporter les umasks restrictifs
-f03d65d [DATA-003] Durcir les chemins du bootstrap secret
-3a0d642 [DATA-003] Sérialiser le bootstrap des secrets
-c8c52c1 [DATA-003] Rompre sûrement les hardlinks de secrets
-106074b [DATA-003] Neutraliser les assertions de secrets
-fcb4977 [DATA-003] Documenter l'ouverture sécurisée du secret
-7906ba7 [DATA-003] Durcir la correction du mode des secrets
-0bee733 [DATA-003] Sécuriser les écritures atomiques de secrets
+ffec377 [DATA-003] Restaurer le mode exact du key store
+90ee4b4 [DATA-003] Sécuriser les parents des stores OpenBao
+b4d26b7 [DATA-003] Durcir le coffre et les répertoires imbriqués
+4aa5d51 [DATA-003] Expliciter les branches de sécurité
+801c2c3 [DATA-003] Supporter les umasks restrictifs
+3d76edd [DATA-003] Durcir les chemins du bootstrap secret
+97dd569 [DATA-003] Sérialiser le bootstrap des secrets
+1179336 [DATA-003] Rompre sûrement les hardlinks de secrets
+bd14bf3 [DATA-003] Neutraliser les assertions de secrets
+20f31b5 [DATA-003] Documenter l'ouverture sécurisée du secret
+dcc872b [DATA-003] Durcir la correction du mode des secrets
+d0a69bf [DATA-003] Sécuriser les écritures atomiques de secrets
 
 ## Files changed
  src/forgeai/bootstrap/secrets.py   |  87 ++--
@@ -2529,4 +2529,3 @@ index 11cbef5..7213c22 100644
 +            )
 +        assert stat.S_IMODE(candidate.stat().st_mode) == 0o700
 +    assert stat.S_IMODE(target.stat().st_mode) == 0o600
-
