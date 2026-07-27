@@ -172,6 +172,39 @@ def test_deux_authorizations_dont_la_premiere_valide_sont_refusees(monkeypatch):
     assert response == (401, b'{"error": "jeton requis ou invalide"}')
 
 
+def test_authorization_non_ascii_est_refusee_sans_interrompre_http(monkeypatch, capfd):
+    """Un en-tête Latin-1 malformé reçoit la réponse 401 générique, sans crash du handler."""
+    configured_token = secrets.token_urlsafe(32)
+    monkeypatch.setattr(web_server, "_WEB_TOKEN", configured_token)
+    server = build_server("0.0.0.0", 0)
+    threading.Thread(target=server.serve_forever, daemon=True).start()
+    connection = http.client.HTTPConnection("127.0.0.1", server.server_address[1], timeout=10)
+    try:
+        connection.putrequest("POST", "/api/deploy")
+        connection.putheader("Content-Type", "application/json")
+        connection.putheader("Content-Length", "2")
+        connection.putheader("Authorization", "Bearer caf\xe9")
+        connection.endheaders(b"{}")
+        reply = connection.getresponse()
+        response = (reply.status, reply.read())
+    finally:
+        connection.close()
+        server.shutdown()
+        server.server_close()
+
+    assert response == (401, b'{"error": "jeton requis ou invalide"}')
+    assert "Traceback" not in capfd.readouterr().err
+
+
+def test_build_server_capture_ladresse_reellement_liee():
+    """La politique d'authentification conserve l'adresse du socket, pas le nom demandé."""
+    server = build_server("localhost", 0)
+    try:
+        assert server.forgeai_bind_host == server.server_address[0]
+    finally:
+        server.server_close()
+
+
 @pytest.mark.parametrize("path", ["/api/deploy", "/api/nodes", "/api/nodes/prepare", "/api/models"])
 def test_bind_non_loopback_exige_bearer_meme_avec_host_loopback(live_non_loopback, path):
     """Le bind public exige un Bearer, même si le client joint le socket via loopback."""
