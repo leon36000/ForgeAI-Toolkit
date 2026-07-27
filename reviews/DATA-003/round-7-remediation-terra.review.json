@@ -1,0 +1,11 @@
+{
+  "artifact_sha256": "89d6b0351ea92994473600034a91dad94d557154baa2be666ce56a39d1d35e94",
+  "model": "gpt-5.6-terra",
+  "not_fresh_context": true,
+  "not_multi_vendor": true,
+  "objections": [],
+  "provider": "OpenAI",
+  "range": "01a418d9d22049bc9cd8a81de0ed16050196c304..601aabdffedf73de22aaa53ca4cd153195b5dc04",
+  "role": "targeted-remediation",
+  "verdict": "APPROVE"
+}

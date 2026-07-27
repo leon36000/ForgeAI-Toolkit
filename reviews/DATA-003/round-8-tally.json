@@ -1,0 +1,11 @@
+{
+  "artifact_sha256": "2c1b16adf98b0bb02d74e193f7aae5add0c52d26d5f3858c8dac36e375fd7742",
+  "candidate": "601aabdffedf73de22aaa53ca4cd153195b5dc04",
+  "completed_reviewers": 0,
+  "invalidated_by_rebase": true,
+  "not_fresh_context": true,
+  "not_multi_vendor": true,
+  "prompt_sha256": "07ff0402b5af91d300433369aecde5a9f7da0ae23b932fa53937e3c76b6c8fb9",
+  "reason": "origin/main advanced to 0547cca2417ba860851dce1f89a39073dca5b762; all in-flight reviews were interrupted before use",
+  "result": "INVALIDATED"
+}

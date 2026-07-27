@@ -1,0 +1,11 @@
+{
+  "artifact_sha256": "18e15619fa4b173b2775a0a1800561c4a74252888bcf9913d394e9d0e36f2217",
+  "model": "gpt-5.6-sol",
+  "not_fresh_context": true,
+  "not_multi_vendor": true,
+  "objections": [],
+  "prompt_sha256": "5224937858772c59dd237e71cd9dd19feb3463cbdbb8606a8c8030bb4e9ed441",
+  "provider": "OpenAI",
+  "role": "security",
+  "verdict": "APPROVE"
+}

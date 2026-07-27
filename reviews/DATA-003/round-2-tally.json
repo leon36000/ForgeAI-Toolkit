@@ -1,0 +1,22 @@
+{
+  "blocking_objections": 0,
+  "controller_remediation_required": true,
+  "deterministic_rule": "Prompt verdict threshold approves when no critique/eleve objection exists; controller additionally requires zero unresolved real objections.",
+  "medium_objections": 1,
+  "model_variants": [
+    "gpt-5.6-sol",
+    "gpt-5.6-terra"
+  ],
+  "not_multi_vendor": true,
+  "prompt_sha256": "8315669583affc6f86e2d306c2a40fcf6b57ee8433387110f1929f499c74f7ee",
+  "provider_count": 1,
+  "providers": [
+    "OpenAI"
+  ],
+  "result": "APPROVE_WITH_MEDIUM_OBJECTION",
+  "reviewer_count": 3,
+  "verdicts": {
+    "APPROVE": 3,
+    "REJECT": 0
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "artifact_sha256": "c27f270f53dd8cd33e2ad2f078c9b2716f44f0ccc1e397b35b09fbd3fd064f1f",
+  "blocking_objections": 1,
+  "completed_reviewers": 3,
+  "not_fresh_context": true,
+  "not_multi_vendor": true,
+  "provider_count": 1,
+  "prompt_sha256": "d88212e0e6bc7722152a19907c4ad2d25c447ac7992d709af98896e195e735a2",
+  "result": "REJECT",
+  "verdicts": [
+    "REJECT",
+    "APPROVE",
+    "APPROVE"
+  ]
+}

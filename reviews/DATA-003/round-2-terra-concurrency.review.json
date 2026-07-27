@@ -1,0 +1,17 @@
+{
+  "artifact_sha256": "4a832040f4b21274c82bcb1b9ff7f6e521cc2c36720ff059ed419b1feb2764ea",
+  "model": "gpt-5.6-terra",
+  "not_multi_vendor": true,
+  "objections": [
+    {
+      "desc": "La validation st_nlink == 1 n'est pas atomique avec fchmod. Si key_path est déjà un hardlink, sa propre entrée peut être supprimée après os.open mais avant fstat; le descripteur voit alors un lien unique — l'alias externe restant — et fchmod modifie cet inode externe.",
+      "file": "src/forgeai/models/vault.py",
+      "line": 82,
+      "severity": "moyen"
+    }
+  ],
+  "prompt_sha256": "8315669583affc6f86e2d306c2a40fcf6b57ee8433387110f1929f499c74f7ee",
+  "provider": "OpenAI",
+  "role": "concurrency",
+  "verdict": "APPROVE"
+}

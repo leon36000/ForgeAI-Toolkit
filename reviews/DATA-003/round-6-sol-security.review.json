@@ -1,0 +1,18 @@
+{
+  "artifact_sha256": "c27f270f53dd8cd33e2ad2f078c9b2716f44f0ccc1e397b35b09fbd3fd064f1f",
+  "model": "gpt-5.6-sol",
+  "not_fresh_context": true,
+  "not_multi_vendor": true,
+  "objections": [
+    {
+      "desc": "FileSecretStore.write crée un parent absent avec Path.mkdir(parents=True) sans mode sécurisé. Sous umask 0000, le répertoire est créé en 0777 et un autre utilisateur local peut supprimer ou remplacer app_token.json malgré son mode 0600.",
+      "file": "src/forgeai/deploy/openbao_flow.py",
+      "line": 70,
+      "severity": "eleve"
+    }
+  ],
+  "prompt_sha256": "d88212e0e6bc7722152a19907c4ad2d25c447ac7992d709af98896e195e735a2",
+  "provider": "OpenAI",
+  "role": "security",
+  "verdict": "REJECT"
+}

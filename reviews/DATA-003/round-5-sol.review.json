@@ -1,0 +1,30 @@
+{
+  "artifact_sha256": "2fa0c3413ec50b266c1b215f5f44343fc73fba33189cba515d518f0800cf7805",
+  "model": "gpt-5.6-sol",
+  "not_fresh_context": true,
+  "not_multi_vendor": true,
+  "objections": [
+    {
+      "desc": "Vault._load utilise self.path.exists() puis self.path.read_text() avant le contrôle anti-symlink de _save. Un vault.json symlink est donc suivi et son référent lu; un symlink vers FIFO peut bloquer indéfiniment.",
+      "file": "src/forgeai/models/vault.py",
+      "line": null,
+      "severity": "eleve"
+    },
+    {
+      "desc": "Vault._save conserve self.path.parent.mkdir(parents=True, exist_ok=True) suivi de os.chmod(self.path.parent, 0o700). Un parent nouvellement créé peut être temporairement trop ouvert et un parent symlink redirige chmod et publication.",
+      "file": "src/forgeai/models/vault.py",
+      "line": null,
+      "severity": "eleve"
+    },
+    {
+      "desc": "Deux premiers bootstraps concurrents vers un out_dir imbriqué absent sous umask 0777 peuvent encore racer lorsqu'un parent intermédiaire existe momentanément en mode 0000.",
+      "file": "src/forgeai/bootstrap/secrets.py",
+      "line": null,
+      "severity": "moyen"
+    }
+  ],
+  "prompt_sha256": "0409cfc6cd10f754dc36b1098f3ade79421979cfe029938b5953de0d53c97bd1",
+  "provider": "OpenAI",
+  "role": "security",
+  "verdict": "REJECT"
+}

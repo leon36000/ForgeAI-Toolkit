@@ -9,12 +9,17 @@ from __future__ import annotations
 
 import base64
 import json
-import os
+import stat
 import subprocess
 import time
 from collections.abc import Callable
 from pathlib import Path
 
+from forgeai.models.vault import (
+    atomic_write_secret_text,
+    prepare_secure_directory,
+    read_secret_text,
+)
 from forgeai.secrets.openbao_init import ensure_openbao_ready, http_transport
 
 
@@ -31,17 +36,19 @@ class FileKeyStore:
         self._root_path = Path(root_path)
 
     def read(self) -> dict | None:
-        if not self._unseal_path.exists() or not self._root_path.exists():
+        try:
+            unseal = read_secret_text(self._unseal_path).strip()
+            root = read_secret_text(self._root_path).strip()
+        except FileNotFoundError:
             return None
-        unseal = self._unseal_path.read_text(encoding="utf-8").strip()
-        root = self._root_path.read_text(encoding="utf-8").strip()
         if not unseal or not root:
             return None
         return {"unseal_key": unseal, "root_token": root}
 
     def write(self, data: dict) -> None:
+        prepare_secure_directory(self._root_path.parent, final_mode=0o700)
+        prepare_secure_directory(self._unseal_path.parent, final_mode=0o711)
         # root_token -> 0600, ISOLÉ dans un fichier séparé jamais monté à l'unsealer (owner seul).
-        self._root_path.parent.mkdir(parents=True, exist_ok=True)
         _write_file(self._root_path, data["root_token"], 0o600)
         # unseal_key -> 0644 : le conteneur openbao-unsealer tourne sous l'UID NON-root de l'image
         # (≠ UID de l'opérateur qui écrit), via un bind-mount hôte -> il ne pourrait PAS lire un 0600
@@ -49,7 +56,6 @@ class FileKeyStore:
         # co-localisée avec le STORAGE scellé sur le même hôte (MÊME frontière de confiance : qui lit
         # l'hôte a déjà les deux) -> 0644 n'élargit pas la surface au-delà du contrôle d'accès au nœud
         # (documenté). Le ROOT reste 0600 et isolé (l'unsealer ne le voit jamais).
-        self._unseal_path.parent.mkdir(parents=True, exist_ok=True)
         _write_file(self._unseal_path, data["unseal_key"], 0o644)
 
 
@@ -60,21 +66,32 @@ class FileSecretStore:
         self._path = Path(path)
 
     def read(self) -> dict | None:
-        if not self._path.exists():
+        try:
+            text = read_secret_text(self._path).strip()
+        except FileNotFoundError:
             return None
-        text = self._path.read_text(encoding="utf-8").strip()
         return json.loads(text) if text else None
 
     def write(self, data: dict) -> None:
-        self._path.parent.mkdir(parents=True, exist_ok=True)
+        try:
+            parent_state = self._path.parent.lstat()
+        except FileNotFoundError:
+            parent_state = None
+        if (
+            parent_state is not None
+            and stat.S_ISDIR(parent_state.st_mode)
+            and stat.S_IMODE(parent_state.st_mode) & 0o200 == 0
+        ):
+            raise OSError("le répertoire du secret n'est pas inscriptible")
+        prepare_secure_directory(self._path.parent, final_mode=0o700)
         _write_file(self._path, json.dumps(dict(data)), 0o600)  # token opérateur, owner seul
 
 
 def _write_file(path: Path, content: str, mode: int) -> None:
     """Écrit `content` avec le mode donné (0600 pour les secrets owner-seul ; 0644 pour l'unseal_key
     que le conteneur unsealer non-root doit lire)."""
-    path.write_text(content if content.endswith("\n") else content + "\n", encoding="utf-8")
-    os.chmod(path, mode)
+    payload = content if content.endswith("\n") else content + "\n"
+    atomic_write_secret_text(path, payload, mode=mode)
 
 
 def prepare_key_store(keys_dir: Path) -> Path:
@@ -85,11 +102,10 @@ def prepare_key_store(keys_dir: Path) -> Path:
     pouvoir le LISTER (pas de bit read pour les autres). Le répertoire ne contient QUE l'unseal_key (le
     root est ailleurs, 0600). Idempotent (create-if-absent). Renvoie le chemin."""
     d = Path(keys_dir)
-    d.mkdir(parents=True, exist_ok=True)
     # 0o711 : traversable par l'UID non-root du conteneur unsealer (pour lire /keys/unseal_key par son
     # nom) MAIS non LISTABLE par les autres (pas de bit read). Risque accepté et documenté (S2612) : la
     # clé d'unseal est co-localisée avec le storage scellé sur le même hôte (même frontière de confiance).
-    os.chmod(d, 0o711)  # nosec B103
+    prepare_secure_directory(d, final_mode=0o711)
     return d
 
 
