@@ -6,8 +6,8 @@
 - Risque : `T2`
 - Branche : `security/DATA-003-secure-atomic-secret-writer`
 - Base initiale : `2ed262e2c31a311134ff63c1336e50ddb23d0555`
-- Base finale après synchronisation : `0547cca2417ba860851dce1f89a39073dca5b762`
-- Candidat fonctionnel revu : `5da95e6f3c3d9fb75971a4113df4262ae50e6d27`
+- Base finale après synchronisation : `b29793bbf538c2320ae6beaee9cc51f62d6713c4`
+- Candidat fonctionnel revu : `ffec37712882c60676a72caef5d91c391747c4b9`
 - Issue : package externe, aucune issue GitHub à créer
 - Claim Codex : tracé dans le ledger PROOF externe
 
@@ -73,14 +73,15 @@ messages d’assertion contenant un secret, republication concurrente,
 répertoires/`.env` non sécurisés, umask restrictif, lectures et parents du
 coffre, parents des stores OpenBao, puis restauration exacte de `0711`.
 
-Après l’avancement de `origin/main` par sept commits sans chevauchement, les
-douze commits DATA-003 ont été rebasés proprement. Les revues en cours sur
-l’ancien SHA ont été invalidées et toutes les preuves ont été rejouées.
+Après un premier avancement de `origin/main` par sept commits, puis un second
+par deux commits, toujours sans chevauchement, les douze commits DATA-003 ont
+été rebasés proprement. Chaque revue portant un ancien SHA a été invalidée et
+toutes les preuves ont été rejouées.
 
 Le pack final rebased porte les hashes :
 
-- artefact : `024aae326499a30a9e87947bdf2a2c3560b7619df0e86e956d051e44dcc17d11` ;
-- prompt : `560885a968996ed6d0e571ee96880ab64290c013fa2edc0b7c646211ca70e845`.
+- artefact : `2b070d753c38aa693a33e1bde19ca515d86dc6730e68f9ec0c27af12942557ae` ;
+- prompt : `f27576343bafa76f28bccb027328b678c99d60b0c67ffff5440faea067868567`.
 
 Trois revues OpenAI ont rendu `APPROVE` sans objection bloquante : deux
 `gpt-5.6-sol` et une `gpt-5.6-terra`. Ces revues réutilisent des contextes,
@@ -90,12 +91,12 @@ validation multi-vendeurs. Le modèle `gpt-5.5` demandé n’était pas disponib
 ## Preuves locales finales
 
 - suite ciblée exacte : `74 passed` ;
-- suite complète : PASS, couverture globale `89,84 %` (seuil `85 %`) ;
+- suite complète : PASS, couverture globale `89,87 %` (seuil `85 %`) ;
 - `forgeai/core/registre.py` : `98 %` (seuil `95 %`) ;
 - no-stub : `264` fichiers, zéro violation ;
 - catalogue : `1 577` entrées, zéro ambiguïté ;
 - registres existants et revues scellées existantes : PASS ;
-- Gitleaks `8.30.1` : `405` commits, `7,77 MB`, zéro fuite ;
+- Gitleaks `8.30.1` : zéro fuite sur la tête complète scannée ;
 - gate PROOF : périmètre, secrets et stubs propres ;
 - Ralph Wiggum gouvernée : complétion à l’itération `1/3`, registre à deux
   entrées et chaîne valide.
@@ -108,7 +109,7 @@ processus multithreadé ; aucun test n’a échoué.
 
 Dans un worktree détaché éphémère, les douze commits ont été inversés avec
 `git revert --no-commit`, du plus récent au plus ancien. L’index et le worktree
-obtenus sont identiques à la base finale `0547cca…`. Les 29 tests ciblés de la
+obtenus sont identiques à la base finale `b29793b…`. Les 29 tests ciblés de la
 base passent, puis le worktree de preuve est supprimé.
 
 ## Gates externes

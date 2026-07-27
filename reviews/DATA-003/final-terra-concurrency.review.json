@@ -1,11 +1,11 @@
 {
-  "artifact_sha256": "024aae326499a30a9e87947bdf2a2c3560b7619df0e86e956d051e44dcc17d11",
-  "candidate": "5da95e6f3c3d9fb75971a4113df4262ae50e6d27",
+  "artifact_sha256": "2b070d753c38aa693a33e1bde19ca515d86dc6730e68f9ec0c27af12942557ae",
+  "candidate": "ffec37712882c60676a72caef5d91c391747c4b9",
   "model": "gpt-5.6-terra",
   "not_fresh_context": true,
   "not_multi_vendor": true,
   "objections": [],
-  "prompt_sha256": "560885a968996ed6d0e571ee96880ab64290c013fa2edc0b7c646211ca70e845",
+  "prompt_sha256": "f27576343bafa76f28bccb027328b678c99d60b0c67ffff5440faea067868567",
   "provider": "OpenAI",
   "role": "concurrency",
   "verdict": "APPROVE"
