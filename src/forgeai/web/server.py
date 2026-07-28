@@ -446,6 +446,19 @@ def _is_loopback_host(value: str) -> bool:
         return False
 
 
+def _bearer_matches(auth_header: str | None, token: str | None) -> bool:
+    """Compare un Bearer ASCII valide en temps constant; toute autre forme est refusée."""
+    if not token:
+        return False
+    candidate = auth_header or ""
+    expected = "Bearer " + token
+    return (
+        candidate.isascii()
+        and expected.isascii()
+        and hmac.compare_digest(candidate, expected)
+    )
+
+
 def authorize_mutation(*, origin: str | None, host: str | None, auth_header: str | None,
                        bind_host: str, token: str | None,
                        sec_fetch_site: str | None = None) -> tuple[bool, int]:
@@ -463,16 +476,8 @@ def authorize_mutation(*, origin: str | None, host: str | None, auth_header: str
     Les clients non-navigateur (CLI, tests) n'envoient pas Sec-Fetch-Site → non pénalisés (ne sont pas
     un vecteur CSRF : pas de « confused deputy »)."""
     if token or not _is_loopback_host(bind_host):
-        candidate = auth_header or ""
-        expected = "Bearer " + token if token else ""
-        if (
-            token
-            and candidate.isascii()
-            and expected.isascii()
-            and hmac.compare_digest(candidate, expected)
-        ):
-            return (True, 0)
-        return (False, 401)
+        bearer_ok = _bearer_matches(auth_header, token)
+        return (bearer_ok, 0 if bearer_ok else 401)
 
     if sec_fetch_site and sec_fetch_site.strip().lower() in {"cross-site", "same-site", "cross-origin"}:
         return (False, 403)
