@@ -1,4 +1,4 @@
-# WEB-001 — Manifeste du prompt de revue finale
+# WEB-001 — Manifeste du prompt de revue finale — round 2 supersédé
 
 - Round: `2`
 - Base: `828714b25895b7f6a49e16bed0ae6b22366ce030`
