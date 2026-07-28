@@ -1,0 +1,20 @@
+{
+  "artifact_sha256": "b7d67909e2b95fb5dc221b3bc04fa7df74f59a50574f179ec315bfb8221147ff",
+  "blocking_objections": 0,
+  "candidate": "0488e3ebbd029d794acf051db75c17dd672366fe",
+  "completed_reviewers": 3,
+  "distinct_model_variants": 2,
+  "not_fresh_context": false,
+  "not_multi_vendor": true,
+  "provider_count": 1,
+  "prompt_exact_external": true,
+  "prompt_evidence_sha256": "d2ca0644dff3897dc340aa51e4b934f81038f521e61c4b4ba393779edcfed9ae",
+  "prompt_sha256": "dbbbdf96d3ef849743148bb7ac2615327ded3cb5b63614462174d07a97d11f59",
+  "result": "APPROVE",
+  "unavailable_requested_model": "gpt-5.5",
+  "verdicts": [
+    "APPROVE",
+    "APPROVE",
+    "APPROVE"
+  ]
+}

@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import hmac
 import importlib.resources
+import ipaddress
 import json
 import os
 import re
@@ -254,9 +255,7 @@ _NODE_KEYS_DIR: Path | None = None
 # Hook déploiement : remplace la commande wizard par défaut dans les tests.
 _DEPLOY_CMD: list[str] | None = None
 
-# Garde d'accès web (FAI-0001) : hôte d'écoute réel (posé par build_server) + jeton optionnel.
-# Jeton facultatif : requis sur les routes mutantes seulement s'il est défini (utile en bind non-loopback).
-_WEB_BIND_HOST: str = "127.0.0.1"
+# Garde d'accès web (FAI-0001) : jeton capturé par chaque instance dans build_server.
 _WEB_TOKEN: str | None = os.environ.get("FORGEAI_WEB_TOKEN") or None
 _SELECTION_ITEM_RE = re.compile(r"^[A-Za-z0-9._/:-]{1,200}$")
 
@@ -434,26 +433,51 @@ def _normalize_host(value: str | None) -> str | None:
     return value.lower()
 
 
+def _is_loopback_host(value: str) -> bool:
+    """Classe un bind comme loopback sans résoudre de nom réseau."""
+    hostname = _normalize_host(value)
+    if hostname == "localhost":
+        return True
+    if hostname is None:
+        return False
+    try:
+        return ipaddress.ip_address(hostname).is_loopback
+    except ValueError:
+        return False
+
+
+def _bearer_matches(auth_header: str | None, token: str | None) -> bool:
+    """Compare un Bearer ASCII valide en temps constant; toute autre forme est refusée."""
+    if not token:
+        return False
+    candidate = auth_header or ""
+    expected = "Bearer " + token
+    return (
+        candidate.isascii()
+        and expected.isascii()
+        and hmac.compare_digest(candidate, expected)
+    )
+
+
 def authorize_mutation(*, origin: str | None, host: str | None, auth_header: str | None,
                        bind_host: str, token: str | None,
                        sec_fetch_site: str | None = None) -> tuple[bool, int]:
     """Autorise une requête MUTANTE. Retour (autorisé, code_si_refus) : 403 CSRF/rebinding, 401 jeton.
 
-    - jeton (prioritaire) : si `token` est défini, un `Authorization: Bearer <token>` valide
-      (comparaison temps constant) autorise IMMÉDIATEMENT — `Authorization` n'est pas un en-tête
-      CORS-safelisted, donc un Bearer valide ne peut pas être un vecteur CSRF/rebinding ; c'est ce
-      qui rend possible l'accès distant authentifié (--host 0.0.0.0). Jeton défini mais absent ou
-      invalide → 401, sans autre contrôle ;
+    - jeton (prioritaire) : exigé si `token` est défini ou si le bind n'est pas loopback. Un
+      `Authorization: Bearer <token>` valide (comparaison temps constant) autorise IMMÉDIATEMENT —
+      `Authorization` n'est pas un en-tête CORS-safelisted, donc un Bearer valide ne peut pas être
+      un vecteur CSRF/rebinding ; c'est ce qui rend possible l'accès distant authentifié
+      (--host 0.0.0.0). Jeton absent, invalide ou non configuré sur un bind réseau → 401 ;
     - anti-CSRF (métadonnées navigateur) : `Sec-Fetch-Site` cross-site/same-site → refus, MÊME si Origin
       est absent (les navigateurs modernes envoient cet en-tête sur toutes les requêtes) ;
     - anti-CSRF (repli) : si Origin présent, son hôte doit être loopback ou l'hôte lié ;
     - anti DNS-rebinding : le Host doit être loopback ou l'hôte lié.
     Les clients non-navigateur (CLI, tests) n'envoient pas Sec-Fetch-Site → non pénalisés (ne sont pas
     un vecteur CSRF : pas de « confused deputy »)."""
-    if token:
-        if hmac.compare_digest(auth_header or "", "Bearer " + token):
-            return (True, 0)
-        return (False, 401)
+    if token or not _is_loopback_host(bind_host):
+        bearer_ok = _bearer_matches(auth_header, token)
+        return (bearer_ok, 0 if bearer_ok else 401)
 
     if sec_fetch_site and sec_fetch_site.strip().lower() in {"cross-site", "same-site", "cross-origin"}:
         return (False, 403)
@@ -817,13 +841,14 @@ class ForgeAIHandler(BaseHTTPRequestHandler):
     def _guard_mutation(self) -> bool:
         """Garde anti-CSRF / anti DNS-rebinding / jeton sur les routes mutantes.
         Envoie 403/401 et retourne False si la requête est refusée."""
+        auth_values = self.headers.get_all("Authorization") or []
         allowed, code = authorize_mutation(
             origin=self.headers.get("Origin"),
             host=self.headers.get("Host"),
-            auth_header=self.headers.get("Authorization"),
-            bind_host=_WEB_BIND_HOST,
-            token=_WEB_TOKEN,
+            auth_header=auth_values[0] if len(auth_values) == 1 else None,
+            bind_host=self.server.forgeai_bind_host,
             sec_fetch_site=self.headers.get("Sec-Fetch-Site"),
+            **{"token": self.server.forgeai_auth_value},
         )
         if not allowed:
             msg = "jeton requis ou invalide" if code == 401 else "origine/hôte non autorisé"
@@ -1139,10 +1164,11 @@ class ForgeAIHandler(BaseHTTPRequestHandler):
 
 
 def build_server(host: str = "127.0.0.1", port: int = 8765) -> ThreadingHTTPServer:
-    global _WEB_BIND_HOST
-    _WEB_BIND_HOST = host  # le garde de mutation autorise Host/Origin = loopback OU cet hôte lié
     _load_deploy_state()  # reporte le dernier statut de deploy connu après un restart (#139)
-    return ThreadingHTTPServer((host, port), ForgeAIHandler)
+    server = ThreadingHTTPServer((host, port), ForgeAIHandler)
+    server.forgeai_bind_host = server.server_address[0]
+    server.forgeai_auth_value = _WEB_TOKEN
+    return server
 
 
 def serve(
