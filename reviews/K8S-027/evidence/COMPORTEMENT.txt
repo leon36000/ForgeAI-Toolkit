@@ -1,0 +1,23 @@
+# K8S-027 — quotas derives du budget REEL du plan (execution reelle)
+
+## Budget du plan (somme des ressources_effectives, RES-012B)
+  ollama   llm        limits   4000m /    8Gi
+  qdrant   db         limits   1000m /    2Gi
+  litellm  sidecar    limits    500m /  512Mi
+
+## ResourceQuota emis
+    limits.cpu: 5500m
+    limits.memory: 10752Mi
+    requests.cpu: 1350m
+    requests.memory: 4736Mi
+
+## LimitRange emis (type: Container )
+    default       : {'cpu': '250m', 'memory': '256Mi'}
+    defaultRequest: {'cpu': '50m', 'memory': '64Mi'}
+    => sans lui, un conteneur sans ressources declarees echapperait au quota
+
+## Garde contre le depassement de capacite
+  cluster trop petit (2000m/4096Mi)    -> REFUSE
+      ERR_QUOTA_CPU_DEPASSE: le plan requiert 5500m CPU mais le cluster n'en déclare que 2000m.
+  cluster suffisant (16000m/32768Mi)   -> ACCEPTE
+  sans capacite declaree               -> ACCEPTE (retro-compat)

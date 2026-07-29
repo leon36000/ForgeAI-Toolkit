@@ -343,3 +343,143 @@ def test_service_sans_dependance_ne_recoit_aucune_sortie():
                   if p["spec"].get("podSelector", {}).get("matchLabels", {}).get("app") == "isole"]
     assert not any(p["spec"].get("egress") for p in pour_isole), \
         "aucune dépendance déclarée : aucune sortie ne doit être ouverte"
+
+
+# ---------------------------------------------------------------------------
+# K8S-027 / FAI-U-027 — quotas et limites par namespace, dérivés du budget réel du plan.
+# Aucun ResourceQuota ni LimitRange n'était émis : rien ne bornait ce qu'un namespace
+# pouvait consommer, et rien ne refusait un plan dépassant la capacité du cluster AVANT
+# application. Le budget est calculable depuis RES-012B (ressources par service).
+# ---------------------------------------------------------------------------
+from forgeai.core.models import CapaciteCluster, QuotaError
+
+
+def _plan_trois_services():
+    """llm 4000m/8Gi + db 1000m/2Gi + sidecar 500m/512Mi = 5500m / 10752Mi de limites."""
+    return _plan([
+        _svc(name="ollama", image="o:1", host_port=1, container_port=1, resource_class="llm"),
+        _svc(name="qdrant", image="q:1", host_port=2, container_port=2, resource_class="db"),
+        _svc(name="litellm", image="l:1", host_port=3, container_port=3, resource_class="sidecar"),
+    ])
+
+
+def _quota(manifeste: str) -> dict:
+    for d in yaml.safe_load_all(manifeste):
+        if d and d.get("kind") == "ResourceQuota":
+            return d
+    raise AssertionError("aucun ResourceQuota dans le manifeste")
+
+
+def _limitrange(manifeste: str) -> dict:
+    for d in yaml.safe_load_all(manifeste):
+        if d and d.get("kind") == "LimitRange":
+            return d
+    raise AssertionError("aucun LimitRange dans le manifeste")
+
+
+def test_quota_derive_du_budget_reel_du_plan():
+    """Critère 1 — le quota doit refléter ce que le plan consomme VRAIMENT, pas un chiffre
+    arbitraire. Il est donc dérivé de la somme des `ressources_effectives` (RES-012B)."""
+    out = render_k3s(_plan_trois_services())
+    spec = _quota(out)["spec"]["hard"]
+    assert spec["limits.cpu"] == "5500m", f"somme des limites CPU : {spec['limits.cpu']}"
+    assert spec["limits.memory"] == "10752Mi", f"somme des limites mémoire : {spec['limits.memory']}"
+    assert "requests.cpu" in spec and "requests.memory" in spec
+
+
+def test_limitrange_present_et_coherent():
+    """Critère 1 (suite) — le LimitRange borne un conteneur qui n'aurait déclaré aucune
+    ressource ; sans lui, un pod sans limites échappe au quota et l'épuise."""
+    lr = _limitrange(render_k3s(_plan_trois_services()))
+    limites = lr["spec"]["limits"][0]
+    assert limites["type"] == "Container"
+    assert "default" in limites and "defaultRequest" in limites
+
+
+def test_le_quota_n_empeche_pas_un_bundle_valide():
+    """Critère 2 — GARDE CONTRE LA SOUS-ALLOCATION. Un quota calculé au plus juste bloquerait
+    le déploiement qu'il est censé encadrer : le quota doit être >= au besoin du plan."""
+    out = render_k3s(_plan_trois_services())
+    spec = _quota(out)["spec"]["hard"]
+    cpu_quota = int(spec["limits.cpu"].rstrip("m"))
+    mem_quota = int(spec["limits.memory"].rstrip("Mi"))
+    assert cpu_quota >= 5500, "le quota CPU doit couvrir le besoin du plan"
+    assert mem_quota >= 10752, "le quota mémoire doit couvrir le besoin du plan"
+
+
+def test_plan_depassant_la_capacite_est_refuse_avant_application():
+    """Critère 3 — un plan qui dépasse la capacité du cluster doit être refusé AVANT kubectl,
+    avec sa cause chiffrée. Sinon les pods restent Pending sans explication."""
+    petite = CapaciteCluster(cpu_millicores=2000, memoire_mib=4096)
+    with pytest.raises(QuotaError) as exc:
+        render_k3s(_plan_trois_services(), capacite=petite)
+    message = str(exc.value)
+    assert "5500" in message and "2000" in message, \
+        f"l'erreur doit chiffrer le besoin ET la capacité : {message}"
+
+
+def test_plan_tenant_dans_la_capacite_est_accepte():
+    """Contrôle positif : une capacité suffisante laisse passer le plan."""
+    large = CapaciteCluster(cpu_millicores=16000, memoire_mib=32768)
+    out = render_k3s(_plan_trois_services(), capacite=large)
+    assert _quota(out)["spec"]["hard"]["limits.cpu"] == "5500m"
+
+
+def test_sans_capacite_declaree_aucun_refus():
+    """Rétro-compatibilité : sans capacité fournie, on ne peut rien vérifier — le rendu
+    reste celui d'avant. La vérification est une capacité ajoutée, pas une rupture."""
+    out = render_k3s(_plan_trois_services())
+    assert _quota(out)["spec"]["hard"]["limits.cpu"] == "5500m"
+
+
+def test_budget_incomplet_leve_au_lieu_de_sous_compter():
+    """Objection de revue (Gemini) : `_budget_du_plan` ignorait SILENCIEUSEMENT une catégorie
+    dont une seule des deux ressources manquait. Un budget sous-compté produit un quota trop
+    petit — exactement la sous-allocation que le critère 2 interdit, et qui bloquerait le
+    déploiement que le quota est censé encadrer.
+
+    L'état est inatteignable via `ServiceSpec` (RES-012B valide en fail-fast), mais une branche
+    défensive qui fausse un budget en silence est PIRE que pas de branche du tout : elle
+    convertit un état impossible en quota faux plutôt qu'en erreur visible."""
+    from forgeai.renderers.k3s import _budget_du_plan
+    svc = _svc(name="casse", image="c:1", host_port=1, container_port=1)
+    object.__setattr__(svc, "ressources_effectives",
+                       {"requests": {"cpu": "100m"},          # `memory` absent
+                        "limits": {"cpu": "1000m", "memory": "1Gi"}})
+    plan = _plan([svc])
+    with pytest.raises(ValueError, match="ERR_QUOTA_RESSOURCES_INCOMPLETES"):
+        _budget_du_plan(plan)
+
+
+def test_depassement_memoire_seul_est_exerce():
+    """Objection de DeepSeek : le test de dépassement utilisait un cluster trop petit en CPU ET
+    en mémoire — seule la première branche s'exécutait, `ERR_QUOTA_MEMOIRE_DEPASSEE` n'était
+    jamais atteinte. Ici le CPU suffit largement, seule la mémoire manque."""
+    cap = CapaciteCluster(cpu_millicores=16000, memoire_mib=4096)   # CPU OK, mémoire non
+    with pytest.raises(QuotaError) as exc:
+        render_k3s(_plan_trois_services(), capacite=cap)
+    message = str(exc.value)
+    assert "ERR_QUOTA_MEMOIRE_DEPASSEE" in message
+    assert "10752" in message and "4096" in message, \
+        f"le message doit chiffrer le besoin ET la capacité mémoire : {message}"
+
+
+def test_categorie_a_none_leve_proprement():
+    """Objection de Tencent : `res.get(categorie, {})` renvoie `None` si la clé EXISTE avec la
+    valeur `None` — le `.get("cpu")` qui suit lève alors `AttributeError`, une erreur technique
+    opaque, au lieu du `ValueError` explicite prévu. Un défaut de données doit produire un
+    message qui nomme sa cause, pas une trace d'attribut manquant."""
+    from forgeai.renderers.k3s import _budget_du_plan
+    svc = _svc(name="nul", image="n:1", host_port=1, container_port=1)
+    object.__setattr__(svc, "ressources_effectives", {"requests": None, "limits": None})
+    with pytest.raises(ValueError, match="ERR_QUOTA_RESSOURCES_INCOMPLETES"):
+        _budget_du_plan(_plan([svc]))
+
+
+def test_quota_affirme_les_valeurs_exactes_des_requests():
+    """Objection de Tencent : le test n'affirmait que la PRÉSENCE de `requests.*`, pas leurs
+    valeurs — une somme fausse serait passée inaperçue. llm 1000m/4Gi + db 250m/512Mi +
+    sidecar 100m/128Mi = 1350m / 4736Mi."""
+    spec = _quota(render_k3s(_plan_trois_services()))["spec"]["hard"]
+    assert spec["requests.cpu"] == "1350m"
+    assert spec["requests.memory"] == "4736Mi"

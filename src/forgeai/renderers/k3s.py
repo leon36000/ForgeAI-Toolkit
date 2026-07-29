@@ -12,7 +12,7 @@ import textwrap
 from typing import NamedTuple
 from urllib.parse import urlsplit
 
-from forgeai.core.models import DeploymentPlan, ServiceSpec, NodeInventaire, valider_placement
+from forgeai.core.models import DeploymentPlan, ServiceSpec, NodeInventaire, valider_placement, CapaciteCluster, QuotaError
 from forgeai.renderers._openbao import UNSEAL_SCRIPT as _UNSEAL_SCRIPT
 
 NAMESPACE = "forgeai-minimal"
@@ -733,15 +733,190 @@ def _network_policies(plan: DeploymentPlan) -> str:
     return "".join(parts)
 
 
+# Conversions CPU/mémoire : la somme du budget doit être NUMÉRIQUE. Additionner
+# des chaînes comme "4000m" et "1" n'a aucun sens — Kubernetes accepte ces deux
+# notations pour 4000 milliCPU, mais une addition Python donnerait "4000m1".
+# On normalise donc tout en entiers (milliCPU, MiB) avant de sommer.
+_MIB_PER_GIB = 1024
+
+
+def _cpu_en_millicores(valeur: str) -> int:
+    """Convertit une valeur CPU Kubernetes (``"250m"`` ou ``"2"``) en milliCPU."""
+    valeur = valeur.strip()
+    if valeur.endswith("m"):
+        return int(valeur[:-1])
+    # Forme décimale : "1" = 1 CPU = 1000 milliCPU.
+    return int(float(valeur) * 1000)
+
+
+def _memoire_en_mib(valeur: str) -> int:
+    """Convertit une valeur mémoire Kubernetes (``"256Mi"`` ou ``"1Gi"``) en MiB."""
+    valeur = valeur.strip()
+    if valeur.endswith("Mi"):
+        return int(valeur[:-2])
+    if valeur.endswith("Gi"):
+        return int(valeur[:-2]) * _MIB_PER_GIB
+    raise ValueError(
+        f"ERR_QUOTA_MEMOIRE_INVALIDE: unité mémoire non supportée: {valeur!r}"
+    )
+
+
+def _budget_du_plan(plan: DeploymentPlan) -> dict:
+    """Somme, pour chaque service du plan, ses ``requests`` et ``limits`` effectifs.
+
+    Retourne un dictionnaire imbriqué compatible avec la sérialisation YAML :
+    ``{"requests": {"cpu_m": int, "mem_mib": int},
+       "limits":   {"cpu_m": int, "mem_mib": int}}``.
+
+    Un budget faux en silence est PIRE qu'une erreur bruyante : ce budget devient un
+    ``ResourceQuota``, et sous-compté il produirait un quota trop petit qui bloquerait le
+    déploiement qu'il est censé encadrer. Toute ressource absente ou incomplète lève donc,
+    plutôt que d'être ignorée (objection de revue scellée, Gemini-3.1-Pro).
+    """
+    budget = {
+        "requests": {"cpu_m": 0, "mem_mib": 0},
+        "limits": {"cpu_m": 0, "mem_mib": 0},
+    }
+    for svc in plan.services:
+        res = getattr(svc, "ressources_effectives", None)
+        if res is None:
+            # On lève une erreur plutôt que de fausser le budget en silence
+            raise ValueError(
+                "ERR_QUOTA_RESSOURCES_ABSENTES: le service {} n'a pas de ressources_effectives".format(svc.name)
+            )
+        for categorie in ("requests", "limits"):
+            # `dict.get(cle, {})` ne protège que de l'absence de clé, pas d'une valeur
+            # None explicite : sans le `or {}`, le .get() suivant lèverait AttributeError
+            # — une trace technique opaque au lieu du ValueError qui nomme la cause.
+            cpu = (res.get(categorie) or {}).get("cpu")
+            memoire = (res.get(categorie) or {}).get("memory")
+            if cpu is None or memoire is None:
+                # On lève une erreur plutôt que de fausser le budget en silence
+                raise ValueError(
+                    "ERR_QUOTA_RESSOURCES_INCOMPLETES: le service {} n'a pas {} dans sa catégorie {}".format(
+                        svc.name,
+                        "cpu" if cpu is None else "memory",
+                        categorie
+                    )
+                )
+            budget[categorie]["cpu_m"] += _cpu_en_millicores(cpu)
+            budget[categorie]["mem_mib"] += _memoire_en_mib(memoire)
+    return budget
+
+
+# Valeurs utilitaires de la LimitRange : volontairement modestes. Elles ne
+# décrivent pas le profil "LLM lourd" (qui a ses propres ressources_effectives)
+# mais le conteneur "moyen" qui ne déclare rien. Sans LimitRange, ce conteneur
+# silencieux échapperait au quota et pourrait, à lui seul, épuiser la capacité
+# allouée au namespace.
+_LIMITE_DEFAUT_CPU = "250m"
+_LIMITE_DEFAUT_MEMOIRE = "256Mi"
+_REQUETE_DEFAUT_CPU = "50m"
+_REQUETE_DEFAUT_MEMOIRE = "64Mi"
+
+
+def _quota_et_limites(plan: DeploymentPlan) -> str:
+    """Émet un ``ResourceQuota`` et un ``LimitRange`` pour le namespace du plan.
+
+    Le ``ResourceQuota`` vaut **exactement** le budget cumulé du plan :
+    - ni plus (on ne gèlerait pas de la capacité inutilisée),
+    - ni moins (un quota sous-alloué bloquerait le déploiement qu'il encadre
+      en refusant la création des pods au-delà du quota).
+    La ``LimitRange`` applique des défauts raisonnables à tout conteneur qui
+    n'aurait pas déclaré ses propres ressources.
+    """
+    budget = _budget_du_plan(plan)
+
+    cpu_req_m = budget["requests"]["cpu_m"]
+    mem_req_mib = budget["requests"]["mem_mib"]
+    cpu_lim_m = budget["limits"]["cpu_m"]
+    mem_lim_mib = budget["limits"]["mem_mib"]
+
+    parts: list[str] = []
+    # ResourceQuota : couvre simultanément requests et limits pour CPU et mémoire.
+    parts.append("---\n")
+    parts.append("apiVersion: v1\n")
+    parts.append("kind: ResourceQuota\n")
+    parts.append("metadata:\n")
+    parts.append("  name: forgeai-quota\n")
+    parts.append(f"  namespace: {NAMESPACE}\n")
+    parts.append("spec:\n")
+    parts.append("  hard:\n")
+    parts.append(f'    requests.cpu: "{cpu_req_m}m"\n')
+    parts.append(f'    requests.memory: "{mem_req_mib}Mi"\n')
+    parts.append(f'    limits.cpu: "{cpu_lim_m}m"\n')
+    parts.append(f'    limits.memory: "{mem_lim_mib}Mi"\n')
+
+    # LimitRange : un seul entrée de type Container, défauts requests/limits.
+    # Sans elle, un pod sans resources serait accepté tel quel et pourrait
+    # consommer à lui seul tout le quota du namespace.
+    parts.append("---\n")
+    parts.append("apiVersion: v1\n")
+    parts.append("kind: LimitRange\n")
+    parts.append("metadata:\n")
+    parts.append("  name: forgeai-limits\n")
+    parts.append(f"  namespace: {NAMESPACE}\n")
+    parts.append("spec:\n")
+    parts.append("  limits:\n")
+    parts.append("    - type: Container\n")
+    parts.append("      default:\n")
+    parts.append(f'        cpu: "{_LIMITE_DEFAUT_CPU}"\n')
+    parts.append(f'        memory: "{_LIMITE_DEFAUT_MEMOIRE}"\n')
+    parts.append("      defaultRequest:\n")
+    parts.append(f'        cpu: "{_REQUETE_DEFAUT_CPU}"\n')
+    parts.append(f'        memory: "{_REQUETE_DEFAUT_MEMOIRE}"\n')
+
+    return "".join(parts)
+
+
+def _verifier_capacite(plan: DeploymentPlan, capacite: "CapaciteCluster | None") -> None:
+    """Vérifie que le budget agrégé du plan tient dans la capacité déclarée.
+
+    Rétro-compatibilité stricte : si ``capacite`` vaut ``None``, on ne peut
+    rien vérifier (l'appelant n'a pas déclaré de cluster cible) et la fonction
+    retourne silencieusement. Sinon, on compare les **limits** (et non les
+    requests) car c'est le plafond absolu que Kubernetes appliquera au pod :
+    si les limits dépassent la capacité, le pod sera de toute façon throttlé
+    ou OOMKill, indépendamment du quota du namespace.
+
+    Les deux contrôles (CPU, mémoire) sont indépendants : un dépassement
+    uniquement mémoire reste un dépassement et doit être signalé.
+    """
+    if capacite is None:
+        return
+
+    budget = _budget_du_plan(plan)
+    cpu_requis = budget["limits"]["cpu_m"]
+    memoire_requise = budget["limits"]["mem_mib"]
+
+    if cpu_requis > capacite.cpu_millicores:
+        raise QuotaError(
+            "ERR_QUOTA_CPU_DEPASSE: le plan requiert "
+            f"{cpu_requis}m CPU mais le cluster n'en déclare que "
+            f"{capacite.cpu_millicores}m."
+        )
+    if memoire_requise > capacite.memoire_mib:
+        raise QuotaError(
+            "ERR_QUOTA_MEMOIRE_DEPASSEE: le plan requiert "
+            f"{memoire_requise} MiB de mémoire mais le cluster n'en déclare "
+            f"que {capacite.memoire_mib} MiB."
+        )
+
+
 def render_k3s(plan: DeploymentPlan, node: str | None = None,
                service_type: str = "NodePort",
                config_files: dict[str, str] | None = None,
-               inventaire: tuple[NodeInventaire, ...] | None = None) -> str:
+               inventaire: tuple[NodeInventaire, ...] | None = None,
+               capacite: CapaciteCluster | None = None) -> str:
     """Manifestes Kubernetes STANDARD (valables k3s ET k8s — même API). `node` épingle les pods
     sur un hôte (profil Minimal = single-node) ; `svc.node == "auto"` laisse le scheduler décider.
     `service_type` : NodePort (défaut, portable partout, k3s/edge) ou LoadBalancer (cloud/k8s).
     `config_files` : mapping {basename: contenu} pour les bind-mounts de fichiers de config
     (ex. litellm-config.yaml) émis comme ConfigMap et montés via subPath."""
+    # K8S-027 : refuser AVANT de produire quoi que ce soit. Rendre puis échouer laisserait
+    # l'utilisateur appliquer un manifeste dont les pods resteront Pending sans cause lisible.
+    _verifier_capacite(plan, capacite)
+
     if service_type not in _SERVICE_TYPES:
         raise ValueError(
             f"service_type invalide : {service_type!r} (attendu {sorted(_SERVICE_TYPES)})")
@@ -757,6 +932,10 @@ automountServiceAccountToken: false
     # K8S-023 : refus par défaut Ingress ET Egress + allowlists dérivées des dépendances
     # DÉCLARÉES du plan. Remplace l'unique politique `forgeai-default`, qui laissait l'egress
     # totalement libre et autorisait un accès intra-namespace universel.
+    # K8S-027 : quota et LimitRange dérivés du budget RÉEL du plan (somme des
+    # ressources_effectives, RES-012B). Sans LimitRange, un conteneur ne déclarant aucune
+    # ressource échapperait au quota et pourrait l'épuiser à lui seul.
+    parts.append(_quota_et_limites(plan))
     parts.append(_network_policies(plan))
     used: set[int] = set()
     for svc in plan.services:

@@ -1,0 +1,19 @@
+[ROUGE] sur origin/main (ba18ef0) — reproduction exécutée.
+
+  objets rendus : Namespace x1, ServiceAccount x1, NetworkPolicy x2, Deployment x3, Service x3
+  ResourceQuota : ABSENT
+  LimitRange    : ABSENT
+
+Conséquences :
+  - rien ne borne ce qu'un namespace peut consommer ;
+  - un conteneur ne déclarant aucune ressource n'est encadré par rien ;
+  - un plan dépassant la capacité du cluster est rendu SANS broncher, appliqué, puis ses pods
+    restent Pending sans cause lisible — l'utilisateur découvre le problème en production.
+
+Le budget était pourtant DÉJÀ calculable grâce à RES-012B (ressources par service) :
+  ollama  llm      limits 4000m /   8Gi
+  qdrant  db       limits 1000m /   2Gi
+  litellm sidecar  limits  500m / 512Mi
+  TOTAL                   5500m / 10752Mi
+
+Tests rouges : ImportError — ni CapaciteCluster ni QuotaError n'existaient.
