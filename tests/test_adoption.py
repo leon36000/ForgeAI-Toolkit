@@ -66,7 +66,7 @@ def test_CA1_service_adopte_absent_de_services():
 # CA-2 : le dépendant ne référence plus le service adopté dans depends_on
 # ---------------------------------------------------------------------------
 
-def test_CA2_dependant_ne_reference_plus_service_adopte():
+def test_le_dependant_ne_reference_plus_le_service_adopte_dans_depends_on():
     plan = _plan([_service_redis(adopted_endpoint="127.0.0.1:6379"), _service_litellm()])
     compose = _parse_compose(render_compose(plan))
     litellm = compose["services"]["litellm"]
@@ -199,3 +199,123 @@ def test_CA8_plan_mixte_ne_refuse_pas():
     litellm = _service_litellm(adopted_endpoint=None)
     services = _parse_compose(render_compose(_plan([redis, litellm])))["services"]
     assert "litellm" in services
+
+
+def _env(compose, service):
+    """Normalise l'environnement d'un service en dict, qu'il soit liste ou dict."""
+    env = compose["services"][service]["environment"]
+    if isinstance(env, dict):
+        return env
+    out = {}
+    for item in env:
+        key, _, value = item.partition("=")
+        out[key] = value
+    return out
+
+
+def test_CA2_dependant_pointe_vers_endpoint_decouvert():
+    """CA-2 : le dépendant reçoit host.docker.internal:<port découvert>.
+
+    L'existant prime sur le catalogue : le port catalogue (3000) ne doit
+    PLUS apparaître dans la variable recâblée — seul le port découvert
+    (3999, issu de adopted_endpoint) reste.
+    """
+    langfuse = ServiceSpec(name="langfuse", image="lf:3",
+                           host_port=3000, container_port=3000,
+                           adopted_endpoint="127.0.0.1:3999")
+    postgres = ServiceSpec(name="postgres", image="pg:16",
+                           host_port=5432, container_port=5432,
+                           adopted_endpoint="127.0.0.1:5555")
+    litellm = ServiceSpec(name="litellm", image="l:1",
+                          host_port=4000, container_port=4000,
+                          depends=("langfuse",),
+                          env={"LANGFUSE_HOST": "http://langfuse:3000",
+                               "DATABASE_URL": "postgresql://u:pw@postgres:5432/db",
+                               "PIEGE_1": "http://mylangfuse:3000",
+                               "PIEGE_2": "langfuse_backup"})
+
+    compose = _parse_compose(render_compose(_plan([langfuse, postgres, litellm])))
+    host = _env(compose, "litellm")["LANGFUSE_HOST"]
+
+    assert "host.docker.internal:3999" in host, (
+        f"LANGFUSE_HOST doit pointer vers le port découvert 3999, got: {host!r}"
+    )
+    assert "3000" not in host, (
+        f"Le port catalogue 3000 ne doit plus apparaître dans LANGFUSE_HOST, got: {host!r}"
+    )
+
+
+def test_CA2_chaine_de_connexion_recablee():
+    """CA-2 : la chaîne de connexion postgres est entièrement recâblée."""
+    langfuse = ServiceSpec(name="langfuse", image="lf:3",
+                           host_port=3000, container_port=3000,
+                           adopted_endpoint="127.0.0.1:3999")
+    postgres = ServiceSpec(name="postgres", image="pg:16",
+                           host_port=5432, container_port=5432,
+                           adopted_endpoint="127.0.0.1:5555")
+    litellm = ServiceSpec(name="litellm", image="l:1",
+                          host_port=4000, container_port=4000,
+                          depends=("langfuse",),
+                          env={"LANGFUSE_HOST": "http://langfuse:3000",
+                               "DATABASE_URL": "postgresql://u:pw@postgres:5432/db",
+                               "PIEGE_1": "http://mylangfuse:3000",
+                               "PIEGE_2": "langfuse_backup"})
+
+    compose = _parse_compose(render_compose(_plan([langfuse, postgres, litellm])))
+    db_url = _env(compose, "litellm")["DATABASE_URL"]
+
+    assert db_url == "postgresql://u:pw@host.docker.internal:5555/db", (
+        f"DATABASE_URL doit valoir la chaîne recâblée exacte, got: {db_url!r}"
+    )
+
+
+def test_CA2_pas_de_substitution_au_milieu_dun_mot():
+    """CA-2 anti faux-positif : les valeurs qui RESSEMBLENT au nom du service
+    sans en être (mylangfuse, langfuse_backup) ne doivent pas être touchées."""
+    langfuse = ServiceSpec(name="langfuse", image="lf:3",
+                           host_port=3000, container_port=3000,
+                           adopted_endpoint="127.0.0.1:3999")
+    postgres = ServiceSpec(name="postgres", image="pg:16",
+                           host_port=5432, container_port=5432,
+                           adopted_endpoint="127.0.0.1:5555")
+    litellm = ServiceSpec(name="litellm", image="l:1",
+                          host_port=4000, container_port=4000,
+                          depends=("langfuse",),
+                          env={"LANGFUSE_HOST": "http://langfuse:3000",
+                               "DATABASE_URL": "postgresql://u:pw@postgres:5432/db",
+                               "PIEGE_1": "http://mylangfuse:3000",
+                               "PIEGE_2": "langfuse_backup"})
+
+    compose = _parse_compose(render_compose(_plan([langfuse, postgres, litellm])))
+    env = _env(compose, "litellm")
+
+    assert env["PIEGE_1"] == "http://mylangfuse:3000", (
+        f"PIEGE_1 (mylangfuse) ne doit pas être corrompu, got: {env.get('PIEGE_1')!r}"
+    )
+    assert env["PIEGE_2"] == "langfuse_backup", (
+        f"PIEGE_2 (langfuse_backup) ne doit pas être corrompu, got: {env.get('PIEGE_2')!r}"
+    )
+
+
+def test_CA2_aucune_substitution_sans_adoption():
+    """CA-2 non-régression : sans aucun adopted_endpoint, aucune substitution
+    n'est appliquée — les variables du dépendant restent intactes."""
+    langfuse = ServiceSpec(name="langfuse", image="lf:3",
+                           host_port=3000, container_port=3000)
+    postgres = ServiceSpec(name="postgres", image="pg:16",
+                           host_port=5432, container_port=5432)
+    litellm = ServiceSpec(name="litellm", image="l:1",
+                          host_port=4000, container_port=4000,
+                          depends=("langfuse",),
+                          env={"LANGFUSE_HOST": "http://langfuse:3000",
+                               "DATABASE_URL": "postgresql://u:pw@postgres:5432/db",
+                               "PIEGE_1": "http://mylangfuse:3000",
+                               "PIEGE_2": "langfuse_backup"})
+
+    compose = _parse_compose(render_compose(_plan([langfuse, postgres, litellm])))
+    env = _env(compose, "litellm")
+
+    assert env["LANGFUSE_HOST"] == "http://langfuse:3000"
+    assert env["DATABASE_URL"] == "postgresql://u:pw@postgres:5432/db"
+    assert env["PIEGE_1"] == "http://mylangfuse:3000"
+    assert env["PIEGE_2"] == "langfuse_backup"

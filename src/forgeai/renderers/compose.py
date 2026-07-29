@@ -7,6 +7,7 @@ injectées via le bloc `environment:` à partir du plan.
 """
 from __future__ import annotations
 
+import re
 import json
 
 from forgeai.core.models import DeploymentPlan, ProbeType
@@ -129,6 +130,24 @@ def render_compose(plan: DeploymentPlan, project: str = "forgeai-minimal") -> st
     ]
     volumes: set[str] = set()
     adopted_names: set[str] = {s.name for s in plan.services if s.adopted_endpoint is not None}
+    # Recablage des deps adoptes : pour chaque service adopte, on prepare le motif qui matche
+    # son nom en position d'hote (precede de `//`, `@` ou debut de valeur) suivi de :PORT.
+    # Le port substitue est le port DECOUVERT (extrait de l'endpoint H:P), pas celui du
+    # catalogue -- l'existant prime. Si le plan n'a aucun service adopte, cette liste reste
+    # vide et la sortie est strictement identique.
+    adopted_patterns: list[tuple[re.Pattern, int]] = []
+    for s in plan.services:
+        if s.adopted_endpoint is not None:
+            # Pas de try/except ici : adopted_endpoint est validé à la construction de
+            # ServiceSpec (forme hôte:port, port numérique 1..65535). Un except silencieux
+            # serait un chemin mort qui, le jour où la validation changerait, avalerait le
+            # défaut et laisserait le dépendant orphelin sans aucun message.
+            _, port_str = s.adopted_endpoint.rsplit(':', 1)
+            port = int(port_str)
+            pattern = re.compile(
+                r'(?:(?<=//)|(?<=@)|^)' + re.escape(s.name) + r':\d+'
+            )
+            adopted_patterns.append((pattern, port))
     for svc in plan.services:
         # Service adopté : déjà présent sur le nœud, on s'y branche — pas d'entrée dans services:.
         if svc.adopted_endpoint is not None:
@@ -150,10 +169,19 @@ def render_compose(plan: DeploymentPlan, project: str = "forgeai-minimal") -> st
         if svc.env:
             lines.append("    environment:")
             for key, value in svc.env.items():
+                str_value = str(value)
+                # Recablage : pour chaque service adopte, rediriger N:PORT vers
+                # host.docker.internal:PORT_DECOUVERT. Le motif n'agit QUE quand N est
+                # en position d'hote (//, @, debut) suivi de :PORT -- jamais sur une
+                # sous-chaine (myN, N_backup, etc.).
+                for pattern, port in adopted_patterns:
+                    str_value = pattern.sub(
+                        f'host.docker.internal:{port}', str_value
+                    )
                 # Valeur toujours entre guillemets : protège les caractères YAML
                 # spéciaux (:, #, espaces) ; l'interpolation ${VAR} de compose
                 # opère avant le parse YAML, donc reste effective ici.
-                safe = str(value).replace("\\", "\\\\").replace('"', '\\"')
+                safe = str_value.replace("\\", "\\\\").replace('"', '\\"')
                 lines.append(f'      {key}: "{safe}"')
         # HEALTH-028B : sonde fonctionnelle par service. Sans elle, un service est réputé
         # disponible dès que Compose l'a démarré — un port ouvert ne prouve pas qu'une base
@@ -188,7 +216,7 @@ def render_compose(plan: DeploymentPlan, project: str = "forgeai-minimal") -> st
         if svc.command:
             lines.append("    command:")
             for arg in svc.command:
-                lines.append(f"      - \"{arg}\"")
+                lines.append(f'      - "{arg}"')
         if svc.volumes:
             lines.append("    volumes:")
             for volume in svc.volumes:
