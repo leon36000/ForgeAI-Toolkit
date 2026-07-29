@@ -457,6 +457,25 @@
         "dossier": "reviews/PLACE-026B/",
         "note": "Diagnostic service -> noeud -> raison. CONSTAT HONNETE : deux criteres sur trois etaient DEJA satisfaits par heritage de PLACE-026A (sélecteur correct, service auto jamais epingle) — rapporte plutot que revendique. Mais ils netaient proteges par AUCUN test : deux tests de non-regression les verrouillent, lecon directe de la revue PLACE-011 ou Grok avait releve quun comportement demontre dans les preuves netait protege par rien. Le critere 3 manquait entierement : placement_diagnostic(plan, node_global, inventaire) rend une ligne par service (service/node/raison/validation), la validation confrontant la decision a linventaire de PLACE-011 — les deux packages sembloitent, lun refuse, lautre explique. CONTRAINTE DE CONCEPTION : la fonction NE LEVE JAMAIS ; un diagnostic doit diagnostiquer, pas planter au premier placement invalide, sinon lutilisateur ne voit quun probleme sur cinq et corrige en aveugle. Prouve a lexecution : ollama refuse (ERR_PLACE_CPU_ONLY) ET les trois autres lignes restent visibles. NOTE DENVIRONNEMENT rapportee, pas passee sous silence : 3 tests de test_multinoeud.py lancent un sous-processus `python3 -m forgeai` et echouent dans un worktree frais ; CONTRE-PREUVE = memes echecs sur origin/main SANS ce changement ; PREUVE DETERMINISTE de la cause = PYTHONPATH=src -> 8/8 verts. Ce nest pas une regression. Reassignations de route journalisees : Grok-4.5 HTTP 500, Kimi-K2.6 indisponible, Tencent-Hy3 retenu (4e route instable de la session)."
       }
+    },
+    {
+      "package": "K8S-027",
+      "merge_commit": "a4d797668b466447682d3799aa090a58dbee98f4",
+      "pr_number": 206,
+      "merged_at": "2026-07-29T02:05:00Z",
+      "owner": "CLAUDE_CODE",
+      "review": {
+        "result": "APPROVE",
+        "ratio": "3/3",
+        "vendors": [
+          "deepseek",
+          "google",
+          "tencent"
+        ],
+        "prompt_sha256": "5df277409565",
+        "dossier": "reviews/K8S-027/",
+        "note": "Quotas de namespace derives du budget REEL. Aucun ResourceQuota ni LimitRange netait emis : rien ne bornait la consommation dun namespace et un plan depassant la capacite etait rendu sans broncher, pods Pending sans cause lisible. Le quota est la SOMME des ressources_effectives (chainage avec RES-012B) : limits 5500m/10752Mi, requests 1350m/4736Mi pour le plan de reference. TROIS DECISIONS MOTIVEES : (1) le quota vaut EXACTEMENT le budget — ni gaspillage ni etranglement du deploiement quil encadre ; (2) le LimitRange nest pas decoratif, un quota ne compte que ce qui est DECLARE et sans lui un conteneur muet lechappe et peut lepuiser seul ; (3) la verification de capacite est en TETE de render_k3s, avant la moindre ligne de manifeste, avec un message chiffrant le besoin ET la capacite. TROIS TOURS DE REVUE, chacun DEJA APPROVE, chacun ayant ameliore le package : tour 1 (1 objection) budget faussé en silence par deux continue defensifs — etat INATTEIGNABLE mais corrige quand meme car un budget faux en silence convertit un etat impossible en QUOTA FAUX au lieu dune erreur visible ; tour 2 (3 objections) triees par des tests rouges ecrits AVANT correction : 1 VRAI BUG (AttributeError sur dict.get(cle,{}) face a une valeur None) + 2 lacunes de couverture ; tour 3 : ZERO objection. Un APPROVE nautorise jamais a ignorer une objection. FAIT NOTABLE : Tencent-Hy3 a trouve le seul vrai bug que ni Gemini ni DeepSeek navaient vu — or il netait recrute que parce que Grok etait tombe en HTTP 500 au package precedent. La diversite du trio produit des trouvailles. Merge SANS admin : CI complete, CLEAN, SonarCloud Code Analysis PASS."
+      }
     }
   ]
 }
