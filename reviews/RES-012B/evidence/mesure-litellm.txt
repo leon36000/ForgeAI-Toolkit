@@ -1,0 +1,29 @@
+# RES-012B — MESURE de l'empreinte mémoire réelle de litellm
+# Image ÉPINGLÉE de deploy-specs.json, limite volontairement large (4Gi) pour OBSERVER
+# le besoin au lieu de le supposer. Cluster k3s réel.
+
+## Mesure
+  kubectl top      : 1m CPU, 1007Mi memoire
+  cgroup memory.current : 1018 Mi
+  redemarrages     : 0
+
+## Ce que la mesure établit
+  litellm consomme ~1020-1075 Mi AU REPOS, sans trafic.
+  La limite historique de _resources_block etait 1Gi = 1024 Mi : le conteneur tournait
+  EXACTEMENT a sa limite, d'ou l'OOMKill constate et documente en K8S-022
+  (reviews/K8S-022/evidence/DEPLOIEMENT-REEL.txt).
+
+## Conflit avec la classe prescrite par l'ADR RES-012A
+  L'ADR classe litellm en 'sidecar' -> limits.memory = 512Mi, soit DEUX FOIS MOINS que
+  ce qui le tue deja. Appliquer la classe telle quelle aggraverait le defaut.
+
+## Resolution — le mecanisme prevu par l'ADR lui-meme
+  L'ADR §3.1 justifie la derogation explicite ainsi : « la derogation couvre l'exception
+  sans toucher a l'enum ». litellm recoit donc une derogation 'resources' DERIVEE DE CETTE
+  MESURE, et non un reclassement qui contredirait l'ADR (immuable) :
+    requests.memory 1Gi   (l'empreinte au repos est deja ~1Gi : garantir moins ferait
+                           placer le pod sur un noeud incapable de le tenir)
+    limits.memory   2Gi   (~2x l'empreinte au repos : marge pour le trafic et les pics
+                           de serialisation, sans sur-souscrire)
+    requests.cpu    100m / limits.cpu 1000m  (passerelle latence-sensible, empreinte CPU
+                           faible mesuree a 1m au repos)

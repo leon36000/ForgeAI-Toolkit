@@ -66,19 +66,31 @@ def _service_ports(svc: ServiceSpec, service_type: str, node_port: int | None) -
     return base
 
 
-def _resources_block(vendor: str | None) -> str:
-    """Bloc resources toujours présent ; ajoute la ressource nvidia.com/gpu si besoin."""
-    block = (
-        "\n          resources:"
-        "\n            requests:"
-        "\n              cpu: 100m"
-        "\n              memory: 128Mi"
-        "\n            limits:"
-        '\n              cpu: "1"'
-        "\n              memory: 1Gi"
-    )
+def _resources_block(svc: ServiceSpec, vendor: str | None) -> str:
+    """Bloc resources rendu DEPUIS le spec ; plus aucun magic number.
+    La validation (unités, cohérence) est dans models.py, pas ici.
+    Ajoute nvidia.com/gpu en limite si svc.gpu_vendor == "nvidia".
+    """
+    res = svc.ressources_effectives
+    req = res["requests"]
+    lim = res["limits"]
+
+    # Indentation existante : chaque ligne est précédée de retours à la ligne et d'espaces
+    block = "\n          resources:"
+    block += "\n            requests:"
+    block += f'\n              cpu: "{req["cpu"]}"'
+    block += f'\n              memory: "{req["memory"]}"'
+    block += "\n            limits:"
+    block += f'\n              cpu: "{lim["cpu"]}"'
+    block += f'\n              memory: "{lim["memory"]}"'
+
+    # Accélérateurs orthogonaux : jamais dans les classes CPU/mémoire.
+    # `vendor` est calculé par l'appelant : (svc.gpu_vendor or "nvidia") si svc.gpu, sinon None.
+    # NVIDIA reste le défaut d'un service GPU sans vendor explicite — ce défaut vivait dans
+    # l'ancien paramètre `vendor` et doit être préservé.
     if vendor == "nvidia":
         block += '\n              nvidia.com/gpu: "1"'
+
     return block
 
 
@@ -305,7 +317,7 @@ def _deployment(svc: ServiceSpec, effective_node: str | None = None,
     # K8S-022 : profil PSS restricted par service (uid mesuré) ; `svc.gpu` = seule dérogation.
     profil = _profil_securite(svc.name)
     gpu_actif = bool(svc.gpu)
-    resources_block = _resources_block(vendor)
+    resources_block = _resources_block(svc, vendor)
     security_block = _security_block(profil, gpu_actif)
     probes_block = _probes_block(svc)
     node_selector = ""

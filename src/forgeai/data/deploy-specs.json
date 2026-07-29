@@ -21,7 +21,18 @@
     ],
     "depends": [
       "ollama"
-    ]
+    ],
+    "resource_class": "sidecar",
+    "resources": {
+      "requests": {
+        "cpu": "100m",
+        "memory": "1Gi"
+      },
+      "limits": {
+        "cpu": "1000m",
+        "memory": "2Gi"
+      }
+    }
   },
   "redis": {
     "image": "redis:7.4.9@sha256:a8f08480e1f88f2647fed492d1178c06abb0d0c1fbf02c682a61e2f483fb3954",
@@ -31,7 +42,8 @@
       "forgeai-redis-data:/data"
     ],
     "env": {},
-    "depends": []
+    "depends": [],
+    "resource_class": "db"
   },
   "qdrant": {
     "image": "qdrant/qdrant:v1.18.3@sha256:0bd98fa7977f1e75694779359ca4e212822e5a71334e28421182f72f209d5286",
@@ -41,7 +53,8 @@
       "forgeai-qdrant-data:/qdrant/storage"
     ],
     "env": {},
-    "depends": []
+    "depends": [],
+    "resource_class": "db"
   },
   "text-embeddings-inference-tei": {
     "image": "ghcr.io/huggingface/text-embeddings-inference:cpu-1.9@sha256:ad950d30878eceb72aaf32024d26fa2b1d04a75304fa0b4776b49aa1941fea07",
@@ -53,7 +66,8 @@
     "env": {
       "MODEL_ID": "BAAI/bge-m3"
     },
-    "depends": []
+    "depends": [],
+    "resource_class": "llm"
   },
   "text-embeddings-inference-reranker": {
     "image": "ghcr.io/huggingface/text-embeddings-inference:cpu-1.9@sha256:ad950d30878eceb72aaf32024d26fa2b1d04a75304fa0b4776b49aa1941fea07",
@@ -65,7 +79,8 @@
     "env": {
       "MODEL_ID": "BAAI/bge-reranker-v2-m3"
     },
-    "depends": []
+    "depends": [],
+    "resource_class": "llm"
   },
   "immudb": {
     "image": "codenotary/immudb:1.11.1@sha256:1053c2c254473670412b6f7257f61b6c09469b9b53b50c02bc7378ba775dc429",
@@ -75,7 +90,8 @@
       "forgeai-immudb-data:/var/lib/immudb"
     ],
     "env": {},
-    "depends": []
+    "depends": [],
+    "resource_class": "db"
   },
   "openbao": {
     "image": "openbao/openbao:2.6.0@sha256:900bb64d0671cd1d82b693c56206f7263b582445f3a3bb6ba6e5213f524a6653",
@@ -86,8 +102,12 @@
       "./openbao.hcl:/openbao/config/openbao.hcl:ro"
     ],
     "env": {},
-    "command": ["server", "-config=/openbao/config/openbao.hcl"],
-    "depends": []
+    "command": [
+      "server",
+      "-config=/openbao/config/openbao.hcl"
+    ],
+    "depends": [],
+    "resource_class": "db"
   },
   "postgres": {
     "image": "postgres:15-alpine@sha256:3d0f7584ed7d04e27fa050d6683a74746608faf21f202be78460d679cc56461f",
@@ -100,7 +120,8 @@
       "POSTGRES_PASSWORD": "${FORGEAI_PG_PASSWORD}",
       "POSTGRES_DB": "langfuse"
     },
-    "depends": []
+    "depends": [],
+    "resource_class": "db"
   },
   "langfuse": {
     "image": "langfuse/langfuse:2@sha256:85c278dcab96c15db94191a5c1664f85aba2d7fb6771a00e99681c902c4b7015",
@@ -124,7 +145,8 @@
     },
     "depends": [
       "postgres"
-    ]
+    ],
+    "resource_class": "sidecar"
   },
   "llama-cpp-vulkan": {
     "image": "ghcr.io/ggml-org/llama.cpp:server-vulkan@sha256:d3f031d5c6bc815174acc05b4cd960e989df6fca600f703028dca21c33896bd1",
@@ -143,7 +165,8 @@
       "--port",
       "8080"
     ],
-    "depends": []
+    "depends": [],
+    "resource_class": "llm"
   },
   "cpu-zendnn": {
     "image": "amdih/zendnn_zentorch:vllm_v0.23.0_zentorch_v2.11.0.2_ubuntu22.04_v2.11.0.2@sha256:ab88b340d290bf8c247b5963f0db83405e5f338b94c24afbb25bf1cb0d100f64",
@@ -169,7 +192,8 @@
       "--port",
       "8000"
     ],
-    "depends": []
+    "depends": [],
+    "resource_class": "llm"
   },
   "intel-openvino": {
     "image": "openvino/model_server:latest@sha256:19cda71ccab73930d0a65e48ea27c3464ce2c00cec326f0831457ae525831321",
@@ -196,6 +220,7 @@
       "--cache_size",
       "2"
     ],
-    "depends": []
+    "depends": [],
+    "resource_class": "llm"
   }
 }
