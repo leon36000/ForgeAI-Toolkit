@@ -131,3 +131,45 @@ dans K3s (même classe que les arguments EXEC, sur un autre champ) ; et la valid
 
 ## Rollback
 `git revert` → retour à la faille de vacuité (défaut FAI-U-028 connu) ; baseline verte.
+
+## Phase couverture (imposée par le quality gate SonarCloud)
+
+La PR a été refusée par SonarCloud à **79,9 % de couverture sur le code nouveau** (seuil 80 %).
+Le refus ne portait pas sur un défaut de comportement mais sur un trou de preuve : **40 des
+196 lignes ajoutées n'étaient exercées par aucun test**, dont `_etats_docker` **en entier** —
+la fonction qui lit l'état réel des services dans Docker, c'est-à-dire la pièce sur laquelle
+repose toute la sortie « healthy » vue par l'utilisateur.
+
+Ce trou avait une cause structurelle, pas un oubli : les lignes non couvertes appartenaient
+à des cibles difficiles à atteindre — une **closure** (`_default_probe`, interne à
+`wait_healthy`) et un **fragment pré-indenté** (`_probes_block`, calibré pour s'insérer dans
+le manifeste). Aucune n'est atteignable autrement qu'en passant par le point d'entrée public.
+Les tests correspondants ont donc été écrits via `wait_healthy` et `render_k3s`, conformément
+au principe déjà acquis en RAG-005 : un test qui fabrique son entrée valide un chemin que la
+production n'emprunte jamais.
+
+**Résultat mesuré : 79,6 % -> 97,4 % (191/196).** 41 tests ajoutés (fichier 3 -> 44).
+Suite complète : code de sortie pytest **0**, zéro FAILED.
+
+Les 5 lignes restantes sont assumées : `compose.py:129` (retour `{}` sur returncode non nul),
+`235-236` (service probeable sans sonde exécutable) et `k3s.py:295-296` (fallback tcpSocket,
+vérifié à la main mais atteint par un autre chemin par le test). Aucun test n'a été fabriqué
+pour flatter le compteur — l'invariant no-fake l'interdit et le seuil est franchi de 17 points.
+
+### Erreurs de méthode commises pendant cette phase (journalisées)
+
+Quatre de mes propres gardes ont rendu un verdict faux, toutes pour la même raison :
+**vérifier une chaîne de caractères au lieu de la propriété réelle.**
+
+| Garde | Croyait vérifier | Ratait |
+|---|---|---|
+| `ast.parse()` | le fichier compile | mot-clé dupliqué (il faut `compile()`) |
+| `"import x" in src` | l'import existe | matchait un **commentaire** |
+| `ast.walk` sur les imports | le nom est disponible | trouvait un import **local à une autre fonction** |
+| absence de `ast.Assert` | test sans assertion | `pytest.raises(match=…)` est une assertion plus forte |
+
+De plus, le `except Exception: return {}` de `_etats_docker` (contrat volontaire : un
+diagnostic qui plante ne diagnostique rien) a masqué successivement un `TypeError` de
+signature de mock puis un `NameError` de classe helper absente, en affichant les deux fois
+le même `{}` trompeur — ce qui m'a fait suspecter trois fois un défaut inexistant du produit.
+Diagnostic obtenu en reproduisant l'appel **hors pytest**, ce qui laisse l'exception remonter.
