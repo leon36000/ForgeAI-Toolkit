@@ -167,6 +167,25 @@ def _candidats(tool_name, tool_input):
     # tour trouvait un opérateur ou un séparateur oublié, signal de
     # conception). On n'extrait que des fragments LITTÉRAUX.
     #
+    # B-24d tour 10 — grappes d'options courtes (1 à 3 lettres).
+    # L'ambiguïté entre une grappe d'options courtes agglutinée à un
+    # chemin (``-cf/etc/passwd``, dangereux) et un argument relatif
+    # légitime (``-Iinclude/sys``, chemin vers un répertoire de
+    # headers) est IRRÉDUCTIBLE lexicalement : les deux formes ont
+    # exactement la même structure (tiret + lettres + ``/`` + reste),
+    # et seule la sémantique de l'outil invoqué les distingue —
+    # sémantique qu'on ne peut pas connaître depuis le guard. On borne
+    # donc par une propriété MESURÉE : les grappes d'options courtes
+    # usuelles font 1 à 3 lettres (``-f``, ``-cf``, ``-czf``, ``-so``,
+    # ``-xzf``), tandis qu'un argument relatif commence par un mot
+    # plus long (``include``, ``src``, ``out``). Mesure : à 3 lettres,
+    # 0 faux positif sur les cas légitimes ; à 4 lettres, 2 faux
+    # positifs réapparaissent (``-Isrc/include``, ``-fout/archive.tar``).
+    # La borne 3 est donc un choix mesuré, pas arbitraire. Faux positif
+    # résiduel assumé : un répertoire relatif dont le nom fait 3
+    # lettres ou moins et colle à une grappe (ex. ``-Iab/x``) serait
+    # refusé à tort — cas rare, coût accepté.
+    #
     # B-24d tour 8 — collage d'un chemin à un préfixe d'option.
     # Le collage d'un chemin à un préfixe d'option suit les conventions
     # POSIX/GNU : séparateur ``=`` pour les options longues
@@ -178,17 +197,12 @@ def _candidats(tool_name, tool_input):
     #     isole le préfixe d'option longue de son argument et couvre
     #     aussi les affectations de variables d'environnement en
     #     préfixe de commande (``VAR=/chemin cmd``).
-    # R2. Un fragment qui COMMENCE par ``-`` est une option. La forme
-    #     POSIX d'option courte avec argument agglutiné est ``-x``
-    #     suivi de l'argument, donc l'argument commence à l'index 2.
-    #     Un caractère ouvrant un chemin situé PLUS LOIN appartient à
-    #     un chemin RELATIF (``-Iinclude/sys``), pas à un chemin
-    #     absolu collé — borner R2 à l'index 2 évite les faux positifs
-    #     bloquants sur des builds légitimes (``gcc -Iinclude/sys``,
-    #     ``tar -fout/archive.tar``) tout en capturant correctement
-    #     les formes dangereuses (``-f/etc/passwd``, ``-f\Windows``,
-    #     ``-fC:\Windows``). Les options longues avec ``=`` sont déjà
-    #     traitées par R1 (le ``=`` est délimiteur). Le fragment entier
+    # R2. Un fragment qui COMMENCE par ``-`` est une option. Pour les
+    #     options courtes avec argument agglutiné (``-x<chemin>`` ou
+    #     ``-xyz<chemin>`` avec grappe de 1 à 3 lettres), on cherche
+    #     le plus petit préfixe alphabétique de longueur 1 à 3 suivi
+    #     d'un caractère ouvrant un chemin (``/``, ``~``, ``.``,
+    #     backslash Windows, ou lecteur ``X:``). Le fragment entier
     #     reste également candidat ; les doublons sont évités par
     #     ``vus``.
     #
@@ -221,32 +235,36 @@ def _candidats(tool_name, tool_input):
             commande = commande.replace(chr(92) + "\n", "")
             DELIMITEURS = r"""[\s<>;|&()"'`$=]+"""
             fragments = [f for f in re.split(DELIMITEURS, commande) if f]
-            # Règle R2 (bornée à l'index 2) : un fragment de longueur
-            # au moins 3 commençant par ``-`` est une option courte
-            # avec argument agglutiné de la forme ``-x<chemin>``,
-            # l'argument débutant à l'index 2. Le motif accepte les
-            # trois ouvrants de chemin POSIX (``/``, ``~``, ``.``), le
-            # backslash Windows (via chr(92), jamais littéral pour
-            # ne dépendre d'aucun échappement dans la chaîne template)
-            # et un lecteur Windows ``C:``. Dédoublonnage par ``vus``
-            # pour ne pas accumuler la même cible sous deux formes.
-            # chr(92)*2 et non chr(92) : dans une classe de caracteres, un backslash
-            # SEUL echapperait le crochet fermant et rendrait la classe invalide
-            # (« bad character range ») — le script leverait alors a chaque appel et,
-            # fail-closed oblige, refuserait TOUTES les commandes.
-            OUVRE_AGGLUTINE = re.compile(r"^-.[/~." + chr(92) * 2 + r"]|^-.[A-Za-z]:")
+            # Règle R2 (grappe de 1 à 3 lettres) : un fragment
+            # commençant par ``-`` est une option courte avec argument
+            # agglutiné. On cherche le plus petit préfixe alphabétique
+            # de longueur n (1 ≤ n ≤ 3) tel que le reste commence par
+            # un caractère ouvrant un chemin. Le motif accepte les
+            # trois ouvrants POSIX (``/``, ``~``, ``.``), le backslash
+            # Windows (via chr(92), jamais littéral pour ne dépendre
+            # d'aucun échappement dans la chaîne template) et un
+            # lecteur Windows ``C:``. chr(92)*2 et non chr(92) : dans
+            # une classe de caracteres, un backslash SEUL échapperait
+            # le crochet fermant et rendrait la classe invalide
+            # (« bad character range ») — le script lèverait alors à
+            # chaque appel et, fail-closed oblige, refuserait TOUTES
+            # les commandes. Dédoublonnage par ``vus`` pour ne pas
+            # accumuler la même cible sous deux formes.
+            OUVRE_AGGLUTINE = re.compile(r"^[/~." + chr(92) * 2 + r"]|^[A-Za-z]:")
             vus = set()
             for fragment in fragments:
                 if _ressemble_chemin(fragment) and fragment not in vus:
                     trouves.append(fragment)
                     vus.add(fragment)
-                if fragment.startswith("-") and len(fragment) >= 3:
-                    m = OUVRE_AGGLUTINE.match(fragment)
-                    if m:
-                        suffixe = fragment[2:]
-                        if _ressemble_chemin(suffixe) and suffixe not in vus:
-                            trouves.append(suffixe)
-                            vus.add(suffixe)
+                if fragment.startswith("-"):
+                    for n in range(1, 4):
+                        prefix = fragment[1:1 + n]
+                        reste = fragment[1 + n:]
+                        if len(prefix) == n and prefix.isalpha() and reste and OUVRE_AGGLUTINE.match(reste):
+                            if _ressemble_chemin(reste) and reste not in vus:
+                                trouves.append(reste)
+                                vus.add(reste)
+                            break
     return trouves
 
 

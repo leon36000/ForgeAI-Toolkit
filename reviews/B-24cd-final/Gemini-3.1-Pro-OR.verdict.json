@@ -1,20 +1,7 @@
 {
- "verdict": "REJECT",
- "objections": [
-  {
-   "severite": "critique",
-   "fichier": "src/forgeai/ide/guard_fs.py",
-   "description": "Contournement (bypass) sur Windows : la regex OUVRE_CHEMIN ignore les chemins Windows agglutinés à une option. Un fragment comme `-fC:\\Windows\\System32` ou `-f\\Windows` ne matche pas `[/~.]`. Le suffixe n'est donc pas extrait. Le fragment entier `-fC:\\Windows\\System32` est évalué, mais comme il commence par `-`, `os.path.isabs` le considère relatif. Il se résout donc DANS la racine et est autorisé à tort, permettant l'accès hors racine (critère de rejet 'a').",
-   "preuve": "Ligne 231 : `OUVRE_CHEMIN = re.compile(r\"[/~.]\")` ne contient ni `\\\\` ni `[A-Za-z]:`. L'extraction `m = OUVRE_CHEMIN.search(fragment)` échoue sur `-fC:\\Windows`."
-  },
-  {
-   "severite": "majeure",
-   "fichier": "src/forgeai/ide/guard_fs.py",
-   "description": "Faux positif bloquant sur POSIX pour les chemins relatifs agglutinés contenant un slash. Si une commande utilise `gcc -Iinclude/sys` ou `tar -fout/archive.tar`, `OUVRE_CHEMIN.search` trouve le premier slash et extrait le suffixe `/sys` ou `/archive.tar`. Ce suffixe tronqué devient un chemin absolu hors racine, ce qui provoque un REFUS (exit 2) pour un chemin relatif légitime situé dans la racine.",
-   "preuve": "Lignes 234-236 : `m = OUVRE_CHEMIN.search(fragment)` sur `-Iinclude/sys` matche le `/` à l'index 8. `suffixe = fragment[m.start():]` donne `/sys`, qui est absolu et sera rejeté."
-  }
- ],
- "date_heure": "2026-07-29T23:00:12.308702+00:00",
- "prompt_sha256": "4a93505d7db8d2430d1a3bf3b524fe4cb50203de2e29a0d96d123f77572d34b9",
+ "verdict": "APPROVE",
+ "objections": [],
+ "date_heure": "2026-07-29T23:21:24.216245+00:00",
+ "prompt_sha256": "1fc7ac86823049e70e88b3a25dea540867e48000ad7b5e8a3214a55bfbe39054",
  "reviewer_model": "Gemini-3.1-Pro-OR"
 }
