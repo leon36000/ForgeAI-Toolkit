@@ -1,0 +1,21 @@
+[ROUGE] sur origin/main (607004b).
+
+Reproduction exécutée, critère par critère :
+
+  Critère 1 — « chaque service ciblé reçoit le bon nodeSelector »   -> DÉJÀ SATISFAIT
+  Critère 2 — « les services auto ne sont pas accidentellement épinglés » -> DÉJÀ SATISFAIT
+      pin    -> nodeSelector={'kubernetes.io/hostname': 'n-a'}
+      libre  -> AUCUN (scheduler libre)          <- `auto` correctement respecté
+      herite -> {'kubernetes.io/hostname': 'n-global'}   <- héritage du nœud global
+
+    Ces deux comportements viennent de PLACE-026A. Ils sont rapportés comme ALREADY_FIXED
+    plutôt que revendiqués — mais ils étaient NON PROTÉGÉS : aucun test ne les verrouillait.
+    Deux tests de non-régression sont ajoutés (leçon de la revue PLACE-011 : un comportement
+    prouvé une fois n'est pas un comportement protégé).
+
+  Critère 3 — « les diagnostics rendent service -> nœud -> raison »  -> MANQUANT
+      plan.placement_reasons                  : ABSENT
+      fonctions de cluster.py                 : cluster_view, node_vendors, read_probes
+      => aucune fonction n'expose la décision de placement ni sa justification.
+
+Tests rouges : ImportError — `placement_diagnostic` n'existait pas.

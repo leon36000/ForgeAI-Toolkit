@@ -6,6 +6,7 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
+from forgeai.core.models import PlacementError, valider_placement
 
 
 def node_vendors(hardware: dict) -> list[str]:
@@ -59,3 +60,71 @@ def read_probes(registre_path: str | Path) -> list[dict]:
             payload = entry.get("payload", {})
             latest[payload.get("node_host")] = payload
     return list(latest.values())
+
+
+def placement_diagnostic(plan, node_global=None, inventaire=None) -> list[dict]:
+    """Diagnostique le placement de chaque service du plan.
+
+    Produit, pour chaque service, le nœud retenu et la raison du choix
+    (explicite, héritage global, ou auto-scheduling), puis confronte ce
+    choix à l'inventaire quand il est fourni.
+
+    Cette fonction n'interrompt jamais : un diagnostic a vocation à
+    remonter TOUTES les lignes d'un coup à l'utilisateur, y compris
+    lorsqu'un placement est invalide ou qu'aucun inventaire n'est
+    disponible. Lever ici masquerait les erreurs suivantes et priverait
+    l'opérateur d'une vision complète de son plan.
+    """
+    lignes: list[dict] = []
+    for svc in plan.services:
+        # Décision de placement : on détermine d'abord le nœud retenu et
+        # la justification, puis on valide séparément.
+        if svc.node == "auto":
+            node_retenu = None
+            raison = (
+                "placement auto : svc.node == 'auto', le scheduler "
+                "k3s choisira le nœud"
+            )
+        elif svc.node is not None:
+            # Hostname explicite demandé par le service : on respecte.
+            node_retenu = svc.node
+            raison = (
+                f"placement explicite : svc.node == '{svc.node}', "
+                "choix du service"
+            )
+        elif node_global is not None:
+            # Pas de nœud propre, on hérite du nœud global du plan.
+            node_retenu = node_global
+            raison = (
+                f"héritage global : svc.node absent, le service "
+                f"reçoit le nœud du plan '{node_global}'"
+            )
+        else:
+            # Ni svc.node, ni node_global : on laisse le scheduler décider.
+            node_retenu = None
+            raison = (
+                "placement auto : aucun nœud explicite ni global, "
+                "le scheduler choisira"
+            )
+
+        # Validation : séparée de la décision pour ne jamais interrompre
+        # le diagnostic. Une erreur sur un service ne doit pas masquer
+        # l'état des autres.
+        if inventaire is None:
+            validation = "non vérifié"
+        else:
+            try:
+                valider_placement(svc, inventaire, node_retenu)
+                validation = "OK"
+            except PlacementError as exc:
+                # Le message porte son code ERR_PLACE_* ; on le remonte
+                # tel quel pour que l'utilisateur puisse le lire.
+                validation = str(exc)
+
+        lignes.append({
+            "service": svc.name,
+            "node": node_retenu,
+            "raison": raison,
+            "validation": validation,
+        })
+    return lignes
