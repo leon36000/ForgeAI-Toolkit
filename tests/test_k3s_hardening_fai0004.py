@@ -104,7 +104,8 @@ def test_redis_probes_tcpSocket():
 def test_http_service_probe_avec_httpGet_et_path():
     out = render_k3s(_plan(_qdrant_http()))
     assert "httpGet:" in out
-    assert "path: /readyz" in out
+    # HEALTH-028B : chemins ÉCHAPPÉS (json.dumps) — intention inchangée, forme quotée.
+    assert 'path: "/readyz"' in out
     assert "port: 6333" in out
 
 

@@ -44,17 +44,31 @@ class TestOpenbaoK3s:
     )
 
     def test_openbao_liveness_has_sealedcode(self):
-        live = (
-            "livenessProbe:\n            httpGet:\n              path: "
-            "/v1/sys/health?standbyok=true&sealedcode=200&uninitcode=200"
-        )
-        assert live in self.manifest
+        # HEALTH-028B : chemins ÉCHAPPÉS (json.dumps). Intention inchangée — la liveness doit
+        # TOLÉRER l'état scellé, sinon le coffre redémarre en boucle avant son unseal.
+        # Vérifiée sur le manifeste PARSÉ, donc indépendante du formatage.
+        import yaml
+        dep = next(d for d in yaml.safe_load_all(self.manifest)
+                   if d and d.get("kind") == "Deployment"
+                   and d["metadata"]["name"] == "openbao")
+        chemin = dep["spec"]["template"]["spec"]["containers"][0]["livenessProbe"]["httpGet"]["path"]
+        assert chemin == "/v1/sys/health?standbyok=true&sealedcode=200&uninitcode=200", chemin
 
     def test_openbao_readiness_is_strict(self):
-        ready = "readinessProbe:\n            httpGet:\n              path: /v1/sys/health"
-        assert ready in self.manifest
-        # On vérifie qu'il n'y a PAS de query params sur la readiness
-        assert ready + "?" not in self.manifest
+        # HEALTH-028B : les chemins sont désormais ÉCHAPPÉS (json.dumps) — un chemin contenant
+        # `: `, `#` ou `*` serait sinon réinterprété par le parseur YAML. Seule la FORME change ;
+        # l'intention de ce test — readiness STRICTE, sans aucun paramètre de tolérance — est
+        # préservée et vérifiée sur le manifeste parsé plutôt que sur une chaîne littérale.
+        import yaml
+        dep = next(d for d in yaml.safe_load_all(self.manifest)
+                   if d and d.get("kind") == "Deployment"
+                   and d["metadata"]["name"] == "openbao")
+        conteneur = dep["spec"]["template"]["spec"]["containers"][0]
+        chemin_ready = conteneur["readinessProbe"]["httpGet"]["path"]
+        assert chemin_ready == "/v1/sys/health", f"readiness non stricte : {chemin_ready!r}"
+        assert "?" not in chemin_ready, "la readiness ne doit porter AUCUN paramètre"
+        # et la liveness reste TOLÉRANTE (le processus vit même scellé)
+        assert "sealedcode=200" in conteneur["livenessProbe"]["httpGet"]["path"]
 
     def test_openbao_no_ipc_lock(self):
         # Moindre privilège : PAS d'IPC_LOCK. L'image lance `bao` en non-root sans file-cap -> la
