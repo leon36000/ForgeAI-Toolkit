@@ -16,25 +16,79 @@ class McpServer:
 
 @dataclass(frozen=True)
 class HookSpec:
+    """Spécification d'un hook claude-code (event + commande + matcher optionnel).
+
+    Invariants durcis (gelés par ``__post_init__`` ET revérifiés à l'usage dans
+    ``_normalize_hook`` — un appelant peut muter une instance frozen via
+    ``object.__setattr__``, ce qui contourne ``__post_init__`` ; c'est pourquoi
+    la validation est *aussi* re-effectuée à chaque consommation) :
+
+    - les trois champs doivent être des ``str`` (ni ``int``, ni ``list``, etc.) ;
+    - aucun champ ne doit être vide ni whitespace-only (un event/command/matcher
+      « mort » ne doit jamais atteindre le JSON).
+    """
+
     event: str
     command: str
     matcher: str = "*"
 
     def __post_init__(self):
-        if not self.event:
-            raise IDEError("HookSpec: 'event' vide")
-        if not self.command:
-            raise IDEError("HookSpec: 'command' vide")
-        if not self.matcher:
-            raise IDEError("HookSpec: 'matcher' vide")
+        # O2 : validation à la construction — type strict + non-vide après strip.
+        # O3 : le message d'erreur inclut le type reçu pour faciliter le diagnostic.
+        if not isinstance(self.event, str):
+            raise IDEError(
+                f"HookSpec: 'event' doit être str, reçu {type(self.event).__name__}"
+            )
+        if not isinstance(self.command, str):
+            raise IDEError(
+                f"HookSpec: 'command' doit être str, reçu {type(self.command).__name__}"
+            )
+        if not isinstance(self.matcher, str):
+            raise IDEError(
+                f"HookSpec: 'matcher' doit être str, reçu {type(self.matcher).__name__}"
+            )
+        if not self.event.strip():
+            raise IDEError("HookSpec: 'event' vide ou whitespace-only")
+        if not self.command.strip():
+            raise IDEError("HookSpec: 'command' vide ou whitespace-only")
+        if not self.matcher.strip():
+            raise IDEError("HookSpec: 'matcher' vide ou whitespace-only")
+
 
 def _normalize_hook(item):
-    if isinstance(item, HookSpec):
-        return item
+    """Normalise un élément de ``hooks`` en ``HookSpec``, avec re-validation défensive.
+
+    Pourquoi re-valider ici alors que ``HookSpec.__post_init__`` valide déjà ?
+    Parce qu'une dataclass ``frozen`` n'est gelée que par son ``__setattr__``
+    généré ; ``object.__setattr__(instance, ...)`` contourne cette protection.
+    Un appelant peut donc muter un ``HookSpec`` après construction ; la
+    validation de construction seule ne couvre pas ce chemin. On revérifie donc
+    les trois invariants (type str + strip non vide) à chaque consommation.
+    """
+    # Cas str : on construit un HookSpec canonique (event == command, matcher "*").
     if isinstance(item, str):
-        if not item:
-            raise IDEError("hook str vide")
+        if not item or not item.strip():
+            # O4 : durcissement VOLONTAIRE — chaîne vide / whitespace-only rejetée.
+            raise IDEError("hook str vide ou whitespace-only")
         return HookSpec(event=item, command=item, matcher="*")
+
+    # Cas HookSpec : on revérifie les trois champs (le contournement
+    # object.__setattr__ rend __post_init__ insuffisant).
+    if isinstance(item, HookSpec):
+        if not isinstance(item.event, str) or not item.event.strip():
+            raise IDEError(
+                f"HookSpec: 'event' invalide à l'usage (type={type(item.event).__name__})"
+            )
+        if not isinstance(item.command, str) or not item.command.strip():
+            raise IDEError(
+                f"HookSpec: 'command' invalide à l'usage (type={type(item.command).__name__})"
+            )
+        if not isinstance(item.matcher, str) or not item.matcher.strip():
+            raise IDEError(
+                f"HookSpec: 'matcher' invalide à l'usage (type={type(item.matcher).__name__})"
+            )
+        return item
+
     raise IDEError(f"type de hook invalide: {type(item).__name__}")
 
 def generate_mcp_config(ide: str, servers: list[McpServer]) -> IdeConfig:
@@ -69,6 +123,27 @@ def generate_mcp_config(ide: str, servers: list[McpServer]) -> IdeConfig:
     return IdeConfig(ide=ide, path=path, content=content_str, fmt="json")
 
 def generate_governance_config(skills: list[str], hooks: list[str | HookSpec], *, ide: str = "claude-code") -> IdeConfig:
+    """Construit ``.claude/settings.json`` (claude-code uniquement).
+
+    Chaque entrée de ``skills`` devient un élément de ``permissions.allow``.
+    Chaque entrée de ``hooks`` (str ou ``HookSpec``) devient une règle
+    ``{matcher, hooks:[{type: command, command}]}`` groupée par ``event``.
+
+    **Divergences assumées par rapport à l'historique (durcissement volontaire,
+    pas un bug)** :
+
+    - Une chaîne vide ou whitespace-only dans ``hooks`` (``[""]``, ``[" "]``)
+      lève ``IDEError`` au lieu d'être sérialisée comme une clé/event mort
+      dans le JSON (O4).
+    - Un ``HookSpec`` dont un champ n'est pas ``str`` ou est vide/whitespace
+      est rejeté — à la construction (``__post_init__``) ET à l'usage dans
+      ``_normalize_hook`` (un HookSpec peut être muté via
+      ``object.__setattr__`` après construction, ce qui contourne le
+      ``__post_init__`` d'une dataclass frozen).
+    - Les règles strictement identiques (même ``matcher`` ET même liste de
+      commandes) pour un même ``event`` sont dédupliquées ; deux ``HookSpec``
+      distincts sur le même event restent agrégés.
+    """
     if ide != "claude-code":
         raise IDEError("governance skills+hooks n'est supportée que pour claude-code")
     # Build permissions.allow from skills
@@ -81,7 +156,11 @@ def generate_governance_config(skills: list[str], hooks: list[str | HookSpec], *
             "matcher": spec.matcher,
             "hooks": [{"type": "command", "command": spec.command}],
         }
-        hooks_dict.setdefault(spec.event, []).append(rule)
+        bucket = hooks_dict.setdefault(spec.event, [])
+        # Égalité structurelle des dicts : même matcher + même contenu == même règle.
+        # Préserve l'historique (["A","A"] -> 1 règle) tout en agrégeant les DISTINCTES.
+        if rule not in bucket:
+            bucket.append(rule)
     content = {"permissions": permissions, "hooks": hooks_dict}
     content_str = json.dumps(content, ensure_ascii=False, indent=1)
     return IdeConfig(ide="claude-code", path=".claude/settings.json", content=content_str, fmt="json")

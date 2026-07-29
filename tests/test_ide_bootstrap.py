@@ -213,3 +213,168 @@ class TestHookSpecNormalisation:
             spec.command = "autre"
         with pytest.raises(dataclasses.FrozenInstanceError):
             spec.matcher = "Edit"
+
+
+# O1 — déduplication stricte des règles identiques
+def test_hooks_str_doublon_produit_une_seule_regle():
+    """["A", "A"] : une seule règle, pas deux exécutions de la même commande."""
+    cfg = generate_governance_config(skills=["s"], hooks=["A", "A"])
+    data = json.loads(cfg.content)
+    assert data["hooks"]["A"] == [
+        {"matcher": "*", "hooks": [{"type": "command", "command": "A"}]}
+    ]
+    assert len(data["hooks"]["A"]) == 1
+
+
+def test_hooks_hookspec_doublon_strict_produit_une_seule_regle():
+    """[HookSpec(e, c1), HookSpec(e, c1)] : une seule règle (dedup strict)."""
+    cfg = generate_governance_config(
+        skills=["s"], hooks=[HookSpec("e", "c1"), HookSpec("e", "c1")]
+    )
+    data = json.loads(cfg.content)
+    assert len(data["hooks"]["e"]) == 1
+    assert data["hooks"]["e"][0]["matcher"] == "*"
+    assert data["hooks"]["e"][0]["hooks"][0]["command"] == "c1"
+
+
+def test_hooks_hookspec_distincts_sont_agreges():
+    """[HookSpec(e, c1, m1), HookSpec(e, c2, m2)] : DEUX règles (distinctes)."""
+    cfg = generate_governance_config(
+        skills=["s"],
+        hooks=[
+            HookSpec("e", "c1", "m1"),
+            HookSpec("e", "c2", "m2"),
+        ],
+    )
+    data = json.loads(cfg.content)
+    assert len(data["hooks"]["e"]) == 2
+    matchers = {r["matcher"] for r in data["hooks"]["e"]}
+    assert matchers == {"m1", "m2"}
+
+
+def test_hooks_str_et_hookpec_meme_event_et_meme_commande_dedupliques():
+    """["A", HookSpec("A","A")] : une seule règle (équivalence stricte)."""
+    cfg = generate_governance_config(
+        skills=["s"],
+        hooks=["A", HookSpec("A", "A")],
+    )
+    data = json.loads(cfg.content)
+    assert len(data["hooks"]["A"]) == 1
+
+
+def test_hooks_meme_event_mais_commandes_differentes_pas_dedupliques():
+    """["A", HookSpec("A", "B")] : deux règles (commandes différentes)."""
+    cfg = generate_governance_config(
+        skills=["s"],
+        hooks=["A", HookSpec("A", "B")],
+    )
+    data = json.loads(cfg.content)
+    assert len(data["hooks"]["A"]) == 2
+
+
+# O2+O3 — validation : type strict + whitespace + contournement object.__setattr__
+def test_hookspec_event_whitespace_leve_ideerror():
+    with pytest.raises(IDEError) as exc:
+        HookSpec(event=" ", command="c", matcher="*")
+    assert "event" in str(exc.value)
+
+
+def test_hookspec_command_whitespace_leve_ideerror():
+    with pytest.raises(IDEError) as exc:
+        HookSpec(event="e", command="   ", matcher="*")
+    assert "command" in str(exc.value)
+
+
+def test_hookspec_matcher_whitespace_leve_ideerror():
+    with pytest.raises(IDEError) as exc:
+        HookSpec(event="e", command="c", matcher="\t\n")
+    assert "matcher" in str(exc.value)
+
+
+def test_hookspec_matcher_liste_leve_ideerror_avec_type_dans_message():
+    with pytest.raises(IDEError) as exc:
+        HookSpec(event="e", command="c", matcher=["*"])
+    msg = str(exc.value)
+    assert "matcher" in msg
+    # O3 : le type reçu doit figurer dans le message pour faciliter le diagnostic.
+    assert "list" in msg
+
+
+def test_hookspec_event_int_leve_ideerror_avec_type_dans_message():
+    with pytest.raises(IDEError) as exc:
+        HookSpec(event=42, command="c", matcher="*")
+    msg = str(exc.value)
+    assert "event" in msg
+    assert "int" in msg
+
+
+def test_hookspec_command_int_leve_ideerror_avec_type_dans_message():
+    with pytest.raises(IDEError) as exc:
+        HookSpec(event="e", command=42, matcher="*")
+    msg = str(exc.value)
+    assert "command" in msg
+    assert "int" in msg
+
+
+def test_generate_governance_rejette_hookspec_mute_via_object_setattr():
+    """Le contournement object.__setattr__(frozen_hookspec, ...) doit être rattrapé
+    à l'usage (la validation de construction seule ne suffit pas)."""
+    spec = HookSpec(event="e", command="c", matcher="*")
+    # Bypass du gel : object.__setattr__ saute le __setattr__ généré par le
+    # décorateur @dataclass(frozen=True).
+    object.__setattr__(spec, "event", "")
+    with pytest.raises(IDEError) as exc:
+        generate_governance_config(skills=["s"], hooks=[spec])
+    assert "event" in str(exc.value)
+
+
+def test_generate_governance_rejette_hookspec_mute_command_whitespace():
+    spec = HookSpec(event="e", command="c", matcher="*")
+    object.__setattr__(spec, "command", "   ")
+    with pytest.raises(IDEError) as exc:
+        generate_governance_config(skills=["s"], hooks=[spec])
+    assert "command" in str(exc.value)
+
+
+def test_generate_governance_rejette_hookspec_mute_matcher_liste():
+    spec = HookSpec(event="e", command="c", matcher="*")
+    object.__setattr__(spec, "matcher", ["*"])
+    with pytest.raises(IDEError) as exc:
+        generate_governance_config(skills=["s"], hooks=[spec])
+    assert "matcher" in str(exc.value)
+    assert "list" in str(exc.value)
+
+
+def test_hookspec_vide_a_la_construction_leve_ideerror():
+    with pytest.raises(IDEError):
+        HookSpec(event="", command="c", matcher="*")
+
+
+# O4 — chaîne vide str : durcissement documenté
+def test_hook_str_vide_leve_ideerror():
+    with pytest.raises(IDEError):
+        generate_governance_config(skills=["s"], hooks=[""])
+
+
+def test_hook_str_whitespace_leve_ideerror():
+    with pytest.raises(IDEError):
+        generate_governance_config(skills=["s"], hooks=["   "])
+
+
+def test_docstring_generate_governance_documente_durcissement_chaine_vide():
+    """O4 : la docstring doit explicitement mentionner que la chaîne vide est
+    rejetée (durcissement volontaire, pas un bug)."""
+    doc = generate_governance_config.__doc__ or ""
+    # Présence d'au moins un mot-clé indiquant que la chaîne vide est rejetée.
+    lowered = doc.lower()
+    assert (
+        "chaîne vide" in lowered
+        or "chaine vide" in lowered
+        or ("vide" in lowered and "durcissement" in lowered)
+    )
+
+
+def test_docstring_generate_governance_documente_dedup_strict():
+    """O1 : la docstring doit mentionner la déduplication stricte des règles."""
+    doc = generate_governance_config.__doc__ or ""
+    assert "édupliqu" in doc.lower() or "dedupliqu" in doc.lower()
