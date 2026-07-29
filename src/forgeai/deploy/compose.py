@@ -113,73 +113,101 @@ def evaluer_service(
     return HealthState.UNKNOWN
 
 
-def wait_healthy(
-    plan: "DeploymentPlan",
-    timeout_s: float = 180.0,
-    probe=None,
-) -> dict[str, str]:
-    """Attend que chaque service réponde sur sa sonde. Échec = DeployError
-    avec l'état exact de chaque service (jamais de faux succès).
+def _etiquette_publique(etat: HealthState) -> str:
+    """Traduit un `HealthState` vers le vocabulaire historique de `wait_healthy`.
 
-    Avant toute boucle, vérifie les contrats : tout service
-    `health_required=True` sans `probe_type` exploitable ni `healthcheck_url`
-    déclenche `HealthContractError` (préfixe ERR_HEALTH_CONTRAT_ABSENT).
+    Le CLI compare ces valeurs à "healthy" en dur : rompre ce contrat casserait le produit.
+    Seul `FUNCTIONALLY_READY` vaut "healthy" — un transport joignable dont l'applicatif n'est
+    pas prouvé reste en attente, jamais sain.
     """
-    from forgeai.core.models import HealthState
+    if etat is HealthState.FUNCTIONALLY_READY:
+        return "healthy"
+    # Tout le reste est "waiting", y compris FAILED. Ce n'est PAS masquer un échec : les
+    # violations de contrat sont rejetées AVANT la boucle (HealthContractError, étape 1).
+    # Passé ce filtre, un FAILED en cours d'attente signifie « la sonde n'a pas encore
+    # répondu », pas « preuve d'échec » — un service qui démarre lentement n'est pas en panne.
+    # L'état interne exact reste rendu dans le champ `détail` du message d'erreur.
+    return "waiting"
+
+
+def wait_healthy(plan, timeout_s: float = 180.0, probe=None) -> dict:
+    """Attend la santé du plan avec contrat non-vacu. Lève DeployError si timeout ou contrat manquant."""
+    import time
+    from urllib.request import urlopen
+
+    def _default_probe(url: str) -> bool:
+        try:
+            urlopen(url, timeout=2)
+            return True
+        except Exception:
+            return False
 
     if probe is None:
-        # probe doit être une fonction qui prend une URL et retourne bool
-        def probe(url: str) -> bool:
-            # fallback minimal, par défaut on utilise http_ok
-            import urllib.request
-            try:
-                with urllib.request.urlopen(url, timeout=2) as _:
-                    return True
-            except Exception:
-                return False
+        probe = _default_probe
 
-    # Vérification des contrats avant toute attente
+    # --- Étape 1 : contrôle des contrats (AVANT toute attente) ---
     for svc in plan.services:
-        if svc.health_required:
-            a_sonde = (
-                svc.probe_type is not None or
-                svc.healthcheck_url is not None
+        if not getattr(svc, "health_required", False):
+            continue
+        probe_type = getattr(svc, "probe_type", None)
+        exploitable = (
+            getattr(svc, "healthcheck_url", None) is not None
+            or probe_type in (ProbeType.HTTP, ProbeType.TCP, ProbeType.EXEC)
+        )
+        if not exploitable:
+            raise HealthContractError(
+                f"ERR_HEALTH_CONTRAT_ABSENT: service '{svc.name}' exige la santé "
+                f"mais n'a pas de contrat de sonde exploitable (probe_type={probe_type!r}, "
+                f"healthcheck_url={getattr(svc, 'healthcheck_url', None)!r})"
             )
-            if not a_sonde:
-                raise HealthContractError(
-                    f"ERR_HEALTH_CONTRAT_ABSENT : le service '{svc.name}' "
-                    f"exige la santé (health_required=True) mais n'a ni "
-                    f"probe_type exploitable ni healthcheck_url. Refus "
-                    f"d'attendre."
-                )
 
     deadline = time.monotonic() + timeout_s
-    status: dict[str, str] = {
-        s.name: "waiting" for s in plan.services if s.healthcheck_url
-    }
-
-    while time.monotonic() < deadline:
+    # --- Étape 2 et 3 : sondage itératif avec agrégation ---
+    while True:
+        verdicts: dict = {}
         for svc in plan.services:
-            if svc.healthcheck_url and status.get(svc.name) != "healthy":
-                if probe(svc.healthcheck_url):
-                    status[svc.name] = "healthy"
+            healthcheck_url = getattr(svc, "healthcheck_url", None)
+            probe_type = getattr(svc, "probe_type", None)
+            requis = bool(getattr(svc, "health_required", False))
+            sondable = bool(healthcheck_url) or probe_type in (
+                ProbeType.HTTP, ProbeType.TCP, ProbeType.EXEC)
+            # Un service NI requis NI sondable n'apporte aucune information : l'inclure le
+            # ferait peser UNKNOWN sur l'agrégat pour toujours. En revanche, un service
+            # sondable DOIT être évalué même s'il n'est pas `health_required` — sinon un plan
+            # de services simplement sondés produirait un ensemble VIDE, et la garde
+            # anti-vacuité conclurait UNKNOWN alors qu'une preuve était disponible.
+            if not requis and not sondable:
+                continue
+            if healthcheck_url:
+                sonde_reussie = bool(probe(healthcheck_url))
+                transport_ouvert = sonde_reussie
+            elif probe_type in (ProbeType.HTTP, ProbeType.TCP, ProbeType.EXEC):
+                # Sonde interne au conteneur (Compose healthcheck), non exécutable depuis l'hôte.
+                sonde_reussie = None
+                transport_ouvert = False
+            else:
+                # Service non sondable : doit quand même figurer dans verdicts pour que
+                # evaluer_service le déclare FAILED (garde anti-vacuité).
+                verdicts[svc.name] = evaluer_service(svc, sonde_reussie=None, transport_ouvert=False)
+                continue
+            verdicts[svc.name] = evaluer_service(
+                svc, sonde_reussie=sonde_reussie, transport_ouvert=transport_ouvert
+            )
 
-        # Utiliser agreger_verdicts pour décider du succès
-        # On convertit les valeurs string en HealthState
-        verdicts = {}
-        for svc in plan.services:
-            if svc.healthcheck_url:
-                if status.get(svc.name) == "healthy":
-                    verdicts[svc.name] = HealthState.FUNCTIONALLY_READY
-                else:
-                    verdicts[svc.name] = HealthState.UNKNOWN  # pas encore sain
-            # services sans healthcheck_url ne participent pas à l'attente,
-            # leur état est ignoré dans le verdict global car ils n'ont
-            # pas été requis (pas de health_required=True ou pas de probe).
-        if agreger_verdicts(verdicts) == HealthState.FUNCTIONALLY_READY:
-            return status
-        time.sleep(2.0)
+        global_verdict = agreger_verdicts(verdicts)
+        if global_verdict == HealthState.FUNCTIONALLY_READY:
+            # CONTRAT DE SORTIE PRÉSERVÉ : `cli.py` compare ces valeurs à "healthy" en dur.
+            # Changer ce vocabulaire casserait le produit sans rien apporter — la distinction
+            # fine (TRANSPORT_READY / UNKNOWN / FAILED) vit dans `HealthState`, en interne,
+            # et c'est elle qui porte la garde anti-vacuité.
+            return {nom: _etiquette_publique(etat) for nom, etat in verdicts.items()}
 
-    raise DeployError(
-        f"Healthchecks incomplets après {timeout_s}s : {status}"
-    )
+        if time.monotonic() >= deadline:
+            details = ", ".join(f"{n}={v.value}" for n, v in verdicts.items()) or "<vide>"
+            etats = {nom: _etiquette_publique(etat) for nom, etat in verdicts.items()}
+            raise DeployError(
+                f"Déploiement non READY (verdict={global_verdict.value}) après {timeout_s}s. "
+                f"États par service: {etats} (détail: {details})"
+            )
+
+        time.sleep(2)

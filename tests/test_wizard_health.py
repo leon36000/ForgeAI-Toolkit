@@ -125,3 +125,61 @@ def test_wait_healthy_refuse_l_absence_de_contrat_requis():
                       health_required=True)   # aucun probe_type, aucun healthcheck_url
     with pytest.raises(HealthContractError, match="ERR_HEALTH"):
         wait_healthy(_plan_sante([svc]), timeout_s=1.0)
+
+
+# --- Objections de la revue scellée (REJECT 3/3, sceau b527901d005d) -------------------
+# Les trois vendors convergent : `evaluer_service` et `agreger_verdicts` sont testées mais
+# `wait_healthy` NE LES APPELLE PAS — il reconstruit sa logique à la main. Mes tests
+# validaient donc des fonctions que le chemin de production n'emprunte pas : exactement le
+# piège du test-sur-chemin-inventé déjà rencontré sur RAG-005.
+def test_probe_type_none_est_un_contrat_absent():
+    """`ProbeType.NONE` n'est PAS `None` : `svc.probe_type is not None` l'accepte comme sonde
+    valide. Un service exigeant la santé tout en déclarant explicitement « aucune sonde » est
+    une violation de contrat, pas un service sondé."""
+    from forgeai.deploy.compose import wait_healthy, HealthContractError
+    svc = ServiceSpec(name="db", image="postgres:15", host_port=5432, container_port=5432,
+                      health_required=True, probe_type=ProbeType.NONE)
+    with pytest.raises(HealthContractError, match="ERR_HEALTH_CONTRAT_ABSENT"):
+        wait_healthy(_plan_sante([svc]), timeout_s=1.0)
+
+
+def test_service_exec_requis_nest_pas_ignore_du_verdict():
+    """Défaut CRITIQUE : `wait_healthy` ne sonde que les services ayant `healthcheck_url`.
+    Un postgres `health_required=True` avec une sonde EXEC passait le contrôle de contrat
+    PUIS était absent des verdicts — le déploiement se déclarait prêt en l'ignorant."""
+    from forgeai.deploy.compose import wait_healthy
+    pg = ServiceSpec(name="postgres", image="postgres:15", host_port=5432, container_port=5432,
+                     health_required=True, probe_type=ProbeType.EXEC,
+                     probe_target=("pg_isready", "-U", "forgeai"))
+    web = ServiceSpec(name="web", image="web:1", host_port=8080, container_port=8080,
+                      healthcheck_url="http://127.0.0.1:8080/health")
+    from forgeai.deploy.compose import DeployError
+    with pytest.raises((DeployError, Exception)) as exc:
+        wait_healthy(_plan_sante([pg, web]), timeout_s=1.0, probe=lambda url: True)
+    assert "postgres" in str(exc.value), \
+        f"un service requis non sondable doit apparaître dans l'échec : {exc.value}"
+
+
+def test_wait_healthy_utilise_bien_agreger_verdicts(monkeypatch):
+    """Défaut de cohérence : `agreger_verdicts` porte la règle anti-vacuité, mais si
+    `wait_healthy` ne l'appelle pas, cette règle ne protège RIEN en production. On vérifie le
+    branchement réel, pas l'existence de la fonction."""
+    from forgeai.deploy import compose as mod
+    appels = []
+    vrai = mod.agreger_verdicts
+    monkeypatch.setattr(mod, "agreger_verdicts", lambda v: (appels.append(v), vrai(v))[1])
+    svc = ServiceSpec(name="web", image="web:1", host_port=8080, container_port=8080,
+                      healthcheck_url="http://127.0.0.1:8080/health")
+    mod.wait_healthy(_plan_sante([svc]), timeout_s=2.0, probe=lambda url: True)
+    assert appels, "wait_healthy doit passer par agreger_verdicts, pas reconstruire sa logique"
+
+
+def test_arguments_exec_sont_echappes():
+    """Objection de Gemini : un argument contenant un guillemet double casse le tableau YAML
+    émis. Un contenu de configuration ne doit jamais pouvoir corrompre le manifeste."""
+    from forgeai.renderers.compose import render_compose
+    svc = ServiceSpec(name="x", image="x:1", host_port=1, container_port=1,
+                      probe_type=ProbeType.EXEC, probe_target=('echo', 'a"b'))
+    import yaml
+    rendu = render_compose(_plan_sante([svc]))
+    yaml.safe_load(rendu)   # doit rester parsable

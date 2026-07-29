@@ -7,6 +7,8 @@ injectées via le bloc `environment:` à partir du plan.
 """
 from __future__ import annotations
 
+import json
+
 from forgeai.core.models import DeploymentPlan, ProbeType
 from forgeai.renderers._openbao import UNSEAL_SCRIPT
 
@@ -25,17 +27,22 @@ def _healthcheck_lines(svc) -> list[str]:
     if svc.probe_type is ProbeType.EXEC:
         # Utilisation de CMD (et non CMD-SHELL) pour éviter l'injection de commande : on passe un tableau d'arguments,
         # jamais une chaîne interprétée par le shell. Le shell est dangereux car il peut exécuter des sous-commandes.
-        test_entry = f'test: ["CMD", {", ".join(f'"{arg}"' for arg in svc.probe_target)}]'
+        # Échappement par json.dumps : un argument contenant un guillemet double
+        # corromprait le tableau YAML si on interpolait naïvement. Un contenu de
+        # configuration ne doit jamais pouvoir casser le manifeste rendu.
+        argv = ["CMD", *(str(a) for a in svc.probe_target)]
+        test_entry = f'test: {json.dumps(argv, ensure_ascii=False)}'
     elif svc.probe_type is ProbeType.HTTP:
         # Sonde HTTP via curl : vérifie que le serveur répond avec un code 2xx/3xx.
-        test_entry = f'test: ["CMD", "curl", "-fsS", "http://127.0.0.1:{int(svc.container_port)}{svc.probe_target}"]'
+        cible = f"http://127.0.0.1:{int(svc.container_port)}{svc.probe_target}"
+        test_entry = f'test: {json.dumps(["CMD", "curl", "-fsS", cible], ensure_ascii=False)}'
     elif svc.probe_type is ProbeType.TCP:
         # Sonde TCP via netcat : vérifie que le port est ouvert et accepte les connexions.
-        test_entry = f'test: ["CMD", "nc", "-z", "127.0.0.1", "{int(svc.container_port)}"]'
+        test_entry = f'test: {json.dumps(["CMD", "nc", "-z", "127.0.0.1", str(int(svc.container_port))], ensure_ascii=False)}'
     else:
         # Fallback : probe_type est None mais healthcheck_url est renseigné (comportement hérité).
         # On utilise l'URL telle quelle, sans reconstruction.
-        test_entry = f'test: ["CMD", "curl", "-fsS", "{svc.healthcheck_url}"]'
+        test_entry = f'test: {json.dumps(["CMD", "curl", "-fsS", str(svc.healthcheck_url)], ensure_ascii=False)}'
 
     # Remplir les paramètres de la sonde avec conversion en entiers
     interval = int(svc.health_interval_s)

@@ -44,5 +44,36 @@ simplification »* — parce que c'est exactement ce que j'ai fait sans le voulo
 suite complète, je livrais un package empêchant le coffre de secrets de démarrer, avec 9 tests
 ciblés verts.
 
+## REJECT 3/3 au tour 1 — cinq défauts, tous réels
+Les trois vendors ont convergé sur un défaut que mes 9 tests ne pouvaient pas voir :
+**`evaluer_service` et `agreger_verdicts` étaient définies, testées… et jamais appelées par
+`wait_healthy`**, qui reconstruisait sa logique à la main. La règle anti-vacuité que ce package
+existe pour instaurer **ne protégeait donc rien en production**.
+
+C'est exactement le piège consigné le matin même après RAG-005 — *tester une fonction que le chemin
+de production n'emprunte pas*. Reproduit six heures plus tard. La mémoire ne suffit pas : seul un
+test traversant le vrai point d'entrée protège. J'en ai écrit un explicite, qui vérifie que
+`wait_healthy` **appelle** `agreger_verdicts`, pas qu'elle existe.
+
+| défaut | source | gravité |
+|---|---|---|
+| `wait_healthy` n'appelle ni `evaluer_service` ni `agreger_verdicts` | 3 vendors | la garde ne protégeait rien |
+| `ProbeType.NONE` accepté comme sonde valide (`is not None` = vrai) | DeepSeek, Gemini, Tencent | contrat violé sans détection |
+| service `EXEC` requis **absent des verdicts** | Gemini, Tencent | déploiement prêt **en l'ignorant** |
+| guillemet dans un argument **corrompt le YAML** | Gemini | manifeste cassé par une config |
+| services sondables sans `health_required` jamais évalués | **trouvé en corrigeant** | agrégat `UNKNOWN` malgré une preuve disponible |
+
+## Un sixième point : ne pas casser ce que le produit consomme
+Ma réécriture changeait le vocabulaire de sortie (`"healthy"` → `"functionally_ready"`). Or
+**`cli.py` compare à `"healthy"` en dur** — et `cli.py` est hors périmètre. J'ai donc préservé le
+contrat public via `_etiquette_publique`, en gardant `HealthState` en interne : c'est lui qui porte
+la garde anti-vacuité, le vocabulaire public n'a jamais eu besoin de changer.
+
+Point sémantique tranché au passage : pendant une **boucle d'attente**, une sonde qui échoue
+signifie « pas encore », pas « échec ». Les violations de contrat étant rejetées AVANT la boucle,
+tout `FAILED` restant est un « pas encore prouvé » → étiquette `waiting`, l'état interne exact
+restant rendu dans le champ `détail`. Conforme à l'ADR, qui réserve `FAILED` à *« une preuve
+d'échec ou un contrat violé »*.
+
 ## Rollback
 `git revert` → retour à la faille de vacuité (défaut FAI-U-028 connu) ; baseline verte.
