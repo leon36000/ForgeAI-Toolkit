@@ -18,6 +18,7 @@ from pathlib import Path
 from typing import Callable, Protocol
 
 from ..core.runner import CommandRunner
+from ..core.validation import ValidationError, resolve_within, valider_nom_simple
 from .probe import ProbeResult, Transport, probe_route
 
 
@@ -82,13 +83,11 @@ def download_verified(model: LocalModel, dest_dir: Path, fetcher: Fetcher) -> Pa
     on vérifie, PUIS on renomme atomiquement vers la destination finale. Ainsi le fichier
     présent à `dest` est toujours exactement l'artefact vérifié (pas de fenêtre de
     substitution entre vérification et usage)."""
-    if "/" in model.name or os.sep in model.name or ".." in model.name:
-        raise LocalModelError(f"nom de modèle invalide : {model.name}")
-    dest = Path(dest_dir) / f"{model.name}.bin"
-    dest_resolved = dest.resolve()
-    dest_dir_resolved = Path(dest_dir).resolve()
-    if not dest_resolved.is_relative_to(dest_dir_resolved):
-        raise LocalModelError(f"nom de modèle invalide : {model.name}")
+    try:
+        valider_nom_simple(model.name)
+        dest = resolve_within(Path(dest_dir) / f"{model.name}.bin", dest_dir)
+    except ValidationError:
+        raise LocalModelError(f"nom de modèle invalide : {model.name}") from None
     tmp = dest.with_suffix(".part")
     fetcher.fetch(model.download_url, tmp)
     actual = _sha256_file(tmp)
