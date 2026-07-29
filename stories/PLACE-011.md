@@ -40,5 +40,23 @@ mon indentation à tort. Diagnostic par comptage (nombre impair de `"""`), répa
 un `ast.parse()` **avant écriture** a été ajouté à la procédure d'intégration, pour que du code
 non compilable ne corrompe plus un fichier sain.
 
+## Objections de la revue scellée — toutes traitées (tour 1 : APPROVE 3/3)
+**Convergence à trois, sur le même point.** Gemini, Grok et DeepSeek ont relevé
+INDÉPENDAMMENT que `NodeInventaire` levait `ERR_PLACE_VENDOR_INCONNU` pour un hostname vide et une
+VRAM négative — deux cas étrangers au vendor. Ironie utile : ce package existe pour produire des
+erreurs causales, et son propre contrat en portait une trompeuse. Trois codes distincts désormais :
+`ERR_PLACE_HOSTNAME_INVALIDE`, `ERR_PLACE_VRAM_INVALIDE`, `ERR_PLACE_VENDOR_INCONNU`.
+
+**DeepSeek** : un tuple vide passait pour une absence d'inventaire. `None` = « je ne sais pas » ;
+`()` = « je sais, et il n'y a rien ». Le correctif du contrat ne suffisait pas — mon propre câblage
+du renderer testait `if inventaire:` et court-circuitait la validation avant de l'appeler ; corrigé
+en `is not None`. Sans le test rouge, je l'aurais manqué.
+
+**Grok** : `ERR_PLACE_NOEUD_INCONNU` était démontré dans les preuves d'exécution mais aucun test ne
+le couvrait. Le test ajouté passe du premier coup — la fonctionnalité était là, mais **un
+comportement prouvé une fois n'est pas un comportement protégé**. Même famille d'erreur que le
+test-sur-chemin-inventé de RAG-005, vue par l'autre bout : là un test sans comportement, ici un
+comportement sans test.
+
 ## Rollback
 `git revert` → retour au rendu sans validation (défaut FAI-U-011 connu) ; baseline verte.
