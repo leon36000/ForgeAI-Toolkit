@@ -1,0 +1,26 @@
+=== PREUVE D'EXÉCUTION — D3 ===
+générée le : 2026-07-29 04:17:20 -0400
+commit     : 78dbd61
+
+--- suite complète (le CODE DE SORTIE fait autorité) ---
+code de sortie pytest : 0
+  => SUITE VERTE
+........................................................................ [ 98%]
+.............                                                            [100%]
+  lignes FAILED : 0
+
+--- couverture du code NOUVEAU ---
+  37/37 = 100 %   (seuil quality gate : 80 %)
+
+--- validation prouvée à 3 niveaux ---
+  unitaire   : 18/18 cas (_valider_adopt), borne 40 car. sur clé de 200
+  HTTP réel  : 9/9 via build_server, ZÉRO réponse 500
+  permanent  : 22 tests dans tests/test_adoption_api.py
+
+--- contrôle de mutation : le défaut est PROUVÉ ---
+  validation neutralisée -> 5 tests ROUGES (500 sur entrée malformée)
+  restaurée              -> 22 verts
+  nuance : les TYPES invalides étaient silencieusement ignorés, pas 500
+
+--- no-stub-scan ---
+NO-STUB-SCAN : OK (266 fichiers scannés, zéro violation)

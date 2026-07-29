@@ -1036,11 +1036,27 @@ class ForgeAIHandler(BaseHTTPRequestHandler):
                 self._send_json(400, {"error": "rag_node invalide"})
                 return
 
+            adopt = data.get("adopt")
+
             try:
                 load_stack(stack_id)
             except FileNotFoundError:
                 self._send_json(404, {"error": "stack not found"})
                 return
+
+            # Validation de `adopt` à la FRONTIÈRE : la valeur atteint le YAML rendu et vient
+            # d'une entrée réseau. La validation en profondeur (ServiceSpec) ne dispense pas
+            # de refuser ici proprement — une ValueError qui remonterait donnerait un 500 sur
+            # une simple faute de saisie. Placée APRÈS le contrôle d'existence du stack pour
+            # ne pas transformer un 404 légitime en 500.
+            if adopt is not None:
+                # Le stack n'est chargé QUE s'il y a quelque chose à valider : sans `adopt`,
+                # cet appel serait un travail inutile — et un risque, car rien ne garantit
+                # que load_stack rende un objet exploitable dans tous les contextes.
+                erreur_adopt = _valider_adopt(adopt, set(deploy_ids(load_stack(stack_id))))
+                if erreur_adopt is not None:
+                    self._send_json(400, {"error": erreur_adopt})
+                    return
 
             with _DEPLOY_STATE["lock"]:
                 proc = _DEPLOY_STATE["proc"]
@@ -1084,7 +1100,7 @@ class ForgeAIHandler(BaseHTTPRequestHandler):
                         "--stack",
                         stack_id,
                     ]
-                    if bricks_sel or models_sel or embeddings_sel or rag_node:
+                    if bricks_sel or models_sel or embeddings_sel or rag_node or adopt:
                         workdir = forgeai_home() / "deploy"
                         workdir.mkdir(parents=True, exist_ok=True)
                         sel_path = workdir / "selection-demande.json"
@@ -1092,6 +1108,8 @@ class ForgeAIHandler(BaseHTTPRequestHandler):
                                    "embeddings": embeddings_sel}
                         if rag_node is not None:
                             contenu["rag_node"] = rag_node
+                        if adopt:
+                            contenu["adopt"] = adopt
                         sel_path.write_text(json.dumps(contenu, ensure_ascii=False),
                                             encoding="utf-8")
                         cmd += ["--selection", str(sel_path)]
