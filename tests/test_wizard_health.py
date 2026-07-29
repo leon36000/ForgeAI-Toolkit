@@ -183,3 +183,19 @@ def test_arguments_exec_sont_echappes():
     import yaml
     rendu = render_compose(_plan_sante([svc]))
     yaml.safe_load(rendu)   # doit rester parsable
+
+
+def test_arguments_exec_k3s_sont_echappes():
+    """Objection de Gemini (tour 2) : `compose.py` échappe via `json.dumps`, `k3s.py` non.
+    Mesuré : `a: b` devient un dictionnaire, ` #c` devient None, `*ref` corrompt le document.
+    La sonde exécuterait alors autre chose que demandé, SANS erreur — une altération
+    silencieuse est pire qu'un échec bruyant."""
+    import yaml
+    from forgeai.renderers.k3s import render_k3s
+    for arg in ("a: b", "[x]", "*ref", " #c", "{a}"):
+        svc = ServiceSpec(name="x", image="x:1", host_port=1, container_port=1,
+                          probe_type=ProbeType.EXEC, probe_target=("echo", arg))
+        docs = list(yaml.safe_load_all(render_k3s(_plan_sante([svc]))))
+        dep = next(d for d in docs if d and d.get("kind") == "Deployment")
+        cmd = dep["spec"]["template"]["spec"]["containers"][0]["livenessProbe"]["exec"]["command"]
+        assert cmd == ["echo", arg], f"argument {arg!r} altéré en {cmd!r}"

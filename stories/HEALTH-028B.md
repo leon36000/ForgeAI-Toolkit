@@ -75,5 +75,25 @@ tout `FAILED` restant est un « pas encore prouvé » → étiquette `waiting`, 
 restant rendu dans le champ `détail`. Conforme à l'ADR, qui réserve `FAILED` à *« une preuve
 d'échec ou un contrat violé »*.
 
+## Tour 2 — une omission de ma part, relevée par Gemini
+J'avais corrigé l'échappement dans `renderers/compose.py` (`json.dumps`) mais **pas dans
+`renderers/k3s.py`**. Corriger un symptôme et laisser le jumeau intact.
+
+**Mesuré avant de corriger** — le défaut est plus grave que signalé : ce ne sont pas seulement des
+corruptions, ce sont des **altérations silencieuses**.
+
+| argument | résultat sans échappement |
+|---|---|
+| `a: b` | devient un **dictionnaire** `{'a': 'b'}` |
+| `[x]` | devient une **liste** `['x']` |
+| ` #c` | devient **`None`** |
+| `{a}` | devient `{'a': None}` |
+| `*ref` | **corrompt le document** (ComposerError) |
+
+Dans quatre cas sur cinq, **la sonde exécuterait autre chose que demandé, sans la moindre erreur**.
+Une altération silencieuse est pire qu'un échec bruyant : le déploiement se déclare sain en
+exécutant une commande qui n'a jamais été écrite. `json.dumps` sur les deux renderers ferme la
+classe entière du problème.
+
 ## Rollback
 `git revert` → retour à la faille de vacuité (défaut FAI-U-028 connu) ; baseline verte.

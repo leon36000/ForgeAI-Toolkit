@@ -6,6 +6,8 @@ Kubernetes : le port hôte est décalé dans la plage NodePort de façon déterm
 """
 from __future__ import annotations
 
+import json
+
 import os
 import re
 import textwrap
@@ -289,7 +291,13 @@ def _probes_block(svc) -> str:
     elif svc.probe_type == ProbeType.EXEC:
         # Exec : argv listé ligne par ligne, JAMAIS via une chaîne shell.
         argv = svc.probe_target or ()
-        cmd_lines = "\n".join(f"              - {arg}" for arg in argv)
+        # Échappement par json.dumps, comme dans le renderer Compose : un argument contenant
+        # `: `, `#`, `*`, `[` ou `{` serait sinon RÉINTERPRÉTÉ par le parseur YAML — mesuré :
+        # "a: b" devient un dictionnaire, " #c" devient None, "*ref" corrompt le document.
+        # La sonde exécuterait alors autre chose que demandé, SANS erreur. Une altération
+        # silencieuse est pire qu'un échec bruyant.
+        cmd_lines = "\n".join(
+            f"              - {json.dumps(str(arg), ensure_ascii=False)}" for arg in argv)
         handler_liveness = f"exec:\n              command:\n{cmd_lines}"
         handler_startup = handler_readiness = handler_liveness
     elif health_url:
