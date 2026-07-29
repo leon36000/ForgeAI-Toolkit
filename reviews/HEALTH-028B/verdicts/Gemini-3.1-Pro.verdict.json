@@ -1,0 +1,14 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "tests/test_wizard_health.py",
+   "description": "Les tests `test_etats_docker_stdout_illisible_retourne_vide_sans_lever` et `test_etats_docker_subprocess_qui_leve_retourne_vide_sans_lever` utilisent un mock de plan avec l'attribut `id` (`plan = type(\"P\", (), {\"id\": \"p1\"})()`) au lieu de `plan_id`. Cela provoque une `AttributeError` immédiate lors de l'évaluation de `str(plan.plan_id)` dans `_etats_docker`. Cette exception est silencieusement interceptée par le bloc `except Exception: return {}`, ce qui fait passer les tests pour la mauvaise raison (ils n'atteignent jamais le parsing JSON ou l'appel à subprocess qu'ils sont censés valider). Le même défaut est présent dans la classe `_FakePlan` (`self.id = \"p1\"`), bien que masqué par un mock de `_etats_docker` dans les tests l'utilisant.",
+   "preuve": "Ligne `plan = type(\"P\", (), {\"id\": \"p1\"})()` dans les tests, confrontée à `str(plan.plan_id)` dans `src/forgeai/deploy/compose.py:131`."
+  }
+ ],
+ "date_heure": "2026-07-29T04:30:27.297697+00:00",
+ "prompt_sha256": "bd40b38a15ce5b65a6eb505e35a9459c6a6a007c0fc65c6d0f46b4360c586dd2",
+ "reviewer_model": "Gemini-3.1-Pro"
+}

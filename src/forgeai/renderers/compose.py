@@ -7,8 +7,59 @@ injectées via le bloc `environment:` à partir du plan.
 """
 from __future__ import annotations
 
-from forgeai.core.models import DeploymentPlan
+import json
+
+from forgeai.core.models import DeploymentPlan, ProbeType
 from forgeai.renderers._openbao import UNSEAL_SCRIPT
+
+
+def _healthcheck_lines(svc) -> list[str]:
+    """Retourne les lignes du bloc healthcheck: pour un service Docker Compose.
+    Retourne une liste vide si aucune sonde exploitable n'est configurée.
+    Indentation: 4 espaces pour 'healthcheck:', 6 espaces pour ses clés."""
+    lines = []
+
+    # Vérifier si une sonde est exploitable
+    if svc.probe_type is ProbeType.NONE or (svc.probe_type is None and not svc.healthcheck_url):
+        return []
+
+    # Déterminer le test selon le type de sonde
+    if svc.probe_type is ProbeType.EXEC:
+        # Utilisation de CMD (et non CMD-SHELL) pour éviter l'injection de commande : on passe un tableau d'arguments,
+        # jamais une chaîne interprétée par le shell. Le shell est dangereux car il peut exécuter des sous-commandes.
+        # Échappement par json.dumps : un argument contenant un guillemet double
+        # corromprait le tableau YAML si on interpolait naïvement. Un contenu de
+        # configuration ne doit jamais pouvoir casser le manifeste rendu.
+        argv = ["CMD", *(str(a) for a in svc.probe_target)]
+        test_entry = f'test: {json.dumps(argv, ensure_ascii=False)}'
+    elif svc.probe_type is ProbeType.HTTP:
+        # Sonde HTTP via curl : vérifie que le serveur répond avec un code 2xx/3xx.
+        cible = f"http://127.0.0.1:{int(svc.container_port)}{svc.probe_target}"
+        test_entry = f'test: {json.dumps(["CMD", "curl", "-fsS", cible], ensure_ascii=False)}'
+    elif svc.probe_type is ProbeType.TCP:
+        # Sonde TCP via netcat : vérifie que le port est ouvert et accepte les connexions.
+        test_entry = f'test: {json.dumps(["CMD", "nc", "-z", "127.0.0.1", str(int(svc.container_port))], ensure_ascii=False)}'
+    else:
+        # Fallback : probe_type est None mais healthcheck_url est renseigné (comportement hérité).
+        # On utilise l'URL telle quelle, sans reconstruction.
+        test_entry = f'test: {json.dumps(["CMD", "curl", "-fsS", str(svc.healthcheck_url)], ensure_ascii=False)}'
+
+    # Remplir les paramètres de la sonde avec conversion en entiers
+    interval = int(svc.health_interval_s)
+    timeout = int(svc.health_timeout_s)
+    retries = int(svc.health_retries)
+    start_period = interval * retries  # correspond à la fenêtre de démarrage tolérée
+
+    lines.append("    healthcheck:")
+    lines.append(f"      {test_entry}")
+    lines.append(f"      interval: {interval}s")
+    lines.append(f"      timeout: {timeout}s")
+    lines.append(f"      retries: {retries}")
+    # start_period équivaut à startupProbe Kubernetes : les échecs pendant cette période ne comptent pas comme
+    # une indisponibilité, permettant au service de démarrer lentement.
+    lines.append(f"      start_period: {start_period}s")
+
+    return lines
 
 
 def _openbao_unsealer_block(image: str) -> list[str]:
@@ -81,6 +132,10 @@ def render_compose(plan: DeploymentPlan, project: str = "forgeai-minimal") -> st
                 # opère avant le parse YAML, donc reste effective ici.
                 safe = str(value).replace("\\", "\\\\").replace('"', '\\"')
                 lines.append(f'      {key}: "{safe}"')
+        # HEALTH-028B : sonde fonctionnelle par service. Sans elle, un service est réputé
+        # disponible dès que Compose l'a démarré — un port ouvert ne prouve pas qu'une base
+        # accepte des requêtes.
+        lines.extend(_healthcheck_lines(svc))
         if svc.depends:
             lines.append("    depends_on:")
             # Le healthcheck openbao (mode prod) ne passe QUE coffre descellé -> un consommateur
