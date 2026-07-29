@@ -278,9 +278,11 @@ def _probes_block(svc) -> str:
         chemin_base = _safe(urlsplit(health_url).path or "/", "healthcheck-path")
         chemin_tolerant = _safe(
             f"{chemin_base}?standbyok=true&sealedcode=200&uninitcode=200", "liveness-path")
-        handler_liveness = f"httpGet:\n              path: {chemin_tolerant}\n              port: {port}"
+        handler_liveness = (f"httpGet:\n              path: {json.dumps(chemin_tolerant, ensure_ascii=False)}"
+                            f"\n              port: {port}")
         handler_startup = handler_liveness
-        handler_readiness = f"httpGet:\n              path: {chemin_base}\n              port: {port}"
+        handler_readiness = (f"httpGet:\n              path: {json.dumps(chemin_base, ensure_ascii=False)}"
+                             f"\n              port: {port}")
     elif svc.probe_type == ProbeType.HTTP:
         path = svc.probe_target if svc.probe_target is not None else "/"
         # Même classe de défaut que les arguments EXEC : un chemin contenant `: `, `#` ou `*`
@@ -307,7 +309,9 @@ def _probes_block(svc) -> str:
     elif health_url:
         # Dérivation depuis healthcheck_url, traitée comme du HTTP.
         path = _safe(urlsplit(health_url).path or "/", "healthcheck-path")
-        handler_liveness = f"httpGet:\n              path: {path}\n              port: {port}"
+        # Dérivation depuis healthcheck_url : MÊME échappement que les autres branches.
+        handler_liveness = (f"httpGet:\n              path: {json.dumps(str(path), ensure_ascii=False)}"
+                            f"\n              port: {port}")
         handler_startup = handler_readiness = handler_liveness
     else:
         # REPLI HISTORIQUE — sans lui, un service comme redis n'aurait AUCUNE sonde et

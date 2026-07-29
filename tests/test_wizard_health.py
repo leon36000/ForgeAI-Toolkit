@@ -251,3 +251,21 @@ def test_argument_exec_vide_est_legitime():
     with pytest.raises(ValueError, match="ERR_HEALTH_CIBLE_EXEC_INVALIDE"):
         ServiceSpec(name="y", image="y:1", host_port=2, container_port=2,
                     probe_type=ProbeType.EXEC, probe_target=())
+
+
+def test_chemin_derive_de_healthcheck_url_est_echappe():
+    """Objection de DeepSeek (tour 4) : j'avais échappé le chemin de `ProbeType.HTTP` mais PAS
+    celui dérivé de `healthcheck_url`. TROISIÈME occurrence du même motif sur ce package —
+    corriger une branche et oublier sa jumelle. Chaque chemin atteignant le YAML doit être
+    échappé, sans exception."""
+    import yaml
+    from forgeai.renderers.k3s import render_k3s
+    # `#` est un FRAGMENT d'URL, retiré à juste titre par urlsplit (il n'est jamais envoyé au
+    # serveur) : le cas de test utilise donc des caractères structurants YAML qui, eux, font
+    # bien partie du chemin.
+    svc = ServiceSpec(name="x", image="x:1", host_port=1, container_port=1,
+                      healthcheck_url="http://127.0.0.1:1/a: b")
+    docs = list(yaml.safe_load_all(render_k3s(_plan_sante([svc]))))
+    dep = next(d for d in docs if d and d.get("kind") == "Deployment")
+    chemin = dep["spec"]["template"]["spec"]["containers"][0]["livenessProbe"]["httpGet"]["path"]
+    assert chemin == "/a: b", f"chemin dérivé altéré : {chemin!r}"
