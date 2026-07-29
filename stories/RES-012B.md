@@ -10,7 +10,7 @@ contre-prouvé lors de K8S-022.
 | Élément | Emplacement |
 |---|---|
 | Table des 4 classes (`llm`, `db`, `sidecar`, `utilitaire`), deux à deux distinctes | `core/models.py` |
-| Validation unités + cohérence `limits ≥ requests`, 6 codes `ERR_RES_*` stables | `core/models.py`, `__post_init__` — fail-fast |
+| Validation unités + cohérence `limits ≥ requests`, **5** codes `ERR_RES_*` stables | `core/models.py`, `__post_init__` — fail-fast |
 | Résolution `resources` > `resource_class` > défaut `utilitaire` | `_resoudre_ressources` |
 | Lecture des valeurs résolues, **zéro magic number** | `renderers/k3s.py` |
 | Classe déclarée par brique | `data/deploy-specs.json` (12 briques) |
@@ -47,3 +47,10 @@ supprime : intention préservée, assertions recentrées sur les valeurs de clas
 
 ## Rollback
 `git revert` → retour aux littéraux (défaut FAI-U-012 connu, litellm OOMKillé) ; baseline verte.
+
+## Correction post-revue (objection mineure, DeepSeek-V4-Pro)
+La story, la PR et le message de commit annonçaient « 6 codes `ERR_RES_*` ». Le compte réel est
+**5** : `ERR_RES_CLASSE_INCONNUE`, `ERR_RES_DEROGATION_PARTIELLE`, `ERR_RES_CPU_INVALIDE`,
+`ERR_RES_MEMOIRE_INVALIDE`, `ERR_RES_LIMITS_INFERIEURES`. Chiffre inexact de ma part, relevé par la
+revue et corrigé ici. Le message de commit déjà poussé n'est pas réécrit (l'historique ne se
+réécrit pas) ; la correction est journalisée au registre.
