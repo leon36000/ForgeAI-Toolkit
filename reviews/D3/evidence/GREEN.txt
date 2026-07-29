@@ -1,6 +1,7 @@
 === PREUVE D'EXÉCUTION — D3 ===
-générée le : 2026-07-29 04:17:20 -0400
-commit     : 78dbd61
+générée le : 2026-07-29 04:20:05 -0400
+commit     : db3c667 — [D3] L UI peut adopter : champ `adopt` valide a la frontiere et transmis au wizard
+commit daté : 2026-07-29 04:17:21
 
 --- suite complète (le CODE DE SORTIE fait autorité) ---
 code de sortie pytest : 0
@@ -13,14 +14,14 @@ code de sortie pytest : 0
   37/37 = 100 %   (seuil quality gate : 80 %)
 
 --- validation prouvée à 3 niveaux ---
-  unitaire   : 18/18 cas (_valider_adopt), borne 40 car. sur clé de 200
-  HTTP réel  : 9/9 via build_server, ZÉRO réponse 500
-  permanent  : 22 tests dans tests/test_adoption_api.py
+  unitaire  : 18/18 cas de _valider_adopt ; borne 40 car. vérifiée sur clé de 200
+  HTTP réel : 9/9 via build_server + requêtes réelles — ZÉRO réponse 500
+  permanent : 22 tests dans tests/test_adoption_api.py
 
---- contrôle de mutation : le défaut est PROUVÉ ---
-  validation neutralisée -> 5 tests ROUGES (500 sur entrée malformée)
+--- contrôle de mutation : le défaut est PROUVÉ, pas supposé ---
+  validation neutralisée -> 5 tests ROUGES : l'API renvoie bien des 500
   restaurée              -> 22 verts
-  nuance : les TYPES invalides étaient silencieusement ignorés, pas 500
+  nuance : les TYPES invalides n'étaient pas 500 mais SILENCIEUSEMENT IGNORÉS
 
 --- no-stub-scan ---
-NO-STUB-SCAN : OK (266 fichiers scannés, zéro violation)
+NO-STUB-SCAN : OK (267 fichiers scannés, zéro violation)
