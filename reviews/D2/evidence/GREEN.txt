@@ -1,18 +1,29 @@
-=== PREUVE D'EXÉCUTION — D2 ===
-générée le : 2026-07-29 02:47:22 -0400
-commit     : 324632f — [D2] Tests du refus rien-a-deployer + controle de mutation (couverture 100%)
-commit daté : 2026-07-29 02:44:46
+=== PREUVE D'EXÉCUTION — D2 (après correction CA-2) ===
+générée le : 2026-07-29 03:12:07 -0400
+commit     : 299fd45 — [D2] CA-2 reellement implemente : recablage des env vers l endpoint decouvert
+commit daté : 2026-07-29 03:09:44
 
 --- suite complète (le CODE DE SORTIE fait autorité) ---
 code de sortie pytest : 0
   => SUITE VERTE
 ........................................................................ [ 94%]
-...........................................................              [100%]
+...............................................................          [100%]
   lignes FAILED : 0
 
 --- couverture du code NOUVEAU ---
-  39/39 = 100 %   (seuil quality gate : 80 %)
+  52/52 = 100 %   (seuil quality gate : 80 %)
 
---- contrôle de mutation (le test détecte-t-il la régression ?) ---
-  garde RienADeployerError neutralisée -> test_CA8_plan_entierement_adopte_refuse ROUGE
-  garde restaurée                      -> 15 tests verts
+--- CA-2 : recâblage prouvé par exécution ---
+  http://langfuse:3000               -> http://host.docker.internal:3999   (port DÉCOUVERT)
+  postgresql://u:pw@postgres:5432/db -> postgresql://u:pw@host.docker.internal:5555/db
+  http://mylangfuse:3000             -> INCHANGÉ (anti-faux-positif)
+  langfuse_backup                    -> INCHANGÉ
+
+--- contrôles de mutation ---
+  recâblage neutralisé  -> test_CA2_dependant_pointe_vers_endpoint_decouvert ROUGE
+                        -> test_CA2_chaine_de_connexion_recablee ROUGE
+  garde RienADeployer   -> test_CA8_plan_entierement_adopte_refuse ROUGE
+  tout restauré         -> 19 tests verts
+
+--- no-stub-scan ---
+NO-STUB-SCAN : OK (266 fichiers scannés, zéro violation)
