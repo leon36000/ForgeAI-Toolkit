@@ -476,6 +476,15 @@
         "dossier": "reviews/K8S-027/",
         "note": "Quotas de namespace derives du budget REEL. Aucun ResourceQuota ni LimitRange netait emis : rien ne bornait la consommation dun namespace et un plan depassant la capacite etait rendu sans broncher, pods Pending sans cause lisible. Le quota est la SOMME des ressources_effectives (chainage avec RES-012B) : limits 5500m/10752Mi, requests 1350m/4736Mi pour le plan de reference. TROIS DECISIONS MOTIVEES : (1) le quota vaut EXACTEMENT le budget — ni gaspillage ni etranglement du deploiement quil encadre ; (2) le LimitRange nest pas decoratif, un quota ne compte que ce qui est DECLARE et sans lui un conteneur muet lechappe et peut lepuiser seul ; (3) la verification de capacite est en TETE de render_k3s, avant la moindre ligne de manifeste, avec un message chiffrant le besoin ET la capacite. TROIS TOURS DE REVUE, chacun DEJA APPROVE, chacun ayant ameliore le package : tour 1 (1 objection) budget faussé en silence par deux continue defensifs — etat INATTEIGNABLE mais corrige quand meme car un budget faux en silence convertit un etat impossible en QUOTA FAUX au lieu dune erreur visible ; tour 2 (3 objections) triees par des tests rouges ecrits AVANT correction : 1 VRAI BUG (AttributeError sur dict.get(cle,{}) face a une valeur None) + 2 lacunes de couverture ; tour 3 : ZERO objection. Un APPROVE nautorise jamais a ignorer une objection. FAIT NOTABLE : Tencent-Hy3 a trouve le seul vrai bug que ni Gemini ni DeepSeek navaient vu — or il netait recrute que parce que Grok etait tombe en HTTP 500 au package precedent. La diversite du trio produit des trouvailles. Merge SANS admin : CI complete, CLEAN, SonarCloud Code Analysis PASS."
       }
+    },
+    {
+      "id": "HEALTH-028B",
+      "ide": "CLAUDE_CODE",
+      "pr": 208,
+      "merge_commit": "75b1469",
+      "review": "APPROVE 3/3 (deepseek/google/xai)",
+      "couverture_code_neuf": "97.4%",
+      "tests_ajoutes": 41
     }
   ]
 }
