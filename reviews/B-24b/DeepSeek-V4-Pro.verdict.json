@@ -1,0 +1,14 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "src/forgeai/ide/bootstrap.py",
+   "description": "Le gel de la dataclass (frozen=True) n'empêche pas la mutation après validation via object.__setattr__, qui contourne le __setattr__ surchargé. Un appelant malveillant pourrait ainsi rendre le HookSpec invalide (par exemple, mettre event à vide) après le __post_init__ sans nouvelle levée d'IDEError.",
+   "preuve": "Ligne définissant @dataclass(frozen=True) et __post_init__ (lignes 17-27 du diff). La documentation Python confirme que object.__setattr__ ignore le __setattr__ de la classe."
+  }
+ ],
+ "date_heure": "2026-07-29T18:24:04.115288+00:00",
+ "prompt_sha256": "1337678798bbea4ac6f42612962a73ccbf680e7621be2ddf48459851330ba157",
+ "reviewer_model": "DeepSeek-V4-Pro"
+}

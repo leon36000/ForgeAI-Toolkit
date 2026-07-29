@@ -1,0 +1,38 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "majeure",
+   "fichier": "src/forgeai/ide/bootstrap.py",
+   "description": "Divergence avec le comportement historique pour les chaînes en doublon. Historiquement, une liste hooks=['A', 'A'] produisait une seule règle car la clé était écrasée dans le dictionnaire en compréhension. Le nouveau code ajoute les règles en double via setdefault().append(), ce qui modifie la structure générée pour les entrées existantes contenant des doublons.",
+   "preuve": "Lignes 77-83 : hooks_dict.setdefault(spec.event, []).append(rule) vs ancien code hooks_dict = {hook: ... for hook in hooks}"
+  },
+  {
+   "severite": "mineure",
+   "fichier": "src/forgeai/ide/bootstrap.py",
+   "description": "Divergence avec le comportement historique pour les chaînes vides. L'ancien code acceptait hooks=[''] et créait une clé vide dans le JSON. Le nouveau code lève une IDEError, ce qui est plus sûr mais constitue une modification du comportement pour les chaînes.",
+   "preuve": "Lignes 35-36 : if not item: raise IDEError('hook str vide')"
+  },
+  {
+   "severite": "mineure",
+   "fichier": "src/forgeai/ide/bootstrap.py",
+   "description": "Validation contournable (risque théorique). La dataclass gelée empêche l'assignation directe (spec.event = 'x'), mais peut être mutée via object.__setattr__(spec, 'event', ''), ce qui permet de contourner la validation du __post_init__ après l'instanciation. C'est un risque théorique car il nécessite une exécution de code Python malveillant dans le processus de bootstrap.",
+   "preuve": "Ligne 17 : @dataclass(frozen=True) n'empêche pas la mutation via object.__setattr__."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "tests/test_ide_bootstrap.py",
+   "description": "Le test test_champs_vides_levent_ideerror semble couvrir les champs vides mais ne détecte pas qu'une chaîne ne contenant que des espaces (ex: ' ') passe la validation. La condition 'if not self.event:' évalue ' ' à True.",
+   "preuve": "Lignes 199-205 : les assertions utilisent uniquement des chaînes vides ''. Ligne 24 de bootstrap.py : if not self.event:"
+  },
+  {
+   "severite": "mineure",
+   "fichier": "src/forgeai/ide/bootstrap.py",
+   "description": "Une entrée avec un type inattendu mais 'truthy' pour matcher (ex: matcher=['*']) passe la validation du __post_init__ et produit un settings.json avec un tableau au lieu d'une chaîne, ce qui est une structure invalide pour les hooks de Claude Code.",
+   "preuve": "Ligne 28 : if not self.matcher: ne rejette pas les types non-falsy comme les listes ou dictionnaires."
+  }
+ ],
+ "date_heure": "2026-07-29T18:24:05.114023+00:00",
+ "prompt_sha256": "1337678798bbea4ac6f42612962a73ccbf680e7621be2ddf48459851330ba157",
+ "reviewer_model": "Gemini-3.1-Pro"
+}
