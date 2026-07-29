@@ -768,8 +768,10 @@ def _budget_du_plan(plan: DeploymentPlan) -> dict:
     ``{"requests": {"cpu_m": int, "mem_mib": int},
        "limits":   {"cpu_m": int, "mem_mib": int}}``.
 
-    Un service sans ``ressources_effectives`` est ignoré (impossible en pratique
-    : le champ est garanti résolu par ``ServiceSpec``, mais on reste défensif).
+    Un budget faux en silence est PIRE qu'une erreur bruyante : ce budget devient un
+    ``ResourceQuota``, et sous-compté il produirait un quota trop petit qui bloquerait le
+    déploiement qu'il est censé encadrer. Toute ressource absente ou incomplète lève donc,
+    plutôt que d'être ignorée (objection de revue scellée, Gemini-3.1-Pro).
     """
     budget = {
         "requests": {"cpu_m": 0, "mem_mib": 0},
@@ -778,12 +780,22 @@ def _budget_du_plan(plan: DeploymentPlan) -> dict:
     for svc in plan.services:
         res = getattr(svc, "ressources_effectives", None)
         if res is None:
-            continue
+            # On lève une erreur plutôt que de fausser le budget en silence
+            raise ValueError(
+                "ERR_QUOTA_RESSOURCES_ABSENTES: le service {} n'a pas de ressources_effectives".format(svc.name)
+            )
         for categorie in ("requests", "limits"):
             cpu = res.get(categorie, {}).get("cpu")
             memoire = res.get(categorie, {}).get("memory")
             if cpu is None or memoire is None:
-                continue
+                # On lève une erreur plutôt que de fausser le budget en silence
+                raise ValueError(
+                    "ERR_QUOTA_RESSOURCES_INCOMPLETES: le service {} n'a pas {} dans sa catégorie {}".format(
+                        svc.name,
+                        "cpu" if cpu is None else "memory",
+                        categorie
+                    )
+                )
             budget[categorie]["cpu_m"] += _cpu_en_millicores(cpu)
             budget[categorie]["mem_mib"] += _memoire_en_mib(memoire)
     return budget

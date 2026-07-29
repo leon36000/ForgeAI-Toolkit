@@ -430,3 +430,22 @@ def test_sans_capacite_declaree_aucun_refus():
     reste celui d'avant. La vérification est une capacité ajoutée, pas une rupture."""
     out = render_k3s(_plan_trois_services())
     assert _quota(out)["spec"]["hard"]["limits.cpu"] == "5500m"
+
+
+def test_budget_incomplet_leve_au_lieu_de_sous_compter():
+    """Objection de revue (Gemini) : `_budget_du_plan` ignorait SILENCIEUSEMENT une catégorie
+    dont une seule des deux ressources manquait. Un budget sous-compté produit un quota trop
+    petit — exactement la sous-allocation que le critère 2 interdit, et qui bloquerait le
+    déploiement que le quota est censé encadrer.
+
+    L'état est inatteignable via `ServiceSpec` (RES-012B valide en fail-fast), mais une branche
+    défensive qui fausse un budget en silence est PIRE que pas de branche du tout : elle
+    convertit un état impossible en quota faux plutôt qu'en erreur visible."""
+    from forgeai.renderers.k3s import _budget_du_plan
+    svc = _svc(name="casse", image="c:1", host_port=1, container_port=1)
+    object.__setattr__(svc, "ressources_effectives",
+                       {"requests": {"cpu": "100m"},          # `memory` absent
+                        "limits": {"cpu": "1000m", "memory": "1Gi"}})
+    plan = _plan([svc])
+    with pytest.raises(ValueError, match="ERR_QUOTA_RESSOURCES_INCOMPLETES"):
+        _budget_du_plan(plan)
