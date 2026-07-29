@@ -1,0 +1,22 @@
+# PLACE-011 — comportement du contrat d'inventaire (exécution réelle)
+
+Inventaire : n-nvidia (nvidia, 8192 Mio) | n-amd (amd, 16384 Mio) | n-cpu (CPU-only)
+
+  NVIDIA epingle sur n-cpu           -> REFUSE
+      ERR_PLACE_CPU_ONLY : le service 'ollama' exige un GPU (vendor demandé : nvidia) mais le nœud 'n-cpu' est CPU-only
+  AMD epingle sur n-nvidia           -> REFUSE
+      ERR_PLACE_VENDOR_INCOMPATIBLE : service 'ollama' demande le vendor 'amd' mais le nœud 'n-nvidia' expose 'nvidia'
+  VRAM 12288 exigee, noeud a 8192    -> REFUSE
+      ERR_PLACE_VRAM_INSUFFISANTE : service 'ollama' exige 12288 Mio de VRAM mais le nœud 'n-nvidia' n'en expose que 8192 Mio
+  Intel en mode auto                 -> REFUSE
+      ERR_PLACE_AUCUN_NOEUD_QUALIFIE : aucun nœud ne convient pour le service 'ollama' (vendor recherché : intel). Nœuds examinés : n-nvidia (vendor 'nvidia' ≠ demandé 'intel'); n-amd (vendor 'amd' ≠ demandé 'intel'); n-cpu (CPU-only)
+  noeud inconnu                      -> REFUSE
+      ERR_PLACE_NOEUD_INCONNU : nœud 'n-fantome' absent de l'inventaire (connus : n-nvidia, n-amd, n-cpu)
+
+  AMD en mode auto                   -> n-amd  (seul noeud qualifie)
+  NVIDIA + VRAM 4096 sur n-nvidia    -> n-nvidia
+  sans inventaire (retro-compat)     -> n-cpu
+  service CPU sur n-cpu              -> n-cpu  (jamais contraint)
+
+=> L'echec sort AVANT kubectl, avec sa cause. Chaque message dit ce qui a ete demande,
+   ce qui a ete trouve, et pourquoi c'est incompatible.

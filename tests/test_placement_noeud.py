@@ -147,3 +147,103 @@ def test_plan_sans_placement_reste_documente():
     plan = _plan_minimal()
     assert all(s.node is None for s in plan.services)
     assert not getattr(plan, "placement_reasons", {})
+
+
+# ---------------------------------------------------------------------------
+# PLACE-011 / FAI-U-011 — le placement est validé contre un INVENTAIRE réel avant rendu.
+# Jusqu'ici aucun inventaire n'était consulté : un workload NVIDIA épinglé sur un nœud
+# CPU-only produisait un manifeste parfaitement valide, envoyé à kubectl, qui échouait au
+# scheduling. L'utilisateur découvrait l'incompatibilité en production.
+# ---------------------------------------------------------------------------
+import pytest
+
+from forgeai.core.models import NodeInventaire, PlacementError
+
+
+def _plan(services) -> DeploymentPlan:
+    """Plan portant exactement les services fournis (le fichier n'a que `_plan_minimal`,
+    qui assemble depuis un overlay et ne convient pas pour ces cas ciblés)."""
+    return DeploymentPlan(plan_id="place011", profile="minimal-gpu-cuda",
+                          target=RenderTarget.K3S, services=tuple(services),
+                          model="m", embed_model="e")
+
+
+def _inventaire():
+    """Inventaire de référence : un nœud NVIDIA 8 Go, un nœud AMD 16 Go, un nœud CPU-only."""
+    return (
+        NodeInventaire(hostname="n-nvidia", gpu_vendor="nvidia", vram_mib=8192),
+        NodeInventaire(hostname="n-amd", gpu_vendor="amd", vram_mib=16384),
+        NodeInventaire(hostname="n-cpu", gpu_vendor=None, vram_mib=0),
+    )
+
+
+def _svc_gpu(vendor="nvidia", node=None, vram_requise=None):
+    return ServiceSpec(name="ollama", image="ollama/ollama:latest", host_port=21434,
+                       container_port=11434, gpu=True, gpu_vendor=vendor, node=node,
+                       vram_min_mib=vram_requise)
+
+
+def test_nvidia_ne_peut_pas_etre_epingle_sur_un_noeud_cpu_only():
+    """Critère 1. Le manifeste serait syntaxiquement valide et échouerait au scheduling :
+    l'erreur doit survenir AVANT kubectl, avec sa cause."""
+    with pytest.raises(PlacementError) as exc:
+        render_k3s(_plan([_svc_gpu(node="n-cpu")]), inventaire=_inventaire())
+    message = str(exc.value)
+    assert "n-cpu" in message and "nvidia" in message.lower(), \
+        f"l'erreur doit nommer le nœud ET le vendor attendu : {message}"
+
+
+def test_vendor_incompatible_refuse():
+    """Critère 2. AMD/Intel portent une contrainte vérifiable : un workload AMD sur un nœud
+    NVIDIA est refusé — un GPU n'est pas un GPU générique."""
+    with pytest.raises(PlacementError) as exc:
+        render_k3s(_plan([_svc_gpu(vendor="amd", node="n-nvidia")]), inventaire=_inventaire())
+    assert "amd" in str(exc.value).lower() and "nvidia" in str(exc.value).lower()
+
+
+def test_vram_insuffisante_produit_une_erreur_causale():
+    """Critère 3. Le nœud a bien un GPU du bon vendor, mais pas assez de VRAM : l'échec ne
+    doit pas se manifester par un OOM au chargement du modèle, en production."""
+    with pytest.raises(PlacementError) as exc:
+        render_k3s(_plan([_svc_gpu(node="n-nvidia", vram_requise=12288)]), inventaire=_inventaire())
+    message = str(exc.value)
+    assert "12288" in message and "8192" in message, \
+        f"l'erreur doit donner la VRAM demandée ET la VRAM disponible : {message}"
+
+
+def test_placement_compatible_accepte():
+    """Contrôle positif : un placement valide passe et épingle bien le nœud demandé."""
+    out = render_k3s(_plan([_svc_gpu(node="n-nvidia", vram_requise=4096)]), inventaire=_inventaire())
+    assert "kubernetes.io/hostname: n-nvidia" in out
+
+
+def test_mode_auto_choisit_uniquement_un_noeud_qualifie():
+    """Critère 4. Sans nœud imposé, la sélection automatique ne doit retenir qu'un nœud
+    qualifié — jamais le nœud CPU-only, jamais un vendor incompatible."""
+    out = render_k3s(_plan([_svc_gpu(vendor="amd", node=None)]), inventaire=_inventaire())
+    assert "kubernetes.io/hostname: n-amd" in out
+    assert "n-cpu" not in out and "n-nvidia" not in out
+
+
+def test_mode_auto_sans_noeud_qualifie_refuse():
+    """Contrôle négatif du mode auto : aucun nœud ne convient -> refus explicite, jamais un
+    placement au hasard ni un manifeste voué à l'échec."""
+    inventaire_sans_intel = _inventaire()
+    with pytest.raises(PlacementError) as exc:
+        render_k3s(_plan([_svc_gpu(vendor="intel", node=None)]), inventaire=inventaire_sans_intel)
+    assert "intel" in str(exc.value).lower()
+
+
+def test_sans_inventaire_le_comportement_reste_inchange():
+    """Rétro-compatibilité : sans inventaire fourni, aucune validation n'est possible et le
+    rendu reste celui d'avant — la validation est une capacité ajoutée, pas une rupture."""
+    out = render_k3s(_plan([_svc_gpu(node="n-cpu")]))
+    assert "kubernetes.io/hostname: n-cpu" in out
+
+
+def test_service_cpu_ignore_l_inventaire_gpu():
+    """Contrôle négatif : un service sans GPU n'est jamais contraint par le vendor d'un nœud."""
+    cpu_only = ServiceSpec(name="redis", image="redis:7", host_port=26379, container_port=6379,
+                           node="n-cpu", resource_class="db")
+    out = render_k3s(_plan([cpu_only]), inventaire=_inventaire())
+    assert "kubernetes.io/hostname: n-cpu" in out
