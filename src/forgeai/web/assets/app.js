@@ -20,6 +20,8 @@
     embeddingSearch: '',
     bricks: null,
     overrides: {},
+    inventaire: null,     // /api/discover ; null = indisponible, jamais bloquant
+    adoptChoisis: {},     // { id: true } — services que l'utilisateur adopte
     search: '',
     i18nTables: {},
     embeddingsLoaded: false,
@@ -261,6 +263,57 @@
 
   function overrideKey() {
     return state.selectedId || '_none_';
+  }
+
+  // Briques réellement AU PLAN = celles cochées. Source UNIQUE partagée par le POST et
+  // l'écran d'inventaire : proposer d'adopter une brique non déployée serait un choix
+  // impossible à honorer.
+  function briquesDuPlan() {
+    return Object.entries(state.overrides[overrideKey()] || {})
+      .filter(function(e){ return e[1]; }).map(function(e){ return e[0]; });
+  }
+
+  async function chargerInventaire() {
+    try {
+      var res = await fetch('/api/discover?node=local');
+      if (!res.ok) throw new Error('/api/discover -> ' + res.status);
+      state.inventaire = await res.json();
+    } catch (e) {
+      // L'inventaire est une COMMODITÉ : son indisponibilité ne doit jamais empêcher de
+      // déployer. On retombe simplement sur « aucun service détecté ».
+      state.inventaire = null;
+    }
+    renderInventaire();
+  }
+
+  function renderInventaire() {
+    var container = document.getElementById('inventaire-content');
+    if (!container) return;
+    var services = ForgeAIAdoption.servicesAdoptables(state.inventaire, briquesDuPlan());
+    container.innerHTML = '';
+    if (!services.length) {
+      // Jamais de liste vide muette : l'utilisateur doit savoir que la recherche a eu lieu.
+      var p = document.createElement('p');
+      p.className = 'muted';
+      p.textContent = t('inventaire_vide');
+      container.appendChild(p);
+      return;
+    }
+    services.forEach(function(svc){
+      var label = document.createElement('label');
+      label.className = 'inventaire-item';
+      var cb = document.createElement('input');
+      cb.type = 'checkbox';
+      cb.id = 'adopt-' + svc.id;
+      cb.checked = !!state.adoptChoisis[svc.id];
+      cb.addEventListener('change', function(){
+        if (cb.checked) state.adoptChoisis[svc.id] = true;
+        else delete state.adoptChoisis[svc.id];
+      });
+      label.appendChild(cb);
+      label.appendChild(document.createTextNode(' ' + svc.id + ' \u2014 ' + svc.endpoint));
+      container.appendChild(label);
+    });
   }
 
   function isChecked(brick) {
@@ -542,10 +595,17 @@
             node: form.elements.node ? form.elements.node.value : 'local',
             models: Object.entries(state.modelsChosen).map(([hf_id, v]) => ({hf_id, node: v.node, engine: v.engine})),
             embeddings: Object.entries(state.embeddingsChosen).map(([hf_id, v]) => ({hf_id, node: v.node, engine: v.engine})),
-            bricks: Object.entries(state.overrides[overrideKey()] || {})
-              .filter(([, coche]) => coche).map(([id]) => id),
+            bricks: briquesDuPlan(),
             rag_node: form.elements.rag_node.value,
-            confirm: confirm
+            confirm: confirm,
+            ...(function(){
+              // `adopt` n'est ajouté QUE s'il est non vide : sans case cochée, le corps du
+              // POST est strictement identique au comportement d'avant cette story.
+              var choix = ForgeAIAdoption.servicesAdoptables(state.inventaire, briquesDuPlan())
+                .map(function(sv){ return {id: sv.id, endpoint: sv.endpoint, adopte: !!state.adoptChoisis[sv.id]}; });
+              var dict = ForgeAIAdoption.construireAdopt(choix);
+              return Object.keys(dict).length ? {adopt: dict} : {};
+            })()
           })
         });
         const body = await res.json();
