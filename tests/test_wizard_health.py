@@ -372,7 +372,7 @@ def test_etats_docker_stdout_illisible_retourne_vide_sans_lever(monkeypatch):
             returncode = 0
         return R()
     monkeypatch.setattr(compose_mod.subprocess, "run", fake_run)
-    plan = type("P", (), {"id": "p1"})()
+    plan = type("P", (), {"plan_id": "p1"})()
     result = compose_mod._etats_docker(plan)
     assert result == {}
 
@@ -382,7 +382,7 @@ def test_etats_docker_subprocess_qui_leve_retourne_vide_sans_lever(monkeypatch):
     def fake_run(*a, **k):
         raise RuntimeError("docker not available")
     monkeypatch.setattr(compose_mod.subprocess, "run", fake_run)
-    plan = type("P", (), {"id": "p1"})()
+    plan = type("P", (), {"plan_id": "p1"})()
     result = compose_mod._etats_docker(plan)
     assert result == {}
 

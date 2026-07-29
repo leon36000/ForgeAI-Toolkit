@@ -173,3 +173,23 @@ diagnostic qui plante ne diagnostique rien) a masqué successivement un `TypeErr
 signature de mock puis un `NameError` de classe helper absente, en affichant les deux fois
 le même `{}` trompeur — ce qui m'a fait suspecter trois fois un défaut inexistant du produit.
 Diagnostic obtenu en reproduisant l'appel **hors pytest**, ce qui laisse l'exception remonter.
+
+## Revue scellée — tour 7 (diff intégral : code + 41 tests)
+
+APPROVE **3/3**, vendors distincts `deepseek` / `google` / `xai`. Codeur = MiniMax (`minimax`),
+absent du panel — jamais d'auto-review. Tally calculé par script, aucun LLM n'écrit un score.
+
+**Objection mineure de Gemini — FONDÉE, corrigée.** Deux tests construisaient leur faux plan
+avec l'attribut `id` alors que `_etats_docker` lit `plan.plan_id`. L'`AttributeError` partait
+dans le `except Exception`, qui rendait `{}` : les tests passaient **sans jamais atteindre le
+parsing qu'ils prétendaient vérifier**. Ils auraient continué à passer avec un parsing cassé.
+
+Preuve exécutée de l'écart :
+    mock {id}      -> AttributeError 'P' object has no attribute 'plan_id' => {} sans parser
+    mock {plan_id} -> parse réellement le JSON tronqué, rend {} pour la BONNE raison
+Corrigé (`id` -> `plan_id`), 44 tests toujours verts.
+
+C'est la **troisième** fois dans ce package que le `except Exception` de `_etats_docker` masque
+une cause (TypeError de signature, NameError de helper, et ici AttributeError du mock) — et la
+première où c'est la revue qui l'attrape, pas moi. Un reviewer aveugle lisant le seul pack a vu
+ce que dix corrections successives m'avaient laissé sous les yeux.
