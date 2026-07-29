@@ -1,0 +1,50 @@
+# D3 — PREUVE DU DÉFAUT : l'UI découvre l'existant mais ne peut pas l'adopter
+
+## 1. La découverte est exposée (D1, livré)
+   route /api/discover présente : True
+
+## 2. Le moteur d'adoption existe (D2, mergé sur main)
+   ServiceSpec.adopted_endpoint : True
+
+## 3. Mais /api/deploy n'a AUCUN champ d'adoption
+   champs REQUIS par /api/deploy   : ["stack", "backend", "confirm"]
+   champs OPTIONNELS de /api/deploy : ['bricks', 'embeddings', 'models', 'node', 'rag_node']
+   occurrences de 'adopt' dans TOUT web/server.py : 0
+   -> aucun champ ne permet de dire « ce service, adopte-le ».
+
+## 4. Ce que l'utilisateur subit
+   Il voit son redis dans l'inventaire (/api/discover), le produit SAIT l'adopter (D2),
+   mais l'interface ne lui offre aucun moyen de le demander. Le déploiement écrase donc
+   son service existant — le défaut que D2 corrige reste ENTIER pour tout utilisateur
+   passant par l'UI, c'est-à-dire le parcours principal du produit.
+
+   La capacité est livrée mais INATTEIGNABLE : D2 sans D3 n'a pas d'utilisateur.
+
+## 5. RE-CADRAGE — découverte qui invalide la conception initiale de D3
+
+Vérification faite sur le code réel de la route (server.py, bloc /api/deploy) :
+
+    load_stack(stack_id)          # <- appelé SANS affectation : simple contrôle d'existence
+    ...
+    cmd = [sys.executable, "-m", "forgeai", "wizard", "--ci",
+           "--workdir", ..., "--backend", backend, "--node", node, "--stack", stack_id]
+
+**`/api/deploy` ne construit AUCUN plan.** Elle valide des champs puis lance un SOUS-PROCESSUS
+`forgeai wizard`. Les choix de l'utilisateur transitent par la **ligne de commande**, pas par
+un objet Python.
+
+Conséquences :
+
+1. Le critère CA-5 de la story D3 (« produit un plan dont le service porte adopted_endpoint,
+   vérifié sur le plan construit ») est **INAPPLICABLE** : il n'y a pas de plan dans la route.
+2. Propager l'adoption depuis l'UI exige un **flag CLI `--adopt` sur le wizard** — c'est-à-dire
+   exactement ce que D2 avait classé « story suivante » (ex-CA-7). Ce flag n'est pas une
+   commodité : il est le **prérequis** de D3, pas sa suite.
+
+L'ordre correct est donc : **flag CLI d'abord, API ensuite**. Sans le flag, l'API n'a rien à
+appeler ; avec l'API seule, la validation refuserait proprement une entrée qu'elle ne saurait
+de toute façon pas transmettre.
+
+Cette découverte vient d'avoir lu le code de la route au moment de l'implémenter, et non de
+l'avoir supposée. Elle invalide la découpe annoncée dans la story : celle-ci est corrigée
+ci-dessous plutôt que d'être maintenue au prix d'une conception fausse.
