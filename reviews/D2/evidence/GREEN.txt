@@ -1,6 +1,7 @@
 === PREUVE D'EXÉCUTION — D2 ===
-générée le : 2026-07-29 02:44:31 -0400
-commit     : 0c8879f
+générée le : 2026-07-29 02:47:22 -0400
+commit     : 324632f — [D2] Tests du refus rien-a-deployer + controle de mutation (couverture 100%)
+commit daté : 2026-07-29 02:44:46
 
 --- suite complète (le CODE DE SORTIE fait autorité) ---
 code de sortie pytest : 0
