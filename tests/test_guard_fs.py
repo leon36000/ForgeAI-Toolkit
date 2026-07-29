@@ -570,3 +570,107 @@ class TestOperateursColles:
                 f"{cmd!r} doit être autorisé (exit 0) — non-régression. "
                 f"stderr={stderr!r}"
             )
+
+
+# ── Tour 4 : validation du cwd (revue scellée, objection critique Gemini) ──
+def test_cwd_hors_racine_nom_nu_refuse(tmp_path, racine, env_tmpdir):
+    """cwd=/etc + Bash 'cat passwd' -> exit 2.
+
+    « passwd » est un nom nu sans séparateur : l'extraction de candidats
+    l'ignore par construction — seul le contrôle du cwd peut refuser.
+    """
+    script = ecrire_garde(tmp_path, racine)
+    code, _ = run(
+        script,
+        charge("Bash", {"command": "cat passwd"}, cwd="/etc"),
+        env=env_tmpdir,
+    )
+    assert code == 2
+
+
+def test_cwd_sous_claude_autoprotection_refuse(tmp_path, racine, env_tmpdir):
+    """cwd=<racine>/.claude + Bash 'echo bad > settings.json' -> exit 2.
+
+    .claude est sous ROOT, donc le confinement seul laisserait passer :
+    c'est l'auto-protection du cwd (outil d'écriture) qui doit refuser.
+    """
+    (racine / ".claude").mkdir()
+    script = ecrire_garde(tmp_path, racine)
+    code, _ = run(
+        script,
+        charge(
+            "Bash",
+            {"command": "echo bad > settings.json"},
+            cwd=str(racine / ".claude"),
+        ),
+        env=env_tmpdir,
+    )
+    assert code == 2
+
+
+def test_cwd_hors_racine_sans_candidat_refuse(tmp_path, racine, env_tmpdir):
+    """cwd=/etc + Bash 'echo bonjour' -> exit 2 : le cwd seul suffit à
+    refuser, même sans aucun chemin candidat dans la commande."""
+    script = ecrire_garde(tmp_path, racine)
+    code, _ = run(
+        script,
+        charge("Bash", {"command": "echo bonjour"}, cwd="/etc"),
+        env=env_tmpdir,
+    )
+    assert code == 2
+
+
+def test_cwd_racine_commandes_inoffensives_autorisees(tmp_path, racine, env_tmpdir):
+    """Non-régression : cwd=racine — les commandes sans chemin restent
+    autorisées."""
+    script = ecrire_garde(tmp_path, racine)
+    for commande in ("echo bonjour", "ls -la"):
+        code, _ = run(
+            script,
+            charge("Bash", {"command": commande}, cwd=str(racine)),
+            env=env_tmpdir,
+        )
+        assert code == 0, commande
+
+
+def test_cwd_sous_repertoire_racine_autorise(tmp_path, racine, env_tmpdir):
+    """Non-régression : cwd = un sous-répertoire de la racine — un nom nu
+    qui s'y résout reste autorisé."""
+    sous = racine / "sous"
+    sous.mkdir()
+    (sous / "f.txt").write_text("contenu\n", encoding="utf-8")
+    script = ecrire_garde(tmp_path, racine)
+    code, _ = run(
+        script,
+        charge("Bash", {"command": "cat f.txt"}, cwd=str(sous)),
+        env=env_tmpdir,
+    )
+    assert code == 0
+
+
+def test_refus_cwd_journalise_et_chaine_verifiee(tmp_path, racine, env_tmpdir):
+    """Un refus de type cwd est journalisé en guard_fs_denied, et la chaîne
+    du registre est acceptée par le verify officiel du produit."""
+    reg = tmp_path / "registre.jsonl"
+    script = ecrire_garde(tmp_path, racine, registre=reg)
+    code, _ = run(
+        script,
+        charge("Bash", {"command": "cat passwd"}, cwd="/etc"),
+        env=env_tmpdir,
+    )
+    assert code == 2
+    lignes = [
+        ligne
+        for ligne in reg.read_text(encoding="utf-8").splitlines()
+        if ligne.strip()
+    ]
+    assert lignes, "le refus par cwd doit être journalisé"
+    for ligne in lignes:
+        json.loads(ligne)  # chaque entrée est un JSON valide
+    assert any("guard_fs_denied" in ligne for ligne in lignes)
+    proc = subprocess.run(
+        [sys.executable, str(REGISTRE_PY), "verify", str(reg)],
+        text=True,
+        capture_output=True,
+    )
+    assert proc.returncode == 0, proc.stderr

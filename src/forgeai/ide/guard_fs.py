@@ -342,16 +342,32 @@ def _decider():
         _refus_structurel("cwd non absolu: {0}".format(cwd))
     tool_input = payload.get("tool_input")
     if tool_input is None:
-
         tool_input = {}
     if not isinstance(tool_input, dict):
         _refus_structurel("tool_input non-objet")
+    # Le cwd est validé en propre, avant l'extraction des candidats : un
+    # cwd non contraint transforme tout nom de fichier nu (sans séparateur,
+    # donc jamais extrait comme candidat) en accès arbitraire — ce que le
+    # contrôle des candidats ne peut pas rattraper par construction.
+    cwd_resolu = os.path.realpath(cwd)
+    exceptions = _exceptions()
+    # Auto-protection AVANT confinement (comme pour les candidats) : un cwd
+    # sous .claude est refusé même si .claude est sous ROOT — depuis ce
+    # cwd, tout nom nu écrirait dans le répertoire de la garde. _sous
+    # inclut l'égalité (commonpath d'un chemin avec lui-même).
+    if tool_name in WRITE_TOOLS and _sous(cwd_resolu, CLAUDE_DIR):
+        _refuser(tool_name, cwd, cwd_resolu, cwd, "cwd sous auto-protection")
+    # Confinement : ROOT lui-même et tout descendant sont acceptés, ainsi
+    # que tout cwd sous une exception explicite (tempdir, fichier allow).
+    if not _sous(cwd_resolu, ROOT) and not any(
+        _sous(cwd_resolu, prefixe) for prefixe in exceptions
+    ):
+        _refuser(tool_name, cwd, cwd_resolu, cwd, "cwd hors racine")
     candidats = _candidats(tool_name, tool_input)
     if not candidats:
         return  # Aucun chemin candidat : AUTORISER (exit 0).
-    exceptions = _exceptions()
     for demande in candidats:
-        resolu = _resoudre(demande, cwd)
+        resolu = _resoudre(demande, cwd_resolu)
         if _auto_protege(tool_name, resolu):
             _refuser(tool_name, demande, resolu, cwd, "auto-protection")
         if any(_sous(resolu, prefixe) for prefixe in exceptions):

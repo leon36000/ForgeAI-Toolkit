@@ -1,0 +1,14 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "critique",
+   "fichier": "src/forgeai/ide/guard_fs.py",
+   "description": "Le paramètre `cwd` du payload n'est jamais validé contre la racine de confinement (`ROOT`) ni contre les règles d'auto-protection. Un agent peut définir `cwd` sur un répertoire hors racine (ex: `/etc`) ou protégé (ex: `ROOT/.claude`), puis exécuter une commande Bash avec un nom de fichier nu (ex: `cat passwd` ou `echo bad > settings.json`). Comme le nom nu ne contient pas de séparateur, `_ressemble_chemin` l'ignore, `candidats` est vide, et la garde autorise l'action (`exit 0`).",
+   "preuve": "Dans `_decider()`, `cwd` est vérifié comme absolu (`if not os.path.isabs(cwd):`) mais n'est jamais ajouté à `candidats` ni vérifié avec `_sous(cwd, ROOT)` ou `_auto_protege`. Si `candidats` est vide, la garde fait un retour anticipé : `if not candidats: return # Aucun chemin candidat : AUTORISER (exit 0)`."
+  }
+ ],
+ "date_heure": "2026-07-29T21:36:19.331021+00:00",
+ "prompt_sha256": "edc162d248406243324efef08e7193162edaa11a764b7df055314f1b1a4b47dd",
+ "reviewer_model": "Gemini-3.1-Pro-OR"
+}
