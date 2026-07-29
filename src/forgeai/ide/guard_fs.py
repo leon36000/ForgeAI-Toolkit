@@ -194,10 +194,40 @@ def _candidats(tool_name, tool_input):
                 lx.whitespace_split = True
                 tokens = list(lx)
             except ValueError:
-                # Guillemets déséquilibrés : repli sur un découpage naïf
-                # sur les espaces ; un token mal découpé qui contient un
-                # séparateur reste contrôlé (fail-closed côté décision).
-                tokens = commande.split()
+                # Repli en cas de ValueError de shlex (guillemets
+                # déséquilibrés — légal en Bash dans un here-doc, mais
+                # shlex lève « No closing quotation »). On NE PEUT PAS
+                # retomber sur `commande.split()` : un découpage naïf
+                # sur les espaces NE SÉPARE PAS les opérateurs shell
+                # collés au token voisin, ce qui réintroduit exactement
+                # la vulnérabilité du tour 3 (un attaquant force le
+                # ValueError avec un guillemet orphelin, puis exploite
+                # `cat</etc/passwd` qui reste collé et n'est pas reconnu
+                # comme chemin hors racine).
+                #
+                # Le repli utilise donc `re.split` sur un motif qui
+                # inclut les opérateurs shell `<>;|&()` en plus des
+                # espaces : tout opérateur collé est détaché du token
+                # adjacent, restaurant la sémantique de tokenisation
+                # attendue. Mesure réelle :
+                #     'cat</etc/passwd\ncat <<EOF\n"\nEOF'
+                #         -> ['cat', '/etc/passwd', 'cat', 'EOF', '"', 'EOF']
+                #     'echo bad >.claude/settings.json "'
+                #         -> ['echo', 'bad', '.claude/settings.json', '"']
+                #     'cat</etc/passwd "'
+                #         -> ['cat', '/etc/passwd', '"']
+                #
+                # Ce repli est DÉLIBÉRÉMENT PLUS STRICT que shlex : il
+                # ignore les guillemets, donc un nom de fichier contenant
+                # `>` y serait découpé (sur-détection possible). C'est
+                # VOULU : on est dans un cas DÉGRADÉ (guillemets
+                # déséquilibrés), et le principe fail-closed de la garde
+                # exige de préférer un faux positif à un faux négatif.
+                # Le chemin NOMINAL (shlex) continue de préserver les
+                # guillemets littéraux — la non-régression
+                # `cat "fichier>bizarre.txt"` (guillemets ÉQUILIBRÉS)
+                # reste AUTORISÉE.
+                tokens = [t for t in re.split(r"[\s<>;|&()]+", commande) if t]
             for token in tokens:
                 if _ressemble_chemin(token):
                     trouves.append(token)

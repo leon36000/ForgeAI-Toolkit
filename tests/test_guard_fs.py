@@ -674,3 +674,93 @@ def test_refus_cwd_journalise_et_chaine_verifiee(tmp_path, racine, env_tmpdir):
         capture_output=True,
     )
     assert proc.returncode == 0, proc.stderr
+
+
+# ── Tour 5 : le repli de tokenisation ne doit pas etre une porte ──
+def test_repli_heredoc_guillemet_orphelin_cible_hors_racine_refuse(
+    tmp_path, racine, env_tmpdir
+):
+    """Repli forcé par here-doc à guillemet orphelin, cible hors racine -> exit 2.
+
+    La commande contient un here-doc avec un guillemet orphelin qui force
+    shlex à lever ValueError ; le repli doit malgré tout reconnaître
+    `/etc/passwd` comme chemin hors racine et REFUSER.
+    """
+    script = ecrire_garde(tmp_path, racine)
+    commande = 'cat</etc/passwd\ncat <<EOF\n"\nEOF'
+    code, stderr = run(
+        script, charge("Bash", {"command": commande}, cwd=racine), env=env_tmpdir
+    )
+    assert code == 2, f"attendu exit 2, obtenu {code} (stderr={stderr!r})"
+
+
+def test_repli_cible_auto_protection_refuse(tmp_path, racine, env_tmpdir):
+    """Repli forcé, cible = auto-protection (.claude/settings.json) -> exit 2.
+
+    Le guillemet orphelin final force le ValueError de shlex ; le repli
+    doit malgré tout reconnaître `.claude/settings.json` comme chemin
+    protégé et REFUSER la réécriture de la config de la garde.
+    """
+    script = ecrire_garde(tmp_path, racine)
+    commande = 'echo bad >.claude/settings.json "'
+    code, stderr = run(
+        script, charge("Bash", {"command": commande}, cwd=racine), env=env_tmpdir
+    )
+    assert code == 2, f"attendu exit 2, obtenu {code} (stderr={stderr!r})"
+
+
+def test_repli_operateur_colle_cible_hors_racine_refuse(
+    tmp_path, racine, env_tmpdir
+):
+    """Repli forcé, opérateur COLLÉ et cible hors racine -> exit 2.
+
+    `cat</etc/passwd` a l'opérateur de redirection COLLÉ à la commande ;
+    le repli doit le séparer pour reconnaître `/etc/passwd` comme chemin
+    hors racine et REFUSER.
+    """
+    script = ecrire_garde(tmp_path, racine)
+    commande = 'cat</etc/passwd "'
+    code, stderr = run(
+        script, charge("Bash", {"command": commande}, cwd=racine), env=env_tmpdir
+    )
+    assert code == 2, f"attendu exit 2, obtenu {code} (stderr={stderr!r})"
+
+
+def test_repli_cible_dans_racine_autorise(tmp_path, racine, env_tmpdir):
+    """Repli forcé, cible RESTANT dans la racine -> exit 0.
+
+    Prouve que le repli n'est pas un refus aveugle : il analyse vraiment
+    les tokens et autorise une cible interne à la racine malgré le
+    guillemet orphelin qui déclenche le ValueError de shlex.
+    """
+    sous = racine / "sous"
+    sous.mkdir()
+    cible = sous / "f.txt"
+    cible.write_text("contenu", encoding="utf-8")
+    script = ecrire_garde(tmp_path, racine)
+    commande = 'cat sous/f.txt "'
+    code, stderr = run(
+        script, charge("Bash", {"command": commande}, cwd=racine), env=env_tmpdir
+    )
+    assert code == 0, f"attendu exit 0, obtenu {code} (stderr={stderr!r})"
+
+
+def test_non_regression_guillemets_equilibres_autorise(
+    tmp_path, racine, env_tmpdir
+):
+    """NON-RÉGRESSION du chemin NOMINAL : guillemets ÉQUILIBRÉS préservés.
+
+    Avec des guillemets équilibrés, shlex tokenise correctement
+    `fichier>bizarre.txt` comme un seul token littéral ; la garde ne le
+    reconnaît pas comme chemin (pas de `/`, pas de préfixe `~`/`.`,
+    pas de lecteur Windows) et l'AUTORISE. Ce test verrouille le chemin
+    nominal face à toute régression du repli.
+    """
+    cible = racine / "fichier>bizarre.txt"
+    cible.write_text("contenu", encoding="utf-8")
+    script = ecrire_garde(tmp_path, racine)
+    commande = 'cat "fichier>bizarre.txt"'
+    code, stderr = run(
+        script, charge("Bash", {"command": commande}, cwd=racine), env=env_tmpdir
+    )
+    assert code == 0, f"attendu exit 0, obtenu {code} (stderr={stderr!r})"
