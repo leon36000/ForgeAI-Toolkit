@@ -12,7 +12,7 @@ import textwrap
 from typing import NamedTuple
 from urllib.parse import urlsplit
 
-from forgeai.core.models import DeploymentPlan, ServiceSpec
+from forgeai.core.models import DeploymentPlan, ServiceSpec, NodeInventaire, valider_placement
 from forgeai.renderers._openbao import UNSEAL_SCRIPT as _UNSEAL_SCRIPT
 
 NAMESPACE = "forgeai-minimal"
@@ -735,7 +735,8 @@ def _network_policies(plan: DeploymentPlan) -> str:
 
 def render_k3s(plan: DeploymentPlan, node: str | None = None,
                service_type: str = "NodePort",
-               config_files: dict[str, str] | None = None) -> str:
+               config_files: dict[str, str] | None = None,
+               inventaire: tuple[NodeInventaire, ...] | None = None) -> str:
     """Manifestes Kubernetes STANDARD (valables k3s ET k8s — même API). `node` épingle les pods
     sur un hôte (profil Minimal = single-node) ; `svc.node == "auto"` laisse le scheduler décider.
     `service_type` : NodePort (défaut, portable partout, k3s/edge) ou LoadBalancer (cloud/k8s).
@@ -760,6 +761,15 @@ automountServiceAccountToken: false
     used: set[int] = set()
     for svc in plan.services:
         effective_node = svc.node if svc.node is not None else node
+        # PLACE-011 : valider le placement contre l'inventaire AVANT d'émettre le manifeste.
+        # Sans inventaire, aucune validation n'est possible et le comportement reste inchangé
+        # (rétro-compatibilité). Avec inventaire, un placement incompatible lève PlacementError
+        # ici plutôt que de produire un manifeste qui échouera au scheduling, en production.
+        # `is not None` et non `if inventaire` : un inventaire explicitement VIDE doit atteindre
+        # la validation, qui saura dire qu'aucun nœud n'est disponible. `None` = « je ne sais
+        # pas » ; `()` = « je sais, et il n'y a rien » (objection de revue, DeepSeek-V4-Pro).
+        if inventaire is not None:
+            effective_node = valider_placement(svc, inventaire, effective_node)
         parts.append(_deployment(svc, effective_node, node_port_for(svc, used), service_type,
                                  config_files))
     return "".join(parts)

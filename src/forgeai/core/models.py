@@ -177,6 +177,116 @@ def _resoudre_ressources(resource_class: str, resources: dict | None) -> dict:
     return resources
 
 
+class PlacementError(ValueError):
+    """Levée lorsqu'un placement est refusé AVANT rendu : aucun nœud de
+    l'inventaire ne peut honorer les contraintes du service. Refuser ici
+    évite l'émission d'un manifeste voué à l'échec silencieux au scheduling
+    k3s : la validation sort de l'inventaire, pas du cluster.
+    """
+
+
+@dataclass(frozen=True)
+class NodeInventaire:
+    hostname: str
+    gpu_vendor: Optional[str] = None
+    vram_mib: int = 0
+
+    def __post_init__(self) -> None:
+        if not self.hostname or not self.hostname.strip():
+            raise ValueError(
+                "ERR_PLACE_HOSTNAME_INVALIDE : hostname vide ou uniquement des espaces")
+        _rejeter_caracteres_de_controle("hostname", self.hostname)
+        if self.vram_mib < 0:
+            raise ValueError(
+                f"ERR_PLACE_VRAM_INVALIDE : vram_mib négatif ({self.vram_mib}), "
+                f"attendu entier >= 0")
+        vendors_autorises = {"nvidia", "amd", "intel", None}
+        if self.gpu_vendor not in vendors_autorises:
+            raise ValueError(
+                f"ERR_PLACE_VENDOR_INCONNU : vendor '{self.gpu_vendor}' "
+                f"inconnu (autorisés : nvidia, amd, intel, None)")
+
+
+def valider_placement(svc, inventaire, node_demande):
+    # Pas d'inventaire : on ne peut rien valider, on laisse passer pour ne
+    # pas casser la rétro-compatibilité — c'est une absence d'information,
+    # pas une rupture de contrat. Le scheduling k3s tranchera.
+    # Distinction sémantique entre absence d'inventaire et inventaire vide :
+    #   - None  = « je ne sais pas » (aucune info fournie, rétro-compatibilité : on laisse passer)
+    #   - ()    = « je sais, et il n'y a rien » (l'appelant AFFIRME qu'aucun nœud n'est dispo)
+    if inventaire is None:
+        return node_demande
+
+    if not inventaire:
+        # Inventaire explicite mais vide : on ne peut honorer un service GPU,
+        # mais un service CPU n'a pas besoin d'un nœud particulier.
+        if getattr(svc, "gpu", False):
+            raise PlacementError(
+                "ERR_PLACE_AUCUN_NOEUD_QUALIFIE : l'inventaire fourni ne contient "
+                "aucun nœud, placement d'un service GPU impossible")
+        return node_demande
+
+    # Service CPU : le vendor d'un nœud ne le concerne jamais. Aucune raison
+    # de contraindre un service sans GPU sur un hôte GPU-only.
+    if not svc.gpu:
+        return node_demande
+
+    hostnames = tuple(n.hostname for n in inventaire)
+
+    if node_demande is not None and node_demande != "auto":
+        # Nœud explicitement demandé : on l'audite point par point.
+        noeud = next(
+            (n for n in inventaire if n.hostname == node_demande), None)
+        if noeud is None:
+            raise PlacementError(
+                f"ERR_PLACE_NOEUD_INCONNU : nœud '{node_demande}' absent de "
+                f"l'inventaire (connus : {', '.join(hostnames) or 'aucun'})")
+        if noeud.gpu_vendor is None:
+            raise PlacementError(
+                f"ERR_PLACE_CPU_ONLY : le service '{svc.name}' exige un GPU "
+                f"(vendor demandé : {svc.gpu_vendor}) mais le nœud "
+                f"'{noeud.hostname}' est CPU-only")
+        if svc.gpu_vendor is not None and noeud.gpu_vendor != svc.gpu_vendor:
+            raise PlacementError(
+                f"ERR_PLACE_VENDOR_INCOMPATIBLE : service '{svc.name}' "
+                f"demande le vendor '{svc.gpu_vendor}' mais le nœud "
+                f"'{noeud.hostname}' expose '{noeud.gpu_vendor}'")
+        if (svc.vram_min_mib is not None
+                and svc.vram_min_mib > noeud.vram_mib):
+            raise PlacementError(
+                f"ERR_PLACE_VRAM_INSUFFISANTE : service '{svc.name}' exige "
+                f"{svc.vram_min_mib} Mio de VRAM mais le nœud "
+                f"'{noeud.hostname}' n'en expose que {noeud.vram_mib} Mio")
+        return node_demande
+
+    # Mode auto : parcours déterministe, on retient le PREMIER nœud dont le
+    # vendor correspond ET dont la VRAM suffit. L'ordre de l'inventaire est
+    # l'ordre de préférence : c'est l'auteur du manifeste qui le fixe.
+    candidats_examines = []
+    for noeud in inventaire:
+        raison = None
+        if noeud.gpu_vendor is None:
+            raison = "CPU-only"
+        elif (svc.gpu_vendor is not None
+              and noeud.gpu_vendor != svc.gpu_vendor):
+            raison = f"vendor '{noeud.gpu_vendor}' ≠ demandé '{svc.gpu_vendor}'"
+        elif (svc.vram_min_mib is not None
+              and svc.vram_min_mib > noeud.vram_mib):
+            raison = (f"VRAM {noeud.vram_mib} Mio < requise "
+                      f"{svc.vram_min_mib} Mio")
+        if raison is None:
+            return noeud.hostname
+        candidats_examines.append(f"{noeud.hostname} ({raison})")
+
+    vram_requise = (f", VRAM requise {svc.vram_min_mib} Mio"
+                    if svc.vram_min_mib is not None else "")
+    raise PlacementError(
+        f"ERR_PLACE_AUCUN_NOEUD_QUALIFIE : aucun nœud ne convient pour le "
+        f"service '{svc.name}' (vendor recherché : {svc.gpu_vendor}"
+        f"{vram_requise}). Nœuds examinés : "
+        f"{'; '.join(candidats_examines) or 'aucun'}")
+
+
 @dataclass(frozen=True)
 class ServiceSpec:
     """Service concret d'un plan de déploiement (brique instanciée)."""
@@ -196,6 +306,7 @@ class ServiceSpec:
     # aucun appel positionnel existant. `resources` (dérogation) prime sur `resource_class`.
     resource_class: str = "utilitaire"
     resources: Optional[dict] = None
+    vram_min_mib: Optional[int] = None  # VRAM minimale exigée par ce service, validée contre l'inventaire au rendu.
 
     def __post_init__(self) -> None:
         # SEC-YAML-INJECT — suivi de #151 : ces scalaires atteignent en brut le YAML/Compose.

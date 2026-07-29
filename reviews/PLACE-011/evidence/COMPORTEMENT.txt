@@ -1,0 +1,29 @@
+# PLACE-011 — comportement du contrat d'inventaire (exécution réelle, APRÈS revue)
+
+Inventaire : n-nvidia (nvidia, 8192 Mio) | n-amd (amd, 16384 Mio) | n-cpu (CPU-only)
+
+## Placements refusés — chaque message dit demandé / trouvé / pourquoi
+  NVIDIA epingle sur n-cpu           -> REFUSE
+      ERR_PLACE_CPU_ONLY : le service 'ollama' exige un GPU (vendor demandé : nvidia) mais le nœud 'n-cpu' est CPU-only
+  AMD epingle sur n-nvidia           -> REFUSE
+      ERR_PLACE_VENDOR_INCOMPATIBLE : service 'ollama' demande le vendor 'amd' mais le nœud 'n-nvidia' expose 'nvidia'
+  VRAM 12288 exigee, noeud a 8192    -> REFUSE
+      ERR_PLACE_VRAM_INSUFFISANTE : service 'ollama' exige 12288 Mio de VRAM mais le nœud 'n-nvidia' n'en expose que 8192 Mio
+  Intel en mode auto                 -> REFUSE
+      ERR_PLACE_AUCUN_NOEUD_QUALIFIE : aucun nœud ne convient pour le service 'ollama' (vendor recherché : intel). Nœuds examinés : n-nvidia (vendor 'nvidia' ≠ demandé 'intel'); n-amd (vendor 'amd' ≠ demandé 'intel'); n-cpu (CPU-only)
+  noeud absent de l inventaire       -> REFUSE
+      ERR_PLACE_NOEUD_INCONNU : nœud 'n-fantome' absent de l'inventaire (connus : n-nvidia, n-amd, n-cpu)
+  inventaire explicitement VIDE      -> REFUSE
+      ERR_PLACE_AUCUN_NOEUD_QUALIFIE : l'inventaire fourni ne contient aucun nœud, placement d'un service GPU impossible
+
+## Placements acceptés
+  AMD en mode auto                   -> n-amd  (seul noeud qualifie)
+  NVIDIA + VRAM 4096 sur n-nvidia    -> n-nvidia
+  inventaire None (retro-compat)     -> n-cpu
+  service CPU sur n-cpu              -> n-cpu  (jamais contraint)
+  service CPU, inventaire vide       -> 'n-cpu'
+
+## Codes d'erreur du contrat d'inventaire (objection de revue : chacun son cas)
+  hostname vide    -> ERR_PLACE_HOSTNAME_INVALIDE : hostname vide ou uniquement des espaces
+  VRAM negative    -> ERR_PLACE_VRAM_INVALIDE : vram_mib négatif (-1), attendu entier >= 0
+  vendor inconnu   -> ERR_PLACE_VENDOR_INCONNU : vendor 'matrox' inconnu (autorisés : nvidia, amd, intel, None
