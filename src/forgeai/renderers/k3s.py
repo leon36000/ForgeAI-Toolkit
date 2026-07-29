@@ -283,7 +283,11 @@ def _probes_block(svc) -> str:
         handler_readiness = f"httpGet:\n              path: {chemin_base}\n              port: {port}"
     elif svc.probe_type == ProbeType.HTTP:
         path = svc.probe_target if svc.probe_target is not None else "/"
-        handler_liveness = f"httpGet:\n              path: {path}\n              port: {port}"
+        # Même classe de défaut que les arguments EXEC : un chemin contenant `: `, `#` ou `*`
+        # serait réinterprété par le parseur YAML et la sonde viserait une autre URL.
+        handler_liveness = (
+            f"httpGet:\n              path: {json.dumps(str(path), ensure_ascii=False)}"
+            f"\n              port: {port}")
         handler_startup = handler_readiness = handler_liveness
     elif svc.probe_type == ProbeType.TCP:
         handler_liveness = f"tcpSocket:\n              port: {port}"

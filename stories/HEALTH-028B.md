@@ -95,5 +95,39 @@ Une altération silencieuse est pire qu'un échec bruyant : le déploiement se d
 exécutant une commande qui n'a jamais été écrite. `json.dumps` sur les deux renderers ferme la
 classe entière du problème.
 
+## Tour 3 — un défaut BLOQUANT que j'aurais livré
+**Objection critique de Gemini, reproduite** : tout plan contenant un service à sonde INTERNE
+(`EXEC`/`TCP`, ou `HTTP` sans `healthcheck_url`) échouait **systématiquement par timeout**. Le
+produit devenait inutilisable dès qu'un postgres ou un redis était présent — mesuré :
+
+```
+BLOQUÉ : Déploiement non READY (verdict=unknown) après 3.0s. États: {'postgres': 'waiting'}
+```
+
+Ma correction du tour 2 en était la cause : j'avais fait entrer les services sondables dans les
+verdicts, mais un service à sonde interne reste éternellement `UNKNOWN` — donc jamais `READY`.
+
+**Le contournement que je n'ai pas fait.** Exclure ces services du verdict aurait rendu les tests
+verts immédiatement — en abandonnant la garantie : un postgres `health_required=True` serait passé
+**sans aucune preuve**, précisément le défaut que ce package supprime.
+
+**La preuve existait, ailleurs.** Docker exécute lui-même le `healthcheck` : `wait_healthy` la LIT
+désormais (`docker compose ps`). C'est la seule preuve fonctionnelle disponible pour ces services,
+et c'est exactement ce que le critère 1 demande — *« postgres/redis ne sont pas prêts sur simple
+port ouvert si une probe fonctionnelle existe »*.
+
+| état Docker | verdict |
+|---|---|
+| `healthy` | sonde réussie |
+| `unhealthy` / `exited` / `dead` | sonde échouée, service nommé dans l'échec |
+| `starting` / `unknown` | pas encore de preuve — on attend |
+
+`_etats_docker` **ne lève jamais** : docker absent, JSON invalide, timeout → dictionnaire vide,
+traité comme une absence d'information. Un diagnostic qui plante ne diagnostique rien.
+
+**Deux autres objections du même tour**, toutes deux justes : le chemin HTTP n'était pas échappé
+dans K3s (même classe que les arguments EXEC, sur un autre champ) ; et la validation rejetait
+`--password ""`, un argv légitime — seul un **tuple** vide est un contrat absent.
+
 ## Rollback
 `git revert` → retour à la faille de vacuité (défaut FAI-U-028 connu) ; baseline verte.

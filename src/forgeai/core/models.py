@@ -422,10 +422,12 @@ class ServiceSpec:
         # Validation de probe_target selon probe_type.
         if self.probe_type is ProbeType.EXEC:
             # Pour EXEC : tuple non vide de chaînes (argv). Jamais de chaîne shell : injection.
+            # Un ARGUMENT vide est légitime (`--password ""` est un argv valide) ; seul un
+            # TUPLE vide est un contrat absent. Rejeter la chaîne vide interdirait un usage réel.
             if (
                 not isinstance(self.probe_target, tuple)
                 or len(self.probe_target) == 0
-                or not all(isinstance(arg, str) and arg for arg in self.probe_target)
+                or not all(isinstance(arg, str) for arg in self.probe_target)
             ):
                 raise ValueError(
                     f"ERR_HEALTH_CIBLE_EXEC_INVALIDE: probe_type=EXEC exige probe_target "

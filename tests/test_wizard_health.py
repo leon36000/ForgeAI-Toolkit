@@ -199,3 +199,55 @@ def test_arguments_exec_k3s_sont_echappes():
         dep = next(d for d in docs if d and d.get("kind") == "Deployment")
         cmd = dep["spec"]["template"]["spec"]["containers"][0]["livenessProbe"]["exec"]["command"]
         assert cmd == ["echo", arg], f"argument {arg!r} altéré en {cmd!r}"
+
+
+def test_sonde_interne_est_lue_depuis_docker_pas_bloquante(monkeypatch):
+    """Objection CRITIQUE de Gemini (tour 3), REPRODUITE : tout plan contenant un service à
+    sonde INTERNE (EXEC/TCP, ou HTTP sans `healthcheck_url`) échouait systématiquement par
+    timeout — le produit devenait inutilisable dès qu'un postgres ou un redis était présent.
+
+    La sonde interne est exécutée par l'orchestrateur, pas depuis l'hôte : sa preuve existe,
+    mais dans Docker. `wait_healthy` doit la LIRE (`docker compose ps`) plutôt que de conclure
+    à l'aveugle. C'est la seule preuve fonctionnelle disponible pour ces services."""
+    from forgeai.deploy import compose as mod
+    pg = ServiceSpec(name="postgres", image="postgres:15", host_port=5432, container_port=5432,
+                     probe_type=ProbeType.EXEC, probe_target=("pg_isready",),
+                     health_required=True)
+    monkeypatch.setattr(mod, "_etats_docker", lambda plan: {"postgres": "healthy"})
+    res = mod.wait_healthy(_plan_sante([pg]), timeout_s=3.0, probe=lambda url: True)
+    assert res == {"postgres": "healthy"}
+
+
+def test_sonde_interne_non_saine_est_rapportee(monkeypatch):
+    """Contrôle négatif : Docker rapporte `unhealthy` -> le déploiement échoue en nommant le
+    service. Lire la preuve ne doit pas revenir à l'accepter aveuglément."""
+    from forgeai.deploy import compose as mod
+    pg = ServiceSpec(name="postgres", image="postgres:15", host_port=5432, container_port=5432,
+                     probe_type=ProbeType.EXEC, probe_target=("pg_isready",),
+                     health_required=True)
+    monkeypatch.setattr(mod, "_etats_docker", lambda plan: {"postgres": "unhealthy"})
+    with pytest.raises(mod.DeployError, match="postgres"):
+        mod.wait_healthy(_plan_sante([pg]), timeout_s=2.0, probe=lambda url: True)
+
+
+def test_chemin_http_k3s_est_echappe():
+    """Objection majeure de Gemini : `probe_target` HTTP n'était pas échappé dans le manifeste
+    K3s — même classe de défaut que les arguments EXEC, sur le chemin."""
+    import yaml
+    from forgeai.renderers.k3s import render_k3s
+    svc = ServiceSpec(name="x", image="x:1", host_port=1, container_port=1,
+                      probe_type=ProbeType.HTTP, probe_target="/a: b#c")
+    docs = list(yaml.safe_load_all(render_k3s(_plan_sante([svc]))))
+    dep = next(d for d in docs if d and d.get("kind") == "Deployment")
+    chemin = dep["spec"]["template"]["spec"]["containers"][0]["livenessProbe"]["httpGet"]["path"]
+    assert chemin == "/a: b#c", f"chemin altéré : {chemin!r}"
+
+
+def test_argument_exec_vide_est_legitime():
+    """Objection mineure de Gemini : `--password ""` est un argv valide. Rejeter une chaîne
+    vide interdit un usage réel ; seul un tuple VIDE est un contrat absent."""
+    ServiceSpec(name="x", image="x:1", host_port=1, container_port=1,
+                probe_type=ProbeType.EXEC, probe_target=("psql", "--password", ""))
+    with pytest.raises(ValueError, match="ERR_HEALTH_CIBLE_EXEC_INVALIDE"):
+        ServiceSpec(name="y", image="y:1", host_port=2, container_port=2,
+                    probe_type=ProbeType.EXEC, probe_target=())

@@ -5,6 +5,7 @@ sur son endpoint HTTP de healthcheck (contrat de preuve du plan maître).
 """
 from __future__ import annotations
 
+import json
 import subprocess
 import time
 import urllib.error
@@ -113,6 +114,40 @@ def evaluer_service(
     return HealthState.UNKNOWN
 
 
+# HEALTH-028B : une sonde INTERNE (healthcheck Compose) est exécutée par Docker, pas
+# depuis l'hôte. Sa preuve existe donc — dans Docker. La lire est la SEULE preuve
+# fonctionnelle disponible pour ces services ; conclure sans elle bloquerait tout plan
+# contenant un postgres ou un redis. Ne lève jamais : un diagnostic qui plante ne
+# diagnostique rien, l'appelant traite le dictionnaire vide comme une absence d'info.
+def _etats_docker(plan) -> dict:
+    try:
+        r = subprocess.run(
+            ["docker", "compose", "-p", str(plan.plan_id), "ps", "--format", "json"],
+            capture_output=True, text=True, timeout=10, check=False
+        )
+        if r.returncode != 0:
+            return {}
+        stdout = r.stdout.strip()
+        if not stdout:
+            return {}
+        if stdout.startswith('['):
+            services = json.loads(stdout)
+        else:
+            services = []
+            for line in stdout.split('\n'):
+                line = line.strip()
+                if line:
+                    services.append(json.loads(line))
+        result = {}
+        for s in services:
+            name = s.get("Service") or s.get("Name") or "unknown"
+            state = s.get("Health") or s.get("State") or "unknown"
+            result[name] = state
+        return result
+    except Exception:
+        return {}
+
+
 def _etiquette_publique(etat: HealthState) -> str:
     """Traduit un `HealthState` vers le vocabulaire historique de `wait_healthy`.
 
@@ -165,6 +200,7 @@ def wait_healthy(plan, timeout_s: float = 180.0, probe=None) -> dict:
     # --- Étape 2 et 3 : sondage itératif avec agrégation ---
     while True:
         verdicts: dict = {}
+        etats_docker = _etats_docker(plan)
         for svc in plan.services:
             healthcheck_url = getattr(svc, "healthcheck_url", None)
             probe_type = getattr(svc, "probe_type", None)
@@ -182,8 +218,16 @@ def wait_healthy(plan, timeout_s: float = 180.0, probe=None) -> dict:
                 sonde_reussie = bool(probe(healthcheck_url))
                 transport_ouvert = sonde_reussie
             elif probe_type in (ProbeType.HTTP, ProbeType.TCP, ProbeType.EXEC):
-                # Sonde interne au conteneur (Compose healthcheck), non exécutable depuis l'hôte.
-                sonde_reussie = None
+                # Sonde INTERNE : exécutée par Docker, pas depuis l'hôte. Sa preuve existe
+                # néanmoins — on la LIT. Conclure sans elle bloquerait éternellement tout plan
+                # contenant un postgres ou un redis (défaut mesuré : timeout systématique).
+                etat_docker = etats_docker.get(svc.name, "unknown")
+                if etat_docker == "healthy":
+                    sonde_reussie = True
+                elif etat_docker in ("unhealthy", "exited", "dead"):
+                    sonde_reussie = False
+                else:
+                    sonde_reussie = None   # starting / unknown : pas encore de preuve
                 transport_ouvert = False
             else:
                 # Service non sondable : doit quand même figurer dans verdicts pour que
