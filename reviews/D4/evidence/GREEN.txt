@@ -1,11 +1,10 @@
 === PREUVE D'EXÉCUTION — D4 ===
-générée le : 2026-07-29 06:26:54 -0400
-code prouvé au commit : 0bd5c2c — [D4] L ecran d inventaire : la capacite devient visible et actionnable
-  (le commit qui archivera cette preuve sera nécessairement postérieur ;
-   le contrôle qui fait foi est : git diff <ce commit> HEAD -- src/ tests/ = VIDE)
+générée le : 2026-07-29 06:36:34 -0400
+code prouvé au commit : a8af983 — [D4] Chaine branchee : script charge, appels reels, test de chaine detectant
+  (contrôle qui fait foi : git diff a8af983 HEAD -- src/ tests/ doit être VIDE)
 
---- tests Node (logique pure) ---
-code de sortie : 0
+--- tests Node ---
+adoption.test.cjs : code 0
   ok  - cas nominal : redis + qdrant détectés, valides, au plan -> 2 adoptables triés par id
   ok  - docker détecté (par binaire) mais endpoint null -> écarté
   ok  - postgres non détecté (detecte=false) -> écarté
@@ -18,18 +17,27 @@ code de sortie : 0
   ok  - aucune mutation : inventaire et tableau de choix inchangés après appel
 
 adoption.test.cjs : 10 cas ok, 0 cas en échec, 10 cas au total.
+chaine_adoption.test.cjs : code 0
+chaine_adoption.test.cjs : 5 cas ok, 0 cas en échec, 5 cas au total.
 
---- suite Python complète (le CODE DE SORTIE fait autorité) ---
+--- suite Python (le CODE DE SORTIE fait autorité) ---
 code de sortie pytest : 0
   => SUITE VERTE
 ........................................................................ [ 98%]
 .................                                                        [100%]
   lignes FAILED : 0
 
---- contrôles de mutation (vérifiés EFFECTIFS avant interprétation) ---
-  filtre « présent au plan » neutralisé -> 1 cas en échec, code 1
-  validation d'endpoint neutralisée     -> 3 cas en échec
-  tout restauré                          -> 10/10, code 0
+--- chaîne prouvée par exécution (pas par comptage) ---
+  ordre : engine_filter.js -> adoption.js -> app.js
+  globalThis.ForgeAIAdoption : servicesAdoptables, construireAdopt, endpointValide
+  docker (endpoint null) écarté ; dict POST = {"redis":"127.0.0.1:6379"}
+
+--- mutations (vérifiées effectives) ---
+  filtre plan neutralisé        -> 1 échec
+  validation endpoint neutralisée -> 3 échecs
+  balise adoption.js retirée    -> code 1
+  appel chargerInventaire commenté -> code 1
+  tout restauré                 -> 15/15, code 0
 
 --- no-stub-scan ---
-NO-STUB-SCAN : OK (269 fichiers scannés, zéro violation)
+NO-STUB-SCAN : OK (270 fichiers scannés, zéro violation)
