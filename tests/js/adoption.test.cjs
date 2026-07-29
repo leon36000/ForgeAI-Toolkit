@@ -9,30 +9,16 @@
  * avec endpoint malformé, ou absent du plan, doit être écarté
  * silencieusement, sans exception et sans modification de l'entrée.
  *
- * Exécution : `node tests/js/adoption.test.cjs`
+ * Exécution : `node --test tests/js/adoption.test.cjs`
  * Sortie    : code 0 si toutes les assertions passent, non-nul sinon.
  */
 
 'use strict';
 
-const assert = require('node:assert');
+const test = require('node:test');
+const assert = require('node:assert/strict');
 
 const adoption = require('../../src/forgeai/web/assets/adoption.js');
-
-let passed = 0;
-let failed = 0;
-
-function check(label, fn) {
-  try {
-    fn();
-    passed += 1;
-    console.log('  ok  -', label);
-  } catch (err) {
-    failed += 1;
-    console.error('  FAIL -', label);
-    console.error('         ', err && err.message ? err.message : err);
-  }
-}
 
 // Copie profonde naïve : suffisante ici (chaînes, booléens, tableaux
 // et objets plats uniquement).
@@ -42,7 +28,7 @@ function deepClone(x) {
 
 // ─────────────────────── servicesAdoptables ───────────────────────
 
-check('cas nominal : redis + qdrant détectés, valides, au plan -> 2 adoptables triés par id', () => {
+test('cas nominal : redis + qdrant détectés, valides, au plan -> 2 adoptables triés par id', () => {
   const inventaire = {
     services: [
       { id: 'redis',  detecte: true, endpoint: 'redis.local:6379', via: ['binaire'] },
@@ -66,7 +52,7 @@ check('cas nominal : redis + qdrant détectés, valides, au plan -> 2 adoptables
     'le champ `via` est préservé pour qdrant');
 });
 
-check('docker détecté (par binaire) mais endpoint null -> écarté', () => {
+test('docker détecté (par binaire) mais endpoint null -> écarté', () => {
   const inventaire = {
     services: [{ id: 'docker', detecte: true, endpoint: null, via: ['binaire'] }]
   };
@@ -75,7 +61,7 @@ check('docker détecté (par binaire) mais endpoint null -> écarté', () => {
     'endpoint null/absent signifie "non joignable" -> docker écarté');
 });
 
-check('postgres non détecté (detecte=false) -> écarté', () => {
+test('postgres non détecté (detecte=false) -> écarté', () => {
   const inventaire = {
     services: [{ id: 'postgres', detecte: false, endpoint: 'pg.local:5432', via: ['port'] }]
   };
@@ -84,7 +70,7 @@ check('postgres non détecté (detecte=false) -> écarté', () => {
     'un service non détecté ne peut pas être adopté, même avec un endpoint');
 });
 
-check('redis détecté et joignable mais absent du plan -> écarté', () => {
+test('redis détecté et joignable mais absent du plan -> écarté', () => {
   const inventaire = {
     services: [{ id: 'redis', detecte: true, endpoint: 'redis.local:6379', via: ['binaire'] }]
   };
@@ -94,7 +80,7 @@ check('redis détecté et joignable mais absent du plan -> écarté', () => {
     'on ne peut pas adopter ce qu\'on ne déploie pas -> redis écarté');
 });
 
-check('endpoints malformés (4 formes) -> tous écartés', () => {
+test('endpoints malformés (4 formes) -> tous écartés', () => {
   const inventaire = {
     services: [
       { id: 'a', detecte: true, endpoint: 'pasdeport' }, // pas de séparateur
@@ -119,7 +105,7 @@ check('endpoints malformés (4 formes) -> tous écartés', () => {
     'port vide (rien après le dernier ":") -> invalide');
 });
 
-check('inventaire null / undefined / {} / {services:[]} -> [] sans plantage', () => {
+test('inventaire null / undefined / {} / {services:[]} -> [] sans plantage', () => {
   const plan = ['redis', 'qdrant'];
   const cases = [
     ['null',          null],
@@ -138,7 +124,7 @@ check('inventaire null / undefined / {} / {services:[]} -> [] sans plantage', ()
 
 // ─────────────────────── construireAdopt ───────────────────────
 
-check('construireAdopt : 2 cochés sur 3 -> mapping {id:"hôte:port"} des 2 seuls', () => {
+test('construireAdopt : 2 cochés sur 3 -> mapping {id:"hôte:port"} des 2 seuls', () => {
   const choix = [
     { id: 'redis',  endpoint: 'redis.local:6379', adopte: true  },
     { id: 'qdrant', endpoint: 'q.local:6333',     adopte: true  },
@@ -156,7 +142,7 @@ check('construireAdopt : 2 cochés sur 3 -> mapping {id:"hôte:port"} des 2 seul
     'le mapping ne contient que les 2 entrées cochées (ni plus, ni moins)');
 });
 
-check('construireAdopt : aucun choix coché -> {} (objet vide)', () => {
+test('construireAdopt : aucun choix coché -> {} (objet vide)', () => {
   const choix = [
     { id: 'redis',  endpoint: 'redis.local:6379', adopte: false },
     { id: 'qdrant', endpoint: 'q.local:6333',     adopte: false }
@@ -168,7 +154,7 @@ check('construireAdopt : aucun choix coché -> {} (objet vide)', () => {
     'le mapping rendu est exactement {}');
 });
 
-check('construireAdopt : coché mais endpoint invalide -> ignoré', () => {
+test('construireAdopt : coché mais endpoint invalide -> ignoré', () => {
   const choix = [
     { id: 'redis',  endpoint: 'pasdeport',    adopte: true },
     { id: 'qdrant', endpoint: 'q.local:6333', adopte: true }
@@ -184,7 +170,7 @@ check('construireAdopt : coché mais endpoint invalide -> ignoré', () => {
 
 // ─────────────────────── non-mutation ───────────────────────
 
-check('aucune mutation : inventaire et tableau de choix inchangés après appel', () => {
+test('aucune mutation : inventaire et tableau de choix inchangés après appel', () => {
   const inventaire = {
     services: [
       { id: 'redis',  detecte: true,  endpoint: 'redis.local:6379', via: ['binaire'] },
@@ -210,9 +196,3 @@ check('aucune mutation : inventaire et tableau de choix inchangés après appel'
   assert.deepStrictEqual(choix, choixAvant,
     'construireAdopt ne doit pas muter le tableau de choix qui lui est passé');
 });
-
-// ─────────────────────── Résumé ───────────────────────
-
-console.log('');
-console.log(`adoption.test.cjs : ${passed} cas ok, ${failed} cas en échec, ${passed + failed} cas au total.`);
-process.exit(failed === 0 ? 0 : 1);

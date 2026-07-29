@@ -466,3 +466,12 @@ code {
   padding: 4px 16px 14px; background: var(--card-bg);
 }
 .cloud-block summary { cursor: pointer; padding: 10px 0; font-weight: 600; font-size: 14px; }
+
+/* Le groupe d'adoption est un <fieldset> pour porter la sémantique « groupe de cases »
+   sans attribut role. On neutralise la bordure et les marges que les navigateurs lui
+   donnent par défaut, pour que l'apparence soit celle du <div> qu'il remplace. */
+#inventaire {
+  border: 0;
+  padding: 0;
+  margin: 0;
+}

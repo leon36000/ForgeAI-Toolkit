@@ -275,34 +275,36 @@
 
   async function chargerInventaire() {
     try {
-      var res = await fetch('/api/discover?node=local');
+      const res = await fetch('/api/discover?node=local');
       if (!res.ok) throw new Error('/api/discover -> ' + res.status);
       state.inventaire = await res.json();
     } catch (e) {
       // L'inventaire est une COMMODITÉ : son indisponibilité ne doit jamais empêcher de
-      // déployer. On retombe simplement sur « aucun service détecté ».
+      // déployer. On retombe simplement sur « aucun service détecté ». L'erreur est
+      // journalisée : un inventaire absent doit rester diagnosticable, pas silencieux.
+      console.warn('inventaire indisponible, déploiement sans adoption :', e);
       state.inventaire = null;
     }
     renderInventaire();
   }
 
   function renderInventaire() {
-    var container = document.getElementById('inventaire-content');
+    const container = document.getElementById('inventaire-content');
     if (!container) return;
-    var services = ForgeAIAdoption.servicesAdoptables(state.inventaire, briquesDuPlan());
+    const services = ForgeAIAdoption.servicesAdoptables(state.inventaire, briquesDuPlan());
     container.innerHTML = '';
     if (!services.length) {
       // Jamais de liste vide muette : l'utilisateur doit savoir que la recherche a eu lieu.
-      var p = document.createElement('p');
+      const p = document.createElement('p');
       p.className = 'muted';
       p.textContent = t('inventaire_vide');
       container.appendChild(p);
       return;
     }
     services.forEach(function(svc){
-      var label = document.createElement('label');
+      const label = document.createElement('label');
       label.className = 'inventaire-item';
-      var cb = document.createElement('input');
+      const cb = document.createElement('input');
       cb.type = 'checkbox';
       cb.id = 'adopt-' + svc.id;
       cb.checked = !!state.adoptChoisis[svc.id];
@@ -321,11 +323,11 @@
   // Extrait en fonction nommée plutôt qu'en expression inline : le quality gate refusait
   // l'IIFE dans le littéral (maintenabilité), et un nom rend l'intention lisible.
   function champAdopt() {
-    var choix = ForgeAIAdoption.servicesAdoptables(state.inventaire, briquesDuPlan())
+    const choix = ForgeAIAdoption.servicesAdoptables(state.inventaire, briquesDuPlan())
       .map(function (sv) {
         return { id: sv.id, endpoint: sv.endpoint, adopte: !!state.adoptChoisis[sv.id] };
       });
-    var dict = ForgeAIAdoption.construireAdopt(choix);
+    const dict = ForgeAIAdoption.construireAdopt(choix);
     return Object.keys(dict).length ? { adopt: dict } : {};
   }
 
