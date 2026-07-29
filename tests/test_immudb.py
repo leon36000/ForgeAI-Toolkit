@@ -6,17 +6,25 @@ insertion (→ transactionId + documentId), et piste d'audit d'un document (rév
 Le comportement contre un immudb RÉEL est prouvé par l'e2e journalisé au registre. Invariant secrets :
 ni les identifiants ni le token de session ne doivent apparaître dans une exception.
 """
+
 import json
 import sys
 import threading
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from pathlib import Path
+from typing import ClassVar
 
 import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
 
-from forgeai.audit.immudb import LedgerError, history, open_session, ensure_collection, record
+from forgeai.audit.immudb import (
+    LedgerError,
+    ensure_collection,
+    history,
+    open_session,
+    record,
+)
 
 TOKEN = "sess-e3c"
 
@@ -24,9 +32,9 @@ TOKEN = "sess-e3c"
 class _ImmudbHandler(BaseHTTPRequestHandler):
     """immudb document-API minimal : session + collection + insert + audit, exige le sessionid."""
 
-    collections: dict = {}
-    docs: dict = {}
-    tx = [1]
+    collections: ClassVar[dict] = {}
+    docs: ClassVar[dict] = {}
+    tx: ClassVar[list[int]] = [1]
 
     def log_message(self, *args):
         return
@@ -36,10 +44,12 @@ class _ImmudbHandler(BaseHTTPRequestHandler):
         return json.loads(self.rfile.read(length) or b"{}")
 
     def _send(self, code: int, obj: dict):
+        payload = json.dumps(obj).encode()
         self.send_response(code)
         self.send_header("Content-Type", "application/json")
+        self.send_header("Content-Length", str(len(payload)))
         self.end_headers()
-        self.wfile.write(json.dumps(obj).encode())
+        self.wfile.write(payload)
 
     def _auth(self) -> bool:
         return self.headers.get("grpc-metadata-sessionid") == TOKEN
@@ -77,7 +87,9 @@ class _ImmudbHandler(BaseHTTPRequestHandler):
             body = self._read()
             docs = body.get("documents")
             if not docs:
-                return self._send(500, {"error": "illegal arguments: no document specified"})
+                return self._send(
+                    500, {"error": "illegal arguments: no document specified"}
+                )
             _ImmudbHandler.tx[0] += 1
             tx = _ImmudbHandler.tx[0]
             doc_id = f"doc{tx:032x}"
@@ -87,19 +99,34 @@ class _ImmudbHandler(BaseHTTPRequestHandler):
         # /api/v2/collection/{name}/documents/search
         if len(parts) == 7 and parts[5] == "documents" and parts[6] == "search":
             name = parts[4]
-            revs = [{"documentId": did, "document": d}
-                    for did, (tx, d) in _ImmudbHandler.docs.get(name, {}).items()]
+            revs = [
+                {"documentId": did, "document": d}
+                for did, (tx, d) in _ImmudbHandler.docs.get(name, {}).items()
+            ]
             return self._send(200, {"revisions": revs})
         # /api/v2/collection/{name}/document/{id}/audit
         if len(parts) == 8 and parts[5] == "document" and parts[7] == "audit":
+            self._read()
             name, did = parts[4], parts[6]
             entry = _ImmudbHandler.docs.get(name, {}).get(did)
             if entry is None:
                 return self._send(404, {"error": "not found"})
             tx, d = entry
-            return self._send(200, {"revisions": [
-                {"transactionId": str(tx), "documentId": did, "revision": "1",
-                 "document": d, "username": "immudb", "ts": "1784541026"}]})
+            return self._send(
+                200,
+                {
+                    "revisions": [
+                        {
+                            "transactionId": str(tx),
+                            "documentId": did,
+                            "revision": "1",
+                            "document": d,
+                            "username": "immudb",
+                            "ts": "1784541026",
+                        }
+                    ]
+                },
+            )
         return self._send(404, {"error": "not found"})
 
 
@@ -109,11 +136,15 @@ def immu():
     _ImmudbHandler.docs = {}
     _ImmudbHandler.tx = [1]
     server = HTTPServer(("127.0.0.1", 0), _ImmudbHandler)
-    threading.Thread(target=server.serve_forever, daemon=True).start()
+    thread = threading.Thread(target=server.serve_forever, daemon=True)
+    thread.start()
     try:
         yield f"http://127.0.0.1:{server.server_address[1]}"
     finally:
         server.shutdown()
+        thread.join(timeout=5)
+        server.server_close()
+        assert not thread.is_alive(), "le faux serveur immudb doit être arrêté"
 
 
 def test_open_session_retourne_token(immu):
@@ -128,7 +159,9 @@ def test_record_puis_history_round_trip(immu):
     assert res["transactionId"] and res["documentId"], "insertion -> tx + docId"
     revs = history(immu, tok, "audit", res["documentId"])
     assert revs and revs[0]["document"]["fact"] == "Vornak-9"
-    assert revs[0]["transactionId"] == res["transactionId"]  # inscription au ledger prouvée
+    assert (
+        revs[0]["transactionId"] == res["transactionId"]
+    )  # inscription au ledger prouvée
 
 
 def test_ensure_collection_idempotent(immu):
