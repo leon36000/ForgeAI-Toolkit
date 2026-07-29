@@ -1,0 +1,26 @@
+[ROUGE] sur origin/main (28d5d6b) — reproduction exécutée.
+
+## Faille de vacuité (règle CENTRALE de l'ADR HEALTH-028A)
+   src/forgeai/deploy/compose.py:65
+     if all(v == 'healthy' for v in status.values()): return status
+
+   `all()` sur une collection VIDE renvoie True :
+     all(v == 'healthy' for v in {}.values()) -> True
+   => un plan sans AUCUN service sondé est déclaré healthy IMMÉDIATEMENT,
+      sans la moindre preuve de santé. L'ADR l'interdit explicitement :
+      « un déploiement de zéro service sondé est UNKNOWN, jamais READY ».
+
+## Contrat de l'ADR absent de ServiceSpec
+   health_required        : ABSENT
+   probe_type             : ABSENT
+   probe_target           : ABSENT
+   http_success_codes     : ABSENT
+   health_timeout_s       : ABSENT
+   health_interval_s      : ABSENT
+   health_retries         : ABSENT
+
+## Conséquence fonctionnelle
+   Un service comme postgres ou redis est considéré prêt sur simple port ouvert :
+   aucune distinction entre TRANSPORT_READY (le port répond) et FUNCTIONALLY_READY
+   (la base accepte réellement des requêtes). Le déploiement enchaîne alors sur un
+   service qui refuse encore les connexions applicatives.

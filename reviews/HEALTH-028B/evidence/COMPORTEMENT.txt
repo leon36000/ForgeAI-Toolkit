@@ -1,0 +1,34 @@
+# HEALTH-028B — contrat de sante mappe vers Compose et K3s (execution reelle)
+
+## Regle ANTI-VACUITE (defaut central de lADR HEALTH-028A)
+   all(v=='healthy' for v in {}.values()) -> True  <- le piege
+   agreger_verdicts({})                   -> unknown  <- corrige
+
+## TRANSPORT_READY nest PAS pret
+   port ouvert, sonde fonctionnelle KO -> transport_ready
+   sonde fonctionnelle OK              -> functionally_ready
+   => un port TCP ouvert prouve que le transport repond, PAS que la base accepte des requetes
+
+## Contrat exige sans sonde : violation, pas absence dinformation
+   health_required=True, aucune sonde -> failed
+
+## Compose : healthcheck FONCTIONNEL (argv, jamais chaine shell)
+    healthcheck:
+    test: ["CMD", "pg_isready", "-U", "forgeai"]
+    interval: 5s
+    timeout: 5s
+    retries: 12
+    start_period: 60s
+
+## K3s : trois sondes aux ROLES DISTINCTS
+   startupProbe     failureThreshold=12 periodSeconds=5
+   readinessProbe   failureThreshold=3 periodSeconds=5
+   livenessProbe    failureThreshold=3 periodSeconds=5
+   => startupProbe tolere 12 echecs contre 3 pour liveness : un demarrage LENT nest pas une PANNE
+
+## Regressions detectees par la suite complete, puis reparees
+   redis sans healthcheck_url -> tcpSocket present : True | sondes : 3
+      (sans ce repli, Kubernetes ne detecterait plus quun redis bloque est mort)
+   openbao liveness TOLERANTE (sealedcode=200) : True
+   openbao readiness STRICTE (aucun parametre)  : True
+      (sans cette distinction, le coffre redemarre en boucle AVANT son unseal)

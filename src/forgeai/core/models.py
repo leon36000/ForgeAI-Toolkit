@@ -321,6 +321,28 @@ class CapaciteCluster:
             )
 
 
+class ProbeType(Enum):
+    """Type de sonde de santé applicable à un service."""
+    HTTP = "http"   # Sonde HTTP : GET sur une URL, vérifie le code de retour
+    TCP = "tcp"     # Sonde TCP : ouvre une connexion sur un port, vérifie le transport
+    EXEC = "exec"   # Sonde par exécution : lance un binaire interne, vérifie son code de sortie
+    NONE = "none"   # Aucune sonde : le service n'expose aucune vérification automatique
+
+
+class HealthState(Enum):
+    """États de santé d'un service.
+
+    TRANSPORT_READY n'est PAS un état prêt au sens fonctionnel : un port ouvert
+    prouve uniquement que le transport répond (TCP/HTTP au niveau réseau), mais ne
+    garantit pas que l'application traite correctement les requêtes. Seul
+    FUNCTIONALLY_READY atteste qu'une sonde applicative a renvoyé une réponse valide.
+    """
+    FUNCTIONALLY_READY = "functionally_ready"   # réponse applicative correcte (sonde métier réussie)
+    TRANSPORT_READY = "transport_ready"         # transport joignable, applicatif NON prouvé
+    UNKNOWN = "unknown"                         # aucune preuve disponible (pas de sonde exécutée)
+    FAILED = "failed"                           # preuve d'échec ou contrat de santé violé
+
+
 @dataclass(frozen=True)
 class ServiceSpec:
     """Service concret d'un plan de déploiement (brique instanciée)."""
@@ -341,6 +363,13 @@ class ServiceSpec:
     resource_class: str = "utilitaire"
     resources: Optional[dict] = None
     vram_min_mib: Optional[int] = None  # VRAM minimale exigée par ce service, validée contre l'inventaire au rendu.
+    health_required: bool = False                   # service critique : sa santé conditionne le READY global
+    probe_type: Optional[ProbeType] = None          # type de sonde ; None = à dériver ailleurs (ex: healthcheck_url)
+    probe_target: Optional[Union[str, tuple]] = None  # str pour http/tcp ; argv (tuple) pour exec
+    http_success_codes: tuple = (200,)              # codes HTTP acceptés comme probe_pass (entre 100 et 599)
+    health_timeout_s: float = 5.0                   # durée max d'une sonde individuelle (secondes, strictement positif)
+    health_interval_s: float = 5.0                  # délai entre deux tentatives de sonde (secondes, strictement positif)
+    health_retries: int = 12                        # nombre de tentatives avant d'abandonner (entier strictement positif)
 
     def __post_init__(self) -> None:
         # SEC-YAML-INJECT — suivi de #151 : ces scalaires atteignent en brut le YAML/Compose.
@@ -361,6 +390,56 @@ class ServiceSpec:
         # plus aucun magic number et ne valide rien. Dataclass frozen -> object.__setattr__.
         object.__setattr__(self, "ressources_effectives",
                            _resoudre_ressources(self.resource_class, self.resources))
+        # --- validation du contrat de santé ---
+        # Les durées doivent être strictement positives (sinon la boucle d'attente diverge ou expire immédiatement).
+        if self.health_timeout_s <= 0:
+            raise ValueError(
+                f"ERR_HEALTH_DUREE_INVALIDE: health_timeout_s={self.health_timeout_s!r} "
+                f"doit être strictement positif."
+            )
+        if self.health_interval_s <= 0:
+            raise ValueError(
+                f"ERR_HEALTH_DUREE_INVALIDE: health_interval_s={self.health_interval_s!r} "
+                f"doit être strictement positif."
+            )
+        # Le nombre de tentatives doit être strictement positif.
+        if self.health_retries <= 0:
+            raise ValueError(
+                f"ERR_HEALTH_RETRIES_INVALIDE: health_retries={self.health_retries!r} "
+                f"doit être un entier strictement positif."
+            )
+        # Les codes HTTP acceptés : tuple non vide, chaque code entier entre 100 et 599.
+        if not self.http_success_codes:
+            raise ValueError(
+                "ERR_HEALTH_CODE_INVALIDE: http_success_codes ne peut pas être vide."
+            )
+        for code in self.http_success_codes:
+            if not isinstance(code, int) or isinstance(code, bool) or code < 100 or code > 599:
+                raise ValueError(
+                    f"ERR_HEALTH_CODE_INVALIDE: code HTTP={code!r} hors plage [100, 599] "
+                    f"ou non entier."
+                )
+        # Validation de probe_target selon probe_type.
+        if self.probe_type is ProbeType.EXEC:
+            # Pour EXEC : tuple non vide de chaînes (argv). Jamais de chaîne shell : injection.
+            if (
+                not isinstance(self.probe_target, tuple)
+                or len(self.probe_target) == 0
+                or not all(isinstance(arg, str) and arg for arg in self.probe_target)
+            ):
+                raise ValueError(
+                    f"ERR_HEALTH_CIBLE_EXEC_INVALIDE: probe_type=EXEC exige probe_target "
+                    f"tuple non vide de chaînes ; reçu={self.probe_target!r}."
+                )
+        elif self.probe_type in (ProbeType.HTTP, ProbeType.TCP):
+            # Pour HTTP/TCP : chaîne non vide, sans caractères de contrôle.
+            if not isinstance(self.probe_target, str) or not self.probe_target:
+                raise ValueError(
+                    f"ERR_HEALTH_CIBLE_INVALIDE: probe_type={self.probe_type.value!r} exige "
+                    f"probe_target chaîne non vide ; reçu={self.probe_target!r}."
+                )
+            _rejeter_caracteres_de_controle("probe_target", self.probe_target)
+        # probe_type is None est autorisé : la dérivation depuis healthcheck_url se fait ailleurs.
         for i, dep in enumerate(self.depends):
             _rejeter_caracteres_de_controle(f"depends[{i}]", dep)
         for cle, valeur in self.env.items():

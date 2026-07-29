@@ -12,7 +12,7 @@ import textwrap
 from typing import NamedTuple
 from urllib.parse import urlsplit
 
-from forgeai.core.models import DeploymentPlan, ServiceSpec, NodeInventaire, valider_placement, CapaciteCluster, QuotaError
+from forgeai.core.models import DeploymentPlan, ServiceSpec, NodeInventaire, valider_placement, CapaciteCluster, QuotaError, ProbeType
 from forgeai.renderers._openbao import UNSEAL_SCRIPT as _UNSEAL_SCRIPT
 
 NAMESPACE = "forgeai-minimal"
@@ -235,46 +235,99 @@ _PROFIL_SIDECAR_OPENBAO = ProfilSecurite(
 )
 
 
-def _probes_block(svc: ServiceSpec) -> str:
-    """Liveness + readiness : httpGet si healthcheck_url renseigné, sinon tcpSocket.
-    openbao (production) démarre SCELLÉ (/v1/sys/health -> 503 scellé, 501 non-init) : liveness
-    TOLÉRANTE (sealedcode=200&uninitcode=200 : le process vit même scellé -> pas de CrashLoop
-    avant unseal) ; readiness STRICTE (200 seulement unsealed -> les consommateurs attendent)."""
+def _probes_block(svc) -> str:
+    """Génère le bloc YAML des trois sondes K3s (startup/readiness/liveness).
+
+    Les trois sondes ont des rôles distincts :
+    - startupProbe : protège un démarrage LENT (échecs tolérés longtemps).
+    - readinessProbe : retire le pod du Service quand il ne peut pas répondre,
+      SANS le tuer.
+    - livenessProbe : redémarre le conteneur quand il est réellement bloqué.
+
+    startupProbe.failureThreshold est strictement supérieur à celui de
+    livenessProbe : c'est précisément ce qui distingue un démarrage lent d'une
+    panne. Si l'on inversait les valeurs, un service qui démarre simplement
+    lentement serait tué en boucle par la livenessProbe (faux positif de panne).
+
+    Retourne une chaîne VIDE si aucune sonde n'est exploitable.
+    """
+    # Import local pour éviter cycles et garder la fonction auto-suffisante
+    # (les énumérations sont définies dans forgeai.core.models).
+    from urllib.parse import urlsplit
+    from forgeai.core.models import ProbeType
+
+    # Pas de sonde exploitable -> bloc vide (le manifeste reste valide).
+    if svc.probe_type == ProbeType.NONE:
+        return ""
+
     port = svc.container_port
     health_url = getattr(svc, "healthcheck_url", None) or ""
-    if svc.name == "openbao":
-        if health_url:
-            base_path = _safe(urlsplit(health_url).path or "/", "healthcheck-path")
-            liveness_path = _safe(
-                f"{base_path}?standbyok=true&sealedcode=200&uninitcode=200", "liveness-path")
-            live_get = f"httpGet:\n              path: {liveness_path}\n              port: {port}"
-            ready_get = f"httpGet:\n              path: {base_path}\n              port: {port}"
-            liveness_probe, readiness_probe = live_get, ready_get
-        else:
-            liveness_probe = f"tcpSocket:\n              port: {port}"
-            readiness_probe = liveness_probe
-        return (
-            f"\n          livenessProbe:\n            {liveness_probe}\n"
-            f"            initialDelaySeconds: 10\n"
-            f"            periodSeconds: 10\n"
-            f"          readinessProbe:\n            {readiness_probe}\n"
-            f"            initialDelaySeconds: 10\n"
-            f"            periodSeconds: 10"
-        )
-    if health_url:
-        path = _safe(urlsplit(health_url).path or "/", "healthcheck-path")
-        probe = f"httpGet:\n              path: {path}\n              port: {port}"
-    else:
-        probe = f"tcpSocket:\n              port: {port}"
-    return (
-        f"\n          livenessProbe:\n            {probe}\n"
-        f"            initialDelaySeconds: 10\n"
-        f"            periodSeconds: 10\n"
-        f"          readinessProbe:\n            {probe}\n"
-        f"            initialDelaySeconds: 10\n"
-        f"            periodSeconds: 10"
-    )
 
+    # Les trois sondes partagent en général le MÊME handler ; openbao est la seule
+    # exception, et elle est indispensable (voir ci-dessous).
+    if svc.name == "openbao" and health_url:
+        # openbao démarre SCELLÉ en production : /v1/sys/health renvoie 503 (scellé)
+        # ou 501 (non initialisé) tant qu'un opérateur ne l'a pas descellé.
+        # Une liveness stricte tuerait donc le conteneur EN BOUCLE avant même que
+        # l'unseal soit possible — le coffre de secrets ne démarrerait jamais.
+        # D'où : liveness et startup TOLÉRANTES (le processus vit même scellé),
+        # readiness STRICTE (les consommateurs attendent réellement le descellement).
+        # Choix délibéré : ne pas supprimer cette branche par simplification.
+        chemin_base = _safe(urlsplit(health_url).path or "/", "healthcheck-path")
+        chemin_tolerant = _safe(
+            f"{chemin_base}?standbyok=true&sealedcode=200&uninitcode=200", "liveness-path")
+        handler_liveness = f"httpGet:\n              path: {chemin_tolerant}\n              port: {port}"
+        handler_startup = handler_liveness
+        handler_readiness = f"httpGet:\n              path: {chemin_base}\n              port: {port}"
+    elif svc.probe_type == ProbeType.HTTP:
+        path = svc.probe_target if svc.probe_target is not None else "/"
+        handler_liveness = f"httpGet:\n              path: {path}\n              port: {port}"
+        handler_startup = handler_readiness = handler_liveness
+    elif svc.probe_type == ProbeType.TCP:
+        handler_liveness = f"tcpSocket:\n              port: {port}"
+        handler_startup = handler_readiness = handler_liveness
+    elif svc.probe_type == ProbeType.EXEC:
+        # Exec : argv listé ligne par ligne, JAMAIS via une chaîne shell.
+        argv = svc.probe_target or ()
+        cmd_lines = "\n".join(f"              - {arg}" for arg in argv)
+        handler_liveness = f"exec:\n              command:\n{cmd_lines}"
+        handler_startup = handler_readiness = handler_liveness
+    elif health_url:
+        # Dérivation depuis healthcheck_url, traitée comme du HTTP.
+        path = _safe(urlsplit(health_url).path or "/", "healthcheck-path")
+        handler_liveness = f"httpGet:\n              path: {path}\n              port: {port}"
+        handler_startup = handler_readiness = handler_liveness
+    else:
+        # REPLI HISTORIQUE — sans lui, un service comme redis n'aurait AUCUNE sonde et
+        # Kubernetes ne pourrait plus détecter qu'il est bloqué : il ne le redémarrerait
+        # jamais. Seul `ProbeType.NONE` explicite (traité plus haut) supprime les sondes.
+        handler_liveness = f"tcpSocket:\n              port: {port}"
+        handler_startup = handler_readiness = handler_liveness
+
+    # Conversion en entiers : le YAML K3s exige des entiers pour ces champs,
+    # et les valeurs du modèle peuvent être des flottants.
+    interval = int(svc.health_interval_s)
+    timeout = int(svc.health_timeout_s)
+    liveness_failure_threshold = 3
+    # startupProbe DOIT tolérer plus d'échecs que la livenessProbe : sinon un
+    # démarrage lent tue le conteneur (faux positif de panne).
+    startup_failure_threshold = max(int(svc.health_retries), liveness_failure_threshold + 1)
+
+    return (
+        f"\n          startupProbe:\n            {handler_startup}"
+        f"\n            periodSeconds: {interval}"
+        f"\n            timeoutSeconds: {timeout}"
+        f"\n            failureThreshold: {startup_failure_threshold}"
+        f"\n          readinessProbe:\n            {handler_readiness}"
+        f"\n            periodSeconds: {interval}"
+        f"\n            timeoutSeconds: {timeout}"
+        f"\n            failureThreshold: {liveness_failure_threshold}"
+        f"\n          livenessProbe:\n            {handler_liveness}"
+        f"\n            periodSeconds: {interval}"
+        f"\n            timeoutSeconds: {timeout}"
+        f"\n            failureThreshold: {liveness_failure_threshold}"
+        f"\n            initialDelaySeconds: 0"
+    )
 
 def _openbao_sidecar_block(image: str) -> str:
     """2e conteneur du POD openbao : re-descelle le coffre depuis la clé montée (Secret RO).
