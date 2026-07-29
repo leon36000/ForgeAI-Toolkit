@@ -28,6 +28,9 @@ def _redis():
         host_port=6379,
         container_port=6379,
         volumes=("forgeai-redis-data:/data",),
+        # RES-012B : redis est déclaré `db` dans deploy-specs.json (brique stateful
+        # mémoire-centric, ADR RES-012A §4). Le helper reflète cette réalité.
+        resource_class="db",
     )
 
 
@@ -68,11 +71,13 @@ def test_redis_clusterip_sans_nodeport():
 def test_redis_resources_et_hardening():
     out = render_k3s(_plan(_redis()))
     assert "requests:" in out
-    assert "cpu: 100m" in out
-    assert "memory: 128Mi" in out
+    # RES-012B : les ressources ne sont plus des littéraux — redis relève de la classe `db`
+    # (ADR RES-012A §4 : brique stateful mémoire-centric). L'intention du test — un bloc de
+    # ressources est bien rendu pour ce service — est préservée et vérifiée sur les valeurs
+    # de sa classe, au lieu du magic number que ce package supprime.
+    assert 'cpu: "250m"' in out and 'memory: "512Mi"' in out
     assert "limits:" in out
-    assert 'cpu: "1"' in out
-    assert "memory: 1Gi" in out
+    assert 'cpu: "1000m"' in out and 'memory: "2Gi"' in out
     assert "allowPrivilegeEscalation: false" in out
     assert "seccompProfile:" in out
     assert "RuntimeDefault" in out

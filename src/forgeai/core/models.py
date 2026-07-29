@@ -77,6 +77,106 @@ class NodeSpec:
     roles: tuple[str, ...] = ()
 
 
+import re
+
+# Ces valeurs proviennent de l'ADR RES-012A. Toute révision passe par une évolution de table relue.
+_CLASSES_RESSOURCES: dict[str, dict[str, dict[str, str]]] = {
+    "llm": {
+        "requests": {"cpu": "1000m", "memory": "4Gi"},
+        "limits": {"cpu": "4000m", "memory": "8Gi"},
+    },
+    "db": {
+        "requests": {"cpu": "250m", "memory": "512Mi"},
+        "limits": {"cpu": "1000m", "memory": "2Gi"},
+    },
+    "sidecar": {
+        "requests": {"cpu": "100m", "memory": "128Mi"},
+        "limits": {"cpu": "500m", "memory": "512Mi"},
+    },
+    "utilitaire": {
+        "requests": {"cpu": "50m", "memory": "64Mi"},
+        "limits": {"cpu": "250m", "memory": "256Mi"},
+    },
+}
+
+def _cpu_en_milli(valeur: str) -> int:
+    """Convertit une chaîne CPU en milliCPU (entier) pour comparaison numérique.
+    
+    La comparaison lexicale échouerait pour des valeurs comme '1000m' vs '2' (car '2' > '1' lexicalement).
+    Il faut donc normaliser en entiers."""
+    if valeur.endswith('m'):
+        return int(valeur[:-1])
+    else:
+        return int(valeur) * 1000
+
+def _memoire_en_mib(valeur: str) -> int:
+    """Convertit une chaîne mémoire en MiB (entier) pour comparaison numérique.
+    
+    Même raison que pour le CPU : une comparaison lexicale serait incorrecte ('1Gi' > '1024Mi' lexicalement)."""
+    if valeur.endswith('Gi'):
+        return int(valeur[:-2]) * 1024
+    elif valeur.endswith('Mi'):
+        return int(valeur[:-2])
+    else:
+        # Ne devrait pas arriver car déjà validé, mais sécurité
+        raise ValueError(f"Format mémoire inattendu : {valeur}")
+
+def _resoudre_ressources(resource_class: str, resources: dict | None) -> dict:
+    """Résout les ressources effectives à partir d'une classe et d'une éventuelle dérogation.
+    Retourne toujours un dictionnaire non None."""
+    # a) Vérification de la classe
+    if resource_class not in _CLASSES_RESSOURCES:
+        classes_admises = ", ".join(_CLASSES_RESSOURCES.keys())
+        raise ValueError(f"ERR_RES_CLASSE_INCONNUE: classe '{resource_class}' inconnue. Admises : {classes_admises}")
+
+    # b) Aucune dérogation -> copie des valeurs de la classe
+    if resources is None:
+        return {k: v.copy() for k, v in _CLASSES_RESSOURCES[resource_class].items()}
+
+    # c) Dérogation présente : vérification des quatre champs obligatoires
+    erreurs = []
+    if "requests" not in resources or "cpu" not in resources.get("requests", {}):
+        erreurs.append("requests.cpu")
+    if "requests" not in resources or "memory" not in resources.get("requests", {}):
+        erreurs.append("requests.memory")
+    if "limits" not in resources or "cpu" not in resources.get("limits", {}):
+        erreurs.append("limits.cpu")
+    if "limits" not in resources or "memory" not in resources.get("limits", {}):
+        erreurs.append("limits.memory")
+    if erreurs:
+        raise ValueError(f"ERR_RES_DEROGATION_PARTIELLE: champs manquants dans la dérogation : {', '.join(erreurs)}")
+
+    # d) Validation des formats CPU et mémoire
+    cpu_re = re.compile(r'^\d+m?$')
+    mem_re = re.compile(r'^\d+(Mi|Gi)$')
+
+    req_cpu = resources["requests"]["cpu"]
+    req_mem = resources["requests"]["memory"]
+    lim_cpu = resources["limits"]["cpu"]
+    lim_mem = resources["limits"]["memory"]
+
+    for nom, val in [("requests.cpu", req_cpu), ("limits.cpu", lim_cpu)]:
+        if not cpu_re.match(val):
+            raise ValueError(f"ERR_RES_CPU_INVALIDE: '{val}' pour {nom} n'est pas un entier avec suffixe optionnel m.")
+    for nom, val in [("requests.memory", req_mem), ("limits.memory", lim_mem)]:
+        if not mem_re.match(val):
+            raise ValueError(f"ERR_RES_MEMOIRE_INVALIDE: '{val}' pour {nom} n'est pas un entier suivi de Mi ou Gi.")
+
+    # e) Cohérence limits >= requests (comparaison numérique normalisée)
+    req_cpu_milli = _cpu_en_milli(req_cpu)
+    lim_cpu_milli = _cpu_en_milli(lim_cpu)
+    req_mem_mib = _memoire_en_mib(req_mem)
+    lim_mem_mib = _memoire_en_mib(lim_mem)
+
+    if lim_cpu_milli < req_cpu_milli:
+        raise ValueError(f"ERR_RES_LIMITS_INFERIEURES: limits.cpu ({lim_cpu}) < requests.cpu ({req_cpu})")
+    if lim_mem_mib < req_mem_mib:
+        raise ValueError(f"ERR_RES_LIMITS_INFERIEURES: limits.memory ({lim_mem}) < requests.memory ({req_mem})")
+
+    # Tout est valide, retourner le dictionnaire de ressources tel quel
+    return resources
+
+
 @dataclass(frozen=True)
 class ServiceSpec:
     """Service concret d'un plan de déploiement (brique instanciée)."""
@@ -92,6 +192,10 @@ class ServiceSpec:
     depends: tuple[str, ...] = ()
     command: tuple[str, ...] = ()  # arguments passés à l'entrypoint du conteneur (ex. litellm --config …)
     node: Optional[str] = None  # nœud cible de CE service (hostname K3s) ; None = suit le nœud global du plan ou le scheduler
+    # RES-012B / ADR RES-012A — schéma de ressources. Ajoutés APRÈS `node` pour ne casser
+    # aucun appel positionnel existant. `resources` (dérogation) prime sur `resource_class`.
+    resource_class: str = "utilitaire"
+    resources: Optional[dict] = None
 
     def __post_init__(self) -> None:
         # SEC-YAML-INJECT — suivi de #151 : ces scalaires atteignent en brut le YAML/Compose.
@@ -107,6 +211,11 @@ class ServiceSpec:
             _rejeter_caracteres_de_controle(f"volumes[{i}]", volume)
         for i, arg in enumerate(self.command):
             _rejeter_caracteres_de_controle(f"command[{i}]", arg)
+        # Résolution fail-fast : aucun spec invalide ne peut exister, quel que soit le
+        # renderer. Le renderer lit EXCLUSIVEMENT `ressources_effectives` — il ne contient
+        # plus aucun magic number et ne valide rien. Dataclass frozen -> object.__setattr__.
+        object.__setattr__(self, "ressources_effectives",
+                           _resoudre_ressources(self.resource_class, self.resources))
         for i, dep in enumerate(self.depends):
             _rejeter_caracteres_de_controle(f"depends[{i}]", dep)
         for cle, valeur in self.env.items():

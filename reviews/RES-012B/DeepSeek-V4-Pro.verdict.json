@@ -1,0 +1,14 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "src/forgeai/core/models.py",
+   "description": "La spécification mentionne 6 codes ERR_RES_* stables, mais le diff ne définit que 5 codes d'erreur distincts : ERR_RES_CLASSE_INCONNUE, ERR_RES_DEROGATION_PARTIELLE, ERR_RES_CPU_INVALIDE, ERR_RES_MEMOIRE_INVALIDE, ERR_RES_LIMITS_INFERIEURES. Il manque un sixième code ou le décompte est erroné.",
+   "preuve": "Lignes 121, 127, 134, 137, 141 du diff de models.py (appels à raise ValueError). La déclaration attendue est issue de la description : '6 codes ERR_RES_* stables'."
+  }
+ ],
+ "date_heure": "2026-07-29T00:25:00.224888+00:00",
+ "prompt_sha256": "8af770671f5e5c3af25cbe7aa20fab24540a7015b0e23d39371a00897f9d17a2",
+ "reviewer_model": "DeepSeek-V4-Pro"
+}

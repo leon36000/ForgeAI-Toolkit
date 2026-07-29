@@ -1,0 +1,21 @@
+[ROUGE] sur origin/main (35b0ad6) — `_resources_block(vendor)` de src/forgeai/renderers/k3s.py :
+
+    block = ("\n          resources:"
+             "\n            requests:"
+             "\n              cpu: 100m"       <- CODÉ EN DUR pour TOUT service
+             "\n              memory: 128Mi"   <- idem
+             "\n            limits:"
+             '\n              cpu: "1"'        <- idem
+             "\n              memory: 1Gi")    <- idem
+
+Un runtime d'inférence est plafonné comme un job d'init ; un utilitaire réserve autant qu'une base.
+Et `ServiceSpec` ne portait AUCUN champ de ressources : le renderer ne pouvait rien lire d'autre
+que ses littéraux.
+
+CONSÉQUENCE MESURÉE (preuve versionnée, reviews/K8S-022/evidence/DEPLOIEMENT-REEL.txt) :
+le pod litellm est OOMKillé par la limite `memory: 1Gi`. Contre-preuve exécutée à l'époque : le
+MÊME service rendu depuis origin/main sans le changement K8S-022 est OOMKillé à l'identique — la
+cause est bien la limite, pas le profil de sécurité.
+
+Tests rouges : 9 échecs (classes llm/db/utilitaire, dérogation prioritaire, unités invalides,
+limits<requests, tout-ou-rien, classe inconnue, absence de magic number, branche GPU préservée).

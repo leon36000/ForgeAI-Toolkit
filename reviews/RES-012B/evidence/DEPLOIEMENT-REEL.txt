@@ -1,0 +1,25 @@
+# RES-012B — DÉPLOIEMENT RÉEL sur cluster k3s (images ÉPINGLÉES de deploy-specs.json)
+# Le manifeste est rendu par le renderer modifié, à partir des specs annotés, et appliqué TEL QUEL.
+
+## Ressources rendues DEPUIS les specs (extrait du manifeste)
+  litellm : requests 100m/1Gi   limits 1000m/2Gi   <- DÉROGATION dérivée de la mesure
+  redis   : requests 250m/512Mi limits 1000m/2Gi   <- classe 'db' de l'ADR
+
+## Résultat
+  litellm-66f6b9f4cb-wmd7t  1/1  Running  age=2m20s
+  redis-689ddf6c67-tmgkp  1/1  Running  age=2m20s
+
+## Redémarrages (0 attendu — l'OOMKill est le défaut corrigé)
+  litellm : 0 restart(s)
+  redis : 0 restart(s)
+
+## Consommation réelle vs limite
+  litellm-66f6b9f4cb-wmd7t  CPU=1m  memoire=1008Mi
+  redis-689ddf6c67-tmgkp  CPU=8m  memoire=4Mi
+
+## Ce que cette preuve établit
+  AVANT (origin/main) : litellm OOMKille par la limite codee en dur memory: 1Gi = 1024 Mi,
+  alors que son empreinte au repos mesuree est ~1018 Mi — il tournait EXACTEMENT a sa limite.
+  APRES : 1/1 Running, 0 redemarrage, 1009 Mi consommes sous une limite de 2Gi.
+  Le meme renderer donne a redis les valeurs de sa classe 'db' — les services ne partagent
+  plus un gabarit unique.
