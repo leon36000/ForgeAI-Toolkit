@@ -14,6 +14,7 @@ import os
 import socket
 import sys
 import time
+from dataclasses import replace
 from pathlib import Path
 from urllib.parse import urlparse
 
@@ -202,6 +203,7 @@ def wizard_ci(args: argparse.Namespace) -> int:
     selection_bricks: list[str] = []
     selection_models: list[dict] = []
     selection_embeddings: list[dict] = []
+    adopt: dict = {}
     rag_node: str | None = None
     if getattr(args, "selection", None):
         from importlib import resources as _res
@@ -219,6 +221,7 @@ def wizard_ci(args: argparse.Namespace) -> int:
             selection_models = [_normalise(m, "vllm") for m in (sel.get("models") or [])]
             selection_embeddings = [_normalise(m, "llama-cpp") for m in (sel.get("embeddings") or [])]
             rag_node = sel.get("rag_node")
+            adopt = sel.get("adopt") or {}
         except (OSError, ValueError, AttributeError) as exc:
             print(f"ABORT [SEL] sélection illisible : {exc}", file=sys.stderr)
             return 8
@@ -284,6 +287,21 @@ def wizard_ci(args: argparse.Namespace) -> int:
     _step(t("wizard.s04"))
     plan = assemble_plan(profile, Path(args.overlay), stack=stack,
                          extra_bricks=tuple(selection_bricks) + rag_durci_bricks)
+    if adopt:
+        # Maillon final de la chaine d adoption : le choix valide par l API et transmis par le
+        # fichier de selection est ici APPLIQUE au plan. Sans ce bloc, il serait valide, ecrit,
+        # puis perdu — defaut releve par la revue scellee.
+        noms_plan = {s.name for s in plan.services}
+        inconnues = sorted(k for k in adopt if k not in noms_plan)
+        if inconnues:
+            print(f"ABORT [SEL] adopt reference des services absents du plan : {inconnues}",
+                  file=sys.stderr)
+            return 8
+        services = tuple(
+            replace(s, adopted_endpoint=adopt[s.name]) if s.name in adopt else s
+            for s in plan.services
+        )
+        plan = replace(plan, services=services)
     (workdir / "plan.json").write_text(plan.to_json(), encoding="utf-8")
     ports = {s.name: s.host_port for s in plan.services}
     print(f"  stack: {stack_label} | services: {ports} | modèle: {plan.model}")
@@ -349,10 +367,17 @@ def wizard_ci(args: argparse.Namespace) -> int:
         effective_node = node_arg
         node_label = node_arg
 
-    (workdir / "k3s.yaml").write_text(
-        render_k3s(plan, node=effective_node,
-                   service_type=getattr(args, "service_type", "NodePort"),
-                   config_files=config_files or None), encoding="utf-8")
+    # Le manifeste k3s n'est rendu que s'il a un sens. En backend compose c'est un artefact
+    # de commodite : le refuser au point de faire echouer tout le deploiement serait absurde,
+    # alors que l'adoption compose est parfaitement supportee. Sans cette condition, la garde
+    # AdoptionNonSupporteeK3s (D2) bloquait le chemin COMPOSE — defaut mesure : returncode 1
+    # sur `wizard --backend compose` avec adoption.
+    plan_a_adoptes = any(getattr(sv, "adopted_endpoint", None) for sv in plan.services)
+    if args.backend in ("k3s", "k8s") or not plan_a_adoptes:
+        (workdir / "k3s.yaml").write_text(
+            render_k3s(plan, node=effective_node,
+                       service_type=getattr(args, "service_type", "NodePort"),
+                       config_files=config_files or None), encoding="utf-8")
 
     if args.dry_run:
         print(f"DRY-RUN OK: {len(plan.services)} services, stack={stack_label}, node={node_label}, "

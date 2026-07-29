@@ -130,10 +130,11 @@ def test_adopt_service_inconnu_400(server):
     [
         ("h:abc",    "port non numerique"),
         ("h:99999",  "port hors bornes"),
+        ("h:0",      "port hors bornes"),
         ("pasdeport", "forme attendue 'hote:port'"),
         (":6379",    "hote invalide"),
     ],
-    ids=["port_non_num", "port_hors_bornes", "pas_de_port", "hote_vide"],
+    ids=["port_non_num", "port_hors_bornes", "port_zero", "pas_de_port", "hote_vide"],
 )
 def test_adopt_endpoint_malforme_400(server, endpoint, frag_attendu):
     status, body = _post_json(server, {
