@@ -122,7 +122,9 @@ def _ressemble_chemin(token):
     #   « rm -rf .claude » (O4), qu'une règle limitée à « .. »/« . »
     #   exacts laisserait passer. Un token non-chemin (commande, option)
     #   ne commence pratiquement jamais par « . » ; OU
-    # - il débute par un lecteur Windows (regex ^[A-Za-z]:[\\/]).
+    # - il débute par un lecteur Windows `X:` — avec séparateur (`C:\x`, `C:/x`)
+    #   OU sans (`C:x`, chemin relatif au répertoire courant du lecteur, tout
+    #   aussi valide sous Windows). Regex `^[A-Za-z]:`.
     # Un token SANS séparateur et sans préfixe « ~ »/« . » (ex. « cat »,
     # « rm », « -rf ») N'EST PAS un chemin : l'ajouter provoquerait des
     # faux positifs massifs sur les commandes et leurs options.
@@ -134,7 +136,7 @@ def _ressemble_chemin(token):
         return True
     if token.startswith("."):
         return True
-    if re.match(r"^[A-Za-z]:[\\/]", token):
+    if re.match(r"^[A-Za-z]:", token):
         return True
     return False
 
