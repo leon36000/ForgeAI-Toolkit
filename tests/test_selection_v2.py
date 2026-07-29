@@ -175,3 +175,50 @@ def test_web_v2_forme_invalide(live) -> None:
     code2, _ = _post(base, {"stack": "agentique", "backend": "k3s", "confirm": "FORCER",
                             "dry_run": True, "rag_node": "x;y"})
     assert code2 == 400
+
+
+def test_adopt_applique_au_plan(tmp_path):
+    # Découverte d'un service réellement présent dans le stack agentique
+    baseline = _run_wizard({"bricks": []}, tmp_path)
+    assert baseline.returncode == 0, baseline.stderr
+    plan_baseline = json.loads((tmp_path / "run" / "plan.json").read_text(encoding="utf-8"))
+    assert plan_baseline["services"], "le stack agentique ne doit pas être vide"
+    cible = plan_baseline["services"][0]["name"]
+    endpoint = "127.0.0.1:6379"
+
+    sel = {"adopt": {cible: endpoint}}
+    r = _run_wizard(sel, tmp_path, "--backend", "compose")
+    assert r.returncode == 0, r.stderr
+
+    plan = json.loads((tmp_path / "run" / "plan.json").read_text(encoding="utf-8"))
+    by_name = {s["name"]: s for s in plan["services"]}
+    assert cible in by_name
+    assert by_name[cible].get("adopted_endpoint") == endpoint
+    for name, svc in by_name.items():
+        if name != cible:
+            assert svc.get("adopted_endpoint") in (None, ""), name
+
+
+def test_adopt_service_inconnu_abort(tmp_path):
+    sel = {"adopt": {"nexistepas": "h:1"}}
+    r = _run_wizard(sel, tmp_path, "--backend", "compose")
+    assert r.returncode != 0
+    err = r.stderr or ""
+    assert "ABORT [SEL]" in err
+    assert "nexistepas" in err
+
+    plan_file = tmp_path / "run" / "plan.json"
+    if plan_file.exists():
+        plan = json.loads(plan_file.read_text(encoding="utf-8"))
+        for svc in plan.get("services", []):
+            assert svc.get("adopted_endpoint") in (None, "")
+
+
+def test_sans_adopt_aucun_adopted_endpoint(tmp_path):
+    sel = {"bricks": []}
+    r = _run_wizard(sel, tmp_path, "--backend", "compose")
+    assert r.returncode == 0, r.stderr
+    plan = json.loads((tmp_path / "run" / "plan.json").read_text(encoding="utf-8"))
+    assert plan["services"]
+    for svc in plan["services"]:
+        assert svc.get("adopted_endpoint") in (None, "")

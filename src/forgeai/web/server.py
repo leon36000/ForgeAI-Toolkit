@@ -122,6 +122,48 @@ def hardware_json() -> str:
     return _hardware_report().to_json()
 
 
+def _valider_adopt(adopt, noms_services):
+    """Valide le champ `adopt` reçu par POST /api/deploy.
+
+    adopt         : la valeur brute lue du JSON (n'importe quel type).
+    noms_services : ensemble (set) des noms de services du plan.
+
+    Retourne None si tout est valide (y compris si adopt est None ou {}).
+    Retourne une CHAÎNE de message d'erreur sinon (l'appelant en fera un 400).
+    """
+    if adopt is None or adopt == {}:
+        return None
+    if not isinstance(adopt, dict):
+        return "adopt doit etre un objet {service: hote:port}"
+
+    MAX_LEN = 40
+
+    def _clip(s):
+        s = str(s)
+        return s if len(s) <= MAX_LEN else s[:MAX_LEN]
+
+    for cle in sorted(adopt, key=lambda k: str(k)):
+        if not isinstance(cle, str) or cle == "":
+            return "adopt : nom de service invalide"
+        if cle not in noms_services:
+            return f"adopt : service inconnu '{_clip(cle)}'"
+        valeur = adopt[cle]
+        if not isinstance(valeur, str):
+            return f"adopt['{_clip(cle)}'] doit etre une chaine 'hote:port'"
+        if valeur.count(':') != 1:
+            return f"adopt['{_clip(cle)}'] : forme attendue 'hote:port'"
+        hote, _, port = valeur.partition(':')
+        if not hote or ' ' in hote or any(ord(c) < 32 for c in hote):
+            return f"adopt['{_clip(cle)}'] : hote invalide"
+        if not port.isdigit():
+            return f"adopt['{_clip(cle)}'] : port non numerique"
+        p = int(port)
+        if p < 1 or p > 65535:
+            return f"adopt['{_clip(cle)}'] : port hors bornes"
+
+    return None
+
+
 class _CachedDetector:
     """Adaptateur : expose l'interface `full_report()` en servant le cache (aucune sonde)."""
 
@@ -994,11 +1036,27 @@ class ForgeAIHandler(BaseHTTPRequestHandler):
                 self._send_json(400, {"error": "rag_node invalide"})
                 return
 
+            adopt = data.get("adopt")
+
             try:
                 load_stack(stack_id)
             except FileNotFoundError:
                 self._send_json(404, {"error": "stack not found"})
                 return
+
+            # Validation de `adopt` à la FRONTIÈRE : la valeur atteint le YAML rendu et vient
+            # d'une entrée réseau. La validation en profondeur (ServiceSpec) ne dispense pas
+            # de refuser ici proprement — une ValueError qui remonterait donnerait un 500 sur
+            # une simple faute de saisie. Placée APRÈS le contrôle d'existence du stack pour
+            # ne pas transformer un 404 légitime en 500.
+            if adopt is not None:
+                # Le stack n'est chargé QUE s'il y a quelque chose à valider : sans `adopt`,
+                # cet appel serait un travail inutile — et un risque, car rien ne garantit
+                # que load_stack rende un objet exploitable dans tous les contextes.
+                erreur_adopt = _valider_adopt(adopt, set(deploy_ids(load_stack(stack_id))))
+                if erreur_adopt is not None:
+                    self._send_json(400, {"error": erreur_adopt})
+                    return
 
             with _DEPLOY_STATE["lock"]:
                 proc = _DEPLOY_STATE["proc"]
@@ -1042,7 +1100,7 @@ class ForgeAIHandler(BaseHTTPRequestHandler):
                         "--stack",
                         stack_id,
                     ]
-                    if bricks_sel or models_sel or embeddings_sel or rag_node:
+                    if bricks_sel or models_sel or embeddings_sel or rag_node or adopt:
                         workdir = forgeai_home() / "deploy"
                         workdir.mkdir(parents=True, exist_ok=True)
                         sel_path = workdir / "selection-demande.json"
@@ -1050,6 +1108,8 @@ class ForgeAIHandler(BaseHTTPRequestHandler):
                                    "embeddings": embeddings_sel}
                         if rag_node is not None:
                             contenu["rag_node"] = rag_node
+                        if adopt:
+                            contenu["adopt"] = adopt
                         sel_path.write_text(json.dumps(contenu, ensure_ascii=False),
                                             encoding="utf-8")
                         cmd += ["--selection", str(sel_path)]

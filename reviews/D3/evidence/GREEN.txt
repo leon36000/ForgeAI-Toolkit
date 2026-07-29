@@ -1,0 +1,36 @@
+=== PREUVE D'EXÉCUTION — D3 ===
+générée le : 2026-07-29 04:44:57 -0400
+commit du CODE : b3fe27e — [D3] Maillon wizard + correction d un defaut REEL de D2 (garde k3s bloquait compose)
+
+--- suite complète (le CODE DE SORTIE fait autorité) ---
+code de sortie pytest : 0
+  => SUITE VERTE
+........................................................................ [ 98%]
+.................                                                        [100%]
+  lignes FAILED : 0
+
+--- couverture du code NOUVEAU ---
+  44/51 = 86,3 %  (seuil 80 %)
+  Les 7 lignes 'non couvertes' sont le bloc if adopt: de cli.py, exercé par 3 tests
+  qui lancent le wizard en SUBPROCESS — pytest-cov ne suit pas les processus enfants.
+  Vérifié par MUTATION : bloc neutralisé -> 2 tests ROUGES ; restauré -> verts.
+
+--- validation à la frontière : 3 niveaux ---
+  unitaire  : 18/18 cas ; borne 40 car. sur clé de 200
+  HTTP réel : 9/9 via build_server — ZÉRO réponse 500
+  permanent : 23 tests dans tests/test_adoption_api.py
+
+--- chaîne complète (comptée dans le code) ---
+  1. UI -> API validé   : 2 appel(s)
+  2. API -> fichier     : 1 écriture(s)
+  3. wizard <- fichier  : 1 lecture(s)
+  4. plan <- appliqué   : 1 application(s)
+
+--- DÉFAUT RÉEL DE D2 corrigé ici (matrice sur le VRAI binaire) ---
+  backend=compose adopt=oui -> rc=0 pas de k3s.yaml   (l'adoption compose FONCTIONNE)
+  backend=compose adopt=non -> rc=0 k3s.yaml écrit    (non-régression)
+  backend=k3s     adopt=oui -> rc=1 refus             (garde D2 légitime)
+  backend=k3s     adopt=non -> rc=0 k3s.yaml écrit    (non-régression)
+
+--- no-stub-scan ---
+NO-STUB-SCAN : OK (267 fichiers scannés, zéro violation)
