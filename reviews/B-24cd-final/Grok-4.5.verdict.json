@@ -1,14 +1,7 @@
 {
- "verdict": "REJECT",
- "objections": [
-  {
-   "severite": "critique",
-   "fichier": "src/forgeai/ide/guard_fs.py",
-   "description": "Le repli de tokenisation (branche ValueError de shlex) laisse les guillemets collés aux tokens. Un chemin absolu quoté n'est alors plus reconnu comme absolu par os.path.isabs, est résolu relativement au cwd (donc sous ROOT) et passe le confinement, alors que Bash interprète toujours la cible hors racine. Contournement résiduel du confinement par le chemin dégradé — exactement la classe de faille T5, non couverte par les tests de repli qui n'emploient que des chemins non quotés.",
-   "preuve": "re.split(r'[\\s<>;|&()]+', 'cat \"/etc/passwd\" \"') → ['cat', '\"/etc/passwd\"', '\"'] ; _ressemble_chemin('\"/etc/passwd\"')=True (contient '/') ; _resoudre('\"/etc/passwd\"', cwd) fait join(cwd, '\"/etc/passwd\"') car isabs('\"/etc/passwd\"') est faux, realpath tombe sous ROOT → AUTORISER. Commande concrète forçant le repli : charge Bash command='cat \"/etc/passwd\" \"' (ou 'cat \\'/etc/passwd\\' \\'' ; ou heredoc à guillemet orphelin + cible quotée). shlex lève ValueError('No closing quotation'), le repli autorise, Bash lit /etc/passwd. Les tests T5 (test_repli_heredoc_*, test_repli_operateur_colle_*, test_repli_cible_auto_protection_*) n'utilisent que cat</etc/passwd et >.claude/... sans guillemets autour du chemin, donc ne capturent pas la faille. Le commentaire « repli PLUS STRICT / fail-closed » est contredit : pour les chemins absolus quotés le repli est plus faible que shlex nominal (qui, lui, strip les guillemets posix et refuse correctement)."
-  }
- ],
- "date_heure": "2026-07-29T22:00:02.362968+00:00",
- "prompt_sha256": "f9fc29e15fa3210b224c0433fbc68651855e386e9e2dcbdd6d0381812c74188a",
+ "verdict": "APPROVE",
+ "objections": [],
+ "date_heure": "2026-07-29T22:34:27.797234+00:00",
+ "prompt_sha256": "5721800f600c74da894dbe3f44075a042151830115a061272451e647cc173b66",
  "reviewer_model": "Grok-4.5"
 }

@@ -4,11 +4,11 @@
   {
    "severite": "critique",
    "fichier": "src/forgeai/ide/guard_fs.py",
-   "description": "Le repli de tokenisation `re.split` (utilisé lors d'un `ValueError` de `shlex`) ne retire pas les guillemets des tokens. Un attaquant peut forcer ce repli avec un guillemet orphelin et passer un chemin absolu ou protégé entre guillemets (ex: `cat \"/etc/passwd\" \"`). Le token extrait sera `'\"/etc/passwd\"'`. Puisque ce token commence par un guillemet et non un slash, `os.path.isabs` retourne `False`. Le chemin est alors traité comme relatif et concaténé au `cwd` (ex: `/racine/\"/etc/passwd\"`), ce qui le fait apparaître faussement comme étant à l'intérieur de la racine et hors de `.claude`. Bash, de son côté, retirera les guillemets et exécutera l'action sur le fichier hors racine ou protégé.",
-   "preuve": "Ligne 169 : `tokens = [t for t in re.split(r\"[\\s<>;|&()]+\", commande) if t]`. Si `commande` vaut `cat \"/etc/passwd\" \"`, `tokens` contient `'\"/etc/passwd\"'`. `_resoudre('\"/etc/passwd\"', cwd)` retourne `cwd + '/\"/etc/passwd\"'`, qui passe à tort la vérification `_sous(resolu, ROOT)`."
+   "description": "Contournement critique par continuation de ligne Bash (`\\\\\\n`). L'expression régulière `DELIMITEURS` inclut `\\n` (via `\\s`). Si un attaquant coupe un chemin relatif avec `\\\\\\n` (ex: `cat .\\\\\\n./.\\\\\\n./etc/passwd`), `re.split` sépare la chaîne aux sauts de ligne. Les fragments extraits sont `.\\\\`, `./.\\\\` et `./etc/passwd`. La fonction `_resoudre` retire ensuite les antislashs, donnant `.`, `./.` et `./etc/passwd`, qui se résolvent tous DANS la racine (autorisés). Cependant, Bash supprime les séquences `\\\\\\n` avant l'exécution, reconstituant le chemin `../../etc/passwd` et permettant de lire hors de la racine.",
+   "preuve": "Lignes 164-165 : `DELIMITEURS = r\"\"\"[\\s<>;|&()\"'`$]+\"\"\"` et `fragments = [f for f in re.split(DELIMITEURS, commande) if f]`. Ligne 108 : `chemin = chemin.replace(chr(92), \"\")`. Une commande `cat .\\\\\\n./.\\\\\\n./etc/passwd` est découpée en `cat`, `.\\\\`, `./.\\\\`, `./etc/passwd`, tous autorisés, mais Bash exécute `cat ../../etc/passwd`."
   }
  ],
- "date_heure": "2026-07-29T21:59:49.145533+00:00",
- "prompt_sha256": "f9fc29e15fa3210b224c0433fbc68651855e386e9e2dcbdd6d0381812c74188a",
+ "date_heure": "2026-07-29T22:32:44.175291+00:00",
+ "prompt_sha256": "5721800f600c74da894dbe3f44075a042151830115a061272451e647cc173b66",
  "reviewer_model": "Gemini-3.1-Pro-OR"
 }

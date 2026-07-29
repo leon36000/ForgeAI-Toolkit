@@ -925,3 +925,62 @@ def test_D2_chemin_hors_racine_message_cite_resolu(tmp_path, racine, env_tmpdir)
     # La citation du chemin RESOLU (et non du fragment brut) prouve que
     # l'extraction a ete suivie d'une resolution reelle.
     assert "/etc/passwd" in stderr
+
+
+# ── Tour 7 : normalisation de la continuation de ligne bash ──
+def test_continuation_ligne_chemin_relatif_sortie(racine, env_tmpdir, tmp_path):
+    """`cat .<backslash-newline>./.<backslash-newline>./etc/passwd` reconstitue `cat ../../etc/passwd`
+    qui sort de la racine : doit être REFUSÉ (exit 2)."""
+    script = ecrire_garde(tmp_path, racine)
+    commande = "cat .\\\n./.\\\n./etc/passwd"
+    code, _ = run(script, charge("Bash", {"command": commande}, cwd=racine), env=env_tmpdir)
+    assert code == 2
+
+
+def test_continuation_ligne_auto_protection(racine, env_tmpdir, tmp_path):
+    """`cat .cla<backslash-newline>ude/settings.json` reconstitue `cat .claude/settings.json`
+    qui est un fichier d'auto-protection : doit être REFUSÉ (exit 2)."""
+    script = ecrire_garde(tmp_path, racine)
+    commande = "cat .cla\\\nude/settings.json"
+    code, _ = run(script, charge("Bash", {"command": commande}, cwd=racine), env=env_tmpdir)
+    assert code == 2
+
+
+def test_continuation_ligne_chemin_absolu(racine, env_tmpdir, tmp_path):
+    """`cat /etc/pas<backslash-newline>swd` reconstitue `cat /etc/passwd` : doit être REFUSÉ (exit 2)."""
+    script = ecrire_garde(tmp_path, racine)
+    commande = "cat /etc/pas\\\nswd"
+    code, _ = run(script, charge("Bash", {"command": commande}, cwd=racine), env=env_tmpdir)
+    assert code == 2
+
+
+def test_continuation_ligne_parentheses_sortie(racine, env_tmpdir, tmp_path):
+    """`cat sous/../<backslash-newline>../etc/passwd` reconstitue `cat sous/../../etc/passwd`
+    qui sort de la racine : doit être REFUSÉ (exit 2)."""
+    script = ecrire_garde(tmp_path, racine)
+    (racine / "sous").mkdir()
+    commande = "cat sous/../\\\n../etc/passwd"
+    code, _ = run(script, charge("Bash", {"command": commande}, cwd=racine), env=env_tmpdir)
+    assert code == 2
+
+
+def test_continuation_ligne_chemin_interne(racine, env_tmpdir, tmp_path):
+    """NON-REGRESSION : `cat sous/f<backslash-newline>.txt` reconstitue `cat sous/f.txt`
+    qui est un chemin INTERNE existant : doit rester AUTORISÉ (exit 0)."""
+    script = ecrire_garde(tmp_path, racine)
+    sous = racine / "sous"
+    sous.mkdir()
+    (sous / "f.txt").write_text("contenu", encoding="utf-8")
+    commande = "cat sous/f\\\n.txt"
+    code, _ = run(script, charge("Bash", {"command": commande}, cwd=racine), env=env_tmpdir)
+    assert code == 0
+
+
+def test_continuation_ligne_non_regression(racine, env_tmpdir, tmp_path):
+    """NON-REGRESSION : une commande sans continuation reste inchangée.
+    `echo bonjour` -> exit 0 ; `cat /etc/passwd` -> exit 2."""
+    script = ecrire_garde(tmp_path, racine)
+    code, _ = run(script, charge("Bash", {"command": "echo bonjour"}, cwd=racine), env=env_tmpdir)
+    assert code == 0
+    code, _ = run(script, charge("Bash", {"command": "cat /etc/passwd"}, cwd=racine), env=env_tmpdir)
+    assert code == 2

@@ -195,6 +195,11 @@ def _candidats(tool_name, tool_input):
     if tool_name == "Bash":
         commande = tool_input.get("command")
         if isinstance(commande, str):
+            # bash supprime la continuation de ligne (backslash + saut de ligne) avant tout découpage (mesure).
+            # Sans cette normalisation, un chemin fragmenté par des continuations échappe au contrôle.
+            # Normalisation appliquée partout, y compris dans des guillemets simples où bash ne le ferait pas — sur-détection assumée, fail-closed.
+            # Avec le retrait du backslash dans _resoudre, cela couvre la liste COMPLÈTE et MESURÉE des transformations pré-découpage de bash.
+            commande = commande.replace(chr(92) + "\n", "")
             DELIMITEURS = r"""[\s<>;|&()"'`$]+"""
             fragments = [f for f in re.split(DELIMITEURS, commande) if f]
             for fragment in fragments:
