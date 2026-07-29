@@ -452,3 +452,121 @@ def test_double_compile_source_et_fichier_installe(racine):
     compile(src, "<source-genere>", "exec")
     script, _hook = install_guard_fs(racine)
     compile(Path(script).read_text(encoding="utf-8"), "<fichier-installe>", "exec")
+# AJOUTS dans tests/test_guard_fs.py (appendices aux tests existants)
+
+
+class TestOperateursColles:
+    """B-24d — ferme le contournement par opérateurs shell collés au chemin.
+
+    Mesure : ``shlex.split(commande, posix=True)`` ne sépare pas
+    ``<``, ``>``, ``;``, ``|``, ``&`` lorsqu'ils sont collés au token
+    voisin (``cat</etc/passwd`` reste un seul token). Le correctif
+    remplace le tokenizer par ``shlex.shlex(..., punctuation_chars=True,
+    whitespace_split=True)`` qui, lui, les isole. Ces tests exécutent
+    RÉELLEMENT la garde générée via subprocess et asserent l'exit code.
+    """
+
+    def test_cat_redirection_entree_collee_refuse(self, tmp_path, racine, env_tmpdir):
+        """``cat</etc/passwd`` : ``<`` collé à ``cat``, mais la cible
+        ``/etc/passwd`` DOIT être vue comme un chemin littéral et
+        REFUSÉE (sortie de la racine)."""
+        script = ecrire_garde(tmp_path, racine)
+        ch = charge("Bash", {"command": "cat</etc/passwd"}, cwd=racine)
+        exit_code, stderr = run(script, ch, env=env_tmpdir)
+        assert exit_code == 2, (
+            "cat</etc/passwd doit être refusé (exit 2) ; "
+            "shlex.split ne sépare pas '<' collé, mais shlex.shlex "
+            "avec punctuation_chars=True doit le faire. stderr="
+            f"{stderr!r}"
+        )
+
+    def test_echo_redirection_sortie_collee_refuse_settings(
+        self, tmp_path, racine, env_tmpdir
+    ):
+        """``echo bad>.claude/settings.json`` : ``>`` collé, contourne
+        l'auto-protection si mal tokenisé. Doit être REFUSÉ (exit 2)."""
+        script = ecrire_garde(tmp_path, racine)
+        ch = charge(
+            "Bash", {"command": "echo bad>.claude/settings.json"}, cwd=racine
+        )
+        exit_code, stderr = run(script, ch, env=env_tmpdir)
+        assert exit_code == 2, (
+            "echo bad>.claude/settings.json doit être refusé (exit 2) "
+            "pour protéger settings.json. stderr="
+            f"{stderr!r}"
+        )
+
+    def test_point_virgule_colle_refuse(self, tmp_path, racine, env_tmpdir):
+        """``cat;/etc/passwd`` : ``;`` collé à ``cat``. Doit refuser
+        l'accès à ``/etc/passwd``."""
+        script = ecrire_garde(tmp_path, racine)
+        ch = charge("Bash", {"command": "cat;/etc/passwd"}, cwd=racine)
+        exit_code, stderr = run(script, ch, env=env_tmpdir)
+        assert exit_code == 2, (
+            "cat;/etc/passwd doit être refusé (exit 2). stderr="
+            f"{stderr!r}"
+        )
+
+    def test_pipe_colle_refuse(self, tmp_path, racine, env_tmpdir):
+        """``cat|/bin/sh`` : ``|`` collé. ``/bin/sh`` doit être vu comme
+        un chemin littéral et REFUSÉ."""
+        script = ecrire_garde(tmp_path, racine)
+        ch = charge("Bash", {"command": "cat|/bin/sh"}, cwd=racine)
+        exit_code, stderr = run(script, ch, env=env_tmpdir)
+        assert exit_code == 2, (
+            "cat|/bin/sh doit être refusé (exit 2). stderr="
+            f"{stderr!r}"
+        )
+
+    def test_redirection_append_collee_refuse(self, tmp_path, racine, env_tmpdir):
+        """``echo x>>/etc/hosts`` : ``>>`` collé à ``x``. La cible
+        ``/etc/hosts`` doit être REFUSÉE (exit 2)."""
+        script = ecrire_garde(tmp_path, racine)
+        ch = charge("Bash", {"command": "echo x>>/etc/hosts"}, cwd=racine)
+        exit_code, stderr = run(script, ch, env=env_tmpdir)
+        assert exit_code == 2, (
+            "echo x>>/etc/hosts doit être refusé (exit 2). stderr="
+            f"{stderr!r}"
+        )
+
+    def test_non_regression_guillemet_superieur_dans_nom(
+        self, tmp_path, racine, env_tmpdir
+    ):
+        """NON-RÉGRESSION : un ``>`` LITTÉRAL entre guillemets fait
+        partie du nom de fichier, pas un opérateur.
+
+        Crée ``racine/fichier>bizarre.txt`` puis ``cat "fichier>bizarre.txt"``
+        avec cwd=racine doit être AUTORISÉ (exit 0)."""
+        cible = racine / "fichier>bizarre.txt"
+        cible.write_text("contenu\n", encoding="utf-8")
+        script = ecrire_garde(tmp_path, racine)
+        ch = charge(
+            "Bash", {"command": 'cat "fichier>bizarre.txt"'}, cwd=racine
+        )
+        exit_code, stderr = run(script, ch, env=env_tmpdir)
+        assert exit_code == 0, (
+            'cat "fichier>bizarre.txt" doit être autorisé (exit 0) ; '
+            "le '>' entre guillemets fait partie du nom de fichier. "
+            f"stderr={stderr!r}"
+        )
+
+    def test_non_regression_commandes_inoffensives(
+        self, tmp_path, racine, env_tmpdir
+    ):
+        """NON-RÉGRESSION : commandes sans chemin littéral, et commande
+        avec chemin LITTÉRAL SOUS LA RACINE, restent AUTORISÉES.
+
+        Couvre ``echo bonjour``, ``ls -la``, ``cat sous/fichier.txt``
+        avec fichier créé dans la racine et cwd=racine."""
+        sous = racine / "sous"
+        sous.mkdir()
+        (sous / "fichier.txt").write_text("ok\n", encoding="utf-8")
+
+        script = ecrire_garde(tmp_path, racine)
+        for cmd in ("echo bonjour", "ls -la", "cat sous/fichier.txt"):
+            ch = charge("Bash", {"command": cmd}, cwd=racine)
+            exit_code, stderr = run(script, ch, env=env_tmpdir)
+            assert exit_code == 0, (
+                f"{cmd!r} doit être autorisé (exit 0) — non-régression. "
+                f"stderr={stderr!r}"
+            )

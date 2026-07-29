@@ -127,7 +127,14 @@ def _ressemble_chemin(token):
     #   aussi valide sous Windows). Regex `^[A-Za-z]:`.
     # Un token SANS séparateur et sans préfixe « ~ »/« . » (ex. « cat »,
     # « rm », « -rf ») N'EST PAS un chemin : l'ajouter provoquerait des
-    # faux positifs massifs sur les commandes et leurs options.
+    # faux positifs massels sur les commandes et leurs options.
+    # NOTE B-24d : les opérateurs shell isolés par `shlex.shlex(
+    # punctuation_chars=True)` (`<`, `>`, `>>`, `;`, `|`, `||`, `&`,
+    # `&&`, `(`, `)`) ne ressemblent JAMAIS à un chemin — par
+    # construction ils ne contiennent pas de séparateur et ne
+    # commencent ni par « ~ », ni par « . », ni par une lettre+« : ».
+    # Le filtre ci-dessous les écarte donc naturellement, sans règle
+    # dédiée.
     if not token:
         return False
     if "/" in token or os.sep in token or chr(92) in token:
@@ -152,15 +159,40 @@ def _candidats(tool_name, tool_input):
         if isinstance(commande, str):
             # Politique « chemins littéraux résolubles uniquement » : seuls
             # les tokens qui ressemblent à un chemin littéral sont
-            # contrôlés. shlex découpe la commande et retire les
-            # guillemets équilibrés, mais ne « comprend » PAS le shell :
-            # aucune expansion de variable, aucune substitution de
-            # commande, aucun globbing — c'est une extraction de tokens
-            # littéraux, pas un interprète. L'exécution de code
+            # contrôlés.
+            #
+            # B-24d — on utilise `shlex.shlex` avec
+            # `punctuation_chars=True` plutôt que `shlex.split`, parce que
+            # `shlex.split` NE SÉPARE PAS les opérateurs shell (`<`, `>`,
+            # `;`, `|`, `&`, `(`, `)`) lorsqu'ils sont COLLÉS au token
+            # voisin (cf. ForgeAI Toolkit). Mesure réelle :
+            #     shlex.split('cat</etc/passwd', posix=True)
+            #         -> ['cat</etc/passwd']   (collatéral, faux négatif)
+            #     shlex.shlex('cat</etc/passwd', posix=True,
+            #         punctuation_chars=True, whitespace_split=True)
+            #         -> ['cat', '<', '/etc/passwd']
+            # `punctuation_chars=True` rend `<>;|&()` caractères de
+            # ponctuation au sens du lexer shlex : ils sont émis en
+            # tokens distincts au lieu d'être agrégés au mot adjacent.
+            # Combiné à `whitespace_split=True`, on obtient un flux de
+            # tokens littéraux, ce qui restaure la sémantique attendue :
+            #     'echo bad>.claude/settings.json'
+            #         -> ['echo', 'bad', '>', '.claude/settings.json']
+            #     'cat "fichier>bizarre.txt"'
+            #         -> ['cat', 'fichier>bizarre.txt']   (guillemets OK)
+            #
+            # Limite de périmètre inchangée : ça reste une EXTRACTION de
+            # tokens LITTÉRAUX — aucune expansion de variable
+            # (``$HOME``, ``${X}``), aucune substitution de commande
+            # (``$(...)``, ```...```), aucun globbing (``*``, ``?``,
+            # ``[...]``), aucune compréhension des quotes imbriquées
+            # au-delà de l'équilibrage shlex. L'exécution de code
             # arbitraire n'est PAS confinable sans sandbox OS —
             # limitation documentée et assumée.
             try:
-                tokens = shlex.split(commande, posix=True)
+                lx = shlex.shlex(commande, posix=True, punctuation_chars=True)
+                lx.whitespace_split = True
+                tokens = list(lx)
             except ValueError:
                 # Guillemets déséquilibrés : repli sur un découpage naïf
                 # sur les espaces ; un token mal découpé qui contient un
@@ -170,6 +202,8 @@ def _candidats(tool_name, tool_input):
                 if _ressemble_chemin(token):
                     trouves.append(token)
     return trouves
+
+
 def _exceptions():
     # tempfile.gettempdir() résolu, plus chaque ligne non vide du fichier
     # d'exceptions s'il existe. Un fichier illisible ne lève pas : on reste
