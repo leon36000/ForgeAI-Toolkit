@@ -30,26 +30,3 @@ jobs:
         uses: SonarSource/sonarqube-scan-action@v8.2.1
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-
-      # DIAGNOSTIC TEMPORAIRE (D4) : le token vit uniquement dans les secrets, donc
-      # la seule facon de savoir CE QUE le quality gate reproche est de le faire
-      # lister par la CI. Rien de sensible n'est imprime. A RETIRER avant merge.
-      - name: Lister les issues du code neuf
-        if: always() && github.event_name == 'pull_request'
-        continue-on-error: true
-        env:
-          SONAR_AUTH: ${{ secrets.SONAR_TOKEN }}
-          PR: ${{ github.event.pull_request.number }}
-        run: |
-          task=$(sed -n 's/^ceTaskId=//p' .scannerwork/report-task.txt)
-          for i in $(seq 1 30); do
-            st=$(curl -s -H "Authorization: Bearer $SONAR_AUTH" \
-                 "https://sonarcloud.io/api/ce/task?id=$task" | jq -r .task.status)
-            echo "analyse: $st"
-            [ "$st" = "SUCCESS" ] && break
-            [ "$st" = "FAILED" ] && exit 0
-            sleep 10
-          done
-          curl -s -H "Authorization: Bearer $SONAR_AUTH" \
-            "https://sonarcloud.io/api/issues/search?componentKeys=leon36000_ForgeAI-Toolkit&pullRequest=$PR&resolved=false&ps=100" \
-            | jq -r '"total: \(.total)", (.issues[] | "[\(.severity)/\(.type)] \(.component|split(":")|last):\(.line) \(.rule) effort=\(.effort)\n     \(.message)")'
