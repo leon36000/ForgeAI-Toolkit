@@ -7,6 +7,7 @@ injectées via le bloc `environment:` à partir du plan.
 """
 from __future__ import annotations
 
+import re
 import json
 
 from forgeai.core.models import DeploymentPlan, ProbeType
@@ -101,7 +102,26 @@ def _openbao_unsealer_block(image: str) -> list[str]:
     return out
 
 
+class RienADeployerError(Exception):
+    """Rendu Compose refusé : tous les services du plan sont déjà adoptés (ERR_ADOPT_RIEN_A_DEPLOYER).
+
+    Un plan dont chaque service porte un adopted_endpoint non None décrit un état où rien n'est
+    à déployer : tout est déjà présent sur le nœud. Émettre un fichier sans aucune entrée
+    `services:` produit un artefact rejeté par `docker compose up`, avec un message qui ne dit
+    pas la vraie cause. Ce n'est PAS une erreur de l'utilisateur, mais un état à lui signaler."""
+
+
 def render_compose(plan: DeploymentPlan, project: str = "forgeai-minimal") -> str:
+    # Rien à déployer : tous les services sont déjà présents sur le nœud. On refuse AVANT de
+    # construire quoi que ce soit — un compose sans section `services` est rejeté par Docker
+    # avec un message qui masque la vraie cause.
+    if plan.services and all(sv.adopted_endpoint is not None for sv in plan.services):
+        _adoptes = [f"{sv.name} -> {sv.adopted_endpoint}" for sv in plan.services]
+        raise RienADeployerError(
+            f"ERR_ADOPT_RIEN_A_DEPLOYER : le plan {plan.plan_id} n'a aucun service a deployer — "
+            f"tous sont deja adoptes ({', '.join(_adoptes)}). Cet etat est normal : le manifeste "
+            f"serait vide et refuse par `docker compose up`."
+        )
     lines = [
         f"# Généré par ForgeAI Toolkit — plan {plan.plan_id} (profil {plan.profile})",
         f"name: {project}",
@@ -109,7 +129,29 @@ def render_compose(plan: DeploymentPlan, project: str = "forgeai-minimal") -> st
         "services:",
     ]
     volumes: set[str] = set()
+    adopted_names: set[str] = {s.name for s in plan.services if s.adopted_endpoint is not None}
+    # Recablage des deps adoptes : pour chaque service adopte, on prepare le motif qui matche
+    # son nom en position d'hote (precede de `//`, `@` ou debut de valeur) suivi de :PORT.
+    # Le port substitue est le port DECOUVERT (extrait de l'endpoint H:P), pas celui du
+    # catalogue -- l'existant prime. Si le plan n'a aucun service adopte, cette liste reste
+    # vide et la sortie est strictement identique.
+    adopted_patterns: list[tuple[re.Pattern, int]] = []
+    for s in plan.services:
+        if s.adopted_endpoint is not None:
+            # Pas de try/except ici : adopted_endpoint est validé à la construction de
+            # ServiceSpec (forme hôte:port, port numérique 1..65535). Un except silencieux
+            # serait un chemin mort qui, le jour où la validation changerait, avalerait le
+            # défaut et laisserait le dépendant orphelin sans aucun message.
+            _, port_str = s.adopted_endpoint.rsplit(':', 1)
+            port = int(port_str)
+            pattern = re.compile(
+                r'(?:(?<=//)|(?<=@)|^)' + re.escape(s.name) + r':\d+'
+            )
+            adopted_patterns.append((pattern, port))
     for svc in plan.services:
+        # Service adopté : déjà présent sur le nœud, on s'y branche — pas d'entrée dans services:.
+        if svc.adopted_endpoint is not None:
+            continue
         lines += [
             f"  {svc.name}:",
             f"    image: {svc.image}",
@@ -127,33 +169,54 @@ def render_compose(plan: DeploymentPlan, project: str = "forgeai-minimal") -> st
         if svc.env:
             lines.append("    environment:")
             for key, value in svc.env.items():
+                str_value = str(value)
+                # Recablage : pour chaque service adopte, rediriger N:PORT vers
+                # host.docker.internal:PORT_DECOUVERT. Le motif n'agit QUE quand N est
+                # en position d'hote (//, @, debut) suivi de :PORT -- jamais sur une
+                # sous-chaine (myN, N_backup, etc.).
+                for pattern, port in adopted_patterns:
+                    str_value = pattern.sub(
+                        f'host.docker.internal:{port}', str_value
+                    )
                 # Valeur toujours entre guillemets : protège les caractères YAML
                 # spéciaux (:, #, espaces) ; l'interpolation ${VAR} de compose
                 # opère avant le parse YAML, donc reste effective ici.
-                safe = str(value).replace("\\", "\\\\").replace('"', '\\"')
+                safe = str_value.replace("\\", "\\\\").replace('"', '\\"')
                 lines.append(f'      {key}: "{safe}"')
         # HEALTH-028B : sonde fonctionnelle par service. Sans elle, un service est réputé
         # disponible dès que Compose l'a démarré — un port ouvert ne prouve pas qu'une base
         # accepte des requêtes.
         lines.extend(_healthcheck_lines(svc))
+        # adopted_endpoint != None -> service non déployé par nous ; le référencer dans
+        # depends_on rendrait le compose invalide. On filtre la liste, et tout service qui
+        # s'y branchait reçoit extra_hosts (host.docker.internal -> host-gateway) pour
+        # atteindre le service de l'hôte depuis le conteneur.
+        depends_adopted = [d for d in svc.depends if d in adopted_names]
         if svc.depends:
-            lines.append("    depends_on:")
-            # Le healthcheck openbao (mode prod) ne passe QUE coffre descellé -> un consommateur
-            # d'openbao doit attendre `service_healthy`. Compose interdit de mêler forme liste et
-            # forme map : dès qu'openbao est une dépendance, tout le bloc passe en forme map
-            # (openbao -> service_healthy ; les autres -> service_started, équivalent de la liste).
-            if "openbao" in svc.depends:
-                for dep in svc.depends:
-                    cond = "service_healthy" if dep == "openbao" else "service_started"
-                    lines.append(f"      {dep}:")
-                    lines.append(f"        condition: {cond}")
-            else:
-                for dep in svc.depends:
-                    lines.append(f"      - {dep}")
+            filtered_depends = [d for d in svc.depends if d not in adopted_names]
+            if filtered_depends:
+                lines.append("    depends_on:")
+                # Le healthcheck openbao (mode prod) ne passe QUE coffre descellé -> un consommateur
+                # d'openbao doit attendre `service_healthy`. Compose interdit de mêler forme liste et
+                # forme map : dès qu'openbao est une dépendance, tout le bloc passe en forme map
+                # (openbao -> service_healthy ; les autres -> service_started, équivalent de la liste).
+                if "openbao" in filtered_depends:
+                    for dep in filtered_depends:
+                        cond = "service_healthy" if dep == "openbao" else "service_started"
+                        lines.append(f"      {dep}:")
+                        lines.append(f"        condition: {cond}")
+                else:
+                    for dep in filtered_depends:
+                        lines.append(f"      - {dep}")
+        if depends_adopted:
+            lines += [
+                "    extra_hosts:",
+                '      - "host.docker.internal:host-gateway"',
+            ]
         if svc.command:
             lines.append("    command:")
             for arg in svc.command:
-                lines.append(f"      - \"{arg}\"")
+                lines.append(f'      - "{arg}"')
         if svc.volumes:
             lines.append("    volumes:")
             for volume in svc.volumes:

@@ -1,0 +1,24 @@
+# D2 — PREUVE DU DÉFAUT : le déploiement ignore l'inventaire
+
+## 1. Le moteur de découverte existe et fonctionne (D1, livré)
+   signatures embarquées : 10
+   exemples : ['docker', 'kubectl', 'k3s', 'helm', 'ollama', 'vllm']
+
+## 2. Le chemin de DÉPLOIEMENT ne le consulte JAMAIS
+   deploy/compose.py    consulte l'inventaire : False
+   deploy/k3s.py        consulte l'inventaire : False
+
+## 3. Conséquence mesurable
+   compose_up() reçoit un fichier compose rendu à partir du plan SEUL.
+   signature réelle : compose_up(compose_file: 'Path', services: 'list[str] | None' = None) -> 'None'
+   -> aucun paramètre ne permet de transmettre ce qui est DÉJÀ présent sur le nœud.
+   signature réelle : k3s_apply(manifest: 'Path') -> 'None'
+   -> idem côté k3s.
+
+## 4. Ce que l'utilisateur subit
+   Un utilisateur ayant DÉJÀ un redis/postgres/qdrant en service voit ForgeAI
+   le redéployer : conteneur recréé, configuration écrasée, données du volume
+   existant potentiellement inaccessibles. La directive PERMANENTE du produit est
+   pourtant : ADOPTER l'existant, JAMAIS réinstaller ni écraser.
+
+   Le déploiement est donc AVEUGLE à l'inventaire que le produit sait produire.
