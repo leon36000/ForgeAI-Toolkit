@@ -1,0 +1,20 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "src/forgeai/ide/guard_fs.py (script généré)",
+   "description": "L'auto-protection ne couvre pas le renommage (mv) du script de garde, bien que l'ADR stipule que la garde doit se protéger elle-même. Un mv autorisé (car le script est sous la racine) déplacerait le fichier et désactiverait la garde, contournant l'auto-protection.",
+   "preuve": "La fonction _auto_protege vérifie l'égalité de la cible avec SCRIPT_PATH, mais un mv utilise le chemin source (le script) comme opérande, et la garde ne bloque pas la suppression. Aucun test ne couvre ce cas."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "src/forgeai/ide/guard_fs.py (corps du script généré, fonction _decider)",
+   "description": "Le script ne vérifie pas que le champ 'cwd' du payload est un chemin absolu avant de l'utiliser dans _resoudre. Un cwd relatif pourrait mener à une résolution incorrecte et un contournement potentiel.",
+   "preuve": "Ligne : if not isinstance(cwd, str) or not cwd: _refus_structurel... Aucun appel à os.path.isabs(cwd)."
+  }
+ ],
+ "date_heure": "2026-07-29T18:56:47.202753+00:00",
+ "prompt_sha256": "3f0cc2b8f268e26ec4e0fb67660062abfc482a0d06109c0b757c1f6125e353f0",
+ "reviewer_model": "DeepSeek-V4-Pro"
+}

@@ -59,6 +59,8 @@ import hashlib
 import json
 import os
 import sys
+import re
+import shlex
 import tempfile
 from datetime import datetime, timezone
 
@@ -77,6 +79,11 @@ WRITE_TOOLS = ("Write", "Edit", "NotebookEdit", "Bash")
 PATH_KEYS = ("file_path", "path", "notebook_path")
 
 SCRIPT_PATH = os.path.realpath(__file__)
+# Le répertoire « .claude » ENTIER est protégé en écriture (O4) : hooks,
+# settings.json et toute cible sous .claude. HOOKS_DIR et SETTINGS_JSON
+# restent définis — couverts a fortiori par CLAUDE_DIR — pour la
+# lisibilité et les messages du registre.
+CLAUDE_DIR = os.path.realpath(os.path.join(ROOT, ".claude"))
 HOOKS_DIR = os.path.realpath(os.path.join(ROOT, ".claude", "hooks"))
 SETTINGS_JSON = os.path.realpath(os.path.join(ROOT, ".claude", "settings.json"))
 
@@ -99,6 +106,39 @@ def _resoudre(chemin, cwd):
     return os.path.realpath(p)
 
 
+# shlex et re sont stdlib : le script généré reste autonome et n'importe
+# jamais forgeai.
+
+
+def _ressemble_chemin(token):
+    # Un token « ressemble à un chemin littéral » si et seulement si :
+    # - il contient un séparateur : « / », le séparateur natif os.sep, ou
+    #   la barre oblique inverse Windows — chr(92) plutôt qu'un littéral,
+    #   pour ne dépendre d'aucun échappement dans la chaîne template ; OU
+    # - il commence par « ~ » ; OU
+    # - il commence par « . » : navigation (« . », « .. ») ou entrée
+    #   cachée (« .claude », « .env ») — dans les deux cas un chemin
+    #   littéral ; c'est ce qui capture la cible nue « .claude » de
+    #   « rm -rf .claude » (O4), qu'une règle limitée à « .. »/« . »
+    #   exacts laisserait passer. Un token non-chemin (commande, option)
+    #   ne commence pratiquement jamais par « . » ; OU
+    # - il débute par un lecteur Windows (regex ^[A-Za-z]:[\\/]).
+    # Un token SANS séparateur et sans préfixe « ~ »/« . » (ex. « cat »,
+    # « rm », « -rf ») N'EST PAS un chemin : l'ajouter provoquerait des
+    # faux positifs massifs sur les commandes et leurs options.
+    if not token:
+        return False
+    if "/" in token or os.sep in token or chr(92) in token:
+        return True
+    if token.startswith("~"):
+        return True
+    if token.startswith("."):
+        return True
+    if re.match(r"^[A-Za-z]:[\\/]", token):
+        return True
+    return False
+
+
 def _candidats(tool_name, tool_input):
     trouves = []
     for cle in PATH_KEYS:
@@ -109,16 +149,25 @@ def _candidats(tool_name, tool_input):
         commande = tool_input.get("command")
         if isinstance(commande, str):
             # Politique « chemins littéraux résolubles uniquement » : seuls
-            # les tokens qui ressemblent à un chemin littéral sont contrôlés.
-            # L'exécution de code arbitraire (variables, substitutions,
-            # globbing) n'est PAS confinable sans sandbox OS — limitation
-            # documentée et assumée.
-            for token in commande.split():
-                if token.startswith(("/", "./", "../", "~")):
+            # les tokens qui ressemblent à un chemin littéral sont
+            # contrôlés. shlex découpe la commande et retire les
+            # guillemets équilibrés, mais ne « comprend » PAS le shell :
+            # aucune expansion de variable, aucune substitution de
+            # commande, aucun globbing — c'est une extraction de tokens
+            # littéraux, pas un interprète. L'exécution de code
+            # arbitraire n'est PAS confinable sans sandbox OS —
+            # limitation documentée et assumée.
+            try:
+                tokens = shlex.split(commande, posix=True)
+            except ValueError:
+                # Guillemets déséquilibrés : repli sur un découpage naïf
+                # sur les espaces ; un token mal découpé qui contient un
+                # séparateur reste contrôlé (fail-closed côté décision).
+                tokens = commande.split()
+            for token in tokens:
+                if _ressemble_chemin(token):
                     trouves.append(token)
     return trouves
-
-
 def _exceptions():
     # tempfile.gettempdir() résolu, plus chaque ligne non vide du fichier
     # d'exceptions s'il existe. Un fichier illisible ne lève pas : on reste
@@ -138,21 +187,23 @@ def _exceptions():
 
 
 def _auto_protege(tool_name, resolu):
-    # Même DANS la racine, un outil d'écriture ne peut toucher ni ce script,
-    # ni le répertoire des hooks, ni settings.json : la garde qui se laisse
-    # réécrire par le confiné est du théâtre. Ce contrôle précède les
-    # exceptions pour n'être jamais contourné par le fichier d'exceptions.
+    # Même DANS la racine, un outil d'écriture ne peut toucher ni ce
+    # script, ni le répertoire « .claude » ENTIER — lui-même ou toute
+    # cible sous lui (hooks, settings.json, etc.) : la garde qui se
+    # laisse réécrire par le confiné est du théâtre. SCRIPT_PATH est
+    # testé isolément car le script peut vivre HORS de .claude. Ce
+    # contrôle précède les exceptions pour n'être jamais contourné par
+    # le fichier d'exceptions.
     if tool_name not in WRITE_TOOLS:
         return False
     cible = os.path.normcase(resolu)
     if cible == os.path.normcase(SCRIPT_PATH):
         return True
-    if _sous(resolu, HOOKS_DIR):
+    if cible == os.path.normcase(CLAUDE_DIR):
         return True
-    if cible == os.path.normcase(SETTINGS_JSON):
+    if _sous(resolu, CLAUDE_DIR):
         return True
     return False
-
 
 def _journaliser(tool, demande, resolu, cwd):
     # Réplique exacte du format de forgeai.core.registre (contrat de
@@ -249,8 +300,13 @@ def _decider():
     cwd = payload.get("cwd")
     if not isinstance(cwd, str) or not cwd:
         _refus_structurel("cwd absent ou invalide")
+    # Fail-closed : un cwd relatif rendrait la résolution des chemins
+    # relatifs ambiguë — refus structurel avant toute décision.
+    if not os.path.isabs(cwd):
+        _refus_structurel("cwd non absolu: {0}".format(cwd))
     tool_input = payload.get("tool_input")
     if tool_input is None:
+
         tool_input = {}
     if not isinstance(tool_input, dict):
         _refus_structurel("tool_input non-objet")
