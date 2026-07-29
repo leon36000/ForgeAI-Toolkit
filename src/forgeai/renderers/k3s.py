@@ -785,8 +785,11 @@ def _budget_du_plan(plan: DeploymentPlan) -> dict:
                 "ERR_QUOTA_RESSOURCES_ABSENTES: le service {} n'a pas de ressources_effectives".format(svc.name)
             )
         for categorie in ("requests", "limits"):
-            cpu = res.get(categorie, {}).get("cpu")
-            memoire = res.get(categorie, {}).get("memory")
+            # `dict.get(cle, {})` ne protège que de l'absence de clé, pas d'une valeur
+            # None explicite : sans le `or {}`, le .get() suivant lèverait AttributeError
+            # — une trace technique opaque au lieu du ValueError qui nomme la cause.
+            cpu = (res.get(categorie) or {}).get("cpu")
+            memoire = (res.get(categorie) or {}).get("memory")
             if cpu is None or memoire is None:
                 # On lève une erreur plutôt que de fausser le budget en silence
                 raise ValueError(

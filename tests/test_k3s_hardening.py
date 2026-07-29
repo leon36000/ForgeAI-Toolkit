@@ -449,3 +449,37 @@ def test_budget_incomplet_leve_au_lieu_de_sous_compter():
     plan = _plan([svc])
     with pytest.raises(ValueError, match="ERR_QUOTA_RESSOURCES_INCOMPLETES"):
         _budget_du_plan(plan)
+
+
+def test_depassement_memoire_seul_est_exerce():
+    """Objection de DeepSeek : le test de dépassement utilisait un cluster trop petit en CPU ET
+    en mémoire — seule la première branche s'exécutait, `ERR_QUOTA_MEMOIRE_DEPASSEE` n'était
+    jamais atteinte. Ici le CPU suffit largement, seule la mémoire manque."""
+    cap = CapaciteCluster(cpu_millicores=16000, memoire_mib=4096)   # CPU OK, mémoire non
+    with pytest.raises(QuotaError) as exc:
+        render_k3s(_plan_trois_services(), capacite=cap)
+    message = str(exc.value)
+    assert "ERR_QUOTA_MEMOIRE_DEPASSEE" in message
+    assert "10752" in message and "4096" in message, \
+        f"le message doit chiffrer le besoin ET la capacité mémoire : {message}"
+
+
+def test_categorie_a_none_leve_proprement():
+    """Objection de Tencent : `res.get(categorie, {})` renvoie `None` si la clé EXISTE avec la
+    valeur `None` — le `.get("cpu")` qui suit lève alors `AttributeError`, une erreur technique
+    opaque, au lieu du `ValueError` explicite prévu. Un défaut de données doit produire un
+    message qui nomme sa cause, pas une trace d'attribut manquant."""
+    from forgeai.renderers.k3s import _budget_du_plan
+    svc = _svc(name="nul", image="n:1", host_port=1, container_port=1)
+    object.__setattr__(svc, "ressources_effectives", {"requests": None, "limits": None})
+    with pytest.raises(ValueError, match="ERR_QUOTA_RESSOURCES_INCOMPLETES"):
+        _budget_du_plan(_plan([svc]))
+
+
+def test_quota_affirme_les_valeurs_exactes_des_requests():
+    """Objection de Tencent : le test n'affirmait que la PRÉSENCE de `requests.*`, pas leurs
+    valeurs — une somme fausse serait passée inaperçue. llm 1000m/4Gi + db 250m/512Mi +
+    sidecar 100m/128Mi = 1350m / 4736Mi."""
+    spec = _quota(render_k3s(_plan_trois_services()))["spec"]["hard"]
+    assert spec["requests.cpu"] == "1350m"
+    assert spec["requests.memory"] == "4736Mi"
