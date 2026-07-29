@@ -1,7 +1,20 @@
 {
- "verdict": "APPROVE",
- "objections": [],
- "date_heure": "2026-07-29T23:21:24.216245+00:00",
- "prompt_sha256": "1fc7ac86823049e70e88b3a25dea540867e48000ad7b5e8a3214a55bfbe39054",
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "critique",
+   "fichier": "src/forgeai/ide/guard_fs.py",
+   "description": "Le confiné peut neutraliser sa garde (critère b) en scindant le nom du dossier protégé avec des guillemets. La commande `echo bad > .cl\"aude/settings.json\"` est découpée en `.cl` et `aude/settings.json`. Ces deux fragments sont évalués indépendamment : ils se résolvent DANS la racine et AUCUN ne correspond à `.claude`. La garde autorise l'opération. Bash concatène les fragments et écrase la configuration. Il s'agit d'une CLASSE entière de contournements (l'ambiguïté lexicale par scission de mots). Comme demandé, je conclus que le périmètre Bash doit être ABANDONNÉ au profit des seuls outils structurés, et qu'une sandbox OS est requise pour Bash.",
+   "preuve": "`DELIMITEURS = r\"\"\"[\\s<>;|&()\"'`$=]+\"\"\"` : le découpage sur `\"` sépare `.cl\"aude/settings.json` en `.cl` et `aude/settings.json`. `_auto_protege` vérifie chaque fragment isolément, aucun ne correspond à `CLAUDE_DIR`."
+  },
+  {
+   "severite": "critique",
+   "fichier": "src/forgeai/ide/guard_fs.py",
+   "description": "Contournement du confinement de la racine sur Windows via la même classe de vulnérabilité (scission par guillemets). La commande `cat C\":/Windows/System32/cmd.exe\"` est découpée en `C` (ignoré car sans séparateur) et `:/Windows/System32/cmd.exe`. Ce dernier fragment n'est pas absolu, il est résolu comme relatif au `cwd` (donc DANS la racine) et autorisé. Bash reconstitue le chemin absolu et sort de la racine.",
+   "preuve": "`DELIMITEURS` inclut `\"`. `_ressemble_chemin('C')` retourne False. `_resoudre` traite `:/Windows...` comme relatif."
+  }
+ ],
+ "date_heure": "2026-07-29T23:38:30.832339+00:00",
+ "prompt_sha256": "f3c997923bf651816bc195c31151158c2b8921f5a25af19944bc2e6573fcbfb6",
  "reviewer_model": "Gemini-3.1-Pro-OR"
 }

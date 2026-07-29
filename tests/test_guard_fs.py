@@ -92,15 +92,21 @@ def racine(tmp_path):
 
 @pytest.fixture
 def env_tmpdir(tmp_path):
-    """TMPDIR isolé pour le subprocess de garde.
+    """Répertoire temporaire isolé pour le subprocess de garde.
 
-    tmp_path vit sous tempfile.gettempdir() ; sans cette isolation,
-    l'exception tempdir de la garde AUTORISERAIT des cibles de test placées
-    sous tmp_path alors qu'elles doivent être REFUSÉES (tests 6 et 10).
+    tmp_path vit sous tempfile.gettempdir() ; sans cette isolation, l'exception
+    tempdir de la garde AUTORISERAIT des cibles de test placées sous tmp_path
+    alors qu'elles doivent être REFUSÉES.
+
+    Les TROIS variables sont passées, pas seulement TMPDIR : `tempfile.gettempdir()`
+    consulte TMPDIR d'abord sur POSIX, mais TEMP et TMP sur Windows. Ne passer que
+    TMPDIR faisait tomber l'isolation sur le runner Windows de la matrice multi-OS —
+    les tests auraient alors échoué pour une MAUVAISE raison (décor de test inopérant,
+    et non comportement de la garde), ce qui est le pire des diagnostics.
     """
     dossier = tmp_path / "guard-tmpdir"
     dossier.mkdir()
-    return {"TMPDIR": str(dossier)}
+    return {"TMPDIR": str(dossier), "TEMP": str(dossier), "TMP": str(dossier)}
 
 
 # 1. Racine inexistante -> IDEError.
@@ -1382,4 +1388,201 @@ def test_grappe_option_exige_des_lettres(tmp_path, racine):
     ligne = _ligne_grappe_option(ecrire_garde(tmp_path, racine))
     assert "isalpha()" in ligne, (
         f"la grappe d'options doit etre restreinte aux lettres ; ligne={ligne!r}"
+    )
+
+
+# ── Tour 11 : union shlex + decoupage (scission par guillemets) ──
+import shlex
+
+from forgeai.ide.guard_fs import generate_guard_fs
+
+
+def _executer_commande(tmp_path, racine, env_tmpdir, commande):
+    """Écrit la garde pour ``racine`` sous tmp_path, puis l'exécute via le
+    runner ``run`` partagé. Renvoie (exit, stderr) de la garde.
+    """
+    script = ecrire_garde(tmp_path, racine)
+    payload = charge("Bash", {"command": commande}, cwd=racine)
+    return run(script, payload, env=env_tmpdir)
+
+
+# ---------------------------------------------------------------------------
+# REFUS — scission par guillemets (cwd=racine, env=env_tmpdir).
+# ---------------------------------------------------------------------------
+
+
+def test_refus_eclatement_chemin_avec_guillemets_doubles(tmp_path, racine, env_tmpdir):
+    """Auto-protection : le confiné ne doit pas pouvoir écraser la configuration
+    de sa propre garde via une scission par guillemets (``echo bad > .cl"aude/settings.json"``).
+
+    Sans union shlex+découpage strict, le découpage seul séparait ``.cl`` et
+    ``aude/settings.json`` ; aucun ne correspondait à ``.claude/...``, et la
+    cible d'écrasement de la configuration de la garde était légitimement
+    autorisée. Avec l'union, shlex concatène comme bash et détecte le chemin
+    interdit.
+    """
+    # Création préalable du fichier de configuration à protéger (la garde
+    # autorise un fichier existant ; l'interdit réel est la cible d'écriture).
+    (racine / ".claude" / "settings.json").parent.mkdir(parents=True, exist_ok=True)
+    (racine / ".claude" / "settings.json").write_text("{}", encoding="utf-8")
+
+    exit_code, stderr = _executer_commande(
+        tmp_path, racine, env_tmpdir, 'echo bad > .cl"aude/settings.json"'
+    )
+    assert exit_code == 2, stderr
+    # Le refus doit mentionner le chemin concaténé restitué (assemblée effective).
+    assert ".claude/settings.json" in stderr, stderr
+
+
+def test_refus_concatenation_absolu_autour_de_guillemets(tmp_path, racine, env_tmpdir):
+    """Concaténation d'un chemin absolu autour de guillemets :
+    ``cat "/etc"/passwd`` -> shlex restitue ``/etc/passwd`` (absolu interdit)."""
+    exit_code, stderr = _executer_commande(
+        tmp_path, racine, env_tmpdir, 'cat "/etc"/passwd'
+    )
+    assert exit_code == 2, stderr
+    assert "/etc/passwd" in stderr, stderr
+
+
+def test_refus_scission_au_milieu_d_un_absolu(tmp_path, racine, env_tmpdir):
+    """Scission d'un chemin absolu en son milieu :
+    ``cat /et"c/passwd"`` -> shlex restitue ``/etc/passwd`` (absolu interdit)."""
+    exit_code, stderr = _executer_commande(
+        tmp_path, racine, env_tmpdir, 'cat /et"c/passwd"'
+    )
+    assert exit_code == 2, stderr
+    assert "/etc/passwd" in stderr, stderr
+
+
+# ---------------------------------------------------------------------------
+# AUTORISATIONS — non-régressions (cwd=racine, env=env_tmpdir).
+# ---------------------------------------------------------------------------
+
+
+def test_autorisation_apostrophe_non_fermee(tmp_path, racine, env_tmpdir):
+    """Non-régression : une apostrophe non fermée fait LEVER shlex ;
+    le découpage strict prend le relais, ne trouve aucun chemin littéral
+    et la commande est autorisée. Prouve que l'échec de shlex est sans
+    conséquence : aucun chemin n'est extrait, donc aucune interdiction
+    supplémentaire n'est introduite.
+    """
+    # Apostrophe NON fermée : le littéral ne peut rien contenir de valide
+    # comme chemin (l'apostrophe non fermée consomme la suite de la chaîne).
+    exit_code, _ = _executer_commande(
+        tmp_path, racine, env_tmpdir, "echo l'utilisateur"
+    )
+    assert exit_code == 0
+
+
+def test_autorisation_chemin_relatif_existant(tmp_path, racine, env_tmpdir):
+    """Non-régression : un chemin relatif pointant vers un fichier existant
+    reste autorisé (``cat sous/f.txt``)."""
+    sous = racine / "sous"
+    sous.mkdir()
+    (sous / "f.txt").write_text("contenu", encoding="utf-8")
+    exit_code, _ = _executer_commande(
+        tmp_path, racine, env_tmpdir, "cat sous/f.txt"
+    )
+    assert exit_code == 0
+
+
+def test_autorisation_commande_sans_chemin(tmp_path, racine, env_tmpdir):
+    """Non-régression : une commande sans aucun fragment de chemin reste
+    autorisée (``echo bonjour``)."""
+    exit_code, _ = _executer_commande(
+        tmp_path, racine, env_tmpdir, "echo bonjour"
+    )
+    assert exit_code == 0
+
+
+# ---------------------------------------------------------------------------
+# Caractérisation Windows : la propriété observable partout est la
+# concaténation restituée par shlex ; le REFUS lui-même ne l'est pas sur
+# POSIX (où ``C:/Windows/...`` est un chemin RELATIF, donc légitime).
+# ---------------------------------------------------------------------------
+
+
+def test_shlex_concatene_chemin_windows_autour_de_guillemets():
+    """Caractérisation portable du cas Windows.
+
+    Le refus de ``cat C":/Windows/System32/cmd.exe"`` n'est PAS observable
+    sur POSIX : ``C:/Windows/...`` y est un nom RELATIF, donc légitimement
+    autorisé. La propriété vérifiable partout (POSIX et Windows) est la
+    RESTITUTION DE LA CONCATÉNATION par shlex : sans elle, la cible
+    ``C:/Windows/System32/cmd.exe`` n'apparaît jamais comme fragment littéral
+    et la garde ne peut pas l'intercepter sur Windows.
+
+    On utilise ``whitespace_split=True`` (sinon shlex fusionne déjà les
+    guillemets vides) et ``punctuation_chars=True`` (sinon ``:`` n'est pas
+    traité comme séparateur et le reste de la ligne peut s'agréger). Le
+    paramètre ``punctuation_chars`` est ignoré si ``posix=False`` ; on
+    impose donc explicitement ``posix=True``.
+    """
+    jetons = shlex.shlex(
+        'cat C":/Windows/System32/cmd.exe"',
+        posix=True,
+        punctuation_chars=True,
+    )
+    # whitespace_split doit être appliqué APRÈS construction du shlex ;
+    # shlex.shlex expose l'attribut correspondant.
+    jetons.whitespace_split = True
+    liste = list(jetons)
+    assert "C:/Windows/System32/cmd.exe" in liste, liste
+
+
+# ---------------------------------------------------------------------------
+# Caractérisation de la garantie d'union dans le script généré.
+# ---------------------------------------------------------------------------
+
+
+def test_script_genere_contient_union_shlex_et_decoupage_sans_repli(tmp_path, racine):
+    """Caractérisation de la GARANTIE d'union dans le script produit.
+
+    Trois propriétés doivent tenir simultanément :
+      1. l'appel à shlex est présent (il restitue la concaténation des quotes) ;
+      2. le découpage strict sur DELIMITEURS est présent (il ne lève jamais) ;
+      3. le bloc ``except ValueError`` QUI SUIT l'appel à shlex ne contient AUCUN
+         traitement alternatif — seulement ``pass`` et des commentaires.
+
+    La propriété (3) est celle qui empêche une porte de service : c'est parce que
+    l'échec de shlex n'entraîne aucun traitement de repli, et que le découpage
+    strict s'applique dans tous les cas, qu'un attaquant ne peut pas forcer un mode
+    plus permissif en provoquant un ValueError (le défaut des tours 5 et 6).
+
+    Le ciblage est IMPORTANT : le script contient trois ``except ValueError``
+    légitimes (conversion du ValueError de commonpath dans _sous, celui de l'union,
+    et le parsing du JSON de stdin). Chercher le PREMIER du fichier testait donc la
+    mauvaise clause — erreur commise puis corrigée ici.
+    """
+    src = ecrire_garde(tmp_path, racine).read_text(encoding="utf-8")
+    assert "shlex.shlex(" in src, "l'appel à shlex doit être présent"
+    assert "re.split(DELIMITEURS" in src, "le découpage strict doit être présent"
+
+    lignes = src.splitlines()
+    # on cible le except qui SUIT l'appel a shlex, pas n'importe lequel
+    idx_shlex = next(
+        (i for i, l in enumerate(lignes) if "shlex.shlex(" in l),
+        None,
+    )
+    assert idx_shlex is not None, "appel à shlex introuvable"
+    idx_except = next(
+        (i for i, l in enumerate(lignes[idx_shlex:], start=idx_shlex)
+         if l.lstrip().startswith("except ValueError")),
+        None,
+    )
+    assert idx_except is not None, "le except ValueError de l'union est introuvable"
+
+    indentation = len(lignes[idx_except]) - len(lignes[idx_except].lstrip())
+    corps = []
+    for ligne in lignes[idx_except + 1:]:
+        if not ligne.strip():
+            continue
+        if len(ligne) - len(ligne.lstrip()) <= indentation:
+            break
+        nu = ligne.strip()
+        if not nu.startswith("#"):
+            corps.append(nu)
+    assert corps == ["pass"], (
+        "le except ValueError de l'union ne doit contenir que `pass` (aucun repli) ; "
+        f"trouvé : {corps!r}"
     )

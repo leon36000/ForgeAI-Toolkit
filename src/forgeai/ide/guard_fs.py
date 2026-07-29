@@ -60,6 +60,7 @@ import json
 import os
 import sys
 import re
+import shlex
 import tempfile
 from datetime import datetime, timezone
 
@@ -252,7 +253,13 @@ def _candidats(tool_name, tool_input):
             # accumuler la même cible sous deux formes.
             OUVRE_AGGLUTINE = re.compile(r"^[/~." + chr(92) * 2 + r"]|^[A-Za-z]:")
             vus = set()
-            for fragment in fragments:
+            # Traitement d'un fragment, factorisé pour être appliqué
+            # à DEUX sources (jetons shlex PUIS fragments du découpage)
+            # sans duplication de code : filtre ``_ressemble_chemin``
+            # avec dédoublonnage, puis règle R2 des grappes d'options
+            # courtes. L'ensemble ``vus`` est GLOBAL aux deux sources :
+            # une même cible n'est jamais accumulée sous deux formes.
+            def traiter(fragment):
                 if _ressemble_chemin(fragment) and fragment not in vus:
                     trouves.append(fragment)
                     vus.add(fragment)
@@ -265,6 +272,40 @@ def _candidats(tool_name, tool_input):
                                 trouves.append(reste)
                                 vus.add(reste)
                             break
+            # B-24e — extraction EN UNION, shlex PUIS découpage, sans
+            # que l'un remplace jamais l'autre. Bash CONCATÈNE les
+            # parties quotées adjacentes ; le découpage, lui, les
+            # SÉPARE. Mesure : ``echo bad > .cl"aude/settings.json"``
+            # produit au découpage les fragments ``.cl`` et
+            # ``aude/settings.json``, dont AUCUN ne correspond à
+            # ``.claude`` : le confiné pouvait ÉCRASER la configuration
+            # de sa propre garde. shlex, lui, restitue le jeton
+            # ``.claude/settings.json``. L'union des deux méthodes
+            # couvre les deux classes de fragments.
+            # La décision de blocage n'est JAMAIS « cette chaîne
+            # apparaît dans la commande » mais « un chemin littéral
+            # résolvable, extrait par au moins une des deux méthodes,
+            # pointe hors racine » — l'union produit des sur-ensembles,
+            # filtrés en aval par la résolution confinée.
+            #
+            # Source (a) : jetons shlex (posix, ponctuation shell émise
+            # en jetons distincts, découpage sur les blancs).
+            try:
+                lx = shlex.shlex(commande, posix=True, punctuation_chars=True)
+                lx.whitespace_split = True
+                for jeton in lx:
+                    traiter(jeton)
+            except ValueError:
+                # Aucun traitement alternatif ici : c'est précisément
+                # cette absence qui interdit une porte de service. Le
+                # découpage strict de (b) s'applique TOUJOURS — shlex
+                # n'est pas un primaire dont on espère le succès, c'est
+                # un enrichisseur dont l'échec est sans conséquence.
+                pass
+            # Source (b) : fragments du découpage sur DELIMITEURS,
+            # appliqué INCONDITIONNELLEMENT, que (a) ait réussi ou non.
+            for fragment in fragments:
+                traiter(fragment)
     return trouves
 
 
