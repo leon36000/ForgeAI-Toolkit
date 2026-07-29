@@ -1,0 +1,35 @@
+=== PREUVE D'EXÉCUTION — D4 ===
+générée le : 2026-07-29 06:26:54 -0400
+code prouvé au commit : 0bd5c2c — [D4] L ecran d inventaire : la capacite devient visible et actionnable
+  (le commit qui archivera cette preuve sera nécessairement postérieur ;
+   le contrôle qui fait foi est : git diff <ce commit> HEAD -- src/ tests/ = VIDE)
+
+--- tests Node (logique pure) ---
+code de sortie : 0
+  ok  - cas nominal : redis + qdrant détectés, valides, au plan -> 2 adoptables triés par id
+  ok  - docker détecté (par binaire) mais endpoint null -> écarté
+  ok  - postgres non détecté (detecte=false) -> écarté
+  ok  - redis détecté et joignable mais absent du plan -> écarté
+  ok  - endpoints malformés (4 formes) -> tous écartés
+  ok  - inventaire null / undefined / {} / {services:[]} -> [] sans plantage
+  ok  - construireAdopt : 2 cochés sur 3 -> mapping {id:"hôte:port"} des 2 seuls
+  ok  - construireAdopt : aucun choix coché -> {} (objet vide)
+  ok  - construireAdopt : coché mais endpoint invalide -> ignoré
+  ok  - aucune mutation : inventaire et tableau de choix inchangés après appel
+
+adoption.test.cjs : 10 cas ok, 0 cas en échec, 10 cas au total.
+
+--- suite Python complète (le CODE DE SORTIE fait autorité) ---
+code de sortie pytest : 0
+  => SUITE VERTE
+........................................................................ [ 98%]
+.................                                                        [100%]
+  lignes FAILED : 0
+
+--- contrôles de mutation (vérifiés EFFECTIFS avant interprétation) ---
+  filtre « présent au plan » neutralisé -> 1 cas en échec, code 1
+  validation d'endpoint neutralisée     -> 3 cas en échec
+  tout restauré                          -> 10/10, code 0
+
+--- no-stub-scan ---
+NO-STUB-SCAN : OK (269 fichiers scannés, zéro violation)
