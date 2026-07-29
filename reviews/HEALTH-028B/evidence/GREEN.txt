@@ -1,11 +1,18 @@
-=== GREEN ciblé ===
+=== PREUVE D'EXÉCUTION — HEALTH-028B ===
+générée le : 2026-07-29 00:21:15 -0400
+commit     : a98354e — [HEALTH-028B] Couverture du code neuf : 79,6% -> 97,4% (41 tests)
+commit daté : 2026-07-29 00:19:16
+
+--- suite complète : le CODE DE SORTIE fait autorité ---
+code de sortie pytest : 0
+  => SUITE VERTE
+........................................................................ [ 96%]
 ............................................                             [100%]
+  lignes FAILED : 0
 
-=== GREEN hors périmètre (régressions + contrat de sortie + format) ===
-.................................                                        [100%]
+--- couverture du code NOUVEAU (seuil quality gate : 80%) ---
+  191/196 = 97,4%   [départ : 156/196 = 79,6% -> SonarCloud en échec]
+  non couvert (assumé) : compose.py 129/235/236, k3s.py 295/296
 
-=== GREEN suite complète ===
-........................................................................ [ 98%]
-...................                                                      [100%]
-
-=== code de sortie pytest (autorité, pas un extrait) ===
+--- no-stub-scan ---
+NO-STUB-SCAN : OK (265 fichiers scannés, zéro violation)
