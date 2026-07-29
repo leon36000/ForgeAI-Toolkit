@@ -355,6 +355,7 @@
       return;
     }
     renderBricks();
+    renderInventaire();  // re-filtre sur la nouvelle sélection (pas de refetch)
     applyStepStatuses(); // UI-039 : preuve étape 5 (chargement backend réel) mise à jour
   }
 
@@ -472,6 +473,7 @@
     renderSummary();
     populateNodeChoices();
     populateRagChoices();
+    chargerInventaire();   // l'inventaire dépend des briques cochées : on le charge en arrivant ici
   }
 
   function renderSummary() {
