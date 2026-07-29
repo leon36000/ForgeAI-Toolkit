@@ -1,0 +1,14 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "src/forgeai/models/local.py",
+   "description": "Le chemin retourné par `download_verified` est désormais un chemin absolu et résolu (via `realpath`), alors qu'auparavant il conservait sa forme originale (potentiellement relative ou non résolue). Bien que ce soit un durcissement assumé et correct du point de vue de la sécurité, cela modifie le contrat de retour et pourrait casser un appelant qui s'attendrait à recevoir exactement le chemin relatif ou non résolu qu'il a fourni.",
+   "preuve": "Ligne 88 : `dest = resolve_within(...)` retourne un `Path(cible_reelle)` qui est passé par `os.path.realpath`, modifiant la valeur de retour de la fonction."
+  }
+ ],
+ "date_heure": "2026-07-29T18:03:59.859102+00:00",
+ "prompt_sha256": "57106e2a72677bc8b36c1b3d1492bad42ee7379ae5f949467fca98e8a4d93f77",
+ "reviewer_model": "Gemini-3.1-Pro"
+}
