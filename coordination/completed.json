@@ -438,6 +438,25 @@
         "dossier": "reviews/PLACE-011/",
         "note": "Placement valide contre linventaire REEL avant rendu. Aucun inventaire netait consulte : un workload NVIDIA epingle sur un noeud CPU-only produisait un manifeste SYNTAXIQUEMENT PARFAIT, envoye a kubectl, qui echouait au scheduling — le pod restait Pending sans message causal et lutilisateur decouvrait lincompatibilite EN PRODUCTION. Contrat ajoute : NodeInventaire(hostname, gpu_vendor, vram_mib), PlacementError, valider_placement() appele par le renderer, ServiceSpec.vram_min_mib. 8 codes ERR_PLACE_* causals : chaque message dit ce qui a ete demande, ce qui a ete trouve et pourquoi cest incompatible. Retro-compatibilite stricte : sans inventaire fourni le comportement est inchange. REVUE TOUR 1 : APPROVE 3/3 MAIS 4 objections mineures TOUTES traitees — un APPROVE nautorise pas a ignorer ce que les relecteurs ont vu. CONVERGENCE A TROIS : Gemini, Grok et DeepSeek ont releve INDEPENDAMMENT que ERR_PLACE_VENDOR_INCONNU etait utilise pour un hostname vide et une VRAM negative — ironie utile, ce package existe pour produire des erreurs causales. DeepSeek : tuple vide != absence dinventaire (None = je ne sais pas, () = je sais et il ny a rien) ; le correctif du contrat ne suffisait pas, mon propre cablage du renderer testait `if inventaire:` et court-circuitait la validation — corrige en `is not None`, rattrape par le test rouge ecrit avant. Grok : ERR_PLACE_NOEUD_INCONNU etait prouve dans les preuves mais aucun test ne le couvrait — le test ajoute passe du premier coup : un comportement prouve une fois nest pas un comportement protege. TOUR 2 sur pack reconstruit : APPROVE 3/3, ZERO objection. Piege de crew journalise : docstring douverture jamais fermee (une seule triple-quote) — lerreur de syntaxe se manifestait 90 lignes plus loin dans du code sain ; garde-fou pose = ast.parse() AVANT ecriture."
       }
+    },
+    {
+      "package": "PLACE-026B",
+      "merge_commit": "7d154f4155abaa3ebee2563940ae000fd231ba74",
+      "pr_number": 204,
+      "merged_at": "2026-07-29T01:25:00Z",
+      "owner": "CLAUDE_CODE",
+      "review": {
+        "result": "APPROVE",
+        "ratio": "3/3",
+        "vendors": [
+          "deepseek",
+          "google",
+          "tencent"
+        ],
+        "prompt_sha256": "ae735638a767",
+        "dossier": "reviews/PLACE-026B/",
+        "note": "Diagnostic service -> noeud -> raison. CONSTAT HONNETE : deux criteres sur trois etaient DEJA satisfaits par heritage de PLACE-026A (sélecteur correct, service auto jamais epingle) — rapporte plutot que revendique. Mais ils netaient proteges par AUCUN test : deux tests de non-regression les verrouillent, lecon directe de la revue PLACE-011 ou Grok avait releve quun comportement demontre dans les preuves netait protege par rien. Le critere 3 manquait entierement : placement_diagnostic(plan, node_global, inventaire) rend une ligne par service (service/node/raison/validation), la validation confrontant la decision a linventaire de PLACE-011 — les deux packages sembloitent, lun refuse, lautre explique. CONTRAINTE DE CONCEPTION : la fonction NE LEVE JAMAIS ; un diagnostic doit diagnostiquer, pas planter au premier placement invalide, sinon lutilisateur ne voit quun probleme sur cinq et corrige en aveugle. Prouve a lexecution : ollama refuse (ERR_PLACE_CPU_ONLY) ET les trois autres lignes restent visibles. NOTE DENVIRONNEMENT rapportee, pas passee sous silence : 3 tests de test_multinoeud.py lancent un sous-processus `python3 -m forgeai` et echouent dans un worktree frais ; CONTRE-PREUVE = memes echecs sur origin/main SANS ce changement ; PREUVE DETERMINISTE de la cause = PYTHONPATH=src -> 8/8 verts. Ce nest pas une regression. Reassignations de route journalisees : Grok-4.5 HTTP 500, Kimi-K2.6 indisponible, Tencent-Hy3 retenu (4e route instable de la session)."
+      }
     }
   ]
 }
