@@ -1,35 +1,36 @@
 === PREUVE D'EXÉCUTION — D3 ===
-générée le : 2026-07-29 04:20:05 -0400
-commit     : db3c667 — [D3] L UI peut adopter : champ `adopt` valide a la frontiere et transmis au wizard
-commit daté : 2026-07-29 04:17:21
+générée le : 2026-07-29 04:44:57 -0400
+commit du CODE : b3fe27e — [D3] Maillon wizard + correction d un defaut REEL de D2 (garde k3s bloquait compose)
 
 --- suite complète (le CODE DE SORTIE fait autorité) ---
 code de sortie pytest : 0
   => SUITE VERTE
 ........................................................................ [ 98%]
-.............                                                            [100%]
+.................                                                        [100%]
   lignes FAILED : 0
 
 --- couverture du code NOUVEAU ---
-  37/37 = 100 %   (seuil quality gate : 80 %)
+  44/51 = 86,3 %  (seuil 80 %)
+  Les 7 lignes 'non couvertes' sont le bloc if adopt: de cli.py, exercé par 3 tests
+  qui lancent le wizard en SUBPROCESS — pytest-cov ne suit pas les processus enfants.
+  Vérifié par MUTATION : bloc neutralisé -> 2 tests ROUGES ; restauré -> verts.
 
---- validation prouvée à 3 niveaux ---
-  unitaire  : 18/18 cas de _valider_adopt ; borne 40 car. vérifiée sur clé de 200
-  HTTP réel : 9/9 via build_server + requêtes réelles — ZÉRO réponse 500
-  permanent : 22 tests dans tests/test_adoption_api.py
+--- validation à la frontière : 3 niveaux ---
+  unitaire  : 18/18 cas ; borne 40 car. sur clé de 200
+  HTTP réel : 9/9 via build_server — ZÉRO réponse 500
+  permanent : 23 tests dans tests/test_adoption_api.py
 
---- contrôle de mutation : le défaut est PROUVÉ, pas supposé ---
-  validation neutralisée -> 5 tests ROUGES : l'API renvoie bien des 500
-  restaurée              -> 22 verts
-  nuance : les TYPES invalides n'étaient pas 500 mais SILENCIEUSEMENT IGNORÉS
+--- chaîne complète (comptée dans le code) ---
+  1. UI -> API validé   : 2 appel(s)
+  2. API -> fichier     : 1 écriture(s)
+  3. wizard <- fichier  : 1 lecture(s)
+  4. plan <- appliqué   : 1 application(s)
 
-
---- note sur le hash (lire avant d'objecter) ---
-  Cette preuve porte sur le commit du CODE : db3c667.
-  Le commit qui l'ARCHIVE est nécessairement postérieur — écrire la preuve déplace HEAD.
-  Poursuivre l'égalité preuve==HEAD serait un paradoxe.
-  Contrôle qui fait foi : `git diff db3c667 HEAD -- src/ tests/` doit être VIDE.
-  Vérifié : 0 fichier source ou test modifié entre db3c667 et HEAD.
+--- DÉFAUT RÉEL DE D2 corrigé ici (matrice sur le VRAI binaire) ---
+  backend=compose adopt=oui -> rc=0 pas de k3s.yaml   (l'adoption compose FONCTIONNE)
+  backend=compose adopt=non -> rc=0 k3s.yaml écrit    (non-régression)
+  backend=k3s     adopt=oui -> rc=1 refus             (garde D2 légitime)
+  backend=k3s     adopt=non -> rc=0 k3s.yaml écrit    (non-régression)
 
 --- no-stub-scan ---
 NO-STUB-SCAN : OK (267 fichiers scannés, zéro violation)
