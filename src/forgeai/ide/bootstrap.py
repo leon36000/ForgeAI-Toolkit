@@ -14,6 +14,29 @@ class McpServer:
         if self.transport not in ("http", "sse"):
             raise IDEError(f"transport MCP invalide: {self.transport} (attendu http ou sse)")
 
+@dataclass(frozen=True)
+class HookSpec:
+    event: str
+    command: str
+    matcher: str = "*"
+
+    def __post_init__(self):
+        if not self.event:
+            raise IDEError("HookSpec: 'event' vide")
+        if not self.command:
+            raise IDEError("HookSpec: 'command' vide")
+        if not self.matcher:
+            raise IDEError("HookSpec: 'matcher' vide")
+
+def _normalize_hook(item):
+    if isinstance(item, HookSpec):
+        return item
+    if isinstance(item, str):
+        if not item:
+            raise IDEError("hook str vide")
+        return HookSpec(event=item, command=item, matcher="*")
+    raise IDEError(f"type de hook invalide: {type(item).__name__}")
+
 def generate_mcp_config(ide: str, servers: list[McpServer]) -> IdeConfig:
     if ide not in MCP_CAPABLE:
         raise IDEError(f"IDE '{ide}' ne supporte pas la configuration MCP")
@@ -45,16 +68,20 @@ def generate_mcp_config(ide: str, servers: list[McpServer]) -> IdeConfig:
     content_str = json.dumps(content, ensure_ascii=False, indent=1)
     return IdeConfig(ide=ide, path=path, content=content_str, fmt="json")
 
-def generate_governance_config(skills: list[str], hooks: list[str], *, ide: str = "claude-code") -> IdeConfig:
+def generate_governance_config(skills: list[str], hooks: list[str | HookSpec], *, ide: str = "claude-code") -> IdeConfig:
     if ide != "claude-code":
         raise IDEError("governance skills+hooks n'est supportée que pour claude-code")
     # Build permissions.allow from skills
     permissions = {"allow": skills}
     # Build hooks: each hook becomes a key with a list of one matcher rule
-    hooks_dict = {
-        hook: [{"matcher": "*", "hooks": [{"type": "command", "command": hook}]}]
-        for hook in hooks
-    }
+    hooks_dict: dict[str, list[dict]] = {}
+    for item in hooks:
+        spec = _normalize_hook(item)
+        rule = {
+            "matcher": spec.matcher,
+            "hooks": [{"type": "command", "command": spec.command}],
+        }
+        hooks_dict.setdefault(spec.event, []).append(rule)
     content = {"permissions": permissions, "hooks": hooks_dict}
     content_str = json.dumps(content, ensure_ascii=False, indent=1)
     return IdeConfig(ide="claude-code", path=".claude/settings.json", content=content_str, fmt="json")

@@ -133,3 +133,83 @@ def test_cli_ide_mcp_et_governance(tmp_path):
     gov = json.loads(gov_file.read_text(encoding="utf-8"))
     assert "Skill(read)" in gov["permissions"]["allow"]
     assert "pre-commit-guard" in gov["hooks"]
+
+
+import dataclasses
+from forgeai.ide.bootstrap import HookSpec
+
+
+class TestHookSpecNormalisation:
+
+    def test_hookspec_seul_genere_un_dict_avec_matcher_explicite(self):
+        """HookSpec seul -> clé unique, matcher explicite, structure complète."""
+        spec = HookSpec(event="PreToolUse", command="python3 /x/garde.py", matcher="Write|Edit")
+        cfg = generate_governance_config(skills=[], hooks=[spec])
+        hooks = json.loads(cfg.content)["hooks"]
+        assert hooks == {
+            "PreToolUse": [
+                {
+                    "matcher": "Write|Edit",
+                    "hooks": [{"type": "command", "command": "python3 /x/garde.py"}],
+                }
+            ]
+        }
+
+    def test_melange_str_et_hookspec_coexistent_avec_forme_historique_pour_str(self):
+        """Mélange str + HookSpec -> deux clés ; la str garde event==command et matcher '*'."""
+        spec = HookSpec(event="PreToolUse", command="cmd")
+        cfg = generate_governance_config(
+            skills=[],
+            hooks=["SessionStart", spec],
+        )
+        hooks = json.loads(cfg.content)["hooks"]
+        assert set(hooks.keys()) == {"SessionStart", "PreToolUse"}
+        assert hooks["SessionStart"] == [
+            {
+                "matcher": "*",
+                "hooks": [{"type": "command", "command": "SessionStart"}],
+            }
+        ]
+        assert hooks["PreToolUse"] == [
+            {
+                "matcher": "*",
+                "hooks": [{"type": "command", "command": "cmd"}],
+            }
+        ]
+
+    def test_deux_hookspec_meme_event_une_seule_cle_ordre_preservé(self):
+        """Deux HookSpec sur le même event -> une seule clé, deux règles, ordre d'origine conservé."""
+        spec1 = HookSpec(event="PreToolUse", command="a", matcher="Write")
+        spec2 = HookSpec(event="PreToolUse", command="b", matcher="Edit")
+        cfg = generate_governance_config(skills=[], hooks=[spec1, spec2])
+        hooks = json.loads(cfg.content)["hooks"]
+        assert list(hooks.keys()) == ["PreToolUse"]
+        assert hooks["PreToolUse"] == [
+            {
+                "matcher": "Write",
+                "hooks": [{"type": "command", "command": "a"}],
+            },
+            {
+                "matcher": "Edit",
+                "hooks": [{"type": "command", "command": "b"}],
+            },
+        ]
+
+    def test_champs_vides_levent_ideerror(self):
+        """event / command / matcher vides -> IDEError (vérif via __post_init__)."""
+        with pytest.raises(IDEError):
+            HookSpec(event="", command="cmd")
+        with pytest.raises(IDEError):
+            HookSpec(event="PreToolUse", command="")
+        with pytest.raises(IDEError):
+            HookSpec(event="PreToolUse", command="cmd", matcher="")
+
+    def test_hookspec_est_gelee(self):
+        """HookSpec est frozen -> toute affectation d'attribut lève FrozenInstanceError."""
+        spec = HookSpec(event="PreToolUse", command="cmd")
+        with pytest.raises(dataclasses.FrozenInstanceError):
+            spec.event = "PostToolUse"
+        with pytest.raises(dataclasses.FrozenInstanceError):
+            spec.command = "autre"
+        with pytest.raises(dataclasses.FrozenInstanceError):
+            spec.matcher = "Edit"
