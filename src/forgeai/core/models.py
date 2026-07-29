@@ -370,6 +370,7 @@ class ServiceSpec:
     health_timeout_s: float = 5.0                   # durée max d'une sonde individuelle (secondes, strictement positif)
     health_interval_s: float = 5.0                  # délai entre deux tentatives de sonde (secondes, strictement positif)
     health_retries: int = 12                        # nombre de tentatives avant d'abandonner (entier strictement positif)
+    adopted_endpoint: Optional[str] = None  # hôte:port d'un service DÉJÀ présent sur le nœud, adopté au lieu d'être redéployé ; None = déployé par nous
 
     def __post_init__(self) -> None:
         # SEC-YAML-INJECT — suivi de #151 : ces scalaires atteignent en brut le YAML/Compose.
@@ -444,6 +445,36 @@ class ServiceSpec:
         # probe_type is None est autorisé : la dérivation depuis healthcheck_url se fait ailleurs.
         for i, dep in enumerate(self.depends):
             _rejeter_caracteres_de_controle(f"depends[{i}]", dep)
+        # adopted_endpoint : hôte:port d'un service DÉJÀ présent sur le nœud que nous adoptons.
+        # None = service déployé par nous (comportement actuel, inchangé).
+        if self.adopted_endpoint is not None:
+            # IPv6 littéral non supporté dans cette tranche : on exige exactement un seul ':'.
+            if self.adopted_endpoint.count(':') != 1:
+                raise ValueError(
+                    f"ERR_ADOPT_FORME: adopted_endpoint={self.adopted_endpoint!r} doit "
+                    f"être exactement 'hôte:port' (un seul ':') ; IPv6 littéral non supporté."
+                )
+            hote, _, port_str = self.adopted_endpoint.rpartition(':')
+            if not hote:
+                raise ValueError(
+                    f"ERR_ADOPT_FORME: adopted_endpoint={self.adopted_endpoint!r} hôte vide."
+                )
+            if any(c.isspace() or ord(c) < 32 for c in hote):
+                raise ValueError(
+                    f"ERR_ADOPT_HOTE: adopted_endpoint={self.adopted_endpoint!r} hôte "
+                    f"contient un espace ou un caractère de contrôle."
+                )
+            if not port_str.isdigit():
+                raise ValueError(
+                    f"ERR_ADOPT_PORT: adopted_endpoint={self.adopted_endpoint!r} port "
+                    f"non numérique."
+                )
+            port_int = int(port_str)
+            if port_int < 1 or port_int > 65535:
+                raise ValueError(
+                    f"ERR_ADOPT_PORT_BORNES: adopted_endpoint={self.adopted_endpoint!r} "
+                    f"port={port_int} hors [1, 65535]."
+                )
         for cle, valeur in self.env.items():
             _rejeter_caracteres_de_controle("env (clé)", cle)
             _rejeter_caracteres_de_controle(f"env[{cle}]", valeur)

@@ -17,6 +17,15 @@ from urllib.parse import urlsplit
 from forgeai.core.models import DeploymentPlan, ServiceSpec, NodeInventaire, valider_placement, CapaciteCluster, QuotaError, ProbeType
 from forgeai.renderers._openbao import UNSEAL_SCRIPT as _UNSEAL_SCRIPT
 
+
+class AdoptionNonSupporteeK3s(Exception):
+    """Rendu k3s refusé pour un plan contenant un service adopté (ERR_ADOPT_K3S_NON_SUPPORTE).
+
+    L'inventaire ne rapporte aujourd'hui que 127.0.0.1:<port> — qui désigne le pod lui-même
+    depuis un pod, pas le nœud hôte. Un Endpoints vers 127.0.0.1 produirait un manifeste
+    syntaxiquement VALIDE et fonctionnellement FAUX : le dépendant se connecterait à lui-même.
+    À retirer quand l'inventaire rapportera une IP de nœud joignable."""
+
 NAMESPACE = "forgeai-minimal"
 _NODEPORT_SPAN = 2768  # 30000..32767
 _DEFAULT_PVC_SIZE = "10Gi"
@@ -982,6 +991,22 @@ def render_k3s(plan: DeploymentPlan, node: str | None = None,
     `service_type` : NodePort (défaut, portable partout, k3s/edge) ou LoadBalancer (cloud/k8s).
     `config_files` : mapping {basename: contenu} pour les bind-mounts de fichiers de config
     (ex. litellm-config.yaml) émis comme ConfigMap et montés via subPath."""
+
+    # Garde adoption (k3s) : un service adopté porte l'endpoint "hôte:port" d'un service DÉJÀ
+    # présent sur le nœud. Côté compose on omet le workload et le dépendant joint l'hôte via
+    # host.docker.internal. Côté k3s la cible correcte serait un Service ClusterIP sans selector
+    # + un Endpoints manuel, MAIS l'inventaire ne rapporte que 127.0.0.1:<port> — qui désigne le
+    # pod lui-même depuis un pod, pas le nœud hôte. Rendre cela produirait un manifeste valide et
+    # fonctionnellement FAUX : le dépendant se connecterait à lui-même. On REFUSE explicitement
+    # plutôt que de rendre un câblage trompeur.
+    _adoptes = [(sv.name, sv.adopted_endpoint) for sv in plan.services if sv.adopted_endpoint]
+    if _adoptes:
+        _detail = ", ".join(f"{nom} ({ep})" for nom, ep in _adoptes)
+        raise AdoptionNonSupporteeK3s(
+            f"ERR_ADOPT_K3S_NON_SUPPORTE : service(s) adopte(s) non rendu(s) en k3s : "
+            f"{_detail} ; 127.0.0.1 est inutilisable comme cible d'Endpoints depuis un pod "
+            f"(le dependant se connecterait a lui-meme)."
+        )
     # K8S-027 : refuser AVANT de produire quoi que ce soit. Rendre puis échouer laisserait
     # l'utilisateur appliquer un manifeste dont les pods resteront Pending sans cause lisible.
     _verifier_capacite(plan, capacite)
