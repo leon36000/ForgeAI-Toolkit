@@ -316,6 +316,19 @@
     });
   }
 
+  // Fragment `adopt` du corps POST /api/deploy. Rendu VIDE quand rien n'est coché : le corps
+  // est alors strictement identique à celui d'avant D4 (équivalence stricte, CA-4).
+  // Extrait en fonction nommée plutôt qu'en expression inline : le quality gate refusait
+  // l'IIFE dans le littéral (maintenabilité), et un nom rend l'intention lisible.
+  function champAdopt() {
+    var choix = ForgeAIAdoption.servicesAdoptables(state.inventaire, briquesDuPlan())
+      .map(function (sv) {
+        return { id: sv.id, endpoint: sv.endpoint, adopte: !!state.adoptChoisis[sv.id] };
+      });
+    var dict = ForgeAIAdoption.construireAdopt(choix);
+    return Object.keys(dict).length ? { adopt: dict } : {};
+  }
+
   function isChecked(brick) {
     if (brick.locked) return true;
     const ov = state.overrides[overrideKey()];
@@ -600,14 +613,7 @@
             bricks: briquesDuPlan(),
             rag_node: form.elements.rag_node.value,
             confirm: confirm,
-            ...(function(){
-              // `adopt` n'est ajouté QUE s'il est non vide : sans case cochée, le corps du
-              // POST est strictement identique au comportement d'avant cette story.
-              var choix = ForgeAIAdoption.servicesAdoptables(state.inventaire, briquesDuPlan())
-                .map(function(sv){ return {id: sv.id, endpoint: sv.endpoint, adopte: !!state.adoptChoisis[sv.id]}; });
-              var dict = ForgeAIAdoption.construireAdopt(choix);
-              return Object.keys(dict).length ? {adopt: dict} : {};
-            })()
+            ...champAdopt()
           })
         });
         const body = await res.json();
