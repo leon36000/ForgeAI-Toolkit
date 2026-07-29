@@ -157,7 +157,12 @@
       <section id="deploy" class="step-panel hidden" data-step-panel="7">
         <h2 data-i18n="deploy_title">Résumé &amp; Déploiement</h2>
         <p class="step-lede" data-i18n="deploy_subtitle">Vérifiez le résumé, puis tapez FORCER pour lancer le déploiement réel — chaque étape est prouvée en direct.</p>
-        <div id="deploy-summary" class="models-list" aria-live="polite"></div>
+        <fieldset id="inventaire" aria-labelledby="inventaire-titre">
+        <h3 id="inventaire-titre" data-i18n="inventaire_titre">Infrastructure déjà présente</h3>
+        <p class="muted" data-i18n="inventaire_aide">Cochez un service pour l'ADOPTER : ForgeAI s'y branchera au lieu de le redéployer.</p>
+        <div id="inventaire-content"></div>
+      </fieldset>
+      <div id="deploy-summary" class="models-list" aria-live="polite"></div>
         <form id="deploy-form" class="model-form card" autocomplete="off">
           <div class="form-grid">
             <label><span data-i18n="f_backend">Backend</span>
@@ -195,6 +200,7 @@
   </div>
 
   <script src="engine_filter.js"></script>
-  <script src="app.js"></script>
+  <script src="adoption.js"></script>
+    <script src="app.js"></script>
 </body>
 </html>

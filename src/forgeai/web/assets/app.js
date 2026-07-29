@@ -20,6 +20,8 @@
     embeddingSearch: '',
     bricks: null,
     overrides: {},
+    inventaire: null,     // /api/discover ; null = indisponible, jamais bloquant
+    adoptChoisis: {},     // { id: true } — services que l'utilisateur adopte
     search: '',
     i18nTables: {},
     embeddingsLoaded: false,
@@ -263,6 +265,72 @@
     return state.selectedId || '_none_';
   }
 
+  // Briques réellement AU PLAN = celles cochées. Source UNIQUE partagée par le POST et
+  // l'écran d'inventaire : proposer d'adopter une brique non déployée serait un choix
+  // impossible à honorer.
+  function briquesDuPlan() {
+    return Object.entries(state.overrides[overrideKey()] || {})
+      .filter(function(e){ return e[1]; }).map(function(e){ return e[0]; });
+  }
+
+  async function chargerInventaire() {
+    try {
+      const res = await fetch('/api/discover?node=local');
+      if (!res.ok) throw new Error('/api/discover -> ' + res.status);
+      state.inventaire = await res.json();
+    } catch (e) {
+      // L'inventaire est une COMMODITÉ : son indisponibilité ne doit jamais empêcher de
+      // déployer. On retombe simplement sur « aucun service détecté ». L'erreur est
+      // journalisée : un inventaire absent doit rester diagnosticable, pas silencieux.
+      console.warn('inventaire indisponible, déploiement sans adoption :', e);
+      state.inventaire = null;
+    }
+    renderInventaire();
+  }
+
+  function renderInventaire() {
+    const container = document.getElementById('inventaire-content');
+    if (!container) return;
+    const services = ForgeAIAdoption.servicesAdoptables(state.inventaire, briquesDuPlan());
+    container.innerHTML = '';
+    if (!services.length) {
+      // Jamais de liste vide muette : l'utilisateur doit savoir que la recherche a eu lieu.
+      const p = document.createElement('p');
+      p.className = 'muted';
+      p.textContent = t('inventaire_vide');
+      container.appendChild(p);
+      return;
+    }
+    services.forEach(function(svc){
+      const label = document.createElement('label');
+      label.className = 'inventaire-item';
+      const cb = document.createElement('input');
+      cb.type = 'checkbox';
+      cb.id = 'adopt-' + svc.id;
+      cb.checked = !!state.adoptChoisis[svc.id];
+      cb.addEventListener('change', function(){
+        if (cb.checked) state.adoptChoisis[svc.id] = true;
+        else delete state.adoptChoisis[svc.id];
+      });
+      label.appendChild(cb);
+      label.appendChild(document.createTextNode(' ' + svc.id + ' \u2014 ' + svc.endpoint));
+      container.appendChild(label);
+    });
+  }
+
+  // Fragment `adopt` du corps POST /api/deploy. Rendu VIDE quand rien n'est coché : le corps
+  // est alors strictement identique à celui d'avant D4 (équivalence stricte, CA-4).
+  // Extrait en fonction nommée plutôt qu'en expression inline : le quality gate refusait
+  // l'IIFE dans le littéral (maintenabilité), et un nom rend l'intention lisible.
+  function champAdopt() {
+    const choix = ForgeAIAdoption.servicesAdoptables(state.inventaire, briquesDuPlan())
+      .map(function (sv) {
+        return { id: sv.id, endpoint: sv.endpoint, adopte: !!state.adoptChoisis[sv.id] };
+      });
+    const dict = ForgeAIAdoption.construireAdopt(choix);
+    return Object.keys(dict).length ? { adopt: dict } : {};
+  }
+
   function isChecked(brick) {
     if (brick.locked) return true;
     const ov = state.overrides[overrideKey()];
@@ -302,6 +370,7 @@
       return;
     }
     renderBricks();
+    renderInventaire();  // re-filtre sur la nouvelle sélection (pas de refetch)
     applyStepStatuses(); // UI-039 : preuve étape 5 (chargement backend réel) mise à jour
   }
 
@@ -419,6 +488,7 @@
     renderSummary();
     populateNodeChoices();
     populateRagChoices();
+    chargerInventaire();   // l'inventaire dépend des briques cochées : on le charge en arrivant ici
   }
 
   function renderSummary() {
@@ -542,10 +612,10 @@
             node: form.elements.node ? form.elements.node.value : 'local',
             models: Object.entries(state.modelsChosen).map(([hf_id, v]) => ({hf_id, node: v.node, engine: v.engine})),
             embeddings: Object.entries(state.embeddingsChosen).map(([hf_id, v]) => ({hf_id, node: v.node, engine: v.engine})),
-            bricks: Object.entries(state.overrides[overrideKey()] || {})
-              .filter(([, coche]) => coche).map(([id]) => id),
+            bricks: briquesDuPlan(),
             rag_node: form.elements.rag_node.value,
-            confirm: confirm
+            confirm: confirm,
+            ...champAdopt()
           })
         });
         const body = await res.json();

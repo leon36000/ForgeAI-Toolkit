@@ -1,0 +1,22 @@
+# D4 — PREUVE DU DÉFAUT : la capacité d'adoption est invisible pour l'utilisateur
+
+## 1. Le back-end sait tout faire (D1, D2, D3 — mergés)
+   route /api/discover exposée          : True
+   champ `adopt` validé par /api/deploy : 2 appel(s)
+   `adopt` écrit dans la sélection      : 1 écriture(s)
+
+## 2. L'interface n'en utilise RIEN
+   appels à /api/discover dans app.js   : 0
+   occurrences de 'adopt' dans app.js   : 0
+   occurrences de 'adopt' dans index.html: 0
+   étapes déclarées dans l'UI           : ['step-hint', 'step-rail']
+
+## 3. Ce que l'utilisateur subit
+   Il ouvre l'interface web — le parcours principal du produit. Le produit SAIT
+   détecter son redis existant (D1), SAIT l'adopter au lieu de l'écraser (D2), et
+   SAIT recevoir ce choix par l'API (D3).
+   Mais l'écran ne lui montre RIEN et ne lui demande RIEN : il n'a aucun moyen de
+   savoir que la capacité existe, ni de la déclencher.
+
+   Trois stories livrées, prouvées, scellées — et la capacité reste inaccessible
+   à celui pour qui elle a été construite. Le dernier maillon est l'écran.
