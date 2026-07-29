@@ -4,7 +4,7 @@ import pytest
 import yaml
 
 from forgeai.core.models import DeploymentPlan, RenderTarget, ServiceSpec
-from forgeai.renderers.compose import render_compose
+from forgeai.renderers.compose import render_compose, RienADeployerError
 from forgeai.renderers.k3s import AdoptionNonSupporteeK3s, render_k3s
 
 
@@ -173,3 +173,29 @@ def test_CA6_non_regression_sans_adoption_k3s_ne_leve_pas():
     output = render_k3s(plan)
     assert isinstance(output, str)
     assert output.strip() != ""
+
+
+def test_CA8_plan_entierement_adopte_refuse():
+    redis = _service_redis(adopted_endpoint="127.0.0.1:6379")
+    qdrant = ServiceSpec(
+        name="qdrant",
+        image="qdrant:1",
+        host_port=6333,
+        container_port=6333,
+        adopted_endpoint="127.0.0.1:6333",
+    )
+    with pytest.raises(RienADeployerError) as exc_info:
+        render_compose(_plan([redis, qdrant]))
+    msg = str(exc_info.value)
+    assert "ERR_ADOPT_RIEN_A_DEPLOYER" in msg
+    assert "redis" in msg
+    assert "qdrant" in msg
+    assert "127.0.0.1:6379" in msg
+    assert "127.0.0.1:6333" in msg
+
+
+def test_CA8_plan_mixte_ne_refuse_pas():
+    redis = _service_redis(adopted_endpoint="127.0.0.1:6379")
+    litellm = _service_litellm(adopted_endpoint=None)
+    services = _parse_compose(render_compose(_plan([redis, litellm])))["services"]
+    assert "litellm" in services

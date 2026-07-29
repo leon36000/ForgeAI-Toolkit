@@ -1,0 +1,17 @@
+=== PREUVE D'EXÉCUTION — D2 ===
+générée le : 2026-07-29 02:44:31 -0400
+commit     : 0c8879f
+
+--- suite complète (le CODE DE SORTIE fait autorité) ---
+code de sortie pytest : 0
+  => SUITE VERTE
+........................................................................ [ 94%]
+...........................................................              [100%]
+  lignes FAILED : 0
+
+--- couverture du code NOUVEAU ---
+  39/39 = 100 %   (seuil quality gate : 80 %)
+
+--- contrôle de mutation (le test détecte-t-il la régression ?) ---
+  garde RienADeployerError neutralisée -> test_CA8_plan_entierement_adopte_refuse ROUGE
+  garde restaurée                      -> 15 tests verts
