@@ -4,11 +4,11 @@
   {
    "severite": "critique",
    "fichier": "src/forgeai/ide/guard_fs.py",
-   "description": "Le repli sur `commande.split()` en cas de `ValueError` (guillemets déséquilibrés) réintroduit la vulnérabilité des opérateurs shell collés (objection Tour 3) et permet un contournement total du confinement et de l'auto-protection. Un attaquant peut forcer ce repli en utilisant un here-doc contenant un guillemet orphelin (que Bash ignore, mais qui fait planter `shlex`). Avec `split()`, un opérateur collé comme `</etc/passwd` ou `>.claude/settings.json` n'est pas séparé. Puisqu'il commence par `<` ou `>`, `os.path.isabs()` retourne `False`, transformant un chemin absolu en chemin relatif résolu dans la racine (`/workspace/</etc/passwd`), ou altérant le nom du chemin pour contourner l'auto-protection (`/workspace/>.claude/settings.json`). Bash exécutera ensuite la commande avec succès.",
-   "preuve": "Payload 1 (Confinement) : `{\"tool_name\": \"Bash\", \"cwd\": \"/workspace\", \"tool_input\": {\"command\": \"cat </etc/passwd\\ncat <<EOF\\n\\\"\\nEOF\"}}`. `shlex` lève `ValueError`, `split()` extrait `</etc/passwd`. Résolu en `/workspace/</etc/passwd` (autorisé). Bash lit `/etc/passwd`.\nPayload 2 (Auto-protection) : `{\"tool_name\": \"Bash\", \"cwd\": \"/workspace\", \"tool_input\": {\"command\": \"echo bad >.claude/settings.json\\ncat <<EOF\\n\\\"\\nEOF\"}}`. `split()` extrait `>.claude/settings.json`. Résolu en `/workspace/>.claude/settings.json` (hors de `.claude`, autorisé). Bash écrase `.claude/settings.json`."
+   "description": "Le repli de tokenisation `re.split` (utilisé lors d'un `ValueError` de `shlex`) ne retire pas les guillemets des tokens. Un attaquant peut forcer ce repli avec un guillemet orphelin et passer un chemin absolu ou protégé entre guillemets (ex: `cat \"/etc/passwd\" \"`). Le token extrait sera `'\"/etc/passwd\"'`. Puisque ce token commence par un guillemet et non un slash, `os.path.isabs` retourne `False`. Le chemin est alors traité comme relatif et concaténé au `cwd` (ex: `/racine/\"/etc/passwd\"`), ce qui le fait apparaître faussement comme étant à l'intérieur de la racine et hors de `.claude`. Bash, de son côté, retirera les guillemets et exécutera l'action sur le fichier hors racine ou protégé.",
+   "preuve": "Ligne 169 : `tokens = [t for t in re.split(r\"[\\s<>;|&()]+\", commande) if t]`. Si `commande` vaut `cat \"/etc/passwd\" \"`, `tokens` contient `'\"/etc/passwd\"'`. `_resoudre('\"/etc/passwd\"', cwd)` retourne `cwd + '/\"/etc/passwd\"'`, qui passe à tort la vérification `_sous(resolu, ROOT)`."
   }
  ],
- "date_heure": "2026-07-29T21:49:12.555439+00:00",
- "prompt_sha256": "1ce36fded01e5cc2288ce003d5eb311802caf4ca6d661cccac66db3fced86dfa",
+ "date_heure": "2026-07-29T21:59:49.145533+00:00",
+ "prompt_sha256": "f9fc29e15fa3210b224c0433fbc68651855e386e9e2dcbdd6d0381812c74188a",
  "reviewer_model": "Gemini-3.1-Pro-OR"
 }

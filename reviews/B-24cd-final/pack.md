@@ -1,70 +1,61 @@
-# Revue scellée — B-24c/d : garde de confinement filesystem (commit bbc41d7)
+# Revue scellée — B-24c/d : garde de confinement filesystem (commit 5604d19)
 
 ## Nature
-Composant de SÉCURITÉ du produit ForgeAI Toolkit. Stories B-24c (génération de la garde)
-et B-24d (comportement + journalisation). B-24a (validateur de chemin) et B-24b (HookSpec)
-sont déjà sur main. Jugez le DIFF CUMULÉ vs origin/main.
+Composant de SÉCURITÉ. Stories B-24c (génération de la garde) + B-24d (comportement +
+journalisation). B-24a/b déjà sur main. Jugez le DIFF CUMULÉ vs origin/main.
+CINQUIÈME tour de revue. Chaque REJECT antérieur était fondé et a été REPRODUIT par
+exécution avant correction. Cherchez ce qui reste.
 
-## INVENTAIRE DES OBJECTIONS DES 4 TOURS — statut de chacune
-Aucune objection antérieure n'est laissée sans décision. Vérifiez que c'est exact.
+## INVENTAIRE DES 12 OBJECTIONS DES 5 TOURS — statut de chacune
+Vérifiez que rien n'est laissé sans décision.
 
-Tour 1 (REJECT 2/3) — 6 critiques, TOUTES corrigées et prouvées :
-  1. tokens quotés `cat "/etc/passwd"` ignorés          -> corrigé (shlex) ; refusé
-  2. chemins Windows `C:\...` ignorés                    -> corrigé (regex lecteur)
-  3. relatifs sans préfixe `rm -rf .claude/hooks`        -> corrigé (_ressemble_chemin)
-  4. dossier `.claude` parent non protégé                -> corrigé (CLAUDE_DIR)
-  5. `rm -rf .claude` non refusé                         -> corrigé ; refusé
-  6. traversal `foo/../../../etc/passwd`                 -> corrigé ; refusé
-Tour 1 mineures :
-  - `mv` du script non couvert                           -> corrigé, test dédié
-  - « double-compile » annoncé mais testé une seule fois  -> corrigé, 2 passes réelles
-Tour 2 (partiel) :
-  - `C:Windows` (lecteur SANS séparateur) non capté       -> corrigé (regex `^[A-Za-z]:`)
-  - MINEURE DeepSeek : « cwd non contraint sous ROOT »    -> NON TRAITÉE à l'époque,
-    revenue en CRITIQUE au tour final. CORRIGÉE au tour 4 (voir ci-dessous).
-Tour 3 (REJECT) :
-  - CRITIQUE : `shlex.split` ne sépare pas les opérateurs shell COLLÉS
-    (`cat</etc/passwd`, `echo bad>.claude/settings.json` passaient)
-                                                          -> corrigé (punctuation_chars)
-Tour 4 (REJECT, ce diff) :
-  - CRITIQUE Gemini : le `cwd` n'était jamais validé contre ROOT ni contre
-    l'auto-protection. Vecteurs mesurés : `cwd=/etc` + `cat passwd` (nom NU, donc non
-    extrait comme candidat) lisait n'importe quel fichier ; `cwd=<ROOT>/.claude` +
-    `echo bad > settings.json` permettait de réécrire la config de la garde.
-                                                          -> CORRIGÉ dans ce diff.
+T1 (REJECT 2/3), 6 critiques — toutes corrigées, refus prouvé par exécution :
+  tokens quotés ignorés · chemins Windows ignorés · relatifs sans préfixe ·
+  `.claude` parent non protégé · `rm -rf .claude` · traversal relatif
+T1 mineures : `mv` du script non couvert -> test dédié · « double-compile » annoncé mais
+  testé une fois -> 2 passes réelles
+T2 partiel : `C:Windows` (lecteur sans séparateur) -> regex élargie
+  MINEURE DeepSeek « cwd non contraint sous ROOT » -> NON TRAITÉE alors, revenue en
+  CRITIQUE au T4. Corrigée au T4.
+T3 (REJECT) CRITIQUE : `shlex.split` ne sépare pas les opérateurs COLLÉS -> corrigé par
+  `shlex.shlex(punctuation_chars=True)`
+T4 (REJECT) CRITIQUE : `cwd` jamais validé contre ROOT ni l'auto-protection
+  (`cwd=/etc` + `cat passwd` ; `cwd=<ROOT>/.claude` + `echo bad > settings.json`)
+  -> corrigé : validation du cwd en propre, auto-protection puis confinement, journalisés
+T5 (REJECT, CE DIFF) CRITIQUE : le REPLI `commande.split()` sur ValueError de shlex
+  réintroduisait la faille du T3 (guillemet orphelin dans un here-doc force le repli)
+  -> corrigé : repli par `re.split(r"[\s<>;|&()]+")`, délibérément PLUS STRICT que shlex
 
 ## Ce qui est livré
 - generate_guard_fs / install_guard_fs : script de garde AUTONOME (stdlib pure, n'importe
-  JAMAIS forgeai — il doit survivre à la désinstallation du produit) + HookSpec PreToolUse
-  dont la commande est « <interpréteur absolu> <script absolu> » (sys.executable capturé au
-  bootstrap, jamais « python » nu : le PATH n'est pas garanti chez l'utilisateur).
-- Confinement : racine figée par realpath À LA GÉNÉRATION (jamais dérivée du cwd à
-  l'exécution) ; realpath des DEUX côtés ; commonpath+normcase (jamais startswith : piège
-  /repo vs /repo-evil) ; fail-closed (toute exception interne -> refus).
-- Validation du cwd EN PROPRE : auto-protection puis confinement, refus journalisés.
-- Extraction Bash : shlex.shlex(punctuation_chars=True, whitespace_split=True) puis
-  _ressemble_chemin (séparateur, ~, préfixe ., lecteur Windows avec/sans séparateur).
-- Auto-protection : le script ET le répertoire .claude ENTIER ne sont pas réinscriptibles
-  par le confiné — une garde qui se laisse réécrire est du théâtre.
-- Journalisation d'un refus au format EXACT de core.registre, verify-compatible.
+  JAMAIS forgeai — doit survivre à la désinstallation du produit) + HookSpec PreToolUse
+  (« <interpréteur absolu> <script absolu> » ; sys.executable au bootstrap, jamais
+  « python » nu : PATH non garanti chez l'utilisateur).
+- Racine figée par realpath À LA GÉNÉRATION. realpath des DEUX côtés. commonpath+normcase
+  (jamais startswith : piège /repo vs /repo-evil). Fail-closed partout.
+- cwd validé en propre AVANT extraction des candidats.
+- Tokenisation Bash : shlex(punctuation_chars) au nominal, re.split strict en dégradé.
+- Auto-protection : script + `.claude` ENTIER non réinscriptibles par le confiné.
+- Refus journalisé au format EXACT de core.registre, verify-compatible.
 
 ## Limite hors périmètre (documentée, assumée — ne pas REJETER pour ça)
-L'exécution de code arbitraire via Bash (expansion `$HOME`/`${X}`, substitution `$(...)`,
-globbing, `base64|sh`) n'est PAS confinable sans sandbox OS. Le périmètre est « chemins
-littéraux résolubles ». Signalez seulement si cette limite est MAL BORNÉE.
+Exécution de code arbitraire via Bash (expansion `$HOME`, substitution `$(...)`, globbing,
+`base64|sh`) NON confinable sans sandbox OS. Périmètre : chemins littéraux résolubles.
+Signalez seulement si cette limite est MAL BORNÉE.
 
-## Ce qu'il faut chercher (adversarial)
-Un contournement RÉSIDUEL du confinement ou de l'auto-protection. REJECT si un chemin
-littéral hors racine passe encore, ou si le confiné peut neutraliser sa garde.
+## Ce qu'il faut chercher
+Un contournement RÉSIDUEL du confinement ou de l'auto-protection, y compris par un chemin
+DÉGRADÉ (exception, repli, entrée malformée). REJECT si un chemin littéral hors racine
+passe, ou si le confiné peut neutraliser sa garde.
 
 ## Diff CUMULÉ vs origin/main
 ~~~diff
 diff --git a/src/forgeai/ide/guard_fs.py b/src/forgeai/ide/guard_fs.py
 new file mode 100644
-index 0000000..473fb05
+index 0000000..51b2bdb
 --- /dev/null
 +++ b/src/forgeai/ide/guard_fs.py
-@@ -0,0 +1,481 @@
+@@ -0,0 +1,511 @@
 +"""Génération et installation de la garde filesystem autonome (B-24).
 +
 +Pourquoi un script GÉNÉRÉ plutôt qu'un module du produit : la garde est
@@ -261,10 +252,40 @@ index 0000000..473fb05
 +                lx.whitespace_split = True
 +                tokens = list(lx)
 +            except ValueError:
-+                # Guillemets déséquilibrés : repli sur un découpage naïf
-+                # sur les espaces ; un token mal découpé qui contient un
-+                # séparateur reste contrôlé (fail-closed côté décision).
-+                tokens = commande.split()
++                # Repli en cas de ValueError de shlex (guillemets
++                # déséquilibrés — légal en Bash dans un here-doc, mais
++                # shlex lève « No closing quotation »). On NE PEUT PAS
++                # retomber sur `commande.split()` : un découpage naïf
++                # sur les espaces NE SÉPARE PAS les opérateurs shell
++                # collés au token voisin, ce qui réintroduit exactement
++                # la vulnérabilité du tour 3 (un attaquant force le
++                # ValueError avec un guillemet orphelin, puis exploite
++                # `cat</etc/passwd` qui reste collé et n'est pas reconnu
++                # comme chemin hors racine).
++                #
++                # Le repli utilise donc `re.split` sur un motif qui
++                # inclut les opérateurs shell `<>;|&()` en plus des
++                # espaces : tout opérateur collé est détaché du token
++                # adjacent, restaurant la sémantique de tokenisation
++                # attendue. Mesure réelle :
++                #     'cat</etc/passwd\ncat <<EOF\n"\nEOF'
++                #         -> ['cat', '/etc/passwd', 'cat', 'EOF', '"', 'EOF']
++                #     'echo bad >.claude/settings.json "'
++                #         -> ['echo', 'bad', '.claude/settings.json', '"']
++                #     'cat</etc/passwd "'
++                #         -> ['cat', '/etc/passwd', '"']
++                #
++                # Ce repli est DÉLIBÉRÉMENT PLUS STRICT que shlex : il
++                # ignore les guillemets, donc un nom de fichier contenant
++                # `>` y serait découpé (sur-détection possible). C'est
++                # VOULU : on est dans un cas DÉGRADÉ (guillemets
++                # déséquilibrés), et le principe fail-closed de la garde
++                # exige de préférer un faux positif à un faux négatif.
++                # Le chemin NOMINAL (shlex) continue de préserver les
++                # guillemets littéraux — la non-régression
++                # `cat "fichier>bizarre.txt"` (guillemets ÉQUILIBRÉS)
++                # reste AUTORISÉE.
++                tokens = [t for t in re.split(r"[\s<>;|&()]+", commande) if t]
 +            for token in tokens:
 +                if _ressemble_chemin(token):
 +                    trouves.append(token)
@@ -548,10 +569,10 @@ index 0000000..473fb05
 +    return script_path, hook
 diff --git a/tests/test_guard_fs.py b/tests/test_guard_fs.py
 new file mode 100644
-index 0000000..b272292
+index 0000000..a0b583e
 --- /dev/null
 +++ b/tests/test_guard_fs.py
-@@ -0,0 +1,676 @@
+@@ -0,0 +1,766 @@
 +"""Tests du module ``forgeai.ide.guard_fs`` (B-24c/d).
 +
 +Chaque test fonctionnel exécute RÉELLEMENT le script de garde généré, via
@@ -1228,19 +1249,109 @@ index 0000000..b272292
 +        capture_output=True,
 +    )
 +    assert proc.returncode == 0, proc.stderr
++
++
++# ── Tour 5 : le repli de tokenisation ne doit pas etre une porte ──
++def test_repli_heredoc_guillemet_orphelin_cible_hors_racine_refuse(
++    tmp_path, racine, env_tmpdir
++):
++    """Repli forcé par here-doc à guillemet orphelin, cible hors racine -> exit 2.
++
++    La commande contient un here-doc avec un guillemet orphelin qui force
++    shlex à lever ValueError ; le repli doit malgré tout reconnaître
++    `/etc/passwd` comme chemin hors racine et REFUSER.
++    """
++    script = ecrire_garde(tmp_path, racine)
++    commande = 'cat</etc/passwd\ncat <<EOF\n"\nEOF'
++    code, stderr = run(
++        script, charge("Bash", {"command": commande}, cwd=racine), env=env_tmpdir
++    )
++    assert code == 2, f"attendu exit 2, obtenu {code} (stderr={stderr!r})"
++
++
++def test_repli_cible_auto_protection_refuse(tmp_path, racine, env_tmpdir):
++    """Repli forcé, cible = auto-protection (.claude/settings.json) -> exit 2.
++
++    Le guillemet orphelin final force le ValueError de shlex ; le repli
++    doit malgré tout reconnaître `.claude/settings.json` comme chemin
++    protégé et REFUSER la réécriture de la config de la garde.
++    """
++    script = ecrire_garde(tmp_path, racine)
++    commande = 'echo bad >.claude/settings.json "'
++    code, stderr = run(
++        script, charge("Bash", {"command": commande}, cwd=racine), env=env_tmpdir
++    )
++    assert code == 2, f"attendu exit 2, obtenu {code} (stderr={stderr!r})"
++
++
++def test_repli_operateur_colle_cible_hors_racine_refuse(
++    tmp_path, racine, env_tmpdir
++):
++    """Repli forcé, opérateur COLLÉ et cible hors racine -> exit 2.
++
++    `cat</etc/passwd` a l'opérateur de redirection COLLÉ à la commande ;
++    le repli doit le séparer pour reconnaître `/etc/passwd` comme chemin
++    hors racine et REFUSER.
++    """
++    script = ecrire_garde(tmp_path, racine)
++    commande = 'cat</etc/passwd "'
++    code, stderr = run(
++        script, charge("Bash", {"command": commande}, cwd=racine), env=env_tmpdir
++    )
++    assert code == 2, f"attendu exit 2, obtenu {code} (stderr={stderr!r})"
++
++
++def test_repli_cible_dans_racine_autorise(tmp_path, racine, env_tmpdir):
++    """Repli forcé, cible RESTANT dans la racine -> exit 0.
++
++    Prouve que le repli n'est pas un refus aveugle : il analyse vraiment
++    les tokens et autorise une cible interne à la racine malgré le
++    guillemet orphelin qui déclenche le ValueError de shlex.
++    """
++    sous = racine / "sous"
++    sous.mkdir()
++    cible = sous / "f.txt"
++    cible.write_text("contenu", encoding="utf-8")
++    script = ecrire_garde(tmp_path, racine)
++    commande = 'cat sous/f.txt "'
++    code, stderr = run(
++        script, charge("Bash", {"command": commande}, cwd=racine), env=env_tmpdir
++    )
++    assert code == 0, f"attendu exit 0, obtenu {code} (stderr={stderr!r})"
++
++
++def test_non_regression_guillemets_equilibres_autorise(
++    tmp_path, racine, env_tmpdir
++):
++    """NON-RÉGRESSION du chemin NOMINAL : guillemets ÉQUILIBRÉS préservés.
++
++    Avec des guillemets équilibrés, shlex tokenise correctement
++    `fichier>bizarre.txt` comme un seul token littéral ; la garde ne le
++    reconnaît pas comme chemin (pas de `/`, pas de préfixe `~`/`.`,
++    pas de lecteur Windows) et l'AUTORISE. Ce test verrouille le chemin
++    nominal face à toute régression du repli.
++    """
++    cible = racine / "fichier>bizarre.txt"
++    cible.write_text("contenu", encoding="utf-8")
++    script = ecrire_garde(tmp_path, racine)
++    commande = 'cat "fichier>bizarre.txt"'
++    code, stderr = run(
++        script, charge("Bash", {"command": commande}, cwd=racine), env=env_tmpdir
++    )
++    assert code == 0, f"attendu exit 0, obtenu {code} (stderr={stderr!r})"
 ~~~
 
-## Preuve d'exécution CAPTURÉE (rejouée APRÈS le commit bbc41d7)
+## Preuve d'exécution CAPTURÉE (rejouée APRÈS le commit 5604d19)
 ~~~
 $ python3 -m pytest tests/test_guard_fs.py -q
-........................s...................                             [100%]
-exit=0 — 43 passés, 1 skip (refus chemin Windows : observable seulement sur Windows)
+........................s........................                        [100%]
+exit=0 — 48 passés, 1 skip (refus chemin Windows : observable seulement sur Windows)
 
 # comportement du script GENERE, subprocess reel (0=autorise, 2=refuse)
-   -- doivent etre REFUSES (2) --
+   -- REFUS attendus (2) --
    2  cat /etc/passwd
-   2  cat "/etc/passwd"
-   2  cat</etc/passwd
+   2  cat "/etc/passwd" (quote)
+   2  cat</etc/passwd (colle)
    2  echo bad>.claude/settings.json
    2  cat;/etc/passwd
    2  cat|/bin/sh
@@ -1252,34 +1363,39 @@ exit=0 — 43 passés, 1 skip (refus chemin Windows : observable seulement sur W
    2  cwd=/etc + cat passwd
    2  cwd=.claude + echo bad > settings.json
    2  cwd=/etc + echo bonjour
-   2  cwd=/etc + Read passwd
+   2  REPLI heredoc -> /etc/passwd
+   2  REPLI -> .claude/settings.json
+   2  REPLI operateur colle
    2  Read /etc/passwd
-   -- doivent etre AUTORISES (0) --
-   0  cat "fichier>bizarre.txt"
+   2  cwd relatif (fail-closed)
+   -- AUTORISATIONS attendues (0) --
+   0  cat "fichier>bizarre.txt" (nominal)
+   0  REPLI cible INTERNE
    0  cat sous/f.txt
    0  echo bonjour
    0  ls -la
    0  cwd=racine/sous + cat f.txt
    0  Read sous/f.txt
 
-# CRITERE FIGE B-24 : refus JOURNALISE et chaine verifiable par l'outil du produit
-   3 entrees ecrites par le script autonome ; types={{'guard_fs_denied'}}
-   payload keys : ['chemin_demande', 'chemin_resolu', 'cwd', 'racine', 'tool']
-   verify OFFICIEL du produit : OK /tmp/tmpwn4ngxwx/reg.jsonl: 3 entrées, chaîne intègre (exit 0)
+# CRITERE FIGE B-24 : refus journalise ET chaine verifiee par l'outil du produit
+   3 entrees ecrites par le script autonome ; types={'guard_fs_denied'}
+   motifs : [None, None, None]
+   verify OFFICIEL du produit : OK /tmp/tmppe5mba29/reg.jsonl: 3 entrées, chaîne intègre (exit 0)
 
 # MUTATIONS (substitution verifiee effective AVANT chaque interpretation)
-  commonpath -> startswith                    : ROUGE
-  realpath cible -> abspath                   : ROUGE
-  auto-protection SCRIPT_PATH desactivee      : ROUGE (test isolant ajoute au t2)
-  tokens Bash non resolus                     : ROUGE
-  shlex.shlex -> shlex.split (t3)             : ROUGE, 5 tests, pytest exit=1
-  retrait du confinement cwd (t4)             : ROUGE, 3 tests, pytest exit=1
-  retrait de l'auto-protection cwd (t4)       : ROUGE, 1 test,  pytest exit=1
-  restauration                                : VERT exit=0
-  NOTE HONNETE : une 8e mutation (resoudre les candidats contre le cwd BRUT au lieu
-  du cwd resolu) SURVIT, et c'est ATTENDU : elle est semantiquement EQUIVALENTE car
-  _resoudre applique deja realpath en sortie. Verifie par mesure, y compris avec un
-  symlink dans le cwd (3 cibles testees, resultats identiques). Ce n'est pas un trou.
+  commonpath -> startswith                : ROUGE
+  realpath cible -> abspath               : ROUGE
+  auto-protection SCRIPT_PATH off         : ROUGE (test isolant, T2)
+  tokens Bash non resolus                 : ROUGE
+  shlex.shlex -> shlex.split (T3)         : ROUGE, 5 tests, exit=1
+  retrait du confinement cwd (T4)         : ROUGE, 3 tests, exit=1
+  retrait de l'auto-protection cwd (T4)   : ROUGE, 1 test,  exit=1
+  repli re.split -> commande.split() (T5) : ROUGE, 3 tests, exit=1
+  restauration                            : VERT exit=0
+  NOTE HONNETE : une mutation (resoudre les candidats contre le cwd BRUT au lieu du
+  cwd resolu) SURVIT et c'est ATTENDU — semantiquement EQUIVALENTE, _resoudre
+  appliquant deja realpath en sortie ; verifie par mesure avec symlink dans le cwd
+  (3 cibles, resultats identiques). Ce n'est pas un trou de couverture.
 
 $ no_stub_scan : OK, zero violation ; $ suite complete du depot : exit=0
 ~~~

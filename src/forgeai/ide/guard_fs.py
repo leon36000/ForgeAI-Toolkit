@@ -60,7 +60,6 @@ import json
 import os
 import sys
 import re
-import shlex
 import tempfile
 from datetime import datetime, timezone
 
@@ -100,14 +99,20 @@ def _sous(chemin, prefixe):
 
 
 def _resoudre(chemin, cwd):
+    # Backslash d'échappement : retrait avant résolution, sur POSIX uniquement.
+    # Sur POSIX, ``\/etc/passwd`` est lu par Bash comme ``/etc/passwd`` :
+    # sans retrait du backslash, le fragment brut n'est pas absolu et se
+    # résout contre le cwd en ``<racine>/\/etc/passwd`` — DANS la racine,
+    # donc autorisé à tort (contournement trivial). Sur Windows, le
+    # backslash est le séparateur natif, pas un échappement : on le
+    # conserve tel quel. Ce traitement couvre AUSSI les chemins venant de
+    # file_path (pas seulement ceux extraits de Bash).
+    if os.sep != chr(92):
+        chemin = chemin.replace(chr(92), "")
     p = os.path.expanduser(chemin)
     if not os.path.isabs(p):
         p = os.path.join(cwd, p)
     return os.path.realpath(p)
-
-
-# shlex et re sont stdlib : le script généré reste autonome et n'importe
-# jamais forgeai.
 
 
 def _ressemble_chemin(token):
@@ -127,14 +132,12 @@ def _ressemble_chemin(token):
     #   aussi valide sous Windows). Regex `^[A-Za-z]:`.
     # Un token SANS séparateur et sans préfixe « ~ »/« . » (ex. « cat »,
     # « rm », « -rf ») N'EST PAS un chemin : l'ajouter provoquerait des
-    # faux positifs massels sur les commandes et leurs options.
-    # NOTE B-24d : les opérateurs shell isolés par `shlex.shlex(
-    # punctuation_chars=True)` (`<`, `>`, `>>`, `;`, `|`, `||`, `&`,
-    # `&&`, `(`, `)`) ne ressemblent JAMAIS à un chemin — par
-    # construction ils ne contiennent pas de séparateur et ne
+    # faux positifs massifs sur les commandes et leurs options.
+    # NOTE B-24d : les opérateurs shell font partie de la classe de
+    # découpage de `_candidats`, ils n'apparaissent donc jamais dans un
+    # fragment. Et même isolés ils ne ressembleraient pas à un chemin :
+    # par construction ils ne contiennent pas de séparateur et ne
     # commencent ni par « ~ », ni par « . », ni par une lettre+« : ».
-    # Le filtre ci-dessous les écarte donc naturellement, sans règle
-    # dédiée.
     if not token:
         return False
     if "/" in token or os.sep in token or chr(92) in token:
@@ -154,83 +157,49 @@ def _candidats(tool_name, tool_input):
         valeur = tool_input.get(cle)
         if isinstance(valeur, str) and valeur:
             trouves.append(valeur)
+    # Politique « chemins littéraux résolubles uniquement » : seuls les
+    # fragments qui ressemblent à un chemin littéral sont contrôlés.
+    #
+    # B-24c/d — on n'utilise PLUS de tokeniseur shell (shlex et son repli
+    # re.split ont été rejetés 3 fois par la revue scellée : chaque tour
+    # trouvait un opérateur ou un séparateur oublié, signal de conception).
+    # On ne réimplémente pas un lexer shell par soustraction de caractères.
+    #
+    # Nouvelle approche : UN SEUL découpage de la commande brute sur la
+    # classe des délimiteurs shell (``\s<>;|&()"'`$``), puis on applique le
+    # filtre ``_ressemble_chemin`` inchangé. Conséquences :
+    #
+    #   * un fragment contenant un séparateur et composé de caractères
+    #     hors délimiteurs ne peut PAS se cacher : s'il est dans la
+    #     commande, le motif le trouve, qu'il soit entre guillemets, après
+    #     une redirection, dans une substitution de commande ou dans un
+    #     heredoc ;
+    #   * les opérateurs shell (``<``, ``>``, ``;``, ``|``, ``&``, ``(``,
+    #     ``)``) sont dans la classe de découpage — donc un fragment collé
+    #     ``cat</etc/passwd`` est correctement séparé en ``cat`` et
+    #     ``/etc/passwd`` ;
+    #   * le découpage NE LÈVE PAS d'exception (re.split ne lève jamais
+    #     sur des guillemets déséquilibrés) : le chemin dégradé
+    #     ``try/except`` disparaît, et avec lui la porte de service
+    #     qu'il constituait (un attaquant forçant un ValueError pour
+    #     atteindre un repli plus permissif).
+    #
+    # Limite de périmètre inchangée : on n'interprète PAS le shell — pas
+    # d'expansion de variable (``$HOME``, ``${X}``), pas de substitution de
+    # commande (``$(...)``, ``...``), pas de globbing (``*``, ``?``,
+    # ``[...]``), pas de compréhension des quotes imbriquées au-delà du
+    # découpage. L'extraction porte sur des FRAGMENTS LITTÉRAUX. L'exécution
+    # de code arbitraire n'est PAS confinable sans sandbox OS — limitation
+    # documentée et assumée. L'absence d'exception possible est précisément
+    # l'intérêt de cette conception : plus de chemin dégradé à oublier.
     if tool_name == "Bash":
         commande = tool_input.get("command")
         if isinstance(commande, str):
-            # Politique « chemins littéraux résolubles uniquement » : seuls
-            # les tokens qui ressemblent à un chemin littéral sont
-            # contrôlés.
-            #
-            # B-24d — on utilise `shlex.shlex` avec
-            # `punctuation_chars=True` plutôt que `shlex.split`, parce que
-            # `shlex.split` NE SÉPARE PAS les opérateurs shell (`<`, `>`,
-            # `;`, `|`, `&`, `(`, `)`) lorsqu'ils sont COLLÉS au token
-            # voisin (cf. ForgeAI Toolkit). Mesure réelle :
-            #     shlex.split('cat</etc/passwd', posix=True)
-            #         -> ['cat</etc/passwd']   (collatéral, faux négatif)
-            #     shlex.shlex('cat</etc/passwd', posix=True,
-            #         punctuation_chars=True, whitespace_split=True)
-            #         -> ['cat', '<', '/etc/passwd']
-            # `punctuation_chars=True` rend `<>;|&()` caractères de
-            # ponctuation au sens du lexer shlex : ils sont émis en
-            # tokens distincts au lieu d'être agrégés au mot adjacent.
-            # Combiné à `whitespace_split=True`, on obtient un flux de
-            # tokens littéraux, ce qui restaure la sémantique attendue :
-            #     'echo bad>.claude/settings.json'
-            #         -> ['echo', 'bad', '>', '.claude/settings.json']
-            #     'cat "fichier>bizarre.txt"'
-            #         -> ['cat', 'fichier>bizarre.txt']   (guillemets OK)
-            #
-            # Limite de périmètre inchangée : ça reste une EXTRACTION de
-            # tokens LITTÉRAUX — aucune expansion de variable
-            # (``$HOME``, ``${X}``), aucune substitution de commande
-            # (``$(...)``, ```...```), aucun globbing (``*``, ``?``,
-            # ``[...]``), aucune compréhension des quotes imbriquées
-            # au-delà de l'équilibrage shlex. L'exécution de code
-            # arbitraire n'est PAS confinable sans sandbox OS —
-            # limitation documentée et assumée.
-            try:
-                lx = shlex.shlex(commande, posix=True, punctuation_chars=True)
-                lx.whitespace_split = True
-                tokens = list(lx)
-            except ValueError:
-                # Repli en cas de ValueError de shlex (guillemets
-                # déséquilibrés — légal en Bash dans un here-doc, mais
-                # shlex lève « No closing quotation »). On NE PEUT PAS
-                # retomber sur `commande.split()` : un découpage naïf
-                # sur les espaces NE SÉPARE PAS les opérateurs shell
-                # collés au token voisin, ce qui réintroduit exactement
-                # la vulnérabilité du tour 3 (un attaquant force le
-                # ValueError avec un guillemet orphelin, puis exploite
-                # `cat</etc/passwd` qui reste collé et n'est pas reconnu
-                # comme chemin hors racine).
-                #
-                # Le repli utilise donc `re.split` sur un motif qui
-                # inclut les opérateurs shell `<>;|&()` en plus des
-                # espaces : tout opérateur collé est détaché du token
-                # adjacent, restaurant la sémantique de tokenisation
-                # attendue. Mesure réelle :
-                #     'cat</etc/passwd\ncat <<EOF\n"\nEOF'
-                #         -> ['cat', '/etc/passwd', 'cat', 'EOF', '"', 'EOF']
-                #     'echo bad >.claude/settings.json "'
-                #         -> ['echo', 'bad', '.claude/settings.json', '"']
-                #     'cat</etc/passwd "'
-                #         -> ['cat', '/etc/passwd', '"']
-                #
-                # Ce repli est DÉLIBÉRÉMENT PLUS STRICT que shlex : il
-                # ignore les guillemets, donc un nom de fichier contenant
-                # `>` y serait découpé (sur-détection possible). C'est
-                # VOULU : on est dans un cas DÉGRADÉ (guillemets
-                # déséquilibrés), et le principe fail-closed de la garde
-                # exige de préférer un faux positif à un faux négatif.
-                # Le chemin NOMINAL (shlex) continue de préserver les
-                # guillemets littéraux — la non-régression
-                # `cat "fichier>bizarre.txt"` (guillemets ÉQUILIBRÉS)
-                # reste AUTORISÉE.
-                tokens = [t for t in re.split(r"[\s<>;|&()]+", commande) if t]
-            for token in tokens:
-                if _ressemble_chemin(token):
-                    trouves.append(token)
+            DELIMITEURS = r"""[\s<>;|&()"'`$]+"""
+            fragments = [f for f in re.split(DELIMITEURS, commande) if f]
+            for fragment in fragments:
+                if _ressemble_chemin(fragment):
+                    trouves.append(fragment)
     return trouves
 
 

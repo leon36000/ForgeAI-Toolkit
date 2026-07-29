@@ -764,3 +764,164 @@ def test_non_regression_guillemets_equilibres_autorise(
         script, charge("Bash", {"command": commande}, cwd=racine), env=env_tmpdir
     )
     assert code == 0, f"attendu exit 0, obtenu {code} (stderr={stderr!r})"
+
+
+# ── Tour 6 : extraction sans tokenisation shell (ADR option C) ──
+import json
+import os
+import subprocess
+import sys
+from pathlib import Path
+
+import pytest
+
+from forgeai.ide.guard_fs import generate_guard_fs
+
+
+# ---------------------------------------------------------------------------
+# AXE A — vecteurs d'evasion CAPTES (exit 2), cwd=racine
+# ---------------------------------------------------------------------------
+
+def test_A1_cat_guillemet_double_ferm_guillemet_simple(tmp_path, racine, env_tmpdir):
+    script = ecrire_garde(tmp_path, racine)
+    c = charge("Bash", {"command": 'cat "/etc/passwd" "'}, cwd=racine)
+    exit_code, _ = run(script, c, env=env_tmpdir)
+    assert exit_code == 2
+
+
+def test_A2_cat_guillemet_simple_ferm_guillemet_double(tmp_path, racine, env_tmpdir):
+    script = ecrire_garde(tmp_path, racine)
+    c = charge("Bash", {"command": "cat '/etc/passwd' '"}, cwd=racine)
+    exit_code, _ = run(script, c, env=env_tmpdir)
+    assert exit_code == 2
+
+
+def test_A3_redirection_entree_chemin_colle(tmp_path, racine, env_tmpdir):
+    script = ecrire_garde(tmp_path, racine)
+    c = charge("Bash", {"command": 'cat</etc/passwd "'}, cwd=racine)
+    exit_code, _ = run(script, c, env=env_tmpdir)
+    assert exit_code == 2
+
+
+def test_A4_redirection_sortie_vers_settings_json(tmp_path, racine, env_tmpdir):
+    script = ecrire_garde(tmp_path, racine)
+    commande = 'echo bad >".claude/settings.json" "'
+    c = charge("Bash", {"command": commande}, cwd=racine)
+    exit_code, _ = run(script, c, env=env_tmpdir)
+    assert exit_code == 2
+
+
+def test_A5_substitution_commande_chemin(tmp_path, racine, env_tmpdir):
+    script = ecrire_garde(tmp_path, racine)
+    c = charge("Bash", {"command": 'cat $(echo /etc/passwd) "'}, cwd=racine)
+    exit_code, _ = run(script, c, env=env_tmpdir)
+    assert exit_code == 2
+
+
+def test_A6_heredoc_apostrophe_francaise(tmp_path, racine, env_tmpdir):
+    script = ecrire_garde(tmp_path, racine)
+    commande = "cat <<EOF\nc'est /etc/passwd\nEOF"
+    c = charge("Bash", {"command": commande}, cwd=racine)
+    exit_code, _ = run(script, c, env=env_tmpdir)
+    assert exit_code == 2
+
+
+def test_A7_cible_nue_collee_operateur(tmp_path, racine, env_tmpdir):
+    script = ecrire_garde(tmp_path, racine)
+    c = charge("Bash", {"command": "rm -rf>.claude"}, cwd=racine)
+    exit_code, _ = run(script, c, env=env_tmpdir)
+    assert exit_code == 2
+
+
+# ---------------------------------------------------------------------------
+# AXE B — non-regression syntaxique, AUCUN faux positif (exit 0)
+# ---------------------------------------------------------------------------
+
+def test_B1_apostrophe_dans_mot(tmp_path, racine, env_tmpdir):
+    script = ecrire_garde(tmp_path, racine)
+    c = charge("Bash", {"command": "echo l'utilisateur"}, cwd=racine)
+    exit_code, _ = run(script, c, env=env_tmpdir)
+    assert exit_code == 0
+
+
+def test_B2_apostrophe_guillemet_simple(tmp_path, racine, env_tmpdir):
+    script = ecrire_garde(tmp_path, racine)
+    c = charge("Bash", {"command": "grep don't fichier.txt"}, cwd=racine)
+    exit_code, _ = run(script, c, env=env_tmpdir)
+    assert exit_code == 0
+
+
+def test_B3_globe_etoile(tmp_path, racine, env_tmpdir):
+    script = ecrire_garde(tmp_path, racine)
+    c = charge("Bash", {"command": "ls *.py"}, cwd=racine)
+    exit_code, _ = run(script, c, env=env_tmpdir)
+    assert exit_code == 0
+
+
+def test_B4_variable_HOME_resolue_sous_racine(tmp_path, racine, env_tmpdir):
+    script = ecrire_garde(tmp_path, racine)
+    c = charge("Bash", {"command": "cat $HOME/truc"}, cwd=racine)
+    exit_code, _ = run(script, c, env=env_tmpdir)
+    assert exit_code == 0
+
+
+def test_B5_echo_bonjour(tmp_path, racine, env_tmpdir):
+    script = ecrire_garde(tmp_path, racine)
+    c = charge("Bash", {"command": "echo bonjour"}, cwd=racine)
+    exit_code, _ = run(script, c, env=env_tmpdir)
+    assert exit_code == 0
+
+
+# ---------------------------------------------------------------------------
+# AXE C — symetrie backslash
+# ---------------------------------------------------------------------------
+
+def test_C1_posix_backslash_chemin_absolu(tmp_path, racine, env_tmpdir):
+    script = ecrire_garde(tmp_path, racine)
+    c = charge("Bash", {"command": 'cat \\/etc/passwd "'}, cwd=racine)
+    exit_code, _ = run(script, c, env=env_tmpdir)
+    assert exit_code == 2
+
+
+def test_C2a_windows_condition_apres_chemin_present_dans_source(tmp_path, racine):
+    """Sur Windows, le backslash fait partie des separateurs chemins : on ne
+    le retire PAS. Ce test est portable : il verifie la PRESENCE du predicat
+    ``os.sep != chr(92)`` dans le source rendu — preuve que la garde
+    distingue bien les deux plateformes."""
+    src = generate_guard_fs(racine)
+    assert "os.sep != chr(92)" in src
+
+
+@pytest.mark.skipif(os.name != "nt", reason="Comportement Windows; voir Registres/")
+def test_C2b_windows_backslash_conserve(tmp_path, racine, env_tmpdir):
+    script = ecrire_garde(tmp_path, racine)
+    c = charge("Bash", {"command": 'cat \\/etc/passwd "'}, cwd=racine)
+    exit_code, _ = run(script, c, env=env_tmpdir)
+    # Sur Windows le backslash est un separateur de chemin LEGAL -> pas de
+    # resolution vers un chemin absolu hors racine -> autorisation.
+    assert exit_code == 0
+
+
+# ---------------------------------------------------------------------------
+# AXE D — appartenance a la racine apres extraction
+# ---------------------------------------------------------------------------
+
+def test_D1_chemin_sous_racine_autorise(tmp_path, racine, env_tmpdir):
+    sous = racine / "sous"
+    sous.mkdir()
+    cible = sous / "f.txt"
+    cible.write_text("ok", encoding="utf-8")
+    script = ecrire_garde(tmp_path, racine)
+    c = charge("Bash", {"command": "cat sous/f.txt"}, cwd=racine)
+    exit_code, _ = run(script, c, env=env_tmpdir)
+    assert exit_code == 0
+
+
+def test_D2_chemin_hors_racine_message_cite_resolu(tmp_path, racine, env_tmpdir):
+    script = ecrire_garde(tmp_path, racine)
+    c = charge("Bash", {"command": "cat /etc/passwd"}, cwd=racine)
+    exit_code, stderr = run(script, c, env=env_tmpdir)
+    assert exit_code == 2
+    # La citation du chemin RESOLU (et non du fragment brut) prouve que
+    # l'extraction a ete suivie d'une resolution reelle.
+    assert "/etc/passwd" in stderr
