@@ -1,0 +1,13 @@
+[ROUGE] sur origin/main (6d7e62c) — aucun inventaire n'est consulté au rendu.
+
+Reproduction exécutée : un workload NVIDIA épinglé sur un nœud CPU-only.
+
+    svc = ServiceSpec(name="ollama", gpu=True, gpu_vendor="nvidia", node="pc-sans-gpu")
+    render_k3s(plan)   ->  manifeste RENDU sans broncher, contenant nvidia.com/gpu: "1"
+
+Le manifeste est syntaxiquement PARFAIT. Il part vers kubectl et échoue au scheduling : le
+nœud n'a pas de GPU. L'utilisateur découvre l'incompatibilité EN PRODUCTION, sans message
+causal — le pod reste simplement Pending.
+
+Tests rouges : 8 échecs (ImportError — ni NodeInventaire, ni PlacementError, ni
+valider_placement n'existaient).
