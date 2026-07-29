@@ -282,3 +282,82 @@ def test_inventaire_vide_explicite_n_est_pas_une_absence_d_inventaire():
     with pytest.raises(PlacementError) as exc:
         render_k3s(_plan([_svc_gpu(node=None)]), inventaire=())
     assert "ERR_PLACE_AUCUN_NOEUD_QUALIFIE" in str(exc.value)
+
+
+# ---------------------------------------------------------------------------
+# PLACE-026B / FAI-U-026 — diagnostic service -> nœud -> raison.
+# Constat de reproduction : les critères 1 et 2 (sélecteur correct, service `auto` non
+# épinglé) sont DÉJÀ satisfaits — héritage de PLACE-026A. Ils sont néanmoins verrouillés
+# par des tests ci-dessous : un comportement prouvé n'est pas un comportement protégé
+# (leçon de la revue PLACE-011). Le critère 3 manquait entièrement.
+# ---------------------------------------------------------------------------
+from forgeai.cluster import placement_diagnostic
+
+
+def _svcs_placement():
+    return [
+        ServiceSpec(name="pin", image="i:1", host_port=1, container_port=1, node="n-a"),
+        ServiceSpec(name="libre", image="i:2", host_port=2, container_port=2, node="auto"),
+        ServiceSpec(name="herite", image="i:3", host_port=3, container_port=3),
+    ]
+
+
+def test_service_epingle_recoit_son_selecteur():
+    """Critère 1 — verrouillage d'un comportement existant (PLACE-026A)."""
+    import yaml
+    out = render_k3s(_plan(_svcs_placement()), node="n-global")
+    sels = {d["metadata"]["name"]: (d["spec"]["template"]["spec"].get("nodeSelector") or {})
+            for d in yaml.safe_load_all(out) if d and d.get("kind") == "Deployment"}
+    assert sels["pin"] == {"kubernetes.io/hostname": "n-a"}
+
+
+def test_service_auto_n_est_jamais_epingle():
+    """Critère 2 — `auto` signifie « laisse le scheduler décider ». L'épingler par
+    inadvertance annulerait la tolérance aux pannes que l'utilisateur a demandée."""
+    import yaml
+    out = render_k3s(_plan(_svcs_placement()), node="n-global")
+    sels = {d["metadata"]["name"]: (d["spec"]["template"]["spec"].get("nodeSelector") or {})
+            for d in yaml.safe_load_all(out) if d and d.get("kind") == "Deployment"}
+    assert sels["libre"] == {}, "un service 'auto' ne doit porter AUCUN nodeSelector"
+    assert sels["herite"] == {"kubernetes.io/hostname": "n-global"}, "sans node, le global s'applique"
+
+
+def test_diagnostic_rend_service_noeud_raison():
+    """Critère 3 — le diagnostic doit dire, pour CHAQUE service, où il ira ET pourquoi.
+    Sans cela, un utilisateur dont le déploiement se place mal n'a aucun moyen de comprendre
+    quelle décision a produit ce placement."""
+    lignes = placement_diagnostic(_plan(_svcs_placement()), node_global="n-global")
+    par_service = {d["service"]: d for d in lignes}
+    assert set(par_service) == {"pin", "libre", "herite"}
+    assert par_service["pin"]["node"] == "n-a"
+    assert "explicite" in par_service["pin"]["raison"].lower()
+    assert par_service["libre"]["node"] is None
+    assert "auto" in par_service["libre"]["raison"].lower()
+    assert par_service["herite"]["node"] == "n-global"
+    assert "global" in par_service["herite"]["raison"].lower()
+
+
+def test_diagnostic_expose_la_validation_contre_l_inventaire():
+    """Critère 3 (suite) — « exposer la décision ET SA VALIDATION ». Le diagnostic doit dire
+    si le nœud choisi a été confronté à l'inventaire, et avec quel résultat."""
+    inv = (NodeInventaire(hostname="n-a", gpu_vendor="nvidia", vram_mib=8192),
+           NodeInventaire(hostname="n-global"))
+    gpu = ServiceSpec(name="ollama", image="o:1", host_port=9, container_port=9,
+                      gpu=True, gpu_vendor="nvidia", node="n-a")
+    lignes = placement_diagnostic(_plan([gpu]), node_global=None, inventaire=inv)
+    d = lignes[0]
+    assert d["node"] == "n-a"
+    assert d["validation"] == "OK", f"placement compatible -> validation OK : {d}"
+
+
+def test_diagnostic_signale_un_placement_invalide_sans_lever():
+    """Un diagnostic doit DIAGNOSTIQUER, pas planter : un placement incompatible est rapporté
+    avec sa cause, pour que l'utilisateur voie TOUTES les lignes d'un coup plutôt que la
+    première erreur seule."""
+    inv = (NodeInventaire(hostname="n-cpu"),)
+    gpu = ServiceSpec(name="ollama", image="o:1", host_port=9, container_port=9,
+                      gpu=True, gpu_vendor="nvidia", node="n-cpu")
+    lignes = placement_diagnostic(_plan([gpu]), node_global=None, inventaire=inv)
+    d = lignes[0]
+    assert d["validation"] != "OK"
+    assert "ERR_PLACE_CPU_ONLY" in d["validation"], f"la cause doit être citée : {d}"

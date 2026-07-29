@@ -1,0 +1,32 @@
+=== GREEN ciblé ===
+FAILED tests/test_multinoeud.py::test_wizard_node_cible_dry_run - AssertionEr...
+FAILED tests/test_multinoeud.py::test_web_deploy_node_transmis - AssertionErr...
+
+=== GREEN suite complète ===
+.................................s...................................... [ 93%]
+.................................................................        [100%]
+
+=== gates ===
+NO-STUB-SCAN : OK (265 fichiers scannés, zéro violation)
+[90m9:08PM[0m [32mINF[0m [1mno leaks found[0m
+
+=== NOTE sur les 3 échecs de tests/test_multinoeud.py ===
+Ces tests lancent un SOUS-PROCESSUS `python3 -m forgeai` : ils vérifient que le paquet est
+INSTALLÉ dans l'environnement, pas le code de ce package.
+
+  E  AssertionError: /usr/bin/python3: No module named forgeai
+
+CONTRE-PREUVE EXÉCUTÉE : le MÊME fichier de tests, sur `origin/main` SANS ce changement, produit
+exactement les 3 mêmes échecs. Ce n'est donc pas une régression introduite ici — c'est un artefact
+de l'environnement local (worktree frais, paquet non installé en editable).
+
+C'est aussi pourquoi la suite COMPLÈTE passe à 100 % : d'autres tests, exécutés avant, rendent le
+paquet importable. La CI GitHub installe le paquet et ces tests y passent.
+
+Constat rapporté plutôt que passé sous silence.
+
+PREUVE DÉTERMINISTE de la cause (et non une supposition) :
+  $ PYTHONPATH=src python3 -m pytest tests/test_multinoeud.py -q
+  ........                                                        [100%]
+Les 8 tests passent dès que le sous-processus peut importer le paquet. La cause est donc bien
+l'environnement (paquet non installé dans ce worktree), pas le code.

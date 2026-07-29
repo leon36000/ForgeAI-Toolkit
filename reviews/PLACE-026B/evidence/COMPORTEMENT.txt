@@ -1,0 +1,20 @@
+# PLACE-026B — diagnostic service -> nœud -> raison (exécution réelle)
+
+## Sans inventaire — la decision seule
+  pin      node=n-a        validation=non vérifié
+           raison : placement explicite : svc.node == 'n-a', choix du service
+  libre    node=None       validation=non vérifié
+           raison : placement auto : svc.node == 'auto', le scheduler k3s choisira le nœud
+  herite   node=n-global   validation=non vérifié
+           raison : héritage global : svc.node absent, le service reçoit le nœud du plan 'n-global'
+  ollama   node=n-cpu      validation=non vérifié
+           raison : placement explicite : svc.node == 'n-cpu', choix du service
+
+## Avec inventaire — decision ET validation
+  pin      node=n-a        -> OK
+  libre    node=None       -> OK
+  herite   node=n-global   -> OK
+  ollama   node=n-cpu      -> ERR_PLACE_CPU_ONLY : le service 'ollama' exige un GPU (vendor demandé...
+
+=> La fonction NE LEVE JAMAIS : le service 'ollama' est invalide, mais les trois autres
+   lignes restent visibles. L'utilisateur voit l'etat COMPLET de son plan d'un seul coup.
