@@ -192,7 +192,9 @@ def _record_in_worker(home_str, agent, tokens, count, barrier):
 
 @pytest.mark.skipif(
     mp.get_start_method(allow_none=True) == "spawn",
-    reason="Ce test de concurrence inter-process requiert la méthode fork.",
+    reason=("Ce test de concurrence inter-process requiert la méthode fork : il TOURNE en CI Linux "
+            "(gate tests ; preuve B-20a au Registres/mission.jsonl) et ne skippe que sur une "
+            "plateforme spawn-only où fork n'existe pas."),
 )
 def test_concurrence_multi_process(tmp_path):
     """4 process font chacun 25 record(x, 10) -> total final EXACTEMENT 1000."""
