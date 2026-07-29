@@ -287,6 +287,40 @@ def valider_placement(svc, inventaire, node_demande):
         f"{'; '.join(candidats_examines) or 'aucun'}")
 
 
+class QuotaError(ValueError):
+    """Le plan dépasse la capacité déclarée du cluster.
+
+    Levée AVANT rendu du manifeste pour éviter qu'un déploiement trop gros
+    ne se traduise par des pods ``Pending`` sans cause lisible côté kubectl.
+    Le message chiffre systématiquement le besoin du plan et la capacité
+    offerte par le cluster afin qu'un opérateur corrige l'un ou l'autre
+    sans avoir à recalculer.
+    """
+
+
+@dataclass(frozen=True)
+class CapaciteCluster:
+    """Capacité totale (CPU + mémoire) qu'un cluster déclare pouvoir servir.
+
+    Les valeurs sont normalisées en milliCPU et en MiB pour permettre une
+    comparaison arithmétique directe avec le budget d'un ``DeploymentPlan``.
+    Une capacité nulle ou négative n'a aucun sens physique : elle est refusée
+    à l'instanciation pour ne pas produire plus tard une division par zéro
+    ou un faux positif de dépassement.
+    """
+
+    cpu_millicores: int
+    memoire_mib: int
+
+    def __post_init__(self) -> None:
+        if self.cpu_millicores <= 0 or self.memoire_mib <= 0:
+            raise ValueError(
+                "ERR_QUOTA_CAPACITE_INVALIDE: la capacité du cluster doit être "
+                f"strictement positive (reçu cpu={self.cpu_millicores}, "
+                f"memoire={self.memoire_mib} Mi)."
+            )
+
+
 @dataclass(frozen=True)
 class ServiceSpec:
     """Service concret d'un plan de déploiement (brique instanciée)."""
