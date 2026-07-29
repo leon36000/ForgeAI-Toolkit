@@ -765,7 +765,10 @@ automountServiceAccountToken: false
         # Sans inventaire, aucune validation n'est possible et le comportement reste inchangé
         # (rétro-compatibilité). Avec inventaire, un placement incompatible lève PlacementError
         # ici plutôt que de produire un manifeste qui échouera au scheduling, en production.
-        if inventaire:
+        # `is not None` et non `if inventaire` : un inventaire explicitement VIDE doit atteindre
+        # la validation, qui saura dire qu'aucun nœud n'est disponible. `None` = « je ne sais
+        # pas » ; `()` = « je sais, et il n'y a rien » (objection de revue, DeepSeek-V4-Pro).
+        if inventaire is not None:
             effective_node = valider_placement(svc, inventaire, effective_node)
         parts.append(_deployment(svc, effective_node, node_port_for(svc, used), service_type,
                                  config_files))

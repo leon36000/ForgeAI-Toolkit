@@ -192,12 +192,14 @@ class NodeInventaire:
     vram_mib: int = 0
 
     def __post_init__(self) -> None:
-        if not self.hostname:
-            raise ValueError("ERR_PLACE_VENDOR_INCONNU : hostname vide")
+        if not self.hostname or not self.hostname.strip():
+            raise ValueError(
+                "ERR_PLACE_HOSTNAME_INVALIDE : hostname vide ou uniquement des espaces")
         _rejeter_caracteres_de_controle("hostname", self.hostname)
         if self.vram_mib < 0:
             raise ValueError(
-                f"ERR_PLACE_VENDOR_INCONNU : vram_mib négatif ({self.vram_mib})")
+                f"ERR_PLACE_VRAM_INVALIDE : vram_mib négatif ({self.vram_mib}), "
+                f"attendu entier >= 0")
         vendors_autorises = {"nvidia", "amd", "intel", None}
         if self.gpu_vendor not in vendors_autorises:
             raise ValueError(
@@ -209,7 +211,19 @@ def valider_placement(svc, inventaire, node_demande):
     # Pas d'inventaire : on ne peut rien valider, on laisse passer pour ne
     # pas casser la rétro-compatibilité — c'est une absence d'information,
     # pas une rupture de contrat. Le scheduling k3s tranchera.
+    # Distinction sémantique entre absence d'inventaire et inventaire vide :
+    #   - None  = « je ne sais pas » (aucune info fournie, rétro-compatibilité : on laisse passer)
+    #   - ()    = « je sais, et il n'y a rien » (l'appelant AFFIRME qu'aucun nœud n'est dispo)
+    if inventaire is None:
+        return node_demande
+
     if not inventaire:
+        # Inventaire explicite mais vide : on ne peut honorer un service GPU,
+        # mais un service CPU n'a pas besoin d'un nœud particulier.
+        if getattr(svc, "gpu", False):
+            raise PlacementError(
+                "ERR_PLACE_AUCUN_NOEUD_QUALIFIE : l'inventaire fourni ne contient "
+                "aucun nœud, placement d'un service GPU impossible")
         return node_demande
 
     # Service CPU : le vendor d'un nœud ne le concerne jamais. Aucune raison

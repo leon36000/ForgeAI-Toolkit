@@ -247,3 +247,38 @@ def test_service_cpu_ignore_l_inventaire_gpu():
                            node="n-cpu", resource_class="db")
     out = render_k3s(_plan([cpu_only]), inventaire=_inventaire())
     assert "kubernetes.io/hostname: n-cpu" in out
+
+
+# --- Objections de la revue scellée (3/3 APPROVE, sceau 258d2f6d1de2) -----------------
+def test_codes_d_erreur_de_l_inventaire_sont_specifiques():
+    """Les TROIS vendors ont relevé indépendamment le même défaut : `NodeInventaire` utilisait
+    `ERR_PLACE_VENDOR_INCONNU` pour signaler un hostname vide ou une VRAM négative — des cas qui
+    n'ont rien à voir avec un vendor. Un code d'erreur trompeur envoie l'utilisateur chercher au
+    mauvais endroit ; c'est exactement ce que les codes stables sont censés éviter."""
+    with pytest.raises(ValueError, match="ERR_PLACE_HOSTNAME_INVALIDE"):
+        NodeInventaire(hostname="")
+    with pytest.raises(ValueError, match="ERR_PLACE_VRAM_INVALIDE"):
+        NodeInventaire(hostname="n1", gpu_vendor="nvidia", vram_mib=-1)
+    with pytest.raises(ValueError, match="ERR_PLACE_VENDOR_INCONNU"):
+        NodeInventaire(hostname="n1", gpu_vendor="matrox")
+
+
+def test_noeud_absent_de_l_inventaire_est_refuse():
+    """Objection de Grok : ce cas était prouvé dans COMPORTEMENT.txt mais aucun test ne le
+    couvrait. Un comportement démontré une fois n'est pas un comportement protégé."""
+    with pytest.raises(PlacementError) as exc:
+        render_k3s(_plan([_svc_gpu(node="n-fantome")]), inventaire=_inventaire())
+    message = str(exc.value)
+    assert "ERR_PLACE_NOEUD_INCONNU" in message
+    assert "n-fantome" in message and "n-nvidia" in message, \
+        "l'erreur doit nommer le nœud demandé ET lister les hostnames connus"
+
+
+def test_inventaire_vide_explicite_n_est_pas_une_absence_d_inventaire():
+    """Objection de DeepSeek : un tuple vide passait pour « pas d'inventaire » et court-circuitait
+    toute validation. Or fournir un inventaire SANS AUCUN nœud n'est pas la même chose que ne pas
+    en fournir : c'est affirmer qu'aucun nœud n'est disponible. Un service GPU ne peut donc y être
+    placé, et le dire vaut mieux que de rendre un manifeste."""
+    with pytest.raises(PlacementError) as exc:
+        render_k3s(_plan([_svc_gpu(node=None)]), inventaire=())
+    assert "ERR_PLACE_AUCUN_NOEUD_QUALIFIE" in str(exc.value)
