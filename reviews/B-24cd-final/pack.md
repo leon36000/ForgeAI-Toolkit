@@ -1,70 +1,68 @@
-# Revue scellée — B-24c/d : garde de confinement filesystem (commit fe83f18)
+# Revue scellée — B-24c/d : garde de confinement filesystem (commit b08a767)
 
 ## Nature
 Composant de SÉCURITÉ. Stories B-24c (génération de la garde) + B-24d (comportement +
 journalisation). B-24a/b déjà sur main. Jugez le DIFF CUMULÉ vs origin/main.
 
-SIXIÈME tour. Les 5 précédents ont tous été rejetés à juste titre, chaque objection étant
-REPRODUITE par exécution avant correction. Ce tour n'est pas un patch de plus : c'est un
-CHANGEMENT DE CONCEPTION décidé par l'architecte après escalade, parce que trois tours
-avaient percé successivement le même chemin dégradé.
+SEPTIÈME tour. Les 6 précédents ont été rejetés à juste titre ; chaque objection a été
+REPRODUITE par exécution avant correction. Aucune n'a été écartée sur parole.
 
-## INVENTAIRE DES 13 OBJECTIONS DES 6 TOURS — statut de chacune
-T1 (REJECT 2/3), 6 critiques — toutes corrigées, refus prouvé :
-  tokens quotés · chemins Windows · relatifs sans préfixe · `.claude` parent ·
-  `rm -rf .claude` · traversal relatif
+## POURQUOI CE TOUR DEVRAIT ÊTRE LE DERNIER — la classe est bornée par MESURE
+Les tours 3, 5 et 6 élargissaient un motif de caractères par tâtonnement : non borné, on ne
+pouvait pas prouver la complétude, et chaque tour trouvait un oubli. Ce tour est différent.
+J'ai mesuré directement avec le BINAIRE bash la liste des transformations lexicales
+appliquées AVANT le découpage en mots. Il n'y en a que DEUX :
+  1. continuation de ligne (backslash + saut de ligne) -> SUPPRIMÉE, y compris à
+     l'intérieur de guillemets DOUBLES ; PAS dans des guillemets simples.
+  2. backslash devant un caractère -> backslash retiré, caractère littéral ; idem.
+La garde traitait déjà (2) dans `_resoudre`. Ce commit ajoute (1). La liste mesurée est
+donc ENTIÈREMENT couverte : il n'existe plus de transformation lexicale pré-découpage non
+traitée. Si vous voyez une TROISIÈME transformation que bash applique avant le découpage,
+c'est un REJECT légitime — sinon la classe est close.
+(La doc GNU répondait 429 ; le binaire local est de toute façon la meilleure source : il
+donne le comportement réel, pas sa description.)
+
+## INVENTAIRE DES 14 OBJECTIONS DES 7 TOURS — statut de chacune
+T1 (REJECT 2/3), 6 critiques -> toutes corrigées, refus prouvé : tokens quotés · chemins
+  Windows · relatifs sans préfixe · `.claude` parent · `rm -rf .claude` · traversal
 T1 mineures : `mv` du script -> test dédié · double-compile -> 2 passes réelles
 T2 : `C:Windows` sans séparateur -> regex élargie
   MINEURE DeepSeek « cwd non contraint sous ROOT » -> NON TRAITÉE alors ; revenue en
-  CRITIQUE au T4 ; corrigée au T4. (Leçon consignée : sur un composant de sécurité, une
-  objection mineure non traitée est une critique dont l'exploit n'est pas encore trouvé.)
-T3 CRITIQUE : `shlex.split` ne sépare pas les opérateurs COLLÉS -> punctuation_chars
-T4 CRITIQUE : `cwd` jamais validé contre ROOT ni l'auto-protection -> validation en propre
-T5 CRITIQUE : le REPLI `commande.split()` réintroduisait la faille T3 (guillemet orphelin)
-  -> repli `re.split` strict
-T6 (2 REJECT : Gemini + Grok) CRITIQUE : le repli `re.split` ne retirait pas les
-  guillemets, donc `cat "/etc/passwd" "` passait -> ce diff SUPPRIME le repli.
+  CRITIQUE au T4 ; corrigée au T4. Leçon consignée en mémoire.
+T3 CRITIQUE : `shlex.split` ne sépare pas les opérateurs collés -> punctuation_chars
+T4 CRITIQUE : `cwd` jamais validé -> validation en propre (auto-protection + confinement)
+T5 CRITIQUE : le repli `commande.split()` réintroduisait T3 -> repli `re.split` strict
+T6 CRITIQUE (Gemini + Grok) : le repli ne retirait pas les guillemets -> ADR option C :
+  SUPPRESSION du repli et de shlex, un seul découpage qui ne peut pas lever
+T7 CRITIQUE (ce diff) : continuation de ligne bash non normalisée
+  (`cat .\<NL>./.\<NL>./etc/passwd` -> Bash lit `../../etc/passwd` -> passait ;
+   `cat .cla\<NL>ude/settings.json` -> auto-protection contournée)
+  -> normalisation avant découpage, classe fermée par mesure
 
-## Décision d'architecture appliquée (versionnée dans stories/B-24.md)
-Option C : ne plus tokeniser. UN SEUL découpage de la commande brute sur la classe des
-délimiteurs shell, puis le filtre `_ressemble_chemin` inchangé.
-  - Ce découpage NE PEUT PAS LEVER -> le chemin dégradé disparaît, et avec lui la porte de
-    service que 3 tours avaient percée. `shlex` n'est plus importé.
-  - L'option fail-closed a été ÉCARTÉE PAR LES DONNÉES : `shlex` lève sur
-    `echo l'utilisateur`, `grep don't fichier.txt`, `cat <<EOF\nc'est bon\nEOF` —
-    commandes triviales, surtout en français. La refuser rendrait le produit inutilisable.
-  - Traitement du backslash tranché : retiré sur POSIX (échappement), conservé sur Windows
-    (séparateur natif). Ferme un défaut que j'ai trouvé par mesure et qu'AUCUN relecteur
-    n'avait signalé : Bash lit `cat \/etc/passwd` comme /etc/passwd, mais le fragment brut
-    n'est pas absolu et se résolvait sous la racine -> autorisé à tort.
-
-## Écarts assumés vs la lettre de l'ADR, énoncés franchement
-1. L'ADR annonçait que `cat $HOME/truc` « ne produit aucun chemin ». MESURE : le fragment
-   `HOME/truc` EST capté (le motif exclut `$`), il est simplement AUTORISÉ car résolu sous
-   la racine. Le test asserte donc exit=0, pas l'absence de candidat.
-2. Simplification : un seul découpage remplace les deux mécanismes prévus (motif regex +
-   filtre des tokens nus). Il couvre en plus `rm -rf>.claude` (cible nue COLLÉE à un
-   opérateur) que le motif regex seul de l'ADR manquait. Mesuré 15/15.
+## Défaut trouvé par moi, qu'aucun relecteur n'avait signalé
+`cat \/etc/passwd` : Bash lit /etc/passwd, mais le fragment brut n'est pas absolu et se
+résolvait sous la racine -> autorisé à tort. Corrigé au T6 (`_resoudre` retire les
+backslashes sur POSIX, les conserve sur Windows où c'est le séparateur natif).
 
 ## Limite hors périmètre (documentée, assumée — ne pas REJETER pour ça)
 On n'interprète PAS le shell : pas d'expansion `$VAR`, pas de substitution `$(...)`, pas de
-globbing. Un attaquant qui matérialise un chemin par expansion (`CIBLE=/etc/passwd;
-cat $CIBLE`) n'est PAS arrêté — c'est le rôle d'une sandbox OS, hors périmètre depuis
-l'origine. Les chemins contenant un espace ne sont pas captés en entier (le découpage
-s'arrête au délimiteur). Signalez seulement si cette limite est MAL BORNÉE.
+globbing. `CIBLE=/etc/passwd; cat $CIBLE` n'est PAS arrêté — rôle d'une sandbox OS, hors
+périmètre depuis l'origine. Les chemins contenant un espace ne sont pas captés en entier.
+Signalez seulement si cette limite est MAL BORNÉE.
 
 ## Ce qu'il faut chercher
 Un contournement RÉSIDUEL du confinement ou de l'auto-protection. REJECT si un chemin
-littéral hors racine passe, ou si le confiné peut neutraliser sa garde.
+littéral hors racine passe, ou si le confiné peut neutraliser sa garde, ou si vous
+identifiez une transformation lexicale pré-découpage de bash non couverte.
 
 ## Diff CUMULÉ vs origin/main
 ~~~diff
 diff --git a/src/forgeai/ide/guard_fs.py b/src/forgeai/ide/guard_fs.py
 new file mode 100644
-index 0000000..ff19c73
+index 0000000..42a5ee5
 --- /dev/null
 +++ b/src/forgeai/ide/guard_fs.py
-@@ -0,0 +1,480 @@
+@@ -0,0 +1,485 @@
 +"""Génération et installation de la garde filesystem autonome (B-24).
 +
 +Pourquoi un script GÉNÉRÉ plutôt qu'un module du produit : la garde est
@@ -262,6 +260,11 @@ index 0000000..ff19c73
 +    if tool_name == "Bash":
 +        commande = tool_input.get("command")
 +        if isinstance(commande, str):
++            # bash supprime la continuation de ligne (backslash + saut de ligne) avant tout découpage (mesure).
++            # Sans cette normalisation, un chemin fragmenté par des continuations échappe au contrôle.
++            # Normalisation appliquée partout, y compris dans des guillemets simples où bash ne le ferait pas — sur-détection assumée, fail-closed.
++            # Avec le retrait du backslash dans _resoudre, cela couvre la liste COMPLÈTE et MESURÉE des transformations pré-découpage de bash.
++            commande = commande.replace(chr(92) + "\n", "")
 +            DELIMITEURS = r"""[\s<>;|&()"'`$]+"""
 +            fragments = [f for f in re.split(DELIMITEURS, commande) if f]
 +            for fragment in fragments:
@@ -547,10 +550,10 @@ index 0000000..ff19c73
 +    return script_path, hook
 diff --git a/tests/test_guard_fs.py b/tests/test_guard_fs.py
 new file mode 100644
-index 0000000..2b97fc5
+index 0000000..a8138ac
 --- /dev/null
 +++ b/tests/test_guard_fs.py
-@@ -0,0 +1,927 @@
+@@ -0,0 +1,986 @@
 +"""Tests du module ``forgeai.ide.guard_fs`` (B-24c/d).
 +
 +Chaque test fonctionnel exécute RÉELLEMENT le script de garde généré, via
@@ -1478,25 +1481,89 @@ index 0000000..2b97fc5
 +    # La citation du chemin RESOLU (et non du fragment brut) prouve que
 +    # l'extraction a ete suivie d'une resolution reelle.
 +    assert "/etc/passwd" in stderr
++
++
++# ── Tour 7 : normalisation de la continuation de ligne bash ──
++def test_continuation_ligne_chemin_relatif_sortie(racine, env_tmpdir, tmp_path):
++    """`cat .<backslash-newline>./.<backslash-newline>./etc/passwd` reconstitue `cat ../../etc/passwd`
++    qui sort de la racine : doit être REFUSÉ (exit 2)."""
++    script = ecrire_garde(tmp_path, racine)
++    commande = "cat .\\\n./.\\\n./etc/passwd"
++    code, _ = run(script, charge("Bash", {"command": commande}, cwd=racine), env=env_tmpdir)
++    assert code == 2
++
++
++def test_continuation_ligne_auto_protection(racine, env_tmpdir, tmp_path):
++    """`cat .cla<backslash-newline>ude/settings.json` reconstitue `cat .claude/settings.json`
++    qui est un fichier d'auto-protection : doit être REFUSÉ (exit 2)."""
++    script = ecrire_garde(tmp_path, racine)
++    commande = "cat .cla\\\nude/settings.json"
++    code, _ = run(script, charge("Bash", {"command": commande}, cwd=racine), env=env_tmpdir)
++    assert code == 2
++
++
++def test_continuation_ligne_chemin_absolu(racine, env_tmpdir, tmp_path):
++    """`cat /etc/pas<backslash-newline>swd` reconstitue `cat /etc/passwd` : doit être REFUSÉ (exit 2)."""
++    script = ecrire_garde(tmp_path, racine)
++    commande = "cat /etc/pas\\\nswd"
++    code, _ = run(script, charge("Bash", {"command": commande}, cwd=racine), env=env_tmpdir)
++    assert code == 2
++
++
++def test_continuation_ligne_parentheses_sortie(racine, env_tmpdir, tmp_path):
++    """`cat sous/../<backslash-newline>../etc/passwd` reconstitue `cat sous/../../etc/passwd`
++    qui sort de la racine : doit être REFUSÉ (exit 2)."""
++    script = ecrire_garde(tmp_path, racine)
++    (racine / "sous").mkdir()
++    commande = "cat sous/../\\\n../etc/passwd"
++    code, _ = run(script, charge("Bash", {"command": commande}, cwd=racine), env=env_tmpdir)
++    assert code == 2
++
++
++def test_continuation_ligne_chemin_interne(racine, env_tmpdir, tmp_path):
++    """NON-REGRESSION : `cat sous/f<backslash-newline>.txt` reconstitue `cat sous/f.txt`
++    qui est un chemin INTERNE existant : doit rester AUTORISÉ (exit 0)."""
++    script = ecrire_garde(tmp_path, racine)
++    sous = racine / "sous"
++    sous.mkdir()
++    (sous / "f.txt").write_text("contenu", encoding="utf-8")
++    commande = "cat sous/f\\\n.txt"
++    code, _ = run(script, charge("Bash", {"command": commande}, cwd=racine), env=env_tmpdir)
++    assert code == 0
++
++
++def test_continuation_ligne_non_regression(racine, env_tmpdir, tmp_path):
++    """NON-REGRESSION : une commande sans continuation reste inchangée.
++    `echo bonjour` -> exit 0 ; `cat /etc/passwd` -> exit 2."""
++    script = ecrire_garde(tmp_path, racine)
++    code, _ = run(script, charge("Bash", {"command": "echo bonjour"}, cwd=racine), env=env_tmpdir)
++    assert code == 0
++    code, _ = run(script, charge("Bash", {"command": "cat /etc/passwd"}, cwd=racine), env=env_tmpdir)
++    assert code == 2
 ~~~
 
-## Preuve d'exécution CAPTURÉE (rejouée APRÈS le commit fe83f18)
+## Preuve d'exécution CAPTURÉE (rejouée APRÈS le commit b08a767)
 ~~~
 $ python3 -m pytest tests/test_guard_fs.py -q
-........................s......................................s..       [100%]
-exit=0 — 65 tests, 2 skips (comportement Windows, observable seulement sur Windows)
+........................s......................................s........ [100%]
+exit=0 — 71 tests, 2 skips (comportement Windows, observable seulement sur Windows)
 
 # comportement du script GENERE en subprocess reel (0=autorise, 2=refuse)
    -- REFUS attendus (2) --
-   2  cat "/etc/passwd" "
-   2  cat '/etc/passwd' '
-   2  cat</etc/passwd (colle)
-   2  echo bad >".claude/settings.json" "
+   2  cat /etc/passwd
+   2  cat "/etc/passwd" (double quote)
+   2  cat '/etc/passwd' (simple quote)
+   2  cat</etc/passwd (operateur colle)
+   2  echo bad >".claude/settings.json"
    2  cat $(echo /etc/passwd) (substitution)
    2  here-doc apostrophe FR
    2  rm -rf .claude
    2  rm -rf>.claude (nu colle)
-   2  cat \/etc/passwd (backslash)
+   2  cat \/etc/passwd (backslash echappe)
+   2  CONTINUATION -> ../../etc/passwd
+   2  CONTINUATION -> .claude/settings.json
+   2  CONTINUATION dans chemin absolu
+   2  CONTINUATION + traversal
    2  mv .claude/hooks/forgeai_guard_fs.py /tmp/x
    2  cat foo/../../../etc/passwd
    2  echo x>>/etc/hosts
@@ -1517,6 +1584,7 @@ exit=0 — 65 tests, 2 skips (comportement Windows, observable seulement sur Win
    0  ls -la
    0  cat "fichier>bizarre.txt"
    0  cat sous/f.txt
+   0  CONTINUATION -> chemin INTERNE
    0  cwd=racine/sous + cat f.txt
    0  Read sous/f.txt
    le refus cite le chemin RESOLU : True
@@ -1524,17 +1592,18 @@ exit=0 — 65 tests, 2 skips (comportement Windows, observable seulement sur Win
 # CRITERE FIGE B-24 : refus journalise ET chaine verifiee par l'outil du produit
    3 entrees ecrites par le script autonome ; types={'guard_fs_denied'}
    motifs : [None, None, None]
-   verify OFFICIEL du produit : OK /tmp/tmpzrtghb4o/reg.jsonl: 3 entrées, chaîne intègre (exit 0)
+   verify OFFICIEL du produit : OK /tmp/tmpx4pih0wj/reg.jsonl: 3 entrées, chaîne intègre (exit 0)
 
 # MUTATIONS (substitution verifiee effective AVANT chaque interpretation)
-  commonpath -> startswith                     : ROUGE
-  realpath cible -> abspath                    : ROUGE
-  auto-protection SCRIPT_PATH desactivee       : ROUGE (test isolant, T2)
-  retrait du confinement cwd (T4)              : ROUGE, 3 tests, exit=1
-  retrait de l'auto-protection cwd (T4)        : ROUGE, 1 test,  exit=1
-  decoupage reduit aux espaces (T6)            : ROUGE, 15 tests, exit=1
-  retrait du traitement backslash (T6)         : ROUGE, 2 tests,  exit=1
-  restauration                                 : VERT exit=0
+  commonpath -> startswith                       : ROUGE
+  realpath cible -> abspath                      : ROUGE
+  auto-protection SCRIPT_PATH desactivee         : ROUGE (test isolant, T2)
+  retrait du confinement cwd (T4)                : ROUGE, 3 tests, exit=1
+  retrait de l'auto-protection cwd (T4)          : ROUGE, 1 test,  exit=1
+  decoupage reduit aux espaces (T6)              : ROUGE, 15 tests, exit=1
+  retrait du traitement backslash (T6)           : ROUGE, 2 tests,  exit=1
+  retrait de la normalisation continuation (T7)  : ROUGE, 2 tests,  exit=1
+  restauration                                   : VERT exit=0
   NOTE HONNETE : une mutation (resoudre contre le cwd BRUT au lieu du cwd resolu)
   SURVIT et c'est ATTENDU — semantiquement EQUIVALENTE, _resoudre appliquant deja
   realpath en sortie ; verifie par mesure avec symlink (3 cibles, identiques).

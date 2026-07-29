@@ -160,51 +160,78 @@ def _candidats(tool_name, tool_input):
     # Politique « chemins littéraux résolubles uniquement » : seuls les
     # fragments qui ressemblent à un chemin littéral sont contrôlés.
     #
-    # B-24c/d — on n'utilise PLUS de tokeniseur shell (shlex et son repli
-    # re.split ont été rejetés 3 fois par la revue scellée : chaque tour
-    # trouvait un opérateur ou un séparateur oublié, signal de conception).
-    # On ne réimplémente pas un lexer shell par soustraction de caractères.
+    # B-24c/d — UN SEUL découpage de la commande brute sur la classe des
+    # délimiteurs shell (``\s<>;|&()"'`$``), puis application du filtre
+    # ``_ressemble_chemin``. Aucune tokenisation de type shell : shlex et
+    # son repli re.split ont été rejetés par la revue scellée (chaque
+    # tour trouvait un opérateur ou un séparateur oublié, signal de
+    # conception). On n'extrait que des fragments LITTÉRAUX.
     #
-    # Nouvelle approche : UN SEUL découpage de la commande brute sur la
-    # classe des délimiteurs shell (``\s<>;|&()"'`$``), puis on applique le
-    # filtre ``_ressemble_chemin`` inchangé. Conséquences :
+    # B-24d tour 8 — collage d'un chemin à un préfixe d'option.
+    # Le collage d'un chemin à un préfixe d'option suit les conventions
+    # POSIX/GNU : séparateur ``=`` pour les options longues
+    # (``--file=...``, ``--target-directory=...``) et agglutination
+    # après ``-`` pour les options courtes (``-f...``, ``-o...``, etc.).
+    # Deux règles bornées par ces conventions les couvrent :
     #
-    #   * un fragment contenant un séparateur et composé de caractères
-    #     hors délimiteurs ne peut PAS se cacher : s'il est dans la
-    #     commande, le motif le trouve, qu'il soit entre guillemets, après
-    #     une redirection, dans une substitution de commande ou dans un
-    #     heredoc ;
-    #   * les opérateurs shell (``<``, ``>``, ``;``, ``|``, ``&``, ``(``,
-    #     ``)``) sont dans la classe de découpage — donc un fragment collé
-    #     ``cat</etc/passwd`` est correctement séparé en ``cat`` et
-    #     ``/etc/passwd`` ;
-    #   * le découpage NE LÈVE PAS d'exception (re.split ne lève jamais
-    #     sur des guillemets déséquilibrés) : le chemin dégradé
-    #     ``try/except`` disparaît, et avec lui la porte de service
-    #     qu'il constituait (un attaquant forçant un ValueError pour
-    #     atteindre un repli plus permissif).
+    # R1. Le signe ``=`` est ajouté à la classe des délimiteurs : il
+    #     isole le préfixe d'option longue de son argument et couvre
+    #     aussi les affectations de variables d'environnement en
+    #     préfixe de commande (``VAR=/chemin cmd``).
+    # R2. Un fragment qui COMMENCE par ``-`` est une option (convention
+    #     universelle). On en extrait AUSSI le suffixe à partir du
+    #     premier caractère ouvrant un chemin (``/``, ``~``, ``.``).
+    #     Le fragment entier reste également candidat (les deux sont
+    #     contrôlés) ; les doublons sont évités par l'ensemble ``vus``.
+    #
+    # Conséquences : un fragment contenant un séparateur et composé de
+    # caractères hors délimiteurs ne peut PAS se cacher — s'il est dans
+    # la commande, le motif le trouve, qu'il soit entre guillemets,
+    # après une redirection, dans une substitution de commande, dans un
+    # heredoc ou collé à un préfixe d'option. Le découpage NE LÈVE PAS
+    # d'exception (re.split ne lève jamais sur des guillemets
+    # déséquilibrés) : le chemin dégradé ``try/except`` disparaît, et
+    # avec lui la porte de service qu'il constituait.
     #
     # Limite de périmètre inchangée : on n'interprète PAS le shell — pas
-    # d'expansion de variable (``$HOME``, ``${X}``), pas de substitution de
-    # commande (``$(...)``, ``...``), pas de globbing (``*``, ``?``,
+    # d'expansion de variable (``$HOME``, ``${X}``), pas de substitution
+    # de commande (``$(...)``, ``...``), pas de globbing (``*``, ``?``,
     # ``[...]``), pas de compréhension des quotes imbriquées au-delà du
-    # découpage. L'extraction porte sur des FRAGMENTS LITTÉRAUX. L'exécution
-    # de code arbitraire n'est PAS confinable sans sandbox OS — limitation
-    # documentée et assumée. L'absence d'exception possible est précisément
-    # l'intérêt de cette conception : plus de chemin dégradé à oublier.
+    # découpage. L'extraction porte sur des FRAGMENTS LITTÉRAUX.
     if tool_name == "Bash":
         commande = tool_input.get("command")
         if isinstance(commande, str):
-            # bash supprime la continuation de ligne (backslash + saut de ligne) avant tout découpage (mesure).
-            # Sans cette normalisation, un chemin fragmenté par des continuations échappe au contrôle.
-            # Normalisation appliquée partout, y compris dans des guillemets simples où bash ne le ferait pas — sur-détection assumée, fail-closed.
-            # Avec le retrait du backslash dans _resoudre, cela couvre la liste COMPLÈTE et MESURÉE des transformations pré-découpage de bash.
+            # bash supprime la continuation de ligne (backslash + saut
+            # de ligne) avant tout découpage (mesure). Sans cette
+            # normalisation, un chemin fragmenté par des continuations
+            # échappe au contrôle. Normalisation appliquée partout, y
+            # compris dans des guillemets simples où bash ne le ferait
+            # pas — sur-détection assumée, fail-closed. Avec le retrait
+            # du backslash dans _resoudre, cela couvre la liste
+            # COMPLÈTE et MESURÉE des transformations pré-découpage
+            # de bash.
             commande = commande.replace(chr(92) + "\n", "")
-            DELIMITEURS = r"""[\s<>;|&()"'`$]+"""
+            DELIMITEURS = r"""[\s<>;|&()"'`$=]+"""
             fragments = [f for f in re.split(DELIMITEURS, commande) if f]
+            # Règle R2 : un fragment commençant par ``-`` est une
+            # option. On extrait le suffixe à partir du premier
+            # caractère ouvrant un chemin (``/``, ``~``, ``.``). Le
+            # fragment entier reste également candidat (les deux
+            # contrôlent). Dédoublonnage par ``vus`` pour ne pas
+            # accumuler la même cible sous deux formes.
+            OUVRE_CHEMIN = re.compile(r"[/~.]")
+            vus = set()
             for fragment in fragments:
-                if _ressemble_chemin(fragment):
+                if _ressemble_chemin(fragment) and fragment not in vus:
                     trouves.append(fragment)
+                    vus.add(fragment)
+                if fragment.startswith("-"):
+                    m = OUVRE_CHEMIN.search(fragment)
+                    if m:
+                        suffixe = fragment[m.start():]
+                        if _ressemble_chemin(suffixe) and suffixe not in vus:
+                            trouves.append(suffixe)
+                            vus.add(suffixe)
     return trouves
 
 
