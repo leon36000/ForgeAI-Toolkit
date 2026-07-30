@@ -36,3 +36,23 @@ def test_allowlist_exonere_un_site_mesure(tmp_path):
     mesure = faux_src / "hardened.py"
     mesure.write_text('URL = "/v1/chat/completions"\n', encoding="utf-8")
     assert garde.sites_non_autorises(src=faux_src, allowlist=frozenset({mesure})) == []
+
+
+def test_main_arbre_propre_retourne_0(capsys):
+    """main() sur l'arbre réel (propre) sort en 0 sans rien écrire sur stderr."""
+    assert garde.main() == 0
+    assert capsys.readouterr().err == ""
+
+
+def test_main_signale_retourne_1(monkeypatch, capsys):
+    """main() sort en 1 et nomme le coupable sur stderr quand un site fuit.
+
+    Le coupable est sous SRC (⊂ RACINE) comme en réalité : `sites_non_autorises`
+    ne retourne que des résultats de `SRC.rglob`, donc `relative_to(RACINE)` du
+    message d'erreur tient toujours."""
+    coupable = garde.SRC / "fuite.py"
+    monkeypatch.setattr(garde, "sites_non_autorises", lambda: [coupable])
+    assert garde.main() == 1
+    err = capsys.readouterr().err
+    assert "GARDE METERING" in err
+    assert "fuite.py" in err
