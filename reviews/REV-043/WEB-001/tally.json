@@ -1,0 +1,19 @@
+{
+ "result": "APPROVE",
+ "reason": "3/3 APPROVE",
+ "vendors": [
+  "alibaba",
+  "deepseek",
+  "xai"
+ ],
+ "prompt_sha256": "27edb4883d2aef3b4fd2a7c16f522b48f1ca8c09a1ad269e1e46594785597ce5",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "src/forgeai/web/server.py",
+   "description": "Syntaxe inhabituelle et moins lisible pour passer un argument mot-clé. L'utilisation directe de `token=self.server.forgeai_auth_value` est standard et préférable à la décompression de dictionnaire.",
+   "preuve": "**{\"token\": self.server.forgeai_auth_value},"
+  }
+ ],
+ "bloquantes": []
+}

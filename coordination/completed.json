@@ -536,7 +536,33 @@
         "prompt_sha256": "f1c3d94e0534b4ad26b177559137073a9a22840e38a0b09949cd44e486e2a0a8",
         "dossier": "reviews/WEB-001"
       },
-      "_note": "Archivage retroactif par le cockpit (Copilot) le 2026-07-29 ; PR mergee par CODEX mais jamais ajoutee a completed.json."
+      "_note": "Archivage retroactif par le cockpit (Copilot) le 2026-07-29 ; PR mergee par CODEX mais jamais ajoutee a completed.json.",
+      "review_rev043": {
+        "result": "APPROVE",
+        "reason": "3/3 APPROVE",
+        "vendors": [
+          "alibaba",
+          "deepseek",
+          "xai"
+        ],
+        "models": [
+          "DeepSeek-V4-Pro",
+          "Grok-4.5",
+          "Qwen3.7-Max"
+        ],
+        "prompt_sha256": "27edb4883d2aef3b4fd2a7c16f522b48f1ca8c09a1ad269e1e46594785597ce5",
+        "objections": [
+          {
+            "severite": "mineure",
+            "fichier": "src/forgeai/web/server.py",
+            "description": "Syntaxe inhabituelle et moins lisible pour passer un argument mot-clé. L'utilisation directe de `token=self.server.forgeai_auth_value` est standard et préférable à la décompression de dictionnaire.",
+            "preuve": "**{\"token\": self.server.forgeai_auth_value},"
+          }
+        ],
+        "bloquantes": [],
+        "verdicts_dir": "reviews/REV-043/WEB-001/",
+        "note": "Revue de conformité multi-vendor REV-043 (issue #304) rejouée sur le diff déjà mergé ; remplace la conformité de la revue d'origine mono-vendor (champ review ci-dessus, conservé comme trace)."
+      }
     },
     {
       "package": "DATA-002",
@@ -563,7 +589,34 @@
         ],
         "dossier": "Registres/PATCH-DATA-002.jsonl (OPENAI_VALIDATION_FINAL)"
       },
-      "_note": "Archivage retroactif par le cockpit (Copilot) le 2026-07-29 ; PR mergee par CODEX (Closes #164) mais jamais ajoutee a completed.json."
+      "_note": "Archivage retroactif par le cockpit (Copilot) le 2026-07-29 ; PR mergee par CODEX (Closes #164) mais jamais ajoutee a completed.json.",
+      "review_rev043": {
+        "result": "REJECT",
+        "reason": "2/3 APPROVE",
+        "vendors": [
+          "alibaba",
+          "deepseek",
+          "xai"
+        ],
+        "models": [
+          "DeepSeek-V4-Pro",
+          "Grok-4.5",
+          "Qwen3.7-Max"
+        ],
+        "prompt_sha256": "b5888dc582062058f6d77f704cb18bca09d79b075b280c938bb4ee743a1136a3",
+        "objections": [
+          {
+            "severite": "critique",
+            "fichier": "src/forgeai/models/routes.py",
+            "description": "Échec de la suppression du journal de transaction (`atomic_unlink`) après un commit réussi dans `add_cloud` laisse persister le journal contenant l'état antérieur. La récupération automatique au prochain démarrage (`_recover_pending_transaction` -> `restore_models_transaction_locked`) applique alors cet ancien instantané, annulant silencieusement la transaction pourtant durablement écrite, violant l'atomicité et la durabilité.",
+            "preuve": "Dans le diff, la méthode `add_cloud` comporte :\n```\n            try:\n                self.vault._save(next_vault)\n                self._save(next_routes)\n            except BaseException:\n                self._rollback_transaction(snapshot)\n                raise\n            atomic_unlink(self.transaction_journal_path)\n```\nL'appel `atomic_unlink(...)` échappe à toute protection ; si cette suppression échoue, le journal persiste. Lors de la construction suivante d'un `RouteStore`, `_recover_pending_transaction` voit le journal (`if not self.transaction_journal_path.exists(): return`) et appelle `restore_models_transaction_locked` qui, à partir du journal contenant l'ancien `routes` et `vault`, restaure l'état antérieur, effaçant la route et la clé scellée ajoutées par le `add_cloud` précédemment réussi."
+          }
+        ],
+        "bloquantes": [],
+        "verdicts_dir": "reviews/REV-043/DATA-002/",
+        "note": "Revue de conformité multi-vendor REV-043 (issue #304) rejouée sur le diff déjà mergé ; remplace la conformité de la revue d'origine mono-vendor (champ review ci-dessus, conservé comme trace).",
+        "follow_up": "issue #306 (fenêtre crash-consistency WAL add_cloud)"
+      }
     },
     {
       "package": "DATA-003",
@@ -591,7 +644,26 @@
         "prompt_sha256": "d0ab88238730bba87670e186c0b28b7e3bccfa1ee6556202433a00371409b6ff",
         "dossier": "reviews/DATA-003"
       },
-      "_note": "Archivage retroactif par le cockpit (Copilot) le 2026-07-29 ; PR mergee par CODEX mais jamais ajoutee a completed.json."
+      "_note": "Archivage retroactif par le cockpit (Copilot) le 2026-07-29 ; PR mergee par CODEX mais jamais ajoutee a completed.json.",
+      "review_rev043": {
+        "result": "APPROVE",
+        "reason": "3/3 APPROVE",
+        "vendors": [
+          "alibaba",
+          "deepseek",
+          "xai"
+        ],
+        "models": [
+          "DeepSeek-V4-Pro",
+          "Grok-4.5",
+          "Qwen3.7-Max"
+        ],
+        "prompt_sha256": "53b411d2a31fb252692b456ed08c45b0213bd3f0c953e9b1c476f8c56ead47eb",
+        "objections": [],
+        "bloquantes": [],
+        "verdicts_dir": "reviews/REV-043/DATA-003/",
+        "note": "Revue de conformité multi-vendor REV-043 (issue #304) rejouée sur le diff déjà mergé ; remplace la conformité de la revue d'origine mono-vendor (champ review ci-dessus, conservé comme trace)."
+      }
     },
     {
       "id": "LAB-033A",
