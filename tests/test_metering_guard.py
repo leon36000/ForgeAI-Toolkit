@@ -1,13 +1,5 @@
 """Tests de la garde metering B-20b §7.4 (scripts/check_metering_sites.py)."""
-import importlib.util
-from pathlib import Path
-
-_SPEC = importlib.util.spec_from_file_location(
-    "check_metering_sites",
-    Path(__file__).resolve().parent.parent / "scripts" / "check_metering_sites.py",
-)
-garde = importlib.util.module_from_spec(_SPEC)
-_SPEC.loader.exec_module(garde)
+from forgeai.models import metering_guard as garde
 
 
 def test_arbre_reel_propre(tmp_path):
