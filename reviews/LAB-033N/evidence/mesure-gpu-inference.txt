@@ -1,0 +1,197 @@
+
+--- 2026-07-30T07:56:55.285233+00:00 ---
+$ kubectl exec deploy/ollama -n forgeai-minimal -- nvidia-smi
+Thu Jul 30 07:56:55 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 595.71.05              Driver Version: 595.71.05      CUDA Version: 13.2     |
++-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA GeForce RTX 5080        Off |   00000000:02:00.0 Off |                  N/A |
+|  0%   27C    P5             28W /  360W |       2MiB /  16303MiB |      0%      Default |
+|                                         |                        |                  N/A |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|  No running processes found                                                             |
++-----------------------------------------------------------------------------------------+
+
+
+--- 2026-07-30T07:56:55.582622+00:00 ---
+$ kubectl exec deploy/ollama -n forgeai-minimal -- ollama pull qwen2.5:0.5b (ÉCHEC — contingency NetworkPolicy de banc)
+
+[stderr]
+[?2026h[?25l[1Gpulling manifest ⠙ [K[?25h[?2026l[?2026h[?25l[1Gpulling manifest [K[?25h[?2026l
+Error: pull model manifest: Get "https://registry.ollama.ai/v2/library/qwen2.5/manifests/0.5b": dial tcp 104.18.17.170:443: connect: connection refused
+command terminated with exit code 1
+
+
+--- 2026-07-30T07:57:01.818522+00:00 ---
+$ kubectl exec deploy/ollama -n forgeai-minimal -- ollama pull qwen2.5:0.5b (après policy de banc)
+
+[stderr]
+[?2026h[?25l[1Gpulling manifest ⠋ [K[?25h[?2026l[?2026h[?25l[1Gpulling manifest ⠙ [K[?25h[?2026l[?2026h[?25l[1Gpulling manifest ⠹ [K[?25h[?2026l[?2026h[?25l[1Gpulling manifest ⠸ [K[?25h[?2026l[?2026h[?25l[1Gpulling manifest ⠴ [K[?25h[?2026l[?2026h[?25l[1Gpulling manifest ⠦ [K[?25h[?2026l[?2026h[?25l[1Gpulling manifest ⠦ [K[?25h[?2026l[?2026h[?25l[1Gpulling manifest ⠧ [K[?25h[?2026l[?2026h[?25l[1Gpulling manifest ⠇ [K[?25h[?2026l[?2026h[?25l[1Gpulling manifest ⠏ [K[?25h[?2026l[?2026h[?25l[1Gpulling manifest [K
+pulling c5396e06af29:   1% ▕                  ▏ 4.6 MB/397 MB                  [K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29:   4% ▕                  ▏  17 MB/397 MB                  [K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29:  10% ▕█                 ▏  38 MB/397 MB                  [K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29:  15% ▕██                ▏  59 MB/397 MB                  [K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29:  17% ▕███               ▏  68 MB/397 MB                  [K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29:  23% ▕████              ▏  92 MB/397 MB                  [K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29:  29% ▕█████             ▏ 114 MB/397 MB                  [K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29:  32% ▕█████             ▏ 127 MB/397 MB                  [K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29:  39% ▕██████            ▏ 153 MB/397 MB                  [K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29:  45% ▕████████          ▏ 179 MB/397 MB                  [K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29:  47% ▕████████          ▏ 185 MB/397 MB  184 MB/s      1s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29:  54% ▕█████████         ▏ 215 MB/397 MB  184 MB/s      0s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29:  59% ▕██████████        ▏ 234 MB/397 MB  184 MB/s      0s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29:  64% ▕███████████       ▏ 254 MB/397 MB  184 MB/s      0s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29:  70% ▕████████████      ▏ 279 MB/397 MB  184 MB/s      0s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29:  75% ▕█████████████     ▏ 298 MB/397 MB  184 MB/s      0s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29:  78% ▕██████████████    ▏ 310 MB/397 MB  184 MB/s      0s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29:  83% ▕██████████████    ▏ 330 MB/397 MB  184 MB/s      0s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29:  86% ▕███████████████   ▏ 344 MB/397 MB  184 MB/s      0s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29:  87% ▕███████████████   ▏ 348 MB/397 MB  184 MB/s      0s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29:  90% ▕████████████████  ▏ 359 MB/397 MB  179 MB/s      0s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29:  92% ▕████████████████  ▏ 366 MB/397 MB  179 MB/s      0s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29:  92% ▕████████████████  ▏ 367 MB/397 MB  179 MB/s      0s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29:  93% ▕████████████████  ▏ 369 MB/397 MB  179 MB/s      0s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29:  93% ▕████████████████  ▏ 370 MB/397 MB  179 MB/s      0s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29:  94% ▕████████████████  ▏ 372 MB/397 MB  179 MB/s      0s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29:  94% ▕████████████████  ▏ 373 MB/397 MB  179 MB/s      0s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29:  94% ▕████████████████  ▏ 375 MB/397 MB  179 MB/s      0s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29:  95% ▕█████████████████ ▏ 376 MB/397 MB  179 MB/s      0s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29:  95% ▕█████████████████ ▏ 378 MB/397 MB  179 MB/s      0s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29:  96% ▕█████████████████ ▏ 382 MB/397 MB  127 MB/s      0s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29:  97% ▕█████████████████ ▏ 384 MB/397 MB  127 MB/s      0s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29:  98% ▕█████████████████ ▏ 389 MB/397 MB  127 MB/s      0s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29:  99% ▕█████████████████ ▏ 394 MB/397 MB  127 MB/s      0s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29: 100% ▕█████████████████ ▏ 396 MB/397 MB  127 MB/s      0s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29: 100% ▕█████████████████ ▏ 396 MB/397 MB  127 MB/s      0s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29: 100% ▕█████████████████ ▏ 396 MB/397 MB  127 MB/s      0s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29: 100% ▕█████████████████ ▏ 396 MB/397 MB  127 MB/s      0s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29: 100% ▕█████████████████ ▏ 396 MB/397 MB  127 MB/s      0s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29: 100% ▕█████████████████ ▏ 396 MB/397 MB  127 MB/s      0s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29: 100% ▕█████████████████ ▏ 396 MB/397 MB  127 MB/s      0s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29: 100% ▕█████████████████ ▏ 396 MB/397 MB  127 MB/s      0s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29: 100% ▕█████████████████ ▏ 396 MB/397 MB  127 MB/s      0s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29: 100% ▕█████████████████ ▏ 396 MB/397 MB  127 MB/s      0s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29: 100% ▕█████████████████ ▏ 396 MB/397 MB  127 MB/s      0s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29: 100% ▕█████████████████ ▏ 396 MB/397 MB  127 MB/s      0s[K
+verifying sha256 digest ⠋ [K[?25h[?2026l[?2026h[?25l[A[A[1Gpulling manifest [K
+pulling c5396e06af29: 100% ▕█████████████████ ▏ 396 MB/397 MB  127 MB/s      0s[K
+verifying sha256 digest ⠙ [K[?25h[?2026l[?2026h[?25l[A[A[1Gpulling manifest [K
+pulling c5396e06af29: 100% ▕█████████████████ ▏ 396 MB/397 MB  127 MB/s      0s[K
+verifying sha256 digest [K
+writing manifest [K
+success [K[?25h[?2026l
+
+
+--- Preuve GPU / inférence ---
+URL NodePort : http://100.81.54.24:32058/api/generate
+Fallbacks :
+  Fallback port-forward utilisé sur http://127.0.0.1:58407/api/generate
+Réponse inférence :
+{"model":"qwen2.5:0.5b","created_at":"2026-07-30T07:57:34.370990583Z","response":"Un GPU (Grand Crusseur d'Essai) est un système de calcul central utilisé pour accélérer et optimiser les algorithmes complexes et des tâches exécution, en particulier ceux qui impliquent des volumes importants ou des débuts imprévisibles. Il est conçu pour fournir une performance égale à celle d'un ordinateur de bureau standard (traduction: \"high-end computer\"), mais il peut effectuer des tâches et des calculs plus complexes, permettant ainsi de procède aux grandes opérations mathématiques et de processe l'information. Il est souvent associé avec le terme \"transfert d'intelligence\" et a été intégré dans certaines applications comme les jeux virtuels, en particulier pour la performance sur des ordinateurs électroniques spécifiquement conçus.","done":true,"done_reason":"stop","context":[151644,8948,198,2610,525,1207,16948,11,3465,553,54364,14817,13,1446,525,264,10950,17847,13,151645,198,151644,872,198,43953,2372,662,6185,17133,3761,922,17321,650,22670,13,151645,198,151644,77091,198,1806,22670,320,40151,50103,325,324,294,6,37438,2143,8,1788,650,71501,409,5812,8622,134449,4914,1029,18503,51324,1842,7553,12059,3541,12111,288,68025,1842,939,259,8835,8528,505,19667,1488,11,662,52908,1268,64956,7774,11605,5011,306,939,26282,1159,1783,5908,939,7439,65,6128,22540,963,2682,20410,13,7543,1788,390,78784,4914,80894,404,6185,5068,3958,70,1574,3784,72003,294,22052,6013,3277,324,409,43302,5297,320,47026,2654,25,330,11892,13068,6366,3975,9870,3815,24666,2456,8801,939,259,8835,8528,1842,939,5812,82,5519,68025,11,28457,60412,43251,409,13674,4458,450,10047,37446,1179,13763,804,6888,963,8470,8303,1842,409,28294,325,326,6,25069,13,7543,1788,70051,4097,963,9753,512,96920,330,1458,69,529,294,54524,8509,1,1842,264,23639,56010,89866,6866,3654,288,8357,21572,3541,69075,12763,60144,11,662,52908,1268,4914,1187,5068,1729,939,6013,3277,1723,3958,69229,8303,70169,333,80135,390,3131,355,13],"total_duration":29229036368,"load_duration":11569295979,"prompt_eval_count":40,"prompt_eval_duration":16680059000,"eval_count":185,"eval_duration":976508000}
+
+--- Échantillons nvidia-smi compute apps ---
+pid, process_name, used_gpu_memory [MiB]
+
+pid, process_name, used_gpu_memory [MiB]
+
+pid, process_name, used_gpu_memory [MiB]
+
+pid, process_name, used_gpu_memory [MiB]
+260, /usr/lib/ollama/llama-server, 726 MiB
+
+pid, process_name, used_gpu_memory [MiB]
+260, /usr/lib/ollama/llama-server, 726 MiB
+
+pid, process_name, used_gpu_memory [MiB]
+260, /usr/lib/ollama/llama-server, 726 MiB
+
+pid, process_name, used_gpu_memory [MiB]
+260, /usr/lib/ollama/llama-server, 726 MiB
+
+pid, process_name, used_gpu_memory [MiB]
+260, /usr/lib/ollama/llama-server, 726 MiB
+
+pid, process_name, used_gpu_memory [MiB]
+260, /usr/lib/ollama/llama-server, 726 MiB
+
+pid, process_name, used_gpu_memory [MiB]
+260, /usr/lib/ollama/llama-server, 758 MiB
+
+pid, process_name, used_gpu_memory [MiB]
+260, /usr/lib/ollama/llama-server, 758 MiB
+
+pid, process_name, used_gpu_memory [MiB]
+260, /usr/lib/ollama/llama-server, 758 MiB
+
+pid, process_name, used_gpu_memory [MiB]
+260, /usr/lib/ollama/llama-server, 758 MiB
+
+pid, process_name, used_gpu_memory [MiB]
+260, /usr/lib/ollama/llama-server, 758 MiB
+
+pid, process_name, used_gpu_memory [MiB]
+260, /usr/lib/ollama/llama-server, 758 MiB
+
+pid, process_name, used_gpu_memory [MiB]
+260, /usr/lib/ollama/llama-server, 758 MiB
+
+pid, process_name, used_gpu_memory [MiB]
+260, /usr/lib/ollama/llama-server, 758 MiB
+
+pid, process_name, used_gpu_memory [MiB]
+260, /usr/lib/ollama/llama-server, 758 MiB
+
+pid, process_name, used_gpu_memory [MiB]
+260, /usr/lib/ollama/llama-server, 758 MiB
+
+pid, process_name, used_gpu_memory [MiB]
+260, /usr/lib/ollama/llama-server, 758 MiB
+
+pid, process_name, used_gpu_memory [MiB]
+260, /usr/lib/ollama/llama-server, 758 MiB
+
+pid, process_name, used_gpu_memory [MiB]
+260, /usr/lib/ollama/llama-server, 758 MiB
+
+pid, process_name, used_gpu_memory [MiB]
+260, /usr/lib/ollama/llama-server, 758 MiB
+
+pid, process_name, used_gpu_memory [MiB]
+260, /usr/lib/ollama/llama-server, 758 MiB
+
+pid, process_name, used_gpu_memory [MiB]
+260, /usr/lib/ollama/llama-server, 758 MiB
+
+pid, process_name, used_gpu_memory [MiB]
+260, /usr/lib/ollama/llama-server, 758 MiB
+
+
+--- Chemins d'écriture pendant l'inférence ---
+/root/.nv/ComputeCache/5/6/32ed337857d67f
+/root/.nv/ComputeCache/5/7/07956a4e0a280e
+/root/.nv/ComputeCache/4/8/434715715f1e35
+/root/.nv/ComputeCache/8/e/e9b5957fb6f258
+/root/.nv/ComputeCache/3/4/8b4696bf195717
+/root/.nv/ComputeCache/3/2/ec154742f0c33d
+/root/.nv/ComputeCache/d/f/1803beb147ae9b
+/root/.nv/ComputeCache/e/d/62f51568f18100
+/root/.nv/ComputeCache/e/f/3e6589e4869fbf
+/root/.nv/ComputeCache/f/4/0f5fa9ba314877
+/root/.nv/ComputeCache/f/e/225e714e6f1b05
+/root/.nv/ComputeCache/f/9/5006a7bb036edb
+/root/.nv/ComputeCache/index
+/root/.nv/ComputeCache/7/5/12b44d9c9f966c
+/root/.nv/ComputeCache/7/5/2315d6314e20f7
+/root/.nv/ComputeCache/2/1/d98efd9252c5be
+/root/.nv/ComputeCache/2/d/f34a3df9700985
+

@@ -1,0 +1,26 @@
+{
+  "cpu_model": "Intel(R) Core(TM) Ultra 7 265KF",
+  "cpu_cores": 20,
+  "cpu_arch": "x86_64",
+  "ram_gb": 30.5,
+  "os_name": "Linux 7.0.0-27-generic",
+  "gpus": [
+    {
+      "vendor": "nvidia",
+      "name": "NVIDIA GeForce RTX 5080",
+      "vram_mb": 16303
+    },
+    {
+      "vendor": "nvidia",
+      "name": "NVIDIA GeForce RTX 2080 SUPER",
+      "vram_mb": 8192
+    }
+  ],
+  "disks": [
+    {
+      "path": "/",
+      "total_gb": 252.0,
+      "free_gb": 197.0
+    }
+  ]
+}

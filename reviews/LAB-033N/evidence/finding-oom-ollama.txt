@@ -1,0 +1,32 @@
+# FINDING LAB-033N — OOMKill du service GPU ollama (capturé par l'Orchestrateur pendant le run)
+# Date : 2026-07-30T07:45:28Z — cluster réel, nœud pc3-grs-a
+
+$ kubectl -n forgeai-minimal get pod -l app=ollama -o jsonpath='{.items[0].status.containerStatuses[0].lastState}'
+{"terminated":{"containerID":"containerd://cd0e40237a5444e959dbc0fa63a3e6ba96d26ed34d01c8e8ff065397edc8592c","exitCode":137,"finishedAt":"2026-07-30T07:43:28Z","reason":"OOMKilled","startedAt":"2026-07-30T07:43:18Z"}}
+
+$ kubectl -n forgeai-minimal get pod -l app=ollama -o jsonpath=... resources
+{"limits":{"cpu":"250m","memory":"256Mi","nvidia.com/gpu":"1"},"requests":{"cpu":"50m","memory":"64Mi","nvidia.com/gpu":"1"}}
+
+$ kubectl -n forgeai-minimal logs deploy/ollama --tail=12
+time=2026-07-30T07:43:18.387Z level=INFO source=routes.go:1947 msg="server config" env="map[CUDA_VISIBLE_DEVICES: GGML_VK_VISIBLE_DEVICES: GPU_DEVICE_ORDINAL: HIP_VISIBLE_DEVICES: HSA_OVERRIDE_GFX_VERSION: HTTPS_PROXY: HTTP_PROXY: LLAMA_ARG_FIT: LLAMA_ARG_FIT_TARGET: NO_PROXY: OLLAMA_CONTEXT_LENGTH:0 OLLAMA_DEBUG:INFO OLLAMA_DEBUG_LOG_REQUESTS:false OLLAMA_EDITOR: OLLAMA_FLASH_ATTENTION:false OLLAMA_GO_TEMPLATE:true OLLAMA_GPU_OVERHEAD:0 OLLAMA_HOST:http://0.0.0.0:11434 OLLAMA_IGPU_ENABLE: OLLAMA_KEEP_ALIVE:5m0s OLLAMA_KV_CACHE_TYPE: OLLAMA_LLM_LIBRARY: OLLAMA_LOAD_TIMEOUT:5m0s OLLAMA_MAX_LOADED_MODELS:0 OLLAMA_MAX_QUEUE:512 OLLAMA_MAX_TRANSFER_STREAMS:4 OLLAMA_MODELS:/root/.ollama/models OLLAMA_NOHISTORY:false OLLAMA_NOPRUNE:false OLLAMA_NO_CLOUD:false OLLAMA_NUM_PARALLEL:1 OLLAMA_ORIGINS:[http://localhost https://localhost http://localhost:* https://localhost:* http://127.0.0.1 https://127.0.0.1 http://127.0.0.1:* https://127.0.0.1:* http://0.0.0.0 https://0.0.0.0 http://0.0.0.0:* https://0.0.0.0:* app://* file://* tauri://* vscode-webview://* vscode-file://*] OLLAMA_REMOTES:[ollama.com] OLLAMA_SCHED_SPREAD:false OLLAMA_VULKAN:true ROCR_VISIBLE_DEVICES: http_proxy: https_proxy: no_proxy:]"
+time=2026-07-30T07:43:18.387Z level=INFO source=routes.go:1949 msg="Ollama cloud disabled: false"
+time=2026-07-30T07:43:18.388Z level=INFO source=images.go:883 msg="total blobs: 0"
+time=2026-07-30T07:43:18.388Z level=INFO source=images.go:890 msg="total unused blobs removed: 0"
+time=2026-07-30T07:43:18.388Z level=INFO source=routes.go:2004 msg="Listening on [::]:11434 (version 0.32.3)"
+time=2026-07-30T07:43:18.389Z level=INFO source=model_list_cache.go:112 msg="model list cache hydration complete" models=0 failures=0 elapsed=53.708µs
+time=2026-07-30T07:43:18.389Z level=INFO source=runner.go:60 msg="discovering available GPUs..."
+time=2026-07-30T07:43:18.466Z level=WARN source=model_show_cache.go:142 msg="model show cloud cache hydration failed" error="Get \"https://ollama.com:443/api/tags?ts=1785397398\": dial tcp 34.36.133.15:443: connect: connection refused"
+time=2026-07-30T07:43:18.466Z level=WARN source=model_recommendations.go:168 msg="model recommendations refresh failed" error="Get \"https://ollama.com/api/experimental/model-recommendations\": dial tcp 34.36.133.15:443: connect: connection refused"
+time=2026-07-30T07:43:18.466Z level=INFO source=model_recommendations.go:177 msg="model recommendations cache sleep scheduled" wait=5m38.250225882s consecutive_failures=1
+
+$ kubectl -n forgeai-minimal get events (extrait)
+4m36s       Warning   Unhealthy               pod/ollama-5c65699988-49p48                   Startup probe failed: Get "http://10.42.2.162:11434/api/tags": read tcp 10.42.2.1:57134->10.42.2.162:11434: read: connection reset by peer
+3m50s       Normal    Pulled                  pod/ollama-5c65699988-49p48                   Successfully pulled image "ollama/ollama:latest@sha256:ec24bcaa2a810eb74171ce7c517813ef4821ed678988845e8d76cf62467036d4" in 341ms (341ms including waiting). Image size: 3260644317 bytes.
+3m40s       Warning   Unhealthy               pod/ollama-5c65699988-49p48                   Startup probe failed: Get "http://10.42.2.162:11434/api/tags": read tcp 10.42.2.1:39648->10.42.2.162:11434: read: connection reset by peer
+3m40s       Normal    Killing                 pod/ollama-5c65699988-49p48                   Container ollama failed startup probe, will be restarted
+2m12s       Normal    Pulling                 pod/ollama-5c65699988-49p48                   Pulling image "ollama/ollama:latest@sha256:ec24bcaa2a810eb74171ce7c517813ef4821ed678988845e8d76cf62467036d4"
+2m11s       Normal    Pulled                  pod/ollama-5c65699988-49p48                   Successfully pulled image "ollama/ollama:latest@sha256:ec24bcaa2a810eb74171ce7c517813ef4821ed678988845e8d76cf62467036d4" in 581ms (581ms including waiting). Image size: 3260644317 bytes.
+2m11s       Normal    Started                 pod/ollama-5c65699988-49p48                   Container started
+2m11s       Normal    Created                 pod/ollama-5c65699988-49p48                   Container created
+2m2s        Warning   Unhealthy               pod/ollama-5c65699988-49p48                   Startup probe failed: Get "http://10.42.2.162:11434/api/tags": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
+34s         Warning   BackOff                 pod/ollama-5c65699988-49p48                   Back-off restarting failed container ollama in pod ollama-5c65699988-49p48_forgeai-minimal(e5918a96-f424-4db5-8c80-383f9efddaa4)

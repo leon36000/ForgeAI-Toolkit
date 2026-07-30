@@ -1,0 +1,29 @@
+# échafaudage de banc, PAS un artefact produit
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: banc-lab033n-egress-temporaire
+  namespace: forgeai-minimal
+spec:
+  podSelector:
+    matchLabels:
+      app: ollama
+  policyTypes:
+    - Egress
+  egress:
+    - to:
+        - namespaceSelector: {}
+          podSelector: {}
+      ports:
+        - protocol: UDP
+          port: 53
+        - protocol: TCP
+          port: 53
+    - to:
+        - ipBlock:
+            cidr: 0.0.0.0/0
+      ports:
+        - protocol: TCP
+          port: 443
+        - protocol: TCP
+          port: 80
