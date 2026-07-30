@@ -1,0 +1,57 @@
+# RED correctif classes de ressources (finding OOM banc) — 2026-07-30T07:53:26Z
+# Test v2 appliqué SEUL (kwarg inventaire corrigé), produit PAS ENCORE corrigé
+============================= test session starts ==============================
+platform linux -- Python 3.12.3, pytest-9.1.1, pluggy-1.6.0
+rootdir: /media/pc1/Storage/Repo/ForgeAI Toolkit/.claude/worktrees/vigilant-ellis-582f24
+configfile: pyproject.toml
+plugins: typeguard-4.4.3, langsmith-0.9.4, anyio-4.14.1, Faker-37.12.0, cov-7.1.0
+collected 4 items
+
+tests/test_res_classes_stack_minimal.py FFF.                             [100%]
+
+=================================== FAILURES ===================================
+__________________ test_ollama_du_stack_minimal_en_classe_llm __________________
+
+    def test_ollama_du_stack_minimal_en_classe_llm():
+        """ollama doit obtenir les ressources de la classe llm (limits 8Gi / requests 4Gi)."""
+        plan = assemble_plan("minimal-gpu-cuda", _minimal_overlay(), target=RenderTarget.K3S)
+        ollama = next(s for s in plan.services if s.name == "ollama")
+>       assert ollama.ressources_effectives["limits"]["memory"] == "8Gi"
+E       AssertionError: assert '256Mi' == '8Gi'
+E         
+E         - 8Gi
+E         + 256Mi
+
+tests/test_res_classes_stack_minimal.py:31: AssertionError
+_______________ test_vector_store_du_stack_minimal_en_classe_db ________________
+
+    def test_vector_store_du_stack_minimal_en_classe_db():
+        """vector-store doit obtenir les ressources de la classe db (limits 2Gi)."""
+        plan = assemble_plan("minimal-gpu-cuda", _minimal_overlay(), target=RenderTarget.K3S)
+        vector_store = next(s for s in plan.services if s.name == "vector-store")
+>       assert vector_store.ressources_effectives["limits"]["memory"] == "2Gi"
+E       AssertionError: assert '256Mi' == '2Gi'
+E         
+E         - 2Gi
+E         + 256Mi
+
+tests/test_res_classes_stack_minimal.py:39: AssertionError
+__________________ test_rendu_k3s_ollama_8gi_et_gpu_conserve ___________________
+
+    def test_rendu_k3s_ollama_8gi_et_gpu_conserve():
+        """Le rendu K3s doit conserver 8Gi pour ollama ET la réservation nvidia.com/gpu."""
+        plan = assemble_plan("minimal-gpu-cuda", _minimal_overlay(), target=RenderTarget.K3S)
+        rendered = render_k3s(
+            plan,
+            node="noeud-x",
+            inventaire=(NodeInventaire(hostname="noeud-x", gpu_vendor="nvidia", vram_mib=16303),),
+        )
+>       assert 'memory: "8Gi"' in rendered
+E       assert 'memory: "8Gi"' in '# Généré par ForgeAI Toolkit — plan p1-b0307341 (profil minimal-gpu-cuda)\napiVersion: v1\nkind: Namespace\n# forgeai...nimal\nspec:\n  type: ClusterIP\n  selector: {app: vector-store}\n  ports:\n    - port: 6333\n      targetPort: 6333\n'
+
+tests/test_res_classes_stack_minimal.py:50: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_res_classes_stack_minimal.py::test_ollama_du_stack_minimal_en_classe_llm
+FAILED tests/test_res_classes_stack_minimal.py::test_vector_store_du_stack_minimal_en_classe_db
+FAILED tests/test_res_classes_stack_minimal.py::test_rendu_k3s_ollama_8gi_et_gpu_conserve
+========================= 3 failed, 1 passed in 0.07s ==========================

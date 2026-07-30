@@ -9,7 +9,8 @@
       "container_port": 11434,
       "volume": "forgeai-ollama-models:/root/.ollama",
       "healthcheck_path": "/api/tags",
-      "gpu_capable": true
+      "gpu_capable": true,
+      "resource_class": "llm"
     },
     {
       "name": "vector-store",
@@ -18,7 +19,8 @@
       "container_port": 6333,
       "volume": "forgeai-qdrant-durci-data:/qdrant/storage",
       "healthcheck_path": "/readyz",
-      "gpu_capable": false
+      "gpu_capable": false,
+      "resource_class": "db"
     }
   ],
   "models": {

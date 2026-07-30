@@ -45,3 +45,21 @@ def test_gpu_drivers_reference_covers_exact_code_vendors():
         f"forgeai.hardware.drivers.VENDORS: {set(VENDORS)!r}; "
         f"missing: {set(VENDORS) - cited!r}"
     )
+
+
+def test_claim_nvidia_reference_la_preuve_e2e_lab033n():
+    """Ce test est le RED de LAB-033N — il fige le claim NVIDIA au niveau « déploiement
+    e2e prouvé » ; toute régression du claim le casse.
+    """
+    assert GPU_DOC.exists()
+    text = GPU_DOC.read_text(encoding="utf-8")
+    nvidia_line = next(
+        (line for line in text.splitlines() if line.strip().startswith("| NVIDIA")),
+        "",
+    )
+    assert "LAB-033N" in nvidia_line, (
+        f"NVIDIA line in {GPU_DOC} must cite LAB-033N e2e proof"
+    )
+    assert "reviews/LAB-033N/evidence/" in nvidia_line, (
+        f"NVIDIA line in {GPU_DOC} must cite reviews/LAB-033N/evidence/ directory"
+    )
