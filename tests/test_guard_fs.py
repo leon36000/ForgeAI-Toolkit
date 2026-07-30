@@ -1586,3 +1586,186 @@ def test_script_genere_contient_union_shlex_et_decoupage_sans_repli(tmp_path, ra
         "le except ValueError de l'union ne doit contenir que `pass` (aucun repli) ; "
         f"trouvé : {corps!r}"
     )
+
+
+# ── Tour 12 : expansion d accolades ──
+def test_expansion_accolades_fragment_absolu_refuse(tmp_path, racine, env_tmpdir):
+    """A — ``cat {/etc/passwd,x}`` est REFUSÉ (exit 2).
+
+    Bash expanserait ``{/etc/passwd,x}`` (présence d'une virgule) en
+    ``/etc/passwd`` + ``x`` AVANT le découpage en mots. La garde ne
+    réimplémente pas l'expansion : elle découpe la commande brute sur la
+    classe des délimiteurs shell, désormais enrichie de ``{``, ``}`` et
+    ``,``. Le fragment absolu ``/etc/passwd`` est donc exposé tel quel et
+    résout hors de la racine confinée.
+    """
+    script = ecrire_garde(tmp_path, racine)
+    code, stderr = run(
+        script,
+        charge("Bash", {"command": "cat {/etc/passwd,x}"}, cwd=racine),
+        env=env_tmpdir,
+    )
+    assert code == 2
+    assert stderr.strip() != ""
+
+
+def test_expansion_accolades_prefixes_multiples_refuse(tmp_path, racine, env_tmpdir):
+    """B — ``cat {/etc,/tmp}/passwd`` est REFUSÉ (exit 2).
+
+    L'expansion bash produirait ``/etc/passwd`` et ``/tmp/passwd``. Le
+    découpage de la garde sur ``{``, ``}`` et ``,`` expose les fragments
+    ``/etc`` et ``/tmp`` : tous deux résolvent hors de la racine. ``/tmp``
+    n'est PAS couvert par l'exception tempdir car ``env_tmpdir`` redirige
+    TMPDIR/TEMP/TMP du subprocess vers un répertoire dédié — sans cette
+    isolation, le test passerait ou échouerait pour une mauvaise raison de
+    décor, pas à cause du comportement de la garde.
+    """
+    script = ecrire_garde(tmp_path, racine)
+    code, stderr = run(
+        script,
+        charge("Bash", {"command": "cat {/etc,/tmp}/passwd"}, cwd=racine),
+        env=env_tmpdir,
+    )
+    assert code == 2
+    assert stderr.strip() != ""
+
+
+def test_expansion_accolades_autoprotection_lecture_refuse(tmp_path, racine, env_tmpdir):
+    """C — ``cat {.claude,x}/settings.json`` est REFUSÉ (exit 2) : auto-protection.
+
+    Avant que les accolades et la virgule deviennent des délimiteurs,
+    ``{.claude,x}/settings.json`` restait UN fragment entier : il ne
+    correspondait pas au protégé ``.claude``, se résolvait sous la racine,
+    et le confiné pouvait atteindre la configuration de sa propre garde.
+    Le découpage expose désormais le fragment ``.claude``, qui déclenche la
+    protection.
+    """
+    script = ecrire_garde(tmp_path, racine)
+    code, stderr = run(
+        script,
+        charge("Bash", {"command": "cat {.claude,x}/settings.json"}, cwd=racine),
+        env=env_tmpdir,
+    )
+    assert code == 2
+    assert stderr.strip() != ""
+
+
+def test_expansion_accolades_autoprotection_ecriture_refuse(tmp_path, racine, env_tmpdir):
+    """D — ``echo bad > {.claude,y}/settings.json`` est REFUSÉ (exit 2).
+
+    Variante ÉCRITURE de l'auto-protection : la redirection ``>`` est un
+    délimiteur de la classe de découpage, puis ``{.claude,y}`` est à son
+    tour découpé sur ``{``, ``}`` et ``,``, exposant le fragment protégé
+    ``.claude``. Sans ce découpage, le confiné pouvait ÉCRASER la
+    configuration de sa propre garde via une expansion d'accolades.
+    """
+    script = ecrire_garde(tmp_path, racine)
+    code, stderr = run(
+        script,
+        charge(
+            "Bash",
+            {"command": "echo bad > {.claude,y}/settings.json"},
+            cwd=racine,
+        ),
+        env=env_tmpdir,
+    )
+    assert code == 2
+    assert stderr.strip() != ""
+
+
+def test_accolade_sans_virgule_litteral_hors_racine_refuse(tmp_path, racine, env_tmpdir):
+    """E — CARACTÉRISATION : ``cat /workspace/{../../etc/passwd}`` est REFUSÉ
+    (exit 2), mais PAS en vertu d'une expansion d'accolades.
+
+    Bash n'expanse les accolades QUE s'il y a une virgule (ou une séquence
+    ``{a..b}``). Ici il n'y a aucune virgule : ``{../../etc/passwd}``
+    resterait LITTÉRAL à l'exécution. Le refus vient exclusivement du fait
+    que le chemin littéral ``/workspace/{../../etc/passwd}`` — comme tout
+    fragment absolu en ``/workspace/...`` — résout HORS de la racine
+    confinée.
+
+    Ce test fige explicitement ce raisonnement : une revue antérieure a
+    attribué ce refus à une expansion d'accolades, ce qui est faux. Ne pas
+    propager cette croyance.
+    """
+    script = ecrire_garde(tmp_path, racine)
+    code, stderr = run(
+        script,
+        charge(
+            "Bash",
+            {"command": "cat /workspace/{../../etc/passwd}"},
+            cwd=racine,
+        ),
+        env=env_tmpdir,
+    )
+    assert code == 2
+    assert stderr.strip() != ""
+
+
+def test_expansion_accolades_find_exec_point_virgule_autorise(tmp_path, racine, env_tmpdir):
+    """F — ``find . -exec cat {} ;`` est AUTORISÉ (exit 0) : non-régression.
+
+    Le ``{}`` de ``find -exec`` est une accolade SANS virgule : littérale
+    pour bash, et réduite par le découpage de la garde à des fragments vides
+    — aucun chemin contrôlable. Le seul fragment chemin est ``.``, qui
+    résout sur le cwd, donc sous la racine. L'idiome ``find -exec`` ne doit
+    pas être confondu avec une expansion d'accolades.
+    """
+    script = ecrire_garde(tmp_path, racine)
+    code, _stderr = run(
+        script,
+        charge("Bash", {"command": "find . -exec cat {} ;"}, cwd=racine),
+        env=env_tmpdir,
+    )
+    assert code == 0
+
+
+def test_expansion_accolades_find_exec_plus_autorise(tmp_path, racine, env_tmpdir):
+    """G — ``find . -name *.py -exec rm {} +`` est AUTORISÉ (exit 0).
+
+    Non-régression du ``{}`` de find dans sa forme ``+`` : ``*.py`` est un
+    motif de glob, pas un chemin littéral résoluble — la politique « chemins
+    littéraux résolubles uniquement » ne le contrôle donc pas ; ``.`` résout
+    sous la racine via le cwd ; ``{}`` ne produit aucun fragment contrôlable.
+    """
+    script = ecrire_garde(tmp_path, racine)
+    code, _stderr = run(
+        script,
+        charge("Bash", {"command": "find . -name *.py -exec rm {} +"}, cwd=racine),
+        env=env_tmpdir,
+    )
+    assert code == 0
+
+
+def test_expansion_accolades_chemin_relatif_autorise(tmp_path, racine, env_tmpdir):
+    """H — ``cat sous/f.txt`` est AUTORISÉ (exit 0).
+
+    Chemin relatif ordinaire résolu sous la racine via le cwd : la présence
+    des délimiteurs ``{``/``}``/``,`` dans la classe de découpage ne change
+    rien au verdict pour une commande qui n'en contient pas.
+    """
+    (racine / "sous").mkdir()
+    (racine / "sous" / "f.txt").write_text("contenu de test\n", encoding="utf-8")
+    script = ecrire_garde(tmp_path, racine)
+    code, _stderr = run(
+        script,
+        charge("Bash", {"command": "cat sous/f.txt"}, cwd=racine),
+        env=env_tmpdir,
+    )
+    assert code == 0
+
+
+def test_expansion_accolades_echo_sans_chemin_autorise(tmp_path, racine, env_tmpdir):
+    """I — ``echo bonjour`` est AUTORISÉ (exit 0).
+
+    Aucun fragment ne ressemble à un chemin littéral : rien à contrôler,
+    la commande passe. Garde-fou de non-régression contre un découpage qui
+    refuserait par excès.
+    """
+    script = ecrire_garde(tmp_path, racine)
+    code, _stderr = run(
+        script,
+        charge("Bash", {"command": "echo bonjour"}, cwd=racine),
+        env=env_tmpdir,
+    )
+    assert code == 0

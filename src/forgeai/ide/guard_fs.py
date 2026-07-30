@@ -234,7 +234,17 @@ def _candidats(tool_name, tool_input):
             # COMPLÈTE et MESURÉE des transformations pré-découpage
             # de bash.
             commande = commande.replace(chr(92) + "\n", "")
-            DELIMITEURS = r"""[\s<>;|&()"'`$=]+"""
+            # B-24f — expansion d'accolades (Bash T{4..6}) : ajout de
+            # { } , à la classe des délimiteurs. Bash applique
+            # l'expansion d'accolades AVANT le découpage en mots ;
+            # sans ces délimiteurs, le fragment ``{.claude,x}/settings.json``
+            # restait entier, ne correspondait pas à ``.claude``, et se
+            # résolvait sous la racine : le confiné pouvait donc
+            # ÉCRASER la configuration de sa propre garde. Précision :
+            # bash n'expand les accolades QUE s'il y a une virgule ou
+            # une séquence ``{a..b}`` — une accolade SANS virgule reste
+            # littérale (mesure : ``{../../etc/passwd}`` reste tel quel).
+            DELIMITEURS = r"""[\s<>;|&()"'`$={},]+"""
             fragments = [f for f in re.split(DELIMITEURS, commande) if f]
             # Règle R2 (grappe de 1 à 3 lettres) : un fragment
             # commençant par ``-`` est une option courte avec argument
