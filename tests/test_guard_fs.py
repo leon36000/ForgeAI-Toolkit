@@ -134,7 +134,11 @@ def test_install_ecrit_script_et_rend_hookspec(tmp_path):
     assert script_path == attendu
     assert script_path.is_file()
     assert script_path.stat().st_size > 0
-    assert stat.S_IMODE(script_path.stat().st_mode) == 0o755
+    # NTFS n'a pas de bit d'exécution POSIX : on vérifie au moins la lisibilité
+    if sys.platform != "win32":
+        assert stat.S_IMODE(script_path.stat().st_mode) == 0o755
+    else:
+        assert os.access(script_path, os.R_OK)
     assert isinstance(hook, HookSpec)
     assert hook.event == "PreToolUse"
     assert hook.matcher == "*"
@@ -262,6 +266,13 @@ def test_outil_inconnu_sans_chemin_autorise(tmp_path, racine):
 
 # 15. JOURNALISATION : deux refus successifs, entrées "guard_fs_denied",
 # prev_hash chaîné, et chaîne acceptée par le verify officiel du produit.
+@pytest.mark.skipif(
+    sys.platform == "win32",
+    reason="forgeai.core.registre importe fcntl (POSIX-only) sans condition : le registre "
+    "du produit n'est pas portable Windows — défaut produit hors périmètre, issue #286, "
+    "écart consigné au Registres/mission.jsonl. Le refus lui-même reste vérifié sur "
+    "Windows par les tests de refus non journalisés.",
+)
 def test_journalisation_registre_et_verify_officiel(tmp_path, racine):
     registre = tmp_path / "Registres" / "mission.jsonl"
     script = ecrire_garde(tmp_path, racine, registre=registre)
@@ -381,9 +392,16 @@ def test_bash_dossier_claude_lui_meme_refuse(racine, env_tmpdir, tmp_path):
 
 
 def test_bash_traversal_relatif_refuse(racine, env_tmpdir, tmp_path):
+    # Porteur de la propriété « le refus cite le chemin RÉSOLU » : ici le fragment brut
+    # (``foo/../../../etc/passwd``) et le résolu (``realpath(racine/foo/../../../etc/passwd)``)
+    # diffèrent sur les trois OS, contrairement à ``cat /etc/passwd`` où ils coïncident sur
+    # POSIX — c'est donc le seul cas où la citation du résolu est DISTINGUABLE de celle du brut.
     script = ecrire_garde(tmp_path, racine)
     code, err = run(script, charge("Bash", {"command": "cat foo/../../../etc/passwd"}, cwd=racine), env=env_tmpdir)
     assert code == 2, f"traversal relatif doit être refusé (stderr={err!r})"
+    resolu = os.path.realpath(os.path.join(str(racine), "foo/../../../etc/passwd"))
+    assert resolu in err, f"le refus doit citer le chemin RÉSOLU {resolu!r} (stderr={err!r})"
+    assert "foo/../../../etc/passwd" not in err, f"le refus ne doit pas citer le fragment BRUT (stderr={err!r})"
 
 
 # O2 (chemins Windows) se prouve à deux niveaux. Sur POSIX, `C:\\...` n'est PAS
@@ -546,10 +564,9 @@ class TestOperateursColles:
         """NON-RÉGRESSION : un ``>`` LITTÉRAL entre guillemets fait
         partie du nom de fichier, pas un opérateur.
 
-        Crée ``racine/fichier>bizarre.txt`` puis ``cat "fichier>bizarre.txt"``
+        La garde statue lexicalement : ``cat "fichier>bizarre.txt"``
         avec cwd=racine doit être AUTORISÉ (exit 0)."""
-        cible = racine / "fichier>bizarre.txt"
-        cible.write_text("contenu\n", encoding="utf-8")
+        # La garde statue lexicalement : le fichier n'a pas besoin d'exister
         script = ecrire_garde(tmp_path, racine)
         ch = charge(
             "Bash", {"command": 'cat "fichier>bizarre.txt"'}, cwd=racine
@@ -659,6 +676,13 @@ def test_cwd_sous_repertoire_racine_autorise(tmp_path, racine, env_tmpdir):
     assert code == 0
 
 
+@pytest.mark.skipif(
+    sys.platform == "win32",
+    reason="forgeai.core.registre importe fcntl (POSIX-only) sans condition : le registre "
+    "du produit n'est pas portable Windows — défaut produit hors périmètre, issue #286, "
+    "écart consigné au Registres/mission.jsonl. Le refus lui-même reste vérifié sur "
+    "Windows par les tests de refus non journalisés.",
+)
 def test_refus_cwd_journalise_et_chaine_verifiee(tmp_path, racine, env_tmpdir):
     """Un refus de type cwd est journalisé en guard_fs_denied, et la chaîne
     du registre est acceptée par le verify officiel du produit."""
@@ -770,8 +794,7 @@ def test_non_regression_guillemets_equilibres_autorise(
     pas de lecteur Windows) et l'AUTORISE. Ce test verrouille le chemin
     nominal face à toute régression du repli.
     """
-    cible = racine / "fichier>bizarre.txt"
-    cible.write_text("contenu", encoding="utf-8")
+    # La garde statue lexicalement : le fichier n'a pas besoin d'exister
     script = ecrire_garde(tmp_path, racine)
     commande = 'cat "fichier>bizarre.txt"'
     code, stderr = run(
@@ -907,13 +930,15 @@ def test_C2a_windows_condition_apres_chemin_present_dans_source(tmp_path, racine
 
 
 @pytest.mark.skipif(os.name != "nt", reason="Comportement Windows; voir Registres/")
-def test_C2b_windows_backslash_conserve(tmp_path, racine, env_tmpdir):
+def test_C2b_windows_backslash_tete_est_absolu_refuse(tmp_path, racine, env_tmpdir):
     script = ecrire_garde(tmp_path, racine)
     c = charge("Bash", {"command": 'cat \\/etc/passwd "'}, cwd=racine)
-    exit_code, _ = run(script, c, env=env_tmpdir)
-    # Sur Windows le backslash est un separateur de chemin LEGAL -> pas de
-    # resolution vers un chemin absolu hors racine -> autorisation.
-    assert exit_code == 0
+    exit_code, stderr = run(script, c, env=env_tmpdir)
+    # Sur Windows, un backslash en tete designe la racine du lecteur courant :
+    # ntpath.isabs(chr(92) + "/etc/passwd") vaut True la ou posixpath.isabs
+    # vaut False. Le chemin est donc ABSOLU et hors de la racine de
+    # confinement : le refus (exit 2) est le comportement conforme.
+    assert exit_code == 2, stderr
 
 
 # ---------------------------------------------------------------------------
@@ -937,8 +962,10 @@ def test_D2_chemin_hors_racine_message_cite_resolu(tmp_path, racine, env_tmpdir)
     exit_code, stderr = run(script, c, env=env_tmpdir)
     assert exit_code == 2
     # La citation du chemin RESOLU (et non du fragment brut) prouve que
-    # l'extraction a ete suivie d'une resolution reelle.
-    assert "/etc/passwd" in stderr
+    # l'extraction a ete suivie d'une resolution reelle. Le resolu est
+    # calcule ici dans le test afin de suivre la plateforme : "/etc/passwd"
+    # sous Linux, "D:\etc\passwd" (lecteur courant) sous Windows.
+    assert os.path.realpath("/etc/passwd") in stderr, stderr
 
 
 # ── Tour 7 : normalisation de la continuation de ligne bash ──
@@ -1431,7 +1458,7 @@ def test_refus_eclatement_chemin_avec_guillemets_doubles(tmp_path, racine, env_t
     )
     assert exit_code == 2, stderr
     # Le refus doit mentionner le chemin concaténé restitué (assemblée effective).
-    assert ".claude/settings.json" in stderr, stderr
+    assert os.path.join(".claude", "settings.json") in stderr, stderr
 
 
 def test_refus_concatenation_absolu_autour_de_guillemets(tmp_path, racine, env_tmpdir):
@@ -1441,7 +1468,7 @@ def test_refus_concatenation_absolu_autour_de_guillemets(tmp_path, racine, env_t
         tmp_path, racine, env_tmpdir, 'cat "/etc"/passwd'
     )
     assert exit_code == 2, stderr
-    assert "/etc/passwd" in stderr, stderr
+    assert os.path.realpath("/etc/passwd") in stderr, stderr
 
 
 def test_refus_scission_au_milieu_d_un_absolu(tmp_path, racine, env_tmpdir):
@@ -1451,7 +1478,7 @@ def test_refus_scission_au_milieu_d_un_absolu(tmp_path, racine, env_tmpdir):
         tmp_path, racine, env_tmpdir, 'cat /et"c/passwd"'
     )
     assert exit_code == 2, stderr
-    assert "/etc/passwd" in stderr, stderr
+    assert os.path.realpath("/etc/passwd") in stderr, stderr
 
 
 # ---------------------------------------------------------------------------
