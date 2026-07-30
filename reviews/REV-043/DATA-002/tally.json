@@ -1,0 +1,19 @@
+{
+ "result": "REJECT",
+ "reason": "2/3 APPROVE",
+ "vendors": [
+  "alibaba",
+  "deepseek",
+  "xai"
+ ],
+ "prompt_sha256": "b5888dc582062058f6d77f704cb18bca09d79b075b280c938bb4ee743a1136a3",
+ "objections": [
+  {
+   "severite": "critique",
+   "fichier": "src/forgeai/models/routes.py",
+   "description": "Échec de la suppression du journal de transaction (`atomic_unlink`) après un commit réussi dans `add_cloud` laisse persister le journal contenant l'état antérieur. La récupération automatique au prochain démarrage (`_recover_pending_transaction` -> `restore_models_transaction_locked`) applique alors cet ancien instantané, annulant silencieusement la transaction pourtant durablement écrite, violant l'atomicité et la durabilité.",
+   "preuve": "Dans le diff, la méthode `add_cloud` comporte :\n```\n            try:\n                self.vault._save(next_vault)\n                self._save(next_routes)\n            except BaseException:\n                self._rollback_transaction(snapshot)\n                raise\n            atomic_unlink(self.transaction_journal_path)\n```\nL'appel `atomic_unlink(...)` échappe à toute protection ; si cette suppression échoue, le journal persiste. Lors de la construction suivante d'un `RouteStore`, `_recover_pending_transaction` voit le journal (`if not self.transaction_journal_path.exists(): return`) et appelle `restore_models_transaction_locked` qui, à partir du journal contenant l'ancien `routes` et `vault`, restaure l'état antérieur, effaçant la route et la clé scellée ajoutées par le `add_cloud` précédemment réussi."
+  }
+ ],
+ "bloquantes": []
+}

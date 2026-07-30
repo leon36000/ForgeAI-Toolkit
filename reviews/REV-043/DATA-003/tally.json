@@ -1,0 +1,12 @@
+{
+ "result": "APPROVE",
+ "reason": "3/3 APPROVE",
+ "vendors": [
+  "alibaba",
+  "deepseek",
+  "xai"
+ ],
+ "prompt_sha256": "53b411d2a31fb252692b456ed08c45b0213bd3f0c953e9b1c476f8c56ead47eb",
+ "objections": [],
+ "bloquantes": []
+}
