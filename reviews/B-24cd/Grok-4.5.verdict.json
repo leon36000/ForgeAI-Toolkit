@@ -1,0 +1,32 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "critique",
+   "fichier": "src/forgeai/ide/guard_fs.py",
+   "description": "Contournement Bash du confinement (CA-3 / critère figé) : _candidats ne retient que les tokens startswith(('/', './', '../', '~')). Un chemin littéral relatif du type 'foo/../../../etc/passwd' ou le token '..' seul n'est jamais extrait, donc jamais résolu ni soumis à _sous — la commande est autorisée (exit 0) alors qu'elle cible hors racine.",
+   "preuve": "_SCRIPT_TEMPLATE _candidats: `for token in commande.split(): if token.startswith(('/', './', '../', '~')): trouves.append(token)`. Contre-exemples non couverts par les tests: token `..` → startswith False; token `foo/../../../etc/passwd` → startswith False. Seuls test_bash_chemin_litteral_hors_racine_refuse (`cat /etc/shadow`) et test_bash_sans_chemin_litteral_autorise (`echo ok`) existent — aucun cas relatif non préfixé."
+  },
+  {
+   "severite": "critique",
+   "fichier": "src/forgeai/ide/guard_fs.py",
+   "description": "Contournement Bash de l'auto-protection (CA-4) : WRITE_TOOLS inclut Bash et _auto_protege compare bien SCRIPT_PATH / HOOKS_DIR / SETTINGS_JSON, mais les chemins relatifs sans préfixe './'/'../' (ex. `.claude/settings.json`, `.claude/hooks/forgeai_guard_fs.py`, ou le nom nu du script) ne entrent pas dans les candidats. Une commande du type `echo '{}' > .claude/settings.json` ou `echo pass > .claude/hooks/forgeai_guard_fs.py` n'a aucun candidat → exit 0, la garde se fait réécrire/désarmer.",
+   "preuve": "Même filtre startswith dans _candidats; _auto_protege n'est appelé que pour les candidats extraits. test_auto_protection_outils_ecriture_refuses ne couvre que Write/Edit avec file_path structuré, pas Bash. test_auto_protection_du_script_dans_racine_hors_hooks utilise Edit, pas Bash. Aucune assertion n'observe un refus auto-protection via outil Bash."
+  },
+  {
+   "severite": "majeure",
+   "fichier": "src/forgeai/ide/guard_fs.py",
+   "description": "Chemins littéraux quotés non détectés dans Bash : `cat '/etc/passwd'` ou `cat \"/etc/passwd\"` produisent un token `'/etc/passwd'` / `\"/etc/passwd\"` qui échoue le startswith — autorisé alors que c'est un chemin littéral hors racine au sens du critère figé reformulé (pas une substitution/glob/variable, hors périmètre assumé).",
+   "preuve": "`commande.split()` conserve les guillemets collés au token; `\"'/etc/passwd'\".startswith(('/', './', '../', '~'))` is False. Pas de shlex ni strip de quotes; aucun test avec chemin quoté."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "tests/test_guard_fs.py",
+   "description": "CA-7 annonce que le SOURCE généré « double-compile » ; le test ne fait qu'un seul compile() et n'exécute pas une seconde passe (ex. compile du fichier écrit sur disque après install). Couverture partielle du critère.",
+   "preuve": "test_source_genere_compile_et_sans_marqueurs: une seule ligne `compile(src, \"<guard_fs>\", \"exec\")`; test_install_ecrit_script_et_rend_hookspec n'appelle pas compile sur le fichier installé."
+  }
+ ],
+ "date_heure": "2026-07-29T18:56:27.234491+00:00",
+ "prompt_sha256": "3f0cc2b8f268e26ec4e0fb67660062abfc482a0d06109c0b757c1f6125e353f0",
+ "reviewer_model": "Grok-4.5"
+}

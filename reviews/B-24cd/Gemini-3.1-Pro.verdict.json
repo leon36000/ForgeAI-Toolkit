@@ -1,0 +1,32 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "critique",
+   "fichier": "src/forgeai/ide/guard_fs.py",
+   "description": "Contournement trivial du confinement Bash via guillemets ou redirections. La détection des chemins littéraux ignore les tokens qui ne commencent pas strictement par '/', './', '../' ou '~'. Un chemin absolu entre guillemets (ex: `\"/etc/passwd\"`) ou collé à un opérateur (ex: `</etc/passwd`) est ignoré par la garde, mais sera évalué correctement par Bash hors du workspace.",
+   "preuve": "Lignes 114-115 : `if token.startswith((\"/\", \"./\", \"../\", \"~\")): trouves.append(token)`. Les tokens `\"/etc/passwd\"` ou `</etc/passwd` ne sont pas extraits."
+  },
+  {
+   "severite": "critique",
+   "fichier": "src/forgeai/ide/guard_fs.py",
+   "description": "Contournement du confinement Bash sur Windows. Les chemins absolus Windows (ex: `C:\\Windows\\System32`) ne commencent pas par les préfixes UNIX codés en dur et sont donc totalement ignorés par l'analyse des tokens Bash.",
+   "preuve": "Lignes 114-115 : `if token.startswith((\"/\", \"./\", \"../\", \"~\")):`. Les lettres de lecteur (ex: `C:\\`) ne sont pas prises en compte."
+  },
+  {
+   "severite": "critique",
+   "fichier": "src/forgeai/ide/guard_fs.py",
+   "description": "Contournement de l'auto-protection par suppression du répertoire parent. L'auto-protection vérifie si la cible est *sous* `HOOKS_DIR`, mais ne protège pas le répertoire parent `.claude`. Une commande Bash exécutant `rm -rf ./.claude` sera autorisée, détruisant ainsi les hooks et les settings.",
+   "preuve": "Lignes 147-152 : `if _sous(resolu, HOOKS_DIR): return True`. Si `resolu` est le dossier `.claude`, `_sous` retourne `False` car `.claude` n'est pas un sous-dossier de `.claude/hooks`."
+  },
+  {
+   "severite": "critique",
+   "fichier": "src/forgeai/ide/guard_fs.py",
+   "description": "Contournement de l'auto-protection via des chemins relatifs simples dans Bash. Un token comme `.claude/hooks` ne commence pas par `./` et est donc ignoré par l'extracteur de candidats Bash, permettant à `rm -rf .claude/hooks` d'être exécuté sans aucune vérification.",
+   "preuve": "Lignes 114-115 : `if token.startswith((\"/\", \"./\", \"../\", \"~\")):`. Les chemins relatifs sans `./` explicite sont ignorés."
+  }
+ ],
+ "date_heure": "2026-07-29T18:56:14.181159+00:00",
+ "prompt_sha256": "3f0cc2b8f268e26ec4e0fb67660062abfc482a0d06109c0b757c1f6125e353f0",
+ "reviewer_model": "Gemini-3.1-Pro"
+}

@@ -1,0 +1,14 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "critique",
+   "fichier": "src/forgeai/ide/guard_fs.py",
+   "description": "Contournement par expansion d'accolades (brace expansion). Bash applique cette expansion AVANT le découpage en mots. Le guard ne reconnaît pas `{` et `}` comme délimiteurs et ne les interprète pas. Un chemin comme `/workspace/{../../etc/passwd}` est vu par le guard comme un littéral sous `/workspace` (car `{..` n'est pas `..` pour `os.path.realpath`), donc autorisé. Bash l'expand en `/workspace/../../etc/passwd` et lit `/etc/passwd`. Nouvelle classe de transformation lexicale pré-découpage (critère c).",
+   "preuve": "Ligne 228 : `DELIMITEURS = r\"\"\"[\\s<>;|&()'\"`$=]+\"\"\"` (accolades absentes). Ligne 268 : `shlex` ne fait pas d'expansion. Reproduction : `cat /workspace/{../../etc/passwd}` -> guard exit 0, bash lit `/etc/passwd`."
+  }
+ ],
+ "date_heure": "2026-07-29T23:58:47.426412+00:00",
+ "prompt_sha256": "a5adee9532fec782925cc7f0b5a8afb54bf958e21a78c7bb09634af94816550d",
+ "reviewer_model": "Qwen3.7-Max"
+}
