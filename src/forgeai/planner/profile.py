@@ -12,16 +12,56 @@ vers la vérification du driver/runtime NVIDIA.
 """
 from __future__ import annotations
 
-from forgeai.core.models import HardwareProfile
+from forgeai.core.models import GPU, HardwareProfile
 
 MIN_RAM_GB = 4.0
 MIN_DISK_FREE_GB = 25.0
+
+# Mesuré (LAB-033I, evidence reviews/LAB-033I/evidence/hardware-pc2.json + gpu-feature-
+# discovery) : une RTX 4070 Laptop annoncée "8 Go" rapporte 8188 MiB via nvidia-smi/GFD —
+# la VRAM utile est toujours < capacité nominale (réservations firmware). Un seuil sur la
+# puissance de 2 exacte (8192) ne peut jamais être atteint par cette classe de carte.
+MIN_VRAM_DEDIE_8GO_MB = 8100
 
 
 class ProfileError(Exception):
     def __init__(self, message: str, code: str = "ERR_HW_MIN") -> None:
         super().__init__(message)
         self.code = code
+
+
+def _est_integre(name: str) -> bool:
+    low = name.lower()
+    # source d'autorité : marqueur canonique émis par detect.py à partir de l'identifiant PCI
+    if "[integrated]" in low:
+        return True
+    # repli défensif (noms explicites éventuels)
+    return "igpu" in low or "integrated" in low
+
+
+def _usable(gpu: GPU) -> bool:
+    if gpu.vendor == "nvidia":
+        return gpu.vram_mb >= MIN_VRAM_DEDIE_8GO_MB
+    if gpu.vendor == "amd":
+        return gpu.vram_mb >= MIN_VRAM_DEDIE_8GO_MB or (gpu.vram_mb == 0 and not _est_integre(gpu.name))
+    if gpu.vendor == "intel":
+        return gpu.vram_mb >= 4096 or gpu.vram_mb == 0
+    return False
+
+
+def gpus_non_qualifies_ignores(hw: HardwareProfile) -> tuple[str, ...]:
+    """Liste les GPU NVIDIA [unqualified] qui seraient IGNORÉS par derive_profile parce
+    qu'un AUTRE vendor est utilisable (HW-010 ne bloque alors pas le déploiement — c'est
+    la bonne décision produit — mais le GPU cassé disparaît sans signal si personne
+    n'appelle cette fonction). Retourne les noms des GPU concernés ; tuple vide si aucun.
+    N'appelle PAS derive_profile (pas de risque de double dérivation/incohérence) :
+    réplique juste le calcul usable/non_qualifies en lecture seule.
+    """
+    usable = [g for g in hw.gpus if _usable(g)]
+    non_qualifies = [g for g in hw.gpus if g.vendor == "nvidia" and "[unqualified]" in g.name]
+    if usable and non_qualifies:
+        return tuple(g.name for g in non_qualifies)
+    return ()
 
 
 def derive_profile(hw: HardwareProfile) -> str:
@@ -45,29 +85,6 @@ def derive_profile(hw: HardwareProfile) -> str:
     if free < MIN_DISK_FREE_GB:
         raise ProfileError(
             f"Disque libre insuffisant : {free} Go < {MIN_DISK_FREE_GB} Go requis")
-
-    # VRAM inconnue (vram_mb == 0, ex. dGPU AMD/Intel vus par lspci) : on se fie à la
-    # PRÉSENCE du vendor. NVIDIA reste strict (nvidia-smi donne toujours la VRAM réelle,
-    # donc 0 = pas de GPU utilisable). Un iGPU AMD faible (VRAM 0) est ignoré : ROCm ne
-    # cible pas les APU intégrés — seul un dGPU AMD à VRAM inconnue déclenche le profil.
-    # La distinction iGPU/dGPU repose sur le marqueur canonique « [integrated] » émis par
-    # detect.py à partir de l'identifiant PCI « vendor:device » (HW-009).
-    def _est_integre(name: str) -> bool:
-        low = name.lower()
-        # source d'autorité : marqueur canonique émis par detect.py à partir de l'identifiant PCI
-        if "[integrated]" in low:
-            return True
-        # repli défensif (noms explicites éventuels)
-        return "igpu" in low or "integrated" in low
-
-    def _usable(gpu) -> bool:
-        if gpu.vendor == "nvidia":
-            return gpu.vram_mb >= 8192
-        if gpu.vendor == "amd":
-            return gpu.vram_mb >= 8192 or (gpu.vram_mb == 0 and not _est_integre(gpu.name))
-        if gpu.vendor == "intel":
-            return gpu.vram_mb >= 4096 or gpu.vram_mb == 0
-        return False
 
     usable = [g for g in hw.gpus if _usable(g)]
     for vendor, profile in (("nvidia", "minimal-gpu-cuda"),

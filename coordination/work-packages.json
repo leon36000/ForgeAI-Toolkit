@@ -1123,6 +1123,17 @@
         "Ne touche pas au code source de WEB-001/DATA-002/DATA-003 : périmètre strictement documentaire/preuve (reviews/**, coordination/completed.json)."
       ],
       "_note": "Complété par PR #307 ; absorbé de #303 (fermée)."
+    },
+    {
+      "id": "GPU-034",
+      "title": "Corriger le seuil VRAM 8192 et rendre visible le contournement de HW-010",
+      "status": "EXTERNAL",
+      "ide": "CLAUDE_CODE",
+      "source_ide": "CLAUDE_CODE",
+      "exclusive_lane": "",
+      "dependencies": [],
+      "_external": true,
+      "_note": "Package géré par CLAUDE_CODE (findings I1/I2 issus de LAB-033I). Marqué completed via coordination centrale après fusion."
     }
   ]
 }
