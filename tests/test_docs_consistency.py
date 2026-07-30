@@ -63,3 +63,26 @@ def test_claim_nvidia_reference_la_preuve_e2e_lab033n():
     assert "reviews/LAB-033N/evidence/" in nvidia_line, (
         f"NVIDIA line in {GPU_DOC} must cite reviews/LAB-033N/evidence/ directory"
     )
+
+
+def test_claim_amd_reference_la_preuve_e2e_lab033a():
+    """Ce test est le RED de LAB-033A. Il fige le claim AMD à deux niveaux : la preuve de
+    déploiement e2e en laboratoire, ET la divulgation honnête que le serving GPU passe par le
+    backend Vulkan/RADV et NON par ROCm/HIP (non couvert par le banc). Toute régression du
+    claim, ou toute suppression de la divulgation, casse ce test.
+    """
+    assert GPU_DOC.exists()
+    text = GPU_DOC.read_text(encoding="utf-8")
+    amd_line = next(
+        (line for line in text.splitlines() if line.strip().startswith("| AMD")),
+        "",
+    )
+    assert "LAB-033A" in amd_line, (
+        f"AMD line in {GPU_DOC} must cite LAB-033A e2e proof"
+    )
+    assert "reviews/LAB-033A/evidence/" in amd_line, (
+        f"AMD line in {GPU_DOC} must cite reviews/LAB-033A/evidence/ directory"
+    )
+    assert "Vulkan" in amd_line, (
+        f"AMD line in {GPU_DOC} must disclose the Vulkan/RADV serving backend"
+    )

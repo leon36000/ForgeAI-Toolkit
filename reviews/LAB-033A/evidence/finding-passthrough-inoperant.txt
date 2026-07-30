@@ -1,0 +1,110 @@
+# FINDING LAB-033A (MAJEUR) — le passthrough hostPath GPU rendu est INOPÉRANT sur Kubernetes
+# Date : 2026-07-30T08:30:16Z — cluster k3s v1.35.5 réel, nœud pc4-grs-b (Navi 48 ×2 + iGPU)
+# Auteur de la mesure : Orchestrateur (expérience contrôlée, 3 pods, une seule variable changée)
+
+## Symptôme observé au run #1 de la qualification produit
+Le pod rendu par render_k3s (profil minimal-gpu-rocm) démarre, /dev/kfd et /dev/dri sont
+VISIBLES dans le conteneur (ls -l fonctionne), mais le moteur rapporte :
+    msg="inference compute" library=cpu
+=> repli CPU SILENCIEUX. Aucun GPU utilisé, aucune erreur remontée à l'utilisateur.
+
+## Expérience contrôlée (même image, même nœud, mêmes montages hostPath)
+
+### A. securityContext produit : capabilities.drop=[ALL], PAS privileged
+id => uid=0(root) gid=0(root) groups=0(root)
+open /dev/kfd rw       => sh: cannot create /dev/kfd: Operation not permitted (EPERM)
+open /dev/dri/renderD128 => Operation not permitted (EPERM)
+
+### B. idem + securityContext.supplementalGroups=[991(render), 44(video)]
+id => uid=0(root) gid=0(root) groups=0(root),44(video),991
+open /dev/kfd rw       => Operation not permitted (EPERM)  <-- les GROUPES NE SUFFISENT PAS
+moteur                 => library=cpu
+
+### C. capabilities.drop=[ALL] + privileged: true   (SEULE variable changée vs A)
+open /dev/kfd rw       => OUVERT-OK
+moteur                 => library=Vulkan ; type=discrete ; type=discrete (2 dGPU)
+
+## Cause racine
+EPERM (et non EACCES) malgré uid=0 et les groupes corrects : ce n'est PAS un refus DAC.
+C'est le CGROUP DEVICES du conteneur qui interdit l'accès aux char devices. Monter un
+noeud de device en hostPath rend le fichier VISIBLE mais n'accorde AUCUN droit d'usage.
+Sur Kubernetes, l'accès à un char device exige soit privileged: true, soit un
+device plugin qui déclare le device via l'API de ressources.
+
+## Portée
+renderers/k3s.py émet ce passthrough pour vendor=amd ET vendor=intel (commentaire
+'pas de device-plugin (limitation vendor)'). Les deux chemins sont donc concernés :
+le manifeste est valide, se déploie, et n'utilise pas le GPU — sans le dire.
+Le chemin NVIDIA n'est PAS affecté (device plugin nvidia.com/gpu, qualifié par LAB-033N).
+
+## Manifestes des 3 pods de l'expérience (verbatim)
+apiVersion: v1
+kind: Pod
+metadata:
+  name: exp-amd-nogroups
+  namespace: default
+spec:
+  nodeName: pc4-grs-b
+  restartPolicy: Never
+  containers:
+    - name: t
+      image: ollama/ollama:latest
+      command: ["sh","-c","echo '--- id ---'; id; echo '--- open /dev/kfd rw ---'; (exec 3<>/dev/kfd && echo OUVERT-OK) 2>&1 || echo OUVERT-REFUSE; echo '--- open renderD128 ---'; (exec 4<>/dev/dri/renderD128 && echo RENDER-OK) 2>&1 || echo RENDER-REFUSE"]
+      securityContext:
+        allowPrivilegeEscalation: false
+        capabilities:
+          drop: ["ALL"]
+      volumeMounts:
+        - {name: dev-kfd, mountPath: /dev/kfd}
+        - {name: dev-dri, mountPath: /dev/dri}
+  volumes:
+    - {name: dev-kfd, hostPath: {path: /dev/kfd}}
+    - {name: dev-dri, hostPath: {path: /dev/dri}}
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: exp-amd-withgroups
+  namespace: default
+spec:
+  nodeName: pc4-grs-b
+  restartPolicy: Never
+  securityContext:
+    supplementalGroups: [991, 44]
+  containers:
+    - name: t
+      image: ollama/ollama:latest
+      command: ["sh","-c","echo '--- id ---'; id; echo '--- open /dev/kfd rw ---'; (exec 3<>/dev/kfd && echo OUVERT-OK) 2>&1 || echo OUVERT-REFUSE; echo '--- open renderD128 ---'; (exec 4<>/dev/dri/renderD128 && echo RENDER-OK) 2>&1 || echo RENDER-REFUSE; echo '--- ollama GPU ---'; ollama serve > /tmp/s.log 2>&1 & sleep 20; grep -oE 'library=[A-Za-z]+|type=[a-z]+|description=\"[^\"]*\"' /tmp/s.log | head -8"]
+      securityContext:
+        allowPrivilegeEscalation: false
+        capabilities:
+          drop: ["ALL"]
+      volumeMounts:
+        - {name: dev-kfd, mountPath: /dev/kfd}
+        - {name: dev-dri, mountPath: /dev/dri}
+  volumes:
+    - {name: dev-kfd, hostPath: {path: /dev/kfd}}
+    - {name: dev-dri, hostPath: {path: /dev/dri}}
+--- pod C ---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: exp-amd-priv-dropall
+  namespace: default
+spec:
+  nodeName: pc4-grs-b
+  restartPolicy: Never
+  containers:
+    - name: t
+      image: ollama/ollama:latest
+      command: ["sh","-c","echo '--- id ---'; id; echo '--- open /dev/kfd rw ---'; (exec 3<>/dev/kfd && echo OUVERT-OK) 2>&1 || echo OUVERT-REFUSE; echo '--- ollama GPU ---'; ollama serve > /tmp/s.log 2>&1 & sleep 20; grep -oE 'library=[A-Za-z]+|type=[a-z]+' /tmp/s.log | head -6"]
+      securityContext:
+        privileged: true
+        capabilities:
+          drop: ["ALL"]
+      volumeMounts:
+        - {name: dev-kfd, mountPath: /dev/kfd}
+        - {name: dev-dri, mountPath: /dev/dri}
+  volumes:
+    - {name: dev-kfd, hostPath: {path: /dev/kfd}}
+    - {name: dev-dri, hostPath: {path: /dev/dri}}

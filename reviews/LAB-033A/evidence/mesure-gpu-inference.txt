@@ -1,0 +1,352 @@
+
+--- 2026-07-30T09:18:07.548418+00:00 ---
+$ kubectl exec deploy/ollama -n forgeai-minimal -- ollama pull qwen2.5:0.5b (ÉCHEC — contingency NetworkPolicy de banc)
+
+[stderr]
+[?2026h[?25l[1Gpulling manifest ⠋ [K[?25h[?2026l[?2026h[?25l[1Gpulling manifest ⠹ [K[?25h[?2026l[?2026h[?25l[1Gpulling manifest [K[?25h[?2026l
+Error: pull model manifest: Get "https://registry.ollama.ai/v2/library/qwen2.5/manifests/0.5b": dial tcp 104.18.17.170:443: connect: connection refused
+command terminated with exit code 1
+
+
+--- 2026-07-30T09:18:13.714125+00:00 ---
+$ kubectl exec deploy/ollama -n forgeai-minimal -- ollama pull qwen2.5:0.5b (après policy de banc)
+
+[stderr]
+[?2026h[?25l[1Gpulling manifest ⠋ [K[?25h[?2026l[?2026h[?25l[1Gpulling manifest ⠹ [K[?25h[?2026l[?2026h[?25l[1Gpulling manifest ⠹ [K[?25h[?2026l[?2026h[?25l[1Gpulling manifest ⠼ [K[?25h[?2026l[?2026h[?25l[1Gpulling manifest ⠼ [K[?25h[?2026l[?2026h[?25l[1Gpulling manifest ⠦ [K[?25h[?2026l[?2026h[?25l[1Gpulling manifest ⠦ [K[?25h[?2026l[?2026h[?25l[1Gpulling manifest ⠇ [K[?25h[?2026l[?2026h[?25l[1Gpulling manifest ⠏ [K[?25h[?2026l[?2026h[?25l[1Gpulling manifest ⠋ [K[?25h[?2026l[?2026h[?25l[1Gpulling manifest [K
+pulling c5396e06af29:   1% ▕                  ▏ 5.7 MB/397 MB                  [K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29:   8% ▕█                 ▏  33 MB/397 MB                  [K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29:  12% ▕██                ▏  48 MB/397 MB                  [K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29:  19% ▕███               ▏  75 MB/397 MB                  [K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29:  26% ▕████              ▏ 101 MB/397 MB                  [K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29:  31% ▕█████             ▏ 123 MB/397 MB                  [K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29:  36% ▕██████            ▏ 141 MB/397 MB                  [K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29:  39% ▕███████           ▏ 156 MB/397 MB                  [K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29:  43% ▕███████           ▏ 169 MB/397 MB                  [K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29:  49% ▕████████          ▏ 194 MB/397 MB                  [K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29:  55% ▕█████████         ▏ 219 MB/397 MB  204 MB/s      0s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29:  56% ▕██████████        ▏ 223 MB/397 MB  204 MB/s      0s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29:  62% ▕███████████       ▏ 247 MB/397 MB  204 MB/s      0s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29:  66% ▕███████████       ▏ 262 MB/397 MB  204 MB/s      0s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29:  68% ▕████████████      ▏ 271 MB/397 MB  204 MB/s      0s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29:  73% ▕█████████████     ▏ 291 MB/397 MB  204 MB/s      0s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29:  78% ▕██████████████    ▏ 311 MB/397 MB  204 MB/s      0s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29:  81% ▕██████████████    ▏ 322 MB/397 MB  204 MB/s      0s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29:  85% ▕███████████████   ▏ 336 MB/397 MB  204 MB/s      0s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29:  85% ▕███████████████   ▏ 339 MB/397 MB  204 MB/s      0s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29:  86% ▕███████████████   ▏ 341 MB/397 MB  170 MB/s      0s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29:  87% ▕███████████████   ▏ 344 MB/397 MB  170 MB/s      0s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29:  88% ▕███████████████   ▏ 348 MB/397 MB  170 MB/s      0s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29:  88% ▕███████████████   ▏ 351 MB/397 MB  170 MB/s      0s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29:  90% ▕████████████████  ▏ 356 MB/397 MB  170 MB/s      0s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29:  91% ▕████████████████  ▏ 361 MB/397 MB  170 MB/s      0s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29:  92% ▕████████████████  ▏ 364 MB/397 MB  170 MB/s      0s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29:  93% ▕████████████████  ▏ 371 MB/397 MB  170 MB/s      0s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29:  95% ▕█████████████████ ▏ 378 MB/397 MB  170 MB/s      0s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29:  96% ▕█████████████████ ▏ 382 MB/397 MB  170 MB/s      0s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29:  99% ▕█████████████████ ▏ 392 MB/397 MB  130 MB/s      0s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29: 100% ▕█████████████████ ▏ 396 MB/397 MB  130 MB/s      0s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29: 100% ▕█████████████████ ▏ 396 MB/397 MB  130 MB/s      0s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29: 100% ▕█████████████████ ▏ 396 MB/397 MB  130 MB/s      0s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29: 100% ▕█████████████████ ▏ 396 MB/397 MB  130 MB/s      0s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29: 100% ▕█████████████████ ▏ 396 MB/397 MB  130 MB/s      0s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29: 100% ▕█████████████████ ▏ 396 MB/397 MB  130 MB/s      0s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29: 100% ▕█████████████████ ▏ 396 MB/397 MB  130 MB/s      0s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29: 100% ▕█████████████████ ▏ 396 MB/397 MB  130 MB/s      0s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29: 100% ▕█████████████████ ▏ 396 MB/397 MB  130 MB/s      0s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29: 100% ▕█████████████████ ▏ 396 MB/397 MB  130 MB/s      0s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29: 100% ▕█████████████████ ▏ 396 MB/397 MB  130 MB/s      0s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29: 100% ▕█████████████████ ▏ 396 MB/397 MB  130 MB/s      0s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29: 100% ▕█████████████████ ▏ 396 MB/397 MB  130 MB/s      0s[K
+verifying sha256 digest ⠋ [K[?25h[?2026l[?2026h[?25l[A[A[1Gpulling manifest [K
+pulling c5396e06af29: 100% ▕█████████████████ ▏ 396 MB/397 MB  130 MB/s      0s[K
+verifying sha256 digest ⠙ [K[?25h[?2026l[?2026h[?25l[A[A[1Gpulling manifest [K
+pulling c5396e06af29: 100% ▕█████████████████ ▏ 396 MB/397 MB  130 MB/s      0s[K
+verifying sha256 digest [K
+writing manifest [K
+success [K[?25h[?2026l
+
+
+--- 2026-07-30T09:18:14.071998+00:00 ---
+$ kubectl exec deploy/ollama -n forgeai-minimal -- ls -l /dev/kfd
+crw-rw---- 1 root 991 509, 0 Jul 30 09:18 /dev/kfd
+
+
+--- 2026-07-30T09:18:14.134895+00:00 ---
+$ kubectl exec deploy/ollama -n forgeai-minimal -- ls -l /dev/dri
+total 0
+crw-rw---- 1 root video 226,   1 Jul 30 09:18 card1
+crw-rw---- 1 root   991 226, 128 Jul 30 09:18 renderD128
+
+
+--- 2026-07-30T09:18:15.050936+00:00 ---
+$ kubectl logs deploy/ollama -n forgeai-minimal
+Couldn't find '/root/.ollama/id_ed25519'. Generating new private key.
+Your new public key is: 
+
+ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILilfAT05fOUpDcnA1nKbK/qAlCqUyaOKoQqCaaB2Sv5
+
+time=2026-07-30T09:18:01.022Z level=INFO source=routes.go:1947 msg="server config" env="map[CUDA_VISIBLE_DEVICES: GGML_VK_VISIBLE_DEVICES: GPU_DEVICE_ORDINAL: HIP_VISIBLE_DEVICES: HSA_OVERRIDE_GFX_VERSION: HTTPS_PROXY: HTTP_PROXY: LLAMA_ARG_FIT: LLAMA_ARG_FIT_TARGET: NO_PROXY: OLLAMA_CONTEXT_LENGTH:0 OLLAMA_DEBUG:INFO OLLAMA_DEBUG_LOG_REQUESTS:false OLLAMA_EDITOR: OLLAMA_FLASH_ATTENTION:false OLLAMA_GO_TEMPLATE:true OLLAMA_GPU_OVERHEAD:0 OLLAMA_HOST:http://0.0.0.0:11434 OLLAMA_IGPU_ENABLE: OLLAMA_KEEP_ALIVE:5m0s OLLAMA_KV_CACHE_TYPE: OLLAMA_LLM_LIBRARY: OLLAMA_LOAD_TIMEOUT:5m0s OLLAMA_MAX_LOADED_MODELS:0 OLLAMA_MAX_QUEUE:512 OLLAMA_MAX_TRANSFER_STREAMS:4 OLLAMA_MODELS:/root/.ollama/models OLLAMA_NOHISTORY:false OLLAMA_NOPRUNE:false OLLAMA_NO_CLOUD:false OLLAMA_NUM_PARALLEL:1 OLLAMA_ORIGINS:[http://localhost https://localhost http://localhost:* https://localhost:* http://127.0.0.1 https://127.0.0.1 http://127.0.0.1:* https://127.0.0.1:* http://0.0.0.0 https://0.0.0.0 http://0.0.0.0:* https://0.0.0.0:* app://* file://* tauri://* vscode-webview://* vscode-file://*] OLLAMA_REMOTES:[ollama.com] OLLAMA_SCHED_SPREAD:false OLLAMA_VULKAN:true ROCR_VISIBLE_DEVICES: http_proxy: https_proxy: no_proxy:]"
+time=2026-07-30T09:18:01.022Z level=INFO source=routes.go:1949 msg="Ollama cloud disabled: false"
+time=2026-07-30T09:18:01.022Z level=INFO source=images.go:883 msg="total blobs: 0"
+time=2026-07-30T09:18:01.022Z level=INFO source=images.go:890 msg="total unused blobs removed: 0"
+time=2026-07-30T09:18:01.022Z level=INFO source=routes.go:2004 msg="Listening on [::]:11434 (version 0.32.3)"
+time=2026-07-30T09:18:01.022Z level=INFO source=model_list_cache.go:112 msg="model list cache hydration complete" models=0 failures=0 elapsed=95.81µs
+time=2026-07-30T09:18:01.023Z level=INFO source=runner.go:60 msg="discovering available GPUs..."
+time=2026-07-30T09:18:01.146Z level=INFO source=types.go:32 msg="inference compute" id=0 filter_id=0 library=Vulkan compute=0.0 name=Vulkan0 description="AMD Radeon Graphics (RADV GFX1201)" libdirs=ollama,vulkan driver=0.0 pci_id=0000:03:00.0 type=discrete total="31.9 GiB" available="31.8 GiB"
+time=2026-07-30T09:18:01.146Z level=INFO source=routes.go:2054 msg="vram-based default context" total_vram="31.9 GiB" default_num_ctx=32768
+time=2026-07-30T09:18:01.336Z level=INFO source=model_recommendations.go:177 msg="model recommendations cache sleep scheduled" wait=3h15m23.06003448s consecutive_failures=0
+[GIN] 2026/07/30 - 09:18:05 | 200 |      133.34µs |       10.42.3.1 | GET      "/api/tags"
+[GIN] 2026/07/30 - 09:18:05 | 200 |       84.15µs |       10.42.3.1 | GET      "/api/tags"
+[GIN] 2026/07/30 - 09:18:07 | 200 |       29.45µs |       127.0.0.1 | HEAD     "/"
+time=2026-07-30T09:18:07.542Z level=INFO source=images.go:1263 msg="request failed: Get \"https://registry.ollama.ai/v2/library/qwen2.5/manifests/0.5b\": dial tcp 104.18.17.170:443: connect: connection refused"
+[GIN] 2026/07/30 - 09:18:07 | 200 |  242.966086ms |       127.0.0.1 | POST     "/api/pull"
+[GIN] 2026/07/30 - 09:18:08 | 200 |       22.24µs |       127.0.0.1 | HEAD     "/"
+time=2026-07-30T09:18:08.763Z level=INFO source=download.go:181 msg="downloading c5396e06af29 in 4 100 MB part(s)"
+[GIN] 2026/07/30 - 09:18:10 | 200 |       77.78µs |       10.42.3.1 | GET      "/api/tags"
+[GIN] 2026/07/30 - 09:18:10 | 200 |      119.68µs |       10.42.3.1 | GET      "/api/tags"
+time=2026-07-30T09:18:12.446Z level=INFO source=download.go:181 msg="downloading 66b9ea09bd5b in 1 68 B part(s)"
+time=2026-07-30T09:18:12.745Z level=INFO source=download.go:181 msg="downloading eb4402837c78 in 1 1.5 KB part(s)"
+time=2026-07-30T09:18:13.049Z level=INFO source=download.go:181 msg="downloading 832dd9e00a68 in 1 11 KB part(s)"
+time=2026-07-30T09:18:13.354Z level=INFO source=download.go:181 msg="downloading 005f95c74751 in 1 490 B part(s)"
+[GIN] 2026/07/30 - 09:18:13 | 200 |  5.536667241s |       127.0.0.1 | POST     "/api/pull"
+
+
+--- 2026-07-30T09:18:15.447653+00:00 ---
+$ ssh pc4 sample repos amdgpu (avant inférence)
+{
+  "card0": {
+    "pci_id": "0x7550",
+    "vram_used": 59936768,
+    "busy": 0,
+    "integrated": false
+  },
+  "card1": {
+    "pci_id": "0x7551",
+    "vram_used": 89427968,
+    "busy": 0,
+    "integrated": false
+  },
+  "card2": {
+    "pci_id": "0x13c0",
+    "vram_used": 16637952,
+    "busy": 0,
+    "integrated": true
+  }
+}
+
+--- 2026-07-30T09:18:20.053903+00:00 ---
+$ ssh pc4 sample repos amdgpu (après inférence)
+{
+  "card0": {
+    "pci_id": "0x7550",
+    "vram_used": 59936768,
+    "busy": 0,
+    "integrated": false
+  },
+  "card1": {
+    "pci_id": "0x7551",
+    "vram_used": 1038372864,
+    "busy": 31,
+    "integrated": false
+  },
+  "card2": {
+    "pci_id": "0x13c0",
+    "vram_used": 16637952,
+    "busy": 0,
+    "integrated": true
+  }
+}
+
+--- Preuve GPU AMD / inférence ---
+URL NodePort : http://100.124.95.18:32058/api/generate
+Fallbacks :
+  Fallback port-forward utilisé sur http://127.0.0.1:39435/api/generate
+Réponse inférence :
+{"model":"qwen2.5:0.5b","created_at":"2026-07-30T09:18:19.739191951Z","response":"Un GPU (Grokking the Very Deep Understanding of Generative Adversarial Networks) est un type de calculur powerful et intelligent utilisé pour générer des images, des vidéos, des graphiques et d'autres formats digitaux complexes. Il a beaucoup plus de mémoire et de capacité en membre par rapport aux ordinateurs traditionnels et permet une performance immédiate et rapide à l'exécution de ces tâches.","done":true,"done_reason":"stop","context":[151644,8948,198,2610,525,1207,16948,11,3465,553,54364,14817,13,1446,525,264,10950,17847,13,151645,198,151644,872,198,43953,2372,662,6185,17133,3761,922,17321,650,22670,13,151645,198,151644,77091,198,1806,22670,320,38,53561,10566,279,15308,18183,45451,315,2607,1388,2410,3004,42721,38710,8,1788,650,943,409,5812,324,7988,1842,24514,134449,4914,77322,51324,939,5335,11,939,71786,11,939,4771,8303,1842,294,80879,19856,4078,6255,2200,68025,13,7543,264,47388,5519,409,31018,96395,1842,409,139536,662,1833,20512,1346,38374,10047,6013,3277,1723,13815,35427,1842,28457,6185,5068,4893,15083,6493,1842,75508,3784,326,57636,19667,1488,409,26652,259,8835,8528,13],"total_duration":1278416350,"load_duration":985110902,"prompt_eval_count":40,"prompt_eval_duration":68502000,"eval_count":90,"eval_duration":223326000}
+
+--- Échantillons sysfs amdgpu ---
+Repos :
+{
+  "card0": {
+    "pci_id": "0x7550",
+    "vram_used": 59936768,
+    "busy": 0,
+    "integrated": false
+  },
+  "card1": {
+    "pci_id": "0x7551",
+    "vram_used": 89427968,
+    "busy": 0,
+    "integrated": false
+  },
+  "card2": {
+    "pci_id": "0x13c0",
+    "vram_used": 16637952,
+    "busy": 0,
+    "integrated": true
+  }
+}
+Pendant :
+{
+  "card0": {
+    "pci_id": "0x7550",
+    "vram_used": 59936768,
+    "busy": 0,
+    "integrated": false
+  },
+  "card1": {
+    "pci_id": "0x7551",
+    "vram_used": 89427968,
+    "busy": 0,
+    "integrated": false
+  },
+  "card2": {
+    "pci_id": "0x13c0",
+    "vram_used": 16637952,
+    "busy": 0,
+    "integrated": true
+  }
+}
+{
+  "card0": {
+    "pci_id": "0x7550",
+    "vram_used": 59936768,
+    "busy": 0,
+    "integrated": false
+  },
+  "card1": {
+    "pci_id": "0x7551",
+    "vram_used": 89427968,
+    "busy": 0,
+    "integrated": false
+  },
+  "card2": {
+    "pci_id": "0x13c0",
+    "vram_used": 16637952,
+    "busy": 0,
+    "integrated": true
+  }
+}
+{
+  "card0": {
+    "pci_id": "0x7550",
+    "vram_used": 59936768,
+    "busy": 0,
+    "integrated": false
+  },
+  "card1": {
+    "pci_id": "0x7551",
+    "vram_used": 1031610368,
+    "busy": 11,
+    "integrated": false
+  },
+  "card2": {
+    "pci_id": "0x13c0",
+    "vram_used": 16637952,
+    "busy": 0,
+    "integrated": true
+  }
+}
+Après :
+{
+  "card0": {
+    "pci_id": "0x7550",
+    "vram_used": 59936768,
+    "busy": 0,
+    "integrated": false
+  },
+  "card1": {
+    "pci_id": "0x7551",
+    "vram_used": 1038372864,
+    "busy": 31,
+    "integrated": false
+  },
+  "card2": {
+    "pci_id": "0x13c0",
+    "vram_used": 16637952,
+    "busy": 0,
+    "integrated": true
+  }
+}
+--- Chemins d'écriture pendant l'inférence ---
+/root/.cache/radv_builtin_shaders/part5/mesa_cache.idx
+/root/.cache/radv_builtin_shaders/part5/mesa_cache.db
+/root/.cache/radv_builtin_shaders/part15/mesa_cache.idx
+/root/.cache/radv_builtin_shaders/part15/mesa_cache.db
+/root/.cache/radv_builtin_shaders/part7/mesa_cache.idx
+/root/.cache/radv_builtin_shaders/part7/mesa_cache.db
+/root/.cache/radv_builtin_shaders/part3/mesa_cache.idx
+/root/.cache/radv_builtin_shaders/part3/mesa_cache.db
+/root/.cache/radv_builtin_shaders/part45/mesa_cache.idx
+/root/.cache/radv_builtin_shaders/part45/mesa_cache.db
+/root/.cache/radv_builtin_shaders/part11/mesa_cache.idx
+/root/.cache/radv_builtin_shaders/part11/mesa_cache.db
+/root/.cache/radv_builtin_shaders/part29/mesa_cache.idx
+/root/.cache/radv_builtin_shaders/part29/mesa_cache.db
+/root/.cache/radv_builtin_shaders/part34/mesa_cache.idx
+/root/.cache/radv_builtin_shaders/part34/mesa_cache.db
+/root/.cache/radv_builtin_shaders/part32/mesa_cache.idx
+/root/.cache/radv_builtin_shaders/part32/mesa_cache.db
+/root/.cache/radv_builtin_shaders/part12/mesa_cache.idx
+/root/.cache/radv_builtin_shaders/part12/mesa_cache.db
+/root/.cache/radv_builtin_shaders/part2/mesa_cache.idx
+/root/.cache/radv_builtin_shaders/part2/mesa_cache.db
+/root/.cache/radv_builtin_shaders/part26/mesa_cache.idx
+/root/.cache/radv_builtin_shaders/part26/mesa_cache.db
+/root/.cache/radv_builtin_shaders/part35/mesa_cache.idx
+/root/.cache/radv_builtin_shaders/part35/mesa_cache.db
+/root/.cache/radv_builtin_shaders/part27/mesa_cache.idx
+/root/.cache/radv_builtin_shaders/part27/mesa_cache.db
+/root/.cache/radv_builtin_shaders/part39/mesa_cache.idx
+/root/.cache/radv_builtin_shaders/part39/mesa_cache.db
+/root/.cache/radv_builtin_shaders/part8/mesa_cache.idx
+/root/.cache/radv_builtin_shaders/part8/mesa_cache.db
+/root/.cache/radv_builtin_shaders/part24/mesa_cache.idx
+/root/.cache/radv_builtin_shaders/part24/mesa_cache.db
+/root/.cache/radv_builtin_shaders/part43/mesa_cache.idx
+/root/.cache/radv_builtin_shaders/part43/mesa_cache.db
+/root/.cache/radv_builtin_shaders/part4/mesa_cache.idx
+/root/.cache/radv_builtin_shaders/part4/mesa_cache.db
+/root/.cache/radv_builtin_shaders/part20/mesa_cache.idx
+/root/.cache/radv_builtin_shaders/part20/mesa_cache.db
+/root/.cache/radv_builtin_shaders/part33/mesa_cache.idx
+/root/.cache/radv_builtin_shaders/part33/mesa_cache.db
+/root/.cache/radv_builtin_shaders/part44/mesa_cache.idx
+/root/.cache/radv_builtin_shaders/part44/mesa_cache.db
+/root/.cache/radv_builtin_shaders/part17/mesa_cache.idx
+/root/.cache/radv_builtin_shaders/part17/mesa_cache.db
+/root/.cache/radv_builtin_shaders/part47/mesa_cache.idx
+/root/.cache/radv_builtin_shaders/part47/mesa_cache.db
+/root/.cache/radv_builtin_shaders/part30/mesa_cache.idx
+/root/.cache/radv_builtin_shaders/part30/mesa_cache.db
+/root/.cache/radv_builtin_shaders/part40/mesa_cache.idx
+/root/.cache/radv_builtin_shaders/part40/mesa_cache.db
+/root/.cache/radv_builtin_shaders/part16/mesa_cache.idx
+/root/.cache/radv_builtin_shaders/part16/mesa_cache.db
+/root/.cache/radv_builtin_shaders/part21/mesa_cache.idx
+/root/.cache/radv_builtin_shaders/part21/mesa_cache.db
+/root/.cache/radv_builtin_shaders/part19/mesa_cache.idx
+/root/.cache/radv_builtin_shaders/part19/mesa_cache.db
+/root/.cache/radv_builtin_shaders/part0/mesa_cache.idx
+/root/.cache/radv_builtin_shaders/part0/mesa_cache.db
+/root/.cache/radv_builtin_shaders/part31/mesa_cache.idx
+/root/.cache/radv_builtin_shaders/part31/mesa_cache.db
+/root/.cache/radv_builtin_shaders/part25/mesa_cache.idx
+/root/.cache/radv_builtin_shaders/part25/mesa_cache.db
+/root/.cache/radv_builtin_shaders/part46/mesa_cache.idx
+/root/.cache/radv_builtin_shaders/part46/mesa_cache.db
+/root/.cache/radv_builtin_shaders/part49/mesa_cache.idx
+/root/.cache/radv_builtin_shaders/part49/mesa_cache.db
+/root/.cache/radv_builtin_shaders/part36/mesa_cache.idx
+/root/.cache/radv_builtin_shaders/part36/mesa_cache.db
+/root/.cache/radv_builtin_shaders/part22/mesa_cache.idx
+/root/.cache/radv_builtin_shaders/part22/mesa_cache.db
+/root/.cache/radv_builtin_shaders/part13/mesa_cache.idx
+/root/.cache/radv_builtin_shaders/part13/mesa_cache.db
+/root/.cache/radv_builtin_shaders/part1/mesa_cache.idx
+/root/.cache/radv_builtin_shaders/part1/mesa_cache.db
+/root/.cache/radv_builtin_shaders/part9/mesa_cache.idx
+/root/.cache/radv_builtin_shaders/part9/mesa_cache.db
+/root/.cache/radv_builtin_shaders/part37/mesa_cache.idx
+/root/.cache/radv_builtin_shaders/part37/mesa_cache.db
+

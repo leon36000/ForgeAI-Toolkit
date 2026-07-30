@@ -501,6 +501,14 @@
       "merge_commit": "7d72398",
       "review": "APPROVE 3/3 apres 2 tours (DeepSeek-V4-Pro/deepseek, LongCat-2.0/meituan, Qwen3.7-Max/alibaba)",
       "note": "CANON/ETAT-SYSTEME.md aligne sur les preuves reelles : NVIDIA/AMD qualifies labo (HW-010/HW-037), Intel implemente + qualification labo en attente (LAB-033I). Nouveau Docs/reference/gpu-drivers-support.md. Registre seq 288. Debloque LAB-033I (CLAUDE_CODE)."
+    },
+    {
+      "id": "LAB-033N",
+      "ide": "CLAUDE_CODE",
+      "pr": 301,
+      "merge_commit": "178d6b1",
+      "review": "APPROVE 3/3 (Qwen3.7-Max/alibaba, DeepSeek-V4-Pro/deepseek, MiMo-Pro-V2/xiaomi), sceau 296a225f, swap CIV apres routes 429/408",
+      "note": "Chemin NVIDIA qualifie e2e sur banc reel (k3s v1.35.5, noeud pc3-grs-a RTX 5080/2080S) : sonde produit -> minimal-gpu-cuda -> manifeste applique tel quel -> pod Running sur pc3 -> nvidia-smi dans le pod -> inference qwen2.5:0.5b avec 726 MiB VRAM echantillonnes pendant generation -> teardown verifie. Finding produit corrige (TDD) : aucune resource_class assignee => ollama en classe utilitaire 256Mi => OOMKilled a l'init CUDA ; overlays declarent desormais resource_class (llm/db). Findings de suivi F2 (egress-deny bloque l'amorcage du modele), F3 (NodePort inaccessible sous policies rendues), F4 (chemins ecriture GPU mesures /root/.nv/ComputeCache). Registre seq 290-295."
     }
   ]
 }

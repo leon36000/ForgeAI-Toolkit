@@ -39,6 +39,15 @@ _INTERNAL_SERVICES = frozenset({"redis", "qdrant", "vector-store", "immudb", "op
 _SECRET_NAME = "forgeai-secrets"
 _SECRET_REF = re.compile(r"\$\{(FORGEAI_[A-Za-z0-9_]+)\}")
 
+# Ressource Kubernetes déclarée par le device plugin de chaque vendor. Demander la
+# ressource est la SEULE façon d'obtenir l'accès au device : monter /dev/... en hostPath
+# rend le fichier visible mais le cgroup devices en refuse l'usage (mesuré, LAB-033A).
+_RESSOURCE_GPU_PAR_VENDOR = {
+    "nvidia": "nvidia.com/gpu",
+    "amd": "amd.com/gpu",
+    "intel": "gpu.intel.com/i915",
+}
+
 
 def _safe(value: str, field: str) -> str:
     """Refuse une valeur interpolée au YAML si elle porte un caractère de contrôle/newline
@@ -80,7 +89,7 @@ def _service_ports(svc: ServiceSpec, service_type: str, node_port: int | None) -
 def _resources_block(svc: ServiceSpec, vendor: str | None) -> str:
     """Bloc resources rendu DEPUIS le spec ; plus aucun magic number.
     La validation (unités, cohérence) est dans models.py, pas ici.
-    Ajoute nvidia.com/gpu en limite si svc.gpu_vendor == "nvidia".
+    Ajoute la ressource du device plugin du vendor en limite si svc.gpu est vrai.
     """
     res = svc.ressources_effectives
     req = res["requests"]
@@ -97,10 +106,10 @@ def _resources_block(svc: ServiceSpec, vendor: str | None) -> str:
 
     # Accélérateurs orthogonaux : jamais dans les classes CPU/mémoire.
     # `vendor` est calculé par l'appelant : (svc.gpu_vendor or "nvidia") si svc.gpu, sinon None.
-    # NVIDIA reste le défaut d'un service GPU sans vendor explicite — ce défaut vivait dans
-    # l'ancien paramètre `vendor` et doit être préservé.
-    if vendor == "nvidia":
-        block += '\n              nvidia.com/gpu: "1"'
+    if vendor is not None:
+        ressource = _RESSOURCE_GPU_PAR_VENDOR.get(vendor)
+        if ressource is not None:
+            block += f'\n              {ressource}: "1"'
 
     return block
 
@@ -182,9 +191,10 @@ def _pod_security_block(profil: ProfilSecurite, gpu: bool) -> str:
     if gpu:
         return (
             "\n      securityContext:"
-            "\n        # forgeai: dérogation PSS restricted — l'accès GPU en passthrough requiert les groupes de l'hôte"
-            "\n        # forgeai: mesure : 0/4 devices /dev/dri accessibles en non-root (gid render variable) ; dérogation limitée aux services GPU demandés"
-            "\n        # forgeai: readOnlyRootFilesystem est également désactivé (chemins de cache du moteur GPU non mesurables sans matériel — cf. LAB-033)"
+            "\n        # forgeai: pod GPU — l'accès au device se fait par ressource de"
+            "\n        # forgeai: device plugin du vendor. Le durcissement (non-root, racine"
+            "\n        # forgeai: en lecture seule) n'a pas été mesuré par vendor ; reporté à"
+            "\n        # forgeai: une story de durcissement dédiée."
             "\n        seccompProfile:"
             "\n          type: RuntimeDefault"
         )
@@ -203,26 +213,33 @@ def _security_block(profil: ProfilSecurite, gpu: bool) -> str:
     """Bloc securityContext au niveau conteneur.
 
     `gpu` désactive AUSSI readOnlyRootFilesystem, et pas seulement l'identité non-root :
-    les chemins d'écriture d'un moteur GPU (caches de modèles, caches de compilation du
-    runtime vendor) dépendent de l'image ET de l'hôte, et n'ont pas pu être mesurés faute
-    de matériel GPU autorisé (packages LAB-033*, BLOCKED_LAB). Activer la racine en lecture
-    seule sans cette mesure casserait des déploiements réels : la règle « exceptions
-    spécifiques et TESTÉES » impose donc de ne pas l'activer ici. Les trois contrôles
-    mesurables restent émis (drop:[ALL], allowPrivilegeEscalation:false, seccomp).
+    les conteneurs GPU tournent actuellement sous une identité root et une racine
+    inscriptible. Le durcissement (non-root, readOnlyRootFilesystem) n'a pas été mesuré
+    par vendor après le passage au device plugin (LAB-033A) : il est reporté à une
+    story de durcissement dédiée. Les trois contrôles mesurables restent émis
+    (drop:[ALL], allowPrivilegeEscalation:false, seccomp).
     readOnlyRootFilesystem n'est pas une exigence du profil PSS restricted : le pod GPU ne
-    déroge à restricted que par son identité root et son volume hostPath, pas par ce champ.
+    déroge à restricted que par son identité root, pas par ce champ.
     """
     ro = profil.ro_rootfs and not gpu
-    return (
-        "\n          securityContext:"
-        "\n            allowPrivilegeEscalation: false"
-        "\n            capabilities:"
-        "\n              drop:"
-        "\n                - ALL"
-        f"\n            readOnlyRootFilesystem: {'true' if ro else 'false'}"
-        "\n            seccompProfile:"
-        "\n              type: RuntimeDefault"
-    )
+    lines = ["\n          securityContext:"]
+    if gpu:
+        lines.extend([
+            "\n            # forgeai: pod GPU — l'accès au device se fait par ressource de",
+            "\n            # forgeai: device plugin du vendor. Le durcissement (non-root, racine",
+            "\n            # forgeai: en lecture seule) n'a pas été mesuré par vendor ; reporté à",
+            "\n            # forgeai: une story de durcissement dédiée.",
+        ])
+    lines.extend([
+        "\n            allowPrivilegeEscalation: false",
+        "\n            capabilities:",
+        "\n              drop:",
+        "\n                - ALL",
+        f"\n            readOnlyRootFilesystem: {'true' if ro else 'false'}",
+        "\n            seccompProfile:",
+        "\n              type: RuntimeDefault",
+    ])
+    return "".join(lines)
 
 
 def _volumes_inscriptibles(profil: ProfilSecurite, gpu: bool) -> list[tuple[str, str]]:
@@ -388,8 +405,9 @@ def _deployment(svc: ServiceSpec, effective_node: str | None = None,
             f"vendor GPU non supporté : {svc.gpu_vendor} — combinaison refusée "
             f"(nvidia/amd/intel uniquement)"
         )
-    # GPU par vendor (S3) : nvidia -> ressource device-plugin ; amd/intel -> passthrough hostPath
-    # des devices noyau (pas de privileged, K8S-008).
+    # GPU par vendor : chaque vendor reçoit sa ressource de device plugin
+    # (LAB-033A). Le passthrough hostPath est supprimé car le cgroup devices
+    # refuse l'accès aux char devices montés en hostPath.
     vendor = (svc.gpu_vendor or "nvidia") if svc.gpu else None
 
     # K8S-022 : profil PSS restricted par service (uid mesuré) ; `svc.gpu` = seule dérogation.
@@ -404,10 +422,10 @@ def _deployment(svc: ServiceSpec, effective_node: str | None = None,
       nodeSelector:
         kubernetes.io/hostname: {_safe(effective_node, 'node')}"""
     effective_type = "ClusterIP" if svc.name in _INTERNAL_SERVICES else service_type
-    # Fusion volume data + devices GPU + fichiers config (ConfigMap) en UN bloc volumeMounts
+    # Fusion volume data + fichiers config (ConfigMap) en UN bloc volumeMounts
     # et UN bloc volumes (sinon clé YAML dupliquée).
     # mounts: (name, mountPath, subPath|None, readOnly)
-    # vols:   (name, payload, kind) avec kind dans {"pvc", "hostPath", "configMap"}
+    # vols:   (name, payload, kind) avec kind dans {"pvc", "configMap", "emptyDir", "secret"}
     mounts, vols, configmap_docs, pvc_docs = [], [], [], []
     for volume in svc.volumes:
         segs = volume.split(":")
@@ -459,19 +477,6 @@ def _deployment(svc: ServiceSpec, effective_node: str | None = None,
         else:
             raise ValueError(
                 f"volume mal formé (attendu 'nom:chemin' ou './fichier:chemin:mode') : {volume!r}")
-    # Montages GPU hostPath (amd/intel) ajoutés au même bloc volumeMounts.
-    gpu_mounts: list[tuple[str, str]] = []
-    gpu_vols: list[tuple[str, str]] = []
-    if vendor == "amd":
-        gpu_mounts = [("dev-kfd", "/dev/kfd"), ("dev-dri", "/dev/dri")]
-        gpu_vols = list(gpu_mounts)
-    elif vendor == "intel":
-        gpu_mounts = [("dev-dri", "/dev/dri")]
-        gpu_vols = list(gpu_mounts)
-    for claim, path in gpu_mounts:
-        mounts.append((claim, path, None, False))
-    for claim, path in gpu_vols:
-        vols.append((claim, path, "hostPath"))
     # K8S-022 : readOnlyRootFilesystem impose des emptyDir explicites pour les chemins que le
     # service écrit hors de ses volumes de données (chemins MESURÉS, cf. _PROFILS_SECURITE).
     # Un chemin déjà monté (PVC, ConfigMap…) n'est jamais monté deux fois : mountPath dupliqué
@@ -501,26 +506,11 @@ def _deployment(svc: ServiceSpec, effective_node: str | None = None,
     volume_def = ""
     if vols:
         items = ""
-        passthrough_comment_emitted = False
         for claim, payload, kind in vols:
             if kind == "pvc":
                 items += (f"\n        - name: {claim}"
                           f"\n          persistentVolumeClaim:"
                           f"\n            claimName: {claim}")
-            elif kind == "hostPath":
-                if vendor in ("amd", "intel") and not passthrough_comment_emitted:
-                    if vendor == "amd":
-                        devices = "/dev/kfd,/dev/dri"
-                    else:
-                        devices = "/dev/dri"
-                    items += (
-                        f"\n        # forgeai: GPU {vendor} en passthrough hostPath "
-                        f"({devices}) — nécessite ces devices sur le nœud ; "
-                        f"pas de device-plugin (limitation vendor)."
-                    )
-                    passthrough_comment_emitted = True
-                items += (f"\n        - name: {claim}"
-                          f"\n          hostPath:\n            path: {payload}")
             elif kind == "emptyDir":
                 items += (f"\n        - name: {claim}"
                           f"\n          emptyDir: {{}}")
@@ -648,15 +638,21 @@ def _namespace_block(plan: DeploymentPlan) -> str:
     Sans ces étiquettes, le durcissement des pods reste purement déclaratif :
     le cluster n'applique aucune politique de sécurité aux pods déployés.
     """
-    enforce = "privileged" if any(svc.gpu for svc in plan.services) else "restricted"
+    # forgeai (LAB-033A) : un plan GPU n'émet plus aucun volume hostPath (accès par ressource de
+    # device plugin). K8S-024 avait mesuré que baseline refusait le pod GPU À CAUSE de ces
+    # hostPath ; ils ont disparu, et baseline l'ACCEPTE désormais (mesuré sur k3s v1.35.5).
+    # restricted reste hors d'atteinte tant que le pod GPU garde l'identité root
+    # (restricted exige runAsNonRoot: true) — durcissement reporté à une story dédiée.
+    enforce = "baseline" if any(svc.gpu for svc in plan.services) else "restricted"
 
     comments = ""
-    if enforce == "privileged":
+    if enforce == "baseline":
         comments = (
-            "# forgeai: le niveau enforce est abaissé à privileged car le plan "
-            "demande explicitement le passthrough hostPath des devices GPU.\n"
-            "# forgeai: restricted et baseline refusent tous deux les volumes hostPath ; "
-            "audit et warn restent à restricted pour signaler l'écart.\n"
+            "# forgeai: (LAB-033A) le niveau enforce est abaissé à baseline car le plan "
+            "demande un service GPU. L'accès au device se fait par ressource de device plugin ; "
+            "aucun volume hostPath n'est émis. restricted reste hors d'atteinte tant que le pod "
+            "GPU garde l'identité root (runAsNonRoot: true requis par restricted).\n"
+            "# forgeai: audit et warn restent à restricted pour signaler l'écart d'identité.\n"
         )
 
     return (
@@ -963,6 +959,11 @@ def _verifier_capacite(plan: DeploymentPlan, capacite: "CapaciteCluster | None")
 
     Les deux contrôles (CPU, mémoire) sont indépendants : un dépassement
     uniquement mémoire reste un dépassement et doit être signalé.
+
+    Pour les services GPU, si le cluster déclare explicitement ses ressources
+    GPU (``ressources_gpu`` non vide), on exige que le device plugin du vendor
+    soit présent avec une capacité suffisante. Si ``ressources_gpu`` est vide,
+    l'appelant n'a pas renseigné l'information : on ne refuse pas le rendu.
     """
     if capacite is None:
         return
@@ -983,6 +984,29 @@ def _verifier_capacite(plan: DeploymentPlan, capacite: "CapaciteCluster | None")
             f"{memoire_requise} MiB de mémoire mais le cluster n'en déclare "
             f"que {capacite.memoire_mib} MiB."
         )
+
+    # Vérification GPU uniquement si le cluster a déclaré ses ressources GPU.
+    if not capacite.ressources_gpu:
+        return
+
+    demandes_gpu: dict[str, int] = {}
+    for svc in plan.services:
+        if not svc.gpu:
+            continue
+        vendor = svc.gpu_vendor or "nvidia"
+        ressource = _RESSOURCE_GPU_PAR_VENDOR.get(vendor)
+        if ressource is None:
+            continue
+        demandes_gpu[ressource] = demandes_gpu.get(ressource, 0) + 1
+
+    for ressource, demande in demandes_gpu.items():
+        disponible = capacite.ressources_gpu.get(ressource, 0)
+        if disponible < demande:
+            raise QuotaError(
+                f"ERR_QUOTA_GPU_PLUGIN_ABSENT: le plan demande {demande}×{ressource} "
+                f"mais le cluster n'en déclare que {disponible}. "
+                f"Installez le device plugin pour la ressource {ressource}."
+            )
 
 
 def render_k3s(plan: DeploymentPlan, node: str | None = None,

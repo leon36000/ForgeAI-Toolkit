@@ -1,0 +1,34 @@
+# RED LAB-033A — impact du correctif device plugin sur la suite existante
+# Date : 2026-07-30T08:59:05Z
+# Correctif appliqué (AMD/Intel -> ressource device plugin, plus aucun hostPath,
+# enforce GPU = baseline mesuré). Les tests qui FIGENT l'ancien comportement doivent
+# échouer : c'est le RED attendu, ils seront réalignés sur le comportement mesuré.
+
+        # privileged était un sur-privilège (CIS 5.2.1). Le securityContext durci s'applique désormais
+        # aussi aux GPU amd/intel. Périmètre élargi accordé par le cockpit pour lever cette contradiction.
+        assert "privileged: true" not in out
+>       assert "/dev/kfd" in out
+E       AssertionError: assert '/dev/kfd' in '# Généré par ForgeAI Toolkit — plan p1-fai0004 (profil minimal)\napiVersion: v1\nkind: Namespace\n# forgeai (LAB-033A...type: NodePort\n  selector: {app: engine}\n  ports:\n    - port: 8000\n      targetPort: 8000\n      nodePort: 32464\n'
+
+tests/test_k3s_hardening_fai0004.py:150: AssertionError
+___________________________ test_manifeste_rendu_amd ___________________________
+
+    def test_manifeste_rendu_amd():
+        """Le manifeste AMD monte /dev/kfd et /dev/dri en hostPath, privilégié, sans amd.com/gpu."""
+        hw = _hardware_from_json(_JSON_SONDE_AMD_SYNTHETIQUE)
+        prove.require_gpu_profile(hw)
+        manifest = prove.render_manifest("minimal-gpu-rocm", "noeud-test-amd", hw)
+    
+>       assert "/dev/kfd" in manifest
+E       AssertionError: assert '/dev/kfd' in '# Généré par ForgeAI Toolkit — plan p1-9a4f6142 (profil minimal-gpu-rocm)\napiVersion: v1\nkind: Namespace\n# forgeai...nimal\nspec:\n  type: ClusterIP\n  selector: {app: vector-store}\n  ports:\n    - port: 6333\n      targetPort: 6333\n'
+
+tests/test_prove_gpu_amd_e2e.py:71: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_amd_vulkan_runtime.py::test_amd_vulkan_rendu_k3s_avec_passthrough
+FAILED tests/test_k3s_gpu_vendor.py::test_k3s_amd_passthrough_kfd_dri_sans_privileged
+FAILED tests/test_k3s_gpu_vendor.py::test_k3s_intel_sans_privileged - Asserti...
+FAILED tests/test_k3s_gpu_vendor.py::test_k3s_intel_passthrough_dri - Asserti...
+FAILED tests/test_k3s_gpu_vendor.py::test_k3s_amd_avec_volume_data_fusionne_un_seul_bloc
+FAILED tests/test_k3s_hardening.py::test_exception_gpu_degrade_enforce_et_reste_visible
+FAILED tests/test_k3s_hardening_fai0004.py::test_gpu_amd_passthrough_pas_de_hardening
+FAILED tests/test_prove_gpu_amd_e2e.py::test_manifeste_rendu_amd - AssertionE...

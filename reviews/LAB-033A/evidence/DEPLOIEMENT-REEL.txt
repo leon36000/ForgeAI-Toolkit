@@ -1,0 +1,594 @@
+
+--- 2026-07-30T09:17:52.477045+00:00 ---
+$ ssh pc4 'transfert archive sources (base64 via stdin)'
+[archive transférée]
+
+--- 2026-07-30T09:17:54.604104+00:00 ---
+$ ssh pc4 'cd /tmp/lab033a && tar -xzf src.tar.gz && python3 -m venv /tmp/lab033a/venv && /tmp/lab033a/venv/bin/pip install --quiet /tmp/lab033a'
+
+
+--- 2026-07-30T09:17:55.366160+00:00 ---
+$ ssh pc4 /tmp/lab033a/venv/bin/forgeai hardware
+{
+  "cpu_model": "AMD Ryzen 9 9950X3D2 16-Core Processor",
+  "cpu_cores": 32,
+  "cpu_arch": "x86_64",
+  "ram_gb": 45.1,
+  "os_name": "Linux 7.0.0-28-generic",
+  "gpus": [
+    {
+      "vendor": "amd",
+      "name": "Advanced Micro Devices, Inc. [1002:7551]",
+      "vram_mb": 0
+    },
+    {
+      "vendor": "amd",
+      "name": "Advanced Micro Devices, Inc. [1002:7550]",
+      "vram_mb": 0
+    },
+    {
+      "vendor": "amd",
+      "name": "Advanced Micro Devices, Inc. [1002:13c0] [integrated]",
+      "vram_mb": 0
+    }
+  ],
+  "disks": [
+    {
+      "path": "/",
+      "total_gb": 936.0,
+      "free_gb": 740.0
+    }
+  ]
+}
+
+
+--- 2026-07-30T09:17:55.702252+00:00 ---
+$ ssh pc4 sample repos amdgpu (avant déploiement)
+{
+  "card0": {
+    "pci_id": "0x7550",
+    "vram_used": 59936768,
+    "busy": 0,
+    "integrated": false
+  },
+  "card1": {
+    "pci_id": "0x7551",
+    "vram_used": 89427968,
+    "busy": 0,
+    "integrated": false
+  },
+  "card2": {
+    "pci_id": "0x13c0",
+    "vram_used": 16637952,
+    "busy": 0,
+    "integrated": true
+  }
+}
+
+--- 2026-07-30T09:17:55.931883+00:00 ---
+$ kubectl apply -f reviews/LAB-033A/evidence/manifeste-rendu.yaml
+namespace/forgeai-minimal created
+serviceaccount/forgeai-sa created
+resourcequota/forgeai-quota created
+limitrange/forgeai-limits created
+networkpolicy.networking.k8s.io/forgeai-default-deny created
+networkpolicy.networking.k8s.io/forgeai-allow-dns created
+persistentvolumeclaim/forgeai-ollama-models created
+deployment.apps/ollama created
+service/ollama created
+persistentvolumeclaim/forgeai-qdrant-data created
+deployment.apps/vector-store created
+service/vector-store created
+
+[stderr]
+Warning: would violate PodSecurity "restricted:v1.25": runAsNonRoot != true (pod or container "ollama" must set securityContext.runAsNonRoot=true)
+
+
+--- 2026-07-30T09:18:07.133651+00:00 ---
+$ kubectl get pods -n forgeai-minimal -o wide
+NAME                            READY   STATUS    RESTARTS   AGE   IP            NODE        NOMINATED NODE   READINESS GATES
+ollama-d5f8bfc48-l85qh          1/1     Running   0          12s   10.42.3.223   pc4-grs-b   <none>           <none>
+vector-store-77fd8bcc89-t6sms   1/1     Running   0          12s   10.42.3.224   pc4-grs-b   <none>           <none>
+
+
+--- 2026-07-30T09:18:07.169506+00:00 ---
+$ kubectl get namespace forgeai-minimal -o yaml
+apiVersion: v1
+kind: Namespace
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"v1","kind":"Namespace","metadata":{"annotations":{},"labels":{"pod-security.kubernetes.io/audit":"restricted","pod-security.kubernetes.io/audit-version":"v1.25","pod-security.kubernetes.io/enforce":"baseline","pod-security.kubernetes.io/enforce-version":"v1.25","pod-security.kubernetes.io/warn":"restricted","pod-security.kubernetes.io/warn-version":"v1.25"},"name":"forgeai-minimal"}}
+  creationTimestamp: "2026-07-30T09:17:55Z"
+  labels:
+    kubernetes.io/metadata.name: forgeai-minimal
+    pod-security.kubernetes.io/audit: restricted
+    pod-security.kubernetes.io/audit-version: v1.25
+    pod-security.kubernetes.io/enforce: baseline
+    pod-security.kubernetes.io/enforce-version: v1.25
+    pod-security.kubernetes.io/warn: restricted
+    pod-security.kubernetes.io/warn-version: v1.25
+  name: forgeai-minimal
+  resourceVersion: "8286690"
+  uid: f2ea6cff-704c-43ba-8895-7840edf00fb2
+spec:
+  finalizers:
+  - kubernetes
+status:
+  phase: Active
+
+
+--- 2026-07-30T09:18:07.214783+00:00 ---
+$ kubectl describe node pc4-grs-b
+Name:               pc4-grs-b
+Roles:              <none>
+Labels:             beta.kubernetes.io/arch=amd64
+                    beta.kubernetes.io/instance-type=k3s
+                    beta.kubernetes.io/os=linux
+                    feature.node.kubernetes.io/cpu-cpuid.ADX=true
+                    feature.node.kubernetes.io/cpu-cpuid.AESNI=true
+                    feature.node.kubernetes.io/cpu-cpuid.AMXFP8=true
+                    feature.node.kubernetes.io/cpu-cpuid.AVX=true
+                    feature.node.kubernetes.io/cpu-cpuid.AVX2=true
+                    feature.node.kubernetes.io/cpu-cpuid.AVX512BF16=true
+                    feature.node.kubernetes.io/cpu-cpuid.AVX512BITALG=true
+                    feature.node.kubernetes.io/cpu-cpuid.AVX512BW=true
+                    feature.node.kubernetes.io/cpu-cpuid.AVX512CD=true
+                    feature.node.kubernetes.io/cpu-cpuid.AVX512DQ=true
+                    feature.node.kubernetes.io/cpu-cpuid.AVX512F=true
+                    feature.node.kubernetes.io/cpu-cpuid.AVX512IFMA=true
+                    feature.node.kubernetes.io/cpu-cpuid.AVX512VBMI=true
+                    feature.node.kubernetes.io/cpu-cpuid.AVX512VBMI2=true
+                    feature.node.kubernetes.io/cpu-cpuid.AVX512VL=true
+                    feature.node.kubernetes.io/cpu-cpuid.AVX512VNNI=true
+                    feature.node.kubernetes.io/cpu-cpuid.AVX512VP2INTERSECT=true
+                    feature.node.kubernetes.io/cpu-cpuid.AVX512VPOPCNTDQ=true
+                    feature.node.kubernetes.io/cpu-cpuid.AVXVNNI=true
+                    feature.node.kubernetes.io/cpu-cpuid.CETSS=true
+                    feature.node.kubernetes.io/cpu-cpuid.CLZERO=true
+                    feature.node.kubernetes.io/cpu-cpuid.CMPXCHG8=true
+                    feature.node.kubernetes.io/cpu-cpuid.CPBOOST=true
+                    feature.node.kubernetes.io/cpu-cpuid.CPPC=true
+                    feature.node.kubernetes.io/cpu-cpuid.EFER_LMSLE_UNS=true
+                    feature.node.kubernetes.io/cpu-cpuid.FLUSH_L1D=true
+                    feature.node.kubernetes.io/cpu-cpuid.FMA3=true
+                    feature.node.kubernetes.io/cpu-cpuid.FSRM=true
+                    feature.node.kubernetes.io/cpu-cpuid.FXSR=true
+                    feature.node.kubernetes.io/cpu-cpuid.FXSROPT=true
+                    feature.node.kubernetes.io/cpu-cpuid.GFNI=true
+                    feature.node.kubernetes.io/cpu-cpuid.IBPB=true
+                    feature.node.kubernetes.io/cpu-cpuid.IBPB_BRTYPE=true
+                    feature.node.kubernetes.io/cpu-cpuid.IBRS=true
+                    feature.node.kubernetes.io/cpu-cpuid.IBRS_PREFERRED=true
+                    feature.node.kubernetes.io/cpu-cpuid.IBRS_PROVIDES_SMP=true
+                    feature.node.kubernetes.io/cpu-cpuid.IBS=true
+                    feature.node.kubernetes.io/cpu-cpuid.IBSBRNTRGT=true
+                    feature.node.kubernetes.io/cpu-cpuid.IBSFETCHSAM=true
+                    feature.node.kubernetes.io/cpu-cpuid.IBSFFV=true
+                    feature.node.kubernetes.io/cpu-cpuid.IBSOPCNT=true
+                    feature.node.kubernetes.io/cpu-cpuid.IBSOPCNTEXT=true
+                    feature.node.kubernetes.io/cpu-cpuid.IBSOPSAM=true
+                    feature.node.kubernetes.io/cpu-cpuid.IBSRDWROPCNT=true
+                    feature.node.kubernetes.io/cpu-cpuid.IBSRIPINVALIDCHK=true
+                    feature.node.kubernetes.io/cpu-cpuid.IBS_FETCH_CTLX=true
+                    feature.node.kubernetes.io/cpu-cpuid.IBS_OPFUSE=true
+                    feature.node.kubernetes.io/cpu-cpuid.IBS_ZEN4=true
+                    feature.node.kubernetes.io/cpu-cpuid.INT_WBINVD=true
+                    feature.node.kubernetes.io/cpu-cpuid.LAHF=true
+                    feature.node.kubernetes.io/cpu-cpuid.LBRVIRT=true
+                    feature.node.kubernetes.io/cpu-cpuid.MCAOVERFLOW=true
+                    feature.node.kubernetes.io/cpu-cpuid.MOVBE=true
+                    feature.node.kubernetes.io/cpu-cpuid.MOVDIR64B=true
+                    feature.node.kubernetes.io/cpu-cpuid.MOVDIRI=true
+                    feature.node.kubernetes.io/cpu-cpuid.MOVU=true
+                    feature.node.kubernetes.io/cpu-cpuid.MSRIRC=true
+                    feature.node.kubernetes.io/cpu-cpuid.NRIPS=true
+                    feature.node.kubernetes.io/cpu-cpuid.OSXSAVE=true
+                    feature.node.kubernetes.io/cpu-cpuid.PSFD=true
+                    feature.node.kubernetes.io/cpu-cpuid.RDPRU=true
+                    feature.node.kubernetes.io/cpu-cpuid.SBPB=true
+                    feature.node.kubernetes.io/cpu-cpuid.SHA=true
+                    feature.node.kubernetes.io/cpu-cpuid.SME=true
+                    feature.node.kubernetes.io/cpu-cpuid.SPEC_CTRL_SSBD=true
+                    feature.node.kubernetes.io/cpu-cpuid.SRSO_USER_KERNEL_NO=true
+                    feature.node.kubernetes.io/cpu-cpuid.SSE4A=true
+                    feature.node.kubernetes.io/cpu-cpuid.STIBP=true
+                    feature.node.kubernetes.io/cpu-cpuid.STIBP_ALWAYSON=true
+                    feature.node.kubernetes.io/cpu-cpuid.SUCCOR=true
+                    feature.node.kubernetes.io/cpu-cpuid.SVM=true
+                    feature.node.kubernetes.io/cpu-cpuid.SVMDA=true
+                    feature.node.kubernetes.io/cpu-cpuid.SVMFBASID=true
+                    feature.node.kubernetes.io/cpu-cpuid.SVML=true
+                    feature.node.kubernetes.io/cpu-cpuid.SVMNP=true
+                    feature.node.kubernetes.io/cpu-cpuid.SVMPF=true
+                    feature.node.kubernetes.io/cpu-cpuid.SVMPFT=true
+                    feature.node.kubernetes.io/cpu-cpuid.SYSCALL=true
+                    feature.node.kubernetes.io/cpu-cpuid.SYSEE=true
+                    feature.node.kubernetes.io/cpu-cpuid.TOPEXT=true
+                    feature.node.kubernetes.io/cpu-cpuid.TSA_L1_NO=true
+                    feature.node.kubernetes.io/cpu-cpuid.TSA_SQ_NO=true
+                    feature.node.kubernetes.io/cpu-cpuid.TSCRATEMSR=true
+                    feature.node.kubernetes.io/cpu-cpuid.VAES=true
+                    feature.node.kubernetes.io/cpu-cpuid.VMCBCLEAN=true
+                    feature.node.kubernetes.io/cpu-cpuid.VPCLMULQDQ=true
+                    feature.node.kubernetes.io/cpu-cpuid.WBNOINVD=true
+                    feature.node.kubernetes.io/cpu-cpuid.X87=true
+                    feature.node.kubernetes.io/cpu-cpuid.XGETBV1=true
+                    feature.node.kubernetes.io/cpu-cpuid.XSAVE=true
+                    feature.node.kubernetes.io/cpu-cpuid.XSAVEC=true
+                    feature.node.kubernetes.io/cpu-cpuid.XSAVEOPT=true
+                    feature.node.kubernetes.io/cpu-cpuid.XSAVES=true
+                    feature.node.kubernetes.io/cpu-hardware_multithreading=true
+                    feature.node.kubernetes.io/cpu-model.family=26
+                    feature.node.kubernetes.io/cpu-model.id=68
+                    feature.node.kubernetes.io/cpu-model.vendor_id=AMD
+                    feature.node.kubernetes.io/kernel-config.NO_HZ=true
+                    feature.node.kubernetes.io/kernel-config.NO_HZ_FULL=true
+                    feature.node.kubernetes.io/kernel-version.full=7.0.0-28-generic
+                    feature.node.kubernetes.io/kernel-version.major=7
+                    feature.node.kubernetes.io/kernel-version.minor=0
+                    feature.node.kubernetes.io/kernel-version.revision=0
+                    feature.node.kubernetes.io/memory-swap=true
+                    feature.node.kubernetes.io/network-sriov.capable=true
+                    feature.node.kubernetes.io/pci-1002.present=true
+                    feature.node.kubernetes.io/pci-10ec.present=true
+                    feature.node.kubernetes.io/pci-14c3.present=true
+                    feature.node.kubernetes.io/pci-15b3.present=true
+                    feature.node.kubernetes.io/pci-15b3.sriov.capable=true
+                    feature.node.kubernetes.io/rdma.available=true
+                    feature.node.kubernetes.io/rdma.capable=true
+                    feature.node.kubernetes.io/storage-nonrotationaldisk=true
+                    feature.node.kubernetes.io/system-os_release.ID=ubuntu
+                    feature.node.kubernetes.io/system-os_release.VERSION_ID=26.04
+                    feature.node.kubernetes.io/system-os_release.VERSION_ID.major=26
+                    feature.node.kubernetes.io/system-os_release.VERSION_ID.minor=04
+                    feature.node.kubernetes.io/usb-ef_0e8d_0717.present=true
+                    feature.node.kubernetes.io/usb-ef_26ce_0a0b.present=true
+                    forge.gpu=amd
+                    forge.k3s=true
+                    forge.name=grs-b
+                    forge.node=pc4
+                    forge.role=amd-worker
+                    kubernetes.io/arch=amd64
+                    kubernetes.io/hostname=pc4-grs-b
+                    kubernetes.io/os=linux
+                    node.kubernetes.io/instance-type=k3s
+Annotations:        alpha.kubernetes.io/provided-node-ip: 100.124.95.18
+                    flannel.alpha.coreos.com/backend-data: {"VNI":1,"VtepMAC":"0e:a9:56:3d:3a:92"}
+                    flannel.alpha.coreos.com/backend-type: vxlan
+                    flannel.alpha.coreos.com/kube-subnet-manager: true
+                    flannel.alpha.coreos.com/public-ip: 100.124.95.18
+                    k3s.io/hostname: pc4-grs-b
+                    k3s.io/internal-ip: 100.124.95.18
+                    k3s.io/node-args:
+                      ["agent","--node-name","pc4-grs-b","--node-ip","100.124.95.18","--flannel-iface","tailscale0","--node-label","forge.node=pc4","--node-labe...
+                    k3s.io/node-config-hash: UN5HPRJGFHH7PXAWWDKHDAMZXJ7FXSFVWCT5DSAEPM35VXFFGZYQ====
+                    k3s.io/node-env: {"K3S_TOKEN":"********","K3S_URL":"https://100.124.92.84:6443"}
+                    nfd.node.kubernetes.io/feature-labels:
+                      cpu-cpuid.ADX,cpu-cpuid.AESNI,cpu-cpuid.AMXFP8,cpu-cpuid.AVX,cpu-cpuid.AVX2,cpu-cpuid.AVX512BF16,cpu-cpuid.AVX512BITALG,cpu-cpuid.AVX512BW...
+                    node.alpha.kubernetes.io/ttl: 0
+                    volumes.kubernetes.io/controller-managed-attach-detach: true
+CreationTimestamp:  Sat, 04 Jul 2026 18:20:26 -0400
+Taints:             <none>
+Unschedulable:      false
+Lease:
+  HolderIdentity:  pc4-grs-b
+  AcquireTime:     <unset>
+  RenewTime:       Thu, 30 Jul 2026 05:18:01 -0400
+Conditions:
+  Type             Status  LastHeartbeatTime                 LastTransitionTime                Reason                       Message
+  ----             ------  -----------------                 ------------------                ------                       -------
+  MemoryPressure   False   Thu, 30 Jul 2026 05:14:08 -0400   Thu, 30 Jul 2026 02:35:13 -0400   KubeletHasSufficientMemory   kubelet has sufficient memory available
+  DiskPressure     False   Thu, 30 Jul 2026 05:14:08 -0400   Thu, 30 Jul 2026 02:35:13 -0400   KubeletHasNoDiskPressure     kubelet has no disk pressure
+  PIDPressure      False   Thu, 30 Jul 2026 05:14:08 -0400   Thu, 30 Jul 2026 02:35:13 -0400   KubeletHasSufficientPID      kubelet has sufficient PID available
+  Ready            True    Thu, 30 Jul 2026 05:14:08 -0400   Thu, 30 Jul 2026 02:35:13 -0400   KubeletReady                 kubelet is posting ready status
+Addresses:
+  InternalIP:  100.124.95.18
+  Hostname:    pc4-grs-b
+Capacity:
+  amd.com/gpu:        3
+  cpu:                32
+  ephemeral-storage:  980760096Ki
+  hugepages-1Gi:      0
+  hugepages-2Mi:      0
+  memory:             47318596Ki
+  pods:               110
+Allocatable:
+  amd.com/gpu:        3
+  cpu:                32
+  ephemeral-storage:  954083420641
+  hugepages-1Gi:      0
+  hugepages-2Mi:      0
+  memory:             47318596Ki
+  pods:               110
+System Info:
+  Machine ID:                 e4c08caef5df4958a0d0737c6be28595
+  System UUID:                97006b9c-4a3a-0000-0000-000000000000
+  Boot ID:                    1c55b451-6bc0-40d3-a2ff-ddfda90ad7e6
+  Kernel Version:             7.0.0-28-generic
+  OS Image:                   Ubuntu 26.04 LTS
+  Operating System:           linux
+  Architecture:               amd64
+  Container Runtime Version:  containerd://2.2.3-k3s1
+  Kubelet Version:            v1.35.5+k3s1
+  Kube-Proxy Version:         
+PodCIDR:                      10.42.3.0/24
+PodCIDRs:                     10.42.3.0/24
+ProviderID:                   k3s://pc4-grs-b
+Non-terminated Pods:          (6 in total)
+  Namespace                   Name                                                    CPU Requests  CPU Limits  Memory Requests  Memory Limits  Age
+  ---------                   ----                                                    ------------  ----------  ---------------  -------------  ---
+  forgeai-minimal             ollama-d5f8bfc48-l85qh                                  1 (3%)        4 (12%)     4Gi (8%)         8Gi (17%)      12s
+  forgeai-minimal             vector-store-77fd8bcc89-t6sms                           250m (0%)     1 (3%)      512Mi (1%)       2Gi (4%)       12s
+  gpu-operator                gpu-operator-node-feature-discovery-worker-k7vlt        5m (0%)       0 (0%)      64Mi (0%)        512Mi (1%)     25d
+  kube-system                 amdgpu-device-plugin-daemonset-lb8x7                    0 (0%)        0 (0%)      0 (0%)           0 (0%)         47m
+  monitoring                  kube-prometheus-stack-prometheus-node-exporter-jkg6l    0 (0%)        0 (0%)      0 (0%)           0 (0%)         18d
+  velero                      node-agent-vs8tl                                        0 (0%)        0 (0%)      0 (0%)           0 (0%)         18d
+Allocated resources:
+  (Total limits may be over 100 percent, i.e., overcommitted.)
+  Resource           Requests      Limits
+  --------           --------      ------
+  cpu                1255m (3%)    5 (15%)
+  memory             4672Mi (10%)  10752Mi (23%)
+  ephemeral-storage  0 (0%)        0 (0%)
+  hugepages-1Gi      0 (0%)        0 (0%)
+  hugepages-2Mi      0 (0%)        0 (0%)
+  amd.com/gpu        1             1
+Events:              <none>
+
+
+--- 2026-07-30T09:18:46.345590+00:00 ---
+$ kubectl delete -f reviews/LAB-033A/evidence/manifeste-rendu.yaml
+namespace "forgeai-minimal" deleted
+serviceaccount "forgeai-sa" deleted from forgeai-minimal namespace
+resourcequota "forgeai-quota" deleted from forgeai-minimal namespace
+limitrange "forgeai-limits" deleted from forgeai-minimal namespace
+networkpolicy.networking.k8s.io "forgeai-default-deny" deleted from forgeai-minimal namespace
+networkpolicy.networking.k8s.io "forgeai-allow-dns" deleted from forgeai-minimal namespace
+persistentvolumeclaim "forgeai-ollama-models" deleted from forgeai-minimal namespace
+deployment.apps "ollama" deleted from forgeai-minimal namespace
+service "ollama" deleted from forgeai-minimal namespace
+persistentvolumeclaim "forgeai-qdrant-data" deleted from forgeai-minimal namespace
+deployment.apps "vector-store" deleted from forgeai-minimal namespace
+service "vector-store" deleted from forgeai-minimal namespace
+
+
+--- 2026-07-30T09:18:46.524295+00:00 ---
+$ kubectl describe node pc4-grs-b (teardown)
+Name:               pc4-grs-b
+Roles:              <none>
+Labels:             beta.kubernetes.io/arch=amd64
+                    beta.kubernetes.io/instance-type=k3s
+                    beta.kubernetes.io/os=linux
+                    feature.node.kubernetes.io/cpu-cpuid.ADX=true
+                    feature.node.kubernetes.io/cpu-cpuid.AESNI=true
+                    feature.node.kubernetes.io/cpu-cpuid.AMXFP8=true
+                    feature.node.kubernetes.io/cpu-cpuid.AVX=true
+                    feature.node.kubernetes.io/cpu-cpuid.AVX2=true
+                    feature.node.kubernetes.io/cpu-cpuid.AVX512BF16=true
+                    feature.node.kubernetes.io/cpu-cpuid.AVX512BITALG=true
+                    feature.node.kubernetes.io/cpu-cpuid.AVX512BW=true
+                    feature.node.kubernetes.io/cpu-cpuid.AVX512CD=true
+                    feature.node.kubernetes.io/cpu-cpuid.AVX512DQ=true
+                    feature.node.kubernetes.io/cpu-cpuid.AVX512F=true
+                    feature.node.kubernetes.io/cpu-cpuid.AVX512IFMA=true
+                    feature.node.kubernetes.io/cpu-cpuid.AVX512VBMI=true
+                    feature.node.kubernetes.io/cpu-cpuid.AVX512VBMI2=true
+                    feature.node.kubernetes.io/cpu-cpuid.AVX512VL=true
+                    feature.node.kubernetes.io/cpu-cpuid.AVX512VNNI=true
+                    feature.node.kubernetes.io/cpu-cpuid.AVX512VP2INTERSECT=true
+                    feature.node.kubernetes.io/cpu-cpuid.AVX512VPOPCNTDQ=true
+                    feature.node.kubernetes.io/cpu-cpuid.AVXVNNI=true
+                    feature.node.kubernetes.io/cpu-cpuid.CETSS=true
+                    feature.node.kubernetes.io/cpu-cpuid.CLZERO=true
+                    feature.node.kubernetes.io/cpu-cpuid.CMPXCHG8=true
+                    feature.node.kubernetes.io/cpu-cpuid.CPBOOST=true
+                    feature.node.kubernetes.io/cpu-cpuid.CPPC=true
+                    feature.node.kubernetes.io/cpu-cpuid.EFER_LMSLE_UNS=true
+                    feature.node.kubernetes.io/cpu-cpuid.FLUSH_L1D=true
+                    feature.node.kubernetes.io/cpu-cpuid.FMA3=true
+                    feature.node.kubernetes.io/cpu-cpuid.FSRM=true
+                    feature.node.kubernetes.io/cpu-cpuid.FXSR=true
+                    feature.node.kubernetes.io/cpu-cpuid.FXSROPT=true
+                    feature.node.kubernetes.io/cpu-cpuid.GFNI=true
+                    feature.node.kubernetes.io/cpu-cpuid.IBPB=true
+                    feature.node.kubernetes.io/cpu-cpuid.IBPB_BRTYPE=true
+                    feature.node.kubernetes.io/cpu-cpuid.IBRS=true
+                    feature.node.kubernetes.io/cpu-cpuid.IBRS_PREFERRED=true
+                    feature.node.kubernetes.io/cpu-cpuid.IBRS_PROVIDES_SMP=true
+                    feature.node.kubernetes.io/cpu-cpuid.IBS=true
+                    feature.node.kubernetes.io/cpu-cpuid.IBSBRNTRGT=true
+                    feature.node.kubernetes.io/cpu-cpuid.IBSFETCHSAM=true
+                    feature.node.kubernetes.io/cpu-cpuid.IBSFFV=true
+                    feature.node.kubernetes.io/cpu-cpuid.IBSOPCNT=true
+                    feature.node.kubernetes.io/cpu-cpuid.IBSOPCNTEXT=true
+                    feature.node.kubernetes.io/cpu-cpuid.IBSOPSAM=true
+                    feature.node.kubernetes.io/cpu-cpuid.IBSRDWROPCNT=true
+                    feature.node.kubernetes.io/cpu-cpuid.IBSRIPINVALIDCHK=true
+                    feature.node.kubernetes.io/cpu-cpuid.IBS_FETCH_CTLX=true
+                    feature.node.kubernetes.io/cpu-cpuid.IBS_OPFUSE=true
+                    feature.node.kubernetes.io/cpu-cpuid.IBS_ZEN4=true
+                    feature.node.kubernetes.io/cpu-cpuid.INT_WBINVD=true
+                    feature.node.kubernetes.io/cpu-cpuid.LAHF=true
+                    feature.node.kubernetes.io/cpu-cpuid.LBRVIRT=true
+                    feature.node.kubernetes.io/cpu-cpuid.MCAOVERFLOW=true
+                    feature.node.kubernetes.io/cpu-cpuid.MOVBE=true
+                    feature.node.kubernetes.io/cpu-cpuid.MOVDIR64B=true
+                    feature.node.kubernetes.io/cpu-cpuid.MOVDIRI=true
+                    feature.node.kubernetes.io/cpu-cpuid.MOVU=true
+                    feature.node.kubernetes.io/cpu-cpuid.MSRIRC=true
+                    feature.node.kubernetes.io/cpu-cpuid.NRIPS=true
+                    feature.node.kubernetes.io/cpu-cpuid.OSXSAVE=true
+                    feature.node.kubernetes.io/cpu-cpuid.PSFD=true
+                    feature.node.kubernetes.io/cpu-cpuid.RDPRU=true
+                    feature.node.kubernetes.io/cpu-cpuid.SBPB=true
+                    feature.node.kubernetes.io/cpu-cpuid.SHA=true
+                    feature.node.kubernetes.io/cpu-cpuid.SME=true
+                    feature.node.kubernetes.io/cpu-cpuid.SPEC_CTRL_SSBD=true
+                    feature.node.kubernetes.io/cpu-cpuid.SRSO_USER_KERNEL_NO=true
+                    feature.node.kubernetes.io/cpu-cpuid.SSE4A=true
+                    feature.node.kubernetes.io/cpu-cpuid.STIBP=true
+                    feature.node.kubernetes.io/cpu-cpuid.STIBP_ALWAYSON=true
+                    feature.node.kubernetes.io/cpu-cpuid.SUCCOR=true
+                    feature.node.kubernetes.io/cpu-cpuid.SVM=true
+                    feature.node.kubernetes.io/cpu-cpuid.SVMDA=true
+                    feature.node.kubernetes.io/cpu-cpuid.SVMFBASID=true
+                    feature.node.kubernetes.io/cpu-cpuid.SVML=true
+                    feature.node.kubernetes.io/cpu-cpuid.SVMNP=true
+                    feature.node.kubernetes.io/cpu-cpuid.SVMPF=true
+                    feature.node.kubernetes.io/cpu-cpuid.SVMPFT=true
+                    feature.node.kubernetes.io/cpu-cpuid.SYSCALL=true
+                    feature.node.kubernetes.io/cpu-cpuid.SYSEE=true
+                    feature.node.kubernetes.io/cpu-cpuid.TOPEXT=true
+                    feature.node.kubernetes.io/cpu-cpuid.TSA_L1_NO=true
+                    feature.node.kubernetes.io/cpu-cpuid.TSA_SQ_NO=true
+                    feature.node.kubernetes.io/cpu-cpuid.TSCRATEMSR=true
+                    feature.node.kubernetes.io/cpu-cpuid.VAES=true
+                    feature.node.kubernetes.io/cpu-cpuid.VMCBCLEAN=true
+                    feature.node.kubernetes.io/cpu-cpuid.VPCLMULQDQ=true
+                    feature.node.kubernetes.io/cpu-cpuid.WBNOINVD=true
+                    feature.node.kubernetes.io/cpu-cpuid.X87=true
+                    feature.node.kubernetes.io/cpu-cpuid.XGETBV1=true
+                    feature.node.kubernetes.io/cpu-cpuid.XSAVE=true
+                    feature.node.kubernetes.io/cpu-cpuid.XSAVEC=true
+                    feature.node.kubernetes.io/cpu-cpuid.XSAVEOPT=true
+                    feature.node.kubernetes.io/cpu-cpuid.XSAVES=true
+                    feature.node.kubernetes.io/cpu-hardware_multithreading=true
+                    feature.node.kubernetes.io/cpu-model.family=26
+                    feature.node.kubernetes.io/cpu-model.id=68
+                    feature.node.kubernetes.io/cpu-model.vendor_id=AMD
+                    feature.node.kubernetes.io/kernel-config.NO_HZ=true
+                    feature.node.kubernetes.io/kernel-config.NO_HZ_FULL=true
+                    feature.node.kubernetes.io/kernel-version.full=7.0.0-28-generic
+                    feature.node.kubernetes.io/kernel-version.major=7
+                    feature.node.kubernetes.io/kernel-version.minor=0
+                    feature.node.kubernetes.io/kernel-version.revision=0
+                    feature.node.kubernetes.io/memory-swap=true
+                    feature.node.kubernetes.io/network-sriov.capable=true
+                    feature.node.kubernetes.io/pci-1002.present=true
+                    feature.node.kubernetes.io/pci-10ec.present=true
+                    feature.node.kubernetes.io/pci-14c3.present=true
+                    feature.node.kubernetes.io/pci-15b3.present=true
+                    feature.node.kubernetes.io/pci-15b3.sriov.capable=true
+                    feature.node.kubernetes.io/rdma.available=true
+                    feature.node.kubernetes.io/rdma.capable=true
+                    feature.node.kubernetes.io/storage-nonrotationaldisk=true
+                    feature.node.kubernetes.io/system-os_release.ID=ubuntu
+                    feature.node.kubernetes.io/system-os_release.VERSION_ID=26.04
+                    feature.node.kubernetes.io/system-os_release.VERSION_ID.major=26
+                    feature.node.kubernetes.io/system-os_release.VERSION_ID.minor=04
+                    feature.node.kubernetes.io/usb-ef_0e8d_0717.present=true
+                    feature.node.kubernetes.io/usb-ef_26ce_0a0b.present=true
+                    forge.gpu=amd
+                    forge.k3s=true
+                    forge.name=grs-b
+                    forge.node=pc4
+                    forge.role=amd-worker
+                    kubernetes.io/arch=amd64
+                    kubernetes.io/hostname=pc4-grs-b
+                    kubernetes.io/os=linux
+                    node.kubernetes.io/instance-type=k3s
+Annotations:        alpha.kubernetes.io/provided-node-ip: 100.124.95.18
+                    flannel.alpha.coreos.com/backend-data: {"VNI":1,"VtepMAC":"0e:a9:56:3d:3a:92"}
+                    flannel.alpha.coreos.com/backend-type: vxlan
+                    flannel.alpha.coreos.com/kube-subnet-manager: true
+                    flannel.alpha.coreos.com/public-ip: 100.124.95.18
+                    k3s.io/hostname: pc4-grs-b
+                    k3s.io/internal-ip: 100.124.95.18
+                    k3s.io/node-args:
+                      ["agent","--node-name","pc4-grs-b","--node-ip","100.124.95.18","--flannel-iface","tailscale0","--node-label","forge.node=pc4","--node-labe...
+                    k3s.io/node-config-hash: UN5HPRJGFHH7PXAWWDKHDAMZXJ7FXSFVWCT5DSAEPM35VXFFGZYQ====
+                    k3s.io/node-env: {"K3S_TOKEN":"********","K3S_URL":"https://100.124.92.84:6443"}
+                    nfd.node.kubernetes.io/feature-labels:
+                      cpu-cpuid.ADX,cpu-cpuid.AESNI,cpu-cpuid.AMXFP8,cpu-cpuid.AVX,cpu-cpuid.AVX2,cpu-cpuid.AVX512BF16,cpu-cpuid.AVX512BITALG,cpu-cpuid.AVX512BW...
+                    node.alpha.kubernetes.io/ttl: 0
+                    volumes.kubernetes.io/controller-managed-attach-detach: true
+CreationTimestamp:  Sat, 04 Jul 2026 18:20:26 -0400
+Taints:             <none>
+Unschedulable:      false
+Lease:
+  HolderIdentity:  pc4-grs-b
+  AcquireTime:     <unset>
+  RenewTime:       Thu, 30 Jul 2026 05:18:41 -0400
+Conditions:
+  Type             Status  LastHeartbeatTime                 LastTransitionTime                Reason                       Message
+  ----             ------  -----------------                 ------------------                ------                       -------
+  MemoryPressure   False   Thu, 30 Jul 2026 05:14:08 -0400   Thu, 30 Jul 2026 02:35:13 -0400   KubeletHasSufficientMemory   kubelet has sufficient memory available
+  DiskPressure     False   Thu, 30 Jul 2026 05:14:08 -0400   Thu, 30 Jul 2026 02:35:13 -0400   KubeletHasNoDiskPressure     kubelet has no disk pressure
+  PIDPressure      False   Thu, 30 Jul 2026 05:14:08 -0400   Thu, 30 Jul 2026 02:35:13 -0400   KubeletHasSufficientPID      kubelet has sufficient PID available
+  Ready            True    Thu, 30 Jul 2026 05:14:08 -0400   Thu, 30 Jul 2026 02:35:13 -0400   KubeletReady                 kubelet is posting ready status
+Addresses:
+  InternalIP:  100.124.95.18
+  Hostname:    pc4-grs-b
+Capacity:
+  amd.com/gpu:        3
+  cpu:                32
+  ephemeral-storage:  980760096Ki
+  hugepages-1Gi:      0
+  hugepages-2Mi:      0
+  memory:             47318596Ki
+  pods:               110
+Allocatable:
+  amd.com/gpu:        3
+  cpu:                32
+  ephemeral-storage:  954083420641
+  hugepages-1Gi:      0
+  hugepages-2Mi:      0
+  memory:             47318596Ki
+  pods:               110
+System Info:
+  Machine ID:                 e4c08caef5df4958a0d0737c6be28595
+  System UUID:                97006b9c-4a3a-0000-0000-000000000000
+  Boot ID:                    1c55b451-6bc0-40d3-a2ff-ddfda90ad7e6
+  Kernel Version:             7.0.0-28-generic
+  OS Image:                   Ubuntu 26.04 LTS
+  Operating System:           linux
+  Architecture:               amd64
+  Container Runtime Version:  containerd://2.2.3-k3s1
+  Kubelet Version:            v1.35.5+k3s1
+  Kube-Proxy Version:         
+PodCIDR:                      10.42.3.0/24
+PodCIDRs:                     10.42.3.0/24
+ProviderID:                   k3s://pc4-grs-b
+Non-terminated Pods:          (4 in total)
+  Namespace                   Name                                                    CPU Requests  CPU Limits  Memory Requests  Memory Limits  Age
+  ---------                   ----                                                    ------------  ----------  ---------------  -------------  ---
+  gpu-operator                gpu-operator-node-feature-discovery-worker-k7vlt        5m (0%)       0 (0%)      64Mi (0%)        512Mi (1%)     25d
+  kube-system                 amdgpu-device-plugin-daemonset-lb8x7                    0 (0%)        0 (0%)      0 (0%)           0 (0%)         48m
+  monitoring                  kube-prometheus-stack-prometheus-node-exporter-jkg6l    0 (0%)        0 (0%)      0 (0%)           0 (0%)         18d
+  velero                      node-agent-vs8tl                                        0 (0%)        0 (0%)      0 (0%)           0 (0%)         18d
+Allocated resources:
+  (Total limits may be over 100 percent, i.e., overcommitted.)
+  Resource           Requests   Limits
+  --------           --------   ------
+  cpu                5m (0%)    0 (0%)
+  memory             64Mi (0%)  512Mi (1%)
+  ephemeral-storage  0 (0%)     0 (0%)
+  hugepages-1Gi      0 (0%)     0 (0%)
+  hugepages-2Mi      0 (0%)     0 (0%)
+  amd.com/gpu        0          0
+Events:              <none>
+
+
+--- 2026-07-30T09:18:46.848788+00:00 ---
+$ ssh pc4 sample repos amdgpu (après teardown)
+{
+  "card0": {
+    "pci_id": "0x7550",
+    "vram_used": 59936768,
+    "busy": 0,
+    "integrated": false
+  },
+  "card1": {
+    "pci_id": "0x7551",
+    "vram_used": 89427968,
+    "busy": 0,
+    "integrated": false
+  },
+  "card2": {
+    "pci_id": "0x13c0",
+    "vram_used": 16637952,
+    "busy": 0,
+    "integrated": true
+  }
+}

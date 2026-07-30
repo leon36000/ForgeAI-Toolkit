@@ -194,21 +194,23 @@ def test_enforce_correspond_aux_manifests_rendus():
 
 
 def test_exception_gpu_degrade_enforce_et_reste_visible():
-    """Un service GPU DÉROGE au profil restricted (mesure K8S-022 : non-root = 0/4 devices).
-    Annoncer `enforce: restricted` sur un tel plan serait un mensonge : le cluster REFUSERAIT les
-    pods au déploiement. Niveau réellement tenu, MESURÉ sur cluster k3s v1.35.5 avec le pod GPU réel :
-      enforce=restricted -> REFUSÉ (« restricted volume type hostPath », « runAsNonRoot »)
-      enforce=baseline    -> REFUSÉ (« hostPath volumes (volume "dri") »)
-      enforce=privileged  -> ACCEPTÉ
-    `baseline` interdit lui aussi hostPath : seul `privileged` admet le passthrough de devices.
-    L'exception doit donc être VISIBLE : enforce descendu au seul niveau qui tient, audit ET warn
-    MAINTENUS à restricted pour que l'API server continue de signaler chaque écart."""
+    """Un service GPU déroge au profil restricted tant qu'il tourne root (durcissement
+    reporté). Mesuré sur cluster k3s v1.35.5 réel avec le pod GPU réel :
+      enforce=restricted -> REFUSÉ (« runAsNonRoot != true »)
+      enforce=baseline   -> ACCEPTÉ (créé, exécuté, Completed).
+    Donc baseline est le niveau le plus strict qui tienne. L'exception reste visible :
+    audit et warn restent à restricted pour que l'API server signale chaque écart.
+    LAB-033A : le passthrough hostPath a été supprimé ; il ne justifie plus privileged."""
     out = render_k3s(_plan([_svc(name="ollama", gpu=True, gpu_vendor="amd")]))
     labels = _namespace(out)["metadata"].get("labels") or {}
-    assert labels.get(_PSA_PREFIXE + "enforce") == "privileged"
+    assert labels.get(_PSA_PREFIXE + "enforce") == "baseline"
     assert labels.get(_PSA_PREFIXE + "audit") == "restricted"
     assert labels.get(_PSA_PREFIXE + "warn") == "restricted"
     assert "# forgeai:" in out.split("kind: Namespace")[1].split("---")[0]
+    # Anti-régression LAB-033A : plus de volume hostPath pour accéder au GPU.
+    for dep in _deployments(out):
+        for vol in dep["spec"]["template"]["spec"].get("volumes") or []:
+            assert "hostPath" not in vol, f"volume hostPath interdit : {vol}"
 
 
 def test_service_sans_volume_declare_garde_un_chemin_de_donnees_inscriptible():

@@ -1,14 +1,17 @@
-"""Story S3 — renderer k3s : passthrough GPU PAR VENDOR (parallèle du renderer compose de S2).
+"""Story S3 — renderer k3s : GPU par ressource de device plugin par vendor (LAB-033A).
 
-AMD  = hostPath /dev/kfd + /dev/dri + privileged (marche sur un nœud NU, sans device-plugin AMD
-       installé — c'est ce qui a servi le dual-GPU RDNA4 sur pc4).
-Intel = hostPath /dev/dri + privileged.
-NVIDIA = ressource nvidia.com/gpu (modèle device-plugin, inchangé). gpu sans vendor => nvidia.
-Prouve la FUSION propre : montages device GPU + volume data = UN seul bloc volumeMounts / volumes
-(sinon YAML invalide par clé dupliquée).
+NVIDIA  = ressource nvidia.com/gpu (device-plugin).
+AMD     = ressource amd.com/gpu (device-plugin) — remplace le passthrough hostPath
+          /dev/kfd+/dev/dri qui ne fonctionnait pas (cgroup devices refuse l'accès).
+Intel   = ressource gpu.intel.com/i915 (device-plugin) — même remplacement.
+gpu sans vendor => nvidia.
+Prouve la FUSION propre : ressource GPU + volume data = UN seul bloc volumeMounts / volumes.
 """
 import sys
 from pathlib import Path
+
+import pytest
+import yaml
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
 
@@ -26,49 +29,67 @@ def _gpu(vendor, volumes=()):
                        gpu=True, gpu_vendor=vendor, volumes=volumes)
 
 
+def _volumes(manifest: str) -> list[dict]:
+    vols = []
+    for doc in yaml.safe_load_all(manifest):
+        if doc and doc.get("kind") == "Deployment":
+            for v in doc["spec"]["template"]["spec"].get("volumes") or []:
+                vols.append(v)
+    return vols
+
+
+def _assert_no_hostpath(manifest: str) -> None:
+    """Vérifie qu'aucun volume n'utilise la clé YAML hostPath (pas seulement la sous-chaîne)."""
+    for vol in _volumes(manifest):
+        assert "hostPath" not in vol, f"volume hostPath interdit trouvé : {vol}"
+
+
 def test_k3s_nvidia_garde_resource():
     out = render_k3s(_plan(_gpu("nvidia")))
     assert 'nvidia.com/gpu: "1"' in out
     assert "/dev/kfd" not in out
 
 
-def test_k3s_amd_passthrough_kfd_dri_sans_privileged():
-    # K8S-008 (FAI-U-008) : le passthrough AMD reste (hostPath /dev/kfd + /dev/dri) mais SANS
-    # privileged:true — securityContext durci (allowPrivilegeEscalation:false) + limitation visible.
+def test_k3s_amd_ressource_device_plugin():
+    """LAB-033A : amd.com/gpu via device plugin ; plus de passthrough hostPath."""
     out = render_k3s(_plan(_gpu("amd")))
-    assert "/dev/kfd" in out and "/dev/dri" in out
+    assert 'amd.com/gpu: "1"' in out
+    _assert_no_hostpath(out)
     assert "privileged: true" not in out
     assert "allowPrivilegeEscalation: false" in out
-    assert "passthrough hostPath" in out  # limitation vendor visible dans le plan
 
 
-def test_k3s_intel_sans_privileged():
+def test_k3s_intel_ressource_device_plugin():
+    """LAB-033A : gpu.intel.com/i915 via device plugin ; plus de passthrough hostPath."""
     out = render_k3s(_plan(_gpu("intel")))
-    assert "/dev/dri" in out and "/dev/kfd" not in out
+    assert 'gpu.intel.com/i915: "1"' in out
+    _assert_no_hostpath(out)
     assert "privileged: true" not in out
     assert "allowPrivilegeEscalation: false" in out
+
+
+def test_k3s_intel_device_plugin_sans_hostpath():
+    """Variante Intel : seule la ressource de device plugin est émise."""
+    out = render_k3s(_plan(_gpu("intel")))
+    assert 'gpu.intel.com/i915: "1"' in out
+    _assert_no_hostpath(out)
+    assert "nvidia.com/gpu" not in out
+    assert "amd.com/gpu" not in out
 
 
 def test_k3s_gpu_vendor_inconnu_refuse():
-    # combinaison non supportée : un vendor GPU inconnu est refusé au rendu (pas de privileged muet).
-    import pytest
     with pytest.raises((ValueError, KeyError)):
         render_k3s(_plan(_gpu("exotic-vendor")))
 
 
-def test_k3s_intel_passthrough_dri():
-    out = render_k3s(_plan(_gpu("intel")))
-    assert "/dev/dri" in out
-    assert "/dev/kfd" not in out and "nvidia.com/gpu" not in out
-
-
 def test_k3s_amd_avec_volume_data_fusionne_un_seul_bloc():
-    # piège YAML : montages device + volume data DOIVENT fusionner en UN volumeMounts + UN volumes
+    """Le volume data utilisateur reste fusionné avec la ressource GPU en un seul bloc YAML."""
     out = render_k3s(_plan(_gpu("amd", volumes=("data:/root/.cache",))))
     assert out.count("volumeMounts:") == 1, "un seul bloc volumeMounts (sinon YAML invalide)"
     assert out.count("\n      volumes:") == 1, "un seul bloc volumes (sinon YAML invalide)"
-    assert "/root/.cache" in out and "/dev/kfd" in out and "/dev/dri" in out
-    assert "name: data" in out  # le volume data reste présent
+    assert "/root/.cache" in out
+    assert 'amd.com/gpu: "1"' in out
+    _assert_no_hostpath(out)
 
 
 def test_k3s_sans_gpu_aucun_device_ni_privileged():
@@ -84,7 +105,6 @@ def test_k3s_gpu_sans_vendor_reste_nvidia():
 
 
 def test_k3s_tous_les_volumes_rendus():
-    # finding revue : TOUS les volumes data doivent être rendus, pas seulement le premier.
     svc = ServiceSpec(name="e", image="i", host_port=1, container_port=1,
                       volumes=("data:/a", "cache:/b"))
     out = render_k3s(_plan(svc))
@@ -94,7 +114,6 @@ def test_k3s_tous_les_volumes_rendus():
 
 
 def test_k3s_command_rendu_en_args():
-    # parité compose : svc.command doit apparaître comme `args:` k8s (serving llama.cpp etc.)
     svc = ServiceSpec(name="e", image="i", host_port=1, container_port=1,
                       command=("--model", "/m.gguf", "--tensor-split", "32,16"))
     out = render_k3s(_plan(svc))

@@ -1,0 +1,86 @@
+# BANC — device plugins GPU installés pour la qualification (LAB-033A / LAB-033I)
+# Date : 2026-07-30T08:34:16Z — carte blanche Nathan sur pc2/pc3/pc4
+
+## Pourquoi c'est légitime et non un artifice
+Le toolkit SUPPOSE déjà le device plugin du vendor présent sur le cluster pour NVIDIA
+(hypothèse qualifiée par LAB-033N : GPU Operator installé, jamais déployé par le produit).
+Installer l'équivalent AMD/Intel place les trois vendors sur le MÊME pied d'hypothèse.
+Ce que le produit doit faire, c'est DEMANDER la ressource ; l'administrateur du cluster
+fournit le plugin. Cf. hardware/drivers.py qui RECOMMANDE amd-gpu-operator et
+intel-device-plugins sans les installer.
+
+## AMD — pc4-grs-b (2 dGPU Navi 48 RDNA4 + 1 iGPU)
+$ kubectl apply -f <DaemonSet rocm/k8s-device-plugin, nodeSelector forge.gpu=amd>
+amdgpu-device-plugin-daemonset-lb8x7   1/1   Running   0     3m46s   10.42.3.216   pc4-grs-b   <none>   <none>
+$ kubectl get node pc4-grs-b -o jsonpath='{.status.capacity}' | (filtre gpu)
+{'amd.com/gpu': '3'}
+
+## Intel — pc2-forge-b (Iris Xe Raptor Lake-P 8086:a7a0)
+$ kubectl apply -f <DaemonSet intel/intel-gpu-plugin:0.34.0, nodeSelector hostname=pc2-forge-b>
+intel-gpu-plugin-4mttw   1/1   Running   0     77s   10.42.1.135   pc2-forge-b   <none>   <none>
+$ kubectl get node pc2-forge-b -o jsonpath='{.status.capacity}' | (filtre gpu)
+{'gpu.intel.com/i915': '1', 'nvidia.com/gpu': '0'}
+
+## NVIDIA — rappel de l'état préexistant du banc (non installé par cette story)
+pc1-x870e-taichi   1
+pc3-grs-a          2
+
+## Manifestes appliqués (verbatim, échafaudage de banc — PAS des artefacts produit)
+--- AMD ---
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: amdgpu-device-plugin-daemonset
+  namespace: kube-system
+spec:
+  selector:
+    matchLabels: {name: amdgpu-dp-ds}
+  template:
+    metadata:
+      labels: {name: amdgpu-dp-ds}
+    spec:
+      nodeSelector: {forge.gpu: amd}
+      priorityClassName: system-node-critical
+      tolerations:
+        - {operator: Exists}
+      containers:
+        - name: amdgpu-dp-cntr
+          image: rocm/k8s-device-plugin:latest
+          securityContext:
+            privileged: true
+          volumeMounts:
+            - {name: dp, mountPath: /var/lib/kubelet/device-plugins}
+            - {name: sys, mountPath: /sys}
+      volumes:
+        - {name: dp, hostPath: {path: /var/lib/kubelet/device-plugins}}
+        - {name: sys, hostPath: {path: /sys}}
+--- Intel ---
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: intel-gpu-plugin
+  namespace: kube-system
+spec:
+  selector:
+    matchLabels: {app: intel-gpu-plugin}
+  template:
+    metadata:
+      labels: {app: intel-gpu-plugin}
+    spec:
+      nodeSelector: {kubernetes.io/hostname: pc2-forge-b}
+      tolerations:
+        - {operator: Exists}
+      containers:
+        - name: intel-gpu-plugin
+          image: intel/intel-gpu-plugin:0.34.0
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+          volumeMounts:
+            - {name: devfs, mountPath: /dev/dri, readOnly: true}
+            - {name: sysfs, mountPath: /sys/class/drm, readOnly: true}
+            - {name: kubeletsockets, mountPath: /var/lib/kubelet/device-plugins}
+      volumes:
+        - {name: devfs, hostPath: {path: /dev/dri}}
+        - {name: sysfs, hostPath: {path: /sys/class/drm}}
+        - {name: kubeletsockets, hostPath: {path: /var/lib/kubelet/device-plugins}}
