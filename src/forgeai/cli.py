@@ -579,11 +579,14 @@ def _gpu_drivers(args: argparse.Namespace) -> int:
         rec = state.recommendation
         print(f"[forgeai] driver {args.vendor} — présent: {state.present} "
               f"v{state.version or '-'}")
-        rocm = " (ROCm jamais proposé)" if args.vendor == "amd" else ""
-        print(f"  recommandation : runtime {rec.runtime}, operator {rec.operator}{rocm}")
+        ordre = " > ".join(rec.runtimes)
+        print(f"  recommandation : runtime {rec.runtime}, operator {rec.operator} (runtimes: {ordre})")
+        if rec.notes:
+            print(f"  note : {rec.notes}")
         payload = {"vendor": args.vendor, "present": state.present, "version": state.version,
                    "runtime": rec.runtime, "operator": rec.operator,
-                   "rocm_allowed": rec.rocm_allowed}
+                   "rocm_allowed": rec.rocm_allowed,
+                   "runtimes": list(rec.runtimes)}
         if args.action:
             plan = plan_driver_op(args.vendor, args.action)
             print(f"  plan {args.action} : {' '.join(plan.install_argv)}")

@@ -1,6 +1,8 @@
 import re
 from dataclasses import dataclass
 
+from forgeai.hardware.detect import HardwareDetector
+
 VENDORS = ("nvidia", "amd", "intel")
 
 
@@ -123,7 +125,15 @@ def detect_driver_state(vendor: str, runner) -> DriverState:
             version = ""
     else:
         version = ""
-    recommendation = recommend_driver(vendor)
+    # HW-037 : la recommandation depend de l'ARCHITECTURE (Instinct/CDNA -> rocm,
+    # Radeon/RDNA -> vulkan). Sans le modele detecte, le chemin reel retombait
+    # toujours sur le defaut et ne pouvait jamais proposer rocm.
+    modele = None
+    for gpu in HardwareDetector(runner).detect_gpus():
+        if gpu.vendor == vendor:
+            modele = gpu.name
+            break
+    recommendation = recommend_driver(vendor, model=modele)
     return DriverState(
         vendor=vendor,
         present=present,
