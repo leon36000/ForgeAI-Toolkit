@@ -1,0 +1,14 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "src/forgeai/models/local.py",
+   "description": "download_verified retourne désormais le chemin résolu (realpath) via resolve_within, alors qu’elle retournait précédemment le chemin construit (p. ex. sous un répertoire lien symbolique). Cela pourrait casser un appelant qui exploite le chemin d’origine (symlink). Les tests existants ne couvrent pas un dest_dir symbolique.",
+   "preuve": "diff local.py: `dest = resolve_within(Path(dest_dir) / f\"{model.name}.bin\", dest_dir)` suivi de `return dest`; l’ancien code retournait `dest` non résolu (Path(dest_dir) / ...)."
+  }
+ ],
+ "date_heure": "2026-07-29T18:01:46.035527+00:00",
+ "prompt_sha256": "57106e2a72677bc8b36c1b3d1492bad42ee7379ae5f949467fca98e8a4d93f77",
+ "reviewer_model": "DeepSeek-V4-Pro"
+}
