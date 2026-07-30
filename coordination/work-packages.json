@@ -6,7 +6,6 @@
   "audit_commit": "251f0682bf9d0ffde9f7fd7ab6c7c9f5bad1cd3e",
   "concurrency_limits": {
     "total": 6,
-    "CODEX": 2,
     "CLAUDE_CODE": 2,
     "CURSOR": 1,
     "VS_CODE": 1,
@@ -60,40 +59,43 @@
       "id": "WEB-001",
       "title": "Rendre l’authentification Web fail-closed sur toute écoute non-loopback",
       "status": "EXTERNAL",
-      "ide": "CODEX",
+      "ide": "CLAUDE_CODE",
       "source_ide": "CODEX",
       "exclusive_lane": "",
       "dependencies": [
         "ORCH-001"
       ],
       "_external": true,
-      "_note": "Package géré par CODEX. Marqué completed via coordination centrale après fusion."
+      "_note": "Package géré par CODEX. Marqué completed via coordination centrale après fusion.",
+      "_reassigned": "CODEX->CLAUDE_CODE (Codex retiré du projet, 2026-07-30)"
     },
     {
       "id": "DATA-002",
       "title": "Rendre RouteStore transactionnel, verrouillé et atomique",
       "status": "EXTERNAL",
-      "ide": "CODEX",
+      "ide": "CLAUDE_CODE",
       "source_ide": "CODEX",
       "exclusive_lane": "",
       "dependencies": [
         "ORCH-001"
       ],
       "_external": true,
-      "_note": "Package géré par CODEX. Marqué completed via coordination centrale après fusion."
+      "_note": "Package géré par CODEX. Marqué completed via coordination centrale après fusion.",
+      "_reassigned": "CODEX->CLAUDE_CODE (Codex retiré du projet, 2026-07-30)"
     },
     {
       "id": "DATA-003",
       "title": "Créer un writer sécurisé commun et atomique pour les secrets OpenBao",
       "status": "EXTERNAL",
-      "ide": "CODEX",
+      "ide": "CLAUDE_CODE",
       "source_ide": "CODEX",
       "exclusive_lane": "",
       "dependencies": [
         "ORCH-001"
       ],
       "_external": true,
-      "_note": "Package géré par CODEX. Marqué completed via coordination centrale après fusion."
+      "_note": "Package géré par CODEX. Marqué completed via coordination centrale après fusion.",
+      "_reassigned": "CODEX->CLAUDE_CODE (Codex retiré du projet, 2026-07-30)"
     },
     {
       "id": "RAG-004A",
@@ -138,27 +140,29 @@
       "id": "SSH-007",
       "title": "Remplacer le TOFU SSH par un enrôlement d’empreinte explicite",
       "status": "EXTERNAL",
-      "ide": "CODEX",
+      "ide": "CLAUDE_CODE",
       "source_ide": "CODEX",
       "exclusive_lane": "",
       "dependencies": [
         "ORCH-001"
       ],
       "_external": true,
-      "_note": "Package géré par CODEX. Marqué completed via coordination centrale après fusion."
+      "_note": "Package géré par CODEX. Marqué completed via coordination centrale après fusion.",
+      "_reassigned": "CODEX->CLAUDE_CODE (Codex retiré du projet, 2026-07-30)"
     },
     {
       "id": "SSH-021",
       "title": "Appliquer la validation SSH canonique au remote probe",
       "status": "EXTERNAL",
-      "ide": "CODEX",
+      "ide": "CLAUDE_CODE",
       "source_ide": "CODEX",
       "exclusive_lane": "",
       "dependencies": [
         "SSH-007"
       ],
       "_external": true,
-      "_note": "Package géré par CODEX. Marqué completed via coordination centrale après fusion."
+      "_note": "Package géré par CODEX. Marqué completed via coordination centrale après fusion.",
+      "_reassigned": "CODEX->CLAUDE_CODE (Codex retiré du projet, 2026-07-30)"
     },
     {
       "id": "K8S-008",
@@ -297,202 +301,217 @@
       "id": "ERR-041A",
       "title": "Créer une redaction centrale pour erreurs, logs et états persistés",
       "status": "EXTERNAL",
-      "ide": "CODEX",
+      "ide": "CLAUDE_CODE",
       "source_ide": "CODEX",
       "exclusive_lane": "",
       "dependencies": [
         "ORCH-001"
       ],
       "_external": true,
-      "_note": "Package géré par CODEX. Marqué completed via coordination centrale après fusion."
+      "_note": "Package géré par CODEX. Marqué completed via coordination centrale après fusion.",
+      "_reassigned": "CODEX->CLAUDE_CODE (Codex retiré du projet, 2026-07-30)"
     },
     {
       "id": "CLI-013",
       "title": "Créer une frontière d’erreurs CLI cohérente sans traceback brut",
       "status": "EXTERNAL",
-      "ide": "CODEX",
+      "ide": "CLAUDE_CODE",
       "source_ide": "CODEX",
       "exclusive_lane": "",
       "dependencies": [
         "ERR-041A"
       ],
       "_external": true,
-      "_note": "Package géré par CODEX. Marqué completed via coordination centrale après fusion."
+      "_note": "Package géré par CODEX. Marqué completed via coordination centrale après fusion.",
+      "_reassigned": "CODEX->CLAUDE_CODE (Codex retiré du projet, 2026-07-30)"
     },
     {
       "id": "CLI-036",
       "title": "Ajouter timeout, annulation et kill d’arbre au runner loop",
       "status": "EXTERNAL",
-      "ide": "CODEX",
+      "ide": "CLAUDE_CODE",
       "source_ide": "CODEX",
       "exclusive_lane": "",
       "dependencies": [
         "CLI-013"
       ],
       "_external": true,
-      "_note": "Package géré par CODEX. Marqué completed via coordination centrale après fusion."
+      "_note": "Package géré par CODEX. Marqué completed via coordination centrale après fusion.",
+      "_reassigned": "CODEX->CLAUDE_CODE (Codex retiré du projet, 2026-07-30)"
     },
     {
       "id": "WEB-017",
       "title": "Définir et appliquer la politique d’accès aux GET sensibles",
       "status": "EXTERNAL",
-      "ide": "CODEX",
+      "ide": "CLAUDE_CODE",
       "source_ide": "CODEX",
       "exclusive_lane": "",
       "dependencies": [
         "WEB-001"
       ],
       "_external": true,
-      "_note": "Package géré par CODEX. Marqué completed via coordination centrale après fusion."
+      "_note": "Package géré par CODEX. Marqué completed via coordination centrale après fusion.",
+      "_reassigned": "CODEX->CLAUDE_CODE (Codex retiré du projet, 2026-07-30)"
     },
     {
       "id": "WEB-015",
       "title": "Normaliser les erreurs Web sans fuite d’exception interne",
       "status": "EXTERNAL",
-      "ide": "CODEX",
+      "ide": "CLAUDE_CODE",
       "source_ide": "CODEX",
       "exclusive_lane": "",
       "dependencies": [
         "WEB-017"
       ],
       "_external": true,
-      "_note": "Package géré par CODEX. Marqué completed via coordination centrale après fusion."
+      "_note": "Package géré par CODEX. Marqué completed via coordination centrale après fusion.",
+      "_reassigned": "CODEX->CLAUDE_CODE (Codex retiré du projet, 2026-07-30)"
     },
     {
       "id": "WEB-016",
       "title": "Ajouter rate limiting et protection anti-bruteforce",
       "status": "EXTERNAL",
-      "ide": "CODEX",
+      "ide": "CLAUDE_CODE",
       "source_ide": "CODEX",
       "exclusive_lane": "",
       "dependencies": [
         "WEB-015"
       ],
       "_external": true,
-      "_note": "Package géré par CODEX. Marqué completed via coordination centrale après fusion."
+      "_note": "Package géré par CODEX. Marqué completed via coordination centrale après fusion.",
+      "_reassigned": "CODEX->CLAUDE_CODE (Codex retiré du projet, 2026-07-30)"
     },
     {
       "id": "WEB-034A",
       "title": "Ajouter en-têtes de sécurité et supprimer la bannière Python",
       "status": "EXTERNAL",
-      "ide": "CODEX",
+      "ide": "CLAUDE_CODE",
       "source_ide": "CODEX",
       "exclusive_lane": "",
       "dependencies": [
         "WEB-016"
       ],
       "_external": true,
-      "_note": "Package géré par CODEX. Marqué completed via coordination centrale après fusion."
+      "_note": "Package géré par CODEX. Marqué completed via coordination centrale après fusion.",
+      "_reassigned": "CODEX->CLAUDE_CODE (Codex retiré du projet, 2026-07-30)"
     },
     {
       "id": "WEB-034B",
       "title": "Introduire un mode TLS explicite ou refuser les identifiants sur HTTP réseau",
       "status": "EXTERNAL",
-      "ide": "CODEX",
+      "ide": "CLAUDE_CODE",
       "source_ide": "CODEX",
       "exclusive_lane": "",
       "dependencies": [
         "WEB-034A"
       ],
       "_external": true,
-      "_note": "Package géré par CODEX. Marqué completed via coordination centrale après fusion."
+      "_note": "Package géré par CODEX. Marqué completed via coordination centrale après fusion.",
+      "_reassigned": "CODEX->CLAUDE_CODE (Codex retiré du projet, 2026-07-30)"
     },
     {
       "id": "PERF-030A",
       "title": "Ajouter un cache matériel TTL cohérent et invalidable",
       "status": "EXTERNAL",
-      "ide": "CODEX",
+      "ide": "CLAUDE_CODE",
       "source_ide": "CODEX",
       "exclusive_lane": "",
       "dependencies": [
         "WEB-034B"
       ],
       "_external": true,
-      "_note": "Package géré par CODEX. Marqué completed via coordination centrale après fusion."
+      "_note": "Package géré par CODEX. Marqué completed via coordination centrale après fusion.",
+      "_reassigned": "CODEX->CLAUDE_CODE (Codex retiré du projet, 2026-07-30)"
     },
     {
       "id": "PERF-030B",
       "title": "Ajouter benchmarks et seuils de non-régression de /api/detect",
       "status": "EXTERNAL",
-      "ide": "CODEX",
+      "ide": "CLAUDE_CODE",
       "source_ide": "CODEX",
       "exclusive_lane": "",
       "dependencies": [
         "PERF-030A"
       ],
       "_external": true,
-      "_note": "Package géré par CODEX. Marqué completed via coordination centrale après fusion."
+      "_note": "Package géré par CODEX. Marqué completed via coordination centrale après fusion.",
+      "_reassigned": "CODEX->CLAUDE_CODE (Codex retiré du projet, 2026-07-30)"
     },
     {
       "id": "REL-038A",
       "title": "Persister l’état de préparation avec schéma et écriture atomique",
       "status": "EXTERNAL",
-      "ide": "CODEX",
+      "ide": "CLAUDE_CODE",
       "source_ide": "CODEX",
       "exclusive_lane": "",
       "dependencies": [
         "PERF-030B"
       ],
       "_external": true,
-      "_note": "Package géré par CODEX. Marqué completed via coordination centrale après fusion."
+      "_note": "Package géré par CODEX. Marqué completed via coordination centrale après fusion.",
+      "_reassigned": "CODEX->CLAUDE_CODE (Codex retiré du projet, 2026-07-30)"
     },
     {
       "id": "REL-038B",
       "title": "Garantir une seule opération active et une réconciliation idempotente",
       "status": "EXTERNAL",
-      "ide": "CODEX",
+      "ide": "CLAUDE_CODE",
       "source_ide": "CODEX",
       "exclusive_lane": "",
       "dependencies": [
         "REL-038A"
       ],
       "_external": true,
-      "_note": "Package géré par CODEX. Marqué completed via coordination centrale après fusion."
+      "_note": "Package géré par CODEX. Marqué completed via coordination centrale après fusion.",
+      "_reassigned": "CODEX->CLAUDE_CODE (Codex retiré du projet, 2026-07-30)"
     },
     {
       "id": "REL-038C",
       "title": "Gérer les process groups et nettoyer les orphelins",
       "status": "EXTERNAL",
-      "ide": "CODEX",
+      "ide": "CLAUDE_CODE",
       "source_ide": "CODEX",
       "exclusive_lane": "",
       "dependencies": [
         "REL-038B"
       ],
       "_external": true,
-      "_note": "Package géré par CODEX. Marqué completed via coordination centrale après fusion."
+      "_note": "Package géré par CODEX. Marqué completed via coordination centrale après fusion.",
+      "_reassigned": "CODEX->CLAUDE_CODE (Codex retiré du projet, 2026-07-30)"
     },
     {
       "id": "OPS-031D",
       "title": "Introduire des correlation IDs de bout en bout",
       "status": "EXTERNAL",
-      "ide": "CODEX",
+      "ide": "CLAUDE_CODE",
       "source_ide": "CODEX",
       "exclusive_lane": "",
       "dependencies": [
         "REL-038C"
       ],
       "_external": true,
-      "_note": "Package géré par CODEX. Marqué completed via coordination centrale après fusion."
+      "_note": "Package géré par CODEX. Marqué completed via coordination centrale après fusion.",
+      "_reassigned": "CODEX->CLAUDE_CODE (Codex retiré du projet, 2026-07-30)"
     },
     {
       "id": "OPS-031A",
       "title": "Ajouter forgeai status et une API de santé re-sondable",
       "status": "EXTERNAL",
-      "ide": "CODEX",
+      "ide": "CLAUDE_CODE",
       "source_ide": "CODEX",
       "exclusive_lane": "",
       "dependencies": [
         "OPS-031D"
       ],
       "_external": true,
-      "_note": "Package géré par CODEX. Marqué completed via coordination centrale après fusion."
+      "_note": "Package géré par CODEX. Marqué completed via coordination centrale après fusion.",
+      "_reassigned": "CODEX->CLAUDE_CODE (Codex retiré du projet, 2026-07-30)"
     },
     {
       "id": "OPS-031B",
       "title": "Ajouter forgeai logs avec limites, filtres et redaction",
       "status": "EXTERNAL",
-      "ide": "CODEX",
+      "ide": "CLAUDE_CODE",
       "source_ide": "CODEX",
       "exclusive_lane": "",
       "dependencies": [
@@ -501,20 +520,22 @@
         "ERR-041C"
       ],
       "_external": true,
-      "_note": "Package géré par CODEX. Marqué completed via coordination centrale après fusion."
+      "_note": "Package géré par CODEX. Marqué completed via coordination centrale après fusion.",
+      "_reassigned": "CODEX->CLAUDE_CODE (Codex retiré du projet, 2026-07-30)"
     },
     {
       "id": "OPS-031C",
       "title": "Créer un bundle de diagnostic reproductible et redigé",
       "status": "EXTERNAL",
-      "ide": "CODEX",
+      "ide": "CLAUDE_CODE",
       "source_ide": "CODEX",
       "exclusive_lane": "",
       "dependencies": [
         "OPS-031B"
       ],
       "_external": true,
-      "_note": "Package géré par CODEX. Marqué completed via coordination centrale après fusion."
+      "_note": "Package géré par CODEX. Marqué completed via coordination centrale après fusion.",
+      "_reassigned": "CODEX->CLAUDE_CODE (Codex retiré du projet, 2026-07-30)"
     },
     {
       "id": "OPS-031E",
@@ -641,7 +662,7 @@
       "id": "ERR-041B",
       "title": "Rediger stderr dans les déploiements Compose/K3s et deploy-state",
       "status": "EXTERNAL",
-      "ide": "CODEX",
+      "ide": "CLAUDE_CODE",
       "source_ide": "CODEX",
       "exclusive_lane": "",
       "dependencies": [
@@ -649,13 +670,14 @@
         "HEALTH-028B"
       ],
       "_external": true,
-      "_note": "Package géré par CODEX. Marqué completed via coordination centrale après fusion."
+      "_note": "Package géré par CODEX. Marqué completed via coordination centrale après fusion.",
+      "_reassigned": "CODEX->CLAUDE_CODE (Codex retiré du projet, 2026-07-30)"
     },
     {
       "id": "ERR-041C",
       "title": "Rediger stderr et diagnostics SSH",
       "status": "EXTERNAL",
-      "ide": "CODEX",
+      "ide": "CLAUDE_CODE",
       "source_ide": "CODEX",
       "exclusive_lane": "",
       "dependencies": [
@@ -663,20 +685,22 @@
         "SSH-021"
       ],
       "_external": true,
-      "_note": "Package géré par CODEX. Marqué completed via coordination centrale après fusion."
+      "_note": "Package géré par CODEX. Marqué completed via coordination centrale après fusion.",
+      "_reassigned": "CODEX->CLAUDE_CODE (Codex retiré du projet, 2026-07-30)"
     },
     {
       "id": "SUPPLY-018",
       "title": "Épingler, vérifier et licencier les plugins avant exécution",
       "status": "EXTERNAL",
-      "ide": "CODEX",
+      "ide": "CLAUDE_CODE",
       "source_ide": "CODEX",
       "exclusive_lane": "",
       "dependencies": [
         "ORCH-001"
       ],
       "_external": true,
-      "_note": "Package géré par CODEX. Marqué completed via coordination centrale après fusion."
+      "_note": "Package géré par CODEX. Marqué completed via coordination centrale après fusion.",
+      "_reassigned": "CODEX->CLAUDE_CODE (Codex retiré du projet, 2026-07-30)"
     },
     {
       "id": "TRUST-019A",
@@ -781,20 +805,21 @@
       "id": "REG-029A",
       "title": "Définir la complétude structurée des registres",
       "status": "EXTERNAL",
-      "ide": "CODEX",
+      "ide": "CLAUDE_CODE",
       "source_ide": "CODEX",
       "exclusive_lane": "",
       "dependencies": [
         "ORCH-001"
       ],
       "_external": true,
-      "_note": "Package géré par CODEX. Marqué completed via coordination centrale après fusion."
+      "_note": "Package géré par CODEX. Marqué completed via coordination centrale après fusion.",
+      "_reassigned": "CODEX->CLAUDE_CODE (Codex retiré du projet, 2026-07-30)"
     },
     {
       "id": "REG-029B",
       "title": "Ancrer les checkpoints et détecter rollback/troncature",
       "status": "EXTERNAL",
-      "ide": "CODEX",
+      "ide": "CLAUDE_CODE",
       "source_ide": "CODEX",
       "exclusive_lane": "",
       "dependencies": [
@@ -802,7 +827,8 @@
         "TRUST-019B"
       ],
       "_external": true,
-      "_note": "Package géré par CODEX. Marqué completed via coordination centrale après fusion."
+      "_note": "Package géré par CODEX. Marqué completed via coordination centrale après fusion.",
+      "_reassigned": "CODEX->CLAUDE_CODE (Codex retiré du projet, 2026-07-30)"
     },
     {
       "id": "UI-039",
@@ -1057,6 +1083,46 @@
       "dependencies": [],
       "_external": true,
       "_note": "Package CORRECTIF hors lot initial (findings d'audit OBS-A060-1/A061) : /api/detect et /api/summary relançaient des sous-processus à chaque requête. Complété par OPT-002 (bornage des sondes). Marqué completed après fusion (#183)."
+    },
+    {
+      "id": "REV-043",
+      "title": "Refaire une revue aveugle scellée 3-vendors-distincts pour WEB-001/DATA-002/DATA-003",
+      "status": "completed",
+      "priority": "P2_HIGH",
+      "severity": "S2_MEDIUM",
+      "ide": "CLAUDE_CODE",
+      "source_ide": "COPILOT",
+      "exclusive_lane": "review-compliance",
+      "milestone": "M2-SECURITY",
+      "dependencies": [
+        "ORCH-001"
+      ],
+      "branch": "audit/REV-043-multivendor-review-web-data",
+      "allowed_paths": [
+        "reviews/WEB-001/**",
+        "reviews/DATA-002/**",
+        "reviews/DATA-003/**",
+        "coordination/completed.json",
+        "stories/REV-043.md",
+        "reviews/REV-043/**",
+        "Registres/PATCH-REV-043.jsonl"
+      ],
+      "forbidden_paths": [
+        "build/**",
+        "dist/**",
+        "**/__pycache__/**",
+        "src/forgeai/data/catalogue.json"
+      ],
+      "labels": [
+        "type:technical-debt",
+        "type:security",
+        "lane:review-compliance"
+      ],
+      "notes": [
+        "Écart découvert lors de l'archivage rétroactif (cockpit, PR #222) de WEB-001 (#199), DATA-002 (#180) et DATA-003 (#198) : les 3 revues scellées mergées n'utilisent que des variantes OpenAI (gpt-5.6-sol/gpt-5.6-terra, `vendor_claim.not_multi_vendor=true`), en écart avec la règle non négociable AGENTS.md/CLAUDE.md « 3 vendors distincts ≠ vendor du codeur ». Le code fusionné lui-même n'est PAS remis en cause (déjà testé, mergé, transparent sur sa propre limite) : REV-043 ne recode rien, il rejoue une revue aveugle scellée conforme (civ_review.py + LiteLLM bridge, 3 vendors distincts) sur les diffs déjà mergés (merge_commit de chaque entrée coordination/completed.json), documente le résultat dans reviews/<pkg>/ et met à jour le champ review de coordination/completed.json en conséquence (ou consigne BLOCKED-avec-raison si l'infra de revue n'est pas joignable — jamais de verdict fabriqué).",
+        "Ne touche pas au code source de WEB-001/DATA-002/DATA-003 : périmètre strictement documentaire/preuve (reviews/**, coordination/completed.json)."
+      ],
+      "_note": "Complété par PR #307 ; absorbé de #303 (fermée)."
     }
   ]
 }
