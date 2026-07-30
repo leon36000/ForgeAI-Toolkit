@@ -22,6 +22,7 @@ from datetime import date
 from pathlib import Path
 from typing import List
 
+from forgeai.core.redaction import is_sensitive_key
 from forgeai.models._locking import (
     MODELS_TRANSACTION_JOURNAL,
     MODELS_TRANSACTION_LOCK,
@@ -65,11 +66,14 @@ def _safe_name(fname: str) -> bool:
 
 def _validate_route(route: dict) -> None:
     """Vérifie qu'une route ne contient aucun secret en clair ni champ interdit."""
-    # Champs de secret explicites
-    secret_keys = {"api_key", "key", "secret"}
-    for sk in secret_keys:
-        if sk in route and route[sk]:
-            raise PortabilityError(f"Présence d'une clé secrète en clair dans une route : {sk}")
+    # Source de vérité unique : is_sensitive_key (ERR-041A) — étend la détection à
+    # token/password/passphrase/credentials/authorization/bearer, pas seulement
+    # {api_key, key, secret}. Un champ SÛR connu (ex. key_fingerprint = empreinte,
+    # dont le nom contient « key ») n'est JAMAIS un secret en clair : on l'exclut,
+    # sinon toute route valide serait rejetée.
+    for champ, valeur in route.items():
+        if champ not in SAFE_ROUTE_FIELDS and is_sensitive_key(champ) and valeur:
+            raise PortabilityError(f"Présence d'une clé secrète en clair dans une route : {champ}")
     # Champs inconnus (sécurité par défaut)
     extra = set(route.keys()) - SAFE_ROUTE_FIELDS
     if extra:

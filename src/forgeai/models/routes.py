@@ -24,6 +24,8 @@ from forgeai.models._locking import (
     restore_models_transaction_locked,
 )
 
+from forgeai.core.redaction import redact_text
+
 from .probe import ProbeResult, Transport, UrllibTransport, probe_route
 from .vault import Vault
 
@@ -39,7 +41,14 @@ PROVENANCES: dict[str, str | None] = {
 
 
 class RouteError(Exception):
-    pass
+    """Erreur de route. Le message est rédigé à la CONSTRUCTION : tout secret
+    interpolé (ex. ``result.detail`` d'une sonde en échec) est neutralisé avant
+    stockage, donc tout rendu ou log ultérieur est sûr par construction (ERR-041A)."""
+
+    def __init__(self, *args: object) -> None:
+        if args and isinstance(args[0], str):
+            args = (redact_text(args[0]), *args[1:])
+        super().__init__(*args)
 
 
 @dataclass(frozen=True)
