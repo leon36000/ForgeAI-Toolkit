@@ -1,0 +1,20 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "critique",
+   "fichier": "coordination/completed.json",
+   "description": "Modification hors périmètre. Le diff supprime l'entrée de la story HW-037 du registre des stories terminées. Les règles stipulent explicitement : 'Perimetre : diff limite a openbao_flow.py, compose.py, k3s.py, les 3 tests openbao et stories/SECRET-020B.md. Toute autre ligne = REJECT.'",
+   "preuve": "-      \"id\": \"HW-037\",\n-      \"ide\": \"CLAUDE_CODE\","
+  },
+  {
+   "severite": "mineure",
+   "fichier": "src/forgeai/deploy/openbao_flow.py",
+   "description": "Le fichier n'est pas inclus dans la matrice de test multi-OS (guard-fs-multi-os). Bien que l'import conditionnel de grp soit testé via un mock (test_resolve_openbao_gid_none_sans_grp), une exécution réelle sur Windows garantirait l'absence d'autres imports POSIX-only cachés.",
+   "preuve": "Point 4.2 du contexte : 'openbao_flow hors matrice 3 OS'"
+  }
+ ],
+ "date_heure": "2026-07-30T04:17:34.657060+00:00",
+ "prompt_sha256": "02ba462adbcf70ac611f3336cf5003c0f2727724bba905b24c4f953b17823f22",
+ "reviewer_model": "Gemini-3.1-Pro-OR"
+}

@@ -1,0 +1,20 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "majeure",
+   "fichier": "src/forgeai/deploy/openbao_flow.py",
+   "description": "FileKeyStore.write remet inconditionnellement le répertoire parent (keys_dir) en final_mode=0o711 via prepare_secure_directory, ce qui annule le durcissement 0o750+groupe effectué par prepare_key_store quand resolve_openbao_gid() est non-None. Le flux réel est prepare_key_store (0750+chown) puis plus tard FileKeyStore.write (re-prépare le même parent en 0711) : le critère d'acceptation keys_dir 0750 n'est donc pas tenu de bout en bout. Le test test_file_key_store_restores_unsealer_access_on_restrictive_keys_directory prouve que prepare_secure_directory réapplique bien le mode sur un répertoire déjà existant (restaure depuis 0/0o500), donc le clobber est effectif. Corriger en pilotant aussi ce final_mode (et le chown du dir) par resolve_openbao_gid(), comme pour prepare_key_store.",
+   "preuve": "Ligne inchangée dans FileKeyStore.write : prepare_secure_directory(self._unseal_path.parent, final_mode=0o711) — visible en contexte du hunk @@ -50,13 +81,27. Contrairement à prepare_key_store qui fait final_mode=0o750 + os.chown quand gid is not None. Test existant test_file_key_store_restores_unsealer_access_on_restrictive_keys_directory(initial_mode=[0,0o500]) confirme que le mode final est réappliqué sur dir pré-existant."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "tests/test_openbao_flow.py",
+   "description": "Pas de test du repli chown échoué pour keys_dir (prepare_key_store), alors que le code a un except (PermissionError, OSError) qui re-prépare en 0o711. Seul le repli chown de unseal_key est couvert (test_unseal_key_repli_si_chown_echoue). Symétrie de couverture incomplète sur le chemin de sûreté du répertoire.",
+   "preuve": "prepare_key_store try/except chown présent dans openbao_flow.py ; test_keys_dir_0750_avec_groupe_sinon_0711 ne couvre que gid présent→0750 et gid None→0711, pas chown qui lève."
+  }
+ ],
+ "date_heure": "2026-07-30T04:00:10.334531+00:00",
+ "prompt_sha256": "3f0afb1a1576f35a47509096b29db549c06f228bb8af08af1a5994c88db4a27c",
+ "reviewer_model": "Grok-4.5"
+}
