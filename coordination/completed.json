@@ -485,6 +485,14 @@
       "review": "APPROVE 3/3 (deepseek/google/xai)",
       "couverture_code_neuf": "97.4%",
       "tests_ajoutes": 41
+    },
+    {
+      "id": "HW-037",
+      "ide": "CLAUDE_CODE",
+      "pr": 290,
+      "merge_commit": "75e663f",
+      "review": "APPROVE 3/3 (DeepSeek-V4-Pro/Gemini-3.1-Pro-OR/Grok-4.5)",
+      "note": "Recommandation AMD/ROCm alignee sur le GPU detecte (detect_driver_state transmet desormais le modele GPU reel a recommend_driver) ; message mort supprime. Registre seq 286 (PR #291). Debloque CAP-033A (COPILOT)."
     }
   ]
 }
