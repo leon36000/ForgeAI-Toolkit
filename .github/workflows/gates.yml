@@ -20,6 +20,12 @@ jobs:
     # Une preuve Linux seule ne vaut donc rien pour ces composants, alors qu'elle
     # suffit pour le reste du depot — d'ou une matrice ciblee sur ces fichiers de
     # tests plutot qu'un doublement de toute la CI.
+    #
+    # SECRET-020C etend la matrice a l'IMPORT de src/forgeai/deploy/openbao_flow.py : son
+    # import conditionnel de grp (POSIX-only, herite de PORT-286) est un troisieme
+    # comportement dependant de l'OS. test_openbao_flow_import.py fait un import PUR (stdlib
+    # seul, sans tirer yaml ni la chaine deploy complete de test_openbao_flow.py) et prouve
+    # la portabilite reelle sur les trois OS, la ou le mock Linux ne le pouvait pas.
     strategy:
       fail-fast: false
       matrix:
@@ -33,7 +39,7 @@ jobs:
       - name: Install test deps
         run: pip install pytest
       - name: Garde de confinement filesystem — matrice de comportement
-        run: python3 -m pytest tests/test_guard_fs.py tests/test_portable_lock.py tests/test_registre_concurrence.py -q
+        run: python3 -m pytest tests/test_guard_fs.py tests/test_portable_lock.py tests/test_registre_concurrence.py tests/test_openbao_flow_import.py -q
   no-stub-scan:
     runs-on: ubuntu-latest
     steps:
