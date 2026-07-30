@@ -672,6 +672,14 @@
       "merge_commit": "0722052",
       "review": "APPROVE 3/3 (Qwen3.7-Max/alibaba, DeepSeek-V4-Pro/deepseek, MiMo-Pro-V2/xiaomi), sceau c24676d4, zero objection",
       "note": "Chemin AMD qualifie e2e sur banc reel (noeud pc4-grs-b, 2 dGPU Navi 48 RDNA4) : amd.com/gpu alloue 1, moteur Vulkan RADV GFX1201 type=discrete 31.9GiB, inference 90 tokens avec VRAM carte discrete 89->1038 Mio, teardown verifie. CORRECTIF PRODUIT MAJEUR : le passthrough hostPath des devices GPU (AMD ET Intel) etait INOPERANT sur Kubernetes (cgroup devices, EPERM meme en root avec supplementalGroups) => repli CPU silencieux. AMD/Intel passent a la ressource de leur device plugin (amd.com/gpu, gpu.intel.com/i915) ; hostPath supprime. Gains mesures : enforce du Namespace descend de privileged a baseline (restricted refuse encore l identite root), isolation reelle (1 GPU sur 3 injecte), scheduler comptabilise les GPU, refus au rendu si plugin absent (ERR_QUOTA_GPU_PLUGIN_ABSENT). Decision d archi tracee (panel 3 vendors unanime). 8 tests realignes + 11 neufs. Registre seq 300-303."
+    },
+    {
+      "id": "LAB-033I",
+      "ide": "CLAUDE_CODE",
+      "pr": 305,
+      "merge_commit": "668b9e9",
+      "review": "APPROVE 3/3 (Qwen3.7-Max/alibaba, DeepSeek-V4-Pro/deepseek, MiMo-Pro-V2/xiaomi), sceau e21b65b3, 2 objections mineures rejetees (limitation reviewer diff-only)",
+      "note": "Chemin Intel qualifie e2e sur banc reel (noeud pc2-forge-b, Iris Xe Raptor Lake-P) : gpu.intel.com/i915 alloue 1->0, /dev/dri/renderD129 ouvert en lecture-ecriture DEPUIS le conteneur (test discriminant post-correctif LAB-033A, EPERM avant). Ecart mesure et consigne (pas maquille) : le moteur ollama ecarte l iGPU et sert sur CPU — chemin Kubernetes prouve, usage GPU reel par le moteur hors controle produit. 3 findings de BANC corriges en route (hors perimetre produit) : disque pc2 sous seuil (39 Go images containerd accumulees, nettoyage crictl --prune), device plugin de banc sur-durci (readOnlyRootFilesystem bloquant l ecriture CDI), symlink udev orphelin (framebuffer EFI mort) faisant echouer la generation de spec containerd. Les trois vendors GPU (NVIDIA #301, AMD #302, Intel #305) sont desormais qualifies e2e."
     }
   ]
 }
