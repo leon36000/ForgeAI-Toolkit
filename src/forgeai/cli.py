@@ -38,7 +38,7 @@ from forgeai.models.gateway import GatewayConfig, GatewayError, GatewayStore
 from forgeai.models.strategy import StrategyError, StrategyStore, resolve_spec
 from forgeai.network.discover import charger_signatures, inventaire, DiscoverError
 from forgeai.planner.assemble import assemble_plan
-from forgeai.planner.profile import ProfileError, derive_profile
+from forgeai.planner.profile import ProfileError, derive_profile, gpus_non_qualifies_ignores
 from forgeai.rag.client import RagClient
 from forgeai.rag.hardened import HardenedRagClient
 from forgeai.secrets.vault import read as vault_read, store as vault_store
@@ -183,6 +183,8 @@ def wizard_ci(args: argparse.Namespace) -> int:
             return 7
     else:
         print(f"  profil: {profile}")
+        for nom in gpus_non_qualifies_ignores(hw):
+            print(f"  ⚠ GPU NVIDIA ignoré (non qualifié, nvidia-smi indisponible) : {nom} — déploiement sur {profile} à la place. Vérifiez le driver NVIDIA si vous vouliez l'utiliser.")
 
     _step(t("wizard.s03"))
     digest = verify_catalogue(Path(args.catalogue))
