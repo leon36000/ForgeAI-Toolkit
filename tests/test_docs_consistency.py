@@ -86,3 +86,25 @@ def test_claim_amd_reference_la_preuve_e2e_lab033a():
     assert "Vulkan" in amd_line, (
         f"AMD line in {GPU_DOC} must disclose the Vulkan/RADV serving backend"
     )
+
+
+def test_claim_intel_reference_la_preuve_e2e_lab033i():
+    """Ce test est le RED de LAB-033I. Il fige le claim Intel au niveau du chemin
+    Kubernetes prouvé, avec la divulgation que l'usage GPU réel (choix du moteur)
+    n'est pas couvert par ce banc.
+    """
+    assert GPU_DOC.exists()
+    text = GPU_DOC.read_text(encoding="utf-8")
+    intel_line = next(
+        (line for line in text.splitlines() if line.strip().startswith("| Intel")),
+        "",
+    )
+    assert "LAB-033I" in intel_line, (
+        f"Intel line in {GPU_DOC} must cite LAB-033I e2e proof"
+    )
+    assert "reviews/LAB-033I/evidence/" in intel_line, (
+        f"Intel line in {GPU_DOC} must cite reviews/LAB-033I/evidence/ directory"
+    )
+    assert any(marker in intel_line for marker in ("iGPU", "CPU", "écarte")), (
+        f"Intel line in {GPU_DOC} must disclose that real GPU usage is not covered"
+    )

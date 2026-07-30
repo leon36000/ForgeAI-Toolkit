@@ -1,0 +1,631 @@
+
+--- 2026-07-30T21:04:42.869232+00:00 ---
+$ ssh pc2-tb 'transfert archive sources (base64 via stdin)'
+[archive transférée]
+
+--- 2026-07-30T21:04:46.188728+00:00 ---
+$ ssh pc2-tb 'cd /tmp/lab033i && tar -xzf src.tar.gz && python3 -m venv /tmp/lab033i/venv && /tmp/lab033i/venv/bin/pip install --quiet /tmp/lab033i'
+
+
+--- 2026-07-30T21:04:46.873376+00:00 ---
+$ ssh pc2-tb /tmp/lab033i/venv/bin/forgeai hardware
+{
+  "cpu_model": "13th Gen Intel(R) Core(TM) i9-13900H",
+  "cpu_cores": 20,
+  "cpu_arch": "x86_64",
+  "ram_gb": 30.6,
+  "os_name": "Linux 7.0.0-28-generic",
+  "gpus": [
+    {
+      "vendor": "intel",
+      "name": "Intel Corporation Raptor Lake-P [8086:a7a0]",
+      "vram_mb": 0
+    },
+    {
+      "vendor": "nvidia",
+      "name": "NVIDIA Corporation AD106M [10de:2860] [unqualified]",
+      "vram_mb": 0
+    }
+  ],
+  "disks": [
+    {
+      "path": "/",
+      "total_gb": 98.0,
+      "free_gb": 43.0
+    }
+  ]
+}
+
+
+--- 2026-07-30T21:04:47.310374+00:00 ---
+$ ssh pc2-tb sample GT Intel (avant déploiement)
+{
+  "card2-DP-2": {
+    "pci_id": "unknown",
+    "gt_act_freq_mhz": 0,
+    "gt_cur_freq_mhz": 1500
+  },
+  "card2-DP-3": {
+    "pci_id": "unknown",
+    "gt_act_freq_mhz": 0,
+    "gt_cur_freq_mhz": 1500
+  },
+  "card2-DP-4": {
+    "pci_id": "unknown",
+    "gt_act_freq_mhz": 0,
+    "gt_cur_freq_mhz": 1500
+  },
+  "card2-DP-5": {
+    "pci_id": "unknown",
+    "gt_act_freq_mhz": 0,
+    "gt_cur_freq_mhz": 1500
+  },
+  "card2-eDP-2": {
+    "pci_id": "unknown",
+    "gt_act_freq_mhz": 0,
+    "gt_cur_freq_mhz": 1500
+  }
+}
+
+--- 2026-07-30T21:04:47.531499+00:00 ---
+$ kubectl apply -f reviews/LAB-033I/evidence/manifeste-rendu.yaml
+namespace/forgeai-minimal created
+serviceaccount/forgeai-sa created
+resourcequota/forgeai-quota created
+limitrange/forgeai-limits created
+networkpolicy.networking.k8s.io/forgeai-default-deny created
+networkpolicy.networking.k8s.io/forgeai-allow-dns created
+persistentvolumeclaim/forgeai-ollama-models created
+deployment.apps/ollama created
+service/ollama created
+persistentvolumeclaim/forgeai-qdrant-data created
+deployment.apps/vector-store created
+service/vector-store created
+
+[stderr]
+Warning: would violate PodSecurity "restricted:v1.25": runAsNonRoot != true (pod or container "ollama" must set securityContext.runAsNonRoot=true)
+
+
+--- 2026-07-30T21:04:58.093373+00:00 ---
+$ kubectl get pods -n forgeai-minimal -o wide
+NAME                            READY   STATUS    RESTARTS   AGE   IP            NODE          NOMINATED NODE   READINESS GATES
+ollama-79657b649-fs4mg          1/1     Running   0          11s   10.42.1.155   pc2-forge-b   <none>           <none>
+vector-store-85d5c478c6-8nnq4   1/1     Running   0          11s   10.42.1.156   pc2-forge-b   <none>           <none>
+
+
+--- 2026-07-30T21:04:58.136171+00:00 ---
+$ kubectl get namespace forgeai-minimal -o yaml
+apiVersion: v1
+kind: Namespace
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"v1","kind":"Namespace","metadata":{"annotations":{},"labels":{"pod-security.kubernetes.io/audit":"restricted","pod-security.kubernetes.io/audit-version":"v1.25","pod-security.kubernetes.io/enforce":"baseline","pod-security.kubernetes.io/enforce-version":"v1.25","pod-security.kubernetes.io/warn":"restricted","pod-security.kubernetes.io/warn-version":"v1.25"},"name":"forgeai-minimal"}}
+  creationTimestamp: "2026-07-30T21:04:47Z"
+  labels:
+    kubernetes.io/metadata.name: forgeai-minimal
+    pod-security.kubernetes.io/audit: restricted
+    pod-security.kubernetes.io/audit-version: v1.25
+    pod-security.kubernetes.io/enforce: baseline
+    pod-security.kubernetes.io/enforce-version: v1.25
+    pod-security.kubernetes.io/warn: restricted
+    pod-security.kubernetes.io/warn-version: v1.25
+  name: forgeai-minimal
+  resourceVersion: "8452715"
+  uid: 8724c43c-7b89-428a-994c-72079cfaf5d9
+spec:
+  finalizers:
+  - kubernetes
+status:
+  phase: Active
+
+
+--- 2026-07-30T21:04:58.189947+00:00 ---
+$ kubectl describe node pc2-forge-b
+Name:               pc2-forge-b
+Roles:              <none>
+Labels:             beta.kubernetes.io/arch=amd64
+                    beta.kubernetes.io/instance-type=k3s
+                    beta.kubernetes.io/os=linux
+                    feature.node.kubernetes.io/cpu-cpuid.ADX=true
+                    feature.node.kubernetes.io/cpu-cpuid.AESNI=true
+                    feature.node.kubernetes.io/cpu-cpuid.AVX=true
+                    feature.node.kubernetes.io/cpu-cpuid.AVX2=true
+                    feature.node.kubernetes.io/cpu-cpuid.AVXVNNI=true
+                    feature.node.kubernetes.io/cpu-cpuid.BHI_CTRL=true
+                    feature.node.kubernetes.io/cpu-cpuid.CETIBT=true
+                    feature.node.kubernetes.io/cpu-cpuid.CETSS=true
+                    feature.node.kubernetes.io/cpu-cpuid.CMPXCHG8=true
+                    feature.node.kubernetes.io/cpu-cpuid.FLUSH_L1D=true
+                    feature.node.kubernetes.io/cpu-cpuid.FMA3=true
+                    feature.node.kubernetes.io/cpu-cpuid.FSRM=true
+                    feature.node.kubernetes.io/cpu-cpuid.FXSR=true
+                    feature.node.kubernetes.io/cpu-cpuid.FXSROPT=true
+                    feature.node.kubernetes.io/cpu-cpuid.GFNI=true
+                    feature.node.kubernetes.io/cpu-cpuid.HRESET=true
+                    feature.node.kubernetes.io/cpu-cpuid.HYBRID_CPU=true
+                    feature.node.kubernetes.io/cpu-cpuid.IA32_ARCH_CAP=true
+                    feature.node.kubernetes.io/cpu-cpuid.IA32_CORE_CAP=true
+                    feature.node.kubernetes.io/cpu-cpuid.IBPB=true
+                    feature.node.kubernetes.io/cpu-cpuid.IDPRED_CTRL=true
+                    feature.node.kubernetes.io/cpu-cpuid.KEYLOCKER=true
+                    feature.node.kubernetes.io/cpu-cpuid.LAHF=true
+                    feature.node.kubernetes.io/cpu-cpuid.MD_CLEAR=true
+                    feature.node.kubernetes.io/cpu-cpuid.MOVBE=true
+                    feature.node.kubernetes.io/cpu-cpuid.MOVDIR64B=true
+                    feature.node.kubernetes.io/cpu-cpuid.MOVDIRI=true
+                    feature.node.kubernetes.io/cpu-cpuid.OSXSAVE=true
+                    feature.node.kubernetes.io/cpu-cpuid.PCONFIG=true
+                    feature.node.kubernetes.io/cpu-cpuid.PMU_FIXEDCOUNTER_CYCLES=true
+                    feature.node.kubernetes.io/cpu-cpuid.PMU_FIXEDCOUNTER_INSTRUCTIONS=true
+                    feature.node.kubernetes.io/cpu-cpuid.PMU_FIXEDCOUNTER_REFCYCLES=true
+                    feature.node.kubernetes.io/cpu-cpuid.PSFD=true
+                    feature.node.kubernetes.io/cpu-cpuid.RRSBA_CTRL=true
+                    feature.node.kubernetes.io/cpu-cpuid.SERIALIZE=true
+                    feature.node.kubernetes.io/cpu-cpuid.SHA=true
+                    feature.node.kubernetes.io/cpu-cpuid.SPEC_CTRL_SSBD=true
+                    feature.node.kubernetes.io/cpu-cpuid.STIBP=true
+                    feature.node.kubernetes.io/cpu-cpuid.STOSB_SHORT=true
+                    feature.node.kubernetes.io/cpu-cpuid.SYSCALL=true
+                    feature.node.kubernetes.io/cpu-cpuid.SYSEE=true
+                    feature.node.kubernetes.io/cpu-cpuid.TME=true
+                    feature.node.kubernetes.io/cpu-cpuid.VAES=true
+                    feature.node.kubernetes.io/cpu-cpuid.VMX=true
+                    feature.node.kubernetes.io/cpu-cpuid.VPCLMULQDQ=true
+                    feature.node.kubernetes.io/cpu-cpuid.WAITPKG=true
+                    feature.node.kubernetes.io/cpu-cpuid.X87=true
+                    feature.node.kubernetes.io/cpu-cpuid.XGETBV1=true
+                    feature.node.kubernetes.io/cpu-cpuid.XSAVE=true
+                    feature.node.kubernetes.io/cpu-cpuid.XSAVEC=true
+                    feature.node.kubernetes.io/cpu-cpuid.XSAVEOPT=true
+                    feature.node.kubernetes.io/cpu-cpuid.XSAVES=true
+                    feature.node.kubernetes.io/cpu-cstate.enabled=true
+                    feature.node.kubernetes.io/cpu-hardware_multithreading=true
+                    feature.node.kubernetes.io/cpu-model.family=6
+                    feature.node.kubernetes.io/cpu-model.id=186
+                    feature.node.kubernetes.io/cpu-model.vendor_id=Intel
+                    feature.node.kubernetes.io/cpu-pstate.scaling_governor=powersave
+                    feature.node.kubernetes.io/cpu-pstate.status=active
+                    feature.node.kubernetes.io/cpu-pstate.turbo=true
+                    feature.node.kubernetes.io/kernel-config.NO_HZ=true
+                    feature.node.kubernetes.io/kernel-config.NO_HZ_FULL=true
+                    feature.node.kubernetes.io/kernel-version.full=7.0.0-28-generic
+                    feature.node.kubernetes.io/kernel-version.major=7
+                    feature.node.kubernetes.io/kernel-version.minor=0
+                    feature.node.kubernetes.io/kernel-version.revision=0
+                    feature.node.kubernetes.io/memory-swap=true
+                    feature.node.kubernetes.io/pci-10de.present=true
+                    feature.node.kubernetes.io/pci-8086.present=true
+                    feature.node.kubernetes.io/pci-8086.sriov.capable=true
+                    feature.node.kubernetes.io/storage-nonrotationaldisk=true
+                    feature.node.kubernetes.io/system-os_release.ID=ubuntu
+                    feature.node.kubernetes.io/system-os_release.VERSION_ID=26.04
+                    feature.node.kubernetes.io/system-os_release.VERSION_ID.major=26
+                    feature.node.kubernetes.io/system-os_release.VERSION_ID.minor=04
+                    feature.node.kubernetes.io/usb-ef_04f2_b7b6.present=true
+                    feature.node.kubernetes.io/usb-ff_10a5_9800.present=true
+                    forge.k3s=true
+                    forge.name=forge-b
+                    forge.node=pc2
+                    forge.role=rag
+                    forgeai/receptacle=pret
+                    kubernetes.io/arch=amd64
+                    kubernetes.io/hostname=pc2-forge-b
+                    kubernetes.io/os=linux
+                    node.kubernetes.io/instance-type=k3s
+                    nvidia.com/cuda.driver-version.full=595.71.05
+                    nvidia.com/cuda.driver-version.major=595
+                    nvidia.com/cuda.driver-version.minor=71
+                    nvidia.com/cuda.driver-version.revision=05
+                    nvidia.com/cuda.driver.major=595
+                    nvidia.com/cuda.driver.minor=71
+                    nvidia.com/cuda.driver.rev=05
+                    nvidia.com/cuda.runtime-version.full=13.2
+                    nvidia.com/cuda.runtime-version.major=13
+                    nvidia.com/cuda.runtime-version.minor=2
+                    nvidia.com/cuda.runtime.major=13
+                    nvidia.com/cuda.runtime.minor=2
+                    nvidia.com/gfd.timestamp=1784730553
+                    nvidia.com/gpu.compute.major=8
+                    nvidia.com/gpu.compute.minor=9
+                    nvidia.com/gpu.count=1
+                    nvidia.com/gpu.deploy.container-toolkit=true
+                    nvidia.com/gpu.deploy.dcgm=false
+                    nvidia.com/gpu.deploy.dcgm-exporter=false
+                    nvidia.com/gpu.deploy.device-plugin=true
+                    nvidia.com/gpu.deploy.driver=true
+                    nvidia.com/gpu.deploy.gpu-feature-discovery=true
+                    nvidia.com/gpu.deploy.node-status-exporter=false
+                    nvidia.com/gpu.deploy.operands=true
+                    nvidia.com/gpu.deploy.operator-validator=true
+                    nvidia.com/gpu.family=ada-lovelace
+                    nvidia.com/gpu.machine=82Y3
+                    nvidia.com/gpu.memory=8188
+                    nvidia.com/gpu.mode=graphics
+                    nvidia.com/gpu.present=true
+                    nvidia.com/gpu.product=NVIDIA-GeForce-RTX-4070-Laptop-GPU
+                    nvidia.com/gpu.replicas=1
+                    nvidia.com/gpu.sharing-strategy=none
+                    nvidia.com/mig.capable=false
+                    nvidia.com/mig.strategy=single
+                    nvidia.com/mps.capable=false
+                    nvidia.com/vgpu.present=false
+Annotations:        alpha.kubernetes.io/provided-node-ip: 100.94.254.15
+                    flannel.alpha.coreos.com/backend-data: {"VNI":1,"VtepMAC":"06:17:3b:07:78:ff"}
+                    flannel.alpha.coreos.com/backend-type: vxlan
+                    flannel.alpha.coreos.com/kube-subnet-manager: true
+                    flannel.alpha.coreos.com/public-ip: 100.94.254.15
+                    k3s.io/hostname: pc2
+                    k3s.io/internal-ip: 100.94.254.15
+                    k3s.io/node-args:
+                      ["agent","--node-name","pc2-forge-b","--node-ip","100.94.254.15","--flannel-iface","tailscale0","--node-label","forge.node=pc2","--node-la...
+                    k3s.io/node-config-hash: QU7QWBVBNIZXBO6TG3VHVJKWELCZ3E27QOAEQXVQIMTKYRYMEYWA====
+                    k3s.io/node-env: {"K3S_TOKEN":"********","K3S_URL":"https://100.124.92.84:6443"}
+                    nfd.node.kubernetes.io/feature-labels:
+                      cpu-cpuid.ADX,cpu-cpuid.AESNI,cpu-cpuid.AVX,cpu-cpuid.AVX2,cpu-cpuid.AVXVNNI,cpu-cpuid.BHI_CTRL,cpu-cpuid.CETIBT,cpu-cpuid.CETSS,cpu-cpuid...
+                    node.alpha.kubernetes.io/ttl: 0
+                    volumes.kubernetes.io/controller-managed-attach-detach: true
+CreationTimestamp:  Sun, 28 Jun 2026 19:56:54 -0400
+Taints:             <none>
+Unschedulable:      false
+Lease:
+  HolderIdentity:  pc2-forge-b
+  AcquireTime:     <unset>
+  RenewTime:       Thu, 30 Jul 2026 17:04:56 -0400
+Conditions:
+  Type             Status  LastHeartbeatTime                 LastTransitionTime                Reason                       Message
+  ----             ------  -----------------                 ------------------                ------                       -------
+  MemoryPressure   False   Thu, 30 Jul 2026 17:04:14 -0400   Tue, 28 Jul 2026 20:06:24 -0400   KubeletHasSufficientMemory   kubelet has sufficient memory available
+  DiskPressure     False   Thu, 30 Jul 2026 17:04:14 -0400   Tue, 28 Jul 2026 20:06:24 -0400   KubeletHasNoDiskPressure     kubelet has no disk pressure
+  PIDPressure      False   Thu, 30 Jul 2026 17:04:14 -0400   Tue, 28 Jul 2026 20:06:24 -0400   KubeletHasSufficientPID      kubelet has sufficient PID available
+  Ready            True    Thu, 30 Jul 2026 17:04:14 -0400   Tue, 28 Jul 2026 20:06:24 -0400   KubeletReady                 kubelet is posting ready status
+Addresses:
+  InternalIP:  100.94.254.15
+  Hostname:    pc2
+Capacity:
+  cpu:                 20
+  ephemeral-storage:   102626232Ki
+  gpu.intel.com/i915:  1
+  hugepages-1Gi:       0
+  hugepages-2Mi:       0
+  memory:              32051140Ki
+  nvidia.com/gpu:      0
+  pods:                110
+Allocatable:
+  cpu:                 20
+  ephemeral-storage:   99834798412
+  gpu.intel.com/i915:  1
+  hugepages-1Gi:       0
+  hugepages-2Mi:       0
+  memory:              32051140Ki
+  nvidia.com/gpu:      0
+  pods:                110
+System Info:
+  Machine ID:                 0199037aaa6743de93e993fe1eb1ef02
+  System UUID:                ebce109f-ba65-11ee-a4f6-bceca04d6d3c
+  Boot ID:                    87a70e19-03bd-40d8-9e4f-b64b11090e8b
+  Kernel Version:             7.0.0-28-generic
+  OS Image:                   Ubuntu 26.04 LTS
+  Operating System:           linux
+  Architecture:               amd64
+  Container Runtime Version:  containerd://2.2.3-k3s1
+  Kubelet Version:            v1.35.5+k3s1
+  Kube-Proxy Version:         
+PodCIDR:                      10.42.1.0/24
+PodCIDRs:                     10.42.1.0/24
+ProviderID:                   k3s://pc2-forge-b
+Non-terminated Pods:          (15 in total)
+  Namespace                   Name                                                    CPU Requests  CPU Limits  Memory Requests  Memory Limits  Age
+  ---------                   ----                                                    ------------  ----------  ---------------  -------------  ---
+  external-secrets            external-secrets-75d658468b-g2zl5                       0 (0%)        0 (0%)      0 (0%)           0 (0%)         8d
+  external-secrets            external-secrets-cert-controller-d6459bb8d-plthw        0 (0%)        0 (0%)      0 (0%)           0 (0%)         8d
+  external-secrets            external-secrets-webhook-7fc5878846-s886d               0 (0%)        0 (0%)      0 (0%)           0 (0%)         8d
+  forge-rag-pilot             ollama-embed-pc2-pilot-5fd944d979-ldw7b                 500m (2%)     4 (20%)     2Gi (6%)         4Gi (13%)      8d
+  forge-rag-pilot             qdrant-pc2-pilot-75cb578b74-2dsrk                       250m (1%)     2 (10%)     512Mi (1%)       1536Mi (4%)    9d
+  forgeai-minimal             ollama-79657b649-fs4mg                                  1 (5%)        4 (20%)     4Gi (13%)        8Gi (26%)      11s
+  forgeai-minimal             vector-store-85d5c478c6-8nnq4                           250m (1%)     1 (5%)      512Mi (1%)       2Gi (6%)       11s
+  gpu-operator                gpu-feature-discovery-qlmfx                             0 (0%)        0 (0%)      0 (0%)           0 (0%)         25d
+  gpu-operator                gpu-operator-node-feature-discovery-worker-c9x9d        5m (0%)       0 (0%)      64Mi (0%)        512Mi (1%)     31d
+  gpu-operator                nvidia-container-toolkit-daemonset-dffd5                0 (0%)        0 (0%)      0 (0%)           0 (0%)         25d
+  gpu-operator                nvidia-device-plugin-daemonset-dxrn9                    0 (0%)        0 (0%)      0 (0%)           0 (0%)         25d
+  gpu-operator                nvidia-operator-validator-q846c                         0 (0%)        0 (0%)      0 (0%)           0 (0%)         25d
+  kube-system                 intel-gpu-plugin-wkm4j                                  0 (0%)        0 (0%)      0 (0%)           0 (0%)         59s
+  monitoring                  kube-prometheus-stack-prometheus-node-exporter-qnvxt    0 (0%)        0 (0%)      0 (0%)           0 (0%)         25d
+  velero                      node-agent-v5qks                                        0 (0%)        0 (0%)      0 (0%)           0 (0%)         25d
+Allocated resources:
+  (Total limits may be over 100 percent, i.e., overcommitted.)
+  Resource            Requests      Limits
+  --------            --------      ------
+  cpu                 2005m (10%)   11 (55%)
+  memory              7232Mi (23%)  16Gi (52%)
+  ephemeral-storage   0 (0%)        0 (0%)
+  hugepages-1Gi       0 (0%)        0 (0%)
+  hugepages-2Mi       0 (0%)        0 (0%)
+  gpu.intel.com/i915  1             1
+  nvidia.com/gpu      1             1
+Events:
+  Type    Reason                   Age    From              Message
+  ----    ------                   ----   ----              -------
+  Normal  CertificateExpirationOK  8m35s  k3s-cert-monitor  Node and Certificate Authority certificates managed by k3s are OK
+
+
+--- 2026-07-30T21:04:58.234522+00:00 ---
+$ kubectl describe node pc2-forge-b (allocation i915 pendant le run)
+{"gpu.intel.com/i915": 1}
+
+--- 2026-07-30T21:05:36.494733+00:00 ---
+$ kubectl delete -f reviews/LAB-033I/evidence/manifeste-rendu.yaml
+namespace "forgeai-minimal" deleted
+serviceaccount "forgeai-sa" deleted from forgeai-minimal namespace
+resourcequota "forgeai-quota" deleted from forgeai-minimal namespace
+limitrange "forgeai-limits" deleted from forgeai-minimal namespace
+networkpolicy.networking.k8s.io "forgeai-default-deny" deleted from forgeai-minimal namespace
+networkpolicy.networking.k8s.io "forgeai-allow-dns" deleted from forgeai-minimal namespace
+persistentvolumeclaim "forgeai-ollama-models" deleted from forgeai-minimal namespace
+deployment.apps "ollama" deleted from forgeai-minimal namespace
+service "ollama" deleted from forgeai-minimal namespace
+persistentvolumeclaim "forgeai-qdrant-data" deleted from forgeai-minimal namespace
+deployment.apps "vector-store" deleted from forgeai-minimal namespace
+service "vector-store" deleted from forgeai-minimal namespace
+
+
+--- 2026-07-30T21:05:36.758654+00:00 ---
+$ kubectl describe node pc2-forge-b (teardown)
+Name:               pc2-forge-b
+Roles:              <none>
+Labels:             beta.kubernetes.io/arch=amd64
+                    beta.kubernetes.io/instance-type=k3s
+                    beta.kubernetes.io/os=linux
+                    feature.node.kubernetes.io/cpu-cpuid.ADX=true
+                    feature.node.kubernetes.io/cpu-cpuid.AESNI=true
+                    feature.node.kubernetes.io/cpu-cpuid.AVX=true
+                    feature.node.kubernetes.io/cpu-cpuid.AVX2=true
+                    feature.node.kubernetes.io/cpu-cpuid.AVXVNNI=true
+                    feature.node.kubernetes.io/cpu-cpuid.BHI_CTRL=true
+                    feature.node.kubernetes.io/cpu-cpuid.CETIBT=true
+                    feature.node.kubernetes.io/cpu-cpuid.CETSS=true
+                    feature.node.kubernetes.io/cpu-cpuid.CMPXCHG8=true
+                    feature.node.kubernetes.io/cpu-cpuid.FLUSH_L1D=true
+                    feature.node.kubernetes.io/cpu-cpuid.FMA3=true
+                    feature.node.kubernetes.io/cpu-cpuid.FSRM=true
+                    feature.node.kubernetes.io/cpu-cpuid.FXSR=true
+                    feature.node.kubernetes.io/cpu-cpuid.FXSROPT=true
+                    feature.node.kubernetes.io/cpu-cpuid.GFNI=true
+                    feature.node.kubernetes.io/cpu-cpuid.HRESET=true
+                    feature.node.kubernetes.io/cpu-cpuid.HYBRID_CPU=true
+                    feature.node.kubernetes.io/cpu-cpuid.IA32_ARCH_CAP=true
+                    feature.node.kubernetes.io/cpu-cpuid.IA32_CORE_CAP=true
+                    feature.node.kubernetes.io/cpu-cpuid.IBPB=true
+                    feature.node.kubernetes.io/cpu-cpuid.IDPRED_CTRL=true
+                    feature.node.kubernetes.io/cpu-cpuid.KEYLOCKER=true
+                    feature.node.kubernetes.io/cpu-cpuid.LAHF=true
+                    feature.node.kubernetes.io/cpu-cpuid.MD_CLEAR=true
+                    feature.node.kubernetes.io/cpu-cpuid.MOVBE=true
+                    feature.node.kubernetes.io/cpu-cpuid.MOVDIR64B=true
+                    feature.node.kubernetes.io/cpu-cpuid.MOVDIRI=true
+                    feature.node.kubernetes.io/cpu-cpuid.OSXSAVE=true
+                    feature.node.kubernetes.io/cpu-cpuid.PCONFIG=true
+                    feature.node.kubernetes.io/cpu-cpuid.PMU_FIXEDCOUNTER_CYCLES=true
+                    feature.node.kubernetes.io/cpu-cpuid.PMU_FIXEDCOUNTER_INSTRUCTIONS=true
+                    feature.node.kubernetes.io/cpu-cpuid.PMU_FIXEDCOUNTER_REFCYCLES=true
+                    feature.node.kubernetes.io/cpu-cpuid.PSFD=true
+                    feature.node.kubernetes.io/cpu-cpuid.RRSBA_CTRL=true
+                    feature.node.kubernetes.io/cpu-cpuid.SERIALIZE=true
+                    feature.node.kubernetes.io/cpu-cpuid.SHA=true
+                    feature.node.kubernetes.io/cpu-cpuid.SPEC_CTRL_SSBD=true
+                    feature.node.kubernetes.io/cpu-cpuid.STIBP=true
+                    feature.node.kubernetes.io/cpu-cpuid.STOSB_SHORT=true
+                    feature.node.kubernetes.io/cpu-cpuid.SYSCALL=true
+                    feature.node.kubernetes.io/cpu-cpuid.SYSEE=true
+                    feature.node.kubernetes.io/cpu-cpuid.TME=true
+                    feature.node.kubernetes.io/cpu-cpuid.VAES=true
+                    feature.node.kubernetes.io/cpu-cpuid.VMX=true
+                    feature.node.kubernetes.io/cpu-cpuid.VPCLMULQDQ=true
+                    feature.node.kubernetes.io/cpu-cpuid.WAITPKG=true
+                    feature.node.kubernetes.io/cpu-cpuid.X87=true
+                    feature.node.kubernetes.io/cpu-cpuid.XGETBV1=true
+                    feature.node.kubernetes.io/cpu-cpuid.XSAVE=true
+                    feature.node.kubernetes.io/cpu-cpuid.XSAVEC=true
+                    feature.node.kubernetes.io/cpu-cpuid.XSAVEOPT=true
+                    feature.node.kubernetes.io/cpu-cpuid.XSAVES=true
+                    feature.node.kubernetes.io/cpu-cstate.enabled=true
+                    feature.node.kubernetes.io/cpu-hardware_multithreading=true
+                    feature.node.kubernetes.io/cpu-model.family=6
+                    feature.node.kubernetes.io/cpu-model.id=186
+                    feature.node.kubernetes.io/cpu-model.vendor_id=Intel
+                    feature.node.kubernetes.io/cpu-pstate.scaling_governor=powersave
+                    feature.node.kubernetes.io/cpu-pstate.status=active
+                    feature.node.kubernetes.io/cpu-pstate.turbo=true
+                    feature.node.kubernetes.io/kernel-config.NO_HZ=true
+                    feature.node.kubernetes.io/kernel-config.NO_HZ_FULL=true
+                    feature.node.kubernetes.io/kernel-version.full=7.0.0-28-generic
+                    feature.node.kubernetes.io/kernel-version.major=7
+                    feature.node.kubernetes.io/kernel-version.minor=0
+                    feature.node.kubernetes.io/kernel-version.revision=0
+                    feature.node.kubernetes.io/memory-swap=true
+                    feature.node.kubernetes.io/pci-10de.present=true
+                    feature.node.kubernetes.io/pci-8086.present=true
+                    feature.node.kubernetes.io/pci-8086.sriov.capable=true
+                    feature.node.kubernetes.io/storage-nonrotationaldisk=true
+                    feature.node.kubernetes.io/system-os_release.ID=ubuntu
+                    feature.node.kubernetes.io/system-os_release.VERSION_ID=26.04
+                    feature.node.kubernetes.io/system-os_release.VERSION_ID.major=26
+                    feature.node.kubernetes.io/system-os_release.VERSION_ID.minor=04
+                    feature.node.kubernetes.io/usb-ef_04f2_b7b6.present=true
+                    feature.node.kubernetes.io/usb-ff_10a5_9800.present=true
+                    forge.k3s=true
+                    forge.name=forge-b
+                    forge.node=pc2
+                    forge.role=rag
+                    forgeai/receptacle=pret
+                    kubernetes.io/arch=amd64
+                    kubernetes.io/hostname=pc2-forge-b
+                    kubernetes.io/os=linux
+                    node.kubernetes.io/instance-type=k3s
+                    nvidia.com/cuda.driver-version.full=595.71.05
+                    nvidia.com/cuda.driver-version.major=595
+                    nvidia.com/cuda.driver-version.minor=71
+                    nvidia.com/cuda.driver-version.revision=05
+                    nvidia.com/cuda.driver.major=595
+                    nvidia.com/cuda.driver.minor=71
+                    nvidia.com/cuda.driver.rev=05
+                    nvidia.com/cuda.runtime-version.full=13.2
+                    nvidia.com/cuda.runtime-version.major=13
+                    nvidia.com/cuda.runtime-version.minor=2
+                    nvidia.com/cuda.runtime.major=13
+                    nvidia.com/cuda.runtime.minor=2
+                    nvidia.com/gfd.timestamp=1784730553
+                    nvidia.com/gpu.compute.major=8
+                    nvidia.com/gpu.compute.minor=9
+                    nvidia.com/gpu.count=1
+                    nvidia.com/gpu.deploy.container-toolkit=true
+                    nvidia.com/gpu.deploy.dcgm=false
+                    nvidia.com/gpu.deploy.dcgm-exporter=false
+                    nvidia.com/gpu.deploy.device-plugin=true
+                    nvidia.com/gpu.deploy.driver=true
+                    nvidia.com/gpu.deploy.gpu-feature-discovery=true
+                    nvidia.com/gpu.deploy.node-status-exporter=false
+                    nvidia.com/gpu.deploy.operands=true
+                    nvidia.com/gpu.deploy.operator-validator=true
+                    nvidia.com/gpu.family=ada-lovelace
+                    nvidia.com/gpu.machine=82Y3
+                    nvidia.com/gpu.memory=8188
+                    nvidia.com/gpu.mode=graphics
+                    nvidia.com/gpu.present=true
+                    nvidia.com/gpu.product=NVIDIA-GeForce-RTX-4070-Laptop-GPU
+                    nvidia.com/gpu.replicas=1
+                    nvidia.com/gpu.sharing-strategy=none
+                    nvidia.com/mig.capable=false
+                    nvidia.com/mig.strategy=single
+                    nvidia.com/mps.capable=false
+                    nvidia.com/vgpu.present=false
+Annotations:        alpha.kubernetes.io/provided-node-ip: 100.94.254.15
+                    flannel.alpha.coreos.com/backend-data: {"VNI":1,"VtepMAC":"06:17:3b:07:78:ff"}
+                    flannel.alpha.coreos.com/backend-type: vxlan
+                    flannel.alpha.coreos.com/kube-subnet-manager: true
+                    flannel.alpha.coreos.com/public-ip: 100.94.254.15
+                    k3s.io/hostname: pc2
+                    k3s.io/internal-ip: 100.94.254.15
+                    k3s.io/node-args:
+                      ["agent","--node-name","pc2-forge-b","--node-ip","100.94.254.15","--flannel-iface","tailscale0","--node-label","forge.node=pc2","--node-la...
+                    k3s.io/node-config-hash: QU7QWBVBNIZXBO6TG3VHVJKWELCZ3E27QOAEQXVQIMTKYRYMEYWA====
+                    k3s.io/node-env: {"K3S_TOKEN":"********","K3S_URL":"https://100.124.92.84:6443"}
+                    nfd.node.kubernetes.io/feature-labels:
+                      cpu-cpuid.ADX,cpu-cpuid.AESNI,cpu-cpuid.AVX,cpu-cpuid.AVX2,cpu-cpuid.AVXVNNI,cpu-cpuid.BHI_CTRL,cpu-cpuid.CETIBT,cpu-cpuid.CETSS,cpu-cpuid...
+                    node.alpha.kubernetes.io/ttl: 0
+                    volumes.kubernetes.io/controller-managed-attach-detach: true
+CreationTimestamp:  Sun, 28 Jun 2026 19:56:54 -0400
+Taints:             <none>
+Unschedulable:      false
+Lease:
+  HolderIdentity:  pc2-forge-b
+  AcquireTime:     <unset>
+  RenewTime:       Thu, 30 Jul 2026 17:05:27 -0400
+Conditions:
+  Type             Status  LastHeartbeatTime                 LastTransitionTime                Reason                       Message
+  ----             ------  -----------------                 ------------------                ------                       -------
+  MemoryPressure   False   Thu, 30 Jul 2026 17:04:14 -0400   Tue, 28 Jul 2026 20:06:24 -0400   KubeletHasSufficientMemory   kubelet has sufficient memory available
+  DiskPressure     False   Thu, 30 Jul 2026 17:04:14 -0400   Tue, 28 Jul 2026 20:06:24 -0400   KubeletHasNoDiskPressure     kubelet has no disk pressure
+  PIDPressure      False   Thu, 30 Jul 2026 17:04:14 -0400   Tue, 28 Jul 2026 20:06:24 -0400   KubeletHasSufficientPID      kubelet has sufficient PID available
+  Ready            True    Thu, 30 Jul 2026 17:04:14 -0400   Tue, 28 Jul 2026 20:06:24 -0400   KubeletReady                 kubelet is posting ready status
+Addresses:
+  InternalIP:  100.94.254.15
+  Hostname:    pc2
+Capacity:
+  cpu:                 20
+  ephemeral-storage:   102626232Ki
+  gpu.intel.com/i915:  1
+  hugepages-1Gi:       0
+  hugepages-2Mi:       0
+  memory:              32051140Ki
+  nvidia.com/gpu:      0
+  pods:                110
+Allocatable:
+  cpu:                 20
+  ephemeral-storage:   99834798412
+  gpu.intel.com/i915:  1
+  hugepages-1Gi:       0
+  hugepages-2Mi:       0
+  memory:              32051140Ki
+  nvidia.com/gpu:      0
+  pods:                110
+System Info:
+  Machine ID:                 0199037aaa6743de93e993fe1eb1ef02
+  System UUID:                ebce109f-ba65-11ee-a4f6-bceca04d6d3c
+  Boot ID:                    87a70e19-03bd-40d8-9e4f-b64b11090e8b
+  Kernel Version:             7.0.0-28-generic
+  OS Image:                   Ubuntu 26.04 LTS
+  Operating System:           linux
+  Architecture:               amd64
+  Container Runtime Version:  containerd://2.2.3-k3s1
+  Kubelet Version:            v1.35.5+k3s1
+  Kube-Proxy Version:         
+PodCIDR:                      10.42.1.0/24
+PodCIDRs:                     10.42.1.0/24
+ProviderID:                   k3s://pc2-forge-b
+Non-terminated Pods:          (13 in total)
+  Namespace                   Name                                                    CPU Requests  CPU Limits  Memory Requests  Memory Limits  Age
+  ---------                   ----                                                    ------------  ----------  ---------------  -------------  ---
+  external-secrets            external-secrets-75d658468b-g2zl5                       0 (0%)        0 (0%)      0 (0%)           0 (0%)         8d
+  external-secrets            external-secrets-cert-controller-d6459bb8d-plthw        0 (0%)        0 (0%)      0 (0%)           0 (0%)         8d
+  external-secrets            external-secrets-webhook-7fc5878846-s886d               0 (0%)        0 (0%)      0 (0%)           0 (0%)         8d
+  forge-rag-pilot             ollama-embed-pc2-pilot-5fd944d979-ldw7b                 500m (2%)     4 (20%)     2Gi (6%)         4Gi (13%)      8d
+  forge-rag-pilot             qdrant-pc2-pilot-75cb578b74-2dsrk                       250m (1%)     2 (10%)     512Mi (1%)       1536Mi (4%)    9d
+  gpu-operator                gpu-feature-discovery-qlmfx                             0 (0%)        0 (0%)      0 (0%)           0 (0%)         25d
+  gpu-operator                gpu-operator-node-feature-discovery-worker-c9x9d        5m (0%)       0 (0%)      64Mi (0%)        512Mi (1%)     31d
+  gpu-operator                nvidia-container-toolkit-daemonset-dffd5                0 (0%)        0 (0%)      0 (0%)           0 (0%)         25d
+  gpu-operator                nvidia-device-plugin-daemonset-dxrn9                    0 (0%)        0 (0%)      0 (0%)           0 (0%)         25d
+  gpu-operator                nvidia-operator-validator-q846c                         0 (0%)        0 (0%)      0 (0%)           0 (0%)         25d
+  kube-system                 intel-gpu-plugin-wkm4j                                  0 (0%)        0 (0%)      0 (0%)           0 (0%)         97s
+  monitoring                  kube-prometheus-stack-prometheus-node-exporter-qnvxt    0 (0%)        0 (0%)      0 (0%)           0 (0%)         25d
+  velero                      node-agent-v5qks                                        0 (0%)        0 (0%)      0 (0%)           0 (0%)         25d
+Allocated resources:
+  (Total limits may be over 100 percent, i.e., overcommitted.)
+  Resource            Requests     Limits
+  --------            --------     ------
+  cpu                 755m (3%)    6 (30%)
+  memory              2624Mi (8%)  6Gi (19%)
+  ephemeral-storage   0 (0%)       0 (0%)
+  hugepages-1Gi       0 (0%)       0 (0%)
+  hugepages-2Mi       0 (0%)       0 (0%)
+  gpu.intel.com/i915  0            0
+  nvidia.com/gpu      1            1
+Events:
+  Type    Reason                   Age    From              Message
+  ----    ------                   ----   ----              -------
+  Normal  CertificateExpirationOK  9m13s  k3s-cert-monitor  Node and Certificate Authority certificates managed by k3s are OK
+
+
+--- 2026-07-30T21:05:36.872838+00:00 ---
+$ kubectl describe node pc2-forge-b (allocation i915 après teardown)
+{"gpu.intel.com/i915": 0}
+
+--- 2026-07-30T21:05:37.303194+00:00 ---
+$ ssh pc2-tb sample GT Intel (après teardown)
+{
+  "card2-DP-2": {
+    "pci_id": "unknown",
+    "gt_act_freq_mhz": 0,
+    "gt_cur_freq_mhz": 1500
+  },
+  "card2-DP-3": {
+    "pci_id": "unknown",
+    "gt_act_freq_mhz": 0,
+    "gt_cur_freq_mhz": 1500
+  },
+  "card2-DP-4": {
+    "pci_id": "unknown",
+    "gt_act_freq_mhz": 0,
+    "gt_cur_freq_mhz": 1500
+  },
+  "card2-DP-5": {
+    "pci_id": "unknown",
+    "gt_act_freq_mhz": 0,
+    "gt_cur_freq_mhz": 1500
+  },
+  "card2-eDP-2": {
+    "pci_id": "unknown",
+    "gt_act_freq_mhz": 0,
+    "gt_cur_freq_mhz": 1500
+  }
+}

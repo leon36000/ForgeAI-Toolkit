@@ -1,0 +1,30 @@
+# FINDING BANC LAB-033I — 3 pannes de configuration de banc corrigées (PAS des défauts produit)
+# Date : 2026-07-30T21:06:24Z — nœud pc2-forge-b
+
+## 1. Seuil disque MIN_DISK_FREE_GB=25.0 franchi par accumulation d'images containerd
+Cause : 39 Go d'images containerd (96 refs) accumulees par les runs successifs
+LAB-033N/A/I (pulls ollama repetes, ~3,26 Go chacun). Corrige : `k3s crictl rmi --prune`
+(ne supprime QUE les images sans reference active — verifie : aucun pod affecte).
+72 Go -> 43 Go utilises sur pc2 (98 Go total).
+
+## 2. Device plugin Intel pose en banc avec readOnlyRootFilesystem: true
+Consequence : echec d'ecriture de la spec CDI (/var/run/cdi, read-only dans son propre
+conteneur) -> repli sur l'injection legacy de devices bruts, qui elle-meme trebuchait sur
+un symlink by-path mort (voir #3). Corrige : retrait de readOnlyRootFilesystem sur CE
+DaemonSet de banc (echafaudage, pas un artefact produit) + montage hostPath de
+/var/run/cdi (repertoire standard que containerd surveille, absent de mon DaemonSet
+initial).
+
+## 3. Symlink udev orphelin /dev/dri/by-path/...simple-framebuffer...-> card0
+card0 (framebuffer EFI pre-driver) n'existe plus une fois i915 charge (verifie :
+udevadm info -q path -n /dev/dri/card0 -> "Unknown device"). Le symlink mort restait
+neanmoins enumere par le device plugin et faisait echouer la generation de spec
+containerd (`mkdir ... file exists`) sur CE laptop precisement (absent des serveurs
+headless pc3/pc4 qui n'ont pas d'ecran physique). Corrige : suppression du symlink
+(re-genere par udev au besoin, aucun device reel affecte).
+
+## Portee
+Les 3 corrections concernent UNIQUEMENT l'echafaudage de banc (DaemonSet installe pour
+la qualification, residu udev de l'hote) — AUCUNE ne touche src/forgeai/**. Une fois ces
+3 obstacles leves, le chemin produit (rendu -> application -> allocation -> ouverture du
+device) a fonctionne du premier coup.

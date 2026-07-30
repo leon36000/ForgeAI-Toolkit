@@ -1,0 +1,40 @@
+Finding LAB-033I — comportement du moteur par défaut vis-à-vis de l'iGPU Intel
+
+Chemin Kubernetes Intel : prouvé (ressource gpu.intel.com/i915 allouée,
+/dev/dri/renderD* injecté et ouvrable en lecture-écriture depuis le conteneur).
+
+Le moteur a-t-il choisi le device Intel : NON (CPU par défaut)
+Indice charge GT : négatif.
+
+Extrait des logs de découverte GPU :
+NGTH:0 OLLAMA_DEBUG:INFO OLLAMA_DEBUG_LOG_REQUESTS:false OLLAMA_EDITOR: OLLAMA_FLASH_ATTENTION:false OLLAMA_GO_TEMPLATE:true OLLAMA_GPU_OVERHEAD:0 OLLAMA_HOST:http://0.0.0.0:11434 OLLAMA_IGPU_ENABLE: OLLAMA_KEEP_ALIVE:5m0s OLLAMA_KV_CACHE_TYPE: OLLAMA_LLM_LIBRARY: OLLAMA_LOAD_TIMEOUT:5m0s OLLAMA_MAX_LOADED_MODELS:0 OLLAMA_MAX_QUEUE:512 OLLAMA_MAX_TRANSFER_STREAMS:4 OLLAMA_MODELS:/root/.ollama/models OLLAMA_NOHISTORY:false OLLAMA_NOPRUNE:false OLLAMA_NO_CLOUD:false OLLAMA_NUM_PARALLEL:1 OLLAMA_ORIGINS:[http://localhost https://localhost http://localhost:* https://localhost:* http://127.0.0.1 https://127.0.0.1 http://127.0.0.1:* https://127.0.0.1:* http://0.0.0.0 https://0.0.0.0 http://0.0.0.0:* https://0.0.0.0:* app://* file://* tauri://* vscode-webview://* vscode-file://*] OLLAMA_REMOTES:[ollama.com] OLLAMA_SCHED_SPREAD:false OLLAMA_VULKAN:true ROCR_VISIBLE_DEVICES: http_proxy: https_proxy: no_proxy:]"
+time=2026-07-30T21:04:52.602Z level=INFO source=routes.go:1949 msg="Ollama cloud disabled: false"
+time=2026-07-30T21:04:52.602Z level=INFO source=images.go:883 msg="total blobs: 0"
+time=2026-07-30T21:04:52.602Z level=INFO source=images.go:890 msg="total unused blobs removed: 0"
+time=2026-07-30T21:04:52.603Z level=INFO source=routes.go:2004 msg="Listening on [::]:11434 (version 0.32.3)"
+time=2026-07-30T21:04:52.603Z level=INFO source=model_list_cache.go:112 msg="model list cache hydration complete" models=0 failures=0 elapsed=137.124µs
+time=2026-07-30T21:04:52.604Z level=INFO source=runner.go:60 msg="discovering available GPUs..."
+time=2026-07-30T21:04:52.797Z level=INFO source=model_recommendations.go:177 msg="model recommendations cache sleep scheduled" wait=4h28m6.332048882s consecutive_failures=0
+time=2026-07-30T21:04:52.817Z level=INFO source=runner.go:405 msg="dropping integrated GPU; to enable, set OLLAMA_IGPU_ENABLE=1" id=0 library=Vulkan compute=0.0 name=Vulkan0 description="Intel(R) Iris(R) Xe Graphics (RPL-P)" pci_id=0000:00:02.0
+time=2026-07-30T21:04:52.817Z level=INFO source=types.go:50 msg="inference compute" id=cpu library=cpu compute="" name=cpu description=cpu libdirs=ollama driver="" pci_id="" type="" total="8.0 GiB" available="8.0 GiB"
+time=2026-07-30T21:04:52.817Z level=INFO source=routes.go:2054 msg="vram-based default context" total_vram="0 B" default_num_ctx=4096
+[GIN] 2026/07/30 - 21:04:56 | 200 |      335.32µs |       10.42.1.1 | GET      "/api/tags"
+[GIN] 2026/07/30 - 21:04:57 | 200 |     278.345µs |       10.42.1.1 | GET      "/api/tags"
+[GIN] 2026/07/30 - 21:04:58 | 200 |      64.574µs |       127.0.0.1 | HEAD     "/"
+time=2026-07-30T21:04:58.671Z level=INFO source=images.go:1263 msg="request failed: Get \"https://registry.ollama.ai/v2/library/qwen2.5/manifests/0.5b\": dial tcp 104.18.17.170:443: connect: connection refused"
+[GIN] 2026/07/30 - 21:04:58 | 200 |  207.844795ms |       127.0.0.1 | POST     "/api/pull"
+[GIN] 2026/07/30 - 21:04:59 | 200 |      35.327µs |       127.0.0.1 | HEAD     "/"
+time=2026-07-30T21:05:00.733Z level=INFO source=download.go:181 msg="downloading c5396e06af29 in 4 100 MB part(s)"
+[GIN] 2026/07/30 - 21:05:01 | 200 |      68.463µs |       10.42.1.1 | GET      "/api/tags"
+[GIN] 2026/07/30 - 21:05:02 | 200 |      78.008µs |       10.42.1.1 | GET      "/api/tags"
+time=2026-07-30T21:05:05.869Z level=INFO source=download.go:181 msg="downloading 66b9ea09bd5b in 1 68 B part(s)"
+time=2026-07-30T21:05:06.269Z level=INFO source=download.go:181 msg="downloading eb4402837c78 in 1 1.5 KB part(s)"
+time=2026-07-30T21:05:06.595Z level=INFO source=download.go:181 msg="downloading 832dd9e00a68 in 1 11 KB part(s)"
+[GIN] 2026/07/30 - 21:05:06 | 200 |     249.291µs |       10.42.1.1 | GET      "/api/tags"
+time=2026-07-30T21:05:07.029Z level=INFO source=download.go:181 msg="downloading 005f95c74751 in 1 490 B part(s)"
+[GIN] 2026/07/30 - 21:05:07 | 200 |     308.115µs |       10.42.1.1 | GET      "/api/tags"
+[GIN] 2026/07/30 - 21:05:07 | 200 |  8.018579554s |       127.0.0.1 | POST     "/api/pull"
+
+
+Si le moteur a écarté l'iGPU, c'est un comportement du moteur (ollama écarte
+les GPU intégrés par défaut), pas un défaut du chemin Kubernetes Intel.
