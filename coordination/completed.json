@@ -509,6 +509,14 @@
       "merge_commit": "178d6b1",
       "review": "APPROVE 3/3 (Qwen3.7-Max/alibaba, DeepSeek-V4-Pro/deepseek, MiMo-Pro-V2/xiaomi), sceau 296a225f, swap CIV apres routes 429/408",
       "note": "Chemin NVIDIA qualifie e2e sur banc reel (k3s v1.35.5, noeud pc3-grs-a RTX 5080/2080S) : sonde produit -> minimal-gpu-cuda -> manifeste applique tel quel -> pod Running sur pc3 -> nvidia-smi dans le pod -> inference qwen2.5:0.5b avec 726 MiB VRAM echantillonnes pendant generation -> teardown verifie. Finding produit corrige (TDD) : aucune resource_class assignee => ollama en classe utilitaire 256Mi => OOMKilled a l'init CUDA ; overlays declarent desormais resource_class (llm/db). Findings de suivi F2 (egress-deny bloque l'amorcage du modele), F3 (NodePort inaccessible sous policies rendues), F4 (chemins ecriture GPU mesures /root/.nv/ComputeCache). Registre seq 290-295."
+    },
+    {
+      "id": "LAB-033A",
+      "ide": "CLAUDE_CODE",
+      "pr": 302,
+      "merge_commit": "0722052",
+      "review": "APPROVE 3/3 (Qwen3.7-Max/alibaba, DeepSeek-V4-Pro/deepseek, MiMo-Pro-V2/xiaomi), sceau c24676d4, zero objection",
+      "note": "Chemin AMD qualifie e2e sur banc reel (noeud pc4-grs-b, 2 dGPU Navi 48 RDNA4) : amd.com/gpu alloue 1, moteur Vulkan RADV GFX1201 type=discrete 31.9GiB, inference 90 tokens avec VRAM carte discrete 89->1038 Mio, teardown verifie. CORRECTIF PRODUIT MAJEUR : le passthrough hostPath des devices GPU (AMD ET Intel) etait INOPERANT sur Kubernetes (cgroup devices, EPERM meme en root avec supplementalGroups) => repli CPU silencieux. AMD/Intel passent a la ressource de leur device plugin (amd.com/gpu, gpu.intel.com/i915) ; hostPath supprime. Gains mesures : enforce du Namespace descend de privileged a baseline (restricted refuse encore l identite root), isolation reelle (1 GPU sur 3 injecte), scheduler comptabilise les GPU, refus au rendu si plugin absent (ERR_QUOTA_GPU_PLUGIN_ABSENT). Decision d archi tracee (panel 3 vendors unanime). 8 tests realignes + 11 neufs. Registre seq 300-303."
     }
   ]
 }
