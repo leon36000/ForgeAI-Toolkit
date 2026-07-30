@@ -100,6 +100,23 @@ Le run #1 du banc a produit `LAB-033N-PROOF-FAIL` (pods pas Ready en 420 s) avec
   mémoire GPU pendant l'inference, chemins d'écriture mesurés.
 - `Registres/PATCH-LAB-033N.jsonl` + `Registres/mission.jsonl` (`story_complete`).
 
+## Revue scellée
+APPROVE **3/3** — `reviews/LAB-033N/*.verdict.json`, sceau `prompt_sha256`
+`296a225fb49f1d19…`, vendors distincts **alibaba / deepseek / xiaomi** (≠ vendor du codeur,
+Moonshot/Kimi — swap appliqué après routes instables 429/408 sur deux reviewers du trio
+initial, journalisé ici). Dépouillement déterministe : `python3 scripts/revue.py tally
+reviews/LAB-033N` → `{"result":"APPROVE","reason":"3/3 APPROVE"}`, zéro objection bloquante.
+
+**Objection mineure examinée et REJETÉE avec preuve** (un reviewer affirmait que
+`evidence/manifeste-rendu.yaml` datait du run #1 pré-correctif, citant
+`requests.memory=4608Mi / limits.memory=10240Mi`) : ces deux valeurs sont le **ResourceQuota
+agrégé** du namespace, dont la somme post-correctif est exactement
+`4096+512 = 4608 Mi` et `8192+2048 = 10240 Mi` ; le conteneur ollama du même fichier porte
+bien `memory: "8Gi"` et `nvidia.com/gpu: "1"`. Horodatages concordants :
+`deploy-minimal.json` 03:53:27 → `manifeste-rendu.yaml` 03:56:43 → `DEPLOIEMENT-REEL.txt`
+03:57:54. Le reviewer a confondu quota de namespace et limite de conteneur ; aucune
+correction n'était requise.
+
 ## Rollback
 Le script est idempotent et son teardown est en `finally` ; en cas d'échec mi-course :
 `kubectl delete namespace <ns du plan>` suffit. `git revert` de la PR → la ligne docs revient

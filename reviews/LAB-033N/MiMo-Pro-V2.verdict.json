@@ -1,0 +1,14 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "reviews/LAB-033N/evidence/manifeste-rendu.yaml",
+   "description": "Le fichier manifeste-rendu.yaml contient les anciens ResourceQuota/limitRange (limits.memory=10240Mi) datant du run #1 (pré-correctif resource_class). Le DEPLOIEMENT-REEL.txt (run #2) montre que le manifeste appliqué réellement avait les bonnes ressources (ollama 4Gi/8Gi, vector-store 512Mi/2Gi). Le fichier YAML d'evidence n'a pas été régénéré après le correctif — incohérence temporelle mineure entre le manifeste-artefact et les logs de déploiement.",
+   "preuve": "manifeste-rendu.yaml ligne 40-41 : requests.memory=4608Mi, limits.memory=10240Mi (ancien quota). DEPLOIEMENT-REEL.txt ligne ~100 (kubectl describe node) : forgeai-minimal ollama Memory Limits 8Gi, vector-store Memory Limits 2Gi (correct, post-correctif). test_rendu_k3s_ollama_8gi_et_gpu_conserve (test_res_classes_stack_minimal.py:50) vérifie 'memory: \"8Gi\"' — le manifeste YAML d'evidence ne passerait pas ce test, mais la réalité du déploiement le passe."
+  }
+ ],
+ "date_heure": "2026-07-30T08:15:56.044186+00:00",
+ "prompt_sha256": "296a225fb49f1d190ebe11bf8e738b07949a1b816287f32d1271a70a5777eb6b",
+ "reviewer_model": "MiMo-Pro-V2"
+}
