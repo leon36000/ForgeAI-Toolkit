@@ -14,7 +14,7 @@ Option globale : `--lang {fr,en}` (i18n, défaut: fr ou `$FORGEAI_LANG`).
 |---|---|---|
 | `hardware` | — | détection hardware (S01) |
 | `doctor` | — | préflight : ce que votre machine peut faire |
-| `gpu` | — | cycle de vie des drivers GPU NVIDIA/AMD/Intel |
+| `gpu` | — | cycle de vie des drivers GPU NVIDIA/AMD (qualifiés labo) + Intel (implémenté, qualification labo en attente — voir Docs/reference/gpu-drivers-support.md) |
 | `node` | status, add, tailscale, probe | multi-nœuds |
 | `wizard` | *flags ci-dessous* | wizard d'installation bout-en-bout |
 | `model` | add-cloud, add-local, list, test | routes modèle cloud/local, clé au coffre chiffré |
@@ -72,4 +72,4 @@ La sélection finale de l'utilisateur (briques + modèles + nœud) est transmise
 - **P1** COUVERTE (fusion templates->stacks, alias hérités, i18n unifiée servie par `/api/i18n`, hiérarchie des défauts gravée, 15e sphère VOIX).
 - **P2** COUVERTE (source unique `parse_stars`, recommandation serveur `/api/stacks/recommended`).
 - **P2.5 multi-nœuds** COUVERTE (ajout nœud, Tailscale, sonde distante).
-- **Extensions** COUVERTE (UI Web locale 6 étapes, drivers GPU, plugins, réévaluation des défauts).
+- **Extensions** COUVERTE (UI Web locale 6 étapes, drivers GPU NVIDIA/AMD (qualifiés labo) + Intel (implémenté, qualification labo en attente — voir Docs/reference/gpu-drivers-support.md), plugins, réévaluation des défauts).
