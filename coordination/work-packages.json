@@ -300,7 +300,7 @@
     {
       "id": "ERR-041A",
       "title": "Créer une redaction centrale pour erreurs, logs et états persistés",
-      "status": "EXTERNAL",
+      "status": "completed",
       "ide": "CLAUDE_CODE",
       "source_ide": "CODEX",
       "exclusive_lane": "",
