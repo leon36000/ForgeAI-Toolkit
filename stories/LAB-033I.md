@@ -93,6 +93,22 @@ Véhicule : `scripts/proof/prove_gpu_intel_e2e.py`, même patron que les deux pr
 - `reviews/LAB-033I/evidence/mesure-gpu-intel.txt` — allocation i915, ouverture des devices,
   logs du moteur, fréquences GT.
 
+## Revue scellée
+APPROVE **3/3** — `reviews/LAB-033I/*.verdict.json`, sceau `prompt_sha256`
+`e21b65b31036929818e12c395337042af5c4094f4511efcea0f756986ad9a90b`, vendors distincts
+**alibaba / deepseek / xiaomi** (≠ vendor du codeur, Moonshot/Kimi). Dépouillement
+déterministe : `{"result":"APPROVE","reason":"3/3 APPROVE"}`, zéro objection bloquante.
+
+**Deux objections mineures examinées et REJETÉES avec preuve** (limitation du reviewer,
+qui ne voit que le diff `origin/main...HEAD`, pas l'état complet du dépôt) :
+1. *« l'entrée `completed.json` de LAB-033A est hors périmètre »* : commit `7cd5411`,
+   légitimement fait sur cette branche après le merge de la PR #302 (LAB-033A) et avant le
+   démarrage de cette story — même motif de bookkeeping post-merge que pour LAB-033N.
+2. *« `findings-pc2-preliminaires.txt` n'apparaît pas dans le diff »* : le fichier existe
+   (36 lignes, 3 findings I1/I2/I3 vérifiés), mais a été committé dans `e003a54` — déjà
+   fusionné dans `origin/main` via la PR #302 — donc invisible dans le diff de *cette*
+   branche par construction, pas absent du dépôt.
+
 ## Rollback
 Teardown en `finally` ; `kubectl delete namespace <ns>` en secours. `git revert` → la ligne
 docs Intel revient à « qualification à réaliser » ; aucun état résiduel cluster.
