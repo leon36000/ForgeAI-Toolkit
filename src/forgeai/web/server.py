@@ -34,6 +34,7 @@ from forgeai.network.node_add import add_node, Bootstrapper, NodeAddError, SshBo
 from forgeai.network.nodes import cluster_status, ClusterError
 from forgeai.network.prepare import sonder_noeud, plan_preparation, preparer_noeud, PrepareError
 from forgeai.preflight import available_backends, run_checks
+from forgeai.core.redaction import redact_text
 from forgeai.resources import catalogue_path, forgeai_home
 from forgeai.stacks import deploy_ids, list_stacks, load_stack
 
@@ -359,7 +360,9 @@ def _persist_deploy_state() -> None:
             snapshot = {
                 "done": _DEPLOY_STATE["done"],
                 "exit_code": _DEPLOY_STATE["exit_code"],
-                "lines": list(_DEPLOY_STATE["lines"]),
+                # Les lignes sont la sortie brute du déploiement : une commande peut
+                # y avoir échotypé un secret. On rédige AVANT persistance (ERR-041A).
+                "lines": [redact_text(line) for line in _DEPLOY_STATE["lines"]],
             }
         path = _deploy_state_path()
         path.parent.mkdir(parents=True, exist_ok=True)
