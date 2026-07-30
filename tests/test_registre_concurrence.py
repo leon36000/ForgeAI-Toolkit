@@ -9,6 +9,7 @@ RED avant correctif : sur `registre.append()` sans verrou, la course forke la ch
 (seq/prev_hash dupliqués), perd des écritures et corrompt des lignes ⇒ ces tests échouent.
 """
 import multiprocessing as mp
+import os
 import sys
 import threading
 from pathlib import Path
@@ -36,7 +37,9 @@ def test_appends_multiprocessus_gardent_la_chaine_intacte(tmp_path):
     seq 1..P*K uniques, chaîne vérifiée intègre, zéro écriture perdue."""
     reg = tmp_path / "r.jsonl"
     P, K = 8, 20
-    ctx = mp.get_context("fork")
+    # fork n'existe pas sur Windows ; spawn y expose la même course (les deux
+    # process font lecture-intégrale puis append sur le même fichier).
+    ctx = mp.get_context("fork" if os.name == "posix" else "spawn")
     barrier = ctx.Barrier(P)
 
     def worker(idx):
@@ -97,3 +100,73 @@ def test_append_refuse_un_fichier_corrompu(tmp_path):
         fh.write("{ceci n'est pas du json}\n")
     with pytest.raises(SystemExit):
         registre.append(reg, "t", "seq", {"n": 2})
+
+# ---------------------------------------------------------------------------
+# C6 : la CLI officielle (wrapper scripts/registre.py) sérialise les appends
+# concurrents multi-processus sur les trois OS.
+# ---------------------------------------------------------------------------
+
+SCRIPTS = Path(__file__).resolve().parent.parent / "scripts"
+
+
+def _cli_worker(reg_path: str, actor: str, n: int) -> None:
+    """Sous-processus : `n` appends via la CLI officielle (scripts/registre.py)."""
+    import subprocess
+    import sys as _sys
+
+    for _ in range(n):
+        cp = subprocess.run(
+            [
+                _sys.executable,
+                str(SCRIPTS / "registre.py"),
+                "append",
+                reg_path,
+                "--type",
+                "t",
+                "--actor",
+                actor,
+                "--payload-json",
+                "{}",
+            ],
+            capture_output=True,
+            text=True,
+        )
+        if cp.returncode != 0:
+            raise AssertionError(
+                f"CLI append a échoué (actor={actor}): rc={cp.returncode}\n"
+                f"stdout={cp.stdout}\nstderr={cp.stderr}"
+            )
+
+
+def test_cli_serialize_appends_multi_processus(tmp_path):
+    """4 sous-processus × 5 appends CLI concurrents ⇒ chaîne intègre, 20 entrées, seq 1..20."""
+    import sys as _sys
+
+    reg = tmp_path / "registre_cli.jsonl"
+    reg_path = str(reg)
+
+    n_workers = 4
+    n_per_worker = 5
+    total = n_workers * n_per_worker  # 20
+
+    # Vagues concurrentes : 4 Popen vivants à la fois, 5 vagues.
+    for wave in range(n_per_worker):
+        procs = []
+        for i in range(n_workers):
+            actor = f"cli{wave * n_workers + i}"
+            proc = mp.get_context("fork" if os.name == "posix" else "spawn").Process(
+                target=_cli_worker, args=(reg_path, actor, 1)
+            )
+            proc.start()
+            procs.append(proc)
+        for proc in procs:
+            proc.join()
+            assert proc.exitcode == 0, (
+                f"sous-processus CLI terminé en code {proc.exitcode}"
+            )
+
+    # Chaîne intègre, 20 entrées, seq 1..20 uniques.
+    assert registre.verify(reg) is None, f"chaîne rompue : {registre.verify(reg)}"
+    seqs, count = _seqs_et_lignes(reg)
+    assert count == total, f"attendu {total} entrées, obtenu {count}"
+    assert seqs == list(range(1, total + 1)), f"seq non consécutifs: {seqs}"
