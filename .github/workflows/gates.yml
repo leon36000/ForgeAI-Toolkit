@@ -13,12 +13,13 @@ permissions:
 jobs:
   guard-fs-multi-os:
     # Le critere d'arret de l'ADR B-24 (amendement du tour 11) exige que la matrice de
-    # comportement de la garde passe sur les TROIS OS supportes. La garde est le seul
-    # composant du produit dont le comportement depend de l'OS : separateur de chemin,
-    # lettres de lecteur Windows, et retrait du backslash d'echappement (echappement sur
-    # POSIX, separateur natif sur Windows). Une preuve Linux seule ne vaut donc rien pour
-    # ce composant, alors qu'elle suffit pour le reste du depot — d'ou une matrice ciblee
-    # sur ce seul fichier de tests plutot qu'un doublement de toute la CI.
+    # comportement de la garde passe sur les TROIS OS supportes. La garde et le verrou
+    # portable (ADR #286, fcntl/msvcrt) sont les deux composants du produit dont le
+    # comportement depend de l'OS : separateur de chemin et lettres de lecteur Windows
+    # pour la garde ; selection de backend flock/LockFile selon os.name pour le verrou.
+    # Une preuve Linux seule ne vaut donc rien pour ces composants, alors qu'elle
+    # suffit pour le reste du depot — d'ou une matrice ciblee sur ces fichiers de
+    # tests plutot qu'un doublement de toute la CI.
     strategy:
       fail-fast: false
       matrix:
@@ -32,7 +33,7 @@ jobs:
       - name: Install test deps
         run: pip install pytest
       - name: Garde de confinement filesystem — matrice de comportement
-        run: python3 -m pytest tests/test_guard_fs.py -q
+        run: python3 -m pytest tests/test_guard_fs.py tests/test_portable_lock.py tests/test_registre_concurrence.py -q
   no-stub-scan:
     runs-on: ubuntu-latest
     steps:

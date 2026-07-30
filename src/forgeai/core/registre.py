@@ -15,17 +15,32 @@ Usage :
     registre.py verify <fichier.jsonl> [...] [--key <clé.hex>]
 """
 import argparse
-import fcntl
 import hashlib
 import hmac
 import json
 import os
 import secrets
 import sys
+
+try:
+    from forgeai.core._portable_lock import LockTimeoutError, locked_exclusive
+except ImportError:  # exécution directe par chemin de fichier, sans paquet installé
+    import importlib.util as _ilu
+    from pathlib import Path as _P
+
+    _spec = _ilu.spec_from_file_location(
+        "_portable_lock", _P(__file__).resolve().with_name("_portable_lock.py")
+    )
+    _mod = _ilu.module_from_spec(_spec)
+    _spec.loader.exec_module(_mod)
+    LockTimeoutError = _mod.LockTimeoutError
+    locked_exclusive = _mod.locked_exclusive
 from datetime import datetime, timezone
 from pathlib import Path
 
 GENESIS = "0" * 64
+
+APPEND_LOCK_TIMEOUT_S = 30.0  # verrou portable — ADR #286 (C2/C6)
 
 
 def _key_id(key: bytes) -> str:
@@ -111,30 +126,29 @@ def append(
     path.parent.mkdir(parents=True, exist_ok=True)  # ex. ~/.forgeai/Registres/ (P3)
     # `path` = registre app/opérateur (pas d'entrée HTTP) ; chemin non dérivé d'input.
     with path.open("a+", encoding="utf-8") as fh:  # NOSONAR
-        fcntl.flock(fh.fileno(), fcntl.LOCK_EX)
-        fh.seek(0)
-        entries = _parse_entries_from_text(fh.read(), source=str(path))
-        prev_hash = entries[-1]["hash"] if entries else GENESIS
-        entry = {
-            "seq": len(entries) + 1,
-            "ts": datetime.now(timezone.utc).isoformat(timespec="seconds"),
-            "type": type_,
-            "actor": actor,
-            "payload": payload,
-            "prev_hash": prev_hash,
-        }
-        if key_path is not None:
-            key = _load_key(key_path)
-            entry["key_id"] = _key_id(key)
-            entry["hash"] = _entry_hmac(key, entry)
-        else:
-            entry["hash"] = _entry_hash(entry)
-        line = json.dumps(entry, sort_keys=True, ensure_ascii=False, separators=(",", ":"))
-        fh.seek(0, os.SEEK_END)
-        fh.write(line + "\n")
-        fh.flush()
-        os.fsync(fh.fileno())
-        fcntl.flock(fh.fileno(), fcntl.LOCK_UN)
+        with locked_exclusive(fh.fileno(), timeout_s=APPEND_LOCK_TIMEOUT_S):
+            fh.seek(0)
+            entries = _parse_entries_from_text(fh.read(), source=str(path))
+            prev_hash = entries[-1]["hash"] if entries else GENESIS
+            entry = {
+                "seq": len(entries) + 1,
+                "ts": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+                "type": type_,
+                "actor": actor,
+                "payload": payload,
+                "prev_hash": prev_hash,
+            }
+            if key_path is not None:
+                key = _load_key(key_path)
+                entry["key_id"] = _key_id(key)
+                entry["hash"] = _entry_hmac(key, entry)
+            else:
+                entry["hash"] = _entry_hash(entry)
+            line = json.dumps(entry, sort_keys=True, ensure_ascii=False, separators=(",", ":"))
+            fh.seek(0, os.SEEK_END)
+            fh.write(line + "\n")
+            fh.flush()
+            os.fsync(fh.fileno())
     return entry
 
 

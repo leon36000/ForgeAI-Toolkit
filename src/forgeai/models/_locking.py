@@ -1,12 +1,13 @@
 """Verrouillage et remplacement atomique de fichiers locaux."""
 
-import fcntl
 import json
 import os
 import stat
 import tempfile
 from contextlib import contextmanager
 from pathlib import Path
+
+from forgeai.core._portable_lock import acquire_exclusive, release_exclusive
 
 MODELS_TRANSACTION_LOCK = ".models-transaction"
 MODELS_TRANSACTION_JOURNAL = ".models-transaction.json"
@@ -33,13 +34,13 @@ def file_lock(path: Path):
     try:
         if not stat.S_ISREG(os.fstat(descriptor).st_mode):
             raise OSError(f"le verrou n'est pas un fichier régulier: {lock_path}")
-        fcntl.flock(descriptor, fcntl.LOCK_EX)
+        acquire_exclusive(descriptor)
         locked = True
         yield
     finally:
         try:
             if locked:
-                fcntl.flock(descriptor, fcntl.LOCK_UN)
+                release_exclusive(descriptor)
         finally:
             os.close(descriptor)
 
