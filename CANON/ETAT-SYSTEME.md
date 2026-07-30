@@ -14,7 +14,7 @@ Option globale : `--lang {fr,en}` (i18n, défaut: fr ou `$FORGEAI_LANG`).
 |---|---|---|
 | `hardware` | — | détection hardware (S01) |
 | `doctor` | — | préflight : ce que votre machine peut faire |
-| `gpu` | — | cycle de vie des drivers GPU NVIDIA/AMD/Intel |
+| `gpu` | drivers | détection + recommandation + **plan** install/update drivers GPU NVIDIA/AMD/Intel (voir limite ci-dessous) |
 | `node` | status, add, tailscale, probe | multi-nœuds |
 | `wizard` | *flags ci-dessous* | wizard d'installation bout-en-bout |
 | `model` | add-cloud, add-local, list, test | routes modèle cloud/local, clé au coffre chiffré |
@@ -33,6 +33,11 @@ Option globale : `--lang {fr,en}` (i18n, défaut: fr ou `$FORGEAI_LANG`).
 ### Wizard Flags
 `--ci --backend --workdir --catalogue --overlay --stack --node --probe-host --selection --dry-run --registre --document --question --expected-fact --health-timeout --teardown --teardown-volumes --skip-preflight --help`
 
+> **Limite connue (CAP-033A)** : `gpu drivers --action install|update` détecte le GPU et son
+> driver, recommande un runtime et **affiche un plan** (`install_argv`/`rollback_argv`) qu'il
+> journalise au registre — il **n'exécute AUCUNE commande sur l'hôte**. L'exécution réelle du
+> plan attend CLI-036 (runner borné et annulable), cf. `stories/HW-037.md` (« Écart résiduel »).
+
 ## Interface Utilisateur (Installateur Web)
 L'installateur web est structuré en **6 étapes** :
 1. **Matériel** : Détection et diagnostic de l'infrastructure locale.
@@ -45,7 +50,7 @@ L'installateur web est structuré en **6 étapes** :
 La sélection finale de l'utilisateur (briques + modèles + nœud) est transmise et tracée de manière déterministe dans `selection.json`.
 
 ## Sous-systèmes (`src/forgeai/`)
-- **hardware/** détection ; **planner/** (profile, assemble, deploy-specs) ; **preflight** matrice backend ; **gpu/** (drivers GPU).
+- **hardware/** détection (`detect.py`) + cycle de vie des drivers GPU (`hardware/drivers.py`, détection + recommandation + plan install/update — pas d'exécution, cf. limite ci-dessus) ; **planner/** (profile, assemble, deploy-specs) ; **preflight** matrice backend.
 - **catalogue/** loader + `data/catalogue.json` (1577 briques) + `catalogue/spheres.py` (15 sphères S1..S14 + VOIX) + source unique `forgeai_home/parse_stars` + `data/locales/` (i18n unifiée, 94 clés web fr).
 - **stacks/** (`stacks.py` + `data/stacks/*.json`) : 5 profils de déploiement + 1 profil global.
   - *agentique* : 72 briques déployées
@@ -72,4 +77,4 @@ La sélection finale de l'utilisateur (briques + modèles + nœud) est transmise
 - **P1** COUVERTE (fusion templates->stacks, alias hérités, i18n unifiée servie par `/api/i18n`, hiérarchie des défauts gravée, 15e sphère VOIX).
 - **P2** COUVERTE (source unique `parse_stars`, recommandation serveur `/api/stacks/recommended`).
 - **P2.5 multi-nœuds** COUVERTE (ajout nœud, Tailscale, sonde distante).
-- **Extensions** COUVERTE (UI Web locale 6 étapes, drivers GPU, plugins, réévaluation des défauts).
+- **Extensions** COUVERTE (UI Web locale 6 étapes, plugins, réévaluation des défauts) ; **drivers GPU** PARTIELLEMENT COUVERTE (détection + recommandation + plan install/update fonctionnels et testés ; exécution réelle du plan non implémentée, cf. limite CAP-033A ci-dessus, attend CLI-036).
