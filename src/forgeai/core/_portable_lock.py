@@ -54,7 +54,7 @@ if os.name == "posix":
         """Contention posix : BlockingIOError uniquement (errno EAGAIN mesuré)."""
         return isinstance(exc, BlockingIOError)
 
-elif os.name == "nt":
+elif os.name == "nt":  # pragma: no cover — exécuté et prouvé par guard-fs-multi-os (windows-latest) ; le job de couverture tourne sur ubuntu, qui ne peut pas exécuter msvcrt
     import msvcrt
 
     # Errnos signalant une contention sous Windows : EACCES (violation de verrou
@@ -84,7 +84,7 @@ elif os.name == "nt":
         """Contention nt : OSError dont l'errno est EACCES ou EDEADLOCK (36)."""
         return isinstance(exc, OSError) and exc.errno in _ERRNOS_OCCUPES_NT
 
-else:
+else:  # pragma: no cover — aucune plateforme CI ne l'exécute par construction ; la propriété « échec franc à l'import » est le contrat C1, vérifiable par lecture
     raise RuntimeError(
         f"_portable_lock : plateforme non prise en charge, os.name={os.name!r} — "
         "aucun backend de verrouillage noyau disponible ; échec franc à l'import "

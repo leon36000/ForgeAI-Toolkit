@@ -32,6 +32,13 @@ def _seqs_et_lignes(reg: Path) -> tuple[list[int], int]:
     return [e["seq"] for e in entries], len(entries)
 
 
+def _worker_barriere(barrier, reg_path: str, k: int, idx: int) -> None:
+    """Worker top-level (exigence spawn : picklable) : attend la barrière commune
+    puis appende son lot — la barrière maximise la contention réelle."""
+    barrier.wait()
+    _appende_lot(reg_path, k, f"p{idx}")
+
+
 def test_appends_multiprocessus_gardent_la_chaine_intacte(tmp_path):
     """Comportement : P process × K appends sur le même fichier ⇒ P*K entrées,
     seq 1..P*K uniques, chaîne vérifiée intègre, zéro écriture perdue."""
@@ -42,11 +49,7 @@ def test_appends_multiprocessus_gardent_la_chaine_intacte(tmp_path):
     ctx = mp.get_context("fork" if os.name == "posix" else "spawn")
     barrier = ctx.Barrier(P)
 
-    def worker(idx):
-        barrier.wait()  # maximise la contention : tous démarrent ensemble
-        _appende_lot(str(reg), K, f"p{idx}")
-
-    procs = [ctx.Process(target=worker, args=(i,)) for i in range(P)]
+    procs = [ctx.Process(target=_worker_barriere, args=(barrier, str(reg), K, i)) for i in range(P)]
     for p in procs:
         p.start()
     for p in procs:

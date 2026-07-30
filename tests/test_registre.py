@@ -257,3 +257,33 @@ def test_init_key_echec_ecriture_libere_le_descripteur(tmp_path, monkeypatch):
     monkeypatch.setattr(core_registre.os, "fdopen", _boom)
     with pytest.raises(OSError):
         core_registre.init_key(tmp_path / "k.key")
+
+
+def test_repli_importlib_execution_directe(tmp_path, monkeypatch):
+    """C6 (ADR PORT-286) : registre.py chargé par CHEMIN sans paquet importable
+    prend la branche de repli importlib et reste pleinement fonctionnel.
+
+    Le masquage de forgeai.core._portable_lock dans sys.modules force
+    l'ImportError du `try` ; le repli charge alors _portable_lock.py par chemin
+    voisin (spec_from_file_location). Un module None dans sys.modules fait
+    échouer `from X import Y` : c'est le mécanisme standard de simulation
+    d'absence de module.
+    """
+    import importlib.util
+
+    src = Path(__file__).resolve().parent.parent / "src" / "forgeai" / "core" / "registre.py"
+    monkeypatch.setitem(sys.modules, "forgeai.core._portable_lock", None)
+
+    spec = importlib.util.spec_from_file_location("registre_par_chemin", src)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+
+    # Le repli a fourni les deux symboles, et le module est fonctionnel.
+    assert module.locked_exclusive is not None
+    assert issubclass(module.LockTimeoutError, TimeoutError)
+    reg = tmp_path / "repli.jsonl"
+    e1 = module.append(reg, "t", "repli", {"n": 1})
+    e2 = module.append(reg, "t", "repli", {"n": 2})
+    assert e1["seq"] == 1 and e2["seq"] == 2
+    assert e2["prev_hash"] == e1["hash"]
+    assert module.verify(reg) is None
