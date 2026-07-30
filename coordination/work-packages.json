@@ -1057,6 +1057,45 @@
       "dependencies": [],
       "_external": true,
       "_note": "Package CORRECTIF hors lot initial (findings d'audit OBS-A060-1/A061) : /api/detect et /api/summary relançaient des sous-processus à chaque requête. Complété par OPT-002 (bornage des sondes). Marqué completed après fusion (#183)."
+    },
+    {
+      "id": "REV-043",
+      "title": "Refaire une revue aveugle scellée 3-vendors-distincts pour WEB-001/DATA-002/DATA-003",
+      "status": "READY",
+      "priority": "P2_HIGH",
+      "severity": "S2_MEDIUM",
+      "ide": "CLAUDE_CODE",
+      "source_ide": "COPILOT",
+      "exclusive_lane": "review-compliance",
+      "milestone": "M2-SECURITY",
+      "dependencies": [
+        "ORCH-001"
+      ],
+      "branch": "audit/REV-043-multivendor-review-web-data",
+      "allowed_paths": [
+        "reviews/WEB-001/**",
+        "reviews/DATA-002/**",
+        "reviews/DATA-003/**",
+        "coordination/completed.json",
+        "stories/REV-043.md",
+        "reviews/REV-043/**",
+        "Registres/PATCH-REV-043.jsonl"
+      ],
+      "forbidden_paths": [
+        "build/**",
+        "dist/**",
+        "**/__pycache__/**",
+        "src/forgeai/data/catalogue.json"
+      ],
+      "labels": [
+        "type:technical-debt",
+        "type:security",
+        "lane:review-compliance"
+      ],
+      "notes": [
+        "Écart découvert lors de l'archivage rétroactif (cockpit, PR #222) de WEB-001 (#199), DATA-002 (#180) et DATA-003 (#198) : les 3 revues scellées mergées n'utilisent que des variantes OpenAI (gpt-5.6-sol/gpt-5.6-terra, `vendor_claim.not_multi_vendor=true`), en écart avec la règle non négociable AGENTS.md/CLAUDE.md « 3 vendors distincts ≠ vendor du codeur ». Le code fusionné lui-même n'est PAS remis en cause (déjà testé, mergé, transparent sur sa propre limite) : REV-043 ne recode rien, il rejoue une revue aveugle scellée conforme (civ_review.py + LiteLLM bridge, 3 vendors distincts) sur les diffs déjà mergés (merge_commit de chaque entrée coordination/completed.json), documente le résultat dans reviews/<pkg>/ et met à jour le champ review de coordination/completed.json en conséquence (ou consigne BLOCKED-avec-raison si l'infra de revue n'est pas joignable — jamais de verdict fabriqué).",
+        "Ne touche pas au code source de WEB-001/DATA-002/DATA-003 : périmètre strictement documentaire/preuve (reviews/**, coordination/completed.json)."
+      ]
     }
   ]
 }
