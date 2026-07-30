@@ -78,7 +78,11 @@ class FileKeyStore:
 
     def write(self, data: dict) -> None:
         prepare_secure_directory(self._root_path.parent, final_mode=0o700)
-        prepare_secure_directory(self._unseal_path.parent, final_mode=0o711)
+        # SECRET-020B (correctif revue Grok) : NE PAS figer 0o711 ici — cela clobberait le
+        # 0750+groupe pose par prepare_key_store dans le flux reel (prepare_key_store PUIS
+        # write). On DELEGUE a prepare_key_store : source unique de durcissement du repertoire
+        # des cles, group-aware avec repli, pilotee par le meme resolve_openbao_gid().
+        prepare_key_store(self._unseal_path.parent)
         # root_token -> 0600, ISOLÉ dans un fichier séparé jamais monté à l'unsealer (owner seul).
         _write_file(self._root_path, data["root_token"], 0o600)
         # unseal_key : 0640 + groupe dédié forgeai-openbao QUAND le groupe existe sur l'hôte

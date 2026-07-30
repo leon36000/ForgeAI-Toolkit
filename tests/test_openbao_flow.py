@@ -944,3 +944,37 @@ def test_provision_openbao_compose_sequence(tmp_path, monkeypatch) -> None:
     assert calls["up"] == [["openbao", "openbao-unsealer"]]
     assert "8200" in calls["waited"]
     assert (tmp_path / "openbao-keys").is_dir()  # key-store hôte préparé
+
+
+# --- SECRET-020B correctif revue (Grok REJECT, objection majeure) : le FLUX RÉEL --------------
+
+def test_flux_reel_prepare_puis_write_garde_keys_dir_0750(tmp_path, monkeypatch) -> None:
+    """CHEMIN RÉEL : dans le flux de production prepare_key_store PUIS FileKeyStore.write, le
+    répertoire des clés doit RESTER 0750+groupe — write ne doit pas reclobber en 0711. Tester
+    les deux fonctions isolément masquait ce défaut ; ce test enchaîne comme le déploiement."""
+    import forgeai.deploy.openbao_flow as flow
+
+    monkeypatch.setattr(flow, "resolve_openbao_gid", lambda: os.getgid())
+    keys_dir = tmp_path / "keys"
+    root_path = tmp_path / "secrets" / "root_token"
+    flow.prepare_key_store(keys_dir)                       # 1. flux : prepare d'abord
+    flow.FileKeyStore(keys_dir, root_path).write(          # 2. puis write
+        {"unseal_key": "U", "root_token": "R"}
+    )
+    assert stat.S_IMODE(keys_dir.stat().st_mode) == 0o750, "write ne doit pas reclobber 0750 -> 0711"
+    assert keys_dir.stat().st_gid == os.getgid(), "le groupe du répertoire doit survivre à write"
+
+
+def test_keys_dir_repli_0711_si_chown_echoue(tmp_path, monkeypatch) -> None:
+    """Symétrie de couverture (objection mineure) : prepare_key_store avec groupe résolu MAIS
+    chown qui lève -> le répertoire DOIT finir 0711, jamais un 0750 orphelin de groupe."""
+    import forgeai.deploy.openbao_flow as flow
+
+    monkeypatch.setattr(flow, "resolve_openbao_gid", lambda: os.getgid())
+
+    def _chown_refuse(*a, **k):
+        raise PermissionError("simulé")
+
+    monkeypatch.setattr(flow.os, "chown", _chown_refuse)
+    d = flow.prepare_key_store(tmp_path / "keys")
+    assert stat.S_IMODE(d.stat().st_mode) == 0o711, "repli 0711 obligatoire si chown échoue"
