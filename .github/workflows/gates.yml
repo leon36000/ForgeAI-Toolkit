@@ -48,6 +48,13 @@ jobs:
       - name: Intégrité des chaînes de hash
         run: python3 scripts/registre.py verify Registres/*.jsonl
 
+  metering-sites:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Garde metering B-20b §7.4 — émissions chat/completions instrumentées
+        run: python3 scripts/check_metering_sites.py
+
   catalogue:
     runs-on: ubuntu-latest
     steps:

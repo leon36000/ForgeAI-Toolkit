@@ -11,6 +11,8 @@ import json
 from dataclasses import dataclass
 from typing import Protocol
 
+from forgeai.models.budget import BudgetTracker, extraire_tokens
+
 
 class Transport(Protocol):
     def post(self, url: str, headers: dict[str, str], body: bytes, timeout: float
@@ -33,6 +35,45 @@ class UrllibTransport:
             return e.code, e.read().decode("utf-8", "replace")
         except (urllib.error.URLError, TimeoutError, OSError):
             return 0, ""
+
+
+class MeteredTransport:
+    """Décorateur de `Transport` qui mesure la consommation (ADR B-20 §1 chemin A).
+
+    Porte pré-dispatch : `tracker.check(agent)` AVANT toute émission — sur COUPURE,
+    `QuotaAtteint` remonte et `inner.post` n'est jamais appelé (zéro émission réseau).
+    Transparent sur le fil : retourne le `(status, text)` de `inner` inchangé. La
+    comptabilisation se fait APRÈS, à partir de la réponse effectivement reçue :
+    échec réseau (status 0) → journal `motif="timeout"` ; sinon `extraire_tokens`
+    sur le corps parsé (réponse d'erreur ou sans `usage` → `exact=False`,
+    `motif="usage_absent"`). L'injection est opt-in via le paramètre `transport`
+    existant : un appelant qui ne fournit pas de `MeteredTransport` n'est pas mesuré.
+    """
+
+    def __init__(self, inner: "Transport", tracker: BudgetTracker, agent: str = "probe") -> None:
+        self._inner = inner
+        self._tracker = tracker
+        self._agent = agent
+
+    def post(self, url: str, headers: dict[str, str], body: bytes, timeout: float
+             ) -> tuple[int, str]:
+        # Porte pré-dispatch : lève QuotaAtteint sur COUPURE AVANT toute émission.
+        self._tracker.check(self._agent)
+        status, text = self._inner.post(url, headers, body, timeout)
+        if status == 0:
+            # Pas de réponse consommée : journal timeout, jamais d'estimation (§7.1).
+            self._tracker.record(self._agent, 0, exact=False, motif="timeout")
+        else:
+            try:
+                reponse = json.loads(text)
+            except (ValueError, TypeError):
+                reponse = {}
+            tokens, exact = extraire_tokens(reponse)
+            self._tracker.record(
+                self._agent, tokens, exact=exact,
+                motif=None if exact else "usage_absent",
+            )
+        return status, text
 
 
 @dataclass(frozen=True)
