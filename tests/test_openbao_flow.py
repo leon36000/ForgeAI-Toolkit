@@ -145,7 +145,11 @@ def test_file_key_store_write_read_and_root_isolation(tmp_path) -> None:
     assert unseal == "UNSEAL" and "ROOT" not in unseal
     assert root_path.read_text(encoding="utf-8").strip() == "ROOT"
 
-    # unseal_key 0644 (lisible par le conteneur unsealer non-root) ; root_token 0600 (owner seul, isolé)
+    # SECRET-020B : ce test exerce le chemin de REPLI (groupe forgeai-openbao absent de la
+    # machine de test -> resolve_openbao_gid() rend None -> mode historique 0644). Les deux
+    # branches (groupe présent -> 0640+chown ; chown échoué -> repli) sont couvertes par les
+    # tests dédiés ci-dessous. root_token reste 0600 (owner seul, isolé) quelle que soit la
+    # branche.
     assert stat.S_IMODE((keys_dir / "unseal_key").stat().st_mode) == 0o644
     assert stat.S_IMODE(root_path.stat().st_mode) == 0o600
 
@@ -163,6 +167,79 @@ def test_file_key_store_modes_are_independent_of_permissive_umask(tmp_path) -> N
 
     assert stat.S_IMODE((keys_dir / "unseal_key").stat().st_mode) == 0o644
     assert stat.S_IMODE(root_path.stat().st_mode) == 0o600
+
+
+# --- SECRET-020B : modèle de permission 0640 + groupe (ADR SECRET-020A §7.1) ----------------
+# Les tests utilisent le gid de l'opérateur COURANT comme groupe cible : chown vers son propre
+# groupe ne demande aucun privilège, ce qui rend ces tests exécutables partout (CI incluse).
+
+def test_unseal_key_0640_et_groupe_quand_groupe_present(tmp_path, monkeypatch) -> None:
+    """§7.1 : groupe dédié présent -> unseal_key en 0640 ET possédé par le groupe résolu.
+    Prouve le durcissement au-delà du repli 0644. gid = os.getgid() (chown sans privilège)."""
+    import forgeai.deploy.openbao_flow as flow
+
+    monkeypatch.setattr(flow, "resolve_openbao_gid", lambda: os.getgid())
+    keys_dir = tmp_path / "keys"
+    root_path = tmp_path / "secrets" / "root_token"
+    flow.FileKeyStore(keys_dir, root_path).write({"unseal_key": "UNSEAL", "root_token": "ROOT"})
+
+    unseal = keys_dir / "unseal_key"
+    assert stat.S_IMODE(unseal.stat().st_mode) == 0o640, "durcissement 0640 attendu quand le groupe existe"
+    assert unseal.stat().st_gid == os.getgid(), "la clé doit appartenir au groupe résolu"
+    assert stat.S_IMODE(root_path.stat().st_mode) == 0o600, "root token toujours 0600, isolé"
+
+
+def test_unseal_key_repli_0644_quand_groupe_absent(tmp_path, monkeypatch) -> None:
+    """§7.1 repli : groupe absent (resolve -> None) -> 0644 historique (prouvé e2e S6),
+    aucun chown. C'est le comportement qui garantit que l'unsealer non-root lit la clé."""
+    import forgeai.deploy.openbao_flow as flow
+
+    monkeypatch.setattr(flow, "resolve_openbao_gid", lambda: None)
+    keys_dir = tmp_path / "keys"
+    root_path = tmp_path / "secrets" / "root_token"
+    flow.FileKeyStore(keys_dir, root_path).write({"unseal_key": "UNSEAL", "root_token": "ROOT"})
+
+    assert stat.S_IMODE((keys_dir / "unseal_key").stat().st_mode) == 0o644
+
+
+def test_unseal_key_repli_si_chown_echoue(tmp_path, monkeypatch) -> None:
+    """§7.1 sûreté : groupe résolu MAIS chown lève PermissionError -> le fichier DOIT finir
+    en 0644, jamais un 0640 orphelin de groupe (qui casserait le re-unseal : régression e2e S6)."""
+    import forgeai.deploy.openbao_flow as flow
+
+    monkeypatch.setattr(flow, "resolve_openbao_gid", lambda: os.getgid())
+
+    def _chown_refuse(*a, **k):
+        raise PermissionError("simulé : groupe présent mais chown interdit")
+
+    monkeypatch.setattr(flow.os, "chown", _chown_refuse)
+    keys_dir = tmp_path / "keys"
+    root_path = tmp_path / "secrets" / "root_token"
+    flow.FileKeyStore(keys_dir, root_path).write({"unseal_key": "UNSEAL", "root_token": "ROOT"})
+
+    assert stat.S_IMODE((keys_dir / "unseal_key").stat().st_mode) == 0o644, "repli 0644 obligatoire si chown échoue"
+
+
+def test_keys_dir_0750_avec_groupe_sinon_0711(tmp_path, monkeypatch) -> None:
+    """§7.1 répertoire : groupe présent -> 0750 + groupe ; absent -> 0711 historique."""
+    import forgeai.deploy.openbao_flow as flow
+
+    monkeypatch.setattr(flow, "resolve_openbao_gid", lambda: os.getgid())
+    d1 = flow.prepare_key_store(tmp_path / "avec_groupe")
+    assert stat.S_IMODE(d1.stat().st_mode) == 0o750 and d1.stat().st_gid == os.getgid()
+
+    monkeypatch.setattr(flow, "resolve_openbao_gid", lambda: None)
+    d2 = flow.prepare_key_store(tmp_path / "sans_groupe")
+    assert stat.S_IMODE(d2.stat().st_mode) == 0o711
+
+
+def test_resolve_openbao_gid_none_sans_grp(monkeypatch) -> None:
+    """Portabilité (héritée de PORT-286) : sans module grp (Windows), resolve_openbao_gid
+    renvoie None et le module reste fonctionnel -> chemin de repli partout."""
+    import forgeai.deploy.openbao_flow as flow
+
+    monkeypatch.setattr(flow, "grp", None)
+    assert flow.resolve_openbao_gid() is None
 
 
 @pytest.mark.parametrize("initial_mode", [0, 0o500])

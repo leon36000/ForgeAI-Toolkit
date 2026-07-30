@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import base64
 import json
+import os
 import stat
 import subprocess
 import time
@@ -21,6 +22,36 @@ from forgeai.models.vault import (
     read_secret_text,
 )
 from forgeai.secrets.openbao_init import ensure_openbao_ready, http_transport
+
+# --- SECRET-020B : source unique de décision du groupe dédié openbao (ADR SECRET-020A §8) ---
+# POSIX-only : import conditionnel pour préserver la portabilité 3 OS héritée de PORT-286.
+# Sur Windows : grp = None -> resolve_openbao_gid() rend None -> tous les appelants basculent
+# sur le repli documenté (0644 sans group_add, 0711 sans chown), qui est le comportement
+# historique prouvé e2e S6.
+try:
+    import grp
+except ImportError:  # pragma: no cover — Windows : pas de groupes POSIX
+    grp = None  # type: ignore[assignment]
+
+OPENBAO_GROUP = "forgeai-openbao"
+
+
+def resolve_openbao_gid() -> int | None:
+    """GID du groupe dédié forgeai-openbao, résolu DYNAMIQUEMENT (jamais codé en dur —
+    ADR SECRET-020A §8 : REJECT 2/3 vécu sur un GID fixe). Renvoie None si le groupe
+    n'existe pas OU si la plateforme n'a pas de groupes POSIX (Windows) : tous les
+    appelants basculent alors sur le repli documenté (0644 sans group_add, 0711 sans
+    chown), qui EST le comportement historique prouvé e2e (S6 : re-unseal muet après
+    restart). Source unique : FileKeyStore.write, prepare_key_store, et le renderer
+    compose (group_add) consultent tous cette fonction — un 0640 sans group_add (ou
+    l'inverse) serait la régression e2e S6 exacte.
+    """
+    if grp is None:
+        return None
+    try:
+        return grp.getgrnam(OPENBAO_GROUP).gr_gid
+    except KeyError:
+        return None
 
 
 class OpenBaoFlowError(RuntimeError):
@@ -50,13 +81,27 @@ class FileKeyStore:
         prepare_secure_directory(self._unseal_path.parent, final_mode=0o711)
         # root_token -> 0600, ISOLÉ dans un fichier séparé jamais monté à l'unsealer (owner seul).
         _write_file(self._root_path, data["root_token"], 0o600)
-        # unseal_key -> 0644 : le conteneur openbao-unsealer tourne sous l'UID NON-root de l'image
-        # (≠ UID de l'opérateur qui écrit), via un bind-mount hôte -> il ne pourrait PAS lire un 0600
-        # possédé par l'opérateur (prouvé e2e S6 : re-unseal muet après restart). La clé d'unseal est
-        # co-localisée avec le STORAGE scellé sur le même hôte (MÊME frontière de confiance : qui lit
-        # l'hôte a déjà les deux) -> 0644 n'élargit pas la surface au-delà du contrôle d'accès au nœud
-        # (documenté). Le ROOT reste 0600 et isolé (l'unsealer ne le voit jamais).
-        _write_file(self._unseal_path, data["unseal_key"], 0o644)
+        # unseal_key : 0640 + groupe dédié forgeai-openbao QUAND le groupe existe sur l'hôte
+        # (résolu dynamiquement via resolve_openbao_gid() — ADR SECRET-020A §8 : jamais de GID
+        # en dur). Le bit groupe 0640 permet à l'unsealer non-root (membre du groupe via
+        # group_add compose / defaultMode k3s 0o440) de lire la clé tout en la retirant au
+        # reste du monde. Repli documenté : si le groupe n'existe pas (ou plateforme non-POSIX),
+        # on reste en 0644 — comportement historique prouvé e2e S6 (re-unseal muet après
+        # restart). Si le chown échoue (PermissionError : groupe présent mais non-writable),
+        # on REPLIE à 0644 pour ne JAMAIS laisser un 0640 orphelin de groupe qui casserait le
+        # re-unseal (régression e2e S6 exactement). La clé d'unseal est co-localisée avec le
+        # STORAGE scellé sur le même hôte (MÊME frontière de confiance). Le ROOT reste 0600 et
+        # isolé (l'unsealer ne le voit jamais).
+        gid = resolve_openbao_gid()
+        if gid is None:
+            _write_file(self._unseal_path, data["unseal_key"], 0o644)
+            return
+        _write_file(self._unseal_path, data["unseal_key"], 0o640)
+        try:
+            os.chown(self._unseal_path, -1, gid)
+        except (PermissionError, OSError):
+            # Repli : ne JAMAIS laisser un 0640 orphelin de groupe (casserait le re-unseal e2e).
+            os.chmod(self._unseal_path, 0o644)
 
 
 class FileSecretStore:
@@ -97,15 +142,26 @@ def _write_file(path: Path, content: str, mode: int) -> None:
 def prepare_key_store(keys_dir: Path) -> Path:
     """Pré-crée le répertoire des clés AVANT le démarrage d'openbao (le bind-mount hôte doit exister et
     appartenir à l'opérateur ; sinon docker le crée root et le flux Python ne peut plus écrire). Mode
-    0o711 : le conteneur openbao-unsealer (UID NON-root de l'image ≠ opérateur) doit TRAVERSER le
-    répertoire pour lire /keys/unseal_key par son nom (un 0700 le lui interdirait, prouvé e2e S6) SANS
-    pouvoir le LISTER (pas de bit read pour les autres). Le répertoire ne contient QUE l'unseal_key (le
-    root est ailleurs, 0600). Idempotent (create-if-absent). Renvoie le chemin."""
+    0o750 + groupe dédié forgeai-openbao QUAND le groupe existe (résolu dynamiquement via
+    resolve_openbao_gid() — ADR SECRET-020A §8) : traversable ET lisible par le groupe, ce qui permet
+    à l'unsealer non-root (membre du groupe via group_add compose / defaultMode k3s 0o440) d'OUVRIR
+    le fichier unseal_key par son nom. Repli documenté : si le groupe n'existe pas (ou plateforme
+    non-POSIX), on reste en 0o711 (traversable mais non listable par les autres) — comportement
+    historique prouvé e2e S6. Si le chown échoue (PermissionError), on REPLIE à 0o711 pour ne JAMAIS
+    laisser un 0750 orphelin de groupe qui bloquerait la traversée. Le répertoire ne contient QUE
+    l'unseal_key (le root est ailleurs, 0600). Idempotent (create-if-absent). Renvoie le chemin."""
     d = Path(keys_dir)
-    # 0o711 : traversable par l'UID non-root du conteneur unsealer (pour lire /keys/unseal_key par son
-    # nom) MAIS non LISTABLE par les autres (pas de bit read). Risque accepté et documenté (S2612) : la
-    # clé d'unseal est co-localisée avec le storage scellé sur le même hôte (même frontière de confiance).
-    prepare_secure_directory(d, final_mode=0o711)
+    gid = resolve_openbao_gid()
+    if gid is None:
+        # Repli : pas de groupe POSIX (Windows) ou groupe absent -> 0o711 historique (prouvé e2e S6).
+        prepare_secure_directory(d, final_mode=0o711)
+        return d
+    prepare_secure_directory(d, final_mode=0o750)
+    try:
+        os.chown(d, -1, gid)
+    except (PermissionError, OSError):
+        # Repli : ne JAMAIS laisser un 0750 orphelin de groupe (casserait la traversée e2e).
+        prepare_secure_directory(d, final_mode=0o711)
     return d
 
 

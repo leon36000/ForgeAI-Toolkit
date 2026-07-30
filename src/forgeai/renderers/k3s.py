@@ -534,6 +534,10 @@ def _deployment(svc: ServiceSpec, effective_node: str | None = None,
                 items += (f"\n        - name: {claim}"
                           f"\n          secret:"  # proof:allow — kind de volume k8s (pas un secret en dur)
                           f"\n            secretName: {payload}"
+                          # defaultMode 0o440 (= 288 décimal, k8s exige le décimal) : lecture
+                          # owner+groupe seulement — équivalent k3s du 0640+groupe hôte côté
+                          # compose (ADR SECRET-020A §7.4, story SECRET-020B).
+                          f"\n            defaultMode: 288"
                           f"\n            optional: true"
                           f"\n            items:"
                           f"\n              - key: unseal_key"

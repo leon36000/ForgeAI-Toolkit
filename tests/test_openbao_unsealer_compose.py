@@ -118,3 +118,26 @@ def test_script_partage_identique_entre_backends() -> None:
     # source unique : le service compose et le sidecar k3s exécutent EXACTEMENT le même script
     from forgeai.renderers.k3s import _UNSEAL_SCRIPT
     assert UNSEAL_SCRIPT == _UNSEAL_SCRIPT
+
+
+# --- SECRET-020B : group_add piloté par la MÊME source que le mode fichier (ADR §7.1) --------
+
+def test_group_add_present_et_quote_quand_groupe_resolu(monkeypatch) -> None:
+    """§7.1 : groupe dédié résolu -> le service openbao-unsealer porte group_add avec le GID
+    QUOTÉ (compose exige des chaînes). Le manifeste complet reste un YAML valide. On monkeypatch
+    resolve_openbao_gid — la SOURCE UNIQUE que le renderer consulte — pour prouver le câblage."""
+    import forgeai.deploy.openbao_flow as flow
+
+    monkeypatch.setattr(flow, "resolve_openbao_gid", lambda: 1234)
+    unsealer = _render((_OPENBAO, _LITELLM))["services"]["openbao-unsealer"]
+    assert unsealer.get("group_add") == ["1234"], "group_add avec GID QUOTÉ attendu"
+
+
+def test_group_add_absent_en_repli(monkeypatch) -> None:
+    """§7.1 repli : pas de groupe (resolve -> None) -> AUCUN group_add (cohérent avec le mode
+    fichier 0644 : jamais un 0640 orphelin de groupe qui casserait le re-unseal, e2e S6)."""
+    import forgeai.deploy.openbao_flow as flow
+
+    monkeypatch.setattr(flow, "resolve_openbao_gid", lambda: None)
+    unsealer = _render((_OPENBAO, _LITELLM))["services"]["openbao-unsealer"]
+    assert "group_add" not in unsealer, "aucun group_add attendu en repli"
