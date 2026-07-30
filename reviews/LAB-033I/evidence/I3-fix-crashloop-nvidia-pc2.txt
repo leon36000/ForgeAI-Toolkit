@@ -1,0 +1,36 @@
+# I3 — CrashLoopBackOff device plugin NVIDIA sur pc2 : REPARE
+# Date : 2026-07-30T21:55:08Z — décision confirmée par Nathan (arrêt bref du service utilisateur autorisé)
+
+## Cause racine
+Upgrade partiel du driver NVIDIA : nvidia-dkms-595-open 595.84 avait DEJA reconstruit le
+module noyau (dkms status: nvidia/595.84 installed) mais l'ANCIEN module 595.71.05
+restait chargé en mémoire (jamais déchargé/rechargé), tenu par un processus utilisateur
+réel (forge-igpu-reranker.service, PID 2660, actif 8 jours). NVML (userspace, déjà à
+595.84) refusait donc toute connexion : « Driver/library version mismatch ».
+
+## Procédure appliquée (feu vert Nathan)
+1. arrêt propre : systemctl --user stop forge-igpu-reranker.service (snake@pc2)
+2. déchargement des modules : rmmod nvidia_drm nvidia_modeset nvidia_uvm nvidia
+3. chargement de la version DKMS déjà construite : modprobe nvidia (+ uvm/modeset/drm)
+4. nvidia-smi confirme : RTX 4070 Laptop GPU, 8188 MiB, driver 595.84
+5. relance : systemctl --user start forge-igpu-reranker.service -> active (running)
+
+## Second défaut découvert et corrigé (drift de la spec CDI)
+Après rechargement du module, le device plugin K8s tombait sur une AUTRE erreur :
+  OCI runtime create failed ... open /usr/lib/x86_64-linux-gnu/libEGL_nvidia.so.595.71.05:
+  no such file or directory
+Cause : le pod nvidia-container-toolkit-daemonset (25 jours d'âge, 8 jours sans
+redémarrage) n'avait jamais régénéré sa spec CDI (/var/run/cdi/management.nvidia.com-gpu.yaml)
+après l'upgrade userspace — elle référençait encore le nom de fichier versionné 595.71.05.
+Corrigé : suppression du pod (DaemonSet le recrée), régénération automatique de la spec
+CDI vérifiée (libEGL_nvidia.so.595.84 désormais référencé).
+
+## Résultat vérifié
+{
+  "gpu.intel.com/i915": "1",
+  "nvidia.com/gpu": "1"
+}
+nvidia-device-plugin : Running, 0 restart (était ~1400+ avant)
+gpu-feature-discovery : Running, 0 restart
+gpu.intel.com/i915=1 ET nvidia.com/gpu=1 simultanément exposés : pc2 pleinement hybride.
+forge-igpu-reranker.service (service réel de Nathan) : relancé, actif, aucune perte de données.
