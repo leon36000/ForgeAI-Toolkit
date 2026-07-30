@@ -3,7 +3,9 @@
 from __future__ import annotations
 
 import json
+from collections.abc import Callable
 from dataclasses import dataclass
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, Tuple
 
@@ -132,7 +134,12 @@ class BudgetTracker:
 
     _FILENAME = "budgets.json"
 
-    def __init__(self, home: Path) -> None:
+    def __init__(
+        self,
+        home: Path,
+        *,
+        clock: Callable[[], datetime] | None = None,
+    ) -> None:
         self._home = Path(home)
         self._home.mkdir(parents=True, exist_ok=True)
         self._path = self._home / self._FILENAME
@@ -140,6 +147,13 @@ class BudgetTracker:
         # ``<home>/budgets`` pour obtenir le fichier dédié
         # ``<home>/budgets.lock`` (sibling de ``budgets.json``).
         self._lock_path = self._home / "budgets"
+        # B-20b : journal des anomalies de mesure (usage absent / timeout).
+        # Fichier frère append-only, NON autoritaire (le compteur reste dans
+        # budgets.json). Horloge injectable pour un ``ts`` déterministe en test.
+        self._journal_path = self._home / "meter-events.jsonl"
+        self._clock: Callable[[], datetime] = clock or (
+            lambda: datetime.now(timezone.utc)
+        )
 
     def _load(self) -> Dict[str, Dict[str, Any]]:
         if not self._path.exists():
@@ -184,19 +198,46 @@ class BudgetTracker:
             }
             self._save(data)
 
-    def record(self, agent: str, tokens: int) -> str:
+    def record(
+        self,
+        agent: str,
+        tokens: int,
+        *,
+        exact: bool = True,
+        motif: str | None = None,
+    ) -> str:
         """Enregistre une consommation de tokens pour un agent.
+
+        Cas normal (``exact=True``) : incrémente ``used_tokens`` de ``tokens``.
+        Cas anomalie (``exact=False``) : ``tokens`` DOIT valoir 0 (aucune
+        estimation inventée, ADR §3) ; le compteur n'est pas modifié et une
+        ligne est ajoutée au journal ``meter-events.jsonl`` avec le ``motif``.
 
         Args:
             agent: Identifiant de l'agent.
-            tokens: Nombre de tokens consommés (doit être >= 0).
+            tokens: Nombre de tokens consommés (>= 0).
+            exact: False si ``usage`` était absent/illisible ou timeout.
+            motif: Obligatoire ssi ``exact`` est False (ex. "usage_absent",
+                "timeout") ; doit être None si ``exact`` est True.
 
         Returns:
             L'état résultant du budget : 'OK', 'ALERTE' ou 'COUPURE'.
 
         Raises:
+            ValueError: Contrat ``exact``/``motif``/``tokens`` violé (bug
+                d'appelant — distinct de BudgetError, jamais une condition
+                budgétaire).
             BudgetError: Si l'agent est inconnu ou si tokens est négatif.
         """
+        if exact and motif is not None:
+            raise ValueError("motif doit être None quand exact=True")
+        if not exact:
+            if motif is None:
+                raise ValueError("motif est obligatoire quand exact=False")
+            if tokens != 0:
+                raise ValueError(
+                    "exact=False exige tokens=0 (aucune estimation inventée)"
+                )
         if tokens < 0:
             raise BudgetError("La consommation de tokens ne peut pas être négative.")
 
@@ -204,8 +245,19 @@ class BudgetTracker:
             data = self._load()
             if agent not in data:
                 raise BudgetError(f"Agent inconnu : {agent}")
-            data[agent]["used_tokens"] += int(tokens)
-            self._save(data)
+            if exact:
+                data[agent]["used_tokens"] += int(tokens)
+                self._save(data)
+            else:
+                ligne = {
+                    "ts": self._clock().isoformat(),
+                    "agent": agent,
+                    "tokens": 0,
+                    "exact": False,
+                    "motif": motif,
+                }
+                with self._journal_path.open("a", encoding="utf-8") as fh:
+                    fh.write(json.dumps(ligne, ensure_ascii=False) + "\n")
             entry = data[agent]
             state = BudgetState(
                 agent=agent,

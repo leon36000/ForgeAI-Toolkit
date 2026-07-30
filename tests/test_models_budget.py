@@ -288,3 +288,87 @@ def test_corruption_json_message_identifie_fichier(tmp_path):
     message = str(exc.value)
     assert "budgets.json" in message
     assert str(tmp_path / "budgets.json") in str(exc.value)
+
+
+# ---------------------------------------------------------------------------
+# B-20b : journal des anomalies exact=False (meter-events.jsonl)
+# ---------------------------------------------------------------------------
+def test_record_normal_n_ecrit_pas_de_journal(tmp_path):
+    """Un record() nominal incrémente le compteur et n'écrit aucun journal."""
+    tracker = BudgetTracker(tmp_path)
+    tracker.set_budget("a", 1000)
+    tracker.record("a", 50)
+    assert tracker.status("a").used_tokens == 50
+    journal = tmp_path / "meter-events.jsonl"
+    assert not journal.exists() or journal.read_text(encoding="utf-8") == ""
+
+
+def test_record_anomalie_ecrit_une_ligne_5_champs(tmp_path):
+    """exact=False fige le compteur et journalise une ligne aux 5 champs."""
+    from datetime import datetime, timezone
+
+    tracker = BudgetTracker(
+        tmp_path, clock=lambda: datetime(2026, 1, 1, tzinfo=timezone.utc)
+    )
+    tracker.set_budget("a", 1000)
+    tracker.record("a", 50)
+    avant = tracker.status("a").used_tokens
+    tracker.record("a", 0, exact=False, motif="usage_absent")
+    assert tracker.status("a").used_tokens == avant
+    lignes = (
+        (tmp_path / "meter-events.jsonl")
+        .read_text(encoding="utf-8")
+        .splitlines()
+    )
+    assert len(lignes) == 1
+    evenement = json.loads(lignes[0])
+    assert set(evenement) == {"ts", "agent", "tokens", "exact", "motif"}
+    assert evenement["ts"] == "2026-01-01T00:00:00+00:00"
+    assert evenement["agent"] == "a"
+    assert evenement["tokens"] == 0
+    assert evenement["exact"] is False
+    assert evenement["motif"] == "usage_absent"
+
+
+def test_record_exact_false_tokens_non_nul_leve_valueerror(tmp_path):
+    """exact=False avec tokens != 0 est un bug d'appelant : ValueError."""
+    tracker = BudgetTracker(tmp_path)
+    tracker.set_budget("a", 1000)
+    with pytest.raises(ValueError):
+        tracker.record("a", 5, exact=False, motif="x")
+
+
+def test_record_exact_true_avec_motif_leve_valueerror(tmp_path):
+    """Un motif fourni alors que exact=True est rejeté par ValueError."""
+    tracker = BudgetTracker(tmp_path)
+    tracker.set_budget("a", 1000)
+    with pytest.raises(ValueError):
+        tracker.record("a", 5, motif="x")
+
+
+def test_record_exact_false_sans_motif_leve_valueerror(tmp_path):
+    """exact=False sans motif est rejeté par ValueError."""
+    tracker = BudgetTracker(tmp_path)
+    tracker.set_budget("a", 1000)
+    with pytest.raises(ValueError):
+        tracker.record("a", 0, exact=False)
+
+
+def test_record_anomalie_agent_inconnu_leve_budgeterror_sans_journal(tmp_path):
+    """Une anomalie sur un agent non déclaré lève BudgetError et ne journalise pas."""
+    tracker = BudgetTracker(tmp_path)
+    with pytest.raises(BudgetError):
+        tracker.record("inconnu", 0, exact=False, motif="timeout")
+    journal = tmp_path / "meter-events.jsonl"
+    assert not journal.exists() or journal.read_text(encoding="utf-8") == ""
+
+
+def test_record_positionnel_b20a_inchange(tmp_path):
+    """record(agent, tokens) positionnel conserve le comportement B-20a."""
+    tracker = BudgetTracker(tmp_path)
+    tracker.set_budget("a", 1000)
+    etat = tracker.record("a", 10)
+    assert etat == "OK"
+    assert tracker.status("a").used_tokens == 10
+    journal = tmp_path / "meter-events.jsonl"
+    assert not journal.exists() or journal.read_text(encoding="utf-8") == ""
