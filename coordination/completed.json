@@ -688,6 +688,14 @@
       "merge_commit": "f393dea",
       "review": "APPROVE 3/3 (Qwen3.7-Max/alibaba, DeepSeek-V4-Pro/deepseek, MiMo-Pro-V2/xiaomi), sceau 16da881e, zero objection",
       "note": "Seuil VRAM dedie 8Go corrige (8192->8100, mesure 8188 MiB RTX4070 Laptop) ; fonction additive gpus_non_qualifies_ignores() rend visible un NVIDIA casse ignore sur machine hybride sans bloquer le deploiement sur le vendor qui fonctionne. Trou de couverture HW-010 comble (premier test de la levee elle-meme)."
+    },
+    {
+      "id": "ERR-041A",
+      "ide": "CLAUDE_CODE",
+      "pr": 314,
+      "merge_commit": "ffb35c7",
+      "review": "APPROVE 3/3 (DeepSeek-V4-Pro/deepseek, Grok-4.5/xai, Qwen3.7-Max/alibaba), sceau f80a7f94, zero objection (2 tours : 1er REJECT base perimee GPU-034, corrige par merge origin/main, re-revue APPROVE)",
+      "note": "reprise lane CODEX ; module feuille src/forgeai/core/redaction.py + adoption 3 sites (RouteError.__init__, _persist_deploy_state, _validate_route+garde key_fingerprint) ; sites rag-hardened & openbao mesures deja-durcis, reportes ERR-041B ; 87+8 tests, 6/6+4/4 mutations detectantes"
     }
   ]
 }
