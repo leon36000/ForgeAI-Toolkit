@@ -119,7 +119,7 @@ PACKAGE: CAP-033A
 REPOSITORY: https://github.com/leon36000/ForgeAI-Toolkit
 BRANCH: docs/CAP-033A-gpu-claims-evidence
 BASE_COMMIT: 984c74d64c1b8693994347619f847819245220da (origin/main, post-archivage HW-037 PR #293)
-MERGE_SHA: PENDING (mis à jour après fusion)
+MERGE_SHA: 7d723985dde53a8adcc29c465e5d703e428ae984 (PR #294, squash sur origin/main)
 FILES_CHANGED: CANON/ETAT-SYSTEME.md, Docs/reference/gpu-drivers-support.md,
   tests/test_docs_consistency.py, stories/CAP-033A.md, reviews/CAP-033A/**,
   Registres/PATCH-CAP-033A.jsonl
@@ -160,5 +160,6 @@ REVIEW_STATUS: 2 tours de revue aveugle scellée. Tour 1 : `Gemini-3.1-Pro` rout
 OPEN_RISKS: débloque LAB-033I (CLAUDE_CODE, qualification laboratoire Intel réelle) ; DOC-032
   reste bloqué (dépend aussi de OPS-031E, lui-même bloqué sur OPS-031C, CODEX).
 READY_FOR_PR: YES
-STATUS: PENDING (fusion à venir)
+STATUS: MERGED (PR #294, 7d723985dde53a8adcc29c465e5d703e428ae984) — archivé dans
+  coordination/completed.json (29e entrée). Registre Registres/mission.jsonl seq 288.
 ```

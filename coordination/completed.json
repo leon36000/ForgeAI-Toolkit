@@ -493,6 +493,14 @@
       "merge_commit": "75e663f",
       "review": "APPROVE 3/3 (DeepSeek-V4-Pro/Gemini-3.1-Pro-OR/Grok-4.5)",
       "note": "Recommandation AMD/ROCm alignee sur le GPU detecte (detect_driver_state transmet desormais le modele GPU reel a recommend_driver) ; message mort supprime. Registre seq 286 (PR #291). Debloque CAP-033A (COPILOT)."
+    },
+    {
+      "id": "CAP-033A",
+      "ide": "COPILOT",
+      "pr": 294,
+      "merge_commit": "7d72398",
+      "review": "APPROVE 3/3 apres 2 tours (DeepSeek-V4-Pro/deepseek, LongCat-2.0/meituan, Qwen3.7-Max/alibaba)",
+      "note": "CANON/ETAT-SYSTEME.md aligne sur les preuves reelles : NVIDIA/AMD qualifies labo (HW-010/HW-037), Intel implemente + qualification labo en attente (LAB-033I). Nouveau Docs/reference/gpu-drivers-support.md. Registre seq 288. Debloque LAB-033I (CLAUDE_CODE)."
     }
   ]
 }
