@@ -511,6 +511,89 @@
       "note": "Chemin NVIDIA qualifie e2e sur banc reel (k3s v1.35.5, noeud pc3-grs-a RTX 5080/2080S) : sonde produit -> minimal-gpu-cuda -> manifeste applique tel quel -> pod Running sur pc3 -> nvidia-smi dans le pod -> inference qwen2.5:0.5b avec 726 MiB VRAM echantillonnes pendant generation -> teardown verifie. Finding produit corrige (TDD) : aucune resource_class assignee => ollama en classe utilitaire 256Mi => OOMKilled a l'init CUDA ; overlays declarent desormais resource_class (llm/db). Findings de suivi F2 (egress-deny bloque l'amorcage du modele), F3 (NodePort inaccessible sous policies rendues), F4 (chemins ecriture GPU mesures /root/.nv/ComputeCache). Registre seq 290-295."
     },
     {
+      "package": "WEB-001",
+      "merge_commit": "43a3617ac56431a8e87f2367927ca9ee01837ec0",
+      "pr_number": 199,
+      "merged_at": "2026-07-28T01:27:16Z",
+      "review": {
+        "result": "APPROVE",
+        "ratio": "3/3",
+        "vendor_claim": "OpenAI uniquement; aucune pretention multi-vendeur (not_multi_vendor=true, distinct_model_variants=2)",
+        "reviewers": [
+          {
+            "model": "gpt-5.6-sol",
+            "role": "security"
+          },
+          {
+            "model": "gpt-5.6-sol",
+            "role": "acceptance"
+          },
+          {
+            "model": "gpt-5.6-terra",
+            "role": "isolation"
+          }
+        ],
+        "prompt_sha256": "f1c3d94e0534b4ad26b177559137073a9a22840e38a0b09949cd44e486e2a0a8",
+        "dossier": "reviews/WEB-001"
+      },
+      "_note": "Archivage retroactif par le cockpit (Copilot) le 2026-07-29 ; PR mergee par CODEX mais jamais ajoutee a completed.json."
+    },
+    {
+      "package": "DATA-002",
+      "merge_commit": "2ed262e2c31a311134ff63c1336e50ddb23d0555",
+      "pr_number": 180,
+      "merged_at": "2026-07-26T02:03:04Z",
+      "review": {
+        "result": "APPROVED",
+        "ratio": "3/3",
+        "vendor_claim": "OpenAI uniquement; aucune pretention multi-vendeur (not_multi_vendor=true, distinct_model_variants=2)",
+        "reviewers": [
+          {
+            "model": "gpt-5.6-sol",
+            "role": "security"
+          },
+          {
+            "model": "gpt-5.6-sol",
+            "role": "acceptance"
+          },
+          {
+            "model": "gpt-5.6-terra",
+            "role": "concurrency"
+          }
+        ],
+        "dossier": "Registres/PATCH-DATA-002.jsonl (OPENAI_VALIDATION_FINAL)"
+      },
+      "_note": "Archivage retroactif par le cockpit (Copilot) le 2026-07-29 ; PR mergee par CODEX (Closes #164) mais jamais ajoutee a completed.json."
+    },
+    {
+      "package": "DATA-003",
+      "merge_commit": "828714b25895b7f6a49e16bed0ae6b22366ce030",
+      "pr_number": 198,
+      "merged_at": "2026-07-27T14:24:45Z",
+      "review": {
+        "result": "APPROVE",
+        "ratio": "3/3",
+        "vendor_claim": "OpenAI uniquement; aucune pretention multi-vendeur (not_multi_vendor=true, distinct_model_variants=2)",
+        "reviewers": [
+          {
+            "model": "gpt-5.6-sol",
+            "role": "security"
+          },
+          {
+            "model": "gpt-5.6-sol",
+            "role": "acceptance"
+          },
+          {
+            "model": "gpt-5.6-terra",
+            "role": "concurrency"
+          }
+        ],
+        "prompt_sha256": "d0ab88238730bba87670e186c0b28b7e3bccfa1ee6556202433a00371409b6ff",
+        "dossier": "reviews/DATA-003"
+      },
+      "_note": "Archivage retroactif par le cockpit (Copilot) le 2026-07-29 ; PR mergee par CODEX mais jamais ajoutee a completed.json."
+    },
+    {
       "id": "LAB-033A",
       "ide": "CLAUDE_CODE",
       "pr": 302,
