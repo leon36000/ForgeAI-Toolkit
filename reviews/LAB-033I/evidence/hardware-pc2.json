@@ -1,0 +1,26 @@
+{
+  "cpu_model": "13th Gen Intel(R) Core(TM) i9-13900H",
+  "cpu_cores": 20,
+  "cpu_arch": "x86_64",
+  "ram_gb": 30.6,
+  "os_name": "Linux 7.0.0-28-generic",
+  "gpus": [
+    {
+      "vendor": "intel",
+      "name": "Intel Corporation Raptor Lake-P [8086:a7a0]",
+      "vram_mb": 0
+    },
+    {
+      "vendor": "nvidia",
+      "name": "NVIDIA Corporation AD106M [10de:2860] [unqualified]",
+      "vram_mb": 0
+    }
+  ],
+  "disks": [
+    {
+      "path": "/",
+      "total_gb": 98.0,
+      "free_gb": 43.0
+    }
+  ]
+}

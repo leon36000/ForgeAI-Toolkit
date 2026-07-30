@@ -55,29 +55,34 @@ du catalogue (`OpenVINO`, cf. `tests/test_intel_openvino_runtime.py`) ou
 
 Véhicule : `scripts/proof/prove_gpu_intel_e2e.py`, même patron que les deux précédents.
 
-## Critères d'acceptation
-- [ ] **T1-CI-1** : `--render-only` produit un manifeste où le service GPU porte
+## Critères d'acceptation (tous mesurés — run #3, 2026-07-30, `LAB-033I-PROOF-OK`)
+- [x] **T1-CI-1** : `--render-only` produit un manifeste où le service GPU porte
   `gpu.intel.com/i915: "1"` en `limits`, **aucun** volume `hostPath`, **aucune** ressource
-  `nvidia.com/gpu` ni `amd.com/gpu`, et `enforce: baseline` — vérifié par pytest sans cluster.
-- [ ] **T1-CI-2** : le profil dérivé du JSON de sonde de pc2 est `minimal-gpu-intel`.
-- [ ] **T1-BANC-1** : sonde **réelle** de pc2 par le produit installé sur place ; profil
-  `minimal-gpu-intel` dérivé des mesures.
-- [ ] **T1-BANC-2** : manifeste appliqué **tel quel** ; pod `1/1 Running` **sur
-  `pc2-forge-b`** ; ressource `gpu.intel.com/i915` allouée = 1 pendant le run.
-- [ ] **T1-BANC-3** : `/dev/dri/renderD*` **ouvrable en lecture-écriture depuis le
-  conteneur** (preuve que l'injection par le device plugin fonctionne là où le hostPath
-  échouait) ; comportement du moteur vis-à-vis de l'iGPU **mesuré et consigné**, quel qu'il
-  soit.
-- [ ] **T1-BANC-4** : teardown : namespace supprimé, ressource `gpu.intel.com/i915`
-  revenue à 0, aucun état résiduel.
-- [ ] **T1-DOC** : la ligne Intel de `gpu-drivers-support.md` passe de « à réaliser » à
-  qualifiée, avec la divulgation exacte de CE QUI est prouvé (chemin Kubernetes + ouverture
-  du device) et de ce qui ne l'est pas (choix du device par le moteur par défaut).
-  **Sans toucher** aux lignes NVIDIA/AMD. ROUGE d'abord, VERT après.
-- [ ] **Findings pc2 consignés** (déjà collectés, `evidence/findings-pc2-preliminaires.txt`) :
-  seuil VRAM 8192 (I1), garde HW-010 contournée (I2), CrashLoop du device plugin NVIDIA de
-  pc2 (I3). Aucun n'est corrigé ici — chacun exige sa propre story.
-- [ ] **Gates** : `pytest` vert, `no_stub_scan.py --all` vert, revue scellée 3/3, registre.
+  `nvidia.com/gpu` ni `amd.com/gpu`, et `enforce: baseline` — vérifié par
+  `tests/test_prove_gpu_intel_e2e.py` (6 passed, sans cluster).
+- [x] **T1-CI-2** : profil dérivé du JSON de sonde réelle de pc2 = `minimal-gpu-intel`
+  (le NVIDIA `[unqualified]` présent n'emporte pas la décision — Intel utilisable suffit).
+- [x] **T1-BANC-1** : sonde **réelle** de pc2 (`evidence/hardware-pc2.json` : i9-13900H,
+  30,6 Gio, Iris Xe `8086:a7a0` + NVIDIA `[unqualified]`) → `minimal-gpu-intel`.
+- [x] **T1-BANC-2** : manifeste appliqué **tel quel** ; `ollama` et `vector-store`
+  `1/1 Running` sur `pc2-forge-b` ; `gpu.intel.com/i915` alloué **1** pendant le run.
+- [x] **T1-BANC-3** : `/dev/dri/renderD129` **ouvert en lecture-écriture depuis le
+  conteneur** (`INTEL-DEVICE-OK`) — exactement le test qui échouait en EPERM avant le
+  correctif LAB-033A. Comportement du moteur mesuré et consigné : ollama écarte l'iGPU
+  (« dropping integrated GPU ; Intel(R) Iris(R) Xe Graphics (RPL-P) ») et sert sur CPU
+  (`evidence/finding-igpu-moteur.txt`) — écart anticipé dans cette story, non maquillé.
+- [x] **T1-BANC-4** : teardown vérifié : namespace supprimé, `gpu.intel.com/i915` revenu
+  à **0** (assertion programmatique).
+- [x] **T1-DOC** : ligne Intel de `gpu-drivers-support.md` passe de « à réaliser » à
+  qualifiée, avec la divulgation exacte (chemin Kubernetes prouvé, usage GPU réel non
+  couvert) ; NVIDIA/AMD intactes. RED → GREEN (7/7 tests), garde de test ajoutée.
+- [x] **Findings pc2 consignés** (`evidence/findings-pc2-preliminaires.txt`) : seuil VRAM
+  8192 (I1), garde HW-010 contournée (I2), CrashLoop device plugin NVIDIA pc2 (I3). Aucun
+  corrigé ici — stories dédiées. **3 findings de banc supplémentaires** trouvés et corrigés
+  pendant cette story (disque, sur-durcissement du plugin de banc, symlink udev orphelin) —
+  `evidence/finding-banc-plugin-cdi.txt`, hors périmètre produit (échafaudage de banc).
+- [x] **Gates** : `pytest` complet vert, `no_stub_scan.py --all` vert, revue scellée 3/3
+  (section Revue).
 
 ## Preuves (chemins attendus)
 - `reviews/LAB-033I/evidence/findings-pc2-preliminaires.txt` — **déjà écrit** (I1/I2/I3).

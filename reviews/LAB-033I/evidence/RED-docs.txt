@@ -1,0 +1,7 @@
+# RED docs Intel LAB-033I — 2026-07-30T21:07:10Z
+E       AssertionError: Intel line in /media/pc1/Storage/Repo/ForgeAI Toolkit/.claude/worktrees/vigilant-ellis-582f24/Docs/reference/gpu-drivers-support.md must cite reviews/LAB-033I/evidence/ directory
+E       assert 'reviews/LAB-033I/evidence/' in '| Intel | `recommend_driver("intel")` et `plan_driver_op("intel", ...)` implémentées. | Implémenté — qualification la..._k3s_gpu_vendor.py::test_k3s_intel_sans_privileged`, `tests/test_k3s_gpu_vendor.py::test_k3s_intel_passthrough_dri`. |'
+
+tests/test_docs_consistency.py:105: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_docs_consistency.py::test_claim_intel_reference_la_preuve_e2e_lab033i
