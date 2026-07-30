@@ -8,7 +8,7 @@ Le niveau de preuve diffère selon les vendeurs.
 
 | Vendeur | Implémentation | Preuve laboratoire | Tests |
 |---|---|---|---|
-| NVIDIA | `recommend_driver("nvidia")` et `plan_driver_op("nvidia", ...)` implémentées. | Qualifié sur matériel réel — registre HW-010. | `tests/test_k3s_gpu_vendor.py` (parties NVIDIA), `tests/test_gpu_reservation_vendor.py` (parties NVIDIA). |
+| NVIDIA | `recommend_driver("nvidia")` et `plan_driver_op("nvidia", ...)` implémentées. | Qualifié sur matériel réel — détection : registre HW-010 ; déploiement e2e k3s en laboratoire : LAB-033N (evidence `reviews/LAB-033N/evidence/`). | `tests/test_k3s_gpu_vendor.py` (parties NVIDIA), `tests/test_gpu_reservation_vendor.py` (parties NVIDIA). |
 | AMD | `recommend_driver("amd", model=...)` et `plan_driver_op("amd", ...)` implémentées (sélection ROCm/Vulkan selon l'architecture). | Qualifié sur matériel réel — registre HW-037, PR #290. | `tests/test_k3s_gpu_vendor.py` (parties AMD), `tests/test_gpu_reservation_vendor.py` (parties AMD), `tests/test_drivers.py`. |
 | Intel | `recommend_driver("intel")` et `plan_driver_op("intel", ...)` implémentées. | Implémenté — qualification laboratoire de bout en bout à réaliser. Suivi : issue `LAB-033I`. | `tests/test_intel_openvino_runtime.py`, `tests/test_gpu_reservation_vendor.py::test_render_intel_reserve_dri`, `tests/test_k3s_gpu_vendor.py::test_k3s_intel_sans_privileged`, `tests/test_k3s_gpu_vendor.py::test_k3s_intel_passthrough_dri`. |
 

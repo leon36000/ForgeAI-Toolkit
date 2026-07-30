@@ -137,6 +137,9 @@ def assemble_plan(
             ),
             gpu=svc_gpu,
             gpu_vendor=_profile_vendor(profile) if svc_gpu else None,
+            # LAB-033N : classe de ressources déclarée dans l'overlay pour éviter
+            # le défaut utilitaire (OOM du moteur LLM constaté sur le banc).
+            resource_class=svc.get("resource_class", "utilitaire"),
             node=node,
         ))
 
@@ -183,6 +186,8 @@ def assemble_plan(
                 command=tuple(spec.get("command", [])),
                 gpu=brick_gpu,
                 gpu_vendor=_profile_vendor(profile) if brick_gpu else None,
+                # LAB-033N : même propagation pour les briques ajoutées au plan.
+                resource_class=spec.get("resource_class", "utilitaire"),
                 node=node,
             ))
             existing_names.add(brick_id)

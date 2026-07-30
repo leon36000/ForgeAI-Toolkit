@@ -1,0 +1,284 @@
+# Généré par ForgeAI Toolkit — plan p1-71171e24 (profil minimal-gpu-cuda)
+apiVersion: v1
+kind: Namespace
+# forgeai: le niveau enforce est abaissé à privileged car le plan demande explicitement le passthrough hostPath des devices GPU.
+# forgeai: restricted et baseline refusent tous deux les volumes hostPath ; audit et warn restent à restricted pour signaler l'écart.
+metadata:
+  name: forgeai-minimal
+  labels:
+    pod-security.kubernetes.io/enforce: privileged
+    pod-security.kubernetes.io/enforce-version: v1.25
+    pod-security.kubernetes.io/audit: restricted
+    pod-security.kubernetes.io/audit-version: v1.25
+    pod-security.kubernetes.io/warn: restricted
+    pod-security.kubernetes.io/warn-version: v1.25
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: forgeai-sa
+  namespace: forgeai-minimal
+automountServiceAccountToken: false
+---
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: forgeai-quota
+  namespace: forgeai-minimal
+spec:
+  hard:
+    requests.cpu: "1250m"
+    requests.memory: "4608Mi"
+    limits.cpu: "5000m"
+    limits.memory: "10240Mi"
+---
+apiVersion: v1
+kind: LimitRange
+metadata:
+  name: forgeai-limits
+  namespace: forgeai-minimal
+spec:
+  limits:
+    - type: Container
+      default:
+        cpu: "250m"
+        memory: "256Mi"
+      defaultRequest:
+        cpu: "50m"
+        memory: "64Mi"
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: forgeai-default-deny
+  namespace: forgeai-minimal
+spec:
+  podSelector: {}
+  policyTypes:
+    - Ingress
+    - Egress
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: forgeai-allow-dns
+  namespace: forgeai-minimal
+spec:
+  podSelector: {}
+  policyTypes:
+    - Egress
+  egress:
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: kube-system
+      ports:
+        - protocol: UDP
+          port: 53
+        - protocol: TCP
+          port: 53
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: forgeai-ollama-models
+  namespace: forgeai-minimal
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ollama
+  namespace: forgeai-minimal
+spec:
+  replicas: 1
+  selector:
+    matchLabels: {app: ollama}
+  template:
+    metadata:
+      labels: {app: ollama}
+    spec:
+      nodeSelector:
+        kubernetes.io/hostname: pc3-grs-a
+      serviceAccountName: forgeai-sa
+      automountServiceAccountToken: false
+      securityContext:
+        # forgeai: dérogation PSS restricted — l'accès GPU en passthrough requiert les groupes de l'hôte
+        # forgeai: mesure : 0/4 devices /dev/dri accessibles en non-root (gid render variable) ; dérogation limitée aux services GPU demandés
+        # forgeai: readOnlyRootFilesystem est également désactivé (chemins de cache du moteur GPU non mesurables sans matériel — cf. LAB-033)
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: ollama
+          image: ollama/ollama:latest@sha256:ec24bcaa2a810eb74171ce7c517813ef4821ed678988845e8d76cf62467036d4
+          ports:
+            - containerPort: 11434
+          resources:
+            requests:
+              cpu: "1000m"
+              memory: "4Gi"
+            limits:
+              cpu: "4000m"
+              memory: "8Gi"
+              nvidia.com/gpu: "1"
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            readOnlyRootFilesystem: false
+            seccompProfile:
+              type: RuntimeDefault
+          startupProbe:
+            httpGet:
+              path: "/api/tags"
+              port: 11434
+            periodSeconds: 5
+            timeoutSeconds: 5
+            failureThreshold: 12
+          readinessProbe:
+            httpGet:
+              path: "/api/tags"
+              port: 11434
+            periodSeconds: 5
+            timeoutSeconds: 5
+            failureThreshold: 3
+          livenessProbe:
+            httpGet:
+              path: "/api/tags"
+              port: 11434
+            periodSeconds: 5
+            timeoutSeconds: 5
+            failureThreshold: 3
+            initialDelaySeconds: 0
+          volumeMounts:
+            - name: forgeai-ollama-models
+              mountPath: /root/.ollama
+      volumes:
+        - name: forgeai-ollama-models
+          persistentVolumeClaim:
+            claimName: forgeai-ollama-models
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ollama
+  namespace: forgeai-minimal
+spec:
+  type: NodePort
+  selector: {app: ollama}
+  ports:
+    - port: 11434
+      targetPort: 11434
+      nodePort: 32058
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: forgeai-qdrant-data
+  namespace: forgeai-minimal
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vector-store
+  namespace: forgeai-minimal
+spec:
+  replicas: 1
+  selector:
+    matchLabels: {app: vector-store}
+  template:
+    metadata:
+      labels: {app: vector-store}
+    spec:
+      nodeSelector:
+        kubernetes.io/hostname: pc3-grs-a
+      serviceAccountName: forgeai-sa
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: vector-store
+          image: qdrant/qdrant:v1.13.4@sha256:318c11b72aaab96b36e9662ad244de3cabd0653a1b942d4e8191f18296c81af0
+          ports:
+            - containerPort: 6333
+          resources:
+            requests:
+              cpu: "250m"
+              memory: "512Mi"
+            limits:
+              cpu: "1000m"
+              memory: "2Gi"
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            readOnlyRootFilesystem: true
+            seccompProfile:
+              type: RuntimeDefault
+          startupProbe:
+            httpGet:
+              path: "/readyz"
+              port: 6333
+            periodSeconds: 5
+            timeoutSeconds: 5
+            failureThreshold: 12
+          readinessProbe:
+            httpGet:
+              path: "/readyz"
+              port: 6333
+            periodSeconds: 5
+            timeoutSeconds: 5
+            failureThreshold: 3
+          livenessProbe:
+            httpGet:
+              path: "/readyz"
+              port: 6333
+            periodSeconds: 5
+            timeoutSeconds: 5
+            failureThreshold: 3
+            initialDelaySeconds: 0
+          volumeMounts:
+            - name: forgeai-qdrant-data
+              mountPath: /qdrant/storage
+            - name: inscriptible-tmp
+              mountPath: /tmp
+            - name: inscriptible-qdrant-snapshots
+              mountPath: /qdrant/snapshots
+      volumes:
+        - name: forgeai-qdrant-data
+          persistentVolumeClaim:
+            claimName: forgeai-qdrant-data
+        - name: inscriptible-tmp
+          emptyDir: {}
+        - name: inscriptible-qdrant-snapshots
+          emptyDir: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: vector-store
+  namespace: forgeai-minimal
+spec:
+  type: ClusterIP
+  selector: {app: vector-store}
+  ports:
+    - port: 6333
+      targetPort: 6333

@@ -1,0 +1,35 @@
+# RED LAB-033N — 2026-07-30T07:26:25Z
+# Commande : python3 -m pytest tests/test_docs_consistency.py -v
+# État : test_claim_nvidia_reference_la_preuve_e2e_lab033n ajouté, docs PAS ENCORE modifiées
+============================= test session starts ==============================
+platform linux -- Python 3.12.3, pytest-9.1.1, pluggy-1.6.0
+rootdir: /media/pc1/Storage/Repo/ForgeAI Toolkit/.claude/worktrees/vigilant-ellis-582f24
+configfile: pyproject.toml
+plugins: typeguard-4.4.3, langsmith-0.9.4, anyio-4.14.1, Faker-37.12.0, cov-7.1.0
+collected 5 items
+
+tests/test_docs_consistency.py ....F                                     [100%]
+
+=================================== FAILURES ===================================
+______________ test_claim_nvidia_reference_la_preuve_e2e_lab033n _______________
+
+    def test_claim_nvidia_reference_la_preuve_e2e_lab033n():
+        """Ce test est le RED de LAB-033N — il fige le claim NVIDIA au niveau « déploiement
+        e2e prouvé » ; toute régression du claim le casse.
+        """
+        assert GPU_DOC.exists()
+        text = GPU_DOC.read_text(encoding="utf-8")
+        nvidia_line = next(
+            (line for line in text.splitlines() if line.strip().startswith("| NVIDIA")),
+            "",
+        )
+>       assert "LAB-033N" in nvidia_line, (
+            f"NVIDIA line in {GPU_DOC} must cite LAB-033N e2e proof"
+        )
+E       AssertionError: NVIDIA line in /media/pc1/Storage/Repo/ForgeAI Toolkit/.claude/worktrees/vigilant-ellis-582f24/Docs/reference/gpu-drivers-support.md must cite LAB-033N e2e proof
+E       assert 'LAB-033N' in '| NVIDIA | `recommend_driver("nvidia")` et `plan_driver_op("nvidia", ...)` implémentées. | Qualifié sur matériel réel... HW-010. | `tests/test_k3s_gpu_vendor.py` (parties NVIDIA), `tests/test_gpu_reservation_vendor.py` (parties NVIDIA). |'
+
+tests/test_docs_consistency.py:60: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_docs_consistency.py::test_claim_nvidia_reference_la_preuve_e2e_lab033n
+========================= 1 failed, 4 passed in 0.05s ==========================

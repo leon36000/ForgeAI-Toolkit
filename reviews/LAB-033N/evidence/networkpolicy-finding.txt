@@ -1,0 +1,52 @@
+
+--- 2026-07-30T07:56:55.730461+00:00 ---
+$ kubectl get networkpolicy -n forgeai-minimal -o yaml
+apiVersion: v1
+items:
+- apiVersion: networking.k8s.io/v1
+  kind: NetworkPolicy
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"forgeai-allow-dns","namespace":"forgeai-minimal"},"spec":{"egress":[{"ports":[{"port":53,"protocol":"UDP"},{"port":53,"protocol":"TCP"}],"to":[{"namespaceSelector":{"matchLabels":{"kubernetes.io/metadata.name":"kube-system"}}}]}],"podSelector":{},"policyTypes":["Egress"]}}
+    creationTimestamp: "2026-07-30T07:56:44Z"
+    generation: 1
+    name: forgeai-allow-dns
+    namespace: forgeai-minimal
+    resourceVersion: "8267060"
+    uid: 72fcb678-8c90-4be8-83fd-e43b727373f1
+  spec:
+    egress:
+    - ports:
+      - port: 53
+        protocol: UDP
+      - port: 53
+        protocol: TCP
+      to:
+      - namespaceSelector:
+          matchLabels:
+            kubernetes.io/metadata.name: kube-system
+    podSelector: {}
+    policyTypes:
+    - Egress
+- apiVersion: networking.k8s.io/v1
+  kind: NetworkPolicy
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"forgeai-default-deny","namespace":"forgeai-minimal"},"spec":{"podSelector":{},"policyTypes":["Ingress","Egress"]}}
+    creationTimestamp: "2026-07-30T07:56:44Z"
+    generation: 1
+    name: forgeai-default-deny
+    namespace: forgeai-minimal
+    resourceVersion: "8267059"
+    uid: a19c604c-68c8-40e0-b952-3df0ee3c40eb
+  spec:
+    podSelector: {}
+    policyTypes:
+    - Ingress
+    - Egress
+kind: List
+metadata:
+  resourceVersion: ""
+
