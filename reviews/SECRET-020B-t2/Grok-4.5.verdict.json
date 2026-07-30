@@ -1,0 +1,14 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "majeure",
+   "fichier": "coordination/completed.json",
+   "description": "Modification hors périmètre explicite : le diff supprime l'entrée complétée HW-037 (PR #290) et altère coordination/completed.json. Le périmètre autorisé est strictement openbao_flow.py, compose.py, k3s.py, les 3 fichiers de tests openbao et stories/SECRET-020B.md — toute autre ligne = REJECT.",
+   "preuve": "diff origin/main..HEAD : bloc retiré {\"id\": \"HW-037\", \"pr\": 290, \"merge_commit\": \"75e663f\", ...} ; fichier terminé par \"}\\ No newline at end of file\""
+  }
+ ],
+ "date_heure": "2026-07-30T04:17:26.899064+00:00",
+ "prompt_sha256": "02ba462adbcf70ac611f3336cf5003c0f2727724bba905b24c4f953b17823f22",
+ "reviewer_model": "Grok-4.5"
+}

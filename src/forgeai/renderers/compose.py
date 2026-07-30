@@ -63,16 +63,33 @@ def _healthcheck_lines(svc) -> list[str]:
     return lines
 
 
-def _openbao_unsealer_block(image: str) -> list[str]:
+def _openbao_unsealer_block(image: str, openbao_gid: int | None = None) -> list[str]:
     """Service compose openbao-unsealer : re-descelle openbao à travers le réseau, clés en bind-mount
     hôte RO. `depends_on` openbao en condition service_STARTED (PAS service_healthy : le healthcheck
     openbao = coffre descellé, or c'est CE service qui descelle — service_healthy créerait un
     interblocage). BAO_ADDR pointe le nom réseau compose (pas localhost, conteneur séparé).
-    Réutilise le MÊME script que le sidecar k3s (source unique forgeai.renderers._openbao)."""
+    Réutilise le MÊME script que le sidecar k3s (source unique forgeai.renderers._openbao).
+
+    `openbao_gid` : GID du groupe dédié forgeai-openbao, résolu DYNAMIQUEMENT par l'appelant
+    via resolve_openbao_gid() (source unique de décision, ADR SECRET-020A §8).
+    - non-None : insère `group_add: ["<gid>"]` pour que l'unsealer non-root lise la clé 0640
+      (valeur QUOTÉE : compose exige des chaînes pour les GID numériques).
+    - None : aucune ligne group_add (repli 0644 sans groupe — comportement historique prouvé
+      e2e S6). Cohérence OBLIGATOIRE avec le mode fichier (FileKeyStore.write) : c'est le MÊME
+      gid qui pilote les deux — un 0640 sans group_add = re-unseal cassé (régression e2e S6)."""
     out = [
         "  openbao-unsealer:",
         f"    image: {image}",  # même image openbao (binaire `bao` présent)
         "    restart: unless-stopped",
+    ]
+    if openbao_gid is not None:
+        # ADR SECRET-020A §7.1 : quand le groupe dédié existe sur l'hôte, l'unsealer doit en
+        # être membre pour lire la clé 0640. Même resolve_openbao_gid() pilote le mode fichier.
+        out.extend([
+            "    group_add:",
+            f'      - "{openbao_gid}"',
+        ])
+    out.extend([
         # Durcissement universel : empêche toute élévation de privilèges via setuid/sudo/cap.
         # Équivalent Compose de allowPrivilegeEscalation:false du renderer k3s
         # (voir renderers/k3s.py::_security_block). Consciemment limité à cette option car
@@ -92,7 +109,7 @@ def _openbao_unsealer_block(image: str) -> list[str]:
         "      - /bin/sh",
         "      - -c",
         "      - |",
-    ]
+    ])
     # Corps du block scalar `|` : indenté à 8 espaces (strictement > la colonne du `-` à 6).
     # docker compose INTERPOLE $VAR / ${VAR} dans le fichier compose AVANT de le passer au conteneur :
     # chaque `$` du script shell est échappé en `$$` (compose recolle `$$` -> `$`) pour que le script
@@ -259,7 +276,14 @@ def render_compose(plan: DeploymentPlan, project: str = "forgeai-minimal") -> st
     # service séparé ; l'équivalent du sidecar k3s de S3). Émis APRÈS la boucle des services du plan.
     openbao_svc = next((s for s in plan.services if s.name == "openbao"), None)
     if openbao_svc is not None:
-        lines += _openbao_unsealer_block(openbao_svc.image)
+        # SECRET-020B : la MÊME source (resolve_openbao_gid) pilote le mode fichier de la clé
+        # (FileKeyStore.write : 0640 si groupe, 0644 sinon) ET le group_add du manifeste —
+        # jamais l'un sans l'autre (un 0640 sans group_add = re-unseal cassé, e2e S6).
+        # Import LOCAL : renderers ne dépend pas de deploy au niveau module (pas de cycle,
+        # dépendance visible au seul point d'usage).
+        from forgeai.deploy.openbao_flow import resolve_openbao_gid
+
+        lines += _openbao_unsealer_block(openbao_svc.image, openbao_gid=resolve_openbao_gid())
     if volumes:
         lines.append("volumes:")
         for volume in sorted(volumes):

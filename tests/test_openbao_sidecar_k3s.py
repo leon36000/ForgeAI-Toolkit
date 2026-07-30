@@ -84,6 +84,16 @@ def test_volume_secret_cles_optional_item_unseal_only() -> None:
     assert kv["secret"]["items"] == [{"key": "unseal_key", "path": "unseal_key"}]
 
 
+def test_openbao_keys_secret_default_mode_0440() -> None:
+    """SECRET-020B (ADR §7.4) : le volume Secret openbao-keys porte defaultMode 288 (= 0o440),
+    lecture owner+groupe seulement — équivalent k3s du 0640+groupe hôte côté compose. Le YAML
+    reste valide (yaml.safe_load_all dans _openbao_deployment le prouve déjà)."""
+    dep = _openbao_deployment()
+    vols = dep["spec"]["template"]["spec"]["volumes"]
+    kv = next(v for v in vols if v["name"] == "openbao-keys")
+    assert kv["secret"]["defaultMode"] == 288, "defaultMode 288 (0o440) attendu sur openbao-keys"
+
+
 def test_conteneur_principal_ne_monte_pas_les_cles() -> None:
     dep = _openbao_deployment()
     main = next(
