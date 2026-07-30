@@ -1,0 +1,8 @@
+# RED docs AMD LAB-033A — 2026-07-30T09:14:35Z
+# Garde du claim AMD ajoutée, doc PAS ENCORE mise à jour
+E       AssertionError: AMD line in /media/pc1/Storage/Repo/ForgeAI Toolkit/.claude/worktrees/vigilant-ellis-582f24/Docs/reference/gpu-drivers-support.md must cite LAB-033A e2e proof
+E       assert 'LAB-033A' in '| AMD | `recommend_driver("amd", model=...)` et `plan_driver_op("amd", ...)` implémentées (sélection ROCm/Vulkan selo...est_k3s_gpu_vendor.py` (parties AMD), `tests/test_gpu_reservation_vendor.py` (parties AMD), `tests/test_drivers.py`. |'
+
+tests/test_docs_consistency.py:80: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_docs_consistency.py::test_claim_amd_reference_la_preuve_e2e_lab033a

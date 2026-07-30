@@ -1,14 +1,17 @@
 """Story S3b — brique moteur AMD Vulkan déployable (llama.cpp server-vulkan).
 
 Auto-fetch du modèle via `-hf` (repo HF public), auto-split multi-GPU (AUCUN --tensor-split
-hardcodé = universel : llama.cpp répartit sur tous les GPU Vulkan présents). `gpu: true` => sur
-profil rocm, assemble (S2) pose gpu_vendor=amd et le renderer k3s (S3) ajoute le passthrough
-/dev/kfd+/dev/dri + la command en args. Serving réel prouvé sur pc4 (dual RDNA4).
-"""
+hardcodé = universel : llama.cpp répartit sur tous les GPU Vulkan présents). `gpu: true` =>
+sur profil rocm, assemble (S2) pose gpu_vendor=amd et le renderer k3s (S3/LAB-033A) ajoute
+la ressource de device plugin `amd.com/gpu` et la command en args. Le passthrough hostPath
+historique est supprimé : le cgroup devices refuse l'accès au char device (EPERM). Serving
+réel prouvé sur pc4 (dual RDNA4)."""
 import json
 import sys
 from importlib.resources import files
 from pathlib import Path
+
+import yaml
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
 
@@ -38,12 +41,21 @@ def _overlay(tmp_path):
     return ov
 
 
-def test_amd_vulkan_rendu_k3s_avec_passthrough(tmp_path):
-    # profil rocm => vendor amd ; le renderer S3 ajoute le passthrough + la command en args.
+def _assert_no_hostpath(manifest: str) -> None:
+    for doc in yaml.safe_load_all(manifest):
+        if doc and doc.get("kind") == "Deployment":
+            for vol in doc["spec"]["template"]["spec"].get("volumes") or []:
+                assert "hostPath" not in vol, f"volume hostPath interdit : {vol}"
+
+
+def test_amd_vulkan_rendu_k3s_avec_device_plugin(tmp_path):
+    # profil rocm => vendor amd ; le renderer S3 ajoute la ressource amd.com/gpu + la command en args.
     plan = assemble_plan("minimal-gpu-rocm", _overlay(tmp_path), extra_bricks=(BRICK,))
     svc = next((s for s in plan.services if s.name == BRICK), None)
     assert svc is not None, "la brique doit être au plan"
     assert svc.gpu is True and svc.gpu_vendor == "amd"
     out = render_k3s(plan)
-    assert "/dev/kfd" in out and "/dev/dri" in out  # passthrough AMD (S3)
+    assert 'amd.com/gpu: "1"' in out  # ressource device plugin (LAB-033A)
     assert "-hf" in out  # command propagée en args (S3)
+    _assert_no_hostpath(out)
+    assert "privileged: true" not in out

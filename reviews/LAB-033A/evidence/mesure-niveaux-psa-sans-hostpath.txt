@@ -1,0 +1,43 @@
+# MESURE LAB-033A — niveaux Pod Security Admission APRÈS suppression du passthrough hostPath
+# Date : 2026-07-30T08:47:47Z — cluster k3s v1.35.5 réel, nœud pc4-grs-b
+# Méthode : celle de K8S-024 (soumettre le pod à chaque niveau, ne rien supposer)
+
+## Pod soumis
+Pod GPU représentatif du rendu POST-correctif : demande `amd.com/gpu: 1`,
+identité root (dérogation d'identité conservée), `drop: [ALL]`,
+`allowPrivilegeEscalation: false`, `seccompProfile: RuntimeDefault`, AUCUN volume hostPath.
+
+## Résultats mesurés
+
+| enforce | résultat |
+|---|---|
+| restricted | **REFUSÉ** — « violates PodSecurity "restricted:v1.25": runAsNonRoot != true »
+| baseline | **ACCEPTÉ** — pod créé, exécuté, phase Completed |
+
+## Sorties verbatim
+$ kubectl apply (namespace enforce=restricted)
+Error from server (Forbidden): pods "pss-probe" is forbidden: violates PodSecurity
+"restricted:v1.25": runAsNonRoot != true (pod or container "t" must set
+securityContext.runAsNonRoot=true)
+
+$ kubectl apply (namespace enforce=baseline)
+pod/pss-probe created
+   pod: Completed
+
+## Conséquence pour le rendu
+K8S-024 avait mesuré que baseline REFUSAIT le pod GPU — à cause des volumes hostPath
+(« hostPath volumes (volume "dri") »). Ces volumes disparaissant, baseline ACCEPTE
+désormais le pod. Le niveau `enforce` d'un plan GPU passe donc de `privileged` à
+**`baseline`** : durcissement réel, mesuré, sans casser le déploiement.
+`restricted` reste hors d'atteinte tant que le pod GPU garde l'identité root.
+
+## Chemin mesuré vers restricted (story de suivi, PAS dans ce périmètre)
+Expérience complémentaire sur pc4, device plugin + identité non-root :
+  - runAsNonRoot/runAsUser=1000 SANS supplementalGroups :
+      /dev/kfd => « Permission denied » ; renderD128 => « Permission denied »
+  - runAsNonRoot/runAsUser=1000 AVEC supplementalGroups: [991 (render), 44 (video)] :
+      KFD-OUVERT-OK ; /dev/dri/renderD129 OK ; moteur => library=Vulkan, type=discrete
+Donc `restricted` EST atteignable pour un pod GPU, à condition d'injecter le GID du
+groupe `render` de l'hôte dans `supplementalGroups`. Ce GID VARIE par machine (991 sur
+pc4) : il doit être remonté par la sonde de nœud (network/prepare.py, `forgeai node
+probe`) et porté par l'inventaire, ce qui dépasse le périmètre de LAB-033A.

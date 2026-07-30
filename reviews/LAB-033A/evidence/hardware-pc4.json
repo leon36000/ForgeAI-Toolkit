@@ -1,0 +1,31 @@
+{
+  "cpu_model": "AMD Ryzen 9 9950X3D2 16-Core Processor",
+  "cpu_cores": 32,
+  "cpu_arch": "x86_64",
+  "ram_gb": 45.1,
+  "os_name": "Linux 7.0.0-28-generic",
+  "gpus": [
+    {
+      "vendor": "amd",
+      "name": "Advanced Micro Devices, Inc. [1002:7551]",
+      "vram_mb": 0
+    },
+    {
+      "vendor": "amd",
+      "name": "Advanced Micro Devices, Inc. [1002:7550]",
+      "vram_mb": 0
+    },
+    {
+      "vendor": "amd",
+      "name": "Advanced Micro Devices, Inc. [1002:13c0] [integrated]",
+      "vram_mb": 0
+    }
+  ],
+  "disks": [
+    {
+      "path": "/",
+      "total_gb": 936.0,
+      "free_gb": 740.0
+    }
+  ]
+}

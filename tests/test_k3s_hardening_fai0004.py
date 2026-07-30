@@ -1,8 +1,9 @@
-
 """Tests FAI-0004 — durcissement k3s : resources, securityContext, probes,
 ServiceAccount, NetworkPolicy et ClusterIP pour services internes."""
 import sys
 from pathlib import Path
+
+import yaml
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
 
@@ -132,7 +133,10 @@ def test_service_non_interne_reste_nodeport():
     assert "nodePort:" in out
 
 
-def test_gpu_amd_passthrough_pas_de_hardening():
+def test_gpu_amd_device_plugin_avec_hardening():
+    """LAB-033A : l'accès GPU AMD se fait par ressource de device plugin (amd.com/gpu).
+    Le passthrough hostPath /dev/kfd+/dev/dri est supprimé car le cgroup devices refuse
+    l'accès au char device (EPERM). Le securityContext durci reste appliqué."""
     amd = ServiceSpec(
         name="engine",
         image="img:latest",
@@ -142,12 +146,12 @@ def test_gpu_amd_passthrough_pas_de_hardening():
         gpu_vendor="amd",
     )
     out = render_k3s(_plan(amd))
-    # K8S-008 (FAI-U-008) SUPERSÈDE l'attente d'origine de FAI-0004 : le passthrough AMD reste
-    # (hostPath /dev/kfd + /dev/dri) mais SANS privileged:true — l'accès aux devices suffit et
-    # privileged était un sur-privilège (CIS 5.2.1). Le securityContext durci s'applique désormais
-    # aussi aux GPU amd/intel. Périmètre élargi accordé par le cockpit pour lever cette contradiction.
+    assert 'amd.com/gpu: "1"' in out
     assert "privileged: true" not in out
-    assert "/dev/kfd" in out
-    assert "/dev/dri" in out
     assert "allowPrivilegeEscalation: false" in out
     assert "nvidia.com/gpu" not in out
+    # Vérification YAML : aucun volume ne porte la clé hostPath.
+    for doc in yaml.safe_load_all(out):
+        if doc and doc.get("kind") == "Deployment":
+            for vol in doc["spec"]["template"]["spec"].get("volumes") or []:
+                assert "hostPath" not in vol, f"volume hostPath interdit : {vol}"

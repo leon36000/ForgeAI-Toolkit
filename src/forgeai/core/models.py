@@ -5,7 +5,8 @@ import json
 import unicodedata
 from dataclasses import asdict, dataclass, field
 from enum import Enum
-from typing import Any, Optional
+from types import MappingProxyType
+from typing import Any, Mapping, Optional, Union
 
 
 def _rejeter_caracteres_de_controle(nom_champ: str, valeur: str) -> None:
@@ -300,17 +301,22 @@ class QuotaError(ValueError):
 
 @dataclass(frozen=True)
 class CapaciteCluster:
-    """Capacité totale (CPU + mémoire) qu'un cluster déclare pouvoir servir.
+    """Capacité totale (CPU + mémoire + GPU) qu'un cluster déclare pouvoir servir.
 
-    Les valeurs sont normalisées en milliCPU et en MiB pour permettre une
+    Les valeurs CPU et mémoire sont normalisées en milliCPU et en MiB pour permettre une
     comparaison arithmétique directe avec le budget d'un ``DeploymentPlan``.
     Une capacité nulle ou négative n'a aucun sens physique : elle est refusée
     à l'instanciation pour ne pas produire plus tard une division par zéro
     ou un faux positif de dépassement.
+
+    ``ressources_gpu`` mappe le nom de la ressource device plugin (ex.
+    ``amd.com/gpu``) vers la quantité disponible. Il est immuable et ses
+    valeurs doivent être positives ou nulles.
     """
 
     cpu_millicores: int
     memoire_mib: int
+    ressources_gpu: Mapping[str, int] = field(default_factory=dict)
 
     def __post_init__(self) -> None:
         if self.cpu_millicores <= 0 or self.memoire_mib <= 0:
@@ -319,6 +325,19 @@ class CapaciteCluster:
                 f"strictement positive (reçu cpu={self.cpu_millicores}, "
                 f"memoire={self.memoire_mib} Mi)."
             )
+        negatifs = [
+            f"{nom!r}: {qte}" for nom, qte in self.ressources_gpu.items() if qte < 0
+        ]
+        if negatifs:
+            raise ValueError(
+                "ERR_QUOTA_GPU_INVALIDE: les ressources GPU ne peuvent pas être négatives : "
+                + ", ".join(negatifs)
+            )
+        object.__setattr__(
+            self,
+            "ressources_gpu",
+            MappingProxyType(dict(self.ressources_gpu)),
+        )
 
 
 class ProbeType(Enum):
@@ -375,7 +394,7 @@ class ServiceSpec:
     def __post_init__(self) -> None:
         # SEC-YAML-INJECT — suivi de #151 : ces scalaires atteignent en brut le YAML/Compose.
         # Le renderer compose n'a pas de `_safe`, donc défense à la source = couverture de
-        # tous les renderers ; dataclass frozen : lecture de self.* autorisée en __post_init__.
+        # tous les renderers actuels et futurs ; dataclass frozen : lecture de self.* autorisée en __post_init__.
         _rejeter_caracteres_de_controle("name", self.name)
         _rejeter_caracteres_de_controle("image", self.image)
         if self.healthcheck_url is not None:

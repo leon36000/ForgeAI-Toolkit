@@ -1,0 +1,36 @@
+# FINDINGS PRÉLIMINAIRES pc2 (banc Intel — collectés pendant LAB-033A, servent LAB-033I)
+# Date : 2026-07-30T08:35:06Z — nœud pc2-forge-b (Iris Xe + RTX 4070 Laptop)
+
+## FINDING I1 — seuil VRAM NVIDIA à 8192 MiB rejette un GPU 8 Go légitime (écart 4 MiB)
+planner/profile.py : `_usable` exige `gpu.vram_mb >= 8192` pour nvidia.
+Or l'outil NVIDIA lui-même (gpu-feature-discovery du GPU Operator) mesure sur pc2 :
+    nvidia.com/gpu.product = NVIDIA-GeForce-RTX-4070-Laptop-GPU
+    nvidia.com/gpu.memory = 8188
+    nvidia.com/gpu.count = 1
+   => 8188 MiB < 8192 : une RTX 4070 Laptop (8 Go annoncés) est déclarée INUTILISABLE.
+   La VRAM utile est toujours inférieure à la capacité nominale (réservations firmware).
+   Un seuil d'égalité stricte sur une puissance de 2 ne peut donc jamais être atteint par
+   un GPU de cette classe. Portée : tout GPU 8 Go (classe la plus répandue en portable).
+   NON corrigé ici (hors périmètre LAB-033A/I) — story dédiée requise.
+
+## FINDING I2 — la garde HW-010 ne protège plus dès qu'un autre vendor est utilisable
+Sur pc2, nvidia-smi échoue réellement :
+   Failed to initialize NVML: Driver/library version mismatch
+   NVML library version: 595.84
+   La sonde produit marque donc le GPU `[unqualified]` (attendu, HW-010) :
+    - intel Intel Corporation Raptor Lake-P [8086:a7a0] vram_mb=0
+    - nvidia NVIDIA Corporation AD106M [10de:2860] [unqualified] vram_mb=0
+   MAIS le profil dérivé est `minimal-gpu-intel` : la garde HW-010 ne lève une erreur
+   que `if not usable and non_qualifies` (profile.py). L'Intel étant utilisable, la liste
+   `usable` n'est pas vide ⇒ le NVIDIA cassé DISPARAÎT SILENCIEUSEMENT du plan.
+   L'intention de HW-010 (« ne pas faire disparaître un NVIDIA présent mais non qualifié »)
+   est donc contournée sur toute machine hybride — exactement le cas d'un portable.
+   NON corrigé ici — story dédiée requise (décision : avertir ? refuser ? journaliser ?).
+
+## FINDING I3 — cause du CrashLoopBackOff du device plugin NVIDIA sur pc2 (état du banc)
+nvidia-device-plugin-daemonset et gpu-feature-discovery sont en CrashLoopBackOff sur pc2
+(~1400 redémarrages) et `nvidia.com/gpu` y vaut 0. Cause mesurée : incohérence entre le
+module noyau NVIDIA et la bibliothèque NVML de l'espace utilisateur (« Driver/library
+version mismatch », NVML 595.84). C'est un défaut d'ADMINISTRATION DU BANC, pas du produit.
+Sans incidence sur LAB-033I : le chemin Intel utilise gpu.intel.com/i915, et le profil
+dérivé de pc2 reste `minimal-gpu-intel` que le driver NVIDIA soit réparé ou non (8188 < 8192).
