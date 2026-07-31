@@ -106,7 +106,7 @@ def test_g1_deploiement_reel_lance_dans_son_propre_groupe(monkeypatch):
         )
 
 
-@pytest.mark.skipif(os.name != "posix", reason="groupes de processus POSIX")
+@pytest.mark.skipif(os.name != "posix", reason="sémantique de groupe POSIX (setsid) ; l'équivalent Windows CREATE_NEW_PROCESS_GROUP est couvert par G1 — voir Registres/")
 def test_g2_orphelin_termine_a_l_arret():
     """CA2 : un déploiement encore actif est bien TUÉ par le nettoyage (pas d'orphelin)."""
     proc = _spawn_dormeur()
@@ -123,7 +123,7 @@ def test_g2_orphelin_termine_a_l_arret():
     assert proc.poll() is not None, "le sous-processus a survécu à l'arrêt du serveur (orphelin)"
 
 
-@pytest.mark.skipif(os.name != "posix", reason="groupes de processus POSIX")
+@pytest.mark.skipif(os.name != "posix", reason="sémantique de groupe POSIX (setsid) ; l'équivalent Windows CREATE_NEW_PROCESS_GROUP est couvert par G1 — voir Registres/")
 def test_g3_semantique_start_new_session_isole_bien_le_groupe():
     """CA1 (support) : vérifie la SÉMANTIQUE sur laquelle repose la garde — `start_new_session`
     place bien le fils dans un groupe distinct, de sorte qu'un signal au serveur ne l'atteint pas.
@@ -147,7 +147,7 @@ def test_g4_sans_deploiement_actif_est_un_noop():
     server._terminate_active_deploy(grace_seconds=0.1)  # ne doit pas lever
 
 
-@pytest.mark.skipif(os.name != "posix", reason="groupes de processus POSIX")
+@pytest.mark.skipif(os.name != "posix", reason="sémantique de groupe POSIX (setsid) ; l'équivalent Windows CREATE_NEW_PROCESS_GROUP est couvert par G1 — voir Registres/")
 def test_g4b_deploiement_deja_termine_est_un_noop():
     """CA3 : un processus DÉJÀ terminé n'est pas re-tué et ne fait pas lever le nettoyage."""
     proc = subprocess.Popen([sys.executable, "-c", "pass"], start_new_session=True)
