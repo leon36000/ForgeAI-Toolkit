@@ -36,6 +36,7 @@ from forgeai.network.nodes import cluster_status, ClusterError
 from forgeai.network.prepare import sonder_noeud, plan_preparation, preparer_noeud, PrepareError
 from forgeai.preflight import available_backends, run_checks
 from forgeai.core.redaction import redact_text
+from forgeai.web.ratelimit import RateLimiter
 from forgeai.resources import catalogue_path, forgeai_home
 from forgeai.stacks import deploy_ids, list_stacks, load_stack
 
@@ -608,6 +609,9 @@ class ForgeAIHandler(BaseHTTPRequestHandler):
         parsed = urllib.parse.urlparse(self.path)
         path = parsed.path
 
+        if not self._rate_gate():
+            return
+
         # WEB-017 : les lectures sensibles subissent la MÊME politique que les mutations
         # (jeton hors loopback, anti-DNS-rebinding Host). Réutilisation littérale = source unique.
         if _is_sensitive_read_path(path) and not self._guard_mutation():
@@ -908,6 +912,23 @@ class ForgeAIHandler(BaseHTTPRequestHandler):
         payload = json.dumps({"error": "not found", "path": path}, ensure_ascii=False).encode("utf-8")
         self._send(404, payload, "application/json; charset=utf-8")
 
+    def _rate_gate(self) -> bool:
+        """WEB-016 : rate-limit global (hors loopback) + lockout anti-bruteforce (même en loopback).
+        Envoie 429 + Retry-After et retourne False si la requête est limitée."""
+        ip = self.client_address[0]
+        retry = self.server.forgeai_rate_limiter.check(ip, is_loopback=_is_loopback_host(ip))
+        if retry is not None:
+            secs = max(1, int(retry + 0.999))
+            body = _json_body({"error": "rate_limited", "retry_after": secs})
+            self.send_response(429)
+            self.send_header("Content-Type", "application/json; charset=utf-8")
+            self.send_header("Retry-After", str(secs))
+            self.send_header("Content-Length", str(len(body)))
+            self.end_headers()
+            self.wfile.write(body)
+            return False
+        return True
+
     def _guard_mutation(self) -> bool:
         """Garde anti-CSRF / anti DNS-rebinding / jeton sur les routes mutantes.
         Envoie 403/401 et retourne False si la requête est refusée."""
@@ -921,6 +942,8 @@ class ForgeAIHandler(BaseHTTPRequestHandler):
             **{"token": self.server.forgeai_auth_value},
         )
         if not allowed:
+            if code == 401:
+                self.server.forgeai_rate_limiter.record_auth_failure(self.client_address[0])
             msg = "jeton requis ou invalide" if code == 401 else "origine/hôte non autorisé"
             self._send_json(code, {"error": msg})
             return False
@@ -929,6 +952,9 @@ class ForgeAIHandler(BaseHTTPRequestHandler):
     def do_POST(self) -> None:  # noqa: N802
         parsed = urllib.parse.urlparse(self.path)
         path = parsed.path
+
+        if not self._rate_gate():
+            return
 
         if not self._guard_mutation():
             return
@@ -1261,6 +1287,7 @@ def build_server(host: str = "127.0.0.1", port: int = 8765) -> ThreadingHTTPServ
     server = ThreadingHTTPServer((host, port), ForgeAIHandler)
     server.forgeai_bind_host = server.server_address[0]
     server.forgeai_auth_value = _WEB_TOKEN
+    server.forgeai_rate_limiter = RateLimiter.from_env()
     return server
 
 
