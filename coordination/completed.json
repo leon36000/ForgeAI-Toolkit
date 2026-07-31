@@ -848,6 +848,14 @@
       "merge_commit": "47f594b",
       "review": "APPROVE 3/3 (Grok-4.5/xai, Qwen3.7-Max/alibaba, MiMo-Pro-V2/xiaomi), sceau 8eccbc6c4dd2, SWAP CIV, 0 objection bloquante",
       "note": "correlation IDs de bout en bout ; comble le trou cree par WEB-015 (erreurs client generiques sans moyen de les relier a la trace) ; validation allowlist anti-injection de logs sur l entree client"
+    },
+    {
+      "id": "OPS-031A",
+      "ide": "CLAUDE_CODE",
+      "pr": 354,
+      "merge_commit": "80d958a",
+      "review": "APPROVE 3/3 (Grok-4.5/xai, Qwen3.7-Max/alibaba, MiMo-Pro-V2/xiaomi), sceau 3b83a9d5957a, SWAP CIV, 0 objection bloquante",
+      "note": "forgeai status + GET /api/status ; liveness (health, public statique) distinguee de la sante profonde (status, gardee d office par WEB-017) ; source unique collect_status partagee CLI/web"
     }
   ]
 }
