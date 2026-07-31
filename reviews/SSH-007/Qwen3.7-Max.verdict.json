@@ -1,0 +1,14 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "src/forgeai/network/remote_probe.py",
+   "description": "Utilisation de `Optional[str]` pour `self._known_hosts` sans import visible de `Optional` depuis `typing` dans le diff. Bien que `from __future__ import annotations` prévienne le `NameError` à l'exécution, cela générera une erreur mypy/pyright si l'import est effectivement absent du fichier.",
+   "preuve": "self._known_hosts: Optional[str] = None ; bloc d'imports du diff ne montre pas `from typing import Optional`."
+  }
+ ],
+ "date_heure": "2026-07-31T02:14:07.958256+00:00",
+ "prompt_sha256": "208fc659f4ff84e4b4a66f3c393f45ad36a43237a7d39f1a61ee9e139fcdf3c6",
+ "reviewer_model": "Qwen3.7-Max"
+}

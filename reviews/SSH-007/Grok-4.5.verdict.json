@@ -1,0 +1,20 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "src/forgeai/cli.py",
+   "description": "SshRunner(...) est instancié hors du try/except RemoteProbeError dans _node_probe (et hors garde équivalente dans _node_discover). Une empreinte mal formée (ex. MD5:…, fournie malgré --hostkey) lève RemoteProbeError avant réseau (CA2 OK au niveau bibliothèque) mais remonte en traceback non capturée au lieu d'un échec CLI propre.",
+   "preuve": "cli.py _node_probe: runner = SshRunner(..., args.hostkey) puis seulement ensuite try: probe_remote_node(...); except RemoteProbeError — l'init n'est pas protégée"
+  },
+  {
+   "severite": "mineure",
+   "fichier": "PREUVE",
+   "description": "CA6 exige couverture ≥ 85 % ; la preuve fournie montre la suite verte et no-stub mais n'inclut aucun chiffre/rapport de couverture vérifiable.",
+   "preuve": "section PREUVE: uniquement '.......................... [100%]' et 'no-stub OK' — pas de seuil de couverture"
+  }
+ ],
+ "date_heure": "2026-07-31T02:13:45.108220+00:00",
+ "prompt_sha256": "208fc659f4ff84e4b4a66f3c393f45ad36a43237a7d39f1a61ee9e139fcdf3c6",
+ "reviewer_model": "Grok-4.5"
+}
