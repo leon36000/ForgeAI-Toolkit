@@ -342,7 +342,7 @@
     {
       "id": "WEB-017",
       "title": "Définir et appliquer la politique d’accès aux GET sensibles",
-      "status": "EXTERNAL",
+      "status": "completed",
       "ide": "CLAUDE_CODE",
       "source_ide": "CODEX",
       "exclusive_lane": "",
