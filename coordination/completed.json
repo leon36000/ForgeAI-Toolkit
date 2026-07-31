@@ -728,6 +728,14 @@
       "merge_commit": "b6bb0d9",
       "review": "APPROVE 3/3 (Grok-4.5/xai, Qwen3.7-Max/alibaba, Kimi-2.7/moonshot), sceau 208fc659, SWAP CIV (coder DeepSeek ecarte), 3 tours (base perimee tour1, validation renforcee tour2)",
       "note": "TOFU (accept-new) elimine ; enrolement empreinte SHA256 (ssh-keyscan+keygen verify, known_hosts strict) ; --hostkey requis sur node probe/discover distant ; 12 tests, 5 mutations detectantes"
+    },
+    {
+      "id": "SUPPLY-018",
+      "ide": "CLAUDE_CODE",
+      "pr": 325,
+      "merge_commit": "ae30195",
+      "review": "APPROVE 3/3 (Grok-4.5/xai, Qwen3.7-Max/alibaba, MiMo-Pro-V2/xiaomi), sceau d4142a16, SWAP CIV (coder DeepSeek ecarte), 2 tours",
+      "note": "garde catalogue/supply.py dans assemble_plan : epinglage @sha256: universel + verified/licence sur plugins catalogues (NOASSERTION tolere, chassis exempt) ; lru_cache ; 30 tests, 5 mutations detectantes ; 6 fixtures pre-existantes epinglees ; politique raffinee vs ADR disclose"
     }
   ]
 }
