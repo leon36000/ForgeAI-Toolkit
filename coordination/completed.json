@@ -720,6 +720,14 @@
       "merge_commit": "5357ace",
       "review": "APPROVE 3/3 (Grok-4.5/xai, Qwen3.7-Max/alibaba, Kimi-2.7/moonshot), sceau 8f091184, SWAP CIV (coder DeepSeek ecarte)",
       "note": "adoption redact_text aux 5 sites proc.stderr (compose up/down, k3s apply/wait/delete) ; 7 tests, mutations par site detectantes ; deploy-state deja fait (ERR-041A)"
+    },
+    {
+      "id": "SSH-007",
+      "ide": "CLAUDE_CODE",
+      "pr": 323,
+      "merge_commit": "b6bb0d9",
+      "review": "APPROVE 3/3 (Grok-4.5/xai, Qwen3.7-Max/alibaba, Kimi-2.7/moonshot), sceau 208fc659, SWAP CIV (coder DeepSeek ecarte), 3 tours (base perimee tour1, validation renforcee tour2)",
+      "note": "TOFU (accept-new) elimine ; enrolement empreinte SHA256 (ssh-keyscan+keygen verify, known_hosts strict) ; --hostkey requis sur node probe/discover distant ; 12 tests, 5 mutations detectantes"
     }
   ]
 }
