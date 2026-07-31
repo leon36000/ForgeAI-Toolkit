@@ -328,7 +328,7 @@
     {
       "id": "CLI-036",
       "title": "Ajouter timeout, annulation et kill d’arbre au runner loop",
-      "status": "EXTERNAL",
+      "status": "completed",
       "ide": "CLAUDE_CODE",
       "source_ide": "CODEX",
       "exclusive_lane": "",
