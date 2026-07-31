@@ -81,7 +81,8 @@ def base_url(tmp_env):
 
 def test_add_node_ok(base_url, tmp_env, fake_bootstrapper):
     password = "mdp-Distinctif-9"  # proof:allow (litteral de test : sert a PROUVER la non-persistance)
-    payload = {"ip": "192.168.1.31", "user": "forge", "password": password}
+    payload = {"ip": "192.168.1.31", "user": "forge", "password": password,
+               "hostkey": "SHA256:FAKEFP"}  # SSH-021 : empreinte requise
     status, body = request_json(f"{base_url}/api/nodes", method="POST", data=payload)
 
     assert status == 201
@@ -124,7 +125,8 @@ def test_add_node_echec_bootstrap(base_url, tmp_env, monkeypatch):
     status, body = request_json(
         f"{base_url}/api/nodes",
         method="POST",
-        data={"ip": "192.168.1.31", "user": "forge", "password": "x"},
+        data={"ip": "192.168.1.31", "user": "forge", "password": "x",
+              "hostkey": "SHA256:FAKEFP"},  # SSH-021 : empreinte requise pour atteindre le bootstrapper
     )
 
     assert status == 400

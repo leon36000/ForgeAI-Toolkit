@@ -97,10 +97,11 @@ def test_secret_absent_de_tous_les_fichiers(tmp_path: Path) -> None:
         if p.is_file():
             try:
                 content = p.read_text()
-                assert "SECRET-EPHEMERE-XYZ" not in content, f"Secret trouvé dans {p}"
-            except Exception:
-                # On ignore les fichiers illisibles (binaires, permissions, etc.)
-                pass
+            except (OSError, UnicodeDecodeError):
+                continue  # fichiers illisibles (binaires, permissions) — hors du champ de l'assertion
+            # L'assertion est HORS du try : son AssertionError ne doit JAMAIS être avalée
+            # (sinon une fuite de secret passerait le test — cf. Sentinelle SSH-021).
+            assert "SECRET-EPHEMERE-XYZ" not in content, f"Secret trouvé dans {p}"
 
 
 def test_verify_echoue_leve(tmp_path: Path) -> None:
@@ -168,7 +169,7 @@ def test_cli_node_add_secret_via_env_jamais_journalise(tmp_path, monkeypatch):
 
     rc = main(["node", "add", "--ip", "10.0.0.5", "--user", "forge",
                "--password-env", "NODE_PW_TEST", "--pubkey", str(pub), "--privkey", str(priv),
-               "--registre", str(reg)])
+               "--hostkey", "SHA256:FAKEFP", "--registre", str(reg)])
     assert rc == 0
     content = reg.read_text(encoding="utf-8")
     assert "10.0.0.5" in content and "SHA256:FAKEFP" in content
