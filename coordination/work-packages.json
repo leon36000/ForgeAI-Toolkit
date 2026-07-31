@@ -440,7 +440,7 @@
     {
       "id": "REL-038A",
       "title": "Persister l’état de préparation avec schéma et écriture atomique",
-      "status": "EXTERNAL",
+      "status": "completed",
       "ide": "CLAUDE_CODE",
       "source_ide": "CODEX",
       "exclusive_lane": "",
