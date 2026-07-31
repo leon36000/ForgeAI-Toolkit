@@ -1002,6 +1002,15 @@ class ForgeAIHandler(BaseHTTPRequestHandler):
         if not self._guard_mutation():
             return
 
+        if path == "/api/detect/refresh":
+            # PERF-030A : invalidation EXPLICITE du cache matériel (OPT-001), puis re-sonde.
+            # Route MUTANTE : elle hérite des gardes ci-dessus (rate-limit, transport, jeton/CSRF/
+            # rebinding) — un refresh force des sondes sous-processus coûteuses, il ne doit jamais
+            # être anonyme (sinon vecteur d'amplification depuis une page tierce).
+            _hardware_cache_clear()
+            self._send(200, hardware_json().encode("utf-8"), "application/json; charset=utf-8")
+            return
+
         if path == "/api/nodes":
             data = self._read_json_body()
             if data is None:
