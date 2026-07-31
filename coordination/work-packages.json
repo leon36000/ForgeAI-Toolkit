@@ -691,7 +691,7 @@
     {
       "id": "SUPPLY-018",
       "title": "Épingler, vérifier et licencier les plugins avant exécution",
-      "status": "EXTERNAL",
+      "status": "completed",
       "ide": "CLAUDE_CODE",
       "source_ide": "CODEX",
       "exclusive_lane": "",
