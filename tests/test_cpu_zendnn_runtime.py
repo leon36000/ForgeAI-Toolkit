@@ -42,7 +42,7 @@ def test_k3s_rend_le_champ_env():
 def _overlay(tmp_path):
     ov = tmp_path / "ov.json"
     ov.write_text(json.dumps({"profile": "x", "engine_default": "ollama", "services": [
-        {"name": "ollama", "brick_id": "ollama", "image": "ollama/ollama:latest",
+        {"name": "ollama", "brick_id": "ollama", "image": "ollama/ollama:latest@sha256:0000000000000000000000000000000000000000000000000000000000000000",
          "container_port": 11434, "healthcheck_path": "/api/tags"}],
         "models": {"llm": "q", "embed": "b"}}))
     return ov

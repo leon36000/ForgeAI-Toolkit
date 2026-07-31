@@ -61,7 +61,8 @@ def test_render_sans_gpu_aucune_reservation():
 def _overlay(tmp_path):
     ov = tmp_path / "ov.json"
     ov.write_text(json.dumps({"profile": "x", "engine_default": "ollama", "services": [
-        {"name": "ollama", "brick_id": "ollama", "image": "ollama/ollama:rocm",
+        {"name": "ollama", "brick_id": "ollama",
+         "image": "ollama/ollama:rocm@sha256:0000000000000000000000000000000000000000000000000000000000000000",
          "container_port": 11434, "healthcheck_path": "/api/tags", "gpu_capable": True}],
         "models": {"llm": "qwen2.5:0.5b", "embed": "bge-m3"}}), encoding="utf-8")
     return ov

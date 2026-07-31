@@ -35,7 +35,7 @@ def test_brique_amd_vulkan_deployable():
 def _overlay(tmp_path):
     ov = tmp_path / "ov.json"
     ov.write_text(json.dumps({"profile": "x", "engine_default": "ollama", "services": [
-        {"name": "ollama", "brick_id": "ollama", "image": "ollama/ollama:latest",
+        {"name": "ollama", "brick_id": "ollama", "image": "ollama/ollama:latest@sha256:0000000000000000000000000000000000000000000000000000000000000000",
          "container_port": 11434, "healthcheck_path": "/api/tags"}],
         "models": {"llm": "q", "embed": "b"}}), encoding="utf-8")
     return ov

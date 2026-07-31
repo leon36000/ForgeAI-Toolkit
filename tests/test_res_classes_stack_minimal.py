@@ -63,7 +63,7 @@ def test_service_sans_classe_reste_utilitaire(tmp_path):
                     {
                         "name": "ollama",
                         "brick_id": "ollama",
-                        "image": "ollama/ollama:latest",
+                        "image": "ollama/ollama:latest@sha256:0000000000000000000000000000000000000000000000000000000000000000",
                         "container_port": 11434,
                         "healthcheck_path": "/api/tags",
                         "gpu_capable": True,
