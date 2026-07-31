@@ -13,6 +13,7 @@ import urllib.request
 from pathlib import Path
 
 from forgeai.core.models import DeploymentPlan, HealthState, ProbeType
+from forgeai.core.redaction import redact_text
 
 
 class DeployError(Exception):
@@ -32,7 +33,7 @@ def compose_up(compose_file: Path, services: list[str] | None = None) -> None:
     service_healthy = coffre descellé, sinon interblocage au premier boot). None = tous les services."""
     proc = _compose(["up", "-d", *(services or [])], compose_file)
     if proc.returncode != 0:
-        raise DeployError(f"docker compose up a échoué :\n{proc.stderr[-2000:]}")
+        raise DeployError(f"docker compose up a échoué :\n{redact_text(proc.stderr[-2000:])}")
 
 
 def compose_down(compose_file: Path, volumes: bool = False) -> None:
@@ -41,7 +42,7 @@ def compose_down(compose_file: Path, volumes: bool = False) -> None:
         args.append("-v")
     proc = _compose(args, compose_file)
     if proc.returncode != 0:
-        raise DeployError(f"docker compose down a échoué :\n{proc.stderr[-2000:]}")
+        raise DeployError(f"docker compose down a échoué :\n{redact_text(proc.stderr[-2000:])}")
 
 
 def http_ok(url: str, timeout_s: float = 3.0) -> bool:

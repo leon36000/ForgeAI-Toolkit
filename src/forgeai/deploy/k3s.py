@@ -9,6 +9,7 @@ import subprocess
 from pathlib import Path
 
 from forgeai.deploy.compose import DeployError
+from forgeai.core.redaction import redact_text
 
 
 def _kubectl(args: list[str], timeout_s: float = 300.0) -> subprocess.CompletedProcess:
@@ -19,7 +20,7 @@ def _kubectl(args: list[str], timeout_s: float = 300.0) -> subprocess.CompletedP
 def k3s_apply(manifest: Path) -> None:
     proc = _kubectl(["apply", "-f", str(manifest)])
     if proc.returncode != 0:
-        raise DeployError(f"kubectl apply a échoué :\n{proc.stderr[-2000:]}")
+        raise DeployError(f"kubectl apply a échoué :\n{redact_text(proc.stderr[-2000:])}")
 
 
 def k3s_wait_deployments(namespace: str, timeout_s: float = 600.0) -> None:
@@ -29,11 +30,11 @@ def k3s_wait_deployments(namespace: str, timeout_s: float = 600.0) -> None:
     if proc.returncode != 0:
         state = _kubectl(["get", "pods", "-n", namespace, "-o", "wide"]).stdout
         raise DeployError(
-            f"Déploiements non disponibles après {timeout_s}s :\n{state}\n{proc.stderr[-1000:]}")
+            f"Déploiements non disponibles après {timeout_s}s :\n{redact_text(state)}\n{redact_text(proc.stderr[-1000:])}")
 
 
 def k3s_delete_namespace(namespace: str) -> None:
     proc = _kubectl(["delete", "namespace", namespace, "--ignore-not-found",
                      "--wait=false"])
     if proc.returncode != 0:
-        raise DeployError(f"kubectl delete namespace a échoué :\n{proc.stderr[-1000:]}")
+        raise DeployError(f"kubectl delete namespace a échoué :\n{redact_text(proc.stderr[-1000:])}")
