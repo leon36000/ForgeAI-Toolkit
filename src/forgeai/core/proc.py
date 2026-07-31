@@ -99,6 +99,16 @@ def timed_runner(
     return runner
 
 
+def kill_tree(proc, grace_seconds: float = 5.0) -> None:  # type: ignore
+    """REL-038C : API PUBLIQUE — termine le groupe de processus de *proc* (grâce puis SIGKILL).
+
+    Mince enveloppe autour de `_kill_tree` (CLI-036) : additive, elle ne modifie aucun appelant
+    existant. Permet au serveur web de réutiliser la sémantique déjà éprouvée plutôt que de la
+    ré-implémenter.
+    """
+    _kill_tree(proc, grace_seconds)
+
+
 def _kill_tree(proc, grace_seconds: float) -> None:  # type: ignore
     """Tue récursivement le groupe de processus de *proc*, avec grâce.
 

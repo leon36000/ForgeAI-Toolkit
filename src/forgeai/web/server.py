@@ -25,6 +25,7 @@ from forgeai.catalogue.loader import parse_stars
 from forgeai.catalogue.spheres import SPHERES, classify_sphere, spheres_index
 from forgeai.core import registre
 from forgeai.core.runner import SubprocessRunner, CommandRunner
+from forgeai.core.proc import kill_tree
 from forgeai.core.validation import NODE_NAME_RE
 from forgeai.deploy.compose import http_ok
 from forgeai.hardware.detect import HardwareDetector
@@ -1331,13 +1332,25 @@ class ForgeAIHandler(BaseHTTPRequestHandler):
                     if data.get("dry_run"):
                         cmd.append("--dry-run")
 
-                new_proc = subprocess.Popen(
-                    cmd,
-                    stdout=subprocess.PIPE,
-                    stderr=subprocess.STDOUT,
-                    text=True,
-                    bufsize=1,
-                )
+                # REL-038C : groupe de processus DÉDIÉ. Sans cela le déploiement partage le groupe
+                # du serveur : un Ctrl-C destiné au serveur tuerait un déploiement en cours (docker
+                # compose / k3s interrompu au milieu), et l'arrêt du serveur laisserait le
+                # sous-processus ORPHELIN. Un groupe propre le rend adressable.
+                # Le réglage est SPÉCIFIQUE À LA PLATEFORME (même convention que CLI-036 dans
+                # core/proc.py) : `start_new_session` est accepté mais SILENCIEUSEMENT IGNORÉ sous
+                # Windows (CPython : `unused_start_new_session`) — le passer seul y laisserait donc
+                # l'isolation absente alors que le code aurait l'air de la fournir.
+                popen_kwargs: dict = {
+                    "stdout": subprocess.PIPE,
+                    "stderr": subprocess.STDOUT,
+                    "text": True,
+                    "bufsize": 1,
+                }
+                if os.name == "posix":
+                    popen_kwargs["start_new_session"] = True
+                else:
+                    popen_kwargs["creationflags"] = subprocess.CREATE_NEW_PROCESS_GROUP
+                new_proc = subprocess.Popen(cmd, **popen_kwargs)
                 _DEPLOY_STATE["proc"] = new_proc
 
             _persist_deploy_state()
@@ -1459,6 +1472,23 @@ def build_server(host: str = "127.0.0.1", port: int = 8765) -> ThreadingHTTPServ
     return server
 
 
+def _terminate_active_deploy(grace_seconds: float = 5.0) -> None:
+    """REL-038C : termine un déploiement encore actif à l'arrêt du serveur (anti-orphelin).
+
+    Sans ce nettoyage, `serve()` rendait la main en laissant tourner un `forgeai deploy` que plus
+    personne ne supervise ni ne peut interrompre. Réutilise `kill_tree` (CLI-036) : SIGTERM au
+    GROUPE, délai de grâce, puis SIGKILL. Best-effort — l'arrêt du serveur ne doit jamais lever.
+    """
+    try:
+        with _DEPLOY_STATE["lock"]:
+            proc = _DEPLOY_STATE["proc"]
+            if proc is None or proc.poll() is not None:
+                return  # aucun déploiement actif : rien à nettoyer
+        kill_tree(proc, grace_seconds)
+    except Exception:  # noqa: BLE001 — un échec de nettoyage ne doit pas empêcher l'arrêt
+        return
+
+
 def serve(
     host: str = "127.0.0.1",
     port: int = 8765,
@@ -1478,6 +1508,10 @@ def serve(
     except KeyboardInterrupt:
         server.shutdown()
         server.server_close()
+    finally:
+        # REL-038C : couvre l'arrêt NORMAL comme le KeyboardInterrupt — aucun déploiement ne
+        # survit au serveur qui l'a lancé.
+        _terminate_active_deploy()
 
 
 def web_command(args) -> int:
