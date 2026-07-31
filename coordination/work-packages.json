@@ -370,7 +370,7 @@
     {
       "id": "WEB-016",
       "title": "Ajouter rate limiting et protection anti-bruteforce",
-      "status": "EXTERNAL",
+      "status": "completed",
       "ide": "CLAUDE_CODE",
       "source_ide": "CODEX",
       "exclusive_lane": "",
