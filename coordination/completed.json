@@ -696,6 +696,14 @@
       "merge_commit": "ffb35c7",
       "review": "APPROVE 3/3 (DeepSeek-V4-Pro/deepseek, Grok-4.5/xai, Qwen3.7-Max/alibaba), sceau f80a7f94, zero objection (2 tours : 1er REJECT base perimee GPU-034, corrige par merge origin/main, re-revue APPROVE)",
       "note": "reprise lane CODEX ; module feuille src/forgeai/core/redaction.py + adoption 3 sites (RouteError.__init__, _persist_deploy_state, _validate_route+garde key_fingerprint) ; sites rag-hardened & openbao mesures deja-durcis, reportes ERR-041B ; 87+8 tests, 6/6+4/4 mutations detectantes"
+    },
+    {
+      "id": "CLI-013",
+      "ide": "CLAUDE_CODE",
+      "pr": 316,
+      "merge_commit": "6d33218",
+      "review": "APPROVE 3/3 (Grok-4.5/xai, Qwen3.7-Max/alibaba, MiMo-Pro-V2/xiaomi), sceau 8eff5fb9, SWAP CIV (coder DeepSeek ecarte ; Gemini 429 -> MiMo), 0 objection (mineure tour 1 Grok traitee : story alignee au code)",
+      "note": "main() scinde _run+wrapper : frontiere d erreurs sans traceback, redaction via ERR-041A, FORGEAI_DEBUG restaure la trace, KeyboardInterrupt->130, SystemExit(2) preserve ; referme la fuite {exc} du handler DeployError ; 9 TDAD + 5 mutations + largeur frontiere, 26 CLI non regresses, couverture 91%"
     }
   ]
 }
