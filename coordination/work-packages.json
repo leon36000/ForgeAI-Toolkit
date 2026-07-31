@@ -412,7 +412,7 @@
     {
       "id": "PERF-030A",
       "title": "Ajouter un cache matériel TTL cohérent et invalidable",
-      "status": "EXTERNAL",
+      "status": "completed",
       "ide": "CLAUDE_CODE",
       "source_ide": "CODEX",
       "exclusive_lane": "",
