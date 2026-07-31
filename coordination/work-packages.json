@@ -384,7 +384,7 @@
     {
       "id": "WEB-034A",
       "title": "Ajouter en-têtes de sécurité et supprimer la bannière Python",
-      "status": "EXTERNAL",
+      "status": "completed",
       "ide": "CLAUDE_CODE",
       "source_ide": "CODEX",
       "exclusive_lane": "",
