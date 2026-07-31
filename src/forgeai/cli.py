@@ -1089,12 +1089,10 @@ def _ide_governance(args: argparse.Namespace) -> int:
 
 
 def _loop_run(args: argparse.Namespace) -> int:
-    import shlex
-    import subprocess
     from forgeai.loop import run_loop, make_command_step, make_command_check, LoopError
+    from forgeai.core.proc import timed_runner, RunnerTimeoutError, RunnerCancelledError
 
-    def runner(cmd: str) -> int:
-        return subprocess.run(shlex.split(cmd)).returncode
+    runner = timed_runner(getattr(args, "timeout", None))
 
     def on_iter(i: int, done: bool) -> None:
         print(f"  itération {i}/{args.max_iter} — {'complété' if done else 'en cours'}")
@@ -1103,6 +1101,12 @@ def _loop_run(args: argparse.Namespace) -> int:
     is_complete = make_command_check(args.until, runner)
     try:
         result = run_loop(step, is_complete, args.max_iter, on_iteration=on_iter)
+    except RunnerTimeoutError as exc:
+        print(f"ECHEC LOOP (timeout): {redact_text(str(exc))}", file=sys.stderr)
+        return 14
+    except RunnerCancelledError as exc:
+        print(f"LOOP ANNULE: {redact_text(str(exc))}", file=sys.stderr)
+        return 15
     except LoopError as exc:
         print(f"ECHEC LOOP: {exc}", file=sys.stderr)
         return 12
@@ -1496,6 +1500,8 @@ def _run(argv: list[str] | None = None) -> int:
                             help="budget d'itérations maximum")
     p_loop_run.add_argument("--step", required=True, help="commande exécutée à chaque itération")
     p_loop_run.add_argument("--until", required=True, help="commande de complétion (exit 0 = terminé)")
+    p_loop_run.add_argument("--timeout", type=float, default=None,
+                            help="durée max (s) par commande ; kill d'arbre au-delà (défaut : illimité)")
     p_loop_run.add_argument("--registre", default=str(DEFAULT_REGISTRE))
     p_loop_run.set_defaults(func=_loop_run)
 
