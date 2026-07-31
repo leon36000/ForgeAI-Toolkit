@@ -67,6 +67,17 @@ def test_malformed_fingerprint():
         SshRunner(USER, HOST, KEYFILE, "pas-de-deux-points")
 
 
+# G2b — empreinte avec deux-points mais MAUVAIS préfixe (MD5:/foo:) : refus AVANT
+#       tout appel réseau (CA2). Le : seul ne suffit pas — il faut le préfixe SHA256:.
+@pytest.mark.parametrize("bad", ["MD5:abc123", "foo:bar", "sha256:minuscule"])
+def test_malformed_fingerprint_wrong_prefix(bad, monkeypatch):
+    def _boom(*a, **k):
+        raise AssertionError("aucun appel réseau ne doit avoir lieu avant validation")
+    monkeypatch.setattr(subprocess, "run", _boom)
+    with pytest.raises(RemoteProbeError, match="SSH-007"):
+        SshRunner(USER, HOST, KEYFILE, bad)
+
+
 # G3 — correspondance réussie : vérification du known_hosts et des options ssh
 def test_successful_enrollment(monkeypatch, tmp_path):
     fake = fake_run_dispatcher()

@@ -35,7 +35,9 @@ class SshRunner:
         hostkey_sha256: str,
         timeout_s: float = 20.0,
     ) -> None:
-        if not hostkey_sha256 or ":" not in hostkey_sha256:
+        # Exiger le préfixe SHA256: (ssh-keygen n'émet que du SHA256) : rejette
+        # « », « foo:bar », « MD5:... » de façon déterministe AVANT tout réseau (CA2).
+        if not hostkey_sha256 or not hostkey_sha256.startswith("SHA256:"):
             raise RemoteProbeError(
                 "empreinte de clé d'hôte requise (SSH-007 : pas de TOFU) — format 'SHA256:...'"
             )

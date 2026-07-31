@@ -1,0 +1,20 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "majeure",
+   "fichier": "src/forgeai/network/remote_probe.py",
+   "description": "La validation de hostkey_sha256 dans SshRunner.__init__ ne vérifie que la présence d'un deux-points (\":\" not in hostkey_sha256). Elle laisse donc passer des empreintes malformées qui ne commencent pas par \"SHA256:\" (ex. \"MD5:...\" ou \"foo:bar\"). Ces entrées ne sont refusées qu'après un appel réseau ssh-keyscan, ce qui viole CA2 qui impose un refus déterministe AVANT tout appel réseau pour toute empreinte absente ou malformée.",
+   "preuve": "Ligne `if not hostkey_sha256 or \":\" not in hostkey_sha256:` dans SshRunner.__init__ (remote_probe.py) ; story §2 point 1 ('validé (« SHA256:… », contient « : »)') et CA2."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "src/forgeai/network/remote_probe.py",
+   "description": "L'annotation `Optional[str]` est utilisée pour `_known_hosts` mais le diff n'ajoute pas l'import de `Optional`. Bien que `from __future__ import annotations` évite une erreur à l'exécution, cela peut échouer lors de l'analyse statique et n'est pas cohérent avec le reste du module.",
+   "preuve": "Ligne `self._known_hosts: Optional[str] = None` dans SshRunner.__init__ (remote_probe.py) ; le bloc d'imports du diff ne contient pas `from typing import Optional`."
+  }
+ ],
+ "date_heure": "2026-07-31T02:09:41.195036+00:00",
+ "prompt_sha256": "73ada0898e654bc8b8fc122d0b80af4200fc51dedbade56e8e6474595bd2a776",
+ "reviewer_model": "Kimi-2.7"
+}
