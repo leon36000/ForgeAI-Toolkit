@@ -808,6 +808,14 @@
       "merge_commit": "78307e8",
       "review": "APPROVE 3/3 (Grok-4.5/xai, Qwen3.7-Max/alibaba, MiMo-Pro-V2/xiaomi), sceau e481177c9279, SWAP CIV, 0 objection bloquante",
       "note": "cache TTL cohérent deja livre par OPT-001 (mesure) ; PERF-030A ajoute le chemin manquant POST /api/detect/refresh (mutation gardee, pas de re-sonde sur refus) ; 5 tests mutation-prouves ; couverture 91%"
+    },
+    {
+      "id": "PERF-030B",
+      "ide": "CLAUDE_CODE",
+      "pr": 344,
+      "merge_commit": "d04cf4c",
+      "review": "APPROVE 3/3 (Grok-4.5/xai, Qwen3.7-Max/alibaba, MiMo-Pro-V2/xiaomi), sceau 693ddbc49f08, SWAP CIV, 0 objection bloquante",
+      "note": "seuils de non-regression perf : compteur de sondes (deterministe) en garde principale, chrono p95 en filet ; mutation prouve que le chrono seul ne detecte pas la perte du cache ; tests only, zero code de production"
     }
   ]
 }

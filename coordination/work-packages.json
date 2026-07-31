@@ -426,7 +426,7 @@
     {
       "id": "PERF-030B",
       "title": "Ajouter benchmarks et seuils de non-régression de /api/detect",
-      "status": "EXTERNAL",
+      "status": "completed",
       "ide": "CLAUDE_CODE",
       "source_ide": "CODEX",
       "exclusive_lane": "",
