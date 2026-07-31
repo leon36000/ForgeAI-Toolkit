@@ -8,6 +8,7 @@ from typing import Protocol
 from forgeai.core.registre import append
 from forgeai.core.runner import CommandRunner
 from forgeai.network.remote_probe import enroll_hostkey, RemoteProbeError
+from forgeai.core.redaction import redact_text
 
 
 class NodeAddError(Exception):
@@ -57,7 +58,7 @@ class SshBootstrapper:
                 proc = subprocess.run(cmd, env=env, timeout=self._timeout,
                                       capture_output=True, text=True)
                 if proc.returncode != 0:
-                    raise NodeAddError(f"ssh-copy-id échec: {proc.stderr.strip()}")
+                    raise NodeAddError(f"ssh-copy-id échec: {redact_text(proc.stderr.strip())}")
             except subprocess.TimeoutExpired as e:
                 raise NodeAddError(f"Timeout lors de l'installation de la clé: {e}") from e
         finally:
@@ -106,7 +107,7 @@ def key_fingerprint(pubkey: Path, runner: CommandRunner) -> str:
     retcode, output = runner.run(["ssh-keygen", "-lf", str(pubkey)])
     match = re.search(r'SHA256:\S+', output)
     if not match:
-        raise NodeAddError(f"Impossible de trouver l'empreinte SHA256 dans la sortie: {output}")
+        raise NodeAddError(f"Impossible de trouver l'empreinte SHA256 dans la sortie: {redact_text(output)}")
     return match.group(0)
 
 
