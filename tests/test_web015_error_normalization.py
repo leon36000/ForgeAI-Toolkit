@@ -56,7 +56,11 @@ def test_detect_erreur_ne_fuite_pas(live, monkeypatch):
     status, body = _get(base, "/api/detect")
     assert status == 500
     payload = json.loads(body)
-    assert payload == {"error": "erreur interne"}
+    # OPS-031D : le corps peut porter en plus `request_id` — jeton OPAQUE généré par le serveur,
+    # qui ne divulgue rien de l'exception. La garantie WEB-015 est donc exprimée en INVARIANT DE
+    # CLÉS (aucune clé hors de cet ensemble) plutôt qu'en égalité stricte.
+    assert set(payload) <= {"error", "request_id"}, f"clé inattendue dans le corps : {payload}"
+    assert payload["error"] == "erreur interne"
     body_str = body.decode()
     assert "api_key" not in body_str, "FUITE: api_key dans la réponse"
     assert ("a" * 32) not in body_str, "FUITE: secret longueur 32"
@@ -76,7 +80,11 @@ def test_stacks_recommended_erreur_ne_fuite_pas(live, monkeypatch):
     status, body = _get(base, "/api/stacks/recommended")
     assert status == 500
     payload = json.loads(body)
-    assert payload == {"error": "erreur interne"}
+    # OPS-031D : le corps peut porter en plus `request_id` — jeton OPAQUE généré par le serveur,
+    # qui ne divulgue rien de l'exception. La garantie WEB-015 est donc exprimée en INVARIANT DE
+    # CLÉS (aucune clé hors de cet ensemble) plutôt qu'en égalité stricte.
+    assert set(payload) <= {"error", "request_id"}, f"clé inattendue dans le corps : {payload}"
+    assert payload["error"] == "erreur interne"
     body_str = body.decode()
     assert secret not in body_str
     assert "/etc/secret.conf" not in body_str
@@ -92,7 +100,11 @@ def test_discover_erreur_ne_fuite_pas(live, monkeypatch):
     status, body = _get(base, "/api/discover?node=local")
     assert status == 500
     payload = json.loads(body)
-    assert payload == {"error": "erreur interne"}
+    # OPS-031D : le corps peut porter en plus `request_id` — jeton OPAQUE généré par le serveur,
+    # qui ne divulgue rien de l'exception. La garantie WEB-015 est donc exprimée en INVARIANT DE
+    # CLÉS (aucune clé hors de cet ensemble) plutôt qu'en égalité stricte.
+    assert set(payload) <= {"error", "request_id"}, f"clé inattendue dans le corps : {payload}"
+    assert payload["error"] == "erreur interne"
     body_str = body.decode()
     assert secret not in body_str
     assert "/var/run/secrets/db" not in body_str
@@ -100,15 +112,21 @@ def test_discover_erreur_ne_fuite_pas(live, monkeypatch):
 
 
 def test_message_generique_exact(live, monkeypatch):
-    """La réponse d'erreur ne contient strictement que {"error": "erreur interne"}."""
+    """La réponse d'erreur ne porte que le message générique (+ l'identifiant opaque OPS-031D)."""
     monkeypatch.setattr(web_server, "hardware_json", lambda: 1 / 0)  # ZeroDivisionError
     base, _ = live
     status, body = _get(base, "/api/detect")
     assert status == 500
     data = json.loads(body)
-    assert data == {"error": "erreur interne"}, (
-        f"Message différent ou clés supplémentaires: {data}"
-    )
+    assert set(data) <= {"error", "request_id"}, f"clé inattendue dans le corps : {data}"
+    assert data["error"] == "erreur interne", f"message non générique : {data}"
+    if "request_id" in data:
+        # OPS-031D : le seul champ additionnel toléré est un identifiant OPAQUE (alphabet restreint),
+        # jamais un détail interne — on le vérifie plutôt que de le prendre pour acquis.
+        from forgeai.web.server import _REQUEST_ID_RE
+        assert _REQUEST_ID_RE.match(data["request_id"]), (
+            f"request_id non opaque/conforme : {data['request_id']!r}"
+        )
 
 
 def test_trace_operateur_sur_stderr(live, monkeypatch, capfd):
