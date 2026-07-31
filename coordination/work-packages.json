@@ -356,7 +356,7 @@
     {
       "id": "WEB-015",
       "title": "Normaliser les erreurs Web sans fuite d’exception interne",
-      "status": "EXTERNAL",
+      "status": "completed",
       "ide": "CLAUDE_CODE",
       "source_ide": "CODEX",
       "exclusive_lane": "",
