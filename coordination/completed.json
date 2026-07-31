@@ -752,6 +752,14 @@
       "merge_commit": "a2d3ba8",
       "review": "APPROVE 3/3 (Grok-4.5/xai, Qwen3.7-Max/alibaba, MiMo-Pro-V2/xiaomi), sceau dbcadfcf, SWAP CIV, 0 objection",
       "note": "redact_text aux 2 sites node_add (install_key stderr, key_fingerprint sortie) ; 3 tests, mutations detectantes ; lane ERR-041 A/B/C complete"
+    },
+    {
+      "id": "WEB-017",
+      "ide": "CLAUDE_CODE",
+      "pr": 331,
+      "merge_commit": "b92744d",
+      "review": "APPROVE 3/3 (Grok-4.5/xai, Qwen3.7-Max/alibaba, MiMo-Pro-V2/xiaomi), sceau d1106bde, SWAP CIV, 0 objection bloquante",
+      "note": "garde GET sensibles = politique mutations (jeton hors loopback + anti-rebinding Host) ; classification fail-closed prefixe /api/ ; 22 tests mutation-prouves ; objection encodage refutee par mesure"
     }
   ]
 }
