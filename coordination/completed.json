@@ -744,6 +744,14 @@
       "merge_commit": "231a84d",
       "review": "APPROVE 3/3 (Grok-4.5/xai, Qwen3.7-Max/alibaba, MiMo-Pro-V2/xiaomi), sceau f575b50e, SWAP CIV (coder DeepSeek ecarte), 0 objection",
       "note": "TOFU node_add elimine ; helper canonique enroll_hostkey (partage SshRunner) ; --hostkey requis node add CLI + POST /api/nodes web ; 5 tests, mutations detectantes ; corrige assertion secret avalee (test_node_add)"
+    },
+    {
+      "id": "ERR-041C",
+      "ide": "CLAUDE_CODE",
+      "pr": 329,
+      "merge_commit": "a2d3ba8",
+      "review": "APPROVE 3/3 (Grok-4.5/xai, Qwen3.7-Max/alibaba, MiMo-Pro-V2/xiaomi), sceau dbcadfcf, SWAP CIV, 0 objection",
+      "note": "redact_text aux 2 sites node_add (install_key stderr, key_fingerprint sortie) ; 3 tests, mutations detectantes ; lane ERR-041 A/B/C complete"
     }
   ]
 }
