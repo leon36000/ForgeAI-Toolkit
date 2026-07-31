@@ -482,7 +482,7 @@
     {
       "id": "OPS-031D",
       "title": "Introduire des correlation IDs de bout en bout",
-      "status": "EXTERNAL",
+      "status": "completed",
       "ide": "CLAUDE_CODE",
       "source_ide": "CODEX",
       "exclusive_lane": "",
