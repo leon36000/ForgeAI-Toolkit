@@ -556,8 +556,30 @@ def authorize_mutation(*, origin: str | None, host: str | None, auth_header: str
     return (True, 0)
 
 
+_SECURITY_HEADERS = {
+    "X-Content-Type-Options": "nosniff",
+    "X-Frame-Options": "DENY",
+    "Referrer-Policy": "no-referrer",
+    "Content-Security-Policy": (
+        "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; "
+        "img-src 'self' data:; connect-src 'self'; font-src 'self'; "
+        "frame-ancestors 'none'; base-uri 'self'; form-action 'self'"
+    ),
+}
+
+
 class ForgeAIHandler(BaseHTTPRequestHandler):
     server_version = "ForgeAI/0.1"
+
+    def version_string(self) -> str:
+        # WEB-034A : header Server sans la bannière Python (pas de sys_version).
+        return self.server_version
+
+    def end_headers(self) -> None:
+        # WEB-034A : injecte les en-têtes de sécurité sur TOUTE réponse (chokepoint unique).
+        for _name, _value in _SECURITY_HEADERS.items():
+            self.send_header(_name, _value)
+        super().end_headers()
 
     def _send(self, code: int, body: bytes, content_type: str) -> None:
         self.send_response(code)
