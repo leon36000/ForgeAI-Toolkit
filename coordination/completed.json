@@ -832,6 +832,14 @@
       "merge_commit": "9ad0671",
       "review": "APPROVE 3/3 (Grok-4.5/xai, Qwen3.7-Max/alibaba, MiMo-Pro-V2/xiaomi), sceau 4e9f89d893ab, SWAP CIV, 0 objection bloquante",
       "note": "unicite par hote (409) + reconciliation idempotente ; interaction traitee avec REL-038A (etat persiste : une garde naive aurait verrouille l hote a vie) ; mutation survivante corrigee en renforcant G4"
+    },
+    {
+      "id": "REL-038C",
+      "ide": "CLAUDE_CODE",
+      "pr": 350,
+      "merge_commit": "643b087",
+      "review": "APPROVE 3/3 (Grok-4.5/xai, Qwen3.7-Max/alibaba, MiMo-Pro-V2/xiaomi), sceau 0046de428361, SWAP CIV, 0 objection bloquante",
+      "note": "groupes de processus + anti-orphelin sur le chemin WEB (le chemin CLI etait deja couvert par CLI-036, non retouche : diff proc.py strictement additif) ; echec local test_proc prouve pre-existant"
     }
   ]
 }
