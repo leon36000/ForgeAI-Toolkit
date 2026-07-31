@@ -768,6 +768,14 @@
       "merge_commit": "33a5d9d",
       "review": "APPROVE 3/3 (Grok-4.5/xai, Qwen3.7-Max/alibaba, MiMo-Pro-V2/xiaomi), sceau 3217ab5f, SWAP CIV, 0 objection bloquante",
       "note": "normalisation erreurs web : generique (inattendu) + redige (ClusterError) ; test existant reconcilie (codifiait la fuite) ; couverture 91%"
+    },
+    {
+      "id": "SECRET-020B",
+      "ide": "CLAUDE_CODE",
+      "pr": 292,
+      "merge_commit": "2a463d1",
+      "review": "APPROVE 3/3 au tour 3 (DeepSeek-V4-Pro/deepseek, Gemini-3.1-Pro-OR/google, Grok-4.5/xai), sceau bb96bccbf1c1 ; tour 1 REJECT Grok majeure (keys_dir 0750 clobbe par write) leve, tour 2 REJECT Gemini+Grok perimetre (base perimee sur coordination/completed.json) leve par merge origin/main + garde de perimetre outil",
+      "note": "Archivage retroactif par le cockpit (Copilot) le 2026-07-31 ; PR mergee par CLAUDE_CODE (Closes #264) mais jamais ajoutee a completed.json."
     }
   ]
 }
