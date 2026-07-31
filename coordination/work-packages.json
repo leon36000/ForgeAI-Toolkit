@@ -153,7 +153,7 @@
     {
       "id": "SSH-021",
       "title": "Appliquer la validation SSH canonique au remote probe",
-      "status": "EXTERNAL",
+      "status": "completed",
       "ide": "CLAUDE_CODE",
       "source_ide": "CODEX",
       "exclusive_lane": "",
