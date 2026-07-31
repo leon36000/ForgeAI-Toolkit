@@ -21,6 +21,7 @@ from urllib.parse import urlparse
 from forgeai.bootstrap.secrets import bootstrap_secrets
 from forgeai.catalogue.loader import load_catalogue, verify_catalogue
 from forgeai.core import registre
+from forgeai.core.redaction import redact_exception, redact_text
 from forgeai.core.runner import SubprocessRunner
 from forgeai.core.validation import NODE_NAME_RE
 from forgeai.deploy.compose import (
@@ -1212,7 +1213,7 @@ def _catalogue(args: argparse.Namespace) -> int:
     return 0
 
 
-def main(argv: list[str] | None = None) -> int:
+def _run(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(prog="forgeai")
     _langs = available_locales() or ["fr", "en"]
     _default_lang = os.environ.get("FORGEAI_LANG", "fr")
@@ -1525,8 +1526,25 @@ def main(argv: list[str] | None = None) -> int:
     try:
         return args.func(args)
     except DeployError as exc:
-        print(f"ECHEC DEPLOIEMENT: {exc}", file=sys.stderr)
+        print(f"ECHEC DEPLOIEMENT: {redact_text(str(exc))}", file=sys.stderr)
         return 8
+
+
+def main(argv: list[str] | None = None) -> int:
+    """Frontière d'erreurs unique (CLI-013). Toute exception inattendue est rédigée
+    (jamais de traceback brute, jamais de secret) et convertie en code non nul.
+    ``FORGEAI_DEBUG`` réactive la traceback complète pour le diagnostic."""
+    try:
+        return _run(argv)
+    except KeyboardInterrupt:
+        print("Interrompu.", file=sys.stderr)
+        return 130
+    except Exception as exc:  # noqa: BLE001 — frontière volontaire ; SystemExit (exit
+        # argparse code 2) n'est PAS une Exception et traverse donc intacte.
+        if os.environ.get("FORGEAI_DEBUG"):
+            raise
+        print(f"ERREUR: {redact_exception(exc)}", file=sys.stderr)
+        return 1
 
 
 if __name__ == "__main__":
