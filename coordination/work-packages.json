@@ -139,7 +139,7 @@
     {
       "id": "SSH-007",
       "title": "Remplacer le TOFU SSH par un enrôlement d’empreinte explicite",
-      "status": "EXTERNAL",
+      "status": "completed",
       "ide": "CLAUDE_CODE",
       "source_ide": "CODEX",
       "exclusive_lane": "",
