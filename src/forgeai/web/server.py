@@ -43,6 +43,7 @@ from forgeai.models._locking import atomic_write_text
 from forgeai.web.ratelimit import RateLimiter
 from forgeai.resources import catalogue_path, forgeai_home
 from forgeai.stacks import deploy_ids, list_stacks, load_stack
+from forgeai.status import collect_status
 
 
 _MIME_TYPES = {
@@ -88,6 +89,12 @@ _hardware_profile_cache_time: float = 0.0
 _backends_cache: list[str] | None = None
 _backends_cache_time: float = 0.0
 
+# OPS-031A : le statut cluster passe par `kubectl` — une sonde SOUS-PROCESSUS. Sans cache, chaque
+# appel de /api/status en relancerait une (jusqu'à la limite de WEB-016), ce que la décision de la
+# story interdit explicitement. Même TTL et même verrou que les caches d'OPT-001.
+_cluster_cache: list | None = None
+_cluster_cache_time: float = 0.0
+
 # RLock (réentrant) : `_available_backends` appelle `_hardware_report()` en tenant déjà le verrou ;
 # un Lock simple provoquerait un INTERBLOCAGE (prouvé par test_backends_et_hardware_sans_interblocage).
 _hardware_lock = threading.RLock()
@@ -97,11 +104,14 @@ def _hardware_cache_clear() -> None:
     """Purge explicite du cache matériel et du cache backends."""
     global _hardware_profile_cache, _hardware_profile_cache_time
     global _backends_cache, _backends_cache_time
+    global _cluster_cache, _cluster_cache_time
     with _hardware_lock:
         _hardware_profile_cache = None
         _hardware_profile_cache_time = 0.0
         _backends_cache = None
         _backends_cache_time = 0.0
+        _cluster_cache = None
+        _cluster_cache_time = 0.0
 
 
 def _hardware_report():
@@ -122,6 +132,39 @@ def _hardware_report():
         _hardware_profile_cache = report
         _hardware_profile_cache_time = now
         return report
+
+
+def _cluster_status_cache() -> list:
+    """OPS-031A : statut cluster mémoïsé (même TTL/verrou qu'OPT-001), avec copie défensive.
+
+    `cluster_status` lance `kubectl` : sans mémoïsation, /api/status offrirait une re-sonde par
+    requête — exactement le levier d'amplification que la décision de la story écarte.
+    """
+    global _cluster_cache, _cluster_cache_time
+    now = time.monotonic()
+    cache = _cluster_cache
+    if cache is not None and now - _cluster_cache_time < _HARDWARE_TTL_S:
+        return list(cache)
+    with _hardware_lock:
+        now = time.monotonic()
+        if _cluster_cache is not None and now - _cluster_cache_time < _HARDWARE_TTL_S:
+            return list(_cluster_cache)
+        nodes = cluster_status(SubprocessRunner(timeout_s=_PROBE_TIMEOUT_S))
+        _cluster_cache = nodes
+        _cluster_cache_time = now
+        return list(nodes)
+
+
+def _deploy_resume() -> dict:
+    """OPS-031A : résumé du dernier déploiement — statut seulement, JAMAIS les lignes brutes
+    (elles peuvent contenir la sortie d'outils ; ERR-041B les rédige déjà pour la persistance)."""
+    with _DEPLOY_STATE["lock"]:
+        proc = _DEPLOY_STATE["proc"]
+        return {
+            "en_cours": proc is not None and proc.poll() is None,
+            "done": _DEPLOY_STATE["done"],
+            "exit_code": _DEPLOY_STATE["exit_code"],
+        }
 
 
 def hardware_json() -> str:
@@ -801,6 +844,21 @@ class ForgeAIHandler(BaseHTTPRequestHandler):
                 json.dumps({"status": "ok"}, ensure_ascii=False).encode("utf-8"),
                 "application/json; charset=utf-8",
             )
+            return
+
+        if path == "/api/status":
+            # OPS-031A : santé PROFONDE. `/api/health` reste la liveness statique et publique ;
+            # cette route-ci révèle l'état de l'infra ET coûte des sondes, elle est donc SENSIBLE —
+            # ce que la classification fail-closed de WEB-017 lui applique d'office (jeton hors
+            # loopback, anti-CSRF/rebinding), sans une ligne de garde ici. « Re-sondable » : elle lit
+            # à travers les caches TTL (OPT-001), donc re-sonde quand ils sont périmés, sans devenir
+            # un levier d'amplification (l'invalidation explicite reste POST /api/detect/refresh).
+            self._send_json(200, collect_status(
+                backends=_available_backends,
+                cluster=_cluster_status_cache,
+                deploiement=_deploy_resume,
+                materiel=lambda: json.loads(hardware_json()),
+            ))
             return
 
         if path.startswith("/api/i18n/"):
