@@ -314,7 +314,7 @@
     {
       "id": "CLI-013",
       "title": "Créer une frontière d’erreurs CLI cohérente sans traceback brut",
-      "status": "EXTERNAL",
+      "status": "completed",
       "ide": "CLAUDE_CODE",
       "source_ide": "CODEX",
       "exclusive_lane": "",
