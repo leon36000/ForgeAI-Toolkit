@@ -1,0 +1,26 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "src/forgeai/core/proc.py",
+   "description": "La stratégie de test / risques (story §3.6 et §5) prévoient « double SIGINT pendant la grâce → SIGKILL direct », mais _kill_tree fait time.sleep(grace_seconds) sans accélérer l'escalade sur un second SIGINT. Pas une violation CA1–CA4 (l'arbre meurt quand même après la grâce), écart de robustesse mineur.",
+   "preuve": "proc.py _kill_tree POSIX: os.killpg(SIGTERM) puis time.sleep(grace_seconds) inconditionnel avant probe/SIGKILL; handle_sigint ne fait que cancel_event.set() et n'influence pas la grâce"
+  },
+  {
+   "severite": "mineure",
+   "fichier": "tests/test_proc.py",
+   "description": "CA2 code CLI 15 (RunnerCancelledError) non exercé via cli.main (seul le code 14 l'est en G8); G4 prouve l'exception au niveau runner seulement. Mapping cli.py symétrique et visible, risque faible.",
+   "preuve": "test_cli_loop_timeout assert cli.main(...) == 14; aucun assert == 15; cli.py lignes except RunnerCancelledError return 15 présentes dans le diff"
+  },
+  {
+   "severite": "mineure",
+   "fichier": "PREUVE D'EXÉCUTION",
+   "description": "CA7 demande couverture ≥ 85 %; la preuve fournie montre tests verts, mutations tuées et no-stub OK mais aucun chiffre de coverage.",
+   "preuve": "section PREUVE D'EXÉCUTION: « ................. [100%] », mutations G1/G3/G4/G8/G9 TUÉ, NO-STUB-SCAN OK; pas de rapport coverage"
+  }
+ ],
+ "date_heure": "2026-07-31T00:45:48.411622+00:00",
+ "prompt_sha256": "3804f34bb879493475196903795996236465503551bfae5691cbc58d26ab1f14",
+ "reviewer_model": "Grok-4.5"
+}
