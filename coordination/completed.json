@@ -712,6 +712,14 @@
       "merge_commit": "27a180e",
       "review": "APPROVE 3/3 (Grok-4.5/xai, Qwen3.7-Max/alibaba, MiMo-Pro-V2/xiaomi), sceau 4d94d452, SWAP CIV (coder DeepSeek ecarte), 2 tours (objections Grok tour 1 traitees : G10 mapping code 15 + doc)",
       "note": "core/proc.py : timeout + annulation SIGINT + kill d arbre (groupe de session, killpg escalade POSIX / taskkill Windows) ; --timeout, codes 14/15 ; loop.py inchange ; 11 tests, mutations detectantes, 3 defauts tests crew corriges (grandchild echappe au groupe, SystemExit vs retour, course escalade)"
+    },
+    {
+      "id": "ERR-041B",
+      "ide": "CLAUDE_CODE",
+      "pr": 321,
+      "merge_commit": "5357ace",
+      "review": "APPROVE 3/3 (Grok-4.5/xai, Qwen3.7-Max/alibaba, Kimi-2.7/moonshot), sceau 8f091184, SWAP CIV (coder DeepSeek ecarte)",
+      "note": "adoption redact_text aux 5 sites proc.stderr (compose up/down, k3s apply/wait/delete) ; 7 tests, mutations par site detectantes ; deploy-state deja fait (ERR-041A)"
     }
   ]
 }
