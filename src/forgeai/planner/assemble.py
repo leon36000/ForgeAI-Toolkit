@@ -14,6 +14,7 @@ import uuid
 from pathlib import Path
 
 from forgeai.catalogue.loader import minimal_stack
+from forgeai.catalogue.supply import verify_brick_before_exec, load_catalog_index
 from forgeai.core.models import DeploymentPlan, RenderTarget, ServiceSpec
 from forgeai.stacks import deploy_ids
 
@@ -119,7 +120,12 @@ def assemble_plan(
     services = []
     placement_reasons: dict[str, str] = {}
 
+    # Garde de chaîne d'approvisionnement (SUPPLY-018) : chaque brique doit être
+    # épinglée (digest), vérifiée et licenciée AVANT tout déploiement — fail-closed.
+    catalog_index = load_catalog_index()
+
     for svc in minimal_stack(deploy_overlay):
+        verify_brick_before_exec(svc["brick_id"], svc["image"], catalog_index)
         host_port = find_free_port(svc["container_port"] + PREFERRED_PORT_OFFSET, is_free)
         svc_gpu = bool(svc.get("gpu_capable")) and profile in _GPU_PROFILES
         node, reason = _node_for(svc["name"], placement, rag_node)
@@ -160,6 +166,7 @@ def assemble_plan(
             spec = specs.get(brick_id)
             if spec is None:
                 continue
+            verify_brick_before_exec(brick_id, spec["image"], catalog_index)
             host_port = _next_chassis_port(used_ports, is_free)
             used_ports.add(host_port)
             health_path = spec.get("health_path")

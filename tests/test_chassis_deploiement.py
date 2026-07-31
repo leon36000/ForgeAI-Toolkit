@@ -41,7 +41,7 @@ def _minimal_overlay(tmp_path: Path) -> Path:
                 "services": [
                     {
                         "name": "ollama",
-                        "image": "ollama/ollama:latest",
+                        "image": "ollama/ollama:latest@sha256:0000000000000000000000000000000000000000000000000000000000000000",
                         "container_port": 11434,
                         "volume": None,
                         "healthcheck_path": None,
@@ -49,7 +49,7 @@ def _minimal_overlay(tmp_path: Path) -> Path:
                     },
                     {
                         "name": "qdrant",
-                        "image": "qdrant/qdrant:v1.18.3",
+                        "image": "qdrant/qdrant:v1.18.3@sha256:0000000000000000000000000000000000000000000000000000000000000000",
                         "container_port": 6333,
                         "volume": "forgeai-qdrant-data:/qdrant/storage",
                         "healthcheck_path": "/readyz",
@@ -182,8 +182,8 @@ def test_depends_ordre_independant(tmp_path: Path, monkeypatch):
 
     fake_specs = {
         # alpha (traité en premier) dépend de beta (ajouté après lui).
-        "alpha": {"image": "alpha:1", "container_port": 9001, "depends": ["beta"]},
-        "beta": {"image": "beta:1", "container_port": 9002, "depends": []},
+        "alpha": {"image": "alpha:1@sha256:0000000000000000000000000000000000000000000000000000000000000000", "container_port": 9001, "depends": ["beta"]},
+        "beta": {"image": "beta:1@sha256:0000000000000000000000000000000000000000000000000000000000000000", "container_port": 9002, "depends": []},
     }
     monkeypatch.setattr(asm, "_load_deploy_specs", lambda: fake_specs)
     overlay = _minimal_overlay(tmp_path)
