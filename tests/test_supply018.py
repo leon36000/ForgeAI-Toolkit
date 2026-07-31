@@ -121,6 +121,19 @@ def test_assemble_accepts_uncatalogued_pinned_chassis(mock_minimal, mock_index, 
     assert isinstance(plan, DeploymentPlan)
 
 
+@patch("forgeai.planner.assemble._load_deploy_specs")
+@patch("forgeai.planner.assemble.load_catalog_index")
+@patch("forgeai.planner.assemble.minimal_stack")
+def test_assemble_gates_extra_bricks_loop(mock_minimal, mock_index, mock_specs, tmp_path):
+    # La garde couvre AUSSI la boucle extra_bricks/stack, pas seulement minimal_stack.
+    mock_minimal.return_value = []
+    mock_index.return_value = {}
+    mock_specs.return_value = {"mybrick": {"image": "mybrick:latest", "container_port": 9000}}
+    from forgeai.planner.assemble import assemble_plan
+    with pytest.raises(SupplyChainError, match="épinglée"):
+        assemble_plan("minimal", _overlay(tmp_path), extra_bricks=("mybrick",), is_free=lambda p: True)
+
+
 @patch("forgeai.planner.assemble.load_catalog_index")
 @patch("forgeai.planner.assemble.minimal_stack")
 def test_assemble_accepts_conforming_brick(mock_minimal, mock_index, tmp_path):

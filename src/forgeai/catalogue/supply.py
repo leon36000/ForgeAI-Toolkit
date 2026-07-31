@@ -79,8 +79,9 @@ def verify_brick_before_exec(
     - **Vérification + licence** : appliquées UNIQUEMENT aux plugins communautaires, c.-à-d. les briques
       présentes dans ``catalog_index``. Une brique first-party/châssis (absente du catalogue communautaire,
       ex. postgres, reranker) est de confiance dès lors qu'elle est épinglée — son intégrité vient de la
-      revue du dépôt, pas du catalogue communautaire. Une brique CATALOGUÉE doit avoir ``verified`` vrai
-      ET une licence dans ``license_allowlist`` (absente/``NOASSERTION``/inconnue → refus).
+      revue du dépôt, pas du catalogue communautaire. Une brique CATALOGUÉE doit avoir ``verified`` vrai ;
+      côté licence, seule une licence EXPLICITE hors ``license_allowlist`` est refusée — ``NOASSERTION``/vide
+      (non assertée, fréquent sur les briques curées) est TOLÉRÉE, son risque étant couvert par ``verified``.
     """
     # 1. Épinglage : contrôle universel, y compris le châssis.
     if policy.require_digest and "@sha256:" not in image:
