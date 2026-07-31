@@ -824,6 +824,14 @@
       "merge_commit": "5c0852e",
       "review": "APPROVE 3/3 (Grok-4.5/xai, Qwen3.7-Max/alibaba, MiMo-Pro-V2/xiaomi), sceau d5b274c9a6fc, SWAP CIV, 0 objection bloquante",
       "note": "persistance de l etat de preparation : schema v1, validation fail-safe (corrompu -> vide, entree invalide -> ignoree seule), ecriture atomique reutilisant atomic_write_text (fsync+0600) plutot que re-implementee ; 8 tests mutation-prouves"
+    },
+    {
+      "id": "REL-038B",
+      "ide": "CLAUDE_CODE",
+      "pr": 348,
+      "merge_commit": "9ad0671",
+      "review": "APPROVE 3/3 (Grok-4.5/xai, Qwen3.7-Max/alibaba, MiMo-Pro-V2/xiaomi), sceau 4e9f89d893ab, SWAP CIV, 0 objection bloquante",
+      "note": "unicite par hote (409) + reconciliation idempotente ; interaction traitee avec REL-038A (etat persiste : une garde naive aurait verrouille l hote a vie) ; mutation survivante corrigee en renforcant G4"
     }
   ]
 }

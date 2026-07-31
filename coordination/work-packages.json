@@ -454,7 +454,7 @@
     {
       "id": "REL-038B",
       "title": "Garantir une seule opération active et une réconciliation idempotente",
-      "status": "EXTERNAL",
+      "status": "completed",
       "ide": "CLAUDE_CODE",
       "source_ide": "CODEX",
       "exclusive_lane": "",
