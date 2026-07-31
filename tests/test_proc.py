@@ -228,3 +228,28 @@ def test_cli_loop_timeout(tmp_path: Path) -> None:
         str(registre_path),
     ]
     assert cli.main(args) == 14
+
+
+# ---------------------------------------------------------------------------
+# G10 – mapping CLI de RunnerCancelledError -> code 15 (via cli.main). G4 ne prouve
+#       que la levée au niveau runner ; ici on exerce le `except` de _loop_run.
+# ---------------------------------------------------------------------------
+def test_cli_loop_cancel_maps_to_15(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    import forgeai.core.proc as proc
+    import forgeai.cli as cli
+
+    def fake_timed_runner(timeout_seconds, grace_seconds=5.0):
+        def _r(cmd: str) -> int:
+            raise proc.RunnerCancelledError("annulation simulée")
+        return _r
+
+    # _loop_run fait `from forgeai.core.proc import timed_runner` à l'exécution :
+    # patcher l'attribut du module suffit à intercepter le dispatch.
+    monkeypatch.setattr(proc, "timed_runner", fake_timed_runner)
+    registre_path = tmp_path / "registre.jsonl"
+    args = [
+        "loop", "run", "--max-iter", "1",
+        "--step", "true", "--until", "true",
+        "--registre", str(registre_path),
+    ]
+    assert cli.main(args) == 15
