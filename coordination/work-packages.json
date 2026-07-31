@@ -468,7 +468,7 @@
     {
       "id": "REL-038C",
       "title": "Gérer les process groups et nettoyer les orphelins",
-      "status": "EXTERNAL",
+      "status": "completed",
       "ide": "CLAUDE_CODE",
       "source_ide": "CODEX",
       "exclusive_lane": "",
