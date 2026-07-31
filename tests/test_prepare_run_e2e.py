@@ -96,7 +96,9 @@ def test_run_prepare_erreur(monkeypatch) -> None:
 
 def test_run_prepare_exception_generique(monkeypatch) -> None:
     """Une exception NON-PrepareError (bug inattendu) est capturée par le filet
-    générique : le thread ne meurt jamais en silence, l'état publie une erreur."""
+    générique : le thread ne meurt jamais en silence, l'état publie une erreur
+    GÉNÉRIQUE. WEB-015 : le détail de l'exception interne ne fuit plus dans l'état
+    (l'opérateur le retrouve sur stderr)."""
 
     def fake_preparer_noeud(runner, host, *, appliquer, helm_present):
         raise RuntimeError("kaboom inattendu")
@@ -113,8 +115,9 @@ def test_run_prepare_exception_generique(monkeypatch) -> None:
         data = _poll_done(base_url, "n-bug")
 
         assert data["done"] is True
-        assert data["erreur"].startswith("erreur interne:")
-        assert "kaboom inattendu" in data["erreur"]
+        # WEB-015 : message générique, aucun détail d'exception interne.
+        assert data["erreur"] == "erreur interne"
+        assert "kaboom inattendu" not in data["erreur"]
         assert data["resultat"] is None
     finally:
         srv.shutdown()
