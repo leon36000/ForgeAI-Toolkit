@@ -661,7 +661,7 @@
     {
       "id": "ERR-041B",
       "title": "Rediger stderr dans les déploiements Compose/K3s et deploy-state",
-      "status": "EXTERNAL",
+      "status": "completed",
       "ide": "CLAUDE_CODE",
       "source_ide": "CODEX",
       "exclusive_lane": "",
