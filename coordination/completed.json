@@ -848,6 +848,14 @@
       "merge_commit": "47f594b",
       "review": "APPROVE 3/3 (Grok-4.5/xai, Qwen3.7-Max/alibaba, MiMo-Pro-V2/xiaomi), sceau 8eccbc6c4dd2, SWAP CIV, 0 objection bloquante",
       "note": "correlation IDs de bout en bout ; comble le trou cree par WEB-015 (erreurs client generiques sans moyen de les relier a la trace) ; validation allowlist anti-injection de logs sur l entree client"
+    },
+    {
+      "id": "REV-043",
+      "ide": "CLAUDE_CODE",
+      "pr": 307,
+      "merge_commit": "7cb1d96",
+      "review": "N/A (package de conformite de revue, pas de code source livre ; le contenu LIVRE par REV-043 = les revues elles-memes reviews/REV-043/**)",
+      "note": "Archivage retroactif par le cockpit (Copilot) le 2026-07-31 ; PR #307 mergee (Closes #304, issue fermee manuellement car le mot-cle francais Corrige n a pas declenche l auto-close GitHub) mais jamais ajoutee a completed.json. Contenu : revue scellee 3-vendors-distincts (DeepSeek-V4-Pro/Grok-4.5/Qwen3.7-Max, zero OpenAI) rejouee sur WEB-001/DATA-002/DATA-003 (champ review_rev043 de leurs entrees) ; a trouve un defaut critique reel sur DATA-002 (fenetre de crash-consistency WAL) manque par la revue mono-vendor d origine -> issue #306 ouverte en suivi."
     }
   ]
 }
