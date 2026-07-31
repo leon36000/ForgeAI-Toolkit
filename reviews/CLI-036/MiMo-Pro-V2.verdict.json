@@ -4,23 +4,23 @@
   {
    "severite": "mineure",
    "fichier": "src/forgeai/core/proc.py",
-   "description": "La gestion Windows utilise subprocess.run pour appeler taskkill, ce qui peut potentiellement échouer silencieusement si taskkill n'est pas disponible (bien que documenté comme risque assumé dans la story).",
-   "preuve": "Ligne 132-136: subprocess.run(['taskkill', '/F', '/T', '/PID', str(proc.pid)], capture_output=True, check=False)"
+   "description": "La gestion de l'annulation sous Windows n'est pas couverte par un test réel. Le code installe un handler SIGINT, mais sous Windows, signal.signal ne fonctionne que pour le thread principal et CTRL_C_EVENT. Avec CREATE_NEW_PROCESS_GROUP, le signal n'est pas propagé au sous-processus, ce qui signifie que l'annulation pourrait ne pas fonctionner comme attendu. Le test G4 est posix_only et G10 utilise un mock, donc ce cas n'est pas exercé.",
+   "preuve": "proc.py: signal.signal(signal.SIGINT, handle_sigint) + popen_kwargs['creationflags'] = subprocess.CREATE_NEW_PROCESS_GROUP; test_proc.py: test_cancellation marqué @posix_only; test_cli_loop_cancel_maps_to_15 utilise un mock sans vérifier la propagation réelle du signal."
   },
   {
    "severite": "mineure",
    "fichier": "src/forgeai/core/proc.py",
-   "description": "La boucle d'attente dans timed_runner utilise un timeout fixe de 0.1 seconde pour p.wait(), ce qui pourrait introduire une latence minimale de détection d'annulation/timeout.",
-   "preuve": "Ligne 80: wait_time = min(0.1, remaining)"
+   "description": "La boucle d'attente dans timed_runner utilise un timeout fixe de 0.1 seconde pour p.wait(), ce qui introduit une latence maximale de 0.1 seconde pour détecter l'annulation ou le timeout. Bien que fonctionnel, cela peut être suboptimal pour des timeouts très courts.",
+   "preuve": "proc.py ligne 80: wait_time = min(0.1, remaining)"
   },
   {
    "severite": "mineure",
    "fichier": "tests/test_proc.py",
-   "description": "Le test d'annulation (G4) est marqué 'posix_only' et il n'y a pas de test équivalent pour Windows pour la gestion des signaux SIGINT, bien que la branche Windows soit couverte par le mock G5.",
-   "preuve": "Ligne 88: @posix_only sur test_cancellation()"
+   "description": "Le test G10 (test_cli_loop_cancel_maps_to_15) utilise un mock pour simuler RunnerCancelledError, mais ne vérifie pas que le vrai mécanisme d'annulation fonctionne via la CLI (envoi de SIGINT au processus parent pendant l'exécution). Cependant, cela est acceptable car G4 couvre le niveau runner et le mapping est testé.",
+   "preuve": "test_cli_loop_cancel_maps_to_15 utilise monkeypatch sur timed_runner pour lever RunnerCancelledError, ne test pas l'envoi réel de SIGINT."
   }
  ],
- "date_heure": "2026-07-31T00:45:19.406806+00:00",
- "prompt_sha256": "3804f34bb879493475196903795996236465503551bfae5691cbc58d26ab1f14",
+ "date_heure": "2026-07-31T00:50:56.002594+00:00",
+ "prompt_sha256": "4d94d45215ff56233d02405974d9972f2ef85166549e7afcaa584a7a10753b12",
  "reviewer_model": "MiMo-Pro-V2"
 }
