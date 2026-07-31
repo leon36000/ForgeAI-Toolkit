@@ -603,6 +603,29 @@ def _gpu_drivers(args: argparse.Namespace) -> int:
     return 0
 
 
+def _status(args) -> int:
+    """OPS-031A : `forgeai status` — MÊME agrégat que GET /api/status (source unique
+    `collect_status`), mais calculé LOCALEMENT : aucun serveur web requis."""
+    import json as _json
+    from forgeai.network.nodes import cluster_status as _cluster_status
+    from forgeai.preflight import available_backends as _available, run_checks as _run_checks
+    from forgeai.deploy.compose import http_ok as _http_ok
+    from forgeai.hardware.detect import HardwareDetector as _Detector
+    from forgeai.status import collect_status, format_status_humain
+
+    runner = SubprocessRunner()
+    detecteur = _Detector(runner)
+    etat = collect_status(
+        backends=lambda: _available(_run_checks(runner, detecteur, _http_ok)),
+        cluster=lambda: _cluster_status(runner),
+        deploiement=lambda: {"en_cours": False, "source": "cli"},
+        materiel=lambda: _json.loads(detecteur.full_report().to_json()),
+    )
+    print(_json.dumps(etat, ensure_ascii=False) if getattr(args, "json", False)
+          else format_status_humain(etat))
+    return 0
+
+
 def _doctor(args: argparse.Namespace) -> int:
     from forgeai.preflight import available_backends, run_checks
     checks = run_checks(SubprocessRunner(), HardwareDetector(SubprocessRunner()), http_ok)
@@ -1236,6 +1259,10 @@ def _run(argv: list[str] | None = None) -> int:
     p_hw = sub.add_parser("hardware", help="détection hardware (S01)")
     p_hw.set_defaults(func=lambda a: print(
         HardwareDetector(SubprocessRunner()).full_report().to_json()) or 0)
+
+    p_st = sub.add_parser("status", help="état d'exécution : backends, cluster, dernier déploiement")
+    p_st.add_argument("--json", action="store_true", help="sortie machine")
+    p_st.set_defaults(func=_status)
 
     p_doctor = sub.add_parser("doctor", help="préflight : ce que votre machine peut faire")
     p_doctor.set_defaults(func=_doctor)
