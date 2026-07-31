@@ -691,6 +691,7 @@ def _node_tailscale(args: argparse.Namespace) -> int:
 
 def _node_add(args: argparse.Namespace) -> int:
     from forgeai.network.node_add import add_node, SshBootstrapper, NodeAddError
+    from forgeai.network.remote_probe import RemoteProbeError
     from forgeai.core.runner import SubprocessRunner
     passwd = os.environ.get(args.password_env)
     if not passwd:
@@ -700,9 +701,10 @@ def _node_add(args: argparse.Namespace) -> int:
     try:
         rec = add_node(args.ip, args.user, passwd,
                        pubkey=Path(args.pubkey), privkey=Path(args.privkey),
-                       bootstrapper=SshBootstrapper(), runner=SubprocessRunner(),
+                       bootstrapper=SshBootstrapper(hostkey_sha256=args.hostkey),
+                       runner=SubprocessRunner(),
                        registre_path=Path(args.registre))
-    except NodeAddError as exc:
+    except (NodeAddError, RemoteProbeError) as exc:
         print(f"ECHEC NODE: {exc}", file=sys.stderr)
         return 12
     print(f"[forgeai] nœud ajouté — {rec.user}@{rec.ip} | empreinte {rec.key_fingerprint}")
@@ -1266,6 +1268,8 @@ def _run(argv: list[str] | None = None) -> int:
                             help="variable d'env portant le mot de passe éphémère (jamais en argv)")
     p_node_add.add_argument("--pubkey", required=True)
     p_node_add.add_argument("--privkey", required=True)
+    p_node_add.add_argument("--hostkey", required=True,
+                            help="empreinte SHA256 de la clé d'hôte (SSH-021 : 'SHA256:...', pas de TOFU)")
     p_node_add.add_argument("--registre", default=str(DEFAULT_REGISTRE))
     p_node_add.set_defaults(func=_node_add)
     p_node_ts = node_sub.add_parser("tailscale",

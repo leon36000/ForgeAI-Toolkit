@@ -913,7 +913,7 @@ class ForgeAIHandler(BaseHTTPRequestHandler):
             if data is None:
                 return
 
-            required = ["ip", "user", "password"]
+            required = ["ip", "user", "password", "hostkey"]
             missing = [field for field in required if field not in data]
             if missing:
                 self._send_json(400, {"error": "champs manquants", "missing": missing})
@@ -922,11 +922,15 @@ class ForgeAIHandler(BaseHTTPRequestHandler):
             ip = data["ip"]
             user = data["user"]
             password = data["password"]  # proof:allow (identifiant ; valeur jamais journalisee)
+            hostkey = data["hostkey"]  # SSH-021 : empreinte SHA256, pas de TOFU
 
             try:
                 runner = SubprocessRunner()
                 pubkey, privkey = _node_keys(runner)
-                bootstrapper = _NODE_BOOTSTRAPPER if _NODE_BOOTSTRAPPER is not None else SshBootstrapper()
+                bootstrapper = (
+                    _NODE_BOOTSTRAPPER if _NODE_BOOTSTRAPPER is not None
+                    else SshBootstrapper(hostkey_sha256=hostkey)
+                )
                 record = add_node(
                     ip,
                     user,

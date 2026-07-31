@@ -7,6 +7,7 @@ from typing import Protocol
 
 from forgeai.core.registre import append
 from forgeai.core.runner import CommandRunner
+from forgeai.network.remote_probe import enroll_hostkey, RemoteProbeError
 
 
 class NodeAddError(Exception):
@@ -33,39 +34,56 @@ class Bootstrapper(Protocol):
 class SshBootstrapper:
     """Implémentation réelle du bootstrap SSH avec mot de passe éphémère."""
 
-    def __init__(self, timeout_s: float = 20.0) -> None:
+    def __init__(self, timeout_s: float = 20.0, hostkey_sha256: str = "") -> None:
+        if not hostkey_sha256 or not hostkey_sha256.startswith("SHA256:"):
+            raise RemoteProbeError(
+                "empreinte de clé d'hôte requise (SSH-021 : pas de TOFU) — format 'SHA256:...'"
+            )
         self._timeout = timeout_s
+        self._hostkey_sha256 = hostkey_sha256
 
     def install_key(self, ip: str, user: str, passwd: str, pubkey: Path) -> None:
-        cmd = [
-            "sshpass", "-e", "ssh-copy-id",
-            "-i", str(pubkey),
-            "-o", "StrictHostKeyChecking=accept-new",
-            f"{user}@{ip}"
-        ]
-        env = {**os.environ, "SSHPASS": passwd}
+        kh = enroll_hostkey(ip, self._hostkey_sha256, self._timeout)
         try:
-            proc = subprocess.run(cmd, env=env, timeout=self._timeout,
-                                  capture_output=True, text=True)
-            if proc.returncode != 0:
-                raise NodeAddError(f"ssh-copy-id échec: {proc.stderr.strip()}")
-        except subprocess.TimeoutExpired as e:
-            raise NodeAddError(f"Timeout lors de l'installation de la clé: {e}") from e
+            cmd = [
+                "sshpass", "-e", "ssh-copy-id",
+                "-i", str(pubkey),
+                "-o", "StrictHostKeyChecking=yes",
+                "-o", f"UserKnownHostsFile={kh}",
+                f"{user}@{ip}"
+            ]
+            env = {**os.environ, "SSHPASS": passwd}
+            try:
+                proc = subprocess.run(cmd, env=env, timeout=self._timeout,
+                                      capture_output=True, text=True)
+                if proc.returncode != 0:
+                    raise NodeAddError(f"ssh-copy-id échec: {proc.stderr.strip()}")
+            except subprocess.TimeoutExpired as e:
+                raise NodeAddError(f"Timeout lors de l'installation de la clé: {e}") from e
+        finally:
+            if os.path.exists(kh):
+                os.unlink(kh)
 
     def verify_key(self, ip: str, user: str, privkey: Path) -> bool:
-        cmd = [
-            "ssh", "-i", str(privkey),
-            "-o", "BatchMode=yes",
-            "-o", "StrictHostKeyChecking=accept-new",
-            f"{user}@{ip}",
-            "true"
-        ]
+        kh = enroll_hostkey(ip, self._hostkey_sha256, self._timeout)
         try:
-            proc = subprocess.run(cmd, timeout=self._timeout,
-                                  capture_output=True)
-            return proc.returncode == 0
-        except subprocess.TimeoutExpired:
-            return False
+            cmd = [
+                "ssh", "-i", str(privkey),
+                "-o", "BatchMode=yes",
+                "-o", "StrictHostKeyChecking=yes",
+                "-o", f"UserKnownHostsFile={kh}",
+                f"{user}@{ip}",
+                "true"
+            ]
+            try:
+                proc = subprocess.run(cmd, timeout=self._timeout,
+                                      capture_output=True)
+                return proc.returncode == 0
+            except subprocess.TimeoutExpired:
+                return False
+        finally:
+            if os.path.exists(kh):
+                os.unlink(kh)
 
 
 # fullmatch (pas .match + `$`) : `$` matcherait un newline final → une cible `admin\n` passerait.

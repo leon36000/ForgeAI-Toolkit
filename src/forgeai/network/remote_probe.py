@@ -23,6 +23,56 @@ class RemoteProbeError(Exception):
     """Erreur lors de la sonde distante."""
 
 
+def enroll_hostkey(host: str, hostkey_sha256: str, timeout_s: float = 20.0) -> str:
+    """Validation SSH canonique (SSH-007/SSH-021). Retourne le chemin d'un known_hosts
+    temporaire (0600) contenant la clé d'hôte offerte dont l'empreinte SHA256 ==
+    ``hostkey_sha256``. Lève ``RemoteProbeError`` si l'empreinte est absente/mal formée
+    (AVANT tout réseau), si ssh-keyscan ne rend rien, ou si aucune clé offerte ne
+    correspond (MITM potentiel). Point unique réutilisé par ``SshRunner`` et le bootstrap
+    de nœud (``node_add``)."""
+    if not hostkey_sha256 or not hostkey_sha256.startswith("SHA256:"):
+        raise RemoteProbeError(
+            "empreinte de clé d'hôte requise (SSH-007) — format 'SHA256:...'"
+        )
+    try:
+        scan = subprocess.run(
+            ["ssh-keyscan", "-t", "ed25519,ecdsa,rsa", host],
+            capture_output=True, text=True, timeout=timeout_s,
+        )
+    except subprocess.TimeoutExpired as exc:
+        raise RemoteProbeError(f"ssh-keyscan timeout sur {host}") from exc
+    offered = [
+        line for line in scan.stdout.splitlines()
+        if line.strip() and not line.startswith("#")
+    ]
+    if not offered:
+        raise RemoteProbeError(f"ssh-keyscan n'a retourné aucune clé pour {host}")
+
+    for line in offered:
+        fd, tmp = tempfile.mkstemp()
+        try:
+            with os.fdopen(fd, "w") as f:
+                f.write(line + "\n")
+            kg = subprocess.run(
+                ["ssh-keygen", "-lf", tmp],
+                capture_output=True, text=True, timeout=timeout_s,
+            )
+        finally:
+            os.unlink(tmp)
+        match = re.search(r"SHA256:\S+", kg.stdout)
+        if match and match.group(0) == hostkey_sha256:
+            fd2, kh = tempfile.mkstemp(suffix=".known_hosts")
+            with os.fdopen(fd2, "w") as f:
+                f.write(line + "\n")
+            os.chmod(kh, 0o600)
+            return kh
+
+    raise RemoteProbeError(
+        f"aucune clé d'hôte offerte ne correspond à l'empreinte déclarée "
+        f"{hostkey_sha256} (SSH-007 : refus, MITM potentiel)"
+    )
+
+
 class SshRunner:
     """Exécute des commandes sur un nœud distant via SSH, avec enrôlement explicite
     de la clé d'hôte par empreinte SHA256 (jamais de TOFU)."""
@@ -49,52 +99,9 @@ class SshRunner:
         self._known_hosts: Optional[str] = None  # chemin du known_hosts temp
 
     def _enroll(self) -> None:
-        """Récupère les clés offertes par l'hôte, les compare à l'empreinte déclarée,
-        et crée un fichier known_hosts temporaire contenant la clé correspondante.
-        """
-        # 1. Clés offertes par l'hôte (ed25519, ecdsa, rsa)
-        scan = subprocess.run(
-            ["ssh-keyscan", "-t", "ed25519,ecdsa,rsa", self.host],
-            capture_output=True,
-            text=True,
-            timeout=self.timeout_s,
-        )
-        offered = [
-            line
-            for line in scan.stdout.splitlines()
-            if line.strip() and not line.startswith("#")
-        ]
-
-        for line in offered:
-            # Calcul de l'empreinte de CETTE ligne
-            fd, tmp = tempfile.mkstemp()
-            try:
-                with os.fdopen(fd, "w") as f:
-                    f.write(line + "\n")
-                kg = subprocess.run(
-                    ["ssh-keygen", "-lf", tmp],
-                    capture_output=True,
-                    text=True,
-                    timeout=self.timeout_s,
-                )
-            finally:
-                os.unlink(tmp)
-
-            match = re.search(r"SHA256:\S+", kg.stdout)
-            if match and match.group(0) == self.hostkey_sha256:
-                # Ligne confirmée → on peuple le known_hosts temp
-                fd2, kh = tempfile.mkstemp(suffix=".known_hosts")
-                with os.fdopen(fd2, "w") as f:
-                    f.write(line + "\n")
-                os.chmod(kh, 0o600)
-                self._known_hosts = kh
-                atexit.register(self.close)
-                return
-
-        raise RemoteProbeError(
-            f"aucune clé d'hôte offerte ne correspond à l'empreinte déclarée "
-            f"{self.hostkey_sha256} (SSH-007 : refus, MITM potentiel)"
-        )
+        """Enrôlement de la clé d'hôte via le helper canonique (SSH-021)."""
+        self._known_hosts = enroll_hostkey(self.host, self.hostkey_sha256, self.timeout_s)
+        atexit.register(self.close)
 
     def run(self, argv: list[str]) -> tuple[int, str]:
         if self._known_hosts is None:
