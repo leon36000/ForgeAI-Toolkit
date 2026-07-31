@@ -103,11 +103,20 @@ def test_deploy_trace_registre(monkeypatch, tmp_path) -> None:
         started = [e for e in entries if e.get("type") == "deploy_started"]
         assert len(started) == 1
         assert started[0]["actor"] == "web"
-        assert started[0]["payload"] == {
+        attendu = {
             "stack": "minimal",
             "backend": "compose",
             "node": "local",
         }
+        charge = started[0]["payload"]
+        # OPS-031D : la trace porte EN PLUS `request_id`, qui rattache l'entrée d'audit à la requête
+        # HTTP qui l'a provoquée. On vérifie donc l'INCLUSION des champs métier attendus + la
+        # conformité de l'identifiant, plutôt qu'une égalité stricte devenue trop rigide.
+        for cle, valeur in attendu.items():
+            assert charge[cle] == valeur, f"champ {cle} altéré : {charge}"
+        assert set(charge) <= set(attendu) | {"request_id"}, f"champ inattendu : {charge}"
+        from forgeai.web.server import _REQUEST_ID_RE
+        assert _REQUEST_ID_RE.match(charge["request_id"]), f"request_id non conforme : {charge}"
     finally:
         srv.shutdown()
         srv.server_close()

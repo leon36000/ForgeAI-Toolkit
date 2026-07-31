@@ -6,6 +6,7 @@ import ipaddress
 import json
 import os
 import re
+import secrets
 import shutil
 import ssl
 import subprocess
@@ -646,6 +647,20 @@ def authorize_mutation(*, origin: str | None, host: str | None, auth_header: str
     return (True, 0)
 
 
+# OPS-031D : un X-Request-Id fourni par le client est une ENTRÉE NON FIABLE qui atterrit dans les
+# journaux et le registre. Sans allowlist stricte c'est une INJECTION DE LOGS (retours à la ligne pour
+# forger de fausses entrées, longueur non bornée, caractères de contrôle). Tout ce qui ne correspond
+# pas est REMPLACÉ — jamais tronqué ni « nettoyé » : on ne rafistole pas une entrée hostile.
+_REQUEST_ID_RE = re.compile(r"^[A-Za-z0-9._-]{8,64}$")
+
+
+def _valider_request_id(brut: str | None) -> str | None:
+    """Retourne l'identifiant client s'il est conforme à l'allowlist, sinon None."""
+    if brut and _REQUEST_ID_RE.match(brut):
+        return brut
+    return None
+
+
 _SECURITY_HEADERS = {
     "X-Content-Type-Options": "nosniff",
     "X-Frame-Options": "DENY",
@@ -665,10 +680,41 @@ class ForgeAIHandler(BaseHTTPRequestHandler):
         # WEB-034A : header Server sans la bannière Python (pas de sys_version).
         return self.server_version
 
+    def handle_one_request(self) -> None:
+        """OPS-031D : remet à zéro l'identifiant de corrélation AVANT chaque requête.
+
+        `BaseHTTPRequestHandler.handle()` boucle sur cette méthode en RÉUTILISANT la même instance
+        tant que la connexion reste ouverte : sans cette remise à zéro, un identifiant mémoïsé sur
+        `self` fuiterait d'une requête à la suivante. Le défaut est aujourd'hui LATENT
+        (`protocol_version` vaut HTTP/1.0, donc CPython n'active jamais le keep-alive), mais un
+        futur passage en HTTP/1.1 le rendrait actif SILENCIEUSEMENT — d'où la garde ici, au seul
+        endroit qui délimite exactement une requête.
+        """
+        self._correlation_id = None
+        super().handle_one_request()
+
+    @property
+    def correlation_id(self) -> str:
+        """OPS-031D : identifiant de corrélation de CETTE requête (stable, calculé une fois).
+
+        Repris de `X-Request-Id` s'il est VALIDE (corrélation de bout en bout derrière un proxy),
+        sinon généré. `token_hex` produit 16 caractères hexadécimaux, donc lui-même conforme à
+        l'allowlist — l'identifiant émis est toujours du même alphabet, qu'il vienne du client ou non.
+        """
+        cid = getattr(self, "_correlation_id", None)
+        if cid is None:
+            entetes = getattr(self, "headers", None)
+            brut = entetes.get("X-Request-Id") if entetes is not None else None
+            cid = _valider_request_id(brut) or secrets.token_hex(8)
+            self._correlation_id = cid
+        return cid
+
     def end_headers(self) -> None:
         # WEB-034A : injecte les en-têtes de sécurité sur TOUTE réponse (chokepoint unique).
         for _name, _value in _SECURITY_HEADERS.items():
             self.send_header(_name, _value)
+        # OPS-031D : même chokepoint — toute réponse porte son identifiant de corrélation.
+        self.send_header("X-Request-Id", self.correlation_id)
         super().end_headers()
 
     def _send(self, code: int, body: bytes, content_type: str) -> None:
@@ -685,8 +731,12 @@ class ForgeAIHandler(BaseHTTPRequestHandler):
         """WEB-015 : erreur inattendue → trace complète pour l'opérateur (stderr), message
         générique pour le client (aucune fuite d'exception interne : type, chemins, détails).
         Imprime explicitement l'exception reçue (robuste hors bloc `except`, cf. revue)."""
+        # OPS-031D : l'identifiant précède la trace côté opérateur ET accompagne le message
+        # générique côté client. L'utilisateur dispose d'une référence OPAQUE à citer, sans qu'aucun
+        # détail interne ne fuie : la garantie de WEB-015 est intacte, l'appariement devient possible.
+        print(f"[request_id={self.correlation_id}] erreur interne :", file=sys.stderr)
         traceback.print_exception(type(exc), exc, exc.__traceback__, file=sys.stderr)
-        self._send_json(500, {"error": "erreur interne"})
+        self._send_json(500, {"error": "erreur interne", "request_id": self.correlation_id})
 
     def _read_json_body(self, max_length: int = 65536) -> dict | None:
         length_hdr = self.headers.get("Content-Length")
@@ -1292,7 +1342,8 @@ class ForgeAIHandler(BaseHTTPRequestHandler):
                         _registre_path(),
                         "deploy_started",
                         "web",
-                        {"stack": stack_id, "backend": backend, "node": node},
+                        {"stack": stack_id, "backend": backend, "node": node,
+                         "request_id": self.correlation_id},  # OPS-031D : audit rattachable
                     )
                 except Exception:
                     _DEPLOY_STATE["lines"].append(
@@ -1433,6 +1484,7 @@ class ForgeAIHandler(BaseHTTPRequestHandler):
                     "provenance": route.provenance,
                     "model_id": route.model_id,
                     "key_fingerprint": route.key_fingerprint,
+                    "request_id": self.correlation_id,  # OPS-031D : audit rattachable
                 },
             )
         except Exception:
