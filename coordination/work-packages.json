@@ -496,7 +496,7 @@
     {
       "id": "OPS-031A",
       "title": "Ajouter forgeai status et une API de santé re-sondable",
-      "status": "EXTERNAL",
+      "status": "completed",
       "ide": "CLAUDE_CODE",
       "source_ide": "CODEX",
       "exclusive_lane": "",
