@@ -792,6 +792,14 @@
       "merge_commit": "bae8055",
       "review": "APPROVE 3/3 (Grok-4.5/xai, Qwen3.7-Max/alibaba, MiMo-Pro-V2/xiaomi), sceau 7c4ec707cf12, SWAP CIV, 0 objection bloquante",
       "note": "en-tetes securite (nosniff/X-Frame-Options DENY/Referrer-Policy/CSP) via override end_headers ; Server sans banniere Python ; CSP script-src self compatible UI ; 5 tests mutation-prouves ; couverture 91%"
+    },
+    {
+      "id": "WEB-034B",
+      "ide": "CLAUDE_CODE",
+      "pr": 339,
+      "merge_commit": "22b2a11",
+      "review": "APPROVE 3/3 (Grok-4.5/xai, Qwen3.7-Max/alibaba, MiMo-Pro-V2/xiaomi), sceau c7dee4022abd, SWAP CIV, 0 objection bloquante",
+      "note": "refus 426 des identifiants sur transport reseau non chiffre + TLS opt-in (ssl.SSLContext, aucun cert genere) ; loopback et trafic sans identifiant non bloques ; password body couvert transitivement (teste) ; 9 tests mutation-prouves ; couverture 91%"
     }
   ]
 }

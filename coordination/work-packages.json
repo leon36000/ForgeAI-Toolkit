@@ -398,7 +398,7 @@
     {
       "id": "WEB-034B",
       "title": "Introduire un mode TLS explicite ou refuser les identifiants sur HTTP réseau",
-      "status": "EXTERNAL",
+      "status": "completed",
       "ide": "CLAUDE_CODE",
       "source_ide": "CODEX",
       "exclusive_lane": "",
