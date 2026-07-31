@@ -37,6 +37,7 @@ from forgeai.network.nodes import cluster_status, ClusterError
 from forgeai.network.prepare import sonder_noeud, plan_preparation, preparer_noeud, PrepareError
 from forgeai.preflight import available_backends, run_checks
 from forgeai.core.redaction import redact_text
+from forgeai.models._locking import atomic_write_text
 from forgeai.web.ratelimit import RateLimiter
 from forgeai.resources import catalogue_path, forgeai_home
 from forgeai.stacks import deploy_ids, list_stacks, load_stack
@@ -335,15 +336,20 @@ _DEPLOY_STATE = {
 _PREPARE_STATE: "OrderedDict[str, dict]" = OrderedDict()
 _PREPARE_LOCK = threading.Lock()
 _PREPARE_MAX = 256  # borne mémoire : au-delà, éviction du plus ancien (LRU)
+_PREPARE_STATE_VERSION = 1  # schéma du fichier de persistance (REL-038A)
 
 
 def _prepare_state_set(host: str, state: dict) -> None:
-    """Écrit l'état de préparation d'un hôte (verrouillé, borné LRU)."""
+    """Écrit l'état de préparation d'un hôte (verrouillé, borné LRU) puis le persiste.
+
+    REL-038A : la persistance a lieu APRÈS la relâche du verrou — jamais d'E/S disque en
+    tenant `_PREPARE_LOCK` (un disque lent bloquerait toutes les lectures d'état)."""
     with _PREPARE_LOCK:
         _PREPARE_STATE[host] = state
         _PREPARE_STATE.move_to_end(host)
         while len(_PREPARE_STATE) > _PREPARE_MAX:
             _PREPARE_STATE.popitem(last=False)
+    _persist_prepare_state()
 
 
 def _prepare_state_get(host: str) -> dict:
@@ -354,6 +360,74 @@ def _prepare_state_get(host: str) -> dict:
 
 def _deploy_state_path() -> Path:
     return forgeai_home() / "deploy" / "deploy-state.json"
+
+
+def _prepare_state_path() -> Path:
+    """REL-038A : fichier de persistance de l'état de préparation des nœuds."""
+    return forgeai_home() / "prepare" / "prepare-state.json"
+
+
+def _persist_prepare_state() -> None:
+    """Snapshot de l'état de préparation sur disque (best-effort, atomique).
+
+    REL-038A : l'écriture passe par `atomic_write_text` (mkstemp + fchmod 0600 + fsync +
+    os.replace) plutôt qu'une ré-implémentation — l'état nomme des hôtes d'infrastructure et
+    n'a pas à être lisible par les autres comptes de la machine. `erreur` est rédigé avant
+    écriture (ERR-041A) : un message PrepareError peut porter un chemin ou un fragment sensible.
+    Best-effort : une panne d'écriture ne doit JAMAIS faire échouer une préparation.
+    """
+    try:
+        with _PREPARE_LOCK:  # copie sous verrou, écriture hors verrou
+            snapshot = {
+                "version": _PREPARE_STATE_VERSION,
+                "hosts": {
+                    host: {
+                        "done": state.get("done", False),
+                        "resultat": state.get("resultat"),
+                        "erreur": (
+                            redact_text(state["erreur"])
+                            if isinstance(state.get("erreur"), str)
+                            else None
+                        ),
+                    }
+                    for host, state in _PREPARE_STATE.items()
+                },
+            }
+        atomic_write_text(_prepare_state_path(), json.dumps(snapshot, ensure_ascii=False))
+    except Exception:  # noqa: BLE001 — best-effort, jamais bloquant pour une préparation
+        return
+
+
+def _load_prepare_state() -> None:
+    """Restaure l'état de préparation depuis le disque au démarrage (fail-safe).
+
+    REL-038A : fichier absent / illisible / JSON invalide / `version` inconnue / `hosts` mal formé
+    → on repart d'un état VIDE plutôt que de propager une structure douteuse. Une entrée d'hôte
+    corrompue est ignorée INDIVIDUELLEMENT, sans invalider les entrées valides du même fichier.
+    """
+    path = _prepare_state_path()
+    try:
+        if not path.exists():
+            return
+        data = json.loads(path.read_text(encoding="utf-8"))
+        if not isinstance(data, dict) or data.get("version") != _PREPARE_STATE_VERSION:
+            return
+        hosts = data.get("hosts")
+        if not isinstance(hosts, dict):
+            return
+        with _PREPARE_LOCK:
+            for host, state in hosts.items():
+                if not isinstance(state, dict) or not isinstance(state.get("done"), bool):
+                    continue  # entrée corrompue : ignorée seule
+                _PREPARE_STATE[host] = {
+                    "done": state["done"],
+                    "resultat": state.get("resultat"),
+                    "erreur": state.get("erreur"),
+                }
+                while len(_PREPARE_STATE) > _PREPARE_MAX:
+                    _PREPARE_STATE.popitem(last=False)
+    except Exception:  # noqa: BLE001 — fail-safe : un fichier douteux ne casse pas le démarrage
+        return
 
 
 def _persist_deploy_state() -> None:
@@ -1336,6 +1410,7 @@ class ForgeAIHandler(BaseHTTPRequestHandler):
 
 def build_server(host: str = "127.0.0.1", port: int = 8765) -> ThreadingHTTPServer:
     _load_deploy_state()  # reporte le dernier statut de deploy connu après un restart (#139)
+    _load_prepare_state()  # REL-038A : l'état de préparation survit aussi au redémarrage
     server = ThreadingHTTPServer((host, port), ForgeAIHandler)
     server.forgeai_bind_host = server.server_address[0]
     server.forgeai_auth_value = _WEB_TOKEN
