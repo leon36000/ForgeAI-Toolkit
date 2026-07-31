@@ -133,7 +133,8 @@ def test_cli_discover_distant_sans_cle() -> None:
     env = os.environ.copy()
     env["PYTHONPATH"] = f"{src}{os.pathsep}{repo_root}{os.pathsep}{env.get('PYTHONPATH', '')}"
     proc = subprocess.run(
-        [sys.executable, "-m", "forgeai", "node", "discover", "pc2"],
+        # --hostkey fourni (SSH-007) pour atteindre la garde --user/--keyfile testée ici
+        [sys.executable, "-m", "forgeai", "node", "discover", "pc2", "--hostkey", "SHA256:testfp"],
         capture_output=True,
         text=True,
         env=env,

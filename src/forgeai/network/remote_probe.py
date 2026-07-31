@@ -2,8 +2,10 @@
 
 from __future__ import annotations
 
+import atexit
 import json
 import os
+import re
 import subprocess
 import tempfile
 from pathlib import Path
@@ -22,15 +24,81 @@ class RemoteProbeError(Exception):
 
 
 class SshRunner:
-    """Exécute des commandes sur un nœud distant via SSH."""
+    """Exécute des commandes sur un nœud distant via SSH, avec enrôlement explicite
+    de la clé d'hôte par empreinte SHA256 (jamais de TOFU)."""
 
-    def __init__(self, user: str, host: str, keyfile: str, timeout_s: float = 20.0) -> None:
+    def __init__(
+        self,
+        user: str,
+        host: str,
+        keyfile: str,
+        hostkey_sha256: str,
+        timeout_s: float = 20.0,
+    ) -> None:
+        # Exiger le préfixe SHA256: (ssh-keygen n'émet que du SHA256) : rejette
+        # « », « foo:bar », « MD5:... » de façon déterministe AVANT tout réseau (CA2).
+        if not hostkey_sha256 or not hostkey_sha256.startswith("SHA256:"):
+            raise RemoteProbeError(
+                "empreinte de clé d'hôte requise (SSH-007 : pas de TOFU) — format 'SHA256:...'"
+            )
         self.user = user
         self.host = host
         self.keyfile = keyfile
+        self.hostkey_sha256 = hostkey_sha256
         self.timeout_s = timeout_s
+        self._known_hosts: Optional[str] = None  # chemin du known_hosts temp
+
+    def _enroll(self) -> None:
+        """Récupère les clés offertes par l'hôte, les compare à l'empreinte déclarée,
+        et crée un fichier known_hosts temporaire contenant la clé correspondante.
+        """
+        # 1. Clés offertes par l'hôte (ed25519, ecdsa, rsa)
+        scan = subprocess.run(
+            ["ssh-keyscan", "-t", "ed25519,ecdsa,rsa", self.host],
+            capture_output=True,
+            text=True,
+            timeout=self.timeout_s,
+        )
+        offered = [
+            line
+            for line in scan.stdout.splitlines()
+            if line.strip() and not line.startswith("#")
+        ]
+
+        for line in offered:
+            # Calcul de l'empreinte de CETTE ligne
+            fd, tmp = tempfile.mkstemp()
+            try:
+                with os.fdopen(fd, "w") as f:
+                    f.write(line + "\n")
+                kg = subprocess.run(
+                    ["ssh-keygen", "-lf", tmp],
+                    capture_output=True,
+                    text=True,
+                    timeout=self.timeout_s,
+                )
+            finally:
+                os.unlink(tmp)
+
+            match = re.search(r"SHA256:\S+", kg.stdout)
+            if match and match.group(0) == self.hostkey_sha256:
+                # Ligne confirmée → on peuple le known_hosts temp
+                fd2, kh = tempfile.mkstemp(suffix=".known_hosts")
+                with os.fdopen(fd2, "w") as f:
+                    f.write(line + "\n")
+                os.chmod(kh, 0o600)
+                self._known_hosts = kh
+                atexit.register(self.close)
+                return
+
+        raise RemoteProbeError(
+            f"aucune clé d'hôte offerte ne correspond à l'empreinte déclarée "
+            f"{self.hostkey_sha256} (SSH-007 : refus, MITM potentiel)"
+        )
 
     def run(self, argv: list[str]) -> tuple[int, str]:
+        if self._known_hosts is None:
+            self._enroll()
         ssh_cmd = [
             "ssh",
             "-i",
@@ -38,7 +106,11 @@ class SshRunner:
             "-o",
             "BatchMode=yes",
             "-o",
-            "StrictHostKeyChecking=accept-new",
+            "StrictHostKeyChecking=yes",
+            "-o",
+            f"UserKnownHostsFile={self._known_hosts}",
+            "-o",
+            "IdentitiesOnly=yes",
             f"{self.user}@{self.host}",
             "--",
         ] + argv
@@ -52,6 +124,18 @@ class SshRunner:
             return proc.returncode, proc.stdout
         except subprocess.TimeoutExpired:
             return 124, ""
+
+    def close(self) -> None:
+        """Nettoie le fichier known_hosts temporaire (best‑effort)."""
+        if self._known_hosts and os.path.exists(self._known_hosts):
+            try:
+                os.unlink(self._known_hosts)
+            except OSError:
+                pass  # best‑effort
+            self._known_hosts = None
+    # Nettoyage : explicite via close() (testé), et de secours au process-exit via
+    # atexit.register(self.close) posé à l'enrôlement. Pas de __del__ (éviter les
+    # avertissements de finalisation au GC et un except-large).
 
 
 @dataclass(frozen=True)

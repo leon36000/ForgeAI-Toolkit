@@ -1,0 +1,38 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "src/forgeai/network/remote_probe.py",
+   "description": "La validation de hostkey_sha256 ne vérifie que le préfixe 'SHA256:'. Des valeurs comme 'SHA256:' ou 'SHA256:!!!' passent l'init et déclenchent ssh-keyscan avant d'échouer sur le mismatch, ce qui ne garantit pas le refus AVANT réseau de CA2 pour toutes les formes mal formées.",
+   "preuve": "remote_probe.py lignes 44-48 (startswith) et 57-62 (ssh-keyscan) ; aucune validation de la partie hash."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "src/forgeai/cli.py",
+   "description": "Pour 'node probe', l'absence de --hostkey est gérée par argparse required=True, qui produit un SystemExit avec code 2, alors que le story §5 indique un échec propre avec code 12.",
+   "preuve": "cli.py lignes 1284-1286 (required=True) ; test_cli_probe_requires_hostkey vérifie seulement code != 0."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "src/forgeai/cli.py",
+   "description": "Les instanciations de SshRunner dans _node_probe et _node_discover sont hors du bloc try/except RemoteProbeError. Une empreinte mal formée lève RemoteProbeError avant réseau mais n'est pas convertie en sortie CLI propre.",
+   "preuve": "cli.py lignes 644 (runner créé avant try) et 752-755 (runner créé avant try) ; except RemoteProbeError ne couvre que le corps suivant."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "tests/test_ssh007_hostkey.py",
+   "description": "Aucun rapport de couverture n'est fourni pour vérifier le critère CA6 (couverture >= 85 %).",
+   "preuve": "Section PREUVE : tests verts et mutations détectées, mais pas de métrique de couverture."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "src/forgeai/network/remote_probe.py",
+   "description": "Si ssh-keyscan ou ssh-keygen est indisponible, subprocess.run lève FileNotFoundError qui n'est pas convertie en RemoteProbeError propre, contrairement au risque 'échoue proprement'.",
+   "preuve": "remote_probe.py lignes 57-62 et 68-75 : appels subprocess.run sans gestion de FileNotFoundError."
+  }
+ ],
+ "date_heure": "2026-07-31T02:15:25.481993+00:00",
+ "prompt_sha256": "208fc659f4ff84e4b4a66f3c393f45ad36a43237a7d39f1a61ee9e139fcdf3c6",
+ "reviewer_model": "Kimi-2.7"
+}

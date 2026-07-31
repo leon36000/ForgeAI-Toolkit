@@ -117,7 +117,8 @@ def test_cli_node_probe(tmp_path, monkeypatch):
     monkeypatch.setattr(rp, "SshRunner", lambda *a, **k: fx)
     reg = tmp_path / "r.jsonl"
     rc = main(["node", "probe", "--node-host", "n1", "--user", "forge",
-               "--keyfile", str(tmp_path / "k"), "--registre", str(reg)])
+               "--keyfile", str(tmp_path / "k"), "--hostkey", "SHA256:testfp",
+               "--registre", str(reg)])
     assert rc == 0
     content = reg.read_text(encoding="utf-8")
     assert "node_hardware" in content and "n1" in content and "compose" in content
