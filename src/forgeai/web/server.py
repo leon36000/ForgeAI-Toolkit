@@ -337,6 +337,9 @@ _PREPARE_STATE: "OrderedDict[str, dict]" = OrderedDict()
 _PREPARE_LOCK = threading.Lock()
 _PREPARE_MAX = 256  # borne mémoire : au-delà, éviction du plus ancien (LRU)
 _PREPARE_STATE_VERSION = 1  # schéma du fichier de persistance (REL-038A)
+# REL-038B : hôtes dont une préparation est ACTIVE. Runtime seulement — JAMAIS persisté : après un
+# redémarrage l'ensemble est vide, donc il ne peut par construction pas verrouiller un hôte à vie.
+_PREPARE_ACTIVE: set = set()
 
 
 def _prepare_state_set(host: str, state: dict) -> None:
@@ -419,11 +422,22 @@ def _load_prepare_state() -> None:
             for host, state in hosts.items():
                 if not isinstance(state, dict) or not isinstance(state.get("done"), bool):
                     continue  # entrée corrompue : ignorée seule
-                _PREPARE_STATE[host] = {
-                    "done": state["done"],
-                    "resultat": state.get("resultat"),
-                    "erreur": state.get("erreur"),
-                }
+                if state["done"]:
+                    _PREPARE_STATE[host] = {
+                        "done": True,
+                        "resultat": state.get("resultat"),
+                        "erreur": state.get("erreur"),
+                    }
+                else:
+                    # REL-038B : réconciliation IDEMPOTENTE — une entrée « en cours » restaurée est
+                    # un mensonge (aucun thread ne survit à un redémarrage). On la rend TERMINALE,
+                    # sinon la garde d'unicité verrouillerait cet hôte définitivement. Ré-appliquer
+                    # la réconciliation sur un état déjà réconcilié ne change plus rien (point fixe).
+                    _PREPARE_STATE[host] = {
+                        "done": True,
+                        "resultat": None,
+                        "erreur": "préparation interrompue par un redémarrage",
+                    }
                 while len(_PREPARE_STATE) > _PREPARE_MAX:
                     _PREPARE_STATE.popitem(last=False)
     except Exception:  # noqa: BLE001 — fail-safe : un fichier douteux ne casse pas le démarrage
@@ -1160,21 +1174,37 @@ class ForgeAIHandler(BaseHTTPRequestHandler):
                 self._send_json(400, {"error": "host invalide"})
                 return
 
+            # REL-038B : test-et-marquage ATOMIQUE sous le MÊME verrou — sinon deux requêtes
+            # concurrentes voient toutes deux « libre » et lancent deux préparations du même nœud.
+            # Unicité PAR HÔTE (et non globale) : préparer plusieurs nœuds distincts en parallèle
+            # est un usage légitime d'un toolkit multi-nœuds.
+            with _PREPARE_LOCK:
+                if host in _PREPARE_ACTIVE:
+                    self._send_json(409, {"error": "préparation déjà en cours pour cet hôte"})
+                    return
+                _PREPARE_ACTIVE.add(host)
+
             def _run_prepare() -> None:
-                _prepare_state_set(host, {"done": False, "resultat": None, "erreur": None})
-                resultat, erreur = None, None
                 try:
-                    runner = SubprocessRunner()
-                    helm_present = shutil.which("helm") is not None
-                    resultat = preparer_noeud(
-                        runner, host, appliquer=True, helm_present=helm_present
-                    )
-                except PrepareError as exc:
-                    erreur = str(exc)
-                except Exception as exc:  # noqa: BLE001
-                    traceback.print_exc(file=sys.stderr)
-                    erreur = "erreur interne"
-                _prepare_state_set(host, {"done": True, "resultat": resultat, "erreur": erreur})
+                    _prepare_state_set(host, {"done": False, "resultat": None, "erreur": None})
+                    resultat, erreur = None, None
+                    try:
+                        runner = SubprocessRunner()
+                        helm_present = shutil.which("helm") is not None
+                        resultat = preparer_noeud(
+                            runner, host, appliquer=True, helm_present=helm_present
+                        )
+                    except PrepareError as exc:
+                        erreur = str(exc)
+                    except Exception as exc:  # noqa: BLE001
+                        traceback.print_exc(file=sys.stderr)
+                        erreur = "erreur interne"
+                    _prepare_state_set(host, {"done": True, "resultat": resultat, "erreur": erreur})
+                finally:
+                    # Libération dans un `finally` : une exception ne doit JAMAIS laisser un hôte
+                    # verrouillé (sinon plus aucune préparation possible sans redémarrer).
+                    with _PREPARE_LOCK:
+                        _PREPARE_ACTIVE.discard(host)
 
             threading.Thread(target=_run_prepare, daemon=True).start()
             self._send_json(202, {"started": True, "host": host})
