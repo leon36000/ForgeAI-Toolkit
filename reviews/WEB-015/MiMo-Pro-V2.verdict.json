@@ -1,0 +1,14 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "tests/test_prepare_run_e2e.py",
+   "description": "Le thread preparer_noeud (4e site inattendu) appelle désormais traceback.print_exc(file=sys.stderr) et l'assertion générique est vérifiée, mais le test test_run_prepare_exception_generique ne capture pas stderr (pas de fixture capfd) pour confirmer que la traceback complète y figure. CA1 exige « trace complète sur stderr » pour les 4 sites ; cette assertion n'est test-verified que pour les 3 routes HTTP (G5 du nouveau fichier). La ligne traceback.print_exc(file=sys.stderr) est un idiom standard Python garanti dans un bloc except — aucun doute fonctionnel — mais une régression silencieuse (ex. suppression accidentelle) ne serait pas détectée par la suite.",
+   "preuve": "tests/test_prepare_run_e2e.py ligne modifiée : def test_run_prepare_exception_generique(monkeypatch) → pas de paramètre capfd ; assertions uniquement sur data['erreur'] et data['resultat'], aucune lecture de capfd.readouterr().err. Contraste avec test_web015_error_normalization.py::test_trace_operateur_sur_stderr qui utilise capfd pour le même type de vérification."
+  }
+ ],
+ "date_heure": "2026-07-31T04:57:54.413642+00:00",
+ "prompt_sha256": "3217ab5fb79650eeaca7d32ef9e82bf03b54ed5c3f739fcfc8a91c3f7ecab5a4",
+ "reviewer_model": "MiMo-Pro-V2"
+}

@@ -12,6 +12,7 @@ import sys
 import tempfile
 import threading
 import time
+import traceback
 import urllib.parse
 import webbrowser
 from collections import OrderedDict
@@ -567,6 +568,13 @@ class ForgeAIHandler(BaseHTTPRequestHandler):
     def _send_json(self, code: int, obj: object) -> None:
         self._send(code, _json_body(obj), "application/json; charset=utf-8")
 
+    def _send_internal_error(self, exc: Exception) -> None:
+        """WEB-015 : erreur inattendue → trace complète pour l'opérateur (stderr), message
+        générique pour le client (aucune fuite d'exception interne : type, chemins, détails).
+        Imprime explicitement l'exception reçue (robuste hors bloc `except`, cf. revue)."""
+        traceback.print_exception(type(exc), exc, exc.__traceback__, file=sys.stderr)
+        self._send_json(500, {"error": "erreur interne"})
+
     def _read_json_body(self, max_length: int = 65536) -> dict | None:
         length_hdr = self.headers.get("Content-Length")
         if length_hdr is None:
@@ -618,8 +626,7 @@ class ForgeAIHandler(BaseHTTPRequestHandler):
                 body = hardware_json().encode("utf-8")
                 self._send(200, body, "application/json; charset=utf-8")
             except Exception as exc:  # noqa: BLE001
-                payload = json.dumps({"error": str(exc)}, ensure_ascii=False).encode("utf-8")
-                self._send(500, payload, "application/json; charset=utf-8")
+                self._send_internal_error(exc)
             return
 
         if path == "/api/health":
@@ -681,7 +688,7 @@ class ForgeAIHandler(BaseHTTPRequestHandler):
                 detect = json.loads(hardware_json())
                 self._send_json(200, {"recommended_id": recommended_stack_id(detect)})
             except Exception as exc:  # noqa: BLE001
-                self._send_json(500, {"error": str(exc)})
+                self._send_internal_error(exc)
             return
 
         if path == "/api/stacks":
@@ -773,7 +780,7 @@ class ForgeAIHandler(BaseHTTPRequestHandler):
                 payload = inventaire(SubprocessRunner(), signatures)
                 self._send_json(200, payload)
             except Exception as exc:  # noqa: BLE001
-                self._send_json(500, {"error": str(exc)})
+                self._send_internal_error(exc)
             return
 
         if path == "/api/deploy/events":
@@ -830,7 +837,9 @@ class ForgeAIHandler(BaseHTTPRequestHandler):
             try:
                 nodes = cluster_status(runner)
             except ClusterError as exc:
-                self._send_json(200, {"nodes": [], "detail": str(exc)})
+                # WEB-015 : ClusterError peut encapsuler un {exc} interne (kubectl illisible) ;
+                # rédige le détail avant de l'exposer au client (secret-safe).
+                self._send_json(200, {"nodes": [], "detail": redact_text(str(exc))})
                 return
             # S6b : enrichit chaque nœud de son/ses vendor(s) GPU (sondes node_hardware du
             # registre) pour que le dropdown moteur de l'UI se filtre par vendor. Nœud sans
@@ -877,7 +886,7 @@ class ForgeAIHandler(BaseHTTPRequestHandler):
                         }
                     )
             except ClusterError as exc:
-                detail = str(exc)
+                detail = redact_text(str(exc))  # WEB-015 : secret-safe (ClusterError wrappe {exc})
             if detail is not None:
                 self._send_json(200, {"nodes": [], "detail": detail})
             else:
@@ -1011,7 +1020,8 @@ class ForgeAIHandler(BaseHTTPRequestHandler):
                 except PrepareError as exc:
                     erreur = str(exc)
                 except Exception as exc:  # noqa: BLE001
-                    erreur = f"erreur interne: {exc}"
+                    traceback.print_exc(file=sys.stderr)
+                    erreur = "erreur interne"
                 _prepare_state_set(host, {"done": True, "resultat": resultat, "erreur": erreur})
 
             threading.Thread(target=_run_prepare, daemon=True).start()
