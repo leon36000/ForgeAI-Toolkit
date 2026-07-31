@@ -491,6 +491,17 @@ def _is_loopback_host(value: str) -> bool:
         return False
 
 
+def _is_sensitive_read_path(path: str) -> bool:
+    """WEB-017 : un GET est sensible (→ même garde que les mutations) s'il est sous /api/ et n'est
+    ni la sonde santé ni les traductions. Coquille UI, assets statiques, /api/health et /api/i18n/*
+    restent publics. Fail-closed : tout futur /api/* non listé est sensible par défaut."""
+    if not path.startswith("/api/"):
+        return False
+    if path == "/api/health" or path.startswith("/api/i18n/"):
+        return False
+    return True
+
+
 def _bearer_matches(auth_header: str | None, token: str | None) -> bool:
     """Compare un Bearer ASCII valide en temps constant; toute autre forme est refusée."""
     if not token:
@@ -588,6 +599,11 @@ class ForgeAIHandler(BaseHTTPRequestHandler):
     def do_GET(self) -> None:  # noqa: N802
         parsed = urllib.parse.urlparse(self.path)
         path = parsed.path
+
+        # WEB-017 : les lectures sensibles subissent la MÊME politique que les mutations
+        # (jeton hors loopback, anti-DNS-rebinding Host). Réutilisation littérale = source unique.
+        if _is_sensitive_read_path(path) and not self._guard_mutation():
+            return
 
         if path in ("/", "/index.html"):
             data = _asset_bytes("index.html")

@@ -1,0 +1,14 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "src/forgeai/web/server.py",
+   "description": "Risque théorique de contournement par encodage URL (ex: `/%61pi/detect`) si la logique de routage en aval décode le chemin (`urllib.parse.unquote`) avant de matcher la route sensible, alors que la garde évalue le chemin brut `parsed.path`. Le principe fail-closed protège bien les sous-routes inconnues, mais pas ce cas de figure sur le préfixe lui-même.",
+   "preuve": "Ligne 603: `path = parsed.path` (non décodé) passé à `_is_sensitive_read_path`."
+  }
+ ],
+ "date_heure": "2026-07-31T04:15:37.961722+00:00",
+ "prompt_sha256": "d1106bde5674ffcc5e165c5eb5fe0e2c1fe8c1cff417446b2ee3e62d7cb7cb84",
+ "reviewer_model": "Qwen3.7-Max"
+}
