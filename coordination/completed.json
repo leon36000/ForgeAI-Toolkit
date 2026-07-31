@@ -704,6 +704,14 @@
       "merge_commit": "6d33218",
       "review": "APPROVE 3/3 (Grok-4.5/xai, Qwen3.7-Max/alibaba, MiMo-Pro-V2/xiaomi), sceau 8eff5fb9, SWAP CIV (coder DeepSeek ecarte ; Gemini 429 -> MiMo), 0 objection (mineure tour 1 Grok traitee : story alignee au code)",
       "note": "main() scinde _run+wrapper : frontiere d erreurs sans traceback, redaction via ERR-041A, FORGEAI_DEBUG restaure la trace, KeyboardInterrupt->130, SystemExit(2) preserve ; referme la fuite {exc} du handler DeployError ; 9 TDAD + 5 mutations + largeur frontiere, 26 CLI non regresses, couverture 91%"
+    },
+    {
+      "id": "CLI-036",
+      "ide": "CLAUDE_CODE",
+      "pr": 318,
+      "merge_commit": "27a180e",
+      "review": "APPROVE 3/3 (Grok-4.5/xai, Qwen3.7-Max/alibaba, MiMo-Pro-V2/xiaomi), sceau 4d94d452, SWAP CIV (coder DeepSeek ecarte), 2 tours (objections Grok tour 1 traitees : G10 mapping code 15 + doc)",
+      "note": "core/proc.py : timeout + annulation SIGINT + kill d arbre (groupe de session, killpg escalade POSIX / taskkill Windows) ; --timeout, codes 14/15 ; loop.py inchange ; 11 tests, mutations detectantes, 3 defauts tests crew corriges (grandchild echappe au groupe, SystemExit vs retour, course escalade)"
     }
   ]
 }
