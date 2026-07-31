@@ -7,6 +7,7 @@ import json
 import os
 import re
 import shutil
+import ssl
 import subprocess
 import sys
 import tempfile
@@ -951,9 +952,29 @@ class ForgeAIHandler(BaseHTTPRequestHandler):
             return False
         return True
 
+    def _is_secure_transport(self) -> bool:
+        """WEB-034B : le transport est sûr si le client est en loopback (jamais sur le réseau) ou
+        si la connexion est chiffrée (TLS). On se base sur l'adresse SOURCE réelle, pas sur le bind :
+        un serveur lié 0.0.0.0 accepte donc toujours l'UI locale."""
+        if _is_loopback_host(self.client_address[0]):
+            return True
+        return isinstance(self.connection, ssl.SSLSocket)
+
+    def _require_secure_transport(self) -> bool:
+        """WEB-034B : refuse (426) une requête porteuse d'identifiants sur un transport non chiffré
+        venant du réseau. Message générique (ne dit pas quel secret) orientant vers TLS/tunnel."""
+        if not self.headers.get("Authorization"):
+            return True
+        if self._is_secure_transport():
+            return True
+        self._send_json(426, {"error": "transport non securise : utilisez TLS ou le loopback/tunnel"})
+        return False
+
     def _guard_mutation(self) -> bool:
         """Garde anti-CSRF / anti DNS-rebinding / jeton sur les routes mutantes.
         Envoie 403/401 et retourne False si la requête est refusée."""
+        if not self._require_secure_transport():
+            return False
         auth_values = self.headers.get_all("Authorization") or []
         allowed, code = authorize_mutation(
             origin=self.headers.get("Origin"),
@@ -1310,6 +1331,17 @@ def build_server(host: str = "127.0.0.1", port: int = 8765) -> ThreadingHTTPServ
     server.forgeai_bind_host = server.server_address[0]
     server.forgeai_auth_value = _WEB_TOKEN
     server.forgeai_rate_limiter = RateLimiter.from_env()
+    cert = os.environ.get("FORGEAI_TLS_CERT")
+    key = os.environ.get("FORGEAI_TLS_KEY")
+    if cert and key:
+        # WEB-034B : TLS explicite (opt-in opérateur) — le transport devient sûr, la garde 426 ne
+        # s'applique plus. Aucun certificat n'est généré : l'opérateur fournit son matériel.
+        context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
+        context.load_cert_chain(certfile=cert, keyfile=key)
+        server.socket = context.wrap_socket(server.socket, server_side=True)
+        server.forgeai_tls = True
+    else:
+        server.forgeai_tls = False
     return server
 
 
@@ -1319,7 +1351,8 @@ def serve(
     open_browser: bool = True,
 ) -> None:
     server = build_server(host, port)
-    url = f"http://{host}:{server.server_address[1]}"
+    scheme = "https" if getattr(server, "forgeai_tls", False) else "http"
+    url = f"{scheme}://{host}:{server.server_address[1]}"
     print(url)
     if open_browser:
         try:
