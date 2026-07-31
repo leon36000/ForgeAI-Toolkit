@@ -641,7 +641,7 @@ def _operators(args: argparse.Namespace) -> int:
 
 def _node_probe(args: argparse.Namespace) -> int:
     from forgeai.network.remote_probe import probe_remote_node, SshRunner, RemoteProbeError
-    runner = SshRunner(args.user, args.node_host, args.keyfile)
+    runner = SshRunner(args.user, args.node_host, args.keyfile, args.hostkey)
     try:
         probe = probe_remote_node(args.node_host, runner=runner, registre_path=args.registre)
     except RemoteProbeError as exc:
@@ -745,11 +745,15 @@ def _node_discover(args: argparse.Namespace) -> int:
     if args.hostname == "local":
         runner = SubprocessRunner()
     else:
+        if not args.hostkey:
+            print("ECHEC DISCOVER: --hostkey requis pour un nœud distant (SSH-007)",
+                  file=sys.stderr)
+            return 12
         if not args.user or not args.keyfile:
             print("ECHEC DISCOVER: --user et --keyfile requis pour un nœud distant",
                   file=sys.stderr)
             return 12
-        runner = SshRunner(args.user, args.hostname, args.keyfile)
+        runner = SshRunner(args.user, args.hostname, args.keyfile, args.hostkey)
 
     try:
         signatures = charger_signatures()
@@ -1278,6 +1282,8 @@ def _run(argv: list[str] | None = None) -> int:
     p_node_probe.add_argument("--node-host", required=True, dest="node_host")
     p_node_probe.add_argument("--user", required=True)
     p_node_probe.add_argument("--keyfile", required=True, help="clé privée SSH d'accès au nœud")
+    p_node_probe.add_argument("--hostkey", required=True,
+                              help="empreinte SHA256 de la clé d'hôte (SSH-007 : 'SHA256:...', pas de TOFU)")
     p_node_probe.add_argument("--registre", default=str(DEFAULT_REGISTRE))
     p_node_probe.set_defaults(func=_node_probe)
     p_node_prepare = node_sub.add_parser(
@@ -1298,6 +1304,8 @@ def _run(argv: list[str] | None = None) -> int:
                                  help="utilisateur SSH (requis si distant)")
     p_node_discover.add_argument("--keyfile", default=None,
                                  help="clé privée SSH (requis si distant)")
+    p_node_discover.add_argument("--hostkey", default=None,
+                                 help="empreinte SHA256 de la clé d'hôte distante (requis si hostname != local)")
     p_node_discover.add_argument("--registre", default=str(DEFAULT_REGISTRE))
     p_node_discover.set_defaults(func=_node_discover)
     p_node_cluster = node_sub.add_parser(
