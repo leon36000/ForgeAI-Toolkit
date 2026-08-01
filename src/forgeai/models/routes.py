@@ -103,10 +103,24 @@ class RouteStore:
             "vault": vault,
         }
 
-    def _write_transaction_journal(self, snapshot: dict) -> None:
+    def _write_transaction_journal(
+        self, snapshot: dict, cible_routes: object, cible_vault: object
+    ) -> None:
+        from ._locking import empreinte_canonique
+
+        journal = {
+            **snapshot,
+            # Le journal n'est supprime que conditionnellement : y placer le
+            # blob scelle de la nouvelle cle laisserait ce chiffre dans un
+            # journal residuel apres revocation. Une empreinte est irreversible.
+            "cible": {
+                "routes": empreinte_canonique(cible_routes),
+                "vault": empreinte_canonique(cible_vault),
+            },
+        }
         atomic_write_text(
             self.transaction_journal_path,
-            json.dumps(snapshot, ensure_ascii=False, sort_keys=True),
+            json.dumps(journal, ensure_ascii=False, sort_keys=True),
             mode=0o600,
         )
 
@@ -169,7 +183,7 @@ class RouteStore:
             )
             snapshot = self._transaction_snapshot(routes, previous_vault)
             next_routes = [*routes, route.public_dict()]
-            self._write_transaction_journal(snapshot)
+            self._write_transaction_journal(snapshot, next_routes, next_vault)
             try:
                 self.vault._save(next_vault)
                 self._save(next_routes)

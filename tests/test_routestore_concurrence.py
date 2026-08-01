@@ -656,7 +656,13 @@ def test_verrou_transaction_refuse_symlink_sans_alterer_la_cible(tmp_path):
 
 
 def test_export_recupere_le_wal_avant_de_lire_routes(tmp_path):
-    """Un export ne doit jamais publier une route encore révocable par le WAL."""
+    """Un export publie l'état RÉCUPÉRÉ, jamais un état encore en attente de récupération.
+
+    RÉÉCRIT PAR DATA-002B (#306). Ce test exigeait auparavant `"routes.json" not in bundle`,
+    c'est-à-dire l'annulation d'une transaction COMMITÉE : il encodait le défaut comme
+    spécification. Son intention légitime — « la récupération précède toute lecture » — est
+    conservée ; son postulat — « une transaction commitée est révocable » — est corrigé.
+    """
     home = tmp_path / "models"
     ctx = mp.get_context("fork")
     ready = ctx.Event()
@@ -674,8 +680,13 @@ def test_export_recupere_le_wal_avant_de_lire_routes(tmp_path):
     assert (home / ".models-transaction.json").exists()
 
     bundle = export_setup(home)
-    assert "routes.json" not in bundle["files"]
+    # La récupération a eu lieu AVANT la lecture : le journal a disparu. C'est ce qui prouve
+    # l'ordre, et c'est le seul détecteur qui survit au correctif — la présence de la route,
+    # elle, serait vraie même sans récupération, puisqu'elle est déjà sur disque.
     assert not (home / ".models-transaction.json").exists()
+    # Et la transaction commitée est publiée, au lieu d'être silencieusement annulée.
+    assert "routes.json" in bundle["files"]
+    assert bundle["files"]["routes.json"][0]["name"] == "orpheline"
 
 
 def test_sigkill_apres_routes_replace_est_recupere_avant_precheck_add(tmp_path):
@@ -694,17 +705,22 @@ def test_sigkill_apres_routes_replace_est_recupere_avant_precheck_add(tmp_path):
     process.join(timeout=5)
 
     assert process.exitcode == -signal.SIGKILL
-    route, result = observer.add_cloud(
-        "orpheline",
-        "openrouter",
-        "m",
-        "nouveau-secret",
-        "pp",
-        transport=_GreenTransport(),
-    )
-    assert result.ok
-    assert route.key_fingerprint == fingerprint("nouveau-secret")
-    assert observer.vault.get("orpheline", "pp") == "nouveau-secret"
+
+    # RÉÉCRIT PAR DATA-002B (#306). Avant le correctif, la récupération annulait la transaction
+    # commitée et le ré-ajout réussissait — le test consacrait donc la perte de données. La route
+    # survit désormais, et le precheck doit la voir comme un doublon.
+    with pytest.raises(RouteError, match="existe déjà"):
+        observer.add_cloud(
+            "orpheline", "openrouter", "m", "nouveau-secret", "pp",
+            transport=_GreenTransport(),
+        )
+
+    # Détecteur de l'ORDRE, seul survivant du correctif : la présence de la route serait vraie
+    # même sans récupération (elle est déjà sur disque), mais la disparition du journal ne peut
+    # venir que de la récupération déclenchée par le precheck.
+    assert not (home / ".models-transaction.json").exists()
+    # Le secret d'ORIGINE est intact : le ré-ajout refusé n'a rien écrasé.
+    assert observer.vault.get("orpheline", "pp-coffre") == FAKE_KEY
 
 
 def test_precheck_add_est_atomique_avec_la_recuperation(tmp_path, monkeypatch):
