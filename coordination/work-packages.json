@@ -526,7 +526,7 @@
     {
       "id": "OPS-031C",
       "title": "Créer un bundle de diagnostic reproductible et redigé",
-      "status": "EXTERNAL",
+      "status": "completed",
       "ide": "CLAUDE_CODE",
       "source_ide": "CODEX",
       "exclusive_lane": "",
