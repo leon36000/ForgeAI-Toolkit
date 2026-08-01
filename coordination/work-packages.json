@@ -562,7 +562,10 @@
         "tests/js/**",
         "stories/OPS-031E.md",
         "reviews/OPS-031E/**",
-        "Registres/PATCH-OPS-031E.jsonl"
+        "Registres/PATCH-OPS-031E.jsonl",
+        "src/forgeai/data/locales/fr.json",
+        "src/forgeai/data/locales/en.json",
+        "tests/test_ops031e_ui_operateur.py"
       ],
       "forbidden_paths": [
         "build/**",
