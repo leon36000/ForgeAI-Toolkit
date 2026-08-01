@@ -540,7 +540,7 @@
     {
       "id": "OPS-031E",
       "title": "Ajouter l’interface opérateur Status/Logs/Diagnostic",
-      "status": "READY_AFTER",
+      "status": "completed",
       "priority": "P2_HIGH",
       "severity": "S2_MEDIUM",
       "ide": "COPILOT",
