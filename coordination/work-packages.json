@@ -510,7 +510,7 @@
     {
       "id": "OPS-031B",
       "title": "Ajouter forgeai logs avec limites, filtres et redaction",
-      "status": "EXTERNAL",
+      "status": "completed",
       "ide": "CLAUDE_CODE",
       "source_ide": "CODEX",
       "exclusive_lane": "",

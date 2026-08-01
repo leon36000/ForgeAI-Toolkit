@@ -856,6 +856,14 @@
       "merge_commit": "80d958a",
       "review": "APPROVE 3/3 (Grok-4.5/xai, Qwen3.7-Max/alibaba, MiMo-Pro-V2/xiaomi), sceau 3b83a9d5957a, SWAP CIV, 0 objection bloquante",
       "note": "forgeai status + GET /api/status ; liveness (health, public statique) distinguee de la sante profonde (status, gardee d office par WEB-017) ; source unique collect_status partagee CLI/web"
+    },
+    {
+      "id": "OPS-031B",
+      "ide": "CLAUDE_CODE",
+      "pr": 356,
+      "merge_commit": "6cf0612",
+      "review": "APPROVE 3/3 (Grok-4.5/xai, Qwen3.7-Max/alibaba, MiMo-Pro-V2/xiaomi), sceau b47e3aba9981, SWAP CIV, 0 objection bloquante",
+      "note": "forgeai logs + fermeture de la fuite du flux live ; redaction a l ingestion plutot qu a chaque sortie (ERR-041B avait couvert le disque et manque le flux)"
     }
   ]
 }
