@@ -155,6 +155,33 @@ def _cluster_status_cache() -> list:
         return list(nodes)
 
 
+LOGS_TAIL_DEFAUT = 200
+LOGS_TAIL_MAX = 5000  # plafond DUR : une commande de diagnostic ne déverse jamais sans borne
+
+
+def lire_logs_deploiement(chemin=None, *, tail: int = LOGS_TAIL_DEFAUT, grep: str | None = None) -> list[str]:
+    """OPS-031B : lignes du dernier déploiement, BORNÉES, filtrées et RÉDIGÉES.
+
+    La rédaction est appliquée AUSSI à la lecture : le fichier d'état a pu être écrit par une version
+    antérieure au correctif d'ingestion — défense en profondeur assumée, pas redondance décorative.
+    `grep` est une SOUS-CHAÎNE littérale et non une expression régulière : compiler un motif fourni
+    par l'utilisateur ouvrirait au ReDoS pour un gain nul sur un filtre de logs.
+    """
+    chemin = chemin or _deploy_state_path()
+    try:
+        donnees = json.loads(Path(chemin).read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return []
+    lignes = donnees.get("lines")
+    if not isinstance(lignes, list):
+        return []
+    lignes = [redact_text(str(ligne)) for ligne in lignes]
+    if grep:
+        lignes = [ligne for ligne in lignes if grep in ligne]
+    borne = max(1, min(int(tail), LOGS_TAIL_MAX))
+    return lignes[-borne:]
+
+
 def _deploy_resume() -> dict:
     """OPS-031A : résumé du dernier déploiement — statut seulement, JAMAIS les lignes brutes
     (elles peuvent contenir la sortie d'outils ; ERR-041B les rédige déjà pour la persistance)."""
@@ -1468,7 +1495,11 @@ class ForgeAIHandler(BaseHTTPRequestHandler):
                 try:
                     for line in new_proc.stdout:
                         with _DEPLOY_STATE["lock"]:
-                            _DEPLOY_STATE["lines"].append(line.rstrip("\r\n"))
+                            # OPS-031B : rédaction à l'INGESTION. ERR-041B rédigeait à l'écriture disque et
+                            # avait MANQUÉ le flux `/api/deploy/events`, qui diffusait les lignes
+                            # brutes. Rédiger au point d'ENTRÉE couvre tous les consommateurs —
+                            # présents et futurs — et la mémoire ne détient plus jamais le secret.
+                            _DEPLOY_STATE["lines"].append(redact_text(line.rstrip("\r\n")))
                     new_proc.wait()
                     with _DEPLOY_STATE["lock"]:
                         _DEPLOY_STATE["exit_code"] = new_proc.returncode

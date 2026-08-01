@@ -603,6 +603,26 @@ def _gpu_drivers(args: argparse.Namespace) -> int:
     return 0
 
 
+def _logs(args) -> int:
+    """OPS-031B : `forgeai logs` — relecture du dernier déploiement SANS serveur web.
+
+    Sortie toujours BORNÉE (défaut + plafond dur) et RÉDIGÉE. Absence de fichier d'état = cas
+    normal (aucun déploiement encore lancé) : on sort proprement, pas par une trace.
+    """
+    import json as _json
+    from forgeai.web.server import LOGS_TAIL_DEFAUT, lire_logs_deploiement
+
+    tail = getattr(args, "tail", None) or LOGS_TAIL_DEFAUT
+    lignes = lire_logs_deploiement(tail=tail, grep=getattr(args, "grep", None))
+    if getattr(args, "json", False):
+        print(_json.dumps({"lines": lignes}, ensure_ascii=False))
+    elif not lignes:
+        print("aucune ligne de déploiement disponible")
+    else:
+        print("\n".join(lignes))
+    return 0
+
+
 def _status(args) -> int:
     """OPS-031A : `forgeai status` — MÊME agrégat que GET /api/status (source unique
     `collect_status`), mais calculé LOCALEMENT : aucun serveur web requis."""
@@ -1259,6 +1279,12 @@ def _run(argv: list[str] | None = None) -> int:
     p_hw = sub.add_parser("hardware", help="détection hardware (S01)")
     p_hw.set_defaults(func=lambda a: print(
         HardwareDetector(SubprocessRunner()).full_report().to_json()) or 0)
+
+    p_logs = sub.add_parser("logs", help="lignes du dernier déploiement (bornées, filtrées, rédigées)")
+    p_logs.add_argument("--tail", type=int, default=None, help="nombre de lignes (borné)")
+    p_logs.add_argument("--grep", default=None, help="filtre par SOUS-CHAÎNE littérale (pas de regex)")
+    p_logs.add_argument("--json", action="store_true", help="sortie machine")
+    p_logs.set_defaults(func=_logs)
 
     p_st = sub.add_parser("status", help="état d'exécution : backends, cluster, dernier déploiement")
     p_st.add_argument("--json", action="store_true", help="sortie machine")
