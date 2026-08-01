@@ -896,6 +896,13 @@
       "merge_commit": "c88f6e9",
       "review": "APPROVE 3/3 (DeepSeek-V4-Pro/deepseek, Gemini-3.1-Pro/google, Qwen3.7-Max/alibaba), sceau 02518c90857a, 0 bloquante, apres REJECT 0/3 au tour R1",
       "note": "verify prouve l integrite, pas l absence de manque : troncature et suppression totale passaient a rc=0. Reference = origin/main (etat DEJA MERGE) apres deux revues d architecture ayant refute une ancre versionnee dans l arbre. Iteration sur l UNION reference/disque. Cliquet de completude borne par (seq_max, hash). Le REJECT R1 a revele un fail-open reel : sans --base-ref-git la non-croissance etait silencieusement ignoree. Gates LOCAUX (CI a l arret, plafond Actions, T3 Nathan)."
+    },
+    {
+      "package": "REV-043",
+      "merge_commit": "828714b2",
+      "pr_number": null,
+      "review": "3 revues rejouées avec 3 vendors DISTINCTS (DeepSeek-V4-Pro, Grok-4.5, Qwen3.7-Max) pour WEB-001, DATA-002, DATA-003",
+      "note": "Livré et attesté dans Registres/PATCH-REV-043.jsonl (4 entrées, dont rev043_complete), mais jamais enregistré dans completed.json — écart de tenue de registre, pas de livraison. Corrigé après mesure : work-packages le disait 'completed' alors que le fichier faisant autorité l'ignorait."
     }
   ]
 }
