@@ -32,7 +32,7 @@ Ce principe est **hérité par toutes les sous-stories** comme critère d'accept
 
 **Besoin** : la surface actuelle est une CLI complète (moteur prouvé). Il manque une **interface visuelle, moderne, intuitive** rendant le déploiement clé-en-main accessible sans connaissance de la ligne de commande.
 
-**Le moteur existe déjà** (livré + prouvé, main) — la web-UI est une **surface, pas une réécriture** : détection hardware, profils (`derive_profile`), catalogue 948 briques + schéma, templates Dev-Agentic/RAG/Lab/Production, modèles cloud/local + vault, gateway unique, stratégie, budgets, **multi-nœuds** (add/tailscale/probe, secret éphémère), IDE (list/configure/MCP/gouvernance), export/import, drivers GPU, et l'orchestration bout-en-bout `wizard_ci` (`cli.py`). La web-UI **rappelle ces fonctions ; elle n'ajoute aucune logique métier**.
+**Le moteur existe déjà** (livré + prouvé, main) — la web-UI est une **surface, pas une réécriture** : détection hardware, profils (`derive_profile`), catalogue 1577 briques + schéma, templates Dev-Agentic/RAG/Lab/Production, modèles cloud/local + vault, gateway unique, stratégie, budgets, **multi-nœuds** (add/tailscale/probe, secret éphémère), IDE (list/configure/MCP/gouvernance), export/import, drivers GPU, et l'orchestration bout-en-bout `wizard_ci` (`cli.py`). La web-UI **rappelle ces fonctions ; elle n'ajoute aucune logique métier**.
 
 **Contraintes héritées** (invariants PROOF + canon) :
 - **Souveraineté / hors-ligne** (voir §0).

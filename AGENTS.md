@@ -31,7 +31,7 @@ pytest
 
 ## Architecture (`src/forgeai/`)
 - `hardware/`, `planner/`, `preflight` — détection matérielle → profil → plan Minimal.
-- `catalogue/` + `data/catalogue.json` — 948 briques R-ALL (vérifiées + bilingues), chargées
+- `catalogue/` + `data/catalogue.json` — 1577 briques R-ALL (vérifiées + bilingues), chargées
   par `importlib.resources` (portable après `pip install`, `dependencies=[]` stdlib pur).
 - `deploy/`, `renderers/` — Compose + K3s ; `network/` — multi-nœuds (clés ed25519, bootstrap).
 - `rag/` — client RAG e2e (preuve P1). `core/` — models, registre hash-chaîné, runner injectable.
@@ -78,7 +78,7 @@ Cursor (UI/accessibilité/docs).
 ### Source de vérité opérationnelle
 
 ```text
-coordination/work-packages.json  — 60 packages, lanes, deps, périmètres
+coordination/work-packages.json  — 64 packages, lanes, deps, périmètres
 coordination/active-claims.json  — claims actifs (un par lane exclusive)
 coordination/completed.json      — SHA de merge prouvés
 ```

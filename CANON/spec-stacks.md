@@ -2,7 +2,7 @@
 
 - **Statut** : Approuvé Nathan 2026-07-19. Étend l'installateur UI et le catalogue (1577 briques).
 - **Exigences** : ID-4 (stacks complets), CD-1/CD-2 (système complet, branché et fonctionnel).
-- **Méthode** : Sourcé R-ALL. 54 dossiers BINDING scellés et validés par la gate D9 (minimum 3 vendors distincts).
+- **Méthode** : Sourcé R-ALL. 130 dossiers BINDING scellés et validés par la gate D9 (minimum 3 vendors distincts).
 
 ---
 
@@ -59,5 +59,5 @@ Tout appel modèle → **gateway `litellm`** (clés virtuelles = budgets, cache,
 ## §5 — Doctrine de validation (Gate D9)
 
 Chaque modification apportée aux définitions de stacks, au catalogue ou aux configurations de déploiement doit passer la gate de validation du dépôt :
-- **Validation multi-vendor** : Tout dossier listé dans `reviews/BINDING.txt` (54 dossiers scellés) doit obligatoirement comporter une approbation signée d'au moins **3 vendors distincts**.
+- **Validation multi-vendor** : Tout dossier listé dans `reviews/BINDING.txt` (130 dossiers scellés) doit obligatoirement comporter une approbation signée d'au moins **3 vendors distincts**.
 - **CI unique** : Validation automatisée via `gates.yml` (vérification de l'absence de stubs, intégrité du registre hash-chaîné, et couverture de tests).
