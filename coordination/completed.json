@@ -911,6 +911,14 @@
       "merge_commit": "178a58b",
       "review": "APPROVE 3/3 (DeepSeek-V4-Pro/deepseek, Gemini-3.1-Pro/google, Qwen3.7-Max/alibaba), sceau 49e9ac1e8739, 0 bloquante",
       "note": "5 sous-commandes documentees sur 21. Le defaut n etait pas que la doc mente mais qu elle OMETTE — invisible en relecture. 3 affirmations FAUSSES supprimees (wizard TUI Textual inexistant, binaire 'forge' au lieu de 'forgeai', regle 3-vendors attribuee a tally.py). 7 chiffres reconcilies par mesure. Archives de decision (PLAN-MAITRE-BMAD, plan-integral) NON touchees. Livrable durable = scripts/gate_docs.py, cliquet borne. Defaut corrige en cours : la borne etait suspendue a --base-ref-git donc muette sans lui — meme defaut que le REJECT R1 de REG-029B."
+    },
+    {
+      "id": "DATA-002B",
+      "ide": "CLAUDE_CODE",
+      "pr": 370,
+      "merge_commit": "8fa0800",
+      "review": "APPROVE 3/3 (DeepSeek-V4-Pro/deepseek, Gemini-3.1-Pro/google, Qwen3.7-Max/alibaba), sceau 1bf418b15dd3, 0 objection",
+      "note": "Suivi de REV-043 (issue #306) : la recuperation WAL annulait une transaction COMMITEE si le process mourait entre le commit et l unlink du journal. Un marqueur de commit ne fermerait pas la fenetre mais la deplacerait (le commit est DEUX os.replace). Retenu : empreinte CANONIQUE des deux etats cibles — canonique et non octet-a-octet, sinon un changement d indent reintroduirait la perte de donnees ; empreinte et non etat complet, sinon le blob scelle de la cle resterait dans un journal residuel apres revocation. Conjonction stricte : le rollback du cas 'cle orpheline' reste applique. Deux tests herites encodaient le defaut comme specification et ont rougi — reecrits semantiquement. PREMIER merge de la session avec CI REELLEMENT VERTE (gates + scope-guard + sonarcloud), matrice multi-OS comprise."
     }
   ]
 }

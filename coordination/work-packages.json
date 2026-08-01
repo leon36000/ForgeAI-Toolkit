@@ -84,6 +84,27 @@
       "_reassigned": "CODEX->CLAUDE_CODE (Codex retiré du projet, 2026-07-30)"
     },
     {
+      "id": "DATA-002B",
+      "title": "Fermer la fenêtre de crash-consistency d'add_cloud (récupération WAL idempotente)",
+      "status": "COMPLETED",
+      "ide": "CLAUDE_CODE",
+      "source_ide": "CLAUDE_CODE",
+      "exclusive_lane": "",
+      "dependencies": [
+        "DATA-002",
+        "REV-043"
+      ],
+      "_note": "Suivi de REV-043 (issue #306) : objection CRITIQUE de DeepSeek-V4-Pro sur le diff déjà mergé de DATA-002, manquée par la revue mono-vendor d'origine. Package créé après coup car né d'une revue, pas du plan initial.",
+      "allowed_paths": [
+        "src/forgeai/models/_locking.py",
+        "src/forgeai/models/routes.py",
+        "tests/test_data002b_wal_idempotent.py",
+        "tests/test_routestore_concurrence.py",
+        "stories/DATA-002B.md",
+        "reviews/DATA-002B/**"
+      ]
+    },
+    {
       "id": "DATA-003",
       "title": "Créer un writer sécurisé commun et atomique pour les secrets OpenBao",
       "status": "EXTERNAL",
