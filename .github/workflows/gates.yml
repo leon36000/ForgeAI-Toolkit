@@ -50,9 +50,28 @@ jobs:
   registres:
     runs-on: ubuntu-latest
     steps:
+      # fetch-depth: 0 est REQUIS par le gate d'ancrage : la référence anti-rollback est l'état
+      # DÉJÀ MERGÉ (origin/main), qu'une PR ne peut pas réécrire. Avec la profondeur 1 par
+      # défaut l'historique serait absent et le contrôle échouerait — volontairement, plutôt que
+      # de verdir en silence (REG-029B). Même motif que le job gitleaks.
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - name: Intégrité des chaînes de hash
         run: python3 scripts/registre.py verify Registres/*.jsonl
+      # `verify` prouve l'intégrité, jamais l'absence de manque : une chaîne tronquée reste
+      # parfaitement valide (ADR-TRUST-019A §2.3, lignes 64-71). L'ancrage compare chaque
+      # registre à origin/main et détecte troncature, rollback et réécriture totale cohérente.
+      - name: Ancrage — rollback, troncature, réécriture (REG-029B)
+        run: python3 scripts/registre.py ancrage --ref origin/main
+      # Cliquet de complétude : la dette héritée (31 anomalies, bornées à seq_max) est figée dans
+      # une base versionnée ; toute anomalie NOUVELLE fait rougir. La base ne peut pas être
+      # élargie pour faire passer une PR : au-delà de la borne, aucune identité n'est baselinable.
+      - name: Complétude — cliquet sur la dette héritée (REG-029A/B)
+        run: |
+          python3 scripts/registre.py completude Registres/*.jsonl \
+            --base Registres/BASELINE-COMPLETUDE.json \
+            --base-ref-git origin/main
 
   metering-sites:
     runs-on: ubuntu-latest

@@ -1,0 +1,19 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": ".github/workflows/gates.yml",
+   "description": "Le step `Complétude` utilise le glob shell `Registres/*.jsonl` alors que la story affirme explicitement que l'énumération se fait en Python pour couvrir les chemins à espaces et Windows. Bien que le cliquet `identite perimee` empêche un fail-open silencieux en cas de suppression, bash splitterait les noms avec espaces, ce qui ferait échouer le gate bruyamment. Une cohérence avec `ancrage` (qui utilise le glob Python) serait préférable.",
+   "preuve": "Diff gates.yml : `python3 scripts/registre.py completude Registres/*.jsonl` contredit la section 'Invariant d'itération' de la story : 'L'énumération se fait en Python... jamais par glob shell'."
+  }
+ ],
+ "date_heure": "2026-08-01T18:25:58.751002+00:00",
+ "prompt_sha256": "02518c90857a74deba11b5f42587876cae5373f943290d759ff5e3de762b155c",
+ "reviewer_model": "Qwen3.7-Max",
+ "modele_servi": "qwen37-max-openrouter",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}
