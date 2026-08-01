@@ -821,7 +821,7 @@
     {
       "id": "REG-029B",
       "title": "Ancrer les checkpoints et détecter rollback/troncature",
-      "status": "EXTERNAL",
+      "status": "COMPLETED",
       "ide": "CLAUDE_CODE",
       "source_ide": "CODEX",
       "exclusive_lane": "",

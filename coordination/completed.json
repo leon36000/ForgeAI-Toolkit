@@ -888,6 +888,14 @@
       "merge_commit": "f05415d",
       "review": "APPROVE 3/3 (DeepSeek-V4-Pro/deepseek, Gemini-3.1-Pro/google, Qwen3.7-Max/alibaba), sceau 9749a089829a, 0 objection",
       "note": "verify() prouve l integrite, pas la completude : une story declaree terminee sans trace de revue passait le gate en silence. Deux conventions d attestation coexistent (revue en ligne / entree revue_scellee separee) : les deux sont acceptees, sinon la moitie de l historique serait faussement signalee. Mesure sur le registre reel : 1 story sur 39 sans attestation (D4). Aucun gate CI ajoute ici (REG-029B). ATTENTION : gates CI a l arret (plafond de depense Actions, T3 Nathan) — gates executes LOCALEMENT, matrice multi-OS non couverte."
+    },
+    {
+      "id": "REG-029B",
+      "ide": "CLAUDE_CODE",
+      "pr": 365,
+      "merge_commit": "c88f6e9",
+      "review": "APPROVE 3/3 (DeepSeek-V4-Pro/deepseek, Gemini-3.1-Pro/google, Qwen3.7-Max/alibaba), sceau 02518c90857a, 0 bloquante, apres REJECT 0/3 au tour R1",
+      "note": "verify prouve l integrite, pas l absence de manque : troncature et suppression totale passaient a rc=0. Reference = origin/main (etat DEJA MERGE) apres deux revues d architecture ayant refute une ancre versionnee dans l arbre. Iteration sur l UNION reference/disque. Cliquet de completude borne par (seq_max, hash). Le REJECT R1 a revele un fail-open reel : sans --base-ref-git la non-croissance etait silencieusement ignoree. Gates LOCAUX (CI a l arret, plafond Actions, T3 Nathan)."
     }
   ]
 }
