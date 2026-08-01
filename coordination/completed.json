@@ -864,6 +864,14 @@
       "merge_commit": "6cf0612",
       "review": "APPROVE 3/3 (Grok-4.5/xai, Qwen3.7-Max/alibaba, MiMo-Pro-V2/xiaomi), sceau b47e3aba9981, SWAP CIV, 0 objection bloquante",
       "note": "forgeai logs + fermeture de la fuite du flux live ; redaction a l ingestion plutot qu a chaque sortie (ERR-041B avait couvert le disque et manque le flux)"
+    },
+    {
+      "id": "OPS-031C",
+      "ide": "CLAUDE_CODE",
+      "pr": 358,
+      "merge_commit": "1b69377",
+      "review": "APPROVE 3/3 (Grok-4.5/xai, Qwen3.7-Max/alibaba, MiMo-Pro-V2/xiaomi), sceau b5d7a31d9859, SWAP CIV, 0 objection bloquante",
+      "note": "bundle de diagnostic reproductible et redige ; portability.py exporte le SETUP (autre role) — ses patrons canonique/empreinte sont reutilises sans import croise"
     }
   ]
 }
