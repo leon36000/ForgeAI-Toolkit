@@ -1,0 +1,325 @@
+{
+  "bornes": {
+    "PATCH-CAP-033A.jsonl": {
+      "hash": "80347f129296f18e7a61c0a60b66dbe1b7f62e8a8ed686d4fd3f97929057b9b7",
+      "seq_max": 2
+    },
+    "PATCH-COMPOSE-025.jsonl": {
+      "hash": "12b1b3e6752d0131ffd170c783f965ceb7d794e09dd8250b18f245f98078820a",
+      "seq_max": 1
+    },
+    "PATCH-DATA-002.jsonl": {
+      "hash": "dbda3e8e75440d1542db4ba52f093fb789881af6debd8737767136e4021e810c",
+      "seq_max": 16
+    },
+    "PATCH-DATA-003.jsonl": {
+      "hash": "861d578ecd4b00699deeb616c1c4618a8e6b54f4a48d0f765a248a83fb3f8d3d",
+      "seq_max": 9
+    },
+    "PATCH-HEALTH-028A.jsonl": {
+      "hash": "139d9450a08da88df37440a3c6a7f7fc12e2799aec09246841b1e686cae1b643",
+      "seq_max": 1
+    },
+    "PATCH-HEALTH-028B.jsonl": {
+      "hash": "b694b4a7aadde22620309c6afb0ac9feb4ccfb3eaaf848516861aef077acdf25",
+      "seq_max": 4
+    },
+    "PATCH-HW-009.jsonl": {
+      "hash": "8e0cc033668bb47e79d084f5a3b8d6b43e745c956f29267286c6b688396d1367",
+      "seq_max": 1
+    },
+    "PATCH-HW-010.jsonl": {
+      "hash": "7f749dc3081896c82a37fbab17a1be0c7b533116e56458e504f3b37173907c7e",
+      "seq_max": 1
+    },
+    "PATCH-K8S-008.jsonl": {
+      "hash": "cfec9884053a6050348209f214c6305b5d7d5c5117b4ee549eed4bd3099f8704",
+      "seq_max": 1
+    },
+    "PATCH-K8S-022.jsonl": {
+      "hash": "6cfd3d2f88116bc46a4d49ce0a7bdd89cbdfa4cad9c7d20493c8b06a540e5c6a",
+      "seq_max": 1
+    },
+    "PATCH-K8S-023.jsonl": {
+      "hash": "7230a11010d1648ebfc88277456bb27925c659b3c2fb01698c56f5398352f723",
+      "seq_max": 1
+    },
+    "PATCH-K8S-024.jsonl": {
+      "hash": "4aa010aee2d28b2e4daa1da821e3a1a13ae845845d67e7e1c53fc85b0285be5e",
+      "seq_max": 1
+    },
+    "PATCH-K8S-027.jsonl": {
+      "hash": "3fa55fc4d0093a0a917a75fe561c89dfc39018a7973d986cadfbc0af0a06e459",
+      "seq_max": 3
+    },
+    "PATCH-OPT-001.jsonl": {
+      "hash": "9514166be8cfd1638e8ce2fbf27b953f735ba4ce69533bd79b130c2c9e9a7e60",
+      "seq_max": 1
+    },
+    "PATCH-OPT-002.jsonl": {
+      "hash": "ccc2f2a9ea3eeefd208b9a2831a951b6aeb46360de13ee950b75a105a21570dc",
+      "seq_max": 1
+    },
+    "PATCH-ORCH-001.jsonl": {
+      "hash": "c1f5f238be031697bea6282245c9ecb7cb4ccd95a705b0239dd91592a6297576",
+      "seq_max": 3
+    },
+    "PATCH-PLACE-011.jsonl": {
+      "hash": "20cf824af0b5541de540fb2b1a1a8569477942fd0c5446e4d769ca500635dbd9",
+      "seq_max": 2
+    },
+    "PATCH-PLACE-026A.jsonl": {
+      "hash": "1bd410931a903948211f8d57d2a051de1d0508272cf700bd034bbe6174acbef2",
+      "seq_max": 1
+    },
+    "PATCH-PLACE-026B.jsonl": {
+      "hash": "22d9ba4a95435e391f7681c651b6a029f5156b5bb82e77f43f0fc9b19d66740e",
+      "seq_max": 1
+    },
+    "PATCH-RAG-004A.jsonl": {
+      "hash": "4ed9bf9760c359e40c5817620dcd768ddfbe2c272301c550c184973eeb327e6a",
+      "seq_max": 1
+    },
+    "PATCH-RAG-004B.jsonl": {
+      "hash": "73a36cde3e9bdbbfc309207a306c68b3d56150575eb32d6741ceaae1860396ea",
+      "seq_max": 1
+    },
+    "PATCH-RAG-005.jsonl": {
+      "hash": "05649833d87ec1e91961af98bebe2a77ab387bb7d2dcdeb378ccb5ea85e01a14",
+      "seq_max": 1
+    },
+    "PATCH-RES-012A.jsonl": {
+      "hash": "2c3535737d47610a9be013fc4d3cdae12743859e72a591c78236dd93efc1d5ed",
+      "seq_max": 1
+    },
+    "PATCH-RES-012B.jsonl": {
+      "hash": "d1cddf53817ba3d0d1032bc7f064da601b67b88ba40c9a6f36f3170063f8cf0f",
+      "seq_max": 2
+    },
+    "PATCH-REV-043.jsonl": {
+      "hash": "72cbef9a7732eca5eec75e7995f761b3f9a36d31d29482062c7bef2075c3b1cb",
+      "seq_max": 4
+    },
+    "PATCH-SAST-042.jsonl": {
+      "hash": "431ec19573df8ab8abf2e066ea3db1459be16176bd5616fd1f6eee8c885a343e",
+      "seq_max": 2
+    },
+    "PATCH-SECRET-020A.jsonl": {
+      "hash": "ddd1b674339ead5bd5e5d8fd116e1d25df47c8f571f1434784cd00762bd88b82",
+      "seq_max": 4
+    },
+    "PATCH-TRUST-019A.jsonl": {
+      "hash": "948920274dab2f3f1d77619f20a34ba06fd52b44f3107bb5855124f218cbe615",
+      "seq_max": 2
+    },
+    "PATCH-TRUST-019B.jsonl": {
+      "hash": "11db28313f325b30d16ab285206eef358483aeebeb39fef819d34939a045a84d",
+      "seq_max": 1
+    },
+    "PATCH-UI-039.jsonl": {
+      "hash": "4552044d5451868f9a0c326257f8aa194589fe4ed704632e413cd515da32f6fe",
+      "seq_max": 1
+    },
+    "PATCH-UI-040.jsonl": {
+      "hash": "d97c3306c780ada776505dcedb402a265ac5e0ea51a65268b6ee4b1699e6126d",
+      "seq_max": 1
+    },
+    "PATCH-WEB-001.jsonl": {
+      "hash": "f320f080c2fd189e162f3a824819588c95fef759fb1a254ffafe0b58908f6825",
+      "seq_max": 10
+    },
+    "mission.jsonl": {
+      "hash": "fc9badac747c7b0464b3980894e92c05be40c400c58a45e438b0bdd2b93cf20f",
+      "seq_max": 390
+    }
+  },
+  "identites": [
+    {
+      "champ": "champ obligatoire manquant: prompt_sha256",
+      "fichier": "mission.jsonl",
+      "seq": 97,
+      "type": "schema"
+    },
+    {
+      "champ": "champ obligatoire manquant: prompt_sha256",
+      "fichier": "mission.jsonl",
+      "seq": 99,
+      "type": "schema"
+    },
+    {
+      "champ": "champ obligatoire manquant: prompt_sha256",
+      "fichier": "mission.jsonl",
+      "seq": 102,
+      "type": "schema"
+    },
+    {
+      "champ": "champ obligatoire manquant: vendors",
+      "fichier": "mission.jsonl",
+      "seq": 102,
+      "type": "schema"
+    },
+    {
+      "champ": "champ obligatoire manquant: prompt_sha256",
+      "fichier": "mission.jsonl",
+      "seq": 103,
+      "type": "schema"
+    },
+    {
+      "champ": "champ obligatoire manquant: prompt_sha256",
+      "fichier": "mission.jsonl",
+      "seq": 105,
+      "type": "schema"
+    },
+    {
+      "champ": "champ obligatoire manquant: prompt_sha256",
+      "fichier": "mission.jsonl",
+      "seq": 107,
+      "type": "schema"
+    },
+    {
+      "champ": "champ obligatoire manquant: preuve",
+      "fichier": "mission.jsonl",
+      "seq": 167,
+      "type": "schema"
+    },
+    {
+      "champ": "champ obligatoire manquant: preuve",
+      "fichier": "mission.jsonl",
+      "seq": 175,
+      "type": "schema"
+    },
+    {
+      "champ": "champ obligatoire manquant: preuve",
+      "fichier": "mission.jsonl",
+      "seq": 178,
+      "type": "schema"
+    },
+    {
+      "champ": "champ obligatoire manquant: preuve",
+      "fichier": "mission.jsonl",
+      "seq": 181,
+      "type": "schema"
+    },
+    {
+      "champ": "champ obligatoire manquant: preuve",
+      "fichier": "mission.jsonl",
+      "seq": 183,
+      "type": "schema"
+    },
+    {
+      "champ": "champ obligatoire manquant: preuve",
+      "fichier": "mission.jsonl",
+      "seq": 187,
+      "type": "schema"
+    },
+    {
+      "champ": "champ obligatoire manquant: preuve",
+      "fichier": "mission.jsonl",
+      "seq": 193,
+      "type": "schema"
+    },
+    {
+      "champ": "champ obligatoire manquant: preuve",
+      "fichier": "mission.jsonl",
+      "seq": 199,
+      "type": "schema"
+    },
+    {
+      "champ": "aucune revue attestée pour cette story",
+      "fichier": "mission.jsonl",
+      "seq": 280,
+      "type": "attestation"
+    },
+    {
+      "champ": "champ obligatoire manquant: story",
+      "fichier": "mission.jsonl",
+      "seq": 342,
+      "type": "schema"
+    },
+    {
+      "champ": "champ obligatoire manquant: story",
+      "fichier": "mission.jsonl",
+      "seq": 345,
+      "type": "schema"
+    },
+    {
+      "champ": "champ obligatoire manquant: story",
+      "fichier": "mission.jsonl",
+      "seq": 349,
+      "type": "schema"
+    },
+    {
+      "champ": "champ obligatoire manquant: story",
+      "fichier": "mission.jsonl",
+      "seq": 352,
+      "type": "schema"
+    },
+    {
+      "champ": "champ obligatoire manquant: story",
+      "fichier": "mission.jsonl",
+      "seq": 355,
+      "type": "schema"
+    },
+    {
+      "champ": "champ obligatoire manquant: story",
+      "fichier": "mission.jsonl",
+      "seq": 358,
+      "type": "schema"
+    },
+    {
+      "champ": "champ obligatoire manquant: story",
+      "fichier": "mission.jsonl",
+      "seq": 361,
+      "type": "schema"
+    },
+    {
+      "champ": "champ obligatoire manquant: story",
+      "fichier": "mission.jsonl",
+      "seq": 364,
+      "type": "schema"
+    },
+    {
+      "champ": "champ obligatoire manquant: story",
+      "fichier": "mission.jsonl",
+      "seq": 367,
+      "type": "schema"
+    },
+    {
+      "champ": "champ obligatoire manquant: story",
+      "fichier": "mission.jsonl",
+      "seq": 370,
+      "type": "schema"
+    },
+    {
+      "champ": "champ obligatoire manquant: story",
+      "fichier": "mission.jsonl",
+      "seq": 373,
+      "type": "schema"
+    },
+    {
+      "champ": "champ obligatoire manquant: story",
+      "fichier": "mission.jsonl",
+      "seq": 376,
+      "type": "schema"
+    },
+    {
+      "champ": "champ obligatoire manquant: story",
+      "fichier": "mission.jsonl",
+      "seq": 379,
+      "type": "schema"
+    },
+    {
+      "champ": "champ obligatoire manquant: story",
+      "fichier": "mission.jsonl",
+      "seq": 382,
+      "type": "schema"
+    },
+    {
+      "champ": "champ obligatoire manquant: story",
+      "fichier": "mission.jsonl",
+      "seq": 386,
+      "type": "schema"
+    }
+  ],
+  "version": 1
+}
