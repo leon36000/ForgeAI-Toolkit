@@ -903,6 +903,14 @@
       "pr_number": null,
       "review": "3 revues rejouées avec 3 vendors DISTINCTS (DeepSeek-V4-Pro, Grok-4.5, Qwen3.7-Max) pour WEB-001, DATA-002, DATA-003",
       "note": "Livré et attesté dans Registres/PATCH-REV-043.jsonl (4 entrées, dont rev043_complete), mais jamais enregistré dans completed.json — écart de tenue de registre, pas de livraison. Corrigé après mesure : work-packages le disait 'completed' alors que le fichier faisant autorité l'ignorait."
+    },
+    {
+      "id": "DOC-032",
+      "ide": "CLAUDE_CODE",
+      "pr": 368,
+      "merge_commit": "178a58b",
+      "review": "APPROVE 3/3 (DeepSeek-V4-Pro/deepseek, Gemini-3.1-Pro/google, Qwen3.7-Max/alibaba), sceau 49e9ac1e8739, 0 bloquante",
+      "note": "5 sous-commandes documentees sur 21. Le defaut n etait pas que la doc mente mais qu elle OMETTE — invisible en relecture. 3 affirmations FAUSSES supprimees (wizard TUI Textual inexistant, binaire 'forge' au lieu de 'forgeai', regle 3-vendors attribuee a tally.py). 7 chiffres reconcilies par mesure. Archives de decision (PLAN-MAITRE-BMAD, plan-integral) NON touchees. Livrable durable = scripts/gate_docs.py, cliquet borne. Defaut corrige en cours : la borne etait suspendue a --base-ref-git donc muette sans lui — meme defaut que le REJECT R1 de REG-029B."
     }
   ]
 }

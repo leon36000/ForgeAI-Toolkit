@@ -990,7 +990,7 @@
     {
       "id": "DOC-032",
       "title": "Réconcilier toute la documentation publique avec l’état prouvé",
-      "status": "READY_AFTER",
+      "status": "COMPLETED",
       "priority": "P2_HIGH",
       "severity": "S2_MEDIUM",
       "ide": "COPILOT",
