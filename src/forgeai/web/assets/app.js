@@ -559,18 +559,38 @@
     state.summary = null;
   }
 
-  function streamDeployLog() {
-    const log = document.getElementById('deploy-log');
-    const status = document.getElementById('deploy-form-status');
+  // OPS-031E : un SEUL flux partagé entre l'étape 7 et le panneau d'exploitation. Ouvrir un second
+  // EventSource dupliquerait la charge serveur et désynchroniserait les deux vues.
+  let deployLogEventSource = null;
+  let deployLogBuffer = '';
+
+  function renderDeployLog() {
+    document.querySelectorAll('#deploy-log, #ops-log').forEach((el) => {
+      el.classList.remove('hidden');
+      el.textContent = deployLogBuffer;
+      el.scrollTop = el.scrollHeight;
+    });
+  }
+
+  function streamDeployLog(logElement, statusElement) {
+    const log = logElement || document.getElementById('deploy-log');
+    const status = statusElement || document.getElementById('deploy-form-status');
+    if (deployLogEventSource) {  // flux déjà ouvert : on rattache la vue, sans réabonnement
+      renderDeployLog();
+      return;
+    }
     log.classList.remove('hidden');
     log.textContent = '';
+    deployLogBuffer = '';
     const es = new EventSource('/api/deploy/events');
+    deployLogEventSource = es;
     es.onmessage = (ev) => {
-      log.textContent += ev.data + '\n';
-      log.scrollTop = log.scrollHeight;
+      deployLogBuffer += ev.data + '\n';
+      renderDeployLog();
     };
     es.addEventListener('end', (ev) => {
       es.close();
+      deployLogEventSource = null;
       let code = null;
       try { code = JSON.parse(ev.data).exit_code; } catch (e) { /* fin sans code */ }
       state.deployStatus = code === 0 ? 'ok' : 'failed'; // UI-039 : preuve backend réelle, jamais positionnelle
@@ -1149,6 +1169,55 @@
       es.onerror = () => { es.close(); };
     } catch (e) { /* EventSource indisponible (environnement restreint) */ }
   }
+
+  async function refreshOperationsStatus() {
+    const status = document.getElementById('ops-status');
+    if (!status) return;
+    status.textContent = '';
+    try {
+      const response = await fetch('/api/status');
+      if (response.status === 401) {
+        // WEB-017 : hors loopback la santé profonde exige un jeton. On l'annonce explicitement
+        // plutôt que d'échouer en silence — et sans jamais rendre le corps d'erreur brut (WEB-015).
+        status.textContent = t('ops_auth_requise');
+        return;
+      }
+      if (!response.ok) {
+        status.textContent = t('ops_indisponible');
+        return;
+      }
+      const payload = await response.json();
+      status.textContent = JSON.stringify(payload, null, 2);
+    } catch (error) {
+      status.textContent = t('ops_indisponible');
+    }
+  }
+
+  function initOperationsPanel() {
+    const toggle = document.getElementById('ops-toggle');
+    const panel = document.getElementById('operations');
+    if (!toggle || !panel) return;
+    toggle.addEventListener('click', () => {
+      const opening = panel.hidden;
+      panel.hidden = !opening;
+      toggle.setAttribute('aria-expanded', String(opening));
+      if (opening) refreshOperationsStatus();
+    });
+    const refresh = document.getElementById('ops-refresh');
+    if (refresh) refresh.addEventListener('click', refreshOperationsStatus);
+    const loadLogs = document.getElementById('ops-load-logs');
+    if (loadLogs) {
+      loadLogs.addEventListener('click', () => {
+        // On ne passe QUE l'élément de journal. Passer `#ops-status` comme élément de statut
+        // laisserait le handler `end` y écrire le résultat du déploiement
+        // (`status.textContent = t('deploy_done_ok')`) et ÉCRASER l'agrégat /api/status que
+        // l'opérateur vient de charger. `#ops-status` reste dédié à la santé.
+        streamDeployLog(document.getElementById('ops-log'));
+      });
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', initOperationsPanel);
 
   function goToStep(n) {
     if (!stepAllowed(n)) {

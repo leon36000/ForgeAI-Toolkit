@@ -475,3 +475,10 @@ code {
   padding: 0;
   margin: 0;
 }
+
+
+/* OPS-031E : panneau d'exploitation (hors parcours d'installation). */
+.operations-panel { margin: 1.5rem 0; padding: 1rem; border: 1px solid var(--border, #ccc); border-radius: .5rem; }
+.operations-panel-header, .operations-logs { display: flex; gap: .75rem; align-items: center; justify-content: space-between; flex-wrap: wrap; }
+.operations-status { min-height: 1.5rem; white-space: pre-wrap; }
+.operations-diagnostic { margin-top: 1rem; }
