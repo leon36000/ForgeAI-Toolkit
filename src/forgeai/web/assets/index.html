@@ -28,6 +28,7 @@
         <button class="btn toggle" data-theme="light" data-i18n="theme_light">Clair</button>
         <button class="btn toggle" data-theme="dark" data-i18n="theme_dark">Sombre</button>
       </div>
+      <button id="ops-toggle" class="btn" type="button" aria-expanded="false" data-i18n="ops_titre">Opérations</button>
     </div>
   </header>
 
@@ -197,6 +198,26 @@
         <button id="btn-next" class="btn btn-primary" data-i18n="nav_next">Suivant →</button>
       </div>
     </main>
+
+    <!-- OPS-031E : surface d'EXPLOITATION. Volontairement SANS `data-step-panel` : le rail d'étapes
+         est verrouillé tant que l'installation n'est pas terminée, or on a besoin de cet écran
+         précisément quand ça va mal. Il vit donc hors du parcours d'installation. -->
+    <section id="operations" class="operations-panel" hidden aria-labelledby="operations-title">
+      <div class="operations-panel-header">
+        <h2 id="operations-title" data-i18n="ops_titre">Opérations</h2>
+        <button id="ops-refresh" class="btn" type="button" data-i18n="ops_actualiser">Actualiser</button>
+      </div>
+      <pre id="ops-status" class="operations-status" aria-live="polite"></pre>
+      <div class="operations-logs">
+        <button id="ops-load-logs" class="btn" type="button" data-i18n="ops_charger_logs">Afficher les journaux</button>
+        <pre id="ops-log" class="deploy-log hidden" aria-live="polite"></pre>
+      </div>
+      <div class="operations-diagnostic">
+        <h3 data-i18n="ops_diagnostic">Diagnostic</h3>
+        <p data-i18n="ops_diagnostic_aide">Exécutez cette commande sur la machine pour créer le diagnostic.</p>
+        <code>forgeai diagnostic --out diagnostic.json</code>
+      </div>
+    </section>
   </div>
 
   <script src="engine_filter.js"></script>
