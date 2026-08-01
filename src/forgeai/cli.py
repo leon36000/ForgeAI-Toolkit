@@ -12,6 +12,7 @@ import json
 import importlib.resources
 import os
 import socket
+from datetime import datetime, timezone
 import sys
 import time
 from dataclasses import replace
@@ -623,26 +624,64 @@ def _logs(args) -> int:
     return 0
 
 
-def _status(args) -> int:
-    """OPS-031A : `forgeai status` — MÊME agrégat que GET /api/status (source unique
-    `collect_status`), mais calculé LOCALEMENT : aucun serveur web requis."""
+def _etat_execution_local() -> dict:
+    """Câblage LOCAL de `collect_status` — source UNIQUE partagée par `status` et `diagnostic`.
+
+    Factorisé (OPS-031C) pour qu'une seule définition de « l'état d'exécution » existe côté CLI :
+    deux câblages divergents finiraient par décrire deux réalités différentes.
+    """
     import json as _json
     from forgeai.network.nodes import cluster_status as _cluster_status
     from forgeai.preflight import available_backends as _available, run_checks as _run_checks
     from forgeai.deploy.compose import http_ok as _http_ok
     from forgeai.hardware.detect import HardwareDetector as _Detector
-    from forgeai.status import collect_status, format_status_humain
+    from forgeai.status import collect_status
 
     runner = SubprocessRunner()
     detecteur = _Detector(runner)
-    etat = collect_status(
+    return collect_status(
         backends=lambda: _available(_run_checks(runner, detecteur, _http_ok)),
         cluster=lambda: _cluster_status(runner),
         deploiement=lambda: {"en_cours": False, "source": "cli"},
         materiel=lambda: _json.loads(detecteur.full_report().to_json()),
     )
+
+
+def _status(args) -> int:
+    """OPS-031A : `forgeai status` — MÊME agrégat que GET /api/status (source unique
+    `collect_status`), mais calculé LOCALEMENT : aucun serveur web requis."""
+    import json as _json
+    from forgeai.status import format_status_humain
+
+    etat = _etat_execution_local()
     print(_json.dumps(etat, ensure_ascii=False) if getattr(args, "json", False)
           else format_status_humain(etat))
+    return 0
+
+
+def _diagnostic(args) -> int:
+    """OPS-031C : `forgeai diagnostic` — bundle reproductible et rédigé.
+
+    L'horodatage est calculé UNE fois ici puis INJECTÉ : le module de construction ne lit jamais
+    l'horloge, ce qui rend le bundle reproductible à état constant (et la propriété testable).
+    """
+    from pathlib import Path as _Path
+    from forgeai.diagnostic import collect_diagnostic, rendre
+    from forgeai.web.server import LOGS_TAIL_DEFAUT, lire_logs_deploiement
+
+    horodatage = datetime.now(timezone.utc).isoformat()
+    tail = getattr(args, "tail", None) or LOGS_TAIL_DEFAUT
+
+    bundle = collect_diagnostic(
+        horodatage=horodatage,
+        etat=_etat_execution_local,
+        logs=lambda: lire_logs_deploiement(tail=tail),
+    )
+    representation = rendre(bundle)
+    if getattr(args, "out", None):
+        _Path(args.out).write_text(representation, encoding="utf-8")
+    else:
+        print(representation)
     return 0
 
 
@@ -1285,6 +1324,11 @@ def _run(argv: list[str] | None = None) -> int:
     p_logs.add_argument("--grep", default=None, help="filtre par SOUS-CHAÎNE littérale (pas de regex)")
     p_logs.add_argument("--json", action="store_true", help="sortie machine")
     p_logs.set_defaults(func=_logs)
+
+    p_diag = sub.add_parser("diagnostic", help="bundle de diagnostic reproductible et rédigé")
+    p_diag.add_argument("--out", default=None, help="fichier de sortie (défaut : stdout)")
+    p_diag.add_argument("--tail", type=int, default=None, help="lignes de logs incluses (borné)")
+    p_diag.set_defaults(func=_diagnostic)
 
     p_st = sub.add_parser("status", help="état d'exécution : backends, cluster, dernier déploiement")
     p_st.add_argument("--json", action="store_true", help="sortie machine")
