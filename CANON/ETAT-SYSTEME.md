@@ -1,6 +1,6 @@
 # ÉTAT-SYSTÈME — ForgeAI Toolkit (canon vivant)
 
-État canonique des capacités **réellement livrées et prouvées** (revue aveugle scellée >=3 vendors + gates CI). Mis à jour : 2026-07-19. Vérifiable contre le code (`forgeai --help`, `src/forgeai/`).
+État canonique des capacités **réellement livrées et prouvées** (revue aveugle scellée >=3 vendors + gates CI). Mis à jour : 2026-08-01. Vérifiable contre le code (`forgeai --help`, `src/forgeai/`).
 
 ## Audit 2026-07-19 (48 constats) — ENTIÈREMENT SOLDÉ
 - **P0 (Déploiement réel)** : Intégration complète du `wizard` avec les flags `--stack`, `--node`, `--probe-host`, `--dry-run`, `--selection`. Génération du plan dérivé `deploy-specs`, exécution e2e sans mock et ingestion idempotente validée.
@@ -46,7 +46,7 @@ La sélection finale de l'utilisateur (briques + modèles + nœud) est transmise
 
 ## Sous-systèmes (`src/forgeai/`)
 - **hardware/** détection ; **planner/** (profile, assemble, deploy-specs) ; **preflight** matrice backend ; **gpu/** (drivers GPU).
-- **catalogue/** loader + `data/catalogue.json` (1577 briques) + `catalogue/spheres.py` (15 sphères S1..S14 + VOIX) + source unique `forgeai_home/parse_stars` + `data/locales/` (i18n unifiée, 94 clés web fr).
+- **catalogue/** loader + `data/catalogue.json` (1577 briques) + `catalogue/spheres.py` (15 sphères S1..S14 + VOIX) + source unique `forgeai_home/parse_stars` + `data/locales/` (i18n unifiée, 113 clés web fr).
 - **stacks/** (`stacks.py` + `data/stacks/*.json`) : 5 profils de déploiement + 1 profil global.
   - *agentique* : 72 briques déployées
   - *assistant-entreprise* : 102 briques déployées
@@ -63,8 +63,17 @@ La sélection finale de l'utilisateur (briques + modèles + nœud) est transmise
   - `/api/bricks`, `/api/deploy`, `/api/deploy/events` (SSE live), `/api/detect`, `/api/health`, `/api/i`, `/api/i18n`, `/api/models`, `/api/models/local`, `/api/nodes`, `/api/nodes/status`, `/api/spheres`, `/api/stacks`, `/api/stacks/`, `/api/stacks/recommended`, `/api/summary`.
 
 ## Gouvernance & CI
-- **Gates CI** (`.github/workflows/gates.yml` uniquement) : `no-stub-scan`, `registres` (intégrité hash-chaîne), `catalogue` (désambiguïsation), `tests` (couverture ≥85 %, registre ≥95 %), `gitleaks`, `reviews-sealed`.
-- **Règle du Repo (Gate D9)** : Tout dossier de `reviews/BINDING.txt` (54 dossiers scellés) doit obligatoirement être approuvé par **au moins 3 vendors distincts** (cette règle stricte prime sur le minimum T1=1 du canon global).
+- **Gates CI** — 3 workflows : `gates.yml` (9 jobs), `scope-guard.yml`, `sonarcloud.yml`.
+  Jobs de `gates.yml` : `guard-fs-multi-os` (matrice Linux/macOS/Windows), `no-stub-scan`,
+  `registres`, `docs`, `metering-sites`, `catalogue`, `tests` (couverture ≥85 %, registre ≥95 %),
+  `gitleaks`, `reviews-sealed`.
+- **Job `registres`** — 3 étapes, et `fetch-depth: 0` obligatoire : `verify` (intégrité de la
+  chaîne de hachage), `ancrage --ref origin/main` (troncature, rollback, réécriture totale —
+  ce que `verify` ne peut pas voir), `completude --base … --base-ref-git origin/main`
+  (chaque story terminée porte une attestation de revue).
+- **Job `docs`** — `gate_docs.py` : aucune sous-commande CLI ajoutée sans documentation
+  (dette héritée figée dans une base bornée, `Docs/BASELINE-CLI-DOC.json`).
+- **Règle du Repo (Gate D9)** : Tout dossier de `reviews/BINDING.txt` (130 dossiers scellés) doit obligatoirement être approuvé par **au moins 3 vendors distincts** (cette règle stricte prime sur le minimum T1=1 du canon global).
 - **Registre** `Registres/mission.jsonl` : append-only, hash-chaîné, une entrée `revue_scellee` par story livrée (sceau `prompt_sha256` + 3 vendors).
 
 ## État des phases

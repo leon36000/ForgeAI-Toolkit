@@ -41,7 +41,7 @@
 Les 10 sites signalés identiquement par bandit ET semgrep correspondent à des appels
 `urllib.request.urlopen` vers des services **auto-hébergés et configurés par l'opérateur**
 (Ollama, Qdrant, TEI, Langfuse, OpenBao/Vault, immudb, gateway modèles cloud via
-`forgeai route configure`) ou un téléchargement depuis `catalogue.json` (948 briques vérifiées).
+`forgeai route configure`) ou un téléchargement depuis `catalogue.json` (1577 briques vérifiées).
 Aucune URL n'est dérivée d'une entrée réseau non authentifiée. Confirme que `FAI-U-042`
 (`ACCEPTED_EVIDENCE`) reste valide sans régression sur le commit courant.
 

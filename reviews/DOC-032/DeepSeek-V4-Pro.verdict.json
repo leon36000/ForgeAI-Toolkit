@@ -1,0 +1,19 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "",
+   "description": "La preuve de CA5 (suite complète verte hors test_proc.py) montre uniquement « tests+couverture ÉCHEC » sans détail ; l'absence de journal détaillé ne permet pas de confirmer que l'échec est limité au test environnemental pré-existant.",
+   "preuve": "Preuve d'exécution : « tests+couverture ÉCHEC » sans rapport complémentaire."
+  }
+ ],
+ "date_heure": "2026-08-01T18:52:23.680791+00:00",
+ "prompt_sha256": "49e9ac1e8739d74b6ac11952c95b34b6c16b2ef211ed1e4d4bb7525c92b80620",
+ "reviewer_model": "DeepSeek-V4-Pro",
+ "modele_servi": "deepseek-v4-pro-direct",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

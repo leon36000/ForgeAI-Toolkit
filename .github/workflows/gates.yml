@@ -73,6 +73,22 @@ jobs:
             --base Registres/BASELINE-COMPLETUDE.json \
             --base-ref-git origin/main
 
+  docs:
+    runs-on: ubuntu-latest
+    steps:
+      # fetch-depth: 0 : la non-croissance de la base est vérifiée contre l'état DÉJÀ MERGÉ.
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      # Mesuré avant ce gate : 5 sous-commandes documentées sur 21. Un gate exigeant tout serait
+      # rouge au premier jour puis désactivé ; la dette est donc figée dans une base BORNÉE —
+      # toute commande ajoutée depuis doit être documentée, jamais baselinée.
+      - name: Gate DOC-032 — aucune commande CLI ajoutée sans documentation
+        run: |
+          python3 scripts/gate_docs.py \
+            --base Docs/BASELINE-CLI-DOC.json \
+            --base-ref-git origin/main
+
   metering-sites:
     runs-on: ubuntu-latest
     steps:

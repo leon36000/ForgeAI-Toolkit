@@ -10,7 +10,7 @@
 ## 1. Mission et périmètre
 
 ForgeAI Toolkit est le **déployeur de référence d'infrastructures IA agentiques** :
-wizard TUI (Textual, hardware-aware), catalogue de **1 021 briques** (FR/EN), rendu double
+wizard CLI et interface web (hardware-aware), catalogue de **1577 briques** (FR/EN), rendu double
 backend (Docker Compose + K3s), multi-nœuds Tailscale (P2), gouvernance par registres
 JSONL hash-chaînés. Réf. complète : `CANON/PLAN-MAITRE-EXECUTION-BMAD-v1.0.md`.
 
@@ -38,9 +38,9 @@ composer+grok (même vendor).
 
 ```
 src/
-├── tui/          # Wizard Textual (bascule langue in-place, mode --ci, 80×24)
+├── web/          # Interface web (wizard, panneau opérateur Status/Logs/Diagnostic)
 ├── hardware/     # Détection CPU/GPU/RAM/disque multi-vendor → HardwareProfile
-├── catalogue/    # 1021 briques, validation, hash du catalogue
+├── catalogue/    # 1577 briques, validation, hash du catalogue
 ├── rag/          # Ingestion + requête (preuve e2e)
 ├── planner/      # Profils, assemblage DeploymentPlan
 ├── renderers/    # RenderTarget: Compose | K3s
@@ -116,8 +116,8 @@ Chaque story : **DONE-avec-preuve ou BLOCKED-avec-raison** (§8bis, aucun troisi
 | Images | trivy | 0 CVE HIGH/CRITICAL |
 | Hash catalogue | vérification dédiée | hash conforme au registre |
 | No-fake-done | vérification dédiée | DONE sans preuve = FAIL |
-| Revue aveugle ×3 | scripts/tally.py | 3 verdicts, 3 vendors, zéro objection critique non résolue |
-| Consensus de plan | scripts/tally.py | ≥7/9 APPROVE + zéro critique (plan-freeze uniquement) |
+| Revue aveugle ×3 | scripts/revue.py (tally) + scripts/reviews_gate.py | 3 verdicts, 3 vendors, zéro objection critique non résolue |
+| Consensus de plan | scripts/revue.py (tally) | ≥7/9 APPROVE + zéro critique (plan-freeze uniquement) |
 | Signature Fable | registre | par-dessus gates verts, jamais en substitut |
 | T3 | Nathan | secrets prod, paiements, suppressions, engagements externes |
 
@@ -135,11 +135,11 @@ Chaque story : **DONE-avec-preuve ou BLOCKED-avec-raison** (§8bis, aucun troisi
 
 | Chemin | Contenu |
 |---|---|
-| `CANON/` | Plan maître gelé + catalogue maître unifié (PDF 1021 + extraction) |
+| `CANON/` | Plan maître gelé + catalogue maître unifié (PDF 1577 + extraction) |
 | `Phase-A/` | Livrables Phase A (architecture, risques, stories, TUI, tests, UX, pilote, manifestes) |
 | `manifests/` | roles.yaml, routes.yaml, phases.yaml, gates.yaml |
 | `Registres/` | mission.jsonl — preuves hash-chaînées |
 | `reviews/` | verdicts de revue aveugle scellés |
-| `scripts/` | registre.py, no_stub_scan.py, tally.py |
+| `scripts/` | registre.py, no_stub_scan.py, revue.py, reviews_gate.py, gate_docs.py |
 
 *Consolidé par MiMo, validé structurellement par Fable — gel v1.0, 2026-07-14.*

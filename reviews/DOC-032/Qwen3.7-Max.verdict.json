@@ -1,0 +1,19 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "Preuve d'exécution",
+   "description": "La preuve d'exécution locale indique `tests+couverture ÉCHEC`. Bien que la story exclue explicitement `test_proc.py` (échec environnemental pré-existant), la sortie exacte de la suite de tests n'est pas fournie pour confirmer que cet échec est uniquement dû à `test_proc.py` et non à une régression ou une couverture globale < 85%.",
+   "preuve": "tests+couverture       ÉCHEC"
+  }
+ ],
+ "date_heure": "2026-08-01T18:53:08.036772+00:00",
+ "prompt_sha256": "49e9ac1e8739d74b6ac11952c95b34b6c16b2ef211ed1e4d4bb7525c92b80620",
+ "reviewer_model": "Qwen3.7-Max",
+ "modele_servi": "qwen37-max-openrouter",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

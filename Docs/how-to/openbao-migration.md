@@ -19,7 +19,7 @@
 déploiement par `ensure_openbao_ready` et persisté en **runtime** (fichier hôte / Secret k8s), jamais dans
 `.env`. Le **root token ne quitte jamais** son store (isolé du volume monté à l'unsealer).
 
-## Compose (clé en main) — `forge wizard --rag-durci`
+## Compose (clé en main) — `forgeai wizard --rag-durci`
 
 Le wizard fait tout automatiquement (backend compose) :
 
@@ -34,14 +34,14 @@ Le wizard fait tout automatiquement (backend compose) :
 4. Démarre les consommateurs (litellm, …) qui deviennent `service_healthy`.
 5. Écrit puis relit la master key passerelle au coffre **avec le token applicatif** (le coffre est porteur).
 
-Rien à faire côté opérateur au-delà de `forge wizard --rag-durci`.
+Rien à faire côté opérateur au-delà de `forgeai wizard --rag-durci`.
 
 ### Migration d'un déploiement DEV existant vers compose PROD
 
 1. Récupérer les secrets applicatifs actuels (master key passerelle, etc.) hors du coffre DEV.
 2. `docker compose down` (le coffre DEV en mémoire est jetable) ; retirer `BAO_DEV_ROOT_TOKEN_ID` (déjà
    absent des specs). Supprimer `FORGEAI_BAO_TOKEN` de `.env` (ignoré désormais).
-3. Redéployer via `forge wizard --rag-durci` : le coffre PROD s'initialise et re-reçoit la master key.
+3. Redéployer via `forgeai wizard --rag-durci` : le coffre PROD s'initialise et re-reçoit la master key.
 4. Conserver `${workdir}/openbao-keys/unseal_key` et `${workdir}/secrets/openbao_root` **hors du dépôt**,
    sauvegardés de façon sûre : ce sont les seules créances de récupération du coffre.
 

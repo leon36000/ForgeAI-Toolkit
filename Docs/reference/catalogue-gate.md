@@ -1,7 +1,7 @@
 # Gate de désambiguïsation du catalogue (B-26)
 
 `scripts/catalogue_gate.py` empêche l'ambiguïté dans `src/forgeai/data/catalogue.json`
-(948 briques). Il est **bloquant en CI** (job `catalogue` de `.github/workflows/gates.yml`).
+(1577 briques). Il est **bloquant en CI** (job `catalogue` de `.github/workflows/gates.yml`).
 
 ## Schéma d'entrée
 `src/forgeai/data/catalogue.schema.json` (JSON Schema draft-07) est la **source de vérité** des
