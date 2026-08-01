@@ -807,7 +807,7 @@
     {
       "id": "REG-029A",
       "title": "Définir la complétude structurée des registres",
-      "status": "EXTERNAL",
+      "status": "COMPLETED",
       "ide": "CLAUDE_CODE",
       "source_ide": "CODEX",
       "exclusive_lane": "",

@@ -880,6 +880,14 @@
       "merge_commit": "bbf68d2",
       "review": "APPROVE 3/3 (Grok-4.5/xai, Qwen3.7-Max/alibaba, MiMo-Pro-V2/xiaomi), sceau bcc5238d609b, SWAP CIV, 0 objection bloquante",
       "note": "UI operateur : les capacites existaient (031A/B/C), le manque etait leur ACCESSIBILITE ; perimetre amende explicitement avant livraison plutot que de s appuyer sur le SKIP de scope_guard"
+    },
+    {
+      "id": "REG-029A",
+      "ide": "CLAUDE_CODE",
+      "pr": 363,
+      "merge_commit": "f05415d",
+      "review": "APPROVE 3/3 (DeepSeek-V4-Pro/deepseek, Gemini-3.1-Pro/google, Qwen3.7-Max/alibaba), sceau 9749a089829a, 0 objection",
+      "note": "verify() prouve l integrite, pas la completude : une story declaree terminee sans trace de revue passait le gate en silence. Deux conventions d attestation coexistent (revue en ligne / entree revue_scellee separee) : les deux sont acceptees, sinon la moitie de l historique serait faussement signalee. Mesure sur le registre reel : 1 story sur 39 sans attestation (D4). Aucun gate CI ajoute ici (REG-029B). ATTENTION : gates CI a l arret (plafond de depense Actions, T3 Nathan) — gates executes LOCALEMENT, matrice multi-OS non couverte."
     }
   ]
 }
