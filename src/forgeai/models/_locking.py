@@ -164,8 +164,75 @@ def restore_models_transaction_locked(
     atomic_unlink(journal_path)
 
 
+def empreinte_canonique(charge: object) -> str:
+    """Retourne le SHA-256 de la donnee parsee, jamais des octets bruts du fichier.
+
+    Hacher les octets bruts ferait qu'un simple changement de ``indent=`` dans
+    le writer casserait toutes les empreintes, et le mode d'echec serait
+    « discordance => rollback », c'est-a-dire la perte de donnees d'origine
+    reintroduite silencieusement par un changement de style.
+    """
+    import hashlib
+
+    serialisee = json.dumps(
+        charge,
+        sort_keys=True,
+        separators=(",", ":"),
+        ensure_ascii=False,
+    ).encode("utf-8")
+    return hashlib.sha256(serialisee).hexdigest()
+
+
+def commit_deja_applique(home: Path, vault_path: Path, snapshot: dict) -> bool:
+    """Indique si les deux images cibles du journal sont deja sur disque."""
+    import hmac
+
+    # Journal LEGACY (ecrit par un binaire anterieur au correctif) : aucune cible enregistree,
+    # donc rien a comparer. Branche EXPLICITE, jamais un defaut implicite : le rollback
+    # inconditionnel est le comportement sur dans ce cas.
+    cible = snapshot.get("cible")
+    if cible is None:
+        return False
+
+    # Cible malformee : on ne peut pas conclure, donc on ne conclut pas — et « ne pas conclure »
+    # signifie ROLLBACK, jamais planter. Lever ici ferait echouer RouteStore(home) a CHAQUE
+    # ouverture sur un journal abime, ce qui est plus grave que la restauration qu'on veut eviter.
+    #
+    # Le `.get()` ci-dessus est deliberement suivi d'un test d'identite : le motif dangereux
+    # serait `snapshot.get("cible") == calcule`, VRAI quand la cle manque ET que le calcul vaut
+    # None — un journal PRE-commit legitime passerait alors pour un commit reussi.
+    if not isinstance(cible, dict):
+        return False
+    cible_routes = cible.get("routes")
+    cible_vault = cible.get("vault")
+    if not isinstance(cible_routes, str) or not isinstance(cible_vault, str):
+        return False
+
+    routes_path = Path(home) / "routes.json"
+    vault_path = Path(vault_path)
+    try:
+        if not routes_path.exists() or not vault_path.exists():
+            return False
+        routes = json.loads(routes_path.read_text(encoding="utf-8"))
+        vault = json.loads(vault_path.read_text(encoding="utf-8"))
+    except (OSError, UnicodeDecodeError, json.JSONDecodeError):
+        return False
+
+    routes_correspondent = hmac.compare_digest(
+        empreinte_canonique(routes),
+        cible_routes,
+    )
+    vault_correspond = hmac.compare_digest(
+        empreinte_canonique(vault),
+        cible_vault,
+    )
+    # Un crash entre les deux os.replace laisse une cle orpheline : son
+    # rollback doit rester applique, donc toute correspondance partielle echoue.
+    return routes_correspondent and vault_correspond
+
+
 def recover_models_transaction_locked(home: Path, vault_path: Path) -> bool:
-    """Récupère le write-ahead journal sous le verrou modèles déjà détenu."""
+    """Recupere le write-ahead journal sous le verrou modeles deja detenu."""
     home = Path(home)
     journal_path = home / MODELS_TRANSACTION_JOURNAL
     if not journal_path.exists():
@@ -175,5 +242,8 @@ def recover_models_transaction_locked(home: Path, vault_path: Path) -> bool:
         Path(vault_path), _journal_vault_path(home, snapshot)
     ):
         return False
+    if commit_deja_applique(home, vault_path, snapshot):
+        atomic_unlink(journal_path)
+        return True
     restore_models_transaction_locked(home, vault_path, snapshot)
     return True
