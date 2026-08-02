@@ -1,0 +1,25 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "src/forgeai_toolkit.egg-info/requires.txt",
+   "description": "Les fichiers auto-générés de l'egg-info contiennent des modifications de dépendances (retrait de textual/tui, ajout de pyyaml, ggshield, pre-commit) sans que le fichier source (pyproject.toml) ne soit présent dans le diff pour justifier ces changements.",
+   "preuve": "Lignes +5 à +9 dans requires.txt (et modifications similaires dans PKG-INFO)."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "tests/test_health029_sondes_executables.py",
+   "description": "La fixture pytest 'tmp_path' est demandée dans la signature de la fonction de test mais n'est jamais utilisée dans le corps de celle-ci.",
+   "preuve": "Ligne 111 : def test_g6_le_plan_serialise_une_sonde_declaree(tmp_path):"
+  }
+ ],
+ "date_heure": "2026-08-02T00:19:59.262075+00:00",
+ "prompt_sha256": "94c85f247c902732db138a098d72732ca80ba438be19dbc97c7286d221ba9134",
+ "reviewer_model": "Gemini-3.1-Pro",
+ "modele_servi": "gemini-31-pro-openrouter",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "1"
+ }
+}
