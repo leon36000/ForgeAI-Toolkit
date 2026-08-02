@@ -919,6 +919,14 @@
       "merge_commit": "8fa0800",
       "review": "APPROVE 3/3 (DeepSeek-V4-Pro/deepseek, Gemini-3.1-Pro/google, Qwen3.7-Max/alibaba), sceau 1bf418b15dd3, 0 objection",
       "note": "Suivi de REV-043 (issue #306) : la recuperation WAL annulait une transaction COMMITEE si le process mourait entre le commit et l unlink du journal. Un marqueur de commit ne fermerait pas la fenetre mais la deplacerait (le commit est DEUX os.replace). Retenu : empreinte CANONIQUE des deux etats cibles — canonique et non octet-a-octet, sinon un changement d indent reintroduirait la perte de donnees ; empreinte et non etat complet, sinon le blob scelle de la cle resterait dans un journal residuel apres revocation. Conjonction stricte : le rollback du cas 'cle orpheline' reste applique. Deux tests herites encodaient le defaut comme specification et ont rougi — reecrits semantiquement. PREMIER merge de la session avec CI REELLEMENT VERTE (gates + scope-guard + sonarcloud), matrice multi-OS comprise."
+    },
+    {
+      "id": "SSH-030",
+      "ide": "CLAUDE_CODE",
+      "pr": 375,
+      "merge_commit": "e7dd4a5",
+      "review": "APPROVE 3/3 (DeepSeek-V4-Pro/deepseek, Gemini-3.1-Pro/google, Qwen3.7-Max/alibaba), sceau cf022b74b171, 0 objection",
+      "note": "Trouve en pilotant forgeai node discover contre du VRAI materiel distant (PC3 NVIDIA, PC4 AMD, aucun avec docker) : les deux nœuds rapportaient un resultat IDENTIQUE correspondant a l environnement de l orchestrateur. Cause : SSH aplatit naivement un argv multi-mots par espace (prouve via ssh -v). Correctif : shlex.join(argv) en un seul element apres --. La revue a trouve un second defaut vivant (docker ps --format avec pipe non protege) que le meme correctif repare, prouve par un test dedie."
     }
   ]
 }
