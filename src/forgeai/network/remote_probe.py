@@ -6,6 +6,7 @@ import atexit
 import json
 import os
 import re
+import shlex
 import subprocess
 import tempfile
 from pathlib import Path
@@ -106,6 +107,12 @@ class SshRunner:
     def run(self, argv: list[str]) -> tuple[int, str]:
         if self._known_hosts is None:
             self._enroll()
+        # SSH-030 : OpenSSH rejoint naivement les elements d'argv par un simple espace,
+        # SANS les re-quoter, avant de les transmettre au shell distant (prouve via
+        # `ssh -v` : "Sending command: sh -c command -v "$1" sh docker"). Tout argv dont
+        # un element contient des espaces se retrouve alors tronque cote shell distant.
+        # Un UNIQUE element shlex-joint apres "--" empeche cet aplatissement : SSH n'a
+        # plus qu'une seule chaine a transmettre, que le shell distant reparse correctement.
         ssh_cmd = [
             "ssh",
             "-i",
@@ -120,7 +127,8 @@ class SshRunner:
             "IdentitiesOnly=yes",
             f"{self.user}@{self.host}",
             "--",
-        ] + argv
+            shlex.join(argv),
+        ]
         try:
             proc = subprocess.run(
                 ssh_cmd,
