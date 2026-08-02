@@ -186,6 +186,24 @@
       "_reassigned": "CODEX->CLAUDE_CODE (Codex retiré du projet, 2026-07-30)"
     },
     {
+      "id": "SSH-030",
+      "title": "SshRunner : argv contenant des espaces aplati par SSH (node discover faux positifs)",
+      "status": "COMPLETED",
+      "ide": "CLAUDE_CODE",
+      "source_ide": "CLAUDE_CODE",
+      "exclusive_lane": "",
+      "dependencies": [
+        "SSH-007"
+      ],
+      "_note": "Trouve en testant contre PC3/PC4 reels, hors du plan initial.",
+      "allowed_paths": [
+        "src/forgeai/network/remote_probe.py",
+        "tests/test_ssh030_argv_ssh.py",
+        "stories/SSH-030.md",
+        "reviews/SSH-030/**"
+      ]
+    },
+    {
       "id": "K8S-008",
       "title": "Supprimer les pods AMD/Intel privilégiés et formaliser les devices minimaux",
       "status": "EXTERNAL",
