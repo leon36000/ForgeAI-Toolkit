@@ -1,5 +1,6 @@
 import ast
 import os
+import shlex
 import signal
 import subprocess
 import sys
@@ -16,6 +17,12 @@ from forgeai.core.proc import (
     _kill_tree,
     timed_runner,
 )
+
+
+# Le runner réanalyse les commandes avec shlex.split : l'interpréteur peut donc
+# contenir des espaces, notamment dans « C:\Program Files\... » ou
+# « /home/me/My Projects/... ».
+PY = shlex.quote(sys.executable)
 
 posix_only = pytest.mark.skipif(
     os.name != "posix",
@@ -58,7 +65,7 @@ def test_kill_tree_real(tmp_path: Path) -> None:
         "    f.write(str(grandchild.pid))\n"
         "time.sleep(999)\n"
     )
-    cmd = f"{sys.executable} {script} {orphan_pid_file}"
+    cmd = f"{PY} {shlex.quote(str(script))} {shlex.quote(str(orphan_pid_file))}"
     runner = timed_runner(timeout_seconds=1.0, grace_seconds=0.5)
     with pytest.raises(RunnerTimeoutError):
         runner(cmd)
@@ -72,7 +79,7 @@ def test_kill_tree_real(tmp_path: Path) -> None:
 # ---------------------------------------------------------------------------
 def test_happy_path() -> None:
     runner = timed_runner(None)
-    ret = runner(f'{sys.executable} -c "exit(0)"')
+    ret = runner(f'{PY} -c "exit(0)"')
     assert ret == 0
 
 
@@ -83,7 +90,7 @@ def test_timeout() -> None:
     runner = timed_runner(timeout_seconds=0.5, grace_seconds=0.3)
     start = time.monotonic()
     with pytest.raises(RunnerTimeoutError):
-        runner(f'{sys.executable} -c "import time; time.sleep(999)"')
+        runner(f'{PY} -c "import time; time.sleep(999)"')
     elapsed = time.monotonic() - start
     assert elapsed < 0.5 + 0.3 + 1.0  # large tolérance
 
@@ -101,7 +108,7 @@ def test_cancellation() -> None:
     thread.start()
     runner = timed_runner(None)
     with pytest.raises(RunnerCancelledError):
-        runner(f'{sys.executable} -c "import time; time.sleep(10)"')
+        runner(f'{PY} -c "import time; time.sleep(10)"')
     thread.join()
 
 
@@ -143,7 +150,7 @@ def test_idempotence_kill_tree_dead_process() -> None:
 
 def test_timeout_none_short_step() -> None:
     runner = timed_runner(None)
-    ret = runner(f'{sys.executable} -c "exit(42)"')
+    ret = runner(f'{PY} -c "exit(42)"')
     assert ret == 42
 
 
@@ -211,8 +218,8 @@ def test_cli_loop_timeout(tmp_path: Path) -> None:
     import forgeai.cli as cli
 
     registre_path = tmp_path / "registre.jsonl"
-    step_cmd = f'{sys.executable} -c "import time; time.sleep(999)"'
-    until_cmd = f'{sys.executable} -c "exit(0)"'
+    step_cmd = f'{PY} -c "import time; time.sleep(999)"'
+    until_cmd = f'{PY} -c "exit(0)"'
     args = [
         "loop",
         "run",
@@ -253,3 +260,94 @@ def test_cli_loop_cancel_maps_to_15(tmp_path: Path, monkeypatch: pytest.MonkeyPa
         "--registre", str(registre_path),
     ]
     assert cli.main(args) == 15
+
+
+# ---------------------------------------------------------------------------
+# G11 – citation et exécution réelle d'un interpréteur situé sous un chemin
+#       contenant des espaces.
+# ---------------------------------------------------------------------------
+def test_composition_commande_cite_les_chemins_espaces() -> None:
+    faux_chemins = [
+        r"C:\Program Files\ForgeAI\py thon.exe",
+        "/home/me/My Projects/.venv/bin/py thon",
+    ]
+    for faux in faux_chemins:
+        assert shlex.split(f'{shlex.quote(faux)} -c "exit(0)"')[0] == faux
+        assert shlex.split(f'{faux} -c "exit(0)"')[0] != faux
+    assert shlex.split(PY)[0] == sys.executable
+
+
+@posix_only
+def test_runner_execute_interpreteur_sous_chemin_espace(tmp_path: Path) -> None:
+    dossier = tmp_path / "dir with space"
+    dossier.mkdir(parents=True)
+    lien = dossier / "py thon"
+    try:
+        lien.symlink_to(sys.executable)
+    except (OSError, NotImplementedError):  # proof:allow — capture, pas raise (symlink absent)
+        pytest.skip(
+            "droits ou prise en charge des liens symboliques indisponibles — écart connu "
+            "et accepté, voir Registres/PATCH-PORT-TESTPROC.jsonl (seq 2, "
+            "ecart_connu_accepte) : la couche 1 (universelle, sans skip) reste active"
+        )
+
+    runner = timed_runner(None)
+    ret = runner(f'{shlex.quote(str(lien))} -c "exit(7)"')
+    assert ret == 7
+
+
+# ---------------------------------------------------------------------------
+# G12 – garde AST contre l'interpolation nue de sys.executable dans les commandes
+#       et contre une définition non citée de la constante PY.
+# ---------------------------------------------------------------------------
+def test_aucune_interpolation_nue_de_sys_executable() -> None:
+    test_file = Path(__file__).resolve()
+    tree = ast.parse(test_file.read_text())
+
+    def is_sys_executable(node: ast.AST) -> bool:
+        return (
+            isinstance(node, ast.Attribute)
+            and node.attr == "executable"
+            and isinstance(node.value, ast.Name)
+            and node.value.id == "sys"
+        )
+
+    for joined in ast.walk(tree):
+        if isinstance(joined, ast.JoinedStr):
+            for node in ast.walk(joined):
+                if isinstance(node, ast.FormattedValue) and is_sys_executable(node.value):
+                    pytest.fail(
+                        f"ligne {node.lineno} : sys.executable doit passer par PY "
+                        "ou par shlex.quote(...), jamais être interpolé nu dans une "
+                        "commande de test"
+                    )
+
+    py_assignments = []
+    for node in tree.body:
+        if isinstance(node, ast.Assign) and any(
+            isinstance(target, ast.Name) and target.id == "PY"
+            for target in node.targets
+        ):
+            py_assignments.append(node)
+
+    py_assignment_is_valid = False
+    for assignment in py_assignments:
+        value = assignment.value
+        if (
+            isinstance(value, ast.Call)
+            and isinstance(value.func, ast.Attribute)
+            and value.func.attr == "quote"
+            and isinstance(value.func.value, ast.Name)
+            and value.func.value.id == "shlex"
+            and len(value.args) == 1
+            and not value.keywords
+            and is_sys_executable(value.args[0])
+        ):
+            py_assignment_is_valid = True
+            break
+
+    if not py_assignment_is_valid:
+        pytest.fail(
+            "L'assignation de module PY doit être shlex.quote(sys.executable), "
+            "afin que les chemins contenant des espaces restent correctement cités"
+        )
