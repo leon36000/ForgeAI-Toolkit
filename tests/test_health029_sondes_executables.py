@@ -111,7 +111,7 @@ def test_g5_la_sonde_prouve_une_reponse_applicative_quand_c_est_possible():
         )
 
 
-def test_g6_le_plan_serialise_une_sonde_declaree(tmp_path):
+def test_g6_le_plan_serialise_une_sonde_declaree():
     """CA1 — détecteur d'un défaut réel : `probe_type` est une enum, et le champ n'avait jamais
     été peuplé de bout en bout. Le plan échouait donc à la sérialisation dès qu'une sonde était
     réellement déclarée — un mécanisme défini mais jamais exercé."""
