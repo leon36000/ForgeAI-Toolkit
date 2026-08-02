@@ -15,7 +15,7 @@ from pathlib import Path
 
 from forgeai.catalogue.loader import minimal_stack
 from forgeai.catalogue.supply import verify_brick_before_exec, load_catalog_index
-from forgeai.core.models import DeploymentPlan, RenderTarget, ServiceSpec
+from forgeai.core.models import DeploymentPlan, ProbeType, RenderTarget, ServiceSpec
 from forgeai.stacks import deploy_ids
 
 PREFERRED_PORT_OFFSET = 10000  # 11434 → 21434 : évite les stacks existantes
@@ -38,6 +38,26 @@ _RAG_SERVICES = frozenset({
     "tei-rerank",
     "embeddings",
 })
+
+
+def _probe_type_de(definition: dict) -> "ProbeType | None":
+    """Convertit le type de sonde declare dans une definition de service."""
+    if "probe_type" not in definition:
+        return None
+
+    valeur = definition["probe_type"]
+    if not isinstance(valeur, str):
+        raise ValueError(
+            f"Valeur inconnue pour la cle 'probe_type': {valeur!r}"
+        )
+
+    nom = valeur.strip().upper()
+    try:
+        return ProbeType[nom]
+    except KeyError as exc:
+        raise ValueError(
+            f"Valeur inconnue pour la cle 'probe_type': {valeur!r}"
+        ) from exc
 
 
 def _profile_vendor(profile: str) -> str | None:
@@ -141,6 +161,11 @@ def assemble_plan(
                 f"http://127.0.0.1:{host_port}{svc['healthcheck_path']}"
                 if svc.get("healthcheck_path") else None
             ),
+            # HEALTH-029 : une sonde DÉCLARÉE prime sur le repli. `healthcheck_url` garde le port
+            # HÔTE — c'est le contrat du consommateur hôte (deploy/compose.py) — tandis que la
+            # sonde déclarée s'exécute DANS le conteneur, deux points de vue distincts.
+            probe_type=_probe_type_de(svc),
+            probe_target=tuple(svc["probe_target"]) if svc.get("probe_target") else None,
             gpu=svc_gpu,
             gpu_vendor=_profile_vendor(profile) if svc_gpu else None,
             # LAB-033N : classe de ressources déclarée dans l'overlay pour éviter
@@ -189,6 +214,8 @@ def assemble_plan(
                 volumes=tuple(spec.get("volumes", [])),
                 env=spec.get("env", {}),
                 healthcheck_url=healthcheck_url,
+                probe_type=_probe_type_de(spec),
+                probe_target=tuple(spec["probe_target"]) if spec.get("probe_target") else None,
                 depends=depends,
                 command=tuple(spec.get("command", [])),
                 gpu=brick_gpu,

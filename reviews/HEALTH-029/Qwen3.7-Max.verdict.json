@@ -1,0 +1,19 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "src/forgeai_toolkit.egg-info/SOURCES.txt",
+   "description": "Les répertoires `.egg-info` sont des artefacts de build générés localement (par `pip install -e .` ou `setuptools`) et ne devraient jamais être versionnés dans le dépôt. De plus, les modifications de dépendances (ajout de `ggshield`, `pre-commit`, suppression de `textual`) apparaissent dans `requires.txt` mais le fichier source de configuration (`pyproject.toml` ou `setup.py`) n'est pas inclus dans le diff, ce qui rend ces changements orphelins et non reproductibles pour les autres développeurs.",
+   "preuve": "Diff complet sur `src/forgeai_toolkit.egg-info/*` (PKG-INFO, SOURCES.txt, requires.txt) et absence de `pyproject.toml` dans la liste des fichiers modifiés."
+  }
+ ],
+ "date_heure": "2026-08-02T00:20:30.081423+00:00",
+ "prompt_sha256": "94c85f247c902732db138a098d72732ca80ba438be19dbc97c7286d221ba9134",
+ "reviewer_model": "Qwen3.7-Max",
+ "modele_servi": "qwen37-max-openrouter",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

@@ -10,7 +10,12 @@
       "volume": "forgeai-ollama-models:/root/.ollama",
       "healthcheck_path": "/api/tags",
       "gpu_capable": true,
-      "resource_class": "llm"
+      "resource_class": "llm",
+      "probe_type": "EXEC",
+      "probe_target": [
+        "ollama",
+        "list"
+      ]
     },
     {
       "name": "vector-store",
@@ -20,7 +25,13 @@
       "volume": "forgeai-qdrant-durci-data:/qdrant/storage",
       "healthcheck_path": "/readyz",
       "gpu_capable": false,
-      "resource_class": "db"
+      "resource_class": "db",
+      "probe_type": "EXEC",
+      "probe_target": [
+        "bash",
+        "-c",
+        "exec 3<>/dev/tcp/127.0.0.1/6333; printf \"GET /readyz HTTP/1.0\\r\\n\\r\\n\" >&3; read -r l <&3; [[ $$l == *\" 200\"* ]]"
+      ]
     }
   ],
   "models": {
