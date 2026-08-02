@@ -521,4 +521,11 @@ class DeploymentPlan:
     def to_json(self) -> str:
         data = asdict(self)
         data["target"] = self.target.value
+        # HEALTH-029 : `probe_type` est une enum, non sérialisable telle quelle. Le champ existait
+        # depuis HEALTH-028B mais n'avait jamais été peuple de bout en bout, si bien que ce chemin
+        # n'avait jamais ete exerce — le plan echouait des qu'une sonde etait reellement declaree.
+        for service in data.get("services", []):
+            sonde = service.get("probe_type")
+            if sonde is not None and not isinstance(sonde, str):
+                service["probe_type"] = sonde.value
         return json.dumps(data, ensure_ascii=False, indent=2)
