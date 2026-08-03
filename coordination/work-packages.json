@@ -1176,6 +1176,34 @@
       "dependencies": [],
       "_external": true,
       "_note": "Package géré par CLAUDE_CODE (findings I1/I2 issus de LAB-033I). Marqué completed via coordination centrale après fusion."
+    },
+    {
+      "id": "I18N-031",
+      "title": "--lang doit gouverner tout le CLI, pas seulement le wizard",
+      "status": "COMPLETED",
+      "ide": "CLAUDE_CODE",
+      "source_ide": "CLAUDE_CODE",
+      "exclusive_lane": "",
+      "dependencies": [],
+      "_note": "Trouve en testant --lang en de long en large avant remise de build (issue #377). Package cree apres coup, ne du plan initial.",
+      "allowed_paths": [
+        "src/forgeai/cli.py",
+        "src/forgeai/preflight.py",
+        "src/forgeai/models/gateway.py",
+        "src/forgeai/templates.py",
+        "src/forgeai/network/prepare.py",
+        "src/forgeai/data/locales/**",
+        "tests/test_i18n031_cli_bilingue.py",
+        "tests/test_cli_wizard.py",
+        "tests/test_models_gateway.py",
+        "stories/I18N-031.md",
+        "reviews/I18N-031/**",
+        "reviews/I18N-031-round1-reject/**",
+        "reviews/I18N-031-round2-reject/**",
+        "reviews/I18N-031-round3-reject/**",
+        "reviews/I18N-031-round4-reject/**",
+        "reviews/I18N-031-round5-approve/**"
+      ]
     }
   ]
 }

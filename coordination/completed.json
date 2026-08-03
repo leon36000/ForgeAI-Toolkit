@@ -927,6 +927,14 @@
       "merge_commit": "e7dd4a5",
       "review": "APPROVE 3/3 (DeepSeek-V4-Pro/deepseek, Gemini-3.1-Pro/google, Qwen3.7-Max/alibaba), sceau cf022b74b171, 0 objection",
       "note": "Trouve en pilotant forgeai node discover contre du VRAI materiel distant (PC3 NVIDIA, PC4 AMD, aucun avec docker) : les deux nœuds rapportaient un resultat IDENTIQUE correspondant a l environnement de l orchestrateur. Cause : SSH aplatit naivement un argv multi-mots par espace (prouve via ssh -v). Correctif : shlex.join(argv) en un seul element apres --. La revue a trouve un second defaut vivant (docker ps --format avec pipe non protege) que le meme correctif repare, prouve par un test dedie."
+    },
+    {
+      "id": "I18N-031",
+      "ide": "CLAUDE_CODE",
+      "pr": 378,
+      "merge_commit": "784f6e7",
+      "review": "APPROVE 3/3 (DeepSeek-V4-Pro/deepseek, Gemini-3.1-Pro/google, Qwen3.8-Max/alibaba), round 5/5, 0 objection",
+      "note": "--lang n'affectait que le wizard ; cli.py (37 fonctions) et preflight.py (alimente doctor) codes en dur en francais. 200 cles fr/en. Revue scellee en 5 rounds : Qwen3.8-Max a trouve a chaque round des fuites reelles supplementaires (trace_etat/coffre_etat codes en dur dans wizard_ci, titre/statut de node_prepare non localises, labels tailscale jamais traduits) et une vraie fragilite (MissingTranslation possible sur un statut de domaine imprevu, corrigee par repli defensif) -- convergence 5 objections vers 0 en 5 rounds, jamais une repetition. Une fois APPROVE 3/3 scelle, le gate CI SonarCloud (independant de civ_review) a bloque le premier push a 58.7% de couverture sur le code nouveau (seuil 80%) : 17 tests cibles ajoutes (template list/show/resolve et node_prepare jamais exercees par le CLI, 8 branches --selection de wizard_ci jamais testees malgre leurs t() deja en place, 3 branches gateway.py) -> cli.py 54.8% -> 82.0% sur son code nouveau, 1850 tests, 93% de couverture globale. ~84 messages d exception domaine restants (~29 fichiers hors cette story) et extension network/prepare.py (PrepareError/pourquoi_fr) signales, suivi separe."
     }
   ]
 }
