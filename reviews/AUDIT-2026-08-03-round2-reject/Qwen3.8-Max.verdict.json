@@ -1,0 +1,61 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "critique",
+   "fichier": "DOCUMENT_AUDITÉ §1",
+   "description": "La métrique de couverture `TOTAL 7183 483 93%` est présentée comme une mesure directe mais aucune preuve brute correspondante n'est fournie dans la section PREUVES.",
+   "preuve": "DOCUMENT_AUDITÉ §1 affirme `TOTAL 7183 483 93%`; la section PREUVES ne contient aucune sortie de `pytest --cov=forgeai --cov-report=term-missing` ni aucune ligne `TOTAL 7183 483 93%`."
+  },
+  {
+   "severite": "majeure",
+   "fichier": "DOCUMENT_AUDITÉ §1",
+   "description": "Le document affirme que les tests Windows-only tournent réellement sur un runner Windows CI `guard-fs-multi-os (windows-latest)` en citant Preuve 8, mais Preuve 8 ne contient aucune information de ce type.",
+   "preuve": "Preuve 8 contient seulement deux checks `gates` et `sonarcloud` en succès; aucun nom de workflow/job Windows. Preuve 12 renvoie à une preuve B-24 non fournie."
+  },
+  {
+   "severite": "majeure",
+   "fichier": "DOCUMENT_AUDITÉ §2",
+   "description": "L'affirmation selon laquelle l'analyse SonarCloud PR passe et l'échec D Security Rating est non bloquant n'est pas soutenue; les preuves montrent un échec par PR et un échec D Security Rating sur commits mergés sans distinction d'un check requis passant.",
+   "preuve": "Preuve 11 montre pour chaque PR #378-#383 `[{'conclusion':'failure','count':1},{'conclusion':'success','count':12}]`; Preuve 15 montre `Failed conditions ... D Security Rating on New Code (required ≥ A)` sur PR#378 et PR#382."
+  },
+  {
+   "severite": "majeure",
+   "fichier": "DOCUMENT_AUDITÉ §3",
+   "description": "Le document affirme que le rapport du 2026-07-14 déclare posés les volets `required_pull_request_reviews`, `required_signatures` et `enforce_admins`, alors que Preuve 9 ne déclare pas ces volets posés et indique explicitement que la revue humaine PR reste à faire.",
+   "preuve": "Preuve 9 contient: `Reste (mineur) : ... et une revue humaine PR (impraticable en mono-propriétaire...)`; aucune phrase ne déclare `required_pull_request_reviews` ou `enforce_admins` posés."
+  },
+  {
+   "severite": "majeure",
+   "fichier": "DOCUMENT_AUDITÉ §5",
+   "description": "L'association de B-23 et I18N-041 aux PR #381 et #383 n'est pas soutenue; la preuve disponible associe I18N-041 à #382 et coordination à #383, et Preuve 11 ne fournit aucune correspondance story/PR.",
+   "preuve": "Preuve 8 est intitulée `CI post-merge sur main (I18N-041 #382, coordination #383)`; Preuve 11 liste seulement les numéros #378-#383 avec état MERGED, commits et checks."
+  },
+  {
+   "severite": "majeure",
+   "fichier": "DOCUMENT_AUDITÉ §7",
+   "description": "Le document affirme qu'I18N-031 et I18N-041 (71 messages d'exception sur 4 fichiers) sont mergés et vérifiés sur main, mais la preuve fournie ne prouve ni le décompte 71 ni la fusion/vérification d'I18N-031.",
+   "preuve": "Preuve 17 montre uniquement les premières lignes de `stories/I18N-041.md`, de `tests/test_core_models_validation.py` et de `.github/CODEOWNERS`; aucun décompte de 71 messages ni aucune trace d'I18N-031."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "DOCUMENT_AUDITÉ §10",
+   "description": "Les affirmations sur le round 1 de revue scellée (identités des reviewers, verdicts, corrections) ne sont soutenues par aucune preuve brute de la section PREUVES.",
+   "preuve": "Aucune preuve de la section PREUVES ne contient de verdict, de nom de reviewer ou de trace du round 1 décrit dans le document."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "DOCUMENT_AUDITÉ §1",
+   "description": "Le document comptabilise 3 warnings pytest sans mentionner leur contenu, alors que la preuve contient des traces d'exceptions non gérées et d'AttributeError dans du code serveur, ce qui constitue une omission notable pour un audit qualité.",
+   "preuve": "Preuve 12 contient `PytestUnhandledThreadExceptionWarning` avec `AttributeError: 'PopenEnregistreur' object has no attribute 'returncode'` et des traces `KeyboardInterrupt` dans `src/forgeai/web/server.py`."
+  }
+ ],
+ "date_heure": "2026-08-03T13:17:23.887271+00:00",
+ "prompt_sha256": "cef86f7bab71c859fe3ad3828133dad843b2501a4ec4219a5d86fd40c43cc282",
+ "reviewer_model": "Qwen3.8-Max",
+ "modele_servi": "qwen38-max-alibaba-sg",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

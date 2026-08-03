@@ -1,0 +1,25 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "majeure",
+   "fichier": "Document audité - Section 2",
+   "description": "Le document affirme que le dernier run CI correspond à la PR #382 à 12:41Z, ce qui contredit la preuve qui indique la PR #383 à 12:48Z.",
+   "preuve": "PREUVE 8 : \"(dernier run post-#383, 2026-08-03T12:48Z)\""
+  },
+  {
+   "severite": "majeure",
+   "fichier": "Document audité - Section 4",
+   "description": "Le document mentionne que l'intégrité a été vérifiée sur 33 fichiers de registres, mais la preuve brute liste exactement 34 fichiers vérifiés.",
+   "preuve": "PREUVE 3 : La liste contient 34 lignes 'OK Registres/...', de 'mission.jsonl' jusqu'à 'PATCH-WEB-001.jsonl'."
+  }
+ ],
+ "date_heure": "2026-08-03T12:55:30.045717+00:00",
+ "prompt_sha256": "bca2e094630f2ef03bc8d9851999fc869985b34f45c2e5a027383712ccd0aadc",
+ "reviewer_model": "Gemini-3.1-Pro",
+ "modele_servi": "gemini-31-pro-openrouter",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "1"
+ }
+}

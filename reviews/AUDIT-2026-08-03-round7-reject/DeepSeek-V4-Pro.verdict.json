@@ -1,0 +1,19 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "Verdict proposé",
+   "description": "Le document affirme « 30 preuves numérotées, plus le sous-point 9b, au total », alors que le pack contient PREUVE 1 à PREUVE 31, soit 31 preuves numérotées. Le décompte est inexact.",
+   "preuve": "Section « Verdict proposé » : « 30 preuves numérotées, plus le sous-point 9b, au total ». Section PREUVES : PREUVE 31 est présente et citée dans le document (§15, Preuve 31)."
+  }
+ ],
+ "date_heure": "2026-08-03T14:07:46.581220+00:00",
+ "prompt_sha256": "aa255151dec4921187f6e1938add23ad4bdc89bb834ad00c3c7970ba915fa7b6",
+ "reviewer_model": "DeepSeek-V4-Pro",
+ "modele_servi": "deepseek-v4-pro-direct",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

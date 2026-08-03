@@ -1,0 +1,55 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "majeure",
+   "fichier": "Section 2 (Gates CI sur main)",
+   "description": "Les affirmations sur SonarCloud (deux analyses sous le même nom de check, seul le contexte PR serait requis, échec branche non bloquant) et l'absence de conciliation avec le succès sonarcloud post-#383 dépassent la preuve brute.",
+   "preuve": "Preuve 19: un pass PR pullRequest=382 et un échec branch=main sans nom de check; Preuve 8: sonarcloud success post-#383; Preuve 1: required_status_checks contient SonarCloud Code Analysis sans distinction PR/branche."
+  },
+  {
+   "severite": "majeure",
+   "fichier": "Section 2 (Gates CI sur main) et Section 8",
+   "description": "La conclusion qualifiant l'échec D Security Rating de pré-existant et sans rapport avec le travail de la session n'est pas soutenue par les preuves citées.",
+   "preuve": "Preuve 15 montre seulement des échecs sur PR#378, PR#382 et main~50; aucune preuve ne date le début de session ou n'établit l'absence de lien avec les modifications de la session."
+  },
+  {
+   "severite": "majeure",
+   "fichier": "Section 3 (Protection de branche main)",
+   "description": "L'affirmation selon laquelle le rapport du 2026-07-14 n'emploie jamais required_pull_request_reviews ou enforce_admins est une généralisation non soutenue par un extrait.",
+   "preuve": "Preuve 9 est présentée comme un extrait de Rapports/conformite-v2.0-integrale.md; aucune preuve ne montre l'absence de ces termes dans l'intégralité du rapport."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "En-tête",
+   "description": "La demande de Nathan est affirmée sans preuve brute; le document indique lui-même qu'elle n'est pas incluse dans les preuves techniques.",
+   "preuve": "En-tête: message utilisateur de cette session — non inclus dans les preuves techniques ci-dessous; aucune preuve brute ne contient cette demande."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "Section 5 (Coordination)",
+   "description": "L'affirmation même pattern que SSH-030/DATA-002B/I18N-031 n'est étayée par aucune preuve citée.",
+   "preuve": "Preuve 4 et Preuve 20 ne mentionnent ni SSH-030, ni DATA-002B, ni I18N-031 comme pattern de coordination."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "Sections 10-13 et Verdict proposé",
+   "description": "Des affirmations de processus (Round 5 en cours, rounds relancés frais, aucun verdict réutilisé, aucune objection ignorée, aucune donnée sciemment inventée) ne sont pas vérifiables dans les preuves brutes.",
+   "preuve": "Preuves 23, 25, 27, 28 contiennent des verdicts JSON mais aucune trace du round 5, de la non-réutilisation de verdicts, de l'exhaustivité des corrections ou de l'absence de données inventées."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "Verdict proposé",
+   "description": "Le décompte 28 preuves numérotées au total ne correspond pas exactement au pack de preuves qui inclut PREUVE 9b.",
+   "preuve": "La section PREUVES contient PREUVE 9b — commit 920b463 entre PREUVE 9 et PREUVE 10, en plus des preuves 1 à 28."
+  }
+ ],
+ "date_heure": "2026-08-03T13:51:09.929738+00:00",
+ "prompt_sha256": "740cdd573586c443f797da97668da11a75e968b45a3c34fddf66d8f6f2e6fe9c",
+ "reviewer_model": "Qwen3.8-Max",
+ "modele_servi": "qwen38-max-alibaba-sg",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

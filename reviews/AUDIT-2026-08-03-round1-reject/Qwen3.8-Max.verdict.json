@@ -1,0 +1,73 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "majeure",
+   "fichier": "Section 4 - Registres hash-chaînés",
+   "description": "Le document affirme que l'intégrité a été vérifiée sur 33 fichiers Registres/*.jsonl, alors que la preuve brute liste 34 fichiers.",
+   "preuve": "PREUVE 3: 34 lignes OK, de 'Registres/mission.jsonl' à 'Registres/PATCH-WEB-001.jsonl'."
+  },
+  {
+   "severite": "majeure",
+   "fichier": "Section 2 - Gates CI sur main",
+   "description": "Le document situe le dernier run post-merge sur I18N-041 PR #382 à 2026-08-03T12:41Z, mais la preuve cite le dernier run post-#383 à 2026-08-03T12:48Z.",
+   "preuve": "PREUVE 8: 'dernier run post-#383, 2026-08-03T12:48Z'; document: 'I18N-041, PR #382 ... 2026-08-03T12:41Z'."
+  },
+  {
+   "severite": "majeure",
+   "fichier": "Section 1 - Suite de tests et couverture",
+   "description": "Le document affirme 'rc=0' et que les 7 skips sont des gardes d'environnement connues, ex. dépendances GPU absentes, mais la preuve pytest montre seulement 1858 passed, 7 skipped, sans rc ni raison des skips.",
+   "preuve": "PREUVE SUITE COMPLETE: '1858 passed, 7 skipped, 3 warnings in 205.15s'; aucune sortie ne contient 'rc=0' ni l'explication des skips."
+  },
+  {
+   "severite": "majeure",
+   "fichier": "Section 3 - Protection de branche main",
+   "description": "Le document conclut à une contradiction directe avec le rapport du 2026-07-14 sans mentionner que la preuve actuelle confirme au moins une partie des affirmations du rapport: required checks incluant les 4 gates, force-push désactivé, suppressions désactivées.",
+   "preuve": "PREUVE 1: contexts contient 'gitleaks', 'no-stub-scan', 'registres', 'tests'; 'allow_force_pushes' est false; 'allow_deletions' est false."
+  },
+  {
+   "severite": "majeure",
+   "fichier": "Sections 3, 4, 6 - références aux entrées mission.jsonl seq 407/408",
+   "description": "Le document affirme le contenu et l'horodatage des entrées seq 407/408 (blocage_t3, constats B-22/B-25, limite catalogue), mais la preuve des registres ne donne que le nombre d'entrées et l'intégrité, pas leur contenu.",
+   "preuve": "PREUVE 3: 'OK Registres/mission.jsonl: 408 entrées, chaîne intègre'; aucun payload de seq 407 ou 408 n'est cité."
+  },
+  {
+   "severite": "majeure",
+   "fichier": "Sections 5, 7, 8 - PRs et stories associées",
+   "description": "Le document affirme que B-23/I18N-041 sont tracés par les PRs #381/#383, que les PRs #378-383 sont mergées et vertes, et que cela a été vérifié par git show, mais les preuves fournies ne contiennent pas ces vérifications.",
+   "preuve": "PREUVE 7: seulement 'issues ouvertes: 0' et 'PRs ouvertes: 0'; PREUVE 8: seulement un run CI après #383; aucune preuve ne liste #378-382 ni une vérification par git show."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "Section 3 - Protection de branche main",
+   "description": "Le document affirme que la mesure gh api a été répétée deux fois indépendamment, mais une seule sortie gh api est fournie.",
+   "preuve": "PREUVE 1: une seule sortie JSON de gh api branch protection."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "En-tête - Base auditée",
+   "description": "Le document affirme 'origin/main = d4b7710' et cite une demande de Nathan, mais aucune preuve brute ne soutient ces affirmations contextuelles.",
+   "preuve": "Aucune preuve fournie ne contient le commit d4b7710 ni la demande citée de Nathan."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "Section 6 - Catalogue de découverte logicielle",
+   "description": "Le document affirme que toutes les vérifications sont datées 2026-07 et que la limite a déjà été signalée au registre seq 407, mais la preuve catalogue donne seulement la version 2026-07-13 et aucun contenu de registre.",
+   "preuve": "PREUVE 5: 'version catalogue: 2026-07-13'; aucune preuve de date individuelle des vérifications ni de l'entrée seq 407."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "Section 7 - Internationalisation (i18n)",
+   "description": "Le document affirme environ 123 messages d'exception restants sur environ 38 fichiers, listés dans stories/I18N-041.md §6, mais aucune preuve brute ne soutient ce compte.",
+   "preuve": "PREUVE 6: seulement 'fr: 275 | en: 275 | parite stricte: True'."
+  }
+ ],
+ "date_heure": "2026-08-03T12:58:52.599411+00:00",
+ "prompt_sha256": "bca2e094630f2ef03bc8d9851999fc869985b34f45c2e5a027383712ccd0aadc",
+ "reviewer_model": "Qwen3.8-Max",
+ "modele_servi": "qwen38-max-alibaba-sg",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

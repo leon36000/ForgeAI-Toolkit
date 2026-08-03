@@ -1,0 +1,37 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "majeure",
+   "fichier": "DOCUMENT AUDITÉ §10",
+   "description": "L'affirmation « pré-existant et sans rapport avec cette session » concernant l'échec SonarCloud en mode branche n'est pas soutenue par les preuves et est contredite par la correction du §14, qui indique qu'aucune preuve ne date le début de la session par rapport à PR #378 et que cette affirmation a été retirée/remplacée.",
+   "preuve": "§10 contient « pré-existant et sans rapport avec cette session » ; §14 dit que « sans rapport avec le travail de cette session » a été retiré faute de preuve ; Preuve 15 ne fournit aucune date de début de session ni de preuve d'antériorité."
+  },
+  {
+   "severite": "majeure",
+   "fichier": "DOCUMENT AUDITÉ §16",
+   "description": "L'affirmation « DeepSeek-V4-Pro (auparavant toujours APPROVE) » est contredite par les verdicts bruts des rounds 2 et 3, où DeepSeek-V4-Pro a émis REJECT.",
+   "preuve": "PREUVE 25 : reviews/AUDIT-2026-08-03/DeepSeek-V4-Pro.verdict.json, \"verdict\": \"REJECT\" ; PREUVE 27 : reviews/AUDIT-2026-08-03/DeepSeek-V4-Pro.verdict.json, \"verdict\": \"REJECT\"."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "DOCUMENT AUDITÉ §5",
+   "description": "L'affirmation selon laquelle B-23 et I18N-041 sont « tous deux nés d'un audit du backlog » n'est pas soutenue par la preuve citée pour B-23 ; Preuve 20 ne donne que les titres et l'état MERGED des PRs #381/#383.",
+   "preuve": "PREUVE 20 : « 381 MERGED chore(coordination): B-23 complétée (#380) + constats B-22/B-25 » et « 383 MERGED chore(coordination): I18N-041 complétée (#382) — 69/69 » ; aucune mention de l'origine de B-23."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "DOCUMENT AUDITÉ Verdict proposé / Méthodologie",
+   "description": "Des affirmations de processus et d'intention (« Round 8 en cours », « aucun verdict réutilisé », « aucune donnée sciemment inventée ») sont maintenues sans preuve brute ; §9 reconnaît que la narration de processus n'est pas prouvable, mais ces affirmations restent énoncées comme des faits.",
+   "preuve": "Aucune preuve brute du pack ne contient « Round 8 », « aucun verdict réutilisé » ou une preuve d'absence de donnée inventée ; §9 admet que la narration de processus n'est pas re-vérifiable."
+  }
+ ],
+ "date_heure": "2026-08-03T14:24:15.599823+00:00",
+ "prompt_sha256": "2936cc99db1ba1b1b57d012aa68a63cc4ec30f11bc988d5993917ed318e7c49b",
+ "reviewer_model": "Qwen3.8-Max",
+ "modele_servi": "qwen38-max-alibaba-sg",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

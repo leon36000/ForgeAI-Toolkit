@@ -1,0 +1,43 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "majeure",
+   "fichier": "Verdict proposé",
+   "description": "Le décompte « 30 preuves numérotées, plus le sous-point 9b » est contredit par le document lui-même et par la section PREUVES : §15 cite la Preuve 31 et la section contient PREUVE 31 ; il y a donc au moins 31 preuves numérotées, plus 9b.",
+   "preuve": "Document §15 : « Verdicts bruts complets cités en Preuve 31 » ; section PREUVES : « ===== PREUVE 31 — verdicts bruts round6... ===== » ; Verdict proposé : « 30 preuves numérotées, plus le sous-point 9b »."
+  },
+  {
+   "severite": "majeure",
+   "fichier": "Verdict proposé",
+   "description": "L'affirmation « chaque affirmation ci-dessus est reproductible par la commande citée en preuve » est contredite par des affirmations non prouvées ou explicitement hors preuve : demande de Nathan, rounds frais, Round 7 en cours, absence de donnée inventée.",
+   "preuve": "En-tête : « message utilisateur de cette session — non inclus dans les preuves techniques » ; §9 : « une narration de processus n'est pas elle-même prouvable » ; aucune preuve du pack ne contient « Round 7 » ou « aucun verdict réutilisé »."
+  },
+  {
+   "severite": "majeure",
+   "fichier": "Section 2",
+   "description": "L'affirmation selon laquelle SonarCloud produit deux analyses distinctes sous le même nom de check « SonarCloud Code Analysis » n'est pas soutenue par la Preuve 19 : la sortie PR nomme explicitement ce check, mais la sortie branche est seulement un objet avec conclusion=failure et details_url contenant branch=main, sans nom de check.",
+   "preuve": "Preuve 19 : ligne PR « SonarCloud Code Analysis pass ... pullRequest=382 » ; pour branch=main, objet avec « conclusion=failure » et « details_url ... branch=main », sans nom de check."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "Section 1",
+   "description": "Le nombre identique de tests passés (1858) est présenté comme confirmant le même état du dépôt entre Preuve 12 et Preuve 18, alors que les preuves montrent seulement deux exécutions distinctes avec durées différentes et aucune comparaison de commit ou d'état du dépôt.",
+   "preuve": "Preuve 12 : « 1858 passed... in 201.94s » ; Preuve 18 : « 1858 passed... in 205.15s » ; aucune preuve ne donne commit/diff comparé entre ces deux exécutions."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "Section 2",
+   "description": "La conclusion « donc PRÉ-EXISTANT à cette PR » fondée sur main~50 dépasse la preuve disponible : Preuve 15 ne fournit pour main~50 que le mot « failure », sans date, contenu, ou relation d'ancrage établie avec PR #378.",
+   "preuve": "Preuve 15 : « main~50 ... failure » ; aucune donnée brute ne prouve que main~50 est antérieur à PR #378 ni que l'échec est identiquement nommé."
+  }
+ ],
+ "date_heure": "2026-08-03T14:11:57.104998+00:00",
+ "prompt_sha256": "aa255151dec4921187f6e1938add23ad4bdc89bb834ad00c3c7970ba915fa7b6",
+ "reviewer_model": "Qwen3.8-Max",
+ "modele_servi": "qwen38-max-alibaba-sg",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

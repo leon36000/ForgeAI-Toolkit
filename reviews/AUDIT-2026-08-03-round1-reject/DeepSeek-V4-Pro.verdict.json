@@ -1,0 +1,25 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "Document audité §8",
+   "description": "Affirmation que les PRs #378-383 sont 'toutes vertes sur main' et vérifiées manuellement par 'git show origin/main:<fichier>' n'est soutenue par aucune preuve brute dans le pack. Les seules preuves fournies (Preuves 7 et 8) ne couvrent pas cette vérification.",
+   "preuve": "Preuve 7 : 0 PRs ouvertes ; Preuve 8 : succès CI pour #382/#383 uniquement. Aucune sortie git show."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "Document audité §7",
+   "description": "Le nombre '~123 messages d'exception restants sur ~38 fichiers' est présenté comme mesuré mais aucune preuve brute n'est incluse dans le pack pour le confirmer. Le renvoi à 'stories/I18N-041.md §6' n'est pas vérifiable ici.",
+   "preuve": "Aucune donnée brute dans les Preuves listées. Preuve 6 ne concerne que les clés locales (275/275)."
+  }
+ ],
+ "date_heure": "2026-08-03T12:55:58.883355+00:00",
+ "prompt_sha256": "bca2e094630f2ef03bc8d9851999fc869985b34f45c2e5a027383712ccd0aadc",
+ "reviewer_model": "DeepSeek-V4-Pro",
+ "modele_servi": "deepseek-v4-pro-direct",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

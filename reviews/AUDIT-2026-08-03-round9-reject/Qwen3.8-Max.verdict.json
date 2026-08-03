@@ -1,0 +1,43 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "majeure",
+   "fichier": "DOCUMENT AUDITÉ §5",
+   "description": "L'affirmation selon laquelle l'origine d'I18N-041 comme issue d'un audit du backlog est soutenue par la Preuve 21 ('titre de la story') n'est pas étayée par la Preuve 21 citée. Cette preuve contient seulement un extrait de stories/I18N-041.md §4 et ne mentionne ni le titre ni l'origine de la story. L'origine est en revanche présente dans la Preuve 17, qui n'est pas citée ici pour ce point.",
+   "preuve": "§5: '...n'est soutenue, dans ce pack, que pour I18N-041 (Preuve 21, titre de la story)...'; PREUVE 21 commence par '## 4. Preuve mesurée' et ne contient pas 'Origine : audit du backlog...'; PREUVE 17 contient '# I18N-041 ... Origine : audit du backlog demandé par Nathan après I18N-031/B-23'."
+  },
+  {
+   "severite": "majeure",
+   "fichier": "DOCUMENT AUDITÉ §17",
+   "description": "La correction round 8 est décrite comme portant sur §11 et comme ayant annoté §11 d'un renvoi vers §14, mais la Preuve 33 montre que l'objection round 8 ciblait §10. De plus, dans le document actuel, la note de correction figure au §10, tandis que §11 ne contient pas ce renvoi.",
+   "preuve": "§17: '1. §11 (narration du round 2) répétait encore... Corrigé : §11 annotée d'un renvoi explicite vers §14...'; PREUVE 33, objection Qwen3.8-Max: 'DOCUMENT AUDITÉ §10'; DOCUMENT §10 contient la 'Note ajoutée round 8', §11 ne la contient pas."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "DOCUMENT AUDITÉ §17",
+   "description": "L'emplacement des verdicts DeepSeek des rounds 2 et 3 est affirmé comme étant 'reviews/AUDIT-2026-08-03-round2-reject/' et '-round3-reject/', alors que les Preuves 25 et 27 montrent les chemins 'reviews/AUDIT-2026-08-03/DeepSeek-V4-Pro.verdict.json'.",
+   "preuve": "§17: 'reviews/AUDIT-2026-08-03-round2-reject/ et -round3-reject/'; PREUVE 25: '-- reviews/AUDIT-2026-08-03/DeepSeek-V4-Pro.verdict.json --'; PREUVE 27: '-- reviews/AUDIT-2026-08-03/DeepSeek-V4-Pro.verdict.json --'."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "DOCUMENT AUDITÉ §2",
+   "description": "La signification opérationnelle de 'enforce_admins.enabled=false' (les administrateurs peuvent contourner tous les required checks) est affirmée comme un fait, alors que la Preuve 1 fournit seulement la valeur JSON du champ sans documenter cette sémantique dans le pack.",
+   "preuve": "§2: 'enforce_admins.enabled = false signifie que les administrateurs du dépôt peuvent merger en contournant TOUS les required checks'; PREUVE 1: '\"enforce_admins\":{...\"enabled\":false}' sans définition ou documentation de cette conséquence dans les preuves brutes."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "DOCUMENT AUDITÉ §2",
+   "description": "L'affirmation selon laquelle les merges #378 à #383 ont été faits avec les droits dont dispose l'Orchestrateur n'est pas soutenue par la Preuve 11, qui indique uniquement l'état MERGED, les commits de fusion et le comptage des checks, sans acteur ni méthode de merge.",
+   "preuve": "§2: 'tous les merges de cette session (#378 à #383, gh pr merge) ont été faits avec les droits dont dispose l'Orchestrateur sur ce dépôt'; PREUVE 11 liste seulement 'MERGED merged_at=... commit=...' et '[{\"conclusion\":\"failure\",\"count\":1},{\"conclusion\":\"success\",\"count\":12}]'."
+  }
+ ],
+ "date_heure": "2026-08-03T14:35:08.168038+00:00",
+ "prompt_sha256": "067bfd321a089b3fde4ed9444fd59710c8e6a5c86a9855bcfca7a8b52d70b5ec",
+ "reviewer_model": "Qwen3.8-Max",
+ "modele_servi": "qwen38-max-alibaba-sg",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

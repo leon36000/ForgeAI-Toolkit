@@ -1,0 +1,19 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "majeure",
+   "fichier": "Section 1 (Suite de tests et couverture)",
+   "description": "Le document affirme une couverture de code de 7183 déclarations, 483 manquées, 93% (issu de pytest --cov), mais aucune preuve n'est fournie pour étayer ces chiffres ; la Preuve 12 ne contient que le résumé des tests sans la sortie de couverture.",
+   "preuve": "Preuve 12 montre le résumé des tests (1858 passed, 7 skipped, 3 warnings, RC=0) mais ne contient pas la sortie de la commande de couverture (TOTAL ... 93%)."
+  }
+ ],
+ "date_heure": "2026-08-03T13:12:28.155671+00:00",
+ "prompt_sha256": "cef86f7bab71c859fe3ad3828133dad843b2501a4ec4219a5d86fd40c43cc282",
+ "reviewer_model": "DeepSeek-V4-Pro",
+ "modele_servi": "deepseek-v4-pro-direct",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

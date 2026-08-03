@@ -1,0 +1,37 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "majeure",
+   "fichier": "Verdict proposé",
+   "description": "Le décompte final '29 preuves numérotées, plus le sous-point 9b' est contredit par le pack : la PREUVE 30 est présente et explicitement citée par §14, donc il y a 30 preuves numérotées plus 9b.",
+   "preuve": "Section PREUVES : '===== PREUVE 30 — verdicts bruts round5 ... =====' ; §14 : 'Verdicts bruts complets cités en Preuve 30' ; Verdict proposé : '29 preuves numérotées, plus le sous-point 9b'."
+  },
+  {
+   "severite": "majeure",
+   "fichier": "Section 2",
+   "description": "La conclusion 'La seule explication cohérente... le required check résout vers le contexte PR' dépasse ce que les preuves permettent : aucune preuve brute ne nomme le contexte réellement requis pour 'SonarCloud Code Analysis', et les preuves fournies ne permettent pas d'exclure d'autres explications ; Preuve 1 montre notamment enforce_admins.enabled=false, donnée non prise en compte pour affirmer qu'aucune autre explication n'est possible.",
+   "preuve": "Preuve 1 : contexts contient 'SonarCloud Code Analysis' sans distinction PR/branche ; Preuve 1 : \"enforce_admins\":{\"enabled\":false} ; Preuve 19 : pass PR pullRequest=382 et échec branch=main sans identifier le required check."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "Section 2",
+   "description": "L'affirmation 'présent sur des commits antérieurs et postérieurs à contenu totalement différent' n'est pas soutenue par les preuves citées : Preuve 15 ne fournit aucun contenu pour main~50, et les preuves disponibles ne démontrent pas que les commits comparés ont un contenu 'totalement différent'.",
+   "preuve": "Preuve 15 : main~50 = 'failure' sans détail ; Preuve 22 : PR #378 'feat(i18n)... (I18N-031)' ; aucune preuve brute du contenu de main~50 ou d'une différence de contenu."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "Méthodologie / Sections 10-14 / Verdict proposé",
+   "description": "Plusieurs affirmations de processus ('Round 6 en cours', 'aucun verdict réutilisé', 'production PROPRE', 'aucune donnée sciemment inventée', 'chaque ligne... mesure directe') ne sont pas vérifiables par les preuves brutes, et §9 admet que la narration de processus n'est pas re-vérifiable comme un fait d'état.",
+   "preuve": "§9 : 'une narration de processus n'est pas elle-même prouvable...' ; Preuves 23/25/27/28/30 : uniquement des verdicts JSON, sans preuve de round frais, de non-réutilisation de verdicts, de production propre ou d'absence de données inventées."
+  }
+ ],
+ "date_heure": "2026-08-03T14:02:52.844490+00:00",
+ "prompt_sha256": "9b5de8db0d6a97ade0e9b8f75077031f12d775154269eb69368d8fae6d90336f",
+ "reviewer_model": "Qwen3.8-Max",
+ "modele_servi": "qwen38-max-alibaba-sg",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

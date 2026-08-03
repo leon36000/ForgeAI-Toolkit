@@ -1,0 +1,31 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "critique",
+   "fichier": "Document audité, Section 1",
+   "description": "L'affirmation concernant la couverture de code (commande `pytest --cov=forgeai` et sa sortie `TOTAL 7183 483 93%`) n'est soutenue par aucune preuve dans le pack de preuves brutes.",
+   "preuve": "Absence totale de la sortie de couverture dans les preuves fournies (la Preuve 12 ne contient que la sortie de `pytest -rs`)."
+  },
+  {
+   "severite": "majeure",
+   "fichier": "Document audité, Section 1",
+   "description": "Le document affirme que les tests Windows 'tournent réellement sur les runners Windows CI — guard-fs-multi-os (windows-latest), Preuve 8'. Or, la Preuve 8 ne mentionne aucunement 'guard-fs-multi-os' ni de runner Windows, elle liste uniquement les checks 'gates' et 'sonarcloud'.",
+   "preuve": "Preuve 8 : '[{\"conclusion\":\"success\",\"name\":\"gates\",\"status\":\"completed\"},{\"conclusion\":\"success\",\"name\":\"sonarcloud\",\"status\":\"completed\"}]'"
+  },
+  {
+   "severite": "mineure",
+   "fichier": "Document audité, Section 7",
+   "description": "Le document mentionne '71 messages d'exception' pour I18N-041, mais ce chiffre n'apparaît pas dans les preuves fournies (la Preuve 17 montre le titre du fichier mais pas le nombre 71).",
+   "preuve": "Preuve 17 : '# I18N-041 — Traduire les messages d'exception du domaine (lot 1 : 4 fichiers fondamentaux)'"
+  }
+ ],
+ "date_heure": "2026-08-03T13:12:20.816638+00:00",
+ "prompt_sha256": "cef86f7bab71c859fe3ad3828133dad843b2501a4ec4219a5d86fd40c43cc282",
+ "reviewer_model": "Gemini-3.1-Pro",
+ "modele_servi": "gemini-31-pro-openrouter",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "1"
+ }
+}
