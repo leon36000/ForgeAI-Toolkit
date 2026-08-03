@@ -1,6 +1,5 @@
 """Tests P2-F21/F22 — clés ed25519, état cluster (fixture réelle), plan de jonction.
 ssh-keygen/kubectl simulés (services externes, tests/ uniquement)."""
-import json
 import stat
 import sys
 from pathlib import Path

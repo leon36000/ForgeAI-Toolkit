@@ -1,7 +1,6 @@
 import re
 from pathlib import Path
 
-import pytest
 
 APP_JS = Path(__file__).resolve().parent.parent / "src" / "forgeai" / "web" / "assets" / "app.js"
 

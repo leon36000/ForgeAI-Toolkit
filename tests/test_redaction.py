@@ -16,9 +16,7 @@ l'API contractuelle :
 
 import ast
 import copy
-import re
 import time
-import types
 
 import pytest
 

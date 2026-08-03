@@ -1332,7 +1332,7 @@ class ForgeAIHandler(BaseHTTPRequestHandler):
                         )
                     except PrepareError as exc:
                         erreur = str(exc)
-                    except Exception as exc:  # noqa: BLE001
+                    except Exception:  # noqa: BLE001
                         traceback.print_exc(file=sys.stderr)
                         erreur = "erreur interne"
                     _prepare_state_set(host, {"done": True, "resultat": resultat, "erreur": erreur})

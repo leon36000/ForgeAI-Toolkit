@@ -1,0 +1,31 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "tests/",
+   "description": "CA3 exige une suite complète verte avec 1850 tests et rc=0. La preuve d'exécution fournie montre la progression et la couverture, mais n'affiche ni le nombre exact de tests ni le code retour.",
+   "preuve": "===== PREUVE D EXECUTION — SUITE COMPLETE + HOOKS REELS ===== ... TOTAL 7179 471 93% (aucune ligne du type '1850 passed' ou 'rc=0')"
+  },
+  {
+   "severite": "mineure",
+   "fichier": "tests/test_wizard_health.py",
+   "description": "Le diff retire ServiceSpec d'une ligne d'import alors que le contexte affiché montre ensuite des appels ServiceSpec(...). La sûreté du retrait dépend d'un import alternatif non visible dans le diff fourni.",
+   "preuve": "-from forgeai.core.models import HealthState, ProbeType, ServiceSpec ... svc = ServiceSpec(name=\"api\", image=\"api:1\", ...)"
+  },
+  {
+   "severite": "mineure",
+   "fichier": "stories/B-23.md",
+   "description": "La story affirme que toutes les corrections relèvent de deux catégories (F401/F811), alors que le diff contient aussi des suppressions de f-strings sans placeholder et des retraits de bindings d'exception inutilisés.",
+   "preuve": "diff src/forgeai/renderers/k3s.py: - parts.append(f\"  name: forgeai-default-deny\\n\") / + parts.append(\"  name: forgeai-default-deny\\n\") ; diff src/forgeai/web/server.py: - except Exception as exc: / + except Exception:"
+  }
+ ],
+ "date_heure": "2026-08-03T09:34:17.518858+00:00",
+ "prompt_sha256": "702bb43416c57a1da7567f6831be964adcd08268c6c890c41d2f229a816e51ee",
+ "reviewer_model": "Qwen3.8-Max",
+ "modele_servi": "qwen38-max-alibaba-sg",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

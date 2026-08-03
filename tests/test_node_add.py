@@ -6,10 +6,8 @@ import pytest
 from forgeai.network.node_add import (
     add_node,
     NodeAddError,
-    Bootstrapper,
     key_fingerprint,
     NodeRecord,
-    SshBootstrapper,
 )
 
 

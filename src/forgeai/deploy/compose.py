@@ -12,7 +12,7 @@ import urllib.error
 import urllib.request
 from pathlib import Path
 
-from forgeai.core.models import DeploymentPlan, HealthState, ProbeType
+from forgeai.core.models import HealthState, ProbeType, ServiceSpec
 from forgeai.core.redaction import redact_text
 
 
@@ -168,7 +168,6 @@ def _etiquette_publique(etat: HealthState) -> str:
 
 def wait_healthy(plan, timeout_s: float = 180.0, probe=None) -> dict:
     """Attend la santé du plan avec contrat non-vacu. Lève DeployError si timeout ou contrat manquant."""
-    import time
     from urllib.request import urlopen
 
     def _default_probe(url: str) -> bool:

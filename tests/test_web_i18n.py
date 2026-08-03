@@ -6,7 +6,6 @@ morte ; aucun attribut accentué en dur sans mécanisme de traduction."""
 import json
 import re
 import threading
-import time
 import urllib.request
 from pathlib import Path
 

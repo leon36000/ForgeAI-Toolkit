@@ -3,7 +3,6 @@ import pytest
 from forgeai.network.tailscale import (
     TailscaleError,
     tailscale_install_argv,
-    NodeNetworkPlan,
     render_node_network,
 )
 from forgeai.network.bootstrap import JoinPlan

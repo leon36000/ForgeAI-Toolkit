@@ -12,7 +12,6 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
-import forgeai.network.remote_probe as rp
 from forgeai.network.remote_probe import RemoteProbeError, SshRunner
 
 # Empreinte valide de test (factice, mais au bon format)

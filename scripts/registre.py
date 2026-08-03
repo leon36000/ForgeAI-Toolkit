@@ -161,7 +161,7 @@ def _resoudre_base_reference(ref: str, chemin_base: str) -> tuple[dict | None, s
         )
     except FileNotFoundError as erreur:
         raise RuntimeError(
-            f"git indisponible : impossible de lire la base de référence ; "
+            "git indisponible : impossible de lire la base de référence ; "
             "le job CI doit utiliser fetch-depth: 0."
         ) from erreur
     except subprocess.CalledProcessError:
@@ -329,7 +329,7 @@ def _cmd_ancrage(arguments: argparse.Namespace) -> int:
 
     try:
         reference = _charger_reference_git(arguments.ref, arguments.dossier)
-    except (subprocess.CalledProcessError, FileNotFoundError) as erreur:
+    except (subprocess.CalledProcessError, FileNotFoundError):
         if not arguments.permettre_reference_absente:
             print(
                 f"reference git {arguments.ref!r} inaccessible : le job CI doit "

@@ -1,9 +1,8 @@
 import json
 from pathlib import Path
 
-import pytest
 
-from scripts.reeval_defaults import main, reevaluate_defaults, current_defaults
+from scripts.reeval_defaults import main, reevaluate_defaults
 from forgeai.resources import catalogue_path
 
 

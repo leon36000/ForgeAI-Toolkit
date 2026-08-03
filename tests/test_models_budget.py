@@ -106,8 +106,6 @@ import multiprocessing as mp
 from pathlib import Path
 
 from forgeai.models.budget import (
-    BudgetError,
-    BudgetTracker,
     QuotaAtteint,
     extraire_tokens,
 )

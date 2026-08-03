@@ -2,12 +2,10 @@ import json
 import sys
 from pathlib import Path
 
-import pytest
 
 # Ajoute le répertoire racine au path pour pouvoir importer scripts.plugin_gate
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
-from scripts.plugin_gate import (PluginError, REQUIRED_FIELDS, default_existence_check,
-                                 validate_plugin, load_plugin, main)
+from scripts.plugin_gate import (validate_plugin, main)
 
 
 def _valid_plugin():

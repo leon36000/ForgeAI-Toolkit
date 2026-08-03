@@ -5,7 +5,6 @@ from pathlib import Path
 import pytest
 
 from forgeai.core.validation import (
-    NODE_NAME_RE,
     ValidationError,
     resolve_within,
     valider_nom_simple,

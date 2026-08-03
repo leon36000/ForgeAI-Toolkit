@@ -66,7 +66,7 @@ def test_probe_paths_filtre_services_hors_rag_ports():
 # ---------------------------------------------------------------------------
 import pytest
 
-from forgeai.core.models import HealthState, ProbeType, ServiceSpec
+from forgeai.core.models import HealthState, ProbeType
 
 
 def _plan_sante(services) -> DeploymentPlan:
@@ -109,7 +109,6 @@ def test_k3s_emet_trois_probes_aux_roles_distincts():
     """Critère 2 — startup, readiness et liveness ont des rôles distincts : startup protège un
     démarrage lent, readiness retire du service, liveness redémarre. Les confondre fait
     redémarrer en boucle un service qui démarre simplement lentement."""
-    import yaml
     from forgeai.renderers.k3s import render_k3s
     svc = ServiceSpec(name="api", image="api:1", host_port=8080, container_port=8080,
                       probe_type=ProbeType.HTTP, probe_target="/healthz", health_required=True)
@@ -196,7 +195,6 @@ def test_arguments_exec_sont_echappes():
     from forgeai.renderers.compose import render_compose
     svc = ServiceSpec(name="x", image="x:1", host_port=1, container_port=1,
                       probe_type=ProbeType.EXEC, probe_target=('echo', 'a"b'))
-    import yaml
     rendu = render_compose(_plan_sante([svc]))
     yaml.safe_load(rendu)   # doit rester parsable
 
@@ -206,7 +204,6 @@ def test_arguments_exec_k3s_sont_echappes():
     Mesuré : `a: b` devient un dictionnaire, ` #c` devient None, `*ref` corrompt le document.
     La sonde exécuterait alors autre chose que demandé, SANS erreur — une altération
     silencieuse est pire qu'un échec bruyant."""
-    import yaml
     from forgeai.renderers.k3s import render_k3s
     for arg in ("a: b", "[x]", "*ref", " #c", "{a}"):
         svc = ServiceSpec(name="x", image="x:1", host_port=1, container_port=1,
@@ -249,7 +246,6 @@ def test_sonde_interne_non_saine_est_rapportee(monkeypatch):
 def test_chemin_http_k3s_est_echappe():
     """Objection majeure de Gemini : `probe_target` HTTP n'était pas échappé dans le manifeste
     K3s — même classe de défaut que les arguments EXEC, sur le chemin."""
-    import yaml
     from forgeai.renderers.k3s import render_k3s
     svc = ServiceSpec(name="x", image="x:1", host_port=1, container_port=1,
                       probe_type=ProbeType.HTTP, probe_target="/a: b#c")
@@ -274,7 +270,6 @@ def test_chemin_derive_de_healthcheck_url_est_echappe():
     celui dérivé de `healthcheck_url`. TROISIÈME occurrence du même motif sur ce package —
     corriger une branche et oublier sa jumelle. Chaque chemin atteignant le YAML doit être
     échappé, sans exception."""
-    import yaml
     from forgeai.renderers.k3s import render_k3s
     # `#` est un FRAGMENT d'URL, retiré à juste titre par urlsplit (il n'est jamais envoyé au
     # serveur) : le cas de test utilise donc des caractères structurants YAML qui, eux, font
@@ -651,7 +646,6 @@ def test_sonde_par_defaut_urlopen_ok(monkeypatch):
 def test_sonde_par_defaut_urlopen_leve_ne_propage_pas(monkeypatch):
     """urlopen lève -> _default_probe attrape et renvoie False -> pas d'exception qui remonte,
     on obtient un DeployError de timeout, JAMAIS l'URLError d'origine."""
-    from urllib.error import URLError
 
     def faux_urlopen(url, timeout=2):
         raise URLError(f"refused: {url}")
@@ -668,7 +662,6 @@ def test_sonde_par_defaut_urlopen_leve_ne_propage_pas(monkeypatch):
 def test_render_k3s_fallback_tcp_socket_sans_sonde(monkeypatch):
     """Aucun contrat de sonde -> _probes_block dégrade en tcpSocket sur container_port,
     avec startupProbe.failureThreshold strictement supérieur à livenessProbe.failureThreshold."""
-    import yaml
     from forgeai.renderers.k3s import render_k3s
 
     # _verifier_capacite exige un CapaciteCluster cohérent avec le plan : on la shunte.

@@ -1,5 +1,4 @@
 import pytest
-from forgeai.core.runner import FixtureRunner
 from forgeai.hardware.drivers import (
     VENDORS,
     DriverError,

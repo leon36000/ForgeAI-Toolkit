@@ -210,7 +210,6 @@ def test_stack_inconnu_reste_404(server):
     )
 
 
-import json
 import time
 
 

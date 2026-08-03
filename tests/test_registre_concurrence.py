@@ -143,7 +143,6 @@ def _cli_worker(reg_path: str, actor: str, n: int) -> None:
 
 def test_cli_serialize_appends_multi_processus(tmp_path):
     """4 sous-processus × 5 appends CLI concurrents ⇒ chaîne intègre, 20 entrées, seq 1..20."""
-    import sys as _sys
 
     reg = tmp_path / "registre_cli.jsonl"
     reg_path = str(reg)

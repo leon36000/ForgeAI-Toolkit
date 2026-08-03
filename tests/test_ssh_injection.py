@@ -6,7 +6,6 @@ Spécification : `add_node` (chemin CLI + web) DOIT rejeter toute cible SSH dont
 l'`ip` n'est pas une valeur sûre (charset restreint, jamais un tiret en tête), AVANT tout appel
 au bootstrapper. RED avant correctif : aucune validation → l'injection atteint l'argv.
 """
-from pathlib import Path
 
 import pytest
 

@@ -22,7 +22,6 @@ from forgeai.models.routes import RouteStore
 
 from tests.test_routestore_concurrence import (  # réutilise l'outillage de crash existant
     _add_cloud_pause_before_journal_unlink,
-    _GreenTransport,
 )
 
 JOURNAL = ".models-transaction.json"

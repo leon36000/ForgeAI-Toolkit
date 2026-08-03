@@ -1,6 +1,5 @@
 import json
 
-import pytest
 
 from forgeai.catalogue.spheres import (
     SPHERES,

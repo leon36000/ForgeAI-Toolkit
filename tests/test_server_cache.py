@@ -51,7 +51,6 @@ def test_read_data_text_distingue_les_fichiers():
 # Sur runner CI chargé, le timeout client de 10 s est dépassé -> échecs CI systématiques.
 # Spécification : mémoïsation à TTL (le matériel ne change pas d'une requête à l'autre),
 # avec invalidation explicite possible. RED avant correctif : chaque appel re-sonde.
-import time as _time
 
 
 def test_hardware_json_memoise_avec_ttl(monkeypatch):

@@ -6,3 +6,16 @@ repos:
         name: ggshield (pre-commit)
         language_version: python3
         stages: [pre-commit]
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.14.5
+    hooks:
+      - id: ruff
+        name: ruff (lint bloquant — E9+F uniquement, cf. pyproject.toml)
+  - repo: local
+    hooks:
+      - id: no-stub-scan
+        name: no-stub-scan (détection déterministe de stubs/TODO/faux)
+        entry: python3 scripts/no_stub_scan.py --all
+        language: system
+        pass_filenames: false
+        stages: [pre-commit]
