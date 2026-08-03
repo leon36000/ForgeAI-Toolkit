@@ -1,0 +1,25 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "tests/test_i18n031_cli_bilingue.py",
+   "description": "G2 ne couvre pas les clés de traduction construites dynamiquement : l'extracteur AST ne capture que les constantes. Les quatre clés de statut actuelles existent et le repli MissingTranslation limite le risque, mais la garantie structurelle CA2 reste incomplète pour une future valeur de statut.",
+   "preuve": "_cles_t_appelees : isinstance(node.args[0], ast.Constant) ; cli.py _node_prepare : t(f\"cli.node_prepare.statut.{statut}\")"
+  },
+  {
+   "severite": "mineure",
+   "fichier": "src/forgeai/cli.py",
+   "description": "_strategy_set imprime diff.render() directement sans passer par t() ; si ce rendu de domaine contient du texte français accentué, il échapperait à G6 car le segment source ne contient pas d'accent. Aucune preuve dans le diff ne permet de vérifier ce contenu.",
+   "preuve": "print(diff.render(), file=sys.stderr) dans _strategy_set"
+  }
+ ],
+ "date_heure": "2026-08-03T00:26:48.594087+00:00",
+ "prompt_sha256": "6905e8053b8cbc67514296eb6489ec952220b3b4b337915d4c0e1261c32e6fbc",
+ "reviewer_model": "Qwen3.8-Max",
+ "modele_servi": "qwen38-max-alibaba-sg",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

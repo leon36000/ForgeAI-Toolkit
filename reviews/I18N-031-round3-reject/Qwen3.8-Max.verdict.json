@@ -1,0 +1,25 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "PREUVE_D_EXECUTION",
+   "description": "CA6 : la sortie brute de suite complète fournie ne permet pas de vérifier indépendamment le nombre de tests collectés ni le rc=0, car la ligne finale de résumé pytest est absente.",
+   "preuve": "La preuve fournie s'arrête après 'TOTAL 7179 582 92%' sans ligne finale du type '1832 passed ...' ni rc explicite."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "src/forgeai/cli.py",
+   "description": "_node_prepare construit une clé de traduction dynamiquement à partir d'un statut domaine ; le diff ne prouve pas que seules les quatre valeurs couvertes peuvent être produites, donc un statut imprévu pourrait lever MissingTranslation.",
+   "preuve": "_node_prepare contient status=t(f\"cli.node_prepare.statut.{statut}\") ; les locales ne définissent que cli.node_prepare.statut.planifiee, cli.node_prepare.statut.echec, cli.node_prepare.statut.sautee et cli.node_prepare.statut.ok."
+  }
+ ],
+ "date_heure": "2026-08-03T00:05:21.250585+00:00",
+ "prompt_sha256": "1a257c38a9f8fcc0745bcdc996f74fd8893b4c296e823e859a3275241dd22c26",
+ "reviewer_model": "Qwen3.8-Max",
+ "modele_servi": "qwen38-max-alibaba-sg",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

@@ -92,6 +92,7 @@ def plan_preparation(etat: dict, helm_present: bool) -> list[dict]:
             {
                 "id": "diagnostic",
                 "titre_fr": "Diagnostic de joignabilité",
+                "titre_en": "Reachability diagnostic",
                 "action": "aucune",
                 "commande": None,
                 "pourquoi_fr": (
@@ -122,6 +123,7 @@ def plan_preparation(etat: dict, helm_present: bool) -> list[dict]:
             steps.append({
                 "id": f"verifier-gpu-{vendor}",
                 "titre_fr": f"Vérifier le GPU {vendor.upper()} déjà exposé",
+                "titre_en": f"Check the already-exposed {vendor.upper()} GPU",
                 "action": "verifier",
                 "commande": None,
                 "pourquoi_fr": (f"Le nœud expose déjà {exposes} GPU(s) {vendor.upper()} ; "
@@ -132,6 +134,7 @@ def plan_preparation(etat: dict, helm_present: bool) -> list[dict]:
                 steps.append({
                     "id": f"helm-{vendor}",
                     "titre_fr": f"Installer {vendor.upper()} GPU Operator",
+                    "titre_en": f"Install {vendor.upper()} GPU Operator",
                     "action": "helm",
                     "commande": helm_cmds[vendor],
                     "pourquoi_fr": (f"Un GPU {vendor.upper()} est détecté mais non exposé comme "
@@ -142,6 +145,7 @@ def plan_preparation(etat: dict, helm_present: bool) -> list[dict]:
                 steps.append({
                     "id": f"helm-{vendor}-manuel",
                     "titre_fr": f"Installer {vendor.upper()} GPU Operator (helm manuel)",
+                    "titre_en": f"Install {vendor.upper()} GPU Operator (manual helm)",
                     "action": "aucune",
                     "commande": None,
                     "pourquoi_fr": ("helm n'est pas installé localement. Commande à exécuter "
@@ -153,6 +157,7 @@ def plan_preparation(etat: dict, helm_present: bool) -> list[dict]:
         steps.append({
             "id": "label-cpu",
             "titre_fr": "Étiqueter le nœud comme réceptacle CPU",
+            "titre_en": "Label the node as a CPU receptacle",
             "action": "label",
             "commande": ["kubectl", "label", "node", hostname,
                          "forgeai/receptacle=pret-cpu", "--overwrite"],
@@ -162,6 +167,7 @@ def plan_preparation(etat: dict, helm_present: bool) -> list[dict]:
         steps.append({
             "id": "label-pret",
             "titre_fr": "Étiqueter le nœud comme réceptacle prêt",
+            "titre_en": "Label the node as a ready receptacle",
             "action": "label",
             "commande": ["kubectl", "label", "node", hostname,
                          "forgeai/receptacle=pret", "--overwrite"],

@@ -1,0 +1,19 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "stories/I18N-031.md",
+   "description": "CA6 indique 1832 tests collectés, mais la preuve finale et le round 3 indiquent 1833 tests après ajout de test_g7. Le critère d'acceptation n'est pas aligné avec l'état livré.",
+   "preuve": "§5 CA6 : 1832 tests collectés ; §7 round 3 : 1833 ; preuve : TESTS_COLLECTES_INDEPENDAMMENT (somme --co par fichier, recalcul separe)=1833"
+  }
+ ],
+ "date_heure": "2026-08-03T00:17:41.667459+00:00",
+ "prompt_sha256": "32ef1dfea86c728665196019cbccbd2d4eed9c300ae04a72413f425ebb0ea18e",
+ "reviewer_model": "Qwen3.8-Max",
+ "modele_servi": "qwen38-max-alibaba-sg",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}
