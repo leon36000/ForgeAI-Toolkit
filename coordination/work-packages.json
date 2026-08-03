@@ -1204,6 +1204,32 @@
         "reviews/I18N-031-round4-reject/**",
         "reviews/I18N-031-round5-approve/**"
       ]
+    },
+    {
+      "id": "B-23",
+      "title": "Hooks pre-commit portables : lint bloquant (ruff E9+F) + no-stub-scan en hook local",
+      "status": "COMPLETED",
+      "ide": "CLAUDE_CODE",
+      "source_ide": "CLAUDE_CODE",
+      "exclusive_lane": "",
+      "dependencies": [],
+      "_note": "Item orphelin de manifests/backlog.yaml v2.0 (jamais story-fie dans le systeme de coordination), trouve lors d'un audit du backlog demande par Nathan (issue implicite, pas de #issue GitHub dediee). .pre-commit-config.yaml n'avait que ggshield ; ajoute ruff scope a [E9, F] (jamais les defauts -- 411 violations dont 232 pure style auraient noye le signal) + no-stub-scan en hook local. 41 fichiers touches par ruff --fix, mecaniques sauf 1 (import ServiceSpec manquant, corrige a la main dans deploy/compose.py).",
+      "allowed_paths": [
+        ".pre-commit-config.yaml",
+        "pyproject.toml",
+        "reviews/B-23-round1-reject/**",
+        "reviews/B-23-round2-reject/**",
+        "reviews/B-23-round3-approve/**",
+        "scripts/coordination/simulate_orchestration.py",
+        "scripts/proof/prove_gpu_nvidia_e2e.py",
+        "scripts/registre.py",
+        "src/forgeai/deploy/compose.py",
+        "src/forgeai/models/local.py",
+        "src/forgeai/renderers/k3s.py",
+        "src/forgeai/web/server.py",
+        "stories/B-23.md",
+        "tests/**"
+      ]
     }
   ]
 }
