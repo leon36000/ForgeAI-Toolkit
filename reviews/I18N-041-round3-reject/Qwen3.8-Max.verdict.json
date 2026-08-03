@@ -1,0 +1,25 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "majeure",
+   "fichier": "src/forgeai/core/models.py",
+   "description": "Un libellé français codé en dur est injecté comme paramètre d'un message d'exception traduit via t() ; en locale en, le message final contient encore le mot français 'clé'. Cela contredit la garantie de la story (paramètres interpolés localisés, cf. correction round 2) et l'objectif de traduction complète des messages d'exception.",
+   "preuve": "Dans le hunk final de core/models.py : for cle, valeur in self.env.items(): _rejeter_caracteres_de_controle('env (clé)', cle). La clé en.json core.models.controle.caractere_controle est 'field {nom_champ} contains a control character...' ; le rendu EN donnerait donc field 'env (clé)' contains..."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "src/forgeai/data/locales/en.json",
+   "description": "La locale anglaise conserve l'abréviation 'Mio' dans des fragments de message de placement, alors que d'autres messages anglais du même domaine utilisent 'MiB' ; incohérence de traduction potentiellement visible pour l'utilisateur.",
+   "preuve": "en.json: core.models.placement.raison_vram_insuffisante_candidat = 'VRAM {noeud_vram_mib} Mio < required {vram_min_mib} Mio' et core.models.placement.suffixe_vram_requise = ', VRAM required {vram_min_mib} Mio'."
+  }
+ ],
+ "date_heure": "2026-08-03T11:29:12.028810+00:00",
+ "prompt_sha256": "853b9773d1d54e0689b84ab0f23f4de821edcf3fc9196bebefc0d69eef9cf3f8",
+ "reviewer_model": "Qwen3.8-Max",
+ "modele_servi": "qwen38-max-alibaba-sg",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

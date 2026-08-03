@@ -23,6 +23,7 @@ from pathlib import Path
 from typing import List
 
 from forgeai.core.redaction import is_sensitive_key
+from forgeai.i18n import t
 from forgeai.models._locking import (
     MODELS_TRANSACTION_JOURNAL,
     MODELS_TRANSACTION_LOCK,
@@ -73,11 +74,11 @@ def _validate_route(route: dict) -> None:
     # sinon toute route valide serait rejetée.
     for champ, valeur in route.items():
         if champ not in SAFE_ROUTE_FIELDS and is_sensitive_key(champ) and valeur:
-            raise PortabilityError(f"Présence d'une clé secrète en clair dans une route : {champ}")
+            raise PortabilityError(t("portability.route.cle_secrete_en_clair", champ=champ))
     # Champs inconnus (sécurité par défaut)
     extra = set(route.keys()) - SAFE_ROUTE_FIELDS
     if extra:
-        raise PortabilityError(f"Champs non autorisés dans une route : {extra}")
+        raise PortabilityError(t("portability.route.champs_non_autorises", extra=extra))
 
 
 def _validate_export_destination(home: Path, out_path: Path | None) -> None:
@@ -105,9 +106,7 @@ def _validate_export_destination(home: Path, out_path: Path | None) -> None:
             for protected in protected_paths
         )
     ):
-        raise PortabilityError(
-            "La destination d'export chevauche un fichier protégé du setup"
-        )
+        raise PortabilityError(t("portability.export.destination_chevauche_protege"))
 
 
 def export_setup(home, out_path=None) -> dict:
@@ -140,24 +139,19 @@ def export_setup(home, out_path=None) -> dict:
                 with open(file_path, "r", encoding="utf-8") as fh:
                     content = json.load(fh)
             except Exception as exc:
-                raise PortabilityError(
-                    f"Erreur lors du chargement de {fname} : {exc}"
-                ) from exc
+                raise PortabilityError(t("portability.export.erreur_chargement",
+                                          fname=fname, exc=str(exc))) from exc
 
             if fname == "routes.json":
                 if not isinstance(content, list):
-                    raise PortabilityError("routes.json doit être une liste de routes")
+                    raise PortabilityError(t("portability.export.routes_doit_etre_liste"))
                 for route in content:
                     if not isinstance(route, dict):
-                        raise PortabilityError(
-                            "Chaque élément de routes.json doit être un dict"
-                        )
+                        raise PortabilityError(t("portability.export.route_doit_etre_dict"))
                     _validate_route(route)
 
             if fname in EXCLUDED_FILES:
-                raise PortabilityError(
-                    f"Le fichier exclu {fname} ne doit jamais être exporté"
-                )
+                raise PortabilityError(t("portability.export.fichier_exclu", fname=fname))
 
             files[fname] = content
 
@@ -178,9 +172,8 @@ def export_setup(home, out_path=None) -> dict:
                 mode=0o600,
             )
         except OSError as exc:
-            raise PortabilityError(
-                f"Erreur lors de l'écriture du bundle : {exc}"
-            ) from exc
+            raise PortabilityError(t("portability.export.erreur_ecriture",
+                                      exc=str(exc))) from exc
 
     return bundle
 
@@ -192,16 +185,17 @@ def verify_bundle(bundle: dict) -> None:
     """
     version = bundle.get("version")
     if version != BUNDLE_VERSION:
-        raise PortabilityError(f"Version de bundle incompatible. Attendu {BUNDLE_VERSION}, reçu {version}")
+        raise PortabilityError(t("portability.verify.version_incompatible",
+                                  bundle_version=BUNDLE_VERSION, version=version))
 
     expected_sha = bundle_sha256(bundle["files"], bundle.get("created_at"))
     if bundle["sha256"] != expected_sha:
-        raise PortabilityError("Hash altéré – bundle corrompu")
+        raise PortabilityError(t("portability.verify.hash_altere"))
 
     # Fail-closed : un bundle (même à hash valide) ne peut porter que des noms autorisés.
     for fname in bundle["files"]:
         if not _safe_name(fname):
-            raise PortabilityError(f"nom de fichier non autorisé dans le bundle : '{fname}'")
+            raise PortabilityError(t("portability.verify.nom_non_autorise", fname=fname))
 
 
 def load_bundle(path) -> dict:
@@ -238,7 +232,7 @@ def import_setup(bundle_path, home, *, force=False) -> dict:
     bundle = load_bundle(bundle_path)
     files = bundle["files"]
     if not isinstance(files, dict):
-        raise PortabilityError("Le bundle ne contient pas un mapping 'files' valide")
+        raise PortabilityError(t("portability.import.mapping_files_invalide"))
 
     home = Path(home)
     home.mkdir(parents=True, exist_ok=True)
@@ -257,10 +251,8 @@ def import_setup(bundle_path, home, *, force=False) -> dict:
                 if dest.exists():
                     conflicts.append(fname)
             if conflicts:
-                raise PortabilityError(
-                    f"Fichiers déjà présents dans {home} : {', '.join(conflicts)}. "
-                    "Utilisez force=True pour écraser."
-                )
+                raise PortabilityError(t("portability.import.fichiers_deja_presents",
+                                          home=home, conflicts_str=", ".join(conflicts)))
 
         # Chaque remplacement est atomique; routes.json reste sérialisé avec RouteStore.
         for fname, content in files.items():

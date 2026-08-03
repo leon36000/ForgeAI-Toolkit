@@ -1,0 +1,31 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "src/forgeai/models/vault.py",
+   "description": "La preuve AST indique un raise non converti (KeyError(name)); la justification est plausible mais la ligne exacte n'est pas dans le diff, donc le doute reste non vérifiable ici.",
+   "preuve": "PREUVE — DETECTEUR STRUCTUREL AST: src/forgeai/models/vault.py : 21 sites raise(...) analysés, 1 non converti(s) L396: KeyError(name)"
+  },
+  {
+   "severite": "mineure",
+   "fichier": "src/forgeai/core/models.py",
+   "description": "Le remplacement de 'env (clé)' par 'env (key)' modifie le rendu FR complet du message de contrôle, alors que CA3 ne couvre que la valeur FR de la clé de catalogue.",
+   "preuve": "diff src/forgeai/core/models.py: - _rejeter_caracteres_de_controle('env (clé)', cle) / + _rejeter_caracteres_de_controle('env (key)', cle)"
+  },
+  {
+   "severite": "mineure",
+   "fichier": "stories/I18N-041.md",
+   "description": "CA2 mentionne les deux détecteurs texte (accent + mots-outils), mais seule la sortie du détecteur AST est jointe explicitement comme preuve; l'absence de sortie des détecteurs texte laisse un doute non vérifiable.",
+   "preuve": "Section PREUVE — DETECTEUR STRUCTUREL AST; aucune sortie explicite des deux détecteurs texte dans le pack."
+  }
+ ],
+ "date_heure": "2026-08-03T11:58:09.939756+00:00",
+ "prompt_sha256": "b5f1084e7aef94f5422bd54e24830528c44ca8dee5158b4b001d9ee23b623540",
+ "reviewer_model": "Qwen3.8-Max",
+ "modele_servi": "qwen38-max-alibaba-sg",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

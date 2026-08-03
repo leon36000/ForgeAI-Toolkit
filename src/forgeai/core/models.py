@@ -8,6 +8,8 @@ from enum import Enum
 from types import MappingProxyType
 from typing import Any, Mapping, Optional, Union
 
+from forgeai.i18n import t
+
 
 def _rejeter_caracteres_de_controle(nom_champ: str, valeur: str) -> None:
     """Lève ValueError si `valeur` contient un caractère de contrôle Unicode (catégorie Cc,
@@ -17,9 +19,9 @@ def _rejeter_caracteres_de_controle(nom_champ: str, valeur: str) -> None:
     ne reproduit PAS la valeur complète (anti-fuite du payload dans les logs)."""
     for position, caractere in enumerate(valeur):
         if unicodedata.category(caractere) == "Cc":
-            raise ValueError(
-                f"champ '{nom_champ}' contient un caractère de contrôle "
-                f"à la position {position} : {caractere!r}")
+            raise ValueError(t("core.models.controle.caractere_controle",
+                                nom_champ=nom_champ, position=position,
+                                caractere_repr=repr(caractere)))
 
 
 class RenderTarget(Enum):
@@ -120,7 +122,7 @@ def _memoire_en_mib(valeur: str) -> int:
         return int(valeur[:-2])
     else:
         # Ne devrait pas arriver car déjà validé, mais sécurité
-        raise ValueError(f"Format mémoire inattendu : {valeur}")
+        raise ValueError(t("core.models.memoire.format_inattendu", valeur=valeur))
 
 def _resoudre_ressources(resource_class: str, resources: dict | None) -> dict:
     """Résout les ressources effectives à partir d'une classe et d'une éventuelle dérogation.
@@ -128,7 +130,8 @@ def _resoudre_ressources(resource_class: str, resources: dict | None) -> dict:
     # a) Vérification de la classe
     if resource_class not in _CLASSES_RESSOURCES:
         classes_admises = ", ".join(_CLASSES_RESSOURCES.keys())
-        raise ValueError(f"ERR_RES_CLASSE_INCONNUE: classe '{resource_class}' inconnue. Admises : {classes_admises}")
+        raise ValueError(t("core.models.ressources.classe_inconnue",
+                            resource_class=resource_class, classes_admises=classes_admises))
 
     # b) Aucune dérogation -> copie des valeurs de la classe
     if resources is None:
@@ -145,7 +148,8 @@ def _resoudre_ressources(resource_class: str, resources: dict | None) -> dict:
     if "limits" not in resources or "memory" not in resources.get("limits", {}):
         erreurs.append("limits.memory")
     if erreurs:
-        raise ValueError(f"ERR_RES_DEROGATION_PARTIELLE: champs manquants dans la dérogation : {', '.join(erreurs)}")
+        raise ValueError(t("core.models.ressources.derogation_partielle",
+                            erreurs_str=", ".join(erreurs)))
 
     # d) Validation des formats CPU et mémoire
     cpu_re = re.compile(r'^\d+m?$')
@@ -158,10 +162,10 @@ def _resoudre_ressources(resource_class: str, resources: dict | None) -> dict:
 
     for nom, val in [("requests.cpu", req_cpu), ("limits.cpu", lim_cpu)]:
         if not cpu_re.match(val):
-            raise ValueError(f"ERR_RES_CPU_INVALIDE: '{val}' pour {nom} n'est pas un entier avec suffixe optionnel m.")
+            raise ValueError(t("core.models.ressources.cpu_invalide", val=val, nom=nom))
     for nom, val in [("requests.memory", req_mem), ("limits.memory", lim_mem)]:
         if not mem_re.match(val):
-            raise ValueError(f"ERR_RES_MEMOIRE_INVALIDE: '{val}' pour {nom} n'est pas un entier suivi de Mi ou Gi.")
+            raise ValueError(t("core.models.ressources.memoire_invalide", val=val, nom=nom))
 
     # e) Cohérence limits >= requests (comparaison numérique normalisée)
     req_cpu_milli = _cpu_en_milli(req_cpu)
@@ -170,9 +174,11 @@ def _resoudre_ressources(resource_class: str, resources: dict | None) -> dict:
     lim_mem_mib = _memoire_en_mib(lim_mem)
 
     if lim_cpu_milli < req_cpu_milli:
-        raise ValueError(f"ERR_RES_LIMITS_INFERIEURES: limits.cpu ({lim_cpu}) < requests.cpu ({req_cpu})")
+        raise ValueError(t("core.models.ressources.limits_inferieures_cpu",
+                            lim_cpu=lim_cpu, req_cpu=req_cpu))
     if lim_mem_mib < req_mem_mib:
-        raise ValueError(f"ERR_RES_LIMITS_INFERIEURES: limits.memory ({lim_mem}) < requests.memory ({req_mem})")
+        raise ValueError(t("core.models.ressources.limits_inferieures_memoire",
+                            lim_mem=lim_mem, req_mem=req_mem))
 
     # Tout est valide, retourner le dictionnaire de ressources tel quel
     return resources
@@ -194,18 +200,14 @@ class NodeInventaire:
 
     def __post_init__(self) -> None:
         if not self.hostname or not self.hostname.strip():
-            raise ValueError(
-                "ERR_PLACE_HOSTNAME_INVALIDE : hostname vide ou uniquement des espaces")
+            raise ValueError(t("core.models.placement.hostname_invalide"))
         _rejeter_caracteres_de_controle("hostname", self.hostname)
         if self.vram_mib < 0:
-            raise ValueError(
-                f"ERR_PLACE_VRAM_INVALIDE : vram_mib négatif ({self.vram_mib}), "
-                f"attendu entier >= 0")
+            raise ValueError(t("core.models.placement.vram_invalide", vram_mib=self.vram_mib))
         vendors_autorises = {"nvidia", "amd", "intel", None}
         if self.gpu_vendor not in vendors_autorises:
-            raise ValueError(
-                f"ERR_PLACE_VENDOR_INCONNU : vendor '{self.gpu_vendor}' "
-                f"inconnu (autorisés : nvidia, amd, intel, None)")
+            raise ValueError(t("core.models.placement.vendor_inconnu",
+                                gpu_vendor=self.gpu_vendor))
 
 
 def valider_placement(svc, inventaire, node_demande):
@@ -222,9 +224,7 @@ def valider_placement(svc, inventaire, node_demande):
         # Inventaire explicite mais vide : on ne peut honorer un service GPU,
         # mais un service CPU n'a pas besoin d'un nœud particulier.
         if getattr(svc, "gpu", False):
-            raise PlacementError(
-                "ERR_PLACE_AUCUN_NOEUD_QUALIFIE : l'inventaire fourni ne contient "
-                "aucun nœud, placement d'un service GPU impossible")
+            raise PlacementError(t("core.models.placement.aucun_noeud_inventaire_vide"))
         return node_demande
 
     # Service CPU : le vendor d'un nœud ne le concerne jamais. Aucune raison
@@ -239,25 +239,25 @@ def valider_placement(svc, inventaire, node_demande):
         noeud = next(
             (n for n in inventaire if n.hostname == node_demande), None)
         if noeud is None:
-            raise PlacementError(
-                f"ERR_PLACE_NOEUD_INCONNU : nœud '{node_demande}' absent de "
-                f"l'inventaire (connus : {', '.join(hostnames) or 'aucun'})")
+            raise PlacementError(t("core.models.placement.noeud_inconnu",
+                                    node_demande=node_demande,
+                                    hostnames_str=(", ".join(hostnames)
+                                                   or t("core.models.placement.aucun"))))
         if noeud.gpu_vendor is None:
-            raise PlacementError(
-                f"ERR_PLACE_CPU_ONLY : le service '{svc.name}' exige un GPU "
-                f"(vendor demandé : {svc.gpu_vendor}) mais le nœud "
-                f"'{noeud.hostname}' est CPU-only")
+            raise PlacementError(t("core.models.placement.cpu_only",
+                                    svc_name=svc.name, gpu_vendor=svc.gpu_vendor,
+                                    noeud_hostname=noeud.hostname))
         if svc.gpu_vendor is not None and noeud.gpu_vendor != svc.gpu_vendor:
-            raise PlacementError(
-                f"ERR_PLACE_VENDOR_INCOMPATIBLE : service '{svc.name}' "
-                f"demande le vendor '{svc.gpu_vendor}' mais le nœud "
-                f"'{noeud.hostname}' expose '{noeud.gpu_vendor}'")
+            raise PlacementError(t("core.models.placement.vendor_incompatible",
+                                    svc_name=svc.name, svc_gpu_vendor=svc.gpu_vendor,
+                                    noeud_hostname=noeud.hostname,
+                                    noeud_gpu_vendor=noeud.gpu_vendor))
         if (svc.vram_min_mib is not None
                 and svc.vram_min_mib > noeud.vram_mib):
-            raise PlacementError(
-                f"ERR_PLACE_VRAM_INSUFFISANTE : service '{svc.name}' exige "
-                f"{svc.vram_min_mib} Mio de VRAM mais le nœud "
-                f"'{noeud.hostname}' n'en expose que {noeud.vram_mib} Mio")
+            raise PlacementError(t("core.models.placement.vram_insuffisante",
+                                    svc_name=svc.name, vram_min_mib=svc.vram_min_mib,
+                                    noeud_hostname=noeud.hostname,
+                                    noeud_vram_mib=noeud.vram_mib))
         return node_demande
 
     # Mode auto : parcours déterministe, on retient le PREMIER nœud dont le
@@ -270,22 +270,24 @@ def valider_placement(svc, inventaire, node_demande):
             raison = "CPU-only"
         elif (svc.gpu_vendor is not None
               and noeud.gpu_vendor != svc.gpu_vendor):
-            raison = f"vendor '{noeud.gpu_vendor}' ≠ demandé '{svc.gpu_vendor}'"
+            raison = t("core.models.placement.raison_vendor_incompatible",
+                       noeud_gpu_vendor=noeud.gpu_vendor, svc_gpu_vendor=svc.gpu_vendor)
         elif (svc.vram_min_mib is not None
               and svc.vram_min_mib > noeud.vram_mib):
-            raison = (f"VRAM {noeud.vram_mib} Mio < requise "
-                      f"{svc.vram_min_mib} Mio")
+            raison = t("core.models.placement.raison_vram_insuffisante_candidat",
+                       noeud_vram_mib=noeud.vram_mib, vram_min_mib=svc.vram_min_mib)
         if raison is None:
             return noeud.hostname
         candidats_examines.append(f"{noeud.hostname} ({raison})")
 
-    vram_requise = (f", VRAM requise {svc.vram_min_mib} Mio"
+    vram_requise = (t("core.models.placement.suffixe_vram_requise",
+                       vram_min_mib=svc.vram_min_mib)
                     if svc.vram_min_mib is not None else "")
-    raise PlacementError(
-        f"ERR_PLACE_AUCUN_NOEUD_QUALIFIE : aucun nœud ne convient pour le "
-        f"service '{svc.name}' (vendor recherché : {svc.gpu_vendor}"
-        f"{vram_requise}). Nœuds examinés : "
-        f"{'; '.join(candidats_examines) or 'aucun'}")
+    raise PlacementError(t("core.models.placement.aucun_noeud_qualifie_auto",
+                            svc_name=svc.name, svc_gpu_vendor=svc.gpu_vendor,
+                            vram_requise=vram_requise,
+                            candidats_str=("; ".join(candidats_examines)
+                                           or t("core.models.placement.aucun"))))
 
 
 class QuotaError(ValueError):
@@ -320,19 +322,15 @@ class CapaciteCluster:
 
     def __post_init__(self) -> None:
         if self.cpu_millicores <= 0 or self.memoire_mib <= 0:
-            raise ValueError(
-                "ERR_QUOTA_CAPACITE_INVALIDE: la capacité du cluster doit être "
-                f"strictement positive (reçu cpu={self.cpu_millicores}, "
-                f"memoire={self.memoire_mib} Mi)."
-            )
+            raise ValueError(t("core.models.quota.capacite_invalide",
+                                cpu_millicores=self.cpu_millicores,
+                                memoire_mib=self.memoire_mib))
         negatifs = [
             f"{nom!r}: {qte}" for nom, qte in self.ressources_gpu.items() if qte < 0
         ]
         if negatifs:
-            raise ValueError(
-                "ERR_QUOTA_GPU_INVALIDE: les ressources GPU ne peuvent pas être négatives : "
-                + ", ".join(negatifs)
-            )
+            raise ValueError(t("core.models.quota.gpu_invalide",
+                                negatifs_str=", ".join(negatifs)))
         object.__setattr__(
             self,
             "ressources_gpu",
@@ -413,32 +411,22 @@ class ServiceSpec:
         # --- validation du contrat de santé ---
         # Les durées doivent être strictement positives (sinon la boucle d'attente diverge ou expire immédiatement).
         if self.health_timeout_s <= 0:
-            raise ValueError(
-                f"ERR_HEALTH_DUREE_INVALIDE: health_timeout_s={self.health_timeout_s!r} "
-                f"doit être strictement positif."
-            )
+            raise ValueError(t("core.models.health.duree_invalide_timeout",
+                                health_timeout_s_repr=repr(self.health_timeout_s)))
         if self.health_interval_s <= 0:
-            raise ValueError(
-                f"ERR_HEALTH_DUREE_INVALIDE: health_interval_s={self.health_interval_s!r} "
-                f"doit être strictement positif."
-            )
+            raise ValueError(t("core.models.health.duree_invalide_interval",
+                                health_interval_s_repr=repr(self.health_interval_s)))
         # Le nombre de tentatives doit être strictement positif.
         if self.health_retries <= 0:
-            raise ValueError(
-                f"ERR_HEALTH_RETRIES_INVALIDE: health_retries={self.health_retries!r} "
-                f"doit être un entier strictement positif."
-            )
+            raise ValueError(t("core.models.health.retries_invalide",
+                                health_retries_repr=repr(self.health_retries)))
         # Les codes HTTP acceptés : tuple non vide, chaque code entier entre 100 et 599.
         if not self.http_success_codes:
-            raise ValueError(
-                "ERR_HEALTH_CODE_INVALIDE: http_success_codes ne peut pas être vide."
-            )
+            raise ValueError(t("core.models.health.code_vide"))
         for code in self.http_success_codes:
             if not isinstance(code, int) or isinstance(code, bool) or code < 100 or code > 599:
-                raise ValueError(
-                    f"ERR_HEALTH_CODE_INVALIDE: code HTTP={code!r} hors plage [100, 599] "
-                    f"ou non entier."
-                )
+                raise ValueError(t("core.models.health.code_hors_plage",
+                                    code_repr=repr(code)))
         # Validation de probe_target selon probe_type.
         if self.probe_type is ProbeType.EXEC:
             # Pour EXEC : tuple non vide de chaînes (argv). Jamais de chaîne shell : injection.
@@ -449,17 +437,14 @@ class ServiceSpec:
                 or len(self.probe_target) == 0
                 or not all(isinstance(arg, str) for arg in self.probe_target)
             ):
-                raise ValueError(
-                    f"ERR_HEALTH_CIBLE_EXEC_INVALIDE: probe_type=EXEC exige probe_target "
-                    f"tuple non vide de chaînes ; reçu={self.probe_target!r}."
-                )
+                raise ValueError(t("core.models.health.cible_exec_invalide",
+                                    probe_target_repr=repr(self.probe_target)))
         elif self.probe_type in (ProbeType.HTTP, ProbeType.TCP):
             # Pour HTTP/TCP : chaîne non vide, sans caractères de contrôle.
             if not isinstance(self.probe_target, str) or not self.probe_target:
-                raise ValueError(
-                    f"ERR_HEALTH_CIBLE_INVALIDE: probe_type={self.probe_type.value!r} exige "
-                    f"probe_target chaîne non vide ; reçu={self.probe_target!r}."
-                )
+                raise ValueError(t("core.models.health.cible_invalide",
+                                    probe_type_repr=repr(self.probe_type.value),
+                                    probe_target_repr=repr(self.probe_target)))
             _rejeter_caracteres_de_controle("probe_target", self.probe_target)
         # probe_type is None est autorisé : la dérivation depuis healthcheck_url se fait ailleurs.
         for i, dep in enumerate(self.depends):
@@ -469,33 +454,25 @@ class ServiceSpec:
         if self.adopted_endpoint is not None:
             # IPv6 littéral non supporté dans cette tranche : on exige exactement un seul ':'.
             if self.adopted_endpoint.count(':') != 1:
-                raise ValueError(
-                    f"ERR_ADOPT_FORME: adopted_endpoint={self.adopted_endpoint!r} doit "
-                    f"être exactement 'hôte:port' (un seul ':') ; IPv6 littéral non supporté."
-                )
+                raise ValueError(t("core.models.adopt.forme_invalide_colon",
+                                    adopted_endpoint_repr=repr(self.adopted_endpoint)))
             hote, _, port_str = self.adopted_endpoint.rpartition(':')
             if not hote:
-                raise ValueError(
-                    f"ERR_ADOPT_FORME: adopted_endpoint={self.adopted_endpoint!r} hôte vide."
-                )
+                raise ValueError(t("core.models.adopt.hote_vide",
+                                    adopted_endpoint_repr=repr(self.adopted_endpoint)))
             if any(c.isspace() or ord(c) < 32 for c in hote):
-                raise ValueError(
-                    f"ERR_ADOPT_HOTE: adopted_endpoint={self.adopted_endpoint!r} hôte "
-                    f"contient un espace ou un caractère de contrôle."
-                )
+                raise ValueError(t("core.models.adopt.hote_invalide",
+                                    adopted_endpoint_repr=repr(self.adopted_endpoint)))
             if not port_str.isdigit():
-                raise ValueError(
-                    f"ERR_ADOPT_PORT: adopted_endpoint={self.adopted_endpoint!r} port "
-                    f"non numérique."
-                )
+                raise ValueError(t("core.models.adopt.port_non_numerique",
+                                    adopted_endpoint_repr=repr(self.adopted_endpoint)))
             port_int = int(port_str)
             if port_int < 1 or port_int > 65535:
-                raise ValueError(
-                    f"ERR_ADOPT_PORT_BORNES: adopted_endpoint={self.adopted_endpoint!r} "
-                    f"port={port_int} hors [1, 65535]."
-                )
+                raise ValueError(t("core.models.adopt.port_hors_bornes",
+                                    adopted_endpoint_repr=repr(self.adopted_endpoint),
+                                    port_int=port_int))
         for cle, valeur in self.env.items():
-            _rejeter_caracteres_de_controle("env (clé)", cle)
+            _rejeter_caracteres_de_controle("env (key)", cle)
             _rejeter_caracteres_de_controle(f"env[{cle}]", valeur)
 
 

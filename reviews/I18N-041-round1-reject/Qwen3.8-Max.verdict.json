@@ -1,0 +1,19 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "majeure",
+   "fichier": "src/forgeai/models/vault.py",
+   "description": "Un message d'exception français reste non traduit dans l'un des quatre fichiers du lot, alors que la story indique une mesure par lecture directe et l'objectif de zéro site restant dans les fichiers traités. Ce site n'est ni traduit dans le diff ni couvert par une clé de catalogue.",
+   "preuve": "Dans le diff de src/forgeai/models/vault.py, ligne inchangée dans read_secret_text : raise OSError(\"fichier secret trop volumineux\")"
+  }
+ ],
+ "date_heure": "2026-08-03T10:44:12.106695+00:00",
+ "prompt_sha256": "570778ca114bb8880057e3f2449c01d5767856a2b9e8120bd43871ed8364cf91",
+ "reviewer_model": "Qwen3.8-Max",
+ "modele_servi": "qwen38-max-alibaba-sg",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}
