@@ -943,6 +943,14 @@
       "merge_commit": "ff7c3d6",
       "review": "APPROVE 3/3 (DeepSeek-V4-Pro/deepseek, Gemini-3.1-Pro/google, Qwen3.8-Max/alibaba), round 3/3, sceau b99864b5747c, 0 objection",
       "note": "manifests/backlog.yaml v2.0 (item orphelin, jamais story-fie) : .pre-commit-config.yaml completait deja ggshield mais pas de lint bloquant ni no-stub-scan en hook local. Ajoute ruff (astral-sh/ruff-pre-commit) scope a [E9, F] uniquement -- les defauts (~411 violations, 232 pure longueur de ligne) auraient noye le signal reel ; +no-stub-scan en hook local. 41 fichiers touches par ruff --fix (import inutilise F401, f-string sans placeholder F541, redefinition F811, exception non utilisee F841) + 1 import ServiceSpec manquant trouve et corrige a la main dans deploy/compose.py (DeploymentPlan retire par erreur historique, non lie a cette story). Revue scellee 3 rounds (REJECT->REJECT->APPROVE) : rounds 1-2 ont exige preuve py_compile/pre-commit explicite au lieu de resumes ; round 2 a aussi trouve que addopts=-q (pyproject.toml) supprime le resume natif pytest -- corrige via -o addopts=\"\" ; objection ServiceSpec (test_wizard_health.py) investiguee et REFUTEE : import deja present ligne 3, le retrait etait un vrai doublon F811."
+    },
+    {
+      "id": "I18N-041",
+      "ide": "CLAUDE_CODE",
+      "pr": 382,
+      "merge_commit": "44156cc",
+      "review": "APPROVE 3/3 (DeepSeek-V4-Pro/deepseek, Gemini-3.1-Pro/google, Qwen3.8-Max/alibaba), round 4/4, sceau b5f1084e7aef, 0 objection critique",
+      "note": "71 messages d'exception traduits sur 4 fichiers fondamentaux (core/models.py, models/vault.py, renderers/k3s.py, portability.py), 275 cles fr/en (+75). Round 1 REJECT : 2 sites vault.py echappes a 3 passages de detecteur ET a la lecture manuelle (4e instance du meme angle mort qu'I18N-031/I18N-041 §1). Round 2 REJECT : bug plus profond -- des PARAMETRES interpoles dans des messages deja traduits (via t()) portaient du francais code en dur independamment de la locale active, donc meme la locale EN affichait du francais (fallback \"aucun\", suffixe VRAM, raisons de rejet de candidat). Round 3 REJECT : meme classe de bug (1 instance de plus, \"env (cle)\") + incoherence d'unite EN (Mio au lieu de MiB) -- balayage proactif ensuite, aucune 3e instance trouvee. Round 4 : APPROVE 3/3, 3 objections mineures non bloquantes (proof-presentation, acceptees comme telles). Trouvaille methodologique : le script de verification \"exhaustive\" avait lui-meme un bug (comparaison de prefixe texte au lieu d'AST structurel) -- corrige. Gate CI SonarCloud post-scelle : 65.1% -> 81.4% couverture new-code, 21 tests cibles ajoutes (sans nouveau round, precedent I18N-031). ~123 messages/~38 fichiers restants mesures et differes explicitement, suivi separe."
     }
   ]
 }

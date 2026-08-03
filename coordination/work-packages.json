@@ -1230,6 +1230,34 @@
         "stories/B-23.md",
         "tests/**"
       ]
+    },
+    {
+      "id": "I18N-041",
+      "title": "Traduire les messages d'exception du domaine (lot 1/42 : 4 fichiers fondamentaux)",
+      "status": "COMPLETED",
+      "ide": "CLAUDE_CODE",
+      "source_ide": "CLAUDE_CODE",
+      "exclusive_lane": "",
+      "dependencies": [
+        "I18N-031"
+      ],
+      "_note": "Suite d'I18N-031/B-23, audit du backlog demande par Nathan. 4/42 fichiers mesures traites (71 messages, 275 cles fr/en). Revue scellee 4 rounds (REJECT x3 -> APPROVE 3/3) : angle mort detecteur (4e instance), puis 2 instances d'une classe de bug plus profonde (parametres interpoles portant du francais code en dur dans un message deja traduit). Gate CI SonarCloud post-scelle (65.1% -> 81.4% new-code coverage, 21 tests cibles, sans nouveau round de revue). ~123 messages/~38 fichiers restants, mesures et differes explicitement (story §6).",
+      "allowed_paths": [
+        "src/forgeai/core/models.py",
+        "src/forgeai/models/vault.py",
+        "src/forgeai/renderers/k3s.py",
+        "src/forgeai/portability.py",
+        "src/forgeai/data/locales/**",
+        "tests/test_portability.py",
+        "tests/test_placement_noeud.py",
+        "tests/test_core_models_validation.py",
+        "tests/test_k3s_hardening.py",
+        "stories/I18N-041.md",
+        "reviews/I18N-041-round1-reject/**",
+        "reviews/I18N-041-round2-reject/**",
+        "reviews/I18N-041-round3-reject/**",
+        "reviews/I18N-041-round4-approve/**"
+      ]
     }
   ]
 }
