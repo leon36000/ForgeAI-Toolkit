@@ -1,0 +1,19 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "Document audité §17",
+   "description": "Le document affirme au §17 avoir corrigé le §11 en y ajoutant une annotation vers le §14 concernant l'échec SonarCloud, suite à une objection du round 8. Or, l'objection du round 8 (Preuve 33, Qwen) portait explicitement sur le §10, et c'est bien le §10 qui a été réellement annoté dans le texte, pas le §11. Il s'agit d'une erreur de référence de section dans la narration du round 8.",
+   "preuve": "Preuve 33 (Qwen) : « DOCUMENT AUDITÉ §10 [...] L'affirmation 'pré-existant et sans rapport avec cette session' [...] ». Document §10 : « Note ajoutée round 8 : sa caractérisation initiale ici [...] a été elle-même retirée plus tard (§14, round 6) ». Document §17 : « 1. §11 (narration du round 2) répétait encore l'ancienne formule [...] Corrigé : §11 annotée d'un renvoi explicite vers §14 »."
+  }
+ ],
+ "date_heure": "2026-08-03T14:29:06.793277+00:00",
+ "prompt_sha256": "067bfd321a089b3fde4ed9444fd59710c8e6a5c86a9855bcfca7a8b52d70b5ec",
+ "reviewer_model": "Gemini-3.1-Pro",
+ "modele_servi": "gemini-31-pro-openrouter",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "1"
+ }
+}

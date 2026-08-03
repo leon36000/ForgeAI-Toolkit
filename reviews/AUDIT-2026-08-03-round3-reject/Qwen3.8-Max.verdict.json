@@ -1,0 +1,37 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "critique",
+   "fichier": "DOCUMENT AUDITÉ §1 (Suite de tests et couverture)",
+   "description": "Le document affirme que les 3 warnings proviennent 'tous du même test' test_rel038b_unicite.py::test_g4_hote_libere_meme_sur_exception_non_rattrapee et les interprète comme un KeyboardInterrupt délibéré. La Preuve 12 contredit cela : le troisième warning provient de tests/test_rel038c_process_groups.py::test_g1_deploiement_reel_lance_dans_son_propre_groupe et est un AttributeError, non un KeyboardInterrupt. Cette omission/contradiction est significative pour un audit qualité.",
+   "preuve": "Preuve 12, warnings summary : deux entrées 'tests/test_rel038b_unicite.py::test_g4...' avec 'KeyboardInterrupt: interruption non rattrapée' ; troisième entrée 'tests/test_rel038c_process_groups.py::test_g1_deploiement_reel_lance_dans_son_propre_groupe' avec \"AttributeError: 'PopenEnregistreur' object has no attribute 'returncode'\"."
+  },
+  {
+   "severite": "majeure",
+   "fichier": "DOCUMENT AUDITÉ §11 et §1",
+   "description": "Le document affirme au §11 que l'objection du round 2 portant sur les 3 warnings pytest a été traitée par une caractérisation ajoutée en §1. Cette affirmation n'est pas soutenue puisque la caractérisation du §1 est contredite par la Preuve 12 (troisième warning différent et AttributeError). La correction revendiquée n'est donc pas exacte.",
+   "preuve": "Document §11 : 'caractérisation des 3 warnings pytest ... ajoutée en §1 avec sa propre réserve explicite' ; Preuve 12 montre un troisième warning AttributeError dans test_rel038c_process_groups.py, contrairement à la caractérisation du §1."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "DOCUMENT AUDITÉ §1",
+   "description": "Le document déclare que les 5 tests e2e Docker skippés ont 'chacun avec sa propre preuve d'exécution réelle déjà au registre mission.jsonl, événements tdad_green', puis précise que ce point est 'non re-vérifié dans ce pack' et 'cité de mémoire de session'. Cette affirmation n'est pas vérifiée par les preuves fournies (Preuve 13 ne contient que seq 407/408) et entre en tension avec la méthodologie affichée ('chaque ligne... mesure directe').",
+   "preuve": "Document §1 : 'non re-vérifié dans ce pack, cité de mémoire de session, à prendre comme tel' ; Preuve 13 : uniquement seq 407 et seq 408, aucune entrée tdad_green pour les 5 tests e2e."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "DOCUMENT AUDITÉ §7",
+   "description": "L'affirmation selon laquelle 'trois détecteurs successifs se sont chacun révélés incomplets pendant cette session ; seule une revue indépendante a trouvé les derniers angles morts à chaque fois' n'est pas soutenue par la Preuve 14 citée, qui mentionne seulement une borne inférieure et la nécessité d'un futur détecteur plus complet.",
+   "preuve": "Preuve 14 : 'Chiffre à traiter comme borne inférieure (§1) — un futur lot devrait re-scanner avec un détecteur encore plus complet...' ; aucune mention de trois détecteurs successifs ni de revues indépendantes."
+  }
+ ],
+ "date_heure": "2026-08-03T13:28:39.922150+00:00",
+ "prompt_sha256": "a9796df2548bd957620de2a6e5b67e0d83d4761382742379074a67932a79e483",
+ "reviewer_model": "Qwen3.8-Max",
+ "modele_servi": "qwen38-max-alibaba-sg",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

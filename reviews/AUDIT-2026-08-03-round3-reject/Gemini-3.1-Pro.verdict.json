@@ -1,0 +1,19 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "majeure",
+   "fichier": "Document audité, Section 1",
+   "description": "Le document affirme que les 3 warnings proviennent tous du même test (`test_rel038b_unicite.py::test_g4_hote_libere_meme_sur_exception_non_rattrapee`) et sont liés à un `KeyboardInterrupt` délibéré. Or, la preuve montre que le 3ème warning provient d'un test différent (`test_rel038c_process_groups.py::test_g1_deploiement_reel_lance_dans_son_propre_groupe`) et concerne une `AttributeError` ('PopenEnregistreur' object has no attribute 'returncode').",
+   "preuve": "Preuve 12 : `tests/test_rel038c_process_groups.py::test_g1_deploiement_reel_lance_dans_son_propre_groupe [...] AttributeError: 'PopenEnregistreur' object has no attribute 'returncode'`"
+  }
+ ],
+ "date_heure": "2026-08-03T13:23:49.108568+00:00",
+ "prompt_sha256": "a9796df2548bd957620de2a6e5b67e0d83d4761382742379074a67932a79e483",
+ "reviewer_model": "Gemini-3.1-Pro",
+ "modele_servi": "gemini-31-pro-openrouter",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "1"
+ }
+}

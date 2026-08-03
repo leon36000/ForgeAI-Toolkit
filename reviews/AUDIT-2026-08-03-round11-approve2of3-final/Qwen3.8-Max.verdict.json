@@ -1,0 +1,37 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "majeure",
+   "fichier": "Document audité §19 (Revue scellée — round 10)",
+   "description": "Le document affirme que les 2 objections mineures du round 10 sont la récurrence des points « sémantique enforce_admins » et « identité de l'acteur des merges ». La Preuve 35 montre que la seconde objection mineure de Qwen3.8-Max porte sur des affirmations de processus (« Round 10 en cours », « Aucune donnée sciemment inventée »), et non sur l'identité de l'acteur des merges.",
+   "preuve": "PREUVE 35, Qwen3.8-Max.verdict.json : objections mineures : « La signification opérationnelle attribuée à 'enforce_admins.enabled=false'... » et « Des affirmations de processus telles que 'Round 10 en cours' et 'Aucune donnée sciemment inventée'... » ; aucune objection relative à l'acteur des merges."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "Document audité §18 (Revue scellée — round 9)",
+   "description": "Le document regroupe l'erreur de référence de section comme « 1 majeure (Gemini + Qwen) », alors que la Preuve 34 montre des sévérités distinctes : Gemini-3.1-Pro a émis une objection mineure sur ce point, Qwen3.8-Max une objection majeure. Le regroupement ne reflète pas exactement les sévérités brutes.",
+   "preuve": "PREUVE 34 : Gemini-3.1-Pro.verdict.json, objection §17, severite=mineure ; Qwen3.8-Max.verdict.json, objection §17, severite=majeure."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "Document audité §17 (Revue scellée — round 8)",
+   "description": "Le document affirme que les verdicts des rounds 2 et 3 sont actuellement archivés sous reviews/AUDIT-2026-08-03-round2-reject/ et reviews/AUDIT-2026-08-03-round3-reject/, mais aucune preuve brute du pack ne montre ces chemins actuels. Les Preuves 25 et 27 montrent uniquement les chemins reviews/AUDIT-2026-08-03/... au moment de leur capture.",
+   "preuve": "PREUVE 25 et PREUVE 27 : en-têtes -- reviews/AUDIT-2026-08-03/DeepSeek-V4-Pro.verdict.json -- ; aucune sortie ne contient reviews/AUDIT-2026-08-03-round2-reject/ ou reviews/AUDIT-2026-08-03-round3-reject/."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "Document audité §6 (Catalogue de découverte logicielle)",
+   "description": "L'affirmation « Toutes les vérifications datées 2026-07 » est rattachée à la Preuve 5, mais la Preuve 5 ne contient que la version catalogue 2026-07-13 et n'énonce pas que toutes les vérifications individuelles sont datées 2026-07. Cette information est soutenue par la Preuve 13, pas par la preuve citée à cet endroit.",
+   "preuve": "PREUVE 5 : version catalogue: 2026-07-13 ; aucune mention de dates individuelles de vérification. PREUVE 13, seq 407 : « toutes datees 2026-07 (version catalogue 2026-07-13) »."
+  }
+ ],
+ "date_heure": "2026-08-03T15:06:47.708408+00:00",
+ "prompt_sha256": "0de50d924408de24ca284ab8bae51b9f6fa0c15af07c2f11a58c011c054cf816",
+ "reviewer_model": "Qwen3.8-Max",
+ "modele_servi": "qwen38-max-alibaba-sg",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

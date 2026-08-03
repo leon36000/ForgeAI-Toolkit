@@ -1,0 +1,43 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "majeure",
+   "fichier": "Document audité — Méthodologie / §§10-18",
+   "description": "L'affirmation 'chaque ligne ci-dessous est une mesure directe' n'est pas soutenue : les sections de revue scellée et le verdict contiennent des affirmations de processus (rounds frais, aucun verdict réutilisé, découverte avant reviewers, Round 10 en cours) que le document reconnaît lui-même comme non re-vérifiables par artefact.",
+   "preuve": "Document : 'chaque ligne ci-dessous est une mesure directe...'; Document §9 : 'une narration de processus n'est pas elle-même prouvable...'; Preuves 23/25/27/28/30/31/32/33/34 : uniquement des verdicts JSON, sans preuve de 'round frais' ou 'aucun verdict réutilisé'."
+  },
+  {
+   "severite": "majeure",
+   "fichier": "Document audité §11",
+   "description": "Le document affirme que le compte identique de 1858 tests 'confirme le même ÉTAT du dépôt' entre Preuve 12 et Preuve 18, alors que les preuves brutes montrent seulement deux exécutions aux durées différentes et qu'aucune comparaison de commit n'est fournie ; le document dit lui-même en §1 que ce point n'est pas prouvé formellement.",
+   "preuve": "Preuve 12 : '1858 passed... in 201.94s'; Preuve 18 : '1858 passed... in 205.15s'; Document §1 : 'ceci n'est pas prouvé formellement dans ce pack — aucun hash de commit n'a été capturé...'."
+  },
+  {
+   "severite": "majeure",
+   "fichier": "Document audité §18",
+   "description": "Le document contredit les severités brutes de la Preuve 34 : il qualifie de 'mineure' l'objection Qwen sur §5/Preuve 21 alors qu'elle est 'majeure', et de 'majeure' l'objection Qwen sur les chemins archivés alors qu'elle est 'mineure'.",
+   "preuve": "Preuve 34, Qwen3.8-Max : objection 'DOCUMENT AUDITÉ §5' avec 'severite':'majeure'; objection 'DOCUMENT AUDITÉ §17' sur les chemins archivés avec 'severite':'mineure'; Document §18 : '1 mineure (Qwen)... §5...' et '1 majeure (Qwen)... chemins archivés'."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "Document audité §2 / §3",
+   "description": "La signification opérationnelle attribuée à 'enforce_admins.enabled=false' (contournement de tous les required checks par un administrateur) n'est pas documentée par une preuve brute du pack ; la Preuve 1 fournit seulement la valeur JSON du champ.",
+   "preuve": "Preuve 1 : '\"enforce_admins\":{\"enabled\":false}'; aucune documentation de l'API GitHub dans la section PREUVES."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "Document audité — Verdict proposé",
+   "description": "Des affirmations de processus telles que 'Round 10 en cours' et 'Aucune donnée sciemment inventée' restent non vérifiables par les preuves brutes, malgré la limite reconnue en §9.",
+   "preuve": "Document : 'Round 10 en cours. Aucune donnée sciemment inventée...'; aucune preuve brute du pack ne contient ces faits ; §9 admet que la narration de processus n'est pas re-vérifiable."
+  }
+ ],
+ "date_heure": "2026-08-03T14:45:44.564039+00:00",
+ "prompt_sha256": "b87f98ed178dee788c0f90e719c92af568c2ccd3f2dd6f545ff8748fb5736160",
+ "reviewer_model": "Qwen3.8-Max",
+ "modele_servi": "qwen38-max-alibaba-sg",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

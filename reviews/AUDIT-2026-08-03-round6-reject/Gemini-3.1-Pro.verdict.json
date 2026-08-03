@@ -1,0 +1,19 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "Verdict proposé",
+   "description": "Le document affirme qu'il y a '29 preuves numérotées, plus le sous-point 9b, au total', mais la section des preuves contient 30 preuves numérotées (de PREUVE 1 à PREUVE 30) en plus de la PREUVE 9b.",
+   "preuve": "La liste des preuves se termine par 'PREUVE 30 — verdicts bruts round 5 de CETTE revue'."
+  }
+ ],
+ "date_heure": "2026-08-03T13:56:31.359516+00:00",
+ "prompt_sha256": "9b5de8db0d6a97ade0e9b8f75077031f12d775154269eb69368d8fae6d90336f",
+ "reviewer_model": "Gemini-3.1-Pro",
+ "modele_servi": "gemini-31-pro-openrouter",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "1"
+ }
+}

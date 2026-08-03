@@ -1,0 +1,49 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "majeure",
+   "fichier": "Section 11 (Revue scellée — round 2)",
+   "description": "Le document affirme que la Preuve 18 provient de la même exécution que la Preuve 12, alors que la Section 1 décrit une exécution séparée et que les durées diffèrent. Cette affirmation est contredite par les preuves citées.",
+   "preuve": "Section 1: 'Preuve 18 — capturée dans une exécution séparée'; Preuve 12: '1858 passed, 7 skipped, 3 warnings in 201.94s'; Preuve 18: '1858 passed, 7 skipped, 3 warnings in 205.15s'; Section 11: 'même exécution que Preuve 12'."
+  },
+  {
+   "severite": "majeure",
+   "fichier": "Section 8 (Issues et PRs GitHub)",
+   "description": "Le document généralise à toutes les PRs #378-383 un unique échec 'pré-existant non lié', mais la Preuve 11 donne seulement des comptes agrégés sans identifier l'échec, et la Preuve 15 ne détaille le D Security Rating que pour deux PRs.",
+   "preuve": "Preuve 11: pour chaque PR, un échec et douze succès sans nom de check; Preuve 15: D Security Rating détaillé seulement pour PR#378 et PR#382, puis 'failure' non détaillé pour main~50."
+  },
+  {
+   "severite": "majeure",
+   "fichier": "Section 3 (Protection de branche main — écart rapport vs réalité)",
+   "description": "La citation et la confrontation avec le rapport du 2026-07-14 omettent la phrase de la Preuve 9 indiquant explicitement qu'une revue humaine PR reste à faire, ce qui change la portée de la divergence sur 'enforcement SERVEUR'.",
+   "preuve": "Preuve 9: 'Reste (mineur) : ... une revue humaine PR (impraticable en mono-propriétaire — la revue 3 modèles reste la gouvernance de contenu).'"
+  },
+  {
+   "severite": "mineure",
+   "fichier": "Section 1 (Suite de tests et couverture)",
+   "description": "Le document affirme que la Preuve 24 confirme que les deux tests Windows skippés tournent réellement sur un runner Windows, mais la preuve montre seulement un job CI Windows au statut pass, sans lister les tests exécutés.",
+   "preuve": "Preuve 24: 'guard-fs-multi-os (windows-latest) pass'; aucune liste des tests test_guard_fs.py:419 ou test_guard_fs.py:929."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "Section 2 (Gates CI sur main)",
+   "description": "Le document présente l'échec sur main~50 comme le même échec 'D Security Rating on New Code', mais la preuve brute correspondante contient uniquement le mot 'failure' sans condition détaillée.",
+   "preuve": "Preuve 15, bloc main~50: 'failure' (aucune mention de D Security Rating on New Code)."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "Sections 10/12 et Verdict proposé",
+   "description": "Plusieurs affirmations processuelles (round 4 relancé frais, découverte avant l'examen des reviewers, absence de donnée inventée) ne sont pas soutenues par des preuves brutes vérifiables dans le pack.",
+   "preuve": "Aucune preuve brute du pack ne documente le round 4, l'antériorité des découvertes, ou l'exhaustivité de l'absence de données inventées."
+  }
+ ],
+ "date_heure": "2026-08-03T13:38:32.654015+00:00",
+ "prompt_sha256": "a2f70d9c867c33a8439e0ad14ae963ae8d60695e2cad5cc7f2412468353cc8aa",
+ "reviewer_model": "Qwen3.8-Max",
+ "modele_servi": "qwen38-max-alibaba-sg",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

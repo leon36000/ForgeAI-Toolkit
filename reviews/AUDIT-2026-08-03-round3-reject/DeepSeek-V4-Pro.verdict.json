@@ -1,0 +1,19 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "majeure",
+   "fichier": "Section 1 (Suite de tests et couverture)",
+   "description": "Le document affirme que les 3 warnings pytest proviennent tous du même test (test_rel038b_unicite.py::test_g4_hote_libere_meme_sur_exception_non_rattrapee). Or la Preuve 12 montre clairement que le troisième warning vient d'un autre test, test_rel038c_process_groups.py::test_g1_deploiement_reel_lance_dans_son_propre_groupe, et résulte d'une AttributeError, pas d'un KeyboardInterrupt intentionnel.",
+   "preuve": "Preuve 12 : 'tests/test_rel038c_process_groups.py::test_g1_deploiement_reel_lance_dans_son_propre_groupe ... PytestUnhandledThreadExceptionWarning: Exception in thread Thread-449 (_reader) ... AttributeError: 'PopenEnregistreur' object has no attribute 'returncode''"
+  }
+ ],
+ "date_heure": "2026-08-03T13:25:13.745526+00:00",
+ "prompt_sha256": "a9796df2548bd957620de2a6e5b67e0d83d4761382742379074a67932a79e483",
+ "reviewer_model": "DeepSeek-V4-Pro",
+ "modele_servi": "deepseek-v4-pro-direct",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}
