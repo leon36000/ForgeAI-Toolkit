@@ -208,3 +208,85 @@ def test_import_ne_restaure_pas_fichier_hors_whitelist(tmp_path):
     report = import_setup(str(bundle_path), str(tgt))
     assert report["restored"] == ["gateway.json"]
     assert not (tgt / "vault.json").exists()
+
+
+class TestValidateRouteChampsInconnus:
+    def test_champ_inconnu_refuse(self, tmp_path: Path):
+        home = tmp_path / "source"
+        route_extra = {**ROUTE_TEMPLATE, "champ_surprise": "x"}
+        _write_json(home / "routes.json", [route_extra])
+        with pytest.raises(PortabilityError, match="non autorisés"):
+            export_setup(str(home))
+
+
+class TestExportFichierCorrompu:
+    def test_json_illisible_leve_portability_error(self, tmp_path: Path):
+        home = tmp_path / "source"
+        home.mkdir()
+        (home / "routes.json").write_text("{ceci n'est pas du json", encoding="utf-8")
+        with pytest.raises(PortabilityError, match="Erreur lors du chargement"):
+            export_setup(str(home))
+
+
+class TestExportRoutesJsonMalForme:
+    def test_routes_json_pas_une_liste(self, tmp_path: Path):
+        home = tmp_path / "source"
+        _write_json(home / "routes.json", {"pas": "une liste"})
+        with pytest.raises(PortabilityError, match="doit être une liste"):
+            export_setup(str(home))
+
+    def test_route_pas_un_dict(self, tmp_path: Path):
+        home = tmp_path / "source"
+        _write_json(home / "routes.json", ["pas-un-dict"])
+        with pytest.raises(PortabilityError, match="doit être un dict"):
+            export_setup(str(home))
+
+
+class TestExportFichierExcluDefenseEnProfondeur:
+    def test_fichier_exclu_refuse_meme_si_dans_setup_files(self, tmp_path, monkeypatch):
+        """SETUP_FILES/EXCLUDED_FILES n'ont aujourd'hui aucune intersection (vault.json
+        n'est jamais itéré) — cette garde protège contre une dérive future de ces
+        constantes. On la teste directement en simulant cette dérive."""
+        import forgeai.portability as portability_mod
+
+        home = tmp_path / "source"
+        _write_json(home / "vault.json", {"secret": "x"})
+        monkeypatch.setattr(portability_mod, "SETUP_FILES", ("vault.json",))
+        with pytest.raises(PortabilityError, match="ne doit jamais être exporté"):
+            export_setup(str(home))
+
+
+class TestExportErreurEcriture:
+    def test_ecriture_echoue_si_parent_est_un_fichier(self, tmp_path: Path):
+        home = tmp_path / "source"
+        _write_json(home / "gateway.json", GATEWAY)
+        blocker = tmp_path / "blocker"
+        blocker.write_text("je ne suis pas un dossier", encoding="utf-8")
+        out_path = blocker / "bundle.json"
+        with pytest.raises(PortabilityError, match="Erreur lors de l'écriture"):
+            export_setup(str(home), out_path=str(out_path))
+
+
+class TestVerifyVersionIncompatible:
+    def test_version_future_refusee(self):
+        files = {"gateway.json": GATEWAY}
+        forged = {"version": 999, "created_at": "2025-01-01", "files": files,
+                  "sha256": bundle_sha256(files, "2025-01-01")}
+        with pytest.raises(PortabilityError, match="incompatible"):
+            verify_bundle(forged)
+
+
+class TestImportFilesMappingInvalide:
+    def test_files_liste_au_lieu_de_dict(self, tmp_path: Path):
+        """verify_bundle accepte 'files' tant que c'est un ITÉRABLE de noms autorisés (une
+        liste de noms valides le satisfait) ; import_setup, lui, exige un vrai dict — la
+        garde de type est plus stricte à ce niveau, et c'est elle qu'on teste ici."""
+        files = ["gateway.json"]
+        created_at = "2025-01-01"
+        bundle_path = tmp_path / "b.json"
+        _write_json(bundle_path, {
+            "version": 1, "created_at": created_at, "files": files,
+            "sha256": bundle_sha256(files, created_at),
+        })
+        with pytest.raises(PortabilityError, match="mapping"):
+            import_setup(str(bundle_path), str(tmp_path / "target"))

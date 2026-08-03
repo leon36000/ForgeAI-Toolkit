@@ -28,6 +28,8 @@ import secrets
 import stat
 from pathlib import Path
 
+from forgeai.i18n import t
+
 from forgeai.models._locking import (
     MODELS_TRANSACTION_JOURNAL,
     MODELS_TRANSACTION_LOCK,
@@ -63,7 +65,7 @@ def _set_mode_without_following_preexisting_symlink(
         stat.S_IFMT(current.st_mode) != stat.S_IFMT(expected_state.st_mode)
         or not _same_inode(current, expected_state)
     ):
-        raise OSError("le chemin sécurisé a changé")
+        raise OSError(t("models.vault.chemin_a_change"))
 
     if os.chmod in os.supports_follow_symlinks:
         os.chmod(path, mode, follow_symlinks=False)
@@ -77,7 +79,7 @@ def _set_mode_without_following_preexisting_symlink(
         stat.S_IFMT(updated.st_mode) != stat.S_IFMT(expected_state.st_mode)
         or not _same_inode(updated, expected_state)
     ):
-        raise OSError("le chemin sécurisé a changé")
+        raise OSError(t("models.vault.chemin_a_change"))
     return updated
 
 
@@ -87,9 +89,9 @@ def _open_directory_with_mode(
     no_follow = getattr(os, "O_NOFOLLOW", None)
     directory = getattr(os, "O_DIRECTORY", None)
     if no_follow is None or directory is None:
-        raise OSError("validation de répertoire sans suivi indisponible")
+        raise OSError(t("models.vault.validation_repertoire_indisponible"))
     if not stat.S_ISDIR(path_state.st_mode):
-        raise OSError("le chemin sécurisé n'est pas un répertoire")
+        raise OSError(t("models.vault.chemin_pas_repertoire"))
 
     if stat.S_IMODE(path_state.st_mode) & 0o500 != 0o500:
         path_state = _set_mode_without_following_preexisting_symlink(
@@ -105,13 +107,13 @@ def _open_directory_with_mode(
             not stat.S_ISDIR(descriptor_state.st_mode)
             or not _same_inode(descriptor_state, path_state)
         ):
-            raise OSError("le chemin sécurisé n'est pas un répertoire")
+            raise OSError(t("models.vault.chemin_pas_repertoire"))
         os.fchmod(descriptor, final_mode)
         current = path.lstat()
         if not stat.S_ISDIR(current.st_mode) or not _same_inode(
             current, descriptor_state
         ):
-            raise OSError("le répertoire sécurisé a changé")
+            raise OSError(t("models.vault.repertoire_a_change"))
     except BaseException:
         os.close(descriptor)
         raise
@@ -140,7 +142,7 @@ def prepare_secure_directory(
                 current = candidate.lstat()
 
         if not stat.S_ISDIR(current.st_mode):
-            raise OSError("le chemin sécurisé n'est pas un répertoire")
+            raise OSError(t("models.vault.chemin_pas_repertoire"))
 
         permissions = stat.S_IMODE(current.st_mode)
         is_final = candidate == path
@@ -168,7 +170,7 @@ def _ensure_regular_path_matches(
         or current.st_nlink != 1
         or not _same_inode(current, expected_state)
     ):
-        raise OSError("le fichier de verrouillage a changé")
+        raise OSError(t("models.vault.fichier_verrou_a_change"))
 
 
 def prepare_lock_file(path: Path) -> None:
@@ -176,7 +178,7 @@ def prepare_lock_file(path: Path) -> None:
     mode = 0o600
     no_follow = getattr(os, "O_NOFOLLOW", None)
     if no_follow is None:
-        raise OSError("ouverture sans suivi de lien indisponible")
+        raise OSError(t("models.vault.ouverture_sans_suivi_indisponible"))
     flags = os.O_RDWR | no_follow
     flags |= getattr(os, "O_CLOEXEC", 0)
     lock_path = Path(str(path) + ".lock")
@@ -192,7 +194,7 @@ def prepare_lock_file(path: Path) -> None:
             not stat.S_ISREG(expected_state.st_mode)
             or expected_state.st_nlink != 1
         ):
-            raise OSError("le verrou n'est pas un fichier régulier")
+            raise OSError(t("models.vault.verrou_pas_fichier_regulier"))
         if stat.S_IMODE(expected_state.st_mode) & 0o600 != 0o600:
             expected_state = _set_mode_without_following_preexisting_symlink(
                 lock_path, mode, expected_state
@@ -205,11 +207,11 @@ def prepare_lock_file(path: Path) -> None:
             not stat.S_ISREG(descriptor_state.st_mode)
             or descriptor_state.st_nlink != 1
         ):
-            raise OSError("le verrou n'est pas un fichier régulier")
+            raise OSError(t("models.vault.verrou_pas_fichier_regulier"))
         if expected_state is not None and not _same_inode(
             descriptor_state, expected_state
         ):
-            raise OSError("le fichier de verrouillage a changé")
+            raise OSError(t("models.vault.fichier_verrou_a_change"))
         os.fchmod(descriptor, mode)
         _ensure_regular_path_matches(lock_path, descriptor_state)
     finally:
@@ -222,7 +224,7 @@ def _reject_secret_target_symlink(path: Path) -> None:
     except FileNotFoundError:
         target = None
     if target is not None and stat.S_ISLNK(target.st_mode):
-        raise OSError("refus d'utiliser un secret via un lien symbolique")
+        raise OSError(t("models.vault.refus_lien_symbolique"))
 
 
 def atomic_write_secret_text(
@@ -240,7 +242,7 @@ def read_secret_text(
     """Lit un petit fichier secret régulier sans suivre son composant final."""
     no_follow = getattr(os, "O_NOFOLLOW", None)
     if no_follow is None:
-        raise OSError("ouverture sans suivi de lien indisponible")
+        raise OSError(t("models.vault.ouverture_sans_suivi_indisponible"))
     flags = os.O_RDONLY | no_follow
     flags |= getattr(os, "O_CLOEXEC", 0)
     flags |= getattr(os, "O_NONBLOCK", 0)
@@ -251,22 +253,22 @@ def read_secret_text(
     try:
         target = os.fstat(descriptor)
         if not stat.S_ISREG(target.st_mode):
-            raise OSError("refus de lire un secret non régulier")
+            raise OSError(t("models.vault.refus_secret_non_regulier"))
         if target.st_size > max_bytes:
-            raise OSError("fichier secret trop volumineux")
+            raise OSError(t("models.vault.secret_trop_volumineux"))
         content = bytearray()
         while chunk := os.read(
             descriptor, min(8_192, max_bytes + 1 - len(content))
         ):
             content.extend(chunk)
             if len(content) > max_bytes:
-                raise OSError("fichier secret trop volumineux")
+                raise OSError(t("models.vault.secret_trop_volumineux"))
     finally:
         os.close(descriptor)
     try:
         return bytes(content).decode("utf-8")
     except UnicodeDecodeError:
-        raise OSError("secret existant non UTF-8") from None
+        raise OSError(t("models.vault.secret_non_utf8")) from None
 
 
 def republish_existing_secret_file(path: Path, *, mode: int = 0o600) -> None:
@@ -303,7 +305,7 @@ def seal(plaintext: bytes, passphrase: str) -> bytes:
 def unseal(blob: bytes, passphrase: str) -> bytes:
     """Ouvre un blob scellé. Lève VaultError si tag invalide (mauvaise passphrase/altéré)."""
     if len(blob) < len(MAGIC) + _SALT + _NONCE + _TAG or not blob.startswith(MAGIC):
-        raise VaultError("format de coffre invalide")
+        raise VaultError(t("models.vault.format_coffre_invalide"))
     off = len(MAGIC)
     salt = blob[off:off + _SALT]; off += _SALT
     nonce = blob[off:off + _NONCE]; off += _NONCE
@@ -312,7 +314,7 @@ def unseal(blob: bytes, passphrase: str) -> bytes:
     enc_key, mac_key = _derive(passphrase, salt)
     expected = hmac.new(mac_key, salt + nonce + ct, hashlib.sha256).digest()
     if not hmac.compare_digest(tag, expected):
-        raise VaultError("tag invalide : passphrase erronée ou coffre altéré")
+        raise VaultError(t("models.vault.tag_invalide"))
     return bytes(a ^ b for a, b in zip(ct, _keystream(enc_key, nonce, len(ct))))
 
 

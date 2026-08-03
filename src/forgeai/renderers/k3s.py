@@ -15,6 +15,7 @@ from typing import NamedTuple
 from urllib.parse import urlsplit
 
 from forgeai.core.models import DeploymentPlan, ServiceSpec, NodeInventaire, valider_placement, CapaciteCluster, QuotaError, ProbeType
+from forgeai.i18n import t
 from forgeai.renderers._openbao import UNSEAL_SCRIPT as _UNSEAL_SCRIPT
 
 
@@ -55,7 +56,7 @@ def _safe(value: str, field: str) -> str:
     images, hostnames, chemins) n'en portent jamais ; on refuse le reste (défense en profondeur).
     Vérif par point de code (pas de regex de contrôle) pour rester lisible et sans surprise."""
     if any(ord(ch) < 0x20 or ord(ch) == 0x7f for ch in value):
-        raise ValueError(f"valeur non sûre pour un manifeste Kubernetes ({field}) : {value!r}")
+        raise ValueError(t("renderers.k3s.valeur_non_sure", field=field, value_repr=repr(value)))
     return value
 
 
@@ -66,8 +67,7 @@ def node_port_for(svc: ServiceSpec, used: set[int] | None = None) -> int:
     port = 30000 + (svc.host_port % _NODEPORT_SPAN)
     if used is not None:
         if len(used) >= _NODEPORT_SPAN:  # plage saturée -> erreur bornée, jamais de boucle infinie
-            raise RuntimeError(
-                f"plage NodePort (30000-32767) saturée : plus de {_NODEPORT_SPAN} services exposés")
+            raise RuntimeError(t("renderers.k3s.nodeport_sature", nodeport_span=_NODEPORT_SPAN))
         while port in used:
             port = 30000 + ((port - 30000 + 1) % _NODEPORT_SPAN)
         used.add(port)
@@ -179,10 +179,9 @@ def _profil_securite(nom: str) -> ProfilSecurite:
     """Retourne le profil mesuré d'un service, ou le profil par défaut."""
     profil = _PROFILS_SECURITE.get(nom, _PROFIL_DEFAUT)
     if profil.uid < _UID_MINIMAL_NON_ROOT:
-        raise ValueError(
-            f"le profil de sécurité pour {nom!r} exige uid={profil.uid} "
-            f"(minimum autorisé : {_UID_MINIMAL_NON_ROOT})"
-        )
+        raise ValueError(t("renderers.k3s.profil_securite_uid",
+                            nom_repr=repr(nom), profil_uid=profil.uid,
+                            uid_minimal=_UID_MINIMAL_NON_ROOT))
     return profil
 
 
@@ -396,10 +395,7 @@ def _deployment(svc: ServiceSpec, effective_node: str | None = None,
 
     # Vérification explicite du vendor GPU avant tout rendu du bloc GPU.
     if svc.gpu and svc.gpu_vendor is not None and svc.gpu_vendor not in {"nvidia", "amd", "intel"}:
-        raise ValueError(
-            f"vendor GPU non supporté : {svc.gpu_vendor} — combinaison refusée "
-            f"(nvidia/amd/intel uniquement)"
-        )
+        raise ValueError(t("renderers.k3s.vendor_gpu_non_supporte", gpu_vendor=svc.gpu_vendor))
     # GPU par vendor : chaque vendor reçoit sa ressource de device plugin
     # (LAB-033A). Le passthrough hostPath est supprimé car le cgroup devices
     # refuse l'accès aux char devices montés en hostPath.
@@ -431,8 +427,8 @@ def _deployment(svc: ServiceSpec, effective_node: str | None = None,
             mode = _safe(mode, "config-mode")
             basename = os.path.basename(source)
             if config_files is None or basename not in config_files:
-                raise ValueError(
-                    f"bind-mount de fichier config non fourni dans config_files : {source!r}")
+                raise ValueError(t("renderers.k3s.bind_mount_non_fourni",
+                                    source_repr=repr(source)))
             cm_name = basename.rsplit(".", 1)[0].lower().replace(".", "-")
             content = config_files[basename]
             indented = textwrap.indent(content, "    ")
@@ -470,8 +466,7 @@ def _deployment(svc: ServiceSpec, effective_node: str | None = None,
                 f"      storage: {_DEFAULT_PVC_SIZE}\n"
             )
         else:
-            raise ValueError(
-                f"volume mal formé (attendu 'nom:chemin' ou './fichier:chemin:mode') : {volume!r}")
+            raise ValueError(t("renderers.k3s.volume_mal_forme", volume_repr=repr(volume)))
     # K8S-022 : readOnlyRootFilesystem impose des emptyDir explicites pour les chemins que le
     # service écrit hors de ses volumes de données (chemins MESURÉS, cf. _PROFILS_SECURITE).
     # Un chemin déjà monté (PVC, ConfigMap…) n'est jamais monté deux fois : mountPath dupliqué
@@ -829,9 +824,7 @@ def _memoire_en_mib(valeur: str) -> int:
         return int(valeur[:-2])
     if valeur.endswith("Gi"):
         return int(valeur[:-2]) * _MIB_PER_GIB
-    raise ValueError(
-        f"ERR_QUOTA_MEMOIRE_INVALIDE: unité mémoire non supportée: {valeur!r}"
-    )
+    raise ValueError(t("renderers.k3s.quota_memoire_invalide", valeur_repr=repr(valeur)))
 
 
 def _budget_du_plan(plan: DeploymentPlan) -> dict:
@@ -854,9 +847,7 @@ def _budget_du_plan(plan: DeploymentPlan) -> dict:
         res = getattr(svc, "ressources_effectives", None)
         if res is None:
             # On lève une erreur plutôt que de fausser le budget en silence
-            raise ValueError(
-                "ERR_QUOTA_RESSOURCES_ABSENTES: le service {} n'a pas de ressources_effectives".format(svc.name)
-            )
+            raise ValueError(t("renderers.k3s.quota_ressources_absentes", svc_name=svc.name))
         for categorie in ("requests", "limits"):
             # `dict.get(cle, {})` ne protège que de l'absence de clé, pas d'une valeur
             # None explicite : sans le `or {}`, le .get() suivant lèverait AttributeError
@@ -865,13 +856,10 @@ def _budget_du_plan(plan: DeploymentPlan) -> dict:
             memoire = (res.get(categorie) or {}).get("memory")
             if cpu is None or memoire is None:
                 # On lève une erreur plutôt que de fausser le budget en silence
-                raise ValueError(
-                    "ERR_QUOTA_RESSOURCES_INCOMPLETES: le service {} n'a pas {} dans sa catégorie {}".format(
-                        svc.name,
-                        "cpu" if cpu is None else "memory",
-                        categorie
-                    )
-                )
+                raise ValueError(t("renderers.k3s.quota_ressources_incompletes",
+                                    svc_name=svc.name,
+                                    champ_manquant="cpu" if cpu is None else "memory",
+                                    categorie=categorie))
             budget[categorie]["cpu_m"] += _cpu_en_millicores(cpu)
             budget[categorie]["mem_mib"] += _memoire_en_mib(memoire)
     return budget
@@ -968,17 +956,11 @@ def _verifier_capacite(plan: DeploymentPlan, capacite: "CapaciteCluster | None")
     memoire_requise = budget["limits"]["mem_mib"]
 
     if cpu_requis > capacite.cpu_millicores:
-        raise QuotaError(
-            "ERR_QUOTA_CPU_DEPASSE: le plan requiert "
-            f"{cpu_requis}m CPU mais le cluster n'en déclare que "
-            f"{capacite.cpu_millicores}m."
-        )
+        raise QuotaError(t("renderers.k3s.quota_cpu_depasse",
+                            cpu_requis=cpu_requis, cpu_millicores=capacite.cpu_millicores))
     if memoire_requise > capacite.memoire_mib:
-        raise QuotaError(
-            "ERR_QUOTA_MEMOIRE_DEPASSEE: le plan requiert "
-            f"{memoire_requise} MiB de mémoire mais le cluster n'en déclare "
-            f"que {capacite.memoire_mib} MiB."
-        )
+        raise QuotaError(t("renderers.k3s.quota_memoire_depassee",
+                            memoire_requise=memoire_requise, memoire_mib=capacite.memoire_mib))
 
     # Vérification GPU uniquement si le cluster a déclaré ses ressources GPU.
     if not capacite.ressources_gpu:
@@ -997,11 +979,8 @@ def _verifier_capacite(plan: DeploymentPlan, capacite: "CapaciteCluster | None")
     for ressource, demande in demandes_gpu.items():
         disponible = capacite.ressources_gpu.get(ressource, 0)
         if disponible < demande:
-            raise QuotaError(
-                f"ERR_QUOTA_GPU_PLUGIN_ABSENT: le plan demande {demande}×{ressource} "
-                f"mais le cluster n'en déclare que {disponible}. "
-                f"Installez le device plugin pour la ressource {ressource}."
-            )
+            raise QuotaError(t("renderers.k3s.quota_gpu_plugin_absent",
+                                demande=demande, ressource=ressource, disponible=disponible))
 
 
 def render_k3s(plan: DeploymentPlan, node: str | None = None,
@@ -1025,18 +1004,15 @@ def render_k3s(plan: DeploymentPlan, node: str | None = None,
     _adoptes = [(sv.name, sv.adopted_endpoint) for sv in plan.services if sv.adopted_endpoint]
     if _adoptes:
         _detail = ", ".join(f"{nom} ({ep})" for nom, ep in _adoptes)
-        raise AdoptionNonSupporteeK3s(
-            f"ERR_ADOPT_K3S_NON_SUPPORTE : service(s) adopte(s) non rendu(s) en k3s : "
-            f"{_detail} ; 127.0.0.1 est inutilisable comme cible d'Endpoints depuis un pod "
-            f"(le dependant se connecterait a lui-meme)."
-        )
+        raise AdoptionNonSupporteeK3s(t("renderers.k3s.adoption_non_supportee", detail=_detail))
     # K8S-027 : refuser AVANT de produire quoi que ce soit. Rendre puis échouer laisserait
     # l'utilisateur appliquer un manifeste dont les pods resteront Pending sans cause lisible.
     _verifier_capacite(plan, capacite)
 
     if service_type not in _SERVICE_TYPES:
-        raise ValueError(
-            f"service_type invalide : {service_type!r} (attendu {sorted(_SERVICE_TYPES)})")
+        raise ValueError(t("renderers.k3s.service_type_invalide",
+                            service_type_repr=repr(service_type),
+                            service_types_valides=sorted(_SERVICE_TYPES)))
     parts = [f"""# Généré par ForgeAI Toolkit — plan {plan.plan_id} (profil {plan.profile})
 {_namespace_block(plan)}---
 apiVersion: v1

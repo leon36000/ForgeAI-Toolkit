@@ -234,6 +234,18 @@ def test_mode_auto_sans_noeud_qualifie_refuse():
     assert "intel" in str(exc.value).lower()
 
 
+def test_mode_auto_candidat_au_bon_vendor_mais_vram_insuffisante():
+    """Contrôle négatif du mode auto, cas distinct du précédent : un candidat existe bien
+    au bon vendor (n-nvidia, 8192 Mio) mais sa VRAM ne suffit pas -> la raison rapportée
+    pour CE candidat doit nommer sa VRAM insuffisante, pas juste un vendor incompatible."""
+    with pytest.raises(PlacementError) as exc:
+        render_k3s(_plan([_svc_gpu(vendor="nvidia", vram_requise=99999, node=None)]),
+                   inventaire=_inventaire())
+    message = str(exc.value)
+    assert "99999" in message and "8192" in message, \
+        f"l'erreur doit donner la VRAM requise ET celle du candidat nvidia examiné : {message}"
+
+
 def test_sans_inventaire_le_comportement_reste_inchange():
     """Rétro-compatibilité : sans inventaire fourni, aucune validation n'est possible et le
     rendu reste celui d'avant — la validation est une capacité ajoutée, pas une rupture."""

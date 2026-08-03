@@ -1,0 +1,31 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "majeure",
+   "fichier": "src/forgeai/core/models.py",
+   "description": "La traduction EN n'est pas complète : des paramètres construits avec du texte français sont injectés dans des messages traduits, donc la locale EN peut afficher du français.",
+   "preuve": "`vram_requise = (f\", VRAM requise {svc.vram_min_mib} Mio\" ...)`; `hostnames_str=\", \".join(hostnames) or \"aucun\"`; `candidats_str=\"; \".join(candidats_examines) or \"aucun\"`; les clés EN `core.models.placement.aucun_noeud_qualifie_auto` et `core.models.placement.noeud_inconnu` utilisent `{vram_requise}`, `{candidats_str}`, `{hostnames_str}`."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "stories/I18N-041.md",
+   "description": "CA4 demande une couverture stable à 93 %, mais la preuve fournie ne contient aucune sortie de couverture, seulement le résumé pytest.",
+   "preuve": "===== PREUVE D EXECUTION — SUITE COMPLETE ===== ... 1843 passed, 7 skipped, 3 warnings in 201.43s (pas de pourcentage de couverture)."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "src/forgeai/core/models.py",
+   "description": "CA1 et CA2 ne sont pas vérifiables directement dans le diff : aucune sortie py_compile/détecteur n'est jointe, et des commentaires français subsistent si le détecteur scanne les fichiers entiers.",
+   "preuve": "Diff sans sortie `python3 -m py_compile` ni résultat de détecteur ; commentaire inchangé `# Ne devrait pas arriver car déjà validé, mais sécurité`."
+  }
+ ],
+ "date_heure": "2026-08-03T11:06:11.826602+00:00",
+ "prompt_sha256": "9673d9cb9ebe37119c78a002e1b03563c4557f216bc6a9c2f832981abfcf7581",
+ "reviewer_model": "Qwen3.8-Max",
+ "modele_servi": "qwen38-max-alibaba-sg",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}
