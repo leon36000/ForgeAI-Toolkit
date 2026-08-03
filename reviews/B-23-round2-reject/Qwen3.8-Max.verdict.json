@@ -1,0 +1,43 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "stories/B-23.md",
+   "description": "CA1 exige une preuve de compilation des fichiers .py modifiés, mais la preuve fournie ne montre aucune commande ou sortie `python3 -m py_compile`.",
+   "preuve": "La section 'PREUVE D EXECUTION — SUITE COMPLETE' contient uniquement la sortie pytest, la couverture et les hooks ; aucune ligne ne montre `python3 -m py_compile` sur les fichiers modifiés."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "stories/B-23.md",
+   "description": "CA4 demande l'exécution réelle de `pre-commit run --all-files` ; la preuve montre seulement trois statuts 'Passed' sans la commande ni sortie complète de pre-commit.",
+   "preuve": "===== EXECUTION REELLE DES 3 HOOKS PRE-COMMIT =====\nggshield (pre-commit)............................................................Passed\nruff (lint bloquant — E9+F uniquement, cf. pyproject.toml).......................Passed\nno-stub-scan (détection déterministe de stubs/TODO/faux).........................Passed"
+  },
+  {
+   "severite": "mineure",
+   "fichier": "src/forgeai/renderers/k3s.py",
+   "description": "Le commentaire 'Import local pour éviter cycles et garder la fonction auto-suffisante' est conservé alors que les imports locaux correspondants sont supprimés, ce qui rend la documentation locale incohérente avec le code.",
+   "preuve": "diff src/forgeai/renderers/k3s.py : le commentaire reste présent, puis `-    from urllib.parse import urlsplit` et `-    from forgeai.core.models import ProbeType` sont retirés juste après."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "stories/B-23.md",
+   "description": "La story annonce 'Portée du diff (43 fichiers, tous des retraits mécaniques)' mais le diff contient des ajouts non mécaniques : configuration ruff/pre-commit, ajout de `ServiceSpec` dans un import, et ajout de la story elle-même.",
+   "preuve": "diff pyproject.toml ajoute `[tool.ruff]` ; diff src/forgeai/deploy/compose.py remplace l'import par `HealthState, ProbeType, ServiceSpec` ; diff stories/B-23.md indique `new file mode 100644`."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "stories/B-23.md",
+   "description": "CA3 affirme 1850 tests, mais la sortie pytest fournie ne contient pas de résumé final permettant de vérifier ce nombre indépendamment ; il repose sur un résumé ajouté après coup.",
+   "preuve": "La sortie pytest montre seulement une progression sous forme de points et de 's', puis '===== RESUME EXPLICITE ===== EXIT_CODE_PYTEST=0 TESTS_COLLECTES_INDEPENDAMMENT=1850', sans ligne finale du type '1850 passed'."
+  }
+ ],
+ "date_heure": "2026-08-03T09:44:45.969842+00:00",
+ "prompt_sha256": "f7faf43c7a574fd87c2f35cab3cb65d245becd99c40b67167d58c52ae5fe0218",
+ "reviewer_model": "Qwen3.8-Max",
+ "modele_servi": "qwen38-max-alibaba-sg",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

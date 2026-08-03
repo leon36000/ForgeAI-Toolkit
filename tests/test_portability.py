@@ -1,5 +1,4 @@
 import json
-import hashlib
 from pathlib import Path
 
 import pytest
@@ -11,7 +10,6 @@ from forgeai.portability import (
     load_bundle,
     verify_bundle,
     bundle_sha256,
-    _canonical,
 )
 
 

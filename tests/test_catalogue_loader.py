@@ -115,10 +115,8 @@ def test_category_defaults_departage_par_nom():
     assert defaults["A"] == "alpha"
 
 
-import json
 from pathlib import Path
 
-import pytest
 
 CATALOGUE_PATH = Path(__file__).resolve().parents[1] / "src" / "forgeai" / "data" / "catalogue.json"
 

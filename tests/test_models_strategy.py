@@ -10,8 +10,6 @@ import json
 import pytest
 
 from forgeai.models.strategy import (
-    STRATEGIES,
-    ReconfigDiff,
     StrategyError,
     StrategyStore,
     diff_specs,

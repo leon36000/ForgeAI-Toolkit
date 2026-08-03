@@ -279,11 +279,6 @@ def _probes_block(svc) -> str:
 
     Retourne une chaîne VIDE si aucune sonde n'est exploitable.
     """
-    # Import local pour éviter cycles et garder la fonction auto-suffisante
-    # (les énumérations sont définies dans forgeai.core.models).
-    from urllib.parse import urlsplit
-    from forgeai.core.models import ProbeType
-
     # Pas de sonde exploitable -> bloc vide (le manifeste reste valide).
     if svc.probe_type == ProbeType.NONE:
         return ""
@@ -687,7 +682,7 @@ def _network_policies(plan: DeploymentPlan) -> str:
     parts.append("apiVersion: networking.k8s.io/v1\n")
     parts.append("kind: NetworkPolicy\n")
     parts.append("metadata:\n")
-    parts.append(f"  name: forgeai-default-deny\n")
+    parts.append("  name: forgeai-default-deny\n")
     parts.append(f"  namespace: {NAMESPACE}\n")
     parts.append("spec:\n")
     parts.append("  podSelector: {}\n")
@@ -701,7 +696,7 @@ def _network_policies(plan: DeploymentPlan) -> str:
     parts.append("apiVersion: networking.k8s.io/v1\n")
     parts.append("kind: NetworkPolicy\n")
     parts.append("metadata:\n")
-    parts.append(f"  name: forgeai-allow-dns\n")
+    parts.append("  name: forgeai-allow-dns\n")
     parts.append(f"  namespace: {NAMESPACE}\n")
     parts.append("spec:\n")
     parts.append("  podSelector: {}\n")
@@ -749,8 +744,8 @@ def _network_policies(plan: DeploymentPlan) -> str:
         parts.append(f"  name: forgeai-allow-{target_name}\n")
         parts.append(f"  namespace: {NAMESPACE}\n")
         parts.append("spec:\n")
-        parts.append(f"  podSelector:\n")
-        parts.append(f"    matchLabels:\n")
+        parts.append("  podSelector:\n")
+        parts.append("    matchLabels:\n")
         parts.append(f"      app: {target_name}\n")
         parts.append("  policyTypes:\n")
         parts.append("    - Ingress\n")
@@ -758,11 +753,11 @@ def _network_policies(plan: DeploymentPlan) -> str:
         parts.append("    - from:\n")
         for dep in dependants:
             dep_name = _safe(dep, "dependant.name")
-            parts.append(f"        - podSelector:\n")
-            parts.append(f"            matchLabels:\n")
+            parts.append("        - podSelector:\n")
+            parts.append("            matchLabels:\n")
             parts.append(f"              app: {dep_name}\n")
-        parts.append(f"      ports:\n")
-        parts.append(f"        - protocol: TCP\n")
+        parts.append("      ports:\n")
+        parts.append("        - protocol: TCP\n")
         parts.append(f"          port: {svc.container_port}\n")
 
     # 4) Politiques d'egress symétriques : Kubernetes exige que la source autorise l'egress
@@ -789,8 +784,8 @@ def _network_policies(plan: DeploymentPlan) -> str:
         parts.append(f"  name: forgeai-allow-{dep_name_safe}-egress\n")
         parts.append(f"  namespace: {NAMESPACE}\n")
         parts.append("spec:\n")
-        parts.append(f"  podSelector:\n")
-        parts.append(f"    matchLabels:\n")
+        parts.append("  podSelector:\n")
+        parts.append("    matchLabels:\n")
         parts.append(f"      app: {dep_name_safe}\n")
         parts.append("  policyTypes:\n")
         parts.append("    - Egress\n")
@@ -800,11 +795,11 @@ def _network_policies(plan: DeploymentPlan) -> str:
             cible_svc = by_name[cible_name]  # Garanti présent car filtré plus haut
             container_port = cible_svc.container_port
             parts.append("    - to:\n")
-            parts.append(f"        - podSelector:\n")
-            parts.append(f"            matchLabels:\n")
+            parts.append("        - podSelector:\n")
+            parts.append("            matchLabels:\n")
             parts.append(f"              app: {cible_safe}\n")
             parts.append("      ports:\n")
-            parts.append(f"        - protocol: TCP\n")
+            parts.append("        - protocol: TCP\n")
             parts.append(f"          port: {container_port}\n")
 
 

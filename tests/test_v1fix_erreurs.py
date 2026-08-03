@@ -2,7 +2,6 @@ import subprocess
 import sys
 import tempfile
 
-import pytest
 
 PYTHON = sys.executable
 CLI = [PYTHON, "-m", "forgeai.cli"]

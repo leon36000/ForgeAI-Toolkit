@@ -18,7 +18,6 @@ import subprocess
 import sys
 import tarfile
 import tempfile
-import textwrap
 import threading
 import time
 import urllib.error

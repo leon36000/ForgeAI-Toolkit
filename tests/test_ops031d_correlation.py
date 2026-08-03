@@ -8,7 +8,6 @@ verrouillent la corrélation (en-tête ↔ corps ↔ stderr) ET l'anti-injection
 
 import json
 import threading
-import time
 import urllib.error
 import urllib.request
 

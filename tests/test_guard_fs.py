@@ -804,15 +804,12 @@ def test_non_regression_guillemets_equilibres_autorise(
 
 
 # ── Tour 6 : extraction sans tokenisation shell (ADR option C) ──
-import json
 import os
-import subprocess
 import sys
 from pathlib import Path
 
 import pytest
 
-from forgeai.ide.guard_fs import generate_guard_fs
 
 
 # ---------------------------------------------------------------------------
@@ -1421,7 +1418,6 @@ def test_grappe_option_exige_des_lettres(tmp_path, racine):
 # ── Tour 11 : union shlex + decoupage (scission par guillemets) ──
 import shlex
 
-from forgeai.ide.guard_fs import generate_guard_fs
 
 
 def _executer_commande(tmp_path, racine, env_tmpdir, commande):

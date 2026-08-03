@@ -2,7 +2,6 @@ import json
 import threading
 import urllib.error
 import urllib.request
-from pathlib import Path
 
 import pytest
 

@@ -1,7 +1,5 @@
 """Tests unitaires pour la persistance de l'état de préparation (REL-038A)."""
 import json
-import os
-import stat
 from pathlib import Path
 
 import pytest

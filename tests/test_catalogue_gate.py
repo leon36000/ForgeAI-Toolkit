@@ -5,7 +5,6 @@ from pathlib import Path
 # Ensure the project root is in sys.path to import the scripts module
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-import pytest
 from scripts.catalogue_gate import (
     load_entries,
     find_violations,
