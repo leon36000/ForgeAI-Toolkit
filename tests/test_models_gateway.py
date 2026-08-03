@@ -16,12 +16,13 @@ from forgeai.models.gateway import (
     BrickWiring,
     GatewayConfig,
     GatewayError,
+    GatewayStore,
     assert_via_gateway,
     prove_traversal,
     wire_all,
     wire_brick,
 )
-from forgeai.models.routes import RouteStore
+from forgeai.models.routes import RouteError, RouteStore
 
 GW = GatewayConfig("http://127.0.0.1:4000/v1", key_env="FORGEAI_GATEWAY_KEY")
 
@@ -62,6 +63,37 @@ def test_wire_all_role_sans_route_echoue():
     store = RouteStore.__new__(RouteStore)
     with pytest.raises(GatewayError):
         wire_all([("b1", "inconnu")], {"chat": "r"}, store, GW)
+
+
+def test_wire_all_route_introuvable_dans_le_store():
+    """I18N-031 : `wire_all` propage un GatewayError bilingue (`route_role_introuvable`)
+    quand le nom de route existe dans le role_mapping mais pas dans le RouteStore."""
+    store = RouteStore.__new__(RouteStore)
+
+    def _echoue(name):
+        raise RouteError(f"route '{name}' inconnue")
+
+    store.get = _echoue
+    with pytest.raises(GatewayError, match="r-absente"):
+        wire_all([("b1", "chat")], {"chat": "r-absente"}, store, GW)
+
+
+def test_gateway_store_get_gateway_non_configure(tmp_path):
+    """I18N-031 : `GatewayStore.get_gateway()` sur un home sans gateway.json lève un
+    GatewayError bilingue (`non_configure`), jamais un texte français codé en dur."""
+    store = GatewayStore(tmp_path / "aucun-gateway-ici")
+    with pytest.raises(GatewayError, match="gateway"):
+        store.get_gateway()
+
+
+def test_gateway_store_wire_route_introuvable(tmp_path):
+    """I18N-031 : `GatewayStore.wire()` propage un GatewayError bilingue
+    (`route_introuvable`) quand la route nommée n'existe pas dans le RouteStore persisté."""
+    home = tmp_path / "models"
+    store = GatewayStore(home)
+    store.set_gateway(GW)
+    with pytest.raises(GatewayError, match="route-jamais-ajoutee"):
+        store.wire("b1", "chat", "route-jamais-ajoutee")
 
 
 # ---------- enforcement de l'invariant ----------

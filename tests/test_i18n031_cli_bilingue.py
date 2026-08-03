@@ -182,3 +182,97 @@ def test_g7_chaque_stack_a_une_description_en_non_vide():
         if not data.get("description_en", "").strip():
             manquants.append(f.name)
     assert not manquants, f"stacks sans description_en : {manquants}"
+
+
+def test_g8_template_list_show_resolve_bilingues(tmp_path, capsys):
+    """CA5 — `_template_list`/`_template_show`/`_template_resolve` n'étaient exercées par
+    AUCUN test avant I18N-031 (0% de couverture sur leur corps entier) : la note de
+    dépréciation et la description de stack sélectionnée par locale n'étaient donc jamais
+    vérifiées en exécution réelle, seulement par une commande manuelle ponctuelle."""
+    from forgeai.cli import main
+
+    registre = tmp_path / "reg.jsonl"
+    sorties_show = {}
+    for lang in ("fr", "en"):
+        assert main(["--lang", lang, "template", "list"]) == 0
+        sortie_list = capsys.readouterr().out
+        assert "agentique" in sortie_list
+
+        assert main(["--lang", lang, "template", "show", "agentique"]) == 0
+        sorties_show[lang] = capsys.readouterr().out
+        assert "Agentique" in sorties_show[lang]
+
+        assert main(["--lang", lang, "template", "resolve", "agentique",
+                     "--registre", str(registre)]) == 0
+        sortie_resolve = capsys.readouterr().out
+        assert "Agentique" in sortie_resolve
+
+    assert sorties_show["fr"] != sorties_show["en"], (
+        "la description de stack affichée par `template show` doit différer selon --lang "
+        f"(description_fr vs description_en) : {sorties_show}"
+    )
+
+    assert main(["--lang", "fr", "template", "show", "stack-inexistante-xyz"]) == 12
+    erreur_fr = capsys.readouterr().err
+    assert main(["--lang", "en", "template", "show", "stack-inexistante-xyz"]) == 12
+    erreur_en = capsys.readouterr().err
+    assert erreur_fr != erreur_en, "le message d'erreur template show doit différer selon --lang"
+
+
+def test_g9_node_prepare_bilingue_titre_statut_et_repli_defensif(monkeypatch, capsys, tmp_path):
+    """CA7 — objection round 3 (Qwen3.8-Max) : `_node_prepare` n'était exercée par aucun test
+    à travers le CLI (seul `network.prepare.preparer_noeud` l'était, directement). Le repli
+    défensif sur `MissingTranslation` (statut de domaine imprévu -> texte brut plutôt qu'un
+    crash) n'avait jamais été exécuté par un test automatisé, seulement vérifié à la main."""
+    import argparse
+    from forgeai.cli import _node_prepare
+    from forgeai.i18n import set_locale
+
+    def fake_preparer_noeud(runner, hostname, *, appliquer, helm_present):
+        return {
+            "hostname": hostname,
+            "receptacle": "pret",
+            "etapes": [
+                {"id": "diagnostic", "titre_fr": "Diagnostic", "titre_en": "Diagnostic check",
+                 "statut": "ok"},
+                {"id": "label-cpu", "titre_fr": "Étiqueter", "titre_en": "Label",
+                 "statut": "planifiee"},
+                {"id": "helm-x", "titre_fr": "Installer", "titre_en": "Install",
+                 "statut": "echec"},
+                {"id": "y", "titre_fr": "Y", "titre_en": "Y", "statut": "sautee"},
+                {"id": "z", "titre_fr": "Z", "titre_en": "Z", "statut": "statut-jamais-vu-avant"},
+            ],
+        }
+
+    monkeypatch.setattr("forgeai.network.prepare.preparer_noeud", fake_preparer_noeud)
+    args = argparse.Namespace(hostname="n1", apply=False,
+                              registre=str(tmp_path / "test-g9.jsonl"))
+
+    set_locale("fr")
+    assert _node_prepare(args) == 0
+    sortie_fr = capsys.readouterr().out
+    assert "Diagnostic" in sortie_fr
+    assert "statut-jamais-vu-avant" in sortie_fr, (
+        "un statut inconnu doit s'afficher en repli brut, jamais lever MissingTranslation"
+    )
+
+    set_locale("en")
+    assert _node_prepare(args) == 0
+    sortie_en = capsys.readouterr().out
+    assert "Label" in sortie_en
+    assert sortie_fr != sortie_en
+
+
+def test_g10_node_discover_local_reel(capsys):
+    """CA — `_node_discover` (hors branche SSH) n'était exercée par aucun test malgré son
+    usage de `t()` sur 4 clés (endpoint/via/service/hostkey_requis). Sonde la VRAIE machine
+    locale (comme `doctor`), pas un simulacre — cohérent avec le reste de la suite bilingue."""
+    from forgeai.cli import main
+
+    assert main(["--lang", "fr", "node", "discover", "local"]) == 0
+    sortie_fr = capsys.readouterr().out
+    assert main(["--lang", "en", "node", "discover", "local"]) == 0
+    sortie_en = capsys.readouterr().out
+
+    assert sortie_fr
+    assert sortie_en
