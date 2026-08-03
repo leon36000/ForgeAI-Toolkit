@@ -17,10 +17,6 @@ LEGACY_ALIASES: dict[str, str] = {
     "production-souveraine": "tout-en-un",
 }
 
-DEPRECATION_NOTE = ("note: les templates sont fusionnés dans les stacks — "
-                    "utilisez `forgeai web` ou les ids de stacks directement")
-
-
 class TemplateError(Exception):
     """Nom hérité ou stack inconnu."""
 

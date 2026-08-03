@@ -13,6 +13,7 @@ from dataclasses import dataclass
 
 from forgeai.core.runner import CommandRunner
 from forgeai.hardware.detect import HardwareDetector
+from forgeai.i18n import t
 
 OK = "ok"
 MISSING = "missing"
@@ -36,50 +37,65 @@ def check_python() -> Check:
     v = platform.python_version()
     ok = tuple(int(x) for x in v.split(".")[:2]) >= (3, 10)
     return Check("python", OK if ok else DEGRADED,
-                 f"Python {v}", "exécution du Toolkit (requis ≥3.10)")
+                 t("preflight.python.detail", version=v),
+                 t("preflight.python.enables"))
 
 
 def check_docker(runner: CommandRunner) -> Check:
     if not _tool_present(runner, ["docker", "--version"]):
-        return Check("docker", MISSING, "docker introuvable",
-                     "backend Docker Compose (installer Docker pour l'activer)")
+        return Check("docker", MISSING,
+                     t("preflight.docker.missing.detail"),
+                     t("preflight.docker.missing.enables"))
     if not _tool_present(runner, ["docker", "info"]):
-        return Check("docker", DEGRADED, "docker installé mais démon injoignable",
-                     "démarrer le démon Docker pour déployer via Compose")
+        return Check("docker", DEGRADED,
+                     t("preflight.docker.daemon_unreachable.detail"),
+                     t("preflight.docker.daemon_unreachable.enables"))
     if not _tool_present(runner, ["docker", "compose", "version"]):
-        return Check("docker", DEGRADED, "docker démon OK mais plugin compose (v2) absent",
-                     "installer le plugin docker compose (paquet docker-compose-v2)")
-    return Check("docker", OK, "docker + compose opérationnels", "déploiement backend Compose")
+        return Check("docker", DEGRADED,
+                     t("preflight.docker.compose_missing.detail"),
+                     t("preflight.docker.compose_missing.enables"))
+    return Check("docker", OK,
+                 t("preflight.docker.ok.detail"),
+                 t("preflight.docker.ok.enables"))
 
 
 def check_kubectl(runner: CommandRunner) -> Check:
     if not _tool_present(runner, ["kubectl", "version", "--client"]):
-        return Check("kubectl", MISSING, "kubectl introuvable",
-                     "backend K3s (installer kubectl + un cluster pour l'activer)")
+        return Check("kubectl", MISSING,
+                     t("preflight.kubectl.missing.detail"),
+                     t("preflight.kubectl.missing.enables"))
     if not _tool_present(runner, ["kubectl", "get", "nodes"]):
-        return Check("kubectl", DEGRADED, "kubectl présent mais aucun cluster joignable",
-                     "configurer un kubeconfig pour déployer via K3s")
-    return Check("kubectl", OK, "cluster joignable", "déploiement backend K3s")
+        return Check("kubectl", DEGRADED,
+                     t("preflight.kubectl.cluster_unreachable.detail"),
+                     t("preflight.kubectl.cluster_unreachable.enables"))
+    return Check("kubectl", OK,
+                 t("preflight.kubectl.ok.detail"),
+                 t("preflight.kubectl.ok.enables"))
 
 
 def check_ollama(http_ok: Callable[[str], bool],
                  base_url: str = "http://127.0.0.1:11434") -> Check:
     if http_ok(f"{base_url}/api/tags"):
-        return Check("ollama", OK, f"Ollama répond ({base_url})",
-                     "moteur LLM par défaut déjà disponible")
-    return Check("ollama", MISSING, "Ollama non détecté localement",
-                 "le Toolkit peut le déployer comme brique (aucune action requise)")
+        return Check("ollama", OK,
+                     t("preflight.ollama.ok.detail", base_url=base_url),
+                     t("preflight.ollama.ok.enables"))
+    return Check("ollama", MISSING,
+                 t("preflight.ollama.missing.detail"),
+                 t("preflight.ollama.missing.enables"))
 
 
 def check_hardware(detector: HardwareDetector) -> Check:
     profile = detector.full_report()
     gpus = [f"{g.vendor}:{g.name}" for g in profile.gpus if g.vram_mb > 0]
     if gpus:
-        return Check("hardware", OK, f"{profile.cpu_cores} cœurs, GPU: {', '.join(gpus)}",
-                     "profil GPU accéléré disponible")
+        return Check("hardware", OK,
+                     t("preflight.hardware.gpu.detail",
+                       cpu_cores=profile.cpu_cores, gpus=", ".join(gpus)),
+                     t("preflight.hardware.gpu.enables"))
     return Check("hardware", OK,
-                 f"{profile.cpu_cores} cœurs, {profile.ram_gb} Go RAM, pas de GPU dédié",
-                 "profil CPU (minimal-cpu) — fonctionne partout")
+                 t("preflight.hardware.cpu.detail",
+                   cpu_cores=profile.cpu_cores, ram_gb=profile.ram_gb),
+                 t("preflight.hardware.cpu.enables"))
 
 
 def run_checks(runner: CommandRunner, detector: HardwareDetector,

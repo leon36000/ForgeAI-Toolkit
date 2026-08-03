@@ -1,0 +1,43 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "majeure",
+   "fichier": "src/forgeai/cli.py",
+   "description": "Dans wizard_ci, l'état de la trace langfuse est codé en dur en français puis injecté dans t(). Sous --lang en, la sortie utilisateur peut donc contenir « présente », ce qui contredit l'objectif de CLI bilingue et laisse du texte français accentué hors catalogue.",
+   "preuve": "diff @@ -546,8 +549,9 @@ : + trace_etat = \"présente\" if trace else \"ABSENTE\" ; + print(t(\"cli.wizard.langfuse_trace\", etat=trace_etat, name=langfuse_witness[\"name\"]))"
+  },
+  {
+   "severite": "mineure",
+   "fichier": "src/forgeai/cli.py",
+   "description": "_node_prepare affiche le champ titre_fr comme titre utilisateur sans sélection de locale. Si ce champ contient du français, il sera affiché même sous --lang en ; la preuve diff ne montre pas de variante anglaise.",
+   "preuve": "diff @@ -805,15 +816,17 @@ : + print(t(\"cli.node_prepare.step\", index=i, total=len(etapes), title=etape[\"titre_fr\"], status=statut))"
+  },
+  {
+   "severite": "mineure",
+   "fichier": "src/forgeai/cli.py",
+   "description": "Des valeurs de repli \"aucun\" sont codées en dur puis injectées dans des messages traduits (wizard abort_backend, export, import). Sous locale en, un mot français non accentué peut apparaître ; ce cas réel dépasse la simple limite théorique du détecteur.",
+   "preuve": "diff : + backends_text = backends or \"aucun\" ; + fichiers = \", \".join(files) or \"aucun\" ; + restaures = \", \".join(report[\"restored\"]) or \"aucun\""
+  },
+  {
+   "severite": "mineure",
+   "fichier": "src/forgeai/cli.py",
+   "description": "Un message d'exception français accentué subsiste dans wizard_ci (DeployError). Même s'il n'est pas couvert par le détecteur G6 centré sur print(), il peut remonter à l'utilisateur et contredit l'objectif --lang gouvernant le CLI.",
+   "preuve": "diff @@ -443,7 +445,7 @@ : raise DeployError(f\"Healthchecks K3s incomplets : {health}\")"
+  },
+  {
+   "severite": "mineure",
+   "fichier": "stories/I18N-031.md",
+   "description": "CA6 exige une suite complète verte, rc=0, 1832 tests collectés et 92 % de couverture, mais le diff ne fournit aucune sortie de pytest ou de couverture permettant de le vérifier indépendamment.",
+   "preuve": "Le diff ajoute seulement tests/test_i18n031_cli_bilingue.py ; aucune sortie d'exécution de suite complète ni de rapport de couverture n'est présente dans le diff."
+  }
+ ],
+ "date_heure": "2026-08-02T23:30:51.611842+00:00",
+ "prompt_sha256": "16ca2d80bd10564d52ed9407f567199c3f40081eb5e1a9bd0cca84578119ca6a",
+ "reviewer_model": "Qwen3.8-Max",
+ "modele_servi": "qwen38-max-alibaba-sg",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

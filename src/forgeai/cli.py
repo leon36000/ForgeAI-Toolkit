@@ -179,19 +179,20 @@ def wizard_ci(args: argparse.Namespace) -> int:
             # dry-run = valider l'assemblage/rendu du plan, pas la machine COURANTE :
             # le plan peut viser un AUTRE nœud du réseau (exigence universelle).
             profile = "Minimal"
-            print(f"  profil: Minimal (repli dry-run — machine courante sous les minima : {exc})")
+            print(t("cli.wizard.profile_dry_run", exc=exc))
         else:
-            print(f"ABORT [{exc.code}] {exc}", file=sys.stderr)
+            print(t("cli.wizard.abort_profile", code=exc.code, exc=exc), file=sys.stderr)
             return 7
     else:
-        print(f"  profil: {profile}")
+        print(t("cli.wizard.profile", profile=profile))
         for nom in gpus_non_qualifies_ignores(hw):
-            print(f"  ⚠ GPU NVIDIA ignoré (non qualifié, nvidia-smi indisponible) : {nom} — déploiement sur {profile} à la place. Vérifiez le driver NVIDIA si vous vouliez l'utiliser.")
+            print(t("cli.wizard.gpu_ignore", nom=nom, profile=profile))
 
     _step(t("wizard.s03"))
     digest = verify_catalogue(Path(args.catalogue))
     bricks = load_catalogue(Path(args.catalogue))
-    print(f"  {len(bricks)} briques, sha256 {digest[:16]}…")
+    digest_short = digest[:16]
+    print(t("cli.wizard.catalogue", count=len(bricks), digest=digest_short))
 
     stack = None
     stack_label = "minimal"
@@ -199,7 +200,7 @@ def wizard_ci(args: argparse.Namespace) -> int:
         try:
             stack = load_stack(args.stack)
         except FileNotFoundError:
-            print(f"ABORT [STACK] stack inconnu : {args.stack}", file=sys.stderr)
+            print(t("cli.wizard.abort_stack", stack=args.stack), file=sys.stderr)
             return 8
         stack_label = stack.get("name", args.stack)
 
@@ -227,12 +228,13 @@ def wizard_ci(args: argparse.Namespace) -> int:
             rag_node = sel.get("rag_node")
             adopt = sel.get("adopt") or {}
         except (OSError, ValueError, AttributeError) as exc:
-            print(f"ABORT [SEL] sélection illisible : {exc}", file=sys.stderr)
+            print(t("cli.wizard.abort_selection_unreadable", exc=exc), file=sys.stderr)
             return 8
         ids_catalogue = {e.id for e in bricks}
         inconnues = sorted(b for b in selection_bricks if b not in ids_catalogue)
         if inconnues:
-            print(f"ABORT [SEL] briques inconnues au catalogue : {inconnues}", file=sys.stderr)
+            print(t("cli.wizard.abort_selection_bricks_unknown", inconnues=inconnues),
+                  file=sys.stderr)
             return 8
         registre_modeles = json.loads(
             (_res.files(DATA_PKG) / "modeles-locaux.json").read_text(encoding="utf-8"))
@@ -245,11 +247,12 @@ def wizard_ci(args: argparse.Namespace) -> int:
         toutes = selection_models + selection_embeddings
         inconnus_m = sorted(e["hf_id"] for e in toutes if e["hf_id"] not in hf_ids)
         if inconnus_m:
-            print(f"ABORT [SEL] modèles inconnus au registre : {inconnus_m}", file=sys.stderr)
+            print(t("cli.wizard.abort_selection_models_unknown", inconnus=inconnus_m),
+                  file=sys.stderr)
             return 8
         mauvais_moteurs = sorted({e["engine"] for e in toutes} - moteurs)
         if mauvais_moteurs:
-            print(f"ABORT [SEL] moteurs inconnus au registre des moteurs : {mauvais_moteurs}",
+            print(t("cli.wizard.abort_selection_engines_unknown", moteurs=mauvais_moteurs),
                   file=sys.stderr)
             return 8
         # S4 : « au choix » FILTRÉ — un moteur incompatible avec le vendor du nœud cible est refusé
@@ -263,29 +266,29 @@ def wizard_ci(args: argparse.Namespace) -> int:
             _paires_vendor(sel.get("models"), "vllm")
             + _paires_vendor(sel.get("embeddings"), "llama-cpp"))
         if incompat:
-            print(f"ABORT [SEL] moteur incompatible avec le vendor du nœud : {incompat}",
+            print(t("cli.wizard.abort_selection_engine_vendor", incompat=incompat),
                   file=sys.stderr)
             return 8
         mauvais_noeuds = sorted({e["node"] for e in toutes if e["node"] not in ("local", "auto")
                                  and not node_re.match(e["node"])})
         if mauvais_noeuds:
-            print(f"ABORT [SEL] nœuds invalides : {mauvais_noeuds}", file=sys.stderr)
+            print(t("cli.wizard.abort_selection_nodes_invalid", noeuds=mauvais_noeuds),
+                  file=sys.stderr)
             return 8
         pas_embed = sorted(e["hf_id"] for e in selection_embeddings
                            if familles.get(e["hf_id"]) != "embeddings-rerank")
         if pas_embed:
-            print(f"ABORT [SEL] entrées 'embeddings' hors famille embeddings-rerank : {pas_embed}",
+            print(t("cli.wizard.abort_selection_embeddings_invalid", modeles=pas_embed),
                   file=sys.stderr)
             return 8
         if rag_node is not None:
             rag_node = str(rag_node)
             if rag_node not in ("local", "auto") and not node_re.match(rag_node):
-                print(f"ABORT [SEL] rag_node invalide : {rag_node!r}", file=sys.stderr)
+                print(t("cli.wizard.abort_rag_node_invalid", rag_node=rag_node), file=sys.stderr)
                 return 8
             if args.backend == "compose" and rag_node not in ("local", "auto"):
                 # auto == la seule machine en compose ; seul un hostname DISTANT est impossible
-                print("ABORT [RAG] compose est mono-machine : utilisez le backend k3s "
-                      "pour placer le RAG sur un autre nœud", file=sys.stderr)
+                print(t("cli.wizard.abort_rag_compose"), file=sys.stderr)
                 return 9
 
     _step(t("wizard.s04"))
@@ -298,7 +301,7 @@ def wizard_ci(args: argparse.Namespace) -> int:
         noms_plan = {s.name for s in plan.services}
         inconnues = sorted(k for k in adopt if k not in noms_plan)
         if inconnues:
-            print(f"ABORT [SEL] adopt reference des services absents du plan : {inconnues}",
+            print(t("cli.wizard.abort_selection_adopt_unknown", inconnues=inconnues),
                   file=sys.stderr)
             return 8
         services = tuple(
@@ -308,7 +311,7 @@ def wizard_ci(args: argparse.Namespace) -> int:
         plan = replace(plan, services=services)
     (workdir / "plan.json").write_text(plan.to_json(), encoding="utf-8")
     ports = {s.name: s.host_port for s in plan.services}
-    print(f"  stack: {stack_label} | services: {ports} | modèle: {plan.model}")
+    print(t("cli.wizard.stack_resume", stack=stack_label, ports=ports, model=plan.model))
     if getattr(args, "selection", None):
         from importlib import resources as _res
         specs_ids = set(json.loads(
@@ -324,9 +327,9 @@ def wizard_ci(args: argparse.Namespace) -> int:
             "provisionnement_futur": [b for b in selection_bricks if b not in specs_ids],
         }, ensure_ascii=False, indent=1), encoding="utf-8")
         cible_rag = rag_node or "local"
-        print(f"  sélection: {len(selection_bricks)} briques "
-              f"({len(deployables)} déployables maintenant) + {len(selection_models)} modèles "
-              f"+ {len(selection_embeddings)} embeddings | RAG -> {cible_rag}")
+        print(t("cli.wizard.selection_resume", bricks=len(selection_bricks),
+                deployables=len(deployables), models=len(selection_models),
+                embeddings=len(selection_embeddings), rag_node=cible_rag))
 
     _step(t("wizard.s05"))
     bootstrap_secrets(workdir)
@@ -384,9 +387,9 @@ def wizard_ci(args: argparse.Namespace) -> int:
                        config_files=config_files or None), encoding="utf-8")
 
     if args.dry_run:
-        print(f"DRY-RUN OK: {len(plan.services)} services, stack={stack_label}, node={node_label}, "
-              f"selection={len(selection_bricks)}+{len(selection_models)}+{len(selection_embeddings)}, "
-              f"rag={(rag_node or 'local')}", flush=True)
+        print(t("cli.wizard.dry_run_ok", services=len(plan.services), stack=stack_label,
+                node=node_label, bricks=len(selection_bricks), models=len(selection_models),
+                embeddings=len(selection_embeddings), rag=rag_node or "local"), flush=True)
         return 0
 
     backend = args.backend
@@ -395,9 +398,8 @@ def wizard_ci(args: argparse.Namespace) -> int:
         backends = available_backends(
             run_checks(SubprocessRunner(), HardwareDetector(SubprocessRunner()), http_ok))
         if backend not in backends:
-            print(f"ABORT: backend '{backend}' indisponible sur cette machine. "
-                  f"Backends prêts : {backends or 'aucun'}. "
-                  f"Lancez `forgeai doctor` pour le détail, ou --skip-preflight pour forcer.",
+            backends_text = backends or t("cli.commun.aucun")
+            print(t("cli.wizard.abort_backend", backend=backend, backends=backends_text),
                   file=sys.stderr)
             return 6
 
@@ -420,15 +422,12 @@ def wizard_ci(args: argparse.Namespace) -> int:
             # openbao est ClusterIP (interne, #113) : l'amorçage PROD k3s exige un port-forward
             # opérateur -> openbao. Flux documenté (Docs/how-to/openbao-migration.md) ; échec RAPIDE
             # ici plutôt qu'un `wait deployments` bloqué indéfiniment sur un coffre jamais descellé.
-            raise DeployError(
-                "openbao production sur k3s : l'amorçage passe par le flux opérateur "
-                "(port-forward + forge, cf. Docs/how-to/openbao-migration.md) — pas encore câblé "
-                "au wizard k3s. Utiliser le backend compose pour un déploiement RAG durci clé en main.")
+            raise DeployError(t("cli.wizard.deploy_error.openbao_k3s"))
         k3s_apply(workdir / "k3s.yaml")
         k3s_wait_deployments(NAMESPACE, timeout_s=args.health_timeout)
         used_node_ports: set[int] = set()
         rag_ports = {s.name: node_port_for(s, used_node_ports) for s in plan.services}
-        print(f"  NodePorts: {rag_ports}")
+        print(t("cli.wizard.nodeports", ports=rag_ports))
     try:
         if backend == "compose":
             health = wait_healthy(plan, timeout_s=args.health_timeout)
@@ -442,8 +441,8 @@ def wizard_ci(args: argparse.Namespace) -> int:
                         health[name] = "healthy"
                 time.sleep(2.0)
             if probe_paths and set(health.values()) != {"healthy"}:
-                raise DeployError(f"Healthchecks K3s incomplets : {health}")
-        print(f"  santé: {health}")
+                raise DeployError(t("cli.wizard.deploy_error.healthchecks_k3s", health=health))
+        print(t("cli.wizard.sante", health=health))
 
         _step(t("wizard.s08"))
         if rag_durci:
@@ -468,7 +467,8 @@ def wizard_ci(args: argparse.Namespace) -> int:
             bao_url = _svc_url(probe_host, rag_ports['openbao'])
             vault_store(bao_url, openbao_app_token, VAULT_SECRET_PATH, {"master_key": gateway_key})
             gateway_key = vault_read(bao_url, openbao_app_token, VAULT_SECRET_PATH).get("master_key", "")
-            print(f"  coffre openbao: master key écrite puis relue ({'ok' if gateway_key else 'VIDE'})")
+            coffre_etat = t("cli.wizard.coffre_ok") if gateway_key else t("cli.wizard.coffre_vide")
+            print(t("cli.wizard.openbao_master_key", etat=coffre_etat))
             rag = HardenedRagClient(
                 ollama_url=_svc_url(probe_host, rag_ports['ollama']),
                 qdrant_url=_svc_url(probe_host, rag_ports['vector-store']),
@@ -497,25 +497,24 @@ def wizard_ci(args: argparse.Namespace) -> int:
         doc = doc_path.read_text(encoding="utf-8")
 
         chunks = rag.ingest(doc, source=source_name)
-        print(f"  {chunks} chunks ingérés")
+        print(t("cli.wizard.chunks_ingested", chunks=chunks))
 
         _step(t("wizard.s09"))
         result = rag.ask(args.question)
         answer = result["answer"]
-        print(f"  Q: {args.question}")
-        print(f"  R: {answer}")
+        print(t("cli.wizard.question", question=args.question))
+        print(t("cli.wizard.answer", answer=answer))
         fact_ok = args.expected_fact.lower() in answer.lower()
         if not fact_ok:
-            print(f"ECHEC: le fait attendu « {args.expected_fact} » est absent de la réponse",
-                  file=sys.stderr)
+            print(t("cli.wizard.fact_missing", fact=args.expected_fact), file=sys.stderr)
             return 9
 
         # E6 — éval RAG DÉTERMINISTE (« optimal » mesuré) : ancrage lexical de la réponse dans le
         # document ingéré (source du RAG) + présence du fait. Aucun LLM n'écrit ce score (invariant
         # PROOF). Le score est journalisé au registre comme mesure objective de qualité.
         eval_witness = rag_eval.evaluate(answer, doc, args.expected_fact)
-        print(f"  éval RAG (déterministe): groundedness={eval_witness['groundedness']} "
-              f"fait={eval_witness['fact_present']} score_optimal={eval_witness['score']}")
+        print(t("cli.wizard.rag_eval", groundedness=eval_witness["groundedness"],
+                fact_present=eval_witness["fact_present"], score=eval_witness["score"]))
 
         # E3c — immudb branché comme ledger d'audit IMMUABLE : on inscrit l'événement
         # « déploiement RAG durci vérifié » dans le ledger append-only d'immudb, puis on relit sa
@@ -533,8 +532,9 @@ def wizard_ci(args: argparse.Namespace) -> int:
             revisions = ledger.history(immu_url, token, IMMUDB_COLLECTION, rec["documentId"])
             immudb_witness = {"tx": rec["transactionId"], "doc": rec["documentId"],
                               "revisions": len(revisions)}
-            print(f"  ledger immudb: audit inscrit tx={rec['transactionId']} "
-                  f"doc={rec['documentId'][:16]}… révisions={len(revisions)}")
+            document_short = rec["documentId"][:16]
+            print(t("cli.wizard.immudb_ledger", transaction_id=rec["transactionId"],
+                    document_id=document_short, revisions=len(revisions)))
 
         # E5 — langfuse branché comme observabilité : la génération RAG passe par la passerelle
         # LiteLLM qui émet une trace (success_callback langfuse). On VÉRIFIE côté déploiement que la
@@ -546,8 +546,9 @@ def wizard_ci(args: argparse.Namespace) -> int:
                                        timeout=90.0, interval=3.0)
             langfuse_witness = {"trace_present": bool(trace),
                                 "name": trace.get("name") if trace else None}
-            print(f"  observabilité langfuse: trace "
-                  f"{'présente' if trace else 'ABSENTE'} ({langfuse_witness['name']})")
+            trace_etat = t("cli.wizard.trace_presente") if trace else t("cli.wizard.trace_absente")
+            print(t("cli.wizard.langfuse_trace", etat=trace_etat,
+                    name=langfuse_witness["name"]))
     finally:
         if args.teardown:
             _step(t("wizard.teardown"))
@@ -571,7 +572,6 @@ def wizard_ci(args: argparse.Namespace) -> int:
     print("RAG_OK=true")
     return 0
 
-
 _STATUS_MARK = {"ok": "OK ", "degraded": "!! ", "missing": "-- "}
 
 
@@ -581,28 +581,30 @@ def _gpu_drivers(args: argparse.Namespace) -> int:
     try:
         state = detect_driver_state(args.vendor, SubprocessRunner())
         rec = state.recommendation
-        print(f"[forgeai] driver {args.vendor} — présent: {state.present} "
-              f"v{state.version or '-'}")
+        print(t("cli.gpu_drivers.status", vendor=args.vendor, present=state.present,
+                version=state.version or "-"))
         ordre = " > ".join(rec.runtimes)
-        print(f"  recommandation : runtime {rec.runtime}, operator {rec.operator} (runtimes: {ordre})")
+        print(t("cli.gpu_drivers.recommendation", runtime=rec.runtime,
+                operator=rec.operator, runtimes=ordre))
         if rec.notes:
-            print(f"  note : {rec.notes}")
+            print(t("cli.gpu_drivers.note", notes=rec.notes))
         payload = {"vendor": args.vendor, "present": state.present, "version": state.version,
                    "runtime": rec.runtime, "operator": rec.operator,
                    "rocm_allowed": rec.rocm_allowed,
                    "runtimes": list(rec.runtimes)}
         if args.action:
             plan = plan_driver_op(args.vendor, args.action)
-            print(f"  plan {args.action} : {' '.join(plan.install_argv)}")
-            print(f"  rollback : {' '.join(plan.rollback_argv)}")
+            install = " ".join(plan.install_argv)
+            rollback = " ".join(plan.rollback_argv)
+            print(t("cli.gpu_drivers.plan", action=args.action, install=install))
+            print(t("cli.gpu_drivers.rollback", rollback=rollback))
             payload["plan"] = {"action": plan.action, "install": plan.install_argv,
                                "rollback": plan.rollback_argv}
     except DriverError as exc:
-        print(f"ECHEC GPU: {exc}", file=sys.stderr)
+        print(t("cli.gpu_drivers.error", error=exc), file=sys.stderr)
         return 12
     registre.append(Path(args.registre), "gpu_drivers", "hardware", payload)
     return 0
-
 
 def _logs(args) -> int:
     """OPS-031B : `forgeai logs` — relecture du dernier déploiement SANS serveur web.
@@ -618,7 +620,7 @@ def _logs(args) -> int:
     if getattr(args, "json", False):
         print(_json.dumps({"lines": lignes}, ensure_ascii=False))
     elif not lignes:
-        print("aucune ligne de déploiement disponible")
+        print(t("cli.logs.vide"))
     else:
         print("\n".join(lignes))
     return 0
@@ -688,16 +690,17 @@ def _diagnostic(args) -> int:
 def _doctor(args: argparse.Namespace) -> int:
     from forgeai.preflight import available_backends, run_checks
     checks = run_checks(SubprocessRunner(), HardwareDetector(SubprocessRunner()), http_ok)
-    print("[forgeai doctor] état de votre environnement :")
+    print(t("cli.doctor.header"))
     for c in checks:
-        print(f"  [{_STATUS_MARK.get(c.status, '?  ')}] {c.name:9} — {c.detail}")
-        print(f"              → {c.enables}")
+        mark = _STATUS_MARK.get(c.status, "?  ")
+        print(t("cli.doctor.ligne", mark=mark, nom=c.name, detail=c.detail))
+        print(t("cli.doctor.enables", enables=c.enables))
     backends = available_backends(checks)
     if backends:
-        print(f"\nBackends de déploiement disponibles : {', '.join(backends)}")
+        disponibles = ", ".join(backends)
+        print(t("cli.doctor.backends", backends=disponibles))
     else:
-        print("\nAucun backend de déploiement prêt. Installez Docker (le plus simple) "
-              "ou configurez un cluster K3s, puis relancez `forgeai doctor`.")
+        print(t("cli.doctor.aucun_backend"))
     return 0
 
 
@@ -706,18 +709,20 @@ def _operators(args: argparse.Namespace) -> int:
     from forgeai.deploy.operators import OPERATORS, plan
     runner = SubprocessRunner()
     names = [args.name] if getattr(args, "name", None) else list(OPERATORS)
-    print("[forgeai operators] détection sur le cluster courant (jamais de réinstallation) :")
+    print(t("cli.operators.header"))
     for name in names:
         if name not in OPERATORS:
-            print(f"  {name} : inconnu (connus : {', '.join(sorted(OPERATORS))})", file=sys.stderr)
+            connus = ", ".join(sorted(OPERATORS))
+            print(t("cli.operators.inconnu", nom=name, connus=connus), file=sys.stderr)
             return 8
         p = plan(name, runner)
         st = p["status"]
         if p["action"] == "adopt":
-            print(f"  [ADOPTÉ] {name} — déjà présent ({st.source}, {st.version or 'CRD'}) ; intact")
+            version = st.version or "CRD"
+            print(t("cli.operators.adopte", nom=name, source=st.source, version=version))
         else:
-            print(f"  [ABSENT] {name} — installable via Helm : "
-                  f"{' ; '.join(' '.join(c) for c in p['commands'])}")
+            commands = " ; ".join(" ".join(c) for c in p["commands"])
+            print(t("cli.operators.absent", nom=name, commands=commands))
     return 0
 
 
@@ -727,10 +732,11 @@ def _node_probe(args: argparse.Namespace) -> int:
     try:
         probe = probe_remote_node(args.node_host, runner=runner, registre_path=args.registre)
     except RemoteProbeError as exc:
-        print(f"ECHEC PROBE: {exc}", file=sys.stderr)
+        print(t("cli.node_probe.echec", erreur=exc), file=sys.stderr)
         return 12
-    print(f"[forgeai] sonde '{probe.node_host}' — profil {probe.profile} | "
-          f"backends {', '.join(probe.backends) or 'aucun'}")
+    backends = ", ".join(probe.backends) or t("cli.node_probe.aucun")
+    print(t("cli.node_probe.resume", node=probe.node_host, profile=probe.profile,
+            backends=backends))
     return 0
 
 
@@ -739,14 +745,16 @@ def _node_cluster(args: argparse.Namespace) -> int:
     from forgeai.cluster import cluster_view, read_probes
     view = cluster_view(read_probes(args.registre))
     if not view["nodes"]:
-        print("[forgeai] vue cluster : aucune sonde node_hardware au registre")
+        print(t("cli.node_cluster.vide"))
         return 0
-    print("[forgeai] vue cluster — vendors GPU par nœud :")
+    print(t("cli.node_cluster.header"))
     for n in view["nodes"]:
-        print(f"  {n['node']} : profil {n['profile']} | vendors {', '.join(n['vendors']) or 'aucun'}")
-    print("[forgeai] quel vendor où :")
+        vendors = ", ".join(n["vendors"]) or t("cli.node_cluster.aucun")
+        print(t("cli.node_cluster.ligne", node=n["node"], profile=n["profile"], vendors=vendors))
+    print(t("cli.node_cluster.vendors_header"))
     for vendor, hosts in sorted(view["vendors"].items()):
-        print(f"  {vendor} -> {', '.join(hosts)}")
+        hosts_text = ", ".join(hosts)
+        print(t("cli.node_cluster.vendor_ligne", vendor=vendor, hosts=hosts_text))
     return 0
 
 
@@ -758,13 +766,13 @@ def _node_tailscale(args: argparse.Namespace) -> int:
                                    tailscale_version=args.version, tailscale_tag=args.tag,
                                    lan_only=args.lan_only)
     except (TailscaleError, BootstrapError) as exc:
-        print(f"ECHEC TAILSCALE: {exc}", file=sys.stderr)
+        print(t("cli.node_tailscale.error", error=exc), file=sys.stderr)
         return 12
-    mode = "LAN-seulement" if plan.lan_only else "tailnet"
-    print(f"[forgeai] plan réseau '{plan.node_host}' — {mode}")
-    print(f"  install: {' '.join(plan.install_argv)}")
+    mode = t("cli.node_tailscale.mode_lan") if plan.lan_only else t("cli.node_tailscale.mode_tailnet")
+    print(t("cli.node_tailscale.plan", node_host=plan.node_host, mode=mode))
+    print(t("cli.node_tailscale.install_line", argv=" ".join(plan.install_argv)))
     if plan.up_argv:
-        print(f"  up: {' '.join(plan.up_argv)}")
+        print(t("cli.node_tailscale.up_line", argv=" ".join(plan.up_argv)))
     registre.append(Path(args.registre), "node_network", "network",
                     {"node_host": plan.node_host, "lan_only": plan.lan_only,
                      "tailscale_version": args.version, "up": plan.up_argv, "acl": plan.acl})
@@ -777,8 +785,7 @@ def _node_add(args: argparse.Namespace) -> int:
     from forgeai.core.runner import SubprocessRunner
     passwd = os.environ.get(args.password_env)
     if not passwd:
-        print(f"ECHEC NODE: variable d'env '{args.password_env}' vide ou absente "
-              f"(le mot de passe ne passe jamais en argv)", file=sys.stderr)
+        print(t("cli.node_add.password_missing", env=args.password_env), file=sys.stderr)
         return 12
     try:
         rec = add_node(args.ip, args.user, passwd,
@@ -787,15 +794,17 @@ def _node_add(args: argparse.Namespace) -> int:
                        runner=SubprocessRunner(),
                        registre_path=Path(args.registre))
     except (NodeAddError, RemoteProbeError) as exc:
-        print(f"ECHEC NODE: {exc}", file=sys.stderr)
+        print(t("cli.node_add.error", error=exc), file=sys.stderr)
         return 12
-    print(f"[forgeai] nœud ajouté — {rec.user}@{rec.ip} | empreinte {rec.key_fingerprint}")
+    print(t("cli.node_add.added", user=rec.user, ip=rec.ip,
+            fingerprint=rec.key_fingerprint))
     return 0
 
 
 def _node_prepare(args: argparse.Namespace) -> int:
     """Prépare un nœud Kubernetes en réceptacle ForgeAI (dry-run par défaut)."""
     import shutil
+    from forgeai.i18n import MissingTranslation, get_translator
     from forgeai.network.prepare import PrepareError, preparer_noeud
 
     runner = SubprocessRunner()
@@ -805,15 +814,25 @@ def _node_prepare(args: argparse.Namespace) -> int:
             runner, args.hostname, appliquer=args.apply, helm_present=helm_present
         )
     except PrepareError as exc:
-        print(f"ECHEC PREPARATION: {exc}", file=sys.stderr)
+        print(t("cli.node_prepare.error", error=exc), file=sys.stderr)
         return 11
 
+    locale = get_translator().locale
     etapes = result["etapes"]
     for i, etape in enumerate(etapes, 1):
         statut = etape.get("statut", "planifiee")
-        print(f"[{i}/{len(etapes)}] {etape['titre_fr']} — {statut}")
+        titre = etape.get(f"titre_{locale}", etape["titre_fr"])
+        try:
+            statut_affiche = t(f"cli.node_prepare.statut.{statut}")
+        except MissingTranslation:
+            # statut de domaine imprévu (hors les 4 valeurs connues d'aujourd'hui) : on affiche
+            # le token brut plutôt que de planter — informer reste plus utile qu'un crash ici.
+            statut_affiche = statut
+        print(t("cli.node_prepare.step", index=i, total=len(etapes),
+                title=titre, status=statut_affiche))
 
-    print(f"[forgeai] nœud '{result['hostname']}' -> réceptacle {result['receptacle']}")
+    print(t("cli.node_prepare.done", hostname=result["hostname"],
+            receptacle=result["receptacle"]))
     registre.append(Path(args.registre), "node_prepare", "node", {
         "hostname": result["hostname"],
         "receptacle": result["receptacle"],
@@ -830,12 +849,10 @@ def _node_discover(args: argparse.Namespace) -> int:
         runner = SubprocessRunner()
     else:
         if not args.hostkey:
-            print("ECHEC DISCOVER: --hostkey requis pour un nœud distant (SSH-007)",
-                  file=sys.stderr)
+            print(t("cli.node_discover.hostkey_requis"), file=sys.stderr)
             return 12
         if not args.user or not args.keyfile:
-            print("ECHEC DISCOVER: --user et --keyfile requis pour un nœud distant",
-                  file=sys.stderr)
+            print(t("cli.node_discover.identifiants_requis"), file=sys.stderr)
             return 12
         runner = SshRunner(args.user, args.hostname, args.keyfile, args.hostkey)
 
@@ -843,15 +860,19 @@ def _node_discover(args: argparse.Namespace) -> int:
         signatures = charger_signatures()
         inv = inventaire(runner, signatures)
     except DiscoverError as exc:
-        print(f"ECHEC DISCOVER: {exc}", file=sys.stderr)
+        print(t("cli.node_discover.echec", erreur=exc), file=sys.stderr)
         return 12
 
     for svc in inv["services"]:
         mark = "✓" if svc["detecte"] else "✗"
-        endpoint = f" [{svc['endpoint']}]" if svc.get("endpoint") else ""
+        endpoint = (
+            t("cli.node_discover.endpoint", endpoint=svc["endpoint"])
+            if svc.get("endpoint") else ""
+        )
         via = ", ".join(svc.get("via", []))
-        via_str = f" (via {via})" if via else ""
-        print(f"{mark} {svc['id']}{endpoint}{via_str}")
+        via_str = t("cli.node_discover.via", via=via) if via else ""
+        print(t("cli.node_discover.service", mark=mark, service=svc["id"],
+                endpoint=endpoint, via=via_str))
 
     registre.append(Path(args.registre), "node_discover", "network", {
         "hostname": args.hostname,
@@ -869,12 +890,13 @@ def _node_status(args: argparse.Namespace) -> int:
     try:
         nodes = cluster_status(SubprocessRunner())
     except ClusterError as exc:
-        print(f"ECHEC: {exc}", file=sys.stderr)
+        print(t("cli.node_status.echec", erreur=exc), file=sys.stderr)
         return 8
     ready = [n for n in nodes if n["ready"]]
     for n in nodes:
-        print(f"  {n['name']}: ready={n['ready']} roles={n['roles']} gpu={n['gpu_allocatable']}")
-    print(f"{len(ready)}/{len(nodes)} nœuds Ready")
+        print(t("cli.node_status.ligne", nom=n["name"], ready=n["ready"],
+                roles=n["roles"], gpu=n["gpu_allocatable"]))
+    print(t("cli.node_status.resume", ready=len(ready), total=len(nodes)))
     if args.witness:
         entry = registre.append(Path(args.registre), "jonction_prouvee", "node-status", {
             "total": len(nodes), "ready": len(ready),
@@ -916,15 +938,16 @@ def _model_add_cloud(args: argparse.Namespace) -> int:
             args.name, args.provenance, args.model_id, api_key, passphrase,
             base_url=args.base_url)
     except RouteError as exc:
-        print(f"ECHEC ROUTE: {exc}", file=sys.stderr)  # message clair, aucune clé
+        print(t("cli.model_add_cloud.echec", erreur=exc), file=sys.stderr)
         return 9
     registre.append(Path(args.registre), "route_cloud_ajoutee", "model-cloud", {
         "name": route.name, "provenance": route.provenance,
         "model_id": route.model_id, "base_url": route.base_url,
         "key_fingerprint": route.key_fingerprint,  # empreinte SEULE, jamais la clé
     })
-    print(f"[forgeai] route '{route.name}' {result.light} — {route.provenance} "
-          f"/ {route.model_id} (clé {route.key_fingerprint})")
+    print(t("cli.model_add_cloud.ajoute", nom=route.name, resultat=result.light,
+            provenance=route.provenance, model_id=route.model_id,
+            empreinte=route.key_fingerprint))
     return 0
 
 
@@ -944,16 +967,17 @@ def _model_add_local(args: argparse.Namespace) -> int:
             transport=UrllibTransport(),
             journal=lambda step, data: registre.append(reg, step, "model-local", data))
     except LocalModelError as exc:
-        print(f"ECHEC MODELE LOCAL: {exc}", file=sys.stderr)
+        print(t("cli.model_add_local.echec", erreur=exc), file=sys.stderr)
         return 9
-    print(f"[forgeai] modèle local '{model.name}' {result.light} — {model.engine}/{model.model_ref}")
+    print(t("cli.model_add_local.ajoute", nom=model.name, resultat=result.light,
+            moteur=model.engine, model_ref=model.model_ref))
     return 0
 
 
 def _model_list(args: argparse.Namespace) -> int:
     routes = RouteStore(Path(args.home)).list()
     if not routes:
-        print("(aucune route cloud)")
+        print(t("cli.model_list.vide"))
         return 0
     for r in routes:  # jamais de clé, empreinte seulement
         print(f"{r.name:24} {r.provenance:12} {r.model_id:32} {r.key_fingerprint}")
@@ -967,10 +991,11 @@ def _model_test(args: argparse.Namespace) -> int:
         passphrase = _read_secret(args.passphrase_env, "Passphrase du coffre : ")
         api_key = store.vault.get(route.name, passphrase)
     except (RouteError, KeyError) as exc:
-        print(f"ECHEC: {exc}", file=sys.stderr)
+        print(t("cli.model_test.echec", erreur=exc), file=sys.stderr)
         return 9
     result = probe_route(route.base_url, route.model_id, api_key)
-    print(f"[forgeai] route '{route.name}' : {result.light} — {result.detail}")
+    print(t("cli.model_test.resultat", nom=route.name, resultat=result.light,
+            detail=result.detail))
     return 0 if result.ok else 9
 
 
@@ -978,12 +1003,12 @@ def _gateway_set_url(args: argparse.Namespace) -> int:
     try:
         cfg = GatewayConfig(args.url, key_env=args.key_env)
     except GatewayError as exc:
-        print(f"ECHEC GATEWAY: {exc}", file=sys.stderr)
+        print(t("cli.gateway_set_url.echec", erreur=exc), file=sys.stderr)
         return 10
     GatewayStore(Path(args.home)).set_gateway(cfg)
     registre.append(Path(args.registre), "gateway_configure", "gateway",
                     {"base_url": cfg.base_url, "key_env": cfg.key_env})
-    print(f"[forgeai] gateway unique = {cfg.base_url} (clé via ${{{cfg.key_env}}})")
+    print(t("cli.gateway_set_url.configure", base_url=cfg.base_url, key_env=cfg.key_env))
     return 0
 
 
@@ -992,14 +1017,14 @@ def _gateway_wire(args: argparse.Namespace) -> int:
     try:
         wiring = store.wire(args.brick, args.role, args.route)
     except GatewayError as exc:
-        print(f"ECHEC CABLAGE: {exc}", file=sys.stderr)
+        print(t("cli.gateway_wire.echec", erreur=exc), file=sys.stderr)
         return 10
     registre.append(Path(args.registre), "brique_cablee_gateway", "gateway",
                     {"brick": wiring.brick_id, "role": wiring.role,
                      "base_url": wiring.env["OPENAI_API_BASE"],
                      "model": wiring.env["OPENAI_MODEL"]})  # jamais de clé
-    print(f"[forgeai] brique '{wiring.brick_id}' ({wiring.role}) → gateway "
-          f"{wiring.env['OPENAI_API_BASE']} modèle {wiring.env['OPENAI_MODEL']}")
+    print(t("cli.gateway_wire.cable", brique=wiring.brick_id, role=wiring.role,
+            base_url=wiring.env["OPENAI_API_BASE"], modele=wiring.env["OPENAI_MODEL"]))
     return 0
 
 
@@ -1007,15 +1032,14 @@ def _gateway_verify(args: argparse.Namespace) -> int:
     try:
         violations = GatewayStore(Path(args.home)).verify()
     except GatewayError as exc:
-        print(f"ECHEC GATEWAY: {exc}", file=sys.stderr)
+        print(t("cli.gateway_verify.echec", erreur=exc), file=sys.stderr)
         return 10
     if violations:
-        print("VIOLATION INVARIANT DM-6 (brique ne passant pas par le gateway unique) :",
-              file=sys.stderr)
+        print(t("cli.gateway_verify.violation"), file=sys.stderr)
         for v in violations:
             print(f"  - {v}", file=sys.stderr)
         return 10
-    print("[forgeai] invariant gateway OK — toutes les briques câblées passent par le gateway unique")
+    print(t("cli.gateway_verify.ok"))
     return 0
 
 
@@ -1025,31 +1049,33 @@ def _strategy_set(args: argparse.Namespace) -> int:
         roles = [r for r in (args.roles.split(",") if args.roles else []) if r]
         spec = resolve_spec(args.strategy, roles or None)
     except StrategyError as exc:
-        print(f"ECHEC STRATEGIE: {exc}", file=sys.stderr)
+        print(t("cli.strategy_set.echec", erreur=exc), file=sys.stderr)
         return 10
     diff = store.plan_change(spec)
     already = store.get() is not None
     if already and diff.is_change and not args.confirm:
-        print("Reconfiguration de la stratégie modèle — changement de slots :", file=sys.stderr)
+        print(t("cli.strategy_set.reconfiguration"), file=sys.stderr)
         print(diff.render(), file=sys.stderr)
-        print("Rien n'a été modifié. Relancez avec --confirm pour appliquer explicitement.",
-              file=sys.stderr)
+        print(t("cli.strategy_set.confirmation"), file=sys.stderr)
         return 10
     store.save(spec)
     registre.append(Path(args.registre), "strategie_modele", "strategy",
                     {"strategy": spec.strategy, "slots": list(spec.slots),
                      "slot_count": spec.slot_count})
-    print(f"[forgeai] stratégie '{spec.strategy}' — {spec.slot_count} slot(s) : "
-          f"{', '.join(spec.slots)}")
+    slots = ", ".join(spec.slots)
+    print(t("cli.strategy_set.definie", strategie=spec.strategy,
+            nombre_slots=spec.slot_count, slots=slots))
     return 0
 
 
 def _strategy_show(args: argparse.Namespace) -> int:
     spec = StrategyStore(Path(args.home)).get()
     if spec is None:
-        print("(aucune stratégie configurée)")
+        print(t("cli.strategy_show.vide"))
         return 0
-    print(f"stratégie : {spec.strategy} | {spec.slot_count} slot(s) : {', '.join(spec.slots)}")
+    slots = ", ".join(spec.slots)
+    print(t("cli.strategy_show.affiche", strategie=spec.strategy,
+            nombre_slots=spec.slot_count, slots=slots))
     return 0
 
 
@@ -1061,13 +1087,15 @@ def _route_configure(args: argparse.Namespace) -> int:
     try:
         store.configure_cache(args.name, enabled, ttl_s, prefix)
     except RouteError as exc:
-        print(f"ECHEC ROUTE: {exc}", file=sys.stderr)
+        print(t("cli.route_configure.echec", erreur=exc), file=sys.stderr)
         return 9
     registre.append(Path(args.registre), "route_cache_configuree", "route",
                     {"name": args.name, "cache": enabled,
                      "cache_ttl_s": ttl_s, "cache_prefix": prefix})
-    print(f"[forgeai] route '{args.name}' configurée — "
-          f"cache={'activé' if enabled else 'désactivé'}, ttl={ttl_s}s, prefix={prefix}")
+    cache = t("cli.route_configure.cache_active") if enabled else t(
+        "cli.route_configure.cache_inactive")
+    print(t("cli.route_configure.configure", nom=args.name, cache=cache,
+            ttl_s=ttl_s, prefix=prefix))
     return 0
 
 
@@ -1077,13 +1105,13 @@ def _budget_set(args: argparse.Namespace) -> int:
     try:
         BudgetTracker(home).set_budget(args.agent, args.quota, args.alert)
     except BudgetError as exc:
-        print(f"ECHEC BUDGET: {exc}", file=sys.stderr)
+        print(t("cli.budget_set.echec", erreur=exc), file=sys.stderr)
         return 10
     registre.append(Path(args.registre), "budget_defini", "budget",
                     {"agent": args.agent, "quota_tokens": args.quota,
                      "alert_ratio": args.alert})
-    print(f"[forgeai] budget '{args.agent}' défini — "
-          f"quota={args.quota} tokens, alerte à {args.alert:.0%}")
+    print(t("cli.budget_set.defini", agent=args.agent, quota=args.quota,
+            alerte=args.alert))
     return 0
 
 
@@ -1096,13 +1124,12 @@ def _budget_status(args: argparse.Namespace) -> int:
         else:
             states = BudgetTracker(home).report()
     except BudgetError as exc:
-        print(f"ECHEC BUDGET: {exc}", file=sys.stderr)
+        print(t("cli.budget_status.echec", erreur=exc), file=sys.stderr)
         return 10
     for s in states:
-        print(f"{s.agent}: {s.used_tokens}/{s.quota_tokens} tokens "
-              f"({s.ratio:.1%}) — {s.etat}")
+        print(t("cli.budget_status.ligne", agent=s.agent, utilises=s.used_tokens,
+                quota=s.quota_tokens, ratio=s.ratio, etat=s.etat))
     return 0
-
 
 def _ide_list(args: argparse.Namespace) -> int:
     from forgeai.ide import list_ides
@@ -1120,18 +1147,17 @@ def _ide_configure(args: argparse.Namespace) -> int:
         try:
             gw = GatewayStore(Path(args.home)).get_gateway()
         except GatewayError as exc:
-            print(f"ECHEC IDE: gateway non configuré ({exc}) — fournir --gateway-url",
-                  file=sys.stderr)
+            print(t("cli.ide_configure.gateway_missing", exc=exc), file=sys.stderr)
             return 12
         gateway_url, key_env = gw.base_url, gw.key_env
     try:
         cfg = generate_ide_config(args.ide, gateway_url, args.model, key_env=key_env)
     except IDEError as exc:
-        print(f"ECHEC IDE: {exc}", file=sys.stderr)
+        print(t("cli.ide_configure.error", exc=exc), file=sys.stderr)
         return 12
     path = write_ide_config(cfg, args.dest)
-    print(f"[forgeai] config {args.ide} écrite → {path}")
-    print(f"  gateway {gateway_url} | modèle {args.model} | clé via ${{{key_env}}}")
+    print(t("cli.ide_configure.written", ide=args.ide, path=path))
+    print(t("cli.ide_configure.gateway", gateway=gateway_url, model=args.model, key_env=key_env))
     registre.append(Path(args.registre), "ide_configure", "ide",
                     {"ide": args.ide, "path": str(path), "gateway": gateway_url,
                      "model": args.model})
@@ -1145,16 +1171,17 @@ def _ide_mcp(args: argparse.Namespace) -> int:
         servers = []
         for spec in args.server:
             if "=" not in spec:
-                print(f"ECHEC IDE: --server attend name=url (reçu '{spec}')", file=sys.stderr)
+                print(t("cli.ide_mcp.server_invalid", spec=spec), file=sys.stderr)
                 return 12
             name, url = spec.split("=", 1)
             servers.append(McpServer(name=name, url=url, transport=args.transport))
         cfg = generate_mcp_config(args.ide, servers)
     except IDEError as exc:
-        print(f"ECHEC IDE: {exc}", file=sys.stderr)
+        print(t("cli.ide_mcp.error", exc=exc), file=sys.stderr)
         return 12
     path = write_ide_config(cfg, args.dest)
-    print(f"[forgeai] config MCP {args.ide} écrite → {path} ({len(servers)} serveur(s))")
+    serveurs = len(servers)
+    print(t("cli.ide_mcp.written", ide=args.ide, path=path, serveurs=serveurs))
     registre.append(Path(args.registre), "ide_mcp", "ide",
                     {"ide": args.ide, "path": str(path), "servers": [s.name for s in servers]})
     return 0
@@ -1166,11 +1193,12 @@ def _ide_governance(args: argparse.Namespace) -> int:
     try:
         cfg = generate_governance_config(skills=args.skill, hooks=args.hook, ide=args.ide)
     except IDEError as exc:
-        print(f"ECHEC IDE: {exc}", file=sys.stderr)
+        print(t("cli.ide_governance.error", exc=exc), file=sys.stderr)
         return 12
     path = write_ide_config(cfg, args.dest)
-    print(f"[forgeai] config gouvernance {args.ide} écrite → {path} "
-          f"({len(args.skill)} skill(s), {len(args.hook)} hook(s))")
+    skills = len(args.skill)
+    hooks = len(args.hook)
+    print(t("cli.ide_governance.written", ide=args.ide, path=path, skills=skills, hooks=hooks))
     registre.append(Path(args.registre), "ide_governance", "ide",
                     {"ide": args.ide, "path": str(path), "skills": args.skill, "hooks": args.hook})
     return 0
@@ -1183,39 +1211,43 @@ def _loop_run(args: argparse.Namespace) -> int:
     runner = timed_runner(getattr(args, "timeout", None))
 
     def on_iter(i: int, done: bool) -> None:
-        print(f"  itération {i}/{args.max_iter} — {'complété' if done else 'en cours'}")
+        etat = t("cli.loop_run.complete") if done else t("cli.loop_run.en_cours")
+        print(t("cli.loop_run.iteration", iteration=i, maximum=args.max_iter, etat=etat))
 
     step = make_command_step(args.step, runner)
     is_complete = make_command_check(args.until, runner)
     try:
         result = run_loop(step, is_complete, args.max_iter, on_iteration=on_iter)
     except RunnerTimeoutError as exc:
-        print(f"ECHEC LOOP (timeout): {redact_text(str(exc))}", file=sys.stderr)
+        erreur = redact_text(str(exc))
+        print(t("cli.loop_run.timeout", erreur=erreur), file=sys.stderr)
         return 14
     except RunnerCancelledError as exc:
-        print(f"LOOP ANNULE: {redact_text(str(exc))}", file=sys.stderr)
+        erreur = redact_text(str(exc))
+        print(t("cli.loop_run.annule", erreur=erreur), file=sys.stderr)
         return 15
     except LoopError as exc:
-        print(f"ECHEC LOOP: {exc}", file=sys.stderr)
+        print(t("cli.loop_run.echec", erreur=exc), file=sys.stderr)
         return 12
     registre.append(Path(args.registre), "ralph_loop", "loop",
                     {"max_iterations": args.max_iter, "completed": result.completed,
                      "iterations": result.iterations, "reason": result.reason,
                      "step": args.step, "until": args.until})
-    print(f"[forgeai] boucle terminée — {result.reason} après {result.iterations} itération(s)")
+    print(t("cli.loop_run.terminee", raison=result.reason, iterations=result.iterations))
     return 0 if result.completed else 13
-
 
 def _export(args: argparse.Namespace) -> int:
     from forgeai.portability import export_setup, PortabilityError
     try:
         bundle = export_setup(args.home, args.out)
     except PortabilityError as exc:
-        print(f"ECHEC EXPORT: {exc}", file=sys.stderr)
+        print(t("cli.export.error", exc=exc), file=sys.stderr)
         return 11
     files = sorted(bundle["files"])
-    print(f"[forgeai] setup exporté → {args.out}")
-    print(f"  fichiers: {', '.join(files) or 'aucun'} | sha256 {bundle['sha256'][:16]}…")
+    print(t("cli.export.done", out=args.out))
+    fichiers = ", ".join(files) or t("cli.commun.aucun")
+    sha256 = bundle["sha256"][:16]
+    print(t("cli.export.files", fichiers=fichiers, sha256=sha256))
     registre.append(Path(args.registre), "setup_exporte", "portability",
                     {"out": args.out, "fichiers": files, "sha256": bundle["sha256"]})
     return 0
@@ -1226,13 +1258,15 @@ def _import(args: argparse.Namespace) -> int:
     try:
         report = import_setup(args.bundle, args.home, force=args.force)
     except PortabilityError as exc:
-        print(f"ECHEC IMPORT: {exc}", file=sys.stderr)
+        print(t("cli.import.error", exc=exc), file=sys.stderr)
         return 11
-    print(f"[forgeai] setup importé dans {report['home']}")
-    print(f"  restaurés: {', '.join(report['restored']) or 'aucun'}")
+    print(t("cli.import.done", home=report["home"]))
+    restaures = ", ".join(report["restored"]) or t("cli.commun.aucun")
+    print(t("cli.import.restored", restaures=restaures))
     secrets = report["secrets_to_reprovision"]
     if secrets:
-        print(f"  secrets à re-saisir (clés jamais incluses): {', '.join(secrets)}")
+        secrets_a_resaisir = ", ".join(secrets)
+        print(t("cli.import.secrets", secrets=secrets_a_resaisir))
     registre.append(Path(args.registre), "setup_importe", "portability",
                     {"home": report["home"], "restaures": report["restored"],
                      "secrets_a_resaisir": secrets})
@@ -1240,45 +1274,52 @@ def _import(args: argparse.Namespace) -> int:
 
 
 def _template_list(args: argparse.Namespace) -> int:
-    from forgeai.templates import DEPRECATION_NOTE, LEGACY_ALIASES, list_templates
-    print(DEPRECATION_NOTE)
+    from forgeai.templates import LEGACY_ALIASES, list_templates
+    print(t("cli.template.deprecation_note"))
     inverses = {v: k for k, v in LEGACY_ALIASES.items()}
     for stack_id in list_templates():
-        alias = f" (alias hérité : {inverses[stack_id]})" if stack_id in inverses else ""
-        print(f"{stack_id}{alias}")
+        if stack_id in inverses:
+            print(t("cli.template_list.alias", stack_id=stack_id, alias=inverses[stack_id]))
+        else:
+            print(stack_id)
     return 0
 
-
 def _template_show(args: argparse.Namespace) -> int:
+    from forgeai.i18n import get_translator
     from forgeai.stacks import deploy_ids
-    from forgeai.templates import DEPRECATION_NOTE, TemplateError, load_template, resolve_alias
+    from forgeai.templates import TemplateError, load_template, resolve_alias
     try:
         stack = load_template(args.name)
         stack_id = resolve_alias(args.name)
     except TemplateError as exc:
-        print(f"ECHEC TEMPLATE: {exc}", file=sys.stderr)
+        print(t("cli.template_show.error", exc=exc), file=sys.stderr)
         return 12
-    print(DEPRECATION_NOTE)
-    print(f"Stack '{stack.get('name', stack_id)}' — {len(deploy_ids(stack))} briques déployées")
-    print(f"  {stack.get('description_fr', '')}")
+    print(t("cli.template.deprecation_note"))
+    nom = stack.get("name", stack_id)
+    briques = len(deploy_ids(stack))
+    print(t("cli.template_show.summary", nom=nom, briques=briques))
+    locale = get_translator().locale
+    description = stack.get(f"description_{locale}", stack.get("description_fr", ""))
+    print(f"  {description}")
     return 0
 
 
 def _template_resolve(args: argparse.Namespace) -> int:
     from forgeai.stacks import deploy_ids
-    from forgeai.templates import DEPRECATION_NOTE, TemplateError, load_template, resolve_alias
+    from forgeai.templates import TemplateError, load_template, resolve_alias
     try:
         stack = load_template(args.name)
         stack_id = resolve_alias(args.name)
     except TemplateError as exc:
-        print(f"ECHEC TEMPLATE: {exc}", file=sys.stderr)
+        print(t("cli.template_resolve.error", exc=exc), file=sys.stderr)
         return 12
-    print(DEPRECATION_NOTE)
+    print(t("cli.template.deprecation_note"))
     ids = deploy_ids(stack)
-    print(f"Stack '{stack.get('name', stack_id)}' : {len(ids)} briques déployées "
-          f"(déploiement : forgeai wizard --ci --stack {stack_id})")
+    nom = stack.get("name", stack_id)
+    briques = len(ids)
+    print(t("cli.template_resolve.summary", nom=nom, briques=briques, stack_id=stack_id))
     for brick_id in ids:
-        print(f"  ⚙ {brick_id}")
+        print(t("cli.template_resolve.brick", brick_id=brick_id))
     registre.append(Path(args.registre), "template_resolve", "template",
                     {"template": args.name, "stack": stack_id, "bricks": len(ids)})
     return 0
@@ -1641,7 +1682,7 @@ def _run(argv: list[str] | None = None) -> int:
     try:
         return args.func(args)
     except DeployError as exc:
-        print(f"ECHEC DEPLOIEMENT: {redact_text(str(exc))}", file=sys.stderr)
+        print(t("cli.wizard.echec_deploiement", exc=redact_text(str(exc))), file=sys.stderr)
         return 8
 
 
@@ -1652,7 +1693,7 @@ def main(argv: list[str] | None = None) -> int:
     try:
         return _run(argv)
     except KeyboardInterrupt:
-        print("Interrompu.", file=sys.stderr)
+        print(t("cli.main.interrompu"), file=sys.stderr)
         return 130
     except Exception as exc:  # noqa: BLE001 — frontière volontaire ; SystemExit (exit
         # argparse code 2) n'est PAS une Exception et traverse donc intacte.

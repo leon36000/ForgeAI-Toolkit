@@ -1,0 +1,31 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "majeure",
+   "fichier": "src/forgeai/cli.py",
+   "description": "Dans wizard_ci, l'état du coffre openbao est injecté dans un message traduit mais la valeur d'échec reste le mot français 'VIDE' codé en dur. Sous --lang en, la sortie utilisateur contient donc un terme français non technique, contrairement à l'objectif de la story et au même type de correction que trace_etat au §7.",
+   "preuve": "Ligne ajoutée (~470, hunk @@ -468,7 +467,8 @@) : coffre_etat = \"ok\" if gateway_key else \"VIDE\" ; puis print(t(\"cli.wizard.openbao_master_key\", etat=coffre_etat))."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "src/forgeai/cli.py",
+   "description": "Dans _node_tailscale, les libellés user-facing 'install:' et 'up:' ne passent pas par t() ; ils ne sont donc pas gouvernés par --lang.",
+   "preuve": "Lignes ~773 et ~775 (hunk @@ -758,10 +766,10 @@) : print(f\"  install: {' '.join(plan.install_argv)}\") et print(f\"  up: {' '.join(plan.up_argv)}\")."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "src/forgeai/cli.py",
+   "description": "Le repli de description de stack vers description_fr dans _template_show peut afficher du français sous --lang en si description_en manque ; le diff ne fournit pas la preuve que tous les JSON de stack contiennent description_en.",
+   "preuve": "Dans _template_show (hunk @@ -1240,45 +1268,52 @@) : description = stack.get(f\"description_{locale}\", stack.get(\"description_fr\", \"\"))."
+  }
+ ],
+ "date_heure": "2026-08-02T23:48:45.004305+00:00",
+ "prompt_sha256": "57018aef7a73b449a32b475e19b1dda52a7456c7b6f796439df63dbab1d51c0c",
+ "reviewer_model": "Qwen3.8-Max",
+ "modele_servi": "qwen38-max-alibaba-sg",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

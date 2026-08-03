@@ -15,6 +15,8 @@ from dataclasses import asdict, dataclass, field
 from pathlib import Path
 from urllib.parse import urlparse
 
+from forgeai.i18n import t
+
 from .probe import ProbeResult, Transport, probe_route
 from .routes import PROVENANCES, RouteError, RouteStore
 
@@ -40,9 +42,7 @@ class GatewayConfig:
     def __post_init__(self) -> None:
         host = urlparse(self.base_url).hostname
         if host in _PROVIDER_HOSTS:
-            raise GatewayError(
-                f"l'URL du gateway ({self.base_url}) est un hôte fournisseur — "
-                f"le gateway doit être un endpoint neutre unique")
+            raise GatewayError(t("models.gateway.url_hote_fournisseur", base_url=self.base_url))
 
 
 @dataclass(frozen=True)
@@ -71,11 +71,12 @@ def wire_all(assignments: list[tuple[str, str]], role_mapping: dict[str, str],
     for brick_id, role in assignments:
         route_name = role_mapping.get(role)
         if not route_name:
-            raise GatewayError(f"rôle '{role}' (brique {brick_id}) sans route associée")
+            raise GatewayError(t("models.gateway.role_sans_route", role=role, brick_id=brick_id))
         try:
             route = store.get(route_name)
         except RouteError as exc:
-            raise GatewayError(f"route '{route_name}' pour le rôle '{role}' introuvable : {exc}")
+            raise GatewayError(t("models.gateway.route_role_introuvable",
+                                  route_name=route_name, role=role, exc=str(exc)))
         wirings.append(wire_brick(brick_id, role, route.model_id, gateway))
     return wirings
 
@@ -86,14 +87,15 @@ def assert_via_gateway(wirings: list[BrickWiring], gateway: GatewayConfig) -> li
     for w in wirings:
         base = w.env.get("OPENAI_API_BASE") or w.env.get("OPENAI_BASE_URL") or ""
         if base != gateway.base_url:
-            violations.append(f"{w.brick_id}: pointe vers '{base}' ≠ gateway unique")
+            violations.append(t("models.gateway.violation_pointe_vers",
+                                 brick_id=w.brick_id, base=base))
         host = urlparse(base).hostname
         if host in _PROVIDER_HOSTS:
-            violations.append(f"{w.brick_id}: pointe vers un hôte fournisseur '{host}'")
+            violations.append(t("models.gateway.violation_hote_fournisseur",
+                                 brick_id=w.brick_id, host=host))
         key = w.env.get("OPENAI_API_KEY", "")
         if not key.startswith("${"):
-            violations.append(f"{w.brick_id}: OPENAI_API_KEY n'est pas une référence env "
-                              f"(clé en clair interdite)")
+            violations.append(t("models.gateway.violation_cle_en_clair", brick_id=w.brick_id))
     return violations
 
 
@@ -123,7 +125,7 @@ class GatewayStore:
 
     def get_gateway(self) -> GatewayConfig:
         if not self.gateway_path.exists():
-            raise GatewayError("gateway non configuré (forgeai gateway set-url)")
+            raise GatewayError(t("models.gateway.non_configure"))
         return GatewayConfig(**json.loads(self.gateway_path.read_text(encoding="utf-8")))
 
     def _load_wirings(self) -> list[BrickWiring]:
@@ -136,7 +138,8 @@ class GatewayStore:
         try:
             route = self.routes.get(route_name)
         except RouteError as exc:
-            raise GatewayError(f"route '{route_name}' introuvable : {exc}")
+            raise GatewayError(t("models.gateway.route_introuvable",
+                                  route_name=route_name, exc=str(exc)))
         wiring = wire_brick(brick_id, role, route.model_id, gateway)
         wirings = [w for w in self._load_wirings() if w.brick_id != brick_id]
         wirings.append(wiring)

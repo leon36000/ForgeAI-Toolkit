@@ -140,3 +140,63 @@ def test_sous_commande_hardware_affiche_le_json(capsys):
     assert cli.main(["hardware"]) == 0
     data = json.loads(capsys.readouterr().out)
     assert "cpu_model" in data and "ram_gb" in data
+
+
+def test_wizard_ci_dry_run_ok(wired):
+    """I18N-031 : couvre `cli.wizard.dry_run_ok` (return anticipé avant tout déploiement) —
+    jamais exercé par aucun test avant, alors que --dry-run est le mode le plus sûr d'essayer
+    le wizard (aucun conteneur, aucun manifeste appliqué)."""
+    tmp_path, registre_path = wired
+    code = cli.main(_argv(tmp_path, registre_path) + ["--dry-run"])
+    assert code == 0
+    assert not registre_path.exists(), "--dry-run ne doit sceller aucune preuve e2e"
+
+
+def test_wizard_ci_selection_happy_path(wired, tmp_path):
+    """I18N-031 : chemin --selection valide de bout en bout (aucune branche d'erreur) —
+    couvre `cli.wizard.selection_resume`, jamais exercé par aucun test avant I18N-031."""
+    selection = tmp_path / "selection.json"
+    selection.write_text(json.dumps({
+        "bricks": [], "models": [], "embeddings": [], "rag_node": None, "adopt": {},
+    }), encoding="utf-8")
+    run_tmp, registre_path = wired
+    code = cli.main(_argv(run_tmp, registre_path, **{"--selection": str(selection)})
+                     + ["--dry-run"])
+    assert code == 0
+
+
+@pytest.mark.parametrize("selection_payload,rc_attendu", [
+    ("PAS_DU_JSON_VALIDE", 8),
+    ({"bricks": ["brique-totalement-inconnue-xyz"]}, 8),
+    ({"models": [{"hf_id": "modele-inconnu-xyz", "node": "auto", "engine": "vllm"}]}, 8),
+    ({"models": [{"hf_id": "meta-llama/Llama-3.3-70B-Instruct", "node": "auto",
+                  "engine": "moteur-inconnu-xyz"}]}, 8),
+    ({"models": [{"hf_id": "meta-llama/Llama-3.3-70B-Instruct",
+                  "node": "NOEUD INVALIDE ESPACES", "engine": "vllm"}]}, 8),
+    ({"embeddings": [{"hf_id": "meta-llama/Llama-3.3-70B-Instruct", "node": "auto",
+                      "engine": "vllm"}]}, 8),
+    ({"rag_node": "NOEUD INVALIDE"}, 8),
+    ({"adopt": {"service-jamais-dans-le-plan-xyz": "http://x"}}, 8),
+])
+def test_wizard_ci_selection_branches_erreur(wired, tmp_path, selection_payload, rc_attendu):
+    """I18N-031 : chaque branche de validation de --selection retourne le code documenté et
+    imprime un message bilingue (`cli.wizard.abort_selection_*`) — 8 branches jamais exercées
+    par aucun test avant cette story, découvertes en cartographiant la couverture manquante."""
+    selection = tmp_path / "selection.json"
+    if isinstance(selection_payload, str):
+        selection.write_text(selection_payload, encoding="utf-8")
+    else:
+        selection.write_text(json.dumps(selection_payload), encoding="utf-8")
+    run_tmp, registre_path = wired
+    code = cli.main(_argv(run_tmp, registre_path, **{"--selection": str(selection)}))
+    assert code == rc_attendu
+
+
+def test_wizard_ci_selection_rag_node_distant_refuse_en_compose(wired, tmp_path):
+    """I18N-031 : branche spécifique — un rag_node DISTANT (hostname valide) avec le backend
+    compose (mono-machine) est refusé avec RC=9, distinct des autres erreurs de sélection (8)."""
+    selection = tmp_path / "selection.json"
+    selection.write_text(json.dumps({"rag_node": "noeud-distant-valide"}), encoding="utf-8")
+    run_tmp, registre_path = wired
+    code = cli.main(_argv(run_tmp, registre_path, **{"--selection": str(selection)}))
+    assert code == 9
