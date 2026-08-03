@@ -950,7 +950,7 @@
     {
       "id": "CAP-033A",
       "title": "Aligner les claims GPU sur les preuves réellement disponibles",
-      "status": "READY_AFTER",
+      "status": "completed",
       "priority": "P2_HIGH",
       "severity": "S2_MEDIUM",
       "ide": "COPILOT",
