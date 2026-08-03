@@ -485,3 +485,42 @@ def test_quota_affirme_les_valeurs_exactes_des_requests():
     spec = _quota(render_k3s(_plan_trois_services()))["spec"]["hard"]
     assert spec["requests.cpu"] == "1350m"
     assert spec["requests.memory"] == "4736Mi"
+
+
+def test_budget_ressources_effectives_absentes_leve_proprement():
+    """État inatteignable via `ServiceSpec` (__post_init__ fixe toujours
+    ressources_effectives), mais un budget qui somme silencieusement `None` comme 0
+    fausserait le ResourceQuota — même défense-en-profondeur que les tests ci-dessus."""
+    from forgeai.renderers.k3s import _budget_du_plan
+    svc = _svc(name="sans-ressources", image="s:1", host_port=1, container_port=1)
+    object.__setattr__(svc, "ressources_effectives", None)
+    with pytest.raises(ValueError, match="ERR_QUOTA_RESSOURCES_ABSENTES"):
+        _budget_du_plan(_plan([svc]))
+
+
+def test_budget_unite_memoire_non_supportee_leve_proprement():
+    """`_resoudre_ressources` (ServiceSpec) filtre déjà les unités par regex `^\\d+(Mi|Gi)$` ;
+    cette branche de `_budget_du_plan` reste la seule garde si `ressources_effectives` est
+    jamais alimenté hors de ce chemin (ex. objet dupliqué/reconstruit sans repasser par
+    `__post_init__`) — verrouillée directement, indépendamment de cette hypothèse."""
+    from forgeai.renderers.k3s import _budget_du_plan
+    svc = _svc(name="unite-invalide", image="u:1", host_port=1, container_port=1)
+    object.__setattr__(svc, "ressources_effectives",
+                       {"requests": {"cpu": "100m", "memory": "512Ki"},
+                        "limits": {"cpu": "100m", "memory": "512Ki"}})
+    with pytest.raises(ValueError, match="ERR_QUOTA_MEMOIRE_INVALIDE"):
+        _budget_du_plan(_plan([svc]))
+
+
+def test_profil_securite_refuse_uid_root_dans_la_table():
+    """`_profil_securite` valide sa PROPRE table statique (`_PROFILS_SECURITE`) — aucune
+    entrée actuelle n'a uid<1, donc cette garde n'est jamais atteinte par le contenu réel ;
+    elle protège contre une future entrée root ajoutée par erreur. Testée en simulant
+    cette dérive plutôt qu'en attendant qu'elle arrive en production."""
+    import forgeai.renderers.k3s as k3s_mod
+
+    with pytest.MonkeyPatch.context() as mp:
+        mp.setitem(k3s_mod._PROFILS_SECURITE, "service-root-par-erreur",
+                   k3s_mod.ProfilSecurite(uid=0, preuve="entrée invalide simulée pour le test"))
+        with pytest.raises(ValueError, match="uid=0"):
+            k3s_mod._profil_securite("service-root-par-erreur")
