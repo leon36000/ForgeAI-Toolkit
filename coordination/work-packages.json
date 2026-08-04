@@ -1260,6 +1260,62 @@
         "reviews/I18N-041-round3-reject/**",
         "reviews/I18N-041-round4-approve/**"
       ]
+    },
+    {
+      "id": "I18N-042",
+      "title": "Traduire les messages d'exception du domaine (lot 2/2 : le reste, 39 fichiers)",
+      "status": "COMPLETED",
+      "ide": "CLAUDE_CODE",
+      "source_ide": "CLAUDE_CODE",
+      "exclusive_lane": "",
+      "dependencies": [
+        "I18N-041"
+      ],
+      "_note": "Suite d'I18N-041 §6 (extension signalee). 132 nouvelles cles fr/en (275->407), 140 sites raise() convertis sur 39 fichiers. 6 exclusions documentees (bootstrap i18n, 2 fichiers a executer hors paquet installe confirme par test architectural existant, 1 message anglais protege par un test match= existant, 1 faux positif detecteur). Revue scellee : round 1 REJECT (Qwen, 3 objections confirmees et corrigees dont une fuite de parametre interpole manquee par le detecteur) ; round 2 route Qwen instable (incomplet, rejoue) ; round 3 APPROVE 3/3. +26 tests cibles, couverture new-code 78.6%->99.2% mesuree avant push (evite le blocage post-revue rencontre par I18N-041).",
+      "allowed_paths": [
+        "src/forgeai/audit/immudb.py",
+        "src/forgeai/catalogue/loader.py",
+        "src/forgeai/catalogue/supply.py",
+        "src/forgeai/cli.py",
+        "src/forgeai/core/registre_ancrage.py",
+        "src/forgeai/core/validation.py",
+        "src/forgeai/data/locales/**",
+        "src/forgeai/deploy/compose.py",
+        "src/forgeai/deploy/k3s.py",
+        "src/forgeai/deploy/openbao_flow.py",
+        "src/forgeai/deploy/operators.py",
+        "src/forgeai/guardrails/io_guard.py",
+        "src/forgeai/ide/bootstrap.py",
+        "src/forgeai/ide/guard_fs.py",
+        "src/forgeai/ide/__init__.py",
+        "src/forgeai/loop.py",
+        "src/forgeai/models/budget.py",
+        "src/forgeai/models/local.py",
+        "src/forgeai/models/_locking.py",
+        "src/forgeai/models/routes.py",
+        "src/forgeai/models/strategy.py",
+        "src/forgeai/network/bootstrap.py",
+        "src/forgeai/network/keys.py",
+        "src/forgeai/network/node_add.py",
+        "src/forgeai/network/nodes.py",
+        "src/forgeai/network/prepare.py",
+        "src/forgeai/network/remote_probe.py",
+        "src/forgeai/network/tailscale.py",
+        "src/forgeai/observability/langfuse.py",
+        "src/forgeai/planner/assemble.py",
+        "src/forgeai/planner/profile.py",
+        "src/forgeai/rag/client.py",
+        "src/forgeai/rag/hardened.py",
+        "src/forgeai/renderers/compose.py",
+        "src/forgeai/secrets/vault.py",
+        "src/forgeai/stacks.py",
+        "src/forgeai/templates.py",
+        "tests/test_i18n042_coverage.py",
+        "stories/I18N-042.md",
+        "reviews/I18N-042-round1-reject/**",
+        "reviews/I18N-042-round2-incomplete-route-instable/**",
+        "reviews/I18N-042-round3-approve3of3-final/**"
+      ]
     }
   ]
 }
