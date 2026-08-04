@@ -15,6 +15,8 @@ import time
 import urllib.error
 import urllib.request
 
+from forgeai.i18n import t
+
 _TRACES = "/api/public/traces"
 
 
@@ -32,9 +34,9 @@ def _get(base_url: str, public_key: str, secret_key: str, path: str, timeout: fl
     except urllib.error.HTTPError as exc:
         raise ObservabilityError(f"langfuse GET {path} -> HTTP {exc.code}") from None
     except urllib.error.URLError as exc:
-        raise ObservabilityError(f"langfuse GET {path} injoignable ({exc.reason})") from None
+        raise ObservabilityError(t("observability.langfuse.get.injoignable", path=path, reason=exc.reason)) from None
     except ValueError as exc:
-        raise ObservabilityError(f"langfuse GET {path} -> réponse illisible ({exc})") from None
+        raise ObservabilityError(t("observability.langfuse.get.reponse_illisible", path=path, detail=exc)) from None
 
 
 def count_traces(base_url: str, public_key: str, secret_key: str, *, timeout: float = 10.0) -> int:

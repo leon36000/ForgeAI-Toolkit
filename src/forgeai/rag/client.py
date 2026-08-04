@@ -11,6 +11,8 @@ import urllib.error
 import urllib.request
 from dataclasses import dataclass
 
+from forgeai.i18n import t
+
 
 def _post(url: str, payload: dict, timeout_s: float = 300.0) -> dict:
     req = urllib.request.Request(
@@ -79,7 +81,7 @@ class RagClient:
     def ingest(self, text: str, source: str) -> int:
         chunks = chunk_text(text)
         if not chunks:
-            raise ValueError("Document vide : rien à ingérer")
+            raise ValueError(t("rag.client.ingest.document_vide"))
         vectors = self._embed(chunks)
         self.ensure_collection(dim=len(vectors[0]))
         points = [

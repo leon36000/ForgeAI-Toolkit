@@ -13,6 +13,7 @@ vers la vérification du driver/runtime NVIDIA.
 from __future__ import annotations
 
 from forgeai.core.models import GPU, HardwareProfile
+from forgeai.i18n import t
 
 MIN_RAM_GB = 4.0
 MIN_DISK_FREE_GB = 25.0
@@ -80,11 +81,11 @@ def derive_profile(hw: HardwareProfile) -> str:
     """
     if hw.ram_gb < MIN_RAM_GB:
         raise ProfileError(
-            f"RAM insuffisante : {hw.ram_gb} Go < {MIN_RAM_GB} Go requis")
+            t("planner.profile.derive_profile.ram_insuffisante", ram=hw.ram_gb, min_ram=MIN_RAM_GB))
     free = max((d.free_gb for d in hw.disks), default=0.0)
     if free < MIN_DISK_FREE_GB:
         raise ProfileError(
-            f"Disque libre insuffisant : {free} Go < {MIN_DISK_FREE_GB} Go requis")
+            t("planner.profile.derive_profile.disque_insuffisant", free=free, min_disk=MIN_DISK_FREE_GB))
 
     usable = [g for g in hw.gpus if _usable(g)]
     for vendor, profile in (("nvidia", "minimal-gpu-cuda"),
@@ -97,9 +98,6 @@ def derive_profile(hw: HardwareProfile) -> str:
     non_qualifies = [g for g in hw.gpus if g.vendor == "nvidia" and "[unqualified]" in g.name]
     if not usable and non_qualifies:
         raise ProfileError(
-            "GPU NVIDIA présent mais non qualifié : nvidia-smi indisponible "
-            "(driver/runtime NVIDIA). VRAM inconnue (non nulle). Vérifiez l'installation du driver "
-            "NVIDIA (`nvidia-smi`) puis relancez — le déploiement d'un workload GPU est refusé tant "
-            "que le GPU n'est pas qualifié.")
+            t("planner.profile.derive_profile.nvidia_non_qualifie"))
 
     return "minimal-cpu"

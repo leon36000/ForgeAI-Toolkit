@@ -28,6 +28,8 @@ import os
 import sys
 from pathlib import Path
 
+from forgeai.i18n import t
+
 from . import IDEError
 from .bootstrap import HookSpec
 
@@ -543,7 +545,7 @@ def generate_guard_fs(
     """
     root = os.path.realpath(os.fspath(workspace_root))
     if not os.path.exists(root):
-        raise IDEError(f"generate_guard_fs: racine de workspace inexistante : {root}")
+        raise IDEError(t("ide.guard_fs.generate_guard_fs.racine_inexistante", root=root))
     registre = (
         _chemin_embarque(registre_path)
         if registre_path is not None
@@ -561,7 +563,7 @@ def generate_guard_fs(
         ("__FORGEAI_ALLOW__", allow),
     ):
         if jeton not in script:
-            raise IDEError(f"generate_guard_fs: emplacement {jeton} absent du template")
+            raise IDEError(t("ide.guard_fs.generate_guard_fs.emplacement_absent", jeton=jeton))
         script = script.replace(jeton, repr(valeur))
     return script
 

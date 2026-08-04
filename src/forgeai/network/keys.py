@@ -13,6 +13,7 @@ import time
 from pathlib import Path
 
 from forgeai.core.runner import CommandRunner
+from forgeai.i18n import t
 
 
 class KeyError_(Exception):
@@ -26,13 +27,13 @@ def generate_keypair(key_dir: Path, runner: CommandRunner,
     private = key_dir / name
     if private.exists():
         raise KeyError_(
-            f"{private} existe déjà — utiliser rotate_keypair (pas d'écrasement silencieux)")
+            t("network.keys.generate_keypair.existe_deja", private=private))
     code, _ = runner.run([
         "ssh-keygen", "-t", "ed25519", "-N", "", "-C", "forgeai-toolkit",
         "-f", str(private),
     ])
     if code != 0 or not private.exists():
-        raise KeyError_(f"ssh-keygen a échoué (code {code})")
+        raise KeyError_(t("network.keys.generate_keypair.ssh_keygen_echec", code=code))
     os.chmod(private, 0o600)
     return {"private": private, "public": private.with_suffix(".pub")}
 
@@ -59,7 +60,7 @@ def commit_rotation(key_dir: Path, name: str = "forgeai_ed25519") -> dict[str, P
     staged_pub = staged_priv.with_suffix(".pub")
     if not staged_priv.exists() or not staged_pub.exists():
         raise KeyError_(
-            f"aucune rotation stagée pour {name} — lancer stage_rotation d'abord")
+            t("network.keys.commit_rotation.aucune_rotation_stagee", name=name))
 
     active_priv = key_dir / name
     active_pub = active_priv.with_suffix(".pub")

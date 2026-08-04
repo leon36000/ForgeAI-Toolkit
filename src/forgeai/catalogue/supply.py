@@ -10,6 +10,8 @@ from dataclasses import dataclass
 from functools import lru_cache
 from pathlib import Path
 
+from forgeai.i18n import t
+
 
 class SupplyChainError(Exception):
     """Brique refusée : non épinglée, non vérifiée, ou licence non autorisée."""
@@ -86,7 +88,7 @@ def verify_brick_before_exec(
     # 1. Épinglage : contrôle universel, y compris le châssis.
     if policy.require_digest and "@sha256:" not in image:
         raise SupplyChainError(
-            f"Image de la brique '{brick_id}' n'est pas épinglée par digest (@sha256:)"
+            t("catalogue.supply.verify_brick_before_exec.non_epinglee", brick_id=brick_id)
         )
 
     # 2. Vérification/licence : seulement pour les plugins communautaires (catalogués).
@@ -95,7 +97,7 @@ def verify_brick_before_exec(
         return  # brique first-party/châssis : l'épinglage suffit
 
     if policy.require_verified and not entry.get("verified", False):
-        raise SupplyChainError(f"Brique '{brick_id}' non vérifiée dans le catalogue")
+        raise SupplyChainError(t("catalogue.supply.verify_brick_before_exec.non_verifiee", brick_id=brick_id))
 
     # Licence : rejette une licence EXPLICITE non autorisée (propriétaire, BUSL, CC, copyleft
     # hors liste…). « NOASSERTION » / vide = licence NON ASSERTÉE dans le catalogue communautaire
@@ -104,5 +106,5 @@ def verify_brick_before_exec(
     lic = entry.get("license", "")
     if lic and lic != "NOASSERTION" and lic not in policy.license_allowlist:
         raise SupplyChainError(
-            f"Licence '{lic}' de la brique '{brick_id}' non autorisée"
+            t("catalogue.supply.verify_brick_before_exec.licence_non_autorisee", lic=lic, brick_id=brick_id)
         )

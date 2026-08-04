@@ -9,6 +9,7 @@ from __future__ import annotations
 import json
 
 from forgeai.core.runner import CommandRunner
+from forgeai.i18n import t
 
 
 class ClusterError(Exception):
@@ -18,11 +19,11 @@ class ClusterError(Exception):
 def cluster_status(runner: CommandRunner) -> list[dict]:
     code, out = runner.run(["kubectl", "get", "nodes", "-o", "json"])
     if code != 0 or not out.strip():
-        raise ClusterError(f"kubectl get nodes a échoué (code {code}) — cluster joignable ?")
+        raise ClusterError(t("network.nodes.cluster_status.kubectl_echec", code=code))
     try:
         items = json.loads(out)["items"]
     except (json.JSONDecodeError, KeyError) as exc:
-        raise ClusterError(f"sortie kubectl illisible : {exc}") from exc
+        raise ClusterError(t("network.nodes.cluster_status.sortie_illisible", detail=exc)) from exc
     nodes = []
     for item in items:
         conditions = {c["type"]: c["status"] for c in item["status"]["conditions"]}
@@ -38,5 +39,5 @@ def cluster_status(runner: CommandRunner) -> list[dict]:
             "gpu_allocatable": gpu,
         })
     if not nodes:
-        raise ClusterError("aucun nœud retourné par le cluster")
+        raise ClusterError(t("network.nodes.cluster_status.aucun_noeud"))
     return nodes

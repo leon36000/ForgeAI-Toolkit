@@ -16,6 +16,7 @@ import time
 from collections.abc import Callable
 from pathlib import Path
 
+from forgeai.i18n import t
 from forgeai.models.vault import (
     atomic_write_secret_text,
     prepare_secure_directory,
@@ -131,7 +132,7 @@ class FileSecretStore:
             and stat.S_ISDIR(parent_state.st_mode)
             and stat.S_IMODE(parent_state.st_mode) & 0o200 == 0
         ):
-            raise OSError("le répertoire du secret n'est pas inscriptible")
+            raise OSError(t("deploy.openbao_flow.file_secret_store.repertoire_non_inscriptible"))
         prepare_secure_directory(self._path.parent, final_mode=0o700)
         _write_file(self._path, json.dumps(dict(data)), 0o600)  # token opérateur, owner seul
 
@@ -231,7 +232,8 @@ class KubectlKeyStore:
         if proc.returncode != 0:
             # stderr peut contenir le nom du Secret mais jamais la valeur (celle-ci était en stdin)
             raise OpenBaoFlowError(
-                f"kubectl apply Secret {self._name} a échoué (code {proc.returncode})")
+                t("deploy.openbao_flow.kubectl_key_store.apply_echec",
+                  name=self._name, code=proc.returncode))
 
 
 # --------------------------------------------------------------------------
@@ -265,4 +267,4 @@ def wait_reachable(
         if probe(url):
             return
         sleep(delay)
-    raise OpenBaoFlowError(f"openbao injoignable à {url} après {attempts} tentatives")
+    raise OpenBaoFlowError(t("deploy.openbao_flow.wait_reachable.injoignable", url=url, attempts=attempts))

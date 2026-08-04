@@ -3,6 +3,8 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Optional
 
+from forgeai.i18n import t
+
 from .bootstrap import render_join_plan, JoinPlan
 
 
@@ -18,7 +20,7 @@ def tailscale_install_argv(version: str) -> list[str]:
     politique de reproductibilité et de sécurité.
     """
     if not version or version == "latest":
-        raise TailscaleError("version Tailscale doit être épinglée (pas 'latest')")
+        raise TailscaleError(t("network.tailscale.install_argv.version_non_epinglee"))
     return ["apt-get", "install", "-y", "--no-install-recommends", f"tailscale={version}"]
 
 

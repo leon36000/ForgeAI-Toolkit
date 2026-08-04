@@ -21,6 +21,8 @@ import json
 import urllib.error
 import urllib.request
 
+from forgeai.i18n import t
+
 _API = "/api/v2"
 
 
@@ -43,9 +45,9 @@ def _request(method: str, url: str, token: str | None, payload: dict | None,
     except urllib.error.HTTPError as exc:  # code seul ; jamais le payload/creds
         raise LedgerError(f"immudb {method} {url} -> HTTP {exc.code}") from None
     except urllib.error.URLError as exc:
-        raise LedgerError(f"immudb {method} {url} injoignable ({exc.reason})") from None
+        raise LedgerError(t("audit.immudb.request.injoignable", method=method, url=url, reason=exc.reason)) from None
     except ValueError as exc:
-        raise LedgerError(f"immudb {method} {url} -> réponse illisible ({exc})") from None
+        raise LedgerError(t("audit.immudb.request.reponse_illisible", method=method, url=url, detail=exc)) from None
 
 
 def open_session(base_url: str, username: str,
@@ -56,7 +58,7 @@ def open_session(base_url: str, username: str,
                    {"username": username, "password": password, "database": database}, timeout)
     token = doc.get("sessionID")
     if not token:
-        raise LedgerError("immudb session/open : sessionID absent de la réponse")
+        raise LedgerError(t("audit.immudb.open_session.sessionid_absent"))
     return token
 
 
@@ -84,7 +86,7 @@ def record(base_url: str, token: str, collection: str, document: dict,
     doc = _request("POST", url, token, {"documents": [document]}, timeout)
     ids = doc.get("documentIds") or []
     if not doc.get("transactionId") or not ids:
-        raise LedgerError("immudb insert : transactionId/documentId absent de la réponse")
+        raise LedgerError(t("audit.immudb.record.transaction_absent"))
     return {"transactionId": doc["transactionId"], "documentId": ids[0]}
 
 

@@ -16,6 +16,7 @@ from typing import Callable, Optional
 from forgeai.core.registre import append
 from forgeai.core.runner import CommandRunner
 from forgeai.hardware.detect import HardwareDetector
+from forgeai.i18n import t
 from forgeai.planner.profile import derive_profile
 from forgeai.preflight import available_backends, run_checks
 
@@ -33,7 +34,7 @@ def enroll_hostkey(host: str, hostkey_sha256: str, timeout_s: float = 20.0) -> s
     de nœud (``node_add``)."""
     if not hostkey_sha256 or not hostkey_sha256.startswith("SHA256:"):
         raise RemoteProbeError(
-            "empreinte de clé d'hôte requise (SSH-007) — format 'SHA256:...'"
+            t("network.remote_probe.enroll_hostkey.empreinte_requise")
         )
     try:
         scan = subprocess.run(
@@ -41,13 +42,13 @@ def enroll_hostkey(host: str, hostkey_sha256: str, timeout_s: float = 20.0) -> s
             capture_output=True, text=True, timeout=timeout_s,
         )
     except subprocess.TimeoutExpired as exc:
-        raise RemoteProbeError(f"ssh-keyscan timeout sur {host}") from exc
+        raise RemoteProbeError(t("network.remote_probe.enroll_hostkey.keyscan_timeout", host=host)) from exc
     offered = [
         line for line in scan.stdout.splitlines()
         if line.strip() and not line.startswith("#")
     ]
     if not offered:
-        raise RemoteProbeError(f"ssh-keyscan n'a retourné aucune clé pour {host}")
+        raise RemoteProbeError(t("network.remote_probe.enroll_hostkey.keyscan_vide", host=host))
 
     for line in offered:
         fd, tmp = tempfile.mkstemp()
@@ -69,8 +70,8 @@ def enroll_hostkey(host: str, hostkey_sha256: str, timeout_s: float = 20.0) -> s
             return kh
 
     raise RemoteProbeError(
-        f"aucune clé d'hôte offerte ne correspond à l'empreinte déclarée "
-        f"{hostkey_sha256} (SSH-007 : refus, MITM potentiel)"
+        t("network.remote_probe.enroll_hostkey.empreinte_non_correspondante",
+          empreinte=hostkey_sha256)
     )
 
 
@@ -90,7 +91,7 @@ class SshRunner:
         # « », « foo:bar », « MD5:... » de façon déterministe AVANT tout réseau (CA2).
         if not hostkey_sha256 or not hostkey_sha256.startswith("SHA256:"):
             raise RemoteProbeError(
-                "empreinte de clé d'hôte requise (SSH-007 : pas de TOFU) — format 'SHA256:...'"
+                t("network.remote_probe.ssh_runner.empreinte_requise")
             )
         self.user = user
         self.host = host
@@ -172,7 +173,7 @@ def probe_remote_node(
     # 1. Récupération du meminfo distant
     code, meminfo = runner.run(["cat", "/proc/meminfo"])
     if code != 0:
-        raise RemoteProbeError("meminfo distant illisible")
+        raise RemoteProbeError(t("network.remote_probe.probe_remote_node.meminfo_illisible"))
 
     # Écrire le meminfo dans un fichier temporaire (sur le nœud local exécutant ce code)
     tmp_fd, tmp_path = tempfile.mkstemp(suffix=".meminfo", dir=tmp_dir)

@@ -14,6 +14,8 @@ import json
 import urllib.error
 import urllib.request
 
+from forgeai.i18n import t
+
 _KV_PREFIX = "/v1/secret/data/"
 _RENEW_SELF = "/v1/auth/token/renew-self"
 
@@ -39,9 +41,9 @@ def _request(method: str, url: str, token: str, payload: dict | None, timeout: f
     except urllib.error.HTTPError as exc:  # 403/404/500… : le code seul, jamais le token/valeur
         raise VaultError(f"openbao {method} {url} -> HTTP {exc.code}") from None
     except urllib.error.URLError as exc:  # coffre injoignable : la raison réseau, pas de secret
-        raise VaultError(f"openbao {method} {url} injoignable ({exc.reason})") from None
+        raise VaultError(t("secrets.vault.request.injoignable", method=method, url=url, reason=exc.reason)) from None
     except ValueError as exc:  # réponse non-JSON
-        raise VaultError(f"openbao {method} {url} -> réponse illisible ({exc})") from None
+        raise VaultError(t("secrets.vault.request.reponse_illisible", method=method, url=url, detail=exc)) from None
 
 
 def store(base_url: str, token: str, path: str, data: dict, *, timeout: float = 10.0) -> None:

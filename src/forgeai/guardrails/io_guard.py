@@ -16,6 +16,7 @@ from __future__ import annotations
 
 import re
 from forgeai.eval.rag_eval import groundedness
+from forgeai.i18n import t
 from typing import NamedTuple
 import hashlib
 import secrets
@@ -68,21 +69,23 @@ class GuardrailBlocked(RuntimeError):
 def scan_input(text: str, max_chars: int = MAX_INPUT_CHARS) -> None:
     """Valide une question utilisateur. Lève GuardrailBlocked si vide, trop longue, ou injection."""
     if text is None or not text.strip():
-        raise GuardrailBlocked("entrée vide")
+        raise GuardrailBlocked(t("guardrails.io_guard.scan_input.entree_vide"))
     if len(text) > max_chars:
-        raise GuardrailBlocked(f"entrée trop longue ({len(text)} > {max_chars} caractères)")
+        raise GuardrailBlocked(t("guardrails.io_guard.scan_input.entree_trop_longue",
+                                  longueur=len(text), max_chars=max_chars))
     for pattern in _INJECTION_PATTERNS:
         if pattern.search(text):
             # on ne recopie PAS le texte hostile ; on nomme le motif déclencheur (borné).
-            raise GuardrailBlocked(f"pattern d'injection détecté : {pattern.pattern[:60]}")
+            raise GuardrailBlocked(t("guardrails.io_guard.scan_input.pattern_detecte",
+                                      pattern=pattern.pattern[:60]))
 
 
 def scan_output(answer: str, context_used: bool) -> None:
     """Valide une réponse générée. Lève GuardrailBlocked si vide ou non ancrée au contexte."""
     if answer is None or not answer.strip():
-        raise GuardrailBlocked("sortie vide")
+        raise GuardrailBlocked(t("guardrails.io_guard.scan_output.sortie_vide"))
     if not context_used:
-        raise GuardrailBlocked("sortie non ancrée (aucun contexte récupéré)")
+        raise GuardrailBlocked(t("guardrails.io_guard.scan_output.sortie_non_ancree"))
 
 
 @dataclass(frozen=True)
@@ -198,14 +201,14 @@ def scan_assembled(context: str, delimiter: str) -> None:
     """
     if delimiter in context:
         raise GuardrailBlocked(
-            "Tentative de forge de la balise de délimitation détectée dans le contexte assemblé."
+            t("guardrails.io_guard.scan_assembled.forge_balise")
         )
 
     report = scan_chunk(context)
     if report.directive_spans:
         motifs = ", ".join(report.motifs)
         raise GuardrailBlocked(
-            f"Directive détectée dans le contexte assemblé après normalisation : {motifs}."
+            t("guardrails.io_guard.scan_assembled.directive_detectee", motifs=motifs)
         )
 
 

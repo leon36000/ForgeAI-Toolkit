@@ -7,6 +7,7 @@ emploi (constat d'audit). Décision : UN SEUL système — les stacks. Les comma
 """
 from __future__ import annotations
 
+from forgeai.i18n import t
 from forgeai.stacks import list_stacks, load_stack
 
 # Noms hérités → stack équivalent (périmètre validé en fusion)
@@ -26,7 +27,7 @@ def resolve_alias(name: str) -> str:
     stack_id = LEGACY_ALIASES.get(name, name)
     if stack_id not in list_stacks():
         connus = sorted(set(LEGACY_ALIASES) | set(list_stacks()))
-        raise TemplateError(f"'{name}' inconnu — noms acceptés : {connus}")
+        raise TemplateError(t("templates.resolve_alias.nom_inconnu", name=name, connus=connus))
     return stack_id
 
 

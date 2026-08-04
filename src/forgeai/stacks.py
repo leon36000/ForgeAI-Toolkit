@@ -17,6 +17,8 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+from forgeai.i18n import t
+
 
 def stacks_dir() -> Path:
     return Path(__file__).resolve().parent / "data" / "stacks"
@@ -29,10 +31,10 @@ def list_stacks() -> list[str]:
 
 def load_stack(stack_id: str) -> dict:
     if not stack_id or "/" in stack_id or "\\" in stack_id or ".." in stack_id:
-        raise FileNotFoundError(f"stack invalide : {stack_id}")
+        raise FileNotFoundError(t("stacks.load_stack.invalide", stack_id=stack_id))
     path = stacks_dir() / f"{stack_id}.json"
     if not path.exists():
-        raise FileNotFoundError(f"stack inconnu : {stack_id}")
+        raise FileNotFoundError(t("stacks.load_stack.inconnu", stack_id=stack_id))
     return json.loads(path.read_text(encoding="utf-8"))
 
 

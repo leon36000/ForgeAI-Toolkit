@@ -12,6 +12,8 @@ import urllib.request
 from collections.abc import Callable
 from typing import Any
 
+from forgeai.i18n import t
+
 # ---------------------------------------------------------------------------
 # Exception
 # ---------------------------------------------------------------------------
@@ -73,11 +75,11 @@ def http_transport(base_url: str, timeout: float = 10.0):
             ) from None
         except urllib.error.URLError as exc:
             raise OpenBaoInitError(
-                f"openbao {method} {path} injoignable ({exc.reason})"
+                t("secrets.openbao_init.http_transport.injoignable", method=method, path=path, reason=exc.reason)
             ) from None
         except ValueError as exc:
             raise OpenBaoInitError(
-                f"openbao {method} {path} -> réponse illisible ({exc})"
+                t("secrets.openbao_init.http_transport.reponse_illisible", method=method, path=path, detail=exc)
             ) from None
 
     return request
@@ -117,7 +119,7 @@ def ensure_openbao_ready(
         keys = init_resp.get("keys", [])
         root = init_resp.get("root_token", "")
         if not keys or not root:
-            raise OpenBaoInitError("openbao PUT /v1/sys/init -> réponse incomplète")
+            raise OpenBaoInitError(t("secrets.openbao_init.ensure_openbao_ready.init_reponse_incomplete"))
         unseal_key = keys[0]
         root_token = root
         # Écriture atomique + read-back
@@ -125,6 +127,11 @@ def ensure_openbao_ready(
         stored = key_store.read()
         if (not stored or stored.get("unseal_key") != unseal_key
                 or stored.get("root_token") != root_token):
+            # NOTE i18n : PAS de t() ici (délibéré) — tests/test_openbao_init.py::
+            # TestReadBackInitFails::test_detects_readback_failure vérifie
+            # `"read-back" in str(exc_info.value).lower()` sur ce texte anglais
+            # d'origine (déjà un cas particulier : seul message anglais du fichier).
+            # Convertir casserait ce test existant (CA5) — hors périmètre I18N-042.
             raise OpenBaoInitError(
                 "openbao init succeeded but key store read-back failed - "
                 "the key material is irrecoverable"
@@ -137,7 +144,7 @@ def ensure_openbao_ready(
     if initialized and (not keys_data or not keys_data.get("root_token")
                         or not keys_data.get("unseal_key")):
         raise OpenBaoInitError(
-            "coffre initialisé mais clés absentes du store"
+            t("secrets.openbao_init.ensure_openbao_ready.coffre_sans_cles")
         )
     root_token = keys_data["root_token"]
     unseal_key = keys_data["unseal_key"]
@@ -151,7 +158,7 @@ def ensure_openbao_ready(
         )
         if unseal_resp.get("sealed") is not False:
             raise OpenBaoInitError(
-                "PUT /v1/sys/unseal n'a pas descellé le coffre"
+                t("secrets.openbao_init.ensure_openbao_ready.unseal_echec")
             )
 
     # ── 5. Monter KV v2 sur secret/ ──────────────────────────────────
@@ -213,7 +220,7 @@ def ensure_openbao_ready(
     new_token = new_token_resp[1].get("auth", {}).get("client_token", "")
     if not new_token:
         raise OpenBaoInitError(
-            "POST /v1/auth/token/create -> pas de client_token"
+            t("secrets.openbao_init.ensure_openbao_ready.token_create_sans_client_token")
         )
 
     # Persister le nouveau token
