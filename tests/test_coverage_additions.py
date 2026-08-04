@@ -1,9 +1,12 @@
 """IMPL-2b — preuve : couverture complète awesome-opensource-ai + écosystème OpenClaw.
 
-Les 596 briques du manifeste (tests/data/coverage_added_ids.json) sont dans le catalogue,
-sourcées gh-api, valides au schéma, classées en sphère, et ajoutées comme OPTIONS
-(default=null : jamais un défaut de catégorie ; le déploiement par stack est décidé par
-les profils, pas par le catalogue)."""
+Les 596 briques ajoutées par IMPL-2b (tests/data/coverage_added_ids.json) sont sourcées
+gh-api, valides au schéma, classées en sphère, et ajoutées comme OPTIONS (default=null :
+jamais un défaut de catégorie ; le déploiement par stack est décidé par les profils, pas
+par le catalogue). Manifeste réduit à 595 le 2026-08-04 (registre seq 411) : le dépôt de
+`feder-cr-invisible-playwright` a disparu de GitHub (404 confirmé, aucun renommage
+identifiable) — entrée retirée du catalogue et du manifeste plutôt que laissée comme
+brique installable non fonctionnelle."""
 import json
 from pathlib import Path
 
@@ -20,8 +23,8 @@ def _entries():
     return d if isinstance(d, list) else d["entries"]
 
 
-def test_manifeste_596_uniques():
-    assert len(ADDED_IDS) == 596
+def test_manifeste_595_uniques():
+    assert len(ADDED_IDS) == 595
     assert len(ADDED_IDS) == len(set(ADDED_IDS))
 
 
@@ -57,15 +60,15 @@ def test_ajoutees_categories_reelles():
     assert cats_add <= cats_base, f"catégories inexistantes introduites : {cats_add - cats_base}"
 
 
-def test_catalogue_1577_integre_et_unique():
-    assert len(_entries()) == 1577
+def test_catalogue_1576_integre_et_unique():
+    assert len(_entries()) == 1576
     verify_catalogue(catalogue_path())  # lève si sha256 ne correspond pas
     ids = [e["id"] for e in _entries()]
     assert len(ids) == len(set(ids)), "id dupliqué"
 
 
 def test_options_jamais_defaut_de_categorie():
-    """Règle Nathan : les 596 briques de couverture sont des OPTIONS (default_eligible=false)
+    """Règle Nathan : les 595 briques de couverture sont des OPTIONS (default_eligible=false)
     — jamais le défaut ⭐ d'une catégorie (fondamentaux/weights/bruit inclus)."""
     ents = _entries()
     by = {e["id"]: e for e in ents}
