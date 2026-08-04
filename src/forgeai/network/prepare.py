@@ -4,6 +4,7 @@ import json
 from typing import Any
 
 from forgeai.core.runner import CommandRunner
+from forgeai.i18n import t
 
 
 class PrepareError(Exception):
@@ -51,13 +52,15 @@ def sonder_noeud(runner: CommandRunner, hostname: str) -> dict:
             except (json.JSONDecodeError, KeyError):
                 pass
         raise PrepareError(
-            f"nœud '{hostname}' absent ou injoignable. Nœuds connus : {', '.join(names) or '(aucun)'}"
+            t("network.prepare.sonder_noeud.noeud_absent", hostname=hostname,
+              noms=', '.join(names) or t("network.prepare.aucun"))
         )
 
     try:
         data = json.loads(stdout)
     except json.JSONDecodeError as exc:
-        raise PrepareError(f"sortie kubectl illisible pour {hostname} : {exc}") from exc
+        raise PrepareError(t("network.prepare.sonder_noeud.sortie_illisible",
+                              hostname=hostname, detail=exc)) from exc
 
     status = data.get("status", {})
     ready = _ready_value(status.get("conditions", []))
@@ -195,8 +198,13 @@ def preparer_noeud(
         if cmd is None:
             if step["id"] == "diagnostic":
                 etapes.append({**step, "statut": "echec"})
+                # NOTE i18n : `pourquoi_fr` est un champ français-seul pré-existant
+                # (mécanisme dédié titre_fr/titre_en de I18N-031, cli.py:824) — hors
+                # périmètre de cette story (messages raise(), pas les champs d'affichage
+                # de plan). Le seul texte traduit ici est l'enveloppe de l'exception.
                 raise PrepareError(
-                    f"Préparation impossible sur '{hostname}' : {step['pourquoi_fr']}"
+                    t("network.prepare.preparer_noeud.preparation_impossible",
+                      hostname=hostname, pourquoi=step['pourquoi_fr'])
                 )
             etapes.append({**step, "statut": "sautee"})
             continue
@@ -207,7 +215,8 @@ def preparer_noeud(
         else:
             etapes.append({**step, "statut": "echec", "rc": rc, "stdout": stdout})
             raise PrepareError(
-                f"Échec de l'étape '{step['id']}' sur '{hostname}' (code {rc})"
+                t("network.prepare.preparer_noeud.etape_echouee",
+                  etape_id=step['id'], hostname=hostname, code=rc)
             )
 
     if etat["ready"] is not True:

@@ -11,6 +11,8 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
+from forgeai.i18n import t
+
 
 class BootstrapError(Exception):
     pass
@@ -60,13 +62,13 @@ def render_join_plan(controller_host: str, node_host: str, node_hostkey_sha256: 
                      login_server: str | None = None) -> JoinPlan:
     if not node_hostkey_sha256 or ":" not in node_hostkey_sha256:
         raise BootstrapError(
-            "empreinte de clé d'hôte requise (EX-1 : pas de TOFU) — format 'SHA256:...'")
+            t("network.bootstrap.render_join_plan.empreinte_requise"))
     if not tailscale_tag.startswith("tag:"):
-        raise BootstrapError("le tag Tailscale doit commencer par 'tag:' (EX-3)")
+        raise BootstrapError(t("network.bootstrap.render_join_plan.tag_invalide"))
     # Headscale souverain : le control plane doit être une URL http(s):// (EX-2, jamais un secret).
     if login_server is not None and not login_server.startswith(("http://", "https://")):
         raise BootstrapError(
-            "login-server Headscale invalide : URL http(s):// attendue (ex. https://headscale.local)")
+            t("network.bootstrap.render_join_plan.login_server_invalide"))
     return JoinPlan(
         controller_host=controller_host,
         node_host=node_host,

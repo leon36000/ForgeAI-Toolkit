@@ -16,6 +16,8 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Callable, Protocol
 
+from forgeai.i18n import t
+
 from ..core.runner import CommandRunner
 from ..core.validation import ValidationError, resolve_within, valider_nom_simple
 from .probe import ProbeResult, Transport, probe_route
@@ -86,15 +88,15 @@ def download_verified(model: LocalModel, dest_dir: Path, fetcher: Fetcher) -> Pa
         valider_nom_simple(model.name)
         dest = resolve_within(Path(dest_dir) / f"{model.name}.bin", dest_dir)
     except ValidationError:
-        raise LocalModelError(f"nom de modèle invalide : {model.name}") from None
+        raise LocalModelError(t("models.local.download_verified.nom_invalide", name=model.name)) from None
     tmp = dest.with_suffix(".part")
     fetcher.fetch(model.download_url, tmp)
     actual = _sha256_file(tmp)
     if actual != model.sha256:
         tmp.unlink(missing_ok=True)  # artefact corrompu/altéré : ne jamais conserver
         raise LocalModelError(
-            f"empreinte SHA-256 invalide pour {model.name} : "
-            f"attendu {model.sha256[:12]}…, obtenu {actual[:12]}… (fichier supprimé)")
+            t("models.local.download_verified.empreinte_invalide",
+              name=model.name, attendu=model.sha256[:12], obtenu=actual[:12]))
     tmp.replace(dest)  # renommage atomique de l'artefact VÉRIFIÉ
     return dest
 
@@ -110,11 +112,11 @@ def deploy(model: LocalModel, runner: CommandRunner) -> None:
     """Déploie le modèle sur le moteur du nœud (runner injectable). Lève si échec."""
     builder = _DEPLOY_CMD.get(model.engine)
     if not builder:
-        raise LocalModelError(f"moteur inconnu '{model.engine}'")
+        raise LocalModelError(t("models.local.deploy.moteur_inconnu", engine=model.engine))
     code, out = runner.run(builder(model.model_ref))
     if code != 0:
         raise LocalModelError(
-            f"déploiement de {model.name} sur {model.engine} échoué (code {code})")
+            t("models.local.deploy.deploiement_echoue", name=model.name, engine=model.engine, code=code))
 
 
 def check_completion(engine_url: str, model_ref: str, transport: Transport | None = None
@@ -135,8 +137,9 @@ def add_local(model: LocalModel, dest_dir: Path, engine_url: str, *,
 
     if not filter_available([model], vram_mb, engines):
         raise LocalModelError(
-            f"{model.name} incompatible : exige {model.vram_required_mb} Mo VRAM / moteur "
-            f"{model.engine} (nœud : {vram_mb} Mo, moteurs {sorted(engines)})")
+            t("models.local.add_local.incompatible", name=model.name,
+              vram_requis=model.vram_required_mb, engine=model.engine,
+              vram_noeud=vram_mb, moteurs=sorted(engines)))
 
     path = download_verified(model, dest_dir, fetcher)
     _log("modele_local_telecharge", {"name": model.name, "sha256": model.sha256,
@@ -147,7 +150,8 @@ def add_local(model: LocalModel, dest_dir: Path, engine_url: str, *,
                                       "ref": model.model_ref})
         result = check_completion(engine_url, model.model_ref, transport)
         if not result.ok:
-            raise LocalModelError(f"test de complétion {result.light} : {result.detail}")
+            raise LocalModelError(t("models.local.add_local.test_completion_echec",
+                                     light=result.light, detail=result.detail))
         _log("modele_local_valide", {"name": model.name, "light": result.light})
         return result
     except Exception:

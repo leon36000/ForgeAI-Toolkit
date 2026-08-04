@@ -1,0 +1,19 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "tests/test_i18n042_coverage.py",
+   "description": "Les nouveaux tests assertent des sous-chaînes françaises de messages d'exception sans épingler la locale dans le fichier ; le pack ne permet pas de vérifier qu'ils restent verts si la locale est EN.",
+   "preuve": "tests/test_i18n042_coverage.py: with pytest.raises(LedgerError, match=\"réponse illisible\"): ... ; aucun set_locale ou variable de locale n'est ajouté dans ce fichier."
+  }
+ ],
+ "date_heure": "2026-08-04T03:33:13.034542+00:00",
+ "prompt_sha256": "2463d9767701247e0f3535507e6848a95d0f60eb091e41a2df2008abb9cc5597",
+ "reviewer_model": "Qwen3.8-Max",
+ "modele_servi": "qwen38-max-alibaba-sg",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

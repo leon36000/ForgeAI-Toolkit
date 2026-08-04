@@ -10,6 +10,10 @@ import threading
 import time
 from collections.abc import Callable
 
+# NOTE i18n : PAS d'import de forgeai.i18n ici (délibéré, gardé par test_proc_no_forgeai_import
+# dans tests/test_proc.py) — les 2 messages français ci-dessous restent non traduits,
+# hors périmètre I18N-042.
+
 
 class RunnerTimeoutError(RuntimeError):
     """Timeout dépassé pour une commande du runner."""

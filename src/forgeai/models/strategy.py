@@ -11,6 +11,8 @@ import json
 from dataclasses import asdict, dataclass
 from pathlib import Path
 
+from forgeai.i18n import t
+
 # Rôles de slots par défaut pour chaque stratégie. « Équipe » reflète une répartition
 # multi-modèles (orchestration + spécialistes) ; « Hybride » mêle principal et spécialistes.
 _DEFAULT_SLOTS: dict[str, tuple[str, ...]] = {
@@ -37,15 +39,17 @@ class StrategySpec:
 
 def resolve_spec(strategy: str, custom_roles: list[str] | None = None) -> StrategySpec:
     if strategy not in _DEFAULT_SLOTS:
-        raise StrategyError(f"stratégie inconnue '{strategy}' (choix : {', '.join(STRATEGIES)})")
+        raise StrategyError(t("models.strategy.resolve_spec.strategie_inconnue",
+                               strategy=strategy, choix=', '.join(STRATEGIES)))
     expected = len(_DEFAULT_SLOTS[strategy])
     if custom_roles:
         slots = tuple(dict.fromkeys(r.strip() for r in custom_roles if r.strip()))
         if not slots:
-            raise StrategyError("liste de rôles vide")
+            raise StrategyError(t("models.strategy.resolve_spec.liste_roles_vide"))
         if len(slots) != expected:
             raise StrategyError(
-                f"la stratégie '{strategy}' impose {expected} slot(s), {len(slots)} fourni(s)"
+                t("models.strategy.resolve_spec.nombre_slots_incorrect",
+                  strategy=strategy, expected=expected, fourni=len(slots))
             )
     else:
         slots = _DEFAULT_SLOTS[strategy]

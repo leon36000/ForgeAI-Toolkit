@@ -1,0 +1,31 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "majeure",
+   "fichier": "src/forgeai/deploy/compose.py",
+   "description": "Un fragment français reste injecté dans un message d'exception pourtant routé vers t() : le fallback de details peut valoir \"<vide>\" et est passé tel quel à la clé deploy.compose.wait_healthy.non_ready. En locale EN, l'exception contiendra donc un mot français, ce qui contredit l'objectif de traduction des messages d'exception et la recherche annoncée des fuites de paramètres.",
+   "preuve": "diff src/forgeai/deploy/compose.py, hunk @@ -250,8 +250,8 @@ : details = \", \".join(f\"{n}={v.value}\" for n, v in verdicts.items()) or \"<vide>\" ; raise DeployError(t(\"deploy.compose.wait_healthy.non_ready\", verdict=global_verdict.value, timeout_s=timeout_s, etats=etats, details=details))"
+  },
+  {
+   "severite": "mineure",
+   "fichier": "stories/I18N-042.md",
+   "description": "Incohérence de comptage des clés : la story annonce 134 clés uniques puis +134 clés dans les locales, alors que le diff ajoute 131 clés top-level par locale et que 275 → 406 correspond à +131. Les reverts expliquent probablement l'écart, mais les chiffres de la story ne sont pas alignés avec le diff final.",
+   "preuve": "Story : 'Portée finale traitée ... 134 clés uniques' et 'plus src/forgeai/data/locales/{fr,en}.json (+134 clés chacun, 275 → 406)' ; diff fr.json/en.json : 131 nouvelles clés top-level."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "stories/I18N-042.md",
+   "description": "Incohérence entre CA2 et la preuve du détecteur : CA2 mentionne core/proc.py dans les exclusions, mais la sortie finale du détecteur ne liste pas core/proc.py et totalise seulement 6 sites sur 4 fichiers.",
+   "preuve": "CA2 : 'à l'exception des 4 exclusions documentées ... core/proc.py' ; preuve détecteur : 'core/_portable_lock.py : 2 site(s) ... i18n/__init__.py : 2 site(s) ... hardware/drivers.py : 1 site(s) ... core/registre.py : 1 site(s) ... TOTAL : 4 fichiers, 6 sites'."
+  }
+ ],
+ "date_heure": "2026-08-04T02:37:51.769817+00:00",
+ "prompt_sha256": "6acd13b5c5f7161080ae114d995083c4cd9a9b54fd6b54d37853cf80abdbadd0",
+ "reviewer_model": "Qwen3.8-Max",
+ "modele_servi": "qwen38-max-alibaba-sg",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

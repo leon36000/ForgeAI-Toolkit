@@ -11,6 +11,7 @@ import re
 import json
 
 from forgeai.core.models import DeploymentPlan, ProbeType
+from forgeai.i18n import t
 from forgeai.renderers._openbao import UNSEAL_SCRIPT
 
 
@@ -135,9 +136,8 @@ def render_compose(plan: DeploymentPlan, project: str = "forgeai-minimal") -> st
     if plan.services and all(sv.adopted_endpoint is not None for sv in plan.services):
         _adoptes = [f"{sv.name} -> {sv.adopted_endpoint}" for sv in plan.services]
         raise RienADeployerError(
-            f"ERR_ADOPT_RIEN_A_DEPLOYER : le plan {plan.plan_id} n'a aucun service a deployer — "
-            f"tous sont deja adoptes ({', '.join(_adoptes)}). Cet etat est normal : le manifeste "
-            f"serait vide et refuse par `docker compose up`."
+            t("renderers.compose.render_compose.rien_a_deployer",
+              plan_id=plan.plan_id, adoptes=', '.join(_adoptes))
         )
     lines = [
         f"# Généré par ForgeAI Toolkit — plan {plan.plan_id} (profil {plan.profile})",

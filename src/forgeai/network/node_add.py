@@ -9,6 +9,7 @@ from forgeai.core.registre import append
 from forgeai.core.runner import CommandRunner
 from forgeai.network.remote_probe import enroll_hostkey, RemoteProbeError
 from forgeai.core.redaction import redact_text
+from forgeai.i18n import t
 
 
 class NodeAddError(Exception):
@@ -38,7 +39,7 @@ class SshBootstrapper:
     def __init__(self, timeout_s: float = 20.0, hostkey_sha256: str = "") -> None:
         if not hostkey_sha256 or not hostkey_sha256.startswith("SHA256:"):
             raise RemoteProbeError(
-                "empreinte de clé d'hôte requise (SSH-021 : pas de TOFU) — format 'SHA256:...'"
+                t("network.node_add.ssh_bootstrapper.empreinte_requise")
             )
         self._timeout = timeout_s
         self._hostkey_sha256 = hostkey_sha256
@@ -58,9 +59,10 @@ class SshBootstrapper:
                 proc = subprocess.run(cmd, env=env, timeout=self._timeout,
                                       capture_output=True, text=True)
                 if proc.returncode != 0:
-                    raise NodeAddError(f"ssh-copy-id échec: {redact_text(proc.stderr.strip())}")
+                    raise NodeAddError(t("network.node_add.install_key.ssh_copy_id_echec",
+                                          detail=redact_text(proc.stderr.strip())))
             except subprocess.TimeoutExpired as e:
-                raise NodeAddError(f"Timeout lors de l'installation de la clé: {e}") from e
+                raise NodeAddError(t("network.node_add.install_key.timeout", detail=e)) from e
         finally:
             if os.path.exists(kh):
                 os.unlink(kh)
@@ -97,9 +99,9 @@ def validate_ssh_target(ip: str, user: str) -> None:
     """Valide que `ip` et `user` sont des valeurs sûres pour l'argv SSH (jamais de tiret en
     tête = option ssh, ni espace/newline/métacaractère). Le message n'écho pas la charge."""
     if not _SSH_USER_RE.fullmatch(user):
-        raise NodeAddError("user SSH invalide")
+        raise NodeAddError(t("network.node_add.validate_ssh_target.user_invalide"))
     if not _SSH_HOST_RE.fullmatch(ip):
-        raise NodeAddError("ip SSH invalide")
+        raise NodeAddError(t("network.node_add.validate_ssh_target.ip_invalide"))
 
 
 def key_fingerprint(pubkey: Path, runner: CommandRunner) -> str:
@@ -107,7 +109,8 @@ def key_fingerprint(pubkey: Path, runner: CommandRunner) -> str:
     retcode, output = runner.run(["ssh-keygen", "-lf", str(pubkey)])
     match = re.search(r'SHA256:\S+', output)
     if not match:
-        raise NodeAddError(f"Impossible de trouver l'empreinte SHA256 dans la sortie: {redact_text(output)}")
+        raise NodeAddError(t("network.node_add.key_fingerprint.empreinte_introuvable",
+                              detail=redact_text(output)))
     return match.group(0)
 
 
@@ -128,7 +131,7 @@ def add_node(ip: str, user: str, passwd: str, *,
 
     # 2. Bascule immédiate sur l'authentification par clé
     if not bootstrapper.verify_key(ip, user, privkey):
-        raise NodeAddError("bascule clé échouée")
+        raise NodeAddError(t("network.node_add.add_node.bascule_echouee"))
 
     # 3. Empreinte de la clé publique
     fp = key_fingerprint(pubkey, runner)

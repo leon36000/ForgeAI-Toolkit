@@ -25,6 +25,7 @@ from forgeai.models._locking import (
 )
 
 from forgeai.core.redaction import redact_text
+from forgeai.i18n import t
 
 from .probe import ProbeResult, Transport, UrllibTransport, probe_route
 from .vault import Vault
@@ -143,14 +144,14 @@ class RouteStore:
 
     def resolve_base_url(self, provenance: str, base_url: str | None) -> str:
         if provenance not in PROVENANCES:
-            raise RouteError(f"provenance inconnue '{provenance}' "
-                             f"(connues : {', '.join(PROVENANCES)})")
+            raise RouteError(t("models.routes.resolve_base_url.provenance_inconnue",
+                                provenance=provenance, connues=', '.join(PROVENANCES)))
         known = PROVENANCES[provenance]
         if known:
             return known
         if not base_url:
-            raise RouteError(f"provenance '{provenance}' exige --base-url "
-                             f"(endpoint compatible OpenAI)")
+            raise RouteError(t("models.routes.resolve_base_url.base_url_requis",
+                                provenance=provenance))
         return base_url
 
     def add_cloud(self, name: str, provenance: str, model_id: str, api_key: str,
@@ -160,17 +161,18 @@ class RouteStore:
         with file_lock(self.transaction_lock_path):
             self._recover_pending_transaction_locked()
             if any(r["name"] == name for r in self._load()):
-                raise RouteError(f"route '{name}' existe déjà")
+                raise RouteError(t("models.routes.add_cloud.route_existe_deja", name=name))
         resolved = self.resolve_base_url(provenance, base_url)
         result = probe_route(resolved, model_id, api_key, transport or UrllibTransport())
         if not result.ok:
             # Aucune route cassée n'est ajoutée ; la clé n'a jamais touché le disque.
-            raise RouteError(f"test de connexion {result.light} : {result.detail}")
+            raise RouteError(t("models.routes.add_cloud.test_connexion_echec",
+                                light=result.light, detail=result.detail))
         with file_lock(self.transaction_lock_path):
             self._recover_pending_transaction_locked()
             routes = self._load()
             if any(r["name"] == name for r in routes):
-                raise RouteError(f"route '{name}' existe déjà")
+                raise RouteError(t("models.routes.add_cloud.route_existe_deja", name=name))
             previous_vault = self.vault._load()
             next_vault, fp = self.vault._with_secret(name, api_key, passphrase)
             route = CloudRoute(
@@ -204,18 +206,18 @@ class RouteStore:
             for r in self._load():
                 if r["name"] == name:
                     return self._route_from_dict(r)
-        raise RouteError(f"route '{name}' introuvable")
+        raise RouteError(t("models.routes.route_introuvable", name=name))
 
     def configure_cache(self, name: str, enabled: bool, ttl_s: int | None = None,
                         prefix: str | None = None) -> CloudRoute:
         if ttl_s is not None and ttl_s < 0:
-            raise RouteError("ttl_s doit être positif ou nul")
+            raise RouteError(t("models.routes.configure_cache.ttl_negatif"))
         with file_lock(self.transaction_lock_path):
             self._recover_pending_transaction_locked()
             routes = self._load()
             index = next((i for i, r in enumerate(routes) if r["name"] == name), None)
             if index is None:
-                raise RouteError(f"route '{name}' introuvable")
+                raise RouteError(t("models.routes.route_introuvable", name=name))
             old_route = self._route_from_dict(routes[index])
             new_route = replace(old_route, cache=enabled, cache_ttl_s=ttl_s,
                                 cache_prefix=prefix)

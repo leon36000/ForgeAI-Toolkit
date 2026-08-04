@@ -16,6 +16,7 @@ from pathlib import Path
 from forgeai.catalogue.loader import minimal_stack
 from forgeai.catalogue.supply import verify_brick_before_exec, load_catalog_index
 from forgeai.core.models import DeploymentPlan, ProbeType, RenderTarget, ServiceSpec
+from forgeai.i18n import t
 from forgeai.stacks import deploy_ids
 
 PREFERRED_PORT_OFFSET = 10000  # 11434 → 21434 : évite les stacks existantes
@@ -48,7 +49,7 @@ def _probe_type_de(definition: dict) -> "ProbeType | None":
     valeur = definition["probe_type"]
     if not isinstance(valeur, str):
         raise ValueError(
-            f"Valeur inconnue pour la cle 'probe_type': {valeur!r}"
+            t("planner.assemble.probe_type_de.valeur_inconnue", valeur=valeur)
         )
 
     nom = valeur.strip().upper()
@@ -56,7 +57,7 @@ def _probe_type_de(definition: dict) -> "ProbeType | None":
         return ProbeType[nom]
     except KeyError as exc:
         raise ValueError(
-            f"Valeur inconnue pour la cle 'probe_type': {valeur!r}"
+            t("planner.assemble.probe_type_de.valeur_inconnue", valeur=valeur)
         ) from exc
 
 
@@ -79,7 +80,7 @@ def find_free_port(preferred: int, is_free=port_is_free) -> int:
     for port in range(preferred, preferred + 200):
         if is_free(port):
             return port
-    raise RuntimeError(f"Aucun port libre entre {preferred} et {preferred + 200}")
+    raise RuntimeError(t("planner.assemble.aucun_port_libre", debut=preferred, fin=preferred + 200))
 
 
 def _next_chassis_port(used_ports: set[int], is_free=port_is_free) -> int:
@@ -89,7 +90,8 @@ def _next_chassis_port(used_ports: set[int], is_free=port_is_free) -> int:
             continue
         if is_free(port):
             return port
-    raise RuntimeError(f"Aucun port libre entre {CHASSIS_PORT_START} et {CHASSIS_PORT_START + 200}")
+    raise RuntimeError(t("planner.assemble.aucun_port_libre",
+                          debut=CHASSIS_PORT_START, fin=CHASSIS_PORT_START + 200))
 
 
 def _load_deploy_specs() -> dict[str, dict]:

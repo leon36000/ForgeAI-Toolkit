@@ -33,6 +33,13 @@ import time
 from collections.abc import Iterator
 from contextlib import contextmanager
 
+# NOTE i18n : PAS d'import de forgeai.i18n ici (délibéré). registre.py charge ce module via
+# importlib.util.spec_from_file_location en repli quand le paquet forgeai n'est pas installé
+# (exécution standalone, ex. gates.yml : `python3 scripts/registre.py verify ...` sans install
+# préalable) — un `from forgeai.i18n import t` en tête de module romprait CET import de repli
+# (ModuleNotFoundError au chargement, avant même d'atteindre un site raise()). Les 2 messages
+# français ci-dessous restent donc non traduits, volontairement, hors périmètre I18N-042.
+
 # ----------------------------------------------------------------------
 # Sélection du backend à l'import — aucune branche par appel (C1)
 # ----------------------------------------------------------------------

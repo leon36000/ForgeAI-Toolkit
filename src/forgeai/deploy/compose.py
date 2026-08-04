@@ -14,6 +14,7 @@ from pathlib import Path
 
 from forgeai.core.models import HealthState, ProbeType, ServiceSpec
 from forgeai.core.redaction import redact_text
+from forgeai.i18n import t
 
 
 class DeployError(Exception):
@@ -33,7 +34,7 @@ def compose_up(compose_file: Path, services: list[str] | None = None) -> None:
     service_healthy = coffre descellé, sinon interblocage au premier boot). None = tous les services."""
     proc = _compose(["up", "-d", *(services or [])], compose_file)
     if proc.returncode != 0:
-        raise DeployError(f"docker compose up a échoué :\n{redact_text(proc.stderr[-2000:])}")
+        raise DeployError(t("deploy.compose.compose_up.echec", detail=redact_text(proc.stderr[-2000:])))
 
 
 def compose_down(compose_file: Path, volumes: bool = False) -> None:
@@ -42,7 +43,7 @@ def compose_down(compose_file: Path, volumes: bool = False) -> None:
         args.append("-v")
     proc = _compose(args, compose_file)
     if proc.returncode != 0:
-        raise DeployError(f"docker compose down a échoué :\n{redact_text(proc.stderr[-2000:])}")
+        raise DeployError(t("deploy.compose.compose_down.echec", detail=redact_text(proc.stderr[-2000:])))
 
 
 def http_ok(url: str, timeout_s: float = 3.0) -> bool:
@@ -191,9 +192,8 @@ def wait_healthy(plan, timeout_s: float = 180.0, probe=None) -> dict:
         )
         if not exploitable:
             raise HealthContractError(
-                f"ERR_HEALTH_CONTRAT_ABSENT: service '{svc.name}' exige la santé "
-                f"mais n'a pas de contrat de sonde exploitable (probe_type={probe_type!r}, "
-                f"healthcheck_url={getattr(svc, 'healthcheck_url', None)!r})"
+                t("deploy.compose.wait_healthy.contrat_absent", name=svc.name,
+                  probe_type=probe_type, healthcheck_url=getattr(svc, 'healthcheck_url', None))
             )
 
     deadline = time.monotonic() + timeout_s
@@ -247,11 +247,11 @@ def wait_healthy(plan, timeout_s: float = 180.0, probe=None) -> dict:
             return {nom: _etiquette_publique(etat) for nom, etat in verdicts.items()}
 
         if time.monotonic() >= deadline:
-            details = ", ".join(f"{n}={v.value}" for n, v in verdicts.items()) or "<vide>"
+            details = ", ".join(f"{n}={v.value}" for n, v in verdicts.items()) or t("deploy.compose.wait_healthy.details_vide")
             etats = {nom: _etiquette_publique(etat) for nom, etat in verdicts.items()}
             raise DeployError(
-                f"Déploiement non READY (verdict={global_verdict.value}) après {timeout_s}s. "
-                f"États par service: {etats} (détail: {details})"
+                t("deploy.compose.wait_healthy.non_ready", verdict=global_verdict.value,
+                  timeout_s=timeout_s, etats=etats, details=details)
             )
 
         time.sleep(2)

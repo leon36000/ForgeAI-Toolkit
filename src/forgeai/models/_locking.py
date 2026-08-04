@@ -8,6 +8,7 @@ from contextlib import contextmanager
 from pathlib import Path
 
 from forgeai.core._portable_lock import acquire_exclusive, release_exclusive
+from forgeai.i18n import t
 
 MODELS_TRANSACTION_LOCK = ".models-transaction"
 MODELS_TRANSACTION_JOURNAL = ".models-transaction.json"
@@ -24,7 +25,7 @@ def file_lock(path: Path):
     except FileNotFoundError:
         existing = None
     if existing is not None and not stat.S_ISREG(existing.st_mode):
-        raise OSError(f"le verrou n'est pas un fichier régulier: {lock_path}")
+        raise OSError(t("models.locking.file_lock.verrou_non_regulier", lock_path=lock_path))
 
     flags = os.O_RDWR | os.O_CREAT
     flags |= getattr(os, "O_CLOEXEC", 0)
@@ -33,7 +34,7 @@ def file_lock(path: Path):
     locked = False
     try:
         if not stat.S_ISREG(os.fstat(descriptor).st_mode):
-            raise OSError(f"le verrou n'est pas un fichier régulier: {lock_path}")
+            raise OSError(t("models.locking.file_lock.verrou_non_regulier", lock_path=lock_path))
         acquire_exclusive(descriptor)
         locked = True
         yield
@@ -98,7 +99,7 @@ def _journal_vault_path(home: Path, snapshot: dict) -> Path:
     """Retourne le nom canonique lexical sans suivre un éventuel symlink injecté."""
     vault_name = snapshot.get("vault_name", "vault.json")
     if vault_name != "vault.json":
-        raise ValueError("identité de coffre invalide dans le journal")
+        raise ValueError(t("models.locking.journal_vault_path.identite_invalide"))
     return Path(os.path.abspath(Path(home) / vault_name))
 
 
@@ -131,7 +132,7 @@ def restore_models_transaction_locked(
     if not _paths_identify_same_file(
         requested_vault_path, canonical_vault_path
     ):
-        raise ValueError("le coffre demandé ne correspond pas au journal")
+        raise ValueError(t("models.locking.restore_models_transaction_locked.coffre_ne_correspond_pas"))
     routes_path = home / "routes.json"
     journal_path = home / MODELS_TRANSACTION_JOURNAL
     rollback_error: Exception | None = None

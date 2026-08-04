@@ -13,6 +13,7 @@ import urllib.error
 import urllib.request
 from dataclasses import dataclass
 
+from forgeai.i18n import t
 from forgeai.models.budget import BudgetTracker, extraire_tokens
 
 from forgeai.guardrails.io_guard import (
@@ -61,7 +62,7 @@ class HardenedRagClient(RagClient):
 
     def __post_init__(self) -> None:
         if not self.tei_url or not self.gateway_url or not self.gateway_key:
-            raise ValueError("tei_url, gateway_url et gateway_key sont obligatoires")
+            raise ValueError(t("rag.hardened.post_init.champs_obligatoires"))
 
     def _embed(self, texts: list[str]) -> list[list[float]]:
         """POST TEI /embed {'inputs': [...]} -> liste BRUTE de vecteurs (un par entrée)."""

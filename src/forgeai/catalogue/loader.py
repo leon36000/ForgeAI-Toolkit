@@ -14,6 +14,7 @@ import re
 from pathlib import Path
 
 from forgeai.core.models import Brick
+from forgeai.i18n import t
 
 
 class CatalogueError(Exception):
@@ -27,7 +28,7 @@ def verify_catalogue(path: Path) -> str:
     recorded = path.with_suffix(".sha256").read_text(encoding="utf-8").strip()
     if digest != recorded:
         raise CatalogueError(
-            f"Empreinte catalogue invalide : {digest} ≠ {recorded} (fichier altéré)")
+            t("catalogue.loader.verify_catalogue.empreinte_invalide", digest=digest, recorded=recorded))
     return digest
 
 
@@ -54,11 +55,12 @@ def minimal_stack(deploy_path: Path) -> list[dict]:
     data = json.loads(deploy_path.read_text(encoding="utf-8"))
     services = data["services"]
     if not services:
-        raise CatalogueError("Overlay de déploiement vide")
+        raise CatalogueError(t("catalogue.loader.minimal_stack.overlay_vide"))
     for svc in services:
         missing = {"name", "image", "container_port"} - set(svc)
         if missing:
-            raise CatalogueError(f"Service {svc.get('name', '?')} : champs manquants {missing}")
+            raise CatalogueError(t("catalogue.loader.minimal_stack.champs_manquants",
+                                    name=svc.get('name', '?'), missing=missing))
     return services
 
 

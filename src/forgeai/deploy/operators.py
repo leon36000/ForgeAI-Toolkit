@@ -14,6 +14,7 @@ import json
 from dataclasses import dataclass
 
 from forgeai.core.runner import CommandRunner
+from forgeai.i18n import t
 
 
 @dataclass(frozen=True)
@@ -81,7 +82,7 @@ def install_argv(name: str) -> list[list[str]]:
 def plan(name: str, runner: CommandRunner) -> dict:
     """Décision Discovery/Adoption : présent -> ADOPTER (aucune commande) ; absent -> installer."""
     if name not in OPERATORS:
-        raise KeyError(f"opérateur inconnu : {name} (connus : {sorted(OPERATORS)})")
+        raise KeyError(t("deploy.operators.plan.operateur_inconnu", name=name, connus=sorted(OPERATORS)))
     status = detect(name, runner)
     if status.present:
         return {"action": "adopt", "status": status, "commands": []}

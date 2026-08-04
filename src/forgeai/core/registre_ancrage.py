@@ -12,6 +12,8 @@ from __future__ import annotations
 
 import hmac
 
+from forgeai.i18n import t
+
 BASE_VERSION = 1
 
 
@@ -127,8 +129,7 @@ def checkpoint_de(entrees: list[dict], registre: str) -> dict:
     """
     if not entrees:
         raise ValueError(
-            "impossible de creer un checkpoint sur un registre vide : "
-            "un ancrage-de-rien est interdit"
+            t("core.registre_ancrage.checkpoint_de.registre_vide")
         )
 
     derniere = entrees[-1]

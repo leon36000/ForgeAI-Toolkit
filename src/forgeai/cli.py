@@ -93,7 +93,7 @@ def _node_type(value: str) -> str:
         return value
     if not _NODE_RE.match(value):
         raise argparse.ArgumentTypeError(
-            f"node invalide : '{value}' (attendu 'local', 'auto' ou un hostname minuscule)"
+            t("cli.node_type.invalide", value=value)
         )
     return value
 
@@ -917,15 +917,14 @@ def _read_secret(env_var: str | None, prompt: str) -> str:
     if env_var:
         value = os.environ.get(env_var, "")
         if not value:
-            raise RouteError(f"variable d'environnement '{env_var}' vide ou absente")
+            raise RouteError(t("cli.read_secret.env_var_vide", env_var=env_var))
         return value
     import getpass
     try:
         return getpass.getpass(prompt)
     except EOFError:  # proof:allow (message d'erreur, aucune valeur secrète)
         raise RouteError(
-            "aucune source disponible pour lire ce champ : ni variable "  # proof:allow
-            "d'environnement (--*-env) ni terminal interactif"
+            t("cli.read_secret.aucune_source")  # proof:allow
         )
 
 

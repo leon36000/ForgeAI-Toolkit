@@ -9,6 +9,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, Tuple
 
+from forgeai.i18n import t
 from forgeai.models._locking import file_lock, atomic_write_text
 
 
@@ -162,9 +163,9 @@ class BudgetTracker:
             try:
                 data = json.load(fh)
             except json.JSONDecodeError:
-                raise BudgetError(f"budgets.json corrompu : {self._path}")
+                raise BudgetError(t("models.budget.load.corrompu", chemin=self._path))
         if not isinstance(data, dict):
-            raise BudgetError(f"budgets.json corrompu (structure inattendue) : {self._path}")
+            raise BudgetError(t("models.budget.load.structure_inattendue", chemin=self._path))
         return data
 
     def _save(self, data: Dict[str, Dict[str, Any]]) -> None:
@@ -185,9 +186,9 @@ class BudgetTracker:
             BudgetError: Si les paramètres sont invalides.
         """
         if quota_tokens < 0:
-            raise BudgetError("Le quota de tokens doit être positif ou nul.")
+            raise BudgetError(t("models.budget.set_budget.quota_negatif"))
         if not (0 < alert_ratio <= 1):
-            raise BudgetError("alert_ratio doit être dans l'intervalle ]0, 1]")
+            raise BudgetError(t("models.budget.set_budget.alert_ratio_hors_intervalle"))
 
         with file_lock(self._lock_path):
             data = self._load()
@@ -230,21 +231,21 @@ class BudgetTracker:
             BudgetError: Si l'agent est inconnu ou si tokens est négatif.
         """
         if exact and motif is not None:
-            raise ValueError("motif doit être None quand exact=True")
+            raise ValueError(t("models.budget.record.motif_doit_etre_none"))
         if not exact:
             if motif is None:
-                raise ValueError("motif est obligatoire quand exact=False")
+                raise ValueError(t("models.budget.record.motif_obligatoire"))
             if tokens != 0:
                 raise ValueError(
-                    "exact=False exige tokens=0 (aucune estimation inventée)"
+                    t("models.budget.record.exact_false_exige_tokens_zero")
                 )
         if tokens < 0:
-            raise BudgetError("La consommation de tokens ne peut pas être négative.")
+            raise BudgetError(t("models.budget.record.consommation_negative"))
 
         with file_lock(self._lock_path):
             data = self._load()
             if agent not in data:
-                raise BudgetError(f"Agent inconnu : {agent}")
+                raise BudgetError(t("models.budget.agent_inconnu", agent=agent))
             if exact:
                 data[agent]["used_tokens"] += int(tokens)
                 self._save(data)
@@ -279,7 +280,7 @@ class BudgetTracker:
         with file_lock(self._lock_path):
             data = self._load()
             if agent not in data:
-                raise BudgetError(f"Agent inconnu : {agent}")
+                raise BudgetError(t("models.budget.agent_inconnu", agent=agent))
             entry = data[agent]
             return BudgetState(
                 agent=agent,
@@ -329,7 +330,7 @@ class BudgetTracker:
         with file_lock(self._lock_path):
             data = self._load()
             if agent not in data:
-                raise BudgetError(f"Agent inconnu : {agent}")
+                raise BudgetError(t("models.budget.agent_inconnu", agent=agent))
             entry = data[agent]
             state = BudgetState(
                 agent=agent,
@@ -339,6 +340,6 @@ class BudgetTracker:
             )
             if state.etat == "COUPURE":
                 raise QuotaAtteint(
-                    f"COUPURE: agent '{agent}' a dépassé son budget "
-                    f"({state.used_tokens}/{state.quota_tokens} tokens)"
+                    t("models.budget.check.coupure", agent=agent,
+                      used=state.used_tokens, quota=state.quota_tokens)
                 )

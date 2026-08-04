@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from . import IDEError, IdeConfig
+from forgeai.i18n import t
 import json
 
 MCP_CAPABLE = ("claude-code", "cline", "cursor", "opencode")
@@ -12,7 +13,7 @@ class McpServer:
 
     def __post_init__(self):
         if self.transport not in ("http", "sse"):
-            raise IDEError(f"transport MCP invalide: {self.transport} (attendu http ou sse)")
+            raise IDEError(t("ide.bootstrap.mcp_server.transport_invalide", transport=self.transport))
 
 @dataclass(frozen=True)
 class HookSpec:
@@ -37,22 +38,22 @@ class HookSpec:
         # O3 : le message d'erreur inclut le type reçu pour faciliter le diagnostic.
         if not isinstance(self.event, str):
             raise IDEError(
-                f"HookSpec: 'event' doit être str, reçu {type(self.event).__name__}"
+                t("ide.bootstrap.hook_spec.event_type_invalide", type_recu=type(self.event).__name__)
             )
         if not isinstance(self.command, str):
             raise IDEError(
-                f"HookSpec: 'command' doit être str, reçu {type(self.command).__name__}"
+                t("ide.bootstrap.hook_spec.command_type_invalide", type_recu=type(self.command).__name__)
             )
         if not isinstance(self.matcher, str):
             raise IDEError(
-                f"HookSpec: 'matcher' doit être str, reçu {type(self.matcher).__name__}"
+                t("ide.bootstrap.hook_spec.matcher_type_invalide", type_recu=type(self.matcher).__name__)
             )
         if not self.event.strip():
-            raise IDEError("HookSpec: 'event' vide ou whitespace-only")
+            raise IDEError(t("ide.bootstrap.hook_spec.event_vide"))
         if not self.command.strip():
-            raise IDEError("HookSpec: 'command' vide ou whitespace-only")
+            raise IDEError(t("ide.bootstrap.hook_spec.command_vide"))
         if not self.matcher.strip():
-            raise IDEError("HookSpec: 'matcher' vide ou whitespace-only")
+            raise IDEError(t("ide.bootstrap.hook_spec.matcher_vide"))
 
 
 def _normalize_hook(item):
@@ -69,7 +70,7 @@ def _normalize_hook(item):
     if isinstance(item, str):
         if not item or not item.strip():
             # O4 : durcissement VOLONTAIRE — chaîne vide / whitespace-only rejetée.
-            raise IDEError("hook str vide ou whitespace-only")
+            raise IDEError(t("ide.bootstrap.normalize_hook.str_vide"))
         return HookSpec(event=item, command=item, matcher="*")
 
     # Cas HookSpec : on revérifie les trois champs (le contournement
@@ -77,25 +78,25 @@ def _normalize_hook(item):
     if isinstance(item, HookSpec):
         if not isinstance(item.event, str) or not item.event.strip():
             raise IDEError(
-                f"HookSpec: 'event' invalide à l'usage (type={type(item.event).__name__})"
+                t("ide.bootstrap.normalize_hook.event_invalide_usage", type_recu=type(item.event).__name__)
             )
         if not isinstance(item.command, str) or not item.command.strip():
             raise IDEError(
-                f"HookSpec: 'command' invalide à l'usage (type={type(item.command).__name__})"
+                t("ide.bootstrap.normalize_hook.command_invalide_usage", type_recu=type(item.command).__name__)
             )
         if not isinstance(item.matcher, str) or not item.matcher.strip():
             raise IDEError(
-                f"HookSpec: 'matcher' invalide à l'usage (type={type(item.matcher).__name__})"
+                t("ide.bootstrap.normalize_hook.matcher_invalide_usage", type_recu=type(item.matcher).__name__)
             )
         return item
 
-    raise IDEError(f"type de hook invalide: {type(item).__name__}")
+    raise IDEError(t("ide.bootstrap.normalize_hook.type_invalide", type_recu=type(item).__name__))
 
 def generate_mcp_config(ide: str, servers: list[McpServer]) -> IdeConfig:
     if ide not in MCP_CAPABLE:
-        raise IDEError(f"IDE '{ide}' ne supporte pas la configuration MCP")
+        raise IDEError(t("ide.bootstrap.generate_mcp_config.ide_non_mcp_capable", ide=ide))
     if not servers:
-        raise IDEError("aucun serveur MCP fourni")
+        raise IDEError(t("ide.bootstrap.generate_mcp_config.aucun_serveur"))
 
     if ide in ("claude-code", "cline"):
         servers_dict = {
@@ -117,7 +118,7 @@ def generate_mcp_config(ide: str, servers: list[McpServer]) -> IdeConfig:
         path = "opencode.json"
     else:
         # safety, already checked
-        raise IDEError(f"IDE '{ide}' non supporté")
+        raise IDEError(t("ide.bootstrap.generate_mcp_config.ide_non_supporte", ide=ide))
 
     content_str = json.dumps(content, ensure_ascii=False, indent=1)
     return IdeConfig(ide=ide, path=path, content=content_str, fmt="json")
@@ -145,7 +146,7 @@ def generate_governance_config(skills: list[str], hooks: list[str | HookSpec], *
       distincts sur le même event restent agrégés.
     """
     if ide != "claude-code":
-        raise IDEError("governance skills+hooks n'est supportée que pour claude-code")
+        raise IDEError(t("ide.bootstrap.generate_governance_config.ide_non_supporte"))
     # Build permissions.allow from skills
     permissions = {"allow": skills}
     # Build hooks: each hook becomes a key with a list of one matcher rule

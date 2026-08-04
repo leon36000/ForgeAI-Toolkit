@@ -2,6 +2,8 @@
 from dataclasses import dataclass
 from typing import Callable, Optional
 
+from forgeai.i18n import t
+
 
 class LoopError(Exception):
     """Raised when loop parameters are invalid."""
@@ -40,7 +42,7 @@ def run_loop(
         LoopError: If max_iterations < 1.
     """
     if max_iterations < 1:
-        raise LoopError("max_iterations doit être >= 1")
+        raise LoopError(t("loop.run_loop.max_iterations_invalide"))
 
     for i in range(1, max_iterations + 1):
         step(i)

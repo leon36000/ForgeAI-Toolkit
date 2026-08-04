@@ -4,6 +4,8 @@ import json
 from dataclasses import dataclass
 from pathlib import Path
 
+from forgeai.i18n import t
+
 SUPPORTED_IDES = ("aider", "claude-code", "cline", "cursor", "opencode")
 
 class IDEError(Exception):
@@ -45,7 +47,7 @@ def generate_ide_config(
         IDEError si l'IDE n'est pas supporté.
     """
     if ide not in SUPPORTED_IDES:
-        raise IDEError(f"IDE '{ide}' non supporté. IDEs supportés : {', '.join(SUPPORTED_IDES)}")
+        raise IDEError(t("ide.ide_non_supporte", ide=ide, supportes=', '.join(SUPPORTED_IDES)))
 
     if ide == "aider":
         path = ".aider.conf.yml"
