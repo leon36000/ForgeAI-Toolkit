@@ -15,7 +15,7 @@
     {
       "id": "ORCH-001",
       "title": "Installer le plan de contrôle multi-IDE et les garde-fous anti-collision",
-      "status": "READY",
+      "status": "COMPLETED",
       "priority": "P0_BLOCKER",
       "severity": "S1_HIGH",
       "ide": "COPILOT",
@@ -58,7 +58,7 @@
     {
       "id": "WEB-001",
       "title": "Rendre l’authentification Web fail-closed sur toute écoute non-loopback",
-      "status": "EXTERNAL",
+      "status": "COMPLETED",
       "ide": "CLAUDE_CODE",
       "source_ide": "CODEX",
       "exclusive_lane": "",
@@ -72,7 +72,7 @@
     {
       "id": "DATA-002",
       "title": "Rendre RouteStore transactionnel, verrouillé et atomique",
-      "status": "EXTERNAL",
+      "status": "COMPLETED",
       "ide": "CLAUDE_CODE",
       "source_ide": "CODEX",
       "exclusive_lane": "",
@@ -107,7 +107,7 @@
     {
       "id": "DATA-003",
       "title": "Créer un writer sécurisé commun et atomique pour les secrets OpenBao",
-      "status": "EXTERNAL",
+      "status": "COMPLETED",
       "ide": "CLAUDE_CODE",
       "source_ide": "CODEX",
       "exclusive_lane": "",
@@ -121,7 +121,7 @@
     {
       "id": "RAG-004A",
       "title": "ADR: définir le contrat de groundedness et ses états vérifiables",
-      "status": "EXTERNAL",
+      "status": "COMPLETED",
       "ide": "CLAUDE_CODE",
       "source_ide": "CLAUDE_CODE",
       "exclusive_lane": "",
@@ -134,7 +134,7 @@
     {
       "id": "RAG-005",
       "title": "Scanner les documents ingérés et le contexte récupéré contre l’injection indirecte",
-      "status": "EXTERNAL",
+      "status": "COMPLETED",
       "ide": "CLAUDE_CODE",
       "source_ide": "CLAUDE_CODE",
       "exclusive_lane": "",
@@ -147,7 +147,7 @@
     {
       "id": "RAG-004B",
       "title": "Appliquer le contrat de groundedness au runtime et aux évaluations",
-      "status": "EXTERNAL",
+      "status": "COMPLETED",
       "ide": "CLAUDE_CODE",
       "source_ide": "CLAUDE_CODE",
       "exclusive_lane": "",
@@ -206,7 +206,7 @@
     {
       "id": "K8S-008",
       "title": "Supprimer les pods AMD/Intel privilégiés et formaliser les devices minimaux",
-      "status": "EXTERNAL",
+      "status": "COMPLETED",
       "ide": "CLAUDE_CODE",
       "source_ide": "CLAUDE_CODE",
       "exclusive_lane": "",
@@ -219,7 +219,7 @@
     {
       "id": "K8S-022",
       "title": "Appliquer un securityContext Restricted par défaut avec exceptions prouvées",
-      "status": "EXTERNAL",
+      "status": "COMPLETED",
       "ide": "CLAUDE_CODE",
       "source_ide": "CLAUDE_CODE",
       "exclusive_lane": "",
@@ -232,7 +232,7 @@
     {
       "id": "K8S-024",
       "title": "Étiqueter les namespaces avec Pod Security Admission",
-      "status": "EXTERNAL",
+      "status": "COMPLETED",
       "ide": "CLAUDE_CODE",
       "source_ide": "CLAUDE_CODE",
       "exclusive_lane": "",
@@ -245,7 +245,7 @@
     {
       "id": "K8S-023",
       "title": "Construire un vrai default-deny ingress/egress avec allowlists",
-      "status": "EXTERNAL",
+      "status": "COMPLETED",
       "ide": "CLAUDE_CODE",
       "source_ide": "CLAUDE_CODE",
       "exclusive_lane": "",
@@ -258,7 +258,7 @@
     {
       "id": "RES-012A",
       "title": "Définir un schéma de ressources par service et profil",
-      "status": "EXTERNAL",
+      "status": "COMPLETED",
       "ide": "CLAUDE_CODE",
       "source_ide": "CLAUDE_CODE",
       "exclusive_lane": "",
@@ -271,7 +271,7 @@
     {
       "id": "RES-012B",
       "title": "Rendre les ressources K3s depuis le schéma validé",
-      "status": "EXTERNAL",
+      "status": "COMPLETED",
       "ide": "CLAUDE_CODE",
       "source_ide": "CLAUDE_CODE",
       "exclusive_lane": "",
@@ -285,7 +285,7 @@
     {
       "id": "PLACE-011",
       "title": "Valider le placement contre l’inventaire réel avant rendu",
-      "status": "EXTERNAL",
+      "status": "COMPLETED",
       "ide": "CLAUDE_CODE",
       "source_ide": "CLAUDE_CODE",
       "exclusive_lane": "",
@@ -298,7 +298,7 @@
     {
       "id": "PLACE-026A",
       "title": "Peupler ServiceSpec.node depuis les choix du planificateur",
-      "status": "EXTERNAL",
+      "status": "COMPLETED",
       "ide": "CLAUDE_CODE",
       "source_ide": "CLAUDE_CODE",
       "exclusive_lane": "",
@@ -311,7 +311,7 @@
     {
       "id": "PLACE-026B",
       "title": "Appliquer le placement par service au rendu et aux diagnostics",
-      "status": "EXTERNAL",
+      "status": "COMPLETED",
       "ide": "CLAUDE_CODE",
       "source_ide": "CLAUDE_CODE",
       "exclusive_lane": "",
@@ -325,7 +325,7 @@
     {
       "id": "K8S-027",
       "title": "Ajouter ResourceQuota et LimitRange au namespace",
-      "status": "EXTERNAL",
+      "status": "COMPLETED",
       "ide": "CLAUDE_CODE",
       "source_ide": "CLAUDE_CODE",
       "exclusive_lane": "",
@@ -622,7 +622,7 @@
     {
       "id": "HW-009",
       "title": "Classer les iGPU par identifiants PCI et mémoire utilisable",
-      "status": "EXTERNAL",
+      "status": "COMPLETED",
       "ide": "CLAUDE_CODE",
       "source_ide": "CLAUDE_CODE",
       "exclusive_lane": "",
@@ -635,7 +635,7 @@
     {
       "id": "HW-010",
       "title": "Conserver la présence NVIDIA lorsque nvidia-smi/NVML échoue",
-      "status": "EXTERNAL",
+      "status": "COMPLETED",
       "ide": "CLAUDE_CODE",
       "source_ide": "CLAUDE_CODE",
       "exclusive_lane": "",
@@ -648,7 +648,7 @@
     {
       "id": "HW-037",
       "title": "Aligner la recommandation AMD/ROCm et supprimer le message mort",
-      "status": "EXTERNAL",
+      "status": "COMPLETED",
       "ide": "CLAUDE_CODE",
       "source_ide": "CLAUDE_CODE",
       "exclusive_lane": "",
@@ -662,7 +662,7 @@
     {
       "id": "COMPOSE-025",
       "title": "Durcir les services Compose par défaut",
-      "status": "EXTERNAL",
+      "status": "COMPLETED",
       "ide": "CLAUDE_CODE",
       "source_ide": "CLAUDE_CODE",
       "exclusive_lane": "",
@@ -675,7 +675,7 @@
     {
       "id": "HEALTH-028A",
       "title": "Définir un contrat de santé non-vacu par service",
-      "status": "EXTERNAL",
+      "status": "COMPLETED",
       "ide": "CLAUDE_CODE",
       "source_ide": "CLAUDE_CODE",
       "exclusive_lane": "",
@@ -688,7 +688,7 @@
     {
       "id": "HEALTH-028B",
       "title": "Rendre et exécuter les probes fonctionnelles Compose/K3s",
-      "status": "EXTERNAL",
+      "status": "COMPLETED",
       "ide": "CLAUDE_CODE",
       "source_ide": "CLAUDE_CODE",
       "exclusive_lane": "",
@@ -747,7 +747,7 @@
     {
       "id": "TRUST-019A",
       "title": "ADR: définir le modèle de menace et la racine de confiance des registres",
-      "status": "DESIGN_FIRST",
+      "status": "COMPLETED",
       "priority": "P2_HIGH",
       "severity": "S2_MEDIUM",
       "ide": "COPILOT",
@@ -783,7 +783,7 @@
     {
       "id": "TRUST-019B",
       "title": "Implémenter signatures/checkpoints selon l’ADR de confiance",
-      "status": "EXTERNAL",
+      "status": "COMPLETED",
       "ide": "CLAUDE_CODE",
       "source_ide": "CLAUDE_CODE",
       "exclusive_lane": "",
@@ -796,7 +796,7 @@
     {
       "id": "SECRET-020A",
       "title": "ADR T3: modèle de permission et unseal OpenBao",
-      "status": "DESIGN_FIRST",
+      "status": "COMPLETED",
       "priority": "P2_HIGH",
       "severity": "S2_MEDIUM",
       "ide": "COPILOT",
@@ -832,7 +832,7 @@
     {
       "id": "SECRET-020B",
       "title": "Appliquer le modèle de permission OpenBao approuvé",
-      "status": "EXTERNAL",
+      "status": "COMPLETED",
       "ide": "CLAUDE_CODE",
       "source_ide": "CLAUDE_CODE",
       "exclusive_lane": "",
@@ -875,7 +875,7 @@
     {
       "id": "UI-039",
       "title": "Rendre les étapes UI basées sur des preuves, jamais sur la position",
-      "status": "READY_AFTER",
+      "status": "COMPLETED",
       "priority": "P3_MEDIUM",
       "severity": "S3_LOW",
       "ide": "COPILOT",
@@ -912,7 +912,7 @@
     {
       "id": "UI-040",
       "title": "Compléter l’accessibilité de l’interface Web",
-      "status": "READY_AFTER",
+      "status": "COMPLETED",
       "priority": "P3_MEDIUM",
       "severity": "S3_LOW",
       "ide": "COPILOT",
@@ -992,7 +992,7 @@
     {
       "id": "LAB-033N",
       "title": "Qualifier le chemin NVIDIA de bout en bout en laboratoire",
-      "status": "EXTERNAL",
+      "status": "COMPLETED",
       "ide": "CLAUDE_CODE",
       "source_ide": "CLAUDE_CODE",
       "exclusive_lane": "",
@@ -1005,7 +1005,7 @@
     {
       "id": "LAB-033A",
       "title": "Qualifier le chemin AMD de bout en bout en laboratoire",
-      "status": "EXTERNAL",
+      "status": "COMPLETED",
       "ide": "CLAUDE_CODE",
       "source_ide": "CLAUDE_CODE",
       "exclusive_lane": "",
@@ -1018,7 +1018,7 @@
     {
       "id": "LAB-033I",
       "title": "Qualifier le chemin Intel de bout en bout en laboratoire",
-      "status": "EXTERNAL",
+      "status": "COMPLETED",
       "ide": "CLAUDE_CODE",
       "source_ide": "CLAUDE_CODE",
       "exclusive_lane": "",
@@ -1073,7 +1073,7 @@
     {
       "id": "SAST-042",
       "title": "Trier les signaux SAST résiduels sans créer un patch omnibus",
-      "status": "TRIAGE_ONLY",
+      "status": "COMPLETED",
       "priority": "P4_LOW",
       "severity": "S3_LOW",
       "ide": "COPILOT",
@@ -1109,7 +1109,7 @@
     {
       "id": "OPT-002",
       "title": "Borner les sondes du chemin web (timeout de requête)",
-      "status": "EXTERNAL",
+      "status": "COMPLETED",
       "ide": "CLAUDE_CODE",
       "source_ide": "CLAUDE_CODE",
       "exclusive_lane": "",
@@ -1120,7 +1120,7 @@
     {
       "id": "OPT-001",
       "title": "Mémoïser les sondes matérielles et backends du serveur web",
-      "status": "EXTERNAL",
+      "status": "COMPLETED",
       "ide": "CLAUDE_CODE",
       "source_ide": "CLAUDE_CODE",
       "exclusive_lane": "",
@@ -1171,7 +1171,7 @@
     {
       "id": "GPU-034",
       "title": "Corriger le seuil VRAM 8192 et rendre visible le contournement de HW-010",
-      "status": "EXTERNAL",
+      "status": "COMPLETED",
       "ide": "CLAUDE_CODE",
       "source_ide": "CLAUDE_CODE",
       "exclusive_lane": "",
