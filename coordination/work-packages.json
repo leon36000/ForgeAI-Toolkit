@@ -950,7 +950,7 @@
     {
       "id": "CAP-033A",
       "title": "Aligner les claims GPU sur les preuves réellement disponibles",
-      "status": "READY_AFTER",
+      "status": "completed",
       "priority": "P2_HIGH",
       "severity": "S2_MEDIUM",
       "ide": "COPILOT",
@@ -985,7 +985,9 @@
         "type:capability-gap",
         "lane:capability-docs"
       ],
-      "notes": []
+      "notes": [
+        "Statut aligné sur completed.json : PR #294 (merge_commit 7d72398) déjà fusionnée et archivée, issue GitHub #281 CLOSED. work-packages.json était resté à READY_AFTER par dérive de tenue de registre."
+      ]
     },
     {
       "id": "LAB-033N",
