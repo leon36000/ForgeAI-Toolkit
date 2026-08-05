@@ -1,0 +1,29 @@
+blobs inventories : 1564
+blobs assignes    : 1564
+
+  INVARIANT 1 (orphelins               ) : OK
+  INVARIANT 2 (fantomes                ) : OK
+  INVARIANT 3 (doublons de propriete   ) : OK
+  INVARIANT 4 (analyse manquante       ) : OK
+  INVARIANT 5 (EXCLU sans raison       ) : OK
+
+REPARTITION PAR LOT PROPRIETAIRE :
+   L03 :     4
+   L05 :    62
+   L06 :    16
+   L07 :     3
+   L08 :    18
+   L09 :    37
+   L10 :  1016
+   L14 :   187
+   L15 :   171
+   L16 :     8
+   L18 :    42
+
+REPARTITION PAR METHODE :
+   EXCLU    :     3
+   LECTURE  :   237
+   SCAN     :   313
+   SCRIPT   :  1080
+
+=== CRITERE S1 : SATISFAIT (exit 0)

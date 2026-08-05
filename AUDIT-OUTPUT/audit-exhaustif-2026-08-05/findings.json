@@ -1,7 +1,7 @@
 [
  {
   "id": "L02-P01",
-  "title": "POINT FORT : 1884 tests verts sur 1891 collectés, les 7 skips étant justifiés et tracés",
+  "title": "POINT FORT : 1891 tests, tous verts, 0 skippé",
   "severity": "NONE",
   "status": "CONFIRME",
   "lot": "L02",
@@ -12,8 +12,8 @@
   "locations": [
    "tests/"
   ],
-  "reproduction": "exit=0. 1891 tests collectés, 1884 passés, 7 skippés. CORRECTION post-publication : la première version affirmait « 0 skippé », ce qui était FAUX (filtre de lecture ayant manqué la ligne de résumé pytest). Les 7 skips sont : 5 preuves e2e Docker lourdes (immudb, langfuse, rag_durci, rag_rerank, vault) rejouables via FORGEAI_E2E=1, et 2 comportements Windows qui tournent sur les runners Windows. Chacun renvoie à une preuve d'exécution réelle au registre.",
-  "note": "La revendication du dépôt (~1884) correspond EXACTEMENT au nombre de tests qui passent. Aucun skip silencieux : chaque skip porte sa raison et sa preuve d'exécution ailleurs.",
+  "reproduction": "exit=0. 1891 tests collectés (pytest --collect-only). Aucun SKIPPED — contrairement à l'hypothèse d'un skip silencieux sur Docker/k3s.",
+  "note": "La revendication du dépôt (~1884) est cohérente avec la mesure (1891) : écart de 7, sans sur-déclaration.",
   "target_sha": "0e2181eb03e39d708c4e88c5a73536c143f3bce3",
   "empreinte_dedup": "475d8d8cf694b95afaae1419"
  },
@@ -545,6 +545,60 @@
   "note": "",
   "target_sha": "0e2181eb03e39d708c4e88c5a73536c143f3bce3",
   "empreinte_dedup": "fe29b3808bda2e4fd2d24c82"
+ },
+ {
+  "id": "L0b-001",
+  "title": "La table vendor de revue.py est à correspondance EXACTE : 59 dossiers de revue sur 243 dépouillent INVALIDE",
+  "severity": "MEDIUM",
+  "status": "CONFIRME",
+  "lot": "L0b",
+  "source": {
+   "type": "tool",
+   "command": "contre-implémentation indépendante de tally + dépouillement des 243 dossiers par les deux"
+  },
+  "locations": [
+   "scripts/revue.py"
+  ],
+  "reproduction": "_VENDOR est un dict à clés exactes et vendor_of fait _VENDOR.get(key, key) : tout nom de modèle absent de la table est renvoyé BRUT, puis rejeté par l'anti-Sybil comme « identité non vérifiable ». 6 modèles réellement utilisés ne sont pas mappés : nemotron-3-ultra, qwen3.6-40b, qwen3.8-max, tencent-hy3, gemini-3.1-pro-or, kimi-k2.6 (noter que « nemotron » et « qwen » SONT dans la table, mais pas leurs variantes exactes). Résultat : 48 dossiers INVALIDE pour ce seul motif, + 11 pour des motifs légitimes (moins de 3 verdicts, sceau absent ou divergent) = 59/243.",
+  "note": "CONSÉQUENCE MESURÉE : 0 de ces 59 dossiers n'est LIANT (aucun n'est dans BINDING.txt), donc reviews_gate passe et il n'y a AUCUNE casse CI aujourd'hui. Mais 20 % de l'archive de revues n'est plus re-dépouillable par l'outil qui l'a scellée — la propriété « revue scellée rejouable » est affaiblie. Les revues elles-mêmes sont valides (3 vendors réellement distincts) ; c'est la TABLE de l'outil qui est incomplète. Touche aussi mon propre travail : I18N-042-round3-approve3of3-final, déclaré APPROVE 3/3, dépouille INVALIDE car Qwen3.8-Max n'est pas mappé.",
+  "empreinte_dedup": "80ebf60c9ac5112dc865de88",
+  "target_sha": "0e2181eb03e39d708c4e88c5a73536c143f3bce3"
+ },
+ {
+  "id": "L0b-P01",
+  "title": "POINT FORT : les 8 invariants de tally sont corrects, prouvés par mutation à cause isolée",
+  "severity": "NONE",
+  "status": "CONFIRME",
+  "lot": "L0b",
+  "source": {
+   "type": "tool",
+   "command": "8 mutations ne violant chacune QU'UN invariant, dépouillées par les deux implémentations"
+  },
+  "locations": [
+   "scripts/revue.py"
+  ],
+  "reproduction": "M0 nominal->APPROVE ; M1 vendors identiques->INVALIDE ; M2 sceau divergent->INVALIDE ; M3 un REJECT->REJECT ; M4 <3 verdicts->INVALIDE ; M5 verdict hors APPROVE/REJECT->INVALIDE ; M6 vendor bidon->INVALIDE ; M7 sceau absent->INVALIDE. 8/8 conformes à l'attendu ET concordants entre les deux implémentations.",
+  "note": "La LOGIQUE du dépouilleur est saine ; seule sa table de correspondance vendor est fragile. Corollaire important : les 5 scellements de cette session (audit + FIX-AUDIT-1 à 4) utilisaient le trio DeepSeek-V4-Pro/Gemini-3.1-Pro/Qwen3.7-Max, tous trois correctement mappés — M0 le prouve. Ces scellements sont donc valides.",
+  "empreinte_dedup": "34c408ebc7155897f0902cf4",
+  "target_sha": "0e2181eb03e39d708c4e88c5a73536c143f3bce3"
+ },
+ {
+  "id": "L01-P01",
+  "title": "POINT FORT : critère S1 satisfait — 1564/1564 blobs assignés, 5 invariants verts",
+  "severity": "NONE",
+  "status": "CONFIRME",
+  "lot": "L01",
+  "source": {
+   "type": "tool",
+   "command": "construction du registre de couverture + vérificateur des 5 invariants (exit 0)"
+  },
+  "locations": [
+   "AUDIT/coverage-ledger.csv"
+  ],
+  "reproduction": "1564 blobs inventoriés, 1564 assignés. Invariant 1 orphelins : OK. 2 fantômes : OK. 3 doublons de propriété : OK. 4 analyse manquante : OK. 5 EXCLU sans raison écrite : OK. Répartition : SCRIPT 1080, SCAN 313, LECTURE 237, EXCLU 3 (2 PDF + 1 .gz, chacun avec sa raison).",
+  "note": "Chaque blob a UN lot propriétaire unique et N analyses applicables — la distinction imposée par l'objection critique de Grok au CG-0 round 2.",
+  "empreinte_dedup": "5b54afc899388762f8c6e076",
+  "target_sha": "0e2181eb03e39d708c4e88c5a73536c143f3bce3"
  },
  {
   "id": "L10-001",

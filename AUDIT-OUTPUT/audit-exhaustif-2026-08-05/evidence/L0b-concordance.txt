@@ -1,0 +1,52 @@
+dossiers dépouillés : 243
+verdicts lus        : 738
+CONCORDANCE         : 195/243
+DIVERGENCES         : 48
+   reviews/AUDIT-2026-08-03-round1-reject | officiel=INVALIDE | independant=REJECT
+   reviews/AUDIT-2026-08-03-round10-reject | officiel=INVALIDE | independant=REJECT
+   reviews/AUDIT-2026-08-03-round11-approve2of3-final | officiel=INVALIDE | independant=REJECT
+   reviews/AUDIT-2026-08-03-round2-reject | officiel=INVALIDE | independant=REJECT
+   reviews/AUDIT-2026-08-03-round3-reject | officiel=INVALIDE | independant=REJECT
+   reviews/AUDIT-2026-08-03-round4-reject | officiel=INVALIDE | independant=REJECT
+   reviews/AUDIT-2026-08-03-round5-reject | officiel=INVALIDE | independant=REJECT
+   reviews/AUDIT-2026-08-03-round6-reject | officiel=INVALIDE | independant=REJECT
+   reviews/AUDIT-2026-08-03-round7-reject | officiel=INVALIDE | independant=REJECT
+   reviews/AUDIT-2026-08-03-round8-reject | officiel=INVALIDE | independant=REJECT
+   reviews/AUDIT-2026-08-03-round9-reject | officiel=INVALIDE | independant=REJECT
+   reviews/B-20b | officiel=INVALIDE | independant=APPROVE
+   reviews/B-23-round1-reject | officiel=INVALIDE | independant=REJECT
+   reviews/B-23-round2-reject | officiel=INVALIDE | independant=REJECT
+   reviews/B-23-round3-approve | officiel=INVALIDE | independant=APPROVE
+   reviews/B-24cd-cloture | officiel=INVALIDE | independant=REJECT
+   reviews/B-24cd-cloture2 | officiel=INVALIDE | independant=APPROVE
+   reviews/B-24e | officiel=INVALIDE | independant=APPROVE
+   reviews/COMPOSE-025 | officiel=INVALIDE | independant=APPROVE
+   reviews/HEALTH-028A | officiel=INVALIDE | independant=APPROVE
+   reviews/HW-009 | officiel=INVALIDE | independant=APPROVE
+   reviews/HW-010 | officiel=INVALIDE | independant=APPROVE
+   reviews/HW-037 | officiel=INVALIDE | independant=APPROVE
+   reviews/I18N-031-round1-reject | officiel=INVALIDE | independant=REJECT
+   reviews/I18N-031-round2-reject | officiel=INVALIDE | independant=REJECT
+   reviews/I18N-031-round3-reject | officiel=INVALIDE | independant=REJECT
+   reviews/I18N-031-round4-reject | officiel=INVALIDE | independant=REJECT
+   reviews/I18N-031-round5-approve | officiel=INVALIDE | independant=APPROVE
+   reviews/I18N-041-round1-reject | officiel=INVALIDE | independant=REJECT
+   reviews/I18N-041-round2-reject | officiel=INVALIDE | independant=REJECT
+   reviews/I18N-041-round3-reject | officiel=INVALIDE | independant=REJECT
+   reviews/I18N-041-round4-approve | officiel=INVALIDE | independant=APPROVE
+   reviews/I18N-042-round1-reject | officiel=INVALIDE | independant=REJECT
+   reviews/I18N-042-round3-approve3of3-final | officiel=INVALIDE | independant=APPROVE
+   reviews/K8S-008 | officiel=INVALIDE | independant=APPROVE
+   reviews/K8S-023 | officiel=INVALIDE | independant=APPROVE
+   reviews/K8S-027 | officiel=INVALIDE | independant=APPROVE
+   reviews/OPT-001 | officiel=INVALIDE | independant=APPROVE
+   reviews/OPT-002 | officiel=INVALIDE | independant=APPROVE
+   reviews/PLACE-026A | officiel=INVALIDE | independant=REJECT
+   reviews/PLACE-026B | officiel=INVALIDE | independant=APPROVE
+   reviews/PORT-286 | officiel=INVALIDE | independant=APPROVE
+   reviews/RAG-004A | officiel=INVALIDE | independant=APPROVE
+   reviews/RES-012A | officiel=INVALIDE | independant=APPROVE
+   reviews/SECRET-020B | officiel=INVALIDE | independant=REJECT
+   reviews/SECRET-020B-t2 | officiel=INVALIDE | independant=REJECT
+   reviews/SECRET-020B-t3 | officiel=INVALIDE | independant=APPROVE
+   reviews/TRUST-019B | officiel=INVALIDE | independant=APPROVE

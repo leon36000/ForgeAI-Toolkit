@@ -1,0 +1,20 @@
+dossiers dépouillant INVALIDE : 59 / 243
+dont LIANTS (dans BINDING.txt) : 0
+
+=== modèles NON MAPPÉS par _VENDOR (rejetés comme 'identité non vérifiable') ===
+   
+   gemini-3.1-pro-or
+   kimi-k2.6
+   nemotron-3-ultra
+   qwen3.6-40b
+   qwen3.8-max
+   tencent-hy3
+
+=== motifs (hors vendor inconnu) ===
+   11 dossier(s)
+   B-24cd-final: 2 verdict(s) < 3 requis
+   I18N-042-round2-incomplete-route-instable: 2 verdict(s) < 3 requis
+   round-1: 2 verdict(s) < 3 requis
+   round-2: prompts non identiques (sha distincts : ['MANQUANT'])
+   outil-revue: prompts non identiques (sha distincts : ['e855e59cb10a790db3628a7cafb63d5d52697699e07be211d47114d061d3b000', 'variante-compacte-non-scellee'])
+   p1-code: prompts non identiques (sha distincts : ['MANQUANT'])
