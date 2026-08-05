@@ -1,0 +1,13 @@
+=== TESTS DE MUTATION À CAUSE ISOLÉE (chaque mutation ne viole QU'UN invariant) ===
+
+  OK  M0 nominal — doit APPROVE            officiel=APPROVE   attendu=APPROVE   concordent
+  OK  M1 deux vendors identiques           officiel=INVALIDE  attendu=INVALIDE  concordent
+  OK  M2 prompt_sha256 divergent           officiel=INVALIDE  attendu=INVALIDE  concordent
+  OK  M3 un REJECT sur trois               officiel=REJECT    attendu=REJECT    concordent
+  OK  M4 moins de 3 verdicts               officiel=INVALIDE  attendu=INVALIDE  concordent
+  OK  M5 verdict hors APPROVE/REJECT       officiel=INVALIDE  attendu=INVALIDE  concordent
+  OK  M6 vendor bidon (anti-Sybil)         officiel=INVALIDE  attendu=INVALIDE  concordent
+  OK  M7 sceau absent                      officiel=INVALIDE  attendu=INVALIDE  concordent
+
+mutations en échec ou divergentes : 0/8
+-> un dépouilleur jamais vu échouer n'est pas prouvé ; ici chaque invariant est exercé isolément.

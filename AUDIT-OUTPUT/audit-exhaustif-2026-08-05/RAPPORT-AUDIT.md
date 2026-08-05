@@ -15,18 +15,26 @@
 4. **Le consensus valide un raisonnement, pas des faits.** Les modèles reçoivent du texte, pas le
    dépôt. L'exactitude repose sur la capture déterministe et la rejouabilité au SHA figé.
 5. **L'audit ne peut pas prouver sa propre intégrité.** `no_stub_scan` ne scanne pas `Rapports/` ni
-   `AUDIT-OUTPUT/`.
+   `AUDIT-OUTPUT/`. Ce qu'il PEUT faire, il l'a fait : l'outil de dépouillement qui scelle ses
+   propres revues a été contrôlé par contre-implémentation indépendante (L0b) — et cela a révélé
+   un défaut réel.
 
-**Compteurs séparés, jamais additionnés** (48 constats au total, chacun dans exactement un statut) :
+**Compteurs séparés, jamais additionnés** (51 constats au total, chacun dans exactement un statut) :
 
 | Statut | Nombre | Ventilation par sévérité |
 |---|---|---|
-| **CONFIRMÉ** (artefact rejouable) | **45** | 3 CRITICAL + 5 HIGH + 14 MEDIUM + 6 LOW + 17 NONE |
+| **CONFIRMÉ** (artefact rejouable) | **48** | 3 CRITICAL + 5 HIGH + 15 MEDIUM + 6 LOW + 19 NONE |
 | **HYPOTHÈSE** (non vérifiée individuellement) | **2** | 1 MEDIUM + 1 LOW |
 | **RÉFUTÉ** par la mesure | **1** | 1 NONE |
 
-Les 17 `NONE` confirmés sont les **points forts mesurés** (un 18ᵉ `NONE` relève du statut RÉFUTÉ).
+Les 19 `NONE` confirmés sont les **points forts mesurés** (un 20ᵉ `NONE` relève du statut RÉFUTÉ).
 Chaque ligne se somme à son propre total ; les trois statuts ne se cumulent pas en un score unique.
+
+> **CORRECTION post-publication n°2 (2026-08-05)** — la première version de ce rapport a été
+> produite alors que **deux lots de son propre plan n'avaient pas été exécutés** : L0b (validation
+> de `revue.py::tally` par contre-implémentation) et L01 (registre de couverture prouvant S1).
+> Les deux sont désormais faits, et L0b a immédiatement trouvé un défaut réel (`L0b-001`) — c'est
+> précisément ce que l'anti-circularité existait pour attraper. Trois constats ajoutés (48→51).
 
 ---
 
@@ -186,5 +194,10 @@ aurait dû bloquer sur mes propres PR.
 
 Toute mesure de ce rapport est rejouable au SHA figé. Artefacts sous `AUDIT/` :
 `toolchain.lock` (21 outils versionnés) · `evidence/` (sorties brutes) · `findings/TOUS.json`
-(48 constats, 48 empreintes de déduplication uniques) · `coverage-ledger` (inventaire 1564 blobs concordant entre
-3 sources indépendantes, 0 sous-module).
+(51 constats, empreintes de déduplication uniques) · `coverage-ledger.csv` (**1564 blobs, un lot
+propriétaire unique et ≥1 analyse par blob ; les 5 invariants passent, exit 0**) ·
+`tally_independant.py` (contre-implémentation du dépouilleur, L0b).
+
+**Critère S1 — satisfait et prouvé** : inventaire concordant entre 3 sources indépendantes,
+0 sous-module, 1564/1564 blobs assignés, invariants orphelins / fantômes / doublons de propriété /
+analyse manquante / EXCLU-sans-raison tous verts.
