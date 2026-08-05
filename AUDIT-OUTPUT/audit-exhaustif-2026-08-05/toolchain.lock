@@ -1,0 +1,28 @@
+# AUDIT ForgeAI-Toolkit — outillage figé
+# cible : 0e2181eb03e39d708c4e88c5a73536c143f3bce3
+# date  : 2026-08-05T04:53:28-04:00
+# hote  : Linux 7.0.0-28-generic x86_64
+
+python3        /media/pc1/Storage/AUDIT-FORGEAI-20260805/venv-audit/bin/python3 :: Python 3.12.3
+git            /usr/bin/git :: git version 2.43.0
+gh             /home/pc1/.local/bin/gh :: gh version 2.96.0 (2026-07-02)
+ruff           /home/pc1/.local/bin/ruff :: ruff 0.15.20
+mypy           /home/pc1/.local/bin/mypy :: mypy 2.1.0 (compiled: yes)
+bandit         /home/pc1/.local/bin/bandit :: bandit 1.9.4
+semgrep        /home/pc1/.local/bin/semgrep :: semgrep 1.168.0
+pip-audit      /home/pc1/.local/bin/pip-audit :: pip-audit 2.10.1
+gitleaks       /home/pc1/.local/bin/gitleaks :: gitleaks version 8.30.1
+jq             /usr/bin/jq :: jq-1.7
+yamllint       /media/pc1/Storage/AUDIT-FORGEAI-20260805/venv-audit/bin/yamllint :: yamllint 1.38.0
+radon          /media/pc1/Storage/AUDIT-FORGEAI-20260805/venv-audit/bin/radon :: 6.0.1
+vulture        /media/pc1/Storage/AUDIT-FORGEAI-20260805/venv-audit/bin/vulture :: vulture 2.16
+zizmor         /media/pc1/Storage/AUDIT-FORGEAI-20260805/venv-audit/bin/zizmor :: zizmor 1.29.0
+mutmut         /media/pc1/Storage/AUDIT-FORGEAI-20260805/venv-audit/bin/mutmut :: mutmut 3.7.0
+shellcheck     /media/pc1/Storage/AUDIT-FORGEAI-20260805/bin/shellcheck :: ShellCheck - shell script analysis tool
+actionlint     /media/pc1/Storage/AUDIT-FORGEAI-20260805/bin/actionlint :: 1.7.7
+trivy          /media/pc1/Storage/AUDIT-FORGEAI-20260805/bin/trivy :: Version: 0.73.0
+osv-scanner    /media/pc1/Storage/AUDIT-FORGEAI-20260805/bin/osv-scanner :: osv-scanner version: 2.0.2
+eslint         /media/pc1/Storage/AUDIT-FORGEAI-20260805/eslint-env/node_modules/.bin/eslint :: v9.39.5
+node           /home/pc1/.nvm/versions/node/v24.18.0/bin/node :: v24.18.0
+
+# ggshield : ABSENT (non installé) — gitleaks couvre la détection de secrets

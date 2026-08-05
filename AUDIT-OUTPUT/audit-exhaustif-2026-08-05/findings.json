@@ -1,0 +1,873 @@
+[
+ {
+  "id": "L02-P01",
+  "title": "POINT FORT : 1891 tests, tous verts, 0 skippé",
+  "severity": "NONE",
+  "status": "CONFIRME",
+  "lot": "L02",
+  "source": {
+   "type": "tool",
+   "command": "pytest -q --cov=src/forgeai --cov-branch"
+  },
+  "locations": [
+   "tests/"
+  ],
+  "reproduction": "exit=0. 1891 tests collectés (pytest --collect-only). Aucun SKIPPED — contrairement à l'hypothèse d'un skip silencieux sur Docker/k3s.",
+  "note": "La revendication du dépôt (~1884) est cohérente avec la mesure (1891) : écart de 7, sans sur-déclaration.",
+  "target_sha": "0e2181eb03e39d708c4e88c5a73536c143f3bce3",
+  "empreinte_dedup": "475d8d8cf694b95afaae1419"
+ },
+ {
+  "id": "L02-P02",
+  "title": "POINT FORT : 93% de couverture BRANCHES incluses (gate n'exige que 85% lignes)",
+  "severity": "NONE",
+  "status": "CONFIRME",
+  "lot": "L02",
+  "source": {
+   "type": "tool",
+   "command": "pytest --cov=src/forgeai --cov-branch --cov-report=term"
+  },
+  "locations": [
+   "pyproject.toml"
+  ],
+  "reproduction": "TOTAL 7219 stmts / 424 miss / 2166 branches / 203 partielles = 93%. Le seuil CI (--cov-fail-under=85) porte sur les lignes seules.",
+  "note": "Hypothèse initiale RÉFUTÉE : j'anticipais une chute sous 85% à l'activation des branches. La qualité réelle DÉPASSE le gate déclaré.",
+  "target_sha": "0e2181eb03e39d708c4e88c5a73536c143f3bce3",
+  "empreinte_dedup": "be84a75a00c182f43d8dd4b9"
+ },
+ {
+  "id": "L02-001",
+  "title": "Un seul module sous 85% de couverture branche : stacks.py à 78%",
+  "severity": "LOW",
+  "status": "CONFIRME",
+  "lot": "L02",
+  "source": {
+   "type": "tool",
+   "command": "pytest --cov-branch (colonne Cover)"
+  },
+  "locations": [
+   "src/forgeai/stacks.py"
+  ],
+  "reproduction": "src/forgeai/stacks.py : 46 stmts, 8 miss, 28 branches, 8 partielles = 78%. Tous les autres modules sont >= 85%.",
+  "note": "",
+  "target_sha": "0e2181eb03e39d708c4e88c5a73536c143f3bce3",
+  "empreinte_dedup": "530a73a7a26d3f599e120e44"
+ },
+ {
+  "id": "L03-001",
+  "title": "14 PR fusionnées dans main avec ZÉRO check CI (+4613 lignes non vérifiées)",
+  "severity": "CRITICAL",
+  "status": "CONFIRME",
+  "lot": "L03",
+  "source": {
+   "type": "tool",
+   "tool": "gh api / git",
+   "command": "gh api repos/leon36000/ForgeAI-Toolkit/commits/<head>/check-runs"
+  },
+  "locations": [
+   ".github/workflows/gates.yml"
+  ],
+  "reproduction": "Pour chaque PR de #356 à #369 : le head ne porte qu'UN check (GitGuardian, app externe hors Actions). Les 5 checks requis basés sur Actions (tests, gitleaks, no-stub-scan, registres, SonarCloud) sont ABSENTS. Fusion possible car enforce_admins=false.",
+  "note": "Coupure GitHub Actions du 2026-08-01 (reprise 2026-08-02T17:14Z). Contenu non vérifié : PR#356 correctif de fuite du flux de déploiement, PR#365 REG-029B ancrage anti-rollback du registre (+2088), PR#368 DOC-032 (+1107). Total +4613/-63.",
+  "target_sha": "0e2181eb03e39d708c4e88c5a73536c143f3bce3",
+  "empreinte_dedup": "d1d3d4c1c796ed62b65a948f"
+ },
+ {
+  "id": "L03-002",
+  "title": "Le gate de revue scellée (G09/reviews-sealed) n'est pas un check requis",
+  "severity": "CRITICAL",
+  "status": "CONFIRME",
+  "lot": "L03",
+  "source": {
+   "type": "tool",
+   "tool": "gh api / git",
+   "command": "gh api .../branches/main/protection --jq .required_status_checks.contexts"
+  },
+  "locations": [
+   ".github/workflows/gates.yml"
+  ],
+  "reproduction": "Les contextes requis sont [gitleaks, no-stub-scan, registres, tests, SonarCloud Code Analysis, GitGuardian Security Checks]. reviews-sealed n'y figure pas alors que le job existe depuis beaa629 (2026-07-16).",
+  "note": "Pilier de la méthodologie PROOF : une PR peut fusionner avec la revue aveugle au rouge.",
+  "target_sha": "0e2181eb03e39d708c4e88c5a73536c143f3bce3",
+  "empreinte_dedup": "1ce83267ff93d1b2dda8f16e"
+ },
+ {
+  "id": "L03-003",
+  "title": "8 des 12 jobs CI définis ne bloquent rien",
+  "severity": "HIGH",
+  "status": "CONFIRME",
+  "lot": "L03",
+  "source": {
+   "type": "tool",
+   "tool": "gh api / git",
+   "command": "comparaison required_status_checks vs jobs des 3 workflows"
+  },
+  "locations": [
+   ".github/workflows/"
+  ],
+  "reproduction": "Jobs non requis : reviews-sealed, catalogue, docs, metering-sites, guard-fs-multi-os, scope-guard, coordination-validation, sonarcloud-scan. Seuls 4 des 6 contextes requis sont des jobs (les 2 autres sont des apps externes).",
+  "note": "",
+  "target_sha": "0e2181eb03e39d708c4e88c5a73536c143f3bce3",
+  "empreinte_dedup": "f6686d5e5f867f86917e7ad0"
+ },
+ {
+  "id": "L03-004",
+  "title": "required_pull_request_reviews absent : CODEOWNERS totalement inerte",
+  "severity": "HIGH",
+  "status": "CONFIRME",
+  "lot": "L03",
+  "source": {
+   "type": "tool",
+   "tool": "gh api / git",
+   "command": "gh api .../branches/main/protection"
+  },
+  "locations": [
+   ".github/CODEOWNERS"
+  ],
+  "reproduction": "La clé required_pull_request_reviews est absente de la réponse. Aucune approbation n'est requise pour fusionner, alors que CODEOWNERS annonce en commentaire être activé par la branch protection.",
+  "note": "",
+  "target_sha": "0e2181eb03e39d708c4e88c5a73536c143f3bce3",
+  "empreinte_dedup": "c21b334578fe631bde2a5010"
+ },
+ {
+  "id": "L03-005",
+  "title": "9 des 11 gates déclarés bloquants ne bloquent pas comme déclaré",
+  "severity": "HIGH",
+  "status": "CONFIRME",
+  "lot": "L03",
+  "source": {
+   "type": "tool",
+   "tool": "gh api / git",
+   "command": "lecture gates.yaml + grep workflows + gh api protection"
+  },
+  "locations": [
+   "manifests/gates.yaml"
+  ],
+  "reproduction": "G02 mypy, G06 trivy, G08 no-fake-done, G10 signature-fable, G11 tally-fin-de-phase : NON IMPLÉMENTÉS. G01 ruff : pre-commit seulement, select=[E9,F] au lieu de --select ALL, absent de la CI. G03 : 2 seuils sur 3, le 3e vise forgeai/gates qui n'existe pas. G07 : verify_catalogue existe au runtime produit mais catalogue_gate.py ne calcule aucun sha256 (0 occurrence hashlib) et le job n'est pas requis. G09 : implémenté mais non requis. Seuls G04 (no-stub-scan) et G05 (gitleaks) bloquent réellement.",
+  "note": "",
+  "target_sha": "0e2181eb03e39d708c4e88c5a73536c143f3bce3",
+  "empreinte_dedup": "32974a38a925c13fd42be8ec"
+ },
+ {
+  "id": "L03-006",
+  "title": "G03 référence deux modules inexistants (forgeai/gates, forgeai/registry)",
+  "severity": "MEDIUM",
+  "status": "CONFIRME",
+  "lot": "L03",
+  "source": {
+   "type": "tool",
+   "tool": "gh api / git",
+   "command": "ls src/forgeai/gates ; ls src/forgeai/registry"
+  },
+  "locations": [
+   "manifests/gates.yaml"
+  ],
+  "reproduction": "Les deux répertoires n'existent pas dans le dépôt. Le chemin réel est src/forgeai/core/registre.py (orthographe française). Le seuil de couverture 95% sur forgeai/gates n'a donc jamais pu être appliqué.",
+  "note": "",
+  "target_sha": "0e2181eb03e39d708c4e88c5a73536c143f3bce3",
+  "empreinte_dedup": "5cb35b5ba166ecb26560da71"
+ },
+ {
+  "id": "L03-007",
+  "title": "Commits de contenu non signés dans main malgré required_signatures=true",
+  "severity": "MEDIUM",
+  "status": "CONFIRME",
+  "lot": "L03",
+  "source": {
+   "type": "tool",
+   "tool": "gh api / git",
+   "command": "gh api repos/leon36000/ForgeAI-Toolkit/commits/<sha> --jq .commit.verification"
+  },
+  "locations": [
+   "Registres/"
+  ],
+  "reproduction": "Les commits d'auteur 'Forge GRS' (73943e9, 9ca4388, 6aeb837...) ont verified=false reason=unsigned. Seuls les merge commits créés par GitHub sont signés. required_signatures a été activé le 2026-08-04 et n'a aucun effet rétroactif ; les fusions ultérieures passent par --admin.",
+  "note": "",
+  "target_sha": "0e2181eb03e39d708c4e88c5a73536c143f3bce3",
+  "empreinte_dedup": "3d5d78f059542d3280123783"
+ },
+ {
+  "id": "L04-001",
+  "title": "17/17 GitHub Actions épinglées par tag mutable, aucune par SHA",
+  "severity": "HIGH",
+  "status": "CONFIRME",
+  "lot": "L04",
+  "source": {
+   "type": "tool",
+   "command": "zizmor --format plain .github/workflows/"
+  },
+  "locations": [
+   ".github/workflows/"
+  ],
+  "reproduction": "zizmor : 17 findings error[unpinned-uses] (confidence High). Vérification indépendante : grep -rhoE 'uses:\\s*\\S+@[0-9a-f]{40}' -> 0 sur 17 occurrences 'uses:'.",
+  "note": "Seule surface supply-chain tierce réelle du dépôt, puisque dependencies=[]. Un tag Git est déplaçable par le propriétaire de l'action ; actions/checkout@v4 et gitleaks-action@v2 s'exécutent avec accès au dépôt.",
+  "target_sha": "0e2181eb03e39d708c4e88c5a73536c143f3bce3",
+  "empreinte_dedup": "114d061fda631e93b8b7cd1c"
+ },
+ {
+  "id": "L04-002",
+  "title": "12 workflows exposent les identifiants via checkout persist-credentials (artipacked)",
+  "severity": "MEDIUM",
+  "status": "CONFIRME",
+  "lot": "L04",
+  "source": {
+   "type": "tool",
+   "command": "zizmor --format plain .github/workflows/"
+  },
+  "locations": [
+   ".github/workflows/"
+  ],
+  "reproduction": "zizmor : 12 findings warning[artipacked]. actions/checkout persiste le token dans .git/config par défaut ; sans persist-credentials:false il peut fuiter via un artefact.",
+  "note": "",
+  "target_sha": "0e2181eb03e39d708c4e88c5a73536c143f3bce3",
+  "empreinte_dedup": "9651411498edbd72c03b22cf"
+ },
+ {
+  "id": "L04-003",
+  "title": "CVE dans la clôture des dépendances de développement (cryptography 48.0.1)",
+  "severity": "MEDIUM",
+  "status": "CONFIRME",
+  "lot": "L04",
+  "source": {
+   "type": "tool",
+   "command": "venv isolé avec les seuls dev extras + pip-audit --format json"
+  },
+  "locations": [
+   "pyproject.toml"
+  ],
+  "reproduction": "94 paquets dans la clôture dev, 1 vulnérable : cryptography 48.0.1 -> PYSEC-2026-3552 (fix 50.0.0), PYSEC-2026-3553 et 3554 (fix 49.0.0). Transitif via ggshield/pyOpenSSL/sigstore.",
+  "note": "Dev uniquement : dependencies=[] en runtime, donc aucune exposition du produit livré. Aucun mécanisme de mise à jour (ni Dependabot ni pip-audit en CI) ne détecterait cette dérive.",
+  "target_sha": "0e2181eb03e39d708c4e88c5a73536c143f3bce3",
+  "empreinte_dedup": "e3fb992bd1adfc50a8e7758a"
+ },
+ {
+  "id": "L04-004",
+  "title": "Aucun scan de vulnérabilité des dépendances n'existe en CI",
+  "severity": "MEDIUM",
+  "status": "CONFIRME",
+  "lot": "L04",
+  "source": {
+   "type": "tool",
+   "command": "grep -rn 'pip-audit|dependabot|safety|osv|trivy' .github/"
+  },
+  "locations": [
+   ".github/workflows/"
+  ],
+  "reproduction": "Aucune occurrence. Le gate G06 (trivy, déclaré bloquant) n'est pas implémenté, et il n'existe ni .github/dependabot.yml ni job pip-audit.",
+  "note": "",
+  "target_sha": "0e2181eb03e39d708c4e88c5a73536c143f3bce3",
+  "empreinte_dedup": "0b3d0ebe00715f64e3b0bbe1"
+ },
+ {
+  "id": "L04-P01",
+  "title": "POINT FORT : aucune fuite de secret sur 678 commits d'historique",
+  "severity": "NONE",
+  "status": "CONFIRME",
+  "lot": "L04",
+  "source": {
+   "type": "tool",
+   "command": "gitleaks detect --source . (historique complet)"
+  },
+  "locations": [
+   "."
+  ],
+  "reproduction": "678 commits scannés, ~12 Mo, 'no leaks found' — 0 fuite.",
+  "note": "",
+  "target_sha": "0e2181eb03e39d708c4e88c5a73536c143f3bce3",
+  "empreinte_dedup": "8d928bc1f3d94c3305abd549"
+ },
+ {
+  "id": "L04-P02",
+  "title": "POINT FORT : zéro dépendance runtime (100% stdlib)",
+  "severity": "NONE",
+  "status": "CONFIRME",
+  "lot": "L04",
+  "source": {
+   "type": "tool",
+   "command": "python -c tomllib project.dependencies"
+  },
+  "locations": [
+   "pyproject.toml"
+  ],
+  "reproduction": "dependencies = [] : la surface supply-chain du produit livré est nulle. Les 7 dev extras n'entrent pas dans le paquet distribué.",
+  "note": "",
+  "target_sha": "0e2181eb03e39d708c4e88c5a73536c143f3bce3",
+  "empreinte_dedup": "e7556c628ad0e68254606e42"
+ },
+ {
+  "id": "L04-P03",
+  "title": "POINT FORT : permissions des workflows restreintes en lecture seule",
+  "severity": "NONE",
+  "status": "CONFIRME",
+  "lot": "L04",
+  "source": {
+   "type": "tool",
+   "command": "grep -A2 'permissions:' .github/workflows/*.yml ; actionlint"
+  },
+  "locations": [
+   ".github/workflows/"
+  ],
+  "reproduction": "Les 3 workflows déclarent contents:read (+ pull-requests:read). actionlint sort exit=0 sans aucun avertissement.",
+  "note": "",
+  "target_sha": "0e2181eb03e39d708c4e88c5a73536c143f3bce3",
+  "empreinte_dedup": "d84809ef006996bdceaaa4a3"
+ },
+ {
+  "id": "L05-001",
+  "title": "10 nouveaux signaux SAST depuis la baseline SAST-042, dont 5 couples (règle,fichier) inédits",
+  "severity": "MEDIUM",
+  "status": "CONFIRME",
+  "lot": "L05",
+  "source": {
+   "type": "tool",
+   "command": "bandit -r src/forgeai -f json (v1.9.4, identique à la baseline) puis diff par (test_id, fichier)"
+  },
+  "locations": [
+   "src/forgeai/"
+  ],
+  "reproduction": "baseline=37 -> maintenant=47. Nouveaux : B404/B603/B607 sur core/proc.py (module extrait de cli.py depuis la baseline), B607 x2 sur network/remote_probe.py (ssh-keyscan/ssh-keygen), B108 sur renderers/k3s.py. Augmentations : B310+B603+B607 sur deploy/compose.py, B603 x2 sur remote_probe.py. Réductions : B404+B603 sur cli.py (subprocess déplacé vers core/proc.py).",
+  "note": "Statut HYPOTHESE pour les sites subprocess : un hit bandit n'est pas une faille. Leur promotion en CONFIRME exige l'analyse d'atteignabilité de L06.",
+  "target_sha": "0e2181eb03e39d708c4e88c5a73536c143f3bce3",
+  "empreinte_dedup": "1384efa0ed7516e189d368c3"
+ },
+ {
+  "id": "L05-002",
+  "title": "B108 (usage de /tmp non sûr) dans renderers/k3s.py : FAUX POSITIF réfuté",
+  "severity": "NONE",
+  "status": "REFUTE",
+  "lot": "L05",
+  "source": {
+   "type": "tool",
+   "command": "lecture de _volumes_inscriptibles() lignes 244-255"
+  },
+  "locations": [
+   "src/forgeai/renderers/k3s.py"
+  ],
+  "reproduction": "Le littéral \"/tmp\" n'ouvre aucun fichier temporaire local : il alimente la liste des chemins de volumes emptyDir du manifeste Kubernetes, générée PRÉCISÉMENT parce que readOnlyRootFilesystem=true. C'est une mesure de durcissement que bandit interprète à l'envers.",
+  "note": "Réfutation par preuve de lecture du chemin de code, conformément à la règle « une réfutation sans preuve est interdite au même titre qu'un constat sans preuve ».",
+  "target_sha": "0e2181eb03e39d708c4e88c5a73536c143f3bce3",
+  "empreinte_dedup": "83ed87b9e0b79e2b43deb31f"
+ },
+ {
+  "id": "L05-P01",
+  "title": "POINT FORT : parité de versions exacte avec la baseline (diff significatif)",
+  "severity": "NONE",
+  "status": "CONFIRME",
+  "lot": "L05",
+  "source": {
+   "type": "tool",
+   "command": "bandit --version ; semgrep --version vs scanner-versions.txt"
+  },
+  "locations": [
+   "AUDIT-OUTPUT/sast/"
+  ],
+  "reproduction": "bandit 1.9.4 et semgrep 1.168.0 des deux côtés : le différentiel mesure de vraies évolutions du code, pas des changements de règles.",
+  "note": "",
+  "target_sha": "0e2181eb03e39d708c4e88c5a73536c143f3bce3",
+  "empreinte_dedup": "2a295c5c4a353a4956965dfe"
+ },
+ {
+  "id": "L07-001",
+  "title": "NODE_NAME_RE accepte un saut de ligne final ($ Python matche avant \\n terminal)",
+  "severity": "LOW",
+  "status": "CONFIRME",
+  "lot": "L07",
+  "source": {
+   "type": "tool",
+   "command": "import de la vraie regex puis NODE_NAME_RE.match('node1\\n')"
+  },
+  "locations": [
+   "src/forgeai/core/validation.py:10"
+  ],
+  "reproduction": "pattern ^[a-z0-9]([a-z0-9.-]{0,62})$ avec re.ASCII. Preuve par exécution : 'node1\\n' -> ACCEPTÉ ; 'node1\\n\\n' -> REJETÉ ; 'node1\\r' -> REJETÉ. Aucun fullmatch ni \\Z dans core/validation.py. Regex partagée (FAI-0016) par cli.py et web/server.py, donc les DEUX points d'entrée sont concernés.",
+  "note": "IMPACT MESURÉ, NON EXPLOITABLE EN L'ÉTAT : le nom part dans argv (liste, sans shell=True) -> aucune injection de commande ; le stockage passe par json.dumps qui échappe le \\n -> aucune injection de ligne. Le défaut réel est la persistance d'un \\n dans la donnée (comparaisons 'node1' != 'node1\\n', affichage, journaux). Remède : re.fullmatch ou \\Z.",
+  "target_sha": "0e2181eb03e39d708c4e88c5a73536c143f3bce3",
+  "empreinte_dedup": "f9cb0b1a4923a4873cf2b5d3"
+ },
+ {
+  "id": "L07-002",
+  "title": "Deux try/except/pass avalent des échecs de persistance sans aucune trace",
+  "severity": "MEDIUM",
+  "status": "CONFIRME",
+  "lot": "L07",
+  "source": {
+   "type": "tool",
+   "command": "bandit B110 + lecture du contexte"
+  },
+  "locations": [
+   "src/forgeai/web/server.py:545,567"
+  ],
+  "reproduction": "server.py:545 (écriture de l'état de déploiement : le handler interne nettoie le tmp et re-raise, l'externe fait 'pass') et server.py:567 (relecture de l'état). Un disque plein, un refus de permission ou un fichier corrompu sont silencieux — aucun log, aucun compteur.",
+  "note": "Discriminant retenu : les autres except Exception du même fichier (472, 515, 1629) portent un commentaire '# noqa: BLE001' JUSTIFIANT le choix (best-effort, fail-safe). Ces deux-là n'en ont aucun — ils dérogent à la convention du dépôt lui-même. Les 2 autres B110 (1514 kill d'un process déjà mort, 1645 webbrowser en headless) sont LÉGITIMES et classés comme tels.",
+  "target_sha": "0e2181eb03e39d708c4e88c5a73536c143f3bce3",
+  "empreinte_dedup": "e6c802f0e749589c052ee4e7"
+ },
+ {
+  "id": "L06-P01",
+  "title": "POINT FORT : validation par liste blanche sur toutes les entrées de /api/deploy",
+  "severity": "NONE",
+  "status": "CONFIRME",
+  "lot": "L06",
+  "source": {
+   "type": "tool",
+   "command": "lecture du handler + test d'exécution de la regex"
+  },
+  "locations": [
+   "src/forgeai/web/server.py:1349-1400"
+  ],
+  "reproduction": "backend restreint à {compose,k3s} ; node et rag_node à {local,auto} ou NODE_NAME_RE ; stack_id validé par load_stack() (404 sinon) ; sélections par _selection_valide(). Preuve d'exécution : '--dry-run', '; rm -rf /', '$(id)', '`id`', '../../etc/passwd', 'node1 --evil' sont TOUS rejetés.",
+  "note": "L'injection d'argument (le risque réel puisque argv est une liste) est fermée par liste blanche, pas seulement par l'absence de shell=True.",
+  "target_sha": "0e2181eb03e39d708c4e88c5a73536c143f3bce3",
+  "empreinte_dedup": "b776e4a4f646a205ef77df9d"
+ },
+ {
+  "id": "L06-P02",
+  "title": "POINT FORT : gardes fail-closed AVANT tout routage des mutations",
+  "severity": "NONE",
+  "status": "CONFIRME",
+  "lot": "L06",
+  "source": {
+   "type": "tool",
+   "command": "lecture de do_POST"
+  },
+  "locations": [
+   "src/forgeai/web/server.py:1219"
+  ],
+  "reproduction": "do_POST applique _rate_gate() puis _guard_mutation() (jeton/CSRF/anti-rebinding) et retourne immédiatement si l'une échoue — AVANT toute comparaison de route. Une route mutante ajoutée par erreur hérite donc des gardes par construction, au lieu de devoir y penser.",
+  "note": "",
+  "target_sha": "0e2181eb03e39d708c4e88c5a73536c143f3bce3",
+  "empreinte_dedup": "94cea33419a0db7355b679dc"
+ },
+ {
+  "id": "L06-P03",
+  "title": "POINT FORT : aucun shell=True, aucun eval/exec, aucun pickle dans tout le code",
+  "severity": "NONE",
+  "status": "CONFIRME",
+  "lot": "L06",
+  "source": {
+   "type": "tool",
+   "command": "grep -rn 'shell=True|eval\\(|exec\\(|pickle' src/forgeai/"
+  },
+  "locations": [
+   "src/forgeai/"
+  ],
+  "reproduction": "0 occurrence des trois. Les 13 sites B603 passent tous par des listes argv. core/proc.py centralise l'exécution avec shlex.split + Popen(args=argv).",
+  "note": "La commande de 'forgeai loop run' vient de --step/--until, c'est-à-dire de la ligne de commande de l'opérateur lui-même : c'est la fonctionnalité, pas une entrée non fiable.",
+  "target_sha": "0e2181eb03e39d708c4e88c5a73536c143f3bce3",
+  "empreinte_dedup": "51ee19124bb6330d53c3129e"
+ },
+ {
+  "id": "L09-P01",
+  "title": "POINT FORT : intégrité parfaite des 34 registres, vérifiée par implémentation INDÉPENDANTE",
+  "severity": "NONE",
+  "status": "CONFIRME",
+  "lot": "L09",
+  "source": {
+   "type": "tool",
+   "command": "vérificateur écrit sans importer aucun code du dépôt (sha256 du JSON canonique clés triées, séparateurs compacts)"
+  },
+  "locations": [
+   "Registres/"
+  ],
+  "reproduction": "34 fichiers, 501 entrées au total (mission.jsonl 413 + 33 PATCH-*). 0 hash divergent, 0 prev_hash rompu, 0 saut de seq. La contre-implémentation concorde à 100% avec les données produites par scripts/registre.py.",
+  "note": "Anti-circularité respectée : le vérificateur n'utilise pas le code audité.",
+  "target_sha": "0e2181eb03e39d708c4e88c5a73536c143f3bce3",
+  "empreinte_dedup": "21c1b7e4c1e47984ffeb1733"
+ },
+ {
+  "id": "L09-P02",
+  "title": "POINT FORT : catalogue intègre (sha256 concordant, 1576 ids uniques)",
+  "severity": "NONE",
+  "status": "CONFIRME",
+  "lot": "L09",
+  "source": {
+   "type": "tool",
+   "command": "sha256 recalculé vs sidecar catalogue.sha256 + contrôle d'unicité"
+  },
+  "locations": [
+   "src/forgeai/data/catalogue.json"
+  ],
+  "reproduction": "sha256 calculé == sidecar (188d6cb713ff7f51...). 1576 entrées, 1576 ids distincts, 0 duplicata.",
+  "note": "",
+  "target_sha": "0e2181eb03e39d708c4e88c5a73536c143f3bce3",
+  "empreinte_dedup": "e7105aaaff1ff205dc24dafb"
+ },
+ {
+  "id": "L18-001",
+  "title": "app.js (53 Ko) n'est couvert par AUCUN linter ni gate, alors qu'il est livré au navigateur",
+  "severity": "MEDIUM",
+  "status": "CONFIRME",
+  "lot": "L18",
+  "source": {
+   "type": "tool",
+   "command": "grep des workflows + sonar-project.properties"
+  },
+  "locations": [
+   "src/forgeai/web/assets/app.js"
+  ],
+  "reproduction": "Aucun runner JS dans les 3 workflows ; les 6 fichiers .js/.cjs (66 Ko au total) échappent à tout contrôle automatique. Premier passage eslint jamais effectué : 18 avertissements no-unused-vars (fonctions showBricksSection/hideBricksSection/showDeploySection/hideDeploySection définies et jamais utilisées, ~11 catch(e) avec e inutilisé).",
+  "note": "Les 8 'erreurs' no-undef remontées (CSS, __dirname) sont des artefacts de MA configuration eslint (globals non déclarés), PAS des défauts du code — écartées après vérification.",
+  "target_sha": "0e2181eb03e39d708c4e88c5a73536c143f3bce3",
+  "empreinte_dedup": "b8136249f56d7cc28cee645f"
+ },
+ {
+  "id": "L18-P01",
+  "title": "POINT FORT : aucun XSS détecté dans app.js — échappement systématique",
+  "severity": "NONE",
+  "status": "CONFIRME",
+  "lot": "L18",
+  "source": {
+   "type": "tool",
+   "command": "extraction bornée des 18 gabarits innerHTML (backticks équilibrés, ${} imbriqués) puis contrôle de chaque interpolation"
+  },
+  "locations": [
+   "src/forgeai/web/assets/app.js"
+  ],
+  "reproduction": "18 gabarits innerHTML, 7 interpolations sans escapeHtml — TOUTES vérifiées sûres : gpuHtml/defaultsHtml/wiringHtml sont des fragments construits en échappant chaque valeur dynamique (escapeHtml(label), escapeHtml(name), escapeHtml(w)) ; n_deploy/chassis/gpus sont des compteurs numériques du résumé serveur. escapeHtml échappe & < > \" '.",
+  "note": "FORMULATION HONNÊTE : aucun XSS détecté par cette méthode à ce SHA — pas « app.js est sûr ». Un premier passage a produit 14 faux positifs (dont body.node.key_fingerprint) par un défaut de MON détecteur (drapeau d'état non réinitialisé, confusion avec textContent) ; réfutés après reprise avec bornes correctes.",
+  "target_sha": "0e2181eb03e39d708c4e88c5a73536c143f3bce3",
+  "empreinte_dedup": "1dac29852fa39b5873f28620"
+ },
+ {
+  "id": "L18-P02",
+  "title": "POINT FORT : 0 JSON/JSONL invalide, shellcheck et actionlint propres",
+  "severity": "NONE",
+  "status": "CONFIRME",
+  "lot": "L18",
+  "source": {
+   "type": "tool",
+   "command": "parse strict de tous les .json/.jsonl ; shellcheck -S warning ; actionlint"
+  },
+  "locations": [
+   "."
+  ],
+  "reproduction": "0 fichier JSON/JSONL non parsable sur l'ensemble du dépôt. actionlint exit=0. shellcheck : 1 seul SC2034 (variable de boucle inutilisée) et il est dans reviews/K8S-023/evidence/lab-reseau.sh, une PIÈCE DE PREUVE archivée, pas du code produit. yamllint : 178 signalements, tous de style (line-length > 80).",
+  "note": "",
+  "target_sha": "0e2181eb03e39d708c4e88c5a73536c143f3bce3",
+  "empreinte_dedup": "fe29b3808bda2e4fd2d24c82"
+ },
+ {
+  "id": "L10-001",
+  "title": "reviews_gate est FAIL-OPEN : un BINDING.txt vide ou supprimé le fait passer avec un message MENSONGER",
+  "severity": "CRITICAL",
+  "status": "CONFIRME",
+  "lot": "L10",
+  "source": {
+   "type": "tool",
+   "command": "test de mutation : vider puis supprimer reviews/BINDING.txt, relancer le gate"
+  },
+  "locations": [
+   "scripts/reviews_gate.py"
+  ],
+  "reproduction": "M1 (manifeste vidé) -> exit 0. M2 (manifeste supprimé) -> exit 0. Dans les DEUX cas le gate imprime « GATE OK : toutes les revues liantes sont APPROVE 3/3 » alors que ZÉRO revue a été vérifiée. Code fautif : check() initialise ok=True puis, si le manifeste est vide, se contente d'un AVERTISSEMENT sans passer ok=False.",
+  "note": "Le message de succès affirme un fait faux — c'est pire qu'un silence : un opérateur lisant le journal CI conclut que 135 revues ont été validées. Contre-épreuve M3 : un verdict liant muté en REJECT produit bien exit=1 et « merge bloqué », donc le gate FONCTIONNE quand il a quelque chose à vérifier ; le défaut est uniquement l'absence de garde sur le manifeste.",
+  "target_sha": "0e2181eb03e39d708c4e88c5a73536c143f3bce3",
+  "empreinte_dedup": "14c6a5d0c3347d6fa9f842d7"
+ },
+ {
+  "id": "L10-002",
+  "title": "Deux modèles n'ont JAMAIS rejeté sur 20+ revues (signal de tampon automatique)",
+  "severity": "MEDIUM",
+  "status": "CONFIRME",
+  "lot": "L10",
+  "source": {
+   "type": "tool",
+   "command": "dépouillement déterministe des 738 verdicts par modèle"
+  },
+  "locations": [
+   "reviews/"
+  ],
+  "reproduction": "GLM-5.2 : 31/31 = 100% APPROVE. MiMo-Pro-V2 : 26/26 = 100% APPROVE. Aucun REJECT sur l'ensemble de leur historique.",
+  "note": "Contraste probant dans le même corpus : Qwen3.8-Max = 4/25 = 16% d'APPROVE. Un écart de 84 points entre modèles sur un corpus partagé indique que le taux dépend fortement du reviewer, pas seulement du code. À noter : la constitution du projet a DÉJÀ écarté GLM du pool (« GLM écarté par données, fuit son raisonnement ») — cette mesure corrobore indépendamment cette décision.",
+  "target_sha": "0e2181eb03e39d708c4e88c5a73536c143f3bce3",
+  "empreinte_dedup": "7ee06ae9de3dd524d6732677"
+ },
+ {
+  "id": "L10-003",
+  "title": "98 dossiers de revue (sur 233) ne sont vérifiés par aucun gate",
+  "severity": "MEDIUM",
+  "status": "CONFIRME",
+  "lot": "L10",
+  "source": {
+   "type": "tool",
+   "command": "set(dossiers avec verdicts) - set(BINDING.txt)"
+  },
+  "locations": [
+   "reviews/BINDING.txt"
+  ],
+  "reproduction": "233 dossiers portent des verdicts, 135 seulement sont liants. Les 98 autres (dont les 11 rounds AUDIT-2026-08-03, B-08-civ, B-10-civ, B-11-civ...) ne sont dépouillés par aucun contrôle automatique.",
+  "note": "Cohérent avec la politique documentée (« les dossiers historiques restent pour la traçabilité mais ne sont PAS liants »), mais rien n'empêche qu'un dossier ACTIF soit oublié du manifeste — aucun contrôle ne rapproche les dossiers présents du manifeste.",
+  "target_sha": "0e2181eb03e39d708c4e88c5a73536c143f3bce3",
+  "empreinte_dedup": "9bcf39bf35b5c0b04c45a4ee"
+ },
+ {
+  "id": "L10-004",
+  "title": "35 verdicts sans champ reviewer_model (vendor non déterminable)",
+  "severity": "LOW",
+  "status": "CONFIRME",
+  "lot": "L10",
+  "source": {
+   "type": "tool",
+   "command": "json: absence de la clé reviewer_model"
+  },
+  "locations": [
+   "reviews/"
+  ],
+  "reproduction": "6 dossiers concernés : round-2 (12), round-1 (11), p2-models (3), p1-code (3), p2-network (3), p3-portabilite (3). Le modèle n'est déductible que du nom de fichier (gemini.verdict.json...).",
+  "note": "Aucun de ces dossiers n'est liant, donc l'anti-Sybil de tally n'est pas contourné en pratique — mais la traçabilité vendor de ces revues repose sur une convention de nommage, pas sur une donnée.",
+  "target_sha": "0e2181eb03e39d708c4e88c5a73536c143f3bce3",
+  "empreinte_dedup": "e35e8e83596d8f65257f785d"
+ },
+ {
+  "id": "L10-P01",
+  "title": "POINT FORT : intégrité structurelle parfaite des 135 revues liantes",
+  "severity": "NONE",
+  "status": "CONFIRME",
+  "lot": "L10",
+  "source": {
+   "type": "tool",
+   "command": "contrôle des 3 invariants sur les 135 dossiers de BINDING.txt"
+  },
+  "locations": [
+   "reviews/"
+  ],
+  "reproduction": "0 dossier liant avec moins de 3 vendors DISTINCTS. 0 dossier liant avec un prompt_sha256 divergent (sceau intact). 0 verdict non-APPROVE dans un dossier liant.",
+  "note": "Quand le mécanisme est appliqué, il l'est correctement. Le défaut n'est pas dans le sceau, il est dans son branchement (non requis en CI, et fail-open si le manifeste disparaît).",
+  "target_sha": "0e2181eb03e39d708c4e88c5a73536c143f3bce3",
+  "empreinte_dedup": "33ec6fd97317cc82f8a96eec"
+ },
+ {
+  "id": "L11-001",
+  "title": "130 erreurs de typage de classe « vrai défaut » (86 union-attr, 17 attr-defined, 14 assignment, 12 arg-type)",
+  "severity": "MEDIUM",
+  "status": "HYPOTHESE",
+  "lot": "L11",
+  "source": {
+   "type": "tool",
+   "command": "mypy --no-error-summary --ignore-missing-imports src/forgeai, filtré sur les codes dénotant un défaut"
+  },
+  "locations": [
+   "src/forgeai/"
+  ],
+  "reproduction": "130 erreurs retenues sur 374 en mode --strict. mypy n'a JAMAIS tourné sur ce dépôt (aucune section [tool.mypy], aucun job CI) alors que G02 le déclare bloquant.",
+  "note": "STATUT HYPOTHESE ASSUMÉ : la vérification d'un échantillon a montré des FAUX POSITIFS structurels — k3s.py:94 « ServiceSpec has no attribute ressources_effectives » est réfuté par exécution (attribut posé par object.__setattr__ dans __post_init__, dataclass gelée, invisible à mypy) ; _portable_lock.py et core/proc.py signalent des attributs Windows (msvcrt.locking, CREATE_NEW_PROCESS_GROUP) absents sous Linux. Aucun de ces 130 ne peut passer CONFIRME sans PoC individuel.",
+  "target_sha": "0e2181eb03e39d708c4e88c5a73536c143f3bce3",
+  "empreinte_dedup": "01577f49cc9eb6ee59aadf39"
+ },
+ {
+  "id": "L12-P01",
+  "title": "POINT FORT : le dépôt est VERT sous sa propre configuration ruff",
+  "severity": "NONE",
+  "status": "CONFIRME",
+  "lot": "L12",
+  "source": {
+   "type": "tool",
+   "command": "ruff check --config pyproject.toml src scripts tests"
+  },
+  "locations": [
+   "pyproject.toml"
+  ],
+  "reproduction": "« All checks passed! » sous select=[E9,F]. Le pre-commit ruff est donc effectif sur ce qu'il couvre.",
+  "note": "Écart de périmètre avec G01 qui déclare --select ALL : 5419 violations sous ALL, dont 3511 S101 (asserts de tests), 3052 E501, 3421 ANN*. Publier ce chiffre brut comme « dette » serait trompeur — l'écrasante majorité est cosmétique ou contradictoire avec d'autres gates.",
+  "target_sha": "0e2181eb03e39d708c4e88c5a73536c143f3bce3",
+  "empreinte_dedup": "f2eddac86ba9f18e1afa731e"
+ },
+ {
+  "id": "L12-001",
+  "title": "324 signalements de classes de bug réelles sous le panier 1",
+  "severity": "LOW",
+  "status": "HYPOTHESE",
+  "lot": "L12",
+  "source": {
+   "type": "tool",
+   "command": "ruff check --isolated --select PLW1510,S603,S607,S310,RUF012,RUF013,TRY004,B011,PT015,S108,S110,B904"
+  },
+  "locations": [
+   "src/forgeai/"
+  ],
+  "reproduction": "S310=114, S603=59, PLW1510=48, S607=46, S108=16, RUF012=14, B904=9, TRY004=8, S110=5, B011=2, PT015=2, RUF013=1.",
+  "note": "S310/S603/S607 (219 sur 324) recouvrent les clusters DÉJÀ triés et acceptés par SAST-042 — ne pas les re-litiger. Le résidu actionnable est PLW1510 (48 subprocess.run sans check=) et B904 (9).",
+  "target_sha": "0e2181eb03e39d708c4e88c5a73536c143f3bce3",
+  "empreinte_dedup": "0be775fdaaabc0538a2635cb"
+ },
+ {
+  "id": "L14-001",
+  "title": "2 tests utilisent « assert False » : sous python -O ils passeraient à vide",
+  "severity": "LOW",
+  "status": "CONFIRME",
+  "lot": "L14",
+  "source": {
+   "type": "tool",
+   "command": "ruff --select B011,PT015"
+  },
+  "locations": [
+   "tests/test_models_local.py:168"
+  ],
+  "reproduction": "Motif « aurait dû lever » : appel attendu comme levant, puis assert False, puis except. Sous python -O les assert sont retirés : le test réussirait alors même qu'aucune exception n'est levée.",
+  "note": "Remède standard : pytest.fail() ou pytest.raises(). Impact réel nul tant que la CI n'utilise pas -O (vérifié : elle ne l'utilise pas).",
+  "target_sha": "0e2181eb03e39d708c4e88c5a73536c143f3bce3",
+  "empreinte_dedup": "e36a8c7fd889b965dcd0e547"
+ },
+ {
+  "id": "L14-002",
+  "title": "27 fonctions de test sans assertion explicite (idiome « ne doit pas lever »)",
+  "severity": "LOW",
+  "status": "CONFIRME",
+  "lot": "L14",
+  "source": {
+   "type": "tool",
+   "command": "détection AST : fonction test* sans ast.Assert ni appel *assert*/raises"
+  },
+  "locations": [
+   "tests/"
+  ],
+  "reproduction": "27 cas. Vérification d'un échantillon : test_catalogue_integrite_sha256 appelle verify_catalogue() qui LÈVE si altéré ; test_question_legitime_passe appelle scan_input() qui LÈVE si bloqué. L'assertion est portée par l'absence d'exception.",
+  "note": "NON CLASSÉ COMME DÉFAUT : idiome légitime, plus faible qu'une assertion explicite mais réel. Précision : le gate no_stub_scan ne prétend PAS les interdire — il détecte « assert True » spécifiquement (ligne 135). Ces 27 sont hors de son périmètre, ce n'est donc pas une défaillance du gate.",
+  "target_sha": "0e2181eb03e39d708c4e88c5a73536c143f3bce3",
+  "empreinte_dedup": "6bd8e0410e6b08f01d29dc72"
+ },
+ {
+  "id": "L13-001",
+  "title": "Complexité extrême concentrée sur 3 fonctions (wizard_ci=109, do_GET=66, do_POST=59)",
+  "severity": "MEDIUM",
+  "status": "CONFIRME",
+  "lot": "L13",
+  "source": {
+   "type": "tool",
+   "command": "radon cc -s -n C ; radon mi -s"
+  },
+  "locations": [
+   "src/forgeai/cli.py:146"
+  ],
+  "reproduction": "cli.py::wizard_ci = complexité cyclomatique 109 (note F). web/server.py::do_GET = 66 (F), do_POST = 59 (F). Indice de maintenabilité : cli.py et web/server.py notés C (0.00), contre A (27.81) pour renderers/k3s.py.",
+  "note": "Ce sont les points où un défaut a le plus de chances de se loger et le moins de chances d'être vu en revue. Aucun gate ne mesure la complexité (ruff C901 n'est pas activé).",
+  "target_sha": "0e2181eb03e39d708c4e88c5a73536c143f3bce3",
+  "empreinte_dedup": "ae1110d34a2669921b974ff7"
+ },
+ {
+  "id": "L13-P01",
+  "title": "POINT FORT : quasi aucun code mort (3 signalements, tous des faux positifs de signature)",
+  "severity": "NONE",
+  "status": "CONFIRME",
+  "lot": "L13",
+  "source": {
+   "type": "tool",
+   "command": "vulture src/forgeai --min-confidence 80"
+  },
+  "locations": [
+   "src/forgeai/"
+  ],
+  "reproduction": "3 signalements seulement : signum/frame (signature imposée d'un handler de signal) et iteration (paramètre de callback). Aucun code réellement mort.",
+  "note": "",
+  "target_sha": "0e2181eb03e39d708c4e88c5a73536c143f3bce3",
+  "empreinte_dedup": "123e606028b30c7e69e81cb3"
+ },
+ {
+  "id": "L15-001",
+  "title": "Les documents canoniques annoncent 1577 briques ; le catalogue en contient 1576",
+  "severity": "LOW",
+  "status": "CONFIRME",
+  "lot": "L15",
+  "source": {
+   "type": "tool",
+   "command": "grep des nombres dans chaque document vs len(catalogue.json)"
+  },
+  "locations": [
+   "README.md"
+  ],
+  "reproduction": "README.md, MASTER-PLAN.md et CANON/ETAT-SYSTEME.md disent 1577. Le catalogue réel en contient 1576.",
+  "note": "CAUSE IDENTIFIÉE ET IMPUTÉE : c'est MOI qui ai retiré l'entrée morte feder-cr-invisible-playwright en PR #393 le 2026-08-04 sans mettre à jour les trois documents. Dérive introduite le jour même de l'audit.",
+  "target_sha": "0e2181eb03e39d708c4e88c5a73536c143f3bce3",
+  "empreinte_dedup": "3a553719391dd8c41155c3b0"
+ },
+ {
+  "id": "L15-002",
+  "title": "CANON/plan-integral.md, qui se déclare « référence unique », annonce encore 1021 briques",
+  "severity": "MEDIUM",
+  "status": "CONFIRME",
+  "lot": "L15",
+  "source": {
+   "type": "tool",
+   "command": "grep '1021' CANON/plan-integral.md"
+  },
+  "locations": [
+   "CANON/plan-integral.md"
+  ],
+  "reproduction": "Le document se proclame « DOCUMENT DE RÉFÉRENCE UNIQUE » et déclare les autres non-autoritaires, mais porte un chiffre périmé de 555 briques (1021 vs 1576 réels). backlog.yaml annonce 1014/1021.",
+  "note": "Conflit d'autorité non tranché : plan-integral.md se dit la référence, mais c'est README/MASTER-PLAN/ETAT-SYSTEME qui portent les chiffres à jour.",
+  "target_sha": "0e2181eb03e39d708c4e88c5a73536c143f3bce3",
+  "empreinte_dedup": "15993fcbab6f7d47136790ac"
+ },
+ {
+  "id": "L15-003",
+  "title": "Deux phasages incompatibles dans le MÊME répertoire manifests/",
+  "severity": "MEDIUM",
+  "status": "CONFIRME",
+  "lot": "L15",
+  "source": {
+   "type": "tool",
+   "command": "grep -ohE 'P[0-9](\\.[0-9])?' sur les deux fichiers"
+  },
+  "locations": [
+   "manifests/backlog.yaml"
+  ],
+  "reproduction": "manifests/backlog.yaml : P2, P2.5, P3, P4, P5. manifests/phases.yaml : P1, P2, P3. Aucun document ne dit lequel fait foi.",
+  "note": "",
+  "target_sha": "0e2181eb03e39d708c4e88c5a73536c143f3bce3",
+  "empreinte_dedup": "f2c0c2d69750007011ec785d"
+ },
+ {
+  "id": "L15-004",
+  "title": "MASTER-PLAN §6 publie une table de gates dont 3 outils n'ont jamais tourné",
+  "severity": "HIGH",
+  "status": "CONFIRME",
+  "lot": "L15",
+  "source": {
+   "type": "tool",
+   "command": "lecture de la table §6 vs mesure des outils"
+  },
+  "locations": [
+   "MASTER-PLAN.md:107-118"
+  ],
+  "reproduction": "La table annonce « Lint ruff : 0 violation », « Types mypy --strict : 0 erreur », « Images trivy : 0 CVE HIGH/CRITICAL », « ≥95% registre/gates », « No-fake-done : DONE sans preuve = FAIL ». Mesuré : mypy --strict = 374 erreurs (jamais exécuté), trivy jamais installé ni invoqué, module forgeai/gates inexistant, no-fake-done non implémenté.",
+  "note": "C'est la formulation la plus trompeuse du dépôt : un tableau de conformité présenté sans réserve, alors que manifests/gates.yaml (sa source) porte lui-même « claim: UNVERIFIED ».",
+  "target_sha": "0e2181eb03e39d708c4e88c5a73536c143f3bce3",
+  "empreinte_dedup": "b11df81ae79a1568ea64d0f8"
+ },
+ {
+  "id": "L16-001",
+  "title": "2 packages déclarés COMPLETED sans aucune entrée au registre (ce que G08 aurait attrapé)",
+  "severity": "MEDIUM",
+  "status": "CONFIRME",
+  "lot": "L16",
+  "source": {
+   "type": "tool",
+   "command": "intersection des 70 ids COMPLETED avec le contenu de Registres/mission.jsonl"
+  },
+  "locations": [
+   "coordination/completed.json"
+  ],
+  "reproduction": "70 packages déclarés COMPLETED, 68 ont une trace au registre. Manquants : I18N-041 et I18N-042.",
+  "note": "IMPUTATION HONNÊTE : ces deux stories sont les MIENNES, livrées dans cette session avec revue scellée 3/3 et documents de story, mais sans entrée registre. Le gate G08 (« toute story DONE sans entrée registre = FAIL ») est déclaré bloquant depuis l'origine et n'a jamais été implémenté — sinon il aurait bloqué mes propres PR.",
+  "target_sha": "0e2181eb03e39d708c4e88c5a73536c143f3bce3",
+  "empreinte_dedup": "c7b5ef8cf3f371f483c2913b"
+ },
+ {
+  "id": "L16-P01",
+  "title": "POINT FORT : chronologie intégralement reconstituable par source objective",
+  "severity": "NONE",
+  "status": "CONFIRME",
+  "lot": "L16",
+  "source": {
+   "type": "tool",
+   "command": "gh api pulls?state=closed + Registres/mission.jsonl"
+  },
+  "locations": [
+   "."
+  ],
+  "reproduction": "96 PR fusionnées traçables par date via l'API. Pic d'activité : 39 PR le 2026-07-31, 22 le 30/07. 413 entrées de registre hash-chaînées et vérifiées. Aucune affirmation de ce rapport ne repose sur la mémoire d'un modèle.",
+  "note": "",
+  "target_sha": "0e2181eb03e39d708c4e88c5a73536c143f3bce3",
+  "empreinte_dedup": "69674370794754de19ab3514"
+ }
+]

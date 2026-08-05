@@ -1,0 +1,43 @@
+=== 34 fichiers de registre ===
+  PATCH-CAP-033A.jsonl                  2 entrées  OK
+  PATCH-COMPOSE-025.jsonl               1 entrées  OK
+  PATCH-DATA-002.jsonl                 16 entrées  OK
+  PATCH-DATA-003.jsonl                  9 entrées  OK
+  PATCH-HEALTH-028A.jsonl               1 entrées  OK
+  PATCH-HEALTH-028B.jsonl               4 entrées  OK
+  PATCH-HW-009.jsonl                    1 entrées  OK
+  PATCH-HW-010.jsonl                    1 entrées  OK
+  PATCH-K8S-008.jsonl                   1 entrées  OK
+  PATCH-K8S-022.jsonl                   1 entrées  OK
+  PATCH-K8S-023.jsonl                   1 entrées  OK
+  PATCH-K8S-024.jsonl                   1 entrées  OK
+  PATCH-K8S-027.jsonl                   3 entrées  OK
+  PATCH-OPT-001.jsonl                   1 entrées  OK
+  PATCH-OPT-002.jsonl                   1 entrées  OK
+  PATCH-ORCH-001.jsonl                  3 entrées  OK
+  PATCH-PLACE-011.jsonl                 2 entrées  OK
+  PATCH-PLACE-026A.jsonl                1 entrées  OK
+  PATCH-PLACE-026B.jsonl                1 entrées  OK
+  PATCH-PORT-TESTPROC.jsonl             4 entrées  OK
+  PATCH-RAG-004A.jsonl                  1 entrées  OK
+  PATCH-RAG-004B.jsonl                  1 entrées  OK
+  PATCH-RAG-005.jsonl                   1 entrées  OK
+  PATCH-RES-012A.jsonl                  1 entrées  OK
+  PATCH-RES-012B.jsonl                  2 entrées  OK
+  PATCH-REV-043.jsonl                   4 entrées  OK
+  PATCH-SAST-042.jsonl                  2 entrées  OK
+  PATCH-SECRET-020A.jsonl               4 entrées  OK
+  PATCH-TRUST-019A.jsonl                2 entrées  OK
+  PATCH-TRUST-019B.jsonl                1 entrées  OK
+  PATCH-UI-039.jsonl                    1 entrées  OK
+  PATCH-UI-040.jsonl                    1 entrées  OK
+  PATCH-WEB-001.jsonl                  10 entrées  OK
+  mission.jsonl                       413 entrées  OK
+
+TOTAL anomalies de chaîne : 0
+
+=== CATALOGUE ===
+  sha256 calculé : 188d6cb713ff7f51e9791c059c8363113843d9268292fe506ce6c574edae0d95
+  sha256 sidecar : 188d6cb713ff7f51e9791c059c8363113843d9268292fe506ce6c574edae0d95
+  -> CONCORDE
+  entrées : 1576   ids uniques : 1576   OK
