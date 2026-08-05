@@ -10,7 +10,7 @@
 ## 1. Mission et périmètre
 
 ForgeAI Toolkit est le **déployeur de référence d'infrastructures IA agentiques** :
-wizard CLI et interface web (hardware-aware), catalogue de **1577 briques** (FR/EN), rendu double
+wizard CLI et interface web (hardware-aware), catalogue de **1576 briques** (FR/EN), rendu double
 backend (Docker Compose + K3s), multi-nœuds Tailscale (P2), gouvernance par registres
 JSONL hash-chaînés. Réf. complète : `CANON/PLAN-MAITRE-EXECUTION-BMAD-v1.0.md`.
 
@@ -40,7 +40,7 @@ composer+grok (même vendor).
 src/
 ├── web/          # Interface web (wizard, panneau opérateur Status/Logs/Diagnostic)
 ├── hardware/     # Détection CPU/GPU/RAM/disque multi-vendor → HardwareProfile
-├── catalogue/    # 1577 briques, validation, hash du catalogue
+├── catalogue/    # 1576 briques, validation, hash du catalogue
 ├── rag/          # Ingestion + requête (preuve e2e)
 ├── planner/      # Profils, assemblage DeploymentPlan
 ├── renderers/    # RenderTarget: Compose | K3s
@@ -106,19 +106,35 @@ Chaque story : **DONE-avec-preuve ou BLOCKED-avec-raison** (§8bis, aucun troisi
 
 ## 6. Gates et enforcement
 
-| Gate | Outil | Seuil |
-|---|---|---|
-| Lint | ruff | 0 violation |
-| Types | mypy --strict | 0 erreur |
-| Tests | pytest | ≥85 % global, ≥95 % registre/gates |
-| Zéro stub | scripts/no_stub_scan.py | 0 hit (marqueurs + AST) |
-| Secrets | gitleaks | 0 fuite |
-| Images | trivy | 0 CVE HIGH/CRITICAL |
-| Hash catalogue | vérification dédiée | hash conforme au registre |
-| No-fake-done | vérification dédiée | DONE sans preuve = FAIL |
-| Revue aveugle ×3 | scripts/revue.py (tally) + scripts/reviews_gate.py | 3 verdicts, 3 vendors, zéro objection critique non résolue |
-| Consensus de plan | scripts/revue.py (tally) | ≥7/9 APPROVE + zéro critique (plan-freeze uniquement) |
-| Signature Fable | registre | par-dessus gates verts, jamais en substitut |
+> **Cette table distingue désormais ce qui est VOULU de ce qui est EXÉCUTÉ.** L'audit exhaustif
+> du 2026-08-05 (registre seq 414) a mesuré que la version précédente publiait, sans réserve,
+> des seuils que rien n'appliquait — « ruff 0 violation », « mypy --strict 0 erreur »,
+> « trivy 0 CVE » — alors que ces trois outils n'avaient jamais tourné. Colonne **État réel**
+> obligatoire : toute ligne ajoutée ici doit dire si elle est branchée, et où.
+
+| Gate | Outil | Seuil visé | État réel (mesuré) |
+|---|---|---|---|
+| Lint Python | ruff | 0 violation sur le périmètre configuré | **actif en pre-commit**, `select=["E9","F"]` — vert. Pas de job CI. Le `--select ALL` d'origine n'a jamais été appliqué (17 620 violations, dont 66 % cosmétiques : 3511 `S101` sur des tests, 3052 `E501`, 3970 `ANN*`, 1094 `D103`) |
+| Types | mypy --strict | 0 erreur | **NON BRANCHÉ** — aucune section `[tool.mypy]`, aucun job. Mesuré : 374 erreurs en `--strict`, dont ~130 de classes « vrai défaut » (à trier, certaines sont des faux positifs de plateforme ou d'attributs dynamiques) |
+| Tests | pytest | ≥85 % global, ≥95 % `core/registre.py` | **ACTIF ET REQUIS** — job `tests`. Réel : 1884 passés / 7 skippés justifiés, 93 % de couverture branches incluses |
+| Zéro stub | scripts/no_stub_scan.py | 0 hit (marqueurs + AST) | **ACTIF ET REQUIS** — job `no-stub-scan` |
+| Secrets | gitleaks | 0 fuite | **ACTIF ET REQUIS** — job `gitleaks`. Historique complet vérifié : 0 fuite sur 678 commits |
+| JavaScript | node + eslint | tests JS verts, 0 `no-eval`/`no-undef` | **ACTIF** — job `js` (ajouté seq 417). Avant : les 3 `tests/js/*.cjs` ne tournaient nulle part, alors que D4 et UI-039 les citaient comme preuve |
+| Images/CVE | trivy | 0 CVE HIGH/CRITICAL | **NON BRANCHÉ** — jamais installé ni invoqué. Note : `dependencies = []` en runtime, la surface réelle est l'extra `dev` et les Actions |
+| Hash catalogue | `verify_catalogue()` | sha256 conforme au sidecar | **actif au RUNTIME produit** (chargement du catalogue). Le job CI `catalogue` ne calcule aucun sha256 et n'est pas requis |
+| No-fake-done | vérification dédiée | DONE sans preuve registre = FAIL | **NON IMPLÉMENTÉ**. Mesuré : 2 packages COMPLETED sans entrée registre auraient été bloqués |
+| Revue aveugle ×3 | `revue.py::tally` + `reviews_gate.py` | 3 verdicts, 3 vendors distincts, 0 objection critique | **actif, MAIS non requis en branch protection** — une PR peut fusionner avec ce job au rouge. Le fail-open sur manifeste vide a été fermé (seq 415) |
+| Consensus de plan | `revue.py::tally` | ≥7/9 APPROVE + 0 critique (plan-freeze) | **actif hors CI**, sur invocation |
+| Signature Fable | registre | par-dessus gates verts, jamais en substitut | **NON IMPLÉMENTÉ** |
+
+**Épinglage** : les 17 références `uses:` des workflows sont épinglées par SHA de commit
+(seq 416) — aucun tag mutable. C'est la seule surface supply-chain tierce, `dependencies` étant vide.
+
+**Ce que la branch protection exige réellement** : `gitleaks`, `no-stub-scan`, `registres`,
+`tests`, plus les apps externes SonarCloud et GitGuardian. Les autres jobs définis
+(`reviews-sealed`, `catalogue`, `docs`, `metering-sites`, `guard-fs-multi-os`, `js`,
+`scope-guard`, `coordination-validation`, `sonarcloud-scan`) s'exécutent mais **ne bloquent pas**.
+Les faire passer en requis est une décision T3.
 | T3 | Nathan | secrets prod, paiements, suppressions, engagements externes |
 
 ## 7. Risques et mitigations (top 5 — détail : Phase-A/risques-deepseek.md)

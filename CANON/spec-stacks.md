@@ -1,6 +1,6 @@
 # spec-stacks.md — Les 6 stacks ForgeAI × 15 sphères (design fondation)
 
-- **Statut** : Approuvé Nathan 2026-07-19. Étend l'installateur UI et le catalogue (1577 briques).
+- **Statut** : Approuvé Nathan 2026-07-19. Étend l'installateur UI et le catalogue (1576 briques).
 - **Exigences** : ID-4 (stacks complets), CD-1/CD-2 (système complet, branché et fonctionnel).
 - **Méthode** : Sourcé R-ALL. 130 dossiers BINDING scellés et validés par la gate D9 (minimum 3 vendors distincts).
 
@@ -10,7 +10,7 @@
 
 **« Châssis unique + tête interchangeable », profil de défauts sur catalogue par sphère.**
 
-- Le **catalogue (1577 briques)** est l'**univers**, organisé en **15 sphères** (incluant la sphère réelle `VOIX`). Tout est activable/désactivable par sphère.
+- Le **catalogue (1576 briques)** est l'**univers**, organisé en **15 sphères** (incluant la sphère réelle `VOIX`). Tout est activable/désactivable par sphère.
 - Un **stack = un PROFIL DE DÉFAUTS** : ce qui se déploie et se câble par défaut. Il est composé du **châssis commun (24 briques calculées)** + les défauts de domaine + la tête S5. Le reste de chaque sphère reste disponible en exploration.
 - **Doctrine des défauts (hiérarchie gravée par gates)** :
   1. `default_by_sphere` : Autorité absolue de déploiement par défaut.

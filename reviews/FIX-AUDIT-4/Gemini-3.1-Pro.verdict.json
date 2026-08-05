@@ -1,0 +1,19 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "Description de la PR",
+   "description": "La description annonce '10 mentions 1577 -> 1576' corrigées, mais le diff montre 11 mentions corrigées au total (AGENTS.md: 1, CANON/ETAT-SYSTEME.md: 2, CANON/spec-stacks.md: 2, CANON/spec-web-ui.md: 1, Docs/reference/catalogue-gate.md: 1, MASTER-PLAN.md: 2, README.md: 2). La correction est exhaustive, seule la description sous-estime le compte.",
+   "preuve": "Décompte des lignes modifiées dans le diff fourni."
+  }
+ ],
+ "date_heure": "2026-08-05T17:36:53.508547+00:00",
+ "prompt_sha256": "72392d76e1c82be14b2a1c0991b3e3bf89485d0d71cc225f355cc15881f4607a",
+ "reviewer_model": "Gemini-3.1-Pro",
+ "modele_servi": "gemini-31-pro-openrouter",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "1"
+ }
+}
