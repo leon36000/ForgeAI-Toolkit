@@ -12,14 +12,14 @@ jobs:
   coordination-validation:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
       - name: Valider la coordination multi-IDE (claims, lanes, deps)
         run: python3 scripts/coordination/validate_coordination.py
 
   scope-guard:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
           fetch-depth: 0
       - name: Vérifier que les fichiers modifiés sont dans l'allowlist du claim de CETTE PR
