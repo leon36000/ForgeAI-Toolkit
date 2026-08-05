@@ -84,8 +84,16 @@ porte elle-même l'en-tête `claim: UNVERIFIED`.
 
 ### 4. « Qualité, perf, dette ? »
 
-**Solide.** 1891 tests, tous verts, **0 skippé**. **93 % de couverture branches incluses** — alors que
-le gate n'exige que 85 % en lignes seules. Quasi aucun code mort (3 signalements, tous des faux
+**Solide.** 1891 tests collectés : **1884 passent, 7 sont skippés**.
+
+> **CORRECTION post-publication (2026-08-05)** — la première version de ce rapport affirmait
+> « 1891 tests, tous verts, 0 skippé ». C'était **faux** : mon filtre de lecture avait manqué la ligne
+> de résumé de pytest. Le chiffre exact est 1884 passés + 7 skippés. Les 7 skips sont **justifiés et
+> tracés** (5 preuves e2e Docker lourdes, rejouables via `FORGEAI_E2E=1` ; 2 comportements Windows qui
+> tournent sur les runners Windows), chacun renvoyant à une preuve d'exécution réelle au registre —
+> c'est l'inverse du « skip silencieux » que le lot L02 cherchait.
+
+**93 % de couverture branches incluses** — alors que le gate n'exige que 85 % en lignes seules. Quasi aucun code mort (3 signalements, tous des faux
 positifs de signature). Le dépôt est **vert sous sa propre configuration ruff**.
 
 La dette réelle est concentrée : `cli.py::wizard_ci` (complexité 109), `web/server.py::do_GET` (66)
@@ -132,7 +140,7 @@ a quelque chose à vérifier ; le défaut est l'absence de garde sur le manifest
   (jeton/CSRF/anti-rebinding) *avant* toute comparaison de route — une route mutante ajoutée par
   erreur hérite des gardes par construction.
 - **Validation par liste blanche** sur toutes les entrées de `/api/deploy`.
-- Permissions CI en lecture seule · `actionlint` propre · 0 JSON/JSONL invalide · 1891 tests verts ·
+- Permissions CI en lecture seule · `actionlint` propre · 0 JSON/JSONL invalide · 1884 tests verts (7 skips justifiés et tracés) ·
   93 % de couverture branches · quasi aucun code mort.
 
 ---

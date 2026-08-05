@@ -51,7 +51,10 @@ def check(manifest: Path, reviews_root: Path) -> tuple[bool, list[str]]:
     ok = True
     binding = read_manifest(manifest)
     if not binding:
-        report.append(f"AVERTISSEMENT : manifeste {manifest} vide ou absent — rien à vérifier")
+        ok = False
+        report.append(
+            f"ECHEC : manifeste {manifest} vide ou absent — aucune revue liante vérifiée"
+        )
     for entry in binding:
         d = reviews_root / entry if not Path(entry).is_absolute() else Path(entry)
         verdict_files = sorted(d.glob("*.verdict.json"))
