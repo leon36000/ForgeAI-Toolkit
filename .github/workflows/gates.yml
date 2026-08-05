@@ -103,6 +103,21 @@ jobs:
       - name: Gate B-26 — désambiguïsation du catalogue (id unique, collisions qualifiées)
         run: python3 scripts/catalogue_gate.py
 
+  js:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af # v4.1.0
+      - name: Installer eslint
+        run: npm install --no-save eslint@9.39.5
+      - name: Tests JavaScript
+        run: |
+          node tests/js/adoption.test.cjs
+          node tests/js/chaine_adoption.test.cjs
+          node tests/js/engine_filter.test.cjs
+      - name: Lint JavaScript ciblé
+        run: npx eslint src/forgeai/web/assets/app.js src/forgeai/web/assets/adoption.js src/forgeai/web/assets/engine_filter.js tests/js/*.cjs
+
   tests:
     runs-on: ubuntu-latest
     steps:
