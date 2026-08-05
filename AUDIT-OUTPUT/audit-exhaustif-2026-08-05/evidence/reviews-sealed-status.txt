@@ -1,0 +1,21 @@
+=== conclusion du job reviews-sealed sur le head des PR fusionnées ===
+  success      82
+  ABSENT       14
+
+=== PR fusionnées SANS reviews-sealed vert ===
+  PR # 369  reviews-sealed=ABSENT
+  PR # 368  reviews-sealed=ABSENT
+  PR # 367  reviews-sealed=ABSENT
+  PR # 366  reviews-sealed=ABSENT
+  PR # 365  reviews-sealed=ABSENT
+  PR # 364  reviews-sealed=ABSENT
+  PR # 363  reviews-sealed=ABSENT
+  PR # 362  reviews-sealed=ABSENT
+  PR # 361  reviews-sealed=ABSENT
+  PR # 360  reviews-sealed=ABSENT
+  PR # 359  reviews-sealed=ABSENT
+  PR # 358  reviews-sealed=ABSENT
+  PR # 357  reviews-sealed=ABSENT
+  PR # 356  reviews-sealed=ABSENT
+
+TOTAL fusionnées sans revue scellée verte : 14 / 96

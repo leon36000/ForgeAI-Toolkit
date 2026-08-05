@@ -1,0 +1,18 @@
+=== PR FUSIONNÉES SANS TOUS LES CHECKS *REQUIS* AU VERT ===
+  PR # 369  checks_total= 1  manquants: SonarCloud Code Analysis, gitleaks, no-stub-scan, registres, tests
+  PR # 368  checks_total= 1  manquants: SonarCloud Code Analysis, gitleaks, no-stub-scan, registres, tests
+  PR # 367  checks_total= 1  manquants: SonarCloud Code Analysis, gitleaks, no-stub-scan, registres, tests
+  PR # 366  checks_total= 1  manquants: SonarCloud Code Analysis, gitleaks, no-stub-scan, registres, tests
+  PR # 365  checks_total= 1  manquants: SonarCloud Code Analysis, gitleaks, no-stub-scan, registres, tests
+  PR # 364  checks_total= 1  manquants: SonarCloud Code Analysis, gitleaks, no-stub-scan, registres, tests
+  PR # 363  checks_total= 1  manquants: SonarCloud Code Analysis, gitleaks, no-stub-scan, registres, tests
+  PR # 362  checks_total= 1  manquants: SonarCloud Code Analysis, gitleaks, no-stub-scan, registres, tests
+  PR # 361  checks_total= 1  manquants: SonarCloud Code Analysis, gitleaks, no-stub-scan, registres, tests
+  PR # 360  checks_total= 1  manquants: SonarCloud Code Analysis, gitleaks, no-stub-scan, registres, tests
+  PR # 359  checks_total= 1  manquants: SonarCloud Code Analysis, gitleaks, no-stub-scan, registres, tests
+  PR # 358  checks_total= 1  manquants: SonarCloud Code Analysis, gitleaks, no-stub-scan, registres, tests
+  PR # 357  checks_total= 1  manquants: SonarCloud Code Analysis, gitleaks, no-stub-scan, registres, tests
+  PR # 356  checks_total= 1  manquants: SonarCloud Code Analysis, gitleaks, no-stub-scan, registres, tests
+
+TOTAL : 14 / 96 PR fusionnées sans les checks requis complets
+dont AUCUN check CI (0 ou 1) : 14 -> PR [369, 368, 367, 366, 365, 364, 363, 362, 361, 360, 359, 358, 357, 356]
