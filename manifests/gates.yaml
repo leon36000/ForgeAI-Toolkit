@@ -1,3 +1,13 @@
+# ⚠️  CE FICHIER DÉCRIT L'INTENTION, PAS L'ÉTAT BRANCHÉ.
+#     `bloquant: true` ci-dessous signifie « doit bloquer selon le plan », PAS « bloque
+#     aujourd'hui ». L'audit exhaustif du 2026-08-05 (registre seq 414) a mesuré que sur les
+#     11 gates déclarés bloquants, 2 bloquaient réellement (G04 no-stub-scan, G05 gitleaks).
+#     G02/G06/G08/G10/G11 n'étaient pas implémentés du tout ; G01 est réduit à E9+F en
+#     pre-commit ; G03 vise un module `forgeai/gates` inexistant ; G07 est vérifié au runtime
+#     produit mais pas par le gate CI ; G09 est implémenté mais absent des required checks.
+#     L'ÉTAT RÉEL, mesuré et daté, vit dans MASTER-PLAN.md §6 — c'est lui qui fait foi pour
+#     savoir ce qui bloque. Ce manifeste reste la cible à atteindre.
+#
 # Livrable Phase A — consolidation manifestes (§1 plan maître, tâche MiMo)
 # membre: mimo (MiMo-Pro-V2 via forge-model-bridge, provider_id=MiMo-Pro-V2)
 # date: 2026-07-14 | statut: DONE (brouillon pour plan-freeze) | claim: UNVERIFIED

@@ -1,0 +1,19 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "MASTER-PLAN.md",
+   "description": "La table affirme une couverture de tests de 93 %, divergence avec README.md qui maintient 92 %, et aucune preuve dans le pack de revue ne permet de la vérifier.",
+   "preuve": "Ligne des tests dans la nouvelle table : « Réel : 1884 passés / 7 skippés justifiés, 93 % de couverture branches incluses » ; README.md non modifié ligne « Couverture 92 % (registre 98 %) »."
+  }
+ ],
+ "date_heure": "2026-08-05T17:37:15.692349+00:00",
+ "prompt_sha256": "72392d76e1c82be14b2a1c0991b3e3bf89485d0d71cc225f355cc15881f4607a",
+ "reviewer_model": "DeepSeek-V4-Pro",
+ "modele_servi": "deepseek-v4-pro-direct",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

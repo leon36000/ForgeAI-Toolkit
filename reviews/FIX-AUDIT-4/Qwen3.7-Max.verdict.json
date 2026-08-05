@@ -1,0 +1,19 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "MASTER-PLAN.md",
+   "description": "La ligne `| T3 | Nathan | secrets prod... |` est laissée orpheline après des paragraphes de texte et ne comporte que 3 colonnes. Si un parseur Markdown tente de la rattacher au tableau des gates (qui en comporte 4), le rendu sera cassé. Il faudrait soit la supprimer, soit la reformater en texte simple.",
+   "preuve": "Diff MASTER-PLAN.md : le tableau a 4 colonnes (`| Gate | Outil | Seuil visé | État réel (mesuré) |`), mais la ligne finale conservée est `| T3 | Nathan | secrets prod, paiements, suppressions, engagements externes |` (3 colonnes) et placée après les paragraphes '**Épinglage**' et '**Ce que la branch protection exige réellement**'."
+  }
+ ],
+ "date_heure": "2026-08-05T17:37:21.219044+00:00",
+ "prompt_sha256": "72392d76e1c82be14b2a1c0991b3e3bf89485d0d71cc225f355cc15881f4607a",
+ "reviewer_model": "Qwen3.7-Max",
+ "modele_servi": "qwen37-max-openrouter",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

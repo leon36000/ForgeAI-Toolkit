@@ -25,7 +25,7 @@ Option globale : `--lang {fr,en}` (i18n, défaut: fr ou `$FORGEAI_LANG`).
 | `export` | — | exporte le setup portable, sans secrets |
 | `import` | — | importe un bundle de setup (re-demande les secrets) |
 | `ide` | list, configure, mcp, governance | branche un IDE/CLI sur le gateway local + MCP + skills/hooks |
-| `catalogue` | `--defaults` | explore le catalogue de briques (1577 briques), brique ⭐ par catégorie |
+| `catalogue` | `--defaults` | explore le catalogue de briques (1576 briques), brique ⭐ par catégorie |
 | `loop` | run | boucle d'agent gouvernée : budget+complétion+journal |
 | `template` | — | alias de déploiement hérités rétro-compatibles |
 | `web` | — | interface web locale (stdlib, hors-ligne) |
@@ -46,7 +46,7 @@ La sélection finale de l'utilisateur (briques + modèles + nœud) est transmise
 
 ## Sous-systèmes (`src/forgeai/`)
 - **hardware/** détection ; **planner/** (profile, assemble, deploy-specs) ; **preflight** matrice backend ; **gpu/** (drivers GPU).
-- **catalogue/** loader + `data/catalogue.json` (1577 briques) + `catalogue/spheres.py` (15 sphères S1..S14 + VOIX) + source unique `forgeai_home/parse_stars` + `data/locales/` (i18n unifiée, 113 clés web fr).
+- **catalogue/** loader + `data/catalogue.json` (1576 briques) + `catalogue/spheres.py` (15 sphères S1..S14 + VOIX) + source unique `forgeai_home/parse_stars` + `data/locales/` (i18n unifiée, 113 clés web fr).
 - **stacks/** (`stacks.py` + `data/stacks/*.json`) : 5 profils de déploiement + 1 profil global.
   - *agentique* : 72 briques déployées
   - *assistant-entreprise* : 102 briques déployées
