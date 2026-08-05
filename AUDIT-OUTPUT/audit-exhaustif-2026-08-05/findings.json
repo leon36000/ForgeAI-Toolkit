@@ -1,7 +1,7 @@
 [
  {
   "id": "L02-P01",
-  "title": "POINT FORT : 1891 tests, tous verts, 0 skippé",
+  "title": "POINT FORT : 1884 tests verts sur 1891 collectés, les 7 skips étant justifiés et tracés",
   "severity": "NONE",
   "status": "CONFIRME",
   "lot": "L02",
@@ -12,8 +12,8 @@
   "locations": [
    "tests/"
   ],
-  "reproduction": "exit=0. 1891 tests collectés (pytest --collect-only). Aucun SKIPPED — contrairement à l'hypothèse d'un skip silencieux sur Docker/k3s.",
-  "note": "La revendication du dépôt (~1884) est cohérente avec la mesure (1891) : écart de 7, sans sur-déclaration.",
+  "reproduction": "exit=0. 1891 tests collectés, 1884 passés, 7 skippés. CORRECTION post-publication : la première version affirmait « 0 skippé », ce qui était FAUX (filtre de lecture ayant manqué la ligne de résumé pytest). Les 7 skips sont : 5 preuves e2e Docker lourdes (immudb, langfuse, rag_durci, rag_rerank, vault) rejouables via FORGEAI_E2E=1, et 2 comportements Windows qui tournent sur les runners Windows. Chacun renvoie à une preuve d'exécution réelle au registre.",
+  "note": "La revendication du dépôt (~1884) correspond EXACTEMENT au nombre de tests qui passent. Aucun skip silencieux : chaque skip porte sa raison et sa preuve d'exécution ailleurs.",
   "target_sha": "0e2181eb03e39d708c4e88c5a73536c143f3bce3",
   "empreinte_dedup": "475d8d8cf694b95afaae1419"
  },

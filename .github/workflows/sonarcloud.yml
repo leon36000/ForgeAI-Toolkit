@@ -23,8 +23,13 @@ jobs:
       - name: Install test deps
         run: pip install pytest pytest-cov pyyaml
 
+      # `sonar.sources` inclut `scripts`, mais la couverture ne mesurait que src/forgeai et
+      # scripts/coordination : TOUT le reste de scripts/ apparaissait donc à 0 % côté SonarCloud,
+      # y compris les gates de gouvernance. Portée élargie à `scripts` (audit 2026-08-05).
+      # Aucun --cov-fail-under ici : ce run ne sert qu'à produire coverage.xml pour SonarCloud,
+      # le seuil bloquant reste celui de gates.yml sur src/forgeai.
       - name: Tests + coverage (XML for SonarCloud)
-        run: pytest -q tests scripts/coordination --cov=src/forgeai --cov=scripts/coordination --cov-report=xml:coverage.xml
+        run: pytest -q tests scripts/coordination --cov=src/forgeai --cov=scripts --cov-report=xml:coverage.xml
 
       - name: SonarQube Cloud Scan
         uses: SonarSource/sonarqube-scan-action@v8.2.1

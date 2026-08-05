@@ -8,7 +8,9 @@ import pathlib
 import forgeai
 from forgeai.core.validation import NODE_NAME_RE
 
-_PATTERN_SRC = 'r"^[a-z0-9]([a-z0-9.-]{0,62})$"'
+# Ancre de fin `\Z` et non `$` : en Python, `$` matche AUSSI avant un saut de ligne
+# terminal, donc "node1\n" passait la validation (audit 2026-08-05, constat L07-001).
+_PATTERN_SRC = r'r"^[a-z0-9]([a-z0-9.-]{0,62})\Z"'
 
 
 def test_motif_node_defini_une_seule_fois():
