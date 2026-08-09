@@ -217,6 +217,30 @@ def test_preparer_applique(profiles: dict[str, tuple[int, str]]) -> None:
     assert len([c for c in failing_runner.calls if c[:2] == ["kubectl", "label"]]) == 0
 
 
+def test_preparer_etape_sans_commande_id_non_diagnostic(
+    profiles: dict[str, tuple[int, str]]
+) -> None:
+    """CAND-016 — dans la boucle de preparer_noeud, une étape sans `commande` dont
+    l'id N'EST PAS "diagnostic" (ex. "verifier-gpu-nvidia", simple constat) doit
+    être marquée 'sautee' et NE PAS interrompre la préparation — contrairement à
+    l'étape spéciale "diagnostic" (même absence de commande) qui, elle, échoue et
+    lève PrepareError. Non pinné avant CAND-016 : sans la garde
+    `if step["id"] == "diagnostic":`, "verifier-gpu-nvidia" serait traitée comme
+    l'étape diagnostic et lèverait à tort, empêchant toute préparation d'un nœud
+    dont le GPU est déjà exposé."""
+    runner = FakeRunner(profiles)
+    # gpu-expose -> plan == ["verifier-gpu-nvidia" (commande=None), "label-pret"]
+    result = preparer_noeud(runner, "gpu-expose", appliquer=True, helm_present=True)
+    statuts = {e["id"]: e["statut"] for e in result["etapes"]}
+    assert statuts["verifier-gpu-nvidia"] == "sautee"
+    assert statuts["label-pret"] == "ok"
+    assert result["receptacle"] == "pret"
+
+    # Contraste : l'étape "diagnostic" (même absence de commande) DOIT lever.
+    with pytest.raises(PrepareError):
+        preparer_noeud(runner, "injoignable", appliquer=True, helm_present=True)
+
+
 def test_cli_plan_sans_apply() -> None:
     # Test subprocess réel : le CLI utilise le vrai kubectl/helm du système.
     # Selon l'environnement, le nœud 'pc-inexistant' est absent (exit 11) ou,
