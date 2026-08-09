@@ -7,6 +7,7 @@ au registre. Invariant secrets : ni le token ni la valeur ne doivent apparaître
 """
 import json
 import os
+import re
 import stat
 import sys
 import threading
@@ -19,6 +20,7 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
 
+from forgeai.i18n import t
 from forgeai.models import vault as file_vault_module
 from forgeai.models.vault import Vault as FileVault
 from forgeai.secrets.vault import VaultError, read, store
@@ -271,3 +273,133 @@ def test_model_vault_creates_nested_parent_under_restrictive_umask(
             )
         assert stat.S_IMODE(candidate.stat().st_mode) == 0o700
     assert stat.S_IMODE(target.stat().st_mode) == 0o600
+
+
+# --- CAND-012/013/014 — gardes non prouvées de vault.py (audit v7.1) -------
+
+
+def test_open_directory_with_mode_refuses_when_nofollow_constant_missing(
+    tmp_path, monkeypatch
+):
+    """CAND-012 — `_open_directory_with_mode` doit refuser AVANT tout open()
+    si O_NOFOLLOW (ou O_DIRECTORY) est indisponible sur la plateforme."""
+    directory = tmp_path / "d"
+    directory.mkdir()
+    os.chmod(directory, 0o700)
+    state = directory.lstat()
+    opened = False
+    real_open = os.open
+
+    def observe_open(path, flags, *args, **kwargs):
+        nonlocal opened
+        if Path(path) == directory:
+            opened = True
+        return real_open(path, flags, *args, **kwargs)
+
+    monkeypatch.setattr(file_vault_module.os, "open", observe_open)
+    monkeypatch.delattr(file_vault_module.os, "O_NOFOLLOW", raising=False)
+
+    with pytest.raises(
+        OSError,
+        match=re.escape(t("models.vault.validation_repertoire_indisponible")),
+    ):
+        file_vault_module._open_directory_with_mode(directory, state, 0o700)
+
+    if opened:
+        raise AssertionError(
+            "_open_directory_with_mode opened a directory before validating "
+            "O_NOFOLLOW/O_DIRECTORY availability"
+        )
+
+
+def test_open_directory_with_mode_accepts_real_directory_when_constants_available(
+    tmp_path,
+):
+    """Contrôle négatif de CAND-012 : cas nominal (O_NOFOLLOW/O_DIRECTORY
+    disponibles, chemin réellement un répertoire) ne lève pas d'erreur."""
+    directory = tmp_path / "d"
+    directory.mkdir()
+    os.chmod(directory, 0o700)
+    state = directory.lstat()
+
+    descriptor = file_vault_module._open_directory_with_mode(directory, state, 0o700)
+    try:
+        assert stat.S_ISDIR(os.fstat(descriptor).st_mode)
+    finally:
+        os.close(descriptor)
+
+
+def test_open_directory_with_mode_refuses_regular_file_before_opening(
+    tmp_path, monkeypatch
+):
+    """CAND-013 — `_open_directory_with_mode` doit refuser un fichier régulier
+    (path_state non-répertoire) AVANT tout appel à os.open()."""
+    regular_file = tmp_path / "not-a-directory"
+    regular_file.write_bytes(b"x")
+    state = regular_file.lstat()
+    opened = False
+    real_open = os.open
+
+    def observe_open(path, flags, *args, **kwargs):
+        nonlocal opened
+        if Path(path) == regular_file:
+            opened = True
+        return real_open(path, flags, *args, **kwargs)
+
+    monkeypatch.setattr(file_vault_module.os, "open", observe_open)
+
+    with pytest.raises(
+        OSError, match=re.escape(t("models.vault.chemin_pas_repertoire"))
+    ):
+        file_vault_module._open_directory_with_mode(regular_file, state, 0o700)
+
+    if opened:
+        raise AssertionError(
+            "_open_directory_with_mode opened a non-directory path before "
+            "validating stat.S_ISDIR"
+        )
+
+
+def test_prepare_lock_file_refuses_when_nofollow_constant_missing(
+    tmp_path, monkeypatch
+):
+    """CAND-014 — `prepare_lock_file` doit refuser AVANT tout open() si
+    O_NOFOLLOW est indisponible sur la plateforme."""
+    target = tmp_path / "vault.json"
+    lock_path = Path(str(target) + ".lock")
+    created = False
+    real_open = os.open
+
+    def observe_open(path, flags, *args, **kwargs):
+        nonlocal created
+        if Path(path) == lock_path:
+            created = True
+        return real_open(path, flags, *args, **kwargs)
+
+    monkeypatch.setattr(file_vault_module.os, "open", observe_open)
+    monkeypatch.delattr(file_vault_module.os, "O_NOFOLLOW", raising=False)
+
+    with pytest.raises(
+        OSError,
+        match=re.escape(t("models.vault.ouverture_sans_suivi_indisponible")),
+    ):
+        file_vault_module.prepare_lock_file(target)
+
+    if created:
+        raise AssertionError(
+            "prepare_lock_file opened a lock file before validating O_NOFOLLOW "
+            "availability"
+        )
+    assert not lock_path.exists()
+
+
+def test_prepare_lock_file_accepts_when_nofollow_constant_available(tmp_path):
+    """Contrôle négatif de CAND-014 : cas nominal (O_NOFOLLOW disponible)
+    crée bien le fichier de verrou 0600 sans lever d'erreur."""
+    target = tmp_path / "vault.json"
+
+    file_vault_module.prepare_lock_file(target)
+
+    lock_path = Path(str(target) + ".lock")
+    assert stat.S_ISREG(lock_path.lstat().st_mode)
+    assert stat.S_IMODE(lock_path.stat().st_mode) == 0o600
