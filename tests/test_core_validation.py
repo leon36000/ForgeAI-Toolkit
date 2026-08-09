@@ -218,3 +218,19 @@ def test_download_verified_refuse_file_scheme_sur_le_chemin_public(tmp_path):
         download_verified(modele, dest, UrllibFetcher())
     assert not (dest / "modele-piege.bin").exists(), \
         "le fichier local a ete lu et ecrit malgre le schema file://"
+
+
+def test_fetch_ne_cree_pas_le_repertoire_avant_de_valider_le_schema(tmp_path):
+    """Objection round 2 (Kimi-K3 ET Qwen3.8-Max-Alibaba, independamment) :
+    dest.parent.mkdir s'executait AVANT valider_schema_url. Effet de bord
+    (creation de repertoire) laisse sur le disque meme quand l'URL est
+    refusee — la garde doit s'executer avant tout effet de bord, mineur
+    ou non."""
+    from forgeai.models.local import UrllibFetcher
+
+    dest = tmp_path / "nouveau" / "modele.bin"
+    assert not dest.parent.exists()
+    with pytest.raises(ValidationError):
+        UrllibFetcher().fetch("file:///etc/passwd", dest)
+    assert not dest.parent.exists(), \
+        "le repertoire a ete cree malgre le schema refuse"

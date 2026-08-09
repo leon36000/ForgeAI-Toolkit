@@ -1,0 +1,31 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "tests/test_core_validation.py",
+   "description": "La preuve d'exécution fournie ne contient pas de sortie montrant explicitement que les 8 nouveaux tests étaient rouges avant le fix ; la baseline indique seulement 1899 tests passés, puis 1907 après fix.",
+   "preuve": "Baseline (code intact) : 1899 passed, 7 skipped, 0 failed ; Après fix : 1907 passed (1899 + 8 nouveaux), 7 skipped, 0 failed"
+  },
+  {
+   "severite": "mineure",
+   "fichier": "src/forgeai/core/validation.py",
+   "description": "Le diff ne permet pas de vérifier la définition de ValidationError ni son héritage de ValueError, alors que ce comportement est utilisé par les sondes booléennes dans deploy/compose.py.",
+   "preuve": "Commentaire dans src/forgeai/deploy/compose.py : '(ValidationError hérite de ValueError, capturé par le même except).' ; la définition de ValidationError n'apparaît pas dans le diff."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "src/forgeai/deploy/compose.py",
+   "description": "Le diff ne permet pas de vérifier que le symbole urlopen est défini dans _default_probe ; l'appel apparaît sans import visible dans les hunks fournis.",
+   "preuve": "def _default_probe(url: str) -> bool: try: valider_schema_url(url); urlopen(url, timeout=2)"
+  }
+ ],
+ "date_heure": "2026-08-09T18:22:04.712636+00:00",
+ "prompt_sha256": "a4cfe0d651a94c5b673351887190a821539897d554b33a779fcfaf472b3c3191",
+ "reviewer_model": "Qwen3.8-Max-Alibaba",
+ "modele_servi": "qwen38-max-alibaba-sg-alias",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

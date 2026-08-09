@@ -1,0 +1,31 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "majeure",
+   "fichier": "src/forgeai/models/local.py",
+   "description": "Garde contournable par redirection : les 10 appels utilisent urllib.request.urlopen avec l'opener par défaut — aucun build_opener/install_opener ni HTTPRedirectHandler personnalisé n'apparaît dans le diff. L'opener par défaut de CPython inclut FileHandler et suit les 301/302/303/307 sans revérifier le schéma de l'URL cible : une URL non fiable http(s) — le vecteur même nommé par la story (catalogue, plugin communautaire, configuration importée) — peut répondre 302 vers file:///etc/passwd et urlopen lira le fichier local APRÈS passage de valider_schema_url. La garde ne valide que l'URL initiale ; la classe de vulnérabilité CAND-001 (lecteur de fichier local via URL non fiable) reste donc ouverte via redirect. Correctif attendu : handler de redirection qui re-valide valider_schema_url sur newurl (ou refus des redirections cross-scheme), ou à minima documentation explicite du risque résiduel + constat de suivi.",
+   "preuve": "diff : `with urllib.request.urlopen(url, timeout=timeout) as resp` (models/local.py) et 9 autres occurrences identiques (rag/client.py x2, rag/hardened.py, secrets/vault.py, secrets/openbao_init.py, audit/immudb.py, observability/langfuse.py, models/probe.py, deploy/compose.py x2) ; aucun opener/handler personnalisé dans le diff. Comportement vérifiable : CPython Lib/urllib/request.py, HTTPRedirectHandler.redirect_request construit Request(newurl) sans filtrage de schéma, puis OpenerDirector dispatche vers FileHandler pour file://."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "src/forgeai/core/validation.py",
+   "description": "L'exhaustivité « 9 sites / 10 appels » n'est pas démontrée mécaniquement : le diff couvre bien 9 modules et 10 appels urlopen chacun précédé d'une garde (cohérent avec le commentaire de validation.py et le compte de la story), mais aucune sortie grep/rg des occurrences d'urlopen ne figure dans la preuve ; un éventuel 10e module hors diff n'est pas détectable par le reviewer.",
+   "preuve": "section « Preuve d'exécution » limitée à 4 puces (baseline 1899, après fix 1907, mutation 6/8, py_compile) — aucune énumération des sites urlopen."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "src/forgeai/models/probe.py",
+   "description": "Incohérence de style : seul site sur 9 où valider_schema_url est importé localement dans la méthode au lieu d'un import en tête de module, sans justification visible (core.validation n'importe que os/re/urllib.parse/pathlib/forgeai.i18n, aucun cycle d'import avec models.probe).",
+   "preuve": "diff probe.py : `+        from forgeai.core.validation import valider_schema_url` indenté dans la méthode ; les 8 autres fichiers (immudb.py, compose.py, local.py, langfuse.py, rag/client.py, rag/hardened.py, openbao_init.py, vault.py) l'importent au niveau module."
+  }
+ ],
+ "date_heure": "2026-08-09T18:23:27.631662+00:00",
+ "prompt_sha256": "a4cfe0d651a94c5b673351887190a821539897d554b33a779fcfaf472b3c3191",
+ "reviewer_model": "Kimi-K3",
+ "modele_servi": "kimi-k3-openrouter",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

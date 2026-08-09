@@ -1,0 +1,25 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "tests/test_core_validation.py",
+   "description": "La preuve d'exécution fournie ne montre pas explicitement les nouveaux tests en échec avant le fix ; elle montre la baseline intacte et la contre-preuve par mutation, mais pas la sortie 'tests rouges avant fix' demandée par le critère 5.",
+   "preuve": "Pack de revue, Preuve d'exécution : 'Baseline (code intact) : 1899 passed, 7 skipped, 0 failed' et 'Après fix : 1907 passed (1899 + 8 nouveaux)' ; aucune sortie de tests nouveaux en échec avant fix n'est rapportée."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "src/forgeai/models/local.py",
+   "description": "La validation du schéma est effectuée après la création du répertoire de destination, ce qui laisse un effet de bord filesystem avant le refus d'une URL invalide.",
+   "preuve": "Diff src/forgeai/models/local.py : 'dest.parent.mkdir(parents=True, exist_ok=True)' précède '+        valider_schema_url(url)'."
+  }
+ ],
+ "date_heure": "2026-08-09T18:29:57.354240+00:00",
+ "prompt_sha256": "65eea2f8abe3365447c0529dde740533570fb11d048f7fb21642482fc0a38fff",
+ "reviewer_model": "Qwen3.8-Max-Alibaba",
+ "modele_servi": "qwen38-max-alibaba-sg-alias",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

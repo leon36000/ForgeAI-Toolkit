@@ -1,0 +1,19 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "diff intégral",
+   "description": "Le diff protège 11 appels distincts à urlopen (local.py:1, rag/client.py:2, rag/hardened.py:1, vault.py:1, openbao_init.py:1, immudb.py:1, compose.py:2, probe.py:1, langfuse.py:1) alors que la story mentionne 10 appels. Écart numérique non justifié mais sans impact sur la couverture.",
+   "preuve": "comptage manuel des insertions de valider_schema_url dans le diff listé"
+  }
+ ],
+ "date_heure": "2026-08-09T18:18:36.158937+00:00",
+ "prompt_sha256": "a4cfe0d651a94c5b673351887190a821539897d554b33a779fcfaf472b3c3191",
+ "reviewer_model": "DeepSeek-V4-Pro",
+ "modele_servi": "deepseek-v4-pro-direct",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}
