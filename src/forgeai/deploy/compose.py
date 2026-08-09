@@ -13,6 +13,7 @@ import urllib.request
 from pathlib import Path
 
 from forgeai.core.models import HealthState, ProbeType, ServiceSpec
+from forgeai.core.validation import valider_schema_url
 from forgeai.core.redaction import redact_text
 from forgeai.i18n import t
 
@@ -48,6 +49,10 @@ def compose_down(compose_file: Path, volumes: bool = False) -> None:
 
 def http_ok(url: str, timeout_s: float = 3.0) -> bool:
     try:
+        # DANS le try : cette fonction est une sonde booléenne, un schéma
+        # invalide est déjà « pas sain » comme toute autre erreur ci-dessous
+        # (ValidationError hérite de ValueError, capturé par le même except).
+        valider_schema_url(url)
         with urllib.request.urlopen(url, timeout=timeout_s) as resp:
             return 200 <= resp.status < 300
     except (urllib.error.URLError, OSError, ValueError):
@@ -173,6 +178,7 @@ def wait_healthy(plan, timeout_s: float = 180.0, probe=None) -> dict:
 
     def _default_probe(url: str) -> bool:
         try:
+            valider_schema_url(url)
             urlopen(url, timeout=2)
             return True
         except Exception:

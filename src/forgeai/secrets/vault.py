@@ -14,6 +14,7 @@ import json
 import urllib.error
 import urllib.request
 
+from forgeai.core.validation import valider_schema_url
 from forgeai.i18n import t
 
 _KV_PREFIX = "/v1/secret/data/"
@@ -34,6 +35,10 @@ def _request(method: str, url: str, token: str, payload: dict | None, timeout: f
     req.add_header("X-Vault-Token", token)
     if data is not None:
         req.add_header("Content-Type", "application/json")
+    # HORS du try : ValidationError hérite de ValueError, et le bloc ci-dessous
+    # attrape ValueError pour « réponse non-JSON ». Dans le try, le refus de
+    # schéma serait ré-étiqueté à tort en erreur de parsing.
+    valider_schema_url(url)
     try:
         with urllib.request.urlopen(req, timeout=timeout) as resp:  # noqa: S310 — URL locale/LAN du socle
             body = resp.read().decode("utf-8")

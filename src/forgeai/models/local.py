@@ -16,6 +16,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Callable, Protocol
 
+from forgeai.core.validation import valider_schema_url
 from forgeai.i18n import t
 
 from ..core.runner import CommandRunner
@@ -59,6 +60,7 @@ class UrllibFetcher:
         import urllib.request
         total = 0
         dest.parent.mkdir(parents=True, exist_ok=True)
+        valider_schema_url(url)
         with urllib.request.urlopen(url, timeout=timeout) as resp, dest.open("wb") as fh:
             while True:
                 buf = resp.read(self.chunk)

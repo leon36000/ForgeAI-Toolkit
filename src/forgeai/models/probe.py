@@ -27,7 +27,10 @@ class UrllibTransport:
              ) -> tuple[int, str]:
         import urllib.error
         import urllib.request
+
+        from forgeai.core.validation import valider_schema_url
         req = urllib.request.Request(url, data=body, headers=headers, method="POST")
+        valider_schema_url(url)
         try:
             with urllib.request.urlopen(req, timeout=timeout) as resp:
                 return resp.status, resp.read().decode("utf-8", "replace")
