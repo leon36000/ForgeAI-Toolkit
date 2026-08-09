@@ -202,6 +202,7 @@
   "core.registre_ancrage.checkpoint_de.registre_vide": "impossible de creer un checkpoint sur un registre vide : un ancrage-de-rien est interdit",
   "core.validation.resolve_within.chemin_hors_racine": "chemin hors racine : {cible!r} n'est pas dans {racine!r}",
   "core.validation.valider_nom_simple.nom_invalide": "nom invalide : {name!r}",
+  "core.validation.valider_schema_url.schema_refuse": "schéma d'URL refusé : {schema!r} pour {url!r} — seuls http et https sont autorisés",
   "deploy.compose.compose_down.echec": "docker compose down a échoué :\n{detail}",
   "deploy.compose.compose_up.echec": "docker compose up a échoué :\n{detail}",
   "deploy.compose.wait_healthy.contrat_absent": "ERR_HEALTH_CONTRAT_ABSENT: service '{name}' exige la santé mais n'a pas de contrat de sonde exploitable (probe_type={probe_type!r}, healthcheck_url={healthcheck_url!r})",

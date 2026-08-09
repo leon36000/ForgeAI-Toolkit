@@ -12,6 +12,7 @@ import urllib.request
 from collections.abc import Callable
 from typing import Any
 
+from forgeai.core.validation import valider_schema_url
 from forgeai.i18n import t
 
 # ---------------------------------------------------------------------------
@@ -64,6 +65,9 @@ def http_transport(base_url: str, timeout: float = 10.0):
             req.add_header("X-Vault-Token", token)
         if data_bytes is not None:
             req.add_header("Content-Type", "application/json")
+        # HORS du try : ValidationError hérite de ValueError, capturé plus
+        # bas pour « réponse illisible ».
+        valider_schema_url(url)
         try:
             with urllib.request.urlopen(req, timeout=timeout) as resp:
                 body = resp.read().decode("utf-8")

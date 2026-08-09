@@ -21,6 +21,7 @@ import json
 import urllib.error
 import urllib.request
 
+from forgeai.core.validation import valider_schema_url
 from forgeai.i18n import t
 
 _API = "/api/v2"
@@ -38,6 +39,8 @@ def _request(method: str, url: str, token: str | None, payload: dict | None,
         req.add_header("Content-Type", "application/json")
     if token:
         req.add_header("grpc-metadata-sessionid", token)
+    # HORS du try : ValidationError hérite de ValueError, capturé plus bas.
+    valider_schema_url(url)
     try:
         with urllib.request.urlopen(req, timeout=timeout) as resp:  # noqa: S310 — URL locale/LAN du socle
             body = resp.read().decode("utf-8")

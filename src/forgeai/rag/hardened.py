@@ -27,6 +27,7 @@ from forgeai.guardrails.io_guard import (
     scan_output,
     verify_grounding,
 )
+from forgeai.core.validation import valider_schema_url
 from forgeai.rag.client import RagClient, _post
 
 
@@ -41,6 +42,7 @@ def _post_bearer(url: str, payload: dict, bearer: str, timeout_s: float = 300.0)
         },
         method="POST",
     )
+    valider_schema_url(url)
     with urllib.request.urlopen(req, timeout=timeout_s) as resp:
         return json.loads(resp.read().decode("utf-8"))
 

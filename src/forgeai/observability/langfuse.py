@@ -15,6 +15,7 @@ import time
 import urllib.error
 import urllib.request
 
+from forgeai.core.validation import valider_schema_url
 from forgeai.i18n import t
 
 _TRACES = "/api/public/traces"
@@ -26,8 +27,11 @@ class ObservabilityError(RuntimeError):
 
 def _get(base_url: str, public_key: str, secret_key: str, path: str, timeout: float) -> dict:
     token = base64.b64encode(f"{public_key}:{secret_key}".encode()).decode()
-    req = urllib.request.Request(f"{base_url.rstrip('/')}{path}")
+    url = f"{base_url.rstrip('/')}{path}"
+    req = urllib.request.Request(url)
     req.add_header("Authorization", f"Basic {token}")
+    # HORS du try : ValidationError hérite de ValueError, capturé plus bas.
+    valider_schema_url(url)
     try:
         with urllib.request.urlopen(req, timeout=timeout) as resp:  # noqa: S310 — URL locale/LAN
             return json.loads(resp.read().decode("utf-8"))

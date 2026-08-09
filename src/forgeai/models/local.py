@@ -16,6 +16,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Callable, Protocol
 
+from forgeai.core.validation import valider_schema_url
 from forgeai.i18n import t
 
 from ..core.runner import CommandRunner
@@ -58,6 +59,10 @@ class UrllibFetcher:
     def fetch(self, url: str, dest: Path, timeout: float = 300.0) -> int:
         import urllib.request
         total = 0
+        # Validation AVANT tout effet de bord (round 2 de revue, Kimi-K3 et
+        # Qwen3.8-Max-Alibaba, indépendamment) : un schéma refusé ne doit
+        # laisser aucune trace sur le disque, pas même un répertoire vide.
+        valider_schema_url(url)
         dest.parent.mkdir(parents=True, exist_ok=True)
         with urllib.request.urlopen(url, timeout=timeout) as resp, dest.open("wb") as fh:
             while True:

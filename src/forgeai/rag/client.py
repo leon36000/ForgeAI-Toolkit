@@ -11,6 +11,7 @@ import urllib.error
 import urllib.request
 from dataclasses import dataclass
 
+from forgeai.core.validation import valider_schema_url
 from forgeai.i18n import t
 
 
@@ -19,6 +20,7 @@ def _post(url: str, payload: dict, timeout_s: float = 300.0) -> dict:
         url, data=json.dumps(payload).encode("utf-8"),
         headers={"Content-Type": "application/json"}, method="POST",
     )
+    valider_schema_url(url)
     with urllib.request.urlopen(req, timeout=timeout_s) as resp:
         return json.loads(resp.read().decode("utf-8"))
 
@@ -28,6 +30,7 @@ def _put(url: str, payload: dict, timeout_s: float = 60.0) -> dict:
         url, data=json.dumps(payload).encode("utf-8"),
         headers={"Content-Type": "application/json"}, method="PUT",
     )
+    valider_schema_url(url)
     with urllib.request.urlopen(req, timeout=timeout_s) as resp:
         return json.loads(resp.read().decode("utf-8"))
 

@@ -153,3 +153,84 @@ def test_resolve_within_rejette_repertoire_frere_prefixe_commun(tmp_path):
     cible_ok.write_text("x")
     result = resolve_within(cible_ok, repo)
     assert result == Path(os.path.realpath(cible_ok))
+
+
+# --- valider_schema_url (CAND-001 : aucun controle de schema sur les 9 sites
+# urlopen du produit — file:// permettait de lire un fichier local arbitraire) ---
+
+
+def test_valider_schema_url_https_accepte():
+    from forgeai.core.validation import valider_schema_url
+    assert valider_schema_url("https://api.exemple.com/v1") is None
+
+
+def test_valider_schema_url_http_accepte():
+    from forgeai.core.validation import valider_schema_url
+    assert valider_schema_url("http://127.0.0.1:11434/api") is None
+
+
+def test_valider_schema_url_file_refuse():
+    from forgeai.core.validation import valider_schema_url
+    with pytest.raises(ValidationError):
+        valider_schema_url("file:///etc/passwd")
+
+
+def test_valider_schema_url_sans_schema_refuse():
+    from forgeai.core.validation import valider_schema_url
+    with pytest.raises(ValidationError):
+        valider_schema_url("etc/passwd")
+
+
+def test_valider_schema_url_ftp_refuse():
+    from forgeai.core.validation import valider_schema_url
+    with pytest.raises(ValidationError):
+        valider_schema_url("ftp://exemple.com/fichier")
+
+
+def test_valider_schema_url_data_refuse():
+    with pytest.raises(pytest.importorskip("forgeai.core.validation").ValidationError):
+        pytest.importorskip("forgeai.core.validation").valider_schema_url("data:text/plain;base64,eA==")
+
+
+def test_valider_schema_url_message_erreur_nomme_le_schema():
+    from forgeai.core.validation import valider_schema_url
+    with pytest.raises(ValidationError) as exc_info:
+        valider_schema_url("file:///secret.txt")
+    assert "file" in str(exc_info.value)
+
+
+def test_download_verified_refuse_file_scheme_sur_le_chemin_public(tmp_path):
+    """REPRODUCTION EXACTE de CAND-001 : download_verified() est le point
+    d'entree public reel (cli.py -> LocalModel.download_url -> ici). Avant
+    le fix, un `download_url="file:///secret"` lisait le fichier local et
+    l'ecrivait dans la destination — reproduit dans l'audit v7.1 sur pc4."""
+    import hashlib
+    from forgeai.models.local import LocalModel, UrllibFetcher, download_verified
+
+    fichier_prive = tmp_path / "hors-perimetre.txt"
+    fichier_prive.write_bytes(b"CONTENU QUI NE DOIT JAMAIS ETRE LU PAR UN TELECHARGEMENT\n")
+    empreinte = hashlib.sha256(fichier_prive.read_bytes()).hexdigest()
+    dest = tmp_path / "dest"; dest.mkdir()
+    modele = LocalModel(name="modele-piege", engine="llamacpp", model_ref="x",
+                        vram_required_mb=0, download_url="file://%s" % fichier_prive,
+                        sha256=empreinte)
+    with pytest.raises(ValidationError):
+        download_verified(modele, dest, UrllibFetcher())
+    assert not (dest / "modele-piege.bin").exists(), \
+        "le fichier local a ete lu et ecrit malgre le schema file://"
+
+
+def test_fetch_ne_cree_pas_le_repertoire_avant_de_valider_le_schema(tmp_path):
+    """Objection round 2 (Kimi-K3 ET Qwen3.8-Max-Alibaba, independamment) :
+    dest.parent.mkdir s'executait AVANT valider_schema_url. Effet de bord
+    (creation de repertoire) laisse sur le disque meme quand l'URL est
+    refusee — la garde doit s'executer avant tout effet de bord, mineur
+    ou non."""
+    from forgeai.models.local import UrllibFetcher
+
+    dest = tmp_path / "nouveau" / "modele.bin"
+    assert not dest.parent.exists()
+    with pytest.raises(ValidationError):
+        UrllibFetcher().fetch("file:///etc/passwd", dest)
+    assert not dest.parent.exists(), \
+        "le repertoire a ete cree malgre le schema refuse"

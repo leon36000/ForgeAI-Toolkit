@@ -1,0 +1,31 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "pack de revue (story/critère 2) vs diff global",
+   "description": "Incohérence de décompte sans impact sur la couverture : le critère annonce « 9 sites, 10 appels » mais le diff ajoute 11 gardes (rag/client.py ×2 via _post/_put, deploy/compose.py ×2 via http_ok/_default_probe, + 7 modules ×1). Tout urlopen visible dans le diff est couvert, mais l'arithmétique du constat devrait être corrigée pour la traçabilité d'audit.",
+   "preuve": "11 lignes '+    valider_schema_url(url)' dans le diff (immudb, compose http_ok, compose _default_probe, local, probe, langfuse, client._post, client._put, hardened, openbao_init, vault) contre « 10 appels » au critère 2."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "tests/test_core_validation.py",
+   "description": "Le critère 4 (retour False des 2 sondes booléennes compose.py sur schéma refusé) n'est vérifié par aucun des 8 nouveaux tests ; le comportement attendu repose sur l'héritage ValidationError→ValueError affirmé dans les commentaires et le critère 3, mais la définition de ValidationError n'apparaît pas dans le diff. Doute non vérifiable depuis le pack, donc mineure — le placement DANS le try est par ailleurs conforme à l'intention du critère.",
+   "preuve": "Les 8 tests ajoutés (test_valider_schema_url_* et test_download_verified_*, lignes 157-220 du diff) n'invoquent ni compose.http_ok ni wait_healthy._default_probe ; aucune assertion False sur file:// pour les sondes."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "src/forgeai/models/local.py",
+   "description": "Ordre des opérations : dest.parent.mkdir(parents=True, exist_ok=True) est exécuté AVANT valider_schema_url(url) dans UrllibFetcher.fetch — un appel refusé laisse un effet de bord (répertoire parent créé). Impact sécurité nul (aucun octet lu/écrit, le test de reproduction vérifie l'absence du fichier), mais valider avant tout effet de bord serait plus propre.",
+   "preuve": "diff local.py : 'dest.parent.mkdir(parents=True, exist_ok=True)' (ligne de contexte) précède '+        valider_schema_url(url)'."
+  }
+ ],
+ "date_heure": "2026-08-09T18:29:59.216545+00:00",
+ "prompt_sha256": "65eea2f8abe3365447c0529dde740533570fb11d048f7fb21642482fc0a38fff",
+ "reviewer_model": "Kimi-K3",
+ "modele_servi": "kimi-k3-openrouter",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}
