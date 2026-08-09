@@ -655,6 +655,56 @@ def test_verrou_transaction_refuse_symlink_sans_alterer_la_cible(tmp_path):
     assert victim.read_bytes() == victim_payload
 
 
+def test_file_lock_refuse_symlink_preexistant_avant_tout_open(tmp_path, monkeypatch):
+    """PINNING CAND-010 : le lstat pré-ouverture de file_lock (avant `os.open`) doit à
+    lui seul refuser un verrou symlink pré-existant — pas seulement grâce à O_NOFOLLOW,
+    qui échouerait lui aussi mais APRÈS avoir tenté l'ouverture. Neutraliser la garde
+    lstat seule ne fait rougir AUCUN test existant (mesuré par mutation) parce que
+    O_NOFOLLOW rattrape silencieusement le symlink au moment de l'open : ce test espionne
+    `os.open` pour prouver qu'il n'est JAMAIS appelé sur un verrou non régulier."""
+    from forgeai.models import _locking as locking_module
+
+    target = tmp_path / "cible.bin"
+    lock_path = tmp_path / "cible.bin.lock"
+    victim = tmp_path / "victime-arbitraire.txt"
+    victim.write_bytes(b"contenu-externe-intact")
+    os.symlink(victim, lock_path)
+
+    opened_paths: list[object] = []
+    real_open = locking_module.os.open
+
+    def spy_open(*args, **kwargs):
+        opened_paths.append(args[0] if args else kwargs.get("path"))
+        return real_open(*args, **kwargs)
+
+    monkeypatch.setattr(locking_module.os, "open", spy_open)
+
+    with pytest.raises(OSError):
+        with file_lock(target):
+            pass
+
+    assert opened_paths == [], (
+        "os.open ne doit jamais être invoqué sur un verrou pré-existant non régulier"
+    )
+    assert lock_path.is_symlink()
+    assert victim.read_bytes() == b"contenu-externe-intact"
+
+
+def test_file_lock_accepte_verrou_regulier_preexistant(tmp_path):
+    """Contrôle négatif : un fichier de verrou RÉGULIER pré-existant ne doit pas
+    déclencher la garde — seule la nature non régulière (symlink, FIFO, périphérique)
+    doit être refusée."""
+    target = tmp_path / "cible-reguliere.bin"
+    lock_path = tmp_path / "cible-reguliere.bin.lock"
+    lock_path.write_bytes(b"")
+
+    with file_lock(target):
+        pass
+
+    assert lock_path.exists()
+    assert not lock_path.is_symlink()
+
+
 def test_export_recupere_le_wal_avant_de_lire_routes(tmp_path):
     """Un export publie l'état RÉCUPÉRÉ, jamais un état encore en attente de récupération.
 
