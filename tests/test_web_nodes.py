@@ -165,6 +165,31 @@ def test_nodes_status_graceful(base_url, monkeypatch):
     assert "pas de cluster" in body["detail"]
 
 
+def test_receptacles_secret_redacted(base_url, monkeypatch):
+    """CAND-021 (audit v7.1, P1_HIGH) : pin la garde WEB-015 sur
+    /api/nodes/receptacles. ClusterError peut encapsuler un message issu d'un
+    outil externe (kubectl illisible, etc.) potentiellement porteur d'un secret.
+    Le detail expose au client DOIT passer par redact_text — ce test échoue si
+    la ligne redevient `detail = str(exc)` brut (RED prouvé manuellement, voir
+    le commit)."""
+
+    secret = "SECRET123ABC"  # proof:allow (litteral de test : sert a PROUVER la non-fuite)
+
+    def boom(runner):
+        raise server_module.ClusterError(f"kubectl injoignable : token={secret}-FUITE")
+
+    monkeypatch.setattr(server_module, "cluster_status", boom)
+
+    status, body = request_json(f"{base_url}/api/nodes/receptacles")
+
+    assert status == 200
+    assert body["nodes"] == []
+    assert "detail" in body
+    assert secret not in body["detail"], "secret brut expose au client (garde WEB-015 contournee)"
+    assert secret not in json.dumps(body), "secret brut present quelque part dans la reponse JSON"
+    assert "«REDACTED»" in body["detail"], "marqueur de redaction absent : redact_text n'a pas ete applique"
+
+
 def test_non_regression(base_url):
     status, body = request_json(f"{base_url}/api/models")
     assert status == 200
