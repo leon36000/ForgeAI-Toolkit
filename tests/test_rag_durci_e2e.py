@@ -6,7 +6,7 @@ télécharger ~2,5 Go d'images/poids ni allonger la suite). Reproductible manuel
     FORGEAI_E2E=1 python3 -m pytest tests/test_rag_durci_e2e.py -s
 
 Déploie le socle durci (ollama + qdrant v1.18.3 + TEI/bge-m3 + LiteLLM), puis prouve :
-  - CONTRÔLE NÉGATIF : collection vide -> aucune fabrication (context_used=false, réponse vide).
+  - CONTRÔLE NÉGATIF : collection vide -> aucune fabrication (grounding="unknown", réponse vide).
   - ANCRAGE OOD : le fait fictif « Vornak-9 » (hors connaissance paramétrique) ingéré -> la réponse
     le contient ET cite le document -> l'ancrage vient du retrieval, pas des poids.
 """
@@ -99,7 +99,7 @@ def test_rag_durci_ancrage_ood_e2e(tmp_path: Path):
         # CONTRÔLE NÉGATIF : collection vide -> aucune fabrication
         client.ensure_collection(dim=1024)
         neg = client.ask(question)
-        assert neg["context_used"] is False and neg["answer"] == "", \
+        assert neg["grounding"] == "unknown" and neg["answer"] == "", \
             "sans corpus, le RAG durci ne doit RIEN fabriquer"
 
         # ANCRAGE OOD : le fait fictif ne peut venir que du retrieval
@@ -107,6 +107,6 @@ def test_rag_durci_ancrage_ood_e2e(tmp_path: Path):
         pos = client.ask(question)
         assert "Vornak-9" in pos["answer"], f"ancrage OOD attendu, obtenu : {pos}"
         assert pos["sources"] == ["verification-durci.md"]
-        assert pos["context_used"] is True
+        assert pos["grounding"] == "grounded"
     finally:
         compose("down", "-v")
