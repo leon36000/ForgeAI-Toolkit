@@ -12,7 +12,7 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
-from forgeai.network.remote_probe import RemoteProbeError, SshRunner
+from forgeai.network.remote_probe import RemoteProbeError, SshRunner, enroll_hostkey
 
 # Empreinte valide de test (factice, mais au bon format)
 GOOD = "SHA256:AAAAgoodfingerprintvalue0000000000000000000"
@@ -190,3 +190,56 @@ def test_cli_discover_remote_requires_hostkey(monkeypatch, capsys, tmp_path):
     assert "ECHEC DISCOVER" in captured.err
     assert "SSH-007" in captured.err
     assert res == 12
+
+
+# ---------------------------------------------------------------------------
+# CAND-017 (audit v7.1, P1_HIGH) — la garde d'empreinte À L'INTÉRIEUR de
+# enroll_hostkey() elle-même (remote_probe.py L35-38) n'était exercée par
+# AUCUN test : G1/G2/G2b ci-dessus ne couvrent que la garde DUPLIQUÉE de
+# SshRunner.__init__ (L92), qui filtre avant même d'atteindre enroll_hostkey.
+# Or node_add.py (bootstrap de nœud, SshBootstrapper.install_key /
+# render_join_plan) appelle enroll_hostkey() DIRECTEMENT, sans jamais passer
+# par SshRunner : sur ce chemin, la garde de la fonction est le SEUL rempart
+# anti-MITM avant tout réseau (ssh-keyscan). Elle n'avait jamais été prouvée.
+# ---------------------------------------------------------------------------
+
+def _boom_si_appele(*a, **k):
+    raise AssertionError(
+        "CAND-017: aucun appel reseau (subprocess.run) ne doit avoir lieu "
+        "avant la validation de l'empreinte dans enroll_hostkey()"
+    )
+
+
+def test_enroll_hostkey_empreinte_vide_refuse_avant_reseau(monkeypatch):
+    """hostkey_sha256="" -> RemoteProbeError levée AVANT tout subprocess.run."""
+    monkeypatch.setattr(subprocess, "run", _boom_si_appele)
+    with pytest.raises(RemoteProbeError, match="SSH-007"):
+        enroll_hostkey(HOST, "")
+
+
+def test_enroll_hostkey_empreinte_none_refuse_avant_reseau(monkeypatch):
+    """hostkey_sha256=None -> RemoteProbeError levée AVANT tout subprocess.run."""
+    monkeypatch.setattr(subprocess, "run", _boom_si_appele)
+    with pytest.raises(RemoteProbeError, match="SSH-007"):
+        enroll_hostkey(HOST, None)
+
+
+def test_enroll_hostkey_empreinte_mal_formee_refuse_avant_reseau(monkeypatch):
+    """hostkey_sha256="md5:abc123" (mauvais préfixe, ne commence pas par
+    'SHA256:') -> RemoteProbeError levée AVANT tout subprocess.run."""
+    monkeypatch.setattr(subprocess, "run", _boom_si_appele)
+    with pytest.raises(RemoteProbeError, match="SSH-007"):
+        enroll_hostkey(HOST, "md5:abc123")
+
+
+def test_enroll_hostkey_empreinte_valide_poursuit_vers_le_scan(monkeypatch):
+    """Contrôle négatif : une empreinte valide ('SHA256:...') ne lève PAS
+    cette erreur et poursuit bien vers ssh-keyscan (subprocess.run appelé)."""
+    fake = fake_run_dispatcher()
+    monkeypatch.setattr(subprocess, "run", fake)
+    kh = enroll_hostkey(HOST, GOOD)
+    try:
+        assert os.path.exists(kh)
+        assert any(c[0] == "ssh-keyscan" for c in fake.calls)
+    finally:
+        os.unlink(kh)
