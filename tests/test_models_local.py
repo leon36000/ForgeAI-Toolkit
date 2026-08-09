@@ -199,3 +199,71 @@ def test_download_rejette_nom_traversal(tmp_path):
     escaped = (tmp_path / "../evil.bin").resolve()
     assert not escaped.exists()
     assert not list(tmp_path.glob("*.bin"))
+
+
+# ---------------------------------------------------------------------------
+# CAND-006 (audit v7.1, P1_HIGH) — trois gardes de download_verified() dont
+# AUCUNE n'était prouvée isolément : le test ci-dessus (nom "../evil") contient
+# À LA FOIS "/" ET ".." — valider_nom_simple ET resolve_within le refusent
+# chacun indépendamment, donc retirer L'UN OU L'AUTRE laisse ce test vert
+# (mutation à cause isolée mesurée par l'audit : rc=0 dans les deux cas). La
+# troisième garde (tmp.unlink(missing_ok=True) sur mismatch de hash) écrit un
+# fichier `.part`, jamais `.bin` — le test de mismatch existant ne vérifie que
+# `glob("*.bin")`, donc un `.part` corrompu resterait invisible sur disque.
+# Les 3 tests suivants isolent chaque garde par mutation/neutralisation
+# ciblée d'UNE SEULE des deux autres, comme dans CAND-001 (redirection HTTP).
+# ---------------------------------------------------------------------------
+
+def test_download_verified_slash_dans_le_nom_refuse_avant_fetch(tmp_path):
+    """Isole valider_nom_simple : un nom contenant "/" mais SANS ".." (donc dont
+    le chemin résultant resterait CONTENU dans dest_dir, resolve_within ne le
+    bloquerait pas) doit quand même être refusé — AVANT tout appel réseau."""
+    import dataclasses
+
+    class _FetchInterdit:
+        def fetch(self, url, dest, timeout=300.0):
+            raise AssertionError(
+                "CAND-006: fetch() ne doit jamais être appelé pour un nom "
+                "de modèle invalide — la garde doit couper le chemin avant."
+            )
+
+    model = dataclasses.replace(_model(), name="sous-repertoire/modele")
+    with pytest.raises(LocalModelError):
+        download_verified(model, tmp_path, _FetchInterdit())
+    assert not list(tmp_path.rglob("*"))  # rien créé, y compris aucun sous-répertoire
+
+
+def test_download_verified_resolve_within_bloque_meme_nom_simple_neutralise(monkeypatch, tmp_path):
+    """Isole resolve_within comme second rempart INDÉPENDANT : même si
+    valider_nom_simple était contournée (neutralisée ici), le confinement de
+    chemin doit à lui seul refuser une évasion hors de dest_dir.
+
+    Le chemin d'évasion visé sort volontairement de `tmp_path` (c'est le point
+    du test) — donc hors du nettoyage automatique de pytest en cas de garde
+    défaillante. Nettoyage défensif dans un `finally` pour ne jamais laisser
+    de résidu hors zone gérée, quel que soit le résultat du test."""
+    import forgeai.models.local as local_mod
+
+    monkeypatch.setattr(local_mod, "valider_nom_simple", lambda name: None)
+
+    import dataclasses
+    model = dataclasses.replace(_model(), name="../../evasion-hors-racine")
+    escaped = (tmp_path / "../../evasion-hors-racine.bin").resolve()
+    try:
+        with pytest.raises(LocalModelError):
+            download_verified(model, tmp_path, FixtureFetcher())
+        assert not escaped.exists()
+    finally:
+        escaped.unlink(missing_ok=True)
+        escaped.with_suffix(".part").unlink(missing_ok=True)
+
+
+def test_download_verified_mismatch_supprime_le_fichier_part_temporaire(tmp_path):
+    """Isole tmp.unlink(missing_ok=True) : sur mismatch de hash, le fichier
+    TEMPORAIRE (.part, pas .bin) doit disparaître — le test de mismatch
+    préexistant ne vérifiait que glob("*.bin"), jamais glob("*.part")."""
+    with pytest.raises(LocalModelError):
+        download_verified(_model(sha="0" * 64), tmp_path, FixtureFetcher())
+    assert not list(tmp_path.glob("*.part")), "fichier .part corrompu non nettoyé"
+    assert not list(tmp_path.rglob("*")), "aucune trace ne doit rester dans dest_dir"
+
