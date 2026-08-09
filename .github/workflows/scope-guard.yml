@@ -13,6 +13,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
       - name: Valider la coordination multi-IDE (claims, lanes, deps)
         run: python3 scripts/coordination/validate_coordination.py
 
@@ -21,6 +23,7 @@ jobs:
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
+          persist-credentials: false
           fetch-depth: 0
       - name: Vérifier que les fichiers modifiés sont dans l'allowlist du claim de CETTE PR
         env:
