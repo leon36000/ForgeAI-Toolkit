@@ -81,6 +81,47 @@ def test_operateur_inconnu_leve():
         plan("inexistant", _Runner({}))
 
 
+# --- PINNING (audit v7.1, CAND-009) ---------------------------------------------------------
+# Constat de l'audit : la garde explicite `if name not in OPERATORS: raise KeyError(...)` en
+# tête de plan() n'était prouvée par AUCUN test. La raison : `test_operateur_inconnu_leve`
+# ci-dessus vérifie seulement qu'un KeyError SORT de plan() — or detect() lève lui-même un
+# KeyError natif (`spec = OPERATORS[name]`) dès qu'on l'appelle avec un nom inconnu. La garde
+# de plan() est donc redondante avec la garde implicite de detect() : la neutraliser (if False:
+# au lieu du if name not in OPERATORS:) laisse toujours passer un KeyError — juste levé une
+# étape plus tard, depuis detect() — et ne fait rougir aucun test existant.
+# Ce test PINNE le comportement précis : KeyError levée AVANT tout appel à detect(). On le
+# prouve en remplaçant detect() par une sentinelle qui échoue (AssertionError) si on l'atteint ;
+# seul un pytest.raises(KeyError) qui n'attrape PAS cette AssertionError démontre que la garde
+# amont a bien coupé le chemin avant detect().
+#
+# Cycle RED-GREEN exécuté (preuve, voir rapport de la story) :
+#   1. RED  : garde de plan() neutralisée en `if False:` -> plan() appelle detect() -> la
+#             sentinelle lève AssertionError -> pytest.raises(KeyError) ne l'attrape pas ->
+#             CE TEST ÉCHOUE (confirmé : 1 failed).
+#   2. Garde restaurée (`if name not in OPERATORS:`) -> CE TEST PASSE (confirmé : 1 passed).
+def test_plan_operateur_inconnu_leve_avant_tout_appel_a_detect(monkeypatch):
+    import forgeai.deploy.operators as operators_mod
+
+    def _detect_ne_doit_jamais_etre_appele(name, runner):
+        raise AssertionError(
+            "detect() a été appelé alors que le nom est inconnu de OPERATORS : "
+            "la garde de plan() ne coupe pas le chemin AVANT detect()."
+        )
+
+    monkeypatch.setattr(operators_mod, "detect", _detect_ne_doit_jamais_etre_appele)
+    with pytest.raises(KeyError):
+        operators_mod.plan("inexistant-pinning-cand009", _Runner({}))
+
+
+# --- contrôle négatif : un nom CONNU ne lève jamais KeyError depuis plan() ------------------
+def test_plan_nom_connu_ne_leve_pas_keyerror():
+    for name in OPERATORS:
+        try:
+            plan(name, _Runner({}))  # runner vide -> detect() renverra "absent", pas d'exception
+        except KeyError:
+            pytest.fail(f"plan({name!r}) a levé KeyError alors que {name!r} est un opérateur connu")
+
+
 def test_registre_operateurs_couvre_le_chassis():
     for name in ("external-secrets-operator", "argo-cd", "kserve"):
         assert name in OPERATORS and OPERATORS[name].crd and OPERATORS[name].chart
