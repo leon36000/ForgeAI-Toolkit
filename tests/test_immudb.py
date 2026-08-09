@@ -18,6 +18,7 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
 
+from forgeai.audit import immudb as _immudb_module
 from forgeai.audit.immudb import (
     LedgerError,
     ensure_collection,
@@ -190,3 +191,70 @@ def test_exception_ne_fuit_pas_identifiants():
         raise AssertionError("aurait dû lever LedgerError")
     except LedgerError as exc:
         assert "MOTDEPASSE-SECRET" not in str(exc)
+
+
+# --- CAND-008 (audit v7.1, P1_HIGH) ----------------------------------------
+#
+# La garde `if collection not in names: raise` de `ensure_collection` (ligne ~81 de
+# src/forgeai/audit/immudb.py) n'était exercée par AUCUN test : le faux serveur HTTP de
+# `immu` ne produit jamais l'état « échec réel + collection absente de la liste de
+# secours », donc un mutant qui neutralise la garde (ex. `if False: raise`) fait passer
+# toute la suite existante. Les deux tests ci-dessous ferment ce trou avec une double
+# injectée pour `_request` (pas de réseau réel) et pinnent les DEUX branches.
+#
+# Cycle RED/GREEN exécuté manuellement pour `test_...leve_ledgererror` :
+#   1. RED  : garde temporairement neutralisée en éditant immudb.py ligne 81
+#             (`if collection not in names:` -> `if False:  # CAND-008 RED probe`),
+#             `pytest tests/test_immudb.py -k relance_si_absente -q` -> 1 failed
+#             (LedgerError attendue mais absorbée : pytest.raises n'a rien capturé).
+#   2. GREEN : garde restaurée à l'identique (`git checkout -- ...immudb.py`),
+#             même commande -> 1 passed.
+# Preuve capturée dans le message de commit CAND-008 (sorties pytest complètes).
+
+
+def test_ensure_collection_relance_si_absente_de_la_liste_secours(monkeypatch):
+    """Pinning : POST échoue (LedgerError) ET la collection cible n'apparaît PAS dans le
+    GET de secours -> l'exception doit remonter, jamais être avalée (ledger d'audit)."""
+    appels = []
+
+    def _request_double(method, url, token, payload, timeout):
+        appels.append(method)
+        if method == "POST":
+            raise LedgerError("immudb POST ... -> HTTP 500")
+        if method == "GET":
+            # la collection ciblée ("audit") N'EST PAS dans la liste de secours
+            return {"collections": [{"name": "autre-collection"}]}
+        raise AssertionError(f"méthode inattendue: {method}")
+
+    monkeypatch.setattr(_immudb_module, "_request", _request_double)
+
+    with pytest.raises(LedgerError):
+        ensure_collection(
+            "http://fake-immudb.invalid", "tok", "audit",
+            [{"name": "fact", "type": "STRING"}],
+        )
+    assert appels == ["POST", "GET"], "doit tenter la création puis relire la liste de secours"
+
+
+def test_ensure_collection_absorbe_si_presente_dans_la_liste_secours(monkeypatch):
+    """Contrôle négatif complémentaire : POST échoue MAIS la collection cible EST dans le
+    GET de secours (2e appel sur collection déjà existante) -> aucune exception ne remonte
+    (idempotence voulue). Pinne la branche `if collection not in names` == False."""
+    appels = []
+
+    def _request_double(method, url, token, payload, timeout):
+        appels.append(method)
+        if method == "POST":
+            raise LedgerError("immudb POST ... -> HTTP 500 (collection already exists)")
+        if method == "GET":
+            # la collection ciblée ("audit") EST dans la liste de secours
+            return {"collections": [{"name": "audit"}]}
+        raise AssertionError(f"méthode inattendue: {method}")
+
+    monkeypatch.setattr(_immudb_module, "_request", _request_double)
+
+    ensure_collection(
+        "http://fake-immudb.invalid", "tok", "audit",
+        [{"name": "fact", "type": "STRING"}],
+    )  # ne doit PAS lever
+    assert appels == ["POST", "GET"]
