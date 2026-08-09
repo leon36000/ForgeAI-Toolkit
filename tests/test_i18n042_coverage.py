@@ -300,6 +300,32 @@ def test_sonder_noeud_sortie_illisible():
         sonder_noeud(runner, "hote-x")
 
 
+def test_sonder_noeud_rc_non_nul_liste_noeuds_connus():
+    """CAND-015 — quand `kubectl get node <hostname>` échoue (rc != 0), sonder_noeud
+    doit interroger `kubectl get nodes` pour lister les nœuds connus et lever
+    PrepareError en citant le hostname absent ET les noms trouvés (message
+    network.prepare.sonder_noeud.noeud_absent). Non pinné avant CAND-015 : sans la
+    garde `if rc != 0:`, le stdout vide de l'échec est passé tel quel à json.loads()
+    et produit une erreur "sortie kubectl illisible" (message DIFFÉRENT) au lieu du
+    diagnostic attendu."""
+    runner = _SeqRunner([
+        (1, ""),  # kubectl get node hote-x -o json : échec
+        (0, json.dumps({"items": [{"metadata": {"name": "n1"}},
+                                   {"metadata": {"name": "n2"}}]})),
+    ])
+    with pytest.raises(PrepareError) as exc_info:
+        sonder_noeud(runner, "hote-x")
+
+    message = str(exc_info.value)
+    assert "hote-x" in message
+    assert "absent ou injoignable" in message
+    assert "n1" in message and "n2" in message
+    assert runner.calls == [
+        ["kubectl", "get", "node", "hote-x", "-o", "json"],
+        ["kubectl", "get", "nodes", "-o", "json"],
+    ]
+
+
 # ---------------------------------------------------------------------------
 # network/remote_probe.py
 # ---------------------------------------------------------------------------
