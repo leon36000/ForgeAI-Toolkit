@@ -1,5 +1,6 @@
 """Tests unitaires S08/S09 — HTTP ollama/qdrant mocké (services externes, tests/ uniquement)."""
 import sys
+import urllib.error
 from pathlib import Path
 
 import pytest
@@ -75,3 +76,16 @@ def test_pull_models_appelle_les_deux(fake_http):
     _client().pull_models()
     pulls = [p["model"] for u, p in fake_http["post"] if "/api/pull" in u]
     assert pulls == ["llm", "emb"]
+
+
+def test_ensure_collection_erreur_non_409_remonte(monkeypatch):
+    """CAND-018 (audit v7.1) — pinning de la garde `if exc.code != 409: raise` de
+    RagClient.ensure_collection : seul 409 (collection déjà existante) est toléré.
+    Tout AUTRE code HTTP (ex. 500) DOIT remonter, jamais être avalé silencieusement."""
+    def fake_put_500(url, payload, timeout_s=60.0):
+        raise urllib.error.HTTPError(url, 500, "Internal Server Error", None, None)
+
+    monkeypatch.setattr(rc, "_put", fake_put_500)
+    with pytest.raises(urllib.error.HTTPError) as exc_info:
+        _client().ensure_collection(dim=4)
+    assert exc_info.value.code == 500
