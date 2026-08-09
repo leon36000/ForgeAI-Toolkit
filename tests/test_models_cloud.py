@@ -138,6 +138,37 @@ def test_route_dupliquee_refusee(tmp_path):
         store.add_cloud("r", "openrouter", "m", SECRET, "pp", transport=GREEN)
 
 
+def test_route_dupliquee_refusee_sans_sonder_le_reseau(tmp_path):
+    """CAND-011 (audit v7.1) — pin la garde anti-doublon PRÉCOCE de add_cloud
+    (avant probe_route, ~ligne 163), distincte de la garde redondante posée
+    APRÈS la sonde (~ligne 174, nécessaire contre une course inter-processus :
+    cf. test_deux_add_cloud_meme_nom_refusent_le_perdant_sans_desaligner_vault).
+
+    test_route_dupliquee_refusee ci-dessus ne vérifie que RouteError : il reste
+    vert même si la garde précoce est neutralisée, car la garde post-sonde lève
+    la même erreur. Ce test pin un effet observable propre à la garde précoce :
+    pour un nom déjà connu, AUCUN appel réseau (probe_route -> transport) n'a
+    lieu — la duplication est refusée avant toute tentative de connexion.
+    """
+    transport = FixtureTransport(
+        200, json.dumps({"choices": [{"message": {"content": "pong"}}]})
+    )
+    store = RouteStore(tmp_path)
+    store.add_cloud("x", "openrouter", "m", SECRET, "pp", transport=transport)
+    assert len(transport.calls) == 1  # une sonde pour le premier ajout, réussi
+
+    with pytest.raises(RouteError) as exc:
+        store.add_cloud("x", "openrouter", "m", SECRET, "pp", transport=transport)
+    assert "existe déjà" in str(exc.value)
+
+    assert len(transport.calls) == 1, (
+        "add_cloud a sondé le réseau pour un nom déjà existant : la garde "
+        "anti-doublon précoce (avant probe_route) n'a pas agi."
+    )
+    # Et le store ne contient toujours qu'UNE route "x" — pas de doublon silencieux.
+    assert [r.name for r in store.list()] == ["x"]
+
+
 def test_vault_cree_0600_sans_chmod(tmp_path, monkeypatch):
     import forgeai.models.vault as vault_mod
     monkeypatch.setattr(vault_mod.os, "chmod", lambda *a, **k: None)
