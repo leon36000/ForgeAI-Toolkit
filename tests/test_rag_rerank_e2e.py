@@ -116,7 +116,7 @@ def test_rerank_discrimination_et_ancrage_e2e(tmp_path: Path):
         # --- ANCRAGE préservé : le RAG durci + rerank répond de façon ancrée (OOD) ---
         client.ensure_collection(dim=1024)
         neg = client.ask("Quel est le nom du protocole ?")
-        assert neg["context_used"] is False and neg["answer"] == "", "négatif préservé sous rerank"
+        assert neg["grounding"] == "unknown" and neg["answer"] == "", "négatif préservé sous rerank"
         client.ingest(doc, source="verification-durci.md")
         pos = client.ask("Comment s'appelle le protocole de synchronisation interne de ForgeAI Toolkit ?")
         assert "Vornak-9" in pos["answer"], f"ancrage OOD préservé, obtenu {pos}"
