@@ -654,3 +654,98 @@ def test_mount_already_in_use_ignored():
     # Le FakeTransport par défaut renvoie un token factice pour token/create
     assert isinstance(token, str)
     assert len(token) > 0
+
+
+# ---------------------------------------------------------------------------
+# CAND-019 : garde "écho unseal incohérent" (~ligne 163 openbao_init.py)
+#
+#   if unseal_resp.get("sealed") is not False:
+#       raise OpenBaoInitError(...)
+#
+# Non couvert par TestSecretSafety.test_unseal_failure_no_leak : ce test-là
+# fait échouer l'appel HTTP lui-même (le transport lève OpenBaoInitError
+# AVANT que la ligne 163 ne soit atteinte). Ici le transport répond HTTP 200
+# (pas d'exception), mais le corps ment sur l'état réel du coffre.
+# ---------------------------------------------------------------------------
+
+class UnsealEchoMismatchTransport(FakeTransport):
+    """PUT /v1/sys/unseal répond HTTP 200 mais le corps garde sealed=True.
+
+    Simule un openbao qui accuse réception de la requête sans confirmer le
+    déscellement (écho incohérent) — aucune HTTPError n'est levée par le
+    transport, donc seule la garde applicative (ligne ~163) peut détecter
+    l'anomalie.
+    """
+    def __call__(self, method, path, *, token=None, payload=None):
+        if method == "PUT" and path == "/v1/sys/unseal":
+            return (200, {"sealed": True})
+        return super().__call__(method, path, token=token, payload=payload)
+
+
+def test_unseal_echo_mismatch_raises():
+    """CAND-019 (P1) : unseal répond 200 mais sealed reste True -> doit lever, pas continuer."""
+    transport = UnsealEchoMismatchTransport()
+    transport._initialized = True
+    transport._sealed = True
+    transport._unseal_key = "my-key"
+    transport._root_token = "my-root"
+
+    key_store = InMemoryStore({"unseal_key": "my-key", "root_token": "my-root"})
+    secret_store = InMemoryStore()
+
+    with pytest.raises(OpenBaoInitError, match=r"unseal"):
+        ensure_openbao_ready(transport, key_store, secret_store)
+
+
+def test_unseal_echo_missing_key_raises():
+    """CAND-019 (P1) : corps sans clé 'sealed' du tout (falsy != False) -> doit lever aussi."""
+
+    class MissingSealedKeyTransport(FakeTransport):
+        def __call__(self, method, path, *, token=None, payload=None):
+            if method == "PUT" and path == "/v1/sys/unseal":
+                return (200, {})  # ni True ni False : absent
+            return super().__call__(method, path, token=token, payload=payload)
+
+    transport = MissingSealedKeyTransport()
+    transport._initialized = True
+    transport._sealed = True
+    transport._unseal_key = "my-key"
+    transport._root_token = "my-root"
+
+    key_store = InMemoryStore({"unseal_key": "my-key", "root_token": "my-root"})
+    secret_store = InMemoryStore()
+
+    with pytest.raises(OpenBaoInitError, match=r"unseal"):
+        ensure_openbao_ready(transport, key_store, secret_store)
+
+
+# ---------------------------------------------------------------------------
+# CAND-020 : garde "erreur de montage KV non-400 doit remonter" (~ligne 183)
+#
+#   except OpenBaoInitError as exc:
+#       if "HTTP 400" not in str(exc):
+#           raise
+#
+# Non couvert : les tests existants (test_mount_already_in_use_ignored,
+# TestKVMountAlreadyPresent) ne couvrent que le 400 acceptable ou l'absence
+# totale d'appel. Aucun test ne prouve qu'un échec non-400 (ex. 500) remonte
+# bien à l'appelant au lieu d'être avalé silencieusement.
+# ---------------------------------------------------------------------------
+
+class MountFailsWithServerErrorTransport(FakeTransport):
+    """secret/ absent du GET mounts, mais POST mounts échoue avec une erreur NON-400 (500)."""
+    def __call__(self, method, path, *, token=None, payload=None):
+        if method == "GET" and path == "/v1/sys/mounts":
+            return (200, {"data": {}})
+        if method == "POST" and path == "/v1/sys/mounts/secret":
+            raise OpenBaoInitError("openbao POST /v1/sys/mounts/secret -> HTTP 500")
+        return super().__call__(method, path, token=token, payload=payload)
+
+
+def test_mount_failure_non_400_propagates():
+    """CAND-020 (P1) : une erreur de montage KV autre que 400 doit REMONTER, pas être avalée."""
+    transport = MountFailsWithServerErrorTransport()
+    keys_store = InMemoryStore({"unseal_key": "fake-key", "root_token": "root"})
+    secrets_store = InMemoryStore()
+    with pytest.raises(OpenBaoInitError, match=r"HTTP 500"):
+        ensure_openbao_ready(transport, keys_store, secrets_store)
