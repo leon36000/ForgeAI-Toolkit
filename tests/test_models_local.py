@@ -211,7 +211,7 @@ def test_download_rejette_nom_traversal(tmp_path):
 # fichier `.part`, jamais `.bin` — le test de mismatch existant ne vérifie que
 # `glob("*.bin")`, donc un `.part` corrompu resterait invisible sur disque.
 # Les 3 tests suivants isolent chaque garde par mutation/neutralisation
-# ciblée d'UNE SEULE des deux autres, comme dans C AND-001 (redirection HTTP).
+# ciblée d'UNE SEULE des deux autres, comme dans CAND-001 (redirection HTTP).
 # ---------------------------------------------------------------------------
 
 def test_download_verified_slash_dans_le_nom_refuse_avant_fetch(tmp_path):
