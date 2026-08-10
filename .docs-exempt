@@ -1,0 +1,5 @@
+scripts/gate_docs.py : durcissement défensif (validation de ref git avant subprocess, validation
+de chemin avant lecture) suite à l'issue #385 (SonarCloud). Le contrat CLI observable du gate
+(arguments --racine/--base/--base-ref-git, codes de sortie, messages sur stderr) est inchangé
+pour tout usage légitime — seul le comportement sur une entrée déjà invalide change (rejet plus
+tôt, message plus clair). Aucune story/doc utilisateur concernée.

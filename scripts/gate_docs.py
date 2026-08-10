@@ -6,10 +6,25 @@ from __future__ import annotations
 import argparse
 import ast
 import json
+import re
 import subprocess
 import sys
 from pathlib import Path
 from typing import Any
+
+# SonarCloud pythonsecurity:S8705 (New Code, issue #385) : `--base-ref-git` est un argument
+# CLI arbitraire injecté tel quel dans un argv `git`. En usage CI réel, gates.yml le fixe à
+# "origin/main" (non attaquable), mais le script reste un outil général invocable avec
+# n'importe quelle valeur — un ref commençant par "-" serait interprété comme une OPTION git
+# (injection d'argument, ex. "--upload-pack=...") plutôt que comme un nom de référence.
+_REF_GIT_VALIDE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._/\-]*$")
+
+
+def _valider_ref_git(ref: str) -> None:
+    """Refuse tout ref commençant par '-' (injection d'option git) ou contenant un
+    caractère hors de l'ensemble attendu pour un nom de référence git."""
+    if not ref or ref.startswith("-") or not _REF_GIT_VALIDE.match(ref):
+        raise ValueError(f"reference git invalide {ref!r} : refusee avant tout appel git")
 
 
 def sous_commandes(chemin_cli: Path) -> list[str]:
@@ -194,6 +209,10 @@ def anomalies(
 
 def _charger_json(chemin: Path, libelle: str) -> dict[str, Any]:
     """Charge et valide le JSON d'une base."""
+    # SonarCloud pythonsecurity:S8707 (New Code, issue #385) : valider explicitement AVANT
+    # tout accès disque, plutot que de se reposer uniquement sur l'OSError attrapee plus bas.
+    if not chemin.is_file():
+        raise ValueError(f"{libelle} introuvable ou n'est pas un fichier regulier : {str(chemin)!r}")
     try:
         texte = chemin.read_text(encoding="utf-8")
     except (OSError, UnicodeError) as erreur:
@@ -213,6 +232,7 @@ def _charger_base_reference_git(
     ref: str,
 ) -> tuple[dict[str, Any] | None, str]:
     """Charge la base depuis une reference git deja resolue."""
+    _valider_ref_git(ref)  # AVANT tout subprocess : refuse une injection d'option git
     try:
         subprocess.run(
             ["git", "rev-parse", "--verify", f"{ref}^{{commit}}"],

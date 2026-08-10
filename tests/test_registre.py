@@ -1,5 +1,6 @@
 """Tests du registre append-only hash-chaîné."""
 import json
+import os
 import sys
 from pathlib import Path
 
@@ -287,3 +288,34 @@ def test_repli_importlib_execution_directe(tmp_path, monkeypatch):
     assert e1["seq"] == 1 and e2["seq"] == 2
     assert e2["prev_hash"] == e1["hash"]
     assert module.verify(reg) is None
+
+
+# --- SonarCloud pythonsecurity:S8707 (New Code, issue #385) ----------------------------------
+# _load_key() (cle HMAC du registre) doit refuser un key_path non-regulier (symlink, fichier
+# special) AVANT toute lecture — meme motif que la garde lstat de _locking.py (CAND-010).
+
+def test_load_key_refuse_symlink_avant_lecture(tmp_path):
+    victime = tmp_path / "victime-secrete.txt"
+    victime.write_text("contenu-externe-jamais-lu", encoding="utf-8")
+    lien = tmp_path / "cle.hex"
+    os.symlink(victime, lien)
+
+    reg = tmp_path / "r.jsonl"
+    registre.append(reg, "t", "a", {"n": 1})
+    with pytest.raises(ValueError, match="cle refusee"):
+        registre.verify(reg, key_path=lien)
+
+
+def test_load_key_refuse_chemin_absent():
+    from forgeai.core.registre import _load_key
+    with pytest.raises(ValueError, match="cle introuvable"):
+        _load_key(Path("/chemin/totalement/inexistant.hex"))
+
+
+def test_load_key_accepte_fichier_regulier(tmp_path):
+    """Contrôle négatif : une clé régulière continue de fonctionner normalement."""
+    cle = tmp_path / "cle.hex"
+    cle.write_text(os.urandom(32).hex(), encoding="utf-8")
+    reg = tmp_path / "r.jsonl"
+    registre.append(reg, "t", "a", {"n": 1}, key_path=cle)
+    assert registre.verify(reg, key_path=cle) is None
