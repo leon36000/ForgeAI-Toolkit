@@ -51,6 +51,48 @@ def test_find_free_port_epuise_leve():
         find_free_port(30000, is_free=lambda p: False)
 
 
+# --- SonarCloud CRITICAL (« New Code », dashboard scelle 2026-08-09) -------------------------
+# python:S5852-like « loop bounds should not be set from unvalidated data » sur find_free_port :
+# `preferred` derive in fine de svc["container_port"] du catalogue de briques (donnee
+# potentiellement communautaire, meme classe de risque que CAND-001). Ces 2 tests pinnent la
+# garde de validation AVANT toute boucle — jamais atteinte par les tests preexistants, qui ne
+# passent que des entiers deja valides.
+
+def test_find_free_port_refuse_port_hors_plage_avant_toute_boucle():
+    """Un port prefere hors [1, 65535] (ex. negatif) doit etre refuse par la garde amont —
+    is_free ne doit JAMAIS etre appelee (boucle non validee = surface DoS potentielle)."""
+    def _boom(port):
+        raise AssertionError(
+            "is_free() a ete appelee avant validation de `preferred` : "
+            "la garde amont ne coupe pas le chemin avant la boucle."
+        )
+    with pytest.raises(RuntimeError):
+        find_free_port(-1, is_free=_boom)
+
+
+def test_find_free_port_refuse_type_non_entier():
+    """Un `preferred` non entier (ex. str) doit etre refuse par la meme garde."""
+    def _boom(port):
+        raise AssertionError("is_free() ne doit pas etre appelee sur un type invalide.")
+    with pytest.raises(RuntimeError):
+        find_free_port("30000", is_free=_boom)  # type: ignore[arg-type]
+
+
+def test_find_free_port_plafonne_la_borne_haute_au_port_tcp_maximal():
+    """Un `preferred` valide mais proche du plafond (65500) ne doit jamais faire sonder un
+    port > 65535 — la borne haute est plafonnee, pas seulement `preferred + 200`."""
+    sondes = []
+
+    def _enregistre(port):
+        sondes.append(port)
+        return False
+
+    with pytest.raises(RuntimeError):
+        find_free_port(65500, is_free=_enregistre)
+    assert sondes, "au moins un port doit avoir ete sonde"
+    assert max(sondes) <= 65535, f"port hors plage TCP valide sonde : {max(sondes)}"
+
+
 def _assert_generated_env_contract(content: str) -> None:
     if "FORGEAI_API_TOKEN=" not in content:
         raise AssertionError("generated env is missing API token")
