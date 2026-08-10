@@ -270,3 +270,33 @@ def test_g15_main_echoue_si_la_base_est_absente(tmp_path):
     )
     assert gate_docs.main(["--racine", str(tmp_path),
                            "--base", str(tmp_path / "absente.json")]) != 0
+
+
+# --- SonarCloud pythonsecurity:S8705 (New Code, issue #385) ----------------------------------
+# `--base-ref-git` est injecte tel quel dans un argv `git`. Un ref commencant par "-" serait
+# interprete comme une OPTION git (injection d'argument) plutot qu'un nom de reference.
+# _valider_ref_git() doit refuser AVANT tout subprocess.run.
+
+def test_valider_ref_git_refuse_prefixe_tiret():
+    with pytest.raises(ValueError, match="reference git invalide"):
+        gate_docs._valider_ref_git("--upload-pack=/bin/evil")
+
+
+def test_valider_ref_git_refuse_vide():
+    with pytest.raises(ValueError, match="reference git invalide"):
+        gate_docs._valider_ref_git("")
+
+
+def test_valider_ref_git_accepte_ref_normal():
+    gate_docs._valider_ref_git("origin/main")  # ne doit pas lever
+
+
+def test_charger_base_reference_git_refuse_avant_tout_subprocess(tmp_path, monkeypatch):
+    """Isole la garde : un ref malveillant ne doit JAMAIS atteindre subprocess.run."""
+    def _boom(*args, **kwargs):
+        raise AssertionError(
+            "subprocess.run() ne doit jamais etre appele pour un ref refuse par la garde amont"
+        )
+    monkeypatch.setattr(gate_docs.subprocess, "run", _boom)
+    with pytest.raises(ValueError, match="reference git invalide"):
+        gate_docs._charger_base_reference_git(tmp_path, tmp_path / "base.json", "--evil=1")

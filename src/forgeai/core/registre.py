@@ -20,6 +20,7 @@ import hmac
 import json
 import os
 import secrets
+import stat
 import sys
 
 try:
@@ -49,7 +50,19 @@ def _key_id(key: bytes) -> str:
 
 
 def _load_key(key_path: Path) -> bytes:
-    """Lit une clé stockée en hexadécimal."""
+    """Lit une clé HMAC stockée en hexadécimal.
+
+    SonarCloud pythonsecurity:S8707 (New Code, issue #385) : valider AVANT l'accès disque —
+    même motif que la garde lstat de _locking.py (CAND-010) et les gardes O_NOFOLLOW de
+    vault.py (CAND-012/013/014) déjà pinnées dans ce dépôt. Un `key_path` pointant vers un
+    lien symbolique ou un fichier spécial (FIFO, périphérique) n'a rien à faire dans le
+    chargement d'une clé de signature du registre d'audit."""
+    try:
+        etat = key_path.lstat()
+    except FileNotFoundError as erreur:
+        raise ValueError(f"cle introuvable : {str(key_path)!r}") from erreur
+    if not stat.S_ISREG(etat.st_mode):
+        raise ValueError(f"cle refusee (pas un fichier regulier) : {str(key_path)!r}")
     return bytes.fromhex(key_path.read_text(encoding="utf-8").strip())
 
 
