@@ -529,6 +529,32 @@ def test_renderer_compose_probe_tcp_genere_test_nc():
     assert test_lines[0].strip() == f"test: {expected_test}"
 
 
+def test_renderer_compose_repli_healthcheck_url_vise_le_port_conteneur():
+    """Défaut mesuré (TEI/reranker) : sans `probe_type` déclaré, le repli hérité réutilisait
+    `healthcheck_url` TEL QUEL — or ce champ porte le port HÔTE (contrat du consommateur hôte,
+    `deploy/compose.py`), alors que la sonde Docker Compose s'exécute DANS le conteneur. Résultat
+    mesuré : `docker inspect` -> `curl: (7) Failed to connect to 127.0.0.1:<port hôte>`, conteneur
+    étiqueté `unhealthy` en permanence bien que le service réponde 200 sur le port hôte depuis
+    l'extérieur. Le repli doit reconstruire la cible avec `container_port`, jamais le port hôte."""
+    svc = ServiceSpec(
+        host_port=8100, name="text-embeddings-inference-tei",
+        image="ghcr.io/huggingface/text-embeddings-inference:cpu-1.9",
+        container_port=80,
+        healthcheck_url="http://127.0.0.1:8100/health",
+    )
+    lines = compose_renderer._healthcheck_lines(svc)
+    test_lines = [l for l in lines if l.strip().startswith("test:")]
+    assert len(test_lines) == 1, f"Une seule ligne 'test:' attendue, obtenu: {test_lines!r}"
+    expected_test = json.dumps(["CMD", "curl", "-fsS", "http://127.0.0.1:80/health"], ensure_ascii=False)
+    assert test_lines[0].strip() == f"test: {expected_test}", (
+        "la sonde du repli doit viser le port CONTENEUR (80), jamais le port hôte (8100) : "
+        f"{test_lines[0]!r}"
+    )
+    assert "8100" not in test_lines[0], (
+        f"le port hôte ne doit jamais apparaître dans une sonde exécutée DANS le conteneur : {test_lines[0]!r}"
+    )
+
+
 # ---------------------------------------------------------------------------
 # HEALTH-028B — bloc 6 : src/forgeai/renderers/k3s.py (263, 295, 296)
 # ---------------------------------------------------------------------------
