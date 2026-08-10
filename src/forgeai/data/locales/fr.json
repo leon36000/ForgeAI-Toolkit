@@ -325,6 +325,7 @@
   "observability.langfuse.get.injoignable": "langfuse GET {path} injoignable ({reason})",
   "observability.langfuse.get.reponse_illisible": "langfuse GET {path} -> réponse illisible ({detail})",
   "planner.assemble.aucun_port_libre": "Aucun port libre entre {debut} et {fin}",
+  "planner.assemble.find_free_port.port_invalide": "Port prefere invalide ({preferred!r}) : doit etre un entier entre 1 et 65535",
   "planner.assemble.probe_type_de.valeur_inconnue": "Valeur inconnue pour la cle 'probe_type': {valeur!r}",
   "planner.profile.derive_profile.disque_insuffisant": "Disque libre insuffisant : {free} Go < {min_disk} Go requis",
   "planner.profile.derive_profile.nvidia_non_qualifie": "GPU NVIDIA présent mais non qualifié : nvidia-smi indisponible (driver/runtime NVIDIA). VRAM inconnue (non nulle). Vérifiez l'installation du driver NVIDIA (`nvidia-smi`) puis relancez — le déploiement d'un workload GPU est refusé tant que le GPU n'est pas qualifié.",

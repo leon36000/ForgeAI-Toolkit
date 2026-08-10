@@ -77,10 +77,17 @@ def port_is_free(port: int, host: str = "127.0.0.1") -> bool:
 
 
 def find_free_port(preferred: int, is_free=port_is_free) -> int:
-    for port in range(preferred, preferred + 200):
+    # SonarCloud python:S5852-like (« borne de boucle depuis une donnee non
+    # validee ») : `preferred` derive in fine du catalogue de briques (donnee
+    # potentiellement communautaire, cf. CAND-001). Valider AVANT toute boucle,
+    # jamais apres — et plafonner la borne haute au port TCP maximal valide.
+    if not isinstance(preferred, int) or not (1 <= preferred <= 65535):
+        raise RuntimeError(t("planner.assemble.find_free_port.port_invalide", preferred=preferred))
+    borne_haute = min(preferred + 200, 65536)
+    for port in range(preferred, borne_haute):
         if is_free(port):
             return port
-    raise RuntimeError(t("planner.assemble.aucun_port_libre", debut=preferred, fin=preferred + 200))
+    raise RuntimeError(t("planner.assemble.aucun_port_libre", debut=preferred, fin=borne_haute))
 
 
 def _next_chassis_port(used_ports: set[int], is_free=port_is_free) -> int:
