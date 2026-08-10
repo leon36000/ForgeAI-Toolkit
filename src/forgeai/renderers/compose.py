@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import re
 import json
+from urllib.parse import urlsplit
 
 from forgeai.core.models import DeploymentPlan, ProbeType
 from forgeai.i18n import t
@@ -43,8 +44,20 @@ def _healthcheck_lines(svc) -> list[str]:
         test_entry = f'test: {json.dumps(["CMD", "nc", "-z", "127.0.0.1", str(int(svc.container_port))], ensure_ascii=False)}'
     else:
         # Fallback : probe_type est None mais healthcheck_url est renseigné (comportement hérité).
-        # On utilise l'URL telle quelle, sans reconstruction.
-        test_entry = f'test: {json.dumps(["CMD", "curl", "-fsS", str(svc.healthcheck_url)], ensure_ascii=False)}'
+        # `healthcheck_url` porte le port HÔTE — c'est le contrat du consommateur hôte
+        # (deploy/compose.py, qui sonde depuis l'ORCHESTRATEUR après déploiement). Cette sonde
+        # Docker Compose, elle, s'exécute DANS le conteneur : réutiliser l'URL telle quelle visait
+        # 127.0.0.1:<port hôte> depuis l'intérieur du conteneur, jamais joignable puisque le
+        # service écoute sur `container_port`. Défaut MESURÉ (text-embeddings-inference-tei et
+        # -reranker) : `docker inspect` rapportait `curl: (7) Failed to connect to
+        # 127.0.0.1:<port hôte>` en boucle -> conteneur `unhealthy` en permanence bien que le
+        # service réponde 200 sur le port hôte depuis l'extérieur. On ne réutilise donc QUE le
+        # chemin de l'URL héritée, reconstruit avec le port INTERNE (même stratégie que le repli
+        # équivalent de renderers/k3s.py, qui n'a jamais cette classe de défaut car un probe K8s
+        # httpGet cible toujours container_port, jamais l'URL brute).
+        chemin = urlsplit(str(svc.healthcheck_url)).path or "/"
+        cible = f"http://127.0.0.1:{int(svc.container_port)}{chemin}"
+        test_entry = f'test: {json.dumps(["CMD", "curl", "-fsS", cible], ensure_ascii=False)}'
 
     # Remplir les paramètres de la sonde avec conversion en entiers
     interval = int(svc.health_interval_s)
