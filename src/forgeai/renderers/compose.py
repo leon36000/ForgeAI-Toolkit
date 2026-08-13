@@ -291,8 +291,14 @@ def render_compose(plan: DeploymentPlan, project: str = "forgeai-minimal") -> st
             ]
     # openbao présent -> ajouter le service compagnon openbao-unsealer (2e "conteneur" en compose =
     # service séparé ; l'équivalent du sidecar k3s de S3). Émis APRÈS la boucle des services du plan.
+    # BUG (trouvé en session, jamais couvert par l'audit v7.1) : si openbao est ADOPTÉ
+    # (adopted_endpoint renseigné), la boucle principale ci-dessus l'exclut déjà de `services:`
+    # (même motif que `adopted_names` L162/L183/L220) — mais ce bloc-ci ne vérifiait pas
+    # adopted_endpoint et émettait quand même le sidecar unsealer, dont le depends_on référence
+    # un service "openbao" jamais déclaré. Preuve : `docker compose config` échoue avec
+    # "service openbao-unsealer depends on undefined service openbao: invalid compose project".
     openbao_svc = next((s for s in plan.services if s.name == "openbao"), None)
-    if openbao_svc is not None:
+    if openbao_svc is not None and openbao_svc.adopted_endpoint is None:
         # SECRET-020B : la MÊME source (resolve_openbao_gid) pilote le mode fichier de la clé
         # (FileKeyStore.write : 0640 si groupe, 0644 sinon) ET le group_add du manifeste —
         # jamais l'un sans l'autre (un 0640 sans group_add = re-unseal cassé, e2e S6).

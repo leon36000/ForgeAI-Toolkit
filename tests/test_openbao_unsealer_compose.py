@@ -114,6 +114,22 @@ def test_script_unsealer_ne_fuit_pas_la_cle() -> None:
             assert "unseal_key" not in line and "$(cat" not in line, line
 
 
+def test_openbao_adopte_aucun_sidecar_unsealer() -> None:
+    """BUG (trouvé en session, jamais couvert par l'audit v7.1) : openbao ADOPTÉ (déjà présent
+    sur le nœud, adopted_endpoint renseigné) est exclu de `services:` par la boucle principale —
+    mais ce bloc-ci émettait quand même le sidecar `openbao-unsealer`, dont le depends_on
+    référence un service `openbao` jamais déclaré : `docker compose config` rejette un tel
+    manifeste avec "service openbao-unsealer depends on undefined service openbao"."""
+    openbao_adopte = ServiceSpec(
+        name="openbao", image="openbao/openbao:2.6.0", host_port=8200, container_port=8200,
+        healthcheck_url="http://127.0.0.1:8200/v1/sys/health",
+        adopted_endpoint="127.0.0.1:8200",
+    )
+    data = _render((openbao_adopte, _LITELLM))
+    assert "openbao" not in data["services"], list(data["services"])
+    assert "openbao-unsealer" not in data["services"], list(data["services"])
+
+
 def test_script_partage_identique_entre_backends() -> None:
     # source unique : le service compose et le sidecar k3s exécutent EXACTEMENT le même script
     from forgeai.renderers.k3s import _UNSEAL_SCRIPT
