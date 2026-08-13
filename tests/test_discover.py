@@ -18,14 +18,29 @@ from forgeai.web.server import build_server
 
 
 class FakeRunner:
-    """Runner de test : répond par préfixe d'argv."""
+    """Runner de test : répond par préfixe d'argv, avec un cas spécial pour le sondage
+    GROUPÉ des binaires (PERF — un seul appel pour tous, une ligne 1/0 par binaire
+    demandé, dans l'ordre reçu) plutôt qu'un appel par binaire."""
 
-    def __init__(self, outputs: dict[str, tuple[int, str]]) -> None:
+    def __init__(
+        self,
+        outputs: dict[str, tuple[int, str]],
+        binaires_presents: frozenset[str] = frozenset(),
+    ) -> None:
         self.outputs = outputs
+        self.binaires_presents = binaires_presents
         self.calls: list[list[str]] = []
 
     def run(self, argv: list[str]) -> tuple[int, str]:
         self.calls.append(argv)
+        if (
+            len(argv) >= 4
+            and argv[0] == "sh" and argv[1] == "-c" and argv[3] == "sh"
+            and "for b in" in argv[2]
+        ):
+            demandes = argv[4:]
+            lignes = ["1" if b in self.binaires_presents else "0" for b in demandes]
+            return 0, "\n".join(lignes)
         key = " ".join(argv)
         for prefix, (rc, stdout) in self.outputs.items():
             if key.startswith(prefix):
@@ -46,8 +61,6 @@ def test_signatures_briques_au_catalogue() -> None:
 def test_inventaire_detecte_ollama_qdrant() -> None:
     runner = FakeRunner(
         {
-            'sh -c command -v "$1" sh docker': (0, "/usr/bin/docker"),
-            'sh -c command -v "$1" sh ollama': (0, "/usr/bin/ollama"),
             "docker ps --format": (
                 0,
                 "ollama/ollama|ollama|0.0.0.0:11434->11434/tcp",
@@ -58,7 +71,8 @@ def test_inventaire_detecte_ollama_qdrant() -> None:
                 "LISTEN 0 128 0.0.0.0:6333 *:*\n",
             ),
             "nvidia-smi -L": (0, "GPU 0: NVIDIA GeForce RTX 3060"),
-        }
+        },
+        binaires_presents=frozenset({"docker", "ollama"}),
     )
     inv = inventaire(runner, charger_signatures())
     by_id = {s["id"]: s for s in inv["services"]}
@@ -93,17 +107,61 @@ def test_inventaire_absents() -> None:
 def test_tolerant_commande_absente() -> None:
     runner = FakeRunner(
         {
-            'sh -c command -v "$1" sh docker': (0, "/usr/bin/docker"),
             "docker ps --format": (127, ""),
             "ss -tlnH": (0, ""),
             "nvidia-smi -L": (127, ""),
-        }
+        },
+        binaires_presents=frozenset({"docker"}),
     )
     sonde = _sonder(runner)
     assert sonde["conteneurs"] == []
     # inventaire ne plante pas non plus
     inv = inventaire(runner, charger_signatures())
     assert isinstance(inv["services"], list)
+
+
+# --- PERF (issue soulevée en session, jamais couverte par l'audit v7.1) ----------------------
+# _sonder() faisait 1 appel runner.run() PAR binaire (8 sur signatures-infra.json). Décisif en
+# SSH distant : SshRunner ouvre une connexion TCP+SSH complète par appel (aucun multiplexage),
+# donc 8 connexions séquentielles pour un sondage qui devrait être quasi instantané.
+
+def test_sonder_groupe_tous_les_binaires_en_un_seul_appel() -> None:
+    """Isole l'optimisation : un SEUL runner.run() pour toutes les vérifications de
+    binaires, quel que soit leur nombre dans signatures-infra.json (mesuré à 8)."""
+    runner = FakeRunner(
+        {
+            "docker ps --format": (127, ""),
+            "ss -tlnH": (0, ""),
+            "nvidia-smi -L": (127, ""),
+        },
+        binaires_presents=frozenset({"docker", "ollama"}),
+    )
+    _sonder(runner)
+
+    appels_binaires = [c for c in runner.calls if len(c) >= 3 and c[0] == "sh" and "for b in" in c[2]]
+    assert len(appels_binaires) == 1, (
+        f"attendu 1 seul appel groupé pour tous les binaires, obtenu {len(appels_binaires)} "
+        f"(régression vers un appel par binaire)"
+    )
+    nb_binaires_signatures = sum(1 for s in charger_signatures() if s.get("binaire"))
+    assert len(appels_binaires[0]) - 4 == nb_binaires_signatures, (
+        "l'appel groupé doit porter TOUS les binaires à vérifier, pas un sous-ensemble"
+    )
+
+
+def test_sonder_binaires_resultat_identique_a_l_ancien_appel_par_binaire() -> None:
+    """Non-régression sémantique : le résultat par binaire (présent/absent) reste correct
+    après le passage à un appel groupé — seule la MÉCANIQUE de l'appel a changé."""
+    runner = FakeRunner(
+        {"docker ps --format": (127, ""), "ss -tlnH": (0, ""), "nvidia-smi -L": (127, "")},
+        binaires_presents=frozenset({"docker", "kubectl", "nvidia-smi"}),
+    )
+    sonde = _sonder(runner)
+    assert sonde["binaires"]["docker"] is True
+    assert sonde["binaires"]["kubectl"] is True
+    assert sonde["binaires"]["nvidia"] is True  # id "nvidia", binaire "nvidia-smi"
+    assert sonde["binaires"]["helm"] is False
+    assert sonde["binaires"]["ollama"] is False
 
 
 def test_api_discover_local() -> None:
