@@ -72,13 +72,21 @@ def _sonder(runner) -> dict[str, Any]:
     """Sonde le nœud et retourne les données brutes de détection."""
     signatures = charger_signatures()
 
+    # PERF : un SEUL appel runner.run() pour TOUS les binaires (au lieu d'un par binaire,
+    # mesuré à 8 appels séparés sur signatures-infra.json). Décisif en SSH distant : SshRunner
+    # ouvre une connexion TCP+SSH complète par appel (aucun multiplexage/ControlMaster) — 8
+    # connexions séquentielles pour ce qui devrait être quasi instantané. Les noms de binaires
+    # restent en paramètres positionnels ($@), jamais interpolés dans le texte du script
+    # (même garantie qu'avant — cf. tests/test_discover_shell_injection.py).
     binaires: dict[str, bool] = {}
-    for sig in signatures:
-        binaire = sig.get("binaire")
-        if binaire:
-            # binaire passé en paramètre positionnel ($1) — jamais interprété comme syntaxe shell
-            code, _ = runner.run(["sh", "-c", 'command -v "$1"', "sh", binaire])
-            binaires[sig["id"]] = code == 0
+    a_verifier = [(sig["id"], sig["binaire"]) for sig in signatures if sig.get("binaire")]
+    if a_verifier:
+        script = 'for b in "$@"; do command -v "$b" >/dev/null 2>&1 && echo 1 || echo 0; done'
+        argv = ["sh", "-c", script, "sh"] + [binaire for _, binaire in a_verifier]
+        _code, out = runner.run(argv)
+        lignes = out.splitlines()
+        for (ident, _binaire), ligne in zip(a_verifier, lignes):
+            binaires[ident] = ligne.strip() == "1"
 
     conteneurs: list[dict[str, str]] = []
     if binaires.get("docker", False):
