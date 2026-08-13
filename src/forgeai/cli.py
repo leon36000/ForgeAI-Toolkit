@@ -713,17 +713,27 @@ def _doctor(args: argparse.Namespace) -> int:
 
 
 def _operators(args: argparse.Namespace) -> int:
-    """Opérateurs K8s du châssis : détecte l'existant (ADOPTE) ou propose l'install Helm."""
-    from forgeai.deploy.operators import OPERATORS, plan
+    """Opérateurs K8s du châssis : détecte l'existant (ADOPTE) ou propose l'install Helm.
+
+    PERF (bug trouvé en session, jamais couvert par l'audit v7.1) : sans --name, cette
+    fonction boucle sur les 3 opérateurs (OPERATORS) — `helm list -A -o json` liste déjà
+    TOUTES les releases indépendamment de l'opérateur visé, donc un seul appel, prêté à
+    plan()/detect() pour chaque itération, suffit (au lieu d'un appel Helm identique par
+    opérateur). Récupéré paresseusement (après validation du nom) pour ne déclencher aucun
+    appel superflu sur un nom inconnu."""
+    from forgeai.deploy.operators import OPERATORS, fetch_releases_helm, plan
     runner = SubprocessRunner()
     names = [args.name] if getattr(args, "name", None) else list(OPERATORS)
     print(t("cli.operators.header"))
+    releases_helm = None
     for name in names:
         if name not in OPERATORS:
             connus = ", ".join(sorted(OPERATORS))
             print(t("cli.operators.inconnu", nom=name, connus=connus), file=sys.stderr)
             return 8
-        p = plan(name, runner)
+        if releases_helm is None:
+            releases_helm = fetch_releases_helm(runner)
+        p = plan(name, runner, releases_helm)
         st = p["status"]
         if p["action"] == "adopt":
             version = st.version or "CRD"

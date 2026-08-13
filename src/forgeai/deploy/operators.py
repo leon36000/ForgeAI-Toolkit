@@ -51,17 +51,35 @@ OPERATORS: dict[str, OperatorSpec] = {
 }
 
 
-def detect(name: str, runner: CommandRunner) -> OperatorStatus:
-    """Détecte un opérateur : release Helm présente (avec sa version de chart) ou CRD signature."""
-    spec = OPERATORS[name]
+def fetch_releases_helm(runner: CommandRunner) -> list:
+    """Un SEUL appel `helm list -A -o json`, résultat parsé réutilisable par plusieurs
+    detect()/plan() (PERF — trouvé en session : `_operators()` dans cli.py bouclait sur les 3
+    opérateurs du châssis et rappelait cette commande IDENTIQUE une fois par opérateur, alors
+    qu'elle liste déjà TOUTES les releases de TOUS les namespaces indépendamment du nom visé).
+    Retourne [] si la commande échoue, ne renvoie rien d'exploitable, ou si le JSON est invalide
+    — dans tous ces cas detect() retombe sur le fallback CRD, exactement comme avant."""
     code, out = runner.run(["helm", "list", "-A", "-o", "json"])
     if code == 0 and out.strip():
         try:
-            for rel in json.loads(out):
-                if rel.get("name") == spec.release:
-                    return OperatorStatus(name, True, "helm", rel.get("chart"))
+            return json.loads(out)
         except (ValueError, TypeError):
-            pass
+            return []
+    return []
+
+
+def detect(name: str, runner: CommandRunner, releases_helm: list | None = None) -> OperatorStatus:
+    """Détecte un opérateur : release Helm présente (avec sa version de chart) ou CRD signature.
+
+    releases_helm : résultat déjà obtenu de fetch_releases_helm(runner), pour éviter un appel
+    `helm list` redondant quand plusieurs opérateurs sont vérifiés dans la même invocation (voir
+    _operators() dans cli.py). None (défaut) -> comportement historique inchangé : un appel
+    `helm list` propre à CET appel de detect() — compatibilité totale pour un usage isolé
+    (ex. `forgeai operators --name <x>`, ou tout appelant externe à (name, runner))."""
+    spec = OPERATORS[name]
+    releases = releases_helm if releases_helm is not None else fetch_releases_helm(runner)
+    for rel in releases:
+        if rel.get("name") == spec.release:
+            return OperatorStatus(name, True, "helm", rel.get("chart"))
     code, out = runner.run(["kubectl", "get", "crd", spec.crd, "-o", "name"])
     if code == 0 and out.strip():
         return OperatorStatus(name, True, "crd", None)
@@ -79,11 +97,13 @@ def install_argv(name: str) -> list[list[str]]:
     ]
 
 
-def plan(name: str, runner: CommandRunner) -> dict:
-    """Décision Discovery/Adoption : présent -> ADOPTER (aucune commande) ; absent -> installer."""
+def plan(name: str, runner: CommandRunner, releases_helm: list | None = None) -> dict:
+    """Décision Discovery/Adoption : présent -> ADOPTER (aucune commande) ; absent -> installer.
+
+    releases_helm : voir detect() — transmis tel quel, None par défaut (compatibilité)."""
     if name not in OPERATORS:
         raise KeyError(t("deploy.operators.plan.operateur_inconnu", name=name, connus=sorted(OPERATORS)))
-    status = detect(name, runner)
+    status = detect(name, runner, releases_helm)
     if status.present:
         return {"action": "adopt", "status": status, "commands": []}
     return {"action": "install", "status": status, "commands": install_argv(name)}
