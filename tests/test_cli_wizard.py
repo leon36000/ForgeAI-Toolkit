@@ -136,6 +136,70 @@ def test_wizard_ci_echec_deploiement_retourne_8(wired, monkeypatch):
     assert cli.main(_argv(tmp_path, registre_path)) == 8
 
 
+# --- BUG teardown orphelin (trouvé en session, jamais couvert par l'audit v7.1) -----------
+# `compose_up`/`k3s_apply` s'exécutaient AVANT le `try/finally` protecteur de wizard_ci. Un
+# échec PENDANT la création (donc potentiellement APRÈS que des ressources aient déjà été
+# créées, ex. certains conteneurs démarrés par un `compose up -d` qui échoue en cours de route)
+# sortait de la fonction sans jamais atteindre le `finally` — --teardown n'était alors JAMAIS
+# honoré, laissant des ressources orphelines sur l'hôte/le cluster.
+def test_wizard_ci_teardown_appele_meme_si_echec_avant_lancien_try(wired, monkeypatch):
+    """Preuve de la garde (RED avant correctif, GREEN après) : `compose_up` échoue — c'est
+    l'étape de création la plus précoce protégeable en backend compose (avant elle, seuls le
+    plan/les rendus de fichiers sont écrits, rien n'existe encore sur l'hôte). --teardown est
+    demandé -> compose_down DOIT être appelé malgré l'échec, pour ne jamais laisser de
+    ressources orphelines."""
+    tmp_path, registre_path = wired
+    from forgeai.deploy.compose import DeployError
+    appels_down = []
+    monkeypatch.setattr(cli, "compose_down",
+                        lambda f, volumes=False: appels_down.append((f, volumes)))
+    def boom(f):
+        raise DeployError("docker indisponible EN COURS de création")
+    monkeypatch.setattr(cli, "compose_up", boom)
+    code = cli.main(_argv(tmp_path, registre_path))  # --teardown déjà dans _argv par défaut
+    assert code == 8
+    assert appels_down, (
+        "compose_down DOIT être appelé même si compose_up échoue AVANT l'ancien try/finally "
+        "— sinon --teardown ne nettoie rien sur cet échec (ressources orphelines)"
+    )
+
+
+def test_wizard_ci_teardown_appele_meme_si_echec_avant_lancien_try_k3s(wired, monkeypatch):
+    """Même garde, backend k3s : `k3s_apply` échoue avant l'ancien try/finally -> le namespace
+    DOIT quand même être nettoyé si --teardown est demandé (même classe de bug que compose)."""
+    tmp_path, registre_path = wired
+    from forgeai.deploy.compose import DeployError
+    appels_delete = []
+    monkeypatch.setattr(cli, "k3s_delete_namespace", lambda ns: appels_delete.append(ns))
+    monkeypatch.setattr(cli, "k3s_wait_deployments", lambda ns, timeout_s: None)
+    def boom(manifest):
+        raise DeployError("kubectl apply EN ECHEC")
+    monkeypatch.setattr(cli, "k3s_apply", boom)
+    code = cli.main(_argv(tmp_path, registre_path, **{"--backend": "k3s"}))
+    assert code == 8
+    assert appels_delete, (
+        "k3s_delete_namespace DOIT être appelé même si k3s_apply échoue AVANT l'ancien "
+        "try/finally — sinon --teardown ne nettoie rien sur cet échec (namespace orphelin)"
+    )
+
+
+def test_wizard_ci_sans_teardown_aucun_nettoyage_sur_echec(wired, monkeypatch):
+    """Non-régression : SANS --teardown, un échec de compose_up ne doit déclencher AUCUN
+    nettoyage — élargir le try/finally ne doit pas faire apparaître un nettoyage non demandé."""
+    tmp_path, registre_path = wired
+    from forgeai.deploy.compose import DeployError
+    appels_down = []
+    monkeypatch.setattr(cli, "compose_down",
+                        lambda f, volumes=False: appels_down.append((f, volumes)))
+    def boom(f):
+        raise DeployError("docker indisponible")
+    monkeypatch.setattr(cli, "compose_up", boom)
+    argv = [a for a in _argv(tmp_path, registre_path) if a != "--teardown"]
+    code = cli.main(argv)
+    assert code == 8
+    assert not appels_down, "sans --teardown, aucun nettoyage ne doit être déclenché sur échec"
+
+
 def test_sous_commande_hardware_affiche_le_json(capsys):
     assert cli.main(["hardware"]) == 0
     data = json.loads(capsys.readouterr().out)

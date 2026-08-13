@@ -407,28 +407,36 @@ def wizard_ci(args: argparse.Namespace) -> int:
     langfuse_witness = None  # E5 — témoin de trace d'observabilité langfuse (RAG durci)
     eval_witness = None  # E6 — score d'éval RAG déterministe (« optimal » mesuré)
     openbao_app_token = ""  # FAI-0005 S5 : token applicatif scopé émis à l'amorçage (jamais le root)
-    if backend == "compose":
-        _step(t("wizard.s06"))
-        if rag_durci and _has_openbao(plan):
-            # openbao PROD : init/unseal AVANT les consommateurs (qui attendent service_healthy =
-            # coffre descellé ; sans amorçage préalable = interblocage au premier boot).
-            openbao_app_token = _provision_openbao_compose(
-                compose_file, workdir, _svc_url(probe_host, ports["openbao"]))
-        compose_up(compose_file)
-        rag_ports = ports
-    else:
-        _step(t("wizard.s07", node=node_label))
-        if rag_durci and _has_openbao(plan):
-            # openbao est ClusterIP (interne, #113) : l'amorçage PROD k3s exige un port-forward
-            # opérateur -> openbao. Flux documenté (Docs/how-to/openbao-migration.md) ; échec RAPIDE
-            # ici plutôt qu'un `wait deployments` bloqué indéfiniment sur un coffre jamais descellé.
-            raise DeployError(t("cli.wizard.deploy_error.openbao_k3s"))
-        k3s_apply(workdir / "k3s.yaml")
-        k3s_wait_deployments(NAMESPACE, timeout_s=args.health_timeout)
-        used_node_ports: set[int] = set()
-        rag_ports = {s.name: node_port_for(s, used_node_ports) for s in plan.services}
-        print(t("cli.wizard.nodeports", ports=rag_ports))
+    # BUG teardown orphelin (trouvé en session, jamais couvert par l'audit v7.1) : le try/finally
+    # protecteur doit englober TOUTE étape pouvant créer une ressource sur l'hôte/le cluster —
+    # provisioning openbao, compose_up, k3s_apply, k3s_wait_deployments — dès son tout premier appel,
+    # pas seulement l'attente de santé qui suit. Avant ce correctif, un échec PENDANT la création
+    # (ex. compose_up qui plante après avoir démarré certains conteneurs, ou k3s_apply qui a déjà
+    # créé des objets avant d'échouer) sortait de wizard_ci SANS jamais atteindre le `finally` :
+    # --teardown restait sans effet et les ressources restaient orphelines.
     try:
+        if backend == "compose":
+            _step(t("wizard.s06"))
+            if rag_durci and _has_openbao(plan):
+                # openbao PROD : init/unseal AVANT les consommateurs (qui attendent service_healthy =
+                # coffre descellé ; sans amorçage préalable = interblocage au premier boot).
+                openbao_app_token = _provision_openbao_compose(
+                    compose_file, workdir, _svc_url(probe_host, ports["openbao"]))
+            compose_up(compose_file)
+            rag_ports = ports
+        else:
+            _step(t("wizard.s07", node=node_label))
+            if rag_durci and _has_openbao(plan):
+                # openbao est ClusterIP (interne, #113) : l'amorçage PROD k3s exige un port-forward
+                # opérateur -> openbao. Flux documenté (Docs/how-to/openbao-migration.md) ; échec RAPIDE
+                # ici plutôt qu'un `wait deployments` bloqué indéfiniment sur un coffre jamais descellé.
+                raise DeployError(t("cli.wizard.deploy_error.openbao_k3s"))
+            k3s_apply(workdir / "k3s.yaml")
+            k3s_wait_deployments(NAMESPACE, timeout_s=args.health_timeout)
+            used_node_ports: set[int] = set()
+            rag_ports = {s.name: node_port_for(s, used_node_ports) for s in plan.services}
+            print(t("cli.wizard.nodeports", ports=rag_ports))
+
         if backend == "compose":
             health = wait_healthy(plan, timeout_s=args.health_timeout)
         else:
