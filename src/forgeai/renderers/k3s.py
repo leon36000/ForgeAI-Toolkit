@@ -526,7 +526,14 @@ def _deployment(svc: ServiceSpec, effective_node: str | None = None,
     # command → args k8s (parité avec le renderer compose) ; chaque arg passé par _safe (injection).
     command_block = ""
     if svc.command:
-        items = "".join(f'\n            - "{_safe(str(a), "arg")}"' for a in svc.command)
+        # Échappement par json.dumps (même motif que _probes_block/EXEC ci-dessus) : un
+        # guillemet dans la valeur casserait sinon le YAML généré — _safe() ne rejette que
+        # les caractères de contrôle, jamais un guillemet (mesuré : ScannerError sur une
+        # valeur du type 'a"b: c').
+        items = "".join(
+            f"\n            - {json.dumps(_safe(str(a), 'arg'), ensure_ascii=False)}"
+            for a in svc.command
+        )
         command_block = f"\n          args:{items}"
     # env → bloc env k8s (parité compose) ; ${FORGEAI_*} devient secretKeyRef ou $(VAR).
     env_block = ""
@@ -568,14 +575,16 @@ def _deployment(svc: ServiceSpec, effective_node: str | None = None,
                 )
             elif _SECRET_REF.search(val):
                 rewritten = _SECRET_REF.sub(lambda match: f"$({match.group(1)})", str(v))
+                # Échappement par json.dumps — même motif que command_block/_probes_block :
+                # un guillemet dans la valeur casserait sinon le YAML généré.
                 items += (
                     f"\n            - name: {_safe(str(k), 'env-key')}"
-                    f"\n              value: \"{_safe(rewritten, 'env-val')}\""
+                    f"\n              value: {json.dumps(_safe(rewritten, 'env-val'), ensure_ascii=False)}"
                 )
             else:
                 items += (
                     f"\n            - name: {_safe(str(k), 'env-key')}"
-                    f"\n              value: \"{_safe(str(v), 'env-val')}\""
+                    f"\n              value: {json.dumps(_safe(str(v), 'env-val'), ensure_ascii=False)}"
                 )
         env_block = f"\n          env:{items}"
     # openbao : le sidecar s'insère ENTRE le conteneur principal (volume_mount, indent 10)

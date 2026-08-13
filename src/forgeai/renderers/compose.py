@@ -246,7 +246,11 @@ def render_compose(plan: DeploymentPlan, project: str = "forgeai-minimal") -> st
         if svc.command:
             lines.append("    command:")
             for arg in svc.command:
-                lines.append(f'      - "{arg}"')
+                # Même échappement que le bloc environment: ci-dessus : un guillemet dans
+                # la valeur casserait sinon le YAML généré (mesuré : ScannerError sur une
+                # valeur du type 'a"b: c').
+                safe_arg = str(arg).replace("\\", "\\\\").replace('"', '\\"')
+                lines.append(f'      - "{safe_arg}"')
         if svc.volumes:
             lines.append("    volumes:")
             for volume in svc.volumes:
