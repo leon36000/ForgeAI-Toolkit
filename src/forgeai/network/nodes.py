@@ -31,12 +31,35 @@ def cluster_status(runner: CommandRunner) -> list[dict]:
         roles = [k.rsplit("/", 1)[-1] for k in labels
                  if k.startswith("node-role.kubernetes.io/")]
         gpu = item["status"].get("allocatable", {}).get("nvidia.com/gpu", "0")
+        # BUG-web-server-redondance (bloc A) : `kubectl get nodes -o json` (CET appel,
+        # UNIQUE) renvoie déjà l'objet Node COMPLET par item — labels, capacité GPU par
+        # vendeur et conditions détaillées y compris. `/api/nodes/receptacles` sondait
+        # pourtant CHAQUE nœud une 2e fois via `sonder_noeud` (kubectl get node <nom>)
+        # pour ré-extraire exactement ces mêmes champs : un N+1 pur. On les expose ici en
+        # enrichissement LOCAL (zéro appel supplémentaire, même JSON déjà en mémoire) pour
+        # que l'appelant construise l'état complet d'un nœud à partir de CETTE liste seule.
+        # Champs additifs uniquement : "ready"/"gpu_allocatable"/"roles"/"version"
+        # (contrat historique, consommé par /api/nodes/status et `forgeai node status`)
+        # restent inchangés en sémantique et en valeur.
+        capacity = item["status"].get("capacity", {})
+        ready_status = conditions.get("Ready")
+        if ready_status == "True":
+            ready_tristate = True
+        elif ready_status == "False":
+            ready_tristate = False
+        else:
+            ready_tristate = None  # absent ou "Unknown" — même sémantique que sonder_noeud
         nodes.append({
             "name": item["metadata"]["name"],
             "ready": conditions.get("Ready") == "True",
             "roles": roles or ["worker"],
             "version": item["status"]["nodeInfo"]["kubeletVersion"],
             "gpu_allocatable": gpu,
+            "labels": labels,
+            "gpu_capacity_nvidia": int(capacity.get("nvidia.com/gpu", "0") or 0),
+            "gpu_capacity_amd": int(capacity.get("amd.com/gpu", "0") or 0),
+            "ready_tristate": ready_tristate,
+            "arch": item["status"].get("nodeInfo", {}).get("architecture", ""),
         })
     if not nodes:
         raise ClusterError(t("network.nodes.cluster_status.aucun_noeud"))
