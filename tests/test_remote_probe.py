@@ -108,6 +108,31 @@ def test_detection_passe_par_le_runner(tmp_path):
     assert "nvidia-smi" in commands_called or "lspci" in commands_called or "df" in commands_called
 
 
+def test_full_report_non_duplique(tmp_path):
+    """BUG-remote-probe-double-full-report : `probe_remote_node()` appelle
+    `detector.full_report()` explicitement (ligne ~189), PUIS `run_checks()` ->
+    `check_hardware()` appelle À NOUVEAU `detector.full_report()` sur le même détecteur
+    (même runner, même nœud) — chaque `full_report()` déclenche 4 `runner.run()` distincts
+    (lscpu, nvidia-smi, lspci, df). Sur `SshRunner`, chacun de ces appels ouvre une
+    connexion SSH complète (handshake + auth, sans multiplexage) : la duplication double
+    inutilement le coût réseau. Ce test COMPTE les appels réels vus par le runner et
+    prouve qu'aucune commande de sonde matérielle n'est répétée."""
+    fx = _make_fixture_runner()
+    registre = tmp_path / "registre.jsonl"
+    probe_remote_node("n1", runner=fx, registre_path=str(registre))
+
+    commands = [call[0] for call in fx.calls]
+    for probe_cmd in ("lscpu", "nvidia-smi", "lspci", "df"):
+        count = commands.count(probe_cmd)
+        assert count == 1, (
+            f"'{probe_cmd}' appelé {count} fois via SshRunner.run() (attendu 1) — "
+            f"full_report() est dupliqué dans le flux probe_remote_node(). Appels: {commands}"
+        )
+    # `cat /proc/meminfo` n'est, lui, jamais dupliqué par ce bug (appelé une seule fois
+    # avant tout full_report()) : sert de témoin négatif pour isoler la régression.
+    assert commands.count("cat") == 1
+
+
 def test_cli_node_probe(tmp_path, monkeypatch):
     """Chemin CLI : forgeai node probe utilise un runner (ici FixtureRunner) et journalise la fiche."""
     import forgeai.network.remote_probe as rp
