@@ -199,6 +199,8 @@
   "core.models.ressources.limits_inferieures_cpu": "ERR_RES_LIMITS_INFERIEURES: limits.cpu ({lim_cpu}) < requests.cpu ({req_cpu})",
   "core.models.ressources.limits_inferieures_memoire": "ERR_RES_LIMITS_INFERIEURES: limits.memory ({lim_mem}) < requests.memory ({req_mem})",
   "core.models.ressources.memoire_invalide": "ERR_RES_MEMOIRE_INVALIDE: '{val}' for {nom} is not an integer followed by Mi or Gi.",
+  "core.models.service.gpu_vendor_inconnu": "ERR_SERVICE_VENDOR_INCONNU: gpu_vendor '{gpu_vendor}' unknown (allowed: nvidia, amd, intel, None)",
+  "core.models.service.port_hors_bornes": "ERR_SERVICE_PORT_BORNES: {nom_champ}={valeur_repr} out of range (expected an integer in [1, 65535])",
   "core.registre_ancrage.checkpoint_de.registre_vide": "cannot create a checkpoint on an empty registry: anchoring nothing is forbidden",
   "core.validation.resolve_within.chemin_hors_racine": "path outside root: {cible!r} is not within {racine!r}",
   "core.validation.valider_nom_simple.nom_invalide": "invalid name: {name!r}",
