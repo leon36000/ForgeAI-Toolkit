@@ -59,16 +59,25 @@ def test_g1_deploiement_reel_lance_dans_son_propre_groupe(monkeypatch):
     vus = {}
 
     class PopenEnregistreur:
+        """Double de subprocess.Popen. `returncode` suit la sémantique réelle
+        (None avant terminaison confirmée, fixé par poll()/wait()) — sans quoi
+        le thread `_reader` du serveur (qui lit .returncode après .wait()) lève
+        une AttributeError non rattrapée en tâche de fond (REL-038C, écart trouvé
+        par débogage live après le rapport d'audit gouvernance du 2026-08-03, qui
+        avait posé l'hypothèse sans la vérifier en lisant le test)."""
         def __init__(self, cmd, **kwargs):
             vus["cmd"] = cmd
             vus.update(kwargs)
             self.pid = 4242
             self.stdout = io.StringIO("")
+            self.returncode = None
 
         def poll(self):
+            self.returncode = 0
             return 0
 
         def wait(self, timeout=None):
+            self.returncode = 0
             return 0
 
     monkeypatch.setattr(server.subprocess, "Popen", PopenEnregistreur)
