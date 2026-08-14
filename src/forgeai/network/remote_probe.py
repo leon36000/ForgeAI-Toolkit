@@ -9,10 +9,11 @@ import re
 import shlex
 import subprocess
 import tempfile
-from pathlib import Path
 from dataclasses import dataclass
+from pathlib import Path
 from typing import Callable, Optional
 
+from forgeai.core.models import HardwareProfile
 from forgeai.core.registre import append
 from forgeai.core.runner import CommandRunner
 from forgeai.hardware.detect import HardwareDetector
@@ -162,6 +163,31 @@ class NodeProbe:
     hardware: dict
 
 
+class _CachedDetector(HardwareDetector):
+    """Adaptateur : expose l'interface `full_report()` de `HardwareDetector` en servant
+    un rapport DÉJÀ calculé (aucune sonde). `run_checks()` -> `check_hardware()` appelle
+    `.full_report()` sur le détecteur qu'on lui passe ; sans cet adaptateur, il resonderait
+    le nœud DISTANT une seconde fois pour rien (le résultat n'est utilisé que pour
+    reformuler `Check.detail` avec des données déjà connues du premier `full_report()`).
+    Sur `SshRunner`, chaque `full_report()` déclenche 4 `runner.run()` (lscpu, nvidia-smi,
+    lspci, df), chacun une connexion SSH complète (handshake + auth, sans multiplexage
+    ControlMaster/ControlPersist) : la duplication double inutilement le coût réseau.
+    Hérite de `HardwareDetector` uniquement pour satisfaire le contrat de type de
+    `run_checks()` ; les méthodes de sondage du parent ne sont jamais appelées."""
+
+    def __init__(
+        self,
+        runner: CommandRunner,
+        report: HardwareProfile,
+        meminfo_path: str = "/proc/meminfo",
+    ) -> None:
+        super().__init__(runner, meminfo_path=meminfo_path)
+        self._report = report
+
+    def full_report(self) -> HardwareProfile:
+        return self._report
+
+
 def probe_remote_node(
     node_host: str,
     *,
@@ -191,10 +217,13 @@ def probe_remote_node(
         # 4. Profil pour le planificateur
         profile = derive_profile(report)
 
-        # 5. Vérifications pré-vol et backends disponibles
+        # 5. Vérifications pré-vol et backends disponibles — réutilise le rapport matériel
+        # déjà obtenu à l'étape 3 (via l'adaptateur _CachedDetector) au lieu de laisser
+        # check_hardware() resonder le nœud distant une seconde fois (BUG-remote-probe-
+        # double-full-report : 4 runner.run() SSH redondants par appel).
         checks = run_checks(
             runner,
-            detector,
+            _CachedDetector(runner, report, meminfo_path=tmp_path),
             http_ok or (lambda url: False),
         )
         backends = available_backends(checks)
