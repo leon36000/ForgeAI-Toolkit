@@ -47,7 +47,7 @@ Cette carte est le rendu de `governance/authority.json`.
 | `coord.active-claims` | `coordination/active-claims.json` | superseded | `coordination_ops` | `copilot` | `gov.decision-mission-lead` |
 | `coord.work-packages` | `coordination/work-packages.json` | active | `coordination_ops` | `copilot` | `—` |
 | `cursor.orchestration-rules` | `.cursor/rules/forgeai-orchestration.mdc` | superseded | `ide_contract` | `copilot` | `gov.decision-mission-lead` |
-| `gov.decision-mission-lead` | `governance/decisions/D-2026-08-14-mission-lead.md` | active | `orchestration` | `nathan` | `—` |
+| `gov.decision-mission-lead` | `governance/decisions/D-2026-08-14-mission-lead.md` | conflicted | `orchestration` | `nathan` | `—` |
 | `manifests.roles` | `manifests/roles.yaml` | active | `ide_contract` | `orchestrateur` | `—` |
 | `master-plan` | `MASTER-PLAN.md` | conflicted | `plan_of_record` | `nathan` | `—` |
 | `readme` | `README.md` | active | `governance_method` | `nathan` | `—` |
@@ -70,4 +70,5 @@ Cette carte est le rendu de `governance/authority.json`.
 - `canon.plan-maitre-bmad` : `plan_of_record` = `canon_plan_maitre_bmad_v1` (CANON/PLAN-MAITRE-EXECUTION-BMAD-v1.0.md:1-2)
 - `claude-md` : `workspace_confinement` = `repo_plus_external_governance_tooling` (CLAUDE.md:16)
 - `coord.work-packages` : `coordination_scale` = `70_packages_0_claim` (coordination/work-packages.json:1)
+- `gov.decision-mission-lead` : `orchestration_seat` = `claude_code_opus_mission_lead` (governance/decisions/D-2026-08-14-mission-lead.md:9)
 - `master-plan` : `plan_of_record` = `master_plan_v1` (MASTER-PLAN.md:7)

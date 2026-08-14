@@ -12,15 +12,17 @@
       "sources": [
         "agents-md",
         "agents-md.orch-001",
-        "canon.plan-integral"
+        "canon.plan-integral",
+        "gov.decision-mission-lead"
       ],
       "positions": [
+        "claude_code_opus_mission_lead",
         "claude_code_session_lead",
         "copilot_vscode_cockpit"
       ],
       "owner": "nathan",
       "resolution_issue": 432,
-      "vision_log_seq": 10
+      "vision_log_seq": 11
     },
     {
       "kind": "topic_position",
@@ -67,7 +69,7 @@
         "master_plan_v1"
       ],
       "owner": "nathan",
-      "resolution_issue": 432,
+      "resolution_issue": 486,
       "vision_log_seq": 5
     }
   ]
