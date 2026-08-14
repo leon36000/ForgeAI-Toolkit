@@ -195,7 +195,7 @@
       "cleanup_issue": null,
       "resolution_issue": 484,
       "decision": {
-        "vision_log_seq": 12,
+        "vision_log_seq": 16,
         "mission_seq": null,
         "ref": "issue-484"
       },
@@ -231,7 +231,7 @@
       "cleanup_issue": null,
       "resolution_issue": 484,
       "decision": {
-        "vision_log_seq": 13,
+        "vision_log_seq": 17,
         "mission_seq": null,
         "ref": "issue-484"
       },
@@ -311,7 +311,7 @@
       "cleanup_issue": null,
       "resolution_issue": 486,
       "decision": {
-        "vision_log_seq": 14,
+        "vision_log_seq": 18,
         "mission_seq": null,
         "ref": "issue-486"
       },
@@ -347,7 +347,7 @@
       "cleanup_issue": null,
       "resolution_issue": 486,
       "decision": {
-        "vision_log_seq": 15,
+        "vision_log_seq": 19,
         "mission_seq": null,
         "ref": "issue-486"
       },
