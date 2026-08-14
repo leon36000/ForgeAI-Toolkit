@@ -1,0 +1,31 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "majeure",
+   "fichier": "governance/authority.json",
+   "description": "Les locators des positions qui pointent vers AGENTS.md n'ont pas été mis à jour après l'ajout de 3 lignes d'en-tête dans AGENTS.md par le même diff. Les références `AGENTS.md:9`, `AGENTS.md:69-71`, `AGENTS.md:76` et `AGENTS.md:84` désignent désormais des lignes décalées de +3, donc une fausse preuve ligne dans l'inventaire canonique et dans le rendu AUTHORITY-MAP.md. Le validateur ne vérifie pas que le locator pointe bien vers le contenu déclaré, donc le gate reste vert malgré cette perte de traçabilité.",
+   "preuve": "Diff AGENTS.md hunk `@@ -1,5 +1,8 @@` insère 3 lignes avant `## Mission`. Dans `governance/authority.json`, `agents-md.positions[*].locator` = `AGENTS.md:9` et `AGENTS.md:69-71`; `agents-md.orch-001.positions[*].locator` = `AGENTS.md:76` et `AGENTS.md:84`. Ces mêmes locators sont reproduits dans `governance/AUTHORITY-MAP.md`."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "governance/vision-log.jsonl",
+   "description": "Le livrable annonce 9 entrées dans `governance/vision-log.jsonl`, mais le diff contient 13 entrées (seq 1 à seq 13). Les entrées supplémentaires semblent correspondre à des corrections post-revue, mais cette divergence n'est pas documentée dans la story ni dans les critères d'acceptation.",
+   "preuve": "Diff `governance/vision-log.jsonl` contient des lignes `seq` de 1 à 13. Le contexte de la PR indique `9 entrées pour les 9 sources non-actives de l'inventaire initial`."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "tests/test_authority_map.py",
+   "description": "Le contexte et la preuve locale annoncent 23 tests, mais le diff contient 27 fonctions de test. La comptabilité des tests est incohérente avec le livrable annoncé.",
+   "preuve": "Le diff de `tests/test_authority_map.py` comporte 27 définitions `def test_...`. Le contexte indique `tests/test_authority_map.py : 23 tests`."
+  }
+ ],
+ "date_heure": "2026-08-14T08:11:09.773851+00:00",
+ "prompt_sha256": "7591aa8b7621b151678846460a9af87101f0b49853caec2ef3e13d7dbb361d56",
+ "reviewer_model": "DeepSeek-V4-Pro",
+ "modele_servi": "deepseek-v4-pro-direct",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

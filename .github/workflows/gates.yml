@@ -77,6 +77,21 @@ jobs:
           python3 scripts/registre.py completude Registres/*.jsonl \
             --base Registres/BASELINE-COMPLETUDE.json \
             --base-ref-git origin/main
+      # governance/vision-log.jsonl (RC1-001/#431) réutilise le même format et les mêmes
+      # garanties que Registres/mission.jsonl — même chaîne verify + ancrage, dossier différent.
+      - name: Journal de vision (governance) — intégrité + ancrage
+        run: |
+          python3 scripts/registre.py verify governance/vision-log.jsonl
+          python3 scripts/registre.py ancrage --dossier governance --ref origin/main
+
+  authority-map:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - name: "Gate RC1-001 (#431) — hiérarchie d'autorité : inventaire, cycles, conflits, empreintes"
+        run: python3 scripts/governance/validate_authority.py
 
   docs:
     runs-on: ubuntu-latest

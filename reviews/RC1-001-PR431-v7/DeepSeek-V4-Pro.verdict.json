@@ -1,0 +1,19 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "majeure",
+   "fichier": "governance/vision-log.jsonl",
+   "description": "Le diff soumis contient 15 entrées de journal de vision (seq 1 à 15), alors que la story/livrable et le critère d'acceptation annoncent 13 entrées (seq 1-13). Les séquences 14 et 15 ne sont pas couvertes par l'état annoncé.",
+   "preuve": "Diff : @@ -0,0 +1,15 @@ et lignes \"seq\":14, \"seq\":15 ; contexte : « 13 entrées (seq 1-13) » et « registre.py verify governance/vision-log.jsonl : OK, 13 entrées »."
+  }
+ ],
+ "date_heure": "2026-08-14T08:54:55.522335+00:00",
+ "prompt_sha256": "44fff2c8ac171c59041c21a0a2109b55e2d91689ef180f59796ad0650d1874a6",
+ "reviewer_model": "DeepSeek-V4-Pro",
+ "modele_servi": "deepseek-v4-pro-direct",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

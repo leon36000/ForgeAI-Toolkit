@@ -3,3 +3,32 @@ de chemin avant lecture) suite à l'issue #385 (SonarCloud). Le contrat CLI obse
 (arguments --racine/--base/--base-ref-git, codes de sortie, messages sur stderr) est inchangé
 pour tout usage légitime — seul le comportement sur une entrée déjà invalide change (rejet plus
 tôt, message plus clair). Aucune story/doc utilisateur concernée.
+
+scripts/governance/validate_authority.py + tests/test_authority_map.py : durcissement défensif
+et refactor de qualité (11 findings SonarCloud du Quality Gate de la PR #431/#485 — 2
+vulnérabilités de traversée de chemin corrigées par _within_repo(), 4 fonctions décomposées pour
+réduire la complexité cognitive sous le seuil, 4 nettoyages mineurs, 4 tests de couverture
+ajoutés). Interface publique inchangée (check/render/digest_of/cycles/main mêmes signatures,
+sortie CLI et messages d'erreur observables identiques pour tout usage légitime — seul le
+comportement sur un chemin CLI hors du dépôt change : rejeté au lieu d'être silencieusement
+tenté). governance/AUTHORITY-MAP.md documente déjà l'inventaire lui-même (#431) ; ce commit ne
+touche que l'outillage de validation, pas les données de gouvernance. Aucune story/doc
+utilisateur supplémentaire concernée.
+
+scripts/governance/validate_authority.py + tests/test_authority_map.py (2e commit) :
+durcissement défensif suite à une objection critique de revue scellée (round RC1-001-PR431-v7,
+DeepSeek-V4-Pro) — _validate_digests() confinait les chemins d'arguments CLI (_within_repo(),
+commit précédent) mais pas les chemins venant du champ `path` des données authority.json
+elles-mêmes (source de traversée distincte, modifiable par tout contributeur d'une PR future).
+Même garde _within_repo() réutilisée telle quelle, contrat CLI observable inchangé pour toute
+entrée valide. Aucune story/doc utilisateur concernée.
+
+scripts/governance/validate_authority.py + tests/test_authority_map.py (3e commit) :
+durcissement défensif suite à une 2e objection critique de revue scellée (round
+RC1-001-PR431-v8, DeepSeek-V4-Pro) — même classe de vulnérabilité que le commit
+précédent (traversée de chemin via des données authority.json), 3e site distinct trouvé
+par audit systématique après le round v8 : le champ "vision_log" de authority.json
+n'était pas confiné par _within_repo() avant lecture. Audit exhaustif effectué (grep de
+tous les read_text/read_bytes/write_text/is_file du fichier) confirmant qu'aucun autre
+site n'est concerné. Contrat CLI observable inchangé. Aucune story/doc utilisateur
+concernée.

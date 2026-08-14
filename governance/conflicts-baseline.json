@@ -1,0 +1,76 @@
+{
+  "_schema": "authority-conflicts-baseline-v1",
+  "_description": "Conflits connus au 2026-08-14. Tout conflit nouveau ou toute entrée devenue sans objet fait échouer le gate.",
+  "bornes": {
+    "inventaire": "2026-08-14",
+    "commit": "ab7ea98"
+  },
+  "conflits": [
+    {
+      "kind": "topic_position",
+      "sujet": "orchestration_seat",
+      "sources": [
+        "agents-md",
+        "agents-md.orch-001",
+        "canon.plan-integral",
+        "gov.decision-mission-lead"
+      ],
+      "positions": [
+        "claude_code_opus_mission_lead",
+        "claude_code_session_lead",
+        "copilot_vscode_cockpit"
+      ],
+      "owner": "nathan",
+      "resolution_issue": 432,
+      "vision_log_seq": 11
+    },
+    {
+      "kind": "topic_position",
+      "sujet": "coordination_scale",
+      "sources": [
+        "agents-md.orch-001",
+        "coord.work-packages"
+      ],
+      "positions": [
+        "64_packages_6_claims",
+        "70_packages_0_claim"
+      ],
+      "owner": "nathan",
+      "resolution_issue": 432,
+      "vision_log_seq": 2
+    },
+    {
+      "kind": "topic_position",
+      "sujet": "workspace_confinement",
+      "sources": [
+        "agents-md",
+        "canon.directives-perimetre",
+        "claude-md"
+      ],
+      "positions": [
+        "repo_only_strict",
+        "repo_plus_external_governance_tooling"
+      ],
+      "owner": "nathan",
+      "resolution_issue": 484,
+      "vision_log_seq": 4
+    },
+    {
+      "kind": "topic_position",
+      "sujet": "plan_of_record",
+      "sources": [
+        "canon.plan-integral",
+        "canon.plan-maitre-bmad",
+        "master-plan"
+      ],
+      "positions": [
+        "canon_plan_integral",
+        "canon_plan_maitre_bmad_v1",
+        "master_plan_v1"
+      ],
+      "owner": "nathan",
+      "resolution_issue": 486,
+      "vision_log_seq": 5
+    }
+  ]
+}

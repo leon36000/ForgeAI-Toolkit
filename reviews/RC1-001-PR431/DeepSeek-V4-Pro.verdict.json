@@ -1,0 +1,25 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "governance/authority.json",
+   "description": "Les locateurs des positions AGENTS.md ne sont pas recalés après l'ajout en tête du fichier : le diff ajoute trois lignes avant l'ancienne ligne 6, donc les références AGENTS.md:9, AGENTS.md:69-71, AGENTS.md:76 et AGENTS.md:84 pointent vers des lignes différentes de celles d'origine.",
+   "preuve": "Diff AGENTS.md @@ -1,5 +1,8 @@ insère trois lignes en tête ; authority.json conserve \"locator\": \"AGENTS.md:9\", \"AGENTS.md:69-71\", \"AGENTS.md:76\", \"AGENTS.md:84\"."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "governance/authority.json",
+   "description": "La source canon.plan-integral mentionne une affirmation d'orchestration non couverte par les positions contrôlées, donc un conflit potentiel peut échapper au gate de détection.",
+   "preuve": "authority.json, canon.plan-integral.notes : \"affirme Fable orchestrateur unique aux lignes 27 et 251\" ; canon.plan-integral.positions ne contient que topic plan_of_record ; topics.orchestration_seat.vocabulaire ne contient que claude_code_session_lead et copilot_vscode_cockpit."
+  }
+ ],
+ "date_heure": "2026-08-14T06:43:41.543138+00:00",
+ "prompt_sha256": "37711f4ec544fe8de0c7dfff882473ef8ac40b622704efb5a5dd981152eefeff",
+ "reviewer_model": "DeepSeek-V4-Pro",
+ "modele_servi": "deepseek-v4-pro-direct",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

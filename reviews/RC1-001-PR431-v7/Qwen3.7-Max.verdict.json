@@ -1,0 +1,25 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "critique",
+   "fichier": "scripts/governance/validate_authority.py",
+   "description": "Vulnérabilité de traversée de chemin (Path Traversal / Arbitrary File Read) sur les chemins définis dans les données de `authority.json`. La fonction `_validate_digests` construit `file_path = repo_root / path_value` sans vérifier que le chemin résolu reste dans le dépôt (contrairement aux arguments CLI corrigés dans `main()` suite au gate SonarCloud). Un contributeur pourrait ajouter une source avec `\"path\": \"/etc/passwd\"` ou `\"path\": \"../../.env\"` dans `authority.json` pour lire des fichiers arbitraires sur le runner CI et exfiltrer des secrets via les messages d'erreur (ex: hash calculé affiché) ou simplement confirmer leur présence.",
+   "preuve": "Ligne ~468: `file_path = repo_root / path_value` suivi de `digest_of(file_path, ...)` sans appel à `_within_repo()` ou vérification `is_relative_to()`. En Python, `Path('/repo') / '/etc/passwd'` évalue à `Path('/etc/passwd')`, contournant le confinement."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "governance/vision-log.jsonl",
+   "description": "Incohérence entre le descriptif de la PR et le diff : le contexte affirme '13 entrées (seq 1-13)' comme état final exact, mais le fichier `vision-log.jsonl` contient 15 entrées (seq 1 à 15) et `authority.json` référence les séquences 14 et 15. Le code et les données sont cohérents entre eux, mais la documentation fournie dans le prompt est erronée.",
+   "preuve": "Contexte: '**13 entrées** (seq 1-13)'. Diff `governance/vision-log.jsonl`: lignes 14 et 15 présentes (seq 14 pour canon.plan-maitre-bmad, seq 15 pour master-plan)."
+  }
+ ],
+ "date_heure": "2026-08-14T08:38:18.024364+00:00",
+ "prompt_sha256": "44fff2c8ac171c59041c21a0a2109b55e2d91689ef180f59796ad0650d1874a6",
+ "reviewer_model": "Qwen3.7-Max",
+ "modele_servi": "qwen37-max-openrouter",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

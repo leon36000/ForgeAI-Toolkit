@@ -3,6 +3,8 @@
 Déployeur de référence d'infrastructures IA agentiques : wizard hardware-aware,
 catalogue 1576 entrées bilingue (FR/EN), multi-nœuds (Tailscale), gouvernance intégrée.
 
+> Hiérarchie d'autorité de ce dépôt : [governance/AUTHORITY-MAP.md](governance/AUTHORITY-MAP.md).
+
 ## Installation (n'importe quelle machine, Python ≥3.10)
 
 ```bash

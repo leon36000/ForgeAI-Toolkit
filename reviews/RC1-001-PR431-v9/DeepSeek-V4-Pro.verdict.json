@@ -1,0 +1,19 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "majeure",
+   "fichier": "governance/vision-log.jsonl",
+   "description": "Les entrées correctives seq12/13/14/15 contiennent un état antérieur (de.status=active) contradictoire avec les entrées initiales seq3/4/5/6 qui ont déjà placé les mêmes sources en status conflicted. Exemple : seq3 place claude-md en conflicted, puis seq12 affirme de.status=active avant la correction de référence de décision. Ces corrections ne changeaient que la référence de décision, pas le statut. Le journal d'audit est donc incohérent et ne reflète pas fidèlement l'historique.",
+   "preuve": "ligne 3 : source_id claude-md, vers.status conflicted ; ligne 12 : source_id claude-md, motif correction_reference_decision_seq3_pointait_a_tort_vers_mission_lead, de.status active, vers.status conflicted ; même contradiction lignes 4 et 13 pour canon.directives-perimetre, lignes 5 et 14 pour canon.plan-maitre-bmad, lignes 6 et 15 pour master-plan."
+  }
+ ],
+ "date_heure": "2026-08-14T09:26:31.769027+00:00",
+ "prompt_sha256": "7c9ce4466e702dc177086158e9657b0a3c89c601fcfdf91d0ea6ddd6508cacfd",
+ "reviewer_model": "DeepSeek-V4-Pro",
+ "modele_servi": "deepseek-v4-pro-direct",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

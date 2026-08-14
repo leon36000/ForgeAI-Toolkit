@@ -1,0 +1,25 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "governance/vision-log.jsonl",
+   "description": "Le critère d'acceptation mentionne 9 entrées de vision-log pour les 9 sources non-actives initiales, mais le diff final en contient 13 (seq 1 à 13).",
+   "preuve": "governance/vision-log.jsonl lignes 1-13 — 13 lignes JSONL alors que le livrable annonce 9 entrées."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "scripts/governance/validate_authority.py",
+   "description": "Les locateurs de positions sont validés syntaxiquement par regex mais ne sont pas vérifiés contre le contenu réel des fichiers ; un simple décalage de lignes après insertion dans AGENTS.md ne ferait pas échouer le gate.",
+   "preuve": "validate_authority.py: if not isinstance(locator, str) or not re.fullmatch(r\"[^:]+:\\d+(?:-\\d+)?\", locator): _error(...)"
+  }
+ ],
+ "date_heure": "2026-08-14T07:44:43.516144+00:00",
+ "prompt_sha256": "66c025eb55b5b5c57aeedec7ea3ef65eb6d13da56ceaef0e03000e2f9f304ab2",
+ "reviewer_model": "DeepSeek-V4-Pro",
+ "modele_servi": "deepseek-v4-pro-direct",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

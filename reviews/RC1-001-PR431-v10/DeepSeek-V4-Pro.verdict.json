@@ -1,0 +1,31 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "tests/test_authority_map.py",
+   "description": "Le contexte annonce 28 tests verts, mais le diff contient 29 fonctions de test.",
+   "preuve": "Le diff de tests/test_authority_map.py compte 29 définitions `def test_*` (de test_id_duplique_rejete à test_main_erreur_authority_json_pas_un_objet) ; la section Preuve locale indique pourtant `pytest tests/test_authority_map.py` : 28/28 verts."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "scripts/governance/validate_authority.py",
+   "description": "Le validateur ne vérifie pas que les cibles de prevails_over existent dans l'inventaire ; une précédence vers un id absent ou mal orthographié serait acceptée.",
+   "preuve": "Dans `_validate_graph_edges`, le traitement `targets = source.get('prevails_over')` valide seulement le type et l'absence de croisement avec `successor`, mais n'effectue aucun test d'appartenance à `by_id`."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "scripts/governance/validate_authority.py",
+   "description": "Une source active ou conflicted avec digest.policy='none' et path=null serait acceptée, alors que le critère R4 exige une empreinte pour ces statuts.",
+   "preuve": "Dans `_validate_digest_structure`, la seule garde pour `policy == 'none'` est `if policy == 'none' and source.get('path') is not None:` ; plus bas, pour statut actif/conflictuel, `if policy not in DIGEST_POLICIES` ne rejette pas `none` car `none` est dans `DIGEST_POLICIES`."
+  }
+ ],
+ "date_heure": "2026-08-14T09:38:55.480079+00:00",
+ "prompt_sha256": "ee8d69a68c5f2337cf7f785d94d2179d6b6bddb261565ac1b9e4d6af74a2c656",
+ "reviewer_model": "DeepSeek-V4-Pro",
+ "modele_servi": "deepseek-v4-pro-direct",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

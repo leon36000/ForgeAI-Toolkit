@@ -1,0 +1,19 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "governance/vision-log.jsonl",
+   "description": "Le contexte de la PR mentionne '13 entrées (seq 1-13)' dans le journal de vision, mais le fichier contient en réalité 15 entrées (seq 1 à 15, incluant les corrections de référence pour canon.plan-maitre-bmad et master-plan). Le code est correct et plus complet, mais la description est légèrement désynchronisée.",
+   "preuve": "Lignes 14-15 de governance/vision-log.jsonl : seq 14 et 15 présentes."
+  }
+ ],
+ "date_heure": "2026-08-14T08:37:24.152243+00:00",
+ "prompt_sha256": "44fff2c8ac171c59041c21a0a2109b55e2d91689ef180f59796ad0650d1874a6",
+ "reviewer_model": "Gemini-3.1-Pro",
+ "modele_servi": "gemini-31-pro-openrouter",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "1"
+ }
+}
