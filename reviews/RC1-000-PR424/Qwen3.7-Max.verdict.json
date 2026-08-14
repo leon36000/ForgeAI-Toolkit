@@ -1,0 +1,19 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "src/forgeai/core/models.py",
+   "description": "La fonction `_valider_port` rejette `None` (car `isinstance(None, int)` est faux). Si `host_port` ou `container_port` sont optionnels (`int | None`) dans le dataclass `ServiceSpec`, cette validation lèvera une `ValueError` inattendue pour des services sans port hôte explicite. Le diff ne permet pas de vérifier la définition exacte des champs pour lever ce doute.",
+   "preuve": "if not isinstance(valeur, int) or isinstance(valeur, bool) or valeur < 1 or valeur > 65535:"
+  }
+ ],
+ "date_heure": "2026-08-14T05:04:25.426991+00:00",
+ "prompt_sha256": "3d2d5ec73e5bc9b7acd9adbb2e10668ad4d53a350d252eb24bc764dc0007dd81",
+ "reviewer_model": "Qwen3.7-Max",
+ "modele_servi": "qwen37-max-openrouter",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}
