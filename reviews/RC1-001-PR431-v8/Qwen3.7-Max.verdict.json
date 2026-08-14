@@ -1,0 +1,19 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "majeure",
+   "fichier": "scripts/governance/validate_authority.py",
+   "description": "Le champ `vision_log` de `authority.json` est utilisé pour construire un chemin de fichier (`vision_path`) qui est ensuite lu par `_load_jsonl_sequences` sans être validé par `_within_repo`. Un contributeur pourrait modifier `authority.json` pour pointer vers un fichier arbitraire du runner CI (ex. `\"/etc/passwd\"` ou `\"../../../etc/passwd\"`). Bien que le contenu ne soit pas exfiltré dans les logs (le parsing JSON échoue silencieusement), cela constitue une lecture de fichier arbitraire (CWE-22) et peut mener à un déni de service (OOM) si le fichier cible est volumineux. Cela contredit le durcissement défensif explicitement appliqué aux autres champs de données (`path` des sources) et aux arguments CLI dans cette même PR.",
+   "preuve": "Lignes ~635-642 de `scripts/governance/validate_authority.py` : `vision_path_value = authority.get(\"vision_log\", ...)` puis `vision_sequences = _load_jsonl_sequences(vision_path)` sans appel préalable à `_within_repo(repo_root, vision_path)`."
+  }
+ ],
+ "date_heure": "2026-08-14T09:04:06.629955+00:00",
+ "prompt_sha256": "a02f2d6286e4bbb54f99136c9bae78d7f2ced67ba14d0c892ebbdc0d3cf4cd8c",
+ "reviewer_model": "Qwen3.7-Max",
+ "modele_servi": "qwen37-max-openrouter",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

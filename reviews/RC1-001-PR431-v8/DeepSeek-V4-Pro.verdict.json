@@ -1,0 +1,19 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "critique",
+   "fichier": "scripts/governance/validate_authority.py",
+   "description": "Le chemin `vision_log` issu des données d'`authority.json` est lu via `_load_jsonl_sequences` sans être confiné par `_within_repo`, contrairement aux chemins CLI et aux chemins `path` des sources. Une PR future peut donc faire lire au gate CI un fichier arbitraire hors du dépôt en modifiant `authority.json`.",
+   "preuve": "vision_path_value = authority.get(\"vision_log\", \"governance/vision-log.jsonl\")\nvision_path = (\n    repo_root / vision_path_value\n    if isinstance(vision_path_value, str)\n    else repo_root / \"governance/vision-log.jsonl\"\n)\nvision_sequences = _load_jsonl_sequences(vision_path)"
+  }
+ ],
+ "date_heure": "2026-08-14T09:10:40.123376+00:00",
+ "prompt_sha256": "a02f2d6286e4bbb54f99136c9bae78d7f2ced67ba14d0c892ebbdc0d3cf4cd8c",
+ "reviewer_model": "DeepSeek-V4-Pro",
+ "modele_servi": "deepseek-v4-pro-direct",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}
