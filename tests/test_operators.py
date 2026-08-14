@@ -132,7 +132,11 @@ def _cli_operators(monkeypatch, plan_result, name=None):
     import forgeai.cli as cli
     monkeypatch.setattr(cli, "SubprocessRunner", lambda: object())
     if isinstance(plan_result, dict):
-        monkeypatch.setattr("forgeai.deploy.operators.plan", lambda n, r: plan_result)
+        # plan() ET fetch_releases_helm() sont désormais tous deux appelés par _operators() ;
+        # le runner mocké (object() nu, sans .run) ne doit jamais être sollicité directement.
+        monkeypatch.setattr("forgeai.deploy.operators.plan",
+                            lambda n, r, releases_helm=None: plan_result)
+        monkeypatch.setattr("forgeai.deploy.operators.fetch_releases_helm", lambda r: [])
     argv = ["operators"] + ([name] if name else [])
     return cli.main(argv)
 
@@ -157,3 +161,106 @@ def test_cli_operators_absent_montre_plan(monkeypatch, capsys):
 def test_cli_operators_inconnu_retourne_erreur(monkeypatch, capsys):
     rc = _cli_operators(monkeypatch, None, name="inexistant-xyz")
     assert rc == 8
+
+
+# --- BUG PERF (trouvé en session, jamais couvert par l'audit v7.1) -------------------------
+# `forgeai operators` sans --name boucle sur les 3 opérateurs (OPERATORS) et appelle
+# plan(name, runner) -> detect(name, runner) une fois PAR opérateur. Or detect() relance
+# ELLE-MÊME `helm list -A -o json` (liste TOUTES les releases de TOUS les namespaces,
+# indépendamment de `name`) à chaque appel : 3 opérateurs -> 3 appels Helm IDENTIQUES pour
+# la même information. Ce test exécute le VRAI chemin CLI (cli.main(["operators"]), plan()/
+# detect() réels, non mockés) avec un runner-espion qui compte les appels `helm list -A`.
+class _RunnerCompteHelmList:
+    """Runner-espion : répond à helm list / kubectl get crd, compte chaque appel reçu."""
+    def __init__(self):
+        self.calls: list[list[str]] = []
+
+    def run(self, argv):
+        self.calls.append(list(argv))
+        joined = " ".join(argv)
+        if "helm list" in joined:
+            return 0, "[]"  # aucune release -> chaque opérateur retombe sur le fallback CRD
+        if "kubectl" in joined and "get crd" in joined:
+            return 127, ""  # CRD absent -> action "install" (peu importe pour cette preuve)
+        return 127, ""
+
+    def appels_helm_list(self):
+        return [c for c in self.calls if c[:3] == ["helm", "list", "-A"]]
+
+
+def test_operators_sans_nom_appelle_helm_list_une_seule_fois(monkeypatch, capsys):
+    """PREUVE DU BUG (RED avant correctif, GREEN après) : `forgeai operators` sans --name
+    boucle sur les 3 opérateurs du châssis (external-secrets-operator, argo-cd, kserve).
+    `helm list -A -o json` liste TOUTES les releases indépendamment de l'opérateur visé :
+    un seul appel doit suffire pour statuer sur les 3, jamais 3 appels identiques."""
+    import forgeai.cli as cli
+    runner = _RunnerCompteHelmList()
+    monkeypatch.setattr(cli, "SubprocessRunner", lambda: runner)
+    rc = cli.main(["operators"])
+    capsys.readouterr()
+    assert rc == 0
+    appels = runner.appels_helm_list()
+    assert len(appels) == 1, (
+        f"attendu 1 seul appel `helm list -A -o json` pour statuer sur les 3 opérateurs, "
+        f"obtenu {len(appels)} appels identiques {appels} "
+        f"(régression : detect() rappelle helm list une fois par opérateur)"
+    )
+
+
+def test_operators_avec_nom_appelle_helm_list_une_seule_fois(monkeypatch, capsys):
+    """Non-régression : l'usage isolé --name (un seul opérateur) continue de ne déclencher
+    qu'UN SEUL appel `helm list -A -o json`, comme avant le correctif."""
+    import forgeai.cli as cli
+    runner = _RunnerCompteHelmList()
+    monkeypatch.setattr(cli, "SubprocessRunner", lambda: runner)
+    rc = cli.main(["operators", "argo-cd"])
+    capsys.readouterr()
+    assert rc == 0
+    assert len(runner.appels_helm_list()) == 1
+
+
+# --- non-régression : appel ISOLÉ de detect()/plan() sur (name, runner), sans le nouveau
+# paramètre optionnel releases_helm — doit continuer à fonctionner EXACTEMENT comme avant.
+def test_detect_isole_sans_releases_helm_fonctionne_comme_avant():
+    r = _Runner({"helm list": (0, _HELM_ES)})
+    st = detect("external-secrets-operator", r)
+    assert st.present and st.source == "helm" and st.version == "external-secrets-2.7.0"
+    appels_helm_list = [c for c in r.calls if c[:3] == ["helm", "list", "-A"]]
+    assert len(appels_helm_list) == 1
+
+
+def test_plan_isole_sans_releases_helm_fonctionne_comme_avant():
+    r = _Runner({"helm list": (0, _HELM_ES)})
+    p = plan("external-secrets-operator", r)
+    assert p["action"] == "adopt" and p["commands"] == []
+    appels_helm_list = [c for c in r.calls if c[:3] == ["helm", "list", "-A"]]
+    assert len(appels_helm_list) == 1
+
+
+# --- le paramètre optionnel releases_helm, quand fourni, court-circuite l'appel helm list :
+# c'est le mécanisme qui permet à _operators() de factoriser l'appel entre les 3 opérateurs.
+def test_detect_avec_releases_helm_fourni_ne_rappelle_pas_helm_list():
+    r = _Runner({"helm list": (0, "JSON invalide si jamais appelé")})
+    releases = json.loads(_HELM_ES)
+    st = detect("external-secrets-operator", r, releases_helm=releases)
+    assert st.present and st.source == "helm" and st.version == "external-secrets-2.7.0"
+    assert not any(c[:3] == ["helm", "list", "-A"] for c in r.calls)
+
+
+def test_plan_avec_releases_helm_fourni_ne_rappelle_pas_helm_list():
+    r = _Runner({"helm list": (0, "JSON invalide si jamais appelé")})
+    releases = json.loads(_HELM_ES)
+    p = plan("external-secrets-operator", r, releases_helm=releases)
+    assert p["action"] == "adopt"
+    assert not any(c[:3] == ["helm", "list", "-A"] for c in r.calls)
+
+
+def test_detect_avec_releases_helm_vide_retombe_sur_crd():
+    """releases_helm=[] (aucune release) doit quand même retomber sur le fallback CRD,
+    exactement comme un helm list qui ne trouve rien — sans jamais appeler runner.run
+    pour helm list puisque la liste est déjà fournie."""
+    crd = "applications.argoproj.io"
+    r = _Runner({f"get crd {crd}": (0, f"customresourcedefinition.apiextensions.k8s.io/{crd}")})
+    st = detect("argo-cd", r, releases_helm=[])
+    assert st.present and st.source == "crd"
+    assert not any(c[:3] == ["helm", "list", "-A"] for c in r.calls)
