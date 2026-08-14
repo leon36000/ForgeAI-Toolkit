@@ -1,0 +1,19 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "src/forgeai/deploy/operators.py",
+   "description": "fetch_releases_helm ne garantit pas que json.loads(out) retourne un itérable. Si `helm list -A -o json` produit un JSON valide non-tableau (ex. `null` ou un scalaire), detect() exécute `for rel in releases` sans try/except et lève TypeError, alors que l'ancien code capturait TypeError autour de la boucle et retombait sur la détection CRD.",
+   "preuve": "Nouveau code : `return json.loads(out)` puis `for rel in releases:`. Ancien code : `try: for rel in json.loads(out): ... except (ValueError, TypeError): pass`."
+  }
+ ],
+ "date_heure": "2026-08-14T05:02:39.768271+00:00",
+ "prompt_sha256": "d1abcf3f26f51b3121e4c8e04aad25436878152e713b30ebb2dfade634120e1c",
+ "reviewer_model": "DeepSeek-V4-Pro",
+ "modele_servi": "deepseek-v4-pro-direct",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}
