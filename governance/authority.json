@@ -277,7 +277,7 @@
       "decision": {
         "vision_log_seq": 10,
         "mission_seq": null,
-        "ref": null
+        "ref": "issue-486"
       },
       "notes": "Le document se déclare document de référence unique et affirme Fable orchestrateur unique aux lignes 27 et 251 (invariant 6) — déclaré en position sur orchestration_seat (revue RC1-001-PR431, objection critique DeepSeek-V4-Pro corrigée : cette affirmation devait être modélisée, pas seulement mentionnée en note, pour que le conflit avec agents-md/agents-md.orch-001 soit détecté par la CI)."
     },
@@ -311,9 +311,9 @@
       "cleanup_issue": null,
       "resolution_issue": 486,
       "decision": {
-        "vision_log_seq": 5,
+        "vision_log_seq": 14,
         "mission_seq": null,
-        "ref": "issue-432"
+        "ref": "issue-486"
       },
       "notes": "Plan conservé dans l'inventaire pendant la résolution de la hiérarchie."
     },
@@ -347,9 +347,9 @@
       "cleanup_issue": null,
       "resolution_issue": 486,
       "decision": {
-        "vision_log_seq": 6,
+        "vision_log_seq": 15,
         "mission_seq": null,
-        "ref": "issue-432"
+        "ref": "issue-486"
       },
       "notes": "Le gel v1.0 est déclaré à la ligne 161."
     },

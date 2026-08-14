@@ -66,9 +66,6 @@ def _source(
             "mission_seq": mission_seq,
             "ref": None,
         },
-        "retention": retention,
-        "cleanup_issue": cleanup_issue,
-        "resolution_issue": resolution_issue,
         "notes": notes,
     }
 
