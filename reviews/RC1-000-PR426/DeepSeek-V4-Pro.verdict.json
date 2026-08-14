@@ -1,0 +1,19 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "src/forgeai/network/nodes.py",
+   "description": "Le diff ne permet pas de vérifier que le remplacement de sonder_noeud par cluster_status conserve exactement la valeur gpu_nvidia de /api/nodes/receptacles : le nouveau champ gpu_capacity_nvidia est lu depuis status.capacity, alors que l'ancien cluster_status expose gpu_allocatable depuis status.allocatable et que le code de sonder_noeud n'est pas inclus. Aucun test ne couvre capacity != allocatable.",
+   "preuve": "nodes.py ajoute \"gpu_capacity_nvidia\": int(capacity.get(\"nvidia.com/gpu\", \"0\") or 0) où capacity = item[\"status\"].get(\"capacity\", {}), tandis que la ligne existante \"gpu_allocatable\": gpu lit item[\"status\"].get(\"allocatable\", {}).get(\"nvidia.com/gpu\", \"0\") ; le test _node_item initialise \"allocatable\": dict(capacity)."
+  }
+ ],
+ "date_heure": "2026-08-14T04:56:28.660911+00:00",
+ "prompt_sha256": "250d687b5d2450c93a918415e3443635c7e1089cc9c28baa6c29105d34344897",
+ "reviewer_model": "DeepSeek-V4-Pro",
+ "modele_servi": "deepseek-v4-pro-direct",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

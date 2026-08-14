@@ -36,7 +36,7 @@ from forgeai.network.discover import charger_signatures, inventaire
 from forgeai.network.keys import generate_keypair, KeyError_
 from forgeai.network.node_add import add_node, Bootstrapper, NodeAddError, SshBootstrapper
 from forgeai.network.nodes import cluster_status, ClusterError
-from forgeai.network.prepare import sonder_noeud, plan_preparation, preparer_noeud, PrepareError
+from forgeai.network.prepare import plan_preparation, preparer_noeud, PrepareError
 from forgeai.preflight import available_backends, run_checks
 from forgeai.core.redaction import redact_text
 from forgeai.models._locking import atomic_write_text
@@ -1107,21 +1107,24 @@ class ForgeAIHandler(BaseHTTPRequestHandler):
             nodes_out: list[dict] = []
             detail: str | None = None
             try:
+                # BUG-web-server-redondance (bloc A) : `cluster_status` sonde déjà TOUS les
+                # nœuds en UN seul appel kubectl et (depuis network/nodes.py) expose les
+                # champs labels/capacité GPU/ready tri-état/arch nécessaires ici — plus
+                # besoin de re-sonder chaque nœud individuellement via `sonder_noeud`
+                # (c'était un N+1 : 1 appel liste + N appels par nœud, potentiellement
+                # coûteux pour des nœuds distants). Un seul appel, quel que soit N.
                 nodes = cluster_status(runner)
                 for n in nodes:
-                    try:
-                        etat = sonder_noeud(runner, n["name"])
-                    except PrepareError:
-                        etat = {
-                            "hostname": n["name"],
-                            "ready": None,
-                            "gpu_nvidia": 0,
-                            "gpu_amd": 0,
-                            "arch": "",
-                            "labels": {},
-                        }
+                    etat = {
+                        "hostname": n["name"],
+                        "ready": n.get("ready_tristate"),
+                        "gpu_nvidia": n.get("gpu_capacity_nvidia", 0),
+                        "gpu_amd": n.get("gpu_capacity_amd", 0),
+                        "arch": n.get("arch", ""),
+                        "labels": n.get("labels", {}),
+                    }
                     plan = plan_preparation(etat, helm_present)
-                    labels = etat.get("labels", {})
+                    labels = etat["labels"]
                     current = labels.get("forgeai/receptacle")
                     pret = current in ("pret", "pret-cpu")
                     restantes = sum(1 for s in plan if s.get("commande") is not None)
@@ -1390,7 +1393,13 @@ class ForgeAIHandler(BaseHTTPRequestHandler):
             adopt = data.get("adopt")
 
             try:
-                load_stack(stack_id)
+                # BUG-web-server-redondance (bloc B) : CET appel charge déjà le stack (pour
+                # vérifier son existence) — son résultat est réutilisé plus bas au lieu
+                # d'être jeté puis re-chargé (2e lecture disque + re-parse JSON du MÊME
+                # fichier stack_id.json, strictement redondante : load_stack est une
+                # fonction pure, sans effet de bord, le contenu ne change pas entre les
+                # deux points de la requête).
+                stack = load_stack(stack_id)
             except FileNotFoundError:
                 self._send_json(404, {"error": "stack not found"})
                 return
@@ -1401,10 +1410,10 @@ class ForgeAIHandler(BaseHTTPRequestHandler):
             # une simple faute de saisie. Placée APRÈS le contrôle d'existence du stack pour
             # ne pas transformer un 404 légitime en 500.
             if adopt is not None:
-                # Le stack n'est chargé QUE s'il y a quelque chose à valider : sans `adopt`,
-                # cet appel serait un travail inutile — et un risque, car rien ne garantit
-                # que load_stack rende un objet exploitable dans tous les contextes.
-                erreur_adopt = _valider_adopt(adopt, set(deploy_ids(load_stack(stack_id))))
+                # `deploy_ids` n'est calculé QUE s'il y a quelque chose à valider : sans
+                # `adopt`, cet appel serait un travail inutile. Le stack lui-même est
+                # RÉUTILISÉ (chargé une seule fois ci-dessus) — jamais rechargé ici.
+                erreur_adopt = _valider_adopt(adopt, set(deploy_ids(stack)))
                 if erreur_adopt is not None:
                     self._send_json(400, {"error": erreur_adopt})
                     return
