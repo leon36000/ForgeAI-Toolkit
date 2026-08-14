@@ -3,11 +3,11 @@ from __future__ import annotations
 import copy
 import importlib.util
 import json
+import sys
 from pathlib import Path
 
-# Chargement par chemin absolu (motif établi par tests/test_reviews_gate.py) — indépendant
-# du pythonpath/CWD, robuste au shadowing du paquet "tests" par un paquet global homonyme.
 REPO = Path(__file__).resolve().parent.parent
+SCRIPT = REPO / "scripts" / "governance" / "validate_authority.py"
 _spec = importlib.util.spec_from_file_location(
     "validate_authority", REPO / "scripts" / "governance" / "validate_authority.py"
 )
@@ -66,6 +66,9 @@ def _source(
             "mission_seq": mission_seq,
             "ref": None,
         },
+        "retention": retention,
+        "cleanup_issue": cleanup_issue,
+        "resolution_issue": resolution_issue,
         "notes": notes,
     }
 
@@ -452,8 +455,6 @@ def test_mission_seq_inexistant_rejete(tmp_path: Path) -> None:
 
 
 def test_marqueur_8bis_dans_les_notes_rejete(tmp_path: Path) -> None:
-    # Marqueur construit par concaténation (comme scripts/no_stub_scan.py lui-même) pour ne
-    # pas déclencher le scan §8bis sur ce fichier de test.
     marqueur_interdit = "TO" + "DO"
     authority = _authority([_source("source-a", notes=f"Annotation {marqueur_interdit} interdite.")])
 
@@ -478,3 +479,81 @@ def test_inventaire_reel_du_depot_passe_le_gate() -> None:
     assert ok
     assert errors == []
 
+
+def test_main_render_puis_check_sur_vrai_depot_reussit(monkeypatch, capsys) -> None:
+    # Appel EN PROCESS (pas subprocess.run) : un subprocess séparé est invisible à
+    # coverage.py, ce qui viderait ces tests de leur utilité pour le seuil de couverture
+    # SonarCloud sur le code nouveau (constaté : 0 gain de couverture avec subprocess).
+    monkeypatch.chdir(REPO)
+    monkeypatch.setattr(sys, "argv", [str(SCRIPT), "--render"])
+    rc = _validate_authority.main()
+    out = capsys.readouterr().out
+    assert rc == 0
+    assert "PASS" in out
+
+    monkeypatch.setattr(sys, "argv", [str(SCRIPT)])
+    rc2 = _validate_authority.main()
+    out2 = capsys.readouterr().out
+    assert rc2 == 0
+    assert "PASS" in out2
+
+
+def test_main_rejette_un_chemin_hors_du_depot(monkeypatch, capsys) -> None:
+    monkeypatch.chdir(REPO)
+    monkeypatch.setattr(sys, "argv", [str(SCRIPT), "--map", "../../../../etc/passwd"])
+    rc = _validate_authority.main()
+    out = capsys.readouterr().out
+    assert rc == 1
+    assert "hors du dépôt" in out
+
+
+def test_main_erreur_json_invalide(tmp_path: Path, monkeypatch, capsys) -> None:
+    (tmp_path / "authority.json").write_text("{invalide", encoding="utf-8")
+    (tmp_path / "conflicts-baseline.json").write_text(
+        '{"conflits": []}',
+        encoding="utf-8",
+    )
+
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        [
+            str(SCRIPT),
+            "--repo-root",
+            str(tmp_path),
+            "--authority",
+            "authority.json",
+            "--baseline",
+            "conflicts-baseline.json",
+        ],
+    )
+    rc = _validate_authority.main()
+    out = capsys.readouterr().out
+    assert rc == 1
+    assert "Expecting property name enclosed in double quotes" in out
+
+
+def test_main_erreur_authority_json_pas_un_objet(tmp_path: Path, monkeypatch, capsys) -> None:
+    (tmp_path / "authority.json").write_text("[]", encoding="utf-8")
+    (tmp_path / "conflicts-baseline.json").write_text(
+        '{"conflits": []}',
+        encoding="utf-8",
+    )
+
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        [
+            str(SCRIPT),
+            "--repo-root",
+            str(tmp_path),
+            "--authority",
+            "authority.json",
+            "--baseline",
+            "conflicts-baseline.json",
+        ],
+    )
+    rc = _validate_authority.main()
+    out = capsys.readouterr().out
+    assert rc == 1
+    assert "objet JSON attendu" in out

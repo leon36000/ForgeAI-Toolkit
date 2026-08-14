@@ -78,11 +78,13 @@ def _section_bytes(path: Path, anchor: str) -> bytes:
     level: int | None = None
 
     for index, line in enumerate(lines):
-        match = re.match(r"^(#{1,6})\s+(.*?)\s*#*\s*$", line.rstrip("\n"))
-        if match and match.group(2) == anchor:
-            heading_index = index
-            level = len(match.group(1))
-            break
+        match = re.match(r"^(#{1,6})\s+(.*)$", line.rstrip("\n"))
+        if match:
+            title = match.group(2).rstrip().rstrip("#").rstrip()
+            if title == anchor:
+                heading_index = index
+                level = len(match.group(1))
+                break
 
     if heading_index is None or level is None:
         raise ValueError(f"section ancrée absente: {anchor!r}")
@@ -110,47 +112,57 @@ def digest_of(path: Path, policy: str, anchor: str | None) -> str:
     return hashlib.sha256(material).hexdigest()
 
 
+def _dfs_from_root(
+    root: str,
+    aretes: dict[str, list[str]],
+    colors: dict[str, int],
+    seen: set[tuple[str, ...]],
+) -> list[list[str]]:
+    """Explore itérativement les cycles accessibles depuis une racine."""
+    found: list[list[str]] = []
+    colors[root] = 1
+    stack: list[tuple[str, int]] = [(root, 0)]
+    trail = [root]
+
+    while stack:
+        node, index = stack[-1]
+        destinations = aretes.get(node, [])
+        if index >= len(destinations):
+            colors[node] = 2
+            stack.pop()
+            trail.pop()
+            continue
+
+        child = destinations[index]
+        stack[-1] = (node, index + 1)
+        color = colors.get(child, 0)
+        if color == 0:
+            colors[child] = 1
+            stack.append((child, 0))
+            trail.append(child)
+        elif color == 1:
+            start = trail.index(child)
+            cycle = trail[start:] + [child]
+            key = tuple(cycle)
+            if key not in seen:
+                seen.add(key)
+                found.append(cycle)
+
+    return found
+
+
 def cycles(aretes: dict[str, list[str]]) -> list[list[str]]:
     """Retourne les cycles d'un graphe orienté via DFS itératif."""
     nodes = set(aretes)
     for destinations in aretes.values():
         nodes.update(destinations)
 
-    colors = {node: 0 for node in nodes}
+    colors = dict.fromkeys(nodes, 0)
     found: list[list[str]] = []
     seen: set[tuple[str, ...]] = set()
-
     for root in sorted(nodes):
-        if colors[root] != 0:
-            continue
-        colors[root] = 1
-        stack: list[tuple[str, int]] = [(root, 0)]
-        trail = [root]
-
-        while stack:
-            node, index = stack[-1]
-            destinations = aretes.get(node, [])
-            if index >= len(destinations):
-                colors[node] = 2
-                stack.pop()
-                trail.pop()
-                continue
-
-            child = destinations[index]
-            stack[-1] = (node, index + 1)
-            color = colors.get(child, 0)
-            if color == 0:
-                colors[child] = 1
-                stack.append((child, 0))
-                trail.append(child)
-            elif color == 1:
-                start = trail.index(child)
-                cycle = trail[start:] + [child]
-                key = tuple(cycle)
-                if key not in seen:
-                    seen.add(key)
-                    found.append(cycle)
-
+        if colors[root] == 0:
+            found.extend(_dfs_from_root(root, aretes, colors, seen))
     return found
 
 
@@ -180,7 +192,9 @@ def _conflict_identity(conflict: dict[str, Any]) -> tuple[Any, ...]:
     )
 
 
-def _real_conflicts(sources: list[dict[str, Any]]) -> list[dict[str, Any]]:
+def _positions_by_topic(
+    sources: list[dict[str, Any]],
+) -> dict[str, dict[str, list[str]]]:
     by_topic: dict[str, dict[str, list[str]]] = {}
     for source in sources:
         if source.get("status") not in {"active", "conflicted"}:
@@ -193,71 +207,63 @@ def _real_conflicts(sources: list[dict[str, Any]]) -> list[dict[str, Any]]:
                 continue
             topic = position.get("topic")
             value = position.get("position")
-            if not isinstance(topic, str) or not isinstance(value, str):
-                continue
-            by_topic.setdefault(topic, {}).setdefault(value, []).append(source_id)
+            if isinstance(topic, str) and isinstance(value, str):
+                by_topic.setdefault(topic, {}).setdefault(value, []).append(source_id)
+    return by_topic
 
+
+def _conflict_for_topic(
+    topic: str,
+    positions: dict[str, list[str]],
+) -> dict[str, Any] | None:
+    if len(positions) < 2:
+        return None
+    selected_sources = sorted(
+        {source_id for source_ids in positions.values() for source_id in source_ids}
+    )
+    if len(selected_sources) < 2:
+        return None
+    return {
+        "kind": "topic_position",
+        "sujet": topic,
+        "sources": selected_sources,
+        "positions": sorted(positions),
+    }
+
+
+def _real_conflicts(sources: list[dict[str, Any]]) -> list[dict[str, Any]]:
     result: list[dict[str, Any]] = []
-    for topic, positions in sorted(by_topic.items()):
-        if len(positions) < 2:
-            continue
-        # TOUTES les sources qui tiennent une position sur ce sujet contrôlé participent au
-        # conflit — pas seulement une source représentative par valeur de position. Une source
-        # qui partage la même position qu'une autre (ex. deux sources d'accord entre elles mais
-        # en désaccord avec une 3e) doit rester visible comme preuve du conflit, sinon elle
-        # disparaît silencieusement du rapport.
-        selected_sources = sorted(
-            {source_id for source_ids in positions.values() for source_id in source_ids}
-        )
-        selected_positions = sorted(positions)
-        if len(selected_sources) >= 2:
-            result.append(
-                {
-                    "kind": "topic_position",
-                    "sujet": topic,
-                    "sources": selected_sources,
-                    "positions": selected_positions,
-                }
-            )
+    for topic, positions in sorted(_positions_by_topic(sources).items()):
+        conflict = _conflict_for_topic(topic, positions)
+        if conflict is not None:
+            result.append(conflict)
     return result
 
 
-def render(authority: dict) -> str:
-    """Produit le rendu Markdown stable de l'inventaire canonique."""
-    owners = authority.get("owners", {})
-    scopes = authority.get("scopes", {})
-    sources = authority.get("sources", [])
-
-    lines = [
-        "<!-- NE PAS ÉDITER À LA MAIN — généré par scripts/governance/validate_authority.py --render -->",
-        "",
-        "# Hiérarchie d'autorité",
-        "",
-        "Cette carte est le rendu de `governance/authority.json`.",
-        "",
-        "## Propriétaires",
-        "",
-        "| Identifiant | Rôle |",
-        "|---|---|",
-    ]
+def _render_owners(owners: dict[str, Any]) -> list[str]:
+    lines = ["", "## Propriétaires", "", "| Identifiant | Rôle |", "|---|---|"]
     for owner_id in sorted(owners):
         role = owners[owner_id].get("role", "") if isinstance(owners[owner_id], dict) else ""
         lines.append(f"| `{owner_id}` | {role} |")
+    return lines
 
-    lines.extend(["", "## Portées", "", "| Portée | Singleton |", "|---|---|"])
+
+def _render_scopes(scopes: dict[str, Any]) -> list[str]:
+    lines = ["", "## Portées", "", "| Portée | Singleton |", "|---|---|"]
     for scope_id in sorted(scopes):
         singleton = scopes[scope_id].get("singleton", False)
         lines.append(f"| `{scope_id}` | {'oui' if singleton else 'non'} |")
+    return lines
 
-    lines.extend(
-        [
-            "",
-            "## Sources",
-            "",
-            "| Id | Source | Statut | Portée | Propriétaire | Successeur |",
-            "|---|---|---|---|---|---|",
-        ]
-    )
+
+def _render_sources_table(sources: list[dict[str, Any]]) -> list[str]:
+    lines = [
+        "",
+        "## Sources",
+        "",
+        "| Id | Source | Statut | Portée | Propriétaire | Successeur |",
+        "|---|---|---|---|---|---|",
+    ]
     for source in sorted(sources, key=lambda item: item.get("id", "")):
         path = source.get("path")
         anchor = source.get("anchor")
@@ -275,18 +281,27 @@ def render(authority: dict) -> str:
                 successor=successor,
             )
         )
+    return lines
 
-    lines.extend(["", "## Précédences déclarées", ""])
+
+def _render_precedences(sources: list[dict[str, Any]]) -> list[str]:
+    lines = ["", "## Précédences déclarées", ""]
     precedence_found = False
     for source in sorted(sources, key=lambda item: item.get("id", "")):
         targets = source.get("prevails_over", [])
         if targets:
             precedence_found = True
-            lines.append(f"- `{source.get('id')}` prévaut sur " + ", ".join(f"`{x}`" for x in targets))
+            lines.append(
+                f"- `{source.get('id')}` prévaut sur "
+                + ", ".join(f"`{target}`" for target in targets)
+            )
     if not precedence_found:
         lines.append("- Aucune précédence déclarée.")
+    return lines
 
-    lines.extend(["", "## Positions déclarées", ""])
+
+def _render_positions(sources: list[dict[str, Any]]) -> list[str]:
+    lines = ["", "## Positions déclarées", ""]
     position_found = False
     for source in sorted(sources, key=lambda item: item.get("id", "")):
         for position in source.get("positions", []):
@@ -299,133 +314,177 @@ def render(authority: dict) -> str:
             )
     if not position_found:
         lines.append("- Aucune position déclarée.")
+    return lines
 
+
+def render(authority: dict) -> str:
+    """Produit le rendu Markdown stable de l'inventaire canonique."""
+    owners = authority.get("owners", {})
+    scopes = authority.get("scopes", {})
+    sources = authority.get("sources", [])
+    lines = [
+        "<!-- NE PAS ÉDITER À LA MAIN — généré par scripts/governance/validate_authority.py --render -->",
+        "",
+        "# Hiérarchie d'autorité",
+        "",
+        "Cette carte est le rendu de `governance/authority.json`.",
+    ]
+    lines.extend(_render_owners(owners))
+    lines.extend(_render_scopes(scopes))
+    lines.extend(_render_sources_table(sources))
+    lines.extend(_render_precedences(sources))
+    lines.extend(_render_positions(sources))
     return "\n".join(lines) + "\n"
 
 
-def check(
-    authority: dict,
-    baseline: dict,
-    repo_root: Path,
-    map_text: str,
-) -> tuple[bool, list[str]]:
-    """Contrôle l'inventaire, les empreintes, les graphes et le rendu."""
-    errors: list[str] = []
-    sources_raw = authority.get("sources")
-    sources: list[dict[str, Any]] = (
-        sources_raw if isinstance(sources_raw, list) else []
-    )
-    if not isinstance(sources_raw, list):
-        _error(errors, "sources doit être une liste")
-
-    owners = authority.get("owners")
-    owners = owners if isinstance(owners, dict) else {}
-    scopes = authority.get("scopes")
-    scopes = scopes if isinstance(scopes, dict) else {}
-    topics = authority.get("topics")
-    topics = topics if isinstance(topics, dict) else {}
-
-    ids: list[str] = []
-    by_id: dict[str, dict[str, Any]] = {}
-    verified_digests = 0
-
-    for index, source in enumerate(sources, start=1):
-        if not isinstance(source, dict):
-            _error(errors, f"source au rang {index} invalide: dictionnaire requis")
+def _validate_positions(
+    source: dict[str, Any],
+    source_id: str | None,
+    index: int,
+    topics: dict[str, Any],
+    errors: list[str],
+) -> None:
+    positions = source.get("positions")
+    label = source_id or index
+    if not isinstance(positions, list):
+        _error(errors, f"{label}: positions doit être une liste")
+        return
+    for position_index, position in enumerate(positions, start=1):
+        if not isinstance(position, dict):
+            _error(errors, f"{label}: position {position_index} invalide")
             continue
+        topic = position.get("topic")
+        value = position.get("position")
+        locator = position.get("locator")
+        topic_data = topics.get(topic)
+        vocabulary = topic_data.get("vocabulaire") if isinstance(topic_data, dict) else None
+        if not isinstance(vocabulary, list) or value not in vocabulary:
+            _error(errors, f"{label}: position hors vocabulaire pour {topic!r}: {value!r}")
+        if not isinstance(locator, str) or not re.fullmatch(r"[^:]+:\d+(?:-\d+)?", locator):
+            _error(errors, f"{label}: locator invalide: {locator!r}")
 
-        missing = sorted(REQUIRED_SOURCE_FIELDS - set(source))
-        if missing:
-            _error(errors, f"source au rang {index}: champs requis absents: {', '.join(missing)}")
 
-        source_id = source.get("id")
-        if not isinstance(source_id, str) or not ID_RE.fullmatch(source_id):
-            _error(errors, f"id invalide au rang {index}: {source_id!r}")
-        else:
-            if source_id in by_id:
-                _error(errors, f"id dupliqué: {source_id}")
-            else:
-                by_id[source_id] = source
-            ids.append(source_id)
+def _validate_digest_structure(
+    source: dict[str, Any],
+    source_id: str | None,
+    index: int,
+    errors: list[str],
+) -> None:
+    label = source_id or index
+    digest = source.get("digest")
+    if not isinstance(digest, dict):
+        _error(errors, f"{label}: digest invalide")
+        digest = {}
+    policy = digest.get("policy")
+    value = digest.get("value")
+    delegated_to = digest.get("delegated_to")
+    if policy not in DIGEST_POLICIES:
+        _error(errors, f"{label}: politique d'empreinte invalide: {policy!r}")
+    if policy == "delegated" and (not isinstance(delegated_to, str) or not delegated_to.strip()):
+        _error(errors, f"{label}: digest délégué exige delegated_to")
+    if policy == "none" and source.get("path") is not None:
+        _error(errors, f"{label}: digest none exige path null")
+    if policy in {"content_sha256", "section_sha256"}:
+        if not isinstance(value, str) or not re.fullmatch(r"[0-9a-f]{64}", value):
+            _error(errors, f"{label}: valeur d'empreinte absente ou invalide")
+    elif value is not None:
+        _error(errors, f"{label}: valeur d'empreinte doit être null pour {policy!r}")
+    if source.get("status") in {"active", "conflicted"}:
+        if not isinstance(source.get("owner"), str) or not source.get("owner"):
+            _error(errors, f"{label}: propriétaire requis")
+        if policy not in DIGEST_POLICIES:
+            _error(errors, f"{label}: digest requis")
 
-        for field, allowed in (
-            ("status", STATUSES),
-            ("kind", KINDS),
-            ("retention", RETENTIONS),
-            ("version_source", VERSION_SOURCES),
-        ):
-            if source.get(field) not in allowed:
-                _error(errors, f"{source_id or index}: {field} invalide: {source.get(field)!r}")
 
-        scope = source.get("scope")
-        if scope not in scopes:
-            _error(errors, f"{source_id or index}: portée inconnue: {scope!r}")
+def _validate_source_fields(
+    source: dict[str, Any],
+    index: int,
+    scopes: dict[str, Any],
+    owners: dict[str, Any],
+    topics: dict[str, Any],
+    errors: list[str],
+) -> str | None:
+    missing = sorted(REQUIRED_SOURCE_FIELDS - set(source))
+    if missing:
+        _error(errors, f"source au rang {index}: champs requis absents: {', '.join(missing)}")
 
-        owner = source.get("owner")
-        if owner not in owners:
-            _error(errors, f"{source_id or index}: propriétaire hors owners: {owner!r}")
+    source_id = source.get("id")
+    if not isinstance(source_id, str) or not ID_RE.fullmatch(source_id):
+        _error(errors, f"id invalide au rang {index}: {source_id!r}")
+        source_id = None
 
-        if not isinstance(source.get("title"), str) or not source.get("title").strip():
-            _error(errors, f"{source_id or index}: titre vide ou invalide")
-        if not isinstance(source.get("version"), str) or not source.get("version").strip():
-            if source.get("status") in {"active", "conflicted"}:
-                _error(errors, f"{source_id or index}: version absente sur source active ou conflictuelle")
+    label = source_id or index
+    for field, allowed in (
+        ("status", STATUSES),
+        ("kind", KINDS),
+        ("retention", RETENTIONS),
+        ("version_source", VERSION_SOURCES),
+    ):
+        if source.get(field) not in allowed:
+            _error(errors, f"{label}: {field} invalide: {source.get(field)!r}")
 
-        positions = source.get("positions")
-        if not isinstance(positions, list):
-            _error(errors, f"{source_id or index}: positions doit être une liste")
-        else:
-            for position_index, position in enumerate(positions, start=1):
-                if not isinstance(position, dict):
-                    _error(errors, f"{source_id or index}: position {position_index} invalide")
-                    continue
-                topic = position.get("topic")
-                value = position.get("position")
-                locator = position.get("locator")
-                vocabulary = topics.get(topic, {}).get("vocabulaire") if isinstance(topics.get(topic), dict) else None
-                if not isinstance(vocabulary, list) or value not in vocabulary:
-                    _error(
-                        errors,
-                        f"{source_id or index}: position hors vocabulaire pour {topic!r}: {value!r}",
-                    )
-                if not isinstance(locator, str) or not re.fullmatch(r"[^:]+:\d+(?:-\d+)?", locator):
-                    _error(errors, f"{source_id or index}: locator invalide: {locator!r}")
+    if source.get("scope") not in scopes:
+        _error(errors, f"{label}: portée inconnue: {source.get('scope')!r}")
+    if source.get("owner") not in owners:
+        _error(errors, f"{label}: propriétaire hors owners: {source.get('owner')!r}")
+    if not isinstance(source.get("title"), str) or not source.get("title").strip():
+        _error(errors, f"{label}: titre vide ou invalide")
+    if not isinstance(source.get("version"), str) or not source.get("version").strip():
+        if source.get("status") in {"active", "conflicted"}:
+            _error(errors, f"{label}: version absente sur source active ou conflictuelle")
 
+    _validate_positions(source, source_id, index, topics, errors)
+    _validate_digest_structure(source, source_id, index, errors)
+
+    if source.get("retention") == "pending_cleanup" and source.get("cleanup_issue") is None:
+        _error(errors, f"{label}: pending_cleanup exige cleanup_issue")
+    if source.get("status") == "conflicted" and source.get("resolution_issue") is None:
+        _error(errors, f"{label}: source conflictuelle exige resolution_issue")
+    for text_field in ("title", "notes"):
+        text = source.get(text_field)
+        if isinstance(text, str) and MARKER_RE.search(text):
+            _error(errors, f"{label}: marqueur interdit dans {text_field}")
+    return source_id
+
+
+def _validate_digests(
+    by_id: dict[str, dict[str, Any]],
+    repo_root: Path,
+    errors: list[str],
+) -> None:
+    for source_id, source in by_id.items():
         digest = source.get("digest")
         if not isinstance(digest, dict):
-            _error(errors, f"{source_id or index}: digest invalide")
-            digest = {}
+            continue
         policy = digest.get("policy")
-        value = digest.get("value")
-        delegated_to = digest.get("delegated_to")
-        if policy not in DIGEST_POLICIES:
-            _error(errors, f"{source_id or index}: politique d'empreinte invalide: {policy!r}")
-        if policy == "delegated" and (not isinstance(delegated_to, str) or not delegated_to.strip()):
-            _error(errors, f"{source_id or index}: digest délégué exige delegated_to")
-        if policy == "none" and source.get("path") is not None:
-            _error(errors, f"{source_id or index}: digest none exige path null")
-        if policy in {"content_sha256", "section_sha256"}:
-            if not isinstance(value, str) or not re.fullmatch(r"[0-9a-f]{64}", value):
-                _error(errors, f"{source_id or index}: valeur d'empreinte absente ou invalide")
-        elif value is not None:
-            _error(errors, f"{source_id or index}: valeur d'empreinte doit être null pour {policy!r}")
+        path_value = source.get("path")
+        if policy not in {"content_sha256", "section_sha256"} or path_value is None:
+            continue
+        if not isinstance(path_value, str):
+            _error(errors, f"{source_id}: path invalide")
+            continue
+        file_path = repo_root / path_value
+        if not file_path.is_file():
+            _error(errors, f"fichier d'empreinte absent: {path_value}")
+            continue
+        try:
+            computed = digest_of(file_path, policy, source.get("anchor"))
+        except (OSError, ValueError) as exc:
+            _error(errors, f"empreinte impossible: {path_value}: {exc}")
+            continue
+        stored = digest.get("value")
+        if stored != computed:
+            stored_short = stored[:8] if isinstance(stored, str) else "absente"
+            _error(
+                errors,
+                f"empreinte périmée: {path_value} — stockée {stored_short}…, recalculée {computed[:8]}…",
+            )
 
-        if source.get("status") in {"active", "conflicted"}:
-            if not isinstance(owner, str) or not owner:
-                _error(errors, f"{source_id or index}: propriétaire requis")
-            if not isinstance(digest, dict) or policy not in DIGEST_POLICIES:
-                _error(errors, f"{source_id or index}: digest requis")
 
-        if source.get("retention") == "pending_cleanup" and source.get("cleanup_issue") is None:
-            _error(errors, f"{source_id or index}: pending_cleanup exige cleanup_issue")
-        if source.get("status") == "conflicted" and source.get("resolution_issue") is None:
-            _error(errors, f"{source_id or index}: source conflictuelle exige resolution_issue")
-
-        for text_field in ("title", "notes"):
-            text = source.get(text_field)
-            if isinstance(text, str) and MARKER_RE.search(text):
-                _error(errors, f"{source_id or index}: marqueur interdit dans {text_field}")
-
+def _validate_graph_edges(
+    by_id: dict[str, dict[str, Any]],
+    errors: list[str],
+) -> None:
     for source_id, source in by_id.items():
         successor = source.get("superseded_by")
         if successor is not None:
@@ -433,41 +492,34 @@ def check(
                 _error(errors, f"{source_id}: successeur inconnu: {successor!r}")
             elif successor == source_id:
                 _error(errors, f"{source_id}: une source ne peut pas être son propre successeur")
-
         targets = source.get("prevails_over")
         if not isinstance(targets, list) or not all(isinstance(target, str) for target in targets):
             _error(errors, f"{source_id}: prevails_over doit être une liste de chaînes")
         elif successor is not None and successor in targets:
             _error(errors, f"{source_id}: arête croisée succession/précédence vers {successor}")
 
-        digest = source.get("digest")
-        if not isinstance(digest, dict):
-            continue
-        policy = digest.get("policy")
-        path_value = source.get("path")
-        if policy in {"content_sha256", "section_sha256"} and path_value is not None:
-            if not isinstance(path_value, str):
-                _error(errors, f"{source_id}: path invalide")
-                continue
-            file_path = repo_root / path_value
-            if not file_path.is_file():
-                _error(errors, f"fichier d'empreinte absent: {path_value}")
-                continue
-            try:
-                computed = digest_of(file_path, policy, source.get("anchor"))
-            except (OSError, UnicodeDecodeError, ValueError) as exc:
-                _error(errors, f"empreinte impossible: {path_value}: {exc}")
-                continue
-            stored = digest.get("value")
-            if stored != computed:
-                stored_short = stored[:8] if isinstance(stored, str) else "absente"
-                _error(
-                    errors,
-                    f"empreinte périmée: {path_value} — stockée {stored_short}…, recalculée {computed[:8]}…",
-                )
-            else:
-                verified_digests += 1
 
+def _validate_successor_endpoints(
+    by_id: dict[str, dict[str, Any]],
+    errors: list[str],
+) -> None:
+    for source_id, source in by_id.items():
+        current = source
+        visited: set[str] = set()
+        while isinstance(current.get("superseded_by"), str):
+            successor = current["superseded_by"]
+            if successor in visited or successor not in by_id:
+                break
+            visited.add(successor)
+            current = by_id[successor]
+        if visited and current.get("status") == "archived":
+            _error(
+                errors,
+                f"{source_id}: succession aboutit sur une source archivée: {current.get('id')}",
+            )
+
+
+def _validate_cycles(by_id: dict[str, dict[str, Any]], errors: list[str]) -> None:
     successor_edges = {
         source_id: [source["superseded_by"]]
         for source_id, source in by_id.items()
@@ -482,19 +534,14 @@ def check(
         _error(errors, "cycle de succession : " + " → ".join(cycle))
     for cycle in cycles(precedence_edges):
         _error(errors, "cycle de précédence : " + " → ".join(cycle))
+    _validate_successor_endpoints(by_id, errors)
 
-    for source_id, source in by_id.items():
-        current = source
-        visited: set[str] = set()
-        while isinstance(current.get("superseded_by"), str):
-            successor = current["superseded_by"]
-            if successor in visited or successor not in by_id:
-                break
-            visited.add(successor)
-            current = by_id[successor]
-        if visited and current.get("status") == "archived":
-            _error(errors, f"{source_id}: succession aboutit sur une source archivée: {current.get('id')}")
 
+def _validate_scopes(
+    by_id: dict[str, dict[str, Any]],
+    scopes: dict[str, Any],
+    errors: list[str],
+) -> None:
     for scope_id, scope_data in scopes.items():
         if not isinstance(scope_data, dict) or not scope_data.get("singleton"):
             continue
@@ -507,19 +554,40 @@ def check(
         if len(occupants) > 1:
             _error(errors, f"portée singleton violée: {scope_id} ({', '.join(sorted(occupants))})")
 
+
+def _validate_conflicts(
+    by_id: dict[str, dict[str, Any]],
+    baseline: dict,
+    errors: list[str],
+) -> None:
     baseline_conflicts = baseline.get("conflits") if isinstance(baseline, dict) else None
     if not isinstance(baseline_conflicts, list):
         _error(errors, "baseline: conflits doit être une liste")
         baseline_conflicts = []
     actual = {_conflict_identity(conflict) for conflict in _real_conflicts(list(by_id.values()))}
-    expected = {_conflict_identity(conflict) for conflict in baseline_conflicts if isinstance(conflict, dict)}
+    expected = {
+        _conflict_identity(conflict)
+        for conflict in baseline_conflicts
+        if isinstance(conflict, dict)
+    }
     for identity in sorted(actual - expected, key=repr):
         _error(errors, f"conflit nouveau non baseliné: {identity!r}")
     for identity in sorted(expected - actual, key=repr):
         _error(errors, f"conflit baseliné périmé: {identity!r}")
 
+
+def _validate_vision_log(
+    by_id: dict[str, dict[str, Any]],
+    authority: dict,
+    repo_root: Path,
+    errors: list[str],
+) -> None:
     vision_path_value = authority.get("vision_log", "governance/vision-log.jsonl")
-    vision_path = repo_root / vision_path_value if isinstance(vision_path_value, str) else repo_root / "governance/vision-log.jsonl"
+    vision_path = (
+        repo_root / vision_path_value
+        if isinstance(vision_path_value, str)
+        else repo_root / "governance/vision-log.jsonl"
+    )
     vision_sequences = _load_jsonl_sequences(vision_path)
     mission_sequences = _load_jsonl_sequences(repo_root / "Registres" / "mission.jsonl")
     for source_id, source in by_id.items():
@@ -536,11 +604,62 @@ def check(
         if mission_seq is not None and mission_seq not in mission_sequences:
             _error(errors, f"{source_id}: mission_seq inexistant: {mission_seq!r}")
 
-    expected_map = render(authority)
-    if map_text != expected_map:
+
+def _validate_map(authority: dict, map_text: str, errors: list[str]) -> None:
+    if map_text != render(authority):
         _error(errors, "carte d'autorité désynchronisée")
 
+
+def check(
+    authority: dict,
+    baseline: dict,
+    repo_root: Path,
+    map_text: str,
+) -> tuple[bool, list[str]]:
+    """Contrôle l'inventaire, les empreintes, les graphes et le rendu."""
+    errors: list[str] = []
+    sources_raw = authority.get("sources")
+    sources: list[dict[str, Any]] = sources_raw if isinstance(sources_raw, list) else []
+    if not isinstance(sources_raw, list):
+        _error(errors, "sources doit être une liste")
+
+    owners = authority.get("owners")
+    owners = owners if isinstance(owners, dict) else {}
+    scopes = authority.get("scopes")
+    scopes = scopes if isinstance(scopes, dict) else {}
+    topics = authority.get("topics")
+    topics = topics if isinstance(topics, dict) else {}
+
+    by_id: dict[str, dict[str, Any]] = {}
+    for index, source in enumerate(sources, start=1):
+        if not isinstance(source, dict):
+            _error(errors, f"source au rang {index} invalide: dictionnaire requis")
+            continue
+        source_id = _validate_source_fields(source, index, scopes, owners, topics, errors)
+        if source_id is None:
+            continue
+        if source_id in by_id:
+            _error(errors, f"id dupliqué: {source_id}")
+        else:
+            by_id[source_id] = source
+
+    _validate_graph_edges(by_id, errors)
+    _validate_digests(by_id, repo_root, errors)
+    _validate_cycles(by_id, errors)
+    _validate_scopes(by_id, scopes, errors)
+    _validate_conflicts(by_id, baseline, errors)
+    _validate_vision_log(by_id, authority, repo_root, errors)
+    _validate_map(authority, map_text, errors)
     return not errors, errors
+
+
+def _within_repo(repo_root: Path, candidate: Path) -> Path:
+    """Résout un chemin et garantit qu'il reste dans le dépôt."""
+    resolved_root = repo_root.resolve()
+    resolved_candidate = candidate.resolve()
+    if not resolved_candidate.is_relative_to(resolved_root):
+        raise ValueError(f"chemin hors du dépôt: {candidate}")
+    return resolved_candidate
 
 
 def _load_json(path: Path) -> dict:
@@ -560,20 +679,27 @@ def main() -> int:
     args = parser.parse_args()
 
     repo_root = args.repo_root.resolve()
-    authority_path = args.authority if args.authority.is_absolute() else repo_root / args.authority
-    baseline_path = args.baseline if args.baseline.is_absolute() else repo_root / args.baseline
-    map_path = args.map_path if args.map_path.is_absolute() else repo_root / args.map_path
+    authority_candidate = args.authority if args.authority.is_absolute() else repo_root / args.authority
+    baseline_candidate = args.baseline if args.baseline.is_absolute() else repo_root / args.baseline
+    map_candidate = args.map_path if args.map_path.is_absolute() else repo_root / args.map_path
 
     try:
+        authority_path = _within_repo(repo_root, authority_candidate)
+        baseline_path = _within_repo(repo_root, baseline_candidate)
+        map_path = _within_repo(repo_root, map_candidate)
         authority = _load_json(authority_path)
         baseline = _load_json(baseline_path)
-    except (OSError, ValueError, json.JSONDecodeError) as exc:
+    except (OSError, ValueError) as exc:
         print(f"FAIL — validate_authority: {exc}")
         return 1
 
     if args.render:
-        map_path.parent.mkdir(parents=True, exist_ok=True)
-        map_path.write_text(render(authority), encoding="utf-8")
+        try:
+            map_path.parent.mkdir(parents=True, exist_ok=True)
+            map_path.write_text(render(authority), encoding="utf-8")
+        except OSError as exc:
+            print(f"FAIL — validate_authority: {exc}")
+            return 1
 
     try:
         map_text = map_path.read_text(encoding="utf-8")
