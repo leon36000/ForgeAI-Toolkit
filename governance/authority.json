@@ -1,0 +1,777 @@
+{
+  "_schema": "authority-v1",
+  "_description": "Inventaire des sources normatives du dépôt. Source unique de la hiérarchie d'autorité ; governance/AUTHORITY-MAP.md en est le rendu.",
+  "generated_map": "governance/AUTHORITY-MAP.md",
+  "vision_log": "governance/vision-log.jsonl",
+  "inventory_commit": "ab7ea98",
+  "owners": {
+    "nathan": {
+      "role": "T3 — gardien (paiements, secrets prod, suppressions, CANON)"
+    },
+    "orchestrateur": {
+      "role": "session lead Claude Code — méthode et pipeline"
+    },
+    "copilot": {
+      "role": "cockpit multi-IDE ORCH-001 (historique)"
+    }
+  },
+  "scopes": {
+    "governance_method": {
+      "singleton": false
+    },
+    "orchestration": {
+      "singleton": false
+    },
+    "product_requirements": {
+      "singleton": true
+    },
+    "architecture": {
+      "singleton": false
+    },
+    "security": {
+      "singleton": false
+    },
+    "coordination_ops": {
+      "singleton": true
+    },
+    "ide_contract": {
+      "singleton": false
+    },
+    "system_state": {
+      "singleton": true
+    },
+    "catalogue_data": {
+      "singleton": true
+    },
+    "evidence_ledger": {
+      "singleton": true
+    },
+    "plan_of_record": {
+      "singleton": false
+    }
+  },
+  "topics": {
+    "orchestration_seat": {
+      "question": "Quelle instance décide et séquence le travail ?",
+      "vocabulaire": [
+        "claude_code_session_lead",
+        "copilot_vscode_cockpit"
+      ]
+    },
+    "coordination_scale": {
+      "question": "Combien de packages / claims actifs ?",
+      "vocabulaire": [
+        "64_packages_6_claims",
+        "70_packages_0_claim"
+      ]
+    },
+    "workspace_confinement": {
+      "question": "Une source hors dépôt est-elle admissible ?",
+      "vocabulaire": [
+        "repo_only_strict",
+        "repo_plus_external_governance_tooling"
+      ]
+    },
+    "plan_of_record": {
+      "question": "Quel document est le plan en vigueur ?",
+      "vocabulaire": [
+        "master_plan_v1",
+        "canon_plan_maitre_bmad_v1",
+        "canon_plan_integral"
+      ]
+    }
+  },
+  "sources": [
+    {
+      "id": "agents-md",
+      "title": "AGENTS — ForgeAI Toolkit",
+      "path": "AGENTS.md",
+      "anchor": null,
+      "kind": "doctrine",
+      "scope": "governance_method",
+      "version": "inventaire-2026-08-14",
+      "version_source": "assigned_by_inventory",
+      "status": "conflicted",
+      "owner": "nathan",
+      "superseded_by": null,
+      "prevails_over": [],
+      "positions": [
+        {
+          "topic": "orchestration_seat",
+          "position": "claude_code_session_lead",
+          "locator": "AGENTS.md:9"
+        },
+        {
+          "topic": "workspace_confinement",
+          "position": "repo_plus_external_governance_tooling",
+          "locator": "AGENTS.md:69-71"
+        }
+      ],
+      "digest": {
+        "policy": "content_sha256",
+        "value": "c24a598110592d7c2ad66725048e921f568f24d21c56258c48ae4338e4e7c618",
+        "checked_at": "2026-08-14",
+        "delegated_to": null
+      },
+      "retention": "in_force",
+      "cleanup_issue": null,
+      "resolution_issue": 432,
+      "decision": {
+        "vision_log_seq": 1,
+        "mission_seq": null,
+        "ref": "issue-432"
+      },
+      "notes": "Le fichier contient simultanément la méthode PROOF et le contrôle ORCH-001."
+    },
+    {
+      "id": "agents-md.orch-001",
+      "title": "Plan de contrôle multi-IDE ORCH-001",
+      "path": "AGENTS.md",
+      "anchor": "Plan de contrôle multi-IDE (ORCH-001 — actif depuis M0)",
+      "kind": "doctrine",
+      "scope": "orchestration",
+      "version": "M0",
+      "version_source": "declared_in_file",
+      "status": "conflicted",
+      "owner": "copilot",
+      "superseded_by": null,
+      "prevails_over": [],
+      "positions": [
+        {
+          "topic": "orchestration_seat",
+          "position": "copilot_vscode_cockpit",
+          "locator": "AGENTS.md:76"
+        },
+        {
+          "topic": "coordination_scale",
+          "position": "64_packages_6_claims",
+          "locator": "AGENTS.md:84"
+        }
+      ],
+      "digest": {
+        "policy": "section_sha256",
+        "value": "91f3163ae832456b2db40ec06dedc6876b695ad4dc3256e187511955c17b6325",
+        "checked_at": "2026-08-14",
+        "delegated_to": null
+      },
+      "retention": "pending_cleanup",
+      "cleanup_issue": 432,
+      "resolution_issue": 432,
+      "decision": {
+        "vision_log_seq": 2,
+        "mission_seq": null,
+        "ref": "issue-432"
+      },
+      "notes": "Portée historique ORCH-001 soumise à la résolution de l'issue 432."
+    },
+    {
+      "id": "claude-md",
+      "title": "CLAUDE.md — adoption PROOF canonique",
+      "path": "CLAUDE.md",
+      "anchor": null,
+      "kind": "doctrine",
+      "scope": "governance_method",
+      "version": "2026-07-16",
+      "version_source": "declared_in_file",
+      "status": "conflicted",
+      "owner": "nathan",
+      "superseded_by": null,
+      "prevails_over": [],
+      "positions": [
+        {
+          "topic": "workspace_confinement",
+          "position": "repo_plus_external_governance_tooling",
+          "locator": "CLAUDE.md:16"
+        }
+      ],
+      "digest": {
+        "policy": "content_sha256",
+        "value": "a3403fd2bb358a1656fc6f0b2f28700bb67900d95c0ca13c661f53ab3cc82864",
+        "checked_at": "2026-08-14",
+        "delegated_to": null
+      },
+      "retention": "in_force",
+      "cleanup_issue": null,
+      "resolution_issue": 484,
+      "decision": {
+        "vision_log_seq": 3,
+        "mission_seq": null,
+        "ref": "issue-484"
+      },
+      "notes": "Le contrat autorise l'outillage de gouvernance externe pendant la construction."
+    },
+    {
+      "id": "canon.directives-perimetre",
+      "title": "Directives périmètre & rigueur",
+      "path": "CANON/directives-perimetre.md",
+      "anchor": null,
+      "kind": "doctrine",
+      "scope": "security",
+      "version": "2026-07-14",
+      "version_source": "declared_in_file",
+      "status": "conflicted",
+      "owner": "nathan",
+      "superseded_by": null,
+      "prevails_over": [],
+      "positions": [
+        {
+          "topic": "workspace_confinement",
+          "position": "repo_only_strict",
+          "locator": "CANON/directives-perimetre.md:7"
+        }
+      ],
+      "digest": {
+        "policy": "content_sha256",
+        "value": "54e58c411099b1a4c74cd0b5d45cc80c847d6d2de8f3999a7ba03e63059c5a81",
+        "checked_at": "2026-08-14",
+        "delegated_to": null
+      },
+      "retention": "in_force",
+      "cleanup_issue": null,
+      "resolution_issue": 484,
+      "decision": {
+        "vision_log_seq": 4,
+        "mission_seq": null,
+        "ref": "issue-484"
+      },
+      "notes": "La directive impose le confinement des sources produit au dépôt."
+    },
+    {
+      "id": "canon.plan-integral",
+      "title": "ForgeAI Toolkit — Plan intégral",
+      "path": "CANON/plan-integral.md",
+      "anchor": null,
+      "kind": "doctrine",
+      "scope": "plan_of_record",
+      "version": "2.0-INTEGRALE",
+      "version_source": "declared_in_file",
+      "status": "active",
+      "owner": "nathan",
+      "superseded_by": null,
+      "prevails_over": [
+        "master-plan",
+        "canon.plan-maitre-bmad"
+      ],
+      "positions": [
+        {
+          "topic": "plan_of_record",
+          "position": "canon_plan_integral",
+          "locator": "CANON/plan-integral.md:4"
+        }
+      ],
+      "digest": {
+        "policy": "content_sha256",
+        "value": "16f4f773d2c5bed7b464000ab87598a0af7171cd9849c50cc0c5536e46030fee",
+        "checked_at": "2026-08-14",
+        "delegated_to": null
+      },
+      "retention": "in_force",
+      "cleanup_issue": null,
+      "resolution_issue": null,
+      "decision": {
+        "vision_log_seq": null,
+        "mission_seq": null,
+        "ref": null
+      },
+      "notes": "Le document se déclare document de référence unique et affirme Fable orchestrateur unique aux lignes 27 et 251."
+    },
+    {
+      "id": "canon.plan-maitre-bmad",
+      "title": "Plan maître d'exécution BMAD v1.0",
+      "path": "CANON/PLAN-MAITRE-EXECUTION-BMAD-v1.0.md",
+      "anchor": null,
+      "kind": "doctrine",
+      "scope": "plan_of_record",
+      "version": "v1.0",
+      "version_source": "declared_in_file",
+      "status": "conflicted",
+      "owner": "nathan",
+      "superseded_by": null,
+      "prevails_over": [],
+      "positions": [
+        {
+          "topic": "plan_of_record",
+          "position": "canon_plan_maitre_bmad_v1",
+          "locator": "CANON/PLAN-MAITRE-EXECUTION-BMAD-v1.0.md:1-2"
+        }
+      ],
+      "digest": {
+        "policy": "content_sha256",
+        "value": "8ed4d59559f26d8e324cdd1ef0c28959559021b61b17661aa9601771afbb21c2",
+        "checked_at": "2026-08-14",
+        "delegated_to": null
+      },
+      "retention": "in_force",
+      "cleanup_issue": null,
+      "resolution_issue": 432,
+      "decision": {
+        "vision_log_seq": 5,
+        "mission_seq": null,
+        "ref": "issue-432"
+      },
+      "notes": "Plan conservé dans l'inventaire pendant la résolution de la hiérarchie."
+    },
+    {
+      "id": "master-plan",
+      "title": "MASTER-PLAN ForgeAI Toolkit v1.0",
+      "path": "MASTER-PLAN.md",
+      "anchor": null,
+      "kind": "doctrine",
+      "scope": "plan_of_record",
+      "version": "v1.0",
+      "version_source": "declared_in_file",
+      "status": "conflicted",
+      "owner": "nathan",
+      "superseded_by": null,
+      "prevails_over": [],
+      "positions": [
+        {
+          "topic": "plan_of_record",
+          "position": "master_plan_v1",
+          "locator": "MASTER-PLAN.md:7"
+        }
+      ],
+      "digest": {
+        "policy": "content_sha256",
+        "value": "59ea05cc66e2827348fbe8a3f38ac9beaf4b1d6f3baee8b345d1dbc980f17dd8",
+        "checked_at": "2026-08-14",
+        "delegated_to": null
+      },
+      "retention": "in_force",
+      "cleanup_issue": null,
+      "resolution_issue": 432,
+      "decision": {
+        "vision_log_seq": 6,
+        "mission_seq": null,
+        "ref": "issue-432"
+      },
+      "notes": "Le gel v1.0 est déclaré à la ligne 161."
+    },
+    {
+      "id": "cursor.orchestration-rules",
+      "title": "Règles Cursor d'orchestration",
+      "path": ".cursor/rules/forgeai-orchestration.mdc",
+      "anchor": null,
+      "kind": "ide_rules",
+      "scope": "ide_contract",
+      "version": "inventaire-2026-08-14",
+      "version_source": "assigned_by_inventory",
+      "status": "superseded",
+      "owner": "copilot",
+      "superseded_by": "gov.decision-mission-lead",
+      "prevails_over": [],
+      "positions": [],
+      "digest": {
+        "policy": "content_sha256",
+        "value": "cf85cad85d510dfcd9a672058d5a90a22dc69d7631f67dfc0187a5c1ff533689",
+        "checked_at": "2026-08-14",
+        "delegated_to": null
+      },
+      "retention": "pending_cleanup",
+      "cleanup_issue": 432,
+      "resolution_issue": null,
+      "decision": {
+        "vision_log_seq": 7,
+        "mission_seq": null,
+        "ref": "governance/decisions/D-2026-08-14-mission-lead.md"
+      },
+      "notes": "Règles historiques remplacées par la décision versionnée de mission lead."
+    },
+    {
+      "id": "coord.active-claims",
+      "title": "Claims actifs de coordination",
+      "path": "coordination/active-claims.json",
+      "anchor": null,
+      "kind": "data",
+      "scope": "coordination_ops",
+      "version": "inventaire-2026-08-14",
+      "version_source": "assigned_by_inventory",
+      "status": "superseded",
+      "owner": "copilot",
+      "superseded_by": "gov.decision-mission-lead",
+      "prevails_over": [],
+      "positions": [],
+      "digest": {
+        "policy": "content_sha256",
+        "value": "fd785a5d2be1f007a3c626ec23f49a2fd5496b43ca222f06355ad463f86649c8",
+        "checked_at": "2026-08-14",
+        "delegated_to": null
+      },
+      "retention": "pending_cleanup",
+      "cleanup_issue": 433,
+      "resolution_issue": null,
+      "decision": {
+        "vision_log_seq": 8,
+        "mission_seq": null,
+        "ref": "governance/decisions/D-2026-08-14-mission-lead.md"
+      },
+      "notes": "État historique de claims à nettoyer par l'issue 433."
+    },
+    {
+      "id": "coord.work-packages",
+      "title": "Packages de travail de coordination",
+      "path": "coordination/work-packages.json",
+      "anchor": null,
+      "kind": "data",
+      "scope": "coordination_ops",
+      "version": "inventaire-2026-08-14",
+      "version_source": "assigned_by_inventory",
+      "status": "active",
+      "owner": "copilot",
+      "superseded_by": null,
+      "prevails_over": [],
+      "positions": [
+        {
+          "topic": "coordination_scale",
+          "position": "70_packages_0_claim",
+          "locator": "coordination/work-packages.json:1"
+        }
+      ],
+      "digest": {
+        "policy": "content_sha256",
+        "value": "8952b9c2ab50546782a129e59999e5df23305a6fca315438510865b4a1633d54",
+        "checked_at": "2026-08-14",
+        "delegated_to": null
+      },
+      "retention": "in_force",
+      "cleanup_issue": null,
+      "resolution_issue": null,
+      "decision": {
+        "vision_log_seq": null,
+        "mission_seq": null,
+        "ref": null
+      },
+      "notes": "Les données déclarent 70 packages et aucun claim actif."
+    },
+    {
+      "id": "stories.orch-001",
+      "title": "Story ORCH-001",
+      "path": "stories/ORCH-001.md",
+      "anchor": null,
+      "kind": "story",
+      "scope": "orchestration",
+      "version": "ORCH-001",
+      "version_source": "declared_in_file",
+      "status": "archived",
+      "owner": "copilot",
+      "superseded_by": null,
+      "prevails_over": [],
+      "positions": [],
+      "digest": {
+        "policy": "content_sha256",
+        "value": "c09d24d3de782735af42d0152c60e9aafaf481b2bf21478d1aa6d7e605333681",
+        "checked_at": "2026-08-14",
+        "delegated_to": null
+      },
+      "retention": "historical_record",
+      "cleanup_issue": null,
+      "resolution_issue": null,
+      "decision": {
+        "vision_log_seq": 9,
+        "mission_seq": null,
+        "ref": "issue-432"
+      },
+      "notes": "Archive de la story du contrôle ORCH-001."
+    },
+    {
+      "id": "registres.mission",
+      "title": "Registre de mission",
+      "path": "Registres/mission.jsonl",
+      "anchor": null,
+      "kind": "ledger",
+      "scope": "evidence_ledger",
+      "version": "registre-hash-chain",
+      "version_source": "assigned_by_inventory",
+      "status": "active",
+      "owner": "orchestrateur",
+      "superseded_by": null,
+      "prevails_over": [],
+      "positions": [],
+      "digest": {
+        "policy": "delegated",
+        "value": null,
+        "checked_at": "2026-08-14",
+        "delegated_to": "gates.yml:registres (registre.py verify + ancrage)"
+      },
+      "retention": "in_force",
+      "cleanup_issue": null,
+      "resolution_issue": null,
+      "decision": {
+        "vision_log_seq": null,
+        "mission_seq": null,
+        "ref": null
+      },
+      "notes": "Le registre est contrôlé par vérification de chaîne et ancrage."
+    },
+    {
+      "id": "canon.etat-systeme",
+      "title": "État-système — ForgeAI Toolkit",
+      "path": "CANON/ETAT-SYSTEME.md",
+      "anchor": null,
+      "kind": "spec",
+      "scope": "system_state",
+      "version": "2026-08-01",
+      "version_source": "declared_in_file",
+      "status": "active",
+      "owner": "nathan",
+      "superseded_by": null,
+      "prevails_over": [],
+      "positions": [],
+      "digest": {
+        "policy": "content_sha256",
+        "value": "1db70255ef89a5bb73adbe39095e39002075cfc2c5f968eb7ab35e52456437f4",
+        "checked_at": "2026-08-14",
+        "delegated_to": null
+      },
+      "retention": "in_force",
+      "cleanup_issue": null,
+      "resolution_issue": null,
+      "decision": {
+        "vision_log_seq": null,
+        "mission_seq": null,
+        "ref": null
+      },
+      "notes": "Canon vivant mis à jour le 2026-08-01."
+    },
+    {
+      "id": "canon.spec-stacks",
+      "title": "Spécification des stacks",
+      "path": "CANON/spec-stacks.md",
+      "anchor": null,
+      "kind": "spec",
+      "scope": "architecture",
+      "version": "2026-07-19",
+      "version_source": "declared_in_file",
+      "status": "active",
+      "owner": "nathan",
+      "superseded_by": null,
+      "prevails_over": [],
+      "positions": [],
+      "digest": {
+        "policy": "content_sha256",
+        "value": "b2622cbf7b9355b60eb304b9d93cf876030ff7ddc28115e5048764ac833f0a76",
+        "checked_at": "2026-08-14",
+        "delegated_to": null
+      },
+      "retention": "in_force",
+      "cleanup_issue": null,
+      "resolution_issue": null,
+      "decision": {
+        "vision_log_seq": null,
+        "mission_seq": null,
+        "ref": null
+      },
+      "notes": "Spécification approuvée par Nathan le 2026-07-19."
+    },
+    {
+      "id": "canon.spec-web-ui",
+      "title": "Spécification de l'interface web",
+      "path": "CANON/spec-web-ui.md",
+      "anchor": null,
+      "kind": "spec",
+      "scope": "architecture",
+      "version": "inventaire-2026-08-14",
+      "version_source": "assigned_by_inventory",
+      "status": "active",
+      "owner": "nathan",
+      "superseded_by": null,
+      "prevails_over": [],
+      "positions": [],
+      "digest": {
+        "policy": "content_sha256",
+        "value": "6075005e31c1c041bba0a54bc298c28f7b0c80b5149c8e68f35cecb86834a1bf",
+        "checked_at": "2026-08-14",
+        "delegated_to": null
+      },
+      "retention": "in_force",
+      "cleanup_issue": null,
+      "resolution_issue": null,
+      "decision": {
+        "vision_log_seq": null,
+        "mission_seq": null,
+        "ref": null
+      },
+      "notes": "Spécification locale de la surface web v1."
+    },
+    {
+      "id": "manifests.roles",
+      "title": "Manifeste des rôles",
+      "path": "manifests/roles.yaml",
+      "anchor": null,
+      "kind": "manifest",
+      "scope": "ide_contract",
+      "version": "inventaire-2026-08-14",
+      "version_source": "assigned_by_inventory",
+      "status": "active",
+      "owner": "orchestrateur",
+      "superseded_by": null,
+      "prevails_over": [],
+      "positions": [],
+      "digest": {
+        "policy": "content_sha256",
+        "value": "e4035b788aac96271a24053134b5f70372d93433b3c86b4dcee3ba79d1810ccc",
+        "checked_at": "2026-08-14",
+        "delegated_to": null
+      },
+      "retention": "in_force",
+      "cleanup_issue": null,
+      "resolution_issue": null,
+      "decision": {
+        "vision_log_seq": null,
+        "mission_seq": null,
+        "ref": null
+      },
+      "notes": "Manifeste des rôles routés par le bridge."
+    },
+    {
+      "id": "readme",
+      "title": "README du dépôt",
+      "path": "README.md",
+      "anchor": null,
+      "kind": "doctrine",
+      "scope": "governance_method",
+      "version": "inventaire-2026-08-14",
+      "version_source": "assigned_by_inventory",
+      "status": "active",
+      "owner": "nathan",
+      "superseded_by": null,
+      "prevails_over": [],
+      "positions": [],
+      "digest": {
+        "policy": "content_sha256",
+        "value": "4fb98ed22f2ea0ce20f78b4434f1ee85dfa9e0c1981b2808f1fabf4a064b6a34",
+        "checked_at": "2026-08-14",
+        "delegated_to": null
+      },
+      "retention": "in_force",
+      "cleanup_issue": null,
+      "resolution_issue": null,
+      "decision": {
+        "vision_log_seq": null,
+        "mission_seq": null,
+        "ref": null
+      },
+      "notes": "Point d'entrée documentaire du dépôt."
+    },
+    {
+      "id": "gov.decision-mission-lead",
+      "title": "Décision de mission lead",
+      "path": "governance/decisions/D-2026-08-14-mission-lead.md",
+      "anchor": null,
+      "kind": "decision",
+      "scope": "orchestration",
+      "version": "2026-08-14",
+      "version_source": "declared_in_file",
+      "status": "active",
+      "owner": "nathan",
+      "superseded_by": null,
+      "prevails_over": [],
+      "positions": [],
+      "digest": {
+        "policy": "content_sha256",
+        "value": "6195f3957e7db0d78aa950044ebd18ba0c555d51918e4cd8feb7d3aa0a0272c5",
+        "checked_at": "2026-08-14",
+        "delegated_to": null
+      },
+      "retention": "in_force",
+      "cleanup_issue": null,
+      "resolution_issue": null,
+      "decision": {
+        "vision_log_seq": null,
+        "mission_seq": null,
+        "ref": "https://github.com/leon36000/ForgeAI-Toolkit/issues/481"
+      },
+      "notes": "Décision versionnée matérialisant le mission lead Claude Code Opus."
+    },
+    {
+      "id": "adr.rag-004a",
+      "title": "ADR-RAG-004A — Contrat d'ancrage vérifiable",
+      "path": "CANON/adr/ADR-RAG-004A-grounding-contract.md",
+      "anchor": null,
+      "kind": "adr",
+      "scope": "architecture",
+      "version": "PROPOSED",
+      "version_source": "declared_in_file",
+      "status": "active",
+      "owner": "nathan",
+      "superseded_by": null,
+      "prevails_over": [],
+      "positions": [],
+      "digest": {
+        "policy": "content_sha256",
+        "value": "e337c17b5c7d506506b011f648167b18ac2735d2c1a79c40c7224858ce4c3031",
+        "checked_at": "2026-08-14",
+        "delegated_to": null
+      },
+      "retention": "in_force",
+      "cleanup_issue": null,
+      "resolution_issue": null,
+      "decision": {
+        "vision_log_seq": null,
+        "mission_seq": null,
+        "ref": null
+      },
+      "notes": "ADR proposé, en attente de l'approbation Nathan."
+    },
+    {
+      "id": "adr.secret-020a",
+      "title": "ADR-SECRET-020A — OpenBao unseal permissions",
+      "path": "CANON/adr/ADR-SECRET-020A-openbao-unseal-permissions.md",
+      "anchor": null,
+      "kind": "adr",
+      "scope": "architecture",
+      "version": "inventaire-2026-08-14",
+      "version_source": "assigned_by_inventory",
+      "status": "active",
+      "owner": "nathan",
+      "superseded_by": null,
+      "prevails_over": [],
+      "positions": [],
+      "digest": {
+        "policy": "content_sha256",
+        "value": "38038d57dfd017c2fb55b1b6be0b4fa3972c8e73f292e7f89725518fe10baa36",
+        "checked_at": "2026-08-14",
+        "delegated_to": null
+      },
+      "retention": "in_force",
+      "cleanup_issue": null,
+      "resolution_issue": null,
+      "decision": {
+        "vision_log_seq": null,
+        "mission_seq": null,
+        "ref": null
+      },
+      "notes": "ADR inventorié sous le répertoire canonique des décisions."
+    },
+    {
+      "id": "adr.trust-019a",
+      "title": "ADR-TRUST-019A — Registres modèle de menace racine de confiance",
+      "path": "CANON/adr/ADR-TRUST-019A-registres-modele-de-menace-racine-confiance.md",
+      "anchor": null,
+      "kind": "adr",
+      "scope": "architecture",
+      "version": "inventaire-2026-08-14",
+      "version_source": "assigned_by_inventory",
+      "status": "active",
+      "owner": "nathan",
+      "superseded_by": null,
+      "prevails_over": [],
+      "positions": [],
+      "digest": {
+        "policy": "content_sha256",
+        "value": "4325fb6f5f6326d58a673138e54efb994a4012a0843434d70b04a04989076d5a",
+        "checked_at": "2026-08-14",
+        "delegated_to": null
+      },
+      "retention": "in_force",
+      "cleanup_issue": null,
+      "resolution_issue": null,
+      "decision": {
+        "vision_log_seq": null,
+        "mission_seq": null,
+        "ref": null
+      },
+      "notes": "ADR inventorié sous le répertoire canonique des décisions."
+    }
+  ]
+}

@@ -1,5 +1,8 @@
 # AGENTS — ForgeAI Toolkit
 
+> Hiérarchie d'autorité de ce dépôt (sources normatives, statuts, conflits connus) :
+> [governance/AUTHORITY-MAP.md](governance/AUTHORITY-MAP.md).
+
 ## Mission
 Construire le ForgeAI Toolkit selon le plan maître BMAD
 ([CANON/PLAN-MAITRE-EXECUTION-BMAD-v1.0.md](CANON/PLAN-MAITRE-EXECUTION-BMAD-v1.0.md)).
