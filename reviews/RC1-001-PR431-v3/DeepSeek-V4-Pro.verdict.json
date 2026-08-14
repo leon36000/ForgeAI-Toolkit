@@ -1,0 +1,25 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "majeure",
+   "fichier": "governance/authority.json",
+   "description": "La source active gov.decision-mission-lead matérialise la décision #481 « Claude Code Opus est mission lead » mais ne déclare aucune position sur le sujet contrôlé orchestration_seat, contrairement aux autres sources conflictuelles.",
+   "preuve": "authority.json : entrée gov.decision-mission-lead positions: [] ; D-2026-08-14-mission-lead.md:9 : « Claude Code Opus est mission lead, gestionnaire du DAG et intégrateur » ; authority.json topics.orchestration_seat vocabulaire = [claude_code_session_lead, copilot_vscode_cockpit] ; conflicts-baseline.json orchestration_seat omet gov.decision-mission-lead."
+  },
+  {
+   "severite": "majeure",
+   "fichier": "governance/vision-log.jsonl",
+   "description": "Le journal de vision référence des décisions incohérentes avec l'inventaire canonique : claude-md y est rattaché à la décision mission-lead alors que authority.json le rattache à l'issue 484.",
+   "preuve": "vision-log.jsonl seq=3 source_id=claude-md decision: governance/decisions/D-2026-08-14-mission-lead.md ; authority.json claude-md resolution_issue: 484 et decision.ref: issue-484."
+  }
+ ],
+ "date_heure": "2026-08-14T07:18:15.359884+00:00",
+ "prompt_sha256": "0bdbd6940d34b7f7043b723bb4a3719cd143a8cf3b8a3640d2a70a3949f1af3a",
+ "reviewer_model": "DeepSeek-V4-Pro",
+ "modele_servi": "deepseek-v4-pro-direct",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}
