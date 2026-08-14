@@ -1,0 +1,12 @@
+{
+ "verdict": "APPROVE",
+ "objections": [],
+ "date_heure": "2026-08-14T09:17:45.271637+00:00",
+ "prompt_sha256": "7c9ce4466e702dc177086158e9657b0a3c89c601fcfdf91d0ea6ddd6508cacfd",
+ "reviewer_model": "Qwen3.7-Max",
+ "modele_servi": "qwen37-max-openrouter",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}
