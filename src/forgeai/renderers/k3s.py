@@ -14,7 +14,7 @@ import textwrap
 from typing import NamedTuple
 from urllib.parse import urlsplit
 
-from forgeai.core.models import DeploymentPlan, ServiceSpec, NodeInventaire, valider_placement, CapaciteCluster, QuotaError, ProbeType
+from forgeai.core.models import DeploymentPlan, ServiceSpec, NodeInventaire, valider_placement, CapaciteCluster, QuotaError, ProbeType, GPU_VENDORS_CONNUS
 from forgeai.i18n import t
 from forgeai.renderers._openbao import UNSEAL_SCRIPT as _UNSEAL_SCRIPT
 
@@ -393,8 +393,12 @@ def _deployment(svc: ServiceSpec, effective_node: str | None = None,
     name = _safe(svc.name, "name")
     image = _safe(svc.image, "image")
 
-    # Vérification explicite du vendor GPU avant tout rendu du bloc GPU.
-    if svc.gpu and svc.gpu_vendor is not None and svc.gpu_vendor not in {"nvidia", "amd", "intel"}:
+    # Vérification explicite du vendor GPU avant tout rendu du bloc GPU. Défense en
+    # profondeur : `ServiceSpec.__post_init__` (core/models.py, BUG-servicespec-validation)
+    # refuse déjà tout gpu_vendor hors GPU_VENDORS_CONNUS dès la construction, donc cette
+    # branche est normalement inatteignable — conservée pour ne pas dépendre implicitement
+    # de l'invariant amont si un ServiceSpec venait à être construit autrement.
+    if svc.gpu and svc.gpu_vendor is not None and svc.gpu_vendor not in GPU_VENDORS_CONNUS:
         raise ValueError(t("renderers.k3s.vendor_gpu_non_supporte", gpu_vendor=svc.gpu_vendor))
     # GPU par vendor : chaque vendor reçoit sa ressource de device plugin
     # (LAB-033A). Le passthrough hostPath est supprimé car le cgroup devices

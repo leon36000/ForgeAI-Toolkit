@@ -199,6 +199,8 @@
   "core.models.ressources.limits_inferieures_cpu": "ERR_RES_LIMITS_INFERIEURES: limits.cpu ({lim_cpu}) < requests.cpu ({req_cpu})",
   "core.models.ressources.limits_inferieures_memoire": "ERR_RES_LIMITS_INFERIEURES: limits.memory ({lim_mem}) < requests.memory ({req_mem})",
   "core.models.ressources.memoire_invalide": "ERR_RES_MEMOIRE_INVALIDE: '{val}' pour {nom} n'est pas un entier suivi de Mi ou Gi.",
+  "core.models.service.gpu_vendor_inconnu": "ERR_SERVICE_VENDOR_INCONNU : gpu_vendor '{gpu_vendor}' inconnu (autorisés : nvidia, amd, intel, None)",
+  "core.models.service.port_hors_bornes": "ERR_SERVICE_PORT_BORNES : {nom_champ}={valeur_repr} hors bornes (attendu un entier dans [1, 65535])",
   "core.registre_ancrage.checkpoint_de.registre_vide": "impossible de creer un checkpoint sur un registre vide : un ancrage-de-rien est interdit",
   "core.validation.resolve_within.chemin_hors_racine": "chemin hors racine : {cible!r} n'est pas dans {racine!r}",
   "core.validation.valider_nom_simple.nom_invalide": "nom invalide : {name!r}",

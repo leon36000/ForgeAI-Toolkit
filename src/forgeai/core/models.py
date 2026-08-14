@@ -24,6 +24,19 @@ def _rejeter_caracteres_de_controle(nom_champ: str, valeur: str) -> None:
                                 caractere_repr=repr(caractere)))
 
 
+def _valider_port(nom_champ: str, valeur: int) -> None:
+    """Lève ValueError si `valeur` n'est pas un port TCP valide : un entier (jamais un bool,
+    sous-classe d'`int` en Python) dans [1, 65535]. Reprend EXACTEMENT le motif déjà utilisé
+    pour valider le port de `adopted_endpoint` dans `ServiceSpec.__post_init__` (ci-dessous) :
+    même famille d'exception (ValueError), même borne [1, 65535]. Centralisé ici car
+    `host_port` et `container_port` (BUG-servicespec-validation / BUG B) n'étaient bornés
+    NULLE PART avant rendu — un port invalide produisait un manifeste k3s/compose invalide
+    au lieu d'être refusé dès la construction du ServiceSpec."""
+    if not isinstance(valeur, int) or isinstance(valeur, bool) or valeur < 1 or valeur > 65535:
+        raise ValueError(t("core.models.service.port_hors_bornes",
+                            nom_champ=nom_champ, valeur_repr=repr(valeur)))
+
+
 class RenderTarget(Enum):
     COMPOSE = "docker-compose"
     K3S = "k3s"
@@ -192,6 +205,17 @@ class PlacementError(ValueError):
     """
 
 
+# Vendors GPU reconnus pour la réservation au rendu — liste canonique UNIQUE, RES-012A/LAB-033A.
+# Reprise de la liste jusqu'ici codée en dur dans `renderers/k3s.py` (seul renderer qui la
+# validait). Centralisée ici pour que `ServiceSpec.__post_init__` (BUG-servicespec-validation /
+# BUG A) et `NodeInventaire.__post_init__` partagent la MÊME source de vérité : sans ça, k3s.py
+# refusait un `gpu_vendor` inconnu au rendu tandis que `renderers/compose.py` (qui ne valide
+# rien, `vendor = svc.gpu_vendor or "nvidia"`) le faisait silencieusement retomber sur "nvidia"
+# — le même plan produisait un refus explicite sur un renderer et un comportement divergent et
+# silencieux sur l'autre.
+GPU_VENDORS_CONNUS: frozenset[str] = frozenset({"nvidia", "amd", "intel"})
+
+
 @dataclass(frozen=True)
 class NodeInventaire:
     hostname: str
@@ -204,7 +228,7 @@ class NodeInventaire:
         _rejeter_caracteres_de_controle("hostname", self.hostname)
         if self.vram_mib < 0:
             raise ValueError(t("core.models.placement.vram_invalide", vram_mib=self.vram_mib))
-        vendors_autorises = {"nvidia", "amd", "intel", None}
+        vendors_autorises = GPU_VENDORS_CONNUS | {None}
         if self.gpu_vendor not in vendors_autorises:
             raise ValueError(t("core.models.placement.vendor_inconnu",
                                 gpu_vendor=self.gpu_vendor))
@@ -399,6 +423,21 @@ class ServiceSpec:
             _rejeter_caracteres_de_controle("healthcheck_url", self.healthcheck_url)
         if self.node is not None:
             _rejeter_caracteres_de_controle("node", self.node)
+        # BUG B (BUG-servicespec-validation) — host_port/container_port n'étaient bornés
+        # nulle part avant rendu. Même motif que la validation du port de `adopted_endpoint`
+        # plus bas dans cette même méthode (réutilisé via `_valider_port`, pas réinventé).
+        _valider_port("host_port", self.host_port)
+        _valider_port("container_port", self.container_port)
+        # BUG A (BUG-servicespec-validation) — gpu_vendor n'était validé par AUCUN renderer
+        # de façon cohérente : k3s.py refuse un vendor inconnu au rendu
+        # (test_k3s_gpu_vendor_inconnu_refuse) mais compose.py le fait silencieusement
+        # retomber sur "nvidia". Validé ICI, à la construction, pour que les deux renderers
+        # héritent automatiquement de la même garde. Vérifié indépendamment de `self.gpu` :
+        # un gpu_vendor incohérent est un défaut de données dès la construction, pas
+        # seulement au moment où un renderer le lirait.
+        if self.gpu_vendor is not None and self.gpu_vendor not in GPU_VENDORS_CONNUS:
+            raise ValueError(t("core.models.service.gpu_vendor_inconnu",
+                                gpu_vendor=self.gpu_vendor))
         for i, volume in enumerate(self.volumes):
             _rejeter_caracteres_de_controle(f"volumes[{i}]", volume)
         for i, arg in enumerate(self.command):
