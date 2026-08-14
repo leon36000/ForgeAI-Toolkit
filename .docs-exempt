@@ -14,3 +14,11 @@ comportement sur un chemin CLI hors du dépôt change : rejeté au lieu d'être 
 tenté). governance/AUTHORITY-MAP.md documente déjà l'inventaire lui-même (#431) ; ce commit ne
 touche que l'outillage de validation, pas les données de gouvernance. Aucune story/doc
 utilisateur supplémentaire concernée.
+
+scripts/governance/validate_authority.py + tests/test_authority_map.py (2e commit) :
+durcissement défensif suite à une objection critique de revue scellée (round RC1-001-PR431-v7,
+DeepSeek-V4-Pro) — _validate_digests() confinait les chemins d'arguments CLI (_within_repo(),
+commit précédent) mais pas les chemins venant du champ `path` des données authority.json
+elles-mêmes (source de traversée distincte, modifiable par tout contributeur d'une PR future).
+Même garde _within_repo() réutilisée telle quelle, contrat CLI observable inchangé pour toute
+entrée valide. Aucune story/doc utilisateur concernée.

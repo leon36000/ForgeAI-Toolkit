@@ -463,7 +463,11 @@ def _validate_digests(
         if not isinstance(path_value, str):
             _error(errors, f"{source_id}: path invalide")
             continue
-        file_path = repo_root / path_value
+        try:
+            file_path = _within_repo(repo_root, repo_root / path_value)
+        except ValueError:
+            _error(errors, f"{source_id}: path hors du dépôt: {path_value!r}")
+            continue
         if not file_path.is_file():
             _error(errors, f"fichier d'empreinte absent: {path_value}")
             continue

@@ -192,6 +192,32 @@ def test_successeur_inconnu_rejete(tmp_path: Path) -> None:
     assert any("successeur inconnu: 'source-inconnue'" in error for error in errors)
 
 
+def test_digest_source_path_hors_du_depot_rejete(tmp_path: Path) -> None:
+    # Preuve fonctionnelle du correctif round v7 (objection critique DeepSeek-V4-Pro) :
+    # une source dont le champ `path` de authority.json pointe hors du dépôt (traversée
+    # relative) doit être rejetée par _validate_digests, pas seulement par les arguments
+    # CLI de main() — path_value vient des DONNÉES (modifiables par tout contributeur),
+    # pas seulement de la ligne de commande.
+    outside = tmp_path.parent / "outside-secret.txt"
+    outside.write_text("secret hors du dépôt\n", encoding="utf-8")
+    source = _source(
+        "source-a",
+        digest={
+            "policy": "content_sha256",
+            "value": "0" * 64,
+            "checked_at": "2026-08-14",
+            "delegated_to": None,
+        },
+    )
+    source["path"] = "../outside-secret.txt"
+    authority = _authority([source])
+
+    ok, errors = _check(authority, tmp_path)
+
+    assert not ok
+    assert any("path hors du dépôt" in error for error in errors)
+
+
 def test_empreinte_perimee_rejetee(tmp_path: Path) -> None:
     document = tmp_path / "document.md"
     document.write_text("version initiale\n", encoding="utf-8")
