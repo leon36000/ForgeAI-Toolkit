@@ -1,0 +1,19 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "tests/test_authority_map.py",
+   "description": "Dictionnaire avec des clés dupliquées dans la fonction helper `_source()`. Les clés `retention`, `cleanup_issue` et `resolution_issue` sont définies deux fois. Bien que Python l'accepte silencieusement (la dernière déclaration écrase la première) et que cela n'impacte pas l'exécution des tests, c'est une erreur de copier-coller qui peut générer des avertissements de linters/qualité (ex: SonarCloud, flake8) et nuit à la maintenabilité.",
+   "preuve": "tests/test_authority_map.py:50-52 et 58-60 : `\"retention\": retention, \"cleanup_issue\": cleanup_issue, \"resolution_issue\": resolution_issue` est présent avant et après le bloc `\"decision\": {...}`."
+  }
+ ],
+ "date_heure": "2026-08-14T08:15:19.956915+00:00",
+ "prompt_sha256": "11aef0224474cb98191bb2cc9432176349c15ac125f1846c2b85fdbf44c55808",
+ "reviewer_model": "Qwen3.7-Max",
+ "modele_servi": "qwen37-max-openrouter",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

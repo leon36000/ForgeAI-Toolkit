@@ -1,0 +1,31 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "majeure",
+   "fichier": "governance/authority.json",
+   "description": "Pour `canon.plan-maitre-bmad` et `master-plan`, `resolution_issue` vaut 486 mais `decision.ref` vaut encore `issue-432`. Le contexte de la PR indique explicitement que #432 est strictement scopé à AGENTS.md et ne résout rien sur le conflit plan_of_record, et que #486 a été ouverte pour ce conflit. Laisser `decision.ref` à `issue-432` est donc une référence de décision incorrecte dans l'inventaire canonique.",
+   "preuve": "authority.json, source `canon.plan-maitre-bmad` : `\"resolution_issue\": 486` et `\"decision\": {\"vision_log_seq\": 5, \"ref\": \"issue-432\"}` ; source `master-plan` : `\"resolution_issue\": 486` et `\"decision\": {\"vision_log_seq\": 6, \"ref\": \"issue-432\"}`."
+  },
+  {
+   "severite": "majeure",
+   "fichier": "governance/vision-log.jsonl",
+   "description": "Les entrées seq 5 et seq 6 enregistrent comme `decision` `governance/decisions/D-2026-08-14-mission-lead.md` pour `canon.plan-maitre-bmad` et `master-plan`, alors que la résolution documentée de leur conflit plan_of_record est l'issue #486. Le journal append-only n'a pas reçu d'entrées correctives pour ces sources, contrairement aux corrections seq 12/13 pour `claude-md` et `canon.directives-perimetre`. La décision enregistrée pour ces changements de vision est donc fausse.",
+   "preuve": "vision-log.jsonl, seq 5 (`source_id: canon.plan-maitre-bmad`) et seq 6 (`source_id: master-plan`) : `\"decision\":\"governance/decisions/D-2026-08-14-mission-lead.md\"` ; authority.json `canon.plan-maitre-bmad` et `master-plan` ont `resolution_issue: 486`."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "scripts/governance/validate_authority.py",
+   "description": "Le validateur ne vérifie pas que `decision.vision_log_seq` pointe vers une entrée du journal de vision dont `source_id` correspond, ni que `decision.ref` est cohérent avec `resolution_issue` ou le payload de l'entrée. Il contrôle seulement l'existence de la séquence, ce qui laisse passer les incohérences constatées dans les données canoniques.",
+   "preuve": "validate_authority.py, fonction `_validate_vision_log` : uniquement `if vision_seq is not None and vision_seq not in vision_sequences: _error(...)` ; aucun contrôle `entry['source_id'] == source_id` ni comparaison de `decision.ref`."
+  }
+ ],
+ "date_heure": "2026-08-14T08:30:53.445895+00:00",
+ "prompt_sha256": "11aef0224474cb98191bb2cc9432176349c15ac125f1846c2b85fdbf44c55808",
+ "reviewer_model": "DeepSeek-V4-Pro",
+ "modele_servi": "deepseek-v4-pro-direct",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}
