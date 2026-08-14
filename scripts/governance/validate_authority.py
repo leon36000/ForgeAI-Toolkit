@@ -201,10 +201,13 @@ def _real_conflicts(sources: list[dict[str, Any]]) -> list[dict[str, Any]]:
     for topic, positions in sorted(by_topic.items()):
         if len(positions) < 2:
             continue
+        # TOUTES les sources qui tiennent une position sur ce sujet contrôlé participent au
+        # conflit — pas seulement une source représentative par valeur de position. Une source
+        # qui partage la même position qu'une autre (ex. deux sources d'accord entre elles mais
+        # en désaccord avec une 3e) doit rester visible comme preuve du conflit, sinon elle
+        # disparaît silencieusement du rapport.
         selected_sources = sorted(
-            min(sorted(source_ids))
-            for source_ids in positions.values()
-            if source_ids
+            {source_id for source_ids in positions.values() for source_id in source_ids}
         )
         selected_positions = sorted(positions)
         if len(selected_sources) >= 2:

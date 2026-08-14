@@ -1,0 +1,25 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "critique",
+   "fichier": "governance/authority.json",
+   "description": "La source canon.plan-integral est active et sa note indique qu'elle affirme « Fable orchestrateur unique » aux lignes 27 et 251, mais aucune position orchestration_seat n'est déclarée pour cette source. Le sujet contrôlé orchestration_seat ne comporte que claude_code_session_lead et copilot_vscode_cockpit. Le conflit entre cette déclaration et les positions de agents-md/agents-md.orch-001 n'est donc ni modélisé ni signalé par la CI, contrairement au critère exigeant que tout conflit actif nouveau soit signalé.",
+   "preuve": "`governance/authority.json`, source `canon.plan-integral` : `\"notes\": \"Le document se déclare document de référence unique et affirme Fable orchestrateur unique aux lignes 27 et 251.\"` ; `\"positions\"` contient uniquement `plan_of_record`. `topics.orchestration_seat.vocabulaire` vaut `[\"claude_code_session_lead\",\"copilot_vscode_cockpit\"]` ; `governance/conflicts-baseline.json`, conflit `orchestration_seat`, sources `[\"agents-md\",\"agents-md.orch-001\"]`."
+  },
+  {
+   "severite": "majeure",
+   "fichier": "governance/authority.json",
+   "description": "Le critère « aucune source active/conflictuelle sans propriétaire, version et empreinte » n'est pas respecté pour `registres.mission` : source active avec `digest.policy = delegated` et `value = null`, donc aucune empreinte n'est calculée ou vérifiée par `validate_authority.py`.",
+   "preuve": "`governance/authority.json`, source `registres.mission` : `\"status\": \"active\"`, `\"digest\": { \"policy\": \"delegated\", \"value\": null, \"delegated_to\": \"gates.yml:registres (registre.py verify + ancrage)\" }`."
+  }
+ ],
+ "date_heure": "2026-08-14T06:54:04.923185+00:00",
+ "prompt_sha256": "b73a6a93ebe6a274d7eab3abd74d64ecd02e63004b86380e81582ece92590d27",
+ "reviewer_model": "DeepSeek-V4-Pro",
+ "modele_servi": "deepseek-v4-pro-direct",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

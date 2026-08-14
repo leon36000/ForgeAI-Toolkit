@@ -39,7 +39,7 @@ Cette carte est le rendu de `governance/authority.json`.
 | `agents-md.orch-001` | `AGENTS.md` — Plan de contrôle multi-IDE (ORCH-001 — actif depuis M0) | conflicted | `orchestration` | `copilot` | `—` |
 | `canon.directives-perimetre` | `CANON/directives-perimetre.md` | conflicted | `security` | `nathan` | `—` |
 | `canon.etat-systeme` | `CANON/ETAT-SYSTEME.md` | active | `system_state` | `nathan` | `—` |
-| `canon.plan-integral` | `CANON/plan-integral.md` | active | `plan_of_record` | `nathan` | `—` |
+| `canon.plan-integral` | `CANON/plan-integral.md` | conflicted | `plan_of_record` | `nathan` | `—` |
 | `canon.plan-maitre-bmad` | `CANON/PLAN-MAITRE-EXECUTION-BMAD-v1.0.md` | conflicted | `plan_of_record` | `nathan` | `—` |
 | `canon.spec-stacks` | `CANON/spec-stacks.md` | active | `architecture` | `nathan` | `—` |
 | `canon.spec-web-ui` | `CANON/spec-web-ui.md` | active | `architecture` | `nathan` | `—` |
@@ -66,6 +66,7 @@ Cette carte est le rendu de `governance/authority.json`.
 - `agents-md.orch-001` : `coordination_scale` = `64_packages_6_claims` (AGENTS.md:84)
 - `canon.directives-perimetre` : `workspace_confinement` = `repo_only_strict` (CANON/directives-perimetre.md:7)
 - `canon.plan-integral` : `plan_of_record` = `canon_plan_integral` (CANON/plan-integral.md:4)
+- `canon.plan-integral` : `orchestration_seat` = `claude_code_session_lead` (CANON/plan-integral.md:27)
 - `canon.plan-maitre-bmad` : `plan_of_record` = `canon_plan_maitre_bmad_v1` (CANON/PLAN-MAITRE-EXECUTION-BMAD-v1.0.md:1-2)
 - `claude-md` : `workspace_confinement` = `repo_plus_external_governance_tooling` (CLAUDE.md:16)
 - `coord.work-packages` : `coordination_scale` = `70_packages_0_claim` (coordination/work-packages.json:1)

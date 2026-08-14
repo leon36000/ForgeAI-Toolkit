@@ -11,7 +11,8 @@
       "sujet": "orchestration_seat",
       "sources": [
         "agents-md",
-        "agents-md.orch-001"
+        "agents-md.orch-001",
+        "canon.plan-integral"
       ],
       "positions": [
         "claude_code_session_lead",
@@ -19,7 +20,7 @@
       ],
       "owner": "nathan",
       "resolution_issue": 432,
-      "vision_log_seq": 1
+      "vision_log_seq": 10
     },
     {
       "kind": "topic_position",
@@ -41,7 +42,8 @@
       "sujet": "workspace_confinement",
       "sources": [
         "agents-md",
-        "canon.directives-perimetre"
+        "canon.directives-perimetre",
+        "claude-md"
       ],
       "positions": [
         "repo_only_strict",

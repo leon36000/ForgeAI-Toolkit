@@ -245,7 +245,7 @@
       "scope": "plan_of_record",
       "version": "2.0-INTEGRALE",
       "version_source": "declared_in_file",
-      "status": "active",
+      "status": "conflicted",
       "owner": "nathan",
       "superseded_by": null,
       "prevails_over": [
@@ -257,6 +257,11 @@
           "topic": "plan_of_record",
           "position": "canon_plan_integral",
           "locator": "CANON/plan-integral.md:4"
+        },
+        {
+          "topic": "orchestration_seat",
+          "position": "claude_code_session_lead",
+          "locator": "CANON/plan-integral.md:27"
         }
       ],
       "digest": {
@@ -267,13 +272,13 @@
       },
       "retention": "in_force",
       "cleanup_issue": null,
-      "resolution_issue": null,
+      "resolution_issue": 432,
       "decision": {
-        "vision_log_seq": null,
+        "vision_log_seq": 10,
         "mission_seq": null,
         "ref": null
       },
-      "notes": "Le document se déclare document de référence unique et affirme Fable orchestrateur unique aux lignes 27 et 251."
+      "notes": "Le document se déclare document de référence unique et affirme Fable orchestrateur unique aux lignes 27 et 251 (invariant 6) — déclaré en position sur orchestration_seat (revue RC1-001-PR431, objection critique DeepSeek-V4-Pro corrigée : cette affirmation devait être modélisée, pas seulement mentionnée en note, pour que le conflit avec agents-md/agents-md.orch-001 soit détecté par la CI)."
     },
     {
       "id": "canon.plan-maitre-bmad",
