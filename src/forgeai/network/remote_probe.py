@@ -9,10 +9,11 @@ import re
 import shlex
 import subprocess
 import tempfile
-from pathlib import Path
 from dataclasses import dataclass
+from pathlib import Path
 from typing import Callable, Optional
 
+from forgeai.core.models import HardwareProfile
 from forgeai.core.registre import append
 from forgeai.core.runner import CommandRunner
 from forgeai.hardware.detect import HardwareDetector
@@ -162,7 +163,7 @@ class NodeProbe:
     hardware: dict
 
 
-class _CachedDetector:
+class _CachedDetector(HardwareDetector):
     """Adaptateur : expose l'interface `full_report()` de `HardwareDetector` en servant
     un rapport DÉJÀ calculé (aucune sonde). `run_checks()` -> `check_hardware()` appelle
     `.full_report()` sur le détecteur qu'on lui passe ; sans cet adaptateur, il resonderait
@@ -170,12 +171,20 @@ class _CachedDetector:
     reformuler `Check.detail` avec des données déjà connues du premier `full_report()`).
     Sur `SshRunner`, chaque `full_report()` déclenche 4 `runner.run()` (lscpu, nvidia-smi,
     lspci, df), chacun une connexion SSH complète (handshake + auth, sans multiplexage
-    ControlMaster/ControlPersist) : la duplication double inutilement le coût réseau."""
+    ControlMaster/ControlPersist) : la duplication double inutilement le coût réseau.
+    Hérite de `HardwareDetector` uniquement pour satisfaire le contrat de type de
+    `run_checks()` ; les méthodes de sondage du parent ne sont jamais appelées."""
 
-    def __init__(self, report) -> None:
+    def __init__(
+        self,
+        runner: CommandRunner,
+        report: HardwareProfile,
+        meminfo_path: str = "/proc/meminfo",
+    ) -> None:
+        super().__init__(runner, meminfo_path=meminfo_path)
         self._report = report
 
-    def full_report(self):
+    def full_report(self) -> HardwareProfile:
         return self._report
 
 
@@ -214,7 +223,7 @@ def probe_remote_node(
         # double-full-report : 4 runner.run() SSH redondants par appel).
         checks = run_checks(
             runner,
-            _CachedDetector(report),
+            _CachedDetector(runner, report, meminfo_path=tmp_path),
             http_ok or (lambda url: False),
         )
         backends = available_backends(checks)
