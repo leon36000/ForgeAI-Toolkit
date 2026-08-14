@@ -1,10 +1,22 @@
 from __future__ import annotations
 
 import copy
+import importlib.util
 import json
 from pathlib import Path
 
-from scripts.governance.validate_authority import check, cycles, digest_of, render
+# Chargement par chemin absolu (motif établi par tests/test_reviews_gate.py) — indépendant
+# du pythonpath/CWD, robuste au shadowing du paquet "tests" par un paquet global homonyme.
+REPO = Path(__file__).resolve().parent.parent
+_spec = importlib.util.spec_from_file_location(
+    "validate_authority", REPO / "scripts" / "governance" / "validate_authority.py"
+)
+_validate_authority = importlib.util.module_from_spec(_spec)
+_spec.loader.exec_module(_validate_authority)
+check = _validate_authority.check
+cycles = _validate_authority.cycles
+digest_of = _validate_authority.digest_of
+render = _validate_authority.render
 
 
 def _source(
