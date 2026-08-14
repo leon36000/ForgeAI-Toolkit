@@ -587,13 +587,18 @@ def _validate_vision_log(
     errors: list[str],
 ) -> None:
     vision_path_value = authority.get("vision_log", "governance/vision-log.jsonl")
-    vision_path = (
-        repo_root / vision_path_value
-        if isinstance(vision_path_value, str)
-        else repo_root / "governance/vision-log.jsonl"
+    if not isinstance(vision_path_value, str):
+        vision_path_value = "governance/vision-log.jsonl"
+    try:
+        vision_path = _within_repo(repo_root, repo_root / vision_path_value)
+    except ValueError:
+        _error(errors, f"vision_log hors du dépôt: {vision_path_value!r}")
+        vision_sequences: set[int] = set()
+    else:
+        vision_sequences = _load_jsonl_sequences(vision_path)
+    mission_sequences = _load_jsonl_sequences(
+        _within_repo(repo_root, repo_root / "Registres" / "mission.jsonl")
     )
-    vision_sequences = _load_jsonl_sequences(vision_path)
-    mission_sequences = _load_jsonl_sequences(repo_root / "Registres" / "mission.jsonl")
     for source_id, source in by_id.items():
         decision = source.get("decision")
         if not isinstance(decision, dict):

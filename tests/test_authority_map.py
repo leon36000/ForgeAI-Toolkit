@@ -451,6 +451,20 @@ def test_rendu_est_idempotent(tmp_path: Path) -> None:
     assert errors == []
 
 
+def test_vision_log_path_hors_du_depot_rejete(tmp_path: Path) -> None:
+    # Preuve fonctionnelle du correctif round v8 (objection critique DeepSeek-V4-Pro) :
+    # le champ "vision_log" de authority.json (3e site de construction de chemin depuis
+    # des DONNÉES, distinct des chemins CLI de main() et du champ "path" des sources)
+    # doit lui aussi passer par _within_repo() avant toute lecture.
+    authority = _authority([_source("source-a")])
+    authority["vision_log"] = "../outside-vision-log.jsonl"
+
+    ok, errors = _check(authority, tmp_path)
+
+    assert not ok
+    assert any("vision_log hors du dépôt" in error for error in errors)
+
+
 def test_journal_de_vision_requis_pour_statut_non_actif(tmp_path: Path) -> None:
     authority = _authority(
         [
