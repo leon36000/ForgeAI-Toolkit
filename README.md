@@ -1,7 +1,7 @@
 # ForgeAI Toolkit
 
 Déployeur de référence d'infrastructures IA agentiques : wizard hardware-aware,
-catalogue 1576 entrées bilingue (FR/EN), multi-nœuds (Tailscale), gouvernance intégrée.
+catalogue <!-- state:catalogue.entries_total -->1576<!-- /state --> entrées bilingue (FR/EN), multi-nœuds (Tailscale), gouvernance intégrée.
 
 > Hiérarchie d'autorité de ce dépôt : [governance/AUTHORITY-MAP.md](governance/AUTHORITY-MAP.md).
 
@@ -74,7 +74,7 @@ PYTHONPATH=src python3 -m forgeai wizard --ci \
 ```
 
 Preuves scellées : `Registres/mission.jsonl` (chaîne sha256 vérifiée) — e2e Compose
-`CI_WITNESS=2a0b6221…`, e2e K3s `CI_WITNESS=bf9e40c7…`. Couverture 92 % (registre 98 %),
-revue aveugle code 3/3 APPROVE (vendors non-Anthropic). Le multi-nœuds est livré (7 sous-commandes `forgeai node`) et les
-traductions EN sont complètes (0 `description_en` vide sur 1576 briques) : l'ancien BLOCKED
+`CI_WITNESS=2a0b6221…`, e2e K3s `CI_WITNESS=bf9e40c7…`. Couverture <!-- state:observations.coverage.global -->94<!-- /state --> % (registre <!-- state:observations.coverage.registre -->98<!-- /state --> %),
+revue aveugle code <!-- state:governance.review_quorum -->3/3<!-- /state --> APPROVE (vendors non-Anthropic). Le multi-nœuds est livré (<!-- state:cli.subcommands_by_group.node -->7<!-- /state --> sous-commandes `forgeai node`) et les
+traductions EN sont complètes (<!-- state:catalogue.descriptions_en_missing -->0<!-- /state --> `description_en` vide sur <!-- state:catalogue.entries_total -->1576<!-- /state --> briques) : l'ancien BLOCKED
 sur la revue sécurité multi-nœuds est levé. Voir `Docs/reference/cli.md` pour la surface CLI.

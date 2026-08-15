@@ -1,0 +1,19 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "tests/test_state_current.py",
+   "description": "Le test test_valeurs_correctes_sur_etat_connu et d'autres tests utilisant tmp_path écrivent et relisent des fichiers JSON sans explicitement garantir la stabilité de l'encodage line-ending. Sous Windows, write_text(encoding='utf-8') peut insérer des \\r\\n tandis que _sha256() normalise via .replace(b'\\r\\n', b'\\n'). Cela ne provoque pas d'échec aujourd'hui (CI ubuntu-latest), mais le test ne protège pas contre un port futur.",
+   "preuve": "tests/test_state_current.py, helpers _write_json/_write_fixture_repo utilisent write_text(encoding='utf-8') sans newline=''; scripts/governance/state_current.py::_sha256 normalise \\r\\n -> \\n."
+  }
+ ],
+ "date_heure": "2026-08-15T16:51:56.862108+00:00",
+ "prompt_sha256": "fa062b8d7dbbd97090577516e5b0cf65a604cf8c8da3aa1955239c65d60d60b9",
+ "reviewer_model": "MiMo-Pro-V2",
+ "modele_servi": "mimo-pro-v2-openrouter",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}
