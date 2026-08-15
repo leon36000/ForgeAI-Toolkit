@@ -14,8 +14,8 @@
     "sha256_recomputed_ok": true
   },
   "ci": {
-    "jobs_total": 18,
-    "workflows": 4
+    "jobs_total": 19,
+    "workflows": 5
   },
   "cli": {
     "subcommands": [
@@ -103,6 +103,10 @@
     {
       "path": ".github/workflows/scope-guard.yml",
       "sha256": "77e4efb2f01162442d4ad3be6f864155bda668e5e1190fa11751bd1f5fd366cb"
+    },
+    {
+      "path": ".github/workflows/sonar-suppressions.yml",
+      "sha256": "c0cc4e9fc3e97fe416c98825fffe19a229ae767c9bebf3853c541386f81635eb"
     },
     {
       "path": ".github/workflows/sonarcloud.yml",
@@ -629,6 +633,10 @@
       "sha256": "2d4714138d7ae74daa1919fb6fd8c503ee69a01943355d8ea1fedb0e253db479"
     },
     {
+      "path": "tests/test_rc1016_sonar_suppressions.py",
+      "sha256": "ffb5ffd5a3e2d0f8ec9e2f6713ddfc463a9a874d8f1ef9873052bcc5e4b287f6"
+    },
+    {
       "path": "tests/test_rc1017_matrice_python.py",
       "sha256": "4cfa1f3a029ff82cfca9ad868eeb02b66fbfab51ffaf076c28097a7936348d7b"
     },
@@ -882,8 +890,8 @@
   },
   "tests": {
     "js_files": 3,
-    "python_files": 182,
-    "python_functions_declared": 1951
+    "python_files": 183,
+    "python_functions_declared": 1968
   }
 }
 ```
