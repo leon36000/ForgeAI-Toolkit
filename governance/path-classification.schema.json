@@ -1,0 +1,242 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/leon36000/ForgeAI-Toolkit/governance/path-classification.schema.json",
+  "title": "path-classification-v1",
+  "description": "Schéma descriptif de governance/path-classification.json (issue RC1-008 / #438). Documente la structure attendue pour lecture humaine et éditeurs — ce fichier est DESCRIPTIF et l'autorité d'application reste scripts/governance/classify_paths.py, qui reste stdlib pur et ne dépend pas de ce schéma. Le champ reference_graph provient d'un balayage textuel best-effort (method: static_text_scan) et ne constitue pas une preuve d'exhaustivité.",
+  "type": "object",
+  "required": [
+    "collisions",
+    "entries",
+    "reference_graph",
+    "rules_sha256",
+    "summary",
+    "waves"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "rules_sha256": {
+      "type": "string"
+    },
+    "summary": {
+      "type": "object",
+      "required": [
+        "by_class",
+        "by_rule",
+        "case_collisions_total",
+        "dangling_references_total",
+        "generated_total",
+        "load_bearing_total",
+        "portability_violations_total",
+        "tracked_total",
+        "unclassified_total",
+        "unicode_anomalies_total"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "by_class": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "integer"
+          }
+        },
+        "by_rule": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "integer"
+          }
+        },
+        "case_collisions_total": {
+          "type": "integer"
+        },
+        "dangling_references_total": {
+          "type": "integer"
+        },
+        "generated_total": {
+          "type": "integer"
+        },
+        "load_bearing_total": {
+          "type": "integer"
+        },
+        "portability_violations_total": {
+          "type": "integer"
+        },
+        "tracked_total": {
+          "type": "integer"
+        },
+        "unclassified_total": {
+          "type": "integer"
+        },
+        "unicode_anomalies_total": {
+          "type": "integer"
+        }
+      }
+    },
+    "entries": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "class",
+          "generated",
+          "load_bearing",
+          "owner",
+          "path",
+          "referenced_by",
+          "rule_id",
+          "sha256",
+          "size",
+          "target_path",
+          "type"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "class": {
+            "type": "string"
+          },
+          "generated": {
+            "type": "boolean"
+          },
+          "load_bearing": {
+            "type": "boolean"
+          },
+          "owner": {
+            "type": "string"
+          },
+          "path": {
+            "type": "string"
+          },
+          "referenced_by": {
+            "type": "array"
+          },
+          "rule_id": {
+            "type": "string"
+          },
+          "sha256": {
+            "description": "null pour les artefacts auto-générés qui s'auto-référencent (governance/path-classification.{json,md}, governance/STATE-CURRENT.{json,md}, governance/AUTHORITY-MAP.md) : leur empreinte dépendrait de leur propre contenu généré, point fixe non convergent.",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "size": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "target_path": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "type": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        }
+      }
+    },
+    "reference_graph": {
+      "type": "object",
+      "required": [
+        "completeness",
+        "dangling",
+        "edges",
+        "method"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "completeness": {
+          "type": "string"
+        },
+        "dangling": {
+          "type": "array"
+        },
+        "edges": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "candidate",
+              "line",
+              "referrer",
+              "resolved",
+              "severity"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "candidate": {
+                "type": "string"
+              },
+              "line": {
+                "type": "integer"
+              },
+              "referrer": {
+                "type": "string"
+              },
+              "resolved": {
+                "type": "string"
+              },
+              "severity": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "method": {
+          "type": "string"
+        }
+      }
+    },
+    "collisions": {
+      "type": "object",
+      "required": [
+        "case",
+        "portability",
+        "unicode"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "case": {
+          "type": "array"
+        },
+        "portability": {
+          "type": "array"
+        },
+        "unicode": {
+          "type": "array"
+        }
+      }
+    },
+    "waves": {
+      "description": "Plan de vagues de migration calculé (tri topologique) — informatif seulement, aucun déplacement n'est exécuté par ce script (issue #438).",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "paths",
+          "rollback"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "paths": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "rollback": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

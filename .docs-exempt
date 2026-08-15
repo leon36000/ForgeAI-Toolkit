@@ -33,6 +33,45 @@ tous les read_text/read_bytes/write_text/is_file du fichier) confirmant qu'aucun
 site n'est concerné. Contrat CLI observable inchangé. Aucune story/doc utilisateur
 concernée.
 
+scripts/governance/classify_paths.py + tests/test_classify_paths.py (RC1-008/#438, commit
+1/7 du plan architecte) : première brique interne (détection de collisions de casse/Unicode
++ validation de portabilité multi-OS), aucune interface utilisateur ni commande CLI exposée
+à ce stade — le module n'a pas encore de `main()`. La documentation utilisateur/gouvernance
+(governance/PATH-CLASSIFICATION.md généré, schéma descriptif, éventuelle entrée README/
+AGENTS.md) arrive aux commits 4-5 du même plan (#438), une fois le manifest et le rendu
+implémentés — prématuré de documenter une fonction interne sans sortie utilisateur encore
+définie. Aucune story/doc utilisateur concernée pour CE commit précis.
+
+scripts/governance/classify_paths.py + tests/test_classify_paths.py (RC1-008/#438, commit
+2/7) : ajoute load_rules()/classify()/tracked_files() — toujours des fonctions internes sans
+main() ni sortie utilisateur. governance/path-classification-rules.json (règles écrites à la
+main, pas un artefact généré) accompagne ce commit mais n'est pas un document de gouvernance
+publié — c'est une entrée de données consommée par le script, documentée par son propre champ
+`_description` interne. Documentation utilisateur toujours prévue aux commits 4-5.
+
+scripts/governance/classify_paths.py + tests/test_classify_paths.py (RC1-008/#438, commit
+3/7) : ajoute build_reference_graph() — fonction interne, toujours sans main() ni sortie
+utilisateur. Documentation prévue aux commits 4-5.
+
+scripts/governance/classify_paths.py + tests/test_classify_paths.py (RC1-008/#438, commit
+4/7) : ajoute build_manifest()/render()/check()/main() — le script a désormais une sortie
+utilisateur (governance/PATH-CLASSIFICATION.md, généré, contient sa propre en-tête
+"NE PAS ÉDITER À LA MAIN" et sert de documentation du résultat). governance/
+path-classification.schema.json est un schéma descriptif, pas un document narratif. Pas
+d'entrée README/AGENTS.md distincte requise pour cette brique interne d'outillage de
+gouvernance (même traitement que governance/STATE-CURRENT.md et governance/AUTHORITY-MAP.md,
+qui n'ont pas non plus d'entrée README dédiée).
+
+scripts/governance/classify_paths.py + tests/test_classify_paths.py (RC1-008/#438, commit
+5/7) : ajoute compute_waves() — calcule un plan de vagues, n'exécute aucun déplacement.
+governance/PATH-CLASSIFICATION.md (déjà généré au commit 4/7) reste la documentation du
+résultat. Pas de nouvelle entrée README/AGENTS.md requise.
+
+scripts/governance/classify_paths.py (RC1-008/#438, commit 6/7) : correctif d'un bug de garde
+__main__ (raise SystemExit(main())) découvert en ajoutant le job CI — comportement observable
+correct par construction (le contrat CLI n'a jamais été documenté comme "toujours retourner 0",
+c'est un correctif de conformité, pas un changement de contrat). Pas de doc supplémentaire.
+
 scripts/governance/capabilities.py + scripts/revue.py + tests associés (RC1-003-PR489-v2,
 commit de fixes round 2) : durcissement défensif suite à 2 objections mineures de la revue
 scellée (round RC1-003-PR489-v2, Gemini-3.1-Pro/DeepSeek-V4-Pro) — Path.home() protégé contre
@@ -48,4 +87,12 @@ RC1-003-PR489-v3, DeepSeek-V4-Pro) — la capacité "pre-commit local" vérifie 
 le binaire `pre-commit` lui-même, pas seulement ggshield+ruff. Comportement observable
 inchangé pour un environnement où pre-commit est déjà présent ; documentation utilisateur
 déjà à jour (mêmes commandes README.md, même message d'action). Aucune story/doc
+supplémentaire concernée.
+
+scripts/governance/classify_paths.py (RC1-008/#438, correctifs rounds de revue #496) :
+durcissement défensif (check() gate aussi sur les vraies collisions Unicode ; dédoublonnage
+des noms de règle de portabilité) suite à des objections de revue scellée. Comportement
+observable inchangé pour tout état déjà conforme — seul le cas d'une vraie collision/violation
+non détectée change (rejeté au lieu d'être silencieusement accepté). governance/
+PATH-CLASSIFICATION.md documente déjà le résultat. Aucune story/doc utilisateur
 supplémentaire concernée.

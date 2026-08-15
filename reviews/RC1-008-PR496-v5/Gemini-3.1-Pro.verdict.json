@@ -1,0 +1,25 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "scripts/governance/classify_paths.py",
+   "description": "La fonction add_pair() ignore les collisions exactes entre un target_path et un chemin stationnaire identique car la condition `if left == right: return` court-circuite l'ajout. Bien que documenté comme un gap connu et accepté dans le payload du commit (seq 443), cela reste une limitation technique de la détection.",
+   "preuve": "Lignes 30-31 : `if left == right: return`"
+  },
+  {
+   "severite": "mineure",
+   "fichier": "scripts/governance/classify_paths.py",
+   "description": "La chaîne de rollback générée par compute_waves() ne met pas les chemins entre guillemets. Si un chemin contient des espaces (ce qui est autorisé par check_portability tant que l'espace n'est pas à la fin du segment), la commande `git mv` générée sera syntaxiquement invalide lors d'un copier-coller.",
+   "preuve": "Lignes 839-841 : `rollback_pairs = \"; \".join(f\"git mv {target_paths[path]} {path}\" for path in current_paths)`"
+  }
+ ],
+ "date_heure": "2026-08-15T19:08:24.103499+00:00",
+ "prompt_sha256": "d0ce77d8486d51c3c51044e212eb77bf514d8015072db0d083f1d2d5c5b6824c",
+ "reviewer_model": "Gemini-3.1-Pro",
+ "modele_servi": "gemini-31-pro-openrouter",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "1"
+ }
+}

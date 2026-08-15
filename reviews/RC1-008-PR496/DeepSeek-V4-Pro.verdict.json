@@ -1,0 +1,25 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "majeure",
+   "fichier": "scripts/governance/classify_paths.py",
+   "description": "La validation de portabilité Windows/macOS/Linux n'est pas intégrée au manifeste généré : build_manifest() n'appelle jamais check_portability() et calcule portability_violations_total uniquement depuis detect_collisions(), qui ne vérifie que les catégories Unicode dangereuses. Les caractères interdits Windows, noms réservés, segments se terminant par point/espace, longueur de segment/path ne sont donc pas reportés ni contrôlés par le gate CI.",
+   "preuve": "Dans build_manifest() : `collisions = detect_collisions(tracked, targets)` puis `\"portability_violations_total\": len(collisions[\"portability\"])`. check_portability() n'apparaît dans aucune autre fonction hors tests."
+  },
+  {
+   "severite": "majeure",
+   "fichier": "scripts/governance/classify_paths.py",
+   "description": "La détection des collisions de casse/Unicode ignore les collisions entre un chemin cible et un chemin source qui migre lui-même. stationary_paths exclut tout chemin ayant une cible différente, donc une cible b/Y.md et une source b/y.md qui migrera ailleurs ne sont jamais comparées. Le plan de vagues ne peut pas ordonner un tel déplacement, ce qui peut produire un git mv conflictuel sur système insensible à la casse.",
+   "preuve": "Extrait detect_collisions() : `stationary_paths = [path for path in paths if path not in targets or targets[path] == path]` ; la comparaison suivante ne boucle que sur `for target in target_values: for path in stationary_paths: add_pair(target, path)`."
+  }
+ ],
+ "date_heure": "2026-08-15T18:19:35.247031+00:00",
+ "prompt_sha256": "222ea32b049cd0232ef2ab4971c80b7fa9f776d74d766b7b7dc3d22c39d8648f",
+ "reviewer_model": "DeepSeek-V4-Pro",
+ "modele_servi": "deepseek-v4-pro-direct",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

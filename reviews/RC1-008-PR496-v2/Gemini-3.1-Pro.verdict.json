@@ -1,0 +1,25 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "critique",
+   "fichier": "scripts/governance/classify_paths.py",
+   "description": "L'inventaire généré omet la taille, le type et l'empreinte des fichiers, ce qui viole le premier livrable exigé par la story ('inventaire complet chemin, taille, type, empreinte, classe, propriétaire et destination cible').",
+   "preuve": "Dans la fonction `build_manifest`, la construction des dictionnaires ajoutés à la liste `entries` n'inclut que les clés `path`, `class`, `generated`, `owner`, `rule_id`, `target_path`, `load_bearing` et `referenced_by`. Les champs taille, type et empreinte sont absents."
+  },
+  {
+   "severite": "critique",
+   "fichier": ".docs-exempt",
+   "description": "Modifications destructrices et hors périmètre (probablement dues à un mauvais rebase) : écrasement des entrées documentant RC1-003-PR489, suppression totale de `capabilities.py` et de ses tests, et régression de `revue.py` vers une liste de vendors codée en dur.",
+   "preuve": "Le diff montre la suppression des lignes `-scripts/governance/capabilities.py + scripts/revue.py + tests associés (RC1-003-PR489-v2...` dans `.docs-exempt`, ainsi que `deleted file mode 100644` pour `scripts/governance/capabilities.py` et `tests/test_governance_capabilities.py`."
+  }
+ ],
+ "date_heure": "2026-08-15T18:30:12.046138+00:00",
+ "prompt_sha256": "246646a7807cfe0d6a6d3dc36fb0353e385db9246ecd7a2ae7a5da859e8b4626",
+ "reviewer_model": "Gemini-3.1-Pro",
+ "modele_servi": "gemini-31-pro-openrouter",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "1"
+ }
+}

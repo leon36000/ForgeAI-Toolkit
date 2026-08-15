@@ -1,0 +1,19 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "scripts/governance/classify_paths.py",
+   "description": "Double comptage des violations de portabilité pour caractères invisibles sur les chemins cibles : detect_collisions() vérifie les catégories Unicode (Cc, Cf, Cs, Co, Cn + Zs≠espace) sur toutes les valeurs (paths + targets) aux lignes 120-138, puis build_manifest() appelle check_portability() sur chaque target_path (lignes 585-593) qui applique la même vérification (lignes 218-230, règle invisible_character), et concatène les deux résultats dans le même tableau collisions[portability]. Un target_path contenant un caractère invisible produit deux entrées distinctes au lieu d'une, gonflant portability_violations_total de +1. N'affecte pas le gate CI (tout > 0 échoue), seulement le décompte dans le manifest généré.",
+   "preuve": "classify_paths.py lignes 120-138 (detect_collisions : unicodedata.category check sur all_values incluant targets), lignes 218-230 (check_portability : même catégories Unicode sur segment), lignes 585-593 (build_manifest : for target_path in targets.values() → check_portability → append dans collisions['portability'] déjà peuplé par detect_collisions)"
+  }
+ ],
+ "date_heure": "2026-08-15T19:16:57.051784+00:00",
+ "prompt_sha256": "d0ce77d8486d51c3c51044e212eb77bf514d8015072db0d083f1d2d5c5b6824c",
+ "reviewer_model": "MiMo-Pro-V2",
+ "modele_servi": "mimo-pro-v2-openrouter",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}
