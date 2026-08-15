@@ -1,0 +1,22 @@
+{
+  "schema": "recu-revue/1",
+  "dossier": "RC1-004-PR497-v5",
+  "issue": 434,
+  "round": 5,
+  "base_commit": "372717e3d8a7b62de5332698d5bc54f321a96c0f",
+  "head_commit": "7b8bdaf1507c7f27970a397b53851ac1f8c6928f",
+  "head_tree": "453affa67a5b871d6674d5d10dd9749c5ff09bfe",
+  "diff_digest": "65b4b44226a7bd32abfca41ef6c44070df347433563f466eab0830770c12cfe9",
+  "prompt_sha256": "9749c0a22d9969a63f760a7df8b695c3dabebfe4545c1cb053d66885e0c2bd2e",
+  "reviewers_attendus": [
+    "Gemini-3.1-Pro",
+    "MiMo-Pro-V2",
+    "Qwen3.7-Max"
+  ],
+  "codeur": [
+    "fable"
+  ],
+  "resultat": "APPROVE",
+  "date_heure": "2026-08-15T17:14:02.882194-04:00",
+  "fenetre_heures": 24
+}
