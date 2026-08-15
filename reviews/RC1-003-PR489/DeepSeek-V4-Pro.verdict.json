@@ -1,0 +1,37 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "README.md",
+   "description": "La commande `python3 scripts/governance/capabilities.py` est ajoutée dans la section `## Gates`, puis le texte indique que ces commandes sont un sous-ensemble des gates CI réels. Or `CLAUDE.md` précise que ce diagnostic n'est pas un gate bloquant et aucun gate CI ne l'exécute. La documentation présente donc un diagnostic local comme un gate CI.",
+   "preuve": "Diff README.md : ajout de `python3 scripts/governance/capabilities.py` sous `## Gates`; phrase `Ces commandes sont un sous-ensemble des gates CI réels ; .github/workflows/gates.yml est la source de vérité...`"
+  },
+  {
+   "severite": "mineure",
+   "fichier": "scripts/revue.py",
+   "description": "Le parseur du roster ignore les commentaires inline pour les champs `vendor`, `provider_id` et `modele`, mais pas pour la ligne `- id:` elle-même. Si `manifests/roles.yaml` contient un commentaire inline sur un `- id:` (ex: `- id: deepseek # codeur`), la ligne n'est pas reconnue et le membre est silencieusement ignoré, ce qui peut fausser la table des vendors.",
+   "preuve": "Diff scripts/revue.py : `_MEMBER_START` ne comporte pas de traitement optionnel d'un commentaire `#`, contrairement à `_MEMBER_FIELD` qui utilise `(?:\\s*#.*)?$`."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "scripts/governance/capabilities.py",
+   "description": "`_pinned_versions()` associe les deux premières révisions trouvées dans `.pre-commit-config.yaml` aux libellés `ggshield` et `ruff` sans vérifier l'identifiant du repo correspondant. Si l'ordre des `rev:` du fichier diffère, le diagnostic affiche des versions épinglées incorrectes.",
+   "preuve": "`labels = ('ggshield', 'ruff')` puis `zip(labels, revisions[:2], strict=False)`."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "scripts/governance/capabilities.py",
+   "description": "Le statut `python3` `BLOCKED` pour Python < 3.10 est inaccessible sur Python 3.9, car `_pinned_versions()` utilise `zip(..., strict=False)`, paramètre introduit seulement en Python 3.10, et cette fonction est appelée sans condition lors de l'évaluation de la capacité pre-commit. Sur Python 3.9, le script lèvera une `TypeError` avant d'afficher tout diagnostic.",
+   "preuve": "`python_ok = sys.version_info >= (3, 10)` ; dans `_pinned_versions()` : `zip(labels, revisions[:2], strict=False)` ; appel inconditionnel dans la branche `howto` de la capacité `pre-commit local (ggshield+ruff)`."
+  }
+ ],
+ "date_heure": "2026-08-15T10:00:37.550787+00:00",
+ "prompt_sha256": "a2f096c6cbd51feb6f43bbecf49981795aeb0ea4d5dc160c3f68cd61fb4aaed4",
+ "reviewer_model": "DeepSeek-V4-Pro",
+ "modele_servi": "deepseek-v4-pro-direct",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

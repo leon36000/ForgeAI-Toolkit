@@ -1,0 +1,31 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "scripts/governance/capabilities.py",
+   "description": "La capacité 'revue aveugle scellée (outillage externe)' ne vérifie pas pack_build.sh, alors que la commande documentée dans CLAUDE.md l'utilise comme première étape. Si pack_build.sh est absent mais civ_review.py présent et variables d'environnement présentes, le diagnostic rapporte AVAILABLE et la procédure échoue.",
+   "preuve": "capabilities.py : proof_script = Path.home() / \"proof-method\" / \"scripts\" / \"civ_review.py\" ; has_proof_method = proof_script.exists(). CLAUDE.md : PROOF_COMPRESS=0 bash ~/proof-method/scripts/pack_build.sh stories/<ID>.md /tmp/<ID>.diff /tmp/<ID>-pack.md"
+  },
+  {
+   "severite": "mineure",
+   "fichier": "AGENTS.md",
+   "description": "La documentation affirme que le script ne lit pas de secret, mais capabilities.py lit la variable d'environnement LITELLM_API_KEY via environment.get(...) pour en tester la présence. Même sans l'afficher, c'est une lecture de la valeur ; de plus, une variable vide est considérée comme présente.",
+   "preuve": "AGENTS.md : « Le script ne lit ni n'affiche de secret ». capabilities.py : has_api_key = environment.get(\"LITELLM_API_KEY\") is not None."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "CLAUDE.md",
+   "description": "L'ancienne variable CIV_MODELS n'est plus exportée ni vérifiée par capabilities.py, sans substitut documenté indiquant comment civ_review.py sélectionne désormais les modèles. Si le script externe l'exige encore, la commande copiée échouera.",
+   "preuve": "Diff CLAUDE.md supprime export CIV_MODELS=\"DeepSeek-V4-Pro,Gemini-3.1-Pro,LongCat-2.0\" ; capabilities.py missing_signals ne teste que LITELLM_API_KEY, LITELLM_BASE_URL et ~/proof-method/scripts/civ_review.py."
+  }
+ ],
+ "date_heure": "2026-08-15T16:26:58.862381+00:00",
+ "prompt_sha256": "9b241dfbd71cb4ed3cd9d066483cd55cef89e14bd2c838e6cfcf3f8806ed6bce",
+ "reviewer_model": "DeepSeek-V4-Pro",
+ "modele_servi": "deepseek-v4-pro-direct",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

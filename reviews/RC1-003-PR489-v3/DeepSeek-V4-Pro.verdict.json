@@ -1,0 +1,19 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "scripts/governance/capabilities.py",
+   "description": "La capacité 'pre-commit local (ggshield+ruff)' ne vérifie pas la présence de l'exécutable `pre-commit` lui-même ; si `pre-commit` est absent alors que `ggshield` et `ruff` sont présents, le diagnostic rapporte `AVAILABLE` alors que `pre-commit install` échouerait. La détection demandée pour l'outillage local est donc incomplète.",
+   "preuve": "Ligne `missing_tools = [tool for tool in (\"ggshield\", \"ruff\") if shutil.which(tool) is None]` ; aucune vérification de `pre-commit` dans `probe_capabilities`."
+  }
+ ],
+ "date_heure": "2026-08-15T16:16:29.023276+00:00",
+ "prompt_sha256": "8ff2291681babe0b2bc5e1186eb7db5465fa57e70847bf4eca9eaa89cde79398",
+ "reviewer_model": "DeepSeek-V4-Pro",
+ "modele_servi": "deepseek-v4-pro-direct",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

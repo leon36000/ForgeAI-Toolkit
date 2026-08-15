@@ -305,6 +305,10 @@
       "sha256": "203705fccc521cbf5cfd7854e6df061d644182576399e6db61cf3292d84b858c"
     },
     {
+      "path": "tests/test_governance_capabilities.py",
+      "sha256": "240aa5646b1eeb5882a673702fdf304ab01251e67730a121cbebb333f7ca055f"
+    },
+    {
       "path": "tests/test_gpu_device_plugin_lab033a.py",
       "sha256": "6a9cc70c9b8937329cdc2aa9cf70a58767d9603c98ad74d293b7d96eee01bd15"
     },
@@ -674,7 +678,7 @@
     },
     {
       "path": "tests/test_revue.py",
-      "sha256": "461e533b22f5886e1577338d3f659c21b170ed89a816c732897dba19e8345685"
+      "sha256": "0e18975132ff555af49911d2be19e51e979053a6d826a70916de07f8f704168f"
     },
     {
       "path": "tests/test_routestore_concurrence.py",
@@ -862,8 +866,8 @@
   },
   "tests": {
     "js_files": 3,
-    "python_files": 178,
-    "python_functions_declared": 1817
+    "python_files": 179,
+    "python_functions_declared": 1839
   }
 }
 ```

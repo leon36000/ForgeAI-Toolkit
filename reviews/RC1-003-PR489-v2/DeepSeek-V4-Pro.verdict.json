@@ -1,0 +1,25 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "scripts/governance/capabilities.py",
+   "description": "Path.home() est appelé sans protection dans probe_capabilities. Si le répertoire utilisateur n'est pas résoluble (HOME absent et base d'utilisateurs indisponible), Path.home() lève RuntimeError, ce qui fait planter le diagnostic au lieu de retourner un statut OPTIONAL avec procédure. La preuve d'exécution en environnement dépouillé ne couvre pas ce cas (HOME isolé mais défini).",
+   "preuve": "Ligne `proof_script = Path.home() / \"proof-method\" / \"scripts\" / \"civ_review.py\"` ; aucun try/except ne l'entoure."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "scripts/revue.py",
+   "description": "Le parseur des routes utilise `[^\\s,}]+` pour `modele_reponse`, donc un nom de modèle contenant un espace ne sera pas capturé intégralement. Le critère d'acceptation impose de pouvoir remplacer un reviewer sans modifier les règles de vérité ; un futur vendor dont le nom de route comporte un espace échouerait à être reconnu, faussant l'identité anti-Sybil.",
+   "preuve": "Ligne `_ROUTE_ENTRY = re.compile(r\"membre:\\s*(\\S+?),.*?modele_reponse:\\s*([^\\s,}]+)\")`."
+  }
+ ],
+ "date_heure": "2026-08-15T10:27:36.633380+00:00",
+ "prompt_sha256": "1a468e3a5e2a6da0a42b0f313a19ff43c19b0aa408c791537546dc90b8e26551",
+ "reviewer_model": "DeepSeek-V4-Pro",
+ "modele_servi": "deepseek-v4-pro-direct",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

@@ -1,0 +1,19 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "majeure",
+   "fichier": ".github/workflows/sonarcloud.yml",
+   "description": "Le correctif CI annoncé dans la description du Round 7 (ajout de jsonschema dans sonarcloud.yml) n'est pas inclus dans le diff fourni, alors que le sha256 du fichier est bien mis à jour dans STATE-CURRENT.json. Impossible de vérifier le correctif bloquant pour le merge.",
+   "preuve": "Absence totale de diff pour .github/workflows/sonarcloud.yml dans le patch, malgré la mention 'Round 7 (ce diff, final) — fix CI ... Correctif d'une ligne' et la mise à jour du sha256 dans governance/STATE-CURRENT.json (ligne 99)."
+  }
+ ],
+ "date_heure": "2026-08-15T17:42:10.780149+00:00",
+ "prompt_sha256": "f3de2207abe77a051beb84deda111bc3b2ca8a1f13bdc061ebe7d8bb214a9ef1",
+ "reviewer_model": "Qwen3.7-Max",
+ "modele_servi": "qwen37-max-openrouter",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

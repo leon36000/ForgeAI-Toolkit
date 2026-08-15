@@ -24,12 +24,128 @@ def _v(vendor, verdict="APPROVE", objs=None, sha=SHA):
 
 # ---------- vendor mapping ----------
 
-def test_composer_et_grok_meme_vendor_xai():
-    assert revue.vendor_of("composer") == revue.vendor_of("grok") == "xai"
+def test_composer_et_grok_meme_vendor():
+    assert revue.vendor_of("composer") == revue.vendor_of("grok")
+    assert revue.vendor_of("composer") != revue.vendor_of("deepseek")
 
 
 def test_vendors_distincts_reconnus():
     assert len({revue.vendor_of(m) for m in ("deepseek", "gemini", "glm52")}) == 3
+
+
+def test_vendor_table_derivee_de_roles_yaml_reelle():
+    table = revue._vendor_table()
+
+    assert table is not None
+    assert "deepseek" in table
+    assert table["deepseek"] == "deepseek"
+
+
+def test_fable_exclu_car_provider_id_null():
+    table = revue._vendor_table()
+
+    assert table is not None
+    assert "fable" not in table
+
+
+def test_alias_ponctuation_variable_normalise_pareil():
+    # "qwen37max" (sans séparateur, régression pré-existante test_reviews_gate.py) et
+    # "qwen3.7-max" (provider_id réel de manifests/roles.yaml) doivent résoudre au même vendor.
+    assert revue.vendor_of("qwen37max") == revue.vendor_of("qwen") == "alibaba"
+
+
+def test_alias_modele_reponse_routes_yaml_reconnu():
+    # manifests/roles.yaml déclare provider_id "deepseek" pour ce membre, mais le nom de route
+    # LiteLLM réel (manifests/routes.yaml, modele_reponse) — celui qui apparaît effectivement
+    # comme reviewer_model dans les verdicts scellés réels — est "DeepSeek-V4-Pro" : les deux
+    # doivent résoudre au même vendor sans que revue.py ait besoin de le coder en dur.
+    assert revue.vendor_of("DeepSeek-V4-Pro") == revue.vendor_of("deepseek") == "deepseek"
+
+
+def test_route_modele_reponse_avec_espace_reconnu(tmp_path):
+    # Régression revue scellée RC1-003-PR489-v2 (objection mineure Gemini-3.1-Pro) : le
+    # nom de route réel (modele_reponse) peut contenir un espace — un futur vendor avec un
+    # tel nom ne doit pas échapper à la reconnaissance de son identité anti-Sybil.
+    roles = tmp_path / "manifests" / "roles.yaml"
+    routes = tmp_path / "manifests" / "routes.yaml"
+    roles.parent.mkdir()
+    roles.write_text(
+        "membres:\n"
+        "  - id: espace-modele\n"
+        "    vendor: vendor-espace\n"
+        "    provider_id: EspaceModele\n"
+        "regles_revue:\n"
+        "  vendors_par_story: 3\n",
+        encoding="utf-8",
+    )
+    routes.write_text(
+        "routes:\n"
+        "  - {membre: espace-modele, provider_id: EspaceModele,"
+        " modele_reponse: Nom Avec Espace, statut: ok}\n",
+        encoding="utf-8",
+    )
+
+    table = revue._vendor_table(roles_path=roles, routes_path=routes)
+
+    assert table is not None
+    # Les clés sont normalisées (ponctuation/espaces retirés) : "Nom Avec Espace" doit être
+    # capturé EN ENTIER par le parseur (pas tronqué au 1er espace) avant normalisation, sinon
+    # la clé stockée ne correspondrait pas à une recherche sur le nom complet.
+    assert revue.vendor_of("Nom Avec Espace", table) == "vendor-espace"
+
+
+def test_id_membre_avec_commentaire_inline_reconnu(tmp_path):
+    # Régression revue scellée RC1-003-PR489 (objection mineure DeepSeek-V4-Pro) : un
+    # commentaire inline sur la ligne "- id:" elle-même (pas seulement sur vendor/provider_id/
+    # modele) ne doit pas faire disparaître silencieusement le membre du roster.
+    roles = tmp_path / "manifests" / "roles.yaml"
+    roles.parent.mkdir()
+    roles.write_text(
+        "membres:\n"
+        "  - id: avec-commentaire  # codeur de cette story\n"
+        "    vendor: vendor-teste\n"
+        "    provider_id: AvecCommentaire\n"
+        "regles_revue:\n"
+        "  vendors_par_story: 3\n",
+        encoding="utf-8",
+    )
+
+    table = revue._vendor_table(roles_path=roles)
+
+    assert table is not None
+    assert "vendor-teste" in table.values()
+
+
+def test_ajouter_un_vendor_ne_touche_pas_revue_py(tmp_path):
+    # Preuve exécutable du critère d'acceptation #433 : un nouveau vendor devient reconnu
+    # par une donnée seule (manifests/roles.yaml), sans toucher une ligne de revue.py.
+    roles = tmp_path / "manifests" / "roles.yaml"
+    roles.parent.mkdir()
+    roles.write_text(
+        "membres:\n"
+        "  - id: nouveau-modele\n"
+        "    modele: Nouveau Modèle v1\n"
+        "    vendor: nouveau-vendor\n"
+        "    provider_id: NouveauModele-v1\n"
+        "regles_revue:\n"
+        "  vendors_par_story: 3\n",
+        encoding="utf-8",
+    )
+
+    table = revue._vendor_table(roles_path=roles)
+
+    assert table is not None
+    assert "nouveau-vendor" in table.values()
+    assert table["nouveaumodelev1"] == "nouveau-vendor"
+
+
+def test_tally_invalide_si_roster_introuvable(monkeypatch):
+    monkeypatch.setattr(revue, "_vendor_table", lambda: None)
+
+    result = revue.tally([_v("deepseek"), _v("gemini"), _v("longcat")])
+
+    assert result["result"] == "INVALIDE"
+    assert "roster" in result["reason"]
 
 
 # ---------- dépouillement ----------
