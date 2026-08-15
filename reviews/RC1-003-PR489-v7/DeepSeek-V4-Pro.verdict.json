@@ -1,0 +1,25 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "critique",
+   "fichier": "Registres/mission.jsonl, reviews/BINDING.txt, reviews/RC1-493-PR-v1/*",
+   "description": "Le diff supprime l'entrée seq 432 de Registres/mission.jsonl (story RC1-493, issue 493), retire RC1-493-PR-v1 de reviews/BINDING.txt, supprime le verdict DeepSeek de RC1-493 et renomme les verdicts Gemini/Qwen de RC1-493 en RC1-003-PR489-v2. C'est hors périmètre de #433 et altère l'historique scellé d'une autre issue.",
+   "preuve": "Registres/mission.jsonl @@ -429,4 +429,3 @@ supprime la ligne contenant \"story\":\"RC1-493\" et \"revue\":\"reviews/RC1-493-PR-v1\". reviews/BINDING.txt remplace \"RC1-493-PR-v1\" par \"RC1-003-PR489-v6\". Diff \"rename from reviews/RC1-493-PR-v1/Gemini-3.1-Pro.verdict.json\" vers \"rename to reviews/RC1-003-PR489-v2/Gemini-3.1-Pro.verdict.json\" (idem Qwen) ; \"deleted file mode 100644\" pour reviews/RC1-493-PR-v1/DeepSeek-V4-Pro.verdict.json."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "governance/STATE-CURRENT.json, .github/workflows/sonarcloud.yml",
+   "description": "Le sha256 de .github/workflows/sonarcloud.yml est mis à jour de 363a... vers bb6b..., mais le diff fourni ne contient aucun hunk pour ce fichier lui-même. Le correctif CI annoncé n'est donc pas vérifiable dans l'artefact revu.",
+   "preuve": "governance/STATE-CURRENT.json @@ -96,7 +96,7 @@ change le hash de .github/workflows/sonarcloud.yml ; aucun \"diff --git a/.github/workflows/sonarcloud.yml\" dans le diff joint."
+  }
+ ],
+ "date_heure": "2026-08-15T17:45:41.337841+00:00",
+ "prompt_sha256": "f3de2207abe77a051beb84deda111bc3b2ca8a1f13bdc061ebe7d8bb214a9ef1",
+ "reviewer_model": "DeepSeek-V4-Pro",
+ "modele_servi": "deepseek-v4-pro-direct",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

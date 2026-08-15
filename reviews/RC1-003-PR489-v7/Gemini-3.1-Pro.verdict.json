@@ -1,0 +1,19 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "majeure",
+   "fichier": ".github/workflows/sonarcloud.yml",
+   "description": "Le contexte affirme qu'un correctif d'une ligne a été apporté à ce fichier pour installer jsonschema, et STATE-CURRENT.json reflète un changement de sha256 pour ce fichier. Cependant, le fichier .github/workflows/sonarcloud.yml lui-même est totalement absent du diff fourni, ce qui rend le correctif invérifiable et indique un diff incomplet ou un commit manquant.",
+   "preuve": "Absence de `diff --git a/.github/workflows/sonarcloud.yml b/.github/workflows/sonarcloud.yml` dans le diff, alors que `governance/STATE-CURRENT.json` montre une mise à jour de son sha256 (de 363a8dbcd111d2007bd6511192fb225196c1b1bd3f4830fd2d17c26f59648a21 à bb6b4da6ba7b18542e6d745ea6f6096bb58105cedd4abdeb63cc61fb2a2bf76c)."
+  }
+ ],
+ "date_heure": "2026-08-15T17:41:31.661530+00:00",
+ "prompt_sha256": "f3de2207abe77a051beb84deda111bc3b2ca8a1f13bdc061ebe7d8bb214a9ef1",
+ "reviewer_model": "Gemini-3.1-Pro",
+ "modele_servi": "gemini-31-pro-openrouter",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "1"
+ }
+}
