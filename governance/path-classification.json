@@ -3232,7 +3232,15 @@
       "load_bearing": false,
       "owner": "docs-utilisateur",
       "path": "Docs/explanation/ADR-0001-structure-docs.md",
-      "referenced_by": [],
+      "referenced_by": [
+        {
+          "candidate": "Docs/explanation/ADR-0001-structure-docs.md",
+          "line": 11,
+          "referrer": "governance/decisions/D-2026-08-15-racines-documentaires.md",
+          "resolved": "Docs/explanation/ADR-0001-structure-docs.md",
+          "severity": "hard"
+        }
+      ],
       "rule_id": "docs-user",
       "sha256": "83e277906481e7a0665805fb064ac917016d8f32b1a3adaba6258b494691b243",
       "size": 1767,
@@ -3495,7 +3503,15 @@
       "load_bearing": false,
       "owner": "docs-utilisateur",
       "path": "Docs/reference/politique-versions-python.md",
-      "referenced_by": [],
+      "referenced_by": [
+        {
+          "candidate": "Docs/reference/politique-versions-python.md",
+          "line": 23,
+          "referrer": "governance/decisions/D-2026-08-15-racines-documentaires.md",
+          "resolved": "Docs/reference/politique-versions-python.md",
+          "severity": "hard"
+        }
+      ],
       "rule_id": "docs-user",
       "sha256": "1ece69e97e3dc8c1f1a6bf0f1d6d8cab38e86c19c1ba9bd6e02ef0852fc44dbb",
       "size": 3093,
@@ -6192,8 +6208,8 @@
         }
       ],
       "rule_id": "evidence-registres",
-      "sha256": "0a40c0a96a55d6eb6b572c543960d3d14fa3d619fc3979dad2ca9f4be591cc69",
-      "size": 351235,
+      "sha256": "19febe749a1456e5a0eff7c4a0dbe6c19562852a23a2d4a54453415ca1a4e3b4",
+      "size": 351813,
       "target_path": "evidence/registres/mission.jsonl",
       "type": "text"
     },
@@ -7024,6 +7040,13 @@
         },
         {
           "candidate": "governance/authority.json",
+          "line": 30,
+          "referrer": "governance/decisions/D-2026-08-15-racines-documentaires.md",
+          "resolved": "governance/authority.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/authority.json",
           "line": 237,
           "referrer": "governance/path-classification-rules.json",
           "resolved": "governance/authority.json",
@@ -7298,6 +7321,34 @@
       "rule_id": "governance-core",
       "sha256": "6195f3957e7db0d78aa950044ebd18ba0c555d51918e4cd8feb7d3aa0a0272c5",
       "size": 721,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "GOVERNANCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-config",
+      "path": "governance/decisions/D-2026-08-15-racines-documentaires.md",
+      "referenced_by": [
+        {
+          "candidate": "governance/decisions/D-2026-08-15-racines-documentaires.md",
+          "line": 0,
+          "referrer": "governance/authority.json",
+          "resolved": "governance/decisions/D-2026-08-15-racines-documentaires.md",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/decisions/D-2026-08-15-racines-documentaires.md",
+          "line": 51,
+          "referrer": "governance/AUTHORITY-MAP.md",
+          "resolved": "governance/decisions/D-2026-08-15-racines-documentaires.md",
+          "severity": "hard"
+        }
+      ],
+      "rule_id": "governance-core",
+      "sha256": "cc5d281c9dd40cc8decb1717d0cff8e8af169148e29b02376c37898d42ca49f5",
+      "size": 1316,
       "target_path": null,
       "type": "text"
     },
@@ -41682,6 +41733,34 @@
       "generated": false,
       "load_bearing": true,
       "owner": "test-suite",
+      "path": "tests/test_rc1009_racines_documentaires.py",
+      "referenced_by": [
+        {
+          "candidate": "tests/test_rc1009_racines_documentaires.py",
+          "line": 622,
+          "referrer": "governance/STATE-CURRENT.json",
+          "resolved": "tests/test_rc1009_racines_documentaires.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "tests/test_rc1009_racines_documentaires.py",
+          "line": 628,
+          "referrer": "governance/STATE-CURRENT.md",
+          "resolved": "tests/test_rc1009_racines_documentaires.py",
+          "severity": "hard"
+        }
+      ],
+      "rule_id": "test-suite",
+      "sha256": "2d4714138d7ae74daa1919fb6fd8c503ee69a01943355d8ea1fedb0e253db479",
+      "size": 1242,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "TEST",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "test-suite",
       "path": "tests/test_rc1017_matrice_python.py",
       "referenced_by": [
         {
@@ -53869,16 +53948,6 @@
         "referrer": "coordination/work-packages.json"
       },
       {
-        "candidate": "governance/decisions/D-2026-08-15-racines-documentaires.md",
-        "line": 51,
-        "referrer": "governance/AUTHORITY-MAP.md"
-      },
-      {
-        "candidate": "tests/test_rc1009_racines_documentaires.py",
-        "line": 622,
-        "referrer": "governance/STATE-CURRENT.json"
-      },
-      {
         "candidate": "repos/leon36000/ForgeAI-Toolkit",
         "line": 891,
         "referrer": "governance/STATE-CURRENT.json"
@@ -53894,14 +53963,49 @@
         "referrer": "governance/STATE-CURRENT.json"
       },
       {
-        "candidate": "tests/test_rc1009_racines_documentaires.py",
-        "line": 628,
-        "referrer": "governance/STATE-CURRENT.md"
-      },
-      {
         "candidate": "defs/source",
         "line": 52,
         "referrer": "governance/authority.schema.json"
+      },
+      {
+        "candidate": "Docs/",
+        "line": 9,
+        "referrer": "governance/decisions/D-2026-08-15-racines-documentaires.md"
+      },
+      {
+        "candidate": "../../Docs/explanation/ADR-0001-structure-docs.md",
+        "line": 11,
+        "referrer": "governance/decisions/D-2026-08-15-racines-documentaires.md"
+      },
+      {
+        "candidate": "governance/",
+        "line": 13,
+        "referrer": "governance/decisions/D-2026-08-15-racines-documentaires.md"
+      },
+      {
+        "candidate": "Docs/",
+        "line": 16,
+        "referrer": "governance/decisions/D-2026-08-15-racines-documentaires.md"
+      },
+      {
+        "candidate": "docs/",
+        "line": 18,
+        "referrer": "governance/decisions/D-2026-08-15-racines-documentaires.md"
+      },
+      {
+        "candidate": "docs/politique-versions-python.md",
+        "line": 21,
+        "referrer": "governance/decisions/D-2026-08-15-racines-documentaires.md"
+      },
+      {
+        "candidate": "RC1-447/PR495",
+        "line": 21,
+        "referrer": "governance/decisions/D-2026-08-15-racines-documentaires.md"
+      },
+      {
+        "candidate": "docs/politique-versions-python.md",
+        "line": 23,
+        "referrer": "governance/decisions/D-2026-08-15-racines-documentaires.md"
       },
       {
         "candidate": "438/RC1-008",
@@ -113954,6 +114058,26 @@
         "referrer": "tests/test_rall.py"
       },
       {
+        "candidate": "Docs/",
+        "line": 1,
+        "referrer": "tests/test_rc1009_racines_documentaires.py"
+      },
+      {
+        "candidate": "Docs/",
+        "line": 32,
+        "referrer": "tests/test_rc1009_racines_documentaires.py"
+      },
+      {
+        "candidate": "docs/",
+        "line": 36,
+        "referrer": "tests/test_rc1009_racines_documentaires.py"
+      },
+      {
+        "candidate": "docs/",
+        "line": 42,
+        "referrer": "tests/test_rc1009_racines_documentaires.py"
+      },
+      {
         "candidate": "gates.yml",
         "line": 11,
         "referrer": "tests/test_rc1017_matrice_python.py"
@@ -115977,6 +116101,13 @@
         "line": 0,
         "referrer": "governance/authority.json",
         "resolved": "governance/decisions/D-2026-08-14-mission-lead.md",
+        "severity": "hard"
+      },
+      {
+        "candidate": "governance/decisions/D-2026-08-15-racines-documentaires.md",
+        "line": 0,
+        "referrer": "governance/authority.json",
+        "resolved": "governance/decisions/D-2026-08-15-racines-documentaires.md",
         "severity": "hard"
       },
       {
@@ -122721,6 +122852,13 @@
         "severity": "hard"
       },
       {
+        "candidate": "governance/decisions/D-2026-08-15-racines-documentaires.md",
+        "line": 51,
+        "referrer": "governance/AUTHORITY-MAP.md",
+        "resolved": "governance/decisions/D-2026-08-15-racines-documentaires.md",
+        "severity": "hard"
+      },
+      {
         "candidate": "manifests/roles.yaml",
         "line": 52,
         "referrer": "governance/AUTHORITY-MAP.md",
@@ -123747,6 +123885,13 @@
         "line": 618,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_ratelimit.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "tests/test_rc1009_racines_documentaires.py",
+        "line": 622,
+        "referrer": "governance/STATE-CURRENT.json",
+        "resolved": "tests/test_rc1009_racines_documentaires.py",
         "severity": "hard"
       },
       {
@@ -125157,6 +125302,13 @@
         "severity": "hard"
       },
       {
+        "candidate": "tests/test_rc1009_racines_documentaires.py",
+        "line": 628,
+        "referrer": "governance/STATE-CURRENT.md",
+        "resolved": "tests/test_rc1009_racines_documentaires.py",
+        "severity": "hard"
+      },
+      {
         "candidate": "tests/test_rc1017_matrice_python.py",
         "line": 632,
         "referrer": "governance/STATE-CURRENT.md",
@@ -125616,6 +125768,27 @@
         "line": 20,
         "referrer": "governance/decisions/D-2026-08-14-mission-lead.md",
         "resolved": "coordination/active-claims.json",
+        "severity": "hard"
+      },
+      {
+        "candidate": "Docs/explanation/ADR-0001-structure-docs.md",
+        "line": 11,
+        "referrer": "governance/decisions/D-2026-08-15-racines-documentaires.md",
+        "resolved": "Docs/explanation/ADR-0001-structure-docs.md",
+        "severity": "hard"
+      },
+      {
+        "candidate": "Docs/reference/politique-versions-python.md",
+        "line": 23,
+        "referrer": "governance/decisions/D-2026-08-15-racines-documentaires.md",
+        "resolved": "Docs/reference/politique-versions-python.md",
+        "severity": "hard"
+      },
+      {
+        "candidate": "governance/authority.json",
+        "line": 30,
+        "referrer": "governance/decisions/D-2026-08-15-racines-documentaires.md",
+        "resolved": "governance/authority.json",
         "severity": "hard"
       },
       {
@@ -138935,9 +139108,9 @@
       "DOCS": 14,
       "EVIDENCE": 1226,
       "GENERATED": 5,
-      "GOVERNANCE": 166,
+      "GOVERNANCE": 167,
       "PRODUCT": 112,
-      "TEST": 196,
+      "TEST": 197,
       "WORKING": 10
     },
     "by_rule": {
@@ -138960,7 +139133,7 @@
       "generated-state-current-json": 1,
       "generated-state-current-markdown": 1,
       "governance-canon": 14,
-      "governance-core": 9,
+      "governance-core": 10,
       "governance-docs-exempt": 1,
       "governance-github-ci": 5,
       "governance-manifests": 6,
@@ -138984,16 +139157,16 @@
       "governance-stories": 84,
       "product-catalogue-checksum": 1,
       "product-source": 111,
-      "test-suite": 196,
+      "test-suite": 197,
       "working-claude-agents": 9,
       "working-sandbox-readme": 1
     },
     "case_collisions_total": 0,
-    "dangling_references_total": 14232,
+    "dangling_references_total": 14241,
     "generated_total": 7,
-    "load_bearing_total": 1606,
+    "load_bearing_total": 1608,
     "portability_violations_total": 0,
-    "tracked_total": 1773,
+    "tracked_total": 1775,
     "unclassified_total": 0,
     "unicode_anomalies_total": 0
   },
