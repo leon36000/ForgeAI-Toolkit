@@ -1,0 +1,25 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "critique",
+   "fichier": "README.md",
+   "description": "Le critère d'acceptation exige qu'aucun compteur opérationnel ne soit maintenu manuellement et que 'skips' et 'couverture' proviennent de sources identifiées. Ces compteurs (ainsi que le nombre de sous-commandes) ont été explicitement ignorés par le développeur et restent codés en dur.",
+   "preuve": "Lignes 76-78 : 'Couverture 92 %', '7 skipped' et '7 sous-commandes forgeai node' ne sont pas remplacés par des marqueurs d'état. Le script state_current.py n'implémente pas l'extraction de ces métriques."
+  },
+  {
+   "severite": "majeure",
+   "fichier": ".github/workflows/gates.yml",
+   "description": "La vérification CI ne contrôle pas la dérive des compteurs dans les documents car les arguments --docs sont manquants.",
+   "preuve": "Ligne 103 : 'run: python3 scripts/governance/state_current.py' est appelé sans '--docs README.md --docs AGENTS.md'."
+  }
+ ],
+ "date_heure": "2026-08-15T10:19:05.838162+00:00",
+ "prompt_sha256": "79fbf0ef862bf2a4912a89d65826b74f68525a7aba975eb8242857970114c324",
+ "reviewer_model": "Gemini-3.1-Pro",
+ "modele_servi": "gemini-31-pro-openrouter",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "1"
+ }
+}

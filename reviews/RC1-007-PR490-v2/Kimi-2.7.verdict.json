@@ -1,0 +1,19 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "governance/state-current.schema.json",
+   "description": "Le schéma descriptif de l'objet 'cli' interdit les propriétés additionnelles (additionalProperties: false) mais ne déclare pas 'subcommands_by_group', pourtant présent dans STATE-CURRENT.json généré. Toute validation JSON Schema de l'artefact canonique échouera sur ce champ.",
+   "preuve": "governance/state-current.schema.json lignes 70-85 : seuls 'subcommands' et 'subcommands_total' sont déclarés pour 'cli' avec additionalProperties:false ; governance/STATE-CURRENT.json lignes 54-65 contient 'subcommands_by_group': {...'node': 7...}"
+  }
+ ],
+ "date_heure": "2026-08-15T16:21:15.338243+00:00",
+ "prompt_sha256": "7a97286e968fa44e1f9d0ed7b29f96016dd5ed016ebb1e527af9f74c5968da0f",
+ "reviewer_model": "Kimi-2.7",
+ "modele_servi": "kimi-27-openrouter",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

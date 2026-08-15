@@ -1,0 +1,19 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "scripts/governance/state_current.py",
+   "description": "Le diagnostic de dérive documentaire propose une commande de correction incomplète : il omet les arguments --docs README.md --docs AGENTS.md, donc suivre la commande indiquée réécrit STATE-CURRENT.json/.md mais ne corrige pas les marqueurs documentaires détectés par la CI state-current.",
+   "preuve": "Dans check(), le bloc final ajoute uniquement 'corriger par : python3 scripts/governance/state_current.py --render'. Dans main(), la branche --render n'injecte les marqueurs que pour 'args.docs or []' (boucle 'for document in args.docs or []')."
+  }
+ ],
+ "date_heure": "2026-08-15T16:50:50.798419+00:00",
+ "prompt_sha256": "fa062b8d7dbbd97090577516e5b0cf65a604cf8c8da3aa1955239c65d60d60b9",
+ "reviewer_model": "DeepSeek-V4-Pro",
+ "modele_servi": "deepseek-v4-pro-direct",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

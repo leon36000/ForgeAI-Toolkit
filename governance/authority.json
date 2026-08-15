@@ -110,7 +110,7 @@
       ],
       "digest": {
         "policy": "content_sha256",
-        "value": "0bae41d669cd8eb095b0852b2408f45777a74e4587001faa8c87bfe60f70e085",
+        "value": "610b8909fb90dae68b32898b6b66aff521090237a0d60fd559436421687753ec",
         "checked_at": "2026-08-15",
         "delegated_to": null
       },
@@ -122,7 +122,7 @@
         "mission_seq": null,
         "ref": "issue-487"
       },
-      "notes": "Auto-contradiction interne resolue par #432 (Mission affirme desormais Claude Code Opus, section ORCH-001 remplacee) ; conflit RESIDUEL avec canon.plan-integral (toujours \"Fable orchestrateur unique\", hors perimetre de #432 -- CANON exige son propre circuit de revue) suivi par #487. Empreinte/locator recalcules par #433 (patch cible lignes 49-67 : paragraphe Perimetre decale de +2 lignes, texte inchange)."
+      "notes": "Auto-contradiction interne resolue par #432 (Mission affirme desormais Claude Code Opus, section ORCH-001 remplacee) ; conflit RESIDUEL avec canon.plan-integral (toujours \"Fable orchestrateur unique\", hors perimetre de #432 -- CANON exige son propre circuit de revue) suivi par #487. Empreinte fusionnee (#433 x #437, merge sur main post-9d97b529) : #433 remplace les lignes 49-67 (pointe vers capabilities.py, decale le paragraphe Perimetre a +3 lignes) ; #437 insere un marqueur <!-- state:catalogue.entries_total --> autour du compteur manuel (AGENTS.md:38), sans decalage de lignes. Les deux changements sont sur des zones disjointes du fichier, fusionnes automatiquement par git (aucun conflit textuel) ; seule l'empreinte ci-dessus reflete desormais le contenu final combine. Locator workspace_confinement verifie a AGENTS.md:73-76 apres fusion."
     },
     {
       "id": "agents-md.orch-001",
@@ -634,7 +634,7 @@
       "positions": [],
       "digest": {
         "policy": "content_sha256",
-        "value": "c684147a08c1306b2df48881c5c78d2a68c3745daf366c73cf6e86b50d0c320c",
+        "value": "acea73acf74e38e3be123649a75635b54e4fa23888dd6dbd46130c5c5af50fd9",
         "checked_at": "2026-08-15",
         "delegated_to": null
       },
@@ -646,7 +646,7 @@
         "mission_seq": null,
         "ref": null
       },
-      "notes": "Point d'entrée documentaire du dépôt. Empreinte recalculée par #433 (sections Installation/Gates/Développement : pointeur vers scripts/governance/capabilities.py, correction de la mention Fable périmée depuis #432, cohérence gitleaks/ggshield) ; section État de la mission non touchée (territoire #437)."
+      "notes": "Point d'entrée documentaire du dépôt. Empreinte fusionnée (#433 x #437, merge sur main post-9d97b529) : #433 réécrit Installation/Gates/Développement (pointeur vers capabilities.py, correction Fable périmée, cohérence gitleaks/ggshield) — section État de la mission non touchée (territoire #437) ; #437 insère des marqueurs <!-- state:... --> autour de 7 compteurs, dont 3 dans la section État de la mission que #433 n'a pas touchée. Zones disjointes, fusionnées automatiquement par git (aucun conflit textuel) ; seule l'empreinte ci-dessus reflète le contenu final combiné."
     },
     {
       "id": "gov.decision-mission-lead",
