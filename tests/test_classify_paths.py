@@ -1,4 +1,5 @@
 import importlib.util
+import jsonschema
 import pathlib
 import unicodedata
 
@@ -183,6 +184,16 @@ import pytest
 
 REPO = pathlib.Path(__file__).resolve().parents[1]
 RULES_PATH = REPO / "governance" / "path-classification-rules.json"
+
+
+def test_manifest_valide_contre_son_schema() -> None:
+    schema_path = REPO / "governance" / "path-classification.schema.json"
+    manifest_path = REPO / "governance" / "path-classification.json"
+
+    schema = json.loads(schema_path.read_text(encoding="utf-8"))
+    data = json.loads(manifest_path.read_text(encoding="utf-8"))
+
+    jsonschema.Draft202012Validator(schema).validate(data)
 
 
 def _regles_fixture(rules: list[dict]) -> dict:
@@ -731,7 +742,7 @@ def test_check_detecte_derive(tmp_path: pathlib.Path) -> None:
     _initialise_depot_jouet(repo_jouet)
     assert classify_paths.main(["--repo-root", str(repo_jouet), "--render"]) == 0
 
-    manifest_path = repo_jouet / "governance" / "path-classification.json"
+    manifest_path = repo_jouet / "governance/path-classification.json"
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
     manifest["summary"]["tracked_total"] = 999
     manifest_path.write_text(

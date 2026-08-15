@@ -9,7 +9,8 @@
     "entries",
     "reference_graph",
     "rules_sha256",
-    "summary"
+    "summary",
+    "waves"
   ],
   "additionalProperties": false,
   "properties": {
@@ -82,7 +83,10 @@
           "path",
           "referenced_by",
           "rule_id",
-          "target_path"
+          "sha256",
+          "size",
+          "target_path",
+          "type"
         ],
         "additionalProperties": false,
         "properties": {
@@ -107,7 +111,26 @@
           "rule_id": {
             "type": "string"
           },
+          "sha256": {
+            "description": "null pour les artefacts auto-générés qui s'auto-référencent (governance/path-classification.{json,md}, governance/STATE-CURRENT.{json,md}, governance/AUTHORITY-MAP.md) : leur empreinte dépendrait de leur propre contenu généré, point fixe non convergent.",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "size": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
           "target_path": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "type": {
             "type": [
               "string",
               "null"
@@ -185,6 +208,33 @@
         },
         "unicode": {
           "type": "array"
+        }
+      }
+    },
+    "waves": {
+      "description": "Plan de vagues de migration calculé (tri topologique) — informatif seulement, aucun déplacement n'est exécuté par ce script (issue #438).",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "paths",
+          "rollback"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "paths": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "rollback": {
+            "type": "string"
+          }
         }
       }
     }
