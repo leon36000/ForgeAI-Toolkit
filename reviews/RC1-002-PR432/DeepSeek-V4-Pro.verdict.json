@@ -1,0 +1,19 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "governance/AUTHORITY-MAP.md",
+   "description": "La source `agents-md.orch-001` est affichée comme « décision sans fichier » et passe en `superseded` avec `path`/`anchor` null, mais les positions déclarées conservent des localisations `AGENTS.md:76` et `AGENTS.md:84`. Ces ancres ne correspondent plus à l'ancienne section ORCH-001, désormais remplacée dans `AGENTS.md`.",
+   "preuve": "Dans le diff de `governance/AUTHORITY-MAP.md`, les lignes « `agents-md.orch-001` : `orchestration_seat` = `copilot_vscode_cockpit` (AGENTS.md:76) » et « `agents-md.orch-001` : `coordination_scale` = `64_packages_6_claims` (AGENTS.md:84) » restent inchangées, tandis que le diff d'`AGENTS.md` supprime la section qui contenait ces lignes."
+  }
+ ],
+ "date_heure": "2026-08-15T08:17:33.943790+00:00",
+ "prompt_sha256": "aa07d414b76b18bd615538431625f38c88a70bad8ad1499f4026c55249ee1366",
+ "reviewer_model": "DeepSeek-V4-Pro",
+ "modele_servi": "deepseek-v4-pro-direct",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

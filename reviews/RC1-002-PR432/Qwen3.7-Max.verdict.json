@@ -1,0 +1,19 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "governance/authority.json",
+   "description": "Les locators des positions de la source 'agents-md.orch-001' pointent encore vers 'AGENTS.md:76' et 'AGENTS.md:84'. Or, la section ORCH-001 a été supprimée et remplacée ; ces lignes correspondent désormais à du texte sans rapport (une ligne vide et le format de claim). Bien que la source soit 'superseded' et que le digest soit 'none', ces références sont techniquement périmées et devraient être nullifiées pour refléter l'absence d'ancre physique.",
+   "preuve": "authority.json lignes 144-155 (positions array de agents-md.orch-001) et AGENTS.md lignes 76 et 84 dans le nouveau fichier."
+  }
+ ],
+ "date_heure": "2026-08-15T08:13:27.513803+00:00",
+ "prompt_sha256": "aa07d414b76b18bd615538431625f38c88a70bad8ad1499f4026c55249ee1366",
+ "reviewer_model": "Qwen3.7-Max",
+ "modele_servi": "qwen37-max-openrouter",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}
