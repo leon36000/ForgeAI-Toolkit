@@ -92,6 +92,22 @@ def detect_collisions(paths: list[str], targets: dict[str, str] | None = None) -
             }
         )
 
+    if targets is not None:
+        sources_by_target: dict[str, list[str]] = {}
+        for source, target in targets.items():
+            sources_by_target.setdefault(target, []).append(source)
+        for target, sources in sources_by_target.items():
+            if len(sources) > 1:
+                result["case"].append(
+                    {
+                        "paths": sorted(sources),
+                        "description": (
+                            f"Cible ambiguë : {len(sources)} sources distinctes "
+                            f"migrent vers le même emplacement : {target}."
+                        ),
+                    }
+                )
+
     for group in groups_from_edges(unicode_edges):
         result["unicode"].append(
             {
@@ -609,12 +625,38 @@ def build_manifest(repo_root: Path, rules_path: Path | None = None) -> dict:
     rules_by_id = {rule["id"]: rule for rule in rules["rules"]}
 
     entries = []
+    self_referential_generated_paths = {
+        _MANIFEST_JSON.as_posix(),
+        _MANIFEST_MARKDOWN.as_posix(),
+        "governance/STATE-CURRENT.json",
+        "governance/STATE-CURRENT.md",
+        "governance/AUTHORITY-MAP.md",
+    }
     for path in sorted(tracked):
         classification = classifications[path]
         rule = rules_by_id[classification["rule_id"]]
+        if path in self_referential_generated_paths:
+            # Ces sorties générées s'auto-référencent : leurs métadonnées de contenu
+            # doivent rester nulles pour éviter un point fixe non déterministe.
+            size = None
+            file_type = None
+            sha256 = None
+        else:
+            file_path = _within_repo(repo_root, repo_root / path)
+            file_data = file_path.read_bytes()
+            try:
+                file_data.decode("utf-8")
+                file_type = "text"
+            except UnicodeDecodeError:
+                file_type = "binary"
+            size = file_path.stat().st_size
+            sha256 = _sha256(file_data)
         entries.append(
             {
                 "path": path,
+                "size": size,
+                "type": file_type,
+                "sha256": sha256,
                 "class": classification["class"],
                 "generated": classification["generated"],
                 "owner": classification["owner"],
@@ -653,13 +695,15 @@ def build_manifest(repo_root: Path, rules_path: Path | None = None) -> dict:
         "dangling_references_total": len(graph["dangling"]),
     }
 
-    return {
+    manifest = {
         "rules_sha256": _sha256(rules_path.read_bytes()),
         "entries": entries,
         "summary": summary,
         "collisions": collisions,
         "reference_graph": reference_graph,
     }
+    manifest["waves"] = compute_waves(manifest)
+    return manifest
 
 
 def render(manifest: dict) -> str:
@@ -687,6 +731,18 @@ def render(manifest: dict) -> str:
 
     for classification, total in sorted(summary["by_class"].items()):
         lines.append(f"- {classification} : {total}")
+
+    lines.extend(
+        [
+            "",
+            "## Plan de migration",
+            "",
+            f"- Vagues : {len(manifest['waves'])}",
+        ]
+    )
+
+    for wave in manifest["waves"]:
+        lines.append(f"- Vague {wave['id']} : {len(wave['paths'])} chemin(s)")
 
     lines.extend(
         [
@@ -749,6 +805,17 @@ def check(repo_root: Path, rules_path: Path | None = None) -> tuple[bool, list[s
             errors.append(
                 "Markdown divergent : governance/PATH-CLASSIFICATION.md"
             )
+
+    if current["summary"]["case_collisions_total"] > 0:
+        errors.append(
+            "collisions de casse détectées : "
+            f"{current['summary']['case_collisions_total']}"
+        )
+    if current["summary"]["portability_violations_total"] > 0:
+        errors.append(
+            "violations de portabilité détectées : "
+            f"{current['summary']['portability_violations_total']}"
+        )
 
     if errors:
         errors.append(

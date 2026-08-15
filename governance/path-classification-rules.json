@@ -167,6 +167,34 @@
       "rationale": "Le fichier porte l'en-tête « NE PAS ÉDITER À LA MAIN » et est régénéré par validate_authority.py."
     },
     {
+      "id": "generated-path-classification-json",
+      "match": {
+        "kind": "exact",
+        "value": "governance/path-classification.json"
+      },
+      "class": "GENERATED",
+      "generated": true,
+      "owner": "gouvernance-generateurs",
+      "target": null,
+      "target_kind": "keep",
+      "load_bearing": true,
+      "rationale": "Manifest genere par scripts/governance/classify_paths.py --render, jamais edite a la main."
+    },
+    {
+      "id": "generated-path-classification-markdown",
+      "match": {
+        "kind": "exact",
+        "value": "governance/PATH-CLASSIFICATION.md"
+      },
+      "class": "GENERATED",
+      "generated": true,
+      "owner": "gouvernance-generateurs",
+      "target": null,
+      "target_kind": "keep",
+      "load_bearing": true,
+      "rationale": "Resume genere par scripts/governance/classify_paths.py --render (en-tete NE PAS EDITER A LA MAIN), jamais edite a la main."
+    },
+    {
       "id": "governance-stories",
       "match": {
         "kind": "prefix",
@@ -203,8 +231,8 @@
       "class": "ARCHIVE",
       "generated": false,
       "owner": "archive-cursor",
-      "target": "archive/cursor/",
-      "target_kind": "reroot",
+      "target": "archive/cursor/rules/forgeai-orchestration.mdc",
+      "target_kind": "explicit",
       "load_bearing": true,
       "rationale": "ARCHIVE et load_bearing=true coexistent sans contradiction: cette configuration historique est déclarée avec empreinte dans governance/authority.json et doit être lue par #440 avant déplacement."
     },

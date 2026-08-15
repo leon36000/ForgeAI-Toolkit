@@ -1,0 +1,31 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "scripts/governance/classify_paths.py",
+   "description": "check_portability() ne teste que des règles Windows (caractères interdits, noms réservés, point/espace terminal). Aucun contrôle macOS-spécifique (normalisation Unicode APFS, noms ≥ 255 octets par segment sur HFS+ exFAT) ni Linux-spécifique (null byte, slash) n'est implémenté, alors que le critère d'acceptation AC6 mentionne explicitement « validation sur Windows, macOS et Linux ». La détection d'anomalies Unicode NFC (detect_collisions) et la limite de segment 255 octets couvrent partiellement le terrain, mais pas via un nom de fonction/règle lié à macOS. Le choix de ne couvrir que Windows comme cas le plus restrictif est une position défendable mais non documentée.",
+   "preuve": "check_portability() (lignes ~117-223) : toutes les vérifications ciblent Windows (forbidden_characters = '<>:\"|?*', reserved_names = CON/PRN/COM1/etc., trailing dot/space). Aucun nom de règle n'inclut 'macos' ou 'linux'."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "scripts/governance/classify_paths.py",
+   "description": "check_portability() émet deux violations distinctes (règles 'path_too_long' + 'path_length', ou 'path_length_warning' + 'path_length') pour le même segment chemin long, avec des champs structurellement différents (l'un n'a pas 'severity'). Fonctionnellement inoffensif (les deux sont collectées dans collisions.portability), mais crée une redondance inattendue dans l'output pour un consommateur de l'API.",
+   "preuve": "check_portability() lignes ~205-223 : pour path_length > 240, deux append avec 'rule': 'path_too_long' et 'rule': 'path_length'/'severity': 'error'. Pour 200-240, deux append avec 'path_length_warning' et 'path_length'/'severity': 'warning'."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "scripts/revue.py",
+   "description": "Le mapping vendor est désormais codé en dur dans un dictionnaire Python (_VENDOR) au lieu d'être dérivé dynamiquement de manifests/roles.yaml. Un nouveau vendor nécessitera une modification de revue.py et non plus seulement des données YAML. Le test AC de #433 (« ajouter un vendor ne touche pas revue.py ») a été supprimé dans ce diff. L'approche est défendable (déterminisme + suppression de la dépendance à un fichier YAML pour le dépouillement), mais le changement de contrat implicite mérite confirmation par les reviewers.",
+   "preuve": "revue.py : _VENDOR dictionnaire statique (lignes ~29-41) remplace _vendor_table() + _load_roles_yaml() + _load_routes_yaml() (~130 lignes supprimées). tests/test_revue.py : test_ajouter_un_vendor_ne_touche_pas_revue_py et test_tally_invalide_si_roster_introuvable supprimés, test_vendor_table_derivee_de_roles_yaml_reelle supprimé."
+  }
+ ],
+ "date_heure": "2026-08-15T18:34:03.477224+00:00",
+ "prompt_sha256": "246646a7807cfe0d6a6d3dc36fb0353e385db9246ecd7a2ae7a5da859e8b4626",
+ "reviewer_model": "MiMo-Pro-V2",
+ "modele_servi": "mimo-pro-v2-openrouter",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}
