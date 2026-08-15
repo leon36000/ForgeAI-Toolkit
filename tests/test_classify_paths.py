@@ -177,6 +177,7 @@ def test_chemin_longueur_avertissement() -> None:
 import hashlib
 import json
 import subprocess
+import sys
 
 import pytest
 
@@ -928,3 +929,42 @@ def test_main_retourne_1_quand_check_echoue_reellement(
     )
 
     assert classify_paths.main(["--repo-root", str(repo_jouet)]) == 1
+
+
+def test_main_exit_code_processus_reflete_lechec(tmp_path: pathlib.Path) -> None:
+    _initialise_depot_jouet(tmp_path)
+
+    rendered = subprocess.run(
+        [
+            sys.executable,
+            str(_MODULE_PATH),
+            "--repo-root",
+            str(tmp_path),
+            "--render",
+        ],
+        capture_output=True,
+        text=True,
+    )
+
+    assert rendered.returncode == 0
+
+    manifest_path = tmp_path / "governance" / "path-classification.json"
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    manifest["summary"]["tracked_total"] = 999
+    manifest_path.write_text(
+        json.dumps(manifest, sort_keys=True, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
+
+    checked = subprocess.run(
+        [
+            sys.executable,
+            str(_MODULE_PATH),
+            "--repo-root",
+            str(tmp_path),
+        ],
+        capture_output=True,
+        text=True,
+    )
+
+    assert checked.returncode == 1

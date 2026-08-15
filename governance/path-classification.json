@@ -139,14 +139,14 @@
         },
         {
           "candidate": ".coderabbit.yaml",
-          "line": 563,
+          "line": 564,
           "referrer": "tests/test_classify_paths.py",
           "resolved": ".coderabbit.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".coderabbit.yaml",
-          "line": 573,
+          "line": 574,
           "referrer": "tests/test_classify_paths.py",
           "resolved": ".coderabbit.yaml",
           "severity": "hard"
@@ -2583,7 +2583,7 @@
       "referenced_by": [
         {
           "candidate": "Docs/BASELINE-CLI-DOC.json",
-          "line": 119,
+          "line": 128,
           "referrer": ".github/workflows/gates.yml",
           "resolved": "Docs/BASELINE-CLI-DOC.json",
           "severity": "hard"
@@ -3801,21 +3801,14 @@
         },
         {
           "candidate": "README.md",
-          "line": 364,
+          "line": 365,
           "referrer": "tests/test_classify_paths.py",
           "resolved": "README.md",
           "severity": "hard"
         },
         {
           "candidate": "README.md",
-          "line": 401,
-          "referrer": "tests/test_classify_paths.py",
-          "resolved": "README.md",
-          "severity": "hard"
-        },
-        {
-          "candidate": "README.md",
-          "line": 403,
+          "line": 402,
           "referrer": "tests/test_classify_paths.py",
           "resolved": "README.md",
           "severity": "hard"
@@ -3829,7 +3822,7 @@
         },
         {
           "candidate": "README.md",
-          "line": 411,
+          "line": 405,
           "referrer": "tests/test_classify_paths.py",
           "resolved": "README.md",
           "severity": "hard"
@@ -3843,21 +3836,28 @@
         },
         {
           "candidate": "README.md",
-          "line": 666,
+          "line": 413,
           "referrer": "tests/test_classify_paths.py",
           "resolved": "README.md",
           "severity": "hard"
         },
         {
           "candidate": "README.md",
-          "line": 682,
+          "line": 667,
           "referrer": "tests/test_classify_paths.py",
           "resolved": "README.md",
           "severity": "hard"
         },
         {
           "candidate": "README.md",
-          "line": 708,
+          "line": 683,
+          "referrer": "tests/test_classify_paths.py",
+          "resolved": "README.md",
+          "severity": "hard"
+        },
+        {
+          "candidate": "README.md",
+          "line": 709,
           "referrer": "tests/test_classify_paths.py",
           "resolved": "README.md",
           "severity": "hard"
@@ -5988,7 +5988,7 @@
         },
         {
           "candidate": "governance/STATE-CURRENT.md",
-          "line": 353,
+          "line": 354,
           "referrer": "tests/test_classify_paths.py",
           "resolved": "governance/STATE-CURRENT.md",
           "severity": "hard"
@@ -6153,49 +6153,49 @@
         },
         {
           "candidate": "governance/authority.json",
-          "line": 400,
+          "line": 401,
           "referrer": "tests/test_classify_paths.py",
           "resolved": "governance/authority.json",
           "severity": "hard"
         },
         {
           "candidate": "governance/authority.json",
-          "line": 404,
+          "line": 405,
           "referrer": "tests/test_classify_paths.py",
           "resolved": "governance/authority.json",
           "severity": "hard"
         },
         {
           "candidate": "governance/authority.json",
-          "line": 409,
+          "line": 410,
           "referrer": "tests/test_classify_paths.py",
           "resolved": "governance/authority.json",
           "severity": "hard"
         },
         {
           "candidate": "governance/authority.json",
-          "line": 421,
+          "line": 422,
           "referrer": "tests/test_classify_paths.py",
           "resolved": "governance/authority.json",
           "severity": "hard"
         },
         {
           "candidate": "governance/authority.json",
-          "line": 424,
+          "line": 425,
           "referrer": "tests/test_classify_paths.py",
           "resolved": "governance/authority.json",
           "severity": "hard"
         },
         {
           "candidate": "governance/authority.json",
-          "line": 429,
+          "line": 430,
           "referrer": "tests/test_classify_paths.py",
           "resolved": "governance/authority.json",
           "severity": "hard"
         },
         {
           "candidate": "governance/authority.json",
-          "line": 555,
+          "line": 556,
           "referrer": "tests/test_classify_paths.py",
           "resolved": "governance/authority.json",
           "severity": "hard"
@@ -6301,14 +6301,14 @@
       "referenced_by": [
         {
           "candidate": "governance/path-classification-rules.json",
-          "line": 669,
+          "line": 670,
           "referrer": "tests/test_classify_paths.py",
           "resolved": "governance/path-classification-rules.json",
           "severity": "hard"
         },
         {
           "candidate": "governance/path-classification-rules.json",
-          "line": 708,
+          "line": 709,
           "referrer": "tests/test_classify_paths.py",
           "resolved": "governance/path-classification-rules.json",
           "severity": "hard"
@@ -6354,14 +6354,14 @@
         },
         {
           "candidate": "governance/path-classification.json",
-          "line": 889,
+          "line": 890,
           "referrer": "tests/test_classify_paths.py",
           "resolved": "governance/path-classification.json",
           "severity": "hard"
         },
         {
           "candidate": "governance/path-classification.json",
-          "line": 921,
+          "line": 922,
           "referrer": "tests/test_classify_paths.py",
           "resolved": "governance/path-classification.json",
           "severity": "hard"
@@ -8419,42 +8419,42 @@
         },
         {
           "candidate": "reviews/BINDING.txt",
-          "line": 436,
+          "line": 437,
           "referrer": "tests/test_classify_paths.py",
           "resolved": "reviews/BINDING.txt",
           "severity": "hard"
         },
         {
           "candidate": "reviews/BINDING.txt",
-          "line": 438,
+          "line": 439,
           "referrer": "tests/test_classify_paths.py",
           "resolved": "reviews/BINDING.txt",
           "severity": "hard"
         },
         {
           "candidate": "reviews/BINDING.txt",
-          "line": 443,
+          "line": 444,
           "referrer": "tests/test_classify_paths.py",
           "resolved": "reviews/BINDING.txt",
           "severity": "hard"
         },
         {
           "candidate": "reviews/BINDING.txt",
-          "line": 452,
+          "line": 453,
           "referrer": "tests/test_classify_paths.py",
           "resolved": "reviews/BINDING.txt",
           "severity": "hard"
         },
         {
           "candidate": "reviews/BINDING.txt",
-          "line": 454,
+          "line": 455,
           "referrer": "tests/test_classify_paths.py",
           "resolved": "reviews/BINDING.txt",
           "severity": "hard"
         },
         {
           "candidate": "reviews/BINDING.txt",
-          "line": 459,
+          "line": 460,
           "referrer": "tests/test_classify_paths.py",
           "resolved": "reviews/BINDING.txt",
           "severity": "hard"
@@ -18670,7 +18670,7 @@
       "referenced_by": [
         {
           "candidate": "scripts/catalogue_gate.py",
-          "line": 138,
+          "line": 147,
           "referrer": ".github/workflows/gates.yml",
           "resolved": "scripts/catalogue_gate.py",
           "severity": "hard"
@@ -18723,7 +18723,7 @@
       "referenced_by": [
         {
           "candidate": "scripts/check_metering_sites.py",
-          "line": 129,
+          "line": 138,
           "referrer": ".github/workflows/gates.yml",
           "resolved": "scripts/check_metering_sites.py",
           "severity": "hard"
@@ -18850,7 +18850,7 @@
         },
         {
           "candidate": "scripts/coordination/test_scope_guard.py",
-          "line": 336,
+          "line": 337,
           "referrer": "tests/test_classify_paths.py",
           "resolved": "scripts/coordination/test_scope_guard.py",
           "severity": "hard"
@@ -18992,7 +18992,7 @@
         },
         {
           "candidate": "scripts/gate_docs.py",
-          "line": 118,
+          "line": 127,
           "referrer": ".github/workflows/gates.yml",
           "resolved": "scripts/gate_docs.py",
           "severity": "hard"
@@ -19076,6 +19076,13 @@
       "referenced_by": [
         {
           "candidate": "scripts/governance/classify_paths.py",
+          "line": 112,
+          "referrer": ".github/workflows/gates.yml",
+          "resolved": "scripts/governance/classify_paths.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "scripts/governance/classify_paths.py",
           "line": 3,
           "referrer": "governance/path-classification-rules.json",
           "resolved": "scripts/governance/classify_paths.py",
@@ -19104,7 +19111,7 @@
         },
         {
           "candidate": "scripts/governance/classify_paths.py",
-          "line": 641,
+          "line": 642,
           "referrer": "tests/test_classify_paths.py",
           "resolved": "scripts/governance/classify_paths.py",
           "severity": "hard"
@@ -20078,7 +20085,7 @@
       "referenced_by": [
         {
           "candidate": "scripts/reviews_gate.py",
-          "line": 190,
+          "line": 199,
           "referrer": ".github/workflows/gates.yml",
           "resolved": "scripts/reviews_gate.py",
           "severity": "hard"
@@ -22282,14 +22289,14 @@
         },
         {
           "candidate": "src/forgeai/data/catalogue.sha256",
-          "line": 344,
+          "line": 345,
           "referrer": "tests/test_classify_paths.py",
           "resolved": "src/forgeai/data/catalogue.sha256",
           "severity": "hard"
         },
         {
           "candidate": "src/forgeai/data/catalogue.sha256",
-          "line": 629,
+          "line": 630,
           "referrer": "tests/test_classify_paths.py",
           "resolved": "src/forgeai/data/catalogue.sha256",
           "severity": "hard"
@@ -26210,7 +26217,7 @@
       "referenced_by": [
         {
           "candidate": "src/forgeai/web/assets/adoption.js",
-          "line": 155,
+          "line": 164,
           "referrer": ".github/workflows/gates.yml",
           "resolved": "src/forgeai/web/assets/adoption.js",
           "severity": "hard"
@@ -26323,7 +26330,7 @@
       "referenced_by": [
         {
           "candidate": "src/forgeai/web/assets/app.js",
-          "line": 155,
+          "line": 164,
           "referrer": ".github/workflows/gates.yml",
           "resolved": "src/forgeai/web/assets/app.js",
           "severity": "hard"
@@ -26432,7 +26439,7 @@
       "referenced_by": [
         {
           "candidate": "src/forgeai/web/assets/engine_filter.js",
-          "line": 155,
+          "line": 164,
           "referrer": ".github/workflows/gates.yml",
           "resolved": "src/forgeai/web/assets/engine_filter.js",
           "severity": "hard"
@@ -28803,7 +28810,7 @@
       "referenced_by": [
         {
           "candidate": "tests/js/adoption.test.cjs",
-          "line": 151,
+          "line": 160,
           "referrer": ".github/workflows/gates.yml",
           "resolved": "tests/js/adoption.test.cjs",
           "severity": "hard"
@@ -28870,7 +28877,7 @@
       "referenced_by": [
         {
           "candidate": "tests/js/chaine_adoption.test.cjs",
-          "line": 152,
+          "line": 161,
           "referrer": ".github/workflows/gates.yml",
           "resolved": "tests/js/chaine_adoption.test.cjs",
           "severity": "hard"
@@ -28937,7 +28944,7 @@
       "referenced_by": [
         {
           "candidate": "tests/js/engine_filter.test.cjs",
-          "line": 153,
+          "line": 162,
           "referrer": ".github/workflows/gates.yml",
           "resolved": "tests/js/engine_filter.test.cjs",
           "severity": "hard"
@@ -37578,22 +37585,17 @@
       },
       {
         "candidate": "actions/checkout",
-        "line": 109,
-        "referrer": ".github/workflows/gates.yml"
-      },
-      {
-        "candidate": "origin/main",
-        "line": 120,
+        "line": 108,
         "referrer": ".github/workflows/gates.yml"
       },
       {
         "candidate": "actions/checkout",
-        "line": 125,
+        "line": 118,
         "referrer": ".github/workflows/gates.yml"
       },
       {
-        "candidate": "chat/completions",
-        "line": 128,
+        "candidate": "origin/main",
+        "line": 129,
         "referrer": ".github/workflows/gates.yml"
       },
       {
@@ -37602,43 +37604,53 @@
         "referrer": ".github/workflows/gates.yml"
       },
       {
+        "candidate": "chat/completions",
+        "line": 137,
+        "referrer": ".github/workflows/gates.yml"
+      },
+      {
         "candidate": "actions/checkout",
         "line": 143,
         "referrer": ".github/workflows/gates.yml"
       },
       {
-        "candidate": "actions/setup-node",
-        "line": 146,
+        "candidate": "actions/checkout",
+        "line": 152,
         "referrer": ".github/workflows/gates.yml"
       },
       {
-        "candidate": "tests/js/",
+        "candidate": "actions/setup-node",
         "line": 155,
         "referrer": ".github/workflows/gates.yml"
       },
       {
+        "candidate": "tests/js/",
+        "line": 164,
+        "referrer": ".github/workflows/gates.yml"
+      },
+      {
         "candidate": "actions/checkout",
-        "line": 160,
+        "line": 169,
         "referrer": ".github/workflows/gates.yml"
       },
       {
         "candidate": "actions/setup-python",
-        "line": 163,
+        "line": 172,
         "referrer": ".github/workflows/gates.yml"
       },
       {
         "candidate": "actions/checkout",
-        "line": 175,
+        "line": 184,
         "referrer": ".github/workflows/gates.yml"
       },
       {
         "candidate": "gitleaks/gitleaks-action",
-        "line": 179,
+        "line": 188,
         "referrer": ".github/workflows/gates.yml"
       },
       {
         "candidate": "actions/checkout",
-        "line": 186,
+        "line": 195,
         "referrer": ".github/workflows/gates.yml"
       },
       {
@@ -101608,67 +101620,62 @@
       },
       {
         "candidate": "path-classification-rules.json",
-        "line": 184,
+        "line": 185,
         "referrer": "tests/test_classify_paths.py"
       },
       {
         "candidate": "src/",
-        "line": 199,
+        "line": 200,
         "referrer": "tests/test_classify_paths.py"
       },
       {
         "candidate": "rules.json",
-        "line": 217,
+        "line": 218,
         "referrer": "tests/test_classify_paths.py"
       },
       {
         "candidate": "a/",
-        "line": 232,
-        "referrer": "tests/test_classify_paths.py"
-      },
-      {
-        "candidate": "b/",
         "line": 233,
         "referrer": "tests/test_classify_paths.py"
       },
       {
-        "candidate": "src/forgeai/",
-        "line": 269,
+        "candidate": "b/",
+        "line": 234,
         "referrer": "tests/test_classify_paths.py"
       },
       {
-        "candidate": "src/",
+        "candidate": "src/forgeai/",
         "line": 270,
         "referrer": "tests/test_classify_paths.py"
       },
       {
+        "candidate": "src/",
+        "line": 271,
+        "referrer": "tests/test_classify_paths.py"
+      },
+      {
         "candidate": "src/forgeai/module.py",
-        "line": 273,
+        "line": 274,
         "referrer": "tests/test_classify_paths.py"
       },
       {
         "candidate": "src/forgeai/",
-        "line": 279,
-        "referrer": "tests/test_classify_paths.py"
-      },
-      {
-        "candidate": "src/",
         "line": 280,
         "referrer": "tests/test_classify_paths.py"
       },
       {
+        "candidate": "src/",
+        "line": 281,
+        "referrer": "tests/test_classify_paths.py"
+      },
+      {
         "candidate": "src/forgeai/module.py",
-        "line": 283,
+        "line": 284,
         "referrer": "tests/test_classify_paths.py"
       },
       {
         "candidate": "src/",
-        "line": 289,
-        "referrer": "tests/test_classify_paths.py"
-      },
-      {
-        "candidate": "inconnu/fichier.txt",
-        "line": 291,
+        "line": 290,
         "referrer": "tests/test_classify_paths.py"
       },
       {
@@ -101677,68 +101684,68 @@
         "referrer": "tests/test_classify_paths.py"
       },
       {
-        "candidate": "reviews/",
-        "line": 298,
+        "candidate": "inconnu/fichier.txt",
+        "line": 293,
         "referrer": "tests/test_classify_paths.py"
       },
       {
-        "candidate": "evidence/reviews/",
+        "candidate": "reviews/",
         "line": 299,
         "referrer": "tests/test_classify_paths.py"
       },
       {
+        "candidate": "evidence/reviews/",
+        "line": 300,
+        "referrer": "tests/test_classify_paths.py"
+      },
+      {
         "candidate": "reviews/x/y.json",
-        "line": 304,
+        "line": 305,
         "referrer": "tests/test_classify_paths.py"
       },
       {
         "candidate": "evidence/reviews/x/y.json",
-        "line": 306,
+        "line": 307,
         "referrer": "tests/test_classify_paths.py"
       },
       {
         "candidate": "src/",
-        "line": 310,
+        "line": 311,
         "referrer": "tests/test_classify_paths.py"
       },
       {
         "candidate": "src/module.py",
-        "line": 313,
+        "line": 314,
         "referrer": "tests/test_classify_paths.py"
       },
       {
         "candidate": "Recherche/x.yaml",
-        "line": 322,
-        "referrer": "tests/test_classify_paths.py"
-      },
-      {
-        "candidate": "archive/recherche/x.yaml",
         "line": 323,
         "referrer": "tests/test_classify_paths.py"
       },
       {
+        "candidate": "archive/recherche/x.yaml",
+        "line": 324,
+        "referrer": "tests/test_classify_paths.py"
+      },
+      {
         "candidate": "Recherche/x.yaml",
-        "line": 328,
+        "line": 329,
         "referrer": "tests/test_classify_paths.py"
       },
       {
         "candidate": "archive/recherche/x.yaml",
-        "line": 330,
+        "line": 331,
         "referrer": "tests/test_classify_paths.py"
       },
       {
         "candidate": "absent.md",
-        "line": 422,
+        "line": 423,
         "referrer": "tests/test_classify_paths.py"
       },
       {
         "candidate": "absent.md",
-        "line": 430,
-        "referrer": "tests/test_classify_paths.py"
-      },
-      {
-        "candidate": "reviews/B-09-civ/x.json",
-        "line": 437,
+        "line": 431,
         "referrer": "tests/test_classify_paths.py"
       },
       {
@@ -101748,7 +101755,7 @@
       },
       {
         "candidate": "reviews/B-09-civ/x.json",
-        "line": 453,
+        "line": 439,
         "referrer": "tests/test_classify_paths.py"
       },
       {
@@ -101757,13 +101764,13 @@
         "referrer": "tests/test_classify_paths.py"
       },
       {
-        "candidate": "src/x.py",
-        "line": 469,
+        "candidate": "reviews/B-09-civ/x.json",
+        "line": 455,
         "referrer": "tests/test_classify_paths.py"
       },
       {
         "candidate": "src/x.py",
-        "line": 471,
+        "line": 470,
         "referrer": "tests/test_classify_paths.py"
       },
       {
@@ -101773,7 +101780,7 @@
       },
       {
         "candidate": "src/x.py",
-        "line": 478,
+        "line": 473,
         "referrer": "tests/test_classify_paths.py"
       },
       {
@@ -101782,13 +101789,13 @@
         "referrer": "tests/test_classify_paths.py"
       },
       {
-        "candidate": "notes.md",
-        "line": 486,
+        "candidate": "src/x.py",
+        "line": 480,
         "referrer": "tests/test_classify_paths.py"
       },
       {
-        "candidate": "src/x.py",
-        "line": 486,
+        "candidate": "notes.md",
+        "line": 487,
         "referrer": "tests/test_classify_paths.py"
       },
       {
@@ -101797,22 +101804,22 @@
         "referrer": "tests/test_classify_paths.py"
       },
       {
-        "candidate": "notes.md",
-        "line": 488,
-        "referrer": "tests/test_classify_paths.py"
-      },
-      {
         "candidate": "src/x.py",
         "line": 488,
         "referrer": "tests/test_classify_paths.py"
       },
       {
         "candidate": "notes.md",
-        "line": 493,
+        "line": 489,
         "referrer": "tests/test_classify_paths.py"
       },
       {
         "candidate": "src/x.py",
+        "line": 489,
+        "referrer": "tests/test_classify_paths.py"
+      },
+      {
+        "candidate": "notes.md",
         "line": 494,
         "referrer": "tests/test_classify_paths.py"
       },
@@ -101822,23 +101829,18 @@
         "referrer": "tests/test_classify_paths.py"
       },
       {
+        "candidate": "src/x.py",
+        "line": 496,
+        "referrer": "tests/test_classify_paths.py"
+      },
+      {
         "candidate": "notes.md",
-        "line": 501,
-        "referrer": "tests/test_classify_paths.py"
-      },
-      {
-        "candidate": "src/pkg",
-        "line": 501,
-        "referrer": "tests/test_classify_paths.py"
-      },
-      {
-        "candidate": "src/pkg/mod.py",
         "line": 502,
         "referrer": "tests/test_classify_paths.py"
       },
       {
-        "candidate": "notes.md",
-        "line": 503,
+        "candidate": "src/pkg",
+        "line": 502,
         "referrer": "tests/test_classify_paths.py"
       },
       {
@@ -101848,11 +101850,16 @@
       },
       {
         "candidate": "notes.md",
-        "line": 508,
+        "line": 504,
         "referrer": "tests/test_classify_paths.py"
       },
       {
-        "candidate": "src/pkg",
+        "candidate": "src/pkg/mod.py",
+        "line": 504,
+        "referrer": "tests/test_classify_paths.py"
+      },
+      {
+        "candidate": "notes.md",
         "line": 509,
         "referrer": "tests/test_classify_paths.py"
       },
@@ -101862,18 +101869,13 @@
         "referrer": "tests/test_classify_paths.py"
       },
       {
-        "candidate": "notes.md",
-        "line": 518,
-        "referrer": "tests/test_classify_paths.py"
-      },
-      {
-        "candidate": "src/x.py",
-        "line": 521,
+        "candidate": "src/pkg",
+        "line": 511,
         "referrer": "tests/test_classify_paths.py"
       },
       {
         "candidate": "notes.md",
-        "line": 522,
+        "line": 519,
         "referrer": "tests/test_classify_paths.py"
       },
       {
@@ -101883,16 +101885,21 @@
       },
       {
         "candidate": "notes.md",
-        "line": 527,
+        "line": 523,
+        "referrer": "tests/test_classify_paths.py"
+      },
+      {
+        "candidate": "src/x.py",
+        "line": 523,
+        "referrer": "tests/test_classify_paths.py"
+      },
+      {
+        "candidate": "notes.md",
+        "line": 528,
         "referrer": "tests/test_classify_paths.py"
       },
       {
         "candidate": "chemin/qui/nexiste/pas.py",
-        "line": 533,
-        "referrer": "tests/test_classify_paths.py"
-      },
-      {
-        "candidate": "notes.md",
         "line": 534,
         "referrer": "tests/test_classify_paths.py"
       },
@@ -101903,26 +101910,26 @@
       },
       {
         "candidate": "notes.md",
-        "line": 540,
+        "line": 536,
         "referrer": "tests/test_classify_paths.py"
       },
       {
         "candidate": "notes.md",
-        "line": 544,
+        "line": 541,
+        "referrer": "tests/test_classify_paths.py"
+      },
+      {
+        "candidate": "notes.md",
+        "line": 545,
         "referrer": "tests/test_classify_paths.py"
       },
       {
         "candidate": "Recherche/",
-        "line": 566,
+        "line": 567,
         "referrer": "tests/test_classify_paths.py"
       },
       {
         "candidate": "x00src/x.py",
-        "line": 580,
-        "referrer": "tests/test_classify_paths.py"
-      },
-      {
-        "candidate": "src/x.py",
         "line": 581,
         "referrer": "tests/test_classify_paths.py"
       },
@@ -101932,123 +101939,123 @@
         "referrer": "tests/test_classify_paths.py"
       },
       {
-        "candidate": "path-classification.json",
-        "line": 652,
+        "candidate": "src/x.py",
+        "line": 583,
         "referrer": "tests/test_classify_paths.py"
       },
       {
-        "candidate": "PATH-CLASSIFICATION.md",
+        "candidate": "path-classification.json",
         "line": 653,
         "referrer": "tests/test_classify_paths.py"
       },
       {
+        "candidate": "PATH-CLASSIFICATION.md",
+        "line": 654,
+        "referrer": "tests/test_classify_paths.py"
+      },
+      {
         "candidate": "governance/",
-        "line": 693,
+        "line": 694,
         "referrer": "tests/test_classify_paths.py"
       },
       {
         "candidate": "path-classification.json",
-        "line": 733,
+        "line": 734,
         "referrer": "tests/test_classify_paths.py"
       },
       {
         "candidate": "archive/a.md",
-        "line": 784,
-        "referrer": "tests/test_classify_paths.py"
-      },
-      {
-        "candidate": "evidence/a.md",
-        "line": 784,
-        "referrer": "tests/test_classify_paths.py"
-      },
-      {
-        "candidate": "archive/b.md",
         "line": 785,
         "referrer": "tests/test_classify_paths.py"
       },
       {
-        "candidate": "evidence/b.md",
+        "candidate": "evidence/a.md",
         "line": 785,
         "referrer": "tests/test_classify_paths.py"
       },
       {
-        "candidate": "archive/a.md",
-        "line": 795,
-        "referrer": "tests/test_classify_paths.py"
-      },
-      {
         "candidate": "archive/b.md",
-        "line": 795,
-        "referrer": "tests/test_classify_paths.py"
-      },
-      {
-        "candidate": "archive/a.md",
-        "line": 805,
-        "referrer": "tests/test_classify_paths.py"
-      },
-      {
-        "candidate": "evidence/a.md",
-        "line": 805,
-        "referrer": "tests/test_classify_paths.py"
-      },
-      {
-        "candidate": "archive/b.md",
-        "line": 806,
+        "line": 786,
         "referrer": "tests/test_classify_paths.py"
       },
       {
         "candidate": "evidence/b.md",
+        "line": 786,
+        "referrer": "tests/test_classify_paths.py"
+      },
+      {
+        "candidate": "archive/a.md",
+        "line": 796,
+        "referrer": "tests/test_classify_paths.py"
+      },
+      {
+        "candidate": "archive/b.md",
+        "line": 796,
+        "referrer": "tests/test_classify_paths.py"
+      },
+      {
+        "candidate": "archive/a.md",
         "line": 806,
         "referrer": "tests/test_classify_paths.py"
       },
       {
-        "candidate": "archive/a.md",
-        "line": 808,
-        "referrer": "tests/test_classify_paths.py"
-      },
-      {
-        "candidate": "archive/b.md",
-        "line": 808,
-        "referrer": "tests/test_classify_paths.py"
-      },
-      {
-        "candidate": "archive/b.md",
-        "line": 818,
-        "referrer": "tests/test_classify_paths.py"
-      },
-      {
-        "candidate": "archive/a.md",
-        "line": 818,
-        "referrer": "tests/test_classify_paths.py"
-      },
-      {
-        "candidate": "archive/a.md",
-        "line": 825,
-        "referrer": "tests/test_classify_paths.py"
-      },
-      {
         "candidate": "evidence/a.md",
-        "line": 825,
+        "line": 806,
         "referrer": "tests/test_classify_paths.py"
       },
       {
         "candidate": "archive/b.md",
-        "line": 826,
+        "line": 807,
         "referrer": "tests/test_classify_paths.py"
       },
       {
         "candidate": "evidence/b.md",
-        "line": 826,
+        "line": 807,
         "referrer": "tests/test_classify_paths.py"
       },
       {
         "candidate": "archive/a.md",
-        "line": 829,
+        "line": 809,
         "referrer": "tests/test_classify_paths.py"
       },
       {
         "candidate": "archive/b.md",
-        "line": 829,
+        "line": 809,
+        "referrer": "tests/test_classify_paths.py"
+      },
+      {
+        "candidate": "archive/b.md",
+        "line": 819,
+        "referrer": "tests/test_classify_paths.py"
+      },
+      {
+        "candidate": "archive/a.md",
+        "line": 819,
+        "referrer": "tests/test_classify_paths.py"
+      },
+      {
+        "candidate": "archive/a.md",
+        "line": 826,
+        "referrer": "tests/test_classify_paths.py"
+      },
+      {
+        "candidate": "evidence/a.md",
+        "line": 826,
+        "referrer": "tests/test_classify_paths.py"
+      },
+      {
+        "candidate": "archive/b.md",
+        "line": 827,
+        "referrer": "tests/test_classify_paths.py"
+      },
+      {
+        "candidate": "evidence/b.md",
+        "line": 827,
+        "referrer": "tests/test_classify_paths.py"
+      },
+      {
+        "candidate": "archive/a.md",
+        "line": 830,
         "referrer": "tests/test_classify_paths.py"
       },
       {
@@ -102057,88 +102064,98 @@
         "referrer": "tests/test_classify_paths.py"
       },
       {
+        "candidate": "archive/b.md",
+        "line": 831,
+        "referrer": "tests/test_classify_paths.py"
+      },
+      {
         "candidate": "archive/a.md",
-        "line": 830,
+        "line": 831,
         "referrer": "tests/test_classify_paths.py"
       },
       {
         "candidate": "archive/",
-        "line": 834,
+        "line": 835,
         "referrer": "tests/test_classify_paths.py"
       },
       {
         "candidate": "archive/deplace.md",
-        "line": 841,
-        "referrer": "tests/test_classify_paths.py"
-      },
-      {
-        "candidate": "evidence/deplace.md",
-        "line": 841,
-        "referrer": "tests/test_classify_paths.py"
-      },
-      {
-        "candidate": "src/reste.py",
         "line": 842,
         "referrer": "tests/test_classify_paths.py"
       },
       {
-        "candidate": "archive/deplace.md",
-        "line": 850,
+        "candidate": "evidence/deplace.md",
+        "line": 842,
         "referrer": "tests/test_classify_paths.py"
       },
       {
         "candidate": "src/reste.py",
+        "line": 843,
+        "referrer": "tests/test_classify_paths.py"
+      },
+      {
+        "candidate": "archive/deplace.md",
         "line": 851,
         "referrer": "tests/test_classify_paths.py"
       },
       {
+        "candidate": "src/reste.py",
+        "line": 852,
+        "referrer": "tests/test_classify_paths.py"
+      },
+      {
         "candidate": "archive/a.md",
-        "line": 857,
+        "line": 858,
         "referrer": "tests/test_classify_paths.py"
       },
       {
         "candidate": "evidence/a.md",
-        "line": 857,
+        "line": 858,
         "referrer": "tests/test_classify_paths.py"
       },
       {
         "candidate": "archive/b.md",
-        "line": 858,
+        "line": 859,
         "referrer": "tests/test_classify_paths.py"
       },
       {
         "candidate": "evidence/b.md",
-        "line": 858,
+        "line": 859,
         "referrer": "tests/test_classify_paths.py"
       },
       {
         "candidate": "archive/a.md",
-        "line": 860,
+        "line": 861,
         "referrer": "tests/test_classify_paths.py"
       },
       {
         "candidate": "archive/b.md",
-        "line": 860,
+        "line": 861,
         "referrer": "tests/test_classify_paths.py"
       },
       {
         "candidate": "src/x.py",
-        "line": 896,
+        "line": 897,
         "referrer": "tests/test_classify_paths.py"
       },
       {
         "candidate": "src/x.py",
-        "line": 896,
-        "referrer": "tests/test_classify_paths.py"
-      },
-      {
-        "candidate": "src/x.py",
-        "line": 898,
+        "line": 897,
         "referrer": "tests/test_classify_paths.py"
       },
       {
         "candidate": "src/x.py",
         "line": 899,
+        "referrer": "tests/test_classify_paths.py"
+      },
+      {
+        "candidate": "src/x.py",
+        "line": 900,
+        "referrer": "tests/test_classify_paths.py"
+      },
+      {
+        "candidate": "path-classification.json",
+        "line": 951,
         "referrer": "tests/test_classify_paths.py"
       },
       {
@@ -109107,85 +109124,92 @@
         "severity": "hard"
       },
       {
+        "candidate": "scripts/governance/classify_paths.py",
+        "line": 112,
+        "referrer": ".github/workflows/gates.yml",
+        "resolved": "scripts/governance/classify_paths.py",
+        "severity": "hard"
+      },
+      {
         "candidate": "scripts/gate_docs.py",
-        "line": 118,
+        "line": 127,
         "referrer": ".github/workflows/gates.yml",
         "resolved": "scripts/gate_docs.py",
         "severity": "hard"
       },
       {
         "candidate": "Docs/BASELINE-CLI-DOC.json",
-        "line": 119,
+        "line": 128,
         "referrer": ".github/workflows/gates.yml",
         "resolved": "Docs/BASELINE-CLI-DOC.json",
         "severity": "hard"
       },
       {
         "candidate": "scripts/check_metering_sites.py",
-        "line": 129,
+        "line": 138,
         "referrer": ".github/workflows/gates.yml",
         "resolved": "scripts/check_metering_sites.py",
         "severity": "hard"
       },
       {
         "candidate": "scripts/catalogue_gate.py",
-        "line": 138,
+        "line": 147,
         "referrer": ".github/workflows/gates.yml",
         "resolved": "scripts/catalogue_gate.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/js/adoption.test.cjs",
-        "line": 151,
+        "line": 160,
         "referrer": ".github/workflows/gates.yml",
         "resolved": "tests/js/adoption.test.cjs",
         "severity": "hard"
       },
       {
         "candidate": "tests/js/chaine_adoption.test.cjs",
-        "line": 152,
+        "line": 161,
         "referrer": ".github/workflows/gates.yml",
         "resolved": "tests/js/chaine_adoption.test.cjs",
         "severity": "hard"
       },
       {
         "candidate": "tests/js/engine_filter.test.cjs",
-        "line": 153,
+        "line": 162,
         "referrer": ".github/workflows/gates.yml",
         "resolved": "tests/js/engine_filter.test.cjs",
         "severity": "hard"
       },
       {
         "candidate": "src/forgeai/web/assets/app.js",
-        "line": 155,
+        "line": 164,
         "referrer": ".github/workflows/gates.yml",
         "resolved": "src/forgeai/web/assets/app.js",
         "severity": "hard"
       },
       {
         "candidate": "src/forgeai/web/assets/adoption.js",
-        "line": 155,
+        "line": 164,
         "referrer": ".github/workflows/gates.yml",
         "resolved": "src/forgeai/web/assets/adoption.js",
         "severity": "hard"
       },
       {
         "candidate": "src/forgeai/web/assets/engine_filter.js",
-        "line": 155,
+        "line": 164,
         "referrer": ".github/workflows/gates.yml",
         "resolved": "src/forgeai/web/assets/engine_filter.js",
         "severity": "hard"
       },
       {
         "candidate": "src/forgeai",
-        "line": 169,
+        "line": 178,
         "referrer": ".github/workflows/gates.yml",
         "resolved": "src/forgeai",
         "severity": "hard"
       },
       {
         "candidate": "scripts/reviews_gate.py",
-        "line": 190,
+        "line": 199,
         "referrer": ".github/workflows/gates.yml",
         "resolved": "scripts/reviews_gate.py",
         "severity": "hard"
@@ -128477,49 +128501,42 @@
       },
       {
         "candidate": "scripts/coordination/test_scope_guard.py",
-        "line": 336,
+        "line": 337,
         "referrer": "tests/test_classify_paths.py",
         "resolved": "scripts/coordination/test_scope_guard.py",
         "severity": "hard"
       },
       {
         "candidate": "src/forgeai/data/catalogue.sha256",
-        "line": 344,
+        "line": 345,
         "referrer": "tests/test_classify_paths.py",
         "resolved": "src/forgeai/data/catalogue.sha256",
         "severity": "hard"
       },
       {
         "candidate": "governance/STATE-CURRENT.md",
-        "line": 353,
+        "line": 354,
         "referrer": "tests/test_classify_paths.py",
         "resolved": "governance/STATE-CURRENT.md",
         "severity": "hard"
       },
       {
         "candidate": "README.md",
-        "line": 364,
+        "line": 365,
         "referrer": "tests/test_classify_paths.py",
         "resolved": "README.md",
         "severity": "hard"
       },
       {
         "candidate": "governance/authority.json",
-        "line": 400,
-        "referrer": "tests/test_classify_paths.py",
-        "resolved": "governance/authority.json",
-        "severity": "hard"
-      },
-      {
-        "candidate": "README.md",
         "line": 401,
         "referrer": "tests/test_classify_paths.py",
-        "resolved": "README.md",
+        "resolved": "governance/authority.json",
         "severity": "hard"
       },
       {
         "candidate": "README.md",
-        "line": 403,
+        "line": 402,
         "referrer": "tests/test_classify_paths.py",
         "resolved": "README.md",
         "severity": "hard"
@@ -128532,24 +128549,24 @@
         "severity": "hard"
       },
       {
-        "candidate": "governance/authority.json",
-        "line": 404,
-        "referrer": "tests/test_classify_paths.py",
-        "resolved": "governance/authority.json",
-        "severity": "hard"
-      },
-      {
-        "candidate": "governance/authority.json",
-        "line": 409,
-        "referrer": "tests/test_classify_paths.py",
-        "resolved": "governance/authority.json",
-        "severity": "hard"
-      },
-      {
         "candidate": "README.md",
-        "line": 411,
+        "line": 405,
         "referrer": "tests/test_classify_paths.py",
         "resolved": "README.md",
+        "severity": "hard"
+      },
+      {
+        "candidate": "governance/authority.json",
+        "line": 405,
+        "referrer": "tests/test_classify_paths.py",
+        "resolved": "governance/authority.json",
+        "severity": "hard"
+      },
+      {
+        "candidate": "governance/authority.json",
+        "line": 410,
+        "referrer": "tests/test_classify_paths.py",
+        "resolved": "governance/authority.json",
         "severity": "hard"
       },
       {
@@ -128560,155 +128577,162 @@
         "severity": "hard"
       },
       {
+        "candidate": "README.md",
+        "line": 413,
+        "referrer": "tests/test_classify_paths.py",
+        "resolved": "README.md",
+        "severity": "hard"
+      },
+      {
         "candidate": "governance/authority.json",
-        "line": 421,
+        "line": 422,
         "referrer": "tests/test_classify_paths.py",
         "resolved": "governance/authority.json",
         "severity": "hard"
       },
       {
         "candidate": "governance/authority.json",
-        "line": 424,
+        "line": 425,
         "referrer": "tests/test_classify_paths.py",
         "resolved": "governance/authority.json",
         "severity": "hard"
       },
       {
         "candidate": "governance/authority.json",
-        "line": 429,
+        "line": 430,
         "referrer": "tests/test_classify_paths.py",
         "resolved": "governance/authority.json",
         "severity": "hard"
       },
       {
         "candidate": "reviews/BINDING.txt",
-        "line": 436,
+        "line": 437,
         "referrer": "tests/test_classify_paths.py",
         "resolved": "reviews/BINDING.txt",
         "severity": "hard"
       },
       {
         "candidate": "reviews/BINDING.txt",
-        "line": 438,
+        "line": 439,
         "referrer": "tests/test_classify_paths.py",
         "resolved": "reviews/BINDING.txt",
         "severity": "hard"
       },
       {
         "candidate": "reviews/BINDING.txt",
-        "line": 443,
+        "line": 444,
         "referrer": "tests/test_classify_paths.py",
         "resolved": "reviews/BINDING.txt",
         "severity": "hard"
       },
       {
         "candidate": "reviews/B-09-civ",
-        "line": 445,
+        "line": 446,
         "referrer": "tests/test_classify_paths.py",
         "resolved": "reviews/B-09-civ",
         "severity": "hard"
       },
       {
         "candidate": "reviews/BINDING.txt",
-        "line": 452,
+        "line": 453,
         "referrer": "tests/test_classify_paths.py",
         "resolved": "reviews/BINDING.txt",
         "severity": "hard"
       },
       {
         "candidate": "reviews/BINDING.txt",
-        "line": 454,
+        "line": 455,
         "referrer": "tests/test_classify_paths.py",
         "resolved": "reviews/BINDING.txt",
         "severity": "hard"
       },
       {
         "candidate": "reviews/BINDING.txt",
-        "line": 459,
+        "line": 460,
         "referrer": "tests/test_classify_paths.py",
         "resolved": "reviews/BINDING.txt",
         "severity": "hard"
       },
       {
         "candidate": "governance/authority.json",
-        "line": 555,
+        "line": 556,
         "referrer": "tests/test_classify_paths.py",
         "resolved": "governance/authority.json",
         "severity": "hard"
       },
       {
         "candidate": ".coderabbit.yaml",
-        "line": 563,
+        "line": 564,
         "referrer": "tests/test_classify_paths.py",
         "resolved": ".coderabbit.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".coderabbit.yaml",
-        "line": 573,
+        "line": 574,
         "referrer": "tests/test_classify_paths.py",
         "resolved": ".coderabbit.yaml",
         "severity": "hard"
       },
       {
         "candidate": "src/forgeai/data/catalogue.sha256",
-        "line": 629,
+        "line": 630,
         "referrer": "tests/test_classify_paths.py",
         "resolved": "src/forgeai/data/catalogue.sha256",
         "severity": "hard"
       },
       {
         "candidate": "scripts/governance/classify_paths.py",
-        "line": 641,
+        "line": 642,
         "referrer": "tests/test_classify_paths.py",
         "resolved": "scripts/governance/classify_paths.py",
         "severity": "hard"
       },
       {
         "candidate": "README.md",
-        "line": 666,
+        "line": 667,
         "referrer": "tests/test_classify_paths.py",
         "resolved": "README.md",
         "severity": "hard"
       },
       {
         "candidate": "governance/path-classification-rules.json",
-        "line": 669,
+        "line": 670,
         "referrer": "tests/test_classify_paths.py",
         "resolved": "governance/path-classification-rules.json",
         "severity": "hard"
       },
       {
         "candidate": "README.md",
-        "line": 682,
+        "line": 683,
         "referrer": "tests/test_classify_paths.py",
         "resolved": "README.md",
         "severity": "hard"
       },
       {
         "candidate": "README.md",
-        "line": 708,
+        "line": 709,
         "referrer": "tests/test_classify_paths.py",
         "resolved": "README.md",
         "severity": "hard"
       },
       {
         "candidate": "governance/path-classification-rules.json",
-        "line": 708,
+        "line": 709,
         "referrer": "tests/test_classify_paths.py",
         "resolved": "governance/path-classification-rules.json",
         "severity": "hard"
       },
       {
         "candidate": "governance/path-classification.json",
-        "line": 889,
+        "line": 890,
         "referrer": "tests/test_classify_paths.py",
         "resolved": "governance/path-classification.json",
         "severity": "hard"
       },
       {
         "candidate": "governance/path-classification.json",
-        "line": 921,
+        "line": 922,
         "referrer": "tests/test_classify_paths.py",
         "resolved": "governance/path-classification.json",
         "severity": "hard"
@@ -129207,7 +129231,7 @@
       "working-sandbox-readme": 1
     },
     "case_collisions_total": 0,
-    "dangling_references_total": 14027,
+    "dangling_references_total": 14029,
     "generated_total": 4,
     "load_bearing_total": 1529,
     "portability_violations_total": 0,

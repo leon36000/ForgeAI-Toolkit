@@ -66,3 +66,8 @@ scripts/governance/classify_paths.py + tests/test_classify_paths.py (RC1-008/#43
 5/7) : ajoute compute_waves() — calcule un plan de vagues, n'exécute aucun déplacement.
 governance/PATH-CLASSIFICATION.md (déjà généré au commit 4/7) reste la documentation du
 résultat. Pas de nouvelle entrée README/AGENTS.md requise.
+
+scripts/governance/classify_paths.py (RC1-008/#438, commit 6/7) : correctif d'un bug de garde
+__main__ (raise SystemExit(main())) découvert en ajoutant le job CI — comportement observable
+correct par construction (le contrat CLI n'a jamais été documenté comme "toujours retourner 0",
+c'est un correctif de conformité, pas un changement de contrat). Pas de doc supplémentaire.
