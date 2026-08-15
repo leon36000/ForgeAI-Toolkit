@@ -62,6 +62,38 @@ def test_alias_modele_reponse_routes_yaml_reconnu():
     assert revue.vendor_of("DeepSeek-V4-Pro") == revue.vendor_of("deepseek") == "deepseek"
 
 
+def test_route_modele_reponse_avec_espace_reconnu(tmp_path):
+    # Régression revue scellée RC1-003-PR489-v2 (objection mineure Gemini-3.1-Pro) : le
+    # nom de route réel (modele_reponse) peut contenir un espace — un futur vendor avec un
+    # tel nom ne doit pas échapper à la reconnaissance de son identité anti-Sybil.
+    roles = tmp_path / "manifests" / "roles.yaml"
+    routes = tmp_path / "manifests" / "routes.yaml"
+    roles.parent.mkdir()
+    roles.write_text(
+        "membres:\n"
+        "  - id: espace-modele\n"
+        "    vendor: vendor-espace\n"
+        "    provider_id: EspaceModele\n"
+        "regles_revue:\n"
+        "  vendors_par_story: 3\n",
+        encoding="utf-8",
+    )
+    routes.write_text(
+        "routes:\n"
+        "  - {membre: espace-modele, provider_id: EspaceModele,"
+        " modele_reponse: Nom Avec Espace, statut: ok}\n",
+        encoding="utf-8",
+    )
+
+    table = revue._vendor_table(roles_path=roles, routes_path=routes)
+
+    assert table is not None
+    # Les clés sont normalisées (ponctuation/espaces retirés) : "Nom Avec Espace" doit être
+    # capturé EN ENTIER par le parseur (pas tronqué au 1er espace) avant normalisation, sinon
+    # la clé stockée ne correspondrait pas à une recherche sur le nom complet.
+    assert revue.vendor_of("Nom Avec Espace", table) == "vendor-espace"
+
+
 def test_id_membre_avec_commentaire_inline_reconnu(tmp_path):
     # Régression revue scellée RC1-003-PR489 (objection mineure DeepSeek-V4-Pro) : un
     # commentaire inline sur la ligne "- id:" elle-même (pas seulement sur vendor/provider_id/

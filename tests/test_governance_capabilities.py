@@ -78,6 +78,23 @@ def test_revue_scellee_available_si_les_3_signaux_presents(monkeypatch) -> None:
     assert item["status"] == "AVAILABLE"
 
 
+def test_revue_scellee_optional_si_path_home_leve_runtimeerror(monkeypatch) -> None:
+    # Régression revue scellée RC1-003-PR489-v2 : Path.home() lève RuntimeError si HOME est
+    # absent et qu'aucune base d'utilisateurs n'est résoluble — le diagnostic ne doit jamais
+    # planter, seulement rapporter la capacité comme OPTIONAL.
+    def raise_runtime_error(cls):
+        raise RuntimeError("impossible de déterminer le répertoire personnel")
+
+    monkeypatch.setattr(capabilities.Path, "home", classmethod(raise_runtime_error))
+
+    item = _by_name(
+        capabilities.probe_capabilities(env={}),
+        "revue aveugle scellée (outillage externe)",
+    )
+
+    assert item["status"] == "OPTIONAL"
+
+
 def test_aucune_valeur_de_secret_dans_la_sortie() -> None:
     env = {
         "LITELLM_API_KEY": "VALEUR_SENTINELLE_INTERDITE_XYZ",

@@ -32,3 +32,12 @@ n'était pas confiné par _within_repo() avant lecture. Audit exhaustif effectu�
 tous les read_text/read_bytes/write_text/is_file du fichier) confirmant qu'aucun autre
 site n'est concerné. Contrat CLI observable inchangé. Aucune story/doc utilisateur
 concernée.
+
+scripts/governance/capabilities.py + scripts/revue.py + tests associés (RC1-003-PR489-v2,
+commit de fixes round 2) : durcissement défensif suite à 2 objections mineures de la revue
+scellée (round RC1-003-PR489-v2, Gemini-3.1-Pro/DeepSeek-V4-Pro) — Path.home() protégé contre
+RuntimeError (HOME non résoluble), regex de capture modele_reponse élargie (ne tronque plus
+au 1er espace). Comportement observable inchangé pour toute entrée déjà valide ; CLAUDE.md/
+AGENTS.md/README.md (documentation utilisateur de ces deux scripts) déjà mis à jour au commit
+précédent de cette même PR #489, pas de nouvelle doc requise pour ce correctif de robustesse
+interne. Aucune story/doc utilisateur supplémentaire concernée.

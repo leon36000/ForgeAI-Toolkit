@@ -32,7 +32,7 @@ _MEMBER_FIELD = re.compile(r"^\s+(vendor|provider_id|modele):\s*(.+?)\s*(?:#.*)?
 # manifests/routes.yaml : mapping flow-style (une route par ligne) — membre/modele_reponse
 # toujours sur la 1ère ligne de l'entrée (une éventuelle "note:" continue sur la ligne
 # suivante, jamais capturée ici, pas pertinente pour l'identité vendor).
-_ROUTE_ENTRY = re.compile(r"membre:\s*(\S+?),.*?modele_reponse:\s*([^\s,}]+)")
+_ROUTE_ENTRY = re.compile(r"membre:\s*(\S+?),.*?modele_reponse:\s*([^,}]+)")
 _NON_ALNUM = re.compile(r"[^a-z0-9]")
 
 
@@ -111,7 +111,7 @@ def _load_routes_yaml(path: Path) -> list[tuple[str, str]]:
     for line in lines:
         match = _ROUTE_ENTRY.search(line)
         if match:
-            pairs.append((match.group(1), match.group(2)))
+            pairs.append((match.group(1), match.group(2).strip()))
     return pairs
 
 

@@ -125,8 +125,13 @@ def probe_capabilities(env: dict | None = None) -> list[dict]:
         )
     )
 
-    proof_script = Path.home() / "proof-method" / "scripts" / "civ_review.py"
-    has_proof_method = proof_script.exists()
+    try:
+        proof_script = Path.home() / "proof-method" / "scripts" / "civ_review.py"
+        has_proof_method = proof_script.exists()
+    except RuntimeError:
+        # Path.home() lève RuntimeError si HOME est absent et qu'aucune base d'utilisateurs
+        # n'est résoluble — un diagnostic ne doit jamais planter, juste rapporter OPTIONAL.
+        has_proof_method = False
     has_api_key = environment.get("LITELLM_API_KEY") is not None  # proof:allow — présence, pas la valeur
     has_base_url = environment.get("LITELLM_BASE_URL") is not None
     missing_signals = []
