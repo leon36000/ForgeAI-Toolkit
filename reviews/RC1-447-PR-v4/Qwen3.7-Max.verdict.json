@@ -1,0 +1,25 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": ".github/workflows/ci-deps-update.yml",
+   "description": "L'outil uv est installé via pip sans --require-hashes ni --no-cache-dir. Bien qu'il s'agisse d'un outil de génération et non d'une dépendance de test exécutée, une toolchain CI entièrement verrouillée et hermétique gagnerait à épingler également cet outil par empreinte ou à utiliser l'action officielle uv.",
+   "preuve": "run: python -m pip install uv==0.11.26"
+  },
+  {
+   "severite": "mineure",
+   "fichier": ".github/workflows/gates.yml",
+   "description": "La comparaison des warnings entre les versions de la matrice repose sur l'inspection manuelle du GITHUB_STEP_SUMMARY. Aucune étape CI ne vient automatiser cette comparaison ou alerter en cas de divergence (ex. nouveau warning sur 3.13 absent sur 3.12), ce qui laisse le critère de comparaison à la charge du reviewer humain.",
+   "preuve": "grep -A 1000 -E 'warnings summary|warnings? in ' pytest-warnings.txt || true"
+  }
+ ],
+ "date_heure": "2026-08-15T19:09:58.574093+00:00",
+ "prompt_sha256": "6bb6f76cde53bd3513457b5b850a0160dcbf09c3fb9f92783e3197330be893f5",
+ "reviewer_model": "Qwen3.7-Max",
+ "modele_servi": "qwen37-max-openrouter",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}
