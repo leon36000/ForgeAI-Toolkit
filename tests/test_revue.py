@@ -2,8 +2,10 @@
 from __future__ import annotations
 
 import importlib.util
+import json
 import sys
 from pathlib import Path
+from types import SimpleNamespace
 
 import pytest
 
@@ -378,3 +380,86 @@ def test_cli_recu_exige_codeur(monkeypatch, tmp_path):
     with pytest.raises(SystemExit) as excinfo:
         revue.main()
     assert excinfo.value.code == 2
+
+
+def test_cmd_diff_canonique_imprime_empreinte(monkeypatch, capsys):
+    monkeypatch.setattr(revue, "_diff_canonique", lambda base_ref, head_ref: "empreinte-test")
+    args = SimpleNamespace(base_ref="origin/main", head_ref="HEAD")
+
+    rc = revue._cmd_diff_canonique(args)
+
+    assert rc == 0
+    assert capsys.readouterr().out.strip() == "empreinte-test"
+
+
+def test_cli_diff_canonique_route_correctement(monkeypatch, capsys):
+    # Preuve que main() route bien "diff-canonique" vers _cmd_diff_canonique via argparse
+    # (pas seulement testé en appel direct de la fonction ci-dessus).
+    monkeypatch.setattr(revue, "_diff_canonique", lambda base_ref, head_ref: "e" * 8)
+    monkeypatch.setattr(sys, "argv", ["revue.py", "diff-canonique", "--base-ref", "origin/main"])
+
+    with pytest.raises(SystemExit) as excinfo:
+        revue.main()
+
+    assert excinfo.value.code == 0
+    assert capsys.readouterr().out.strip() == "e" * 8
+
+
+def test_cmd_recu_ecrit_fichier_avec_etat_mocke(monkeypatch, tmp_path, capsys):
+    dossier = tmp_path / "reviews" / "S-1"
+    dossier.mkdir(parents=True)
+    verdict = _v("deepseek")
+    (dossier / "DeepSeek-V4-Pro.verdict.json").write_text(json.dumps(verdict), encoding="utf-8")
+    (dossier / "Gemini-3.1-Pro.verdict.json").write_text(
+        json.dumps(_v("gemini")), encoding="utf-8"
+    )
+    (dossier / "LongCat-2.0.verdict.json").write_text(
+        json.dumps(_v("longcat")), encoding="utf-8"
+    )
+    monkeypatch.setattr(revue, "REPO", tmp_path)
+    monkeypatch.setattr(revue, "_etat_git_reel", lambda base_ref, head_ref: _etat())
+    out_file = tmp_path / "RECU.json"
+    args = SimpleNamespace(
+        dossier="S-1",
+        base_ref="origin/main",
+        head_ref="HEAD",
+        issue=434,
+        round=1,
+        codeur=["fable"],
+        fenetre_heures=24,
+        out=str(out_file),
+    )
+
+    rc = revue._cmd_recu(args)
+
+    assert rc == 0
+    written = json.loads(out_file.read_text(encoding="utf-8"))
+    assert written["resultat"] == "APPROVE"
+    assert written["codeur"] == ["fable"]
+    assert written["base_commit"] == _etat()["base_commit"]
+
+
+def test_cmd_recu_imprime_sur_stdout_sans_out(monkeypatch, tmp_path, capsys):
+    dossier = tmp_path / "reviews" / "S-2"
+    dossier.mkdir(parents=True)
+    (dossier / "DeepSeek-V4-Pro.verdict.json").write_text(
+        json.dumps(_v("deepseek", "REJECT")), encoding="utf-8"
+    )
+    monkeypatch.setattr(revue, "REPO", tmp_path)
+    monkeypatch.setattr(revue, "_etat_git_reel", lambda base_ref, head_ref: _etat())
+    args = SimpleNamespace(
+        dossier="S-2",
+        base_ref="origin/main",
+        head_ref="HEAD",
+        issue=434,
+        round=1,
+        codeur=["fable"],
+        fenetre_heures=24,
+        out=None,
+    )
+
+    rc = revue._cmd_recu(args)
+
+    assert rc == 0
+    printed = json.loads(capsys.readouterr().out)
+    assert printed["resultat"] == "INVALIDE"
