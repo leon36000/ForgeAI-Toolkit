@@ -106,7 +106,7 @@ def probe_capabilities(env: dict | None = None) -> list[dict]:
     )
 
     missing_tools = [
-        tool for tool in ("ggshield", "ruff") if shutil.which(tool) is None
+        tool for tool in ("pre-commit", "ggshield", "ruff") if shutil.which(tool) is None
     ]
     local_hooks_ok = not missing_tools
     missing_text = ", ".join(missing_tools)

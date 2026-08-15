@@ -41,3 +41,11 @@ au 1er espace). Comportement observable inchangé pour toute entrée déjà vali
 AGENTS.md/README.md (documentation utilisateur de ces deux scripts) déjà mis à jour au commit
 précédent de cette même PR #489, pas de nouvelle doc requise pour ce correctif de robustesse
 interne. Aucune story/doc utilisateur supplémentaire concernée.
+
+scripts/governance/capabilities.py + tests associés (RC1-003-PR489-v3, commit de fixes
+round 3) : durcissement défensif suite à 1 objection mineure de la revue scellée (round
+RC1-003-PR489-v3, DeepSeek-V4-Pro) — la capacité "pre-commit local" vérifie désormais aussi
+le binaire `pre-commit` lui-même, pas seulement ggshield+ruff. Comportement observable
+inchangé pour un environnement où pre-commit est déjà présent ; documentation utilisateur
+déjà à jour (mêmes commandes README.md, même message d'action). Aucune story/doc
+supplémentaire concernée.

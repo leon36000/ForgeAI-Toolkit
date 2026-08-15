@@ -30,6 +30,22 @@ def test_git_blocked_si_absent(monkeypatch) -> None:
     assert item["status"] == "BLOCKED"
 
 
+def test_pre_commit_local_optional_si_binaire_pre_commit_absent(monkeypatch) -> None:
+    # Régression revue scellée RC1-003-PR489-v3 (objection mineure DeepSeek-V4-Pro) :
+    # ggshield et ruff présents mais le binaire `pre-commit` lui-même absent doit toujours
+    # rapporter OPTIONAL (pre-commit install échouerait sinon silencieusement).
+    monkeypatch.setattr(
+        capabilities.shutil,
+        "which",
+        lambda name: None if name == "pre-commit" else "/bin/tool",
+    )
+
+    item = _by_name(capabilities.probe_capabilities(env={}), "pre-commit local (ggshield+ruff)")
+
+    assert item["status"] == "OPTIONAL"
+    assert "pre-commit" in item["howto"]
+
+
 def test_pytest_optional_et_seul_gate_tests_affecte(monkeypatch) -> None:
     class Result:
         returncode = 1
