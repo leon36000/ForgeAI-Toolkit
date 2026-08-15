@@ -23,6 +23,30 @@ from forgeai.resources import deploy_overlay_path
 DEPLOY = deploy_overlay_path()
 
 
+@contextmanager
+def _observe_mkdir_requests(path: Path):
+    """Observe les modes demandés lors des créations réelles par mkdir."""
+    expected = os.fspath(path)
+    requested_modes: list[int] = []
+    enabled = True
+
+    def observe(event, arguments):
+        if not enabled or event != "os.mkdir":
+            return
+        candidate, mode, _dir_fd = arguments
+        if (
+            os.fspath(candidate) == expected
+            and not os.path.lexists(candidate)
+        ):
+            requested_modes.append(mode)
+
+    sys.addaudithook(observe)
+    try:
+        yield requested_modes
+    finally:
+        enabled = False
+
+
 def test_plan_minimal_assemble_deux_services():
     plan = assemble_plan("minimal-gpu-cuda", DEPLOY, is_free=lambda p: True)
     assert {s.name for s in plan.services} == {"ollama", "vector-store"}
@@ -34,7 +58,7 @@ def test_ports_alloues_evitent_les_occupes():
     occupied = {21434, 21435}
     plan = assemble_plan("minimal-cpu", DEPLOY, is_free=lambda p: p not in occupied)
     ollama = next(s for s in plan.services if s.name == "ollama")
-    assert ollama.host_port == 21436  # 21434 et 21435 occupés → suivant libre
+    assert ollama.host_port == 21436
 
 
 def test_gpu_seulement_si_profil_cuda_et_service_capable():
@@ -46,41 +70,30 @@ def test_gpu_seulement_si_profil_cuda_et_service_capable():
 
 
 def test_find_free_port_epuise_leve():
-    import pytest
     with pytest.raises(RuntimeError):
         find_free_port(30000, is_free=lambda p: False)
 
 
-# --- SonarCloud CRITICAL (« New Code », dashboard scelle 2026-08-09) -------------------------
-# python:S5852-like « loop bounds should not be set from unvalidated data » sur find_free_port :
-# `preferred` derive in fine de svc["container_port"] du catalogue de briques (donnee
-# potentiellement communautaire, meme classe de risque que CAND-001). Ces 2 tests pinnent la
-# garde de validation AVANT toute boucle — jamais atteinte par les tests preexistants, qui ne
-# passent que des entiers deja valides.
-
 def test_find_free_port_refuse_port_hors_plage_avant_toute_boucle():
-    """Un port prefere hors [1, 65535] (ex. negatif) doit etre refuse par la garde amont —
-    is_free ne doit JAMAIS etre appelee (boucle non validee = surface DoS potentielle)."""
     def _boom(port):
         raise AssertionError(
             "is_free() a ete appelee avant validation de `preferred` : "
             "la garde amont ne coupe pas le chemin avant la boucle."
         )
+
     with pytest.raises(RuntimeError):
         find_free_port(-1, is_free=_boom)
 
 
 def test_find_free_port_refuse_type_non_entier():
-    """Un `preferred` non entier (ex. str) doit etre refuse par la meme garde."""
     def _boom(port):
         raise AssertionError("is_free() ne doit pas etre appelee sur un type invalide.")
+
     with pytest.raises(RuntimeError):
         find_free_port("30000", is_free=_boom)  # type: ignore[arg-type]
 
 
 def test_find_free_port_plafonne_la_borne_haute_au_port_tcp_maximal():
-    """Un `preferred` valide mais proche du plafond (65500) ne doit jamais faire sonder un
-    port > 65535 — la borne haute est plafonnee, pas seulement `preferred + 200`."""
     sondes = []
 
     def _enregistre(port):
@@ -97,7 +110,7 @@ def _assert_generated_env_contract(content: str) -> None:
     if "FORGEAI_API_TOKEN=" not in content:
         raise AssertionError("generated env is missing API token")
     token = content.splitlines()[0].split("=", 1)[1]
-    if len(token) != 64:  # 256 bits hex
+    if len(token) != 64:
         raise AssertionError("generated API token length is invalid")
 
 
@@ -110,112 +123,59 @@ def test_secrets_generes_permissions_0600(tmp_path):
     _assert_generated_env_contract(content)
 
 
-def test_secrets_directory_is_private_at_its_first_creation(
-    tmp_path, monkeypatch
-):
+def test_secrets_directory_is_private_at_its_first_creation(tmp_path):
     out_dir = tmp_path / "out"
     secrets_dir = out_dir / "secrets"
-    observed_creation_modes: list[int] = []
-    real_mkdir = os.mkdir
 
-    def observe_real_mkdir(path, mode=0o777, *args, **kwargs):
-        result = real_mkdir(path, mode, *args, **kwargs)
-        if Path(path) == secrets_dir:
-            observed_creation_modes.append(
-                stat.S_IMODE(os.lstat(path).st_mode)
-            )
-        return result
-
-    monkeypatch.setattr(vault_module.os, "mkdir", observe_real_mkdir)
-    previous_umask = os.umask(0)
-    try:
+    with _observe_mkdir_requests(secrets_dir) as requested_modes:
         bootstrap_secrets(out_dir)
-    finally:
-        os.umask(previous_umask)
 
-    if observed_creation_modes != [0o700]:
-        raise AssertionError("secret directory was not private at creation")
+    assert requested_modes == [0o700]
+    assert stat.S_IMODE(os.lstat(secrets_dir).st_mode) == 0o700
 
 
 def test_bootstrap_succeeds_under_restrictive_umask_without_relaxing_paths(
-    tmp_path, monkeypatch
+    tmp_path,
 ):
     out_dir = tmp_path / "out"
     out_dir.mkdir()
     os.chmod(out_dir, 0o750)
     original_out_mode = stat.S_IMODE(out_dir.stat().st_mode)
     secrets_dir = out_dir / "secrets"
-    observed_creation_modes: list[int] = []
-    real_mkdir = os.mkdir
-
-    def observe_real_mkdir(path, mode=0o777, *args, **kwargs):
-        result = real_mkdir(path, mode, *args, **kwargs)
-        if Path(path) == secrets_dir:
-            observed_creation_modes.append(
-                stat.S_IMODE(os.lstat(path).st_mode)
-            )
-        return result
-
-    monkeypatch.setattr(vault_module.os, "mkdir", observe_real_mkdir)
     previous_umask = os.umask(0o777)
     try:
-        first_paths = bootstrap_secrets(out_dir)
-        second_paths = bootstrap_secrets(out_dir)
+        with _observe_mkdir_requests(secrets_dir) as requested_modes:
+            first_paths = bootstrap_secrets(out_dir)
+            second_paths = bootstrap_secrets(out_dir)
     finally:
         os.umask(previous_umask)
 
-    if not observed_creation_modes:
-        raise AssertionError("secret directory creation was not observed")
-    if any(mode & ~0o700 for mode in observed_creation_modes):
-        raise AssertionError("secret directory creation exposed excess permissions")
+    assert requested_modes == [0o700]
     assert stat.S_IMODE(out_dir.stat().st_mode) == original_out_mode
     assert stat.S_IMODE(secrets_dir.stat().st_mode) == 0o700
     for secret_path in (*first_paths.values(), *second_paths.values()):
         assert stat.S_IMODE(secret_path.stat().st_mode) == 0o600
 
 
-def test_bootstrap_creates_missing_out_dir_under_restrictive_umask(
-    tmp_path, monkeypatch
-):
+def test_bootstrap_creates_missing_out_dir_under_restrictive_umask(tmp_path):
     out_dir = tmp_path / "out"
     secrets_dir = out_dir / "secrets"
-    observed_creation_modes: dict[Path, list[int]] = {
-        out_dir: [],
-        secrets_dir: [],
-    }
-    real_mkdir = os.mkdir
-
-    def observe_real_mkdir(path, mode=0o777, *args, **kwargs):
-        result = real_mkdir(path, mode, *args, **kwargs)
-        candidate = Path(path)
-        if candidate in observed_creation_modes:
-            observed_creation_modes[candidate].append(
-                stat.S_IMODE(os.lstat(candidate).st_mode)
-            )
-        return result
-
-    monkeypatch.setattr(vault_module.os, "mkdir", observe_real_mkdir)
     previous_umask = os.umask(0o777)
     try:
-        first_paths = bootstrap_secrets(out_dir)
-        second_paths = bootstrap_secrets(out_dir)
+        with _observe_mkdir_requests(secrets_dir) as requested_modes:
+            first_paths = bootstrap_secrets(out_dir)
+            second_paths = bootstrap_secrets(out_dir)
     finally:
         os.umask(previous_umask)
 
-    for candidate, modes in observed_creation_modes.items():
-        if not modes:
-            raise AssertionError(f"directory creation was not observed: {candidate.name}")
-        if any(mode & ~0o700 for mode in modes):
-            raise AssertionError("directory creation exposed excess permissions")
+    assert requested_modes == [0o700]
     assert stat.S_IMODE(out_dir.stat().st_mode) == 0o700
     assert stat.S_IMODE(secrets_dir.stat().st_mode) == 0o700
     for secret_path in (*first_paths.values(), *second_paths.values()):
         assert stat.S_IMODE(secret_path.stat().st_mode) == 0o600
 
 
-def test_bootstrap_creates_nested_out_dir_under_restrictive_umask(
-    tmp_path, monkeypatch
-):
+def test_bootstrap_creates_nested_out_dir_under_restrictive_umask(tmp_path):
     out_dir = tmp_path / "a" / "b" / "c"
     secrets_dir = out_dir / "secrets"
     created_directories = (
@@ -224,35 +184,18 @@ def test_bootstrap_creates_nested_out_dir_under_restrictive_umask(
         out_dir,
         secrets_dir,
     )
-    observed_creation_modes = {
-        candidate: [] for candidate in created_directories
-    }
     original_tmp_mode = stat.S_IMODE(tmp_path.stat().st_mode)
-    real_mkdir = os.mkdir
-
-    def observe_real_mkdir(path, mode=0o777, *args, **kwargs):
-        result = real_mkdir(path, mode, *args, **kwargs)
-        candidate = Path(path)
-        if candidate in observed_creation_modes:
-            observed_creation_modes[candidate].append(
-                stat.S_IMODE(os.lstat(candidate).st_mode)
-            )
-        return result
-
-    monkeypatch.setattr(vault_module.os, "mkdir", observe_real_mkdir)
     previous_umask = os.umask(0o777)
     try:
-        first_paths = bootstrap_secrets(out_dir)
-        second_paths = bootstrap_secrets(out_dir)
+        with _observe_mkdir_requests(secrets_dir) as requested_modes:
+            first_paths = bootstrap_secrets(out_dir)
+            second_paths = bootstrap_secrets(out_dir)
     finally:
         os.umask(previous_umask)
 
+    assert requested_modes == [0o700]
     assert stat.S_IMODE(tmp_path.stat().st_mode) == original_tmp_mode
-    for candidate, modes in observed_creation_modes.items():
-        if not modes:
-            raise AssertionError(f"directory creation was not observed: {candidate.name}")
-        if any(mode & ~0o700 for mode in modes):
-            raise AssertionError("directory creation exposed excess permissions")
+    for candidate in created_directories:
         assert stat.S_IMODE(candidate.stat().st_mode) == 0o700
     for secret_path in (*first_paths.values(), *second_paths.values()):
         assert stat.S_IMODE(secret_path.stat().st_mode) == 0o600
@@ -271,9 +214,9 @@ def test_concurrent_first_bootstraps_share_one_lock_under_restrictive_umask(
     result_digests: list[tuple[bytes, bytes]] = []
     observation_lock = threading.Lock()
     real_open = os.open
-    real_mkdir = os.mkdir
     creator_thread: threading.Thread | None = None
     contender_thread: threading.Thread | None = None
+    pause_enabled = True
 
     def observe_lock_open(path, flags, *args, **kwargs):
         descriptor = real_open(path, flags, *args, **kwargs)
@@ -283,16 +226,22 @@ def test_concurrent_first_bootstraps_share_one_lock_under_restrictive_umask(
                 observed_lock_inodes.append(inode)
         return descriptor
 
-    def pause_after_out_creation(path, mode=0o777, *args, **kwargs):
-        result = real_mkdir(path, mode, *args, **kwargs)
-        if Path(path) == out_dir and threading.current_thread() is creator_thread:
-            out_created.set()
-            if not release_creator.wait(timeout=5):
-                raise RuntimeError("creator did not resume after out creation")
-        return result
+    def pause_after_out_creation(event, arguments):
+        nonlocal pause_enabled
+        if (
+            not pause_enabled
+            or event != "os.mkdir"
+            or os.fspath(arguments[0]) != os.fspath(out_dir)
+            or os.path.lexists(arguments[0])
+            or threading.current_thread() is not creator_thread
+        ):
+            return
+        out_created.set()
+        if not release_creator.wait(timeout=5):
+            raise RuntimeError("creator did not resume after out creation")
 
+    sys.addaudithook(pause_after_out_creation)
     monkeypatch.setattr(vault_module.os, "open", observe_lock_open)
-    monkeypatch.setattr(vault_module.os, "mkdir", pause_after_out_creation)
 
     def run_bootstrap() -> None:
         try:
@@ -323,15 +272,14 @@ def test_concurrent_first_bootstraps_share_one_lock_under_restrictive_umask(
         for worker in workers:
             worker.join(timeout=5)
     finally:
+        pause_enabled = False
         release_creator.set()
         os.umask(previous_umask)
 
     assert all(not worker.is_alive() for worker in workers)
     assert not worker_errors, f"concurrent bootstrap errors: {worker_errors}"
-    if len(result_digests) != 2 or result_digests[0] != result_digests[1]:
-        raise AssertionError("concurrent bootstrap results diverged")
-    if not observed_lock_inodes or len(set(observed_lock_inodes)) != 1:
-        raise AssertionError("concurrent bootstraps used different lock inodes")
+    assert len(result_digests) == 2 and result_digests[0] == result_digests[1]
+    assert observed_lock_inodes and len(set(observed_lock_inodes)) == 1
     assert stat.S_IMODE(lock_path.stat().st_mode) == 0o600
 
 
@@ -349,9 +297,9 @@ def test_concurrent_nested_first_bootstraps_restore_restrictive_parent(
     result_digests: list[tuple[bytes, bytes]] = []
     observation_lock = threading.Lock()
     real_open = os.open
-    real_mkdir = os.mkdir
     creator_thread: threading.Thread | None = None
     contender_thread: threading.Thread | None = None
+    pause_enabled = True
 
     def observe_lock_open(path, flags, *args, **kwargs):
         descriptor = real_open(path, flags, *args, **kwargs)
@@ -360,19 +308,22 @@ def test_concurrent_nested_first_bootstraps_restore_restrictive_parent(
                 observed_lock_inodes.append(os.fstat(descriptor).st_ino)
         return descriptor
 
-    def pause_after_parent_creation(path, mode=0o777, *args, **kwargs):
-        result = real_mkdir(path, mode, *args, **kwargs)
+    def pause_after_parent_creation(event, arguments):
+        nonlocal pause_enabled
         if (
-            Path(path) == first_parent
-            and threading.current_thread() is creator_thread
+            not pause_enabled
+            or event != "os.mkdir"
+            or os.fspath(arguments[0]) != os.fspath(first_parent)
+            or os.path.lexists(arguments[0])
+            or threading.current_thread() is not creator_thread
         ):
-            parent_created.set()
-            if not release_creator.wait(timeout=5):
-                raise RuntimeError("nested creator did not resume")
-        return result
+            return
+        parent_created.set()
+        if not release_creator.wait(timeout=5):
+            raise RuntimeError("nested creator did not resume")
 
+    sys.addaudithook(pause_after_parent_creation)
     monkeypatch.setattr(vault_module.os, "open", observe_lock_open)
-    monkeypatch.setattr(vault_module.os, "mkdir", pause_after_parent_creation)
 
     def run_bootstrap() -> None:
         try:
@@ -403,15 +354,14 @@ def test_concurrent_nested_first_bootstraps_restore_restrictive_parent(
         for worker in workers:
             worker.join(timeout=5)
     finally:
+        pause_enabled = False
         release_creator.set()
         os.umask(previous_umask)
 
     assert all(not worker.is_alive() for worker in workers)
     assert not worker_errors, f"nested bootstrap errors: {worker_errors}"
-    if len(result_digests) != 2 or result_digests[0] != result_digests[1]:
-        raise AssertionError("nested concurrent bootstrap results diverged")
-    if not observed_lock_inodes or len(set(observed_lock_inodes)) != 1:
-        raise AssertionError("nested bootstraps used different lock inodes")
+    assert len(result_digests) == 2 and result_digests[0] == result_digests[1]
+    assert observed_lock_inodes and len(set(observed_lock_inodes)) == 1
     assert stat.S_IMODE(lock_path.stat().st_mode) == 0o600
 
 
@@ -430,24 +380,20 @@ def test_generated_env_contract_failures_never_disclose_content():
     for content, expected_message in cases:
         with pytest.raises(AssertionError) as caught:
             _assert_generated_env_contract(content)
-        if sentinel in str(caught.value):
-            raise AssertionError("env contract failure disclosed secret content")
-        if str(caught.value) != expected_message:
-            raise AssertionError("env contract failure was not neutral")
+        assert sentinel not in str(caught.value)
+        assert str(caught.value) == expected_message
 
 
 def test_bootstrap_idempotent_sans_regen(tmp_path):
     first = bootstrap_secrets(tmp_path)["env"].read_text(encoding="utf-8")
     second = bootstrap_secrets(tmp_path)["env"].read_text(encoding="utf-8")
-    if first != second:
-        raise AssertionError("bootstrap changed existing secrets without regen")
+    assert first == second
 
 
 def test_regen_change_les_secrets(tmp_path):
     first = bootstrap_secrets(tmp_path)["env"].read_text(encoding="utf-8")
     regen = bootstrap_secrets(tmp_path, regen=True)["env"].read_text(encoding="utf-8")
-    if first == regen:
-        raise AssertionError("bootstrap regen did not replace existing secrets")
+    assert first != regen
 
 
 def test_bootstrap_refuses_env_symlink_without_touching_referent(tmp_path):
@@ -492,10 +438,8 @@ def test_non_regen_refuses_env_symlink_before_reading_referent(
     with pytest.raises(OSError):
         bootstrap_secrets(out_dir)
 
-    if referent_was_read:
-        raise AssertionError("bootstrap read an env symlink referent")
-    if sha256(referent.read_bytes()).digest() != referent_digest:
-        raise AssertionError("bootstrap changed an env symlink referent")
+    assert not referent_was_read
+    assert sha256(referent.read_bytes()).digest() == referent_digest
 
 
 def test_non_regen_env_fifo_symlink_uses_nofollow_nonblocking_open(
@@ -533,10 +477,8 @@ def test_non_regen_env_fifo_symlink_uses_nofollow_nonblocking_open(
     with pytest.raises(OSError):
         bootstrap_secrets(out_dir)
 
-    if path_read_attempted:
-        raise AssertionError("bootstrap attempted a blocking FIFO read")
-    if len(observed_flags) != 1:
-        raise AssertionError("bootstrap did not perform one bounded env open")
+    assert not path_read_attempted
+    assert len(observed_flags) == 1
     assert env_path.is_symlink()
     assert stat.S_ISFIFO(fifo_referent.stat().st_mode)
 
@@ -564,10 +506,8 @@ def test_bootstrap_refuses_secrets_directory_symlink_before_any_write(tmp_path):
     assert os.readlink(secrets_dir) == original_link
     assert stat.S_IMODE(external_dir.stat().st_mode) == external_mode
     assert stat.S_IMODE(external_key.stat().st_mode) == external_key_mode
-    if sha256(external_key.read_bytes()).digest() != external_key_digest:
-        raise AssertionError("bootstrap changed a secret-directory referent")
-    if (out_dir / ".env").exists():
-        raise AssertionError("bootstrap wrote env before directory validation")
+    assert sha256(external_key.read_bytes()).digest() == external_key_digest
+    assert not (out_dir / ".env").exists()
 
 
 def test_existing_token_key_symlink_swap_cannot_touch_external_inode(
@@ -616,13 +556,11 @@ def test_existing_token_key_symlink_swap_cannot_touch_external_inode(
     with pytest.raises(OSError):
         bootstrap_secrets(out_dir)
 
-    assert swapped, "test did not inject the target swap"
-    assert key_path.is_symlink(), "swapped target is no longer a symlink"
+    assert swapped
+    assert key_path.is_symlink()
     assert stat.S_IMODE(external.stat().st_mode) == external_mode
-    if sha256(external.read_bytes()).digest() != external_digest:
-        raise AssertionError("writer changed external symlink referent content")
-    if sha256(saved_key.read_bytes()).digest() != key_digest:
-        raise AssertionError("writer changed the displaced original key content")
+    assert sha256(external.read_bytes()).digest() == external_digest
+    assert sha256(saved_key.read_bytes()).digest() == key_digest
 
 
 def test_existing_token_key_hardlink_is_safely_broken_without_touching_external_inode(
@@ -645,10 +583,8 @@ def test_existing_token_key_hardlink_is_safely_broken_without_touching_external_
     assert key_path.stat().st_ino != external.stat().st_ino
     assert stat.S_IMODE(key_path.stat().st_mode) == 0o600
     assert stat.S_IMODE(external.stat().st_mode) == external_mode
-    if sha256(external.read_bytes()).digest() != external_digest:
-        raise AssertionError("writer changed external hardlink content")
-    if sha256(key_path.read_bytes()).digest() != external_digest:
-        raise AssertionError("writer did not preserve hardlinked key content")
+    assert sha256(external.read_bytes()).digest() == external_digest
+    assert sha256(key_path.read_bytes()).digest() == external_digest
 
 
 def test_existing_token_key_unlinked_after_open_republishes_without_mutating_alias(
@@ -694,16 +630,14 @@ def test_existing_token_key_unlinked_after_open_republishes_without_mutating_ali
     resume_writer.set()
     writer.join(timeout=5)
 
-    assert not writer.is_alive(), "bootstrap writer did not stop"
-    assert not writer_errors, f"bootstrap writer errors: {writer_errors}"
+    assert not writer.is_alive()
+    assert not writer_errors
     assert stat.S_IMODE(external.stat().st_mode) == external_mode
-    if sha256(external.read_bytes()).digest() != external_digest:
-        raise AssertionError("writer changed the remaining external alias content")
-    assert key_path.exists(), "bootstrap did not republish the key path"
+    assert sha256(external.read_bytes()).digest() == external_digest
+    assert key_path.exists()
     assert key_path.stat().st_ino != external.stat().st_ino
     assert stat.S_IMODE(key_path.stat().st_mode) == 0o600
-    if sha256(key_path.read_bytes()).digest() != external_digest:
-        raise AssertionError("writer did not preserve the republished key content")
+    assert sha256(key_path.read_bytes()).digest() == external_digest
 
 
 def test_non_regen_snapshot_cannot_overwrite_concurrent_regen_rotation(
@@ -774,29 +708,26 @@ def test_non_regen_snapshot_cannot_overwrite_concurrent_regen_rotation(
     non_regen_thread = threading.Thread(target=run_non_regen, daemon=True)
     regen_thread = threading.Thread(target=run_regen, daemon=True)
     non_regen_thread.start()
-    assert snapshot_captured.wait(timeout=5), "non-regen descriptor snapshot was not captured"
+    assert snapshot_captured.wait(timeout=5)
     regen_thread.start()
     start_regen.wait(timeout=5)
 
     state = serialization_state.get(timeout=5)
     try:
         if state == "published":
-            if not rotated_digests or rotated_digests[0] == initial_digest:
-                raise AssertionError("regen did not publish a genuinely new token key")
-        elif state != "lock-attempted":
-            raise AssertionError("unexpected bootstrap serialization state")
+            assert rotated_digests and rotated_digests[0] != initial_digest
+        else:
+            assert state == "lock-attempted"
     finally:
         resume_non_regen.set()
 
     non_regen_thread.join(timeout=5)
     regen_thread.join(timeout=5)
-    assert not non_regen_thread.is_alive(), "non-regen bootstrap did not stop"
-    assert not regen_thread.is_alive(), "regen bootstrap did not stop"
-    assert not worker_errors, f"bootstrap worker errors: {worker_errors}"
-    if not rotated_digests or rotated_digests[0] == initial_digest:
-        raise AssertionError("regen did not publish a genuinely new token key")
-    if sha256(key_path.read_bytes()).digest() != rotated_digests[0]:
-        raise AssertionError("stale non-regen snapshot replaced the rotated token key")
+    assert not non_regen_thread.is_alive()
+    assert not regen_thread.is_alive()
+    assert not worker_errors
+    assert rotated_digests and rotated_digests[0] != initial_digest
+    assert sha256(key_path.read_bytes()).digest() == rotated_digests[0]
 
 
 def test_regen_then_non_regen_serialization_preserves_latest_rotation(
@@ -857,26 +788,20 @@ def test_regen_then_non_regen_serialization_preserves_latest_rotation(
     regen_thread = threading.Thread(target=run_regen, daemon=True)
     non_regen_thread = threading.Thread(target=run_non_regen, daemon=True)
     regen_thread.start()
-    first_state = ordering.get(timeout=5)
-    if first_state != "locked":
-        regen_thread.join(timeout=5)
-        raise AssertionError("regen bootstrap did not acquire the serialization lock")
+    assert ordering.get(timeout=5) == "locked"
 
     non_regen_thread.start()
     start_non_regen.wait(timeout=5)
-    assert non_regen_lock_attempted.wait(timeout=5), "non-regen did not attempt the lock"
+    assert non_regen_lock_attempted.wait(timeout=5)
     resume_regen.set()
     regen_thread.join(timeout=5)
     non_regen_thread.join(timeout=5)
 
-    assert not regen_thread.is_alive(), "regen bootstrap did not stop"
-    assert not non_regen_thread.is_alive(), "non-regen bootstrap did not stop"
-    assert not worker_errors, f"bootstrap worker errors: {worker_errors}"
-    if not rotated_digests or rotated_digests[0] == initial_digest:
-        raise AssertionError("regen did not publish a genuinely new token key")
-    if sha256(key_path.read_bytes()).digest() != rotated_digests[0]:
-        raise AssertionError("last serialized bootstrap did not preserve the rotated token key")
-    if {entry.name for entry in (out_dir / "secrets").iterdir()} != {
+    assert not regen_thread.is_alive()
+    assert not non_regen_thread.is_alive()
+    assert not worker_errors
+    assert rotated_digests and rotated_digests[0] != initial_digest
+    assert sha256(key_path.read_bytes()).digest() == rotated_digests[0]
+    assert {entry.name for entry in (out_dir / "secrets").iterdir()} == {
         "forgeai_token.key"
-    }:
-        raise AssertionError("bootstrap lock artifact entered the secret directory")
+    }

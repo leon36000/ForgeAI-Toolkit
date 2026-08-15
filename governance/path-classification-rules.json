@@ -335,6 +335,20 @@
       "rationale": "Ce répertoire regroupe la documentation destinée aux lecteurs du projet."
     },
     {
+      "id": "docs-active",
+      "match": {
+        "kind": "prefix",
+        "value": "docs/"
+      },
+      "class": "DOCS",
+      "generated": false,
+      "owner": "docs-utilisateur",
+      "target": null,
+      "target_kind": "keep",
+      "load_bearing": false,
+      "rationale": "L'issue #439 (RC1-009) fait de docs/ l'une des deux racines canoniques : docs/ contient la documentation active et governance/ le canon et les décisions. Cette règle matérialise donc une décision déjà prise, elle ne l'anticipe pas arbitrairement. Le répertoire docs/ n'est référencé par aucun script ou workflow d'exécution et n'est donc pas load-bearing."
+    },
+    {
       "id": "governance-core",
       "match": {
         "kind": "prefix",
@@ -683,6 +697,34 @@
       "target_kind": "keep",
       "load_bearing": true,
       "rationale": "Configuration de lint/CI, même sous-classe ci que pyproject.toml/sonar-project.properties."
+    },
+    {
+      "id": "governance-root-requirements-ci-in",
+      "match": {
+        "kind": "exact",
+        "value": "requirements-ci.in"
+      },
+      "class": "GOVERNANCE",
+      "generated": false,
+      "owner": "gouvernance-ci",
+      "target": null,
+      "target_kind": "keep",
+      "load_bearing": true,
+      "rationale": "Ce fichier source écrit à la main déclare les dépendances directes de test de la CI. Il est référencé en dur par .github/workflows/gates.yml, .github/workflows/sonarcloud.yml, .github/workflows/ci-deps-update.yml et tests/test_rc1017_matrice_python.py; le déplacer casserait la CI."
+    },
+    {
+      "id": "governance-root-requirements-ci-txt",
+      "match": {
+        "kind": "exact",
+        "value": "requirements-ci.txt"
+      },
+      "class": "GOVERNANCE",
+      "generated": true,
+      "owner": "gouvernance-ci",
+      "target": null,
+      "target_kind": "keep",
+      "load_bearing": true,
+      "rationale": "Ce lockfile est entièrement généré par uv pip compile requirements-ci.in --universal --python-version 3.10 --generate-hashes et régénéré automatiquement par .github/workflows/ci-deps-update.yml; il ne doit jamais être édité à la main. Il est référencé en dur par .github/workflows/gates.yml, .github/workflows/sonarcloud.yml, .github/workflows/ci-deps-update.yml et tests/test_rc1017_matrice_python.py; le déplacer casserait la CI."
     }
   ]
 }

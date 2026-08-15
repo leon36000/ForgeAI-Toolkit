@@ -1,0 +1,25 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "tests/test_assemble_and_secrets.py",
+   "description": "Les tests de création de répertoires parents/out_dir n'observent plus leurs modes de création; seule la création de secrets_dir est observée. Une régression vers mkdir(0o777)+chmod(0o700) sur out_dir ne serait plus détectée.",
+   "preuve": "Diff: suppression de observed_creation_modes {out_dir, secrets_dir} et de la vérification mode & ~0o700, remplacée par _observe_mkdir_requests(secrets_dir) dans test_bootstrap_creates_missing_out_dir_under_restrictive_umask et test_bootstrap_creates_nested_out_dir_under_restrictive_umask."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "pyproject.toml",
+   "description": "requires-python reste '>=3.10' sans borne haute; une future version Python non testée resterait installable sans passer par la matrice CI ni avoir de classifier.",
+   "preuve": "pyproject.toml: requires-python = \">=3.10\" ; classifiers ajoutés pour 3.10-3.13 uniquement."
+  }
+ ],
+ "date_heure": "2026-08-15T20:16:01.101844+00:00",
+ "prompt_sha256": "9c70c4450275e6697e3b27bfaaca53a0f4fd43d186958c2304ebc0f09f5e9a26",
+ "reviewer_model": "DeepSeek-V4-Pro",
+ "modele_servi": "deepseek-v4-pro-direct",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

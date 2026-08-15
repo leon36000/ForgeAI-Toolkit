@@ -1,0 +1,25 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": ".github/workflows/gates.yml",
+   "description": "L'installation des dépendances n'utilise pas explicitement l'option --no-cache-dir. Bien que le cache soit vide par défaut sur les runners GitHub Actions, cette option garantirait formellement le critère 'installation hermétique depuis cache vide' en toute circonstance.",
+   "preuve": "run: python -m pip install --require-hashes -r requirements-ci.txt"
+  },
+  {
+   "severite": "mineure",
+   "fichier": ".github/workflows/ci-deps-update.yml",
+   "description": "Le workflow de mise à jour échouera lors du `git push` si la branche du jour existe déjà sur le dépôt distant (par exemple en cas de déclenchement manuel multiple le même jour).",
+   "preuve": "git push --set-upstream origin \"$branche\""
+  }
+ ],
+ "date_heure": "2026-08-15T18:10:54.592657+00:00",
+ "prompt_sha256": "69a270a32d0e684d4c977c3850de90d1fab819387800d25ad34f5f8505cc4545",
+ "reviewer_model": "Gemini-3.1-Pro",
+ "modele_servi": "gemini-31-pro-openrouter",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "1"
+ }
+}

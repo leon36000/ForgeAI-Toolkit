@@ -11,6 +11,7 @@ import re
 import stat
 import sys
 import threading
+from contextlib import contextmanager
 from hashlib import sha256
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from pathlib import Path
@@ -28,12 +29,33 @@ from forgeai.secrets.vault import VaultError, read, store
 TOKEN = "root-token-e3b"
 
 
+@contextmanager
+def _observe_mkdir_requests(path: Path):
+    """Observe les modes demandés lors des créations réelles par mkdir."""
+    expected = os.fspath(path)
+    requested_modes: list[int] = []
+    enabled = True
+
+    def observe(event, arguments):
+        if not enabled or event != "os.mkdir":
+            return
+        candidate, mode, _dir_fd = arguments
+        if os.fspath(candidate) == expected and not os.path.exists(candidate):
+            requested_modes.append(mode)
+
+    sys.addaudithook(observe)
+    try:
+        yield requested_modes
+    finally:
+        enabled = False
+
+
 class _KVHandler(BaseHTTPRequestHandler):
     """openbao KV v2 minimal : exige le bon X-Vault-Token, stocke/rend sous data.data."""
 
     store: dict = {}
 
-    def log_message(self, *args):  # silence
+    def log_message(self, *args):
         return
 
     def _auth_ok(self) -> bool:
@@ -85,8 +107,8 @@ def bao():
 
 
 def test_store_puis_read_round_trip(bao):
-    store(bao, TOKEN, "forgeai/litellm", {"master_key": "sk-secret-xyz"})  # proof:allow — valeur de test
-    assert read(bao, TOKEN, "forgeai/litellm") == {"master_key": "sk-secret-xyz"}  # proof:allow
+    store(bao, TOKEN, "forgeai/litellm", {"master_key": "sk-secret-xyz"})
+    assert read(bao, TOKEN, "forgeai/litellm") == {"master_key": "sk-secret-xyz"}
 
 
 def test_read_chemin_absent_leve_vaulterror(bao):
@@ -105,8 +127,7 @@ def test_mauvais_token_leve_vaulterror(bao):
 
 
 def test_exception_ne_fuit_ni_token_ni_valeur(bao):
-    # openbao injoignable : le message d'erreur ne doit contenir ni le token ni la valeur secrète.
-    secret_value = "sk-ne-doit-pas-fuiter"  # proof:allow — valeur de test
+    secret_value = "sk-ne-doit-pas-fuiter"
     try:
         store("http://127.0.0.1:1", "TOKEN-CONFIDENTIEL", "forgeai/x", {"k": secret_value})
         raise AssertionError("aurait dû lever VaultError")
@@ -213,22 +234,14 @@ def test_model_vault_refuses_parent_symlink_before_external_change(tmp_path):
         raise AssertionError("vault changed parent-symlink referent content")
 
 
-def test_model_vault_parent_is_private_at_first_creation(tmp_path, monkeypatch):
+def test_model_vault_parent_is_private_at_first_creation(tmp_path):
     parent = tmp_path / "vault-parent"
     target = parent / "vault.json"
-    observed_creation_modes: list[int] = []
-    real_mkdir = os.mkdir
 
-    def observe_real_mkdir(path, mode=0o777, *args, **kwargs):
-        result = real_mkdir(path, mode, *args, **kwargs)
-        if Path(path) == parent:
-            observed_creation_modes.append(stat.S_IMODE(os.lstat(path).st_mode))
-        return result
-
-    monkeypatch.setattr(file_vault_module.os, "mkdir", observe_real_mkdir)
     previous_umask = os.umask(0)
     try:
-        FileVault(target).put("cloud-key", token_hex(32), "test-passphrase")
+        with _observe_mkdir_requests(parent) as observed_creation_modes:
+            FileVault(target).put("cloud-key", token_hex(32), "test-passphrase")
     finally:
         os.umask(previous_umask)
 
@@ -241,31 +254,25 @@ def test_model_vault_parent_is_private_at_first_creation(tmp_path, monkeypatch):
 
 
 def test_model_vault_creates_nested_parent_under_restrictive_umask(
-    tmp_path, monkeypatch
+    tmp_path,
 ):
     parents = (tmp_path / "a", tmp_path / "a" / "b")
     target = parents[-1] / "vault.json"
     observed_creation_modes = {candidate: [] for candidate in parents}
-    real_mkdir = os.mkdir
 
-    def observe_real_mkdir(path, mode=0o777, *args, **kwargs):
-        result = real_mkdir(path, mode, *args, **kwargs)
-        candidate = Path(path)
-        if candidate in observed_creation_modes:
-            observed_creation_modes[candidate].append(
-                stat.S_IMODE(os.lstat(candidate).st_mode)
-            )
-        return result
-
-    monkeypatch.setattr(file_vault_module.os, "mkdir", observe_real_mkdir)
     previous_umask = os.umask(0o777)
     try:
-        vault = FileVault(target)
-        vault.put("first-key", token_hex(32), "test-passphrase")
-        vault.put("second-key", token_hex(32), "test-passphrase")
+        with _observe_mkdir_requests(parents[0]) as first_modes, _observe_mkdir_requests(
+            parents[1]
+        ) as second_modes:
+            vault = FileVault(target)
+            vault.put("first-key", token_hex(32), "test-passphrase")
+            vault.put("second-key", token_hex(32), "test-passphrase")
     finally:
         os.umask(previous_umask)
 
+    observed_creation_modes[parents[0]] = first_modes
+    observed_creation_modes[parents[1]] = second_modes
     for candidate, modes in observed_creation_modes.items():
         if not modes or any(mode & ~0o700 for mode in modes):
             raise AssertionError(
