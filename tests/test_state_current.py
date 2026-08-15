@@ -10,6 +10,7 @@ import sys
 import urllib.request
 from typing import Any
 
+import jsonschema
 import pytest
 
 _MODULE_PATH = (
@@ -487,6 +488,19 @@ def test_etat_reel_du_depot_passe_le_gate(monkeypatch: pytest.MonkeyPatch) -> No
     assert rendered == 0
     assert ok
     assert errors == []
+
+
+def test_state_current_valide_contre_son_schema() -> None:
+    schema = json.loads(
+        (REPO / "governance" / "state-current.schema.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    data = json.loads(
+        (REPO / "governance" / "STATE-CURRENT.json").read_text(encoding="utf-8")
+    )
+
+    jsonschema.Draft202012Validator(schema).validate(data)
 
 
 def test_subcommands_by_group_compte_node_a_sept() -> None:
