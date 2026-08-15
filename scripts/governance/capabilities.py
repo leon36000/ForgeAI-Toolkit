@@ -12,7 +12,8 @@ import sys
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[2]
-_PIN_RE = re.compile(r"^\s*rev:\s*(\S+)")
+_REPO_RE = re.compile(r"^\s*-?\s*repo:\s*(\S+)")
+_REV_RE = re.compile(r"^\s*rev:\s*(\S+)")
 
 
 def _run_available(command: list[str]) -> bool:
@@ -30,16 +31,28 @@ def _run_available(command: list[str]) -> bool:
 
 
 def _pinned_versions() -> str:
+    """Associe chaque `rev:` épinglée à son `repo:` déclarant, sans supposer d'ordre fixe
+    dans .pre-commit-config.yaml (un réagencement du fichier ne doit pas mélabeler les
+    versions)."""
     config = REPO / ".pre-commit-config.yaml"
     try:
-        revisions = _PIN_RE.findall(config.read_text(encoding="utf-8"))
+        lines = config.read_text(encoding="utf-8").splitlines()
     except OSError:
         return ""
-    labels = ("ggshield", "ruff")
-    found = [
-        f"{label} {revision}"
-        for label, revision in zip(labels, revisions[:2], strict=False)
-    ]
+    found = []
+    current_repo = ""
+    for line in lines:
+        repo_match = _REPO_RE.match(line)
+        if repo_match:
+            current_repo = repo_match.group(1).lower()
+            continue
+        rev_match = _REV_RE.match(line)
+        if rev_match and current_repo:
+            if "ggshield" in current_repo:
+                found.append(f"ggshield {rev_match.group(1)}")
+            elif "ruff" in current_repo:
+                found.append(f"ruff {rev_match.group(1)}")
+            current_repo = ""
     return f" épinglé : {', '.join(found)} — voir .pre-commit-config.yaml." if found else ""
 
 

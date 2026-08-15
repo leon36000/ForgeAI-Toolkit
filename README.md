@@ -42,8 +42,11 @@ dans Claude Code (l'orchestrateur en session), routée par le gateway LiteLLM lo
 
 ## Gates (§8bis — aucun stub, aucun faux)
 
+`python3 scripts/governance/capabilities.py` diagnostique localement quelles capacités sont
+disponibles — ce n'est PAS lui-même un gate CI, juste un point d'entrée avant de lancer les
+gates ci-dessous :
+
 ```bash
-python3 scripts/governance/capabilities.py  # diagnostic local des capacités
 python3 scripts/no_stub_scan.py --all       # scan stubs/marqueurs interdits
 python3 scripts/registre.py verify Registres/mission.jsonl
 pytest                                      # tests

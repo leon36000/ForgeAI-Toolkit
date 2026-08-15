@@ -62,6 +62,28 @@ def test_alias_modele_reponse_routes_yaml_reconnu():
     assert revue.vendor_of("DeepSeek-V4-Pro") == revue.vendor_of("deepseek") == "deepseek"
 
 
+def test_id_membre_avec_commentaire_inline_reconnu(tmp_path):
+    # Régression revue scellée RC1-003-PR489 (objection mineure DeepSeek-V4-Pro) : un
+    # commentaire inline sur la ligne "- id:" elle-même (pas seulement sur vendor/provider_id/
+    # modele) ne doit pas faire disparaître silencieusement le membre du roster.
+    roles = tmp_path / "manifests" / "roles.yaml"
+    roles.parent.mkdir()
+    roles.write_text(
+        "membres:\n"
+        "  - id: avec-commentaire  # codeur de cette story\n"
+        "    vendor: vendor-teste\n"
+        "    provider_id: AvecCommentaire\n"
+        "regles_revue:\n"
+        "  vendors_par_story: 3\n",
+        encoding="utf-8",
+    )
+
+    table = revue._vendor_table(roles_path=roles)
+
+    assert table is not None
+    assert "vendor-teste" in table.values()
+
+
 def test_ajouter_un_vendor_ne_touche_pas_revue_py(tmp_path):
     # Preuve exécutable du critère d'acceptation #433 : un nouveau vendor devient reconnu
     # par une donnée seule (manifests/roles.yaml), sans toucher une ligne de revue.py.

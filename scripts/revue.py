@@ -27,7 +27,7 @@ import sys
 from pathlib import Path
 
 _PLACEHOLDER = re.compile(r"\{(story_id|criteres|artefact_path|artefact)\}")
-_MEMBER_START = re.compile(r"^\s*-\s*id:\s*(\S+)\s*$")
+_MEMBER_START = re.compile(r"^\s*-\s*id:\s*(\S+)\s*(?:#.*)?$")
 _MEMBER_FIELD = re.compile(r"^\s+(vendor|provider_id|modele):\s*(.+?)\s*(?:#.*)?$")
 # manifests/routes.yaml : mapping flow-style (une route par ligne) — membre/modele_reponse
 # toujours sur la 1ère ligne de l'entrée (une éventuelle "note:" continue sur la ligne
