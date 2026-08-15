@@ -88,7 +88,7 @@
     "inputs": [
       {
         "path": ".github/workflows/gates.yml",
-        "sha256": "9b98b0ef65c05fd6984def4a15d0ff0b0b0b3312a8ffbddcf5acb123eeef7e34"
+        "sha256": "0b0b6ca84399e3d78084860a961a6f1822968129593c9d7c63588855b2c1b1a8"
       },
       {
         "path": ".github/workflows/scope-guard.yml",
@@ -672,7 +672,7 @@
       },
       {
         "path": "tests/test_reviews_gate.py",
-        "sha256": "81b095a2ff441ea0f138dca55931f5bfa19d11ba79c7d753311a23981a474081"
+        "sha256": "043c753c37178b3218b49df90b302e7443612216cd0f58ba8be65db98513ae2c"
       },
       {
         "path": "tests/test_revue.py",
@@ -865,7 +865,7 @@
     "tests": {
       "js_files": 3,
       "python_files": 180,
-      "python_functions_declared": 1928
+      "python_functions_declared": 1929
     }
   },
   "observations": [

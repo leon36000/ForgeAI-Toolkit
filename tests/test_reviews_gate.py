@@ -163,6 +163,21 @@ def test_mode_archive_rejette_recu_commit_non_fusionne(tmp_path):
     assert ok is False and any("jamais fusionné" in line for line in report)
 
 
+def test_mode_archive_recu_malforme_echoue_proprement(tmp_path):
+    # Régression revue scellée RC1-004-PR497-v3 (objection mineure DeepSeek-V4-Pro) : un
+    # RECU.json valide en JSON mais pas un objet (ex. une liste) levait TypeError non
+    # attrapée sur receipt["head_commit"] — doit produire un échec contrôlé, jamais planter.
+    root = tmp_path / "reviews"
+    directory = _make_review(
+        root, "S", [_verdict("deepseek"), _verdict("gemini"), _verdict("longcat")]
+    )
+    (directory / "RECU.json").write_text("[]", encoding="utf-8")
+
+    ok, report = gate.check(_manifest(tmp_path, ["S"]), root, mode="archive", runner=_runner)
+
+    assert ok is False and any("reçu archive illisible" in line for line in report)
+
+
 def test_defaut_sans_drapeau_comportement_inchange(tmp_path):
     root = tmp_path / "reviews"
     _make_review(root, "S", [_verdict("deepseek"), _verdict("gemini"), _verdict("longcat")])

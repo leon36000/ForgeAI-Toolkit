@@ -185,7 +185,10 @@ def check(
                 # les refs de _diff_canonique/_etat_git_reel (objection mineure revue scellée
                 # RC1-004-PR497-v2, DeepSeek-V4-Pro).
                 revue._validate_git_ref(commit)
-            except (OSError, json.JSONDecodeError, KeyError, ValueError) as error:
+            except (OSError, json.JSONDecodeError, KeyError, ValueError, TypeError) as error:
+                # TypeError : RECU.json valide en JSON mais pas un objet (ex. liste/null) —
+                # receipt["head_commit"] lèverait sinon une exception non gérée (objection
+                # mineure round 3, DeepSeek-V4-Pro).
                 ok = False
                 report.append(f"ECHEC {entry} : reçu archive illisible : {error}")
                 continue
