@@ -217,7 +217,7 @@ def check_portability(path: str) -> list[dict]:
                 }
             )
 
-        if segment == "" or segment == "." or segment == ".." or segment == ".git":
+        if segment == "" or segment == "." or segment == "..":
             violations.append(
                 {
                     "rule": "illegal_segment",
@@ -225,14 +225,14 @@ def check_portability(path: str) -> list[dict]:
                     "detail": "Le segment est vide, réservé ou ne constitue pas un nom de répertoire valide.",
                 }
             )
-            if segment == ".git":
-                violations.append(
-                    {
-                        "rule": "reserved_git_segment",
-                        "segment": segment,
-                        "detail": "Le segment .git est réservé.",
-                    }
-                )
+        elif segment == ".git":
+            violations.append(
+                {
+                    "rule": "reserved_git_segment",
+                    "segment": segment,
+                    "detail": "Le segment .git est réservé.",
+                }
+            )
 
         if len(segment.encode("utf-8")) > 255:
             violations.append(
@@ -264,13 +264,6 @@ def check_portability(path: str) -> list[dict]:
         detail = "Le chemin relatif dépasse la longueur maximale portable de 240 caractères."
         violations.append(
             {
-                "rule": "path_too_long",
-                "segment": path,
-                "detail": detail,
-            }
-        )
-        violations.append(
-            {
                 "rule": "path_length",
                 "segment": path,
                 "detail": detail,
@@ -279,13 +272,6 @@ def check_portability(path: str) -> list[dict]:
         )
     elif 200 <= path_length < 240:
         detail = "Le chemin relatif approche la limite de longueur portable."
-        violations.append(
-            {
-                "rule": "path_length_warning",
-                "segment": path,
-                "detail": detail,
-            }
-        )
         violations.append(
             {
                 "rule": "path_length",
@@ -810,6 +796,15 @@ def check(repo_root: Path, rules_path: Path | None = None) -> tuple[bool, list[s
         errors.append(
             "collisions de casse détectées : "
             f"{current['summary']['case_collisions_total']}"
+        )
+    unicode_collisions_total = sum(
+        len(entry["paths"]) > 1
+        for entry in current["collisions"]["unicode"]
+    )
+    if unicode_collisions_total > 0:
+        errors.append(
+            "collisions Unicode réelles détectées : "
+            f"{unicode_collisions_total}"
         )
     if current["summary"]["portability_violations_total"] > 0:
         errors.append(

@@ -5948,8 +5948,8 @@
         }
       ],
       "rule_id": "evidence-registres",
-      "sha256": "f6b9666af88200d6a1241c0256772a2c3305e2c1c2af62860ce01b4581b63d45",
-      "size": 342793,
+      "sha256": "d8601aad21f836eec9e05d34d22535ba584c517e79359d36e105e91bdf7c2afa",
+      "size": 343914,
       "target_path": "evidence/registres/mission.jsonl",
       "type": "text"
     },
@@ -6514,7 +6514,7 @@
         },
         {
           "candidate": "governance/AUTHORITY-MAP.md",
-          "line": 633,
+          "line": 619,
           "referrer": "scripts/governance/classify_paths.py",
           "resolved": "governance/AUTHORITY-MAP.md",
           "severity": "hard"
@@ -6577,14 +6577,14 @@
         },
         {
           "candidate": "governance/PATH-CLASSIFICATION.md",
-          "line": 800,
+          "line": 786,
           "referrer": "scripts/governance/classify_paths.py",
           "resolved": "governance/PATH-CLASSIFICATION.md",
           "severity": "hard"
         },
         {
           "candidate": "governance/PATH-CLASSIFICATION.md",
-          "line": 806,
+          "line": 792,
           "referrer": "scripts/governance/classify_paths.py",
           "resolved": "governance/PATH-CLASSIFICATION.md",
           "severity": "hard"
@@ -6689,7 +6689,7 @@
         },
         {
           "candidate": "governance/STATE-CURRENT.json",
-          "line": 631,
+          "line": 617,
           "referrer": "scripts/governance/classify_paths.py",
           "resolved": "governance/STATE-CURRENT.json",
           "severity": "hard"
@@ -6724,7 +6724,7 @@
         },
         {
           "candidate": "governance/STATE-CURRENT.md",
-          "line": 632,
+          "line": 618,
           "referrer": "scripts/governance/classify_paths.py",
           "resolved": "governance/STATE-CURRENT.md",
           "severity": "hard"
@@ -6864,28 +6864,28 @@
         },
         {
           "candidate": "governance/authority.json",
-          "line": 397,
+          "line": 383,
           "referrer": "scripts/governance/classify_paths.py",
           "resolved": "governance/authority.json",
           "severity": "hard"
         },
         {
           "candidate": "governance/authority.json",
-          "line": 402,
+          "line": 388,
           "referrer": "scripts/governance/classify_paths.py",
           "resolved": "governance/authority.json",
           "severity": "hard"
         },
         {
           "candidate": "governance/authority.json",
-          "line": 405,
+          "line": 391,
           "referrer": "scripts/governance/classify_paths.py",
           "resolved": "governance/authority.json",
           "severity": "hard"
         },
         {
           "candidate": "governance/authority.json",
-          "line": 418,
+          "line": 404,
           "referrer": "scripts/governance/classify_paths.py",
           "resolved": "governance/authority.json",
           "severity": "hard"
@@ -7143,21 +7143,21 @@
         },
         {
           "candidate": "governance/path-classification.json",
-          "line": 726,
+          "line": 712,
           "referrer": "scripts/governance/classify_paths.py",
           "resolved": "governance/path-classification.json",
           "severity": "hard"
         },
         {
           "candidate": "governance/path-classification.json",
-          "line": 754,
+          "line": 740,
           "referrer": "scripts/governance/classify_paths.py",
           "resolved": "governance/path-classification.json",
           "severity": "hard"
         },
         {
           "candidate": "governance/path-classification.json",
-          "line": 769,
+          "line": 755,
           "referrer": "scripts/governance/classify_paths.py",
           "resolved": "governance/path-classification.json",
           "severity": "hard"
@@ -9746,35 +9746,35 @@
         },
         {
           "candidate": "reviews/BINDING.txt",
-          "line": 398,
+          "line": 384,
           "referrer": "scripts/governance/classify_paths.py",
           "resolved": "reviews/BINDING.txt",
           "severity": "hard"
         },
         {
           "candidate": "reviews/BINDING.txt",
-          "line": 428,
+          "line": 414,
           "referrer": "scripts/governance/classify_paths.py",
           "resolved": "reviews/BINDING.txt",
           "severity": "hard"
         },
         {
           "candidate": "reviews/BINDING.txt",
-          "line": 431,
+          "line": 417,
           "referrer": "scripts/governance/classify_paths.py",
           "resolved": "reviews/BINDING.txt",
           "severity": "hard"
         },
         {
           "candidate": "reviews/BINDING.txt",
-          "line": 446,
+          "line": 432,
           "referrer": "scripts/governance/classify_paths.py",
           "resolved": "reviews/BINDING.txt",
           "severity": "hard"
         },
         {
           "candidate": "reviews/BINDING.txt",
-          "line": 456,
+          "line": 442,
           "referrer": "scripts/governance/classify_paths.py",
           "resolved": "reviews/BINDING.txt",
           "severity": "hard"
@@ -24152,14 +24152,14 @@
         },
         {
           "candidate": "scripts/governance/classify_paths.py",
-          "line": 714,
+          "line": 700,
           "referrer": "scripts/governance/classify_paths.py",
           "resolved": "scripts/governance/classify_paths.py",
           "severity": "hard"
         },
         {
           "candidate": "scripts/governance/classify_paths.py",
-          "line": 822,
+          "line": 817,
           "referrer": "scripts/governance/classify_paths.py",
           "resolved": "scripts/governance/classify_paths.py",
           "severity": "hard"
@@ -24173,8 +24173,8 @@
         }
       ],
       "rule_id": "governance-scripts-governance",
-      "sha256": "f74954e2e99d700a6b239e0f7884619a134e1fe90da164b680930027fcc36b6c",
-      "size": 32655,
+      "sha256": "a2e4a2c6dbe1327417d03f0f5409b0716b08b7ab96a5cc4c24f0d8cd18475cf1",
+      "size": 32549,
       "target_path": null,
       "type": "text"
     },
@@ -82361,12 +82361,12 @@
       },
       {
         "candidate": "reviews/",
-        "line": 439,
+        "line": 425,
         "referrer": "scripts/governance/classify_paths.py"
       },
       {
         "candidate": "A-Za-z0-9._/-",
-        "line": 501,
+        "line": 487,
         "referrer": "scripts/governance/classify_paths.py"
       },
       {
@@ -131314,133 +131314,133 @@
       },
       {
         "candidate": "governance/authority.json",
-        "line": 397,
+        "line": 383,
         "referrer": "scripts/governance/classify_paths.py",
         "resolved": "governance/authority.json",
         "severity": "hard"
       },
       {
         "candidate": "reviews/BINDING.txt",
-        "line": 398,
+        "line": 384,
         "referrer": "scripts/governance/classify_paths.py",
         "resolved": "reviews/BINDING.txt",
         "severity": "hard"
       },
       {
         "candidate": "governance/authority.json",
-        "line": 402,
+        "line": 388,
         "referrer": "scripts/governance/classify_paths.py",
         "resolved": "governance/authority.json",
         "severity": "hard"
       },
       {
         "candidate": "governance/authority.json",
-        "line": 405,
+        "line": 391,
         "referrer": "scripts/governance/classify_paths.py",
         "resolved": "governance/authority.json",
         "severity": "hard"
       },
       {
         "candidate": "governance/authority.json",
-        "line": 418,
+        "line": 404,
         "referrer": "scripts/governance/classify_paths.py",
         "resolved": "governance/authority.json",
         "severity": "hard"
       },
       {
         "candidate": "reviews/BINDING.txt",
-        "line": 428,
+        "line": 414,
         "referrer": "scripts/governance/classify_paths.py",
         "resolved": "reviews/BINDING.txt",
         "severity": "hard"
       },
       {
         "candidate": "reviews/BINDING.txt",
-        "line": 431,
+        "line": 417,
         "referrer": "scripts/governance/classify_paths.py",
         "resolved": "reviews/BINDING.txt",
         "severity": "hard"
       },
       {
         "candidate": "reviews/BINDING.txt",
-        "line": 446,
+        "line": 432,
         "referrer": "scripts/governance/classify_paths.py",
         "resolved": "reviews/BINDING.txt",
         "severity": "hard"
       },
       {
         "candidate": "reviews/BINDING.txt",
-        "line": 456,
+        "line": 442,
         "referrer": "scripts/governance/classify_paths.py",
         "resolved": "reviews/BINDING.txt",
         "severity": "hard"
       },
       {
         "candidate": "governance/STATE-CURRENT.json",
-        "line": 631,
+        "line": 617,
         "referrer": "scripts/governance/classify_paths.py",
         "resolved": "governance/STATE-CURRENT.json",
         "severity": "hard"
       },
       {
         "candidate": "governance/STATE-CURRENT.md",
-        "line": 632,
+        "line": 618,
         "referrer": "scripts/governance/classify_paths.py",
         "resolved": "governance/STATE-CURRENT.md",
         "severity": "hard"
       },
       {
         "candidate": "governance/AUTHORITY-MAP.md",
-        "line": 633,
+        "line": 619,
         "referrer": "scripts/governance/classify_paths.py",
         "resolved": "governance/AUTHORITY-MAP.md",
         "severity": "hard"
       },
       {
         "candidate": "scripts/governance/classify_paths.py",
-        "line": 714,
+        "line": 700,
         "referrer": "scripts/governance/classify_paths.py",
         "resolved": "scripts/governance/classify_paths.py",
         "severity": "hard"
       },
       {
         "candidate": "governance/path-classification.json",
-        "line": 726,
+        "line": 712,
         "referrer": "scripts/governance/classify_paths.py",
         "resolved": "governance/path-classification.json",
         "severity": "hard"
       },
       {
         "candidate": "governance/path-classification.json",
-        "line": 754,
+        "line": 740,
         "referrer": "scripts/governance/classify_paths.py",
         "resolved": "governance/path-classification.json",
         "severity": "hard"
       },
       {
         "candidate": "governance/path-classification.json",
-        "line": 769,
+        "line": 755,
         "referrer": "scripts/governance/classify_paths.py",
         "resolved": "governance/path-classification.json",
         "severity": "hard"
       },
       {
         "candidate": "governance/PATH-CLASSIFICATION.md",
-        "line": 800,
+        "line": 786,
         "referrer": "scripts/governance/classify_paths.py",
         "resolved": "governance/PATH-CLASSIFICATION.md",
         "severity": "hard"
       },
       {
         "candidate": "governance/PATH-CLASSIFICATION.md",
-        "line": 806,
+        "line": 792,
         "referrer": "scripts/governance/classify_paths.py",
         "resolved": "governance/PATH-CLASSIFICATION.md",
         "severity": "hard"
       },
       {
         "candidate": "scripts/governance/classify_paths.py",
-        "line": 822,
+        "line": 817,
         "referrer": "scripts/governance/classify_paths.py",
         "resolved": "scripts/governance/classify_paths.py",
         "severity": "hard"

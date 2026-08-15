@@ -88,3 +88,11 @@ le binaire `pre-commit` lui-même, pas seulement ggshield+ruff. Comportement obs
 inchangé pour un environnement où pre-commit est déjà présent ; documentation utilisateur
 déjà à jour (mêmes commandes README.md, même message d'action). Aucune story/doc
 supplémentaire concernée.
+
+scripts/governance/classify_paths.py (RC1-008/#438, correctifs rounds de revue #496) :
+durcissement défensif (check() gate aussi sur les vraies collisions Unicode ; dédoublonnage
+des noms de règle de portabilité) suite à des objections de revue scellée. Comportement
+observable inchangé pour tout état déjà conforme — seul le cas d'une vraie collision/violation
+non détectée change (rejeté au lieu d'être silencieusement accepté). governance/
+PATH-CLASSIFICATION.md documente déjà le résultat. Aucune story/doc utilisateur
+supplémentaire concernée.

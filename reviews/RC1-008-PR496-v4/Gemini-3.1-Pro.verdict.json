@@ -1,0 +1,25 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "majeure",
+   "fichier": "scripts/governance/classify_paths.py",
+   "description": "La fonction check() ignore les collisions Unicode. Elle vérifie case_collisions_total et portability_violations_total pour faire échouer le gate, mais ne vérifie pas la présence de collisions Unicode (len(current['collisions']['unicode']) > 0). De plus, unicode_anomalies_total ne compte que les anomalies 'non_nfc' et exclut les véritables collisions Unicode. Cela viole le critère 'aucun chemin cible ambigu ou collisionnel' car une collision Unicode validée par --render ne fera pas échouer l'intégration continue.",
+   "preuve": "Lignes 788-797 dans check() : if current['summary']['case_collisions_total'] > 0: ... if current['summary']['portability_violations_total'] > 0: ... (aucune vérification des collisions Unicode). Lignes 668-671 dans build_manifest() : unicode_anomalies_total ne somme que les entrées avec kind == 'non_nfc'."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "scripts/governance/classify_paths.py",
+   "description": "Malgré l'affirmation dans le payload du commit 440 d'avoir corrigé les violations en double ('1 seul nom canonique garde par type'), check_portability() émet toujours des violations multiples pour la même détection. Par exemple, un chemin trop long émet 'path_too_long' et 'path_length', et un segment '.git' émet 'illegal_segment' et 'reserved_git_segment'.",
+   "preuve": "Lignes 258-273 : violations.append({'rule': 'path_too_long'...}) suivi de violations.append({'rule': 'path_length'...}). Lignes 216-223 : violations.append({'rule': 'illegal_segment'...}) suivi de violations.append({'rule': 'reserved_git_segment'...}) pour '.git'."
+  }
+ ],
+ "date_heure": "2026-08-15T18:56:44.172268+00:00",
+ "prompt_sha256": "b97001d5f66d6058841d60c5a8f96d02451deeaa4eaec57af9a78735de29a527",
+ "reviewer_model": "Gemini-3.1-Pro",
+ "modele_servi": "gemini-31-pro-openrouter",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "1"
+ }
+}

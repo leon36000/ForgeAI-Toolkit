@@ -1,0 +1,25 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": ".github/workflows/gates.yml",
+   "description": "Le job path-classification ne s'exécute que sur ubuntu-latest. Aucun runner Windows/macOS n'est présent pour démontrer l'exécution réelle de la validation sur les trois OS du critère d'acceptation. La validation statique check_portability est multi-OS, mais l'exécution Windows/macOS n'est pas démontrée.",
+   "preuve": "path-classification:\n    runs-on: ubuntu-latest"
+  },
+  {
+   "severite": "mineure",
+   "fichier": "scripts/governance/classify_paths.py",
+   "description": "detect_collisions ne signale pas une collision exacte entre un target_path et un chemin suivi non migrant, car add_pair() ignore les paires strictement identiques. Un target_path identique à un fichier existant qui ne migre pas ne serait donc pas remonté.",
+   "preuve": "def add_pair(left: str, right: str) -> None:\n        if left == right:\n            return"
+  }
+ ],
+ "date_heure": "2026-08-15T19:00:04.104438+00:00",
+ "prompt_sha256": "b97001d5f66d6058841d60c5a8f96d02451deeaa4eaec57af9a78735de29a527",
+ "reviewer_model": "DeepSeek-V4-Pro",
+ "modele_servi": "deepseek-v4-pro-direct",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}
