@@ -1,0 +1,23 @@
+name: Validation des suppressions Sonar
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  validate:
+    name: Inventaire des suppressions Sonar
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Valider l'inventaire
+        run: python scripts/governance/validate_sonar_suppressions.py --root .
+      - name: Vérifier le rapport généré
+        run: |
+          python scripts/governance/validate_sonar_suppressions.py --root . --render
+          git diff --exit-code -- governance/SONAR-SUPPRESSIONS.md

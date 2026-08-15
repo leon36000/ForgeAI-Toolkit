@@ -1,0 +1,385 @@
+{
+  "review_horizon": {
+    "days": 180,
+    "justification": "Les risques acceptés stables sont réexaminés au plus tard tous les 180 jours afin de confirmer que les suppressions restent nécessaires, ciblées et compensées."
+  },
+  "suppressions": [
+    {
+      "id": "inline:src/forgeai/cli.py:121:S5332",
+      "kind": "inline",
+      "rule": "S5332",
+      "scope": "line",
+      "sites": [
+        {
+          "path": "src/forgeai/cli.py",
+          "line": 121
+        }
+      ],
+      "owner": "équipe réseau ForgeAI",
+      "justification": "Le service local ou LAN documenté à cette ligne accepte délibérément HTTP dans la frontière réseau maîtrisée prévue par le produit.",
+      "compensating_test": null,
+      "compensating_test_reason": "La suppression concerne une décision de déploiement explicitement documentée à la ligne concernée.",
+      "review_due": "2027-02-11",
+      "accepted_risk": "Un transport HTTP reste autorisé uniquement pour le service local ou LAN documenté."
+    },
+    {
+      "id": "inline:src/forgeai/deploy/openbao_flow.py:102:S2612",
+      "kind": "inline",
+      "rule": "S2612",
+      "scope": "line",
+      "sites": [
+        {
+          "path": "src/forgeai/deploy/openbao_flow.py",
+          "line": 102
+        }
+      ],
+      "owner": "équipe secrets ForgeAI",
+      "justification": "Le conteneur openbao-unsealer tourne sous un UID non-root distinct de l'opérateur et lit la clé d'unseal via un bind-mount hôte. La clé doit donc être lisible par ce conteneur. Elle est co-localisée avec le stockage scellé sur le même hôte et partage la même frontière de confiance ; le root token reste isolé en 0600 hors du volume de l'unsealer.",
+      "compensating_test": null,
+      "compensating_test_reason": "Le comportement est prouvé par la preuve e2e S6 documentée ; aucune occurrence de test unitaire précise n'est déclarée ici.",
+      "review_due": "2027-02-11",
+      "accepted_risk": "La clé d'unseal peut être lisible par le conteneur non-root sur le même hôte de confiance."
+    },
+    {
+      "id": "inline:src/forgeai/deploy/openbao_flow.py:104:S2612",
+      "kind": "inline",
+      "rule": "S2612",
+      "scope": "line",
+      "sites": [
+        {
+          "path": "src/forgeai/deploy/openbao_flow.py",
+          "line": 104
+        }
+      ],
+      "owner": "équipe secrets ForgeAI",
+      "justification": "Le conteneur openbao-unsealer tourne sous un UID non-root distinct de l'opérateur et lit la clé d'unseal via un bind-mount hôte. La clé doit donc être lisible par ce conteneur. Elle est co-localisée avec le stockage scellé sur le même hôte et partage la même frontière de confiance ; le root token reste isolé en 0600 hors du volume de l'unsealer.",
+      "compensating_test": null,
+      "compensating_test_reason": "Le comportement est prouvé par la preuve e2e S6 documentée ; aucune occurrence de test unitaire précise n'est déclarée ici.",
+      "review_due": "2027-02-11",
+      "accepted_risk": "La clé d'unseal peut être lisible par le conteneur non-root sur le même hôte de confiance."
+    },
+    {
+      "id": "inline:src/forgeai/deploy/openbao_flow.py:109:S2612",
+      "kind": "inline",
+      "rule": "S2612",
+      "scope": "line",
+      "sites": [
+        {
+          "path": "src/forgeai/deploy/openbao_flow.py",
+          "line": 109
+        }
+      ],
+      "owner": "équipe secrets ForgeAI",
+      "justification": "Le conteneur openbao-unsealer tourne sous un UID non-root distinct de l'opérateur et lit la clé d'unseal via un bind-mount hôte. La clé doit donc être lisible par ce conteneur. Elle est co-localisée avec le stockage scellé sur le même hôte et partage la même frontière de confiance ; le root token reste isolé en 0600 hors du volume de l'unsealer.",
+      "compensating_test": null,
+      "compensating_test_reason": "Le comportement est prouvé par la preuve e2e S6 documentée ; aucune occurrence de test unitaire précise n'est déclarée ici.",
+      "review_due": "2027-02-11",
+      "accepted_risk": "La clé d'unseal peut être lisible par le conteneur non-root sur le même hôte de confiance."
+    },
+    {
+      "id": "inline:src/forgeai/models/vault.py:252:S2083",
+      "kind": "inline",
+      "rule": "S2083",
+      "scope": "line",
+      "sites": [
+        {
+          "path": "src/forgeai/models/vault.py",
+          "line": 252
+        }
+      ],
+      "owner": "équipe secrets ForgeAI",
+      "justification": "La cible locale de bootstrap est choisie par l'opérateur, ouverte avec O_NOFOLLOW puis validée comme fichier régulier avant lecture ; la publication ultérieure utilise le writer atomique.",
+      "compensating_test": null,
+      "compensating_test_reason": "La garde O_NOFOLLOW et la validation du descripteur sont documentées directement au site.",
+      "review_due": "2027-02-11",
+      "accepted_risk": "L'analyse de traversée de chemin ne reconnaît pas la validation explicite du descripteur ouvert."
+    },
+    {
+      "id": "inline:src/forgeai/models/_locking.py:53:S2083",
+      "kind": "inline",
+      "rule": "S2083",
+      "scope": "line",
+      "sites": [
+        {
+          "path": "src/forgeai/models/_locking.py",
+          "line": 53
+        }
+      ],
+      "owner": "équipe modèles ForgeAI",
+      "justification": "Le descripteur ouvert est le parent exact de la destination locale choisie par l'opérateur ; aucun privilège n'est élevé.",
+      "compensating_test": null,
+      "compensating_test_reason": "Le commentaire au site documente la cible locale et l'absence d'élévation de privilège.",
+      "review_due": "2027-02-11",
+      "accepted_risk": "L'analyse ne distingue pas ce répertoire local contrôlé d'un chemin non fiable."
+    },
+    {
+      "id": "inline:src/forgeai/models/_locking.py:79:S2083",
+      "kind": "inline",
+      "rule": "S2083",
+      "scope": "line",
+      "sites": [
+        {
+          "path": "src/forgeai/models/_locking.py",
+          "line": 79
+        }
+      ],
+      "owner": "équipe modèles ForgeAI",
+      "justification": "Le temporaire est créé par mkstemp dans le parent de la destination et os.replace réalise explicitement le remplacement local demandé.",
+      "compensating_test": null,
+      "compensating_test_reason": "Le commentaire au site documente l'origine contrôlée du temporaire et la finalité du remplacement.",
+      "review_due": "2027-02-11",
+      "accepted_risk": "L'analyse de traversée de chemin ne reconnaît pas le temporaire créé dans le répertoire cible."
+    },
+    {
+      "id": "properties-multicriteria:e2",
+      "kind": "properties-multicriteria",
+      "rule": "python:S5443",
+      "scope": "file",
+      "sites": [
+        {
+          "path": "src/forgeai/renderers/k3s.py"
+        }
+      ],
+      "owner": "équipe déploiement ForgeAI",
+      "justification": "Le littéral /tmp de k3s.py est le contenu d'un manifeste Kubernetes généré pour un conteneur distant et éphémère ; ce processus n'écrit aucun fichier temporaire local. Le pod monte lui-même un emptyDir neuf et isolé à cet emplacement.",
+      "compensating_test": null,
+      "compensating_test_reason": "Non-réductible : Sonar vise le fichier car son analyse ne distingue pas ce littéral de contenu de manifeste d'un chemin temporaire local.",
+      "review_due": "2027-02-11",
+      "accepted_risk": "Le faux positif peut masquer une occurrence S5443 dans ce fichier jusqu'à sa révision."
+    },
+    {
+      "id": "properties-multicriteria:e3",
+      "kind": "properties-multicriteria",
+      "rule": "python:S2068",
+      "scope": "file",
+      "sites": [
+        {
+          "path": "src/forgeai/cli.py"
+        }
+      ],
+      "owner": "équipe plateforme ForgeAI",
+      "justification": "La constante concernée est l'identifiant public par défaut de l'image immudb officielle, documenté par le projet immudb lui-même, et non un identifiant propre à ForgeAI. Sa rotation relève du durcissement production ; l'immuabilité tamper-evident d'immudb n'en dépend pas.",
+      "compensating_test": null,
+      "compensating_test_reason": "Non-réductible : SonarCloud ne comprend pas la justification noqa déjà présente dans le code.",
+      "review_due": "2027-02-11",
+      "accepted_risk": "Le faux positif peut masquer une occurrence S2068 dans ce fichier jusqu'à sa révision."
+    },
+    {
+      "id": "properties-multicriteria:e4",
+      "kind": "properties-multicriteria",
+      "rule": "python:S5332",
+      "scope": "file",
+      "sites": [
+        {
+          "path": "src/forgeai/network/bootstrap.py"
+        }
+      ],
+      "owner": "équipe réseau ForgeAI",
+      "justification": "La validation de render_join_plan autorise délibérément http:// pour un control plane Headscale auto-hébergé sur réseau privé pendant le bootstrap initial avant terminaison TLS. Ce chemin ne matérialise aucun secret et ne transmet aucune valeur sur un réseau non maîtrisé.",
+      "compensating_test": null,
+      "compensating_test_reason": "Non-réductible : l'exception correspond à une compatibilité de bootstrap réseau privée documentée.",
+      "review_due": "2027-02-11",
+      "accepted_risk": "Le faux positif peut masquer une occurrence S5332 dans ce fichier jusqu'à sa révision."
+    },
+    {
+      "id": "properties-multicriteria:e5",
+      "kind": "properties-multicriteria",
+      "rule": "pythonsecurity:S8707",
+      "scope": "file",
+      "sites": [
+        {
+          "path": "scripts/gate_docs.py"
+        }
+      ],
+      "owner": "équipe gouvernance ForgeAI",
+      "justification": "La règle LLM-aware ne reconnaît pas le validateur personnalisé : _valider_ref_git est appelé avant subprocess.run et _charger_json valide chemin.is_file avant read_text. La correction de fond est réelle et testée, mais la règle ne suit pas cette garde.",
+      "compensating_test": "tests/test_doc032_gate_docs.py",
+      "review_due": "2027-02-11",
+      "accepted_risk": "Le faux positif peut masquer une occurrence S8707 dans ce fichier jusqu'à sa révision."
+    },
+    {
+      "id": "properties-multicriteria:e6",
+      "kind": "properties-multicriteria",
+      "rule": "pythonsecurity:S8705",
+      "scope": "file",
+      "sites": [
+        {
+          "path": "scripts/gate_docs.py"
+        }
+      ],
+      "owner": "équipe gouvernance ForgeAI",
+      "justification": "La règle LLM-aware ne reconnaît pas le validateur personnalisé : _valider_ref_git est appelé avant subprocess.run et _charger_json valide chemin.is_file avant read_text. La correction de fond est réelle et testée, mais la règle ne suit pas cette garde.",
+      "compensating_test": "tests/test_doc032_gate_docs.py",
+      "review_due": "2027-02-11",
+      "accepted_risk": "Le faux positif peut masquer une occurrence S8705 dans ce fichier jusqu'à sa révision."
+    },
+    {
+      "id": "properties-multicriteria:e7",
+      "kind": "properties-multicriteria",
+      "rule": "pythonsecurity:S8707",
+      "scope": "file",
+      "sites": [
+        {
+          "path": "src/forgeai/core/registre.py"
+        }
+      ],
+      "owner": "équipe audit ForgeAI",
+      "justification": "La règle LLM-aware ne reconnaît pas la garde explicite de _load_key : lstat et stat.S_ISREG valident le chemin avant read_text. La correction est réelle et testée, mais cette règle ne suit pas le validateur personnalisé.",
+      "compensating_test": "tests/test_registre.py",
+      "review_due": "2027-02-11",
+      "accepted_risk": "Le faux positif peut masquer une occurrence S8707 dans ce fichier jusqu'à sa révision."
+    },
+    {
+      "id": "analysis-exclusion:sonar.exclusions:**/__pycache__/**",
+      "kind": "analysis-exclusion",
+      "rule": null,
+      "scope": "glob",
+      "sites": [
+        {
+          "path": "**/__pycache__/**"
+        }
+      ],
+      "owner": "équipe plateforme ForgeAI",
+      "justification": "Les caches Python générés ne sont pas du code source à analyser.",
+      "compensating_test": null,
+      "compensating_test_reason": "Non-réductible : il s'agit de fichiers générés.",
+      "review_due": "2027-02-11",
+      "accepted_risk": "Aucun cache Python généré n'est analysé."
+    },
+    {
+      "id": "analysis-exclusion:sonar.exclusions:**/*.pyc",
+      "kind": "analysis-exclusion",
+      "rule": null,
+      "scope": "glob",
+      "sites": [
+        {
+          "path": "**/*.pyc"
+        }
+      ],
+      "owner": "équipe plateforme ForgeAI",
+      "justification": "Les bytecodes Python générés ne sont pas du code source à analyser.",
+      "compensating_test": null,
+      "compensating_test_reason": "Non-réductible : il s'agit de fichiers générés.",
+      "review_due": "2027-02-11",
+      "accepted_risk": "Aucun bytecode Python généré n'est analysé."
+    },
+    {
+      "id": "analysis-exclusion:sonar.exclusions:src/forgeai/data/**",
+      "kind": "analysis-exclusion",
+      "rule": null,
+      "scope": "glob",
+      "sites": [
+        {
+          "path": "src/forgeai/data/**"
+        }
+      ],
+      "owner": "équipe plateforme ForgeAI",
+      "justification": "Les données livrées sous src/forgeai/data ne constituent pas du code source exécutable à analyser.",
+      "compensating_test": null,
+      "compensating_test_reason": "Non-réductible : cette arborescence contient des données et non du code.",
+      "review_due": "2027-02-11",
+      "accepted_risk": "Les données statiques ne sont pas analysées comme du code."
+    },
+    {
+      "id": "analysis-exclusion:sonar.exclusions:scripts/proof/**",
+      "kind": "analysis-exclusion",
+      "rule": null,
+      "scope": "glob",
+      "sites": [
+        {
+          "path": "scripts/proof/**"
+        }
+      ],
+      "owner": "équipe preuves ForgeAI",
+      "justification": "Les scripts/proof sont des scripts de preuve e2e exécutés réellement, avec déploiement Docker et assertions, et non du code de bibliothèque livré. Leurs subprocess et HTTP locale sont inhérents à la preuve ; ils sont exécutés et leur sortie est journalisée au registre et aux EVIDENCE.",
+      "compensating_test": null,
+      "compensating_test_reason": "Non-réductible : ces scripts sont eux-mêmes les preuves e2e exécutées manuellement.",
+      "review_due": "2027-02-11",
+      "accepted_risk": "Les outils de preuve e2e ne sont pas inclus dans l'analyse produit."
+    },
+    {
+      "id": "analysis-exclusion:sonar.test.exclusions:**/__pycache__/**",
+      "kind": "analysis-exclusion",
+      "rule": null,
+      "scope": "glob",
+      "sites": [
+        {
+          "path": "**/__pycache__/**"
+        }
+      ],
+      "owner": "équipe plateforme ForgeAI",
+      "justification": "Les caches Python générés ne sont pas des tests source.",
+      "compensating_test": null,
+      "compensating_test_reason": "Non-réductible : il s'agit de fichiers générés.",
+      "review_due": "2027-02-11",
+      "accepted_risk": "Aucun cache Python généré n'est considéré comme test."
+    },
+    {
+      "id": "analysis-exclusion:sonar.test.exclusions:**/*.pyc",
+      "kind": "analysis-exclusion",
+      "rule": null,
+      "scope": "glob",
+      "sites": [
+        {
+          "path": "**/*.pyc"
+        }
+      ],
+      "owner": "équipe plateforme ForgeAI",
+      "justification": "Les bytecodes Python générés ne sont pas des tests source.",
+      "compensating_test": null,
+      "compensating_test_reason": "Non-réductible : il s'agit de fichiers générés.",
+      "review_due": "2027-02-11",
+      "accepted_risk": "Aucun bytecode Python généré n'est considéré comme test."
+    },
+    {
+      "id": "coverage-exclusion:sonar.coverage.exclusions:src/forgeai/web/assets/**",
+      "kind": "coverage-exclusion",
+      "rule": null,
+      "scope": "glob",
+      "sites": [
+        {
+          "path": "src/forgeai/web/assets/**"
+        }
+      ],
+      "owner": "équipe web ForgeAI",
+      "justification": "Les assets navigateur JS, HTML et CSS sont analysés pour la qualité mais ne sont pas comptés dans la couverture : aucun runner JS n'est câblé aux gates et le produit est stdlib pur. Leur logique pure est prouvée hors couverture par tests/js/*.test.cjs et leur rendu se vérifie en navigateur.",
+      "compensating_test": null,
+      "compensating_test_reason": "Non-réductible : la couverture Python ne peut pas mesurer les assets navigateur.",
+      "review_due": "2027-02-11",
+      "accepted_risk": "La couverture Sonar ne mesure pas les assets navigateur."
+    },
+    {
+      "id": "coverage-exclusion:sonar.coverage.exclusions:scripts/proof/**",
+      "kind": "coverage-exclusion",
+      "rule": null,
+      "scope": "glob",
+      "sites": [
+        {
+          "path": "scripts/proof/**"
+        }
+      ],
+      "owner": "équipe preuves ForgeAI",
+      "justification": "Les scripts/proof sont des preuves e2e de déploiement Docker réel, pas du code de bibliothèque unit-testable. Ils sont exécutés réellement et leur sortie est journalisée au registre et aux EVIDENCE ; les compter en couverture ferait chuter la couverture alors qu'ils sont eux-mêmes la preuve.",
+      "compensating_test": null,
+      "compensating_test_reason": "Non-réductible : les scripts constituent les preuves e2e exécutées.",
+      "review_due": "2027-02-11",
+      "accepted_risk": "La couverture Sonar ne mesure pas les scripts de preuve e2e."
+    },
+    {
+      "id": "coverage-exclusion:sonar.coverage.exclusions:scripts/check_metering_sites.py",
+      "kind": "coverage-exclusion",
+      "rule": null,
+      "scope": "glob",
+      "sites": [
+        {
+          "path": "scripts/check_metering_sites.py"
+        }
+      ],
+      "owner": "équipe gouvernance ForgeAI",
+      "justification": "Le fichier est un lanceur CLI mince : la logique vit dans forgeai.models.metering_guard et est couverte à 100 % par les tests du module ; le wrapper ne contient que la plomberie d'entrée.",
+      "compensating_test": "tests/test_metering_guard.py",
+      "review_due": "2027-02-11",
+      "accepted_risk": "La couverture Sonar ne mesure pas le wrapper CLI sans logique métier."
+    }
+  ]
+}
