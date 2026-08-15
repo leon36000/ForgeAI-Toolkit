@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import importlib.util
+import sys
 from pathlib import Path
 
 import pytest
@@ -260,11 +261,25 @@ def test_verifier_recu_donnees_absentes():
     assert result["result"] == "INVALIDE" and "head_commit" in result["reason"]
 
 
-def test_verifier_recu_commit_different_rejete():
+def test_verifier_recu_base_differente_rejete():
     result = revue.verifier_recu(
-        _recu(head_commit="x" * 40), [_v("deepseek"), _v("gemini"), _v("longcat")], _etat()
+        _recu(base_commit="x" * 40), [_v("deepseek"), _v("gemini"), _v("longcat")], _etat()
     )
     assert result["result"] == "INVALIDE" and "un autre commit" in result["reason"]
+
+
+def test_verifier_recu_approve_meme_si_head_commit_differe_de_letat_git_actuel():
+    # Régression revue scellée RC1-004-PR497 (objection critique DeepSeek-V4-Pro) : un reçu
+    # correctement généré PUIS COMMIS ne peut structurellement jamais contenir le hash exact
+    # du commit qui l'inclut lui-même (le commit du reçu change le head_commit). La liaison
+    # réelle repose sur base_commit (jamais auto-référentiel) + diff_digest (déjà insensible,
+    # exclut reviews/** des deux côtés) — PAS sur l'égalité stricte head_commit/head_tree.
+    result = revue.verifier_recu(
+        _recu(head_commit="x" * 40, head_tree="y" * 40),
+        [_v("deepseek"), _v("gemini"), _v("longcat")],
+        _etat(),
+    )
+    assert result["result"] == "APPROVE"
 
 
 def test_verifier_recu_diff_modifie_apres_revue():
@@ -333,3 +348,22 @@ def test_verifier_recu_objection_bloquante_avec_cle_francaise():
     result = revue.verifier_recu(_recu(), verdicts, _etat())
     assert tally_result["bloquantes"]
     assert result["result"] == "REJECT" and "bloquante" in result["reason"]
+
+
+def test_cli_recu_exige_codeur(monkeypatch, tmp_path):
+    # Régression revue scellée RC1-004-PR497 (objection majeure DeepSeek-V4-Pro) : --codeur
+    # silencieusement optionnel (défaut []) contournait l'anti-auto-review par omission —
+    # désormais requis par argparse (SystemExit(2), jamais un défaut vide silencieux).
+    monkeypatch.setattr(
+        sys, "argv",
+        [
+            "revue.py", "recu",
+            "--dossier", "S",
+            "--base-ref", "origin/main",
+            "--issue", "434",
+            "--round", "1",
+        ],
+    )
+    with pytest.raises(SystemExit) as excinfo:
+        revue.main()
+    assert excinfo.value.code == 2

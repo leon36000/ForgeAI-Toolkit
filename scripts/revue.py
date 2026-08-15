@@ -386,10 +386,17 @@ def verifier_recu(
     if isinstance(recu["round"], bool) or not isinstance(recu["round"], int) or recu["round"] <= 0:
         return {"result": "INVALIDE", "reason": "round invalide"}
 
-    if recu["head_commit"] != etat_git.get("head_commit") or recu["base_commit"] != etat_git.get("base_commit"):
+    # Liaison au commit/diff : PAS d'égalité stricte sur head_commit/head_tree — un reçu
+    # correctement généré (`revue.py recu`) puis COMMIS ne peut structurellement JAMAIS
+    # contenir le hash exact du commit/arbre qui l'inclut lui-même (paradoxe d'auto-référence
+    # trouvé par revue scellée RC1-004-PR497, DeepSeek-V4-Pro — critique). head_commit/
+    # head_tree restent des champs REQUIS du schéma (traçabilité/audit), mais la garantie de
+    # liaison réelle repose sur base_commit (jamais auto-référentiel — c'est l'état de
+    # base_ref, pas de cette PR) et diff_digest (DÉJÀ insensible à l'auto-référence : il
+    # exclut reviews/** des deux côtés de la comparaison, donc committer le reçu APRÈS l'avoir
+    # généré ne change jamais ce digest).
+    if recu["base_commit"] != etat_git.get("base_commit"):
         return {"result": "INVALIDE", "reason": "reçu lié à un autre commit"}
-    if recu["head_tree"] != etat_git.get("head_tree"):
-        return {"result": "INVALIDE", "reason": "arbre incohérent"}
     if recu["diff_digest"] != etat_git.get("diff_digest"):
         return {"result": "INVALIDE", "reason": "diff modifié après revue"}
 
@@ -523,7 +530,12 @@ def main() -> None:
     pr.add_argument("--head-ref", default="HEAD")
     pr.add_argument("--issue", required=True, type=int)
     pr.add_argument("--round", required=True, type=int)
-    pr.add_argument("--codeur", action="append", default=[])
+    # OBLIGATOIRE (≥1) : un --codeur silencieusement optionnel (défaut []) permettait de
+    # contourner l'anti-auto-review par simple omission (revue scellée RC1-004-PR497,
+    # DeepSeek-V4-Pro — majeure). verifier_recu() reste tolérant à une liste vide construite
+    # directement (cas de test/receipt manuel), mais l'outil de génération FORCE la
+    # déclaration explicite.
+    pr.add_argument("--codeur", action="append", required=True)
     pr.add_argument("--fenetre-heures", type=int, default=24)
     pr.add_argument("--out", default=None)
     pr.set_defaults(func=_cmd_recu)

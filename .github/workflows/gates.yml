@@ -185,10 +185,16 @@ jobs:
     steps:
       # fetch-depth: 0 est requis pour calculer le merge-base, le diff origin/main...HEAD
       # et vérifier qu'un reçu archivé pointe vers un commit réellement fusionné (#434).
+      # ref: sur pull_request, actions/checkout SANS ref extrait par défaut le commit de
+      # MERGE SYNTHÉTIQUE (refs/pull/N/merge), pas le vrai HEAD de la branche — un reçu
+      # généré localement contre le vrai HEAD ne correspondrait jamais (revue scellée
+      # RC1-004-PR497, DeepSeek-V4-Pro — majeure). Épingle explicitement le SHA réel selon
+      # l'événement (un seul des trois contextes est renseigné à la fois).
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
           persist-credentials: false
           fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha || github.event.merge_group.head_sha || github.sha }}
       - name: Gate D9 — revue liante couvrant le changement de la PR
         if: github.event_name == 'pull_request' || github.event_name == 'merge_group'
         run: python3 scripts/reviews_gate.py --exiger-recu-courant --base-ref origin/main
