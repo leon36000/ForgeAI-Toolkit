@@ -19,7 +19,7 @@ jobs:
       - name: Valider l'inventaire Sonar
         run: python scripts/governance/validate_sonar_suppressions.py --root .
 
-      - name: Mutation contrôlée des suppressions voisines
+      - name: Détecter une suppression voisine non inventoriée
         shell: bash
         run: |
           set -euo pipefail

@@ -40,18 +40,54 @@ def _proprietes(path: Path) -> dict[str, str]:
     return resultat
 
 
+def _motifs(valeur: str) -> list[str]:
+    return [motif.strip() for motif in valeur.split(",") if motif.strip()]
+
+
+def _regex_glob_sonar(motif: str) -> re.Pattern[str]:
+    parties: list[str] = ["^"]
+    index = 0
+    while index < len(motif):
+        caractere = motif[index]
+        if caractere == "*" and index + 1 < len(motif) and motif[index + 1] == "*":
+            index += 2
+            if index < len(motif) and motif[index] == "/":
+                parties.append("(?:.*/)?")
+                index += 1
+            else:
+                parties.append(".*")
+            continue
+        if caractere == "*":
+            parties.append("[^/]*")
+        elif caractere == "?":
+            parties.append("[^/]")
+        else:
+            parties.append(re.escape(caractere))
+        index += 1
+    parties.append("$")
+    return re.compile("".join(parties))
+
+
+def _est_exclu(relatif: str, motifs: list[str]) -> bool:
+    return any(_regex_glob_sonar(motif).fullmatch(relatif) for motif in motifs)
+
+
 def _sources_python(root: Path, props: dict[str, str]) -> list[Path]:
     paths: list[Path] = []
-    for source in props.get("sonar.sources", "").split(","):
-        source = source.strip()
-        if not source:
-            continue
+    exclusions = _motifs(props.get("sonar.exclusions", ""))
+    for source in _motifs(props.get("sonar.sources", "")):
         candidate = root / source
         if candidate.is_file() and candidate.suffix == ".py":
             paths.append(candidate)
         elif candidate.is_dir():
             paths.extend(candidate.rglob("*.py"))
-    return sorted(set(paths))
+    return sorted(
+        {
+            path
+            for path in paths
+            if not _est_exclu(path.relative_to(root).as_posix(), exclusions)
+        }
+    )
 
 
 def _commentaires_nosonar(path: Path) -> list[tuple[int, str]]:
@@ -67,7 +103,9 @@ def _commentaires_nosonar(path: Path) -> list[tuple[int, str]]:
     return result
 
 
-def _suppression_inline(relatif: str, numero: int, regle: str | None, **extra: object) -> dict:
+def _suppression_inline(
+    relatif: str, numero: int, regle: str | None, **extra: object
+) -> dict:
     suffixe = regle if regle is not None else "NU"
     resultat: dict = {
         "id": f"inline:{relatif}:{numero}:{suffixe}",
@@ -80,83 +118,104 @@ def _suppression_inline(relatif: str, numero: int, regle: str | None, **extra: o
     return resultat
 
 
+def _suppressions_commentaire(relatif: str, numero: int, commentaire: str) -> list[dict]:
+    if not NOSONAR_MARKER.search(commentaire):
+        return []
+
+    ciblee = NOSONAR_TARGETED.search(commentaire)
+    if ciblee:
+        return [
+            _suppression_inline(relatif, numero, regle)
+            for regle in (item.strip() for item in ciblee.group(1).split(","))
+        ]
+
+    legacy = NOSONAR_LEGACY_RULE.search(commentaire)
+    if legacy:
+        return [
+            _suppression_inline(
+                relatif,
+                numero,
+                None,
+                nue=True,
+                legacy_rule=legacy.group(1),
+            )
+        ]
+
+    return [_suppression_inline(relatif, numero, None, nue=True)]
+
+
+def _suppressions_inline(path: Path, root: Path) -> list[dict]:
+    relatif = path.relative_to(root).as_posix()
+    suppressions: list[dict] = []
+    for numero, commentaire in _commentaires_nosonar(path):
+        suppressions.extend(_suppressions_commentaire(relatif, numero, commentaire))
+    return suppressions
+
+
+def _suppression_multicritere(props: dict[str, str], identifiant: str) -> dict:
+    regle = props.get(f"sonar.issue.ignore.multicriteria.{identifiant}.ruleKey")
+    resource = props.get(f"sonar.issue.ignore.multicriteria.{identifiant}.resourceKey")
+    if regle is None or resource is None:
+        return {
+            "id": f"properties-multicriteria:{identifiant}:INCOMPLET",
+            "kind": "properties-multicriteria",
+            "rule": regle,
+            "scope": "file",
+            "sites": [{"path": resource}] if resource else [],
+            "incomplete": True,
+        }
+    return {
+        "id": f"properties-multicriteria:{identifiant}",
+        "kind": "properties-multicriteria",
+        "rule": regle,
+        "scope": "file",
+        "sites": [{"path": resource}],
+    }
+
+
+def _suppressions_multicriteres(props: dict[str, str]) -> list[dict]:
+    identifiants = _motifs(props.get("sonar.issue.ignore.multicriteria", ""))
+    return [_suppression_multicritere(props, identifiant) for identifiant in identifiants]
+
+
+def _exclusions_proprietes(props: dict[str, str]) -> list[dict]:
+    exclusions: list[dict] = []
+    for cle in PROPERTIES:
+        kind = (
+            "coverage-exclusion"
+            if cle == "sonar.coverage.exclusions"
+            else "analysis-exclusion"
+        )
+        for motif in _motifs(props.get(cle, "")):
+            exclusions.append(
+                {
+                    "id": f"{kind}:{cle}:{motif}",
+                    "kind": kind,
+                    "rule": None,
+                    "scope": "glob",
+                    "sites": [{"path": motif}],
+                }
+            )
+    return exclusions
+
+
 def suppressions_reelles(root: Path) -> list[dict]:
-    reelles: list[dict] = []
     props = _proprietes(root / "sonar-project.properties")
-    validator = (root / "scripts" / "governance" / "validate_sonar_suppressions.py").resolve()
+    validator = (
+        root / "scripts" / "governance" / "validate_sonar_suppressions.py"
+    ).resolve()
+    suppressions: list[dict] = []
 
     for path in _sources_python(root, props):
         if path.resolve() == validator:
             continue
         if any(part in {".git", "__pycache__"} for part in path.parts):
             continue
-        relatif = path.relative_to(root).as_posix()
-        for numero, commentaire in _commentaires_nosonar(path):
-            if not NOSONAR_MARKER.search(commentaire):
-                continue
-            ciblee = NOSONAR_TARGETED.search(commentaire)
-            if ciblee:
-                for regle in (item.strip() for item in ciblee.group(1).split(",")):
-                    reelles.append(_suppression_inline(relatif, numero, regle))
-                continue
-            legacy = NOSONAR_LEGACY_RULE.search(commentaire)
-            if legacy:
-                reelles.append(
-                    _suppression_inline(
-                        relatif,
-                        numero,
-                        None,
-                        nue=True,
-                        legacy_rule=legacy.group(1),
-                    )
-                )
-                continue
-            reelles.append(_suppression_inline(relatif, numero, None, nue=True))
+        suppressions.extend(_suppressions_inline(path, root))
 
-    identifiants = [
-        item.strip()
-        for item in props.get("sonar.issue.ignore.multicriteria", "").split(",")
-        if item.strip()
-    ]
-    for identifiant in identifiants:
-        regle = props.get(f"sonar.issue.ignore.multicriteria.{identifiant}.ruleKey")
-        resource = props.get(f"sonar.issue.ignore.multicriteria.{identifiant}.resourceKey")
-        if regle is None or resource is None:
-            reelles.append(
-                {
-                    "id": f"properties-multicriteria:{identifiant}:INCOMPLET",
-                    "kind": "properties-multicriteria",
-                    "rule": regle,
-                    "scope": "file",
-                    "sites": [{"path": resource}] if resource else [],
-                    "incomplete": True,
-                }
-            )
-        else:
-            reelles.append(
-                {
-                    "id": f"properties-multicriteria:{identifiant}",
-                    "kind": "properties-multicriteria",
-                    "rule": regle,
-                    "scope": "file",
-                    "sites": [{"path": resource}],
-                }
-            )
-
-    for cle in PROPERTIES:
-        kind = "coverage-exclusion" if cle == "sonar.coverage.exclusions" else "analysis-exclusion"
-        for motif in (item.strip() for item in props.get(cle, "").split(",")):
-            if motif:
-                reelles.append(
-                    {
-                        "id": f"{kind}:{cle}:{motif}",
-                        "kind": kind,
-                        "rule": None,
-                        "scope": "glob",
-                        "sites": [{"path": motif}],
-                    }
-                )
-    return reelles
+    suppressions.extend(_suppressions_multicriteres(props))
+    suppressions.extend(_exclusions_proprietes(props))
+    return suppressions
 
 
 def _date(value: str) -> dt.date:
@@ -188,49 +247,114 @@ def _test_compensatoire_existe(root: Path, test_compensatoire: object) -> bool:
     return candidat.is_file()
 
 
-def valider(root: Path, *, aujourd_hui: dt.date | None = None) -> list[str]:
-    aujourd_hui = aujourd_hui or dt.date.today()
-    inventaire = _lire_json(root / "governance" / "sonar-suppressions.json")
-    entrees = inventaire.get("suppressions", [])
-    erreurs: list[str] = []
-
+def _erreurs_horizon(inventaire: dict, aujourd_hui: dt.date) -> tuple[list[str], dt.date]:
     try:
         horizon_jours = _horizon(inventaire)
     except ValueError as erreur:
-        erreurs.append(str(erreur))
-        horizon_jours = 0
-    date_maximale = aujourd_hui + dt.timedelta(days=horizon_jours)
+        return [str(erreur)], aujourd_hui
+    return [], aujourd_hui + dt.timedelta(days=horizon_jours)
 
+
+def _erreurs_identifiants_dupliques(entrees: list[dict]) -> list[str]:
     ids = [entree.get("id") for entree in entrees]
-    for identifiant in sorted({item for item in ids if ids.count(item) > 1}):
-        erreurs.append(f"identifiant d'inventaire dupliqué : {identifiant}")
+    return [
+        f"identifiant d'inventaire dupliqué : {identifiant}"
+        for identifiant in sorted({item for item in ids if ids.count(item) > 1})
+    ]
 
-    reelles = suppressions_reelles(root)
-    reels_par_id = {entree["id"]: entree for entree in reelles}
-    inventaire_par_id = {entree.get("id"): entree for entree in entrees}
 
+def _erreurs_suppression_reelle(entree: dict, inventaire_par_id: dict) -> list[str]:
+    erreurs: list[str] = []
+    if entree.get("nue"):
+        site = entree["sites"][0]
+        legacy_rule = entree.get("legacy_rule")
+        if legacy_rule:
+            erreurs.append(
+                f"NOSONAR ciblé mal formé : {site['path']}:{site['line']} ; "
+                f"utilisez # NOSONAR({legacy_rule})"
+            )
+        else:
+            erreurs.append(
+                f"NOSONAR nu interdit : {site['path']}:{site['line']} ; "
+                "indiquez la règle exacte"
+            )
+    if entree.get("incomplete"):
+        erreurs.append(f"suppression multicritère incomplète : {entree['id']}")
+    if entree["id"] not in inventaire_par_id:
+        erreurs.append(f"suppression réelle non inventoriée : {entree['id']}")
+    return erreurs
+
+
+def _erreurs_suppressions_reelles(
+    reelles: list[dict], inventaire_par_id: dict
+) -> list[str]:
+    erreurs: list[str] = []
     for entree in reelles:
-        if entree.get("nue"):
-            site = entree["sites"][0]
-            legacy_rule = entree.get("legacy_rule")
-            if legacy_rule:
-                erreurs.append(
-                    f"NOSONAR ciblé mal formé : {site['path']}:{site['line']} ; "
-                    f"utilisez # NOSONAR({legacy_rule})"
-                )
-            else:
-                erreurs.append(
-                    f"NOSONAR nu interdit : {site['path']}:{site['line']} ; indiquez la règle exacte"
-                )
-        if entree.get("incomplete"):
-            erreurs.append(f"suppression multicritère incomplète : {entree['id']}")
-        if entree["id"] not in inventaire_par_id:
-            erreurs.append(f"suppression réelle non inventoriée : {entree['id']}")
+        erreurs.extend(_erreurs_suppression_reelle(entree, inventaire_par_id))
+    return erreurs
 
-    for identifiant in inventaire_par_id:
-        if identifiant not in reels_par_id:
-            erreurs.append(f"entrée d'inventaire fossile : {identifiant}")
 
+def _erreurs_entrees_fossiles(
+    reels_par_id: dict, inventaire_par_id: dict
+) -> list[str]:
+    return [
+        f"entrée d'inventaire fossile : {identifiant}"
+        for identifiant in inventaire_par_id
+        if identifiant not in reels_par_id
+    ]
+
+
+def _erreurs_date_revision(
+    identifiant: object,
+    review_due: object,
+    aujourd_hui: dt.date,
+    date_maximale: dt.date,
+) -> list[str]:
+    try:
+        echeance = _date(review_due)
+    except (TypeError, ValueError):
+        return [f"{identifiant} : review_due doit être une date ISO valide"]
+
+    erreurs: list[str] = []
+    if echeance < aujourd_hui:
+        erreurs.append(f"{identifiant} : review_due dépassée ({echeance.isoformat()})")
+    if echeance > date_maximale:
+        erreurs.append(
+            f"{identifiant} : review_due dépasse l'horizon de révision "
+            f"({echeance.isoformat()} > {date_maximale.isoformat()})"
+        )
+    return erreurs
+
+
+def _erreurs_test_compensatoire(
+    root: Path, identifiant: object, test_compensatoire: object
+) -> list[str]:
+    if test_compensatoire is None:
+        return []
+    if _test_compensatoire_existe(root, test_compensatoire):
+        return []
+    return [
+        f"{identifiant} : test compensatoire absent du dépôt : {test_compensatoire}"
+    ]
+
+
+def _erreurs_portee_large(entree: dict, identifiant: object) -> list[str]:
+    test_compensatoire = entree["compensating_test"]
+    if entree["scope"] not in {"file", "glob"} or test_compensatoire:
+        return []
+    raison = entree.get("compensating_test_reason", "")
+    if "non-réductible" in raison.lower():
+        return []
+    return [
+        f"{identifiant} : portée {entree['scope']} sans test compensatoire "
+        "ni justification explicite de non-réductibilité"
+    ]
+
+
+def _erreurs_entree(
+    root: Path, entree: dict, aujourd_hui: dt.date, date_maximale: dt.date
+) -> list[str]:
+    identifiant = entree.get("id", "<sans id>")
     champs = {
         "id",
         "kind",
@@ -243,38 +367,48 @@ def valider(root: Path, *, aujourd_hui: dt.date | None = None) -> list[str]:
         "review_due",
         "accepted_risk",
     }
+    manquants = sorted(champs - set(entree))
+    if manquants:
+        return [
+            f"{identifiant} : champs obligatoires absents : {', '.join(manquants)}"
+        ]
+
+    erreurs = _erreurs_date_revision(
+        identifiant, entree["review_due"], aujourd_hui, date_maximale
+    )
+    if any("review_due doit être une date ISO valide" in erreur for erreur in erreurs):
+        return erreurs
+    erreurs.extend(
+        _erreurs_test_compensatoire(root, identifiant, entree["compensating_test"])
+    )
+    erreurs.extend(_erreurs_portee_large(entree, identifiant))
+    return erreurs
+
+
+def _erreurs_entrees(
+    root: Path, entrees: list[dict], aujourd_hui: dt.date, date_maximale: dt.date
+) -> list[str]:
+    erreurs: list[str] = []
     for entree in entrees:
-        identifiant = entree.get("id", "<sans id>")
-        manquants = sorted(champs - set(entree))
-        if manquants:
-            erreurs.append(f"{identifiant} : champs obligatoires absents : {', '.join(manquants)}")
-            continue
-        try:
-            echeance = _date(entree["review_due"])
-        except (TypeError, ValueError):
-            erreurs.append(f"{identifiant} : review_due doit être une date ISO valide")
-            continue
-        if echeance < aujourd_hui:
-            erreurs.append(f"{identifiant} : review_due dépassée ({echeance.isoformat()})")
-        if echeance > date_maximale:
-            erreurs.append(
-                f"{identifiant} : review_due dépasse l'horizon de révision "
-                f"({echeance.isoformat()} > {date_maximale.isoformat()})"
-            )
-        test_compensatoire = entree["compensating_test"]
-        if test_compensatoire is not None and not _test_compensatoire_existe(
-            root, test_compensatoire
-        ):
-            erreurs.append(
-                f"{identifiant} : test compensatoire absent du dépôt : {test_compensatoire}"
-            )
-        if entree["scope"] in {"file", "glob"} and not test_compensatoire:
-            raison = entree.get("compensating_test_reason", "")
-            if "non-réductible" not in raison.lower():
-                erreurs.append(
-                    f"{identifiant} : portée {entree['scope']} sans test compensatoire "
-                    "ni justification explicite de non-réductibilité"
-                )
+        erreurs.extend(_erreurs_entree(root, entree, aujourd_hui, date_maximale))
+    return erreurs
+
+
+def valider(root: Path, *, aujourd_hui: dt.date | None = None) -> list[str]:
+    aujourd_hui = aujourd_hui or dt.date.today()
+    inventaire = _lire_json(root / "governance" / "sonar-suppressions.json")
+    entrees = inventaire.get("suppressions", [])
+
+    erreurs, date_maximale = _erreurs_horizon(inventaire, aujourd_hui)
+    erreurs.extend(_erreurs_identifiants_dupliques(entrees))
+
+    reelles = suppressions_reelles(root)
+    reels_par_id = {entree["id"]: entree for entree in reelles}
+    inventaire_par_id = {entree.get("id"): entree for entree in entrees}
+
+    erreurs.extend(_erreurs_suppressions_reelles(reelles, inventaire_par_id))
+    erreurs.extend(_erreurs_entrees_fossiles(reels_par_id, inventaire_par_id))
+    erreurs.extend(_erreurs_entrees(root, entrees, aujourd_hui, date_maximale))
     return erreurs
 
 
@@ -289,6 +423,8 @@ def rendre(root: Path) -> str:
         "Les suppressions inline ciblées utilisent obligatoirement la syntaxe Sonar `# NOSONAR(Sxxxx)`. La forme `# NOSONAR Sxxxx` est une suppression nue : le texte après `NOSONAR` n'est pas une clé de règle. Source : https://community.sonarsource.com/t/python-issue-suppression-improvements-nosonar-and-new-rules/145017",
         "",
         "La réduction de S2612 dans `openbao_flow.py` est désormais au site : une nouvelle occurrence ailleurs dans ce fichier n'est plus masquée.",
+        "",
+        "La portée réelle des suppressions ciblées est vérifiée par le scan SonarCloud de la PR qui introduit une occurrence voisine : toute occurrence non couverte par un `NOSONAR(<règle>)` ciblé apparaît dans ce scan. La vérification ne relève donc pas du gate local ; sur la PR 499, `api/issues/search?pullRequest=499` a renvoyé deux issues et aucune sur `registre.py`, ce qui a confirmé que les deux `NOSONAR` nus retirés ne masquaient aucune issue.",
         "",
         "| Règle | Portée | Site | Propriétaire | Risque accepté | Test compensatoire | Révision |",
         "|---|---|---|---|---|---|---|",
@@ -310,14 +446,18 @@ def rendre(root: Path) -> str:
             test,
             entree["review_due"],
         ]
-        lignes.append("| " + " | ".join(cellule.replace("|", "\\|") for cellule in cellules) + " |")
+        lignes.append(
+            "| " + " | ".join(cellule.replace("|", "\\|") for cellule in cellules) + " |"
+        )
     return "\n".join(lignes) + "\n"
 
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--root", type=Path, default=Path.cwd())
-    parser.add_argument("--render", action="store_true", help="écrit le rapport Markdown généré")
+    parser.add_argument(
+        "--render", action="store_true", help="écrit le rapport Markdown généré"
+    )
     args = parser.parse_args()
     root = args.root.resolve()
     erreurs = valider(root)

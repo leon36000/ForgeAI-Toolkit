@@ -94,6 +94,28 @@ def test_scan_limite_aux_sources_et_ignore_les_chaines_et_regex(tmp_path: Path) 
     assert [item["id"] for item in resultats] == ["inline:src/active.py:3:S9999"]
 
 
+def test_scan_ignore_un_nosonar_dans_un_chemin_exclu(tmp_path: Path) -> None:
+    (tmp_path / "src" / "exclu").mkdir(parents=True)
+    (tmp_path / "sonar-project.properties").write_text(
+        "sonar.sources=src\nsonar.exclusions=src/exclu/**\n",
+        encoding="utf-8",
+    )
+    (tmp_path / "src" / "exclu" / "active.py").write_text(
+        "value = 1  # NOSONAR(S1234)\n",
+        encoding="utf-8",
+    )
+    _ecrire_inventaire(tmp_path, [])
+
+    resultats = VALIDATEUR.suppressions_reelles(tmp_path)
+
+    assert not any(item["id"].startswith("inline:") for item in resultats)
+    assert {
+        item["id"]
+        for item in resultats
+        if item["kind"] == "analysis-exclusion"
+    } == {"analysis-exclusion:sonar.exclusions:src/exclu/**"}
+
+
 def test_scan_detecte_nosonar_apres_un_autre_pragma(tmp_path: Path) -> None:
     (tmp_path / "src").mkdir()
     (tmp_path / "sonar-project.properties").write_text("sonar.sources=src\n", encoding="utf-8")

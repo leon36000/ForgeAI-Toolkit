@@ -7,6 +7,8 @@ Les suppressions inline ciblées utilisent obligatoirement la syntaxe Sonar `# N
 
 La réduction de S2612 dans `openbao_flow.py` est désormais au site : une nouvelle occurrence ailleurs dans ce fichier n'est plus masquée.
 
+La portée réelle des suppressions ciblées est vérifiée par le scan SonarCloud de la PR qui introduit une occurrence voisine : toute occurrence non couverte par un `NOSONAR(<règle>)` ciblé apparaît dans ce scan. La vérification ne relève donc pas du gate local ; sur la PR 499, `api/issues/search?pullRequest=499` a renvoyé deux issues et aucune sur `registre.py`, ce qui a confirmé que les deux `NOSONAR` nus retirés ne masquaient aucune issue.
+
 | Règle | Portée | Site | Propriétaire | Risque accepté | Test compensatoire | Révision |
 |---|---|---|---|---|---|---|
 | S2068 | line | src/forgeai/cli.py:73 | équipe plateforme ForgeAI | La ligne peut masquer uniquement une occurrence S2068 sur cette constante publique. | La suppression est réduite à la constante concernée. | 2027-02-10 |
