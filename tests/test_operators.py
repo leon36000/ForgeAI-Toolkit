@@ -12,7 +12,7 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
 
-from forgeai.deploy.operators import OPERATORS, detect, install_argv, plan
+from forgeai.deploy.operators import OPERATORS, detect, fetch_releases_helm, install_argv, plan
 
 
 class _Runner:
@@ -264,3 +264,44 @@ def test_detect_avec_releases_helm_vide_retombe_sur_crd():
     st = detect("argo-cd", r, releases_helm=[])
     assert st.present and st.source == "crd"
     assert not any(c[:3] == ["helm", "list", "-A"] for c in r.calls)
+
+
+# --- robustesse : une réponse Helm JSON valide mais non-liste retombe sur une liste vide ---
+@pytest.mark.parametrize("sortie", ["null", "42", '"texte"', '{"releases": []}'])
+def test_fetch_releases_helm_retourne_liste_vide_pour_json_non_liste(sortie):
+    r = _Runner({"helm list": (0, sortie)})
+    resultat = fetch_releases_helm(r)
+    assert resultat == []
+    assert isinstance(resultat, list)
+
+
+def test_detect_null_helm_retombe_sur_fallback_crd():
+    crd = "externalsecrets.external-secrets.io"
+    r = _Runner({
+        "helm list": (0, "null"),
+        f"get crd {crd}": (0, f"customresourcedefinition.apiextensions.k8s.io/{crd}"),
+    })
+    st = detect("external-secrets-operator", r)
+    assert st.present is True
+    assert st.source == "crd"
+
+
+def test_detect_null_helm_et_crd_absent_retourne_absent():
+    r = _Runner({"helm list": (0, "null")})
+    st = detect("external-secrets-operator", r)
+    assert st.present is False
+    assert st.source is None
+
+
+def test_plan_null_helm_et_crd_absent_produit_installation():
+    r = _Runner({"helm list": (0, "null")})
+    p = plan("external-secrets-operator", r)
+    assert p["action"] == "install"
+
+
+def test_detect_liste_helm_non_vide_continue_de_detecter_la_release():
+    r = _Runner({"helm list": (0, _HELM_ES)})
+    st = detect("external-secrets-operator", r)
+    assert st.present is True
+    assert st.source == "helm"
+    assert st.version == "external-secrets-2.7.0"
