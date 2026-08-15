@@ -1,0 +1,31 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "critique",
+   "fichier": "README.md",
+   "description": "AC1 non respecté : des compteurs opérationnels restent maintenus manuellement dans README.md. La couverture '92 %' et '7 sous-commandes forgeai node' ne sont pas encapsulés par des marqueurs state et ne proviennent d'aucune source identifiée.",
+   "preuve": "README.md:76-78 laisse 'Couverture 92 % (registre 98 %)' et '7 sous-commandes `forgeai node`' en clair, alors que le diff a ajouté des marqueurs uniquement autour de 0 et 1576 dans la même phrase. Registres/mission.jsonl seq 426 confirme : 'descope_documente : 2 compteurs prose de README.md NON marqués ... couverture 92 %'."
+  },
+  {
+   "severite": "majeure",
+   "fichier": "governance/STATE-CURRENT.json",
+   "description": "AC2 non respecté : aucun champ 'skips' ni 'couverture' n'est produit dans le bloc déterministe. Les tests portent uniquement sur le nombre de fichiers et de fonctions déclarées, pas sur les résultats pytest ni la couverture.",
+   "preuve": "governance/STATE-CURRENT.json contient 'tests': {'js_files': 3, 'python_files': 178, 'python_functions_declared': 1808} et aucun champ 'skips' ou 'couverture' ; README.md conserve manuellement 'Couverture 92 %'."
+  },
+  {
+   "severite": "majeure",
+   "fichier": ".github/workflows/gates.yml",
+   "description": "Le gate CI state-current ne passe pas --docs README.md --docs AGENTS.md. Or le script ne vérifie les marqueurs documentaires que lorsque --docs est fourni, donc une dérive ou modification manuelle des marqueurs dans README.md/AGENTS.md ne fera pas échouer la CI.",
+   "preuve": ".github/workflows/gates.yml ajoute 'run: python3 scripts/governance/state_current.py' sans --docs ; scripts/governance/state_current.py dans check() exécute 'for document in docs or []:'."
+  }
+ ],
+ "date_heure": "2026-08-15T10:22:00.612510+00:00",
+ "prompt_sha256": "79fbf0ef862bf2a4912a89d65826b74f68525a7aba975eb8242857970114c324",
+ "reviewer_model": "DeepSeek-V4-Pro",
+ "modele_servi": "deepseek-v4-pro-direct",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

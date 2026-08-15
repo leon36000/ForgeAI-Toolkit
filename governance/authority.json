@@ -634,7 +634,7 @@
       "positions": [],
       "digest": {
         "policy": "content_sha256",
-        "value": "5c7d85715f092c5b16edcce3935f18e2889033b9f645d823ab5b430105448940",
+        "value": "f7a6f3a881126c792d98ccdcf9f44cfba935971477797da04aae52dbf0231d8d",
         "checked_at": "2026-08-15",
         "delegated_to": null
       },
@@ -646,7 +646,7 @@
         "mission_seq": null,
         "ref": null
       },
-      "notes": "Point d'entrée documentaire du dépôt. Empreinte mise à jour par #437 (RC1-007, commit 2/3) : insertion de marqueurs <!-- state:... --> autour de 3 compteurs (catalogue.entries_total x2, catalogue.descriptions_en_missing), aucun autre changement de contenu."
+      "notes": "Point d'entrée documentaire du dépôt. Empreinte mise à jour par #437 (RC1-007) : insertion de marqueurs <!-- state:... --> autour de 6 compteurs au total (catalogue.entries_total x2, catalogue.descriptions_en_missing, observations.coverage.global, observations.coverage.registre, cli.subcommands_by_group.node) — les 3 derniers ajoutés en correctif suite à la revue scellée #490 (3/3 REJECT : AC1 exigeait qu'AUCUN compteur ne reste manuel), aucun autre changement de contenu."
     },
     {
       "id": "gov.decision-mission-lead",

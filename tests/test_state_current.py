@@ -344,6 +344,26 @@ def test_injection_preserve_le_reste_du_fichier() -> None:
     assert replacements == ["catalogue.entries_total : 999 -> 3"]
 
 
+def test_injection_marqueur_observations_resout_par_id() -> None:
+    state = {
+        "deterministe": {},
+        "observations": [{"id": "coverage.global", "display": "94"}],
+    }
+
+    rendered, _ = state_current.inject(
+        "Couverture <!-- state:observations.coverage.global -->92<!-- /state --> %.",
+        state,
+        "test.md",
+    )
+
+    assert (
+        rendered
+        == "Couverture <!-- state:observations.coverage.global -->94<!-- /state --> %."
+    )
+    assert ">94<" in rendered
+    assert ">92<" not in rendered
+
+
 def test_injection_chemin_inconnu_leve() -> None:
     text = "<!-- state:nexiste.pas -->ancienne<!-- /state -->"
     state = {"deterministe": {}, "observations": []}
@@ -467,6 +487,12 @@ def test_etat_reel_du_depot_passe_le_gate(monkeypatch: pytest.MonkeyPatch) -> No
     assert rendered == 0
     assert ok
     assert errors == []
+
+
+def test_subcommands_by_group_compte_node_a_sept() -> None:
+    state = state_current.collect(REPO)
+
+    assert state["cli"]["subcommands_by_group"]["node"] == 7
 
 
 def test_observation_sans_provenance_rejetee(tmp_path: pathlib.Path) -> None:

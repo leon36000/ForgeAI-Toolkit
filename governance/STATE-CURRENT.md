@@ -69,6 +69,18 @@
       "web",
       "wizard"
     ],
+    "subcommands_by_group": {
+      "budget": 2,
+      "gateway": 3,
+      "gpu": 1,
+      "ide": 4,
+      "loop": 1,
+      "model": 4,
+      "node": 7,
+      "route": 1,
+      "strategy": 2,
+      "template": 3
+    },
     "subcommands_total": 49
   },
   "coordination": {
@@ -79,7 +91,7 @@
   "inputs": [
     {
       "path": ".github/workflows/gates.yml",
-      "sha256": "6ccfd710787050aa5d3f125805eae416dfac610ad4385168a4a8cde40b782434"
+      "sha256": "f59f775b92ad9a42e304ea964e9a44511e4ba2123d7e0d7f6e4cbb7de9b9123d"
     },
     {
       "path": ".github/workflows/scope-guard.yml",
@@ -715,7 +727,7 @@
     },
     {
       "path": "tests/test_state_current.py",
-      "sha256": "4d2f69cbc50c3808090b07f45cae68ab25d31eb1ce65d13ad277cce514d6135d"
+      "sha256": "2dbf3af46d33d901d6d995a225f62205a0fd2f9263c8c162d39f174b798a6535"
     },
     {
       "path": "tests/test_supply018.py",
@@ -848,7 +860,7 @@
   "tests": {
     "js_files": 3,
     "python_files": 178,
-    "python_functions_declared": 1808
+    "python_functions_declared": 1810
   }
 }
 ```
@@ -857,3 +869,6 @@
 
 - 56 — observation horodatée, non scellée — hors chaîne de preuve du dépôt
 - 1 — observation horodatée, non scellée — hors chaîne de preuve du dépôt
+- 94 — observation horodatée, non scellée — hors chaîne de preuve du dépôt
+- 98 — observation horodatée, non scellée — hors chaîne de preuve du dépôt
+- 7 — observation horodatée, non scellée — hors chaîne de preuve du dépôt

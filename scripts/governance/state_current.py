@@ -294,6 +294,15 @@ def _cli_commands(repo_root: Path) -> list[str]:
     return sorted(first_level | second_level)
 
 
+def _commands_by_group(commands: list[str]) -> dict[str, int]:
+    groups: dict[str, int] = {}
+    for command in commands:
+        parts = command.split(" ")
+        if len(parts) == 2:
+            groups[parts[0]] = groups.get(parts[0], 0) + 1
+    return dict(sorted(groups.items()))
+
+
 def _coordination_entries(value: Any, relative: str) -> list[Any]:
     if isinstance(value, list):
         return value
@@ -452,6 +461,7 @@ def collect(repo_root: Path) -> dict:
         "cli": {
             "subcommands_total": len(commands),
             "subcommands": commands,
+            "subcommands_by_group": _commands_by_group(commands),
         },
         "tests": {
             "python_files": len(test_paths),

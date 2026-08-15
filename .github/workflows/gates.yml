@@ -100,7 +100,7 @@ jobs:
         with:
           persist-credentials: false
       - name: "Gate RC1-007 (#437) — état courant : dérive des compteurs générés"
-        run: python3 scripts/governance/state_current.py
+        run: python3 scripts/governance/state_current.py --docs README.md --docs AGENTS.md
 
   docs:
     runs-on: ubuntu-latest

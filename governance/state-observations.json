@@ -18,5 +18,35 @@
     "evidence": "commande rejouable ci-dessus, exécutée manuellement par l'Orchestrateur (issue #437)",
     "sealed": false,
     "command": "gh pr list --state open --limit 500 --json number | python3 -c \"import json,sys; print(len(json.load(sys.stdin)))\""
+  },
+  {
+    "id": "coverage.global",
+    "value": 94,
+    "display": "94",
+    "observed_at": "2026-08-15T10:33:01Z",
+    "source": "pytest --cov=src/forgeai --cov-report=term, exécution locale complète (hors tests/test_data002b_wal_idempotent.py, échec de collecte préexistant documenté registre seq 422/423, non lié à ce changement)",
+    "evidence": "sortie complète capturée par l'Orchestrateur (issue #437, commit correctif post-revue #490) : TOTAL 7289 lignes, 408 manquées, 94% — mesure locale à un instant donné, pas une preuve scellée (varie selon suites e2e opt-in skip/exécutées)",
+    "sealed": false,
+    "command": "pytest -q --cov=src/forgeai --cov-report=term --ignore=tests/test_data002b_wal_idempotent.py"
+  },
+  {
+    "id": "coverage.registre",
+    "value": 98,
+    "display": "98",
+    "observed_at": "2026-08-15T10:33:01Z",
+    "source": "coverage report --include=*/forgeai/core/registre.py, sur les données de la même exécution que coverage.global (fichier .coverage local)",
+    "evidence": "sortie complète capturée par l'Orchestrateur (issue #437, commit correctif post-revue #490) : src/forgeai/core/registre.py 162 lignes, 3 manquées, 98% — mesure locale à un instant donné, pas une preuve scellée",
+    "sealed": false,
+    "command": "coverage report --include=\"*/forgeai/core/registre.py\""
+  },
+  {
+    "id": "tests.skips",
+    "value": 7,
+    "display": "7",
+    "observed_at": "2026-08-15T16:14:02Z",
+    "source": "pytest -rs, exécution locale complète (hors tests/test_data002b_wal_idempotent.py, échec de collecte préexistant documenté registre seq 422/423, non lié à ce changement)",
+    "evidence": "sortie complète capturée par l'Orchestrateur (issue #437, commit correctif post-revue #490) : 7 lignes SKIPPED dans le rapport -rs (suites e2e opt-in non exécutées en environnement local) — mesure locale à un instant donné, pas une preuve scellée",
+    "sealed": false,
+    "command": "pytest -q --tb=no -rs --ignore=tests/test_data002b_wal_idempotent.py | grep -c '^SKIPPED'"
   }
 ]

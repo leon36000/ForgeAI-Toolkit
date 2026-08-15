@@ -63,6 +63,18 @@
         "web",
         "wizard"
       ],
+      "subcommands_by_group": {
+        "budget": 2,
+        "gateway": 3,
+        "gpu": 1,
+        "ide": 4,
+        "loop": 1,
+        "model": 4,
+        "node": 7,
+        "route": 1,
+        "strategy": 2,
+        "template": 3
+      },
       "subcommands_total": 49
     },
     "coordination": {
@@ -73,7 +85,7 @@
     "inputs": [
       {
         "path": ".github/workflows/gates.yml",
-        "sha256": "6ccfd710787050aa5d3f125805eae416dfac610ad4385168a4a8cde40b782434"
+        "sha256": "f59f775b92ad9a42e304ea964e9a44511e4ba2123d7e0d7f6e4cbb7de9b9123d"
       },
       {
         "path": ".github/workflows/scope-guard.yml",
@@ -709,7 +721,7 @@
       },
       {
         "path": "tests/test_state_current.py",
-        "sha256": "4d2f69cbc50c3808090b07f45cae68ab25d31eb1ce65d13ad277cce514d6135d"
+        "sha256": "2dbf3af46d33d901d6d995a225f62205a0fd2f9263c8c162d39f174b798a6535"
       },
       {
         "path": "tests/test_supply018.py",
@@ -842,7 +854,7 @@
     "tests": {
       "js_files": 3,
       "python_files": 178,
-      "python_functions_declared": 1808
+      "python_functions_declared": 1810
     }
   },
   "observations": [
@@ -865,6 +877,36 @@
       "sealed": false,
       "source": "gh pr list --state open --limit 500 (repos/leon36000/ForgeAI-Toolkit, via gh api)",
       "value": 1
+    },
+    {
+      "command": "pytest -q --cov=src/forgeai --cov-report=term --ignore=tests/test_data002b_wal_idempotent.py",
+      "display": "94",
+      "evidence": "sortie complète capturée par l'Orchestrateur (issue #437, commit correctif post-revue #490) : TOTAL 7289 lignes, 408 manquées, 94% — mesure locale à un instant donné, pas une preuve scellée (varie selon suites e2e opt-in skip/exécutées)",
+      "id": "coverage.global",
+      "observed_at": "2026-08-15T10:33:01Z",
+      "sealed": false,
+      "source": "pytest --cov=src/forgeai --cov-report=term, exécution locale complète (hors tests/test_data002b_wal_idempotent.py, échec de collecte préexistant documenté registre seq 422/423, non lié à ce changement)",
+      "value": 94
+    },
+    {
+      "command": "coverage report --include=\"*/forgeai/core/registre.py\"",
+      "display": "98",
+      "evidence": "sortie complète capturée par l'Orchestrateur (issue #437, commit correctif post-revue #490) : src/forgeai/core/registre.py 162 lignes, 3 manquées, 98% — mesure locale à un instant donné, pas une preuve scellée",
+      "id": "coverage.registre",
+      "observed_at": "2026-08-15T10:33:01Z",
+      "sealed": false,
+      "source": "coverage report --include=*/forgeai/core/registre.py, sur les données de la même exécution que coverage.global (fichier .coverage local)",
+      "value": 98
+    },
+    {
+      "command": "pytest -q --tb=no -rs --ignore=tests/test_data002b_wal_idempotent.py | grep -c '^SKIPPED'",
+      "display": "7",
+      "evidence": "sortie complète capturée par l'Orchestrateur (issue #437, commit correctif post-revue #490) : 7 lignes SKIPPED dans le rapport -rs (suites e2e opt-in non exécutées en environnement local) — mesure locale à un instant donné, pas une preuve scellée",
+      "id": "tests.skips",
+      "observed_at": "2026-08-15T16:14:02Z",
+      "sealed": false,
+      "source": "pytest -rs, exécution locale complète (hors tests/test_data002b_wal_idempotent.py, échec de collecte préexistant documenté registre seq 422/423, non lié à ce changement)",
+      "value": 7
     }
   ]
 }
