@@ -1,0 +1,22 @@
+{
+  "schema": "recu-revue/1",
+  "dossier": "RC1-009-PR500-v3",
+  "issue": 439,
+  "round": 3,
+  "base_commit": "e335d5e0abb71f5b1b5b3c5698114544df0d21b4",
+  "head_commit": "fc84a7d6d005972ef620afc26728a7f9bb01356a",
+  "head_tree": "f994202fe1c40314b44f1936ef7cce157411d86d",
+  "diff_digest": "11530f8824fa9ed99e3543638106da6983a4ac9289d393ecbccb0c22f63b7883",
+  "prompt_sha256": "d1966db1b24496acc870fd82bf011ec1dd83e7cb5d852d45775069fdaa767a18",
+  "reviewers_attendus": [
+    "DeepSeek-V4-Pro",
+    "Gemini-3.1-Pro",
+    "MiMo-Pro-V2"
+  ],
+  "codeur": [
+    "fable"
+  ],
+  "resultat": "APPROVE",
+  "date_heure": "2026-08-15T18:32:52.773034-04:00",
+  "fenetre_heures": 24
+}
