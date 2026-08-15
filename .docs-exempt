@@ -32,3 +32,12 @@ n'était pas confiné par _within_repo() avant lecture. Audit exhaustif effectu�
 tous les read_text/read_bytes/write_text/is_file du fichier) confirmant qu'aucun autre
 site n'est concerné. Contrat CLI observable inchangé. Aucune story/doc utilisateur
 concernée.
+
+scripts/governance/classify_paths.py + tests/test_classify_paths.py (RC1-008/#438, commit
+1/7 du plan architecte) : première brique interne (détection de collisions de casse/Unicode
++ validation de portabilité multi-OS), aucune interface utilisateur ni commande CLI exposée
+à ce stade — le module n'a pas encore de `main()`. La documentation utilisateur/gouvernance
+(governance/PATH-CLASSIFICATION.md généré, schéma descriptif, éventuelle entrée README/
+AGENTS.md) arrive aux commits 4-5 du même plan (#438), une fois le manifest et le rendu
+implémentés — prématuré de documenter une fonction interne sans sortie utilisateur encore
+définie. Aucune story/doc utilisateur concernée pour CE commit précis.
