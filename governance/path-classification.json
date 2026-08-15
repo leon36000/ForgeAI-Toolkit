@@ -19596,7 +19596,7 @@
       "path": "reviews/RC1-004-PR497-v4/RECU.json",
       "referenced_by": [],
       "rule_id": "evidence-reviews",
-      "sha256": "76749475879ea3c0138442a51305d755d12f5721a3f64a1676879220e50ebfa0",
+      "sha256": "add5e37e8b3cdcd1688086a594f0415e680f5ed96ce416791535e457a12bb5e4",
       "size": 669,
       "target_path": "evidence/reviews/RC1-004-PR497-v4/RECU.json",
       "type": "text"
