@@ -607,6 +607,13 @@
         },
         {
           "candidate": ".github/workflows/sonarcloud.yml",
+          "line": 7,
+          "referrer": "reviews/RC1-493-PR-v1/DeepSeek-V4-Pro.verdict.json",
+          "resolved": ".github/workflows/sonarcloud.yml",
+          "severity": "hard"
+        },
+        {
+          "candidate": ".github/workflows/sonarcloud.yml",
           "line": 109,
           "referrer": "stories/ORCH-001.md",
           "resolved": ".github/workflows/sonarcloud.yml",
@@ -5951,6 +5958,20 @@
           "candidate": "governance/STATE-CURRENT.json",
           "line": 14,
           "referrer": "reviews/RC1-007-PR490/DeepSeek-V4-Pro.verdict.json",
+          "resolved": "governance/STATE-CURRENT.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/STATE-CURRENT.json",
+          "line": 6,
+          "referrer": "reviews/RC1-493-PR-v1/DeepSeek-V4-Pro.verdict.json",
+          "resolved": "governance/STATE-CURRENT.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/STATE-CURRENT.json",
+          "line": 8,
+          "referrer": "reviews/RC1-493-PR-v1/DeepSeek-V4-Pro.verdict.json",
           "resolved": "governance/STATE-CURRENT.json",
           "severity": "hard"
         },
@@ -15857,6 +15878,66 @@
       "referenced_by": [],
       "rule_id": "evidence-reviews",
       "target_path": "evidence/reviews/RC1-007-PR490/Kimi-2.7.verdict.json"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "reviews/RC1-482-PR-v1/DeepSeek-V4-Pro.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews",
+      "target_path": "evidence/reviews/RC1-482-PR-v1/DeepSeek-V4-Pro.verdict.json"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "reviews/RC1-482-PR-v1/Gemini-3.1-Pro.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews",
+      "target_path": "evidence/reviews/RC1-482-PR-v1/Gemini-3.1-Pro.verdict.json"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "reviews/RC1-482-PR-v1/Qwen3.7-Max.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews",
+      "target_path": "evidence/reviews/RC1-482-PR-v1/Qwen3.7-Max.verdict.json"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "reviews/RC1-493-PR-v1/DeepSeek-V4-Pro.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews",
+      "target_path": "evidence/reviews/RC1-493-PR-v1/DeepSeek-V4-Pro.verdict.json"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "reviews/RC1-493-PR-v1/Gemini-3.1-Pro.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews",
+      "target_path": "evidence/reviews/RC1-493-PR-v1/Gemini-3.1-Pro.verdict.json"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "reviews/RC1-493-PR-v1/Qwen3.7-Max.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews",
+      "target_path": "evidence/reviews/RC1-493-PR-v1/Qwen3.7-Max.verdict.json"
     },
     {
       "class": "EVIDENCE",
@@ -92240,17 +92321,17 @@
       },
       {
         "candidate": "cli.py",
-        "line": 75,
+        "line": 77,
         "referrer": "src/forgeai/deploy/operators.py"
       },
       {
         "candidate": "add/update",
-        "line": 90,
+        "line": 92,
         "referrer": "src/forgeai/deploy/operators.py"
       },
       {
         "candidate": "Discovery/Adoption",
-        "line": 101,
+        "line": 103,
         "referrer": "src/forgeai/deploy/operators.py"
       },
       {
@@ -108627,6 +108708,20 @@
         "severity": "hard"
       },
       {
+        "candidate": "RC1-493-PR-v1",
+        "line": 157,
+        "referrer": "reviews/BINDING.txt",
+        "resolved": "reviews/RC1-493-PR-v1",
+        "severity": "hard"
+      },
+      {
+        "candidate": "RC1-482-PR-v1",
+        "line": 158,
+        "referrer": "reviews/BINDING.txt",
+        "resolved": "reviews/RC1-482-PR-v1",
+        "severity": "hard"
+      },
+      {
         "candidate": "src/forgeai/deploy/openbao_flow.py",
         "line": 20,
         "referrer": "sonar-project.properties",
@@ -122704,6 +122799,27 @@
         "severity": "hard"
       },
       {
+        "candidate": "governance/STATE-CURRENT.json",
+        "line": 6,
+        "referrer": "reviews/RC1-493-PR-v1/DeepSeek-V4-Pro.verdict.json",
+        "resolved": "governance/STATE-CURRENT.json",
+        "severity": "hard"
+      },
+      {
+        "candidate": ".github/workflows/sonarcloud.yml",
+        "line": 7,
+        "referrer": "reviews/RC1-493-PR-v1/DeepSeek-V4-Pro.verdict.json",
+        "resolved": ".github/workflows/sonarcloud.yml",
+        "severity": "hard"
+      },
+      {
+        "candidate": "governance/STATE-CURRENT.json",
+        "line": 8,
+        "referrer": "reviews/RC1-493-PR-v1/DeepSeek-V4-Pro.verdict.json",
+        "resolved": "governance/STATE-CURRENT.json",
+        "severity": "hard"
+      },
+      {
         "candidate": ".github/workflows/gates.yml",
         "line": 6,
         "referrer": "reviews/REG-029B/Qwen3.7-Max.verdict.json",
@@ -129179,7 +129295,7 @@
     "by_class": {
       "ARCHIVE": 44,
       "DOCS": 13,
-      "EVIDENCE": 1155,
+      "EVIDENCE": 1161,
       "GENERATED": 3,
       "GOVERNANCE": 164,
       "PRODUCT": 112,
@@ -129199,7 +129315,7 @@
       "docs-user": 12,
       "evidence-audit-output": 18,
       "evidence-registres": 35,
-      "evidence-reviews": 1102,
+      "evidence-reviews": 1108,
       "generated-authority-map": 1,
       "generated-state-current-json": 1,
       "generated-state-current-markdown": 1,
@@ -129233,9 +129349,9 @@
     "case_collisions_total": 0,
     "dangling_references_total": 14029,
     "generated_total": 4,
-    "load_bearing_total": 1529,
+    "load_bearing_total": 1535,
     "portability_violations_total": 0,
-    "tracked_total": 1695,
+    "tracked_total": 1701,
     "unclassified_total": 0,
     "unicode_anomalies_total": 0
   }
