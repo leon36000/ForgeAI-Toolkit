@@ -102,7 +102,7 @@
     },
     {
       "path": ".github/workflows/sonarcloud.yml",
-      "sha256": "bb6b4da6ba7b18542e6d745ea6f6096bb58105cedd4abdeb63cc61fb2a2bf76c"
+      "sha256": "363a8dbcd111d2007bd6511192fb225196c1b1bd3f4830fd2d17c26f59648a21"
     },
     {
       "path": "coordination/active-claims.json",
