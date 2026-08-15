@@ -634,8 +634,8 @@
       "positions": [],
       "digest": {
         "policy": "content_sha256",
-        "value": "4fb98ed22f2ea0ce20f78b4434f1ee85dfa9e0c1981b2808f1fabf4a064b6a34",
-        "checked_at": "2026-08-14",
+        "value": "5c7d85715f092c5b16edcce3935f18e2889033b9f645d823ab5b430105448940",
+        "checked_at": "2026-08-15",
         "delegated_to": null
       },
       "retention": "in_force",
@@ -646,7 +646,7 @@
         "mission_seq": null,
         "ref": null
       },
-      "notes": "Point d'entrée documentaire du dépôt."
+      "notes": "Point d'entrée documentaire du dépôt. Empreinte mise à jour par #437 (RC1-007, commit 2/3) : insertion de marqueurs <!-- state:... --> autour de 3 compteurs (catalogue.entries_total x2, catalogue.descriptions_en_missing), aucun autre changement de contenu."
     },
     {
       "id": "gov.decision-mission-lead",

@@ -128,6 +128,10 @@
         "sha256": "b746584f23c382d9b73b660f6658acba1e484e6ac22cffd95894f4974924af07"
       },
       {
+        "path": "tests/test_agents_md_no_obsolete_terms.py",
+        "sha256": "f1a9c8fcc22a6fdaca61b8a58e6c21b98e6da5b8e289d6a102c8270de103c7b0"
+      },
+      {
         "path": "tests/test_amd_vulkan_runtime.py",
         "sha256": "d3bd9489409c7be6ccd36ec4f5d23e0eb45ce338eb5f593a14b92c88bf50c080"
       },
@@ -837,8 +841,8 @@
     },
     "tests": {
       "js_files": 3,
-      "python_files": 177,
-      "python_functions_declared": 1800
+      "python_files": 178,
+      "python_functions_declared": 1808
     }
   },
   "observations": [
