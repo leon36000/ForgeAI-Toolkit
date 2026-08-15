@@ -1,0 +1,19 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "tests/test_routestore_concurrence.py",
+   "description": "Le hook d'audit `observe_open` enregistré via `sys.addaudithook` ne possède pas de mécanisme de désactivation (comme un flag `enabled = False` dans un bloc `finally`), contrairement au context manager `_observe_mkdir_requests`. Puisque `sys.addaudithook` conserve une référence forte vers la closure, ce hook restera actif pour le reste de l'exécution de la suite de tests dans ce processus. Il interceptera tous les appels ultérieurs à `os.open` et accumulera indéfiniment les chemins dans la liste locale `opened_paths`, créant une fuite de mémoire mineure.",
+   "preuve": "Lignes 673-678 : `sys.addaudithook(observe_open)` est appelé sans aucun moyen de neutraliser l'ajout à `opened_paths` après la sortie du bloc `with pytest.raises(...)`."
+  }
+ ],
+ "date_heure": "2026-08-15T20:09:24.695393+00:00",
+ "prompt_sha256": "9c70c4450275e6697e3b27bfaaca53a0f4fd43d186958c2304ebc0f09f5e9a26",
+ "reviewer_model": "Gemini-3.1-Pro",
+ "modele_servi": "gemini-31-pro-openrouter",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "1"
+ }
+}

@@ -6151,8 +6151,8 @@
         }
       ],
       "rule_id": "evidence-registres",
-      "sha256": "0277e5539255ffbfc394908fc1af66540fcc1fd1c30f144fb9eacc89202d7d88",
-      "size": 348934,
+      "sha256": "0a40c0a96a55d6eb6b572c543960d3d14fa3d619fc3979dad2ca9f4be591cc69",
+      "size": 351235,
       "target_path": "evidence/registres/mission.jsonl",
       "type": "text"
     },
@@ -10107,8 +10107,8 @@
         }
       ],
       "rule_id": "evidence-reviews",
-      "sha256": "55229d15d67592199f570c85f6a5b76445c25666c3830c1962ea1e7db65053ff",
-      "size": 2157,
+      "sha256": "c0fde45b3dd30e797b9b615b4b6e924b063b0a7b942b71cffbb4a3065389e23a",
+      "size": 2171,
       "target_path": "evidence/reviews/BINDING.txt",
       "type": "text"
     },
@@ -44319,6 +44319,11 @@
   "reference_graph": {
     "completeness": "best_effort",
     "dangling": [
+      {
+        "candidate": "RC1-447-PR-v5",
+        "line": 161,
+        "referrer": "reviews/BINDING.txt"
+      },
       {
         "candidate": "TUI/UX",
         "line": 3,
@@ -137948,7 +137953,7 @@
       "working-sandbox-readme": 1
     },
     "case_collisions_total": 0,
-    "dangling_references_total": 14126,
+    "dangling_references_total": 14127,
     "generated_total": 7,
     "load_bearing_total": 1586,
     "portability_violations_total": 0,
