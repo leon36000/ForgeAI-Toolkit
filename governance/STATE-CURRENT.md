@@ -14,8 +14,8 @@
     "sha256_recomputed_ok": true
   },
   "ci": {
-    "jobs_total": 16,
-    "workflows": 3
+    "jobs_total": 18,
+    "workflows": 4
   },
   "cli": {
     "subcommands": [
@@ -93,8 +93,12 @@
   },
   "inputs": [
     {
+      "path": ".github/workflows/ci-deps-update.yml",
+      "sha256": "fe4aafcac163054f203e14b309da1dffe9272155d72a91298c05954ce5e79e66"
+    },
+    {
       "path": ".github/workflows/gates.yml",
-      "sha256": "4bc0ad7ccbb62ac7061a4214917377d733541609311adce73d8a1ef1ee265edc"
+      "sha256": "c36b323edb018582d5903b52ee0b22c2ac132daace3bf552bb7ec6455abe44ce"
     },
     {
       "path": ".github/workflows/scope-guard.yml",
@@ -102,7 +106,7 @@
     },
     {
       "path": ".github/workflows/sonarcloud.yml",
-      "sha256": "363a8dbcd111d2007bd6511192fb225196c1b1bd3f4830fd2d17c26f59648a21"
+      "sha256": "f7613771529577fea8e04869a3b911144b8aece2bc8bcc214fa41e8503c39bfb"
     },
     {
       "path": "coordination/active-claims.json",
@@ -114,7 +118,7 @@
     },
     {
       "path": "pyproject.toml",
-      "sha256": "94800ecf9e9cf845474e6d685e40f38e3fb97682dbcd69472f2076c29a6b7048"
+      "sha256": "2247ade432bd7d1c085efa76542641e355c139f9261666e6b16de670f78685ae"
     },
     {
       "path": "src/forgeai/__init__.py",
@@ -158,7 +162,7 @@
     },
     {
       "path": "tests/test_assemble_and_secrets.py",
-      "sha256": "928f558f4b1f0bc3c1af88eedc7365b4bb344cf67160b4539d205cc334e4f345"
+      "sha256": "c2d6bfc3f425a7144fedc06b7da4ebdf7dc206f2c1578dac3f796ef1bd5e13fc"
     },
     {
       "path": "tests/test_authority_map.py",
@@ -621,6 +625,10 @@
       "sha256": "747fd9a6d1bcb9fce57fa5f53c284b9cdfc1ad1f15985c834c7ded038c89828e"
     },
     {
+      "path": "tests/test_rc1017_matrice_python.py",
+      "sha256": "5986a40bc07b2798f30f8379a3dcb86e716324d236ac6170ae9e78a4fbecc608"
+    },
+    {
       "path": "tests/test_receptacles.py",
       "sha256": "e73378b496c2f6109133dfcef07f1a7b3f79e9e48cbc473882e4b53e4ef496ca"
     },
@@ -870,8 +878,8 @@
   },
   "tests": {
     "js_files": 3,
-    "python_files": 180,
-    "python_functions_declared": 1904
+    "python_files": 181,
+    "python_functions_declared": 1911
   }
 }
 ```
