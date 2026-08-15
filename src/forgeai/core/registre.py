@@ -98,7 +98,7 @@ def _read_entries(path: Path) -> list[dict]:
         return []
     # `path` = emplacement du registre choisi par l'app/l'opérateur (jamais une entrée HTTP) ;
     # correctif de concurrence, aucun chemin dérivé d'input → faux positif path-traversal.
-    return _parse_entries_from_text(path.read_text(encoding="utf-8"), source=str(path))
+    return _parse_entries_from_text(path.read_text(encoding="utf-8"), source=str(path))  # NOSONAR(S8707)
 
 
 def init_key(path: Path) -> str:
@@ -138,7 +138,7 @@ def append(
 ) -> dict:
     path.parent.mkdir(parents=True, exist_ok=True)  # ex. ~/.forgeai/Registres/ (P3)
     # `path` = registre app/opérateur (pas d'entrée HTTP) ; chemin non dérivé d'input.
-    with path.open("a+", encoding="utf-8") as fh:
+    with path.open("a+", encoding="utf-8") as fh:  # NOSONAR(S8707)
         with locked_exclusive(fh.fileno(), timeout_s=APPEND_LOCK_TIMEOUT_S):
             fh.seek(0)
             entries = _parse_entries_from_text(fh.read(), source=str(path))
