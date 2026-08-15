@@ -62,8 +62,6 @@ Cette carte est le rendu de `governance/authority.json`.
 
 - `agents-md` : `orchestration_seat` = `claude_code_opus_mission_lead` (AGENTS.md:9)
 - `agents-md` : `workspace_confinement` = `repo_plus_external_governance_tooling` (AGENTS.md:70-72)
-- `agents-md.orch-001` : `orchestration_seat` = `copilot_vscode_cockpit` (AGENTS.md:76)
-- `agents-md.orch-001` : `coordination_scale` = `64_packages_6_claims` (AGENTS.md:84)
 - `canon.directives-perimetre` : `workspace_confinement` = `repo_only_strict` (CANON/directives-perimetre.md:7)
 - `canon.plan-integral` : `plan_of_record` = `canon_plan_integral` (CANON/plan-integral.md:4)
 - `canon.plan-integral` : `orchestration_seat` = `claude_code_session_lead` (CANON/plan-integral.md:27)

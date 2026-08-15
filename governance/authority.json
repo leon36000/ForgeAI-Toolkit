@@ -137,18 +137,7 @@
       "owner": "copilot",
       "superseded_by": "gov.decision-mission-lead",
       "prevails_over": [],
-      "positions": [
-        {
-          "topic": "orchestration_seat",
-          "position": "copilot_vscode_cockpit",
-          "locator": "AGENTS.md:76"
-        },
-        {
-          "topic": "coordination_scale",
-          "position": "64_packages_6_claims",
-          "locator": "AGENTS.md:84"
-        }
-      ],
+      "positions": [],
       "digest": {
         "policy": "none",
         "value": null,
@@ -163,7 +152,7 @@
         "mission_seq": null,
         "ref": "issue-432"
       },
-      "notes": "Section retiree d'AGENTS.md par #432 (remplacee par \"## Modele de coordination\"). Plus de fichier/ancre a empreinter : source retenue comme trace historique uniquement."
+      "notes": "Section retiree d'AGENTS.md par #432 (remplacee par \"## Modele de coordination\"). Plus de fichier/ancre a empreinter : source retenue comme trace historique uniquement. Positions vidées : une source superseded ne détient plus de position courante (les anciens locators AGENTS.md:76/:84 pointent désormais vers un contenu sans rapport, revue PR432)."
     },
     {
       "id": "claude-md",
