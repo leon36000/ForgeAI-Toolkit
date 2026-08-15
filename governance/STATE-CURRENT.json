@@ -100,7 +100,7 @@
       },
       {
         "path": ".github/workflows/sonar-suppressions.yml",
-        "sha256": "c0cc4e9fc3e97fe416c98825fffe19a229ae767c9bebf3853c541386f81635eb"
+        "sha256": "2b0f684f5d91ddd4e5448a796b6d685c811bfc293791973881bfb2b6dbf366b1"
       },
       {
         "path": ".github/workflows/sonarcloud.yml",

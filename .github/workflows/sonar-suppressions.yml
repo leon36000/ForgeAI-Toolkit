@@ -28,11 +28,13 @@ jobs:
           cp -a . "$travail/repo"
           cd "$travail/repo"
 
-          cat >> src/forgeai/models/vault.py <<'PYTHON'
+          printf '%s\n' \
+            '' \
+            '_mutation_voisine_non_supprimee = True' \
+            '_mutation_voisine_non_inventoriee = True  # NOSONAR(S9999)' \
+            >> src/forgeai/models/vault.py
 
-          _mutation_voisine_non_supprimee = True
-          _mutation_voisine_non_inventoriee = True  # NOSONAR(S9999)
-          PYTHON
+          python -m py_compile src/forgeai/models/vault.py
 
           set +e
           sortie="$(python scripts/governance/validate_sonar_suppressions.py --root . 2>&1)"
