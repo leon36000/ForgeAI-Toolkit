@@ -162,8 +162,6 @@ def test_chemin_trop_long_echoue() -> None:
 
 
 def test_chemin_longueur_avertissement() -> None:
-    # La plage préventive autour de 205 caractères est un avertissement, distinct
-    # de l'erreur bloquante appliquée aux chemins de 245 caractères et plus.
     path = "a" * 205
 
     violations = classify_paths.check_portability(path)
@@ -176,6 +174,7 @@ def test_chemin_longueur_avertissement() -> None:
     )
 
 
+import hashlib
 import json
 import subprocess
 
@@ -585,3 +584,170 @@ def test_graphe_fichier_binaire_ignore_sans_erreur(tmp_path: pathlib.Path) -> No
     graph = classify_paths.build_reference_graph(tmp_path, tracked)
 
     assert graph == {"edges": [], "dangling": []}
+
+
+def test_build_manifest_sur_vrai_depot_zero_non_classe() -> None:
+    manifest = classify_paths.build_manifest(REPO)
+
+    assert manifest["summary"]["unclassified_total"] == 0
+    assert manifest["summary"]["tracked_total"] == len(classify_paths.tracked_files(REPO))
+
+
+def test_build_manifest_deux_generations_identiques() -> None:
+    first = classify_paths.build_manifest(REPO)
+    second = classify_paths.build_manifest(REPO)
+
+    assert json.dumps(first, sort_keys=True) == json.dumps(second, sort_keys=True)
+
+
+def test_build_manifest_rules_sha256_correspond_au_fichier() -> None:
+    manifest = classify_paths.build_manifest(REPO)
+    normalized = RULES_PATH.read_text(encoding="utf-8").replace("\r\n", "\n")
+    expected = hashlib.sha256(normalized.encode("utf-8")).hexdigest()
+
+    assert manifest["rules_sha256"] == expected
+
+
+def test_build_manifest_entries_triees_par_path() -> None:
+    manifest = classify_paths.build_manifest(REPO)
+    paths = [entry["path"] for entry in manifest["entries"]]
+
+    assert paths == sorted(paths)
+
+
+def test_build_manifest_summary_by_class_coherent() -> None:
+    manifest = classify_paths.build_manifest(REPO)
+
+    assert sum(manifest["summary"]["by_class"].values()) == manifest["summary"]["tracked_total"]
+
+
+def test_build_manifest_catalogue_sha256_generated_et_product() -> None:
+    manifest = classify_paths.build_manifest(REPO)
+    entry = next(
+        item
+        for item in manifest["entries"]
+        if item["path"] == "src/forgeai/data/catalogue.sha256"
+    )
+
+    assert entry["class"] == "PRODUCT"
+    assert entry["generated"] is True
+
+
+def test_render_contient_entete_ne_pas_editer() -> None:
+    manifest = classify_paths.build_manifest(REPO)
+
+    assert (
+        "NE PAS ÉDITER À LA MAIN — généré par "
+        "scripts/governance/classify_paths.py --render"
+    ) in classify_paths.render(manifest)
+
+
+def test_render_ne_contient_pas_le_detail_de_chaque_entree() -> None:
+    manifest = classify_paths.build_manifest(REPO)
+
+    assert len(classify_paths.render(manifest)) < 5000
+
+
+def test_check_sur_vrai_depot_avant_render_echoue() -> None:
+    json_path = REPO / "governance" / "path-classification.json"
+    markdown_path = REPO / "governance" / "PATH-CLASSIFICATION.md"
+
+    ok, messages = classify_paths.check(REPO)
+
+    if not json_path.exists() or not markdown_path.exists():
+        assert ok is False
+        assert messages
+    else:
+        assert isinstance(ok, bool)
+        assert isinstance(messages, list)
+
+
+def _initialise_depot_jouet(repo: pathlib.Path) -> None:
+    _ecrit_fixture_texte(repo, "README.md", "# Dépôt jouet\n")
+    _ecrit_fixture_texte(
+        repo,
+        "governance/path-classification-rules.json",
+        json.dumps(
+            {
+                "_schema": "path-classification-rules-v1",
+                "classes": ["PRODUCT", "GOVERNANCE", "ARCHIVE"],
+                "owners": {
+                    "equipe-test": {
+                        "role": "Fixture de test explicite.",
+                    }
+                },
+                "rules": [
+                    {
+                        "id": "readme",
+                        "match": {"kind": "exact", "value": "README.md"},
+                        "class": "PRODUCT",
+                        "generated": False,
+                        "owner": "equipe-test",
+                        "target": None,
+                        "target_kind": "keep",
+                        "load_bearing": False,
+                        "rationale": "Le README est classé pour la fixture.",
+                    },
+                    {
+                        "id": "governance",
+                        "match": {"kind": "prefix", "value": "governance/"},
+                        "class": "GOVERNANCE",
+                        "generated": False,
+                        "owner": "equipe-test",
+                        "target": None,
+                        "target_kind": "keep",
+                        "load_bearing": False,
+                        "rationale": "La gouvernance est classée pour la fixture.",
+                    },
+                ],
+            }
+        ),
+    )
+    subprocess.run(["git", "init"], cwd=repo, check=True, capture_output=True)
+    subprocess.run(
+        ["git", "add", "README.md", "governance/path-classification-rules.json"],
+        cwd=repo,
+        check=True,
+        capture_output=True,
+    )
+
+
+def test_render_puis_check_aller_retour(tmp_path: pathlib.Path) -> None:
+    repo_jouet = tmp_path / "repo"
+    repo_jouet.mkdir()
+    _initialise_depot_jouet(repo_jouet)
+
+    rendered = classify_paths.main(["--repo-root", str(repo_jouet), "--render"])
+    checked = classify_paths.main(["--repo-root", str(repo_jouet)])
+
+    assert rendered == 0
+    assert checked == 0
+
+
+def test_check_detecte_derive(tmp_path: pathlib.Path) -> None:
+    repo_jouet = tmp_path / "repo"
+    repo_jouet.mkdir()
+    _initialise_depot_jouet(repo_jouet)
+    assert classify_paths.main(["--repo-root", str(repo_jouet), "--render"]) == 0
+
+    manifest_path = repo_jouet / "governance" / "path-classification.json"
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    manifest["summary"]["tracked_total"] = 999
+    manifest_path.write_text(
+        json.dumps(manifest, sort_keys=True, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
+
+    ok, messages = classify_paths.check(repo_jouet)
+
+    assert ok is False
+    assert messages
+
+
+def test_main_retourne_1_sur_erreur_sans_lever(tmp_path: pathlib.Path) -> None:
+    repo_vide = tmp_path / "repo-vide"
+    repo_vide.mkdir()
+
+    result = classify_paths.main(["--repo-root", str(repo_vide)])
+
+    assert result == 1

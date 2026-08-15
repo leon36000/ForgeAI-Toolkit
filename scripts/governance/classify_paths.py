@@ -1,9 +1,17 @@
+import argparse
 import fnmatch
+import hashlib
 import json
 import re
 import subprocess
+import sys
 import unicodedata
 from pathlib import Path
+
+
+_MANIFEST_JSON = Path("governance") / "path-classification.json"
+_MANIFEST_MARKDOWN = Path("governance") / "PATH-CLASSIFICATION.md"
+_DEFAULT_RULES = Path("governance") / "path-classification-rules.json"
 
 
 def detect_collisions(paths: list[str], targets: dict[str, str] | None = None) -> dict:
@@ -527,6 +535,17 @@ def build_reference_graph(repo_root: Path, tracked: list[str]) -> dict:
                 candidate = match.group(0).rstrip(".,;:!?)\"'")
                 if not candidate:
                     continue
+                if match.start() > 0 and line[match.start() - 1] == "/":
+                    continue
+                if match.end() < len(line) and line[match.end()] == "<":
+                    continue
+                if re.fullmatch(r"\d+/\d+", candidate):
+                    continue
+                first_segment = candidate.split("/", 1)[0].casefold()
+                if first_segment.endswith(
+                    (".com", ".io", ".org", ".net", ".dev")
+                ):
+                    continue
                 if any(
                     url_start <= match.start() < url_end
                     for url_start, url_end in url_ranges
@@ -567,3 +586,217 @@ def build_reference_graph(repo_root: Path, tracked: list[str]) -> dict:
                     )
 
     return graph
+
+
+def _sha256(data: bytes) -> str:
+    return hashlib.sha256(data.replace(b"\r\n", b"\n")).hexdigest()
+
+
+def build_manifest(repo_root: Path, rules_path: Path | None = None) -> dict:
+    rules_path = rules_path or _within_repo(repo_root, repo_root / _DEFAULT_RULES)
+    rules = load_rules(rules_path)
+    tracked = tracked_files(repo_root)
+    classifications = {path: classify(path, rules) for path in tracked}
+    targets = {
+        path: classification["target_path"]
+        for path, classification in classifications.items()
+        if classification["target_path"]
+    }
+    collisions = detect_collisions(tracked, targets)
+    graph = build_reference_graph(repo_root, tracked)
+    reference_graph = {
+        **graph,
+        "method": "static_text_scan",
+        "completeness": "best_effort",
+    }
+    rules_by_id = {rule["id"]: rule for rule in rules["rules"]}
+
+    entries = []
+    for path in sorted(tracked):
+        classification = classifications[path]
+        rule = rules_by_id[classification["rule_id"]]
+        entries.append(
+            {
+                "path": path,
+                "class": classification["class"],
+                "generated": classification["generated"],
+                "owner": classification["owner"],
+                "rule_id": classification["rule_id"],
+                "target_path": classification["target_path"],
+                "load_bearing": rule.get("load_bearing", False),
+                "referenced_by": [
+                    edge for edge in graph["edges"] if edge["resolved"] == path
+                ],
+            }
+        )
+
+    by_class: dict[str, int] = {}
+    by_rule: dict[str, int] = {}
+    for entry in entries:
+        by_class[entry["class"]] = by_class.get(entry["class"], 0) + 1
+        by_rule[entry["rule_id"]] = by_rule.get(entry["rule_id"], 0) + 1
+
+    summary = {
+        "tracked_total": len(tracked),
+        "by_class": by_class,
+        "by_rule": by_rule,
+        "generated_total": sum(
+            entry["generated"] is True for entry in entries
+        ),
+        "load_bearing_total": sum(
+            entry["load_bearing"] is True for entry in entries
+        ),
+        "unclassified_total": 0,
+        "case_collisions_total": len(collisions["case"]),
+        "unicode_anomalies_total": sum(
+            entry.get("kind") == "non_nfc"
+            for entry in collisions["unicode"]
+        ),
+        "portability_violations_total": len(collisions["portability"]),
+        "dangling_references_total": len(graph["dangling"]),
+    }
+
+    return {
+        "rules_sha256": _sha256(rules_path.read_bytes()),
+        "entries": entries,
+        "summary": summary,
+        "collisions": collisions,
+        "reference_graph": reference_graph,
+    }
+
+
+def render(manifest: dict) -> str:
+    summary = manifest["summary"]
+    lines = [
+        "# Classification des chemins",
+        "",
+        "NE PAS ÉDITER À LA MAIN — généré par scripts/governance/classify_paths.py --render",
+        "",
+        "## Résumé",
+        "",
+        f"- Fichiers suivis : {summary['tracked_total']}",
+        f"- Fichiers générés : {summary['generated_total']}",
+        f"- Éléments porteurs : {summary['load_bearing_total']}",
+        f"- Fichiers non classés : {summary['unclassified_total']}",
+        f"- Collisions de casse : {summary['case_collisions_total']}",
+        f"- Anomalies Unicode NFC : {summary['unicode_anomalies_total']}",
+        f"- Violations de portabilité : {summary['portability_violations_total']}",
+        f"- Références pendantes : {summary['dangling_references_total']}",
+        "(balayage textuel best-effort — une majorité de ces candidats sont du bruit connu : unités de mesure, clés de labels, ratios ; à trier manuellement avant toute décision de migration, voir governance/path-classification.json → reference_graph.dangling)",
+        "",
+        "## Répartition par classe",
+        "",
+    ]
+
+    for classification, total in sorted(summary["by_class"].items()):
+        lines.append(f"- {classification} : {total}")
+
+    lines.extend(
+        [
+            "",
+            "## Intégrité",
+            "",
+            f"- SHA-256 des règles : `{manifest['rules_sha256']}`",
+            "",
+            "L'inventaire complet des chemins est disponible dans `governance/path-classification.json`.",
+            "",
+        ]
+    )
+    return "\n".join(lines)
+
+
+def check(repo_root: Path, rules_path: Path | None = None) -> tuple[bool, list[str]]:
+    current = build_manifest(repo_root, rules_path)
+    errors: list[str] = []
+
+    manifest_path = _within_repo(repo_root, repo_root / _MANIFEST_JSON)
+    markdown_path = _within_repo(repo_root, repo_root / _MANIFEST_MARKDOWN)
+
+    if not manifest_path.exists():
+        errors.append("fichier absent : governance/path-classification.json")
+    else:
+        disk_manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+        disk_summary = disk_manifest.get("summary", {})
+        current_summary = current["summary"]
+
+        for field in sorted(set(disk_summary) | set(current_summary)):
+            disk_value = disk_summary.get(field)
+            current_value = current_summary.get(field)
+            if disk_value != current_value:
+                errors.append(
+                    f"summary divergent pour {field} : disque={disk_value!r}, "
+                    f"recalculée={current_value!r}"
+                )
+
+        disk_entries = disk_manifest.get("entries")
+        current_entries = current["entries"]
+        if disk_entries != current_entries:
+            if isinstance(disk_entries, list) and len(disk_entries) != len(current_entries):
+                errors.append(
+                    "entries divergentes : nombre d'entrées différent "
+                    f"(disque={len(disk_entries)}, recalculée={len(current_entries)})"
+                )
+            else:
+                errors.append("entries divergentes entre le disque et le recalcul")
+
+        for field in ("rules_sha256", "collisions", "reference_graph"):
+            if disk_manifest.get(field) != current.get(field):
+                errors.append(f"{field} divergent entre le disque et le recalcul")
+
+    if not markdown_path.exists():
+        errors.append("fichier absent : governance/PATH-CLASSIFICATION.md")
+    else:
+        disk_markdown = markdown_path.read_text(encoding="utf-8")
+        current_markdown = render(current)
+        if disk_markdown != current_markdown:
+            errors.append(
+                "Markdown divergent : governance/PATH-CLASSIFICATION.md"
+            )
+
+    if errors:
+        errors.append(
+            "corriger par : python3 scripts/governance/classify_paths.py --render"
+        )
+        return False, errors
+
+    return True, []
+
+
+def main(argv: list[str] | None = None) -> int:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--repo-root", type=Path, default=Path.cwd())
+    parser.add_argument("--render", action="store_true")
+    arguments = parser.parse_args(argv)
+    repo_root = arguments.repo_root
+
+    try:
+        if arguments.render:
+            manifest = build_manifest(repo_root)
+            manifest_path = _within_repo(repo_root, repo_root / _MANIFEST_JSON)
+            markdown_path = _within_repo(repo_root, repo_root / _MANIFEST_MARKDOWN)
+            manifest_path.parent.mkdir(parents=True, exist_ok=True)
+            markdown_path.parent.mkdir(parents=True, exist_ok=True)
+            manifest_path.write_text(
+                json.dumps(
+                    manifest,
+                    sort_keys=True,
+                    ensure_ascii=False,
+                    indent=2,
+                )
+                + "\n",
+                encoding="utf-8",
+            )
+            markdown_path.write_text(render(manifest), encoding="utf-8")
+            return 0
+
+        ok, errors = check(repo_root)
+        for error in errors:
+            print(error, file=sys.stderr)
+        return 0 if ok else 1
+    except (OSError, UnicodeError, ValueError, TypeError, KeyError) as exc:
+        print(str(exc), file=sys.stderr)
+        return 1
+
+
+if __name__ == "__main__":
+    main()

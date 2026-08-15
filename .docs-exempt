@@ -52,3 +52,12 @@ publié — c'est une entrée de données consommée par le script, documentée 
 scripts/governance/classify_paths.py + tests/test_classify_paths.py (RC1-008/#438, commit
 3/7) : ajoute build_reference_graph() — fonction interne, toujours sans main() ni sortie
 utilisateur. Documentation prévue aux commits 4-5.
+
+scripts/governance/classify_paths.py + tests/test_classify_paths.py (RC1-008/#438, commit
+4/7) : ajoute build_manifest()/render()/check()/main() — le script a désormais une sortie
+utilisateur (governance/PATH-CLASSIFICATION.md, généré, contient sa propre en-tête
+"NE PAS ÉDITER À LA MAIN" et sert de documentation du résultat). governance/
+path-classification.schema.json est un schéma descriptif, pas un document narratif. Pas
+d'entrée README/AGENTS.md distincte requise pour cette brique interne d'outillage de
+gouvernance (même traitement que governance/STATE-CURRENT.md et governance/AUTHORITY-MAP.md,
+qui n'ont pas non plus d'entrée README dédiée).
