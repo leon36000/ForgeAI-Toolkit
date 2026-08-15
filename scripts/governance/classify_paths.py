@@ -50,14 +50,13 @@ def detect_collisions(paths: list[str], targets: dict[str, str] | None = None) -
     compare_within(target_values)
 
     if targets is not None:
-        stationary_paths = [
-            path
-            for path in paths
-            if path not in targets or targets[path] == path
-        ]
         for target in target_values:
-            for path in stationary_paths:
-                add_pair(target, path)
+            own_sources = {
+                source for source, destination in targets.items() if destination == target
+            }
+            for path in paths:
+                if path not in own_sources:
+                    add_pair(target, path)
 
     def groups_from_edges(edges: set[tuple[str, str]]) -> list[list[str]]:
         adjacency: dict[str, set[str]] = {}
@@ -176,13 +175,6 @@ def check_portability(path: str) -> list[dict]:
             detail = "Le segment contient un caractère interdit par Windows."
             violations.append(
                 {
-                    "rule": "windows_forbidden_char",
-                    "segment": segment,
-                    "detail": detail,
-                }
-            )
-            violations.append(
-                {
                     "rule": "windows_forbidden_character",
                     "segment": segment,
                     "detail": detail,
@@ -201,13 +193,6 @@ def check_portability(path: str) -> list[dict]:
 
         if segment.endswith(".") or segment.endswith(" "):
             detail = "Un segment Windows ne peut pas se terminer par un point ou un espace."
-            violations.append(
-                {
-                    "rule": "trailing_dot_or_space",
-                    "segment": segment,
-                    "detail": detail,
-                }
-            )
             violations.append(
                 {
                     "rule": "windows_trailing_dot_or_space",
@@ -607,6 +592,14 @@ def build_manifest(repo_root: Path, rules_path: Path | None = None) -> dict:
         if classification["target_path"]
     }
     collisions = detect_collisions(tracked, targets)
+    for target_path in targets.values():
+        for violation in check_portability(target_path):
+            collisions["portability"].append(
+                {
+                    "paths": [target_path],
+                    "description": violation["detail"],
+                }
+            )
     graph = build_reference_graph(repo_root, tracked)
     reference_graph = {
         **graph,
@@ -767,11 +760,12 @@ def check(repo_root: Path, rules_path: Path | None = None) -> tuple[bool, list[s
 
 
 def compute_waves(manifest: dict) -> list[dict]:
-    migrating_paths = {
-        entry["path"]
+    target_paths = {
+        entry["path"]: entry["target_path"]
         for entry in manifest["entries"]
         if entry["target_path"] is not None
     }
+    migrating_paths = set(target_paths)
     prerequisites: dict[str, set[str]] = {
         path: set() for path in migrating_paths
     }
@@ -814,12 +808,14 @@ def compute_waves(manifest: dict) -> list[dict]:
                 f"{remaining_paths[0]}"
             )
 
+        rollback_pairs = "; ".join(
+            f"git mv {target_paths[path]} {path}" for path in current_paths
+        )
         rollback = (
             f"Vague {wave_id} : {len(current_paths)} chemin(s). "
-            "Rollback = git mv <cible> <source> pour chaque chemin listé "
-            "(ordre inverse), puis git commit --amend ou nouveau commit de "
-            "restauration ; ne PAS exécuter cette vague sans avoir d'abord "
-            "validé les vagues précédentes."
+            f"Rollback = {rollback_pairs} (ordre inverse), puis git commit "
+            "--amend ou nouveau commit de restauration ; ne PAS exécuter cette "
+            "vague sans avoir d'abord validé les vagues précédentes."
         )
         waves.append(
             {
