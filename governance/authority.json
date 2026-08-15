@@ -105,13 +105,13 @@
         {
           "topic": "workspace_confinement",
           "position": "repo_plus_external_governance_tooling",
-          "locator": "AGENTS.md:70-72"
+          "locator": "AGENTS.md:72-75"
         }
       ],
       "digest": {
         "policy": "content_sha256",
-        "value": "019cae166106f574cd9422bc3946b82f737782099c6628a3b0174987e795d98e",
-        "checked_at": "2026-08-14",
+        "value": "ffc74512021de9dce22a085f5d1f04c9443702b680cdef835ab7f2816541d0fd",
+        "checked_at": "2026-08-15",
         "delegated_to": null
       },
       "retention": "in_force",
@@ -122,7 +122,7 @@
         "mission_seq": null,
         "ref": "issue-487"
       },
-      "notes": "Auto-contradiction interne resolue par #432 (Mission affirme desormais Claude Code Opus, section ORCH-001 remplacee) ; conflit RESIDUEL avec canon.plan-integral (toujours \"Fable orchestrateur unique\", hors perimetre de #432 -- CANON exige son propre circuit de revue) suivi par #487."
+      "notes": "Auto-contradiction interne resolue par #432 (Mission affirme desormais Claude Code Opus, section ORCH-001 remplacee) ; conflit RESIDUEL avec canon.plan-integral (toujours \"Fable orchestrateur unique\", hors perimetre de #432 -- CANON exige son propre circuit de revue) suivi par #487. Empreinte/locator recalcules par #433 (patch cible lignes 49-67 : paragraphe Perimetre decale de +2 lignes, texte inchange)."
     },
     {
       "id": "agents-md.orch-001",
@@ -171,13 +171,13 @@
         {
           "topic": "workspace_confinement",
           "position": "repo_plus_external_governance_tooling",
-          "locator": "CLAUDE.md:16"
+          "locator": "CLAUDE.md:39"
         }
       ],
       "digest": {
         "policy": "content_sha256",
-        "value": "a3403fd2bb358a1656fc6f0b2f28700bb67900d95c0ca13c661f53ab3cc82864",
-        "checked_at": "2026-08-14",
+        "value": "0f66813847f8e73acb1daaa63064653d53ac699ac310afb1bdf855957bbb42be",
+        "checked_at": "2026-08-15",
         "delegated_to": null
       },
       "retention": "in_force",
@@ -188,7 +188,7 @@
         "mission_seq": null,
         "ref": "issue-484"
       },
-      "notes": "Le contrat autorise l'outillage de gouvernance externe pendant la construction."
+      "notes": "Le contrat autorise l'outillage de gouvernance externe pendant la construction. Empreinte/locator recalcules par #433 (reecriture complete : distingue capacites toujours disponibles vs outillage externe optionnel, supprime la commande d'extraction de secret docker inspect) -- la position et le statut CONFLICTED envers #484 restent inchanges, #433 ne tranche pas ce conflit."
     },
     {
       "id": "canon.directives-perimetre",
@@ -392,15 +392,15 @@
         "checked_at": "2026-08-14",
         "delegated_to": null
       },
-      "retention": "pending_cleanup",
-      "cleanup_issue": 433,
+      "retention": "historical_record",
+      "cleanup_issue": null,
       "resolution_issue": null,
       "decision": {
         "vision_log_seq": 8,
         "mission_seq": null,
         "ref": "governance/decisions/D-2026-08-14-mission-lead.md"
       },
-      "notes": "État historique de claims à nettoyer par l'issue 433."
+      "notes": "Nettoyage #433 termine : coordination/active-claims.json reste au depot inchange (\"claims\": [] deja vide, fichier requis par scope_guard.py/validate_coordination.py en CI -- le supprimer casserait ces gates) ; seul le statut de retention gouvernance est cloture, confirmant qu'aucune action de code n'est due. Statut source inchange (superseded depuis #431, aucune transition, pas de nouvelle entree vision-log requise)."
     },
     {
       "id": "coord.work-packages",
@@ -634,8 +634,8 @@
       "positions": [],
       "digest": {
         "policy": "content_sha256",
-        "value": "4fb98ed22f2ea0ce20f78b4434f1ee85dfa9e0c1981b2808f1fabf4a064b6a34",
-        "checked_at": "2026-08-14",
+        "value": "57d4f8a0faee29dc1387c31c87ae93596e5cc6bfc4e8263ccaeacac62fdcb49a",
+        "checked_at": "2026-08-15",
         "delegated_to": null
       },
       "retention": "in_force",
@@ -646,7 +646,7 @@
         "mission_seq": null,
         "ref": null
       },
-      "notes": "Point d'entrée documentaire du dépôt."
+      "notes": "Point d'entrée documentaire du dépôt. Empreinte recalculée par #433 (sections Installation/Gates/Développement : pointeur vers scripts/governance/capabilities.py, correction de la mention Fable périmée depuis #432, cohérence gitleaks/ggshield) ; section État de la mission non touchée (territoire #437)."
     },
     {
       "id": "gov.decision-mission-lead",

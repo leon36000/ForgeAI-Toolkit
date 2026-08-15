@@ -27,31 +27,132 @@ import sys
 from pathlib import Path
 
 _PLACEHOLDER = re.compile(r"\{(story_id|criteres|artefact_path|artefact)\}")
+_MEMBER_START = re.compile(r"^\s*-\s*id:\s*(\S+)\s*$")
+_MEMBER_FIELD = re.compile(r"^\s+(vendor|provider_id|modele):\s*(.+?)\s*(?:#.*)?$")
+# manifests/routes.yaml : mapping flow-style (une route par ligne) — membre/modele_reponse
+# toujours sur la 1ère ligne de l'entrée (une éventuelle "note:" continue sur la ligne
+# suivante, jamais capturée ici, pas pertinente pour l'identité vendor).
+_ROUTE_ENTRY = re.compile(r"membre:\s*(\S+?),.*?modele_reponse:\s*([^\s,}]+)")
+_NON_ALNUM = re.compile(r"[^a-z0-9]")
+
+
+def _normalize(value: str) -> str:
+    """Réduit un identifiant à ses seuls alphanumériques minuscules — "Qwen3.7-Max",
+    "qwen 3.7 max" et "qwen37max" doivent tous résoudre au même vendor, quelle que soit la
+    ponctuation utilisée par la source (roster, route, ou verdict réel)."""
+    return _NON_ALNUM.sub("", value.strip().lower())
 
 REPO = Path(__file__).resolve().parent.parent
 TEMPLATE = REPO / "CANON" / "revue-template.md"
 
-# model/alias → vendor. Deux reviewers du même vendor ne comptent QUE pour un (invariant #5 :
-# Composer + Grok = xAI, jamais appariés).
-_VENDOR = {
-    "glm": "zhipu", "glm52": "zhipu", "glm-5.2": "zhipu",
-    "deepseek": "deepseek", "deepseek-v4-pro": "deepseek",
-    "kimi": "moonshot", "kimi-2.7": "moonshot",
-    "composer": "xai", "composer-2.5": "xai", "grok": "xai", "grok-4.5": "xai",
-    "gemini": "google", "gemini-3.1-pro": "google",
-    "qwen": "alibaba", "qwen37max": "alibaba", "qwen3.7-max": "alibaba",
-    "longcat": "meituan", "longcat-2.0": "meituan",
-    "mimo": "xiaomi", "mimo-pro-v2": "xiaomi",
-    "nemotron": "nvidia",
-}
 _SEVERITY_RANK = {"critique": 0, "eleve": 1, "moyen": 2, "faible": 3}
 _BLOCKING = {"critique", "eleve"}
-_KNOWN_VENDORS = set(_VENDOR.values())  # vendors reconnus (identité vérifiable)
 
 
-def vendor_of(model_or_vendor: str) -> str:
+def _load_roles_yaml(path: Path) -> list[dict]:
+    """Lit uniquement les données membres nécessaires du roster YAML stable."""
+    if not path.exists():
+        return []
+    try:
+        lines = path.read_text(encoding="utf-8").splitlines()
+    except OSError:
+        return []
+
+    start = None
+    for index, line in enumerate(lines):
+        if line == "membres:":
+            start = index + 1
+            break
+    if start is None:
+        return []
+
+    block = []
+    for line in lines[start:]:
+        if line and not line[0].isspace() and re.match(r"^[^:#]+:", line):
+            break
+        block.append(line)
+
+    members = []
+    current = None
+    for line in block:
+        start_match = _MEMBER_START.match(line)
+        if start_match:
+            if current is not None:
+                members.append(current)
+            current = {"id": start_match.group(1)}
+            continue
+        if current is None:
+            continue
+        field_match = _MEMBER_FIELD.match(line)
+        if field_match:
+            key, value = field_match.groups()
+            if value != "null":
+                current[key] = value
+    if current is not None:
+        members.append(current)
+    return members
+
+
+def _load_routes_yaml(path: Path) -> list[tuple[str, str]]:
+    """Lit les paires (membre, modele_reponse) du fichier de routes stable.
+
+    modele_reponse est le nom de route LiteLLM RÉELLEMENT renvoyé par le bridge — c'est LUI
+    qui apparaît comme `reviewer_model` dans les verdicts scellés réels, pas forcément le
+    `provider_id` de manifests/roles.yaml (les deux divergent pour au moins un membre :
+    deepseek → provider_id "deepseek" mais modele_reponse "DeepSeek-V4-Pro").
+    """
+    if not path.exists():
+        return []
+    try:
+        lines = path.read_text(encoding="utf-8").splitlines()
+    except OSError:
+        return []
+    pairs = []
+    for line in lines:
+        match = _ROUTE_ENTRY.search(line)
+        if match:
+            pairs.append((match.group(1), match.group(2)))
+    return pairs
+
+
+def _vendor_table(
+    roles_path: Path = REPO / "manifests" / "roles.yaml",
+    routes_path: Path = REPO / "manifests" / "routes.yaml",
+) -> dict[str, str] | None:
+    """Construit la table identité→vendor depuis le roster versionné (manifests/roles.yaml,
+    enrichi des alias de manifests/routes.yaml).
+
+    Retourne None (distinct de {}) si le roster est introuvable/illisible — l'appelant
+    (tally) doit alors échouer fort, jamais retomber sur une table vide silencieuse qui
+    romprait l'anti-Sybil (tout vendor deviendrait "inconnu" ET pourtant filtré différemment).
+    """
+    roles = _load_roles_yaml(roles_path)
+    if not roles:
+        return None
+    table = {}
+    for member in roles:
+        vendor = member.get("vendor")
+        provider_id = member.get("provider_id")
+        if not vendor or not provider_id:
+            continue  # pas de route bridge (ex. fable) → pas un reviewer possible
+        normalized_vendor = vendor.lower()
+        for key in (member.get("id"), provider_id, member.get("modele")):
+            if key:
+                table[_normalize(key)] = normalized_vendor
+    for membre, modele_reponse in _load_routes_yaml(routes_path):
+        vendor = table.get(_normalize(membre))
+        if vendor:
+            table[_normalize(modele_reponse)] = vendor
+    return table
+
+
+def vendor_of(model_or_vendor: str, table: dict[str, str] | None = None) -> str:
     key = model_or_vendor.strip().lower()
-    return _VENDOR.get(key, key)  # inconnu → tel quel (rejeté au dépouillement, cf. tally)
+    loaded_table = _vendor_table() if table is None else table
+    if loaded_table is None:
+        return key  # roster introuvable : tel quel (rejeté au dépouillement, cf. tally)
+    # inconnu → renvoie la forme lisible (pas normalisée) : rejeté au dépouillement, cf. tally
+    return loaded_table.get(_normalize(model_or_vendor), key)
 
 
 def build_prompt(story_id: str, criteres: str, artefact_path: str, artefact: str,
@@ -75,16 +176,23 @@ def build_prompt(story_id: str, criteres: str, artefact_path: str, artefact: str
 
 def tally(verdicts: list[dict]) -> dict:
     """Dépouillement déterministe. Retourne {result, reason, vendors, objections, prompt_sha256}."""
+    table = _vendor_table()
+    if table is None:
+        return {
+            "result": "INVALIDE",
+            "reason": "roster de vendors introuvable ou illisible (manifests/roles.yaml) — identité des reviewers non vérifiable",
+        }
     if len(verdicts) < 3:
         return {"result": "INVALIDE", "reason": f"{len(verdicts)} verdict(s) < 3 requis"}
     shas = {v.get("prompt_sha256") for v in verdicts}
     if len(shas) != 1 or None in shas:
         return {"result": "INVALIDE",
                 "reason": f"prompts non identiques (sha distincts : {sorted(s or 'MANQUANT' for s in shas)})"}
-    vendors = [vendor_of(v.get("vendor") or v.get("reviewer_model", "")) for v in verdicts]
+    vendors = [vendor_of(v.get("vendor") or v.get("reviewer_model", ""), table) for v in verdicts]
     # Anti-Sybil (revue aveugle Nemotron) : un vendor NON reconnu ne peut pas compter comme
     # « distinct » — sinon des chaînes bidon simuleraient la diversité de vendors exigée.
-    inconnus = sorted(set(vendors) - _KNOWN_VENDORS)
+    known_vendors = set(table.values())
+    inconnus = sorted(set(vendors) - known_vendors)
     if inconnus:
         return {"result": "INVALIDE",
                 "reason": f"vendor(s) inconnu(s), identité non vérifiable : {inconnus}"}

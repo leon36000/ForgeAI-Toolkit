@@ -63,8 +63,10 @@ pytest
 6. Gate CI **`reviews-sealed`** (`scripts/reviews_gate.py` + `reviews/BINDING.txt`) : bloque tout
    merge où une revue liante n'est pas APPROVE 3/3.
 
-Env bridge/revue : base LiteLLM sur `http://localhost:4000` ; la clé d'API LiteLLM est lue
-du conteneur `serveur-litellm` via `docker inspect` (jamais en clair au dépôt — voir CLAUDE.md).
+Avant d'engager l'outillage `~/proof-method`, lancez
+`python3 scripts/governance/capabilities.py` pour vérifier sa disponibilité et celle des variables
+d'environnement nécessaires. Le script ne lit ni n'affiche de secret ; exportez les variables
+depuis votre propre gestion de secrets avant d'invoquer le flux de revue externe.
 
 ## Périmètre
 Confinement au repo (directive `CANON/directives-perimetre.md`) : aucune source produit hors du
