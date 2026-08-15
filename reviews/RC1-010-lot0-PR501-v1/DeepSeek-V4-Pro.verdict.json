@@ -1,0 +1,31 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "majeure",
+   "fichier": "Registres/mission.jsonl",
+   "description": "Le lot déclare explicitement ne toucher aucun fichier sous Registres/, mais le diff ajoute une entrée à Registres/mission.jsonl. C'est un changement hors périmètre du lot 0 et hors de la liste « Contenu exact de ce lot ».",
+   "preuve": "diff --git a/Registres/mission.jsonl : ajout de la ligne {\"actor\":\"orchestrateur\",...,\"story\":\"RC1-010-lot0\"...} ; story : « Aucun fichier sous coordination/, Registres/, reviews/, AUDIT-OUTPUT/, Phase-A/, Rapports/, Recherche/, .cursor/rules/ »."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "governance/authority.json",
+   "description": "La story affirme que seul le statut de gouvernance change pour coord.work-packages, mais le diff supprime aussi le tableau positions (topic coordination_scale). Ce retrait n'est annoncé ni dans la story ni dans le fichier de décision.",
+   "preuve": "governance/authority.json, hunk coord.work-packages : suppression de positions contenant coordination_scale et remplacement par positions: []."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "governance/path-classification.json",
+   "description": "Le rendu généré ajoute des entrées d'inventaire pour quatre fichiers reviews/RC1-009-PR500-v3/* et fait passer tracked_total de 1781 à 1786, mais le diff fourni ne contient pas les créations de ces fichiers. La cohérence entre l'inventaire généré et le commit n'est donc pas vérifiable sur pièce.",
+   "preuve": "governance/path-classification.json : nouvelles entrées reviews/RC1-009-PR500-v3/DeepSeek-V4-Pro.verdict.json, Gemini-3.1-Pro.verdict.json, MiMo-Pro-V2.verdict.json et RECU.json ; absence de diff --git a/reviews/RC1-009-PR500-v3/*."
+  }
+ ],
+ "date_heure": "2026-08-15T23:30:56.431741+00:00",
+ "prompt_sha256": "78ae0e1d6145727944106232e4a4562599555a955253092601f17ed9f291b874",
+ "reviewer_model": "DeepSeek-V4-Pro",
+ "modele_servi": "deepseek-v4-pro-direct",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}
