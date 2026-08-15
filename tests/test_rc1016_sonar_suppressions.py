@@ -25,15 +25,23 @@ VALIDATEUR = _charger_validateur()
 RACINE_DEPOT = Path(__file__).resolve().parents[1]
 
 
-def _ecrire_inventaire(root: Path, suppressions: list[dict]) -> None:
+def _ecrire_inventaire(root: Path, suppressions: list[dict], *, horizon: int = 180) -> None:
     (root / "governance").mkdir(parents=True, exist_ok=True)
     (root / "governance" / "sonar-suppressions.json").write_text(
-        json.dumps({"suppressions": suppressions}),
+        json.dumps(
+            {
+                "review_horizon": {
+                    "days": horizon,
+                    "justification": "Horizon de test.",
+                },
+                "suppressions": suppressions,
+            }
+        ),
         encoding="utf-8",
     )
 
 
-def _entree_inline(*, review_due: str = "2099-01-01") -> dict:
+def _entree_inline(*, review_due: str = "2026-06-01") -> dict:
     return {
         "id": "inline:src/active.py:1:S1234",
         "kind": "inline",
@@ -48,20 +56,17 @@ def _entree_inline(*, review_due: str = "2099-01-01") -> dict:
     }
 
 
-def _preparer_suppression_inline(root: Path, *, review_due: str = "2099-01-01") -> None:
+def _preparer_suppression_inline(root: Path, *, review_due: str = "2026-06-01") -> None:
     (root / "src").mkdir()
-    (root / "sonar-project.properties").write_text(
-        "sonar.sources=src\n",
-        encoding="utf-8",
-    )
+    (root / "sonar-project.properties").write_text("sonar.sources=src\n", encoding="utf-8")
     (root / "src" / "active.py").write_text(
-        "value = 1  # NOSONAR S1234\n",
+        "value = 1  # NOSONAR(S1234)\n",
         encoding="utf-8",
     )
     _ecrire_inventaire(root, [_entree_inline(review_due=review_due)])
 
 
-def test_scan_limite_aux_sources_et_ignore_les_chain_es_et_regex(tmp_path: Path) -> None:
+def test_scan_limite_aux_sources_et_ignore_les_chaines_et_regex(tmp_path: Path) -> None:
     (tmp_path / "src").mkdir()
     (tmp_path / "scripts" / "governance").mkdir(parents=True)
     (tmp_path / "tests").mkdir()
@@ -70,17 +75,17 @@ def test_scan_limite_aux_sources_et_ignore_les_chain_es_et_regex(tmp_path: Path)
         encoding="utf-8",
     )
     (tmp_path / "src" / "active.py").write_text(
-        'MESSAGE = "# NOSONAR S1234"\n'
+        'MESSAGE = "# NOSONAR(S1234)"\n'
         'MOTIF = r"#\\s*NOSONAR"\n'
-        'value = 1  # NOSONAR S9999\n',
+        "value = 1  # NOSONAR(S9999)\n",
         encoding="utf-8",
     )
     (tmp_path / "tests" / "hors_perimetre.py").write_text(
-        "value = 1  # NOSONAR S0001\n",
+        "value = 1  # NOSONAR(S0001)\n",
         encoding="utf-8",
     )
     (tmp_path / "scripts" / "governance" / "validate_sonar_suppressions.py").write_text(
-        "value = 1  # NOSONAR S0002\n",
+        "value = 1  # NOSONAR(S0002)\n",
         encoding="utf-8",
     )
 
@@ -89,16 +94,23 @@ def test_scan_limite_aux_sources_et_ignore_les_chain_es_et_regex(tmp_path: Path)
     assert [item["id"] for item in resultats] == ["inline:src/active.py:3:S9999"]
 
 
+def test_scan_detecte_nosonar_apres_un_autre_pragma(tmp_path: Path) -> None:
+    (tmp_path / "src").mkdir()
+    (tmp_path / "sonar-project.properties").write_text("sonar.sources=src\n", encoding="utf-8")
+    (tmp_path / "src" / "active.py").write_text(
+        'PASSWORD = "immudb"  # noqa: S105  proof:allow  # NOSONAR(S2068)\n',
+        encoding="utf-8",
+    )
+
+    resultats = VALIDATEUR.suppressions_reelles(tmp_path)
+
+    assert [item["id"] for item in resultats] == ["inline:src/active.py:1:S2068"]
+
+
 def test_commentaire_nu_est_signale_et_non_inventorie(tmp_path: Path) -> None:
     (tmp_path / "src").mkdir()
-    (tmp_path / "sonar-project.properties").write_text(
-        "sonar.sources=src\n",
-        encoding="utf-8",
-    )
-    (tmp_path / "src" / "active.py").write_text(
-        "value = 1  # NOSONAR\n",
-        encoding="utf-8",
-    )
+    (tmp_path / "sonar-project.properties").write_text("sonar.sources=src\n", encoding="utf-8")
+    (tmp_path / "src" / "active.py").write_text("value = 1  # NOSONAR\n", encoding="utf-8")
     _ecrire_inventaire(tmp_path, [])
 
     erreurs = VALIDATEUR.valider(tmp_path)
@@ -107,18 +119,32 @@ def test_commentaire_nu_est_signale_et_non_inventorie(tmp_path: Path) -> None:
     assert "suppression réelle non inventoriée : inline:src/active.py:1:NU" in erreurs
 
 
+def test_forme_legacy_sans_parentheses_est_rejetee(tmp_path: Path) -> None:
+    (tmp_path / "src").mkdir()
+    (tmp_path / "sonar-project.properties").write_text("sonar.sources=src\n", encoding="utf-8")
+    (tmp_path / "src" / "active.py").write_text(
+        "value = 1  # NOSONAR S1234\n",
+        encoding="utf-8",
+    )
+    _ecrire_inventaire(tmp_path, [])
+
+    erreurs = VALIDATEUR.valider(tmp_path)
+
+    assert (
+        "NOSONAR ciblé mal formé : src/active.py:1 ; utilisez # NOSONAR(S1234)"
+    ) in erreurs
+    assert "suppression réelle non inventoriée : inline:src/active.py:1:NU" in erreurs
+
+
 def test_commentaire_inventorie_ne_produit_aucune_erreur(tmp_path: Path) -> None:
     _preparer_suppression_inline(tmp_path)
 
-    assert VALIDATEUR.valider(tmp_path) == []
+    assert VALIDATEUR.valider(tmp_path, aujourd_hui=dt.date(2026, 1, 1)) == []
 
 
 def test_entree_inventaire_fossile_est_rejetee(tmp_path: Path) -> None:
     (tmp_path / "src").mkdir()
-    (tmp_path / "sonar-project.properties").write_text(
-        "sonar.sources=src\n",
-        encoding="utf-8",
-    )
+    (tmp_path / "sonar-project.properties").write_text("sonar.sources=src\n", encoding="utf-8")
     _ecrire_inventaire(tmp_path, [_entree_inline()])
 
     erreurs = VALIDATEUR.valider(tmp_path, aujourd_hui=dt.date(2026, 1, 1))
@@ -142,9 +168,26 @@ def test_review_due_non_depassee_est_acceptee_avec_date_injectee(tmp_path: Path)
     assert erreurs == []
 
 
-def test_portee_file_sans_test_ni_justification_non_reductible_est_rejetee(
-    tmp_path: Path,
-) -> None:
+def test_review_due_au_dela_du_plafond_est_rejetee(tmp_path: Path) -> None:
+    _preparer_suppression_inline(tmp_path, review_due="2026-07-01")
+
+    erreurs = VALIDATEUR.valider(tmp_path, aujourd_hui=dt.date(2026, 1, 1))
+
+    assert (
+        "inline:src/active.py:1:S1234 : review_due dépasse l'horizon de révision "
+        "(2026-07-01 > 2026-06-30)"
+    ) in erreurs
+
+
+def test_review_due_dans_le_plafond_est_acceptee(tmp_path: Path) -> None:
+    _preparer_suppression_inline(tmp_path, review_due="2026-06-30")
+
+    erreurs = VALIDATEUR.valider(tmp_path, aujourd_hui=dt.date(2026, 1, 1))
+
+    assert erreurs == []
+
+
+def test_portee_file_sans_test_ni_justification_non_reductible_est_rejetee(tmp_path: Path) -> None:
     (tmp_path / "sonar-project.properties").write_text(
         "\n".join(
             [
@@ -168,7 +211,7 @@ def test_portee_file_sans_test_ni_justification_non_reductible_est_rejetee(
                 "owner": "équipe test",
                 "justification": "Justification testée.",
                 "compensating_test": None,
-                "review_due": "2099-01-01",
+                "review_due": "2026-06-01",
                 "accepted_risk": "Risque test.",
             }
         ],
@@ -209,7 +252,7 @@ def test_portee_file_avec_justification_non_reductible_est_acceptee(tmp_path: Pa
                 "compensating_test_reason": (
                     "Non-réductible : la règle ne permet pas une portée plus fine."
                 ),
-                "review_due": "2099-01-01",
+                "review_due": "2026-06-01",
                 "accepted_risk": "Risque test.",
             }
         ],

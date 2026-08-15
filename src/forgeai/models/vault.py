@@ -249,7 +249,7 @@ def read_secret_text(
     # S2083 est un faux positif : cible locale de bootstrap choisie par
     # l'opérateur, ouverte O_NOFOLLOW puis validée comme fichier régulier avant
     # lecture; la publication passe ensuite par le writer atomique.
-    descriptor = os.open(Path(path), flags)  # NOSONAR S2083
+    descriptor = os.open(Path(path), flags)  # NOSONAR(S2083)
     try:
         target = os.fstat(descriptor)
         if not stat.S_ISREG(target.st_mode):

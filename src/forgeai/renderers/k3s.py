@@ -246,7 +246,7 @@ def _volumes_inscriptibles(profil: ProfilSecurite, gpu: bool) -> list[tuple[str,
     ro = profil.ro_rootfs and not gpu
     if not ro:
         return []
-    chemins = ["/tmp"] + list(profil.chemins_inscriptibles)
+    chemins = ["/tmp"] + list(profil.chemins_inscriptibles)  # NOSONAR(S5443) — contenu d'un manifeste Kubernetes, pas un fichier temporaire local
 
     def _nom(chemin: str) -> str:
         return "inscriptible-" + chemin.lstrip("/").replace("/", "-").lower()
