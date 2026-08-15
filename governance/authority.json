@@ -646,7 +646,7 @@
         "mission_seq": null,
         "ref": null
       },
-      "notes": "Point d'entrée documentaire du dépôt. Empreinte mise à jour par #439 (RC1-009) : ajout de governance/ et stories/ à la table « Structure canonique » et clarification Docs/=doc active vs governance/=canon+décisions (RC1-009-PR<NNN>), au-dessus de l'empreinte fusionnée #433 x #437 (installation/gates/développement + marqueurs state)."
+      "notes": "Point d'entrée documentaire du dépôt. Empreinte mise à jour par #439 (RC1-009, PR #500) : ajout de governance/ et stories/ à la table « Structure canonique » et clarification Docs/=doc active vs governance/=canon+décisions, au-dessus de l'empreinte fusionnée #433 x #437 (installation/gates/développement + marqueurs state)."
     },
     {
       "id": "gov.decision-mission-lead",
