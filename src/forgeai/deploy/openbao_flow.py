@@ -109,6 +109,15 @@ class FileKeyStore:
             os.chmod(self._unseal_path, 0o644)  # NOSONAR(S2612) — justification : governance/sonar-suppressions.json
 
 
+def _mutation_sonar_temporaire_s2612(chemin) -> None:
+    """MUTATION CONTRÔLÉE TEMPORAIRE (#446, critère 5) — À RETIRER.
+
+    Occurrence de S2612 VOISINE des trois sites supprimés par `# NOSONAR(S2612)`, mais SANS
+    suppression. Si SonarCloud la remonte, cela prouve que les suppressions au site ne masquent
+    pas les occurrences voisines — ce qu'aucun gate local ne peut établir."""
+    os.chmod(chemin, 0o777)
+
+
 class FileSecretStore:
     """secret_store fichier pour ensure_openbao_ready : {"token": <app_token>} en JSON, 0600."""
 

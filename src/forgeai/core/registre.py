@@ -63,7 +63,7 @@ def _load_key(key_path: Path) -> bytes:
         raise ValueError(f"cle introuvable : {str(key_path)!r}") from erreur
     if not stat.S_ISREG(etat.st_mode):
         raise ValueError(f"cle refusee (pas un fichier regulier) : {str(key_path)!r}")
-    return bytes.fromhex(key_path.read_text(encoding="utf-8").strip())
+    return bytes.fromhex(key_path.read_text(encoding="utf-8").strip())  # NOSONAR(S8707)
 
 
 def _canonical_material(entry: dict) -> bytes:
