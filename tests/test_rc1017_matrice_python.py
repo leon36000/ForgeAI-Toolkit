@@ -105,12 +105,35 @@ class TestRC1017MatricePython(unittest.TestCase):
 
         self.assertGreater(dependances_verifiees, 0)
 
+    def test_lockfile_contient_un_marker_pour_version_superieure_au_minimum(
+        self,
+    ) -> None:
+        """Le verrou universel conserve une branche Python au-delà de sa borne basse."""
+        minimum_matrice = min(
+            tuple(int(partie) for partie in version.split("."))
+            for version in _versions_matrice()
+        )
+        contenu = _contenu(CHEMIN_LOCKFILE)
+        versions_superieures = re.findall(
+            r"""python_full_version\s*(?:>=|>)\s*['"](\d+)\.(\d+)""",
+            contenu,
+        )
+
+        self.assertTrue(
+            any(
+                (int(majeure), int(mineure)) > minimum_matrice
+                for majeure, mineure in versions_superieures
+            ),
+            "Le lockfile doit contenir un marker python_full_version visant une "
+            "version strictement supérieure au minimum de la matrice.",
+        )
+
     def test_job_matrice_installe_le_lockfile_avec_empreintes(self) -> None:
         """Le job de matrice impose la vérification des empreintes du lockfile."""
         bloc = _bloc_job_tests()
         self.assertRegex(
             bloc,
-            r"pip install --require-hashes -r requirements-ci\.txt",
+            r"pip install --no-cache-dir --require-hashes -r requirements-ci\.txt",
         )
 
     def test_aucune_liste_de_dependances_de_test_n_est_dupliquee(self) -> None:
@@ -134,6 +157,11 @@ class TestRC1017MatricePython(unittest.TestCase):
                     "--require-hashes",
                     installation,
                     f"Installation sans empreintes dans {chemin}: {installation}",
+                )
+                self.assertIn(
+                    "--no-cache-dir",
+                    installation,
+                    f"Installation avec cache dans {chemin}: {installation}",
                 )
 
     def test_politique_existe_et_cite_chaque_version(self) -> None:

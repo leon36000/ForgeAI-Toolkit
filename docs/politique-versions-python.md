@@ -45,6 +45,10 @@ Ces trois déclarations constituent un contrat unique et ne doivent jamais diver
 Les dépendances de test directes sont déclarées dans `requirements-ci.in`. Le fichier
 `requirements-ci.txt` est le lockfile universel généré avec empreintes SHA-256.
 
+La génération utilise `uv pip compile --universal --python-version 3.10` : Python 3.10 est la
+borne basse de résolution et `--universal` génère les branches conditionnelles par marker pour
+toutes les versions de la matrice officielle.
+
 Le workflow `ci-deps-update.yml` le régénère chaque semaine et peut aussi être lancé
 manuellement avec `workflow_dispatch`. Lorsqu'une modification est détectée, il ouvre une pull
 request ; il ne pousse jamais directement sur `main`. Toute modification du lockfile est donc
@@ -54,7 +58,7 @@ revue avant intégration.
 
 Les jobs de test n'installent aucune dépendance par nom de paquet et ne téléchargent aucune
 dépendance hors du lockfile. Ils installent uniquement
-`requirements-ci.txt` avec `pip install --require-hashes`.
+`requirements-ci.txt` avec `pip install --no-cache-dir --require-hashes`.
 
 Toute nouvelle dépendance de test doit d'abord être ajoutée à `requirements-ci.in`, puis le
 lockfile universel doit être régénéré par la procédure contrôlée. Le produit runtime reste, lui,

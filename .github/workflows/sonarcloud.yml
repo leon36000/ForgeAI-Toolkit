@@ -22,7 +22,7 @@ jobs:
           python-version: "3.12"
 
       - name: Installer les dépendances de test verrouillées
-        run: python -m pip install --require-hashes -r requirements-ci.txt
+        run: python -m pip install --no-cache-dir --require-hashes -r requirements-ci.txt
 
       # `sonar.sources` inclut `scripts`, mais la couverture ne mesurait que src/forgeai et
       # scripts/coordination : TOUT le reste de scripts/ apparaissait donc à 0 % côté SonarCloud,

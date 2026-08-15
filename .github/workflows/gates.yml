@@ -39,7 +39,7 @@ jobs:
         with:
           python-version: "3.12"
       - name: Installer les dépendances de test verrouillées
-        run: python -m pip install --require-hashes -r requirements-ci.txt
+        run: python -m pip install --no-cache-dir --require-hashes -r requirements-ci.txt
       - name: Garde de confinement filesystem — matrice de comportement
         run: python -m pytest tests/test_guard_fs.py tests/test_portable_lock.py tests/test_registre_concurrence.py tests/test_openbao_flow_import.py -q
 
@@ -178,7 +178,7 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
       - name: Installer les dépendances de test verrouillées
-        run: python -m pip install --require-hashes -r requirements-ci.txt
+        run: python -m pip install --no-cache-dir --require-hashes -r requirements-ci.txt
       - name: Tests et résumé des warnings — Python ${{ matrix.python-version }}
         if: matrix.python-version != '3.12'
         shell: bash
@@ -225,7 +225,7 @@ jobs:
         with:
           python-version: "3.12"
       - name: Installer les dépendances de test verrouillées
-        run: python -m pip install --require-hashes -r requirements-ci.txt
+        run: python -m pip install --no-cache-dir --require-hashes -r requirements-ci.txt
       - name: Sous-ensemble portable de référence
         run: python -m pytest tests/test_guard_fs.py tests/test_portable_lock.py tests/test_registre_concurrence.py tests/test_openbao_flow_import.py -q
 
