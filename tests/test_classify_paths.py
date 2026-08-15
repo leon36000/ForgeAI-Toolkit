@@ -751,3 +751,180 @@ def test_main_retourne_1_sur_erreur_sans_lever(tmp_path: pathlib.Path) -> None:
     result = classify_paths.main(["--repo-root", str(repo_vide)])
 
     assert result == 1
+
+
+def _manifest_vagues_fixture(entries: list[dict], edges: list[dict]) -> dict:
+    return {
+        "entries": entries,
+        "reference_graph": {
+            "edges": edges,
+            "dangling": [],
+        },
+    }
+
+
+def _entree_vague_fixture(path: str, target_path: str | None) -> dict:
+    return {
+        "path": path,
+        "target_path": target_path,
+    }
+
+
+def _arete_hard_fixture(referrer: str, resolved: str) -> dict:
+    return {
+        "referrer": referrer,
+        "resolved": resolved,
+        "severity": "hard",
+    }
+
+
+def test_compute_waves_sans_dependance_une_seule_vague() -> None:
+    manifest = _manifest_vagues_fixture(
+        [
+            _entree_vague_fixture("archive/a.md", "evidence/a.md"),
+            _entree_vague_fixture("archive/b.md", "evidence/b.md"),
+        ],
+        [],
+    )
+
+    waves = classify_paths.compute_waves(manifest)
+
+    assert waves == [
+        {
+            "id": 0,
+            "paths": ["archive/a.md", "archive/b.md"],
+            "rollback": waves[0]["rollback"],
+        }
+    ]
+    assert waves[0]["rollback"]
+
+
+def test_compute_waves_avec_dependance_deux_vagues() -> None:
+    manifest = _manifest_vagues_fixture(
+        [
+            _entree_vague_fixture("archive/a.md", "evidence/a.md"),
+            _entree_vague_fixture("archive/b.md", "evidence/b.md"),
+        ],
+        [_arete_hard_fixture("archive/a.md", "archive/b.md")],
+    )
+
+    waves = classify_paths.compute_waves(manifest)
+    wave_by_path = {
+        path: wave["id"]
+        for wave in waves
+        for path in wave["paths"]
+    }
+
+    assert wave_by_path["archive/b.md"] < wave_by_path["archive/a.md"]
+    assert len(waves) == 2
+
+
+def test_compute_waves_cycle_leve() -> None:
+    manifest = _manifest_vagues_fixture(
+        [
+            _entree_vague_fixture("archive/a.md", "evidence/a.md"),
+            _entree_vague_fixture("archive/b.md", "evidence/b.md"),
+        ],
+        [
+            _arete_hard_fixture("archive/a.md", "archive/b.md"),
+            _arete_hard_fixture("archive/b.md", "archive/a.md"),
+        ],
+    )
+
+    with pytest.raises(ValueError, match="archive/[ab]\\.md"):
+        classify_paths.compute_waves(manifest)
+
+
+def test_compute_waves_ignore_entrees_sans_target() -> None:
+    manifest = _manifest_vagues_fixture(
+        [
+            _entree_vague_fixture("archive/deplace.md", "evidence/deplace.md"),
+            _entree_vague_fixture("src/reste.py", None),
+        ],
+        [],
+    )
+
+    waves = classify_paths.compute_waves(manifest)
+    paths = [path for wave in waves for path in wave["paths"]]
+
+    assert paths == ["archive/deplace.md"]
+    assert "src/reste.py" not in paths
+
+
+def test_compute_waves_chaque_vague_a_un_rollback_non_vide() -> None:
+    manifest = _manifest_vagues_fixture(
+        [
+            _entree_vague_fixture("archive/a.md", "evidence/a.md"),
+            _entree_vague_fixture("archive/b.md", "evidence/b.md"),
+        ],
+        [_arete_hard_fixture("archive/a.md", "archive/b.md")],
+    )
+
+    waves = classify_paths.compute_waves(manifest)
+
+    assert len(waves) >= 2
+    assert all(
+        isinstance(wave["rollback"], str) and wave["rollback"]
+        for wave in waves
+    )
+
+
+def test_compute_waves_sur_vrai_manifest_aucune_exception() -> None:
+    manifest = classify_paths.build_manifest(REPO)
+
+    try:
+        waves = classify_paths.compute_waves(manifest)
+    except Exception as error:
+        pytest.fail(f"compute_waves a échoué sur le manifest réel : {error}")
+
+    assert isinstance(waves, list)
+
+
+def test_graphe_ignore_le_manifest_genere_comme_source(
+    tmp_path: pathlib.Path,
+) -> None:
+    manifest_path = getattr(
+        classify_paths,
+        "_MANIFEST_JSON",
+        "governance/path-classification.json",
+    )
+    if isinstance(manifest_path, pathlib.PurePath):
+        manifest_path = manifest_path.as_posix()
+    _ecrit_fixture_texte(
+        tmp_path,
+        manifest_path,
+        '{"path": "src/x.py", "candidate": "src/x.py"}',
+    )
+    _ecrit_fixture_texte(tmp_path, "src/x.py", "pass\n")
+    tracked = [manifest_path, "src/x.py"]
+
+    graph = classify_paths.build_reference_graph(tmp_path, tracked)
+
+    assert not any(
+        entry["referrer"] == manifest_path
+        for entry in graph["edges"] + graph["dangling"]
+    )
+
+
+def test_main_retourne_1_quand_check_echoue_reellement(
+    tmp_path: pathlib.Path,
+) -> None:
+    repo_jouet = tmp_path / "repo"
+    repo_jouet.mkdir()
+    _initialise_depot_jouet(repo_jouet)
+
+    assert classify_paths.main(["--repo-root", str(repo_jouet), "--render"]) == 0
+
+    manifest_path = repo_jouet / getattr(
+        classify_paths,
+        "_MANIFEST_JSON",
+        "governance/path-classification.json",
+    )
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    manifest["summary"]["tracked_total"] = 999
+    manifest_path.write_text(
+        json.dumps(manifest, sort_keys=True, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
+
+    assert classify_paths.main(["--repo-root", str(repo_jouet)]) == 1

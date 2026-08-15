@@ -61,3 +61,8 @@ path-classification.schema.json est un schéma descriptif, pas un document narra
 d'entrée README/AGENTS.md distincte requise pour cette brique interne d'outillage de
 gouvernance (même traitement que governance/STATE-CURRENT.md et governance/AUTHORITY-MAP.md,
 qui n'ont pas non plus d'entrée README dédiée).
+
+scripts/governance/classify_paths.py + tests/test_classify_paths.py (RC1-008/#438, commit
+5/7) : ajoute compute_waves() — calcule un plan de vagues, n'exécute aucun déplacement.
+governance/PATH-CLASSIFICATION.md (déjà généré au commit 4/7) reste la documentation du
+résultat. Pas de nouvelle entrée README/AGENTS.md requise.

@@ -498,10 +498,14 @@ def build_reference_graph(repo_root: Path, tracked: list[str]) -> dict:
     }
     known_path_extensions = {".py", ".md", ".json", ".yml", ".yaml"}
     candidate_pattern = re.compile(r"[A-Za-z0-9_.][A-Za-z0-9._/-]*")
+    excluded_generic_referrers = structured_referrers | {
+        _MANIFEST_JSON.as_posix(),
+        _MANIFEST_MARKDOWN.as_posix(),
+    }
 
     for referrer in tracked:
         path_name = Path(referrer)
-        if referrer in structured_referrers:
+        if referrer in excluded_generic_referrers:
             continue
         if (
             path_name.suffix not in allowed_extensions
@@ -760,6 +764,79 @@ def check(repo_root: Path, rules_path: Path | None = None) -> tuple[bool, list[s
         return False, errors
 
     return True, []
+
+
+def compute_waves(manifest: dict) -> list[dict]:
+    migrating_paths = {
+        entry["path"]
+        for entry in manifest["entries"]
+        if entry["target_path"] is not None
+    }
+    prerequisites: dict[str, set[str]] = {
+        path: set() for path in migrating_paths
+    }
+    dependents: dict[str, set[str]] = {
+        path: set() for path in migrating_paths
+    }
+
+    for edge in manifest["reference_graph"]["edges"]:
+        if edge.get("severity") != "hard":
+            continue
+
+        referrer = edge.get("referrer")
+        resolved = edge.get("resolved")
+        if referrer not in migrating_paths or resolved not in migrating_paths:
+            continue
+        if referrer == resolved:
+            continue
+
+        prerequisites[referrer].add(resolved)
+        dependents[resolved].add(referrer)
+
+    remaining_prerequisites = {
+        path: set(path_prerequisites)
+        for path, path_prerequisites in prerequisites.items()
+    }
+    unplaced = set(migrating_paths)
+    waves: list[dict] = []
+    wave_id = 0
+
+    while unplaced:
+        current_paths = sorted(
+            path
+            for path in unplaced
+            if not remaining_prerequisites[path]
+        )
+        if not current_paths:
+            remaining_paths = sorted(unplaced)
+            raise ValueError(
+                "cycle de dépendances détecté impliquant : "
+                f"{remaining_paths[0]}"
+            )
+
+        rollback = (
+            f"Vague {wave_id} : {len(current_paths)} chemin(s). "
+            "Rollback = git mv <cible> <source> pour chaque chemin listé "
+            "(ordre inverse), puis git commit --amend ou nouveau commit de "
+            "restauration ; ne PAS exécuter cette vague sans avoir d'abord "
+            "validé les vagues précédentes."
+        )
+        waves.append(
+            {
+                "id": wave_id,
+                "paths": current_paths,
+                "rollback": rollback,
+            }
+        )
+
+        for path in current_paths:
+            unplaced.remove(path)
+            for dependent in dependents[path]:
+                remaining_prerequisites[dependent].discard(path)
+
+        wave_id += 1
+
+    return waves
 
 
 def main(argv: list[str] | None = None) -> int:

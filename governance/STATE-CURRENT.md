@@ -186,7 +186,7 @@
     },
     {
       "path": "tests/test_classify_paths.py",
-      "sha256": "cec962d20eb727affc97a4eb2c53eedc3bd731252b0678d442b11511a4139c71"
+      "sha256": "289e1dad0457b232df65525e991028b791bf1c7e16c607df0630f37d8d542df6"
     },
     {
       "path": "tests/test_cli_doctor.py",
@@ -867,7 +867,7 @@
   "tests": {
     "js_files": 3,
     "python_files": 179,
-    "python_functions_declared": 1867
+    "python_functions_declared": 1875
   }
 }
 ```
