@@ -69,7 +69,7 @@ def _receipt():
         "diff_digest": __import__("hashlib").sha256(b"").hexdigest(),
         "prompt_sha256": SHA,
         "reviewers_attendus": ["deepseek", "gemini", "longcat"],
-        "codeur": [],
+        "codeur": ["fable"],
         "resultat": "APPROVE",
         "date_heure": DATE,
         "fenetre_heures": 24,

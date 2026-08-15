@@ -413,8 +413,12 @@ def verifier_recu(
         return {"result": "INVALIDE", "reason": "nombre incorrect de reviewers"}
 
     codeurs = recu["codeur"]
-    if not isinstance(codeurs, list):
-        return {"result": "INVALIDE", "reason": "codeur invalide"}
+    # OBLIGATOIREMENT non vide ICI (pas seulement dans la CLI `recu`, round 2 — objection
+    # critique DeepSeek-V4-Pro round 2 : verifier_recu EST la frontière d'application réelle
+    # du gate ; un RECU.json écrit/modifié à la main avec codeur:[] contournerait sinon
+    # totalement l'anti-auto-review, peu importe ce que la CLI exige).
+    if not isinstance(codeurs, list) or not codeurs:
+        return {"result": "INVALIDE", "reason": "codeur requis (liste vide)"}
     codeur_table = _codeur_vendor_table()
     if codeur_table is None:
         return {"result": "INVALIDE", "reason": "roster de codeurs introuvable"}

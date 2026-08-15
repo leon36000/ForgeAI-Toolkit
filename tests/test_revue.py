@@ -44,7 +44,7 @@ def _recu(**changes):
         **_etat(),
         "prompt_sha256": SHA,
         "reviewers_attendus": ["deepseek", "gemini", "longcat"],
-        "codeur": [],
+        "codeur": ["fable"],  # jamais un vendor reviewer par défaut (anthropic n'y figure pas)
         "resultat": "APPROVE",
         "date_heure": DATE,
         "fenetre_heures": 24,
@@ -336,6 +336,17 @@ def test_verifier_recu_codeur_inconnu_echoue_dur():
         _etat(),
     )
     assert result["result"] == "INVALIDE" and "codeur inconnu" in result["reason"]
+
+
+def test_verifier_recu_codeur_vide_rejete():
+    # Régression revue scellée RC1-004-PR497-v2 (objection critique DeepSeek-V4-Pro) :
+    # verifier_recu() EST la frontière d'application réelle du gate — un RECU.json écrit ou
+    # modifié à la main avec codeur:[] ne doit JAMAIS passer, même si la CLI `recu` exige
+    # --codeur (un attaquant/une erreur peut toujours écrire le fichier directement).
+    result = revue.verifier_recu(
+        _recu(codeur=[]), [_v("deepseek"), _v("gemini"), _v("longcat")], _etat()
+    )
+    assert result["result"] == "INVALIDE" and "codeur" in result["reason"]
 
 
 def test_verifier_recu_objection_bloquante_avec_cle_francaise():

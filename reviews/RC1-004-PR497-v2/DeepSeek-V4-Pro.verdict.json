@@ -1,0 +1,25 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "critique",
+   "fichier": "scripts/revue.py",
+   "description": "verifier_recu() accepte une liste `codeur` vide, donc un RECU.json sans auteur déclaré peut passer le gate PR, contournant l'anti-auto-review par simple omission. Le correctif du round 2 ne s'applique qu'à la CLI `revue.py recu`, pas à la vérification du fichier lu par le gate.",
+   "preuve": "scripts/revue.py: `codeurs = recu[\"codeur\"]` puis uniquement `if not isinstance(codeurs, list): return ...`; si `codeurs == []`, `vendors_codeurs` reste vide et le test `if vendors_codeurs & set(tally_result[\"vendors\"]):` ne se déclenche pas. `tests/test_reviews_gate.py` `_receipt()` contient `\"codeur\": []` et `test_mode_pr_reussit_avec_recu_valide` attend `ok is True`; `tests/test_revue.py` `test_verifier_recu_approve_nominal` attend APPROVE avec la même liste vide."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "scripts/reviews_gate.py",
+   "description": "Le mode archive transmet `receipt['head_commit']` à `git merge-base --is-ancestor` sans appliquer `_validate_git_ref`, contrairement à la garde anti-injection utilisée pour les refs dans `_diff_canonique`/`_etat_git_reel`.",
+   "preuve": "`_is_ancestor(commit, runner)` exécute `runner([\"git\", \"merge-base\", \"--is-ancestor\", commit, \"HEAD\"])` sans validation de `commit`, alors que ce commit provient directement du RECU.json lu."
+  }
+ ],
+ "date_heure": "2026-08-15T19:15:23.218123+00:00",
+ "prompt_sha256": "6bf03c969801d36aefa56e3d1215ba3b89956b975235cee7d73383031066d6fb",
+ "reviewer_model": "DeepSeek-V4-Pro",
+ "modele_servi": "deepseek-v4-pro-direct",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

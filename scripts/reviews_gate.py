@@ -181,7 +181,11 @@ def check(
             try:
                 receipt = json.loads(receipt_path.read_text(encoding="utf-8"))
                 commit = receipt["head_commit"]
-            except (OSError, json.JSONDecodeError, KeyError) as error:
+                # Anti-injection : commit vient d'un RECU.json lu au disque, même garde que
+                # les refs de _diff_canonique/_etat_git_reel (objection mineure revue scellée
+                # RC1-004-PR497-v2, DeepSeek-V4-Pro).
+                revue._validate_git_ref(commit)
+            except (OSError, json.JSONDecodeError, KeyError, ValueError) as error:
                 ok = False
                 report.append(f"ECHEC {entry} : reçu archive illisible : {error}")
                 continue

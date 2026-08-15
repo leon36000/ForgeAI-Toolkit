@@ -1,0 +1,31 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "critique",
+   "fichier": "scripts/revue.py",
+   "description": "La vérification de `head_tree`/`head_commit` compare le reçu à un état git qui contient le fichier `RECU.json` lui-même. `revue.py recu` écrit un reçu calculé à partir du HEAD courant, puis le commit de ce `RECU.json` change précisément ce `head_tree`/`head_commit`. Aucun reçu réel ne peut donc satisfaire la vérification, car il devrait contenir l'empreinte d'un arbre incluant son propre contenu, sans exclusion de `reviews/**` contrairement à `diff_digest`.",
+   "preuve": "`scripts/revue.py` : `_etat_git_reel` -> `\"head_tree\": execute([\"git\", \"rev-parse\", f\"{head_ref}^{{tree}}\"]).strip()` ; `verifier_recu` -> `if recu[\"head_tree\"] != etat_git.get(\"head_tree\")` ; `reviews_gate.py` lit `receipt_path = directory / \"RECU.json\"` dans le même checkout/HEAD ; seule `_diff_canonique` exclut `reviews/`."
+  },
+  {
+   "severite": "majeure",
+   "fichier": ".github/workflows/gates.yml",
+   "description": "En mode PR, le checkout ne fixe pas `ref` et sur `pull_request` GitHub Actions donne un commit de merge synthétique comme HEAD. Un reçu généré localement avec `revue.py recu` contre le HEAD de la branche aura des `base_commit`/`head_commit` différents de ceux calculés par la CI, ce qui fait échouer `verifier_recu` même pour une PR valide.",
+   "preuve": "Le diff du job `reviews-sealed` utilise `actions/checkout` avec `fetch-depth: 0` mais sans `ref` ; condition `if: github.event_name == 'pull_request' || github.event_name == 'merge_group'` ; `run: python3 scripts/reviews_gate.py --exiger-recu-courant --base-ref origin/main` ; `verifier_recu` exige `recu[\"base_commit\"] == etat_git[\"base_commit\"]` et `recu[\"head_commit\"] == etat_git[\"head_commit\"]`."
+  },
+  {
+   "severite": "majeure",
+   "fichier": "scripts/revue.py",
+   "description": "L'anti-auto-review est contournable avec un reçu `codeur: []` : la sous-commande `recu` rend `--codeur` optionnel (défaut liste vide), et `verifier_recu` accepte une liste vide. Le test nominal utilise même `\"codeur\": []`, donc un auteur qui est reviewer peut être omis du reçu et la vérification `vendors_codeurs & tally_result[\"vendors\"]` ne détecte rien.",
+   "preuve": "`pr.add_argument(\"--codeur\", action=\"append\", default=[])` ; `\"codeur\": args.codeur` dans `_cmd_recu` ; `verifier_recu` vérifie seulement `if not isinstance(codeurs, list)` puis `for codeur in codeurs` (boucle sans aucune itération) ; `tests/test_revue.py` `_recu()` contient `\"codeur\": []` et `test_verifier_recu_approve_nominal` attend `APPROVE`."
+  }
+ ],
+ "date_heure": "2026-08-15T19:00:03.457665+00:00",
+ "prompt_sha256": "d4283c5cc7e2bd88f2a7e073d1784e96fe9300d8d3b347fa5fc70fdd3806ed9b",
+ "reviewer_model": "DeepSeek-V4-Pro",
+ "modele_servi": "deepseek-v4-pro-direct",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}
