@@ -56,12 +56,14 @@ def fetch_releases_helm(runner: CommandRunner) -> list:
     detect()/plan() (PERF — trouvé en session : `_operators()` dans cli.py bouclait sur les 3
     opérateurs du châssis et rappelait cette commande IDENTIQUE une fois par opérateur, alors
     qu'elle liste déjà TOUTES les releases de TOUS les namespaces indépendamment du nom visé).
-    Retourne [] si la commande échoue, ne renvoie rien d'exploitable, ou si le JSON est invalide
-    — dans tous ces cas detect() retombe sur le fallback CRD, exactement comme avant."""
+    Retourne [] si la commande échoue, ne renvoie rien d'exploitable, si le JSON est invalide ou
+    si le JSON valide ne représente pas une liste — dans tous ces cas detect() retombe sur le
+    fallback CRD, exactement comme avant."""
     code, out = runner.run(["helm", "list", "-A", "-o", "json"])
     if code == 0 and out.strip():
         try:
-            return json.loads(out)
+            releases = json.loads(out)
+            return releases if isinstance(releases, list) else []
         except (ValueError, TypeError):
             return []
     return []
