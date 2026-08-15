@@ -1,0 +1,19 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "critique",
+   "fichier": ".github/workflows/gates.yml",
+   "description": "Typo dans la résolution du SHA pour l'événement `merge_group`. La clé correcte dans le payload GitHub est `head_sha` (avec un underscore) et non `head.sha`. Cette erreur fait évaluer l'expression à vide, ce qui active le fallback sur `github.sha` (qui correspond au commit de merge synthétique créé par la merge queue). Cela réintroduit exactement le bug structurel du Round 1 (objection #2) pour les merge queues, rendant la vérification du reçu impossible car le code checkout ne correspondra pas au vrai HEAD de la branche.",
+   "preuve": "Ligne ajoutée dans le bloc `with:` de `actions/checkout` : `ref: ${{ github.event.pull_request.head.sha || github.event.merge_group.head.sha || github.sha }}`"
+  }
+ ],
+ "date_heure": "2026-08-15T19:11:22.333020+00:00",
+ "prompt_sha256": "6bf03c969801d36aefa56e3d1215ba3b89956b975235cee7d73383031066d6fb",
+ "reviewer_model": "Qwen3.7-Max",
+ "modele_servi": "qwen37-max-openrouter",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

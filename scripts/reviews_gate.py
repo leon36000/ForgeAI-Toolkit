@@ -14,17 +14,36 @@ Le dépouillement réutilise `scripts/revue.py` (fonction pure `tally`, invarian
 LLM n'écrit un score). Le gate échoue (exit 1) si un dossier liant n'est pas APPROVE, est
 absent, ou n'a pas ses verdicts.
 
+#434 — deux modes supplémentaires, OPT-IN par drapeau (le comportement PAR DÉFAUT, sans
+drapeau, reste STRICTEMENT identique à avant cette story) :
+
+  --exiger-recu-courant --base-ref <ref>   (mode PR) : en plus du dépouillement legacy
+    habituel, exige qu'AU MOINS UNE entrée liante porte un reviews/<ID>/RECU.json qui se
+    vérifie contre l'état git RÉEL de la PR courante (commit, arbre, diff canonique hors
+    reviews/**). Sans reçu valide couvrant le changement courant : échec explicite.
+
+  --mode archive : dépouillement legacy habituel pour toutes les entrées ; en plus, pour
+    chaque entrée qui porte un RECU.json, vérifie que son commit est un ANCÊTRE du HEAD
+    courant (post-merge, sur main). Un reçu pointant un commit jamais fusionné échoue.
+
+Les 150+ entrées historiques de BINDING.txt n'ont PAS de RECU.json : leur comportement dans
+LES DEUX modes reste identique à aujourd'hui — "archivées sans être rattachées aux nouveaux
+changements".
+
 Usage : reviews_gate.py [--manifest reviews/BINDING.txt] [--reviews-root reviews]
+                        [--exiger-recu-courant --base-ref <ref>] [--mode archive]
 """
 from __future__ import annotations
 
 import argparse
 import importlib.util
 import json
-import sys
+import subprocess
 from pathlib import Path
+from typing import Callable
 
 REPO = Path(__file__).resolve().parent.parent
+GitRunner = Callable[[list[str]], str]
 
 
 def _load_revue():
@@ -32,6 +51,16 @@ def _load_revue():
     mod = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(mod)
     return mod
+
+
+def _default_runner(command: list[str]) -> str:
+    return subprocess.run(
+        command,
+        cwd=REPO,
+        capture_output=True,
+        text=True,
+        check=True,
+    ).stdout
 
 
 def read_manifest(path: Path) -> list[str]:
@@ -45,49 +74,160 @@ def read_manifest(path: Path) -> list[str]:
     return lines
 
 
-def check(manifest: Path, reviews_root: Path) -> tuple[bool, list[str]]:
+def _is_ancestor(commit: str, runner: GitRunner) -> bool:
+    try:
+        runner(["git", "merge-base", "--is-ancestor", commit, "HEAD"])
+    except subprocess.CalledProcessError:
+        return False
+    return True
+
+
+def check(
+    manifest: Path,
+    reviews_root: Path,
+    *,
+    exiger_recu_courant: bool = False,
+    base_ref: str | None = None,
+    mode: str | None = None,
+    runner: GitRunner | None = None,
+) -> tuple[bool, list[str]]:
     revue = _load_revue()
+    execute = _default_runner if runner is None else runner
     report: list[str] = []
     ok = True
     binding = read_manifest(manifest)
+
+    if exiger_recu_courant and not base_ref:
+        return False, ["ECHEC : --base-ref est obligatoire avec --exiger-recu-courant"]
+    if mode not in (None, "archive"):
+        return False, [f"ECHEC : mode inconnu {mode!r}"]
+
+    etat_git = None
+    if exiger_recu_courant:
+        try:
+            etat_git = revue._etat_git_reel(base_ref, "HEAD", runner=execute)
+        except (OSError, ValueError, subprocess.CalledProcessError) as error:
+            return False, [f"ECHEC : état git courant inaccessible : {error}"]
+
     if not binding:
         ok = False
         report.append(
             f"ECHEC : manifeste {manifest} vide ou absent — aucune revue liante vérifiée"
         )
+
+    received_current = False
+    root_resolved = reviews_root.resolve()
     for entry in binding:
-        d = reviews_root / entry if not Path(entry).is_absolute() else Path(entry)
-        verdict_files = sorted(d.glob("*.verdict.json"))
+        candidate = reviews_root / entry
+        try:
+            inside_root = candidate.resolve().is_relative_to(root_resolved)
+        except OSError:
+            inside_root = False
+        if not inside_root:
+            ok = False
+            report.append(f"ECHEC {entry} : chemin hors de reviews/")
+            continue
+
+        directory = candidate.resolve()
+        verdict_files = sorted(directory.glob("*.verdict.json"))
         if not verdict_files:
             ok = False
             report.append(f"ECHEC {entry} : aucun verdict scellé (dossier absent/vide)")
             continue
-        verdicts = [json.loads(p.read_text(encoding="utf-8")) for p in verdict_files]
-        res = revue.tally(verdicts)
-        if res.get("result") != "APPROVE":
+
+        try:
+            verdicts = [
+                json.loads(path.read_text(encoding="utf-8")) for path in verdict_files
+            ]
+        except (OSError, json.JSONDecodeError) as error:
             ok = False
-            report.append(f"ECHEC {entry} : dépouillement = {res.get('result')} "
-                          f"({res.get('reason', '')})")
+            report.append(f"ECHEC {entry} : verdict illisible : {error}")
+            continue
+
+        result = revue.tally(verdicts)
+        if result.get("result") != "APPROVE":
+            ok = False
+            report.append(
+                f"ECHEC {entry} : dépouillement = {result.get('result')} "
+                f"({result.get('reason', '')})"
+            )
         else:
-            report.append(f"OK    {entry} : APPROVE {res.get('reason', '')} "
-                          f"vendors {res.get('vendors')}")
+            report.append(
+                f"OK    {entry} : APPROVE {result.get('reason', '')} "
+                f"vendors {result.get('vendors')}"
+            )
+
+        receipt_path = directory / "RECU.json"
+
+        if exiger_recu_courant and receipt_path.is_file():
+            try:
+                receipt = json.loads(receipt_path.read_text(encoding="utf-8"))
+            except (OSError, json.JSONDecodeError) as error:
+                ok = False
+                report.append(f"ECHEC {entry} : reçu illisible : {error}")
+                continue
+            receipt_result = revue.verifier_recu(receipt, verdicts, etat_git)
+            if receipt_result.get("result") == "APPROVE":
+                received_current = True
+                report.append(f"OK    {entry} : reçu couvre le changement courant")
+            else:
+                ok = False
+                report.append(
+                    f"ECHEC {entry} : reçu invalide = {receipt_result.get('result')} "
+                    f"({receipt_result.get('reason', '')})"
+                )
+
+        if mode == "archive" and receipt_path.is_file():
+            try:
+                receipt = json.loads(receipt_path.read_text(encoding="utf-8"))
+                commit = receipt["head_commit"]
+                # Anti-injection : commit vient d'un RECU.json lu au disque, même garde que
+                # les refs de _diff_canonique/_etat_git_reel (objection mineure revue scellée
+                # RC1-004-PR497-v2, DeepSeek-V4-Pro).
+                revue._validate_git_ref(commit)
+            except (OSError, json.JSONDecodeError, KeyError, ValueError, TypeError) as error:
+                # TypeError : RECU.json valide en JSON mais pas un objet (ex. liste/null) —
+                # receipt["head_commit"] lèverait sinon une exception non gérée (objection
+                # mineure round 3, DeepSeek-V4-Pro).
+                ok = False
+                report.append(f"ECHEC {entry} : reçu archive illisible : {error}")
+                continue
+            if not _is_ancestor(commit, execute):
+                ok = False
+                report.append(f"ECHEC {entry} : reçu pointe un commit jamais fusionné")
+
+    if exiger_recu_courant and not received_current:
+        ok = False
+        report.append("ECHEC : aucun reçu ne couvre le changement courant")
     return ok, report
 
 
-def main() -> None:
+def main(argv: list[str] | None = None, *, runner: GitRunner | None = None) -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--manifest", default=str(REPO / "reviews" / "BINDING.txt"))
     ap.add_argument("--reviews-root", default=str(REPO / "reviews"))
-    args = ap.parse_args()
-    ok, report = check(Path(args.manifest), Path(args.reviews_root))
+    ap.add_argument("--exiger-recu-courant", action="store_true")
+    ap.add_argument("--base-ref")
+    ap.add_argument("--mode", choices=("archive",))
+    args = ap.parse_args(argv)
+
+    ok, report = check(
+        Path(args.manifest),
+        Path(args.reviews_root),
+        exiger_recu_courant=args.exiger_recu_courant,
+        base_ref=args.base_ref,
+        mode=args.mode,
+        runner=runner,
+    )
     print("REVIEWS-SEALED GATE (déviation D9)")
     for line in report:
         print("  " + line)
     if not ok:
         print("GATE ECHOUÉ : une revue liante n'est pas APPROVE — merge bloqué.")
-        sys.exit(1)
+        return 1
     print("GATE OK : toutes les revues liantes sont APPROVE 3/3.")
+    return 0
 
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())

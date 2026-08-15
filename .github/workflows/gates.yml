@@ -243,8 +243,34 @@ jobs:
   reviews-sealed:
     runs-on: ubuntu-latest
     steps:
+      # fetch-depth: 0 est requis pour calculer le merge-base, le diff origin/main...HEAD
+      # et vérifier qu'un reçu archivé pointe vers un commit réellement fusionné (#434).
+      # ref: sur pull_request, actions/checkout SANS ref extrait par défaut le commit de
+      # MERGE SYNTHÉTIQUE (refs/pull/N/merge), pas le vrai HEAD de la branche — un reçu
+      # généré localement contre le vrai HEAD ne correspondrait jamais (revue scellée
+      # RC1-004-PR497, DeepSeek-V4-Pro — majeure). Épingle explicitement le SHA réel du
+      # commit de tête de PR (merge_group traité en mode archive ci-dessous, pas ici — voir
+      # note à l'étape mode PR).
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
           persist-credentials: false
-      - name: Gate D9 — revues aveugles scellées liantes = APPROVE 3/3
-        run: python3 scripts/reviews_gate.py
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      # Mode PR limité à pull_request UNIQUEMENT (pas merge_group) : sur merge_group,
+      # github.event.merge_group.head_sha est le commit synthétique de TÊTE DE LA QUEUE
+      # (peut agréger plusieurs PR), --base-ref origin/main y calculerait un diff plus large
+      # que celui qu'une seule PR peut couvrir par son reçu — le gate échouerait à tort sur
+      # une merge queue valide (revue scellée RC1-004-PR497-v3, DeepSeek-V4-Pro — critique).
+      # merge_group est traité en mode archive : à ce stade la PR est déjà passée par le mode
+      # PR, on ne vérifie plus qu'un ancêtre, jamais un diff agrégé.
+      - name: Gate D9 — revue liante couvrant le changement de la PR
+        if: github.event_name == 'pull_request'
+        run: python3 scripts/reviews_gate.py --exiger-recu-courant --base-ref origin/main
+      # push est déjà restreint à branches: [main] par le déclencheur `on:` du fichier
+      # (ligne 4) — github.event_name == 'push' ne peut donc jamais se déclencher sur une
+      # branche de fonctionnalité, aucun filtre github.ref supplémentaire n'est nécessaire
+      # ici (vérifié — objection majeure round 3 réfutée, le reviewer ne voyait que le hunk
+      # modifié, pas le déclencheur en tête de fichier).
+      - name: Gate D9 — archivage des reçus de revues fusionnées
+        if: github.event_name == 'push' || github.event_name == 'merge_group'
+        run: python3 scripts/reviews_gate.py --mode archive

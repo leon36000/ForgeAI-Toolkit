@@ -1,0 +1,31 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "critique",
+   "fichier": ".github/workflows/gates.yml",
+   "description": "Le mode PR est activé pour `merge_group`, mais le checkout utilise `github.event.merge_group.head_sha`, qui est le commit synthétique de tête de la merge queue, pas le HEAD de la branche PR individuelle. `reviews_gate.py --exiger-recu-courant --base-ref origin/main` calcule alors `git diff origin/main...HEAD` sur ce commit synthétique ; avec plusieurs PRs dans la queue, `_diff_canonique` inclut les changements des autres PRs. Un `RECU.json` généré localement par `revue.py recu` sur la branche de la PR ne peut donc pas couvrir ce diff agrégé, et le gate échouera à tort sur des merge queues valides.",
+   "preuve": "`ref: ${{ github.event.pull_request.head.sha || github.event.merge_group.head_sha || github.sha }}` ; condition `if: github.event_name == 'pull_request' || github.event_name == 'merge_group'` ; run `python3 scripts/reviews_gate.py --exiger-recu-courant --base-ref origin/main`. Dans `scripts/revue.py`, `_diff_canonique(base_ref, head_ref)` utilise `git diff --raw ... f\"{base_ref}...{head_ref}\"`."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "scripts/reviews_gate.py",
+   "description": "Le bloc archive attrape `OSError, json.JSONDecodeError, KeyError, ValueError` mais pas `TypeError`. Si un `RECU.json` contient un tableau/null au lieu d'un objet, `receipt[\"head_commit\"]` lève une `TypeError` non attrapée, crashant le gate au lieu de produire un échec contrôlé. Le mode PR est protégé par `verifier_recu()` via `isinstance(recu, dict)`, mais le mode archive ne l'est pas.",
+   "preuve": "Dans le bloc `if mode == \"archive\" and receipt_path.is_file():`, la garde est `except (OSError, json.JSONDecodeError, KeyError, ValueError) as error:` ; l'instruction `commit = receipt[\"head_commit\"]` est exécutée avant cet except. Un JSON `[]` ou `null` provoque une `TypeError` non couverte."
+  },
+  {
+   "severite": "majeure",
+   "fichier": ".github/workflows/gates.yml",
+   "description": "Le mode archive est documenté comme post-merge sur `main`, mais la condition d'exécution est uniquement `github.event_name == 'push'`, sans restriction `github.ref == 'refs/heads/main'` ni filtre `branches:`. Le gate archive s'exécute donc aussi sur les poussées de branches de fonctionnalité, où un reçu peut être refusé à tort comme n'étant pas ancêtre du HEAD courant alors qu'il n'est simplement pas encore fusionné dans cette branche.",
+   "preuve": "`if: github.event_name == 'push'` est la seule condition de l'étape `Gate D9 — archivage des reçus de revues fusionnées` ; aucun `github.ref` ni `branches:` n'apparaît dans le diff."
+  }
+ ],
+ "date_heure": "2026-08-15T19:36:45.412462+00:00",
+ "prompt_sha256": "0adfc3fe004b3259e4d3166dde80851ab5609ce59c544955665ca77e76972d9f",
+ "reviewer_model": "DeepSeek-V4-Pro",
+ "modele_servi": "deepseek-v4-pro-direct",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}
