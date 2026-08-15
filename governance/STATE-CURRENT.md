@@ -14,7 +14,7 @@
     "sha256_recomputed_ok": true
   },
   "ci": {
-    "jobs_total": 16,
+    "jobs_total": 15,
     "workflows": 3
   },
   "cli": {
@@ -94,7 +94,7 @@
   "inputs": [
     {
       "path": ".github/workflows/gates.yml",
-      "sha256": "4bc0ad7ccbb62ac7061a4214917377d733541609311adce73d8a1ef1ee265edc"
+      "sha256": "513376d2fcf2375e3e8d6608b718b54667f86916df8a5a21b4730842b2a83744"
     },
     {
       "path": ".github/workflows/scope-guard.yml",
@@ -183,10 +183,6 @@
     {
       "path": "tests/test_chassis_deploiement.py",
       "sha256": "31349a593e1f344b7f745fa9c5be1bea03a3ef1881b9da944d6c8b78130ab3bd"
-    },
-    {
-      "path": "tests/test_classify_paths.py",
-      "sha256": "e2e19bd90348c0e53a5586eb9c6c83a3bef76077e23b3c310dd4f662223ccd56"
     },
     {
       "path": "tests/test_cli_doctor.py",
@@ -307,6 +303,10 @@
     {
       "path": "tests/test_gap_bricks.py",
       "sha256": "203705fccc521cbf5cfd7854e6df061d644182576399e6db61cf3292d84b858c"
+    },
+    {
+      "path": "tests/test_governance_capabilities.py",
+      "sha256": "240aa5646b1eeb5882a673702fdf304ab01251e67730a121cbebb333f7ca055f"
     },
     {
       "path": "tests/test_gpu_device_plugin_lab033a.py",
@@ -678,7 +678,7 @@
     },
     {
       "path": "tests/test_revue.py",
-      "sha256": "461e533b22f5886e1577338d3f659c21b170ed89a816c732897dba19e8345685"
+      "sha256": "0e18975132ff555af49911d2be19e51e979053a6d826a70916de07f8f704168f"
     },
     {
       "path": "tests/test_routestore_concurrence.py",
@@ -867,7 +867,7 @@
   "tests": {
     "js_files": 3,
     "python_files": 179,
-    "python_functions_declared": 1881
+    "python_functions_declared": 1839
   }
 }
 ```

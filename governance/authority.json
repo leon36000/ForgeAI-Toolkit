@@ -105,12 +105,12 @@
         {
           "topic": "workspace_confinement",
           "position": "repo_plus_external_governance_tooling",
-          "locator": "AGENTS.md:70-72"
+          "locator": "AGENTS.md:73-76"
         }
       ],
       "digest": {
         "policy": "content_sha256",
-        "value": "3b0976ca849dd87b9cec476f1b8df033ca497860a926e7f28640e59450df9599",
+        "value": "610b8909fb90dae68b32898b6b66aff521090237a0d60fd559436421687753ec",
         "checked_at": "2026-08-15",
         "delegated_to": null
       },
@@ -122,7 +122,7 @@
         "mission_seq": null,
         "ref": "issue-487"
       },
-      "notes": "Auto-contradiction interne resolue par #432 (Mission affirme desormais Claude Code Opus, section ORCH-001 remplacee) ; conflit RESIDUEL avec canon.plan-integral (toujours \"Fable orchestrateur unique\", hors perimetre de #432 -- CANON exige son propre circuit de revue) suivi par #487. Empreinte mise à jour par #437 (RC1-007, commit 3/3) : insertion d'un marqueur <!-- state:catalogue.entries_total --> autour du seul compteur opérationnel manuel du fichier (AGENTS.md:38), aucun autre changement — les locators AGENTS.md:9 et AGENTS.md:70-72 restent valides (nombre de lignes inchangé)."
+      "notes": "Auto-contradiction interne resolue par #432 (Mission affirme desormais Claude Code Opus, section ORCH-001 remplacee) ; conflit RESIDUEL avec canon.plan-integral (toujours \"Fable orchestrateur unique\", hors perimetre de #432 -- CANON exige son propre circuit de revue) suivi par #487. Empreinte fusionnee (#433 x #437, merge sur main post-9d97b529) : #433 remplace les lignes 49-67 (pointe vers capabilities.py, decale le paragraphe Perimetre a +3 lignes) ; #437 insere un marqueur <!-- state:catalogue.entries_total --> autour du compteur manuel (AGENTS.md:38), sans decalage de lignes. Les deux changements sont sur des zones disjointes du fichier, fusionnes automatiquement par git (aucun conflit textuel) ; seule l'empreinte ci-dessus reflete desormais le contenu final combine. Locator workspace_confinement verifie a AGENTS.md:73-76 apres fusion."
     },
     {
       "id": "agents-md.orch-001",
@@ -171,13 +171,13 @@
         {
           "topic": "workspace_confinement",
           "position": "repo_plus_external_governance_tooling",
-          "locator": "CLAUDE.md:16"
+          "locator": "CLAUDE.md:39"
         }
       ],
       "digest": {
         "policy": "content_sha256",
-        "value": "a3403fd2bb358a1656fc6f0b2f28700bb67900d95c0ca13c661f53ab3cc82864",
-        "checked_at": "2026-08-14",
+        "value": "a8212a0e55af8e5096f98a2de6d79862ebaf47c32021a9741ae31539f07c7010",
+        "checked_at": "2026-08-15",
         "delegated_to": null
       },
       "retention": "in_force",
@@ -188,7 +188,7 @@
         "mission_seq": null,
         "ref": "issue-484"
       },
-      "notes": "Le contrat autorise l'outillage de gouvernance externe pendant la construction."
+      "notes": "Le contrat autorise l'outillage de gouvernance externe pendant la construction. Empreinte/locator recalcules par #433 (reecriture complete : distingue capacites toujours disponibles vs outillage externe optionnel, supprime la commande d'extraction de secret docker inspect) -- la position et le statut CONFLICTED envers #484 restent inchanges, #433 ne tranche pas ce conflit."
     },
     {
       "id": "canon.directives-perimetre",
@@ -392,15 +392,15 @@
         "checked_at": "2026-08-14",
         "delegated_to": null
       },
-      "retention": "pending_cleanup",
-      "cleanup_issue": 433,
+      "retention": "historical_record",
+      "cleanup_issue": null,
       "resolution_issue": null,
       "decision": {
         "vision_log_seq": 8,
         "mission_seq": null,
         "ref": "governance/decisions/D-2026-08-14-mission-lead.md"
       },
-      "notes": "État historique de claims à nettoyer par l'issue 433."
+      "notes": "Nettoyage #433 termine : coordination/active-claims.json reste au depot inchange (\"claims\": [] deja vide, fichier requis par scope_guard.py/validate_coordination.py en CI -- le supprimer casserait ces gates) ; seul le statut de retention gouvernance est cloture, confirmant qu'aucune action de code n'est due. Statut source inchange (superseded depuis #431, aucune transition, pas de nouvelle entree vision-log requise)."
     },
     {
       "id": "coord.work-packages",
@@ -634,7 +634,7 @@
       "positions": [],
       "digest": {
         "policy": "content_sha256",
-        "value": "a5f210b354cddec3401c56eed2fb6c7831396a401f7b8470063359793e76a417",
+        "value": "acea73acf74e38e3be123649a75635b54e4fa23888dd6dbd46130c5c5af50fd9",
         "checked_at": "2026-08-15",
         "delegated_to": null
       },
@@ -646,7 +646,7 @@
         "mission_seq": null,
         "ref": null
       },
-      "notes": "Point d'entrée documentaire du dépôt. Empreinte mise à jour par #437 (RC1-007) : insertion de marqueurs <!-- state:... --> autour de 7 compteurs au total (catalogue.entries_total x2, catalogue.descriptions_en_missing, observations.coverage.global, observations.coverage.registre, cli.subcommands_by_group.node, governance.review_quorum) — les 4 derniers ajoutés en 2 correctifs suite à la revue scellée #490 (round 1 : 3/3 REJECT, AC1 exigeait qu'aucun compteur ne reste manuel ; round 2 : 1/3 REJECT résiduel sur le même principe + gap de régénération), aucun autre changement de contenu. Note round 2 : main() --render --docs réinjecte désormais réellement ces marqueurs (avant ce correctif, --render n'écrivait que STATE-CURRENT.{json,md}, jamais les documents actifs — gap trouvé par la revue)."
+      "notes": "Point d'entrée documentaire du dépôt. Empreinte fusionnée (#433 x #437, merge sur main post-9d97b529) : #433 réécrit Installation/Gates/Développement (pointeur vers capabilities.py, correction Fable périmée, cohérence gitleaks/ggshield) — section État de la mission non touchée (territoire #437) ; #437 insère des marqueurs <!-- state:... --> autour de 7 compteurs, dont 3 dans la section État de la mission que #433 n'a pas touchée. Zones disjointes, fusionnées automatiquement par git (aucun conflit textuel) ; seule l'empreinte ci-dessus reflète le contenu final combiné."
     },
     {
       "id": "gov.decision-mission-lead",

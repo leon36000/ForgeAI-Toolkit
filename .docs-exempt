@@ -71,3 +71,20 @@ scripts/governance/classify_paths.py (RC1-008/#438, commit 6/7) : correctif d'un
 __main__ (raise SystemExit(main())) découvert en ajoutant le job CI — comportement observable
 correct par construction (le contrat CLI n'a jamais été documenté comme "toujours retourner 0",
 c'est un correctif de conformité, pas un changement de contrat). Pas de doc supplémentaire.
+
+scripts/governance/capabilities.py + scripts/revue.py + tests associés (RC1-003-PR489-v2,
+commit de fixes round 2) : durcissement défensif suite à 2 objections mineures de la revue
+scellée (round RC1-003-PR489-v2, Gemini-3.1-Pro/DeepSeek-V4-Pro) — Path.home() protégé contre
+RuntimeError (HOME non résoluble), regex de capture modele_reponse élargie (ne tronque plus
+au 1er espace). Comportement observable inchangé pour toute entrée déjà valide ; CLAUDE.md/
+AGENTS.md/README.md (documentation utilisateur de ces deux scripts) déjà mis à jour au commit
+précédent de cette même PR #489, pas de nouvelle doc requise pour ce correctif de robustesse
+interne. Aucune story/doc utilisateur supplémentaire concernée.
+
+scripts/governance/capabilities.py + tests associés (RC1-003-PR489-v3, commit de fixes
+round 3) : durcissement défensif suite à 1 objection mineure de la revue scellée (round
+RC1-003-PR489-v3, DeepSeek-V4-Pro) — la capacité "pre-commit local" vérifie désormais aussi
+le binaire `pre-commit` lui-même, pas seulement ggshield+ruff. Comportement observable
+inchangé pour un environnement où pre-commit est déjà présent ; documentation utilisateur
+déjà à jour (mêmes commandes README.md, même message d'action). Aucune story/doc
+supplémentaire concernée.

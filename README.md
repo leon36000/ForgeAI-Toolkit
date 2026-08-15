@@ -19,8 +19,11 @@ et rapporte quels profils et backends de déploiement sont disponibles — le To
 s'adapte à ce que vous avez, sans exiger de stack particulière. Le catalogue voyage
 dans le paquet : aucune donnée externe requise.
 
+Pour les capacités de GOUVERNANCE du dépôt, distinctes du diagnostic de déploiement produit,
+lancez `python3 scripts/governance/capabilities.py`.
+
 Construit via la méthodologie **BMAD**, exécuté par une équipe de modèles orchestrée
-dans Claude Code (Fable = orchestrateur/juge), routée par le gateway LiteLLM local
+dans Claude Code (l'orchestrateur en session), routée par le gateway LiteLLM local
 (`forge-model-bridge`). Plan de référence : [CANON/PLAN-MAITRE-EXECUTION-BMAD-v1.0.md](CANON/PLAN-MAITRE-EXECUTION-BMAD-v1.0.md).
 
 ## Structure canonique
@@ -39,13 +42,19 @@ dans Claude Code (Fable = orchestrateur/juge), routée par le gateway LiteLLM lo
 
 ## Gates (§8bis — aucun stub, aucun faux)
 
+`python3 scripts/governance/capabilities.py` diagnostique localement quelles capacités sont
+disponibles — ce n'est PAS lui-même un gate CI, juste un point d'entrée avant de lancer les
+gates ci-dessous :
+
 ```bash
-python3 scripts/no_stub_scan.py --all      # scan stubs/marqueurs interdits
+python3 scripts/no_stub_scan.py --all       # scan stubs/marqueurs interdits
 python3 scripts/registre.py verify Registres/mission.jsonl
 pytest                                      # tests
 ```
 
-Tout passe par PR. Zéro commit direct sur `main` une fois la branch protection active.
+Ces commandes sont un sous-ensemble des gates CI réels ; `.github/workflows/gates.yml` est la
+source de vérité pour leur liste complète. Tout passe par PR. Zéro commit direct sur `main` une
+fois la branch protection active.
 
 ## Développement (sécurité pre-commit)
 
@@ -58,6 +67,9 @@ ggshield auth login   # authentification interactive locale — NE JAMAIS commit
 ```
 
 **Important :** Le token d'authentification GitGuardian (`GITGUARDIAN_API_KEY` ou équivalent) est strictement local. Ne le committez jamais et ne le placez jamais en clair dans le dépôt ni dans une variable d'environnement partagée.
+
+`gitleaks` en CI reste le gate de secrets faisant autorité, indépendamment de la disponibilité
+locale de `ggshield` ou de `pre-commit`.
 
 ## État de la mission
 

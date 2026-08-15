@@ -1,0 +1,19 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "scripts/governance/capabilities.py",
+   "description": "Le diagnostic vérifie la présence de LITELLM_API_KEY en lisant sa valeur via environment.get('LITELLM_API_KEY') puis bool(). Même s'il ne l'affiche jamais, cela charge la valeur secrète en mémoire, ce qui n'est pas strictement 'présence uniquement' et heurte le critère 'aucun secret n'est lu par une commande copiée dans le document'. Utiliser l'opérateur 'in' sur le mapping d'environnement éviterait de lire la valeur.",
+   "preuve": "Ligne `has_api_key = bool(environment.get(\"LITELLM_API_KEY\"))` dans scripts/governance/capabilities.py ; la commande `python3 scripts/governance/capabilities.py` est copiée dans CLAUDE.md, AGENTS.md et README.md."
+  }
+ ],
+ "date_heure": "2026-08-15T18:11:40.147779+00:00",
+ "prompt_sha256": "48ec9f855f00c63ffbf3a85e6eac9dc67335d03d03d263d41f58f97446eaf8e2",
+ "reviewer_model": "Kimi-2.7",
+ "modele_servi": "kimi-27-openrouter",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}
