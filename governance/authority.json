@@ -105,12 +105,12 @@
         {
           "topic": "workspace_confinement",
           "position": "repo_plus_external_governance_tooling",
-          "locator": "AGENTS.md:72-75"
+          "locator": "AGENTS.md:73-76"
         }
       ],
       "digest": {
         "policy": "content_sha256",
-        "value": "ffc74512021de9dce22a085f5d1f04c9443702b680cdef835ab7f2816541d0fd",
+        "value": "0bae41d669cd8eb095b0852b2408f45777a74e4587001faa8c87bfe60f70e085",
         "checked_at": "2026-08-15",
         "delegated_to": null
       },
@@ -176,7 +176,7 @@
       ],
       "digest": {
         "policy": "content_sha256",
-        "value": "0f66813847f8e73acb1daaa63064653d53ac699ac310afb1bdf855957bbb42be",
+        "value": "a8212a0e55af8e5096f98a2de6d79862ebaf47c32021a9741ae31539f07c7010",
         "checked_at": "2026-08-15",
         "delegated_to": null
       },

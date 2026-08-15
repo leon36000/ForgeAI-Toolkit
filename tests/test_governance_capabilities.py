@@ -71,12 +71,14 @@ def test_revue_scellee_optional_si_env_incomplet() -> None:
     assert item["status"] == "OPTIONAL"
 
 
-def test_revue_scellee_available_si_les_3_signaux_presents(monkeypatch) -> None:
+def test_revue_scellee_available_si_tous_les_signaux_presents(monkeypatch) -> None:
     monkeypatch.setattr(capabilities.Path, "home", classmethod(lambda cls: Path("/tmp/home")))
     original_exists = capabilities.Path.exists
 
     def exists(path: Path) -> bool:
-        if str(path).endswith("proof-method/scripts/civ_review.py"):
+        if str(path).endswith("proof-method/scripts/civ_review.py") or str(path).endswith(
+            "proof-method/scripts/pack_build.sh"
+        ):
             return True
         return original_exists(path)
 
@@ -86,12 +88,68 @@ def test_revue_scellee_available_si_les_3_signaux_presents(monkeypatch) -> None:
             env={
                 "LITELLM_API_KEY": "peu-importe",
                 "LITELLM_BASE_URL": "http://localhost:4000",
+                "CIV_MODELS": "DeepSeek-V4-Pro,Gemini-3.1-Pro,LongCat-2.0",
             }
         ),
         "revue aveugle scellée (outillage externe)",
     )
 
     assert item["status"] == "AVAILABLE"
+
+
+def test_revue_scellee_optional_si_pack_build_absent_mais_civ_review_present(monkeypatch) -> None:
+    # Régression revue scellée RC1-003-PR489-v4 (objection mineure Gemini-3.1-Pro) :
+    # pack_build.sh est la 1ère étape documentée du flux — civ_review.py seul ne suffit pas.
+    monkeypatch.setattr(capabilities.Path, "home", classmethod(lambda cls: Path("/tmp/home")))
+    original_exists = capabilities.Path.exists
+
+    def exists(path: Path) -> bool:
+        if str(path).endswith("proof-method/scripts/civ_review.py"):
+            return True  # pack_build.sh reste absent
+        return original_exists(path)
+
+    monkeypatch.setattr(capabilities.Path, "exists", exists)
+    item = _by_name(
+        capabilities.probe_capabilities(
+            env={
+                "LITELLM_API_KEY": "peu-importe",
+                "LITELLM_BASE_URL": "http://localhost:4000",
+                "CIV_MODELS": "DeepSeek-V4-Pro,Gemini-3.1-Pro,LongCat-2.0",
+            }
+        ),
+        "revue aveugle scellée (outillage externe)",
+    )
+
+    assert item["status"] == "OPTIONAL"
+
+
+def test_revue_scellee_optional_si_civ_models_vide(monkeypatch) -> None:
+    # Régression revue scellée RC1-003-PR489-v4 (objection mineure DeepSeek-V4-Pro) : une
+    # variable exportée VIDE ("") ne doit pas être comptée comme présente.
+    monkeypatch.setattr(capabilities.Path, "home", classmethod(lambda cls: Path("/tmp/home")))
+    original_exists = capabilities.Path.exists
+
+    def exists(path: Path) -> bool:
+        if str(path).endswith("proof-method/scripts/civ_review.py") or str(path).endswith(
+            "proof-method/scripts/pack_build.sh"
+        ):
+            return True
+        return original_exists(path)
+
+    monkeypatch.setattr(capabilities.Path, "exists", exists)
+    item = _by_name(
+        capabilities.probe_capabilities(
+            env={
+                "LITELLM_API_KEY": "peu-importe",
+                "LITELLM_BASE_URL": "http://localhost:4000",
+                "CIV_MODELS": "",
+            }
+        ),
+        "revue aveugle scellée (outillage externe)",
+    )
+
+    assert item["status"] == "OPTIONAL"
+    assert "CIV_MODELS" in item["howto"]
 
 
 def test_revue_scellee_optional_si_path_home_leve_runtimeerror(monkeypatch) -> None:

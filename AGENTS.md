@@ -65,8 +65,9 @@ pytest
 
 Avant d'engager l'outillage `~/proof-method`, lancez
 `python3 scripts/governance/capabilities.py` pour vérifier sa disponibilité et celle des variables
-d'environnement nécessaires. Le script ne lit ni n'affiche de secret ; exportez les variables
-depuis votre propre gestion de secrets avant d'invoquer le flux de revue externe.
+d'environnement nécessaires. Le script ne révèle jamais la valeur d'un secret (présence
+uniquement) ; exportez les variables depuis votre propre gestion de secrets avant d'invoquer le
+flux de revue externe.
 
 ## Périmètre
 Confinement au repo (directive `CANON/directives-perimetre.md`) : aucune source produit hors du

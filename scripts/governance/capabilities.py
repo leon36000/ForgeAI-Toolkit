@@ -126,21 +126,28 @@ def probe_capabilities(env: dict | None = None) -> list[dict]:
     )
 
     try:
-        proof_script = Path.home() / "proof-method" / "scripts" / "civ_review.py"
-        has_proof_method = proof_script.exists()
+        proof_method_dir = Path.home() / "proof-method" / "scripts"
+        has_proof_method = (proof_method_dir / "civ_review.py").exists() and (
+            proof_method_dir / "pack_build.sh"
+        ).exists()
     except RuntimeError:
         # Path.home() lève RuntimeError si HOME est absent et qu'aucune base d'utilisateurs
         # n'est résoluble — un diagnostic ne doit jamais planter, juste rapporter OPTIONAL.
         has_proof_method = False
-    has_api_key = environment.get("LITELLM_API_KEY") is not None  # proof:allow — présence, pas la valeur
-    has_base_url = environment.get("LITELLM_BASE_URL") is not None
+    # Vérité (pas seulement "is not None") : une variable exportée vide (`export X=""`) ne
+    # doit pas être comptée comme présente — présence uniquement, jamais la valeur.
+    has_api_key = bool(environment.get("LITELLM_API_KEY"))  # proof:allow — présence, pas la valeur
+    has_base_url = bool(environment.get("LITELLM_BASE_URL"))
+    has_civ_models = bool(environment.get("CIV_MODELS"))
     missing_signals = []
     if not has_proof_method:
-        missing_signals.append("~/proof-method/scripts/civ_review.py")
+        missing_signals.append("~/proof-method/scripts/{civ_review.py,pack_build.sh}")
     if not has_api_key:  # proof:allow — booléen de présence, pas un secret en clair
         missing_signals.append("LITELLM_API_KEY")
     if not has_base_url:
         missing_signals.append("LITELLM_BASE_URL")
+    if not has_civ_models:
+        missing_signals.append("CIV_MODELS")
     review_ok = not missing_signals
     capabilities.append(
         _capability(
@@ -150,10 +157,11 @@ def probe_capabilities(env: dict | None = None) -> list[dict]:
             (
                 "signaux absents : "
                 + ", ".join(missing_signals)
-                + ". Exportez LITELLM_BASE_URL et LITELLM_API_KEY depuis votre propre gestion "
-                "de secrets avant d'invoquer civ_review.py ; sans ~/proof-method, la revue "
-                "scellée doit être produite ailleurs (autre machine/session) puis versionnée "
-                "dans reviews/ — les gates déterministes restent, eux, exécutables ici."
+                + ". Exportez LITELLM_BASE_URL, LITELLM_API_KEY (depuis votre propre gestion "
+                "de secrets) et CIV_MODELS (3 modèles de vendors distincts) avant d'invoquer "
+                "civ_review.py ; sans ~/proof-method, la revue scellée doit être produite "
+                "ailleurs (autre machine/session) puis versionnée dans reviews/ — les gates "
+                "déterministes restent, eux, exécutables ici."
                 if not review_ok
                 else "aucune action requise."
             ),

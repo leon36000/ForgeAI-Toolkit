@@ -61,7 +61,7 @@ Cette carte est le rendu de `governance/authority.json`.
 ## Positions déclarées
 
 - `agents-md` : `orchestration_seat` = `claude_code_opus_mission_lead` (AGENTS.md:9)
-- `agents-md` : `workspace_confinement` = `repo_plus_external_governance_tooling` (AGENTS.md:72-75)
+- `agents-md` : `workspace_confinement` = `repo_plus_external_governance_tooling` (AGENTS.md:73-76)
 - `canon.directives-perimetre` : `workspace_confinement` = `repo_only_strict` (CANON/directives-perimetre.md:7)
 - `canon.plan-integral` : `plan_of_record` = `canon_plan_integral` (CANON/plan-integral.md:4)
 - `canon.plan-integral` : `orchestration_seat` = `claude_code_session_lead` (CANON/plan-integral.md:27)

@@ -38,11 +38,14 @@ et chaque subagent reçoit la discipline PROOF (hook `SubagentStart`). Compléti
 
 Le flux `civ_review.py` relève de l'outillage de gouvernance externe de Nathan : il est optionnel
 pour la construction locale et ne conditionne aucun gate déterministe. Avant de l'utiliser, lancez
-`python3 scripts/governance/capabilities.py` pour vérifier, sans les afficher, la présence de
-`LITELLM_API_KEY` et `LITELLM_BASE_URL`. Exportez ces variables depuis votre propre gestion de
-secrets avant d'invoquer `civ_review.py`.
+`python3 scripts/governance/capabilities.py` pour vérifier la présence de `~/proof-method`,
+`LITELLM_API_KEY` et `LITELLM_BASE_URL` — le script ne révèle jamais la valeur d'un secret,
+seulement sa présence. Exportez `LITELLM_API_KEY`/`LITELLM_BASE_URL` depuis votre propre gestion
+de secrets, et `CIV_MODELS` (3 modèles de vendors distincts) avant d'invoquer `civ_review.py`.
 
 ```text
+export LITELLM_BASE_URL=http://localhost:4000
+export CIV_MODELS="DeepSeek-V4-Pro,Gemini-3.1-Pro,LongCat-2.0"
 PROOF_COMPRESS=0 bash ~/proof-method/scripts/pack_build.sh stories/<ID>.md /tmp/<ID>.diff /tmp/<ID>-pack.md
 python3 ~/proof-method/scripts/civ_review.py --story reviews/<ID> --pack /tmp/<ID>-pack.md
 python3 scripts/revue.py tally reviews/<ID>
