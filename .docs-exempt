@@ -48,3 +48,7 @@ main() ni sortie utilisateur. governance/path-classification-rules.json (règles
 main, pas un artefact généré) accompagne ce commit mais n'est pas un document de gouvernance
 publié — c'est une entrée de données consommée par le script, documentée par son propre champ
 `_description` interne. Documentation utilisateur toujours prévue aux commits 4-5.
+
+scripts/governance/classify_paths.py + tests/test_classify_paths.py (RC1-008/#438, commit
+3/7) : ajoute build_reference_graph() — fonction interne, toujours sans main() ni sortie
+utilisateur. Documentation prévue aux commits 4-5.

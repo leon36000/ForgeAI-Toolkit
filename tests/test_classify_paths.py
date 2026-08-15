@@ -387,3 +387,201 @@ def test_tous_les_chemins_reels_sont_classes() -> None:
             classify_paths.classify(chemin, rules)
         except ValueError:
             pytest.fail(f"non classé: {chemin}")
+
+
+def _ecrit_fixture_texte(tmp_path: pathlib.Path, chemin: str, contenu: str) -> None:
+    destination = tmp_path / chemin
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    destination.write_text(contenu, encoding="utf-8")
+
+
+def test_graphe_authority_json_produit_une_arete_hard(tmp_path: pathlib.Path) -> None:
+    _ecrit_fixture_texte(
+        tmp_path,
+        "governance/authority.json",
+        '{"sources":[{"path":"README.md"}]}',
+    )
+    _ecrit_fixture_texte(tmp_path, "README.md", "# Fixture\n")
+    tracked = ["README.md", "governance/authority.json"]
+
+    graph = classify_paths.build_reference_graph(tmp_path, tracked)
+
+    assert any(
+        edge["referrer"] == "governance/authority.json"
+        and edge["line"] == 0
+        and edge["candidate"] == "README.md"
+        and edge["resolved"] == "README.md"
+        and edge["severity"] == "hard"
+        for edge in graph["edges"]
+    )
+
+
+def test_graphe_authority_json_path_absent_ignore(tmp_path: pathlib.Path) -> None:
+    _ecrit_fixture_texte(
+        tmp_path,
+        "governance/authority.json",
+        '{"sources":[{"path":"absent.md"}]}',
+    )
+    tracked = ["governance/authority.json"]
+
+    graph = classify_paths.build_reference_graph(tmp_path, tracked)
+
+    assert not any(
+        edge["referrer"] == "governance/authority.json"
+        and edge["candidate"] == "absent.md"
+        for edge in graph["edges"]
+    )
+
+
+def test_graphe_binding_txt_resout_prefixe_reviews(tmp_path: pathlib.Path) -> None:
+    _ecrit_fixture_texte(tmp_path, "reviews/BINDING.txt", "B-09-civ\n")
+    _ecrit_fixture_texte(tmp_path, "reviews/B-09-civ/x.json", "{}")
+    tracked = ["reviews/BINDING.txt", "reviews/B-09-civ/x.json"]
+
+    graph = classify_paths.build_reference_graph(tmp_path, tracked)
+
+    assert any(
+        edge["referrer"] == "reviews/BINDING.txt"
+        and edge["candidate"] == "B-09-civ"
+        and edge["resolved"] == "reviews/B-09-civ"
+        and edge["severity"] == "hard"
+        for edge in graph["edges"]
+    )
+
+
+def test_graphe_binding_txt_commentaire_ignore(tmp_path: pathlib.Path) -> None:
+    _ecrit_fixture_texte(tmp_path, "reviews/BINDING.txt", "# B-09-civ\n")
+    _ecrit_fixture_texte(tmp_path, "reviews/B-09-civ/x.json", "{}")
+    tracked = ["reviews/BINDING.txt", "reviews/B-09-civ/x.json"]
+
+    graph = classify_paths.build_reference_graph(tmp_path, tracked)
+
+    assert not any(
+        entry["referrer"] == "reviews/BINDING.txt"
+        and entry["candidate"] == "B-09-civ"
+        for entry in graph["edges"] + graph["dangling"]
+    )
+
+
+def test_graphe_sonar_resourcekey_severity_silent(tmp_path: pathlib.Path) -> None:
+    _ecrit_fixture_texte(
+        tmp_path,
+        "sonar-project.properties",
+        "sonar.issue.ignore.multicriteria.e1.resourceKey=src/x.py\n",
+    )
+    _ecrit_fixture_texte(tmp_path, "src/x.py", "pass\n")
+    tracked = ["sonar-project.properties", "src/x.py"]
+
+    graph = classify_paths.build_reference_graph(tmp_path, tracked)
+
+    assert any(
+        edge["referrer"] == "sonar-project.properties"
+        and edge["candidate"] == "src/x.py"
+        and edge["resolved"] == "src/x.py"
+        and edge["severity"] == "silent"
+        for edge in graph["edges"]
+    )
+
+
+def test_graphe_balayage_generique_resout_fichier_exact(tmp_path: pathlib.Path) -> None:
+    _ecrit_fixture_texte(tmp_path, "notes.md", "Voir src/x.py pour le détail.\n")
+    _ecrit_fixture_texte(tmp_path, "src/x.py", "pass\n")
+    tracked = ["notes.md", "src/x.py"]
+
+    graph = classify_paths.build_reference_graph(tmp_path, tracked)
+
+    assert any(
+        edge["referrer"] == "notes.md"
+        and edge["candidate"] == "src/x.py"
+        and edge["resolved"] == "src/x.py"
+        for edge in graph["edges"]
+    )
+
+
+def test_graphe_balayage_generique_resout_prefixe_repertoire(tmp_path: pathlib.Path) -> None:
+    _ecrit_fixture_texte(tmp_path, "notes.md", "Le module est dans src/pkg.\n")
+    _ecrit_fixture_texte(tmp_path, "src/pkg/mod.py", "pass\n")
+    tracked = ["notes.md", "src/pkg/mod.py"]
+
+    graph = classify_paths.build_reference_graph(tmp_path, tracked)
+
+    assert any(
+        edge["referrer"] == "notes.md"
+        and edge["candidate"] == "src/pkg"
+        and edge["resolved"] == "src/pkg"
+        for edge in graph["edges"]
+    )
+
+
+def test_graphe_url_jamais_une_arete(tmp_path: pathlib.Path) -> None:
+    _ecrit_fixture_texte(
+        tmp_path,
+        "notes.md",
+        "Voir https://example.com/src/x.py pour le détail.\n",
+    )
+    _ecrit_fixture_texte(tmp_path, "src/x.py", "pass\n")
+    tracked = ["notes.md", "src/x.py"]
+
+    graph = classify_paths.build_reference_graph(tmp_path, tracked)
+
+    assert not any(
+        entry["referrer"] == "notes.md"
+        for entry in graph["edges"] + graph["dangling"]
+    )
+
+
+def test_graphe_reference_non_resolue_va_en_dangling(tmp_path: pathlib.Path) -> None:
+    candidate = "chemin/qui/nexiste/pas.py"
+    _ecrit_fixture_texte(tmp_path, "notes.md", f"Référence: {candidate}\n")
+    tracked = ["notes.md"]
+
+    graph = classify_paths.build_reference_graph(tmp_path, tracked)
+
+    assert any(
+        entry["referrer"] == "notes.md" and entry["candidate"] == candidate
+        for entry in graph["dangling"]
+    )
+    assert not any(
+        entry["referrer"] == "notes.md" and entry["candidate"] == candidate
+        for entry in graph["edges"]
+    )
+
+
+def test_graphe_reel_authority_json_a_des_aretes() -> None:
+    tracked = classify_paths.tracked_files(REPO)
+
+    graph = classify_paths.build_reference_graph(REPO, tracked)
+
+    assert any(
+        edge["referrer"] == "governance/authority.json"
+        for edge in graph["edges"]
+    )
+
+
+def test_graphe_reel_coderabbit_recherche_est_dangling() -> None:
+    tracked = classify_paths.tracked_files(REPO)
+
+    assert ".coderabbit.yaml" in tracked
+
+    graph = classify_paths.build_reference_graph(REPO, tracked)
+    recherche_est_resolu = any(path.startswith("Recherche/") for path in tracked)
+
+    if recherche_est_resolu:
+        assert isinstance(graph, dict)
+        assert {"edges", "dangling"}.issubset(graph)
+    else:
+        assert any(
+            entry["referrer"] == ".coderabbit.yaml"
+            for entry in graph["dangling"]
+        )
+
+
+def test_graphe_fichier_binaire_ignore_sans_erreur(tmp_path: pathlib.Path) -> None:
+    binary_path = tmp_path / "fixture.bin"
+    binary_path.write_bytes(b"\xff\xfe\x00src/x.py")
+    _ecrit_fixture_texte(tmp_path, "src/x.py", "pass\n")
+    tracked = ["fixture.bin", "src/x.py"]
+
+    graph = classify_paths.build_reference_graph(tmp_path, tracked)
+
+    assert graph == {"edges": [], "dangling": []}

@@ -1,5 +1,6 @@
 import fnmatch
 import json
+import re
 import subprocess
 import unicodedata
 from pathlib import Path
@@ -368,3 +369,201 @@ def tracked_files(repo_root: Path) -> list[str]:
     )
     raw = result.stdout.decode("utf-8")
     return sorted(path for path in raw.split("\0") if path)
+
+
+def _within_repo(repo_root: Path, path: Path) -> Path:
+    root = repo_root.resolve()
+    candidate = path.resolve()
+    try:
+        candidate.relative_to(root)
+    except ValueError as error:
+        raise ValueError(f"chemin hors du dépôt : {path}") from error
+    return candidate
+
+
+def build_reference_graph(repo_root: Path, tracked: list[str]) -> dict:
+    graph = {"edges": [], "dangling": []}
+    tracked_set = set(tracked)
+    structured_referrers = {
+        "governance/authority.json",
+        "reviews/BINDING.txt",
+        "sonar-project.properties",
+    }
+
+    if "governance/authority.json" in tracked_set:
+        try:
+            authority_path = _within_repo(
+                repo_root, repo_root / "governance/authority.json"
+            )
+            authority = json.loads(authority_path.read_text(encoding="utf-8"))
+            sources = authority.get("sources", [])
+            if not isinstance(sources, list):
+                sources = []
+            for source in sources:
+                if not isinstance(source, dict):
+                    continue
+                candidate = source.get("path")
+                if isinstance(candidate, str) and candidate and candidate in tracked_set:
+                    graph["edges"].append(
+                        {
+                            "referrer": "governance/authority.json",
+                            "line": 0,
+                            "candidate": candidate,
+                            "resolved": candidate,
+                            "severity": "hard",
+                        }
+                    )
+        except (OSError, UnicodeDecodeError, json.JSONDecodeError, ValueError):
+            pass
+
+    if "reviews/BINDING.txt" in tracked_set:
+        try:
+            binding_path = _within_repo(
+                repo_root, repo_root / "reviews/BINDING.txt"
+            )
+            for line_number, line in enumerate(
+                binding_path.read_text(encoding="utf-8").splitlines(), start=1
+            ):
+                candidate = line.strip()
+                if not candidate or candidate.startswith("#"):
+                    continue
+                resolved = f"reviews/{candidate}"
+                if any(
+                    path == resolved or path.startswith(resolved + "/")
+                    for path in tracked
+                ):
+                    graph["edges"].append(
+                        {
+                            "referrer": "reviews/BINDING.txt",
+                            "line": line_number,
+                            "candidate": candidate,
+                            "resolved": resolved,
+                            "severity": "hard",
+                        }
+                    )
+                else:
+                    graph["dangling"].append(
+                        {
+                            "referrer": "reviews/BINDING.txt",
+                            "line": line_number,
+                            "candidate": candidate,
+                        }
+                    )
+        except (OSError, UnicodeDecodeError, ValueError):
+            pass
+
+    if "sonar-project.properties" in tracked_set:
+        try:
+            sonar_path = _within_repo(
+                repo_root, repo_root / "sonar-project.properties"
+            )
+            for line_number, line in enumerate(
+                sonar_path.read_text(encoding="utf-8").splitlines(), start=1
+            ):
+                if "resourceKey=" not in line:
+                    continue
+                candidate = line.split("resourceKey=", 1)[1].strip()
+                if candidate in tracked_set:
+                    graph["edges"].append(
+                        {
+                            "referrer": "sonar-project.properties",
+                            "line": line_number,
+                            "candidate": candidate,
+                            "resolved": candidate,
+                            "severity": "silent",
+                        }
+                    )
+        except (OSError, UnicodeDecodeError, ValueError):
+            pass
+
+    allowed_extensions = {
+        ".py",
+        ".yml",
+        ".yaml",
+        ".toml",
+        ".md",
+        ".mdc",
+        ".json",
+        ".txt",
+        ".cfg",
+        ".properties",
+    }
+    known_path_extensions = {".py", ".md", ".json", ".yml", ".yaml"}
+    candidate_pattern = re.compile(r"[A-Za-z0-9_.][A-Za-z0-9._/-]*")
+
+    for referrer in tracked:
+        path_name = Path(referrer)
+        if referrer in structured_referrers:
+            continue
+        if (
+            path_name.suffix not in allowed_extensions
+            and path_name.name != ".gitignore"
+        ):
+            continue
+
+        try:
+            content = _within_repo(repo_root, repo_root / referrer).read_text(
+                encoding="utf-8"
+            )
+        except UnicodeDecodeError:
+            continue
+
+        for line_number, line in enumerate(content.splitlines(), start=1):
+            url_ranges: list[tuple[int, int]] = []
+            for marker in ("http://", "https://"):
+                start = 0
+                while True:
+                    marker_index = line.find(marker, start)
+                    if marker_index == -1:
+                        break
+                    url_start = marker_index + len(marker)
+                    url_end = url_start
+                    while url_end < len(line) and not line[url_end].isspace():
+                        url_end += 1
+                    url_ranges.append((url_start, url_end))
+                    start = marker_index + len(marker)
+
+            for match in candidate_pattern.finditer(line):
+                candidate = match.group(0).rstrip(".,;:!?)\"'")
+                if not candidate:
+                    continue
+                if any(
+                    url_start <= match.start() < url_end
+                    for url_start, url_end in url_ranges
+                ):
+                    continue
+                if candidate.startswith("/") or "${" in candidate:
+                    continue
+                if "/" not in candidate and Path(candidate).suffix not in known_path_extensions:
+                    continue
+
+                if candidate in tracked_set:
+                    graph["edges"].append(
+                        {
+                            "referrer": referrer,
+                            "line": line_number,
+                            "candidate": candidate,
+                            "resolved": candidate,
+                            "severity": "hard",
+                        }
+                    )
+                elif any(path.startswith(candidate + "/") for path in tracked):
+                    graph["edges"].append(
+                        {
+                            "referrer": referrer,
+                            "line": line_number,
+                            "candidate": candidate,
+                            "resolved": candidate,
+                            "severity": "hard",
+                        }
+                    )
+                else:
+                    graph["dangling"].append(
+                        {
+                            "referrer": referrer,
+                            "line": line_number,
+                            "candidate": candidate,
+                        }
+                    )
+
+    return graph
