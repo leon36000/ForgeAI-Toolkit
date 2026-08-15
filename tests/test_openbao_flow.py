@@ -13,6 +13,7 @@ import stat
 import subprocess
 import sys
 import threading
+from contextlib import contextmanager
 from hashlib import sha256
 from pathlib import Path
 from secrets import token_hex
@@ -35,6 +36,28 @@ from forgeai.models import vault as vault_module
 from forgeai.secrets.openbao_init import ensure_openbao_ready
 from forgeai.secrets.vault import VaultError, renew_self
 
+
+@contextmanager
+def _observe_mkdir_requests(path: Path):
+    """Observe les modes demandés lors des créations réelles par mkdir."""
+    expected = os.fspath(path)
+    requested_modes: list[int] = []
+    enabled = True
+
+    def observe(event, arguments):
+        if not enabled or event != "os.mkdir":
+            return
+        candidate, mode, _dir_fd = arguments
+        if os.fspath(candidate) == expected and not os.path.exists(candidate):
+            requested_modes.append(mode)
+
+    sys.addaudithook(observe)
+    try:
+        yield requested_modes
+    finally:
+        enabled = False
+
+
 # --- 1. prepare_key_store ---------------------------------------------------
 
 def test_prepare_key_store_creates_and_chmod(tmp_path) -> None:
@@ -47,7 +70,7 @@ def test_prepare_key_store_creates_and_chmod(tmp_path) -> None:
 def test_prepare_key_store_idempotent(tmp_path) -> None:
     d = tmp_path / "keys"
     d.mkdir(parents=True)
-    os.chmod(d, 0o700)  # trop restrictif au départ (l'unsealer non-root ne pourrait pas traverser)
+    os.chmod(d, 0o700)
     prepare_key_store(d)
     assert oct(d.stat().st_mode & 0o777) == "0o711"
 
@@ -138,18 +161,12 @@ def test_file_key_store_write_read_and_root_isolation(tmp_path) -> None:
     store.write({"unseal_key": "UNSEAL", "root_token": "ROOT"})
     assert store.read() == {"unseal_key": "UNSEAL", "root_token": "ROOT"}
 
-    # INVARIANT : le répertoire monté à l'unsealer ne contient QUE unseal_key, jamais le root.
     entries = list(keys_dir.iterdir())
     assert [e.name for e in entries] == ["unseal_key"]
     unseal = (keys_dir / "unseal_key").read_text(encoding="utf-8").strip()
     assert unseal == "UNSEAL" and "ROOT" not in unseal
     assert root_path.read_text(encoding="utf-8").strip() == "ROOT"
 
-    # SECRET-020B : ce test exerce le chemin de REPLI (groupe forgeai-openbao absent de la
-    # machine de test -> resolve_openbao_gid() rend None -> mode historique 0644). Les deux
-    # branches (groupe présent -> 0640+chown ; chown échoué -> repli) sont couvertes par les
-    # tests dédiés ci-dessous. root_token reste 0600 (owner seul, isolé) quelle que soit la
-    # branche.
     assert stat.S_IMODE((keys_dir / "unseal_key").stat().st_mode) == 0o644
     assert stat.S_IMODE(root_path.stat().st_mode) == 0o600
 
@@ -169,13 +186,7 @@ def test_file_key_store_modes_are_independent_of_permissive_umask(tmp_path) -> N
     assert stat.S_IMODE(root_path.stat().st_mode) == 0o600
 
 
-# --- SECRET-020B : modèle de permission 0640 + groupe (ADR SECRET-020A §7.1) ----------------
-# Les tests utilisent le gid de l'opérateur COURANT comme groupe cible : chown vers son propre
-# groupe ne demande aucun privilège, ce qui rend ces tests exécutables partout (CI incluse).
-
 def test_unseal_key_0640_et_groupe_quand_groupe_present(tmp_path, monkeypatch) -> None:
-    """§7.1 : groupe dédié présent -> unseal_key en 0640 ET possédé par le groupe résolu.
-    Prouve le durcissement au-delà du repli 0644. gid = os.getgid() (chown sans privilège)."""
     import forgeai.deploy.openbao_flow as flow
 
     monkeypatch.setattr(flow, "resolve_openbao_gid", lambda: os.getgid())
@@ -184,14 +195,12 @@ def test_unseal_key_0640_et_groupe_quand_groupe_present(tmp_path, monkeypatch) -
     flow.FileKeyStore(keys_dir, root_path).write({"unseal_key": "UNSEAL", "root_token": "ROOT"})
 
     unseal = keys_dir / "unseal_key"
-    assert stat.S_IMODE(unseal.stat().st_mode) == 0o640, "durcissement 0640 attendu quand le groupe existe"
-    assert unseal.stat().st_gid == os.getgid(), "la clé doit appartenir au groupe résolu"
-    assert stat.S_IMODE(root_path.stat().st_mode) == 0o600, "root token toujours 0600, isolé"
+    assert stat.S_IMODE(unseal.stat().st_mode) == 0o640
+    assert unseal.stat().st_gid == os.getgid()
+    assert stat.S_IMODE(root_path.stat().st_mode) == 0o600
 
 
 def test_unseal_key_repli_0644_quand_groupe_absent(tmp_path, monkeypatch) -> None:
-    """§7.1 repli : groupe absent (resolve -> None) -> 0644 historique (prouvé e2e S6),
-    aucun chown. C'est le comportement qui garantit que l'unsealer non-root lit la clé."""
     import forgeai.deploy.openbao_flow as flow
 
     monkeypatch.setattr(flow, "resolve_openbao_gid", lambda: None)
@@ -203,8 +212,6 @@ def test_unseal_key_repli_0644_quand_groupe_absent(tmp_path, monkeypatch) -> Non
 
 
 def test_unseal_key_repli_si_chown_echoue(tmp_path, monkeypatch) -> None:
-    """§7.1 sûreté : groupe résolu MAIS chown lève PermissionError -> le fichier DOIT finir
-    en 0644, jamais un 0640 orphelin de groupe (qui casserait le re-unseal : régression e2e S6)."""
     import forgeai.deploy.openbao_flow as flow
 
     monkeypatch.setattr(flow, "resolve_openbao_gid", lambda: os.getgid())
@@ -217,11 +224,10 @@ def test_unseal_key_repli_si_chown_echoue(tmp_path, monkeypatch) -> None:
     root_path = tmp_path / "secrets" / "root_token"
     flow.FileKeyStore(keys_dir, root_path).write({"unseal_key": "UNSEAL", "root_token": "ROOT"})
 
-    assert stat.S_IMODE((keys_dir / "unseal_key").stat().st_mode) == 0o644, "repli 0644 obligatoire si chown échoue"
+    assert stat.S_IMODE((keys_dir / "unseal_key").stat().st_mode) == 0o644
 
 
 def test_keys_dir_0750_avec_groupe_sinon_0711(tmp_path, monkeypatch) -> None:
-    """§7.1 répertoire : groupe présent -> 0750 + groupe ; absent -> 0711 historique."""
     import forgeai.deploy.openbao_flow as flow
 
     monkeypatch.setattr(flow, "resolve_openbao_gid", lambda: os.getgid())
@@ -234,8 +240,6 @@ def test_keys_dir_0750_avec_groupe_sinon_0711(tmp_path, monkeypatch) -> None:
 
 
 def test_resolve_openbao_gid_none_sans_grp(monkeypatch) -> None:
-    """Portabilité (héritée de PORT-286) : sans module grp (Windows), resolve_openbao_gid
-    renvoie None et le module reste fonctionnel -> chemin de repli partout."""
     import forgeai.deploy.openbao_flow as flow
 
     monkeypatch.setattr(flow, "grp", None)
@@ -263,36 +267,25 @@ def test_file_key_store_restores_unsealer_access_on_restrictive_keys_directory(
 
 @pytest.mark.parametrize("requested_umask", [0, 0o777])
 def test_file_key_store_parent_modes_are_secure_from_first_creation(
-    tmp_path, monkeypatch, requested_umask
+    tmp_path, requested_umask
 ) -> None:
     keys_dir = tmp_path / "keys"
     root_parent = tmp_path / "root-secrets"
     root_path = root_parent / "root_token"
-    observed_modes: dict[Path, list[int]] = {
-        keys_dir: [],
-        root_parent: [],
-    }
-    real_mkdir = os.mkdir
+    expected_modes = {keys_dir: 0o711, root_parent: 0o700}
 
-    def observe_real_mkdir(path, mode=0o777, *args, **kwargs):
-        result = real_mkdir(path, mode, *args, **kwargs)
-        candidate = Path(path)
-        if candidate in observed_modes:
-            observed_modes[candidate].append(
-                stat.S_IMODE(os.lstat(candidate).st_mode)
-            )
-        return result
-
-    monkeypatch.setattr(vault_module.os, "mkdir", observe_real_mkdir)
     previous_umask = os.umask(requested_umask)
     try:
-        FileKeyStore(keys_dir, root_path).write(
-            {"unseal_key": "UNSEAL", "root_token": "ROOT"}
-        )
+        with _observe_mkdir_requests(keys_dir) as key_modes, _observe_mkdir_requests(
+            root_parent
+        ) as root_modes:
+            FileKeyStore(keys_dir, root_path).write(
+                {"unseal_key": "UNSEAL", "root_token": "ROOT"}
+            )
     finally:
         os.umask(previous_umask)
 
-    expected_modes = {keys_dir: 0o711, root_parent: 0o700}
+    observed_modes = {keys_dir: key_modes, root_parent: root_modes}
     for candidate, expected_mode in expected_modes.items():
         modes = observed_modes[candidate]
         if not modes or any(mode & ~expected_mode for mode in modes):
@@ -452,25 +445,15 @@ def test_file_secret_store_overwrite(tmp_path) -> None:
 
 @pytest.mark.parametrize("requested_umask", [0, 0o777])
 def test_file_secret_store_parent_is_secure_from_first_creation(
-    tmp_path, monkeypatch, requested_umask
+    tmp_path, requested_umask
 ) -> None:
     parent = tmp_path / "app-secrets"
     target = parent / "app_token.json"
-    observed_creation_modes: list[int] = []
-    real_mkdir = os.mkdir
 
-    def observe_real_mkdir(path, mode=0o777, *args, **kwargs):
-        result = real_mkdir(path, mode, *args, **kwargs)
-        if Path(path) == parent:
-            observed_creation_modes.append(
-                stat.S_IMODE(os.lstat(parent).st_mode)
-            )
-        return result
-
-    monkeypatch.setattr(vault_module.os, "mkdir", observe_real_mkdir)
     previous_umask = os.umask(requested_umask)
     try:
-        FileSecretStore(target).write({"token": token_hex(32)})
+        with _observe_mkdir_requests(parent) as observed_creation_modes:
+            FileSecretStore(target).write({"token": token_hex(32)})
     finally:
         os.umask(previous_umask)
 
@@ -739,7 +722,6 @@ def test_file_secret_store_unwritable_directory_fails_without_secret_leak(
 # --- 4. Bout-en-bout avec le VRAI ensure_openbao_ready (S2) ------------------
 
 def _fake_transport():
-    """request(method, path, *, token=None, payload=None) -> (status, body) simulant openbao."""
     state = {"mounts": False, "policy": False}
 
     def request(method, path, *, token=None, payload=None):
@@ -781,7 +763,6 @@ def test_ensure_openbao_ready_with_file_stores(tmp_path) -> None:
     assert token == "APPTOKEN"
     assert key_store.read() == {"unseal_key": "UNSEAL", "root_token": "ROOT"}
     assert secret_store.read() == {"token": "APPTOKEN"}
-    # le root n'est jamais tombé dans le répertoire monté à l'unsealer
     assert [e.name for e in keys_dir.iterdir()] == ["unseal_key"]
     assert "ROOT" not in (keys_dir / "unseal_key").read_text(encoding="utf-8")
 
@@ -792,7 +773,7 @@ def test_ensure_openbao_ready_reutilise_token_valide(tmp_path) -> None:
     key_store = FileKeyStore(keys_dir, tmp_path / "secrets" / "root_token")
     key_store.write({"unseal_key": "UNSEAL", "root_token": "ROOT"})
     secret_store = FileSecretStore(tmp_path / "app_token.json")
-    secret_store.write({"token": "APPTOKEN"})  # token déjà valide -> réutilisé (lookup-self 200)
+    secret_store.write({"token": "APPTOKEN"})
 
     assert ensure_openbao_ready(_fake_transport(), key_store, secret_store) == "APPTOKEN"
 
@@ -835,14 +816,12 @@ def test_renew_self_propage_vault_error_sans_fuite(monkeypatch) -> None:
     with pytest.raises(VaultError) as exc:
         renew_self("http://vault:8200", "BROKEN-SECRET")
     assert "openbao POST" in str(exc.value)
-    assert "BROKEN-SECRET" not in str(exc.value)  # invariant : jamais le token dans le message
+    assert "BROKEN-SECRET" not in str(exc.value)
 
 
 # --- 6. KubectlKeyStore (k3s : Secret, secrets par STDIN jamais argv) --------
 
 class _FakeKubectl:
-    """Faux runner kubectl : simule un unique Secret en mémoire (data base64)."""
-
     def __init__(self):
         self.stored: dict[str, str] | None = None
         self.apply_inputs: list[str] = []
@@ -858,7 +837,6 @@ class _FakeKubectl:
             return subprocess.CompletedProcess(args, 0, stdout=self.stored[key], stderr="")
         if args[:3] == ["kubectl", "apply", "-f"]:
             self.apply_inputs.append(input or "")
-            # parse le manifeste stdin -> mémorise les data base64
             data = {}
             for line in (input or "").splitlines():
                 s = line.strip()
@@ -873,17 +851,15 @@ class _FakeKubectl:
 def test_kubectl_key_store_roundtrip_and_no_secret_in_argv() -> None:
     run = _FakeKubectl()
     store = KubectlKeyStore("forgeai-openbao-keys", "forgeai-minimal", run=run)
-    assert store.read() is None  # Secret absent
+    assert store.read() is None
     store.write({"unseal_key": "UNSEAL-SECRET", "root_token": "ROOT-SECRET"})
     assert store.read() == {"unseal_key": "UNSEAL-SECRET", "root_token": "ROOT-SECRET"}
-    # INVARIANT : aucun secret en clair dans un argv kubectl (ils passent par STDIN)
     for argv in run.argv_seen:
         joined = " ".join(argv)
         assert "UNSEAL-SECRET" not in joined and "ROOT-SECRET" not in joined
-    # le manifeste appliqué porte les valeurs en base64 (jamais en clair)
     b64_unseal = base64.b64encode(b"UNSEAL-SECRET").decode()
     assert any(b64_unseal in m for m in run.apply_inputs)
-    assert all("UNSEAL-SECRET" not in m for m in run.apply_inputs)  # jamais en clair, même en stdin
+    assert all("UNSEAL-SECRET" not in m for m in run.apply_inputs)
 
 
 def test_kubectl_key_store_write_failure_raises() -> None:
@@ -891,6 +867,7 @@ def test_kubectl_key_store_write_failure_raises() -> None:
         if args[:3] == ["kubectl", "apply", "-f"]:
             return subprocess.CompletedProcess(args, 1, stdout="", stderr="forbidden")
         return subprocess.CompletedProcess(args, 1, stdout="", stderr="")
+
     store = KubectlKeyStore("s", "ns", run=failing_run)
     with pytest.raises(OpenBaoFlowError):
         store.write({"unseal_key": "U", "root_token": "R"})
@@ -903,7 +880,6 @@ def test_initialize_openbao_wraps_ensure(tmp_path) -> None:
     prepare_key_store(keys_dir)
     key_store = FileKeyStore(keys_dir, tmp_path / "secrets" / "root")
     secret_store = FileSecretStore(tmp_path / "app.json")
-    # request_factory injecté -> renvoie le faux transport (openbao simulé)
     token = initialize_openbao(
         "http://openbao:8200", key_store, secret_store,
         request_factory=lambda url, timeout: _fake_transport(),
@@ -916,12 +892,12 @@ def test_wait_reachable_returns_when_probe_true() -> None:
 
     def probe(url):
         calls["n"] += 1
-        return calls["n"] >= 3  # joignable à la 3e tentative
+        return calls["n"] >= 3
 
     slept = []
     wait_reachable("http://openbao:8200/health", probe=probe, attempts=10,
                    delay=0.5, sleep=slept.append)
-    assert calls["n"] == 3 and slept == [0.5, 0.5]  # 2 attentes avant succès
+    assert calls["n"] == 3 and slept == [0.5, 0.5]
 
 
 def test_wait_reachable_raises_after_attempts() -> None:
@@ -930,44 +906,37 @@ def test_wait_reachable_raises_after_attempts() -> None:
                        delay=0, sleep=lambda d: None)
 
 
-# --- 8. Intégration wizard : _provision_openbao_compose (séquence anti-interblocage) --------
+# --- 8. Intégration wizard : _provision_openbao_compose ----------------------
 
 def test_provision_openbao_compose_sequence(tmp_path, monkeypatch) -> None:
     import forgeai.cli as cli
+
     calls = {"up": []}
     monkeypatch.setattr(cli, "compose_up", lambda cf, services=None: calls["up"].append(services))
     monkeypatch.setattr(cli, "wait_reachable", lambda url, **kw: calls.__setitem__("waited", url))
     monkeypatch.setattr(cli, "initialize_openbao", lambda url, ks, ss: "APP-TOK")
     tok = cli._provision_openbao_compose(tmp_path / "compose.yml", tmp_path, "http://127.0.0.1:8200")
     assert tok == "APP-TOK"
-    # openbao + son unsealer démarrés SEULS et d'abord (avant les consommateurs = anti-interblocage)
     assert calls["up"] == [["openbao", "openbao-unsealer"]]
     assert "8200" in calls["waited"]
-    assert (tmp_path / "openbao-keys").is_dir()  # key-store hôte préparé
+    assert (tmp_path / "openbao-keys").is_dir()
 
-
-# --- SECRET-020B correctif revue (Grok REJECT, objection majeure) : le FLUX RÉEL --------------
 
 def test_flux_reel_prepare_puis_write_garde_keys_dir_0750(tmp_path, monkeypatch) -> None:
-    """CHEMIN RÉEL : dans le flux de production prepare_key_store PUIS FileKeyStore.write, le
-    répertoire des clés doit RESTER 0750+groupe — write ne doit pas reclobber en 0711. Tester
-    les deux fonctions isolément masquait ce défaut ; ce test enchaîne comme le déploiement."""
     import forgeai.deploy.openbao_flow as flow
 
     monkeypatch.setattr(flow, "resolve_openbao_gid", lambda: os.getgid())
     keys_dir = tmp_path / "keys"
     root_path = tmp_path / "secrets" / "root_token"
-    flow.prepare_key_store(keys_dir)                       # 1. flux : prepare d'abord
-    flow.FileKeyStore(keys_dir, root_path).write(          # 2. puis write
+    flow.prepare_key_store(keys_dir)
+    flow.FileKeyStore(keys_dir, root_path).write(
         {"unseal_key": "U", "root_token": "R"}
     )
-    assert stat.S_IMODE(keys_dir.stat().st_mode) == 0o750, "write ne doit pas reclobber 0750 -> 0711"
-    assert keys_dir.stat().st_gid == os.getgid(), "le groupe du répertoire doit survivre à write"
+    assert stat.S_IMODE(keys_dir.stat().st_mode) == 0o750
+    assert keys_dir.stat().st_gid == os.getgid()
 
 
 def test_keys_dir_repli_0711_si_chown_echoue(tmp_path, monkeypatch) -> None:
-    """Symétrie de couverture (objection mineure) : prepare_key_store avec groupe résolu MAIS
-    chown qui lève -> le répertoire DOIT finir 0711, jamais un 0750 orphelin de groupe."""
     import forgeai.deploy.openbao_flow as flow
 
     monkeypatch.setattr(flow, "resolve_openbao_gid", lambda: os.getgid())
@@ -977,4 +946,4 @@ def test_keys_dir_repli_0711_si_chown_echoue(tmp_path, monkeypatch) -> None:
 
     monkeypatch.setattr(flow.os, "chown", _chown_refuse)
     d = flow.prepare_key_store(tmp_path / "keys")
-    assert stat.S_IMODE(d.stat().st_mode) == 0o711, "repli 0711 obligatoire si chown échoue"
+    assert stat.S_IMODE(d.stat().st_mode) == 0o711
