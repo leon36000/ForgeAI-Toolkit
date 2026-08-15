@@ -41,3 +41,10 @@ scripts/governance/classify_paths.py + tests/test_classify_paths.py (RC1-008/#43
 AGENTS.md) arrive aux commits 4-5 du même plan (#438), une fois le manifest et le rendu
 implémentés — prématuré de documenter une fonction interne sans sortie utilisateur encore
 définie. Aucune story/doc utilisateur concernée pour CE commit précis.
+
+scripts/governance/classify_paths.py + tests/test_classify_paths.py (RC1-008/#438, commit
+2/7) : ajoute load_rules()/classify()/tracked_files() — toujours des fonctions internes sans
+main() ni sortie utilisateur. governance/path-classification-rules.json (règles écrites à la
+main, pas un artefact généré) accompagne ce commit mais n'est pas un document de gouvernance
+publié — c'est une entrée de données consommée par le script, documentée par son propre champ
+`_description` interne. Documentation utilisateur toujours prévue aux commits 4-5.

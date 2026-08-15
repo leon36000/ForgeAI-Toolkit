@@ -1,0 +1,660 @@
+{
+  "_schema": "path-classification-rules-v1",
+  "_description": "Règles de classification des chemins du dépôt (issue #438/RC1-008). Ordre du tableau = priorité, PREMIER match gagnant. L'autorité d'application reste scripts/governance/classify_paths.py. Tout chemin ne correspondant à aucune règle doit provoquer une erreur explicite unclassified dans le script.",
+  "classes": [
+    "PRODUCT",
+    "TEST",
+    "DOCS",
+    "GOVERNANCE",
+    "EVIDENCE",
+    "WORKING",
+    "ARCHIVE",
+    "GENERATED"
+  ],
+  "owners": {
+    "gouvernance-coordination": {
+      "role": "Contrôles de coordination et validation d'orchestration."
+    },
+    "produit-catalogue": {
+      "role": "Catalogue de données livré avec le produit."
+    },
+    "gouvernance-generateurs": {
+      "role": "Générateurs des états et cartes d'autorité."
+    },
+    "gouvernance-stories": {
+      "role": "Artefacts de gouvernance des stories."
+    },
+    "archive-coordination": {
+      "role": "Archives du modèle historique de coordination."
+    },
+    "archive-cursor": {
+      "role": "Archive de configuration Cursor historique."
+    },
+    "gouvernance-preuve": {
+      "role": "Preuves, registres et résultats d'audit."
+    },
+    "archive-phase-a": {
+      "role": "Archives des brouillons fournisseurs de Phase-A."
+    },
+    "archive-rapports": {
+      "role": "Archives des rapports historiques."
+    },
+    "gouvernance-canon": {
+      "role": "Référentiel canonique du dépôt."
+    },
+    "docs-utilisateur": {
+      "role": "Documentation destinée aux lecteurs du projet."
+    },
+    "gouvernance-config": {
+      "role": "Configuration et documents de gouvernance du dépôt."
+    },
+    "working-cockpit": {
+      "role": "Configuration locale du cockpit de développement."
+    },
+    "gouvernance-manifests": {
+      "role": "Manifestes de rôles et de routage."
+    },
+    "gouvernance-ci": {
+      "role": "Configuration de construction et d'intégration continue."
+    },
+    "test-suite": {
+      "role": "Suite de tests automatisés."
+    },
+    "produit-source": {
+      "role": "Code source et ressources du produit."
+    },
+    "gouvernance-scripts": {
+      "role": "Scripts d'administration et de gouvernance."
+    }
+  },
+  "rules": [
+    {
+      "id": "coordination-sonar-test-scope-guard",
+      "match": {
+        "kind": "exact",
+        "value": "scripts/coordination/test_scope_guard.py"
+      },
+      "class": "GOVERNANCE",
+      "generated": false,
+      "owner": "gouvernance-coordination",
+      "target": null,
+      "target_kind": "keep",
+      "load_bearing": true,
+      "rationale": "Ce fichier est TEST par son nom mais GOVERNANCE par son emplacement, exécuté par SonarCloud et non par pytest par défaut car pyproject.toml limite testpaths à tests; le déplacer casserait sonarcloud.yml."
+    },
+    {
+      "id": "coordination-sonar-test-validate",
+      "match": {
+        "kind": "exact",
+        "value": "scripts/coordination/test_validate_coordination.py"
+      },
+      "class": "GOVERNANCE",
+      "generated": false,
+      "owner": "gouvernance-coordination",
+      "target": null,
+      "target_kind": "keep",
+      "load_bearing": true,
+      "rationale": "Ce fichier est TEST par son nom mais GOVERNANCE par son emplacement, exécuté par SonarCloud et non par pytest par défaut car pyproject.toml limite testpaths à tests; le déplacer casserait sonarcloud.yml."
+    },
+    {
+      "id": "coordination-sonar-test-simulate",
+      "match": {
+        "kind": "exact",
+        "value": "scripts/coordination/test_simulate_orchestration.py"
+      },
+      "class": "GOVERNANCE",
+      "generated": false,
+      "owner": "gouvernance-coordination",
+      "target": null,
+      "target_kind": "keep",
+      "load_bearing": true,
+      "rationale": "Ce fichier est TEST par son nom mais GOVERNANCE par son emplacement, exécuté par SonarCloud et non par pytest par défaut car pyproject.toml limite testpaths à tests; le déplacer casserait sonarcloud.yml."
+    },
+    {
+      "id": "product-catalogue-checksum",
+      "match": {
+        "kind": "exact",
+        "value": "src/forgeai/data/catalogue.sha256"
+      },
+      "class": "PRODUCT",
+      "generated": true,
+      "owner": "produit-catalogue",
+      "target": null,
+      "target_kind": "keep",
+      "load_bearing": true,
+      "rationale": "Ce checksum est livré par package-data de pyproject.toml et simultanément recalculé puis vérifié par state_current.py; classe et caractère généré sont orthogonaux."
+    },
+    {
+      "id": "generated-state-current-json",
+      "match": {
+        "kind": "exact",
+        "value": "governance/STATE-CURRENT.json"
+      },
+      "class": "GENERATED",
+      "generated": true,
+      "owner": "gouvernance-generateurs",
+      "target": null,
+      "target_kind": "keep",
+      "load_bearing": true,
+      "rationale": "Le fichier porte l'en-tête « NE PAS ÉDITER À LA MAIN » et est régénéré par state_current.py."
+    },
+    {
+      "id": "generated-state-current-markdown",
+      "match": {
+        "kind": "exact",
+        "value": "governance/STATE-CURRENT.md"
+      },
+      "class": "GENERATED",
+      "generated": true,
+      "owner": "gouvernance-generateurs",
+      "target": null,
+      "target_kind": "keep",
+      "load_bearing": true,
+      "rationale": "Le fichier porte l'en-tête « NE PAS ÉDITER À LA MAIN » et est régénéré par state_current.py."
+    },
+    {
+      "id": "generated-authority-map",
+      "match": {
+        "kind": "exact",
+        "value": "governance/AUTHORITY-MAP.md"
+      },
+      "class": "GENERATED",
+      "generated": true,
+      "owner": "gouvernance-generateurs",
+      "target": null,
+      "target_kind": "keep",
+      "load_bearing": true,
+      "rationale": "Le fichier porte l'en-tête « NE PAS ÉDITER À LA MAIN » et est régénéré par validate_authority.py."
+    },
+    {
+      "id": "governance-stories",
+      "match": {
+        "kind": "prefix",
+        "value": "stories/"
+      },
+      "class": "GOVERNANCE",
+      "generated": false,
+      "owner": "gouvernance-stories",
+      "target": null,
+      "target_kind": "keep",
+      "load_bearing": false,
+      "rationale": "Le fichier .gitignore ignore stories/* sauf les fichiers Markdown explicitement versionnés comme artefacts de gouvernance."
+    },
+    {
+      "id": "archive-coordination",
+      "match": {
+        "kind": "prefix",
+        "value": "coordination/"
+      },
+      "class": "ARCHIVE",
+      "generated": false,
+      "owner": "archive-coordination",
+      "target": "archive/coordination/",
+      "target_kind": "reroot",
+      "load_bearing": true,
+      "rationale": "ARCHIVE et load_bearing=true coexistent sans contradiction: ce modèle est historique selon AGENTS.md, mais state_current.py lit encore ses totaux et scope-guard.yml exécute validate_coordination.py; c'est le signal que #440 doit lire avant déplacement."
+    },
+    {
+      "id": "archive-cursor-orchestration-rule",
+      "match": {
+        "kind": "exact",
+        "value": ".cursor/rules/forgeai-orchestration.mdc"
+      },
+      "class": "ARCHIVE",
+      "generated": false,
+      "owner": "archive-cursor",
+      "target": "archive/cursor/",
+      "target_kind": "reroot",
+      "load_bearing": true,
+      "rationale": "ARCHIVE et load_bearing=true coexistent sans contradiction: cette configuration historique est déclarée avec empreinte dans governance/authority.json et doit être lue par #440 avant déplacement."
+    },
+    {
+      "id": "evidence-audit-output",
+      "match": {
+        "kind": "prefix",
+        "value": "AUDIT-OUTPUT/"
+      },
+      "class": "EVIDENCE",
+      "generated": false,
+      "owner": "gouvernance-preuve",
+      "target": "evidence/audit-output/",
+      "target_kind": "reroot",
+      "load_bearing": false,
+      "rationale": "Ce répertoire provient d'une exécution passée; son emplacement gagne sur l'extension et un fichier .py présent ici reste une preuve, non un PRODUCT."
+    },
+    {
+      "id": "evidence-reviews",
+      "match": {
+        "kind": "prefix",
+        "value": "reviews/"
+      },
+      "class": "EVIDENCE",
+      "generated": false,
+      "owner": "gouvernance-preuve",
+      "target": "evidence/reviews/",
+      "target_kind": "reroot",
+      "load_bearing": true,
+      "rationale": "Les 1102 fichiers de revue sont des preuves; le sous-ensemble liant est déterminé par reviews/BINDING.txt, et non par cette règle."
+    },
+    {
+      "id": "evidence-registres",
+      "match": {
+        "kind": "prefix",
+        "value": "Registres/"
+      },
+      "class": "EVIDENCE",
+      "generated": false,
+      "owner": "gouvernance-preuve",
+      "target": "evidence/registres/",
+      "target_kind": "reroot",
+      "load_bearing": true,
+      "rationale": "Les registres constituent une chaîne de preuve dont les hachages sont vérifiés par scripts/registre.py."
+    },
+    {
+      "id": "archive-phase-a",
+      "match": {
+        "kind": "prefix",
+        "value": "Phase-A/"
+      },
+      "class": "ARCHIVE",
+      "generated": false,
+      "owner": "archive-phase-a",
+      "target": "archive/phase-a/",
+      "target_kind": "reroot",
+      "load_bearing": false,
+      "rationale": "Ces brouillons de fournisseurs, dont architecture-glm.md et risques-deepseek.md, sont superseded et ne sont référencés par aucun exécutable."
+    },
+    {
+      "id": "archive-rapports",
+      "match": {
+        "kind": "prefix",
+        "value": "Rapports/"
+      },
+      "class": "ARCHIVE",
+      "generated": false,
+      "owner": "archive-rapports",
+      "target": "archive/rapports/",
+      "target_kind": "reroot",
+      "load_bearing": false,
+      "rationale": "Ces rapports sont des documents historiques conservés hors du flux actif."
+    },
+    {
+      "id": "governance-canon",
+      "match": {
+        "kind": "prefix",
+        "value": "CANON/"
+      },
+      "class": "GOVERNANCE",
+      "generated": false,
+      "owner": "gouvernance-canon",
+      "target": null,
+      "target_kind": "keep",
+      "load_bearing": true,
+      "rationale": "Ce répertoire est référencé comme canon dans plusieurs documents du dépôt."
+    },
+    {
+      "id": "docs-user",
+      "match": {
+        "kind": "prefix",
+        "value": "Docs/"
+      },
+      "class": "DOCS",
+      "generated": false,
+      "owner": "docs-utilisateur",
+      "target": null,
+      "target_kind": "keep",
+      "load_bearing": false,
+      "rationale": "Ce répertoire regroupe la documentation destinée aux lecteurs du projet."
+    },
+    {
+      "id": "governance-core",
+      "match": {
+        "kind": "prefix",
+        "value": "governance/"
+      },
+      "class": "GOVERNANCE",
+      "generated": false,
+      "owner": "gouvernance-config",
+      "target": null,
+      "target_kind": "keep",
+      "load_bearing": true,
+      "rationale": "Les autorités, schémas, décisions et observations restants sont écrits à la main ou relèvent d'observations réelles."
+    },
+    {
+      "id": "working-claude-agents",
+      "match": {
+        "kind": "prefix",
+        "value": ".claude/agents/"
+      },
+      "class": "WORKING",
+      "generated": false,
+      "owner": "working-cockpit",
+      "target": null,
+      "target_kind": "keep",
+      "load_bearing": false,
+      "rationale": "Cette configuration de cockpit n'est jamais livrée et ne reçoit pas de cible de déplacement hors du dépôt de développement."
+    },
+    {
+      "id": "governance-manifests",
+      "match": {
+        "kind": "prefix",
+        "value": "manifests/"
+      },
+      "class": "GOVERNANCE",
+      "generated": false,
+      "owner": "gouvernance-manifests",
+      "target": null,
+      "target_kind": "keep",
+      "load_bearing": true,
+      "rationale": "Les manifestes roles.yaml et routes.yaml sont référencés par AGENTS.md."
+    },
+    {
+      "id": "governance-github-ci",
+      "match": {
+        "kind": "prefix",
+        "value": ".github/"
+      },
+      "class": "GOVERNANCE",
+      "generated": false,
+      "owner": "gouvernance-ci",
+      "target": null,
+      "target_kind": "keep",
+      "load_bearing": true,
+      "rationale": "Ce répertoire relève de la sous-classe ci implicite: configuration d'intégration continue sans classe dédiée parmi les huit classes."
+    },
+    {
+      "id": "test-suite",
+      "match": {
+        "kind": "prefix",
+        "value": "tests/"
+      },
+      "class": "TEST",
+      "generated": false,
+      "owner": "test-suite",
+      "target": null,
+      "target_kind": "keep",
+      "load_bearing": true,
+      "rationale": "Ce répertoire contient la suite de tests automatisés du produit."
+    },
+    {
+      "id": "product-source",
+      "match": {
+        "kind": "prefix",
+        "value": "src/"
+      },
+      "class": "PRODUCT",
+      "generated": false,
+      "owner": "produit-source",
+      "target": null,
+      "target_kind": "keep",
+      "load_bearing": true,
+      "rationale": "Ce répertoire contient le code source et les ressources livrés du produit, hors checksum déjà traité."
+    },
+    {
+      "id": "governance-scripts-coordination",
+      "match": {
+        "kind": "prefix",
+        "value": "scripts/coordination/"
+      },
+      "class": "GOVERNANCE",
+      "generated": false,
+      "owner": "gouvernance-scripts",
+      "target": null,
+      "target_kind": "keep",
+      "load_bearing": true,
+      "rationale": "Les scripts restants de coordination portent les contrôles de gouvernance exécutables."
+    },
+    {
+      "id": "governance-scripts-governance",
+      "match": {
+        "kind": "prefix",
+        "value": "scripts/governance/"
+      },
+      "class": "GOVERNANCE",
+      "generated": false,
+      "owner": "gouvernance-scripts",
+      "target": null,
+      "target_kind": "keep",
+      "load_bearing": true,
+      "rationale": "Ces scripts appliquent les règles et validations de gouvernance du dépôt."
+    },
+    {
+      "id": "governance-scripts-root",
+      "match": {
+        "kind": "prefix",
+        "value": "scripts/"
+      },
+      "class": "GOVERNANCE",
+      "generated": false,
+      "owner": "gouvernance-scripts",
+      "target": null,
+      "target_kind": "keep",
+      "load_bearing": true,
+      "rationale": "Les scripts restants à la racine de scripts assurent des opérations de gouvernance."
+    },
+    {
+      "id": "governance-root-readme",
+      "match": {
+        "kind": "exact",
+        "value": "README.md"
+      },
+      "class": "GOVERNANCE",
+      "generated": false,
+      "owner": "gouvernance-config",
+      "target": null,
+      "target_kind": "keep",
+      "load_bearing": true,
+      "rationale": "Ce document racine porte des marqueurs d'état et participe à la gouvernance du dépôt."
+    },
+    {
+      "id": "governance-root-agents",
+      "match": {
+        "kind": "exact",
+        "value": "AGENTS.md"
+      },
+      "class": "GOVERNANCE",
+      "generated": false,
+      "owner": "gouvernance-config",
+      "target": null,
+      "target_kind": "keep",
+      "load_bearing": true,
+      "rationale": "Ce document racine porte des marqueurs d'état et des références d'autorité."
+    },
+    {
+      "id": "governance-root-claude",
+      "match": {
+        "kind": "exact",
+        "value": "CLAUDE.md"
+      },
+      "class": "GOVERNANCE",
+      "generated": false,
+      "owner": "gouvernance-config",
+      "target": null,
+      "target_kind": "keep",
+      "load_bearing": true,
+      "rationale": "Ce document racine porte des instructions de gouvernance et des marqueurs d'état."
+    },
+    {
+      "id": "governance-root-master-plan",
+      "match": {
+        "kind": "exact",
+        "value": "MASTER-PLAN.md"
+      },
+      "class": "GOVERNANCE",
+      "generated": false,
+      "owner": "gouvernance-config",
+      "target": null,
+      "target_kind": "keep",
+      "load_bearing": true,
+      "rationale": "Ce plan racine porte des marqueurs d'état et structure la gouvernance du projet."
+    },
+    {
+      "id": "docs-license",
+      "match": {
+        "kind": "exact",
+        "value": "LICENSE"
+      },
+      "class": "DOCS",
+      "generated": false,
+      "owner": "docs-utilisateur",
+      "target": null,
+      "target_kind": "keep",
+      "load_bearing": false,
+      "rationale": "La licence est une documentation juridique destinée aux utilisateurs et distributeurs."
+    },
+    {
+      "id": "governance-root-pyproject",
+      "match": {
+        "kind": "exact",
+        "value": "pyproject.toml"
+      },
+      "class": "GOVERNANCE",
+      "generated": false,
+      "owner": "gouvernance-ci",
+      "target": null,
+      "target_kind": "keep",
+      "load_bearing": true,
+      "rationale": "Cette configuration de build relève de la sous-classe ci implicite, sans case dédiée parmi les huit classes."
+    },
+    {
+      "id": "governance-root-sonar",
+      "match": {
+        "kind": "exact",
+        "value": "sonar-project.properties"
+      },
+      "class": "GOVERNANCE",
+      "generated": false,
+      "owner": "gouvernance-ci",
+      "target": null,
+      "target_kind": "keep",
+      "load_bearing": true,
+      "rationale": "Cette configuration d'analyse relève de la sous-classe ci implicite, sans case dédiée parmi les huit classes."
+    },
+    {
+      "id": "governance-root-coderabbit",
+      "match": {
+        "kind": "exact",
+        "value": ".coderabbit.yaml"
+      },
+      "class": "GOVERNANCE",
+      "generated": false,
+      "owner": "gouvernance-ci",
+      "target": null,
+      "target_kind": "keep",
+      "load_bearing": true,
+      "rationale": "Cette configuration de revue relève de la sous-classe ci implicite, sans case dédiée parmi les huit classes."
+    },
+    {
+      "id": "governance-root-gitguardian",
+      "match": {
+        "kind": "exact",
+        "value": ".gitguardian.yaml"
+      },
+      "class": "GOVERNANCE",
+      "generated": false,
+      "owner": "gouvernance-ci",
+      "target": null,
+      "target_kind": "keep",
+      "load_bearing": true,
+      "rationale": "Cette configuration de sécurité relève de la sous-classe ci implicite, sans case dédiée parmi les huit classes."
+    },
+    {
+      "id": "governance-root-precommit",
+      "match": {
+        "kind": "exact",
+        "value": ".pre-commit-config.yaml"
+      },
+      "class": "GOVERNANCE",
+      "generated": false,
+      "owner": "gouvernance-ci",
+      "target": null,
+      "target_kind": "keep",
+      "load_bearing": true,
+      "rationale": "Cette configuration de contrôles relève de la sous-classe ci implicite, sans case dédiée parmi les huit classes."
+    },
+    {
+      "id": "governance-proof",
+      "match": {
+        "kind": "exact",
+        "value": ".proof"
+      },
+      "class": "GOVERNANCE",
+      "generated": false,
+      "owner": "gouvernance-config",
+      "target": null,
+      "target_kind": "keep",
+      "load_bearing": false,
+      "rationale": "Ce fichier racine appartient aux métadonnées de gouvernance du dépôt."
+    },
+    {
+      "id": "governance-docs-exempt",
+      "match": {
+        "kind": "exact",
+        "value": ".docs-exempt"
+      },
+      "class": "GOVERNANCE",
+      "generated": false,
+      "owner": "gouvernance-config",
+      "target": null,
+      "target_kind": "keep",
+      "load_bearing": true,
+      "rationale": "Artefact de processus contenant des justifications d'exemption doc, pas un produit ni une preuve d'exécution."
+    },
+    {
+      "id": "governance-root-gitignore",
+      "match": {
+        "kind": "exact",
+        "value": ".gitignore"
+      },
+      "class": "GOVERNANCE",
+      "generated": false,
+      "owner": "gouvernance-config",
+      "target": null,
+      "target_kind": "keep",
+      "load_bearing": true,
+      "rationale": "Configuration de dépôt."
+    },
+    {
+      "id": "archive-recherche-rall-1-agents-orchestration",
+      "match": {
+        "kind": "exact",
+        "value": "Recherche/rall-1-agents-orchestration.yaml"
+      },
+      "class": "ARCHIVE",
+      "generated": false,
+      "owner": "archive-phase-a",
+      "target": "archive/recherche/rall-1-agents-orchestration.yaml",
+      "target_kind": "reroot",
+      "load_bearing": false,
+      "rationale": "Matériau de recherche/sourcing (lot R-ALL-1) qui a servi à compiler src/forgeai/data/catalogue.json — superseded par le catalogue compilé, ne pilote plus rien à l'exécution."
+    },
+    {
+      "id": "working-sandbox-readme",
+      "match": {
+        "kind": "exact",
+        "value": "Sandbox/README.md"
+      },
+      "class": "WORKING",
+      "generated": false,
+      "owner": "working-cockpit",
+      "target": null,
+      "target_kind": "keep",
+      "load_bearing": false,
+      "rationale": "Le fichier se déclare lui-même « Zone hors gates pour prototypes et essais. Rien ici n'est une preuve, rien ici n'est mergeable vers src/ sans repasser par le pipeline complet » — définition exacte de la classe WORKING."
+    },
+    {
+      "id": "governance-root-eslint",
+      "match": {
+        "kind": "exact",
+        "value": "eslint.config.mjs"
+      },
+      "class": "GOVERNANCE",
+      "generated": false,
+      "owner": "gouvernance-ci",
+      "target": null,
+      "target_kind": "keep",
+      "load_bearing": true,
+      "rationale": "Configuration de lint/CI, même sous-classe ci que pyproject.toml/sonar-project.properties."
+    }
+  ]
+}

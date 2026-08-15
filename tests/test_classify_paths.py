@@ -174,3 +174,216 @@ def test_chemin_longueur_avertissement() -> None:
         and violation["detail"]
         for violation in violations
     )
+
+
+import json
+import subprocess
+
+import pytest
+
+REPO = pathlib.Path(__file__).resolve().parents[1]
+RULES_PATH = REPO / "governance" / "path-classification-rules.json"
+
+
+def _regles_fixture(rules: list[dict]) -> dict:
+    return {
+        "_schema": "path-classification-rules-v1",
+        "classes": ["PRODUCT", "GOVERNANCE", "ARCHIVE"],
+        "owners": {"equipe-test": {"role": "Fixture de test explicite."}},
+        "rules": rules,
+    }
+
+
+def _regle_fixture(
+    rule_id: str,
+    kind: str = "prefix",
+    value: str = "src/",
+    target: str | None = None,
+    target_kind: str = "keep",
+) -> dict:
+    return {
+        "id": rule_id,
+        "match": {"kind": kind, "value": value},
+        "class": "PRODUCT",
+        "generated": False,
+        "owner": "equipe-test",
+        "target": target,
+        "target_kind": target_kind,
+        "load_bearing": False,
+        "rationale": "Règle de fixture explicitement créée pour ce test.",
+    }
+
+
+def _ecrit_regles_fixture(tmp_path: pathlib.Path, rules: dict) -> pathlib.Path:
+    rules_path = tmp_path / "rules.json"
+    rules_path.write_text(json.dumps(rules), encoding="utf-8")
+    return rules_path
+
+
+def test_load_rules_charge_le_fichier_reel() -> None:
+    rules = classify_paths.load_rules(RULES_PATH)
+
+    assert isinstance(rules, dict)
+    assert {"rules", "classes", "owners"}.issubset(rules)
+
+
+def test_load_rules_id_duplique_leve(tmp_path: pathlib.Path) -> None:
+    rules = _regles_fixture(
+        [
+            _regle_fixture("duplique", value="a/"),
+            _regle_fixture("duplique", value="b/"),
+        ]
+    )
+
+    with pytest.raises(ValueError):
+        classify_paths.load_rules(_ecrit_regles_fixture(tmp_path, rules))
+
+
+def test_load_rules_owner_absent_leve(tmp_path: pathlib.Path) -> None:
+    rule = _regle_fixture("owner-absent")
+    rule["owner"] = "proprietaire-inexistant"
+    rules = _regles_fixture([rule])
+
+    with pytest.raises(ValueError):
+        classify_paths.load_rules(_ecrit_regles_fixture(tmp_path, rules))
+
+
+def test_load_rules_classe_invalide_leve(tmp_path: pathlib.Path) -> None:
+    rule = _regle_fixture("classe-invalide")
+    rule["class"] = "INEXISTANTE"
+    rules = _regles_fixture([rule])
+
+    with pytest.raises(ValueError):
+        classify_paths.load_rules(_ecrit_regles_fixture(tmp_path, rules))
+
+
+def test_load_rules_rationale_vide_leve(tmp_path: pathlib.Path) -> None:
+    rule = _regle_fixture("rationale-vide")
+    rule["rationale"] = ""
+    rules = _regles_fixture([rule])
+
+    with pytest.raises(ValueError):
+        classify_paths.load_rules(_ecrit_regles_fixture(tmp_path, rules))
+
+
+def test_classify_premier_match_gagne() -> None:
+    specific = _regle_fixture("specifique", value="src/forgeai/")
+    generic = _regle_fixture("generique", value="src/")
+    rules = _regles_fixture([specific, generic])
+
+    result = classify_paths.classify("src/forgeai/module.py", rules)
+
+    assert result["rule_id"] == "specifique"
+
+
+def test_classify_ordre_inverse_donne_lautre_regle() -> None:
+    specific = _regle_fixture("specifique", value="src/forgeai/")
+    generic = _regle_fixture("generique", value="src/")
+    rules = _regles_fixture([generic, specific])
+
+    result = classify_paths.classify("src/forgeai/module.py", rules)
+
+    assert result["rule_id"] == "generique"
+
+
+def test_classify_aucune_regle_leve() -> None:
+    rules = _regles_fixture([_regle_fixture("seulement-src", value="src/")])
+
+    with pytest.raises(ValueError, match="inconnu/fichier.txt"):
+        classify_paths.classify("inconnu/fichier.txt", rules)
+
+
+def test_classify_target_reroot() -> None:
+    rule = _regle_fixture(
+        "reviews-reroot",
+        value="reviews/",
+        target="evidence/reviews/",
+        target_kind="reroot",
+    )
+    rules = _regles_fixture([rule])
+
+    result = classify_paths.classify("reviews/x/y.json", rules)
+
+    assert result["target_path"] == "evidence/reviews/x/y.json"
+
+
+def test_classify_target_keep() -> None:
+    rule = _regle_fixture("garder", value="src/", target=None, target_kind="keep")
+    rules = _regles_fixture([rule])
+
+    result = classify_paths.classify("src/module.py", rules)
+
+    assert result["target_path"] is None
+
+
+def test_classify_target_explicit() -> None:
+    rule = _regle_fixture(
+        "recherche-explicite",
+        kind="exact",
+        value="Recherche/x.yaml",
+        target="archive/recherche/x.yaml",
+        target_kind="explicit",
+    )
+    rules = _regles_fixture([rule])
+
+    result = classify_paths.classify("Recherche/x.yaml", rules)
+
+    assert result["target_path"] == "archive/recherche/x.yaml"
+
+
+def test_classify_scripts_coordination_test_est_governance() -> None:
+    rules = classify_paths.load_rules(RULES_PATH)
+
+    result = classify_paths.classify("scripts/coordination/test_scope_guard.py", rules)
+
+    assert result["class"] == "GOVERNANCE"
+
+
+def test_classify_catalogue_sha256_est_product_et_generated() -> None:
+    rules = classify_paths.load_rules(RULES_PATH)
+
+    result = classify_paths.classify("src/forgeai/data/catalogue.sha256", rules)
+
+    assert result["class"] == "PRODUCT"
+    assert result["generated"] is True
+
+
+def test_classify_state_current_md_est_generated() -> None:
+    rules = classify_paths.load_rules(RULES_PATH)
+
+    result = classify_paths.classify("governance/STATE-CURRENT.md", rules)
+
+    assert result["class"] == "GENERATED"
+
+
+def test_tracked_files_retourne_une_liste_triee_non_vide() -> None:
+    paths = classify_paths.tracked_files(REPO)
+
+    assert paths
+    assert paths == sorted(paths)
+    assert len(paths) == len(set(paths))
+    assert "README.md" in paths
+
+
+def test_tracked_files_compte_coherent_avec_git_ls_files() -> None:
+    paths = classify_paths.tracked_files(REPO)
+    result = subprocess.run(
+        ["git", "ls-files"],
+        cwd=REPO,
+        capture_output=True,
+        check=True,
+        text=True,
+    )
+    direct_paths = [line for line in result.stdout.splitlines() if line]
+
+    assert len(paths) == len(direct_paths)
+
+
+def test_tous_les_chemins_reels_sont_classes() -> None:
+    rules = classify_paths.load_rules(RULES_PATH)
+
+    for chemin in classify_paths.tracked_files(REPO):
+        try:
+            classify_paths.classify(chemin, rules)
+        except ValueError:
+            pytest.fail(f"non classé: {chemin}")

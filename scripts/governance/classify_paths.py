@@ -1,4 +1,8 @@
+import fnmatch
+import json
+import subprocess
 import unicodedata
+from pathlib import Path
 
 
 def detect_collisions(paths: list[str], targets: dict[str, str] | None = None) -> dict:
@@ -282,3 +286,85 @@ def check_portability(path: str) -> list[dict]:
         )
 
     return violations
+
+
+def load_rules(rules_path: Path) -> dict:
+    rules = json.loads(rules_path.read_text(encoding="utf-8"))
+    rule_ids: set[str] = set()
+    owners = rules["owners"]
+    classes = rules["classes"]
+
+    for rule in rules["rules"]:
+        rule_id = rule["id"]
+        if rule_id in rule_ids:
+            raise ValueError(f"id de règle dupliqué : {rule_id}")
+        rule_ids.add(rule_id)
+
+        owner = rule["owner"]
+        if owner not in owners:
+            raise ValueError(
+                f"règle {rule_id} : owner manquant dans owners : {owner}"
+            )
+
+        rule_class = rule["class"]
+        if rule_class not in classes:
+            raise ValueError(
+                f"règle {rule_id} : classe invalide : {rule_class}"
+            )
+
+        rationale = rule["rationale"]
+        if not isinstance(rationale, str) or not rationale.strip():
+            raise ValueError(f"règle {rule_id} : rationale vide ou invalide")
+
+    return rules
+
+
+def classify(path: str, rules: dict) -> dict:
+    selected_rule: dict | None = None
+
+    for rule in rules["rules"]:
+        match = rule["match"]
+        kind = match["kind"]
+        value = match["value"]
+
+        if (
+            (kind == "prefix" and path.startswith(value))
+            or (kind == "exact" and path == value)
+            or (kind == "suffix" and path.endswith(value))
+            or (kind == "glob" and fnmatch.fnmatchcase(path, value))
+        ):
+            selected_rule = rule
+            break
+
+    if selected_rule is None:
+        raise ValueError(f"chemin non classé : {path}")
+
+    if selected_rule.get("target") is None:
+        target_path = None
+    elif selected_rule["target_kind"] == "reroot":
+        target_path = selected_rule["target"] + path[
+            len(selected_rule["match"]["value"]):
+        ]
+    elif selected_rule["target_kind"] == "keep":
+        target_path = path
+    elif selected_rule["target_kind"] == "explicit":
+        target_path = selected_rule["target"]
+
+    return {
+        "rule_id": selected_rule["id"],
+        "class": selected_rule["class"],
+        "generated": selected_rule["generated"],
+        "owner": selected_rule["owner"],
+        "target_path": target_path,
+    }
+
+
+def tracked_files(repo_root: Path) -> list[str]:
+    result = subprocess.run(
+        ["git", "-C", str(repo_root), "ls-files", "-z"],
+        capture_output=True,
+        check=True,
+        text=False,
+    )
+    raw = result.stdout.decode("utf-8")
+    return sorted(path for path in raw.split("\0") if path)
