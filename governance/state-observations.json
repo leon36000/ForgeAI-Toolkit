@@ -1,0 +1,22 @@
+[
+  {
+    "id": "github.open_issues",
+    "value": 56,
+    "display": "56",
+    "observed_at": "2026-08-15T08:22:45Z",
+    "source": "gh issue list --state open --limit 500 (repos/leon36000/ForgeAI-Toolkit, via gh api)",
+    "evidence": "commande rejouable ci-dessus, exécutée manuellement par l'Orchestrateur (issue #437)",
+    "sealed": false,
+    "command": "gh issue list --state open --limit 500 --json number | python3 -c \"import json,sys; print(len(json.load(sys.stdin)))\""
+  },
+  {
+    "id": "github.open_pull_requests",
+    "value": 1,
+    "display": "1",
+    "observed_at": "2026-08-15T08:22:45Z",
+    "source": "gh pr list --state open --limit 500 (repos/leon36000/ForgeAI-Toolkit, via gh api)",
+    "evidence": "commande rejouable ci-dessus, exécutée manuellement par l'Orchestrateur (issue #437)",
+    "sealed": false,
+    "command": "gh pr list --state open --limit 500 --json number | python3 -c \"import json,sys; print(len(json.load(sys.stdin)))\""
+  }
+]

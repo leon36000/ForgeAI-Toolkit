@@ -93,6 +93,15 @@ jobs:
       - name: "Gate RC1-001 (#431) — hiérarchie d'autorité : inventaire, cycles, conflits, empreintes"
         run: python3 scripts/governance/validate_authority.py
 
+  state-current:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - name: "Gate RC1-007 (#437) — état courant : dérive des compteurs générés"
+        run: python3 scripts/governance/state_current.py
+
   docs:
     runs-on: ubuntu-latest
     steps:

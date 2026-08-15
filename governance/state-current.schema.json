@@ -1,0 +1,157 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/leon36000/ForgeAI-Toolkit/governance/state-current.schema.json",
+  "title": "state-current-v1",
+  "description": "Schéma descriptif de governance/STATE-CURRENT.json (issue RC1-007 / #437). Documente la structure attendue pour lecture humaine et éditeurs — ce fichier est DESCRIPTIF et l'autorité d'application reste scripts/governance/state_current.py, qui reste stdlib pur et ne dépend pas de ce schéma.",
+  "type": "object",
+  "required": ["deterministe", "observations"],
+  "additionalProperties": false,
+  "properties": {
+    "deterministe": {
+      "type": "object",
+      "required": [
+        "_schema",
+        "package",
+        "catalogue",
+        "cli",
+        "tests",
+        "ci",
+        "coordination",
+        "inputs"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "_schema": { "const": "state-current-v1" },
+        "package": {
+          "type": "object",
+          "required": [
+            "name",
+            "requires_python",
+            "runtime_dependencies",
+            "version",
+            "version_pyproject"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "name": { "type": "string" },
+            "requires_python": { "type": "string" },
+            "runtime_dependencies": {
+              "type": "array",
+              "items": { "type": "string" }
+            },
+            "version": { "type": "string" },
+            "version_pyproject": { "type": "string" }
+          }
+        },
+        "catalogue": {
+          "type": "object",
+          "required": [
+            "categories_total",
+            "descriptions_en_missing",
+            "entries_total",
+            "sha256_recomputed_ok"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "categories_total": { "type": "integer" },
+            "descriptions_en_missing": { "type": "integer" },
+            "entries_total": { "type": "integer" },
+            "sha256_recomputed_ok": { "type": "boolean" }
+          }
+        },
+        "cli": {
+          "type": "object",
+          "required": ["subcommands", "subcommands_total"],
+          "additionalProperties": false,
+          "properties": {
+            "subcommands": {
+              "type": "array",
+              "items": { "type": "string" }
+            },
+            "subcommands_total": { "type": "integer" }
+          }
+        },
+        "tests": {
+          "type": "object",
+          "required": [
+            "js_files",
+            "python_files",
+            "python_functions_declared"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "js_files": { "type": "integer" },
+            "python_files": { "type": "integer" },
+            "python_functions_declared": { "type": "integer" }
+          }
+        },
+        "ci": {
+          "type": "object",
+          "required": ["jobs_total", "workflows"],
+          "additionalProperties": false,
+          "properties": {
+            "jobs_total": { "type": "integer" },
+            "workflows": { "type": "integer" }
+          }
+        },
+        "coordination": {
+          "type": "object",
+          "required": [
+            "active_claims_total",
+            "concurrency_total",
+            "work_packages_total"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "active_claims_total": { "type": "integer" },
+            "concurrency_total": { "type": "integer" },
+            "work_packages_total": { "type": "integer" }
+          }
+        },
+        "inputs": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/input" }
+        }
+      }
+    },
+    "observations": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/observation" }
+    }
+  },
+  "$defs": {
+    "input": {
+      "type": "object",
+      "required": ["path", "sha256"],
+      "additionalProperties": false,
+      "properties": {
+        "path": { "type": "string" },
+        "sha256": { "type": "string" }
+      }
+    },
+    "observation": {
+      "type": "object",
+      "required": [
+        "id",
+        "value",
+        "display",
+        "observed_at",
+        "source",
+        "evidence",
+        "sealed",
+        "command"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string" },
+        "value": { "type": "integer" },
+        "display": { "type": "string" },
+        "observed_at": { "type": "string" },
+        "source": { "type": "string" },
+        "evidence": { "type": "string" },
+        "sealed": { "type": "boolean" },
+        "command": { "type": "string" }
+      }
+    }
+  }
+}
