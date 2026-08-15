@@ -110,8 +110,8 @@
       ],
       "digest": {
         "policy": "content_sha256",
-        "value": "019cae166106f574cd9422bc3946b82f737782099c6628a3b0174987e795d98e",
-        "checked_at": "2026-08-14",
+        "value": "3b0976ca849dd87b9cec476f1b8df033ca497860a926e7f28640e59450df9599",
+        "checked_at": "2026-08-15",
         "delegated_to": null
       },
       "retention": "in_force",
@@ -122,7 +122,7 @@
         "mission_seq": null,
         "ref": "issue-487"
       },
-      "notes": "Auto-contradiction interne resolue par #432 (Mission affirme desormais Claude Code Opus, section ORCH-001 remplacee) ; conflit RESIDUEL avec canon.plan-integral (toujours \"Fable orchestrateur unique\", hors perimetre de #432 -- CANON exige son propre circuit de revue) suivi par #487."
+      "notes": "Auto-contradiction interne resolue par #432 (Mission affirme desormais Claude Code Opus, section ORCH-001 remplacee) ; conflit RESIDUEL avec canon.plan-integral (toujours \"Fable orchestrateur unique\", hors perimetre de #432 -- CANON exige son propre circuit de revue) suivi par #487. Empreinte mise à jour par #437 (RC1-007, commit 3/3) : insertion d'un marqueur <!-- state:catalogue.entries_total --> autour du seul compteur opérationnel manuel du fichier (AGENTS.md:38), aucun autre changement — les locators AGENTS.md:9 et AGENTS.md:70-72 restent valides (nombre de lignes inchangé)."
     },
     {
       "id": "agents-md.orch-001",
