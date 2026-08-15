@@ -12,7 +12,7 @@ CHEMIN_GATES = RACINE / ".github" / "workflows" / "gates.yml"
 CHEMIN_SONAR = RACINE / ".github" / "workflows" / "sonarcloud.yml"
 CHEMIN_PYPROJECT = RACINE / "pyproject.toml"
 CHEMIN_LOCKFILE = RACINE / "requirements-ci.txt"
-CHEMIN_POLITIQUE = RACINE / "docs" / "politique-versions-python.md"
+CHEMIN_POLITIQUE = RACINE / "Docs" / "reference" / "politique-versions-python.md"
 
 
 def _contenu(chemin: Path) -> str:

@@ -634,7 +634,7 @@
       "positions": [],
       "digest": {
         "policy": "content_sha256",
-        "value": "acea73acf74e38e3be123649a75635b54e4fa23888dd6dbd46130c5c5af50fd9",
+        "value": "daf1bf0fb7a7a5c993e4a03299cb0f394d045194e64a9e33b1e9bd2f31b9f463",
         "checked_at": "2026-08-15",
         "delegated_to": null
       },
@@ -646,7 +646,7 @@
         "mission_seq": null,
         "ref": null
       },
-      "notes": "Point d'entrée documentaire du dépôt. Empreinte fusionnée (#433 x #437, merge sur main post-9d97b529) : #433 réécrit Installation/Gates/Développement (pointeur vers capabilities.py, correction Fable périmée, cohérence gitleaks/ggshield) — section État de la mission non touchée (territoire #437) ; #437 insère des marqueurs <!-- state:... --> autour de 7 compteurs, dont 3 dans la section État de la mission que #433 n'a pas touchée. Zones disjointes, fusionnées automatiquement par git (aucun conflit textuel) ; seule l'empreinte ci-dessus reflète le contenu final combiné."
+      "notes": "Point d'entrée documentaire du dépôt. Empreinte mise à jour par #439 (RC1-009) : ajout de governance/ et stories/ à la table « Structure canonique » et clarification Docs/=doc active vs governance/=canon+décisions (RC1-009-PR<NNN>), au-dessus de l'empreinte fusionnée #433 x #437 (installation/gates/développement + marqueurs state)."
     },
     {
       "id": "gov.decision-mission-lead",
@@ -683,6 +683,36 @@
         "ref": "https://github.com/leon36000/ForgeAI-Toolkit/issues/481"
       },
       "notes": "Décision versionnée matérialisant le mission lead Claude Code Opus (#481) — déclarée en position sur orchestration_seat (revue RC1-001-PR431-v3, objection majeure DeepSeek-V4-Pro corrigée) pour que le gate reflète explicitement que cette position est la plus récente, jusqu'à ce que #432 supprime les positions concurrentes d'agents-md/agents-md.orch-001/canon.plan-integral."
+    },
+    {
+      "id": "gov.decision-racines-documentaires",
+      "title": "Décision — racines documentaires (Docs/ actif, governance/ canon+décisions)",
+      "path": "governance/decisions/D-2026-08-15-racines-documentaires.md",
+      "anchor": null,
+      "kind": "decision",
+      "scope": "governance_method",
+      "version": "2026-08-15",
+      "version_source": "declared_in_file",
+      "status": "active",
+      "owner": "orchestrateur",
+      "superseded_by": null,
+      "prevails_over": [],
+      "positions": [],
+      "digest": {
+        "policy": "content_sha256",
+        "value": "cc5d281c9dd40cc8decb1717d0cff8e8af169148e29b02376c37898d42ca49f5",
+        "checked_at": "2026-08-15",
+        "delegated_to": null
+      },
+      "retention": "in_force",
+      "cleanup_issue": null,
+      "resolution_issue": null,
+      "decision": {
+        "vision_log_seq": null,
+        "mission_seq": null,
+        "ref": "https://github.com/leon36000/ForgeAI-Toolkit/issues/439"
+      },
+      "notes": "Décision versionnée confirmant Docs/ (majuscule) comme racine unique de doc active (ADR-0001, déjà en vigueur) et governance/ comme racine canon+décisions+méthode ; ferme l'écart docs/politique-versions-python.md (RC1-447/PR495)."
     },
     {
       "id": "adr.rag-004a",
