@@ -1,0 +1,19 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "governance/STATE-CURRENT.json",
+   "description": "Le nouveau sha256 déclaré pour .github/workflows/sonarcloud.yml ne peut pas être vérifié à partir du diff seul ; absence de preuve de correspondance avec le contenu réel du fichier modifié.",
+   "preuve": "governance/STATE-CURRENT.json:99 : \"sha256\": \"363a8dbcd111d2007bd6511192fb225196c1b1bd3f4830fd2d17c26f59648a21\""
+  }
+ ],
+ "date_heure": "2026-08-15T17:23:38.608661+00:00",
+ "prompt_sha256": "ff99c0208372e927581136c4ed499f81b1409dda75da2e7b15a8e3559501de5b",
+ "reviewer_model": "DeepSeek-V4-Pro",
+ "modele_servi": "deepseek-v4-pro-direct",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

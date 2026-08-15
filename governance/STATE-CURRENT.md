@@ -14,7 +14,7 @@
     "sha256_recomputed_ok": true
   },
   "ci": {
-    "jobs_total": 16,
+    "jobs_total": 15,
     "workflows": 3
   },
   "cli": {
@@ -94,7 +94,7 @@
   "inputs": [
     {
       "path": ".github/workflows/gates.yml",
-      "sha256": "4bc0ad7ccbb62ac7061a4214917377d733541609311adce73d8a1ef1ee265edc"
+      "sha256": "513376d2fcf2375e3e8d6608b718b54667f86916df8a5a21b4730842b2a83744"
     },
     {
       "path": ".github/workflows/scope-guard.yml",
@@ -102,7 +102,7 @@
     },
     {
       "path": ".github/workflows/sonarcloud.yml",
-      "sha256": "bb6b4da6ba7b18542e6d745ea6f6096bb58105cedd4abdeb63cc61fb2a2bf76c"
+      "sha256": "363a8dbcd111d2007bd6511192fb225196c1b1bd3f4830fd2d17c26f59648a21"
     },
     {
       "path": "coordination/active-claims.json",
@@ -183,10 +183,6 @@
     {
       "path": "tests/test_chassis_deploiement.py",
       "sha256": "31349a593e1f344b7f745fa9c5be1bea03a3ef1881b9da944d6c8b78130ab3bd"
-    },
-    {
-      "path": "tests/test_classify_paths.py",
-      "sha256": "e2e19bd90348c0e53a5586eb9c6c83a3bef76077e23b3c310dd4f662223ccd56"
     },
     {
       "path": "tests/test_cli_doctor.py",
@@ -494,7 +490,7 @@
     },
     {
       "path": "tests/test_operators.py",
-      "sha256": "cabe9fe73657472de16f4b5d1e4d95d4701d3136fc8857ab3b84dcbe0b747b19"
+      "sha256": "8ed78dae4cf7b5789a88ed6076e66e3cb18424a65c4f578bdc89ed5708bc1d8b"
     },
     {
       "path": "tests/test_ops031a_status.py",
@@ -866,8 +862,8 @@
   },
   "tests": {
     "js_files": 3,
-    "python_files": 179,
-    "python_functions_declared": 1876
+    "python_files": 178,
+    "python_functions_declared": 1817
   }
 }
 ```
