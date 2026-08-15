@@ -102,6 +102,15 @@ jobs:
       - name: "Gate RC1-007 (#437) — état courant : dérive des compteurs générés"
         run: python3 scripts/governance/state_current.py --docs README.md --docs AGENTS.md
 
+  path-classification:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - name: "Gate RC1-008 (#438) — classification des chemins : dérive de l'inventaire"
+        run: python3 scripts/governance/classify_paths.py
+
   docs:
     runs-on: ubuntu-latest
     steps:

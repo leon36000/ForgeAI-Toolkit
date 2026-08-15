@@ -1,0 +1,37 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "scripts/governance/classify_paths.py",
+   "description": "La fonction _sha256 normalise les fins de ligne CRLF -> LF pour tous les octets, y compris les fichiers binaires. L'empreinte stockée pour un fichier binaire contenant CRLF ne correspond pas au SHA-256 réel du fichier, ce qui est incohérent avec le livrable 'empreinte'.",
+   "preuve": "def _sha256(data: bytes) -> str: return hashlib.sha256(data.replace(b\"\\r\\n\", b\"\\n\")).hexdigest() ; puis sha256 = _sha256(file_data) dans build_manifest."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "scripts/governance/classify_paths.py",
+   "description": "check() ne fait pas échouer le gate sur unicode_anomalies_total > 0, donc un chemin cible non normalisé NFC mais sans collision réelle peut passer si le manifest est régénéré, malgré le critère de validation multi-OS.",
+   "preuve": "Dans check(), seuls case_collisions_total, portability_violations_total et les collisions Unicode à plusieurs chemins ajoutent une erreur ; aucun test/erreur sur summary['unicode_anomalies_total']."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "scripts/governance/classify_paths.py",
+   "description": "compute_waves n'exploite pas les dépendances dont resolved est un préfixe de répertoire, car seules les entrées fichier ont target_path. Les arêtes génériques résolvant un répertoire ne contraignent donc pas l'ordre des vagues.",
+   "preuve": "compute_waves continue si referrer not in migrating_paths or resolved not in migrating_paths ; build_reference_graph crée des arêtes avec resolved='src/pkg' pour un préfixe de répertoire."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "governance/path-classification.json",
+   "description": "Le manifest complet est exclu du diff, donc l'absence de cible ambiguë/collisionnelle et l'inventaire complet ne sont pas vérifiables sur pièce depuis ce pack ; seul PATH-CLASSIFICATION.md le résume.",
+   "preuve": "La note de périmètre exclut governance/path-classification.json ; PATH-CLASSIFICATION.md renvoie vers ce fichier pour l'inventaire complet."
+  }
+ ],
+ "date_heure": "2026-08-15T19:12:00.434045+00:00",
+ "prompt_sha256": "d0ce77d8486d51c3c51044e212eb77bf514d8015072db0d083f1d2d5c5b6824c",
+ "reviewer_model": "DeepSeek-V4-Pro",
+ "modele_servi": "deepseek-v4-pro-direct",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

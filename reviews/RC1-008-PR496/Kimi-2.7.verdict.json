@@ -1,0 +1,43 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "critique",
+   "fichier": "scripts/governance/classify_paths.py",
+   "description": "La validation de portabilité multi-OS des chemins cibles n'est pas intégrée au manifeste. La fonction check_portability() existe et est testée, mais build_manifest() ne l'appelle jamais : seule detect_collisions() alimente summary.portability_violations_total, et elle ne détecte que les caractères invisibles/dangereux. Les noms réservés Windows, caractères interdits, points/espaces finaux, longueurs de segment/chemin ne sont donc pas reportés dans l'inventaire, en violation du critère d'acceptation 'validation sur Windows, macOS et Linux des chemins cibles'.",
+   "preuve": "scripts/governance/classify_paths.py : check_portability() définie mais build_manifest() (l. ~560) appelle uniquement detect_collisions(tracked, targets) ; aucun appel à check_portability() sur les chemins sources ou cibles."
+  },
+  {
+   "severite": "majeure",
+   "fichier": "scripts/governance/classify_paths.py",
+   "description": "Le plan de vagues/rollback produit par compute_waves() n'est pas réversible en l'état : chaque vague ne contient que les chemins sources et un texte générique de rollback avec des placeholders <cible>/<source>, sans les target_path effectifs. Le critère 'rollback défini pour chaque lot' n'est donc pas satisfait de manière actionnable sans requêter le manifeste en parallèle.",
+   "preuve": "scripts/governance/classify_paths.py : compute_waves() (l. ~720-790) retourne {'id':..., 'paths':[sources], 'rollback': 'Vague ... git mv <cible> <source> ...'} sans inclure les target_path ni les paires source/cible concrètes."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "scripts/governance/classify_paths.py",
+   "description": "Les arêtes de référence résolues sur un préfixe de répertoire (ex. 'src/pkg') sont ignorées par compute_waves() car seuls les chemins de fichiers migrants sont pris en compte. Cela peut sous-évaluer les dépendances entre vagues, bien que le balayage soit documenté best-effort.",
+   "preuve": "scripts/governance/classify_paths.py : build_reference_graph() produit des edges avec resolved='src/pkg' (test_graphe_balayage_generique_resout_prefixe_repertoire) ; compute_waves() filtre avec 'if referrer not in migrating_paths or resolved not in migrating_paths: continue', or un préfixe de répertoire n'est jamais dans migrating_paths (ensemble de fichiers)."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "governance/path-classification-rules.json / scripts/governance/classify_paths.py",
+   "description": "check_portability() émet des violations en double sous des noms de règle différents (windows_forbidden_char / windows_forbidden_character, trailing_dot_or_space / windows_trailing_dot_or_space, path_too_long / path_length). Si elle était intégrée, le compteur portability_violations_total serait artificiellement gonflé.",
+   "preuve": "scripts/governance/classify_paths.py : dans check_portability(), deux append successifs pour les mêmes segments avec des rule distincts (ex. l. ~170-180 pour windows_forbidden_char/character)."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "Note de périmètre du diff",
+   "description": "L'inventaire généré (governance/path-classification.json) et son résumé (governance/PATH-CLASSIFICATION.md) sont exclus du pack de revue. Le critère 'deux reviewers externes vérifient l'inventaire sans modifier le dépôt' ne peut donc pas être vérifié directement par les reviewers sur le diff ; seuls le générateur, les règles et les tests sont visibles.",
+   "preuve": "Note pour les reviewers : 'Ce diff EXCLUT délibérément ... governance/path-classification.json ... governance/PATH-CLASSIFICATION.md ... La revue porte sur : le générateur ... les 42 règles ... les tests ...'."
+  }
+ ],
+ "date_heure": "2026-08-15T18:22:58.755580+00:00",
+ "prompt_sha256": "222ea32b049cd0232ef2ab4971c80b7fa9f776d74d766b7b7dc3d22c39d8648f",
+ "reviewer_model": "Kimi-2.7",
+ "modele_servi": "kimi-27-openrouter",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

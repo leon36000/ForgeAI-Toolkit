@@ -1,0 +1,12 @@
+{
+ "verdict": "APPROVE",
+ "objections": [],
+ "date_heure": "2026-08-15T18:16:37.387115+00:00",
+ "prompt_sha256": "222ea32b049cd0232ef2ab4971c80b7fa9f776d74d766b7b7dc3d22c39d8648f",
+ "reviewer_model": "Gemini-3.1-Pro",
+ "modele_servi": "gemini-31-pro-openrouter",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "1"
+ }
+}

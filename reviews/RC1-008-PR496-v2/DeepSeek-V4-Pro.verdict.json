@@ -1,0 +1,49 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "critique",
+   "fichier": "scripts/governance/classify_paths.py",
+   "description": "Le gate ne fait pas échouer les collisions ni les violations de portabilité des cibles : check() compare uniquement le manifeste disque au recalcul, sans exiger que case_collisions_total ou portability_violations_total soient à zéro.",
+   "preuve": "Dans check(), la boucle compare les champs summary et retourne True si aucune divergence n'est ajoutée ; or le fichier governance/PATH-CLASSIFICATION.md livré affiche `- Violations de portabilité : 1`. Aucun embranchement ne transforme cette valeur en erreur."
+  },
+  {
+   "severite": "majeure",
+   "fichier": "scripts/governance/classify_paths.py",
+   "description": "L'inventaire demandé est incomplet : build_manifest n'enregistre ni taille, ni type, ni empreinte de contenu par chemin, contrairement au livrable « inventaire complet chemin, taille, type, empreinte, classe, propriétaire et destination cible ».",
+   "preuve": "Le bloc entries.append({...}) renseigne uniquement path, class, generated, owner, rule_id, target_path, load_bearing, referenced_by. Le schéma governance/path-classification.schema.json ne déclare pas non plus size/type/hash pour les entrées."
+  },
+  {
+   "severite": "majeure",
+   "fichier": "scripts/governance/classify_paths.py",
+   "description": "Une collision de cible exacte échappe à la détection : deux sources distinctes mappées vers la même target_path sont dédupliquées et ne produisent aucune collision ni ambiguïté.",
+   "preuve": "detect_collisions construit target_values = list(targets.values()), puis all_values avec `if value not in all_values` ; les doublons exacts de cible n'apparaissent donc qu'une seule fois et ne sont jamais comparés entre eux."
+  },
+  {
+   "severite": "majeure",
+   "fichier": "governance/path-classification-rules.json",
+   "description": "Les artefacts générés par le script lui-même ne sont pas classés GENERATED : governance/PATH-CLASSIFICATION.md et governance/path-classification.json tombent dans la règle générique governance-core avec generated=false.",
+   "preuve": "Aucun id exact n'existe pour ces deux fichiers ; les règles ordonnées contiennent generated-state-current-json, generated-state-current-markdown, generated-authority-map, puis governance-core (prefix governance/) avec `\"generated\": false`. Le Markdown porte pourtant l'en-tête `NE PAS ÉDITER À LA MAIN — généré par scripts/governance/classify_paths.py --render`."
+  },
+  {
+   "severite": "majeure",
+   "fichier": "scripts/revue.py",
+   "description": "Changements hors périmètre RC1-008 : le diff remplace la table de vendors issue de manifests/roles.yaml par un dictionnaire codé en dur et supprime scripts/governance/capabilities.py ainsi que ses tests, sans rapport avec la classification des chemins.",
+   "preuve": "Le diff de scripts/revue.py supprime _load_roles_yaml/_load_routes_yaml/_vendor_table et ajoute _VENDOR codé en dur ; le diff supprime scripts/governance/capabilities.py et tests/test_governance_capabilities.py."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "scripts/governance/classify_paths.py",
+   "description": "compute_waves est implémenté mais jamais appelé par main() ni inclus dans le manifeste/render ; le plan de PR move-only réversible n'est donc pas produit comme livrable.",
+   "preuve": "main() ne définit que --render et le mode check ; render() n'inclut aucune sortie de compute_waves."
+  }
+ ],
+ "date_heure": "2026-08-15T18:33:11.825374+00:00",
+ "prompt_sha256": "246646a7807cfe0d6a6d3dc36fb0353e385db9246ecd7a2ae7a5da859e8b4626",
+ "reviewer_model": "DeepSeek-V4-Pro",
+ "modele_servi": "deepseek-v4-pro-direct",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}
