@@ -183,8 +183,15 @@ jobs:
   reviews-sealed:
     runs-on: ubuntu-latest
     steps:
+      # fetch-depth: 0 est requis pour calculer le merge-base, le diff origin/main...HEAD
+      # et vérifier qu'un reçu archivé pointe vers un commit réellement fusionné (#434).
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
           persist-credentials: false
-      - name: Gate D9 — revues aveugles scellées liantes = APPROVE 3/3
-        run: python3 scripts/reviews_gate.py
+          fetch-depth: 0
+      - name: Gate D9 — revue liante couvrant le changement de la PR
+        if: github.event_name == 'pull_request' || github.event_name == 'merge_group'
+        run: python3 scripts/reviews_gate.py --exiger-recu-courant --base-ref origin/main
+      - name: Gate D9 — archivage des reçus de revues fusionnées
+        if: github.event_name == 'push'
+        run: python3 scripts/reviews_gate.py --mode archive

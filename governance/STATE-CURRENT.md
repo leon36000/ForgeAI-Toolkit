@@ -94,7 +94,7 @@
   "inputs": [
     {
       "path": ".github/workflows/gates.yml",
-      "sha256": "513376d2fcf2375e3e8d6608b718b54667f86916df8a5a21b4730842b2a83744"
+      "sha256": "45468b03d4739f045be0996695898beb36f89d4cdbda26dd807a73e81425ee0a"
     },
     {
       "path": ".github/workflows/scope-guard.yml",
@@ -674,11 +674,11 @@
     },
     {
       "path": "tests/test_reviews_gate.py",
-      "sha256": "2ace91e39a59d1bb81daf0a6d71b864cc3cfacadb5b38bcfa4e2d0f72ae24da5"
+      "sha256": "83564f0193da1503d1952f827986562b2f717e3c8808142c5d7dd9984cdc9856"
     },
     {
       "path": "tests/test_revue.py",
-      "sha256": "0e18975132ff555af49911d2be19e51e979053a6d826a70916de07f8f704168f"
+      "sha256": "8602866466b0dda62a3bab9171fbee8ec0704daa974a9acb33199a6bea9bc02e"
     },
     {
       "path": "tests/test_routestore_concurrence.py",
@@ -867,7 +867,7 @@
   "tests": {
     "js_files": 3,
     "python_files": 179,
-    "python_functions_declared": 1839
+    "python_functions_declared": 1860
   }
 }
 ```
