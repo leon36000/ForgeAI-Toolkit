@@ -171,10 +171,17 @@ def check(
                 received_current = True
                 report.append(f"OK    {entry} : reçu couvre le changement courant")
             else:
-                ok = False
+                # PAS un ECHEC de cette entrée : un reçu qui ne valide plus contre l'état git
+                # COURANT est l'état normal et permanent de toute entrée HISTORIQUE (déjà
+                # mergée) une fois qu'origin/main a avancé — son base_commit ne correspondra
+                # plus jamais. Seule l'ABSENCE de tout reçu couvrant est un échec (vérifié plus
+                # bas via received_current). Régression #439/PR500 : le mode PR faisait
+                # échouer le gate sur CHAQUE reçu historique déjà mergé, bloquant toute PR
+                # future dès qu'une entrée liante antérieure portait un RECU.json.
                 report.append(
-                    f"ECHEC {entry} : reçu invalide = {receipt_result.get('result')} "
-                    f"({receipt_result.get('reason', '')})"
+                    f"info  {entry} : reçu invalide = {receipt_result.get('result')} "
+                    f"({receipt_result.get('reason', '')}) — ignoré si un autre reçu couvre "
+                    f"le changement courant"
                 )
 
         if mode == "archive" and receipt_path.is_file():
