@@ -1,0 +1,31 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "majeure",
+   "fichier": ".github/workflows/ci-deps-update.yml",
+   "description": "Le lockfile CI est régénéré en ciblant uniquement Python 3.10, alors que la matrice officielle supporte Python 3.10, 3.11, 3.12 et 3.13. La commande ne peut pas garantir un verrouillage compatible avec l'ensemble des versions supportées : une future résolution pourrait sélectionner des paquets dont les métadonnées excluent Python 3.11/3.12/3.13.",
+   "preuve": "run: uv pip compile requirements-ci.in --universal --python-version 3.10 --generate-hashes --no-header -o requirements-ci.txt"
+  },
+  {
+   "severite": "mineure",
+   "fichier": "requirements-ci.txt",
+   "description": "Le lockfile généré est exclu du diff, donc ses empreintes effectives ne sont pas vérifiables dans cette revue.",
+   "preuve": "Note au reviewer : le diff exclut requirements-ci.txt ; tests/test_rc1017_matrice_python.py atteste seulement son existence et la présence d'empreintes par balayage."
+  },
+  {
+   "severite": "mineure",
+   "fichier": ".github/workflows/ci-deps-update.yml",
+   "description": "L'installation de l'outil uv n'est ni versionnée ni protégée par empreinte, ce qui n'est pas entièrement cohérent avec une toolchain CI verrouillée.",
+   "preuve": "run: python -m pip install uv"
+  }
+ ],
+ "date_heure": "2026-08-15T18:14:42.509622+00:00",
+ "prompt_sha256": "69a270a32d0e684d4c977c3850de90d1fab819387800d25ad34f5f8505cc4545",
+ "reviewer_model": "DeepSeek-V4-Pro",
+ "modele_servi": "deepseek-v4-pro-direct",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

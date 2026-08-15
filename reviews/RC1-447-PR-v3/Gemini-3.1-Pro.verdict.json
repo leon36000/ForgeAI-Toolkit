@@ -1,0 +1,25 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": ".github/workflows/ci-deps-update.yml",
+   "description": "L'outil uv est épinglé en version mais installé avec pip sans --require-hashes, ce qui n'est pas strictement conforme à l'objectif d'une toolchain CI entièrement verrouillée.",
+   "preuve": "run: python -m pip install uv==0.11.26"
+  },
+  {
+   "severite": "mineure",
+   "fichier": ".github/workflows/gates.yml",
+   "description": "Le workflow extrait et publie un résumé des warnings par version dans GITHUB_STEP_SUMMARY, mais aucune étape ne compare automatiquement ces warnings ou les résultats entre les versions de la matrice. La comparaison repose sur une action manuelle.",
+   "preuve": "grep -A 1000 -E 'warnings summary|warnings? in ' pytest-warnings.txt || true"
+  }
+ ],
+ "date_heure": "2026-08-15T18:27:58.627051+00:00",
+ "prompt_sha256": "2903b57d3c75a98fff2735ef54c3ea63fa3a87cc6b447e781bec9f5332264ce1",
+ "reviewer_model": "Gemini-3.1-Pro",
+ "modele_servi": "gemini-31-pro-openrouter",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "1"
+ }
+}

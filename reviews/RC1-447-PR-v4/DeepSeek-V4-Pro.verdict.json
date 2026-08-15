@@ -1,0 +1,25 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": ".github/workflows/ci-deps-update.yml",
+   "description": "L'outil uv est épinglé en version exacte mais installé sans --require-hashes ni --no-cache-dir, donc l'installation de l'outil de toolchain n'est pas protégée par empreinte malgré l'objectif de toolchain CI verrouillée.",
+   "preuve": "run: python -m pip install uv==0.11.26"
+  },
+  {
+   "severite": "mineure",
+   "fichier": ".github/workflows/gates.yml",
+   "description": "Le workflow publie des résumés de warnings par version Python dans GITHUB_STEP_SUMMARY, mais aucune étape ne compare automatiquement ces résumés ou les résultats entre les versions de la matrice ; le critère de comparaison reste manuel.",
+   "preuve": "grep -A 1000 -E 'warnings summary|warnings? in ' pytest-warnings.txt || true"
+  }
+ ],
+ "date_heure": "2026-08-15T19:14:57.589494+00:00",
+ "prompt_sha256": "6bb6f76cde53bd3513457b5b850a0160dcbf09c3fb9f92783e3197330be893f5",
+ "reviewer_model": "DeepSeek-V4-Pro",
+ "modele_servi": "deepseek-v4-pro-direct",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

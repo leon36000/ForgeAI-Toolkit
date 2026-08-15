@@ -9,6 +9,12 @@ description = "Déployeur de référence d'infrastructures IA agentiques — wiz
 readme = "README.md"
 license = "Apache-2.0"
 requires-python = ">=3.10"
+classifiers = [
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+]
 # Aucune dépendance runtime : le cœur tourne sur la bibliothèque standard uniquement,
 # pour une portabilité maximale (pip install sans chaîne de dépendances).
 dependencies = []

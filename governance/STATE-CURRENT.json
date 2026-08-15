@@ -8,8 +8,8 @@
       "sha256_recomputed_ok": true
     },
     "ci": {
-      "jobs_total": 16,
-      "workflows": 3
+      "jobs_total": 18,
+      "workflows": 4
     },
     "cli": {
       "subcommands": [
@@ -87,8 +87,12 @@
     },
     "inputs": [
       {
+        "path": ".github/workflows/ci-deps-update.yml",
+        "sha256": "fe4aafcac163054f203e14b309da1dffe9272155d72a91298c05954ce5e79e66"
+      },
+      {
         "path": ".github/workflows/gates.yml",
-        "sha256": "0b0b6ca84399e3d78084860a961a6f1822968129593c9d7c63588855b2c1b1a8"
+        "sha256": "39c7486ae4fce2da9df824ff5c02563769d9078d363da8620c7df738da72da0d"
       },
       {
         "path": ".github/workflows/scope-guard.yml",
@@ -96,7 +100,7 @@
       },
       {
         "path": ".github/workflows/sonarcloud.yml",
-        "sha256": "363a8dbcd111d2007bd6511192fb225196c1b1bd3f4830fd2d17c26f59648a21"
+        "sha256": "f7613771529577fea8e04869a3b911144b8aece2bc8bcc214fa41e8503c39bfb"
       },
       {
         "path": "coordination/active-claims.json",
@@ -108,7 +112,7 @@
       },
       {
         "path": "pyproject.toml",
-        "sha256": "94800ecf9e9cf845474e6d685e40f38e3fb97682dbcd69472f2076c29a6b7048"
+        "sha256": "2247ade432bd7d1c085efa76542641e355c139f9261666e6b16de670f78685ae"
       },
       {
         "path": "src/forgeai/__init__.py",
@@ -152,7 +156,7 @@
       },
       {
         "path": "tests/test_assemble_and_secrets.py",
-        "sha256": "928f558f4b1f0bc3c1af88eedc7365b4bb344cf67160b4539d205cc334e4f345"
+        "sha256": "c2d6bfc3f425a7144fedc06b7da4ebdf7dc206f2c1578dac3f796ef1bd5e13fc"
       },
       {
         "path": "tests/test_authority_map.py",
@@ -468,7 +472,7 @@
       },
       {
         "path": "tests/test_openbao_flow.py",
-        "sha256": "1d488089d08e92ea4f0462c21200ff1ff17a7c3e84c71fa0a270b40943edcf1e"
+        "sha256": "13e42f7cc1ecde69d7df126190951a6f6462937d7896748069a6f5c73aa0df68"
       },
       {
         "path": "tests/test_openbao_flow_import.py",
@@ -615,6 +619,10 @@
         "sha256": "747fd9a6d1bcb9fce57fa5f53c284b9cdfc1ad1f15985c834c7ded038c89828e"
       },
       {
+        "path": "tests/test_rc1017_matrice_python.py",
+        "sha256": "5986a40bc07b2798f30f8379a3dcb86e716324d236ac6170ae9e78a4fbecc608"
+      },
+      {
         "path": "tests/test_receptacles.py",
         "sha256": "e73378b496c2f6109133dfcef07f1a7b3f79e9e48cbc473882e4b53e4ef496ca"
       },
@@ -680,7 +688,7 @@
       },
       {
         "path": "tests/test_routestore_concurrence.py",
-        "sha256": "e507563db4fce70030fc983556188995b917b9f1cd4cf68d7fc27bb287789d0c"
+        "sha256": "8641c62ac1fd34c9237c6c753d444bc9a73973ab5a7dcdb78ca425c9f8f7b00b"
       },
       {
         "path": "tests/test_selection_complete.py",
@@ -776,7 +784,7 @@
       },
       {
         "path": "tests/test_vault.py",
-        "sha256": "d946467021169f1cd1ea0f3bbc39c2fc00ca7541cb293dac22f3672824b7d372"
+        "sha256": "32c96e2349fc238a1d5aa733ef9c4063049bcdf68f6d28cd5c83e58cccb2e578"
       },
       {
         "path": "tests/test_vault_e2e.py",
@@ -864,8 +872,8 @@
     },
     "tests": {
       "js_files": 3,
-      "python_files": 180,
-      "python_functions_declared": 1942
+      "python_files": 181,
+      "python_functions_declared": 1949
     }
   },
   "observations": [

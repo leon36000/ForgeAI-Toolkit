@@ -10,6 +10,7 @@ import json
 import multiprocessing as mp
 import os
 import signal
+import sys
 import threading
 from pathlib import Path
 
@@ -31,8 +32,14 @@ class _GreenTransport:
 def _add_one(home_str: str, i: int, barrier) -> None:
     barrier.wait()
     store = RouteStore(Path(home_str))
-    store.add_cloud(f"route-{i}", "openrouter", "z-ai/glm-4.6", FAKE_KEY, "pp-coffre",
-                    transport=_GreenTransport())
+    store.add_cloud(
+        f"route-{i}",
+        "openrouter",
+        "z-ai/glm-4.6",
+        FAKE_KEY,
+        "pp-coffre",
+        transport=_GreenTransport(),
+    )
 
 
 def _add_named(home_str: str, done) -> None:
@@ -55,7 +62,6 @@ def _configure_named(home_str: str, done) -> None:
 def _import_pause_before_routes_commit(
     bundle_path: str, home_str: str, ready, release
 ) -> None:
-    """Suspend l'import à sa primitive de commit, quel que soit le writer utilisé."""
     target = Path(home_str) / "routes.json"
     real_open = builtins.open
     real_replace = os.replace
@@ -80,7 +86,6 @@ def _import_pause_before_routes_commit(
 
 
 def _configure_pause_before_replace(home_str: str, ready) -> None:
-    """Processus victime : attend indéfiniment juste avant le rename atomique."""
     target = Path(home_str) / "routes.json"
     real_replace = os.replace
 
@@ -95,7 +100,6 @@ def _configure_pause_before_replace(home_str: str, ready) -> None:
 
 
 def _add_cloud_pause_before_routes_replace(home_str: str, ready) -> None:
-    """Processus victime : coffre remplacé, puis attente avant le replace des routes."""
     target = Path(home_str) / "routes.json"
     real_replace = os.replace
 
@@ -117,7 +121,6 @@ def _add_cloud_pause_before_routes_replace(home_str: str, ready) -> None:
 
 
 def _add_cloud_pause_before_vault_replace(home_str: str, ready) -> None:
-    """Processus victime : WAL durable, attente avant le premier replace du coffre."""
     target = Path(home_str) / "vault.json"
     real_replace = os.replace
 
@@ -139,17 +142,20 @@ def _add_cloud_pause_before_vault_replace(home_str: str, ready) -> None:
 
 
 def _add_cloud_pause_before_journal_unlink(home_str: str, ready) -> None:
-    """Processus victime : les deux fichiers sont commités, le journal est encore présent."""
     target = Path(home_str) / ".models-transaction.json"
-    real_unlink = os.unlink
 
-    def paused_unlink(path, *args, **kwargs):
-        if os.fspath(path) == os.fspath(target):
+    def pause_before_journal_unlink(event, args) -> None:
+        if event != "os.remove" or not args:
+            return
+        try:
+            path = os.fspath(args[0])
+        except TypeError:
+            return
+        if path == os.fspath(target):
             ready.set()
             threading.Event().wait()
-        return real_unlink(path, *args, **kwargs)
 
-    os.unlink = paused_unlink
+    sys.addaudithook(pause_before_journal_unlink)
     RouteStore(Path(home_str)).add_cloud(
         "orpheline",
         "openrouter",
@@ -163,14 +169,12 @@ def _add_cloud_pause_before_journal_unlink(home_str: str, ready) -> None:
 def _add_cloud_wait_then_pause_before_journal_unlink(
     home_str: str, start, ready
 ) -> None:
-    """Attend le signal parent; le processus est forké avant les threads du test."""
     if not start.wait(timeout=10):
         raise RuntimeError("signal de départ absent")
     _add_cloud_pause_before_journal_unlink(home_str, ready)
 
 
 def test_add_cloud_concurrent_ne_perd_aucune_route(tmp_path):
-    """N process ajoutent des routes distinctes en parallèle ⇒ les N sont persistées."""
     home = tmp_path / "models"
     N = 8
     ctx = mp.get_context("fork")
@@ -183,14 +187,12 @@ def test_add_cloud_concurrent_ne_perd_aucune_route(tmp_path):
 
     store = RouteStore(home)
     noms = sorted(r.name for r in store.list())
-    assert noms == sorted(f"route-{i}" for i in range(N)), f"routes perdues : {noms}"
-    # chaque clé scellée est retrouvable (le coffre n'a pas non plus perdu d'entrée)
+    assert noms == sorted(f"route-{i}" for i in range(N))
     for i in range(N):
         assert store.vault.get(f"route-{i}", "pp-coffre") == FAKE_KEY
 
 
 def test_import_add_et_configure_partagent_le_verrou_interprocessus(tmp_path):
-    """L'import ne peut écraser ni l'ajout ni la configuration concurrents."""
     home = tmp_path / "models"
     home.mkdir()
     route = {
@@ -226,7 +228,7 @@ def test_import_add_et_configure_partagent_le_verrou_interprocessus(tmp_path):
         args=(str(bundle_path), str(home), import_ready, release_import),
     )
     importer.start()
-    assert import_ready.wait(timeout=5), "l'import n'a pas atteint son commit"
+    assert import_ready.wait(timeout=5)
 
     adder = ctx.Process(target=_add_named, args=(str(home), add_done))
     configurator = ctx.Process(
@@ -235,7 +237,6 @@ def test_import_add_et_configure_partagent_le_verrou_interprocessus(tmp_path):
     adder.start()
     configurator.start()
 
-    # Sans verrou commun, les deux RMW finissent avant l'import puis sont écrasés.
     add_done.wait(timeout=2)
     configure_done.wait(timeout=2)
     release_import.set()
@@ -255,7 +256,6 @@ def test_import_add_et_configure_partagent_le_verrou_interprocessus(tmp_path):
 
 
 def test_vault_put_concurrent_ne_perd_aucune_cle(tmp_path):
-    """T threads scellent des secrets distincts en parallèle ⇒ tous retrouvables."""
     vault = Vault(tmp_path / "vault.json")
     T = 8
     barrier = threading.Barrier(T)
@@ -275,7 +275,6 @@ def test_vault_put_concurrent_ne_perd_aucune_cle(tmp_path):
 
 
 def test_configure_cache_100_ecritures_concurrentes_sont_toutes_persistees(tmp_path):
-    """100 RMW concurrents sur des routes distinctes ne perdent aucune configuration."""
     home = tmp_path / "models"
     home.mkdir()
     route_count = 100
@@ -321,7 +320,7 @@ def test_configure_cache_100_ecritures_concurrentes_sont_toutes_persistees(tmp_p
             RouteStore(home).configure_cache(
                 f"route-{i}", True, ttl_s=i, prefix=f"prefix-{i}"
             )
-        except Exception as exc:  # la liste rend les erreurs de thread observables
+        except Exception as exc:
             with errors_lock:
                 errors.append(exc)
 
@@ -330,7 +329,7 @@ def test_configure_cache_100_ecritures_concurrentes_sont_toutes_persistees(tmp_p
         thread.start()
     for thread in threads:
         thread.join(timeout=10)
-        assert not thread.is_alive(), "configure_cache est resté bloqué"
+        assert not thread.is_alive()
     reader_stop.set()
     reader_thread.join(timeout=5)
 
@@ -349,7 +348,6 @@ def test_configure_cache_100_ecritures_concurrentes_sont_toutes_persistees(tmp_p
 def test_add_cloud_et_configure_cache_partagent_la_meme_transaction(
     tmp_path, monkeypatch
 ):
-    """Un add bloqué ne peut pas écraser une configuration concurrente déjà persistée."""
     home = tmp_path / "models"
     home.mkdir()
     (home / "routes.json").write_text(
@@ -413,7 +411,7 @@ def test_add_cloud_et_configure_cache_partagent_la_meme_transaction(
 
     add_thread = threading.Thread(target=add_worker)
     add_thread.start()
-    assert add_save_entered.wait(timeout=5), "add_cloud n'a pas atteint son commit"
+    assert add_save_entered.wait(timeout=5)
     config_thread = threading.Thread(target=configure_worker)
     config_thread.start()
     config_save_entered.wait(timeout=0.5)
@@ -434,7 +432,6 @@ def test_add_cloud_et_configure_cache_partagent_la_meme_transaction(
 
 
 def test_sigkill_avant_replace_conserve_ancien_routes_json(tmp_path):
-    """Un kill après fsync du tmp mais avant replace laisse l'ancien JSON complet."""
     home = tmp_path / "models"
     home.mkdir()
     path = home / "routes.json"
@@ -460,7 +457,7 @@ def test_sigkill_avant_replace_conserve_ancien_routes_json(tmp_path):
         target=_configure_pause_before_replace, args=(str(home), ready)
     )
     process.start()
-    assert ready.wait(timeout=5), "le processus n'a pas atteint os.replace"
+    assert ready.wait(timeout=5)
 
     os.kill(process.pid, signal.SIGKILL)
     process.join(timeout=5)
@@ -471,7 +468,6 @@ def test_sigkill_avant_replace_conserve_ancien_routes_json(tmp_path):
 
 
 def test_sigkill_entre_vault_et_routes_recupere_sans_cle_orpheline(tmp_path):
-    """Une nouvelle session rollback la transaction interrompue entre les deux fichiers."""
     home = tmp_path / "models"
     ctx = mp.get_context("fork")
     ready = ctx.Event()
@@ -479,7 +475,7 @@ def test_sigkill_entre_vault_et_routes_recupere_sans_cle_orpheline(tmp_path):
         target=_add_cloud_pause_before_routes_replace, args=(str(home), ready)
     )
     process.start()
-    assert ready.wait(timeout=10), "le processus n'a pas atteint le replace routes"
+    assert ready.wait(timeout=10)
 
     os.kill(process.pid, signal.SIGKILL)
     process.join(timeout=5)
@@ -491,7 +487,6 @@ def test_sigkill_entre_vault_et_routes_recupere_sans_cle_orpheline(tmp_path):
 
 
 def test_sigkill_add_cloud_restaure_exactement_etat_preexistant(tmp_path):
-    """Le journal ne doit pas être contaminé par la mutation du nouvel état."""
     home = tmp_path / "models"
     home.mkdir()
     existing_secret = "secret-existant"
@@ -518,7 +513,7 @@ def test_sigkill_add_cloud_restaure_exactement_etat_preexistant(tmp_path):
         target=_add_cloud_pause_before_routes_replace, args=(str(home), ready)
     )
     process.start()
-    assert ready.wait(timeout=10), "le processus n'a pas atteint le replace routes"
+    assert ready.wait(timeout=10)
 
     os.kill(process.pid, signal.SIGKILL)
     process.join(timeout=5)
@@ -530,7 +525,6 @@ def test_sigkill_add_cloud_restaure_exactement_etat_preexistant(tmp_path):
 
 
 def test_vault_put_apres_crash_recupere_avant_nouvelle_ecriture(tmp_path):
-    """Une écriture Vault acquittée après crash ne doit jamais être effacée ensuite."""
     home = tmp_path / "models"
     ctx = mp.get_context("fork")
     ready = ctx.Event()
@@ -538,7 +532,7 @@ def test_vault_put_apres_crash_recupere_avant_nouvelle_ecriture(tmp_path):
         target=_add_cloud_pause_before_routes_replace, args=(str(home), ready)
     )
     process.start()
-    assert ready.wait(timeout=10), "le processus n'a pas atteint le replace routes"
+    assert ready.wait(timeout=10)
 
     os.kill(process.pid, signal.SIGKILL)
     process.join(timeout=5)
@@ -555,7 +549,6 @@ def test_vault_put_apres_crash_recupere_avant_nouvelle_ecriture(tmp_path):
 
 
 def test_vault_voisin_ne_detourne_pas_la_recuperation_route_store(tmp_path):
-    """Un coffre voisin récupère le WAL canonique sans recevoir son snapshot."""
     home = tmp_path / "models"
     ctx = mp.get_context("fork")
     ready = ctx.Event()
@@ -563,7 +556,7 @@ def test_vault_voisin_ne_detourne_pas_la_recuperation_route_store(tmp_path):
         target=_add_cloud_pause_before_routes_replace, args=(str(home), ready)
     )
     process.start()
-    assert ready.wait(timeout=10), "le processus n'a pas atteint le replace routes"
+    assert ready.wait(timeout=10)
 
     os.kill(process.pid, signal.SIGKILL)
     process.join(timeout=5)
@@ -581,7 +574,6 @@ def test_vault_voisin_ne_detourne_pas_la_recuperation_route_store(tmp_path):
 
 
 def test_alias_hardlink_du_coffre_est_restaure_avant_put(tmp_path):
-    """Un alias du coffre ne conserve ni état révocable ni écriture hors recovery."""
     home = tmp_path / "models"
     ctx = mp.get_context("fork")
     ready = ctx.Event()
@@ -589,7 +581,7 @@ def test_alias_hardlink_du_coffre_est_restaure_avant_put(tmp_path):
         target=_add_cloud_pause_before_routes_replace, args=(str(home), ready)
     )
     process.start()
-    assert ready.wait(timeout=10), "le processus n'a pas atteint le replace routes"
+    assert ready.wait(timeout=10)
 
     os.kill(process.pid, signal.SIGKILL)
     process.join(timeout=5)
@@ -611,7 +603,6 @@ def test_alias_hardlink_du_coffre_est_restaure_avant_put(tmp_path):
 
 
 def test_recovery_ne_suit_jamais_un_symlink_vault_externe(tmp_path):
-    """Le rollback supprime le lien canonique injecté, jamais sa cible externe."""
     home = tmp_path / "models"
     victim = tmp_path / "victime.json"
     victim_payload = '{"ne_pas_toucher":true}'
@@ -622,7 +613,7 @@ def test_recovery_ne_suit_jamais_un_symlink_vault_externe(tmp_path):
         target=_add_cloud_pause_before_vault_replace, args=(str(home), ready)
     )
     process.start()
-    assert ready.wait(timeout=10), "le processus n'a pas atteint le replace coffre"
+    assert ready.wait(timeout=10)
 
     (home / "vault.json").symlink_to(victim)
     os.kill(process.pid, signal.SIGKILL)
@@ -638,7 +629,6 @@ def test_recovery_ne_suit_jamais_un_symlink_vault_externe(tmp_path):
 
 
 def test_verrou_transaction_refuse_symlink_sans_alterer_la_cible(tmp_path):
-    """L'acquisition du verrou échoue fermée sans suivre ni tronquer un symlink."""
     home = tmp_path / "models"
     home.mkdir()
     victim = tmp_path / "victime-lock.txt"
@@ -656,12 +646,6 @@ def test_verrou_transaction_refuse_symlink_sans_alterer_la_cible(tmp_path):
 
 
 def test_file_lock_refuse_symlink_preexistant_avant_tout_open(tmp_path, monkeypatch):
-    """PINNING CAND-010 : le lstat pré-ouverture de file_lock (avant `os.open`) doit à
-    lui seul refuser un verrou symlink pré-existant — pas seulement grâce à O_NOFOLLOW,
-    qui échouerait lui aussi mais APRÈS avoir tenté l'ouverture. Neutraliser la garde
-    lstat seule ne fait rougir AUCUN test existant (mesuré par mutation) parce que
-    O_NOFOLLOW rattrape silencieusement le symlink au moment de l'open : ce test espionne
-    `os.open` pour prouver qu'il n'est JAMAIS appelé sur un verrou non régulier."""
     from forgeai.models import _locking as locking_module
 
     target = tmp_path / "cible.bin"
@@ -683,17 +667,12 @@ def test_file_lock_refuse_symlink_preexistant_avant_tout_open(tmp_path, monkeypa
         with file_lock(target):
             pass
 
-    assert opened_paths == [], (
-        "os.open ne doit jamais être invoqué sur un verrou pré-existant non régulier"
-    )
+    assert opened_paths == []
     assert lock_path.is_symlink()
     assert victim.read_bytes() == b"contenu-externe-intact"
 
 
 def test_file_lock_accepte_verrou_regulier_preexistant(tmp_path):
-    """Contrôle négatif : un fichier de verrou RÉGULIER pré-existant ne doit pas
-    déclencher la garde — seule la nature non régulière (symlink, FIFO, périphérique)
-    doit être refusée."""
     target = tmp_path / "cible-reguliere.bin"
     lock_path = tmp_path / "cible-reguliere.bin.lock"
     lock_path.write_bytes(b"")
@@ -706,13 +685,6 @@ def test_file_lock_accepte_verrou_regulier_preexistant(tmp_path):
 
 
 def test_export_recupere_le_wal_avant_de_lire_routes(tmp_path):
-    """Un export publie l'état RÉCUPÉRÉ, jamais un état encore en attente de récupération.
-
-    RÉÉCRIT PAR DATA-002B (#306). Ce test exigeait auparavant `"routes.json" not in bundle`,
-    c'est-à-dire l'annulation d'une transaction COMMITÉE : il encodait le défaut comme
-    spécification. Son intention légitime — « la récupération précède toute lecture » — est
-    conservée ; son postulat — « une transaction commitée est révocable » — est corrigé.
-    """
     home = tmp_path / "models"
     ctx = mp.get_context("fork")
     ready = ctx.Event()
@@ -720,7 +692,7 @@ def test_export_recupere_le_wal_avant_de_lire_routes(tmp_path):
         target=_add_cloud_pause_before_journal_unlink, args=(str(home), ready)
     )
     process.start()
-    assert ready.wait(timeout=10), "le processus n'a pas atteint l'unlink du journal"
+    assert ready.wait(timeout=10)
 
     os.kill(process.pid, signal.SIGKILL)
     process.join(timeout=5)
@@ -730,17 +702,12 @@ def test_export_recupere_le_wal_avant_de_lire_routes(tmp_path):
     assert (home / ".models-transaction.json").exists()
 
     bundle = export_setup(home)
-    # La récupération a eu lieu AVANT la lecture : le journal a disparu. C'est ce qui prouve
-    # l'ordre, et c'est le seul détecteur qui survit au correctif — la présence de la route,
-    # elle, serait vraie même sans récupération, puisqu'elle est déjà sur disque.
     assert not (home / ".models-transaction.json").exists()
-    # Et la transaction commitée est publiée, au lieu d'être silencieusement annulée.
     assert "routes.json" in bundle["files"]
     assert bundle["files"]["routes.json"][0]["name"] == "orpheline"
 
 
 def test_sigkill_apres_routes_replace_est_recupere_avant_precheck_add(tmp_path):
-    """Le precheck d'une instance existante récupère avant de juger un doublon."""
     home = tmp_path / "models"
     observer = RouteStore(home)
     ctx = mp.get_context("fork")
@@ -749,32 +716,26 @@ def test_sigkill_apres_routes_replace_est_recupere_avant_precheck_add(tmp_path):
         target=_add_cloud_pause_before_journal_unlink, args=(str(home), ready)
     )
     process.start()
-    assert ready.wait(timeout=10), "le processus n'a pas atteint l'unlink du journal"
+    assert ready.wait(timeout=10)
 
     os.kill(process.pid, signal.SIGKILL)
     process.join(timeout=5)
 
     assert process.exitcode == -signal.SIGKILL
-
-    # RÉÉCRIT PAR DATA-002B (#306). Avant le correctif, la récupération annulait la transaction
-    # commitée et le ré-ajout réussissait — le test consacrait donc la perte de données. La route
-    # survit désormais, et le precheck doit la voir comme un doublon.
     with pytest.raises(RouteError, match="existe déjà"):
         observer.add_cloud(
-            "orpheline", "openrouter", "m", "nouveau-secret", "pp",
+            "orpheline",
+            "openrouter",
+            "m",
+            "nouveau-secret",
+            "pp",
             transport=_GreenTransport(),
         )
-
-    # Détecteur de l'ORDRE, seul survivant du correctif : la présence de la route serait vraie
-    # même sans récupération (elle est déjà sur disque), mais la disparition du journal ne peut
-    # venir que de la récupération déclenchée par le precheck.
     assert not (home / ".models-transaction.json").exists()
-    # Le secret d'ORIGINE est intact : le ré-ajout refusé n'a rien écrasé.
     assert observer.vault.get("orpheline", "pp-coffre") == FAKE_KEY
 
 
 def test_precheck_add_est_atomique_avec_la_recuperation(tmp_path, monkeypatch):
-    """Aucun writer ne peut commiter entre recovery et lecture du precheck."""
     home = tmp_path / "models"
     observer = RouteStore(home)
     load_entered = threading.Event()
@@ -823,7 +784,7 @@ def test_precheck_add_est_atomique_avec_la_recuperation(tmp_path, monkeypatch):
 
     observer_thread = threading.Thread(target=observer_worker)
     observer_thread.start()
-    assert load_entered.wait(timeout=5), "le precheck observer n'a pas commencé"
+    assert load_entered.wait(timeout=5)
 
     writer_start.set()
     writer_interleaved_during_precheck = writer_ready.wait(timeout=0.5)
@@ -837,16 +798,13 @@ def test_precheck_add_est_atomique_avec_la_recuperation(tmp_path, monkeypatch):
     writer.join(timeout=5)
     observer_thread.join(timeout=10)
 
-    assert not writer_interleaved_during_precheck, (
-        "un writer a commité pendant le precheck"
-    )
+    assert not writer_interleaved_during_precheck
     assert observer_done.is_set()
     assert errors == []
     assert len(results) == 1
 
 
 def test_deux_configure_cache_meme_route_restent_linearisables(tmp_path):
-    """Deux configurations concurrentes donnent un état final complet de l'une des deux."""
     home = tmp_path / "models"
     home.mkdir()
     (home / "routes.json").write_text(
@@ -896,10 +854,7 @@ def test_deux_configure_cache_meme_route_restent_linearisables(tmp_path):
     assert (final.cache_ttl_s, final.cache_prefix) in {(10, "a"), (20, "b")}
 
 
-def test_deux_add_cloud_meme_nom_refusent_le_perdant_sans_desaligner_vault(
-    tmp_path,
-):
-    """Le perdant reçoit RouteError; la clé du coffre correspond à la route gagnante."""
+def test_deux_add_cloud_meme_nom_refusent_le_perdant_sans_desaligner_vault(tmp_path):
     home = tmp_path / "models"
     barrier = threading.Barrier(2)
     successes: list[tuple[str, str]] = []
@@ -947,7 +902,6 @@ def test_deux_add_cloud_meme_nom_refusent_le_perdant_sans_desaligner_vault(
 
 
 def test_probe_reseau_reste_hors_verrou_transaction(tmp_path):
-    """Un contender acquiert le lock pendant le probe réseau lui-même."""
     home = tmp_path / "models"
     store = RouteStore(home)
     probe_completed = threading.Event()
@@ -961,9 +915,7 @@ def test_probe_reseau_reste_hors_verrou_transaction(tmp_path):
 
             contender_thread = threading.Thread(target=contender)
             contender_thread.start()
-            assert lock_acquired_during_probe.wait(timeout=2), (
-                "le verrou transactionnel couvre le probe réseau"
-            )
+            assert lock_acquired_during_probe.wait(timeout=2)
             contender_thread.join(timeout=2)
             result = super().post(url, headers, body, timeout)
             probe_completed.set()
