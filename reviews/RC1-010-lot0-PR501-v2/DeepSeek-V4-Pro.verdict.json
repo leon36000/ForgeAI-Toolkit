@@ -1,0 +1,19 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "governance/path-classification.json",
+   "description": "Le manifeste régénéré référence des fichiers reviews/RC1-009-PR500-v3/* qui ne font pas partie du diff examiné ; leur existence, contenu et empreinte ne sont donc pas vérifiables depuis le pack de revue. L'incohérence n'est pas démontrée, mais le doute est non levable par le reviewer.",
+   "preuve": "Diff governance/path-classification.json : ajouts d'entrées reviews/RC1-009-PR500-v3/DeepSeek-V4-Pro.verdict.json, Gemini-3.1-Pro.verdict.json, MiMo-Pro-V2.verdict.json, RECU.json classées EVIDENCE avec target_path evidence/reviews/..."
+  }
+ ],
+ "date_heure": "2026-08-15T23:37:00.605726+00:00",
+ "prompt_sha256": "e3296b10666048b55168208be9d5563aab98f816c2e2a82876e8ef28542fb993",
+ "reviewer_model": "DeepSeek-V4-Pro",
+ "modele_servi": "deepseek-v4-pro-direct",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}
