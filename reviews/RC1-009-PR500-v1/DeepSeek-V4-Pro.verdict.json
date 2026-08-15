@@ -1,0 +1,19 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "majeure",
+   "fichier": "governance/path-classification.json",
+   "description": "Le rendu de classification des chemins n'est pas cohérent avec le diff : il omet au moins les deux nouveaux fichiers ajoutés par la story (governance/decisions/D-2026-08-15-racines-documentaires.md et tests/test_rc1009_racines_documentaires.py). Le total suivi ne passe que de 1756 à 1773 (+17) et le compteur GOVERNANCE reste 166 alors qu'un nouveau fichier governance est ajouté ; le delta +17 correspond aux seuls 17 fichiers reviews/RC1-004-PR497* ajoutés au rendu, hors périmètre de la story. Un rendu ultérieur depuis le même arbre devrait donc encore changer, donc la convergence/idempotence annoncée est fausse.",
+   "preuve": "diff governance/PATH-CLASSIFICATION.md : '- Fichiers suivis : 1756' / '+ Fichiers suivis : 1773' ; '- GOVERNANCE : 166' inchangé. Diff ajoute 'new file mode 100644' pour governance/decisions/D-2026-08-15-racines-documentaires.md et tests/test_rc1009_racines_documentaires.py. governance/path-classification.json ajoute 17 entrées 'reviews/RC1-004-PR497-*' (ex. 'reviews/RC1-004-PR497-v2/DeepSeek-V4-Pro.verdict.json') et '- evidence-reviews : 1156' / '+ evidence-reviews : 1173'."
+  }
+ ],
+ "date_heure": "2026-08-15T22:04:48.722817+00:00",
+ "prompt_sha256": "e7cf7864dd1f38ce8d62b4d16963b14d398d9086d30211f2a50a2ee086c78767",
+ "reviewer_model": "DeepSeek-V4-Pro",
+ "modele_servi": "deepseek-v4-pro-direct",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

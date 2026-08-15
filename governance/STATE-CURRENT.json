@@ -619,8 +619,12 @@
         "sha256": "747fd9a6d1bcb9fce57fa5f53c284b9cdfc1ad1f15985c834c7ded038c89828e"
       },
       {
+        "path": "tests/test_rc1009_racines_documentaires.py",
+        "sha256": "2d4714138d7ae74daa1919fb6fd8c503ee69a01943355d8ea1fedb0e253db479"
+      },
+      {
         "path": "tests/test_rc1017_matrice_python.py",
-        "sha256": "5986a40bc07b2798f30f8379a3dcb86e716324d236ac6170ae9e78a4fbecc608"
+        "sha256": "4cfa1f3a029ff82cfca9ad868eeb02b66fbfab51ffaf076c28097a7936348d7b"
       },
       {
         "path": "tests/test_receptacles.py",
@@ -680,7 +684,7 @@
       },
       {
         "path": "tests/test_reviews_gate.py",
-        "sha256": "ded17c9ab79b8ccfce889b2d5123f48e25d657e14297fea90bea86834f5cb440"
+        "sha256": "006416f5ec348b1170e82cda1c8eababe20f4b7a11925324d0b9437acce809ea"
       },
       {
         "path": "tests/test_revue.py",
@@ -872,8 +876,8 @@
     },
     "tests": {
       "js_files": 3,
-      "python_files": 181,
-      "python_functions_declared": 1949
+      "python_files": 182,
+      "python_functions_declared": 1951
     }
   },
   "observations": [

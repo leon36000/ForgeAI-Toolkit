@@ -48,6 +48,7 @@ Cette carte est le rendu de `governance/authority.json`.
 | `coord.work-packages` | `coordination/work-packages.json` | active | `coordination_ops` | `copilot` | `—` |
 | `cursor.orchestration-rules` | `.cursor/rules/forgeai-orchestration.mdc` | superseded | `ide_contract` | `copilot` | `gov.decision-mission-lead` |
 | `gov.decision-mission-lead` | `governance/decisions/D-2026-08-14-mission-lead.md` | conflicted | `orchestration` | `nathan` | `—` |
+| `gov.decision-racines-documentaires` | `governance/decisions/D-2026-08-15-racines-documentaires.md` | active | `governance_method` | `orchestrateur` | `—` |
 | `manifests.roles` | `manifests/roles.yaml` | active | `ide_contract` | `orchestrateur` | `—` |
 | `master-plan` | `MASTER-PLAN.md` | conflicted | `plan_of_record` | `nathan` | `—` |
 | `readme` | `README.md` | active | `governance_method` | `nathan` | `—` |

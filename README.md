@@ -30,15 +30,19 @@ dans Claude Code (l'orchestrateur en session), routée par le gateway LiteLLM lo
 
 | Répertoire | Rôle |
 |---|---|
+| `governance/` | Canon, décisions, méthode et artefacts de gouvernance |
 | `CANON/` | Documents de référence gelés (plan maître, annexes) |
 | `manifests/` | Plan machine-lisible : `roles.yaml`, `routes.yaml`, `phases.yaml`, `bricks.yaml`, `gates.yaml` |
 | `Registres/` | Journaux JSONL append-only hash-chaînés (preuves) |
-| `Docs/` | Documentation Diátaxis |
+| `Docs/` | Racine de la documentation active, organisée selon Diátaxis |
+| `stories/` | Artefacts de gouvernance des stories |
 | `src/` | Code du Toolkit |
 | `tests/` | Tests (TDD strict — une fonctionnalité sans test n'existe pas) |
 | `reviews/` | Verdicts de revue aveugle scellés (`<étape>/<modèle>.verdict.json`) |
 | `Sandbox/` | Expérimentations jetables — jamais mergées dans `src/` |
 | `scripts/` | Outillage de gouvernance (registre, no-stub-scan, tally) |
+
+`Docs/` est la racine de la documentation active ; `governance/` porte le canon et les décisions.
 
 ## Gates (§8bis — aucun stub, aucun faux)
 

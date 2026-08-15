@@ -1,0 +1,19 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "governance/path-classification.json",
+   "description": "Le manifeste régénéré déclare comme EVIDENCE des fichiers reviews/RC1-009-PR500-v1/* et reviews/RC1-009-PR500-v2/* (dont DeepSeek-V4-Pro.verdict.json), mais le diff fourni ne contient aucune création de ces fichiers ; leur contenu et leur hash ne sont donc pas vérifiables sur pièce.",
+   "preuve": "Le diff ajoute dans governance/path-classification.json des entrées path=reviews/RC1-009-PR500-v1/DeepSeek-V4-Pro.verdict.json et reviews/RC1-009-PR500-v2/DeepSeek-V4-Pro.verdict.json, ainsi que leur comptage dans summary->by_rule->evidence-reviews, sans sections diff --git correspondantes."
+  }
+ ],
+ "date_heure": "2026-08-15T22:32:19.778060+00:00",
+ "prompt_sha256": "d1966db1b24496acc870fd82bf011ec1dd83e7cb5d852d45775069fdaa767a18",
+ "reviewer_model": "DeepSeek-V4-Pro",
+ "modele_servi": "deepseek-v4-pro-direct",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

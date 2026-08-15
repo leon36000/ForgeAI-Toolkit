@@ -246,6 +246,39 @@ def test_mode_pr_recu_illisible_echoue_proprement(tmp_path):
     assert ok is False and any("reçu illisible" in line for line in report)
 
 
+def test_mode_pr_ignore_recu_historique_non_couvrant(tmp_path):
+    # Régression #439/PR500 (dogfooding réel de #434 sur la PR suivante) : une entrée liante
+    # DÉJÀ MERGÉE (ex. RC1-004-PR497-v5) porte un RECU.json valide pour SA PROPRE PR d'origine,
+    # dont le base_commit ne correspondra plus jamais à l'état git courant d'une PR ultérieure
+    # (origin/main a avancé). Ce n'est PAS une anomalie — c'est l'état normal et permanent de
+    # toute entrée historique. Le mode PR ne doit échouer que si AUCUN reçu ne couvre le
+    # changement courant, jamais parce qu'un reçu HISTORIQUE ne le couvre plus.
+    root = tmp_path / "reviews"
+    ancienne = _make_review(
+        root, "S-ancienne", [_verdict("deepseek"), _verdict("gemini"), _verdict("longcat")]
+    )
+    recu_ancien = _receipt()
+    recu_ancien["base_commit"] = "e" * 40  # ne correspond plus au merge-base courant ("b"*40)
+    (ancienne / "RECU.json").write_text(json.dumps(recu_ancien), encoding="utf-8")
+
+    courante = _make_review(
+        root, "S-courante", [_verdict("deepseek"), _verdict("gemini"), _verdict("longcat")]
+    )
+    (courante / "RECU.json").write_text(json.dumps(_receipt()), encoding="utf-8")
+
+    ok, report = gate.check(
+        _manifest(tmp_path, ["S-ancienne", "S-courante"]),
+        root,
+        exiger_recu_courant=True,
+        base_ref="origin/main",
+        runner=_runner,
+    )
+
+    assert ok is True, report
+    assert any("reçu couvre le changement courant" in line for line in report)
+    assert not any("ECHEC S-ancienne" in line for line in report)
+
+
 def test_mode_pr_recu_invalide_rapporte_raison(tmp_path):
     root = tmp_path / "reviews"
     directory = _make_review(

@@ -1,0 +1,19 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "governance/authority.json",
+   "description": "Placeholder non résolu dans la note de l'entrée 'readme' : la référence de PR est restée 'RC1-009-PR<NNN>' au lieu d'un numéro réel.",
+   "preuve": "Diff governance/authority.json, ligne ajoutée : \"notes\": \"Point d'entrée documentaire du dépôt. Empreinte mise à jour par #439 (RC1-009) : ajout de governance/ et stories/ à la table « Structure canonique » et clarification Docs/=doc active vs governance/=canon+décisions (RC1-009-PR<NNN>), au-dessus de l'empreinte fusionnée #433 x #437 (installation/gates/développement + marqueurs state).\""
+  }
+ ],
+ "date_heure": "2026-08-15T22:15:24.404198+00:00",
+ "prompt_sha256": "688427abfebe870e912b016bad17d8f43c1f6414ab34ed1291508229457fa996",
+ "reviewer_model": "DeepSeek-V4-Pro",
+ "modele_servi": "deepseek-v4-pro-direct",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

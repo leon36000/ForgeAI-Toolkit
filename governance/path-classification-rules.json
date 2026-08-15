@@ -335,20 +335,6 @@
       "rationale": "Ce répertoire regroupe la documentation destinée aux lecteurs du projet."
     },
     {
-      "id": "docs-active",
-      "match": {
-        "kind": "prefix",
-        "value": "docs/"
-      },
-      "class": "DOCS",
-      "generated": false,
-      "owner": "docs-utilisateur",
-      "target": null,
-      "target_kind": "keep",
-      "load_bearing": false,
-      "rationale": "L'issue #439 (RC1-009) fait de docs/ l'une des deux racines canoniques : docs/ contient la documentation active et governance/ le canon et les décisions. Cette règle matérialise donc une décision déjà prise, elle ne l'anticipe pas arbitrairement. Le répertoire docs/ n'est référencé par aucun script ou workflow d'exécution et n'est donc pas load-bearing."
-    },
-    {
       "id": "governance-core",
       "match": {
         "kind": "prefix",
