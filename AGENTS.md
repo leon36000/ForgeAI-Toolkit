@@ -6,8 +6,9 @@
 ## Mission
 Construire le ForgeAI Toolkit selon le plan maître BMAD
 ([CANON/PLAN-MAITRE-EXECUTION-BMAD-v1.0.md](CANON/PLAN-MAITRE-EXECUTION-BMAD-v1.0.md)).
-Fable (session lead Claude Code) orchestre; les membres de l'équipe sont routés via
-`forge-model-bridge` (LiteLLM, 127.0.0.1:4000) — voir `manifests/roles.yaml` et `manifests/routes.yaml`.
+Claude Code Opus est mission lead, gestionnaire du DAG et intégrateur ; les membres de l'équipe sont routés via
+`forge-model-bridge` (LiteLLM, 127.0.0.1:4000) — voir `manifests/roles.yaml` et
+`manifests/routes.yaml`.
 
 ## Règles non négociables
 1. **§8bis — zéro stub, zéro faux** : une story sort en DONE-avec-preuve ou BLOCKED-avec-raison.
@@ -71,59 +72,25 @@ dépôt ; le produit ne dépend d'aucun fichier de la machine (portabilité). L'
 gouvernance (`~/proof-method`, `forge-model-bridge`/LiteLLM) est autorisé pour CONSTRUIRE le
 toolkit, jamais embarqué dans le produit livré.
 
-## Plan de contrôle multi-IDE (ORCH-001 — actif depuis M0)
+## Modèle de coordination (issue #481 — remplace ORCH-001)
 
-Plusieurs IDE/agents corrigent ForgeAI en parallèle selon un contrat commun. Le cockpit est
-**GitHub Copilot / VS Code**; il détient `ORCH-001` et gère les claims, labels, milestones et
-issues. Les autres IDE sont Codex (sécurité/backend), Claude Code (K3s/RAG/hardware) et
-Cursor (UI/accessibilité/docs).
+Claude Code est l'orchestrateur en session et le seul mission lead ; actuellement, cette
+responsabilité est exercée par Claude Code Opus. Il n'y a pas de cockpit multi-IDE actif.
 
-### Source de vérité opérationnelle
+L'invariant de traitement est : une issue = une branche = un worktree = un writer.
 
-```text
-coordination/work-packages.json  — 64 packages, lanes, deps, périmètres
-coordination/active-claims.json  — claims actifs (un par lane exclusive)
-coordination/completed.json      — SHA de merge prouvés
-```
+Le claim est visible par un commentaire sur l'issue GitHub concernée, posté au début du
+traitement de chaque issue, selon le format exact :
+« Claim — session Claude Code (writer unique #NNN) ».
+Aucun fichier JSON de claims ne constitue le protocole de claim actif.
 
-### Invariants non négociables
+Le parallélisme est limité à un maximum de 4 issues simultanées, uniquement sur des chemins de
+fichiers disjoints.
 
-1. Une issue = une branche = un worktree = un IDE = une PR.
-2. Un claim actif détient un lease sur sa lane et ses chemins (`allowed_paths`).
-3. Toute branche part du dernier `origin/main` **après** fusion de toutes les dépendances.
-4. Pas de stacked PR implicite; merge queue uniquement.
-5. Aucun agent ne modifie `build/**`, `dist/**` ou le catalogue maître sans issue explicite.
+Les reviewers sont en lecture seule ; la revue aveugle scellée est définie à la règle 3.
+Nathan conserve les décisions T3, conformément à la règle 5.
 
-### Flux de claim
-
-```text
-ELIGIBLE → CLAIMED → WORKTREE_CREATED → BASELINE_VERIFIED → RED_TEST
-→ IMPLEMENTATION → FOCUSED_TESTS → FULL_GATES → SECURITY_SCANS
-→ REVIEW_PACK → 3 BLIND VERDICTS → FINAL TALLY → PR → MERGE_QUEUE → MERGED
-→ COMPLETED (inscrire dans completed.json) → CLAIM_RELEASED
-```
-
-### Scripts de coordination
-
-```bash
-python3 scripts/coordination/validate_coordination.py   # valide claims + lanes + deps
-python3 scripts/coordination/simulate_orchestration.py  # 10 simulations anti-collision
-```
-
-### Sécurité IDE
-
-- ggshield AI hooks actifs pour les quatre IDE (`.gitguardian.yaml` présent).
-- Aucun secret dans `coordination/**`, prompts, logs ou commits.
-- `.cursor/rules/forgeai-orchestration.mdc` — règles path-scoped Cursor.
-- `CLAUDE.md` — contrat Claude Code (adoption PROOF canonique).
-
-### Concurrence maximale
-
-| IDE | Claims max |
-|---|---|
-| COPILOT (cockpit) | 1 |
-| VS_CODE | 1 |
-| CURSOR | 1 |
-| CODEX | 2 |
-| CLAUDE_CODE | 2 |
-| **Total** | **6** |
+Le modèle multi-IDE ORCH-001, `coordination/*.json` et
+`.cursor/rules/forgeai-orchestration.mdc` sont archivés/historiques et remplacés par ce modèle ;
+voir [governance/AUTHORITY-MAP.md](governance/AUTHORITY-MAP.md) pour les statuts, empreintes et
+la succession.

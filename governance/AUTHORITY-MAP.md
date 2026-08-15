@@ -36,7 +36,7 @@ Cette carte est le rendu de `governance/authority.json`.
 | `adr.secret-020a` | `CANON/adr/ADR-SECRET-020A-openbao-unseal-permissions.md` | active | `architecture` | `nathan` | `—` |
 | `adr.trust-019a` | `CANON/adr/ADR-TRUST-019A-registres-modele-de-menace-racine-confiance.md` | active | `architecture` | `nathan` | `—` |
 | `agents-md` | `AGENTS.md` | conflicted | `governance_method` | `nathan` | `—` |
-| `agents-md.orch-001` | `AGENTS.md` — Plan de contrôle multi-IDE (ORCH-001 — actif depuis M0) | conflicted | `orchestration` | `copilot` | `—` |
+| `agents-md.orch-001` | décision sans fichier | superseded | `orchestration` | `copilot` | `gov.decision-mission-lead` |
 | `canon.directives-perimetre` | `CANON/directives-perimetre.md` | conflicted | `security` | `nathan` | `—` |
 | `canon.etat-systeme` | `CANON/ETAT-SYSTEME.md` | active | `system_state` | `nathan` | `—` |
 | `canon.plan-integral` | `CANON/plan-integral.md` | conflicted | `plan_of_record` | `nathan` | `—` |
@@ -60,10 +60,8 @@ Cette carte est le rendu de `governance/authority.json`.
 
 ## Positions déclarées
 
-- `agents-md` : `orchestration_seat` = `claude_code_session_lead` (AGENTS.md:9)
-- `agents-md` : `workspace_confinement` = `repo_plus_external_governance_tooling` (AGENTS.md:69-71)
-- `agents-md.orch-001` : `orchestration_seat` = `copilot_vscode_cockpit` (AGENTS.md:76)
-- `agents-md.orch-001` : `coordination_scale` = `64_packages_6_claims` (AGENTS.md:84)
+- `agents-md` : `orchestration_seat` = `claude_code_opus_mission_lead` (AGENTS.md:9)
+- `agents-md` : `workspace_confinement` = `repo_plus_external_governance_tooling` (AGENTS.md:70-72)
 - `canon.directives-perimetre` : `workspace_confinement` = `repo_only_strict` (CANON/directives-perimetre.md:7)
 - `canon.plan-integral` : `plan_of_record` = `canon_plan_integral` (CANON/plan-integral.md:4)
 - `canon.plan-integral` : `orchestration_seat` = `claude_code_session_lead` (CANON/plan-integral.md:27)
