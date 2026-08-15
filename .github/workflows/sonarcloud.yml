@@ -22,7 +22,7 @@ jobs:
           python-version: "3.12"
 
       - name: Install test deps
-        run: pip install pytest pytest-cov pyyaml
+        run: pip install pytest pytest-cov pyyaml jsonschema
 
       # `sonar.sources` inclut `scripts`, mais la couverture ne mesurait que src/forgeai et
       # scripts/coordination : TOUT le reste de scripts/ apparaissait donc à 0 % côté SonarCloud,
