@@ -1,0 +1,31 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "majeure",
+   "fichier": "README.md",
+   "description": "AC1 non respecté : un compteur opérationnel de revue reste codé en dur sans marqueur state ni source identifiée : 'revue aveugle code 3/3 APPROVE'. Ce nombre est du même type que les compteurs de couverture/catalogue remplacés.",
+   "preuve": "Diff README.md, nouvelle ligne : 'revue aveugle code 3/3 APPROVE (vendors non-Anthropic).' reste en clair, tandis que les compteurs voisins sont encapsulés dans <!-- state:... -->."
+  },
+  {
+   "severite": "majeure",
+   "fichier": "scripts/governance/state_current.py",
+   "description": "Aucune commande ne régénère les marqueurs documentaires de README.md/AGENTS.md. En cas de changement d'une source (ex. catalogue), le check échoue sur les documents, mais le conseil '--render' ne modifie pas ces documents et inject() n'est appelé nulle part dans main(). Les compteurs documentaires restent donc maintenus manuellement.",
+   "preuve": "Dans main(), la branche --render écrit seulement STATE-CURRENT.json et STATE-CURRENT.md ; check() ajoute 'corriger par : python3 scripts/governance/state_current.py --render' sans opération d'écriture sur docs ; la fonction inject() définie n'est pas utilisée dans main()."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "governance/state-current.schema.json",
+   "description": "Le schéma descriptif est incohérent avec l'état canonique généré : pour deterministe.cli, il interdit subcommands_by_group via additionalProperties:false et ne le déclare pas, alors que STATE-CURRENT.json le contient.",
+   "preuve": "governance/state-current.schema.json définit cli avec required ['subcommands','subcommands_total'] et additionalProperties:false ; governance/STATE-CURRENT.json contient 'subcommands_by_group': { 'node': 7, ... } sous cli."
+  }
+ ],
+ "date_heure": "2026-08-15T16:17:46.212767+00:00",
+ "prompt_sha256": "7a97286e968fa44e1f9d0ed7b29f96016dd5ed016ebb1e527af9f74c5968da0f",
+ "reviewer_model": "DeepSeek-V4-Pro",
+ "modele_servi": "deepseek-v4-pro-direct",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

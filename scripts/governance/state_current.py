@@ -13,6 +13,10 @@ import sys
 from pathlib import Path
 from typing import Any
 
+# INVARIANT DE POLITIQUE fixée par AGENTS.md : revue aveugle scellée 3/3.
+# Ce n'est pas une donnée mesurée qui dérive d'une source externe.
+_REVIEW_QUORUM = "3/3"
+
 _SCHEMA = "state-current-v1"
 _CATALOGUE = Path("src/forgeai/data/catalogue.json")
 _CANONICAL_CATALOGUE_SIDECAR = Path("src/forgeai/data/catalogue.sha256")
@@ -477,6 +481,9 @@ def collect(repo_root: Path) -> dict:
             "active_claims_total": len(claims),
             "concurrency_total": _coordination_total(packages_value, claims),
         },
+        "governance": {
+            "review_quorum": _REVIEW_QUORUM,
+        },
         "inputs": input_list,
     }
 
@@ -737,9 +744,21 @@ def main(argv: list[str] | None = None) -> int:
             markdown_path = _path(repo_root, _STATE_MARKDOWN)
             markdown_path.parent.mkdir(parents=True, exist_ok=True)
             markdown_path.write_text(render(state), encoding="utf-8")
+            for document in args.docs or []:
+                candidate = document if document.is_absolute() else repo_root / document
+                document_path = _within_repo(repo_root, candidate)
+                try:
+                    content = document_path.read_text(encoding="utf-8")
+                except OSError as exc:
+                    raise ValueError(
+                        f"document inaccessible: {document_path}: {exc}"
+                    ) from exc
+                rendered, _ = inject(content, state, str(document_path))
+                if rendered != content:
+                    document_path.write_text(rendered, encoding="utf-8")
             return 0
         ok, errors = check(repo_root, args.docs)
-    except (OSError, UnicodeError, ValueError, TypeError) as exc:
+    except (OSError, UnicodeError, ValueError, TypeError, KeyError) as exc:
         print(str(exc), file=sys.stderr)
         return 1
 

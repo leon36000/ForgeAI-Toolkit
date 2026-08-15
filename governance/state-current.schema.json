@@ -17,6 +17,7 @@
         "tests",
         "ci",
         "coordination",
+        "governance",
         "inputs"
       ],
       "additionalProperties": false,
@@ -61,12 +62,16 @@
         },
         "cli": {
           "type": "object",
-          "required": ["subcommands", "subcommands_total"],
+          "required": ["subcommands", "subcommands_by_group", "subcommands_total"],
           "additionalProperties": false,
           "properties": {
             "subcommands": {
               "type": "array",
               "items": { "type": "string" }
+            },
+            "subcommands_by_group": {
+              "type": "object",
+              "additionalProperties": { "type": "integer" }
             },
             "subcommands_total": { "type": "integer" }
           }
@@ -106,6 +111,17 @@
             "active_claims_total": { "type": "integer" },
             "concurrency_total": { "type": "integer" },
             "work_packages_total": { "type": "integer" }
+          }
+        },
+        "governance": {
+          "type": "object",
+          "required": ["review_quorum"],
+          "additionalProperties": false,
+          "properties": {
+            "review_quorum": {
+              "type": "string",
+              "description": "Invariant de politique fixé par AGENTS.md (revue aveugle scellée 3/3), pas une donnée mesurée qui dérive d'une source externe."
+            }
           }
         },
         "inputs": {

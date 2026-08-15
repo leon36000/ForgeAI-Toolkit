@@ -82,6 +82,9 @@
       "concurrency_total": 6,
       "work_packages_total": 70
     },
+    "governance": {
+      "review_quorum": "3/3"
+    },
     "inputs": [
       {
         "path": ".github/workflows/gates.yml",
@@ -721,7 +724,7 @@
       },
       {
         "path": "tests/test_state_current.py",
-        "sha256": "2dbf3af46d33d901d6d995a225f62205a0fd2f9263c8c162d39f174b798a6535"
+        "sha256": "8bcce5e361a74711ac2a9d424b9bed667edd10ac773f8a484ab7280c2ad19a6a"
       },
       {
         "path": "tests/test_supply018.py",
@@ -854,7 +857,7 @@
     "tests": {
       "js_files": 3,
       "python_files": 178,
-      "python_functions_declared": 1810
+      "python_functions_declared": 1811
     }
   },
   "observations": [

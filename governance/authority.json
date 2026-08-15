@@ -634,7 +634,7 @@
       "positions": [],
       "digest": {
         "policy": "content_sha256",
-        "value": "f7a6f3a881126c792d98ccdcf9f44cfba935971477797da04aae52dbf0231d8d",
+        "value": "a5f210b354cddec3401c56eed2fb6c7831396a401f7b8470063359793e76a417",
         "checked_at": "2026-08-15",
         "delegated_to": null
       },
@@ -646,7 +646,7 @@
         "mission_seq": null,
         "ref": null
       },
-      "notes": "Point d'entrée documentaire du dépôt. Empreinte mise à jour par #437 (RC1-007) : insertion de marqueurs <!-- state:... --> autour de 6 compteurs au total (catalogue.entries_total x2, catalogue.descriptions_en_missing, observations.coverage.global, observations.coverage.registre, cli.subcommands_by_group.node) — les 3 derniers ajoutés en correctif suite à la revue scellée #490 (3/3 REJECT : AC1 exigeait qu'AUCUN compteur ne reste manuel), aucun autre changement de contenu."
+      "notes": "Point d'entrée documentaire du dépôt. Empreinte mise à jour par #437 (RC1-007) : insertion de marqueurs <!-- state:... --> autour de 7 compteurs au total (catalogue.entries_total x2, catalogue.descriptions_en_missing, observations.coverage.global, observations.coverage.registre, cli.subcommands_by_group.node, governance.review_quorum) — les 4 derniers ajoutés en 2 correctifs suite à la revue scellée #490 (round 1 : 3/3 REJECT, AC1 exigeait qu'aucun compteur ne reste manuel ; round 2 : 1/3 REJECT résiduel sur le même principe + gap de régénération), aucun autre changement de contenu. Note round 2 : main() --render --docs réinjecte désormais réellement ces marqueurs (avant ce correctif, --render n'écrivait que STATE-CURRENT.{json,md}, jamais les documents actifs — gap trouvé par la revue)."
     },
     {
       "id": "gov.decision-mission-lead",

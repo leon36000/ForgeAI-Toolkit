@@ -567,6 +567,25 @@ def test_observation_ancienne_nempeche_pas_ok(tmp_path: pathlib.Path) -> None:
     assert errors == []
 
 
+def test_main_render_docs_reecrit_le_document(tmp_path: pathlib.Path) -> None:
+    repo_root = _write_fixture_repo(tmp_path)
+    document = repo_root / "doc.md"
+    document.write_text(
+        "Total: <!-- state:catalogue.entries_total -->999<!-- /state --> briques.\n",
+        encoding="utf-8",
+    )
+    arguments = ["--repo-root", str(repo_root), "--render", "--docs", "doc.md"]
+
+    assert state_current.main(arguments) == 0
+    first_content = document.read_text(encoding="utf-8")
+
+    assert ">3<" in first_content
+    assert ">999<" not in first_content
+
+    assert state_current.main(arguments) == 0
+    assert document.read_text(encoding="utf-8") == first_content
+
+
 def test_main_render_puis_check_sur_vrai_depot(
     monkeypatch: pytest.MonkeyPatch,
     capsys: pytest.CaptureFixture[str],
