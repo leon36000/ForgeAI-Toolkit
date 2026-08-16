@@ -6163,8 +6163,8 @@
         }
       ],
       "rule_id": "evidence-registres-root",
-      "sha256": "7e43fe8b9040287781f8239388589b99fe53d6bbfc25950131d35876f59b9ece",
-      "size": 362983,
+      "sha256": "72cbc5dfef945ae38215e8657756dc46c52be18a017582c57492cdc70e565936",
+      "size": 364139,
       "target_path": null,
       "type": "text"
     },
@@ -17724,6 +17724,27 @@
           "referrer": "scripts/governance/classify_paths.py",
           "resolved": "governance/PATH-CLASSIFICATION.md",
           "severity": "hard"
+        },
+        {
+          "candidate": "governance/PATH-CLASSIFICATION.md",
+          "line": 251,
+          "referrer": "scripts/revue.py",
+          "resolved": "governance/PATH-CLASSIFICATION.md",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/PATH-CLASSIFICATION.md",
+          "line": 42,
+          "referrer": "stories/RC1-504.md",
+          "resolved": "governance/PATH-CLASSIFICATION.md",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/PATH-CLASSIFICATION.md",
+          "line": 60,
+          "referrer": "stories/RC1-504.md",
+          "resolved": "governance/PATH-CLASSIFICATION.md",
+          "severity": "hard"
         }
       ],
       "rule_id": "generated-path-classification-markdown",
@@ -18488,6 +18509,34 @@
         },
         {
           "candidate": "governance/path-classification-rules.json",
+          "line": 7,
+          "referrer": "reviews/RC1-504-v1/Kimi-2.7.verdict.json",
+          "resolved": "governance/path-classification-rules.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/path-classification-rules.json",
+          "line": 245,
+          "referrer": "scripts/revue.py",
+          "resolved": "governance/path-classification-rules.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/path-classification-rules.json",
+          "line": 61,
+          "referrer": "stories/RC1-504.md",
+          "resolved": "governance/path-classification-rules.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/path-classification-rules.json",
+          "line": 65,
+          "referrer": "stories/RC1-504.md",
+          "resolved": "governance/path-classification-rules.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/path-classification-rules.json",
           "line": 716,
           "referrer": "tests/test_classify_paths.py",
           "resolved": "governance/path-classification-rules.json",
@@ -18761,6 +18810,27 @@
         },
         {
           "candidate": "governance/path-classification.json",
+          "line": 7,
+          "referrer": "reviews/RC1-504-v1/Kimi-2.7.verdict.json",
+          "resolved": "governance/path-classification.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/path-classification.json",
+          "line": 12,
+          "referrer": "reviews/RC1-504-v1/Kimi-2.7.verdict.json",
+          "resolved": "governance/path-classification.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/path-classification.json",
+          "line": 14,
+          "referrer": "reviews/RC1-504-v1/Kimi-2.7.verdict.json",
+          "resolved": "governance/path-classification.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/path-classification.json",
           "line": 726,
           "referrer": "scripts/governance/classify_paths.py",
           "resolved": "governance/path-classification.json",
@@ -18782,6 +18852,48 @@
         },
         {
           "candidate": "governance/path-classification.json",
+          "line": 237,
+          "referrer": "scripts/revue.py",
+          "resolved": "governance/path-classification.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/path-classification.json",
+          "line": 250,
+          "referrer": "scripts/revue.py",
+          "resolved": "governance/path-classification.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/path-classification.json",
+          "line": 15,
+          "referrer": "stories/RC1-504.md",
+          "resolved": "governance/path-classification.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/path-classification.json",
+          "line": 31,
+          "referrer": "stories/RC1-504.md",
+          "resolved": "governance/path-classification.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/path-classification.json",
+          "line": 42,
+          "referrer": "stories/RC1-504.md",
+          "resolved": "governance/path-classification.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/path-classification.json",
+          "line": 60,
+          "referrer": "stories/RC1-504.md",
+          "resolved": "governance/path-classification.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/path-classification.json",
           "line": 780,
           "referrer": "tests/test_classify_paths.py",
           "resolved": "governance/path-classification.json",
@@ -18798,6 +18910,13 @@
           "candidate": "governance/path-classification.json",
           "line": 968,
           "referrer": "tests/test_classify_paths.py",
+          "resolved": "governance/path-classification.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/path-classification.json",
+          "line": 254,
+          "referrer": "tests/test_revue.py",
           "resolved": "governance/path-classification.json",
           "severity": "hard"
         }
@@ -19488,7 +19607,7 @@
         },
         {
           "candidate": "manifests/roles.yaml",
-          "line": 331,
+          "line": 349,
           "referrer": "scripts/revue.py",
           "resolved": "manifests/roles.yaml",
           "severity": "hard"
@@ -19765,6 +19884,13 @@
         },
         {
           "candidate": "reviews/BINDING.txt",
+          "line": 35,
+          "referrer": "stories/RC1-504.md",
+          "resolved": "reviews/BINDING.txt",
+          "severity": "hard"
+        },
+        {
+          "candidate": "reviews/BINDING.txt",
           "line": 448,
           "referrer": "tests/test_classify_paths.py",
           "resolved": "reviews/BINDING.txt",
@@ -19807,8 +19933,8 @@
         }
       ],
       "rule_id": "evidence-reviews",
-      "sha256": "fae8d59e4543d4c11e492dcf221e8bea201b8f8b1a0a247dd8b9fa7443c552eb",
-      "size": 2465,
+      "sha256": "cad5e251906bf6475aff942abd5c9e005a0c0b75412d3e3443602deeec612604",
+      "size": 2476,
       "target_path": "evidence/reviews/BINDING.txt",
       "type": "text"
     },
@@ -21269,7 +21395,29 @@
       "load_bearing": true,
       "owner": "gouvernance-preuve",
       "path": "reviews/RC1-009/RECU.json",
-      "referenced_by": [],
+      "referenced_by": [
+        {
+          "candidate": "reviews/RC1-009/RECU.json",
+          "line": 13,
+          "referrer": "reviews/RC1-504-v1/Kimi-2.7.verdict.json",
+          "resolved": "reviews/RC1-009/RECU.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "reviews/RC1-009/RECU.json",
+          "line": 14,
+          "referrer": "reviews/RC1-504-v1/Kimi-2.7.verdict.json",
+          "resolved": "reviews/RC1-009/RECU.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "reviews/RC1-009/RECU.json",
+          "line": 14,
+          "referrer": "reviews/RC1-504-v1/Kimi-2.7.verdict.json",
+          "resolved": "reviews/RC1-009/RECU.json",
+          "severity": "hard"
+        }
+      ],
       "rule_id": "evidence-reviews",
       "sha256": "494f9dc552f6617f5d5e0489e15140d442df49df17b2484b09b4cbb6d6e8f63b",
       "size": 661,
@@ -22705,6 +22853,45 @@
       "sha256": "07f80a3bd47377adb7e31c126913d972ca61e659d39f6c7b21aa8c42c48f1121",
       "size": 323,
       "target_path": "evidence/reviews/RC1-493-PR-v1/Qwen3.7-Max.verdict.json",
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "reviews/RC1-504-v1/DeepSeek-V4-Pro.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews",
+      "sha256": "9df6d3aaa2465a5f5ca9f78759b46d4dd20abda3c38b3b2de759db1415bc981a",
+      "size": 328,
+      "target_path": "evidence/reviews/RC1-504-v1/DeepSeek-V4-Pro.verdict.json",
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "reviews/RC1-504-v1/Kimi-2.7.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews",
+      "sha256": "4a054f206b179d0ca135559dbde09584e071a956efd646734e50e37e7ce8cf0e",
+      "size": 1886,
+      "target_path": "evidence/reviews/RC1-504-v1/Kimi-2.7.verdict.json",
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "reviews/RC1-504-v1/Qwen3.7-Max.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews",
+      "sha256": "a250d953b95933f8bf475a754a8c5f9b1eb381297f20278979918727bbeaa85b",
+      "size": 322,
+      "target_path": "evidence/reviews/RC1-504-v1/Qwen3.7-Max.verdict.json",
       "type": "text"
     },
     {
@@ -26216,6 +26403,20 @@
         },
         {
           "candidate": "scripts/governance/classify_paths.py",
+          "line": 13,
+          "referrer": "stories/RC1-504.md",
+          "resolved": "scripts/governance/classify_paths.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "scripts/governance/classify_paths.py",
+          "line": 64,
+          "referrer": "stories/RC1-504.md",
+          "resolved": "scripts/governance/classify_paths.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "scripts/governance/classify_paths.py",
           "line": 688,
           "referrer": "tests/test_classify_paths.py",
           "resolved": "scripts/governance/classify_paths.py",
@@ -27431,6 +27632,13 @@
         },
         {
           "candidate": "scripts/reviews_gate.py",
+          "line": 65,
+          "referrer": "stories/RC1-504.md",
+          "resolved": "scripts/reviews_gate.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "scripts/reviews_gate.py",
           "line": 4,
           "referrer": "tests/test_reviews_gate.py",
           "resolved": "scripts/reviews_gate.py",
@@ -27599,6 +27807,20 @@
         },
         {
           "candidate": "scripts/revue.py",
+          "line": 7,
+          "referrer": "reviews/RC1-504-v1/Kimi-2.7.verdict.json",
+          "resolved": "scripts/revue.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "scripts/revue.py",
+          "line": 8,
+          "referrer": "reviews/RC1-504-v1/Kimi-2.7.verdict.json",
+          "resolved": "scripts/revue.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "scripts/revue.py",
           "line": 12,
           "referrer": "reviews/WEB-001/prompt.md",
           "resolved": "scripts/revue.py",
@@ -27655,6 +27877,27 @@
         },
         {
           "candidate": "scripts/revue.py",
+          "line": 12,
+          "referrer": "stories/RC1-504.md",
+          "resolved": "scripts/revue.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "scripts/revue.py",
+          "line": 43,
+          "referrer": "stories/RC1-504.md",
+          "resolved": "scripts/revue.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "scripts/revue.py",
+          "line": 59,
+          "referrer": "stories/RC1-504.md",
+          "resolved": "scripts/revue.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "scripts/revue.py",
           "line": 51,
           "referrer": "stories/REV-043.md",
           "resolved": "scripts/revue.py",
@@ -27690,8 +27933,8 @@
         }
       ],
       "rule_id": "governance-scripts-root",
-      "sha256": "3cf9e894ab83bb8d75b271ea645680d2f89d6e4c45ad1aba66ef4bf280ef6284",
-      "size": 25467,
+      "sha256": "c104f550be6a66fcc48d2bb74e026c9ae15d800fdf11e93c9461fe8debde912c",
+      "size": 26735,
       "target_path": null,
       "type": "text"
     },
@@ -36515,6 +36758,19 @@
       "generated": false,
       "load_bearing": false,
       "owner": "gouvernance-stories",
+      "path": "stories/RC1-504.md",
+      "referenced_by": [],
+      "rule_id": "governance-stories",
+      "sha256": "94c2c2f3a479ab45bfc400faa2a2dbde033297cdb5ff9f9234e3e2e620822bc0",
+      "size": 4562,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "GOVERNANCE",
+      "generated": false,
+      "load_bearing": false,
+      "owner": "gouvernance-stories",
       "path": "stories/REG-029A.md",
       "referenced_by": [
         {
@@ -44771,6 +45027,20 @@
         },
         {
           "candidate": "tests/test_revue.py",
+          "line": 6,
+          "referrer": "reviews/RC1-504-v1/Kimi-2.7.verdict.json",
+          "resolved": "tests/test_revue.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "tests/test_revue.py",
+          "line": 8,
+          "referrer": "reviews/RC1-504-v1/Kimi-2.7.verdict.json",
+          "resolved": "tests/test_revue.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "tests/test_revue.py",
           "line": 12,
           "referrer": "reviews/ROSTER-MAJ-PR511-v1/Qwen3.8-2.4T.verdict.json",
           "resolved": "tests/test_revue.py",
@@ -44782,11 +45052,46 @@
           "referrer": "reviews/ROSTER-MAJ-PR511-v1/Qwen3.8-2.4T.verdict.json",
           "resolved": "tests/test_revue.py",
           "severity": "hard"
+        },
+        {
+          "candidate": "tests/test_revue.py",
+          "line": 24,
+          "referrer": "stories/RC1-504.md",
+          "resolved": "tests/test_revue.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "tests/test_revue.py",
+          "line": 25,
+          "referrer": "stories/RC1-504.md",
+          "resolved": "tests/test_revue.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "tests/test_revue.py",
+          "line": 26,
+          "referrer": "stories/RC1-504.md",
+          "resolved": "tests/test_revue.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "tests/test_revue.py",
+          "line": 63,
+          "referrer": "stories/RC1-504.md",
+          "resolved": "tests/test_revue.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "tests/test_revue.py",
+          "line": 70,
+          "referrer": "stories/RC1-504.md",
+          "resolved": "tests/test_revue.py",
+          "severity": "hard"
         }
       ],
       "rule_id": "test-suite",
-      "sha256": "05d965917c6992b561e5a939e21dcd53810b6534ed73b87cf6a0a353e27de3d2",
-      "size": 17438,
+      "sha256": "5d7cbecd10faa0854c2315e566f747de7f76816a3725fdea88e3ad2074f3efd2",
+      "size": 18938,
       "target_path": null,
       "type": "text"
     },
@@ -84784,6 +85089,16 @@
         "referrer": "reviews/RC1-492-PR512/RECU.json"
       },
       {
+        "candidate": "rules.json",
+        "line": 7,
+        "referrer": "reviews/RC1-504-v1/Kimi-2.7.verdict.json"
+      },
+      {
+        "candidate": "evidence/reviews/RC1-009/RECU.json",
+        "line": 14,
+        "referrer": "reviews/RC1-504-v1/Kimi-2.7.verdict.json"
+      },
+      {
         "candidate": "reviews/",
         "line": 1,
         "referrer": "reviews/README.md"
@@ -88655,97 +88970,117 @@
       },
       {
         "candidate": "reviews/",
-        "line": 236,
-        "referrer": "scripts/revue.py"
-      },
-      {
-        "candidate": "evidence/reviews/",
-        "line": 236,
-        "referrer": "scripts/revue.py"
-      },
-      {
-        "candidate": "reviews/",
-        "line": 246,
-        "referrer": "scripts/revue.py"
-      },
-      {
-        "candidate": ".verdict.json",
-        "line": 247,
-        "referrer": "scripts/revue.py"
-      },
-      {
-        "candidate": "APPROVE/REJECT",
-        "line": 353,
-        "referrer": "scripts/revue.py"
-      },
-      {
-        "candidate": "commit/diff",
-        "line": 393,
-        "referrer": "scripts/revue.py"
-      },
-      {
-        "candidate": "head_commit/head_tree",
-        "line": 393,
-        "referrer": "scripts/revue.py"
-      },
-      {
-        "candidate": "revue.py",
-        "line": 394,
-        "referrer": "scripts/revue.py"
-      },
-      {
-        "candidate": "commit/arbre",
-        "line": 395,
-        "referrer": "scripts/revue.py"
-      },
-      {
-        "candidate": "head_commit/",
-        "line": 396,
-        "referrer": "scripts/revue.py"
-      },
-      {
-        "candidate": "reviews/",
-        "line": 400,
+        "line": 238,
         "referrer": "scripts/revue.py"
       },
       {
         "candidate": "RECU.json",
-        "line": 422,
+        "line": 238,
         "referrer": "scripts/revue.py"
       },
       {
-        "candidate": "crit/modifi",
-        "line": 422,
+        "candidate": "reviews/",
+        "line": 248,
+        "referrer": "scripts/revue.py"
+      },
+      {
+        "candidate": "evidence/reviews/",
+        "line": 249,
+        "referrer": "scripts/revue.py"
+      },
+      {
+        "candidate": "reviews/",
+        "line": 262,
         "referrer": "scripts/revue.py"
       },
       {
         "candidate": ".verdict.json",
-        "line": 477,
+        "line": 263,
         "referrer": "scripts/revue.py"
       },
       {
-        "candidate": ".verdict.json",
-        "line": 487,
+        "candidate": "governance/path-classification.json/.md",
+        "line": 266,
         "referrer": "scripts/revue.py"
       },
       {
-        "candidate": "recu-revue/1",
-        "line": 492,
+        "candidate": "classify_paths.py",
+        "line": 268,
+        "referrer": "scripts/revue.py"
+      },
+      {
+        "candidate": "APPROVE/REJECT",
+        "line": 371,
+        "referrer": "scripts/revue.py"
+      },
+      {
+        "candidate": "commit/diff",
+        "line": 411,
+        "referrer": "scripts/revue.py"
+      },
+      {
+        "candidate": "head_commit/head_tree",
+        "line": 411,
         "referrer": "scripts/revue.py"
       },
       {
         "candidate": "revue.py",
-        "line": 521,
+        "line": 412,
+        "referrer": "scripts/revue.py"
+      },
+      {
+        "candidate": "commit/arbre",
+        "line": 413,
+        "referrer": "scripts/revue.py"
+      },
+      {
+        "candidate": "head_commit/",
+        "line": 414,
+        "referrer": "scripts/revue.py"
+      },
+      {
+        "candidate": "reviews/",
+        "line": 418,
+        "referrer": "scripts/revue.py"
+      },
+      {
+        "candidate": "RECU.json",
+        "line": 440,
+        "referrer": "scripts/revue.py"
+      },
+      {
+        "candidate": "crit/modifi",
+        "line": 440,
         "referrer": "scripts/revue.py"
       },
       {
         "candidate": ".verdict.json",
-        "line": 531,
+        "line": 495,
+        "referrer": "scripts/revue.py"
+      },
+      {
+        "candidate": ".verdict.json",
+        "line": 505,
+        "referrer": "scripts/revue.py"
+      },
+      {
+        "candidate": "recu-revue/1",
+        "line": 510,
+        "referrer": "scripts/revue.py"
+      },
+      {
+        "candidate": "revue.py",
+        "line": 539,
+        "referrer": "scripts/revue.py"
+      },
+      {
+        "candidate": ".verdict.json",
+        "line": 549,
         "referrer": "scripts/revue.py"
       },
       {
         "candidate": "test/receipt",
-        "line": 544,
+        "line": 562,
         "referrer": "scripts/revue.py"
       },
       {
@@ -111249,6 +111584,111 @@
         "referrer": "stories/RC1-009.md"
       },
       {
+        "candidate": "fix/RC1-504-reviews-sealed-path-classification-interlock",
+        "line": 7,
+        "referrer": "stories/RC1-504.md"
+      },
+      {
+        "candidate": "reviews/",
+        "line": 12,
+        "referrer": "stories/RC1-504.md"
+      },
+      {
+        "candidate": "evidence/reviews/",
+        "line": 12,
+        "referrer": "stories/RC1-504.md"
+      },
+      {
+        "candidate": "RECU.json",
+        "line": 13,
+        "referrer": "stories/RC1-504.md"
+      },
+      {
+        "candidate": "RECU.json",
+        "line": 15,
+        "referrer": "stories/RC1-504.md"
+      },
+      {
+        "candidate": ".verdict.json",
+        "line": 15,
+        "referrer": "stories/RC1-504.md"
+      },
+      {
+        "candidate": "u/verdict",
+        "line": 16,
+        "referrer": "stories/RC1-504.md"
+      },
+      {
+        "candidate": "classify_paths.py",
+        "line": 32,
+        "referrer": "stories/RC1-504.md"
+      },
+      {
+        "candidate": "reviews/",
+        "line": 32,
+        "referrer": "stories/RC1-504.md"
+      },
+      {
+        "candidate": "evidence/reviews/",
+        "line": 32,
+        "referrer": "stories/RC1-504.md"
+      },
+      {
+        "candidate": "classify_paths.py",
+        "line": 36,
+        "referrer": "stories/RC1-504.md"
+      },
+      {
+        "candidate": "reviews/",
+        "line": 37,
+        "referrer": "stories/RC1-504.md"
+      },
+      {
+        "candidate": "reviews/",
+        "line": 43,
+        "referrer": "stories/RC1-504.md"
+      },
+      {
+        "candidate": "evidence/reviews/",
+        "line": 44,
+        "referrer": "stories/RC1-504.md"
+      },
+      {
+        "candidate": "evidence/reviews/RC1-010-lot5b-PR510-v4/",
+        "line": 45,
+        "referrer": "stories/RC1-504.md"
+      },
+      {
+        "candidate": "Kimi-2.7.verdict.json",
+        "line": 46,
+        "referrer": "stories/RC1-504.md"
+      },
+      {
+        "candidate": "classify_paths.py",
+        "line": 50,
+        "referrer": "stories/RC1-504.md"
+      },
+      {
+        "candidate": "src/forgeai/",
+        "line": 66,
+        "referrer": "stories/RC1-504.md"
+      },
+      {
+        "candidate": "no_stub_scan.py",
+        "line": 70,
+        "referrer": "stories/RC1-504.md"
+      },
+      {
+        "candidate": "registre.py",
+        "line": 71,
+        "referrer": "stories/RC1-504.md"
+      },
+      {
+        "candidate": "classify_paths.py",
+        "line": 72,
+        "referrer": "stories/RC1-504.md"
+      },
+      {
         "candidate": "hash/HMAC",
         "line": 9,
         "referrer": "stories/REG-029A.md"
@@ -119874,88 +120314,103 @@
         "referrer": "tests/test_revue.py"
       },
       {
-        "candidate": "0z.py",
-        "line": 259,
-        "referrer": "tests/test_revue.py"
-      },
-      {
-        "candidate": "0a.py",
-        "line": 259,
-        "referrer": "tests/test_revue.py"
-      },
-      {
-        "candidate": "0a.py",
-        "line": 260,
-        "referrer": "tests/test_revue.py"
-      },
-      {
-        "candidate": "0z.py",
-        "line": 260,
+        "candidate": "classify_paths.py",
+        "line": 254,
         "referrer": "tests/test_revue.py"
       },
       {
         "candidate": "reviews/",
-        "line": 290,
+        "line": 255,
+        "referrer": "tests/test_revue.py"
+      },
+      {
+        "candidate": "RECU.json/",
+        "line": 256,
+        "referrer": "tests/test_revue.py"
+      },
+      {
+        "candidate": ".verdict.json",
+        "line": 256,
+        "referrer": "tests/test_revue.py"
+      },
+      {
+        "candidate": "0src/a.py",
+        "line": 261,
+        "referrer": "tests/test_revue.py"
+      },
+      {
+        "candidate": "0governance/path-classification.json",
+        "line": 262,
+        "referrer": "tests/test_revue.py"
+      },
+      {
+        "candidate": "0src/a.py",
+        "line": 271,
+        "referrer": "tests/test_revue.py"
+      },
+      {
+        "candidate": "0governance/PATH-CLASSIFICATION.md",
+        "line": 272,
+        "referrer": "tests/test_revue.py"
+      },
+      {
+        "candidate": "0z.py",
+        "line": 284,
+        "referrer": "tests/test_revue.py"
+      },
+      {
+        "candidate": "0a.py",
+        "line": 284,
+        "referrer": "tests/test_revue.py"
+      },
+      {
+        "candidate": "0a.py",
+        "line": 285,
+        "referrer": "tests/test_revue.py"
+      },
+      {
+        "candidate": "0z.py",
+        "line": 285,
+        "referrer": "tests/test_revue.py"
+      },
+      {
+        "candidate": "reviews/",
+        "line": 315,
         "referrer": "tests/test_revue.py"
       },
       {
         "candidate": "head_commit/head_tree",
-        "line": 290,
+        "line": 315,
         "referrer": "tests/test_revue.py"
       },
       {
         "candidate": "RECU.json",
-        "line": 357,
+        "line": 382,
         "referrer": "tests/test_revue.py"
       },
       {
         "candidate": "attaquant/une",
-        "line": 359,
+        "line": 384,
         "referrer": "tests/test_revue.py"
       },
       {
         "candidate": "revue.py",
-        "line": 385,
+        "line": 410,
         "referrer": "tests/test_revue.py"
       },
       {
         "candidate": "origin/main",
-        "line": 387,
+        "line": 412,
         "referrer": "tests/test_revue.py"
       },
       {
         "candidate": "origin/main",
-        "line": 399,
-        "referrer": "tests/test_revue.py"
-      },
-      {
-        "candidate": "revue.py",
-        "line": 411,
-        "referrer": "tests/test_revue.py"
-      },
-      {
-        "candidate": "origin/main",
-        "line": 411,
-        "referrer": "tests/test_revue.py"
-      },
-      {
-        "candidate": "DeepSeek-V4-Pro.verdict.json",
         "line": 424,
         "referrer": "tests/test_revue.py"
       },
       {
-        "candidate": "Gemini-3.7-Flash.verdict.json",
-        "line": 425,
-        "referrer": "tests/test_revue.py"
-      },
-      {
-        "candidate": "LongCat-2.0.verdict.json",
-        "line": 428,
-        "referrer": "tests/test_revue.py"
-      },
-      {
-        "candidate": "RECU.json",
-        "line": 433,
+        "candidate": "revue.py",
+        "line": 436,
         "referrer": "tests/test_revue.py"
       },
       {
@@ -119965,12 +120420,37 @@
       },
       {
         "candidate": "DeepSeek-V4-Pro.verdict.json",
-        "line": 457,
+        "line": 449,
+        "referrer": "tests/test_revue.py"
+      },
+      {
+        "candidate": "Gemini-3.7-Flash.verdict.json",
+        "line": 450,
+        "referrer": "tests/test_revue.py"
+      },
+      {
+        "candidate": "LongCat-2.0.verdict.json",
+        "line": 453,
+        "referrer": "tests/test_revue.py"
+      },
+      {
+        "candidate": "RECU.json",
+        "line": 458,
         "referrer": "tests/test_revue.py"
       },
       {
         "candidate": "origin/main",
-        "line": 464,
+        "line": 461,
+        "referrer": "tests/test_revue.py"
+      },
+      {
+        "candidate": "DeepSeek-V4-Pro.verdict.json",
+        "line": 482,
+        "referrer": "tests/test_revue.py"
+      },
+      {
+        "candidate": "origin/main",
+        "line": 489,
         "referrer": "tests/test_revue.py"
       },
       {
@@ -122625,6 +123105,13 @@
         "line": 177,
         "referrer": "reviews/BINDING.txt",
         "resolved": "reviews/RC1-487-v1",
+        "severity": "hard"
+      },
+      {
+        "candidate": "RC1-504-v1",
+        "line": 178,
+        "referrer": "reviews/BINDING.txt",
+        "resolved": "reviews/RC1-504-v1",
         "severity": "hard"
       },
       {
@@ -139092,6 +139579,83 @@
         "severity": "hard"
       },
       {
+        "candidate": "tests/test_revue.py",
+        "line": 6,
+        "referrer": "reviews/RC1-504-v1/Kimi-2.7.verdict.json",
+        "resolved": "tests/test_revue.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "governance/path-classification.json",
+        "line": 7,
+        "referrer": "reviews/RC1-504-v1/Kimi-2.7.verdict.json",
+        "resolved": "governance/path-classification.json",
+        "severity": "hard"
+      },
+      {
+        "candidate": "governance/path-classification-rules.json",
+        "line": 7,
+        "referrer": "reviews/RC1-504-v1/Kimi-2.7.verdict.json",
+        "resolved": "governance/path-classification-rules.json",
+        "severity": "hard"
+      },
+      {
+        "candidate": "scripts/revue.py",
+        "line": 7,
+        "referrer": "reviews/RC1-504-v1/Kimi-2.7.verdict.json",
+        "resolved": "scripts/revue.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "tests/test_revue.py",
+        "line": 8,
+        "referrer": "reviews/RC1-504-v1/Kimi-2.7.verdict.json",
+        "resolved": "tests/test_revue.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "scripts/revue.py",
+        "line": 8,
+        "referrer": "reviews/RC1-504-v1/Kimi-2.7.verdict.json",
+        "resolved": "scripts/revue.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "governance/path-classification.json",
+        "line": 12,
+        "referrer": "reviews/RC1-504-v1/Kimi-2.7.verdict.json",
+        "resolved": "governance/path-classification.json",
+        "severity": "hard"
+      },
+      {
+        "candidate": "reviews/RC1-009/RECU.json",
+        "line": 13,
+        "referrer": "reviews/RC1-504-v1/Kimi-2.7.verdict.json",
+        "resolved": "reviews/RC1-009/RECU.json",
+        "severity": "hard"
+      },
+      {
+        "candidate": "governance/path-classification.json",
+        "line": 14,
+        "referrer": "reviews/RC1-504-v1/Kimi-2.7.verdict.json",
+        "resolved": "governance/path-classification.json",
+        "severity": "hard"
+      },
+      {
+        "candidate": "reviews/RC1-009/RECU.json",
+        "line": 14,
+        "referrer": "reviews/RC1-504-v1/Kimi-2.7.verdict.json",
+        "resolved": "reviews/RC1-009/RECU.json",
+        "severity": "hard"
+      },
+      {
+        "candidate": "reviews/RC1-009/RECU.json",
+        "line": 14,
+        "referrer": "reviews/RC1-504-v1/Kimi-2.7.verdict.json",
+        "resolved": "reviews/RC1-009/RECU.json",
+        "severity": "hard"
+      },
+      {
         "candidate": ".github/workflows/gates.yml",
         "line": 6,
         "referrer": "reviews/REG-029B/Qwen3.7-Max.verdict.json",
@@ -140429,8 +140993,36 @@
         "severity": "hard"
       },
       {
+        "candidate": "governance/path-classification.json",
+        "line": 237,
+        "referrer": "scripts/revue.py",
+        "resolved": "governance/path-classification.json",
+        "severity": "hard"
+      },
+      {
+        "candidate": "governance/path-classification-rules.json",
+        "line": 245,
+        "referrer": "scripts/revue.py",
+        "resolved": "governance/path-classification-rules.json",
+        "severity": "hard"
+      },
+      {
+        "candidate": "governance/path-classification.json",
+        "line": 250,
+        "referrer": "scripts/revue.py",
+        "resolved": "governance/path-classification.json",
+        "severity": "hard"
+      },
+      {
+        "candidate": "governance/PATH-CLASSIFICATION.md",
+        "line": 251,
+        "referrer": "scripts/revue.py",
+        "resolved": "governance/PATH-CLASSIFICATION.md",
+        "severity": "hard"
+      },
+      {
         "candidate": "manifests/roles.yaml",
-        "line": 331,
+        "line": 349,
         "referrer": "scripts/revue.py",
         "resolved": "manifests/roles.yaml",
         "severity": "hard"
@@ -142669,6 +143261,146 @@
         "severity": "hard"
       },
       {
+        "candidate": "scripts/revue.py",
+        "line": 12,
+        "referrer": "stories/RC1-504.md",
+        "resolved": "scripts/revue.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "scripts/governance/classify_paths.py",
+        "line": 13,
+        "referrer": "stories/RC1-504.md",
+        "resolved": "scripts/governance/classify_paths.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "governance/path-classification.json",
+        "line": 15,
+        "referrer": "stories/RC1-504.md",
+        "resolved": "governance/path-classification.json",
+        "severity": "hard"
+      },
+      {
+        "candidate": "tests/test_revue.py",
+        "line": 24,
+        "referrer": "stories/RC1-504.md",
+        "resolved": "tests/test_revue.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "tests/test_revue.py",
+        "line": 25,
+        "referrer": "stories/RC1-504.md",
+        "resolved": "tests/test_revue.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "tests/test_revue.py",
+        "line": 26,
+        "referrer": "stories/RC1-504.md",
+        "resolved": "tests/test_revue.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "governance/path-classification.json",
+        "line": 31,
+        "referrer": "stories/RC1-504.md",
+        "resolved": "governance/path-classification.json",
+        "severity": "hard"
+      },
+      {
+        "candidate": "reviews/BINDING.txt",
+        "line": 35,
+        "referrer": "stories/RC1-504.md",
+        "resolved": "reviews/BINDING.txt",
+        "severity": "hard"
+      },
+      {
+        "candidate": "governance/path-classification.json",
+        "line": 42,
+        "referrer": "stories/RC1-504.md",
+        "resolved": "governance/path-classification.json",
+        "severity": "hard"
+      },
+      {
+        "candidate": "governance/PATH-CLASSIFICATION.md",
+        "line": 42,
+        "referrer": "stories/RC1-504.md",
+        "resolved": "governance/PATH-CLASSIFICATION.md",
+        "severity": "hard"
+      },
+      {
+        "candidate": "scripts/revue.py",
+        "line": 43,
+        "referrer": "stories/RC1-504.md",
+        "resolved": "scripts/revue.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "scripts/revue.py",
+        "line": 59,
+        "referrer": "stories/RC1-504.md",
+        "resolved": "scripts/revue.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "governance/path-classification.json",
+        "line": 60,
+        "referrer": "stories/RC1-504.md",
+        "resolved": "governance/path-classification.json",
+        "severity": "hard"
+      },
+      {
+        "candidate": "governance/PATH-CLASSIFICATION.md",
+        "line": 60,
+        "referrer": "stories/RC1-504.md",
+        "resolved": "governance/PATH-CLASSIFICATION.md",
+        "severity": "hard"
+      },
+      {
+        "candidate": "governance/path-classification-rules.json",
+        "line": 61,
+        "referrer": "stories/RC1-504.md",
+        "resolved": "governance/path-classification-rules.json",
+        "severity": "hard"
+      },
+      {
+        "candidate": "tests/test_revue.py",
+        "line": 63,
+        "referrer": "stories/RC1-504.md",
+        "resolved": "tests/test_revue.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "scripts/governance/classify_paths.py",
+        "line": 64,
+        "referrer": "stories/RC1-504.md",
+        "resolved": "scripts/governance/classify_paths.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "scripts/reviews_gate.py",
+        "line": 65,
+        "referrer": "stories/RC1-504.md",
+        "resolved": "scripts/reviews_gate.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "governance/path-classification-rules.json",
+        "line": 65,
+        "referrer": "stories/RC1-504.md",
+        "resolved": "governance/path-classification-rules.json",
+        "severity": "hard"
+      },
+      {
+        "candidate": "tests/test_revue.py",
+        "line": 70,
+        "referrer": "stories/RC1-504.md",
+        "resolved": "tests/test_revue.py",
+        "severity": "hard"
+      },
+      {
         "candidate": "src/forgeai/core/registre_completude.py",
         "line": 5,
         "referrer": "stories/REG-029A.md",
@@ -144713,6 +145445,13 @@
         "severity": "hard"
       },
       {
+        "candidate": "governance/path-classification.json",
+        "line": 254,
+        "referrer": "tests/test_revue.py",
+        "resolved": "governance/path-classification.json",
+        "severity": "hard"
+      },
+      {
         "candidate": "governance/state-observations.json",
         "line": 64,
         "referrer": "tests/test_state_current.py",
@@ -144825,9 +145564,9 @@
     "by_class": {
       "ARCHIVE": 44,
       "DOCS": 14,
-      "EVIDENCE": 1331,
+      "EVIDENCE": 1334,
       "GENERATED": 5,
-      "GOVERNANCE": 174,
+      "GOVERNANCE": 175,
       "PRODUCT": 112,
       "TEST": 200,
       "WORKING": 10
@@ -144842,7 +145581,7 @@
       "evidence-audit-output-root": 18,
       "evidence-registres": 1,
       "evidence-registres-root": 35,
-      "evidence-reviews": 409,
+      "evidence-reviews": 412,
       "evidence-reviews-root": 868,
       "generated-authority-map": 1,
       "generated-path-classification-json": 1,
@@ -144871,7 +145610,7 @@
       "governance-scripts-coordination": 4,
       "governance-scripts-governance": 7,
       "governance-scripts-root": 21,
-      "governance-stories": 85,
+      "governance-stories": 86,
       "product-catalogue-checksum": 1,
       "product-source": 111,
       "test-suite": 200,
@@ -144879,11 +145618,11 @@
       "working-sandbox-readme": 1
     },
     "case_collisions_total": 0,
-    "dangling_references_total": 14869,
+    "dangling_references_total": 14904,
     "generated_total": 7,
-    "load_bearing_total": 1762,
+    "load_bearing_total": 1765,
     "portability_violations_total": 0,
-    "tracked_total": 1890,
+    "tracked_total": 1894,
     "unclassified_total": 0,
     "unicode_anomalies_total": 0
   },
@@ -145098,6 +145837,8 @@
         "reviews/RC1-493-PR-v1/DeepSeek-V4-Pro.verdict.json",
         "reviews/RC1-493-PR-v1/Gemini-3.1-Pro.verdict.json",
         "reviews/RC1-493-PR-v1/Qwen3.7-Max.verdict.json",
+        "reviews/RC1-504-v1/DeepSeek-V4-Pro.verdict.json",
+        "reviews/RC1-504-v1/Qwen3.7-Max.verdict.json",
         "reviews/README.md",
         "reviews/REG-029A/DeepSeek-V4-Pro.verdict.json",
         "reviews/REG-029A/Gemini-3.1-Pro.verdict.json",
@@ -145290,7 +146031,7 @@
         "reviews/wh-civ/Gemini-3.1-Pro.verdict.json",
         "reviews/wh-civ/Grok-4.5.verdict.json"
       ],
-      "rollback": "Vague 0 : 398 chemin(s). Rollback = git mv evidence/registres/mission.jsonl Registres/mission.jsonl; git mv evidence/reviews/BINDING.txt reviews/BINDING.txt; git mv evidence/reviews/RC1-001-PR431-v10/DeepSeek-V4-Pro.verdict.json reviews/RC1-001-PR431-v10/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-001-PR431-v10/Gemini-3.1-Pro.verdict.json reviews/RC1-001-PR431-v10/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-001-PR431-v10/Qwen3.7-Max.verdict.json reviews/RC1-001-PR431-v10/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-001-PR431-v2/DeepSeek-V4-Pro.verdict.json reviews/RC1-001-PR431-v2/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-001-PR431-v2/Gemini-3.1-Pro.verdict.json reviews/RC1-001-PR431-v2/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-001-PR431-v2/Qwen3.7-Max.verdict.json reviews/RC1-001-PR431-v2/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-001-PR431-v3/DeepSeek-V4-Pro.verdict.json reviews/RC1-001-PR431-v3/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-001-PR431-v3/Gemini-3.1-Pro.verdict.json reviews/RC1-001-PR431-v3/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-001-PR431-v3/Qwen3.7-Max.verdict.json reviews/RC1-001-PR431-v3/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-001-PR431-v4/DeepSeek-V4-Pro.verdict.json reviews/RC1-001-PR431-v4/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-001-PR431-v4/Gemini-3.1-Pro.verdict.json reviews/RC1-001-PR431-v4/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-001-PR431-v4/Qwen3.7-Max.verdict.json reviews/RC1-001-PR431-v4/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-001-PR431-v5/DeepSeek-V4-Pro.verdict.json reviews/RC1-001-PR431-v5/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-001-PR431-v5/Gemini-3.1-Pro.verdict.json reviews/RC1-001-PR431-v5/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-001-PR431-v5/Qwen3.7-Max.verdict.json reviews/RC1-001-PR431-v5/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-001-PR431-v6/DeepSeek-V4-Pro.verdict.json reviews/RC1-001-PR431-v6/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-001-PR431-v6/Gemini-3.1-Pro.verdict.json reviews/RC1-001-PR431-v6/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-001-PR431-v6/Qwen3.7-Max.verdict.json reviews/RC1-001-PR431-v6/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-001-PR431-v7/DeepSeek-V4-Pro.verdict.json reviews/RC1-001-PR431-v7/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-001-PR431-v7/Gemini-3.1-Pro.verdict.json reviews/RC1-001-PR431-v7/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-001-PR431-v7/Qwen3.7-Max.verdict.json reviews/RC1-001-PR431-v7/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-001-PR431-v8/DeepSeek-V4-Pro.verdict.json reviews/RC1-001-PR431-v8/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-001-PR431-v8/Gemini-3.1-Pro.verdict.json reviews/RC1-001-PR431-v8/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-001-PR431-v8/Qwen3.7-Max.verdict.json reviews/RC1-001-PR431-v8/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-001-PR431-v9/DeepSeek-V4-Pro.verdict.json reviews/RC1-001-PR431-v9/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-001-PR431-v9/Gemini-3.1-Pro.verdict.json reviews/RC1-001-PR431-v9/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-001-PR431-v9/Qwen3.7-Max.verdict.json reviews/RC1-001-PR431-v9/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-002-PR432-v2/DeepSeek-V4-Pro.verdict.json reviews/RC1-002-PR432-v2/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-002-PR432-v2/Gemini-3.1-Pro.verdict.json reviews/RC1-002-PR432-v2/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-002-PR432-v2/Qwen3.7-Max.verdict.json reviews/RC1-002-PR432-v2/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-002-PR432/DeepSeek-V4-Pro.verdict.json reviews/RC1-002-PR432/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-002-PR432/Gemini-3.1-Pro.verdict.json reviews/RC1-002-PR432/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-002-PR432/Qwen3.7-Max.verdict.json reviews/RC1-002-PR432/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-003-PR489-v2/DeepSeek-V4-Pro.verdict.json reviews/RC1-003-PR489-v2/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-003-PR489-v2/Gemini-3.1-Pro.verdict.json reviews/RC1-003-PR489-v2/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-003-PR489-v2/Qwen3.7-Max.verdict.json reviews/RC1-003-PR489-v2/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-003-PR489-v3/DeepSeek-V4-Pro.verdict.json reviews/RC1-003-PR489-v3/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-003-PR489-v3/Gemini-3.1-Pro.verdict.json reviews/RC1-003-PR489-v3/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-003-PR489-v3/Qwen3.7-Max.verdict.json reviews/RC1-003-PR489-v3/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-003-PR489-v4/DeepSeek-V4-Pro.verdict.json reviews/RC1-003-PR489-v4/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-003-PR489-v4/Gemini-3.1-Pro.verdict.json reviews/RC1-003-PR489-v4/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-003-PR489-v4/Qwen3.7-Max.verdict.json reviews/RC1-003-PR489-v4/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-003-PR489-v6/DeepSeek-V4-Pro.verdict.json reviews/RC1-003-PR489-v6/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-003-PR489-v6/Gemini-3.1-Pro.verdict.json reviews/RC1-003-PR489-v6/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-003-PR489-v6/Qwen3.7-Max.verdict.json reviews/RC1-003-PR489-v6/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-003-PR489-v7/Gemini-3.1-Pro.verdict.json reviews/RC1-003-PR489-v7/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-003-PR489-v7/Qwen3.7-Max.verdict.json reviews/RC1-003-PR489-v7/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-003-PR489-v8/Gemini-3.1-Pro.verdict.json reviews/RC1-003-PR489-v8/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-003-PR489-v8/Kimi-2.7.verdict.json reviews/RC1-003-PR489-v8/Kimi-2.7.verdict.json; git mv evidence/reviews/RC1-003-PR489-v8/Qwen3.7-Max.verdict.json reviews/RC1-003-PR489-v8/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-003-PR489/DeepSeek-V4-Pro.verdict.json reviews/RC1-003-PR489/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-003-PR489/Gemini-3.1-Pro.verdict.json reviews/RC1-003-PR489/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-003-PR489/Qwen3.7-Max.verdict.json reviews/RC1-003-PR489/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-004-PR497-v2/DeepSeek-V4-Pro.verdict.json reviews/RC1-004-PR497-v2/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-004-PR497-v2/Gemini-3.1-Pro.verdict.json reviews/RC1-004-PR497-v2/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-004-PR497-v2/Qwen3.7-Max.verdict.json reviews/RC1-004-PR497-v2/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-004-PR497-v3/DeepSeek-V4-Pro.verdict.json reviews/RC1-004-PR497-v3/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-004-PR497-v3/Gemini-3.1-Pro.verdict.json reviews/RC1-004-PR497-v3/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-004-PR497-v3/Qwen3.7-Max.verdict.json reviews/RC1-004-PR497-v3/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-004-PR497-v4/Gemini-3.1-Pro.verdict.json reviews/RC1-004-PR497-v4/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-004-PR497-v4/MiMo-Pro-V2.verdict.json reviews/RC1-004-PR497-v4/MiMo-Pro-V2.verdict.json; git mv evidence/reviews/RC1-004-PR497-v4/Qwen3.7-Max.verdict.json reviews/RC1-004-PR497-v4/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-004-PR497-v4/RECU.json reviews/RC1-004-PR497-v4/RECU.json; git mv evidence/reviews/RC1-004-PR497-v5/Gemini-3.1-Pro.verdict.json reviews/RC1-004-PR497-v5/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-004-PR497-v5/MiMo-Pro-V2.verdict.json reviews/RC1-004-PR497-v5/MiMo-Pro-V2.verdict.json; git mv evidence/reviews/RC1-004-PR497-v5/Qwen3.7-Max.verdict.json reviews/RC1-004-PR497-v5/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-004-PR497-v5/RECU.json reviews/RC1-004-PR497-v5/RECU.json; git mv evidence/reviews/RC1-004-PR497/DeepSeek-V4-Pro.verdict.json reviews/RC1-004-PR497/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-004-PR497/Gemini-3.1-Pro.verdict.json reviews/RC1-004-PR497/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-004-PR497/Qwen3.7-Max.verdict.json reviews/RC1-004-PR497/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-007-PR490-v2/DeepSeek-V4-Pro.verdict.json reviews/RC1-007-PR490-v2/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-007-PR490-v2/Gemini-3.1-Pro.verdict.json reviews/RC1-007-PR490-v2/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-007-PR490-v2/Kimi-2.7.verdict.json reviews/RC1-007-PR490-v2/Kimi-2.7.verdict.json; git mv evidence/reviews/RC1-007-PR490-v3/Gemini-3.1-Pro.verdict.json reviews/RC1-007-PR490-v3/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-007-PR490-v3/MiMo-Pro-V2.verdict.json reviews/RC1-007-PR490-v3/MiMo-Pro-V2.verdict.json; git mv evidence/reviews/RC1-007-PR490-v3/Qwen3.7-Max.verdict.json reviews/RC1-007-PR490-v3/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-007-PR490-v4/DeepSeek-V4-Pro.verdict.json reviews/RC1-007-PR490-v4/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-007-PR490-v4/Gemini-3.1-Pro.verdict.json reviews/RC1-007-PR490-v4/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-007-PR490-v4/MiMo-Pro-V2.verdict.json reviews/RC1-007-PR490-v4/MiMo-Pro-V2.verdict.json; git mv evidence/reviews/RC1-007-PR490/Gemini-3.1-Pro.verdict.json reviews/RC1-007-PR490/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-008-PR496-v2/DeepSeek-V4-Pro.verdict.json reviews/RC1-008-PR496-v2/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-008-PR496-v2/Gemini-3.1-Pro.verdict.json reviews/RC1-008-PR496-v2/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-008-PR496-v2/MiMo-Pro-V2.verdict.json reviews/RC1-008-PR496-v2/MiMo-Pro-V2.verdict.json; git mv evidence/reviews/RC1-008-PR496-v4/DeepSeek-V4-Pro.verdict.json reviews/RC1-008-PR496-v4/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-008-PR496-v4/Gemini-3.1-Pro.verdict.json reviews/RC1-008-PR496-v4/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-008-PR496-v4/Qwen3.7-Max.verdict.json reviews/RC1-008-PR496-v4/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-008-PR496-v5/DeepSeek-V4-Pro.verdict.json reviews/RC1-008-PR496-v5/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-008-PR496-v5/Gemini-3.1-Pro.verdict.json reviews/RC1-008-PR496-v5/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-008-PR496-v5/MiMo-Pro-V2.verdict.json reviews/RC1-008-PR496-v5/MiMo-Pro-V2.verdict.json; git mv evidence/reviews/RC1-008-PR496/DeepSeek-V4-Pro.verdict.json reviews/RC1-008-PR496/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-008-PR496/Gemini-3.1-Pro.verdict.json reviews/RC1-008-PR496/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-008-PR496/Kimi-2.7.verdict.json reviews/RC1-008-PR496/Kimi-2.7.verdict.json; git mv evidence/reviews/RC1-009-PR500-v1/Gemini-3.1-Pro.verdict.json reviews/RC1-009-PR500-v1/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-009-PR500-v1/MiMo-Pro-V2.verdict.json reviews/RC1-009-PR500-v1/MiMo-Pro-V2.verdict.json; git mv evidence/reviews/RC1-009-PR500-v2/DeepSeek-V4-Pro.verdict.json reviews/RC1-009-PR500-v2/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-009-PR500-v2/Gemini-3.1-Pro.verdict.json reviews/RC1-009-PR500-v2/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-009-PR500-v2/MiMo-Pro-V2.verdict.json reviews/RC1-009-PR500-v2/MiMo-Pro-V2.verdict.json; git mv evidence/reviews/RC1-009-PR500-v3/Gemini-3.1-Pro.verdict.json reviews/RC1-009-PR500-v3/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-009-PR500-v3/MiMo-Pro-V2.verdict.json reviews/RC1-009-PR500-v3/MiMo-Pro-V2.verdict.json; git mv evidence/reviews/RC1-009-PR500-v3/RECU.json reviews/RC1-009-PR500-v3/RECU.json; git mv evidence/reviews/RC1-009/DeepSeek-V4-Pro.verdict.json reviews/RC1-009/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-009/Gemini-3.1-Pro.verdict.json reviews/RC1-009/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-009/Kimi-2.7.verdict.json reviews/RC1-009/Kimi-2.7.verdict.json; git mv evidence/reviews/RC1-009/RECU.json reviews/RC1-009/RECU.json; git mv evidence/reviews/RC1-010-lot0-PR501-v1/Gemini-3.1-Pro.verdict.json reviews/RC1-010-lot0-PR501-v1/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-010-lot0-PR501-v1/Qwen3.7-Max.verdict.json reviews/RC1-010-lot0-PR501-v1/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-010-lot0-PR501-v2/Gemini-3.1-Pro.verdict.json reviews/RC1-010-lot0-PR501-v2/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-010-lot0-PR501-v2/Qwen3.7-Max.verdict.json reviews/RC1-010-lot0-PR501-v2/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-010-lot0-PR501-v2/RECU.json reviews/RC1-010-lot0-PR501-v2/RECU.json; git mv evidence/reviews/RC1-010-lot1-PR502-v1/DeepSeek-V4-Pro.verdict.json reviews/RC1-010-lot1-PR502-v1/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-010-lot1-PR502-v1/Gemini-3.1-Pro.verdict.json reviews/RC1-010-lot1-PR502-v1/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-010-lot1-PR502-v1/MiMo-Pro-V2.verdict.json reviews/RC1-010-lot1-PR502-v1/MiMo-Pro-V2.verdict.json; git mv evidence/reviews/RC1-010-lot1-PR502-v1/RECU.json reviews/RC1-010-lot1-PR502-v1/RECU.json; git mv evidence/reviews/RC1-010-lot2-PR503-v1/DeepSeek-V4-Pro.verdict.json reviews/RC1-010-lot2-PR503-v1/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-010-lot2-PR503-v1/Gemini-3.1-Pro.verdict.json reviews/RC1-010-lot2-PR503-v1/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-010-lot2-PR503-v1/Qwen3.7-Max.verdict.json reviews/RC1-010-lot2-PR503-v1/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-010-lot2-PR503-v2/DeepSeek-V4-Pro.verdict.json reviews/RC1-010-lot2-PR503-v2/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-010-lot2-PR503-v2/Gemini-3.1-Pro.verdict.json reviews/RC1-010-lot2-PR503-v2/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-010-lot2-PR503-v2/Qwen3.7-Max.verdict.json reviews/RC1-010-lot2-PR503-v2/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-010-lot2-PR503-v3/Gemini-3.1-Pro.verdict.json reviews/RC1-010-lot2-PR503-v3/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-010-lot2-PR503-v3/Qwen3.7-Max.verdict.json reviews/RC1-010-lot2-PR503-v3/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-010-lot2-PR503-v4/DeepSeek-V4-Pro.verdict.json reviews/RC1-010-lot2-PR503-v4/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-010-lot2-PR503-v4/Gemini-3.1-Pro.verdict.json reviews/RC1-010-lot2-PR503-v4/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-010-lot2-PR503-v4/Qwen3.7-Max.verdict.json reviews/RC1-010-lot2-PR503-v4/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-010-lot2-PR503-v4/RECU.json reviews/RC1-010-lot2-PR503-v4/RECU.json; git mv evidence/reviews/RC1-010-lot3-PR505-v1/DeepSeek-V4-Pro.verdict.json reviews/RC1-010-lot3-PR505-v1/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-010-lot3-PR505-v1/Kimi-2.7.verdict.json reviews/RC1-010-lot3-PR505-v1/Kimi-2.7.verdict.json; git mv evidence/reviews/RC1-010-lot3-PR505-v1/Qwen3.7-Max.verdict.json reviews/RC1-010-lot3-PR505-v1/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-010-lot3-PR505-v1/RECU.json reviews/RC1-010-lot3-PR505-v1/RECU.json; git mv evidence/reviews/RC1-010-lot3-PR505-v2/Kimi-2.7.verdict.json reviews/RC1-010-lot3-PR505-v2/Kimi-2.7.verdict.json; git mv evidence/reviews/RC1-010-lot3-PR505-v2/Qwen3.7-Max.verdict.json reviews/RC1-010-lot3-PR505-v2/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-010-lot3-PR505-v2/RECU.json reviews/RC1-010-lot3-PR505-v2/RECU.json; git mv evidence/reviews/RC1-010-lot4-PR507-v1/DeepSeek-V4-Pro.verdict.json reviews/RC1-010-lot4-PR507-v1/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-010-lot4-PR507-v1/Kimi-2.7.verdict.json reviews/RC1-010-lot4-PR507-v1/Kimi-2.7.verdict.json; git mv evidence/reviews/RC1-010-lot4-PR507-v1/Qwen3.7-Max.verdict.json reviews/RC1-010-lot4-PR507-v1/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-010-lot4-PR507-v1/RECU.json reviews/RC1-010-lot4-PR507-v1/RECU.json; git mv evidence/reviews/RC1-010-lot5a-PR508-v1/Kimi-2.7.verdict.json reviews/RC1-010-lot5a-PR508-v1/Kimi-2.7.verdict.json; git mv evidence/reviews/RC1-010-lot5a-PR508-v1/Qwen3.7-Max.verdict.json reviews/RC1-010-lot5a-PR508-v1/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-010-lot5a-PR508-v1/RECU.json reviews/RC1-010-lot5a-PR508-v1/RECU.json; git mv evidence/reviews/RC1-010-lot5b-PR510-v1/DeepSeek-V4-Pro.verdict.json reviews/RC1-010-lot5b-PR510-v1/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-010-lot5b-PR510-v1/Kimi-2.7.verdict.json reviews/RC1-010-lot5b-PR510-v1/Kimi-2.7.verdict.json; git mv evidence/reviews/RC1-010-lot5b-PR510-v1/Qwen3.7-Max.verdict.json reviews/RC1-010-lot5b-PR510-v1/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-010-lot5b-PR510-v2/DeepSeek-V4-Pro.verdict.json reviews/RC1-010-lot5b-PR510-v2/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-010-lot5b-PR510-v2/Kimi-2.7.verdict.json reviews/RC1-010-lot5b-PR510-v2/Kimi-2.7.verdict.json; git mv evidence/reviews/RC1-010-lot5b-PR510-v2/Qwen3.7-Max.verdict.json reviews/RC1-010-lot5b-PR510-v2/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-010-lot5b-PR510-v2/RECU.json reviews/RC1-010-lot5b-PR510-v2/RECU.json; git mv evidence/reviews/RC1-010-lot5b-PR510-v3/Kimi-2.7.verdict.json reviews/RC1-010-lot5b-PR510-v3/Kimi-2.7.verdict.json; git mv evidence/reviews/RC1-010-lot5b-PR510-v3/Qwen3.7-Max.verdict.json reviews/RC1-010-lot5b-PR510-v3/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-010-lot5b-PR510-v4/DeepSeek-V4-Pro.verdict.json reviews/RC1-010-lot5b-PR510-v4/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-010-lot5b-PR510-v4/Kimi-2.7.verdict.json reviews/RC1-010-lot5b-PR510-v4/Kimi-2.7.verdict.json; git mv evidence/reviews/RC1-010-lot5b-PR510-v4/Qwen3.7-Max.verdict.json reviews/RC1-010-lot5b-PR510-v4/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-010-lot5b-PR510-v4/RECU.json reviews/RC1-010-lot5b-PR510-v4/RECU.json; git mv evidence/reviews/RC1-010-lot5c-PR516-v1/DeepSeek-V4-Pro.verdict.json reviews/RC1-010-lot5c-PR516-v1/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-010-lot5c-PR516-v1/Kimi-2.7.verdict.json reviews/RC1-010-lot5c-PR516-v1/Kimi-2.7.verdict.json; git mv evidence/reviews/RC1-010-lot5c-PR516-v1/Qwen3.7-Max.verdict.json reviews/RC1-010-lot5c-PR516-v1/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-010-lot5c-PR516-v1/RECU.json reviews/RC1-010-lot5c-PR516-v1/RECU.json; git mv evidence/reviews/RC1-446-PR-v1/DeepSeek-V4-Pro.verdict.json reviews/RC1-446-PR-v1/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-446-PR-v1/Gemini-3.1-Pro.verdict.json reviews/RC1-446-PR-v1/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-446-PR-v1/Qwen3.7-Max.verdict.json reviews/RC1-446-PR-v1/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-446-PR-v2/DeepSeek-V4-Pro.verdict.json reviews/RC1-446-PR-v2/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-446-PR-v2/Gemini-3.1-Pro.verdict.json reviews/RC1-446-PR-v2/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-446-PR-v2/Qwen3.7-Max.verdict.json reviews/RC1-446-PR-v2/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-446-PR-v3/DeepSeek-V4-Pro.verdict.json reviews/RC1-446-PR-v3/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-446-PR-v3/Gemini-3.1-Pro.verdict.json reviews/RC1-446-PR-v3/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-446-PR-v3/Qwen3.7-Max.verdict.json reviews/RC1-446-PR-v3/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-446-PR-v4/DeepSeek-V4-Pro.verdict.json reviews/RC1-446-PR-v4/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-446-PR-v4/Gemini-3.1-Pro.verdict.json reviews/RC1-446-PR-v4/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-446-PR-v4/Qwen3.7-Max.verdict.json reviews/RC1-446-PR-v4/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-446-PR-v5/DeepSeek-V4-Pro.verdict.json reviews/RC1-446-PR-v5/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-446-PR-v5/Gemini-3.1-Pro.verdict.json reviews/RC1-446-PR-v5/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-446-PR-v5/Qwen3.7-Max.verdict.json reviews/RC1-446-PR-v5/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-446-PR-v5/RECU.json reviews/RC1-446-PR-v5/RECU.json; git mv evidence/reviews/RC1-447-PR-v1/DeepSeek-V4-Pro.verdict.json reviews/RC1-447-PR-v1/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-447-PR-v1/Gemini-3.1-Pro.verdict.json reviews/RC1-447-PR-v1/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-447-PR-v1/Qwen3.7-Max.verdict.json reviews/RC1-447-PR-v1/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-447-PR-v2/DeepSeek-V4-Pro.verdict.json reviews/RC1-447-PR-v2/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-447-PR-v2/Gemini-3.1-Pro.verdict.json reviews/RC1-447-PR-v2/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-447-PR-v2/Qwen3.7-Max.verdict.json reviews/RC1-447-PR-v2/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-447-PR-v3/DeepSeek-V4-Pro.verdict.json reviews/RC1-447-PR-v3/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-447-PR-v3/Gemini-3.1-Pro.verdict.json reviews/RC1-447-PR-v3/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-447-PR-v3/Qwen3.7-Max.verdict.json reviews/RC1-447-PR-v3/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-447-PR-v4/DeepSeek-V4-Pro.verdict.json reviews/RC1-447-PR-v4/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-447-PR-v4/Gemini-3.1-Pro.verdict.json reviews/RC1-447-PR-v4/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-447-PR-v4/Qwen3.7-Max.verdict.json reviews/RC1-447-PR-v4/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-447-PR-v5/DeepSeek-V4-Pro.verdict.json reviews/RC1-447-PR-v5/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-447-PR-v5/Gemini-3.1-Pro.verdict.json reviews/RC1-447-PR-v5/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-447-PR-v5/Qwen3.7-Max.verdict.json reviews/RC1-447-PR-v5/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-459-PR517/DeepSeek-V4-Pro.verdict.json reviews/RC1-459-PR517/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-459-PR517/Gemini-3.1-Pro.verdict.json reviews/RC1-459-PR517/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-459-PR517/MiMo-Pro-V2.verdict.json reviews/RC1-459-PR517/MiMo-Pro-V2.verdict.json; git mv evidence/reviews/RC1-459-PR517/RECU.json reviews/RC1-459-PR517/RECU.json; git mv evidence/reviews/RC1-482-PR-v1/DeepSeek-V4-Pro.verdict.json reviews/RC1-482-PR-v1/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-482-PR-v1/Gemini-3.1-Pro.verdict.json reviews/RC1-482-PR-v1/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-482-PR-v1/Qwen3.7-Max.verdict.json reviews/RC1-482-PR-v1/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-487-v1/DeepSeek-V4-Pro.verdict.json reviews/RC1-487-v1/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-487-v1/Gemini-3.1-Pro.verdict.json reviews/RC1-487-v1/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-487-v1/MiMo-Pro-V2.verdict.json reviews/RC1-487-v1/MiMo-Pro-V2.verdict.json; git mv evidence/reviews/RC1-487-v1/RECU.json reviews/RC1-487-v1/RECU.json; git mv evidence/reviews/RC1-492-PR512/DeepSeek-V4-Pro.verdict.json reviews/RC1-492-PR512/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-492-PR512/MiMo-Pro-V2.verdict.json reviews/RC1-492-PR512/MiMo-Pro-V2.verdict.json; git mv evidence/reviews/RC1-492-PR512/Qwen3.7-Max.verdict.json reviews/RC1-492-PR512/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-492-PR512/RECU.json reviews/RC1-492-PR512/RECU.json; git mv evidence/reviews/RC1-493-PR-v1/DeepSeek-V4-Pro.verdict.json reviews/RC1-493-PR-v1/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-493-PR-v1/Gemini-3.1-Pro.verdict.json reviews/RC1-493-PR-v1/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-493-PR-v1/Qwen3.7-Max.verdict.json reviews/RC1-493-PR-v1/Qwen3.7-Max.verdict.json; git mv evidence/reviews/README.md reviews/README.md; git mv evidence/reviews/REG-029A/DeepSeek-V4-Pro.verdict.json reviews/REG-029A/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/REG-029A/Gemini-3.1-Pro.verdict.json reviews/REG-029A/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/REG-029A/Qwen3.7-Max.verdict.json reviews/REG-029A/Qwen3.7-Max.verdict.json; git mv evidence/reviews/REG-029B/DeepSeek-V4-Pro.verdict.json reviews/REG-029B/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/REG-029B/Gemini-3.1-Pro.verdict.json reviews/REG-029B/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/REG-029B/Qwen3.7-Max.verdict.json reviews/REG-029B/Qwen3.7-Max.verdict.json; git mv evidence/reviews/REL-038A/GLM-5.2.verdict.json reviews/REL-038A/GLM-5.2.verdict.json; git mv evidence/reviews/REL-038A/Grok-4.5.verdict.json reviews/REL-038A/Grok-4.5.verdict.json; git mv evidence/reviews/REL-038A/Qwen3.7-Max.verdict.json reviews/REL-038A/Qwen3.7-Max.verdict.json; git mv evidence/reviews/REL-038B/GLM-5.2.verdict.json reviews/REL-038B/GLM-5.2.verdict.json; git mv evidence/reviews/REL-038B/Grok-4.5.verdict.json reviews/REL-038B/Grok-4.5.verdict.json; git mv evidence/reviews/REL-038B/Qwen3.7-Max.verdict.json reviews/REL-038B/Qwen3.7-Max.verdict.json; git mv evidence/reviews/REL-038C/GLM-5.2.verdict.json reviews/REL-038C/GLM-5.2.verdict.json; git mv evidence/reviews/REL-038C/Grok-4.5.verdict.json reviews/REL-038C/Grok-4.5.verdict.json; git mv evidence/reviews/REL-038C/Qwen3.7-Max.verdict.json reviews/REL-038C/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RES-012A/DeepSeek-V4-Pro.verdict.json reviews/RES-012A/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RES-012A/Gemini-3.1-Pro.verdict.json reviews/RES-012A/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RES-012A/Qwen3.6-40B.verdict.json reviews/RES-012A/Qwen3.6-40B.verdict.json; git mv evidence/reviews/RES-012A/REVIEW-PACK.md reviews/RES-012A/REVIEW-PACK.md; git mv evidence/reviews/RES-012B/DeepSeek-V4-Pro.verdict.json reviews/RES-012B/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RES-012B/GREEN-focused.txt reviews/RES-012B/GREEN-focused.txt; git mv evidence/reviews/RES-012B/Gemini-3.1-Pro.verdict.json reviews/RES-012B/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RES-012B/Grok-4.5.verdict.json reviews/RES-012B/Grok-4.5.verdict.json; git mv evidence/reviews/RES-012B/RED-reproduction.txt reviews/RES-012B/RED-reproduction.txt; git mv evidence/reviews/RES-012B/REVIEW-LOG.md reviews/RES-012B/REVIEW-LOG.md; git mv evidence/reviews/RES-012B/evidence/DEPLOIEMENT-REEL.txt reviews/RES-012B/evidence/DEPLOIEMENT-REEL.txt; git mv evidence/reviews/RES-012B/evidence/GREEN.txt reviews/RES-012B/evidence/GREEN.txt; git mv evidence/reviews/RES-012B/evidence/RED.txt reviews/RES-012B/evidence/RED.txt; git mv evidence/reviews/RES-012B/evidence/mesure-litellm.txt reviews/RES-012B/evidence/mesure-litellm.txt; git mv evidence/reviews/REV-043/DATA-002/DeepSeek-V4-Pro.verdict.json reviews/REV-043/DATA-002/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/REV-043/DATA-002/Grok-4.5.verdict.json reviews/REV-043/DATA-002/Grok-4.5.verdict.json; git mv evidence/reviews/REV-043/DATA-002/Qwen3.7-Max.verdict.json reviews/REV-043/DATA-002/Qwen3.7-Max.verdict.json; git mv evidence/reviews/REV-043/DATA-002/tally.json reviews/REV-043/DATA-002/tally.json; git mv evidence/reviews/REV-043/DATA-003/DeepSeek-V4-Pro.verdict.json reviews/REV-043/DATA-003/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/REV-043/DATA-003/Grok-4.5.verdict.json reviews/REV-043/DATA-003/Grok-4.5.verdict.json; git mv evidence/reviews/REV-043/DATA-003/Qwen3.7-Max.verdict.json reviews/REV-043/DATA-003/Qwen3.7-Max.verdict.json; git mv evidence/reviews/REV-043/DATA-003/tally.json reviews/REV-043/DATA-003/tally.json; git mv evidence/reviews/REV-043/WEB-001/DeepSeek-V4-Pro.verdict.json reviews/REV-043/WEB-001/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/REV-043/WEB-001/Grok-4.5.verdict.json reviews/REV-043/WEB-001/Grok-4.5.verdict.json; git mv evidence/reviews/REV-043/WEB-001/Qwen3.7-Max.verdict.json reviews/REV-043/WEB-001/Qwen3.7-Max.verdict.json; git mv evidence/reviews/REV-043/WEB-001/tally.json reviews/REV-043/WEB-001/tally.json; git mv evidence/reviews/ROSTER-MAJ-PR511-v1/DeepSeek-V4-Pro-0813.verdict.json reviews/ROSTER-MAJ-PR511-v1/DeepSeek-V4-Pro-0813.verdict.json; git mv evidence/reviews/ROSTER-MAJ-PR511-v1/Kimi-2.7.verdict.json reviews/ROSTER-MAJ-PR511-v1/Kimi-2.7.verdict.json; git mv evidence/reviews/ROSTER-MAJ-PR511-v1/Qwen3.8-2.4T.verdict.json reviews/ROSTER-MAJ-PR511-v1/Qwen3.8-2.4T.verdict.json; git mv evidence/reviews/ROSTER-MAJ-PR511-v1/RECU.json reviews/ROSTER-MAJ-PR511-v1/RECU.json; git mv evidence/reviews/S-TAIL-tailscale-optin/Gemini-3.1-Pro.verdict.json reviews/S-TAIL-tailscale-optin/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/S-TAIL-tailscale-optin/Grok-4.5.verdict.json reviews/S-TAIL-tailscale-optin/Grok-4.5.verdict.json; git mv evidence/reviews/S-TAIL-tailscale-optin/Qwen3.7-Max.verdict.json reviews/S-TAIL-tailscale-optin/Qwen3.7-Max.verdict.json; git mv evidence/reviews/S-TAIL-tailscale-optin/pack.md reviews/S-TAIL-tailscale-optin/pack.md; git mv evidence/reviews/S-ZEN-cpu-zendnn/Gemini-3.1-Pro.verdict.json reviews/S-ZEN-cpu-zendnn/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/S-ZEN-cpu-zendnn/Grok-4.5.verdict.json reviews/S-ZEN-cpu-zendnn/Grok-4.5.verdict.json; git mv evidence/reviews/S-ZEN-cpu-zendnn/Qwen3.7-Max.verdict.json reviews/S-ZEN-cpu-zendnn/Qwen3.7-Max.verdict.json; git mv evidence/reviews/S-ZEN-cpu-zendnn/pack.md reviews/S-ZEN-cpu-zendnn/pack.md; git mv evidence/reviews/S1-gpu-rocm-runtime/Gemini-3.1-Pro.verdict.json reviews/S1-gpu-rocm-runtime/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/S1-gpu-rocm-runtime/Grok-4.5.verdict.json reviews/S1-gpu-rocm-runtime/Grok-4.5.verdict.json; git mv evidence/reviews/S1-gpu-rocm-runtime/Qwen3.7-Max.verdict.json reviews/S1-gpu-rocm-runtime/Qwen3.7-Max.verdict.json; git mv evidence/reviews/S1-gpu-rocm-runtime/pack.md reviews/S1-gpu-rocm-runtime/pack.md; git mv evidence/reviews/S2-gpu-reservation-vendor/Gemini-3.1-Pro.verdict.json reviews/S2-gpu-reservation-vendor/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/S2-gpu-reservation-vendor/Grok-4.5.verdict.json reviews/S2-gpu-reservation-vendor/Grok-4.5.verdict.json; git mv evidence/reviews/S2-gpu-reservation-vendor/Qwen3.7-Max.verdict.json reviews/S2-gpu-reservation-vendor/Qwen3.7-Max.verdict.json; git mv evidence/reviews/S2-gpu-reservation-vendor/pack.md reviews/S2-gpu-reservation-vendor/pack.md; git mv evidence/reviews/S3-amd-runtimes-k3s-gpu/Gemini-3.1-Pro.verdict.json reviews/S3-amd-runtimes-k3s-gpu/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/S3-amd-runtimes-k3s-gpu/Grok-4.5.verdict.json reviews/S3-amd-runtimes-k3s-gpu/Grok-4.5.verdict.json; git mv evidence/reviews/S3-amd-runtimes-k3s-gpu/Qwen3.7-Max.verdict.json reviews/S3-amd-runtimes-k3s-gpu/Qwen3.7-Max.verdict.json; git mv evidence/reviews/S3-amd-runtimes-k3s-gpu/pack.md reviews/S3-amd-runtimes-k3s-gpu/pack.md; git mv evidence/reviews/S3b-amd-vulkan-runtime/Gemini-3.1-Pro.verdict.json reviews/S3b-amd-vulkan-runtime/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/S3b-amd-vulkan-runtime/Grok-4.5.verdict.json reviews/S3b-amd-vulkan-runtime/Grok-4.5.verdict.json; git mv evidence/reviews/S3b-amd-vulkan-runtime/Qwen3.7-Max.verdict.json reviews/S3b-amd-vulkan-runtime/Qwen3.7-Max.verdict.json; git mv evidence/reviews/S3b-amd-vulkan-runtime/pack.md reviews/S3b-amd-vulkan-runtime/pack.md; git mv evidence/reviews/S4-engine-vendor-filter/Gemini-3.1-Pro.verdict.json reviews/S4-engine-vendor-filter/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/S4-engine-vendor-filter/Grok-4.5.verdict.json reviews/S4-engine-vendor-filter/Grok-4.5.verdict.json; git mv evidence/reviews/S4-engine-vendor-filter/Qwen3.7-Max.verdict.json reviews/S4-engine-vendor-filter/Qwen3.7-Max.verdict.json; git mv evidence/reviews/S4-engine-vendor-filter/pack.md reviews/S4-engine-vendor-filter/pack.md; git mv evidence/reviews/S5-intel-openvino/Gemini-3.1-Pro.verdict.json reviews/S5-intel-openvino/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/S5-intel-openvino/Grok-4.5.verdict.json reviews/S5-intel-openvino/Grok-4.5.verdict.json; git mv evidence/reviews/S5-intel-openvino/Qwen3.7-Max.verdict.json reviews/S5-intel-openvino/Qwen3.7-Max.verdict.json; git mv evidence/reviews/S5-intel-openvino/pack.md reviews/S5-intel-openvino/pack.md; git mv evidence/reviews/S6-surface-filtre-vendor/Gemini-3.1-Pro.verdict.json reviews/S6-surface-filtre-vendor/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/S6-surface-filtre-vendor/Grok-4.5.verdict.json reviews/S6-surface-filtre-vendor/Grok-4.5.verdict.json; git mv evidence/reviews/S6-surface-filtre-vendor/Qwen3.7-Max.verdict.json reviews/S6-surface-filtre-vendor/Qwen3.7-Max.verdict.json; git mv evidence/reviews/S6-surface-filtre-vendor/pack.md reviews/S6-surface-filtre-vendor/pack.md; git mv evidence/reviews/S6b-engine-dropdown-vendor/Gemini-3.1-Pro.verdict.json reviews/S6b-engine-dropdown-vendor/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/S6b-engine-dropdown-vendor/Grok-4.5.verdict.json reviews/S6b-engine-dropdown-vendor/Grok-4.5.verdict.json; git mv evidence/reviews/S6b-engine-dropdown-vendor/Qwen3.7-Max.verdict.json reviews/S6b-engine-dropdown-vendor/Qwen3.7-Max.verdict.json; git mv evidence/reviews/S6b-engine-dropdown-vendor/pack.md reviews/S6b-engine-dropdown-vendor/pack.md; git mv evidence/reviews/S7-cluster-view/Gemini-3.1-Pro.verdict.json reviews/S7-cluster-view/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/S7-cluster-view/Grok-4.5.verdict.json reviews/S7-cluster-view/Grok-4.5.verdict.json; git mv evidence/reviews/S7-cluster-view/Qwen3.7-Max.verdict.json reviews/S7-cluster-view/Qwen3.7-Max.verdict.json; git mv evidence/reviews/S7-cluster-view/pack.md reviews/S7-cluster-view/pack.md; git mv evidence/reviews/SAST-042/README.md reviews/SAST-042/README.md; git mv evidence/reviews/SAST-042/civ/DeepSeek-V4-Pro.verdict.json reviews/SAST-042/civ/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/SAST-042/civ/Gemini-3.1-Pro.verdict.json reviews/SAST-042/civ/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/SAST-042/civ/LongCat-2.0.verdict.json reviews/SAST-042/civ/LongCat-2.0.verdict.json; git mv evidence/reviews/SEC-SVCSPEC-INJECT/DeepSeek-V4-Pro.verdict.json reviews/SEC-SVCSPEC-INJECT/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/SEC-SVCSPEC-INJECT/Gemini-3.1-Pro.verdict.json reviews/SEC-SVCSPEC-INJECT/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/SEC-SVCSPEC-INJECT/LongCat-2.0.verdict.json reviews/SEC-SVCSPEC-INJECT/LongCat-2.0.verdict.json; git mv evidence/reviews/SEC-YAML-INJECT/DeepSeek-V4-Pro.verdict.json reviews/SEC-YAML-INJECT/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/SEC-YAML-INJECT/Gemini-3.1-Pro.verdict.json reviews/SEC-YAML-INJECT/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/SEC-YAML-INJECT/LongCat-2.0.verdict.json reviews/SEC-YAML-INJECT/LongCat-2.0.verdict.json; git mv evidence/reviews/SEC1-gitguardian-v2/Gemini-3.1-Pro.verdict.json reviews/SEC1-gitguardian-v2/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/SEC1-gitguardian-v2/LongCat-2.0.verdict.json reviews/SEC1-gitguardian-v2/LongCat-2.0.verdict.json; git mv evidence/reviews/SEC1-gitguardian-v2/Qwen3.7-Max.verdict.json reviews/SEC1-gitguardian-v2/Qwen3.7-Max.verdict.json; git mv evidence/reviews/SEC1-gitguardian/Gemini-3.1-Pro.verdict.json reviews/SEC1-gitguardian/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/SEC1-gitguardian/LongCat-2.0.verdict.json reviews/SEC1-gitguardian/LongCat-2.0.verdict.json; git mv evidence/reviews/SEC1-gitguardian/Qwen3.7-Max.verdict.json reviews/SEC1-gitguardian/Qwen3.7-Max.verdict.json; git mv evidence/reviews/SECRET-020A/civ/DeepSeek-V4-Pro.verdict.json reviews/SECRET-020A/civ/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/SECRET-020A/civ/Gemini-3.1-Pro.verdict.json reviews/SECRET-020A/civ/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/SECRET-020A/civ/LongCat-2.0.verdict.json reviews/SECRET-020A/civ/LongCat-2.0.verdict.json; git mv evidence/reviews/SECRET-020A/civ2/DeepSeek-V4-Pro.verdict.json reviews/SECRET-020A/civ2/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/SECRET-020A/civ2/Gemini-3.1-Pro.verdict.json reviews/SECRET-020A/civ2/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/SECRET-020A/civ2/LongCat-2.0.verdict.json reviews/SECRET-020A/civ2/LongCat-2.0.verdict.json; git mv evidence/reviews/SECRET-020A/civ3/DeepSeek-V4-Pro.verdict.json reviews/SECRET-020A/civ3/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/SECRET-020A/civ3/Gemini-3.1-Pro.verdict.json reviews/SECRET-020A/civ3/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/SECRET-020A/civ3/LongCat-2.0.verdict.json reviews/SECRET-020A/civ3/LongCat-2.0.verdict.json; git mv evidence/reviews/SECRET-020A/civ4/DeepSeek-V4-Pro.verdict.json reviews/SECRET-020A/civ4/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/SECRET-020A/civ4/Gemini-3.1-Pro.verdict.json reviews/SECRET-020A/civ4/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/SECRET-020A/civ4/LongCat-2.0.verdict.json reviews/SECRET-020A/civ4/LongCat-2.0.verdict.json; git mv evidence/reviews/SECRET-020B-t2/DeepSeek-V4-Pro.verdict.json reviews/SECRET-020B-t2/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/SECRET-020B-t2/Gemini-3.1-Pro-OR.verdict.json reviews/SECRET-020B-t2/Gemini-3.1-Pro-OR.verdict.json; git mv evidence/reviews/SECRET-020B-t2/Grok-4.5.verdict.json reviews/SECRET-020B-t2/Grok-4.5.verdict.json; git mv evidence/reviews/SECRET-020B-t3/DeepSeek-V4-Pro.verdict.json reviews/SECRET-020B-t3/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/SECRET-020B-t3/Gemini-3.1-Pro-OR.verdict.json reviews/SECRET-020B-t3/Gemini-3.1-Pro-OR.verdict.json; git mv evidence/reviews/SECRET-020B-t3/Grok-4.5.verdict.json reviews/SECRET-020B-t3/Grok-4.5.verdict.json; git mv evidence/reviews/SECRET-020B/DeepSeek-V4-Pro.verdict.json reviews/SECRET-020B/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/SECRET-020B/Gemini-3.1-Pro-OR.verdict.json reviews/SECRET-020B/Gemini-3.1-Pro-OR.verdict.json; git mv evidence/reviews/SECRET-020B/Grok-4.5.verdict.json reviews/SECRET-020B/Grok-4.5.verdict.json; git mv evidence/reviews/SECRET-020C/DeepSeek-V4-Pro.verdict.json reviews/SECRET-020C/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/SECRET-020C/LongCat-2.0.verdict.json reviews/SECRET-020C/LongCat-2.0.verdict.json; git mv evidence/reviews/SECRET-020C/Qwen3.7-Max.verdict.json reviews/SECRET-020C/Qwen3.7-Max.verdict.json; git mv evidence/reviews/SSH-007/Grok-4.5.verdict.json reviews/SSH-007/Grok-4.5.verdict.json; git mv evidence/reviews/SSH-007/Kimi-2.7.verdict.json reviews/SSH-007/Kimi-2.7.verdict.json; git mv evidence/reviews/SSH-007/Qwen3.7-Max.verdict.json reviews/SSH-007/Qwen3.7-Max.verdict.json; git mv evidence/reviews/SSH-021/Grok-4.5.verdict.json reviews/SSH-021/Grok-4.5.verdict.json; git mv evidence/reviews/SSH-021/MiMo-Pro-V2.verdict.json reviews/SSH-021/MiMo-Pro-V2.verdict.json; git mv evidence/reviews/SSH-021/Qwen3.7-Max.verdict.json reviews/SSH-021/Qwen3.7-Max.verdict.json; git mv evidence/reviews/SSH-030/DeepSeek-V4-Pro.verdict.json reviews/SSH-030/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/SSH-030/Gemini-3.1-Pro.verdict.json reviews/SSH-030/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/SSH-030/Qwen3.7-Max.verdict.json reviews/SSH-030/Qwen3.7-Max.verdict.json; git mv evidence/reviews/SUPPLY-018/Grok-4.5.verdict.json reviews/SUPPLY-018/Grok-4.5.verdict.json; git mv evidence/reviews/SUPPLY-018/MiMo-Pro-V2.verdict.json reviews/SUPPLY-018/MiMo-Pro-V2.verdict.json; git mv evidence/reviews/SUPPLY-018/Qwen3.7-Max.verdict.json reviews/SUPPLY-018/Qwen3.7-Max.verdict.json; git mv evidence/reviews/TRUST-019A/civ/DeepSeek-V4-Pro.verdict.json reviews/TRUST-019A/civ/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/TRUST-019A/civ/Gemini-3.1-Pro.verdict.json reviews/TRUST-019A/civ/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/TRUST-019A/civ/LongCat-2.0.verdict.json reviews/TRUST-019A/civ/LongCat-2.0.verdict.json; git mv evidence/reviews/TRUST-019A/civ2/DeepSeek-V4-Pro.verdict.json reviews/TRUST-019A/civ2/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/TRUST-019A/civ2/Gemini-3.1-Pro.verdict.json reviews/TRUST-019A/civ2/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/TRUST-019A/civ2/LongCat-2.0.verdict.json reviews/TRUST-019A/civ2/LongCat-2.0.verdict.json; git mv evidence/reviews/TRUST-019B/DeepSeek-V4-Pro.verdict.json reviews/TRUST-019B/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/TRUST-019B/GREEN-focused.txt reviews/TRUST-019B/GREEN-focused.txt; git mv evidence/reviews/TRUST-019B/Gemini-3.1-Pro.verdict.json reviews/TRUST-019B/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/TRUST-019B/Qwen3.6-40B.verdict.json reviews/TRUST-019B/Qwen3.6-40B.verdict.json; git mv evidence/reviews/TRUST-019B/RED-reproduction.txt reviews/TRUST-019B/RED-reproduction.txt; git mv evidence/reviews/TRUST-019B/REVIEW-PACK.md reviews/TRUST-019B/REVIEW-PACK.md; git mv evidence/reviews/UI-039/DeepSeek-V4-Pro.verdict.json reviews/UI-039/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/UI-039/Gemini-3.1-Pro.verdict.json reviews/UI-039/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/UI-039/LongCat-2.0.verdict.json reviews/UI-039/LongCat-2.0.verdict.json; git mv evidence/reviews/UI-040/DeepSeek-V4-Pro.verdict.json reviews/UI-040/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/UI-040/Gemini-3.1-Pro.verdict.json reviews/UI-040/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/UI-040/LongCat-2.0.verdict.json reviews/UI-040/LongCat-2.0.verdict.json; git mv evidence/reviews/V1-FIX/GLM-5.2.verdict.json reviews/V1-FIX/GLM-5.2.verdict.json; git mv evidence/reviews/V1-FIX/Grok-4.5.verdict.json reviews/V1-FIX/Grok-4.5.verdict.json; git mv evidence/reviews/V1-FIX/Qwen3.7-Max.verdict.json reviews/V1-FIX/Qwen3.7-Max.verdict.json; git mv evidence/reviews/WEB-001/final-sol-acceptance.review.json reviews/WEB-001/final-sol-acceptance.review.json; git mv evidence/reviews/WEB-001/final-sol-security.review.json reviews/WEB-001/final-sol-security.review.json; git mv evidence/reviews/WEB-001/final-tally.json reviews/WEB-001/final-tally.json; git mv evidence/reviews/WEB-001/final-terra-isolation.review.json reviews/WEB-001/final-terra-isolation.review.json; git mv evidence/reviews/WEB-001/prompt.md reviews/WEB-001/prompt.md; git mv evidence/reviews/WEB-001/round-2-prompt-manifest.md reviews/WEB-001/round-2-prompt-manifest.md; git mv evidence/reviews/WEB-001/round-2-sol-acceptance.review.json reviews/WEB-001/round-2-sol-acceptance.review.json; git mv evidence/reviews/WEB-001/round-2-sol-security.review.json reviews/WEB-001/round-2-sol-security.review.json; git mv evidence/reviews/WEB-001/round-2-tally.json reviews/WEB-001/round-2-tally.json; git mv evidence/reviews/WEB-001/round-2-terra-isolation.review.json reviews/WEB-001/round-2-terra-isolation.review.json; git mv evidence/reviews/WEB-015/Grok-4.5.verdict.json reviews/WEB-015/Grok-4.5.verdict.json; git mv evidence/reviews/WEB-015/MiMo-Pro-V2.verdict.json reviews/WEB-015/MiMo-Pro-V2.verdict.json; git mv evidence/reviews/WEB-015/Qwen3.7-Max.verdict.json reviews/WEB-015/Qwen3.7-Max.verdict.json; git mv evidence/reviews/WEB-016/GLM-5.2.verdict.json reviews/WEB-016/GLM-5.2.verdict.json; git mv evidence/reviews/WEB-016/Grok-4.5.verdict.json reviews/WEB-016/Grok-4.5.verdict.json; git mv evidence/reviews/WEB-016/Qwen3.7-Max.verdict.json reviews/WEB-016/Qwen3.7-Max.verdict.json; git mv evidence/reviews/WEB-017/Grok-4.5.verdict.json reviews/WEB-017/Grok-4.5.verdict.json; git mv evidence/reviews/WEB-017/MiMo-Pro-V2.verdict.json reviews/WEB-017/MiMo-Pro-V2.verdict.json; git mv evidence/reviews/WEB-017/Qwen3.7-Max.verdict.json reviews/WEB-017/Qwen3.7-Max.verdict.json; git mv evidence/reviews/WEB-034A/GLM-5.2.verdict.json reviews/WEB-034A/GLM-5.2.verdict.json; git mv evidence/reviews/WEB-034A/Grok-4.5.verdict.json reviews/WEB-034A/Grok-4.5.verdict.json; git mv evidence/reviews/WEB-034A/Qwen3.7-Max.verdict.json reviews/WEB-034A/Qwen3.7-Max.verdict.json; git mv evidence/reviews/WEB-034B/GLM-5.2.verdict.json reviews/WEB-034B/GLM-5.2.verdict.json; git mv evidence/reviews/WEB-034B/Grok-4.5.verdict.json reviews/WEB-034B/Grok-4.5.verdict.json; git mv evidence/reviews/WEB-034B/Qwen3.7-Max.verdict.json reviews/WEB-034B/Qwen3.7-Max.verdict.json; git mv evidence/reviews/wh-civ/GLM-5.2.verdict.json reviews/wh-civ/GLM-5.2.verdict.json; git mv evidence/reviews/wh-civ/Gemini-3.1-Pro.verdict.json reviews/wh-civ/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/wh-civ/Grok-4.5.verdict.json reviews/wh-civ/Grok-4.5.verdict.json (ordre inverse), puis git commit --amend ou nouveau commit de restauration ; ne PAS exécuter cette vague sans avoir d'abord validé les vagues précédentes."
+      "rollback": "Vague 0 : 400 chemin(s). Rollback = git mv evidence/registres/mission.jsonl Registres/mission.jsonl; git mv evidence/reviews/BINDING.txt reviews/BINDING.txt; git mv evidence/reviews/RC1-001-PR431-v10/DeepSeek-V4-Pro.verdict.json reviews/RC1-001-PR431-v10/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-001-PR431-v10/Gemini-3.1-Pro.verdict.json reviews/RC1-001-PR431-v10/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-001-PR431-v10/Qwen3.7-Max.verdict.json reviews/RC1-001-PR431-v10/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-001-PR431-v2/DeepSeek-V4-Pro.verdict.json reviews/RC1-001-PR431-v2/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-001-PR431-v2/Gemini-3.1-Pro.verdict.json reviews/RC1-001-PR431-v2/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-001-PR431-v2/Qwen3.7-Max.verdict.json reviews/RC1-001-PR431-v2/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-001-PR431-v3/DeepSeek-V4-Pro.verdict.json reviews/RC1-001-PR431-v3/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-001-PR431-v3/Gemini-3.1-Pro.verdict.json reviews/RC1-001-PR431-v3/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-001-PR431-v3/Qwen3.7-Max.verdict.json reviews/RC1-001-PR431-v3/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-001-PR431-v4/DeepSeek-V4-Pro.verdict.json reviews/RC1-001-PR431-v4/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-001-PR431-v4/Gemini-3.1-Pro.verdict.json reviews/RC1-001-PR431-v4/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-001-PR431-v4/Qwen3.7-Max.verdict.json reviews/RC1-001-PR431-v4/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-001-PR431-v5/DeepSeek-V4-Pro.verdict.json reviews/RC1-001-PR431-v5/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-001-PR431-v5/Gemini-3.1-Pro.verdict.json reviews/RC1-001-PR431-v5/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-001-PR431-v5/Qwen3.7-Max.verdict.json reviews/RC1-001-PR431-v5/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-001-PR431-v6/DeepSeek-V4-Pro.verdict.json reviews/RC1-001-PR431-v6/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-001-PR431-v6/Gemini-3.1-Pro.verdict.json reviews/RC1-001-PR431-v6/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-001-PR431-v6/Qwen3.7-Max.verdict.json reviews/RC1-001-PR431-v6/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-001-PR431-v7/DeepSeek-V4-Pro.verdict.json reviews/RC1-001-PR431-v7/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-001-PR431-v7/Gemini-3.1-Pro.verdict.json reviews/RC1-001-PR431-v7/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-001-PR431-v7/Qwen3.7-Max.verdict.json reviews/RC1-001-PR431-v7/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-001-PR431-v8/DeepSeek-V4-Pro.verdict.json reviews/RC1-001-PR431-v8/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-001-PR431-v8/Gemini-3.1-Pro.verdict.json reviews/RC1-001-PR431-v8/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-001-PR431-v8/Qwen3.7-Max.verdict.json reviews/RC1-001-PR431-v8/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-001-PR431-v9/DeepSeek-V4-Pro.verdict.json reviews/RC1-001-PR431-v9/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-001-PR431-v9/Gemini-3.1-Pro.verdict.json reviews/RC1-001-PR431-v9/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-001-PR431-v9/Qwen3.7-Max.verdict.json reviews/RC1-001-PR431-v9/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-002-PR432-v2/DeepSeek-V4-Pro.verdict.json reviews/RC1-002-PR432-v2/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-002-PR432-v2/Gemini-3.1-Pro.verdict.json reviews/RC1-002-PR432-v2/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-002-PR432-v2/Qwen3.7-Max.verdict.json reviews/RC1-002-PR432-v2/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-002-PR432/DeepSeek-V4-Pro.verdict.json reviews/RC1-002-PR432/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-002-PR432/Gemini-3.1-Pro.verdict.json reviews/RC1-002-PR432/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-002-PR432/Qwen3.7-Max.verdict.json reviews/RC1-002-PR432/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-003-PR489-v2/DeepSeek-V4-Pro.verdict.json reviews/RC1-003-PR489-v2/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-003-PR489-v2/Gemini-3.1-Pro.verdict.json reviews/RC1-003-PR489-v2/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-003-PR489-v2/Qwen3.7-Max.verdict.json reviews/RC1-003-PR489-v2/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-003-PR489-v3/DeepSeek-V4-Pro.verdict.json reviews/RC1-003-PR489-v3/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-003-PR489-v3/Gemini-3.1-Pro.verdict.json reviews/RC1-003-PR489-v3/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-003-PR489-v3/Qwen3.7-Max.verdict.json reviews/RC1-003-PR489-v3/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-003-PR489-v4/DeepSeek-V4-Pro.verdict.json reviews/RC1-003-PR489-v4/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-003-PR489-v4/Gemini-3.1-Pro.verdict.json reviews/RC1-003-PR489-v4/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-003-PR489-v4/Qwen3.7-Max.verdict.json reviews/RC1-003-PR489-v4/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-003-PR489-v6/DeepSeek-V4-Pro.verdict.json reviews/RC1-003-PR489-v6/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-003-PR489-v6/Gemini-3.1-Pro.verdict.json reviews/RC1-003-PR489-v6/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-003-PR489-v6/Qwen3.7-Max.verdict.json reviews/RC1-003-PR489-v6/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-003-PR489-v7/Gemini-3.1-Pro.verdict.json reviews/RC1-003-PR489-v7/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-003-PR489-v7/Qwen3.7-Max.verdict.json reviews/RC1-003-PR489-v7/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-003-PR489-v8/Gemini-3.1-Pro.verdict.json reviews/RC1-003-PR489-v8/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-003-PR489-v8/Kimi-2.7.verdict.json reviews/RC1-003-PR489-v8/Kimi-2.7.verdict.json; git mv evidence/reviews/RC1-003-PR489-v8/Qwen3.7-Max.verdict.json reviews/RC1-003-PR489-v8/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-003-PR489/DeepSeek-V4-Pro.verdict.json reviews/RC1-003-PR489/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-003-PR489/Gemini-3.1-Pro.verdict.json reviews/RC1-003-PR489/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-003-PR489/Qwen3.7-Max.verdict.json reviews/RC1-003-PR489/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-004-PR497-v2/DeepSeek-V4-Pro.verdict.json reviews/RC1-004-PR497-v2/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-004-PR497-v2/Gemini-3.1-Pro.verdict.json reviews/RC1-004-PR497-v2/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-004-PR497-v2/Qwen3.7-Max.verdict.json reviews/RC1-004-PR497-v2/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-004-PR497-v3/DeepSeek-V4-Pro.verdict.json reviews/RC1-004-PR497-v3/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-004-PR497-v3/Gemini-3.1-Pro.verdict.json reviews/RC1-004-PR497-v3/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-004-PR497-v3/Qwen3.7-Max.verdict.json reviews/RC1-004-PR497-v3/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-004-PR497-v4/Gemini-3.1-Pro.verdict.json reviews/RC1-004-PR497-v4/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-004-PR497-v4/MiMo-Pro-V2.verdict.json reviews/RC1-004-PR497-v4/MiMo-Pro-V2.verdict.json; git mv evidence/reviews/RC1-004-PR497-v4/Qwen3.7-Max.verdict.json reviews/RC1-004-PR497-v4/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-004-PR497-v4/RECU.json reviews/RC1-004-PR497-v4/RECU.json; git mv evidence/reviews/RC1-004-PR497-v5/Gemini-3.1-Pro.verdict.json reviews/RC1-004-PR497-v5/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-004-PR497-v5/MiMo-Pro-V2.verdict.json reviews/RC1-004-PR497-v5/MiMo-Pro-V2.verdict.json; git mv evidence/reviews/RC1-004-PR497-v5/Qwen3.7-Max.verdict.json reviews/RC1-004-PR497-v5/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-004-PR497-v5/RECU.json reviews/RC1-004-PR497-v5/RECU.json; git mv evidence/reviews/RC1-004-PR497/DeepSeek-V4-Pro.verdict.json reviews/RC1-004-PR497/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-004-PR497/Gemini-3.1-Pro.verdict.json reviews/RC1-004-PR497/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-004-PR497/Qwen3.7-Max.verdict.json reviews/RC1-004-PR497/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-007-PR490-v2/DeepSeek-V4-Pro.verdict.json reviews/RC1-007-PR490-v2/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-007-PR490-v2/Gemini-3.1-Pro.verdict.json reviews/RC1-007-PR490-v2/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-007-PR490-v2/Kimi-2.7.verdict.json reviews/RC1-007-PR490-v2/Kimi-2.7.verdict.json; git mv evidence/reviews/RC1-007-PR490-v3/Gemini-3.1-Pro.verdict.json reviews/RC1-007-PR490-v3/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-007-PR490-v3/MiMo-Pro-V2.verdict.json reviews/RC1-007-PR490-v3/MiMo-Pro-V2.verdict.json; git mv evidence/reviews/RC1-007-PR490-v3/Qwen3.7-Max.verdict.json reviews/RC1-007-PR490-v3/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-007-PR490-v4/DeepSeek-V4-Pro.verdict.json reviews/RC1-007-PR490-v4/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-007-PR490-v4/Gemini-3.1-Pro.verdict.json reviews/RC1-007-PR490-v4/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-007-PR490-v4/MiMo-Pro-V2.verdict.json reviews/RC1-007-PR490-v4/MiMo-Pro-V2.verdict.json; git mv evidence/reviews/RC1-007-PR490/Gemini-3.1-Pro.verdict.json reviews/RC1-007-PR490/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-008-PR496-v2/DeepSeek-V4-Pro.verdict.json reviews/RC1-008-PR496-v2/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-008-PR496-v2/Gemini-3.1-Pro.verdict.json reviews/RC1-008-PR496-v2/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-008-PR496-v2/MiMo-Pro-V2.verdict.json reviews/RC1-008-PR496-v2/MiMo-Pro-V2.verdict.json; git mv evidence/reviews/RC1-008-PR496-v4/DeepSeek-V4-Pro.verdict.json reviews/RC1-008-PR496-v4/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-008-PR496-v4/Gemini-3.1-Pro.verdict.json reviews/RC1-008-PR496-v4/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-008-PR496-v4/Qwen3.7-Max.verdict.json reviews/RC1-008-PR496-v4/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-008-PR496-v5/DeepSeek-V4-Pro.verdict.json reviews/RC1-008-PR496-v5/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-008-PR496-v5/Gemini-3.1-Pro.verdict.json reviews/RC1-008-PR496-v5/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-008-PR496-v5/MiMo-Pro-V2.verdict.json reviews/RC1-008-PR496-v5/MiMo-Pro-V2.verdict.json; git mv evidence/reviews/RC1-008-PR496/DeepSeek-V4-Pro.verdict.json reviews/RC1-008-PR496/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-008-PR496/Gemini-3.1-Pro.verdict.json reviews/RC1-008-PR496/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-008-PR496/Kimi-2.7.verdict.json reviews/RC1-008-PR496/Kimi-2.7.verdict.json; git mv evidence/reviews/RC1-009-PR500-v1/Gemini-3.1-Pro.verdict.json reviews/RC1-009-PR500-v1/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-009-PR500-v1/MiMo-Pro-V2.verdict.json reviews/RC1-009-PR500-v1/MiMo-Pro-V2.verdict.json; git mv evidence/reviews/RC1-009-PR500-v2/DeepSeek-V4-Pro.verdict.json reviews/RC1-009-PR500-v2/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-009-PR500-v2/Gemini-3.1-Pro.verdict.json reviews/RC1-009-PR500-v2/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-009-PR500-v2/MiMo-Pro-V2.verdict.json reviews/RC1-009-PR500-v2/MiMo-Pro-V2.verdict.json; git mv evidence/reviews/RC1-009-PR500-v3/Gemini-3.1-Pro.verdict.json reviews/RC1-009-PR500-v3/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-009-PR500-v3/MiMo-Pro-V2.verdict.json reviews/RC1-009-PR500-v3/MiMo-Pro-V2.verdict.json; git mv evidence/reviews/RC1-009-PR500-v3/RECU.json reviews/RC1-009-PR500-v3/RECU.json; git mv evidence/reviews/RC1-009/DeepSeek-V4-Pro.verdict.json reviews/RC1-009/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-009/Gemini-3.1-Pro.verdict.json reviews/RC1-009/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-009/Kimi-2.7.verdict.json reviews/RC1-009/Kimi-2.7.verdict.json; git mv evidence/reviews/RC1-009/RECU.json reviews/RC1-009/RECU.json; git mv evidence/reviews/RC1-010-lot0-PR501-v1/Gemini-3.1-Pro.verdict.json reviews/RC1-010-lot0-PR501-v1/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-010-lot0-PR501-v1/Qwen3.7-Max.verdict.json reviews/RC1-010-lot0-PR501-v1/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-010-lot0-PR501-v2/Gemini-3.1-Pro.verdict.json reviews/RC1-010-lot0-PR501-v2/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-010-lot0-PR501-v2/Qwen3.7-Max.verdict.json reviews/RC1-010-lot0-PR501-v2/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-010-lot0-PR501-v2/RECU.json reviews/RC1-010-lot0-PR501-v2/RECU.json; git mv evidence/reviews/RC1-010-lot1-PR502-v1/DeepSeek-V4-Pro.verdict.json reviews/RC1-010-lot1-PR502-v1/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-010-lot1-PR502-v1/Gemini-3.1-Pro.verdict.json reviews/RC1-010-lot1-PR502-v1/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-010-lot1-PR502-v1/MiMo-Pro-V2.verdict.json reviews/RC1-010-lot1-PR502-v1/MiMo-Pro-V2.verdict.json; git mv evidence/reviews/RC1-010-lot1-PR502-v1/RECU.json reviews/RC1-010-lot1-PR502-v1/RECU.json; git mv evidence/reviews/RC1-010-lot2-PR503-v1/DeepSeek-V4-Pro.verdict.json reviews/RC1-010-lot2-PR503-v1/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-010-lot2-PR503-v1/Gemini-3.1-Pro.verdict.json reviews/RC1-010-lot2-PR503-v1/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-010-lot2-PR503-v1/Qwen3.7-Max.verdict.json reviews/RC1-010-lot2-PR503-v1/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-010-lot2-PR503-v2/DeepSeek-V4-Pro.verdict.json reviews/RC1-010-lot2-PR503-v2/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-010-lot2-PR503-v2/Gemini-3.1-Pro.verdict.json reviews/RC1-010-lot2-PR503-v2/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-010-lot2-PR503-v2/Qwen3.7-Max.verdict.json reviews/RC1-010-lot2-PR503-v2/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-010-lot2-PR503-v3/Gemini-3.1-Pro.verdict.json reviews/RC1-010-lot2-PR503-v3/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-010-lot2-PR503-v3/Qwen3.7-Max.verdict.json reviews/RC1-010-lot2-PR503-v3/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-010-lot2-PR503-v4/DeepSeek-V4-Pro.verdict.json reviews/RC1-010-lot2-PR503-v4/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-010-lot2-PR503-v4/Gemini-3.1-Pro.verdict.json reviews/RC1-010-lot2-PR503-v4/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-010-lot2-PR503-v4/Qwen3.7-Max.verdict.json reviews/RC1-010-lot2-PR503-v4/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-010-lot2-PR503-v4/RECU.json reviews/RC1-010-lot2-PR503-v4/RECU.json; git mv evidence/reviews/RC1-010-lot3-PR505-v1/DeepSeek-V4-Pro.verdict.json reviews/RC1-010-lot3-PR505-v1/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-010-lot3-PR505-v1/Kimi-2.7.verdict.json reviews/RC1-010-lot3-PR505-v1/Kimi-2.7.verdict.json; git mv evidence/reviews/RC1-010-lot3-PR505-v1/Qwen3.7-Max.verdict.json reviews/RC1-010-lot3-PR505-v1/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-010-lot3-PR505-v1/RECU.json reviews/RC1-010-lot3-PR505-v1/RECU.json; git mv evidence/reviews/RC1-010-lot3-PR505-v2/Kimi-2.7.verdict.json reviews/RC1-010-lot3-PR505-v2/Kimi-2.7.verdict.json; git mv evidence/reviews/RC1-010-lot3-PR505-v2/Qwen3.7-Max.verdict.json reviews/RC1-010-lot3-PR505-v2/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-010-lot3-PR505-v2/RECU.json reviews/RC1-010-lot3-PR505-v2/RECU.json; git mv evidence/reviews/RC1-010-lot4-PR507-v1/DeepSeek-V4-Pro.verdict.json reviews/RC1-010-lot4-PR507-v1/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-010-lot4-PR507-v1/Kimi-2.7.verdict.json reviews/RC1-010-lot4-PR507-v1/Kimi-2.7.verdict.json; git mv evidence/reviews/RC1-010-lot4-PR507-v1/Qwen3.7-Max.verdict.json reviews/RC1-010-lot4-PR507-v1/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-010-lot4-PR507-v1/RECU.json reviews/RC1-010-lot4-PR507-v1/RECU.json; git mv evidence/reviews/RC1-010-lot5a-PR508-v1/Kimi-2.7.verdict.json reviews/RC1-010-lot5a-PR508-v1/Kimi-2.7.verdict.json; git mv evidence/reviews/RC1-010-lot5a-PR508-v1/Qwen3.7-Max.verdict.json reviews/RC1-010-lot5a-PR508-v1/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-010-lot5a-PR508-v1/RECU.json reviews/RC1-010-lot5a-PR508-v1/RECU.json; git mv evidence/reviews/RC1-010-lot5b-PR510-v1/DeepSeek-V4-Pro.verdict.json reviews/RC1-010-lot5b-PR510-v1/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-010-lot5b-PR510-v1/Kimi-2.7.verdict.json reviews/RC1-010-lot5b-PR510-v1/Kimi-2.7.verdict.json; git mv evidence/reviews/RC1-010-lot5b-PR510-v1/Qwen3.7-Max.verdict.json reviews/RC1-010-lot5b-PR510-v1/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-010-lot5b-PR510-v2/DeepSeek-V4-Pro.verdict.json reviews/RC1-010-lot5b-PR510-v2/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-010-lot5b-PR510-v2/Kimi-2.7.verdict.json reviews/RC1-010-lot5b-PR510-v2/Kimi-2.7.verdict.json; git mv evidence/reviews/RC1-010-lot5b-PR510-v2/Qwen3.7-Max.verdict.json reviews/RC1-010-lot5b-PR510-v2/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-010-lot5b-PR510-v2/RECU.json reviews/RC1-010-lot5b-PR510-v2/RECU.json; git mv evidence/reviews/RC1-010-lot5b-PR510-v3/Kimi-2.7.verdict.json reviews/RC1-010-lot5b-PR510-v3/Kimi-2.7.verdict.json; git mv evidence/reviews/RC1-010-lot5b-PR510-v3/Qwen3.7-Max.verdict.json reviews/RC1-010-lot5b-PR510-v3/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-010-lot5b-PR510-v4/DeepSeek-V4-Pro.verdict.json reviews/RC1-010-lot5b-PR510-v4/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-010-lot5b-PR510-v4/Kimi-2.7.verdict.json reviews/RC1-010-lot5b-PR510-v4/Kimi-2.7.verdict.json; git mv evidence/reviews/RC1-010-lot5b-PR510-v4/Qwen3.7-Max.verdict.json reviews/RC1-010-lot5b-PR510-v4/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-010-lot5b-PR510-v4/RECU.json reviews/RC1-010-lot5b-PR510-v4/RECU.json; git mv evidence/reviews/RC1-010-lot5c-PR516-v1/DeepSeek-V4-Pro.verdict.json reviews/RC1-010-lot5c-PR516-v1/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-010-lot5c-PR516-v1/Kimi-2.7.verdict.json reviews/RC1-010-lot5c-PR516-v1/Kimi-2.7.verdict.json; git mv evidence/reviews/RC1-010-lot5c-PR516-v1/Qwen3.7-Max.verdict.json reviews/RC1-010-lot5c-PR516-v1/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-010-lot5c-PR516-v1/RECU.json reviews/RC1-010-lot5c-PR516-v1/RECU.json; git mv evidence/reviews/RC1-446-PR-v1/DeepSeek-V4-Pro.verdict.json reviews/RC1-446-PR-v1/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-446-PR-v1/Gemini-3.1-Pro.verdict.json reviews/RC1-446-PR-v1/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-446-PR-v1/Qwen3.7-Max.verdict.json reviews/RC1-446-PR-v1/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-446-PR-v2/DeepSeek-V4-Pro.verdict.json reviews/RC1-446-PR-v2/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-446-PR-v2/Gemini-3.1-Pro.verdict.json reviews/RC1-446-PR-v2/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-446-PR-v2/Qwen3.7-Max.verdict.json reviews/RC1-446-PR-v2/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-446-PR-v3/DeepSeek-V4-Pro.verdict.json reviews/RC1-446-PR-v3/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-446-PR-v3/Gemini-3.1-Pro.verdict.json reviews/RC1-446-PR-v3/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-446-PR-v3/Qwen3.7-Max.verdict.json reviews/RC1-446-PR-v3/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-446-PR-v4/DeepSeek-V4-Pro.verdict.json reviews/RC1-446-PR-v4/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-446-PR-v4/Gemini-3.1-Pro.verdict.json reviews/RC1-446-PR-v4/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-446-PR-v4/Qwen3.7-Max.verdict.json reviews/RC1-446-PR-v4/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-446-PR-v5/DeepSeek-V4-Pro.verdict.json reviews/RC1-446-PR-v5/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-446-PR-v5/Gemini-3.1-Pro.verdict.json reviews/RC1-446-PR-v5/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-446-PR-v5/Qwen3.7-Max.verdict.json reviews/RC1-446-PR-v5/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-446-PR-v5/RECU.json reviews/RC1-446-PR-v5/RECU.json; git mv evidence/reviews/RC1-447-PR-v1/DeepSeek-V4-Pro.verdict.json reviews/RC1-447-PR-v1/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-447-PR-v1/Gemini-3.1-Pro.verdict.json reviews/RC1-447-PR-v1/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-447-PR-v1/Qwen3.7-Max.verdict.json reviews/RC1-447-PR-v1/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-447-PR-v2/DeepSeek-V4-Pro.verdict.json reviews/RC1-447-PR-v2/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-447-PR-v2/Gemini-3.1-Pro.verdict.json reviews/RC1-447-PR-v2/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-447-PR-v2/Qwen3.7-Max.verdict.json reviews/RC1-447-PR-v2/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-447-PR-v3/DeepSeek-V4-Pro.verdict.json reviews/RC1-447-PR-v3/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-447-PR-v3/Gemini-3.1-Pro.verdict.json reviews/RC1-447-PR-v3/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-447-PR-v3/Qwen3.7-Max.verdict.json reviews/RC1-447-PR-v3/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-447-PR-v4/DeepSeek-V4-Pro.verdict.json reviews/RC1-447-PR-v4/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-447-PR-v4/Gemini-3.1-Pro.verdict.json reviews/RC1-447-PR-v4/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-447-PR-v4/Qwen3.7-Max.verdict.json reviews/RC1-447-PR-v4/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-447-PR-v5/DeepSeek-V4-Pro.verdict.json reviews/RC1-447-PR-v5/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-447-PR-v5/Gemini-3.1-Pro.verdict.json reviews/RC1-447-PR-v5/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-447-PR-v5/Qwen3.7-Max.verdict.json reviews/RC1-447-PR-v5/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-459-PR517/DeepSeek-V4-Pro.verdict.json reviews/RC1-459-PR517/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-459-PR517/Gemini-3.1-Pro.verdict.json reviews/RC1-459-PR517/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-459-PR517/MiMo-Pro-V2.verdict.json reviews/RC1-459-PR517/MiMo-Pro-V2.verdict.json; git mv evidence/reviews/RC1-459-PR517/RECU.json reviews/RC1-459-PR517/RECU.json; git mv evidence/reviews/RC1-482-PR-v1/DeepSeek-V4-Pro.verdict.json reviews/RC1-482-PR-v1/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-482-PR-v1/Gemini-3.1-Pro.verdict.json reviews/RC1-482-PR-v1/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-482-PR-v1/Qwen3.7-Max.verdict.json reviews/RC1-482-PR-v1/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-487-v1/DeepSeek-V4-Pro.verdict.json reviews/RC1-487-v1/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-487-v1/Gemini-3.1-Pro.verdict.json reviews/RC1-487-v1/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-487-v1/MiMo-Pro-V2.verdict.json reviews/RC1-487-v1/MiMo-Pro-V2.verdict.json; git mv evidence/reviews/RC1-487-v1/RECU.json reviews/RC1-487-v1/RECU.json; git mv evidence/reviews/RC1-492-PR512/DeepSeek-V4-Pro.verdict.json reviews/RC1-492-PR512/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-492-PR512/MiMo-Pro-V2.verdict.json reviews/RC1-492-PR512/MiMo-Pro-V2.verdict.json; git mv evidence/reviews/RC1-492-PR512/Qwen3.7-Max.verdict.json reviews/RC1-492-PR512/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-492-PR512/RECU.json reviews/RC1-492-PR512/RECU.json; git mv evidence/reviews/RC1-493-PR-v1/DeepSeek-V4-Pro.verdict.json reviews/RC1-493-PR-v1/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-493-PR-v1/Gemini-3.1-Pro.verdict.json reviews/RC1-493-PR-v1/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-493-PR-v1/Qwen3.7-Max.verdict.json reviews/RC1-493-PR-v1/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-504-v1/DeepSeek-V4-Pro.verdict.json reviews/RC1-504-v1/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-504-v1/Qwen3.7-Max.verdict.json reviews/RC1-504-v1/Qwen3.7-Max.verdict.json; git mv evidence/reviews/README.md reviews/README.md; git mv evidence/reviews/REG-029A/DeepSeek-V4-Pro.verdict.json reviews/REG-029A/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/REG-029A/Gemini-3.1-Pro.verdict.json reviews/REG-029A/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/REG-029A/Qwen3.7-Max.verdict.json reviews/REG-029A/Qwen3.7-Max.verdict.json; git mv evidence/reviews/REG-029B/DeepSeek-V4-Pro.verdict.json reviews/REG-029B/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/REG-029B/Gemini-3.1-Pro.verdict.json reviews/REG-029B/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/REG-029B/Qwen3.7-Max.verdict.json reviews/REG-029B/Qwen3.7-Max.verdict.json; git mv evidence/reviews/REL-038A/GLM-5.2.verdict.json reviews/REL-038A/GLM-5.2.verdict.json; git mv evidence/reviews/REL-038A/Grok-4.5.verdict.json reviews/REL-038A/Grok-4.5.verdict.json; git mv evidence/reviews/REL-038A/Qwen3.7-Max.verdict.json reviews/REL-038A/Qwen3.7-Max.verdict.json; git mv evidence/reviews/REL-038B/GLM-5.2.verdict.json reviews/REL-038B/GLM-5.2.verdict.json; git mv evidence/reviews/REL-038B/Grok-4.5.verdict.json reviews/REL-038B/Grok-4.5.verdict.json; git mv evidence/reviews/REL-038B/Qwen3.7-Max.verdict.json reviews/REL-038B/Qwen3.7-Max.verdict.json; git mv evidence/reviews/REL-038C/GLM-5.2.verdict.json reviews/REL-038C/GLM-5.2.verdict.json; git mv evidence/reviews/REL-038C/Grok-4.5.verdict.json reviews/REL-038C/Grok-4.5.verdict.json; git mv evidence/reviews/REL-038C/Qwen3.7-Max.verdict.json reviews/REL-038C/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RES-012A/DeepSeek-V4-Pro.verdict.json reviews/RES-012A/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RES-012A/Gemini-3.1-Pro.verdict.json reviews/RES-012A/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RES-012A/Qwen3.6-40B.verdict.json reviews/RES-012A/Qwen3.6-40B.verdict.json; git mv evidence/reviews/RES-012A/REVIEW-PACK.md reviews/RES-012A/REVIEW-PACK.md; git mv evidence/reviews/RES-012B/DeepSeek-V4-Pro.verdict.json reviews/RES-012B/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RES-012B/GREEN-focused.txt reviews/RES-012B/GREEN-focused.txt; git mv evidence/reviews/RES-012B/Gemini-3.1-Pro.verdict.json reviews/RES-012B/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RES-012B/Grok-4.5.verdict.json reviews/RES-012B/Grok-4.5.verdict.json; git mv evidence/reviews/RES-012B/RED-reproduction.txt reviews/RES-012B/RED-reproduction.txt; git mv evidence/reviews/RES-012B/REVIEW-LOG.md reviews/RES-012B/REVIEW-LOG.md; git mv evidence/reviews/RES-012B/evidence/DEPLOIEMENT-REEL.txt reviews/RES-012B/evidence/DEPLOIEMENT-REEL.txt; git mv evidence/reviews/RES-012B/evidence/GREEN.txt reviews/RES-012B/evidence/GREEN.txt; git mv evidence/reviews/RES-012B/evidence/RED.txt reviews/RES-012B/evidence/RED.txt; git mv evidence/reviews/RES-012B/evidence/mesure-litellm.txt reviews/RES-012B/evidence/mesure-litellm.txt; git mv evidence/reviews/REV-043/DATA-002/DeepSeek-V4-Pro.verdict.json reviews/REV-043/DATA-002/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/REV-043/DATA-002/Grok-4.5.verdict.json reviews/REV-043/DATA-002/Grok-4.5.verdict.json; git mv evidence/reviews/REV-043/DATA-002/Qwen3.7-Max.verdict.json reviews/REV-043/DATA-002/Qwen3.7-Max.verdict.json; git mv evidence/reviews/REV-043/DATA-002/tally.json reviews/REV-043/DATA-002/tally.json; git mv evidence/reviews/REV-043/DATA-003/DeepSeek-V4-Pro.verdict.json reviews/REV-043/DATA-003/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/REV-043/DATA-003/Grok-4.5.verdict.json reviews/REV-043/DATA-003/Grok-4.5.verdict.json; git mv evidence/reviews/REV-043/DATA-003/Qwen3.7-Max.verdict.json reviews/REV-043/DATA-003/Qwen3.7-Max.verdict.json; git mv evidence/reviews/REV-043/DATA-003/tally.json reviews/REV-043/DATA-003/tally.json; git mv evidence/reviews/REV-043/WEB-001/DeepSeek-V4-Pro.verdict.json reviews/REV-043/WEB-001/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/REV-043/WEB-001/Grok-4.5.verdict.json reviews/REV-043/WEB-001/Grok-4.5.verdict.json; git mv evidence/reviews/REV-043/WEB-001/Qwen3.7-Max.verdict.json reviews/REV-043/WEB-001/Qwen3.7-Max.verdict.json; git mv evidence/reviews/REV-043/WEB-001/tally.json reviews/REV-043/WEB-001/tally.json; git mv evidence/reviews/ROSTER-MAJ-PR511-v1/DeepSeek-V4-Pro-0813.verdict.json reviews/ROSTER-MAJ-PR511-v1/DeepSeek-V4-Pro-0813.verdict.json; git mv evidence/reviews/ROSTER-MAJ-PR511-v1/Kimi-2.7.verdict.json reviews/ROSTER-MAJ-PR511-v1/Kimi-2.7.verdict.json; git mv evidence/reviews/ROSTER-MAJ-PR511-v1/Qwen3.8-2.4T.verdict.json reviews/ROSTER-MAJ-PR511-v1/Qwen3.8-2.4T.verdict.json; git mv evidence/reviews/ROSTER-MAJ-PR511-v1/RECU.json reviews/ROSTER-MAJ-PR511-v1/RECU.json; git mv evidence/reviews/S-TAIL-tailscale-optin/Gemini-3.1-Pro.verdict.json reviews/S-TAIL-tailscale-optin/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/S-TAIL-tailscale-optin/Grok-4.5.verdict.json reviews/S-TAIL-tailscale-optin/Grok-4.5.verdict.json; git mv evidence/reviews/S-TAIL-tailscale-optin/Qwen3.7-Max.verdict.json reviews/S-TAIL-tailscale-optin/Qwen3.7-Max.verdict.json; git mv evidence/reviews/S-TAIL-tailscale-optin/pack.md reviews/S-TAIL-tailscale-optin/pack.md; git mv evidence/reviews/S-ZEN-cpu-zendnn/Gemini-3.1-Pro.verdict.json reviews/S-ZEN-cpu-zendnn/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/S-ZEN-cpu-zendnn/Grok-4.5.verdict.json reviews/S-ZEN-cpu-zendnn/Grok-4.5.verdict.json; git mv evidence/reviews/S-ZEN-cpu-zendnn/Qwen3.7-Max.verdict.json reviews/S-ZEN-cpu-zendnn/Qwen3.7-Max.verdict.json; git mv evidence/reviews/S-ZEN-cpu-zendnn/pack.md reviews/S-ZEN-cpu-zendnn/pack.md; git mv evidence/reviews/S1-gpu-rocm-runtime/Gemini-3.1-Pro.verdict.json reviews/S1-gpu-rocm-runtime/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/S1-gpu-rocm-runtime/Grok-4.5.verdict.json reviews/S1-gpu-rocm-runtime/Grok-4.5.verdict.json; git mv evidence/reviews/S1-gpu-rocm-runtime/Qwen3.7-Max.verdict.json reviews/S1-gpu-rocm-runtime/Qwen3.7-Max.verdict.json; git mv evidence/reviews/S1-gpu-rocm-runtime/pack.md reviews/S1-gpu-rocm-runtime/pack.md; git mv evidence/reviews/S2-gpu-reservation-vendor/Gemini-3.1-Pro.verdict.json reviews/S2-gpu-reservation-vendor/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/S2-gpu-reservation-vendor/Grok-4.5.verdict.json reviews/S2-gpu-reservation-vendor/Grok-4.5.verdict.json; git mv evidence/reviews/S2-gpu-reservation-vendor/Qwen3.7-Max.verdict.json reviews/S2-gpu-reservation-vendor/Qwen3.7-Max.verdict.json; git mv evidence/reviews/S2-gpu-reservation-vendor/pack.md reviews/S2-gpu-reservation-vendor/pack.md; git mv evidence/reviews/S3-amd-runtimes-k3s-gpu/Gemini-3.1-Pro.verdict.json reviews/S3-amd-runtimes-k3s-gpu/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/S3-amd-runtimes-k3s-gpu/Grok-4.5.verdict.json reviews/S3-amd-runtimes-k3s-gpu/Grok-4.5.verdict.json; git mv evidence/reviews/S3-amd-runtimes-k3s-gpu/Qwen3.7-Max.verdict.json reviews/S3-amd-runtimes-k3s-gpu/Qwen3.7-Max.verdict.json; git mv evidence/reviews/S3-amd-runtimes-k3s-gpu/pack.md reviews/S3-amd-runtimes-k3s-gpu/pack.md; git mv evidence/reviews/S3b-amd-vulkan-runtime/Gemini-3.1-Pro.verdict.json reviews/S3b-amd-vulkan-runtime/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/S3b-amd-vulkan-runtime/Grok-4.5.verdict.json reviews/S3b-amd-vulkan-runtime/Grok-4.5.verdict.json; git mv evidence/reviews/S3b-amd-vulkan-runtime/Qwen3.7-Max.verdict.json reviews/S3b-amd-vulkan-runtime/Qwen3.7-Max.verdict.json; git mv evidence/reviews/S3b-amd-vulkan-runtime/pack.md reviews/S3b-amd-vulkan-runtime/pack.md; git mv evidence/reviews/S4-engine-vendor-filter/Gemini-3.1-Pro.verdict.json reviews/S4-engine-vendor-filter/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/S4-engine-vendor-filter/Grok-4.5.verdict.json reviews/S4-engine-vendor-filter/Grok-4.5.verdict.json; git mv evidence/reviews/S4-engine-vendor-filter/Qwen3.7-Max.verdict.json reviews/S4-engine-vendor-filter/Qwen3.7-Max.verdict.json; git mv evidence/reviews/S4-engine-vendor-filter/pack.md reviews/S4-engine-vendor-filter/pack.md; git mv evidence/reviews/S5-intel-openvino/Gemini-3.1-Pro.verdict.json reviews/S5-intel-openvino/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/S5-intel-openvino/Grok-4.5.verdict.json reviews/S5-intel-openvino/Grok-4.5.verdict.json; git mv evidence/reviews/S5-intel-openvino/Qwen3.7-Max.verdict.json reviews/S5-intel-openvino/Qwen3.7-Max.verdict.json; git mv evidence/reviews/S5-intel-openvino/pack.md reviews/S5-intel-openvino/pack.md; git mv evidence/reviews/S6-surface-filtre-vendor/Gemini-3.1-Pro.verdict.json reviews/S6-surface-filtre-vendor/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/S6-surface-filtre-vendor/Grok-4.5.verdict.json reviews/S6-surface-filtre-vendor/Grok-4.5.verdict.json; git mv evidence/reviews/S6-surface-filtre-vendor/Qwen3.7-Max.verdict.json reviews/S6-surface-filtre-vendor/Qwen3.7-Max.verdict.json; git mv evidence/reviews/S6-surface-filtre-vendor/pack.md reviews/S6-surface-filtre-vendor/pack.md; git mv evidence/reviews/S6b-engine-dropdown-vendor/Gemini-3.1-Pro.verdict.json reviews/S6b-engine-dropdown-vendor/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/S6b-engine-dropdown-vendor/Grok-4.5.verdict.json reviews/S6b-engine-dropdown-vendor/Grok-4.5.verdict.json; git mv evidence/reviews/S6b-engine-dropdown-vendor/Qwen3.7-Max.verdict.json reviews/S6b-engine-dropdown-vendor/Qwen3.7-Max.verdict.json; git mv evidence/reviews/S6b-engine-dropdown-vendor/pack.md reviews/S6b-engine-dropdown-vendor/pack.md; git mv evidence/reviews/S7-cluster-view/Gemini-3.1-Pro.verdict.json reviews/S7-cluster-view/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/S7-cluster-view/Grok-4.5.verdict.json reviews/S7-cluster-view/Grok-4.5.verdict.json; git mv evidence/reviews/S7-cluster-view/Qwen3.7-Max.verdict.json reviews/S7-cluster-view/Qwen3.7-Max.verdict.json; git mv evidence/reviews/S7-cluster-view/pack.md reviews/S7-cluster-view/pack.md; git mv evidence/reviews/SAST-042/README.md reviews/SAST-042/README.md; git mv evidence/reviews/SAST-042/civ/DeepSeek-V4-Pro.verdict.json reviews/SAST-042/civ/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/SAST-042/civ/Gemini-3.1-Pro.verdict.json reviews/SAST-042/civ/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/SAST-042/civ/LongCat-2.0.verdict.json reviews/SAST-042/civ/LongCat-2.0.verdict.json; git mv evidence/reviews/SEC-SVCSPEC-INJECT/DeepSeek-V4-Pro.verdict.json reviews/SEC-SVCSPEC-INJECT/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/SEC-SVCSPEC-INJECT/Gemini-3.1-Pro.verdict.json reviews/SEC-SVCSPEC-INJECT/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/SEC-SVCSPEC-INJECT/LongCat-2.0.verdict.json reviews/SEC-SVCSPEC-INJECT/LongCat-2.0.verdict.json; git mv evidence/reviews/SEC-YAML-INJECT/DeepSeek-V4-Pro.verdict.json reviews/SEC-YAML-INJECT/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/SEC-YAML-INJECT/Gemini-3.1-Pro.verdict.json reviews/SEC-YAML-INJECT/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/SEC-YAML-INJECT/LongCat-2.0.verdict.json reviews/SEC-YAML-INJECT/LongCat-2.0.verdict.json; git mv evidence/reviews/SEC1-gitguardian-v2/Gemini-3.1-Pro.verdict.json reviews/SEC1-gitguardian-v2/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/SEC1-gitguardian-v2/LongCat-2.0.verdict.json reviews/SEC1-gitguardian-v2/LongCat-2.0.verdict.json; git mv evidence/reviews/SEC1-gitguardian-v2/Qwen3.7-Max.verdict.json reviews/SEC1-gitguardian-v2/Qwen3.7-Max.verdict.json; git mv evidence/reviews/SEC1-gitguardian/Gemini-3.1-Pro.verdict.json reviews/SEC1-gitguardian/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/SEC1-gitguardian/LongCat-2.0.verdict.json reviews/SEC1-gitguardian/LongCat-2.0.verdict.json; git mv evidence/reviews/SEC1-gitguardian/Qwen3.7-Max.verdict.json reviews/SEC1-gitguardian/Qwen3.7-Max.verdict.json; git mv evidence/reviews/SECRET-020A/civ/DeepSeek-V4-Pro.verdict.json reviews/SECRET-020A/civ/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/SECRET-020A/civ/Gemini-3.1-Pro.verdict.json reviews/SECRET-020A/civ/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/SECRET-020A/civ/LongCat-2.0.verdict.json reviews/SECRET-020A/civ/LongCat-2.0.verdict.json; git mv evidence/reviews/SECRET-020A/civ2/DeepSeek-V4-Pro.verdict.json reviews/SECRET-020A/civ2/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/SECRET-020A/civ2/Gemini-3.1-Pro.verdict.json reviews/SECRET-020A/civ2/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/SECRET-020A/civ2/LongCat-2.0.verdict.json reviews/SECRET-020A/civ2/LongCat-2.0.verdict.json; git mv evidence/reviews/SECRET-020A/civ3/DeepSeek-V4-Pro.verdict.json reviews/SECRET-020A/civ3/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/SECRET-020A/civ3/Gemini-3.1-Pro.verdict.json reviews/SECRET-020A/civ3/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/SECRET-020A/civ3/LongCat-2.0.verdict.json reviews/SECRET-020A/civ3/LongCat-2.0.verdict.json; git mv evidence/reviews/SECRET-020A/civ4/DeepSeek-V4-Pro.verdict.json reviews/SECRET-020A/civ4/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/SECRET-020A/civ4/Gemini-3.1-Pro.verdict.json reviews/SECRET-020A/civ4/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/SECRET-020A/civ4/LongCat-2.0.verdict.json reviews/SECRET-020A/civ4/LongCat-2.0.verdict.json; git mv evidence/reviews/SECRET-020B-t2/DeepSeek-V4-Pro.verdict.json reviews/SECRET-020B-t2/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/SECRET-020B-t2/Gemini-3.1-Pro-OR.verdict.json reviews/SECRET-020B-t2/Gemini-3.1-Pro-OR.verdict.json; git mv evidence/reviews/SECRET-020B-t2/Grok-4.5.verdict.json reviews/SECRET-020B-t2/Grok-4.5.verdict.json; git mv evidence/reviews/SECRET-020B-t3/DeepSeek-V4-Pro.verdict.json reviews/SECRET-020B-t3/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/SECRET-020B-t3/Gemini-3.1-Pro-OR.verdict.json reviews/SECRET-020B-t3/Gemini-3.1-Pro-OR.verdict.json; git mv evidence/reviews/SECRET-020B-t3/Grok-4.5.verdict.json reviews/SECRET-020B-t3/Grok-4.5.verdict.json; git mv evidence/reviews/SECRET-020B/DeepSeek-V4-Pro.verdict.json reviews/SECRET-020B/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/SECRET-020B/Gemini-3.1-Pro-OR.verdict.json reviews/SECRET-020B/Gemini-3.1-Pro-OR.verdict.json; git mv evidence/reviews/SECRET-020B/Grok-4.5.verdict.json reviews/SECRET-020B/Grok-4.5.verdict.json; git mv evidence/reviews/SECRET-020C/DeepSeek-V4-Pro.verdict.json reviews/SECRET-020C/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/SECRET-020C/LongCat-2.0.verdict.json reviews/SECRET-020C/LongCat-2.0.verdict.json; git mv evidence/reviews/SECRET-020C/Qwen3.7-Max.verdict.json reviews/SECRET-020C/Qwen3.7-Max.verdict.json; git mv evidence/reviews/SSH-007/Grok-4.5.verdict.json reviews/SSH-007/Grok-4.5.verdict.json; git mv evidence/reviews/SSH-007/Kimi-2.7.verdict.json reviews/SSH-007/Kimi-2.7.verdict.json; git mv evidence/reviews/SSH-007/Qwen3.7-Max.verdict.json reviews/SSH-007/Qwen3.7-Max.verdict.json; git mv evidence/reviews/SSH-021/Grok-4.5.verdict.json reviews/SSH-021/Grok-4.5.verdict.json; git mv evidence/reviews/SSH-021/MiMo-Pro-V2.verdict.json reviews/SSH-021/MiMo-Pro-V2.verdict.json; git mv evidence/reviews/SSH-021/Qwen3.7-Max.verdict.json reviews/SSH-021/Qwen3.7-Max.verdict.json; git mv evidence/reviews/SSH-030/DeepSeek-V4-Pro.verdict.json reviews/SSH-030/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/SSH-030/Gemini-3.1-Pro.verdict.json reviews/SSH-030/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/SSH-030/Qwen3.7-Max.verdict.json reviews/SSH-030/Qwen3.7-Max.verdict.json; git mv evidence/reviews/SUPPLY-018/Grok-4.5.verdict.json reviews/SUPPLY-018/Grok-4.5.verdict.json; git mv evidence/reviews/SUPPLY-018/MiMo-Pro-V2.verdict.json reviews/SUPPLY-018/MiMo-Pro-V2.verdict.json; git mv evidence/reviews/SUPPLY-018/Qwen3.7-Max.verdict.json reviews/SUPPLY-018/Qwen3.7-Max.verdict.json; git mv evidence/reviews/TRUST-019A/civ/DeepSeek-V4-Pro.verdict.json reviews/TRUST-019A/civ/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/TRUST-019A/civ/Gemini-3.1-Pro.verdict.json reviews/TRUST-019A/civ/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/TRUST-019A/civ/LongCat-2.0.verdict.json reviews/TRUST-019A/civ/LongCat-2.0.verdict.json; git mv evidence/reviews/TRUST-019A/civ2/DeepSeek-V4-Pro.verdict.json reviews/TRUST-019A/civ2/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/TRUST-019A/civ2/Gemini-3.1-Pro.verdict.json reviews/TRUST-019A/civ2/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/TRUST-019A/civ2/LongCat-2.0.verdict.json reviews/TRUST-019A/civ2/LongCat-2.0.verdict.json; git mv evidence/reviews/TRUST-019B/DeepSeek-V4-Pro.verdict.json reviews/TRUST-019B/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/TRUST-019B/GREEN-focused.txt reviews/TRUST-019B/GREEN-focused.txt; git mv evidence/reviews/TRUST-019B/Gemini-3.1-Pro.verdict.json reviews/TRUST-019B/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/TRUST-019B/Qwen3.6-40B.verdict.json reviews/TRUST-019B/Qwen3.6-40B.verdict.json; git mv evidence/reviews/TRUST-019B/RED-reproduction.txt reviews/TRUST-019B/RED-reproduction.txt; git mv evidence/reviews/TRUST-019B/REVIEW-PACK.md reviews/TRUST-019B/REVIEW-PACK.md; git mv evidence/reviews/UI-039/DeepSeek-V4-Pro.verdict.json reviews/UI-039/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/UI-039/Gemini-3.1-Pro.verdict.json reviews/UI-039/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/UI-039/LongCat-2.0.verdict.json reviews/UI-039/LongCat-2.0.verdict.json; git mv evidence/reviews/UI-040/DeepSeek-V4-Pro.verdict.json reviews/UI-040/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/UI-040/Gemini-3.1-Pro.verdict.json reviews/UI-040/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/UI-040/LongCat-2.0.verdict.json reviews/UI-040/LongCat-2.0.verdict.json; git mv evidence/reviews/V1-FIX/GLM-5.2.verdict.json reviews/V1-FIX/GLM-5.2.verdict.json; git mv evidence/reviews/V1-FIX/Grok-4.5.verdict.json reviews/V1-FIX/Grok-4.5.verdict.json; git mv evidence/reviews/V1-FIX/Qwen3.7-Max.verdict.json reviews/V1-FIX/Qwen3.7-Max.verdict.json; git mv evidence/reviews/WEB-001/final-sol-acceptance.review.json reviews/WEB-001/final-sol-acceptance.review.json; git mv evidence/reviews/WEB-001/final-sol-security.review.json reviews/WEB-001/final-sol-security.review.json; git mv evidence/reviews/WEB-001/final-tally.json reviews/WEB-001/final-tally.json; git mv evidence/reviews/WEB-001/final-terra-isolation.review.json reviews/WEB-001/final-terra-isolation.review.json; git mv evidence/reviews/WEB-001/prompt.md reviews/WEB-001/prompt.md; git mv evidence/reviews/WEB-001/round-2-prompt-manifest.md reviews/WEB-001/round-2-prompt-manifest.md; git mv evidence/reviews/WEB-001/round-2-sol-acceptance.review.json reviews/WEB-001/round-2-sol-acceptance.review.json; git mv evidence/reviews/WEB-001/round-2-sol-security.review.json reviews/WEB-001/round-2-sol-security.review.json; git mv evidence/reviews/WEB-001/round-2-tally.json reviews/WEB-001/round-2-tally.json; git mv evidence/reviews/WEB-001/round-2-terra-isolation.review.json reviews/WEB-001/round-2-terra-isolation.review.json; git mv evidence/reviews/WEB-015/Grok-4.5.verdict.json reviews/WEB-015/Grok-4.5.verdict.json; git mv evidence/reviews/WEB-015/MiMo-Pro-V2.verdict.json reviews/WEB-015/MiMo-Pro-V2.verdict.json; git mv evidence/reviews/WEB-015/Qwen3.7-Max.verdict.json reviews/WEB-015/Qwen3.7-Max.verdict.json; git mv evidence/reviews/WEB-016/GLM-5.2.verdict.json reviews/WEB-016/GLM-5.2.verdict.json; git mv evidence/reviews/WEB-016/Grok-4.5.verdict.json reviews/WEB-016/Grok-4.5.verdict.json; git mv evidence/reviews/WEB-016/Qwen3.7-Max.verdict.json reviews/WEB-016/Qwen3.7-Max.verdict.json; git mv evidence/reviews/WEB-017/Grok-4.5.verdict.json reviews/WEB-017/Grok-4.5.verdict.json; git mv evidence/reviews/WEB-017/MiMo-Pro-V2.verdict.json reviews/WEB-017/MiMo-Pro-V2.verdict.json; git mv evidence/reviews/WEB-017/Qwen3.7-Max.verdict.json reviews/WEB-017/Qwen3.7-Max.verdict.json; git mv evidence/reviews/WEB-034A/GLM-5.2.verdict.json reviews/WEB-034A/GLM-5.2.verdict.json; git mv evidence/reviews/WEB-034A/Grok-4.5.verdict.json reviews/WEB-034A/Grok-4.5.verdict.json; git mv evidence/reviews/WEB-034A/Qwen3.7-Max.verdict.json reviews/WEB-034A/Qwen3.7-Max.verdict.json; git mv evidence/reviews/WEB-034B/GLM-5.2.verdict.json reviews/WEB-034B/GLM-5.2.verdict.json; git mv evidence/reviews/WEB-034B/Grok-4.5.verdict.json reviews/WEB-034B/Grok-4.5.verdict.json; git mv evidence/reviews/WEB-034B/Qwen3.7-Max.verdict.json reviews/WEB-034B/Qwen3.7-Max.verdict.json; git mv evidence/reviews/wh-civ/GLM-5.2.verdict.json reviews/wh-civ/GLM-5.2.verdict.json; git mv evidence/reviews/wh-civ/Gemini-3.1-Pro.verdict.json reviews/wh-civ/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/wh-civ/Grok-4.5.verdict.json reviews/wh-civ/Grok-4.5.verdict.json (ordre inverse), puis git commit --amend ou nouveau commit de restauration ; ne PAS exécuter cette vague sans avoir d'abord validé les vagues précédentes."
     },
     {
       "id": 1,
@@ -145303,9 +146044,10 @@
         "reviews/RC1-010-lot3-PR505-v2/DeepSeek-V4-Pro.verdict.json",
         "reviews/RC1-010-lot5a-PR508-v1/DeepSeek-V4-Pro.verdict.json",
         "reviews/RC1-010-lot5b-PR510-v3/DeepSeek-V4-Pro.verdict.json",
+        "reviews/RC1-504-v1/Kimi-2.7.verdict.json",
         "reviews/RES-012B/REVIEW-PACK.md"
       ],
-      "rollback": "Vague 1 : 9 chemin(s). Rollback = git mv evidence/reviews/RC1-003-PR489-v7/DeepSeek-V4-Pro.verdict.json reviews/RC1-003-PR489-v7/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-007-PR490/DeepSeek-V4-Pro.verdict.json reviews/RC1-007-PR490/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-007-PR490/Kimi-2.7.verdict.json reviews/RC1-007-PR490/Kimi-2.7.verdict.json; git mv evidence/reviews/RC1-009-PR500-v1/DeepSeek-V4-Pro.verdict.json reviews/RC1-009-PR500-v1/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-010-lot2-PR503-v3/DeepSeek-V4-Pro.verdict.json reviews/RC1-010-lot2-PR503-v3/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-010-lot3-PR505-v2/DeepSeek-V4-Pro.verdict.json reviews/RC1-010-lot3-PR505-v2/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-010-lot5a-PR508-v1/DeepSeek-V4-Pro.verdict.json reviews/RC1-010-lot5a-PR508-v1/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-010-lot5b-PR510-v3/DeepSeek-V4-Pro.verdict.json reviews/RC1-010-lot5b-PR510-v3/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RES-012B/REVIEW-PACK.md reviews/RES-012B/REVIEW-PACK.md (ordre inverse), puis git commit --amend ou nouveau commit de restauration ; ne PAS exécuter cette vague sans avoir d'abord validé les vagues précédentes."
+      "rollback": "Vague 1 : 10 chemin(s). Rollback = git mv evidence/reviews/RC1-003-PR489-v7/DeepSeek-V4-Pro.verdict.json reviews/RC1-003-PR489-v7/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-007-PR490/DeepSeek-V4-Pro.verdict.json reviews/RC1-007-PR490/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-007-PR490/Kimi-2.7.verdict.json reviews/RC1-007-PR490/Kimi-2.7.verdict.json; git mv evidence/reviews/RC1-009-PR500-v1/DeepSeek-V4-Pro.verdict.json reviews/RC1-009-PR500-v1/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-010-lot2-PR503-v3/DeepSeek-V4-Pro.verdict.json reviews/RC1-010-lot2-PR503-v3/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-010-lot3-PR505-v2/DeepSeek-V4-Pro.verdict.json reviews/RC1-010-lot3-PR505-v2/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-010-lot5a-PR508-v1/DeepSeek-V4-Pro.verdict.json reviews/RC1-010-lot5a-PR508-v1/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-010-lot5b-PR510-v3/DeepSeek-V4-Pro.verdict.json reviews/RC1-010-lot5b-PR510-v3/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-504-v1/Kimi-2.7.verdict.json reviews/RC1-504-v1/Kimi-2.7.verdict.json; git mv evidence/reviews/RES-012B/REVIEW-PACK.md reviews/RES-012B/REVIEW-PACK.md (ordre inverse), puis git commit --amend ou nouveau commit de restauration ; ne PAS exécuter cette vague sans avoir d'abord validé les vagues précédentes."
     },
     {
       "id": 2,

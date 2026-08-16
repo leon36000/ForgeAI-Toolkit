@@ -233,7 +233,23 @@ def _diff_canonique(
     # préfixes sont exclus du diff canonique pendant la transition (même garde
     # anti-paradoxe-bootstrap : le reçu et les verdicts d'une revue en cours ne doivent jamais
     # entrer dans le hash du diff qu'ils examinent, quelle que soit leur racine du moment).
-    exclude: tuple[str, ...] = ("reviews/", "evidence/reviews/"),
+    #
+    # #504 : governance/path-classification.json (+ son rendu .md) trace individuellement
+    # chaque fichier sous reviews/**/evidence/reviews/**, RECU.json compris — le régénérer
+    # APRÈS avoir scellé un reçu change donc TOUJOURS le diff que ce reçu prétend attester
+    # (interblocage circulaire entre les gates reviews-sealed et path-classification, main
+    # rouge sur path-classification depuis 3 merges au moment de la découverte). Ce manifeste
+    # est de toute façon déjà retiré à la main des packs de revue depuis le lot 5b — les
+    # reviewers ne le voient jamais — donc l'exclure ici aligne l'empreinte scellée sur ce qui
+    # est réellement revu, au lieu de sceller des octets jamais vus. Exclusion par nom de
+    # fichier EXACT (pas de préfixe partiel) : governance/path-classification-rules.json
+    # (écrit à la main, load_bearing) ne doit surtout PAS matcher par accident.
+    exclude: tuple[str, ...] = (
+        "reviews/",
+        "evidence/reviews/",
+        "governance/path-classification.json",
+        "governance/PATH-CLASSIFICATION.md",
+    ),
     runner: GitRunner | None = None,
 ) -> str:
     """Retourne l'empreinte SHA-256 canonique du diff merge-base, hors artefacts exclus.
@@ -247,7 +263,9 @@ def _diff_canonique(
     sa propre revue (le dossier reviews/<ID>/*.verdict.json + la ligne BINDING.txt sont ajoutés
     dans LA MÊME PR que le code qu'ils attestent) — sans cette exclusion, l'empreinte calculée
     par le reçu ne pourrait JAMAIS correspondre à celle du diff final (les reviewers ont vu un
-    diff SANS ces fichiers).
+    diff SANS ces fichiers). Même raisonnement pour governance/path-classification.json/.md
+    (#504) : entièrement dérivés, re-vérifiés octet à octet par leur propre gate
+    (classify_paths.py check), jamais montrés aux reviewers non plus.
     """
     _validate_git_ref(base_ref)
     _validate_git_ref(head_ref)
