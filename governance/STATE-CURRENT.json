@@ -472,7 +472,7 @@
       },
       {
         "path": "tests/test_network.py",
-        "sha256": "458f6b262da61f5ddc238475c415c7f432d1f60e2363c0d74f1a1d00c3b143be"
+        "sha256": "7e67849948b17b1fcec93b52b3ce52031d95c63b64e0a4bd6f281bcee4ef3e2b"
       },
       {
         "path": "tests/test_no_stub_scan.py",
@@ -897,7 +897,7 @@
     "tests": {
       "js_files": 3,
       "python_files": 186,
-      "python_functions_declared": 2006
+      "python_functions_declared": 2009
     }
   },
   "observations": [
