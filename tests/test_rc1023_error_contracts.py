@@ -325,6 +325,24 @@ def test_site_path_hors_src_forgeai_detecte(tmp_path: Path) -> None:
     assert any("site.path" in e and "src/forgeai" in e for e in erreurs)
 
 
+def test_site_path_traversee_qui_reste_sous_racine_detecte(tmp_path: Path) -> None:
+    """Round 16 (#452) — objection GPT-5.6-Terra-Pro (revue scellée) : le round 13 testait le
+    préfixe src/forgeai/ sur la CHAÎNE BRUTE, contournable par une remontée ../.. qui reste sous
+    la racine du dépôt tout en s'échappant de src/forgeai/ — ex. 'src/forgeai/../../tests/x.py'
+    commence bien par 'src/forgeai/' en texte, mais résout hors de ce dossier."""
+    _creer_fichier_source(
+        tmp_path, "src/forgeai/example.py", "try:\n    pass\nexcept ValueError:\n    pass\n"
+    )
+    _creer_fichier_source(
+        tmp_path, "tests/hors_scope.py", "try:\n    pass\nexcept ValueError:\n    pass\n"
+    )
+    contrat = _entree_valide(path="src/forgeai/../../tests/hors_scope.py", line=3)
+    _ecrire_inventaire(tmp_path, [contrat])
+
+    erreurs = VALIDATEUR.valider(tmp_path, aujourd_hui=dt.date(2026, 1, 1))
+    assert any("site.path" in e and "src/forgeai" in e for e in erreurs)
+
+
 def test_risk_paths_element_non_chaine_detecte(tmp_path: Path) -> None:
     # Durcissement proactif (round 12-13, même famille que l'objection GPT-5.6-Terra-Pro sur
     # exception_types) : risk_paths était vérifié « est une liste » mais pas le type de ses

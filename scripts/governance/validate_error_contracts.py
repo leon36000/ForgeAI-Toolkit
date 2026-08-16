@@ -304,10 +304,16 @@ def _verifier_site_ast(
     root_resolu = root.resolve()
     fichier_source = (root_resolu / path_rel).resolve()
     try:
-        fichier_source.relative_to(root_resolu)
+        chemin_relatif_reel = fichier_source.relative_to(root_resolu)
     except ValueError:
         return [f"{identifiant} : site.path sort de la racine du dépôt : {path_rel}"]
-    if not path_rel.startswith("src/forgeai/"):
+    # Round 16 (#452) — objection GPT-5.6-Terra-Pro (revue scellée) : round 13 testait le préfixe
+    # sur la CHAÎNE BRUTE path_rel, contournable par une traversée qui reste sous root tout en
+    # s'échappant de src/forgeai/ (ex. "src/forgeai/../../tests/x.py" commence par "src/forgeai/"
+    # en texte mais résout à <root>/tests/x.py). Le test porte désormais sur le chemin RÉSOLU ET
+    # NORMALISÉ (chemin_relatif_reel, déjà produit par .resolve() + relative_to() ci-dessus), via
+    # .parts plutôt qu'un préfixe de chaîne — insensible à toute forme de ../ ou de séparateurs.
+    if chemin_relatif_reel.parts[:2] != ("src", "forgeai"):
         return [f"{identifiant} : site.path doit cibler src/forgeai/ (reçu : {path_rel})"]
 
     # Round 8 (#452) — objection GPT-5.6-Terra-Pro (revue scellée) : site.function n'était ni
