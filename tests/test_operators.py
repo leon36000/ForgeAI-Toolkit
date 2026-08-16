@@ -305,3 +305,16 @@ def test_detect_liste_helm_non_vide_continue_de_detecter_la_release():
     assert st.present is True
     assert st.source == "helm"
     assert st.version == "external-secrets-2.7.0"
+
+
+# --- PINNING (#492) — robustesse detect() sur une liste JSON valide dont des éléments ne sont pas des dict ---
+def test_detect_helm_list_avec_elements_non_dict_ne_leve_pas():
+    # Pas de règle "kubectl get crd" ici : _Runner.run() (ci-dessus) retourne (127, "") par
+    # défaut quand aucune règle ne matche l'argv — PAS de KeyError (ce n'est pas un mock
+    # strict basé sur dict[argv]). code=127 != 0 -> le fallback CRD de detect() ne trouve
+    # rien -> present=False. Rouge confirmé sur le code d'origine (AttributeError), vert
+    # après le correctif isinstance(rel, dict) (voir rapport de la story).
+    r = _Runner({"helm list": (0, "[1, 2, 3]")})
+    st = detect("external-secrets-operator", r)
+    assert st.present is False
+    assert st.source is None

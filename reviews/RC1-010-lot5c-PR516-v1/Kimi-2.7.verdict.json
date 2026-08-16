@@ -1,0 +1,25 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "governance/PATH-CLASSIFICATION.md",
+   "description": "Le résumé indique 'Fichiers suivis : 1861' alors que le diff ne contient aucune création de fichier (seuls des renommages et deux modifications de fichiers existants sont présents). Le delta +1 par rapport à 1860 n'est pas justifié par une preuve vérifiable dans le pack.",
+   "preuve": "ligne '- Fichiers suivis : 1860' -> '+ Fichiers suivis : 1861' dans governance/PATH-CLASSIFICATION.md"
+  },
+  {
+   "severite": "mineure",
+   "fichier": "governance/PATH-CLASSIFICATION.md",
+   "description": "Le compteur 'Références pendantes' augmente de 102 (14743 -> 14845) sans mise à jour de contenu visible dans le diff ; cela pourrait traduire des liens vers les anciens chemins reviews/ non mis à jour, non vérifiables sans exécuter les scripts de gouvernance.",
+   "preuve": "ligne '- Références pendantes : 14743' -> '+ Références pendantes : 14845' dans governance/PATH-CLASSIFICATION.md"
+  }
+ ],
+ "date_heure": "2026-08-16T05:36:36.517811+00:00",
+ "prompt_sha256": "3b9169e49059d0a63aa002e5787dc9ce755ea5a4e69c55ed533eb024ae9e1c72",
+ "reviewer_model": "Kimi-2.7",
+ "modele_servi": "kimi-27-openrouter",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}
