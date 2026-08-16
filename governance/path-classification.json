@@ -21242,7 +21242,7 @@
       "path": "evidence/reviews/RC1-528/RECU.json",
       "referenced_by": [],
       "rule_id": "evidence-reviews-root",
-      "sha256": "3270ab75dbe718e562459764399b3a2845c85fdfd2be9b2c061305ab1c404299",
+      "sha256": "c89f6589417c9f7619940496f6c117474f09775c6e99d01a09a896457319cffd",
       "size": 666,
       "target_path": null,
       "type": "text"
