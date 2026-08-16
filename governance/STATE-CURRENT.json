@@ -508,7 +508,7 @@
       },
       {
         "path": "tests/test_openbao_init.py",
-        "sha256": "e273897528737fd93ec7143c5250fbbc323a3d0508148fc57ea29f1033a2a639"
+        "sha256": "22b3423b60fab6af3a07ad8ddc930eeac8d6cb2ec6b98be4b8a4f9945c60a304"
       },
       {
         "path": "tests/test_openbao_prod_render.py",
@@ -937,7 +937,7 @@
     "tests": {
       "js_files": 3,
       "python_files": 195,
-      "python_functions_declared": 2320
+      "python_functions_declared": 2322
     }
   },
   "observations": [

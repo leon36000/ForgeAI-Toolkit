@@ -25399,8 +25399,8 @@
         }
       ],
       "rule_id": "governance-core",
-      "sha256": "0093dbc59fba162d40f5ca2fce7c15abbd4cdc60ea932f5fc84052f395521986",
-      "size": 16169,
+      "sha256": "8dcd4846c0b8d44e2e00f9614362eca105e49e96878bb9e4a620b67f577b44b2",
+      "size": 16884,
       "target_path": null,
       "type": "text"
     },
@@ -26439,14 +26439,21 @@
         },
         {
           "candidate": "governance/error-handling-contracts.json",
-          "line": 217,
+          "line": 218,
           "referrer": "src/forgeai/secrets/openbao_init.py",
           "resolved": "governance/error-handling-contracts.json",
           "severity": "hard"
         },
         {
           "candidate": "governance/error-handling-contracts.json",
-          "line": 257,
+          "line": 258,
+          "referrer": "src/forgeai/secrets/openbao_init.py",
+          "resolved": "governance/error-handling-contracts.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/error-handling-contracts.json",
+          "line": 269,
           "referrer": "src/forgeai/secrets/openbao_init.py",
           "resolved": "governance/error-handling-contracts.json",
           "severity": "hard"
@@ -26481,8 +26488,8 @@
         }
       ],
       "rule_id": "governance-core",
-      "sha256": "1f62ba0030ea8899ed9b0ce3a5ea34142e2842cab9cd813fbf37fd7b151dd884",
-      "size": 67048,
+      "sha256": "ae841d7654c4e49cec91a3ae6e879b413862520bb7fb13e5279d727f549542d6",
+      "size": 70405,
       "target_path": null,
       "type": "text"
     },
@@ -39137,6 +39144,13 @@
         },
         {
           "candidate": "src/forgeai/secrets/openbao_init.py",
+          "line": 30,
+          "referrer": "governance/ERROR-HANDLING-CONTRACTS.md",
+          "resolved": "src/forgeai/secrets/openbao_init.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "src/forgeai/secrets/openbao_init.py",
           "line": 358,
           "referrer": "governance/error-handling-contracts.json",
           "resolved": "src/forgeai/secrets/openbao_init.py",
@@ -39193,6 +39207,20 @@
         },
         {
           "candidate": "src/forgeai/secrets/openbao_init.py",
+          "line": 723,
+          "referrer": "governance/error-handling-contracts.json",
+          "resolved": "src/forgeai/secrets/openbao_init.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "src/forgeai/secrets/openbao_init.py",
+          "line": 725,
+          "referrer": "governance/error-handling-contracts.json",
+          "resolved": "src/forgeai/secrets/openbao_init.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "src/forgeai/secrets/openbao_init.py",
           "line": 148,
           "referrer": "stories/I18N-042.md",
           "resolved": "src/forgeai/secrets/openbao_init.py",
@@ -39200,8 +39228,8 @@
         }
       ],
       "rule_id": "product-source",
-      "sha256": "235348229a7892350ec49fae7e4229840f10535ce02ff3de77b813a00a694139",
-      "size": 11322,
+      "sha256": "2f0f8470cbe54ddff36ce89fb1ea19e7c9d459b8e24028b3866bd4cbaff4fb46",
+      "size": 12172,
       "target_path": null,
       "type": "text"
     },
@@ -40117,13 +40145,6 @@
         },
         {
           "candidate": "src/forgeai/web/server.py",
-          "line": 30,
-          "referrer": "governance/ERROR-HANDLING-CONTRACTS.md",
-          "resolved": "src/forgeai/web/server.py",
-          "severity": "hard"
-        },
-        {
-          "candidate": "src/forgeai/web/server.py",
           "line": 31,
           "referrer": "governance/ERROR-HANDLING-CONTRACTS.md",
           "resolved": "src/forgeai/web/server.py",
@@ -40174,6 +40195,13 @@
         {
           "candidate": "src/forgeai/web/server.py",
           "line": 38,
+          "referrer": "governance/ERROR-HANDLING-CONTRACTS.md",
+          "resolved": "src/forgeai/web/server.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "src/forgeai/web/server.py",
+          "line": 39,
           "referrer": "governance/ERROR-HANDLING-CONTRACTS.md",
           "resolved": "src/forgeai/web/server.py",
           "severity": "hard"
@@ -41808,7 +41836,7 @@
       "referenced_by": [
         {
           "candidate": "stories/RC1-023-error-handling-contracts.md",
-          "line": 36,
+          "line": 37,
           "referrer": "governance/ERROR-HANDLING-CONTRACTS.md",
           "resolved": "stories/RC1-023-error-handling-contracts.md",
           "severity": "hard"
@@ -44548,14 +44576,14 @@
       "referenced_by": [
         {
           "candidate": "tests/test_deploy_persist.py",
-          "line": 30,
+          "line": 31,
           "referrer": "governance/ERROR-HANDLING-CONTRACTS.md",
           "resolved": "tests/test_deploy_persist.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_deploy_persist.py",
-          "line": 31,
+          "line": 32,
           "referrer": "governance/ERROR-HANDLING-CONTRACTS.md",
           "resolved": "tests/test_deploy_persist.py",
           "severity": "hard"
@@ -47999,6 +48027,13 @@
         },
         {
           "candidate": "tests/test_openbao_init.py",
+          "line": 30,
+          "referrer": "governance/ERROR-HANDLING-CONTRACTS.md",
+          "resolved": "tests/test_openbao_init.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "tests/test_openbao_init.py",
           "line": 510,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_openbao_init.py",
@@ -48027,7 +48062,14 @@
         },
         {
           "candidate": "tests/test_openbao_init.py",
-          "line": 135,
+          "line": 741,
+          "referrer": "governance/error-handling-contracts.json",
+          "resolved": "tests/test_openbao_init.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "tests/test_openbao_init.py",
+          "line": 136,
           "referrer": "src/forgeai/secrets/openbao_init.py",
           "resolved": "tests/test_openbao_init.py",
           "severity": "hard"
@@ -48048,8 +48090,8 @@
         }
       ],
       "rule_id": "test-suite",
-      "sha256": "e273897528737fd93ec7143c5250fbbc323a3d0508148fc57ea29f1033a2a639",
-      "size": 32986,
+      "sha256": "22b3423b60fab6af3a07ad8ddc930eeac8d6cb2ec6b98be4b8a4f9945c60a304",
+      "size": 37209,
       "target_path": null,
       "type": "text"
     },
@@ -50540,14 +50582,14 @@
         },
         {
           "candidate": "tests/test_rel038c_process_groups.py",
-          "line": 36,
+          "line": 37,
           "referrer": "governance/ERROR-HANDLING-CONTRACTS.md",
           "resolved": "tests/test_rel038c_process_groups.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_rel038c_process_groups.py",
-          "line": 37,
+          "line": 38,
           "referrer": "governance/ERROR-HANDLING-CONTRACTS.md",
           "resolved": "tests/test_rel038c_process_groups.py",
           "severity": "hard"
@@ -93904,8 +93946,13 @@
         "referrer": "governance/ERROR-HANDLING-CONTRACTS.md"
       },
       {
+        "candidate": "openbao_init.py",
+        "line": 28,
+        "referrer": "governance/ERROR-HANDLING-CONTRACTS.md"
+      },
+      {
         "candidate": "retry/escalade",
-        "line": 37,
+        "line": 38,
         "referrer": "governance/ERROR-HANDLING-CONTRACTS.md"
       },
       {
@@ -94254,6 +94301,16 @@
         "referrer": "governance/error-handling-contracts.json"
       },
       {
+        "candidate": "openbao_init.py",
+        "line": 13,
+        "referrer": "governance/error-handling-contracts.json"
+      },
+      {
+        "candidate": "contracted/floor",
+        "line": 13,
+        "referrer": "governance/error-handling-contracts.json"
+      },
+      {
         "candidate": "registre.py",
         "line": 33,
         "referrer": "governance/error-handling-contracts.json"
@@ -94321,6 +94378,16 @@
       {
         "candidate": "init/rotation",
         "line": 375,
+        "referrer": "governance/error-handling-contracts.json"
+      },
+      {
+        "candidate": "openbao_init.py",
+        "line": 398,
+        "referrer": "governance/error-handling-contracts.json"
+      },
+      {
+        "candidate": "openbao_init.py",
+        "line": 402,
         "referrer": "governance/error-handling-contracts.json"
       },
       {
@@ -94416,6 +94483,16 @@
       {
         "candidate": "server.py",
         "line": 716,
+        "referrer": "governance/error-handling-contracts.json"
+      },
+      {
+        "candidate": "openbao_init.py",
+        "line": 737,
+        "referrer": "governance/error-handling-contracts.json"
+      },
+      {
+        "candidate": "openbao_init.py",
+        "line": 738,
         "referrer": "governance/error-handling-contracts.json"
       },
       {
@@ -114440,52 +114517,57 @@
       },
       {
         "candidate": "init/unseal",
-        "line": 24,
+        "line": 25,
         "referrer": "src/forgeai/secrets/openbao_init.py"
       },
       {
         "candidate": "token/cl",
-        "line": 24,
+        "line": 25,
         "referrer": "src/forgeai/secrets/openbao_init.py"
       },
       {
         "candidate": "secret/data/forgeai/",
-        "line": 31,
-        "referrer": "src/forgeai/secrets/openbao_init.py"
-      },
-      {
-        "candidate": "secret/metadata/forgeai/",
         "line": 32,
         "referrer": "src/forgeai/secrets/openbao_init.py"
       },
       {
+        "candidate": "secret/metadata/forgeai/",
+        "line": 33,
+        "referrer": "src/forgeai/secrets/openbao_init.py"
+      },
+      {
         "candidate": "lookup-self/renew-self",
-        "line": 34,
+        "line": 35,
         "referrer": "src/forgeai/secrets/openbao_init.py"
       },
       {
         "candidate": "auth/token/lookup-self",
-        "line": 38,
-        "referrer": "src/forgeai/secrets/openbao_init.py"
-      },
-      {
-        "candidate": "auth/token/renew-self",
         "line": 39,
         "referrer": "src/forgeai/secrets/openbao_init.py"
       },
       {
+        "candidate": "auth/token/renew-self",
+        "line": 40,
+        "referrer": "src/forgeai/secrets/openbao_init.py"
+      },
+      {
         "candidate": "application/json",
-        "line": 68,
+        "line": 69,
         "referrer": "src/forgeai/secrets/openbao_init.py"
       },
       {
         "candidate": "secret/",
-        "line": 169,
+        "line": 170,
         "referrer": "src/forgeai/secrets/openbao_init.py"
       },
       {
         "candidate": "secret/",
-        "line": 174,
+        "line": 175,
+        "referrer": "src/forgeai/secrets/openbao_init.py"
+      },
+      {
+        "candidate": "openbao_init.py",
+        "line": 269,
         "referrer": "src/forgeai/secrets/openbao_init.py"
       },
       {
@@ -128155,107 +128237,117 @@
       },
       {
         "candidate": "read/write",
-        "line": 17,
+        "line": 18,
         "referrer": "tests/test_openbao_init.py"
       },
       {
         "candidate": "lecture/",
-        "line": 21,
+        "line": 22,
         "referrer": "tests/test_openbao_init.py"
       },
       {
         "candidate": "secret/",
-        "line": 124,
+        "line": 125,
         "referrer": "tests/test_openbao_init.py"
       },
       {
         "candidate": "secret/",
-        "line": 126,
+        "line": 127,
         "referrer": "tests/test_openbao_init.py"
       },
       {
         "candidate": "secret/",
-        "line": 239,
+        "line": 240,
         "referrer": "tests/test_openbao_init.py"
       },
       {
         "candidate": "secret/",
-        "line": 291,
+        "line": 292,
         "referrer": "tests/test_openbao_init.py"
       },
       {
         "candidate": "secret/",
-        "line": 328,
+        "line": 329,
         "referrer": "tests/test_openbao_init.py"
       },
       {
         "candidate": "secret/",
-        "line": 365,
+        "line": 366,
         "referrer": "tests/test_openbao_init.py"
       },
       {
         "candidate": "secret/",
-        "line": 402,
+        "line": 403,
         "referrer": "tests/test_openbao_init.py"
       },
       {
         "candidate": "secret/",
-        "line": 409,
+        "line": 465,
         "referrer": "tests/test_openbao_init.py"
       },
       {
         "candidate": "secret/",
-        "line": 488,
+        "line": 509,
         "referrer": "tests/test_openbao_init.py"
       },
       {
         "candidate": "secret/",
-        "line": 542,
+        "line": 516,
         "referrer": "tests/test_openbao_init.py"
       },
       {
         "candidate": "secret/",
-        "line": 545,
+        "line": 595,
+        "referrer": "tests/test_openbao_init.py"
+      },
+      {
+        "candidate": "secret/",
+        "line": 649,
+        "referrer": "tests/test_openbao_init.py"
+      },
+      {
+        "candidate": "secret/",
+        "line": 652,
         "referrer": "tests/test_openbao_init.py"
       },
       {
         "candidate": "application/json",
-        "line": 580,
+        "line": 687,
         "referrer": "tests/test_openbao_init.py"
       },
       {
         "candidate": "application/json",
-        "line": 592,
+        "line": 699,
         "referrer": "tests/test_openbao_init.py"
       },
       {
         "candidate": "token/create",
-        "line": 698,
+        "line": 805,
         "referrer": "tests/test_openbao_init.py"
       },
       {
         "candidate": "root_token/unseal_key",
-        "line": 700,
+        "line": 807,
         "referrer": "tests/test_openbao_init.py"
       },
       {
         "candidate": "secret/",
-        "line": 708,
+        "line": 815,
         "referrer": "tests/test_openbao_init.py"
       },
       {
         "candidate": "token/create",
-        "line": 714,
+        "line": 821,
         "referrer": "tests/test_openbao_init.py"
       },
       {
         "candidate": "openbao_init.py",
-        "line": 720,
+        "line": 827,
         "referrer": "tests/test_openbao_init.py"
       },
       {
         "candidate": "secret/",
-        "line": 796,
+        "line": 903,
         "referrer": "tests/test_openbao_init.py"
       },
       {
@@ -150885,17 +150977,17 @@
         "severity": "hard"
       },
       {
-        "candidate": "src/forgeai/web/server.py",
+        "candidate": "src/forgeai/secrets/openbao_init.py",
         "line": 30,
         "referrer": "governance/ERROR-HANDLING-CONTRACTS.md",
-        "resolved": "src/forgeai/web/server.py",
+        "resolved": "src/forgeai/secrets/openbao_init.py",
         "severity": "hard"
       },
       {
-        "candidate": "tests/test_deploy_persist.py",
+        "candidate": "tests/test_openbao_init.py",
         "line": 30,
         "referrer": "governance/ERROR-HANDLING-CONTRACTS.md",
-        "resolved": "tests/test_deploy_persist.py",
+        "resolved": "tests/test_openbao_init.py",
         "severity": "hard"
       },
       {
@@ -150917,6 +151009,13 @@
         "line": 32,
         "referrer": "governance/ERROR-HANDLING-CONTRACTS.md",
         "resolved": "src/forgeai/web/server.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "tests/test_deploy_persist.py",
+        "line": 32,
+        "referrer": "governance/ERROR-HANDLING-CONTRACTS.md",
+        "resolved": "tests/test_deploy_persist.py",
         "severity": "hard"
       },
       {
@@ -150948,24 +151047,17 @@
         "severity": "hard"
       },
       {
-        "candidate": "stories/RC1-023-error-handling-contracts.md",
-        "line": 36,
-        "referrer": "governance/ERROR-HANDLING-CONTRACTS.md",
-        "resolved": "stories/RC1-023-error-handling-contracts.md",
-        "severity": "hard"
-      },
-      {
-        "candidate": "tests/test_rel038c_process_groups.py",
-        "line": 36,
-        "referrer": "governance/ERROR-HANDLING-CONTRACTS.md",
-        "resolved": "tests/test_rel038c_process_groups.py",
-        "severity": "hard"
-      },
-      {
         "candidate": "src/forgeai/web/server.py",
         "line": 37,
         "referrer": "governance/ERROR-HANDLING-CONTRACTS.md",
         "resolved": "src/forgeai/web/server.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "stories/RC1-023-error-handling-contracts.md",
+        "line": 37,
+        "referrer": "governance/ERROR-HANDLING-CONTRACTS.md",
+        "resolved": "stories/RC1-023-error-handling-contracts.md",
         "severity": "hard"
       },
       {
@@ -150978,6 +151070,20 @@
       {
         "candidate": "src/forgeai/web/server.py",
         "line": 38,
+        "referrer": "governance/ERROR-HANDLING-CONTRACTS.md",
+        "resolved": "src/forgeai/web/server.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "tests/test_rel038c_process_groups.py",
+        "line": 38,
+        "referrer": "governance/ERROR-HANDLING-CONTRACTS.md",
+        "resolved": "tests/test_rel038c_process_groups.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "src/forgeai/web/server.py",
+        "line": 39,
         "referrer": "governance/ERROR-HANDLING-CONTRACTS.md",
         "resolved": "src/forgeai/web/server.py",
         "severity": "hard"
@@ -154980,6 +155086,27 @@
         "severity": "hard"
       },
       {
+        "candidate": "src/forgeai/secrets/openbao_init.py",
+        "line": 723,
+        "referrer": "governance/error-handling-contracts.json",
+        "resolved": "src/forgeai/secrets/openbao_init.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "src/forgeai/secrets/openbao_init.py",
+        "line": 725,
+        "referrer": "governance/error-handling-contracts.json",
+        "resolved": "src/forgeai/secrets/openbao_init.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "tests/test_openbao_init.py",
+        "line": 741,
+        "referrer": "governance/error-handling-contracts.json",
+        "resolved": "tests/test_openbao_init.py",
+        "severity": "hard"
+      },
+      {
         "candidate": "scripts/governance/classify_paths.py",
         "line": 3,
         "referrer": "governance/path-classification-rules.json",
@@ -156843,21 +156970,28 @@
       },
       {
         "candidate": "tests/test_openbao_init.py",
-        "line": 135,
+        "line": 136,
         "referrer": "src/forgeai/secrets/openbao_init.py",
         "resolved": "tests/test_openbao_init.py",
         "severity": "hard"
       },
       {
         "candidate": "governance/error-handling-contracts.json",
-        "line": 217,
+        "line": 218,
         "referrer": "src/forgeai/secrets/openbao_init.py",
         "resolved": "governance/error-handling-contracts.json",
         "severity": "hard"
       },
       {
         "candidate": "governance/error-handling-contracts.json",
-        "line": 257,
+        "line": 258,
+        "referrer": "src/forgeai/secrets/openbao_init.py",
+        "resolved": "governance/error-handling-contracts.json",
+        "severity": "hard"
+      },
+      {
+        "candidate": "governance/error-handling-contracts.json",
+        "line": 269,
         "referrer": "src/forgeai/secrets/openbao_init.py",
         "resolved": "governance/error-handling-contracts.json",
         "severity": "hard"
@@ -161874,7 +162008,7 @@
       "working-sandbox-readme": 1
     },
     "case_collisions_total": 0,
-    "dangling_references_total": 16211,
+    "dangling_references_total": 16221,
     "generated_total": 9,
     "load_bearing_total": 1931,
     "portability_violations_total": 0,
