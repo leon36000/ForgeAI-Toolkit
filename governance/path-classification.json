@@ -5974,8 +5974,8 @@
         }
       ],
       "rule_id": "evidence-registres-root",
-      "sha256": "88329084755b85d41e507b1296e2ac4a36ff5873bdb6e25c33aef75f9f50d7f8",
-      "size": 358968,
+      "sha256": "d879177dcfd2d00cbd9c8be1e30949b431441ae51ea0054aed4042a8bb260061",
+      "size": 360124,
       "target_path": null,
       "type": "text"
     },
