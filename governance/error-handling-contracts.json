@@ -5,12 +5,12 @@
     "justification": "Les dispositions JUSTIFIED sont réexaminées au plus tard tous les 180 jours pour confirmer qu'elles restent exactes (le code n'a pas dérivé) et nécessaires."
   },
   "coverage": {
-    "total_except_sites_src_forgeai": 194,
-    "measured_on": "chore/RC1-023-error-handlers @ round 11 (comptage AST post-diff)",
+    "total_except_sites_src_forgeai": 195,
+    "measured_on": "chore/RC1-023-error-handlers @ round 27 (comptage AST post-diff)",
     "measured_command": "comptage AST (ast.ExceptHandler) sur src/forgeai — méthode grep (^\\s*except) abandonnée : donne 205, faux positifs confirmés dans src/forgeai/ide/guard_fs.py (script généré embarqué comme littéral de chaîne, non exécuté par ce module — grep ne distingue pas le texte d'une chaîne du code réel, l'AST si)",
     "contracted": 31,
     "floor": 31,
-    "note": "Campagne en lots (précédent : RC1-010/#440, 9 lots). Lot 1 = les 24 sites body_kind pass/continue (les plus silencieux, priorité de l'issue #452) + 1 site adjacent découvert en traitant l'un d'eux (web/server.py:1517, même fonction que le site 1523 inventorié). Lots suivants : catégories body_kind='autre' (29) puis 'return_default' (87) par sous-système, et contrats docstring légers sur les 42 sites 're_raise' (déjà conformes — la cause est déjà propagée, pas 'avalée' au sens du critère). `floor` augmente à chaque lot ; jamais abaissé sans suppression documentée d'une entrée existante (visible en revue). Round 11 (#452) — objection GPT-5.6-Terra-Pro : le diff de cette story a elle-même introduit 6 nouveaux sites body_kind=pass (repli ultime du print diagnostic best-effort, motif # proof:allow) non contractualisés lors de leur introduction — corrigé ici (contracted 25 -> 31). Méthode de mesure corrigée en AST pur (voir measured_command) après découverte d'un écart grep/AST non lié à cette story (guard_fs.py, script embarqué en chaîne)."
+    "note": "Campagne en lots (précédent : RC1-010/#440, 9 lots). Lot 1 = les 24 sites body_kind pass/continue (les plus silencieux, priorité de l'issue #452) + 1 site adjacent découvert en traitant l'un d'eux (web/server.py:1517, même fonction que le site 1523 inventorié). Lots suivants : catégories body_kind='autre' (29) puis 'return_default' (87) par sous-système, et contrats docstring légers sur les 42 sites 're_raise' (déjà conformes — la cause est déjà propagée, pas 'avalée' au sens du critère). `floor` augmente à chaque lot ; jamais abaissé sans suppression documentée d'une entrée existante (visible en revue). Round 11 (#452) — objection GPT-5.6-Terra-Pro : le diff de cette story a elle-même introduit 6 nouveaux sites body_kind=pass (repli ultime du print diagnostic best-effort, motif # proof:allow) non contractualisés lors de leur introduction — corrigé ici (contracted 25 -> 31). Méthode de mesure corrigée en AST pur (voir measured_command) après découverte d'un écart grep/AST non lié à cette story (guard_fs.py, script embarqué en chaîne). Round 27 (#452) — objection GPT-5.6-Terra-Pro (str_exc_sur) : src/forgeai/core/safe_repr.py ajoute 1 except (return_default, repli défensif de str_exc_sur elle-même) — total 194 -> 195, contracted/floor inchangés (return_default reste différé aux lots suivants, comme les 87 préexistants)."
   },
   "contracts": [
     {
@@ -152,10 +152,10 @@
       "accepted_risk": "Aucun — l'exception d'origine est systématiquement relancée."
     },
     {
-      "id": "site:src/forgeai/hardware/detect.py:46",
+      "id": "site:src/forgeai/hardware/detect.py:47",
       "site": {
         "path": "src/forgeai/hardware/detect.py",
-        "line": 46,
+        "line": 47,
         "function": "forgeai.hardware.detect.HardwareDetector.detect_cpu"
       },
       "exception_types": [
@@ -175,10 +175,10 @@
       "accepted_risk": "Le repli sur les valeurs par défaut est inchangé ; seule la visibilité change (aucun nouveau risque de comportement)."
     },
     {
-      "id": "site:src/forgeai/hardware/detect.py:79",
+      "id": "site:src/forgeai/hardware/detect.py:84",
       "site": {
         "path": "src/forgeai/hardware/detect.py",
-        "line": 79,
+        "line": 84,
         "function": "forgeai.hardware.detect.HardwareDetector.detect_ram_gb"
       },
       "exception_types": [
@@ -198,10 +198,10 @@
       "accepted_risk": "Le repli à 0.0 Go est inchangé ; seule la visibilité change."
     },
     {
-      "id": "site:src/forgeai/hardware/detect.py:103",
+      "id": "site:src/forgeai/hardware/detect.py:110",
       "site": {
         "path": "src/forgeai/hardware/detect.py",
-        "line": 103,
+        "line": 110,
         "function": "forgeai.hardware.detect.HardwareDetector.detect_disks"
       },
       "exception_types": [
@@ -219,10 +219,10 @@
       "accepted_risk": "Une ligne `df` malformée fait disparaître silencieusement ce disque du rapport matériel."
     },
     {
-      "id": "site:src/forgeai/hardware/detect.py:127",
+      "id": "site:src/forgeai/hardware/detect.py:134",
       "site": {
         "path": "src/forgeai/hardware/detect.py",
-        "line": 127,
+        "line": 134,
         "function": "forgeai.hardware.detect.HardwareDetector._nvidia_gpus"
       },
       "exception_types": [
@@ -402,10 +402,10 @@
       "accepted_risk": "Le flux d'init ne bloque jamais sur un échec de révocation (comportement inchangé) ; le jeton non révoqué reste borné par son TTL `period` existant. Risque résiduel documenté et TRACÉ (pas seulement écrit) : issue #519 — le signal de visibilité lui-même (print stderr) n'est pas garanti si stderr est indisponible ; correction nécessite une conception dédiée (persistance) hors scope du lot 1 (visibilité des except silencieux)."
     },
     {
-      "id": "site:src/forgeai/web/server.py:569",
+      "id": "site:src/forgeai/web/server.py:570",
       "site": {
         "path": "src/forgeai/web/server.py",
-        "line": 569,
+        "line": 570,
         "function": "forgeai.web.server._persist_deploy_state"
       },
       "exception_types": [
@@ -426,10 +426,10 @@
       "accepted_risk": "Le serveur ne plante jamais pour un échec de persistance (comportement inchangé) ; seule la visibilité change."
     },
     {
-      "id": "site:src/forgeai/web/server.py:598",
+      "id": "site:src/forgeai/web/server.py:602",
       "site": {
         "path": "src/forgeai/web/server.py",
-        "line": 598,
+        "line": 602,
         "function": "forgeai.web.server._load_deploy_state"
       },
       "exception_types": [
@@ -450,10 +450,10 @@
       "accepted_risk": "Le serveur démarre toujours avec un état vide en cas d'échec (comportement inchangé) ; seule la visibilité change."
     },
     {
-      "id": "site:src/forgeai/web/server.py:650",
+      "id": "site:src/forgeai/web/server.py:658",
       "site": {
         "path": "src/forgeai/web/server.py",
-        "line": 650,
+        "line": 658,
         "function": "forgeai.web.server._summary_payload"
       },
       "exception_types": [
@@ -471,10 +471,10 @@
       "accepted_risk": "La page de statut affiche une liste de nœuds vide si le cluster est temporairement indisponible, sans distinction visuelle avec un cluster réellement sans nœuds."
     },
     {
-      "id": "site:src/forgeai/web/server.py:1101",
+      "id": "site:src/forgeai/web/server.py:1109",
       "site": {
         "path": "src/forgeai/web/server.py",
-        "line": 1101,
+        "line": 1109,
         "function": "forgeai.web.server.ForgeAIHandler.do_GET"
       },
       "exception_types": [
@@ -493,10 +493,10 @@
       "accepted_risk": "Aucun — déconnexion client normale."
     },
     {
-      "id": "site:src/forgeai/web/server.py:1116",
+      "id": "site:src/forgeai/web/server.py:1124",
       "site": {
         "path": "src/forgeai/web/server.py",
-        "line": 1116,
+        "line": 1124,
         "function": "forgeai.web.server.ForgeAIHandler.do_GET"
       },
       "exception_types": [
@@ -515,10 +515,10 @@
       "accepted_risk": "Aucun — déconnexion client normale."
     },
     {
-      "id": "site:src/forgeai/web/server.py:1564",
+      "id": "site:src/forgeai/web/server.py:1572",
       "site": {
         "path": "src/forgeai/web/server.py",
-        "line": 1564,
+        "line": 1572,
         "function": "forgeai.web.server._reader (closure locale de la route POST /api/deploy)"
       },
       "exception_types": [
@@ -539,10 +539,10 @@
       "accepted_risk": "Le comportement de récupération (exit_code=-1 si indisponible, done=True, tentative de kill) est inchangé ; seule la visibilité de la cause racine change."
     },
     {
-      "id": "site:src/forgeai/web/server.py:1573",
+      "id": "site:src/forgeai/web/server.py:1587",
       "site": {
         "path": "src/forgeai/web/server.py",
-        "line": 1573,
+        "line": 1587,
         "function": "forgeai.web.server._reader (closure locale de la route POST /api/deploy)"
       },
       "exception_types": [
@@ -563,10 +563,10 @@
       "accepted_risk": "Le mécanisme de nettoyage lui-même reste plafonné à `kill()`/`wait()` (un SIGKILL qui échoue — ex. process en D-state — reste un plafond OS qu'aucun code applicatif ne peut lever ; retry/escalade plus agressive serait un changement de comportement, hors scope de #452 lot 1). Ce qui a changé : l'état RAPPORTÉ n'est plus mensonger — un consommateur structuré de l'API voit maintenant explicitement `nettoyage_incertain=True` au lieu d'un `exit_code=-1` d'apparence normale. Risque résiduel restreint et documenté : un process potentiellement orphelin peut encore exister après ce point (limite OS), mais ce fait est désormais VISIBLE et interrogeable, pas silencieux. Amélioration du mécanisme de kill lui-même (retry, signal plus fort, supervision externe) : candidate explicite pour une story dédiée de lot 2+, pas traitée ici pour ne pas élargir le scope au-delà de la véracité de l'état rapporté."
     },
     {
-      "id": "site:src/forgeai/web/server.py:1708",
+      "id": "site:src/forgeai/web/server.py:1723",
       "site": {
         "path": "src/forgeai/web/server.py",
-        "line": 1708,
+        "line": 1723,
         "function": "forgeai.web.server.serve"
       },
       "exception_types": [
@@ -608,10 +608,10 @@
       "accepted_risk": "Si stderr devient indisponible exactement quand kill_tree tente de signaler un process potentiellement en D-state, ce message spécifique est perdu silencieusement — mais le site parent (server.py, nettoyage_incertain) reste la source de vérité structurée pour ce risque, déjà contractualisée séparément."
     },
     {
-      "id": "site:src/forgeai/hardware/detect.py:56",
+      "id": "site:src/forgeai/hardware/detect.py:61",
       "site": {
         "path": "src/forgeai/hardware/detect.py",
-        "line": 56,
+        "line": 61,
         "function": "forgeai.hardware.detect.HardwareDetector.detect_cpu"
       },
       "exception_types": [
@@ -629,10 +629,10 @@
       "accepted_risk": "Si stderr devient indisponible exactement quand detect_cpu() tente de signaler un lscpu illisible, ce message diagnostique est perdu silencieusement — le comportement observable (valeurs par défaut retournées) est inchangé et non affecté."
     },
     {
-      "id": "site:src/forgeai/hardware/detect.py:88",
+      "id": "site:src/forgeai/hardware/detect.py:95",
       "site": {
         "path": "src/forgeai/hardware/detect.py",
-        "line": 88,
+        "line": 95,
         "function": "forgeai.hardware.detect.HardwareDetector.detect_ram_gb"
       },
       "exception_types": [
@@ -696,10 +696,10 @@
       "accepted_risk": "Si stderr devient indisponible exactement à ce moment, la notice d'échec de révocation est perdue silencieusement — le risque résiduel réel (jeton non révoqué, borné par TTL, issue #519) est déjà tracé séparément et inchangé."
     },
     {
-      "id": "site:src/forgeai/web/server.py:607",
+      "id": "site:src/forgeai/web/server.py:615",
       "site": {
         "path": "src/forgeai/web/server.py",
-        "line": 607,
+        "line": 615,
         "function": "forgeai.web.server._load_deploy_state"
       },
       "exception_types": [

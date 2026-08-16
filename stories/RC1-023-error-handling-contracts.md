@@ -17,17 +17,19 @@ indépendant). Répartition initiale par comportement du corps du handler : 87 `
 42 `re_raise` (déjà conformes — la cause est propagée, pas « avalée »), 29 `autre`, 18 `pass`,
 6 `continue`.
 
-**Mise à jour round 24 (#452, objection GPT-5.6-Terra-Pro)** — la mesure ci-dessus est celle
+**Mise à jour round 24-27 (#452, objections GPT-5.6-Terra-Pro)** — la mesure ci-dessus est celle
 d'AVANT cette story ; elle ne reflète plus le dépôt après ses propres correctifs. Le motif
 « repli ultime du print diagnostic best-effort » (# proof:allow, rounds 1-8) introduit 6 sites
 `except Exception: pass` — DÉJÀ contractualisés au round 11 — chacun imbriqué dans un except
 externe `except Exception:` (corps = un `try`, donc `autre`) qui, lui, n'est PAS contractualisé
-(même catégorie que les 29 `autre` existants, différée aux lots suivants). Total et répartition
-courants (194, vérifiés par `python3 scripts/governance/validate_error_contracts.py --root .` —
+(même catégorie que les 29 `autre` existants, différée aux lots suivants). Round 27 (correctif
+`str_exc_sur`, `src/forgeai/core/safe_repr.py`) ajoute 1 site `return_default` de plus (le repli
+défensif de `str_exc_sur` elle-même si `exc.__str__()` lève). Total et répartition courants (195,
+vérifiés par `python3 scripts/governance/validate_error_contracts.py --root .` —
 `coverage.total_except_sites_src_forgeai` fait foi, recalculé automatiquement par
-`_compter_except_handlers_reels` depuis le round 17) : 87 `return_default`, 42 `re_raise`,
+`_compter_except_handlers_reels` depuis le round 17) : 88 `return_default` (87 + 1), 42 `re_raise`,
 35 `autre` (29 + 6), 24 `pass` (18 + 6, les 6 nouveaux déjà couverts par le lot 1 ci-dessous),
-6 `continue`. 87+42+35+24+6 = 194.
+6 `continue`. 88+42+35+24+6 = 195.
 
 ## Scope de ce lot (1/N — campagne à la RC1-010/#440)
 

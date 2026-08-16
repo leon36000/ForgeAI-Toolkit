@@ -515,7 +515,7 @@
         },
         {
           "candidate": ".github/workflows/error-handling-contracts.yml",
-          "line": 68,
+          "line": 70,
           "referrer": "stories/RC1-023-error-handling-contracts.md",
           "resolved": ".github/workflows/error-handling-contracts.yml",
           "severity": "hard"
@@ -25452,14 +25452,14 @@
         },
         {
           "candidate": "governance/ERROR-HANDLING-CONTRACTS.md",
-          "line": 67,
+          "line": 69,
           "referrer": "stories/RC1-023-error-handling-contracts.md",
           "resolved": "governance/ERROR-HANDLING-CONTRACTS.md",
           "severity": "hard"
         }
       ],
       "rule_id": "governance-core",
-      "sha256": "84cea92d6659344aa84103585c4999c94d0697e2df2116ac20991e60bec0d9f8",
+      "sha256": "4cba5673c291697c083838424309d5bac84fef1a6e10bb7f458e4e94fb842358",
       "size": 15225,
       "target_path": null,
       "type": "text"
@@ -27423,14 +27423,14 @@
         },
         {
           "candidate": "governance/error-handling-contracts.json",
-          "line": 56,
+          "line": 61,
           "referrer": "src/forgeai/hardware/detect.py",
           "resolved": "governance/error-handling-contracts.json",
           "severity": "hard"
         },
         {
           "candidate": "governance/error-handling-contracts.json",
-          "line": 88,
+          "line": 95,
           "referrer": "src/forgeai/hardware/detect.py",
           "resolved": "governance/error-handling-contracts.json",
           "severity": "hard"
@@ -27451,29 +27451,29 @@
         },
         {
           "candidate": "governance/error-handling-contracts.json",
-          "line": 607,
+          "line": 615,
           "referrer": "src/forgeai/web/server.py",
           "resolved": "governance/error-handling-contracts.json",
           "severity": "hard"
         },
         {
           "candidate": "governance/error-handling-contracts.json",
-          "line": 48,
+          "line": 50,
           "referrer": "stories/RC1-023-error-handling-contracts.md",
           "resolved": "governance/error-handling-contracts.json",
           "severity": "hard"
         },
         {
           "candidate": "governance/error-handling-contracts.json",
-          "line": 53,
+          "line": 55,
           "referrer": "stories/RC1-023-error-handling-contracts.md",
           "resolved": "governance/error-handling-contracts.json",
           "severity": "hard"
         }
       ],
       "rule_id": "governance-core",
-      "sha256": "0c835fe0ae08cf2b04024c2ee522cdcb7805aa0707c5216e5902d37947c97ce2",
-      "size": 61734,
+      "sha256": "7d30557e0973b8d0b0d4f817c4f1c133f2d6ef88813f3aaa7b012517999038ef",
+      "size": 62034,
       "target_path": null,
       "type": "text"
     },
@@ -29444,7 +29444,7 @@
         },
         {
           "candidate": "manifests/roles.yaml",
-          "line": 72,
+          "line": 74,
           "referrer": "stories/RC1-023-error-handling-contracts.md",
           "resolved": "manifests/roles.yaml",
           "severity": "hard"
@@ -31223,21 +31223,21 @@
         },
         {
           "candidate": "scripts/governance/validate_error_contracts.py",
-          "line": 26,
+          "line": 28,
           "referrer": "stories/RC1-023-error-handling-contracts.md",
           "resolved": "scripts/governance/validate_error_contracts.py",
           "severity": "hard"
         },
         {
           "candidate": "scripts/governance/validate_error_contracts.py",
-          "line": 57,
+          "line": 59,
           "referrer": "stories/RC1-023-error-handling-contracts.md",
           "resolved": "scripts/governance/validate_error_contracts.py",
           "severity": "hard"
         },
         {
           "candidate": "scripts/governance/validate_error_contracts.py",
-          "line": 130,
+          "line": 132,
           "referrer": "stories/RC1-023-error-handling-contracts.md",
           "resolved": "scripts/governance/validate_error_contracts.py",
           "severity": "hard"
@@ -31825,7 +31825,7 @@
         },
         {
           "candidate": "scripts/no_stub_scan.py",
-          "line": 129,
+          "line": 131,
           "referrer": "stories/RC1-023-error-handling-contracts.md",
           "resolved": "scripts/no_stub_scan.py",
           "severity": "hard"
@@ -35420,6 +35420,34 @@
       "generated": false,
       "load_bearing": true,
       "owner": "produit-source",
+      "path": "src/forgeai/core/safe_repr.py",
+      "referenced_by": [
+        {
+          "candidate": "src/forgeai/core/safe_repr.py",
+          "line": 13,
+          "referrer": "governance/error-handling-contracts.json",
+          "resolved": "src/forgeai/core/safe_repr.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "src/forgeai/core/safe_repr.py",
+          "line": 26,
+          "referrer": "stories/RC1-023-error-handling-contracts.md",
+          "resolved": "src/forgeai/core/safe_repr.py",
+          "severity": "hard"
+        }
+      ],
+      "rule_id": "product-source",
+      "sha256": "8a6c52b3fcdef47a7e535e9cf114ddd782b1424c898ad075ae5d06cd5bb8f793",
+      "size": 1130,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "PRODUCT",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "produit-source",
       "path": "src/forgeai/core/validation.py",
       "referenced_by": [
         {
@@ -37580,8 +37608,8 @@
         }
       ],
       "rule_id": "product-source",
-      "sha256": "19594da4af8d6c18de3a2ddcfc0eb6127a28ee1e40e87959b6055cc6cfaf2b24",
-      "size": 6741,
+      "sha256": "880b9de87ff0e9d924b324b970e3abea242bae4ade1f2d658b0b4fa8d3ce0c1f",
+      "size": 7270,
       "target_path": null,
       "type": "text"
     },
@@ -37979,7 +38007,7 @@
         },
         {
           "candidate": "src/forgeai/ide/guard_fs.py",
-          "line": 65,
+          "line": 67,
           "referrer": "stories/RC1-023-error-handling-contracts.md",
           "resolved": "src/forgeai/ide/guard_fs.py",
           "severity": "hard"
@@ -42228,8 +42256,8 @@
         }
       ],
       "rule_id": "product-source",
-      "sha256": "2db7209ad59957fdb9f5f542d6ba570b419ec639b3afece0a85ecde03162048a",
-      "size": 75443,
+      "sha256": "7177bf63dbefe7ee0604e4d98baaf91840958869bec7b0945842434f1e02de6b",
+      "size": 76656,
       "target_path": null,
       "type": "text"
     },
@@ -43582,8 +43610,8 @@
       "path": "stories/RC1-023-error-handling-contracts.md",
       "referenced_by": [],
       "rule_id": "governance-stories",
-      "sha256": "1760f445671bbfc5970026f5be3f0e47673996fa5815ac43b18e72e61e8b38cf",
-      "size": 9913,
+      "sha256": "b8e5e23ae1e2b01966453a4f4d72fe3ccd16345ffff11319a1256ac37c9dbfb0",
+      "size": 10108,
       "target_path": null,
       "type": "text"
     },
@@ -47274,8 +47302,8 @@
         }
       ],
       "rule_id": "test-suite",
-      "sha256": "cc50e60de0d91a022e469983d5081ffb634d11193dfb614dddb2efcc8d57c818",
-      "size": 14586,
+      "sha256": "b04853991d1549725e55c215b8c13074043fe500b95376dce467778aeda462e4",
+      "size": 15552,
       "target_path": null,
       "type": "text"
     },
@@ -57139,6 +57167,19 @@
       "rule_id": "test-suite",
       "sha256": "92a67d93d9c2a3ed76f57170cee644dcd4c79d363a32d29c72cabb2a6c0a6319",
       "size": 9109,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "TEST",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "test-suite",
+      "path": "tests/test_safe_repr.py",
+      "referenced_by": [],
+      "rule_id": "test-suite",
+      "sha256": "49caebfbc9bf312f1ba8ef863ef15331ffc2232cd30cd1ec9956ea77890ba957",
+      "size": 901,
       "target_path": null,
       "type": "text"
     },
@@ -101479,6 +101520,11 @@
         "referrer": "governance/error-handling-contracts.json"
       },
       {
+        "candidate": "contracted/floor",
+        "line": 13,
+        "referrer": "governance/error-handling-contracts.json"
+      },
+      {
         "candidate": "registre.py",
         "line": 33,
         "referrer": "governance/error-handling-contracts.json"
@@ -105127,6 +105173,21 @@
         "candidate": "origin/main",
         "line": 6,
         "referrer": "src/forgeai/core/registre_ancrage.py"
+      },
+      {
+        "candidate": "web/server.py",
+        "line": 9,
+        "referrer": "src/forgeai/core/safe_repr.py"
+      },
+      {
+        "candidate": "hardware/detect.py",
+        "line": 9,
+        "referrer": "src/forgeai/core/safe_repr.py"
+      },
+      {
+        "candidate": "core/redaction.py",
+        "line": 9,
+        "referrer": "src/forgeai/core/safe_repr.py"
       },
       {
         "candidate": "models/local.py",
@@ -120560,12 +120621,12 @@
       },
       {
         "candidate": "iGPU/APU",
-        "line": 14,
+        "line": 15,
         "referrer": "src/forgeai/hardware/detect.py"
       },
       {
         "candidate": "APU/iGPU",
-        "line": 28,
+        "line": 29,
         "referrer": "src/forgeai/hardware/detect.py"
       },
       {
@@ -121680,257 +121741,257 @@
       },
       {
         "candidate": "text/html",
-        "line": 50,
-        "referrer": "src/forgeai/web/server.py"
-      },
-      {
-        "candidate": "text/css",
         "line": 51,
         "referrer": "src/forgeai/web/server.py"
       },
       {
-        "candidate": "text/javascript",
+        "candidate": "text/css",
         "line": 52,
         "referrer": "src/forgeai/web/server.py"
       },
       {
-        "candidate": "application/json",
+        "candidate": "text/javascript",
         "line": 53,
         "referrer": "src/forgeai/web/server.py"
       },
       {
-        "candidate": "image/svg",
+        "candidate": "application/json",
         "line": 54,
         "referrer": "src/forgeai/web/server.py"
       },
       {
+        "candidate": "image/svg",
+        "line": 55,
+        "referrer": "src/forgeai/web/server.py"
+      },
+      {
         "candidate": "application/octet-stream",
-        "line": 66,
+        "line": 67,
         "referrer": "src/forgeai/web/server.py"
       },
       {
         "candidate": "interdit/absent",
-        "line": 70,
+        "line": 71,
         "referrer": "src/forgeai/web/server.py"
       },
       {
         "candidate": "hotplug/driver",
-        "line": 83,
+        "line": 84,
         "referrer": "src/forgeai/web/server.py"
       },
       {
         "candidate": "TTL/verrou",
-        "line": 138,
+        "line": 139,
         "referrer": "src/forgeai/web/server.py"
       },
       {
         "candidate": "parse/process",
-        "line": 286,
+        "line": 287,
         "referrer": "src/forgeai/web/server.py"
       },
       {
         "candidate": "A-Za-z0-9._/",
-        "line": 390,
+        "line": 391,
         "referrer": "src/forgeai/web/server.py"
       },
       {
         "candidate": "P0.3b/N1b",
-        "line": 394,
+        "line": 395,
         "referrer": "src/forgeai/web/server.py"
       },
       {
         "candidate": "E/S",
-        "line": 432,
+        "line": 433,
         "referrer": "src/forgeai/web/server.py"
       },
       {
         "candidate": "deploy-state.json",
-        "line": 449,
+        "line": 450,
         "referrer": "src/forgeai/web/server.py"
       },
       {
         "candidate": "prepare-state.json",
-        "line": 454,
+        "line": 455,
         "referrer": "src/forgeai/web/server.py"
       },
       {
         "candidate": "deploy-state.json",
-        "line": 544,
+        "line": 545,
         "referrer": "src/forgeai/web/server.py"
       },
       {
         "candidate": "cluster.read_probes/node_vendors",
-        "line": 625,
+        "line": 633,
         "referrer": "src/forgeai/web/server.py"
       },
       {
         "candidate": "Host/netloc",
-        "line": 670,
+        "line": 678,
         "referrer": "src/forgeai/web/server.py"
       },
       {
         "candidate": "CSRF/rebinding",
-        "line": 724,
+        "line": 732,
         "referrer": "src/forgeai/web/server.py"
       },
       {
         "candidate": "CSRF/rebinding",
-        "line": 729,
+        "line": 737,
         "referrer": "src/forgeai/web/server.py"
       },
       {
         "candidate": "cross-site/same-site",
-        "line": 731,
+        "line": 739,
         "referrer": "src/forgeai/web/server.py"
       },
       {
         "candidate": "ForgeAI/0.1",
-        "line": 787,
+        "line": 795,
         "referrer": "src/forgeai/web/server.py"
       },
       {
         "candidate": "HTTP/1.0",
-        "line": 799,
+        "line": 807,
         "referrer": "src/forgeai/web/server.py"
       },
       {
         "candidate": "HTTP/1.1",
-        "line": 800,
+        "line": 808,
         "referrer": "src/forgeai/web/server.py"
       },
       {
         "candidate": "application/json",
-        "line": 838,
+        "line": 846,
         "referrer": "src/forgeai/web/server.py"
       },
       {
         "candidate": "text/plain",
-        "line": 895,
-        "referrer": "src/forgeai/web/server.py"
-      },
-      {
-        "candidate": "text/html",
-        "line": 897,
-        "referrer": "src/forgeai/web/server.py"
-      },
-      {
-        "candidate": "application/json",
         "line": 903,
         "referrer": "src/forgeai/web/server.py"
       },
       {
-        "candidate": "application/json",
-        "line": 912,
+        "candidate": "text/html",
+        "line": 905,
         "referrer": "src/forgeai/web/server.py"
       },
       {
-        "candidate": "anti-CSRF/rebinding",
+        "candidate": "application/json",
+        "line": 911,
+        "referrer": "src/forgeai/web/server.py"
+      },
+      {
+        "candidate": "application/json",
         "line": 920,
         "referrer": "src/forgeai/web/server.py"
       },
       {
+        "candidate": "anti-CSRF/rebinding",
+        "line": 928,
+        "referrer": "src/forgeai/web/server.py"
+      },
+      {
         "candidate": "locales/",
-        "line": 937,
+        "line": 945,
         "referrer": "src/forgeai/web/server.py"
       },
       {
         "candidate": "modeles-locaux.json",
-        "line": 951,
+        "line": 959,
         "referrer": "src/forgeai/web/server.py"
       },
       {
         "candidate": "moteurs-inference.json",
-        "line": 957,
+        "line": 965,
         "referrer": "src/forgeai/web/server.py"
       },
       {
         "candidate": "moteurs-inference.json",
-        "line": 966,
+        "line": 974,
         "referrer": "src/forgeai/web/server.py"
       },
       {
         "candidate": "text/event-stream",
-        "line": 1079,
+        "line": 1087,
         "referrer": "src/forgeai/web/server.py"
       },
       {
         "candidate": "son/ses",
-        "line": 1141,
+        "line": 1149,
         "referrer": "src/forgeai/web/server.py"
       },
       {
         "candidate": "network/nodes.py",
-        "line": 1157,
+        "line": 1165,
         "referrer": "src/forgeai/web/server.py"
       },
       {
         "candidate": "labels/capacit",
-        "line": 1158,
+        "line": 1166,
         "referrer": "src/forgeai/web/server.py"
       },
       {
         "candidate": "GPU/ready",
-        "line": 1158,
+        "line": 1166,
         "referrer": "src/forgeai/web/server.py"
       },
       {
         "candidate": "tat/arch",
-        "line": 1158,
+        "line": 1166,
         "referrer": "src/forgeai/web/server.py"
       },
       {
         "candidate": "forgeai/receptacle",
-        "line": 1174,
+        "line": 1182,
         "referrer": "src/forgeai/web/server.py"
       },
       {
         "candidate": "application/json",
-        "line": 1209,
+        "line": 1217,
         "referrer": "src/forgeai/web/server.py"
       },
       {
         "candidate": "application/json",
-        "line": 1220,
+        "line": 1228,
         "referrer": "src/forgeai/web/server.py"
       },
       {
         "candidate": "TLS/tunnel",
-        "line": 1238,
+        "line": 1246,
         "referrer": "src/forgeai/web/server.py"
       },
       {
         "candidate": "loopback/tunnel",
-        "line": 1243,
+        "line": 1251,
         "referrer": "src/forgeai/web/server.py"
       },
       {
         "candidate": "origine/h",
-        "line": 1263,
+        "line": 1271,
         "referrer": "src/forgeai/web/server.py"
       },
       {
         "candidate": "jeton/CSRF/",
-        "line": 1280,
+        "line": 1288,
         "referrer": "src/forgeai/web/server.py"
       },
       {
         "candidate": "application/json",
-        "line": 1284,
+        "line": 1292,
         "referrer": "src/forgeai/web/server.py"
       },
       {
         "candidate": "stack_id.json",
-        "line": 1445,
+        "line": 1453,
         "referrer": "src/forgeai/web/server.py"
       },
       {
         "candidate": "selection-demande.json",
-        "line": 1514,
+        "line": 1522,
         "referrer": "src/forgeai/web/server.py"
       },
       {
         "candidate": "core/proc.py",
-        "line": 1532,
+        "line": 1540,
         "referrer": "src/forgeai/web/server.py"
       },
       {
@@ -127665,82 +127726,82 @@
       },
       {
         "candidate": "1/N",
-        "line": 32,
+        "line": 34,
         "referrer": "stories/RC1-023-error-handling-contracts.md"
       },
       {
         "candidate": "RC1-010/",
-        "line": 32,
+        "line": 34,
         "referrer": "stories/RC1-023-error-handling-contracts.md"
       },
       {
         "candidate": "web/server.py",
-        "line": 35,
+        "line": 37,
         "referrer": "stories/RC1-023-error-handling-contracts.md"
       },
       {
         "candidate": "ploiement/",
-        "line": 41,
+        "line": 43,
         "referrer": "stories/RC1-023-error-handling-contracts.md"
       },
       {
         "candidate": "id/site/coverage/review_horizon",
-        "line": 58,
+        "line": 60,
         "referrer": "stories/RC1-023-error-handling-contracts.md"
       },
       {
         "candidate": "test/raison",
-        "line": 59,
+        "line": 61,
         "referrer": "stories/RC1-023-error-handling-contracts.md"
       },
       {
         "candidate": "grep/AST",
-        "line": 64,
+        "line": 66,
         "referrer": "stories/RC1-023-error-handling-contracts.md"
       },
       {
         "candidate": "origin/main",
-        "line": 75,
-        "referrer": "stories/RC1-023-error-handling-contracts.md"
-      },
-      {
-        "candidate": "RC1-010/ROSTER-MAJ-PR511",
-        "line": 76,
-        "referrer": "stories/RC1-023-error-handling-contracts.md"
-      },
-      {
-        "candidate": "moonshot/google",
         "line": 77,
         "referrer": "stories/RC1-023-error-handling-contracts.md"
       },
       {
+        "candidate": "RC1-010/ROSTER-MAJ-PR511",
+        "line": 78,
+        "referrer": "stories/RC1-023-error-handling-contracts.md"
+      },
+      {
+        "candidate": "moonshot/google",
+        "line": 79,
+        "referrer": "stories/RC1-023-error-handling-contracts.md"
+      },
+      {
         "candidate": "validate_error_contracts.py",
-        "line": 85,
+        "line": 87,
         "referrer": "stories/RC1-023-error-handling-contracts.md"
       },
       {
         "candidate": "fonction/m",
-        "line": 86,
+        "line": 88,
         "referrer": "stories/RC1-023-error-handling-contracts.md"
       },
       {
         "candidate": "rapide/d",
-        "line": 105,
+        "line": 107,
         "referrer": "stories/RC1-023-error-handling-contracts.md"
       },
       {
         "candidate": "terministe/sans",
-        "line": 105,
+        "line": 107,
         "referrer": "stories/RC1-023-error-handling-contracts.md"
       },
       {
         "candidate": "triviale/d",
-        "line": 114,
+        "line": 116,
         "referrer": "stories/RC1-023-error-handling-contracts.md"
       },
       {
         "candidate": "452/",
-        "line": 120,
+        "line": 122,
         "referrer": "stories/RC1-023-error-handling-contracts.md"
       },
       {
@@ -132790,7 +132851,7 @@
       },
       {
         "candidate": "I/O",
-        "line": 335,
+        "line": 358,
         "referrer": "tests/test_deploy_persist.py"
       },
       {
@@ -167228,6 +167289,13 @@
         "severity": "hard"
       },
       {
+        "candidate": "src/forgeai/core/safe_repr.py",
+        "line": 13,
+        "referrer": "governance/error-handling-contracts.json",
+        "resolved": "src/forgeai/core/safe_repr.py",
+        "severity": "hard"
+      },
+      {
         "candidate": "src/forgeai/cluster.py",
         "line": 17,
         "referrer": "governance/error-handling-contracts.json",
@@ -169595,14 +169663,14 @@
       },
       {
         "candidate": "governance/error-handling-contracts.json",
-        "line": 56,
+        "line": 61,
         "referrer": "src/forgeai/hardware/detect.py",
         "resolved": "governance/error-handling-contracts.json",
         "severity": "hard"
       },
       {
         "candidate": "governance/error-handling-contracts.json",
-        "line": 88,
+        "line": 95,
         "referrer": "src/forgeai/hardware/detect.py",
         "resolved": "governance/error-handling-contracts.json",
         "severity": "hard"
@@ -169658,7 +169726,7 @@
       },
       {
         "candidate": "governance/error-handling-contracts.json",
-        "line": 607,
+        "line": 615,
         "referrer": "src/forgeai/web/server.py",
         "resolved": "governance/error-handling-contracts.json",
         "severity": "hard"
@@ -171974,71 +172042,78 @@
         "severity": "hard"
       },
       {
-        "candidate": "scripts/governance/validate_error_contracts.py",
+        "candidate": "src/forgeai/core/safe_repr.py",
         "line": 26,
+        "referrer": "stories/RC1-023-error-handling-contracts.md",
+        "resolved": "src/forgeai/core/safe_repr.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "scripts/governance/validate_error_contracts.py",
+        "line": 28,
         "referrer": "stories/RC1-023-error-handling-contracts.md",
         "resolved": "scripts/governance/validate_error_contracts.py",
         "severity": "hard"
       },
       {
         "candidate": "governance/error-handling-contracts.json",
-        "line": 48,
+        "line": 50,
         "referrer": "stories/RC1-023-error-handling-contracts.md",
         "resolved": "governance/error-handling-contracts.json",
         "severity": "hard"
       },
       {
         "candidate": "governance/error-handling-contracts.json",
-        "line": 53,
+        "line": 55,
         "referrer": "stories/RC1-023-error-handling-contracts.md",
         "resolved": "governance/error-handling-contracts.json",
         "severity": "hard"
       },
       {
         "candidate": "scripts/governance/validate_error_contracts.py",
-        "line": 57,
+        "line": 59,
         "referrer": "stories/RC1-023-error-handling-contracts.md",
         "resolved": "scripts/governance/validate_error_contracts.py",
         "severity": "hard"
       },
       {
         "candidate": "src/forgeai/ide/guard_fs.py",
-        "line": 65,
+        "line": 67,
         "referrer": "stories/RC1-023-error-handling-contracts.md",
         "resolved": "src/forgeai/ide/guard_fs.py",
         "severity": "hard"
       },
       {
         "candidate": "governance/ERROR-HANDLING-CONTRACTS.md",
-        "line": 67,
+        "line": 69,
         "referrer": "stories/RC1-023-error-handling-contracts.md",
         "resolved": "governance/ERROR-HANDLING-CONTRACTS.md",
         "severity": "hard"
       },
       {
         "candidate": ".github/workflows/error-handling-contracts.yml",
-        "line": 68,
+        "line": 70,
         "referrer": "stories/RC1-023-error-handling-contracts.md",
         "resolved": ".github/workflows/error-handling-contracts.yml",
         "severity": "hard"
       },
       {
         "candidate": "manifests/roles.yaml",
-        "line": 72,
+        "line": 74,
         "referrer": "stories/RC1-023-error-handling-contracts.md",
         "resolved": "manifests/roles.yaml",
         "severity": "hard"
       },
       {
         "candidate": "scripts/no_stub_scan.py",
-        "line": 129,
+        "line": 131,
         "referrer": "stories/RC1-023-error-handling-contracts.md",
         "resolved": "scripts/no_stub_scan.py",
         "severity": "hard"
       },
       {
         "candidate": "scripts/governance/validate_error_contracts.py",
-        "line": 130,
+        "line": 132,
         "referrer": "stories/RC1-023-error-handling-contracts.md",
         "resolved": "scripts/governance/validate_error_contracts.py",
         "severity": "hard"
@@ -174539,8 +174614,8 @@
       "EVIDENCE": 1468,
       "GENERATED": 13,
       "GOVERNANCE": 192,
-      "PRODUCT": 112,
-      "TEST": 209,
+      "PRODUCT": 113,
+      "TEST": 210,
       "WORKING": 10
     },
     "by_rule": {
@@ -174585,17 +174660,17 @@
       "governance-scripts-root": 25,
       "governance-stories": 91,
       "product-catalogue-checksum": 1,
-      "product-source": 111,
-      "test-suite": 209,
+      "product-source": 112,
+      "test-suite": 210,
       "working-claude-agents": 9,
       "working-sandbox-readme": 1
     },
     "case_collisions_total": 0,
-    "dangling_references_total": 16154,
+    "dangling_references_total": 16158,
     "generated_total": 17,
-    "load_bearing_total": 1926,
+    "load_bearing_total": 1928,
     "portability_violations_total": 0,
-    "tracked_total": 2065,
+    "tracked_total": 2067,
     "unclassified_total": 0,
     "unicode_anomalies_total": 0
   },

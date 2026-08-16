@@ -260,7 +260,7 @@
       },
       {
         "path": "tests/test_deploy_persist.py",
-        "sha256": "cc50e60de0d91a022e469983d5081ffb634d11193dfb614dddb2efcc8d57c818"
+        "sha256": "b04853991d1549725e55c215b8c13074043fe500b95376dce467778aeda462e4"
       },
       {
         "path": "tests/test_deploy_reel.py",
@@ -751,6 +751,10 @@
         "sha256": "92a67d93d9c2a3ed76f57170cee644dcd4c79d363a32d29c72cabb2a6c0a6319"
       },
       {
+        "path": "tests/test_safe_repr.py",
+        "sha256": "49caebfbc9bf312f1ba8ef863ef15331ffc2232cd30cd1ec9956ea77890ba957"
+      },
+      {
         "path": "tests/test_selection_complete.py",
         "sha256": "b18755fe7d219a7ab4b10b6065e0676c917614773d93d217e3a3857c42f3c465"
       },
@@ -932,8 +936,8 @@
     },
     "tests": {
       "js_files": 3,
-      "python_files": 194,
-      "python_functions_declared": 2302
+      "python_files": 195,
+      "python_functions_declared": 2306
     }
   },
   "observations": [

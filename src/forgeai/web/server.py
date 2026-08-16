@@ -27,6 +27,7 @@ from forgeai.catalogue.spheres import SPHERES, classify_sphere, spheres_index
 from forgeai.core import registre
 from forgeai.core.runner import SubprocessRunner, CommandRunner
 from forgeai.core.proc import kill_tree
+from forgeai.core.safe_repr import str_exc_sur
 from forgeai.core.validation import NODE_NAME_RE
 from forgeai.deploy.compose import http_ok
 from forgeai.hardware.detect import HardwareDetector
@@ -567,9 +568,12 @@ def _persist_deploy_state() -> None:
                 tmp.unlink(missing_ok=True)  # nettoie le tmp orphelin ; fd déjà fermé par le with
             raise
     except Exception as exc:
+        # Round 27 (#452) — objection GPT-5.6-Terra-Pro (revue scellée) : str_exc_sur() plutôt
+        # que {exc} directement — rien n'empêche exc.__str__() de lever lui-même (vérifié
+        # empiriquement), ce qui ferait échouer CE bloc best-effort.
         with _DEPLOY_STATE["lock"]:
             _DEPLOY_STATE["lines"].append(
-                f"avertissement: échec persistance état déploiement : {exc}"
+                f"avertissement: échec persistance état déploiement : {str_exc_sur(exc)}"
             )
 
 
@@ -596,8 +600,12 @@ def _load_deploy_state() -> None:
             _DEPLOY_STATE["exit_code"] = exit_code
             _DEPLOY_STATE["nettoyage_incertain"] = nettoyage_incertain
     except Exception as exc:
+        # Round 27 (#452) — objection GPT-5.6-Terra-Pro : str_exc_sur(), voir
+        # _persist_deploy_state() ci-dessus — sans ça, une exc.__str__() qui lève ferait échouer
+        # la construction du message AVANT même d'atteindre le print de secours qui suit.
         message = (
-            f"[web.server] échec de restauration de l'état de déploiement au démarrage : {exc}"
+            f"[web.server] échec de restauration de l'état de déploiement au démarrage : "
+            f"{str_exc_sur(exc)}"
         )
         try:
             print(message, file=sys.stderr)
@@ -1562,9 +1570,15 @@ class ForgeAIHandler(BaseHTTPRequestHandler):
                         _DEPLOY_STATE["done"] = True
                     _persist_deploy_state()
                 except Exception as exc:
+                    # Round 27 (#452) — objection GPT-5.6-Terra-Pro (revue scellée) : str_exc_sur()
+                    # aux 2 sites ci-dessous — sans ça, une exc.__str__() qui lève ferait échouer
+                    # CE handler AVANT de marquer le déploiement terminé et avant sa tentative de
+                    # nettoyage (le plus sévère des 3 sites signalés : done resterait bloqué à
+                    # False, un déploiement fantôme jamais terminé côté API).
                     with _DEPLOY_STATE["lock"]:
                         _DEPLOY_STATE["lines"].append(
-                            f"avertissement: le thread de lecture du déploiement a échoué : {exc}"
+                            "avertissement: le thread de lecture du déploiement a échoué : "
+                            f"{str_exc_sur(exc)}"
                         )
                         if new_proc.returncode is None:
                             try:
@@ -1573,7 +1587,8 @@ class ForgeAIHandler(BaseHTTPRequestHandler):
                             except Exception as exc_kill:
                                 _DEPLOY_STATE["lines"].append(
                                     "avertissement: échec du nettoyage best-effort du "
-                                    f"process de déploiement pendant la récupération : {exc_kill}"
+                                    f"process de déploiement pendant la récupération : "
+                                    f"{str_exc_sur(exc_kill)}"
                                 )
                                 _DEPLOY_STATE["nettoyage_incertain"] = True
                         _DEPLOY_STATE["exit_code"] = new_proc.returncode if new_proc.returncode is not None else -1

@@ -325,6 +325,29 @@ def test_persist_deploy_state_echec_ecriture_ajoute_avertissement(monkeypatch) -
     )
 
 
+def test_persist_deploy_state_exception_str_cassee_ne_leve_pas(monkeypatch) -> None:
+    """Round 27 (#452) — objection GPT-5.6-Terra-Pro (revue scellée) : rien n'empêche
+    exc.__str__() de lever lui-même (vérifié empiriquement) — sans str_exc_sur(), la
+    construction du message f"...: {exc}" ferait échouer CE bloc best-effort au lieu d'ajouter
+    un avertissement."""
+    class _ExceptionStrCassee(OSError):
+        def __str__(self) -> str:
+            raise ValueError("str() cassé délibérément pour ce test")
+
+    def _boom(*args, **kwargs):
+        raise _ExceptionStrCassee()
+
+    monkeypatch.setattr(server.tempfile, "mkstemp", _boom)
+
+    server._persist_deploy_state()  # ne doit JAMAIS lever, même avec exc.__str__() cassé
+
+    with server._DEPLOY_STATE["lock"]:
+        lines = list(server._DEPLOY_STATE["lines"])
+    assert any(
+        ln.startswith("avertissement: échec persistance état déploiement") for ln in lines
+    )
+
+
 def test_load_deploy_state_echec_inattendu_journalise_stderr(monkeypatch, capsys) -> None:
     """Une exception inattendue lors du chargement journalise un message sur stderr sans lever."""
     state_path = server._deploy_state_path()
