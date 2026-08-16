@@ -21394,6 +21394,19 @@
       "generated": false,
       "load_bearing": true,
       "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-519-v1/RECU.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": null,
+      "size": null,
+      "target_path": null,
+      "type": null
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
       "path": "evidence/reviews/RC1-527-v1/GPT-5.6-Terra-Pro.verdict.json",
       "referenced_by": [],
       "rule_id": "evidence-reviews-root",
@@ -91138,6 +91151,11 @@
         "candidate": "recu-revue/1",
         "line": 2,
         "referrer": "evidence/reviews/RC1-504-v1/RECU.json"
+      },
+      {
+        "candidate": "recu-revue/1",
+        "line": 2,
+        "referrer": "evidence/reviews/RC1-519-v1/RECU.json"
       },
       {
         "candidate": "recu-revue/1",
@@ -161999,7 +162017,7 @@
     "by_class": {
       "ARCHIVE": 44,
       "DOCS": 17,
-      "EVIDENCE": 1482,
+      "EVIDENCE": 1483,
       "GENERATED": 5,
       "GOVERNANCE": 192,
       "PRODUCT": 113,
@@ -162018,7 +162036,7 @@
       "evidence-audit-output-root": 18,
       "evidence-dedup-root": 2,
       "evidence-registres-root": 35,
-      "evidence-reviews-root": 1427,
+      "evidence-reviews-root": 1428,
       "generated-authority-map": 1,
       "generated-path-classification-json": 1,
       "generated-path-classification-markdown": 1,
@@ -162054,11 +162072,11 @@
       "working-sandbox-readme": 1
     },
     "case_collisions_total": 0,
-    "dangling_references_total": 16221,
+    "dangling_references_total": 16222,
     "generated_total": 9,
-    "load_bearing_total": 1934,
+    "load_bearing_total": 1935,
     "portability_violations_total": 0,
-    "tracked_total": 2073,
+    "tracked_total": 2074,
     "unclassified_total": 0,
     "unicode_anomalies_total": 0
   },
