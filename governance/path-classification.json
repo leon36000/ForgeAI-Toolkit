@@ -6496,566 +6496,6 @@
       "generated": false,
       "load_bearing": true,
       "owner": "gouvernance-preuve",
-      "path": "evidence/registres/mission.jsonl",
-      "referenced_by": [
-        {
-          "candidate": "evidence/registres/mission.jsonl",
-          "line": 0,
-          "referrer": "governance/authority.json",
-          "resolved": "evidence/registres/mission.jsonl",
-          "severity": "hard"
-        },
-        {
-          "candidate": "evidence/registres/mission.jsonl",
-          "line": 23,
-          "referrer": ".claude/agents/composer-tui.md",
-          "resolved": "evidence/registres/mission.jsonl",
-          "severity": "hard"
-        },
-        {
-          "candidate": "evidence/registres/mission.jsonl",
-          "line": 23,
-          "referrer": ".claude/agents/deepseek-juge.md",
-          "resolved": "evidence/registres/mission.jsonl",
-          "severity": "hard"
-        },
-        {
-          "candidate": "evidence/registres/mission.jsonl",
-          "line": 23,
-          "referrer": ".claude/agents/gemini-reviewer.md",
-          "resolved": "evidence/registres/mission.jsonl",
-          "severity": "hard"
-        },
-        {
-          "candidate": "evidence/registres/mission.jsonl",
-          "line": 23,
-          "referrer": ".claude/agents/glm-architecte.md",
-          "resolved": "evidence/registres/mission.jsonl",
-          "severity": "hard"
-        },
-        {
-          "candidate": "evidence/registres/mission.jsonl",
-          "line": 23,
-          "referrer": ".claude/agents/grok-tests.md",
-          "resolved": "evidence/registres/mission.jsonl",
-          "severity": "hard"
-        },
-        {
-          "candidate": "evidence/registres/mission.jsonl",
-          "line": 23,
-          "referrer": ".claude/agents/kimi-codeur-long.md",
-          "resolved": "evidence/registres/mission.jsonl",
-          "severity": "hard"
-        },
-        {
-          "candidate": "evidence/registres/mission.jsonl",
-          "line": 23,
-          "referrer": ".claude/agents/longcat-securite.md",
-          "resolved": "evidence/registres/mission.jsonl",
-          "severity": "hard"
-        },
-        {
-          "candidate": "evidence/registres/mission.jsonl",
-          "line": 23,
-          "referrer": ".claude/agents/mimo-synthese.md",
-          "resolved": "evidence/registres/mission.jsonl",
-          "severity": "hard"
-        },
-        {
-          "candidate": "evidence/registres/mission.jsonl",
-          "line": 23,
-          "referrer": ".claude/agents/qwen-catalogue.md",
-          "resolved": "evidence/registres/mission.jsonl",
-          "severity": "hard"
-        },
-        {
-          "candidate": "evidence/registres/mission.jsonl",
-          "line": 82,
-          "referrer": ".github/workflows/gates.yml",
-          "resolved": "evidence/registres/mission.jsonl",
-          "severity": "hard"
-        },
-        {
-          "candidate": "evidence/registres/mission.jsonl",
-          "line": 31,
-          "referrer": "AGENTS.md",
-          "resolved": "evidence/registres/mission.jsonl",
-          "severity": "hard"
-        },
-        {
-          "candidate": "evidence/registres/mission.jsonl",
-          "line": 32,
-          "referrer": "AGENTS.md",
-          "resolved": "evidence/registres/mission.jsonl",
-          "severity": "hard"
-        },
-        {
-          "candidate": "evidence/registres/mission.jsonl",
-          "line": 30,
-          "referrer": "CONTRIBUTING.md",
-          "resolved": "evidence/registres/mission.jsonl",
-          "severity": "hard"
-        },
-        {
-          "candidate": "evidence/registres/mission.jsonl",
-          "line": 38,
-          "referrer": "Docs/reference/proof-ubuntu-vierge.md",
-          "resolved": "evidence/registres/mission.jsonl",
-          "severity": "hard"
-        },
-        {
-          "candidate": "evidence/registres/mission.jsonl",
-          "line": 98,
-          "referrer": "README.md",
-          "resolved": "evidence/registres/mission.jsonl",
-          "severity": "hard"
-        },
-        {
-          "candidate": "evidence/registres/mission.jsonl",
-          "line": 134,
-          "referrer": "README.md",
-          "resolved": "evidence/registres/mission.jsonl",
-          "severity": "hard"
-        },
-        {
-          "candidate": "evidence/registres/mission.jsonl",
-          "line": 146,
-          "referrer": "README.md",
-          "resolved": "evidence/registres/mission.jsonl",
-          "severity": "hard"
-        },
-        {
-          "candidate": "evidence/registres/mission.jsonl",
-          "line": 7,
-          "referrer": "evidence/reviews/RC1-009/Kimi-2.7.verdict.json",
-          "resolved": "evidence/registres/mission.jsonl",
-          "severity": "hard"
-        },
-        {
-          "candidate": "evidence/registres/mission.jsonl",
-          "line": 8,
-          "referrer": "evidence/reviews/RC1-009/Kimi-2.7.verdict.json",
-          "resolved": "evidence/registres/mission.jsonl",
-          "severity": "hard"
-        },
-        {
-          "candidate": "evidence/registres/mission.jsonl",
-          "line": 8,
-          "referrer": "evidence/reviews/RC1-009/Kimi-2.7.verdict.json",
-          "resolved": "evidence/registres/mission.jsonl",
-          "severity": "hard"
-        },
-        {
-          "candidate": "evidence/registres/mission.jsonl",
-          "line": 7,
-          "referrer": "evidence/reviews/RC1-010-lot5a-PR508-v1/DeepSeek-V4-Pro.verdict.json",
-          "resolved": "evidence/registres/mission.jsonl",
-          "severity": "hard"
-        },
-        {
-          "candidate": "evidence/registres/mission.jsonl",
-          "line": 7,
-          "referrer": "evidence/reviews/RC1-010-lot5b-PR510-v4/Kimi-2.7.verdict.json",
-          "resolved": "evidence/registres/mission.jsonl",
-          "severity": "hard"
-        },
-        {
-          "candidate": "evidence/registres/mission.jsonl",
-          "line": 8,
-          "referrer": "evidence/reviews/RC1-010-lot5b-PR510-v4/Kimi-2.7.verdict.json",
-          "resolved": "evidence/registres/mission.jsonl",
-          "severity": "hard"
-        },
-        {
-          "candidate": "evidence/registres/mission.jsonl",
-          "line": 18,
-          "referrer": "evidence/reviews/RC1-010-lot5d-PR-v1/DeepSeek-V4-Pro.verdict.json",
-          "resolved": "evidence/registres/mission.jsonl",
-          "severity": "hard"
-        },
-        {
-          "candidate": "evidence/registres/mission.jsonl",
-          "line": 20,
-          "referrer": "evidence/reviews/RC1-010-lot5d-PR-v1/DeepSeek-V4-Pro.verdict.json",
-          "resolved": "evidence/registres/mission.jsonl",
-          "severity": "hard"
-        },
-        {
-          "candidate": "evidence/registres/mission.jsonl",
-          "line": 6,
-          "referrer": "evidence/reviews/RC1-010-lot5d-PR-v2/DeepSeek-V4-Pro.verdict.json",
-          "resolved": "evidence/registres/mission.jsonl",
-          "severity": "hard"
-        },
-        {
-          "candidate": "evidence/registres/mission.jsonl",
-          "line": 8,
-          "referrer": "evidence/reviews/RC1-010-lot5d-PR-v2/DeepSeek-V4-Pro.verdict.json",
-          "resolved": "evidence/registres/mission.jsonl",
-          "severity": "hard"
-        },
-        {
-          "candidate": "evidence/registres/mission.jsonl",
-          "line": 6,
-          "referrer": "evidence/reviews/RC1-010-lot5d-PR-v3/DeepSeek-V4-Pro.verdict.json",
-          "resolved": "evidence/registres/mission.jsonl",
-          "severity": "hard"
-        },
-        {
-          "candidate": "evidence/registres/mission.jsonl",
-          "line": 8,
-          "referrer": "evidence/reviews/RC1-010-lot5d-PR-v3/DeepSeek-V4-Pro.verdict.json",
-          "resolved": "evidence/registres/mission.jsonl",
-          "severity": "hard"
-        },
-        {
-          "candidate": "evidence/registres/mission.jsonl",
-          "line": 20,
-          "referrer": "evidence/reviews/RC1-449-v1/Qwen3.8-2.4T.verdict.json",
-          "resolved": "evidence/registres/mission.jsonl",
-          "severity": "hard"
-        },
-        {
-          "candidate": "evidence/registres/mission.jsonl",
-          "line": 56,
-          "referrer": "governance/AUTHORITY-MAP.md",
-          "resolved": "evidence/registres/mission.jsonl",
-          "severity": "hard"
-        },
-        {
-          "candidate": "evidence/registres/mission.jsonl",
-          "line": 4,
-          "referrer": "manifests/routes.yaml",
-          "resolved": "evidence/registres/mission.jsonl",
-          "severity": "hard"
-        },
-        {
-          "candidate": "evidence/registres/mission.jsonl",
-          "line": 79,
-          "referrer": "scripts/reeval_defaults.py",
-          "resolved": "evidence/registres/mission.jsonl",
-          "severity": "hard"
-        },
-        {
-          "candidate": "evidence/registres/mission.jsonl",
-          "line": 80,
-          "referrer": "scripts/reeval_defaults.py",
-          "resolved": "evidence/registres/mission.jsonl",
-          "severity": "hard"
-        },
-        {
-          "candidate": "evidence/registres/mission.jsonl",
-          "line": 42,
-          "referrer": "stories/RC1-009.md",
-          "resolved": "evidence/registres/mission.jsonl",
-          "severity": "hard"
-        },
-        {
-          "candidate": "evidence/registres/mission.jsonl",
-          "line": 357,
-          "referrer": "tests/test_registre.py",
-          "resolved": "evidence/registres/mission.jsonl",
-          "severity": "hard"
-        },
-        {
-          "candidate": "evidence/registres/mission.jsonl",
-          "line": 453,
-          "referrer": "tests/test_registre.py",
-          "resolved": "evidence/registres/mission.jsonl",
-          "severity": "hard"
-        }
-      ],
-      "rule_id": "evidence-registres-root",
-      "sha256": "96f5ce0ad713b3a4fd494e2f6f790ef9907ddb1c5717ce8d6a1e5f386c7e5b73",
-      "size": 382479,
-      "target_path": null,
-      "type": "text"
-    },
-    {
-      "class": "EVIDENCE",
-      "generated": false,
-      "load_bearing": true,
-      "owner": "gouvernance-preuve",
-      "path": "evidence/registres/mission.jsonl",
-      "referenced_by": [
-        {
-          "candidate": "evidence/registres/mission.jsonl",
-          "line": 0,
-          "referrer": "governance/authority.json",
-          "resolved": "evidence/registres/mission.jsonl",
-          "severity": "hard"
-        },
-        {
-          "candidate": "evidence/registres/mission.jsonl",
-          "line": 23,
-          "referrer": ".claude/agents/composer-tui.md",
-          "resolved": "evidence/registres/mission.jsonl",
-          "severity": "hard"
-        },
-        {
-          "candidate": "evidence/registres/mission.jsonl",
-          "line": 23,
-          "referrer": ".claude/agents/deepseek-juge.md",
-          "resolved": "evidence/registres/mission.jsonl",
-          "severity": "hard"
-        },
-        {
-          "candidate": "evidence/registres/mission.jsonl",
-          "line": 23,
-          "referrer": ".claude/agents/gemini-reviewer.md",
-          "resolved": "evidence/registres/mission.jsonl",
-          "severity": "hard"
-        },
-        {
-          "candidate": "evidence/registres/mission.jsonl",
-          "line": 23,
-          "referrer": ".claude/agents/glm-architecte.md",
-          "resolved": "evidence/registres/mission.jsonl",
-          "severity": "hard"
-        },
-        {
-          "candidate": "evidence/registres/mission.jsonl",
-          "line": 23,
-          "referrer": ".claude/agents/grok-tests.md",
-          "resolved": "evidence/registres/mission.jsonl",
-          "severity": "hard"
-        },
-        {
-          "candidate": "evidence/registres/mission.jsonl",
-          "line": 23,
-          "referrer": ".claude/agents/kimi-codeur-long.md",
-          "resolved": "evidence/registres/mission.jsonl",
-          "severity": "hard"
-        },
-        {
-          "candidate": "evidence/registres/mission.jsonl",
-          "line": 23,
-          "referrer": ".claude/agents/longcat-securite.md",
-          "resolved": "evidence/registres/mission.jsonl",
-          "severity": "hard"
-        },
-        {
-          "candidate": "evidence/registres/mission.jsonl",
-          "line": 23,
-          "referrer": ".claude/agents/mimo-synthese.md",
-          "resolved": "evidence/registres/mission.jsonl",
-          "severity": "hard"
-        },
-        {
-          "candidate": "evidence/registres/mission.jsonl",
-          "line": 23,
-          "referrer": ".claude/agents/qwen-catalogue.md",
-          "resolved": "evidence/registres/mission.jsonl",
-          "severity": "hard"
-        },
-        {
-          "candidate": "evidence/registres/mission.jsonl",
-          "line": 82,
-          "referrer": ".github/workflows/gates.yml",
-          "resolved": "evidence/registres/mission.jsonl",
-          "severity": "hard"
-        },
-        {
-          "candidate": "evidence/registres/mission.jsonl",
-          "line": 31,
-          "referrer": "AGENTS.md",
-          "resolved": "evidence/registres/mission.jsonl",
-          "severity": "hard"
-        },
-        {
-          "candidate": "evidence/registres/mission.jsonl",
-          "line": 32,
-          "referrer": "AGENTS.md",
-          "resolved": "evidence/registres/mission.jsonl",
-          "severity": "hard"
-        },
-        {
-          "candidate": "evidence/registres/mission.jsonl",
-          "line": 30,
-          "referrer": "CONTRIBUTING.md",
-          "resolved": "evidence/registres/mission.jsonl",
-          "severity": "hard"
-        },
-        {
-          "candidate": "evidence/registres/mission.jsonl",
-          "line": 38,
-          "referrer": "Docs/reference/proof-ubuntu-vierge.md",
-          "resolved": "evidence/registres/mission.jsonl",
-          "severity": "hard"
-        },
-        {
-          "candidate": "evidence/registres/mission.jsonl",
-          "line": 98,
-          "referrer": "README.md",
-          "resolved": "evidence/registres/mission.jsonl",
-          "severity": "hard"
-        },
-        {
-          "candidate": "evidence/registres/mission.jsonl",
-          "line": 134,
-          "referrer": "README.md",
-          "resolved": "evidence/registres/mission.jsonl",
-          "severity": "hard"
-        },
-        {
-          "candidate": "evidence/registres/mission.jsonl",
-          "line": 146,
-          "referrer": "README.md",
-          "resolved": "evidence/registres/mission.jsonl",
-          "severity": "hard"
-        },
-        {
-          "candidate": "evidence/registres/mission.jsonl",
-          "line": 7,
-          "referrer": "evidence/reviews/RC1-009/Kimi-2.7.verdict.json",
-          "resolved": "evidence/registres/mission.jsonl",
-          "severity": "hard"
-        },
-        {
-          "candidate": "evidence/registres/mission.jsonl",
-          "line": 8,
-          "referrer": "evidence/reviews/RC1-009/Kimi-2.7.verdict.json",
-          "resolved": "evidence/registres/mission.jsonl",
-          "severity": "hard"
-        },
-        {
-          "candidate": "evidence/registres/mission.jsonl",
-          "line": 8,
-          "referrer": "evidence/reviews/RC1-009/Kimi-2.7.verdict.json",
-          "resolved": "evidence/registres/mission.jsonl",
-          "severity": "hard"
-        },
-        {
-          "candidate": "evidence/registres/mission.jsonl",
-          "line": 7,
-          "referrer": "evidence/reviews/RC1-010-lot5a-PR508-v1/DeepSeek-V4-Pro.verdict.json",
-          "resolved": "evidence/registres/mission.jsonl",
-          "severity": "hard"
-        },
-        {
-          "candidate": "evidence/registres/mission.jsonl",
-          "line": 7,
-          "referrer": "evidence/reviews/RC1-010-lot5b-PR510-v4/Kimi-2.7.verdict.json",
-          "resolved": "evidence/registres/mission.jsonl",
-          "severity": "hard"
-        },
-        {
-          "candidate": "evidence/registres/mission.jsonl",
-          "line": 8,
-          "referrer": "evidence/reviews/RC1-010-lot5b-PR510-v4/Kimi-2.7.verdict.json",
-          "resolved": "evidence/registres/mission.jsonl",
-          "severity": "hard"
-        },
-        {
-          "candidate": "evidence/registres/mission.jsonl",
-          "line": 18,
-          "referrer": "evidence/reviews/RC1-010-lot5d-PR-v1/DeepSeek-V4-Pro.verdict.json",
-          "resolved": "evidence/registres/mission.jsonl",
-          "severity": "hard"
-        },
-        {
-          "candidate": "evidence/registres/mission.jsonl",
-          "line": 20,
-          "referrer": "evidence/reviews/RC1-010-lot5d-PR-v1/DeepSeek-V4-Pro.verdict.json",
-          "resolved": "evidence/registres/mission.jsonl",
-          "severity": "hard"
-        },
-        {
-          "candidate": "evidence/registres/mission.jsonl",
-          "line": 6,
-          "referrer": "evidence/reviews/RC1-010-lot5d-PR-v2/DeepSeek-V4-Pro.verdict.json",
-          "resolved": "evidence/registres/mission.jsonl",
-          "severity": "hard"
-        },
-        {
-          "candidate": "evidence/registres/mission.jsonl",
-          "line": 8,
-          "referrer": "evidence/reviews/RC1-010-lot5d-PR-v2/DeepSeek-V4-Pro.verdict.json",
-          "resolved": "evidence/registres/mission.jsonl",
-          "severity": "hard"
-        },
-        {
-          "candidate": "evidence/registres/mission.jsonl",
-          "line": 6,
-          "referrer": "evidence/reviews/RC1-010-lot5d-PR-v3/DeepSeek-V4-Pro.verdict.json",
-          "resolved": "evidence/registres/mission.jsonl",
-          "severity": "hard"
-        },
-        {
-          "candidate": "evidence/registres/mission.jsonl",
-          "line": 8,
-          "referrer": "evidence/reviews/RC1-010-lot5d-PR-v3/DeepSeek-V4-Pro.verdict.json",
-          "resolved": "evidence/registres/mission.jsonl",
-          "severity": "hard"
-        },
-        {
-          "candidate": "evidence/registres/mission.jsonl",
-          "line": 20,
-          "referrer": "evidence/reviews/RC1-449-v1/Qwen3.8-2.4T.verdict.json",
-          "resolved": "evidence/registres/mission.jsonl",
-          "severity": "hard"
-        },
-        {
-          "candidate": "evidence/registres/mission.jsonl",
-          "line": 56,
-          "referrer": "governance/AUTHORITY-MAP.md",
-          "resolved": "evidence/registres/mission.jsonl",
-          "severity": "hard"
-        },
-        {
-          "candidate": "evidence/registres/mission.jsonl",
-          "line": 4,
-          "referrer": "manifests/routes.yaml",
-          "resolved": "evidence/registres/mission.jsonl",
-          "severity": "hard"
-        },
-        {
-          "candidate": "evidence/registres/mission.jsonl",
-          "line": 79,
-          "referrer": "scripts/reeval_defaults.py",
-          "resolved": "evidence/registres/mission.jsonl",
-          "severity": "hard"
-        },
-        {
-          "candidate": "evidence/registres/mission.jsonl",
-          "line": 80,
-          "referrer": "scripts/reeval_defaults.py",
-          "resolved": "evidence/registres/mission.jsonl",
-          "severity": "hard"
-        },
-        {
-          "candidate": "evidence/registres/mission.jsonl",
-          "line": 42,
-          "referrer": "stories/RC1-009.md",
-          "resolved": "evidence/registres/mission.jsonl",
-          "severity": "hard"
-        },
-        {
-          "candidate": "evidence/registres/mission.jsonl",
-          "line": 357,
-          "referrer": "tests/test_registre.py",
-          "resolved": "evidence/registres/mission.jsonl",
-          "severity": "hard"
-        },
-        {
-          "candidate": "evidence/registres/mission.jsonl",
-          "line": 453,
-          "referrer": "tests/test_registre.py",
-          "resolved": "evidence/registres/mission.jsonl",
-          "severity": "hard"
-        }
-      ],
-      "rule_id": "evidence-registres-root",
-      "sha256": "96f5ce0ad713b3a4fd494e2f6f790ef9907ddb1c5717ce8d6a1e5f386c7e5b73",
-      "size": 382479,
-      "target_path": null,
-      "type": "text"
-    },
-    {
-      "class": "EVIDENCE",
-      "generated": false,
-      "load_bearing": true,
-      "owner": "gouvernance-preuve",
       "path": "evidence/reviews/AUDIT-2026-08-03-round1-reject/DeepSeek-V4-Pro.verdict.json",
       "referenced_by": [],
       "rule_id": "evidence-reviews-root",
@@ -27350,8 +26790,8 @@
         }
       ],
       "rule_id": "governance-core",
-      "sha256": "f9530b5430bdf8e02c42694a4c2cff51a1adba9466e0be0a4945422ef3e5e475",
-      "size": 66656,
+      "sha256": "97bd46482b1a71717d2e9a6e3652849339e651c4d4c1cea970e06b6fe92ac7fe",
+      "size": 67048,
       "target_path": null,
       "type": "text"
     },
@@ -39266,6 +38706,13 @@
           "candidate": "src/forgeai/network/nodes.py",
           "line": 6,
           "referrer": "evidence/reviews/RC1-000-PR426/DeepSeek-V4-Pro.verdict.json",
+          "resolved": "src/forgeai/network/nodes.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "src/forgeai/network/nodes.py",
+          "line": 13,
+          "referrer": "governance/error-handling-contracts.json",
           "resolved": "src/forgeai/network/nodes.py",
           "severity": "hard"
         }
@@ -95759,6 +95206,11 @@
         "referrer": "governance/error-handling-contracts.json"
       },
       {
+        "candidate": "origin/main",
+        "line": 9,
+        "referrer": "governance/error-handling-contracts.json"
+      },
+      {
         "candidate": "RC1-010/",
         "line": 13,
         "referrer": "governance/error-handling-contracts.json"
@@ -95785,6 +95237,21 @@
       },
       {
         "candidate": "contracted/floor",
+        "line": 13,
+        "referrer": "governance/error-handling-contracts.json"
+      },
+      {
+        "candidate": "origin/main",
+        "line": 13,
+        "referrer": "governance/error-handling-contracts.json"
+      },
+      {
+        "candidate": "contracted/floor",
+        "line": 13,
+        "referrer": "governance/error-handling-contracts.json"
+      },
+      {
+        "candidate": "RC1-010/",
         "line": 13,
         "referrer": "governance/error-handling-contracts.json"
       },
@@ -155802,6 +155269,13 @@
         "severity": "hard"
       },
       {
+        "candidate": "src/forgeai/network/nodes.py",
+        "line": 13,
+        "referrer": "governance/error-handling-contracts.json",
+        "resolved": "src/forgeai/network/nodes.py",
+        "severity": "hard"
+      },
+      {
         "candidate": "src/forgeai/cluster.py",
         "line": 17,
         "referrer": "governance/error-handling-contracts.json",
@@ -163201,7 +162675,7 @@
     "by_class": {
       "ARCHIVE": 44,
       "DOCS": 17,
-      "EVIDENCE": 1473,
+      "EVIDENCE": 1471,
       "GENERATED": 9,
       "GOVERNANCE": 192,
       "PRODUCT": 113,
@@ -163219,7 +162693,7 @@
       "docs-user": 14,
       "evidence-audit-output-root": 18,
       "evidence-dedup-root": 2,
-      "evidence-registres-root": 37,
+      "evidence-registres-root": 35,
       "evidence-reviews-root": 1416,
       "generated-authority-map": 1,
       "generated-path-classification-json": 3,
@@ -163256,11 +162730,11 @@
       "working-sandbox-readme": 1
     },
     "case_collisions_total": 0,
-    "dangling_references_total": 16182,
+    "dangling_references_total": 16186,
     "generated_total": 13,
-    "load_bearing_total": 1929,
+    "load_bearing_total": 1927,
     "portability_violations_total": 0,
-    "tracked_total": 2068,
+    "tracked_total": 2066,
     "unclassified_total": 0,
     "unicode_anomalies_total": 0
   },
