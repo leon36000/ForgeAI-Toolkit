@@ -6500,8 +6500,8 @@
         }
       ],
       "rule_id": "evidence-registres-root",
-      "sha256": "96f5ce0ad713b3a4fd494e2f6f790ef9907ddb1c5717ce8d6a1e5f386c7e5b73",
-      "size": 382479,
+      "sha256": "8196c16618caad2c601686fed4a46df0372e5b64eb181a43db9a2c73882ee1e4",
+      "size": 384020,
       "target_path": null,
       "type": "text"
     },
@@ -8461,8 +8461,8 @@
         }
       ],
       "rule_id": "evidence-reviews-root",
-      "sha256": "cde77e3dcd95c78763071762c493c50df75de1e4b605f059e70dbc235d7ebcf9",
-      "size": 2661,
+      "sha256": "1815232c7a0318486215f7be4d2228b8e26d5ab2c2a2cc6213af384de4559a1c",
+      "size": 2672,
       "target_path": null,
       "type": "text"
     },
@@ -21349,6 +21349,45 @@
       "size": null,
       "target_path": null,
       "type": null
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-519-v1/Gemini-3.1-Pro.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "631e2d96793fde60ffcca431d891af240687bf379e9f120deeb115fe87652a17",
+      "size": 329,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-519-v1/MiMo-V2.5-Pro.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "0b19ec9f8a77ca9343610cabac55349d9aaf8b42ddf8ea09103ce437f8a29172",
+      "size": 327,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-519-v1/Qwen3.7-Max.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "e8215e865bf81815d05ef696e5694c5789d3503ce2c3e945d1a1872958c75756",
+      "size": 323,
+      "target_path": null,
+      "type": "text"
     },
     {
       "class": "EVIDENCE",
@@ -135794,6 +135833,13 @@
         "severity": "hard"
       },
       {
+        "candidate": "RC1-519-v1",
+        "line": 195,
+        "referrer": "evidence/reviews/BINDING.txt",
+        "resolved": "evidence/reviews/RC1-519-v1",
+        "severity": "hard"
+      },
+      {
         "candidate": "scripts/gate_docs.py",
         "line": 11,
         "referrer": "sonar-project.properties",
@@ -161953,7 +161999,7 @@
     "by_class": {
       "ARCHIVE": 44,
       "DOCS": 17,
-      "EVIDENCE": 1479,
+      "EVIDENCE": 1482,
       "GENERATED": 5,
       "GOVERNANCE": 192,
       "PRODUCT": 113,
@@ -161972,7 +162018,7 @@
       "evidence-audit-output-root": 18,
       "evidence-dedup-root": 2,
       "evidence-registres-root": 35,
-      "evidence-reviews-root": 1424,
+      "evidence-reviews-root": 1427,
       "generated-authority-map": 1,
       "generated-path-classification-json": 1,
       "generated-path-classification-markdown": 1,
@@ -162010,9 +162056,9 @@
     "case_collisions_total": 0,
     "dangling_references_total": 16221,
     "generated_total": 9,
-    "load_bearing_total": 1931,
+    "load_bearing_total": 1934,
     "portability_violations_total": 0,
-    "tracked_total": 2070,
+    "tracked_total": 2073,
     "unclassified_total": 0,
     "unicode_anomalies_total": 0
   },
