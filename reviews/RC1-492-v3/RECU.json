@@ -1,0 +1,22 @@
+{
+  "schema": "recu-revue/1",
+  "dossier": "RC1-492-v3",
+  "issue": 492,
+  "round": 3,
+  "base_commit": "0bd0abba72de85344625ddd45a28198da3798e8d",
+  "head_commit": "58abcfcd897e66cbb2c18f37c4ae1dfc770e78ee",
+  "head_tree": "23d45ce8076be5091bdcf6be409faed6654d7fcc",
+  "diff_digest": "d76562ee716a4c425ee6025ffe15657dccabd8d9af8c34c4a23dcfc72c4fb73e",
+  "prompt_sha256": "56c3cbb77dec93f5c99df9ba13340e6d020b105d8f977aa9dcd9326d5cafbd3f",
+  "reviewers_attendus": [
+    "DeepSeek-V4-Pro",
+    "Kimi-2.7",
+    "Qwen3.7-Max"
+  ],
+  "codeur": [
+    "GPT-5.6-Luna-Pro"
+  ],
+  "resultat": "APPROVE",
+  "date_heure": "2026-08-16T01:19:45.168915-04:00",
+  "fenetre_heures": 24
+}

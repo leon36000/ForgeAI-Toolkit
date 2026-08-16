@@ -506,7 +506,7 @@
     },
     {
       "path": "tests/test_operators.py",
-      "sha256": "8ed78dae4cf7b5789a88ed6076e66e3cb18424a65c4f578bdc89ed5708bc1d8b"
+      "sha256": "6bcf9197705be54c85970d101a4c145134ec5d5dab4839aa9069c67dc404b4cc"
     },
     {
       "path": "tests/test_ops031a_status.py",
@@ -891,7 +891,7 @@
   "tests": {
     "js_files": 3,
     "python_files": 183,
-    "python_functions_declared": 1975
+    "python_functions_declared": 1978
   }
 }
 ```
