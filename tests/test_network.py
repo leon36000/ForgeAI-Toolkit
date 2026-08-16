@@ -1,5 +1,6 @@
 """Tests P2-F21/F22 — clés ed25519, état cluster (fixture réelle), plan de jonction.
 ssh-keygen/kubectl simulés (services externes, tests/ uniquement)."""
+import json
 import stat
 import sys
 from pathlib import Path
@@ -109,6 +110,53 @@ def test_cluster_status_gpu_lu_correctement():
 def test_cluster_status_cluster_injoignable():
     with pytest.raises(ClusterError, match="joignable"):
         cluster_status(FixtureRunner({}))  # kubectl absent → code 127
+
+
+def test_cluster_status_ignore_noeud_structure_incomplete():
+    payload = json.dumps({
+        "items": [
+            {
+                "metadata": {"name": "node-sain"},
+                "status": {
+                    "conditions": [{"type": "Ready", "status": "True"}],
+                    "allocatable": {"nvidia.com/gpu": "1"},
+                    "capacity": {"nvidia.com/gpu": "1"},
+                    "nodeInfo": {
+                        "kubeletVersion": "v1.31.1+k3s1",
+                        "architecture": "amd64",
+                    },
+                },
+            },
+            {
+                "metadata": {"name": "node-en-cours-de-join"},
+                "status": {},
+            },
+        ]
+    })
+    runner = FixtureRunner({"kubectl": payload})
+    nodes = cluster_status(runner)
+    assert len(nodes) == 1
+    assert nodes[0]["name"] == "node-sain"
+
+
+def test_cluster_status_tous_noeuds_malformes_leve_clustererror():
+    payload = json.dumps({
+        "items": [
+            {
+                "metadata": {"name": "node-incomplet"},
+                "status": {},
+            }
+        ]
+    })
+    runner = FixtureRunner({"kubectl": payload})
+    with pytest.raises(ClusterError):
+        cluster_status(runner)
+
+
+def test_cluster_status_noeud_bien_forme_inchange_apres_correctif():
+    runner = FixtureRunner({"kubectl": (FIXTURES / "get_nodes_real.json").read_text("utf-8")})
+    nodes = cluster_status(runner)
+    assert len(nodes) == 4
 
 
 def test_join_plan_refuse_tofu():
