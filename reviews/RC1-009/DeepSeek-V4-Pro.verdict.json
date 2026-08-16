@@ -1,27 +1,8 @@
 {
  "verdict": "APPROVE",
- "objections": [
-  {
-   "severite": "mineure",
-   "fichier": "stories/RC1-009.md",
-   "description": "La note de traçabilité pointe vers evidence/registres/mission.jsonl seq 454, mais l'entrée RC1-009 ajoutée par ce diff est seq 455; seq 454 est RC1-010-lot5b.",
-   "preuve": "stories/RC1-009.md : voir `evidence/registres/mission.jsonl` seq 454 ; evidence/registres/mission.jsonl ajoute l'entrée avec \"story\":\"RC1-009\" et \"seq\":455."
-  },
-  {
-   "severite": "mineure",
-   "fichier": "evidence/registres/mission.jsonl",
-   "description": "Le critère 6 exige zéro régression sur pytest complet, mais la preuve enregistrée ne mentionne que le run du nouveau test, pas un run pytest complet.",
-   "preuve": "payload.gates de l'entrée seq 455 : \"pytest_test_check_doc_links\":\"14/14\", sans entrée \"pytest complet\"."
-  },
-  {
-   "severite": "mineure",
-   "fichier": "evidence/registres/mission.jsonl",
-   "description": "Les références T3 sous CANON/ doivent être documentées séparément; le diff ne fournit qu'un compte (6) et un exemple de test, pas la liste des 6 références T3.",
-   "preuve": "payload seq 455 : \"findings_t3_canon_en_attente\":6 ; tests/test_check_doc_links.py ne cite que CANON/ETAT-SYSTEME.md -> Registres/mission.jsonl."
-  }
- ],
- "date_heure": "2026-08-16T06:03:22.491254+00:00",
- "prompt_sha256": "934b81501078df6671d982e1fa142b6103576f7e4c010791047bdfa6d43d636c",
+ "objections": [],
+ "date_heure": "2026-08-16T06:30:37.459517+00:00",
+ "prompt_sha256": "48d6cc793a0b8619132261c0e489cdf07ed57a2b0ccf8b7265acadf289cc6f26",
  "reviewer_model": "DeepSeek-V4-Pro",
  "modele_servi": "deepseek-v4-pro-direct",
  "gateway_resilience": {
