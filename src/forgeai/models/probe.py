@@ -96,7 +96,11 @@ def _extract_text(payload: str) -> str:
         data = json.loads(payload)
     except json.JSONDecodeError:
         return ""
+    if not isinstance(data, dict):
+        return ""
     for choice in data.get("choices", []) or []:
+        if not isinstance(choice, dict):
+            continue
         msg = choice.get("message") or {}
         content = msg.get("content") or choice.get("text") or ""
         if isinstance(content, str) and content.strip():

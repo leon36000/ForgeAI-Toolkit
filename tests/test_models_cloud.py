@@ -96,6 +96,28 @@ def test_probe_red_reponse_vide():
     assert not r.ok and "vide" in r.detail.lower()
 
 
+def test_probe_reponse_top_level_non_dict_pas_dexception():
+    """RC1-528 : un JSON valide dont le top-level n'est PAS un objet (liste, chaîne, nombre,
+    null) — ex. une gateway mal configurée qui répond 200 avec un corps non conforme — ne doit
+    jamais lever AttributeError, seulement produire une extraction vide."""
+    for payload in ["[1,2,3]", '"erreur texte brute"', "42", "null"]:
+        assert probe_mod._extract_text(payload) == "", payload
+
+
+def test_probe_choice_non_dict_ignoree_le_reste_examine():
+    """RC1-528 : un élément non-dict dans choices est ignoré, pas fatal — les éléments valides
+    restants de la liste continuent d'être examinés normalement."""
+    payload = json.dumps({"choices": [None, {"message": {"content": "contenu valide"}}]})
+    assert probe_mod._extract_text(payload) == "contenu valide"
+
+
+def test_probe_route_reponse_gateway_malformee_ne_leve_pas():
+    """RC1-528 : intégration bout-en-bout — probe_route ne doit jamais lever sur une réponse
+    HTTP 200 dont le corps est un JSON valide mais non conforme (top-level non-dict)."""
+    r = probe_mod.probe_route("https://api.x/v1", "m", SECRET, FixtureTransport(200, "[1,2,3]"))
+    assert not r.ok
+
+
 # ---------- route store ----------
 
 def test_add_cloud_green_scelle_la_cle(tmp_path):

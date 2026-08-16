@@ -35854,8 +35854,8 @@
         }
       ],
       "rule_id": "product-source",
-      "sha256": "2b0a8e4c2f0804cefaa85b12c6ec5978560d0c1f6eecf558961219ea9135142f",
-      "size": 5460,
+      "sha256": "a1016686d1346c271318bb56719c8fd35a9efd98d00d031ed0e335409ff5c417",
+      "size": 5575,
       "target_path": null,
       "type": "text"
     },
@@ -45886,8 +45886,8 @@
         }
       ],
       "rule_id": "test-suite",
-      "sha256": "ebd8a4842f32c6f80be984ef3779c7e8c0abde2a3f38315bc4f9898fea4a7351",
-      "size": 13725,
+      "sha256": "59d8a62fad223649926a6b7a495914521a9fb4332609f5e2eca41e6044c7fb37",
+      "size": 14945,
       "target_path": null,
       "type": "text"
     },
@@ -111675,17 +111675,17 @@
       },
       {
         "candidate": "application/json",
-        "line": 112,
+        "line": 116,
         "referrer": "src/forgeai/models/probe.py"
       },
       {
         "candidate": "seau/URL",
-        "line": 120,
+        "line": 124,
         "referrer": "src/forgeai/models/probe.py"
       },
       {
         "candidate": "vide/illisible",
-        "line": 127,
+        "line": 131,
         "referrer": "src/forgeai/models/probe.py"
       },
       {
@@ -125470,52 +125470,52 @@
       },
       {
         "candidate": "z-ai/glm-4.6",
-        "line": 103,
+        "line": 125,
         "referrer": "tests/test_models_cloud.py"
       },
       {
         "candidate": "routes.json",
-        "line": 106,
+        "line": 128,
         "referrer": "tests/test_models_cloud.py"
       },
       {
         "candidate": "vault.json",
-        "line": 175,
+        "line": 197,
         "referrer": "tests/test_models_cloud.py"
       },
       {
         "candidate": "routes.json",
-        "line": 209,
+        "line": 231,
         "referrer": "tests/test_models_cloud.py"
       },
       {
         "candidate": "routes.json",
-        "line": 226,
+        "line": 248,
         "referrer": "tests/test_models_cloud.py"
       },
       {
         "candidate": "routes.json",
-        "line": 249,
+        "line": 271,
         "referrer": "tests/test_models_cloud.py"
       },
       {
         "candidate": "routes.json",
-        "line": 257,
+        "line": 279,
         "referrer": "tests/test_models_cloud.py"
       },
       {
         "candidate": "routes.json",
-        "line": 273,
+        "line": 295,
         "referrer": "tests/test_models_cloud.py"
       },
       {
         "candidate": "vault.json",
-        "line": 293,
+        "line": 315,
         "referrer": "tests/test_models_cloud.py"
       },
       {
         "candidate": "routes.json",
-        "line": 383,
+        "line": 405,
         "referrer": "tests/test_models_cloud.py"
       },
       {
