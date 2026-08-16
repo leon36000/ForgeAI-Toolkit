@@ -67,6 +67,48 @@ le plan des lots suivants.
    retirés en résolvant le conflit de rebase plutôt que réappliqués. Aucune action de suivi :
    le besoin original est déjà couvert par le roster actuel.
 
+## Risque résiduel accepté (rounds 19-23, #452) — compensating_test et exécution réelle
+
+`validate_error_contracts.py` vérifie qu'un `compensating_test` référencé par un contrat `FIXED`
+désigne une fonction/méthode réellement **collectable** par pytest (convention de nommage round
+14, non-`__init__` round 15, absence de skip inconditionnel — décorateur fonction round 19,
+`pytestmark` de module round 20, décorateur classe round 21, `skipif` à condition littéralement
+constante round 22). Ce que le gate NE vérifie PAS, et ne vérifiera PAS dans ce lot : qu'une
+condition `skipif` **non littérale mais constante-repliable** (`skipif(1 == 1, ...)`,
+`skipif(not False, ...)`, etc.) désactive réellement le test à l'exécution — round 23, objection
+GPT-5.6-Terra-Pro, re-signale précisément le cas déjà documenté et testé (contre-preuve
+`test_compensating_test_skipif_expression_non_litterale_reste_valide`) comme délibérément hors
+scope.
+
+**Pourquoi c'est une frontière délibérée, pas un oubli** : détecter categoriquement TOUTE
+condition constante-repliable exige soit (a) une évaluation partielle de code Python arbitraire
+(replier `1 == 1`, `not False`, `(1+1)==2`, un nombre non borné de formes équivalentes — la même
+classe de problème que `pytest.skip()` en corps de fonction, déjà hors scope depuis le round 19),
+soit (b) exécuter réellement pytest et lire l'issue (SKIPPED vs PASSED) plutôt que d'analyser
+l'AST statiquement. Vérifié empiriquement avant cette décision : `pytest --collect-only` ne
+distingue PAS un test skip-marqué d'un test normal (le skip est évalué au SETUP, pas à la
+collecte) — seule une exécution réelle (`pytest -q <nodeid>`, sortie `code retour 0` que le test
+soit PASSED **ou** SKIPPED, distinction uniquement dans le texte de sortie) donnerait un signal
+fiable. Ce changement d'architecture — d'un gate rapide/déterministe/sans effet de bord vers une
+vérification qui exécute du code de test arbitraire (coût par invocation, risque de fragilité
+d'un test par ailleurs sans rapport, isolation vis-à-vis d'une éventuelle exécution pytest
+englobante) — est un choix de conception qui mérite sa propre story dédiée avec ses propres
+compromis explicites (fréquence d'exécution, timeout, cache, ordonnancement CI), pas un correctif
+réactif de plus dans ce lot.
+
+**Portée réelle du risque résiduel** : aucun `compensating_test` du dépôt réel n'utilise
+aujourd'hui une condition `skipif` non littérale du type visé (`@posix_only` utilise une
+`ast.Compare` sur `os.name`, qui n'est PAS une condition triviale/déguisée — elle dépend
+réellement de la plateforme, cas légitime et volontairement toléré). Le risque est donc
+actuellement théorique sur ce dépôt, contrairement au round 19 (`@posix_only`, `pytestmark`) où
+le mécanisme sous-jacent existait déjà réellement dans le code — round 22/23 sont les premiers de
+cette série où l'objection reste au niveau du gate lui-même, pas d'une donnée réelle affectée.
+
+**Suivi** : signalé sur #452/#481 pour une story dédiée si ce risque devient réel en pratique
+(nouveau `compensating_test` utilisant une condition constante déguisée non détectée) — pas
+ignoré en silence, disposition équivalente à `SPLIT_TO_NEW_ISSUE` au niveau du gate plutôt que
+d'un site individuel.
+
 ## Critères de validation
 
 - [x] `pytest` — suite complète verte (2224 tests collectés, 0 échec ; régression confirmée sur
