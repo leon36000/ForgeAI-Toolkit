@@ -152,10 +152,10 @@
       "accepted_risk": "Aucun — l'exception d'origine est systématiquement relancée."
     },
     {
-      "id": "site:src/forgeai/hardware/detect.py:47",
+      "id": "site:src/forgeai/hardware/detect.py:50",
       "site": {
         "path": "src/forgeai/hardware/detect.py",
-        "line": 47,
+        "line": 50,
         "function": "forgeai.hardware.detect.HardwareDetector.detect_cpu"
       },
       "exception_types": [
@@ -175,10 +175,10 @@
       "accepted_risk": "Le repli sur les valeurs par défaut est inchangé pour toute Exception levée par exc.__str__() ; seule la visibilité change (aucun nouveau risque de comportement dans ce périmètre). Risque résiduel étroit distinct (BaseException explicite via __str__) accepté rounds 27-37, voir la story."
     },
     {
-      "id": "site:src/forgeai/hardware/detect.py:84",
+      "id": "site:src/forgeai/hardware/detect.py:91",
       "site": {
         "path": "src/forgeai/hardware/detect.py",
-        "line": 84,
+        "line": 91,
         "function": "forgeai.hardware.detect.HardwareDetector.detect_ram_gb"
       },
       "exception_types": [
@@ -198,10 +198,10 @@
       "accepted_risk": "Le repli à 0.0 Go est inchangé pour toute Exception levée par exc.__str__() ; seule la visibilité change. Risque résiduel étroit distinct (BaseException explicite via __str__) accepté rounds 27-37, voir la story."
     },
     {
-      "id": "site:src/forgeai/hardware/detect.py:110",
+      "id": "site:src/forgeai/hardware/detect.py:117",
       "site": {
         "path": "src/forgeai/hardware/detect.py",
-        "line": 110,
+        "line": 117,
         "function": "forgeai.hardware.detect.HardwareDetector.detect_disks"
       },
       "exception_types": [
@@ -219,10 +219,10 @@
       "accepted_risk": "Une ligne `df` malformée fait disparaître silencieusement ce disque du rapport matériel."
     },
     {
-      "id": "site:src/forgeai/hardware/detect.py:134",
+      "id": "site:src/forgeai/hardware/detect.py:141",
       "site": {
         "path": "src/forgeai/hardware/detect.py",
-        "line": 134,
+        "line": 141,
         "function": "forgeai.hardware.detect.HardwareDetector._nvidia_gpus"
       },
       "exception_types": [
@@ -607,10 +607,10 @@
       "accepted_risk": "Si stderr devient indisponible exactement quand kill_tree tente de signaler un process potentiellement en D-state, ce message spécifique est perdu silencieusement — mais le site parent (server.py, nettoyage_incertain) reste la source de vérité structurée pour ce risque, déjà contractualisée séparément."
     },
     {
-      "id": "site:src/forgeai/hardware/detect.py:61",
+      "id": "site:src/forgeai/hardware/detect.py:64",
       "site": {
         "path": "src/forgeai/hardware/detect.py",
-        "line": 61,
+        "line": 64,
         "function": "forgeai.hardware.detect.HardwareDetector.detect_cpu"
       },
       "exception_types": [
@@ -628,10 +628,10 @@
       "accepted_risk": "Si stderr devient indisponible exactement quand detect_cpu() tente de signaler un lscpu illisible, ce message diagnostique est perdu silencieusement — le comportement observable (valeurs par défaut retournées) est inchangé et non affecté."
     },
     {
-      "id": "site:src/forgeai/hardware/detect.py:95",
+      "id": "site:src/forgeai/hardware/detect.py:102",
       "site": {
         "path": "src/forgeai/hardware/detect.py",
-        "line": 95,
+        "line": 102,
         "function": "forgeai.hardware.detect.HardwareDetector.detect_ram_gb"
       },
       "exception_types": [
