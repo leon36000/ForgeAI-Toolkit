@@ -226,20 +226,6 @@
       "rationale": "ARCHIVE et load_bearing=true coexistent sans contradiction: ce modèle est historique selon AGENTS.md, mais state_current.py lit encore ses totaux et scope-guard.yml exécute validate_coordination.py; c'est le signal que #440 doit lire avant déplacement."
     },
     {
-      "id": "evidence-audit-output",
-      "match": {
-        "kind": "prefix",
-        "value": "AUDIT-OUTPUT/"
-      },
-      "class": "EVIDENCE",
-      "generated": false,
-      "owner": "gouvernance-preuve",
-      "target": "evidence/audit-output/",
-      "target_kind": "reroot",
-      "load_bearing": false,
-      "rationale": "Ce répertoire provient d'une exécution passée; son emplacement gagne sur l'extension et un fichier .py présent ici reste une preuve, non un PRODUCT."
-    },
-    {
       "id": "evidence-reviews",
       "match": {
         "kind": "prefix",
