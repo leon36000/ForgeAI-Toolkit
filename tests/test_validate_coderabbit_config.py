@@ -116,7 +116,7 @@ def test_main_exit1_et_message_sur_config_cassee(tmp_path: Path, capsys) -> None
 
 
 def test_chemin_present_mais_non_trackable_est_mort(tmp_path: Path) -> None:
-    (tmp_path / "Vide").mkdir()
+    (tmp_path / "archive").mkdir()
     (tmp_path / ".coderabbit.yaml").write_text(
         "reviews:\n  path_filters:\n    - \"!archive/**\"\n",
         encoding="utf-8",
