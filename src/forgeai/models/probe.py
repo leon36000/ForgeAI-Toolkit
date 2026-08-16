@@ -98,7 +98,10 @@ def _extract_text(payload: str) -> str:
         return ""
     if not isinstance(data, dict):
         return ""
-    for choice in data.get("choices", []) or []:
+    choices = data.get("choices")
+    if not isinstance(choices, list):
+        return ""
+    for choice in choices:
         if not isinstance(choice, dict):
             continue
         msg = choice.get("message") or {}

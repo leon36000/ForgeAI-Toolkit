@@ -104,6 +104,18 @@ def test_probe_reponse_top_level_non_dict_pas_dexception():
         assert probe_mod._extract_text(payload) == "", payload
 
 
+def test_probe_choices_non_liste_pas_dexception():
+    """RC1-528 round 2 : `choices` présent mais pas une liste (int, str, None, dict) — ne doit
+    jamais lever TypeError, seulement produire une extraction vide."""
+    for payload in [
+        json.dumps({"choices": 42}),
+        json.dumps({"choices": "texte"}),
+        json.dumps({"choices": None}),
+        json.dumps({"choices": {"a": 1}}),
+    ]:
+        assert probe_mod._extract_text(payload) == "", payload
+
+
 def test_probe_choice_non_dict_ignoree_le_reste_examine():
     """RC1-528 : un élément non-dict dans choices est ignoré, pas fatal — les éléments valides
     restants de la liste continuent d'être examinés normalement."""
