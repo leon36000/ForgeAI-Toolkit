@@ -1,0 +1,19 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "majeure",
+   "fichier": "src/forgeai/core/safe_repr.py",
+   "description": "Le helper utilisé dans les handlers FIXED peut propager un BaseException levé par exc.__str__(), interrompant ainsi le fallback qui devait conserver le comportement antérieur (absence de propagation et poursuite de la récupération). Cela contredit le critère d’acceptation « Aucun changement de comportement observable sur les 9 sites FIXED ».",
+   "preuve": "src/forgeai/core/safe_repr.py, lignes 46-49 : str_exc_sur() ne capture que `except Exception`. tests/test_safe_repr.py::test_str_exc_sur_str_leve_baseexception_propage_delibrement prouve explicitement `with pytest.raises(SystemExit): str_exc_sur(exc)`. Les handlers FIXED appellent ce helper, notamment src/forgeai/web/server.py dans les except de _persist_deploy_state, _load_deploy_state et _reader ; avant le diff, ces handlers n’évaluaient pas str(exc) et avalaient l’exception."
+  }
+ ],
+ "date_heure": "2026-08-16T18:01:29.700944+00:00",
+ "prompt_sha256": "3197ed690d3149e80b037710c193a62f0c46d64f9a5a55a43904ca746618a9b4",
+ "reviewer_model": "GPT-5.6-Terra-Pro",
+ "modele_servi": "gpt56-terra-pro-openrouter",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}
