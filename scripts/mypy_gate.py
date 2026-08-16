@@ -21,6 +21,9 @@ from typing import Any
 import gate_git_ref
 
 
+# SonarCloud pythonsecurity:S8705 (New Code, #449 — suppression sonar-project.properties e8,
+# même famille que e6 sur gate_docs.py) : `cible` est un argument CLI arbitraire injecté tel quel
+# dans un argv `python3 -m mypy`. Validée ci-dessous AVANT tout subprocess dans executer_mypy.
 def _valider_cible(cible: str) -> None:
     """Refuse une cible mypy vide ou commençant par '-' (injection d'option subprocess)."""
     if not cible or cible.startswith("-"):
@@ -330,6 +333,9 @@ def anomalies(
 
 def _charger_json(chemin: Path, libelle: str) -> dict[str, Any]:
     """Charge et valide le JSON d'une base."""
+    # SonarCloud pythonsecurity:S8707 (New Code, #449 — suppression sonar-project.properties e9,
+    # même famille que e5/e7) : validé explicitement AVANT tout accès disque (is_file() ci-dessus),
+    # plutôt que de se reposer uniquement sur l'OSError attrapée plus bas.
     if not chemin.is_file():
         raise ValueError(f"{libelle} introuvable ou n'est pas un fichier regulier : {str(chemin)!r}")
     try:

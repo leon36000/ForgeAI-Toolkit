@@ -15,7 +15,9 @@ import subprocess
 from pathlib import Path
 from typing import Any, Callable
 
-# SonarCloud pythonsecurity:S8705 (New Code, issue #385) : `--base-ref-git` est un argument
+# SonarCloud pythonsecurity:S8705 (New Code, issue #385, extrait ici par #449 — suppression
+# sonar-project.properties e10, ce fichier étant neuf le finding réapparaît malgré la validation
+# identique à celle déjà suppressée pour gate_docs.py en e6) : `--base-ref-git` est un argument
 # CLI arbitraire injecté tel quel dans un argv `git`. En usage CI réel, gates.yml le fixe à
 # "origin/main" (non attaquable), mais le script reste un outil général invocable avec
 # n'importe quelle valeur — un ref commençant par "-" serait interprété comme une OPTION git

@@ -60,10 +60,13 @@ def test_charger_base_reference_git_git_absent_premier_appel(tmp_path, monkeypat
         )
 
 
-def test_charger_base_reference_git_chemin_hors_racine(tmp_path_factory, monkeypatch):
+def test_charger_base_reference_git_chemin_hors_racine(tmp_path, monkeypatch):
     """Un chemin de base hors de la racine git est refusé avant git show."""
-    racine = tmp_path_factory.mktemp("racine")
-    chemin_base = tmp_path_factory.mktemp("hors") / "base.json"
+    racine = tmp_path / "racine"
+    racine.mkdir()
+    hors = tmp_path / "hors"
+    hors.mkdir()
+    chemin_base = hors / "base.json"
     chemin_base.write_text("{}", encoding="utf-8")
 
     def fake_run(args, **kwargs):
