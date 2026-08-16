@@ -68,14 +68,14 @@ commentaire — risque accepté, durcissement production hors périmètre.
 
 Outil d'orchestration devant légitimement invoquer `docker`, `kubectl`, `ssh`/`ssh-copy-id`.
 Vérification site par site : forme liste uniquement (jamais `shell=True`), pas de concaténation
-de chaîne shell, secrets jamais en argv (invariant documenté dans `deploy/openbao_flow.py`),
+de chaîne shell, secrets jamais en argv (invariant documenté dans `src/forgeai/deploy/openbao_flow.py`),
 entrées provenant de la configuration opérateur (wizard d'ajout de nœud) ou de fichiers JSON
 validés en amont. Le chemin partiel (`B607`) sur `docker`/`kubectl` est le comportement standard
 attendu (portabilité multi-distribution via `PATH`).
 
 ### C7 — B110 try/except/pass (4 signaux)
 
-4 sites dans `web/server.py` : nettoyage best-effort d'un fichier temporaire, mise à jour d'un
+4 sites dans `src/forgeai/web/server.py` : nettoyage best-effort d'un fichier temporaire, mise à jour d'un
 état de déploiement sous verrou, arrêt défensif d'un sous-processus déjà terminé, ouverture
 best-effort du navigateur. Aucun n'avale une exception liée à l'auth/l'autorisation/la
 validation d'entrée.

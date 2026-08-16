@@ -11,7 +11,7 @@ sous-stories #142(S1) #143(S2) #144(S3) #145(S4) #146(S5) #147(S6). -->
 
 ## Principe : INIT privilégié (flux de déploiement Python) + RE-UNSEAL bête (sidecar shell). Secrets PRÉ-CRÉÉS pour briser le chicken-and-egg.
 
-## A. Cœur Python `forgeai/secrets/openbao_init.py` (exécuté par le flux de déploiement ; transports injectés ; testable)
+## A. Cœur Python `src/forgeai/secrets/openbao_init.py` (exécuté par le flux de déploiement ; transports injectés ; testable)
 `ensure_openbao_ready(bao_http, key_store, secret_store, addr) -> app_token` — **réconciliation par état
 désiré, idempotente, transactionnelle** (pas de branche monolithique) :
 1. `GET /v1/sys/health` ; si **non-initialisé** (501) → `POST /v1/sys/init {secret_shares:1, secret_threshold:1}`
@@ -31,7 +31,7 @@ désiré, idempotente, transactionnelle** (pas de branche monolithique) :
    no_default_policy, policies=[forgeai-app]) — un token NON-root a TOUJOURS un TTL (seul le root n'expire
    pas) ; un token périodique reste valide indéfiniment TANT QU'il est renouvelé dans sa période. L'écrire
    dans secret_store et **révoquer** l'ancien s'il existait (pas d'accumulation). Root token ne quitte JAMAIS
-   key_store. Renouvellement : `secrets/vault.py` fait **renew-self** proactif (quand TTL restant < période/2,
+   key_store. Renouvellement : `src/forgeai/secrets/vault.py` fait **renew-self** proactif (quand TTL restant < période/2,
    et sur 403 il relit le token du secret_store) — le token reste donc perpétuellement valide sans root.
 Le flux de déploiement l'appelle APRÈS que openbao tourne (voir C) et AVANT de valider le socle prêt.
 
@@ -88,7 +88,7 @@ readiness strict. Détails S1 : ENTRYPOINT image (valider `command:["server","-c
 - **S2** cœur Python `ensure_openbao_ready` (réconciliation état désiré, fail-fast, token reuse/revoke, policy PUT) — pur, injecté, tests exhaustifs. ∥ S1.
 - **S3** sidecar re-unseal (asset shell + rendu) + câblage k3s (sidecar, Secrets placeholder pré-créés, port-forward init, probes). Dépend S1+S2.
 - **S4** câblage compose (unsealer service, bind-mount clés hôte séparé, healthcheck unsealed, restart unless-stopped, depends_on). Dépend S1+S2.
-- **S5** intégration flux de déploiement (pré-création Secrets → apply openbao → init → apply consommateurs) + `bootstrap/secrets.py` sans dev-root + migration `Docs/how-to/openbao-migration.md` + `test_vault_e2e.py`→prod. Dépend S3+S4.
+- **S5** intégration flux de déploiement (pré-création Secrets → apply openbao → init → apply consommateurs) + `src/forgeai/bootstrap/secrets.py` sans dev-root + migration `Docs/how-to/openbao-migration.md` + `test_vault_e2e.py`→prod. Dépend S3+S4.
 - **S6** preuve e2e réelle : init+unseal+KV+round-trip + **restart→re-unseal auto→KV OK** + **posture mlock : disable_mlock + non-root + swap-off** + token scopé (root≠app). Dépend S5.
 
 ## Frontières T3 (Nathan) + compromis DOCUMENTÉS (acceptés)
