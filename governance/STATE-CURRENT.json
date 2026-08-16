@@ -616,7 +616,7 @@
       },
       {
         "path": "tests/test_rag_durci.py",
-        "sha256": "b57622176b0965619e972b3217f50260f0f0f039fcac73de827e17ab1db88cd7"
+        "sha256": "fbf6fdd22869db35d16a1f061c91098ba3e46a0583041280a72eb526749b89ee"
       },
       {
         "path": "tests/test_rag_durci_e2e.py",
