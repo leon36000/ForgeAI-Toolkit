@@ -219,4 +219,33 @@ par tests d'injection de faute reste exacte et inchangée pour ce périmètre co
       REJECT majeure) : la formulation précédente de cette case ne portait pas cette exclusion
       explicitement et contredisait donc la section d'analyse — corrigé ici, aucun changement de
       code (le compromis round 30/36 reste inchangé, seule la formulation de l'AC était fausse).
-- [ ] Revue aveugle scellée 3 vendors distincts, APPROVE 3/3.
+- [x] Revue aveugle scellée 3 vendors distincts, APPROVE 3/3 — round 39 (Qwen3.7-Max/alibaba,
+      GPT-5.6-Terra-Pro/openai, Muse-Spark-1.2/meta), 0 objection,
+      `prompt_sha256=1f00937992ff7e34f79b0a2d3a6e7350a2b2e54f4c40ce4ec060655a46bab666`.
+
+## Post-round-39 — cliquet mypy progressif (#449, gate apparu en cours de story via rebase)
+
+`scripts/mypy_gate.py` (fusionné sur `main` pendant le traitement de cette story, #449) borne le
+nombre d'erreurs mypy par fichier « en dette » contre `Docs/BASELINE-MYPY.json` — toute
+augmentation est un échec bloquant, jamais résolu en relevant simplement la borne. Rebase de
+cette branche a exposé une régression réelle sur `src/forgeai/web/server.py` (106 → 121 erreurs) :
+chaque nouveau site FIXED de ce lot qui journalise désormais un avertissement (`with
+_DEPLOY_STATE["lock"]: _DEPLOY_STATE["lines"].append(...)`) ajoutait des occurrences de la MÊME
+classe d'erreur `union-attr` déjà tolérée ailleurs dans le fichier — `_DEPLOY_STATE` est un dict
+littéral sans annotation explicite, donc mypy infère `None | list[Any] | bool | LockType` pour
+CHAQUE accès à CHAQUE clé, peu importe laquelle.
+
+**Rejeté** : suppression via `# type: ignore[union-attr]` aux nouveaux sites — `mypy_gate.py`
+scelle spécifiquement contre ce contournement (`occurrences_type_ignore`/`type_ignore_lignes`
+dans la base JSON, correctif post-revue round 12 #449) ; le baseline actuel pour ce fichier est
+`type_ignore: None` (zéro toléré), donc tout ajout aurait été détecté comme une neutralisation,
+pas une correction.
+
+**Corrigé** : annotation `_DEPLOY_STATE: dict[str, Any]` (import `typing.Any` ajouté) — un
+changement d'UNE ligne, zéro changement de comportement runtime (annotation pure), qui élimine
+la classe d'erreur entière plutôt que de la suppresser site par site. Effet mesuré :
+`src/forgeai/web/server.py` passe de 121 à **19** erreurs (mieux que la borne baselinée de 106,
+amélioration nette de 87 erreurs pré-existantes non liées à cette story) ; total dépôt 149 → 47
+(borne 134). `Docs/BASELINE-MYPY.json` volontairement NON modifié — la borne de 106 reste
+correcte comme PLAFOND, l'inutile de l'abaisser formellement n'est pas dans le scope de cette
+story (dette mypy hors #452, resserrer le cliquet est une décision distincte pour #449/#456).

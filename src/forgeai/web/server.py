@@ -21,6 +21,7 @@ from collections import OrderedDict
 from functools import lru_cache
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
+from typing import Any
 
 from forgeai.catalogue.loader import parse_stars
 from forgeai.catalogue.spheres import SPHERES, classify_sphere, spheres_index
@@ -409,7 +410,7 @@ def _selection_valide(lst: object) -> bool:
             return False
     return True
 
-_DEPLOY_STATE = {
+_DEPLOY_STATE: dict[str, Any] = {
     "proc": None,
     "lines": [],
     "done": False,
