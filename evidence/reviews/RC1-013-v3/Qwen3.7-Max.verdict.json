@@ -1,0 +1,19 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "scripts/gate_docs.py",
+   "description": "Utilisation de `ast.walk()` pour identifier le parseur racine via le premier `add_subparsers` trouvé. La documentation officielle de Python précise que `ast.walk` ne garantit aucun ordre de parcours (il ne respecte pas nécessairement l'ordre du code source). Si la structure de la CLI évolue (ex. définition de sous-parseurs avant le parseur principal ou dans des fonctions auxiliaires), le `break` pourrait capturer le mauvais porteur. Un parcours récursif personnalisé ou l'utilisation de `ast.iter_child_nodes` garantirait la découverte dans l'ordre source.",
+   "preuve": "scripts/gate_docs.py, fonction `_inventaire_cli` : `for noeud in ast.walk(arbre):` ... `if isinstance(fonction, ast.Attribute) and fonction.attr == \"add_subparsers\":` ... `break`"
+  }
+ ],
+ "date_heure": "2026-08-16T13:30:00.562220+00:00",
+ "prompt_sha256": "135e18327694d002856bb65c1e9bba5bbe7b564c8c6198d58637e908d953d594",
+ "reviewer_model": "Qwen3.7-Max",
+ "modele_servi": "qwen37-max-openrouter",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

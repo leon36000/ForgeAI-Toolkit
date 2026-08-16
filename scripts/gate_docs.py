@@ -27,8 +27,8 @@ def _valider_ref_git(ref: str) -> None:
         raise ValueError(f"reference git invalide {ref!r} : refusee avant tout appel git")
 
 
-def sous_commandes(chemin_cli: Path) -> list[str]:
-    """Extrait par AST les sous-commandes declarees par add_parser."""
+def _arbre_et_porteur(chemin_cli: Path) -> tuple[ast.AST, str]:
+    """Lit la CLI, parse son AST et trouve le porteur des sous-commandes de premier niveau."""
     try:
         source = chemin_cli.read_text(encoding="utf-8")
     except (OSError, UnicodeError) as erreur:
@@ -39,14 +39,6 @@ def sous_commandes(chemin_cli: Path) -> list[str]:
     except SyntaxError as erreur:
         raise ValueError(f"CLI invalide {str(chemin_cli)!r} : {erreur}") from erreur
 
-    # Seules les sous-commandes de PREMIER NIVEAU comptent : la documentation est reperee par la
-    # chaine « forgeai <cmd> », qui ne peut par construction jamais correspondre a une commande
-    # imbriquee (« forgeai node prepare » n'est pas « forgeai prepare »). Compter les imbriquees
-    # produirait des anomalies systematiques et indefendables — 42 au lieu de 21 ici.
-    #
-    # Le porteur du premier niveau est DERIVE, jamais code en dur : on repere la variable
-    # affectee par `add_subparsers(...)` sur l'objet `ArgumentParser` racine, c'est-a-dire le
-    # PREMIER `add_subparsers` du fichier. Renommer la variable dans cli.py reste donc sans effet.
     porteur: str | None = None
     for noeud in ast.walk(arbre):
         if not isinstance(noeud, ast.Assign) or not isinstance(noeud.value, ast.Call):
@@ -64,6 +56,21 @@ def sous_commandes(chemin_cli: Path) -> list[str]:
             "change, le gate ne peut pas conclure et refuse de verdir par defaut"
         )
 
+    return arbre, porteur
+
+
+def sous_commandes(chemin_cli: Path) -> list[str]:
+    """Extrait par AST les sous-commandes declarees par add_parser."""
+    arbre, porteur = _arbre_et_porteur(chemin_cli)
+
+    # Seules les sous-commandes de PREMIER NIVEAU comptent : la documentation est reperee par la
+    # chaine « forgeai <cmd> », qui ne peut par construction jamais correspondre a une commande
+    # imbriquee (« forgeai node prepare » n'est pas « forgeai prepare »). Compter les imbriquees
+    # produirait des anomalies systematiques et indefendables — 42 au lieu de 21 ici.
+    #
+    # Le porteur du premier niveau est DERIVE, jamais code en dur : on repere la variable
+    # affectee par `add_subparsers(...)` sur l'objet `ArgumentParser` racine, c'est-a-dire le
+    # PREMIER `add_subparsers` du fichier. Renommer la variable dans cli.py reste donc sans effet.
     resultat: set[str] = set()
     for noeud in ast.walk(arbre):
         if not isinstance(noeud, ast.Call):
@@ -83,6 +90,100 @@ def sous_commandes(chemin_cli: Path) -> list[str]:
             resultat.add(premier_argument.value)
 
     return sorted(resultat)
+
+
+def _inventaire_cli(chemin_cli: Path) -> dict[str, dict[str, Any]]:
+    """Inventorie les sous-commandes directes et options des parseurs de premier niveau."""
+    try:
+        arbre, porteur = _arbre_et_porteur(chemin_cli)
+    except ValueError as erreur:
+        if str(erreur).startswith("aucun add_subparsers trouve"):
+            raise ValueError(
+                f"aucun add_subparsers trouve dans {str(chemin_cli)!r} : la structure de la CLI a "
+                "change, le rapport ne peut pas conclure"
+            ) from erreur
+        raise
+
+    parseurs: dict[str, str] = {}
+    for noeud in ast.walk(arbre):
+        if not isinstance(noeud, ast.Assign) or not isinstance(noeud.value, ast.Call):
+            continue
+        fonction = noeud.value.func
+        if (
+            not isinstance(fonction, ast.Attribute)
+            or fonction.attr != "add_parser"
+            or not isinstance(fonction.value, ast.Name)
+            or fonction.value.id != porteur
+            or not noeud.value.args
+            or not isinstance(noeud.value.args[0], ast.Constant)
+            or not isinstance(noeud.value.args[0].value, str)
+        ):
+            continue
+        cible = noeud.targets[0]
+        if isinstance(cible, ast.Name):
+            parseurs[cible.id] = noeud.value.args[0].value
+
+    resultat: dict[str, dict[str, Any]] = {}
+    for variable, commande in parseurs.items():
+        sous_porteurs: set[str] = set()
+        for noeud in ast.walk(arbre):
+            if not isinstance(noeud, ast.Assign) or not isinstance(noeud.value, ast.Call):
+                continue
+            fonction = noeud.value.func
+            if (
+                isinstance(fonction, ast.Attribute)
+                and fonction.attr == "add_subparsers"
+                and isinstance(fonction.value, ast.Name)
+                and fonction.value.id == variable
+            ):
+                cible = noeud.targets[0]
+                if isinstance(cible, ast.Name):
+                    sous_porteurs.add(cible.id)
+
+        sous_commandes_directes: set[str] = set()
+        for noeud in ast.walk(arbre):
+            if not isinstance(noeud, ast.Call):
+                continue
+            fonction = noeud.func
+            if (
+                not isinstance(fonction, ast.Attribute)
+                or fonction.attr != "add_parser"
+                or not isinstance(fonction.value, ast.Name)
+                or fonction.value.id not in sous_porteurs
+                or not noeud.args
+            ):
+                continue
+            premier_argument = noeud.args[0]
+            if isinstance(premier_argument, ast.Constant) and isinstance(
+                premier_argument.value, str
+            ):
+                sous_commandes_directes.add(premier_argument.value)
+
+        nombre_options = 0
+        for noeud in ast.walk(arbre):
+            if not isinstance(noeud, ast.Call):
+                continue
+            fonction = noeud.func
+            if (
+                not isinstance(fonction, ast.Attribute)
+                or fonction.attr != "add_argument"
+                or not isinstance(fonction.value, ast.Name)
+                or fonction.value.id != variable
+            ):
+                continue
+            nombre_options += sum(
+                isinstance(argument, ast.Constant)
+                and isinstance(argument.value, str)
+                and argument.value.startswith("--")
+                for argument in noeud.args
+            )
+
+        resultat[commande] = {
+            "sous_commandes": sorted(sous_commandes_directes),
+            "options": nombre_options,
+        }
+
+    return resultat
 
 
 def commandes_documentees(racine: Path) -> set[str]:
@@ -306,12 +407,60 @@ def main(argv: list[str] | None = None) -> int:
         metavar="REF",
         help="reference git de la base pour le controle de non-croissance",
     )
+    parser.add_argument(
+        "--report",
+        action="store_true",
+        help="affiche le rapport de couverture documentaire",
+    )
     arguments = parser.parse_args(argv)
 
     racine = Path(arguments.racine)
     chemin_base = Path(arguments.base)
     if not chemin_base.is_absolute():
         chemin_base = racine / chemin_base
+
+    if arguments.report:
+        try:
+            reelles = sous_commandes(racine / "src" / "forgeai" / "cli.py")
+            documentees = commandes_documentees(racine)
+            inventaire = _inventaire_cli(racine / "src" / "forgeai" / "cli.py")
+        except (OSError, TypeError, ValueError, RuntimeError) as erreur:
+            print(str(erreur), file=sys.stderr)
+            return 1
+
+        commandes_reelles = set(reelles)
+        commandes_documentees_set = set(documentees)
+        non_documentees = sorted(commandes_reelles - commandes_documentees_set)
+        total = len(commandes_reelles)
+        # documentees est un sous-ensemble de reelles par construction, donc le nombre documente
+        # ne peut pas depasser le total et le pourcentage reste borne.
+        couverture = (len(commandes_documentees_set) / total * 100) if total else 100.0
+
+        print("Rapport de couverture documentaire")
+        print(f"Total de commandes : {total}")
+        print(f"Commandes documentées : {len(commandes_documentees_set)}")
+        print(f"Commandes non documentées : {len(non_documentees)}")
+        print("Liste des commandes non documentées :")
+        for commande in non_documentees:
+            print(f"- {commande}")
+        print("Inventaire des commandes :")
+        for commande in reelles:
+            details = inventaire.get(
+                commande,
+                {"sous_commandes": [], "options": 0},
+            )
+            sous_commandes_directes = details["sous_commandes"]
+            liste_sous_commandes = (
+                ", ".join(sous_commandes_directes)
+                if sous_commandes_directes
+                else "aucune"
+            )
+            print(
+                f"- forgeai {commande} : sous-commandes directes : "
+                f"{liste_sous_commandes} ; options déclarées : {details['options']}"
+            )
+        print(f"Pourcentage de couverture : {couverture:.2f} %")
+        return 0
 
     try:
         base = _charger_json(chemin_base, "base")

@@ -1,0 +1,19 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "critique",
+   "fichier": "Docs/reference/cli.md",
+   "description": "Refus explicite d'implémenter le critère d'acceptation exigeant la documentation en anglais (FR/EN).",
+   "preuve": "Le critère d'acceptation de l'issue #443 demande une documentation « FR/EN » ; produire une version anglaise complète de cette référence est un changement de politique documentaire [...] la décision revient à une story de suivi distincte plutôt qu'à un arbitrage unilatéral ici."
+  }
+ ],
+ "date_heure": "2026-08-16T13:26:32.103953+00:00",
+ "prompt_sha256": "f456a1f12497c3e1186be2920e1125382902d2157a23c87e4903f8a15b8e117e",
+ "reviewer_model": "Gemini-3.1-Pro",
+ "modele_servi": "gemini-31-pro-openrouter",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "1"
+ }
+}

@@ -1,0 +1,43 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "critique",
+   "fichier": "Docs/reference/cli.md",
+   "description": "Le critère demande une documentation FR/EN de chaque commande publique. Le diff ajoute uniquement des sections en français et déclare explicitement une documentation française, sans version anglaise.",
+   "preuve": "Section ajoutée « Langue de cette référence » : « Cette documentation est rédigée en français par choix délibéré... Il ne s'agit donc pas d'un oubli du critère FR/EN de l'issue #443. »"
+  },
+  {
+   "severite": "majeure",
+   "fichier": "tests/test_cli_doc_coverage.py",
+   "description": "La vérification automatique des exemples n'exécute qu'un sous-ensemble codé en dur de sept commandes sûres. Les autres exemples sûrs et les variantes d'options du document ne sont ni extraits ni vérifiés.",
+   "preuve": "Ensemble `wanted` dans `_safe_cli_invocations()` et ensemble `expected` dans `test_exemples_surs_du_cli_md_sont_executables` limités à 7 tuples."
+  },
+  {
+   "severite": "majeure",
+   "fichier": "tests/test_cli_doc_coverage.py",
+   "description": "La détection de non-documentation se limite aux commandes de premier niveau. Une nouvelle sous-commande ou option non documentée ne sera pas détectée par la CI, alors que le critère demande un inventaire des commandes, options, codes retour et variables.",
+   "preuve": "Test `test_toutes_commandes_premier_niveau_documentees` et assertion `commandes = set(gate_docs.sous_commandes(CLI_PATH))`."
+  },
+  {
+   "severite": "majeure",
+   "fichier": "scripts/gate_docs.py",
+   "description": "Le rapport de couverture `--report` n'inventorie ni les options, ni les codes retour, ni les variables. Il retourne 0 même si des commandes sont non documentées, ce qui ne constitue pas une couverture documentaire complète exploitable par la CI.",
+   "preuve": "Bloc `if arguments.report:` : seuls `Total de commandes`, `Commandes documentées`, `Commandes non documentées`, `Pourcentage de couverture` sont affichés, puis `return 0`."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "Docs/reference/cli.md",
+   "description": "La cohérence avec le README n'est ni mise à jour ni vérifiée automatiquement par le diff ; aucun changement de README ni test comparant parser, docs et README n'apparaît.",
+   "preuve": "Le diff ne contient aucune modification du README et `tests/test_cli_doc_coverage.py` ne référence pas le README."
+  }
+ ],
+ "date_heure": "2026-08-16T13:19:21.634228+00:00",
+ "prompt_sha256": "1a44d19779ddebff6181fb0dffa5c40689c36306ff8119918923a70fa937338c",
+ "reviewer_model": "DeepSeek-V4-Pro",
+ "modele_servi": "deepseek-v4-pro-direct",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}
