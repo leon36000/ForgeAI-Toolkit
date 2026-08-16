@@ -93,6 +93,16 @@ def _fonction_test_existe(fichier: Path, segments: list[str]) -> bool:
             if isinstance(noeud, ast.ClassDef) and noeud.name == cible:
                 if not reste:
                     return False
+                # Round 15 (#452) — objection GPT-5.6-Terra-Pro (revue scellée) : pytest
+                # n'instancie PAS une classe Test* qui définit __init__ (PytestCollectionWarning
+                # « cannot collect test class ... because it has a __init__ constructor »,
+                # vérifié empiriquement) — une telle classe n'est donc jamais réellement
+                # collectée, même si la méthode existe bien dans l'AST.
+                if any(
+                    isinstance(m, (ast.FunctionDef, ast.AsyncFunctionDef)) and m.name == "__init__"
+                    for m in noeud.body
+                ):
+                    return False
                 return _cherche(noeud.body, reste)
         return False
 

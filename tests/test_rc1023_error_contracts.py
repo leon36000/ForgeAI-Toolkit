@@ -750,6 +750,35 @@ def test_compensating_test_fichier_hors_convention_pytest_rejete(tmp_path: Path)
     assert any("test compensatoire absent du dépôt" in e for e in erreurs)
 
 
+def test_compensating_test_classe_avec_init_rejetee(tmp_path: Path) -> None:
+    """Round 15 (#452) — objection GPT-5.6-Terra-Pro (revue scellée) : une classe Test* qui
+    définit __init__ n'est PAS collectée par pytest (PytestCollectionWarning: cannot collect
+    test class ... because it has a __init__ constructor — vérifié empiriquement), même si la
+    méthode existe bien dans l'AST du fichier."""
+    _creer_fichier_source(
+        tmp_path,
+        "src/forgeai/example.py",
+        "try:\n    pass\nexcept ValueError:\n    pass\n",
+    )
+    _creer_fichier_source(
+        tmp_path,
+        "tests/test_classe_init.py",
+        "class TestAvecInit:\n"
+        "    def __init__(self):\n"
+        "        self.x = 1\n"
+        "    def test_methode(self):\n"
+        "        assert self.x == 1\n",
+    )
+    contrat = _entree_valide(
+        compensating_test="tests/test_classe_init.py::TestAvecInit::test_methode",
+        compensating_test_reason=None,
+    )
+    _ecrire_inventaire(tmp_path, [contrat])
+
+    erreurs = VALIDATEUR.valider(tmp_path, aujourd_hui=dt.date(2026, 1, 1))
+    assert any("test compensatoire absent du dépôt" in e for e in erreurs)
+
+
 def test_compensating_test_chemin_nu_sans_fonction_rejete(tmp_path: Path) -> None:
     """Round 5 (#452) — objection DeepSeek-V4-Pro (reviews/RC1-023-PR-v4) : un compensating_test
     qui n'est qu'un chemin de fichier existant, SANS ::fonction, ne doit plus suffire — même sans
