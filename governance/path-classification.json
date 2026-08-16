@@ -2457,8 +2457,8 @@
         }
       ],
       "rule_id": "governance-canon",
-      "sha256": "16f4f773d2c5bed7b464000ab87598a0af7171cd9849c50cc0c5536e46030fee",
-      "size": 85057,
+      "sha256": "6b1cc0ea68fe4e052946d77a720bb7b4fb338181c8bcc7280d1a44954a989ad6",
+      "size": 85688,
       "target_path": null,
       "type": "text"
     },
@@ -5974,8 +5974,8 @@
         }
       ],
       "rule_id": "evidence-registres-root",
-      "sha256": "2706954ca2503975d918f1e084f0812409a45fdca359412b35c475a2960951e3",
-      "size": 358182,
+      "sha256": "88329084755b85d41e507b1296e2ac4a36ff5873bdb6e25c33aef75f9f50d7f8",
+      "size": 358968,
       "target_path": null,
       "type": "text"
     },
@@ -7907,8 +7907,8 @@
         }
       ],
       "rule_id": "evidence-reviews-root",
-      "sha256": "98fda670a783f8b6a23a2783749d7746967554f33651992f68d4a02aa8d42437",
-      "size": 2446,
+      "sha256": "c455f876a642e4a5beebe21e1643a89b69e37256690f0689b91e69190e3598b5",
+      "size": 2457,
       "target_path": null,
       "type": "text"
     },
@@ -18902,6 +18902,58 @@
       "generated": false,
       "load_bearing": true,
       "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-487-v1/DeepSeek-V4-Pro.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "adf393a45c9eaa4050630e78e402c29b8863ca66a1ca63fa824761c8fc7424d9",
+      "size": 328,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-487-v1/Gemini-3.1-Pro.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "f211039a5b5b29712e70792ffce0bb13f986d71d2fa5e19d01a6d8cdd4931473",
+      "size": 329,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-487-v1/MiMo-Pro-V2.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "d2b1d6f2510708590a56c5278c21591a6aba2832cd6645c1636ba6b1406a3371",
+      "size": 1654,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-487-v1/RECU.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "15ad1738f547c6b4f7330ce7c3b47d09b9334014fb3893e09025b084465cb8fa",
+      "size": 667,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
       "path": "evidence/reviews/RC1-492-PR512/DeepSeek-V4-Pro.verdict.json",
       "referenced_by": [],
       "rule_id": "evidence-reviews-root",
@@ -23185,6 +23237,20 @@
         },
         {
           "candidate": "governance/authority.json",
+          "line": 6,
+          "referrer": "evidence/reviews/RC1-487-v1/MiMo-Pro-V2.verdict.json",
+          "resolved": "governance/authority.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/authority.json",
+          "line": 8,
+          "referrer": "evidence/reviews/RC1-487-v1/MiMo-Pro-V2.verdict.json",
+          "resolved": "governance/authority.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/authority.json",
           "line": 5,
           "referrer": "governance/AUTHORITY-MAP.md",
           "resolved": "governance/authority.json",
@@ -23332,8 +23398,8 @@
         }
       ],
       "rule_id": "governance-core",
-      "sha256": "45124abe4ea38c2f20675076dea50525ef95d3f5f22b6fb08fa6456910e79b59",
-      "size": 29261,
+      "sha256": "3ed4e95161388a0ec88284d131df59addf40c6398cd7f4d39f2fa66cb897ab9f",
+      "size": 29325,
       "target_path": null,
       "type": "text"
     },
@@ -23373,8 +23439,8 @@
         }
       ],
       "rule_id": "governance-core",
-      "sha256": "3a93b6472b6a5027edb3a4c68b693067e1a55a6edf4bf5988fde6f1ff1c49c23",
-      "size": 1443,
+      "sha256": "250506d343ce5076edd5c8710fc9402e550bcf5840eb52ad8fbf5df66e3c4887",
+      "size": 1056,
       "target_path": null,
       "type": "text"
     },
@@ -23389,6 +23455,20 @@
           "candidate": "governance/decisions/D-2026-08-14-mission-lead.md",
           "line": 0,
           "referrer": "governance/authority.json",
+          "resolved": "governance/decisions/D-2026-08-14-mission-lead.md",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/decisions/D-2026-08-14-mission-lead.md",
+          "line": 27,
+          "referrer": "CANON/plan-integral.md",
+          "resolved": "governance/decisions/D-2026-08-14-mission-lead.md",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/decisions/D-2026-08-14-mission-lead.md",
+          "line": 249,
+          "referrer": "CANON/plan-integral.md",
           "resolved": "governance/decisions/D-2026-08-14-mission-lead.md",
           "severity": "hard"
         },
@@ -25825,6 +25905,20 @@
           "candidate": "scripts/governance/validate_authority.py",
           "line": 8,
           "referrer": "evidence/reviews/RC1-001-PR431-v8/Qwen3.7-Max.verdict.json",
+          "resolved": "scripts/governance/validate_authority.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "scripts/governance/validate_authority.py",
+          "line": 7,
+          "referrer": "evidence/reviews/RC1-487-v1/MiMo-Pro-V2.verdict.json",
+          "resolved": "scripts/governance/validate_authority.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "scripts/governance/validate_authority.py",
+          "line": 14,
+          "referrer": "evidence/reviews/RC1-487-v1/MiMo-Pro-V2.verdict.json",
           "resolved": "scripts/governance/validate_authority.py",
           "severity": "hard"
         },
@@ -82857,6 +82951,31 @@
         "referrer": "evidence/reviews/RC1-459-PR517/RECU.json"
       },
       {
+        "candidate": "validate_authority.py",
+        "line": 13,
+        "referrer": "evidence/reviews/RC1-487-v1/MiMo-Pro-V2.verdict.json"
+      },
+      {
+        "candidate": "state_current.py",
+        "line": 13,
+        "referrer": "evidence/reviews/RC1-487-v1/MiMo-Pro-V2.verdict.json"
+      },
+      {
+        "candidate": "no_stub_scan.py",
+        "line": 13,
+        "referrer": "evidence/reviews/RC1-487-v1/MiMo-Pro-V2.verdict.json"
+      },
+      {
+        "candidate": "gate_docs.py",
+        "line": 13,
+        "referrer": "evidence/reviews/RC1-487-v1/MiMo-Pro-V2.verdict.json"
+      },
+      {
+        "candidate": "recu-revue/1",
+        "line": 2,
+        "referrer": "evidence/reviews/RC1-487-v1/RECU.json"
+      },
+      {
         "candidate": "recu-revue/1",
         "line": 2,
         "referrer": "evidence/reviews/RC1-492-PR512/RECU.json"
@@ -121707,6 +121826,13 @@
         "severity": "hard"
       },
       {
+        "candidate": "RC1-487-v1",
+        "line": 176,
+        "referrer": "evidence/reviews/BINDING.txt",
+        "resolved": "evidence/reviews/RC1-487-v1",
+        "severity": "hard"
+      },
+      {
         "candidate": "scripts/gate_docs.py",
         "line": 11,
         "referrer": "sonar-project.properties",
@@ -122904,6 +123030,13 @@
         "severity": "hard"
       },
       {
+        "candidate": "governance/decisions/D-2026-08-14-mission-lead.md",
+        "line": 27,
+        "referrer": "CANON/plan-integral.md",
+        "resolved": "governance/decisions/D-2026-08-14-mission-lead.md",
+        "severity": "hard"
+      },
+      {
         "candidate": "CANON/exigences-produit.md",
         "line": 149,
         "referrer": "CANON/plan-integral.md",
@@ -122929,6 +123062,13 @@
         "line": 235,
         "referrer": "CANON/plan-integral.md",
         "resolved": "MASTER-PLAN.md",
+        "severity": "hard"
+      },
+      {
+        "candidate": "governance/decisions/D-2026-08-14-mission-lead.md",
+        "line": 249,
+        "referrer": "CANON/plan-integral.md",
+        "resolved": "governance/decisions/D-2026-08-14-mission-lead.md",
         "severity": "hard"
       },
       {
@@ -133495,6 +133635,34 @@
         "severity": "hard"
       },
       {
+        "candidate": "governance/authority.json",
+        "line": 6,
+        "referrer": "evidence/reviews/RC1-487-v1/MiMo-Pro-V2.verdict.json",
+        "resolved": "governance/authority.json",
+        "severity": "hard"
+      },
+      {
+        "candidate": "scripts/governance/validate_authority.py",
+        "line": 7,
+        "referrer": "evidence/reviews/RC1-487-v1/MiMo-Pro-V2.verdict.json",
+        "resolved": "scripts/governance/validate_authority.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "governance/authority.json",
+        "line": 8,
+        "referrer": "evidence/reviews/RC1-487-v1/MiMo-Pro-V2.verdict.json",
+        "resolved": "governance/authority.json",
+        "severity": "hard"
+      },
+      {
+        "candidate": "scripts/governance/validate_authority.py",
+        "line": 14,
+        "referrer": "evidence/reviews/RC1-487-v1/MiMo-Pro-V2.verdict.json",
+        "resolved": "scripts/governance/validate_authority.py",
+        "severity": "hard"
+      },
+      {
         "candidate": "governance/STATE-CURRENT.json",
         "line": 6,
         "referrer": "evidence/reviews/RC1-493-PR-v1/DeepSeek-V4-Pro.verdict.json",
@@ -143148,7 +143316,7 @@
     "by_class": {
       "ARCHIVE": 44,
       "DOCS": 14,
-      "EVIDENCE": 1323,
+      "EVIDENCE": 1327,
       "GENERATED": 5,
       "GOVERNANCE": 172,
       "PRODUCT": 112,
@@ -143165,7 +143333,7 @@
       "evidence-audit-output-root": 18,
       "evidence-registres": 1,
       "evidence-registres-root": 35,
-      "evidence-reviews-root": 1269,
+      "evidence-reviews-root": 1273,
       "generated-authority-map": 1,
       "generated-path-classification-json": 1,
       "generated-path-classification-markdown": 1,
@@ -143201,11 +143369,11 @@
       "working-sandbox-readme": 1
     },
     "case_collisions_total": 0,
-    "dangling_references_total": 14846,
+    "dangling_references_total": 14851,
     "generated_total": 7,
-    "load_bearing_total": 1752,
+    "load_bearing_total": 1756,
     "portability_violations_total": 0,
-    "tracked_total": 1879,
+    "tracked_total": 1883,
     "unclassified_total": 0,
     "unicode_anomalies_total": 0
   },
