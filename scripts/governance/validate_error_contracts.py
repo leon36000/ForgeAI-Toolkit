@@ -6,6 +6,7 @@ import argparse
 import ast
 import datetime as dt
 import json
+import re
 import sys
 from pathlib import Path
 
@@ -387,6 +388,62 @@ def _erreurs_sites_dupliques(entrees: list[dict], root: Path) -> list[str]:
     ]
 
 
+_MOTIF_RENVOI_SITE = re.compile(r"\bsite (\d{1,6})\b")
+
+_CHAMPS_PROSE = (
+    "behavior_contract", "logging", "justification", "compensating_test_reason", "accepted_risk",
+)
+
+
+def _erreurs_renvois_croises(entrees: list[dict]) -> list[str]:
+    """Détecte un renvoi prose « site N » (convention établie dans ce fichier pour référencer un
+    site frère : « même raisonnement que le site 1109 », etc.) dont N ne correspond à AUCUN site
+    réellement contractualisé du MÊME fichier.
+
+    Round 32 (#452) — découvert en creusant l'objection GPT-5.6-Terra-Pro sur
+    detect.py:47 (behavior_contract inexact) : plusieurs renvois « site N » avaient dérivé au fil
+    des remappings successifs de site.line (rounds 7/8/27) sans jamais être mis à jour — round 31
+    en avait corrigé 3 avec une regex trop étroite (ne matchait que la phrase exacte « site N »
+    déjà vue), en laissant 2 de plus (une auto-référence à l'ancienne propre ligne de l'entrée,
+    une référence dans compensating_test_reason jamais balayée). Vérifié avant d'ajouter ce
+    garde-fou : la convention « site N » est utilisée EXCLUSIVEMENT comme renvoi vers un site
+    frère du MÊME fichier dans les 31 entrées réelles du dépôt (aucun faux positif). Détection
+    permanente plutôt que des corrections réactives au coup par coup à chaque futur remapping.
+    """
+    sites_par_fichier: dict[str, set[int]] = {}
+    for entree in entrees:
+        if not isinstance(entree, dict):
+            continue
+        site = entree.get("site")
+        if not isinstance(site, dict):
+            continue
+        path, line = site.get("path"), site.get("line")
+        if isinstance(path, str) and isinstance(line, int) and not isinstance(line, bool):
+            sites_par_fichier.setdefault(path, set()).add(line)
+
+    erreurs: list[str] = []
+    for entree in entrees:
+        if not isinstance(entree, dict):
+            continue
+        identifiant = entree.get("id", "<sans id>")
+        if not isinstance(identifiant, str):
+            identifiant = "<sans id>"
+        site = entree.get("site")
+        path = site.get("path") if isinstance(site, dict) else None
+        if not isinstance(path, str):
+            continue
+        sites_connus = sites_par_fichier.get(path, set())
+        texte = " ".join(str(entree.get(champ, "")) for champ in _CHAMPS_PROSE)
+        for m in _MOTIF_RENVOI_SITE.finditer(texte):
+            cite = int(m.group(1))
+            if cite not in sites_connus:
+                erreurs.append(
+                    f"{identifiant} : renvoi périmé « site {cite} » — ne correspond à aucun site "
+                    f"contractualisé de {path}"
+                )
+    return erreurs
+
+
 def _compter_except_handlers_reels(root: Path) -> int:
     """Recompte indépendamment (AST) le nombre total de blocs `except` sous src/forgeai/ — même
     grandeur que coverage.total_except_sites_src_forgeai, faisant foi pour la comparaison."""
@@ -649,6 +706,7 @@ def valider(root: Path, *, aujourd_hui: dt.date | None = None) -> list[str]:
     erreurs.extend(erreurs_horizon)
     erreurs.extend(_erreurs_identifiants_dupliques(contracts))
     erreurs.extend(_erreurs_sites_dupliques(contracts, root))
+    erreurs.extend(_erreurs_renvois_croises(contracts))
 
     # Round 17 (#452) — objection GPT-5.6-Terra-Pro (revue scellée) : coverage.total_except_sites_
     # src_forgeai n'était jamais vérifié contre un décompte AST réel — un total arbitraire passait

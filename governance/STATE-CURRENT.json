@@ -356,7 +356,7 @@
       },
       {
         "path": "tests/test_hardware_detect.py",
-        "sha256": "2d008680faefc4ad4951bd187e9cb0429c9e8c64055b22723856626218eb108b"
+        "sha256": "63db0f3ceb889a9e2c24881d27a3904479861da61e16dd31f543ac07847a4dcc"
       },
       {
         "path": "tests/test_health029_sondes_executables.py",
@@ -672,7 +672,7 @@
       },
       {
         "path": "tests/test_rc1023_error_contracts.py",
-        "sha256": "fd3e8ca3a2c598d45c48d225ed48704fcf220573dcc6ac1a8053969a35fe2162"
+        "sha256": "8d0efb94c0a482e09875337e51e18c2fe582e092ffb21ee2ecf94f9e7d0dc9f0"
       },
       {
         "path": "tests/test_readme_dist_status.py",
@@ -937,7 +937,7 @@
     "tests": {
       "js_files": 3,
       "python_files": 195,
-      "python_functions_declared": 2308
+      "python_functions_declared": 2311
     }
   },
   "observations": [

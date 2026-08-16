@@ -36,6 +36,30 @@ def test_cpu_detecte_depuis_lscpu_json():
     assert model != "unknown"
 
 
+def test_cpu_lscpu_partiellement_invalide_conserve_les_champs_deja_extraits(
+    capsys: pytest.CaptureFixture,
+) -> None:
+    """Round 32 (#452) — objection GPT-5.6-Terra-Pro (revue scellée) : le behavior_contract de
+    site:src/forgeai/hardware/detect.py:47 affirmait un repli COMPLET vers ("unknown", 0,
+    platform.machine()) — faux pour un échec PARTIEL. model/cores/arch sont assignés
+    SÉQUENTIELLEMENT ; un Model name valide suivi d'un CPU(s) non convertible lève APRÈS que
+    `model` a déjà été réassigné avec succès — `model` reste donc la vraie valeur extraite, PAS
+    "unknown", contrairement à l'ancien texte du contrat (corrigé dans le même commit)."""
+    lscpu_partiellement_invalide = (
+        '{"lscpu": ['
+        '{"field": "Model name:", "data": "Un CPU bien réel"},'
+        '{"field": "CPU(s):", "data": "pas-un-nombre"}'
+        ']}'
+    )
+    detector = _detector(lscpu=lscpu_partiellement_invalide)
+    model, cores, arch = detector.detect_cpu()
+    assert model == "Un CPU bien réel"  # PAS "unknown" — déjà extrait avant l'échec
+    assert cores == 0  # jamais assigné, reste au défaut initial
+    assert arch == platform.machine()  # jamais atteint, reste au défaut initial
+    captured = capsys.readouterr()
+    assert "lscpu -J illisible" in captured.err
+
+
 def test_ram_detectee_depuis_meminfo():
     ram = _detector().detect_ram_gb()
     assert 40 < ram < 50  # fixture réelle : 48371672 kB ≈ 46.1 GiB

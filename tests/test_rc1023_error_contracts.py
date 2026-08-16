@@ -480,6 +480,42 @@ def test_sites_dupliques_sous_id_distincts_detecte(tmp_path: Path) -> None:
     assert any("site dupliqué" in e and "src/forgeai/example.py:3" in e for e in erreurs)
 
 
+def test_renvoi_site_perime_detecte(tmp_path: Path) -> None:
+    """Round 32 (#452) — découvert en creusant l'objection GPT-5.6-Terra-Pro sur detect.py:47 :
+    un renvoi prose « même raisonnement que le site N » (convention établie de ce fichier) dont N
+    ne correspond à AUCUN site contractualisé n'était jamais détecté — a fallu 2 rounds
+    supplémentaires (31, 32) pour rattraper tous les renvois périmés au fil des remappings."""
+    _creer_fichier_source(
+        tmp_path,
+        "src/forgeai/example.py",
+        "try:\n    pass\nexcept ValueError:\n    pass\n",
+    )
+    contrat = _entree_valide()
+    contrat["justification"] = "Même raisonnement que le site 999 (n'existe pas)."
+    _ecrire_inventaire(tmp_path, [contrat])
+
+    erreurs = VALIDATEUR.valider(tmp_path, aujourd_hui=dt.date(2026, 1, 1))
+    assert any("renvoi périmé « site 999 »" in e for e in erreurs)
+
+
+def test_renvoi_site_valide_vers_un_frere_reste_valide(tmp_path: Path) -> None:
+    """Contre-preuve : un renvoi « site N » qui correspond à un site frère RÉELLEMENT
+    contractualisé du même fichier reste valide — la convention légitime, déjà utilisée par 31
+    entrées réelles du dépôt, ne doit pas être cassée par ce nouveau garde-fou."""
+    _creer_fichier_source(
+        tmp_path,
+        "src/forgeai/example.py",
+        "try:\n    pass\nexcept ValueError:\n    pass\ntry:\n    pass\nexcept ValueError:\n    pass\n",
+    )
+    contrat1 = _entree_valide(id_contrat="site:src/forgeai/example.py:3", path="src/forgeai/example.py", line=3)
+    contrat2 = _entree_valide(id_contrat="site:src/forgeai/example.py:7", path="src/forgeai/example.py", line=7)
+    contrat2["justification"] = "Même raisonnement que le site 3, frère réel de ce fichier."
+    _ecrire_inventaire(tmp_path, [contrat1, contrat2])
+
+    erreurs = VALIDATEUR.valider(tmp_path, aujourd_hui=dt.date(2026, 1, 1))
+    assert not any("renvoi périmé" in e for e in erreurs)
+
+
 def test_sites_dupliques_ecritures_de_chemin_equivalentes_detecte(tmp_path: Path) -> None:
     """Round 18 (#452) — objection GPT-5.6-Terra-Pro (revue scellée) : la dédup round 17
     comparait la CHAÎNE BRUTE de site.path, alors que la vérification AST résout et normalise ce
