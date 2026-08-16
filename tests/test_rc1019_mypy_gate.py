@@ -11,14 +11,17 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
 import mypy_gate  # noqa: E402
 
 
-def _base(dette=None, fichiers_proteges=None, total_erreurs=0, version=1):
+def _base(dette=None, fichiers_proteges=None, total_erreurs=0, version=1, classification=None):
     """Fabrique une base valide pour les tests."""
-    return {
+    base = {
         "version": version,
         "borne": {"total_erreurs": total_erreurs},
         "fichiers_proteges": list(fichiers_proteges or []),
         "dette": dict(dette or {}),
     }
+    if classification is not None:
+        base["classification"] = classification
+    return base
 
 
 # ---------------------------------------------------------------------------
@@ -459,7 +462,7 @@ def test_g15_executer_mypy_construit_la_commande_attendue(tmp_path, monkeypatch)
 
     assert resultat == ""
     assert captured["args"] == [
-        "python3",
+        sys.executable,
         "-m",
         "mypy",
         "src/forgeai",
@@ -506,7 +509,7 @@ def test_g15d_executer_mypy_erreur_si_python3_introuvable(tmp_path, monkeypatch)
         raise FileNotFoundError
 
     monkeypatch.setattr(mypy_gate.subprocess, "run", fake_run)
-    with pytest.raises(RuntimeError, match="python3 introuvable"):
+    with pytest.raises(RuntimeError, match="interpreteur Python introuvable"):
         mypy_gate.executer_mypy(tmp_path, "src/forgeai")
 
 
@@ -554,3 +557,148 @@ def test_g17b_valider_chemin_rapport_refuse_parent_inexistant(tmp_path):
     chemin = tmp_path / "inexistant" / "rapport.json"
     with pytest.raises(ValueError, match="--rapport-json"):
         mypy_gate._valider_chemin_rapport(str(chemin))
+
+
+# ---------------------------------------------------------------------------
+# Correctif post-revue scellée #449 (round 1) — protection permanente
+# ---------------------------------------------------------------------------
+
+def test_g18_fichier_proteges_retrograde_vers_dette_est_detecte():
+    """Un fichier protégé dans la référence, rétrogradé en dette courante, est détecté."""
+    reference = _base(fichiers_proteges=["src/a.py"], total_erreurs=0)
+    base = _base(dette={"src/a.py": 1}, total_erreurs=1)
+
+    anomalies = mypy_gate.anomalies(
+        reels={"src/a.py"},
+        erreurs={"src/a.py": 1},
+        base=base,
+        base_reference=reference,
+    )
+
+    assert any(
+        "src/a.py" in m and "retire de la protection" in m for m in anomalies
+    )
+
+
+def test_g18b_fichier_proteges_retire_completement_est_detecte():
+    """Un fichier protégé dans la référence, absent de la base courante, est détecté."""
+    reference = _base(fichiers_proteges=["src/a.py"], total_erreurs=0)
+    base = _base(total_erreurs=0)
+
+    anomalies = mypy_gate.anomalies(
+        reels={"src/a.py"},
+        erreurs={},
+        base=base,
+        base_reference=reference,
+    )
+
+    assert any(
+        "src/a.py" in m and "retire de la protection" in m for m in anomalies
+    )
+
+
+def test_g18c_fichier_proteges_dans_la_reference_ET_courant_ne_produit_aucune_anomalie_de_ce_type():
+    """Un fichier protégé dans les deux bases ne déclenche pas cette anomalie."""
+    reference = _base(fichiers_proteges=["src/a.py"], total_erreurs=0)
+    base = _base(fichiers_proteges=["src/a.py"], total_erreurs=0)
+
+    anomalies = mypy_gate.anomalies(
+        reels={"src/a.py"},
+        erreurs={},
+        base=base,
+        base_reference=reference,
+    )
+
+    assert not any("retire de la protection" in m for m in anomalies)
+    assert anomalies == []
+
+
+# ---------------------------------------------------------------------------
+# Tests pour _valider_classification
+# ---------------------------------------------------------------------------
+
+def test_g19_classification_absente_est_acceptee():
+    """Une classification absente (None) est acceptée et retourne {}."""
+    assert mypy_gate._valider_classification(None, {"a.py": 3}, "base") == {}
+
+
+def test_g19b_classification_coherente_est_acceptee():
+    """Une classification cohérente avec la dette est acceptée telle quelle."""
+    classification = {"a.py": {"union-attr": 2, "misc": 1}}
+    assert (
+        mypy_gate._valider_classification(
+            classification, {"a.py": 3}, "base"
+        )
+        == classification
+    )
+
+
+def test_g19c_classification_somme_incoherente_leve():
+    """La somme des comptes doit égale la dette, sinon ValueError."""
+    with pytest.raises(ValueError, match="incoherente"):
+        mypy_gate._valider_classification(
+            {"a.py": {"union-attr": 5}}, {"a.py": 3}, "base"
+        )
+
+
+def test_g19d_classification_cles_incoherentes_avec_dette_leve():
+    """Les clés de classification doivent correspondre exactement aux clés de dette."""
+    # Clé en trop dans la classification.
+    with pytest.raises(ValueError):
+        mypy_gate._valider_classification(
+            {"a.py": {"x": 3}, "b.py": {"y": 2}},
+            {"a.py": 3},
+            "base",
+        )
+
+    # Clé manquante dans la classification.
+    with pytest.raises(ValueError):
+        mypy_gate._valider_classification(
+            {"a.py": {"x": 2}},
+            {"a.py": 2, "b.py": 4},
+            "base",
+        )
+
+
+def test_g19e_classification_valeur_non_positive_leve():
+    """Chaque compte de code doit être un entier strictement positif non booléen."""
+    # Zéro.
+    with pytest.raises(ValueError):
+        mypy_gate._valider_classification(
+            {"a.py": {"x": 0}}, {"a.py": 1}, "base"
+        )
+
+    # Négatif.
+    with pytest.raises(ValueError):
+        mypy_gate._valider_classification(
+            {"a.py": {"x": -1}}, {"a.py": 1}, "base"
+        )
+
+    # Booléen.
+    with pytest.raises(ValueError):
+        mypy_gate._valider_classification(
+            {"a.py": {"x": True}}, {"a.py": 1}, "base"
+        )
+
+
+def test_g19f_valider_base_accepte_classification_valide():
+    """_valider_base accepte une base complète avec classification cohérente."""
+    base = _base(
+        dette={"a.py": 3},
+        fichiers_proteges=["b.py"],
+        total_erreurs=3,
+        classification={"a.py": {"union-attr": 2, "misc": 1}},
+    )
+    assert mypy_gate._valider_base(base, "base") == base
+
+
+def test_g19g_valider_base_refuse_classification_incoherente():
+    """_valider_base lève ValueError si la classification est incohérente avec la dette."""
+    base = _base(
+        dette={"a.py": 3},
+        fichiers_proteges=["b.py"],
+        total_erreurs=3,
+        classification={"a.py": {"union-attr": 5}},
+    )
+    with pytest.raises(ValueError, match="incoherente"):
+        mypy_gate._valider_base(base, "base")

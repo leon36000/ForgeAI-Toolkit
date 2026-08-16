@@ -31,14 +31,15 @@ def _valider_cible(cible: str) -> None:
 
 
 def executer_mypy(racine: Path, cible: str) -> str:
-    """Lance `python3 -m mypy <cible> --ignore-missing-imports` (cwd=racine), capture
-    stdout+stderr, retourne le texte combiné. mypy sort avec un code non-nul QUAND IL TROUVE DES
-    ERREURS DE TYPE — c'est le cas normal attendu, PAS une exception : ne jamais lever sur un
-    exit code mypy non-nul en soi. Ne lever RuntimeError QUE si le module mypy est absent
-    (FileNotFoundError sur l'exécutable python, ou le message mypy indiquant l'absence du
-    module) — dans ce cas message clair invitant à installer `mypy>=1.10`."""
+    """Lance `<interpréteur courant> -m mypy <cible> --ignore-missing-imports` (cwd=racine),
+    capture stdout+stderr, retourne le texte combiné. Utilise sys.executable, pas python3 en dur.
+    mypy sort avec un code non-nul QUAND IL TROUVE DES ERREURS DE TYPE — c'est le cas normal
+    attendu, PAS une exception : ne jamais lever sur un exit code mypy non-nul en soi. Ne lever
+    RuntimeError QUE si l'interpréteur est introuvable (FileNotFoundError sur sys.executable) ou
+    si le module mypy est absent (message mypy indiquant l'absence du module) — dans ce cas
+    message clair invitant à installer `mypy>=1.10`."""
     _valider_cible(cible)
-    commande = ["python3", "-m", "mypy", cible, "--ignore-missing-imports"]
+    commande = [sys.executable, "-m", "mypy", cible, "--ignore-missing-imports"]
     try:
         resultat = subprocess.run(
             commande,
@@ -49,8 +50,9 @@ def executer_mypy(racine: Path, cible: str) -> str:
         )
     except FileNotFoundError as erreur:
         raise RuntimeError(
-            "python3 introuvable ; installer mypy>=1.10 (déjà en dev deps pyproject.toml, "
-            "et à ajouter à requirements-ci.in / requirements-ci.txt)"
+            "interpreteur Python introuvable (sys.executable) ; installer mypy>=1.10 "
+            "(déjà en dev deps pyproject.toml, et à ajouter à requirements-ci.in / "
+            "requirements-ci.txt)"
         ) from erreur
 
     sortie = resultat.stdout + resultat.stderr
@@ -139,11 +141,69 @@ def _valider_dette(dette: Any, libelle: str) -> dict[str, int]:
     return dette
 
 
+def _valider_classification(
+    classification: Any, dette: dict[str, int], libelle: str
+) -> dict[str, dict[str, int]]:
+    """Valide la classification mypy optionnelle. Si absente ou null, retourne {}.
+
+    Si présente : doit être un dict dont les clés correspondent exactement aux clés de `dette`.
+    Pour chaque fichier, la valeur doit être un dict `code mypy -> compte`, chaque compte
+    strictement positif non booléen, et la somme des comptes doit égaler la dette du fichier.
+    Lève ValueError avec message explicite selon la violation (clés manquantes/en trop, valeur
+    non positive, somme incohérente). La classification reste informationnelle.
+    """
+    if classification is None:
+        return {}
+
+    if not isinstance(classification, dict):
+        raise ValueError(f"{libelle}.classification doit etre un objet")
+
+    cle_classification = set(classification.keys())
+    cle_dette = set(dette.keys())
+    if cle_classification != cle_dette:
+        manquantes = sorted(cle_dette - cle_classification)
+        en_trop = sorted(cle_classification - cle_dette)
+        details: list[str] = []
+        if manquantes:
+            details.append(f"manquantes pour {manquantes}")
+        if en_trop:
+            details.append(f"en trop pour {en_trop}")
+        raise ValueError(
+            f"{libelle}.classification : cles incoherentes avec dette ({', '.join(details)})"
+        )
+
+    for fichier, plafond in dette.items():
+        comptes = classification[fichier]
+        if not isinstance(comptes, dict):
+            raise ValueError(
+                f"{libelle}.classification[{fichier!r}] doit etre un objet"
+            )
+        for code, compte in comptes.items():
+            if not isinstance(code, str):
+                raise ValueError(
+                    f"{libelle}.classification[{fichier!r}] contient un code non chaine"
+                )
+            if isinstance(compte, bool) or not isinstance(compte, int) or compte <= 0:
+                raise ValueError(
+                    f"{libelle}.classification[{fichier!r}][{code!r}] doit etre un "
+                    "entier strictement positif"
+                )
+        total = sum(comptes.values())
+        if total != plafond:
+            raise ValueError(
+                f"{libelle}.classification[{fichier!r}] : somme des codes ({total}) "
+                f"incoherente avec dette ({plafond})"
+            )
+
+    return classification
+
+
 def _valider_base(base: Any, libelle: str) -> dict[str, Any]:
     """Valide la structure : `version` (int), `borne.total_erreurs` (int >= 0, pas un bool),
     `fichiers_proteges` (liste de str, sans doublon), `dette` (dict str->int, toutes les valeurs
-    > 0, pas de bool). Valide l'invariant de disjonction ci-dessus. Lève ValueError avec message
-    explicite sinon. Retourne `base` si valide."""
+    > 0, pas de bool), `classification` optionnelle (dict cohérent avec `dette`). Valide
+    l'invariant de disjonction ci-dessus. Lève ValueError avec message explicite sinon. Retourne
+    `base` si valide."""
     if not isinstance(base, dict):
         raise ValueError(f"{libelle} doit etre un objet JSON")
 
@@ -170,6 +230,9 @@ def _valider_base(base: Any, libelle: str) -> dict[str, Any]:
             f"{libelle} : les fichiers {sorted(intersection)} sont a la fois "
             "dans fichiers_proteges et dans dette"
         )
+
+    # classification (optionnelle, uniquement validée si présente)
+    _valider_classification(base.get("classification"), dette, libelle)
 
     return base
 
@@ -254,11 +317,20 @@ def _anomalies_reference(
     dette: dict[str, int],
     borne_totale: int,
     reference: dict[str, Any],
+    proteges: set[str],
 ) -> list[str]:
-    """Règle 5 : comparaison avec la base de référence (aucune croissance non justifiée)."""
+    """Règle 5 : comparaison avec la base de référence (aucune croissance non justifiée,
+    protection permanente)."""
     resultat: list[str] = []
     ref_proteges = set(reference["fichiers_proteges"])
     ref_dette = reference["dette"]
+
+    for f in sorted(ref_proteges):
+        if f not in proteges:
+            resultat.append(
+                f"fichier {f} retire de la protection depuis la reference (etait dans "
+                "fichiers_proteges) : la protection est permanente, jamais retiree"
+            )
 
     for f, plafond in sorted(dette.items()):
         if f in ref_dette and plafond > ref_dette[f]:
@@ -298,7 +370,8 @@ def anomalies(
     4. borne totale inconditionnelle (mêmes garanties que la borne de gate_docs.py — ne dépend
        d'aucun argument optionnel) ;
     5. si `base_reference` est fourni : toute dette ou borne supérieure à la référence est une
-       extension non justifiée (anti-contournement, mirrorant
+       extension non justifiée, et tout fichier protégé dans la référence doit rester protégé
+       dans la base courante (anti-contournement, mirrorant
        gate_docs._charger_base_reference_git).
 
     Retourne la liste des messages d'anomalie (vide si aucune)."""
@@ -325,6 +398,7 @@ def anomalies(
                 dette,
                 base_validee["borne"]["total_erreurs"],
                 reference_validee,
+                proteges,
             )
         )
 
@@ -433,6 +507,7 @@ def main(argv: list[str] | None = None) -> int:
                 "anomalies": rapport,
                 "fichiers_proteges": n_proteges,
                 "fichiers_en_dette": n_dette,
+                "classification": base.get("classification", {}),
             }
             with open(chemin_rapport, "w", encoding="utf-8") as fh:
                 json.dump(rapport_json, fh, indent=2)

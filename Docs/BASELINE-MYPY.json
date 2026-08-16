@@ -92,5 +92,54 @@
     "src/forgeai/rag/hardened.py": 1,
     "src/forgeai/renderers/k3s.py": 6,
     "src/forgeai/web/server.py": 106
+  },
+  "classification": {
+    "src/forgeai/cli.py": {
+      "arg-type": 1,
+      "assignment": 3
+    },
+    "src/forgeai/core/_portable_lock.py": {
+      "attr-defined": 4
+    },
+    "src/forgeai/core/proc.py": {
+      "attr-defined": 1
+    },
+    "src/forgeai/core/registre.py": {
+      "arg-type": 1,
+      "misc": 1,
+      "union-attr": 2
+    },
+    "src/forgeai/core/registre_completude.py": {
+      "arg-type": 1
+    },
+    "src/forgeai/guardrails/io_guard.py": {
+      "union-attr": 2
+    },
+    "src/forgeai/ide/bootstrap.py": {
+      "dict-item": 1
+    },
+    "src/forgeai/planner/assemble.py": {
+      "assignment": 2,
+      "attr-defined": 1
+    },
+    "src/forgeai/portability.py": {
+      "arg-type": 1
+    },
+    "src/forgeai/rag/hardened.py": {
+      "return-value": 1
+    },
+    "src/forgeai/renderers/k3s.py": {
+      "arg-type": 4,
+      "assignment": 1,
+      "attr-defined": 1
+    },
+    "src/forgeai/web/server.py": {
+      "arg-type": 4,
+      "assignment": 8,
+      "attr-defined": 10,
+      "misc": 1,
+      "union-attr": 82,
+      "var-annotated": 1
+    }
   }
 }
