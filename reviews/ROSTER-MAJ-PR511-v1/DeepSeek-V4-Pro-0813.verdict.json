@@ -1,0 +1,19 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "tests/test_fix_audit_1b_reviews_gate_in_process.py",
+   "description": "Le tuple de revieweurs conserve 'DeepSeek-V4-Pro' alors que le manifeste définit le provider_id 'DeepSeek-V4-Pro-0813' et le modele 'DeepSeek V4 Pro 0813'. Si ce test résout les vendors via le manifeste, ce libellé n'est pas aligné sur les identifiants réels.",
+   "preuve": "diff test_fix_audit_1b_reviews_gate_in_process.py:79 ; manifests/roles.yaml: provider_id: DeepSeek-V4-Pro-0813, modele: DeepSeek V4 Pro 0813"
+  }
+ ],
+ "date_heure": "2026-08-16T04:49:49.597644+00:00",
+ "prompt_sha256": "7f69ed4fd599eae52cfcbaf083b700b8730733fd6b743a99272d3ca2e23e59cb",
+ "reviewer_model": "DeepSeek-V4-Pro-0813",
+ "modele_servi": "1cbd427d85a4593a157a49bb0ad51ededb429b85aca980b3b23cd445246b9fcb",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

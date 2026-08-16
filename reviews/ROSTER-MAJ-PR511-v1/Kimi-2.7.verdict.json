@@ -1,0 +1,19 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "tests/test_fix_audit_1b_reviews_gate_in_process.py",
+   "description": "L'identifiant de modèle utilisé dans le cas nominal (`MiMo-2.5-Pro`) ne correspond pas au provider_id du manifeste (`MiMo-V2.5-Pro` pour le membre actif `mimo`). Sans accès à la gateway LiteLLM, il est impossible de vérifier lequel est l'identifiant réel, ce qui laisse un doute sur l'alignement complet des tests sur les identifiants réels.",
+   "preuve": "tests/test_fix_audit_1b_reviews_gate_in_process.py : tuple `(\"DeepSeek-V4-Pro\", \"MiMo-2.5-Pro\", \"Qwen3.7-Max\")` ; manifests/roles.yaml : entrée `mimo` avec `provider_id: MiMo-V2.5-Pro`"
+  }
+ ],
+ "date_heure": "2026-08-16T04:47:27.745111+00:00",
+ "prompt_sha256": "7f69ed4fd599eae52cfcbaf083b700b8730733fd6b743a99272d3ca2e23e59cb",
+ "reviewer_model": "Kimi-2.7",
+ "modele_servi": "kimi-27-openrouter",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}
