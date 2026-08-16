@@ -1,0 +1,46 @@
+name: Sonar suppressions
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Valider l'inventaire Sonar
+        run: python scripts/governance/validate_sonar_suppressions.py --root .
+
+      - name: Détecter une suppression voisine non inventoriée
+        shell: bash
+        run: |
+          set -euo pipefail
+          travail="$(mktemp -d)"
+          trap 'rm -rf "$travail"' EXIT
+          cp -a . "$travail/repo"
+          cd "$travail/repo"
+
+          printf '%s\n' \
+            '' \
+            '_mutation_voisine_non_supprimee = True' \
+            '_mutation_voisine_non_inventoriee = True  # NOSONAR(S9999)' \
+            >> src/forgeai/models/vault.py
+
+          python -m py_compile src/forgeai/models/vault.py
+
+          set +e
+          sortie="$(python scripts/governance/validate_sonar_suppressions.py --root . 2>&1)"
+          statut=$?
+          set -e
+
+          test "$statut" -ne 0
+          printf '%s\n' "$sortie" | grep -F "suppression réelle non inventoriée : inline:src/forgeai/models/vault.py:"
+          printf '%s\n' "$sortie" | grep -F ":S9999"

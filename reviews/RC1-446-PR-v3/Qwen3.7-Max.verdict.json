@@ -1,0 +1,19 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "majeure",
+   "fichier": ".github/workflows/sonar-suppressions.yml",
+   "description": "La mutation contrôlée dans le workflow CI va échouer pour une mauvaise raison (IndentationError) au lieu de prouver l'efficacité du validateur. Le bloc heredoc `<<'PYTHON'` est indenté de 10 espaces dans le YAML. Bash va donc injecter ces 10 espaces au début des lignes ajoutées à `vault.py`. Comme ce code se retrouve au niveau supérieur du module, Python lèvera une `IndentationError` lors du `tokenize` dans le validateur. Le script plantera avec une traceback, le `grep` échouera, et l'étape CI sera rouge, mais sans jamais avoir exécuté la logique de détection des suppressions non inventoriées. Il faut désindenter le contenu du heredoc par rapport à la clé `run:` (même si cela semble disgracieux dans le YAML) ou utiliser une autre méthode d'injection.",
+   "preuve": "Lignes 33-37 du workflow : `cat >> src/forgeai/models/vault.py <<'PYTHON'\\n\\n          _mutation_voisine_non_supprimee = True\\n          _mutation_voisine_non_inventoriee = True  # NOSONAR(S9999)\\n          PYTHON`"
+  }
+ ],
+ "date_heure": "2026-08-15T23:06:53.495878+00:00",
+ "prompt_sha256": "160fdff5f410268c1937f08f832062b11acdaec70526ac347f18ac1c03b5c8cb",
+ "reviewer_model": "Qwen3.7-Max",
+ "modele_servi": "qwen37-max-openrouter",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

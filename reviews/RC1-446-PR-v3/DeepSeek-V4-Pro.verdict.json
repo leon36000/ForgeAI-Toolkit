@@ -1,0 +1,19 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "critique",
+   "fichier": "governance/sonar-suppressions.json",
+   "description": "Toutes les suppressions de l'inventaire ont review_due fixée au 2027-02-10, alors que review_horizon.days vaut 180. À la date courante 2026-04-26, la date maximale autorisée est 2026-10-23. Le validateur rejette donc chaque entrée pour dépassement de l'horizon, ce qui rend le gate CI rouge immédiatement et empêche la PR d'être verte.",
+   "preuve": "sonar-suppressions.json contient 'review_horizon.days=180' et 'review_due: \"2027-02-10\"' pour toutes les suppressions. validate_sonar_suppressions.py, fonction _erreurs_date_revision, ajoute une erreur si 'echeance > date_maximale'. 2026-04-26 + 180 jours = 2026-10-23, donc 2027-02-10 dépasse l'horizon."
+  }
+ ],
+ "date_heure": "2026-08-15T23:07:11.023750+00:00",
+ "prompt_sha256": "160fdff5f410268c1937f08f832062b11acdaec70526ac347f18ac1c03b5c8cb",
+ "reviewer_model": "DeepSeek-V4-Pro",
+ "modele_servi": "deepseek-v4-pro-direct",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

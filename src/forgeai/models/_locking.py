@@ -50,7 +50,7 @@ def _fsync_directory(path: Path) -> None:
     """Persiste les changements de nom du répertoire contenant un fichier."""
     # S2083 est un faux positif ici : `path` est le parent exact de la
     # destination locale choisie par l'opérateur, et aucun privilège n'est élevé.
-    directory_fd = os.open(path, os.O_RDONLY)  # NOSONAR S2083
+    directory_fd = os.open(path, os.O_RDONLY)  # NOSONAR(S2083)
     try:
         os.fsync(directory_fd)
     finally:
@@ -76,7 +76,7 @@ def atomic_write_text(path: Path, payload: str, *, mode: int = 0o600) -> None:
         # S2083 est un faux positif : le fichier temporaire est créé par
         # mkstemp dans `path.parent`; remplacer `path` est la fonction explicite
         # de ce writer local (notamment pour la destination CLI `--out`).
-        os.replace(temporary, path)  # NOSONAR S2083
+        os.replace(temporary, path)  # NOSONAR(S2083)
         _fsync_directory(path.parent)
     except BaseException:
         if descriptor_open:

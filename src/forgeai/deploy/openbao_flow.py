@@ -99,14 +99,14 @@ class FileKeyStore:
         # isolé (l'unsealer ne le voit jamais).
         gid = resolve_openbao_gid()
         if gid is None:
-            _write_file(self._unseal_path, data["unseal_key"], 0o644)
+            _write_file(self._unseal_path, data["unseal_key"], 0o644)  # NOSONAR(S2612) — justification : governance/sonar-suppressions.json
             return
-        _write_file(self._unseal_path, data["unseal_key"], 0o640)
+        _write_file(self._unseal_path, data["unseal_key"], 0o640)  # NOSONAR(S2612) — justification : governance/sonar-suppressions.json
         try:
             os.chown(self._unseal_path, -1, gid)
         except (PermissionError, OSError):
             # Repli : ne JAMAIS laisser un 0640 orphelin de groupe (casserait le re-unseal e2e).
-            os.chmod(self._unseal_path, 0o644)
+            os.chmod(self._unseal_path, 0o644)  # NOSONAR(S2612) — justification : governance/sonar-suppressions.json
 
 
 class FileSecretStore:

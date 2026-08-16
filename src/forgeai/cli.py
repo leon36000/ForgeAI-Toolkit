@@ -70,7 +70,7 @@ IMMUDB_COLLECTION = "forgeai_audit"  # collection immudb du ledger d'audit du d�
 # secret forgeai). La valeur d'immudb ici = l'immuabilité tamper-evident, pas le contrôle d'accès
 # local/LAN ; la rotation du mot de passe admin relève du durcissement production (hors E3c).
 IMMUDB_USER = "immudb"
-IMMUDB_PASSWORD = "immudb"  # noqa: S105  proof:allow — défaut PUBLIC immudb (dev), pas un secret
+IMMUDB_PASSWORD = "immudb"  # noqa: S105  proof:allow  # NOSONAR(S2068) — identifiant public par défaut de l'image immudb officielle — défaut PUBLIC immudb (dev), pas un secret
 DEFAULT_OVERLAY = deploy_overlay_path()
 
 
@@ -118,7 +118,7 @@ def _svc_url(host: str, port: int) -> str:
     """URL d'un service LOCAL du socle déployé (127.0.0.1 / hôte LAN, ports Docker publiés).
     Le trafic est local/LAN entre briques du même déploiement — pas de transmission réseau
     externe ; le TLS inter-briques est hors périmètre de la série E."""
-    return f"http://{host}:{port}"  # NOSONAR S5332 — service local/LAN, cf. docstring
+    return f"http://{host}:{port}"  # NOSONAR(S5332) — service local/LAN, cf. docstring
 
 
 # openbao PRODUCTION (FAI-0005 S5) : chemin de santé tolérant au coffre scellé (le process vit scellé).
