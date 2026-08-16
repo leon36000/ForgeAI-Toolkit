@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 import platform
 import re
+import sys
 from pathlib import Path
 
 from forgeai.core.models import GPU, Disk, HardwareProfile
@@ -42,8 +43,12 @@ class HardwareDetector:
                 model = entries.get("Model name", entries.get("Nom de modèle", model))
                 cores = int(entries.get("CPU(s)", entries.get("Processeur(s)", "0")))
                 arch = entries.get("Architecture", arch)
-            except (json.JSONDecodeError, KeyError, ValueError):
-                pass
+            except (json.JSONDecodeError, KeyError, ValueError) as exc:
+                print(
+                    f"[hardware.detect] lscpu -J illisible, repli sur les valeurs "
+                    f"par défaut : {exc}",
+                    file=sys.stderr,
+                )
         return model, cores, arch
 
     @staticmethod
@@ -65,8 +70,11 @@ class HardwareDetector:
             for line in Path(self.meminfo_path).read_text(encoding="ascii").splitlines():
                 if line.startswith("MemTotal:"):
                     return round(int(line.split()[1]) / 1024 / 1024, 1)
-        except (OSError, ValueError, IndexError):
-            pass
+        except (OSError, ValueError, IndexError) as exc:
+            print(
+                f"[hardware.detect] {self.meminfo_path} illisible, RAM détectée = 0.0 Go : {exc}",
+                file=sys.stderr,
+            )
         return 0.0
 
     def detect_disks(self) -> tuple[Disk, ...]:

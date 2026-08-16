@@ -1,6 +1,9 @@
 """Tests S01 — détection hardware sur fixtures réelles capturées (machine forge, 2026-07-14)."""
+import platform
 import sys
 from pathlib import Path
+
+import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
 
@@ -64,6 +67,29 @@ def test_source_defaillante_ne_bloque_pas_le_reste():
     assert profile.cpu_model == "unknown"      # source CPU dégradée…
     assert profile.ram_gb > 40                 # …les autres sources répondent
     assert len(profile.gpus) >= 1
+
+
+def test_cpu_lscpu_illisible_journalise_et_replie(capsys: pytest.CaptureFixture) -> None:
+    """Vérifie le repli sur les valeurs par défaut et le log stderr si lscpu est invalide."""
+    detector = _detector(lscpu="ceci n'est pas du JSON")
+    model, cores, arch = detector.detect_cpu()
+    assert model == "unknown"
+    assert cores == 0
+    assert arch == platform.machine()
+    captured = capsys.readouterr()
+    assert "lscpu -J illisible" in captured.err
+
+
+def test_ram_meminfo_illisible_journalise_et_replie(
+    tmp_path: Path, capsys: pytest.CaptureFixture
+) -> None:
+    """Vérifie le repli à 0.0 Go et le log stderr si meminfo est illisible ou absent."""
+    bad_meminfo = tmp_path / "meminfo_absent.txt"
+    detector = HardwareDetector(_runner(), meminfo_path=str(bad_meminfo))
+    ram = detector.detect_ram_gb()
+    assert ram == 0.0
+    captured = capsys.readouterr()
+    assert "illisible" in captured.err
 
 
 def test_disque_racine_detecte():

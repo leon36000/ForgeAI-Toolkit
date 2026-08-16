@@ -191,6 +191,35 @@ def test_kill_tree_escalates_to_sigkill(tmp_path: Path) -> None:
             proc.wait()
 
 
+@posix_only
+def test_kill_tree_sigkill_reap_timeout_logs_stderr(
+    capsys: pytest.CaptureFixture, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Vérifie que l'échec de réap après SIGKILL émet un avertissement sur stderr."""
+    proc = subprocess.Popen(
+        [sys.executable, "-c", "import time; time.sleep(10)"],
+        start_new_session=True,
+    )
+    orig_wait = proc.wait
+
+    def mock_wait(timeout=None):
+        raise subprocess.TimeoutExpired(cmd="mock", timeout=timeout or 0)
+
+    monkeypatch.setattr(proc, "wait", mock_wait)
+    try:
+        _kill_tree(proc, grace_seconds=0.1)
+    finally:
+        try:
+            proc.kill()
+            orig_wait(timeout=1.0)
+        except Exception:  # proof:allow — filet de nettoyage best-effort du process de test, pas du code produit
+            pass
+
+    captured = capsys.readouterr()
+    assert "n'a pas été réapé" in captured.err
+    assert str(proc.pid) in captured.err
+
+
 # ---------------------------------------------------------------------------
 # G7 – AST : proc.py ne contient aucun import forgeai.*
 # ---------------------------------------------------------------------------

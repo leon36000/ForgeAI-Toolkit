@@ -6,6 +6,7 @@ import os
 import signal
 import shlex
 import subprocess
+import sys
 import threading
 import time
 from collections.abc import Callable
@@ -145,7 +146,11 @@ def _kill_tree(proc, grace_seconds: float) -> None:  # type: ignore
         try:
             proc.wait(timeout=5)  # type: ignore
         except subprocess.TimeoutExpired:
-            pass
+            print(
+                f"[kill_tree] process {proc.pid} n'a pas été réapé 5s après SIGKILL "
+                "(possible D-state)",
+                file=sys.stderr,
+            )
     else:  # Windows
         subprocess.run(
             ["taskkill", "/F", "/T", "/PID", str(proc.pid)],  # type: ignore

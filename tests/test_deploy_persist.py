@@ -268,3 +268,37 @@ def test_persist_concurrent_pas_de_corruption(tmp_path) -> None:
     assert set(data) == {"done", "exit_code", "lines"}
     assert isinstance(data["lines"], list)
     assert isinstance(data["done"], bool)
+
+
+def test_persist_deploy_state_echec_ecriture_ajoute_avertissement(monkeypatch) -> None:
+    """Si l'écriture sur disque échoue, _persist_deploy_state ajoute un avertissement sans lever."""
+    def _boom(*args, **kwargs):
+        raise OSError("disque plein")
+
+    monkeypatch.setattr(server.tempfile, "mkstemp", _boom)
+
+    server._persist_deploy_state()
+
+    with server._DEPLOY_STATE["lock"]:
+        lines = list(server._DEPLOY_STATE["lines"])
+    assert any(
+        ln.startswith("avertissement: échec persistance état déploiement")
+        for ln in lines
+    )
+
+
+def test_load_deploy_state_echec_inattendu_journalise_stderr(monkeypatch, capsys) -> None:
+    """Une exception inattendue lors du chargement journalise un message sur stderr sans lever."""
+    state_path = server._deploy_state_path()
+    state_path.parent.mkdir(parents=True, exist_ok=True)
+    state_path.write_text("{}", encoding="utf-8")
+
+    def _boom(*args, **kwargs):
+        raise OSError("erreur I/O inattendue")
+
+    monkeypatch.setattr(server.Path, "read_text", _boom)
+
+    server._load_deploy_state()
+
+    captured = capsys.readouterr()
+    assert "échec de restauration" in captured.err

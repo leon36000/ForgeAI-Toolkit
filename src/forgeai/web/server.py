@@ -547,8 +547,11 @@ def _persist_deploy_state() -> None:
         except Exception:
             tmp.unlink(missing_ok=True)  # nettoie le tmp orphelin ; fd déjà fermé par le with
             raise
-    except Exception:
-        pass
+    except Exception as exc:
+        with _DEPLOY_STATE["lock"]:
+            _DEPLOY_STATE["lines"].append(
+                f"avertissement: échec persistance état déploiement : {exc}"
+            )
 
 
 def _load_deploy_state() -> None:
@@ -569,8 +572,11 @@ def _load_deploy_state() -> None:
             _DEPLOY_STATE["lines"] = list(lines)
             _DEPLOY_STATE["done"] = done
             _DEPLOY_STATE["exit_code"] = exit_code
-    except Exception:
-        pass
+    except Exception as exc:
+        print(
+            f"[web.server] échec de restauration de l'état de déploiement au démarrage : {exc}",
+            file=sys.stderr,
+        )
 
 
 def _models_home() -> Path:
@@ -1519,14 +1525,20 @@ class ForgeAIHandler(BaseHTTPRequestHandler):
                         _DEPLOY_STATE["exit_code"] = new_proc.returncode
                         _DEPLOY_STATE["done"] = True
                     _persist_deploy_state()
-                except Exception:
+                except Exception as exc:
                     with _DEPLOY_STATE["lock"]:
+                        _DEPLOY_STATE["lines"].append(
+                            f"avertissement: le thread de lecture du déploiement a échoué : {exc}"
+                        )
                         if new_proc.returncode is None:
                             try:
                                 new_proc.kill()
                                 new_proc.wait()
-                            except Exception:
-                                pass
+                            except Exception as exc_kill:
+                                _DEPLOY_STATE["lines"].append(
+                                    "avertissement: échec du nettoyage best-effort du "
+                                    f"process de déploiement pendant la récupération : {exc_kill}"
+                                )
                         _DEPLOY_STATE["exit_code"] = new_proc.returncode if new_proc.returncode is not None else -1
                         _DEPLOY_STATE["done"] = True
                     _persist_deploy_state()

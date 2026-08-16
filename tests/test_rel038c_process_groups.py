@@ -6,10 +6,13 @@ ne doit jamais survivre à l'arrêt du serveur (orphelin non supervisé).
 """
 
 import io
+import json
 import os
 import subprocess
 import sys
+import threading
 import time
+import urllib.request
 
 import pytest
 
@@ -194,3 +197,125 @@ def test_g6_kill_tree_est_public():
     """CA3 : `kill_tree` est exposé publiquement (réutilisation de CLI-036, sans import privé)."""
     from forgeai.core.proc import kill_tree as public_kill_tree
     assert callable(public_kill_tree)
+
+
+def test_reader_thread_echec_ajoute_avertissement(monkeypatch):
+    """Un échec dans la boucle du thread lecteur ajoute un avertissement et termine sans deadlock."""
+    monkeypatch.setattr(server, "load_stack", lambda stack_id: None)
+    monkeypatch.setattr(
+        server,
+        "_DEPLOY_CMD",
+        [sys.executable, "-c", "import sys, time; print('depart'); sys.stdout.flush(); time.sleep(10)"],
+    )
+
+    def _boom_redact(text):
+        raise RuntimeError("erreur simulation lecteur")
+
+    monkeypatch.setattr(server, "redact_text", _boom_redact)
+
+    with server._DEPLOY_STATE["lock"]:
+        server._DEPLOY_STATE["lines"].clear()
+        server._DEPLOY_STATE["done"] = False
+        server._DEPLOY_STATE["exit_code"] = None
+
+    srv = server.build_server("127.0.0.1", 0)
+    threading.Thread(target=srv.serve_forever, daemon=True).start()
+    base = f"http://127.0.0.1:{srv.server_address[1]}"
+    try:
+        corps = json.dumps(
+            {"stack": "agentique", "backend": "compose", "confirm": "FORCER"}
+        ).encode("utf-8")
+        req = urllib.request.Request(
+            f"{base}/api/deploy",
+            data=corps,
+            method="POST",
+            headers={"Content-Type": "application/json"},
+        )
+        with urllib.request.urlopen(req, timeout=5) as resp:
+            assert resp.status == 202
+
+        deadline = time.monotonic() + 5.0
+        while time.monotonic() < deadline:
+            with server._DEPLOY_STATE["lock"]:
+                if server._DEPLOY_STATE["done"]:
+                    break
+            time.sleep(0.05)
+        else:
+            pytest.fail("Timeout attendant la fin du reader (deadlock potentiel)")
+
+        with server._DEPLOY_STATE["lock"]:
+            lines = list(server._DEPLOY_STATE["lines"])
+            done = server._DEPLOY_STATE["done"]
+        assert done is True
+        assert any(
+            "avertissement: le thread de lecture du déploiement a échoué" in ln
+            for ln in lines
+        )
+    finally:
+        srv.shutdown()
+        srv.server_close()
+
+
+def test_reader_secondary_kill_echec_ajoute_avertissement(monkeypatch):
+    """Un échec du reader ET du kill secondaire ajoute les deux avertissements sans deadlock."""
+    monkeypatch.setattr(server, "load_stack", lambda stack_id: None)
+    monkeypatch.setattr(
+        server,
+        "_DEPLOY_CMD",
+        [sys.executable, "-c", "import sys, time; print('depart'); sys.stdout.flush(); time.sleep(10)"],
+    )
+
+    def _boom_redact(text):
+        raise RuntimeError("erreur simulation lecteur")
+
+    def _boom_kill(self):
+        raise OSError("kill impossible")
+
+    monkeypatch.setattr(server, "redact_text", _boom_redact)
+    monkeypatch.setattr(subprocess.Popen, "kill", _boom_kill)
+
+    with server._DEPLOY_STATE["lock"]:
+        server._DEPLOY_STATE["lines"].clear()
+        server._DEPLOY_STATE["done"] = False
+        server._DEPLOY_STATE["exit_code"] = None
+
+    srv = server.build_server("127.0.0.1", 0)
+    threading.Thread(target=srv.serve_forever, daemon=True).start()
+    base = f"http://127.0.0.1:{srv.server_address[1]}"
+    try:
+        corps = json.dumps(
+            {"stack": "agentique", "backend": "compose", "confirm": "FORCER"}
+        ).encode("utf-8")
+        req = urllib.request.Request(
+            f"{base}/api/deploy",
+            data=corps,
+            method="POST",
+            headers={"Content-Type": "application/json"},
+        )
+        with urllib.request.urlopen(req, timeout=5) as resp:
+            assert resp.status == 202
+
+        deadline = time.monotonic() + 5.0
+        while time.monotonic() < deadline:
+            with server._DEPLOY_STATE["lock"]:
+                if server._DEPLOY_STATE["done"]:
+                    break
+            time.sleep(0.05)
+        else:
+            pytest.fail("Timeout attendant la fin du reader (deadlock potentiel)")
+
+        with server._DEPLOY_STATE["lock"]:
+            lines = list(server._DEPLOY_STATE["lines"])
+            done = server._DEPLOY_STATE["done"]
+        assert done is True
+        assert any(
+            "avertissement: le thread de lecture du déploiement a échoué" in ln
+            for ln in lines
+        )
+        assert any(
+            "avertissement: échec du nettoyage best-effort du process de déploiement pendant la récupération" in ln
+            for ln in lines
+        )
+    finally:
+        srv.shutdown()
+        srv.server_close()
