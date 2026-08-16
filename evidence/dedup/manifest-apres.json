@@ -1,0 +1,207 @@
+{
+  "fichiers_total": 1376,
+  "groupes": [
+    {
+      "canonique": "reviews/RAG-005/RED-reproduction.txt",
+      "classe": "duplique",
+      "repliques": [
+        "reviews/RAG-005/evidence/RED.txt"
+      ],
+      "sha256": "01c249a4fca822b76e8ad41642f7539b54c366e5daf2cd4a764b353923badb75"
+    },
+    {
+      "canonique": "reviews/K8S-024/RED-reproduction.txt",
+      "classe": "duplique",
+      "repliques": [
+        "reviews/K8S-024/evidence/RED.txt"
+      ],
+      "sha256": "12735a9b91ff3ab55399b378ba2d3501445ff6620d7b92fdf2e87f3452968eeb"
+    },
+    {
+      "canonique": null,
+      "classe": "attestation-verdict",
+      "repliques": [
+        "reviews/plan-v1.0/round-1/glm.verdict.json",
+        "reviews/plan-v1.0/round-1/kimi.verdict.json"
+      ],
+      "sha256": "12d67dce0e4d45f0cfb1ddb27bcbdd5e45a572f268e6aad05dad66d4f360d125"
+    },
+    {
+      "canonique": "reviews/K8S-023/GREEN-focused.txt",
+      "classe": "duplique",
+      "repliques": [
+        "reviews/K8S-023/evidence/GREEN.txt"
+      ],
+      "sha256": "1b74807ab3acee0866bb6ef61be86e29f3ef6fa78594abc57dd1011bff299135"
+    },
+    {
+      "canonique": null,
+      "classe": "attestation-verdict",
+      "repliques": [
+        "reviews/p2-network/deepseek.verdict.json",
+        "reviews/p2-network/longcat.verdict.json"
+      ],
+      "sha256": "1f0867f313901e86e9c36b069fe393eb2885fea43cd1997a6b2d622f7a89af4d"
+    },
+    {
+      "canonique": null,
+      "classe": "attestation-verdict",
+      "repliques": [
+        "reviews/conformite-v2/round-2/deepseek.verdict.json",
+        "reviews/conformite-v2/round-2/gemini.verdict.json"
+      ],
+      "sha256": "2ab735c4b2ecbb7af6b089e31430d8441078e44a5fde203ea86ff57ce092d970"
+    },
+    {
+      "canonique": "reviews/K8S-027/RED-reproduction.txt",
+      "classe": "duplique",
+      "repliques": [
+        "reviews/K8S-027/evidence/RED.txt"
+      ],
+      "sha256": "2e2ed0c2c7664d1de67d26e2c10434b2ab70f892177cc4f0dd831fbb6f5f6530"
+    },
+    {
+      "canonique": "reviews/RAG-004B/RED-reproduction.txt",
+      "classe": "duplique",
+      "repliques": [
+        "reviews/RAG-004B/evidence/RED.txt"
+      ],
+      "sha256": "3a0e4c9c4ddfcd59656d062dcdaf9f11427410c740d4bd2335e91985e642c1e7"
+    },
+    {
+      "canonique": "reviews/RES-012B/GREEN-focused.txt",
+      "classe": "duplique",
+      "repliques": [
+        "reviews/RES-012B/evidence/GREEN.txt"
+      ],
+      "sha256": "45d765abe82573418b29e155b3d02177486e3dc02966b517cceec7d6ce3febba"
+    },
+    {
+      "canonique": "reviews/PLACE-011/RED-reproduction.txt",
+      "classe": "duplique",
+      "repliques": [
+        "reviews/PLACE-011/evidence/RED.txt"
+      ],
+      "sha256": "5202e2ab53c6a023cb07d5dd2361857268ed3d554c294c6b0eb9c7eb485bb90c"
+    },
+    {
+      "canonique": "reviews/K8S-022/RED-reproduction.txt",
+      "classe": "duplique",
+      "repliques": [
+        "reviews/K8S-022/evidence/RED.txt"
+      ],
+      "sha256": "5b04254e318a0a68a82d04c6a48d060464e37b82ba43632d1c27c1a8f1cf7dcd"
+    },
+    {
+      "canonique": null,
+      "classe": "attestation-verdict",
+      "repliques": [
+        "reviews/plan-v1.0/round-2/composer.verdict.json",
+        "reviews/plan-v1.0/round-2/deepseek.verdict.json",
+        "reviews/plan-v1.0/round-2/glm.verdict.json",
+        "reviews/plan-v1.0/round-2/kimi.verdict.json",
+        "reviews/plan-v1.0/round-2/qwen.verdict.json"
+      ],
+      "sha256": "638e5407d674202b1d9daa2ed98d281131299c196fbfe8b6a544673fa1179ff7"
+    },
+    {
+      "canonique": "reviews/K8S-024/GREEN-focused.txt",
+      "classe": "duplique",
+      "repliques": [
+        "reviews/K8S-024/evidence/GREEN.txt"
+      ],
+      "sha256": "65c68747b0af3e35d20fbbe7cbe70fccd3fbd32b9b699e4209532c5eb7b88c5a"
+    },
+    {
+      "canonique": "reviews/PLACE-011/GREEN-focused.txt",
+      "classe": "duplique",
+      "repliques": [
+        "reviews/PLACE-011/evidence/GREEN.txt"
+      ],
+      "sha256": "6a1b225cf1766ea34aeef0d7a4f2c951cbe5c36f97fdc8073199507903fb09d5"
+    },
+    {
+      "canonique": "reviews/K8S-023/RED-reproduction.txt",
+      "classe": "duplique",
+      "repliques": [
+        "reviews/K8S-023/evidence/RED.txt"
+      ],
+      "sha256": "70afc0bd9e6c18b3d5ae6da2cae6b2787e4147e52e4b9829f4a774ed08d1512e"
+    },
+    {
+      "canonique": "reviews/PLACE-026B/GREEN-focused.txt",
+      "classe": "duplique",
+      "repliques": [
+        "reviews/PLACE-026B/evidence/GREEN.txt"
+      ],
+      "sha256": "7f369d9f6d543d35f9e116de3a6e95fb140222e5d1338b29d037a2b3c03dbd23"
+    },
+    {
+      "canonique": "reviews/RES-012B/RED-reproduction.txt",
+      "classe": "duplique",
+      "repliques": [
+        "reviews/RES-012B/evidence/RED.txt"
+      ],
+      "sha256": "85c1ef93e8c4d0a4475cc6cca9e3d10253502640d1baac8d4a789ab79e3e59ff"
+    },
+    {
+      "canonique": "reviews/K8S-022/GREEN-focused.txt",
+      "classe": "duplique",
+      "repliques": [
+        "reviews/K8S-022/evidence/GREEN.txt"
+      ],
+      "sha256": "94b3778cf5eb24d687f0debc01718e38200bff9e92c3f5e2afcc6e59254aa3e1"
+    },
+    {
+      "canonique": "reviews/PLACE-026B/RED-reproduction.txt",
+      "classe": "duplique",
+      "repliques": [
+        "reviews/PLACE-026B/evidence/RED.txt"
+      ],
+      "sha256": "99c3d10681a011f9af82e2dca370a365c83802393983f2488eb063b7f75639dd"
+    },
+    {
+      "canonique": "reviews/K8S-027/GREEN-focused.txt",
+      "classe": "duplique",
+      "repliques": [
+        "reviews/K8S-027/evidence/GREEN.txt"
+      ],
+      "sha256": "aca042fb0cde2352490af06cd39a3d8a1aabf554abe7fa642f134db69943033c"
+    },
+    {
+      "canonique": "reviews/RAG-004B/GREEN-focused.txt",
+      "classe": "duplique",
+      "repliques": [
+        "reviews/RAG-004B/evidence/GREEN.txt"
+      ],
+      "sha256": "ca9a13c02cd0fb1866ffe87757268bc945813478ef1e88511dbb0cb18ef330c6"
+    },
+    {
+      "canonique": "reviews/AUDIT-CAND-001-R2/pack.md",
+      "classe": "duplique",
+      "repliques": [
+        "reviews/AUDIT-CAND-001/pack.md"
+      ],
+      "sha256": "e7f58d5ff3a7e4bf110bb9e574ec5c9c4ff603d8162f71229061af20c7bdd6cf"
+    },
+    {
+      "canonique": "reviews/HW-010/GREEN-focused.txt",
+      "classe": "duplique",
+      "repliques": [
+        "reviews/OPT-002/GREEN-focused.txt"
+      ],
+      "sha256": "eb27a136c18598aedc0e4f11e6893b614a04335a9faf3ec03433325d777e2663"
+    },
+    {
+      "canonique": "reviews/HW-009/GREEN-focused.txt",
+      "classe": "duplique",
+      "repliques": [
+        "reviews/PLACE-026A/GREEN-focused.txt"
+      ],
+      "sha256": "f44919a3367dc52929a8af8f8919d5f9536d2eb90b5c6c6d38b1e58904be21bc"
+    }
+  ],
+  "inventaire_sha256": "66899298c4e4484f37ed983ded824fd3cf28018d3a3b73cc7a2009b24cf4c8de",
+  "phase": "apres",
+  "schema": "evidence-dedup/1"
+}

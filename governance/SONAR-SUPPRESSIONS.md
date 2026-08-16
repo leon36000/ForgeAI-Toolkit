@@ -53,6 +53,7 @@ La conclusion antérieure selon laquelle les deux NOSONAR nus retirés de regist
 | pythonsecurity:S8707 | file | scripts/gate_docs.py | équipe gouvernance ForgeAI | Le faux positif peut masquer une occurrence S8707 dans ce fichier jusqu'à sa révision. | tests/test_doc032_gate_docs.py | 2027-02-10 |
 | pythonsecurity:S8705 | file | scripts/gate_docs.py | équipe gouvernance ForgeAI | Le faux positif peut masquer une occurrence S8705 dans ce fichier jusqu'à sa révision. | tests/test_doc032_gate_docs.py | 2027-02-10 |
 | pythonsecurity:S8707 | file | src/forgeai/core/registre.py | équipe audit ForgeAI | Le faux positif peut masquer une occurrence S8707 dans ce fichier jusqu'à sa révision. | tests/test_registre.py | 2027-02-10 |
+| pythonsecurity:S8707 | file | scripts/governance/evidence_dedup.py | équipe gouvernance ForgeAI | Le faux positif peut masquer une occurrence S8707 dans ce fichier jusqu'à sa révision. | tests/test_rc1011_dedup.py | 2027-02-10 |
 | — | glob | **/__pycache__/** | équipe plateforme ForgeAI | Aucun cache Python généré n'est analysé. | Non-réductible : il s'agit de fichiers générés. | 2027-02-10 |
 | — | glob | **/*.pyc | équipe plateforme ForgeAI | Aucun bytecode Python généré n'est analysé. | Non-réductible : il s'agit de fichiers générés. | 2027-02-10 |
 | — | glob | src/forgeai/data/** | équipe plateforme ForgeAI | Les données statiques ne sont pas analysées comme du code. | Non-réductible : cette arborescence contient des données et non du code. | 2027-02-10 |

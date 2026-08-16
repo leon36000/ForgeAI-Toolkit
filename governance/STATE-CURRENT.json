@@ -639,6 +639,14 @@
         "sha256": "2d4714138d7ae74daa1919fb6fd8c503ee69a01943355d8ea1fedb0e253db479"
       },
       {
+        "path": "tests/test_rc1011_dedup.py",
+        "sha256": "382d974328509143dfcda8a7cfa188ce27270ff81a2296f524527071edd24bc2"
+      },
+      {
+        "path": "tests/test_rc1011_packs_md.py",
+        "sha256": "71363f9130dfca106e3ff1b8161303ba1c94525932dc527a763a9f930b908474"
+      },
+      {
         "path": "tests/test_rc1016_sonar_suppressions.py",
         "sha256": "6cd5c75cf9260b9db47b492295a927613f9c2f00061648960661bc3f5cd25f0f"
       },
@@ -904,8 +912,8 @@
     },
     "tests": {
       "js_files": 3,
-      "python_files": 188,
-      "python_functions_declared": 2035
+      "python_files": 190,
+      "python_functions_declared": 2076
     }
   },
   "observations": [
