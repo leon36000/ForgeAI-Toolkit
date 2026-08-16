@@ -8,22 +8,6 @@
   "conflits": [
     {
       "kind": "topic_position",
-      "sujet": "orchestration_seat",
-      "sources": [
-        "agents-md",
-        "canon.plan-integral",
-        "gov.decision-mission-lead"
-      ],
-      "positions": [
-        "claude_code_opus_mission_lead",
-        "claude_code_session_lead"
-      ],
-      "owner": "nathan",
-      "resolution_issue": 487,
-      "vision_log_seq": 20
-    },
-    {
-      "kind": "topic_position",
       "sujet": "workspace_confinement",
       "sources": [
         "agents-md",
