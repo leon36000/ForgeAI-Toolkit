@@ -466,6 +466,7 @@ def test_g15_executer_mypy_construit_la_commande_attendue(tmp_path, monkeypatch)
         "-m",
         "mypy",
         "src/forgeai",
+        "--config-file=",
     ]
     assert captured["kwargs"]["cwd"] == str(tmp_path)
     assert captured["kwargs"]["capture_output"] is True
@@ -726,3 +727,29 @@ def test_g21_fichiers_reels_inclut_les_stubs_pyi(tmp_path):
 
     reels = mypy_gate.fichiers_reels(tmp_path, "src/forgeai")
     assert reels == {"src/forgeai/a.py", "src/forgeai/b.pyi"}
+
+
+# ---------------------------------------------------------------------------
+# Correctif post-revue scellée #449 (round 4) — --config-file=
+# ---------------------------------------------------------------------------
+
+def test_g22_executer_mypy_ignore_config_mypy_du_depot(tmp_path, monkeypatch):
+    """Garantit que --config-file= est toujours passé à mypy, neutralisant toute config du dépôt."""
+    captured = {}
+
+    def fake_run(args, **kwargs):
+        captured["args"] = args
+        captured["kwargs"] = kwargs
+
+        class Result:
+            stdout = ""
+            stderr = ""
+            returncode = 0
+
+        return Result()
+
+    monkeypatch.setattr(mypy_gate.subprocess, "run", fake_run)
+
+    mypy_gate.executer_mypy(tmp_path, "src/forgeai")
+
+    assert "--config-file=" in captured["args"]
