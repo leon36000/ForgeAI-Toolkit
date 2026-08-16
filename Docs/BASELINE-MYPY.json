@@ -141,5 +141,11 @@
       "union-attr": 82,
       "var-annotated": 1
     }
+  },
+  "type_ignore": {
+    "src/forgeai/core/redaction.py": 1,
+    "src/forgeai/core/proc.py": 10,
+    "src/forgeai/planner/assemble.py": 1,
+    "src/forgeai/deploy/openbao_flow.py": 1
   }
 }

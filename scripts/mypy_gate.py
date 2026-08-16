@@ -144,6 +144,39 @@ def fichiers_neutralises(racine: Path, fichiers: set[str]) -> set[str]:
     return resultat
 
 
+# Correctif post-revue scellée #449 (round 12, REJECT de GPT-5.6-Terra-Pro) — `# type: ignore`
+# est la syntaxe STANDARD de mypy pour supprimer une erreur ligne par ligne (documentée,
+# largement utilisée dans ce dépôt AVANT ce lot : core/redaction.py, core/proc.py,
+# planner/assemble.py, deploy/openbao_flow.py — dont 2 fichiers protégés). Contrairement à
+# `# mypy: <option>` (jamais légitime dans ce dépôt, zéro tolérance, règle 6), `# type: ignore`
+# est un usage normal déjà présent : la détection ne peut pas être « toute occurrence est une
+# anomalie » — ce doit être un cliquet de NON-CROISSANCE par fichier, exactement comme la dette
+# d'erreurs mypy (règle 3), baseliné dans le champ `type_ignore` de la base JSON.
+_DIRECTIVE_TYPE_IGNORE = re.compile(rb"#\s*type:\s*ignore\b")
+
+
+def occurrences_type_ignore(racine: Path, fichiers: set[str]) -> dict[str, int]:
+    """Compte, pour chaque fichier de `fichiers` (qui existe dans `racine`), le nombre
+    d'occurrences du commentaire de suppression standard mypy `# type: ignore` (avec ou sans
+    code d'erreur entre crochets, ex. `# type: ignore[return-value]`) — PAS la directive fichier
+    `# mypy: <option>` (couverte séparément par `fichiers_neutralises`). Lecture en octets bruts
+    (`read_bytes()`), indépendante de l'encodage déclaré (PEP-263), même raisonnement que
+    `fichiers_neutralises`. Fichier illisible ou absent : compte 0 (ignoré silencieusement, déjà
+    couvert par une autre règle si le fichier a disparu). Fichiers sans aucune occurrence :
+    absents du dict retourné (même convention que `erreurs_par_fichier`)."""
+    resultat: dict[str, int] = {}
+    for f in fichiers:
+        chemin = racine / f
+        try:
+            donnees = chemin.read_bytes()
+        except OSError:
+            continue
+        n = len(_DIRECTIVE_TYPE_IGNORE.findall(donnees))
+        if n > 0:
+            resultat[f] = n
+    return resultat
+
+
 def _valider_borne(borne: Any, libelle: str) -> int:
     """Valide l'objet `borne` (dict avec `total_erreurs` int >= 0 non-bool) et retourne
     `total_erreurs`. Lève ValueError avec message explicite sinon."""
@@ -184,6 +217,24 @@ def _valider_dette(dette: Any, libelle: str) -> dict[str, int]:
                 f"{libelle}.dette[{fichier!r}] doit etre un entier strictement positif"
             )
     return dette
+
+
+def _valider_type_ignore(type_ignore: Any, libelle: str) -> dict[str, int]:
+    """Valide le champ optionnel `type_ignore` (dict str->int>0 non-bool, même forme que
+    `dette`) et le retourne. Absent ou null : retourne {} (champ optionnel, même traitement
+    que `classification`)."""
+    if type_ignore is None:
+        return {}
+    if not isinstance(type_ignore, dict):
+        raise ValueError(f"{libelle}.type_ignore doit etre un objet")
+    for fichier, plafond in type_ignore.items():
+        if not isinstance(fichier, str):
+            raise ValueError(f"{libelle}.type_ignore contient une cle non chaine")
+        if isinstance(plafond, bool) or not isinstance(plafond, int) or plafond <= 0:
+            raise ValueError(
+                f"{libelle}.type_ignore[{fichier!r}] doit etre un entier strictement positif"
+            )
+    return type_ignore
 
 
 def _valider_classification(
@@ -246,9 +297,9 @@ def _valider_classification(
 def _valider_base(base: Any, libelle: str) -> dict[str, Any]:
     """Valide la structure : `version` (int), `borne.total_erreurs` (int >= 0, pas un bool),
     `fichiers_proteges` (liste de str, sans doublon), `dette` (dict str->int, toutes les valeurs
-    > 0, pas de bool), `classification` optionnelle (dict cohérent avec `dette`). Valide
-    l'invariant de disjonction ci-dessus. Lève ValueError avec message explicite sinon. Retourne
-    `base` si valide."""
+    > 0, pas de bool), `classification` optionnelle (dict cohérent avec `dette`), `type_ignore`
+    optionnel (dict str->int>0). Valide l'invariant de disjonction ci-dessus. Lève ValueError avec
+    message explicite sinon. Retourne `base` si valide."""
     if not isinstance(base, dict):
         raise ValueError(f"{libelle} doit etre un objet JSON")
 
@@ -278,6 +329,9 @@ def _valider_base(base: Any, libelle: str) -> dict[str, Any]:
 
     # classification (optionnelle, uniquement validée si présente)
     _valider_classification(base.get("classification"), dette, libelle)
+
+    # type_ignore (optionnelle, uniquement validée si présente)
+    _valider_type_ignore(base.get("type_ignore"), libelle)
 
     return base
 
@@ -406,12 +460,39 @@ def _anomalies_reference(
     return resultat
 
 
+def _anomalies_type_ignore(
+    reels: set[str],
+    occurrences: dict[str, int],
+    type_ignore: dict[str, int],
+) -> list[str]:
+    """Règle 7 : hausse du nombre de commentaires `# type: ignore` par fichier réel au-delà de
+    sa valeur baselinee (0 si le fichier est absent de `type_ignore`) — même principe de
+    non-croissance que la dette d'erreurs mypy (règle 3), appliqué au nombre de suppressions par
+    ligne plutôt qu'au nombre d'erreurs rapportées par mypy. `# type: ignore` est un usage
+    standard déjà présent dans ce dépôt (contrairement à `# mypy: <option>`, règle 6) : il n'est
+    donc jamais interdit en soi, seule sa CROISSANCE au-delà du compte baseliné est une anomalie
+    — une nouvelle occurrence doit être ajoutée explicitement à `type_ignore`, jamais
+    silencieusement."""
+    resultat: list[str] = []
+    for f in sorted(reels):
+        actuel = occurrences.get(f, 0)
+        plafond = type_ignore.get(f, 0)
+        if actuel > plafond:
+            resultat.append(
+                f"fichier {f} : commentaires # type: ignore en hausse ({actuel} > {plafond}) : "
+                "nouvelle suppression non baselinee, la justifier explicitement dans "
+                "type_ignore (Docs/BASELINE-MYPY.json) ou corriger l'erreur sous-jacente"
+            )
+    return resultat
+
+
 def anomalies(
     reels: set[str],
     erreurs: dict[str, int],
     base: dict[str, Any],
     base_reference: dict[str, Any] | None,
     neutralises: set[str] | None = None,
+    occurrences: dict[str, int] | None = None,
 ) -> list[str]:
     """Logique pure de comparaison — aucun I/O, aucun subprocess. Valide `base` (et
     `base_reference` si fourni) via `_valider_base`, puis contrôle dans l'ordre :
@@ -434,6 +515,9 @@ def anomalies(
        est signalé comme contenant une directive de neutralisation mypy (`# mypy: ...`) —
        la mesure est compromise car mypy ne remontera aucune erreur sur ce fichier, quelle
        que soit l'option nommée.
+    7. si `occurrences` est fourni : tout fichier réel dont le nombre de commentaires `# type: ignore`
+       dépasse sa valeur baselinée dans `type_ignore` (0 si absent) est signalé comme une hausse
+       non baselinée (même principe de non-croissance que la règle 3).
 
     Retourne la liste des messages d'anomalie (vide si aucune)."""
     base_validee = _valider_base(base, "base")
@@ -468,6 +552,10 @@ def anomalies(
                 f"fichier {f} contient une directive mypy inline (# mypy: ...) : "
                 "suppression d'erreurs non vérifiable, retirer la directive"
             )
+    if occurrences is not None:
+        resultat.extend(
+            _anomalies_type_ignore(reels, occurrences, base_validee.get("type_ignore", {}))
+        )
 
     return resultat
 
@@ -555,7 +643,15 @@ def main(argv: list[str] | None = None) -> int:
             print(message_reference)
 
         neutralises = fichiers_neutralises(racine, reels)
-        rapport = anomalies(reels, erreurs, base, base_reference, neutralises=neutralises)
+        occurrences_ignore = occurrences_type_ignore(racine, reels)
+        rapport = anomalies(
+            reels,
+            erreurs,
+            base,
+            base_reference,
+            neutralises=neutralises,
+            occurrences=occurrences_ignore,
+        )
 
         total = sum(erreurs.get(f, 0) for f in reels)
         n_dette = len(base["dette"])

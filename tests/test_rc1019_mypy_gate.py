@@ -935,3 +935,98 @@ def test_g30_fichiers_neutralises_couvre_fichier_hors_base(tmp_path):
     chemin = tmp_path / "hors_base.py"
     chemin.write_bytes(b"# mypy: ignore-errors\nx = 1\n")
     assert mypy_gate.fichiers_neutralises(tmp_path, {"hors_base.py"}) == {"hors_base.py"}
+
+
+# ---------------------------------------------------------------------------
+# Correctif post-revue scellée #449 (round 12) — cliquet # type: ignore
+# ---------------------------------------------------------------------------
+
+def test_g31_occurrences_type_ignore_compte_les_occurrences(tmp_path):
+    chemin = tmp_path / "a.py"
+    chemin.write_bytes(b"x = 1  # type: ignore\ny = 2  # type: ignore\nz = 3\n")
+    assert mypy_gate.occurrences_type_ignore(tmp_path, {"a.py"}) == {"a.py": 2}
+
+
+def test_g31b_occurrences_type_ignore_fichier_sans_occurrence_absent_du_resultat(tmp_path):
+    chemin = tmp_path / "a.py"
+    chemin.write_bytes(b"x = 1\n")
+    assert mypy_gate.occurrences_type_ignore(tmp_path, {"a.py"}) == {}
+
+
+def test_g31c_occurrences_type_ignore_variantes_espacement_toutes_comptees(tmp_path):
+    chemin = tmp_path / "a.py"
+    chemin.write_bytes(
+        b"a = 1  # type: ignore\nb = 2  #type:ignore\nc = 3  # type:ignore[return-value]\nd = 4  #  type:   ignore\n"
+    )
+    assert mypy_gate.occurrences_type_ignore(tmp_path, {"a.py"}) == {"a.py": 4}
+
+
+def test_g31d_occurrences_type_ignore_ignore_faux_positifs(tmp_path):
+    chemin = tmp_path / "a.py"
+    chemin.write_bytes(
+        b"x = 1  # ceci mentionne type: ignore dans une phrase normale\ny = 2  # type: ignoreme\n"
+    )
+    assert mypy_gate.occurrences_type_ignore(tmp_path, {"a.py"}) == {}
+
+
+def test_g32_anomalies_signale_hausse_type_ignore_nouveau_fichier():
+    base = _base(total_erreurs=0)
+    anomalies = mypy_gate.anomalies(
+        reels={"nouveau.py"},
+        erreurs={},
+        base=base,
+        base_reference=None,
+        occurrences={"nouveau.py": 1},
+    )
+    assert any("# type: ignore en hausse" in m and "nouveau.py" in m for m in anomalies)
+
+
+def test_g32b_anomalies_type_ignore_sous_le_plafond_aucune_anomalie():
+    base = _base(total_erreurs=0, dette={}, fichiers_proteges=[])
+    base["type_ignore"] = {"core/proc.py": 10}
+    anomalies = mypy_gate.anomalies(
+        reels={"core/proc.py"},
+        erreurs={},
+        base=base,
+        base_reference=None,
+        occurrences={"core/proc.py": 10},
+    )
+    assert anomalies == []
+
+
+def test_g32c_anomalies_type_ignore_depasse_le_plafond_est_detecte():
+    base = _base(total_erreurs=0, dette={}, fichiers_proteges=[])
+    base["type_ignore"] = {"core/proc.py": 10}
+    anomalies = mypy_gate.anomalies(
+        reels={"core/proc.py"},
+        erreurs={},
+        base=base,
+        base_reference=None,
+        occurrences={"core/proc.py": 11},
+    )
+    assert any(
+        "# type: ignore en hausse" in m
+        and "core/proc.py" in m
+        and "11" in m
+        and "10" in m
+        for m in anomalies
+    )
+
+
+def test_g32d_anomalies_sans_occurrences_aucune_regression():
+    anomalies = mypy_gate.anomalies(
+        reels={"nouveau.py"},
+        erreurs={},
+        base=_base(total_erreurs=0),
+        base_reference=None,
+    )
+    assert anomalies == []
+
+
+def test_g33_valider_type_ignore_rejette_plafond_non_positif():
+    with pytest.raises(ValueError):
+        mypy_gate._valider_type_ignore({"a.py": 0}, "base")
+
+
+def test_g33b_valider_type_ignore_absent_retourne_dict_vide():
+    assert mypy_gate._valider_type_ignore(None, "base") == {}

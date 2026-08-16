@@ -1,0 +1,19 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "majeure",
+   "fichier": "scripts/mypy_gate.py",
+   "description": "Le cliquet reste contournable par l’ajout d’un `# type: ignore` sur une ligne introduisant une erreur dans un fichier protégé ou non baseliné. Cette suppression inline fait disparaître l’erreur de la sortie mypy sans être détectée par le scan anti-neutralisation ; elle contredit l’objectif « aucune nouvelle erreur autorisée » puisque l’erreur réelle devient invisible au gate.",
+   "preuve": "`_DIRECTIVE_NEUTRALISATION` (vers la ligne 119) ne recherche que `rb\"#\\s*mypy:\\s*\\S\"`, et `fichiers_neutralises()` ne signale que les correspondances de cette regex. `executer_mypy()` (vers les lignes 35-69) n’active pas `--warn-unused-ignores` et aucun autre contrôle ne recherche `# type: ignore`. Reproduction : dans un fichier de `fichiers_proteges`, ajouter `def f() -> int:\\n    return \"erreur\"  # type: ignore\\n` ; mypy masque l’erreur de retour, `erreurs_par_fichier()` retourne 0 pour ce fichier et `fichiers_neutralises()` ne le signale pas."
+  }
+ ],
+ "date_heure": "2026-08-16T14:50:30.852445+00:00",
+ "prompt_sha256": "6a1f2648c1c9b488e295b287349fe4eccfb76b48701cddd302a18b0778103756",
+ "reviewer_model": "GPT-5.6-Terra-Pro",
+ "modele_servi": "gpt56-terra-pro-openrouter",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}
