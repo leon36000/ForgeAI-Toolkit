@@ -19774,6 +19774,45 @@
       "generated": false,
       "load_bearing": true,
       "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-023/GPT-5.6-Terra-Pro.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "b205df632e578a1ccb016bd29d9fcd36ce08bcd261abbae02032783e945b4a69",
+      "size": 1294,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-023/Muse-Spark-1.2.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "f3ee082c17618a7559dce1cf3d6ab887842c9a1d8e36ed2d339533d6c0457b23",
+      "size": 329,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-023/Qwen3.7-Max.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "6c6bce459c066a141ba1a7a71bdca08d7a17525109f5ec217e0a3b153d1d3c75",
+      "size": 323,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
       "path": "evidence/reviews/RC1-442/DeepSeek-V4-Pro.verdict.json",
       "referenced_by": [],
       "rule_id": "evidence-reviews-root",
@@ -25235,8 +25274,8 @@
         }
       ],
       "rule_id": "governance-core",
-      "sha256": "145710b502437f7a951914561f352ef79a5d751d9dbf7203c4b3bdecfd17e680",
-      "size": 15857,
+      "sha256": "2bccbd03a73d9b0d5a5e9032de95371e1ff41389f5c04312ae41b667b1056f0a",
+      "size": 16169,
       "target_path": null,
       "type": "text"
     },
@@ -26751,8 +26790,8 @@
         }
       ],
       "rule_id": "governance-core",
-      "sha256": "9097551c28c3485f6fa64ca10b88b9634d50364ef2fc3f3f25902585f6dab2b1",
-      "size": 65907,
+      "sha256": "f9530b5430bdf8e02c42694a4c2cff51a1adba9466e0be0a4945422ef3e5e475",
+      "size": 66656,
       "target_path": null,
       "type": "text"
     },
@@ -34647,6 +34686,20 @@
       "referenced_by": [
         {
           "candidate": "src/forgeai/core/safe_repr.py",
+          "line": 6,
+          "referrer": "evidence/reviews/RC1-023/GPT-5.6-Terra-Pro.verdict.json",
+          "resolved": "src/forgeai/core/safe_repr.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "src/forgeai/core/safe_repr.py",
+          "line": 8,
+          "referrer": "evidence/reviews/RC1-023/GPT-5.6-Terra-Pro.verdict.json",
+          "resolved": "src/forgeai/core/safe_repr.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "src/forgeai/core/safe_repr.py",
           "line": 13,
           "referrer": "governance/error-handling-contracts.json",
           "resolved": "src/forgeai/core/safe_repr.py",
@@ -41073,6 +41126,13 @@
         },
         {
           "candidate": "src/forgeai/web/server.py",
+          "line": 8,
+          "referrer": "evidence/reviews/RC1-023/GPT-5.6-Terra-Pro.verdict.json",
+          "resolved": "src/forgeai/web/server.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "src/forgeai/web/server.py",
           "line": 14,
           "referrer": "evidence/reviews/RC1-449-v1/GPT-5.6-Terra-Pro.verdict.json",
           "resolved": "src/forgeai/web/server.py",
@@ -42821,6 +42881,13 @@
         {
           "candidate": "stories/RC1-023-error-handling-contracts.md",
           "line": 419,
+          "referrer": "governance/error-handling-contracts.json",
+          "resolved": "stories/RC1-023-error-handling-contracts.md",
+          "severity": "hard"
+        },
+        {
+          "candidate": "stories/RC1-023-error-handling-contracts.md",
+          "line": 443,
           "referrer": "governance/error-handling-contracts.json",
           "resolved": "stories/RC1-023-error-handling-contracts.md",
           "severity": "hard"
@@ -52054,6 +52121,13 @@
       "owner": "test-suite",
       "path": "tests/test_safe_repr.py",
       "referenced_by": [
+        {
+          "candidate": "tests/test_safe_repr.py",
+          "line": 8,
+          "referrer": "evidence/reviews/RC1-023/GPT-5.6-Terra-Pro.verdict.json",
+          "resolved": "tests/test_safe_repr.py",
+          "severity": "hard"
+        },
         {
           "candidate": "tests/test_safe_repr.py",
           "line": 754,
@@ -149498,6 +149572,34 @@
         "severity": "hard"
       },
       {
+        "candidate": "src/forgeai/core/safe_repr.py",
+        "line": 6,
+        "referrer": "evidence/reviews/RC1-023/GPT-5.6-Terra-Pro.verdict.json",
+        "resolved": "src/forgeai/core/safe_repr.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "src/forgeai/core/safe_repr.py",
+        "line": 8,
+        "referrer": "evidence/reviews/RC1-023/GPT-5.6-Terra-Pro.verdict.json",
+        "resolved": "src/forgeai/core/safe_repr.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "tests/test_safe_repr.py",
+        "line": 8,
+        "referrer": "evidence/reviews/RC1-023/GPT-5.6-Terra-Pro.verdict.json",
+        "resolved": "tests/test_safe_repr.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "src/forgeai/web/server.py",
+        "line": 8,
+        "referrer": "evidence/reviews/RC1-023/GPT-5.6-Terra-Pro.verdict.json",
+        "resolved": "src/forgeai/web/server.py",
+        "severity": "hard"
+      },
+      {
         "candidate": "tests/test_readme_dist_status.py",
         "line": 6,
         "referrer": "evidence/reviews/RC1-442/DeepSeek-V4-Pro.verdict.json",
@@ -155543,6 +155645,13 @@
         "line": 431,
         "referrer": "governance/error-handling-contracts.json",
         "resolved": "src/forgeai/web/server.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "stories/RC1-023-error-handling-contracts.md",
+        "line": 443,
+        "referrer": "governance/error-handling-contracts.json",
+        "resolved": "stories/RC1-023-error-handling-contracts.md",
         "severity": "hard"
       },
       {
@@ -162581,7 +162690,7 @@
     "by_class": {
       "ARCHIVE": 44,
       "DOCS": 17,
-      "EVIDENCE": 1468,
+      "EVIDENCE": 1471,
       "GENERATED": 9,
       "GOVERNANCE": 192,
       "PRODUCT": 113,
@@ -162600,7 +162709,7 @@
       "evidence-audit-output-root": 18,
       "evidence-dedup-root": 2,
       "evidence-registres-root": 35,
-      "evidence-reviews-root": 1413,
+      "evidence-reviews-root": 1416,
       "generated-authority-map": 1,
       "generated-path-classification-json": 3,
       "generated-path-classification-markdown": 3,
@@ -162638,9 +162747,9 @@
     "case_collisions_total": 0,
     "dangling_references_total": 16182,
     "generated_total": 13,
-    "load_bearing_total": 1924,
+    "load_bearing_total": 1927,
     "portability_violations_total": 0,
-    "tracked_total": 2063,
+    "tracked_total": 2066,
     "unclassified_total": 0,
     "unicode_anomalies_total": 0
   },

@@ -168,7 +168,7 @@
       "behavior_contract": "Si la sortie `lscpu -J` ne peut pas être parsée DU TOUT (JSON invalide), retombe sur les 3 valeurs par défaut sûres (\"unknown\", 0, `platform.machine()`), prouvé par le test compensatoire. Round 32 (#452, objection GPT-5.6-Terra-Pro) — précision : les 3 champs (model, cores, arch) sont assignés SÉQUENTIELLEMENT (pas atomiquement) ; un échec PARTIEL (JSON valide, mais un seul champ non convertible, ex. CPU(s) non numérique après un Model name valide) conserve les champs DÉJÀ extraits avec succès et ne réinitialise QUE ceux qui restent à leur valeur par défaut initiale — vérifié empiriquement et par test dédié (voir compensating_test le plus proche + tests/test_hardware_detect.py::test_cpu_lscpu_partiellement_invalide_conserve_les_champs_deja_extraits). Le fallback lui-même (complet OU partiel selon le cas) est inchangé pour toute `Exception` levée par `exc.__str__()` ; l'échec de parsing est désormais visible sur stderr pour le diagnostic sur machines atypiques, dans les deux cas. Cas pathologique hors de cette garantie (`__str__` qui lève un `BaseException` non-`Exception`) : risque résiduel étroit, accepté et documenté au niveau story (stories/RC1-023-error-handling-contracts.md, « Risque résiduel accepté (rounds 27-37) »).",
       "logging": "stderr : \"[hardware.detect] lscpu -J illisible, repli sur les valeurs par défaut : {str_exc_sur(exc)}\" — chaîne simple non traduite (diagnostic interne, même style que les autres replis stderr de ce fichier) ; `str_exc_sur()` (pas `{exc}` nu, round 27) protège l'interpolation elle-même contre un `__str__` défaillant",
       "owner": "équipe matériel ForgeAI",
-      "justification": "ForgeAI Toolkit se veut « adaptatif sur toute machine » (portabilité P3) : un échec de parsing lscpu sur une distribution/version atypique doit rester non-bloquant (le fallback est correct et reste inchangé) mais NE DOIT PAS être invisible — sans log, un utilisateur sur matériel exotique voit un profil \"unknown\"/0 cœurs sans aucune piste de diagnostic.",
+      "justification": "ForgeAI Toolkit se veut « adaptatif sur toute machine » (portabilité P3) : un échec de parsing lscpu sur une distribution/version atypique doit rester non-bloquant (le fallback est correct et reste inchangé pour toute Exception levée par exc.__str__(), cf. behavior_contract) mais NE DOIT PAS être invisible — sans log, un utilisateur sur matériel exotique voit un profil \"unknown\"/0 cœurs sans aucune piste de diagnostic.",
       "compensating_test": "tests/test_hardware_detect.py::test_cpu_lscpu_illisible_journalise_et_replie",
       "compensating_test_reason": null,
       "review_due": "2027-02-10",
@@ -423,7 +423,7 @@
       "compensating_test": "tests/test_deploy_persist.py::test_persist_deploy_state_echec_ecriture_ajoute_avertissement",
       "compensating_test_reason": null,
       "review_due": "2027-02-10",
-      "accepted_risk": "Le serveur ne plante jamais pour un échec de persistance (comportement inchangé) ; seule la visibilité change."
+      "accepted_risk": "Le serveur ne plante jamais pour un échec de persistance (comportement inchangé) pour toute Exception levée par exc.__str__() ; seule la visibilité change. Risque résiduel étroit distinct (BaseException explicite via __str__) accepté rounds 27-37, voir la story."
     },
     {
       "id": "site:src/forgeai/web/server.py:607",
@@ -440,14 +440,14 @@
         "deploiement"
       ],
       "disposition": "FIXED",
-      "behavior_contract": "Restaure l'état de déploiement depuis le disque au démarrage (les cas attendus — fichier absent, JSON de forme invalide — sont déjà gérés par des retours anticipés explicites AVANT ce bloc). Ce `except Exception` ne couvre que les échecs vraiment inattendus (I/O, permissions). Désormais journalisé.",
+      "behavior_contract": "Restaure l'état de déploiement depuis le disque au démarrage (les cas attendus — fichier absent, JSON de forme invalide — sont déjà gérés par des retours anticipés explicites AVANT ce bloc). Ce `except Exception` ne couvre que les échecs vraiment inattendus (I/O, permissions). Désormais journalisé pour toute `Exception` levée par `exc.__str__()`. Cas pathologique hors de cette garantie (`__str__` qui lève un `BaseException` non-`Exception`) : `str_exc_sur(exc)` propagerait avant la fin du handler — risque résiduel étroit, accepté et documenté au niveau story (stories/RC1-023-error-handling-contracts.md, « Risque résiduel accepté (rounds 27-37) »).",
       "logging": "stderr : print(f\"[web.server] échec de restauration de l'état de déploiement au démarrage : {str_exc_sur(exc)}\", file=sys.stderr) — même style que les autres replis stderr de ce fichier ; PAS le mécanisme _DEPLOY_STATE[\"lines\"].append utilisé au site 570, car _load_deploy_state s'exécute au DÉMARRAGE du serveur, avant tout déploiement/client SSE — un avertissement ajouté à `lines` à cet instant serait rejoué en tête du PROCHAIN déploiement (mélange trompeur d'un diagnostic de démarrage dans la sortie d'un déploiement sans rapport) ; `str_exc_sur()` (pas `{exc}` nu, round 27) protège l'interpolation elle-même contre un `__str__` défaillant",
       "owner": "équipe web ForgeAI",
       "justification": "Second site du constat L07-002 (voir justification du site 570, même finding, même fonctionnalité de reprise après redémarrage). Un échec de restauration au démarrage laisse le serveur démarrer avec un état de déploiement vide sans que l'opérateur sache si c'est parce qu'aucun déploiement n'a jamais tourné (nominal) ou parce que le fichier existant n'a pas pu être lu (anomalie). stderr est le bon canal ici (pas `_DEPLOY_STATE[\"lines\"]`, cf. logging) car il n'y a par construction aucun client SSE actif à ce stade.",
       "compensating_test": "tests/test_deploy_persist.py::test_load_deploy_state_echec_inattendu_journalise_stderr",
       "compensating_test_reason": null,
       "review_due": "2027-02-10",
-      "accepted_risk": "Le serveur démarre toujours avec un état vide en cas d'échec (comportement inchangé) ; seule la visibilité change."
+      "accepted_risk": "Le serveur démarre toujours avec un état vide en cas d'échec (comportement inchangé) pour toute Exception levée par exc.__str__() ; seule la visibilité change. Risque résiduel étroit distinct (BaseException explicite via __str__) accepté rounds 27-37, voir la story."
     },
     {
       "id": "site:src/forgeai/web/server.py:668",
