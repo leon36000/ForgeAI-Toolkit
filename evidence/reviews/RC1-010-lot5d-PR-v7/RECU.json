@@ -1,0 +1,22 @@
+{
+  "schema": "recu-revue/1",
+  "dossier": "RC1-010-lot5d-PR-v7",
+  "issue": 440,
+  "round": 7,
+  "base_commit": "95e48ebf94baa3cde7c1378d970cb171c16789c9",
+  "head_commit": "4cfe98524f08b2fed90ad2e761afcbea5e84d1b7",
+  "head_tree": "79a3f3abe920572c310186886d8661ee27b42372",
+  "diff_digest": "6c97373a9d89c2527d81081f4c068155d16676c23e8947dc7635df4665e5859d",
+  "prompt_sha256": "fa227187591a4ad4a7a47438925b4c76159b0d7ee4cce369d8c03d893df48b56",
+  "reviewers_attendus": [
+    "GPT-5.6-Terra-Pro",
+    "Gemini-3.7-Flash",
+    "Qwen3.7-Max"
+  ],
+  "codeur": [
+    "fable"
+  ],
+  "resultat": "APPROVE",
+  "date_heure": "2026-08-16T07:22:23.693431-04:00",
+  "fenetre_heures": 24
+}
