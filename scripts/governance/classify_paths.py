@@ -625,9 +625,16 @@ def build_manifest(repo_root: Path, rules_path: Path | None = None) -> dict:
     for path in sorted(tracked):
         classification = classifications[path]
         rule = rules_by_id[classification["rule_id"]]
-        if path in self_referential_generated_paths:
-            # Ces sorties générées s'auto-référencent : leurs métadonnées de contenu
-            # doivent rester nulles pour éviter un point fixe non déterministe.
+        is_recu_volatile = (
+            Path(path).name == "RECU.json" and path.startswith("evidence/reviews/")
+        )
+        if path in self_referential_generated_paths or is_recu_volatile:
+            # RC1-010-suivi (#498) : evidence/reviews/<ID>/RECU.json est régénéré EN PLACE par
+            # revue.py recu avec un champ date_heure volatile à chaque appel — hacher son
+            # contenu crée le même point fixe non déterministe que les sorties générées
+            # ci-dessus (path-classification.json <-> RECU.json s'invalident mutuellement en
+            # boucle). Seul RECU.json est concerné : les verdicts *.verdict.json (jamais
+            # réécrits en place) et BINDING.txt (append-only stable) restent hachés normalement.
             size = None
             file_type = None
             sha256 = None
