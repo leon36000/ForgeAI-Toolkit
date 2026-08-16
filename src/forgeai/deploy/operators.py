@@ -80,7 +80,7 @@ def detect(name: str, runner: CommandRunner, releases_helm: list | None = None) 
     spec = OPERATORS[name]
     releases = releases_helm if releases_helm is not None else fetch_releases_helm(runner)
     for rel in releases:
-        if rel.get("name") == spec.release:
+        if isinstance(rel, dict) and rel.get("name") == spec.release:
             return OperatorStatus(name, True, "helm", rel.get("chart"))
     code, out = runner.run(["kubectl", "get", "crd", spec.crd, "-o", "name"])
     if code == 0 and out.strip():
