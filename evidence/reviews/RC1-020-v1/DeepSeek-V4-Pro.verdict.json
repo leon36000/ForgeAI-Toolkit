@@ -1,0 +1,19 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "critique",
+   "fichier": "requirements-ci.in / requirements-ci.txt / .github/workflows/gates.yml / scripts/ruff_report.py",
+   "description": "Le diff modifie requirements-ci.in pour ajouter ruff==0.14.5 mais ne modifie pas requirements-ci.txt, alors que le nouveau job CI installe `python -m pip install --no-cache-dir --require-hashes -r requirements-ci.txt`. Sans entrée ruff dans ce lockfile, ruff n'est pas installé dans le job, `scripts/ruff_report.py` lève FileNotFoundError/retourne 1, donc le job échoue sur chaque exécution.",
+   "preuve": "diff requirements-ci.in : +ruff==0.14.5 (aucun diff requirements-ci.txt) ; gates.yml : `run: python -m pip install --no-cache-dir --require-hashes -r requirements-ci.txt` ; scripts/ruff_report.py : `except FileNotFoundError ... raise RuntimeError('ruff est indisponible ...')` ; main : `return 1` sur RuntimeError."
+  }
+ ],
+ "date_heure": "2026-08-16T14:59:11.215229+00:00",
+ "prompt_sha256": "a0bcd5a5cd03bb982cf4563141c291e1a25445cb6faff7622417509a9d7ca153",
+ "reviewer_model": "DeepSeek-V4-Pro",
+ "modele_servi": "deepseek-v4-pro-direct",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

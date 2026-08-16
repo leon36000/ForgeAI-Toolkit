@@ -1,0 +1,19 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "critique",
+   "fichier": "requirements-ci.txt",
+   "description": "Le lockfile requirements-ci.txt est absent du diff. Le job CI ruff-report exécute pip install avec l'option --require-hashes sur ce fichier. Sans l'ajout de ruff==0.14.5 et de son hash dans requirements-ci.txt, l'installation échouera ou n'installera pas ruff, provoquant un échec du script (RuntimeError: ruff est indisponible).",
+   "preuve": "Le diff ne contient que requirements-ci.in. Le workflow .github/workflows/gates.yml (ligne 292) exécute : python -m pip install --no-cache-dir --require-hashes -r requirements-ci.txt."
+  }
+ ],
+ "date_heure": "2026-08-16T14:59:12.995944+00:00",
+ "prompt_sha256": "a0bcd5a5cd03bb982cf4563141c291e1a25445cb6faff7622417509a9d7ca153",
+ "reviewer_model": "Qwen3.7-Max",
+ "modele_servi": "qwen37-max-openrouter",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

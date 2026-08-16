@@ -1,0 +1,19 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "scripts/ruff_report.py",
+   "description": "La commande Ruff ne scanne que les répertoires 'src' et 'scripts', omettant le répertoire 'tests/'. Cela rend inopérante la classification de règles spécifiques aux tests comme S101 (assert nu) pourtant documentée dans le JSON, et empêche une mesure exhaustive des violations sur l'ensemble du dépôt.",
+   "preuve": "Lignes 76-77 de scripts/ruff_report.py : 'src', 'scripts',"
+  }
+ ],
+ "date_heure": "2026-08-16T15:00:27.663574+00:00",
+ "prompt_sha256": "ef8bb90a5cf8112be3382cd5e743fadc461122c2b2452b70296e24b6d6e7644a",
+ "reviewer_model": "Qwen3.7-Max",
+ "modele_servi": "qwen37-max-openrouter",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}
