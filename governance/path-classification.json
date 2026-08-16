@@ -3303,8 +3303,8 @@
         }
       ],
       "rule_id": "docs-user",
-      "sha256": "e951138f9d61deb77f0bc9302dda0df8b3a9e6d59dc0576d544aa2d105ab0fc5",
-      "size": 3286,
+      "sha256": "19e652aeb9caad2aeb03c95c7156f9cb50ea6a6fb1cc8b558ea87f533880692b",
+      "size": 3295,
       "target_path": null,
       "type": "text"
     },
@@ -7792,6 +7792,19 @@
       "rule_id": "evidence-reviews-root",
       "sha256": "4cd5c749e95a131cd2cae10d6721c7fb505522f376915633aa8b519d89985c37",
       "size": 323,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/BUGHUNT-2026-08-16-v3/RECU.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "ad91bdcc1add0d7ba06edbfef8dabde962b93e4b70b6442983296d8c0fa1fb1a",
+      "size": 682,
       "target_path": null,
       "type": "text"
     },
@@ -13378,7 +13391,15 @@
       "load_bearing": true,
       "owner": "gouvernance-preuve",
       "path": "evidence/reviews/LAB-033A/evidence/finding-passthrough-inoperant.txt",
-      "referenced_by": [],
+      "referenced_by": [
+        {
+          "candidate": "evidence/reviews/LAB-033A/evidence/finding-passthrough-inoperant.txt",
+          "line": 25,
+          "referrer": "Docs/reference/gpu-drivers-support.md",
+          "resolved": "evidence/reviews/LAB-033A/evidence/finding-passthrough-inoperant.txt",
+          "severity": "hard"
+        }
+      ],
       "rule_id": "evidence-reviews-root",
       "sha256": "8f227bf549fb47c1edac0cf6d43fb560829a87c764ead4aa2a3a18db6ce8fdb1",
       "size": 4885,
@@ -51394,11 +51415,6 @@
         "referrer": "Docs/reference/gpu-drivers-support.md"
       },
       {
-        "candidate": "reviews/LAB-033A/evidence/finding-passthrough-inoperant.txt",
-        "line": 25,
-        "referrer": "Docs/reference/gpu-drivers-support.md"
-      },
-      {
         "candidate": "contribution.json",
         "line": 15,
         "referrer": "Docs/reference/plugin-gate.md"
@@ -61472,6 +61488,11 @@
         "candidate": "b/governance/STATE-CURRENT.md",
         "line": 8,
         "referrer": "evidence/reviews/BUGHUNT-2026-08-16-v1/DeepSeek-V4-Pro.verdict.json"
+      },
+      {
+        "candidate": "recu-revue/1",
+        "line": 2,
+        "referrer": "evidence/reviews/BUGHUNT-2026-08-16-v3/RECU.json"
       },
       {
         "candidate": "proc.py",
@@ -125163,6 +125184,13 @@
         "severity": "hard"
       },
       {
+        "candidate": "evidence/reviews/LAB-033A/evidence/finding-passthrough-inoperant.txt",
+        "line": 25,
+        "referrer": "Docs/reference/gpu-drivers-support.md",
+        "resolved": "evidence/reviews/LAB-033A/evidence/finding-passthrough-inoperant.txt",
+        "severity": "hard"
+      },
+      {
         "candidate": "archive/coordination/work-packages.json",
         "line": 33,
         "referrer": "Docs/reference/gpu-drivers-support.md",
@@ -145561,7 +145589,7 @@
     "by_class": {
       "ARCHIVE": 44,
       "DOCS": 14,
-      "EVIDENCE": 1349,
+      "EVIDENCE": 1350,
       "GENERATED": 5,
       "GOVERNANCE": 176,
       "PRODUCT": 112,
@@ -145577,7 +145605,7 @@
       "docs-user": 13,
       "evidence-audit-output-root": 18,
       "evidence-registres-root": 35,
-      "evidence-reviews-root": 1296,
+      "evidence-reviews-root": 1297,
       "generated-authority-map": 1,
       "generated-path-classification-json": 1,
       "generated-path-classification-markdown": 1,
@@ -145615,9 +145643,9 @@
     "case_collisions_total": 0,
     "dangling_references_total": 15036,
     "generated_total": 7,
-    "load_bearing_total": 1780,
+    "load_bearing_total": 1781,
     "portability_violations_total": 0,
-    "tracked_total": 1910,
+    "tracked_total": 1911,
     "unclassified_total": 0,
     "unicode_anomalies_total": 0
   },
