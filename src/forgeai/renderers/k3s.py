@@ -387,36 +387,14 @@ def _openbao_sidecar_block(image: str) -> str:
     )
 
 
-def _deployment(svc: ServiceSpec, effective_node: str | None = None,
-                node_port: int | None = None, service_type: str = "NodePort",
-                config_files: dict[str, str] | None = None) -> str:
-    name = _safe(svc.name, "name")
-    image = _safe(svc.image, "image")
+def _volumes_et_mounts(svc: ServiceSpec, profil: ProfilSecurite, gpu_actif: bool,
+                       config_files: dict[str, str] | None) -> tuple[str, str, list[str], list[str]]:
+    """Construit les blocs volumeMounts/volumes du pod et les documents ConfigMap/PVC.
 
-    # Vérification explicite du vendor GPU avant tout rendu du bloc GPU. Défense en
-    # profondeur : `ServiceSpec.__post_init__` (core/models.py, BUG-servicespec-validation)
-    # refuse déjà tout gpu_vendor hors GPU_VENDORS_CONNUS dès la construction, donc cette
-    # branche est normalement inatteignable — conservée pour ne pas dépendre implicitement
-    # de l'invariant amont si un ServiceSpec venait à être construit autrement.
-    if svc.gpu and svc.gpu_vendor is not None and svc.gpu_vendor not in GPU_VENDORS_CONNUS:
-        raise ValueError(t("renderers.k3s.vendor_gpu_non_supporte", gpu_vendor=svc.gpu_vendor))
-    # GPU par vendor : chaque vendor reçoit sa ressource de device plugin
-    # (LAB-033A). Le passthrough hostPath est supprimé car le cgroup devices
-    # refuse l'accès aux char devices montés en hostPath.
-    vendor = (svc.gpu_vendor or "nvidia") if svc.gpu else None
-
-    # K8S-022 : profil PSS restricted par service (uid mesuré) ; `svc.gpu` = seule dérogation.
-    profil = _profil_securite(svc.name)
-    gpu_actif = bool(svc.gpu)
-    resources_block = _resources_block(svc, vendor)
-    security_block = _security_block(profil, gpu_actif)
-    probes_block = _probes_block(svc)
-    node_selector = ""
-    if effective_node and effective_node != "auto":
-        node_selector = f"""
-      nodeSelector:
-        kubernetes.io/hostname: {_safe(effective_node, 'node')}"""
-    effective_type = "ClusterIP" if svc.name in _INTERNAL_SERVICES else service_type
+    Retourne ``(volume_mount, volume_def, configmap_docs, pvc_docs)`` : les deux blocs YAML
+    insérés dans le Deployment, puis les documents multi-doc à émettre AVANT le Deployment.
+    Extraction pure de ``_deployment()`` (issue #459) — sortie strictement identique.
+    """
     # Fusion volume data + fichiers config (ConfigMap) en UN bloc volumeMounts
     # et UN bloc volumes (sinon clé YAML dupliquée).
     # mounts: (name, mountPath, subPath|None, readOnly)
@@ -527,6 +505,15 @@ def _deployment(svc: ServiceSpec, effective_node: str | None = None,
                           f"\n              - key: unseal_key"
                           f"\n                path: unseal_key")
         volume_def = f"\n      volumes:{items}"
+    return volume_mount, volume_def, configmap_docs, pvc_docs
+
+
+def _command_et_env_blocks(svc: ServiceSpec) -> tuple[str, str]:
+    """Construit les blocs ``args:`` (depuis ``svc.command``) et ``env:`` (depuis ``svc.env``).
+
+    Retourne ``(command_block, env_block)``. Extraction pure de ``_deployment()``
+    (issue #459) — sortie strictement identique.
+    """
     # command → args k8s (parité avec le renderer compose) ; chaque arg passé par _safe (injection).
     command_block = ""
     if svc.command:
@@ -591,6 +578,42 @@ def _deployment(svc: ServiceSpec, effective_node: str | None = None,
                     f"\n              value: {json.dumps(_safe(str(v), 'env-val'), ensure_ascii=False)}"
                 )
         env_block = f"\n          env:{items}"
+    return command_block, env_block
+
+
+def _deployment(svc: ServiceSpec, effective_node: str | None = None,
+                node_port: int | None = None, service_type: str = "NodePort",
+                config_files: dict[str, str] | None = None) -> str:
+    name = _safe(svc.name, "name")
+    image = _safe(svc.image, "image")
+
+    # Vérification explicite du vendor GPU avant tout rendu du bloc GPU. Défense en
+    # profondeur : `ServiceSpec.__post_init__` (core/models.py, BUG-servicespec-validation)
+    # refuse déjà tout gpu_vendor hors GPU_VENDORS_CONNUS dès la construction, donc cette
+    # branche est normalement inatteignable — conservée pour ne pas dépendre implicitement
+    # de l'invariant amont si un ServiceSpec venait à être construit autrement.
+    if svc.gpu and svc.gpu_vendor is not None and svc.gpu_vendor not in GPU_VENDORS_CONNUS:
+        raise ValueError(t("renderers.k3s.vendor_gpu_non_supporte", gpu_vendor=svc.gpu_vendor))
+    # GPU par vendor : chaque vendor reçoit sa ressource de device plugin
+    # (LAB-033A). Le passthrough hostPath est supprimé car le cgroup devices
+    # refuse l'accès aux char devices montés en hostPath.
+    vendor = (svc.gpu_vendor or "nvidia") if svc.gpu else None
+
+    # K8S-022 : profil PSS restricted par service (uid mesuré) ; `svc.gpu` = seule dérogation.
+    profil = _profil_securite(svc.name)
+    gpu_actif = bool(svc.gpu)
+    resources_block = _resources_block(svc, vendor)
+    security_block = _security_block(profil, gpu_actif)
+    probes_block = _probes_block(svc)
+    node_selector = ""
+    if effective_node and effective_node != "auto":
+        node_selector = f"""
+      nodeSelector:
+        kubernetes.io/hostname: {_safe(effective_node, 'node')}"""
+    effective_type = "ClusterIP" if svc.name in _INTERNAL_SERVICES else service_type
+    volume_mount, volume_def, configmap_docs, pvc_docs = _volumes_et_mounts(
+        svc, profil, gpu_actif, config_files)
+    command_block, env_block = _command_et_env_blocks(svc)
     # openbao : le sidecar s'insère ENTRE le conteneur principal (volume_mount, indent 10)
     # et le bloc `volumes:` du POD (volume_def, indent 6) — sinon le 2e conteneur tomberait après
     # `volumes:` = YAML invalide.

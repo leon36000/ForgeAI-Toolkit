@@ -1,87 +1,238 @@
-# Équipe de mission ForgeAI Toolkit — §1 du plan maître (CANON/PLAN-MAITRE-EXECUTION-BMAD-v1.0.md)
-# provider_id = raccourci roster forge-model-bridge (LiteLLM 127.0.0.1:4000).
-# route_status passe à "ok" après test de connexion réel (checklist §9, étape 3) → manifests/routes.yaml
 version: 1
 membres:
   - id: fable
-    modele: Claude Fable 5 (instance Claude Code, session lead)
+    modele: Modèle actif Claude Code
     vendor: anthropic
-    provider_id: null   # Fable EST la session — pas de route bridge
-    phase_a: Validation finale du plan après consensus; arbitre des objections
-    phase_b: Orchestrateur de mission + juge/validateur d'étapes + codeur du difficile
-    contrainte: ne se relit jamais lui-même — reviewers non-Anthropic obligatoires sur son code
-  - id: glm
-    modele: GLM-5.2
-    vendor: zhipu
-    provider_id: glm52
-    phase_a: Architecture technique détaillée (modules, schémas de données, API des hooks)
-    phase_b: Architecte permanent — revue d'architecture de chaque story avant codage
-  - id: deepseek
-    modele: DeepSeek V4 Pro
-    vendor: deepseek
-    provider_id: deepseek
-    phase_a: Registre des risques + mitigations; revue critique du PRD
-    phase_b: Juge/critique indépendant — reviewer aveugle no 1
-  - id: kimi
-    modele: Kimi K2.7 Code
+    provider_id: null
+    phase_a: Orchestrateur — revue et validation des travaux structurels
+    phase_b: Orchestrateur — code le plus dur et signe sur pièces
+    contrainte: session lead ; ne se relit jamais lui-même — reviewers non-Anthropic obligatoires sur son code
+
+  - id: kimi_k3
+    modele: Kimi K3
     vendor: moonshot
-    provider_id: kimi
-    phase_a: Découpage du plan en stories BMAD exécutables
+    provider_id: Kimi-K3
+    phase_a: Architecte — revue AVANT code structurel
+    phase_b: Codeur très haute difficulté hors Orchestrateur ; codeur TUI/UX et parallèle
+    contrainte: "dispatch --difficulty difficile pour les missions structurelles et de très haute difficulté"
+
+  - id: opus_5
+    modele: Opus 5
+    vendor: anthropic
+    provider_id: null
+    phase_a: Codeur très haute difficulté hors Orchestrateur
+    phase_b: Codeur très haute difficulté via subagent natif
+    contrainte: subagent general-purpose natif Claude Code ; pas de route bridge
+
+  - id: muse
+    modele: Muse Spark 1.2
+    vendor: meta
+    provider_id: Muse-Spark-1.2
+    phase_a: Codeur des missions longues multi-fichiers
     phase_b: Codeur des missions longues multi-fichiers
-  - id: composer
-    modele: Composer 2.5
-    vendor: xai-cursor
-    provider_id: composer
-    phase_a: Spécification du TUI (écrans du wizard, flux d'interaction)
-    phase_b: Codeur des itérations rapides TUI/UX
-    contrainte: jamais apparié en revue avec grok (même vendor)
-  - id: grok
-    modele: Grok 4.5
-    vendor: xai-cursor
-    provider_id: Grok-4.5
-    phase_a: Spécification des tests (matrice de couverture par fonctionnalité)
-    phase_b: Codeur parallèle sur stories indépendantes (git worktrees)
-    contrainte: jamais apparié en revue avec composer (même vendor)
-  - id: gemini
-    modele: Gemini 3.1 Pro
+    contrainte: "subagent model: crew-coder-long"
+
+  - id: gemini_flash
+    modele: Gemini 3.7 Flash
     vendor: google
-    provider_id: Gemini-3.1-Pro
-    phase_a: Revue UX/design du wizard + diagrammes d'architecture
-    phase_b: Reviewer aveugle no 2 (multimodal)
+    provider_id: Gemini-3.7-Flash
+    phase_a: Codeur bulk et tâches mécaniques ; sentinelle qualité ; documentaliste
+    phase_b: Codeur bulk via subagent ; sentinelle qualité ; mainteneur documentation et canon
+    contrainte: "subagent model: crew-coder-bulk ; doc_keeper.py ; jamais codeur lorsqu'il agit comme sentinelle ; la sentinelle peut rouvrir une story"
+
+  # Terra Pro cumule deux rôles : codeur TUI/UX/parallèle ET reviewer aveugle scellé.
+  # Règle explicite : il ne doit JAMAIS reviewer une story qu'il a codée.
+  - id: terra
+    modele: ChatGPT Terra Pro 5.6
+    vendor: openai
+    provider_id: GPT-5.6-Terra-Pro
+    phase_a: Codeur TUI/UX et parallèle ; reviewer aveugle scellé
+    phase_b: Codeur TUI/UX et parallèle en sessions/worktrees dédiés ; reviewer aveugle scellé
+    contrainte: civ_review.py hors session pour les revues aveugles ; ne doit jamais reviewer une story qu'il a codée
+
+  - id: grok_45
+    modele: Grok 4.5
+    vendor: xai
+    provider_id: Grok-4.5
+    phase_a: Codeur TUI/UX et parallèle
+    phase_b: Codeur TUI/UX et parallèle en sessions/worktrees dédiés
+    contrainte: sessions/worktrees dédiés
+
+  - id: deepseek
+    modele: DeepSeek V4 Pro 0813
+    vendor: deepseek
+    provider_id: DeepSeek-V4-Pro-0813
+    phase_a: Reviewer aveugle scellé
+    phase_b: Reviewer aveugle scellé
+    contrainte: civ_review.py hors session
+
+  # Qwen3.8-2.4T et Qwen3.8-Max sont DEUX modèles distincts, tous deux utilisés :
+  # - qwen (Qwen3.8-2.4T)      : reviewer aveugle scellé + synthétiseur de preuves
+  # - qwen_38_max (Qwen3.8-Max): sentinelle qualité
   - id: qwen
+    modele: Qwen 3.8 2.4T
+    vendor: alibaba
+    provider_id: Qwen3.8-2.4T
+    phase_a: Reviewer aveugle scellé ; synthétiseur de preuves proposé, non confirmé
+    phase_b: Reviewer aveugle scellé ; synthétiseur de preuves proposé, non confirmé
+    contrainte: civ_review.py hors session pour les revues ; synthétiseur proposé, non confirmé
+
+  - id: qwen_38_max
+    modele: Qwen 3.8 Max
+    vendor: alibaba
+    provider_id: Qwen3.8-Max
+    phase_a: Sentinelle qualité
+    phase_b: Sentinelle qualité
+    contrainte: sentinelle uniquement ; jamais codeur ; peut rouvrir une story
+
+  - id: grok_46
+    modele: Grok 4.6
+    vendor: xai
+    provider_id: Grok-4.6
+    phase_a: Sentinelle qualité
+    phase_b: Sentinelle qualité
+    contrainte: script ou CI ; jamais codeur ; peut rouvrir une story
+
+  - id: kimi_27
+    modele: Kimi 2.7
+    vendor: moonshot
+    provider_id: Kimi-2.7
+    phase_a: Pool rotation reviewers
+    phase_b: Pool rotation reviewers
+    contrainte: route instable, journalisée ; pool de rotation uniquement
+
+  - id: qwen_37
     modele: Qwen 3.7 Max
     vendor: alibaba
     provider_id: Qwen3.7-Max
-    phase_a: Enrichissement du catalogue (742 descriptions EN + revue des 231 entrées)
-    phase_b: Mainteneur du catalogue bilingue
-  - id: longcat
-    modele: LongCat 2.0
-    vendor: meituan
-    provider_id: LongCat-2.0
-    phase_a: Second lot de descriptions + revue critique du protocole multi-nœuds
-    phase_b: Reviewer aveugle no 3 (pool de rotation) + second-opinion sécurité
+    phase_a: Pool rotation reviewers
+    phase_b: Pool rotation reviewers
+    contrainte: route instable, journalisée ; pool de rotation uniquement
+
   - id: mimo
     modele: MiMo 2.5 Pro
     vendor: xiaomi
+    provider_id: MiMo-V2.5-Pro
+    phase_a: Pool rotation reviewers
+    phase_b: Pool rotation reviewers
+    contrainte: route instable, journalisée ; pool de rotation uniquement
+
+  # ---------------------------------------------------------------------------
+  # Membres historiques — NON SÉLECTIONNABLES.
+  # statut: retire => jamais proposés comme reviewers d'une nouvelle revue.
+  # Présents uniquement pour que vendor_of() resolve les identités ayant signé
+  # des revues scellées historiques (audit a posteriori).
+  # ---------------------------------------------------------------------------
+
+  - id: glm_52
+    modele: GLM 5.2
+    vendor: zhipu
+    provider_id: GLM-5.2
+    statut: retire
+    raison: "retiré : fuite de raisonnement, ADR-0003 R-038"
+    phase_a: historique — audit seulement
+    phase_b: historique — audit seulement
+    contrainte: non sélectionnable ; résolution d'identité pour audit uniquement
+
+  - id: longcat_20
+    modele: LongCat 2.0
+    vendor: meituan
+    provider_id: LongCat-2.0
+    statut: retire
+    raison: "retiré du trio 2026-07-31 (Qwen3.8 l'a remplacé) ; quota épuisé"
+    phase_a: historique — audit seulement
+    phase_b: historique — audit seulement
+    contrainte: non sélectionnable ; résolution d'identité pour audit uniquement
+
+  - id: gemini_31_pro
+    modele: Gemini 3.1 Pro
+    vendor: google
+    provider_id: Gemini-3.1-Pro
+    statut: retire
+    raison: "ancien reviewer du trio, remplacé par ChatGPT Terra Pro"
+    phase_a: historique — audit seulement
+    phase_b: historique — audit seulement
+    contrainte: non sélectionnable ; résolution d'identité pour audit uniquement
+
+  - id: gemini_31_pro_or
+    modele: Gemini 3.1 Pro (route OR)
+    vendor: google
+    provider_id: Gemini-3.1-Pro-OR
+    statut: retire
+    raison: "identifiant de route historique présent dans les verdicts scellés"
+    phase_a: historique — audit seulement
+    phase_b: historique — audit seulement
+    contrainte: non sélectionnable ; résolution d'identité pour audit uniquement
+
+  - id: mimo_pro_v2
+    modele: MiMo Pro V2
+    vendor: xiaomi
     provider_id: MiMo-Pro-V2
-    phase_a: Consolidation MASTER-PLAN + manifestes YAML machine-lisibles (contexte 1M)
-    phase_b: Synthétiseur de preuves — rapports d'étape pour Fable
-  - id: terra
-    modele: GPT-5.6-Terra-Pro
-    vendor: openai
-    provider_id: GPT-5.6-Terra-Pro
-    phase_a: Codeur du crew pour les missions de difficulté difficile
-    phase_b: Codeur du crew — dispatch --difficulty difficile
+    statut: retire
+    raison: "ancien identifiant de route, remplacé par MiMo-V2.5-Pro"
+    phase_a: historique — audit seulement
+    phase_b: historique — audit seulement
+    contrainte: non sélectionnable ; résolution d'identité pour audit uniquement
+
+  # Composer est un produit xAI (même maker que Grok) : vendor xai, jamais un
+  # vendor distinct — anti-Sybil, deux voix du même maker ne comptent pas comme
+  # deux avis indépendants en revue.
+  - id: composer_25
+    modele: Composer 2.5
+    vendor: xai
+    provider_id: Composer-2.5
+    statut: retire
+    raison: "retiré de l'équipe active"
+    phase_a: historique — audit seulement
+    phase_b: historique — audit seulement
+    contrainte: non sélectionnable ; résolution d'identité pour audit uniquement
+
+  - id: qwen_36_40b
+    modele: Qwen 3.6 40B
+    vendor: alibaba
+    provider_id: Qwen3.6-40B
+    statut: retire
+    raison: "historique"
+    phase_a: historique — audit seulement
+    phase_b: historique — audit seulement
+    contrainte: non sélectionnable ; résolution d'identité pour audit uniquement
+
+  - id: nemotron_3_ultra
+    modele: Nemotron 3 Ultra
+    vendor: nvidia
+    provider_id: Nemotron-3-Ultra
+    statut: retire
+    raison: "historique"
+    phase_a: historique — audit seulement
+    phase_b: historique — audit seulement
+    contrainte: non sélectionnable ; résolution d'identité pour audit uniquement
+
   - id: luna
-    modele: GPT-5.6-Luna-Pro
+    modele: ChatGPT Luna Pro 5.6
     vendor: openai
     provider_id: GPT-5.6-Luna-Pro
-    phase_a: Codeur du crew pour les missions de difficulté facile
-    phase_b: Codeur du crew — dispatch --difficulty facile
+    statut: retire
+    raison: "retiré de l'équipe active ; a codé des stories et signé des reçus D9 — identité résoluble pour audit"
+    phase_a: historique — audit seulement
+    phase_b: historique — audit seulement
+    contrainte: non sélectionnable ; résolution d'identité pour audit uniquement
+
+  - id: gemini_36_flash
+    modele: Gemini 3.6 Flash
+    vendor: google
+    provider_id: Gemini-3.6-Flash
+    statut: retire
+    raison: "ancienne route bulk de l'équipe active, remplacée par Gemini-3.7-Flash"
+    phase_a: historique — audit seulement
+    phase_b: historique — audit seulement
+    contrainte: non sélectionnable ; résolution d'identité pour audit uniquement
 
 regles_revue:
   seuil_consensus: "7/9 APPROVE et zéro objection critique non résolue"
-  vendors_par_story: 3   # trois reviewers, trois vendors différents
-  paires_interdites:
-    - [composer, grok]
-  code_fable_reviewers: non-anthropic uniquement (deepseek, gemini, longcat, kimi, qwen, mimo)
+  vendors_par_story: 3
+  paires_interdites: []
+  # Règle explicite : ChatGPT Terra Pro 5.6 ne doit jamais reviewer une story qu'il a codée.
+  reviewers_aveugles: "DeepSeek V4 Pro 0813, Qwen 3.8 2.4T, ChatGPT Terra Pro 5.6"
+  revue_aveugle_mecanisme: civ_review.py hors session
+  sentinelles: "Qwen 3.8 Max, Grok 4.6, Gemini 3.7 Flash"
+  synthese_preuves: "Qwen 3.8 2.4T — proposé, non confirmé"

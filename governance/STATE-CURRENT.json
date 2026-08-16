@@ -187,10 +187,6 @@
         "sha256": "31349a593e1f344b7f745fa9c5be1bea03a3ef1881b9da944d6c8b78130ab3bd"
       },
       {
-        "path": "tests/test_check_doc_links.py",
-        "sha256": "93f22a0d85f228008a8040674714bb30b43fc4e71640c7df7557990d432b9d37"
-      },
-      {
         "path": "tests/test_classify_paths.py",
         "sha256": "e7d8aa782fc6ca6ef5bea0beabe87bff257396e6405cf0763072edbd284672bb"
       },
@@ -308,7 +304,7 @@
       },
       {
         "path": "tests/test_fix_audit_1b_reviews_gate_in_process.py",
-        "sha256": "b2d95f2d3e752abcadc310481ee98892c05e8c76a51b1e130f7319c517c2c790"
+        "sha256": "d4c17c8c99d6c03888d1c9bf60c337d6336891b7b1de76236825d2c7459c2ee7"
       },
       {
         "path": "tests/test_gap_bricks.py",
@@ -389,6 +385,10 @@
       {
         "path": "tests/test_k3s_configmap.py",
         "sha256": "0674b72cd53cbfdab92bcbc5f2b958f5141bfcfbdfe461f2a7dd6657e612f31b"
+      },
+      {
+        "path": "tests/test_k3s_deployment_decoupage.py",
+        "sha256": "4f1039322ebbe3fed9da96157e6ce49d9cb8840763568fb1c6a80d73de9771b2"
       },
       {
         "path": "tests/test_k3s_env_secret.py",
@@ -696,11 +696,11 @@
       },
       {
         "path": "tests/test_reviews_gate.py",
-        "sha256": "5049a839aaeb90ff15f0fa901e4d5786fd836c2209c3df81f7e72e7093866182"
+        "sha256": "1a7caf387b6b95ecd190f361ea01ad5d1f2906ab1f3bdb19b4c967b1404ddb27"
       },
       {
         "path": "tests/test_revue.py",
-        "sha256": "cfbcea8c2bd1e6c87ffe80f877587a5a49a3813cd58c143c5b5185ad47a52d49"
+        "sha256": "05d965917c6992b561e5a939e21dcd53810b6534ed73b87cf6a0a353e27de3d2"
       },
       {
         "path": "tests/test_routestore_concurrence.py",
@@ -889,7 +889,7 @@
     "tests": {
       "js_files": 3,
       "python_files": 184,
-      "python_functions_declared": 1989
+      "python_functions_declared": 1983
     }
   },
   "observations": [
