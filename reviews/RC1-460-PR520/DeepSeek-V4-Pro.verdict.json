@@ -1,0 +1,25 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "src/forgeai/web/server.py",
+   "description": "La refonte de do_GET ajoute un return inconditionnel après _get_summary, _get_stacks_id et _get_nodes_receptacles alors que le code d'origine ne retournait pas après certains chemins d'erreur (ex. FileNotFoundError de _summary_payload ou _get_stacks_id). Cela change le flux post-réponse par rapport au code original, sans mention dans la story.",
+   "preuve": "diff do_GET: le bloc /api/summary supprimé ne contient pas de return après `except FileNotFoundError: self._send_json(404, ...)`; la version remplacée ajoute `+            return` après `self._get_summary(path, parsed)`."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "tests/test_ops031b_logs.py",
+   "description": "Le critère demande d'ajouter des tests de non-régression, mais le diff ne fait que modifier une assertion existante pour pointer _get_deploy_events; aucune nouvelle fonction ou couverture de non-régression n'est visible.",
+   "preuve": "diff tests/test_ops031b_logs.py: modification de test_g1b uniquement, sans nouveau test visible."
+  }
+ ],
+ "date_heure": "2026-08-16T07:00:05.784652+00:00",
+ "prompt_sha256": "b6fe007ef3a66b9248cfb894c91ef5914098f51d4632d85fa9ae0a64b29622c6",
+ "reviewer_model": "DeepSeek-V4-Pro",
+ "modele_servi": "deepseek-v4-pro-direct",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}
