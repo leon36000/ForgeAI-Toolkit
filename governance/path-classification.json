@@ -6163,8 +6163,8 @@
         }
       ],
       "rule_id": "evidence-registres-root",
-      "sha256": "7e43fe8b9040287781f8239388589b99fe53d6bbfc25950131d35876f59b9ece",
-      "size": 362983,
+      "sha256": "11aaa9dd27ad8e5722897ab14918233ef026c90a14150851b0d8d80310d3fd8e",
+      "size": 364138,
       "target_path": null,
       "type": "text"
     },
@@ -21271,7 +21271,7 @@
       "path": "reviews/RC1-009/RECU.json",
       "referenced_by": [],
       "rule_id": "evidence-reviews",
-      "sha256": "ffa246883e0373c636c2d284d1a6ca5511b54ad20eba5606d580042c68e926a5",
+      "sha256": "494f9dc552f6617f5d5e0489e15140d442df49df17b2484b09b4cbb6d6e8f63b",
       "size": 661,
       "target_path": "evidence/reviews/RC1-009/RECU.json",
       "type": "text"
@@ -29038,6 +29038,13 @@
         },
         {
           "candidate": "src/forgeai/core/models.py",
+          "line": 24,
+          "referrer": "stories/BUGHUNT-2026-08-16.md",
+          "resolved": "src/forgeai/core/models.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "src/forgeai/core/models.py",
           "line": 27,
           "referrer": "stories/HEALTH-028A.md",
           "resolved": "src/forgeai/core/models.py",
@@ -29087,8 +29094,8 @@
         }
       ],
       "rule_id": "product-source",
-      "sha256": "ee714f9aee40985b23f42d0f7783832bec3ad24c69f580c7de79dc5bc38bb7e9",
-      "size": 27874,
+      "sha256": "14142e911871393bf62f1678a2addb655228b32259b84d0a5d5e574445a4db36",
+      "size": 28183,
       "target_path": null,
       "type": "text"
     },
@@ -31996,11 +32003,18 @@
           "referrer": "evidence/reviews/B-11-civ/Qwen3.7-Max.verdict.json",
           "resolved": "src/forgeai/models/gateway.py",
           "severity": "hard"
+        },
+        {
+          "candidate": "src/forgeai/models/gateway.py",
+          "line": 40,
+          "referrer": "stories/BUGHUNT-2026-08-16.md",
+          "resolved": "src/forgeai/models/gateway.py",
+          "severity": "hard"
         }
       ],
       "rule_id": "product-source",
-      "sha256": "692401c475aec4b4bf8ddcb36f07a1f95035088b33bdfc372eab2a895d642308",
-      "size": 6841,
+      "sha256": "a9b8cbcb5aeab7507865b4cc9ef4c66d72064c067bdb7f960ddb28c73764d400",
+      "size": 7442,
       "target_path": null,
       "type": "text"
     },
@@ -34820,6 +34834,13 @@
       "referenced_by": [
         {
           "candidate": "src/forgeai/web/ratelimit.py",
+          "line": 31,
+          "referrer": "stories/BUGHUNT-2026-08-16.md",
+          "resolved": "src/forgeai/web/ratelimit.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "src/forgeai/web/ratelimit.py",
           "line": 5,
           "referrer": "stories/WEB-016.md",
           "resolved": "src/forgeai/web/ratelimit.py",
@@ -34827,8 +34848,8 @@
         }
       ],
       "rule_id": "product-source",
-      "sha256": "fc9fd1d16112254d843ae0aa6bed839216d000b500d6d7474a5119176b9f2387",
-      "size": 5562,
+      "sha256": "ee19fbed5f94c04fe88722f3fa0936b983a0aeef07f1802916587420cbe0793b",
+      "size": 6480,
       "target_path": null,
       "type": "text"
     },
@@ -35121,6 +35142,13 @@
         },
         {
           "candidate": "src/forgeai/web/server.py",
+          "line": 23,
+          "referrer": "stories/BUGHUNT-2026-08-16.md",
+          "resolved": "src/forgeai/web/server.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "src/forgeai/web/server.py",
           "line": 5,
           "referrer": "stories/OPS-031A.md",
           "resolved": "src/forgeai/web/server.py",
@@ -35247,8 +35275,8 @@
         }
       ],
       "rule_id": "product-source",
-      "sha256": "ef0cdd79d6b68f46645fc8f08ea88248d624a228c3aedf7852d68f988237dfae",
-      "size": 71831,
+      "sha256": "ae70247fe734ee9b746ee774f1b4bd3b33bda7976f3d1902552a3a84e49bfca7",
+      "size": 72248,
       "target_path": null,
       "type": "text"
     },
@@ -35380,6 +35408,19 @@
       "rule_id": "governance-stories",
       "sha256": "df7c5b62f4426e7fd2afe332fb91b95cb7576a68279661a0e7d0213c382c814e",
       "size": 4074,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "GOVERNANCE",
+      "generated": false,
+      "load_bearing": false,
+      "owner": "gouvernance-stories",
+      "path": "stories/BUGHUNT-2026-08-16.md",
+      "referenced_by": [],
+      "rule_id": "governance-stories",
+      "sha256": "32861f1ea8f5e80a50a9ba3751f9122c4948941af1444aaf206bde335440bdc9",
+      "size": 4223,
       "target_path": null,
       "type": "text"
     },
@@ -37701,6 +37742,13 @@
         },
         {
           "candidate": "tests/test_adoption.py",
+          "line": 49,
+          "referrer": "stories/BUGHUNT-2026-08-16.md",
+          "resolved": "tests/test_adoption.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "tests/test_adoption.py",
           "line": 113,
           "referrer": "stories/D2.md",
           "resolved": "tests/test_adoption.py",
@@ -37715,8 +37763,8 @@
         }
       ],
       "rule_id": "test-suite",
-      "sha256": "f5bc8a39e36c20a774ff7dd582d75df953a7fde4425a187343624d189887de1d",
-      "size": 13026,
+      "sha256": "c2a7c27f55a2a75a20474b5a9e97b469c01e3682e9a878890b6dccdad69ae99e",
+      "size": 13372,
       "target_path": null,
       "type": "text"
     },
@@ -37750,6 +37798,13 @@
         },
         {
           "candidate": "tests/test_adoption_api.py",
+          "line": 47,
+          "referrer": "stories/BUGHUNT-2026-08-16.md",
+          "resolved": "tests/test_adoption_api.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "tests/test_adoption_api.py",
           "line": 99,
           "referrer": "stories/D3.md",
           "resolved": "tests/test_adoption_api.py",
@@ -37764,8 +37819,8 @@
         }
       ],
       "rule_id": "test-suite",
-      "sha256": "b746584f23c382d9b73b660f6658acba1e484e6ac22cffd95894f4974924af07",
-      "size": 12034,
+      "sha256": "bb4ddc5e536f1ab586e522ad98a547393db23acd5ca114274bd14bc6c8751756",
+      "size": 12121,
       "target_path": null,
       "type": "text"
     },
@@ -41600,6 +41655,13 @@
         },
         {
           "candidate": "tests/test_models_gateway.py",
+          "line": 54,
+          "referrer": "stories/BUGHUNT-2026-08-16.md",
+          "resolved": "tests/test_models_gateway.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "tests/test_models_gateway.py",
           "line": 284,
           "referrer": "stories/I18N-031.md",
           "resolved": "tests/test_models_gateway.py",
@@ -41614,8 +41676,8 @@
         }
       ],
       "rule_id": "test-suite",
-      "sha256": "07dd771237fb986e9685d5bb897ff37538be30bf454de6a47ae1894ea7725eb5",
-      "size": 8826,
+      "sha256": "038b8be76bf0eda225af1bcf18e9116d51dfb263d90dc526da77e17429501c38",
+      "size": 10360,
       "target_path": null,
       "type": "text"
     },
@@ -43784,6 +43846,13 @@
         },
         {
           "candidate": "tests/test_ratelimit.py",
+          "line": 51,
+          "referrer": "stories/BUGHUNT-2026-08-16.md",
+          "resolved": "tests/test_ratelimit.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "tests/test_ratelimit.py",
           "line": 6,
           "referrer": "stories/WEB-016.md",
           "resolved": "tests/test_ratelimit.py",
@@ -43798,8 +43867,8 @@
         }
       ],
       "rule_id": "test-suite",
-      "sha256": "747fd9a6d1bcb9fce57fa5f53c284b9cdfc1ad1f15985c834c7ded038c89828e",
-      "size": 5478,
+      "sha256": "f49b854e41d0fddedb54237307da60a63e5064d99c115f7d05c4c62839623a10",
+      "size": 7252,
       "target_path": null,
       "type": "text"
     },
@@ -89205,7 +89274,7 @@
       },
       {
         "candidate": "YAML/Compose",
-        "line": 529,
+        "line": 532,
         "referrer": "src/forgeai/core/models.py"
       },
       {
@@ -104985,27 +105054,27 @@
       },
       {
         "candidate": "URL/cl",
-        "line": 50,
+        "line": 54,
         "referrer": "src/forgeai/models/gateway.py"
       },
       {
         "candidate": "gateway.json",
-        "line": 112,
-        "referrer": "src/forgeai/models/gateway.py"
-      },
-      {
-        "candidate": "wirings.json",
-        "line": 112,
-        "referrer": "src/forgeai/models/gateway.py"
-      },
-      {
-        "candidate": "gateway.json",
-        "line": 117,
+        "line": 118,
         "referrer": "src/forgeai/models/gateway.py"
       },
       {
         "candidate": "wirings.json",
         "line": 118,
+        "referrer": "src/forgeai/models/gateway.py"
+      },
+      {
+        "candidate": "gateway.json",
+        "line": 123,
+        "referrer": "src/forgeai/models/gateway.py"
+      },
+      {
+        "candidate": "wirings.json",
+        "line": 124,
         "referrer": "src/forgeai/models/gateway.py"
       },
       {
@@ -105870,47 +105939,42 @@
       },
       {
         "candidate": "parse/process",
-        "line": 275,
+        "line": 280,
         "referrer": "src/forgeai/web/server.py"
       },
       {
         "candidate": "A-Za-z0-9._/",
-        "line": 379,
+        "line": 384,
         "referrer": "src/forgeai/web/server.py"
       },
       {
         "candidate": "P0.3b/N1b",
-        "line": 383,
+        "line": 388,
         "referrer": "src/forgeai/web/server.py"
       },
       {
         "candidate": "E/S",
-        "line": 420,
+        "line": 425,
         "referrer": "src/forgeai/web/server.py"
       },
       {
         "candidate": "deploy-state.json",
-        "line": 437,
-        "referrer": "src/forgeai/web/server.py"
-      },
-      {
-        "candidate": "prepare-state.json",
         "line": 442,
         "referrer": "src/forgeai/web/server.py"
       },
       {
+        "candidate": "prepare-state.json",
+        "line": 447,
+        "referrer": "src/forgeai/web/server.py"
+      },
+      {
         "candidate": "cluster.read_probes/node_vendors",
-        "line": 585,
+        "line": 590,
         "referrer": "src/forgeai/web/server.py"
       },
       {
         "candidate": "Host/netloc",
-        "line": 630,
-        "referrer": "src/forgeai/web/server.py"
-      },
-      {
-        "candidate": "CSRF/rebinding",
-        "line": 684,
+        "line": 635,
         "referrer": "src/forgeai/web/server.py"
       },
       {
@@ -105919,158 +105983,163 @@
         "referrer": "src/forgeai/web/server.py"
       },
       {
+        "candidate": "CSRF/rebinding",
+        "line": 694,
+        "referrer": "src/forgeai/web/server.py"
+      },
+      {
         "candidate": "cross-site/same-site",
-        "line": 691,
+        "line": 696,
         "referrer": "src/forgeai/web/server.py"
       },
       {
         "candidate": "ForgeAI/0.1",
-        "line": 747,
+        "line": 752,
         "referrer": "src/forgeai/web/server.py"
       },
       {
         "candidate": "HTTP/1.0",
-        "line": 759,
+        "line": 764,
         "referrer": "src/forgeai/web/server.py"
       },
       {
         "candidate": "HTTP/1.1",
-        "line": 760,
+        "line": 765,
         "referrer": "src/forgeai/web/server.py"
       },
       {
         "candidate": "application/json",
-        "line": 798,
+        "line": 803,
         "referrer": "src/forgeai/web/server.py"
       },
       {
         "candidate": "text/plain",
-        "line": 855,
+        "line": 860,
         "referrer": "src/forgeai/web/server.py"
       },
       {
         "candidate": "text/html",
-        "line": 857,
+        "line": 862,
         "referrer": "src/forgeai/web/server.py"
       },
       {
         "candidate": "application/json",
-        "line": 863,
+        "line": 868,
         "referrer": "src/forgeai/web/server.py"
       },
       {
         "candidate": "application/json",
-        "line": 872,
+        "line": 877,
         "referrer": "src/forgeai/web/server.py"
       },
       {
         "candidate": "anti-CSRF/rebinding",
-        "line": 880,
+        "line": 885,
         "referrer": "src/forgeai/web/server.py"
       },
       {
         "candidate": "locales/",
-        "line": 897,
+        "line": 902,
         "referrer": "src/forgeai/web/server.py"
       },
       {
         "candidate": "modeles-locaux.json",
-        "line": 911,
+        "line": 916,
         "referrer": "src/forgeai/web/server.py"
       },
       {
         "candidate": "moteurs-inference.json",
-        "line": 917,
+        "line": 922,
         "referrer": "src/forgeai/web/server.py"
       },
       {
         "candidate": "moteurs-inference.json",
-        "line": 926,
+        "line": 931,
         "referrer": "src/forgeai/web/server.py"
       },
       {
         "candidate": "text/event-stream",
-        "line": 1039,
+        "line": 1044,
         "referrer": "src/forgeai/web/server.py"
       },
       {
         "candidate": "son/ses",
-        "line": 1095,
+        "line": 1100,
         "referrer": "src/forgeai/web/server.py"
       },
       {
         "candidate": "network/nodes.py",
-        "line": 1111,
+        "line": 1116,
         "referrer": "src/forgeai/web/server.py"
       },
       {
         "candidate": "labels/capacit",
-        "line": 1112,
+        "line": 1117,
         "referrer": "src/forgeai/web/server.py"
       },
       {
         "candidate": "GPU/ready",
-        "line": 1112,
+        "line": 1117,
         "referrer": "src/forgeai/web/server.py"
       },
       {
         "candidate": "tat/arch",
-        "line": 1112,
+        "line": 1117,
         "referrer": "src/forgeai/web/server.py"
       },
       {
         "candidate": "forgeai/receptacle",
-        "line": 1128,
+        "line": 1133,
         "referrer": "src/forgeai/web/server.py"
       },
       {
         "candidate": "application/json",
-        "line": 1163,
+        "line": 1168,
         "referrer": "src/forgeai/web/server.py"
       },
       {
         "candidate": "application/json",
-        "line": 1174,
+        "line": 1179,
         "referrer": "src/forgeai/web/server.py"
       },
       {
         "candidate": "TLS/tunnel",
-        "line": 1192,
-        "referrer": "src/forgeai/web/server.py"
-      },
-      {
-        "candidate": "loopback/tunnel",
         "line": 1197,
         "referrer": "src/forgeai/web/server.py"
       },
       {
+        "candidate": "loopback/tunnel",
+        "line": 1202,
+        "referrer": "src/forgeai/web/server.py"
+      },
+      {
         "candidate": "origine/h",
-        "line": 1217,
+        "line": 1222,
         "referrer": "src/forgeai/web/server.py"
       },
       {
         "candidate": "jeton/CSRF/",
-        "line": 1234,
+        "line": 1239,
         "referrer": "src/forgeai/web/server.py"
       },
       {
         "candidate": "application/json",
-        "line": 1238,
+        "line": 1243,
         "referrer": "src/forgeai/web/server.py"
       },
       {
         "candidate": "stack_id.json",
-        "line": 1399,
+        "line": 1404,
         "referrer": "src/forgeai/web/server.py"
       },
       {
         "candidate": "selection-demande.json",
-        "line": 1467,
+        "line": 1472,
         "referrer": "src/forgeai/web/server.py"
       },
       {
         "candidate": "core/proc.py",
-        "line": 1485,
+        "line": 1490,
         "referrer": "src/forgeai/web/server.py"
       },
       {
@@ -106652,6 +106721,71 @@
         "candidate": "src/forgeai/models/",
         "line": 54,
         "referrer": "stories/BC-models-remediation.md"
+      },
+      {
+        "candidate": "origin/main",
+        "line": 5,
+        "referrer": "stories/BUGHUNT-2026-08-16.md"
+      },
+      {
+        "candidate": "fix/bughunt-isdigit-ratelimit-gateway",
+        "line": 6,
+        "referrer": "stories/BUGHUNT-2026-08-16.md"
+      },
+      {
+        "candidate": "panne-passerelle-multi-vendor-2026-08-16.md",
+        "line": 12,
+        "referrer": "stories/BUGHUNT-2026-08-16.md"
+      },
+      {
+        "candidate": "crew_dispatch.py",
+        "line": 12,
+        "referrer": "stories/BUGHUNT-2026-08-16.md"
+      },
+      {
+        "candidate": "civ_review.py",
+        "line": 13,
+        "referrer": "stories/BUGHUNT-2026-08-16.md"
+      },
+      {
+        "candidate": "no_stub_scan.py",
+        "line": 59,
+        "referrer": "stories/BUGHUNT-2026-08-16.md"
+      },
+      {
+        "candidate": "governance/",
+        "line": 63,
+        "referrer": "stories/BUGHUNT-2026-08-16.md"
+      },
+      {
+        "candidate": "scripts/",
+        "line": 63,
+        "referrer": "stories/BUGHUNT-2026-08-16.md"
+      },
+      {
+        "candidate": "CANON/",
+        "line": 63,
+        "referrer": "stories/BUGHUNT-2026-08-16.md"
+      },
+      {
+        "candidate": "web/server.py",
+        "line": 64,
+        "referrer": "stories/BUGHUNT-2026-08-16.md"
+      },
+      {
+        "candidate": "core/models.py",
+        "line": 64,
+        "referrer": "stories/BUGHUNT-2026-08-16.md"
+      },
+      {
+        "candidate": "web/ratelimit.py",
+        "line": 64,
+        "referrer": "stories/BUGHUNT-2026-08-16.md"
+      },
+      {
+        "candidate": "models/gateway.py",
+        "line": 64,
+        "referrer": "stories/BUGHUNT-2026-08-16.md"
       },
       {
         "candidate": "Owner/repo",
@@ -114155,32 +114289,32 @@
       },
       {
         "candidate": "5432/db",
-        "line": 233,
+        "line": 238,
         "referrer": "tests/test_adoption.py"
       },
       {
         "candidate": "5432/db",
-        "line": 260,
+        "line": 265,
         "referrer": "tests/test_adoption.py"
       },
       {
         "candidate": "5555/db",
-        "line": 267,
+        "line": 272,
         "referrer": "tests/test_adoption.py"
       },
       {
         "candidate": "5432/db",
-        "line": 285,
+        "line": 290,
         "referrer": "tests/test_adoption.py"
       },
       {
         "candidate": "5432/db",
-        "line": 311,
+        "line": 316,
         "referrer": "tests/test_adoption.py"
       },
       {
         "candidate": "5432/db",
-        "line": 319,
+        "line": 324,
         "referrer": "tests/test_adoption.py"
       },
       {
@@ -114190,7 +114324,7 @@
       },
       {
         "candidate": "selection-demande.json",
-        "line": 281,
+        "line": 283,
         "referrer": "tests/test_adoption_api.py"
       },
       {
@@ -117815,27 +117949,27 @@
       },
       {
         "candidate": "z/glm-4.6",
-        "line": 56,
+        "line": 65,
         "referrer": "tests/test_models_gateway.py"
       },
       {
         "candidate": "z/glm-4.6",
-        "line": 59,
+        "line": 68,
         "referrer": "tests/test_models_gateway.py"
       },
       {
         "candidate": "gateway.json",
-        "line": 82,
+        "line": 91,
         "referrer": "tests/test_models_gateway.py"
       },
       {
         "candidate": "application/json",
-        "line": 135,
+        "line": 163,
         "referrer": "tests/test_models_gateway.py"
       },
       {
         "candidate": "wirings.json",
-        "line": 200,
+        "line": 228,
         "referrer": "tests/test_models_gateway.py"
       },
       {
@@ -140737,6 +140871,62 @@
         "severity": "hard"
       },
       {
+        "candidate": "src/forgeai/web/server.py",
+        "line": 23,
+        "referrer": "stories/BUGHUNT-2026-08-16.md",
+        "resolved": "src/forgeai/web/server.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "src/forgeai/core/models.py",
+        "line": 24,
+        "referrer": "stories/BUGHUNT-2026-08-16.md",
+        "resolved": "src/forgeai/core/models.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "src/forgeai/web/ratelimit.py",
+        "line": 31,
+        "referrer": "stories/BUGHUNT-2026-08-16.md",
+        "resolved": "src/forgeai/web/ratelimit.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "src/forgeai/models/gateway.py",
+        "line": 40,
+        "referrer": "stories/BUGHUNT-2026-08-16.md",
+        "resolved": "src/forgeai/models/gateway.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "tests/test_adoption_api.py",
+        "line": 47,
+        "referrer": "stories/BUGHUNT-2026-08-16.md",
+        "resolved": "tests/test_adoption_api.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "tests/test_adoption.py",
+        "line": 49,
+        "referrer": "stories/BUGHUNT-2026-08-16.md",
+        "resolved": "tests/test_adoption.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "tests/test_ratelimit.py",
+        "line": 51,
+        "referrer": "stories/BUGHUNT-2026-08-16.md",
+        "resolved": "tests/test_ratelimit.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "tests/test_models_gateway.py",
+        "line": 54,
+        "referrer": "stories/BUGHUNT-2026-08-16.md",
+        "resolved": "tests/test_models_gateway.py",
+        "severity": "hard"
+      },
+      {
         "candidate": "scripts/coordination/validate_coordination.py",
         "line": 20,
         "referrer": "stories/CAP-033A.md",
@@ -144827,7 +145017,7 @@
       "DOCS": 14,
       "EVIDENCE": 1331,
       "GENERATED": 5,
-      "GOVERNANCE": 174,
+      "GOVERNANCE": 175,
       "PRODUCT": 112,
       "TEST": 200,
       "WORKING": 10
@@ -144871,7 +145061,7 @@
       "governance-scripts-coordination": 4,
       "governance-scripts-governance": 7,
       "governance-scripts-root": 21,
-      "governance-stories": 85,
+      "governance-stories": 86,
       "product-catalogue-checksum": 1,
       "product-source": 111,
       "test-suite": 200,
@@ -144879,11 +145069,11 @@
       "working-sandbox-readme": 1
     },
     "case_collisions_total": 0,
-    "dangling_references_total": 14869,
+    "dangling_references_total": 14882,
     "generated_total": 7,
     "load_bearing_total": 1762,
     "portability_violations_total": 0,
-    "tracked_total": 1890,
+    "tracked_total": 1891,
     "unclassified_total": 0,
     "unicode_anomalies_total": 0
   },
