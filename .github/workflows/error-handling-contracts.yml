@@ -19,6 +19,12 @@ jobs:
       - name: Valider les contrats de gestion d'erreurs
         run: python scripts/governance/validate_error_contracts.py --root .
 
+      - name: Vérifier que le rapport Markdown est synchronisé avec le JSON
+        run: |
+          set -euo pipefail
+          python scripts/governance/validate_error_contracts.py --root . --render
+          git diff --exit-code -- governance/ERROR-HANDLING-CONTRACTS.md
+
       - name: Détecter un décalage de site non répercuté
         shell: bash
         run: |
