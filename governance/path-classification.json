@@ -1724,7 +1724,7 @@
         },
         {
           "candidate": "AGENTS.md",
-          "line": 159,
+          "line": 154,
           "referrer": "scripts/governance/check_doc_links.py",
           "resolved": "AGENTS.md",
           "severity": "hard"
@@ -2793,7 +2793,7 @@
         },
         {
           "candidate": "CLAUDE.md",
-          "line": 160,
+          "line": 155,
           "referrer": "scripts/governance/check_doc_links.py",
           "resolved": "CLAUDE.md",
           "severity": "hard"
@@ -3523,7 +3523,7 @@
         },
         {
           "candidate": "MASTER-PLAN.md",
-          "line": 161,
+          "line": 156,
           "referrer": "scripts/governance/check_doc_links.py",
           "resolved": "MASTER-PLAN.md",
           "severity": "hard"
@@ -3831,7 +3831,7 @@
         },
         {
           "candidate": "README.md",
-          "line": 158,
+          "line": 153,
           "referrer": "scripts/governance/check_doc_links.py",
           "resolved": "README.md",
           "severity": "hard"
@@ -19971,7 +19971,7 @@
       "path": "reviews/RC1-009/RECU.json",
       "referenced_by": [],
       "rule_id": "evidence-reviews",
-      "sha256": "018fb7038db3bf8a1360136b3cb8b6cec6d08cd953f62cc031bda4749fbb97a4",
+      "sha256": "962a2539734e85e8302fc1853ba93687b39b91dd859e59926c803663756ae014",
       "size": 664,
       "target_path": "evidence/reviews/RC1-009/RECU.json",
       "type": "text"
@@ -25328,8 +25328,8 @@
         }
       ],
       "rule_id": "governance-scripts-governance",
-      "sha256": "c814299c7c4a95fde2de9ff6d19a694375b14300346e64b903bc02859347bce4",
-      "size": 5126,
+      "sha256": "c5820a77c2f011c3e94135479a6e020251469f9a4cd6ce481fbd473d46c609f1",
+      "size": 4975,
       "target_path": null,
       "type": "text"
     },
@@ -86466,17 +86466,17 @@
       },
       {
         "candidate": "Docs/",
-        "line": 156,
+        "line": 151,
         "referrer": "scripts/governance/check_doc_links.py"
       },
       {
         "candidate": "governance/",
-        "line": 157,
+        "line": 152,
         "referrer": "scripts/governance/check_doc_links.py"
       },
       {
         "candidate": "CANON/",
-        "line": 162,
+        "line": 157,
         "referrer": "scripts/governance/check_doc_links.py"
       },
       {
@@ -138545,28 +138545,28 @@
       },
       {
         "candidate": "README.md",
-        "line": 158,
+        "line": 153,
         "referrer": "scripts/governance/check_doc_links.py",
         "resolved": "README.md",
         "severity": "hard"
       },
       {
         "candidate": "AGENTS.md",
-        "line": 159,
+        "line": 154,
         "referrer": "scripts/governance/check_doc_links.py",
         "resolved": "AGENTS.md",
         "severity": "hard"
       },
       {
         "candidate": "CLAUDE.md",
-        "line": 160,
+        "line": 155,
         "referrer": "scripts/governance/check_doc_links.py",
         "resolved": "CLAUDE.md",
         "severity": "hard"
       },
       {
         "candidate": "MASTER-PLAN.md",
-        "line": 161,
+        "line": 156,
         "referrer": "scripts/governance/check_doc_links.py",
         "resolved": "MASTER-PLAN.md",
         "severity": "hard"

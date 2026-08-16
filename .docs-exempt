@@ -96,3 +96,10 @@ observable inchangé pour tout état déjà conforme — seul le cas d'une vraie
 non détectée change (rejeté au lieu d'être silencieusement accepté). governance/
 PATH-CLASSIFICATION.md documente déjà le résultat. Aucune story/doc utilisateur
 supplémentaire concernée.
+
+scripts/governance/check_doc_links.py (RC1-009/#509, correctif SonarCloud S5332) : suppression
+de 2 conditions redondantes (candidate.startswith('http://')/('https://'), déjà couvertes par
+'://' in candidate). Faux positif SonarCloud (comparaison de chaîne pure, aucun appel réseau),
+corrigé par suppression de code mort plutôt qu'un NOSONAR gouverné. Comportement observable
+inchangé (14/14 tests, résultat identique sur le vrai dépôt). stories/RC1-009.md documente déjà
+l'outil ; aucune doc utilisateur supplémentaire concernée pour ce correctif de robustesse.

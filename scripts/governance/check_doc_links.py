@@ -32,12 +32,7 @@ def extract_links(text: str) -> list[tuple[str, int]]:
             candidates.append((match.start(), match.group(1)))
 
         for _, candidate in sorted(candidates, key=lambda item: item[0]):
-            if (
-                candidate.startswith("http://")
-                or candidate.startswith("https://")
-                or "://" in candidate
-                or candidate.startswith("#")
-            ):
+            if "://" in candidate or candidate.startswith("#"):
                 continue
             links.append((candidate, line_number))
 
