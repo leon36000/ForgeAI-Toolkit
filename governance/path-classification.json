@@ -7907,8 +7907,8 @@
         }
       ],
       "rule_id": "evidence-reviews-root",
-      "sha256": "46240aec36b271fb586c8914bd0944224a8c6475e720340d86cd901e699c0f11",
-      "size": 2432,
+      "sha256": "98fda670a783f8b6a23a2783749d7746967554f33651992f68d4a02aa8d42437",
+      "size": 2446,
       "target_path": null,
       "type": "text"
     },
@@ -18894,6 +18894,58 @@
       "rule_id": "evidence-reviews-root",
       "sha256": "8827a9a7abcfbdbc4e123780b221eaca356551dee6226b4a546b62f95944bd46",
       "size": 323,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-492-PR512/DeepSeek-V4-Pro.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "b8ae602dc70751e9daa6f8dab787089460795ba273f0915e0c72ad50e859dfa4",
+      "size": 328,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-492-PR512/MiMo-Pro-V2.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "c26298608e9db9f75f687e79f12d0a640df18fa2769f977711e68561f480c077",
+      "size": 324,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-492-PR512/Qwen3.7-Max.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "3469dfb4b725783cb619ad378237823648fbd541c4d8e159fa4fffe4671920fe",
+      "size": 323,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-492-PR512/RECU.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "788a1bd5f6d5c14d56c84e2f043ba51e8e1d35d6f82a9d8735bbe26907ceb9ff",
+      "size": 674,
       "target_path": null,
       "type": "text"
     },
@@ -30448,8 +30500,8 @@
         }
       ],
       "rule_id": "product-source",
-      "sha256": "a416d6cf791d9f8673a1bad7a3a8fb203449ca4f66b0f3d8bc7a225deeac30c9",
-      "size": 5243,
+      "sha256": "3c92f0eb746965e9fae719c4d0437e4a27a4c58789b40b1118872b067f405b8f",
+      "size": 5269,
       "target_path": null,
       "type": "text"
     },
@@ -41582,8 +41634,8 @@
         }
       ],
       "rule_id": "test-suite",
-      "sha256": "8ed78dae4cf7b5789a88ed6076e66e3cb18424a65c4f578bdc89ed5708bc1d8b",
-      "size": 14132,
+      "sha256": "a47cd430d420ca50efe1e43c046669734c3404d5266b25c345282026bb1b8cdf",
+      "size": 14914,
       "target_path": null,
       "type": "text"
     },
@@ -82805,6 +82857,11 @@
         "referrer": "evidence/reviews/RC1-459-PR517/RECU.json"
       },
       {
+        "candidate": "recu-revue/1",
+        "line": 2,
+        "referrer": "evidence/reviews/RC1-492-PR512/RECU.json"
+      },
+      {
         "candidate": "reviews/",
         "line": 1,
         "referrer": "evidence/reviews/README.md"
@@ -121643,6 +121700,13 @@
         "severity": "hard"
       },
       {
+        "candidate": "RC1-492-PR512",
+        "line": 175,
+        "referrer": "evidence/reviews/BINDING.txt",
+        "resolved": "evidence/reviews/RC1-492-PR512",
+        "severity": "hard"
+      },
+      {
         "candidate": "scripts/gate_docs.py",
         "line": 11,
         "referrer": "sonar-project.properties",
@@ -143084,7 +143148,7 @@
     "by_class": {
       "ARCHIVE": 44,
       "DOCS": 14,
-      "EVIDENCE": 1319,
+      "EVIDENCE": 1323,
       "GENERATED": 5,
       "GOVERNANCE": 172,
       "PRODUCT": 112,
@@ -143101,7 +143165,7 @@
       "evidence-audit-output-root": 18,
       "evidence-registres": 1,
       "evidence-registres-root": 35,
-      "evidence-reviews-root": 1265,
+      "evidence-reviews-root": 1269,
       "generated-authority-map": 1,
       "generated-path-classification-json": 1,
       "generated-path-classification-markdown": 1,
@@ -143137,11 +143201,11 @@
       "working-sandbox-readme": 1
     },
     "case_collisions_total": 0,
-    "dangling_references_total": 14845,
+    "dangling_references_total": 14846,
     "generated_total": 7,
-    "load_bearing_total": 1748,
+    "load_bearing_total": 1752,
     "portability_violations_total": 0,
-    "tracked_total": 1875,
+    "tracked_total": 1879,
     "unclassified_total": 0,
     "unicode_anomalies_total": 0
   },
