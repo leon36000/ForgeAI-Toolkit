@@ -8145,8 +8145,8 @@
         }
       ],
       "rule_id": "evidence-reviews-root",
-      "sha256": "cad5e251906bf6475aff942abd5c9e005a0c0b75412d3e3443602deeec612604",
-      "size": 2476,
+      "sha256": "5189c006d789959f0e4d2864c37daf3113e149b23d60b4a2d53ef794fb74455e",
+      "size": 2496,
       "target_path": null,
       "type": "text"
     },
@@ -18776,6 +18776,45 @@
       "rule_id": "evidence-reviews-root",
       "sha256": "a404025af4ba4a72c524baa074d6b08a96e6ab2794ffd26f67ddef0d7f02a916",
       "size": 322,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-010-lot5d-PR-v7/GPT-5.6-Terra-Pro.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "95ee32302d55b867d01e41b5e75af870f1d5f7c6953092110ac3e9d7aea48c83",
+      "size": 334,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-010-lot5d-PR-v7/Gemini-3.7-Flash.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "c1eeab2514c2c6b0f7550b63c15a808ec8d56a909dd57a1e2592353684b00aa6",
+      "size": 371,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-010-lot5d-PR-v7/Qwen3.7-Max.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "fd79ccf3c70a7912810f17e8da56410a88c93faab153254f5d0393528a1d46f1",
+      "size": 323,
       "target_path": null,
       "type": "text"
     },
@@ -123334,6 +123373,13 @@
         "severity": "hard"
       },
       {
+        "candidate": "RC1-010-lot5d-PR-v7",
+        "line": 179,
+        "referrer": "evidence/reviews/BINDING.txt",
+        "resolved": "evidence/reviews/RC1-010-lot5d-PR-v7",
+        "severity": "hard"
+      },
+      {
         "candidate": "scripts/gate_docs.py",
         "line": 11,
         "referrer": "sonar-project.properties",
@@ -145566,7 +145612,7 @@
     "by_class": {
       "ARCHIVE": 44,
       "DOCS": 14,
-      "EVIDENCE": 1341,
+      "EVIDENCE": 1344,
       "GENERATED": 5,
       "GOVERNANCE": 175,
       "PRODUCT": 112,
@@ -145583,7 +145629,7 @@
       "evidence-audit-output-root": 18,
       "evidence-registres": 1,
       "evidence-registres-root": 35,
-      "evidence-reviews-root": 1287,
+      "evidence-reviews-root": 1290,
       "generated-authority-map": 1,
       "generated-path-classification-json": 1,
       "generated-path-classification-markdown": 1,
@@ -145621,9 +145667,9 @@
     "case_collisions_total": 0,
     "dangling_references_total": 14951,
     "generated_total": 7,
-    "load_bearing_total": 1772,
+    "load_bearing_total": 1775,
     "portability_violations_total": 0,
-    "tracked_total": 1901,
+    "tracked_total": 1904,
     "unclassified_total": 0,
     "unicode_anomalies_total": 0
   },
