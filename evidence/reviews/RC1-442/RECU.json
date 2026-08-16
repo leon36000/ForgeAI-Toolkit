@@ -3,10 +3,10 @@
   "dossier": "RC1-442",
   "issue": 442,
   "round": 1,
-  "base_commit": "2744f778f5dd07e3862f1f93d44e0942f8063a5a",
-  "head_commit": "9ca2e6e04f50b49431ff83523c1011395b4badb9",
-  "head_tree": "f651475c613b52c5fc124035197bbbc6232806a2",
-  "diff_digest": "568044798d9006b643b465dfa4c58ea45485706b3e50c53924fb9cf5a1714ce7",
+  "base_commit": "d1b1e6bc4f0e94068eae484606ebff79daac42b2",
+  "head_commit": "99fd735d5fef8de8b1eb068554cb4455dbf62df6",
+  "head_tree": "27a5a51b983e17981091e4e4a8ca30a741e5ad27",
+  "diff_digest": "04650b178fb55d15416c37f93660f3aae84016061f6981435b505701e7c08006",
   "prompt_sha256": "ab5c0c4e43f6cba14af8fc57e706efbcdb6e77ca52de48cfb322220ed363330f",
   "reviewers_attendus": [
     "DeepSeek-V4-Pro",
@@ -17,6 +17,6 @@
     "gemini_flash"
   ],
   "resultat": "APPROVE",
-  "date_heure": "2026-08-16T07:56:21.237744-04:00",
+  "date_heure": "2026-08-16T08:20:38.855679-04:00",
   "fenetre_heures": 24
 }
