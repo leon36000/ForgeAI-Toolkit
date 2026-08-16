@@ -1,15 +1,8 @@
 {
- "verdict": "REJECT",
- "objections": [
-  {
-   "severite": "majeure",
-   "fichier": "governance/error-handling-contracts.json",
-   "description": "Le contrat du site FIXED `src/forgeai/web/server.py:607` affirme sans réserve que le serveur démarre toujours avec un état vide et que le comportement est inchangé. Cette affirmation est fausse pour une exception dont `__str__()` lève un `BaseException` non-`Exception` : le nouveau chemin de journalisation propage alors cette exception avant la fin du handler, donc le comportement antérieur de suppression de l'exception n'est plus garanti. Cela contredit le critère d'acceptation, qui limite explicitement la garantie à `Exception`, ainsi que le risque résiduel documenté dans la story.",
-   "preuve": "Dans `governance/error-handling-contracts.json`, contrat `site:src/forgeai/web/server.py:607`, `behavior_contract` indique « Désormais journalisé » sans réserve et `accepted_risk` indique « Le serveur démarre toujours avec un état vide en cas d'échec (comportement inchangé) ». Or `src/forgeai/web/server.py` construit dans ce handler `f\"... {str_exc_sur(exc)}\"`; `src/forgeai/core/safe_repr.py:48` ne capture que `except Exception:`. Le test `tests/test_safe_repr.py::test_str_exc_sur_str_leve_baseexception_propage_delibrement` prouve explicitement que `SystemExit` est propagé. Dans ce cas, `_load_deploy_state()` ne respecte donc pas l'affirmation inconditionnelle du contrat."
-  }
- ],
- "date_heure": "2026-08-16T18:23:42.554676+00:00",
- "prompt_sha256": "d9536f35bed01255f8dbe18ca1b48cb0a8eca9c65d1c3328ba0eb6e7bb559760",
+ "verdict": "APPROVE",
+ "objections": [],
+ "date_heure": "2026-08-16T18:27:20.668140+00:00",
+ "prompt_sha256": "1f00937992ff7e34f79b0a2d3a6e7350a2b2e54f4c40ce4ec060655a46bab666",
  "reviewer_model": "GPT-5.6-Terra-Pro",
  "modele_servi": "gpt56-terra-pro-openrouter",
  "gateway_resilience": {
