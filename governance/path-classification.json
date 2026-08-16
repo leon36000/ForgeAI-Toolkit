@@ -31216,7 +31216,7 @@
         },
         {
           "candidate": "scripts/governance/validate_error_contracts.py",
-          "line": 540,
+          "line": 567,
           "referrer": "scripts/governance/validate_error_contracts.py",
           "resolved": "scripts/governance/validate_error_contracts.py",
           "severity": "hard"
@@ -31237,8 +31237,8 @@
         }
       ],
       "rule_id": "governance-scripts-governance",
-      "sha256": "1f68291d58837b8325eacd6adf278ba5b6f32780cfba8dafec959b8577c2c88e",
-      "size": 26114,
+      "sha256": "d10eb67dae08ee15d0addebaa94edf80ad24e1713901601193af4d1c691e1fe8",
+      "size": 27590,
       "target_path": null,
       "type": "text"
     },
@@ -53994,6 +53994,13 @@
         },
         {
           "candidate": "tests/test_proc.py",
+          "line": 67,
+          "referrer": "scripts/governance/validate_error_contracts.py",
+          "resolved": "tests/test_proc.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "tests/test_proc.py",
           "line": 15,
           "referrer": "src/forgeai/core/proc.py",
           "resolved": "tests/test_proc.py",
@@ -54136,6 +54143,13 @@
           "candidate": "tests/test_proc.py",
           "line": 169,
           "referrer": "stories/REG-029B.md",
+          "resolved": "tests/test_proc.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "tests/test_proc.py",
+          "line": 899,
+          "referrer": "tests/test_rc1023_error_contracts.py",
           "resolved": "tests/test_proc.py",
           "severity": "hard"
         }
@@ -55499,8 +55513,8 @@
         }
       ],
       "rule_id": "test-suite",
-      "sha256": "3c19fca5a9b4e0c41a32957e63cd63fa384dcac869add9edf699fdc77ceb747b",
-      "size": 36367,
+      "sha256": "b2a6a37b249daa0fba9512fd7fe715c3d3c8af0797d7c739f2a06ecd2b2c243a",
+      "size": 39180,
       "target_path": null,
       "type": "text"
     },
@@ -103403,133 +103417,138 @@
         "referrer": "scripts/governance/validate_error_contracts.py"
       },
       {
+        "candidate": "plateforme/config",
+        "line": 61,
+        "referrer": "scripts/governance/validate_error_contracts.py"
+      },
+      {
         "candidate": "python_classes/python_functions",
-        "line": 67,
+        "line": 92,
         "referrer": "scripts/governance/validate_error_contracts.py"
       },
       {
         "candidate": "fonctions/m",
-        "line": 68,
+        "line": 93,
         "referrer": "scripts/governance/validate_error_contracts.py"
       },
       {
         "candidate": "tests/",
-        "line": 120,
+        "line": 147,
         "referrer": "scripts/governance/validate_error_contracts.py"
       },
       {
         "candidate": "_test.py",
-        "line": 122,
+        "line": 149,
         "referrer": "scripts/governance/validate_error_contracts.py"
       },
       {
         "candidate": "_test.py",
-        "line": 128,
+        "line": 155,
         "referrer": "scripts/governance/validate_error_contracts.py"
       },
       {
         "candidate": "reviews/RC1-023-PR-v4",
-        "line": 140,
+        "line": 167,
         "referrer": "scripts/governance/validate_error_contracts.py"
       },
       {
         "candidate": "fonction/m",
-        "line": 142,
+        "line": 169,
         "referrer": "scripts/governance/validate_error_contracts.py"
       },
       {
         "candidate": "contracted/floor",
-        "line": 183,
+        "line": 210,
         "referrer": "scripts/governance/validate_error_contracts.py"
       },
       {
         "candidate": "solvait/normalisait",
-        "line": 225,
+        "line": 252,
         "referrer": "scripts/governance/validate_error_contracts.py"
       },
       {
         "candidate": "src/forgeai/example.py",
-        "line": 225,
+        "line": 252,
         "referrer": "scripts/governance/validate_error_contracts.py"
       },
       {
         "candidate": "src/forgeai/./example.py",
-        "line": 225,
+        "line": 252,
         "referrer": "scripts/governance/validate_error_contracts.py"
       },
       {
         "candidate": "src/forgeai/",
-        "line": 265,
+        "line": 292,
         "referrer": "scripts/governance/validate_error_contracts.py"
       },
       {
         "candidate": "JUSTIFIED/SPLIT_TO_NEW_ISSUE/BLOCKED",
-        "line": 324,
-        "referrer": "scripts/governance/validate_error_contracts.py"
-      },
-      {
-        "candidate": "coverage.contracted/floor/total_except_sites_src_forgeai",
         "line": 351,
         "referrer": "scripts/governance/validate_error_contracts.py"
       },
       {
+        "candidate": "coverage.contracted/floor/total_except_sites_src_forgeai",
+        "line": 378,
+        "referrer": "scripts/governance/validate_error_contracts.py"
+      },
+      {
         "candidate": "src/forgeai/",
-        "line": 361,
+        "line": 388,
         "referrer": "scripts/governance/validate_error_contracts.py"
       },
       {
         "candidate": "../",
-        "line": 363,
+        "line": 390,
         "referrer": "scripts/governance/validate_error_contracts.py"
       },
       {
         "candidate": "src/forgeai/",
-        "line": 376,
+        "line": 403,
         "referrer": "scripts/governance/validate_error_contracts.py"
       },
       {
         "candidate": "src/forgeai/../../tests/x.py",
-        "line": 376,
+        "line": 403,
         "referrer": "scripts/governance/validate_error_contracts.py"
       },
       {
         "candidate": "src/forgeai/",
-        "line": 376,
+        "line": 403,
         "referrer": "scripts/governance/validate_error_contracts.py"
       },
       {
         "candidate": "../",
-        "line": 379,
+        "line": 406,
         "referrer": "scripts/governance/validate_error_contracts.py"
       },
       {
         "candidate": "src/forgeai/",
-        "line": 381,
+        "line": 408,
         "referrer": "scripts/governance/validate_error_contracts.py"
       },
       {
         "candidate": "error-handling-contracts.json",
-        "line": 478,
+        "line": 505,
         "referrer": "scripts/governance/validate_error_contracts.py"
       },
       {
         "candidate": "src/forgeai/",
-        "line": 519,
+        "line": 546,
         "referrer": "scripts/governance/validate_error_contracts.py"
       },
       {
         "candidate": "reviews/RC1-023-PR-v4",
-        "line": 527,
+        "line": 554,
         "referrer": "scripts/governance/validate_error_contracts.py"
       },
       {
         "candidate": "error-handling-contracts.json",
-        "line": 538,
+        "line": 565,
         "referrer": "scripts/governance/validate_error_contracts.py"
       },
       {
         "candidate": "ERROR-HANDLING-CONTRACTS.md",
-        "line": 596,
+        "line": 623,
         "referrer": "scripts/governance/validate_error_contracts.py"
       },
       {
@@ -138769,47 +138788,92 @@
       },
       {
         "candidate": "src/forgeai/example.py",
-        "line": 859,
+        "line": 857,
         "referrer": "tests/test_rc1023_error_contracts.py"
       },
       {
-        "candidate": "tests/test_classe_init.py",
-        "line": 864,
+        "candidate": "tests/test_skip.py",
+        "line": 862,
         "referrer": "tests/test_rc1023_error_contracts.py"
       },
       {
-        "candidate": "tests/test_classe_init.py",
-        "line": 872,
-        "referrer": "tests/test_rc1023_error_contracts.py"
-      },
-      {
-        "candidate": "reviews/RC1-023-PR-v4",
-        "line": 882,
+        "candidate": "tests/test_skip.py",
+        "line": 866,
         "referrer": "tests/test_rc1023_error_contracts.py"
       },
       {
         "candidate": "src/forgeai/example.py",
+        "line": 878,
+        "referrer": "tests/test_rc1023_error_contracts.py"
+      },
+      {
+        "candidate": "tests/test_skip2.py",
+        "line": 883,
+        "referrer": "tests/test_rc1023_error_contracts.py"
+      },
+      {
+        "candidate": "tests/test_skip2.py",
         "line": 887,
         "referrer": "tests/test_rc1023_error_contracts.py"
       },
       {
-        "candidate": "tests/test_sans_rapport.py",
-        "line": 892,
-        "referrer": "tests/test_rc1023_error_contracts.py"
-      },
-      {
-        "candidate": "tests/test_sans_rapport.py",
-        "line": 897,
-        "referrer": "tests/test_rc1023_error_contracts.py"
-      },
-      {
-        "candidate": "tests/test_sans_rapport.py",
+        "candidate": "src/forgeai/example.py",
         "line": 903,
         "referrer": "tests/test_rc1023_error_contracts.py"
       },
       {
+        "candidate": "tests/test_skipif.py",
+        "line": 908,
+        "referrer": "tests/test_rc1023_error_contracts.py"
+      },
+      {
+        "candidate": "tests/test_skipif.py",
+        "line": 912,
+        "referrer": "tests/test_rc1023_error_contracts.py"
+      },
+      {
+        "candidate": "src/forgeai/example.py",
+        "line": 928,
+        "referrer": "tests/test_rc1023_error_contracts.py"
+      },
+      {
+        "candidate": "tests/test_classe_init.py",
+        "line": 933,
+        "referrer": "tests/test_rc1023_error_contracts.py"
+      },
+      {
+        "candidate": "tests/test_classe_init.py",
+        "line": 941,
+        "referrer": "tests/test_rc1023_error_contracts.py"
+      },
+      {
         "candidate": "reviews/RC1-023-PR-v4",
-        "line": 907,
+        "line": 951,
+        "referrer": "tests/test_rc1023_error_contracts.py"
+      },
+      {
+        "candidate": "src/forgeai/example.py",
+        "line": 956,
+        "referrer": "tests/test_rc1023_error_contracts.py"
+      },
+      {
+        "candidate": "tests/test_sans_rapport.py",
+        "line": 961,
+        "referrer": "tests/test_rc1023_error_contracts.py"
+      },
+      {
+        "candidate": "tests/test_sans_rapport.py",
+        "line": 966,
+        "referrer": "tests/test_rc1023_error_contracts.py"
+      },
+      {
+        "candidate": "tests/test_sans_rapport.py",
+        "line": 972,
+        "referrer": "tests/test_rc1023_error_contracts.py"
+      },
+      {
+        "candidate": "reviews/RC1-023-PR-v4",
+        "line": 976,
         "referrer": "tests/test_rc1023_error_contracts.py"
       },
       {
@@ -168952,8 +169016,15 @@
         "severity": "hard"
       },
       {
+        "candidate": "tests/test_proc.py",
+        "line": 67,
+        "referrer": "scripts/governance/validate_error_contracts.py",
+        "resolved": "tests/test_proc.py",
+        "severity": "hard"
+      },
+      {
         "candidate": "scripts/governance/validate_error_contracts.py",
-        "line": 540,
+        "line": 567,
         "referrer": "scripts/governance/validate_error_contracts.py",
         "resolved": "scripts/governance/validate_error_contracts.py",
         "severity": "hard"
@@ -173943,6 +174014,13 @@
         "severity": "hard"
       },
       {
+        "candidate": "tests/test_proc.py",
+        "line": 899,
+        "referrer": "tests/test_rc1023_error_contracts.py",
+        "resolved": "tests/test_proc.py",
+        "severity": "hard"
+      },
+      {
         "candidate": "README.md",
         "line": 1,
         "referrer": "tests/test_readme_dist_status.py",
@@ -174299,7 +174377,7 @@
       "working-sandbox-readme": 1
     },
     "case_collisions_total": 0,
-    "dangling_references_total": 16104,
+    "dangling_references_total": 16114,
     "generated_total": 17,
     "load_bearing_total": 1926,
     "portability_violations_total": 0,

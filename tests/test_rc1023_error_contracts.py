@@ -849,6 +849,75 @@ def test_compensating_test_fichier_hors_convention_pytest_rejete(tmp_path: Path)
     assert any("test compensatoire absent du dépôt" in e for e in erreurs)
 
 
+def test_compensating_test_skip_inconditionnel_bare_rejete(tmp_path: Path) -> None:
+    """Round 19 (#452) — objection GPT-5.6-Terra-Pro (revue scellée) : un test marqué
+    @pytest.mark.skip n'est JAMAIS exécuté par pytest — la présence AST seule ne prouve rien."""
+    _creer_fichier_source(
+        tmp_path,
+        "src/forgeai/example.py",
+        "try:\n    pass\nexcept ValueError:\n    pass\n",
+    )
+    _creer_fichier_source(
+        tmp_path,
+        "tests/test_skip.py",
+        "import pytest\n\n@pytest.mark.skip\ndef test_desactive(): pass\n",
+    )
+    contrat = _entree_valide(
+        compensating_test="tests/test_skip.py::test_desactive",
+        compensating_test_reason=None,
+    )
+    _ecrire_inventaire(tmp_path, [contrat])
+
+    erreurs = VALIDATEUR.valider(tmp_path, aujourd_hui=dt.date(2026, 1, 1))
+    assert any("test compensatoire absent du dépôt" in e for e in erreurs)
+
+
+def test_compensating_test_skip_inconditionnel_avec_reason_rejete(tmp_path: Path) -> None:
+    _creer_fichier_source(
+        tmp_path,
+        "src/forgeai/example.py",
+        "try:\n    pass\nexcept ValueError:\n    pass\n",
+    )
+    _creer_fichier_source(
+        tmp_path,
+        "tests/test_skip2.py",
+        "import pytest\n\n@pytest.mark.skip(reason='temporairement désactivé')\ndef test_desactive(): pass\n",
+    )
+    contrat = _entree_valide(
+        compensating_test="tests/test_skip2.py::test_desactive",
+        compensating_test_reason=None,
+    )
+    _ecrire_inventaire(tmp_path, [contrat])
+
+    erreurs = VALIDATEUR.valider(tmp_path, aujourd_hui=dt.date(2026, 1, 1))
+    assert any("test compensatoire absent du dépôt" in e for e in erreurs)
+
+
+def test_compensating_test_skipif_conditionnel_reste_valide(tmp_path: Path) -> None:
+    """Contre-preuve : @pytest.mark.skipif est délibérément TOLÉRÉ (portée bornée, documentée
+    dans _decorateur_skip_inconditionnel) — un test skipif s'exécute réellement sous les
+    conditions normales de CI (ex. @posix_only dans tests/test_proc.py, vrai sur ubuntu-latest).
+    Rejeter systématiquement skipif casserait ce motif légitime déjà utilisé dans le dépôt réel."""
+    _creer_fichier_source(
+        tmp_path,
+        "src/forgeai/example.py",
+        "try:\n    pass\nexcept ValueError:\n    pass\n",
+    )
+    _creer_fichier_source(
+        tmp_path,
+        "tests/test_skipif.py",
+        "import pytest\n\n@pytest.mark.skipif(False, reason='jamais sur cette plateforme')\ndef test_conditionnel(): pass\n",
+    )
+    contrat = _entree_valide(
+        compensating_test="tests/test_skipif.py::test_conditionnel",
+        compensating_test_reason=None,
+    )
+    _ecrire_inventaire(tmp_path, [contrat])
+
+    erreurs = VALIDATEUR.valider(tmp_path, aujourd_hui=dt.date(2026, 1, 1))
+    assert erreurs == []
+
+
 def test_compensating_test_classe_avec_init_rejetee(tmp_path: Path) -> None:
     """Round 15 (#452) — objection GPT-5.6-Terra-Pro (revue scellée) : une classe Test* qui
     définit __init__ n'est PAS collectée par pytest (PytestCollectionWarning: cannot collect

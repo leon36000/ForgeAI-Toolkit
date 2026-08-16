@@ -56,6 +56,31 @@ def _horizon(inventaire: dict) -> int:
     return jours
 
 
+def _decorateur_skip_inconditionnel(decorator_list: list) -> bool:
+    """True si la liste de décorateurs porte un @pytest.mark.skip SANS condition — un tel test
+    n'est JAMAIS exécuté par pytest, quelle que soit la plateforme/config.
+
+    Round 19 (#452) — objection GPT-5.6-Terra-Pro (revue scellée) : le validateur ne garantissait
+    pas qu'un compensating_test est réellement EXÉCUTÉ, seulement présent dans l'AST avec le bon
+    nom. Portée délibérément bornée à @pytest.mark.skip (bare ou avec reason=), DISTINCT de
+    @pytest.mark.skipif (conditionnel — tolérée : un test skipif s'exécute réellement sous les
+    conditions normales de CI, ex. @posix_only dans tests/test_proc.py, vrai sur ubuntu-latest).
+    Hors scope, documenté, pas ignoré en silence : pytestmark de module, __test__=False,
+    pytest.skip() en corps de fonction, parametrize à liste vide — détection complète
+    nécessiterait d'exécuter pytest plutôt que de l'analyser statiquement, disproportionné pour
+    ce gate rapide et déterministe.
+    """
+    for dec in decorator_list:
+        cible = dec.func if isinstance(dec, ast.Call) else dec
+        try:
+            nom = ast.unparse(cible)
+        except Exception:
+            continue
+        if nom in ("pytest.mark.skip", "mark.skip"):
+            return True
+    return False
+
+
 def _fonction_test_existe(fichier: Path, segments: list[str]) -> bool:
     """Vérifie qu'une chaîne de segments (ex. ['test_fonction'] pour une fonction de module,
     ou ['TestClasse', 'test_methode'] pour une méthode) désigne réellement une fonction de test
@@ -89,6 +114,8 @@ def _fonction_test_existe(fichier: Path, segments: list[str]) -> bool:
         reste = segs[1:]
         for noeud in noeuds:
             if isinstance(noeud, (ast.FunctionDef, ast.AsyncFunctionDef)) and noeud.name == cible:
+                if not reste and _decorateur_skip_inconditionnel(noeud.decorator_list):
+                    return False
                 return not reste
             if isinstance(noeud, ast.ClassDef) and noeud.name == cible:
                 if not reste:
