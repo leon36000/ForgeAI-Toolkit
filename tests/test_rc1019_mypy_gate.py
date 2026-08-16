@@ -1178,13 +1178,14 @@ def test_g35_contenus_type_ignore_capture_une_empreinte(tmp_path):
     chemin = tmp_path / "a.py"
     chemin.write_bytes(b"x = 1  # type: ignore\n")
     attendu = hashlib.sha256(b"x = 1  # type: ignore").hexdigest()
-    assert mypy_gate.contenus_type_ignore(tmp_path, {"a.py"}) == {"a.py": {attendu}}
+    assert mypy_gate.contenus_type_ignore(tmp_path, {"a.py"}) == {"a.py": {attendu: 1}}
 
 
 def test_g35b_contenus_type_ignore_deux_lignes_identiques_apres_strip_une_seule_empreinte(tmp_path):
     chemin = tmp_path / "a.py"
     chemin.write_bytes(b"    x = 1  # type: ignore\nx = 1  # type: ignore\n")
     assert len(mypy_gate.contenus_type_ignore(tmp_path, {"a.py"})["a.py"]) == 1
+    assert list(mypy_gate.contenus_type_ignore(tmp_path, {"a.py"})["a.py"].values()) == [2]
 
 
 def test_g35c_contenus_type_ignore_fichier_sans_occurrence_absent_du_resultat(tmp_path):
@@ -1200,7 +1201,7 @@ def test_g36_anomalies_signale_ligne_type_ignore_non_baselinee():
         "fichiers_proteges": [],
         "dette": {},
         "type_ignore": {"a.py": 1},
-        "type_ignore_lignes": {"a.py": ["deadbeef" * 8]},
+        "type_ignore_lignes": {"a.py": {"deadbeef" * 8: 1}},
     }
     anomalies = mypy_gate.anomalies(
         reels={"a.py"},
@@ -1208,9 +1209,9 @@ def test_g36_anomalies_signale_ligne_type_ignore_non_baselinee():
         base=base,
         base_reference=None,
         occurrences={"a.py": 1},
-        contenus={"a.py": {"cafebabe" * 8}},
+        contenus={"a.py": {"cafebabe" * 8: 1}},
     )
-    assert any("non baselinee" in m and "a.py" in m for m in anomalies)
+    assert any("suppression non verifiee" in m and "a.py" in m for m in anomalies)
 
 
 def test_g36b_anomalies_meme_empreinte_que_baseline_aucune_anomalie():
@@ -1220,7 +1221,7 @@ def test_g36b_anomalies_meme_empreinte_que_baseline_aucune_anomalie():
         "fichiers_proteges": [],
         "dette": {},
         "type_ignore": {"a.py": 1},
-        "type_ignore_lignes": {"a.py": ["cafebabe" * 8]},
+        "type_ignore_lignes": {"a.py": {"cafebabe" * 8: 1}},
     }
     anomalies = mypy_gate.anomalies(
         reels={"a.py"},
@@ -1228,7 +1229,7 @@ def test_g36b_anomalies_meme_empreinte_que_baseline_aucune_anomalie():
         base=base,
         base_reference=None,
         occurrences={"a.py": 1},
-        contenus={"a.py": {"cafebabe" * 8}},
+        contenus={"a.py": {"cafebabe" * 8: 1}},
     )
     assert anomalies == []
 
@@ -1250,7 +1251,7 @@ def test_g37_anomalies_reference_signale_empreinte_type_ignore_lignes_ajoutee():
         "fichiers_proteges": [],
         "dette": {},
         "type_ignore": {"a.py": 1},
-        "type_ignore_lignes": {"a.py": ["cafebabe" * 8]},
+        "type_ignore_lignes": {"a.py": {"cafebabe" * 8: 1}},
     }
     reference = {
         "version": 1,
@@ -1258,7 +1259,7 @@ def test_g37_anomalies_reference_signale_empreinte_type_ignore_lignes_ajoutee():
         "fichiers_proteges": [],
         "dette": {},
         "type_ignore": {"a.py": 1},
-        "type_ignore_lignes": {"a.py": ["deadbeef" * 8]},
+        "type_ignore_lignes": {"a.py": {"deadbeef" * 8: 1}},
     }
     anomalies = mypy_gate.anomalies(
         reels={"a.py"},
@@ -1266,10 +1267,10 @@ def test_g37_anomalies_reference_signale_empreinte_type_ignore_lignes_ajoutee():
         base=base,
         base_reference=reference,
         occurrences={"a.py": 1},
-        contenus={"a.py": {"cafebabe" * 8}},
+        contenus={"a.py": {"cafebabe" * 8: 1}},
     )
     assert any(
-        "type_ignore_lignes" in m and "a.py" in m and "absente(s) de la reference" in m
+        "type_ignore_lignes" in m and "a.py" in m and "augmentee" in m
         for m in anomalies
     )
 
@@ -1281,7 +1282,7 @@ def test_g37b_anomalies_reference_sans_type_ignore_lignes_retrocompatible():
         "fichiers_proteges": [],
         "dette": {},
         "type_ignore": {"a.py": 1},
-        "type_ignore_lignes": {"a.py": ["cafebabe" * 8]},
+        "type_ignore_lignes": {"a.py": {"cafebabe" * 8: 1}},
     }
     reference = {
         "version": 1,
@@ -1296,18 +1297,47 @@ def test_g37b_anomalies_reference_sans_type_ignore_lignes_retrocompatible():
         base=base,
         base_reference=reference,
         occurrences={"a.py": 1},
-        contenus={"a.py": {"cafebabe" * 8}},
+        contenus={"a.py": {"cafebabe" * 8: 1}},
     )
     assert any(
-        "type_ignore_lignes" in m and "a.py" in m and "absente(s) de la reference" in m
+        "type_ignore_lignes" in m and "a.py" in m and "augmentee" in m
         for m in anomalies
     )
 
 
-def test_g38_valider_type_ignore_lignes_rejette_valeur_non_liste():
+def test_g38_valider_type_ignore_lignes_rejette_valeur_qui_nest_pas_un_objet():
     with pytest.raises(ValueError):
-        mypy_gate._valider_type_ignore_lignes({"a.py": "pas-une-liste"}, "base")
+        mypy_gate._valider_type_ignore_lignes({"a.py": ["pas-un-dict"]}, "base")
 
 
 def test_g38b_valider_type_ignore_lignes_absent_retourne_dict_vide():
     assert mypy_gate._valider_type_ignore_lignes(None, "base") == {}
+
+
+def test_g38c_valider_type_ignore_lignes_rejette_compte_non_positif():
+    with pytest.raises(ValueError):
+        mypy_gate._valider_type_ignore_lignes({"a.py": {"hashA": 0}}, "base")
+
+
+# ---------------------------------------------------------------------------
+# Correctif post-revue scellée #449 (round 15) — multiplicite des empreintes
+# ---------------------------------------------------------------------------
+
+def test_g39_anomalies_duplication_empreinte_deja_connue_est_detectee():
+    base = {
+        "version": 1,
+        "borne": {"total_erreurs": 0},
+        "fichiers_proteges": [],
+        "dette": {},
+        "type_ignore": {"a.py": 2},
+        "type_ignore_lignes": {"a.py": {"hashA": 1}},
+    }
+    anomalies = mypy_gate.anomalies(
+        reels={"a.py"},
+        erreurs={},
+        base=base,
+        base_reference=None,
+        occurrences={"a.py": 2},
+        contenus={"a.py": {"hashA": 2}},
+    )
+    assert any("hashA" in m and "a.py" in m for m in anomalies)

@@ -149,25 +149,25 @@
     "src/forgeai/deploy/openbao_flow.py": 1
   },
   "type_ignore_lignes": {
-    "src/forgeai/core/redaction.py": [
-      "644e03cbefb53d03d016a76c06850bcc49bce37c541d0948faadb8140d1d5751"
-    ],
-    "src/forgeai/core/proc.py": [
-      "0cdac134f0526db87a75ffe0540c94f31f900a3932e68f68bd10597bd7ecfcb4",
-      "19b84ab8220124e04103278105946c57e2b273b502294fbea7030455d92c16a4",
-      "26e16a965e9b04f7c80e414f92ab78bedc494d2d486965caaab5a2a4f899a65c",
-      "5816891c3ab8043fef3d4c53e2984dc4b4c73be667c9a3fec237f6760a57c632",
-      "58769c5a0a10565c84c4cc3e2a1c85e1f81798f252db226b2d17a48769a9a24e",
-      "700863f34557d1794fca9d976b505e8edc26f8705a488d7aaadba05b64a2d54a",
-      "b29894b4a8a5681ccdd0bfe7359e6553c65df5366b8fd88199b9608ab874c722",
-      "cd3f1d3bff417ca13a9d706455eba987d63dd22f51b466d75872f7edb1eb0cca",
-      "f885445d3fb70cf5787545972459a15afc034f666311bae18ad6e33ac2c72391"
-    ],
-    "src/forgeai/planner/assemble.py": [
-      "48bfc786d2633be31ca9b2212dc889c206badab630ad4ca8c5567c8e912f78fb"
-    ],
-    "src/forgeai/deploy/openbao_flow.py": [
-      "b905f58ce2f1a1beffb25b8da823d345afa7ed8dea2773fb713a199e4c0199bb"
-    ]
+    "src/forgeai/core/redaction.py": {
+      "644e03cbefb53d03d016a76c06850bcc49bce37c541d0948faadb8140d1d5751": 1
+    },
+    "src/forgeai/core/proc.py": {
+      "0cdac134f0526db87a75ffe0540c94f31f900a3932e68f68bd10597bd7ecfcb4": 1,
+      "19b84ab8220124e04103278105946c57e2b273b502294fbea7030455d92c16a4": 1,
+      "26e16a965e9b04f7c80e414f92ab78bedc494d2d486965caaab5a2a4f899a65c": 1,
+      "5816891c3ab8043fef3d4c53e2984dc4b4c73be667c9a3fec237f6760a57c632": 2,
+      "58769c5a0a10565c84c4cc3e2a1c85e1f81798f252db226b2d17a48769a9a24e": 1,
+      "700863f34557d1794fca9d976b505e8edc26f8705a488d7aaadba05b64a2d54a": 1,
+      "b29894b4a8a5681ccdd0bfe7359e6553c65df5366b8fd88199b9608ab874c722": 1,
+      "cd3f1d3bff417ca13a9d706455eba987d63dd22f51b466d75872f7edb1eb0cca": 1,
+      "f885445d3fb70cf5787545972459a15afc034f666311bae18ad6e33ac2c72391": 1
+    },
+    "src/forgeai/planner/assemble.py": {
+      "48bfc786d2633be31ca9b2212dc889c206badab630ad4ca8c5567c8e912f78fb": 1
+    },
+    "src/forgeai/deploy/openbao_flow.py": {
+      "b905f58ce2f1a1beffb25b8da823d345afa7ed8dea2773fb713a199e4c0199bb": 1
+    }
   }
 }
