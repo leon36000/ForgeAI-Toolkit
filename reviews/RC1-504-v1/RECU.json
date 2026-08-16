@@ -1,0 +1,22 @@
+{
+  "schema": "recu-revue/1",
+  "dossier": "RC1-504-v1",
+  "issue": 504,
+  "round": 1,
+  "base_commit": "b1d98be967b4707d52ec5f37e9d3960c07e9a7d4",
+  "head_commit": "a1014c8c46bba806e2724e13a20f4381d81cb530",
+  "head_tree": "0d64b727af3f2352d4fd790847b3ee260aaedd9f",
+  "diff_digest": "c1cc7f28334b21ce74c4d91c71460bccc039a67743752e6dc970c29868735085",
+  "prompt_sha256": "fa18bcdf0382773713dbcdaedb9761cc1611a5645a6ff882fc7c474857c49ac1",
+  "reviewers_attendus": [
+    "DeepSeek-V4-Pro",
+    "Kimi-2.7",
+    "Qwen3.7-Max"
+  ],
+  "codeur": [
+    "fable"
+  ],
+  "resultat": "APPROVE",
+  "date_heure": "2026-08-16T06:35:49.020237-04:00",
+  "fenetre_heures": 24
+}
