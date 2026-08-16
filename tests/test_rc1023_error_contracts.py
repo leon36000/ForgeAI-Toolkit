@@ -39,28 +39,40 @@ def _ecrire_inventaire(
     horizon_days: int = 180,
     contracted: int | None = None,
     floor: int | None = None,
+    total_except_sites: object = 100,
+    measured_on: object = "test",
+    measured_command: object = "grep test",
+    coverage_note: object = "Note de couverture de test.",
+    horizon_justification: object = "Horizon de test pour la validation des contrats.",
+    omit_coverage_fields: list[str] | None = None,
+    omit_review_horizon_fields: list[str] | None = None,
 ) -> None:
     nb_contrats = len(contrats)
     contracted_val = nb_contrats if contracted is None else contracted
     floor_val = nb_contrats if floor is None else floor
+
+    coverage = {
+        "total_except_sites_src_forgeai": total_except_sites,
+        "measured_on": measured_on,
+        "measured_command": measured_command,
+        "contracted": contracted_val,
+        "floor": floor_val,
+        "note": coverage_note,
+    }
+    for champ in omit_coverage_fields or []:
+        coverage.pop(champ, None)
+
+    review_horizon = {"days": horizon_days, "justification": horizon_justification}
+    for champ in omit_review_horizon_fields or []:
+        review_horizon.pop(champ, None)
 
     (root / "governance").mkdir(parents=True, exist_ok=True)
     (root / "governance" / "error-handling-contracts.json").write_text(
         json.dumps(
             {
                 "schema": "error-handling-contracts/1",
-                "review_horizon": {
-                    "days": horizon_days,
-                    "justification": "Horizon de test pour la validation des contrats.",
-                },
-                "coverage": {
-                    "total_except_sites_src_forgeai": 100,
-                    "measured_on": "test",
-                    "measured_command": "grep test",
-                    "contracted": contracted_val,
-                    "floor": floor_val,
-                    "note": "Note de couverture de test.",
-                },
+                "review_horizon": review_horizon,
+                "coverage": coverage,
                 "contracts": contrats,
             },
             indent=2,
@@ -149,6 +161,85 @@ def test_coverage_sous_le_plancher_detecte(tmp_path: Path) -> None:
 
     erreurs = VALIDATEUR.valider(tmp_path, aujourd_hui=dt.date(2026, 1, 1))
     assert any("couverture sous le plancher : 1 contrats pour un plancher de 5" in e for e in erreurs)
+
+
+def test_coverage_total_except_sites_manquant_detecte(tmp_path: Path) -> None:
+    # Objection GPT-5.6-Terra-Pro (revue scellée round 8, #452) : coverage.total_except_sites_src_forgeai
+    # n'était ni exigé ni typé — un inventaire "amputé" de ce champ passait quand même le gate.
+    _creer_fichier_source(
+        tmp_path, "src/example.py", "try:\n    pass\nexcept ValueError:\n    pass\n"
+    )
+    contrat = _entree_valide()
+    _ecrire_inventaire(tmp_path, [contrat], omit_coverage_fields=["total_except_sites_src_forgeai"])
+
+    erreurs = VALIDATEUR.valider(tmp_path, aujourd_hui=dt.date(2026, 1, 1))
+    assert any("total_except_sites_src_forgeai" in e for e in erreurs)
+
+
+def test_coverage_total_except_sites_type_invalide_detecte(tmp_path: Path) -> None:
+    _creer_fichier_source(
+        tmp_path, "src/example.py", "try:\n    pass\nexcept ValueError:\n    pass\n"
+    )
+    contrat = _entree_valide()
+    _ecrire_inventaire(tmp_path, [contrat], total_except_sites=-5)
+
+    erreurs = VALIDATEUR.valider(tmp_path, aujourd_hui=dt.date(2026, 1, 1))
+    assert any("total_except_sites_src_forgeai" in e for e in erreurs)
+
+
+def test_coverage_measured_on_manquant_detecte(tmp_path: Path) -> None:
+    _creer_fichier_source(
+        tmp_path, "src/example.py", "try:\n    pass\nexcept ValueError:\n    pass\n"
+    )
+    contrat = _entree_valide()
+    _ecrire_inventaire(tmp_path, [contrat], omit_coverage_fields=["measured_on"])
+
+    erreurs = VALIDATEUR.valider(tmp_path, aujourd_hui=dt.date(2026, 1, 1))
+    assert any("measured_on" in e for e in erreurs)
+
+
+def test_coverage_measured_command_manquant_detecte(tmp_path: Path) -> None:
+    _creer_fichier_source(
+        tmp_path, "src/example.py", "try:\n    pass\nexcept ValueError:\n    pass\n"
+    )
+    contrat = _entree_valide()
+    _ecrire_inventaire(tmp_path, [contrat], omit_coverage_fields=["measured_command"])
+
+    erreurs = VALIDATEUR.valider(tmp_path, aujourd_hui=dt.date(2026, 1, 1))
+    assert any("measured_command" in e for e in erreurs)
+
+
+def test_coverage_note_manquante_detectee(tmp_path: Path) -> None:
+    _creer_fichier_source(
+        tmp_path, "src/example.py", "try:\n    pass\nexcept ValueError:\n    pass\n"
+    )
+    contrat = _entree_valide()
+    _ecrire_inventaire(tmp_path, [contrat], omit_coverage_fields=["note"])
+
+    erreurs = VALIDATEUR.valider(tmp_path, aujourd_hui=dt.date(2026, 1, 1))
+    assert any("coverage.note" in e for e in erreurs)
+
+
+def test_review_horizon_justification_manquante_detectee(tmp_path: Path) -> None:
+    _creer_fichier_source(
+        tmp_path, "src/example.py", "try:\n    pass\nexcept ValueError:\n    pass\n"
+    )
+    contrat = _entree_valide()
+    _ecrire_inventaire(tmp_path, [contrat], omit_review_horizon_fields=["justification"])
+
+    erreurs = VALIDATEUR.valider(tmp_path, aujourd_hui=dt.date(2026, 1, 1))
+    assert any("review_horizon.justification" in e for e in erreurs)
+
+
+def test_site_function_manquante_detectee(tmp_path: Path) -> None:
+    _creer_fichier_source(
+        tmp_path, "src/example.py", "try:\n    pass\nexcept ValueError:\n    pass\n"
+    )
+    contrat = _entree_valide(function_name="")
+    _ecrire_inventaire(tmp_path, [contrat])
+
+    erreurs = VALIDATEUR.valider(tmp_path, aujourd_hui=dt.date(2026, 1, 1))
+    assert any("site.function" in e for e in erreurs)
 
 
 def test_identifiant_duplique_detecte(tmp_path: Path) -> None:

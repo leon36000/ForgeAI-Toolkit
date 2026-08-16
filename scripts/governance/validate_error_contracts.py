@@ -111,6 +111,13 @@ def _valider_structure_globale(inventaire: dict) -> tuple[list[str], int, int]:
         review_horizon.get("days"), int
     ):
         erreurs.append("champ 'review_horizon' absent ou invalide (doit contenir 'days': int)")
+    elif (
+        not isinstance(review_horizon.get("justification"), str)
+        or not review_horizon["justification"].strip()
+    ):
+        # Round 8 (#452) — objection GPT-5.6-Terra-Pro (revue scellée) : ce champ n'était ni
+        # exigé ni typé, alors que le rapport Markdown le rend visible comme partie du contrat.
+        erreurs.append("review_horizon.justification doit être une chaîne non vide")
 
     coverage = inventaire.get("coverage")
     if not isinstance(coverage, dict):
@@ -123,6 +130,18 @@ def _valider_structure_globale(inventaire: dict) -> tuple[list[str], int, int]:
             erreurs.append("coverage.contracted doit être un entier positif ou nul")
         if not isinstance(floor, int) or isinstance(floor, bool) or floor < 0:
             erreurs.append("coverage.floor doit être un entier positif ou nul")
+        # Round 8 (#452) — objection GPT-5.6-Terra-Pro (revue scellée) : ces champs de couverture
+        # n'étaient ni exigés ni typés — un inventaire amputé de l'un d'eux passait quand même le
+        # gate dès lors que contracted/floor et les contrats restaient valides.
+        total_sites = coverage.get("total_except_sites_src_forgeai")
+        if not isinstance(total_sites, int) or isinstance(total_sites, bool) or total_sites < 0:
+            erreurs.append(
+                "coverage.total_except_sites_src_forgeai doit être un entier positif ou nul"
+            )
+        for champ in ("measured_on", "measured_command", "note"):
+            valeur = coverage.get(champ)
+            if not isinstance(valeur, str) or not valeur.strip():
+                erreurs.append(f"coverage.{champ} doit être une chaîne non vide")
 
     contracts = inventaire.get("contracts")
     if not isinstance(contracts, list):
@@ -219,6 +238,12 @@ def _verifier_site_ast(
     line = site.get("line")
     if not isinstance(path_rel, str) or not isinstance(line, int):
         return [f"{identifiant} : site.path (str) et site.line (int) requis"]
+
+    # Round 8 (#452) — objection GPT-5.6-Terra-Pro (revue scellée) : site.function n'était ni
+    # exigé ni typé alors qu'il documente la fonction englobante de chaque site contractualisé.
+    fonction = site.get("function")
+    if not isinstance(fonction, str) or not fonction.strip():
+        return [f"{identifiant} : site.function doit être une chaîne non vide"]
 
     fichier_source = (root / path_rel).resolve()
     if fichier_source not in ast_cache:
