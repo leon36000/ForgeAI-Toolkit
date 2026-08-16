@@ -19830,7 +19830,7 @@
       "path": "evidence/reviews/RC1-023/RECU.json",
       "referenced_by": [],
       "rule_id": "evidence-reviews-root",
-      "sha256": "792fad7a3f623bd5d4fe0d7ca0db1d03ca51f8ad1e04c4495ee5d0c9c4c50218",
+      "sha256": "20072c454978e8a12bffd0c3cd1c6e145e9fcb250966e718af5c064d34a08dba",
       "size": 689,
       "target_path": null,
       "type": "text"
