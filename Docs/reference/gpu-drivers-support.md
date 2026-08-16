@@ -30,5 +30,5 @@ Conséquence de sécurité : un plan GPU n'émettant plus aucun volume `hostPath
 
 _Note : `LAB-033I` dépendait de `CAP-033A` (ce document) avant sa fusion. Cette dépendance
 étant levée une fois `CAP-033A` intégré, ce tableau ne réaffirme pas un statut de dépendance
-qui deviendrait obsolète dès la fusion — se référer à `coordination/work-packages.json` pour
-le statut vivant de `LAB-033I`._
+qui deviendrait obsolète dès la fusion — se référer à `archive/coordination/work-packages.json`
+pour le statut vivant de `LAB-033I`._

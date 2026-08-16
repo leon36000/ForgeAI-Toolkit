@@ -4,7 +4,7 @@ Racine **unique** de la documentation (le dossier `docs/` en minuscules a été 
 `explanation/ADR-0001-structure-docs.md`). Quatre quadrants :
 
 - `tutorials/` — prise en main guidée _(à alimenter)_
-- `how-to/` — recettes ciblées _(à alimenter)_
+- [`how-to/`](how-to/openbao-migration.md) — recettes ciblées
 - `reference/` — référence : gates et procédures
   - [`cli.md`](reference/cli.md) — surface CLI
   - [`catalogue-gate.md`](reference/catalogue-gate.md) — gate de désambiguïsation du catalogue (B-26)
