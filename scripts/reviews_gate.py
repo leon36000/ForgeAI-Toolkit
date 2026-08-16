@@ -5,9 +5,9 @@ Rien n'empêchait structurellement un merge sans revue aveugle scellée passante
 models/ ont été mergées puis trouvées défectueuses). Ce gate rend la revue OBLIGATOIRE et
 BLOQUANTE côté CI pour les revues déclarées LIANTES.
 
-Modèle : `reviews/BINDING.txt` liste les dossiers de revue qui DOIVENT actuellement dépouiller
-en APPROVE (un par ligne ; # = commentaire). Une story ajoute son dossier quand elle passe ;
-une revue superseded (ex. code remédié + re-revu) est retirée du manifeste (les dossiers
+Modèle : `evidence/reviews/BINDING.txt` liste les dossiers de revue qui DOIVENT actuellement
+dépouiller en APPROVE (un par ligne ; # = commentaire). Une story ajoute son dossier quand elle
+passe ; une revue superseded (ex. code remédié + re-revu) est retirée du manifeste (les dossiers
 historiques/legacy restent au dépôt pour la traçabilité mais ne sont PAS liants).
 
 Le dépouillement réutilise `scripts/revue.py` (fonction pure `tally`, invariant #10 : aucun
@@ -18,9 +18,9 @@ absent, ou n'a pas ses verdicts.
 drapeau, reste STRICTEMENT identique à avant cette story) :
 
   --exiger-recu-courant --base-ref <ref>   (mode PR) : en plus du dépouillement legacy
-    habituel, exige qu'AU MOINS UNE entrée liante porte un reviews/<ID>/RECU.json qui se
-    vérifie contre l'état git RÉEL de la PR courante (commit, arbre, diff canonique hors
-    reviews/**). Sans reçu valide couvrant le changement courant : échec explicite.
+    habituel, exige qu'AU MOINS UNE entrée liante porte un evidence/reviews/<ID>/RECU.json qui
+    se vérifie contre l'état git RÉEL de la PR courante (commit, arbre, diff canonique hors
+    evidence/reviews/**). Sans reçu valide couvrant le changement courant : échec explicite.
 
   --mode archive : dépouillement legacy habituel pour toutes les entrées ; en plus, pour
     chaque entrée qui porte un RECU.json, vérifie que son commit est un ANCÊTRE du HEAD
@@ -30,7 +30,8 @@ Les 150+ entrées historiques de BINDING.txt n'ont PAS de RECU.json : leur compo
 LES DEUX modes reste identique à aujourd'hui — "archivées sans être rattachées aux nouveaux
 changements".
 
-Usage : reviews_gate.py [--manifest reviews/BINDING.txt] [--reviews-root reviews]
+Usage : reviews_gate.py [--manifest evidence/reviews/BINDING.txt]
+                        [--reviews-root evidence/reviews]
                         [--exiger-recu-courant --base-ref <ref>] [--mode archive]
 """
 from __future__ import annotations
@@ -115,38 +116,19 @@ def check(
             f"ECHEC : manifeste {manifest} vide ou absent — aucune revue liante vérifiée"
         )
 
-    # RC1-010 (#440) lot 5a : reviews/ migre vers evidence/reviews/ (lots 5b-5d). Pendant la
-    # transition, une entrée liante peut vivre sous l'une OU l'autre racine — evidence/reviews/
-    # (sibling de reviews_root, la racine finale) est essayée en premier, reviews_root en repli.
-    # Comportement par défaut inchangé une fois la migration terminée (evidence/reviews/
-    # n'existe pas encore aujourd'hui pour la plupart des entrées : le repli s'applique).
-    evidence_root = reviews_root.parent / "evidence" / "reviews"
-    evidence_root_resolved = evidence_root.resolve() if evidence_root.is_dir() else None
     root_resolved = reviews_root.resolve()
     received_current = False
     for entry in binding:
-        directory = None
-        if evidence_root_resolved is not None:
-            essai_evidence = evidence_root / entry
-            try:
-                if (
-                    essai_evidence.resolve().is_relative_to(evidence_root_resolved)
-                    and essai_evidence.is_dir()
-                ):
-                    directory = essai_evidence.resolve()
-            except OSError:
-                pass
-        if directory is None:
-            candidate = reviews_root / entry
-            try:
-                inside_root = candidate.resolve().is_relative_to(root_resolved)
-            except OSError:
-                inside_root = False
-            if not inside_root:
-                ok = False
-                report.append(f"ECHEC {entry} : chemin hors de reviews/ ou de evidence/reviews/")
-                continue
-            directory = candidate.resolve()
+        candidate = reviews_root / entry
+        try:
+            inside_root = candidate.resolve().is_relative_to(root_resolved)
+        except OSError:
+            inside_root = False
+        if not inside_root:
+            ok = False
+            report.append(f"ECHEC {entry} : chemin hors de la racine de revues ({reviews_root})")
+            continue
+        directory = candidate.resolve()
         verdict_files = sorted(directory.glob("*.verdict.json"))
         if not verdict_files:
             ok = False
@@ -229,8 +211,8 @@ def check(
 
 def main(argv: list[str] | None = None, *, runner: GitRunner | None = None) -> int:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--manifest", default=str(REPO / "reviews" / "BINDING.txt"))
-    ap.add_argument("--reviews-root", default=str(REPO / "reviews"))
+    ap.add_argument("--manifest", default=str(REPO / "evidence" / "reviews" / "BINDING.txt"))
+    ap.add_argument("--reviews-root", default=str(REPO / "evidence" / "reviews"))
     ap.add_argument("--exiger-recu-courant", action="store_true")
     ap.add_argument("--base-ref")
     ap.add_argument("--mode", choices=("archive",))

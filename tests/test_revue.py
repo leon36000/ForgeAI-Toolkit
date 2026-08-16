@@ -230,19 +230,11 @@ def test_codeur_vendor_table_inclut_fable_sans_provider_id():
     assert table["fable"] == "anthropic"
 
 
-def test_diff_canonique_exclut_reviews():
-    code = ":100644 100644 a b M\0src/a.py\0"
-    reviewed = code + ":000000 100644 0 c A\0reviews/S/RECU.json\0"
-    assert revue._diff_canonique("base", "HEAD", runner=lambda _: code) == revue._diff_canonique(
-        "base", "HEAD", runner=lambda _: reviewed
-    )
-
-
 def test_diff_canonique_exclut_evidence_reviews():
-    # RC1-010 (#440) lot 5a : reviews/ migre vers evidence/reviews/ — le préfixe final doit
-    # être exclu du diff canonique dès maintenant (avant tout déplacement physique), sinon le
-    # lot qui déplace reviews/ créerait exactement le paradoxe bootstrap déjà corrigé pour
-    # reviews/ (le reçu d'un round entrerait dans le hash du diff qu'il examine).
+    # RC1-010 (#440) lot 5d : evidence/reviews/ est la racine unique (reviews/ n'existe plus,
+    # le repli legacy posé au lot 5a est retiré) — garde anti-paradoxe-bootstrap (le reçu et
+    # les verdicts d'une revue en cours ne doivent jamais entrer dans le hash du diff qu'ils
+    # examinent).
     code = ":100644 100644 a b M\0src/a.py\0"
     reviewed = code + ":000000 100644 0 c A\0evidence/reviews/S/RECU.json\0"
     assert revue._diff_canonique("base", "HEAD", runner=lambda _: code) == revue._diff_canonique(
@@ -443,7 +435,7 @@ def test_cli_diff_canonique_route_correctement(monkeypatch, capsys):
 
 
 def test_cmd_recu_ecrit_fichier_avec_etat_mocke(monkeypatch, tmp_path, capsys):
-    dossier = tmp_path / "reviews" / "S-1"
+    dossier = tmp_path / "evidence" / "reviews" / "S-1"
     dossier.mkdir(parents=True)
     verdict = _v("deepseek")
     (dossier / "DeepSeek-V4-Pro.verdict.json").write_text(json.dumps(verdict), encoding="utf-8")
@@ -477,7 +469,7 @@ def test_cmd_recu_ecrit_fichier_avec_etat_mocke(monkeypatch, tmp_path, capsys):
 
 
 def test_cmd_recu_imprime_sur_stdout_sans_out(monkeypatch, tmp_path, capsys):
-    dossier = tmp_path / "reviews" / "S-2"
+    dossier = tmp_path / "evidence" / "reviews" / "S-2"
     dossier.mkdir(parents=True)
     (dossier / "DeepSeek-V4-Pro.verdict.json").write_text(
         json.dumps(_v("deepseek", "REJECT")), encoding="utf-8"

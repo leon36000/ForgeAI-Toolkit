@@ -1,0 +1,37 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "critique",
+   "fichier": "governance/STATE-CURRENT.json",
+   "description": "Le manifeste d'état n'est pas régénéré pour les renommages et modifications de ce lot. Seuls les hachages de tests/test_classify_paths.py, tests/test_reviews_gate.py et tests/test_revue.py sont mis à jour, alors que le même diff modifie scripts/revue.py, scripts/reviews_gate.py, scripts/governance/classify_paths.py, scripts/tally.py, AGENTS.md, CLAUDE.md, README.md, CANON/*, manifests/gates.yaml, governance/authority.json, governance/path-classification-rules.json et renomme ~397 fichiers reviews/ -> evidence/reviews/. Sans mise à jour de ces entrées, state_current.py --check échouera.",
+   "preuve": "Diff governance/STATE-CURRENT.json : seuls trois blocs de hachage changent (lignes ~188, ~696, ~889) ; aucun retrait d'entrées reviews/**, aucune mise à jour de scripts/revue.py (pourtant modifié dans le même diff)."
+  },
+  {
+   "severite": "critique",
+   "fichier": "governance/STATE-CURRENT.md",
+   "description": "Même incohérence que STATE-CURRENT.json : le fichier markdown embarque le JSON périmé. Les entrées des fichiers déplacés restent sous l'ancien chemin reviews/ alors que le diff les renomme en evidence/reviews/.",
+   "preuve": "Diff governance/STATE-CURRENT.md identique à STATE-CURRENT.json, aucun changement de chemin pour les ~397 renommages."
+  },
+  {
+   "severite": "majeure",
+   "fichier": "evidence/registres/mission.jsonl",
+   "description": "Le diff ne contient pas l'entrée de preuve append-only du livrable, contrairement à la story qui l'indique comme exception attendue. Cela peut faire échouer la règle 2 (preuve au registre).",
+   "preuve": "Story : 'Exception attendue ... evidence/registres/mission.jsonl reçoit une entrée de preuve append-only pour ce livrable' ; fichier absent du diff fourni."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "governance/PATH-CLASSIFICATION.md",
+   "description": "Le résumé généré indique encore 'Vagues : 1, Vague 0 : 1 chemin(s)' alors que la story affirme 0 fichier sous reviews/ restant. Incohérence potentielle à lever.",
+   "preuve": "Diff governance/PATH-CLASSIFICATION.md : 'Vagues : 1, Vague 0 : 1 chemin(s)'."
+  }
+ ],
+ "date_heure": "2026-08-16T07:11:31.467395+00:00",
+ "prompt_sha256": "839d431d2a424d7e974ca55bf2f246ca03faed016c35faaf6948642517fc41a7",
+ "reviewer_model": "DeepSeek-V4-Pro",
+ "modele_servi": "deepseek-v4-pro-direct",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

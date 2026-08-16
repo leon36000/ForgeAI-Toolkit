@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Dépouillement déterministe des revues aveugles (§3.2 du plan maître).
 
-Lit les verdicts scellés d'un répertoire reviews/<étape>/ (fichiers *.verdict.json,
+Lit les verdicts scellés d'un répertoire evidence/reviews/<étape>/ (fichiers *.verdict.json,
 format {verdict: APPROVE|REJECT, objections: [{severite, description, preuve}], ...})
 et applique le seuil : nombre minimal d'APPROVE ET zéro objection critique non résolue.
 Un script compte — jamais un LLM.

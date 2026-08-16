@@ -38,7 +38,7 @@ dans Claude Code (l'orchestrateur en session), routée par le gateway LiteLLM lo
 | `stories/` | Artefacts de gouvernance des stories |
 | `src/` | Code du Toolkit |
 | `tests/` | Tests (TDD strict — une fonctionnalité sans test n'existe pas) |
-| `reviews/` | Verdicts de revue aveugle scellés (`<étape>/<modèle>.verdict.json`) |
+| `evidence/reviews/` | Verdicts de revue aveugle scellés (`<étape>/<modèle>.verdict.json`) |
 | `Sandbox/` | Expérimentations jetables — jamais mergées dans `src/` |
 | `scripts/` | Outillage de gouvernance (registre, no-stub-scan, tally) |
 
