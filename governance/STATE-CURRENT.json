@@ -752,7 +752,7 @@
       },
       {
         "path": "tests/test_safe_repr.py",
-        "sha256": "49caebfbc9bf312f1ba8ef863ef15331ffc2232cd30cd1ec9956ea77890ba957"
+        "sha256": "d450bd10d107a40d3053cf31beeff725f55f02057277a39f6c9d1a4f93349ce0"
       },
       {
         "path": "tests/test_selection_complete.py",
@@ -937,7 +937,7 @@
     "tests": {
       "js_files": 3,
       "python_files": 195,
-      "python_functions_declared": 2306
+      "python_functions_declared": 2307
     }
   },
   "observations": [
