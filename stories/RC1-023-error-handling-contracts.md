@@ -50,10 +50,16 @@ le plan des lots suivants.
    mutation : un site déplacé doit faire échouer le gate).
 5. 9 correctifs minimaux (sites FIXED) + 9 tests d'injection de faute prouvant (a) le nouveau
    signal apparaît, (b) le comportement observable préexistant est inchangé.
-6. `manifests/roles.yaml` — 2 entrées ajoutées (`kimi-k3`, `gemini-3.7-flash`) : roster codeur
-   périmé découvert en construisant le reçu D9 de cette story (vendors vérifiés à la source via
-   `/v1/model/info`), bloquant pour toute lane utilisant `crew_dispatch.py --difficulty` — signalé
-   sur #481.
+6. ~~`manifests/roles.yaml` — 2 entrées ajoutées (`kimi-k3`, `gemini-3.7-flash`)~~ : livrable
+   initial (roster codeur périmé découvert en construisant le reçu D9 de cette story, vendors
+   vérifiés à la source via `/v1/model/info`, signalé sur #481) — **superseded, retiré du diff
+   final**. Au rebase de cette branche sur origin/main courant, le roster avait déjà mûri
+   (roulement RC1-010/ROSTER-MAJ-PR511) : les entrées équivalentes `kimi_k3`/`gemini_flash`
+   (mêmes `provider_id` `Kimi-K3`/`Gemini-3.7-Flash`, vendors moonshot/google identiques,
+   convention de nommage à underscore alignée sur le reste du fichier) existaient déjà, mieux
+   intégrées. Mes ajouts hyphenés (`kimi-k3`/`gemini-3.7-flash`) auraient été des doublons —
+   retirés en résolvant le conflit de rebase plutôt que réappliqués. Aucune action de suivi :
+   le besoin original est déjà couvert par le roster actuel.
 
 ## Critères de validation
 
