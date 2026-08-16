@@ -306,12 +306,41 @@ def main(argv: list[str] | None = None) -> int:
         metavar="REF",
         help="reference git de la base pour le controle de non-croissance",
     )
+    parser.add_argument(
+        "--report",
+        action="store_true",
+        help="affiche le rapport de couverture documentaire",
+    )
     arguments = parser.parse_args(argv)
 
     racine = Path(arguments.racine)
     chemin_base = Path(arguments.base)
     if not chemin_base.is_absolute():
         chemin_base = racine / chemin_base
+
+    if arguments.report:
+        try:
+            reelles = sous_commandes(racine / "src" / "forgeai" / "cli.py")
+            documentees = commandes_documentees(racine)
+        except (OSError, TypeError, ValueError, RuntimeError) as erreur:
+            print(str(erreur), file=sys.stderr)
+            return 1
+
+        commandes_reelles = set(reelles)
+        commandes_documentees_set = set(documentees)
+        non_documentees = sorted(commandes_reelles - commandes_documentees_set)
+        total = len(commandes_reelles)
+        couverture = (len(commandes_documentees_set) / total * 100) if total else 100.0
+
+        print("Rapport de couverture documentaire")
+        print(f"Total de commandes : {total}")
+        print(f"Commandes documentées : {len(commandes_documentees_set)}")
+        print(f"Commandes non documentées : {len(non_documentees)}")
+        print("Liste des commandes non documentées :")
+        for commande in non_documentees:
+            print(f"- {commande}")
+        print(f"Pourcentage de couverture : {couverture:.2f} %")
+        return 0
 
     try:
         base = _charger_json(chemin_base, "base")
