@@ -305,3 +305,11 @@ def test_detect_liste_helm_non_vide_continue_de_detecter_la_release():
     assert st.present is True
     assert st.source == "helm"
     assert st.version == "external-secrets-2.7.0"
+
+
+# --- PINNING (#492) — robustesse detect() sur une liste JSON valide dont des éléments ne sont pas des dict ---
+def test_detect_helm_list_avec_elements_non_dict_ne_leve_pas():
+    r = _Runner({"helm list": (0, "[1, 2, 3]")})
+    st = detect("external-secrets-operator", r)
+    assert st.present is False
+    assert st.source is None
