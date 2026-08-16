@@ -57,19 +57,70 @@ def _horizon(inventaire: dict) -> int:
     return jours
 
 
-def _nom_marqueur_skip(noeud: ast.expr) -> str | None:
-    """Unparse un décorateur/valeur de marqueur en nom pointé, ou None si non-unparsable.
-    Factorisé round 20 : même logique utilisée par le marqueur au niveau fonction (round 19) et
-    au niveau module (round 20) — éviter que ces deux points de vérification dérivent l'un de
-    l'autre, comme round 17/18 l'ont montré pour la résolution de site.path."""
-    cible = noeud.func if isinstance(noeud, ast.Call) else noeud
-    try:
-        return ast.unparse(cible)
-    except Exception:
+def _table_alias_pytest_skip(arbre: ast.Module) -> dict[str, str]:
+    """Construit alias local -> chemin canonique pointé, pour les imports pytest de CE module
+    (ex. 'pt' -> 'pytest' via `import pytest as pt`, 'm' -> 'pytest.mark' via
+    `from pytest import mark as m`).
+
+    Round 34 (#452) — objection GPT-5.6-Terra-Pro (revue scellée) : `_nom_marqueur_skip()`
+    comparait la chaîne UNPARSED brute à des noms canoniques fixes (`pytest.mark.skip`,
+    `mark.skip`) — un simple alias d'import (`import pytest as pt` puis `@pt.mark.skip`, ou
+    `from pytest import mark as m` puis `@m.skip`) donne une chaîne unparsed différente
+    (`pt.mark.skip`, `m.skip`) qui ne matchait AUCUN des noms contrôlés, alors que pytest honore
+    bel et bien le skip (vérifié empiriquement : `@pt.mark.skip` -> "1 skipped"). Résolution
+    d'alias explicite plutôt qu'élargir indéfiniment la liste de chaînes en dur (le nombre
+    d'alias possibles est illimité — `import pytest as n_importe_quoi` reste valide Python).
+
+    La branche `from pytest.mark import skip as sk` est délibérément conservée bien que
+    `pytest.mark` ne soit PAS un sous-module important able en pratique (vérifié empiriquement :
+    `ModuleNotFoundError`, `mark` est un attribut de `pytest`, pas un package) — cette branche ne
+    matchera donc jamais un fichier de test réellement valide. Gardée par robustesse défensive
+    (analyse AST pure, aucune exécution : un import syntaxiquement valide mais sémantiquement
+    impossible ne coûte rien à tolérer ici) plutôt que supprimée, au cas où une version future de
+    pytest ou un shim tiers l'exposerait un jour comme sous-module réel."""
+    table: dict[str, str] = {}
+    for noeud in ast.walk(arbre):
+        if isinstance(noeud, ast.Import):
+            for alias in noeud.names:
+                if alias.name == "pytest":
+                    table[alias.asname or alias.name] = "pytest"
+        elif isinstance(noeud, ast.ImportFrom):
+            if noeud.module == "pytest":
+                for alias in noeud.names:
+                    if alias.name == "mark":
+                        table[alias.asname or alias.name] = "pytest.mark"
+            elif noeud.module == "pytest.mark":
+                for alias in noeud.names:
+                    if alias.name in ("skip", "skipif"):
+                        table[alias.asname or alias.name] = f"pytest.mark.{alias.name}"
+    return table
+
+
+def _chemin_canonique(noeud: ast.expr, table_alias: dict[str, str]) -> str | None:
+    """Résout un ast.Attribute/Name (ex. `pt.mark.skip`) vers son chemin canonique pointé, en
+    substituant la RACINE de la chaîne d'attributs via la table d'alias — insensible à l'alias
+    local choisi par l'auteur du fichier."""
+    parties: list[str] = []
+    courant = noeud
+    while isinstance(courant, ast.Attribute):
+        parties.append(courant.attr)
+        courant = courant.value
+    if not isinstance(courant, ast.Name):
         return None
+    parties.append(table_alias.get(courant.id, courant.id))
+    return ".".join(reversed(parties))
 
 
-def _skipif_condition_toujours_vraie(dec: ast.expr) -> bool:
+def _nom_marqueur_skip(noeud: ast.expr, table_alias: dict[str, str]) -> str | None:
+    """Résout un décorateur/valeur de marqueur en nom canonique pointé (alias d'import résolus),
+    ou None si non résolvable. Factorisé round 20 : même logique utilisée par le marqueur au
+    niveau fonction (round 19) et au niveau module (round 20) — éviter que ces deux points de
+    vérification dérivent l'un de l'autre, comme round 17/18 l'ont montré pour site.path."""
+    cible = noeud.func if isinstance(noeud, ast.Call) else noeud
+    return _chemin_canonique(cible, table_alias)
+
+
+def _skipif_condition_toujours_vraie(dec: ast.expr, table_alias: dict[str, str]) -> bool:
     """True si le décorateur est @pytest.mark.skipif(True, ...) — condition LITTÉRALEMENT
     constante True, donc un skip inconditionnel déguisé (vérifié empiriquement : 'skipped').
 
@@ -80,10 +131,12 @@ def _skipif_condition_toujours_vraie(dec: ast.expr) -> bool:
     d'expression) — `skipif(1 == 1, ...)`, `skipif(not False, ...)` ou toute expression
     constante-repliable mais non littérale restent hors scope : les replier nécessiterait une
     évaluation partielle de code arbitraire, la même ligne dure que pytest.skip() en corps de
-    fonction (cf. docstring de _decorateur_skip_inconditionnel)."""
+    fonction (cf. docstring de _decorateur_skip_inconditionnel).
+
+    Round 34 : `table_alias` résout les alias d'import (voir _table_alias_pytest_skip)."""
     if not isinstance(dec, ast.Call):
         return False
-    if _nom_marqueur_skip(dec) not in ("pytest.mark.skipif", "mark.skipif"):
+    if _nom_marqueur_skip(dec, table_alias) not in ("pytest.mark.skipif", "mark.skipif"):
         return False
     if not dec.args:
         return False
@@ -91,10 +144,14 @@ def _skipif_condition_toujours_vraie(dec: ast.expr) -> bool:
     return isinstance(premier, ast.Constant) and premier.value is True
 
 
-def _decorateur_skip_inconditionnel(decorator_list: list) -> bool:
+def _decorateur_skip_inconditionnel(decorator_list: list, table_alias: dict[str, str]) -> bool:
     """True si la liste de décorateurs porte un @pytest.mark.skip SANS condition, ou un
     @pytest.mark.skipif(True, ...) (condition constante déguisée) — un tel test n'est JAMAIS
     exécuté par pytest, quelle que soit la plateforme/config.
+
+    Round 34 : `table_alias` résout les alias d'import (voir _table_alias_pytest_skip) — un
+    décorateur écrit via un alias (`@pt.mark.skip`, `@m.skip`) est désormais reconnu comme
+    n'importe quel autre nom canonique.
 
     Round 19 (#452) — objection GPT-5.6-Terra-Pro (revue scellée) : le validateur ne garantissait
     pas qu'un compensating_test est réellement EXÉCUTÉ, seulement présent dans l'AST avec le bon
@@ -121,9 +178,9 @@ def _decorateur_skip_inconditionnel(decorator_list: list) -> bool:
     par cas.
     """
     for dec in decorator_list:
-        if _nom_marqueur_skip(dec) in ("pytest.mark.skip", "mark.skip"):
+        if _nom_marqueur_skip(dec, table_alias) in ("pytest.mark.skip", "mark.skip"):
             return True
-        if _skipif_condition_toujours_vraie(dec):
+        if _skipif_condition_toujours_vraie(dec, table_alias):
             return True
     return False
 
@@ -137,8 +194,10 @@ def _module_a_pytestmark_skip_inconditionnel(arbre: ast.Module) -> bool:
     scopé ce cas hors périmètre (documenté, pas oublié) ; Terra a confirmé que ce n'est pas un cas
     d'école — même mécanisme que @pytest.mark.skip, juste au niveau module plutôt que fonction.
     Round 22 : couvre aussi skipif(True, ...) au niveau module, même raffinement qu'au niveau
-    fonction/classe (voir _skipif_condition_toujours_vraie).
+    fonction/classe (voir _skipif_condition_toujours_vraie). Round 34 : résout aussi les alias
+    d'import (voir _table_alias_pytest_skip) — construit sa propre table depuis `arbre`.
     """
+    table_alias = _table_alias_pytest_skip(arbre)
     for noeud in arbre.body:
         if not isinstance(noeud, ast.Assign):
             continue
@@ -148,8 +207,8 @@ def _module_a_pytestmark_skip_inconditionnel(arbre: ast.Module) -> bool:
             noeud.value.elts if isinstance(noeud.value, (ast.List, ast.Tuple)) else [noeud.value]
         )
         if any(
-            _nom_marqueur_skip(v) in ("pytest.mark.skip", "mark.skip")
-            or _skipif_condition_toujours_vraie(v)
+            _nom_marqueur_skip(v, table_alias) in ("pytest.mark.skip", "mark.skip")
+            or _skipif_condition_toujours_vraie(v, table_alias)
             for v in valeurs
         ):
             return True
@@ -187,6 +246,10 @@ def _fonction_test_existe(fichier: Path, segments: list[str]) -> bool:
     if _module_a_pytestmark_skip_inconditionnel(arbre):
         return False
 
+    # Round 34 (#452) : construite UNE FOIS pour tout l'arbre, réutilisée à chaque décorateur
+    # rencontré par _cherche() — voir _table_alias_pytest_skip().
+    table_alias = _table_alias_pytest_skip(arbre)
+
     def _cherche(noeuds: list, segs: list[str]) -> bool:
         if not segs:
             return False
@@ -194,7 +257,7 @@ def _fonction_test_existe(fichier: Path, segments: list[str]) -> bool:
         reste = segs[1:]
         for noeud in noeuds:
             if isinstance(noeud, (ast.FunctionDef, ast.AsyncFunctionDef)) and noeud.name == cible:
-                if not reste and _decorateur_skip_inconditionnel(noeud.decorator_list):
+                if not reste and _decorateur_skip_inconditionnel(noeud.decorator_list, table_alias):
                     return False
                 return not reste
             if isinstance(noeud, ast.ClassDef) and noeud.name == cible:
@@ -215,7 +278,7 @@ def _fonction_test_existe(fichier: Path, segments: list[str]) -> bool:
                 # module round 20, classe ici) — @pytest.mark.skip sur une classe Test*
                 # désactive TOUTES ses méthodes (vérifié empiriquement : "1 skipped"). Même
                 # helper que les deux niveaux précédents — pas de nouvelle logique.
-                if _decorateur_skip_inconditionnel(noeud.decorator_list):
+                if _decorateur_skip_inconditionnel(noeud.decorator_list, table_alias):
                     return False
                 return _cherche(noeud.body, reste)
         return False

@@ -977,6 +977,77 @@ def test_compensating_test_fichier_hors_convention_pytest_rejete(tmp_path: Path)
     assert any("test compensatoire absent du dépôt" in e for e in erreurs)
 
 
+def test_compensating_test_skip_via_alias_module_rejete(tmp_path: Path) -> None:
+    """Round 34 (#452) — objection GPT-5.6-Terra-Pro (revue scellée) : `import pytest as pt`
+    puis `@pt.mark.skip` — pytest honore réellement ce skip (vérifié empiriquement : 'skipped'),
+    mais l'ancienne comparaison de chaîne brute (`pytest.mark.skip`/`mark.skip` en dur) ne
+    reconnaissait pas l'alias `pt`."""
+    _creer_fichier_source(
+        tmp_path,
+        "src/forgeai/example.py",
+        "try:\n    pass\nexcept ValueError:\n    pass\n",
+    )
+    _creer_fichier_source(
+        tmp_path,
+        "tests/test_alias_module.py",
+        "import pytest as pt\n\n@pt.mark.skip\ndef test_x(): pass\n",
+    )
+    contrat = _entree_valide(
+        compensating_test="tests/test_alias_module.py::test_x",
+        compensating_test_reason=None,
+    )
+    _ecrire_inventaire(tmp_path, [contrat])
+
+    erreurs = VALIDATEUR.valider(tmp_path, aujourd_hui=dt.date(2026, 1, 1))
+    assert any("test compensatoire absent du dépôt" in e for e in erreurs)
+
+
+def test_compensating_test_skip_via_alias_mark_rejete(tmp_path: Path) -> None:
+    """Même objection round 34, second exemple du reviewer : `from pytest import mark as m`
+    puis `@m.skip`."""
+    _creer_fichier_source(
+        tmp_path,
+        "src/forgeai/example.py",
+        "try:\n    pass\nexcept ValueError:\n    pass\n",
+    )
+    _creer_fichier_source(
+        tmp_path,
+        "tests/test_alias_mark.py",
+        "from pytest import mark as m\n\n@m.skip\ndef test_x(): pass\n",
+    )
+    contrat = _entree_valide(
+        compensating_test="tests/test_alias_mark.py::test_x",
+        compensating_test_reason=None,
+    )
+    _ecrire_inventaire(tmp_path, [contrat])
+
+    erreurs = VALIDATEUR.valider(tmp_path, aujourd_hui=dt.date(2026, 1, 1))
+    assert any("test compensatoire absent du dépôt" in e for e in erreurs)
+
+
+def test_compensating_test_skipif_via_alias_reste_valide(tmp_path: Path) -> None:
+    """Contre-preuve : la résolution d'alias s'applique aussi à skipif (conditionnel, toléré) —
+    un alias ne doit pas faire passer un skipif légitime pour un skip inconditionnel."""
+    _creer_fichier_source(
+        tmp_path,
+        "src/forgeai/example.py",
+        "try:\n    pass\nexcept ValueError:\n    pass\n",
+    )
+    _creer_fichier_source(
+        tmp_path,
+        "tests/test_alias_skipif.py",
+        "import pytest as pt\n\n@pt.mark.skipif(False, reason='x')\ndef test_x(): pass\n",
+    )
+    contrat = _entree_valide(
+        compensating_test="tests/test_alias_skipif.py::test_x",
+        compensating_test_reason=None,
+    )
+    _ecrire_inventaire(tmp_path, [contrat])
+
+    erreurs = VALIDATEUR.valider(tmp_path, aujourd_hui=dt.date(2026, 1, 1))
+    assert erreurs == []
+
+
 def test_compensating_test_skip_inconditionnel_bare_rejete(tmp_path: Path) -> None:
     """Round 19 (#452) — objection GPT-5.6-Terra-Pro (revue scellée) : un test marqué
     @pytest.mark.skip n'est JAMAIS exécuté par pytest — la présence AST seule ne prouve rien."""
