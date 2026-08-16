@@ -26026,8 +26026,8 @@
         }
       ],
       "rule_id": "governance-core",
-      "sha256": "78b007d9618c760dbcd5f5ff415048f3b5a8f09ac491fc50d10b95703d93df3b",
-      "size": 16874,
+      "sha256": "111414bd41fc59abbccbffcc0ccc1fc95545e6bb02102248035e6c167edc6201",
+      "size": 16875,
       "target_path": null,
       "type": "text"
     },
@@ -27626,8 +27626,8 @@
         }
       ],
       "rule_id": "governance-core",
-      "sha256": "a8584d20ff0427d7ce44e46c49e56b013b8ece9a772f683f033b48bc0c8d1759",
-      "size": 71318,
+      "sha256": "60ece66413c648b49eddbef7075960786013a6f1678a3ffa8697667fadc7f3a8",
+      "size": 71320,
       "target_path": null,
       "type": "text"
     },
