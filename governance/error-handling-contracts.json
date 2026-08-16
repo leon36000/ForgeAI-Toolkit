@@ -402,10 +402,10 @@
       "accepted_risk": "Le flux d'init ne bloque jamais sur un échec de révocation (comportement inchangé) ; le jeton non révoqué reste borné par son TTL `period` existant. Risque résiduel documenté et TRACÉ (pas seulement écrit) : issue #519 — le signal de visibilité lui-même (print stderr) n'est pas garanti si stderr est indisponible ; correction nécessite une conception dédiée (persistance) hors scope du lot 1 (visibilité des except silencieux)."
     },
     {
-      "id": "site:src/forgeai/web/server.py:558",
+      "id": "site:src/forgeai/web/server.py:563",
       "site": {
         "path": "src/forgeai/web/server.py",
-        "line": 558,
+        "line": 563,
         "function": "forgeai.web.server._persist_deploy_state"
       },
       "exception_types": [
@@ -426,10 +426,10 @@
       "accepted_risk": "Le serveur ne plante jamais pour un échec de persistance (comportement inchangé) ; seule la visibilité change."
     },
     {
-      "id": "site:src/forgeai/web/server.py:587",
+      "id": "site:src/forgeai/web/server.py:592",
       "site": {
         "path": "src/forgeai/web/server.py",
-        "line": 587,
+        "line": 592,
         "function": "forgeai.web.server._load_deploy_state"
       },
       "exception_types": [
@@ -450,10 +450,10 @@
       "accepted_risk": "Le serveur démarre toujours avec un état vide en cas d'échec (comportement inchangé) ; seule la visibilité change."
     },
     {
-      "id": "site:src/forgeai/web/server.py:639",
+      "id": "site:src/forgeai/web/server.py:644",
       "site": {
         "path": "src/forgeai/web/server.py",
-        "line": 639,
+        "line": 644,
         "function": "forgeai.web.server._summary_payload"
       },
       "exception_types": [
@@ -471,10 +471,10 @@
       "accepted_risk": "La page de statut affiche une liste de nœuds vide si le cluster est temporairement indisponible, sans distinction visuelle avec un cluster réellement sans nœuds."
     },
     {
-      "id": "site:src/forgeai/web/server.py:1090",
+      "id": "site:src/forgeai/web/server.py:1095",
       "site": {
         "path": "src/forgeai/web/server.py",
-        "line": 1090,
+        "line": 1095,
         "function": "forgeai.web.server.ForgeAIHandler.do_GET"
       },
       "exception_types": [
@@ -493,10 +493,10 @@
       "accepted_risk": "Aucun — déconnexion client normale."
     },
     {
-      "id": "site:src/forgeai/web/server.py:1105",
+      "id": "site:src/forgeai/web/server.py:1110",
       "site": {
         "path": "src/forgeai/web/server.py",
-        "line": 1105,
+        "line": 1110,
         "function": "forgeai.web.server.ForgeAIHandler.do_GET"
       },
       "exception_types": [
@@ -515,10 +515,10 @@
       "accepted_risk": "Aucun — déconnexion client normale."
     },
     {
-      "id": "site:src/forgeai/web/server.py:1553",
+      "id": "site:src/forgeai/web/server.py:1558",
       "site": {
         "path": "src/forgeai/web/server.py",
-        "line": 1553,
+        "line": 1558,
         "function": "forgeai.web.server._reader (closure locale de la route POST /api/deploy)"
       },
       "exception_types": [
@@ -539,10 +539,10 @@
       "accepted_risk": "Le comportement de récupération (exit_code=-1 si indisponible, done=True, tentative de kill) est inchangé ; seule la visibilité de la cause racine change."
     },
     {
-      "id": "site:src/forgeai/web/server.py:1562",
+      "id": "site:src/forgeai/web/server.py:1567",
       "site": {
         "path": "src/forgeai/web/server.py",
-        "line": 1562,
+        "line": 1567,
         "function": "forgeai.web.server._reader (closure locale de la route POST /api/deploy)"
       },
       "exception_types": [
@@ -563,10 +563,10 @@
       "accepted_risk": "Le mécanisme de nettoyage lui-même reste plafonné à `kill()`/`wait()` (un SIGKILL qui échoue — ex. process en D-state — reste un plafond OS qu'aucun code applicatif ne peut lever ; retry/escalade plus agressive serait un changement de comportement, hors scope de #452 lot 1). Ce qui a changé : l'état RAPPORTÉ n'est plus mensonger — un consommateur structuré de l'API voit maintenant explicitement `nettoyage_incertain=True` au lieu d'un `exit_code=-1` d'apparence normale. Risque résiduel restreint et documenté : un process potentiellement orphelin peut encore exister après ce point (limite OS), mais ce fait est désormais VISIBLE et interrogeable, pas silencieux. Amélioration du mécanisme de kill lui-même (retry, signal plus fort, supervision externe) : candidate explicite pour une story dédiée de lot 2+, pas traitée ici pour ne pas élargir le scope au-delà de la véracité de l'état rapporté."
     },
     {
-      "id": "site:src/forgeai/web/server.py:1697",
+      "id": "site:src/forgeai/web/server.py:1702",
       "site": {
         "path": "src/forgeai/web/server.py",
-        "line": 1697,
+        "line": 1702,
         "function": "forgeai.web.server.serve"
       },
       "exception_types": [
