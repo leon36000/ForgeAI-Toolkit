@@ -113,3 +113,13 @@ pour --report et sans --report) — 27/27 tests verts (6 nouveaux + 21 test_doc0
 préexistant, non cassés). Docs/reference/cli.md documente déjà l'usage utilisateur du CLI
 ForgeAI lui-même ; ce commit ne touche que l'outillage interne du gate de documentation, aucune
 doc utilisateur supplémentaire concernée.
+
+scripts/branch_coverage_report.py + job .github/workflows/gates.yml `branch-coverage-report`
+(RC1-021/#451, incrément 1) : nouvel outillage interne CI, mesure et rapport de couverture de
+branches par fonction, jamais bloquant (miroir exact de scripts/ruff_report.py / job
+`ruff-report` de #450, déjà documenté dans ce journal via governance/PATH-CLASSIFICATION.md).
+Aucune commande utilisateur ForgeAI ajoutée ou modifiée (Docs/reference/cli.md non concerné),
+aucun comportement produit changé — le gate bloquant existant (job `tests`,
+--cov-fail-under=85, lignes seules) reste inchangé, vérifié par exécution locale (94.48%,
+identique à la baseline). L'issue #451 elle-même documente le contexte et les critères ;
+aucune doc utilisateur supplémentaire concernée pour cet incrément de reconnaissance/outillage.
