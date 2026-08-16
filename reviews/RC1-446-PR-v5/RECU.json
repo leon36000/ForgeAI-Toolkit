@@ -3,10 +3,10 @@
   "dossier": "RC1-446-PR-v5",
   "issue": 446,
   "round": 5,
-  "base_commit": "68154ab42a6fec32ac535bc9864247b0d311193b",
-  "head_commit": "051e16fc7466ac4593a1608de47b91d888acac7d",
-  "head_tree": "fbaefee4e6793f73961acbbadc6aabd58e3409e5",
-  "diff_digest": "29fba1bc6d4cb0e9fd4f0263a491f08fc888cc03a9933a798848eccd4fd5bcaa",
+  "base_commit": "9cc82f1f51a4802435721f8a0cf3c846f094a3ea",
+  "head_commit": "13e017339a239f225e3a39d08be53e4e29054c58",
+  "head_tree": "5522730bce282b6aaa4d578f7054d73179e9bf32",
+  "diff_digest": "9cc2cbee8931a7117dc1119f8c7bf29808a7a98701f4164b13ce6aaae21290e0",
   "prompt_sha256": "c9121a53606ce7f8b6342425b23a2a4c7cd2ccf27410bd0548f1b477b68f81e4",
   "reviewers_attendus": [
     "DeepSeek-V4-Pro",
@@ -17,6 +17,6 @@
     "GPT-5.6-Terra-Pro"
   ],
   "resultat": "APPROVE",
-  "date_heure": "2026-08-15T21:21:15.459682-04:00",
+  "date_heure": "2026-08-15T21:58:02.981013-04:00",
   "fenetre_heures": 24
 }
