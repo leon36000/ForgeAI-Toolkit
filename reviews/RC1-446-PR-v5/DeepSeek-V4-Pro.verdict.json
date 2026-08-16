@@ -1,0 +1,25 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "governance/sonar-suppressions.json",
+   "description": "La preuve mesurée pour la suppression e6 (pythonsecurity:S8705 sur scripts/gate_docs.py) ne couvre pas directement S8705 : elle cite uniquement des scans S8707 sur registre.py. L'extrapolation à la règle S8705 n'est pas démontrée dans le diff.",
+   "preuve": "Entrée properties-multicriteria:e6, champ justification : « # NOSONAR(S8707) posé au site sur src/forgeai/core/registre.py:101 et :141 ... le scan a remonté pythonsecurity:S8707 ... »"
+  },
+  {
+   "severite": "mineure",
+   "fichier": "scripts/governance/validate_sonar_suppressions.py",
+   "description": "Le validateur ne vérifie pas la cohérence du site et de la règle d'une entrée d'inventaire dont l'id correspond à une suppression réelle ; une entrée properties-multicriteria pourrait garder le même id mais déclarer un autre site ou une autre règle et passer.",
+   "preuve": "Dans _erreurs_suppression_reelle, seul entree['id'] not in inventaire_par_id est vérifié ; _erreurs_entree vérifie uniquement la présence des champs, pas leur correspondance avec suppressions_reelles."
+  }
+ ],
+ "date_heure": "2026-08-16T00:24:39.499228+00:00",
+ "prompt_sha256": "c9121a53606ce7f8b6342425b23a2a4c7cd2ccf27410bd0548f1b477b68f81e4",
+ "reviewer_model": "DeepSeek-V4-Pro",
+ "modele_servi": "deepseek-v4-pro-direct",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}
