@@ -896,28 +896,28 @@ class ForgeAIHandler(BaseHTTPRequestHandler):
 
         return data
 
-    def _get_index(self, path: str, parsed: urllib.parse.ParseResult) -> None:
+    def _get_index(self) -> None:
         data = _asset_bytes("index.html")
         if data is None:
             self._send(500, b"index.html missing", "text/plain; charset=utf-8")
         else:
             self._send(200, data, "text/html; charset=utf-8")
 
-    def _get_detect(self, path: str, parsed: urllib.parse.ParseResult) -> None:
+    def _get_detect(self) -> None:
         try:
             body = hardware_json().encode("utf-8")
             self._send(200, body, "application/json; charset=utf-8")
         except Exception as exc:  # noqa: BLE001
             self._send_internal_error(exc)
 
-    def _get_health(self, path: str, parsed: urllib.parse.ParseResult) -> None:
+    def _get_health(self) -> None:
         self._send(
             200,
             json.dumps({"status": "ok"}, ensure_ascii=False).encode("utf-8"),
             "application/json; charset=utf-8",
         )
 
-    def _get_status(self, path: str, parsed: urllib.parse.ParseResult) -> None:
+    def _get_status(self) -> None:
         # OPS-031A : santé PROFONDE. `/api/health` reste la liveness statique et publique ;
         # cette route-ci révèle l'état de l'infra ET coûte des sondes, elle est donc SENSIBLE —
         # ce que la classification fail-closed de WEB-017 lui applique d'office (jeton hors
@@ -931,7 +931,7 @@ class ForgeAIHandler(BaseHTTPRequestHandler):
             materiel=lambda: json.loads(hardware_json()),
         ))
 
-    def _get_i18n(self, path: str, parsed: urllib.parse.ParseResult) -> None:
+    def _get_i18n(self, path: str) -> None:
         lang = path[len("/api/i18n/") :]
         if lang not in {"fr", "en"}:
             self._send_json(404, {"error": "locale not found"})
@@ -947,13 +947,13 @@ class ForgeAIHandler(BaseHTTPRequestHandler):
             return
         self._send_json(200, web)
 
-    def _get_models_local(self, path: str, parsed: urllib.parse.ParseResult) -> None:
+    def _get_models_local(self) -> None:
         # Registre des modeles open-weight verifies HF — expose TEL QUEL :
         # aucun filtrage par materiel local (directive permanente), l'UI informe seulement.
         data = json.loads(_read_data_text("modeles-locaux.json"))
         self._send_json(200, data)
 
-    def _get_engines(self, path: str, parsed: urllib.parse.ParseResult) -> None:
+    def _get_engines(self) -> None:
         try:
             data = json.loads(_read_data_text("moteurs-inference.json"))
         except (FileNotFoundError, ModuleNotFoundError, json.JSONDecodeError):
@@ -961,25 +961,25 @@ class ForgeAIHandler(BaseHTTPRequestHandler):
             return
         self._send_json(200, data)
 
-    def _get_engines_compatible(self, path: str, parsed: urllib.parse.ParseResult) -> None:
+    def _get_engines_compatible(self, parsed: urllib.parse.ParseResult) -> None:
         # S6 : liste de choix FILTRÉE par vendor du nœud (?vendor=amd|nvidia|intel|cpu).
         # S'appuie sur forgeai.engines.compatible_engines (moteurs-inference.json gpu_vendors).
         from forgeai.engines import compatible_engines
         vendor = (urllib.parse.parse_qs(parsed.query).get("vendor") or [""])[0]
         self._send_json(200, {"vendor": vendor, "moteurs": compatible_engines(vendor)})
 
-    def _get_models(self, path: str, parsed: urllib.parse.ParseResult) -> None:
+    def _get_models(self) -> None:
         store = RouteStore(_models_home())
         self._send_json(200, [r.public_dict() for r in store.list()])
 
-    def _get_stacks_recommended(self, path: str, parsed: urllib.parse.ParseResult) -> None:
+    def _get_stacks_recommended(self) -> None:
         try:
             detect = json.loads(hardware_json())
             self._send_json(200, {"recommended_id": recommended_stack_id(detect)})
         except Exception as exc:  # noqa: BLE001
             self._send_internal_error(exc)
 
-    def _get_stacks(self, path: str, parsed: urllib.parse.ParseResult) -> None:
+    def _get_stacks(self) -> None:
         stack_ids = list_stacks()
         ordered = [sid for sid in stack_ids if sid != "tout-en-un"]
         if "tout-en-un" in stack_ids:
@@ -1000,7 +1000,7 @@ class ForgeAIHandler(BaseHTTPRequestHandler):
             )
         self._send_json(200, summaries)
 
-    def _get_stacks_id(self, path: str, parsed: urllib.parse.ParseResult) -> None:
+    def _get_stacks_id(self, path: str) -> None:
         sid = path[len("/api/stacks/") :]
         if not sid or "/" in sid:
             self._send_json(404, {"error": "stack not found"})
@@ -1011,7 +1011,7 @@ class ForgeAIHandler(BaseHTTPRequestHandler):
         except FileNotFoundError:
             self._send_json(404, {"error": "stack not found"})
 
-    def _get_spheres(self, path: str, parsed: urllib.parse.ParseResult) -> None:
+    def _get_spheres(self) -> None:
         entries = _catalogue_entries()
         index = spheres_index(entries)
         spheres = [
@@ -1026,7 +1026,7 @@ class ForgeAIHandler(BaseHTTPRequestHandler):
         ]
         self._send_json(200, spheres)
 
-    def _get_bricks(self, path: str, parsed: urllib.parse.ParseResult) -> None:
+    def _get_bricks(self, parsed: urllib.parse.ParseResult) -> None:
         query = urllib.parse.parse_qs(parsed.query)
         sphere_list = query.get("sphere")
         if not sphere_list:
@@ -1040,7 +1040,7 @@ class ForgeAIHandler(BaseHTTPRequestHandler):
             return
         self._send_json(200, payload)
 
-    def _get_summary(self, path: str, parsed: urllib.parse.ParseResult) -> None:
+    def _get_summary(self, parsed: urllib.parse.ParseResult) -> None:
         query = urllib.parse.parse_qs(parsed.query)
         stack_list = query.get("stack")
         if not stack_list:
@@ -1052,7 +1052,7 @@ class ForgeAIHandler(BaseHTTPRequestHandler):
         except FileNotFoundError:
             self._send_json(404, {"error": "stack not found"})
 
-    def _get_discover(self, path: str, parsed: urllib.parse.ParseResult) -> None:
+    def _get_discover(self, parsed: urllib.parse.ParseResult) -> None:
         query = urllib.parse.parse_qs(parsed.query)
         node_list = query.get("node")
         if not node_list or node_list[0] != "local":
@@ -1065,34 +1065,39 @@ class ForgeAIHandler(BaseHTTPRequestHandler):
         except Exception as exc:  # noqa: BLE001
             self._send_internal_error(exc)
 
-    def _get_deploy_events(self, path: str, parsed: urllib.parse.ParseResult) -> None:
+    def _get_deploy_events(self) -> None:
         self.send_response(200)
         self.send_header("Content-Type", "text/event-stream")
         self.send_header("Cache-Control", "no-cache")
         self.end_headers()
 
         if _DEPLOY_STATE["proc"] is None:
-            # Aucun process vivant : soit aucun deploy n'a tourné, soit l'état a été
-            # restauré du disque après un restart (proc perdu, statut reportable). On
-            # rejoue les lignes mémorisées puis on clôt avec l'exit_code connu (#139).
-            with _DEPLOY_STATE["lock"]:
-                lines = list(_DEPLOY_STATE["lines"])
-                done = _DEPLOY_STATE["done"]
-                exit_code = _DEPLOY_STATE["exit_code"]
-                nettoyage_incertain = _DEPLOY_STATE["nettoyage_incertain"]
-            fin = {"exit_code": exit_code if done else None}
-            if nettoyage_incertain:
-                fin["nettoyage_incertain"] = True
-            payload = json.dumps(fin, ensure_ascii=False)
-            try:
-                for line in lines:
-                    self.wfile.write(f"data: {line}\n\n".encode("utf-8"))
-                self.wfile.write(f"event: end\ndata: {payload}\n\n".encode("utf-8"))
-                self.wfile.flush()
-            except (BrokenPipeError, ConnectionResetError):
-                pass
-            return
+            self._deploy_events_replay()
+        else:
+            self._deploy_events_stream()
 
+    def _deploy_events_replay(self) -> None:
+        # Aucun process vivant : soit aucun deploy n'a tourné, soit l'état a été
+        # restauré du disque après un restart (proc perdu, statut reportable). On
+        # rejoue les lignes mémorisées puis on clôt avec l'exit_code connu (#139).
+        with _DEPLOY_STATE["lock"]:
+            lines = list(_DEPLOY_STATE["lines"])
+            done = _DEPLOY_STATE["done"]
+            exit_code = _DEPLOY_STATE["exit_code"]
+            nettoyage_incertain = _DEPLOY_STATE["nettoyage_incertain"]
+        fin = {"exit_code": exit_code if done else None}
+        if nettoyage_incertain:
+            fin["nettoyage_incertain"] = True
+        payload = json.dumps(fin, ensure_ascii=False)
+        try:
+            for line in lines:
+                self.wfile.write(f"data: {line}\n\n".encode("utf-8"))
+            self.wfile.write(f"event: end\ndata: {payload}\n\n".encode("utf-8"))
+            self.wfile.flush()
+        except (BrokenPipeError, ConnectionResetError):
+            pass
+
+    def _deploy_events_stream(self) -> None:
         idx = 0
         while True:
             with _DEPLOY_STATE["lock"]:
@@ -1120,7 +1125,7 @@ class ForgeAIHandler(BaseHTTPRequestHandler):
                     return
             time.sleep(0.2)
 
-    def _get_nodes_status(self, path: str, parsed: urllib.parse.ParseResult) -> None:
+    def _get_nodes_status(self) -> None:
         runner = SubprocessRunner()
         try:
             nodes = cluster_status(runner)
@@ -1137,7 +1142,7 @@ class ForgeAIHandler(BaseHTTPRequestHandler):
             node["vendors"] = vendors_by_host.get(node.get("name"), [])
         self._send_json(200, {"nodes": nodes})
 
-    def _get_nodes_receptacles(self, path: str, parsed: urllib.parse.ParseResult) -> None:
+    def _get_nodes_receptacles(self) -> None:
         runner = SubprocessRunner()
         helm_present = shutil.which("helm") is not None
         nodes_out: list[dict] = []
@@ -1182,7 +1187,7 @@ class ForgeAIHandler(BaseHTTPRequestHandler):
         else:
             self._send_json(200, {"nodes": nodes_out})
 
-    def _get_nodes_prepare(self, path: str, parsed: urllib.parse.ParseResult) -> None:
+    def _get_nodes_prepare(self, path: str) -> None:
         host = path[len("/api/nodes/prepare/") :]
         state = _prepare_state_get(host)
         self._send_json(200, state)
@@ -1200,83 +1205,83 @@ class ForgeAIHandler(BaseHTTPRequestHandler):
             return
 
         if path in ("/", "/index.html"):
-            self._get_index(path, parsed)
+            self._get_index()
             return
 
         if path == "/api/detect":
-            self._get_detect(path, parsed)
+            self._get_detect()
             return
 
         if path == "/api/health":
-            self._get_health(path, parsed)
+            self._get_health()
             return
 
         if path == "/api/status":
-            self._get_status(path, parsed)
+            self._get_status()
             return
 
         if path.startswith("/api/i18n/"):
-            self._get_i18n(path, parsed)
+            self._get_i18n(path)
             return
 
         if path == "/api/models/local":
-            self._get_models_local(path, parsed)
+            self._get_models_local()
             return
 
         if path == "/api/engines":
-            self._get_engines(path, parsed)
+            self._get_engines()
             return
 
         if path == "/api/engines/compatible":
-            self._get_engines_compatible(path, parsed)
+            self._get_engines_compatible(parsed)
             return
 
         if path == "/api/models":
-            self._get_models(path, parsed)
+            self._get_models()
             return
 
         if path == "/api/stacks/recommended":
-            self._get_stacks_recommended(path, parsed)
+            self._get_stacks_recommended()
             return
 
         if path == "/api/stacks":
-            self._get_stacks(path, parsed)
+            self._get_stacks()
             return
 
         if path.startswith("/api/stacks/"):
-            self._get_stacks_id(path, parsed)
+            self._get_stacks_id(path)
             return
 
         if path == "/api/spheres":
-            self._get_spheres(path, parsed)
+            self._get_spheres()
             return
 
         if path == "/api/bricks":
-            self._get_bricks(path, parsed)
+            self._get_bricks(parsed)
             return
 
         if path == "/api/summary":
-            self._get_summary(path, parsed)
+            self._get_summary(parsed)
             return
 
         if path == "/api/discover":
-            self._get_discover(path, parsed)
+            self._get_discover(parsed)
             return
 
         if path == "/api/deploy/events":
-            self._get_deploy_events(path, parsed)
+            self._get_deploy_events()
             return
 
         if path == "/api/nodes/status":
-            self._get_nodes_status(path, parsed)
+            self._get_nodes_status()
             return
 
         if path == "/api/nodes/receptacles":
-            self._get_nodes_receptacles(path, parsed)
+            self._get_nodes_receptacles()
             return
 
         if path.startswith("/api/nodes/prepare/"):
-            self._get_nodes_prepare(path, parsed)
+            self._get_nodes_prepare(path)
             return
 
         basename = path.rsplit("/", 1)[-1]
