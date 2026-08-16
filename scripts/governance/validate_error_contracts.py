@@ -249,13 +249,28 @@ def _verifier_site_ast(
     if not isinstance(path_rel, str) or not isinstance(line, int):
         return [f"{identifiant} : site.path (str) et site.line (int) requis"]
 
+    # Round 13 (#452) — objection GPT-5.6-Terra-Pro (revue scellée) : site.path n'était confiné
+    # ni à la racine du dépôt ni à src/forgeai/. Un chemin absolu passait tel quel — piège pathlib
+    # classique : (root / "/etc/passwd") == Path("/etc/passwd"), le côté gauche est ignoré par
+    # l'opérateur / quand le droit est absolu — et une remontée ../.. pouvait faire sortir la
+    # validation AST du périmètre annoncé de l'inventaire.
+    if Path(path_rel).is_absolute():
+        return [f"{identifiant} : site.path doit être un chemin relatif (reçu un chemin absolu)"]
+    root_resolu = root.resolve()
+    fichier_source = (root_resolu / path_rel).resolve()
+    try:
+        fichier_source.relative_to(root_resolu)
+    except ValueError:
+        return [f"{identifiant} : site.path sort de la racine du dépôt : {path_rel}"]
+    if not path_rel.startswith("src/forgeai/"):
+        return [f"{identifiant} : site.path doit cibler src/forgeai/ (reçu : {path_rel})"]
+
     # Round 8 (#452) — objection GPT-5.6-Terra-Pro (revue scellée) : site.function n'était ni
     # exigé ni typé alors qu'il documente la fonction englobante de chaque site contractualisé.
     fonction = site.get("function")
     if not isinstance(fonction, str) or not fonction.strip():
         return [f"{identifiant} : site.function doit être une chaîne non vide"]
 
-    fichier_source = (root / path_rel).resolve()
     if fichier_source not in ast_cache:
         if not fichier_source.is_file():
             ast_cache[fichier_source] = None

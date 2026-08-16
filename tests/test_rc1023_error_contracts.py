@@ -85,8 +85,8 @@ def _ecrire_inventaire(
 
 def _entree_valide(
     *,
-    id_contrat: str = "site:src/example.py:3",
-    path: str = "src/example.py",
+    id_contrat: str = "site:src/forgeai/example.py:3",
+    path: str = "src/forgeai/example.py",
     line: int = 3,
     function_name: str = "src.example.foo",
     exception_types: list[str] | None = None,
@@ -119,12 +119,12 @@ def _entree_valide(
 def test_inventaire_minimal_valide(tmp_path: Path) -> None:
     _creer_fichier_source(
         tmp_path,
-        "src/example.py",
+        "src/forgeai/example.py",
         "try:\n    pass\nexcept ValueError:\n    pass\n",
     )
     contrat = _entree_valide(
-        id_contrat="site:src/example.py:3",
-        path="src/example.py",
+        id_contrat="site:src/forgeai/example.py:3",
+        path="src/forgeai/example.py",
         line=3,
         exception_types=["ValueError"],
         disposition="JUSTIFIED",
@@ -141,7 +141,7 @@ def test_inventaire_minimal_valide(tmp_path: Path) -> None:
 def test_coverage_contracted_incoherent_detecte(tmp_path: Path) -> None:
     _creer_fichier_source(
         tmp_path,
-        "src/example.py",
+        "src/forgeai/example.py",
         "try:\n    pass\nexcept ValueError:\n    pass\n",
     )
     contrat = _entree_valide()
@@ -154,7 +154,7 @@ def test_coverage_contracted_incoherent_detecte(tmp_path: Path) -> None:
 def test_coverage_sous_le_plancher_detecte(tmp_path: Path) -> None:
     _creer_fichier_source(
         tmp_path,
-        "src/example.py",
+        "src/forgeai/example.py",
         "try:\n    pass\nexcept ValueError:\n    pass\n",
     )
     contrat = _entree_valide()
@@ -168,7 +168,7 @@ def test_coverage_total_except_sites_manquant_detecte(tmp_path: Path) -> None:
     # Objection GPT-5.6-Terra-Pro (revue scellée round 8, #452) : coverage.total_except_sites_src_forgeai
     # n'était ni exigé ni typé — un inventaire "amputé" de ce champ passait quand même le gate.
     _creer_fichier_source(
-        tmp_path, "src/example.py", "try:\n    pass\nexcept ValueError:\n    pass\n"
+        tmp_path, "src/forgeai/example.py", "try:\n    pass\nexcept ValueError:\n    pass\n"
     )
     contrat = _entree_valide()
     _ecrire_inventaire(tmp_path, [contrat], omit_coverage_fields=["total_except_sites_src_forgeai"])
@@ -179,7 +179,7 @@ def test_coverage_total_except_sites_manquant_detecte(tmp_path: Path) -> None:
 
 def test_coverage_total_except_sites_type_invalide_detecte(tmp_path: Path) -> None:
     _creer_fichier_source(
-        tmp_path, "src/example.py", "try:\n    pass\nexcept ValueError:\n    pass\n"
+        tmp_path, "src/forgeai/example.py", "try:\n    pass\nexcept ValueError:\n    pass\n"
     )
     contrat = _entree_valide()
     _ecrire_inventaire(tmp_path, [contrat], total_except_sites=-5)
@@ -190,7 +190,7 @@ def test_coverage_total_except_sites_type_invalide_detecte(tmp_path: Path) -> No
 
 def test_coverage_measured_on_manquant_detecte(tmp_path: Path) -> None:
     _creer_fichier_source(
-        tmp_path, "src/example.py", "try:\n    pass\nexcept ValueError:\n    pass\n"
+        tmp_path, "src/forgeai/example.py", "try:\n    pass\nexcept ValueError:\n    pass\n"
     )
     contrat = _entree_valide()
     _ecrire_inventaire(tmp_path, [contrat], omit_coverage_fields=["measured_on"])
@@ -201,7 +201,7 @@ def test_coverage_measured_on_manquant_detecte(tmp_path: Path) -> None:
 
 def test_coverage_measured_command_manquant_detecte(tmp_path: Path) -> None:
     _creer_fichier_source(
-        tmp_path, "src/example.py", "try:\n    pass\nexcept ValueError:\n    pass\n"
+        tmp_path, "src/forgeai/example.py", "try:\n    pass\nexcept ValueError:\n    pass\n"
     )
     contrat = _entree_valide()
     _ecrire_inventaire(tmp_path, [contrat], omit_coverage_fields=["measured_command"])
@@ -212,7 +212,7 @@ def test_coverage_measured_command_manquant_detecte(tmp_path: Path) -> None:
 
 def test_coverage_note_manquante_detectee(tmp_path: Path) -> None:
     _creer_fichier_source(
-        tmp_path, "src/example.py", "try:\n    pass\nexcept ValueError:\n    pass\n"
+        tmp_path, "src/forgeai/example.py", "try:\n    pass\nexcept ValueError:\n    pass\n"
     )
     contrat = _entree_valide()
     _ecrire_inventaire(tmp_path, [contrat], omit_coverage_fields=["note"])
@@ -223,7 +223,7 @@ def test_coverage_note_manquante_detectee(tmp_path: Path) -> None:
 
 def test_review_horizon_justification_manquante_detectee(tmp_path: Path) -> None:
     _creer_fichier_source(
-        tmp_path, "src/example.py", "try:\n    pass\nexcept ValueError:\n    pass\n"
+        tmp_path, "src/forgeai/example.py", "try:\n    pass\nexcept ValueError:\n    pass\n"
     )
     contrat = _entree_valide()
     _ecrire_inventaire(tmp_path, [contrat], omit_review_horizon_fields=["justification"])
@@ -234,7 +234,7 @@ def test_review_horizon_justification_manquante_detectee(tmp_path: Path) -> None
 
 def test_site_function_manquante_detectee(tmp_path: Path) -> None:
     _creer_fichier_source(
-        tmp_path, "src/example.py", "try:\n    pass\nexcept ValueError:\n    pass\n"
+        tmp_path, "src/forgeai/example.py", "try:\n    pass\nexcept ValueError:\n    pass\n"
     )
     contrat = _entree_valide(function_name="")
     _ecrire_inventaire(tmp_path, [contrat])
@@ -248,7 +248,7 @@ def test_id_vide_detecte(tmp_path: Path) -> None:
     # (présence), mais ni son type chaîne ni son caractère non vide ne l'étaient — un contrat
     # avec "id": "" passait la validation, invalidant le caractère machine-identifiable promis.
     _creer_fichier_source(
-        tmp_path, "src/example.py", "try:\n    pass\nexcept ValueError:\n    pass\n"
+        tmp_path, "src/forgeai/example.py", "try:\n    pass\nexcept ValueError:\n    pass\n"
     )
     contrat = _entree_valide(id_contrat="")
     _ecrire_inventaire(tmp_path, [contrat])
@@ -259,7 +259,7 @@ def test_id_vide_detecte(tmp_path: Path) -> None:
 
 def test_id_null_detecte(tmp_path: Path) -> None:
     _creer_fichier_source(
-        tmp_path, "src/example.py", "try:\n    pass\nexcept ValueError:\n    pass\n"
+        tmp_path, "src/forgeai/example.py", "try:\n    pass\nexcept ValueError:\n    pass\n"
     )
     contrat = _entree_valide(id_contrat=None)
     _ecrire_inventaire(tmp_path, [contrat])
@@ -268,12 +268,53 @@ def test_id_null_detecte(tmp_path: Path) -> None:
     assert any("champ 'id' doit être une chaîne non vide" in e for e in erreurs)
 
 
+def test_site_path_absolu_detecte(tmp_path: Path) -> None:
+    # Objection GPT-5.6-Terra-Pro (revue scellée round 13, #452) : site.path n'était confiné ni
+    # à la racine du dépôt ni à src/forgeai/. Piège pathlib : (root / "/etc/passwd") ==
+    # Path("/etc/passwd") — un chemin absolu échappait entièrement à root.
+    _creer_fichier_source(
+        tmp_path, "src/forgeai/example.py", "try:\n    pass\nexcept ValueError:\n    pass\n"
+    )
+    contrat = _entree_valide(path="/etc/passwd")
+    _ecrire_inventaire(tmp_path, [contrat])
+
+    erreurs = VALIDATEUR.valider(tmp_path, aujourd_hui=dt.date(2026, 1, 1))
+    assert any("site.path" in e and "absolu" in e for e in erreurs)
+
+
+def test_site_path_hors_racine_detecte(tmp_path: Path) -> None:
+    _creer_fichier_source(
+        tmp_path, "src/forgeai/example.py", "try:\n    pass\nexcept ValueError:\n    pass\n"
+    )
+    # Fichier réel HORS de tmp_path (la « racine du dépôt » de ce test), atteignable par ../../..
+    hors_racine = tmp_path.parent / "hors_racine_test.py"
+    hors_racine.write_text("try:\n    pass\nexcept ValueError:\n    pass\n", encoding="utf-8")
+    profondeur = len(tmp_path.parts) - len(tmp_path.anchor.split("/"))
+    chemin_traversee = "/".join([".."] * (profondeur + 1)) + "/hors_racine_test.py"
+    contrat = _entree_valide(path=chemin_traversee)
+    _ecrire_inventaire(tmp_path, [contrat])
+
+    erreurs = VALIDATEUR.valider(tmp_path, aujourd_hui=dt.date(2026, 1, 1))
+    assert any("site.path" in e and ("racine" in e or "src/forgeai" in e) for e in erreurs)
+
+
+def test_site_path_hors_src_forgeai_detecte(tmp_path: Path) -> None:
+    _creer_fichier_source(
+        tmp_path, "autre_dossier/example.py", "try:\n    pass\nexcept ValueError:\n    pass\n"
+    )
+    contrat = _entree_valide(path="autre_dossier/example.py")
+    _ecrire_inventaire(tmp_path, [contrat])
+
+    erreurs = VALIDATEUR.valider(tmp_path, aujourd_hui=dt.date(2026, 1, 1))
+    assert any("site.path" in e and "src/forgeai" in e for e in erreurs)
+
+
 def test_risk_paths_element_non_chaine_detecte(tmp_path: Path) -> None:
     # Durcissement proactif (round 12-13, même famille que l'objection GPT-5.6-Terra-Pro sur
     # exception_types) : risk_paths était vérifié « est une liste » mais pas le type de ses
     # éléments — [123, None] passait la validation.
     _creer_fichier_source(
-        tmp_path, "src/example.py", "try:\n    pass\nexcept ValueError:\n    pass\n"
+        tmp_path, "src/forgeai/example.py", "try:\n    pass\nexcept ValueError:\n    pass\n"
     )
     contrat = _entree_valide()
     contrat["risk_paths"] = [123, None]
@@ -288,7 +329,7 @@ def test_schema_version_inconnue_detectee(tmp_path: Path) -> None:
     # 'schema' non vide, mais ne comparait jamais sa VALEUR à "error-handling-contracts/1" —
     # {"schema": "incompatible/999", ...} franchissait le gate sans être détecté.
     _creer_fichier_source(
-        tmp_path, "src/example.py", "try:\n    pass\nexcept ValueError:\n    pass\n"
+        tmp_path, "src/forgeai/example.py", "try:\n    pass\nexcept ValueError:\n    pass\n"
     )
     contrat = _entree_valide()
     _ecrire_inventaire(tmp_path, [contrat], schema_value="incompatible/999")
@@ -300,21 +341,21 @@ def test_schema_version_inconnue_detectee(tmp_path: Path) -> None:
 def test_identifiant_duplique_detecte(tmp_path: Path) -> None:
     _creer_fichier_source(
         tmp_path,
-        "src/example.py",
+        "src/forgeai/example.py",
         "try:\n    pass\nexcept ValueError:\n    pass\n",
     )
-    contrat1 = _entree_valide(id_contrat="site:src/example.py:3")
-    contrat2 = _entree_valide(id_contrat="site:src/example.py:3")
+    contrat1 = _entree_valide(id_contrat="site:src/forgeai/example.py:3")
+    contrat2 = _entree_valide(id_contrat="site:src/forgeai/example.py:3")
     _ecrire_inventaire(tmp_path, [contrat1, contrat2])
 
     erreurs = VALIDATEUR.valider(tmp_path, aujourd_hui=dt.date(2026, 1, 1))
-    assert any("identifiant de contrat dupliqué : site:src/example.py:3" in e for e in erreurs)
+    assert any("identifiant de contrat dupliqué : site:src/forgeai/example.py:3" in e for e in erreurs)
 
 
 def test_champs_obligatoires_manquants_detectes(tmp_path: Path) -> None:
     _creer_fichier_source(
         tmp_path,
-        "src/example.py",
+        "src/forgeai/example.py",
         "try:\n    pass\nexcept ValueError:\n    pass\n",
     )
     contrat1 = _entree_valide()
@@ -335,7 +376,7 @@ def test_champs_obligatoires_manquants_detectes(tmp_path: Path) -> None:
 def test_disposition_invalide_detectee(tmp_path: Path) -> None:
     _creer_fichier_source(
         tmp_path,
-        "src/example.py",
+        "src/forgeai/example.py",
         "try:\n    pass\nexcept ValueError:\n    pass\n",
     )
     contrat = _entree_valide(disposition="MAYBE")
@@ -348,7 +389,7 @@ def test_disposition_invalide_detectee(tmp_path: Path) -> None:
 def test_review_due_dans_le_passe_detectee(tmp_path: Path) -> None:
     _creer_fichier_source(
         tmp_path,
-        "src/example.py",
+        "src/forgeai/example.py",
         "try:\n    pass\nexcept ValueError:\n    pass\n",
     )
     contrat = _entree_valide(review_due="2025-12-31")
@@ -361,7 +402,7 @@ def test_review_due_dans_le_passe_detectee(tmp_path: Path) -> None:
 def test_review_due_au_dela_horizon_detectee(tmp_path: Path) -> None:
     _creer_fichier_source(
         tmp_path,
-        "src/example.py",
+        "src/forgeai/example.py",
         "try:\n    pass\nexcept ValueError:\n    pass\n",
     )
     # Horizon = 180 jours. Pour 2026-01-01, max = 2026-06-30. 2026-07-01 dépasse.
@@ -375,7 +416,7 @@ def test_review_due_au_dela_horizon_detectee(tmp_path: Path) -> None:
 def test_review_due_malformee_detectee(tmp_path: Path) -> None:
     _creer_fichier_source(
         tmp_path,
-        "src/example.py",
+        "src/forgeai/example.py",
         "try:\n    pass\nexcept ValueError:\n    pass\n",
     )
     contrat = _entree_valide(review_due="01-06-2026")
@@ -388,7 +429,7 @@ def test_review_due_malformee_detectee(tmp_path: Path) -> None:
 def test_compensating_test_et_reason_tous_deux_null_detectes(tmp_path: Path) -> None:
     _creer_fichier_source(
         tmp_path,
-        "src/example.py",
+        "src/forgeai/example.py",
         "try:\n    pass\nexcept ValueError:\n    pass\n",
     )
     contrat = _entree_valide(compensating_test=None, compensating_test_reason=None)
@@ -401,7 +442,7 @@ def test_compensating_test_et_reason_tous_deux_null_detectes(tmp_path: Path) -> 
 def test_compensating_test_et_reason_tous_deux_renseignes_detectes(tmp_path: Path) -> None:
     _creer_fichier_source(
         tmp_path,
-        "src/example.py",
+        "src/forgeai/example.py",
         "try:\n    pass\nexcept ValueError:\n    pass\n",
     )
     _creer_fichier_source(
@@ -422,7 +463,7 @@ def test_compensating_test_et_reason_tous_deux_renseignes_detectes(tmp_path: Pat
 def test_compensating_test_inexistant_detecte(tmp_path: Path) -> None:
     _creer_fichier_source(
         tmp_path,
-        "src/example.py",
+        "src/forgeai/example.py",
         "try:\n    pass\nexcept ValueError:\n    pass\n",
     )
     contrat = _entree_valide(
@@ -438,7 +479,7 @@ def test_compensating_test_inexistant_detecte(tmp_path: Path) -> None:
 def test_disposition_fixed_sans_test_detectee(tmp_path: Path) -> None:
     _creer_fichier_source(
         tmp_path,
-        "src/example.py",
+        "src/forgeai/example.py",
         "try:\n    pass\nexcept ValueError:\n    pass\n",
     )
     contrat = _entree_valide(
@@ -455,10 +496,10 @@ def test_disposition_fixed_sans_test_detectee(tmp_path: Path) -> None:
 def test_derive_site_ligne_non_except_detectee(tmp_path: Path) -> None:
     _creer_fichier_source(
         tmp_path,
-        "src/example.py",
+        "src/forgeai/example.py",
         "a = 1\nb = 2\nc = 3\n",
     )
-    contrat = _entree_valide(path="src/example.py", line=2)
+    contrat = _entree_valide(path="src/forgeai/example.py", line=2)
     _ecrire_inventaire(tmp_path, [contrat])
 
     erreurs = VALIDATEUR.valider(tmp_path, aujourd_hui=dt.date(2026, 1, 1))
@@ -468,11 +509,11 @@ def test_derive_site_ligne_non_except_detectee(tmp_path: Path) -> None:
 def test_derive_type_exception_detectee(tmp_path: Path) -> None:
     _creer_fichier_source(
         tmp_path,
-        "src/example.py",
+        "src/forgeai/example.py",
         "try:\n    pass\nexcept KeyError:\n    pass\n",
     )
     contrat = _entree_valide(
-        path="src/example.py",
+        path="src/forgeai/example.py",
         line=3,
         exception_types=["ValueError"],
     )
@@ -484,7 +525,7 @@ def test_derive_type_exception_detectee(tmp_path: Path) -> None:
 
 def test_fichier_source_absent_ne_plante_pas_et_signale_site_introuvable(tmp_path: Path) -> None:
     contrat = _entree_valide(
-        path="src/fichier_totalement_absent.py",
+        path="src/forgeai/fichier_totalement_absent.py",
         line=10,
     )
     _ecrire_inventaire(tmp_path, [contrat])
@@ -496,11 +537,11 @@ def test_fichier_source_absent_ne_plante_pas_et_signale_site_introuvable(tmp_pat
 def test_except_avec_tuple_de_types_est_valide(tmp_path: Path) -> None:
     _creer_fichier_source(
         tmp_path,
-        "src/example.py",
+        "src/forgeai/example.py",
         "try:\n    pass\nexcept (TypeError, ValueError):\n    pass\n",
     )
     contrat = _entree_valide(
-        path="src/example.py",
+        path="src/forgeai/example.py",
         line=3,
         exception_types=["TypeError", "ValueError"],
     )
@@ -513,7 +554,7 @@ def test_except_avec_tuple_de_types_est_valide(tmp_path: Path) -> None:
 def test_rendre_rapport_markdown(tmp_path: Path) -> None:
     _creer_fichier_source(
         tmp_path,
-        "src/example.py",
+        "src/forgeai/example.py",
         "try:\n    pass\nexcept ValueError:\n    pass\n",
     )
     _creer_fichier_source(
@@ -522,8 +563,8 @@ def test_rendre_rapport_markdown(tmp_path: Path) -> None:
         "def test_example(): pass\n",
     )
     contrat = _entree_valide(
-        id_contrat="site:src/example.py:3",
-        path="src/example.py",
+        id_contrat="site:src/forgeai/example.py:3",
+        path="src/forgeai/example.py",
         line=3,
         disposition="FIXED",
         compensating_test="tests/test_example.py::test_example",
@@ -533,7 +574,7 @@ def test_rendre_rapport_markdown(tmp_path: Path) -> None:
 
     markdown = VALIDATEUR.rendre(tmp_path)
     assert "# Contrats de gestion d'erreurs et risques acceptés" in markdown
-    assert "src/example.py:3" in markdown
+    assert "src/forgeai/example.py:3" in markdown
     assert "FIXED" in markdown
     assert "tests/test_example.py::test_example" in markdown
 
@@ -546,7 +587,7 @@ def test_integration_inventaire_officiel_du_depot() -> None:
 def test_compensating_test_fonction_inexistante_detectee(tmp_path: Path) -> None:
     _creer_fichier_source(
         tmp_path,
-        "src/example.py",
+        "src/forgeai/example.py",
         "try:\n    pass\nexcept ValueError:\n    pass\n",
     )
     _creer_fichier_source(
@@ -567,7 +608,7 @@ def test_compensating_test_fonction_inexistante_detectee(tmp_path: Path) -> None
 def test_compensating_test_fonction_existante_est_valide(tmp_path: Path) -> None:
     _creer_fichier_source(
         tmp_path,
-        "src/example.py",
+        "src/forgeai/example.py",
         "try:\n    pass\nexcept ValueError:\n    pass\n",
     )
     _creer_fichier_source(
@@ -588,7 +629,7 @@ def test_compensating_test_fonction_existante_est_valide(tmp_path: Path) -> None
 def test_compensating_test_methode_de_classe_existante_est_valide(tmp_path: Path) -> None:
     _creer_fichier_source(
         tmp_path,
-        "src/example.py",
+        "src/forgeai/example.py",
         "try:\n    pass\nexcept ValueError:\n    pass\n",
     )
     _creer_fichier_source(
@@ -609,7 +650,7 @@ def test_compensating_test_methode_de_classe_existante_est_valide(tmp_path: Path
 def test_compensating_test_methode_de_classe_inexistante_detectee(tmp_path: Path) -> None:
     _creer_fichier_source(
         tmp_path,
-        "src/example.py",
+        "src/forgeai/example.py",
         "try:\n    pass\nexcept ValueError:\n    pass\n",
     )
     _creer_fichier_source(
@@ -633,7 +674,7 @@ def test_compensating_test_chemin_nu_sans_fonction_rejete(tmp_path: Path) -> Non
     aucun rapport avec le correctif réel, un chemin nu passait auparavant la validation."""
     _creer_fichier_source(
         tmp_path,
-        "src/example.py",
+        "src/forgeai/example.py",
         "try:\n    pass\nexcept ValueError:\n    pass\n",
     )
     _creer_fichier_source(
