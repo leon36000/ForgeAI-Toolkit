@@ -232,9 +232,10 @@ def _valider_adopt(adopt, noms_services):
         hote, _, port = valeur.partition(':')
         if not hote or ' ' in hote or any(ord(c) < 32 for c in hote):
             return f"adopt['{_clip(cle)}'] : hote invalide"
-        if not port.isdigit():
+        try:
+            p = int(port)
+        except ValueError:
             return f"adopt['{_clip(cle)}'] : port non numerique"
-        p = int(port)
         if p < 1 or p > 65535:
             return f"adopt['{_clip(cle)}'] : port hors bornes"
 

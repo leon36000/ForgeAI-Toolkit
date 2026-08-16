@@ -21271,7 +21271,7 @@
       "path": "reviews/RC1-009/RECU.json",
       "referenced_by": [],
       "rule_id": "evidence-reviews",
-      "sha256": "ffa246883e0373c636c2d284d1a6ca5511b54ad20eba5606d580042c68e926a5",
+      "sha256": "494f9dc552f6617f5d5e0489e15140d442df49df17b2484b09b4cbb6d6e8f63b",
       "size": 661,
       "target_path": "evidence/reviews/RC1-009/RECU.json",
       "type": "text"
