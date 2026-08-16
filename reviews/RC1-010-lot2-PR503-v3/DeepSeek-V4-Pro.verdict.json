@@ -1,0 +1,25 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "majeure",
+   "fichier": "governance/path-classification.json",
+   "description": "Le rendu généré incorpore des fichiers de revue absents du diff : il ajoute des entrées EVIDENCE pour reviews/RC1-010-lot2-PR503-v1/* et reviews/RC1-010-lot2-PR503-v2/*, et modifie le sha256/size de reviews/BINDING.txt, sans qu'aucun diff --git ne crée ou modifie ces fichiers dans le commit. Un checkout propre après merge ne contiendra pas ces chemins, ce qui rendra le fichier généré incohérent et peut faire échouer classify_paths.py --check.",
+   "preuve": "Le diff de governance/path-classification.json ajoute des blocs EVIDENCE pour \"reviews/RC1-010-lot2-PR503-v1/DeepSeek-V4-Pro.verdict.json\", \"reviews/RC1-010-lot2-PR503-v1/Gemini-3.1-Pro.verdict.json\", \"reviews/RC1-010-lot2-PR503-v2/DeepSeek-V4-Pro.verdict.json\", etc. ; le bloc reviews/BINDING.txt passe de \"f94e4bf87c430281a3d2ffdf1b5d285bf43b6c727911209642181ccde59a9324\" à \"0adccc9eef75eaf3a99c3f92c50efd7cc8b6c78c18d6fde102099e3d1fef5f04\" ; aucun diff --git correspondant n'est présent pour ces fichiers."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "governance/authority.json",
+   "description": "Le digest d'AGENTS.md est recalculé, mais checked_at reste à 2026-08-15 alors que la modification date du lot 2 (2026-08-16) et que les autres digests modifiés du même diff passent à 2026-08-16.",
+   "preuve": "Dans governance/authority.json, pour la source AGENTS.md (value 98bd01792fb534a997d44912446771c1c05ee2bd2d09dcda4fc2a0a6dbfd432f -> 38ce058d098f0d0761376e3403b3d0e1bff153bda5e09daf74eb75fb2880d531), la ligne checked_at reste \"2026-08-15\"."
+  }
+ ],
+ "date_heure": "2026-08-16T01:14:37.441136+00:00",
+ "prompt_sha256": "c37028e90c7cabbb741de2ba282a28889af3ed23f2d586f4e13f55dee718720e",
+ "reviewer_model": "DeepSeek-V4-Pro",
+ "modele_servi": "deepseek-v4-pro-direct",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

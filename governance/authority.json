@@ -111,7 +111,7 @@
       "digest": {
         "policy": "content_sha256",
         "value": "38ce058d098f0d0761376e3403b3d0e1bff153bda5e09daf74eb75fb2880d531",
-        "checked_at": "2026-08-15",
+        "checked_at": "2026-08-16",
         "delegated_to": null
       },
       "retention": "in_force",

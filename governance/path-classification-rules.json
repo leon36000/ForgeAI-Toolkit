@@ -226,20 +226,6 @@
       "rationale": "ARCHIVE et load_bearing=true coexistent sans contradiction: ce modèle est historique selon AGENTS.md, mais state_current.py lit encore ses totaux et scope-guard.yml exécute validate_coordination.py; c'est le signal que #440 doit lire avant déplacement."
     },
     {
-      "id": "archive-cursor-orchestration-rule",
-      "match": {
-        "kind": "exact",
-        "value": ".cursor/rules/forgeai-orchestration.mdc"
-      },
-      "class": "ARCHIVE",
-      "generated": false,
-      "owner": "archive-cursor",
-      "target": "archive/cursor/rules/forgeai-orchestration.mdc",
-      "target_kind": "explicit",
-      "load_bearing": true,
-      "rationale": "ARCHIVE et load_bearing=true coexistent sans contradiction: cette configuration historique est déclarée avec empreinte dans governance/authority.json et doit être lue par #440 avant déplacement."
-    },
-    {
       "id": "evidence-audit-output",
       "match": {
         "kind": "prefix",
@@ -644,20 +630,6 @@
       "target_kind": "keep",
       "load_bearing": true,
       "rationale": "Configuration de dépôt."
-    },
-    {
-      "id": "archive-recherche-rall-1-agents-orchestration",
-      "match": {
-        "kind": "exact",
-        "value": "Recherche/rall-1-agents-orchestration.yaml"
-      },
-      "class": "ARCHIVE",
-      "generated": false,
-      "owner": "archive-phase-a",
-      "target": "archive/recherche/rall-1-agents-orchestration.yaml",
-      "target_kind": "reroot",
-      "load_bearing": false,
-      "rationale": "Matériau de recherche/sourcing (lot R-ALL-1) qui a servi à compiler src/forgeai/data/catalogue.json — superseded par le catalogue compilé, ne pilote plus rien à l'exécution."
     },
     {
       "id": "working-sandbox-readme",
