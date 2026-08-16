@@ -3,10 +3,10 @@
   "dossier": "RC1-442",
   "issue": 442,
   "round": 1,
-  "base_commit": "d1b1e6bc4f0e94068eae484606ebff79daac42b2",
-  "head_commit": "36b661020bad2bd0beaee6498c00b710721f028e",
-  "head_tree": "e44e6b77e7e676fe6facaf5d4c405467b639ad04",
-  "diff_digest": "adcb39a584ec80c03165fb653db8d5744d71f26fb98f54e33bb78e57adea109d",
+  "base_commit": "1463756c07272b5d345e7672b0f2f5bf819373ae",
+  "head_commit": "e5d3c84e791d019fe3b154a9076d23eeb0aaea57",
+  "head_tree": "9dd1549c33fb30dffa8f4f91610617c9b52d2d84",
+  "diff_digest": "e9f86fa09d2db0c3a322b97e77a00c4ac5e5eaa334ce8cbcec50af26e1e58ab6",
   "prompt_sha256": "ab5c0c4e43f6cba14af8fc57e706efbcdb6e77ca52de48cfb322220ed363330f",
   "reviewers_attendus": [
     "DeepSeek-V4-Pro",
@@ -14,9 +14,9 @@
     "Qwen3.7-Max"
   ],
   "codeur": [
-    "Gemini-3.7-Flash"
+    "gemini_flash"
   ],
   "resultat": "APPROVE",
-  "date_heure": "2026-08-16T08:28:36.411458-04:00",
+  "date_heure": "2026-08-16T08:47:25.692635-04:00",
   "fenetre_heures": 24
 }
