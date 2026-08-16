@@ -1,0 +1,19 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "majeure",
+   "fichier": "scripts/mypy_gate.py",
+   "description": "Le cliquet peut être contourné par un ignore mypy non borné au niveau d’un module : une PR peut ajouter `# mypy: ignore-errors` dans un fichier actuellement en dette, retirer ce fichier de `dette` et diminuer la borne. Les erreurs deviennent alors invisibles, le fichier n’est ni en erreur non-baselinée ni protégé en erreur, et la comparaison avec la référence accepte la suppression de la dette. Cela contrevient à l’interdiction des ignore globaux non bornés et permet de simuler une réduction de dette sans correction.",
+   "preuve": "`executer_mypy` (lignes 46-47) neutralise uniquement les fichiers de configuration par `--config-file=`, sans détecter ni interdire les directives inline `# mypy: ignore-errors`. `_anomalies_reference` (lignes 358-385) itère uniquement sur `dette` courante : aucune règle ne signale un fichier présent dans `reference[\"dette\"]` mais retiré de la dette courante. Le retrait est donc accepté tant que mypy ne remonte plus d’erreur."
+  }
+ ],
+ "date_heure": "2026-08-16T12:46:01.192738+00:00",
+ "prompt_sha256": "ce5c42ebd9008577ff72f44a26ae6a8d7ab1eea0cdb3279263bd08923be50a8f",
+ "reviewer_model": "GPT-5.6-Terra-Pro",
+ "modele_servi": "gpt56-terra-pro-openrouter",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

@@ -753,3 +753,58 @@ def test_g22_executer_mypy_ignore_config_mypy_du_depot(tmp_path, monkeypatch):
     mypy_gate.executer_mypy(tmp_path, "src/forgeai")
 
     assert "--config-file=" in captured["args"]
+
+
+# ---------------------------------------------------------------------------
+# Correctif post-revue scellée #449 (round 5) — retire de la dette sans promotion
+# ---------------------------------------------------------------------------
+
+def test_g23_fichier_dette_retire_sans_promotion_est_detecte():
+    """Un fichier présent dans la dette de référence, retiré de la dette courante
+    sans être promu aux fichiers_proteges, doit produire une anomalie.
+    """
+    reference = _base(
+        dette={"src/a.py": 106, "src/b.py": 28},
+        total_erreurs=134,
+    )
+    base = _base(
+        dette={"src/b.py": 28},
+        total_erreurs=28,
+    )
+
+    anomalies = mypy_gate.anomalies(
+        reels={"src/a.py", "src/b.py"},
+        erreurs={"src/b.py": 28},  # src/a.py absent = 0, simule une directive d'ignore
+        base=base,
+        base_reference=reference,
+    )
+
+    assert any(
+        "retire de la dette" in m and "src/a.py" in m for m in anomalies
+    )
+
+
+def test_g23b_fichier_dette_retire_ET_promu_proteges_aucune_anomalie():
+    """Même scénario, mais src/a.py est promu aux fichiers_proteges : aucune anomalie
+    de ce type ne doit apparaître.
+    """
+    reference = _base(
+        dette={"src/a.py": 106, "src/b.py": 28},
+        total_erreurs=134,
+    )
+    base = _base(
+        fichiers_proteges=["src/a.py"],
+        dette={"src/b.py": 28},
+        total_erreurs=28,
+    )
+
+    anomalies = mypy_gate.anomalies(
+        reels={"src/a.py", "src/b.py"},
+        erreurs={"src/b.py": 28},  # src/a.py est protégé et propre
+        base=base,
+        base_reference=reference,
+    )
+
+    assert not any(
+        "retire de la dette" in m and "src/a.py" in m for m in anomalies
+    )

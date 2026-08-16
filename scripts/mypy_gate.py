@@ -323,8 +323,9 @@ def _anomalies_reference(
     reference: dict[str, Any],
     proteges: set[str],
 ) -> list[str]:
-    """Règle 5 : comparaison avec la base de référence (aucune croissance non justifiée,
-    protection permanente)."""
+    """Règle 5 : comparaison avec la base de référence — aucune croissance non justifiée
+    (dette ou borne), protection permanente des fichiers_proteges, et interdiction de retirer
+    silencieusement un fichier de la dette référencée sans le promouvoir aux fichiers_proteges."""
     resultat: list[str] = []
     ref_proteges = set(reference["fichiers_proteges"])
     ref_dette = reference["dette"]
@@ -334,6 +335,13 @@ def _anomalies_reference(
             resultat.append(
                 f"fichier {f} retire de la protection depuis la reference (etait dans "
                 "fichiers_proteges) : la protection est permanente, jamais retiree"
+            )
+
+    for f in sorted(ref_dette):
+        if f not in dette and f not in proteges:
+            resultat.append(
+                f"fichier {f} retire de la dette referencee sans etre promu aux fichiers proteges : "
+                "suppression de tracking non justifiee"
             )
 
     for f, plafond in sorted(dette.items()):
@@ -374,8 +382,10 @@ def anomalies(
     4. borne totale inconditionnelle (mêmes garanties que la borne de gate_docs.py — ne dépend
        d'aucun argument optionnel) ;
     5. si `base_reference` est fourni : toute dette ou borne supérieure à la référence est une
-       extension non justifiée, et tout fichier protégé dans la référence doit rester protégé
-       dans la base courante (anti-contournement, mirrorant
+       extension non justifiée ; tout fichier protégé dans la référence doit rester protégé
+       dans la base courante ; et tout fichier présent dans la dette de la référence doit
+       demeurer suivi (soit en dette, soit promu aux fichiers_proteges) — toute disparition
+       silencieuse du tracking est une anomalie (anti-contournement, mirrorant
        gate_docs._charger_base_reference_git).
 
     Retourne la liste des messages d'anomalie (vide si aucune)."""
