@@ -1,0 +1,19 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "governance/STATE-CURRENT.json",
+   "description": "Le rendu state_current ne montre que les hashs de .github/workflows/gates.yml et tests/test_reg029b_ancrage.py modifiés, alors que d'autres fichiers (AGENTS.md, README.md) ont été édités et que leurs empreintes sont mises à jour dans authority.json. Si state_current les suit, le rendu pourrait être incomplet.",
+   "preuve": "governance/STATE-CURRENT.json:92 et :648 seuls changements de sha256 ; AGENTS.md et README.md modifiés dans le diff."
+  }
+ ],
+ "date_heure": "2026-08-16T02:14:23.849364+00:00",
+ "prompt_sha256": "208d053088530cdfff4b6cc2005c2f36df72057583b8a6c8901785d74bdd6d6e",
+ "reviewer_model": "DeepSeek-V4-Pro",
+ "modele_servi": "deepseek-v4-pro-direct",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}
