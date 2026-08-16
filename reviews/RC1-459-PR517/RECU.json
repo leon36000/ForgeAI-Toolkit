@@ -3,10 +3,10 @@
   "dossier": "RC1-459-PR517",
   "issue": 459,
   "round": 1,
-  "base_commit": "e3f7fe01d00f774a2850f52d85c9c34443cf6992",
-  "head_commit": "ad57fe32fb42cbb85c1dfb000fe1efe801139c21",
-  "head_tree": "3d19908558b294bb28d72f092c02c12bd5c4a1ab",
-  "diff_digest": "0d6127670ca17b6be7035ba0e10cb9158f7bc86a62d3946cdf0ee47724652a2f",
+  "base_commit": "b61146bd4edb4c5351c561acf6ff1eddcf2d25d6",
+  "head_commit": "bafad9fd6e9908eb1412f62cfd70af9471bf1f11",
+  "head_tree": "b67969a873dde5e5c819cfaf3513200fac3ea919",
+  "diff_digest": "09627f11e31edafc6f03af1e5340b131ede63f69c64d50f45bfe3e2bde65f8f4",
   "prompt_sha256": "d48f192d7be2f4816b4583a07d8cf9174775766ee5957bf21f6a7f38c30ea5fc",
   "reviewers_attendus": [
     "DeepSeek-V4-Pro",
@@ -14,9 +14,9 @@
     "MiMo-Pro-V2"
   ],
   "codeur": [
-    "kimi"
+    "kimi_k3"
   ],
   "resultat": "APPROVE",
-  "date_heure": "2026-08-16T01:48:06.454549-04:00",
+  "date_heure": "2026-08-16T01:58:16.347649-04:00",
   "fenetre_heures": 24
 }
