@@ -35,10 +35,15 @@ def _ecrire_etat(tmp_path, lignes):
 
 def test_g1_ingestion_redige_avant_la_memoire():
     """CA1 (détecteur de la fuite) : la ligne est rédigée AVANT d'entrer en mémoire — donc
-    `/api/deploy/events`, qui diffuse `_DEPLOY_STATE["lines"]`, ne peut plus fuiter."""
+    `/api/deploy/events`, qui diffuse `_DEPLOY_STATE["lines"]`, ne peut plus fuiter.
+
+    #460 (RC1-030, lot 2) a extrait la logique de `/api/deploy` de `do_POST()` (devenu un
+    dispatcher pur) vers `_post_deploy()` — c'est désormais elle qui porte le contrat, `do_POST`
+    ne fait plus qu'y déléguer (voir aussi `test_g1c_...` ci-dessous, qui prouve le même contrat
+    par le comportement HTTP observé plutôt que par le texte source)."""
     import inspect
 
-    source = inspect.getsource(server.ForgeAIHandler.do_POST)
+    source = inspect.getsource(server.ForgeAIHandler._post_deploy)
     assert 'redact_text(line.rstrip' in source, (
         "les lignes de déploiement doivent être rédigées à l'INGESTION : rédiger à chaque sortie "
         "a déjà laissé passer le flux /api/deploy/events (ERR-041B)"
