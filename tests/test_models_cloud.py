@@ -116,6 +116,17 @@ def test_probe_choices_non_liste_pas_dexception():
         assert probe_mod._extract_text(payload) == "", payload
 
 
+def test_probe_message_non_dict_pas_dexception():
+    """RC1-528 round 3 : `message` présent mais pas un dict (str/int/list) — ne doit jamais
+    lever AttributeError, seulement produire une extraction vide."""
+    for payload in [
+        json.dumps({"choices": [{"message": "Erreur interne"}]}),
+        json.dumps({"choices": [{"message": 42}]}),
+        json.dumps({"choices": [{"message": ["a", "b"]}]}),
+    ]:
+        assert probe_mod._extract_text(payload) == "", payload
+
+
 def test_probe_choice_non_dict_ignoree_le_reste_examine():
     """RC1-528 : un élément non-dict dans choices est ignoré, pas fatal — les éléments valides
     restants de la liste continuent d'être examinés normalement."""

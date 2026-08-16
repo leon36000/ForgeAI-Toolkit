@@ -104,7 +104,9 @@ def _extract_text(payload: str) -> str:
     for choice in choices:
         if not isinstance(choice, dict):
             continue
-        msg = choice.get("message") or {}
+        msg = choice.get("message")
+        if not isinstance(msg, dict):
+            msg = {}
         content = msg.get("content") or choice.get("text") or ""
         if isinstance(content, str) and content.strip():
             return content.strip()

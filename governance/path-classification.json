@@ -37863,8 +37863,8 @@
         }
       ],
       "rule_id": "product-source",
-      "sha256": "e66058dc5e326d3ef0bce9d5e33420af12d44b522c96d1cf4bb3533e2799f66e",
-      "size": 5643,
+      "sha256": "4de3c4ea181b8ebb5573498584b4d274e8b11dc8c3f52dd69c5b8fa1e7931556",
+      "size": 5696,
       "target_path": null,
       "type": "text"
     },
@@ -50316,8 +50316,8 @@
         }
       ],
       "rule_id": "test-suite",
-      "sha256": "d92d8b2b93675d98114d704dcea8d89346ab3c874ebed02c3129806a02c48630",
-      "size": 15419,
+      "sha256": "6910540cc322a1d7baa52cc2d6e8691dffdae04c5815a15c46435b60738715a9",
+      "size": 15904,
       "target_path": null,
       "type": "text"
     },
@@ -119271,17 +119271,17 @@
       },
       {
         "candidate": "application/json",
-        "line": 119,
+        "line": 121,
         "referrer": "src/forgeai/models/probe.py"
       },
       {
         "candidate": "seau/URL",
-        "line": 127,
+        "line": 129,
         "referrer": "src/forgeai/models/probe.py"
       },
       {
         "candidate": "vide/illisible",
-        "line": 134,
+        "line": 136,
         "referrer": "src/forgeai/models/probe.py"
       },
       {
@@ -133130,53 +133130,58 @@
         "referrer": "tests/test_models_cloud.py"
       },
       {
+        "candidate": "str/int/list",
+        "line": 120,
+        "referrer": "tests/test_models_cloud.py"
+      },
+      {
         "candidate": "z-ai/glm-4.6",
-        "line": 137,
+        "line": 148,
         "referrer": "tests/test_models_cloud.py"
       },
       {
         "candidate": "routes.json",
-        "line": 140,
+        "line": 151,
         "referrer": "tests/test_models_cloud.py"
       },
       {
         "candidate": "vault.json",
-        "line": 209,
+        "line": 220,
         "referrer": "tests/test_models_cloud.py"
       },
       {
         "candidate": "routes.json",
-        "line": 243,
+        "line": 254,
         "referrer": "tests/test_models_cloud.py"
       },
       {
         "candidate": "routes.json",
-        "line": 260,
+        "line": 271,
         "referrer": "tests/test_models_cloud.py"
       },
       {
         "candidate": "routes.json",
-        "line": 283,
+        "line": 294,
         "referrer": "tests/test_models_cloud.py"
       },
       {
         "candidate": "routes.json",
-        "line": 291,
+        "line": 302,
         "referrer": "tests/test_models_cloud.py"
       },
       {
         "candidate": "routes.json",
-        "line": 307,
+        "line": 318,
         "referrer": "tests/test_models_cloud.py"
       },
       {
         "candidate": "vault.json",
-        "line": 327,
+        "line": 338,
         "referrer": "tests/test_models_cloud.py"
       },
       {
         "candidate": "routes.json",
-        "line": 417,
+        "line": 428,
         "referrer": "tests/test_models_cloud.py"
       },
       {
@@ -170849,7 +170854,7 @@
       "working-sandbox-readme": 1
     },
     "case_collisions_total": 0,
-    "dangling_references_total": 15885,
+    "dangling_references_total": 15886,
     "generated_total": 17,
     "load_bearing_total": 1917,
     "portability_violations_total": 0,
