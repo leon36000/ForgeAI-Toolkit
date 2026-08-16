@@ -1,0 +1,19 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "majeure",
+   "fichier": "src/forgeai/core/runner.py",
+   "description": "Des références textuelles vers les chemins déplacés restent dans des fichiers source actifs non modifiés : src/forgeai/core/runner.py, src/forgeai/network/bootstrap.py et src/forgeai/network/keys.py. Après le git mv, ces anciens chemins Phase-A/... deviennent pendants, ce qui contredit le périmètre annoncé selon lequel seul src/forgeai/core/models.py est adapté dans src/forgeai/** (aucun diff ne modifie ces trois fichiers).",
+   "preuve": "governance/path-classification.json, reference_graph.dangling ajouté : candidate Phase-A/matrice-tests-grok.md line 3 referrer src/forgeai/core/runner.py ; candidate Phase-A/revue-securite-multinoeuds-longcat.md line 4 referrer src/forgeai/network/bootstrap.py ; candidate Phase-A/revue-securite-multinoeuds-longcat.md line 3 referrer src/forgeai/network/keys.py. Les entrées resolved correspondantes sont supprimées dans ce même diff."
+  }
+ ],
+ "date_heure": "2026-08-16T01:05:02.848067+00:00",
+ "prompt_sha256": "15bd42d63eaa442910e2ec19d29d7faeccd97b780e4ab53b4cbdf55410b5d61c",
+ "reviewer_model": "DeepSeek-V4-Pro",
+ "modele_servi": "deepseek-v4-pro-direct",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

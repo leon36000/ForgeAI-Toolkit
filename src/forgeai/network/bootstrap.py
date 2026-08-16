@@ -1,7 +1,7 @@
 """Story P2-F21 (bootstrap) — plan de jonction multi-nœuds sécurisé (codeur : fable).
 
 Rend le plan de jonction d'un nœud secondaire conforme aux exigences testables de
-la revue sécurité (Phase-A/revue-securite-multinoeuds-longcat.md) :
+la revue sécurité (archive/phase-a/revue-securite-multinoeuds-longcat.md) :
 - EX-1 : SSH strict, jamais de TOFU (StrictHostKeyChecking=yes + known_hosts pré-rempli).
 - EX-2 : authkey Tailscale éphémère, taggé, jamais en clair dans le plan (référence env).
 - EX-3 : ACL Tailscale deny-all par défaut, autorisation explicite du contrôleur.
