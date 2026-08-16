@@ -1633,6 +1633,13 @@
         },
         {
           "candidate": "AGENTS.md",
+          "line": 7,
+          "referrer": "evidence/reviews/RC1-010-lot5d-PR-v1/DeepSeek-V4-Pro.verdict.json",
+          "resolved": "AGENTS.md",
+          "severity": "hard"
+        },
+        {
+          "candidate": "AGENTS.md",
           "line": 38,
           "referrer": "governance/AUTHORITY-MAP.md",
           "resolved": "AGENTS.md",
@@ -2723,6 +2730,13 @@
         },
         {
           "candidate": "CLAUDE.md",
+          "line": 7,
+          "referrer": "evidence/reviews/RC1-010-lot5d-PR-v1/DeepSeek-V4-Pro.verdict.json",
+          "resolved": "CLAUDE.md",
+          "severity": "hard"
+        },
+        {
+          "candidate": "CLAUDE.md",
           "line": 46,
           "referrer": "governance/AUTHORITY-MAP.md",
           "resolved": "CLAUDE.md",
@@ -3679,6 +3693,13 @@
           "candidate": "README.md",
           "line": 8,
           "referrer": "evidence/reviews/RC1-010-lot3-PR505-v1/DeepSeek-V4-Pro.verdict.json",
+          "resolved": "README.md",
+          "severity": "hard"
+        },
+        {
+          "candidate": "README.md",
+          "line": 7,
+          "referrer": "evidence/reviews/RC1-010-lot5d-PR-v1/DeepSeek-V4-Pro.verdict.json",
           "resolved": "README.md",
           "severity": "hard"
         },
@@ -5946,6 +5967,20 @@
         },
         {
           "candidate": "evidence/registres/mission.jsonl",
+          "line": 18,
+          "referrer": "evidence/reviews/RC1-010-lot5d-PR-v1/DeepSeek-V4-Pro.verdict.json",
+          "resolved": "evidence/registres/mission.jsonl",
+          "severity": "hard"
+        },
+        {
+          "candidate": "evidence/registres/mission.jsonl",
+          "line": 20,
+          "referrer": "evidence/reviews/RC1-010-lot5d-PR-v1/DeepSeek-V4-Pro.verdict.json",
+          "resolved": "evidence/registres/mission.jsonl",
+          "severity": "hard"
+        },
+        {
+          "candidate": "evidence/registres/mission.jsonl",
           "line": 56,
           "referrer": "governance/AUTHORITY-MAP.md",
           "resolved": "evidence/registres/mission.jsonl",
@@ -5974,8 +6009,8 @@
         }
       ],
       "rule_id": "evidence-registres-root",
-      "sha256": "88329084755b85d41e507b1296e2ac4a36ff5873bdb6e25c33aef75f9f50d7f8",
-      "size": 358968,
+      "sha256": "bcf3336fa7ae382aca2f0dd9e7d367bb6702ec199a5ffe1aa962471366fb3200",
+      "size": 359990,
       "target_path": null,
       "type": "text"
     },
@@ -18408,6 +18443,32 @@
       "generated": false,
       "load_bearing": true,
       "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-010-lot5d-PR-v1/DeepSeek-V4-Pro.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "467809c1112839695bec3845e9282d65f34c63380259e1faf72b0d3043c2b6bf",
+      "size": 2565,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-010-lot5d-PR-v1/Qwen3.7-Max.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "efabefaf9621bf8ea89eae239921a77272d3a2c514d33ad9000b0c90076ff58a",
+      "size": 322,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
       "path": "evidence/reviews/RC1-446-PR-v1/DeepSeek-V4-Pro.verdict.json",
       "referenced_by": [],
       "rule_id": "evidence-reviews-root",
@@ -22895,6 +22956,20 @@
         },
         {
           "candidate": "governance/PATH-CLASSIFICATION.md",
+          "line": 24,
+          "referrer": "evidence/reviews/RC1-010-lot5d-PR-v1/DeepSeek-V4-Pro.verdict.json",
+          "resolved": "governance/PATH-CLASSIFICATION.md",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/PATH-CLASSIFICATION.md",
+          "line": 26,
+          "referrer": "evidence/reviews/RC1-010-lot5d-PR-v1/DeepSeek-V4-Pro.verdict.json",
+          "resolved": "governance/PATH-CLASSIFICATION.md",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/PATH-CLASSIFICATION.md",
           "line": 190,
           "referrer": "governance/path-classification-rules.json",
           "resolved": "governance/PATH-CLASSIFICATION.md",
@@ -23014,6 +23089,20 @@
         {
           "candidate": "governance/STATE-CURRENT.json",
           "line": 6,
+          "referrer": "evidence/reviews/RC1-010-lot5d-PR-v1/DeepSeek-V4-Pro.verdict.json",
+          "resolved": "governance/STATE-CURRENT.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/STATE-CURRENT.json",
+          "line": 8,
+          "referrer": "evidence/reviews/RC1-010-lot5d-PR-v1/DeepSeek-V4-Pro.verdict.json",
+          "resolved": "governance/STATE-CURRENT.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/STATE-CURRENT.json",
+          "line": 6,
           "referrer": "evidence/reviews/RC1-459-PR517/MiMo-Pro-V2.verdict.json",
           "resolved": "governance/STATE-CURRENT.json",
           "severity": "hard"
@@ -23074,6 +23163,20 @@
       "owner": "gouvernance-generateurs",
       "path": "governance/STATE-CURRENT.md",
       "referenced_by": [
+        {
+          "candidate": "governance/STATE-CURRENT.md",
+          "line": 12,
+          "referrer": "evidence/reviews/RC1-010-lot5d-PR-v1/DeepSeek-V4-Pro.verdict.json",
+          "resolved": "governance/STATE-CURRENT.md",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/STATE-CURRENT.md",
+          "line": 14,
+          "referrer": "evidence/reviews/RC1-010-lot5d-PR-v1/DeepSeek-V4-Pro.verdict.json",
+          "resolved": "governance/STATE-CURRENT.md",
+          "severity": "hard"
+        },
         {
           "candidate": "governance/STATE-CURRENT.md",
           "line": 148,
@@ -23232,6 +23335,13 @@
           "candidate": "governance/authority.json",
           "line": 14,
           "referrer": "evidence/reviews/RC1-010-lot2-PR503-v3/DeepSeek-V4-Pro.verdict.json",
+          "resolved": "governance/authority.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/authority.json",
+          "line": 7,
+          "referrer": "evidence/reviews/RC1-010-lot5d-PR-v1/DeepSeek-V4-Pro.verdict.json",
           "resolved": "governance/authority.json",
           "severity": "hard"
         },
@@ -23644,6 +23754,13 @@
           "candidate": "governance/path-classification-rules.json",
           "line": 8,
           "referrer": "evidence/reviews/RC1-010-lot2-PR503-v3/Qwen3.7-Max.verdict.json",
+          "resolved": "governance/path-classification-rules.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/path-classification-rules.json",
+          "line": 7,
+          "referrer": "evidence/reviews/RC1-010-lot5d-PR-v1/DeepSeek-V4-Pro.verdict.json",
           "resolved": "governance/path-classification-rules.json",
           "severity": "hard"
         },
@@ -24448,6 +24565,13 @@
           "candidate": "manifests/gates.yaml",
           "line": 887,
           "referrer": "evidence/audit-output/audit-exhaustif-2026-08-05/findings.json",
+          "resolved": "manifests/gates.yaml",
+          "severity": "hard"
+        },
+        {
+          "candidate": "manifests/gates.yaml",
+          "line": 7,
+          "referrer": "evidence/reviews/RC1-010-lot5d-PR-v1/DeepSeek-V4-Pro.verdict.json",
           "resolved": "manifests/gates.yaml",
           "severity": "hard"
         }
@@ -25625,6 +25749,13 @@
           "candidate": "scripts/governance/classify_paths.py",
           "line": 26,
           "referrer": "evidence/reviews/RC1-008-PR496/Kimi-2.7.verdict.json",
+          "resolved": "scripts/governance/classify_paths.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "scripts/governance/classify_paths.py",
+          "line": 7,
+          "referrer": "evidence/reviews/RC1-010-lot5d-PR-v1/DeepSeek-V4-Pro.verdict.json",
           "resolved": "scripts/governance/classify_paths.py",
           "severity": "hard"
         },
@@ -26880,6 +27011,13 @@
         },
         {
           "candidate": "scripts/reviews_gate.py",
+          "line": 7,
+          "referrer": "evidence/reviews/RC1-010-lot5d-PR-v1/DeepSeek-V4-Pro.verdict.json",
+          "resolved": "scripts/reviews_gate.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "scripts/reviews_gate.py",
           "line": 110,
           "referrer": "stories/DOC-032.md",
           "resolved": "scripts/reviews_gate.py",
@@ -27048,6 +27186,20 @@
         },
         {
           "candidate": "scripts/revue.py",
+          "line": 7,
+          "referrer": "evidence/reviews/RC1-010-lot5d-PR-v1/DeepSeek-V4-Pro.verdict.json",
+          "resolved": "scripts/revue.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "scripts/revue.py",
+          "line": 8,
+          "referrer": "evidence/reviews/RC1-010-lot5d-PR-v1/DeepSeek-V4-Pro.verdict.json",
+          "resolved": "scripts/revue.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "scripts/revue.py",
           "line": 12,
           "referrer": "evidence/reviews/WEB-001/prompt.md",
           "resolved": "scripts/revue.py",
@@ -27171,6 +27323,13 @@
       "owner": "gouvernance-scripts",
       "path": "scripts/tally.py",
       "referenced_by": [
+        {
+          "candidate": "scripts/tally.py",
+          "line": 7,
+          "referrer": "evidence/reviews/RC1-010-lot5d-PR-v1/DeepSeek-V4-Pro.verdict.json",
+          "resolved": "scripts/tally.py",
+          "severity": "hard"
+        },
         {
           "candidate": "scripts/tally.py",
           "line": 108,
@@ -37710,6 +37869,13 @@
       "referenced_by": [
         {
           "candidate": "tests/test_classify_paths.py",
+          "line": 7,
+          "referrer": "evidence/reviews/RC1-010-lot5d-PR-v1/DeepSeek-V4-Pro.verdict.json",
+          "resolved": "tests/test_classify_paths.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "tests/test_classify_paths.py",
           "line": 190,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_classify_paths.py",
@@ -44010,6 +44176,13 @@
         },
         {
           "candidate": "tests/test_reviews_gate.py",
+          "line": 7,
+          "referrer": "evidence/reviews/RC1-010-lot5d-PR-v1/DeepSeek-V4-Pro.verdict.json",
+          "resolved": "tests/test_reviews_gate.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "tests/test_reviews_gate.py",
           "line": 698,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_reviews_gate.py",
@@ -44054,6 +44227,13 @@
           "candidate": "tests/test_revue.py",
           "line": 20,
           "referrer": "evidence/reviews/RC1-008-PR496-v2/MiMo-Pro-V2.verdict.json",
+          "resolved": "tests/test_revue.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "tests/test_revue.py",
+          "line": 7,
+          "referrer": "evidence/reviews/RC1-010-lot5d-PR-v1/DeepSeek-V4-Pro.verdict.json",
           "resolved": "tests/test_revue.py",
           "severity": "hard"
         },
@@ -82824,6 +83004,56 @@
         "candidate": "recu-revue/1",
         "line": 2,
         "referrer": "evidence/reviews/RC1-010-lot5c-PR516-v1/RECU.json"
+      },
+      {
+        "candidate": "CANON/",
+        "line": 7,
+        "referrer": "evidence/reviews/RC1-010-lot5d-PR-v1/DeepSeek-V4-Pro.verdict.json"
+      },
+      {
+        "candidate": "reviews/",
+        "line": 7,
+        "referrer": "evidence/reviews/RC1-010-lot5d-PR-v1/DeepSeek-V4-Pro.verdict.json"
+      },
+      {
+        "candidate": "evidence/reviews/",
+        "line": 7,
+        "referrer": "evidence/reviews/RC1-010-lot5d-PR-v1/DeepSeek-V4-Pro.verdict.json"
+      },
+      {
+        "candidate": "state_current.py",
+        "line": 7,
+        "referrer": "evidence/reviews/RC1-010-lot5d-PR-v1/DeepSeek-V4-Pro.verdict.json"
+      },
+      {
+        "candidate": "reviews/",
+        "line": 8,
+        "referrer": "evidence/reviews/RC1-010-lot5d-PR-v1/DeepSeek-V4-Pro.verdict.json"
+      },
+      {
+        "candidate": "STATE-CURRENT.json",
+        "line": 13,
+        "referrer": "evidence/reviews/RC1-010-lot5d-PR-v1/DeepSeek-V4-Pro.verdict.json"
+      },
+      {
+        "candidate": "reviews/",
+        "line": 13,
+        "referrer": "evidence/reviews/RC1-010-lot5d-PR-v1/DeepSeek-V4-Pro.verdict.json"
+      },
+      {
+        "candidate": "evidence/reviews/",
+        "line": 13,
+        "referrer": "evidence/reviews/RC1-010-lot5d-PR-v1/DeepSeek-V4-Pro.verdict.json"
+      },
+      {
+        "candidate": "STATE-CURRENT.json",
+        "line": 14,
+        "referrer": "evidence/reviews/RC1-010-lot5d-PR-v1/DeepSeek-V4-Pro.verdict.json"
+      },
+      {
+        "candidate": "reviews/",
+        "line": 25,
+        "referrer": "evidence/reviews/RC1-010-lot5d-PR-v1/DeepSeek-V4-Pro.verdict.json"
       },
       {
         "candidate": "e2/e3/e4/e5/e6/e7",
@@ -133264,6 +133494,160 @@
         "severity": "hard"
       },
       {
+        "candidate": "governance/STATE-CURRENT.json",
+        "line": 6,
+        "referrer": "evidence/reviews/RC1-010-lot5d-PR-v1/DeepSeek-V4-Pro.verdict.json",
+        "resolved": "governance/STATE-CURRENT.json",
+        "severity": "hard"
+      },
+      {
+        "candidate": "tests/test_classify_paths.py",
+        "line": 7,
+        "referrer": "evidence/reviews/RC1-010-lot5d-PR-v1/DeepSeek-V4-Pro.verdict.json",
+        "resolved": "tests/test_classify_paths.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "tests/test_reviews_gate.py",
+        "line": 7,
+        "referrer": "evidence/reviews/RC1-010-lot5d-PR-v1/DeepSeek-V4-Pro.verdict.json",
+        "resolved": "tests/test_reviews_gate.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "tests/test_revue.py",
+        "line": 7,
+        "referrer": "evidence/reviews/RC1-010-lot5d-PR-v1/DeepSeek-V4-Pro.verdict.json",
+        "resolved": "tests/test_revue.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "scripts/revue.py",
+        "line": 7,
+        "referrer": "evidence/reviews/RC1-010-lot5d-PR-v1/DeepSeek-V4-Pro.verdict.json",
+        "resolved": "scripts/revue.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "scripts/reviews_gate.py",
+        "line": 7,
+        "referrer": "evidence/reviews/RC1-010-lot5d-PR-v1/DeepSeek-V4-Pro.verdict.json",
+        "resolved": "scripts/reviews_gate.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "scripts/governance/classify_paths.py",
+        "line": 7,
+        "referrer": "evidence/reviews/RC1-010-lot5d-PR-v1/DeepSeek-V4-Pro.verdict.json",
+        "resolved": "scripts/governance/classify_paths.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "scripts/tally.py",
+        "line": 7,
+        "referrer": "evidence/reviews/RC1-010-lot5d-PR-v1/DeepSeek-V4-Pro.verdict.json",
+        "resolved": "scripts/tally.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "AGENTS.md",
+        "line": 7,
+        "referrer": "evidence/reviews/RC1-010-lot5d-PR-v1/DeepSeek-V4-Pro.verdict.json",
+        "resolved": "AGENTS.md",
+        "severity": "hard"
+      },
+      {
+        "candidate": "CLAUDE.md",
+        "line": 7,
+        "referrer": "evidence/reviews/RC1-010-lot5d-PR-v1/DeepSeek-V4-Pro.verdict.json",
+        "resolved": "CLAUDE.md",
+        "severity": "hard"
+      },
+      {
+        "candidate": "README.md",
+        "line": 7,
+        "referrer": "evidence/reviews/RC1-010-lot5d-PR-v1/DeepSeek-V4-Pro.verdict.json",
+        "resolved": "README.md",
+        "severity": "hard"
+      },
+      {
+        "candidate": "manifests/gates.yaml",
+        "line": 7,
+        "referrer": "evidence/reviews/RC1-010-lot5d-PR-v1/DeepSeek-V4-Pro.verdict.json",
+        "resolved": "manifests/gates.yaml",
+        "severity": "hard"
+      },
+      {
+        "candidate": "governance/authority.json",
+        "line": 7,
+        "referrer": "evidence/reviews/RC1-010-lot5d-PR-v1/DeepSeek-V4-Pro.verdict.json",
+        "resolved": "governance/authority.json",
+        "severity": "hard"
+      },
+      {
+        "candidate": "governance/path-classification-rules.json",
+        "line": 7,
+        "referrer": "evidence/reviews/RC1-010-lot5d-PR-v1/DeepSeek-V4-Pro.verdict.json",
+        "resolved": "governance/path-classification-rules.json",
+        "severity": "hard"
+      },
+      {
+        "candidate": "governance/STATE-CURRENT.json",
+        "line": 8,
+        "referrer": "evidence/reviews/RC1-010-lot5d-PR-v1/DeepSeek-V4-Pro.verdict.json",
+        "resolved": "governance/STATE-CURRENT.json",
+        "severity": "hard"
+      },
+      {
+        "candidate": "scripts/revue.py",
+        "line": 8,
+        "referrer": "evidence/reviews/RC1-010-lot5d-PR-v1/DeepSeek-V4-Pro.verdict.json",
+        "resolved": "scripts/revue.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "governance/STATE-CURRENT.md",
+        "line": 12,
+        "referrer": "evidence/reviews/RC1-010-lot5d-PR-v1/DeepSeek-V4-Pro.verdict.json",
+        "resolved": "governance/STATE-CURRENT.md",
+        "severity": "hard"
+      },
+      {
+        "candidate": "governance/STATE-CURRENT.md",
+        "line": 14,
+        "referrer": "evidence/reviews/RC1-010-lot5d-PR-v1/DeepSeek-V4-Pro.verdict.json",
+        "resolved": "governance/STATE-CURRENT.md",
+        "severity": "hard"
+      },
+      {
+        "candidate": "evidence/registres/mission.jsonl",
+        "line": 18,
+        "referrer": "evidence/reviews/RC1-010-lot5d-PR-v1/DeepSeek-V4-Pro.verdict.json",
+        "resolved": "evidence/registres/mission.jsonl",
+        "severity": "hard"
+      },
+      {
+        "candidate": "evidence/registres/mission.jsonl",
+        "line": 20,
+        "referrer": "evidence/reviews/RC1-010-lot5d-PR-v1/DeepSeek-V4-Pro.verdict.json",
+        "resolved": "evidence/registres/mission.jsonl",
+        "severity": "hard"
+      },
+      {
+        "candidate": "governance/PATH-CLASSIFICATION.md",
+        "line": 24,
+        "referrer": "evidence/reviews/RC1-010-lot5d-PR-v1/DeepSeek-V4-Pro.verdict.json",
+        "resolved": "governance/PATH-CLASSIFICATION.md",
+        "severity": "hard"
+      },
+      {
+        "candidate": "governance/PATH-CLASSIFICATION.md",
+        "line": 26,
+        "referrer": "evidence/reviews/RC1-010-lot5d-PR-v1/DeepSeek-V4-Pro.verdict.json",
+        "resolved": "governance/PATH-CLASSIFICATION.md",
+        "severity": "hard"
+      },
+      {
         "candidate": ".github/workflows/sonar-suppressions.yml",
         "line": 6,
         "referrer": "evidence/reviews/RC1-446-PR-v1/DeepSeek-V4-Pro.verdict.json",
@@ -143316,7 +143700,7 @@
     "by_class": {
       "ARCHIVE": 44,
       "DOCS": 14,
-      "EVIDENCE": 1327,
+      "EVIDENCE": 1329,
       "GENERATED": 5,
       "GOVERNANCE": 172,
       "PRODUCT": 112,
@@ -143333,7 +143717,7 @@
       "evidence-audit-output-root": 18,
       "evidence-registres": 1,
       "evidence-registres-root": 35,
-      "evidence-reviews-root": 1273,
+      "evidence-reviews-root": 1275,
       "generated-authority-map": 1,
       "generated-path-classification-json": 1,
       "generated-path-classification-markdown": 1,
@@ -143369,11 +143753,11 @@
       "working-sandbox-readme": 1
     },
     "case_collisions_total": 0,
-    "dangling_references_total": 14851,
+    "dangling_references_total": 14861,
     "generated_total": 7,
-    "load_bearing_total": 1756,
+    "load_bearing_total": 1758,
     "portability_violations_total": 0,
-    "tracked_total": 1883,
+    "tracked_total": 1885,
     "unclassified_total": 0,
     "unicode_anomalies_total": 0
   },
