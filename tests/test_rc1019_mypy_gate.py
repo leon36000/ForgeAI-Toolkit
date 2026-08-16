@@ -808,3 +808,49 @@ def test_g23b_fichier_dette_retire_ET_promu_proteges_aucune_anomalie():
     assert not any(
         "retire de la dette" in m and "src/a.py" in m for m in anomalies
     )
+
+
+# ---------------------------------------------------------------------------
+# Correctif post-revue scellée #449 (round 6) — neutralisation mypy
+# ---------------------------------------------------------------------------
+
+def test_g24_fichiers_proteges_neutralises_detecte_la_directive(tmp_path):
+    chemin = tmp_path / "a.py"
+    chemin.write_text("# mypy: ignore-errors\nx = 1\n", encoding="utf-8")
+    assert mypy_gate.fichiers_proteges_neutralises(tmp_path, {"a.py"}) == {"a.py"}
+
+
+def test_g24b_fichiers_proteges_neutralises_ignore_fichier_sain(tmp_path):
+    chemin = tmp_path / "a.py"
+    chemin.write_text("x = 1\n", encoding="utf-8")
+    assert mypy_gate.fichiers_proteges_neutralises(tmp_path, {"a.py"}) == set()
+
+
+def test_g24c_fichiers_proteges_neutralises_ignore_fichier_absent(tmp_path):
+    # Ne doit pas lever d'exception et ne pas inclure le fichier absent.
+    assert mypy_gate.fichiers_proteges_neutralises(tmp_path, {"absent.py"}) == set()
+
+
+def test_g25_anomalies_signale_fichier_protege_neutralise():
+    base = _base(fichiers_proteges=["a.py"], total_erreurs=0)
+    anomalies = mypy_gate.anomalies(
+        reels={"a.py"},
+        erreurs={},
+        base=base,
+        base_reference=None,
+        neutralises={"a.py"},
+    )
+    assert any(
+        "neutralisation" in m and "a.py" in m for m in anomalies
+    )
+
+
+def test_g25b_anomalies_sans_neutralises_aucune_regression():
+    base = _base(fichiers_proteges=["a.py"], total_erreurs=0)
+    anomalies = mypy_gate.anomalies(
+        reels={"a.py"},
+        erreurs={},
+        base=base,
+        base_reference=None,
+    )
+    assert anomalies == []

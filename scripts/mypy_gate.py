@@ -370,6 +370,7 @@ def anomalies(
     erreurs: dict[str, int],
     base: dict[str, Any],
     base_reference: dict[str, Any] | None,
+    neutralises: set[str] | None = None,
 ) -> list[str]:
     """Logique pure de comparaison — aucun I/O, aucun subprocess. Valide `base` (et
     `base_reference` si fourni) via `_valider_base`, puis contrôle dans l'ordre :
@@ -387,6 +388,9 @@ def anomalies(
        demeurer suivi (soit en dette, soit promu aux fichiers_proteges) — toute disparition
        silencieuse du tracking est une anomalie (anti-contournement, mirrorant
        gate_docs._charger_base_reference_git).
+    6. si `neutralises` est fourni : tout fichier protégé listé dans `neutralises` est signalé
+       comme contenant une directive de neutralisation mypy (`# mypy: ignore-errors`) — la
+       protection est compromise car mypy ne remontera aucune erreur sur ce fichier.
 
     Retourne la liste des messages d'anomalie (vide si aucune)."""
     base_validee = _valider_base(base, "base")
@@ -415,6 +419,13 @@ def anomalies(
                 proteges,
             )
         )
+    if neutralises is not None:
+        for f in sorted(neutralises):
+            resultat.append(
+                f"fichier protege {f} contient une directive de neutralisation mypy "
+                "(# mypy: ignore-errors) : protection compromise, retirer la directive "
+                "ou le fichier de fichiers_proteges"
+            )
 
     return resultat
 
@@ -501,7 +512,8 @@ def main(argv: list[str] | None = None) -> int:
         if message_reference:
             print(message_reference)
 
-        rapport = anomalies(reels, erreurs, base, base_reference)
+        neutralises = fichiers_proteges_neutralises(racine, set(base["fichiers_proteges"]))
+        rapport = anomalies(reels, erreurs, base, base_reference, neutralises=neutralises)
 
         total = sum(erreurs.get(f, 0) for f in reels)
         n_dette = len(base["dette"])
@@ -531,6 +543,31 @@ def main(argv: list[str] | None = None) -> int:
         return 1
 
     return 1 if rapport else 0
+
+
+# Correctif post-revue scellée #449 (round 6, REJECT de GPT-5.6-Terra-Pro) — `scripts/mypy_gate.py`
+# (La fonction fichiers_proteges_neutralises et la regex sont définies ci-dessous, avant main)
+_DIRECTIVE_NEUTRALISATION = re.compile(r"#\s*mypy:\s*ignore-errors\b")
+
+
+def fichiers_proteges_neutralises(racine: Path, proteges: set[str]) -> set[str]:
+    """Scanne le contenu de chaque fichier de `proteges` (qui existe dans `racine`) à la
+    recherche de la directive inline `# mypy: ignore-errors` (n'importe où dans le fichier,
+    mypy ne l'exige pas en première ligne). Retourne l'ensemble des fichiers protégés
+    contenant cette directive — un fichier protégé neutralisé ainsi continue de remonter 0
+    erreur mypy, indiscernable par comptage seul de l'état attendu d'un fichier réellement
+    propre. Fichier illisible ou absent : ignoré silencieusement (déjà couvert par une autre
+    règle si le fichier a disparu)."""
+    resultat: set[str] = set()
+    for f in proteges:
+        chemin = racine / f
+        try:
+            texte = chemin.read_text(encoding="utf-8")
+        except (OSError, UnicodeError):
+            continue
+        if _DIRECTIVE_NEUTRALISATION.search(texte):
+            resultat.add(f)
+    return resultat
 
 
 if __name__ == "__main__":
