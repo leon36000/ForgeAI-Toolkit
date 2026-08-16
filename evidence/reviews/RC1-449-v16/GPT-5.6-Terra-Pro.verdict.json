@@ -1,0 +1,19 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "majeure",
+   "fichier": "scripts/mypy_gate.py",
+   "description": "La règle 8 ne détecte pas le déplacement d’un unique `# type: ignore` baseliné vers une nouvelle violation lorsque la ligne ajoutée a exactement le même contenu après `strip()`. La limite résiduelle documentée affirme ne concerner que les empreintes ayant déjà 2+ occurrences, mais l’algorithme perd également la localisation pour une empreinte dont le compte baseliné vaut 1 : retirer l’occurrence originale et en ajouter une autre identique conserve le compte à 1. Les règles 7 et 8 n’émettent alors aucune anomalie, ce qui permet de masquer une nouvelle erreur tout en gardant les plafonds inchangés.",
+   "preuve": "`contenus_type_ignore()` (vers lignes 194-215) ne retourne que `empreinte -> nombre`; `_anomalies_contenu_type_ignore()` (vers lignes 634-651) signale uniquement `actuel > plafond`. Avec une base `{\"a.py\":{\"H\":1}}` et un état courant où l’ancienne ligne est retirée puis une nouvelle ligne identique après `strip()` est ajoutée ailleurs, `contenus == {\"a.py\":{\"H\":1}}`, donc `1 > 1` est faux et aucune anomalie n’est produite. La docstring de `contenus_type_ignore()` limite pourtant explicitement ce cas aux empreintes ayant « DÉJÀ 2+ occurrences baselinées »."
+  }
+ ],
+ "date_heure": "2026-08-16T15:50:17.380225+00:00",
+ "prompt_sha256": "9cc5bbb71e152828dccb3e330320e50fdc55d5023f895e38e7e8b746ebf32acf",
+ "reviewer_model": "GPT-5.6-Terra-Pro",
+ "modele_servi": "gpt56-terra-pro-openrouter",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

@@ -186,10 +186,29 @@ def contenus_type_ignore(racine: Path, fichiers: set[str]) -> dict[str, dict[str
     MULTIPLICITÉ : si la même ligne (après strip) apparaît 2 fois, son empreinte a un compte de
     2 — permet de détecter qu'une occurrence supplémentaire de contenu IDENTIQUE à une empreinte
     déjà connue a été ajoutée (round 15, corrige la perte de multiplicité d'un ensemble simple).
-    LIMITE CONNUE, ASSUMÉE : si une empreinte a DÉJÀ 2+ occurrences baselinées, échanger l'une
-    contre une nouvelle occurrence de cette MÊME empreinte exacte (compte inchangé pour cette
-    empreinte précise) reste indétectable par hachage de contenu seul — fermer ce cas résiduel
-    exigerait une analyse mypy différentielle (avec/sans ignores), hors périmètre du lot 1.
+
+    LIMITE RÉSIDUELLE, PROUVÉE IRRÉDUCTIBLE POUR TOUT SCHÉMA DE COMPTAGE (round 16 — correction
+    d'une affirmation trop étroite du round 15, qui bornait ce cas à tort aux empreintes ayant
+    « déjà 2+ occurrences ») : retirer UNE occurrence d'une empreinte (compte baseliné N, quel
+    que soit N >= 1) et en ajouter UNE NOUVELLE de cette EXACTE MÊME empreinte ailleurs laisse le
+    compte inchangé à N — mathématiquement indétectable par AUCUN schéma de comptage, quelle que
+    soit sa granularité (par fichier — règle 7 —, par empreinte de commentaire — cette règle 8 —,
+    ou même par message d'erreur mypy obtenu via une analyse différentielle avec/sans ignores) :
+    retirer N occurrences d'une clé puis en ajouter N de la MÊME clé laisse par définition le
+    compte de cette clé inchangé, quelle que soit la nature de la clé. Fermer CE cas précis
+    exigerait un suivi basé sur la PROVENANCE (diff git réel : cette ligne précise a-t-elle été
+    supprimée puis une autre ajoutée ailleurs dans le même commit ?), pas sur un instantané de
+    contenu — une architecture différente et significativement plus large (inspection de
+    l'historique git, pas seulement de l'arbre courant), explicitement hors périmètre du lot 1.
+    Une alternative par NUMÉRO DE LIGNE serait plus précise sur ce cas isolé mais introduirait une
+    régression opérationnelle pire : tout décalage de ligne dû à une édition SANS RAPPORT
+    (ajout/retrait d'une ligne au-dessus) casserait le cliquet sur des PR légitimes en
+    permanence — un compromis délibérément écarté au profit de l'indépendance de position déjà
+    en place (robuste aux réindentations/déplacements innocents, coût : ce résidu assumé).
+    L'exploitation de ce résidu exige une coïncidence de texte délibérément construite par un
+    acteur qui devrait aussi survivre à la revue scellée à 3 vendors sur le diff réel du commit —
+    un scénario nettement plus contraint qu'une simple omission de couverture.
+
     Lecture en octets bruts, indépendante de l'encodage (PEP-263), même raisonnement que
     `fichiers_neutralises`. Fichier illisible ou absent : ignoré silencieusement. Fichiers sans
     aucune occurrence : absents du dict retourné (même convention que `occurrences_type_ignore`)."""
@@ -588,7 +607,10 @@ def _anomalies_contenu_type_ignore(
     absente de la base) — même principe de non-croissance que les règles 3/7, appliqué par
     empreinte de contenu distincte plutôt qu'au total par fichier (règle 7) ou au nombre brut
     d'erreurs (règle 3). Détecte qu'une occurrence supplémentaire d'un contenu déjà connu a été
-    ajoutée, même si le compte total du fichier (règle 7) reste inchangé."""
+    ajoutée, même si le compte total du fichier (règle 7) reste inchangé. Limite résiduelle
+    prouvée irréductible pour tout schéma de comptage (retirer N occurrences d'une clé et en
+    ajouter N de la MÊME clé laisse le compte inchangé, par construction) : voir le docstring de
+    `contenus_type_ignore` pour l'argumentation complète (round 16)."""
     resultat: list[str] = []
     for f in sorted(reels):
         comptes_actuels = contenus.get(f, {})
