@@ -4,14 +4,14 @@ NE PAS ÉDITER À LA MAIN — généré par scripts/governance/classify_paths.py
 
 ## Résumé
 
-- Fichiers suivis : 2051
-- Fichiers générés : 9
-- Éléments porteurs : 1913
+- Fichiers suivis : 2065
+- Fichiers générés : 17
+- Éléments porteurs : 1926
 - Fichiers non classés : 0
 - Collisions de casse : 0
 - Anomalies Unicode NFC : 0
 - Violations de portabilité : 0
-- Références pendantes : 15881
+- Références pendantes : 16014
 (balayage textuel best-effort — une majorité de ces candidats sont du bruit connu : unités de mesure, clés de labels, ratios ; à trier manuellement avant toute décision de migration, voir governance/path-classification.json → reference_graph.dangling)
 
 ## Répartition par classe
@@ -19,10 +19,10 @@ NE PAS ÉDITER À LA MAIN — généré par scripts/governance/classify_paths.py
 - ARCHIVE : 44
 - DOCS : 17
 - EVIDENCE : 1468
-- GENERATED : 5
-- GOVERNANCE : 187
+- GENERATED : 13
+- GOVERNANCE : 192
 - PRODUCT : 112
-- TEST : 208
+- TEST : 209
 - WORKING : 10
 
 ## Plan de migration

@@ -8,8 +8,8 @@
       "sha256_recomputed_ok": true
     },
     "ci": {
-      "jobs_total": 22,
-      "workflows": 5
+      "jobs_total": 23,
+      "workflows": 6
     },
     "cli": {
       "subcommands": [
@@ -89,6 +89,10 @@
       {
         "path": ".github/workflows/ci-deps-update.yml",
         "sha256": "fe4aafcac163054f203e14b309da1dffe9272155d72a91298c05954ce5e79e66"
+      },
+      {
+        "path": ".github/workflows/error-handling-contracts.yml",
+        "sha256": "7b31255f45a7d89ea6f442c318380f9c1eb4dd5863c5143ec64cb6cf2774c3c3"
       },
       {
         "path": ".github/workflows/gates.yml",
@@ -256,7 +260,7 @@
       },
       {
         "path": "tests/test_deploy_persist.py",
-        "sha256": "9242dac871edab3b1d2a71352ee650a6f5a799dc2436e928bbb7faa2c479bd55"
+        "sha256": "2f5609685ef8bb6ecc4d43b6517144056be22eaa7baf7384600fa91de326d02f"
       },
       {
         "path": "tests/test_deploy_reel.py",
@@ -352,7 +356,7 @@
       },
       {
         "path": "tests/test_hardware_detect.py",
-        "sha256": "56522ec07aa5022424868c08f08f39ba552bbb6acbfb01f98dcc7596636a9b5d"
+        "sha256": "2d008680faefc4ad4951bd187e9cb0429c9e8c64055b22723856626218eb108b"
       },
       {
         "path": "tests/test_health029_sondes_executables.py",
@@ -504,7 +508,7 @@
       },
       {
         "path": "tests/test_openbao_init.py",
-        "sha256": "6cac190041f2aaeccd390a61a25a24f249f10da655767af67a2294f96fb31dce"
+        "sha256": "e273897528737fd93ec7143c5250fbbc323a3d0508148fc57ea29f1033a2a639"
       },
       {
         "path": "tests/test_openbao_prod_render.py",
@@ -592,7 +596,7 @@
       },
       {
         "path": "tests/test_proc.py",
-        "sha256": "149a010c7f3418db3979c948d1c186ee75add3f07d75d7910f6464e153b75c40"
+        "sha256": "e9a964101fb8e0b2b645b88c461e2e26e8e3f680fede888f5d3cad5b8abf2fe9"
       },
       {
         "path": "tests/test_profile_presence.py",
@@ -667,6 +671,10 @@
         "sha256": "fd87c625c8afc7df802ac23e1e6a57948bb12af65070c24a2c162a890ff4d582"
       },
       {
+        "path": "tests/test_rc1023_error_contracts.py",
+        "sha256": "ab80778302c923023897e72f39a6c9a351949c37d48c886b9cb57b692d2ef281"
+      },
+      {
         "path": "tests/test_readme_dist_status.py",
         "sha256": "70c8716dec991cd998875699db0045fc7bbab9873cda790af9c1285e73c2b07b"
       },
@@ -712,7 +720,7 @@
       },
       {
         "path": "tests/test_rel038c_process_groups.py",
-        "sha256": "f2598b677028c17095d4fd0b9715f59b8053aa60806925171b759f5789503a04"
+        "sha256": "fda6dbc88bbec0379a08eab1e0a99a364d5b3a83d75a425f8b23db55d759716e"
       },
       {
         "path": "tests/test_remote_probe.py",
@@ -924,8 +932,8 @@
     },
     "tests": {
       "js_files": 3,
-      "python_files": 193,
-      "python_functions_declared": 2224
+      "python_files": 194,
+      "python_functions_declared": 2264
     }
   },
   "observations": [
