@@ -502,7 +502,10 @@ class ServiceSpec:
             if any(c.isspace() or ord(c) < 32 for c in hote):
                 raise ValueError(t("core.models.adopt.hote_invalide",
                                     adopted_endpoint_repr=repr(self.adopted_endpoint)))
-            if not port_str.isdigit():
+            # str.isdigit() accepte des chiffres Unicode non-ASCII (ex. '²') que int() ne sait
+            # pas parser — sans isascii(), une ValueError BRUTE (message int() natif, jamais
+            # traduit) remonte au lieu du ValueError traduit attendu (bug hunt, issue #530).
+            if not (port_str.isascii() and port_str.isdigit()):
                 raise ValueError(t("core.models.adopt.port_non_numerique",
                                     adopted_endpoint_repr=repr(self.adopted_endpoint)))
             port_int = int(port_str)

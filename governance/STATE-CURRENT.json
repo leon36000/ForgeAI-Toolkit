@@ -144,11 +144,11 @@
       },
       {
         "path": "tests/test_adoption.py",
-        "sha256": "f5bc8a39e36c20a774ff7dd582d75df953a7fde4425a187343624d189887de1d"
+        "sha256": "c2a7c27f55a2a75a20474b5a9e97b469c01e3682e9a878890b6dccdad69ae99e"
       },
       {
         "path": "tests/test_adoption_api.py",
-        "sha256": "b746584f23c382d9b73b660f6658acba1e484e6ac22cffd95894f4974924af07"
+        "sha256": "bb4ddc5e536f1ab586e522ad98a547393db23acd5ca114274bd14bc6c8751756"
       },
       {
         "path": "tests/test_agents_md_no_obsolete_terms.py",
@@ -456,7 +456,7 @@
       },
       {
         "path": "tests/test_models_gateway.py",
-        "sha256": "07dd771237fb986e9685d5bb897ff37538be30bf454de6a47ae1894ea7725eb5"
+        "sha256": "038b8be76bf0eda225af1bcf18e9116d51dfb263d90dc526da77e17429501c38"
       },
       {
         "path": "tests/test_models_local.py",
@@ -628,7 +628,7 @@
       },
       {
         "path": "tests/test_ratelimit.py",
-        "sha256": "747fd9a6d1bcb9fce57fa5f53c284b9cdfc1ad1f15985c834c7ded038c89828e"
+        "sha256": "f49b854e41d0fddedb54237307da60a63e5064d99c115f7d05c4c62839623a10"
       },
       {
         "path": "tests/test_rc1009_racines_documentaires.py",
@@ -893,7 +893,7 @@
     "tests": {
       "js_files": 3,
       "python_files": 185,
-      "python_functions_declared": 1998
+      "python_functions_declared": 2003
     }
   },
   "observations": [

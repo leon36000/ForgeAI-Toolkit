@@ -232,7 +232,12 @@ def _valider_adopt(adopt, noms_services):
         hote, _, port = valeur.partition(':')
         if not hote or ' ' in hote or any(ord(c) < 32 for c in hote):
             return f"adopt['{_clip(cle)}'] : hote invalide"
-        if not port.isdigit():
+        # str.isdigit() accepte des chiffres Unicode non-ASCII (ex. '²') que int() ne
+        # sait pas parser — sans isascii(), un tel port fait lever une ValueError NON rattrapee
+        # ici, qui remonte jusqu'a do_POST (aucun garde-fou la-bas pour ce cas precis) et tue
+        # le thread de connexion sans jamais ecrire de reponse HTTP (bug trouve par bug hunt,
+        # issue #530).
+        if not (port.isascii() and port.isdigit()):
             return f"adopt['{_clip(cle)}'] : port non numerique"
         p = int(port)
         if p < 1 or p > 65535:

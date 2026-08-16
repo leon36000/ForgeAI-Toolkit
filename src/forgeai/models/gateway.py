@@ -40,7 +40,11 @@ class GatewayConfig:
     key_env: str = "FORGEAI_GATEWAY_KEY"
 
     def __post_init__(self) -> None:
-        host = urlparse(self.base_url).hostname
+        # bug hunt (issue #532) : un FQDN absolu avec point final ('api.openai.com.') est
+        # transparent pour la résolution DNS et tout client HTTP réel (curl, urllib) — MÊME
+        # hôte que sans le point — mais urlparse() conserve ce point tel quel dans la chaîne,
+        # donc une comparaison stricte contre _PROVIDER_HOSTS le manquait. Normalisé ici.
+        host = (urlparse(self.base_url).hostname or "").rstrip(".")
         if host in _PROVIDER_HOSTS:
             raise GatewayError(t("models.gateway.url_hote_fournisseur", base_url=self.base_url))
 
@@ -89,7 +93,9 @@ def assert_via_gateway(wirings: list[BrickWiring], gateway: GatewayConfig) -> li
         if base != gateway.base_url:
             violations.append(t("models.gateway.violation_pointe_vers",
                                  brick_id=w.brick_id, base=base))
-        host = urlparse(base).hostname
+        # bug hunt (issue #532) : même normalisation que GatewayConfig.__post_init__ — un
+        # point final de FQDN absolu ne doit pas faire échapper cette garde indépendante.
+        host = (urlparse(base).hostname or "").rstrip(".")
         if host in _PROVIDER_HOSTS:
             violations.append(t("models.gateway.violation_hote_fournisseur",
                                  brick_id=w.brick_id, host=host))

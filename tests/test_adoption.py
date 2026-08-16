@@ -136,6 +136,11 @@ def test_CA4_k3s_leve_adoption_non_supportee():
         ("127.0.0.1:abc", "ERR_ADOPT_PORT"),
         ("127.0.0.1:0", "ERR_ADOPT_PORT_BORNES"),
         ("127.0.0.1:70000", "ERR_ADOPT_PORT_BORNES"),
+        # bug hunt (issue #530) : str.isdigit() accepte des chiffres Unicode non-ASCII
+        # ('²' = '²') que int() ne sait pas parser — sans isascii(), ceci levait une
+        # ValueError BRUTE non traduite (message int() natif) au lieu du ValueError traduit
+        # ERR_ADOPT_PORT attendu.
+        ("127.0.0.1:²", "ERR_ADOPT_PORT"),
     ],
 )
 def test_CA5_service_spec_rejette_adopted_endpoint_invalide(valeur_invalide, code_attendu):

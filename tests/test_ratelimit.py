@@ -1,7 +1,10 @@
 """Tests unitaires déterministes de RateLimiter (horloge factice, sans sleep)."""
 
+import os
 import threading
 import time
+
+import pytest
 
 from forgeai.web.ratelimit import RateLimiter
 
@@ -143,3 +146,38 @@ def test_eviction_preserve_lockout():
 
     retry = rl.check(ip_lock, is_loopback=False)
     assert isinstance(retry, float) and retry > 0, "lockout actif indûment purgé par l'éviction"
+
+
+# ---------------------------------------------------------------------------
+# Bug hunt (issue #531) : rate_max=0 ou rate_window_s=0 -> ZeroDivisionError sur toute
+# requête distante (le token-bucket divise par ces valeurs sans garde).
+# ---------------------------------------------------------------------------
+
+def test_rate_max_zero_ne_leve_pas_zerodivisionerror():
+    """rate_max=0 (constructeur direct) ne doit jamais faire planter check() — 429 propre."""
+    rl = RateLimiter(rate_max=0, rate_window_s=60.0, clock=MockClock())
+    retry = rl.check("203.0.113.5", is_loopback=False)
+    assert isinstance(retry, float) and retry > 0, (
+        "rate_max=0 doit rejeter proprement (retry > 0), pas planter"
+    )
+
+
+def test_rate_window_s_zero_ne_leve_pas_zerodivisionerror():
+    """rate_window_s=0.0 ne doit jamais faire planter check() non plus (2e division, ligne 92)."""
+    rl = RateLimiter(rate_max=5, rate_window_s=0.0, clock=MockClock())
+    ip = "203.0.113.6"
+    # Épuise le bucket initial pour retomber sur la branche de recharge (ligne 92).
+    for _ in range(5):
+        rl.check(ip, is_loopback=False)
+    retry = rl.check(ip, is_loopback=False)
+    assert isinstance(retry, float) and retry > 0
+
+
+def test_from_env_rate_max_zero_ne_leve_pas(monkeypatch):
+    """FORGEAI_RATE_MAX=0 (variable documentée, geste d'opérateur plausible) ne doit jamais
+    faire planter une requête distante — même défaut atteint par la voie réellement utilisée
+    en production (RateLimiter.from_env(), pas seulement le constructeur direct)."""
+    monkeypatch.setenv("FORGEAI_RATE_MAX", "0")
+    rl = RateLimiter.from_env()
+    retry = rl.check("203.0.113.7", is_loopback=False)
+    assert isinstance(retry, float) and retry > 0
