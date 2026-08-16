@@ -12,18 +12,30 @@ from __future__ import annotations
 
 
 def str_exc_sur(exc: BaseException) -> str:
-    """Représentation textuelle de `exc` qui NE LÈVE JAMAIS, même si `exc.__str__()` lui-même
-    lève une exception.
+    """Représentation textuelle de `exc`, robuste si `exc.__str__()` lève une `Exception`.
 
-    Round 28 (#452) — objection GPT-5.6-Terra-Pro (revue scellée) : `except Exception` (round 27)
-    ne couvre pas un `__str__` qui lève un `BaseException` non-`Exception` (ex. `SystemExit`,
-    `KeyboardInterrupt` — légal en Python, vérifié empiriquement), contredisant la garantie
-    documentée « ne lève jamais ». `except BaseException` ici est délibéré et sûr : on ne capture
-    pas l'exception d'ORIGINE (`exc` reste inchangée, toujours accessible à l'appelant si besoin),
-    seulement un échec du FORMATAGE de son message — la capacité normale de Ctrl-C/SystemExit à
-    interrompre le programme via l'exception ORIGINALE n'est pas affectée.
+    Historique délibéré (#452) — deux rounds de revue scellée en tension directe, résolus en
+    faveur de la sécurité signal plutôt que d'une couverture totale :
+
+    - Round 27 : `except Exception` (ci-dessous) ne couvrait pas un `__str__` qui lève un
+      `BaseException` non-`Exception` (`SystemExit`, `KeyboardInterrupt` — légal en Python,
+      vérifié empiriquement). Corrigé round 28 en `except BaseException`.
+    - Round 30 : `except BaseException` capture aussi un `KeyboardInterrupt`/`SystemExit`
+      *asynchrone* qui arrive PENDANT l'appel à `str(exc)` sans rapport avec `exc.__str__()`
+      elle-même (livraison de signal non déterministe — Python ne peut PAS distinguer "levée
+      par le code de `__str__`" de "arrivée de l'extérieur pendant que ce code tournait"). Une
+      interruption Ctrl-C légitime au mauvais moment serait donc avalée silencieusement.
+
+    Revenu à `except Exception` : c'est le compromis retenu délibérément, aligné sur la
+    convention de la stdlib (`traceback.format_exception_only` et consorts ne capturent pas non
+    plus `BaseException`) — CPython exclut spécifiquement `KeyboardInterrupt`/`SystemExit` de la
+    hiérarchie `Exception` pour que ce genre de garde-fou reste signal-safe. Risque résiduel
+    accepté, étroit et documenté : un `__str__` personnalisé qui lève explicitement
+    `SystemExit`/`KeyboardInterrupt` (plutôt qu'une `Exception` normale) fera encore échouer
+    cette fonction — un cas pathologique bien plus rare et bien moins dommageable qu'avaler un
+    Ctrl-C réel.
     """
     try:
         return str(exc)
-    except BaseException:  # noqa: BLE001 — délibéré, voir docstring
+    except Exception:
         return f"{type(exc).__name__} (str() a levé lors du formatage du message d'erreur)"

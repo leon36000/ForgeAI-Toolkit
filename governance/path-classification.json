@@ -515,7 +515,7 @@
         },
         {
           "candidate": ".github/workflows/error-handling-contracts.yml",
-          "line": 70,
+          "line": 88,
           "referrer": "stories/RC1-023-error-handling-contracts.md",
           "resolved": ".github/workflows/error-handling-contracts.yml",
           "severity": "hard"
@@ -25452,7 +25452,7 @@
         },
         {
           "candidate": "governance/ERROR-HANDLING-CONTRACTS.md",
-          "line": 69,
+          "line": 87,
           "referrer": "stories/RC1-023-error-handling-contracts.md",
           "resolved": "governance/ERROR-HANDLING-CONTRACTS.md",
           "severity": "hard"
@@ -27458,14 +27458,21 @@
         },
         {
           "candidate": "governance/error-handling-contracts.json",
-          "line": 50,
+          "line": 49,
           "referrer": "stories/RC1-023-error-handling-contracts.md",
           "resolved": "governance/error-handling-contracts.json",
           "severity": "hard"
         },
         {
           "candidate": "governance/error-handling-contracts.json",
-          "line": 55,
+          "line": 68,
+          "referrer": "stories/RC1-023-error-handling-contracts.md",
+          "resolved": "governance/error-handling-contracts.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/error-handling-contracts.json",
+          "line": 73,
           "referrer": "stories/RC1-023-error-handling-contracts.md",
           "resolved": "governance/error-handling-contracts.json",
           "severity": "hard"
@@ -29444,7 +29451,7 @@
         },
         {
           "candidate": "manifests/roles.yaml",
-          "line": 74,
+          "line": 92,
           "referrer": "stories/RC1-023-error-handling-contracts.md",
           "resolved": "manifests/roles.yaml",
           "severity": "hard"
@@ -31230,14 +31237,14 @@
         },
         {
           "candidate": "scripts/governance/validate_error_contracts.py",
-          "line": 59,
+          "line": 77,
           "referrer": "stories/RC1-023-error-handling-contracts.md",
           "resolved": "scripts/governance/validate_error_contracts.py",
           "severity": "hard"
         },
         {
           "candidate": "scripts/governance/validate_error_contracts.py",
-          "line": 132,
+          "line": 150,
           "referrer": "stories/RC1-023-error-handling-contracts.md",
           "resolved": "scripts/governance/validate_error_contracts.py",
           "severity": "hard"
@@ -31825,7 +31832,7 @@
         },
         {
           "candidate": "scripts/no_stub_scan.py",
-          "line": 131,
+          "line": 149,
           "referrer": "stories/RC1-023-error-handling-contracts.md",
           "resolved": "scripts/no_stub_scan.py",
           "severity": "hard"
@@ -35438,8 +35445,8 @@
         }
       ],
       "rule_id": "product-source",
-      "sha256": "9d8c19ba4174a3f4a8c9ab464e62be180a6b9920c906b9c3b8817d243dc7534b",
-      "size": 1865,
+      "sha256": "9b5299a1a9c20bff307dbe1aebe914c1bf911ee25fd3ff0242c2d9a46929ccc4",
+      "size": 2697,
       "target_path": null,
       "type": "text"
     },
@@ -37605,6 +37612,13 @@
           "referrer": "scripts/coordination/test_scope_guard.py",
           "resolved": "src/forgeai/hardware/detect.py",
           "severity": "hard"
+        },
+        {
+          "candidate": "src/forgeai/hardware/detect.py",
+          "line": 39,
+          "referrer": "stories/RC1-023-error-handling-contracts.md",
+          "resolved": "src/forgeai/hardware/detect.py",
+          "severity": "hard"
         }
       ],
       "rule_id": "product-source",
@@ -38007,7 +38021,7 @@
         },
         {
           "candidate": "src/forgeai/ide/guard_fs.py",
-          "line": 67,
+          "line": 85,
           "referrer": "stories/RC1-023-error-handling-contracts.md",
           "resolved": "src/forgeai/ide/guard_fs.py",
           "severity": "hard"
@@ -43610,8 +43624,8 @@
       "path": "stories/RC1-023-error-handling-contracts.md",
       "referenced_by": [],
       "rule_id": "governance-stories",
-      "sha256": "b8e5e23ae1e2b01966453a4f4d72fe3ccd16345ffff11319a1256ac37c9dbfb0",
-      "size": 10108,
+      "sha256": "94a7b9552a9752dc6c4f77e44468c84e1c1a07e84713fb215b0ebb00aaa5afe8",
+      "size": 11496,
       "target_path": null,
       "type": "text"
     },
@@ -57221,8 +57235,8 @@
         }
       ],
       "rule_id": "test-suite",
-      "sha256": "d450bd10d107a40d3053cf31beeff725f55f02057277a39f6c9d1a4f93349ce0",
-      "size": 1720,
+      "sha256": "0b4cbe10652375824ad1121373149b2b110b842f59376b3a771118a196668a72",
+      "size": 2708,
       "target_path": null,
       "type": "text"
     },
@@ -105233,11 +105247,6 @@
         "referrer": "src/forgeai/core/safe_repr.py"
       },
       {
-        "candidate": "Ctrl-C/SystemExit",
-        "line": 23,
-        "referrer": "src/forgeai/core/safe_repr.py"
-      },
-      {
         "candidate": "models/local.py",
         "line": 11,
         "referrer": "src/forgeai/core/validation.py"
@@ -127773,83 +127782,103 @@
         "referrer": "stories/RC1-023-error-handling-contracts.md"
       },
       {
-        "candidate": "1/N",
-        "line": 34,
+        "candidate": "detect.py",
+        "line": 36,
         "referrer": "stories/RC1-023-error-handling-contracts.md"
       },
       {
-        "candidate": "RC1-010/",
-        "line": 34,
-        "referrer": "stories/RC1-023-error-handling-contracts.md"
-      },
-      {
-        "candidate": "web/server.py",
-        "line": 37,
-        "referrer": "stories/RC1-023-error-handling-contracts.md"
-      },
-      {
-        "candidate": "ploiement/",
+        "candidate": "detect.py",
         "line": 43,
         "referrer": "stories/RC1-023-error-handling-contracts.md"
       },
       {
-        "candidate": "id/site/coverage/review_horizon",
-        "line": 60,
+        "candidate": "detect.py",
+        "line": 43,
         "referrer": "stories/RC1-023-error-handling-contracts.md"
       },
       {
-        "candidate": "test/raison",
+        "candidate": "server.py",
+        "line": 43,
+        "referrer": "stories/RC1-023-error-handling-contracts.md"
+      },
+      {
+        "candidate": "1/N",
+        "line": 52,
+        "referrer": "stories/RC1-023-error-handling-contracts.md"
+      },
+      {
+        "candidate": "RC1-010/",
+        "line": 52,
+        "referrer": "stories/RC1-023-error-handling-contracts.md"
+      },
+      {
+        "candidate": "web/server.py",
+        "line": 55,
+        "referrer": "stories/RC1-023-error-handling-contracts.md"
+      },
+      {
+        "candidate": "ploiement/",
         "line": 61,
         "referrer": "stories/RC1-023-error-handling-contracts.md"
       },
       {
-        "candidate": "grep/AST",
-        "line": 66,
-        "referrer": "stories/RC1-023-error-handling-contracts.md"
-      },
-      {
-        "candidate": "origin/main",
-        "line": 77,
-        "referrer": "stories/RC1-023-error-handling-contracts.md"
-      },
-      {
-        "candidate": "RC1-010/ROSTER-MAJ-PR511",
+        "candidate": "id/site/coverage/review_horizon",
         "line": 78,
         "referrer": "stories/RC1-023-error-handling-contracts.md"
       },
       {
-        "candidate": "moonshot/google",
+        "candidate": "test/raison",
         "line": 79,
         "referrer": "stories/RC1-023-error-handling-contracts.md"
       },
       {
+        "candidate": "grep/AST",
+        "line": 84,
+        "referrer": "stories/RC1-023-error-handling-contracts.md"
+      },
+      {
+        "candidate": "origin/main",
+        "line": 95,
+        "referrer": "stories/RC1-023-error-handling-contracts.md"
+      },
+      {
+        "candidate": "RC1-010/ROSTER-MAJ-PR511",
+        "line": 96,
+        "referrer": "stories/RC1-023-error-handling-contracts.md"
+      },
+      {
+        "candidate": "moonshot/google",
+        "line": 97,
+        "referrer": "stories/RC1-023-error-handling-contracts.md"
+      },
+      {
         "candidate": "validate_error_contracts.py",
-        "line": 87,
+        "line": 105,
         "referrer": "stories/RC1-023-error-handling-contracts.md"
       },
       {
         "candidate": "fonction/m",
-        "line": 88,
+        "line": 106,
         "referrer": "stories/RC1-023-error-handling-contracts.md"
       },
       {
         "candidate": "rapide/d",
-        "line": 107,
+        "line": 125,
         "referrer": "stories/RC1-023-error-handling-contracts.md"
       },
       {
         "candidate": "terministe/sans",
-        "line": 107,
+        "line": 125,
         "referrer": "stories/RC1-023-error-handling-contracts.md"
       },
       {
         "candidate": "triviale/d",
-        "line": 116,
+        "line": 134,
         "referrer": "stories/RC1-023-error-handling-contracts.md"
       },
       {
         "candidate": "452/",
-        "line": 122,
+        "line": 140,
         "referrer": "stories/RC1-023-error-handling-contracts.md"
       },
       {
@@ -140166,6 +140195,11 @@
         "candidate": "ruff-classification.json",
         "line": 298,
         "referrer": "tests/test_ruff_report.py"
+      },
+      {
+        "candidate": "KeyboardInterrupt/",
+        "line": 47,
+        "referrer": "tests/test_safe_repr.py"
       },
       {
         "candidate": "sel.json",
@@ -172146,64 +172180,78 @@
         "severity": "hard"
       },
       {
+        "candidate": "src/forgeai/hardware/detect.py",
+        "line": 39,
+        "referrer": "stories/RC1-023-error-handling-contracts.md",
+        "resolved": "src/forgeai/hardware/detect.py",
+        "severity": "hard"
+      },
+      {
         "candidate": "governance/error-handling-contracts.json",
-        "line": 50,
+        "line": 49,
         "referrer": "stories/RC1-023-error-handling-contracts.md",
         "resolved": "governance/error-handling-contracts.json",
         "severity": "hard"
       },
       {
         "candidate": "governance/error-handling-contracts.json",
-        "line": 55,
+        "line": 68,
+        "referrer": "stories/RC1-023-error-handling-contracts.md",
+        "resolved": "governance/error-handling-contracts.json",
+        "severity": "hard"
+      },
+      {
+        "candidate": "governance/error-handling-contracts.json",
+        "line": 73,
         "referrer": "stories/RC1-023-error-handling-contracts.md",
         "resolved": "governance/error-handling-contracts.json",
         "severity": "hard"
       },
       {
         "candidate": "scripts/governance/validate_error_contracts.py",
-        "line": 59,
+        "line": 77,
         "referrer": "stories/RC1-023-error-handling-contracts.md",
         "resolved": "scripts/governance/validate_error_contracts.py",
         "severity": "hard"
       },
       {
         "candidate": "src/forgeai/ide/guard_fs.py",
-        "line": 67,
+        "line": 85,
         "referrer": "stories/RC1-023-error-handling-contracts.md",
         "resolved": "src/forgeai/ide/guard_fs.py",
         "severity": "hard"
       },
       {
         "candidate": "governance/ERROR-HANDLING-CONTRACTS.md",
-        "line": 69,
+        "line": 87,
         "referrer": "stories/RC1-023-error-handling-contracts.md",
         "resolved": "governance/ERROR-HANDLING-CONTRACTS.md",
         "severity": "hard"
       },
       {
         "candidate": ".github/workflows/error-handling-contracts.yml",
-        "line": 70,
+        "line": 88,
         "referrer": "stories/RC1-023-error-handling-contracts.md",
         "resolved": ".github/workflows/error-handling-contracts.yml",
         "severity": "hard"
       },
       {
         "candidate": "manifests/roles.yaml",
-        "line": 74,
+        "line": 92,
         "referrer": "stories/RC1-023-error-handling-contracts.md",
         "resolved": "manifests/roles.yaml",
         "severity": "hard"
       },
       {
         "candidate": "scripts/no_stub_scan.py",
-        "line": 131,
+        "line": 149,
         "referrer": "stories/RC1-023-error-handling-contracts.md",
         "resolved": "scripts/no_stub_scan.py",
         "severity": "hard"
       },
       {
         "candidate": "scripts/governance/validate_error_contracts.py",
-        "line": 132,
+        "line": 150,
         "referrer": "stories/RC1-023-error-handling-contracts.md",
         "resolved": "scripts/governance/validate_error_contracts.py",
         "severity": "hard"
@@ -174756,7 +174804,7 @@
       "working-sandbox-readme": 1
     },
     "case_collisions_total": 0,
-    "dangling_references_total": 16159,
+    "dangling_references_total": 16163,
     "generated_total": 17,
     "load_bearing_total": 1928,
     "portability_violations_total": 0,
