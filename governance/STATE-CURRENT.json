@@ -628,7 +628,7 @@
       },
       {
         "path": "tests/test_rc1016_sonar_suppressions.py",
-        "sha256": "ffb5ffd5a3e2d0f8ec9e2f6713ddfc463a9a874d8f1ef9873052bcc5e4b287f6"
+        "sha256": "6cd5c75cf9260b9db47b492295a927613f9c2f00061648960661bc3f5cd25f0f"
       },
       {
         "path": "tests/test_rc1017_matrice_python.py",
@@ -885,7 +885,7 @@
     "tests": {
       "js_files": 3,
       "python_files": 183,
-      "python_functions_declared": 1968
+      "python_functions_declared": 1970
     }
   },
   "observations": [

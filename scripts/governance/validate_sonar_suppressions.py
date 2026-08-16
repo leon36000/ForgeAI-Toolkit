@@ -338,12 +338,16 @@ def _erreurs_test_compensatoire(
     ]
 
 
-def _erreurs_portee_large(entree: dict, identifiant: object) -> list[str]:
+def _justification_absence_test(entree: dict) -> bool:
+    raison = entree.get("compensating_test_reason")
+    return isinstance(raison, str) and bool(raison.strip())
+
+
+def _erreurs_portee_large(root: Path, entree: dict, identifiant: object) -> list[str]:
     test_compensatoire = entree["compensating_test"]
-    if entree["scope"] not in {"file", "glob"} or test_compensatoire:
+    if _test_compensatoire_existe(root, test_compensatoire):
         return []
-    raison = entree.get("compensating_test_reason", "")
-    if "non-réductible" in raison.lower():
+    if _justification_absence_test(entree):
         return []
     return [
         f"{identifiant} : portée {entree['scope']} sans test compensatoire "
@@ -381,7 +385,7 @@ def _erreurs_entree(
     erreurs.extend(
         _erreurs_test_compensatoire(root, identifiant, entree["compensating_test"])
     )
-    erreurs.extend(_erreurs_portee_large(entree, identifiant))
+    erreurs.extend(_erreurs_portee_large(root, entree, identifiant))
     return erreurs
 
 
@@ -412,6 +416,37 @@ def valider(root: Path, *, aujourd_hui: dt.date | None = None) -> list[str]:
     return erreurs
 
 
+def _rendre_preuves_mesurees(inventaire: dict) -> list[str]:
+    preuves = inventaire.get("measured_evidence", [])
+    if not preuves:
+        return []
+
+    lignes = [
+        "## Preuves mesurées",
+        "",
+        "Les mutations temporaires ci-dessous ont été poussées, scannées, puis retirées.",
+        "",
+    ]
+    for preuve in preuves:
+        lignes.extend(
+            [
+                f"### {preuve['title']}",
+                "",
+                preuve["description"],
+                "",
+            ]
+        )
+        resultats = preuve.get("scan_results", [])
+        if resultats:
+            lignes.append("Résultats du scan :")
+            lignes.append("")
+            lignes.append("```text")
+            lignes.extend(resultats)
+            lignes.append("```")
+            lignes.append("")
+    return lignes
+
+
 def rendre(root: Path) -> str:
     inventaire = _lire_json(root / "governance" / "sonar-suppressions.json")
     lignes = [
@@ -424,11 +459,16 @@ def rendre(root: Path) -> str:
         "",
         "La réduction de S2612 dans `openbao_flow.py` est désormais au site : une nouvelle occurrence ailleurs dans ce fichier n'est plus masquée.",
         "",
-        "La portée réelle des suppressions ciblées est vérifiée par le scan SonarCloud de la PR qui introduit une occurrence voisine : toute occurrence non couverte par un `NOSONAR(<règle>)` ciblé apparaît dans ce scan. La vérification ne relève donc pas du gate local ; sur la PR 499, `api/issues/search?pullRequest=499` a renvoyé deux issues et aucune sur `registre.py`, ce qui a confirmé que les deux `NOSONAR` nus retirés ne masquaient aucune issue.",
+        "La portée réelle des suppressions ciblées est vérifiée par le scan SonarCloud de la PR qui introduit une occurrence voisine : toute occurrence non couverte par un `NOSONAR(<règle>)` ciblé apparaît dans ce scan.",
         "",
-        "| Règle | Portée | Site | Propriétaire | Risque accepté | Test compensatoire | Révision |",
-        "|---|---|---|---|---|---|---|",
     ]
+    lignes.extend(_rendre_preuves_mesurees(inventaire))
+    lignes.extend(
+        [
+            "| Règle | Portée | Site | Propriétaire | Risque accepté | Test compensatoire | Révision |",
+            "|---|---|---|---|---|---|---|",
+        ]
+    )
     for entree in inventaire["suppressions"]:
         sites = "<br>".join(
             f"{site['path']}:{site['line']}" if "line" in site else site["path"]

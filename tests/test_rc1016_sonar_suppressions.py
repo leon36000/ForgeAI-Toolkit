@@ -51,6 +51,7 @@ def _entree_inline(*, review_due: str = "2026-06-01") -> dict:
         "owner": "équipe test",
         "justification": "Justification testée.",
         "compensating_test": None,
+        "compensating_test_reason": "La suppression est réduite à la ligne concernée.",
         "review_due": review_due,
         "accepted_risk": "Risque test.",
     }
@@ -285,6 +286,38 @@ def test_portee_file_avec_justification_non_reductible_est_acceptee(tmp_path: Pa
     assert erreurs == []
 
 
+def test_suppression_inline_sans_test_ni_justification_est_rejetee(
+    tmp_path: Path,
+) -> None:
+    _preparer_suppression_inline(tmp_path)
+    inventaire = _entree_inline()
+    del inventaire["compensating_test_reason"]
+    _ecrire_inventaire(tmp_path, [inventaire])
+
+    erreurs = VALIDATEUR.valider(tmp_path, aujourd_hui=dt.date(2026, 1, 1))
+
+    assert (
+        "inline:src/active.py:1:S1234 : portée line sans test compensatoire "
+        "ni justification explicite de non-réductibilité"
+    ) in erreurs
+
+
+def test_suppression_inline_avec_justification_absence_test_est_acceptee(
+    tmp_path: Path,
+) -> None:
+    _preparer_suppression_inline(tmp_path)
+    inventaire = _entree_inline()
+    inventaire["compensating_test_reason"] = (
+        "La suppression porte sur une constante documentaire et non sur "
+        "un comportement exécutable."
+    )
+    _ecrire_inventaire(tmp_path, [inventaire])
+
+    erreurs = VALIDATEUR.valider(tmp_path, aujourd_hui=dt.date(2026, 1, 1))
+
+    assert erreurs == []
+
+
 def test_test_compensatoire_inexistant_est_rejete(tmp_path: Path) -> None:
     _preparer_suppression_inline(tmp_path)
     inventaire = _entree_inline()
@@ -308,6 +341,7 @@ def test_test_compensatoire_existant_est_accepte(tmp_path: Path) -> None:
     )
     inventaire = _entree_inline()
     inventaire["compensating_test"] = "tests/test_compensatoire.py"
+    del inventaire["compensating_test_reason"]
     _ecrire_inventaire(tmp_path, [inventaire])
 
     erreurs = VALIDATEUR.valider(tmp_path, aujourd_hui=dt.date(2026, 1, 1))

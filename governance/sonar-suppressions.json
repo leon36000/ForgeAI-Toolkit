@@ -3,6 +3,27 @@
     "days": 180,
     "justification": "Les risques acceptés stables sont réexaminés au plus tard tous les 180 jours afin de confirmer que les suppressions restent nécessaires, ciblées et compensées."
   },
+  "measured_evidence": [
+    {
+      "title": "Critère 5 satisfait : portée réelle des suppressions S2612",
+      "description": "Une occurrence os.chmod(chemin, 0o777) ajoutée temporairement dans openbao_flow.py, voisine des trois sites couverts par # NOSONAR(S2612) mais sans suppression, a été remontée. Les sites 102, 104 et 109 ne l'ont pas été. Cette mesure confirme qu'une suppression au site ne masque pas les occurrences voisines et que NOSONAR(S2612) est réellement pris en compte.",
+      "scan_results": [
+        "python:S2612 | src/forgeai/deploy/openbao_flow.py : 118"
+      ]
+    },
+    {
+      "title": "e5, e6 et e7 non réductibles : NOSONAR ignoré par pythonsecurity",
+      "description": "# NOSONAR(S8707) a été posé temporairement au site sur registre.py:101 et registre.py:141 après retrait de e7. Le scan a continué de remonter les deux issues. NOSONAR est donc ignoré par les règles pythonsecurity d'analyse de sécurité avancée ; le périmètre fichier est le seul disponible pour e5, e6 et e7.",
+      "scan_results": [
+        "pythonsecurity:S8707 | src/forgeai/core/registre.py : 101",
+        "pythonsecurity:S8707 | src/forgeai/core/registre.py : 141"
+      ]
+    },
+    {
+      "title": "Rectification sur les NOSONAR nus retirés de registre.py",
+      "description": "La conclusion antérieure selon laquelle les deux NOSONAR nus retirés de registre.py ne masquaient rien était fausse : le scan alors observé tournait avec e7 actif, qui masquait S8707 sur tout le fichier. Leur retrait reste correct parce que e7 couvre déjà ces lignes et qu'un NOSONAR au site y serait de toute façon sans effet, comme le démontre la mesure pythonsecurity."
+    }
+  ],
   "suppressions": [
     {
       "id": "inline:src/forgeai/cli.py:73:S2068",
@@ -13,7 +34,7 @@
       "owner": "équipe plateforme ForgeAI",
       "justification": "La constante concernée est l'identifiant public par défaut de l'image immudb officielle, documenté par le projet immudb lui-même, et non un identifiant propre à ForgeAI.",
       "compensating_test": null,
-      "compensating_test_reason": "La suppression est réduite à la constante concernée.",
+      "compensating_test_reason": "La suppression porte sur une constante publique documentée, et non sur un comportement exécutable susceptible d'être couvert par un test.",
       "review_due": "2027-02-10",
       "accepted_risk": "La ligne peut masquer uniquement une occurrence S2068 sur cette constante publique."
     },
@@ -26,7 +47,7 @@
       "owner": "équipe réseau ForgeAI",
       "justification": "Le service local ou LAN documenté à cette ligne accepte délibérément HTTP dans la frontière réseau maîtrisée prévue par le produit.",
       "compensating_test": null,
-      "compensating_test_reason": "La suppression concerne une décision de déploiement explicitement documentée à la ligne concernée.",
+      "compensating_test_reason": "La suppression porte sur une chaîne de connexion locale documentée, et non sur un comportement exécutable distinct à tester.",
       "review_due": "2027-02-10",
       "accepted_risk": "Un transport HTTP reste autorisé uniquement pour le service local ou LAN documenté."
     },
@@ -141,7 +162,7 @@
       "scope": "file",
       "sites": [{"path": "scripts/gate_docs.py"}],
       "owner": "équipe gouvernance ForgeAI",
-      "justification": "La règle LLM-aware ne reconnaît pas le validateur personnalisé : _valider_ref_git est appelé avant subprocess.run et _charger_json valide chemin.is_file avant read_text.",
+      "justification": "Mesure Sonar : # NOSONAR(S8707) posé au site sur src/forgeai/core/registre.py:101 et :141 après retrait de e7 a été ignoré ; le scan a remonté « pythonsecurity:S8707 | src/forgeai/core/registre.py : 101 » et « pythonsecurity:S8707 | src/forgeai/core/registre.py : 141 ». NOSONAR est ignoré par les règles pythonsecurity d'analyse de sécurité avancée ; le périmètre fichier est donc le seul disponible.",
       "compensating_test": "tests/test_doc032_gate_docs.py",
       "compensating_test_reason": "Non-réductible : Sonar rattache ces alertes avancées à des flux dont le site rapporté peut varier après analyse ; une annotation inline ne garantit pas la suppression de l'alerte effectivement produite.",
       "review_due": "2027-02-10",
@@ -154,7 +175,7 @@
       "scope": "file",
       "sites": [{"path": "scripts/gate_docs.py"}],
       "owner": "équipe gouvernance ForgeAI",
-      "justification": "La règle LLM-aware ne reconnaît pas le validateur personnalisé : _valider_ref_git est appelé avant subprocess.run et _charger_json valide chemin.is_file avant read_text.",
+      "justification": "Mesure Sonar : # NOSONAR(S8707) posé au site sur src/forgeai/core/registre.py:101 et :141 après retrait de e7 a été ignoré ; le scan a remonté « pythonsecurity:S8707 | src/forgeai/core/registre.py : 101 » et « pythonsecurity:S8707 | src/forgeai/core/registre.py : 141 ». NOSONAR est ignoré par les règles pythonsecurity d'analyse de sécurité avancée ; le périmètre fichier est donc le seul disponible.",
       "compensating_test": "tests/test_doc032_gate_docs.py",
       "compensating_test_reason": "Non-réductible : Sonar rattache ces alertes avancées à des flux dont le site rapporté peut varier après analyse ; une annotation inline ne garantit pas la suppression de l'alerte effectivement produite.",
       "review_due": "2027-02-10",
@@ -167,7 +188,7 @@
       "scope": "file",
       "sites": [{"path": "src/forgeai/core/registre.py"}],
       "owner": "équipe audit ForgeAI",
-      "justification": "La règle LLM-aware ne reconnaît pas la garde explicite de _load_key : lstat et stat.S_ISREG valident le chemin avant read_text.",
+      "justification": "Mesure Sonar : # NOSONAR(S8707) posé au site sur src/forgeai/core/registre.py:101 et :141 après retrait de e7 a été ignoré ; le scan a remonté « pythonsecurity:S8707 | src/forgeai/core/registre.py : 101 » et « pythonsecurity:S8707 | src/forgeai/core/registre.py : 141 ». NOSONAR est ignoré par les règles pythonsecurity d'analyse de sécurité avancée ; le périmètre fichier est donc le seul disponible.",
       "compensating_test": "tests/test_registre.py",
       "compensating_test_reason": "Non-réductible : Sonar rattache cette alerte avancée au flux de données et non à un site stable ; une annotation inline peut ne pas viser le site finalement signalé.",
       "review_due": "2027-02-10",

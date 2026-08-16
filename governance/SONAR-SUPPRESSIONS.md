@@ -7,12 +7,41 @@ Les suppressions inline ciblées utilisent obligatoirement la syntaxe Sonar `# N
 
 La réduction de S2612 dans `openbao_flow.py` est désormais au site : une nouvelle occurrence ailleurs dans ce fichier n'est plus masquée.
 
-La portée réelle des suppressions ciblées est vérifiée par le scan SonarCloud de la PR qui introduit une occurrence voisine : toute occurrence non couverte par un `NOSONAR(<règle>)` ciblé apparaît dans ce scan. La vérification ne relève donc pas du gate local ; sur la PR 499, `api/issues/search?pullRequest=499` a renvoyé deux issues et aucune sur `registre.py`, ce qui a confirmé que les deux `NOSONAR` nus retirés ne masquaient aucune issue.
+La portée réelle des suppressions ciblées est vérifiée par le scan SonarCloud de la PR qui introduit une occurrence voisine : toute occurrence non couverte par un `NOSONAR(<règle>)` ciblé apparaît dans ce scan.
+
+## Preuves mesurées
+
+Les mutations temporaires ci-dessous ont été poussées, scannées, puis retirées.
+
+### Critère 5 satisfait : portée réelle des suppressions S2612
+
+Une occurrence os.chmod(chemin, 0o777) ajoutée temporairement dans openbao_flow.py, voisine des trois sites couverts par # NOSONAR(S2612) mais sans suppression, a été remontée. Les sites 102, 104 et 109 ne l'ont pas été. Cette mesure confirme qu'une suppression au site ne masque pas les occurrences voisines et que NOSONAR(S2612) est réellement pris en compte.
+
+Résultats du scan :
+
+```text
+python:S2612 | src/forgeai/deploy/openbao_flow.py : 118
+```
+
+### e5, e6 et e7 non réductibles : NOSONAR ignoré par pythonsecurity
+
+# NOSONAR(S8707) a été posé temporairement au site sur registre.py:101 et registre.py:141 après retrait de e7. Le scan a continué de remonter les deux issues. NOSONAR est donc ignoré par les règles pythonsecurity d'analyse de sécurité avancée ; le périmètre fichier est le seul disponible pour e5, e6 et e7.
+
+Résultats du scan :
+
+```text
+pythonsecurity:S8707 | src/forgeai/core/registre.py : 101
+pythonsecurity:S8707 | src/forgeai/core/registre.py : 141
+```
+
+### Rectification sur les NOSONAR nus retirés de registre.py
+
+La conclusion antérieure selon laquelle les deux NOSONAR nus retirés de registre.py ne masquaient rien était fausse : le scan alors observé tournait avec e7 actif, qui masquait S8707 sur tout le fichier. Leur retrait reste correct parce que e7 couvre déjà ces lignes et qu'un NOSONAR au site y serait de toute façon sans effet, comme le démontre la mesure pythonsecurity.
 
 | Règle | Portée | Site | Propriétaire | Risque accepté | Test compensatoire | Révision |
 |---|---|---|---|---|---|---|
-| S2068 | line | src/forgeai/cli.py:73 | équipe plateforme ForgeAI | La ligne peut masquer uniquement une occurrence S2068 sur cette constante publique. | La suppression est réduite à la constante concernée. | 2027-02-10 |
-| S5332 | line | src/forgeai/cli.py:121 | équipe réseau ForgeAI | Un transport HTTP reste autorisé uniquement pour le service local ou LAN documenté. | La suppression concerne une décision de déploiement explicitement documentée à la ligne concernée. | 2027-02-10 |
+| S2068 | line | src/forgeai/cli.py:73 | équipe plateforme ForgeAI | La ligne peut masquer uniquement une occurrence S2068 sur cette constante publique. | La suppression porte sur une constante publique documentée, et non sur un comportement exécutable susceptible d'être couvert par un test. | 2027-02-10 |
+| S5332 | line | src/forgeai/cli.py:121 | équipe réseau ForgeAI | Un transport HTTP reste autorisé uniquement pour le service local ou LAN documenté. | La suppression porte sur une chaîne de connexion locale documentée, et non sur un comportement exécutable distinct à tester. | 2027-02-10 |
 | S2612 | line | src/forgeai/deploy/openbao_flow.py:102 | équipe secrets ForgeAI | La clé d'unseal peut être lisible par le conteneur non-root sur le même hôte de confiance. | Le comportement est prouvé par la preuve e2e S6 documentée. | 2027-02-10 |
 | S2612 | line | src/forgeai/deploy/openbao_flow.py:104 | équipe secrets ForgeAI | La clé d'unseal peut être lisible par le conteneur non-root sur le même hôte de confiance. | Le comportement est prouvé par la preuve e2e S6 documentée. | 2027-02-10 |
 | S2612 | line | src/forgeai/deploy/openbao_flow.py:109 | équipe secrets ForgeAI | La clé d'unseal peut être lisible par le conteneur non-root sur le même hôte de confiance. | Le comportement est prouvé par la preuve e2e S6 documentée. | 2027-02-10 |
