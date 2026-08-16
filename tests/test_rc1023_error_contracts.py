@@ -268,6 +268,22 @@ def test_id_null_detecte(tmp_path: Path) -> None:
     assert any("champ 'id' doit être une chaîne non vide" in e for e in erreurs)
 
 
+def test_site_line_booleen_detecte(tmp_path: Path) -> None:
+    # Durcissement proactif (même famille que les objections GPT-5.6-Terra-Pro sur le typage) :
+    # isinstance(line, int) accepte un bool en Python (True/False sont des int). Ce fichier
+    # exclut déjà explicitement bool pour coverage.contracted/floor/total_except_sites_src_forgeai
+    # — le même piège n'était pas gardé pour site.line.
+    _creer_fichier_source(
+        tmp_path, "src/forgeai/example.py", "try:\n    pass\nexcept ValueError:\n    pass\n"
+    )
+    contrat = _entree_valide()
+    contrat["site"]["line"] = True
+    _ecrire_inventaire(tmp_path, [contrat])
+
+    erreurs = VALIDATEUR.valider(tmp_path, aujourd_hui=dt.date(2026, 1, 1))
+    assert any("site.line" in e or "site.path" in e for e in erreurs)
+
+
 def test_site_path_absolu_detecte(tmp_path: Path) -> None:
     # Objection GPT-5.6-Terra-Pro (revue scellée round 13, #452) : site.path n'était confiné ni
     # à la racine du dépôt ni à src/forgeai/. Piège pathlib : (root / "/etc/passwd") ==

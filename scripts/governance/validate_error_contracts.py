@@ -246,8 +246,15 @@ def _verifier_site_ast(
 
     path_rel = site.get("path")
     line = site.get("line")
-    if not isinstance(path_rel, str) or not isinstance(line, int):
-        return [f"{identifiant} : site.path (str) et site.line (int) requis"]
+    # bool exclu explicitement : isinstance(True, int) vaut True en Python (même piège déjà
+    # gardé pour coverage.contracted/floor/total_except_sites_src_forgeai plus haut).
+    if (
+        not isinstance(path_rel, str)
+        or not isinstance(line, int)
+        or isinstance(line, bool)
+        or line <= 0
+    ):
+        return [f"{identifiant} : site.path (str) et site.line (int > 0) requis"]
 
     # Round 13 (#452) — objection GPT-5.6-Terra-Pro (revue scellée) : site.path n'était confiné
     # ni à la racine du dépôt ni à src/forgeai/. Un chemin absolu passait tel quel — piège pathlib
