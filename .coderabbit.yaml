@@ -8,15 +8,24 @@ reviews:
   auto_review:
     enabled: true
     drafts: false
+  # RC1-014 (#444) : exclusions bornées aux artefacts GÉNÉRÉS ayant leur propre validation
+  # déterministe séparée (gate CI dédié) — CANON/, Docs/, stories/ retirés de l'exclusion :
+  # contenu normatif majoritairement humain, doit désormais recevoir la revue automatique.
+  # Vérifié : scripts/governance/validate_coderabbit_config.py (aucun chemin mort, exclusions
+  # bornées à une allowlist justifiée).
   path_filters:
     - "!src/forgeai/data/**"
     - "src/forgeai/data/__init__.py"
-    - "!CANON/**"
-    - "!Docs/**"
     - "!archive/**"
     - "!evidence/registres/**"
-    - "!reviews/**"
-    - "!stories/**"
+    - "!evidence/reviews/**"
+    - "!evidence/audit-output/**"
+    - "!evidence/dedup/**"
+    - "!governance/STATE-CURRENT.json"
+    - "!governance/STATE-CURRENT.md"
+    - "!governance/path-classification.json"
+    - "!governance/PATH-CLASSIFICATION.md"
+    - "!governance/AUTHORITY-MAP.md"
     - "!build/**"
     - "!dist/**"
   pre_merge_checks:
