@@ -63,6 +63,8 @@ def _fichiers_trackes(root: Path, sous_chemin: str) -> list[str]:
 def _chemin_mort(root: Path, repertoire: str) -> bool:
     if repertoire in _ABSENCE_TOLEREE:
         return False
+    if not (root / repertoire).is_dir():
+        return True
     return len(_fichiers_trackes(root, repertoire)) == 0
 
 

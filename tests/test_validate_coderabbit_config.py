@@ -113,3 +113,15 @@ def test_main_exit1_et_message_sur_config_cassee(tmp_path: Path, capsys) -> None
     assert code == 1
     captured = capsys.readouterr()
     assert "ERREUR:" in captured.err
+
+
+def test_chemin_present_mais_non_trackable_est_mort(tmp_path: Path) -> None:
+    (tmp_path / "Vide").mkdir()
+    (tmp_path / ".coderabbit.yaml").write_text(
+        "reviews:\n  path_filters:\n    - \"!archive/**\"\n",
+        encoding="utf-8",
+    )
+
+    errs = vcc.erreurs(tmp_path)
+
+    assert any("chemin mort" in err and "archive" in err for err in errs)

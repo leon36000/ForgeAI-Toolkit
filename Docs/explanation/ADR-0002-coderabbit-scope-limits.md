@@ -20,8 +20,13 @@ du dépôt.
    revue automatique CodeRabbit, comme tout autre changement de PR.
 3. **Exclusions bornées à une allowlist justifiée**, vérifiée par
    `scripts/governance/validate_coderabbit_config.py` (gate déterministe, même famille que
-   `validate_sonar_suppressions.py`) : seuls des artefacts **générés** ayant leur propre
-   validation déterministe séparée restent exclus — `evidence/**` (registres hash-chaînés,
+   `validate_sonar_suppressions.py`) : un motif d'exclusion `!<dir>/**` est un « chemin mort »
+   si le répertoire n'existe PAS physiquement (`is_dir()` faux) OU s'il n'a aucun fichier
+   TRACKÉ (`git ls-files` vide) — les deux conditions sont vérifiées indépendamment, pour
+   couvrir aussi le cas d'un répertoire supprimé du disque sans `git rm`/`git add` (fichiers
+   encore présents dans l'index mais répertoire de travail absent). Seuls des artefacts
+   **générés** ayant leur propre validation déterministe séparée restent exclus — `evidence/**`
+   (registres hash-chaînés,
    revues scellées, sorties d'audit), `archive/**` (historique gelé, RC1-010), les fichiers
    `governance/*.json`/`*.md` auto-référentiels (même ensemble que
    `classify_paths.py::self_referential_generated_paths`), `src/forgeai/data/**` (catalogue
