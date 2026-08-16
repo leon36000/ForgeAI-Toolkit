@@ -6576,8 +6576,20 @@
         },
         {
           "candidate": "evidence/registres/mission.jsonl",
+<<<<<<< HEAD
           "line": 20,
           "referrer": "evidence/reviews/RC1-449-v1/Qwen3.8-2.4T.verdict.json",
+=======
+          "line": 6,
+          "referrer": "evidence/reviews/RC1-registre-PR522/DeepSeek-V4-Pro.verdict.json",
+          "resolved": "evidence/registres/mission.jsonl",
+          "severity": "hard"
+        },
+        {
+          "candidate": "evidence/registres/mission.jsonl",
+          "line": 8,
+          "referrer": "evidence/reviews/RC1-registre-PR522/DeepSeek-V4-Pro.verdict.json",
+>>>>>>> 1843e7bd (chore(review): relocalise RC1-registre-PR522 vers evidence/reviews/ + re-scelle)
           "resolved": "evidence/registres/mission.jsonl",
           "severity": "hard"
         },
@@ -6632,8 +6644,13 @@
         }
       ],
       "rule_id": "evidence-registres-root",
+<<<<<<< HEAD
       "sha256": "91087be8fa8c10a3b6d647072f92d502b20d291f30ff1aff50aa6ad1b84defb9",
       "size": 385970,
+=======
+      "sha256": "9fb65ef70f91ab51d03ee126153110be74acfb2931a0ca5e81821fb43c9507ba",
+      "size": 369252,
+>>>>>>> 1843e7bd (chore(review): relocalise RC1-registre-PR522 vers evidence/reviews/ + re-scelle)
       "target_path": null,
       "type": "text"
     },
@@ -8593,6 +8610,7 @@
         }
       ],
       "rule_id": "evidence-reviews-root",
+<<<<<<< HEAD
       "sha256": "492bed382f102ed24c59ec0c0bf2fb019ec11aac4407f798c20e6b06ca5ae05a",
       "size": 2731,
       "target_path": null,
@@ -8660,6 +8678,10 @@
       "rule_id": "evidence-reviews-root",
       "sha256": "4cd5c749e95a131cd2cae10d6721c7fb505522f376915633aa8b519d89985c37",
       "size": 323,
+=======
+      "sha256": "1896a9e1b636b7817ebf399d23fa92ffa723e0739ebdbd5ef99634de8976866a",
+      "size": 2515,
+>>>>>>> 1843e7bd (chore(review): relocalise RC1-registre-PR522 vers evidence/reviews/ + re-scelle)
       "target_path": null,
       "type": "text"
     },
@@ -21721,11 +21743,19 @@
       "generated": false,
       "load_bearing": true,
       "owner": "gouvernance-preuve",
+<<<<<<< HEAD
       "path": "evidence/reviews/RC1-519-v1/MiMo-V2.5-Pro.verdict.json",
       "referenced_by": [],
       "rule_id": "evidence-reviews-root",
       "sha256": "0b19ec9f8a77ca9343610cabac55349d9aaf8b42ddf8ea09103ce437f8a29172",
       "size": 327,
+=======
+      "path": "evidence/reviews/RC1-registre-PR522/DeepSeek-V4-Pro.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "00cd4c99f46f23e23955087420bd1151dc10a0f73aaee4063ed5df1dd755ebbe",
+      "size": 841,
+>>>>>>> 1843e7bd (chore(review): relocalise RC1-registre-PR522 vers evidence/reviews/ + re-scelle)
       "target_path": null,
       "type": "text"
     },
@@ -21734,6 +21764,7 @@
       "generated": false,
       "load_bearing": true,
       "owner": "gouvernance-preuve",
+<<<<<<< HEAD
       "path": "evidence/reviews/RC1-519-v1/Qwen3.7-Max.verdict.json",
       "referenced_by": [],
       "rule_id": "evidence-reviews-root",
@@ -22024,6 +22055,12 @@
       "referenced_by": [],
       "rule_id": "evidence-reviews-root",
       "sha256": "0e8459622f944db5bfee2a93e9b5c14f13a4634c40546c6e569ba042b6160803",
+=======
+      "path": "evidence/reviews/RC1-registre-PR522/Gemini-3.7-Flash.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "cce76ecf307828ca0122413c55b4c63fb77181dcbd99dac8eb74c0a86da5646e",
+>>>>>>> 1843e7bd (chore(review): relocalise RC1-registre-PR522 vers evidence/reviews/ + re-scelle)
       "size": 371,
       "target_path": null,
       "type": "text"
@@ -22033,11 +22070,19 @@
       "generated": false,
       "load_bearing": true,
       "owner": "gouvernance-preuve",
+<<<<<<< HEAD
       "path": "evidence/reviews/RC1-544/Kimi-2.7.verdict.json",
       "referenced_by": [],
       "rule_id": "evidence-reviews-root",
       "sha256": "70384a661defa363922a08f4e577cffbc9f18c53133f5e41d44a6ddc689d6bf4",
       "size": 317,
+=======
+      "path": "evidence/reviews/RC1-registre-PR522/Qwen3.7-Max.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "c596ffd3f7c1d13ea922050512ad4faf4fdb96346dfe56dd3d0f77ec5ba33d40",
+      "size": 322,
+>>>>>>> 1843e7bd (chore(review): relocalise RC1-registre-PR522 vers evidence/reviews/ + re-scelle)
       "target_path": null,
       "type": "text"
     },
@@ -22046,11 +22091,19 @@
       "generated": false,
       "load_bearing": true,
       "owner": "gouvernance-preuve",
+<<<<<<< HEAD
       "path": "evidence/reviews/RC1-544/Qwen3.7-Max.verdict.json",
       "referenced_by": [],
       "rule_id": "evidence-reviews-root",
       "sha256": "15a81e3df312cfe0c979016fcc5ca221e6312aa9a828b1db82c206846a344fe4",
       "size": 786,
+=======
+      "path": "evidence/reviews/RC1-registre-PR522/RECU.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "70140f5f83186fa5bef7e3f498e7a8da47bb2a3f7d24740cc5aa368d810b8e32",
+      "size": 677,
+>>>>>>> 1843e7bd (chore(review): relocalise RC1-registre-PR522 vers evidence/reviews/ + re-scelle)
       "target_path": null,
       "type": "text"
     },
@@ -22059,6 +22112,7 @@
       "generated": false,
       "load_bearing": true,
       "owner": "gouvernance-preuve",
+<<<<<<< HEAD
       "path": "evidence/reviews/RC1-544/RECU.json",
       "referenced_by": [],
       "rule_id": "evidence-reviews-root",
@@ -22228,6 +22282,8 @@
       "generated": false,
       "load_bearing": true,
       "owner": "gouvernance-preuve",
+=======
+>>>>>>> 1843e7bd (chore(review): relocalise RC1-registre-PR522 vers evidence/reviews/ + re-scelle)
       "path": "evidence/reviews/README.md",
       "referenced_by": [],
       "rule_id": "evidence-reviews-root",
@@ -26284,6 +26340,7 @@
       "referenced_by": [
         {
           "candidate": "governance/STATE-CURRENT.json",
+<<<<<<< HEAD
           "line": 24,
           "referrer": ".coderabbit.yaml",
           "resolved": "governance/STATE-CURRENT.json",
@@ -26319,6 +26376,8 @@
         },
         {
           "candidate": "governance/STATE-CURRENT.json",
+=======
+>>>>>>> 1843e7bd (chore(review): relocalise RC1-registre-PR522 vers evidence/reviews/ + re-scelle)
           "line": 12,
           "referrer": "evidence/reviews/RC1-003-PR489-v7/DeepSeek-V4-Pro.verdict.json",
           "resolved": "governance/STATE-CURRENT.json",
@@ -26449,6 +26508,7 @@
           "referrer": "scripts/governance/state_current.py",
           "resolved": "governance/STATE-CURRENT.json",
           "severity": "hard"
+<<<<<<< HEAD
         },
         {
           "candidate": "governance/STATE-CURRENT.json",
@@ -26477,6 +26537,8 @@
           "referrer": "tests/test_validate_coderabbit_config.py",
           "resolved": "governance/STATE-CURRENT.json",
           "severity": "hard"
+=======
+>>>>>>> 1843e7bd (chore(review): relocalise RC1-registre-PR522 vers evidence/reviews/ + re-scelle)
         }
       ],
       "rule_id": "generated-state-current-json",
@@ -26494,6 +26556,7 @@
       "referenced_by": [
         {
           "candidate": "governance/STATE-CURRENT.md",
+<<<<<<< HEAD
           "line": 25,
           "referrer": ".coderabbit.yaml",
           "resolved": "governance/STATE-CURRENT.md",
@@ -26508,6 +26571,8 @@
         },
         {
           "candidate": "governance/STATE-CURRENT.md",
+=======
+>>>>>>> 1843e7bd (chore(review): relocalise RC1-registre-PR522 vers evidence/reviews/ + re-scelle)
           "line": 12,
           "referrer": "evidence/reviews/RC1-010-lot5d-PR-v1/DeepSeek-V4-Pro.verdict.json",
           "resolved": "governance/STATE-CURRENT.md",
@@ -33478,13 +33543,6 @@
         },
         {
           "candidate": "src/forgeai/core/models.py",
-          "line": 24,
-          "referrer": "stories/BUGHUNT-2026-08-16.md",
-          "resolved": "src/forgeai/core/models.py",
-          "severity": "hard"
-        },
-        {
-          "candidate": "src/forgeai/core/models.py",
           "line": 27,
           "referrer": "stories/HEALTH-028A.md",
           "resolved": "src/forgeai/core/models.py",
@@ -33534,8 +33592,8 @@
         }
       ],
       "rule_id": "product-source",
-      "sha256": "14142e911871393bf62f1678a2addb655228b32259b84d0a5d5e574445a4db36",
-      "size": 28183,
+      "sha256": "ee714f9aee40985b23f42d0f7783832bec3ad24c69f580c7de79dc5bc38bb7e9",
+      "size": 27874,
       "target_path": null,
       "type": "text"
     },
@@ -37220,6 +37278,7 @@
           "referrer": "evidence/reviews/B-11-civ/Qwen3.7-Max.verdict.json",
           "resolved": "src/forgeai/models/gateway.py",
           "severity": "hard"
+<<<<<<< HEAD
         },
         {
           "candidate": "src/forgeai/models/gateway.py",
@@ -37239,6 +37298,13 @@
       "rule_id": "product-source",
       "sha256": "d3844345a68025189e4059a9f782dc4f952afcb1f6c8dbf3c2ab03073b75b185",
       "size": 8441,
+=======
+        }
+      ],
+      "rule_id": "product-source",
+      "sha256": "692401c475aec4b4bf8ddcb36f07a1f95035088b33bdfc372eab2a895d642308",
+      "size": 6841,
+>>>>>>> 1843e7bd (chore(review): relocalise RC1-registre-PR522 vers evidence/reviews/ + re-scelle)
       "target_path": null,
       "type": "text"
     },
@@ -40576,6 +40642,7 @@
       "referenced_by": [
         {
           "candidate": "src/forgeai/web/ratelimit.py",
+<<<<<<< HEAD
           "line": 80,
           "referrer": "Docs/BASELINE-MYPY.json",
           "resolved": "src/forgeai/web/ratelimit.py",
@@ -40590,6 +40657,8 @@
         },
         {
           "candidate": "src/forgeai/web/ratelimit.py",
+=======
+>>>>>>> 1843e7bd (chore(review): relocalise RC1-registre-PR522 vers evidence/reviews/ + re-scelle)
           "line": 5,
           "referrer": "stories/WEB-016.md",
           "resolved": "src/forgeai/web/ratelimit.py",
@@ -40597,8 +40666,8 @@
         }
       ],
       "rule_id": "product-source",
-      "sha256": "ee19fbed5f94c04fe88722f3fa0936b983a0aeef07f1802916587420cbe0793b",
-      "size": 6480,
+      "sha256": "fc9fd1d16112254d843ae0aa6bed839216d000b500d6d7474a5119176b9f2387",
+      "size": 5562,
       "target_path": null,
       "type": "text"
     },
@@ -40919,6 +40988,7 @@
         },
         {
           "candidate": "src/forgeai/web/server.py",
+<<<<<<< HEAD
           "line": 31,
           "referrer": "governance/ERROR-HANDLING-CONTRACTS.md",
           "resolved": "src/forgeai/web/server.py",
@@ -41115,6 +41185,8 @@
         },
         {
           "candidate": "src/forgeai/web/server.py",
+=======
+>>>>>>> 1843e7bd (chore(review): relocalise RC1-registre-PR522 vers evidence/reviews/ + re-scelle)
           "line": 5,
           "referrer": "stories/OPS-031A.md",
           "resolved": "src/forgeai/web/server.py",
@@ -41255,8 +41327,13 @@
         }
       ],
       "rule_id": "product-source",
+<<<<<<< HEAD
       "sha256": "4a544e90fd2d4f811a06bf5f7735eb9347621e8ceed1ec9e8bb64b1418cdf610",
       "size": 78262,
+=======
+      "sha256": "ef0cdd79d6b68f46645fc8f08ea88248d624a228c3aedf7852d68f988237dfae",
+      "size": 71831,
+>>>>>>> 1843e7bd (chore(review): relocalise RC1-registre-PR522 vers evidence/reviews/ + re-scelle)
       "target_path": null,
       "type": "text"
     },
@@ -41388,19 +41465,6 @@
       "rule_id": "governance-stories",
       "sha256": "df7c5b62f4426e7fd2afe332fb91b95cb7576a68279661a0e7d0213c382c814e",
       "size": 4074,
-      "target_path": null,
-      "type": "text"
-    },
-    {
-      "class": "GOVERNANCE",
-      "generated": false,
-      "load_bearing": false,
-      "owner": "gouvernance-stories",
-      "path": "stories/BUGHUNT-2026-08-16.md",
-      "referenced_by": [],
-      "rule_id": "governance-stories",
-      "sha256": "755b97392edf628e36a979fda939426d4d3bafa7fa240e69c1e5be469149ad1b",
-      "size": 4706,
       "target_path": null,
       "type": "text"
     },
@@ -43880,13 +43944,6 @@
       "referenced_by": [
         {
           "candidate": "tests/test_adoption.py",
-          "line": 14,
-          "referrer": "evidence/reviews/BUGHUNT-2026-08-16-v1/DeepSeek-V4-Pro.verdict.json",
-          "resolved": "tests/test_adoption.py",
-          "severity": "hard"
-        },
-        {
-          "candidate": "tests/test_adoption.py",
           "line": 60,
           "referrer": "evidence/reviews/D2/evidence/ADR.md",
           "resolved": "tests/test_adoption.py",
@@ -43908,13 +43965,6 @@
         },
         {
           "candidate": "tests/test_adoption.py",
-          "line": 49,
-          "referrer": "stories/BUGHUNT-2026-08-16.md",
-          "resolved": "tests/test_adoption.py",
-          "severity": "hard"
-        },
-        {
-          "candidate": "tests/test_adoption.py",
           "line": 113,
           "referrer": "stories/D2.md",
           "resolved": "tests/test_adoption.py",
@@ -43929,8 +43979,8 @@
         }
       ],
       "rule_id": "test-suite",
-      "sha256": "c2a7c27f55a2a75a20474b5a9e97b469c01e3682e9a878890b6dccdad69ae99e",
-      "size": 13372,
+      "sha256": "f5bc8a39e36c20a774ff7dd582d75df953a7fde4425a187343624d189887de1d",
+      "size": 13026,
       "target_path": null,
       "type": "text"
     },
@@ -43941,13 +43991,6 @@
       "owner": "test-suite",
       "path": "tests/test_adoption_api.py",
       "referenced_by": [
-        {
-          "candidate": "tests/test_adoption_api.py",
-          "line": 14,
-          "referrer": "evidence/reviews/BUGHUNT-2026-08-16-v1/DeepSeek-V4-Pro.verdict.json",
-          "resolved": "tests/test_adoption_api.py",
-          "severity": "hard"
-        },
         {
           "candidate": "tests/test_adoption_api.py",
           "line": 21,
@@ -43971,13 +44014,6 @@
         },
         {
           "candidate": "tests/test_adoption_api.py",
-          "line": 47,
-          "referrer": "stories/BUGHUNT-2026-08-16.md",
-          "resolved": "tests/test_adoption_api.py",
-          "severity": "hard"
-        },
-        {
-          "candidate": "tests/test_adoption_api.py",
           "line": 99,
           "referrer": "stories/D3.md",
           "resolved": "tests/test_adoption_api.py",
@@ -43992,8 +44028,8 @@
         }
       ],
       "rule_id": "test-suite",
-      "sha256": "bb4ddc5e536f1ab586e522ad98a547393db23acd5ca114274bd14bc6c8751756",
-      "size": 12121,
+      "sha256": "b746584f23c382d9b73b660f6658acba1e484e6ac22cffd95894f4974924af07",
+      "size": 12034,
       "target_path": null,
       "type": "text"
     },
@@ -48087,6 +48123,7 @@
         },
         {
           "candidate": "tests/test_models_gateway.py",
+<<<<<<< HEAD
           "line": 14,
           "referrer": "evidence/reviews/BUGHUNT-2026-08-16-v1/DeepSeek-V4-Pro.verdict.json",
           "resolved": "tests/test_models_gateway.py",
@@ -48095,6 +48132,9 @@
         {
           "candidate": "tests/test_models_gateway.py",
           "line": 474,
+=======
+          "line": 458,
+>>>>>>> 1843e7bd (chore(review): relocalise RC1-registre-PR522 vers evidence/reviews/ + re-scelle)
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_models_gateway.py",
           "severity": "hard"
@@ -48103,13 +48143,6 @@
           "candidate": "tests/test_models_gateway.py",
           "line": 480,
           "referrer": "governance/STATE-CURRENT.md",
-          "resolved": "tests/test_models_gateway.py",
-          "severity": "hard"
-        },
-        {
-          "candidate": "tests/test_models_gateway.py",
-          "line": 54,
-          "referrer": "stories/BUGHUNT-2026-08-16.md",
           "resolved": "tests/test_models_gateway.py",
           "severity": "hard"
         },
@@ -48129,8 +48162,13 @@
         }
       ],
       "rule_id": "test-suite",
+<<<<<<< HEAD
       "sha256": "0592b87a9737cd605edd914e900ca06c5eb7a2df030dcb494e9a4200521a11bd",
       "size": 11986,
+=======
+      "sha256": "07dd771237fb986e9685d5bb897ff37538be30bf454de6a47ae1894ea7725eb5",
+      "size": 8826,
+>>>>>>> 1843e7bd (chore(review): relocalise RC1-registre-PR522 vers evidence/reviews/ + re-scelle)
       "target_path": null,
       "type": "text"
     },
@@ -50383,6 +50421,7 @@
       "referenced_by": [
         {
           "candidate": "tests/test_ratelimit.py",
+<<<<<<< HEAD
           "line": 14,
           "referrer": "evidence/reviews/BUGHUNT-2026-08-16-v1/DeepSeek-V4-Pro.verdict.json",
           "resolved": "tests/test_ratelimit.py",
@@ -50391,6 +50430,9 @@
         {
           "candidate": "tests/test_ratelimit.py",
           "line": 646,
+=======
+          "line": 630,
+>>>>>>> 1843e7bd (chore(review): relocalise RC1-registre-PR522 vers evidence/reviews/ + re-scelle)
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_ratelimit.py",
           "severity": "hard"
@@ -50399,13 +50441,6 @@
           "candidate": "tests/test_ratelimit.py",
           "line": 652,
           "referrer": "governance/STATE-CURRENT.md",
-          "resolved": "tests/test_ratelimit.py",
-          "severity": "hard"
-        },
-        {
-          "candidate": "tests/test_ratelimit.py",
-          "line": 51,
-          "referrer": "stories/BUGHUNT-2026-08-16.md",
           "resolved": "tests/test_ratelimit.py",
           "severity": "hard"
         },
@@ -50425,8 +50460,8 @@
         }
       ],
       "rule_id": "test-suite",
-      "sha256": "f49b854e41d0fddedb54237307da60a63e5064d99c115f7d05c4c62839623a10",
-      "size": 7252,
+      "sha256": "747fd9a6d1bcb9fce57fa5f53c284b9cdfc1ad1f15985c834c7ded038c89828e",
+      "size": 5478,
       "target_path": null,
       "type": "text"
     },
@@ -69290,6 +69325,7 @@
         "referrer": "evidence/reviews/B-24cd/pack.md"
       },
       {
+<<<<<<< HEAD
         "candidate": "governance/",
         "line": 7,
         "referrer": "evidence/reviews/BUGHUNT-2026-08-16-v1/DeepSeek-V4-Pro.verdict.json"
@@ -69335,6 +69371,8 @@
         "referrer": "evidence/reviews/BUGHUNT-2026-08-16-v3/RECU.json"
       },
       {
+=======
+>>>>>>> 1843e7bd (chore(review): relocalise RC1-registre-PR522 vers evidence/reviews/ + re-scelle)
         "candidate": "proc.py",
         "line": 8,
         "referrer": "evidence/reviews/CLI-036/MiMo-Pro-V2.verdict.json"
@@ -92350,6 +92388,7 @@
         "referrer": "evidence/reviews/RC1-504-v1/RECU.json"
       },
       {
+<<<<<<< HEAD
         "candidate": "recu-revue/1",
         "line": 2,
         "referrer": "evidence/reviews/RC1-519-v1/RECU.json"
@@ -92388,10 +92427,21 @@
         "candidate": "./Registres/x",
         "line": 8,
         "referrer": "evidence/reviews/RC1-542-v1/Qwen3.7-Max.verdict.json"
+=======
+        "candidate": "registre.py",
+        "line": 7,
+        "referrer": "evidence/reviews/RC1-registre-PR522/DeepSeek-V4-Pro.verdict.json"
+      },
+      {
+        "candidate": "registre.py",
+        "line": 8,
+        "referrer": "evidence/reviews/RC1-registre-PR522/DeepSeek-V4-Pro.verdict.json"
+>>>>>>> 1843e7bd (chore(review): relocalise RC1-registre-PR522 vers evidence/reviews/ + re-scelle)
       },
       {
         "candidate": "recu-revue/1",
         "line": 2,
+<<<<<<< HEAD
         "referrer": "evidence/reviews/RC1-542-v1/RECU.json"
       },
       {
@@ -92418,6 +92468,9 @@
         "candidate": "recu-revue/1",
         "line": 2,
         "referrer": "evidence/reviews/RC1-547/RECU.json"
+=======
+        "referrer": "evidence/reviews/RC1-registre-PR522/RECU.json"
+>>>>>>> 1843e7bd (chore(review): relocalise RC1-registre-PR522 vers evidence/reviews/ + re-scelle)
       },
       {
         "candidate": "reviews/",
@@ -99236,7 +99289,7 @@
       },
       {
         "candidate": "YAML/Compose",
-        "line": 532,
+        "line": 529,
         "referrer": "src/forgeai/core/models.py"
       },
       {
@@ -115071,12 +115124,22 @@
       },
       {
         "candidate": "URL/cl",
-        "line": 54,
+        "line": 50,
         "referrer": "src/forgeai/models/gateway.py"
       },
       {
         "candidate": "gateway.json",
-        "line": 118,
+        "line": 112,
+        "referrer": "src/forgeai/models/gateway.py"
+      },
+      {
+        "candidate": "wirings.json",
+        "line": 112,
+        "referrer": "src/forgeai/models/gateway.py"
+      },
+      {
+        "candidate": "gateway.json",
+        "line": 117,
         "referrer": "src/forgeai/models/gateway.py"
       },
       {
@@ -115085,6 +115148,7 @@
         "referrer": "src/forgeai/models/gateway.py"
       },
       {
+<<<<<<< HEAD
         "candidate": "gateway.json",
         "line": 123,
         "referrer": "src/forgeai/models/gateway.py"
@@ -115125,6 +115189,8 @@
         "referrer": "src/forgeai/models/gateway.py"
       },
       {
+=======
+>>>>>>> 1843e7bd (chore(review): relocalise RC1-registre-PR522 vers evidence/reviews/ + re-scelle)
         "candidate": "moteur/backend",
         "line": 4,
         "referrer": "src/forgeai/models/local.py"
@@ -116021,50 +116087,92 @@
       },
       {
         "candidate": "parse/process",
+<<<<<<< HEAD
         "line": 288,
+=======
+        "line": 275,
+>>>>>>> 1843e7bd (chore(review): relocalise RC1-registre-PR522 vers evidence/reviews/ + re-scelle)
         "referrer": "src/forgeai/web/server.py"
       },
       {
         "candidate": "A-Za-z0-9._/",
+<<<<<<< HEAD
         "line": 392,
+=======
+        "line": 379,
+>>>>>>> 1843e7bd (chore(review): relocalise RC1-registre-PR522 vers evidence/reviews/ + re-scelle)
         "referrer": "src/forgeai/web/server.py"
       },
       {
         "candidate": "P0.3b/N1b",
+<<<<<<< HEAD
         "line": 396,
+=======
+        "line": 383,
+>>>>>>> 1843e7bd (chore(review): relocalise RC1-registre-PR522 vers evidence/reviews/ + re-scelle)
         "referrer": "src/forgeai/web/server.py"
       },
       {
         "candidate": "E/S",
+<<<<<<< HEAD
         "line": 434,
+=======
+        "line": 420,
+>>>>>>> 1843e7bd (chore(review): relocalise RC1-registre-PR522 vers evidence/reviews/ + re-scelle)
         "referrer": "src/forgeai/web/server.py"
       },
       {
         "candidate": "deploy-state.json",
+<<<<<<< HEAD
         "line": 451,
+=======
+        "line": 437,
+>>>>>>> 1843e7bd (chore(review): relocalise RC1-registre-PR522 vers evidence/reviews/ + re-scelle)
         "referrer": "src/forgeai/web/server.py"
       },
       {
         "candidate": "prepare-state.json",
+<<<<<<< HEAD
         "line": 456,
         "referrer": "src/forgeai/web/server.py"
       },
       {
         "candidate": "deploy-state.json",
         "line": 546,
+=======
+        "line": 442,
+>>>>>>> 1843e7bd (chore(review): relocalise RC1-registre-PR522 vers evidence/reviews/ + re-scelle)
         "referrer": "src/forgeai/web/server.py"
       },
       {
         "candidate": "cluster.read_probes/node_vendors",
+<<<<<<< HEAD
         "line": 644,
+=======
+        "line": 585,
+>>>>>>> 1843e7bd (chore(review): relocalise RC1-registre-PR522 vers evidence/reviews/ + re-scelle)
         "referrer": "src/forgeai/web/server.py"
       },
       {
         "candidate": "Host/netloc",
+<<<<<<< HEAD
+=======
+        "line": 630,
+        "referrer": "src/forgeai/web/server.py"
+      },
+      {
+        "candidate": "CSRF/rebinding",
+        "line": 684,
+        "referrer": "src/forgeai/web/server.py"
+      },
+      {
+        "candidate": "CSRF/rebinding",
+>>>>>>> 1843e7bd (chore(review): relocalise RC1-registre-PR522 vers evidence/reviews/ + re-scelle)
         "line": 689,
         "referrer": "src/forgeai/web/server.py"
       },
       {
+<<<<<<< HEAD
         "candidate": "CSRF/rebinding",
         "line": 743,
         "referrer": "src/forgeai/web/server.py"
@@ -116077,35 +116185,60 @@
       {
         "candidate": "cross-site/same-site",
         "line": 750,
+=======
+        "candidate": "cross-site/same-site",
+        "line": 691,
+>>>>>>> 1843e7bd (chore(review): relocalise RC1-registre-PR522 vers evidence/reviews/ + re-scelle)
         "referrer": "src/forgeai/web/server.py"
       },
       {
         "candidate": "ForgeAI/0.1",
+<<<<<<< HEAD
         "line": 806,
+=======
+        "line": 747,
+>>>>>>> 1843e7bd (chore(review): relocalise RC1-registre-PR522 vers evidence/reviews/ + re-scelle)
         "referrer": "src/forgeai/web/server.py"
       },
       {
         "candidate": "HTTP/1.0",
+<<<<<<< HEAD
         "line": 818,
+=======
+        "line": 759,
+>>>>>>> 1843e7bd (chore(review): relocalise RC1-registre-PR522 vers evidence/reviews/ + re-scelle)
         "referrer": "src/forgeai/web/server.py"
       },
       {
         "candidate": "HTTP/1.1",
+<<<<<<< HEAD
         "line": 819,
+=======
+        "line": 760,
+>>>>>>> 1843e7bd (chore(review): relocalise RC1-registre-PR522 vers evidence/reviews/ + re-scelle)
         "referrer": "src/forgeai/web/server.py"
       },
       {
         "candidate": "application/json",
+<<<<<<< HEAD
         "line": 857,
+=======
+        "line": 798,
+>>>>>>> 1843e7bd (chore(review): relocalise RC1-registre-PR522 vers evidence/reviews/ + re-scelle)
         "referrer": "src/forgeai/web/server.py"
       },
       {
         "candidate": "text/plain",
+<<<<<<< HEAD
         "line": 914,
+=======
+        "line": 855,
+>>>>>>> 1843e7bd (chore(review): relocalise RC1-registre-PR522 vers evidence/reviews/ + re-scelle)
         "referrer": "src/forgeai/web/server.py"
       },
       {
         "candidate": "text/html",
+<<<<<<< HEAD
         "line": 916,
         "referrer": "src/forgeai/web/server.py"
       },
@@ -116117,6 +116250,44 @@
       {
         "candidate": "application/json",
         "line": 931,
+=======
+        "line": 857,
+        "referrer": "src/forgeai/web/server.py"
+      },
+      {
+        "candidate": "application/json",
+        "line": 863,
+        "referrer": "src/forgeai/web/server.py"
+      },
+      {
+        "candidate": "application/json",
+        "line": 872,
+        "referrer": "src/forgeai/web/server.py"
+      },
+      {
+        "candidate": "anti-CSRF/rebinding",
+        "line": 880,
+        "referrer": "src/forgeai/web/server.py"
+      },
+      {
+        "candidate": "locales/",
+        "line": 897,
+        "referrer": "src/forgeai/web/server.py"
+      },
+      {
+        "candidate": "modeles-locaux.json",
+        "line": 911,
+        "referrer": "src/forgeai/web/server.py"
+      },
+      {
+        "candidate": "moteurs-inference.json",
+        "line": 917,
+        "referrer": "src/forgeai/web/server.py"
+      },
+      {
+        "candidate": "moteurs-inference.json",
+        "line": 926,
+>>>>>>> 1843e7bd (chore(review): relocalise RC1-registre-PR522 vers evidence/reviews/ + re-scelle)
         "referrer": "src/forgeai/web/server.py"
       },
       {
@@ -116146,47 +116317,103 @@
       },
       {
         "candidate": "text/event-stream",
+<<<<<<< HEAD
         "line": 1098,
+=======
+        "line": 1039,
+>>>>>>> 1843e7bd (chore(review): relocalise RC1-registre-PR522 vers evidence/reviews/ + re-scelle)
         "referrer": "src/forgeai/web/server.py"
       },
       {
         "candidate": "son/ses",
+<<<<<<< HEAD
         "line": 1160,
+=======
+        "line": 1095,
+>>>>>>> 1843e7bd (chore(review): relocalise RC1-registre-PR522 vers evidence/reviews/ + re-scelle)
         "referrer": "src/forgeai/web/server.py"
       },
       {
         "candidate": "network/nodes.py",
+<<<<<<< HEAD
         "line": 1176,
+=======
+        "line": 1111,
+>>>>>>> 1843e7bd (chore(review): relocalise RC1-registre-PR522 vers evidence/reviews/ + re-scelle)
         "referrer": "src/forgeai/web/server.py"
       },
       {
         "candidate": "labels/capacit",
+<<<<<<< HEAD
         "line": 1177,
+=======
+        "line": 1112,
+>>>>>>> 1843e7bd (chore(review): relocalise RC1-registre-PR522 vers evidence/reviews/ + re-scelle)
         "referrer": "src/forgeai/web/server.py"
       },
       {
         "candidate": "GPU/ready",
+<<<<<<< HEAD
         "line": 1177,
+=======
+        "line": 1112,
+>>>>>>> 1843e7bd (chore(review): relocalise RC1-registre-PR522 vers evidence/reviews/ + re-scelle)
         "referrer": "src/forgeai/web/server.py"
       },
       {
         "candidate": "tat/arch",
+<<<<<<< HEAD
         "line": 1177,
+=======
+        "line": 1112,
+>>>>>>> 1843e7bd (chore(review): relocalise RC1-registre-PR522 vers evidence/reviews/ + re-scelle)
         "referrer": "src/forgeai/web/server.py"
       },
       {
         "candidate": "forgeai/receptacle",
+<<<<<<< HEAD
         "line": 1193,
+=======
+        "line": 1128,
+>>>>>>> 1843e7bd (chore(review): relocalise RC1-registre-PR522 vers evidence/reviews/ + re-scelle)
         "referrer": "src/forgeai/web/server.py"
       },
       {
         "candidate": "application/json",
+<<<<<<< HEAD
         "line": 1228,
+=======
+        "line": 1163,
+>>>>>>> 1843e7bd (chore(review): relocalise RC1-registre-PR522 vers evidence/reviews/ + re-scelle)
         "referrer": "src/forgeai/web/server.py"
       },
       {
         "candidate": "application/json",
+<<<<<<< HEAD
         "line": 1239,
+=======
+        "line": 1174,
+        "referrer": "src/forgeai/web/server.py"
+      },
+      {
+        "candidate": "TLS/tunnel",
+        "line": 1192,
+        "referrer": "src/forgeai/web/server.py"
+      },
+      {
+        "candidate": "loopback/tunnel",
+        "line": 1197,
+        "referrer": "src/forgeai/web/server.py"
+      },
+      {
+        "candidate": "origine/h",
+        "line": 1217,
+        "referrer": "src/forgeai/web/server.py"
+      },
+      {
+        "candidate": "jeton/CSRF/",
+        "line": 1234,
+>>>>>>> 1843e7bd (chore(review): relocalise RC1-registre-PR522 vers evidence/reviews/ + re-scelle)
         "referrer": "src/forgeai/web/server.py"
       },
       {
@@ -116211,22 +116438,38 @@
       },
       {
         "candidate": "application/json",
+<<<<<<< HEAD
         "line": 1303,
+=======
+        "line": 1238,
+>>>>>>> 1843e7bd (chore(review): relocalise RC1-registre-PR522 vers evidence/reviews/ + re-scelle)
         "referrer": "src/forgeai/web/server.py"
       },
       {
         "candidate": "stack_id.json",
+<<<<<<< HEAD
         "line": 1464,
+=======
+        "line": 1399,
+>>>>>>> 1843e7bd (chore(review): relocalise RC1-registre-PR522 vers evidence/reviews/ + re-scelle)
         "referrer": "src/forgeai/web/server.py"
       },
       {
         "candidate": "selection-demande.json",
+<<<<<<< HEAD
         "line": 1533,
+=======
+        "line": 1467,
+>>>>>>> 1843e7bd (chore(review): relocalise RC1-registre-PR522 vers evidence/reviews/ + re-scelle)
         "referrer": "src/forgeai/web/server.py"
       },
       {
         "candidate": "core/proc.py",
+<<<<<<< HEAD
         "line": 1551,
+=======
+        "line": 1485,
+>>>>>>> 1843e7bd (chore(review): relocalise RC1-registre-PR522 vers evidence/reviews/ + re-scelle)
         "referrer": "src/forgeai/web/server.py"
       },
       {
@@ -116808,96 +117051,6 @@
         "candidate": "src/forgeai/models/",
         "line": 54,
         "referrer": "stories/BC-models-remediation.md"
-      },
-      {
-        "candidate": "origin/main",
-        "line": 5,
-        "referrer": "stories/BUGHUNT-2026-08-16.md"
-      },
-      {
-        "candidate": "fix/bughunt-isdigit-ratelimit-gateway",
-        "line": 6,
-        "referrer": "stories/BUGHUNT-2026-08-16.md"
-      },
-      {
-        "candidate": "panne-passerelle-multi-vendor-2026-08-16.md",
-        "line": 12,
-        "referrer": "stories/BUGHUNT-2026-08-16.md"
-      },
-      {
-        "candidate": "crew_dispatch.py",
-        "line": 12,
-        "referrer": "stories/BUGHUNT-2026-08-16.md"
-      },
-      {
-        "candidate": "civ_review.py",
-        "line": 13,
-        "referrer": "stories/BUGHUNT-2026-08-16.md"
-      },
-      {
-        "candidate": "no_stub_scan.py",
-        "line": 59,
-        "referrer": "stories/BUGHUNT-2026-08-16.md"
-      },
-      {
-        "candidate": "scripts/",
-        "line": 63,
-        "referrer": "stories/BUGHUNT-2026-08-16.md"
-      },
-      {
-        "candidate": "CANON/",
-        "line": 63,
-        "referrer": "stories/BUGHUNT-2026-08-16.md"
-      },
-      {
-        "candidate": "cision/politique",
-        "line": 63,
-        "referrer": "stories/BUGHUNT-2026-08-16.md"
-      },
-      {
-        "candidate": "tests/",
-        "line": 66,
-        "referrer": "stories/BUGHUNT-2026-08-16.md"
-      },
-      {
-        "candidate": "test_adoption.py",
-        "line": 66,
-        "referrer": "stories/BUGHUNT-2026-08-16.md"
-      },
-      {
-        "candidate": "test_adoption_api.py",
-        "line": 66,
-        "referrer": "stories/BUGHUNT-2026-08-16.md"
-      },
-      {
-        "candidate": "test_ratelimit.py",
-        "line": 67,
-        "referrer": "stories/BUGHUNT-2026-08-16.md"
-      },
-      {
-        "candidate": "test_models_gateway.py",
-        "line": 67,
-        "referrer": "stories/BUGHUNT-2026-08-16.md"
-      },
-      {
-        "candidate": "web/server.py",
-        "line": 69,
-        "referrer": "stories/BUGHUNT-2026-08-16.md"
-      },
-      {
-        "candidate": "core/models.py",
-        "line": 69,
-        "referrer": "stories/BUGHUNT-2026-08-16.md"
-      },
-      {
-        "candidate": "web/ratelimit.py",
-        "line": 69,
-        "referrer": "stories/BUGHUNT-2026-08-16.md"
-      },
-      {
-        "candidate": "models/gateway.py",
-        "line": 70,
-        "referrer": "stories/BUGHUNT-2026-08-16.md"
       },
       {
         "candidate": "Owner/repo",
@@ -125311,32 +125464,32 @@
       },
       {
         "candidate": "5432/db",
-        "line": 238,
+        "line": 233,
         "referrer": "tests/test_adoption.py"
       },
       {
         "candidate": "5432/db",
-        "line": 265,
+        "line": 260,
         "referrer": "tests/test_adoption.py"
       },
       {
         "candidate": "5555/db",
-        "line": 272,
+        "line": 267,
         "referrer": "tests/test_adoption.py"
       },
       {
         "candidate": "5432/db",
-        "line": 290,
+        "line": 285,
         "referrer": "tests/test_adoption.py"
       },
       {
         "candidate": "5432/db",
-        "line": 316,
+        "line": 311,
         "referrer": "tests/test_adoption.py"
       },
       {
         "candidate": "5432/db",
-        "line": 324,
+        "line": 319,
         "referrer": "tests/test_adoption.py"
       },
       {
@@ -125346,7 +125499,7 @@
       },
       {
         "candidate": "selection-demande.json",
-        "line": 283,
+        "line": 281,
         "referrer": "tests/test_adoption_api.py"
       },
       {
@@ -129376,20 +129529,21 @@
       },
       {
         "candidate": "z/glm-4.6",
-        "line": 65,
+        "line": 56,
         "referrer": "tests/test_models_gateway.py"
       },
       {
         "candidate": "z/glm-4.6",
-        "line": 68,
+        "line": 59,
         "referrer": "tests/test_models_gateway.py"
       },
       {
         "candidate": "gateway.json",
-        "line": 91,
+        "line": 82,
         "referrer": "tests/test_models_gateway.py"
       },
       {
+<<<<<<< HEAD
         "candidate": "482/",
         "line": 98,
         "referrer": "tests/test_models_gateway.py"
@@ -129427,10 +129581,15 @@
       {
         "candidate": "gateway.json",
         "line": 108,
+=======
+        "candidate": "application/json",
+        "line": 135,
+>>>>>>> 1843e7bd (chore(review): relocalise RC1-registre-PR522 vers evidence/reviews/ + re-scelle)
         "referrer": "tests/test_models_gateway.py"
       },
       {
         "candidate": "wirings.json",
+<<<<<<< HEAD
         "line": 115,
         "referrer": "tests/test_models_gateway.py"
       },
@@ -129447,6 +129606,9 @@
       {
         "candidate": "wirings.json",
         "line": 257,
+=======
+        "line": 200,
+>>>>>>> 1843e7bd (chore(review): relocalise RC1-registre-PR522 vers evidence/reviews/ + re-scelle)
         "referrer": "tests/test_models_gateway.py"
       },
       {
@@ -137238,10 +137400,10 @@
         "severity": "hard"
       },
       {
-        "candidate": "BUGHUNT-2026-08-16-v3",
+        "candidate": "RC1-registre-PR522",
         "line": 180,
         "referrer": "evidence/reviews/BINDING.txt",
-        "resolved": "evidence/reviews/BUGHUNT-2026-08-16-v3",
+        "resolved": "evidence/reviews/RC1-registre-PR522",
         "severity": "hard"
       },
       {
@@ -144060,69 +144222,6 @@
         "line": 808,
         "referrer": "evidence/reviews/B-24cd/pack.md",
         "resolved": "tests/test_ide_bootstrap.py",
-        "severity": "hard"
-      },
-      {
-        "candidate": "governance/STATE-CURRENT.json",
-        "line": 6,
-        "referrer": "evidence/reviews/BUGHUNT-2026-08-16-v1/DeepSeek-V4-Pro.verdict.json",
-        "resolved": "governance/STATE-CURRENT.json",
-        "severity": "hard"
-      },
-      {
-        "candidate": "governance/STATE-CURRENT.json",
-        "line": 7,
-        "referrer": "evidence/reviews/BUGHUNT-2026-08-16-v1/DeepSeek-V4-Pro.verdict.json",
-        "resolved": "governance/STATE-CURRENT.json",
-        "severity": "hard"
-      },
-      {
-        "candidate": "governance/STATE-CURRENT.md",
-        "line": 7,
-        "referrer": "evidence/reviews/BUGHUNT-2026-08-16-v1/DeepSeek-V4-Pro.verdict.json",
-        "resolved": "governance/STATE-CURRENT.md",
-        "severity": "hard"
-      },
-      {
-        "candidate": "governance/STATE-CURRENT.json",
-        "line": 12,
-        "referrer": "evidence/reviews/BUGHUNT-2026-08-16-v1/DeepSeek-V4-Pro.verdict.json",
-        "resolved": "governance/STATE-CURRENT.json",
-        "severity": "hard"
-      },
-      {
-        "candidate": "governance/STATE-CURRENT.json",
-        "line": 14,
-        "referrer": "evidence/reviews/BUGHUNT-2026-08-16-v1/DeepSeek-V4-Pro.verdict.json",
-        "resolved": "governance/STATE-CURRENT.json",
-        "severity": "hard"
-      },
-      {
-        "candidate": "tests/test_adoption.py",
-        "line": 14,
-        "referrer": "evidence/reviews/BUGHUNT-2026-08-16-v1/DeepSeek-V4-Pro.verdict.json",
-        "resolved": "tests/test_adoption.py",
-        "severity": "hard"
-      },
-      {
-        "candidate": "tests/test_adoption_api.py",
-        "line": 14,
-        "referrer": "evidence/reviews/BUGHUNT-2026-08-16-v1/DeepSeek-V4-Pro.verdict.json",
-        "resolved": "tests/test_adoption_api.py",
-        "severity": "hard"
-      },
-      {
-        "candidate": "tests/test_models_gateway.py",
-        "line": 14,
-        "referrer": "evidence/reviews/BUGHUNT-2026-08-16-v1/DeepSeek-V4-Pro.verdict.json",
-        "resolved": "tests/test_models_gateway.py",
-        "severity": "hard"
-      },
-      {
-        "candidate": "tests/test_ratelimit.py",
-        "line": 14,
-        "referrer": "evidence/reviews/BUGHUNT-2026-08-16-v1/DeepSeek-V4-Pro.verdict.json",
-        "resolved": "tests/test_ratelimit.py",
         "severity": "hard"
       },
       {
@@ -151469,6 +151568,7 @@
         "severity": "hard"
       },
       {
+<<<<<<< HEAD
         "candidate": "scripts/registre.py",
         "line": 6,
         "referrer": "evidence/reviews/RC1-542-v1/Qwen3.7-Max.verdict.json",
@@ -151480,6 +151580,19 @@
         "line": 6,
         "referrer": "evidence/reviews/RC1-544/Qwen3.7-Max.verdict.json",
         "resolved": "src/forgeai/rag/hardened.py",
+=======
+        "candidate": "evidence/registres/mission.jsonl",
+        "line": 6,
+        "referrer": "evidence/reviews/RC1-registre-PR522/DeepSeek-V4-Pro.verdict.json",
+        "resolved": "evidence/registres/mission.jsonl",
+        "severity": "hard"
+      },
+      {
+        "candidate": "evidence/registres/mission.jsonl",
+        "line": 8,
+        "referrer": "evidence/reviews/RC1-registre-PR522/DeepSeek-V4-Pro.verdict.json",
+        "resolved": "evidence/registres/mission.jsonl",
+>>>>>>> 1843e7bd (chore(review): relocalise RC1-registre-PR522 vers evidence/reviews/ + re-scelle)
         "severity": "hard"
       },
       {
@@ -159036,69 +159149,6 @@
         "severity": "hard"
       },
       {
-        "candidate": "src/forgeai/web/server.py",
-        "line": 23,
-        "referrer": "stories/BUGHUNT-2026-08-16.md",
-        "resolved": "src/forgeai/web/server.py",
-        "severity": "hard"
-      },
-      {
-        "candidate": "src/forgeai/core/models.py",
-        "line": 24,
-        "referrer": "stories/BUGHUNT-2026-08-16.md",
-        "resolved": "src/forgeai/core/models.py",
-        "severity": "hard"
-      },
-      {
-        "candidate": "src/forgeai/web/ratelimit.py",
-        "line": 31,
-        "referrer": "stories/BUGHUNT-2026-08-16.md",
-        "resolved": "src/forgeai/web/ratelimit.py",
-        "severity": "hard"
-      },
-      {
-        "candidate": "src/forgeai/models/gateway.py",
-        "line": 40,
-        "referrer": "stories/BUGHUNT-2026-08-16.md",
-        "resolved": "src/forgeai/models/gateway.py",
-        "severity": "hard"
-      },
-      {
-        "candidate": "tests/test_adoption_api.py",
-        "line": 47,
-        "referrer": "stories/BUGHUNT-2026-08-16.md",
-        "resolved": "tests/test_adoption_api.py",
-        "severity": "hard"
-      },
-      {
-        "candidate": "tests/test_adoption.py",
-        "line": 49,
-        "referrer": "stories/BUGHUNT-2026-08-16.md",
-        "resolved": "tests/test_adoption.py",
-        "severity": "hard"
-      },
-      {
-        "candidate": "tests/test_ratelimit.py",
-        "line": 51,
-        "referrer": "stories/BUGHUNT-2026-08-16.md",
-        "resolved": "tests/test_ratelimit.py",
-        "severity": "hard"
-      },
-      {
-        "candidate": "tests/test_models_gateway.py",
-        "line": 54,
-        "referrer": "stories/BUGHUNT-2026-08-16.md",
-        "resolved": "tests/test_models_gateway.py",
-        "severity": "hard"
-      },
-      {
-        "candidate": "governance/STATE-CURRENT.json",
-        "line": 64,
-        "referrer": "stories/BUGHUNT-2026-08-16.md",
-        "resolved": "governance/STATE-CURRENT.json",
-        "severity": "hard"
-      },
-      {
         "candidate": "scripts/coordination/validate_coordination.py",
         "line": 20,
         "referrer": "stories/CAP-033A.md",
@@ -163914,12 +163964,21 @@
   "summary": {
     "by_class": {
       "ARCHIVE": 44,
+<<<<<<< HEAD
       "DOCS": 18,
       "EVIDENCE": 1516,
       "GENERATED": 5,
       "GOVERNANCE": 193,
       "PRODUCT": 113,
       "TEST": 211,
+=======
+      "DOCS": 14,
+      "EVIDENCE": 1348,
+      "GENERATED": 5,
+      "GOVERNANCE": 175,
+      "PRODUCT": 112,
+      "TEST": 200,
+>>>>>>> 1843e7bd (chore(review): relocalise RC1-registre-PR522 vers evidence/reviews/ + re-scelle)
       "WORKING": 10
     },
     "by_rule": {
@@ -163934,7 +163993,11 @@
       "evidence-audit-output-root": 18,
       "evidence-dedup-root": 2,
       "evidence-registres-root": 35,
+<<<<<<< HEAD
       "evidence-reviews-root": 1461,
+=======
+      "evidence-reviews-root": 1295,
+>>>>>>> 1843e7bd (chore(review): relocalise RC1-registre-PR522 vers evidence/reviews/ + re-scelle)
       "generated-authority-map": 1,
       "generated-path-classification-json": 1,
       "generated-path-classification-markdown": 1,
@@ -163960,9 +164023,15 @@
       "governance-root-requirements-ci-txt": 1,
       "governance-root-sonar": 1,
       "governance-scripts-coordination": 4,
+<<<<<<< HEAD
       "governance-scripts-governance": 11,
       "governance-scripts-root": 25,
       "governance-stories": 91,
+=======
+      "governance-scripts-governance": 7,
+      "governance-scripts-root": 21,
+      "governance-stories": 86,
+>>>>>>> 1843e7bd (chore(review): relocalise RC1-registre-PR522 vers evidence/reviews/ + re-scelle)
       "product-catalogue-checksum": 1,
       "product-source": 112,
       "test-suite": 211,
@@ -163970,11 +164039,19 @@
       "working-sandbox-readme": 1
     },
     "case_collisions_total": 0,
+<<<<<<< HEAD
     "dangling_references_total": 16355,
     "generated_total": 9,
     "load_bearing_total": 1970,
     "portability_violations_total": 0,
     "tracked_total": 2110,
+=======
+    "dangling_references_total": 15013,
+    "generated_total": 7,
+    "load_bearing_total": 1779,
+    "portability_violations_total": 0,
+    "tracked_total": 1908,
+>>>>>>> 1843e7bd (chore(review): relocalise RC1-registre-PR522 vers evidence/reviews/ + re-scelle)
     "unclassified_total": 0,
     "unicode_anomalies_total": 0
   },
