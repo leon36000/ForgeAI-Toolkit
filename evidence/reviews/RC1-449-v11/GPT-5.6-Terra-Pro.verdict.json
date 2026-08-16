@@ -1,0 +1,19 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "majeure",
+   "fichier": "scripts/mypy_gate.py",
+   "description": "Le scan anti-neutralisation ne couvre que les fichiers déjà présents dans la base. Un nouveau fichier sous `src/forgeai` peut donc introduire des erreurs masquées par `# mypy: ignore-errors` (ou une autre directive `# mypy: ...`) : mypy ne rapporte alors aucune erreur, le fichier n'est ni signalé comme non-baseliné ni scanné comme neutralisé. Cela contourne le critère « aucune nouvelle erreur autorisée dans un module couvert ».",
+   "preuve": "Dans `main()`, l'appel à `fichiers_neutralises()` reçoit exclusivement `set(base[\"fichiers_proteges\"]) | set(base[\"dette\"])`. La fonction `anomalies()` ne signale les directives que via l'argument `neutralises`, tandis que `_anomalies_non_baselinees()` ne signale un fichier absent de la base que si `erreurs.get(f, 0) > 0`. Scénario reproductible : ajouter `src/forgeai/nouveau.py` avec `# mypy: ignore-errors` et des erreurs de type ; mypy retourne zéro erreur pour ce fichier, il est absent de l'union scannée et aucune anomalie n'est produite."
+  }
+ ],
+ "date_heure": "2026-08-16T14:36:00.942093+00:00",
+ "prompt_sha256": "46f88effb66b172d7792830930f70e05893b48a088326e0f2a67a5247c20bec2",
+ "reviewer_model": "GPT-5.6-Terra-Pro",
+ "modele_servi": "gpt56-terra-pro-openrouter",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

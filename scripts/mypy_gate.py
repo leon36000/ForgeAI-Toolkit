@@ -111,24 +111,27 @@ def fichiers_reels(racine: Path, cible: str) -> set[str]:
 # UTF-8. Round 8 : la directive `# mypy:` est généralisée à TOUTE option mypy — un fichier suivi
 # n'a jamais besoin d'une directive mypy inline, donc toute occurrence `# mypy: <...>` y est
 # suspecte. Round 9 : le périmètre d'appel couvre fichiers_proteges ET dette (voir main()), pas
-# seulement les fichiers protégés.
+# seulement les fichiers protégés. Round 11 : le périmètre d'appel couvre `reels` (tout fichier
+# réel sous la cible mypy), pas seulement `fichiers_proteges | dette` — un nouveau fichier pas
+# encore tracké par la base, neutralisé par une directive inline, n'échappe plus au scan (il aurait
+# sinon été invisible : mypy rapporte 0 erreur pour un fichier neutralisé, donc
+# `_anomalies_non_baselinees` ne le signale pas non plus).
 _DIRECTIVE_NEUTRALISATION = re.compile(rb"#\s*mypy:\s*\S")
 
 
 def fichiers_neutralises(racine: Path, fichiers: set[str]) -> set[str]:
     """Scanne le contenu de chaque fichier de `fichiers` (qui existe dans `racine`) à la
     recherche de toute directive mypy inline `# mypy: <...>` (n'importe où dans le fichier,
-    mypy ne l'exige pas en première ligne). Retourne l'ensemble des fichiers suivis contenant
-    une telle directive — qu'ils soient protégés (zéro tolérance) ou en dette (compte mesuré),
-    tout fichier tracké par la base est présumé ne jamais avoir besoin d'une directive mypy
-    inline, donc toute occurrence est traitée comme suspecte par principe, quelle que soit
-    l'option nommée, plutôt que d'énumérer des noms d'options spécifiques qui deviendraient
-    vite obsolètes ou incomplets. La lecture est effectuée en octets bruts (`read_bytes()`),
-    sans décodage, afin de rester indépendante de l'encodage déclaré du fichier (PEP-263) ;
-    la directive étant composée uniquement de caractères ASCII, une recherche bytes la détecte
-    toujours, même pour un fichier latin-1/cp1252 qui ferait échouer une lecture texte UTF-8.
-    Fichier illisible ou absent : ignoré silencieusement (déjà couvert par une autre règle si
-    le fichier a disparu)."""
+    mypy ne l'exige pas en première ligne). Retourne l'ensemble des fichiers contenant
+    une telle directive — qu'ils soient protégés, en dette, ou pas encore trackés par la base :
+    AUCUN fichier réellement analysé par mypy ne devrait jamais avoir besoin d'une directive
+    mypy inline, la présence d'une telle directive est donc toujours suspecte, qu'elle porte
+    sur un fichier connu de la base ou sur un fichier tout juste ajouté au dépôt.
+    La lecture est effectuée en octets bruts (`read_bytes()`), sans décodage, afin de rester
+    indépendante de l'encodage déclaré du fichier (PEP-263) ; la directive étant composée
+    uniquement de caractères ASCII, une recherche bytes la détecte toujours, même pour un
+    fichier latin-1/cp1252 qui ferait échouer une lecture texte UTF-8. Fichier illisible ou
+    absent : ignoré silencieusement (déjà couvert par une autre règle si le fichier a disparu)."""
     resultat: set[str] = set()
     for f in fichiers:
         chemin = racine / f
@@ -426,10 +429,11 @@ def anomalies(
        demeurer suivi (soit en dette, soit promu aux fichiers_proteges) — toute disparition
        silencieuse du tracking est une anomalie (anti-contournement, mirrorant
        gate_docs._charger_base_reference_git).
-    6. si `neutralises` est fourni : tout fichier suivi (protégé ou en dette) listé dans
-       `neutralises` est signalé comme contenant une directive de neutralisation mypy
-       (`# mypy: ...`) — la mesure est compromise car mypy ne remontera aucune erreur sur ce
-       fichier, quelle que soit l'option nommée.
+    6. si `neutralises` est fourni : tout fichier listé dans `neutralises` (typiquement
+       l'ensemble complet des fichiers réels sous la cible mypy, trackés ou non par la base)
+       est signalé comme contenant une directive de neutralisation mypy (`# mypy: ...`) —
+       la mesure est compromise car mypy ne remontera aucune erreur sur ce fichier, quelle
+       que soit l'option nommée.
 
     Retourne la liste des messages d'anomalie (vide si aucune)."""
     base_validee = _valider_base(base, "base")
@@ -550,10 +554,7 @@ def main(argv: list[str] | None = None) -> int:
         if message_reference:
             print(message_reference)
 
-        neutralises = fichiers_neutralises(
-            racine,
-            set(base["fichiers_proteges"]) | set(base["dette"])
-        )
+        neutralises = fichiers_neutralises(racine, reels)
         rapport = anomalies(reels, erreurs, base, base_reference, neutralises=neutralises)
 
         total = sum(erreurs.get(f, 0) for f in reels)
@@ -588,6 +589,3 @@ def main(argv: list[str] | None = None) -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-
-
-# Correctif post-revue scellée #449 (round 9, REJECT de GPT-5.6-Terra-Pro) — `scripts/mypy_gate.py`

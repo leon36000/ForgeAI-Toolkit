@@ -900,3 +900,38 @@ def test_g28_fichier_dette_avec_directive_est_detecte():
     assert any(
         "directive mypy inline" in m and "server.py" in m for m in anomalies
     )
+
+
+# ---------------------------------------------------------------------------
+# Correctif post-revue scellée #449 (round 11) — perimetre etendu a `reels`
+# ---------------------------------------------------------------------------
+
+def test_g29_fichier_non_baseline_avec_directive_est_detecte():
+    base = _base(total_erreurs=0)
+    anomalies = mypy_gate.anomalies(
+        reels={"nouveau.py"},
+        erreurs={},
+        base=base,
+        base_reference=None,
+        neutralises={"nouveau.py"},
+    )
+    assert any(
+        "directive mypy inline" in m and "nouveau.py" in m for m in anomalies
+    )
+
+
+def test_g29b_fichier_non_baseline_sans_directive_ni_erreur_aucune_anomalie():
+    base = _base(total_erreurs=0)
+    anomalies = mypy_gate.anomalies(
+        reels={"nouveau.py"},
+        erreurs={},
+        base=base,
+        base_reference=None,
+    )
+    assert anomalies == []
+
+
+def test_g30_fichiers_neutralises_couvre_fichier_hors_base(tmp_path):
+    chemin = tmp_path / "hors_base.py"
+    chemin.write_bytes(b"# mypy: ignore-errors\nx = 1\n")
+    assert mypy_gate.fichiers_neutralises(tmp_path, {"hors_base.py"}) == {"hors_base.py"}
