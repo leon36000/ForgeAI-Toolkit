@@ -1,0 +1,19 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "tests/test_check_doc_links.py",
+   "description": "L'exigence TDD (test écrit avant l'implémentation) n'est pas vérifiable depuis le diff : le test et l'implémentation apparaissent comme des ajouts simultanés, sans ordre de commit visible.",
+   "preuve": "Diff new file mode pour scripts/governance/check_doc_links.py et tests/test_check_doc_links.py."
+  }
+ ],
+ "date_heure": "2026-08-16T05:07:07.602337+00:00",
+ "prompt_sha256": "e058f08942558eceb44f3cea828b19519afcf93430adc26460299fb54df4caa4",
+ "reviewer_model": "DeepSeek-V4-Pro",
+ "modele_servi": "deepseek-v4-pro-direct",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}
