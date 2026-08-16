@@ -268,6 +268,21 @@ def test_id_null_detecte(tmp_path: Path) -> None:
     assert any("champ 'id' doit être une chaîne non vide" in e for e in erreurs)
 
 
+def test_risk_paths_element_non_chaine_detecte(tmp_path: Path) -> None:
+    # Durcissement proactif (round 12-13, même famille que l'objection GPT-5.6-Terra-Pro sur
+    # exception_types) : risk_paths était vérifié « est une liste » mais pas le type de ses
+    # éléments — [123, None] passait la validation.
+    _creer_fichier_source(
+        tmp_path, "src/example.py", "try:\n    pass\nexcept ValueError:\n    pass\n"
+    )
+    contrat = _entree_valide()
+    contrat["risk_paths"] = [123, None]
+    _ecrire_inventaire(tmp_path, [contrat])
+
+    erreurs = VALIDATEUR.valider(tmp_path, aujourd_hui=dt.date(2026, 1, 1))
+    assert any("risk_paths" in e for e in erreurs)
+
+
 def test_schema_version_inconnue_detectee(tmp_path: Path) -> None:
     # Objection GPT-5.6-Terra-Pro (revue scellée round 12, #452) : le validateur exigeait
     # 'schema' non vide, mais ne comparait jamais sa VALEUR à "error-handling-contracts/1" —

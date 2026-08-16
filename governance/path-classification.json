@@ -31216,7 +31216,7 @@
         },
         {
           "candidate": "scripts/governance/validate_error_contracts.py",
-          "line": 392,
+          "line": 397,
           "referrer": "scripts/governance/validate_error_contracts.py",
           "resolved": "scripts/governance/validate_error_contracts.py",
           "severity": "hard"
@@ -31237,8 +31237,8 @@
         }
       ],
       "rule_id": "governance-scripts-governance",
-      "sha256": "83403934066716b3aaf8f84d7c67a56ee2f69776a04fae63f27a469f7842821b",
-      "size": 17724,
+      "sha256": "e94671603a26e91e9141f040f2d33661cd7a7e4f3391c45043dfed2518e3d5da",
+      "size": 18090,
       "target_path": null,
       "type": "text"
     },
@@ -55499,8 +55499,8 @@
         }
       ],
       "rule_id": "test-suite",
-      "sha256": "0a9c24f200292bd5d041e87814d8504e83fc8d6cb68d7c654f285ac26f282ead",
-      "size": 23488,
+      "sha256": "41c04f5a6ceb385aa022dc5c8dd817046dade69a86c3d7003d3240746b80565b",
+      "size": 24170,
       "target_path": null,
       "type": "text"
     },
@@ -103424,22 +103424,22 @@
       },
       {
         "candidate": "error-handling-contracts.json",
-        "line": 343,
+        "line": 348,
         "referrer": "scripts/governance/validate_error_contracts.py"
       },
       {
         "candidate": "reviews/RC1-023-PR-v4",
-        "line": 379,
+        "line": 384,
         "referrer": "scripts/governance/validate_error_contracts.py"
       },
       {
         "candidate": "error-handling-contracts.json",
-        "line": 390,
+        "line": 395,
         "referrer": "scripts/governance/validate_error_contracts.py"
       },
       {
         "candidate": "ERROR-HANDLING-CONTRACTS.md",
-        "line": 448,
+        "line": 453,
         "referrer": "scripts/governance/validate_error_contracts.py"
       },
       {
@@ -138213,28 +138213,18 @@
         "referrer": "tests/test_rc1023_error_contracts.py"
       },
       {
-        "candidate": "error-handling-contracts/1",
-        "line": 273,
-        "referrer": "tests/test_rc1023_error_contracts.py"
-      },
-      {
-        "candidate": "incompatible/999",
-        "line": 274,
-        "referrer": "tests/test_rc1023_error_contracts.py"
-      },
-      {
         "candidate": "src/example.py",
         "line": 276,
         "referrer": "tests/test_rc1023_error_contracts.py"
       },
       {
-        "candidate": "incompatible/999",
-        "line": 279,
+        "candidate": "error-handling-contracts/1",
+        "line": 288,
         "referrer": "tests/test_rc1023_error_contracts.py"
       },
       {
-        "candidate": "src/example.py",
-        "line": 288,
+        "candidate": "incompatible/999",
+        "line": 289,
         "referrer": "tests/test_rc1023_error_contracts.py"
       },
       {
@@ -138243,178 +138233,178 @@
         "referrer": "tests/test_rc1023_error_contracts.py"
       },
       {
-        "candidate": "src/example.py",
-        "line": 292,
+        "candidate": "incompatible/999",
+        "line": 294,
         "referrer": "tests/test_rc1023_error_contracts.py"
       },
       {
         "candidate": "src/example.py",
-        "line": 296,
+        "line": 303,
         "referrer": "tests/test_rc1023_error_contracts.py"
       },
       {
         "candidate": "src/example.py",
-        "line": 302,
+        "line": 306,
         "referrer": "tests/test_rc1023_error_contracts.py"
       },
       {
         "candidate": "src/example.py",
-        "line": 323,
+        "line": 307,
         "referrer": "tests/test_rc1023_error_contracts.py"
       },
       {
         "candidate": "src/example.py",
-        "line": 336,
+        "line": 311,
         "referrer": "tests/test_rc1023_error_contracts.py"
       },
       {
         "candidate": "src/example.py",
-        "line": 349,
+        "line": 317,
         "referrer": "tests/test_rc1023_error_contracts.py"
       },
       {
         "candidate": "src/example.py",
-        "line": 363,
+        "line": 338,
         "referrer": "tests/test_rc1023_error_contracts.py"
       },
       {
         "candidate": "src/example.py",
-        "line": 376,
+        "line": 351,
         "referrer": "tests/test_rc1023_error_contracts.py"
       },
       {
         "candidate": "src/example.py",
-        "line": 389,
+        "line": 364,
+        "referrer": "tests/test_rc1023_error_contracts.py"
+      },
+      {
+        "candidate": "src/example.py",
+        "line": 378,
+        "referrer": "tests/test_rc1023_error_contracts.py"
+      },
+      {
+        "candidate": "src/example.py",
+        "line": 391,
+        "referrer": "tests/test_rc1023_error_contracts.py"
+      },
+      {
+        "candidate": "src/example.py",
+        "line": 404,
         "referrer": "tests/test_rc1023_error_contracts.py"
       },
       {
         "candidate": "tests/test_example.py",
-        "line": 394,
+        "line": 409,
         "referrer": "tests/test_rc1023_error_contracts.py"
       },
       {
         "candidate": "tests/test_example.py",
-        "line": 398,
+        "line": 413,
         "referrer": "tests/test_rc1023_error_contracts.py"
       },
       {
         "candidate": "src/example.py",
-        "line": 410,
+        "line": 425,
         "referrer": "tests/test_rc1023_error_contracts.py"
       },
       {
         "candidate": "tests/test_inexistant.py",
-        "line": 414,
+        "line": 429,
         "referrer": "tests/test_rc1023_error_contracts.py"
       },
       {
         "candidate": "tests/test_inexistant.py",
-        "line": 420,
+        "line": 435,
         "referrer": "tests/test_rc1023_error_contracts.py"
       },
       {
         "candidate": "src/example.py",
-        "line": 426,
+        "line": 441,
         "referrer": "tests/test_rc1023_error_contracts.py"
       },
       {
         "candidate": "src/example.py",
-        "line": 443,
+        "line": 458,
         "referrer": "tests/test_rc1023_error_contracts.py"
       },
       {
         "candidate": "src/example.py",
-        "line": 446,
+        "line": 461,
         "referrer": "tests/test_rc1023_error_contracts.py"
       },
       {
         "candidate": "src/example.py",
-        "line": 456,
+        "line": 471,
         "referrer": "tests/test_rc1023_error_contracts.py"
       },
       {
         "candidate": "src/example.py",
-        "line": 460,
+        "line": 475,
         "referrer": "tests/test_rc1023_error_contracts.py"
       },
       {
         "candidate": "src/fichier_totalement_absent.py",
-        "line": 472,
+        "line": 487,
         "referrer": "tests/test_rc1023_error_contracts.py"
       },
       {
         "candidate": "src/example.py",
-        "line": 484,
+        "line": 499,
         "referrer": "tests/test_rc1023_error_contracts.py"
       },
       {
         "candidate": "src/example.py",
-        "line": 488,
+        "line": 503,
         "referrer": "tests/test_rc1023_error_contracts.py"
       },
       {
         "candidate": "src/example.py",
-        "line": 501,
+        "line": 516,
         "referrer": "tests/test_rc1023_error_contracts.py"
       },
       {
         "candidate": "tests/test_example.py",
-        "line": 506,
-        "referrer": "tests/test_rc1023_error_contracts.py"
-      },
-      {
-        "candidate": "src/example.py",
-        "line": 510,
-        "referrer": "tests/test_rc1023_error_contracts.py"
-      },
-      {
-        "candidate": "src/example.py",
-        "line": 511,
-        "referrer": "tests/test_rc1023_error_contracts.py"
-      },
-      {
-        "candidate": "tests/test_example.py",
-        "line": 514,
-        "referrer": "tests/test_rc1023_error_contracts.py"
-      },
-      {
-        "candidate": "src/example.py",
         "line": 521,
         "referrer": "tests/test_rc1023_error_contracts.py"
       },
       {
-        "candidate": "tests/test_example.py",
-        "line": 523,
+        "candidate": "src/example.py",
+        "line": 525,
         "referrer": "tests/test_rc1023_error_contracts.py"
       },
       {
         "candidate": "src/example.py",
-        "line": 534,
+        "line": 526,
         "referrer": "tests/test_rc1023_error_contracts.py"
       },
       {
-        "candidate": "tests/test_exemple.py",
-        "line": 539,
+        "candidate": "tests/test_example.py",
+        "line": 529,
         "referrer": "tests/test_rc1023_error_contracts.py"
       },
       {
-        "candidate": "tests/test_exemple.py",
-        "line": 543,
+        "candidate": "src/example.py",
+        "line": 536,
         "referrer": "tests/test_rc1023_error_contracts.py"
       },
       {
-        "candidate": "tests/test_exemple.py",
+        "candidate": "tests/test_example.py",
+        "line": 538,
+        "referrer": "tests/test_rc1023_error_contracts.py"
+      },
+      {
+        "candidate": "src/example.py",
         "line": 549,
         "referrer": "tests/test_rc1023_error_contracts.py"
       },
       {
-        "candidate": "src/example.py",
-        "line": 555,
+        "candidate": "tests/test_exemple.py",
+        "line": 554,
         "referrer": "tests/test_rc1023_error_contracts.py"
       },
       {
         "candidate": "tests/test_exemple.py",
-        "line": 560,
+        "line": 558,
         "referrer": "tests/test_rc1023_error_contracts.py"
       },
       {
@@ -138424,67 +138414,82 @@
       },
       {
         "candidate": "src/example.py",
-        "line": 576,
+        "line": 570,
         "referrer": "tests/test_rc1023_error_contracts.py"
       },
       {
-        "candidate": "tests/test_classe.py",
-        "line": 581,
+        "candidate": "tests/test_exemple.py",
+        "line": 575,
         "referrer": "tests/test_rc1023_error_contracts.py"
       },
       {
-        "candidate": "tests/test_classe.py",
-        "line": 585,
+        "candidate": "tests/test_exemple.py",
+        "line": 579,
         "referrer": "tests/test_rc1023_error_contracts.py"
       },
       {
         "candidate": "src/example.py",
-        "line": 597,
+        "line": 591,
         "referrer": "tests/test_rc1023_error_contracts.py"
       },
       {
         "candidate": "tests/test_classe.py",
-        "line": 602,
+        "line": 596,
         "referrer": "tests/test_rc1023_error_contracts.py"
       },
       {
         "candidate": "tests/test_classe.py",
-        "line": 606,
+        "line": 600,
         "referrer": "tests/test_rc1023_error_contracts.py"
       },
       {
-        "candidate": "tests/test_classe.py",
+        "candidate": "src/example.py",
         "line": 612,
         "referrer": "tests/test_rc1023_error_contracts.py"
       },
       {
-        "candidate": "reviews/RC1-023-PR-v4",
-        "line": 616,
+        "candidate": "tests/test_classe.py",
+        "line": 617,
         "referrer": "tests/test_rc1023_error_contracts.py"
       },
       {
-        "candidate": "src/example.py",
+        "candidate": "tests/test_classe.py",
         "line": 621,
         "referrer": "tests/test_rc1023_error_contracts.py"
       },
       {
-        "candidate": "tests/test_sans_rapport.py",
-        "line": 626,
-        "referrer": "tests/test_rc1023_error_contracts.py"
-      },
-      {
-        "candidate": "tests/test_sans_rapport.py",
-        "line": 631,
-        "referrer": "tests/test_rc1023_error_contracts.py"
-      },
-      {
-        "candidate": "tests/test_sans_rapport.py",
-        "line": 637,
+        "candidate": "tests/test_classe.py",
+        "line": 627,
         "referrer": "tests/test_rc1023_error_contracts.py"
       },
       {
         "candidate": "reviews/RC1-023-PR-v4",
+        "line": 631,
+        "referrer": "tests/test_rc1023_error_contracts.py"
+      },
+      {
+        "candidate": "src/example.py",
+        "line": 636,
+        "referrer": "tests/test_rc1023_error_contracts.py"
+      },
+      {
+        "candidate": "tests/test_sans_rapport.py",
         "line": 641,
+        "referrer": "tests/test_rc1023_error_contracts.py"
+      },
+      {
+        "candidate": "tests/test_sans_rapport.py",
+        "line": 646,
+        "referrer": "tests/test_rc1023_error_contracts.py"
+      },
+      {
+        "candidate": "tests/test_sans_rapport.py",
+        "line": 652,
+        "referrer": "tests/test_rc1023_error_contracts.py"
+      },
+      {
+        "candidate": "reviews/RC1-023-PR-v4",
+        "line": 656,
         "referrer": "tests/test_rc1023_error_contracts.py"
       },
       {
@@ -168628,7 +168633,7 @@
       },
       {
         "candidate": "scripts/governance/validate_error_contracts.py",
-        "line": 392,
+        "line": 397,
         "referrer": "scripts/governance/validate_error_contracts.py",
         "resolved": "scripts/governance/validate_error_contracts.py",
         "severity": "hard"
@@ -173953,7 +173958,7 @@
       "working-sandbox-readme": 1
     },
     "case_collisions_total": 0,
-    "dangling_references_total": 16039,
+    "dangling_references_total": 16040,
     "generated_total": 17,
     "load_bearing_total": 1926,
     "portability_violations_total": 0,

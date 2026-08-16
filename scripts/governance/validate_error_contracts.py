@@ -323,8 +323,13 @@ def _erreurs_entree(
         if not isinstance(valeur, str) or not valeur.strip():
             erreurs.append(f"{identifiant} : champ '{champ}' doit être une chaîne non vide")
 
-    if not isinstance(entree.get("risk_paths"), list):
+    risk_paths = entree.get("risk_paths")
+    if not isinstance(risk_paths, list):
         erreurs.append(f"{identifiant} : champ 'risk_paths' doit être une liste")
+    elif any(not isinstance(rp, str) or not rp.strip() for rp in risk_paths):
+        # Durcissement proactif (round 12-13, #452) — même famille que exception_types :
+        # le type des ÉLÉMENTS de la liste n'était pas vérifié.
+        erreurs.append(f"{identifiant} : champ 'risk_paths' doit contenir des chaînes non vides")
 
     if not isinstance(entree.get("exception_types"), list) or not entree.get("exception_types"):
         erreurs.append(f"{identifiant} : champ 'exception_types' doit être une liste non vide")
