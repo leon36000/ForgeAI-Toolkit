@@ -187,12 +187,17 @@ def _deploy_resume() -> dict:
     (elles peuvent contenir la sortie d'outils ; ERR-041B les rédige déjà pour la persistance)."""
     with _DEPLOY_STATE["lock"]:
         proc = _DEPLOY_STATE["proc"]
-        return {
+        resume = {
             "en_cours": proc is not None and proc.poll() is None,
             "done": _DEPLOY_STATE["done"],
             "exit_code": _DEPLOY_STATE["exit_code"],
-            "nettoyage_incertain": _DEPLOY_STATE["nettoyage_incertain"],
         }
+        # Round 5 (#452, objection DeepSeek-V4-Pro CRITIQUE) : n'apparaît QUE si True — préserve
+        # EXACTEMENT le payload d'avant round 4 sur le chemin nominal (aucun changement observable
+        # sur un déploiement réussi).
+        if _DEPLOY_STATE["nettoyage_incertain"]:
+            resume["nettoyage_incertain"] = True
+        return resume
 
 
 def hardware_json() -> str:
@@ -1078,10 +1083,10 @@ class ForgeAIHandler(BaseHTTPRequestHandler):
                     done = _DEPLOY_STATE["done"]
                     exit_code = _DEPLOY_STATE["exit_code"]
                     nettoyage_incertain = _DEPLOY_STATE["nettoyage_incertain"]
-                payload = json.dumps(
-                    {"exit_code": exit_code if done else None, "nettoyage_incertain": nettoyage_incertain},
-                    ensure_ascii=False,
-                )
+                fin = {"exit_code": exit_code if done else None}
+                if nettoyage_incertain:
+                    fin["nettoyage_incertain"] = True
+                payload = json.dumps(fin, ensure_ascii=False)
                 try:
                     for line in lines:
                         self.wfile.write(f"data: {line}\n\n".encode("utf-8"))
@@ -1106,10 +1111,10 @@ class ForgeAIHandler(BaseHTTPRequestHandler):
                             return
                         idx += 1
                     if done:
-                        payload = json.dumps(
-                            {"exit_code": exit_code, "nettoyage_incertain": nettoyage_incertain},
-                            ensure_ascii=False,
-                        )
+                        fin = {"exit_code": exit_code}
+                        if nettoyage_incertain:
+                            fin["nettoyage_incertain"] = True
+                        payload = json.dumps(fin, ensure_ascii=False)
                         try:
                             self.wfile.write(f"event: end\ndata: {payload}\n\n".encode("utf-8"))
                             self.wfile.flush()

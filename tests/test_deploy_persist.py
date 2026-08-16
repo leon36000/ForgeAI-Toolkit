@@ -178,7 +178,38 @@ def test_deploy_events_reporte_apres_restart(tmp_path) -> None:
             body = resp.read().decode("utf-8")
 
         assert "data: ligne-restauree\n\n" in body
-        assert 'event: end\ndata: {"exit_code": 0, "nettoyage_incertain": false}' in body
+        assert 'event: end\ndata: {"exit_code": 0}' in body
+    finally:
+        srv.shutdown()
+        srv.server_close()
+
+
+def test_deploy_events_reporte_nettoyage_incertain_apres_restart(tmp_path) -> None:
+    """Round 5 (#452) : quand nettoyage_incertain=True est restauré du disque, la clé DOIT
+    apparaître dans la charge SSE (le mécanisme de visibilité reste fonctionnel — seul le
+    chemin NOMINAL, sans nettoyage incertain, doit rester byte-identique à avant round 4)."""
+    state_path = server._deploy_state_path()
+    state_path.parent.mkdir(parents=True, exist_ok=True)
+    state_path.write_text(
+        json.dumps(
+            {
+                "done": True,
+                "exit_code": -1,
+                "lines": ["ligne-restauree"],
+                "nettoyage_incertain": True,
+            },
+            ensure_ascii=False,
+        ),
+        encoding="utf-8",
+    )
+
+    srv, base_url = _start_server()
+    try:
+        with urllib.request.urlopen(f"{base_url}/api/deploy/events", timeout=5) as resp:
+            body = resp.read().decode("utf-8")
+
+        assert "data: ligne-restauree\n\n" in body
+        assert 'event: end\ndata: {"exit_code": -1, "nettoyage_incertain": true}' in body
     finally:
         srv.shutdown()
         srv.server_close()
