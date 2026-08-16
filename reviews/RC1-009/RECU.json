@@ -1,0 +1,22 @@
+{
+  "schema": "recu-revue/1",
+  "dossier": "RC1-009",
+  "issue": 509,
+  "round": 1,
+  "base_commit": "0bd0abba72de85344625ddd45a28198da3798e8d",
+  "head_commit": "b940a01dd1de8415d36df2893c139078bdbff92b",
+  "head_tree": "6b1fe980d0e103aab26b1e8056308abd99edffc7",
+  "diff_digest": "c632e68a058966fbc2580e9d276ebe0c6a023745b4c807d1efe98dfdc6e24556",
+  "prompt_sha256": "e058f08942558eceb44f3cea828b19519afcf93430adc26460299fb54df4caa4",
+  "reviewers_attendus": [
+    "DeepSeek-V4-Pro",
+    "Gemini-3.1-Pro",
+    "MiMo-Pro-V2"
+  ],
+  "codeur": [
+    "fable"
+  ],
+  "resultat": "APPROVE",
+  "date_heure": "2026-08-16T01:13:13.764826-04:00",
+  "fenetre_heures": 24
+}
