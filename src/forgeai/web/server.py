@@ -21,12 +21,14 @@ from collections import OrderedDict
 from functools import lru_cache
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
+from typing import Any
 
 from forgeai.catalogue.loader import parse_stars
 from forgeai.catalogue.spheres import SPHERES, classify_sphere, spheres_index
 from forgeai.core import registre
 from forgeai.core.runner import SubprocessRunner, CommandRunner
 from forgeai.core.proc import kill_tree
+from forgeai.core.safe_repr import str_exc_sur
 from forgeai.core.validation import NODE_NAME_RE
 from forgeai.deploy.compose import http_ok
 from forgeai.hardware.detect import HardwareDetector
@@ -187,11 +189,17 @@ def _deploy_resume() -> dict:
     (elles peuvent contenir la sortie d'outils ; ERR-041B les rédige déjà pour la persistance)."""
     with _DEPLOY_STATE["lock"]:
         proc = _DEPLOY_STATE["proc"]
-        return {
+        resume = {
             "en_cours": proc is not None and proc.poll() is None,
             "done": _DEPLOY_STATE["done"],
             "exit_code": _DEPLOY_STATE["exit_code"],
         }
+        # Round 5 (#452, objection DeepSeek-V4-Pro CRITIQUE) : n'apparaît QUE si True — préserve
+        # EXACTEMENT le payload d'avant round 4 sur le chemin nominal (aucun changement observable
+        # sur un déploiement réussi).
+        if _DEPLOY_STATE["nettoyage_incertain"]:
+            resume["nettoyage_incertain"] = True
+        return resume
 
 
 def hardware_json() -> str:
@@ -402,11 +410,12 @@ def _selection_valide(lst: object) -> bool:
             return False
     return True
 
-_DEPLOY_STATE = {
+_DEPLOY_STATE: dict[str, Any] = {
     "proc": None,
     "lines": [],
     "done": False,
     "exit_code": None,
+    "nettoyage_incertain": False,
     "lock": threading.Lock(),
 }
 
@@ -532,12 +541,20 @@ def _persist_deploy_state() -> None:
                 # y avoir échotypé un secret. On rédige AVANT persistance (ERR-041A).
                 "lines": [redact_text(line) for line in _DEPLOY_STATE["lines"]],
             }
+            # Round 8 (#452, objection GPT-5.6-Terra-Pro majeure) : n'apparaît QUE si True — même
+            # principe que _deploy_resume() (round 5) et le payload de fin (round 6) : le chemin
+            # nominal (aucun nettoyage incertain) garde EXACTEMENT le format deploy-state.json
+            # d'avant round 4. _load_deploy_state() tolère déjà l'absence de la clé
+            # (.get("nettoyage_incertain", False), plus bas) : round-trip inchangé.
+            if _DEPLOY_STATE["nettoyage_incertain"]:
+                snapshot["nettoyage_incertain"] = True
         path = _deploy_state_path()
         path.parent.mkdir(parents=True, exist_ok=True)
         # Fichier temporaire UNIQUE par écriture : deux persists concurrents (le `_reader` de
         # l'ancien deploy qui se termine + le persist initial d'un nouveau deploy) écriraient
         # sinon le MÊME .tmp et corromperaient le JSON avant `os.replace`. mkstemp garantit un
         # nom distinct ; `os.replace` est atomique (dernier écrivain gagne, jamais de corruption).
+        tmp: Path | None = None
         fd, tmp_str = tempfile.mkstemp(dir=str(path.parent), prefix=".deploy-state.", suffix=".tmp")
         tmp = Path(tmp_str)
         try:
@@ -545,10 +562,25 @@ def _persist_deploy_state() -> None:
                 json.dump(snapshot, fh, ensure_ascii=False)
             os.replace(str(tmp), str(path))
         except Exception:
-            tmp.unlink(missing_ok=True)  # nettoie le tmp orphelin ; fd déjà fermé par le with
+            # Garde défensive (revue round 3, DeepSeek-V4-Pro) : le contrôle de flux actuel
+            # garantit tmp assigné ici (mkstemp est HORS de ce try, cf. AST), mais on protège
+            # contre un futur refactor qui déplacerait mkstemp() par erreur dans ce bloc.
+            if tmp is not None:
+                tmp.unlink(missing_ok=True)  # nettoie le tmp orphelin ; fd déjà fermé par le with
             raise
-    except Exception:
-        pass
+    except Exception as exc:
+        # Round 27 (#452) — objection GPT-5.6-Terra-Pro (revue scellée) : str_exc_sur() plutôt
+        # que {exc} directement — rien n'empêche exc.__str__() de lever lui-même (vérifié
+        # empiriquement), ce qui ferait échouer CE bloc best-effort. Round 36 : risque résiduel
+        # (un __str__ qui lève explicitement BaseException reste non couvert, cf. docstring de
+        # str_exc_sur) documenté formellement dans la story (section « Risque résiduel —
+        # str_exc_sur et sites FIXED ») plutôt que corrigé ici par une garde supplémentaire —
+        # voir cette section pour l'analyse complète, dont la portée exacte par site appelant
+        # (cette fonction a plusieurs appelants, pas tous nécessairement sur un thread daemon).
+        with _DEPLOY_STATE["lock"]:
+            _DEPLOY_STATE["lines"].append(
+                f"avertissement: échec persistance état déploiement : {str_exc_sur(exc)}"
+            )
 
 
 def _load_deploy_state() -> None:
@@ -565,12 +597,34 @@ def _load_deploy_state() -> None:
         exit_code = data.get("exit_code")
         if not isinstance(lines, list) or not isinstance(done, bool):
             return
+        nettoyage_incertain = data.get("nettoyage_incertain", False)
+        if not isinstance(nettoyage_incertain, bool):
+            nettoyage_incertain = False
         with _DEPLOY_STATE["lock"]:
             _DEPLOY_STATE["lines"] = list(lines)
             _DEPLOY_STATE["done"] = done
             _DEPLOY_STATE["exit_code"] = exit_code
-    except Exception:
-        pass
+            _DEPLOY_STATE["nettoyage_incertain"] = nettoyage_incertain
+    except Exception as exc:
+        # Round 27 (#452) — objection GPT-5.6-Terra-Pro : str_exc_sur(), voir
+        # _persist_deploy_state() ci-dessus — sans ça, une exc.__str__() qui lève ferait échouer
+        # la construction du message AVANT même d'atteindre le print de secours qui suit. Round 36 :
+        # risque résiduel documenté dans la story (section « Risque résiduel — str_exc_sur et
+        # sites FIXED ») — vérifié (chaîne d'appel tracée : web_command -> serve -> build_server,
+        # aucun threading.Thread) que ce site s'exécute sur le thread PRINCIPAL, le sous-cas le
+        # moins favorable de l'analyse de cette section (contrairement à _reader, prouvé
+        # signal-safe par construction).
+        message = (
+            f"[web.server] échec de restauration de l'état de déploiement au démarrage : "
+            f"{str_exc_sur(exc)}"
+        )
+        try:
+            print(message, file=sys.stderr)
+        except Exception:
+            try:
+                print(message.encode("ascii", "backslashreplace").decode("ascii"), file=sys.stderr)
+            except Exception:  # proof:allow — repli ultime du print diagnostic best-effort (jamais lever, cf. governance/error-handling-contracts.json)
+                pass
 
 
 def _models_home() -> Path:
@@ -1053,9 +1107,11 @@ class ForgeAIHandler(BaseHTTPRequestHandler):
                     lines = list(_DEPLOY_STATE["lines"])
                     done = _DEPLOY_STATE["done"]
                     exit_code = _DEPLOY_STATE["exit_code"]
-                payload = json.dumps(
-                    {"exit_code": exit_code if done else None}, ensure_ascii=False
-                )
+                    nettoyage_incertain = _DEPLOY_STATE["nettoyage_incertain"]
+                fin = {"exit_code": exit_code if done else None}
+                if nettoyage_incertain:
+                    fin["nettoyage_incertain"] = True
+                payload = json.dumps(fin, ensure_ascii=False)
                 try:
                     for line in lines:
                         self.wfile.write(f"data: {line}\n\n".encode("utf-8"))
@@ -1071,6 +1127,7 @@ class ForgeAIHandler(BaseHTTPRequestHandler):
                     lines = _DEPLOY_STATE["lines"]
                     done = _DEPLOY_STATE["done"]
                     exit_code = _DEPLOY_STATE["exit_code"]
+                    nettoyage_incertain = _DEPLOY_STATE["nettoyage_incertain"]
                     while idx < len(lines):
                         try:
                             self.wfile.write(f"data: {lines[idx]}\n\n".encode("utf-8"))
@@ -1079,7 +1136,10 @@ class ForgeAIHandler(BaseHTTPRequestHandler):
                             return
                         idx += 1
                     if done:
-                        payload = json.dumps({"exit_code": exit_code}, ensure_ascii=False)
+                        fin = {"exit_code": exit_code}
+                        if nettoyage_incertain:
+                            fin["nettoyage_incertain"] = True
+                        payload = json.dumps(fin, ensure_ascii=False)
                         try:
                             self.wfile.write(f"event: end\ndata: {payload}\n\n".encode("utf-8"))
                             self.wfile.flush()
@@ -1432,6 +1492,7 @@ class ForgeAIHandler(BaseHTTPRequestHandler):
                 _DEPLOY_STATE["lines"].clear()
                 _DEPLOY_STATE["done"] = False
                 _DEPLOY_STATE["exit_code"] = None
+                _DEPLOY_STATE["nettoyage_incertain"] = False
 
                 # Trace de gouvernance AVANT le spawn : un crash du backend en cours de
                 # déploiement laisse ainsi une trace `deploy_started` au registre (best-effort ;
@@ -1519,14 +1580,34 @@ class ForgeAIHandler(BaseHTTPRequestHandler):
                         _DEPLOY_STATE["exit_code"] = new_proc.returncode
                         _DEPLOY_STATE["done"] = True
                     _persist_deploy_state()
-                except Exception:
+                except Exception as exc:
+                    # Round 27 (#452) — objection GPT-5.6-Terra-Pro (revue scellée) : str_exc_sur()
+                    # aux 2 sites ci-dessous — sans ça, une exc.__str__() qui lève ferait échouer
+                    # CE handler AVANT de marquer le déploiement terminé et avant sa tentative de
+                    # nettoyage (le plus sévère des 3 sites signalés : done resterait bloqué à
+                    # False, un déploiement fantôme jamais terminé côté API). Round 36 : risque
+                    # résiduel documenté dans la story (section « Risque résiduel — str_exc_sur et
+                    # sites FIXED ») — mais ce site précis est prouvé SIGNAL-SAFE par construction
+                    # (thread daemon en arrière-plan, cf. threading.Thread(target=_reader,
+                    # daemon=True) ci-dessous ; Python ne délivre jamais KeyboardInterrupt à un
+                    # thread non-principal, vérifié empiriquement) : le sous-cas résiduel qui
+                    # subsiste ici est encore plus étroit que l'analyse générale de la story.
                     with _DEPLOY_STATE["lock"]:
+                        _DEPLOY_STATE["lines"].append(
+                            "avertissement: le thread de lecture du déploiement a échoué : "
+                            f"{str_exc_sur(exc)}"
+                        )
                         if new_proc.returncode is None:
                             try:
                                 new_proc.kill()
                                 new_proc.wait()
-                            except Exception:
-                                pass
+                            except Exception as exc_kill:
+                                _DEPLOY_STATE["lines"].append(
+                                    "avertissement: échec du nettoyage best-effort du "
+                                    f"process de déploiement pendant la récupération : "
+                                    f"{str_exc_sur(exc_kill)}"
+                                )
+                                _DEPLOY_STATE["nettoyage_incertain"] = True
                         _DEPLOY_STATE["exit_code"] = new_proc.returncode if new_proc.returncode is not None else -1
                         _DEPLOY_STATE["done"] = True
                     _persist_deploy_state()

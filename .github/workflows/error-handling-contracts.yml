@@ -1,0 +1,47 @@
+name: Error handling contracts
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Valider les contrats de gestion d'erreurs
+        run: python scripts/governance/validate_error_contracts.py --root .
+
+      - name: Vérifier que le rapport Markdown est synchronisé avec le JSON
+        run: |
+          set -euo pipefail
+          python scripts/governance/validate_error_contracts.py --root . --render
+          git diff --exit-code -- governance/ERROR-HANDLING-CONTRACTS.md
+
+      - name: Détecter un décalage de site non répercuté
+        shell: bash
+        run: |
+          set -euo pipefail
+          travail="$(mktemp -d)"
+          trap 'rm -rf "$travail"' EXIT
+          cp -a . "$travail/repo"
+          cd "$travail/repo"
+
+          sed -i '1i# mutation décalage de ligne' src/forgeai/core/proc.py
+
+          python -m py_compile src/forgeai/core/proc.py
+
+          set +e
+          sortie="$(python scripts/governance/validate_error_contracts.py --root . 2>&1)"
+          statut=$?
+          set -e
+
+          test "$statut" -ne 0
+          printf '%s\n' "$sortie" | grep -F "site introuvable"

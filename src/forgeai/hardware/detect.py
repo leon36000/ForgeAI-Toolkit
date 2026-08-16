@@ -3,10 +3,12 @@ from __future__ import annotations
 import json
 import platform
 import re
+import sys
 from pathlib import Path
 
 from forgeai.core.models import GPU, Disk, HardwareProfile
 from forgeai.core.runner import CommandRunner
+from forgeai.core.safe_repr import str_exc_sur
 
 _PCI_VENDORS = {"1002": "amd", "8086": "intel", "10de": "nvidia"}
 
@@ -42,8 +44,22 @@ class HardwareDetector:
                 model = entries.get("Model name", entries.get("Nom de modèle", model))
                 cores = int(entries.get("CPU(s)", entries.get("Processeur(s)", "0")))
                 arch = entries.get("Architecture", arch)
-            except (json.JSONDecodeError, KeyError, ValueError):
-                pass
+            except (json.JSONDecodeError, KeyError, ValueError) as exc:
+                # Round 27 (#452) — objection GPT-5.6-Terra-Pro (revue scellée) : str_exc_sur()
+                # au lieu de {exc} — rien n'empêche exc.__str__() de lever lui-même (vérifié
+                # empiriquement), ce qui ferait échouer ce bloc best-effort avant même d'atteindre
+                # le print de secours.
+                message = (
+                    f"[hardware.detect] lscpu -J illisible, repli sur les valeurs "
+                    f"par défaut : {str_exc_sur(exc)}"
+                )
+                try:
+                    print(message, file=sys.stderr)
+                except Exception:
+                    try:
+                        print(message.encode("ascii", "backslashreplace").decode("ascii"), file=sys.stderr)
+                    except Exception:  # proof:allow — repli ultime du print diagnostic best-effort (jamais lever, cf. governance/error-handling-contracts.json)
+                        pass
         return model, cores, arch
 
     @staticmethod
@@ -65,8 +81,19 @@ class HardwareDetector:
             for line in Path(self.meminfo_path).read_text(encoding="ascii").splitlines():
                 if line.startswith("MemTotal:"):
                     return round(int(line.split()[1]) / 1024 / 1024, 1)
-        except (OSError, ValueError, IndexError):
-            pass
+        except (OSError, ValueError, IndexError) as exc:
+            # Round 27 (#452) — objection GPT-5.6-Terra-Pro : str_exc_sur(), voir detect_cpu().
+            message = (
+                f"[hardware.detect] {self.meminfo_path} illisible, RAM détectée = 0.0 Go : "
+                f"{str_exc_sur(exc)}"
+            )
+            try:
+                print(message, file=sys.stderr)
+            except Exception:
+                try:
+                    print(message.encode("ascii", "backslashreplace").decode("ascii"), file=sys.stderr)
+                except Exception:  # proof:allow — repli ultime du print diagnostic best-effort (jamais lever, cf. governance/error-handling-contracts.json)
+                    pass
         return 0.0
 
     def detect_disks(self) -> tuple[Disk, ...]:

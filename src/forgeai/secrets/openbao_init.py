@@ -7,6 +7,7 @@ Stdlib pure, transport injectable, jamais de fuite de secret dans les erreurs.
 from __future__ import annotations
 
 import json
+import sys
 import urllib.error
 import urllib.request
 from collections.abc import Callable
@@ -207,7 +208,14 @@ def ensure_openbao_ready(
                 return current_token
         except OpenBaoInitError:
             # token invalide -> on en crée un nouveau
-            pass
+            message = t("secrets.openbao_init.ensure_openbao_ready.token_invalide_remplace")
+            try:
+                print(message, file=sys.stderr)
+            except Exception:
+                try:
+                    print(message.encode("ascii", "backslashreplace").decode("ascii"), file=sys.stderr)
+                except Exception:  # proof:allow — repli ultime du print diagnostic best-effort (jamais lever, cf. governance/error-handling-contracts.json)
+                    pass
 
     # Créer un nouveau token
     new_token_resp = request(
@@ -240,6 +248,13 @@ def ensure_openbao_ready(
                 payload={"token": current_token},
             )
         except OpenBaoInitError:
-            pass
+            message = t("secrets.openbao_init.ensure_openbao_ready.revocation_ancien_jeton_echouee")
+            try:
+                print(message, file=sys.stderr)
+            except Exception:
+                try:
+                    print(message.encode("ascii", "backslashreplace").decode("ascii"), file=sys.stderr)
+                except Exception:  # proof:allow — repli ultime du print diagnostic best-effort (jamais lever, cf. governance/error-handling-contracts.json)
+                    pass
 
     return new_token

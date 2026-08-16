@@ -1,6 +1,9 @@
 """Tests S01 — détection hardware sur fixtures réelles capturées (machine forge, 2026-07-14)."""
+import platform
 import sys
 from pathlib import Path
+
+import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
 
@@ -31,6 +34,30 @@ def test_cpu_detecte_depuis_lscpu_json():
     assert cores > 0
     assert arch in ("x86_64", "amd64")
     assert model != "unknown"
+
+
+def test_cpu_lscpu_partiellement_invalide_conserve_les_champs_deja_extraits(
+    capsys: pytest.CaptureFixture,
+) -> None:
+    """Round 32 (#452) — objection GPT-5.6-Terra-Pro (revue scellée) : le behavior_contract de
+    site:src/forgeai/hardware/detect.py:47 affirmait un repli COMPLET vers ("unknown", 0,
+    platform.machine()) — faux pour un échec PARTIEL. model/cores/arch sont assignés
+    SÉQUENTIELLEMENT ; un Model name valide suivi d'un CPU(s) non convertible lève APRÈS que
+    `model` a déjà été réassigné avec succès — `model` reste donc la vraie valeur extraite, PAS
+    "unknown", contrairement à l'ancien texte du contrat (corrigé dans le même commit)."""
+    lscpu_partiellement_invalide = (
+        '{"lscpu": ['
+        '{"field": "Model name:", "data": "Un CPU bien réel"},'
+        '{"field": "CPU(s):", "data": "pas-un-nombre"}'
+        ']}'
+    )
+    detector = _detector(lscpu=lscpu_partiellement_invalide)
+    model, cores, arch = detector.detect_cpu()
+    assert model == "Un CPU bien réel"  # PAS "unknown" — déjà extrait avant l'échec
+    assert cores == 0  # jamais assigné, reste au défaut initial
+    assert arch == platform.machine()  # jamais atteint, reste au défaut initial
+    captured = capsys.readouterr()
+    assert "lscpu -J illisible" in captured.err
 
 
 def test_ram_detectee_depuis_meminfo():
@@ -64,6 +91,29 @@ def test_source_defaillante_ne_bloque_pas_le_reste():
     assert profile.cpu_model == "unknown"      # source CPU dégradée…
     assert profile.ram_gb > 40                 # …les autres sources répondent
     assert len(profile.gpus) >= 1
+
+
+def test_cpu_lscpu_illisible_journalise_et_replie(capsys: pytest.CaptureFixture) -> None:
+    """Vérifie le repli sur les valeurs par défaut et le log stderr si lscpu est invalide."""
+    detector = _detector(lscpu="ceci n'est pas du JSON")
+    model, cores, arch = detector.detect_cpu()
+    assert model == "unknown"
+    assert cores == 0
+    assert arch == platform.machine()
+    captured = capsys.readouterr()
+    assert "lscpu -J illisible" in captured.err
+
+
+def test_ram_meminfo_illisible_journalise_et_replie(
+    tmp_path: Path, capsys: pytest.CaptureFixture
+) -> None:
+    """Vérifie le repli à 0.0 Go et le log stderr si meminfo est illisible ou absent."""
+    bad_meminfo = tmp_path / "meminfo_absent.txt"
+    detector = HardwareDetector(_runner(), meminfo_path=str(bad_meminfo))
+    ram = detector.detect_ram_gb()
+    assert ram == 0.0
+    captured = capsys.readouterr()
+    assert "illisible" in captured.err
 
 
 def test_disque_racine_detecte():
@@ -138,3 +188,22 @@ def test_machine_reellement_sans_gpu_reste_cpu():
     gpus = _detector(**{"nvidia-smi": "", "lspci": ""}).detect_gpus()
     assert not gpus  # aucun GPU (tuple vide)
     assert derive_profile(_hw(gpus)) == "minimal-cpu"
+
+
+def test_print_stderr_fallback_ascii_si_encodage_incompatible(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Vérifie que l'échec d'encodage sur stderr se replie proprement sans lever d'exception."""
+    import io
+
+    raw_buffer = io.BytesIO()
+    fake_stderr = io.TextIOWrapper(raw_buffer, encoding="ascii", errors="strict")
+    monkeypatch.setattr(sys, "stderr", fake_stderr)
+
+    detector = _detector(lscpu="ceci n'est pas du JSON")
+    model, cores, arch = detector.detect_cpu()
+    assert model == "unknown"
+    assert cores == 0
+
+    fake_stderr.flush()
+    sortie = raw_buffer.getvalue()
+    assert len(sortie) > 0
+    assert b"lscpu" in sortie

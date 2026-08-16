@@ -319,6 +319,66 @@ class TestInvalidTokenInStore:
         assert secret_store.read() == {"token": token}
 
 
+def test_invalid_token_replacement_logs_stderr(capsys: pytest.CaptureFixture) -> None:
+    """Vérifie que la détection d'un jeton invalide journalise sur stderr et en recrée un."""
+    transport = FakeTransport()
+    transport._initialized = True
+    transport._sealed = False
+    transport._root_token = "my-root"
+    transport._mounts.add("secret/")
+    transport._policies["forgeai-app"] = "..."
+
+    key_store = InMemoryStore({
+        "unseal_key": "my-key",
+        "root_token": "my-root",
+    })
+    old_token = "dead-token"
+    secret_store = InMemoryStore({"token": old_token})
+
+    token = ensure_openbao_ready(transport.request, key_store, secret_store)
+
+    assert token and token != old_token
+    captured = capsys.readouterr()
+    assert ("invalide" in captured.err) or ("invalid" in captured.err)
+
+
+def test_old_token_revoke_failure_logs_stderr(capsys: pytest.CaptureFixture) -> None:
+    """Vérifie que l'échec de révocation de l'ancien jeton journalise sur stderr sans bloquer."""
+    class RevokeFailsTransport(FakeTransport):
+        def request(
+            self,
+            method: str,
+            path: str,
+            *,
+            token: str | None = None,
+            payload: dict | None = None,
+        ) -> tuple[int, dict]:
+            if method == "POST" and path == "/v1/auth/token/revoke":
+                self.calls.append((method, path, token, payload))
+                raise OpenBaoInitError("openbao POST /v1/auth/token/revoke -> HTTP 500")
+            return super().request(method, path, token=token, payload=payload)
+
+    transport = RevokeFailsTransport()
+    transport._initialized = True
+    transport._sealed = False
+    transport._root_token = "my-root"
+    transport._mounts.add("secret/")
+    transport._policies["forgeai-app"] = "..."
+
+    key_store = InMemoryStore({
+        "unseal_key": "my-key",
+        "root_token": "my-root",
+    })
+    old_token = "dead-token"
+    secret_store = InMemoryStore({"token": old_token})
+
+    token = ensure_openbao_ready(transport.request, key_store, secret_store)
+
+    assert token and token != old_token
+    captured = capsys.readouterr()
+    assert ("révocation" in captured.err) or ("revocation" in captured.err.lower())
+
+
 class TestReadBackInitFails:
     """6. L'initialisation réussit mais le read-back échoue (store cassé)."""
 

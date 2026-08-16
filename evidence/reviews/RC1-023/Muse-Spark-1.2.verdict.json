@@ -1,0 +1,12 @@
+{
+ "verdict": "APPROVE",
+ "objections": [],
+ "date_heure": "2026-08-16T18:27:03.658651+00:00",
+ "prompt_sha256": "1f00937992ff7e34f79b0a2d3a6e7350a2b2e54f4c40ce4ec060655a46bab666",
+ "reviewer_model": "Muse-Spark-1.2",
+ "modele_servi": "muse-spark-12-openrouter",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

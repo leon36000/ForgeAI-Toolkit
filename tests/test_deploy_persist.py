@@ -77,6 +77,9 @@ def isolate_deploy_state(tmp_path, monkeypatch):
         server._DEPLOY_STATE["lines"].clear()
         server._DEPLOY_STATE["done"] = False
         server._DEPLOY_STATE["exit_code"] = None
+        # Round 8 (#452) : manquait à cette liste — un test antérieur laissant
+        # nettoyage_incertain=True polluait silencieusement l'ordre d'exécution suivant.
+        server._DEPLOY_STATE["nettoyage_incertain"] = False
     yield
 
 
@@ -184,6 +187,37 @@ def test_deploy_events_reporte_apres_restart(tmp_path) -> None:
         srv.server_close()
 
 
+def test_deploy_events_reporte_nettoyage_incertain_apres_restart(tmp_path) -> None:
+    """Round 5 (#452) : quand nettoyage_incertain=True est restauré du disque, la clé DOIT
+    apparaître dans la charge SSE (le mécanisme de visibilité reste fonctionnel — seul le
+    chemin NOMINAL, sans nettoyage incertain, doit rester byte-identique à avant round 4)."""
+    state_path = server._deploy_state_path()
+    state_path.parent.mkdir(parents=True, exist_ok=True)
+    state_path.write_text(
+        json.dumps(
+            {
+                "done": True,
+                "exit_code": -1,
+                "lines": ["ligne-restauree"],
+                "nettoyage_incertain": True,
+            },
+            ensure_ascii=False,
+        ),
+        encoding="utf-8",
+    )
+
+    srv, base_url = _start_server()
+    try:
+        with urllib.request.urlopen(f"{base_url}/api/deploy/events", timeout=5) as resp:
+            body = resp.read().decode("utf-8")
+
+        assert "data: ligne-restauree\n\n" in body
+        assert 'event: end\ndata: {"exit_code": -1, "nettoyage_incertain": true}' in body
+    finally:
+        srv.shutdown()
+        srv.server_close()
+
+
 def test_load_deploy_state_fichier_corrompu_ignore(tmp_path) -> None:
     """Un deploy-state.json corrompu / mal typé n'altère pas l'état ni ne crashe le démarrage."""
     state_path = server._deploy_state_path()
@@ -265,6 +299,104 @@ def test_persist_concurrent_pas_de_corruption(tmp_path) -> None:
     path = server._deploy_state_path()
     assert path.exists()
     data = json.loads(path.read_text(encoding="utf-8"))  # ne doit JAMAIS lever (JSON valide)
+    # Round 8 (#452, objection GPT-5.6-Terra-Pro majeure) : nettoyage_incertain n'est plus
+    # sérialisé quand False (chemin nominal de ce test — le writer() ci-dessus ne le met
+    # jamais à True) ; voir _persist_deploy_state(). Avant round 8, la clé apparaissait
+    # toujours, même sur le chemin nominal — c'était précisément le défaut signalé.
     assert set(data) == {"done", "exit_code", "lines"}
     assert isinstance(data["lines"], list)
     assert isinstance(data["done"], bool)
+
+
+def test_persist_deploy_state_echec_ecriture_ajoute_avertissement(monkeypatch) -> None:
+    """Si l'écriture sur disque échoue, _persist_deploy_state ajoute un avertissement sans lever."""
+    def _boom(*args, **kwargs):
+        raise OSError("disque plein")
+
+    monkeypatch.setattr(server.tempfile, "mkstemp", _boom)
+
+    server._persist_deploy_state()
+
+    with server._DEPLOY_STATE["lock"]:
+        lines = list(server._DEPLOY_STATE["lines"])
+    assert any(
+        ln.startswith("avertissement: échec persistance état déploiement")
+        for ln in lines
+    )
+
+
+def test_persist_deploy_state_exception_str_cassee_ne_leve_pas(monkeypatch) -> None:
+    """Round 27 (#452) — objection GPT-5.6-Terra-Pro (revue scellée) : rien n'empêche
+    exc.__str__() de lever lui-même (vérifié empiriquement) — sans str_exc_sur(), la
+    construction du message f"...: {exc}" ferait échouer CE bloc best-effort au lieu d'ajouter
+    un avertissement."""
+    class _ExceptionStrCassee(OSError):
+        def __str__(self) -> str:
+            raise ValueError("str() cassé délibérément pour ce test")
+
+    def _boom(*args, **kwargs):
+        raise _ExceptionStrCassee()
+
+    monkeypatch.setattr(server.tempfile, "mkstemp", _boom)
+
+    server._persist_deploy_state()  # ne doit JAMAIS lever, même avec exc.__str__() cassé
+
+    with server._DEPLOY_STATE["lock"]:
+        lines = list(server._DEPLOY_STATE["lines"])
+    assert any(
+        ln.startswith("avertissement: échec persistance état déploiement") for ln in lines
+    )
+
+
+def test_load_deploy_state_echec_inattendu_journalise_stderr(monkeypatch, capsys) -> None:
+    """Une exception inattendue lors du chargement journalise un message sur stderr sans lever."""
+    state_path = server._deploy_state_path()
+    state_path.parent.mkdir(parents=True, exist_ok=True)
+    state_path.write_text("{}", encoding="utf-8")
+
+    def _boom(*args, **kwargs):
+        raise OSError("erreur I/O inattendue")
+
+    monkeypatch.setattr(server.Path, "read_text", _boom)
+
+    server._load_deploy_state()
+
+    captured = capsys.readouterr()
+    assert "échec de restauration" in captured.err
+
+
+def test_deploy_state_persiste_et_recharge_nettoyage_incertain(tmp_path) -> None:
+    """Le flag nettoyage_incertain est persisté sur disque et restauré par _load_deploy_state."""
+    with server._DEPLOY_STATE["lock"]:
+        server._DEPLOY_STATE["done"] = True
+        server._DEPLOY_STATE["exit_code"] = 1
+        server._DEPLOY_STATE["lines"] = ["erreur"]
+        server._DEPLOY_STATE["nettoyage_incertain"] = True
+
+    server._persist_deploy_state()
+
+    with server._DEPLOY_STATE["lock"]:
+        server._DEPLOY_STATE["nettoyage_incertain"] = False
+
+    server._load_deploy_state()
+
+    with server._DEPLOY_STATE["lock"]:
+        assert server._DEPLOY_STATE["nettoyage_incertain"] is True
+
+
+def test_load_deploy_state_sans_nettoyage_incertain_par_defaut_false(tmp_path) -> None:
+    """Un fichier d'état pré-correctif sans clé nettoyage_incertain charge False par défaut."""
+    state_path = server._deploy_state_path()
+    state_path.parent.mkdir(parents=True, exist_ok=True)
+    state_path.write_text(
+        json.dumps({"done": True, "exit_code": 0, "lines": ["ok"]}, ensure_ascii=False),
+        encoding="utf-8",
+    )
+
+    with server._DEPLOY_STATE["lock"]:
+        server._DEPLOY_STATE["nettoyage_incertain"] = True
+
+    server._load_deploy_state()
+
+    with server._DEPLOY_STATE["lock"]:
+        assert server._DEPLOY_STATE["nettoyage_incertain"] is False

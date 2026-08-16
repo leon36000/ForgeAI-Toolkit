@@ -8,8 +8,8 @@
       "sha256_recomputed_ok": true
     },
     "ci": {
-      "jobs_total": 22,
-      "workflows": 5
+      "jobs_total": 23,
+      "workflows": 6
     },
     "cli": {
       "subcommands": [
@@ -89,6 +89,10 @@
       {
         "path": ".github/workflows/ci-deps-update.yml",
         "sha256": "fe4aafcac163054f203e14b309da1dffe9272155d72a91298c05954ce5e79e66"
+      },
+      {
+        "path": ".github/workflows/error-handling-contracts.yml",
+        "sha256": "5ed2e4ab6bcc9185af3abc268a5a8b924840d2c5cc4be54b1835508a8624eea9"
       },
       {
         "path": ".github/workflows/gates.yml",
@@ -256,7 +260,7 @@
       },
       {
         "path": "tests/test_deploy_persist.py",
-        "sha256": "9242dac871edab3b1d2a71352ee650a6f5a799dc2436e928bbb7faa2c479bd55"
+        "sha256": "b04853991d1549725e55c215b8c13074043fe500b95376dce467778aeda462e4"
       },
       {
         "path": "tests/test_deploy_reel.py",
@@ -352,7 +356,7 @@
       },
       {
         "path": "tests/test_hardware_detect.py",
-        "sha256": "56522ec07aa5022424868c08f08f39ba552bbb6acbfb01f98dcc7596636a9b5d"
+        "sha256": "63db0f3ceb889a9e2c24881d27a3904479861da61e16dd31f543ac07847a4dcc"
       },
       {
         "path": "tests/test_health029_sondes_executables.py",
@@ -504,7 +508,7 @@
       },
       {
         "path": "tests/test_openbao_init.py",
-        "sha256": "6cac190041f2aaeccd390a61a25a24f249f10da655767af67a2294f96fb31dce"
+        "sha256": "e273897528737fd93ec7143c5250fbbc323a3d0508148fc57ea29f1033a2a639"
       },
       {
         "path": "tests/test_openbao_prod_render.py",
@@ -592,7 +596,7 @@
       },
       {
         "path": "tests/test_proc.py",
-        "sha256": "149a010c7f3418db3979c948d1c186ee75add3f07d75d7910f6464e153b75c40"
+        "sha256": "e9a964101fb8e0b2b645b88c461e2e26e8e3f680fede888f5d3cad5b8abf2fe9"
       },
       {
         "path": "tests/test_profile_presence.py",
@@ -667,6 +671,10 @@
         "sha256": "fd87c625c8afc7df802ac23e1e6a57948bb12af65070c24a2c162a890ff4d582"
       },
       {
+        "path": "tests/test_rc1023_error_contracts.py",
+        "sha256": "c3754d11cc2d28a9424043ec68e2bcd3b2b50a5ca7ddbb84fac299c0be68074a"
+      },
+      {
         "path": "tests/test_readme_dist_status.py",
         "sha256": "70c8716dec991cd998875699db0045fc7bbab9873cda790af9c1285e73c2b07b"
       },
@@ -712,7 +720,7 @@
       },
       {
         "path": "tests/test_rel038c_process_groups.py",
-        "sha256": "f2598b677028c17095d4fd0b9715f59b8053aa60806925171b759f5789503a04"
+        "sha256": "fda6dbc88bbec0379a08eab1e0a99a364d5b3a83d75a425f8b23db55d759716e"
       },
       {
         "path": "tests/test_remote_probe.py",
@@ -741,6 +749,10 @@
       {
         "path": "tests/test_ruff_report.py",
         "sha256": "92a67d93d9c2a3ed76f57170cee644dcd4c79d363a32d29c72cabb2a6c0a6319"
+      },
+      {
+        "path": "tests/test_safe_repr.py",
+        "sha256": "0b4cbe10652375824ad1121373149b2b110b842f59376b3a771118a196668a72"
       },
       {
         "path": "tests/test_selection_complete.py",
@@ -924,8 +936,8 @@
     },
     "tests": {
       "js_files": 3,
-      "python_files": 193,
-      "python_functions_declared": 2224
+      "python_files": 195,
+      "python_functions_declared": 2315
     }
   },
   "observations": [

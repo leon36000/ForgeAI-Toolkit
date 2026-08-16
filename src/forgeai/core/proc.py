@@ -6,6 +6,7 @@ import os
 import signal
 import shlex
 import subprocess
+import sys
 import threading
 import time
 from collections.abc import Callable
@@ -145,7 +146,17 @@ def _kill_tree(proc, grace_seconds: float) -> None:  # type: ignore
         try:
             proc.wait(timeout=5)  # type: ignore
         except subprocess.TimeoutExpired:
-            pass
+            message = (
+                f"[kill_tree] process {proc.pid} n'a pas été réapé 5s après SIGKILL "
+                "(possible D-state)"
+            )
+            try:
+                print(message, file=sys.stderr)
+            except Exception:
+                try:
+                    print(message.encode("ascii", "backslashreplace").decode("ascii"), file=sys.stderr)
+                except Exception:  # proof:allow — repli ultime du print diagnostic best-effort (jamais lever, cf. governance/error-handling-contracts.json)
+                    pass
     else:  # Windows
         subprocess.run(
             ["taskkill", "/F", "/T", "/PID", str(proc.pid)],  # type: ignore
