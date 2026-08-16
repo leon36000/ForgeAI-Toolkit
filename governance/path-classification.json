@@ -7980,6 +7980,32 @@
       "generated": false,
       "load_bearing": true,
       "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/BUGHUNT-2026-08-16-v1/DeepSeek-V4-Pro.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "c7503035a037b50b6912933d31f387398a5a75ed10ef3903c2a56cde3ca4fb8d",
+      "size": 1422,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/BUGHUNT-2026-08-16-v1/Qwen3.7-Max.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "1b48bb2606b4cafdce3a8c50fa97ea161bca0dd10d402cf1185b72649b6a9c5f",
+      "size": 322,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
       "path": "evidence/reviews/CAP-033A/DeepSeek-V4-Pro.verdict.json",
       "referenced_by": [],
       "rule_id": "evidence-reviews-root",
@@ -17754,6 +17780,34 @@
       "referenced_by": [
         {
           "candidate": "governance/STATE-CURRENT.json",
+          "line": 6,
+          "referrer": "evidence/reviews/BUGHUNT-2026-08-16-v1/DeepSeek-V4-Pro.verdict.json",
+          "resolved": "governance/STATE-CURRENT.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/STATE-CURRENT.json",
+          "line": 7,
+          "referrer": "evidence/reviews/BUGHUNT-2026-08-16-v1/DeepSeek-V4-Pro.verdict.json",
+          "resolved": "governance/STATE-CURRENT.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/STATE-CURRENT.json",
+          "line": 12,
+          "referrer": "evidence/reviews/BUGHUNT-2026-08-16-v1/DeepSeek-V4-Pro.verdict.json",
+          "resolved": "governance/STATE-CURRENT.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/STATE-CURRENT.json",
+          "line": 14,
+          "referrer": "evidence/reviews/BUGHUNT-2026-08-16-v1/DeepSeek-V4-Pro.verdict.json",
+          "resolved": "governance/STATE-CURRENT.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/STATE-CURRENT.json",
           "line": 134,
           "referrer": "governance/path-classification-rules.json",
           "resolved": "governance/STATE-CURRENT.json",
@@ -17870,6 +17924,13 @@
           "referrer": "scripts/governance/state_current.py",
           "resolved": "governance/STATE-CURRENT.json",
           "severity": "hard"
+        },
+        {
+          "candidate": "governance/STATE-CURRENT.json",
+          "line": 64,
+          "referrer": "stories/BUGHUNT-2026-08-16.md",
+          "resolved": "governance/STATE-CURRENT.json",
+          "severity": "hard"
         }
       ],
       "rule_id": "generated-state-current-json",
@@ -17885,6 +17946,13 @@
       "owner": "gouvernance-generateurs",
       "path": "governance/STATE-CURRENT.md",
       "referenced_by": [
+        {
+          "candidate": "governance/STATE-CURRENT.md",
+          "line": 7,
+          "referrer": "evidence/reviews/BUGHUNT-2026-08-16-v1/DeepSeek-V4-Pro.verdict.json",
+          "resolved": "governance/STATE-CURRENT.md",
+          "severity": "hard"
+        },
         {
           "candidate": "governance/STATE-CURRENT.md",
           "line": 148,
@@ -35419,8 +35487,8 @@
       "path": "stories/BUGHUNT-2026-08-16.md",
       "referenced_by": [],
       "rule_id": "governance-stories",
-      "sha256": "32861f1ea8f5e80a50a9ba3751f9122c4948941af1444aaf206bde335440bdc9",
-      "size": 4223,
+      "sha256": "755b97392edf628e36a979fda939426d4d3bafa7fa240e69c1e5be469149ad1b",
+      "size": 4706,
       "target_path": null,
       "type": "text"
     },
@@ -37721,6 +37789,13 @@
       "referenced_by": [
         {
           "candidate": "tests/test_adoption.py",
+          "line": 14,
+          "referrer": "evidence/reviews/BUGHUNT-2026-08-16-v1/DeepSeek-V4-Pro.verdict.json",
+          "resolved": "tests/test_adoption.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "tests/test_adoption.py",
           "line": 60,
           "referrer": "evidence/reviews/D2/evidence/ADR.md",
           "resolved": "tests/test_adoption.py",
@@ -37775,6 +37850,13 @@
       "owner": "test-suite",
       "path": "tests/test_adoption_api.py",
       "referenced_by": [
+        {
+          "candidate": "tests/test_adoption_api.py",
+          "line": 14,
+          "referrer": "evidence/reviews/BUGHUNT-2026-08-16-v1/DeepSeek-V4-Pro.verdict.json",
+          "resolved": "tests/test_adoption_api.py",
+          "severity": "hard"
+        },
         {
           "candidate": "tests/test_adoption_api.py",
           "line": 21,
@@ -41641,6 +41723,13 @@
         },
         {
           "candidate": "tests/test_models_gateway.py",
+          "line": 14,
+          "referrer": "evidence/reviews/BUGHUNT-2026-08-16-v1/DeepSeek-V4-Pro.verdict.json",
+          "resolved": "tests/test_models_gateway.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "tests/test_models_gateway.py",
           "line": 458,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_models_gateway.py",
@@ -43830,6 +43919,13 @@
       "owner": "test-suite",
       "path": "tests/test_ratelimit.py",
       "referenced_by": [
+        {
+          "candidate": "tests/test_ratelimit.py",
+          "line": 14,
+          "referrer": "evidence/reviews/BUGHUNT-2026-08-16-v1/DeepSeek-V4-Pro.verdict.json",
+          "resolved": "tests/test_ratelimit.py",
+          "severity": "hard"
+        },
         {
           "candidate": "tests/test_ratelimit.py",
           "line": 630,
@@ -61206,6 +61302,46 @@
         "candidate": "POSIX/Windows",
         "line": 858,
         "referrer": "evidence/reviews/B-24cd/pack.md"
+      },
+      {
+        "candidate": "governance/",
+        "line": 7,
+        "referrer": "evidence/reviews/BUGHUNT-2026-08-16-v1/DeepSeek-V4-Pro.verdict.json"
+      },
+      {
+        "candidate": "governance/",
+        "line": 8,
+        "referrer": "evidence/reviews/BUGHUNT-2026-08-16-v1/DeepSeek-V4-Pro.verdict.json"
+      },
+      {
+        "candidate": "scripts/",
+        "line": 8,
+        "referrer": "evidence/reviews/BUGHUNT-2026-08-16-v1/DeepSeek-V4-Pro.verdict.json"
+      },
+      {
+        "candidate": "CANON/",
+        "line": 8,
+        "referrer": "evidence/reviews/BUGHUNT-2026-08-16-v1/DeepSeek-V4-Pro.verdict.json"
+      },
+      {
+        "candidate": "a/governance/STATE-CURRENT.json",
+        "line": 8,
+        "referrer": "evidence/reviews/BUGHUNT-2026-08-16-v1/DeepSeek-V4-Pro.verdict.json"
+      },
+      {
+        "candidate": "b/governance/STATE-CURRENT.json",
+        "line": 8,
+        "referrer": "evidence/reviews/BUGHUNT-2026-08-16-v1/DeepSeek-V4-Pro.verdict.json"
+      },
+      {
+        "candidate": "a/governance/STATE-CURRENT.md",
+        "line": 8,
+        "referrer": "evidence/reviews/BUGHUNT-2026-08-16-v1/DeepSeek-V4-Pro.verdict.json"
+      },
+      {
+        "candidate": "b/governance/STATE-CURRENT.md",
+        "line": 8,
+        "referrer": "evidence/reviews/BUGHUNT-2026-08-16-v1/DeepSeek-V4-Pro.verdict.json"
       },
       {
         "candidate": "proc.py",
@@ -106753,11 +106889,6 @@
         "referrer": "stories/BUGHUNT-2026-08-16.md"
       },
       {
-        "candidate": "governance/",
-        "line": 63,
-        "referrer": "stories/BUGHUNT-2026-08-16.md"
-      },
-      {
         "candidate": "scripts/",
         "line": 63,
         "referrer": "stories/BUGHUNT-2026-08-16.md"
@@ -106768,23 +106899,53 @@
         "referrer": "stories/BUGHUNT-2026-08-16.md"
       },
       {
+        "candidate": "cision/politique",
+        "line": 63,
+        "referrer": "stories/BUGHUNT-2026-08-16.md"
+      },
+      {
+        "candidate": "tests/",
+        "line": 66,
+        "referrer": "stories/BUGHUNT-2026-08-16.md"
+      },
+      {
+        "candidate": "test_adoption.py",
+        "line": 66,
+        "referrer": "stories/BUGHUNT-2026-08-16.md"
+      },
+      {
+        "candidate": "test_adoption_api.py",
+        "line": 66,
+        "referrer": "stories/BUGHUNT-2026-08-16.md"
+      },
+      {
+        "candidate": "test_ratelimit.py",
+        "line": 67,
+        "referrer": "stories/BUGHUNT-2026-08-16.md"
+      },
+      {
+        "candidate": "test_models_gateway.py",
+        "line": 67,
+        "referrer": "stories/BUGHUNT-2026-08-16.md"
+      },
+      {
         "candidate": "web/server.py",
-        "line": 64,
+        "line": 69,
         "referrer": "stories/BUGHUNT-2026-08-16.md"
       },
       {
         "candidate": "core/models.py",
-        "line": 64,
+        "line": 69,
         "referrer": "stories/BUGHUNT-2026-08-16.md"
       },
       {
         "candidate": "web/ratelimit.py",
-        "line": 64,
+        "line": 69,
         "referrer": "stories/BUGHUNT-2026-08-16.md"
       },
       {
         "candidate": "models/gateway.py",
-        "line": 64,
+        "line": 70,
         "referrer": "stories/BUGHUNT-2026-08-16.md"
       },
       {
@@ -128516,6 +128677,69 @@
         "severity": "hard"
       },
       {
+        "candidate": "governance/STATE-CURRENT.json",
+        "line": 6,
+        "referrer": "evidence/reviews/BUGHUNT-2026-08-16-v1/DeepSeek-V4-Pro.verdict.json",
+        "resolved": "governance/STATE-CURRENT.json",
+        "severity": "hard"
+      },
+      {
+        "candidate": "governance/STATE-CURRENT.json",
+        "line": 7,
+        "referrer": "evidence/reviews/BUGHUNT-2026-08-16-v1/DeepSeek-V4-Pro.verdict.json",
+        "resolved": "governance/STATE-CURRENT.json",
+        "severity": "hard"
+      },
+      {
+        "candidate": "governance/STATE-CURRENT.md",
+        "line": 7,
+        "referrer": "evidence/reviews/BUGHUNT-2026-08-16-v1/DeepSeek-V4-Pro.verdict.json",
+        "resolved": "governance/STATE-CURRENT.md",
+        "severity": "hard"
+      },
+      {
+        "candidate": "governance/STATE-CURRENT.json",
+        "line": 12,
+        "referrer": "evidence/reviews/BUGHUNT-2026-08-16-v1/DeepSeek-V4-Pro.verdict.json",
+        "resolved": "governance/STATE-CURRENT.json",
+        "severity": "hard"
+      },
+      {
+        "candidate": "governance/STATE-CURRENT.json",
+        "line": 14,
+        "referrer": "evidence/reviews/BUGHUNT-2026-08-16-v1/DeepSeek-V4-Pro.verdict.json",
+        "resolved": "governance/STATE-CURRENT.json",
+        "severity": "hard"
+      },
+      {
+        "candidate": "tests/test_adoption.py",
+        "line": 14,
+        "referrer": "evidence/reviews/BUGHUNT-2026-08-16-v1/DeepSeek-V4-Pro.verdict.json",
+        "resolved": "tests/test_adoption.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "tests/test_adoption_api.py",
+        "line": 14,
+        "referrer": "evidence/reviews/BUGHUNT-2026-08-16-v1/DeepSeek-V4-Pro.verdict.json",
+        "resolved": "tests/test_adoption_api.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "tests/test_models_gateway.py",
+        "line": 14,
+        "referrer": "evidence/reviews/BUGHUNT-2026-08-16-v1/DeepSeek-V4-Pro.verdict.json",
+        "resolved": "tests/test_models_gateway.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "tests/test_ratelimit.py",
+        "line": 14,
+        "referrer": "evidence/reviews/BUGHUNT-2026-08-16-v1/DeepSeek-V4-Pro.verdict.json",
+        "resolved": "tests/test_ratelimit.py",
+        "severity": "hard"
+      },
+      {
         "candidate": "src/forgeai/core/proc.py",
         "line": 6,
         "referrer": "evidence/reviews/CLI-036/MiMo-Pro-V2.verdict.json",
@@ -140927,6 +141151,13 @@
         "severity": "hard"
       },
       {
+        "candidate": "governance/STATE-CURRENT.json",
+        "line": 64,
+        "referrer": "stories/BUGHUNT-2026-08-16.md",
+        "resolved": "governance/STATE-CURRENT.json",
+        "severity": "hard"
+      },
+      {
         "candidate": "scripts/coordination/validate_coordination.py",
         "line": 20,
         "referrer": "stories/CAP-033A.md",
@@ -145015,7 +145246,7 @@
     "by_class": {
       "ARCHIVE": 44,
       "DOCS": 14,
-      "EVIDENCE": 1331,
+      "EVIDENCE": 1333,
       "GENERATED": 5,
       "GOVERNANCE": 175,
       "PRODUCT": 112,
@@ -145033,7 +145264,7 @@
       "evidence-registres": 1,
       "evidence-registres-root": 35,
       "evidence-reviews": 409,
-      "evidence-reviews-root": 868,
+      "evidence-reviews-root": 870,
       "generated-authority-map": 1,
       "generated-path-classification-json": 1,
       "generated-path-classification-markdown": 1,
@@ -145069,11 +145300,11 @@
       "working-sandbox-readme": 1
     },
     "case_collisions_total": 0,
-    "dangling_references_total": 14882,
+    "dangling_references_total": 14895,
     "generated_total": 7,
-    "load_bearing_total": 1762,
+    "load_bearing_total": 1764,
     "portability_violations_total": 0,
-    "tracked_total": 1891,
+    "tracked_total": 1893,
     "unclassified_total": 0,
     "unicode_anomalies_total": 0
   },

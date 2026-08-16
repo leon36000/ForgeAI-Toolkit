@@ -1,0 +1,25 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "majeure",
+   "fichier": "governance/STATE-CURRENT.json",
+   "description": "Le diff modifie governance/STATE-CURRENT.json et governance/STATE-CURRENT.md alors que la story déclare explicitement qu'aucun fichier governance/ n'est touché. Le diff sort donc du périmètre annoncé.",
+   "preuve": "Story : 'Périmètre Aucun fichier `governance/`, `scripts/` (hors tests), `CANON/`.' Diff : 'diff --git a/governance/STATE-CURRENT.json b/governance/STATE-CURRENT.json' et 'diff --git a/governance/STATE-CURRENT.md b/governance/STATE-CURRENT.md'."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "governance/STATE-CURRENT.json",
+   "description": "Les empreintes mises à jour concernent uniquement les fichiers de tests; aucune empreinte des fichiers source modifiés n'apparaît dans le diff, ce qui laisse un doute sur la cohérence du registre STATE-CURRENT.",
+   "preuve": "Hunks governance/STATE-CURRENT.json : @@ -144, @@ -456, @@ -628 listent uniquement tests/test_adoption.py, tests/test_adoption_api.py, tests/test_models_gateway.py, tests/test_ratelimit.py."
+  }
+ ],
+ "date_heure": "2026-08-16T10:08:57.724708+00:00",
+ "prompt_sha256": "9a3a20faf1489e12a45dbe0daaabe621448c866818ef03dbc6cf4a98a1816e3a",
+ "reviewer_model": "DeepSeek-V4-Pro",
+ "modele_servi": "deepseek-v4-pro-direct",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}
