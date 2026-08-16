@@ -1,0 +1,19 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "critique",
+   "fichier": "requirements-ci.txt",
+   "description": "Le fichier requirements-ci.txt (lockfile) n'a pas été inclus dans le diff, contrairement à ce qui est affirmé dans la description ('lockfile régénéré'). Sans ce fichier, l'étape CI 'Installer les dépendances de test verrouillées' n'installera pas ruff, ce qui fera échouer le script ruff_report.py avec une erreur d'outillage.",
+   "preuve": "Le diff montre les modifications pour `requirements-ci.in` (ajout de `ruff==0.14.5`) mais ne contient aucune section `diff --git a/requirements-ci.txt b/requirements-ci.txt`."
+  }
+ ],
+ "date_heure": "2026-08-16T14:58:36.603846+00:00",
+ "prompt_sha256": "a0bcd5a5cd03bb982cf4563141c291e1a25445cb6faff7622417509a9d7ca153",
+ "reviewer_model": "Gemini-3.1-Pro",
+ "modele_servi": "gemini-31-pro-openrouter",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "1"
+ }
+}
