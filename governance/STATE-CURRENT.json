@@ -464,7 +464,7 @@
       },
       {
         "path": "tests/test_models_cloud.py",
-        "sha256": "ebd8a4842f32c6f80be984ef3779c7e8c0abde2a3f38315bc4f9898fea4a7351"
+        "sha256": "6910540cc322a1d7baa52cc2d6e8691dffdae04c5815a15c46435b60738715a9"
       },
       {
         "path": "tests/test_models_gateway.py",
@@ -925,7 +925,7 @@
     "tests": {
       "js_files": 3,
       "python_files": 193,
-      "python_functions_declared": 2219
+      "python_functions_declared": 2224
     }
   },
   "observations": [

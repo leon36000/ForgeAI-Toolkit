@@ -6443,8 +6443,8 @@
         }
       ],
       "rule_id": "evidence-registres-root",
-      "sha256": "0cda77647be6919df2e76743b48a1ce434f6516ecea035f70a9aa72450dfae9a",
-      "size": 379859,
+      "sha256": "0f1c93ee7e9ba92eb7a7d0a065d9fac762a8c25397f86e19b9c89927433dbbee",
+      "size": 380642,
       "target_path": null,
       "type": "text"
     },
@@ -8397,8 +8397,8 @@
         }
       ],
       "rule_id": "evidence-reviews-root",
-      "sha256": "ff9224addff8f3e84859276df143088979db1367db36a0f3bd4f226ed2fa497d",
-      "size": 2634,
+      "sha256": "55e381e8ed9e140c94bf097ec58503a6eac62b862e4a22b38246ed87ca5048e4",
+      "size": 2642,
       "target_path": null,
       "type": "text"
     },
@@ -21192,6 +21192,58 @@
       "rule_id": "evidence-reviews-root",
       "sha256": "818f230668072892a3b6457c1a8557388c6e878878740ccd9d32955e623d071a",
       "size": 681,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-528/GPT-5.6-Terra-Pro.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "4569fd357efbbb7742b154f0987a4d1d932548a1e571d99bd06f976fd491da6e",
+      "size": 334,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-528/Muse-Spark-1.2.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "ae39aac320fb08d24027b64c36e01abe106b67a32f3ae4fa5f440f903d278406",
+      "size": 329,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-528/Qwen3.7-Max.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "0fe06d3754a14c0d9aade2fc9c2467a5a361581a7ce5b9ba75184ed6c2e9e83e",
+      "size": 323,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-528/RECU.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "c89f6589417c9f7619940496f6c117474f09775c6e99d01a09a896457319cffd",
+      "size": 666,
       "target_path": null,
       "type": "text"
     },
@@ -35851,11 +35903,18 @@
           "referrer": "evidence/reviews/AUDIT-CAND-001/Kimi-K3.verdict.json",
           "resolved": "src/forgeai/models/probe.py",
           "severity": "hard"
+        },
+        {
+          "candidate": "src/forgeai/models/probe.py",
+          "line": 10,
+          "referrer": "stories/RC1-528-extract-text-attributeerror.md",
+          "resolved": "src/forgeai/models/probe.py",
+          "severity": "hard"
         }
       ],
       "rule_id": "product-source",
-      "sha256": "2b0a8e4c2f0804cefaa85b12c6ec5978560d0c1f6eecf558961219ea9135142f",
-      "size": 5460,
+      "sha256": "4de3c4ea181b8ebb5573498584b4d274e8b11dc8c3f52dd69c5b8fa1e7931556",
+      "size": 5696,
       "target_path": null,
       "type": "text"
     },
@@ -40591,6 +40650,19 @@
       "rule_id": "governance-stories",
       "sha256": "94c2c2f3a479ab45bfc400faa2a2dbde033297cdb5ff9f9234e3e2e620822bc0",
       "size": 4562,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "GOVERNANCE",
+      "generated": false,
+      "load_bearing": false,
+      "owner": "gouvernance-stories",
+      "path": "stories/RC1-528-extract-text-attributeerror.md",
+      "referenced_by": [],
+      "rule_id": "governance-stories",
+      "sha256": "0d009a904406e71e7202397b4a390dbf517df1336bddfac2056f06635606549b",
+      "size": 3116,
       "target_path": null,
       "type": "text"
     },
@@ -45886,8 +45958,8 @@
         }
       ],
       "rule_id": "test-suite",
-      "sha256": "ebd8a4842f32c6f80be984ef3779c7e8c0abde2a3f38315bc4f9898fea4a7351",
-      "size": 13725,
+      "sha256": "6910540cc322a1d7baa52cc2d6e8691dffdae04c5815a15c46435b60738715a9",
+      "size": 15904,
       "target_path": null,
       "type": "text"
     },
@@ -89451,6 +89523,11 @@
       {
         "candidate": "recu-revue/1",
         "line": 2,
+        "referrer": "evidence/reviews/RC1-528/RECU.json"
+      },
+      {
+        "candidate": "recu-revue/1",
+        "line": 2,
         "referrer": "evidence/reviews/RC1-538/RECU.json"
       },
       {
@@ -111675,17 +111752,17 @@
       },
       {
         "candidate": "application/json",
-        "line": 112,
+        "line": 121,
         "referrer": "src/forgeai/models/probe.py"
       },
       {
         "candidate": "seau/URL",
-        "line": 120,
+        "line": 129,
         "referrer": "src/forgeai/models/probe.py"
       },
       {
         "candidate": "vide/illisible",
-        "line": 127,
+        "line": 136,
         "referrer": "src/forgeai/models/probe.py"
       },
       {
@@ -118492,6 +118569,71 @@
         "candidate": "classify_paths.py",
         "line": 72,
         "referrer": "stories/RC1-504.md"
+      },
+      {
+        "candidate": "482/",
+        "line": 5,
+        "referrer": "stories/RC1-528-extract-text-attributeerror.md"
+      },
+      {
+        "candidate": "492/",
+        "line": 5,
+        "referrer": "stories/RC1-528-extract-text-attributeerror.md"
+      },
+      {
+        "candidate": "gateway/API",
+        "line": 6,
+        "referrer": "stories/RC1-528-extract-text-attributeerror.md"
+      },
+      {
+        "candidate": "try/except",
+        "line": 15,
+        "referrer": "stories/RC1-528-extract-text-attributeerror.md"
+      },
+      {
+        "candidate": "gateway/mod",
+        "line": 16,
+        "referrer": "stories/RC1-528-extract-text-attributeerror.md"
+      },
+      {
+        "candidate": "cli.py",
+        "line": 20,
+        "referrer": "stories/RC1-528-extract-text-attributeerror.md"
+      },
+      {
+        "candidate": "try/except",
+        "line": 21,
+        "referrer": "stories/RC1-528-extract-text-attributeerror.md"
+      },
+      {
+        "candidate": "valide/bien",
+        "line": 32,
+        "referrer": "stories/RC1-528-extract-text-attributeerror.md"
+      },
+      {
+        "candidate": "tests/test_models_probe.py",
+        "line": 34,
+        "referrer": "stories/RC1-528-extract-text-attributeerror.md"
+      },
+      {
+        "candidate": "gateway.py",
+        "line": 44,
+        "referrer": "stories/RC1-528-extract-text-attributeerror.md"
+      },
+      {
+        "candidate": "local.py",
+        "line": 44,
+        "referrer": "stories/RC1-528-extract-text-attributeerror.md"
+      },
+      {
+        "candidate": "routes.py",
+        "line": 44,
+        "referrer": "stories/RC1-528-extract-text-attributeerror.md"
+      },
+      {
+        "candidate": "s/couverts",
+        "line": 45,
+        "referrer": "stories/RC1-528-extract-text-attributeerror.md"
       },
       {
         "candidate": "reviews/LAB-033A/",
@@ -125469,53 +125611,58 @@
         "referrer": "tests/test_models_cloud.py"
       },
       {
+        "candidate": "str/int/list",
+        "line": 120,
+        "referrer": "tests/test_models_cloud.py"
+      },
+      {
         "candidate": "z-ai/glm-4.6",
-        "line": 103,
+        "line": 148,
         "referrer": "tests/test_models_cloud.py"
       },
       {
         "candidate": "routes.json",
-        "line": 106,
+        "line": 151,
         "referrer": "tests/test_models_cloud.py"
       },
       {
         "candidate": "vault.json",
-        "line": 175,
+        "line": 220,
         "referrer": "tests/test_models_cloud.py"
       },
       {
         "candidate": "routes.json",
-        "line": 209,
+        "line": 254,
         "referrer": "tests/test_models_cloud.py"
       },
       {
         "candidate": "routes.json",
-        "line": 226,
+        "line": 271,
         "referrer": "tests/test_models_cloud.py"
       },
       {
         "candidate": "routes.json",
-        "line": 249,
+        "line": 294,
         "referrer": "tests/test_models_cloud.py"
       },
       {
         "candidate": "routes.json",
-        "line": 257,
+        "line": 302,
         "referrer": "tests/test_models_cloud.py"
       },
       {
         "candidate": "routes.json",
-        "line": 273,
+        "line": 318,
         "referrer": "tests/test_models_cloud.py"
       },
       {
         "candidate": "vault.json",
-        "line": 293,
+        "line": 338,
         "referrer": "tests/test_models_cloud.py"
       },
       {
         "candidate": "routes.json",
-        "line": 383,
+        "line": 428,
         "referrer": "tests/test_models_cloud.py"
       },
       {
@@ -132393,6 +132540,13 @@
         "line": 191,
         "referrer": "evidence/reviews/BINDING.txt",
         "resolved": "evidence/reviews/RC1-021-v4",
+        "severity": "hard"
+      },
+      {
+        "candidate": "RC1-528",
+        "line": 192,
+        "referrer": "evidence/reviews/BINDING.txt",
+        "resolved": "evidence/reviews/RC1-528",
         "severity": "hard"
       },
       {
@@ -154922,6 +155076,13 @@
         "severity": "hard"
       },
       {
+        "candidate": "src/forgeai/models/probe.py",
+        "line": 10,
+        "referrer": "stories/RC1-528-extract-text-attributeerror.md",
+        "resolved": "src/forgeai/models/probe.py",
+        "severity": "hard"
+      },
+      {
         "candidate": "Docs/reference/gpu-drivers-support.md",
         "line": 1,
         "referrer": "stories/RC1-538.md",
@@ -157246,9 +157407,9 @@
     "by_class": {
       "ARCHIVE": 44,
       "DOCS": 17,
-      "EVIDENCE": 1464,
+      "EVIDENCE": 1468,
       "GENERATED": 5,
-      "GOVERNANCE": 186,
+      "GOVERNANCE": 187,
       "PRODUCT": 112,
       "TEST": 208,
       "WORKING": 10
@@ -157265,7 +157426,7 @@
       "evidence-audit-output-root": 18,
       "evidence-dedup-root": 2,
       "evidence-registres-root": 35,
-      "evidence-reviews-root": 1409,
+      "evidence-reviews-root": 1413,
       "generated-authority-map": 1,
       "generated-path-classification-json": 1,
       "generated-path-classification-markdown": 1,
@@ -157293,7 +157454,7 @@
       "governance-scripts-coordination": 4,
       "governance-scripts-governance": 9,
       "governance-scripts-root": 25,
-      "governance-stories": 89,
+      "governance-stories": 90,
       "product-catalogue-checksum": 1,
       "product-source": 111,
       "test-suite": 208,
@@ -157301,11 +157462,11 @@
       "working-sandbox-readme": 1
     },
     "case_collisions_total": 0,
-    "dangling_references_total": 15866,
+    "dangling_references_total": 15881,
     "generated_total": 9,
-    "load_bearing_total": 1909,
+    "load_bearing_total": 1913,
     "portability_violations_total": 0,
-    "tracked_total": 2046,
+    "tracked_total": 2051,
     "unclassified_total": 0,
     "unicode_anomalies_total": 0
   },
