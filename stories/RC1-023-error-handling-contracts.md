@@ -62,7 +62,10 @@ site par site (lecture du code, pas de classification automatique) :
   rollback (ex. constat d'audit L07-002 : deux `except Exception: pass` avalaient des échecs de
   persistance de l'état de déploiement sans aucune trace). Correctif MINIMAL : rendre la
   dégradation visible (stderr ou ligne d'avertissement dans le flux de déploiement, selon le
-  contexte), **aucun changement de comportement fonctionnel préexistant**.
+  contexte), **aucun changement de comportement fonctionnel préexistant pour la hiérarchie
+  `Exception`** — portée précisée round 37 (voir « Risque résiduel accepté » ci-dessous) : un
+  `__str__` pathologique qui lève explicitement un `BaseException` non-`Exception` reste un écart
+  résiduel étroit, accepté et documenté, pas silencieusement recouvert par cette formulation.
 
 Les 158 sites restants (`autre`, `return_default`, contrats docstring légers sur `re_raise`)
 sont hors scope de ce lot — `governance/error-handling-contracts.json::coverage.note` documente
@@ -88,7 +91,10 @@ le plan des lots suivants.
 4. `.github/workflows/error-handling-contracts.yml` — gate CI (validation + détection de
    mutation : un site déplacé doit faire échouer le gate).
 5. 9 correctifs minimaux (sites FIXED) + 9 tests d'injection de faute prouvant (a) le nouveau
-   signal apparaît, (b) le comportement observable préexistant est inchangé.
+   signal apparaît, (b) le comportement observable préexistant est inchangé pour toute `Exception`
+   levée par `__str__()` — la frontière `BaseException` non-`Exception` est un risque résiduel
+   étroit distinct, accepté et documenté (voir « Risque résiduel accepté » ci-dessous), pas une
+   omission de cette preuve.
 6. ~~`manifests/roles.yaml` — 2 entrées ajoutées (`kimi-k3`, `gemini-3.7-flash`)~~ : livrable
    initial (roster codeur périmé découvert en construisant le reçu D9 de cette story, vendors
    vérifiés à la source via `/v1/model/info`, signalé sur #481) — **superseded, retiré du diff
@@ -142,7 +148,7 @@ cette série où l'objection reste au niveau du gate lui-même, pas d'une donné
 ignoré en silence, disposition équivalente à `SPLIT_TO_NEW_ISSUE` au niveau du gate plutôt que
 d'un site individuel.
 
-## Risque résiduel accepté (rounds 27-36, #452) — str_exc_sur() et le critère « aucun changement de comportement » des sites FIXED
+## Risque résiduel accepté (rounds 27-37, #452) — str_exc_sur() et le critère « aucun changement de comportement » des sites FIXED
 
 `src/forgeai/core/safe_repr.py::str_exc_sur()` (round 27) rend sûre l'interpolation `f"...:
 {exc}"` utilisée par les sites FIXED de cette story (`_persist_deploy_state`, `_load_deploy_state`,
@@ -182,6 +188,20 @@ devient réel en pratique (jamais observé à ce jour), la correction approprié
 dédié `str_exc_sur_best_effort_total()` (BaseException, réservé aux contextes déjà vérifiés
 signal-safe comme les threads daemon) plutôt qu'une garde ad hoc par site.
 
+**Round 37 (objection GPT-5.6-Terra-Pro, REJECT majeure, 2/3 APPROVE)** : round 36 documentait
+correctement ce risque résiduel dans CETTE section, mais laissait intacte, plus bas, la formulation
+des « Critères de validation » et des livrables qui affirmait sans nuance « aucun changement de
+comportement observable sur les 9 sites FIXED » — une contradiction interne du document (l'analyse
+ci-dessus admet explicitement un changement de comportement dans le cas pathologique
+`BaseException`, la case à cocher le niait). Un reviewer indépendant lisant le pack complet retombe
+nécessairement sur cette contradiction, quelle que soit la qualité de l'analyse : documenter un
+risque résiduel à un endroit du document sans corriger l'affirmation contraire ailleurs ne le
+résout pas. **Aucun changement de code** — le compromis `except Exception` (round 30) reste la
+position finale, toujours pour les mêmes raisons de sécurité signal. Seule la formulation des trois
+endroits qui promettaient « zéro changement de comportement » sans réserve a été corrigée pour
+scoper précisément à la hiérarchie `Exception` (livrable 9-FIXED, livrable 5, case AC) — la preuve
+par tests d'injection de faute reste exacte et inchangée pour ce périmètre corrigé.
+
 ## Critères de validation
 
 - [x] `pytest` — suite complète verte (2224 tests collectés, 0 échec ; régression confirmée sur
@@ -190,6 +210,13 @@ signal-safe comme les threads daemon) plutôt qu'une garde ad hoc par site.
 - [x] `python3 scripts/governance/validate_error_contracts.py --root . --render` — OK.
 - [x] Mutation locale (site déplacé) → gate détecte "site introuvable" (vérifié en local avant
       CI).
-- [x] Aucun changement de comportement observable sur les 9 sites FIXED (prouvé par les tests
-      d'injection de faute : valeur de retour / absence d'exception propagée inchangée).
+- [x] Aucun changement de comportement observable sur les 9 sites FIXED pour toute `Exception`
+      levée par `exc.__str__()` (prouvé par les tests d'injection de faute : valeur de retour /
+      absence d'exception propagée inchangée). Portée EXCLUT explicitement un `__str__` qui lève
+      un `BaseException` non-`Exception` (`SystemExit`/`KeyboardInterrupt` explicites) — risque
+      résiduel étroit, analysé et accepté round 36-37, pas couvert par cette preuve (voir
+      « Risque résiduel accepté (rounds 27-36…) » ci-dessus). Round 37 (objection GPT-5.6-Terra-Pro,
+      REJECT majeure) : la formulation précédente de cette case ne portait pas cette exclusion
+      explicitement et contredisait donc la section d'analyse — corrigé ici, aucun changement de
+      code (le compromis round 30/36 reste inchangé, seule la formulation de l'AC était fausse).
 - [ ] Revue aveugle scellée 3 vendors distincts, APPROVE 3/3.
