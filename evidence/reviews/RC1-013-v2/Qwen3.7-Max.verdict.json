@@ -1,0 +1,25 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "critique",
+   "fichier": "Docs/reference/cli.md",
+   "description": "Le critère d'acceptation exige explicitement une « documentation FR/EN de chaque commande publique ». Le diff ajoute une note qui refuse unilatéralement de produire la version anglaise, repoussant cette exigence à une story de suivi. Le PR ne respecte pas les critères d'acceptation définis.",
+   "preuve": "Section '## Langue de cette référence' : « Le critère d'acceptation de l'issue #443 demande une documentation « FR/EN » ; produire une version anglaise complète [...] la décision revient à une story de suivi distincte »."
+  },
+  {
+   "severite": "majeure",
+   "fichier": "Docs/reference/cli.md",
+   "description": "Le critère d'acceptation demande un « inventaire des commandes, options, codes retour et variables ». La documentation n'inclut pas systématiquement les codes de retour et les variables d'environnement pour l'ensemble des commandes (ex: budget, catalogue, export n'en mentionnent aucun). Le script d'inventaire automatisé (_inventaire_cli) ne les extrait pas non plus du parser.",
+   "preuve": "Absence de sections 'Code de retour' ou 'Variables' pour la majorité des commandes dans cli.md ; fonction _inventaire_cli dans scripts/gate_docs.py (lignes 88-198) qui ne compte que les options et sous-commandes."
+  }
+ ],
+ "date_heure": "2026-08-16T13:27:05.478183+00:00",
+ "prompt_sha256": "f456a1f12497c3e1186be2920e1125382902d2157a23c87e4903f8a15b8e117e",
+ "reviewer_model": "Qwen3.7-Max",
+ "modele_servi": "qwen37-max-openrouter",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

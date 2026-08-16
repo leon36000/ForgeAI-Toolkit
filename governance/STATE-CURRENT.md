@@ -201,6 +201,10 @@
       "sha256": "0c6fe881de3bab81b1730ba1e360e15ca45a4db66f21262219188fff5e4b4f90"
     },
     {
+      "path": "tests/test_cli_doc_coverage.py",
+      "sha256": "972ee3fcfcb3009f2d89c174541f6718cbfc4c160ee04143855fae7dfcd82fd8"
+    },
+    {
       "path": "tests/test_cli_doctor.py",
       "sha256": "4507035649ea63a39df7cea0646b3419913cfd432674a5edab192a5d6a24f03c"
     },
@@ -902,8 +906,8 @@
   },
   "tests": {
     "js_files": 3,
-    "python_files": 186,
-    "python_functions_declared": 2009
+    "python_files": 187,
+    "python_functions_declared": 2014
   }
 }
 ```

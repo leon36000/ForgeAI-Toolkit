@@ -1,0 +1,37 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "critique",
+   "fichier": "Docs/reference/cli.md",
+   "description": "Le critère demande une documentation FR/EN de chaque commande publique, mais le diff ajoute uniquement du contenu en français et indique explicitement qu'une version anglaise est hors périmètre.",
+   "preuve": "Le diff ajoute : « Le critère d'acceptation de l'issue #443 demande une documentation « FR/EN » ; produire une version anglaise complète de cette référence est un changement de politique documentaire à l'échelle du dépôt ... la décision revient à une story de suivi distincte plutôt qu'à un arbitrage unilatéral ici. »"
+  },
+  {
+   "severite": "majeure",
+   "fichier": "scripts/gate_docs.py",
+   "description": "L'inventaire demandé des commandes, options, codes retour et variables n'est pas produit : `_inventaire_cli` ne collecte que les sous-commandes directes et un compte d'options de premier niveau, sans noms d'options, codes retour ni variables. Le mode `--report` n'affiche pas ces éléments.",
+   "preuve": "`resultat[commande] = {\"sous_commandes\": sorted(sous_commandes_directes), \"options\": nombre_options}` ; plus loin : `print(f\"- forgeai {commande} : sous-commandes directes : {liste_sous_commandes} ; options déclarées : {details['options']}\")`."
+  },
+  {
+   "severite": "majeure",
+   "fichier": "tests/test_cli_doc_coverage.py",
+   "description": "Les exemples ne sont vérifiés automatiquement que pour un sous-ensemble restreint de 8 invocations sûres. La majorité des exemples ajoutés (`budget set`, `export`, `gateway`, `import`, `model add-*`, `strategy set`, `template show/resolve`, etc.) ne sont pas exécutés, donc le critère « exemples vérifiés automatiquement » n'est que partiellement couvert.",
+   "preuve": "Dans `_safe_cli_invocations`, l'ensemble `wanted` ne contient que les préfixes `budget status`, `catalogue`, `hardware`, `ide list`, `model list`, `strategy show`, `template list`, `operators`."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "tests/test_cli_doc_coverage.py",
+   "description": "La détection de toute nouvelle commande non documentée repose sur des tests Python ajoutés, mais aucune modification de configuration CI n'est incluse dans ce diff pour prouver que cette vérification est exécutée automatiquement sur chaque changement.",
+   "preuve": "Le diff n'ajoute aucun fichier de CI ; il ajoute uniquement `test_toutes_commandes_premier_niveau_documentees` et `test_gate_docs_exit_0_sur_vrai_depot` dans `tests/test_cli_doc_coverage.py`."
+  }
+ ],
+ "date_heure": "2026-08-16T13:27:24.230307+00:00",
+ "prompt_sha256": "f456a1f12497c3e1186be2920e1125382902d2157a23c87e4903f8a15b8e117e",
+ "reviewer_model": "DeepSeek-V4-Pro",
+ "modele_servi": "deepseek-v4-pro-direct",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}
