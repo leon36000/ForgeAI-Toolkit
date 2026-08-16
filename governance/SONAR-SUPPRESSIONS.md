@@ -63,3 +63,6 @@ La conclusion antérieure selon laquelle les deux NOSONAR nus retirés de regist
 | — | glob | src/forgeai/web/assets/** | équipe web ForgeAI | La couverture Sonar ne mesure pas les assets navigateur. | Non-réductible : la couverture Python ne peut pas mesurer les assets navigateur. | 2027-02-10 |
 | — | glob | scripts/proof/** | équipe preuves ForgeAI | La couverture Sonar ne mesure pas les scripts de preuve e2e. | Non-réductible : les scripts constituent les preuves e2e exécutées. | 2027-02-10 |
 | — | glob | scripts/check_metering_sites.py | équipe gouvernance ForgeAI | La couverture Sonar ne mesure pas le wrapper CLI sans logique métier. | tests/test_metering_guard.py | 2027-02-10 |
+| pythonsecurity:S8705 | file | scripts/mypy_gate.py | équipe gouvernance ForgeAI | Le faux positif peut masquer une occurrence S8705 dans ce fichier jusqu'à sa révision. | tests/test_rc1019_mypy_gate.py | 2027-02-10 |
+| pythonsecurity:S8707 | file | scripts/mypy_gate.py | équipe gouvernance ForgeAI | Le faux positif peut masquer une occurrence S8707 dans ce fichier jusqu'à sa révision. | tests/test_rc1019_mypy_gate.py | 2027-02-10 |
+| pythonsecurity:S8705 | file | scripts/gate_git_ref.py | équipe gouvernance ForgeAI | Le faux positif peut masquer une occurrence S8705 dans ce fichier jusqu'à sa révision. | tests/test_gate_git_ref.py | 2027-02-10 |

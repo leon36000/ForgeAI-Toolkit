@@ -1,0 +1,37 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "critique",
+   "fichier": "scripts/mypy_gate.py",
+   "description": "Le cliquet ne garantit pas la protection permanente des fichiers deja presents dans fichiers_proteges par rapport a la reference git : un fichier protege peut etre retire de fichiers_proteges ou bascule en dette sans anomalie, ce qui permet de contourner la tolerance zero et l'interdiction d'extension de la base.",
+   "preuve": "_anomalies_reference() signale seulement `if f not in ref_dette and f not in ref_proteges: ... extension non justifiee` pour un fichier en dette ; il n'y a aucun controle exigeant que `ref_proteges` soit inclus dans les `proteges` courants, et _anomalies_proteges() n'itere que les `proteges` courants."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "Docs/BASELINE-MYPY.json",
+   "description": "La baseline ne classe pas les erreurs par cause alors que le critere mentionne un classement par cause et module ; elle ne contient que des decomptes par fichier.",
+   "preuve": "Objet JSON : `\"dette\": { \"src/forgeai/cli.py\": 4, ... }` ; aucun champ decrivant la cause des erreurs n'est present."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "Docs/BASELINE-MYPY.json",
+   "description": "La verification d'une baseline fraiche identique entre mypy 2.1.0 local et mypy 2.3.1 verrouille en CI n'est pas démontrable dans le diff ; seul le JSON final est fourni.",
+   "preuve": "Le diff ajoute seulement `Docs/BASELINE-MYPY.json` et des entrees `evidence/registres/mission.jsonl` relatives aux correctifs Sonar, pas de sortie mypy ni de preuve de mesure comparée des versions."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "scripts/mypy_gate.py",
+   "description": "`executer_mypy` lance `python3` en dur plutôt que l'interprète courant (`sys.executable`), ce qui peut réduire le déterminisme du gate si les dépendances sont installées dans un environnement différent de `python3`.",
+   "preuve": "commande = [\"python3\", \"-m\", \"mypy\", cible, \"--ignore-missing-imports\"]"
+  }
+ ],
+ "date_heure": "2026-08-16T10:27:37.520834+00:00",
+ "prompt_sha256": "a2cd91755ff56c89650ca44d06bc81d3fa18adc13d092659e639173639dbc1f1",
+ "reviewer_model": "Qwen3.8-2.4T",
+ "modele_servi": "b9de6bc895fe95ccacf7d9fa9b1cf29ca44d34f03e249738f325c9dee3790b78",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

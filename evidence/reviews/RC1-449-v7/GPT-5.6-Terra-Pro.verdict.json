@@ -1,0 +1,19 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "majeure",
+   "fichier": "scripts/mypy_gate.py",
+   "description": "Le scan anti-neutralisation peut être contourné par un fichier Python valide encodé hors UTF-8. Un fichier protégé déclaré en PEP-263, par exemple latin-1, contenant un octet non UTF-8 et `# mypy: ignore-errors`, est analysable par mypy avec son encodage déclaré, mais le gate échoue à le décoder en UTF-8 puis l’ignore silencieusement. La directive neutralise alors le fichier protégé sans anomalie, contrairement à la garantie de zéro tolérance.",
+   "preuve": "scripts/mypy_gate.py: environ lignes 552-560 : `texte = chemin.read_text(encoding=\"utf-8\")` puis `except (OSError, UnicodeError): continue`. Ainsi toute `UnicodeError` supprime le fichier du scan. Exemple reproductible : un fichier commençant par `# -*- coding: latin-1 -*-`, contenant ensuite un caractère latin-1 non UTF-8 et `# mypy: ignore-errors`, provoque `UnicodeDecodeError` dans ce scan tandis que l’encodage déclaré permet à mypy de lire le fichier."
+  }
+ ],
+ "date_heure": "2026-08-16T13:32:14.022562+00:00",
+ "prompt_sha256": "9c623ee2e0cd4c0e97bff64d258e6ebe28f1bdb4e81f9c58a35ea32a8a77af97",
+ "reviewer_model": "GPT-5.6-Terra-Pro",
+ "modele_servi": "gpt56-terra-pro-openrouter",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

@@ -1,0 +1,19 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "majeure",
+   "fichier": "scripts/mypy_gate.py",
+   "description": "Le mécanisme anti-neutralisation ne couvre que `# mypy: ignore-errors`. Une directive inline mypy telle que `# mypy: disable-error-code=assignment` peut désactiver une ou plusieurs catégories d'erreurs dans un fichier protégé sans être détectée ; une régression de ce type produit alors zéro erreur mypy et passe les règles 1, 2 et 4. Cela contredit la zéro tolérance inconditionnelle annoncée pour les fichiers protégés.",
+   "preuve": "La regex `_DIRECTIVE_NEUTRALISATION` (vers lignes 550-551) est strictement `rb\"#\\s*mypy:\\s*ignore-errors\\b\"`, et `fichiers_proteges_neutralises()` ne signale un fichier que si cette regex matche (vers lignes 569-570). Aucun scan ne recherche `disable-error-code`; les tests g24-g26 ne couvrent également que `ignore-errors`."
+  }
+ ],
+ "date_heure": "2026-08-16T13:42:42.594546+00:00",
+ "prompt_sha256": "0cd9c1c843ebe56261f48a5f8d4f0dc380b0ca449565e153853a692fde444bc1",
+ "reviewer_model": "GPT-5.6-Terra-Pro",
+ "modele_servi": "gpt56-terra-pro-openrouter",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

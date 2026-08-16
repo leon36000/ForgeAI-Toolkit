@@ -1,0 +1,19 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "critique",
+   "fichier": "scripts/mypy_gate.py",
+   "description": "Le script échoue lorsqu'il est exécuté directement par le job CI : `main()` appelle `fichiers_neutralises()` avant que cette fonction et `_DIRECTIVE_NEUTRALISATION` ne soient définies. Les tests masquent ce défaut car ils importent le module, ce qui exécute toutes les définitions avant d'appeler `main()`.",
+   "preuve": "Le bloc `if __name__ == \"__main__\": raise SystemExit(main())` apparaît avant la définition de `_DIRECTIVE_NEUTRALISATION` et de `def fichiers_neutralises(...)`. Lors de `python3 scripts/mypy_gate.py ...` (commande de `.github/workflows/gates.yml`), l'exécution entre dans `main()`, atteint `neutralises = fichiers_neutralises(...)`, puis lève `NameError: name 'fichiers_neutralises' is not defined`."
+  }
+ ],
+ "date_heure": "2026-08-16T14:10:23.957373+00:00",
+ "prompt_sha256": "5d1defabd26da6e6f2a81087c383b71e7428f64d43918f6318cc6333c07be877",
+ "reviewer_model": "GPT-5.6-Terra-Pro",
+ "modele_servi": "gpt56-terra-pro-openrouter",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

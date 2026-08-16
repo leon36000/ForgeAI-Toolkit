@@ -1,0 +1,19 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "majeure",
+   "fichier": "scripts/mypy_gate.py",
+   "description": "Le gate active un ignore global non borné sur l’ensemble de la cible mypy, contrairement au critère d’acceptation qui interdit les ignore globaux non bornés. Des imports sans stubs ou introuvables dans n’importe quel module contrôlé sont ainsi silencieusement ignorés, et les erreurs de type induites par ces imports peuvent être masquées.",
+   "preuve": "Ligne 42 environ : `commande = [sys.executable, \"-m\", \"mypy\", cible, \"--ignore-missing-imports\"]`. Cette option est appliquée sans limitation de module, de paquet ou de code d’erreur."
+  }
+ ],
+ "date_heure": "2026-08-16T11:58:06.246664+00:00",
+ "prompt_sha256": "d8623f7ea382339b32f3dca7e1988fcd01057c5f3a905634cf1cf3ea0ddd507a",
+ "reviewer_model": "GPT-5.6-Terra-Pro",
+ "modele_servi": "gpt56-terra-pro-openrouter",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

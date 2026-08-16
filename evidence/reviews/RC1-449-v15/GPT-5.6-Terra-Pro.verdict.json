@@ -1,0 +1,19 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "majeure",
+   "fichier": "scripts/mypy_gate.py",
+   "description": "La règle 8 ne conserve pas une empreinte par occurrence de `# type: ignore`, mais un ensemble d’empreintes distinctes. Elle ne peut donc pas détecter le déplacement d’un ignore entre deux lignes ayant le même contenu après `strip()`, notamment dans des blocs d’indentation différents. Le compte de la règle 7 reste inchangé et la règle 8 considère l’empreinte déjà connue : une nouvelle suppression peut ainsi être masquée.",
+   "preuve": "`contenus_type_ignore()` construit `empreintes = { hashlib.sha256(ligne.strip()).hexdigest() ... }`, donc déduplique les lignes identiques. La baseline fournit elle-même la preuve de cette perte : `Docs/BASELINE-MYPY.json` déclare `src/forgeai/core/proc.py: 10` dans `type_ignore`, mais seulement 9 empreintes dans `type_ignore_lignes`; le contexte confirme explicitement « 10 occurrences mais 9 empreintes distinctes (2 lignes identiques après strip, indentations différentes) ». `_anomalies_contenu_type_ignore()` compare ensuite seulement des ensembles (`nouvelles = actuelles - baselinees`), sans multiplicité ni emplacement."
+  }
+ ],
+ "date_heure": "2026-08-16T15:35:34.659015+00:00",
+ "prompt_sha256": "4ba7133f6c33d401447c0f517e09b47acb3cc241fad34bdecdb4e1d5ee8bbba3",
+ "reviewer_model": "GPT-5.6-Terra-Pro",
+ "modele_servi": "gpt56-terra-pro-openrouter",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

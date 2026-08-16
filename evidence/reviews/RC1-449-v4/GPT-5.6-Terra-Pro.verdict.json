@@ -1,0 +1,19 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "majeure",
+   "fichier": "scripts/mypy_gate.py",
+   "description": "Le gate n'empêche pas l'ajout ultérieur d'une configuration mypy globale non bornée, telle que `ignore_errors = true`, qui supprimerait toutes les erreurs émises. Les fichiers protégés seraient alors vus à zéro erreur et la dette pourrait être diminuée/supprimée — une évolution explicitement autorisée par la comparaison à la référence — sans que le gate ne détecte que l'analyse a été neutralisée. Cela contourne l'exigence d'interdiction des ignore globaux non bornés et la zéro tolérance des modules protégés.",
+   "preuve": "`executer_mypy` construit uniquement `[sys.executable, \"-m\", \"mypy\", cible]` (scripts/mypy_gate.py, ligne `commande = [sys.executable, \"-m\", \"mypy\", cible]`) : mypy charge donc automatiquement une configuration du dépôt, sans `--config-file` contrôlé ni inspection/rejet des options globales. `anomalies` considère un fichier de dette devenu propre comme une réduction à appliquer (`_anomalies_dette`, message « retirer de la dette ») et `_anomalies_reference` interdit seulement les augmentations de dette/borne, pas cette réduction."
+  }
+ ],
+ "date_heure": "2026-08-16T12:31:04.367360+00:00",
+ "prompt_sha256": "93db4a84aedf10e7c81f4fece373ee119263927f766a00d2aff4f2c287e33097",
+ "reviewer_model": "GPT-5.6-Terra-Pro",
+ "modele_servi": "gpt56-terra-pro-openrouter",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

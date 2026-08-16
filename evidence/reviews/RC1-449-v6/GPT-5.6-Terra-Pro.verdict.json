@@ -1,0 +1,19 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "majeure",
+   "fichier": "scripts/mypy_gate.py",
+   "description": "Le cliquet peut être neutralisé pour n'importe quel fichier protégé en ajoutant la directive inline mypy `# mypy: ignore-errors`. Cette directive supprime les diagnostics du fichier sans modifier la baseline ni la référence : le fichier reste dans `fichiers_proteges`, mypy retourne zéro erreur pour lui, et le gate accepte alors une régression de typage masquée. Cela contrevient à la zéro-tolérance permanente et à l'interdiction des ignore non bornés.",
+   "preuve": "`executer_mypy` lance mypy avec `--config-file=` (`scripts/mypy_gate.py:45` environ), ce qui désactive la découverte de configuration mais ne désactive pas les directives inline mypy. `_anomalies_proteges` ne signale une régression que si `n = erreurs.get(f, 0)` est supérieur à zéro (`scripts/mypy_gate.py`, fonction `_anomalies_proteges`), tandis que `erreurs_par_fichier` ne peut compter que les diagnostics effectivement émis. Reproduction : ajouter `# mypy: ignore-errors` dans un fichier de `Docs/BASELINE-MYPY.json` présent dans `fichiers_proteges`, y introduire une erreur mypy ; mypy n'émet aucun diagnostic pour ce fichier et les règles 1 à 5 ne produisent aucune anomalie."
+  }
+ ],
+ "date_heure": "2026-08-16T13:13:25.358054+00:00",
+ "prompt_sha256": "823afa955e7ed98d77b89347dbed52259240916e6c3ae9c6a68b915c7c429a6f",
+ "reviewer_model": "GPT-5.6-Terra-Pro",
+ "modele_servi": "gpt56-terra-pro-openrouter",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

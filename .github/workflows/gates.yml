@@ -130,6 +130,28 @@ jobs:
             --base Docs/BASELINE-CLI-DOC.json \
             --base-ref-git origin/main
 
+  mypy-ratchet:
+    runs-on: ubuntu-latest
+    steps:
+      # fetch-depth: 0 : la non-croissance de la base est vérifiée contre l'état DÉJÀ MERGÉ.
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+        with:
+          python-version: "3.12"
+      - name: Installer les dépendances de test verrouillées
+        run: python -m pip install --no-cache-dir --require-hashes -r requirements-ci.txt
+      # Mesuré à la création du gate (#449) : 134 erreurs / 12 fichiers, 74 fichiers déjà propres
+      # protégés à zéro tolérance. La dette est gelée dans une base BORNÉE — toute régression doit
+      # être corrigée, jamais re-baselinée.
+      - name: Gate RC1-019 — cliquet mypy (aucune régression, dette non extensible)
+        run: |
+          python3 scripts/mypy_gate.py \
+            --base Docs/BASELINE-MYPY.json \
+            --base-ref-git origin/main
+
   metering-sites:
     runs-on: ubuntu-latest
     steps:

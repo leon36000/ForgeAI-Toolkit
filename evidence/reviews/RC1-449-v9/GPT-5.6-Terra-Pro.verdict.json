@@ -1,0 +1,19 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "majeure",
+   "fichier": "scripts/mypy_gate.py",
+   "description": "Le scan des directives inline ne couvre que les fichiers protégés. Un fichier en dette peut donc employer une directive mypy inline sélective pour masquer des erreurs existantes ou nouvelles tout en restant sous son plafond, ce qui contourne le cliquet sans déclencher les règles 1 à 4.",
+   "preuve": "Dans main(), le scan est appelé avec uniquement `set(base[\"fichiers_proteges\"])` : `neutralises = fichiers_proteges_neutralises(racine, set(base[\"fichiers_proteges\"]))` (vers ligne 530). La règle de signalement ne reçoit donc jamais les fichiers de `dette`. Or la regex généralisée reconnaît bien une directive sélective telle que `# mypy: disable-error-code=assignment` (`_DIRECTIVE_NEUTRALISATION = re.compile(rb\"#\\s*mypy:\\s*\\S\")`, vers ligne 548), et le contexte confirme que cette directive supprime sélectivement une catégorie. Dans un fichier de dette, la baisse du nombre d'erreurs est explicitement acceptée par `_anomalies_dette` tant que `actuel > plafond` est faux et que `actuel != 0` (vers lignes 324-332) : par exemple, désactiver une partie des 106 erreurs de `src/forgeai/web/server.py` laisse un compte positif inférieur au plafond 106 et le gate approuve."
+  }
+ ],
+ "date_heure": "2026-08-16T13:57:23.521937+00:00",
+ "prompt_sha256": "9a430186c2e69b8fd6a06f271266cd8d7038c89d167e8e784880c08550b1533d",
+ "reviewer_model": "GPT-5.6-Terra-Pro",
+ "modele_servi": "gpt56-terra-pro-openrouter",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}
