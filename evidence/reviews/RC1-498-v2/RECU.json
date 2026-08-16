@@ -3,10 +3,10 @@
   "dossier": "RC1-498-v2",
   "issue": 498,
   "round": 2,
-  "base_commit": "c4188cd9e1cf61ceb636939a3ac0b186ec2997cf",
-  "head_commit": "c21ca1e435d894d4cd1a16bf495cb6cc3aa593b8",
-  "head_tree": "466d30c06cf782eac08c5b45715ce3a7359afeae",
-  "diff_digest": "916562d6b6a0d07cdac548b62a1d7ce7d299d58db5f3b6e864109b5e543b1142",
+  "base_commit": "f9da36033a2a706a0b389a183e453115a730bf80",
+  "head_commit": "382c649ec9aa1dd3232261e42babe41c72db71d4",
+  "head_tree": "ef3458ae289df08485b395b695314dc622927bf8",
+  "diff_digest": "7b399b5eb189e7d7f392d538d25d36a3a4151b461e539570f38f7c10a6aef26b",
   "prompt_sha256": "3769e0bbf1c9db3cd10dcb6cc8a4e2eda98c1ba0b60485265dfd5199394bdc05",
   "reviewers_attendus": [
     "GPT-5.6-Terra-Pro",
@@ -17,6 +17,6 @@
     "Gemini-3.7-Flash"
   ],
   "resultat": "APPROVE",
-  "date_heure": "2026-08-16T16:14:27.608826-04:00",
+  "date_heure": "2026-08-16T16:40:07.215361-04:00",
   "fenetre_heures": 24
 }
