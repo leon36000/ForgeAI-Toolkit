@@ -1415,3 +1415,14 @@ def test_g43c_lignes_avec_commentaire_reel_encodage_non_utf8(tmp_path):
         )
         == {2}
     )
+
+
+# ---------------------------------------------------------------------------
+# Correctif post-revue scellée #449 (round 18) — alignement split(b"\n") vs tokenize
+# ---------------------------------------------------------------------------
+
+def test_g44_contenus_type_ignore_aligne_avec_cr_isole(tmp_path):
+    chemin = tmp_path / "a.py"
+    chemin.write_bytes(b"x = 1\ry = 2\nz = 3  # type: ignore\n")
+    attendu = hashlib.sha256(b"z = 3  # type: ignore").hexdigest()
+    assert mypy_gate.contenus_type_ignore(tmp_path, {"a.py"}) == {"a.py": {attendu: 1}}

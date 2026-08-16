@@ -1,0 +1,19 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "scripts/mypy_gate.py",
+   "description": "Le hachage des lignes `# type: ignore` n'utilise pas le même découpage physique des lignes que `tokenize`. Cela peut associer un numéro de ligne confirmé à des octets d'une autre ligne et déclencher une empreinte erronée.",
+   "preuve": "Dans `contenus_type_ignore()`, les numéros viennent de `_lignes_avec_commentaire_reel()`, qui tokenize via `io.BytesIO(donnees).readline`, puis les octets sont sélectionnés avec `toutes_lignes = donnees.splitlines()` et `toutes_lignes[numero - 1]`. `BytesIO.readline` ne sépare que sur `\\n`, tandis que `bytes.splitlines()` sépare aussi notamment sur `\\x0b` et `\\x0c`. Un fichier Python valide contenant par exemple un form-feed de mise en forme avant un vrai commentaire décale donc les index de `splitlines()` sans décaler `tokenize`; la règle 8 hache alors une mauvaise ligne et peut signaler une suppression non vérifiée fictive."
+  }
+ ],
+ "date_heure": "2026-08-16T16:27:57.391766+00:00",
+ "prompt_sha256": "1af705bec51f39746f35159bf966cf4f66e57757254e863d33ed8a2e6e324e13",
+ "reviewer_model": "GPT-5.6-Terra-Pro",
+ "modele_servi": "gpt56-terra-pro-openrouter",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

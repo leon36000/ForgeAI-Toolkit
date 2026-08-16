@@ -206,6 +206,12 @@ def contenus_type_ignore(racine: Path, fichiers: set[str]) -> dict[str, dict[str
     qu'une occurrence supplémentaire de contenu IDENTIQUE à une empreinte déjà connue a été
     ajoutée (round 15, corrige la perte de multiplicité d'un ensemble simple).
 
+    Le découpage des lignes s'effectue via `split(b"\\n")` plutôt que `splitlines()` (round 18)
+    afin de rester strictement cohérent byte-à-byte avec le comptage de lignes de
+    `tokenize`/`io.BytesIO.readline` (qui ne reconnaît que `\\n` comme séparateur, alors que
+    `splitlines()` couperait aussi sur un `\\r` isolé), évitant tout désalignement d'indexation
+    quel que soit le caractère de contrôle présent dans le fichier.
+
     LIMITE RÉSIDUELLE, PROUVÉE IRRÉDUCTIBLE POUR TOUT SCHÉMA DE COMPTAGE (round 16 — correction
     d'une affirmation trop étroite du round 15, qui bornait ce cas à tort aux empreintes ayant
     « déjà 2+ occurrences ») : retirer UNE occurrence d'une empreinte (compte baseliné N, quel
@@ -241,7 +247,7 @@ def contenus_type_ignore(racine: Path, fichiers: set[str]) -> dict[str, dict[str
             donnees = chemin.read_bytes()
         except OSError:
             continue
-        toutes_lignes = donnees.splitlines()
+        toutes_lignes = donnees.split(b"\n")
         comptes: dict[str, int] = {}
         for numero in lignes_confirmees:
             if numero - 1 >= len(toutes_lignes):
