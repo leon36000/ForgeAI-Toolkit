@@ -1,0 +1,19 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "critique",
+   "fichier": "scripts/branch_coverage_report.py",
+   "description": "Le critère d'acceptation « définir un seuil global initial depuis une mesure fraîche » n'est pas implémenté. Le script mesure et affiche les totaux, mais ne définit, ne calcule ni ne conserve aucun seuil global initial de couverture de branches. Le job CI est explicitement non bloquant et aucun seuil n'y est configuré.",
+   "preuve": "scripts/branch_coverage_report.py construit la commande pytest avec --cov-branch et --cov-report mais sans --cov-fail-under ni option de seuil de branches ; main retourne 0 après affichage. .github/workflows/gates.yml ajoute le job branch-coverage-report avec le commentaire « jamais bloquant sur le nombre de branches manquantes » et aucune étape ne définit de seuil."
+  }
+ ],
+ "date_heure": "2026-08-16T17:12:44.761440+00:00",
+ "prompt_sha256": "f499faad0719d5606eed03d6c878e1a5a29a424b099976adb5f256bd93f5ed59",
+ "reviewer_model": "DeepSeek-V4-Pro",
+ "modele_servi": "deepseek-v4-pro-direct",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}
