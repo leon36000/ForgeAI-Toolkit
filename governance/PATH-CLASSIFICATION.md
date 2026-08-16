@@ -4,9 +4,9 @@ NE PAS ÉDITER À LA MAIN — généré par scripts/governance/classify_paths.py
 
 ## Résumé
 
-- Fichiers suivis : 1850
+- Fichiers suivis : 1853
 - Fichiers générés : 7
-- Éléments porteurs : 1722
+- Éléments porteurs : 1725
 - Fichiers non classés : 0
 - Collisions de casse : 0
 - Anomalies Unicode NFC : 0
@@ -18,7 +18,7 @@ NE PAS ÉDITER À LA MAIN — généré par scripts/governance/classify_paths.py
 
 - ARCHIVE : 44
 - DOCS : 14
-- EVIDENCE : 1292
+- EVIDENCE : 1295
 - GENERATED : 5
 - GOVERNANCE : 174
 - PRODUCT : 112
@@ -28,7 +28,7 @@ NE PAS ÉDITER À LA MAIN — généré par scripts/governance/classify_paths.py
 ## Plan de migration
 
 - Vagues : 4
-- Vague 0 : 1217 chemin(s)
+- Vague 0 : 1220 chemin(s)
 - Vague 1 : 18 chemin(s)
 - Vague 2 : 2 chemin(s)
 - Vague 3 : 2 chemin(s)
