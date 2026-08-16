@@ -8376,8 +8376,8 @@
         }
       ],
       "rule_id": "evidence-reviews-root",
-      "sha256": "1c49fe8e983206ac3466a8baceaa084c80d0dbc0774581975d05cb55b3fed777",
-      "size": 2578,
+      "sha256": "8bfe65872f67af6ee0ae3dc83d9516cc61f4d8808e71415009ebaf81277d81ea",
+      "size": 2590,
       "target_path": null,
       "type": "text"
     },
@@ -20378,6 +20378,58 @@
       "rule_id": "evidence-reviews-root",
       "sha256": "528d738676409dfe63a6a5d906f2ebc821299c350481ebc9b4f8dd9c160a3400",
       "size": 1109,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-449-v19/GPT-5.6-Terra-Pro.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "cb206cbb96af054089fe81b50447c2e078c5022112282e6cb7b55612f1d0bb3c",
+      "size": 334,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-449-v19/MiMo-Pro-V2.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "e15fbf83c5c5ba04b01d907408b3fff48fc8bcee2ecb04f555c6b5c8fbd57f3e",
+      "size": 324,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-449-v19/Qwen3.7-Max.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "4ae53be95b3e95d57c289e21601cafde7972a94cc89847365418cd9bf55cfaa2",
+      "size": 323,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-449-v19/RECU.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "dc4f2bfeccc6a7b9b85b11d264d10faa835935787a6d35eae8f08bc862314de3",
+      "size": 679,
       "target_path": null,
       "type": "text"
     },
@@ -88675,6 +88727,11 @@
         "referrer": "evidence/reviews/RC1-449-v16/GPT-5.6-Terra-Pro.verdict.json"
       },
       {
+        "candidate": "recu-revue/1",
+        "line": 2,
+        "referrer": "evidence/reviews/RC1-449-v19/RECU.json"
+      },
+      {
         "candidate": "src/forgeai/nouveau.pyi",
         "line": 8,
         "referrer": "evidence/reviews/RC1-449-v3/GPT-5.6-Terra-Pro.verdict.json"
@@ -131292,6 +131349,13 @@
         "severity": "hard"
       },
       {
+        "candidate": "RC1-449-v19",
+        "line": 187,
+        "referrer": "evidence/reviews/BINDING.txt",
+        "resolved": "evidence/reviews/RC1-449-v19",
+        "severity": "hard"
+      },
+      {
         "candidate": "scripts/gate_docs.py",
         "line": 11,
         "referrer": "sonar-project.properties",
@@ -155869,7 +155933,7 @@
     "by_class": {
       "ARCHIVE": 44,
       "DOCS": 17,
-      "EVIDENCE": 1441,
+      "EVIDENCE": 1445,
       "GENERATED": 5,
       "GOVERNANCE": 184,
       "PRODUCT": 112,
@@ -155888,7 +155952,7 @@
       "evidence-audit-output-root": 18,
       "evidence-dedup-root": 2,
       "evidence-registres-root": 35,
-      "evidence-reviews-root": 1386,
+      "evidence-reviews-root": 1390,
       "generated-authority-map": 1,
       "generated-path-classification-json": 1,
       "generated-path-classification-markdown": 1,
@@ -155924,11 +155988,11 @@
       "working-sandbox-readme": 1
     },
     "case_collisions_total": 0,
-    "dangling_references_total": 15772,
+    "dangling_references_total": 15773,
     "generated_total": 9,
-    "load_bearing_total": 1883,
+    "load_bearing_total": 1887,
     "portability_violations_total": 0,
-    "tracked_total": 2020,
+    "tracked_total": 2024,
     "unclassified_total": 0,
     "unicode_anomalies_total": 0
   },
