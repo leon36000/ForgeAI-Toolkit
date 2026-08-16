@@ -63,7 +63,7 @@ def _load_key(key_path: Path) -> bytes:
         raise ValueError(f"cle introuvable : {str(key_path)!r}") from erreur
     if not stat.S_ISREG(etat.st_mode):
         raise ValueError(f"cle refusee (pas un fichier regulier) : {str(key_path)!r}")
-    return bytes.fromhex(key_path.read_text(encoding="utf-8").strip())  # NOSONAR(S8707)
+    return bytes.fromhex(key_path.read_text(encoding="utf-8").strip())
 
 
 def _canonical_material(entry: dict) -> bytes:
@@ -98,7 +98,7 @@ def _read_entries(path: Path) -> list[dict]:
         return []
     # `path` = emplacement du registre choisi par l'app/l'opérateur (jamais une entrée HTTP) ;
     # correctif de concurrence, aucun chemin dérivé d'input → faux positif path-traversal.
-    return _parse_entries_from_text(path.read_text(encoding="utf-8"), source=str(path))  # NOSONAR(S8707)
+    return _parse_entries_from_text(path.read_text(encoding="utf-8"), source=str(path))
 
 
 def init_key(path: Path) -> str:
@@ -138,7 +138,7 @@ def append(
 ) -> dict:
     path.parent.mkdir(parents=True, exist_ok=True)  # ex. ~/.forgeai/Registres/ (P3)
     # `path` = registre app/opérateur (pas d'entrée HTTP) ; chemin non dérivé d'input.
-    with path.open("a+", encoding="utf-8") as fh:  # NOSONAR(S8707)
+    with path.open("a+", encoding="utf-8") as fh:
         with locked_exclusive(fh.fileno(), timeout_s=APPEND_LOCK_TIMEOUT_S):
             fh.seek(0)
             entries = _parse_entries_from_text(fh.read(), source=str(path))
