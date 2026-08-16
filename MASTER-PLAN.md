@@ -116,7 +116,7 @@ Chaque story : **DONE-avec-preuve ou BLOCKED-avec-raison** (§8bis, aucun troisi
 |---|---|---|---|
 | Lint Python | ruff | 0 violation sur le périmètre configuré | **actif en pre-commit**, `select=["E9","F"]` — vert. Pas de job CI. Le `--select ALL` d'origine n'a jamais été appliqué (17 620 violations, dont 66 % cosmétiques : 3511 `S101` sur des tests, 3052 `E501`, 3970 `ANN*`, 1094 `D103`) |
 | Types | mypy --strict | 0 erreur | **NON BRANCHÉ** — aucune section `[tool.mypy]`, aucun job. Mesuré : 374 erreurs en `--strict`, dont ~130 de classes « vrai défaut » (à trier, certaines sont des faux positifs de plateforme ou d'attributs dynamiques) |
-| Tests | pytest | ≥85 % global, ≥95 % `core/registre.py` | **ACTIF ET REQUIS** — job `tests`. Réel : 1884 passés / 7 skippés justifiés, 93 % de couverture branches incluses |
+| Tests | pytest | ≥85 % global, ≥95 % `src/forgeai/core/registre.py` | **ACTIF ET REQUIS** — job `tests`. Réel : 1884 passés / 7 skippés justifiés, 93 % de couverture branches incluses |
 | Zéro stub | scripts/no_stub_scan.py | 0 hit (marqueurs + AST) | **ACTIF ET REQUIS** — job `no-stub-scan` |
 | Secrets | gitleaks | 0 fuite | **ACTIF ET REQUIS** — job `gitleaks`. Historique complet vérifié : 0 fuite sur 678 commits |
 | JavaScript | node + eslint | tests JS verts, 0 `no-eval`/`no-undef` | **ACTIF** — job `js` (ajouté seq 417). Avant : les 3 `tests/js/*.cjs` ne tournaient nulle part, alors que D4 et UI-039 les citaient comme preuve |
@@ -154,7 +154,7 @@ Les faire passer en requis est une décision T3.
 | `CANON/` | Plan maître gelé + catalogue maître unifié (PDF 1577 + extraction) |
 | `archive/phase-a/` | Livrables Phase A (architecture, risques, stories, TUI, tests, UX, pilote, manifestes) |
 | `manifests/` | roles.yaml, routes.yaml, phases.yaml, gates.yaml |
-| `Registres/` | mission.jsonl — preuves hash-chaînées |
+| `evidence/registres/` | mission.jsonl — preuves hash-chaînées |
 | `reviews/` | verdicts de revue aveugle scellés |
 | `scripts/` | registre.py, no_stub_scan.py, revue.py, reviews_gate.py, gate_docs.py |
 
