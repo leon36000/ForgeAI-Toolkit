@@ -115,20 +115,38 @@ def check(
             f"ECHEC : manifeste {manifest} vide ou absent — aucune revue liante vérifiée"
         )
 
-    received_current = False
+    # RC1-010 (#440) lot 5a : reviews/ migre vers evidence/reviews/ (lots 5b-5d). Pendant la
+    # transition, une entrée liante peut vivre sous l'une OU l'autre racine — evidence/reviews/
+    # (sibling de reviews_root, la racine finale) est essayée en premier, reviews_root en repli.
+    # Comportement par défaut inchangé une fois la migration terminée (evidence/reviews/
+    # n'existe pas encore aujourd'hui pour la plupart des entrées : le repli s'applique).
+    evidence_root = reviews_root.parent / "evidence" / "reviews"
+    evidence_root_resolved = evidence_root.resolve() if evidence_root.is_dir() else None
     root_resolved = reviews_root.resolve()
+    received_current = False
     for entry in binding:
-        candidate = reviews_root / entry
-        try:
-            inside_root = candidate.resolve().is_relative_to(root_resolved)
-        except OSError:
-            inside_root = False
-        if not inside_root:
-            ok = False
-            report.append(f"ECHEC {entry} : chemin hors de reviews/")
-            continue
-
-        directory = candidate.resolve()
+        directory = None
+        if evidence_root_resolved is not None:
+            essai_evidence = evidence_root / entry
+            try:
+                if (
+                    essai_evidence.resolve().is_relative_to(evidence_root_resolved)
+                    and essai_evidence.is_dir()
+                ):
+                    directory = essai_evidence.resolve()
+            except OSError:
+                pass
+        if directory is None:
+            candidate = reviews_root / entry
+            try:
+                inside_root = candidate.resolve().is_relative_to(root_resolved)
+            except OSError:
+                inside_root = False
+            if not inside_root:
+                ok = False
+                report.append(f"ECHEC {entry} : chemin hors de reviews/ ou de evidence/reviews/")
+                continue
+            directory = candidate.resolve()
         verdict_files = sorted(directory.glob("*.verdict.json"))
         if not verdict_files:
             ok = False

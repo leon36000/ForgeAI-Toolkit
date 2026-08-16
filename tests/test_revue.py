@@ -238,6 +238,18 @@ def test_diff_canonique_exclut_reviews():
     )
 
 
+def test_diff_canonique_exclut_evidence_reviews():
+    # RC1-010 (#440) lot 5a : reviews/ migre vers evidence/reviews/ — le préfixe final doit
+    # être exclu du diff canonique dès maintenant (avant tout déplacement physique), sinon le
+    # lot qui déplace reviews/ créerait exactement le paradoxe bootstrap déjà corrigé pour
+    # reviews/ (le reçu d'un round entrerait dans le hash du diff qu'il examine).
+    code = ":100644 100644 a b M\0src/a.py\0"
+    reviewed = code + ":000000 100644 0 c A\0evidence/reviews/S/RECU.json\0"
+    assert revue._diff_canonique("base", "HEAD", runner=lambda _: code) == revue._diff_canonique(
+        "base", "HEAD", runner=lambda _: reviewed
+    )
+
+
 def test_diff_canonique_rejette_ref_commencant_par_tiret():
     with pytest.raises(ValueError):
         revue._diff_canonique("-x", "HEAD", runner=lambda _: "")

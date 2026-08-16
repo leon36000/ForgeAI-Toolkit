@@ -76,6 +76,37 @@ def _receipt():
     }
 
 
+def test_gate_resout_une_entree_liante_sous_evidence_reviews(tmp_path):
+    # RC1-010 (#440) lot 5a : pendant la migration reviews/ -> evidence/reviews/ (lots 5b-5d),
+    # une entrée liante peut vivre sous evidence/reviews/<nom> alors que reviews_root pointe
+    # encore vers reviews/ (racine legacy, transmise par défaut par gates.yml). Le gate doit la
+    # trouver via la racine evidence/reviews/ (sibling de reviews_root), sans qu'aucun fichier
+    # n'existe sous reviews/<nom>.
+    reviews_root = tmp_path / "reviews"
+    reviews_root.mkdir()
+    evidence_root = tmp_path / "evidence" / "reviews"
+    _make_review(evidence_root, "S-deja-migree", [_verdict("deepseek"), _verdict("gemini"), _verdict("longcat")])
+
+    ok, report = gate.check(_manifest(tmp_path, ["S-deja-migree"]), reviews_root)
+
+    assert ok is True, report
+    assert any("S-deja-migree" in line and "APPROVE" in line for line in report)
+
+
+def test_gate_priorite_evidence_reviews_sur_reviews_si_les_deux_existent(tmp_path):
+    # Si une entrée existe sous les DEUX racines (transition en cours), evidence/reviews/ (la
+    # racine finale) doit gagner.
+    reviews_root = tmp_path / "reviews"
+    _make_review(reviews_root, "S-double", [_verdict("deepseek", "REJECT"), _verdict("gemini"), _verdict("longcat")])
+    evidence_root = tmp_path / "evidence" / "reviews"
+    _make_review(evidence_root, "S-double", [_verdict("deepseek"), _verdict("gemini"), _verdict("longcat")])
+
+    ok, report = gate.check(_manifest(tmp_path, ["S-double"]), reviews_root)
+
+    assert ok is True, report
+    assert any("S-double" in line and "APPROVE" in line for line in report)
+
+
 def test_gate_ok_si_toutes_approve(tmp_path):
     root = tmp_path / "reviews"
     _make_review(root, "S-1", [_verdict("deepseek"), _verdict("gemini"), _verdict("longcat")])

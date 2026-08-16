@@ -229,7 +229,11 @@ def _diff_canonique(
     base_ref: str,
     head_ref: str,
     *,
-    exclude: tuple[str, ...] = ("reviews/",),
+    # RC1-010 (#440) lot 5a : reviews/ migre vers evidence/reviews/ (lots 5b-5d) — les deux
+    # préfixes sont exclus du diff canonique pendant la transition (même garde
+    # anti-paradoxe-bootstrap : le reçu et les verdicts d'une revue en cours ne doivent jamais
+    # entrer dans le hash du diff qu'ils examinent, quelle que soit leur racine du moment).
+    exclude: tuple[str, ...] = ("reviews/", "evidence/reviews/"),
     runner: GitRunner | None = None,
 ) -> str:
     """Retourne l'empreinte SHA-256 canonique du diff merge-base, hors artefacts exclus.
