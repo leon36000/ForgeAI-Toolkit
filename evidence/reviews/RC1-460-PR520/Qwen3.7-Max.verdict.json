@@ -1,12 +1,12 @@
 {
  "verdict": "APPROVE",
  "objections": [],
- "date_heure": "2026-08-16T06:56:56.833798+00:00",
- "prompt_sha256": "b6fe007ef3a66b9248cfb894c91ef5914098f51d4632d85fa9ae0a64b29622c6",
+ "date_heure": "2026-08-16T12:43:45.216317+00:00",
+ "prompt_sha256": "b175ace0c9429c1cff4584fd6636d4b22444c3ee9c3e3abda27d7525471ab362",
  "reviewer_model": "Qwen3.7-Max",
- "modele_servi": "qwen37-max-dashscope",
+ "modele_servi": "qwen37-max-openrouter",
  "gateway_resilience": {
   "retries": "0",
-  "fallbacks": "1"
+  "fallbacks": "0"
  }
 }

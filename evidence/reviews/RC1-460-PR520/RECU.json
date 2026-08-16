@@ -2,21 +2,22 @@
   "schema": "recu-revue/1",
   "dossier": "RC1-460-PR520",
   "issue": 460,
-  "round": 1,
+  "round": 2,
   "base_commit": "d1b1e6bc4f0e94068eae484606ebff79daac42b2",
-  "head_commit": "05d6bb628f17c7c15eb5c22de52d241e0ca29160",
-  "head_tree": "5fed1df2ac21cc813033bd4c4e4169fd258e9a56",
-  "diff_digest": "71dd76dcfe3da2573132200b6c357dadce22f17ef3cefb9721299777284b840c",
-  "prompt_sha256": "b6fe007ef3a66b9248cfb894c91ef5914098f51d4632d85fa9ae0a64b29622c6",
+  "head_commit": "bed4d51ce15c32064349776ac73da09d3a2eac9d",
+  "head_tree": "84501cf5d9d99c74c612d222d72ff87fe7c5cd14",
+  "diff_digest": "9c73eef08bf18f1ce675a97754f94563cad53d78a921aedddb05c238cc82cca0",
+  "prompt_sha256": "b175ace0c9429c1cff4584fd6636d4b22444c3ee9c3e3abda27d7525471ab362",
   "reviewers_attendus": [
     "DeepSeek-V4-Pro",
     "MiMo-V2.5-Pro",
     "Qwen3.7-Max"
   ],
   "codeur": [
-    "gemini_flash"
+    "gemini_flash",
+    "fable"
   ],
   "resultat": "APPROVE",
-  "date_heure": "2026-08-16T08:16:24.417331-04:00",
+  "date_heure": "2026-08-16T08:44:31.393965-04:00",
   "fenetre_heures": 24
 }
