@@ -304,7 +304,7 @@
       },
       {
         "path": "tests/test_fix_audit_1b_reviews_gate_in_process.py",
-        "sha256": "b2d95f2d3e752abcadc310481ee98892c05e8c76a51b1e130f7319c517c2c790"
+        "sha256": "d4c17c8c99d6c03888d1c9bf60c337d6336891b7b1de76236825d2c7459c2ee7"
       },
       {
         "path": "tests/test_gap_bricks.py",
@@ -692,11 +692,11 @@
       },
       {
         "path": "tests/test_reviews_gate.py",
-        "sha256": "5049a839aaeb90ff15f0fa901e4d5786fd836c2209c3df81f7e72e7093866182"
+        "sha256": "1a7caf387b6b95ecd190f361ea01ad5d1f2906ab1f3bdb19b4c967b1404ddb27"
       },
       {
         "path": "tests/test_revue.py",
-        "sha256": "cfbcea8c2bd1e6c87ffe80f877587a5a49a3813cd58c143c5b5185ad47a52d49"
+        "sha256": "05d965917c6992b561e5a939e21dcd53810b6534ed73b87cf6a0a353e27de3d2"
       },
       {
         "path": "tests/test_routestore_concurrence.py",

@@ -79,7 +79,7 @@ def test_cas_nominal_trois_approbations_vendors_distincts_reussit(
     date_heure = datetime.now(timezone.utc).isoformat()
 
     for index, reviewer_model in enumerate(
-        ("DeepSeek-V4-Pro", "Gemini-3.1-Pro", "Qwen3.7-Max"),
+        ("DeepSeek-V4-Pro", "MiMo-2.5-Pro", "Qwen3.7-Max"),
         start=1,
     ):
         verdict = {
