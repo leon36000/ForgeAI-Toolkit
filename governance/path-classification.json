@@ -6219,8 +6219,8 @@
         }
       ],
       "rule_id": "evidence-registres-root",
-      "sha256": "94e6ef2ef65462eaafbab48c13fb823e7334e70224bc0c9df5a11a57448aa7cc",
-      "size": 373071,
+      "sha256": "1a53d90fe6dee76ee0fbb5df4ab5752dc11882e571f471ecceaed1166bff0fb4",
+      "size": 374270,
       "target_path": null,
       "type": "text"
     },
@@ -8138,7 +8138,7 @@
         }
       ],
       "rule_id": "evidence-reviews-root",
-      "sha256": "f5a21c9c5bdeb600ea1676015b09aba3b9fc6475f733806cbc012783e8460f9b",
+      "sha256": "0086bde5378ce5e16c6c6a4bbd36decc43accde78ab16bd46492a87b6a892ea0",
       "size": 2567,
       "target_path": null,
       "type": "text"
@@ -19179,6 +19179,58 @@
       "referenced_by": [],
       "rule_id": "evidence-reviews-root",
       "sha256": "558f5045fcbe796702cffa6a22acb7a6b3be55d0595b3f7d43d2473108b77485",
+      "size": 676,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-020-v3/Gemini-3.1-Pro.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "0dbbee6ae8e7e57f6abe4bf9211c099c9ea323b782d87d713ab145eef499daa9",
+      "size": 329,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-020-v3/MiMo-V2.5-Pro.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "3939380f4b5e0e37ca51345ed6a2cd9872a025a68c0e652ced4965652ffd9dd7",
+      "size": 327,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-020-v3/Qwen3.7-Max.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "79664e100a894e8eb0cb9685aa3ff1b57c71169567f9cbd9a17bdf7a7a035580",
+      "size": 323,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-020-v3/RECU.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "6dd0b9df74d49c2b3396a1bd710afb45af5281298c41d26fdaabe1073b303a19",
       "size": 676,
       "target_path": null,
       "type": "text"
@@ -85268,6 +85320,11 @@
       {
         "candidate": "recu-revue/1",
         "line": 2,
+        "referrer": "evidence/reviews/RC1-020-v3/RECU.json"
+      },
+      {
+        "candidate": "recu-revue/1",
+        "line": 2,
         "referrer": "evidence/reviews/RC1-442/RECU.json"
       },
       {
@@ -125279,10 +125336,10 @@
         "severity": "hard"
       },
       {
-        "candidate": "RC1-020-v2",
+        "candidate": "RC1-020-v3",
         "line": 185,
         "referrer": "evidence/reviews/BINDING.txt",
-        "resolved": "evidence/reviews/RC1-020-v2",
+        "resolved": "evidence/reviews/RC1-020-v3",
         "severity": "hard"
       },
       {
@@ -147924,7 +147981,7 @@
     "by_class": {
       "ARCHIVE": 44,
       "DOCS": 16,
-      "EVIDENCE": 1383,
+      "EVIDENCE": 1387,
       "GENERATED": 5,
       "GOVERNANCE": 179,
       "PRODUCT": 112,
@@ -147942,7 +147999,7 @@
       "docs-user": 13,
       "evidence-audit-output-root": 18,
       "evidence-registres-root": 35,
-      "evidence-reviews-root": 1330,
+      "evidence-reviews-root": 1334,
       "generated-authority-map": 1,
       "generated-path-classification-json": 1,
       "generated-path-classification-markdown": 1,
@@ -147978,11 +148035,11 @@
       "working-sandbox-readme": 1
     },
     "case_collisions_total": 0,
-    "dangling_references_total": 15118,
+    "dangling_references_total": 15119,
     "generated_total": 7,
-    "load_bearing_total": 1819,
+    "load_bearing_total": 1823,
     "portability_violations_total": 0,
-    "tracked_total": 1952,
+    "tracked_total": 1956,
     "unclassified_total": 0,
     "unicode_anomalies_total": 0
   },
