@@ -1,6 +1,6 @@
 """Exécuteur de commandes injectable — en production : subprocess; en test : fixtures.
 
-Stratégie CI de la matrice Grok (Phase-A/matrice-tests-grok.md) : le détecteur
+Stratégie CI de la matrice Grok (archive/phase-a/matrice-tests-grok.md) : le détecteur
 consomme un runner injectable; les fixtures sont des captures réelles anonymisées.
 """
 from __future__ import annotations

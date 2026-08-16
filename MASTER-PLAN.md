@@ -1,5 +1,5 @@
 <!-- Consolidation MiMo (provider_id=MiMo-Pro-V2, 2026-07-14) — corrections Fable appliquées et journalisées :
-     table des stories réalignée sur Phase-A/stories-kimi.md (la sortie brute décalait S03-S10),
+     table des stories réalignée sur archive/phase-a/stories-kimi.md (la sortie brute décalait S03-S10),
      tally corrigé (plan-freeze: ≥7/9; par story: 3 verdicts 3 vendors + zéro critique — la sortie disait « 2/3 »),
      références corrigées (scripts/ et Registres/ — pas de répertoire gates/), risques réalignés sur risques-deepseek.md. -->
 # MASTER-PLAN ForgeAI Toolkit v1.0
@@ -50,7 +50,7 @@ src/
 
 Dataclasses : `HardwareProfile`, `Brick`, `DeploymentPlan`, `NodeSpec`, `RenderTarget`.
 Pipeline : détection → sélection → assemblage → rendu → déploiement → preuve.
-Détail : `Phase-A/architecture-glm.md`.
+Détail : `archive/phase-a/architecture-glm.md`.
 
 ## 4. Phases et critères de sortie
 
@@ -137,7 +137,7 @@ Chaque story : **DONE-avec-preuve ou BLOCKED-avec-raison** (§8bis, aucun troisi
 Les faire passer en requis est une décision T3.
 | T3 | Nathan | secrets prod, paiements, suppressions, engagements externes |
 
-## 7. Risques et mitigations (top 5 — détail : Phase-A/risques-deepseek.md)
+## 7. Risques et mitigations (top 5 — détail : archive/phase-a/risques-deepseek.md)
 
 | ID | Risque | Mitigation |
 |---|---|---|
@@ -152,7 +152,7 @@ Les faire passer en requis est une décision T3.
 | Chemin | Contenu |
 |---|---|
 | `CANON/` | Plan maître gelé + catalogue maître unifié (PDF 1577 + extraction) |
-| `Phase-A/` | Livrables Phase A (architecture, risques, stories, TUI, tests, UX, pilote, manifestes) |
+| `archive/phase-a/` | Livrables Phase A (architecture, risques, stories, TUI, tests, UX, pilote, manifestes) |
 | `manifests/` | roles.yaml, routes.yaml, phases.yaml, gates.yaml |
 | `Registres/` | mission.jsonl — preuves hash-chaînées |
 | `reviews/` | verdicts de revue aveugle scellés |

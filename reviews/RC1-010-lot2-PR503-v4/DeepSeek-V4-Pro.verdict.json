@@ -1,0 +1,19 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "governance/path-classification.json",
+   "description": "Le passage sous la règle générique archive-root fait passer 40 fichiers historiques sans lecteur runtime de load_bearing:false à load_bearing:true. Exemple : archive/phase-a/catalogue-pilote-qwen.yaml est maintenant load_bearing:true avec referenced_by vide, alors que l'ancienne entrée Phase-A/catalogue-pilote-qwen.yaml était load_bearing:false. La story les décrit comme purement historiques et sans lecteur fonctionnel actif ; l'impact de ce changement de signal sur state_current/classify_paths n'est pas démontré dans le diff.",
+   "preuve": "Diff governance/path-classification.json : suppression de l'ancienne entrée Phase-A/catalogue-pilote-qwen.yaml avec \"load_bearing\": false ; ajout de archive/phase-a/catalogue-pilote-qwen.yaml avec \"load_bearing\": true et \"referenced_by\": []."
+  }
+ ],
+ "date_heure": "2026-08-16T01:28:00.940621+00:00",
+ "prompt_sha256": "6a019a0fa9f4cb6558166ba94056765f970145c36ae356d8f2ebc0917c1283e7",
+ "reviewer_model": "DeepSeek-V4-Pro",
+ "modele_servi": "deepseek-v4-pro-direct",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

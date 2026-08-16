@@ -1,6 +1,6 @@
 """Story P2-F21 (clés) — cycle de vie des clés ed25519 (codeur : fable).
 
-Exigences sécurité de la revue LongCat (Phase-A/revue-securite-multinoeuds-longcat.md) :
+Exigences sécurité de la revue LongCat (archive/phase-a/revue-securite-multinoeuds-longcat.md) :
 - EX-5 : rotation — `rotate_keypair` régénère, archive l'ancienne clé publique dans
   revoked_keys (liste de révocation à distribuer), et horodate.
 - Permissions : clé privée 0600, répertoire 0700 (SEC-01).

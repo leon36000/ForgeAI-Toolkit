@@ -35,6 +35,12 @@ exit: 2
 | `Registres/PATCH-ORCH-001.jsonl` | Entrée registre |
 | `.cursor/rules/forgeai-orchestration.mdc` | Règles path-scoped Cursor IDE |
 
+> Note (RC1-010/#440) : les trois chemins `coordination/*.json` ci-dessus ont été déplacés vers
+> `archive/coordination/*.json` (lot 1) et `.cursor/rules/forgeai-orchestration.mdc` vers
+> `archive/cursor/rules/forgeai-orchestration.mdc` (lot 2). Le tableau ci-dessus reste tel
+> qu'écrit au moment de cette story (compte-rendu daté, non réécrit) ; cette note documente
+> l'emplacement actuel sans altérer le récit historique.
+
 ## Tests effectués
 
 ### Test rouge (avant patch)

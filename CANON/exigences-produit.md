@@ -58,5 +58,5 @@ Légende des statuts de spécification (au moment de la consolidation) :
 
 ---
 Le statut réel de chaque exigence dans le repo est audité dans
-`Rapports/conformite-v2.0-integrale.md` (Section B) et suivi comme stories dans
+`archive/rapports/conformite-v2.0-integrale.md` (Section B) et suivi comme stories dans
 `manifests/backlog.yaml`.

@@ -1,0 +1,19 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "governance/path-classification-rules.json",
+   "description": "Le fichier de règles de classification contient encore des références aux anciens chemins (.cursor/rules/forgeai-orchestration.mdc et Recherche/rall-1-agents-orchestration.yaml), visibles dans path-classification.json comme références pendantes. Cela contredit le grep 'zéro occurrence' bien que sans impact runtime.",
+   "preuve": "governance/path-classification.json: +        \"candidate\": \".cursor/rules/forgeai-orchestration.mdc\",\n+        \"line\": 232,\n+        \"referrer\": \"governance/path-classification-rules.json\""
+  }
+ ],
+ "date_heure": "2026-08-16T01:13:28.855455+00:00",
+ "prompt_sha256": "c37028e90c7cabbb741de2ba282a28889af3ed23f2d586f4e13f55dee718720e",
+ "reviewer_model": "Qwen3.7-Max",
+ "modele_servi": "qwen37-max-openrouter",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}
