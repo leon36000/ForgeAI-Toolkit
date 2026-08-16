@@ -78,7 +78,7 @@ def test_fable_exclu_car_provider_id_null():
 
 
 def test_alias_ponctuation_variable_normalise_pareil():
-    assert revue.vendor_of("qwen37max") == revue.vendor_of("qwen") == "alibaba"
+    assert revue.vendor_of("qwen_37") == revue.vendor_of("qwen") == "alibaba"
 
 
 def test_alias_modele_reponse_routes_yaml_reconnu():

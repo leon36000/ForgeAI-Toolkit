@@ -698,11 +698,11 @@
     },
     {
       "path": "tests/test_reviews_gate.py",
-      "sha256": "33224b83eaf5e2a34898d40ba883ab4378bd98a2cef2104ea01789af864ffc57"
+      "sha256": "1a7caf387b6b95ecd190f361ea01ad5d1f2906ab1f3bdb19b4c967b1404ddb27"
     },
     {
       "path": "tests/test_revue.py",
-      "sha256": "53faaae86201f4fdbe1f5b30d2248fa7b559e6b05ff37c5070f62a40cef42931"
+      "sha256": "05d965917c6992b561e5a939e21dcd53810b6534ed73b87cf6a0a353e27de3d2"
     },
     {
       "path": "tests/test_routestore_concurrence.py",

@@ -85,7 +85,7 @@ def test_gate_resout_une_entree_liante_sous_evidence_reviews(tmp_path):
     reviews_root = tmp_path / "reviews"
     reviews_root.mkdir()
     evidence_root = tmp_path / "evidence" / "reviews"
-    _make_review(evidence_root, "S-deja-migree", [_verdict("deepseek"), _verdict("gemini"), _verdict("longcat")])
+    _make_review(evidence_root, "S-deja-migree", [_verdict("deepseek"), _verdict("gemini_flash"), _verdict("longcat_20")])
 
     ok, report = gate.check(_manifest(tmp_path, ["S-deja-migree"]), reviews_root)
 
@@ -97,9 +97,9 @@ def test_gate_priorite_evidence_reviews_sur_reviews_si_les_deux_existent(tmp_pat
     # Si une entrée existe sous les DEUX racines (transition en cours), evidence/reviews/ (la
     # racine finale) doit gagner.
     reviews_root = tmp_path / "reviews"
-    _make_review(reviews_root, "S-double", [_verdict("deepseek", "REJECT"), _verdict("gemini"), _verdict("longcat")])
+    _make_review(reviews_root, "S-double", [_verdict("deepseek", "REJECT"), _verdict("gemini_flash"), _verdict("longcat_20")])
     evidence_root = tmp_path / "evidence" / "reviews"
-    _make_review(evidence_root, "S-double", [_verdict("deepseek"), _verdict("gemini"), _verdict("longcat")])
+    _make_review(evidence_root, "S-double", [_verdict("deepseek"), _verdict("gemini_flash"), _verdict("longcat_20")])
 
     ok, report = gate.check(_manifest(tmp_path, ["S-double"]), reviews_root)
 
