@@ -698,7 +698,7 @@
     },
     {
       "path": "tests/test_registre.py",
-      "sha256": "27a9d5affa42d623faf41b47064cee6900057e1dcb4c69163da4b36e2cd412f8"
+      "sha256": "b95f6bc7e046b553b9fcff70c1e35fd069fa9fee7c755b498cd273c2afbdf893"
     },
     {
       "path": "tests/test_registre_concurrence.py",
@@ -927,7 +927,7 @@
   "tests": {
     "js_files": 3,
     "python_files": 192,
-    "python_functions_declared": 2181
+    "python_functions_declared": 2186
   }
 }
 ```

@@ -1,6 +1,7 @@
 """Tests du registre append-only hash-chaîné."""
 import json
 import os
+import subprocess
 import sys
 from pathlib import Path
 
@@ -103,7 +104,6 @@ def test_ligne_json_invalide_rejetee(tmp_path):
 # ADR TRUST-019A §9 : key_id optionnel par entrée ; verify rétro-compatible avec les
 # entrées Tier 0 (sans key_id -> SHA-256 nu) ; clé générée par commande EXPLICITE en 0600 ;
 # sans racine disponible -> statut UNVERIFIED/échec explicite, jamais silencieusement OK.
-import os
 import stat as _stat
 
 from forgeai.core import registre as core_registre
@@ -319,3 +319,119 @@ def test_load_key_accepte_fichier_regulier(tmp_path):
     reg = tmp_path / "r.jsonl"
     registre.append(reg, "t", "a", {"n": 1}, key_path=cle)
     assert registre.verify(reg, key_path=cle) is None
+
+
+SCRIPT_REGISTRE = Path(__file__).resolve().parent.parent / "scripts" / "registre.py"
+
+
+def test_g_cli_append_refuse_chemin_registres_deprecie_relatif(tmp_path, monkeypatch):
+    monkeypatch.chdir(tmp_path)
+    cp = subprocess.run(
+        [
+            sys.executable,
+            str(SCRIPT_REGISTRE),
+            "append",
+            "Registres/mission.jsonl",
+            "--type",
+            "t",
+            "--actor",
+            "a",
+            "--payload-json",
+            "{}",
+        ],
+        cwd=tmp_path,
+        capture_output=True,
+        text=True,
+    )
+    assert cp.returncode == 1, f"devait echouer: {cp.stdout}"
+    assert "deprecie" in cp.stderr
+    assert not (tmp_path / "Registres" / "mission.jsonl").exists()
+
+
+def test_g_cli_append_accepte_chemin_canonique(tmp_path):
+    cp = subprocess.run(
+        [
+            sys.executable,
+            str(SCRIPT_REGISTRE),
+            "append",
+            "evidence/registres/mission.jsonl",
+            "--type",
+            "t",
+            "--actor",
+            "a",
+            "--payload-json",
+            "{}",
+        ],
+        cwd=tmp_path,
+        capture_output=True,
+        text=True,
+    )
+    assert cp.returncode == 0, f"echec inattendu: {cp.stderr}"
+    assert (tmp_path / "evidence" / "registres" / "mission.jsonl").exists()
+
+
+def test_g_cli_append_accepte_chemin_absolu_contenant_registres(tmp_path):
+    chemin_abs = tmp_path / "ailleurs" / "Registres" / "mission.jsonl"
+    cp = subprocess.run(
+        [
+            sys.executable,
+            str(SCRIPT_REGISTRE),
+            "append",
+            str(chemin_abs),
+            "--type",
+            "t",
+            "--actor",
+            "a",
+            "--payload-json",
+            "{}",
+        ],
+        cwd=tmp_path,
+        capture_output=True,
+        text=True,
+    )
+    assert cp.returncode == 0, f"echec inattendu: {cp.stderr}"
+    assert chemin_abs.exists()
+
+
+def test_g_cli_append_accepte_registres_minuscule(tmp_path):
+    cp = subprocess.run(
+        [
+            sys.executable,
+            str(SCRIPT_REGISTRE),
+            "append",
+            "registres/mission.jsonl",
+            "--type",
+            "t",
+            "--actor",
+            "a",
+            "--payload-json",
+            "{}",
+        ],
+        cwd=tmp_path,
+        capture_output=True,
+        text=True,
+    )
+    assert cp.returncode == 0, f"echec inattendu: {cp.stderr}"
+    assert (tmp_path / "registres" / "mission.jsonl").exists()
+
+
+def test_g_cli_append_accepte_chemin_relatif_non_prefixe_registres(tmp_path):
+    cp = subprocess.run(
+        [
+            sys.executable,
+            str(SCRIPT_REGISTRE),
+            "append",
+            "mon_dossier/Registres/mission.jsonl",
+            "--type",
+            "t",
+            "--actor",
+            "a",
+            "--payload-json",
+            "{}",
+        ],
+        cwd=tmp_path,
+        capture_output=True,
+        text=True,
+    )
+    assert cp.returncode == 0, f"echec inattendu: {cp.stderr}"
+    assert (tmp_path / "mon_dossier" / "Registres" / "mission.jsonl").exists()

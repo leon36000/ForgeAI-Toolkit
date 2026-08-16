@@ -6419,6 +6419,13 @@
           "referrer": "stories/RC1-009.md",
           "resolved": "evidence/registres/mission.jsonl",
           "severity": "hard"
+        },
+        {
+          "candidate": "evidence/registres/mission.jsonl",
+          "line": 357,
+          "referrer": "tests/test_registre.py",
+          "resolved": "evidence/registres/mission.jsonl",
+          "severity": "hard"
         }
       ],
       "rule_id": "evidence-registres-root",
@@ -29801,8 +29808,8 @@
         }
       ],
       "rule_id": "governance-scripts-root",
-      "sha256": "b16e10a5f6d3f375fc78460714146ac44365d8fb35e6a514d547a58f7cc7c08e",
-      "size": 15702,
+      "sha256": "240dc3d50022f0f0bb7942264620749e7b1bc78ae0e98761d85c7c176cd28f2d",
+      "size": 16098,
       "target_path": null,
       "type": "text"
     },
@@ -43729,7 +43736,7 @@
         },
         {
           "candidate": "tests/test_guard_fs.py",
-          "line": 123,
+          "line": 136,
           "referrer": "scripts/registre.py",
           "resolved": "tests/test_guard_fs.py",
           "severity": "hard"
@@ -48321,8 +48328,8 @@
         }
       ],
       "rule_id": "test-suite",
-      "sha256": "27a9d5affa42d623faf41b47064cee6900057e1dcb4c69163da4b36e2cd412f8",
-      "size": 13598,
+      "sha256": "b95f6bc7e046b553b9fcff70c1e35fd069fa9fee7c755b498cd273c2afbdf893",
+      "size": 16701,
       "target_path": null,
       "type": "text"
     },
@@ -48363,7 +48370,7 @@
         },
         {
           "candidate": "tests/test_registre_concurrence.py",
-          "line": 375,
+          "line": 388,
           "referrer": "scripts/registre.py",
           "resolved": "tests/test_registre_concurrence.py",
           "severity": "hard"
@@ -94262,33 +94269,43 @@
         "referrer": "scripts/registre.py"
       },
       {
+        "candidate": "evidence/registres/",
+        "line": 100,
+        "referrer": "scripts/registre.py"
+      },
+      {
+        "candidate": "440/",
+        "line": 100,
+        "referrer": "scripts/registre.py"
+      },
+      {
         "candidate": "gates.yml",
-        "line": 122,
+        "line": 135,
         "referrer": "scripts/registre.py"
       },
       {
         "candidate": "CLI/CI",
-        "line": 364,
+        "line": 377,
         "referrer": "scripts/registre.py"
       },
       {
         "candidate": "origin/main",
-        "line": 402,
+        "line": 415,
         "referrer": "scripts/registre.py"
       },
       {
         "candidate": "origin/main",
-        "line": 408,
+        "line": 421,
         "referrer": "scripts/registre.py"
       },
       {
         "candidate": "origin/main",
-        "line": 433,
+        "line": 446,
         "referrer": "scripts/registre.py"
       },
       {
         "candidate": "origin/main",
-        "line": 434,
+        "line": 447,
         "referrer": "scripts/registre.py"
       },
       {
@@ -128043,22 +128060,22 @@
       },
       {
         "candidate": "registre.py",
-        "line": 68,
+        "line": 69,
         "referrer": "tests/test_registre.py"
       },
       {
         "candidate": "registre.py",
-        "line": 73,
+        "line": 74,
         "referrer": "tests/test_registre.py"
       },
       {
         "candidate": "registre.py",
-        "line": 88,
+        "line": 89,
         "referrer": "tests/test_registre.py"
       },
       {
         "candidate": "UNVERIFIED/",
-        "line": 105,
+        "line": 106,
         "referrer": "tests/test_registre.py"
       },
       {
@@ -128079,6 +128096,26 @@
       {
         "candidate": "_locking.py",
         "line": 295,
+        "referrer": "tests/test_registre.py"
+      },
+      {
+        "candidate": "registre.py",
+        "line": 324,
+        "referrer": "tests/test_registre.py"
+      },
+      {
+        "candidate": "Registres/mission.jsonl",
+        "line": 334,
+        "referrer": "tests/test_registre.py"
+      },
+      {
+        "candidate": "registres/mission.jsonl",
+        "line": 402,
+        "referrer": "tests/test_registre.py"
+      },
+      {
+        "candidate": "mon_dossier/Registres/mission.jsonl",
+        "line": 424,
         "referrer": "tests/test_registre.py"
       },
       {
@@ -150880,28 +150917,28 @@
       },
       {
         "candidate": "tests/test_guard_fs.py",
-        "line": 123,
+        "line": 136,
         "referrer": "scripts/registre.py",
         "resolved": "tests/test_guard_fs.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_registre_concurrence.py",
-        "line": 375,
+        "line": 388,
         "referrer": "scripts/registre.py",
         "resolved": "tests/test_registre_concurrence.py",
         "severity": "hard"
       },
       {
         "candidate": "evidence/registres",
-        "line": 428,
+        "line": 441,
         "referrer": "scripts/registre.py",
         "resolved": "evidence/registres",
         "severity": "hard"
       },
       {
         "candidate": "evidence/registres",
-        "line": 429,
+        "line": 442,
         "referrer": "scripts/registre.py",
         "resolved": "evidence/registres",
         "severity": "hard"
@@ -155800,6 +155837,13 @@
         "severity": "hard"
       },
       {
+        "candidate": "evidence/registres/mission.jsonl",
+        "line": 357,
+        "referrer": "tests/test_registre.py",
+        "resolved": "evidence/registres/mission.jsonl",
+        "severity": "hard"
+      },
+      {
         "candidate": "scripts/registre.py",
         "line": 108,
         "referrer": "tests/test_registre_concurrence.py",
@@ -155988,7 +156032,7 @@
       "working-sandbox-readme": 1
     },
     "case_collisions_total": 0,
-    "dangling_references_total": 15773,
+    "dangling_references_total": 15779,
     "generated_total": 9,
     "load_bearing_total": 1887,
     "portability_violations_total": 0,
