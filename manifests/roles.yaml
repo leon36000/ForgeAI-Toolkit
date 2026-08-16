@@ -66,6 +66,19 @@ membres:
     provider_id: MiMo-Pro-V2
     phase_a: Consolidation MASTER-PLAN + manifestes YAML machine-lisibles (contexte 1M)
     phase_b: Synthétiseur de preuves — rapports d'étape pour Fable
+  - id: terra
+    modele: GPT-5.6-Terra-Pro
+    vendor: openai
+    provider_id: GPT-5.6-Terra-Pro
+    phase_a: Codeur du crew pour les missions de difficulté difficile
+    phase_b: Codeur du crew — dispatch --difficulty difficile
+  - id: luna
+    modele: GPT-5.6-Luna-Pro
+    vendor: openai
+    provider_id: GPT-5.6-Luna-Pro
+    phase_a: Codeur du crew pour les missions de difficulté facile
+    phase_b: Codeur du crew — dispatch --difficulty facile
+
 regles_revue:
   seuil_consensus: "7/9 APPROVE et zéro objection critique non résolue"
   vendors_par_story: 3   # trois reviewers, trois vendors différents

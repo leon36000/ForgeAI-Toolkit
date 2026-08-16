@@ -1,0 +1,22 @@
+{
+  "schema": "recu-revue/1",
+  "dossier": "RC1-446-PR-v5",
+  "issue": 446,
+  "round": 5,
+  "base_commit": "fae158260e8b1fc09c6ca6c88dc047ff6128162a",
+  "head_commit": "b46e142b3aad11abfe45d434ba2ae4062d826cab",
+  "head_tree": "c91e3c5836c3212beaec65bb83e628280fbe5a1b",
+  "diff_digest": "38481681ab7b92abd23d323843774a552fe541ef132100161a042224af6823be",
+  "prompt_sha256": "c9121a53606ce7f8b6342425b23a2a4c7cd2ccf27410bd0548f1b477b68f81e4",
+  "reviewers_attendus": [
+    "DeepSeek-V4-Pro",
+    "Gemini-3.1-Pro",
+    "Qwen3.7-Max"
+  ],
+  "codeur": [
+    "GPT-5.6-Terra-Pro"
+  ],
+  "resultat": "APPROVE",
+  "date_heure": "2026-08-15T21:04:41.618537-04:00",
+  "fenetre_heures": 24
+}
