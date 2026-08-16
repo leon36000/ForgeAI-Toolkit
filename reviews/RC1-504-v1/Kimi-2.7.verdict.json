@@ -1,0 +1,25 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "tests/test_revue.py",
+   "description": "Les nouveaux tests (l. 250-272) vérifient seulement l'exclusion positive de governance/path-classification.json et .md, mais ne contiennent aucune assertion négative garantissant que governance/path-classification-rules.json (fichier load_bearing écrit à la main) n'est PAS exclu par accident. Le diff de scripts/revue.py affiche le tuple exclude (l. 245-266) et un commentaire affirmant l'intention 'exacte', mais ne montre pas la logique de filtrage appliquée à ce tuple. Ajouter un test confirmant que rules.json reste dans le digest renforcerait la règle d'acceptation explicite de la story.",
+   "preuve": "tests/test_revue.py:250-272 ; scripts/revue.py:245-266"
+  },
+  {
+   "severite": "mineure",
+   "fichier": "governance/path-classification.json",
+   "description": "Le manifeste généré enregistre un changement de SHA-256 pour le reçu scellé reviews/RC1-009/RECU.json (ancien ffa24688..., nouveau 494f9dc5...) sans qu'aucun diff de contenu pour ce fichier ne soit présent dans le pack. Si ce n'est pas un rattrapage légitime d'un état antérieur, cela pourrait signifier qu'un reçu scellé a été modifié. Une confirmation explicite que ce reçu n'a pas été réémis par la présente PR serait utile.",
+   "preuve": "governance/path-classification.json:hunk autour de reviews/RC1-009/RECU.json (sha256 modifié, size 661 inchangée) ; absence de hunk correspondant pour reviews/RC1-009/RECU.json ou evidence/reviews/RC1-009/RECU.json dans le diff"
+  }
+ ],
+ "date_heure": "2026-08-16T10:24:43.622858+00:00",
+ "prompt_sha256": "fa18bcdf0382773713dbcdaedb9761cc1611a5645a6ff882fc7c474857c49ac1",
+ "reviewer_model": "Kimi-2.7",
+ "modele_servi": "kimi-27-openrouter",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}
