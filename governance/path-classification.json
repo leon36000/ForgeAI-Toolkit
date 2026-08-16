@@ -187,7 +187,7 @@
         },
         {
           "candidate": ".coderabbit.yaml",
-          "line": 554,
+          "line": 498,
           "referrer": "governance/path-classification-rules.json",
           "resolved": ".coderabbit.yaml",
           "severity": "hard"
@@ -361,7 +361,7 @@
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 568,
+          "line": 512,
           "referrer": "governance/path-classification-rules.json",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
@@ -522,21 +522,21 @@
         },
         {
           "candidate": ".github/workflows/ci-deps-update.yml",
-          "line": 674,
+          "line": 618,
           "referrer": "governance/path-classification-rules.json",
           "resolved": ".github/workflows/ci-deps-update.yml",
           "severity": "hard"
         },
         {
           "candidate": ".github/workflows/ci-deps-update.yml",
-          "line": 688,
+          "line": 632,
           "referrer": "governance/path-classification-rules.json",
           "resolved": ".github/workflows/ci-deps-update.yml",
           "severity": "hard"
         },
         {
           "candidate": ".github/workflows/ci-deps-update.yml",
-          "line": 688,
+          "line": 632,
           "referrer": "governance/path-classification-rules.json",
           "resolved": ".github/workflows/ci-deps-update.yml",
           "severity": "hard"
@@ -851,14 +851,14 @@
         },
         {
           "candidate": ".github/workflows/gates.yml",
-          "line": 674,
+          "line": 618,
           "referrer": "governance/path-classification-rules.json",
           "resolved": ".github/workflows/gates.yml",
           "severity": "hard"
         },
         {
           "candidate": ".github/workflows/gates.yml",
-          "line": 688,
+          "line": 632,
           "referrer": "governance/path-classification-rules.json",
           "resolved": ".github/workflows/gates.yml",
           "severity": "hard"
@@ -1145,14 +1145,14 @@
         },
         {
           "candidate": ".github/workflows/sonarcloud.yml",
-          "line": 674,
+          "line": 618,
           "referrer": "governance/path-classification-rules.json",
           "resolved": ".github/workflows/sonarcloud.yml",
           "severity": "hard"
         },
         {
           "candidate": ".github/workflows/sonarcloud.yml",
-          "line": 688,
+          "line": 632,
           "referrer": "governance/path-classification-rules.json",
           "resolved": ".github/workflows/sonarcloud.yml",
           "severity": "hard"
@@ -1221,7 +1221,7 @@
         },
         {
           "candidate": ".pre-commit-config.yaml",
-          "line": 582,
+          "line": 526,
           "referrer": "governance/path-classification-rules.json",
           "resolved": ".pre-commit-config.yaml",
           "severity": "hard"
@@ -1892,21 +1892,14 @@
         },
         {
           "candidate": "AGENTS.md",
-          "line": 226,
+          "line": 282,
           "referrer": "governance/path-classification-rules.json",
           "resolved": "AGENTS.md",
           "severity": "hard"
         },
         {
           "candidate": "AGENTS.md",
-          "line": 338,
-          "referrer": "governance/path-classification-rules.json",
-          "resolved": "AGENTS.md",
-          "severity": "hard"
-        },
-        {
-          "candidate": "AGENTS.md",
-          "line": 442,
+          "line": 386,
           "referrer": "governance/path-classification-rules.json",
           "resolved": "AGENTS.md",
           "severity": "hard"
@@ -3038,7 +3031,7 @@
         },
         {
           "candidate": "CLAUDE.md",
-          "line": 456,
+          "line": 400,
           "referrer": "governance/path-classification-rules.json",
           "resolved": "CLAUDE.md",
           "severity": "hard"
@@ -3164,7 +3157,7 @@
         },
         {
           "candidate": "CONTRIBUTING.md",
-          "line": 498,
+          "line": 442,
           "referrer": "governance/path-classification-rules.json",
           "resolved": "CONTRIBUTING.md",
           "severity": "hard"
@@ -4075,7 +4068,7 @@
         },
         {
           "candidate": "MASTER-PLAN.md",
-          "line": 470,
+          "line": 414,
           "referrer": "governance/path-classification-rules.json",
           "resolved": "MASTER-PLAN.md",
           "severity": "hard"
@@ -4404,21 +4397,21 @@
         },
         {
           "candidate": "README.md",
-          "line": 428,
+          "line": 372,
           "referrer": "governance/path-classification-rules.json",
           "resolved": "README.md",
           "severity": "hard"
         },
         {
           "candidate": "README.md",
-          "line": 506,
+          "line": 450,
           "referrer": "governance/path-classification-rules.json",
           "resolved": "README.md",
           "severity": "hard"
         },
         {
           "candidate": "README.md",
-          "line": 520,
+          "line": 464,
           "referrer": "governance/path-classification-rules.json",
           "resolved": "README.md",
           "severity": "hard"
@@ -4670,7 +4663,7 @@
         },
         {
           "candidate": "SECURITY.md",
-          "line": 512,
+          "line": 456,
           "referrer": "governance/path-classification-rules.json",
           "resolved": "SECURITY.md",
           "severity": "hard"
@@ -4726,7 +4719,7 @@
       "referenced_by": [
         {
           "candidate": "Sandbox/README.md",
-          "line": 638,
+          "line": 582,
           "referrer": "governance/path-classification-rules.json",
           "resolved": "Sandbox/README.md",
           "severity": "hard"
@@ -4851,7 +4844,7 @@
         },
         {
           "candidate": "archive/coordination/work-packages.json",
-          "line": 758,
+          "line": 702,
           "referrer": "governance/path-classification-rules.json",
           "resolved": "archive/coordination/work-packages.json",
           "severity": "hard"
@@ -8600,8 +8593,8 @@
         }
       ],
       "rule_id": "evidence-reviews-root",
-      "sha256": "2804ff4e4336eee19f3745d3fba39416c01f9e0dcddc23b287c10d7b51bb5e47",
-      "size": 2699,
+      "sha256": "7536a6af9035778e2560897b1241ca67b0fbf45869b2e1a4177cc7f5e6ae5151",
+      "size": 2715,
       "target_path": null,
       "type": "text"
     },
@@ -19986,6 +19979,58 @@
       "generated": false,
       "load_bearing": true,
       "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-440-lot6-v1/GPT-5.6-Terra-Pro.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "9f9280132c5ef4afa58651718a3204d6799b616f9bc45621127319e446ab972c",
+      "size": 334,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-440-lot6-v1/MiMo-Pro-V2.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "b389114f81dc918419a2ce88fe3f4849a9e3490671c8de9e2d0ef85ec1e65d98",
+      "size": 324,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-440-lot6-v1/Qwen3.7-Max.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "4226bcce748eb9bad93641b2641eff6c955c196915034d8644ebc98aa4936ab3",
+      "size": 323,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-440-lot6-v1/RECU.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": null,
+      "size": null,
+      "target_path": null,
+      "type": null
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
       "path": "evidence/reviews/RC1-442/DeepSeek-V4-Pro.verdict.json",
       "referenced_by": [],
       "rule_id": "evidence-reviews-root",
@@ -27141,8 +27186,8 @@
         }
       ],
       "rule_id": "governance-core",
-      "sha256": "ed4c03e6a82c2e87baa9a83c595c877a3d5b46abd3cc50bee9063223d1146039",
-      "size": 25947,
+      "sha256": "d44e0fe8b2ff4fb4a3021ee5f10ed46635392d165a626018954b3e9010afc88e",
+      "size": 24022,
       "target_path": null,
       "type": "text"
     },
@@ -29667,7 +29712,7 @@
         },
         {
           "candidate": "scripts/governance/evidence_dedup.py",
-          "line": 744,
+          "line": 688,
           "referrer": "governance/path-classification-rules.json",
           "resolved": "scripts/governance/evidence_dedup.py",
           "severity": "hard"
@@ -31199,13 +31244,6 @@
           "candidate": "scripts/registre.py",
           "line": 8,
           "referrer": "evidence/reviews/REG-029B/Qwen3.7-Max.verdict.json",
-          "resolved": "scripts/registre.py",
-          "severity": "hard"
-        },
-        {
-          "candidate": "scripts/registre.py",
-          "line": 240,
-          "referrer": "governance/path-classification-rules.json",
           "resolved": "scripts/registre.py",
           "severity": "hard"
         },
@@ -50514,14 +50552,14 @@
         },
         {
           "candidate": "tests/test_rc1017_matrice_python.py",
-          "line": 674,
+          "line": 618,
           "referrer": "governance/path-classification-rules.json",
           "resolved": "tests/test_rc1017_matrice_python.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_rc1017_matrice_python.py",
-          "line": 688,
+          "line": 632,
           "referrer": "governance/path-classification-rules.json",
           "resolved": "tests/test_rc1017_matrice_python.py",
           "severity": "hard"
@@ -91743,6 +91781,11 @@
       {
         "candidate": "recu-revue/1",
         "line": 2,
+        "referrer": "evidence/reviews/RC1-440-lot6-v1/RECU.json"
+      },
+      {
+        "candidate": "recu-revue/1",
+        "line": 2,
         "referrer": "evidence/reviews/RC1-442/RECU.json"
       },
       {
@@ -95671,263 +95714,198 @@
         "referrer": "governance/path-classification-rules.json"
       },
       {
-        "candidate": "coordination/",
+        "candidate": "CANON/",
         "line": 218,
         "referrer": "governance/path-classification-rules.json"
       },
       {
-        "candidate": "archive/coordination/",
-        "line": 223,
-        "referrer": "governance/path-classification-rules.json"
-      },
-      {
-        "candidate": "state_current.py",
-        "line": 226,
-        "referrer": "governance/path-classification-rules.json"
-      },
-      {
-        "candidate": "scope-guard.yml",
-        "line": 226,
-        "referrer": "governance/path-classification-rules.json"
-      },
-      {
-        "candidate": "validate_coordination.py",
-        "line": 226,
-        "referrer": "governance/path-classification-rules.json"
-      },
-      {
-        "candidate": "Registres/",
+        "candidate": "Docs/",
         "line": 232,
         "referrer": "governance/path-classification-rules.json"
       },
       {
-        "candidate": "evidence/registres/",
-        "line": 237,
-        "referrer": "governance/path-classification-rules.json"
-      },
-      {
-        "candidate": "Phase-A/",
+        "candidate": "governance/",
         "line": 246,
         "referrer": "governance/path-classification-rules.json"
       },
       {
-        "candidate": "archive/phase-a/",
-        "line": 251,
-        "referrer": "governance/path-classification-rules.json"
-      },
-      {
-        "candidate": "architecture-glm.md",
-        "line": 254,
-        "referrer": "governance/path-classification-rules.json"
-      },
-      {
-        "candidate": "risques-deepseek.md",
-        "line": 254,
-        "referrer": "governance/path-classification-rules.json"
-      },
-      {
-        "candidate": "Rapports/",
+        "candidate": ".claude/agents/",
         "line": 260,
         "referrer": "governance/path-classification-rules.json"
       },
       {
-        "candidate": "archive/rapports/",
-        "line": 265,
-        "referrer": "governance/path-classification-rules.json"
-      },
-      {
-        "candidate": "CANON/",
+        "candidate": "manifests/",
         "line": 274,
         "referrer": "governance/path-classification-rules.json"
       },
       {
-        "candidate": "Docs/",
-        "line": 288,
-        "referrer": "governance/path-classification-rules.json"
-      },
-      {
-        "candidate": "governance/",
-        "line": 302,
-        "referrer": "governance/path-classification-rules.json"
-      },
-      {
-        "candidate": ".claude/agents/",
-        "line": 316,
-        "referrer": "governance/path-classification-rules.json"
-      },
-      {
-        "candidate": "manifests/",
-        "line": 330,
-        "referrer": "governance/path-classification-rules.json"
-      },
-      {
         "candidate": "roles.yaml",
-        "line": 338,
+        "line": 282,
         "referrer": "governance/path-classification-rules.json"
       },
       {
         "candidate": "routes.yaml",
-        "line": 338,
+        "line": 282,
         "referrer": "governance/path-classification-rules.json"
       },
       {
         "candidate": ".github/",
-        "line": 344,
+        "line": 288,
         "referrer": "governance/path-classification-rules.json"
       },
       {
         "candidate": "tests/",
-        "line": 358,
+        "line": 302,
         "referrer": "governance/path-classification-rules.json"
       },
       {
         "candidate": "src/",
-        "line": 372,
+        "line": 316,
         "referrer": "governance/path-classification-rules.json"
       },
       {
         "candidate": "scripts/coordination/",
-        "line": 386,
+        "line": 330,
         "referrer": "governance/path-classification-rules.json"
       },
       {
         "candidate": "scripts/governance/",
-        "line": 400,
+        "line": 344,
         "referrer": "governance/path-classification-rules.json"
       },
       {
         "candidate": "scripts/",
-        "line": 414,
+        "line": 358,
         "referrer": "governance/path-classification-rules.json"
       },
       {
         "candidate": "lecteurs/contributeurs",
-        "line": 506,
+        "line": 450,
         "referrer": "governance/path-classification-rules.json"
       },
       {
         "candidate": "src/",
-        "line": 646,
+        "line": 590,
         "referrer": "governance/path-classification-rules.json"
       },
       {
         "candidate": "lint/CI",
-        "line": 660,
+        "line": 604,
         "referrer": "governance/path-classification-rules.json"
       },
       {
         "candidate": "pyproject.toml/sonar-project.properties",
-        "line": 660,
+        "line": 604,
         "referrer": "governance/path-classification-rules.json"
       },
       {
         "candidate": "evidence/reviews/",
-        "line": 694,
+        "line": 638,
         "referrer": "governance/path-classification-rules.json"
       },
       {
         "candidate": "reviews/",
-        "line": 702,
+        "line": 646,
         "referrer": "governance/path-classification-rules.json"
       },
       {
         "candidate": "classify_paths.py",
-        "line": 702,
+        "line": 646,
         "referrer": "governance/path-classification-rules.json"
       },
       {
         "candidate": "evidence/registres/",
-        "line": 708,
+        "line": 652,
         "referrer": "governance/path-classification-rules.json"
       },
       {
         "candidate": "Registres/",
-        "line": 716,
+        "line": 660,
         "referrer": "governance/path-classification-rules.json"
       },
       {
         "candidate": "classify_paths.py",
-        "line": 716,
+        "line": 660,
         "referrer": "governance/path-classification-rules.json"
       },
       {
         "candidate": "evidence/audit-output/",
-        "line": 722,
+        "line": 666,
         "referrer": "governance/path-classification-rules.json"
       },
       {
         "candidate": "AUDIT-OUTPUT/",
-        "line": 730,
+        "line": 674,
         "referrer": "governance/path-classification-rules.json"
       },
       {
         "candidate": "classify_paths.py",
-        "line": 730,
+        "line": 674,
         "referrer": "governance/path-classification-rules.json"
       },
       {
         "candidate": "evidence/dedup/",
-        "line": 736,
+        "line": 680,
         "referrer": "governance/path-classification-rules.json"
       },
       {
         "candidate": "avant/apr",
-        "line": 744,
+        "line": 688,
         "referrer": "governance/path-classification-rules.json"
       },
       {
         "candidate": "evidence/",
-        "line": 744,
+        "line": 688,
         "referrer": "governance/path-classification-rules.json"
       },
       {
         "candidate": "canonique/r",
-        "line": 744,
+        "line": 688,
         "referrer": "governance/path-classification-rules.json"
       },
       {
         "candidate": "reviews_gate.py",
-        "line": 744,
+        "line": 688,
         "referrer": "governance/path-classification-rules.json"
       },
       {
         "candidate": "archive/",
-        "line": 750,
+        "line": 694,
         "referrer": "governance/path-classification-rules.json"
       },
       {
         "candidate": "coordination/",
-        "line": 758,
+        "line": 702,
         "referrer": "governance/path-classification-rules.json"
       },
       {
         "candidate": "Phase-A/",
-        "line": 758,
+        "line": 702,
         "referrer": "governance/path-classification-rules.json"
       },
       {
         "candidate": "Rapports/",
-        "line": 758,
+        "line": 702,
         "referrer": "governance/path-classification-rules.json"
       },
       {
         "candidate": "Recherche/rall-1-agents-orchestration.yaml",
-        "line": 758,
+        "line": 702,
         "referrer": "governance/path-classification-rules.json"
       },
       {
         "candidate": ".cursor/rules/forgeai-orchestration.mdc",
-        "line": 758,
+        "line": 702,
         "referrer": "governance/path-classification-rules.json"
       },
       {
         "candidate": "classify_paths.py",
-        "line": 758,
+        "line": 702,
         "referrer": "governance/path-classification-rules.json"
       },
       {
         "candidate": "validate_coordination.py/state_current.py",
-        "line": 758,
+        "line": 702,
         "referrer": "governance/path-classification-rules.json"
       },
       {
@@ -137152,6 +137130,13 @@
         "severity": "hard"
       },
       {
+        "candidate": "RC1-440-lot6-v1",
+        "line": 199,
+        "referrer": "evidence/reviews/BINDING.txt",
+        "resolved": "evidence/reviews/RC1-440-lot6-v1",
+        "severity": "hard"
+      },
+      {
         "candidate": "scripts/gate_docs.py",
         "line": 11,
         "referrer": "sonar-project.properties",
@@ -156781,182 +156766,168 @@
       },
       {
         "candidate": "AGENTS.md",
-        "line": 226,
-        "referrer": "governance/path-classification-rules.json",
-        "resolved": "AGENTS.md",
-        "severity": "hard"
-      },
-      {
-        "candidate": "scripts/registre.py",
-        "line": 240,
-        "referrer": "governance/path-classification-rules.json",
-        "resolved": "scripts/registre.py",
-        "severity": "hard"
-      },
-      {
-        "candidate": "AGENTS.md",
-        "line": 338,
+        "line": 282,
         "referrer": "governance/path-classification-rules.json",
         "resolved": "AGENTS.md",
         "severity": "hard"
       },
       {
         "candidate": "README.md",
-        "line": 428,
+        "line": 372,
         "referrer": "governance/path-classification-rules.json",
         "resolved": "README.md",
         "severity": "hard"
       },
       {
         "candidate": "AGENTS.md",
-        "line": 442,
+        "line": 386,
         "referrer": "governance/path-classification-rules.json",
         "resolved": "AGENTS.md",
         "severity": "hard"
       },
       {
         "candidate": "CLAUDE.md",
-        "line": 456,
+        "line": 400,
         "referrer": "governance/path-classification-rules.json",
         "resolved": "CLAUDE.md",
         "severity": "hard"
       },
       {
         "candidate": "MASTER-PLAN.md",
-        "line": 470,
+        "line": 414,
         "referrer": "governance/path-classification-rules.json",
         "resolved": "MASTER-PLAN.md",
         "severity": "hard"
       },
       {
         "candidate": "CONTRIBUTING.md",
-        "line": 498,
+        "line": 442,
         "referrer": "governance/path-classification-rules.json",
         "resolved": "CONTRIBUTING.md",
         "severity": "hard"
       },
       {
         "candidate": "README.md",
-        "line": 506,
+        "line": 450,
         "referrer": "governance/path-classification-rules.json",
         "resolved": "README.md",
         "severity": "hard"
       },
       {
         "candidate": "SECURITY.md",
-        "line": 512,
+        "line": 456,
         "referrer": "governance/path-classification-rules.json",
         "resolved": "SECURITY.md",
         "severity": "hard"
       },
       {
         "candidate": "README.md",
-        "line": 520,
+        "line": 464,
         "referrer": "governance/path-classification-rules.json",
         "resolved": "README.md",
         "severity": "hard"
       },
       {
         "candidate": ".coderabbit.yaml",
-        "line": 554,
+        "line": 498,
         "referrer": "governance/path-classification-rules.json",
         "resolved": ".coderabbit.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 568,
+        "line": 512,
         "referrer": "governance/path-classification-rules.json",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".pre-commit-config.yaml",
-        "line": 582,
+        "line": 526,
         "referrer": "governance/path-classification-rules.json",
         "resolved": ".pre-commit-config.yaml",
         "severity": "hard"
       },
       {
         "candidate": "Sandbox/README.md",
-        "line": 638,
+        "line": 582,
         "referrer": "governance/path-classification-rules.json",
         "resolved": "Sandbox/README.md",
         "severity": "hard"
       },
       {
         "candidate": ".github/workflows/gates.yml",
-        "line": 674,
+        "line": 618,
         "referrer": "governance/path-classification-rules.json",
         "resolved": ".github/workflows/gates.yml",
         "severity": "hard"
       },
       {
         "candidate": ".github/workflows/sonarcloud.yml",
-        "line": 674,
+        "line": 618,
         "referrer": "governance/path-classification-rules.json",
         "resolved": ".github/workflows/sonarcloud.yml",
         "severity": "hard"
       },
       {
         "candidate": ".github/workflows/ci-deps-update.yml",
-        "line": 674,
+        "line": 618,
         "referrer": "governance/path-classification-rules.json",
         "resolved": ".github/workflows/ci-deps-update.yml",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_rc1017_matrice_python.py",
-        "line": 674,
+        "line": 618,
         "referrer": "governance/path-classification-rules.json",
         "resolved": "tests/test_rc1017_matrice_python.py",
         "severity": "hard"
       },
       {
         "candidate": ".github/workflows/ci-deps-update.yml",
-        "line": 688,
+        "line": 632,
         "referrer": "governance/path-classification-rules.json",
         "resolved": ".github/workflows/ci-deps-update.yml",
         "severity": "hard"
       },
       {
         "candidate": ".github/workflows/gates.yml",
-        "line": 688,
+        "line": 632,
         "referrer": "governance/path-classification-rules.json",
         "resolved": ".github/workflows/gates.yml",
         "severity": "hard"
       },
       {
         "candidate": ".github/workflows/sonarcloud.yml",
-        "line": 688,
+        "line": 632,
         "referrer": "governance/path-classification-rules.json",
         "resolved": ".github/workflows/sonarcloud.yml",
         "severity": "hard"
       },
       {
         "candidate": ".github/workflows/ci-deps-update.yml",
-        "line": 688,
+        "line": 632,
         "referrer": "governance/path-classification-rules.json",
         "resolved": ".github/workflows/ci-deps-update.yml",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_rc1017_matrice_python.py",
-        "line": 688,
+        "line": 632,
         "referrer": "governance/path-classification-rules.json",
         "resolved": "tests/test_rc1017_matrice_python.py",
         "severity": "hard"
       },
       {
         "candidate": "scripts/governance/evidence_dedup.py",
-        "line": 744,
+        "line": 688,
         "referrer": "governance/path-classification-rules.json",
         "resolved": "scripts/governance/evidence_dedup.py",
         "severity": "hard"
       },
       {
         "candidate": "archive/coordination/work-packages.json",
-        "line": 758,
+        "line": 702,
         "referrer": "governance/path-classification-rules.json",
         "resolved": "archive/coordination/work-packages.json",
         "severity": "hard"
@@ -163677,12 +163648,12 @@
     ],
     "method": "static_text_scan"
   },
-  "rules_sha256": "ed4c03e6a82c2e87baa9a83c595c877a3d5b46abd3cc50bee9063223d1146039",
+  "rules_sha256": "d44e0fe8b2ff4fb4a3021ee5f10ed46635392d165a626018954b3e9010afc88e",
   "summary": {
     "by_class": {
       "ARCHIVE": 44,
       "DOCS": 18,
-      "EVIDENCE": 1504,
+      "EVIDENCE": 1508,
       "GENERATED": 5,
       "GOVERNANCE": 193,
       "PRODUCT": 113,
@@ -163701,7 +163672,7 @@
       "evidence-audit-output-root": 18,
       "evidence-dedup-root": 2,
       "evidence-registres-root": 35,
-      "evidence-reviews-root": 1449,
+      "evidence-reviews-root": 1453,
       "generated-authority-map": 1,
       "generated-path-classification-json": 1,
       "generated-path-classification-markdown": 1,
@@ -163737,11 +163708,11 @@
       "working-sandbox-readme": 1
     },
     "case_collisions_total": 0,
-    "dangling_references_total": 16341,
+    "dangling_references_total": 16329,
     "generated_total": 9,
-    "load_bearing_total": 1958,
+    "load_bearing_total": 1962,
     "portability_violations_total": 0,
-    "tracked_total": 2098,
+    "tracked_total": 2102,
     "unclassified_total": 0,
     "unicode_anomalies_total": 0
   },

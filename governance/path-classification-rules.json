@@ -212,62 +212,6 @@
       "rationale": "Le fichier .gitignore ignore stories/* sauf les fichiers Markdown explicitement versionnés comme artefacts de gouvernance."
     },
     {
-      "id": "archive-coordination",
-      "match": {
-        "kind": "prefix",
-        "value": "coordination/"
-      },
-      "class": "ARCHIVE",
-      "generated": false,
-      "owner": "archive-coordination",
-      "target": "archive/coordination/",
-      "target_kind": "reroot",
-      "load_bearing": true,
-      "rationale": "ARCHIVE et load_bearing=true coexistent sans contradiction: ce modèle est historique selon AGENTS.md, mais state_current.py lit encore ses totaux et scope-guard.yml exécute validate_coordination.py; c'est le signal que #440 doit lire avant déplacement."
-    },
-    {
-      "id": "evidence-registres",
-      "match": {
-        "kind": "prefix",
-        "value": "Registres/"
-      },
-      "class": "EVIDENCE",
-      "generated": false,
-      "owner": "gouvernance-preuve",
-      "target": "evidence/registres/",
-      "target_kind": "reroot",
-      "load_bearing": true,
-      "rationale": "Les registres constituent une chaîne de preuve dont les hachages sont vérifiés par scripts/registre.py."
-    },
-    {
-      "id": "archive-phase-a",
-      "match": {
-        "kind": "prefix",
-        "value": "Phase-A/"
-      },
-      "class": "ARCHIVE",
-      "generated": false,
-      "owner": "archive-phase-a",
-      "target": "archive/phase-a/",
-      "target_kind": "reroot",
-      "load_bearing": false,
-      "rationale": "Ces brouillons de fournisseurs, dont architecture-glm.md et risques-deepseek.md, sont superseded et ne sont référencés par aucun exécutable."
-    },
-    {
-      "id": "archive-rapports",
-      "match": {
-        "kind": "prefix",
-        "value": "Rapports/"
-      },
-      "class": "ARCHIVE",
-      "generated": false,
-      "owner": "archive-rapports",
-      "target": "archive/rapports/",
-      "target_kind": "reroot",
-      "load_bearing": false,
-      "rationale": "Ces rapports sont des documents historiques conservés hors du flux actif."
-    },
-    {
       "id": "governance-canon",
       "match": {
         "kind": "prefix",
