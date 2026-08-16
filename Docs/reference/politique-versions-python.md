@@ -14,7 +14,7 @@ suite complète sur chacune de ces versions, sous Ubuntu.
 
 Python 3.12 est la version de référence. C'est exclusivement sur cette version que les seuils de
 couverture du projet sont appliqués : 85 % pour le paquet `src/forgeai` et 95 % pour
-`forgeai/core/registre.py`. Les autres versions exécutent néanmoins toute la suite de tests ;
+`src/forgeai/core/registre.py`. Les autres versions exécutent néanmoins toute la suite de tests ;
 elles ne sont jamais dispensées silencieusement.
 
 Un sous-ensemble de tests explicitement portables est aussi exécuté sur macOS et Windows avec

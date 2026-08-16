@@ -35,7 +35,7 @@ pytest
 
 ## Architecture (`src/forgeai/`)
 - `hardware/`, `planner/`, `preflight` — détection matérielle → profil → plan Minimal.
-- `catalogue/` + `data/catalogue.json` — <!-- state:catalogue.entries_total -->1576<!-- /state --> briques R-ALL (vérifiées + bilingues), chargées
+- `catalogue/` + `src/forgeai/data/catalogue.json` — <!-- state:catalogue.entries_total -->1576<!-- /state --> briques R-ALL (vérifiées + bilingues), chargées
   par `importlib.resources` (portable après `pip install`, `dependencies=[]` stdlib pur).
 - `deploy/`, `renderers/` — Compose + K3s ; `network/` — multi-nœuds (clés ed25519, bootstrap).
 - `rag/` — client RAG e2e (preuve P1). `core/` — models, registre hash-chaîné, runner injectable.

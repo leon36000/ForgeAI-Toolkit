@@ -15,7 +15,7 @@
 | mlock | inactif | `disable_mlock = true` (posture conteneur standard, défaut du chart Helm Vault) + **swap désactivé au nœud** (contrôle compensatoire opérateur) |
 | Descellement au restart | sans objet | service/sidecar `openbao-unsealer` (re-descelle depuis l'unique item `unseal_key`) |
 
-`FORGEAI_BAO_TOKEN` **n'est plus généré** par `bootstrap/secrets.py` : le token applicatif est créé au
+`FORGEAI_BAO_TOKEN` **n'est plus généré** par `src/forgeai/bootstrap/secrets.py` : le token applicatif est créé au
 déploiement par `ensure_openbao_ready` et persisté en **runtime** (fichier hôte / Secret k8s), jamais dans
 `.env`. Le **root token ne quitte jamais** son store (isolé du volume monté à l'unsealer).
 

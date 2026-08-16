@@ -1,0 +1,37 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "stories/RC1-009.md",
+   "description": "Référence de traçabilité incorrecte : le texte cite seq 454 de evidence/registres/mission.jsonl pour le détail de RC1-009, mais le diff montre que seq 454 est l'entrée RC1-010-lot5b et que l'entrée RC1-009 est seq 455.",
+   "preuve": "stories/RC1-009.md ligne 'voir `evidence/registres/mission.jsonl` seq 454' ; evidence/registres/mission.jsonl diff : seq 454 = RC1-010-lot5b, seq 455 = RC1-009"
+  },
+  {
+   "severite": "mineure",
+   "fichier": "tests/test_check_doc_links.py",
+   "description": "Tests d'intégration fragiles : deux tests supposent qu'un lien mort sous CANON/spec-web-ui.md restera non corrigé. S'il est corrigé par la suite, pytest échouera alors que l'outil fonctionnera correctement.",
+   "preuve": "tests/test_check_doc_links.py : test_scan_repo_reel_detecte_les_references_mortes_connues (ligne ~108) et test_main_retourne_1_avec_liens_morts_connus (ligne ~121) reposent sur le lien `.claude/launch.json` dans CANON/spec-web-ui.md"
+  },
+  {
+   "severite": "mineure",
+   "fichier": "tests/test_check_doc_links.py",
+   "description": "Absence de test vérifiant que les préfixes CANON/adr/** et governance/decisions/** sont bien exclus du scan (critère 2).",
+   "preuve": "tests/test_check_doc_links.py : aucune fonction de test ne vérifie EXCLUDE_PREFIXES ou scan_repo avec ces préfixes"
+  },
+  {
+   "severite": "mineure",
+   "fichier": "scripts/governance/check_doc_links.py",
+   "description": "main() laisse échapper SystemExit en cas d'argument invalide ou de demande d'aide, car argparse.parse_args n'est pas protégé.",
+   "preuve": "scripts/governance/check_doc_links.py lignes 143-146 : parser.parse_args(argv) est appelé directement dans main sans gestion de SystemExit"
+  }
+ ],
+ "date_heure": "2026-08-16T06:37:12.862800+00:00",
+ "prompt_sha256": "48d6cc793a0b8619132261c0e489cdf07ed57a2b0ccf8b7265acadf289cc6f26",
+ "reviewer_model": "Kimi-2.7",
+ "modele_servi": "kimi-27-openrouter",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}
