@@ -680,7 +680,7 @@
       },
       {
         "path": "tests/test_receptacles.py",
-        "sha256": "e73378b496c2f6109133dfcef07f1a7b3f79e9e48cbc473882e4b53e4ef496ca"
+        "sha256": "bf11ad794c0b2164c96b70f9a76e17fcf97596dbb32a016a1cb73bc20969c838"
       },
       {
         "path": "tests/test_redaction.py",
@@ -937,7 +937,7 @@
     "tests": {
       "js_files": 3,
       "python_files": 195,
-      "python_functions_declared": 2322
+      "python_functions_declared": 2323
     }
   },
   "observations": [
