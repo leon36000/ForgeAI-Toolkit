@@ -61,7 +61,7 @@ gates:
     outil: revue-aveugle
     declencheur: merge
     bloquant: true
-    regle: "revue aveugle scellée par 3 modèles / 3 vendors distincts (verdicts reviews/<étape>/<modèle>.verdict.json) → tally déterministe par script ; objection critique non résolue = bloqué"
+    regle: "revue aveugle scellée par 3 modèles / 3 vendors distincts (verdicts evidence/reviews/<étape>/<modèle>.verdict.json) → tally déterministe par script ; objection critique non résolue = bloqué"
   - id: G10
     outil: signature-fable
     declencheur: merge

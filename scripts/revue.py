@@ -229,11 +229,7 @@ def _diff_canonique(
     base_ref: str,
     head_ref: str,
     *,
-    # RC1-010 (#440) lot 5a : reviews/ migre vers evidence/reviews/ (lots 5b-5d) — les deux
-    # préfixes sont exclus du diff canonique pendant la transition (même garde
-    # anti-paradoxe-bootstrap : le reçu et les verdicts d'une revue en cours ne doivent jamais
-    # entrer dans le hash du diff qu'ils examinent, quelle que soit leur racine du moment).
-    exclude: tuple[str, ...] = ("reviews/", "evidence/reviews/"),
+    exclude: tuple[str, ...] = ("evidence/reviews/",),
     runner: GitRunner | None = None,
 ) -> str:
     """Retourne l'empreinte SHA-256 canonique du diff merge-base, hors artefacts exclus.
@@ -243,11 +239,15 @@ def _diff_canonique(
     PLOMBERIE (`git diff --raw --no-renames -z`), extrait (mode, sha_base, sha_head, chemin)
     par entrée, trie (ordre déterministe, indépendant de l'ordre retourné par git), hache.
 
-    Exclusion OBLIGATOIRE de "reviews/" : le diff d'une PR contient TOUJOURS les artefacts de
-    sa propre revue (le dossier reviews/<ID>/*.verdict.json + la ligne BINDING.txt sont ajoutés
-    dans LA MÊME PR que le code qu'ils attestent) — sans cette exclusion, l'empreinte calculée
-    par le reçu ne pourrait JAMAIS correspondre à celle du diff final (les reviewers ont vu un
-    diff SANS ces fichiers).
+    Exclusion OBLIGATOIRE de "evidence/reviews/" : le diff d'une PR contient TOUJOURS les
+    artefacts de sa propre revue (le dossier evidence/reviews/<ID>/*.verdict.json + la ligne
+    BINDING.txt sont ajoutés dans LA MÊME PR que le code qu'ils attestent) — sans cette
+    exclusion, l'empreinte calculée par le reçu ne pourrait JAMAIS correspondre à celle du diff
+    final (les reviewers ont vu un diff SANS ces fichiers).
+
+    RC1-010 (#440) lot 5d : reviews/ est intégralement migré vers evidence/reviews/ (lots
+    5a-5d) — le préfixe legacy "reviews/" est retiré de l'exclusion par défaut (mort : plus
+    aucun fichier de revue n'y vit).
     """
     _validate_git_ref(base_ref)
     _validate_git_ref(head_ref)
@@ -481,7 +481,8 @@ def _cmd_tally(args) -> int:
 
 
 def _cmd_recu(args) -> int:
-    dossier = REPO / "reviews" / args.dossier
+    # RC1-010 (#440) lot 5d : reviews/ est intégralement migré vers evidence/reviews/.
+    dossier = REPO / "evidence" / "reviews" / args.dossier
     verdicts = [
         json.loads(path.read_text(encoding="utf-8"))
         for path in sorted(dossier.glob("*.verdict.json"))

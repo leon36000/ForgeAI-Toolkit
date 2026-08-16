@@ -73,7 +73,7 @@ La sélection finale de l'utilisateur (briques + modèles + nœud) est transmise
   (chaque story terminée porte une attestation de revue).
 - **Job `docs`** — `gate_docs.py` : aucune sous-commande CLI ajoutée sans documentation
   (dette héritée figée dans une base bornée, `Docs/BASELINE-CLI-DOC.json`).
-- **Règle du Repo (Gate D9)** : Tout dossier de `reviews/BINDING.txt` (130 dossiers scellés) doit obligatoirement être approuvé par **au moins 3 vendors distincts** (cette règle stricte prime sur le minimum T1=1 du canon global).
+- **Règle du Repo (Gate D9)** : Tout dossier de `evidence/reviews/BINDING.txt` (130 dossiers scellés à l'origine, migré depuis `reviews/BINDING.txt` par RC1-010/#440) doit obligatoirement être approuvé par **au moins 3 vendors distincts** (cette règle stricte prime sur le minimum T1=1 du canon global).
 - **Registre** `Registres/mission.jsonl` : append-only, hash-chaîné, une entrée `revue_scellee` par story livrée (sceau `prompt_sha256` + 3 vendors).
 
 ## État des phases

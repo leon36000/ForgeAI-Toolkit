@@ -76,38 +76,13 @@ def _receipt():
     }
 
 
-def test_gate_resout_une_entree_liante_sous_evidence_reviews(tmp_path):
-    # RC1-010 (#440) lot 5a : pendant la migration reviews/ -> evidence/reviews/ (lots 5b-5d),
-    # une entrée liante peut vivre sous evidence/reviews/<nom> alors que reviews_root pointe
-    # encore vers reviews/ (racine legacy, transmise par défaut par gates.yml). Le gate doit la
-    # trouver via la racine evidence/reviews/ (sibling de reviews_root), sans qu'aucun fichier
-    # n'existe sous reviews/<nom>.
-    reviews_root = tmp_path / "reviews"
-    reviews_root.mkdir()
-    evidence_root = tmp_path / "evidence" / "reviews"
-    _make_review(evidence_root, "S-deja-migree", [_verdict("deepseek"), _verdict("gemini_flash"), _verdict("longcat_20")])
-
-    ok, report = gate.check(_manifest(tmp_path, ["S-deja-migree"]), reviews_root)
-
-    assert ok is True, report
-    assert any("S-deja-migree" in line and "APPROVE" in line for line in report)
-
-
-def test_gate_priorite_evidence_reviews_sur_reviews_si_les_deux_existent(tmp_path):
-    # Si une entrée existe sous les DEUX racines (transition en cours), evidence/reviews/ (la
-    # racine finale) doit gagner.
-    reviews_root = tmp_path / "reviews"
-    _make_review(reviews_root, "S-double", [_verdict("deepseek", "REJECT"), _verdict("gemini_flash"), _verdict("longcat_20")])
-    evidence_root = tmp_path / "evidence" / "reviews"
-    _make_review(evidence_root, "S-double", [_verdict("deepseek"), _verdict("gemini_flash"), _verdict("longcat_20")])
-
-    ok, report = gate.check(_manifest(tmp_path, ["S-double"]), reviews_root)
-
-    assert ok is True, report
-    assert any("S-double" in line and "APPROVE" in line for line in report)
-
-
 def test_gate_ok_si_toutes_approve(tmp_path):
+    # RC1-010 (#440) lot 5d : reviews/ est intégralement migré vers evidence/reviews/ — le
+    # repli bi-racine posé au lot 5a (une entrée liante pouvait vivre sous l'une OU l'autre
+    # racine pendant la transition) est retiré, `reviews_root` désigne désormais une racine
+    # unique et sans ambiguïté. `tmp_path / "reviews"` ci-dessous est un nom de dossier de test
+    # arbitraire (transmis explicitement en paramètre) — sans rapport avec la racine par défaut
+    # du CLI, qui pointe maintenant vers evidence/reviews/.
     root = tmp_path / "reviews"
     _make_review(root, "S-1", [_verdict("deepseek"), _verdict("gemini_flash"), _verdict("mimo")])
     ok, report = gate.check(_manifest(tmp_path, ["S-1"]), root)
@@ -146,7 +121,7 @@ def test_gate_traversee_chemin_rejetee(tmp_path):
     root = tmp_path / "reviews"
     root.mkdir()
     ok, report = gate.check(_manifest(tmp_path, ["../ailleurs"]), root)
-    assert ok is False and any("chemin hors de reviews/" in line for line in report)
+    assert ok is False and any("chemin hors de la racine de revues" in line for line in report)
 
 
 def test_mode_pr_echoue_sans_recu_couvrant(tmp_path):
@@ -358,5 +333,7 @@ def test_defaut_sans_drapeau_comportement_inchange(tmp_path):
 
 
 def test_manifeste_reel_du_depot_est_approve():
-    ok, report = gate.check(REPO / "reviews" / "BINDING.txt", REPO / "reviews")
+    ok, report = gate.check(
+        REPO / "evidence" / "reviews" / "BINDING.txt", REPO / "evidence" / "reviews"
+    )
     assert ok is True, report

@@ -59,5 +59,5 @@ Tout appel modèle → **gateway `litellm`** (clés virtuelles = budgets, cache,
 ## §5 — Doctrine de validation (Gate D9)
 
 Chaque modification apportée aux définitions de stacks, au catalogue ou aux configurations de déploiement doit passer la gate de validation du dépôt :
-- **Validation multi-vendor** : Tout dossier listé dans `reviews/BINDING.txt` (130 dossiers scellés) doit obligatoirement comporter une approbation signée d'au moins **3 vendors distincts**.
+- **Validation multi-vendor** : Tout dossier listé dans `evidence/reviews/BINDING.txt` (130 dossiers scellés à l'origine, migré depuis `reviews/BINDING.txt` par RC1-010/#440) doit obligatoirement comporter une approbation signée d'au moins **3 vendors distincts**.
 - **CI unique** : Validation automatisée via `gates.yml` (vérification de l'absence de stubs, intégrité du registre hash-chaîné, et couverture de tests).

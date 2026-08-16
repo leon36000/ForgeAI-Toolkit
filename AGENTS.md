@@ -17,7 +17,8 @@ Claude Code Opus est mission lead, gestionnaire du DAG et intégrateur ; les mem
    Gate : `python3 scripts/no_stub_scan.py --all` (bloquant, aucune exception).
 2. **Preuve au registre** : chaque livrable ⇒ une entrée dans `evidence/registres/*.jsonl` via
    `scripts/registre.py append`. Un livrable sans preuve n'existe pas.
-3. **Revue aveugle scellée (§3)** : verdicts déposés dans `reviews/<étape>/<modèle>.verdict.json`
+3. **Revue aveugle scellée (§3)** : verdicts déposés dans
+   `evidence/reviews/<étape>/<modèle>.verdict.json`
    sans accès aux verdicts des autres. Jamais de verdict attendu, de compte d'approbations
    ni d'identité de reviewers dans un prompt de revue.
 4. **Sorties de modèles = CLAIMS non vérifiées** : toute réponse du bridge est marquée
@@ -54,14 +55,15 @@ pytest
    non câblé). **Le crew génère, l'Orchestrateur applique + teste + itère. L'Orchestrateur ne
    code jamais les stories.** TDD strict : test ROUGE sur l'ancien code AVANT le correctif.
 3. Gates : `pytest`, `no_stub_scan.py --all` (après `git add`).
-4. **Revue aveugle scellée 3/3** — `~/proof-method/scripts/civ_review.py --story reviews/<ID>
-   --pack <pack>` (prompt byte-identique aux `CIV_MODELS`, 16k tokens, scelle `prompt_sha256`) →
-   `scripts/revue.py tally reviews/<ID>` (dépouillement déterministe : 3 vendors distincts ≠
-   vendor du codeur, même sha, APPROVE-ssi-tous). **Artefact de revue = diff git**, jamais des
-   snippets recollés. Pack via `pack_build.sh story diff out` (PROOF_COMPRESS=0).
+4. **Revue aveugle scellée 3/3** — `~/proof-method/scripts/civ_review.py --story
+   evidence/reviews/<ID> --pack <pack>` (prompt byte-identique aux `CIV_MODELS`, 16k tokens,
+   scelle `prompt_sha256`) → `scripts/revue.py tally evidence/reviews/<ID>` (dépouillement
+   déterministe : 3 vendors distincts ≠ vendor du codeur, même sha, APPROVE-ssi-tous).
+   **Artefact de revue = diff git**, jamais des snippets recollés. Pack via
+   `pack_build.sh story diff out` (PROOF_COMPRESS=0).
 5. Signature Orchestrateur par-dessus (gates verts + revue APPROVE) → PR → merge (CODEOWNERS = Nathan).
-6. Gate CI **`reviews-sealed`** (`scripts/reviews_gate.py` + `reviews/BINDING.txt`) : bloque tout
-   merge où une revue liante n'est pas APPROVE 3/3.
+6. Gate CI **`reviews-sealed`** (`scripts/reviews_gate.py` + `evidence/reviews/BINDING.txt`) :
+   bloque tout merge où une revue liante n'est pas APPROVE 3/3.
 
 Avant d'engager l'outillage `~/proof-method`, lancez
 `python3 scripts/governance/capabilities.py` pour vérifier sa disponibilité et celle des variables
