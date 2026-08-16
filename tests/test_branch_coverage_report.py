@@ -116,6 +116,51 @@ def test_mesurer_code_pytest_inattendu(
         branch_coverage_report.mesurer(tmp_path, tmp_path / "coverage.json")
 
 
+def test_mesurer_timeout(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    def timeout_depasse(
+        *args: object,
+        **kwargs: object,
+    ) -> subprocess.CompletedProcess[str]:
+        raise subprocess.TimeoutExpired(cmd="pytest", timeout=1200)
+
+    monkeypatch.setattr(branch_coverage_report.subprocess, "run", timeout_depasse)
+
+    with pytest.raises(RuntimeError, match="délai de 1200s"):
+        branch_coverage_report.mesurer(tmp_path, tmp_path / "coverage.json")
+
+
+def test_mesurer_avertit_sur_stderr_si_des_tests_ont_echoue(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    resultat = subprocess.CompletedProcess(
+        args=["pytest"],
+        returncode=1,
+        stdout="",
+        stderr="",
+    )
+    monkeypatch.setattr(
+        branch_coverage_report.subprocess,
+        "run",
+        lambda *args, **kwargs: resultat,
+    )
+    sortie = tmp_path / "coverage.json"
+    sortie.write_text(
+        json.dumps({"meta": {"branch_coverage": True}, "files": {}, "totals": {}}),
+        encoding="utf-8",
+    )
+
+    donnees = branch_coverage_report.mesurer(tmp_path, sortie)
+    erreur = capsys.readouterr().err
+
+    assert donnees == {"meta": {"branch_coverage": True}, "files": {}, "totals": {}}
+    assert "au moins un test a échoué" in erreur
+
+
 def test_mesurer_fichier_de_couverture_absent(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
@@ -722,6 +767,4 @@ def test_main_utilise_la_racine_par_defaut(
     code_retour = branch_coverage_report.main([])
 
     assert code_retour == 0
-    assert arguments_recus == [(Path("."), Path(".") / "branch-coverage.json")] or (
-        arguments_recus == [(Path("."), Path("branch-coverage.json"))]
-    )
+    assert arguments_recus == [(Path("."), Path("branch-coverage.json"))]

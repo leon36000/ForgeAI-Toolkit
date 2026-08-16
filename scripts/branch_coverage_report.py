@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Mesure et rapporte les branches manquantes par fonction."""
+"""Mesure et rapporte les branches manquantes par fonction, sans bloquer la CI."""
 
 from __future__ import annotations
 
@@ -30,10 +30,15 @@ def mesurer(racine: Path, sortie_json: Path) -> dict[str, Any]:
             capture_output=True,
             text=True,
             check=False,
+            timeout=1200,
         )
     except FileNotFoundError as erreur:
         raise RuntimeError(
             "pytest est indisponible : vérifiez son installation et le PATH"
+        ) from erreur
+    except subprocess.TimeoutExpired as erreur:
+        raise RuntimeError(
+            "pytest a dépassé le délai de 1200s — abandon plutôt que de bloquer la CI"
         ) from erreur
     except OSError as erreur:
         raise RuntimeError(f"impossible d'exécuter pytest : {erreur}") from erreur
@@ -43,6 +48,16 @@ def mesurer(racine: Path, sortie_json: Path) -> dict[str, Any]:
         suffixe = f" : {details}" if details else ""
         raise RuntimeError(
             f"pytest a échoué avec le code {resultat.returncode}{suffixe}"
+        )
+
+    if resultat.returncode == 1:
+        # Non bloquant par conception (voir docstring module) : le job `tests` séparé est déjà
+        # le gate qui bloque sur les échecs de test. On avertit seulement, pour que le rapport
+        # de branches ne soit pas lu comme fiable à 100% si la mesure sous-jacente est partielle.
+        print(
+            "ATTENTION : au moins un test a échoué pendant cette mesure — le rapport de "
+            "couverture de branches peut être basé sur une exécution partielle.",
+            file=sys.stderr,
         )
 
     if not sortie_json.exists():
