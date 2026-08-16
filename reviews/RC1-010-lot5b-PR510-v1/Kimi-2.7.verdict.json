@@ -1,0 +1,19 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "governance/PATH-CLASSIFICATION.md",
+   "description": "Le résumé généré indique +4 fichiers suivis et +4 EVIDENCE, et Vague 0 diminue de 379 (et non 383) pour 383 renommages ; l'alignement exact avec le manifeste exclu governance/path-classification.json n'est pas vérifiable dans ce diff.",
+   "preuve": "lignes '- Fichiers suivis : 1843' -> '1847', '- EVIDENCE : 1288' -> '1292', '- Vague 0 : 1214' -> '835' dans governance/PATH-CLASSIFICATION.md"
+  }
+ ],
+ "date_heure": "2026-08-16T04:32:47.413207+00:00",
+ "prompt_sha256": "2851ec5a201f9a57e2077aa86e11b22b476a86680ecc11edf7596dee59d2ffa0",
+ "reviewer_model": "Kimi-2.7",
+ "modele_servi": "kimi-27-openrouter",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}
