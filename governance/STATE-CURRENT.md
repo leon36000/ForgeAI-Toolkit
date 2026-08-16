@@ -137,6 +137,10 @@
       "sha256": "a08b9eaa38c1e60068acebaab151b305991aa8c2de3901b37ba235e807933271"
     },
     {
+      "path": "tests/__init__.py",
+      "sha256": "8ec61b3e5760166fe75f877ab931594fb66d89e9eb2e7cdb09d1b3fe1ea5f875"
+    },
+    {
       "path": "tests/js/adoption.test.cjs",
       "sha256": "241e8d04a915161a59cba6fa33f26c3be5072f5636a8c9106f5314a516ff0c9f"
     },
@@ -898,7 +902,7 @@
   },
   "tests": {
     "js_files": 3,
-    "python_files": 185,
+    "python_files": 186,
     "python_functions_declared": 1998
   }
 }
