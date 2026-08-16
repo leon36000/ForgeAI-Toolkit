@@ -14,7 +14,7 @@
     "sha256_recomputed_ok": true
   },
   "ci": {
-    "jobs_total": 21,
+    "jobs_total": 22,
     "workflows": 5
   },
   "cli": {
@@ -98,7 +98,7 @@
     },
     {
       "path": ".github/workflows/gates.yml",
-      "sha256": "a150720f5afa3f38739d4311bf79e32683924c32b207999f3369d3df07ac08a4"
+      "sha256": "e873717a7abad6ddb9f6c993593d4993b1d518b235bea7d20f3123094049cd24"
     },
     {
       "path": ".github/workflows/scope-guard.yml",
@@ -175,6 +175,10 @@
     {
       "path": "tests/test_backend_k8s.py",
       "sha256": "548a0db5bda3d66a205d6b7677bf93528841710e9acc07bb5dbc6229d2030518"
+    },
+    {
+      "path": "tests/test_branch_coverage_report.py",
+      "sha256": "f68d96bd747cc9aca54b2e425045fb6263544c43534ca991f543b2c1146dcc76"
     },
     {
       "path": "tests/test_bug_servicespec_gpu_vendor_et_ports.py",
@@ -926,8 +930,8 @@
   },
   "tests": {
     "js_files": 3,
-    "python_files": 192,
-    "python_functions_declared": 2188
+    "python_files": 193,
+    "python_functions_declared": 2219
   }
 }
 ```
