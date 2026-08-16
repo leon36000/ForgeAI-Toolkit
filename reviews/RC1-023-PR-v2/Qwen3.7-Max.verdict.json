@@ -1,0 +1,21 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "critique",
+   "fichier": "src/forgeai/web/server.py",
+   "description": "Le correctif du site 1534 remplace `new_proc.kill(); new_proc.wait()` par `kill_tree(new_proc, grace_seconds=5.0)`. Cela introduit un changement de comportement fonctionnel majeur (passage d'un SIGKILL immédiat sur le process unique à un SIGTERM/SIGKILL sur le groupe de processus avec délai de grâce de 5s), violant la contrainte explicite du scope 'aucun changement de comportement fonctionnel préexistant' pour les sites FIXED. De plus, le `behavior_contract` déclaré dans `governance/error-handling-contracts.json` pour ce site documente encore l'ancien comportement (`new_proc.kill(); new_proc.wait()`), créant une rupture de contrat sémantique entre l'inventaire de gouvernance et le code réel. Le test `test_reader_secondary_kill_echec_ajoute_avertissement` mocke d'ailleurs `os.killpg` pour valider cette dérive fonctionnelle non autorisée.",
+   "preuve": "Diff src/forgeai/web/server.py (bloc except Exception as exc_kill) : `- new_proc.kill() \\n - new_proc.wait()` remplacé par `+ kill_tree(new_proc, grace_seconds=5.0)`. governance/error-handling-contracts.json (entrée id: site:src/forgeai/web/server.py:1534) : le champ `behavior_contract` mentionne explicitement `new_proc.kill(); new_proc.wait()`."
+  }
+ ],
+ "date_heure": "2026-08-16T05:55:25.670457+00:00",
+ "pack_sha256": "495f3cbaee26e7ba27e4c368f4b4e4b5cbec2106fa5da138346326d7f41b4641",
+ "role_sha256": "3e836bda0d815badaccf03df40ce861daaa1745b0f17728069985cb32c45de82",
+ "role": "contrats",
+ "reviewer_model": "Qwen3.7-Max",
+ "modele_servi": "qwen37-max-openrouter",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

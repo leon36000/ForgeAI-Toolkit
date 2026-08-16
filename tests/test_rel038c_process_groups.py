@@ -268,11 +268,11 @@ def test_reader_secondary_kill_echec_ajoute_avertissement(monkeypatch):
     def _boom_redact(text):
         raise RuntimeError("erreur simulation lecteur")
 
-    def _boom_killpg(pgid, sig):
-        raise PermissionError("killpg impossible (simulation)")
+    def _boom_kill(self):
+        raise OSError("kill impossible")
 
     monkeypatch.setattr(server, "redact_text", _boom_redact)
-    monkeypatch.setattr("os.killpg", _boom_killpg)
+    monkeypatch.setattr(subprocess.Popen, "kill", _boom_kill)
 
     with server._DEPLOY_STATE["lock"]:
         server._DEPLOY_STATE["lines"].clear()

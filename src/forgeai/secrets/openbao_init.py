@@ -211,8 +211,11 @@ def ensure_openbao_ready(
             message = t("secrets.openbao_init.ensure_openbao_ready.token_invalide_remplace")
             try:
                 print(message, file=sys.stderr)
-            except UnicodeEncodeError:
-                print(message.encode("ascii", "backslashreplace").decode("ascii"), file=sys.stderr)
+            except Exception:
+                try:
+                    print(message.encode("ascii", "backslashreplace").decode("ascii"), file=sys.stderr)
+                except Exception:  # proof:allow — repli ultime du print diagnostic best-effort (jamais lever, cf. governance/error-handling-contracts.json)
+                    pass
 
     # Créer un nouveau token
     new_token_resp = request(
@@ -248,7 +251,10 @@ def ensure_openbao_ready(
             message = t("secrets.openbao_init.ensure_openbao_ready.revocation_ancien_jeton_echouee")
             try:
                 print(message, file=sys.stderr)
-            except UnicodeEncodeError:
-                print(message.encode("ascii", "backslashreplace").decode("ascii"), file=sys.stderr)
+            except Exception:
+                try:
+                    print(message.encode("ascii", "backslashreplace").decode("ascii"), file=sys.stderr)
+                except Exception:  # proof:allow — repli ultime du print diagnostic best-effort (jamais lever, cf. governance/error-handling-contracts.json)
+                    pass
 
     return new_token

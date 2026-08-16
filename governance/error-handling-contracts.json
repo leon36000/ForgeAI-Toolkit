@@ -175,10 +175,10 @@
       "accepted_risk": "Le repli sur les valeurs par défaut est inchangé ; seule la visibilité change (aucun nouveau risque de comportement)."
     },
     {
-      "id": "site:src/forgeai/hardware/detect.py:76",
+      "id": "site:src/forgeai/hardware/detect.py:79",
       "site": {
         "path": "src/forgeai/hardware/detect.py",
-        "line": 76,
+        "line": 79,
         "function": "forgeai.hardware.detect.HardwareDetector.detect_ram_gb"
       },
       "exception_types": [
@@ -198,10 +198,10 @@
       "accepted_risk": "Le repli à 0.0 Go est inchangé ; seule la visibilité change."
     },
     {
-      "id": "site:src/forgeai/hardware/detect.py:97",
+      "id": "site:src/forgeai/hardware/detect.py:103",
       "site": {
         "path": "src/forgeai/hardware/detect.py",
-        "line": 97,
+        "line": 103,
         "function": "forgeai.hardware.detect.HardwareDetector.detect_disks"
       },
       "exception_types": [
@@ -219,10 +219,10 @@
       "accepted_risk": "Une ligne `df` malformée fait disparaître silencieusement ce disque du rapport matériel."
     },
     {
-      "id": "site:src/forgeai/hardware/detect.py:121",
+      "id": "site:src/forgeai/hardware/detect.py:127",
       "site": {
         "path": "src/forgeai/hardware/detect.py",
-        "line": 121,
+        "line": 127,
         "function": "forgeai.hardware.detect.HardwareDetector._nvidia_gpus"
       },
       "exception_types": [
@@ -379,10 +379,10 @@
       "accepted_risk": "Le remplacement automatique du jeton reste le comportement ; seule la visibilité change (aucun nouveau risque de comportement)."
     },
     {
-      "id": "site:src/forgeai/secrets/openbao_init.py:247",
+      "id": "site:src/forgeai/secrets/openbao_init.py:250",
       "site": {
         "path": "src/forgeai/secrets/openbao_init.py",
-        "line": 247,
+        "line": 250,
         "function": "forgeai.secrets.openbao_init.ensure_openbao_ready"
       },
       "exception_types": [
@@ -450,10 +450,10 @@
       "accepted_risk": "Le serveur démarre toujours avec un état vide en cas d'échec (comportement inchangé) ; seule la visibilité change."
     },
     {
-      "id": "site:src/forgeai/web/server.py:619",
+      "id": "site:src/forgeai/web/server.py:622",
       "site": {
         "path": "src/forgeai/web/server.py",
-        "line": 619,
+        "line": 622,
         "function": "forgeai.web.server._summary_payload"
       },
       "exception_types": [
@@ -471,10 +471,10 @@
       "accepted_risk": "La page de statut affiche une liste de nœuds vide si le cluster est temporairement indisponible, sans distinction visuelle avec un cluster réellement sans nœuds."
     },
     {
-      "id": "site:src/forgeai/web/server.py:1068",
+      "id": "site:src/forgeai/web/server.py:1071",
       "site": {
         "path": "src/forgeai/web/server.py",
-        "line": 1068,
+        "line": 1071,
         "function": "forgeai.web.server.ForgeAIHandler.do_GET"
       },
       "exception_types": [
@@ -493,10 +493,10 @@
       "accepted_risk": "Aucun — déconnexion client normale."
     },
     {
-      "id": "site:src/forgeai/web/server.py:1090",
+      "id": "site:src/forgeai/web/server.py:1093",
       "site": {
         "path": "src/forgeai/web/server.py",
-        "line": 1090,
+        "line": 1093,
         "function": "forgeai.web.server.ForgeAIHandler.do_GET"
       },
       "exception_types": [
@@ -515,10 +515,10 @@
       "accepted_risk": "Aucun — déconnexion client normale."
     },
     {
-      "id": "site:src/forgeai/web/server.py:1526",
+      "id": "site:src/forgeai/web/server.py:1529",
       "site": {
         "path": "src/forgeai/web/server.py",
-        "line": 1526,
+        "line": 1529,
         "function": "forgeai.web.server._reader (closure locale de la route POST /api/deploy)"
       },
       "exception_types": [
@@ -539,10 +539,10 @@
       "accepted_risk": "Le comportement de récupération (exit_code=-1 si indisponible, done=True, tentative de kill) est inchangé ; seule la visibilité de la cause racine change."
     },
     {
-      "id": "site:src/forgeai/web/server.py:1534",
+      "id": "site:src/forgeai/web/server.py:1538",
       "site": {
         "path": "src/forgeai/web/server.py",
-        "line": 1534,
+        "line": 1538,
         "function": "forgeai.web.server._reader (closure locale de la route POST /api/deploy)"
       },
       "exception_types": [
@@ -556,17 +556,17 @@
       "behavior_contract": "Nettoyage best-effort à l'intérieur du handler d'erreur du thread lecteur : tente de tuer le process de déploiement encore vivant (`new_proc.kill(); new_proc.wait()`) pendant la récupération d'erreur. Si CE nettoyage secondaire échoue aussi, désormais journalisé plutôt que totalement silencieux ; le flux de récupération (marquer l'état terminé) continue inchangé dans tous les cas.",
       "logging": "_DEPLOY_STATE[\"lines\"].append(f\"avertissement: échec du nettoyage best-effort du process de déploiement pendant la récupération : {exc}\") — ce site est DÉJÀ à l'intérieur du bloc `with _DEPLOY_STATE[\"lock\"]:` ouvert à la ligne 1518 (englobe 1519-1526) : append DIRECT, SANS `with` (le lock est déjà tenu par le thread courant ; le ré-acquérir avec `threading.Lock()`, non réentrant, bloquerait indéfiniment ce même thread — piège identifié en spec, à couvrir explicitement par le test compensatoire)",
       "owner": "équipe web ForgeAI",
-      "justification": "Chemin de rollback/nettoyage sur un échec DÉJÀ en cours de traitement (double échec) : un `kill()` qui échoue pour une raison autre que « déjà mort » (ex. permissions) sur un process de déploiement laisserait potentiellement un process orphelin sans qu'aucune trace n'existe nulle part — contrairement à core/proc.py où ce cas est déjà bien couvert par des types d'exception précis, ici c'est un `except Exception` nu sur une opération de nettoyage critique en contexte de déploiement.",
+      "justification": "Chemin de rollback/nettoyage sur un échec DÉJÀ en cours de traitement (double échec) : un `kill()` qui échoue pour une raison autre que « déjà mort » (ex. permissions) sur un process de déploiement laisserait potentiellement un process orphelin sans qu'aucune trace n'existe nulle part — contrairement à core/proc.py où ce cas est déjà bien couvert par des types d'exception précis, ici c'est un `except Exception` nu sur une opération de nettoyage critique en contexte de déploiement. Round 2 avait tenté de remplacer new_proc.kill()/wait() par kill_tree(grace_seconds=5.0) pour renforcer ce nettoyage — REVERTÉ après objections convergentes de 2 reviewers (correction, contrats) : ce changement modifiait le comportement observable (SIGTERM+grâce 5s sur le groupe de processus au lieu de SIGKILL immédiat sur le process seul, verrou _DEPLOY_STATE tenu plus longtemps) — exactement ce que le critère \"aucun changement de comportement\" interdit. Le renforcement réel du nettoyage est une amélioration légitime mais hors scope de #452 lot 1 ; à traiter dans une story dédiée.",
       "compensating_test": "tests/test_rel038c_process_groups.py::test_reader_secondary_kill_echec_ajoute_avertissement",
       "compensating_test_reason": null,
       "review_due": "2027-02-10",
-      "accepted_risk": "Le flux de récupération (état marqué terminé) est inchangé ; un process orphelin resterait possible dans ce double-échec, désormais au moins visible en log."
+      "accepted_risk": "Le flux de récupération (état marqué terminé, exit_code=-1) reste FAIL-OPEN si ce nettoyage best-effort échoue aussi : un process orphelin resterait possible. C'est un choix de scope EXPLICITE de ce lot, pas un oubli : #452 lot 1 vise à rendre visible une dégradation silencieuse préexistante SANS changer de comportement fonctionnel (critère explicite de la story) — remplacer le flux FAIL-OPEN par un mécanisme de confinement (retry, blocage, escalade différente) EST un changement de comportement, donc hors périmètre ici. Objection soulevée 2 fois (round 1 et round 2, revue securite) sur ce point précis : reconnue comme réelle et non résolue par ce lot ; candidate explicite pour une story dédiée de lot 2+ (contrat de récupération renforcé sur ce chemin de rollback), PAS traitée ici pour ne pas élargir le scope au-delà de la visibilité."
     },
     {
-      "id": "site:src/forgeai/web/server.py:1668",
+      "id": "site:src/forgeai/web/server.py:1672",
       "site": {
         "path": "src/forgeai/web/server.py",
-        "line": 1668,
+        "line": 1672,
         "function": "forgeai.web.server.serve"
       },
       "exception_types": [

@@ -1,0 +1,27 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "majeure",
+   "fichier": "src/forgeai/web/server.py",
+   "description": "Le chemin de récupération reste FAIL-OPEN : si le nettoyage du process de déploiement échoue, le handler avale toute exception, marque néanmoins le déploiement terminé avec exit_code=-1, puis poursuit. Un process encore vivant peut donc continuer à exécuter des actions de déploiement tout en étant présenté comme terminé, sans mécanisme de confinement, de relance du nettoyage ni signal d'échec bloquant.",
+   "preuve": "src/forgeai/web/server.py:1526-1538 : `except Exception as exc_kill:` ajoute seulement un avertissement, puis affecte `_DEPLOY_STATE[\"exit_code\"] = new_proc.returncode if new_proc.returncode is not None else -1` et `_DEPLOY_STATE[\"done\"] = True`. governance/error-handling-contracts.json, contrat site:src/forgeai/web/server.py:1534, accepte explicitement qu'« un process orphelin resterait possible »."
+  },
+  {
+   "severite": "majeure",
+   "fichier": "src/forgeai/secrets/openbao_init.py",
+   "description": "Les nouveaux logs exécutés dans les handlers OpenBao peuvent eux-mêmes faire échouer le flux auparavant best-effort. Seul UnicodeEncodeError est intercepté ; un stderr fermé, un pipe consommateur fermé ou une erreur I/O de journalisation lève notamment BrokenPipeError/OSError/ValueError, qui s'échappent du handler et interrompent la création ou la rotation de jeton. Cela transforme une erreur de lookup/revocation normalement absorbée en indisponibilité d'initialisation des secrets.",
+   "preuve": "src/forgeai/secrets/openbao_init.py:210-214 et :247-251 : chaque `except OpenBaoInitError` appelle `print(message, file=sys.stderr)` et ne capture que `except UnicodeEncodeError`. Aucune garde ne capture BrokenPipeError, OSError ou ValueError produits par `sys.stderr`; ces exceptions quittent donc le handler."
+  }
+ ],
+ "date_heure": "2026-08-16T05:54:16.214349+00:00",
+ "pack_sha256": "495f3cbaee26e7ba27e4c368f4b4e4b5cbec2106fa5da138346326d7f41b4641",
+ "role_sha256": "1444f4a8ca1c52008a237fa623fec5ea4cb9dfe214259899c12d2978d09e7789",
+ "role": "securite",
+ "reviewer_model": "GPT-5.6-Terra-Pro",
+ "modele_servi": "gpt56-terra-pro-openrouter",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

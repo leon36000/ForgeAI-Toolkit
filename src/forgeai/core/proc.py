@@ -152,8 +152,11 @@ def _kill_tree(proc, grace_seconds: float) -> None:  # type: ignore
             )
             try:
                 print(message, file=sys.stderr)
-            except UnicodeEncodeError:
-                print(message.encode("ascii", "backslashreplace").decode("ascii"), file=sys.stderr)
+            except Exception:
+                try:
+                    print(message.encode("ascii", "backslashreplace").decode("ascii"), file=sys.stderr)
+                except Exception:  # proof:allow — repli ultime du print diagnostic best-effort (jamais lever, cf. governance/error-handling-contracts.json)
+                    pass
     else:  # Windows
         subprocess.run(
             ["taskkill", "/F", "/T", "/PID", str(proc.pid)],  # type: ignore

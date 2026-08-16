@@ -578,8 +578,11 @@ def _load_deploy_state() -> None:
         )
         try:
             print(message, file=sys.stderr)
-        except UnicodeEncodeError:
-            print(message.encode("ascii", "backslashreplace").decode("ascii"), file=sys.stderr)
+        except Exception:
+            try:
+                print(message.encode("ascii", "backslashreplace").decode("ascii"), file=sys.stderr)
+            except Exception:  # proof:allow — repli ultime du print diagnostic best-effort (jamais lever, cf. governance/error-handling-contracts.json)
+                pass
 
 
 def _models_home() -> Path:
@@ -1535,7 +1538,8 @@ class ForgeAIHandler(BaseHTTPRequestHandler):
                         )
                         if new_proc.returncode is None:
                             try:
-                                kill_tree(new_proc, grace_seconds=5.0)
+                                new_proc.kill()
+                                new_proc.wait()
                             except Exception as exc_kill:
                                 _DEPLOY_STATE["lines"].append(
                                     "avertissement: échec du nettoyage best-effort du "
