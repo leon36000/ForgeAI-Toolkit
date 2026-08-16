@@ -814,21 +814,21 @@ def test_g23b_fichier_dette_retire_ET_promu_proteges_aucune_anomalie():
 # Correctif post-revue scellée #449 (round 6) — neutralisation mypy
 # ---------------------------------------------------------------------------
 
-def test_g24_fichiers_proteges_neutralises_detecte_la_directive(tmp_path):
+def test_g24_fichiers_neutralises_detecte_la_directive(tmp_path):
     chemin = tmp_path / "a.py"
     chemin.write_text("# mypy: ignore-errors\nx = 1\n", encoding="utf-8")
-    assert mypy_gate.fichiers_proteges_neutralises(tmp_path, {"a.py"}) == {"a.py"}
+    assert mypy_gate.fichiers_neutralises(tmp_path, {"a.py"}) == {"a.py"}
 
 
-def test_g24b_fichiers_proteges_neutralises_ignore_fichier_sain(tmp_path):
+def test_g24b_fichiers_neutralises_ignore_fichier_sain(tmp_path):
     chemin = tmp_path / "a.py"
     chemin.write_text("x = 1\n", encoding="utf-8")
-    assert mypy_gate.fichiers_proteges_neutralises(tmp_path, {"a.py"}) == set()
+    assert mypy_gate.fichiers_neutralises(tmp_path, {"a.py"}) == set()
 
 
-def test_g24c_fichiers_proteges_neutralises_ignore_fichier_absent(tmp_path):
+def test_g24c_fichiers_neutralises_ignore_fichier_absent(tmp_path):
     # Ne doit pas lever d'exception et ne pas inclure le fichier absent.
-    assert mypy_gate.fichiers_proteges_neutralises(tmp_path, {"absent.py"}) == set()
+    assert mypy_gate.fichiers_neutralises(tmp_path, {"absent.py"}) == set()
 
 
 def test_g25_anomalies_signale_fichier_protege_neutralise():
@@ -860,28 +860,43 @@ def test_g25b_anomalies_sans_neutralises_aucune_regression():
 # Correctif post-revue scellée #449 (round 7) — encodage non UTF-8
 # ---------------------------------------------------------------------------
 
-def test_g26_fichiers_proteges_neutralises_detecte_meme_encodage_non_utf8(tmp_path):
+def test_g26_fichiers_neutralises_detecte_meme_encodage_non_utf8(tmp_path):
     chemin = tmp_path / "a.py"
     chemin.write_bytes(
         b'# -*- coding: latin-1 -*-\n# mypy: ignore-errors\nx = "caf\xe9"\n'
     )
-    assert mypy_gate.fichiers_proteges_neutralises(tmp_path, {"a.py"}) == {"a.py"}
+    assert mypy_gate.fichiers_neutralises(tmp_path, {"a.py"}) == {"a.py"}
 
 
 # ---------------------------------------------------------------------------
 # Correctif post-revue scellée #449 (round 8) — généralisation directive mypy
 # ---------------------------------------------------------------------------
 
-def test_g27_fichiers_proteges_neutralises_detecte_disable_error_code(tmp_path):
+def test_g27_fichiers_neutralises_detecte_disable_error_code(tmp_path):
     chemin = tmp_path / "a.py"
     chemin.write_bytes(b"# mypy: disable-error-code=assignment\nx = 1\n")
-    assert mypy_gate.fichiers_proteges_neutralises(tmp_path, {"a.py"}) == {"a.py"}
+    assert mypy_gate.fichiers_neutralises(tmp_path, {"a.py"}) == {"a.py"}
 
 
-def test_g27b_fichiers_proteges_neutralises_ignore_commentaire_mypy_sans_deux_points(tmp_path):
+def test_g27b_fichiers_neutralises_ignore_commentaire_mypy_sans_deux_points(tmp_path):
     chemin = tmp_path / "a.py"
     chemin.write_bytes(b"# mypy is a great tool\nx = 1\n")
-    assert mypy_gate.fichiers_proteges_neutralises(tmp_path, {"a.py"}) == set()
+    assert mypy_gate.fichiers_neutralises(tmp_path, {"a.py"}) == set()
 
 
+# ---------------------------------------------------------------------------
 # Correctif post-revue scellée #449 (round 8) — `tests/test_rc1019_mypy_gate.py`
+# ---------------------------------------------------------------------------
+
+def test_g28_fichier_dette_avec_directive_est_detecte():
+    base = _base(dette={"server.py": 106}, total_erreurs=106)
+    anomalies = mypy_gate.anomalies(
+        reels={"server.py"},
+        erreurs={"server.py": 50},
+        base=base,
+        base_reference=None,
+        neutralises={"server.py"},
+    )
+    assert any(
+        "directive mypy inline" in m and "server.py" in m for m in anomalies
+    )
