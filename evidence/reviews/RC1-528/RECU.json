@@ -3,10 +3,10 @@
   "dossier": "RC1-528",
   "issue": 528,
   "round": 2,
-  "base_commit": "b5e928bf74d8c0dbfc3080b40fdc1a69dd0c4576",
-  "head_commit": "ce0aa8d0e08ffac92d879b842f78c44b4d303f24",
-  "head_tree": "b52cbbd9587333a5cebee6193de9c117af85fd9e",
-  "diff_digest": "25e486fa45b10cc7839634c8cd416e56f556fa36d3b164c94e5e0ac22940b965",
+  "base_commit": "b58193bee7c07d869dd66e907f53c09062cf648a",
+  "head_commit": "bfecb2268e5bb3bc6c85a56a7636fd9ded6453f3",
+  "head_tree": "1cb288a40ecfae31057dc089fbb2f5b266dc0119",
+  "diff_digest": "4cad7caf39f3f3242f57606c1937035f3b70bc36d4af3f89a5d877a1aa9b04e1",
   "prompt_sha256": "7c6c8900aad9c607a63fe171c58cf410bd4b5fd1ceb49f5b5ab6335b600ebc56",
   "reviewers_attendus": [
     "GPT-5.6-Terra-Pro",
@@ -17,6 +17,6 @@
     "fable"
   ],
   "resultat": "APPROVE",
-  "date_heure": "2026-08-16T14:36:21.412390-04:00",
+  "date_heure": "2026-08-16T14:51:46.256112-04:00",
   "fenetre_heures": 24
 }
