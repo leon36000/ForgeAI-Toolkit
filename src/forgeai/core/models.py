@@ -1,4 +1,4 @@
-"""Schémas de données centraux (architecture GLM, Phase-A/architecture-glm.md)."""
+"""Schémas de données centraux (architecture GLM, archive/phase-a/architecture-glm.md)."""
 from __future__ import annotations
 
 import json

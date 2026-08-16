@@ -110,7 +110,7 @@
       ],
       "digest": {
         "policy": "content_sha256",
-        "value": "98bd01792fb534a997d44912446771c1c05ee2bd2d09dcda4fc2a0a6dbfd432f",
+        "value": "38ce058d098f0d0761376e3403b3d0e1bff153bda5e09daf74eb75fb2880d531",
         "checked_at": "2026-08-15",
         "delegated_to": null
       },
@@ -328,8 +328,8 @@
       ],
       "digest": {
         "policy": "content_sha256",
-        "value": "59ea05cc66e2827348fbe8a3f38ac9beaf4b1d6f3baee8b345d1dbc980f17dd8",
-        "checked_at": "2026-08-14",
+        "value": "298e3c2934d36750b88c44560052db8a8f6b263d89c1f534cd2c83ea49091116",
+        "checked_at": "2026-08-16",
         "delegated_to": null
       },
       "retention": "in_force",
@@ -345,7 +345,7 @@
     {
       "id": "cursor.orchestration-rules",
       "title": "Règles Cursor d'orchestration",
-      "path": ".cursor/rules/forgeai-orchestration.mdc",
+      "path": "archive/cursor/rules/forgeai-orchestration.mdc",
       "anchor": null,
       "kind": "ide_rules",
       "scope": "ide_contract",
