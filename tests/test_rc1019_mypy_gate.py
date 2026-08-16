@@ -841,7 +841,7 @@ def test_g25_anomalies_signale_fichier_protege_neutralise():
         neutralises={"a.py"},
     )
     assert any(
-        "neutralisation" in m and "a.py" in m for m in anomalies
+        "directive mypy inline" in m and "a.py" in m for m in anomalies
     )
 
 
@@ -866,3 +866,22 @@ def test_g26_fichiers_proteges_neutralises_detecte_meme_encodage_non_utf8(tmp_pa
         b'# -*- coding: latin-1 -*-\n# mypy: ignore-errors\nx = "caf\xe9"\n'
     )
     assert mypy_gate.fichiers_proteges_neutralises(tmp_path, {"a.py"}) == {"a.py"}
+
+
+# ---------------------------------------------------------------------------
+# Correctif post-revue scellée #449 (round 8) — généralisation directive mypy
+# ---------------------------------------------------------------------------
+
+def test_g27_fichiers_proteges_neutralises_detecte_disable_error_code(tmp_path):
+    chemin = tmp_path / "a.py"
+    chemin.write_bytes(b"# mypy: disable-error-code=assignment\nx = 1\n")
+    assert mypy_gate.fichiers_proteges_neutralises(tmp_path, {"a.py"}) == {"a.py"}
+
+
+def test_g27b_fichiers_proteges_neutralises_ignore_commentaire_mypy_sans_deux_points(tmp_path):
+    chemin = tmp_path / "a.py"
+    chemin.write_bytes(b"# mypy is a great tool\nx = 1\n")
+    assert mypy_gate.fichiers_proteges_neutralises(tmp_path, {"a.py"}) == set()
+
+
+# Correctif post-revue scellée #449 (round 8) — `tests/test_rc1019_mypy_gate.py`
