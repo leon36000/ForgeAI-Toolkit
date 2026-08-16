@@ -5,8 +5,15 @@ import sys
 
 
 _MARKDOWN_LINK_RE = re.compile(r"\[[^\]]*\]\(([^)]+)\)")
+
+_KNOWN_EXTENSIONS = (
+    "md", "py", "json", "jsonl", "yaml", "yml", "txt", "toml", "cfg", "ini", "sh",
+    "js", "cjs", "mjs", "ts", "tsx", "jsx", "html", "css", "csv", "lock", "pub",
+    "gz", "mdc", "pdf", "sha256", "properties", "svg", "png", "sql", "conf",
+)
 _BACKTICK_PATH_RE = re.compile(
-    r"`([A-Za-z0-9_.][A-Za-z0-9._/-]*/[A-Za-z0-9_.-]+\.[A-Za-z0-9]{1,15})`"
+    r"`([A-Za-z0-9_.][A-Za-z0-9._/-]*/[A-Za-z0-9_.-]+\."
+    + r"(?:" + "|".join(_KNOWN_EXTENSIONS) + r"))`"
 )
 
 EXCLUDE_PREFIXES = ["CANON/adr/", "governance/decisions/"]
@@ -86,9 +93,10 @@ def check_links(paths, contents, known_paths) -> list[dict]:
                 continue
             if resolved in known_paths:
                 continue
-            root_relative = _normalize_root_relative(link)
-            if root_relative in known_paths:
-                continue
+            if ".." not in pathlib.PurePosixPath(link).parts:
+                root_relative = _normalize_root_relative(link)
+                if root_relative in known_paths:
+                    continue
             results.append(
                 {
                     "referrer": path,

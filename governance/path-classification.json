@@ -1724,7 +1724,7 @@
         },
         {
           "candidate": "AGENTS.md",
-          "line": 151,
+          "line": 159,
           "referrer": "scripts/governance/check_doc_links.py",
           "resolved": "AGENTS.md",
           "severity": "hard"
@@ -1781,6 +1781,13 @@
         {
           "candidate": "AGENTS.md",
           "line": 11,
+          "referrer": "stories/RC1-009.md",
+          "resolved": "AGENTS.md",
+          "severity": "hard"
+        },
+        {
+          "candidate": "AGENTS.md",
+          "line": 22,
           "referrer": "stories/RC1-009.md",
           "resolved": "AGENTS.md",
           "severity": "hard"
@@ -2786,7 +2793,7 @@
         },
         {
           "candidate": "CLAUDE.md",
-          "line": 152,
+          "line": 160,
           "referrer": "scripts/governance/check_doc_links.py",
           "resolved": "CLAUDE.md",
           "severity": "hard"
@@ -3516,7 +3523,7 @@
         },
         {
           "candidate": "MASTER-PLAN.md",
-          "line": 153,
+          "line": 161,
           "referrer": "scripts/governance/check_doc_links.py",
           "resolved": "MASTER-PLAN.md",
           "severity": "hard"
@@ -3824,7 +3831,7 @@
         },
         {
           "candidate": "README.md",
-          "line": 150,
+          "line": 158,
           "referrer": "scripts/governance/check_doc_links.py",
           "resolved": "README.md",
           "severity": "hard"
@@ -3853,6 +3860,13 @@
         {
           "candidate": "README.md",
           "line": 11,
+          "referrer": "stories/RC1-009.md",
+          "resolved": "README.md",
+          "severity": "hard"
+        },
+        {
+          "candidate": "README.md",
+          "line": 16,
           "referrer": "stories/RC1-009.md",
           "resolved": "README.md",
           "severity": "hard"
@@ -5680,7 +5694,7 @@
         },
         {
           "candidate": "evidence/registres/mission.jsonl",
-          "line": 30,
+          "line": 42,
           "referrer": "stories/RC1-009.md",
           "resolved": "evidence/registres/mission.jsonl",
           "severity": "hard"
@@ -25255,8 +25269,8 @@
         }
       ],
       "rule_id": "governance-scripts-governance",
-      "sha256": "0596e6ec03dbe81a929e4f38a02f4679ca8c5d1678e38bc9c4679a85534df77c",
-      "size": 4753,
+      "sha256": "c814299c7c4a95fde2de9ff6d19a694375b14300346e64b903bc02859347bce4",
+      "size": 5126,
       "target_path": null,
       "type": "text"
     },
@@ -35767,8 +35781,8 @@
       "path": "stories/RC1-009.md",
       "referenced_by": [],
       "rule_id": "governance-stories",
-      "sha256": "7ff1025c9328c5ef63a1b54c271412964e7709e75c9b9608a585d513ecb32a65",
-      "size": 2093,
+      "sha256": "fd6c473491929cee445b044a52a81ac87ac2357992417da9ec2556526227d502",
+      "size": 3273,
       "target_path": null,
       "type": "text"
     },
@@ -37621,7 +37635,7 @@
         },
         {
           "candidate": "tests/test_check_doc_links.py",
-          "line": 19,
+          "line": 31,
           "referrer": "stories/RC1-009.md",
           "resolved": "tests/test_check_doc_links.py",
           "severity": "hard"
@@ -86359,32 +86373,32 @@
       },
       {
         "candidate": "A-Za-z0-9._/-",
-        "line": 9,
+        "line": 15,
         "referrer": "scripts/governance/check_doc_links.py"
       },
       {
         "candidate": "CANON/adr/",
-        "line": 12,
+        "line": 19,
         "referrer": "scripts/governance/check_doc_links.py"
       },
       {
         "candidate": "governance/decisions/",
-        "line": 12,
+        "line": 19,
         "referrer": "scripts/governance/check_doc_links.py"
       },
       {
         "candidate": "Docs/",
-        "line": 148,
+        "line": 156,
         "referrer": "scripts/governance/check_doc_links.py"
       },
       {
         "candidate": "governance/",
-        "line": 149,
+        "line": 157,
         "referrer": "scripts/governance/check_doc_links.py"
       },
       {
         "candidate": "CANON/",
-        "line": 154,
+        "line": 162,
         "referrer": "scripts/governance/check_doc_links.py"
       },
       {
@@ -109648,18 +109662,43 @@
         "referrer": "stories/RC1-009.md"
       },
       {
+        "candidate": "phrase/en-t",
+        "line": 21,
+        "referrer": "stories/RC1-009.md"
+      },
+      {
+        "candidate": "hardware/",
+        "line": 21,
+        "referrer": "stories/RC1-009.md"
+      },
+      {
+        "candidate": "cli.py",
+        "line": 21,
+        "referrer": "stories/RC1-009.md"
+      },
+      {
+        "candidate": "src/forgeai/",
+        "line": 22,
+        "referrer": "stories/RC1-009.md"
+      },
+      {
+        "candidate": "cision/rappel",
+        "line": 24,
+        "referrer": "stories/RC1-009.md"
+      },
+      {
         "candidate": "CANON/adr/",
-        "line": 14,
+        "line": 26,
         "referrer": "stories/RC1-009.md"
       },
       {
         "candidate": "governance/decisions/",
-        "line": 14,
+        "line": 26,
         "referrer": "stories/RC1-009.md"
       },
       {
         "candidate": "CANON/",
-        "line": 22,
+        "line": 34,
         "referrer": "stories/RC1-009.md"
       },
       {
@@ -138400,28 +138439,28 @@
       },
       {
         "candidate": "README.md",
-        "line": 150,
+        "line": 158,
         "referrer": "scripts/governance/check_doc_links.py",
         "resolved": "README.md",
         "severity": "hard"
       },
       {
         "candidate": "AGENTS.md",
-        "line": 151,
+        "line": 159,
         "referrer": "scripts/governance/check_doc_links.py",
         "resolved": "AGENTS.md",
         "severity": "hard"
       },
       {
         "candidate": "CLAUDE.md",
-        "line": 152,
+        "line": 160,
         "referrer": "scripts/governance/check_doc_links.py",
         "resolved": "CLAUDE.md",
         "severity": "hard"
       },
       {
         "candidate": "MASTER-PLAN.md",
-        "line": 153,
+        "line": 161,
         "referrer": "scripts/governance/check_doc_links.py",
         "resolved": "MASTER-PLAN.md",
         "severity": "hard"
@@ -141381,15 +141420,29 @@
         "severity": "hard"
       },
       {
+        "candidate": "README.md",
+        "line": 16,
+        "referrer": "stories/RC1-009.md",
+        "resolved": "README.md",
+        "severity": "hard"
+      },
+      {
+        "candidate": "AGENTS.md",
+        "line": 22,
+        "referrer": "stories/RC1-009.md",
+        "resolved": "AGENTS.md",
+        "severity": "hard"
+      },
+      {
         "candidate": "tests/test_check_doc_links.py",
-        "line": 19,
+        "line": 31,
         "referrer": "stories/RC1-009.md",
         "resolved": "tests/test_check_doc_links.py",
         "severity": "hard"
       },
       {
         "candidate": "evidence/registres/mission.jsonl",
-        "line": 30,
+        "line": 42,
         "referrer": "stories/RC1-009.md",
         "resolved": "evidence/registres/mission.jsonl",
         "severity": "hard"
@@ -143435,7 +143488,7 @@
       "working-sandbox-readme": 1
     },
     "case_collisions_total": 0,
-    "dangling_references_total": 14738,
+    "dangling_references_total": 14743,
     "generated_total": 7,
     "load_bearing_total": 1722,
     "portability_violations_total": 0,
