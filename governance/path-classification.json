@@ -5550,7 +5550,7 @@
       "referenced_by": [
         {
           "candidate": "evidence/audit-output/audit-exhaustif-2026-08-05/findings.json",
-          "line": 422,
+          "line": 421,
           "referrer": "governance/error-handling-contracts.json",
           "resolved": "evidence/audit-output/audit-exhaustif-2026-08-05/findings.json",
           "severity": "hard"
@@ -25503,444 +25503,10 @@
         }
       ],
       "rule_id": "governance-core",
-      "sha256": "8dcd4846c0b8d44e2e00f9614362eca105e49e96878bb9e4a620b67f577b44b2",
-      "size": 16884,
+      "sha256": "78b007d9618c760dbcd5f5ff415048f3b5a8f09ac491fc50d10b95703d93df3b",
+      "size": 16874,
       "target_path": null,
       "type": "text"
-    },
-    {
-      "class": "GENERATED",
-      "generated": true,
-      "load_bearing": true,
-      "owner": "gouvernance-generateurs",
-      "path": "governance/PATH-CLASSIFICATION.md",
-      "referenced_by": [
-        {
-          "candidate": "governance/PATH-CLASSIFICATION.md",
-          "line": 8,
-          "referrer": "evidence/reviews/RC1-008-PR496-v2/DeepSeek-V4-Pro.verdict.json",
-          "resolved": "governance/PATH-CLASSIFICATION.md",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/PATH-CLASSIFICATION.md",
-          "line": 25,
-          "referrer": "evidence/reviews/RC1-008-PR496-v2/DeepSeek-V4-Pro.verdict.json",
-          "resolved": "governance/PATH-CLASSIFICATION.md",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/PATH-CLASSIFICATION.md",
-          "line": 31,
-          "referrer": "evidence/reviews/RC1-008-PR496/Kimi-2.7.verdict.json",
-          "resolved": "governance/PATH-CLASSIFICATION.md",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/PATH-CLASSIFICATION.md",
-          "line": 32,
-          "referrer": "evidence/reviews/RC1-008-PR496/Kimi-2.7.verdict.json",
-          "resolved": "governance/PATH-CLASSIFICATION.md",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/PATH-CLASSIFICATION.md",
-          "line": 8,
-          "referrer": "evidence/reviews/RC1-009-PR500-v1/DeepSeek-V4-Pro.verdict.json",
-          "resolved": "governance/PATH-CLASSIFICATION.md",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/PATH-CLASSIFICATION.md",
-          "line": 6,
-          "referrer": "evidence/reviews/RC1-010-lot5b-PR510-v1/DeepSeek-V4-Pro.verdict.json",
-          "resolved": "governance/PATH-CLASSIFICATION.md",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/PATH-CLASSIFICATION.md",
-          "line": 6,
-          "referrer": "evidence/reviews/RC1-010-lot5b-PR510-v1/Kimi-2.7.verdict.json",
-          "resolved": "governance/PATH-CLASSIFICATION.md",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/PATH-CLASSIFICATION.md",
-          "line": 8,
-          "referrer": "evidence/reviews/RC1-010-lot5b-PR510-v1/Kimi-2.7.verdict.json",
-          "resolved": "governance/PATH-CLASSIFICATION.md",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/PATH-CLASSIFICATION.md",
-          "line": 7,
-          "referrer": "evidence/reviews/RC1-010-lot5b-PR510-v2/Kimi-2.7.verdict.json",
-          "resolved": "governance/PATH-CLASSIFICATION.md",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/PATH-CLASSIFICATION.md",
-          "line": 8,
-          "referrer": "evidence/reviews/RC1-010-lot5b-PR510-v2/Kimi-2.7.verdict.json",
-          "resolved": "governance/PATH-CLASSIFICATION.md",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/PATH-CLASSIFICATION.md",
-          "line": 6,
-          "referrer": "evidence/reviews/RC1-010-lot5b-PR510-v3/DeepSeek-V4-Pro.verdict.json",
-          "resolved": "governance/PATH-CLASSIFICATION.md",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/PATH-CLASSIFICATION.md",
-          "line": 6,
-          "referrer": "evidence/reviews/RC1-010-lot5b-PR510-v4/DeepSeek-V4-Pro.verdict.json",
-          "resolved": "governance/PATH-CLASSIFICATION.md",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/PATH-CLASSIFICATION.md",
-          "line": 8,
-          "referrer": "evidence/reviews/RC1-010-lot5b-PR510-v4/DeepSeek-V4-Pro.verdict.json",
-          "resolved": "governance/PATH-CLASSIFICATION.md",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/PATH-CLASSIFICATION.md",
-          "line": 7,
-          "referrer": "evidence/reviews/RC1-010-lot5b-PR510-v4/Kimi-2.7.verdict.json",
-          "resolved": "governance/PATH-CLASSIFICATION.md",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/PATH-CLASSIFICATION.md",
-          "line": 8,
-          "referrer": "evidence/reviews/RC1-010-lot5b-PR510-v4/Kimi-2.7.verdict.json",
-          "resolved": "governance/PATH-CLASSIFICATION.md",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/PATH-CLASSIFICATION.md",
-          "line": 6,
-          "referrer": "evidence/reviews/RC1-010-lot5c-PR516-v1/DeepSeek-V4-Pro.verdict.json",
-          "resolved": "governance/PATH-CLASSIFICATION.md",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/PATH-CLASSIFICATION.md",
-          "line": 6,
-          "referrer": "evidence/reviews/RC1-010-lot5c-PR516-v1/Kimi-2.7.verdict.json",
-          "resolved": "governance/PATH-CLASSIFICATION.md",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/PATH-CLASSIFICATION.md",
-          "line": 8,
-          "referrer": "evidence/reviews/RC1-010-lot5c-PR516-v1/Kimi-2.7.verdict.json",
-          "resolved": "governance/PATH-CLASSIFICATION.md",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/PATH-CLASSIFICATION.md",
-          "line": 12,
-          "referrer": "evidence/reviews/RC1-010-lot5c-PR516-v1/Kimi-2.7.verdict.json",
-          "resolved": "governance/PATH-CLASSIFICATION.md",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/PATH-CLASSIFICATION.md",
-          "line": 14,
-          "referrer": "evidence/reviews/RC1-010-lot5c-PR516-v1/Kimi-2.7.verdict.json",
-          "resolved": "governance/PATH-CLASSIFICATION.md",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/PATH-CLASSIFICATION.md",
-          "line": 24,
-          "referrer": "evidence/reviews/RC1-010-lot5d-PR-v1/DeepSeek-V4-Pro.verdict.json",
-          "resolved": "governance/PATH-CLASSIFICATION.md",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/PATH-CLASSIFICATION.md",
-          "line": 26,
-          "referrer": "evidence/reviews/RC1-010-lot5d-PR-v1/DeepSeek-V4-Pro.verdict.json",
-          "resolved": "governance/PATH-CLASSIFICATION.md",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/PATH-CLASSIFICATION.md",
-          "line": 190,
-          "referrer": "governance/path-classification-rules.json",
-          "resolved": "governance/PATH-CLASSIFICATION.md",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/PATH-CLASSIFICATION.md",
-          "line": 797,
-          "referrer": "scripts/governance/classify_paths.py",
-          "resolved": "governance/PATH-CLASSIFICATION.md",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/PATH-CLASSIFICATION.md",
-          "line": 803,
-          "referrer": "scripts/governance/classify_paths.py",
-          "resolved": "governance/PATH-CLASSIFICATION.md",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/PATH-CLASSIFICATION.md",
-          "line": 249,
-          "referrer": "scripts/revue.py",
-          "resolved": "governance/PATH-CLASSIFICATION.md",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/PATH-CLASSIFICATION.md",
-          "line": 212,
-          "referrer": "stories/RC1-011.md",
-          "resolved": "governance/PATH-CLASSIFICATION.md",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/PATH-CLASSIFICATION.md",
-          "line": 42,
-          "referrer": "stories/RC1-504.md",
-          "resolved": "governance/PATH-CLASSIFICATION.md",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/PATH-CLASSIFICATION.md",
-          "line": 60,
-          "referrer": "stories/RC1-504.md",
-          "resolved": "governance/PATH-CLASSIFICATION.md",
-          "severity": "hard"
-        }
-      ],
-      "rule_id": "generated-path-classification-markdown",
-      "sha256": null,
-      "size": null,
-      "target_path": null,
-      "type": null
-    },
-    {
-      "class": "GENERATED",
-      "generated": true,
-      "load_bearing": true,
-      "owner": "gouvernance-generateurs",
-      "path": "governance/PATH-CLASSIFICATION.md",
-      "referenced_by": [
-        {
-          "candidate": "governance/PATH-CLASSIFICATION.md",
-          "line": 8,
-          "referrer": "evidence/reviews/RC1-008-PR496-v2/DeepSeek-V4-Pro.verdict.json",
-          "resolved": "governance/PATH-CLASSIFICATION.md",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/PATH-CLASSIFICATION.md",
-          "line": 25,
-          "referrer": "evidence/reviews/RC1-008-PR496-v2/DeepSeek-V4-Pro.verdict.json",
-          "resolved": "governance/PATH-CLASSIFICATION.md",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/PATH-CLASSIFICATION.md",
-          "line": 31,
-          "referrer": "evidence/reviews/RC1-008-PR496/Kimi-2.7.verdict.json",
-          "resolved": "governance/PATH-CLASSIFICATION.md",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/PATH-CLASSIFICATION.md",
-          "line": 32,
-          "referrer": "evidence/reviews/RC1-008-PR496/Kimi-2.7.verdict.json",
-          "resolved": "governance/PATH-CLASSIFICATION.md",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/PATH-CLASSIFICATION.md",
-          "line": 8,
-          "referrer": "evidence/reviews/RC1-009-PR500-v1/DeepSeek-V4-Pro.verdict.json",
-          "resolved": "governance/PATH-CLASSIFICATION.md",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/PATH-CLASSIFICATION.md",
-          "line": 6,
-          "referrer": "evidence/reviews/RC1-010-lot5b-PR510-v1/DeepSeek-V4-Pro.verdict.json",
-          "resolved": "governance/PATH-CLASSIFICATION.md",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/PATH-CLASSIFICATION.md",
-          "line": 6,
-          "referrer": "evidence/reviews/RC1-010-lot5b-PR510-v1/Kimi-2.7.verdict.json",
-          "resolved": "governance/PATH-CLASSIFICATION.md",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/PATH-CLASSIFICATION.md",
-          "line": 8,
-          "referrer": "evidence/reviews/RC1-010-lot5b-PR510-v1/Kimi-2.7.verdict.json",
-          "resolved": "governance/PATH-CLASSIFICATION.md",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/PATH-CLASSIFICATION.md",
-          "line": 7,
-          "referrer": "evidence/reviews/RC1-010-lot5b-PR510-v2/Kimi-2.7.verdict.json",
-          "resolved": "governance/PATH-CLASSIFICATION.md",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/PATH-CLASSIFICATION.md",
-          "line": 8,
-          "referrer": "evidence/reviews/RC1-010-lot5b-PR510-v2/Kimi-2.7.verdict.json",
-          "resolved": "governance/PATH-CLASSIFICATION.md",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/PATH-CLASSIFICATION.md",
-          "line": 6,
-          "referrer": "evidence/reviews/RC1-010-lot5b-PR510-v3/DeepSeek-V4-Pro.verdict.json",
-          "resolved": "governance/PATH-CLASSIFICATION.md",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/PATH-CLASSIFICATION.md",
-          "line": 6,
-          "referrer": "evidence/reviews/RC1-010-lot5b-PR510-v4/DeepSeek-V4-Pro.verdict.json",
-          "resolved": "governance/PATH-CLASSIFICATION.md",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/PATH-CLASSIFICATION.md",
-          "line": 8,
-          "referrer": "evidence/reviews/RC1-010-lot5b-PR510-v4/DeepSeek-V4-Pro.verdict.json",
-          "resolved": "governance/PATH-CLASSIFICATION.md",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/PATH-CLASSIFICATION.md",
-          "line": 7,
-          "referrer": "evidence/reviews/RC1-010-lot5b-PR510-v4/Kimi-2.7.verdict.json",
-          "resolved": "governance/PATH-CLASSIFICATION.md",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/PATH-CLASSIFICATION.md",
-          "line": 8,
-          "referrer": "evidence/reviews/RC1-010-lot5b-PR510-v4/Kimi-2.7.verdict.json",
-          "resolved": "governance/PATH-CLASSIFICATION.md",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/PATH-CLASSIFICATION.md",
-          "line": 6,
-          "referrer": "evidence/reviews/RC1-010-lot5c-PR516-v1/DeepSeek-V4-Pro.verdict.json",
-          "resolved": "governance/PATH-CLASSIFICATION.md",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/PATH-CLASSIFICATION.md",
-          "line": 6,
-          "referrer": "evidence/reviews/RC1-010-lot5c-PR516-v1/Kimi-2.7.verdict.json",
-          "resolved": "governance/PATH-CLASSIFICATION.md",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/PATH-CLASSIFICATION.md",
-          "line": 8,
-          "referrer": "evidence/reviews/RC1-010-lot5c-PR516-v1/Kimi-2.7.verdict.json",
-          "resolved": "governance/PATH-CLASSIFICATION.md",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/PATH-CLASSIFICATION.md",
-          "line": 12,
-          "referrer": "evidence/reviews/RC1-010-lot5c-PR516-v1/Kimi-2.7.verdict.json",
-          "resolved": "governance/PATH-CLASSIFICATION.md",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/PATH-CLASSIFICATION.md",
-          "line": 14,
-          "referrer": "evidence/reviews/RC1-010-lot5c-PR516-v1/Kimi-2.7.verdict.json",
-          "resolved": "governance/PATH-CLASSIFICATION.md",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/PATH-CLASSIFICATION.md",
-          "line": 24,
-          "referrer": "evidence/reviews/RC1-010-lot5d-PR-v1/DeepSeek-V4-Pro.verdict.json",
-          "resolved": "governance/PATH-CLASSIFICATION.md",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/PATH-CLASSIFICATION.md",
-          "line": 26,
-          "referrer": "evidence/reviews/RC1-010-lot5d-PR-v1/DeepSeek-V4-Pro.verdict.json",
-          "resolved": "governance/PATH-CLASSIFICATION.md",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/PATH-CLASSIFICATION.md",
-          "line": 190,
-          "referrer": "governance/path-classification-rules.json",
-          "resolved": "governance/PATH-CLASSIFICATION.md",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/PATH-CLASSIFICATION.md",
-          "line": 797,
-          "referrer": "scripts/governance/classify_paths.py",
-          "resolved": "governance/PATH-CLASSIFICATION.md",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/PATH-CLASSIFICATION.md",
-          "line": 803,
-          "referrer": "scripts/governance/classify_paths.py",
-          "resolved": "governance/PATH-CLASSIFICATION.md",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/PATH-CLASSIFICATION.md",
-          "line": 249,
-          "referrer": "scripts/revue.py",
-          "resolved": "governance/PATH-CLASSIFICATION.md",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/PATH-CLASSIFICATION.md",
-          "line": 212,
-          "referrer": "stories/RC1-011.md",
-          "resolved": "governance/PATH-CLASSIFICATION.md",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/PATH-CLASSIFICATION.md",
-          "line": 42,
-          "referrer": "stories/RC1-504.md",
-          "resolved": "governance/PATH-CLASSIFICATION.md",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/PATH-CLASSIFICATION.md",
-          "line": 60,
-          "referrer": "stories/RC1-504.md",
-          "resolved": "governance/PATH-CLASSIFICATION.md",
-          "severity": "hard"
-        }
-      ],
-      "rule_id": "generated-path-classification-markdown",
-      "sha256": null,
-      "size": null,
-      "target_path": null,
-      "type": null
     },
     {
       "class": "GENERATED",
@@ -27026,8 +26592,8 @@
         }
       ],
       "rule_id": "governance-core",
-      "sha256": "ae841d7654c4e49cec91a3ae6e879b413862520bb7fb13e5279d727f549542d6",
-      "size": 70405,
+      "sha256": "699df4dea4b3e596282b6b7acbfe2205f982995c4403078410f3e81a173754b8",
+      "size": 70713,
       "target_path": null,
       "type": "text"
     },
@@ -27156,762 +26722,6 @@
       "size": 25947,
       "target_path": null,
       "type": "text"
-    },
-    {
-      "class": "GENERATED",
-      "generated": true,
-      "load_bearing": true,
-      "owner": "gouvernance-generateurs",
-      "path": "governance/path-classification.json",
-      "referenced_by": [
-        {
-          "candidate": "governance/path-classification.json",
-          "line": 25,
-          "referrer": "evidence/reviews/RC1-008-PR496-v2/DeepSeek-V4-Pro.verdict.json",
-          "resolved": "governance/path-classification.json",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/path-classification.json",
-          "line": 24,
-          "referrer": "evidence/reviews/RC1-008-PR496-v5/DeepSeek-V4-Pro.verdict.json",
-          "resolved": "governance/path-classification.json",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/path-classification.json",
-          "line": 26,
-          "referrer": "evidence/reviews/RC1-008-PR496-v5/DeepSeek-V4-Pro.verdict.json",
-          "resolved": "governance/path-classification.json",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/path-classification.json",
-          "line": 31,
-          "referrer": "evidence/reviews/RC1-008-PR496/Kimi-2.7.verdict.json",
-          "resolved": "governance/path-classification.json",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/path-classification.json",
-          "line": 32,
-          "referrer": "evidence/reviews/RC1-008-PR496/Kimi-2.7.verdict.json",
-          "resolved": "governance/path-classification.json",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/path-classification.json",
-          "line": 6,
-          "referrer": "evidence/reviews/RC1-009-PR500-v1/DeepSeek-V4-Pro.verdict.json",
-          "resolved": "governance/path-classification.json",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/path-classification.json",
-          "line": 8,
-          "referrer": "evidence/reviews/RC1-009-PR500-v1/DeepSeek-V4-Pro.verdict.json",
-          "resolved": "governance/path-classification.json",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/path-classification.json",
-          "line": 6,
-          "referrer": "evidence/reviews/RC1-009-PR500-v3/DeepSeek-V4-Pro.verdict.json",
-          "resolved": "governance/path-classification.json",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/path-classification.json",
-          "line": 8,
-          "referrer": "evidence/reviews/RC1-009-PR500-v3/DeepSeek-V4-Pro.verdict.json",
-          "resolved": "governance/path-classification.json",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/path-classification.json",
-          "line": 18,
-          "referrer": "evidence/reviews/RC1-010-lot0-PR501-v1/DeepSeek-V4-Pro.verdict.json",
-          "resolved": "governance/path-classification.json",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/path-classification.json",
-          "line": 20,
-          "referrer": "evidence/reviews/RC1-010-lot0-PR501-v1/DeepSeek-V4-Pro.verdict.json",
-          "resolved": "governance/path-classification.json",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/path-classification.json",
-          "line": 6,
-          "referrer": "evidence/reviews/RC1-010-lot0-PR501-v2/DeepSeek-V4-Pro.verdict.json",
-          "resolved": "governance/path-classification.json",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/path-classification.json",
-          "line": 8,
-          "referrer": "evidence/reviews/RC1-010-lot0-PR501-v2/DeepSeek-V4-Pro.verdict.json",
-          "resolved": "governance/path-classification.json",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/path-classification.json",
-          "line": 8,
-          "referrer": "evidence/reviews/RC1-010-lot2-PR503-v1/DeepSeek-V4-Pro.verdict.json",
-          "resolved": "governance/path-classification.json",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/path-classification.json",
-          "line": 14,
-          "referrer": "evidence/reviews/RC1-010-lot2-PR503-v1/DeepSeek-V4-Pro.verdict.json",
-          "resolved": "governance/path-classification.json",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/path-classification.json",
-          "line": 20,
-          "referrer": "evidence/reviews/RC1-010-lot2-PR503-v1/DeepSeek-V4-Pro.verdict.json",
-          "resolved": "governance/path-classification.json",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/path-classification.json",
-          "line": 26,
-          "referrer": "evidence/reviews/RC1-010-lot2-PR503-v1/DeepSeek-V4-Pro.verdict.json",
-          "resolved": "governance/path-classification.json",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/path-classification.json",
-          "line": 8,
-          "referrer": "evidence/reviews/RC1-010-lot2-PR503-v2/DeepSeek-V4-Pro.verdict.json",
-          "resolved": "governance/path-classification.json",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/path-classification.json",
-          "line": 6,
-          "referrer": "evidence/reviews/RC1-010-lot2-PR503-v3/DeepSeek-V4-Pro.verdict.json",
-          "resolved": "governance/path-classification.json",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/path-classification.json",
-          "line": 8,
-          "referrer": "evidence/reviews/RC1-010-lot2-PR503-v3/DeepSeek-V4-Pro.verdict.json",
-          "resolved": "governance/path-classification.json",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/path-classification.json",
-          "line": 8,
-          "referrer": "evidence/reviews/RC1-010-lot2-PR503-v3/Qwen3.7-Max.verdict.json",
-          "resolved": "governance/path-classification.json",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/path-classification.json",
-          "line": 6,
-          "referrer": "evidence/reviews/RC1-010-lot2-PR503-v4/DeepSeek-V4-Pro.verdict.json",
-          "resolved": "governance/path-classification.json",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/path-classification.json",
-          "line": 8,
-          "referrer": "evidence/reviews/RC1-010-lot2-PR503-v4/DeepSeek-V4-Pro.verdict.json",
-          "resolved": "governance/path-classification.json",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/path-classification.json",
-          "line": 7,
-          "referrer": "evidence/reviews/RC1-010-lot4-PR507-v1/DeepSeek-V4-Pro.verdict.json",
-          "resolved": "governance/path-classification.json",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/path-classification.json",
-          "line": 6,
-          "referrer": "evidence/reviews/RC1-010-lot5a-PR508-v1/DeepSeek-V4-Pro.verdict.json",
-          "resolved": "governance/path-classification.json",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/path-classification.json",
-          "line": 8,
-          "referrer": "evidence/reviews/RC1-010-lot5a-PR508-v1/DeepSeek-V4-Pro.verdict.json",
-          "resolved": "governance/path-classification.json",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/path-classification.json",
-          "line": 7,
-          "referrer": "evidence/reviews/RC1-010-lot5b-PR510-v1/Kimi-2.7.verdict.json",
-          "resolved": "governance/path-classification.json",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/path-classification.json",
-          "line": 6,
-          "referrer": "evidence/reviews/RC1-010-lot5b-PR510-v2/Kimi-2.7.verdict.json",
-          "resolved": "governance/path-classification.json",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/path-classification.json",
-          "line": 8,
-          "referrer": "evidence/reviews/RC1-010-lot5b-PR510-v2/Kimi-2.7.verdict.json",
-          "resolved": "governance/path-classification.json",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/path-classification.json",
-          "line": 8,
-          "referrer": "evidence/reviews/RC1-010-lot5b-PR510-v2/Kimi-2.7.verdict.json",
-          "resolved": "governance/path-classification.json",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/path-classification.json",
-          "line": 6,
-          "referrer": "evidence/reviews/RC1-010-lot5b-PR510-v4/Kimi-2.7.verdict.json",
-          "resolved": "governance/path-classification.json",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/path-classification.json",
-          "line": 8,
-          "referrer": "evidence/reviews/RC1-010-lot5b-PR510-v4/Kimi-2.7.verdict.json",
-          "resolved": "governance/path-classification.json",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/path-classification.json",
-          "line": 8,
-          "referrer": "evidence/reviews/RC1-010-lot5b-PR510-v4/Kimi-2.7.verdict.json",
-          "resolved": "governance/path-classification.json",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/path-classification.json",
-          "line": 7,
-          "referrer": "evidence/reviews/RC1-504-v1/Kimi-2.7.verdict.json",
-          "resolved": "governance/path-classification.json",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/path-classification.json",
-          "line": 12,
-          "referrer": "evidence/reviews/RC1-504-v1/Kimi-2.7.verdict.json",
-          "resolved": "governance/path-classification.json",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/path-classification.json",
-          "line": 14,
-          "referrer": "evidence/reviews/RC1-504-v1/Kimi-2.7.verdict.json",
-          "resolved": "governance/path-classification.json",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/path-classification.json",
-          "line": 176,
-          "referrer": "governance/path-classification-rules.json",
-          "resolved": "governance/path-classification.json",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/path-classification.json",
-          "line": 5,
-          "referrer": "governance/path-classification.schema.json",
-          "resolved": "governance/path-classification.json",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/path-classification.json",
-          "line": 723,
-          "referrer": "scripts/governance/classify_paths.py",
-          "resolved": "governance/path-classification.json",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/path-classification.json",
-          "line": 751,
-          "referrer": "scripts/governance/classify_paths.py",
-          "resolved": "governance/path-classification.json",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/path-classification.json",
-          "line": 766,
-          "referrer": "scripts/governance/classify_paths.py",
-          "resolved": "governance/path-classification.json",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/path-classification.json",
-          "line": 236,
-          "referrer": "scripts/revue.py",
-          "resolved": "governance/path-classification.json",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/path-classification.json",
-          "line": 248,
-          "referrer": "scripts/revue.py",
-          "resolved": "governance/path-classification.json",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/path-classification.json",
-          "line": 211,
-          "referrer": "stories/RC1-011.md",
-          "resolved": "governance/path-classification.json",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/path-classification.json",
-          "line": 15,
-          "referrer": "stories/RC1-504.md",
-          "resolved": "governance/path-classification.json",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/path-classification.json",
-          "line": 31,
-          "referrer": "stories/RC1-504.md",
-          "resolved": "governance/path-classification.json",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/path-classification.json",
-          "line": 42,
-          "referrer": "stories/RC1-504.md",
-          "resolved": "governance/path-classification.json",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/path-classification.json",
-          "line": 60,
-          "referrer": "stories/RC1-504.md",
-          "resolved": "governance/path-classification.json",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/path-classification.json",
-          "line": 763,
-          "referrer": "tests/test_classify_paths.py",
-          "resolved": "governance/path-classification.json",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/path-classification.json",
-          "line": 919,
-          "referrer": "tests/test_classify_paths.py",
-          "resolved": "governance/path-classification.json",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/path-classification.json",
-          "line": 951,
-          "referrer": "tests/test_classify_paths.py",
-          "resolved": "governance/path-classification.json",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/path-classification.json",
-          "line": 246,
-          "referrer": "tests/test_revue.py",
-          "resolved": "governance/path-classification.json",
-          "severity": "hard"
-        }
-      ],
-      "rule_id": "generated-path-classification-json",
-      "sha256": null,
-      "size": null,
-      "target_path": null,
-      "type": null
-    },
-    {
-      "class": "GENERATED",
-      "generated": true,
-      "load_bearing": true,
-      "owner": "gouvernance-generateurs",
-      "path": "governance/path-classification.json",
-      "referenced_by": [
-        {
-          "candidate": "governance/path-classification.json",
-          "line": 25,
-          "referrer": "evidence/reviews/RC1-008-PR496-v2/DeepSeek-V4-Pro.verdict.json",
-          "resolved": "governance/path-classification.json",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/path-classification.json",
-          "line": 24,
-          "referrer": "evidence/reviews/RC1-008-PR496-v5/DeepSeek-V4-Pro.verdict.json",
-          "resolved": "governance/path-classification.json",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/path-classification.json",
-          "line": 26,
-          "referrer": "evidence/reviews/RC1-008-PR496-v5/DeepSeek-V4-Pro.verdict.json",
-          "resolved": "governance/path-classification.json",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/path-classification.json",
-          "line": 31,
-          "referrer": "evidence/reviews/RC1-008-PR496/Kimi-2.7.verdict.json",
-          "resolved": "governance/path-classification.json",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/path-classification.json",
-          "line": 32,
-          "referrer": "evidence/reviews/RC1-008-PR496/Kimi-2.7.verdict.json",
-          "resolved": "governance/path-classification.json",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/path-classification.json",
-          "line": 6,
-          "referrer": "evidence/reviews/RC1-009-PR500-v1/DeepSeek-V4-Pro.verdict.json",
-          "resolved": "governance/path-classification.json",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/path-classification.json",
-          "line": 8,
-          "referrer": "evidence/reviews/RC1-009-PR500-v1/DeepSeek-V4-Pro.verdict.json",
-          "resolved": "governance/path-classification.json",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/path-classification.json",
-          "line": 6,
-          "referrer": "evidence/reviews/RC1-009-PR500-v3/DeepSeek-V4-Pro.verdict.json",
-          "resolved": "governance/path-classification.json",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/path-classification.json",
-          "line": 8,
-          "referrer": "evidence/reviews/RC1-009-PR500-v3/DeepSeek-V4-Pro.verdict.json",
-          "resolved": "governance/path-classification.json",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/path-classification.json",
-          "line": 18,
-          "referrer": "evidence/reviews/RC1-010-lot0-PR501-v1/DeepSeek-V4-Pro.verdict.json",
-          "resolved": "governance/path-classification.json",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/path-classification.json",
-          "line": 20,
-          "referrer": "evidence/reviews/RC1-010-lot0-PR501-v1/DeepSeek-V4-Pro.verdict.json",
-          "resolved": "governance/path-classification.json",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/path-classification.json",
-          "line": 6,
-          "referrer": "evidence/reviews/RC1-010-lot0-PR501-v2/DeepSeek-V4-Pro.verdict.json",
-          "resolved": "governance/path-classification.json",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/path-classification.json",
-          "line": 8,
-          "referrer": "evidence/reviews/RC1-010-lot0-PR501-v2/DeepSeek-V4-Pro.verdict.json",
-          "resolved": "governance/path-classification.json",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/path-classification.json",
-          "line": 8,
-          "referrer": "evidence/reviews/RC1-010-lot2-PR503-v1/DeepSeek-V4-Pro.verdict.json",
-          "resolved": "governance/path-classification.json",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/path-classification.json",
-          "line": 14,
-          "referrer": "evidence/reviews/RC1-010-lot2-PR503-v1/DeepSeek-V4-Pro.verdict.json",
-          "resolved": "governance/path-classification.json",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/path-classification.json",
-          "line": 20,
-          "referrer": "evidence/reviews/RC1-010-lot2-PR503-v1/DeepSeek-V4-Pro.verdict.json",
-          "resolved": "governance/path-classification.json",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/path-classification.json",
-          "line": 26,
-          "referrer": "evidence/reviews/RC1-010-lot2-PR503-v1/DeepSeek-V4-Pro.verdict.json",
-          "resolved": "governance/path-classification.json",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/path-classification.json",
-          "line": 8,
-          "referrer": "evidence/reviews/RC1-010-lot2-PR503-v2/DeepSeek-V4-Pro.verdict.json",
-          "resolved": "governance/path-classification.json",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/path-classification.json",
-          "line": 6,
-          "referrer": "evidence/reviews/RC1-010-lot2-PR503-v3/DeepSeek-V4-Pro.verdict.json",
-          "resolved": "governance/path-classification.json",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/path-classification.json",
-          "line": 8,
-          "referrer": "evidence/reviews/RC1-010-lot2-PR503-v3/DeepSeek-V4-Pro.verdict.json",
-          "resolved": "governance/path-classification.json",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/path-classification.json",
-          "line": 8,
-          "referrer": "evidence/reviews/RC1-010-lot2-PR503-v3/Qwen3.7-Max.verdict.json",
-          "resolved": "governance/path-classification.json",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/path-classification.json",
-          "line": 6,
-          "referrer": "evidence/reviews/RC1-010-lot2-PR503-v4/DeepSeek-V4-Pro.verdict.json",
-          "resolved": "governance/path-classification.json",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/path-classification.json",
-          "line": 8,
-          "referrer": "evidence/reviews/RC1-010-lot2-PR503-v4/DeepSeek-V4-Pro.verdict.json",
-          "resolved": "governance/path-classification.json",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/path-classification.json",
-          "line": 7,
-          "referrer": "evidence/reviews/RC1-010-lot4-PR507-v1/DeepSeek-V4-Pro.verdict.json",
-          "resolved": "governance/path-classification.json",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/path-classification.json",
-          "line": 6,
-          "referrer": "evidence/reviews/RC1-010-lot5a-PR508-v1/DeepSeek-V4-Pro.verdict.json",
-          "resolved": "governance/path-classification.json",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/path-classification.json",
-          "line": 8,
-          "referrer": "evidence/reviews/RC1-010-lot5a-PR508-v1/DeepSeek-V4-Pro.verdict.json",
-          "resolved": "governance/path-classification.json",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/path-classification.json",
-          "line": 7,
-          "referrer": "evidence/reviews/RC1-010-lot5b-PR510-v1/Kimi-2.7.verdict.json",
-          "resolved": "governance/path-classification.json",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/path-classification.json",
-          "line": 6,
-          "referrer": "evidence/reviews/RC1-010-lot5b-PR510-v2/Kimi-2.7.verdict.json",
-          "resolved": "governance/path-classification.json",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/path-classification.json",
-          "line": 8,
-          "referrer": "evidence/reviews/RC1-010-lot5b-PR510-v2/Kimi-2.7.verdict.json",
-          "resolved": "governance/path-classification.json",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/path-classification.json",
-          "line": 8,
-          "referrer": "evidence/reviews/RC1-010-lot5b-PR510-v2/Kimi-2.7.verdict.json",
-          "resolved": "governance/path-classification.json",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/path-classification.json",
-          "line": 6,
-          "referrer": "evidence/reviews/RC1-010-lot5b-PR510-v4/Kimi-2.7.verdict.json",
-          "resolved": "governance/path-classification.json",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/path-classification.json",
-          "line": 8,
-          "referrer": "evidence/reviews/RC1-010-lot5b-PR510-v4/Kimi-2.7.verdict.json",
-          "resolved": "governance/path-classification.json",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/path-classification.json",
-          "line": 8,
-          "referrer": "evidence/reviews/RC1-010-lot5b-PR510-v4/Kimi-2.7.verdict.json",
-          "resolved": "governance/path-classification.json",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/path-classification.json",
-          "line": 7,
-          "referrer": "evidence/reviews/RC1-504-v1/Kimi-2.7.verdict.json",
-          "resolved": "governance/path-classification.json",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/path-classification.json",
-          "line": 12,
-          "referrer": "evidence/reviews/RC1-504-v1/Kimi-2.7.verdict.json",
-          "resolved": "governance/path-classification.json",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/path-classification.json",
-          "line": 14,
-          "referrer": "evidence/reviews/RC1-504-v1/Kimi-2.7.verdict.json",
-          "resolved": "governance/path-classification.json",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/path-classification.json",
-          "line": 176,
-          "referrer": "governance/path-classification-rules.json",
-          "resolved": "governance/path-classification.json",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/path-classification.json",
-          "line": 5,
-          "referrer": "governance/path-classification.schema.json",
-          "resolved": "governance/path-classification.json",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/path-classification.json",
-          "line": 723,
-          "referrer": "scripts/governance/classify_paths.py",
-          "resolved": "governance/path-classification.json",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/path-classification.json",
-          "line": 751,
-          "referrer": "scripts/governance/classify_paths.py",
-          "resolved": "governance/path-classification.json",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/path-classification.json",
-          "line": 766,
-          "referrer": "scripts/governance/classify_paths.py",
-          "resolved": "governance/path-classification.json",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/path-classification.json",
-          "line": 236,
-          "referrer": "scripts/revue.py",
-          "resolved": "governance/path-classification.json",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/path-classification.json",
-          "line": 248,
-          "referrer": "scripts/revue.py",
-          "resolved": "governance/path-classification.json",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/path-classification.json",
-          "line": 211,
-          "referrer": "stories/RC1-011.md",
-          "resolved": "governance/path-classification.json",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/path-classification.json",
-          "line": 15,
-          "referrer": "stories/RC1-504.md",
-          "resolved": "governance/path-classification.json",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/path-classification.json",
-          "line": 31,
-          "referrer": "stories/RC1-504.md",
-          "resolved": "governance/path-classification.json",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/path-classification.json",
-          "line": 42,
-          "referrer": "stories/RC1-504.md",
-          "resolved": "governance/path-classification.json",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/path-classification.json",
-          "line": 60,
-          "referrer": "stories/RC1-504.md",
-          "resolved": "governance/path-classification.json",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/path-classification.json",
-          "line": 763,
-          "referrer": "tests/test_classify_paths.py",
-          "resolved": "governance/path-classification.json",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/path-classification.json",
-          "line": 919,
-          "referrer": "tests/test_classify_paths.py",
-          "resolved": "governance/path-classification.json",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/path-classification.json",
-          "line": 951,
-          "referrer": "tests/test_classify_paths.py",
-          "resolved": "governance/path-classification.json",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/path-classification.json",
-          "line": 246,
-          "referrer": "tests/test_revue.py",
-          "resolved": "governance/path-classification.json",
-          "severity": "hard"
-        }
-      ],
-      "rule_id": "generated-path-classification-json",
-      "sha256": null,
-      "size": null,
-      "target_path": null,
-      "type": null
     },
     {
       "class": "GENERATED",
@@ -34250,14 +33060,14 @@
         },
         {
           "candidate": "src/forgeai/core/proc.py",
-          "line": 587,
+          "line": 586,
           "referrer": "governance/error-handling-contracts.json",
           "resolved": "src/forgeai/core/proc.py",
           "severity": "hard"
         },
         {
           "candidate": "src/forgeai/core/proc.py",
-          "line": 589,
+          "line": 588,
           "referrer": "governance/error-handling-contracts.json",
           "resolved": "src/forgeai/core/proc.py",
           "severity": "hard"
@@ -37029,28 +35839,28 @@
         },
         {
           "candidate": "src/forgeai/hardware/detect.py",
-          "line": 611,
+          "line": 610,
           "referrer": "governance/error-handling-contracts.json",
           "resolved": "src/forgeai/hardware/detect.py",
           "severity": "hard"
         },
         {
           "candidate": "src/forgeai/hardware/detect.py",
-          "line": 613,
+          "line": 612,
           "referrer": "governance/error-handling-contracts.json",
           "resolved": "src/forgeai/hardware/detect.py",
           "severity": "hard"
         },
         {
           "candidate": "src/forgeai/hardware/detect.py",
-          "line": 632,
+          "line": 631,
           "referrer": "governance/error-handling-contracts.json",
           "resolved": "src/forgeai/hardware/detect.py",
           "severity": "hard"
         },
         {
           "candidate": "src/forgeai/hardware/detect.py",
-          "line": 634,
+          "line": 633,
           "referrer": "governance/error-handling-contracts.json",
           "resolved": "src/forgeai/hardware/detect.py",
           "severity": "hard"
@@ -39136,14 +37946,14 @@
         },
         {
           "candidate": "src/forgeai/network/remote_probe.py",
-          "line": 313,
+          "line": 312,
           "referrer": "governance/error-handling-contracts.json",
           "resolved": "src/forgeai/network/remote_probe.py",
           "severity": "hard"
         },
         {
           "candidate": "src/forgeai/network/remote_probe.py",
-          "line": 315,
+          "line": 314,
           "referrer": "governance/error-handling-contracts.json",
           "resolved": "src/forgeai/network/remote_probe.py",
           "severity": "hard"
@@ -39290,14 +38100,14 @@
         },
         {
           "candidate": "src/forgeai/observability/langfuse.py",
-          "line": 337,
+          "line": 336,
           "referrer": "governance/error-handling-contracts.json",
           "resolved": "src/forgeai/observability/langfuse.py",
           "severity": "hard"
         },
         {
           "candidate": "src/forgeai/observability/langfuse.py",
-          "line": 339,
+          "line": 338,
           "referrer": "governance/error-handling-contracts.json",
           "resolved": "src/forgeai/observability/langfuse.py",
           "severity": "hard"
@@ -40445,70 +39255,70 @@
         },
         {
           "candidate": "src/forgeai/secrets/openbao_init.py",
-          "line": 358,
+          "line": 357,
           "referrer": "governance/error-handling-contracts.json",
           "resolved": "src/forgeai/secrets/openbao_init.py",
           "severity": "hard"
         },
         {
           "candidate": "src/forgeai/secrets/openbao_init.py",
-          "line": 360,
+          "line": 359,
           "referrer": "governance/error-handling-contracts.json",
           "resolved": "src/forgeai/secrets/openbao_init.py",
           "severity": "hard"
         },
         {
           "candidate": "src/forgeai/secrets/openbao_init.py",
-          "line": 382,
+          "line": 381,
           "referrer": "governance/error-handling-contracts.json",
           "resolved": "src/forgeai/secrets/openbao_init.py",
           "severity": "hard"
         },
         {
           "candidate": "src/forgeai/secrets/openbao_init.py",
-          "line": 384,
+          "line": 383,
           "referrer": "governance/error-handling-contracts.json",
           "resolved": "src/forgeai/secrets/openbao_init.py",
           "severity": "hard"
         },
         {
           "candidate": "src/forgeai/secrets/openbao_init.py",
-          "line": 653,
+          "line": 652,
           "referrer": "governance/error-handling-contracts.json",
           "resolved": "src/forgeai/secrets/openbao_init.py",
           "severity": "hard"
         },
         {
           "candidate": "src/forgeai/secrets/openbao_init.py",
-          "line": 655,
+          "line": 654,
           "referrer": "governance/error-handling-contracts.json",
           "resolved": "src/forgeai/secrets/openbao_init.py",
           "severity": "hard"
         },
         {
           "candidate": "src/forgeai/secrets/openbao_init.py",
-          "line": 676,
+          "line": 675,
           "referrer": "governance/error-handling-contracts.json",
           "resolved": "src/forgeai/secrets/openbao_init.py",
           "severity": "hard"
         },
         {
           "candidate": "src/forgeai/secrets/openbao_init.py",
-          "line": 678,
+          "line": 677,
           "referrer": "governance/error-handling-contracts.json",
           "resolved": "src/forgeai/secrets/openbao_init.py",
           "severity": "hard"
         },
         {
           "candidate": "src/forgeai/secrets/openbao_init.py",
-          "line": 723,
+          "line": 722,
           "referrer": "governance/error-handling-contracts.json",
           "resolved": "src/forgeai/secrets/openbao_init.py",
           "severity": "hard"
         },
         {
           "candidate": "src/forgeai/secrets/openbao_init.py",
-          "line": 725,
+          "line": 724,
           "referrer": "governance/error-handling-contracts.json",
           "resolved": "src/forgeai/secrets/openbao_init.py",
           "severity": "hard"
@@ -41502,126 +40312,126 @@
         },
         {
           "candidate": "src/forgeai/web/server.py",
-          "line": 405,
+          "line": 404,
           "referrer": "governance/error-handling-contracts.json",
           "resolved": "src/forgeai/web/server.py",
           "severity": "hard"
         },
         {
           "candidate": "src/forgeai/web/server.py",
-          "line": 407,
+          "line": 406,
           "referrer": "governance/error-handling-contracts.json",
           "resolved": "src/forgeai/web/server.py",
           "severity": "hard"
         },
         {
           "candidate": "src/forgeai/web/server.py",
-          "line": 429,
+          "line": 428,
           "referrer": "governance/error-handling-contracts.json",
           "resolved": "src/forgeai/web/server.py",
           "severity": "hard"
         },
         {
           "candidate": "src/forgeai/web/server.py",
-          "line": 431,
+          "line": 430,
           "referrer": "governance/error-handling-contracts.json",
           "resolved": "src/forgeai/web/server.py",
           "severity": "hard"
         },
         {
           "candidate": "src/forgeai/web/server.py",
-          "line": 453,
+          "line": 452,
           "referrer": "governance/error-handling-contracts.json",
           "resolved": "src/forgeai/web/server.py",
           "severity": "hard"
         },
         {
           "candidate": "src/forgeai/web/server.py",
-          "line": 455,
+          "line": 454,
           "referrer": "governance/error-handling-contracts.json",
           "resolved": "src/forgeai/web/server.py",
           "severity": "hard"
         },
         {
           "candidate": "src/forgeai/web/server.py",
-          "line": 474,
+          "line": 473,
           "referrer": "governance/error-handling-contracts.json",
           "resolved": "src/forgeai/web/server.py",
           "severity": "hard"
         },
         {
           "candidate": "src/forgeai/web/server.py",
-          "line": 476,
+          "line": 475,
           "referrer": "governance/error-handling-contracts.json",
           "resolved": "src/forgeai/web/server.py",
           "severity": "hard"
         },
         {
           "candidate": "src/forgeai/web/server.py",
-          "line": 496,
+          "line": 495,
           "referrer": "governance/error-handling-contracts.json",
           "resolved": "src/forgeai/web/server.py",
           "severity": "hard"
         },
         {
           "candidate": "src/forgeai/web/server.py",
-          "line": 498,
+          "line": 497,
           "referrer": "governance/error-handling-contracts.json",
           "resolved": "src/forgeai/web/server.py",
           "severity": "hard"
         },
         {
           "candidate": "src/forgeai/web/server.py",
-          "line": 518,
+          "line": 517,
           "referrer": "governance/error-handling-contracts.json",
           "resolved": "src/forgeai/web/server.py",
           "severity": "hard"
         },
         {
           "candidate": "src/forgeai/web/server.py",
-          "line": 520,
+          "line": 519,
           "referrer": "governance/error-handling-contracts.json",
           "resolved": "src/forgeai/web/server.py",
           "severity": "hard"
         },
         {
           "candidate": "src/forgeai/web/server.py",
-          "line": 542,
+          "line": 541,
           "referrer": "governance/error-handling-contracts.json",
           "resolved": "src/forgeai/web/server.py",
           "severity": "hard"
         },
         {
           "candidate": "src/forgeai/web/server.py",
-          "line": 544,
+          "line": 543,
           "referrer": "governance/error-handling-contracts.json",
           "resolved": "src/forgeai/web/server.py",
           "severity": "hard"
         },
         {
           "candidate": "src/forgeai/web/server.py",
-          "line": 566,
+          "line": 565,
           "referrer": "governance/error-handling-contracts.json",
           "resolved": "src/forgeai/web/server.py",
           "severity": "hard"
         },
         {
           "candidate": "src/forgeai/web/server.py",
-          "line": 568,
+          "line": 567,
           "referrer": "governance/error-handling-contracts.json",
           "resolved": "src/forgeai/web/server.py",
           "severity": "hard"
         },
         {
           "candidate": "src/forgeai/web/server.py",
-          "line": 699,
+          "line": 698,
           "referrer": "governance/error-handling-contracts.json",
           "resolved": "src/forgeai/web/server.py",
           "severity": "hard"
         },
         {
           "candidate": "src/forgeai/web/server.py",
-          "line": 701,
+          "line": 700,
           "referrer": "governance/error-handling-contracts.json",
           "resolved": "src/forgeai/web/server.py",
           "severity": "hard"
@@ -43151,35 +41961,35 @@
         },
         {
           "candidate": "stories/RC1-023-error-handling-contracts.md",
-          "line": 419,
+          "line": 418,
           "referrer": "governance/error-handling-contracts.json",
           "resolved": "stories/RC1-023-error-handling-contracts.md",
           "severity": "hard"
         },
         {
           "candidate": "stories/RC1-023-error-handling-contracts.md",
-          "line": 443,
+          "line": 442,
           "referrer": "governance/error-handling-contracts.json",
           "resolved": "stories/RC1-023-error-handling-contracts.md",
           "severity": "hard"
         },
         {
           "candidate": "stories/RC1-023-error-handling-contracts.md",
-          "line": 532,
+          "line": 531,
           "referrer": "governance/error-handling-contracts.json",
           "resolved": "stories/RC1-023-error-handling-contracts.md",
           "severity": "hard"
         },
         {
           "candidate": "stories/RC1-023-error-handling-contracts.md",
-          "line": 539,
+          "line": 538,
           "referrer": "governance/error-handling-contracts.json",
           "resolved": "stories/RC1-023-error-handling-contracts.md",
           "severity": "hard"
         },
         {
           "candidate": "stories/RC1-023-error-handling-contracts.md",
-          "line": 556,
+          "line": 555,
           "referrer": "governance/error-handling-contracts.json",
           "resolved": "stories/RC1-023-error-handling-contracts.md",
           "severity": "hard"
@@ -45898,28 +44708,28 @@
         },
         {
           "candidate": "tests/test_deploy_persist.py",
-          "line": 423,
+          "line": 422,
           "referrer": "governance/error-handling-contracts.json",
           "resolved": "tests/test_deploy_persist.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_deploy_persist.py",
-          "line": 447,
+          "line": 446,
           "referrer": "governance/error-handling-contracts.json",
           "resolved": "tests/test_deploy_persist.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_deploy_persist.py",
-          "line": 559,
+          "line": 558,
           "referrer": "governance/error-handling-contracts.json",
           "resolved": "tests/test_deploy_persist.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_deploy_persist.py",
-          "line": 559,
+          "line": 558,
           "referrer": "governance/error-handling-contracts.json",
           "resolved": "tests/test_deploy_persist.py",
           "severity": "hard"
@@ -49342,21 +48152,21 @@
         },
         {
           "candidate": "tests/test_openbao_init.py",
-          "line": 376,
+          "line": 375,
           "referrer": "governance/error-handling-contracts.json",
           "resolved": "tests/test_openbao_init.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_openbao_init.py",
-          "line": 399,
+          "line": 398,
           "referrer": "governance/error-handling-contracts.json",
           "resolved": "tests/test_openbao_init.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_openbao_init.py",
-          "line": 741,
+          "line": 740,
           "referrer": "governance/error-handling-contracts.json",
           "resolved": "tests/test_openbao_init.py",
           "severity": "hard"
@@ -51904,7 +50714,21 @@
         },
         {
           "candidate": "tests/test_rel038c_process_groups.py",
-          "line": 536,
+          "line": 535,
+          "referrer": "governance/error-handling-contracts.json",
+          "resolved": "tests/test_rel038c_process_groups.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "tests/test_rel038c_process_groups.py",
+          "line": 558,
+          "referrer": "governance/error-handling-contracts.json",
+          "resolved": "tests/test_rel038c_process_groups.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "tests/test_rel038c_process_groups.py",
+          "line": 558,
           "referrer": "governance/error-handling-contracts.json",
           "resolved": "tests/test_rel038c_process_groups.py",
           "severity": "hard"
@@ -51912,20 +50736,6 @@
         {
           "candidate": "tests/test_rel038c_process_groups.py",
           "line": 559,
-          "referrer": "governance/error-handling-contracts.json",
-          "resolved": "tests/test_rel038c_process_groups.py",
-          "severity": "hard"
-        },
-        {
-          "candidate": "tests/test_rel038c_process_groups.py",
-          "line": 559,
-          "referrer": "governance/error-handling-contracts.json",
-          "resolved": "tests/test_rel038c_process_groups.py",
-          "severity": "hard"
-        },
-        {
-          "candidate": "tests/test_rel038c_process_groups.py",
-          "line": 560,
           "referrer": "governance/error-handling-contracts.json",
           "resolved": "tests/test_rel038c_process_groups.py",
           "severity": "hard"
@@ -95671,132 +94481,132 @@
       },
       {
         "candidate": "OS/les",
-        "line": 330,
+        "line": 329,
         "referrer": "governance/error-handling-contracts.json"
       },
       {
         "candidate": "debug/performance",
-        "line": 351,
+        "line": 350,
         "referrer": "governance/error-handling-contracts.json"
       },
       {
         "candidate": "init/rotation",
-        "line": 375,
+        "line": 374,
         "referrer": "governance/error-handling-contracts.json"
       },
       {
         "candidate": "openbao_init.py",
-        "line": 398,
+        "line": 397,
         "referrer": "governance/error-handling-contracts.json"
       },
       {
         "candidate": "openbao_init.py",
-        "line": 402,
+        "line": 401,
         "referrer": "governance/error-handling-contracts.json"
       },
       {
         "candidate": "server.py",
-        "line": 420,
+        "line": 419,
         "referrer": "governance/error-handling-contracts.json"
       },
       {
         "candidate": "try/except/pass",
-        "line": 422,
+        "line": 421,
         "referrer": "governance/error-handling-contracts.json"
       },
       {
         "candidate": "I/O",
-        "line": 443,
+        "line": 442,
         "referrer": "governance/error-handling-contracts.json"
       },
       {
         "candidate": "ploiement/client",
-        "line": 444,
+        "line": 443,
         "referrer": "governance/error-handling-contracts.json"
       },
       {
         "candidate": "BrokenPipe/ConnectionReset",
-        "line": 486,
+        "line": 485,
         "referrer": "governance/error-handling-contracts.json"
       },
       {
         "candidate": "lecture/",
-        "line": 532,
+        "line": 531,
+        "referrer": "governance/error-handling-contracts.json"
+      },
+      {
+        "candidate": "exit_code/done",
+        "line": 531,
         "referrer": "governance/error-handling-contracts.json"
       },
       {
         "candidate": "exit_code/done",
         "line": 532,
-        "referrer": "governance/error-handling-contracts.json"
-      },
-      {
-        "candidate": "exit_code/done",
-        "line": 533,
         "referrer": "governance/error-handling-contracts.json"
       },
       {
         "candidate": "reviews/RC1-023-PR-v5",
-        "line": 556,
+        "line": 555,
         "referrer": "governance/error-handling-contracts.json"
       },
       {
         "candidate": "rollback/nettoyage",
-        "line": 559,
+        "line": 558,
         "referrer": "governance/error-handling-contracts.json"
       },
       {
         "candidate": "core/proc.py",
-        "line": 559,
+        "line": 558,
         "referrer": "governance/error-handling-contracts.json"
       },
       {
         "candidate": "kill/wait",
-        "line": 559,
+        "line": 558,
         "referrer": "governance/error-handling-contracts.json"
       },
       {
         "candidate": "scope/dur",
-        "line": 559,
+        "line": 558,
         "referrer": "governance/error-handling-contracts.json"
       },
       {
         "candidate": "reviews/RC1-023-PR-v5",
-        "line": 559,
+        "line": 558,
         "referrer": "governance/error-handling-contracts.json"
       },
       {
         "candidate": "retry/escalade",
-        "line": 563,
+        "line": 562,
         "referrer": "governance/error-handling-contracts.json"
       },
       {
         "candidate": "server.py",
-        "line": 608,
+        "line": 607,
         "referrer": "governance/error-handling-contracts.json"
       },
       {
         "candidate": "openbao_init.py",
-        "line": 669,
+        "line": 668,
         "referrer": "governance/error-handling-contracts.json"
       },
       {
         "candidate": "openbao_init.py",
-        "line": 692,
+        "line": 691,
         "referrer": "governance/error-handling-contracts.json"
       },
       {
         "candidate": "server.py",
-        "line": 716,
+        "line": 715,
+        "referrer": "governance/error-handling-contracts.json"
+      },
+      {
+        "candidate": "openbao_init.py",
+        "line": 736,
         "referrer": "governance/error-handling-contracts.json"
       },
       {
         "candidate": "openbao_init.py",
         "line": 737,
-        "referrer": "governance/error-handling-contracts.json"
-      },
-      {
-        "candidate": "openbao_init.py",
-        "line": 738,
         "referrer": "governance/error-handling-contracts.json"
       },
       {
@@ -156066,385 +154876,385 @@
       },
       {
         "candidate": "src/forgeai/network/remote_probe.py",
-        "line": 313,
+        "line": 312,
         "referrer": "governance/error-handling-contracts.json",
         "resolved": "src/forgeai/network/remote_probe.py",
         "severity": "hard"
       },
       {
         "candidate": "src/forgeai/network/remote_probe.py",
-        "line": 315,
+        "line": 314,
         "referrer": "governance/error-handling-contracts.json",
         "resolved": "src/forgeai/network/remote_probe.py",
         "severity": "hard"
       },
       {
         "candidate": "src/forgeai/observability/langfuse.py",
-        "line": 337,
+        "line": 336,
         "referrer": "governance/error-handling-contracts.json",
         "resolved": "src/forgeai/observability/langfuse.py",
         "severity": "hard"
       },
       {
         "candidate": "src/forgeai/observability/langfuse.py",
-        "line": 339,
+        "line": 338,
         "referrer": "governance/error-handling-contracts.json",
         "resolved": "src/forgeai/observability/langfuse.py",
         "severity": "hard"
       },
       {
         "candidate": "src/forgeai/secrets/openbao_init.py",
-        "line": 358,
+        "line": 357,
         "referrer": "governance/error-handling-contracts.json",
         "resolved": "src/forgeai/secrets/openbao_init.py",
         "severity": "hard"
       },
       {
         "candidate": "src/forgeai/secrets/openbao_init.py",
-        "line": 360,
+        "line": 359,
         "referrer": "governance/error-handling-contracts.json",
         "resolved": "src/forgeai/secrets/openbao_init.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_openbao_init.py",
-        "line": 376,
+        "line": 375,
         "referrer": "governance/error-handling-contracts.json",
         "resolved": "tests/test_openbao_init.py",
         "severity": "hard"
       },
       {
         "candidate": "src/forgeai/secrets/openbao_init.py",
-        "line": 382,
+        "line": 381,
         "referrer": "governance/error-handling-contracts.json",
         "resolved": "src/forgeai/secrets/openbao_init.py",
         "severity": "hard"
       },
       {
         "candidate": "src/forgeai/secrets/openbao_init.py",
-        "line": 384,
+        "line": 383,
         "referrer": "governance/error-handling-contracts.json",
         "resolved": "src/forgeai/secrets/openbao_init.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_openbao_init.py",
-        "line": 399,
+        "line": 398,
         "referrer": "governance/error-handling-contracts.json",
         "resolved": "tests/test_openbao_init.py",
         "severity": "hard"
       },
       {
         "candidate": "src/forgeai/web/server.py",
-        "line": 405,
+        "line": 404,
         "referrer": "governance/error-handling-contracts.json",
         "resolved": "src/forgeai/web/server.py",
         "severity": "hard"
       },
       {
         "candidate": "src/forgeai/web/server.py",
-        "line": 407,
+        "line": 406,
         "referrer": "governance/error-handling-contracts.json",
         "resolved": "src/forgeai/web/server.py",
         "severity": "hard"
       },
       {
         "candidate": "stories/RC1-023-error-handling-contracts.md",
-        "line": 419,
+        "line": 418,
         "referrer": "governance/error-handling-contracts.json",
         "resolved": "stories/RC1-023-error-handling-contracts.md",
         "severity": "hard"
       },
       {
         "candidate": "evidence/audit-output/audit-exhaustif-2026-08-05/findings.json",
-        "line": 422,
+        "line": 421,
         "referrer": "governance/error-handling-contracts.json",
         "resolved": "evidence/audit-output/audit-exhaustif-2026-08-05/findings.json",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_deploy_persist.py",
-        "line": 423,
+        "line": 422,
         "referrer": "governance/error-handling-contracts.json",
         "resolved": "tests/test_deploy_persist.py",
         "severity": "hard"
       },
       {
         "candidate": "src/forgeai/web/server.py",
-        "line": 429,
+        "line": 428,
         "referrer": "governance/error-handling-contracts.json",
         "resolved": "src/forgeai/web/server.py",
         "severity": "hard"
       },
       {
         "candidate": "src/forgeai/web/server.py",
-        "line": 431,
+        "line": 430,
         "referrer": "governance/error-handling-contracts.json",
         "resolved": "src/forgeai/web/server.py",
         "severity": "hard"
       },
       {
         "candidate": "stories/RC1-023-error-handling-contracts.md",
-        "line": 443,
+        "line": 442,
         "referrer": "governance/error-handling-contracts.json",
         "resolved": "stories/RC1-023-error-handling-contracts.md",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_deploy_persist.py",
-        "line": 447,
+        "line": 446,
         "referrer": "governance/error-handling-contracts.json",
         "resolved": "tests/test_deploy_persist.py",
         "severity": "hard"
       },
       {
         "candidate": "src/forgeai/web/server.py",
-        "line": 453,
+        "line": 452,
         "referrer": "governance/error-handling-contracts.json",
         "resolved": "src/forgeai/web/server.py",
         "severity": "hard"
       },
       {
         "candidate": "src/forgeai/web/server.py",
-        "line": 455,
+        "line": 454,
         "referrer": "governance/error-handling-contracts.json",
         "resolved": "src/forgeai/web/server.py",
         "severity": "hard"
       },
       {
         "candidate": "src/forgeai/web/server.py",
-        "line": 474,
+        "line": 473,
         "referrer": "governance/error-handling-contracts.json",
         "resolved": "src/forgeai/web/server.py",
         "severity": "hard"
       },
       {
         "candidate": "src/forgeai/web/server.py",
-        "line": 476,
+        "line": 475,
         "referrer": "governance/error-handling-contracts.json",
         "resolved": "src/forgeai/web/server.py",
         "severity": "hard"
       },
       {
         "candidate": "src/forgeai/web/server.py",
-        "line": 496,
+        "line": 495,
         "referrer": "governance/error-handling-contracts.json",
         "resolved": "src/forgeai/web/server.py",
         "severity": "hard"
       },
       {
         "candidate": "src/forgeai/web/server.py",
-        "line": 498,
+        "line": 497,
         "referrer": "governance/error-handling-contracts.json",
         "resolved": "src/forgeai/web/server.py",
         "severity": "hard"
       },
       {
         "candidate": "src/forgeai/web/server.py",
-        "line": 518,
+        "line": 517,
         "referrer": "governance/error-handling-contracts.json",
         "resolved": "src/forgeai/web/server.py",
         "severity": "hard"
       },
       {
         "candidate": "src/forgeai/web/server.py",
-        "line": 520,
+        "line": 519,
         "referrer": "governance/error-handling-contracts.json",
         "resolved": "src/forgeai/web/server.py",
         "severity": "hard"
       },
       {
         "candidate": "stories/RC1-023-error-handling-contracts.md",
-        "line": 532,
+        "line": 531,
         "referrer": "governance/error-handling-contracts.json",
         "resolved": "stories/RC1-023-error-handling-contracts.md",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_rel038c_process_groups.py",
-        "line": 536,
+        "line": 535,
         "referrer": "governance/error-handling-contracts.json",
         "resolved": "tests/test_rel038c_process_groups.py",
         "severity": "hard"
       },
       {
         "candidate": "stories/RC1-023-error-handling-contracts.md",
-        "line": 539,
+        "line": 538,
         "referrer": "governance/error-handling-contracts.json",
         "resolved": "stories/RC1-023-error-handling-contracts.md",
         "severity": "hard"
       },
       {
         "candidate": "src/forgeai/web/server.py",
-        "line": 542,
+        "line": 541,
         "referrer": "governance/error-handling-contracts.json",
         "resolved": "src/forgeai/web/server.py",
         "severity": "hard"
       },
       {
         "candidate": "src/forgeai/web/server.py",
-        "line": 544,
+        "line": 543,
         "referrer": "governance/error-handling-contracts.json",
         "resolved": "src/forgeai/web/server.py",
         "severity": "hard"
       },
       {
         "candidate": "stories/RC1-023-error-handling-contracts.md",
-        "line": 556,
+        "line": 555,
         "referrer": "governance/error-handling-contracts.json",
         "resolved": "stories/RC1-023-error-handling-contracts.md",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_rel038c_process_groups.py",
-        "line": 559,
+        "line": 558,
         "referrer": "governance/error-handling-contracts.json",
         "resolved": "tests/test_rel038c_process_groups.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_rel038c_process_groups.py",
-        "line": 559,
+        "line": 558,
         "referrer": "governance/error-handling-contracts.json",
         "resolved": "tests/test_rel038c_process_groups.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_deploy_persist.py",
-        "line": 559,
+        "line": 558,
         "referrer": "governance/error-handling-contracts.json",
         "resolved": "tests/test_deploy_persist.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_deploy_persist.py",
-        "line": 559,
+        "line": 558,
         "referrer": "governance/error-handling-contracts.json",
         "resolved": "tests/test_deploy_persist.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_rel038c_process_groups.py",
-        "line": 560,
+        "line": 559,
         "referrer": "governance/error-handling-contracts.json",
         "resolved": "tests/test_rel038c_process_groups.py",
         "severity": "hard"
       },
       {
         "candidate": "src/forgeai/web/server.py",
-        "line": 566,
+        "line": 565,
         "referrer": "governance/error-handling-contracts.json",
         "resolved": "src/forgeai/web/server.py",
         "severity": "hard"
       },
       {
         "candidate": "src/forgeai/web/server.py",
-        "line": 568,
+        "line": 567,
         "referrer": "governance/error-handling-contracts.json",
         "resolved": "src/forgeai/web/server.py",
         "severity": "hard"
       },
       {
         "candidate": "src/forgeai/core/proc.py",
-        "line": 587,
+        "line": 586,
         "referrer": "governance/error-handling-contracts.json",
         "resolved": "src/forgeai/core/proc.py",
         "severity": "hard"
       },
       {
         "candidate": "src/forgeai/core/proc.py",
-        "line": 589,
+        "line": 588,
         "referrer": "governance/error-handling-contracts.json",
         "resolved": "src/forgeai/core/proc.py",
         "severity": "hard"
       },
       {
         "candidate": "src/forgeai/hardware/detect.py",
-        "line": 611,
+        "line": 610,
         "referrer": "governance/error-handling-contracts.json",
         "resolved": "src/forgeai/hardware/detect.py",
         "severity": "hard"
       },
       {
         "candidate": "src/forgeai/hardware/detect.py",
-        "line": 613,
+        "line": 612,
         "referrer": "governance/error-handling-contracts.json",
         "resolved": "src/forgeai/hardware/detect.py",
         "severity": "hard"
       },
       {
         "candidate": "src/forgeai/hardware/detect.py",
-        "line": 632,
+        "line": 631,
         "referrer": "governance/error-handling-contracts.json",
         "resolved": "src/forgeai/hardware/detect.py",
         "severity": "hard"
       },
       {
         "candidate": "src/forgeai/hardware/detect.py",
-        "line": 634,
+        "line": 633,
         "referrer": "governance/error-handling-contracts.json",
         "resolved": "src/forgeai/hardware/detect.py",
         "severity": "hard"
       },
       {
         "candidate": "src/forgeai/secrets/openbao_init.py",
-        "line": 653,
+        "line": 652,
         "referrer": "governance/error-handling-contracts.json",
         "resolved": "src/forgeai/secrets/openbao_init.py",
         "severity": "hard"
       },
       {
         "candidate": "src/forgeai/secrets/openbao_init.py",
-        "line": 655,
+        "line": 654,
         "referrer": "governance/error-handling-contracts.json",
         "resolved": "src/forgeai/secrets/openbao_init.py",
         "severity": "hard"
       },
       {
         "candidate": "src/forgeai/secrets/openbao_init.py",
-        "line": 676,
+        "line": 675,
         "referrer": "governance/error-handling-contracts.json",
         "resolved": "src/forgeai/secrets/openbao_init.py",
         "severity": "hard"
       },
       {
         "candidate": "src/forgeai/secrets/openbao_init.py",
-        "line": 678,
+        "line": 677,
         "referrer": "governance/error-handling-contracts.json",
         "resolved": "src/forgeai/secrets/openbao_init.py",
         "severity": "hard"
       },
       {
         "candidate": "src/forgeai/web/server.py",
-        "line": 699,
+        "line": 698,
         "referrer": "governance/error-handling-contracts.json",
         "resolved": "src/forgeai/web/server.py",
         "severity": "hard"
       },
       {
         "candidate": "src/forgeai/web/server.py",
-        "line": 701,
+        "line": 700,
         "referrer": "governance/error-handling-contracts.json",
         "resolved": "src/forgeai/web/server.py",
         "severity": "hard"
       },
       {
         "candidate": "src/forgeai/secrets/openbao_init.py",
-        "line": 723,
+        "line": 722,
         "referrer": "governance/error-handling-contracts.json",
         "resolved": "src/forgeai/secrets/openbao_init.py",
         "severity": "hard"
       },
       {
         "candidate": "src/forgeai/secrets/openbao_init.py",
-        "line": 725,
+        "line": 724,
         "referrer": "governance/error-handling-contracts.json",
         "resolved": "src/forgeai/secrets/openbao_init.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_openbao_init.py",
-        "line": 741,
+        "line": 740,
         "referrer": "governance/error-handling-contracts.json",
         "resolved": "tests/test_openbao_init.py",
         "severity": "hard"
@@ -163297,7 +162107,7 @@
       "ARCHIVE": 44,
       "DOCS": 17,
       "EVIDENCE": 1487,
-      "GENERATED": 9,
+      "GENERATED": 5,
       "GOVERNANCE": 192,
       "PRODUCT": 113,
       "TEST": 210,
@@ -163317,8 +162127,8 @@
       "evidence-registres-root": 35,
       "evidence-reviews-root": 1432,
       "generated-authority-map": 1,
-      "generated-path-classification-json": 3,
-      "generated-path-classification-markdown": 3,
+      "generated-path-classification-json": 1,
+      "generated-path-classification-markdown": 1,
       "generated-state-current-json": 1,
       "generated-state-current-markdown": 1,
       "governance-canon": 14,
@@ -163352,10 +162162,10 @@
     },
     "case_collisions_total": 0,
     "dangling_references_total": 16228,
-    "generated_total": 13,
-    "load_bearing_total": 1943,
+    "generated_total": 9,
+    "load_bearing_total": 1939,
     "portability_violations_total": 0,
-    "tracked_total": 2082,
+    "tracked_total": 2078,
     "unclassified_total": 0,
     "unicode_anomalies_total": 0
   },
