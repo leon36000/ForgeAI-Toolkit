@@ -58,8 +58,25 @@ def _horizon(inventaire: dict) -> int:
 
 def _fonction_test_existe(fichier: Path, segments: list[str]) -> bool:
     """Vérifie qu'une chaîne de segments (ex. ['test_fonction'] pour une fonction de module,
-    ou ['TestClasse', 'test_methode'] pour une méthode) désigne réellement une fonction de
-    test dans l'AST du fichier — pas seulement que le fichier existe."""
+    ou ['TestClasse', 'test_methode'] pour une méthode) désigne réellement une fonction de test
+    COLLECTABLE PAR PYTEST dans l'AST du fichier — pas seulement une fonction qui existe.
+
+    Round 14 (#452) — objection GPT-5.6-Terra-Pro (revue scellée) : un compensating_test pouvait
+    désigner n'importe quelle fonction existante (y compris du code de production), tant qu'elle
+    portait le nom demandé — sans jamais vérifier que pytest la collecterait réellement. Convention
+    pytest par défaut (pyproject.toml : aucun override python_classes/python_functions) : classes
+    'Test*', fonctions/méthodes 'test_*'.
+    """
+    if len(segments) == 1:
+        if not segments[0].startswith("test_"):
+            return False
+    elif len(segments) == 2:
+        classe, methode = segments
+        if not classe.startswith("Test") or not methode.startswith("test_"):
+            return False
+    else:
+        return False  # profondeur non supportée par la convention pytest par défaut
+
     try:
         arbre = ast.parse(fichier.read_text(encoding="utf-8"), filename=str(fichier))
     except (OSError, SyntaxError):
@@ -89,6 +106,17 @@ def _test_compensatoire_existe(root: Path, test_compensatoire: object) -> bool:
     chemin = parties[0]
     segments = parties[1:]
     if not chemin:
+        return False
+    # Round 14 (#452) — objection GPT-5.6-Terra-Pro : le fichier doit être sous tests/ et nommé
+    # selon la convention de découverte pytest par défaut (pyproject.toml : testpaths=["tests"],
+    # aucun override python_files -> test_*.py ou *_test.py) — sinon pytest ne le collecte jamais.
+    chemin_p = Path(chemin)
+    if not chemin_p.parts or chemin_p.parts[0] != "tests":
+        return False
+    nom_fichier = chemin_p.name
+    if not nom_fichier.endswith(".py") or not (
+        nom_fichier.startswith("test_") or nom_fichier.endswith("_test.py")
+    ):
         return False
     root_resolu = root.resolve()
     candidat = (root_resolu / chemin).resolve()

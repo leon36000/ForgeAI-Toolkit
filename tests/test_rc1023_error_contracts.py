@@ -684,6 +684,72 @@ def test_compensating_test_methode_de_classe_inexistante_detectee(tmp_path: Path
     assert any("test compensatoire absent du dépôt : tests/test_classe.py::TestExemple::test_absente" in e for e in erreurs)
 
 
+def test_compensating_test_fonction_non_test_rejetee(tmp_path: Path) -> None:
+    """Round 14 (#452) — objection GPT-5.6-Terra-Pro (revue scellée) : compensating_test pouvait
+    désigner N'IMPORTE QUELLE fonction existante (y compris du code de production), tant qu'elle
+    portait le nom demandé — sans jamais vérifier que pytest la collecterait réellement
+    (convention par défaut : le nom doit commencer par 'test_')."""
+    _creer_fichier_source(
+        tmp_path,
+        "src/forgeai/example.py",
+        "try:\n    pass\nexcept ValueError:\n    pass\n",
+    )
+    _creer_fichier_source(
+        tmp_path,
+        "tests/test_exemple.py",
+        "def fonction_helper_pas_un_test(): pass\n",
+    )
+    contrat = _entree_valide(
+        compensating_test="tests/test_exemple.py::fonction_helper_pas_un_test",
+        compensating_test_reason=None,
+    )
+    _ecrire_inventaire(tmp_path, [contrat])
+
+    erreurs = VALIDATEUR.valider(tmp_path, aujourd_hui=dt.date(2026, 1, 1))
+    assert any("test compensatoire absent du dépôt" in e for e in erreurs)
+
+
+def test_compensating_test_hors_dossier_tests_rejete(tmp_path: Path) -> None:
+    """Round 14 (#452) — même objection : un fichier hors tests/ n'est jamais collecté par
+    pytest (pyproject.toml : testpaths=["tests"]), même si la fonction s'appelle test_*."""
+    _creer_fichier_source(
+        tmp_path,
+        "src/forgeai/example.py",
+        "def test_quelque_chose(): pass\n",
+    )
+    contrat = _entree_valide(
+        compensating_test="src/forgeai/example.py::test_quelque_chose",
+        compensating_test_reason=None,
+    )
+    _ecrire_inventaire(tmp_path, [contrat])
+
+    erreurs = VALIDATEUR.valider(tmp_path, aujourd_hui=dt.date(2026, 1, 1))
+    assert any("test compensatoire absent du dépôt" in e for e in erreurs)
+
+
+def test_compensating_test_fichier_hors_convention_pytest_rejete(tmp_path: Path) -> None:
+    """Round 14 (#452) — même objection : un fichier sous tests/ mais pas nommé test_*.py (ou
+    *_test.py) n'est pas collecté par pytest (python_files par défaut)."""
+    _creer_fichier_source(
+        tmp_path,
+        "src/forgeai/example.py",
+        "try:\n    pass\nexcept ValueError:\n    pass\n",
+    )
+    _creer_fichier_source(
+        tmp_path,
+        "tests/helpers_pas_un_module_de_tests.py",
+        "def test_quelque_chose(): pass\n",
+    )
+    contrat = _entree_valide(
+        compensating_test="tests/helpers_pas_un_module_de_tests.py::test_quelque_chose",
+        compensating_test_reason=None,
+    )
+    _ecrire_inventaire(tmp_path, [contrat])
+
+    erreurs = VALIDATEUR.valider(tmp_path, aujourd_hui=dt.date(2026, 1, 1))
+    assert any("test compensatoire absent du dépôt" in e for e in erreurs)
+
+
 def test_compensating_test_chemin_nu_sans_fonction_rejete(tmp_path: Path) -> None:
     """Round 5 (#452) — objection DeepSeek-V4-Pro (reviews/RC1-023-PR-v4) : un compensating_test
     qui n'est qu'un chemin de fichier existant, SANS ::fonction, ne doit plus suffire — même sans
