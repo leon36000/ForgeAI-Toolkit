@@ -195,6 +195,19 @@
       "accepted_risk": "Le faux positif peut masquer une occurrence S8707 dans ce fichier jusqu'à sa révision."
     },
     {
+      "id": "properties-multicriteria:e8",
+      "kind": "properties-multicriteria",
+      "rule": "pythonsecurity:S8707",
+      "scope": "file",
+      "sites": [{"path": "scripts/governance/evidence_dedup.py"}],
+      "owner": "équipe gouvernance ForgeAI",
+      "justification": "Même mesure que e7 (RC1-011/#441) : # NOSONAR(S8707) posé au site sur evidence_dedup.py:167 (écriture --sortie, déjà résolue et validée avant accès disque — répertoire parent vérifié existant) a été ignoré par le scanner ; le périmètre fichier est donc le seul disponible pour cette règle pythonsecurity avancée. Outil CLI local (pas de frontière réseau/HTTP) : --racine/--sortie/--verifier acceptent délibérément tout chemin fourni par l'opérateur, exactement comme --racine de scripts/governance/check_md_packs.py et --out de scripts/revue.py (code préexistant, non retouché par cette PR, donc hors du gate New Code).",
+      "compensating_test": "tests/test_rc1011_dedup.py",
+      "compensating_test_reason": "Non-réductible : Sonar rattache cette alerte avancée au flux de données et non à un site stable ; une annotation inline peut ne pas viser le site finalement signalé (mesuré identiquement sur registre.py, e7). Les tests test_main_phase_ecrit_un_manifest_valide et test_main_phase_sortie_parent_introuvable_retourne_2 couvrent le comportement réel de validation (résolution + vérification d'existence du parent avant écriture).",
+      "review_due": "2027-02-10",
+      "accepted_risk": "Le faux positif peut masquer une occurrence S8707 dans ce fichier jusqu'à sa révision."
+    },
+    {
       "id": "analysis-exclusion:sonar.exclusions:**/__pycache__/**",
       "kind": "analysis-exclusion",
       "rule": null,

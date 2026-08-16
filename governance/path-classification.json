@@ -725,6 +725,13 @@
         },
         {
           "candidate": ".github/workflows/gates.yml",
+          "line": 144,
+          "referrer": "stories/RC1-011.md",
+          "resolved": ".github/workflows/gates.yml",
+          "severity": "hard"
+        },
+        {
+          "candidate": ".github/workflows/gates.yml",
           "line": 159,
           "referrer": "stories/REG-029B.md",
           "resolved": ".github/workflows/gates.yml",
@@ -4537,7 +4544,7 @@
         },
         {
           "candidate": "archive/coordination/work-packages.json",
-          "line": 744,
+          "line": 758,
           "referrer": "governance/path-classification-rules.json",
           "resolved": "archive/coordination/work-packages.json",
           "severity": "hard"
@@ -5517,6 +5524,83 @@
     },
     {
       "class": "EVIDENCE",
+      "generated": true,
+      "load_bearing": false,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/dedup/manifest-apres.json",
+      "referenced_by": [
+        {
+          "candidate": "evidence/dedup/manifest-apres.json",
+          "line": 150,
+          "referrer": "stories/RC1-011.md",
+          "resolved": "evidence/dedup/manifest-apres.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "evidence/dedup/manifest-apres.json",
+          "line": 181,
+          "referrer": "tests/test_rc1011_dedup.py",
+          "resolved": "evidence/dedup/manifest-apres.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "evidence/dedup/manifest-apres.json",
+          "line": 184,
+          "referrer": "tests/test_rc1011_dedup.py",
+          "resolved": "evidence/dedup/manifest-apres.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "evidence/dedup/manifest-apres.json",
+          "line": 263,
+          "referrer": "tests/test_rc1011_dedup.py",
+          "resolved": "evidence/dedup/manifest-apres.json",
+          "severity": "hard"
+        }
+      ],
+      "rule_id": "evidence-dedup-root",
+      "sha256": "ac6ac7be256a99beb2ebc0b2adb591e26f8d52824f417ed4e6782af5e64bbfc7",
+      "size": 6697,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": true,
+      "load_bearing": false,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/dedup/manifest-avant.json",
+      "referenced_by": [
+        {
+          "candidate": "evidence/dedup/manifest-avant.json",
+          "line": 47,
+          "referrer": "stories/RC1-011.md",
+          "resolved": "evidence/dedup/manifest-avant.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "evidence/dedup/manifest-avant.json",
+          "line": 150,
+          "referrer": "stories/RC1-011.md",
+          "resolved": "evidence/dedup/manifest-avant.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "evidence/dedup/manifest-avant.json",
+          "line": 268,
+          "referrer": "tests/test_rc1011_dedup.py",
+          "resolved": "evidence/dedup/manifest-avant.json",
+          "severity": "hard"
+        }
+      ],
+      "rule_id": "evidence-dedup-root",
+      "sha256": "465837e5c0dcea4fb47628f0c351fa543083f279562cb05ff8e4013281e2dee2",
+      "size": 6697,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
       "generated": false,
       "load_bearing": true,
       "owner": "gouvernance-preuve",
@@ -6219,8 +6303,8 @@
         }
       ],
       "rule_id": "evidence-registres-root",
-      "sha256": "1a53d90fe6dee76ee0fbb5df4ab5752dc11882e571f471ecceaed1166bff0fb4",
-      "size": 374270,
+      "sha256": "7ff2fdd2be45d5726c5cef844720441a21630149ae17b92a6df3409ddbfb5951",
+      "size": 376211,
       "target_path": null,
       "type": "text"
     },
@@ -8061,6 +8145,13 @@
         },
         {
           "candidate": "evidence/reviews/BINDING.txt",
+          "line": 6,
+          "referrer": "scripts/governance/evidence_dedup.py",
+          "resolved": "evidence/reviews/BINDING.txt",
+          "severity": "hard"
+        },
+        {
+          "candidate": "evidence/reviews/BINDING.txt",
           "line": 8,
           "referrer": "scripts/reviews_gate.py",
           "resolved": "evidence/reviews/BINDING.txt",
@@ -8070,6 +8161,34 @@
           "candidate": "evidence/reviews/BINDING.txt",
           "line": 33,
           "referrer": "scripts/reviews_gate.py",
+          "resolved": "evidence/reviews/BINDING.txt",
+          "severity": "hard"
+        },
+        {
+          "candidate": "evidence/reviews/BINDING.txt",
+          "line": 29,
+          "referrer": "stories/RC1-011.md",
+          "resolved": "evidence/reviews/BINDING.txt",
+          "severity": "hard"
+        },
+        {
+          "candidate": "evidence/reviews/BINDING.txt",
+          "line": 157,
+          "referrer": "stories/RC1-011.md",
+          "resolved": "evidence/reviews/BINDING.txt",
+          "severity": "hard"
+        },
+        {
+          "candidate": "evidence/reviews/BINDING.txt",
+          "line": 183,
+          "referrer": "stories/RC1-011.md",
+          "resolved": "evidence/reviews/BINDING.txt",
+          "severity": "hard"
+        },
+        {
+          "candidate": "evidence/reviews/BINDING.txt",
+          "line": 252,
+          "referrer": "stories/RC1-011.md",
           "resolved": "evidence/reviews/BINDING.txt",
           "severity": "hard"
         },
@@ -8138,8 +8257,8 @@
         }
       ],
       "rule_id": "evidence-reviews-root",
-      "sha256": "0086bde5378ce5e16c6c6a4bbd36decc43accde78ab16bd46492a87b6a892ea0",
-      "size": 2567,
+      "sha256": "1c49fe8e983206ac3466a8baceaa084c80d0dbc0774581975d05cb55b3fed777",
+      "size": 2578,
       "target_path": null,
       "type": "text"
     },
@@ -11568,7 +11687,22 @@
       "load_bearing": true,
       "owner": "gouvernance-preuve",
       "path": "evidence/reviews/HEALTH-028A/REVIEW-PACK.md",
-      "referenced_by": [],
+      "referenced_by": [
+        {
+          "candidate": "evidence/reviews/HEALTH-028A/REVIEW-PACK.md",
+          "line": 38,
+          "referrer": "stories/RC1-011.md",
+          "resolved": "evidence/reviews/HEALTH-028A/REVIEW-PACK.md",
+          "severity": "hard"
+        },
+        {
+          "candidate": "evidence/reviews/HEALTH-028A/REVIEW-PACK.md",
+          "line": 173,
+          "referrer": "tests/test_rc1011_packs_md.py",
+          "resolved": "evidence/reviews/HEALTH-028A/REVIEW-PACK.md",
+          "severity": "hard"
+        }
+      ],
       "rule_id": "evidence-reviews-root",
       "sha256": "eba752478de47ef3e5e9d0fce1bf06597ea5d5150c0f10ad883c74577710de9d",
       "size": 17046,
@@ -12569,7 +12703,29 @@
       "load_bearing": true,
       "owner": "gouvernance-preuve",
       "path": "evidence/reviews/IMPL-2b-civ/pack.md",
-      "referenced_by": [],
+      "referenced_by": [
+        {
+          "candidate": "evidence/reviews/IMPL-2b-civ/pack.md",
+          "line": 22,
+          "referrer": "stories/RC1-011.md",
+          "resolved": "evidence/reviews/IMPL-2b-civ/pack.md",
+          "severity": "hard"
+        },
+        {
+          "candidate": "evidence/reviews/IMPL-2b-civ/pack.md",
+          "line": 53,
+          "referrer": "tests/test_rc1011_packs_md.py",
+          "resolved": "evidence/reviews/IMPL-2b-civ/pack.md",
+          "severity": "hard"
+        },
+        {
+          "candidate": "evidence/reviews/IMPL-2b-civ/pack.md",
+          "line": 166,
+          "referrer": "tests/test_rc1011_packs_md.py",
+          "resolved": "evidence/reviews/IMPL-2b-civ/pack.md",
+          "severity": "hard"
+        }
+      ],
       "rule_id": "evidence-reviews-root",
       "sha256": "e6cac3771101dfae7e4f6834b03a5b24df398062ab9cd7876b8fa4d108a4a2eb",
       "size": 527418,
@@ -20840,7 +20996,22 @@
       "load_bearing": true,
       "owner": "gouvernance-preuve",
       "path": "evidence/reviews/S1-gpu-rocm-runtime/pack.md",
-      "referenced_by": [],
+      "referenced_by": [
+        {
+          "candidate": "evidence/reviews/S1-gpu-rocm-runtime/pack.md",
+          "line": 30,
+          "referrer": "stories/RC1-011.md",
+          "resolved": "evidence/reviews/S1-gpu-rocm-runtime/pack.md",
+          "severity": "hard"
+        },
+        {
+          "candidate": "evidence/reviews/S1-gpu-rocm-runtime/pack.md",
+          "line": 167,
+          "referrer": "tests/test_rc1011_packs_md.py",
+          "resolved": "evidence/reviews/S1-gpu-rocm-runtime/pack.md",
+          "severity": "hard"
+        }
+      ],
       "rule_id": "evidence-reviews-root",
       "sha256": "b228889ecf56aa8aa59e35c2317b37f49d37a5a22d2b9e681f02025d9ef63070",
       "size": 13410,
@@ -20944,7 +21115,22 @@
       "load_bearing": true,
       "owner": "gouvernance-preuve",
       "path": "evidence/reviews/S3-amd-runtimes-k3s-gpu/pack.md",
-      "referenced_by": [],
+      "referenced_by": [
+        {
+          "candidate": "evidence/reviews/S3-amd-runtimes-k3s-gpu/pack.md",
+          "line": 35,
+          "referrer": "stories/RC1-011.md",
+          "resolved": "evidence/reviews/S3-amd-runtimes-k3s-gpu/pack.md",
+          "severity": "hard"
+        },
+        {
+          "candidate": "evidence/reviews/S3-amd-runtimes-k3s-gpu/pack.md",
+          "line": 168,
+          "referrer": "tests/test_rc1011_packs_md.py",
+          "resolved": "evidence/reviews/S3-amd-runtimes-k3s-gpu/pack.md",
+          "severity": "hard"
+        }
+      ],
       "rule_id": "evidence-reviews-root",
       "sha256": "2d43c69b6539c0614e24374cfa959a40912fd12def46e5be1e3b0cc5bebe7a96",
       "size": 11273,
@@ -23531,7 +23717,15 @@
       "load_bearing": true,
       "owner": "gouvernance-preuve",
       "path": "evidence/reviews/plan-v1.0/round-2/glm.verdict.json",
-      "referenced_by": [],
+      "referenced_by": [
+        {
+          "candidate": "evidence/reviews/plan-v1.0/round-2/glm.verdict.json",
+          "line": 110,
+          "referrer": "tests/test_rc1011_dedup.py",
+          "resolved": "evidence/reviews/plan-v1.0/round-2/glm.verdict.json",
+          "severity": "hard"
+        }
+      ],
       "rule_id": "evidence-reviews-root",
       "sha256": "638e5407d674202b1d9daa2ed98d281131299c196fbfe8b6a544673fa1179ff7",
       "size": 135,
@@ -23557,7 +23751,15 @@
       "load_bearing": true,
       "owner": "gouvernance-preuve",
       "path": "evidence/reviews/plan-v1.0/round-2/kimi.verdict.json",
-      "referenced_by": [],
+      "referenced_by": [
+        {
+          "candidate": "evidence/reviews/plan-v1.0/round-2/kimi.verdict.json",
+          "line": 111,
+          "referrer": "tests/test_rc1011_dedup.py",
+          "resolved": "evidence/reviews/plan-v1.0/round-2/kimi.verdict.json",
+          "severity": "hard"
+        }
+      ],
       "rule_id": "evidence-reviews-root",
       "sha256": "638e5407d674202b1d9daa2ed98d281131299c196fbfe8b6a544673fa1179ff7",
       "size": 135,
@@ -23991,6 +24193,13 @@
         },
         {
           "candidate": "governance/PATH-CLASSIFICATION.md",
+          "line": 212,
+          "referrer": "stories/RC1-011.md",
+          "resolved": "governance/PATH-CLASSIFICATION.md",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/PATH-CLASSIFICATION.md",
           "line": 42,
           "referrer": "stories/RC1-504.md",
           "resolved": "governance/PATH-CLASSIFICATION.md",
@@ -24018,8 +24227,8 @@
       "path": "governance/SONAR-SUPPRESSIONS.md",
       "referenced_by": [],
       "rule_id": "governance-core",
-      "sha256": "4eb70d9f673de79926a226d9566d47f421febed6df116105b4008a8f83e69bc9",
-      "size": 7893,
+      "sha256": "e153250feeaca4f7c47daf702834feea8fa2c05ddac79f4bc8008b5697a1f84f",
+      "size": 8127,
       "target_path": null,
       "type": "text"
     },
@@ -24871,6 +25080,13 @@
         },
         {
           "candidate": "governance/path-classification-rules.json",
+          "line": 151,
+          "referrer": "stories/RC1-011.md",
+          "resolved": "governance/path-classification-rules.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/path-classification-rules.json",
           "line": 61,
           "referrer": "stories/RC1-504.md",
           "resolved": "governance/path-classification-rules.json",
@@ -24899,8 +25115,8 @@
         }
       ],
       "rule_id": "governance-core",
-      "sha256": "9d7fe92f098e967c929500878d6cdb5e30eb25bfc020516b246a2a5ee1ba2bf2",
-      "size": 25285,
+      "sha256": "ed4c03e6a82c2e87baa9a83c595c877a3d5b46abd3cc50bee9063223d1146039",
+      "size": 25947,
       "target_path": null,
       "type": "text"
     },
@@ -25214,6 +25430,13 @@
         },
         {
           "candidate": "governance/path-classification.json",
+          "line": 211,
+          "referrer": "stories/RC1-011.md",
+          "resolved": "governance/path-classification.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/path-classification.json",
           "line": 15,
           "referrer": "stories/RC1-504.md",
           "resolved": "governance/path-classification.json",
@@ -25388,8 +25611,8 @@
         }
       ],
       "rule_id": "governance-core",
-      "sha256": "c4ab07810cba0b95ff4c30562bb69b3392723f4d0a901b35d2ca63f4b18176db",
-      "size": 18652,
+      "sha256": "fb8441f840138ccead4f4dfd4a5eee930c21a36716da491f686acd1ab878904c",
+      "size": 20276,
       "target_path": null,
       "type": "text"
     },
@@ -26146,21 +26369,21 @@
         },
         {
           "candidate": "scripts/check_metering_sites.py",
-          "line": 64,
+          "line": 65,
           "referrer": "governance/SONAR-SUPPRESSIONS.md",
           "resolved": "scripts/check_metering_sites.py",
           "severity": "hard"
         },
         {
           "candidate": "scripts/check_metering_sites.py",
-          "line": 302,
+          "line": 315,
           "referrer": "governance/sonar-suppressions.json",
           "resolved": "scripts/check_metering_sites.py",
           "severity": "hard"
         },
         {
           "candidate": "scripts/check_metering_sites.py",
-          "line": 306,
+          "line": 319,
           "referrer": "governance/sonar-suppressions.json",
           "resolved": "scripts/check_metering_sites.py",
           "severity": "hard"
@@ -26861,6 +27084,48 @@
       "generated": false,
       "load_bearing": true,
       "owner": "gouvernance-scripts",
+      "path": "scripts/governance/check_md_packs.py",
+      "referenced_by": [
+        {
+          "candidate": "scripts/governance/check_md_packs.py",
+          "line": 204,
+          "referrer": "governance/sonar-suppressions.json",
+          "resolved": "scripts/governance/check_md_packs.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "scripts/governance/check_md_packs.py",
+          "line": 17,
+          "referrer": "stories/RC1-011.md",
+          "resolved": "scripts/governance/check_md_packs.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "scripts/governance/check_md_packs.py",
+          "line": 148,
+          "referrer": "stories/RC1-011.md",
+          "resolved": "scripts/governance/check_md_packs.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "scripts/governance/check_md_packs.py",
+          "line": 198,
+          "referrer": "stories/RC1-011.md",
+          "resolved": "scripts/governance/check_md_packs.py",
+          "severity": "hard"
+        }
+      ],
+      "rule_id": "governance-scripts-governance",
+      "sha256": "f2e706d83a5b08bb5964cce3fe184913326336bc7ae159b5e2ecee73d2ceb2af",
+      "size": 9169,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "GOVERNANCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-scripts",
       "path": "scripts/governance/classify_paths.py",
       "referenced_by": [
         {
@@ -27110,6 +27375,13 @@
         },
         {
           "candidate": "scripts/governance/classify_paths.py",
+          "line": 210,
+          "referrer": "stories/RC1-011.md",
+          "resolved": "scripts/governance/classify_paths.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "scripts/governance/classify_paths.py",
           "line": 13,
           "referrer": "stories/RC1-504.md",
           "resolved": "scripts/governance/classify_paths.py",
@@ -27133,6 +27405,55 @@
       "rule_id": "governance-scripts-governance",
       "sha256": "0da60586691eb1858569d2e60b540d2f36fa7f995570ff9224cc2192e58a9c70",
       "size": 32936,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "GOVERNANCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-scripts",
+      "path": "scripts/governance/evidence_dedup.py",
+      "referenced_by": [
+        {
+          "candidate": "scripts/governance/evidence_dedup.py",
+          "line": 17,
+          "referrer": "sonar-project.properties",
+          "resolved": "scripts/governance/evidence_dedup.py",
+          "severity": "silent"
+        },
+        {
+          "candidate": "scripts/governance/evidence_dedup.py",
+          "line": 56,
+          "referrer": "governance/SONAR-SUPPRESSIONS.md",
+          "resolved": "scripts/governance/evidence_dedup.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "scripts/governance/evidence_dedup.py",
+          "line": 744,
+          "referrer": "governance/path-classification-rules.json",
+          "resolved": "scripts/governance/evidence_dedup.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "scripts/governance/evidence_dedup.py",
+          "line": 202,
+          "referrer": "governance/sonar-suppressions.json",
+          "resolved": "scripts/governance/evidence_dedup.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "scripts/governance/evidence_dedup.py",
+          "line": 148,
+          "referrer": "stories/RC1-011.md",
+          "resolved": "scripts/governance/evidence_dedup.py",
+          "severity": "hard"
+        }
+      ],
+      "rule_id": "governance-scripts-governance",
+      "sha256": "a7eadead20990220d8fd2dacac19ac77bfc0f234832469551be5cc49d0012f81",
+      "size": 8293,
       "target_path": null,
       "type": "text"
     },
@@ -27259,6 +27580,13 @@
           "candidate": "scripts/governance/state_current.py",
           "line": 717,
           "referrer": "scripts/governance/state_current.py",
+          "resolved": "scripts/governance/state_current.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "scripts/governance/state_current.py",
+          "line": 209,
+          "referrer": "stories/RC1-011.md",
           "resolved": "scripts/governance/state_current.py",
           "severity": "hard"
         },
@@ -27392,6 +27720,13 @@
           "candidate": "scripts/governance/validate_authority.py",
           "line": 326,
           "referrer": "scripts/governance/validate_authority.py",
+          "resolved": "scripts/governance/validate_authority.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "scripts/governance/validate_authority.py",
+          "line": 208,
+          "referrer": "stories/RC1-011.md",
           "resolved": "scripts/governance/validate_authority.py",
           "severity": "hard"
         }
@@ -27658,6 +27993,13 @@
           "candidate": "scripts/no_stub_scan.py",
           "line": 110,
           "referrer": "stories/PORT-TESTPROC.md",
+          "resolved": "scripts/no_stub_scan.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "scripts/no_stub_scan.py",
+          "line": 197,
+          "referrer": "stories/RC1-011.md",
           "resolved": "scripts/no_stub_scan.py",
           "severity": "hard"
         },
@@ -28591,6 +28933,13 @@
         },
         {
           "candidate": "scripts/revue.py",
+          "line": 204,
+          "referrer": "governance/sonar-suppressions.json",
+          "resolved": "scripts/revue.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "scripts/revue.py",
           "line": 13,
           "referrer": "scripts/reviews_gate.py",
           "resolved": "scripts/revue.py",
@@ -28628,6 +28977,27 @@
           "candidate": "scripts/revue.py",
           "line": 199,
           "referrer": "stories/ORCH-001.md",
+          "resolved": "scripts/revue.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "scripts/revue.py",
+          "line": 171,
+          "referrer": "stories/RC1-011.md",
+          "resolved": "scripts/revue.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "scripts/revue.py",
+          "line": 213,
+          "referrer": "stories/RC1-011.md",
+          "resolved": "scripts/revue.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "scripts/revue.py",
+          "line": 268,
+          "referrer": "stories/RC1-011.md",
           "resolved": "scripts/revue.py",
           "severity": "hard"
         },
@@ -28834,8 +29204,8 @@
       "path": "sonar-project.properties",
       "referenced_by": [],
       "rule_id": "governance-root-sonar",
-      "sha256": "e9219e0c87e3e525e62b1f2267143aa65117dc72af3f237e87e59aecec2d7bec",
-      "size": 903,
+      "sha256": "9f29ff0d34d698e26144b5b6da8a6c03216be6b22daa7ff947784c653fefa8dc",
+      "size": 1056,
       "target_path": null,
       "type": "text"
     },
@@ -30408,7 +30778,7 @@
         },
         {
           "candidate": "src/forgeai/core/registre.py",
-          "line": 945,
+          "line": 953,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "src/forgeai/core/registre.py",
           "severity": "hard"
@@ -37632,6 +38002,76 @@
       "generated": false,
       "load_bearing": false,
       "owner": "gouvernance-stories",
+      "path": "stories/RC1-011.md",
+      "referenced_by": [
+        {
+          "candidate": "stories/RC1-011.md",
+          "line": 4,
+          "referrer": "scripts/governance/evidence_dedup.py",
+          "resolved": "stories/RC1-011.md",
+          "severity": "hard"
+        },
+        {
+          "candidate": "stories/RC1-011.md",
+          "line": 75,
+          "referrer": "scripts/governance/evidence_dedup.py",
+          "resolved": "stories/RC1-011.md",
+          "severity": "hard"
+        },
+        {
+          "candidate": "stories/RC1-011.md",
+          "line": 3,
+          "referrer": "tests/test_rc1011_dedup.py",
+          "resolved": "stories/RC1-011.md",
+          "severity": "hard"
+        },
+        {
+          "candidate": "stories/RC1-011.md",
+          "line": 55,
+          "referrer": "tests/test_rc1011_packs_md.py",
+          "resolved": "stories/RC1-011.md",
+          "severity": "hard"
+        },
+        {
+          "candidate": "stories/RC1-011.md",
+          "line": 158,
+          "referrer": "tests/test_rc1011_packs_md.py",
+          "resolved": "stories/RC1-011.md",
+          "severity": "hard"
+        },
+        {
+          "candidate": "stories/RC1-011.md",
+          "line": 194,
+          "referrer": "tests/test_rc1011_packs_md.py",
+          "resolved": "stories/RC1-011.md",
+          "severity": "hard"
+        },
+        {
+          "candidate": "stories/RC1-011.md",
+          "line": 203,
+          "referrer": "tests/test_rc1011_packs_md.py",
+          "resolved": "stories/RC1-011.md",
+          "severity": "hard"
+        },
+        {
+          "candidate": "stories/RC1-011.md",
+          "line": 208,
+          "referrer": "tests/test_rc1011_packs_md.py",
+          "resolved": "stories/RC1-011.md",
+          "severity": "hard"
+        }
+      ],
+      "rule_id": "governance-stories",
+      "sha256": "b4969aa64a89c4768b69941cb0312282e3f8e5196c038b61bbbe99e8b7e1d0d2",
+      "size": 21875,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "GOVERNANCE",
+      "generated": false,
+      "load_bearing": false,
+      "owner": "gouvernance-stories",
       "path": "stories/RC1-504.md",
       "referenced_by": [],
       "rule_id": "governance-stories",
@@ -39562,6 +40002,13 @@
           "referrer": "stories/RC1-009.md",
           "resolved": "tests/test_check_doc_links.py",
           "severity": "hard"
+        },
+        {
+          "candidate": "tests/test_check_doc_links.py",
+          "line": 142,
+          "referrer": "stories/RC1-011.md",
+          "resolved": "tests/test_check_doc_links.py",
+          "severity": "hard"
         }
       ],
       "rule_id": "test-suite",
@@ -40041,28 +40488,28 @@
         },
         {
           "candidate": "tests/test_data002b_wal_idempotent.py",
-          "line": 933,
+          "line": 941,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_data002b_wal_idempotent.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_data002b_wal_idempotent.py",
-          "line": 939,
+          "line": 947,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_data002b_wal_idempotent.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_data002b_wal_idempotent.py",
-          "line": 953,
+          "line": 961,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_data002b_wal_idempotent.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_data002b_wal_idempotent.py",
-          "line": 959,
+          "line": 967,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_data002b_wal_idempotent.py",
           "severity": "hard"
@@ -42645,7 +43092,7 @@
       "referenced_by": [
         {
           "candidate": "tests/test_metering_guard.py",
-          "line": 64,
+          "line": 65,
           "referrer": "governance/SONAR-SUPPRESSIONS.md",
           "resolved": "tests/test_metering_guard.py",
           "severity": "hard"
@@ -42666,7 +43113,7 @@
         },
         {
           "candidate": "tests/test_metering_guard.py",
-          "line": 309,
+          "line": 322,
           "referrer": "governance/sonar-suppressions.json",
           "resolved": "tests/test_metering_guard.py",
           "severity": "hard"
@@ -45126,6 +45573,125 @@
       "generated": false,
       "load_bearing": true,
       "owner": "test-suite",
+      "path": "tests/test_rc1011_dedup.py",
+      "referenced_by": [
+        {
+          "candidate": "tests/test_rc1011_dedup.py",
+          "line": 56,
+          "referrer": "governance/SONAR-SUPPRESSIONS.md",
+          "resolved": "tests/test_rc1011_dedup.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "tests/test_rc1011_dedup.py",
+          "line": 642,
+          "referrer": "governance/STATE-CURRENT.json",
+          "resolved": "tests/test_rc1011_dedup.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "tests/test_rc1011_dedup.py",
+          "line": 648,
+          "referrer": "governance/STATE-CURRENT.md",
+          "resolved": "tests/test_rc1011_dedup.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "tests/test_rc1011_dedup.py",
+          "line": 205,
+          "referrer": "governance/sonar-suppressions.json",
+          "resolved": "tests/test_rc1011_dedup.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "tests/test_rc1011_dedup.py",
+          "line": 149,
+          "referrer": "stories/RC1-011.md",
+          "resolved": "tests/test_rc1011_dedup.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "tests/test_rc1011_dedup.py",
+          "line": 201,
+          "referrer": "stories/RC1-011.md",
+          "resolved": "tests/test_rc1011_dedup.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "tests/test_rc1011_dedup.py",
+          "line": 230,
+          "referrer": "stories/RC1-011.md",
+          "resolved": "tests/test_rc1011_dedup.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "tests/test_rc1011_dedup.py",
+          "line": 262,
+          "referrer": "stories/RC1-011.md",
+          "resolved": "tests/test_rc1011_dedup.py",
+          "severity": "hard"
+        }
+      ],
+      "rule_id": "test-suite",
+      "sha256": "382d974328509143dfcda8a7cfa188ce27270ff81a2296f524527071edd24bc2",
+      "size": 15574,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "TEST",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "test-suite",
+      "path": "tests/test_rc1011_packs_md.py",
+      "referenced_by": [
+        {
+          "candidate": "tests/test_rc1011_packs_md.py",
+          "line": 646,
+          "referrer": "governance/STATE-CURRENT.json",
+          "resolved": "tests/test_rc1011_packs_md.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "tests/test_rc1011_packs_md.py",
+          "line": 652,
+          "referrer": "governance/STATE-CURRENT.md",
+          "resolved": "tests/test_rc1011_packs_md.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "tests/test_rc1011_packs_md.py",
+          "line": 149,
+          "referrer": "stories/RC1-011.md",
+          "resolved": "tests/test_rc1011_packs_md.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "tests/test_rc1011_packs_md.py",
+          "line": 201,
+          "referrer": "stories/RC1-011.md",
+          "resolved": "tests/test_rc1011_packs_md.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "tests/test_rc1011_packs_md.py",
+          "line": 259,
+          "referrer": "tests/test_rc1011_dedup.py",
+          "resolved": "tests/test_rc1011_packs_md.py",
+          "severity": "hard"
+        }
+      ],
+      "rule_id": "test-suite",
+      "sha256": "71363f9130dfca106e3ff1b8161303ba1c94525932dc527a763a9f930b908474",
+      "size": 11935,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "TEST",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "test-suite",
       "path": "tests/test_rc1016_sonar_suppressions.py",
       "referenced_by": [
         {
@@ -45144,14 +45710,14 @@
         },
         {
           "candidate": "tests/test_rc1016_sonar_suppressions.py",
-          "line": 642,
+          "line": 650,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_rc1016_sonar_suppressions.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_rc1016_sonar_suppressions.py",
-          "line": 648,
+          "line": 656,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_rc1016_sonar_suppressions.py",
           "severity": "hard"
@@ -45179,14 +45745,14 @@
         },
         {
           "candidate": "tests/test_rc1017_matrice_python.py",
-          "line": 646,
+          "line": 654,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_rc1017_matrice_python.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_rc1017_matrice_python.py",
-          "line": 652,
+          "line": 660,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_rc1017_matrice_python.py",
           "severity": "hard"
@@ -45235,14 +45801,14 @@
         },
         {
           "candidate": "tests/test_readme_dist_status.py",
-          "line": 650,
+          "line": 658,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_readme_dist_status.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_readme_dist_status.py",
-          "line": 656,
+          "line": 664,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_readme_dist_status.py",
           "severity": "hard"
@@ -45263,14 +45829,14 @@
       "referenced_by": [
         {
           "candidate": "tests/test_receptacles.py",
-          "line": 654,
+          "line": 662,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_receptacles.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_receptacles.py",
-          "line": 660,
+          "line": 668,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_receptacles.py",
           "severity": "hard"
@@ -45291,14 +45857,14 @@
       "referenced_by": [
         {
           "candidate": "tests/test_redaction.py",
-          "line": 658,
+          "line": 666,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_redaction.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_redaction.py",
-          "line": 664,
+          "line": 672,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_redaction.py",
           "severity": "hard"
@@ -45340,14 +45906,14 @@
       "referenced_by": [
         {
           "candidate": "tests/test_redaction_adoption.py",
-          "line": 662,
+          "line": 670,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_redaction_adoption.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_redaction_adoption.py",
-          "line": 668,
+          "line": 676,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_redaction_adoption.py",
           "severity": "hard"
@@ -45368,14 +45934,14 @@
       "referenced_by": [
         {
           "candidate": "tests/test_reeval_defaults.py",
-          "line": 666,
+          "line": 674,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_reeval_defaults.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_reeval_defaults.py",
-          "line": 672,
+          "line": 680,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_reeval_defaults.py",
           "severity": "hard"
@@ -45396,14 +45962,14 @@
       "referenced_by": [
         {
           "candidate": "tests/test_reg029a_completude.py",
-          "line": 670,
+          "line": 678,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_reg029a_completude.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_reg029a_completude.py",
-          "line": 676,
+          "line": 684,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_reg029a_completude.py",
           "severity": "hard"
@@ -45445,14 +46011,14 @@
         },
         {
           "candidate": "tests/test_reg029b_ancrage.py",
-          "line": 674,
+          "line": 682,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_reg029b_ancrage.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_reg029b_ancrage.py",
-          "line": 680,
+          "line": 688,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_reg029b_ancrage.py",
           "severity": "hard"
@@ -45550,14 +46116,14 @@
         },
         {
           "candidate": "tests/test_registre.py",
-          "line": 678,
+          "line": 686,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_registre.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_registre.py",
-          "line": 684,
+          "line": 692,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_registre.py",
           "severity": "hard"
@@ -45620,14 +46186,14 @@
         },
         {
           "candidate": "tests/test_registre_concurrence.py",
-          "line": 682,
+          "line": 690,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_registre_concurrence.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_registre_concurrence.py",
-          "line": 688,
+          "line": 696,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_registre_concurrence.py",
           "severity": "hard"
@@ -45655,14 +46221,14 @@
       "referenced_by": [
         {
           "candidate": "tests/test_rel038a_prepare_persist.py",
-          "line": 686,
+          "line": 694,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_rel038a_prepare_persist.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_rel038a_prepare_persist.py",
-          "line": 692,
+          "line": 700,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_rel038a_prepare_persist.py",
           "severity": "hard"
@@ -45704,14 +46270,14 @@
         },
         {
           "candidate": "tests/test_rel038b_unicite.py",
-          "line": 690,
+          "line": 698,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_rel038b_unicite.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_rel038b_unicite.py",
-          "line": 696,
+          "line": 704,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_rel038b_unicite.py",
           "severity": "hard"
@@ -45774,14 +46340,14 @@
         },
         {
           "candidate": "tests/test_rel038c_process_groups.py",
-          "line": 694,
+          "line": 702,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_rel038c_process_groups.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_rel038c_process_groups.py",
-          "line": 700,
+          "line": 708,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_rel038c_process_groups.py",
           "severity": "hard"
@@ -45816,14 +46382,14 @@
       "referenced_by": [
         {
           "candidate": "tests/test_remote_probe.py",
-          "line": 698,
+          "line": 706,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_remote_probe.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_remote_probe.py",
-          "line": 704,
+          "line": 712,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_remote_probe.py",
           "severity": "hard"
@@ -45893,14 +46459,14 @@
         },
         {
           "candidate": "tests/test_renderers.py",
-          "line": 702,
+          "line": 710,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_renderers.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_renderers.py",
-          "line": 708,
+          "line": 716,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_renderers.py",
           "severity": "hard"
@@ -45984,14 +46550,14 @@
         },
         {
           "candidate": "tests/test_res_classes_stack_minimal.py",
-          "line": 706,
+          "line": 714,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_res_classes_stack_minimal.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_res_classes_stack_minimal.py",
-          "line": 712,
+          "line": 720,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_res_classes_stack_minimal.py",
           "severity": "hard"
@@ -46033,14 +46599,14 @@
         },
         {
           "candidate": "tests/test_reviews_gate.py",
-          "line": 710,
+          "line": 718,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_reviews_gate.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_reviews_gate.py",
-          "line": 716,
+          "line": 724,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_reviews_gate.py",
           "severity": "hard"
@@ -46117,14 +46683,14 @@
         },
         {
           "candidate": "tests/test_revue.py",
-          "line": 714,
+          "line": 722,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_revue.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_revue.py",
-          "line": 720,
+          "line": 728,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_revue.py",
           "severity": "hard"
@@ -46208,14 +46774,14 @@
         },
         {
           "candidate": "tests/test_routestore_concurrence.py",
-          "line": 718,
+          "line": 726,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_routestore_concurrence.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_routestore_concurrence.py",
-          "line": 724,
+          "line": 732,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_routestore_concurrence.py",
           "severity": "hard"
@@ -46236,14 +46802,14 @@
       "referenced_by": [
         {
           "candidate": "tests/test_ruff_report.py",
-          "line": 722,
+          "line": 730,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_ruff_report.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_ruff_report.py",
-          "line": 728,
+          "line": 736,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_ruff_report.py",
           "severity": "hard"
@@ -46264,14 +46830,14 @@
       "referenced_by": [
         {
           "candidate": "tests/test_selection_complete.py",
-          "line": 726,
+          "line": 734,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_selection_complete.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_selection_complete.py",
-          "line": 732,
+          "line": 740,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_selection_complete.py",
           "severity": "hard"
@@ -46292,14 +46858,14 @@
       "referenced_by": [
         {
           "candidate": "tests/test_selection_v2.py",
-          "line": 730,
+          "line": 738,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_selection_v2.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_selection_v2.py",
-          "line": 736,
+          "line": 744,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_selection_v2.py",
           "severity": "hard"
@@ -46320,14 +46886,14 @@
       "referenced_by": [
         {
           "candidate": "tests/test_sentinelle_sweep.py",
-          "line": 734,
+          "line": 742,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_sentinelle_sweep.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_sentinelle_sweep.py",
-          "line": 740,
+          "line": 748,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_sentinelle_sweep.py",
           "severity": "hard"
@@ -46432,14 +46998,14 @@
         },
         {
           "candidate": "tests/test_server_cache.py",
-          "line": 738,
+          "line": 746,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_server_cache.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_server_cache.py",
-          "line": 744,
+          "line": 752,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_server_cache.py",
           "severity": "hard"
@@ -46467,14 +47033,14 @@
       "referenced_by": [
         {
           "candidate": "tests/test_service_spec_injection_yaml.py",
-          "line": 742,
+          "line": 750,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_service_spec_injection_yaml.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_service_spec_injection_yaml.py",
-          "line": 748,
+          "line": 756,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_service_spec_injection_yaml.py",
           "severity": "hard"
@@ -46516,14 +47082,14 @@
         },
         {
           "candidate": "tests/test_spheres.py",
-          "line": 746,
+          "line": 754,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_spheres.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_spheres.py",
-          "line": 752,
+          "line": 760,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_spheres.py",
           "severity": "hard"
@@ -46551,14 +47117,14 @@
         },
         {
           "candidate": "tests/test_ssh007_hostkey.py",
-          "line": 750,
+          "line": 758,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_ssh007_hostkey.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_ssh007_hostkey.py",
-          "line": 756,
+          "line": 764,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_ssh007_hostkey.py",
           "severity": "hard"
@@ -46593,14 +47159,14 @@
       "referenced_by": [
         {
           "candidate": "tests/test_ssh021_nodeadd.py",
-          "line": 754,
+          "line": 762,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_ssh021_nodeadd.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_ssh021_nodeadd.py",
-          "line": 760,
+          "line": 768,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_ssh021_nodeadd.py",
           "severity": "hard"
@@ -46642,14 +47208,14 @@
         },
         {
           "candidate": "tests/test_ssh030_argv_ssh.py",
-          "line": 758,
+          "line": 766,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_ssh030_argv_ssh.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_ssh030_argv_ssh.py",
-          "line": 764,
+          "line": 772,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_ssh030_argv_ssh.py",
           "severity": "hard"
@@ -46670,14 +47236,14 @@
       "referenced_by": [
         {
           "candidate": "tests/test_ssh_injection.py",
-          "line": 762,
+          "line": 770,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_ssh_injection.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_ssh_injection.py",
-          "line": 768,
+          "line": 776,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_ssh_injection.py",
           "severity": "hard"
@@ -46705,14 +47271,14 @@
         },
         {
           "candidate": "tests/test_stack_traversal.py",
-          "line": 766,
+          "line": 774,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_stack_traversal.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_stack_traversal.py",
-          "line": 772,
+          "line": 780,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_stack_traversal.py",
           "severity": "hard"
@@ -46747,14 +47313,14 @@
         },
         {
           "candidate": "tests/test_stacks.py",
-          "line": 770,
+          "line": 778,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_stacks.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_stacks.py",
-          "line": 776,
+          "line": 784,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_stacks.py",
           "severity": "hard"
@@ -46803,14 +47369,14 @@
         },
         {
           "candidate": "tests/test_state_current.py",
-          "line": 774,
+          "line": 782,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_state_current.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_state_current.py",
-          "line": 780,
+          "line": 788,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_state_current.py",
           "severity": "hard"
@@ -46831,14 +47397,14 @@
       "referenced_by": [
         {
           "candidate": "tests/test_supply018.py",
-          "line": 778,
+          "line": 786,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_supply018.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_supply018.py",
-          "line": 784,
+          "line": 792,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_supply018.py",
           "severity": "hard"
@@ -46873,14 +47439,14 @@
       "referenced_by": [
         {
           "candidate": "tests/test_tailscale.py",
-          "line": 782,
+          "line": 790,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_tailscale.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_tailscale.py",
-          "line": 788,
+          "line": 796,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_tailscale.py",
           "severity": "hard"
@@ -46908,14 +47474,14 @@
         },
         {
           "candidate": "tests/test_tailscale_optin.py",
-          "line": 786,
+          "line": 794,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_tailscale_optin.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_tailscale_optin.py",
-          "line": 792,
+          "line": 800,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_tailscale_optin.py",
           "severity": "hard"
@@ -46936,14 +47502,14 @@
       "referenced_by": [
         {
           "candidate": "tests/test_tally.py",
-          "line": 790,
+          "line": 798,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_tally.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_tally.py",
-          "line": 796,
+          "line": 804,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_tally.py",
           "severity": "hard"
@@ -46971,14 +47537,14 @@
         },
         {
           "candidate": "tests/test_templates.py",
-          "line": 794,
+          "line": 802,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_templates.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_templates.py",
-          "line": 800,
+          "line": 808,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_templates.py",
           "severity": "hard"
@@ -46999,14 +47565,14 @@
       "referenced_by": [
         {
           "candidate": "tests/test_traductions.py",
-          "line": 798,
+          "line": 806,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_traductions.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_traductions.py",
-          "line": 804,
+          "line": 812,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_traductions.py",
           "severity": "hard"
@@ -47048,14 +47614,14 @@
         },
         {
           "candidate": "tests/test_ui_7_etapes.py",
-          "line": 802,
+          "line": 810,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_ui_7_etapes.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_ui_7_etapes.py",
-          "line": 808,
+          "line": 816,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_ui_7_etapes.py",
           "severity": "hard"
@@ -47153,14 +47719,14 @@
         },
         {
           "candidate": "tests/test_ui_n2b.py",
-          "line": 806,
+          "line": 814,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_ui_n2b.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_ui_n2b.py",
-          "line": 812,
+          "line": 820,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_ui_n2b.py",
           "severity": "hard"
@@ -47223,14 +47789,14 @@
         },
         {
           "candidate": "tests/test_ui_s6b.py",
-          "line": 810,
+          "line": 818,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_ui_s6b.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_ui_s6b.py",
-          "line": 816,
+          "line": 824,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_ui_s6b.py",
           "severity": "hard"
@@ -47265,14 +47831,14 @@
       "referenced_by": [
         {
           "candidate": "tests/test_v1fix_erreurs.py",
-          "line": 814,
+          "line": 822,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_v1fix_erreurs.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_v1fix_erreurs.py",
-          "line": 820,
+          "line": 828,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_v1fix_erreurs.py",
           "severity": "hard"
@@ -47531,14 +48097,14 @@
         },
         {
           "candidate": "tests/test_vault.py",
-          "line": 818,
+          "line": 826,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_vault.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_vault.py",
-          "line": 824,
+          "line": 832,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_vault.py",
           "severity": "hard"
@@ -47559,14 +48125,14 @@
       "referenced_by": [
         {
           "candidate": "tests/test_vault_e2e.py",
-          "line": 822,
+          "line": 830,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_vault_e2e.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_vault_e2e.py",
-          "line": 828,
+          "line": 836,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_vault_e2e.py",
           "severity": "hard"
@@ -47594,14 +48160,14 @@
       "referenced_by": [
         {
           "candidate": "tests/test_web015_error_normalization.py",
-          "line": 826,
+          "line": 834,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_web015_error_normalization.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_web015_error_normalization.py",
-          "line": 832,
+          "line": 840,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_web015_error_normalization.py",
           "severity": "hard"
@@ -47636,14 +48202,14 @@
       "referenced_by": [
         {
           "candidate": "tests/test_web016_ratelimit_integration.py",
-          "line": 830,
+          "line": 838,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_web016_ratelimit_integration.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_web016_ratelimit_integration.py",
-          "line": 836,
+          "line": 844,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_web016_ratelimit_integration.py",
           "severity": "hard"
@@ -47678,14 +48244,14 @@
       "referenced_by": [
         {
           "candidate": "tests/test_web017_get_policy.py",
-          "line": 834,
+          "line": 842,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_web017_get_policy.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_web017_get_policy.py",
-          "line": 840,
+          "line": 848,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_web017_get_policy.py",
           "severity": "hard"
@@ -47720,14 +48286,14 @@
       "referenced_by": [
         {
           "candidate": "tests/test_web034a_security_headers.py",
-          "line": 838,
+          "line": 846,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_web034a_security_headers.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_web034a_security_headers.py",
-          "line": 844,
+          "line": 852,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_web034a_security_headers.py",
           "severity": "hard"
@@ -47762,14 +48328,14 @@
       "referenced_by": [
         {
           "candidate": "tests/test_web034b_secure_transport.py",
-          "line": 842,
+          "line": 850,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_web034b_secure_transport.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_web034b_secure_transport.py",
-          "line": 848,
+          "line": 856,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_web034b_secure_transport.py",
           "severity": "hard"
@@ -47804,14 +48370,14 @@
       "referenced_by": [
         {
           "candidate": "tests/test_web_auth.py",
-          "line": 846,
+          "line": 854,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_web_auth.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_web_auth.py",
-          "line": 852,
+          "line": 860,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_web_auth.py",
           "severity": "hard"
@@ -47888,14 +48454,14 @@
       "referenced_by": [
         {
           "candidate": "tests/test_web_bricks.py",
-          "line": 850,
+          "line": 858,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_web_bricks.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_web_bricks.py",
-          "line": 856,
+          "line": 864,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_web_bricks.py",
           "severity": "hard"
@@ -47923,14 +48489,14 @@
         },
         {
           "candidate": "tests/test_web_deploy.py",
-          "line": 854,
+          "line": 862,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_web_deploy.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_web_deploy.py",
-          "line": 860,
+          "line": 868,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_web_deploy.py",
           "severity": "hard"
@@ -47972,14 +48538,14 @@
       "referenced_by": [
         {
           "candidate": "tests/test_web_deploy_load_stack_once.py",
-          "line": 858,
+          "line": 866,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_web_deploy_load_stack_once.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_web_deploy_load_stack_once.py",
-          "line": 864,
+          "line": 872,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_web_deploy_load_stack_once.py",
           "severity": "hard"
@@ -48014,14 +48580,14 @@
         },
         {
           "candidate": "tests/test_web_i18n.py",
-          "line": 862,
+          "line": 870,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_web_i18n.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_web_i18n.py",
-          "line": 868,
+          "line": 876,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_web_i18n.py",
           "severity": "hard"
@@ -48084,14 +48650,14 @@
       "referenced_by": [
         {
           "candidate": "tests/test_web_models.py",
-          "line": 866,
+          "line": 874,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_web_models.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_web_models.py",
-          "line": 872,
+          "line": 880,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_web_models.py",
           "severity": "hard"
@@ -48112,14 +48678,14 @@
       "referenced_by": [
         {
           "candidate": "tests/test_web_models_local.py",
-          "line": 870,
+          "line": 878,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_web_models_local.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_web_models_local.py",
-          "line": 876,
+          "line": 884,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_web_models_local.py",
           "severity": "hard"
@@ -48140,14 +48706,14 @@
       "referenced_by": [
         {
           "candidate": "tests/test_web_nodes.py",
-          "line": 874,
+          "line": 882,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_web_nodes.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_web_nodes.py",
-          "line": 880,
+          "line": 888,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_web_nodes.py",
           "severity": "hard"
@@ -48175,14 +48741,14 @@
       "referenced_by": [
         {
           "candidate": "tests/test_web_nodes_vendors.py",
-          "line": 878,
+          "line": 886,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_web_nodes_vendors.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_web_nodes_vendors.py",
-          "line": 884,
+          "line": 892,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_web_nodes_vendors.py",
           "severity": "hard"
@@ -48203,14 +48769,14 @@
       "referenced_by": [
         {
           "candidate": "tests/test_web_server.py",
-          "line": 882,
+          "line": 890,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_web_server.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_web_server.py",
-          "line": 888,
+          "line": 896,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_web_server.py",
           "severity": "hard"
@@ -48238,14 +48804,14 @@
       "referenced_by": [
         {
           "candidate": "tests/test_web_stacks.py",
-          "line": 886,
+          "line": 894,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_web_stacks.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_web_stacks.py",
-          "line": 892,
+          "line": 900,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_web_stacks.py",
           "severity": "hard"
@@ -48280,14 +48846,14 @@
         },
         {
           "candidate": "tests/test_wizard_health.py",
-          "line": 890,
+          "line": 898,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_wizard_health.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_wizard_health.py",
-          "line": 896,
+          "line": 904,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_wizard_health.py",
           "severity": "hard"
@@ -48329,14 +48895,14 @@
         },
         {
           "candidate": "tests/test_wizard_rag_durci.py",
-          "line": 894,
+          "line": 902,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_wizard_rag_durci.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_wizard_rag_durci.py",
-          "line": 900,
+          "line": 908,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_wizard_rag_durci.py",
           "severity": "hard"
@@ -48352,6 +48918,11 @@
   "reference_graph": {
     "completeness": "best_effort",
     "dangling": [
+      {
+        "candidate": "RC1-011-v1",
+        "line": 186,
+        "referrer": "evidence/reviews/BINDING.txt"
+      },
       {
         "candidate": "TUI/UX",
         "line": 3,
@@ -58086,6 +58657,526 @@
         "candidate": "AUDIT-OUTPUT/sast/semgrep.json",
         "line": 15,
         "referrer": "evidence/audit-output/sast/scanner-versions.txt"
+      },
+      {
+        "candidate": "reviews/RAG-005/RED-reproduction.txt",
+        "line": 5,
+        "referrer": "evidence/dedup/manifest-apres.json"
+      },
+      {
+        "candidate": "reviews/RAG-005/evidence/RED.txt",
+        "line": 8,
+        "referrer": "evidence/dedup/manifest-apres.json"
+      },
+      {
+        "candidate": "reviews/K8S-024/RED-reproduction.txt",
+        "line": 13,
+        "referrer": "evidence/dedup/manifest-apres.json"
+      },
+      {
+        "candidate": "reviews/K8S-024/evidence/RED.txt",
+        "line": 16,
+        "referrer": "evidence/dedup/manifest-apres.json"
+      },
+      {
+        "candidate": "reviews/plan-v1.0/round-1/glm.verdict.json",
+        "line": 24,
+        "referrer": "evidence/dedup/manifest-apres.json"
+      },
+      {
+        "candidate": "reviews/plan-v1.0/round-1/kimi.verdict.json",
+        "line": 25,
+        "referrer": "evidence/dedup/manifest-apres.json"
+      },
+      {
+        "candidate": "reviews/K8S-023/GREEN-focused.txt",
+        "line": 30,
+        "referrer": "evidence/dedup/manifest-apres.json"
+      },
+      {
+        "candidate": "reviews/K8S-023/evidence/GREEN.txt",
+        "line": 33,
+        "referrer": "evidence/dedup/manifest-apres.json"
+      },
+      {
+        "candidate": "reviews/p2-network/deepseek.verdict.json",
+        "line": 41,
+        "referrer": "evidence/dedup/manifest-apres.json"
+      },
+      {
+        "candidate": "reviews/p2-network/longcat.verdict.json",
+        "line": 42,
+        "referrer": "evidence/dedup/manifest-apres.json"
+      },
+      {
+        "candidate": "reviews/conformite-v2/round-2/deepseek.verdict.json",
+        "line": 50,
+        "referrer": "evidence/dedup/manifest-apres.json"
+      },
+      {
+        "candidate": "reviews/conformite-v2/round-2/gemini.verdict.json",
+        "line": 51,
+        "referrer": "evidence/dedup/manifest-apres.json"
+      },
+      {
+        "candidate": "reviews/K8S-027/RED-reproduction.txt",
+        "line": 56,
+        "referrer": "evidence/dedup/manifest-apres.json"
+      },
+      {
+        "candidate": "reviews/K8S-027/evidence/RED.txt",
+        "line": 59,
+        "referrer": "evidence/dedup/manifest-apres.json"
+      },
+      {
+        "candidate": "reviews/RAG-004B/RED-reproduction.txt",
+        "line": 64,
+        "referrer": "evidence/dedup/manifest-apres.json"
+      },
+      {
+        "candidate": "reviews/RAG-004B/evidence/RED.txt",
+        "line": 67,
+        "referrer": "evidence/dedup/manifest-apres.json"
+      },
+      {
+        "candidate": "reviews/RES-012B/GREEN-focused.txt",
+        "line": 72,
+        "referrer": "evidence/dedup/manifest-apres.json"
+      },
+      {
+        "candidate": "reviews/RES-012B/evidence/GREEN.txt",
+        "line": 75,
+        "referrer": "evidence/dedup/manifest-apres.json"
+      },
+      {
+        "candidate": "reviews/PLACE-011/RED-reproduction.txt",
+        "line": 80,
+        "referrer": "evidence/dedup/manifest-apres.json"
+      },
+      {
+        "candidate": "reviews/PLACE-011/evidence/RED.txt",
+        "line": 83,
+        "referrer": "evidence/dedup/manifest-apres.json"
+      },
+      {
+        "candidate": "reviews/K8S-022/RED-reproduction.txt",
+        "line": 88,
+        "referrer": "evidence/dedup/manifest-apres.json"
+      },
+      {
+        "candidate": "reviews/K8S-022/evidence/RED.txt",
+        "line": 91,
+        "referrer": "evidence/dedup/manifest-apres.json"
+      },
+      {
+        "candidate": "reviews/plan-v1.0/round-2/composer.verdict.json",
+        "line": 99,
+        "referrer": "evidence/dedup/manifest-apres.json"
+      },
+      {
+        "candidate": "reviews/plan-v1.0/round-2/deepseek.verdict.json",
+        "line": 100,
+        "referrer": "evidence/dedup/manifest-apres.json"
+      },
+      {
+        "candidate": "reviews/plan-v1.0/round-2/glm.verdict.json",
+        "line": 101,
+        "referrer": "evidence/dedup/manifest-apres.json"
+      },
+      {
+        "candidate": "reviews/plan-v1.0/round-2/kimi.verdict.json",
+        "line": 102,
+        "referrer": "evidence/dedup/manifest-apres.json"
+      },
+      {
+        "candidate": "reviews/plan-v1.0/round-2/qwen.verdict.json",
+        "line": 103,
+        "referrer": "evidence/dedup/manifest-apres.json"
+      },
+      {
+        "candidate": "reviews/K8S-024/GREEN-focused.txt",
+        "line": 108,
+        "referrer": "evidence/dedup/manifest-apres.json"
+      },
+      {
+        "candidate": "reviews/K8S-024/evidence/GREEN.txt",
+        "line": 111,
+        "referrer": "evidence/dedup/manifest-apres.json"
+      },
+      {
+        "candidate": "reviews/PLACE-011/GREEN-focused.txt",
+        "line": 116,
+        "referrer": "evidence/dedup/manifest-apres.json"
+      },
+      {
+        "candidate": "reviews/PLACE-011/evidence/GREEN.txt",
+        "line": 119,
+        "referrer": "evidence/dedup/manifest-apres.json"
+      },
+      {
+        "candidate": "reviews/K8S-023/RED-reproduction.txt",
+        "line": 124,
+        "referrer": "evidence/dedup/manifest-apres.json"
+      },
+      {
+        "candidate": "reviews/K8S-023/evidence/RED.txt",
+        "line": 127,
+        "referrer": "evidence/dedup/manifest-apres.json"
+      },
+      {
+        "candidate": "reviews/PLACE-026B/GREEN-focused.txt",
+        "line": 132,
+        "referrer": "evidence/dedup/manifest-apres.json"
+      },
+      {
+        "candidate": "reviews/PLACE-026B/evidence/GREEN.txt",
+        "line": 135,
+        "referrer": "evidence/dedup/manifest-apres.json"
+      },
+      {
+        "candidate": "reviews/RES-012B/RED-reproduction.txt",
+        "line": 140,
+        "referrer": "evidence/dedup/manifest-apres.json"
+      },
+      {
+        "candidate": "reviews/RES-012B/evidence/RED.txt",
+        "line": 143,
+        "referrer": "evidence/dedup/manifest-apres.json"
+      },
+      {
+        "candidate": "reviews/K8S-022/GREEN-focused.txt",
+        "line": 148,
+        "referrer": "evidence/dedup/manifest-apres.json"
+      },
+      {
+        "candidate": "reviews/K8S-022/evidence/GREEN.txt",
+        "line": 151,
+        "referrer": "evidence/dedup/manifest-apres.json"
+      },
+      {
+        "candidate": "reviews/PLACE-026B/RED-reproduction.txt",
+        "line": 156,
+        "referrer": "evidence/dedup/manifest-apres.json"
+      },
+      {
+        "candidate": "reviews/PLACE-026B/evidence/RED.txt",
+        "line": 159,
+        "referrer": "evidence/dedup/manifest-apres.json"
+      },
+      {
+        "candidate": "reviews/K8S-027/GREEN-focused.txt",
+        "line": 164,
+        "referrer": "evidence/dedup/manifest-apres.json"
+      },
+      {
+        "candidate": "reviews/K8S-027/evidence/GREEN.txt",
+        "line": 167,
+        "referrer": "evidence/dedup/manifest-apres.json"
+      },
+      {
+        "candidate": "reviews/RAG-004B/GREEN-focused.txt",
+        "line": 172,
+        "referrer": "evidence/dedup/manifest-apres.json"
+      },
+      {
+        "candidate": "reviews/RAG-004B/evidence/GREEN.txt",
+        "line": 175,
+        "referrer": "evidence/dedup/manifest-apres.json"
+      },
+      {
+        "candidate": "reviews/AUDIT-CAND-001-R2/pack.md",
+        "line": 180,
+        "referrer": "evidence/dedup/manifest-apres.json"
+      },
+      {
+        "candidate": "reviews/AUDIT-CAND-001/pack.md",
+        "line": 183,
+        "referrer": "evidence/dedup/manifest-apres.json"
+      },
+      {
+        "candidate": "reviews/HW-010/GREEN-focused.txt",
+        "line": 188,
+        "referrer": "evidence/dedup/manifest-apres.json"
+      },
+      {
+        "candidate": "reviews/OPT-002/GREEN-focused.txt",
+        "line": 191,
+        "referrer": "evidence/dedup/manifest-apres.json"
+      },
+      {
+        "candidate": "reviews/HW-009/GREEN-focused.txt",
+        "line": 196,
+        "referrer": "evidence/dedup/manifest-apres.json"
+      },
+      {
+        "candidate": "reviews/PLACE-026A/GREEN-focused.txt",
+        "line": 199,
+        "referrer": "evidence/dedup/manifest-apres.json"
+      },
+      {
+        "candidate": "evidence-dedup/1",
+        "line": 206,
+        "referrer": "evidence/dedup/manifest-apres.json"
+      },
+      {
+        "candidate": "reviews/RAG-005/RED-reproduction.txt",
+        "line": 5,
+        "referrer": "evidence/dedup/manifest-avant.json"
+      },
+      {
+        "candidate": "reviews/RAG-005/evidence/RED.txt",
+        "line": 8,
+        "referrer": "evidence/dedup/manifest-avant.json"
+      },
+      {
+        "candidate": "reviews/K8S-024/RED-reproduction.txt",
+        "line": 13,
+        "referrer": "evidence/dedup/manifest-avant.json"
+      },
+      {
+        "candidate": "reviews/K8S-024/evidence/RED.txt",
+        "line": 16,
+        "referrer": "evidence/dedup/manifest-avant.json"
+      },
+      {
+        "candidate": "reviews/plan-v1.0/round-1/glm.verdict.json",
+        "line": 24,
+        "referrer": "evidence/dedup/manifest-avant.json"
+      },
+      {
+        "candidate": "reviews/plan-v1.0/round-1/kimi.verdict.json",
+        "line": 25,
+        "referrer": "evidence/dedup/manifest-avant.json"
+      },
+      {
+        "candidate": "reviews/K8S-023/GREEN-focused.txt",
+        "line": 30,
+        "referrer": "evidence/dedup/manifest-avant.json"
+      },
+      {
+        "candidate": "reviews/K8S-023/evidence/GREEN.txt",
+        "line": 33,
+        "referrer": "evidence/dedup/manifest-avant.json"
+      },
+      {
+        "candidate": "reviews/p2-network/deepseek.verdict.json",
+        "line": 41,
+        "referrer": "evidence/dedup/manifest-avant.json"
+      },
+      {
+        "candidate": "reviews/p2-network/longcat.verdict.json",
+        "line": 42,
+        "referrer": "evidence/dedup/manifest-avant.json"
+      },
+      {
+        "candidate": "reviews/conformite-v2/round-2/deepseek.verdict.json",
+        "line": 50,
+        "referrer": "evidence/dedup/manifest-avant.json"
+      },
+      {
+        "candidate": "reviews/conformite-v2/round-2/gemini.verdict.json",
+        "line": 51,
+        "referrer": "evidence/dedup/manifest-avant.json"
+      },
+      {
+        "candidate": "reviews/K8S-027/RED-reproduction.txt",
+        "line": 56,
+        "referrer": "evidence/dedup/manifest-avant.json"
+      },
+      {
+        "candidate": "reviews/K8S-027/evidence/RED.txt",
+        "line": 59,
+        "referrer": "evidence/dedup/manifest-avant.json"
+      },
+      {
+        "candidate": "reviews/RAG-004B/RED-reproduction.txt",
+        "line": 64,
+        "referrer": "evidence/dedup/manifest-avant.json"
+      },
+      {
+        "candidate": "reviews/RAG-004B/evidence/RED.txt",
+        "line": 67,
+        "referrer": "evidence/dedup/manifest-avant.json"
+      },
+      {
+        "candidate": "reviews/RES-012B/GREEN-focused.txt",
+        "line": 72,
+        "referrer": "evidence/dedup/manifest-avant.json"
+      },
+      {
+        "candidate": "reviews/RES-012B/evidence/GREEN.txt",
+        "line": 75,
+        "referrer": "evidence/dedup/manifest-avant.json"
+      },
+      {
+        "candidate": "reviews/PLACE-011/RED-reproduction.txt",
+        "line": 80,
+        "referrer": "evidence/dedup/manifest-avant.json"
+      },
+      {
+        "candidate": "reviews/PLACE-011/evidence/RED.txt",
+        "line": 83,
+        "referrer": "evidence/dedup/manifest-avant.json"
+      },
+      {
+        "candidate": "reviews/K8S-022/RED-reproduction.txt",
+        "line": 88,
+        "referrer": "evidence/dedup/manifest-avant.json"
+      },
+      {
+        "candidate": "reviews/K8S-022/evidence/RED.txt",
+        "line": 91,
+        "referrer": "evidence/dedup/manifest-avant.json"
+      },
+      {
+        "candidate": "reviews/plan-v1.0/round-2/composer.verdict.json",
+        "line": 99,
+        "referrer": "evidence/dedup/manifest-avant.json"
+      },
+      {
+        "candidate": "reviews/plan-v1.0/round-2/deepseek.verdict.json",
+        "line": 100,
+        "referrer": "evidence/dedup/manifest-avant.json"
+      },
+      {
+        "candidate": "reviews/plan-v1.0/round-2/glm.verdict.json",
+        "line": 101,
+        "referrer": "evidence/dedup/manifest-avant.json"
+      },
+      {
+        "candidate": "reviews/plan-v1.0/round-2/kimi.verdict.json",
+        "line": 102,
+        "referrer": "evidence/dedup/manifest-avant.json"
+      },
+      {
+        "candidate": "reviews/plan-v1.0/round-2/qwen.verdict.json",
+        "line": 103,
+        "referrer": "evidence/dedup/manifest-avant.json"
+      },
+      {
+        "candidate": "reviews/K8S-024/GREEN-focused.txt",
+        "line": 108,
+        "referrer": "evidence/dedup/manifest-avant.json"
+      },
+      {
+        "candidate": "reviews/K8S-024/evidence/GREEN.txt",
+        "line": 111,
+        "referrer": "evidence/dedup/manifest-avant.json"
+      },
+      {
+        "candidate": "reviews/PLACE-011/GREEN-focused.txt",
+        "line": 116,
+        "referrer": "evidence/dedup/manifest-avant.json"
+      },
+      {
+        "candidate": "reviews/PLACE-011/evidence/GREEN.txt",
+        "line": 119,
+        "referrer": "evidence/dedup/manifest-avant.json"
+      },
+      {
+        "candidate": "reviews/K8S-023/RED-reproduction.txt",
+        "line": 124,
+        "referrer": "evidence/dedup/manifest-avant.json"
+      },
+      {
+        "candidate": "reviews/K8S-023/evidence/RED.txt",
+        "line": 127,
+        "referrer": "evidence/dedup/manifest-avant.json"
+      },
+      {
+        "candidate": "reviews/PLACE-026B/GREEN-focused.txt",
+        "line": 132,
+        "referrer": "evidence/dedup/manifest-avant.json"
+      },
+      {
+        "candidate": "reviews/PLACE-026B/evidence/GREEN.txt",
+        "line": 135,
+        "referrer": "evidence/dedup/manifest-avant.json"
+      },
+      {
+        "candidate": "reviews/RES-012B/RED-reproduction.txt",
+        "line": 140,
+        "referrer": "evidence/dedup/manifest-avant.json"
+      },
+      {
+        "candidate": "reviews/RES-012B/evidence/RED.txt",
+        "line": 143,
+        "referrer": "evidence/dedup/manifest-avant.json"
+      },
+      {
+        "candidate": "reviews/K8S-022/GREEN-focused.txt",
+        "line": 148,
+        "referrer": "evidence/dedup/manifest-avant.json"
+      },
+      {
+        "candidate": "reviews/K8S-022/evidence/GREEN.txt",
+        "line": 151,
+        "referrer": "evidence/dedup/manifest-avant.json"
+      },
+      {
+        "candidate": "reviews/PLACE-026B/RED-reproduction.txt",
+        "line": 156,
+        "referrer": "evidence/dedup/manifest-avant.json"
+      },
+      {
+        "candidate": "reviews/PLACE-026B/evidence/RED.txt",
+        "line": 159,
+        "referrer": "evidence/dedup/manifest-avant.json"
+      },
+      {
+        "candidate": "reviews/K8S-027/GREEN-focused.txt",
+        "line": 164,
+        "referrer": "evidence/dedup/manifest-avant.json"
+      },
+      {
+        "candidate": "reviews/K8S-027/evidence/GREEN.txt",
+        "line": 167,
+        "referrer": "evidence/dedup/manifest-avant.json"
+      },
+      {
+        "candidate": "reviews/RAG-004B/GREEN-focused.txt",
+        "line": 172,
+        "referrer": "evidence/dedup/manifest-avant.json"
+      },
+      {
+        "candidate": "reviews/RAG-004B/evidence/GREEN.txt",
+        "line": 175,
+        "referrer": "evidence/dedup/manifest-avant.json"
+      },
+      {
+        "candidate": "reviews/AUDIT-CAND-001-R2/pack.md",
+        "line": 180,
+        "referrer": "evidence/dedup/manifest-avant.json"
+      },
+      {
+        "candidate": "reviews/AUDIT-CAND-001/pack.md",
+        "line": 183,
+        "referrer": "evidence/dedup/manifest-avant.json"
+      },
+      {
+        "candidate": "reviews/HW-010/GREEN-focused.txt",
+        "line": 188,
+        "referrer": "evidence/dedup/manifest-avant.json"
+      },
+      {
+        "candidate": "reviews/OPT-002/GREEN-focused.txt",
+        "line": 191,
+        "referrer": "evidence/dedup/manifest-avant.json"
+      },
+      {
+        "candidate": "reviews/HW-009/GREEN-focused.txt",
+        "line": 196,
+        "referrer": "evidence/dedup/manifest-avant.json"
+      },
+      {
+        "candidate": "reviews/PLACE-026A/GREEN-focused.txt",
+        "line": 199,
+        "referrer": "evidence/dedup/manifest-avant.json"
+      },
+      {
+        "candidate": "evidence-dedup/1",
+        "line": 206,
+        "referrer": "evidence/dedup/manifest-avant.json"
       },
       {
         "candidate": "origin/main",
@@ -88339,37 +89430,37 @@
       },
       {
         "candidate": "src/forgeai/data/",
-        "line": 58,
-        "referrer": "governance/SONAR-SUPPRESSIONS.md"
-      },
-      {
-        "candidate": "scripts/proof/",
         "line": 59,
         "referrer": "governance/SONAR-SUPPRESSIONS.md"
       },
       {
-        "candidate": "src/forgeai/web/assets/",
-        "line": 62,
+        "candidate": "scripts/proof/",
+        "line": 60,
         "referrer": "governance/SONAR-SUPPRESSIONS.md"
       },
       {
-        "candidate": "scripts/proof/",
+        "candidate": "src/forgeai/web/assets/",
         "line": 63,
         "referrer": "governance/SONAR-SUPPRESSIONS.md"
       },
       {
+        "candidate": "scripts/proof/",
+        "line": 64,
+        "referrer": "governance/SONAR-SUPPRESSIONS.md"
+      },
+      {
         "candidate": "repos/leon36000/ForgeAI-Toolkit",
-        "line": 919,
+        "line": 927,
         "referrer": "governance/STATE-CURRENT.json"
       },
       {
         "candidate": "repos/leon36000/ForgeAI-Toolkit",
-        "line": 929,
+        "line": 937,
         "referrer": "governance/STATE-CURRENT.json"
       },
       {
         "candidate": "skip/ex",
-        "line": 935,
+        "line": 943,
         "referrer": "governance/STATE-CURRENT.json"
       },
       {
@@ -88838,43 +89929,68 @@
         "referrer": "governance/path-classification-rules.json"
       },
       {
-        "candidate": "archive/",
+        "candidate": "evidence/dedup/",
         "line": 736,
         "referrer": "governance/path-classification-rules.json"
       },
       {
-        "candidate": "coordination/",
+        "candidate": "avant/apr",
         "line": 744,
+        "referrer": "governance/path-classification-rules.json"
+      },
+      {
+        "candidate": "evidence/",
+        "line": 744,
+        "referrer": "governance/path-classification-rules.json"
+      },
+      {
+        "candidate": "canonique/r",
+        "line": 744,
+        "referrer": "governance/path-classification-rules.json"
+      },
+      {
+        "candidate": "reviews_gate.py",
+        "line": 744,
+        "referrer": "governance/path-classification-rules.json"
+      },
+      {
+        "candidate": "archive/",
+        "line": 750,
+        "referrer": "governance/path-classification-rules.json"
+      },
+      {
+        "candidate": "coordination/",
+        "line": 758,
         "referrer": "governance/path-classification-rules.json"
       },
       {
         "candidate": "Phase-A/",
-        "line": 744,
+        "line": 758,
         "referrer": "governance/path-classification-rules.json"
       },
       {
         "candidate": "Rapports/",
-        "line": 744,
+        "line": 758,
         "referrer": "governance/path-classification-rules.json"
       },
       {
         "candidate": "Recherche/rall-1-agents-orchestration.yaml",
-        "line": 744,
+        "line": 758,
         "referrer": "governance/path-classification-rules.json"
       },
       {
         "candidate": ".cursor/rules/forgeai-orchestration.mdc",
-        "line": 744,
+        "line": 758,
         "referrer": "governance/path-classification-rules.json"
       },
       {
         "candidate": "classify_paths.py",
-        "line": 744,
+        "line": 758,
         "referrer": "governance/path-classification-rules.json"
       },
       {
         "candidate": "validate_coordination.py/state_current.py",
-        "line": 744,
+        "line": 758,
         "referrer": "governance/path-classification-rules.json"
       },
       {
@@ -88963,43 +90079,68 @@
         "referrer": "governance/sonar-suppressions.json"
       },
       {
-        "candidate": "src/forgeai/data/",
-        "line": 224,
+        "candidate": "RC1-011/",
+        "line": 204,
+        "referrer": "governance/sonar-suppressions.json"
+      },
+      {
+        "candidate": "evidence_dedup.py",
+        "line": 204,
+        "referrer": "governance/sonar-suppressions.json"
+      },
+      {
+        "candidate": "seau/HTTP",
+        "line": 204,
+        "referrer": "governance/sonar-suppressions.json"
+      },
+      {
+        "candidate": "racine/--sortie/--verifier",
+        "line": 204,
+        "referrer": "governance/sonar-suppressions.json"
+      },
+      {
+        "candidate": "registre.py",
+        "line": 206,
         "referrer": "governance/sonar-suppressions.json"
       },
       {
         "candidate": "src/forgeai/data/",
-        "line": 228,
-        "referrer": "governance/sonar-suppressions.json"
-      },
-      {
-        "candidate": "scripts/proof/",
         "line": 237,
         "referrer": "governance/sonar-suppressions.json"
       },
       {
-        "candidate": "scripts/proof/",
+        "candidate": "src/forgeai/data/",
         "line": 241,
         "referrer": "governance/sonar-suppressions.json"
       },
       {
-        "candidate": "src/forgeai/web/assets/",
-        "line": 276,
-        "referrer": "governance/sonar-suppressions.json"
-      },
-      {
-        "candidate": "src/forgeai/web/assets/",
-        "line": 280,
+        "candidate": "scripts/proof/",
+        "line": 250,
         "referrer": "governance/sonar-suppressions.json"
       },
       {
         "candidate": "scripts/proof/",
+        "line": 254,
+        "referrer": "governance/sonar-suppressions.json"
+      },
+      {
+        "candidate": "src/forgeai/web/assets/",
         "line": 289,
         "referrer": "governance/sonar-suppressions.json"
       },
       {
-        "candidate": "scripts/proof/",
+        "candidate": "src/forgeai/web/assets/",
         "line": 293,
+        "referrer": "governance/sonar-suppressions.json"
+      },
+      {
+        "candidate": "scripts/proof/",
+        "line": 302,
+        "referrer": "governance/sonar-suppressions.json"
+      },
+      {
+        "candidate": "scripts/proof/",
+        "line": 306,
         "referrer": "governance/sonar-suppressions.json"
       },
       {
@@ -89878,6 +91019,41 @@
         "referrer": "scripts/governance/check_doc_links.py"
       },
       {
+        "candidate": "R1/R2",
+        "line": 25,
+        "referrer": "scripts/governance/check_md_packs.py"
+      },
+      {
+        "candidate": "check_md_packs.py",
+        "line": 30,
+        "referrer": "scripts/governance/check_md_packs.py"
+      },
+      {
+        "candidate": "espace/tabulation",
+        "line": 61,
+        "referrer": "scripts/governance/check_md_packs.py"
+      },
+      {
+        "candidate": "espaces/",
+        "line": 62,
+        "referrer": "scripts/governance/check_md_packs.py"
+      },
+      {
+        "candidate": "court/imbriqu",
+        "line": 120,
+        "referrer": "scripts/governance/check_md_packs.py"
+      },
+      {
+        "candidate": "clone/extraction",
+        "line": 132,
+        "referrer": "scripts/governance/check_md_packs.py"
+      },
+      {
+        "candidate": "args.json",
+        "line": 156,
+        "referrer": "scripts/governance/check_md_packs.py"
+      },
+      {
         "candidate": "path-classification.json",
         "line": 12,
         "referrer": "scripts/governance/classify_paths.py"
@@ -89916,6 +91092,121 @@
         "candidate": "A-Za-z0-9._/-",
         "line": 491,
         "referrer": "scripts/governance/classify_paths.py"
+      },
+      {
+        "candidate": "evidence/reviews/",
+        "line": 5,
+        "referrer": "scripts/governance/evidence_dedup.py"
+      },
+      {
+        "candidate": "pack.md",
+        "line": 5,
+        "referrer": "scripts/governance/evidence_dedup.py"
+      },
+      {
+        "candidate": "REVIEW-PACK.md",
+        "line": 5,
+        "referrer": "scripts/governance/evidence_dedup.py"
+      },
+      {
+        "candidate": ".verdict.json",
+        "line": 5,
+        "referrer": "scripts/governance/evidence_dedup.py"
+      },
+      {
+        "candidate": "avant/apr",
+        "line": 8,
+        "referrer": "scripts/governance/evidence_dedup.py"
+      },
+      {
+        "candidate": ".verdict.json",
+        "line": 13,
+        "referrer": "scripts/governance/evidence_dedup.py"
+      },
+      {
+        "candidate": "glm.verdict.json",
+        "line": 15,
+        "referrer": "scripts/governance/evidence_dedup.py"
+      },
+      {
+        "candidate": "kimi.verdict.json",
+        "line": 15,
+        "referrer": "scripts/governance/evidence_dedup.py"
+      },
+      {
+        "candidate": "evidence_dedup.py",
+        "line": 19,
+        "referrer": "scripts/governance/evidence_dedup.py"
+      },
+      {
+        "candidate": "MANIFEST.json",
+        "line": 19,
+        "referrer": "scripts/governance/evidence_dedup.py"
+      },
+      {
+        "candidate": "evidence_dedup.py",
+        "line": 20,
+        "referrer": "scripts/governance/evidence_dedup.py"
+      },
+      {
+        "candidate": "MANIFEST.json",
+        "line": 20,
+        "referrer": "scripts/governance/evidence_dedup.py"
+      },
+      {
+        "candidate": "evidence-dedup/1",
+        "line": 30,
+        "referrer": "scripts/governance/evidence_dedup.py"
+      },
+      {
+        "candidate": "git/subprocess",
+        "line": 41,
+        "referrer": "scripts/governance/evidence_dedup.py"
+      },
+      {
+        "candidate": "extraction/clone",
+        "line": 42,
+        "referrer": "scripts/governance/evidence_dedup.py"
+      },
+      {
+        "candidate": "dedup/",
+        "line": 43,
+        "referrer": "scripts/governance/evidence_dedup.py"
+      },
+      {
+        "candidate": ".verdict.json",
+        "line": 81,
+        "referrer": "scripts/governance/evidence_dedup.py"
+      },
+      {
+        "candidate": ".verdict.json",
+        "line": 83,
+        "referrer": "scripts/governance/evidence_dedup.py"
+      },
+      {
+        "candidate": "avant/apr",
+        "line": 90,
+        "referrer": "scripts/governance/evidence_dedup.py"
+      },
+      {
+        "candidate": "dedup/",
+        "line": 100,
+        "referrer": "scripts/governance/evidence_dedup.py"
+      },
+      {
+        "candidate": "schema/phase/fichiers_total/inventaire_sha256/groupes",
+        "line": 101,
+        "referrer": "scripts/governance/evidence_dedup.py"
+      },
+      {
+        "candidate": "avant/apr",
+        "line": 147,
+        "referrer": "scripts/governance/evidence_dedup.py"
+      },
+      {
+        "candidate": "manifest.json",
+        "line": 174,
+        "referrer": "scripts/governance/evidence_dedup.py"
       },
       {
         "candidate": "src/forgeai/data/catalogue.json.sha256",
@@ -113523,6 +114814,411 @@
         "referrer": "stories/RC1-009.md"
       },
       {
+        "candidate": "chore/RC1-011-dedup-preuves",
+        "line": 6,
+        "referrer": "stories/RC1-011.md"
+      },
+      {
+        "candidate": "reviews/",
+        "line": 10,
+        "referrer": "stories/RC1-011.md"
+      },
+      {
+        "candidate": "evidence/reviews/",
+        "line": 11,
+        "referrer": "stories/RC1-011.md"
+      },
+      {
+        "candidate": "EXT-015/016",
+        "line": 14,
+        "referrer": "stories/RC1-011.md"
+      },
+      {
+        "candidate": "pack.md",
+        "line": 15,
+        "referrer": "stories/RC1-011.md"
+      },
+      {
+        "candidate": "evidence/reviews/",
+        "line": 15,
+        "referrer": "stories/RC1-011.md"
+      },
+      {
+        "candidate": "espaces/backticks",
+        "line": 25,
+        "referrer": "stories/RC1-011.md"
+      },
+      {
+        "candidate": "pack.md",
+        "line": 43,
+        "referrer": "stories/RC1-011.md"
+      },
+      {
+        "candidate": "evidence/",
+        "line": 46,
+        "referrer": "stories/RC1-011.md"
+      },
+      {
+        "candidate": "evidence_dedup.py",
+        "line": 47,
+        "referrer": "stories/RC1-011.md"
+      },
+      {
+        "candidate": "evidence/",
+        "line": 50,
+        "referrer": "stories/RC1-011.md"
+      },
+      {
+        "candidate": "reviews/HW-010/GREEN-focused.txt",
+        "line": 58,
+        "referrer": "stories/RC1-011.md"
+      },
+      {
+        "candidate": "reviews/OPT-002/GREEN-focused.txt",
+        "line": 58,
+        "referrer": "stories/RC1-011.md"
+      },
+      {
+        "candidate": "reviews/HW-009/GREEN-focused.txt",
+        "line": 59,
+        "referrer": "stories/RC1-011.md"
+      },
+      {
+        "candidate": "reviews/PLACE-026A/GREEN-focused.txt",
+        "line": 59,
+        "referrer": "stories/RC1-011.md"
+      },
+      {
+        "candidate": "AUDIT-CAND-001/pack.md",
+        "line": 65,
+        "referrer": "stories/RC1-011.md"
+      },
+      {
+        "candidate": "AUDIT-CAND-001-R2/pack.md",
+        "line": 65,
+        "referrer": "stories/RC1-011.md"
+      },
+      {
+        "candidate": "groupes/",
+        "line": 70,
+        "referrer": "stories/RC1-011.md"
+      },
+      {
+        "candidate": ".verdict.json",
+        "line": 71,
+        "referrer": "stories/RC1-011.md"
+      },
+      {
+        "candidate": "civ_review.py",
+        "line": 79,
+        "referrer": "stories/RC1-011.md"
+      },
+      {
+        "candidate": "pack.md",
+        "line": 81,
+        "referrer": "stories/RC1-011.md"
+      },
+      {
+        "candidate": "evidence/reviews/",
+        "line": 81,
+        "referrer": "stories/RC1-011.md"
+      },
+      {
+        "candidate": "civ_review.py",
+        "line": 82,
+        "referrer": "stories/RC1-011.md"
+      },
+      {
+        "candidate": "pack.md",
+        "line": 89,
+        "referrer": "stories/RC1-011.md"
+      },
+      {
+        "candidate": "reviews_gate.py",
+        "line": 89,
+        "referrer": "stories/RC1-011.md"
+      },
+      {
+        "candidate": "revue.py",
+        "line": 89,
+        "referrer": "stories/RC1-011.md"
+      },
+      {
+        "candidate": ".verdict.json",
+        "line": 89,
+        "referrer": "stories/RC1-011.md"
+      },
+      {
+        "candidate": "RECU.json",
+        "line": 90,
+        "referrer": "stories/RC1-011.md"
+      },
+      {
+        "candidate": "no_stub_scan.py",
+        "line": 98,
+        "referrer": "stories/RC1-011.md"
+      },
+      {
+        "candidate": "evidence/",
+        "line": 98,
+        "referrer": "stories/RC1-011.md"
+      },
+      {
+        "candidate": "GREEN/RED",
+        "line": 99,
+        "referrer": "stories/RC1-011.md"
+      },
+      {
+        "candidate": "REVIEW-PACK.md",
+        "line": 99,
+        "referrer": "stories/RC1-011.md"
+      },
+      {
+        "candidate": "reviews/K8S-022/evidence/",
+        "line": 100,
+        "referrer": "stories/RC1-011.md"
+      },
+      {
+        "candidate": "avant/apr",
+        "line": 102,
+        "referrer": "stories/RC1-011.md"
+      },
+      {
+        "candidate": "pack.md",
+        "line": 105,
+        "referrer": "stories/RC1-011.md"
+      },
+      {
+        "candidate": "REVIEW-PACK.md",
+        "line": 105,
+        "referrer": "stories/RC1-011.md"
+      },
+      {
+        "candidate": ".verdict.json",
+        "line": 105,
+        "referrer": "stories/RC1-011.md"
+      },
+      {
+        "candidate": "evidence/reviews/",
+        "line": 106,
+        "referrer": "stories/RC1-011.md"
+      },
+      {
+        "candidate": "evidence/",
+        "line": 109,
+        "referrer": "stories/RC1-011.md"
+      },
+      {
+        "candidate": "evidence/dedup/",
+        "line": 109,
+        "referrer": "stories/RC1-011.md"
+      },
+      {
+        "candidate": "evidence/",
+        "line": 110,
+        "referrer": "stories/RC1-011.md"
+      },
+      {
+        "candidate": "reviews/RAG-005/RED-reproduction.txt",
+        "line": 111,
+        "referrer": "stories/RC1-011.md"
+      },
+      {
+        "candidate": "evidence/",
+        "line": 111,
+        "referrer": "stories/RC1-011.md"
+      },
+      {
+        "candidate": ".verdict.json",
+        "line": 113,
+        "referrer": "stories/RC1-011.md"
+      },
+      {
+        "candidate": "plan-v1.0/round-1",
+        "line": 117,
+        "referrer": "stories/RC1-011.md"
+      },
+      {
+        "candidate": "conformite-v2/round-1",
+        "line": 118,
+        "referrer": "stories/RC1-011.md"
+      },
+      {
+        "candidate": "glm.verdict.json",
+        "line": 119,
+        "referrer": "stories/RC1-011.md"
+      },
+      {
+        "candidate": "kimi.verdict.json",
+        "line": 119,
+        "referrer": "stories/RC1-011.md"
+      },
+      {
+        "candidate": "HEALTH-028A/REVIEW-PACK.md",
+        "line": 131,
+        "referrer": "stories/RC1-011.md"
+      },
+      {
+        "candidate": "HEALTH-028A/REVIEW-PACK.md",
+        "line": 138,
+        "referrer": "stories/RC1-011.md"
+      },
+      {
+        "candidate": "evidence/",
+        "line": 143,
+        "referrer": "stories/RC1-011.md"
+      },
+      {
+        "candidate": "pack.md",
+        "line": 154,
+        "referrer": "stories/RC1-011.md"
+      },
+      {
+        "candidate": "REVIEW-PACK.md",
+        "line": 154,
+        "referrer": "stories/RC1-011.md"
+      },
+      {
+        "candidate": ".verdict.json",
+        "line": 155,
+        "referrer": "stories/RC1-011.md"
+      },
+      {
+        "candidate": "evidence/reviews/",
+        "line": 156,
+        "referrer": "stories/RC1-011.md"
+      },
+      {
+        "candidate": "evidence/reviews/RC1-011-v1/",
+        "line": 162,
+        "referrer": "stories/RC1-011.md"
+      },
+      {
+        "candidate": "RECU.json",
+        "line": 162,
+        "referrer": "stories/RC1-011.md"
+      },
+      {
+        "candidate": "evidence/reviews/RC1-011-v1/",
+        "line": 166,
+        "referrer": "stories/RC1-011.md"
+      },
+      {
+        "candidate": "RECU.json",
+        "line": 166,
+        "referrer": "stories/RC1-011.md"
+      },
+      {
+        "candidate": "diff/pack",
+        "line": 167,
+        "referrer": "stories/RC1-011.md"
+      },
+      {
+        "candidate": "RC1-004/",
+        "line": 171,
+        "referrer": "stories/RC1-011.md"
+      },
+      {
+        "candidate": "revue.py",
+        "line": 172,
+        "referrer": "stories/RC1-011.md"
+      },
+      {
+        "candidate": "commit/arbre",
+        "line": 173,
+        "referrer": "stories/RC1-011.md"
+      },
+      {
+        "candidate": "evidence/reviews/",
+        "line": 174,
+        "referrer": "stories/RC1-011.md"
+      },
+      {
+        "candidate": "RC1-011-v1/",
+        "line": 175,
+        "referrer": "stories/RC1-011.md"
+      },
+      {
+        "candidate": "evidence/reviews/RC1-011-v1/",
+        "line": 176,
+        "referrer": "stories/RC1-011.md"
+      },
+      {
+        "candidate": "reviews_gate.py",
+        "line": 177,
+        "referrer": "stories/RC1-011.md"
+      },
+      {
+        "candidate": "RECU.json",
+        "line": 181,
+        "referrer": "stories/RC1-011.md"
+      },
+      {
+        "candidate": "origin/main",
+        "line": 192,
+        "referrer": "stories/RC1-011.md"
+      },
+      {
+        "candidate": "RC1-504/",
+        "line": 214,
+        "referrer": "stories/RC1-011.md"
+      },
+      {
+        "candidate": "check_md_packs.py",
+        "line": 222,
+        "referrer": "stories/RC1-011.md"
+      },
+      {
+        "candidate": "evidence_dedup.py",
+        "line": 226,
+        "referrer": "stories/RC1-011.md"
+      },
+      {
+        "candidate": "lus/",
+        "line": 228,
+        "referrer": "stories/RC1-011.md"
+      },
+      {
+        "candidate": "check_md_packs.py",
+        "line": 242,
+        "referrer": "stories/RC1-011.md"
+      },
+      {
+        "candidate": "fichiers/lignes/r",
+        "line": 249,
+        "referrer": "stories/RC1-011.md"
+      },
+      {
+        "candidate": "evidence/reviews/",
+        "line": 251,
+        "referrer": "stories/RC1-011.md"
+      },
+      {
+        "candidate": "evidence_dedup.py",
+        "line": 262,
+        "referrer": "stories/RC1-011.md"
+      },
+      {
+        "candidate": "evidence/reviews/",
+        "line": 263,
+        "referrer": "stories/RC1-011.md"
+      },
+      {
+        "candidate": "espace/tabulation",
+        "line": 273,
+        "referrer": "stories/RC1-011.md"
+      },
+      {
+        "candidate": "espaces/tabulations",
+        "line": 275,
+        "referrer": "stories/RC1-011.md"
+      },
+      {
+        "candidate": "fichiers/lignes/r",
+        "line": 280,
+        "referrer": "stories/RC1-011.md"
+      },
+      {
         "candidate": "fix/RC1-504-reviews-sealed-path-classification-interlock",
         "line": 7,
         "referrer": "stories/RC1-504.md"
@@ -121668,6 +123364,456 @@
         "referrer": "tests/test_rc1009_racines_documentaires.py"
       },
       {
+        "candidate": "evidence/reviews/",
+        "line": 4,
+        "referrer": "tests/test_rc1011_dedup.py"
+      },
+      {
+        "candidate": "evidence/dedup/",
+        "line": 5,
+        "referrer": "tests/test_rc1011_dedup.py"
+      },
+      {
+        "candidate": "evidence/reviews/",
+        "line": 5,
+        "referrer": "tests/test_rc1011_dedup.py"
+      },
+      {
+        "candidate": ".verdict.json",
+        "line": 10,
+        "referrer": "tests/test_rc1011_dedup.py"
+      },
+      {
+        "candidate": "evidence_dedup.py",
+        "line": 25,
+        "referrer": "tests/test_rc1011_dedup.py"
+      },
+      {
+        "candidate": "subprocess/git",
+        "line": 53,
+        "referrer": "tests/test_rc1011_dedup.py"
+      },
+      {
+        "candidate": "git/subprocess",
+        "line": 56,
+        "referrer": "tests/test_rc1011_dedup.py"
+      },
+      {
+        "candidate": "sous/b.txt",
+        "line": 61,
+        "referrer": "tests/test_rc1011_dedup.py"
+      },
+      {
+        "candidate": "sous/b.txt",
+        "line": 63,
+        "referrer": "tests/test_rc1011_dedup.py"
+      },
+      {
+        "candidate": "dedup/manifest-avant.json",
+        "line": 68,
+        "referrer": "tests/test_rc1011_dedup.py"
+      },
+      {
+        "candidate": "dedup/",
+        "line": 69,
+        "referrer": "tests/test_rc1011_dedup.py"
+      },
+      {
+        "candidate": "dedup/manifest-avant.json",
+        "line": 71,
+        "referrer": "tests/test_rc1011_dedup.py"
+      },
+      {
+        "candidate": "z/GREEN-focused.txt",
+        "line": 87,
+        "referrer": "tests/test_rc1011_dedup.py"
+      },
+      {
+        "candidate": "z/evidence/GREEN.txt",
+        "line": 87,
+        "referrer": "tests/test_rc1011_dedup.py"
+      },
+      {
+        "candidate": "z/GREEN-focused.txt",
+        "line": 91,
+        "referrer": "tests/test_rc1011_dedup.py"
+      },
+      {
+        "candidate": "z/evidence/GREEN.txt",
+        "line": 91,
+        "referrer": "tests/test_rc1011_dedup.py"
+      },
+      {
+        "candidate": "z/evidence/GREEN.txt",
+        "line": 95,
+        "referrer": "tests/test_rc1011_dedup.py"
+      },
+      {
+        "candidate": "z/GREEN-focused.txt",
+        "line": 95,
+        "referrer": "tests/test_rc1011_dedup.py"
+      },
+      {
+        "candidate": "a/x.txt",
+        "line": 95,
+        "referrer": "tests/test_rc1011_dedup.py"
+      },
+      {
+        "candidate": "a/x.txt",
+        "line": 96,
+        "referrer": "tests/test_rc1011_dedup.py"
+      },
+      {
+        "candidate": "b/x.txt",
+        "line": 100,
+        "referrer": "tests/test_rc1011_dedup.py"
+      },
+      {
+        "candidate": "a/x.txt",
+        "line": 100,
+        "referrer": "tests/test_rc1011_dedup.py"
+      },
+      {
+        "candidate": "a/x.txt",
+        "line": 103,
+        "referrer": "tests/test_rc1011_dedup.py"
+      },
+      {
+        "candidate": "a/x.verdict.json",
+        "line": 123,
+        "referrer": "tests/test_rc1011_dedup.py"
+      },
+      {
+        "candidate": "b/x.txt",
+        "line": 123,
+        "referrer": "tests/test_rc1011_dedup.py"
+      },
+      {
+        "candidate": "a/x.verdict.json",
+        "line": 126,
+        "referrer": "tests/test_rc1011_dedup.py"
+      },
+      {
+        "candidate": "evidence-dedup/1",
+        "line": 135,
+        "referrer": "tests/test_rc1011_dedup.py"
+      },
+      {
+        "candidate": "a/x.txt",
+        "line": 140,
+        "referrer": "tests/test_rc1011_dedup.py"
+      },
+      {
+        "candidate": "b/x.txt",
+        "line": 141,
+        "referrer": "tests/test_rc1011_dedup.py"
+      },
+      {
+        "candidate": "evidence/reviews/r/glm.verdict.json",
+        "line": 148,
+        "referrer": "tests/test_rc1011_dedup.py"
+      },
+      {
+        "candidate": "evidence/reviews/r/kimi.verdict.json",
+        "line": 149,
+        "referrer": "tests/test_rc1011_dedup.py"
+      },
+      {
+        "candidate": "b/x.txt",
+        "line": 157,
+        "referrer": "tests/test_rc1011_dedup.py"
+      },
+      {
+        "candidate": "a/x.txt",
+        "line": 157,
+        "referrer": "tests/test_rc1011_dedup.py"
+      },
+      {
+        "candidate": "a/x.txt",
+        "line": 161,
+        "referrer": "tests/test_rc1011_dedup.py"
+      },
+      {
+        "candidate": "a/x.txt",
+        "line": 161,
+        "referrer": "tests/test_rc1011_dedup.py"
+      },
+      {
+        "candidate": "hors/groupe.txt",
+        "line": 165,
+        "referrer": "tests/test_rc1011_dedup.py"
+      },
+      {
+        "candidate": "hors/groupe.txt",
+        "line": 165,
+        "referrer": "tests/test_rc1011_dedup.py"
+      },
+      {
+        "candidate": "evidence/reviews/r/glm.verdict.json",
+        "line": 170,
+        "referrer": "tests/test_rc1011_dedup.py"
+      },
+      {
+        "candidate": "evidence/reviews/r/glm.verdict.json",
+        "line": 171,
+        "referrer": "tests/test_rc1011_dedup.py"
+      },
+      {
+        "candidate": "evidence/reviews/r/kimi.verdict.json",
+        "line": 173,
+        "referrer": "tests/test_rc1011_dedup.py"
+      },
+      {
+        "candidate": "evidence/reviews/r/kimi.verdict.json",
+        "line": 174,
+        "referrer": "tests/test_rc1011_dedup.py"
+      },
+      {
+        "candidate": "evidence/",
+        "line": 179,
+        "referrer": "tests/test_rc1011_dedup.py"
+      },
+      {
+        "candidate": "manifest-apres.json",
+        "line": 183,
+        "referrer": "tests/test_rc1011_dedup.py"
+      },
+      {
+        "candidate": "canonique/repliques",
+        "line": 190,
+        "referrer": "tests/test_rc1011_dedup.py"
+      },
+      {
+        "candidate": "corrompu/d",
+        "line": 191,
+        "referrer": "tests/test_rc1011_dedup.py"
+      },
+      {
+        "candidate": "evidence-dedup/1",
+        "line": 217,
+        "referrer": "tests/test_rc1011_dedup.py"
+      },
+      {
+        "candidate": "manifest-avant.json",
+        "line": 237,
+        "referrer": "tests/test_rc1011_dedup.py"
+      },
+      {
+        "candidate": "manifest-apres.json",
+        "line": 238,
+        "referrer": "tests/test_rc1011_dedup.py"
+      },
+      {
+        "candidate": "manifest-avant.json",
+        "line": 239,
+        "referrer": "tests/test_rc1011_dedup.py"
+      },
+      {
+        "candidate": "manifest-apres.json",
+        "line": 240,
+        "referrer": "tests/test_rc1011_dedup.py"
+      },
+      {
+        "candidate": "fichiers_total/inventaire_sha256",
+        "line": 247,
+        "referrer": "tests/test_rc1011_dedup.py"
+      },
+      {
+        "candidate": "evidence/",
+        "line": 248,
+        "referrer": "tests/test_rc1011_dedup.py"
+      },
+      {
+        "candidate": "disparu/modifi",
+        "line": 252,
+        "referrer": "tests/test_rc1011_dedup.py"
+      },
+      {
+        "candidate": "canonique/repliques",
+        "line": 253,
+        "referrer": "tests/test_rc1011_dedup.py"
+      },
+      {
+        "candidate": "canonique/repliques",
+        "line": 254,
+        "referrer": "tests/test_rc1011_dedup.py"
+      },
+      {
+        "candidate": "fichiers_total/inventaire_sha256",
+        "line": 255,
+        "referrer": "tests/test_rc1011_dedup.py"
+      },
+      {
+        "candidate": "avant/apr",
+        "line": 258,
+        "referrer": "tests/test_rc1011_dedup.py"
+      },
+      {
+        "candidate": "evidence_dedup.py",
+        "line": 260,
+        "referrer": "tests/test_rc1011_dedup.py"
+      },
+      {
+        "candidate": "t/dispara",
+        "line": 261,
+        "referrer": "tests/test_rc1011_dedup.py"
+      },
+      {
+        "candidate": "manifest-apres.json",
+        "line": 262,
+        "referrer": "tests/test_rc1011_dedup.py"
+      },
+      {
+        "candidate": "evidence/",
+        "line": 267,
+        "referrer": "tests/test_rc1011_dedup.py"
+      },
+      {
+        "candidate": "manifest-apres.json",
+        "line": 268,
+        "referrer": "tests/test_rc1011_dedup.py"
+      },
+      {
+        "candidate": "sortie/--verifier",
+        "line": 274,
+        "referrer": "tests/test_rc1011_dedup.py"
+      },
+      {
+        "candidate": "lecture/",
+        "line": 274,
+        "referrer": "tests/test_rc1011_dedup.py"
+      },
+      {
+        "candidate": "manifest.json",
+        "line": 279,
+        "referrer": "tests/test_rc1011_dedup.py"
+      },
+      {
+        "candidate": "evidence_dedup.py",
+        "line": 283,
+        "referrer": "tests/test_rc1011_dedup.py"
+      },
+      {
+        "candidate": "evidence-dedup/1",
+        "line": 288,
+        "referrer": "tests/test_rc1011_dedup.py"
+      },
+      {
+        "candidate": "manifest.json",
+        "line": 294,
+        "referrer": "tests/test_rc1011_dedup.py"
+      },
+      {
+        "candidate": "evidence_dedup.py",
+        "line": 297,
+        "referrer": "tests/test_rc1011_dedup.py"
+      },
+      {
+        "candidate": "manifest.json",
+        "line": 305,
+        "referrer": "tests/test_rc1011_dedup.py"
+      },
+      {
+        "candidate": "evidence_dedup.py",
+        "line": 309,
+        "referrer": "tests/test_rc1011_dedup.py"
+      },
+      {
+        "candidate": "b/x.txt",
+        "line": 309,
+        "referrer": "tests/test_rc1011_dedup.py"
+      },
+      {
+        "candidate": "a/x.txt",
+        "line": 313,
+        "referrer": "tests/test_rc1011_dedup.py"
+      },
+      {
+        "candidate": "evidence_dedup.py",
+        "line": 317,
+        "referrer": "tests/test_rc1011_dedup.py"
+      },
+      {
+        "candidate": "b/x.txt",
+        "line": 317,
+        "referrer": "tests/test_rc1011_dedup.py"
+      },
+      {
+        "candidate": "absent.json",
+        "line": 324,
+        "referrer": "tests/test_rc1011_dedup.py"
+      },
+      {
+        "candidate": "evidence_dedup.py",
+        "line": 327,
+        "referrer": "tests/test_rc1011_dedup.py"
+      },
+      {
+        "candidate": "b/x.txt",
+        "line": 327,
+        "referrer": "tests/test_rc1011_dedup.py"
+      },
+      {
+        "candidate": "evidence_dedup.py",
+        "line": 335,
+        "referrer": "tests/test_rc1011_dedup.py"
+      },
+      {
+        "candidate": "check_md_packs.py",
+        "line": 24,
+        "referrer": "tests/test_rc1011_packs_md.py"
+      },
+      {
+        "candidate": "S1-gpu-rocm-runtime/pack.md",
+        "line": 70,
+        "referrer": "tests/test_rc1011_packs_md.py"
+      },
+      {
+        "candidate": "espaces/tabulations",
+        "line": 119,
+        "referrer": "tests/test_rc1011_packs_md.py"
+      },
+      {
+        "candidate": "espace/tabulation",
+        "line": 120,
+        "referrer": "tests/test_rc1011_packs_md.py"
+      },
+      {
+        "candidate": "civ_review.py",
+        "line": 160,
+        "referrer": "tests/test_rc1011_packs_md.py"
+      },
+      {
+        "candidate": "ligne/r",
+        "line": 163,
+        "referrer": "tests/test_rc1011_packs_md.py"
+      },
+      {
+        "candidate": "pack.md",
+        "line": 169,
+        "referrer": "tests/test_rc1011_packs_md.py"
+      },
+      {
+        "candidate": "sain.md",
+        "line": 217,
+        "referrer": "tests/test_rc1011_packs_md.py"
+      },
+      {
+        "candidate": "check_md_packs.py",
+        "line": 219,
+        "referrer": "tests/test_rc1011_packs_md.py"
+      },
+      {
+        "candidate": "casse.md",
+        "line": 225,
+        "referrer": "tests/test_rc1011_packs_md.py"
+      },
+      {
+        "candidate": "check_md_packs.py",
+        "line": 227,
+        "referrer": "tests/test_rc1011_packs_md.py"
+      },
+      {
         "candidate": "validate_sonar_suppressions.py",
         "line": 14,
         "referrer": "tests/test_rc1016_sonar_suppressions.py"
@@ -125361,6 +127507,13 @@
         "line": 15,
         "referrer": "sonar-project.properties",
         "resolved": "src/forgeai/core/registre.py",
+        "severity": "silent"
+      },
+      {
+        "candidate": "scripts/governance/evidence_dedup.py",
+        "line": 17,
+        "referrer": "sonar-project.properties",
+        "resolved": "scripts/governance/evidence_dedup.py",
         "severity": "silent"
       },
       {
@@ -139154,15 +141307,29 @@
         "severity": "hard"
       },
       {
+        "candidate": "scripts/governance/evidence_dedup.py",
+        "line": 56,
+        "referrer": "governance/SONAR-SUPPRESSIONS.md",
+        "resolved": "scripts/governance/evidence_dedup.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "tests/test_rc1011_dedup.py",
+        "line": 56,
+        "referrer": "governance/SONAR-SUPPRESSIONS.md",
+        "resolved": "tests/test_rc1011_dedup.py",
+        "severity": "hard"
+      },
+      {
         "candidate": "scripts/check_metering_sites.py",
-        "line": 64,
+        "line": 65,
         "referrer": "governance/SONAR-SUPPRESSIONS.md",
         "resolved": "scripts/check_metering_sites.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_metering_guard.py",
-        "line": 64,
+        "line": 65,
         "referrer": "governance/SONAR-SUPPRESSIONS.md",
         "resolved": "tests/test_metering_guard.py",
         "severity": "hard"
@@ -140127,498 +142294,512 @@
         "severity": "hard"
       },
       {
-        "candidate": "tests/test_rc1016_sonar_suppressions.py",
+        "candidate": "tests/test_rc1011_dedup.py",
         "line": 642,
+        "referrer": "governance/STATE-CURRENT.json",
+        "resolved": "tests/test_rc1011_dedup.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "tests/test_rc1011_packs_md.py",
+        "line": 646,
+        "referrer": "governance/STATE-CURRENT.json",
+        "resolved": "tests/test_rc1011_packs_md.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "tests/test_rc1016_sonar_suppressions.py",
+        "line": 650,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_rc1016_sonar_suppressions.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_rc1017_matrice_python.py",
-        "line": 646,
+        "line": 654,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_rc1017_matrice_python.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_readme_dist_status.py",
-        "line": 650,
+        "line": 658,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_readme_dist_status.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_receptacles.py",
-        "line": 654,
+        "line": 662,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_receptacles.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_redaction.py",
-        "line": 658,
+        "line": 666,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_redaction.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_redaction_adoption.py",
-        "line": 662,
+        "line": 670,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_redaction_adoption.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_reeval_defaults.py",
-        "line": 666,
+        "line": 674,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_reeval_defaults.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_reg029a_completude.py",
-        "line": 670,
+        "line": 678,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_reg029a_completude.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_reg029b_ancrage.py",
-        "line": 674,
+        "line": 682,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_reg029b_ancrage.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_registre.py",
-        "line": 678,
+        "line": 686,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_registre.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_registre_concurrence.py",
-        "line": 682,
+        "line": 690,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_registre_concurrence.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_rel038a_prepare_persist.py",
-        "line": 686,
+        "line": 694,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_rel038a_prepare_persist.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_rel038b_unicite.py",
-        "line": 690,
+        "line": 698,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_rel038b_unicite.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_rel038c_process_groups.py",
-        "line": 694,
+        "line": 702,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_rel038c_process_groups.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_remote_probe.py",
-        "line": 698,
+        "line": 706,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_remote_probe.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_renderers.py",
-        "line": 702,
+        "line": 710,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_renderers.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_res_classes_stack_minimal.py",
-        "line": 706,
+        "line": 714,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_res_classes_stack_minimal.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_reviews_gate.py",
-        "line": 710,
+        "line": 718,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_reviews_gate.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_revue.py",
-        "line": 714,
+        "line": 722,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_revue.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_routestore_concurrence.py",
-        "line": 718,
+        "line": 726,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_routestore_concurrence.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_ruff_report.py",
-        "line": 722,
+        "line": 730,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_ruff_report.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_selection_complete.py",
-        "line": 726,
+        "line": 734,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_selection_complete.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_selection_v2.py",
-        "line": 730,
+        "line": 738,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_selection_v2.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_sentinelle_sweep.py",
-        "line": 734,
+        "line": 742,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_sentinelle_sweep.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_server_cache.py",
-        "line": 738,
+        "line": 746,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_server_cache.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_service_spec_injection_yaml.py",
-        "line": 742,
+        "line": 750,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_service_spec_injection_yaml.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_spheres.py",
-        "line": 746,
+        "line": 754,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_spheres.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_ssh007_hostkey.py",
-        "line": 750,
+        "line": 758,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_ssh007_hostkey.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_ssh021_nodeadd.py",
-        "line": 754,
+        "line": 762,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_ssh021_nodeadd.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_ssh030_argv_ssh.py",
-        "line": 758,
+        "line": 766,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_ssh030_argv_ssh.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_ssh_injection.py",
-        "line": 762,
+        "line": 770,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_ssh_injection.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_stack_traversal.py",
-        "line": 766,
+        "line": 774,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_stack_traversal.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_stacks.py",
-        "line": 770,
+        "line": 778,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_stacks.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_state_current.py",
-        "line": 774,
+        "line": 782,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_state_current.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_supply018.py",
-        "line": 778,
+        "line": 786,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_supply018.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_tailscale.py",
-        "line": 782,
+        "line": 790,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_tailscale.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_tailscale_optin.py",
-        "line": 786,
+        "line": 794,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_tailscale_optin.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_tally.py",
-        "line": 790,
+        "line": 798,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_tally.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_templates.py",
-        "line": 794,
+        "line": 802,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_templates.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_traductions.py",
-        "line": 798,
+        "line": 806,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_traductions.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_ui_7_etapes.py",
-        "line": 802,
+        "line": 810,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_ui_7_etapes.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_ui_n2b.py",
-        "line": 806,
+        "line": 814,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_ui_n2b.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_ui_s6b.py",
-        "line": 810,
+        "line": 818,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_ui_s6b.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_v1fix_erreurs.py",
-        "line": 814,
+        "line": 822,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_v1fix_erreurs.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_vault.py",
-        "line": 818,
+        "line": 826,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_vault.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_vault_e2e.py",
-        "line": 822,
+        "line": 830,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_vault_e2e.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_web015_error_normalization.py",
-        "line": 826,
+        "line": 834,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_web015_error_normalization.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_web016_ratelimit_integration.py",
-        "line": 830,
+        "line": 838,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_web016_ratelimit_integration.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_web017_get_policy.py",
-        "line": 834,
+        "line": 842,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_web017_get_policy.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_web034a_security_headers.py",
-        "line": 838,
+        "line": 846,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_web034a_security_headers.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_web034b_secure_transport.py",
-        "line": 842,
+        "line": 850,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_web034b_secure_transport.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_web_auth.py",
-        "line": 846,
+        "line": 854,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_web_auth.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_web_bricks.py",
-        "line": 850,
+        "line": 858,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_web_bricks.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_web_deploy.py",
-        "line": 854,
+        "line": 862,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_web_deploy.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_web_deploy_load_stack_once.py",
-        "line": 858,
+        "line": 866,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_web_deploy_load_stack_once.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_web_i18n.py",
-        "line": 862,
+        "line": 870,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_web_i18n.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_web_models.py",
-        "line": 866,
+        "line": 874,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_web_models.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_web_models_local.py",
-        "line": 870,
+        "line": 878,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_web_models_local.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_web_nodes.py",
-        "line": 874,
+        "line": 882,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_web_nodes.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_web_nodes_vendors.py",
-        "line": 878,
+        "line": 886,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_web_nodes_vendors.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_web_server.py",
-        "line": 882,
+        "line": 890,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_web_server.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_web_stacks.py",
-        "line": 886,
+        "line": 894,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_web_stacks.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_wizard_health.py",
-        "line": 890,
+        "line": 898,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_wizard_health.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_wizard_rag_durci.py",
-        "line": 894,
+        "line": 902,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_wizard_rag_durci.py",
         "severity": "hard"
       },
       {
         "candidate": "src/forgeai",
-        "line": 933,
+        "line": 941,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "src/forgeai",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_data002b_wal_idempotent.py",
-        "line": 933,
+        "line": 941,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_data002b_wal_idempotent.py",
         "severity": "hard"
       },
       {
         "candidate": "src/forgeai",
-        "line": 939,
+        "line": 947,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "src/forgeai",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_data002b_wal_idempotent.py",
-        "line": 939,
+        "line": 947,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_data002b_wal_idempotent.py",
         "severity": "hard"
       },
       {
         "candidate": "src/forgeai/core/registre.py",
-        "line": 945,
+        "line": 953,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "src/forgeai/core/registre.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_data002b_wal_idempotent.py",
-        "line": 953,
+        "line": 961,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_data002b_wal_idempotent.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_data002b_wal_idempotent.py",
-        "line": 959,
+        "line": 967,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_data002b_wal_idempotent.py",
         "severity": "hard"
@@ -141590,449 +143771,463 @@
         "severity": "hard"
       },
       {
-        "candidate": "tests/test_rc1016_sonar_suppressions.py",
+        "candidate": "tests/test_rc1011_dedup.py",
         "line": 648,
+        "referrer": "governance/STATE-CURRENT.md",
+        "resolved": "tests/test_rc1011_dedup.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "tests/test_rc1011_packs_md.py",
+        "line": 652,
+        "referrer": "governance/STATE-CURRENT.md",
+        "resolved": "tests/test_rc1011_packs_md.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "tests/test_rc1016_sonar_suppressions.py",
+        "line": 656,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_rc1016_sonar_suppressions.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_rc1017_matrice_python.py",
-        "line": 652,
+        "line": 660,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_rc1017_matrice_python.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_readme_dist_status.py",
-        "line": 656,
+        "line": 664,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_readme_dist_status.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_receptacles.py",
-        "line": 660,
+        "line": 668,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_receptacles.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_redaction.py",
-        "line": 664,
+        "line": 672,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_redaction.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_redaction_adoption.py",
-        "line": 668,
+        "line": 676,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_redaction_adoption.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_reeval_defaults.py",
-        "line": 672,
+        "line": 680,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_reeval_defaults.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_reg029a_completude.py",
-        "line": 676,
+        "line": 684,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_reg029a_completude.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_reg029b_ancrage.py",
-        "line": 680,
+        "line": 688,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_reg029b_ancrage.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_registre.py",
-        "line": 684,
+        "line": 692,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_registre.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_registre_concurrence.py",
-        "line": 688,
+        "line": 696,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_registre_concurrence.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_rel038a_prepare_persist.py",
-        "line": 692,
+        "line": 700,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_rel038a_prepare_persist.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_rel038b_unicite.py",
-        "line": 696,
+        "line": 704,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_rel038b_unicite.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_rel038c_process_groups.py",
-        "line": 700,
+        "line": 708,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_rel038c_process_groups.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_remote_probe.py",
-        "line": 704,
+        "line": 712,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_remote_probe.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_renderers.py",
-        "line": 708,
+        "line": 716,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_renderers.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_res_classes_stack_minimal.py",
-        "line": 712,
+        "line": 720,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_res_classes_stack_minimal.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_reviews_gate.py",
-        "line": 716,
+        "line": 724,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_reviews_gate.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_revue.py",
-        "line": 720,
+        "line": 728,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_revue.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_routestore_concurrence.py",
-        "line": 724,
+        "line": 732,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_routestore_concurrence.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_ruff_report.py",
-        "line": 728,
+        "line": 736,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_ruff_report.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_selection_complete.py",
-        "line": 732,
+        "line": 740,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_selection_complete.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_selection_v2.py",
-        "line": 736,
+        "line": 744,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_selection_v2.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_sentinelle_sweep.py",
-        "line": 740,
+        "line": 748,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_sentinelle_sweep.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_server_cache.py",
-        "line": 744,
+        "line": 752,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_server_cache.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_service_spec_injection_yaml.py",
-        "line": 748,
+        "line": 756,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_service_spec_injection_yaml.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_spheres.py",
-        "line": 752,
+        "line": 760,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_spheres.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_ssh007_hostkey.py",
-        "line": 756,
+        "line": 764,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_ssh007_hostkey.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_ssh021_nodeadd.py",
-        "line": 760,
+        "line": 768,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_ssh021_nodeadd.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_ssh030_argv_ssh.py",
-        "line": 764,
+        "line": 772,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_ssh030_argv_ssh.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_ssh_injection.py",
-        "line": 768,
+        "line": 776,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_ssh_injection.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_stack_traversal.py",
-        "line": 772,
+        "line": 780,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_stack_traversal.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_stacks.py",
-        "line": 776,
+        "line": 784,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_stacks.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_state_current.py",
-        "line": 780,
+        "line": 788,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_state_current.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_supply018.py",
-        "line": 784,
+        "line": 792,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_supply018.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_tailscale.py",
-        "line": 788,
+        "line": 796,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_tailscale.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_tailscale_optin.py",
-        "line": 792,
+        "line": 800,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_tailscale_optin.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_tally.py",
-        "line": 796,
+        "line": 804,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_tally.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_templates.py",
-        "line": 800,
+        "line": 808,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_templates.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_traductions.py",
-        "line": 804,
+        "line": 812,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_traductions.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_ui_7_etapes.py",
-        "line": 808,
+        "line": 816,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_ui_7_etapes.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_ui_n2b.py",
-        "line": 812,
+        "line": 820,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_ui_n2b.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_ui_s6b.py",
-        "line": 816,
+        "line": 824,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_ui_s6b.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_v1fix_erreurs.py",
-        "line": 820,
+        "line": 828,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_v1fix_erreurs.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_vault.py",
-        "line": 824,
+        "line": 832,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_vault.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_vault_e2e.py",
-        "line": 828,
+        "line": 836,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_vault_e2e.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_web015_error_normalization.py",
-        "line": 832,
+        "line": 840,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_web015_error_normalization.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_web016_ratelimit_integration.py",
-        "line": 836,
+        "line": 844,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_web016_ratelimit_integration.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_web017_get_policy.py",
-        "line": 840,
+        "line": 848,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_web017_get_policy.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_web034a_security_headers.py",
-        "line": 844,
+        "line": 852,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_web034a_security_headers.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_web034b_secure_transport.py",
-        "line": 848,
+        "line": 856,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_web034b_secure_transport.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_web_auth.py",
-        "line": 852,
+        "line": 860,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_web_auth.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_web_bricks.py",
-        "line": 856,
+        "line": 864,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_web_bricks.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_web_deploy.py",
-        "line": 860,
+        "line": 868,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_web_deploy.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_web_deploy_load_stack_once.py",
-        "line": 864,
+        "line": 872,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_web_deploy_load_stack_once.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_web_i18n.py",
-        "line": 868,
+        "line": 876,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_web_i18n.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_web_models.py",
-        "line": 872,
+        "line": 880,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_web_models.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_web_models_local.py",
-        "line": 876,
+        "line": 884,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_web_models_local.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_web_nodes.py",
-        "line": 880,
+        "line": 888,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_web_nodes.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_web_nodes_vendors.py",
-        "line": 884,
+        "line": 892,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_web_nodes_vendors.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_web_server.py",
-        "line": 888,
+        "line": 896,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_web_server.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_web_stacks.py",
-        "line": 892,
+        "line": 900,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_web_stacks.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_wizard_health.py",
-        "line": 896,
+        "line": 904,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_wizard_health.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_wizard_rag_durci.py",
-        "line": 900,
+        "line": 908,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_wizard_rag_durci.py",
         "severity": "hard"
@@ -142423,8 +144618,15 @@
         "severity": "hard"
       },
       {
-        "candidate": "archive/coordination/work-packages.json",
+        "candidate": "scripts/governance/evidence_dedup.py",
         "line": 744,
+        "referrer": "governance/path-classification-rules.json",
+        "resolved": "scripts/governance/evidence_dedup.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "archive/coordination/work-packages.json",
+        "line": 758,
         "referrer": "governance/path-classification-rules.json",
         "resolved": "archive/coordination/work-packages.json",
         "severity": "hard"
@@ -142717,43 +144919,71 @@
         "severity": "hard"
       },
       {
+        "candidate": "scripts/governance/evidence_dedup.py",
+        "line": 202,
+        "referrer": "governance/sonar-suppressions.json",
+        "resolved": "scripts/governance/evidence_dedup.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "scripts/governance/check_md_packs.py",
+        "line": 204,
+        "referrer": "governance/sonar-suppressions.json",
+        "resolved": "scripts/governance/check_md_packs.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "scripts/revue.py",
+        "line": 204,
+        "referrer": "governance/sonar-suppressions.json",
+        "resolved": "scripts/revue.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "tests/test_rc1011_dedup.py",
+        "line": 205,
+        "referrer": "governance/sonar-suppressions.json",
+        "resolved": "tests/test_rc1011_dedup.py",
+        "severity": "hard"
+      },
+      {
         "candidate": "src/forgeai/data",
-        "line": 230,
+        "line": 243,
         "referrer": "governance/sonar-suppressions.json",
         "resolved": "src/forgeai/data",
         "severity": "hard"
       },
       {
         "candidate": "scripts/proof",
-        "line": 243,
+        "line": 256,
         "referrer": "governance/sonar-suppressions.json",
         "resolved": "scripts/proof",
         "severity": "hard"
       },
       {
         "candidate": "scripts/proof",
-        "line": 295,
+        "line": 308,
         "referrer": "governance/sonar-suppressions.json",
         "resolved": "scripts/proof",
         "severity": "hard"
       },
       {
         "candidate": "scripts/check_metering_sites.py",
-        "line": 302,
+        "line": 315,
         "referrer": "governance/sonar-suppressions.json",
         "resolved": "scripts/check_metering_sites.py",
         "severity": "hard"
       },
       {
         "candidate": "scripts/check_metering_sites.py",
-        "line": 306,
+        "line": 319,
         "referrer": "governance/sonar-suppressions.json",
         "resolved": "scripts/check_metering_sites.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_metering_guard.py",
-        "line": 309,
+        "line": 322,
         "referrer": "governance/sonar-suppressions.json",
         "resolved": "tests/test_metering_guard.py",
         "severity": "hard"
@@ -143134,6 +145364,27 @@
         "line": 821,
         "referrer": "scripts/governance/classify_paths.py",
         "resolved": "scripts/governance/classify_paths.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "stories/RC1-011.md",
+        "line": 4,
+        "referrer": "scripts/governance/evidence_dedup.py",
+        "resolved": "stories/RC1-011.md",
+        "severity": "hard"
+      },
+      {
+        "candidate": "evidence/reviews/BINDING.txt",
+        "line": 6,
+        "referrer": "scripts/governance/evidence_dedup.py",
+        "resolved": "evidence/reviews/BINDING.txt",
+        "severity": "hard"
+      },
+      {
+        "candidate": "stories/RC1-011.md",
+        "line": 75,
+        "referrer": "scripts/governance/evidence_dedup.py",
+        "resolved": "stories/RC1-011.md",
         "severity": "hard"
       },
       {
@@ -145734,6 +147985,251 @@
         "severity": "hard"
       },
       {
+        "candidate": "scripts/governance/check_md_packs.py",
+        "line": 17,
+        "referrer": "stories/RC1-011.md",
+        "resolved": "scripts/governance/check_md_packs.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "evidence/reviews",
+        "line": 17,
+        "referrer": "stories/RC1-011.md",
+        "resolved": "evidence/reviews",
+        "severity": "hard"
+      },
+      {
+        "candidate": "evidence/reviews/IMPL-2b-civ/pack.md",
+        "line": 22,
+        "referrer": "stories/RC1-011.md",
+        "resolved": "evidence/reviews/IMPL-2b-civ/pack.md",
+        "severity": "hard"
+      },
+      {
+        "candidate": "evidence/reviews/BINDING.txt",
+        "line": 29,
+        "referrer": "stories/RC1-011.md",
+        "resolved": "evidence/reviews/BINDING.txt",
+        "severity": "hard"
+      },
+      {
+        "candidate": "evidence/reviews/S1-gpu-rocm-runtime/pack.md",
+        "line": 30,
+        "referrer": "stories/RC1-011.md",
+        "resolved": "evidence/reviews/S1-gpu-rocm-runtime/pack.md",
+        "severity": "hard"
+      },
+      {
+        "candidate": "evidence/reviews/S3-amd-runtimes-k3s-gpu/pack.md",
+        "line": 35,
+        "referrer": "stories/RC1-011.md",
+        "resolved": "evidence/reviews/S3-amd-runtimes-k3s-gpu/pack.md",
+        "severity": "hard"
+      },
+      {
+        "candidate": "evidence/reviews/HEALTH-028A/REVIEW-PACK.md",
+        "line": 38,
+        "referrer": "stories/RC1-011.md",
+        "resolved": "evidence/reviews/HEALTH-028A/REVIEW-PACK.md",
+        "severity": "hard"
+      },
+      {
+        "candidate": "evidence/dedup/manifest-avant.json",
+        "line": 47,
+        "referrer": "stories/RC1-011.md",
+        "resolved": "evidence/dedup/manifest-avant.json",
+        "severity": "hard"
+      },
+      {
+        "candidate": "tests/test_check_doc_links.py",
+        "line": 142,
+        "referrer": "stories/RC1-011.md",
+        "resolved": "tests/test_check_doc_links.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": ".github/workflows/gates.yml",
+        "line": 144,
+        "referrer": "stories/RC1-011.md",
+        "resolved": ".github/workflows/gates.yml",
+        "severity": "hard"
+      },
+      {
+        "candidate": "scripts/governance/check_md_packs.py",
+        "line": 148,
+        "referrer": "stories/RC1-011.md",
+        "resolved": "scripts/governance/check_md_packs.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "scripts/governance/evidence_dedup.py",
+        "line": 148,
+        "referrer": "stories/RC1-011.md",
+        "resolved": "scripts/governance/evidence_dedup.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "tests/test_rc1011_packs_md.py",
+        "line": 149,
+        "referrer": "stories/RC1-011.md",
+        "resolved": "tests/test_rc1011_packs_md.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "tests/test_rc1011_dedup.py",
+        "line": 149,
+        "referrer": "stories/RC1-011.md",
+        "resolved": "tests/test_rc1011_dedup.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "evidence/dedup/manifest-avant.json",
+        "line": 150,
+        "referrer": "stories/RC1-011.md",
+        "resolved": "evidence/dedup/manifest-avant.json",
+        "severity": "hard"
+      },
+      {
+        "candidate": "evidence/dedup/manifest-apres.json",
+        "line": 150,
+        "referrer": "stories/RC1-011.md",
+        "resolved": "evidence/dedup/manifest-apres.json",
+        "severity": "hard"
+      },
+      {
+        "candidate": "governance/path-classification-rules.json",
+        "line": 151,
+        "referrer": "stories/RC1-011.md",
+        "resolved": "governance/path-classification-rules.json",
+        "severity": "hard"
+      },
+      {
+        "candidate": "evidence/reviews/BINDING.txt",
+        "line": 157,
+        "referrer": "stories/RC1-011.md",
+        "resolved": "evidence/reviews/BINDING.txt",
+        "severity": "hard"
+      },
+      {
+        "candidate": "scripts/revue.py",
+        "line": 171,
+        "referrer": "stories/RC1-011.md",
+        "resolved": "scripts/revue.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "evidence/reviews/BINDING.txt",
+        "line": 183,
+        "referrer": "stories/RC1-011.md",
+        "resolved": "evidence/reviews/BINDING.txt",
+        "severity": "hard"
+      },
+      {
+        "candidate": "scripts/no_stub_scan.py",
+        "line": 197,
+        "referrer": "stories/RC1-011.md",
+        "resolved": "scripts/no_stub_scan.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "scripts/governance/check_md_packs.py",
+        "line": 198,
+        "referrer": "stories/RC1-011.md",
+        "resolved": "scripts/governance/check_md_packs.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "evidence/reviews",
+        "line": 198,
+        "referrer": "stories/RC1-011.md",
+        "resolved": "evidence/reviews",
+        "severity": "hard"
+      },
+      {
+        "candidate": "tests/test_rc1011_dedup.py",
+        "line": 201,
+        "referrer": "stories/RC1-011.md",
+        "resolved": "tests/test_rc1011_dedup.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "tests/test_rc1011_packs_md.py",
+        "line": 201,
+        "referrer": "stories/RC1-011.md",
+        "resolved": "tests/test_rc1011_packs_md.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "scripts/governance/validate_authority.py",
+        "line": 208,
+        "referrer": "stories/RC1-011.md",
+        "resolved": "scripts/governance/validate_authority.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "scripts/governance/state_current.py",
+        "line": 209,
+        "referrer": "stories/RC1-011.md",
+        "resolved": "scripts/governance/state_current.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "scripts/governance/classify_paths.py",
+        "line": 210,
+        "referrer": "stories/RC1-011.md",
+        "resolved": "scripts/governance/classify_paths.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "governance/path-classification.json",
+        "line": 211,
+        "referrer": "stories/RC1-011.md",
+        "resolved": "governance/path-classification.json",
+        "severity": "hard"
+      },
+      {
+        "candidate": "governance/PATH-CLASSIFICATION.md",
+        "line": 212,
+        "referrer": "stories/RC1-011.md",
+        "resolved": "governance/PATH-CLASSIFICATION.md",
+        "severity": "hard"
+      },
+      {
+        "candidate": "scripts/revue.py",
+        "line": 213,
+        "referrer": "stories/RC1-011.md",
+        "resolved": "scripts/revue.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "tests/test_rc1011_dedup.py",
+        "line": 230,
+        "referrer": "stories/RC1-011.md",
+        "resolved": "tests/test_rc1011_dedup.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "evidence/reviews/BINDING.txt",
+        "line": 252,
+        "referrer": "stories/RC1-011.md",
+        "resolved": "evidence/reviews/BINDING.txt",
+        "severity": "hard"
+      },
+      {
+        "candidate": "tests/test_rc1011_dedup.py",
+        "line": 262,
+        "referrer": "stories/RC1-011.md",
+        "resolved": "tests/test_rc1011_dedup.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "scripts/revue.py",
+        "line": 268,
+        "referrer": "stories/RC1-011.md",
+        "resolved": "scripts/revue.py",
+        "severity": "hard"
+      },
+      {
         "candidate": "scripts/revue.py",
         "line": 12,
         "referrer": "stories/RC1-504.md",
@@ -147673,6 +150169,132 @@
         "severity": "hard"
       },
       {
+        "candidate": "stories/RC1-011.md",
+        "line": 3,
+        "referrer": "tests/test_rc1011_dedup.py",
+        "resolved": "stories/RC1-011.md",
+        "severity": "hard"
+      },
+      {
+        "candidate": "evidence/reviews/plan-v1.0/round-2/glm.verdict.json",
+        "line": 110,
+        "referrer": "tests/test_rc1011_dedup.py",
+        "resolved": "evidence/reviews/plan-v1.0/round-2/glm.verdict.json",
+        "severity": "hard"
+      },
+      {
+        "candidate": "evidence/reviews/plan-v1.0/round-2/kimi.verdict.json",
+        "line": 111,
+        "referrer": "tests/test_rc1011_dedup.py",
+        "resolved": "evidence/reviews/plan-v1.0/round-2/kimi.verdict.json",
+        "severity": "hard"
+      },
+      {
+        "candidate": "evidence/dedup/manifest-apres.json",
+        "line": 181,
+        "referrer": "tests/test_rc1011_dedup.py",
+        "resolved": "evidence/dedup/manifest-apres.json",
+        "severity": "hard"
+      },
+      {
+        "candidate": "evidence/dedup/manifest-apres.json",
+        "line": 184,
+        "referrer": "tests/test_rc1011_dedup.py",
+        "resolved": "evidence/dedup/manifest-apres.json",
+        "severity": "hard"
+      },
+      {
+        "candidate": "tests/test_rc1011_packs_md.py",
+        "line": 259,
+        "referrer": "tests/test_rc1011_dedup.py",
+        "resolved": "tests/test_rc1011_packs_md.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "evidence/dedup/manifest-apres.json",
+        "line": 263,
+        "referrer": "tests/test_rc1011_dedup.py",
+        "resolved": "evidence/dedup/manifest-apres.json",
+        "severity": "hard"
+      },
+      {
+        "candidate": "evidence/dedup/manifest-avant.json",
+        "line": 268,
+        "referrer": "tests/test_rc1011_dedup.py",
+        "resolved": "evidence/dedup/manifest-avant.json",
+        "severity": "hard"
+      },
+      {
+        "candidate": "evidence/reviews/IMPL-2b-civ/pack.md",
+        "line": 53,
+        "referrer": "tests/test_rc1011_packs_md.py",
+        "resolved": "evidence/reviews/IMPL-2b-civ/pack.md",
+        "severity": "hard"
+      },
+      {
+        "candidate": "stories/RC1-011.md",
+        "line": 55,
+        "referrer": "tests/test_rc1011_packs_md.py",
+        "resolved": "stories/RC1-011.md",
+        "severity": "hard"
+      },
+      {
+        "candidate": "stories/RC1-011.md",
+        "line": 158,
+        "referrer": "tests/test_rc1011_packs_md.py",
+        "resolved": "stories/RC1-011.md",
+        "severity": "hard"
+      },
+      {
+        "candidate": "evidence/reviews/IMPL-2b-civ/pack.md",
+        "line": 166,
+        "referrer": "tests/test_rc1011_packs_md.py",
+        "resolved": "evidence/reviews/IMPL-2b-civ/pack.md",
+        "severity": "hard"
+      },
+      {
+        "candidate": "evidence/reviews/S1-gpu-rocm-runtime/pack.md",
+        "line": 167,
+        "referrer": "tests/test_rc1011_packs_md.py",
+        "resolved": "evidence/reviews/S1-gpu-rocm-runtime/pack.md",
+        "severity": "hard"
+      },
+      {
+        "candidate": "evidence/reviews/S3-amd-runtimes-k3s-gpu/pack.md",
+        "line": 168,
+        "referrer": "tests/test_rc1011_packs_md.py",
+        "resolved": "evidence/reviews/S3-amd-runtimes-k3s-gpu/pack.md",
+        "severity": "hard"
+      },
+      {
+        "candidate": "evidence/reviews/HEALTH-028A/REVIEW-PACK.md",
+        "line": 173,
+        "referrer": "tests/test_rc1011_packs_md.py",
+        "resolved": "evidence/reviews/HEALTH-028A/REVIEW-PACK.md",
+        "severity": "hard"
+      },
+      {
+        "candidate": "stories/RC1-011.md",
+        "line": 194,
+        "referrer": "tests/test_rc1011_packs_md.py",
+        "resolved": "stories/RC1-011.md",
+        "severity": "hard"
+      },
+      {
+        "candidate": "stories/RC1-011.md",
+        "line": 203,
+        "referrer": "tests/test_rc1011_packs_md.py",
+        "resolved": "stories/RC1-011.md",
+        "severity": "hard"
+      },
+      {
+        "candidate": "stories/RC1-011.md",
+        "line": 208,
+        "referrer": "tests/test_rc1011_packs_md.py",
+        "resolved": "stories/RC1-011.md",
+        "severity": "hard"
+      },
+      {
         "candidate": "src/forgeai/deploy/openbao_flow.py",
         "line": 378,
         "referrer": "tests/test_rc1016_sonar_suppressions.py",
@@ -147976,16 +150598,16 @@
     ],
     "method": "static_text_scan"
   },
-  "rules_sha256": "9d7fe92f098e967c929500878d6cdb5e30eb25bfc020516b246a2a5ee1ba2bf2",
+  "rules_sha256": "ed4c03e6a82c2e87baa9a83c595c877a3d5b46abd3cc50bee9063223d1146039",
   "summary": {
     "by_class": {
       "ARCHIVE": 44,
       "DOCS": 16,
-      "EVIDENCE": 1387,
+      "EVIDENCE": 1389,
       "GENERATED": 5,
-      "GOVERNANCE": 179,
+      "GOVERNANCE": 182,
       "PRODUCT": 112,
-      "TEST": 203,
+      "TEST": 205,
       "WORKING": 10
     },
     "by_rule": {
@@ -147998,6 +150620,7 @@
       "docs-security": 1,
       "docs-user": 13,
       "evidence-audit-output-root": 18,
+      "evidence-dedup-root": 2,
       "evidence-registres-root": 35,
       "evidence-reviews-root": 1334,
       "generated-authority-map": 1,
@@ -148025,21 +150648,21 @@
       "governance-root-requirements-ci-txt": 1,
       "governance-root-sonar": 1,
       "governance-scripts-coordination": 4,
-      "governance-scripts-governance": 7,
+      "governance-scripts-governance": 9,
       "governance-scripts-root": 22,
-      "governance-stories": 88,
+      "governance-stories": 89,
       "product-catalogue-checksum": 1,
       "product-source": 111,
-      "test-suite": 203,
+      "test-suite": 205,
       "working-claude-agents": 9,
       "working-sandbox-readme": 1
     },
     "case_collisions_total": 0,
-    "dangling_references_total": 15119,
-    "generated_total": 7,
-    "load_bearing_total": 1823,
+    "dangling_references_total": 15435,
+    "generated_total": 9,
+    "load_bearing_total": 1827,
     "portability_violations_total": 0,
-    "tracked_total": 1956,
+    "tracked_total": 1963,
     "unclassified_total": 0,
     "unicode_anomalies_total": 0
   },

@@ -730,6 +730,20 @@
       "rationale": "RC1-010 (#440) lot 0 : racine de destination pour la migration de AUDIT-OUTPUT/** (lot 4). Ajoutée en amont de tout déplacement pour que classify_paths.py ne lève pas 'chemin non classé' dès le premier fichier déplacé."
     },
     {
+      "id": "evidence-dedup-root",
+      "match": {
+        "kind": "prefix",
+        "value": "evidence/dedup/"
+      },
+      "class": "EVIDENCE",
+      "generated": true,
+      "owner": "gouvernance-preuve",
+      "target": null,
+      "target_kind": "keep",
+      "load_bearing": false,
+      "rationale": "RC1-011 (#441) : manifests avant/après générés par scripts/governance/evidence_dedup.py::construire_manifest, déclarant les groupes de fichiers byte-identiques sous evidence/ et leur résolution canonique/répliques. Non liant (aucun gate CI ne bloque dessus) — preuve mécanique de dédup, jamais consommée par reviews_gate.py."
+    },
+    {
       "id": "archive-root",
       "match": {
         "kind": "prefix",
