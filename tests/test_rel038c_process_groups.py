@@ -316,6 +316,83 @@ def test_reader_secondary_kill_echec_ajoute_avertissement(monkeypatch):
             "avertissement: échec du nettoyage best-effort du process de déploiement pendant la récupération" in ln
             for ln in lines
         )
+        assert server._DEPLOY_STATE["nettoyage_incertain"] is True
+    finally:
+        srv.shutdown()
+        srv.server_close()
+
+
+def test_reader_succes_ne_marque_pas_nettoyage_incertain(monkeypatch):
+    """Un déploiement sans échec du reader laisse nettoyage_incertain à False."""
+    monkeypatch.setattr(server, "load_stack", lambda stack_id: None)
+    monkeypatch.setattr(
+        server,
+        "_DEPLOY_CMD",
+        [sys.executable, "-c", "print('ok')"],
+    )
+
+    srv = server.build_server("127.0.0.1", 0)
+    threading.Thread(target=srv.serve_forever, daemon=True).start()
+    base = f"http://127.0.0.1:{srv.server_address[1]}"
+    try:
+        corps = json.dumps(
+            {"stack": "agentique", "backend": "compose", "confirm": "FORCER"}
+        ).encode("utf-8")
+        req = urllib.request.Request(
+            f"{base}/api/deploy",
+            data=corps,
+            method="POST",
+            headers={"Content-Type": "application/json"},
+        )
+        with urllib.request.urlopen(req, timeout=5) as resp:
+            assert resp.status == 202
+
+        deadline = time.monotonic() + 5.0
+        while time.monotonic() < deadline:
+            with server._DEPLOY_STATE["lock"]:
+                if server._DEPLOY_STATE["done"]:
+                    break
+            time.sleep(0.05)
+        else:
+            pytest.fail("Timeout attendant la fin du reader")
+
+        with server._DEPLOY_STATE["lock"]:
+            assert server._DEPLOY_STATE["nettoyage_incertain"] is False
+    finally:
+        srv.shutdown()
+        srv.server_close()
+
+
+def test_nouveau_deploiement_reinitialise_nettoyage_incertain(monkeypatch):
+    """Le lancement d'un nouveau déploiement remet nettoyage_incertain à False."""
+    monkeypatch.setattr(server, "load_stack", lambda stack_id: None)
+    monkeypatch.setattr(
+        server,
+        "_DEPLOY_CMD",
+        [sys.executable, "-c", "print('ok')"],
+    )
+
+    with server._DEPLOY_STATE["lock"]:
+        server._DEPLOY_STATE["nettoyage_incertain"] = True
+
+    srv = server.build_server("127.0.0.1", 0)
+    threading.Thread(target=srv.serve_forever, daemon=True).start()
+    base = f"http://127.0.0.1:{srv.server_address[1]}"
+    try:
+        corps = json.dumps(
+            {"stack": "agentique", "backend": "compose", "confirm": "FORCER"}
+        ).encode("utf-8")
+        req = urllib.request.Request(
+            f"{base}/api/deploy",
+            data=corps,
+            method="POST",
+            headers={"Content-Type": "application/json"},
+        )
+        with urllib.request.urlopen(req, timeout=5) as resp:
+            assert resp.status == 202
+
+        with server._DEPLOY_STATE["lock"]:
+            assert server._DEPLOY_STATE["nettoyage_incertain"] is False
     finally:
         srv.shutdown()
         srv.server_close()

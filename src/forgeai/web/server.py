@@ -191,6 +191,7 @@ def _deploy_resume() -> dict:
             "en_cours": proc is not None and proc.poll() is None,
             "done": _DEPLOY_STATE["done"],
             "exit_code": _DEPLOY_STATE["exit_code"],
+            "nettoyage_incertain": _DEPLOY_STATE["nettoyage_incertain"],
         }
 
 
@@ -407,6 +408,7 @@ _DEPLOY_STATE = {
     "lines": [],
     "done": False,
     "exit_code": None,
+    "nettoyage_incertain": False,
     "lock": threading.Lock(),
 }
 
@@ -528,6 +530,7 @@ def _persist_deploy_state() -> None:
             snapshot = {
                 "done": _DEPLOY_STATE["done"],
                 "exit_code": _DEPLOY_STATE["exit_code"],
+                "nettoyage_incertain": _DEPLOY_STATE["nettoyage_incertain"],
                 # Les lignes sont la sortie brute du déploiement : une commande peut
                 # y avoir échotypé un secret. On rédige AVANT persistance (ERR-041A).
                 "lines": [redact_text(line) for line in _DEPLOY_STATE["lines"]],
@@ -538,6 +541,7 @@ def _persist_deploy_state() -> None:
         # l'ancien deploy qui se termine + le persist initial d'un nouveau deploy) écriraient
         # sinon le MÊME .tmp et corromperaient le JSON avant `os.replace`. mkstemp garantit un
         # nom distinct ; `os.replace` est atomique (dernier écrivain gagne, jamais de corruption).
+        tmp: Path | None = None
         fd, tmp_str = tempfile.mkstemp(dir=str(path.parent), prefix=".deploy-state.", suffix=".tmp")
         tmp = Path(tmp_str)
         try:
@@ -545,7 +549,11 @@ def _persist_deploy_state() -> None:
                 json.dump(snapshot, fh, ensure_ascii=False)
             os.replace(str(tmp), str(path))
         except Exception:
-            tmp.unlink(missing_ok=True)  # nettoie le tmp orphelin ; fd déjà fermé par le with
+            # Garde défensive (revue round 3, DeepSeek-V4-Pro) : le contrôle de flux actuel
+            # garantit tmp assigné ici (mkstemp est HORS de ce try, cf. AST), mais on protège
+            # contre un futur refactor qui déplacerait mkstemp() par erreur dans ce bloc.
+            if tmp is not None:
+                tmp.unlink(missing_ok=True)  # nettoie le tmp orphelin ; fd déjà fermé par le with
             raise
     except Exception as exc:
         with _DEPLOY_STATE["lock"]:
@@ -568,10 +576,14 @@ def _load_deploy_state() -> None:
         exit_code = data.get("exit_code")
         if not isinstance(lines, list) or not isinstance(done, bool):
             return
+        nettoyage_incertain = data.get("nettoyage_incertain", False)
+        if not isinstance(nettoyage_incertain, bool):
+            nettoyage_incertain = False
         with _DEPLOY_STATE["lock"]:
             _DEPLOY_STATE["lines"] = list(lines)
             _DEPLOY_STATE["done"] = done
             _DEPLOY_STATE["exit_code"] = exit_code
+            _DEPLOY_STATE["nettoyage_incertain"] = nettoyage_incertain
     except Exception as exc:
         message = (
             f"[web.server] échec de restauration de l'état de déploiement au démarrage : {exc}"
@@ -1065,8 +1077,10 @@ class ForgeAIHandler(BaseHTTPRequestHandler):
                     lines = list(_DEPLOY_STATE["lines"])
                     done = _DEPLOY_STATE["done"]
                     exit_code = _DEPLOY_STATE["exit_code"]
+                    nettoyage_incertain = _DEPLOY_STATE["nettoyage_incertain"]
                 payload = json.dumps(
-                    {"exit_code": exit_code if done else None}, ensure_ascii=False
+                    {"exit_code": exit_code if done else None, "nettoyage_incertain": nettoyage_incertain},
+                    ensure_ascii=False,
                 )
                 try:
                     for line in lines:
@@ -1083,6 +1097,7 @@ class ForgeAIHandler(BaseHTTPRequestHandler):
                     lines = _DEPLOY_STATE["lines"]
                     done = _DEPLOY_STATE["done"]
                     exit_code = _DEPLOY_STATE["exit_code"]
+                    nettoyage_incertain = _DEPLOY_STATE["nettoyage_incertain"]
                     while idx < len(lines):
                         try:
                             self.wfile.write(f"data: {lines[idx]}\n\n".encode("utf-8"))
@@ -1091,7 +1106,10 @@ class ForgeAIHandler(BaseHTTPRequestHandler):
                             return
                         idx += 1
                     if done:
-                        payload = json.dumps({"exit_code": exit_code}, ensure_ascii=False)
+                        payload = json.dumps(
+                            {"exit_code": exit_code, "nettoyage_incertain": nettoyage_incertain},
+                            ensure_ascii=False,
+                        )
                         try:
                             self.wfile.write(f"event: end\ndata: {payload}\n\n".encode("utf-8"))
                             self.wfile.flush()
@@ -1444,6 +1462,7 @@ class ForgeAIHandler(BaseHTTPRequestHandler):
                 _DEPLOY_STATE["lines"].clear()
                 _DEPLOY_STATE["done"] = False
                 _DEPLOY_STATE["exit_code"] = None
+                _DEPLOY_STATE["nettoyage_incertain"] = False
 
                 # Trace de gouvernance AVANT le spawn : un crash du backend en cours de
                 # déploiement laisse ainsi une trace `deploy_started` au registre (best-effort ;
@@ -1545,6 +1564,7 @@ class ForgeAIHandler(BaseHTTPRequestHandler):
                                     "avertissement: échec du nettoyage best-effort du "
                                     f"process de déploiement pendant la récupération : {exc_kill}"
                                 )
+                                _DEPLOY_STATE["nettoyage_incertain"] = True
                         _DEPLOY_STATE["exit_code"] = new_proc.returncode if new_proc.returncode is not None else -1
                         _DEPLOY_STATE["done"] = True
                     _persist_deploy_state()

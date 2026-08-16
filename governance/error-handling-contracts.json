@@ -395,17 +395,17 @@
       "behavior_contract": "Après création d'un nouveau jeton, tentative de révocation de l'ANCIEN (commentaire inline : \"best effort\") ; si la révocation échoue, l'ancien jeton reste valide jusqu'à expiration naturelle (TTL `period`). Désormais journalisé (stderr) car un jeton qui aurait dû être révoqué et qui ne l'est pas est un fait de sécurité qu'un opérateur doit pouvoir constater.",
       "logging": "stderr, via t() : \"[openbao] échec de révocation de l'ancien jeton (reste valide jusqu'à expiration naturelle)\"",
       "owner": "équipe secrets ForgeAI",
-      "justification": "Contrairement au site 208 (remplacement, dégradation sans risque résiduel), ce site laisse un risque résiduel réel : un identifiant qui AURAIT DÛ être invalidé reste utilisable. Le comportement best-effort reste correct (ne pas faire échouer tout le flux d'init pour un échec de révocation), mais l'absence totale de trace était le vrai gap : c'est exactement le cas d'usage du critère « métrique ou log lorsqu'une dégradation est volontaire ».",
+      "justification": "Contrairement au site 208 (remplacement, dégradation sans risque résiduel), ce site laisse un risque résiduel réel : un identifiant qui AURAIT DÛ être invalidé reste utilisable. Le comportement best-effort reste correct (ne pas faire échouer tout le flux d'init pour un échec de révocation), mais l'absence totale de trace était le vrai gap : c'est exactement le cas d'usage du critère « métrique ou log lorsqu'une dégradation est volontaire ». Revue scellée round 3 (#452, GPT-5.6-Terra-Pro, rôle sécurité, MAJEURE) : le signal stderr lui-même peut s'éteindre silencieusement si stderr est fermé/cassé (repli final `except Exception: pass`, nécessaire par contrat — ce site ne doit jamais lever). Décision de scope consciente : ne PAS précipiter ici un correctif de persistance durable (nouveau champ dans secret_store, risque de collision avec l'écriture du nouveau token, tests de format) sous pression de revue — ce code touche la gestion de secrets, un correctif hâtif y est plus risqué qu'utile. Suivi concret ouvert : issue #519 (https://github.com/leon36000/ForgeAI-Toolkit/issues/519), propose un marqueur durable distinct du token ou une escalade vers un canal de log structuré.",
       "compensating_test": "tests/test_openbao_init.py::test_old_token_revoke_failure_logs_stderr",
       "compensating_test_reason": null,
       "review_due": "2027-02-10",
-      "accepted_risk": "Le flux d'init ne bloque jamais sur un échec de révocation (comportement inchangé) ; le jeton non révoqué reste borné par son TTL `period` existant."
+      "accepted_risk": "Le flux d'init ne bloque jamais sur un échec de révocation (comportement inchangé) ; le jeton non révoqué reste borné par son TTL `period` existant. Risque résiduel documenté et TRACÉ (pas seulement écrit) : issue #519 — le signal de visibilité lui-même (print stderr) n'est pas garanti si stderr est indisponible ; correction nécessite une conception dédiée (persistance) hors scope du lot 1 (visibilité des except silencieux)."
     },
     {
-      "id": "site:src/forgeai/web/server.py:545",
+      "id": "site:src/forgeai/web/server.py:553",
       "site": {
         "path": "src/forgeai/web/server.py",
-        "line": 545,
+        "line": 553,
         "function": "forgeai.web.server._persist_deploy_state"
       },
       "exception_types": [
@@ -426,10 +426,10 @@
       "accepted_risk": "Le serveur ne plante jamais pour un échec de persistance (comportement inchangé) ; seule la visibilité change."
     },
     {
-      "id": "site:src/forgeai/web/server.py:570",
+      "id": "site:src/forgeai/web/server.py:582",
       "site": {
         "path": "src/forgeai/web/server.py",
-        "line": 570,
+        "line": 582,
         "function": "forgeai.web.server._load_deploy_state"
       },
       "exception_types": [
@@ -450,10 +450,10 @@
       "accepted_risk": "Le serveur démarre toujours avec un état vide en cas d'échec (comportement inchangé) ; seule la visibilité change."
     },
     {
-      "id": "site:src/forgeai/web/server.py:622",
+      "id": "site:src/forgeai/web/server.py:634",
       "site": {
         "path": "src/forgeai/web/server.py",
-        "line": 622,
+        "line": 634,
         "function": "forgeai.web.server._summary_payload"
       },
       "exception_types": [
@@ -471,10 +471,10 @@
       "accepted_risk": "La page de statut affiche une liste de nœuds vide si le cluster est temporairement indisponible, sans distinction visuelle avec un cluster réellement sans nœuds."
     },
     {
-      "id": "site:src/forgeai/web/server.py:1071",
+      "id": "site:src/forgeai/web/server.py:1085",
       "site": {
         "path": "src/forgeai/web/server.py",
-        "line": 1071,
+        "line": 1085,
         "function": "forgeai.web.server.ForgeAIHandler.do_GET"
       },
       "exception_types": [
@@ -493,10 +493,10 @@
       "accepted_risk": "Aucun — déconnexion client normale."
     },
     {
-      "id": "site:src/forgeai/web/server.py:1093",
+      "id": "site:src/forgeai/web/server.py:1100",
       "site": {
         "path": "src/forgeai/web/server.py",
-        "line": 1093,
+        "line": 1100,
         "function": "forgeai.web.server.ForgeAIHandler.do_GET"
       },
       "exception_types": [
@@ -515,10 +515,10 @@
       "accepted_risk": "Aucun — déconnexion client normale."
     },
     {
-      "id": "site:src/forgeai/web/server.py:1529",
+      "id": "site:src/forgeai/web/server.py:1548",
       "site": {
         "path": "src/forgeai/web/server.py",
-        "line": 1529,
+        "line": 1548,
         "function": "forgeai.web.server._reader (closure locale de la route POST /api/deploy)"
       },
       "exception_types": [
@@ -539,10 +539,10 @@
       "accepted_risk": "Le comportement de récupération (exit_code=-1 si indisponible, done=True, tentative de kill) est inchangé ; seule la visibilité de la cause racine change."
     },
     {
-      "id": "site:src/forgeai/web/server.py:1538",
+      "id": "site:src/forgeai/web/server.py:1557",
       "site": {
         "path": "src/forgeai/web/server.py",
-        "line": 1538,
+        "line": 1557,
         "function": "forgeai.web.server._reader (closure locale de la route POST /api/deploy)"
       },
       "exception_types": [
@@ -553,20 +553,20 @@
         "rollback"
       ],
       "disposition": "FIXED",
-      "behavior_contract": "Nettoyage best-effort à l'intérieur du handler d'erreur du thread lecteur : tente de tuer le process de déploiement encore vivant (`new_proc.kill(); new_proc.wait()`) pendant la récupération d'erreur. Si CE nettoyage secondaire échoue aussi, désormais journalisé plutôt que totalement silencieux ; le flux de récupération (marquer l'état terminé) continue inchangé dans tous les cas.",
+      "behavior_contract": "Nettoyage best-effort à l'intérieur du handler d'erreur du thread lecteur : tente de tuer le process de déploiement encore vivant (`new_proc.kill(); new_proc.wait()`) pendant la récupération d'erreur. Si CE nettoyage secondaire échoue aussi : (1) journalisé (comme avant), ET (2) désormais un signal STRUCTURÉ `_DEPLOY_STATE[\"nettoyage_incertain\"] = True` est levé — exposé par `_deploy_resume()`, l'endpoint SSE `/api/deploy/events` (les deux payloads) et persisté/restauré (`_persist_deploy_state`/`_load_deploy_state`, repli `False` pour les fichiers pré-correctif). Un consommateur de l'API qui ne lit QUE les champs structurés (sans parser le texte libre de `lines`) peut désormais distinguer une fin de déploiement normale d'un nettoyage secondaire raté — le flux continue à marquer l'état `done=True, exit_code=-1` (comportement inchangé), mais n'annonce plus un état qui a l'air propre sans nuance.",
       "logging": "_DEPLOY_STATE[\"lines\"].append(f\"avertissement: échec du nettoyage best-effort du process de déploiement pendant la récupération : {exc}\") — ce site est DÉJÀ à l'intérieur du bloc `with _DEPLOY_STATE[\"lock\"]:` ouvert à la ligne 1518 (englobe 1519-1526) : append DIRECT, SANS `with` (le lock est déjà tenu par le thread courant ; le ré-acquérir avec `threading.Lock()`, non réentrant, bloquerait indéfiniment ce même thread — piège identifié en spec, à couvrir explicitement par le test compensatoire)",
       "owner": "équipe web ForgeAI",
-      "justification": "Chemin de rollback/nettoyage sur un échec DÉJÀ en cours de traitement (double échec) : un `kill()` qui échoue pour une raison autre que « déjà mort » (ex. permissions) sur un process de déploiement laisserait potentiellement un process orphelin sans qu'aucune trace n'existe nulle part — contrairement à core/proc.py où ce cas est déjà bien couvert par des types d'exception précis, ici c'est un `except Exception` nu sur une opération de nettoyage critique en contexte de déploiement. Round 2 avait tenté de remplacer new_proc.kill()/wait() par kill_tree(grace_seconds=5.0) pour renforcer ce nettoyage — REVERTÉ après objections convergentes de 2 reviewers (correction, contrats) : ce changement modifiait le comportement observable (SIGTERM+grâce 5s sur le groupe de processus au lieu de SIGKILL immédiat sur le process seul, verrou _DEPLOY_STATE tenu plus longtemps) — exactement ce que le critère \"aucun changement de comportement\" interdit. Le renforcement réel du nettoyage est une amélioration légitime mais hors scope de #452 lot 1 ; à traiter dans une story dédiée.",
+      "justification": "Chemin de rollback/nettoyage sur un échec DÉJÀ en cours de traitement (double échec) : un `kill()` qui échoue pour une raison autre que « déjà mort » (ex. permissions) sur un process de déploiement laisserait potentiellement un process orphelin sans qu'aucune trace n'existe nulle part — contrairement à core/proc.py où ce cas est déjà bien couvert par des types d'exception précis, ici c'est un `except Exception` nu sur une opération de nettoyage critique en contexte de déploiement. Round 2 avait tenté de remplacer new_proc.kill()/wait() par kill_tree(grace_seconds=5.0) pour renforcer ce nettoyage — REVERTÉ après objections convergentes de 2 reviewers (correction, contrats) : ce changement modifiait le comportement observable (SIGTERM+grâce 5s sur le groupe de processus au lieu de SIGKILL immédiat sur le process seul, verrou _DEPLOY_STATE tenu plus longtemps) — exactement ce que le critère \"aucun changement de comportement\" interdit. Round 3 (revue GPT-5.6-Terra-Pro, sécurité, MAJEURE 3e occurrence) a maintenu l'objection malgré la documentation seule (round 1 et 2) : « poursuite du système dans un état mensonger ». Round 4 : correctif structurel ADDITIF distinct du mécanisme de kill lui-même — un booléen `nettoyage_incertain` qui rend l'incertitude EXPLICITE dans l'état structuré au lieu d'un exit_code=-1 indistinguable d'une fin normale. Ne touche ni au kill/wait, ni au scope/durée du lock — respecte le critère \"aucun changement de comportement\" du mécanisme lui-même tout en corrigeant le problème de VÉRACITÉ de l'état rapporté que 3 rounds de revue ont identifié comme le vrai coeur de l'objection. Couverture complémentaire (même mécanisme, cas additionnels) : tests/test_rel038c_process_groups.py::test_reader_succes_ne_marque_pas_nettoyage_incertain, tests/test_rel038c_process_groups.py::test_nouveau_deploiement_reinitialise_nettoyage_incertain, tests/test_deploy_persist.py::test_deploy_state_persiste_et_recharge_nettoyage_incertain, tests/test_deploy_persist.py::test_load_deploy_state_sans_nettoyage_incertain_par_defaut_false.",
       "compensating_test": "tests/test_rel038c_process_groups.py::test_reader_secondary_kill_echec_ajoute_avertissement",
       "compensating_test_reason": null,
       "review_due": "2027-02-10",
-      "accepted_risk": "Le flux de récupération (état marqué terminé, exit_code=-1) reste FAIL-OPEN si ce nettoyage best-effort échoue aussi : un process orphelin resterait possible. C'est un choix de scope EXPLICITE de ce lot, pas un oubli : #452 lot 1 vise à rendre visible une dégradation silencieuse préexistante SANS changer de comportement fonctionnel (critère explicite de la story) — remplacer le flux FAIL-OPEN par un mécanisme de confinement (retry, blocage, escalade différente) EST un changement de comportement, donc hors périmètre ici. Objection soulevée 2 fois (round 1 et round 2, revue securite) sur ce point précis : reconnue comme réelle et non résolue par ce lot ; candidate explicite pour une story dédiée de lot 2+ (contrat de récupération renforcé sur ce chemin de rollback), PAS traitée ici pour ne pas élargir le scope au-delà de la visibilité."
+      "accepted_risk": "Le mécanisme de nettoyage lui-même reste plafonné à `kill()`/`wait()` (un SIGKILL qui échoue — ex. process en D-state — reste un plafond OS qu'aucun code applicatif ne peut lever ; retry/escalade plus agressive serait un changement de comportement, hors scope de #452 lot 1). Ce qui a changé : l'état RAPPORTÉ n'est plus mensonger — un consommateur structuré de l'API voit maintenant explicitement `nettoyage_incertain=True` au lieu d'un `exit_code=-1` d'apparence normale. Risque résiduel restreint et documenté : un process potentiellement orphelin peut encore exister après ce point (limite OS), mais ce fait est désormais VISIBLE et interrogeable, pas silencieux. Amélioration du mécanisme de kill lui-même (retry, signal plus fort, supervision externe) : candidate explicite pour une story dédiée de lot 2+, pas traitée ici pour ne pas élargir le scope au-delà de la véracité de l'état rapporté."
     },
     {
-      "id": "site:src/forgeai/web/server.py:1672",
+      "id": "site:src/forgeai/web/server.py:1692",
       "site": {
         "path": "src/forgeai/web/server.py",
-        "line": 1672,
+        "line": 1692,
         "function": "forgeai.web.server.serve"
       },
       "exception_types": [

@@ -178,7 +178,7 @@ def test_deploy_events_reporte_apres_restart(tmp_path) -> None:
             body = resp.read().decode("utf-8")
 
         assert "data: ligne-restauree\n\n" in body
-        assert 'event: end\ndata: {"exit_code": 0}' in body
+        assert 'event: end\ndata: {"exit_code": 0, "nettoyage_incertain": false}' in body
     finally:
         srv.shutdown()
         srv.server_close()
@@ -265,7 +265,7 @@ def test_persist_concurrent_pas_de_corruption(tmp_path) -> None:
     path = server._deploy_state_path()
     assert path.exists()
     data = json.loads(path.read_text(encoding="utf-8"))  # ne doit JAMAIS lever (JSON valide)
-    assert set(data) == {"done", "exit_code", "lines"}
+    assert set(data) == {"done", "exit_code", "lines", "nettoyage_incertain"}
     assert isinstance(data["lines"], list)
     assert isinstance(data["done"], bool)
 
@@ -302,3 +302,40 @@ def test_load_deploy_state_echec_inattendu_journalise_stderr(monkeypatch, capsys
 
     captured = capsys.readouterr()
     assert "échec de restauration" in captured.err
+
+
+def test_deploy_state_persiste_et_recharge_nettoyage_incertain(tmp_path) -> None:
+    """Le flag nettoyage_incertain est persisté sur disque et restauré par _load_deploy_state."""
+    with server._DEPLOY_STATE["lock"]:
+        server._DEPLOY_STATE["done"] = True
+        server._DEPLOY_STATE["exit_code"] = 1
+        server._DEPLOY_STATE["lines"] = ["erreur"]
+        server._DEPLOY_STATE["nettoyage_incertain"] = True
+
+    server._persist_deploy_state()
+
+    with server._DEPLOY_STATE["lock"]:
+        server._DEPLOY_STATE["nettoyage_incertain"] = False
+
+    server._load_deploy_state()
+
+    with server._DEPLOY_STATE["lock"]:
+        assert server._DEPLOY_STATE["nettoyage_incertain"] is True
+
+
+def test_load_deploy_state_sans_nettoyage_incertain_par_defaut_false(tmp_path) -> None:
+    """Un fichier d'état pré-correctif sans clé nettoyage_incertain charge False par défaut."""
+    state_path = server._deploy_state_path()
+    state_path.parent.mkdir(parents=True, exist_ok=True)
+    state_path.write_text(
+        json.dumps({"done": True, "exit_code": 0, "lines": ["ok"]}, ensure_ascii=False),
+        encoding="utf-8",
+    )
+
+    with server._DEPLOY_STATE["lock"]:
+        server._DEPLOY_STATE["nettoyage_incertain"] = True
+
+    server._load_deploy_state()
+
+    with server._DEPLOY_STATE["lock"]:
+        assert server._DEPLOY_STATE["nettoyage_incertain"] is False
