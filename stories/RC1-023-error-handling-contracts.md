@@ -31,6 +31,24 @@ vérifiés par `python3 scripts/governance/validate_error_contracts.py --root .`
 35 `autre` (29 + 6), 24 `pass` (18 + 6, les 6 nouveaux déjà couverts par le lot 1 ci-dessous),
 6 `continue`. 88+42+35+24+6 = 195.
 
+**Note de vérification round 29 (#452, objection GPT-5.6-Terra-Pro répétée à l'identique 2 fois)**
+— objection : plusieurs contrats des replis ultimes (# proof:allow) pointeraient sur la ligne du
+corps `pass` plutôt que sur la ligne du handler `except` lui-même (ex. `detect.py:61` serait le
+`pass`, l'`except` serait à `60`). **Vérifié FAUX, trois méthodes indépendantes, à chaque
+relance :**
+1. Lecture directe du fichier (`sed -n '55,63p' src/forgeai/hardware/detect.py`) : ligne 61 =
+   `except Exception:  # proof:allow …`, ligne 62 = `pass`.
+2. `ast.parse` direct : `ExceptHandler.lineno == 61` (pas 60, pas 62).
+3. Appel direct de `_verifier_site_ast()` (la fonction du validateur elle-même) sur les 3 entrées
+   nommément citées (`detect.py:61`, `detect.py:95`, `server.py:615`) : aucune erreur, dans les
+   trois cas.
+Le hunk du diff cumulatif (`@@ -42,8 +44,22 @@`, comptage ligne par ligne depuis l'en-tête)
+confirme la même chose : la ligne `+44` est `except (...) as exc:`, en comptant les 17 lignes `+`
+suivantes on arrive à `+61` = `except Exception:  # proof:allow`, `+62` = `pass`. Pas d'ambiguïté
+de format de diff — juste une lecture à corriger côté revue. Aucune correction de code nécessaire
+: `governance/error-handling-contracts.json` est exact, confirmé par le gate lui-même (l'AST fait
+foi, pas une relecture manuelle du diff).
+
 ## Scope de ce lot (1/N — campagne à la RC1-010/#440)
 
 **Les 24 sites `pass`/`continue`** — les handlers les plus silencieux, cœur du problème décrit
