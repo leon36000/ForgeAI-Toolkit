@@ -93,7 +93,7 @@ fichiers disjoints.
 Les reviewers sont en lecture seule ; la revue aveugle scellée est définie à la règle 3.
 Nathan conserve les décisions T3, conformément à la règle 5.
 
-Le modèle multi-IDE ORCH-001, `coordination/*.json` et
+Le modèle multi-IDE ORCH-001, `archive/coordination/*.json` (RC1-010/#440, lot 1) et
 `.cursor/rules/forgeai-orchestration.mdc` sont archivés/historiques et remplacés par ce modèle ;
 voir [governance/AUTHORITY-MAP.md](governance/AUTHORITY-MAP.md) pour les statuts, empreintes et
 la succession.

@@ -44,8 +44,8 @@ Cette carte est le rendu de `governance/authority.json`.
 | `canon.spec-stacks` | `CANON/spec-stacks.md` | active | `architecture` | `nathan` | `—` |
 | `canon.spec-web-ui` | `CANON/spec-web-ui.md` | active | `architecture` | `nathan` | `—` |
 | `claude-md` | `CLAUDE.md` | conflicted | `governance_method` | `nathan` | `—` |
-| `coord.active-claims` | `coordination/active-claims.json` | superseded | `coordination_ops` | `copilot` | `gov.decision-mission-lead` |
-| `coord.work-packages` | `coordination/work-packages.json` | superseded | `coordination_ops` | `copilot` | `gov.decision-mission-lead` |
+| `coord.active-claims` | `archive/coordination/active-claims.json` | superseded | `coordination_ops` | `copilot` | `gov.decision-mission-lead` |
+| `coord.work-packages` | `archive/coordination/work-packages.json` | superseded | `coordination_ops` | `copilot` | `gov.decision-mission-lead` |
 | `cursor.orchestration-rules` | `.cursor/rules/forgeai-orchestration.mdc` | superseded | `ide_contract` | `copilot` | `gov.decision-mission-lead` |
 | `gov.decision-arborescence-evidence-work-archive` | `governance/decisions/D-2026-08-15-arborescence-evidence-work-archive.md` | active | `governance_method` | `orchestrateur` | `—` |
 | `gov.decision-mission-lead` | `governance/decisions/D-2026-08-14-mission-lead.md` | conflicted | `orchestration` | `nathan` | `—` |

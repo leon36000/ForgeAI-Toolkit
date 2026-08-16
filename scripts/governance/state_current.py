@@ -327,7 +327,7 @@ def _coordination_total(value: Any, claims: list[Any]) -> int:
                 return total
             if total is not None:
                 raise ValueError(
-                    "coordination/work-packages.json: concurrency_limits.total invalide"
+                    "archive/coordination/work-packages.json: concurrency_limits.total invalide"
                 )
     return sum(
         isinstance(claim, dict)
@@ -425,8 +425,8 @@ def collect(repo_root: Path) -> dict:
         workflow_text = source(relative).decode("utf-8")
         jobs_total += _workflow_jobs(relative.as_posix(), workflow_text)
 
-    packages_relative = Path("coordination/work-packages.json")
-    claims_relative = Path("coordination/active-claims.json")
+    packages_relative = Path("archive/coordination/work-packages.json")
+    claims_relative = Path("archive/coordination/active-claims.json")
     packages_value = json.loads(source(packages_relative).decode("utf-8"))
     claims_value = json.loads(source(claims_relative).decode("utf-8"))
     packages = _coordination_entries(packages_value, packages_relative.as_posix())

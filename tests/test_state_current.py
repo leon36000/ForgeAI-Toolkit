@@ -73,7 +73,7 @@ def _write_fixture_repo(tmp_path: pathlib.Path) -> pathlib.Path:
     (tmp_path / "src" / "forgeai" / "data").mkdir(parents=True)
     (tmp_path / "tests").mkdir()
     (tmp_path / ".github" / "workflows").mkdir(parents=True)
-    (tmp_path / "coordination").mkdir()
+    (tmp_path / "archive" / "coordination").mkdir(parents=True)
 
     (tmp_path / "pyproject.toml").write_text(
         """
@@ -152,11 +152,11 @@ jobs:
         encoding="utf-8",
     )
     _write_json(
-        tmp_path / "coordination" / "work-packages.json",
+        tmp_path / "archive" / "coordination" / "work-packages.json",
         [{"id": "wp-a"}, {"id": "wp-b"}],
     )
     _write_json(
-        tmp_path / "coordination" / "active-claims.json",
+        tmp_path / "archive" / "coordination" / "active-claims.json",
         [{"id": "claim-a", "concurrency": "catalogue"}],
     )
     _write_observations(tmp_path)
