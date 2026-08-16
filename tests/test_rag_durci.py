@@ -28,6 +28,7 @@ class _SocleDurci(BaseHTTPRequestHandler):
     requests: list = []          # (method, path, payload, headers) reçus
     search_hits: list = []       # hits renvoyés par /points/search (configurable par test)
     chat_answer: str = "Réponse durcie ancrée."
+    chat_response_override: object = None  # RC1-456-iter3/#5xx : corps brut si non None
 
     def _read(self):
         length = int(self.headers.get("Content-Length", 0))
@@ -61,7 +62,10 @@ class _SocleDurci(BaseHTTPRequestHandler):
         elif self.path.endswith("/points/search") or "/points/search" in self.path:
             self._send(200, {"result": list(type(self).search_hits)})
         elif self.path.endswith("/v1/chat/completions"):
-            self._send(200, {"choices": [{"message": {"content": type(self).chat_answer}}]})
+            if type(self).chat_response_override is not None:
+                self._send(200, type(self).chat_response_override)
+            else:
+                self._send(200, {"choices": [{"message": {"content": type(self).chat_answer}}]})
         elif self.path.endswith("/api/pull"):
             self._send(200, {"status": "success"})
         else:
@@ -76,6 +80,7 @@ def socle():
     _SocleDurci.requests = []
     _SocleDurci.search_hits = []
     _SocleDurci.chat_answer = "Réponse durcie ancrée."
+    _SocleDurci.chat_response_override = None
     srv = ThreadingHTTPServer(("127.0.0.1", 0), _SocleDurci)
     threading.Thread(target=srv.serve_forever, daemon=True).start()
     base = f"http://127.0.0.1:{srv.server_address[1]}"
@@ -118,6 +123,28 @@ def test_ask_genere_via_passerelle_bearer(socle):
     assert chat[0][3].get("Authorization") == "Bearer forgeai-bearer-test-token-DO-NOT-LEAK"
     # forme OpenAI : messages présents
     assert "messages" in chat[0][2]
+
+
+# --- RC1-456-iter3 : passerelle mal configurée répond 200 avec un corps JSON valide mais non
+# conforme (choices vide, ou body d'erreur) — même famille que #482/#492/#527/#528, ici ZÉRO
+# garde (pas même json.JSONDecodeError) autour de _post_bearer()/response["choices"][0]... ---
+def test_ask_passerelle_reponse_choices_vide_ne_leve_pas(socle):
+    """RC1-456-iter3 : une gateway/API cloud compatible OpenAI répond couramment
+    {"choices": []} (filtrage de contenu, cas documenté chez Azure OpenAI) — ne doit jamais
+    lever IndexError, seulement produire une réponse sans réponse générée (comme B3)."""
+    _SocleDurci.search_hits = [{"payload": {"text": "contexte présent.", "source": "doc.md"}}]
+    _SocleDurci.chat_response_override = {"choices": []}
+    res = _client(socle).ask("question ?")
+    assert res["answer"] == ""
+
+
+def test_ask_passerelle_reponse_body_erreur_ne_leve_pas(socle):
+    """RC1-456-iter3 : un proxy/gateway mal configuré peut répondre HTTP 200 avec un corps
+    d'erreur ({"error": {...}}, sans clé "choices") — ne doit jamais lever KeyError."""
+    _SocleDurci.search_hits = [{"payload": {"text": "contexte présent.", "source": "doc.md"}}]
+    _SocleDurci.chat_response_override = {"error": {"message": "modèle introuvable"}}
+    res = _client(socle).ask("question ?")
+    assert res["answer"] == ""
 
 
 # --- B3 : contrôle négatif — sans hit, pas de génération, grounding="unknown" ---
