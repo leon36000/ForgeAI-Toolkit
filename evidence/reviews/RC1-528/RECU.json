@@ -1,0 +1,22 @@
+{
+  "schema": "recu-revue/1",
+  "dossier": "RC1-528",
+  "issue": 528,
+  "round": 2,
+  "base_commit": "b5e928bf74d8c0dbfc3080b40fdc1a69dd0c4576",
+  "head_commit": "ce0aa8d0e08ffac92d879b842f78c44b4d303f24",
+  "head_tree": "b52cbbd9587333a5cebee6193de9c117af85fd9e",
+  "diff_digest": "25e486fa45b10cc7839634c8cd416e56f556fa36d3b164c94e5e0ac22940b965",
+  "prompt_sha256": "7c6c8900aad9c607a63fe171c58cf410bd4b5fd1ceb49f5b5ab6335b600ebc56",
+  "reviewers_attendus": [
+    "GPT-5.6-Terra-Pro",
+    "Muse-Spark-1.2",
+    "Qwen3.7-Max"
+  ],
+  "codeur": [
+    "fable"
+  ],
+  "resultat": "APPROVE",
+  "date_heure": "2026-08-16T14:36:21.412390-04:00",
+  "fenetre_heures": 24
+}
