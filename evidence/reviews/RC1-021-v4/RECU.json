@@ -3,10 +3,10 @@
   "dossier": "RC1-021-v4",
   "issue": 451,
   "round": 1,
-  "base_commit": "b5e928bf74d8c0dbfc3080b40fdc1a69dd0c4576",
-  "head_commit": "7b7fb3cfc2b41c837c78bc8c9cc57bd72a8e1793",
-  "head_tree": "bd564507b00ac72f1bd84060891b762aa4046d72",
-  "diff_digest": "c6223e6cada356d474fccce86d9a84920795109fe42d38230498083efaab60b9",
+  "base_commit": "b58193bee7c07d869dd66e907f53c09062cf648a",
+  "head_commit": "0b20336d239374220225438dbb91ba91d5bb58a1",
+  "head_tree": "78f99f311c8fc7ffb0be4407783d934aff73f28b",
+  "diff_digest": "dabbff6b2e93889ca6223b02dd02bac6a02657baafd02a4c97f5246feb1ff9ea",
   "prompt_sha256": "f40bdb992289d6dd38e871fe0ddd04d7781bb10ea305a7c025e2c852ebd97f84",
   "reviewers_attendus": [
     "Gemini-3.1-Pro",
@@ -17,6 +17,6 @@
     "GPT-5.6-Luna-Pro"
   ],
   "resultat": "APPROVE",
-  "date_heure": "2026-08-16T14:15:54.708099-04:00",
+  "date_heure": "2026-08-16T14:52:14.684016-04:00",
   "fenetre_heures": 24
 }
