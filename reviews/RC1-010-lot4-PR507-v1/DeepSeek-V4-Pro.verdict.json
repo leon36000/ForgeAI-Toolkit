@@ -1,0 +1,19 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "Docs/audit/SAST-042.md",
+   "description": "Le chemin de sortie bandit adapté reste incohérent avec le fichier réel déplacé : la doc référence `evidence/audit-output/sast/bandit.json`, alors que le diff déplace uniquement `evidence/audit-output/sast/bandit.json.gz`. La référence est d'ailleurs constatée comme pendante dans governance/path-classification.json.",
+   "preuve": "Diff Docs/audit/SAST-042.md ligne 5 : `-o evidence/audit-output/sast/bandit.json`; renames du diff : `AUDIT-OUTPUT/sast/bandit.json.gz` -> `evidence/audit-output/sast/bandit.json.gz`; path-classification.json ajoute `candidate: evidence/audit-output/sast/bandit.json`, `referrer: Docs/audit/SAST-042.md`."
+  }
+ ],
+ "date_heure": "2026-08-16T03:09:00.830843+00:00",
+ "prompt_sha256": "8cfd490984a700ac9a77edd40ba101bad1588572a810b73a1248a1f131a977d5",
+ "reviewer_model": "DeepSeek-V4-Pro",
+ "modele_servi": "deepseek-v4-pro-direct",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}
