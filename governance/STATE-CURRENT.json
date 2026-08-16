@@ -120,7 +120,7 @@
       },
       {
         "path": "pyproject.toml",
-        "sha256": "2247ade432bd7d1c085efa76542641e355c139f9261666e6b16de670f78685ae"
+        "sha256": "79292696c4bf32ca45c5181a6415098335f545c159dbd0084a49bf8441a492cb"
       },
       {
         "path": "src/forgeai/__init__.py",
@@ -847,6 +847,10 @@
         "sha256": "479db6af2c2b5e421be6565bdfba8315031cebaaa3bf1507a814fbd7f847b5b8"
       },
       {
+        "path": "tests/test_validate_coderabbit_config.py",
+        "sha256": "c8c7392b37c0077af7820f502074aca8a004988f8893e6952784db0cfcce5f42"
+      },
+      {
         "path": "tests/test_vault.py",
         "sha256": "32c96e2349fc238a1d5aa733ef9c4063049bcdf68f6d28cd5c83e58cccb2e578"
       },
@@ -936,8 +940,8 @@
     },
     "tests": {
       "js_files": 3,
-      "python_files": 195,
-      "python_functions_declared": 2323
+      "python_files": 196,
+      "python_functions_declared": 2332
     }
   },
   "observations": [
