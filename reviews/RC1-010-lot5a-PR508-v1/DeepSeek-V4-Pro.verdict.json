@@ -1,0 +1,19 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "governance/path-classification.json",
+   "description": "Le diff généré montre que `reviews/BINDING.txt` a changé de sha256 et de taille, et que quatre fichiers `reviews/RC1-010-lot4-PR507-v1/*` sont ajoutés, alors qu'aucun diff correspondant n'est fourni pour ces chemins `reviews/**` (probablement filtré par le diff canonique). La story liste comme seule exception attendue `evidence/registres/mission.jsonl` et annonce un lot code pur; l'absence de diff pour ces chemins empêche de vérifier le contenu exact de ces changements.",
+   "preuve": "Diff `governance/path-classification.json` : `-sha256: 0748aa6ecf...` -> `+sha256: 56b49a4c...`, `-size: 2307` -> `+size: 2329`, et ajout de `reviews/RC1-010-lot4-PR507-v1/*` dans les entrées EVIDENCE."
+  }
+ ],
+ "date_heure": "2026-08-16T03:49:34.527784+00:00",
+ "prompt_sha256": "1014490fafa61a29b0af70ffc430f51e6474a5e91a32b8f8da8e48eaff2072f8",
+ "reviewer_model": "DeepSeek-V4-Pro",
+ "modele_servi": "deepseek-v4-pro-direct",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

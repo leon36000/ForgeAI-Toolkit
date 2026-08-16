@@ -474,6 +474,41 @@ def test_graphe_binding_txt_commentaire_ignore(tmp_path: pathlib.Path) -> None:
     )
 
 
+def test_graphe_binding_txt_resout_prefixe_evidence_reviews(tmp_path: pathlib.Path) -> None:
+    # RC1-010 (#440) lot 5a : une fois BINDING.txt lui-même déplacé (lot 5d), les entrées
+    # doivent se résoudre contre le préfixe evidence/reviews/, pas reviews/.
+    _ecrit_fixture_texte(tmp_path, "evidence/reviews/BINDING.txt", "S-migree\n")
+    _ecrit_fixture_texte(tmp_path, "evidence/reviews/S-migree/x.json", "{}")
+    tracked = ["evidence/reviews/BINDING.txt", "evidence/reviews/S-migree/x.json"]
+
+    graph = classify_paths.build_reference_graph(tmp_path, tracked)
+
+    assert any(
+        edge["referrer"] == "evidence/reviews/BINDING.txt"
+        and edge["candidate"] == "S-migree"
+        and edge["resolved"] == "evidence/reviews/S-migree"
+        and edge["severity"] == "hard"
+        for edge in graph["edges"]
+    )
+
+
+def test_graphe_binding_txt_tolere_entree_pas_encore_migree(tmp_path: pathlib.Path) -> None:
+    # Transition (lots 5b-5c) : BINDING.txt a déjà migré, mais une entrée qu'il référence vit
+    # encore sous reviews/ (pas encore déplacée par ce lot précis) — doit rester résoluble.
+    _ecrit_fixture_texte(tmp_path, "evidence/reviews/BINDING.txt", "S-pas-encore-migree\n")
+    _ecrit_fixture_texte(tmp_path, "reviews/S-pas-encore-migree/x.json", "{}")
+    tracked = ["evidence/reviews/BINDING.txt", "reviews/S-pas-encore-migree/x.json"]
+
+    graph = classify_paths.build_reference_graph(tmp_path, tracked)
+
+    assert any(
+        edge["referrer"] == "evidence/reviews/BINDING.txt"
+        and edge["candidate"] == "S-pas-encore-migree"
+        and edge["resolved"] == "reviews/S-pas-encore-migree"
+        for edge in graph["edges"]
+    )
+
+
 def test_graphe_sonar_resourcekey_severity_silent(tmp_path: pathlib.Path) -> None:
     _ecrit_fixture_texte(
         tmp_path,

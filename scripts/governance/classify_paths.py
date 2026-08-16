@@ -382,6 +382,7 @@ def build_reference_graph(repo_root: Path, tracked: list[str]) -> dict:
     structured_referrers = {
         "governance/authority.json",
         "reviews/BINDING.txt",
+        "evidence/reviews/BINDING.txt",
         "sonar-project.properties",
     }
 
@@ -411,25 +412,38 @@ def build_reference_graph(repo_root: Path, tracked: list[str]) -> dict:
         except (OSError, UnicodeDecodeError, json.JSONDecodeError, ValueError):
             pass
 
-    if "reviews/BINDING.txt" in tracked_set:
+    # RC1-010 (#440) lot 5a : BINDING.txt et les dossiers qu'il référence vivent, pendant la
+    # migration reviews/ -> evidence/reviews/ (lots 5b-5d), à cheval sur les DEUX racines —
+    # certaines entrées déjà déplacées, d'autres pas encore. binding_referrer détecte où
+    # BINDING.txt lui-même se trouve (il migre au lot 5d) ; chaque candidat est résolu contre
+    # les DEUX racines possibles, dans cet ordre (evidence/reviews/ d'abord, reviews/ en repli).
+    binding_referrer = (
+        "evidence/reviews/BINDING.txt"
+        if "evidence/reviews/BINDING.txt" in tracked_set
+        else "reviews/BINDING.txt" if "reviews/BINDING.txt" in tracked_set else None
+    )
+    if binding_referrer is not None:
         try:
-            binding_path = _within_repo(
-                repo_root, repo_root / "reviews/BINDING.txt"
-            )
+            binding_path = _within_repo(repo_root, repo_root / binding_referrer)
             for line_number, line in enumerate(
                 binding_path.read_text(encoding="utf-8").splitlines(), start=1
             ):
                 candidate = line.strip()
                 if not candidate or candidate.startswith("#"):
                     continue
-                resolved = f"reviews/{candidate}"
-                if any(
-                    path == resolved or path.startswith(resolved + "/")
-                    for path in tracked
-                ):
+                resolved = None
+                for prefix in ("evidence/reviews/", "reviews/"):
+                    essai = f"{prefix}{candidate}"
+                    if any(
+                        path == essai or path.startswith(essai + "/")
+                        for path in tracked
+                    ):
+                        resolved = essai
+                        break
+                if resolved is not None:
                     graph["edges"].append(
                         {
-                            "referrer": "reviews/BINDING.txt",
+                            "referrer": binding_referrer,
                             "line": line_number,
                             "candidate": candidate,
                             "resolved": resolved,
@@ -439,7 +453,7 @@ def build_reference_graph(repo_root: Path, tracked: list[str]) -> dict:
                 else:
                     graph["dangling"].append(
                         {
-                            "referrer": "reviews/BINDING.txt",
+                            "referrer": binding_referrer,
                             "line": line_number,
                             "candidate": candidate,
                         }
