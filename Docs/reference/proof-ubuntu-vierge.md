@@ -35,6 +35,6 @@ d'images + modèles). Le script est idempotent et nettoie tout en sortie (`trap 
 
 ## Traçabilité
 
-Chaque exécution est destinée à être journalisée au registre (`Registres/mission.jsonl`, type
+Chaque exécution est destinée à être journalisée au registre (`evidence/registres/mission.jsonl`, type
 `preuve_capacite`). La preuve est un **script reproductible** lancé à la demande (et non un test
 CI : `--privileged` + réseau + ~2,5 Go la rendent inadaptée à l'intégration continue).

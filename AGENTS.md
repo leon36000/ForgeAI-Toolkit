@@ -15,7 +15,7 @@ Claude Code Opus est mission lead, gestionnaire du DAG et intégrateur ; les mem
    Interdits dans tout code mergé : corps vides, `NotImplementedError`, marqueurs de travail
    inachevé, tests sans assertion, données inventées présentées comme réelles.
    Gate : `python3 scripts/no_stub_scan.py --all` (bloquant, aucune exception).
-2. **Preuve au registre** : chaque livrable ⇒ une entrée dans `Registres/*.jsonl` via
+2. **Preuve au registre** : chaque livrable ⇒ une entrée dans `evidence/registres/*.jsonl` via
    `scripts/registre.py append`. Un livrable sans preuve n'existe pas.
 3. **Revue aveugle scellée (§3)** : verdicts déposés dans `reviews/<étape>/<modèle>.verdict.json`
    sans accès aux verdicts des autres. Jamais de verdict attendu, de compte d'approbations
@@ -27,8 +27,8 @@ Claude Code Opus est mission lead, gestionnaire du DAG et intégrateur ; les mem
 
 ## Commandes
 ```bash
-python3 scripts/registre.py append Registres/mission.jsonl --type <type> --actor <actor> --payload-json '<json>'
-python3 scripts/registre.py verify Registres/mission.jsonl
+python3 scripts/registre.py append evidence/registres/mission.jsonl --type <type> --actor <actor> --payload-json '<json>'
+python3 scripts/registre.py verify evidence/registres/mission.jsonl
 python3 scripts/no_stub_scan.py --all
 pytest
 ```

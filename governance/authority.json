@@ -110,7 +110,7 @@
       ],
       "digest": {
         "policy": "content_sha256",
-        "value": "38ce058d098f0d0761376e3403b3d0e1bff153bda5e09daf74eb75fb2880d531",
+        "value": "2c3884c19fbc1e2920dfd879ccec88ae9e17470c1af95ad7291d7a65542ef75d",
         "checked_at": "2026-08-16",
         "delegated_to": null
       },
@@ -465,7 +465,7 @@
     {
       "id": "registres.mission",
       "title": "Registre de mission",
-      "path": "Registres/mission.jsonl",
+      "path": "evidence/registres/mission.jsonl",
       "anchor": null,
       "kind": "ledger",
       "scope": "evidence_ledger",
@@ -628,8 +628,8 @@
       "positions": [],
       "digest": {
         "policy": "content_sha256",
-        "value": "daf1bf0fb7a7a5c993e4a03299cb0f394d045194e64a9e33b1e9bd2f31b9f463",
-        "checked_at": "2026-08-15",
+        "value": "7d7a10f4ad7e07f245c11e7e91d8122bb47a875949e72749d901b886e0a36bc2",
+        "checked_at": "2026-08-16",
         "delegated_to": null
       },
       "retention": "in_force",

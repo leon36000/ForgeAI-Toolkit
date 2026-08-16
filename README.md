@@ -33,7 +33,7 @@ dans Claude Code (l'orchestrateur en session), routée par le gateway LiteLLM lo
 | `governance/` | Canon, décisions, méthode et artefacts de gouvernance |
 | `CANON/` | Documents de référence gelés (plan maître, annexes) |
 | `manifests/` | Plan machine-lisible : `roles.yaml`, `routes.yaml`, `phases.yaml`, `bricks.yaml`, `gates.yaml` |
-| `Registres/` | Journaux JSONL append-only hash-chaînés (preuves) |
+| `evidence/registres/` | Journaux JSONL append-only hash-chaînés (preuves) |
 | `Docs/` | Racine de la documentation active, organisée selon Diátaxis |
 | `stories/` | Artefacts de gouvernance des stories |
 | `src/` | Code du Toolkit |
@@ -52,7 +52,7 @@ gates ci-dessous :
 
 ```bash
 python3 scripts/no_stub_scan.py --all       # scan stubs/marqueurs interdits
-python3 scripts/registre.py verify Registres/mission.jsonl
+python3 scripts/registre.py verify evidence/registres/mission.jsonl
 pytest                                      # tests
 ```
 
@@ -77,7 +77,7 @@ locale de `ggshield` ou de `pre-commit`.
 
 ## État de la mission
 
-_État courant : voir le registre `Registres/mission.jsonl` (chaîne sha256 vérifiée)._
+_État courant : voir le registre `evidence/registres/mission.jsonl` (chaîne sha256 vérifiée)._
 
 **P1 PROUVÉE** — machine nue → RAG fonctionnel, sur les deux backends :
 
@@ -89,7 +89,7 @@ PYTHONPATH=src python3 -m forgeai wizard --ci \
 # … --backend k3s                                              # parité K3s
 ```
 
-Preuves scellées : `Registres/mission.jsonl` (chaîne sha256 vérifiée) — e2e Compose
+Preuves scellées : `evidence/registres/mission.jsonl` (chaîne sha256 vérifiée) — e2e Compose
 `CI_WITNESS=2a0b6221…`, e2e K3s `CI_WITNESS=bf9e40c7…`. Couverture <!-- state:observations.coverage.global -->94<!-- /state --> % (registre <!-- state:observations.coverage.registre -->98<!-- /state --> %),
 revue aveugle code <!-- state:governance.review_quorum -->3/3<!-- /state --> APPROVE (vendors non-Anthropic). Le multi-nœuds est livré (<!-- state:cli.subcommands_by_group.node -->7<!-- /state --> sous-commandes `forgeai node`) et les
 traductions EN sont complètes (<!-- state:catalogue.descriptions_en_missing -->0<!-- /state --> `description_en` vide sur <!-- state:catalogue.entries_total -->1576<!-- /state --> briques) : l'ancien BLOCKED

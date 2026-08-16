@@ -28,7 +28,11 @@ MARKERS = [
     "PLACE" + "HOLDER",
 ]
 MARKER_RE = re.compile(r"\b(" + "|".join(MARKERS) + r")\b")
-JUSTIFICATION_TOKEN = "Registres/"
+# RC1-010 (#440) lot 3 : Registres/ a migré vers evidence/registres/. Les deux préfixes sont
+# acceptés — l'ancien pour ne pas casser les justifications déjà écrites (28 occurrences dans
+# 17 fichiers de tests au moment du lot 3, jamais réécrites rétroactivement), le nouveau pour
+# les justifications futures.
+JUSTIFICATION_TOKENS = ("Registres/", "evidence/registres/")
 
 
 def _tracked_files() -> list[Path]:
@@ -86,7 +90,11 @@ def _call_is_justified(node: ast.Call) -> bool:
     parts = [arg.value for arg in node.args if isinstance(arg, ast.Constant)]
     parts += [kw.value.value for kw in node.keywords
               if isinstance(kw.value, ast.Constant)]
-    return any(isinstance(p, str) and JUSTIFICATION_TOKEN in p for p in parts)
+    return any(
+        isinstance(p, str) and token in p
+        for p in parts
+        for token in JUSTIFICATION_TOKENS
+    )
 
 
 def _protocol_function_lines(tree: ast.Module) -> set[int]:
@@ -137,7 +145,7 @@ def scan_python(path: Path, text: str) -> list[str]:
             if not _call_is_justified(node):
                 violations.append(
                     f"{path}:{node.lineno}: skip/xfail pytest sans justification "
-                    f"'{JUSTIFICATION_TOKEN}...'"
+                    f"'{JUSTIFICATION_TOKENS[1]}...'"
                 )
     return violations
 

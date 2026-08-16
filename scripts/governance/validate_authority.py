@@ -597,7 +597,7 @@ def _validate_vision_log(
     else:
         vision_sequences = _load_jsonl_sequences(vision_path)
     mission_sequences = _load_jsonl_sequences(
-        _within_repo(repo_root, repo_root / "Registres" / "mission.jsonl")
+        _within_repo(repo_root, repo_root / "evidence" / "registres" / "mission.jsonl")
     )
     for source_id, source in by_id.items():
         decision = source.get("decision")
