@@ -1,0 +1,22 @@
+{
+  "schema": "recu-revue/1",
+  "dossier": "BUGHUNT-2026-08-16-v3",
+  "issue": 530,
+  "round": 1,
+  "base_commit": "2744f778f5dd07e3862f1f93d44e0942f8063a5a",
+  "head_commit": "ecec786000703c5975150716835a8ee779b67d8a",
+  "head_tree": "d9d9367dd70b108269a7d1a7961d0008cc358ee1",
+  "diff_digest": "6810a464f36d1317beac4d2c5cc74b7086309c9e4412e90f1388c2a26a4ad11a",
+  "prompt_sha256": "815fb26f99148e477564866f02d9c044218a1375e40bbff7d1a2e65ea42020d2",
+  "reviewers_attendus": [
+    "GPT-5.6-Terra-Pro",
+    "Gemini-3.7-Flash",
+    "Qwen3.7-Max"
+  ],
+  "codeur": [
+    "fable"
+  ],
+  "resultat": "APPROVE",
+  "date_heure": "2026-08-16T07:50:55.253716-04:00",
+  "fenetre_heures": 24
+}

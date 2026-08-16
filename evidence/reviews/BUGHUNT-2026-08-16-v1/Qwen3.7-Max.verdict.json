@@ -1,0 +1,12 @@
+{
+ "verdict": "APPROVE",
+ "objections": [],
+ "date_heure": "2026-08-16T10:04:03.520013+00:00",
+ "prompt_sha256": "9a3a20faf1489e12a45dbe0daaabe621448c866818ef03dbc6cf4a98a1816e3a",
+ "reviewer_model": "Qwen3.7-Max",
+ "modele_servi": "qwen37-max-dashscope",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "1"
+ }
+}

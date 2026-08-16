@@ -85,7 +85,11 @@ class RateLimiter:
             if state is None:
                 state = self._init_state(now)
                 self._state[ip] = state
-            else:
+            elif self.rate_window_s > 0:
+                # bug hunt (issue #531) : self.rate_window_s == 0 diviserait par zéro ici
+                # (`FORGEAI_RATE_WINDOW_S=0`, variable documentée). Fenêtre nulle = pas de
+                # recharge calculable proprement ; on ne fait juste rien avancer (les jetons
+                # restent à leur valeur courante) plutôt que de planter.
                 elapsed = now - state["last_refill"]
                 state["tokens"] = min(
                     self.rate_max,
@@ -97,6 +101,13 @@ class RateLimiter:
             if state["tokens"] >= 1.0:
                 state["tokens"] -= 1.0
                 return None
+            if self.rate_max <= 0:
+                # bug hunt (issue #531) : self.rate_max <= 0 diviserait par zéro ci-dessous.
+                # rate_max <= 0 signifie littéralement « zéro requête autorisée » —
+                # FORGEAI_RATE_MAX=0 est un geste d'opérateur plausible pour bloquer tout
+                # trafic distant en urgence ; refuser systématiquement (retry fixe) est le
+                # comportement qui honore cette intention, pas planter la connexion.
+                return max(self.rate_window_s, 0.001)
             retry = (1.0 - state["tokens"]) * (self.rate_window_s / self.rate_max)
             return max(retry, 0.001)
 

@@ -50,6 +50,15 @@ def test_gateway_refuse_hote_fournisseur():
         GatewayConfig("https://openrouter.ai/api/v1")  # un fournisseur n'est pas LE gateway
 
 
+def test_gateway_refuse_hote_fournisseur_avec_point_final():
+    """Bug hunt : un FQDN absolu avec point final (forme standard, transparente pour la
+    résolution DNS et tout client HTTP réel) contournait la garde — urlparse() conserve ce
+    point ('api.openai.com.' != 'api.openai.com' en tant que chaîne Python) alors que c'est
+    exactement le même hôte réel."""
+    with pytest.raises(GatewayError):
+        GatewayConfig("https://openrouter.ai./api/v1")
+
+
 def test_wire_all_resout_role_vers_route():
     store = RouteStore.__new__(RouteStore)  # get() monkeypaté ci-dessous
     from forgeai.models.routes import CloudRoute
@@ -109,6 +118,25 @@ def test_assert_detecte_brique_pointant_fournisseur():
         "OPENAI_API_KEY": "${FORGEAI_GATEWAY_KEY}", "OPENAI_MODEL": "gpt"})
     violations = assert_via_gateway([rogue], GW)
     assert violations and "rogue" in violations[0]
+
+
+def test_assert_detecte_brique_pointant_fournisseur_avec_point_final():
+    """Même contournement que ci-dessus, sur la 2e garde INDÉPENDANTE (audit des câblages
+    déjà écrits, assert_via_gateway::host in _PROVIDER_HOSTS) — les deux gardes doivent être
+    insensibles au point final d'un FQDN absolu.
+
+    Isolation de la garde précisément (pas juste « une violation quelconque », que la garde
+    générale « base != gateway.base_url » produirait de toute façon) : on filtre les
+    violations sur le message SPÉCIFIQUE de la détection d'hôte fournisseur.
+    """
+    rogue = BrickWiring("rogue2", "chat", {
+        "OPENAI_API_BASE": "https://api.openai.com./v1",  # point final = même hôte réel
+        "OPENAI_API_KEY": "${FORGEAI_GATEWAY_KEY}", "OPENAI_MODEL": "gpt"})
+    violations = assert_via_gateway([rogue], GW)
+    hote_violations = [v for v in violations if "hôte fournisseur" in v]
+    assert hote_violations, (
+        f"la garde host in _PROVIDER_HOSTS doit détecter le point final, violations={violations!r}"
+    )
 
 
 def test_assert_detecte_cle_en_clair():
