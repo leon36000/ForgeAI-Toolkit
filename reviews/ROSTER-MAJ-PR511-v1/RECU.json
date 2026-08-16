@@ -3,10 +3,10 @@
   "dossier": "ROSTER-MAJ-PR511-v1",
   "issue": 511,
   "round": 1,
-  "base_commit": "643e1235e1f42552c6b9373930a6c231a401d886",
-  "head_commit": "c5429f7436d697100cd15f6242a88dccf0105852",
-  "head_tree": "d21bf355dbdc0bc63654a01a09a140881c592d4c",
-  "diff_digest": "4979af955d65e1f681ae7fe66cc27b089b61d32a715b4fd16238e772cf7be79d",
+  "base_commit": "0bd0abba72de85344625ddd45a28198da3798e8d",
+  "head_commit": "e8ded0f362f616940f631c9dcfee5f677353ac3b",
+  "head_tree": "4797d29279eafdf9c73823a54e628b82818d65bb",
+  "diff_digest": "15b4de408a11ef01b2ff11ae2ef79829f4656b4de741cdc1792fd09cb0cb66ba",
   "prompt_sha256": "7f69ed4fd599eae52cfcbaf083b700b8730733fd6b743a99272d3ca2e23e59cb",
   "reviewers_attendus": [
     "DeepSeek-V4-Pro-0813",
@@ -17,6 +17,6 @@
     "GPT-5.6-Terra-Pro"
   ],
   "resultat": "APPROVE",
-  "date_heure": "2026-08-16T00:50:19.022781-04:00",
+  "date_heure": "2026-08-16T00:56:11.831844-04:00",
   "fenetre_heures": 24
 }
