@@ -214,6 +214,43 @@ def _erreurs_identifiants_dupliques(entrees: list[dict]) -> list[str]:
     ]
 
 
+def _erreurs_sites_dupliques(entrees: list[dict]) -> list[str]:
+    # Round 17 (#452) — objection GPT-5.6-Terra-Pro (revue scellée) : _erreurs_identifiants_dupliques
+    # ne détecte que les `id` dupliqués, jamais deux entrées ciblant le MÊME site (site.path,
+    # site.line) sous des id distincts — le plancher de couverture pouvait ainsi être atteint sans
+    # que 31 sites AST réellement distincts soient contractualisés.
+    sites: list[tuple[str, int]] = []
+    for entree in entrees:
+        if not isinstance(entree, dict):
+            continue
+        site = entree.get("site")
+        if not isinstance(site, dict):
+            continue
+        path, line = site.get("path"), site.get("line")
+        if isinstance(path, str) and isinstance(line, int) and not isinstance(line, bool):
+            sites.append((path, line))
+    return [
+        f"site dupliqué référencé par plusieurs contrats : {chemin}:{ligne}"
+        for chemin, ligne in sorted({item for item in sites if sites.count(item) > 1})
+    ]
+
+
+def _compter_except_handlers_reels(root: Path) -> int:
+    """Recompte indépendamment (AST) le nombre total de blocs `except` sous src/forgeai/ — même
+    grandeur que coverage.total_except_sites_src_forgeai, faisant foi pour la comparaison."""
+    total = 0
+    racine_src = root / "src" / "forgeai"
+    if not racine_src.is_dir():
+        return 0
+    for fichier in sorted(racine_src.rglob("*.py")):
+        try:
+            arbre = ast.parse(fichier.read_text(encoding="utf-8"), filename=str(fichier))
+        except (OSError, SyntaxError):
+            continue
+        total += sum(1 for noeud in ast.walk(arbre) if isinstance(noeud, ast.ExceptHandler))
+    return total
+
+
 def _erreurs_date_revision(
     identifiant: object,
     review_due: object,
@@ -441,6 +478,19 @@ def valider(root: Path, *, aujourd_hui: dt.date | None = None) -> list[str]:
     erreurs_horizon, date_maximale = _erreurs_horizon(inventaire, aujourd_hui)
     erreurs.extend(erreurs_horizon)
     erreurs.extend(_erreurs_identifiants_dupliques(contracts))
+    erreurs.extend(_erreurs_sites_dupliques(contracts))
+
+    # Round 17 (#452) — objection GPT-5.6-Terra-Pro (revue scellée) : coverage.total_except_sites_
+    # src_forgeai n'était jamais vérifié contre un décompte AST réel — un total arbitraire passait
+    # le gate tant qu'il restait un entier positif (round 8). total_declare est garanti entier ici
+    # (structure déjà validée plus haut, retour anticipé sinon).
+    total_declare = inventaire["coverage"]["total_except_sites_src_forgeai"]
+    total_reel = _compter_except_handlers_reels(root)
+    if total_declare != total_reel:
+        erreurs.append(
+            f"coverage.total_except_sites_src_forgeai ({total_declare}) ne correspond pas au "
+            f"décompte AST réel de src/forgeai/ ({total_reel})"
+        )
 
     ast_cache: dict[Path, ast.AST | None] = {}
     for index, entree in enumerate(contracts):

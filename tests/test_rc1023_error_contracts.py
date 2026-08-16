@@ -24,6 +24,12 @@ def _charger_validateur():
 VALIDATEUR = _charger_validateur()
 RACINE_DEPOT = Path(__file__).resolve().parents[1]
 
+# Round 17 (#452) : sentinelle pour total_except_sites — la valeur par défaut doit refléter le
+# VRAI décompte AST du fixture tree du test (root/src/forgeai/), sinon le nouveau garde-fou
+# coverage.total_except_sites_src_forgeai vs décompte réel (round 17) ferait échouer les tests
+# existants qui n'ont pas vocation à tester CE champ précis.
+_AUTO_TOTAL = object()
+
 
 def _creer_fichier_source(root: Path, rel_path: str, contenu: str) -> Path:
     cible = root / rel_path
@@ -39,7 +45,7 @@ def _ecrire_inventaire(
     horizon_days: int = 180,
     contracted: int | None = None,
     floor: int | None = None,
-    total_except_sites: object = 100,
+    total_except_sites: object = _AUTO_TOTAL,
     measured_on: object = "test",
     measured_command: object = "grep test",
     coverage_note: object = "Note de couverture de test.",
@@ -51,6 +57,9 @@ def _ecrire_inventaire(
     nb_contrats = len(contrats)
     contracted_val = nb_contrats if contracted is None else contracted
     floor_val = nb_contrats if floor is None else floor
+
+    if total_except_sites is _AUTO_TOTAL:
+        total_except_sites = VALIDATEUR._compter_except_handlers_reels(root)
 
     coverage = {
         "total_except_sites_src_forgeai": total_except_sites,
@@ -186,6 +195,38 @@ def test_coverage_total_except_sites_type_invalide_detecte(tmp_path: Path) -> No
 
     erreurs = VALIDATEUR.valider(tmp_path, aujourd_hui=dt.date(2026, 1, 1))
     assert any("total_except_sites_src_forgeai" in e for e in erreurs)
+
+
+def test_coverage_total_except_sites_ne_correspond_pas_au_reel_detecte(tmp_path: Path) -> None:
+    """Round 17 (#452) — objection GPT-5.6-Terra-Pro (revue scellée) : la valeur de
+    total_except_sites_src_forgeai n'était jamais comparée à un décompte AST réel de
+    src/forgeai/ — n'importe quel entier positif passait le gate."""
+    _creer_fichier_source(
+        tmp_path, "src/forgeai/example.py", "try:\n    pass\nexcept ValueError:\n    pass\n"
+    )
+    contrat = _entree_valide()
+    # le fixture tree ci-dessus contient exactement 1 except réel — 999 est délibérément faux
+    _ecrire_inventaire(tmp_path, [contrat], total_except_sites=999)
+
+    erreurs = VALIDATEUR.valider(tmp_path, aujourd_hui=dt.date(2026, 1, 1))
+    assert any(
+        "total_except_sites_src_forgeai (999) ne correspond pas au décompte AST réel" in e
+        for e in erreurs
+    )
+
+
+def test_coverage_total_except_sites_auto_correspond_est_valide(tmp_path: Path) -> None:
+    """Contre-preuve : la sentinelle _AUTO_TOTAL (utilisée par défaut dans tout le reste de ce
+    fichier) doit produire un inventaire valide — confirme que le nouveau garde-fou round 17
+    n'introduit aucun faux positif sur un total correctement mesuré."""
+    _creer_fichier_source(
+        tmp_path, "src/forgeai/example.py", "try:\n    pass\nexcept ValueError:\n    pass\n"
+    )
+    contrat = _entree_valide()
+    _ecrire_inventaire(tmp_path, [contrat])  # total_except_sites=_AUTO_TOTAL par défaut
+
+    erreurs = VALIDATEUR.valider(tmp_path, aujourd_hui=dt.date(2026, 1, 1))
+    assert erreurs == []
 
 
 def test_coverage_measured_on_manquant_detecte(tmp_path: Path) -> None:
@@ -384,6 +425,23 @@ def test_identifiant_duplique_detecte(tmp_path: Path) -> None:
 
     erreurs = VALIDATEUR.valider(tmp_path, aujourd_hui=dt.date(2026, 1, 1))
     assert any("identifiant de contrat dupliqué : site:src/forgeai/example.py:3" in e for e in erreurs)
+
+
+def test_sites_dupliques_sous_id_distincts_detecte(tmp_path: Path) -> None:
+    """Round 17 (#452) — objection GPT-5.6-Terra-Pro (revue scellée) : deux entrées avec des id
+    DISTINCTS mais ciblant le même (site.path, site.line) n'étaient jamais détectées — le plancher
+    de couverture pouvait être atteint sans autant de sites AST réellement distincts."""
+    _creer_fichier_source(
+        tmp_path,
+        "src/forgeai/example.py",
+        "try:\n    pass\nexcept ValueError:\n    pass\n",
+    )
+    contrat1 = _entree_valide(id_contrat="site:src/forgeai/example.py:3")
+    contrat2 = _entree_valide(id_contrat="un-autre-identifiant-totalement-different")
+    _ecrire_inventaire(tmp_path, [contrat1, contrat2])
+
+    erreurs = VALIDATEUR.valider(tmp_path, aujourd_hui=dt.date(2026, 1, 1))
+    assert any("site dupliqué" in e and "src/forgeai/example.py:3" in e for e in erreurs)
 
 
 def test_champs_obligatoires_manquants_detectes(tmp_path: Path) -> None:
