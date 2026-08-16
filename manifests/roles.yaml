@@ -78,6 +78,20 @@ membres:
     provider_id: GPT-5.6-Luna-Pro
     phase_a: Codeur du crew pour les missions de difficulté facile
     phase_b: Codeur du crew — dispatch --difficulty facile
+  - id: gemini37
+    modele: Gemini-3.7-Flash
+    vendor: google
+    provider_id: Gemini-3.7-Flash
+    phase_a: Codeur du crew pour les missions de difficulté facile (bulk)
+    phase_b: >-
+      Codeur du crew — route réelle mesurée de `--difficulty facile`/`--model crew-coder-bulk`
+      (#492, `/v1/model/info` LiteLLM : model_name "crew-coder-bulk" ET "Gemini-3.7-Flash" pointent
+      tous deux vers `openrouter/google/gemini-3.7-flash`). Absent du roster jusqu'ici — sans
+      cette entrée, `revue.py recu --codeur` rejette tout reçu D9 sur une story codée en
+      `--difficulty facile` comme "codeur inconnu" (même défaut bloquant que celui corrigé pour
+      GPT-5.6-Terra-Pro/Luna-Pro par #446 ; l'entrée `luna` ci-dessus documente une route qui
+      n'a pas été observée répondre en pratique lors de cette vérification, à confirmer/corriger
+      séparément — hors périmètre de #492).
 
 regles_revue:
   seuil_consensus: "7/9 APPROVE et zéro objection critique non résolue"
