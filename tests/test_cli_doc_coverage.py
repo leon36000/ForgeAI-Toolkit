@@ -16,6 +16,7 @@ SRC_DIR = REPO_ROOT / "src"
 DOC_PATH = REPO_ROOT / "Docs" / "reference" / "cli.md"
 BASELINE_PATH = REPO_ROOT / "Docs" / "BASELINE-CLI-DOC.json"
 CLI_PATH = SRC_DIR / "forgeai" / "cli.py"
+README_PATH = REPO_ROOT / "README.md"
 
 sys.path.insert(0, str(SCRIPTS_DIR))
 import gate_docs  # noqa: E402
@@ -59,6 +60,7 @@ def _safe_cli_invocations() -> dict[tuple[str, ...], list[str]]:
         ("forgeai", "strategy", "show"),
         ("forgeai", "template", "list"),
         ("forgeai", "operators"),
+        ("forgeai", "budget", "status"),
     }
     found: dict[tuple[str, ...], list[str]] = {}
     in_shell_block = False
@@ -104,6 +106,7 @@ def test_exemples_surs_du_cli_md_sont_executables() -> None:
         ("forgeai", "strategy", "show"),
         ("forgeai", "template", "list"),
         ("forgeai", "operators"),
+        ("forgeai", "budget", "status"),
     }
 
     assert expected <= set(invocations)
@@ -138,3 +141,7 @@ def test_exemples_surs_du_cli_md_sont_executables() -> None:
             f"stdout:\n{result.stdout}\n"
             f"stderr:\n{result.stderr}"
         )
+
+
+def test_readme_reference_cli_md() -> None:
+    assert "Docs/reference/cli.md" in README_PATH.read_text(encoding="utf-8")

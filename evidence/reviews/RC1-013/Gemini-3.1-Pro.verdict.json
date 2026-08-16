@@ -1,0 +1,19 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "majeure",
+   "fichier": "Docs/reference/cli.md",
+   "description": "Le critère d'acceptation exige une documentation FR/EN, mais la documentation fournie est uniquement en français, l'auteur ayant délibérément ignoré la traduction anglaise.",
+   "preuve": "Ligne 224-226 : \"Cette documentation est rédigée en français par choix délibéré [...] Il ne s'agit donc pas d'un oubli du critère FR/EN de l'issue #443.\""
+  }
+ ],
+ "date_heure": "2026-08-16T13:17:52.609861+00:00",
+ "prompt_sha256": "1a44d19779ddebff6181fb0dffa5c40689c36306ff8119918923a70fa937338c",
+ "reviewer_model": "Gemini-3.1-Pro",
+ "modele_servi": "gemini-31-pro-openrouter",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "1"
+ }
+}

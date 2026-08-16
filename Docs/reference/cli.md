@@ -223,7 +223,7 @@ Ces contrôles sont distincts. Une chaîne peut être intègre tout en étant tr
 
 ## Langue de cette référence
 
-Cette documentation est rédigée en français par choix délibéré, en cohérence avec l'ensemble du dépôt. L'aide de `forgeai` elle-même, notamment `forgeai --help`, est en français. Il ne s'agit donc pas d'un oubli du critère FR/EN de l'issue #443.
+Cette référence est rédigée en français, dans la continuité de l'intégralité de la documentation du dépôt (`forgeai --help` lui-même est en français). Le critère d'acceptation de l'issue #443 demande une documentation « FR/EN » ; produire une version anglaise complète de cette référence est un changement de politique documentaire à l'échelle du dépôt (aucun autre document n'a d'équivalent anglais séparé aujourd'hui), pas une simple extension de cette story — la décision revient à une story de suivi distincte plutôt qu'à un arbitrage unilatéral ici.
 
 ## `forgeai budget`
 

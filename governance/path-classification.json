@@ -1752,7 +1752,7 @@
         },
         {
           "candidate": "AGENTS.md",
-          "line": 94,
+          "line": 205,
           "referrer": "scripts/gate_docs.py",
           "resolved": "AGENTS.md",
           "severity": "hard"
@@ -2849,7 +2849,7 @@
         },
         {
           "candidate": "CLAUDE.md",
-          "line": 94,
+          "line": 205,
           "referrer": "scripts/gate_docs.py",
           "resolved": "CLAUDE.md",
           "severity": "hard"
@@ -3038,7 +3038,7 @@
         },
         {
           "candidate": "Docs/BASELINE-CLI-DOC.json",
-          "line": 301,
+          "line": 412,
           "referrer": "scripts/gate_docs.py",
           "resolved": "Docs/BASELINE-CLI-DOC.json",
           "severity": "hard"
@@ -3289,6 +3289,69 @@
         },
         {
           "candidate": "Docs/reference/cli.md",
+          "line": 6,
+          "referrer": "evidence/reviews/RC1-013-v2/DeepSeek-V4-Pro.verdict.json",
+          "resolved": "Docs/reference/cli.md",
+          "severity": "hard"
+        },
+        {
+          "candidate": "Docs/reference/cli.md",
+          "line": 6,
+          "referrer": "evidence/reviews/RC1-013-v2/Gemini-3.1-Pro.verdict.json",
+          "resolved": "Docs/reference/cli.md",
+          "severity": "hard"
+        },
+        {
+          "candidate": "Docs/reference/cli.md",
+          "line": 6,
+          "referrer": "evidence/reviews/RC1-013-v2/Qwen3.7-Max.verdict.json",
+          "resolved": "Docs/reference/cli.md",
+          "severity": "hard"
+        },
+        {
+          "candidate": "Docs/reference/cli.md",
+          "line": 12,
+          "referrer": "evidence/reviews/RC1-013-v2/Qwen3.7-Max.verdict.json",
+          "resolved": "Docs/reference/cli.md",
+          "severity": "hard"
+        },
+        {
+          "candidate": "Docs/reference/cli.md",
+          "line": 6,
+          "referrer": "evidence/reviews/RC1-013/DeepSeek-V4-Pro.verdict.json",
+          "resolved": "Docs/reference/cli.md",
+          "severity": "hard"
+        },
+        {
+          "candidate": "Docs/reference/cli.md",
+          "line": 30,
+          "referrer": "evidence/reviews/RC1-013/DeepSeek-V4-Pro.verdict.json",
+          "resolved": "Docs/reference/cli.md",
+          "severity": "hard"
+        },
+        {
+          "candidate": "Docs/reference/cli.md",
+          "line": 6,
+          "referrer": "evidence/reviews/RC1-013/Gemini-3.1-Pro.verdict.json",
+          "resolved": "Docs/reference/cli.md",
+          "severity": "hard"
+        },
+        {
+          "candidate": "Docs/reference/cli.md",
+          "line": 6,
+          "referrer": "evidence/reviews/RC1-013/Qwen3.7-Max.verdict.json",
+          "resolved": "Docs/reference/cli.md",
+          "severity": "hard"
+        },
+        {
+          "candidate": "Docs/reference/cli.md",
+          "line": 12,
+          "referrer": "evidence/reviews/RC1-013/Qwen3.7-Max.verdict.json",
+          "resolved": "Docs/reference/cli.md",
+          "severity": "hard"
+        },
+        {
+          "candidate": "Docs/reference/cli.md",
           "line": 54,
           "referrer": "stories/DOC-032.md",
           "resolved": "Docs/reference/cli.md",
@@ -3328,11 +3391,18 @@
           "referrer": "tests/test_check_doc_links.py",
           "resolved": "Docs/reference/cli.md",
           "severity": "hard"
+        },
+        {
+          "candidate": "Docs/reference/cli.md",
+          "line": 147,
+          "referrer": "tests/test_cli_doc_coverage.py",
+          "resolved": "Docs/reference/cli.md",
+          "severity": "hard"
         }
       ],
       "rule_id": "docs-user",
-      "sha256": "fbbf63dc03112995a3b4d1d521949b26b3ddf2b856401d097cdf21fb852288ab",
-      "size": 23616,
+      "sha256": "a5b68d40fbead17c765b9ef65a10252519b8342afe335886042faecd83946100",
+      "size": 23945,
       "target_path": null,
       "type": "text"
     },
@@ -3691,7 +3761,7 @@
         },
         {
           "candidate": "MASTER-PLAN.md",
-          "line": 94,
+          "line": 205,
           "referrer": "scripts/gate_docs.py",
           "resolved": "MASTER-PLAN.md",
           "severity": "hard"
@@ -3978,6 +4048,20 @@
         },
         {
           "candidate": "README.md",
+          "line": 24,
+          "referrer": "evidence/reviews/RC1-013/Qwen3.7-Max.verdict.json",
+          "resolved": "README.md",
+          "severity": "hard"
+        },
+        {
+          "candidate": "README.md",
+          "line": 26,
+          "referrer": "evidence/reviews/RC1-013/Qwen3.7-Max.verdict.json",
+          "resolved": "README.md",
+          "severity": "hard"
+        },
+        {
+          "candidate": "README.md",
           "line": 14,
           "referrer": "evidence/reviews/RC1-442/DeepSeek-V4-Pro.verdict.json",
           "resolved": "README.md",
@@ -4027,7 +4111,7 @@
         },
         {
           "candidate": "README.md",
-          "line": 94,
+          "line": 205,
           "referrer": "scripts/gate_docs.py",
           "resolved": "README.md",
           "severity": "hard"
@@ -4148,6 +4232,13 @@
           "candidate": "README.md",
           "line": 738,
           "referrer": "tests/test_classify_paths.py",
+          "resolved": "README.md",
+          "severity": "hard"
+        },
+        {
+          "candidate": "README.md",
+          "line": 19,
+          "referrer": "tests/test_cli_doc_coverage.py",
           "resolved": "README.md",
           "severity": "hard"
         },
@@ -18810,6 +18901,123 @@
       "generated": false,
       "load_bearing": true,
       "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-013-v2/DeepSeek-V4-Pro.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "4350be23634b1222a0cce20deaa629401d02782a2db98210fcb541a055b1d5e3",
+      "size": 2879,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-013-v2/Gemini-3.1-Pro.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "1b02a4d792e7f2718183f456d7eedbe07c55faf0c833c37e761b255dd4bb67b2",
+      "size": 833,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-013-v2/Qwen3.7-Max.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "70d270a04b92b944121c93dabc442fb84a7ad0fffcf298ddc7f115a79bbc1d73",
+      "size": 1672,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-013-v3/Gemini-3.1-Pro.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "14fe6f9a28b7a5b6c00afa7fd832d437f1dd51cf3e77b6a58f52c2b5c96e03f3",
+      "size": 329,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-013-v3/MiMo-V2.5-Pro.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "c9036f2a834c6c8e36afc077ef21cab9deaa4147c76ace86efebf1a017a3e235",
+      "size": 327,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-013-v3/Qwen3.7-Max.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "e0bba4c39ee357f064cf728062079db07053e1553c861be1bec3ad0375d6c853",
+      "size": 1183,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-013/DeepSeek-V4-Pro.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "cdbe3b2188f271f7667256c7795f146f6ed137e78cdc42a77dd434f17b67fea6",
+      "size": 2758,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-013/Gemini-3.1-Pro.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "7dad7122676888e1acf77cfb725d75b7ce811e2bed3b6b66e9cf16dd28a557da",
+      "size": 781,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-013/Qwen3.7-Max.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "fb2b3d6b91cb91414d1a78692effe71fef22868c7814fb5b212e1ec8d83348c9",
+      "size": 2013,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
       "path": "evidence/reviews/RC1-442/DeepSeek-V4-Pro.verdict.json",
       "referenced_by": [],
       "rule_id": "evidence-reviews-root",
@@ -26052,6 +26260,48 @@
         },
         {
           "candidate": "scripts/gate_docs.py",
+          "line": 12,
+          "referrer": "evidence/reviews/RC1-013-v2/DeepSeek-V4-Pro.verdict.json",
+          "resolved": "scripts/gate_docs.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "scripts/gate_docs.py",
+          "line": 14,
+          "referrer": "evidence/reviews/RC1-013-v2/Qwen3.7-Max.verdict.json",
+          "resolved": "scripts/gate_docs.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "scripts/gate_docs.py",
+          "line": 6,
+          "referrer": "evidence/reviews/RC1-013-v3/Qwen3.7-Max.verdict.json",
+          "resolved": "scripts/gate_docs.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "scripts/gate_docs.py",
+          "line": 8,
+          "referrer": "evidence/reviews/RC1-013-v3/Qwen3.7-Max.verdict.json",
+          "resolved": "scripts/gate_docs.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "scripts/gate_docs.py",
+          "line": 24,
+          "referrer": "evidence/reviews/RC1-013/DeepSeek-V4-Pro.verdict.json",
+          "resolved": "scripts/gate_docs.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "scripts/gate_docs.py",
+          "line": 18,
+          "referrer": "evidence/reviews/RC1-013/Qwen3.7-Max.verdict.json",
+          "resolved": "scripts/gate_docs.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "scripts/gate_docs.py",
           "line": 7,
           "referrer": "evidence/reviews/RC1-446-PR-v5/DeepSeek-V4-Pro.verdict.json",
           "resolved": "scripts/gate_docs.py",
@@ -26129,8 +26379,8 @@
         }
       ],
       "rule_id": "governance-scripts-root",
-      "sha256": "d6db16540628cf475f06d49789d457aa4447e15bb447873df29b15850f208702",
-      "size": 14642,
+      "sha256": "4c427a5f5935a676b712808cedf43bd25e6968dac97bbb97a8e74b9e310f2ede",
+      "size": 19756,
       "target_path": null,
       "type": "text"
     },
@@ -39066,6 +39316,48 @@
       "referenced_by": [
         {
           "candidate": "tests/test_cli_doc_coverage.py",
+          "line": 18,
+          "referrer": "evidence/reviews/RC1-013-v2/DeepSeek-V4-Pro.verdict.json",
+          "resolved": "tests/test_cli_doc_coverage.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "tests/test_cli_doc_coverage.py",
+          "line": 24,
+          "referrer": "evidence/reviews/RC1-013-v2/DeepSeek-V4-Pro.verdict.json",
+          "resolved": "tests/test_cli_doc_coverage.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "tests/test_cli_doc_coverage.py",
+          "line": 26,
+          "referrer": "evidence/reviews/RC1-013-v2/DeepSeek-V4-Pro.verdict.json",
+          "resolved": "tests/test_cli_doc_coverage.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "tests/test_cli_doc_coverage.py",
+          "line": 12,
+          "referrer": "evidence/reviews/RC1-013/DeepSeek-V4-Pro.verdict.json",
+          "resolved": "tests/test_cli_doc_coverage.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "tests/test_cli_doc_coverage.py",
+          "line": 18,
+          "referrer": "evidence/reviews/RC1-013/DeepSeek-V4-Pro.verdict.json",
+          "resolved": "tests/test_cli_doc_coverage.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "tests/test_cli_doc_coverage.py",
+          "line": 32,
+          "referrer": "evidence/reviews/RC1-013/DeepSeek-V4-Pro.verdict.json",
+          "resolved": "tests/test_cli_doc_coverage.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "tests/test_cli_doc_coverage.py",
           "line": 198,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_cli_doc_coverage.py",
@@ -39080,8 +39372,8 @@
         }
       ],
       "rule_id": "test-suite",
-      "sha256": "972ee3fcfcb3009f2d89c174541f6718cbfc4c160ee04143855fae7dfcd82fd8",
-      "size": 3878,
+      "sha256": "05421680eea1bcaeb68f1de2bb7438cbb4a1b66e712ad7c301acd1deea11c565",
+      "size": 4122,
       "target_path": null,
       "type": "text"
     },
@@ -84570,6 +84862,76 @@
         "referrer": "evidence/reviews/RC1-010-lot5d-PR-v7/RECU.json"
       },
       {
+        "candidate": "FR/EN",
+        "line": 7,
+        "referrer": "evidence/reviews/RC1-013-v2/DeepSeek-V4-Pro.verdict.json"
+      },
+      {
+        "candidate": "FR/EN",
+        "line": 8,
+        "referrer": "evidence/reviews/RC1-013-v2/DeepSeek-V4-Pro.verdict.json"
+      },
+      {
+        "candidate": "show/resolve",
+        "line": 19,
+        "referrer": "evidence/reviews/RC1-013-v2/DeepSeek-V4-Pro.verdict.json"
+      },
+      {
+        "candidate": "FR/EN",
+        "line": 7,
+        "referrer": "evidence/reviews/RC1-013-v2/Gemini-3.1-Pro.verdict.json"
+      },
+      {
+        "candidate": "FR/EN",
+        "line": 8,
+        "referrer": "evidence/reviews/RC1-013-v2/Gemini-3.1-Pro.verdict.json"
+      },
+      {
+        "candidate": "FR/EN",
+        "line": 7,
+        "referrer": "evidence/reviews/RC1-013-v2/Qwen3.7-Max.verdict.json"
+      },
+      {
+        "candidate": "FR/EN",
+        "line": 8,
+        "referrer": "evidence/reviews/RC1-013-v2/Qwen3.7-Max.verdict.json"
+      },
+      {
+        "candidate": "cli.md",
+        "line": 14,
+        "referrer": "evidence/reviews/RC1-013-v2/Qwen3.7-Max.verdict.json"
+      },
+      {
+        "candidate": "FR/EN",
+        "line": 7,
+        "referrer": "evidence/reviews/RC1-013/DeepSeek-V4-Pro.verdict.json"
+      },
+      {
+        "candidate": "FR/EN",
+        "line": 8,
+        "referrer": "evidence/reviews/RC1-013/DeepSeek-V4-Pro.verdict.json"
+      },
+      {
+        "candidate": "FR/EN",
+        "line": 7,
+        "referrer": "evidence/reviews/RC1-013/Gemini-3.1-Pro.verdict.json"
+      },
+      {
+        "candidate": "FR/EN",
+        "line": 8,
+        "referrer": "evidence/reviews/RC1-013/Gemini-3.1-Pro.verdict.json"
+      },
+      {
+        "candidate": "FR/EN",
+        "line": 7,
+        "referrer": "evidence/reviews/RC1-013/Qwen3.7-Max.verdict.json"
+      },
+      {
+        "candidate": "FR/EN",
+        "line": 8,
+        "referrer": "evidence/reviews/RC1-013/Qwen3.7-Max.verdict.json"
+      },
+      {
         "candidate": "recu-revue/1",
         "line": 2,
         "referrer": "evidence/reviews/RC1-442/RECU.json"
@@ -88986,17 +89348,22 @@
       },
       {
         "candidate": "cli.py",
-        "line": 90,
+        "line": 201,
         "referrer": "scripts/gate_docs.py"
       },
       {
         "candidate": "cli.py",
-        "line": 323,
+        "line": 434,
         "referrer": "scripts/gate_docs.py"
       },
       {
         "candidate": "cli.py",
-        "line": 347,
+        "line": 436,
+        "referrer": "scripts/gate_docs.py"
+      },
+      {
+        "candidate": "cli.py",
+        "line": 476,
         "referrer": "scripts/gate_docs.py"
       },
       {
@@ -136291,6 +136658,167 @@
         "severity": "hard"
       },
       {
+        "candidate": "Docs/reference/cli.md",
+        "line": 6,
+        "referrer": "evidence/reviews/RC1-013-v2/DeepSeek-V4-Pro.verdict.json",
+        "resolved": "Docs/reference/cli.md",
+        "severity": "hard"
+      },
+      {
+        "candidate": "scripts/gate_docs.py",
+        "line": 12,
+        "referrer": "evidence/reviews/RC1-013-v2/DeepSeek-V4-Pro.verdict.json",
+        "resolved": "scripts/gate_docs.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "tests/test_cli_doc_coverage.py",
+        "line": 18,
+        "referrer": "evidence/reviews/RC1-013-v2/DeepSeek-V4-Pro.verdict.json",
+        "resolved": "tests/test_cli_doc_coverage.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "tests/test_cli_doc_coverage.py",
+        "line": 24,
+        "referrer": "evidence/reviews/RC1-013-v2/DeepSeek-V4-Pro.verdict.json",
+        "resolved": "tests/test_cli_doc_coverage.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "tests/test_cli_doc_coverage.py",
+        "line": 26,
+        "referrer": "evidence/reviews/RC1-013-v2/DeepSeek-V4-Pro.verdict.json",
+        "resolved": "tests/test_cli_doc_coverage.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "Docs/reference/cli.md",
+        "line": 6,
+        "referrer": "evidence/reviews/RC1-013-v2/Gemini-3.1-Pro.verdict.json",
+        "resolved": "Docs/reference/cli.md",
+        "severity": "hard"
+      },
+      {
+        "candidate": "Docs/reference/cli.md",
+        "line": 6,
+        "referrer": "evidence/reviews/RC1-013-v2/Qwen3.7-Max.verdict.json",
+        "resolved": "Docs/reference/cli.md",
+        "severity": "hard"
+      },
+      {
+        "candidate": "Docs/reference/cli.md",
+        "line": 12,
+        "referrer": "evidence/reviews/RC1-013-v2/Qwen3.7-Max.verdict.json",
+        "resolved": "Docs/reference/cli.md",
+        "severity": "hard"
+      },
+      {
+        "candidate": "scripts/gate_docs.py",
+        "line": 14,
+        "referrer": "evidence/reviews/RC1-013-v2/Qwen3.7-Max.verdict.json",
+        "resolved": "scripts/gate_docs.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "scripts/gate_docs.py",
+        "line": 6,
+        "referrer": "evidence/reviews/RC1-013-v3/Qwen3.7-Max.verdict.json",
+        "resolved": "scripts/gate_docs.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "scripts/gate_docs.py",
+        "line": 8,
+        "referrer": "evidence/reviews/RC1-013-v3/Qwen3.7-Max.verdict.json",
+        "resolved": "scripts/gate_docs.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "Docs/reference/cli.md",
+        "line": 6,
+        "referrer": "evidence/reviews/RC1-013/DeepSeek-V4-Pro.verdict.json",
+        "resolved": "Docs/reference/cli.md",
+        "severity": "hard"
+      },
+      {
+        "candidate": "tests/test_cli_doc_coverage.py",
+        "line": 12,
+        "referrer": "evidence/reviews/RC1-013/DeepSeek-V4-Pro.verdict.json",
+        "resolved": "tests/test_cli_doc_coverage.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "tests/test_cli_doc_coverage.py",
+        "line": 18,
+        "referrer": "evidence/reviews/RC1-013/DeepSeek-V4-Pro.verdict.json",
+        "resolved": "tests/test_cli_doc_coverage.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "scripts/gate_docs.py",
+        "line": 24,
+        "referrer": "evidence/reviews/RC1-013/DeepSeek-V4-Pro.verdict.json",
+        "resolved": "scripts/gate_docs.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "Docs/reference/cli.md",
+        "line": 30,
+        "referrer": "evidence/reviews/RC1-013/DeepSeek-V4-Pro.verdict.json",
+        "resolved": "Docs/reference/cli.md",
+        "severity": "hard"
+      },
+      {
+        "candidate": "tests/test_cli_doc_coverage.py",
+        "line": 32,
+        "referrer": "evidence/reviews/RC1-013/DeepSeek-V4-Pro.verdict.json",
+        "resolved": "tests/test_cli_doc_coverage.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "Docs/reference/cli.md",
+        "line": 6,
+        "referrer": "evidence/reviews/RC1-013/Gemini-3.1-Pro.verdict.json",
+        "resolved": "Docs/reference/cli.md",
+        "severity": "hard"
+      },
+      {
+        "candidate": "Docs/reference/cli.md",
+        "line": 6,
+        "referrer": "evidence/reviews/RC1-013/Qwen3.7-Max.verdict.json",
+        "resolved": "Docs/reference/cli.md",
+        "severity": "hard"
+      },
+      {
+        "candidate": "Docs/reference/cli.md",
+        "line": 12,
+        "referrer": "evidence/reviews/RC1-013/Qwen3.7-Max.verdict.json",
+        "resolved": "Docs/reference/cli.md",
+        "severity": "hard"
+      },
+      {
+        "candidate": "scripts/gate_docs.py",
+        "line": 18,
+        "referrer": "evidence/reviews/RC1-013/Qwen3.7-Max.verdict.json",
+        "resolved": "scripts/gate_docs.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "README.md",
+        "line": 24,
+        "referrer": "evidence/reviews/RC1-013/Qwen3.7-Max.verdict.json",
+        "resolved": "README.md",
+        "severity": "hard"
+      },
+      {
+        "candidate": "README.md",
+        "line": 26,
+        "referrer": "evidence/reviews/RC1-013/Qwen3.7-Max.verdict.json",
+        "resolved": "README.md",
+        "severity": "hard"
+      },
+      {
         "candidate": "tests/test_readme_dist_status.py",
         "line": 6,
         "referrer": "evidence/reviews/RC1-442/DeepSeek-V4-Pro.verdict.json",
@@ -141822,35 +142350,35 @@
       },
       {
         "candidate": "README.md",
-        "line": 94,
+        "line": 205,
         "referrer": "scripts/gate_docs.py",
         "resolved": "README.md",
         "severity": "hard"
       },
       {
         "candidate": "AGENTS.md",
-        "line": 94,
+        "line": 205,
         "referrer": "scripts/gate_docs.py",
         "resolved": "AGENTS.md",
         "severity": "hard"
       },
       {
         "candidate": "MASTER-PLAN.md",
-        "line": 94,
+        "line": 205,
         "referrer": "scripts/gate_docs.py",
         "resolved": "MASTER-PLAN.md",
         "severity": "hard"
       },
       {
         "candidate": "CLAUDE.md",
-        "line": 94,
+        "line": 205,
         "referrer": "scripts/gate_docs.py",
         "resolved": "CLAUDE.md",
         "severity": "hard"
       },
       {
         "candidate": "Docs/BASELINE-CLI-DOC.json",
-        "line": 301,
+        "line": 412,
         "referrer": "scripts/gate_docs.py",
         "resolved": "Docs/BASELINE-CLI-DOC.json",
         "severity": "hard"
@@ -146392,6 +146920,20 @@
         "severity": "hard"
       },
       {
+        "candidate": "README.md",
+        "line": 19,
+        "referrer": "tests/test_cli_doc_coverage.py",
+        "resolved": "README.md",
+        "severity": "hard"
+      },
+      {
+        "candidate": "Docs/reference/cli.md",
+        "line": 147,
+        "referrer": "tests/test_cli_doc_coverage.py",
+        "resolved": "Docs/reference/cli.md",
+        "severity": "hard"
+      },
+      {
         "candidate": "src/forgeai/core/validation.py",
         "line": 1,
         "referrer": "tests/test_core_validation.py",
@@ -146847,7 +147389,7 @@
     "by_class": {
       "ARCHIVE": 44,
       "DOCS": 16,
-      "EVIDENCE": 1362,
+      "EVIDENCE": 1371,
       "GENERATED": 5,
       "GOVERNANCE": 177,
       "PRODUCT": 112,
@@ -146865,7 +147407,7 @@
       "docs-user": 13,
       "evidence-audit-output-root": 18,
       "evidence-registres-root": 35,
-      "evidence-reviews-root": 1309,
+      "evidence-reviews-root": 1318,
       "generated-authority-map": 1,
       "generated-path-classification-json": 1,
       "generated-path-classification-markdown": 1,
@@ -146901,11 +147443,11 @@
       "working-sandbox-readme": 1
     },
     "case_collisions_total": 0,
-    "dangling_references_total": 15069,
+    "dangling_references_total": 15084,
     "generated_total": 7,
-    "load_bearing_total": 1795,
+    "load_bearing_total": 1804,
     "portability_violations_total": 0,
-    "tracked_total": 1928,
+    "tracked_total": 1937,
     "unclassified_total": 0,
     "unicode_anomalies_total": 0
   },

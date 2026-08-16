@@ -196,7 +196,7 @@
       },
       {
         "path": "tests/test_cli_doc_coverage.py",
-        "sha256": "972ee3fcfcb3009f2d89c174541f6718cbfc4c160ee04143855fae7dfcd82fd8"
+        "sha256": "05421680eea1bcaeb68f1de2bb7438cbb4a1b66e712ad7c301acd1deea11c565"
       },
       {
         "path": "tests/test_cli_doctor.py",
@@ -901,7 +901,7 @@
     "tests": {
       "js_files": 3,
       "python_files": 187,
-      "python_functions_declared": 2014
+      "python_functions_declared": 2015
     }
   },
   "observations": [

@@ -1,0 +1,37 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "Docs/reference/cli.md",
+   "description": "Le critère exige une documentation 'FR/EN'. Le diff ne fournit que le FR et justifie l'absence de l'EN par une référence à l'issue #443. En l'absence de vérification de cette exemption, le critère n'est pas littéralement respecté.",
+   "preuve": "## Langue de cette référence [...] Il ne s'agit donc pas d'un oubli du critère FR/EN de l'issue #443."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "Docs/reference/cli.md",
+   "description": "Le critère exige un inventaire des 'codes retour'. Seule la commande `forgeai gateway verify` documente explicitement son code de retour. Les autres commandes n'ont pas de section dédiée aux codes de retour de manière systématique.",
+   "preuve": "##### Code de retour\n\nContrairement à `forgeai status`/`forgeai operators` [...] cette commande est une VALIDATION : elle échoue avec le code 10"
+  },
+  {
+   "severite": "mineure",
+   "fichier": "scripts/gate_docs.py",
+   "description": "Le calcul du pourcentage de couverture utilise `len(commandes_documentees_set)` au numérateur, ce qui inclut les commandes documentées mais non présentes dans le code source. Cela peut produire un taux supérieur à 100%.",
+   "preuve": "couverture = (len(commandes_documentees_set) / total * 100) if total else 100.0"
+  },
+  {
+   "severite": "mineure",
+   "fichier": "README.md",
+   "description": "Le critère exige la 'cohérence avec le parser et le README'. Le README n'est pas inclus dans le diff, rendant cette cohérence non vérifiable.",
+   "preuve": "Absence de modification ou d'inclusion du fichier README.md dans le diff fourni."
+  }
+ ],
+ "date_heure": "2026-08-16T13:19:12.548138+00:00",
+ "prompt_sha256": "1a44d19779ddebff6181fb0dffa5c40689c36306ff8119918923a70fa937338c",
+ "reviewer_model": "Qwen3.7-Max",
+ "modele_servi": "qwen37-max-openrouter",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}
