@@ -19178,7 +19178,7 @@
       "path": "evidence/reviews/RC1-020-v2/RECU.json",
       "referenced_by": [],
       "rule_id": "evidence-reviews-root",
-      "sha256": "1abfe7b1dc1c43eb52c269b4adf2363482a3d49c130f463230b25a17542d8758",
+      "sha256": "558f5045fcbe796702cffa6a22acb7a6b3be55d0595b3f7d43d2473108b77485",
       "size": 676,
       "target_path": null,
       "type": "text"
@@ -28700,8 +28700,8 @@
         }
       ],
       "rule_id": "governance-scripts-root",
-      "sha256": "e5ed4bd61277197826a95ccc8a27d7a193cfe678b37fcfef0871a6f679e5fa1b",
-      "size": 7831,
+      "sha256": "6a7c2b613d1ca5141c8cc125c142ab55cd575d06d505627b449651bf4bf41cb7",
+      "size": 7875,
       "target_path": null,
       "type": "text"
     },
@@ -46198,8 +46198,8 @@
         }
       ],
       "rule_id": "test-suite",
-      "sha256": "377f08933bbe7501e8b97feb2acda0c7a03484d06a110829aa9fdd01dab3c904",
-      "size": 1615,
+      "sha256": "92a67d93d9c2a3ed76f57170cee644dcd4c79d363a32d29c72cabb2a6c0a6319",
+      "size": 9109,
       "target_path": null,
       "type": "text"
     },
@@ -90827,7 +90827,7 @@
       },
       {
         "candidate": "ruff-classification.json",
-        "line": 224,
+        "line": 226,
         "referrer": "scripts/ruff_report.py"
       },
       {
@@ -122687,7 +122687,52 @@
       },
       {
         "candidate": "ruff-classification.json",
-        "line": 11,
+        "line": 12,
+        "referrer": "tests/test_ruff_report.py"
+      },
+      {
+        "candidate": "absent.json",
+        "line": 61,
+        "referrer": "tests/test_ruff_report.py"
+      },
+      {
+        "candidate": "illisible.json",
+        "line": 71,
+        "referrer": "tests/test_ruff_report.py"
+      },
+      {
+        "candidate": "invalide.json",
+        "line": 89,
+        "referrer": "tests/test_ruff_report.py"
+      },
+      {
+        "candidate": "liste.json",
+        "line": 97,
+        "referrer": "tests/test_ruff_report.py"
+      },
+      {
+        "candidate": "classification.json",
+        "line": 118,
+        "referrer": "tests/test_ruff_report.py"
+      },
+      {
+        "candidate": "module.py",
+        "line": 211,
+        "referrer": "tests/test_ruff_report.py"
+      },
+      {
+        "candidate": "src/module.py",
+        "line": 232,
+        "referrer": "tests/test_ruff_report.py"
+      },
+      {
+        "candidate": "src/inconnu.py",
+        "line": 240,
+        "referrer": "tests/test_ruff_report.py"
+      },
+      {
+        "candidate": "ruff-classification.json",
+        "line": 298,
         "referrer": "tests/test_ruff_report.py"
       },
       {
@@ -147933,7 +147978,7 @@
       "working-sandbox-readme": 1
     },
     "case_collisions_total": 0,
-    "dangling_references_total": 15109,
+    "dangling_references_total": 15118,
     "generated_total": 7,
     "load_bearing_total": 1819,
     "portability_violations_total": 0,

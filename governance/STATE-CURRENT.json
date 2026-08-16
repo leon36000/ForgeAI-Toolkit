@@ -720,7 +720,7 @@
       },
       {
         "path": "tests/test_ruff_report.py",
-        "sha256": "377f08933bbe7501e8b97feb2acda0c7a03484d06a110829aa9fdd01dab3c904"
+        "sha256": "92a67d93d9c2a3ed76f57170cee644dcd4c79d363a32d29c72cabb2a6c0a6319"
       },
       {
         "path": "tests/test_selection_complete.py",
@@ -905,7 +905,7 @@
     "tests": {
       "js_files": 3,
       "python_files": 188,
-      "python_functions_declared": 2020
+      "python_functions_declared": 2035
     }
   },
   "observations": [

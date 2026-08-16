@@ -40,11 +40,13 @@ def _selection_depuis_classification(chemin: Path) -> list[str]:
     """Retourne les familles candidates définies par la classification."""
     classification = _charger_json(chemin)
     selection = classification.get("_familles_candidates")
-    if not isinstance(selection, list) or not all(
-        isinstance(famille, str) and famille for famille in selection
+    if (
+        not isinstance(selection, list)
+        or not selection
+        or not all(isinstance(famille, str) and famille for famille in selection)
     ):
         raise ValueError(
-            "la classification Ruff doit contenir une liste "
+            "la classification Ruff doit contenir une liste non vide "
             "'_familles_candidates' de chaînes non vides"
         )
     return selection
