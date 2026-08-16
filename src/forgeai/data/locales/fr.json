@@ -254,6 +254,7 @@
   "models.budget.record.motif_obligatoire": "motif est obligatoire quand exact=False",
   "models.budget.set_budget.alert_ratio_hors_intervalle": "alert_ratio doit être dans l'intervalle ]0, 1]",
   "models.budget.set_budget.quota_negatif": "Le quota de tokens doit être positif ou nul.",
+  "models.gateway.fichier_corrompu": "{chemin} a une structure inattendue : {detail}",
   "models.gateway.non_configure": "gateway non configuré (forgeai gateway set-url)",
   "models.gateway.role_sans_route": "rôle '{role}' (brique {brick_id}) sans route associée",
   "models.gateway.route_introuvable": "route '{route_name}' introuvable : {exc}",

@@ -6639,8 +6639,8 @@
         }
       ],
       "rule_id": "evidence-registres-root",
-      "sha256": "27c20586d16bcef01c577c3b07a5facc24c66883ed83e3251eba0657f6165507",
-      "size": 384481,
+      "sha256": "532726709960c0fc6467e1dd03d52d1c8a726bf4fbfbd39660eb30f171b8c4a8",
+      "size": 384956,
       "target_path": null,
       "type": "text"
     },
@@ -8600,8 +8600,8 @@
         }
       ],
       "rule_id": "evidence-reviews-root",
-      "sha256": "297dce94fecc7e16f55d61cd7ce97fa7e98451c3e2a2277f8d4194cf36e09536",
-      "size": 2691,
+      "sha256": "2804ff4e4336eee19f3745d3fba39416c01f9e0dcddc23b287c10d7b51bb5e47",
+      "size": 2699,
       "target_path": null,
       "type": "text"
     },
@@ -22027,6 +22027,58 @@
       "generated": false,
       "load_bearing": true,
       "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-546/Gemini-3.7-Flash.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "dcce66ad78839c458554172ae9ff4287c21f91d0e5c6d6144926e7bbdba61dbf",
+      "size": 371,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-546/Kimi-2.7.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "f97fa8f4c15666e8b635d89deb7880b990f5ad6dbea613ccb94e9576fb9dfcad",
+      "size": 317,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-546/Qwen3.7-Max.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "571edf99b7d7ab689cdf36550023119a05a9bb1112fe6144678415cd38216757",
+      "size": 323,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-546/RECU.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": null,
+      "size": null,
+      "target_path": null,
+      "type": null
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
       "path": "evidence/reviews/README.md",
       "referenced_by": [],
       "rule_id": "evidence-reviews-root",
@@ -26963,8 +27015,8 @@
         }
       ],
       "rule_id": "governance-core",
-      "sha256": "699df4dea4b3e596282b6b7acbfe2205f982995c4403078410f3e81a173754b8",
-      "size": 70713,
+      "sha256": "a8584d20ff0427d7ce44e46c49e56b013b8ece9a772f683f033b48bc0c8d1759",
+      "size": 71318,
       "target_path": null,
       "type": "text"
     },
@@ -34831,8 +34883,8 @@
         }
       ],
       "rule_id": "product-source",
-      "sha256": "0f482f627736f1bffcf7be92c810c23b56bb9f48881d57b706d43f8e5961cb2f",
-      "size": 44399,
+      "sha256": "735e5a9f4cfb34d4e9dd9eddd044da7a584befeab93c613885789c1236e44053",
+      "size": 44486,
       "target_path": null,
       "type": "text"
     },
@@ -34866,8 +34918,8 @@
         }
       ],
       "rule_id": "product-source",
-      "sha256": "ee0fdb4a7c7fddac6460a2e449fa7638f04a7ac77af3787d2479c23be2ffe389",
-      "size": 46177,
+      "sha256": "77ecd6c79919969871c0244ca8e4e4902607f1e80390fd0b4b5f184aa673f2b9",
+      "size": 46264,
       "target_path": null,
       "type": "text"
     },
@@ -37029,6 +37081,13 @@
         },
         {
           "candidate": "src/forgeai/models/gateway.py",
+          "line": 13,
+          "referrer": "governance/error-handling-contracts.json",
+          "resolved": "src/forgeai/models/gateway.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "src/forgeai/models/gateway.py",
           "line": 40,
           "referrer": "stories/BUGHUNT-2026-08-16.md",
           "resolved": "src/forgeai/models/gateway.py",
@@ -37036,8 +37095,8 @@
         }
       ],
       "rule_id": "product-source",
-      "sha256": "a9b8cbcb5aeab7507865b4cc9ef4c66d72064c067bdb7f960ddb28c73764d400",
-      "size": 7442,
+      "sha256": "d3844345a68025189e4059a9f782dc4f952afcb1f6c8dbf3c2ab03073b75b185",
+      "size": 8441,
       "target_path": null,
       "type": "text"
     },
@@ -47921,8 +47980,8 @@
         }
       ],
       "rule_id": "test-suite",
-      "sha256": "038b8be76bf0eda225af1bcf18e9116d51dfb263d90dc526da77e17429501c38",
-      "size": 10360,
+      "sha256": "0592b87a9737cd605edd914e900ca06c5eb7a2df030dcb494e9a4200521a11bd",
+      "size": 11986,
       "target_path": null,
       "type": "text"
     },
@@ -92192,6 +92251,11 @@
         "referrer": "evidence/reviews/RC1-545/RECU.json"
       },
       {
+        "candidate": "recu-revue/1",
+        "line": 2,
+        "referrer": "evidence/reviews/RC1-546/RECU.json"
+      },
+      {
         "candidate": "reviews/",
         "line": 1,
         "referrer": "evidence/reviews/README.md"
@@ -95292,7 +95356,7 @@
         "referrer": "governance/error-handling-contracts.json"
       },
       {
-        "candidate": "chore/RC1-023-error-handlers",
+        "candidate": "fix/RC1-546-gateway-json-corrompu",
         "line": 9,
         "referrer": "governance/error-handling-contracts.json"
       },
@@ -95348,6 +95412,11 @@
       },
       {
         "candidate": "openbao_init.py",
+        "line": 13,
+        "referrer": "governance/error-handling-contracts.json"
+      },
+      {
+        "candidate": "contracted/floor",
         "line": 13,
         "referrer": "governance/error-handling-contracts.json"
       },
@@ -111883,12 +111952,7 @@
       },
       {
         "candidate": "driver/runtime",
-        "line": 333,
-        "referrer": "src/forgeai/data/locales/en.json"
-      },
-      {
-        "candidate": "routes.json",
-        "line": 339,
+        "line": 334,
         "referrer": "src/forgeai/data/locales/en.json"
       },
       {
@@ -111897,13 +111961,18 @@
         "referrer": "src/forgeai/data/locales/en.json"
       },
       {
+        "candidate": "routes.json",
+        "line": 341,
+        "referrer": "src/forgeai/data/locales/en.json"
+      },
+      {
         "candidate": "nvidia/amd/intel",
-        "line": 387,
+        "line": 388,
         "referrer": "src/forgeai/data/locales/en.json"
       },
       {
         "candidate": "./file",
-        "line": 388,
+        "line": 389,
         "referrer": "src/forgeai/data/locales/en.json"
       },
       {
@@ -111928,12 +111997,7 @@
       },
       {
         "candidate": "driver/runtime",
-        "line": 333,
-        "referrer": "src/forgeai/data/locales/fr.json"
-      },
-      {
-        "candidate": "routes.json",
-        "line": 339,
+        "line": 334,
         "referrer": "src/forgeai/data/locales/fr.json"
       },
       {
@@ -111942,13 +112006,18 @@
         "referrer": "src/forgeai/data/locales/fr.json"
       },
       {
+        "candidate": "routes.json",
+        "line": 341,
+        "referrer": "src/forgeai/data/locales/fr.json"
+      },
+      {
         "candidate": "nvidia/amd/intel",
-        "line": 387,
+        "line": 388,
         "referrer": "src/forgeai/data/locales/fr.json"
       },
       {
         "candidate": "./fichier",
-        "line": 388,
+        "line": 389,
         "referrer": "src/forgeai/data/locales/fr.json"
       },
       {
@@ -114889,6 +114958,36 @@
       {
         "candidate": "wirings.json",
         "line": 124,
+        "referrer": "src/forgeai/models/gateway.py"
+      },
+      {
+        "candidate": "482/",
+        "line": 133,
+        "referrer": "src/forgeai/models/gateway.py"
+      },
+      {
+        "candidate": "492/",
+        "line": 133,
+        "referrer": "src/forgeai/models/gateway.py"
+      },
+      {
+        "candidate": "527/",
+        "line": 133,
+        "referrer": "src/forgeai/models/gateway.py"
+      },
+      {
+        "candidate": "gateway.json",
+        "line": 133,
+        "referrer": "src/forgeai/models/gateway.py"
+      },
+      {
+        "candidate": "portability.py",
+        "line": 134,
+        "referrer": "src/forgeai/models/gateway.py"
+      },
+      {
+        "candidate": "wirings.json",
+        "line": 148,
         "referrer": "src/forgeai/models/gateway.py"
       },
       {
@@ -129112,13 +129211,63 @@
         "referrer": "tests/test_models_gateway.py"
       },
       {
-        "candidate": "application/json",
-        "line": 163,
+        "candidate": "482/",
+        "line": 98,
+        "referrer": "tests/test_models_gateway.py"
+      },
+      {
+        "candidate": "492/",
+        "line": 98,
+        "referrer": "tests/test_models_gateway.py"
+      },
+      {
+        "candidate": "527/",
+        "line": 98,
+        "referrer": "tests/test_models_gateway.py"
+      },
+      {
+        "candidate": "gateway.json/wirings.json",
+        "line": 98,
+        "referrer": "tests/test_models_gateway.py"
+      },
+      {
+        "candidate": "portability.py",
+        "line": 99,
+        "referrer": "tests/test_models_gateway.py"
+      },
+      {
+        "candidate": "routes.json",
+        "line": 100,
+        "referrer": "tests/test_models_gateway.py"
+      },
+      {
+        "candidate": "gateway.json",
+        "line": 103,
+        "referrer": "tests/test_models_gateway.py"
+      },
+      {
+        "candidate": "gateway.json",
+        "line": 108,
         "referrer": "tests/test_models_gateway.py"
       },
       {
         "candidate": "wirings.json",
-        "line": 228,
+        "line": 115,
+        "referrer": "tests/test_models_gateway.py"
+      },
+      {
+        "candidate": "wirings.json",
+        "line": 120,
+        "referrer": "tests/test_models_gateway.py"
+      },
+      {
+        "candidate": "application/json",
+        "line": 192,
+        "referrer": "tests/test_models_gateway.py"
+      },
+      {
+        "candidate": "wirings.json",
+        "line": 257,
         "referrer": "tests/test_models_gateway.py"
       },
       {
@@ -136993,6 +137142,13 @@
         "line": 197,
         "referrer": "evidence/reviews/BINDING.txt",
         "resolved": "evidence/reviews/RC1-444-v4",
+        "severity": "hard"
+      },
+      {
+        "candidate": "RC1-546",
+        "line": 198,
+        "referrer": "evidence/reviews/BINDING.txt",
+        "resolved": "evidence/reviews/RC1-546",
         "severity": "hard"
       },
       {
@@ -155910,6 +156066,13 @@
         "severity": "hard"
       },
       {
+        "candidate": "src/forgeai/models/gateway.py",
+        "line": 13,
+        "referrer": "governance/error-handling-contracts.json",
+        "resolved": "src/forgeai/models/gateway.py",
+        "severity": "hard"
+      },
+      {
         "candidate": "src/forgeai/cluster.py",
         "line": 17,
         "referrer": "governance/error-handling-contracts.json",
@@ -163519,7 +163682,7 @@
     "by_class": {
       "ARCHIVE": 44,
       "DOCS": 18,
-      "EVIDENCE": 1500,
+      "EVIDENCE": 1504,
       "GENERATED": 5,
       "GOVERNANCE": 193,
       "PRODUCT": 113,
@@ -163538,7 +163701,7 @@
       "evidence-audit-output-root": 18,
       "evidence-dedup-root": 2,
       "evidence-registres-root": 35,
-      "evidence-reviews-root": 1445,
+      "evidence-reviews-root": 1449,
       "generated-authority-map": 1,
       "generated-path-classification-json": 1,
       "generated-path-classification-markdown": 1,
@@ -163574,11 +163737,11 @@
       "working-sandbox-readme": 1
     },
     "case_collisions_total": 0,
-    "dangling_references_total": 16323,
+    "dangling_references_total": 16341,
     "generated_total": 9,
-    "load_bearing_total": 1954,
+    "load_bearing_total": 1958,
     "portability_violations_total": 0,
-    "tracked_total": 2094,
+    "tracked_total": 2098,
     "unclassified_total": 0,
     "unicode_anomalies_total": 0
   },

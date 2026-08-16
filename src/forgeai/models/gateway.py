@@ -130,14 +130,32 @@ class GatewayStore:
                                      encoding="utf-8")
 
     def get_gateway(self) -> GatewayConfig:
+        # RC1-456-iter3 : même famille que #482/#492/#527/#528 — gateway.json est dans
+        # portability.py::SETUP_FILES (copié sans validation de structure par import_setup) et
+        # reste éditable à la main. Un JSON valide mais top-level non-dict, ou avec des champs
+        # inattendus, levait TypeError (`** argument`) au lieu d'un GatewayError explicite.
         if not self.gateway_path.exists():
             raise GatewayError(t("models.gateway.non_configure"))
-        return GatewayConfig(**json.loads(self.gateway_path.read_text(encoding="utf-8")))
+        brut = json.loads(self.gateway_path.read_text(encoding="utf-8"))
+        try:
+            return GatewayConfig(**brut)
+        except TypeError as exc:
+            raise GatewayError(
+                t("models.gateway.fichier_corrompu", chemin=str(self.gateway_path), detail=str(exc))
+            ) from exc
 
     def _load_wirings(self) -> list[BrickWiring]:
+        # RC1-456-iter3 : même raisonnement que get_gateway() ci-dessus — wirings.json est
+        # également dans SETUP_FILES, non validé en profondeur à l'import.
         if not self.wirings_path.exists():
             return []
-        return [BrickWiring(**w) for w in json.loads(self.wirings_path.read_text(encoding="utf-8"))]
+        brut = json.loads(self.wirings_path.read_text(encoding="utf-8"))
+        try:
+            return [BrickWiring(**w) for w in brut]
+        except TypeError as exc:
+            raise GatewayError(
+                t("models.gateway.fichier_corrompu", chemin=str(self.wirings_path), detail=str(exc))
+            ) from exc
 
     def wire(self, brick_id: str, role: str, route_name: str) -> BrickWiring:
         gateway = self.get_gateway()
