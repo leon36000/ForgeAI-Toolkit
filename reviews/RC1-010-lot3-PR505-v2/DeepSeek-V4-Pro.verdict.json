@@ -1,0 +1,19 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "Registres/mission.jsonl",
+   "description": "La story annonce 34 PATCH-*.jsonl et une vérification portant sur 35 fichiers JSONL, mais le diff fourni contient 33 renommages PATCH-*.jsonl plus mission.jsonl, soit 34 fichiers .jsonl ; BASELINE-COMPLETUDE.json est exclu du glob verify. Les 35 fichiers déplacés sont bien présents, mais les comptes internes divergent.",
+   "preuve": "33 blocs 'diff --git a/Registres/PATCH-*.jsonl b/evidence/registres/PATCH-*.jsonl' + 'diff --git a/Registres/mission.jsonl b/evidence/registres/mission.jsonl' ; story 'mission.jsonl + 34 PATCH-*.jsonl + BASELINE-COMPLETUDE.json' et 'verify evidence/registres/*.jsonl' -> '35 fichiers réellement vérifiés'."
+  }
+ ],
+ "date_heure": "2026-08-16T02:34:37.057474+00:00",
+ "prompt_sha256": "e966f74da0f9395943770b2fe4045344e651aeeb941236359eddc22b20f86b42",
+ "reviewer_model": "DeepSeek-V4-Pro",
+ "modele_servi": "deepseek-v4-pro-direct",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}
