@@ -547,7 +547,11 @@ def main(argv: list[str] | None = None) -> int:
 
 # Correctif post-revue scellée #449 (round 6, REJECT de GPT-5.6-Terra-Pro) — `scripts/mypy_gate.py`
 # (La fonction fichiers_proteges_neutralises et la regex sont définies ci-dessous, avant main)
-_DIRECTIVE_NEUTRALISATION = re.compile(r"#\s*mypy:\s*ignore-errors\b")
+# Correctif round 7 : la recherche se fait sur les octets bruts (`read_bytes`) pour être
+# indépendante de l'encodage déclaré du fichier (PEP-263). La directive `# mypy: ignore-errors`
+# étant purement ASCII, une regex bytes la détecte quel que soit l'encodage, contrairement à une
+# lecture texte qui lèverait UnicodeDecodeError sur un fichier latin-1/cp1252 avec octets non UTF-8.
+_DIRECTIVE_NEUTRALISATION = re.compile(rb"#\s*mypy:\s*ignore-errors\b")
 
 
 def fichiers_proteges_neutralises(racine: Path, proteges: set[str]) -> set[str]:
@@ -556,16 +560,19 @@ def fichiers_proteges_neutralises(racine: Path, proteges: set[str]) -> set[str]:
     mypy ne l'exige pas en première ligne). Retourne l'ensemble des fichiers protégés
     contenant cette directive — un fichier protégé neutralisé ainsi continue de remonter 0
     erreur mypy, indiscernable par comptage seul de l'état attendu d'un fichier réellement
-    propre. Fichier illisible ou absent : ignoré silencieusement (déjà couvert par une autre
-    règle si le fichier a disparu)."""
+    propre. La lecture est effectuée en octets bruts (`read_bytes()`), sans décodage, afin de
+    rester indépendante de l'encodage déclaré du fichier (PEP-263) ; la directive étant
+    composée uniquement de caractères ASCII, une recherche bytes la détecte toujours, même pour
+    un fichier latin-1/cp1252 qui ferait échouer une lecture texte UTF-8. Fichier illisible ou
+    absent : ignoré silencieusement (déjà couvert par une autre règle si le fichier a disparu)."""
     resultat: set[str] = set()
     for f in proteges:
         chemin = racine / f
         try:
-            texte = chemin.read_text(encoding="utf-8")
-        except (OSError, UnicodeError):
+            donnees = chemin.read_bytes()
+        except OSError:
             continue
-        if _DIRECTIVE_NEUTRALISATION.search(texte):
+        if _DIRECTIVE_NEUTRALISATION.search(donnees):
             resultat.add(f)
     return resultat
 

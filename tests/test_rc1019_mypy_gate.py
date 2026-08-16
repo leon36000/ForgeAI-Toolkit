@@ -854,3 +854,15 @@ def test_g25b_anomalies_sans_neutralises_aucune_regression():
         base_reference=None,
     )
     assert anomalies == []
+
+
+# ---------------------------------------------------------------------------
+# Correctif post-revue scellée #449 (round 7) — encodage non UTF-8
+# ---------------------------------------------------------------------------
+
+def test_g26_fichiers_proteges_neutralises_detecte_meme_encodage_non_utf8(tmp_path):
+    chemin = tmp_path / "a.py"
+    chemin.write_bytes(
+        b'# -*- coding: latin-1 -*-\n# mypy: ignore-errors\nx = "caf\xe9"\n'
+    )
+    assert mypy_gate.fichiers_proteges_neutralises(tmp_path, {"a.py"}) == {"a.py"}
