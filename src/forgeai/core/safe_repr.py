@@ -1,4 +1,5 @@
-"""Représentation textuelle d'exception qui ne lève JAMAIS (source unique).
+"""Représentation textuelle d'exception, robuste si `exc.__str__()` lève une `Exception`
+(source unique).
 
 Round 27 (#452) — objection GPT-5.6-Terra-Pro (revue scellée) : rien n'empêche une exception
 (personnalisée, ou standard encapsulant des données arbitraires) de définir un `__str__` qui lève
@@ -7,6 +8,13 @@ un handler censé être best-effort ferait alors échouer CE handler avant d'att
 récupération qui le suit (ex. persister l'état, marquer un déploiement terminé, tenter un
 nettoyage). Source unique pour éviter que ce garde-fou dérive entre les modules qui en ont besoin
 (web/server.py, hardware/detect.py) — même motif que core/redaction.py pour la rédaction.
+
+Round 35 (#452) — objection GPT-5.6-Terra-Pro (revue scellée) : ce docstring de MODULE affirmait
+encore « ne lève JAMAIS » après que round 30 a délibérément revenu sur cette garantie pour les
+BaseException (SystemExit/KeyboardInterrupt) — le docstring de la FONCTION str_exc_sur() avait
+été corrigé en conséquence, mais pas celui-ci, au niveau module. Portée exacte, alignée sur le
+docstring de la fonction : robuste pour toute `Exception` levée par `__str__()`, PAS pour un
+`BaseException` explicite (risque résiduel étroit et délibéré, voir str_exc_sur()).
 """
 from __future__ import annotations
 
