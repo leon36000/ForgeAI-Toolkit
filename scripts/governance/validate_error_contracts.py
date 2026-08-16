@@ -56,6 +56,18 @@ def _horizon(inventaire: dict) -> int:
     return jours
 
 
+def _nom_marqueur_skip(noeud: ast.expr) -> str | None:
+    """Unparse un décorateur/valeur de marqueur en nom pointé, ou None si non-unparsable.
+    Factorisé round 20 : même logique utilisée par le marqueur au niveau fonction (round 19) et
+    au niveau module (round 20) — éviter que ces deux points de vérification dérivent l'un de
+    l'autre, comme round 17/18 l'ont montré pour la résolution de site.path."""
+    cible = noeud.func if isinstance(noeud, ast.Call) else noeud
+    try:
+        return ast.unparse(cible)
+    except Exception:
+        return None
+
+
 def _decorateur_skip_inconditionnel(decorator_list: list) -> bool:
     """True si la liste de décorateurs porte un @pytest.mark.skip SANS condition — un tel test
     n'est JAMAIS exécuté par pytest, quelle que soit la plateforme/config.
@@ -65,18 +77,44 @@ def _decorateur_skip_inconditionnel(decorator_list: list) -> bool:
     nom. Portée délibérément bornée à @pytest.mark.skip (bare ou avec reason=), DISTINCT de
     @pytest.mark.skipif (conditionnel — tolérée : un test skipif s'exécute réellement sous les
     conditions normales de CI, ex. @posix_only dans tests/test_proc.py, vrai sur ubuntu-latest).
-    Hors scope, documenté, pas ignoré en silence : pytestmark de module, __test__=False,
-    pytest.skip() en corps de fonction, parametrize à liste vide — détection complète
-    nécessiterait d'exécuter pytest plutôt que de l'analyser statiquement, disproportionné pour
-    ce gate rapide et déterministe.
+
+    Round 20 : `pytestmark` de module est désormais couvert (voir
+    _module_a_pytestmark_skip_inconditionnel). Reste et RESTERA hors scope, ligne dure documentée
+    ici une fois pour toutes : `pytest.skip()` appelé dans le CORPS d'un test, `__test__ = False`
+    (round 15), `parametrize` à liste vide. Ces trois cas exigent une analyse de flot de contrôle
+    (un appel conditionnel, profondément imbriqué, ou dérivé d'un état runtime n'est pas
+    statiquement décidable en général) ou l'exécution réelle de pytest — un changement
+    d'architecture du gate (rapide, déterministe, sans effet de bord) vers une vérification qui
+    exécute du code arbitraire, avec un coût et un profil de risque différents. Si ce point
+    devient un problème réel en pratique (pas seulement théorique, cf. le précédent round 19 où
+    @posix_only existait déjà réellement dans le dépôt), la correction appropriée est une story
+    dédiée ajoutant une vérification par `pytest --collect-only`/exécution réelle, pas une
+    nouvelle itération de filtrage AST au cas par cas.
     """
     for dec in decorator_list:
-        cible = dec.func if isinstance(dec, ast.Call) else dec
-        try:
-            nom = ast.unparse(cible)
-        except Exception:
+        if _nom_marqueur_skip(dec) in ("pytest.mark.skip", "mark.skip"):
+            return True
+    return False
+
+
+def _module_a_pytestmark_skip_inconditionnel(arbre: ast.Module) -> bool:
+    """True si le module porte `pytestmark = pytest.mark.skip` (scalaire ou dans une liste/tuple)
+    au niveau module — désactive INCONDITIONNELLEMENT tous les tests du fichier. Vérifié
+    empiriquement : `pytest --collect-only`/exécution rapporte '1 skipped', jamais exécuté.
+
+    Round 20 (#452) — objection GPT-5.6-Terra-Pro (revue scellée) : round 19 avait explicitement
+    scopé ce cas hors périmètre (documenté, pas oublié) ; Terra a confirmé que ce n'est pas un cas
+    d'école — même mécanisme que @pytest.mark.skip, juste au niveau module plutôt que fonction.
+    """
+    for noeud in arbre.body:
+        if not isinstance(noeud, ast.Assign):
             continue
-        if nom in ("pytest.mark.skip", "mark.skip"):
+        if not any(isinstance(t, ast.Name) and t.id == "pytestmark" for t in noeud.targets):
+            continue
+        valeurs = (
+            noeud.value.elts if isinstance(noeud.value, (ast.List, ast.Tuple)) else [noeud.value]
+        )
+        if any(_nom_marqueur_skip(v) in ("pytest.mark.skip", "mark.skip") for v in valeurs):
             return True
     return False
 
@@ -105,6 +143,11 @@ def _fonction_test_existe(fichier: Path, segments: list[str]) -> bool:
     try:
         arbre = ast.parse(fichier.read_text(encoding="utf-8"), filename=str(fichier))
     except (OSError, SyntaxError):
+        return False
+
+    # Round 20 (#452) — objection GPT-5.6-Terra-Pro : pytestmark = pytest.mark.skip au niveau
+    # module désactive INCONDITIONNELLEMENT tous les tests du fichier, y compris celui ciblé.
+    if _module_a_pytestmark_skip_inconditionnel(arbre):
         return False
 
     def _cherche(noeuds: list, segs: list[str]) -> bool:

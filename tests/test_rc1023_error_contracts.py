@@ -918,6 +918,76 @@ def test_compensating_test_skipif_conditionnel_reste_valide(tmp_path: Path) -> N
     assert erreurs == []
 
 
+def test_compensating_test_pytestmark_module_skip_rejete(tmp_path: Path) -> None:
+    """Round 20 (#452) — objection GPT-5.6-Terra-Pro (revue scellée) : `pytestmark =
+    pytest.mark.skip` au niveau module désactive INCONDITIONNELLEMENT tous les tests du fichier
+    (vérifié empiriquement : 'skipped', jamais exécuté) — round 19 ne vérifiait que les
+    décorateurs de la fonction ciblée, pas ce marqueur de module."""
+    _creer_fichier_source(
+        tmp_path,
+        "src/forgeai/example.py",
+        "try:\n    pass\nexcept ValueError:\n    pass\n",
+    )
+    _creer_fichier_source(
+        tmp_path,
+        "tests/test_pytestmark.py",
+        "import pytest\n\npytestmark = pytest.mark.skip\n\ndef test_desactive_par_module(): pass\n",
+    )
+    contrat = _entree_valide(
+        compensating_test="tests/test_pytestmark.py::test_desactive_par_module",
+        compensating_test_reason=None,
+    )
+    _ecrire_inventaire(tmp_path, [contrat])
+
+    erreurs = VALIDATEUR.valider(tmp_path, aujourd_hui=dt.date(2026, 1, 1))
+    assert any("test compensatoire absent du dépôt" in e for e in erreurs)
+
+
+def test_compensating_test_pytestmark_module_liste_skip_rejete(tmp_path: Path) -> None:
+    """pytestmark peut aussi être une liste de marqueurs — même effet."""
+    _creer_fichier_source(
+        tmp_path,
+        "src/forgeai/example.py",
+        "try:\n    pass\nexcept ValueError:\n    pass\n",
+    )
+    _creer_fichier_source(
+        tmp_path,
+        "tests/test_pytestmark_liste.py",
+        "import pytest\n\npytestmark = [pytest.mark.skip]\n\ndef test_desactive(): pass\n",
+    )
+    contrat = _entree_valide(
+        compensating_test="tests/test_pytestmark_liste.py::test_desactive",
+        compensating_test_reason=None,
+    )
+    _ecrire_inventaire(tmp_path, [contrat])
+
+    erreurs = VALIDATEUR.valider(tmp_path, aujourd_hui=dt.date(2026, 1, 1))
+    assert any("test compensatoire absent du dépôt" in e for e in erreurs)
+
+
+def test_compensating_test_pytestmark_skipif_module_reste_valide(tmp_path: Path) -> None:
+    """Contre-preuve : pytestmark = pytest.mark.skipif (conditionnel) reste toléré, même
+    principe que la contre-preuve décorateur round 19 — cohérence des deux niveaux."""
+    _creer_fichier_source(
+        tmp_path,
+        "src/forgeai/example.py",
+        "try:\n    pass\nexcept ValueError:\n    pass\n",
+    )
+    _creer_fichier_source(
+        tmp_path,
+        "tests/test_pytestmark_skipif.py",
+        "import pytest\n\npytestmark = pytest.mark.skipif(False, reason='x')\n\ndef test_conditionnel(): pass\n",
+    )
+    contrat = _entree_valide(
+        compensating_test="tests/test_pytestmark_skipif.py::test_conditionnel",
+        compensating_test_reason=None,
+    )
+    _ecrire_inventaire(tmp_path, [contrat])
+
+    erreurs = VALIDATEUR.valider(tmp_path, aujourd_hui=dt.date(2026, 1, 1))
+    assert erreurs == []
+
+
 def test_compensating_test_classe_avec_init_rejetee(tmp_path: Path) -> None:
     """Round 15 (#452) — objection GPT-5.6-Terra-Pro (revue scellée) : une classe Test* qui
     définit __init__ n'est PAS collectée par pytest (PytestCollectionWarning: cannot collect
