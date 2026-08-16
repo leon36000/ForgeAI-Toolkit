@@ -31,7 +31,7 @@ def _valider_cible(cible: str) -> None:
 
 
 def executer_mypy(racine: Path, cible: str) -> str:
-    """Lance `<interpréteur courant> -m mypy <cible> --ignore-missing-imports` (cwd=racine),
+    """Lance `<interpréteur courant> -m mypy <cible>` (cwd=racine),
     capture stdout+stderr, retourne le texte combiné. Utilise sys.executable, pas python3 en dur.
     mypy sort avec un code non-nul QUAND IL TROUVE DES ERREURS DE TYPE — c'est le cas normal
     attendu, PAS une exception : ne jamais lever sur un exit code mypy non-nul en soi. Ne lever
@@ -39,7 +39,7 @@ def executer_mypy(racine: Path, cible: str) -> str:
     si le module mypy est absent (message mypy indiquant l'absence du module) — dans ce cas
     message clair invitant à installer `mypy>=1.10`."""
     _valider_cible(cible)
-    commande = [sys.executable, "-m", "mypy", cible, "--ignore-missing-imports"]
+    commande = [sys.executable, "-m", "mypy", cible]
     try:
         resultat = subprocess.run(
             commande,

@@ -466,7 +466,6 @@ def test_g15_executer_mypy_construit_la_commande_attendue(tmp_path, monkeypatch)
         "-m",
         "mypy",
         "src/forgeai",
-        "--ignore-missing-imports",
     ]
     assert captured["kwargs"]["cwd"] == str(tmp_path)
     assert captured["kwargs"]["capture_output"] is True
