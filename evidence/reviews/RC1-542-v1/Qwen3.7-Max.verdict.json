@@ -1,0 +1,19 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "scripts/registre.py",
+   "description": "La garde peut être contournée si le chemin relatif est préfixé par './' (ex: './Registres/mission.jsonl'), car Path('./Registres/...').parts[0] retourne '.' et non 'Registres'. Bien que l'implémentation suive la lettre du critère ('premier composant EXACTEMENT Registres'), une normalisation (ex: filtrer les composants '.' ou utiliser resolve()) rendrait la garde plus robuste contre les complétions automatiques de shell.",
+   "preuve": "Ligne 94 : chemin_fichier.parts[0] == \"Registres\" — dans Python, Path('./Registres/x').parts vaut ('.', 'Registres', 'x')."
+  }
+ ],
+ "date_heure": "2026-08-16T17:33:10.777870+00:00",
+ "prompt_sha256": "ea5aff69e76e3a5fe1dc75f37455051d1bd07c6967a9a2c1c9eb6124f681a224",
+ "reviewer_model": "Qwen3.7-Max",
+ "modele_servi": "qwen37-max-openrouter",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

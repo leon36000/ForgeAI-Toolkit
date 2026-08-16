@@ -6419,6 +6419,20 @@
           "referrer": "stories/RC1-009.md",
           "resolved": "evidence/registres/mission.jsonl",
           "severity": "hard"
+        },
+        {
+          "candidate": "evidence/registres/mission.jsonl",
+          "line": 357,
+          "referrer": "tests/test_registre.py",
+          "resolved": "evidence/registres/mission.jsonl",
+          "severity": "hard"
+        },
+        {
+          "candidate": "evidence/registres/mission.jsonl",
+          "line": 453,
+          "referrer": "tests/test_registre.py",
+          "resolved": "evidence/registres/mission.jsonl",
+          "severity": "hard"
         }
       ],
       "rule_id": "evidence-registres-root",
@@ -8376,8 +8390,8 @@
         }
       ],
       "rule_id": "evidence-reviews-root",
-      "sha256": "8bfe65872f67af6ee0ae3dc83d9516cc61f4d8808e71415009ebaf81277d81ea",
-      "size": 2590,
+      "sha256": "3b341db5ecdb9dd52ca10d956b4e5eaf09118b1f9bc8bef68564b4b7cdb11540",
+      "size": 2612,
       "target_path": null,
       "type": "text"
     },
@@ -21088,6 +21102,110 @@
       "generated": false,
       "load_bearing": true,
       "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-542-v1/GPT-5.6-Terra-Pro.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "004c16bb2b02d6012322d5e663f3d0489e460353ba79ae245aee96f76e951f51",
+      "size": 334,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-542-v1/MiMo-Pro-V2.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "1791a1cd10262d93a0b67b8d0e3ee2123616b4567e2d2c7a554826cd9f5d12d8",
+      "size": 324,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-542-v1/Qwen3.7-Max.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "fef36ab3be4d084db947aae0ca614dcb5924e525ad67d689a51097c55d083ace",
+      "size": 990,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-542-v1/RECU.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "365a2dbe0b9add29fb3d2717fdfe0c74be024aef6645cf3be764847347877d67",
+      "size": 677,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-542-v2/GPT-5.6-Terra-Pro.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "89905e625a6b499ef6b8cf939031dfc0e184a9e6a045e444edcf60ea278598ab",
+      "size": 334,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-542-v2/MiMo-Pro-V2.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "1f174bee3df4ead074fe21fcb93230b04f9bf73775bb2261a642a37adf5c023b",
+      "size": 324,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-542-v2/Qwen3.7-Max.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "98e1e782c8eff332b5eea301c452ef3428b7fb2d6ba07832d51fb6dab19320fc",
+      "size": 323,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-542-v2/RECU.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "4f19af7024cccb672ca2c5ce36172e591cdf6d4e6d87c2b40f6a45ca9f88c6b5",
+      "size": 677,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
       "path": "evidence/reviews/README.md",
       "referenced_by": [],
       "rule_id": "evidence-reviews-root",
@@ -29696,6 +29814,13 @@
         },
         {
           "candidate": "scripts/registre.py",
+          "line": 6,
+          "referrer": "evidence/reviews/RC1-542-v1/Qwen3.7-Max.verdict.json",
+          "resolved": "scripts/registre.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "scripts/registre.py",
           "line": 8,
           "referrer": "evidence/reviews/REG-029B/Qwen3.7-Max.verdict.json",
           "resolved": "scripts/registre.py",
@@ -29801,8 +29926,8 @@
         }
       ],
       "rule_id": "governance-scripts-root",
-      "sha256": "b16e10a5f6d3f375fc78460714146ac44365d8fb35e6a514d547a58f7cc7c08e",
-      "size": 15702,
+      "sha256": "240dc3d50022f0f0bb7942264620749e7b1bc78ae0e98761d85c7c176cd28f2d",
+      "size": 16098,
       "target_path": null,
       "type": "text"
     },
@@ -43729,7 +43854,7 @@
         },
         {
           "candidate": "tests/test_guard_fs.py",
-          "line": 123,
+          "line": 136,
           "referrer": "scripts/registre.py",
           "resolved": "tests/test_guard_fs.py",
           "severity": "hard"
@@ -48321,8 +48446,8 @@
         }
       ],
       "rule_id": "test-suite",
-      "sha256": "27a9d5affa42d623faf41b47064cee6900057e1dcb4c69163da4b36e2cd412f8",
-      "size": 13598,
+      "sha256": "fa8bf24c80d60d103abd2e4cb816930caf31341b108f54e956f65c8952f72c26",
+      "size": 17403,
       "target_path": null,
       "type": "text"
     },
@@ -48363,7 +48488,7 @@
         },
         {
           "candidate": "tests/test_registre_concurrence.py",
-          "line": 375,
+          "line": 388,
           "referrer": "scripts/registre.py",
           "resolved": "tests/test_registre_concurrence.py",
           "severity": "hard"
@@ -88862,6 +88987,36 @@
         "referrer": "evidence/reviews/RC1-538/RECU.json"
       },
       {
+        "candidate": "./",
+        "line": 7,
+        "referrer": "evidence/reviews/RC1-542-v1/Qwen3.7-Max.verdict.json"
+      },
+      {
+        "candidate": "./Registres/mission.jsonl",
+        "line": 7,
+        "referrer": "evidence/reviews/RC1-542-v1/Qwen3.7-Max.verdict.json"
+      },
+      {
+        "candidate": "./Registres/",
+        "line": 7,
+        "referrer": "evidence/reviews/RC1-542-v1/Qwen3.7-Max.verdict.json"
+      },
+      {
+        "candidate": "./Registres/x",
+        "line": 8,
+        "referrer": "evidence/reviews/RC1-542-v1/Qwen3.7-Max.verdict.json"
+      },
+      {
+        "candidate": "recu-revue/1",
+        "line": 2,
+        "referrer": "evidence/reviews/RC1-542-v1/RECU.json"
+      },
+      {
+        "candidate": "recu-revue/1",
+        "line": 2,
+        "referrer": "evidence/reviews/RC1-542-v2/RECU.json"
+      },
+      {
         "candidate": "reviews/",
         "line": 1,
         "referrer": "evidence/reviews/README.md"
@@ -94262,33 +94417,43 @@
         "referrer": "scripts/registre.py"
       },
       {
+        "candidate": "evidence/registres/",
+        "line": 100,
+        "referrer": "scripts/registre.py"
+      },
+      {
+        "candidate": "440/",
+        "line": 100,
+        "referrer": "scripts/registre.py"
+      },
+      {
         "candidate": "gates.yml",
-        "line": 122,
+        "line": 135,
         "referrer": "scripts/registre.py"
       },
       {
         "candidate": "CLI/CI",
-        "line": 364,
+        "line": 377,
         "referrer": "scripts/registre.py"
       },
       {
         "candidate": "origin/main",
-        "line": 402,
+        "line": 415,
         "referrer": "scripts/registre.py"
       },
       {
         "candidate": "origin/main",
-        "line": 408,
+        "line": 421,
         "referrer": "scripts/registre.py"
       },
       {
         "candidate": "origin/main",
-        "line": 433,
+        "line": 446,
         "referrer": "scripts/registre.py"
       },
       {
         "candidate": "origin/main",
-        "line": 434,
+        "line": 447,
         "referrer": "scripts/registre.py"
       },
       {
@@ -128043,22 +128208,22 @@
       },
       {
         "candidate": "registre.py",
-        "line": 68,
+        "line": 69,
         "referrer": "tests/test_registre.py"
       },
       {
         "candidate": "registre.py",
-        "line": 73,
+        "line": 74,
         "referrer": "tests/test_registre.py"
       },
       {
         "candidate": "registre.py",
-        "line": 88,
+        "line": 89,
         "referrer": "tests/test_registre.py"
       },
       {
         "candidate": "UNVERIFIED/",
-        "line": 105,
+        "line": 106,
         "referrer": "tests/test_registre.py"
       },
       {
@@ -128079,6 +128244,31 @@
       {
         "candidate": "_locking.py",
         "line": 295,
+        "referrer": "tests/test_registre.py"
+      },
+      {
+        "candidate": "registre.py",
+        "line": 324,
+        "referrer": "tests/test_registre.py"
+      },
+      {
+        "candidate": "Registres/mission.jsonl",
+        "line": 334,
+        "referrer": "tests/test_registre.py"
+      },
+      {
+        "candidate": "registres/mission.jsonl",
+        "line": 402,
+        "referrer": "tests/test_registre.py"
+      },
+      {
+        "candidate": "mon_dossier/Registres/mission.jsonl",
+        "line": 424,
+        "referrer": "tests/test_registre.py"
+      },
+      {
+        "candidate": "Registres/mission.jsonl",
+        "line": 443,
         "referrer": "tests/test_registre.py"
       },
       {
@@ -131353,6 +131543,20 @@
         "line": 187,
         "referrer": "evidence/reviews/BINDING.txt",
         "resolved": "evidence/reviews/RC1-449-v19",
+        "severity": "hard"
+      },
+      {
+        "candidate": "RC1-542-v1",
+        "line": 188,
+        "referrer": "evidence/reviews/BINDING.txt",
+        "resolved": "evidence/reviews/RC1-542-v1",
+        "severity": "hard"
+      },
+      {
+        "candidate": "RC1-542-v2",
+        "line": 189,
+        "referrer": "evidence/reviews/BINDING.txt",
+        "resolved": "evidence/reviews/RC1-542-v2",
         "severity": "hard"
       },
       {
@@ -145083,6 +145287,13 @@
         "severity": "hard"
       },
       {
+        "candidate": "scripts/registre.py",
+        "line": 6,
+        "referrer": "evidence/reviews/RC1-542-v1/Qwen3.7-Max.verdict.json",
+        "resolved": "scripts/registre.py",
+        "severity": "hard"
+      },
+      {
         "candidate": ".github/workflows/gates.yml",
         "line": 6,
         "referrer": "evidence/reviews/REG-029B/Qwen3.7-Max.verdict.json",
@@ -150880,28 +151091,28 @@
       },
       {
         "candidate": "tests/test_guard_fs.py",
-        "line": 123,
+        "line": 136,
         "referrer": "scripts/registre.py",
         "resolved": "tests/test_guard_fs.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_registre_concurrence.py",
-        "line": 375,
+        "line": 388,
         "referrer": "scripts/registre.py",
         "resolved": "tests/test_registre_concurrence.py",
         "severity": "hard"
       },
       {
         "candidate": "evidence/registres",
-        "line": 428,
+        "line": 441,
         "referrer": "scripts/registre.py",
         "resolved": "evidence/registres",
         "severity": "hard"
       },
       {
         "candidate": "evidence/registres",
-        "line": 429,
+        "line": 442,
         "referrer": "scripts/registre.py",
         "resolved": "evidence/registres",
         "severity": "hard"
@@ -155800,6 +156011,20 @@
         "severity": "hard"
       },
       {
+        "candidate": "evidence/registres/mission.jsonl",
+        "line": 357,
+        "referrer": "tests/test_registre.py",
+        "resolved": "evidence/registres/mission.jsonl",
+        "severity": "hard"
+      },
+      {
+        "candidate": "evidence/registres/mission.jsonl",
+        "line": 453,
+        "referrer": "tests/test_registre.py",
+        "resolved": "evidence/registres/mission.jsonl",
+        "severity": "hard"
+      },
+      {
         "candidate": "scripts/registre.py",
         "line": 108,
         "referrer": "tests/test_registre_concurrence.py",
@@ -155933,7 +156158,7 @@
     "by_class": {
       "ARCHIVE": 44,
       "DOCS": 17,
-      "EVIDENCE": 1445,
+      "EVIDENCE": 1453,
       "GENERATED": 5,
       "GOVERNANCE": 184,
       "PRODUCT": 112,
@@ -155952,7 +156177,7 @@
       "evidence-audit-output-root": 18,
       "evidence-dedup-root": 2,
       "evidence-registres-root": 35,
-      "evidence-reviews-root": 1390,
+      "evidence-reviews-root": 1398,
       "generated-authority-map": 1,
       "generated-path-classification-json": 1,
       "generated-path-classification-markdown": 1,
@@ -155988,11 +156213,11 @@
       "working-sandbox-readme": 1
     },
     "case_collisions_total": 0,
-    "dangling_references_total": 15773,
+    "dangling_references_total": 15786,
     "generated_total": 9,
-    "load_bearing_total": 1887,
+    "load_bearing_total": 1895,
     "portability_violations_total": 0,
-    "tracked_total": 2024,
+    "tracked_total": 2032,
     "unclassified_total": 0,
     "unicode_anomalies_total": 0
   },

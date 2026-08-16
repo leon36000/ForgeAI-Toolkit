@@ -89,9 +89,22 @@ def _cmd_append(arguments: argparse.Namespace) -> int:
         print(f"payload JSON invalide : {erreur.msg}", file=sys.stderr)
         return 1
 
+    chemin_fichier = Path(arguments.fichier)
+    if (
+        not chemin_fichier.is_absolute()
+        and chemin_fichier.parts
+        and chemin_fichier.parts[0] == "Registres"
+    ):
+        print(
+            f"chemin deprecie refuse : {arguments.fichier!r} — utiliser "
+            "evidence/registres/ (migration RC1-010, voir #440/#539)",
+            file=sys.stderr,
+        )
+        return 1
+
     try:
         entree = append(
-            Path(arguments.fichier),
+            chemin_fichier,
             arguments.type,
             arguments.actor,
             payload,

@@ -1,0 +1,22 @@
+{
+  "schema": "recu-revue/1",
+  "dossier": "RC1-542-v1",
+  "issue": 542,
+  "round": 1,
+  "base_commit": "b5e928bf74d8c0dbfc3080b40fdc1a69dd0c4576",
+  "head_commit": "84bf3e71aecf2c0c62bece5a223a68755e69f6e9",
+  "head_tree": "a8537219da27b5d34f27afc2b6a260774ab279e9",
+  "diff_digest": "9df0031609718638069209a83decafb3323f176b8eb0a86f01ae7115e1054e31",
+  "prompt_sha256": "ea5aff69e76e3a5fe1dc75f37455051d1bd07c6967a9a2c1c9eb6124f681a224",
+  "reviewers_attendus": [
+    "GPT-5.6-Terra-Pro",
+    "MiMo-Pro-V2",
+    "Qwen3.7-Max"
+  ],
+  "codeur": [
+    "Gemini-3.7-Flash"
+  ],
+  "resultat": "APPROVE",
+  "date_heure": "2026-08-16T13:34:15.970540-04:00",
+  "fenetre_heures": 24
+}
