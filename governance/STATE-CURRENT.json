@@ -643,10 +643,6 @@
         "sha256": "4cfa1f3a029ff82cfca9ad868eeb02b66fbfab51ffaf076c28097a7936348d7b"
       },
       {
-        "path": "tests/test_readme_dist_status.py",
-        "sha256": "70c8716dec991cd998875699db0045fc7bbab9873cda790af9c1285e73c2b07b"
-      },
-      {
         "path": "tests/test_receptacles.py",
         "sha256": "e73378b496c2f6109133dfcef07f1a7b3f79e9e48cbc473882e4b53e4ef496ca"
       },
@@ -896,8 +892,8 @@
     },
     "tests": {
       "js_files": 3,
-      "python_files": 186,
-      "python_functions_declared": 2006
+      "python_files": 185,
+      "python_functions_declared": 2001
     }
   },
   "observations": [
