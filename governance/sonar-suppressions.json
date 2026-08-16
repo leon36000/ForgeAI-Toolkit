@@ -30,7 +30,12 @@
       "kind": "inline",
       "rule": "S2068",
       "scope": "line",
-      "sites": [{"path": "src/forgeai/cli.py", "line": 73}],
+      "sites": [
+        {
+          "path": "src/forgeai/cli.py",
+          "line": 73
+        }
+      ],
       "owner": "équipe plateforme ForgeAI",
       "justification": "La constante concernée est l'identifiant public par défaut de l'image immudb officielle, documenté par le projet immudb lui-même, et non un identifiant propre à ForgeAI.",
       "compensating_test": null,
@@ -43,7 +48,12 @@
       "kind": "inline",
       "rule": "S5332",
       "scope": "line",
-      "sites": [{"path": "src/forgeai/cli.py", "line": 121}],
+      "sites": [
+        {
+          "path": "src/forgeai/cli.py",
+          "line": 121
+        }
+      ],
       "owner": "équipe réseau ForgeAI",
       "justification": "Le service local ou LAN documenté à cette ligne accepte délibérément HTTP dans la frontière réseau maîtrisée prévue par le produit.",
       "compensating_test": null,
@@ -56,7 +66,12 @@
       "kind": "inline",
       "rule": "S2612",
       "scope": "line",
-      "sites": [{"path": "src/forgeai/deploy/openbao_flow.py", "line": 102}],
+      "sites": [
+        {
+          "path": "src/forgeai/deploy/openbao_flow.py",
+          "line": 102
+        }
+      ],
       "owner": "équipe secrets ForgeAI",
       "justification": "Le conteneur openbao-unsealer tourne sous un UID non-root distinct de l'opérateur et lit la clé d'unseal via un bind-mount hôte. La clé doit donc être lisible par ce conteneur.",
       "compensating_test": null,
@@ -69,7 +84,12 @@
       "kind": "inline",
       "rule": "S2612",
       "scope": "line",
-      "sites": [{"path": "src/forgeai/deploy/openbao_flow.py", "line": 104}],
+      "sites": [
+        {
+          "path": "src/forgeai/deploy/openbao_flow.py",
+          "line": 104
+        }
+      ],
       "owner": "équipe secrets ForgeAI",
       "justification": "Le conteneur openbao-unsealer tourne sous un UID non-root distinct de l'opérateur et lit la clé d'unseal via un bind-mount hôte. La clé doit donc être lisible par ce conteneur.",
       "compensating_test": null,
@@ -82,7 +102,12 @@
       "kind": "inline",
       "rule": "S2612",
       "scope": "line",
-      "sites": [{"path": "src/forgeai/deploy/openbao_flow.py", "line": 109}],
+      "sites": [
+        {
+          "path": "src/forgeai/deploy/openbao_flow.py",
+          "line": 109
+        }
+      ],
       "owner": "équipe secrets ForgeAI",
       "justification": "Le conteneur openbao-unsealer tourne sous un UID non-root distinct de l'opérateur et lit la clé d'unseal via un bind-mount hôte. La clé doit donc être lisible par ce conteneur.",
       "compensating_test": null,
@@ -95,7 +120,12 @@
       "kind": "inline",
       "rule": "S2083",
       "scope": "line",
-      "sites": [{"path": "src/forgeai/models/vault.py", "line": 252}],
+      "sites": [
+        {
+          "path": "src/forgeai/models/vault.py",
+          "line": 252
+        }
+      ],
       "owner": "équipe secrets ForgeAI",
       "justification": "La cible locale de bootstrap est choisie par l'opérateur, ouverte avec O_NOFOLLOW puis validée comme fichier régulier avant lecture.",
       "compensating_test": null,
@@ -108,7 +138,12 @@
       "kind": "inline",
       "rule": "S2083",
       "scope": "line",
-      "sites": [{"path": "src/forgeai/models/_locking.py", "line": 53}],
+      "sites": [
+        {
+          "path": "src/forgeai/models/_locking.py",
+          "line": 53
+        }
+      ],
       "owner": "équipe modèles ForgeAI",
       "justification": "Le descripteur ouvert est le parent exact de la destination locale choisie par l'opérateur ; aucun privilège n'est élevé.",
       "compensating_test": null,
@@ -121,7 +156,12 @@
       "kind": "inline",
       "rule": "S2083",
       "scope": "line",
-      "sites": [{"path": "src/forgeai/models/_locking.py", "line": 79}],
+      "sites": [
+        {
+          "path": "src/forgeai/models/_locking.py",
+          "line": 79
+        }
+      ],
       "owner": "équipe modèles ForgeAI",
       "justification": "Le temporaire est créé par mkstemp dans le parent de la destination et os.replace réalise explicitement le remplacement local demandé.",
       "compensating_test": null,
@@ -134,7 +174,12 @@
       "kind": "inline",
       "rule": "S5332",
       "scope": "line",
-      "sites": [{"path": "src/forgeai/network/bootstrap.py", "line": 69}],
+      "sites": [
+        {
+          "path": "src/forgeai/network/bootstrap.py",
+          "line": 69
+        }
+      ],
       "owner": "équipe réseau ForgeAI",
       "justification": "La validation de render_join_plan autorise délibérément http:// pour un control plane Headscale auto-hébergé sur réseau privé pendant le bootstrap initial avant terminaison TLS.",
       "compensating_test": null,
@@ -147,7 +192,12 @@
       "kind": "inline",
       "rule": "S5443",
       "scope": "line",
-      "sites": [{"path": "src/forgeai/renderers/k3s.py", "line": 249}],
+      "sites": [
+        {
+          "path": "src/forgeai/renderers/k3s.py",
+          "line": 249
+        }
+      ],
       "owner": "équipe déploiement ForgeAI",
       "justification": "Le littéral /tmp est le contenu d'un manifeste Kubernetes généré pour un conteneur distant et éphémère ; ce processus n'écrit aucun fichier temporaire local.",
       "compensating_test": null,
@@ -160,7 +210,11 @@
       "kind": "properties-multicriteria",
       "rule": "pythonsecurity:S8707",
       "scope": "file",
-      "sites": [{"path": "scripts/gate_docs.py"}],
+      "sites": [
+        {
+          "path": "scripts/gate_docs.py"
+        }
+      ],
       "owner": "équipe gouvernance ForgeAI",
       "justification": "Mesure Sonar : # NOSONAR(S8707) posé au site sur src/forgeai/core/registre.py:101 et :141 après retrait de e7 a été ignoré ; le scan a remonté « pythonsecurity:S8707 | src/forgeai/core/registre.py : 101 » et « pythonsecurity:S8707 | src/forgeai/core/registre.py : 141 ». NOSONAR est ignoré par les règles pythonsecurity d'analyse de sécurité avancée ; le périmètre fichier est donc le seul disponible.",
       "compensating_test": "tests/test_doc032_gate_docs.py",
@@ -173,7 +227,11 @@
       "kind": "properties-multicriteria",
       "rule": "pythonsecurity:S8705",
       "scope": "file",
-      "sites": [{"path": "scripts/gate_docs.py"}],
+      "sites": [
+        {
+          "path": "scripts/gate_docs.py"
+        }
+      ],
       "owner": "équipe gouvernance ForgeAI",
       "justification": "Mesure Sonar : # NOSONAR(S8707) posé au site sur src/forgeai/core/registre.py:101 et :141 après retrait de e7 a été ignoré ; le scan a remonté « pythonsecurity:S8707 | src/forgeai/core/registre.py : 101 » et « pythonsecurity:S8707 | src/forgeai/core/registre.py : 141 ». NOSONAR est ignoré par les règles pythonsecurity d'analyse de sécurité avancée ; le périmètre fichier est donc le seul disponible.",
       "compensating_test": "tests/test_doc032_gate_docs.py",
@@ -186,7 +244,11 @@
       "kind": "properties-multicriteria",
       "rule": "pythonsecurity:S8707",
       "scope": "file",
-      "sites": [{"path": "src/forgeai/core/registre.py"}],
+      "sites": [
+        {
+          "path": "src/forgeai/core/registre.py"
+        }
+      ],
       "owner": "équipe audit ForgeAI",
       "justification": "Mesure Sonar : # NOSONAR(S8707) posé au site sur src/forgeai/core/registre.py:101 et :141 après retrait de e7 a été ignoré ; le scan a remonté « pythonsecurity:S8707 | src/forgeai/core/registre.py : 101 » et « pythonsecurity:S8707 | src/forgeai/core/registre.py : 141 ». NOSONAR est ignoré par les règles pythonsecurity d'analyse de sécurité avancée ; le périmètre fichier est donc le seul disponible.",
       "compensating_test": "tests/test_registre.py",
@@ -212,7 +274,11 @@
       "kind": "analysis-exclusion",
       "rule": null,
       "scope": "glob",
-      "sites": [{"path": "**/__pycache__/**"}],
+      "sites": [
+        {
+          "path": "**/__pycache__/**"
+        }
+      ],
       "owner": "équipe plateforme ForgeAI",
       "justification": "Les caches Python générés ne sont pas du code source à analyser.",
       "compensating_test": null,
@@ -225,7 +291,11 @@
       "kind": "analysis-exclusion",
       "rule": null,
       "scope": "glob",
-      "sites": [{"path": "**/*.pyc"}],
+      "sites": [
+        {
+          "path": "**/*.pyc"
+        }
+      ],
       "owner": "équipe plateforme ForgeAI",
       "justification": "Les bytecodes Python générés ne sont pas du code source à analyser.",
       "compensating_test": null,
@@ -238,7 +308,11 @@
       "kind": "analysis-exclusion",
       "rule": null,
       "scope": "glob",
-      "sites": [{"path": "src/forgeai/data/**"}],
+      "sites": [
+        {
+          "path": "src/forgeai/data/**"
+        }
+      ],
       "owner": "équipe plateforme ForgeAI",
       "justification": "Les données livrées sous src/forgeai/data ne constituent pas du code source exécutable à analyser.",
       "compensating_test": null,
@@ -251,7 +325,11 @@
       "kind": "analysis-exclusion",
       "rule": null,
       "scope": "glob",
-      "sites": [{"path": "scripts/proof/**"}],
+      "sites": [
+        {
+          "path": "scripts/proof/**"
+        }
+      ],
       "owner": "équipe preuves ForgeAI",
       "justification": "Les scripts/proof sont des scripts de preuve e2e exécutés réellement, avec déploiement Docker et assertions, et non du code de bibliothèque livré.",
       "compensating_test": null,
@@ -264,7 +342,11 @@
       "kind": "analysis-exclusion",
       "rule": null,
       "scope": "glob",
-      "sites": [{"path": "**/__pycache__/**"}],
+      "sites": [
+        {
+          "path": "**/__pycache__/**"
+        }
+      ],
       "owner": "équipe plateforme ForgeAI",
       "justification": "Les caches Python générés ne sont pas des tests source.",
       "compensating_test": null,
@@ -277,7 +359,11 @@
       "kind": "analysis-exclusion",
       "rule": null,
       "scope": "glob",
-      "sites": [{"path": "**/*.pyc"}],
+      "sites": [
+        {
+          "path": "**/*.pyc"
+        }
+      ],
       "owner": "équipe plateforme ForgeAI",
       "justification": "Les bytecodes Python générés ne sont pas des tests source.",
       "compensating_test": null,
@@ -290,7 +376,11 @@
       "kind": "coverage-exclusion",
       "rule": null,
       "scope": "glob",
-      "sites": [{"path": "src/forgeai/web/assets/**"}],
+      "sites": [
+        {
+          "path": "src/forgeai/web/assets/**"
+        }
+      ],
       "owner": "équipe web ForgeAI",
       "justification": "Les assets navigateur JS, HTML et CSS sont analysés pour la qualité mais ne sont pas comptés dans la couverture : aucun runner JS n'est câblé aux gates et le produit est stdlib pur.",
       "compensating_test": null,
@@ -303,7 +393,11 @@
       "kind": "coverage-exclusion",
       "rule": null,
       "scope": "glob",
-      "sites": [{"path": "scripts/proof/**"}],
+      "sites": [
+        {
+          "path": "scripts/proof/**"
+        }
+      ],
       "owner": "équipe preuves ForgeAI",
       "justification": "Les scripts/proof sont des preuves e2e de déploiement Docker réel, pas du code de bibliothèque unit-testable.",
       "compensating_test": null,
@@ -316,12 +410,67 @@
       "kind": "coverage-exclusion",
       "rule": null,
       "scope": "glob",
-      "sites": [{"path": "scripts/check_metering_sites.py"}],
+      "sites": [
+        {
+          "path": "scripts/check_metering_sites.py"
+        }
+      ],
       "owner": "équipe gouvernance ForgeAI",
       "justification": "Le fichier est un lanceur CLI mince : la logique vit dans forgeai.models.metering_guard et est couverte à 100 % par les tests du module.",
       "compensating_test": "tests/test_metering_guard.py",
       "review_due": "2027-02-10",
       "accepted_risk": "La couverture Sonar ne mesure pas le wrapper CLI sans logique métier."
+    },
+    {
+      "id": "properties-multicriteria:e8",
+      "kind": "properties-multicriteria",
+      "rule": "pythonsecurity:S8705",
+      "scope": "file",
+      "sites": [
+        {
+          "path": "scripts/mypy_gate.py"
+        }
+      ],
+      "owner": "équipe gouvernance ForgeAI",
+      "justification": "Mesure Sonar (établie sur e5/e6/e7) : # NOSONAR(S8707) posé au site sur src/forgeai/core/registre.py:101 et :141 après retrait de e7 a été ignoré ; le scan a remonté « pythonsecurity:S8707 | src/forgeai/core/registre.py : 101 » et « pythonsecurity:S8707 | src/forgeai/core/registre.py : 141 ». NOSONAR est ignoré par les règles pythonsecurity d'analyse de sécurité avancée ; le périmètre fichier est donc le seul disponible. Même famille de site (argument CLI/chemin validé en amont avant subprocess/accès disque, non tracé par l'analyse de flux) introduite par RC1-019 (#449).",
+      "compensating_test": "tests/test_rc1019_mypy_gate.py",
+      "compensating_test_reason": "Non-réductible : Sonar rattache ces alertes avancées à des flux dont le site rapporté peut varier après analyse ; une annotation inline ne garantit pas la suppression de l'alerte effectivement produite (mesuré sur e5/e6/e7).",
+      "review_due": "2027-02-10",
+      "accepted_risk": "Le faux positif peut masquer une occurrence S8705 dans ce fichier jusqu'à sa révision."
+    },
+    {
+      "id": "properties-multicriteria:e9",
+      "kind": "properties-multicriteria",
+      "rule": "pythonsecurity:S8707",
+      "scope": "file",
+      "sites": [
+        {
+          "path": "scripts/mypy_gate.py"
+        }
+      ],
+      "owner": "équipe gouvernance ForgeAI",
+      "justification": "Mesure Sonar (établie sur e5/e6/e7) : # NOSONAR(S8707) posé au site sur src/forgeai/core/registre.py:101 et :141 après retrait de e7 a été ignoré ; le scan a remonté « pythonsecurity:S8707 | src/forgeai/core/registre.py : 101 » et « pythonsecurity:S8707 | src/forgeai/core/registre.py : 141 ». NOSONAR est ignoré par les règles pythonsecurity d'analyse de sécurité avancée ; le périmètre fichier est donc le seul disponible. Même famille de site (argument CLI/chemin validé en amont avant subprocess/accès disque, non tracé par l'analyse de flux) introduite par RC1-019 (#449).",
+      "compensating_test": "tests/test_rc1019_mypy_gate.py",
+      "compensating_test_reason": "Non-réductible : Sonar rattache ces alertes avancées à des flux dont le site rapporté peut varier après analyse ; une annotation inline ne garantit pas la suppression de l'alerte effectivement produite (mesuré sur e5/e6/e7).",
+      "review_due": "2027-02-10",
+      "accepted_risk": "Le faux positif peut masquer une occurrence S8707 dans ce fichier jusqu'à sa révision."
+    },
+    {
+      "id": "properties-multicriteria:e10",
+      "kind": "properties-multicriteria",
+      "rule": "pythonsecurity:S8705",
+      "scope": "file",
+      "sites": [
+        {
+          "path": "scripts/gate_git_ref.py"
+        }
+      ],
+      "owner": "équipe gouvernance ForgeAI",
+      "justification": "Mesure Sonar (établie sur e5/e6/e7) : # NOSONAR(S8707) posé au site sur src/forgeai/core/registre.py:101 et :141 après retrait de e7 a été ignoré ; le scan a remonté « pythonsecurity:S8707 | src/forgeai/core/registre.py : 101 » et « pythonsecurity:S8707 | src/forgeai/core/registre.py : 141 ». NOSONAR est ignoré par les règles pythonsecurity d'analyse de sécurité avancée ; le périmètre fichier est donc le seul disponible. Même famille de site (argument CLI/chemin validé en amont avant subprocess/accès disque, non tracé par l'analyse de flux) introduite par RC1-019 (#449).",
+      "compensating_test": "tests/test_gate_git_ref.py",
+      "compensating_test_reason": "Non-réductible : Sonar rattache ces alertes avancées à des flux dont le site rapporté peut varier après analyse ; une annotation inline ne garantit pas la suppression de l'alerte effectivement produite (mesuré sur e5/e6/e7).",
+      "review_due": "2027-02-10",
+      "accepted_risk": "Le faux positif peut masquer une occurrence S8705 dans ce fichier jusqu'à sa révision."
     }
   ]
 }
