@@ -1030,3 +1030,140 @@ def test_g33_valider_type_ignore_rejette_plafond_non_positif():
 
 def test_g33b_valider_type_ignore_absent_retourne_dict_vide():
     assert mypy_gate._valider_type_ignore(None, "base") == {}
+
+
+# ---------------------------------------------------------------------------
+# Correctif post-revue scellée #449 (round 13) — reference git pour type_ignore
+# ---------------------------------------------------------------------------
+
+def test_g34_anomalies_signale_plafond_type_ignore_augmente_depuis_reference():
+    base = {
+        "version": 1,
+        "borne": {"total_erreurs": 0},
+        "fichiers_proteges": [],
+        "dette": {},
+        "type_ignore": {"a.py": 50},
+    }
+    reference = {
+        "version": 1,
+        "borne": {"total_erreurs": 0},
+        "fichiers_proteges": [],
+        "dette": {},
+        "type_ignore": {"a.py": 1},
+    }
+    anomalies = mypy_gate.anomalies(
+        reels={"a.py"},
+        erreurs={},
+        base=base,
+        base_reference=reference,
+        occurrences={"a.py": 50},
+    )
+    assert any(
+        "type_ignore" in m and "a.py" in m and "50" in m and "1" in m
+        for m in anomalies
+    )
+
+
+def test_g34b_anomalies_signale_nouveau_fichier_type_ignore_absent_de_reference():
+    base = {
+        "version": 1,
+        "borne": {"total_erreurs": 0},
+        "fichiers_proteges": [],
+        "dette": {},
+        "type_ignore": {"nouveau.py": 3},
+    }
+    reference = {
+        "version": 1,
+        "borne": {"total_erreurs": 0},
+        "fichiers_proteges": [],
+        "dette": {},
+        "type_ignore": {},
+    }
+    anomalies = mypy_gate.anomalies(
+        reels={"nouveau.py"},
+        erreurs={},
+        base=base,
+        base_reference=reference,
+        occurrences={"nouveau.py": 3},
+    )
+    assert any(
+        "type_ignore" in m and "nouveau.py" in m and "absent de la reference" in m
+        for m in anomalies
+    )
+
+
+def test_g34c_anomalies_type_ignore_meme_plafond_que_reference_aucune_anomalie():
+    base = {
+        "version": 1,
+        "borne": {"total_erreurs": 0},
+        "fichiers_proteges": [],
+        "dette": {},
+        "type_ignore": {"a.py": 5},
+    }
+    reference = {
+        "version": 1,
+        "borne": {"total_erreurs": 0},
+        "fichiers_proteges": [],
+        "dette": {},
+        "type_ignore": {"a.py": 5},
+    }
+    anomalies = mypy_gate.anomalies(
+        reels={"a.py"},
+        erreurs={},
+        base=base,
+        base_reference=reference,
+        occurrences={"a.py": 5},
+    )
+    assert anomalies == []
+
+
+def test_g34d_anomalies_type_ignore_plafond_diminue_depuis_reference_aucune_anomalie():
+    base = {
+        "version": 1,
+        "borne": {"total_erreurs": 0},
+        "fichiers_proteges": [],
+        "dette": {},
+        "type_ignore": {"a.py": 2},
+    }
+    reference = {
+        "version": 1,
+        "borne": {"total_erreurs": 0},
+        "fichiers_proteges": [],
+        "dette": {},
+        "type_ignore": {"a.py": 5},
+    }
+    anomalies = mypy_gate.anomalies(
+        reels={"a.py"},
+        erreurs={},
+        base=base,
+        base_reference=reference,
+        occurrences={"a.py": 2},
+    )
+    assert anomalies == []
+
+
+def test_g34e_anomalies_reference_sans_type_ignore_retrocompatible():
+    base = {
+        "version": 1,
+        "borne": {"total_erreurs": 0},
+        "fichiers_proteges": [],
+        "dette": {},
+        "type_ignore": {"a.py": 1},
+    }
+    reference = {
+        "version": 1,
+        "borne": {"total_erreurs": 0},
+        "fichiers_proteges": [],
+        "dette": {},
+    }
+    anomalies = mypy_gate.anomalies(
+        reels={"a.py"},
+        erreurs={},
+        base=base,
+        base_reference=reference,
+        occurrences={"a.py": 1},
+    )
+    assert any(
+        "type_ignore" in m and "a.py" in m and "absent de la reference" in m
+        for m in anomalies
+    )

@@ -417,13 +417,17 @@ def _anomalies_reference(
     borne_totale: int,
     reference: dict[str, Any],
     proteges: set[str],
+    type_ignore: dict[str, int],
 ) -> list[str]:
     """Règle 5 : comparaison avec la base de référence — aucune croissance non justifiée
-    (dette ou borne), protection permanente des fichiers_proteges, et interdiction de retirer
-    silencieusement un fichier de la dette référencée sans le promouvoir aux fichiers_proteges."""
+    (dette, borne ou type_ignore), protection permanente des fichiers_proteges, et interdiction
+    de retirer silencieusement un fichier de la dette référencée sans le promouvoir aux
+    fichiers_proteges. Couvre également type_ignore selon le même principe de non-croissance que
+    dette (sans lien avec fichiers_proteges)."""
     resultat: list[str] = []
     ref_proteges = set(reference["fichiers_proteges"])
     ref_dette = reference["dette"]
+    ref_type_ignore = reference.get("type_ignore", {})
 
     for f in sorted(ref_proteges):
         if f not in proteges:
@@ -456,6 +460,18 @@ def _anomalies_reference(
             f"borne totale augmentee depuis la reference ({borne_totale} > "
             f"{reference['borne']['total_erreurs']}) : extension non justifiee"
         )
+
+    for f, plafond in sorted(type_ignore.items()):
+        if f in ref_type_ignore and plafond > ref_type_ignore[f]:
+            resultat.append(
+                f"plafond type_ignore pour {f} augmente depuis la reference ({plafond} > "
+                f"{ref_type_ignore[f]}) : extension non justifiee"
+            )
+        if f not in ref_type_ignore:
+            resultat.append(
+                f"fichier {f} ajoute au plafond type_ignore, absent de la reference : "
+                "extension non justifiee"
+            )
 
     return resultat
 
@@ -504,12 +520,13 @@ def anomalies(
        pas silencieusement) ;
     4. borne totale inconditionnelle (mêmes garanties que la borne de gate_docs.py — ne dépend
        d'aucun argument optionnel) ;
-    5. si `base_reference` est fourni : toute dette ou borne supérieure à la référence est une
-       extension non justifiée ; tout fichier protégé dans la référence doit rester protégé
-       dans la base courante ; et tout fichier présent dans la dette de la référence doit
-       demeurer suivi (soit en dette, soit promu aux fichiers_proteges) — toute disparition
+    5. si `base_reference` est fourni : toute dette, borne ou plafond type_ignore supérieur à la
+       référence est une extension non justifiée ; tout fichier protégé dans la référence doit
+       rester protégé dans la base courante ; et tout fichier présent dans la dette de la référence
+       doit demeurer suivi (soit en dette, soit promu aux fichiers_proteges) — toute disparition
        silencieuse du tracking est une anomalie (anti-contournement, mirrorant
-       gate_docs._charger_base_reference_git).
+       gate_docs._charger_base_reference_git) ; la protection contre l'extension non justifiée
+       couvre désormais aussi `type_ignore`, symétriquement à `dette`.
     6. si `neutralises` est fourni : tout fichier listé dans `neutralises` (typiquement
        l'ensemble complet des fichiers réels sous la cible mypy, trackés ou non par la base)
        est signalé comme contenant une directive de neutralisation mypy (`# mypy: ...`) —
@@ -544,6 +561,7 @@ def anomalies(
                 base_validee["borne"]["total_erreurs"],
                 reference_validee,
                 proteges,
+                base_validee.get("type_ignore", {}),
             )
         )
     if neutralises is not None:
