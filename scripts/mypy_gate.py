@@ -18,15 +18,13 @@ import sys
 from pathlib import Path
 from typing import Any
 
-# Copié depuis gate_docs.py — validation anti-injection pour --base-ref-git
-_REF_GIT_VALIDE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._/\-]*$")
+import gate_git_ref
 
 
-def _valider_ref_git(ref: str) -> None:
-    """Refuse tout ref commençant par '-' (injection d'option git) ou contenant un
-    caractère hors de l'ensemble attendu pour un nom de référence git."""
-    if not ref or ref.startswith("-") or not _REF_GIT_VALIDE.match(ref):
-        raise ValueError(f"reference git invalide {ref!r} : refusee avant tout appel git")
+def _valider_cible(cible: str) -> None:
+    """Refuse une cible mypy vide ou commençant par '-' (injection d'option subprocess)."""
+    if not cible or cible.startswith("-"):
+        raise ValueError(f"cible mypy invalide {cible!r} : refusee avant tout appel subprocess")
 
 
 def executer_mypy(racine: Path, cible: str) -> str:
@@ -36,6 +34,7 @@ def executer_mypy(racine: Path, cible: str) -> str:
     exit code mypy non-nul en soi. Ne lever RuntimeError QUE si le module mypy est absent
     (FileNotFoundError sur l'exécutable python, ou le message mypy indiquant l'absence du
     module) — dans ce cas message clair invitant à installer `mypy>=1.10`."""
+    _valider_cible(cible)
     commande = ["python3", "-m", "mypy", cible, "--ignore-missing-imports"]
     try:
         resultat = subprocess.run(
@@ -69,7 +68,7 @@ def erreurs_par_fichier(sortie_mypy: str) -> dict[str, int]:
     erreurs: dict[str, int] = {}
     pattern = re.compile(r"^(.+\.py):\d+: error:")
     for ligne in sortie_mypy.splitlines():
-        if ligne.startswith("Found ") or ligne.startswith("Success: no issues found"):
+        if ligne.startswith(("Found ", "Success: no issues found")):
             continue
         if ligne.startswith("note:"):
             continue
@@ -95,6 +94,48 @@ def fichiers_reels(racine: Path, cible: str) -> set[str]:
     }
 
 
+def _valider_borne(borne: Any, libelle: str) -> int:
+    """Valide l'objet `borne` (dict avec `total_erreurs` int >= 0 non-bool) et retourne
+    `total_erreurs`. Lève ValueError avec message explicite sinon."""
+    if not isinstance(borne, dict):
+        raise ValueError(f"{libelle} doit contenir un objet 'borne'")
+    total_erreurs = borne.get("total_erreurs")
+    if (
+        isinstance(total_erreurs, bool)
+        or not isinstance(total_erreurs, int)
+        or total_erreurs < 0
+    ):
+        raise ValueError(
+            f"{libelle}.borne.total_erreurs doit etre un entier positif ou nul"
+        )
+    return total_erreurs
+
+
+def _valider_fichiers_proteges(fichiers_proteges: Any, libelle: str) -> list[str]:
+    """Valide `fichiers_proteges` (liste de str sans doublon) et la retourne."""
+    if not isinstance(fichiers_proteges, list) or not all(
+        isinstance(f, str) for f in fichiers_proteges
+    ):
+        raise ValueError(f"{libelle}.fichiers_proteges doit etre une liste de chaines")
+    if len(set(fichiers_proteges)) != len(fichiers_proteges):
+        raise ValueError(f"{libelle}.fichiers_proteges contient des doublons")
+    return fichiers_proteges
+
+
+def _valider_dette(dette: Any, libelle: str) -> dict[str, int]:
+    """Valide `dette` (dict str->int>0 non-bool) et la retourne."""
+    if not isinstance(dette, dict):
+        raise ValueError(f"{libelle}.dette doit etre un objet")
+    for fichier, plafond in dette.items():
+        if not isinstance(fichier, str):
+            raise ValueError(f"{libelle}.dette contient une cle non chaine")
+        if isinstance(plafond, bool) or not isinstance(plafond, int) or plafond <= 0:
+            raise ValueError(
+                f"{libelle}.dette[{fichier!r}] doit etre un entier strictement positif"
+            )
+    return dette
+
+
 def _valider_base(base: Any, libelle: str) -> dict[str, Any]:
     """Valide la structure : `version` (int), `borne.total_erreurs` (int >= 0, pas un bool),
     `fichiers_proteges` (liste de str, sans doublon), `dette` (dict str->int, toutes les valeurs
@@ -109,39 +150,15 @@ def _valider_base(base: Any, libelle: str) -> dict[str, Any]:
         raise ValueError(f"{libelle}.version doit etre un entier")
 
     # borne
-    borne = base.get("borne")
-    if not isinstance(borne, dict):
-        raise ValueError(f"{libelle} doit contenir un objet 'borne'")
-    total_erreurs = borne.get("total_erreurs")
-    if (
-        isinstance(total_erreurs, bool)
-        or not isinstance(total_erreurs, int)
-        or total_erreurs < 0
-    ):
-        raise ValueError(
-            f"{libelle}.borne.total_erreurs doit etre un entier positif ou nul"
-        )
+    _valider_borne(base.get("borne"), libelle)
 
     # fichiers_proteges
-    fichiers_proteges = base.get("fichiers_proteges")
-    if not isinstance(fichiers_proteges, list) or not all(
-        isinstance(f, str) for f in fichiers_proteges
-    ):
-        raise ValueError(f"{libelle}.fichiers_proteges doit etre une liste de chaines")
-    if len(set(fichiers_proteges)) != len(fichiers_proteges):
-        raise ValueError(f"{libelle}.fichiers_proteges contient des doublons")
+    fichiers_proteges = _valider_fichiers_proteges(
+        base.get("fichiers_proteges"), libelle
+    )
 
     # dette
-    dette = base.get("dette")
-    if not isinstance(dette, dict):
-        raise ValueError(f"{libelle}.dette doit etre un objet")
-    for fichier, plafond in dette.items():
-        if not isinstance(fichier, str):
-            raise ValueError(f"{libelle}.dette contient une cle non chaine")
-        if isinstance(plafond, bool) or not isinstance(plafond, int) or plafond <= 0:
-            raise ValueError(
-                f"{libelle}.dette[{fichier!r}] doit etre un entier strictement positif"
-            )
+    dette = _valider_dette(base.get("dette"), libelle)
 
     # disjonction
     intersection = set(fichiers_proteges) & set(dette.keys())
@@ -152,6 +169,113 @@ def _valider_base(base: Any, libelle: str) -> dict[str, Any]:
         )
 
     return base
+
+
+def _anomalies_non_baselinees(
+    reels: set[str],
+    erreurs: dict[str, int],
+    proteges: set[str],
+    dette: dict[str, int],
+) -> list[str]:
+    """Règle 1 : fichier réel en erreur absent de la base (ni protégé ni en dette)."""
+    resultat: list[str] = []
+    for f in sorted(reels):
+        n = erreurs.get(f, 0)
+        if n > 0 and f not in proteges and f not in dette:
+            resultat.append(
+                f"fichier {f} en erreur ({n}) mais absent de la base (ni protege ni en dette) : "
+                "baseliner explicitement ou corriger"
+            )
+    return resultat
+
+
+def _anomalies_proteges(
+    reels: set[str],
+    erreurs: dict[str, int],
+    proteges: set[str],
+) -> list[str]:
+    """Règle 2 : régression sur un fichier protégé, ou fichier protégé disparu."""
+    resultat: list[str] = []
+    for f in sorted(proteges):
+        n = erreurs.get(f, 0)
+        if n > 0:
+            resultat.append(
+                f"fichier protege {f} desormais en erreur ({n}) : regression interdite"
+            )
+        if f not in reels:
+            resultat.append(f"fichier {f} protege mais absent du depot")
+    return resultat
+
+
+def _anomalies_dette(
+    reels: set[str],
+    erreurs: dict[str, int],
+    dette: dict[str, int],
+) -> list[str]:
+    """Règle 3 : dette dépassée, fichier en dette disparu, ou fichier devenu propre."""
+    resultat: list[str] = []
+    for f, plafond in sorted(dette.items()):
+        if f not in reels:
+            resultat.append(f"fichier {f} baselineé en dette mais absent du depot")
+        else:
+            actuel = erreurs.get(f, 0)
+            if actuel > plafond:
+                resultat.append(
+                    f"fichier {f} depasse sa dette baselinee ({actuel} > {plafond}) : regression"
+                )
+            elif actuel == 0:
+                resultat.append(
+                    f"fichier {f} baselineé en dette mais desormais propre : retirer de la dette "
+                    "(la base doit decroitre)"
+                )
+    return resultat
+
+
+def _anomalie_borne_totale(
+    reels: set[str],
+    erreurs: dict[str, int],
+    borne: int,
+) -> list[str]:
+    """Règle 4 : borne totale inconditionnelle (liste de 0 ou 1 élément)."""
+    total_actuel = sum(erreurs.get(f, 0) for f in reels)
+    if total_actuel > borne:
+        return [
+            f"le total mypy est de {total_actuel} erreurs alors que la borne est fixee a {borne} : "
+            "toute nouvelle erreur doit etre corrigee, jamais simplement re-baselinee (rebaser la "
+            "borne exige de documenter la regression, pas de l'etendre)"
+        ]
+    return []
+
+
+def _anomalies_reference(
+    dette: dict[str, int],
+    borne_totale: int,
+    reference: dict[str, Any],
+) -> list[str]:
+    """Règle 5 : comparaison avec la base de référence (aucune croissance non justifiée)."""
+    resultat: list[str] = []
+    ref_proteges = set(reference["fichiers_proteges"])
+    ref_dette = reference["dette"]
+
+    for f, plafond in sorted(dette.items()):
+        if f in ref_dette and plafond > ref_dette[f]:
+            resultat.append(
+                f"dette baselinee pour {f} augmentee depuis la reference ({plafond} > "
+                f"{ref_dette[f]}) : la base doit decroitre, jamais s'etendre"
+            )
+        if f not in ref_dette and f not in ref_proteges:
+            resultat.append(
+                f"fichier {f} ajoute a la dette baselinee, absent de la base de reference : "
+                "extension non justifiee"
+            )
+
+    if borne_totale > reference["borne"]["total_erreurs"]:
+        resultat.append(
+            f"borne totale augmentee depuis la reference ({borne_totale} > "
+            f"{reference['borne']['total_erreurs']}) : extension non justifiee"
+        )
+
+    return resultat
 
 
 def anomalies(
@@ -182,77 +306,24 @@ def anomalies(
         else None
     )
 
-    commandes_proteges = set(base_validee["fichiers_proteges"])
-    commandes_dette = base_validee["dette"]
+    proteges = set(base_validee["fichiers_proteges"])
+    dette = base_validee["dette"]
     resultat: list[str] = []
 
-    # 1. Nouveau fichier en erreur non baseliné
-    for f in sorted(reels):
-        n = erreurs.get(f, 0)
-        if n > 0 and f not in commandes_proteges and f not in commandes_dette:
-            resultat.append(
-                f"fichier {f} en erreur ({n}) mais absent de la base (ni protege ni en dette) : "
-                "baseliner explicitement ou corriger"
-            )
-
-    # 2. Fichiers protégés
-    for f in sorted(commandes_proteges):
-        n = erreurs.get(f, 0)
-        if n > 0:
-            resultat.append(
-                f"fichier protege {f} desormais en erreur ({n}) : regression interdite"
-            )
-        if f not in reels:
-            resultat.append(f"fichier {f} protege mais absent du depot")
-
-    # 3. Dette
-    for f, plafond in sorted(commandes_dette.items()):
-        if f not in reels:
-            resultat.append(f"fichier {f} baselineé en dette mais absent du depot")
-        else:
-            actuel = erreurs.get(f, 0)
-            if actuel > plafond:
-                resultat.append(
-                    f"fichier {f} depasse sa dette baselinee ({actuel} > {plafond}) : regression"
-                )
-            elif actuel == 0:
-                resultat.append(
-                    f"fichier {f} baselineé en dette mais desormais propre : retirer de la dette "
-                    "(la base doit decroitre)"
-                )
-
-    # 4. Borne totale inconditionnelle
-    borne = base_validee["borne"]["total_erreurs"]
-    total_actuel = sum(erreurs.get(f, 0) for f in reels)
-    if total_actuel > borne:
-        resultat.append(
-            f"le total mypy est de {total_actuel} erreurs alors que la borne est fixee a {borne} : "
-            "toute nouvelle erreur doit etre corrigee, jamais simplement re-baselinee (rebaser la "
-            "borne exige de documenter la regression, pas de l'etendre)"
-        )
-
-    # 5. Comparaison avec la référence
+    resultat.extend(_anomalies_non_baselinees(reels, erreurs, proteges, dette))
+    resultat.extend(_anomalies_proteges(reels, erreurs, proteges))
+    resultat.extend(_anomalies_dette(reels, erreurs, dette))
+    resultat.extend(
+        _anomalie_borne_totale(reels, erreurs, base_validee["borne"]["total_erreurs"])
+    )
     if reference_validee is not None:
-        ref_proteges = set(reference_validee["fichiers_proteges"])
-        ref_dette = reference_validee["dette"]
-
-        for f, plafond in sorted(commandes_dette.items()):
-            if f in ref_dette and plafond > ref_dette[f]:
-                resultat.append(
-                    f"dette baselinee pour {f} augmentee depuis la reference ({plafond} > "
-                    f"{ref_dette[f]}) : la base doit decroitre, jamais s'etendre"
-                )
-            if f not in ref_dette and f not in ref_proteges:
-                resultat.append(
-                    f"fichier {f} ajoute a la dette baselinee, absent de la base de reference : "
-                    "extension non justifiee"
-                )
-
-        if base_validee["borne"]["total_erreurs"] > reference_validee["borne"]["total_erreurs"]:
-            resultat.append(
-                f"borne totale augmentee depuis la reference ({base_validee['borne']['total_erreurs']} > "
-                f"{reference_validee['borne']['total_erreurs']}) : extension non justifiee"
+        resultat.extend(
+            _anomalies_reference(
+                dette,
+                base_validee["borne"]["total_erreurs"],
+                reference_validee,
             )
+        )
 
     return resultat
 
@@ -274,68 +345,14 @@ def _charger_json(chemin: Path, libelle: str) -> dict[str, Any]:
     return _valider_base(contenu, libelle)
 
 
-def _charger_base_reference_git(
-    racine: Path,
-    chemin_base: Path,
-    ref: str,
-) -> tuple[dict[str, Any] | None, str]:
-    """Charge la base depuis une reference git deja resolue."""
-    _valider_ref_git(ref)  # AVANT tout subprocess : refuse une injection d'option git
-    try:
-        subprocess.run(
-            ["git", "rev-parse", "--verify", f"{ref}^{{commit}}"],
-            cwd=str(racine),
-            check=True,
-            capture_output=True,
-            text=True,
-        )
-    except FileNotFoundError as erreur:
-        raise RuntimeError(
-            f"git indisponible pour la reference {ref!r} ; "
-            "le job CI doit utiliser fetch-depth: 0."
-        ) from erreur
-    except subprocess.CalledProcessError as erreur:
-        raise RuntimeError(
-            f"reference git {ref!r} inaccessible ; "
-            "le job CI doit utiliser fetch-depth: 0."
-        ) from erreur
-
-    try:
-        chemin_git = chemin_base.resolve().relative_to(racine.resolve()).as_posix()
-    except ValueError as erreur:
+def _valider_chemin_rapport(chemin: str) -> Path:
+    """Valide le chemin de sortie du rapport JSON : le parent doit exister."""
+    chemin_resolu = Path(chemin).resolve()
+    if not chemin_resolu.parent.is_dir():
         raise ValueError(
-            f"base {str(chemin_base)!r} hors de la racine git {str(racine)!r}"
-        ) from erreur
-
-    try:
-        resultat = subprocess.run(
-            ["git", "show", f"{ref}:{chemin_git}"],
-            cwd=str(racine),
-            check=True,
-            capture_output=True,
-            text=True,
+            f"répertoire parent introuvable pour --rapport-json {chemin!r}"
         )
-    except FileNotFoundError as erreur:
-        raise RuntimeError(
-            "git indisponible pour lire la base de reference ; "
-            "le job CI doit utiliser fetch-depth: 0."
-        ) from erreur
-    except subprocess.CalledProcessError:
-        return (
-            None,
-            "base de reference absente a cette ref : le controle de "
-            "non-croissance est inapplicable (premiere introduction).",
-        )
-
-    try:
-        contenu = json.loads(resultat.stdout)
-    except (json.JSONDecodeError, UnicodeError) as erreur:
-        raise ValueError(
-            f"base de reference git JSON invalide {chemin_git!r} sur {ref!r} : "
-            f"{erreur}"
-        ) from erreur
-
-    return _valider_base(contenu, "base de reference git"), ""
+    return chemin_resolu
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -380,41 +397,43 @@ def main(argv: list[str] | None = None) -> int:
         base_reference: dict[str, Any] | None = None
         message_reference = ""
         if arguments.base_ref_git:
-            base_reference, message_reference = _charger_base_reference_git(
+            base_reference, message_reference = gate_git_ref.charger_base_reference_git(
                 racine,
                 chemin_base,
                 arguments.base_ref_git,
+                _valider_base,
             )
 
         if message_reference:
             print(message_reference)
 
         rapport = anomalies(reels, erreurs, base, base_reference)
+
+        total = sum(erreurs.get(f, 0) for f in reels)
+        n_dette = len(base["dette"])
+        n_proteges = len(base["fichiers_proteges"])
+        for anomalie in rapport:
+            print(anomalie)
+        print(
+            f"— {total} erreur(s) mypy sur {n_dette} fichier(s) en dette (borne "
+            f"{base['borne']['total_erreurs']}), {n_proteges} fichier(s) proteges a zero tolerance"
+        )
+
+        if arguments.rapport_json:
+            chemin_rapport = _valider_chemin_rapport(arguments.rapport_json)
+            rapport_json: dict[str, Any] = {
+                "total_erreurs": total,
+                "erreurs_par_fichier": {f: n for f, n in erreurs.items() if n > 0},
+                "anomalies": rapport,
+                "fichiers_proteges": n_proteges,
+                "fichiers_en_dette": n_dette,
+            }
+            with open(chemin_rapport, "w", encoding="utf-8") as fh:
+                json.dump(rapport_json, fh, indent=2)
+                fh.write("\n")
     except (OSError, TypeError, ValueError, RuntimeError) as erreur:
         print(str(erreur), file=sys.stderr)
         return 1
-
-    total = sum(erreurs.get(f, 0) for f in reels)
-    n_dette = len(base["dette"])
-    n_proteges = len(base["fichiers_proteges"])
-    for anomalie in rapport:
-        print(anomalie)
-    print(
-        f"— {total} erreur(s) mypy sur {n_dette} fichier(s) en dette (borne "
-        f"{base['borne']['total_erreurs']}), {n_proteges} fichier(s) proteges a zero tolerance"
-    )
-
-    if arguments.rapport_json:
-        rapport_json: dict[str, Any] = {
-            "total_erreurs": total,
-            "erreurs_par_fichier": {f: n for f, n in erreurs.items() if n > 0},
-            "anomalies": rapport,
-            "fichiers_proteges": n_proteges,
-            "fichiers_en_dette": n_dette,
-        }
-        with open(arguments.rapport_json, "w", encoding="utf-8") as fh:
-            json.dump(rapport_json, fh, indent=2)
-            fh.write("\n")
 
     return 1 if rapport else 0
 

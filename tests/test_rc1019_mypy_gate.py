@@ -341,8 +341,8 @@ def test_g11_base_reference_absente_a_la_ref_retourne_none_et_message(
 
     monkeypatch.setattr(mypy_gate.subprocess, "run", fake_run)
 
-    base_reference, message = mypy_gate._charger_base_reference_git(
-        tmp_path, chemin_base, "origin/main"
+    base_reference, message = mypy_gate.gate_git_ref.charger_base_reference_git(
+        tmp_path, chemin_base, "origin/main", mypy_gate._valider_base
     )
 
     assert base_reference is None
@@ -411,3 +411,146 @@ def test_g13_rapport_json_contient_cles_attendues(tmp_path, monkeypatch):
     assert "anomalies" in contenu
     assert contenu["total_erreurs"] == 1
     assert any("src/forgeai/a.py" in anomalie for anomalie in contenu["anomalies"])
+
+
+# ---------------------------------------------------------------------------
+# Correctif SonarCloud #449 — étape 4/4
+# ---------------------------------------------------------------------------
+
+def test_g14_rapport_json_chemin_invalide_ne_plante_pas_main(tmp_path, monkeypatch):
+    (tmp_path / "src" / "forgeai").mkdir(parents=True)
+    (tmp_path / "src" / "forgeai" / "a.py").write_text("x = 1\n", encoding="utf-8")
+    chemin_base = tmp_path / "base.json"
+    chemin_base.write_text(json.dumps(_base()), encoding="utf-8")
+    monkeypatch.setattr(
+        mypy_gate, "executer_mypy",
+        lambda racine, cible: "Success: no issues found in 1 source file\n",
+    )
+    chemin_invalide = str(tmp_path / "inexistant" / "rapport.json")
+    code = mypy_gate.main([
+        "--racine", str(tmp_path), "--base", str(chemin_base),
+        "--rapport-json", chemin_invalide,
+    ])
+    assert code == 1
+
+
+# ---------------------------------------------------------------------------
+# Tests RÉELS de executer_mypy (ferme l'écart de couverture)
+# ---------------------------------------------------------------------------
+
+def test_g15_executer_mypy_construit_la_commande_attendue(tmp_path, monkeypatch):
+    """subprocess.run doit être appelé avec la commande exacte et les options de capture."""
+    captured = {}
+
+    def fake_run(args, **kwargs):
+        captured["args"] = args
+        captured["kwargs"] = kwargs
+
+        class Result:
+            stdout = ""
+            stderr = ""
+            returncode = 0
+
+        return Result()
+
+    monkeypatch.setattr(mypy_gate.subprocess, "run", fake_run)
+
+    resultat = mypy_gate.executer_mypy(tmp_path, "src/forgeai")
+
+    assert resultat == ""
+    assert captured["args"] == [
+        "python3",
+        "-m",
+        "mypy",
+        "src/forgeai",
+        "--ignore-missing-imports",
+    ]
+    assert captured["kwargs"]["cwd"] == str(tmp_path)
+    assert captured["kwargs"]["capture_output"] is True
+    assert captured["kwargs"]["text"] is True
+
+
+def test_g15b_executer_mypy_retourne_stdout_stderr(tmp_path, monkeypatch):
+    """executer_mypy doit concaténer stdout et stderr."""
+    class Result:
+        stdout = "STDOUT\n"
+        stderr = "STDERR\n"
+        returncode = 1
+
+    monkeypatch.setattr(mypy_gate.subprocess, "run", lambda *a, **k: Result())
+    assert mypy_gate.executer_mypy(tmp_path, "src/forgeai") == "STDOUT\nSTDERR\n"
+
+
+@pytest.mark.parametrize(
+    "message",
+    [
+        "No module named mypy",
+        "No module named 'mypy'",
+    ],
+)
+def test_g15c_executer_mypy_erreur_si_module_mypy_absent(tmp_path, monkeypatch, message):
+    """executer_mypy lève RuntimeError avec mention mypy>=1.10 quand mypy n'est pas installé."""
+    class Result:
+        stdout = message + "\n"
+        stderr = ""
+        returncode = 1
+
+    monkeypatch.setattr(mypy_gate.subprocess, "run", lambda *a, **k: Result())
+    with pytest.raises(RuntimeError, match="mypy>=1.10"):
+        mypy_gate.executer_mypy(tmp_path, "src/forgeai")
+
+
+def test_g15d_executer_mypy_erreur_si_python3_introuvable(tmp_path, monkeypatch):
+    """executer_mypy convertit FileNotFoundError en RuntimeError explicite."""
+    def fake_run(*args, **kwargs):
+        raise FileNotFoundError
+
+    monkeypatch.setattr(mypy_gate.subprocess, "run", fake_run)
+    with pytest.raises(RuntimeError, match="python3 introuvable"):
+        mypy_gate.executer_mypy(tmp_path, "src/forgeai")
+
+
+def test_g15e_executer_mypy_refuse_cible_invalide_avant_subprocess(tmp_path, monkeypatch):
+    """Une cible invalide doit être refusée AVANT tout appel à subprocess.run."""
+    def boom(*args, **kwargs):
+        raise AssertionError(
+            "subprocess.run ne doit pas etre appele pour une cible invalide"
+        )
+
+    monkeypatch.setattr(mypy_gate.subprocess, "run", boom)
+    with pytest.raises(ValueError, match="cible mypy invalide"):
+        mypy_gate.executer_mypy(tmp_path, "--evil")
+
+
+# ---------------------------------------------------------------------------
+# Tests de _valider_cible
+# ---------------------------------------------------------------------------
+
+def test_g16_valider_cible_refuse_vide():
+    with pytest.raises(ValueError, match="cible mypy invalide"):
+        mypy_gate._valider_cible("")
+
+
+def test_g16b_valider_cible_refuse_prefixe_tiret():
+    with pytest.raises(ValueError, match="cible mypy invalide"):
+        mypy_gate._valider_cible("-cible")
+
+
+def test_g16c_valider_cible_accepte_cible_normale():
+    mypy_gate._valider_cible("src/forgeai")  # ne doit pas lever
+
+
+# ---------------------------------------------------------------------------
+# Tests de _valider_chemin_rapport
+# ---------------------------------------------------------------------------
+
+def test_g17_valider_chemin_rapport_accepte_repertoire_parent_existant(tmp_path):
+    chemin = mypy_gate._valider_chemin_rapport(str(tmp_path / "rapport.json"))
+    assert isinstance(chemin, Path)
+    assert chemin == (tmp_path / "rapport.json").resolve()
+
+
+def test_g17b_valider_chemin_rapport_refuse_parent_inexistant(tmp_path):
+    chemin = tmp_path / "inexistant" / "rapport.json"
+    with pytest.raises(ValueError, match="--rapport-json"):
+        mypy_gate._valider_chemin_rapport(str(chemin))

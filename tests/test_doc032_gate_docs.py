@@ -297,6 +297,9 @@ def test_charger_base_reference_git_refuse_avant_tout_subprocess(tmp_path, monke
         raise AssertionError(
             "subprocess.run() ne doit jamais etre appele pour un ref refuse par la garde amont"
         )
-    monkeypatch.setattr(gate_docs.subprocess, "run", _boom)
+    # RC1-019 (#449) : le subprocess.run() réel vit désormais dans gate_git_ref (module partagé
+    # avec mypy_gate.py) — gate_docs._charger_base_reference_git y délègue entièrement, plus
+    # aucun subprocess.run n'est atteignable via gate_docs.subprocess lui-même.
+    monkeypatch.setattr(gate_docs.gate_git_ref.subprocess, "run", _boom)
     with pytest.raises(ValueError, match="reference git invalide"):
         gate_docs._charger_base_reference_git(tmp_path, tmp_path / "base.json", "--evil=1")

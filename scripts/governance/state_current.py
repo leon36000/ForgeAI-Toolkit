@@ -225,7 +225,20 @@ def _cli_commands(repo_root: Path) -> list[str]:
     if spec is None or spec.loader is None:
         raise ValueError(f"chargement impossible: {gate_path}")
     module = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(module)
+    # RC1-019 (#449) : gate_docs.py importe désormais gate_git_ref (module partagé sibling,
+    # scripts/gate_git_ref.py). Un chargement par chemin (spec_from_file_location) ne place PAS
+    # le dossier parent sur sys.path — sans cette ligne, `import gate_git_ref` lève
+    # ModuleNotFoundError alors que `python3 scripts/gate_docs.py` fonctionne (Python ajoute
+    # automatiquement le dossier du script lancé directement).
+    dossier_scripts = str(gate_path.parent)
+    ajoute = dossier_scripts not in sys.path
+    if ajoute:
+        sys.path.insert(0, dossier_scripts)
+    try:
+        spec.loader.exec_module(module)
+    finally:
+        if ajoute:
+            sys.path.remove(dossier_scripts)
     first_level = set(module.sous_commandes(cli_path))
 
     try:
