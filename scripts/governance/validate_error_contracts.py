@@ -466,8 +466,15 @@ def _erreurs_date_revision(
     aujourd_hui: dt.date,
     date_maximale: dt.date,
 ) -> list[str]:
+    # Round 33 (#452) — objection GPT-5.6-Terra-Pro (revue scellée) : str(review_due) convertit
+    # SILENCIEUSEMENT tout type en chaîne avant l'appel à _date() — un entier JSON comme
+    # 20270210 devient la chaîne "20270210", que date.fromisoformat() ACCEPTE (format ISO 8601
+    # compact, Python 3.11+, vérifié empiriquement) sans jamais signaler que le type déclaré
+    # (entier, pas chaîne) est invalide. Type vérifié explicitement AVANT toute conversion.
+    if not isinstance(review_due, str):
+        return [f"{identifiant} : review_due doit être une chaîne (date ISO), pas {type(review_due).__name__}"]
     try:
-        echeance = _date(str(review_due))
+        echeance = _date(review_due)
     except (TypeError, ValueError):
         return [f"{identifiant} : review_due doit être une date ISO valide"]
 

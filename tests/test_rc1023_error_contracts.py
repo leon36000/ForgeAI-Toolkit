@@ -613,6 +613,23 @@ def test_review_due_malformee_detectee(tmp_path: Path) -> None:
     assert any("review_due doit être une date ISO valide" in e for e in erreurs)
 
 
+def test_review_due_entier_iso_compact_detecte(tmp_path: Path) -> None:
+    """Round 33 (#452) — objection GPT-5.6-Terra-Pro (revue scellée) : str(review_due) convertit
+    silencieusement tout type en chaîne avant l'appel à date.fromisoformat() — un entier JSON
+    20270210 devient la chaîne "20270210", que Python 3.11+ ACCEPTE (format ISO 8601 compact),
+    sans jamais signaler que le type déclaré (entier, pas chaîne) est invalide."""
+    _creer_fichier_source(
+        tmp_path,
+        "src/forgeai/example.py",
+        "try:\n    pass\nexcept ValueError:\n    pass\n",
+    )
+    contrat = _entree_valide(review_due=20270210)
+    _ecrire_inventaire(tmp_path, [contrat])
+
+    erreurs = VALIDATEUR.valider(tmp_path, aujourd_hui=dt.date(2026, 1, 1))
+    assert any("review_due doit être une chaîne" in e for e in erreurs)
+
+
 def test_compensating_test_et_reason_tous_deux_null_detectes(tmp_path: Path) -> None:
     _creer_fichier_source(
         tmp_path,
