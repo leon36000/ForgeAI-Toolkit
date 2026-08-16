@@ -68,7 +68,7 @@ def _receipt():
         "head_tree": "d" * 40,
         "diff_digest": __import__("hashlib").sha256(b"").hexdigest(),
         "prompt_sha256": SHA,
-        "reviewers_attendus": ["deepseek", "gemini", "longcat"],
+        "reviewers_attendus": ["deepseek", "gemini_flash", "mimo"],
         "codeur": ["fable"],
         "resultat": "APPROVE",
         "date_heure": DATE,
@@ -109,21 +109,21 @@ def test_gate_priorite_evidence_reviews_sur_reviews_si_les_deux_existent(tmp_pat
 
 def test_gate_ok_si_toutes_approve(tmp_path):
     root = tmp_path / "reviews"
-    _make_review(root, "S-1", [_verdict("deepseek"), _verdict("gemini"), _verdict("longcat")])
+    _make_review(root, "S-1", [_verdict("deepseek"), _verdict("gemini_flash"), _verdict("mimo")])
     ok, report = gate.check(_manifest(tmp_path, ["S-1"]), root)
     assert ok is True and any("OK" in line for line in report)
 
 
 def test_gate_bloque_si_reject(tmp_path):
     root = tmp_path / "reviews"
-    _make_review(root, "S-2", [_verdict("deepseek"), _verdict("gemini", "REJECT"), _verdict("longcat")])
+    _make_review(root, "S-2", [_verdict("deepseek"), _verdict("gemini_flash", "REJECT"), _verdict("mimo")])
     ok, report = gate.check(_manifest(tmp_path, ["S-2"]), root)
     assert ok is False and any("ECHEC" in line and "REJECT" in line for line in report)
 
 
 def test_gate_bloque_si_moins_de_3_vendors(tmp_path):
     root = tmp_path / "reviews"
-    _make_review(root, "S-3", [_verdict("deepseek"), _verdict("gemini")])
+    _make_review(root, "S-3", [_verdict("deepseek"), _verdict("gemini_flash")])
     ok, report = gate.check(_manifest(tmp_path, ["S-3"]), root)
     assert ok is False and any("INVALIDE" in line for line in report)
 
@@ -137,7 +137,7 @@ def test_gate_bloque_si_dossier_absent(tmp_path):
 
 def test_gate_ignore_commentaires_et_lignes_vides(tmp_path):
     root = tmp_path / "reviews"
-    _make_review(root, "S-4", [_verdict("deepseek"), _verdict("gemini"), _verdict("qwen37max")])
+    _make_review(root, "S-4", [_verdict("deepseek"), _verdict("gemini_flash"), _verdict("qwen_37")])
     ok, _ = gate.check(_manifest(tmp_path, ["# commentaire", "", "S-4", "  # autre"]), root)
     assert ok is True
 
@@ -151,7 +151,7 @@ def test_gate_traversee_chemin_rejetee(tmp_path):
 
 def test_mode_pr_echoue_sans_recu_couvrant(tmp_path):
     root = tmp_path / "reviews"
-    _make_review(root, "S", [_verdict("deepseek"), _verdict("gemini"), _verdict("longcat")])
+    _make_review(root, "S", [_verdict("deepseek"), _verdict("gemini_flash"), _verdict("mimo")])
     ok, report = gate.check(
         _manifest(tmp_path, ["S"]),
         root,
@@ -165,7 +165,7 @@ def test_mode_pr_echoue_sans_recu_couvrant(tmp_path):
 def test_mode_pr_reussit_avec_recu_valide(tmp_path):
     root = tmp_path / "reviews"
     directory = _make_review(
-        root, "S", [_verdict("deepseek"), _verdict("gemini"), _verdict("longcat")]
+        root, "S", [_verdict("deepseek"), _verdict("gemini_flash"), _verdict("mimo")]
     )
     (directory / "RECU.json").write_text(json.dumps(_receipt()), encoding="utf-8")
     ok, report = gate.check(
@@ -181,7 +181,7 @@ def test_mode_pr_reussit_avec_recu_valide(tmp_path):
 def test_mode_archive_rejette_recu_commit_non_fusionne(tmp_path):
     root = tmp_path / "reviews"
     directory = _make_review(
-        root, "S", [_verdict("deepseek"), _verdict("gemini"), _verdict("longcat")]
+        root, "S", [_verdict("deepseek"), _verdict("gemini_flash"), _verdict("mimo")]
     )
     (directory / "RECU.json").write_text(json.dumps(_receipt()), encoding="utf-8")
 
@@ -200,7 +200,7 @@ def test_mode_archive_recu_malforme_echoue_proprement(tmp_path):
     # attrapée sur receipt["head_commit"] — doit produire un échec contrôlé, jamais planter.
     root = tmp_path / "reviews"
     directory = _make_review(
-        root, "S", [_verdict("deepseek"), _verdict("gemini"), _verdict("longcat")]
+        root, "S", [_verdict("deepseek"), _verdict("gemini_flash"), _verdict("mimo")]
     )
     (directory / "RECU.json").write_text("[]", encoding="utf-8")
 
@@ -212,7 +212,7 @@ def test_mode_archive_recu_malforme_echoue_proprement(tmp_path):
 def test_mode_archive_accepte_recu_ancetre_valide(tmp_path):
     root = tmp_path / "reviews"
     directory = _make_review(
-        root, "S", [_verdict("deepseek"), _verdict("gemini"), _verdict("longcat")]
+        root, "S", [_verdict("deepseek"), _verdict("gemini_flash"), _verdict("mimo")]
     )
     (directory / "RECU.json").write_text(json.dumps(_receipt()), encoding="utf-8")
 
@@ -266,7 +266,7 @@ def test_gate_verdict_illisible_echoue_proprement(tmp_path):
 def test_mode_pr_recu_illisible_echoue_proprement(tmp_path):
     root = tmp_path / "reviews"
     directory = _make_review(
-        root, "S", [_verdict("deepseek"), _verdict("gemini"), _verdict("longcat")]
+        root, "S", [_verdict("deepseek"), _verdict("gemini_flash"), _verdict("mimo")]
     )
     (directory / "RECU.json").write_text("{pas du json valide", encoding="utf-8")
 
@@ -286,14 +286,14 @@ def test_mode_pr_ignore_recu_historique_non_couvrant(tmp_path):
     # changement courant, jamais parce qu'un reçu HISTORIQUE ne le couvre plus.
     root = tmp_path / "reviews"
     ancienne = _make_review(
-        root, "S-ancienne", [_verdict("deepseek"), _verdict("gemini"), _verdict("longcat")]
+        root, "S-ancienne", [_verdict("deepseek"), _verdict("gemini_flash"), _verdict("mimo")]
     )
     recu_ancien = _receipt()
     recu_ancien["base_commit"] = "e" * 40  # ne correspond plus au merge-base courant ("b"*40)
     (ancienne / "RECU.json").write_text(json.dumps(recu_ancien), encoding="utf-8")
 
     courante = _make_review(
-        root, "S-courante", [_verdict("deepseek"), _verdict("gemini"), _verdict("longcat")]
+        root, "S-courante", [_verdict("deepseek"), _verdict("gemini_flash"), _verdict("mimo")]
     )
     (courante / "RECU.json").write_text(json.dumps(_receipt()), encoding="utf-8")
 
@@ -313,7 +313,7 @@ def test_mode_pr_ignore_recu_historique_non_couvrant(tmp_path):
 def test_mode_pr_recu_invalide_rapporte_raison(tmp_path):
     root = tmp_path / "reviews"
     directory = _make_review(
-        root, "S", [_verdict("deepseek"), _verdict("gemini"), _verdict("longcat")]
+        root, "S", [_verdict("deepseek"), _verdict("gemini_flash"), _verdict("mimo")]
     )
     recu = _receipt()
     recu["base_commit"] = "x" * 40
@@ -328,7 +328,7 @@ def test_mode_pr_recu_invalide_rapporte_raison(tmp_path):
 
 def test_main_argv_reussit_avec_manifeste_valide(monkeypatch, tmp_path, capsys):
     root = tmp_path / "reviews"
-    _make_review(root, "S", [_verdict("deepseek"), _verdict("gemini"), _verdict("longcat")])
+    _make_review(root, "S", [_verdict("deepseek"), _verdict("gemini_flash"), _verdict("mimo")])
     manifest = _manifest(tmp_path, ["S"])
 
     rc = gate.main(["--manifest", str(manifest), "--reviews-root", str(root)])
@@ -352,7 +352,7 @@ def test_main_argv_echoue_avec_manifeste_invalide(monkeypatch, tmp_path, capsys)
 
 def test_defaut_sans_drapeau_comportement_inchange(tmp_path):
     root = tmp_path / "reviews"
-    _make_review(root, "S", [_verdict("deepseek"), _verdict("gemini"), _verdict("longcat")])
+    _make_review(root, "S", [_verdict("deepseek"), _verdict("gemini_flash"), _verdict("mimo")])
     ok, report = gate.check(_manifest(tmp_path, ["S"]), root)
     assert ok is True and any("APPROVE" in line for line in report)
 
