@@ -3,10 +3,10 @@
   "dossier": "RC1-009",
   "issue": 509,
   "round": 5,
-  "base_commit": "cf10af9565654774b6ea696bffc2e6f7dc016904",
-  "head_commit": "03a8eb45821309dd368eb9a8cc00912f46a98568",
-  "head_tree": "ad957ca68c5ebae6c533f74727f5ada20548e445",
-  "diff_digest": "f79c12d31ecb13cabb84470cd54ab580eb0d01cb330e6bf8b22725432c5ad9d6",
+  "base_commit": "101b5a8a90e768a558faa732f83fcf84b4a4295f",
+  "head_commit": "3364ccbf7f9ca3265d7cb76555feb3fed31ef3d8",
+  "head_tree": "a694d2ac1c47003bf134c0dd0a6ba0a570dd373a",
+  "diff_digest": "9e00ff1df7891b9284da9feabff59bbd547960e524256f8250a9a0ec5024d1d1",
   "prompt_sha256": "48d6cc793a0b8619132261c0e489cdf07ed57a2b0ccf8b7265acadf289cc6f26",
   "reviewers_attendus": [
     "DeepSeek-V4-Pro",
@@ -17,6 +17,6 @@
     "fable"
   ],
   "resultat": "APPROVE",
-  "date_heure": "2026-08-16T02:38:53.986101-04:00",
+  "date_heure": "2026-08-16T04:16:00.248185-04:00",
   "fenetre_heures": 24
 }
