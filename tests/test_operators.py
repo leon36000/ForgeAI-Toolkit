@@ -305,3 +305,52 @@ def test_detect_liste_helm_non_vide_continue_de_detecter_la_release():
     assert st.present is True
     assert st.source == "helm"
     assert st.version == "external-secrets-2.7.0"
+
+
+# --- Bug #492 : gestion des listes Helm contenant des éléments non-dict ---
+# Découvert pendant #482 (PR #491) par la sonde adversariale de tentative de contournement
+# (règle 6, campagne #481). `fetch_releases_helm()` garantit une LISTE (isinstance(list),
+# fix #482) mais ne garantissait pas que chaque ÉLÉMENT de cette liste soit un dict : un JSON
+# valide type `[1, 2, 3]` faisait lever `AttributeError` par `rel.get(...)` dans detect(),
+# hors de tout try/except. Défaut latent d'origine (confirmé sur b1f709b), pas une régression
+# du refactor #427 ni de #482.
+
+def test_detect_helm_liste_tous_elements_non_dict_retombe_sur_crd():
+    crd = "externalsecrets.external-secrets.io"
+    sortie = json.dumps([1, 2, 3])
+    r = _Runner({
+        "helm list": (0, sortie),
+        f"get crd {crd}": (
+            0,
+            f"customresourcedefinition.apiextensions.k8s.io/{crd}",
+        ),
+    })
+
+    st = detect("external-secrets-operator", r)
+
+    assert st.present is True
+    assert st.source == "crd"
+
+
+def test_detect_helm_liste_mixte_ignore_elements_non_dict_et_detecte_release():
+    sortie = json.dumps([
+        None,
+        1,
+        {"name": "external-secrets", "chart": "external-secrets-2.7.0"},
+    ])
+    r = _Runner({"helm list": (0, sortie)})
+
+    st = detect("external-secrets-operator", r)
+
+    assert st.present is True
+    assert st.source == "helm"
+    assert st.version == "external-secrets-2.7.0"
+
+
+def test_fetch_releases_helm_filtre_les_elements_non_dict():
+    sortie = json.dumps([1, 2, {"name": "x"}])
+    r = _Runner({"helm list": (0, sortie)})
+
+    releases = fetch_releases_helm(r)
+
+    assert releases == [{"name": "x"}]
