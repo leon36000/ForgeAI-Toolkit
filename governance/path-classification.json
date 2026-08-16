@@ -8383,8 +8383,8 @@
         }
       ],
       "rule_id": "evidence-reviews-root",
-      "sha256": "8bfe65872f67af6ee0ae3dc83d9516cc61f4d8808e71415009ebaf81277d81ea",
-      "size": 2590,
+      "sha256": "eafcb0bfc9c76213ae772cd9dd7c8137d8f7329447294f38edd934493fe5bcf4",
+      "size": 2601,
       "target_path": null,
       "type": "text"
     },
@@ -21095,6 +21095,58 @@
       "generated": false,
       "load_bearing": true,
       "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-542-v1/GPT-5.6-Terra-Pro.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "004c16bb2b02d6012322d5e663f3d0489e460353ba79ae245aee96f76e951f51",
+      "size": 334,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-542-v1/MiMo-Pro-V2.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "1791a1cd10262d93a0b67b8d0e3ee2123616b4567e2d2c7a554826cd9f5d12d8",
+      "size": 324,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-542-v1/Qwen3.7-Max.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "fef36ab3be4d084db947aae0ca614dcb5924e525ad67d689a51097c55d083ace",
+      "size": 990,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-542-v1/RECU.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "365a2dbe0b9add29fb3d2717fdfe0c74be024aef6645cf3be764847347877d67",
+      "size": 677,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
       "path": "evidence/reviews/README.md",
       "referenced_by": [],
       "rule_id": "evidence-reviews-root",
@@ -29698,6 +29750,13 @@
           "candidate": "scripts/registre.py",
           "line": 472,
           "referrer": "evidence/audit-output/audit-exhaustif-2026-08-05/findings.json",
+          "resolved": "scripts/registre.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "scripts/registre.py",
+          "line": 6,
+          "referrer": "evidence/reviews/RC1-542-v1/Qwen3.7-Max.verdict.json",
           "resolved": "scripts/registre.py",
           "severity": "hard"
         },
@@ -88869,6 +88928,31 @@
         "referrer": "evidence/reviews/RC1-538/RECU.json"
       },
       {
+        "candidate": "./",
+        "line": 7,
+        "referrer": "evidence/reviews/RC1-542-v1/Qwen3.7-Max.verdict.json"
+      },
+      {
+        "candidate": "./Registres/mission.jsonl",
+        "line": 7,
+        "referrer": "evidence/reviews/RC1-542-v1/Qwen3.7-Max.verdict.json"
+      },
+      {
+        "candidate": "./Registres/",
+        "line": 7,
+        "referrer": "evidence/reviews/RC1-542-v1/Qwen3.7-Max.verdict.json"
+      },
+      {
+        "candidate": "./Registres/x",
+        "line": 8,
+        "referrer": "evidence/reviews/RC1-542-v1/Qwen3.7-Max.verdict.json"
+      },
+      {
+        "candidate": "recu-revue/1",
+        "line": 2,
+        "referrer": "evidence/reviews/RC1-542-v1/RECU.json"
+      },
+      {
         "candidate": "reviews/",
         "line": 1,
         "referrer": "evidence/reviews/README.md"
@@ -131393,6 +131477,13 @@
         "severity": "hard"
       },
       {
+        "candidate": "RC1-542-v1",
+        "line": 188,
+        "referrer": "evidence/reviews/BINDING.txt",
+        "resolved": "evidence/reviews/RC1-542-v1",
+        "severity": "hard"
+      },
+      {
         "candidate": "scripts/gate_docs.py",
         "line": 11,
         "referrer": "sonar-project.properties",
@@ -145120,6 +145211,13 @@
         "severity": "hard"
       },
       {
+        "candidate": "scripts/registre.py",
+        "line": 6,
+        "referrer": "evidence/reviews/RC1-542-v1/Qwen3.7-Max.verdict.json",
+        "resolved": "scripts/registre.py",
+        "severity": "hard"
+      },
+      {
         "candidate": ".github/workflows/gates.yml",
         "line": 6,
         "referrer": "evidence/reviews/REG-029B/Qwen3.7-Max.verdict.json",
@@ -155977,7 +156075,7 @@
     "by_class": {
       "ARCHIVE": 44,
       "DOCS": 17,
-      "EVIDENCE": 1445,
+      "EVIDENCE": 1449,
       "GENERATED": 5,
       "GOVERNANCE": 184,
       "PRODUCT": 112,
@@ -155996,7 +156094,7 @@
       "evidence-audit-output-root": 18,
       "evidence-dedup-root": 2,
       "evidence-registres-root": 35,
-      "evidence-reviews-root": 1390,
+      "evidence-reviews-root": 1394,
       "generated-authority-map": 1,
       "generated-path-classification-json": 1,
       "generated-path-classification-markdown": 1,
@@ -156032,11 +156130,11 @@
       "working-sandbox-readme": 1
     },
     "case_collisions_total": 0,
-    "dangling_references_total": 15779,
+    "dangling_references_total": 15784,
     "generated_total": 9,
-    "load_bearing_total": 1887,
+    "load_bearing_total": 1891,
     "portability_violations_total": 0,
-    "tracked_total": 2024,
+    "tracked_total": 2028,
     "unclassified_total": 0,
     "unicode_anomalies_total": 0
   },
