@@ -110,7 +110,7 @@
       ],
       "digest": {
         "policy": "content_sha256",
-        "value": "610b8909fb90dae68b32898b6b66aff521090237a0d60fd559436421687753ec",
+        "value": "98bd01792fb534a997d44912446771c1c05ee2bd2d09dcda4fc2a0a6dbfd432f",
         "checked_at": "2026-08-15",
         "delegated_to": null
       },
@@ -375,7 +375,7 @@
     {
       "id": "coord.active-claims",
       "title": "Claims actifs de coordination",
-      "path": "coordination/active-claims.json",
+      "path": "archive/coordination/active-claims.json",
       "anchor": null,
       "kind": "data",
       "scope": "coordination_ops",
@@ -405,7 +405,7 @@
     {
       "id": "coord.work-packages",
       "title": "Packages de travail de coordination",
-      "path": "coordination/work-packages.json",
+      "path": "archive/coordination/work-packages.json",
       "anchor": null,
       "kind": "data",
       "scope": "coordination_ops",

@@ -103,11 +103,11 @@
         "sha256": "f7613771529577fea8e04869a3b911144b8aece2bc8bcc214fa41e8503c39bfb"
       },
       {
-        "path": "coordination/active-claims.json",
+        "path": "archive/coordination/active-claims.json",
         "sha256": "fd785a5d2be1f007a3c626ec23f49a2fd5496b43ca222f06355ad463f86649c8"
       },
       {
-        "path": "coordination/work-packages.json",
+        "path": "archive/coordination/work-packages.json",
         "sha256": "8952b9c2ab50546782a129e59999e5df23305a6fca315438510865b4a1633d54"
       },
       {
@@ -744,7 +744,7 @@
       },
       {
         "path": "tests/test_state_current.py",
-        "sha256": "7377a24e8b66cce693f7466f64bfdaa2ce451860076fa0d5997f273317b4edc5"
+        "sha256": "9ed30f3a8ed62da9929aa947cd08aa93c35a1214b99debdd95a449ff2aac86a6"
       },
       {
         "path": "tests/test_supply018.py",
