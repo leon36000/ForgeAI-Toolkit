@@ -6205,8 +6205,8 @@
         }
       ],
       "rule_id": "evidence-registres-root",
-      "sha256": "9f90134bfbb048bab4c78cd0636e218cf7ebccf1292e011509c23903f41c3d05",
-      "size": 370125,
+      "sha256": "55630a2b478d3a6df5114a8e7b9bc07340372f30c4fc0b6e9272fce8db16d748",
+      "size": 371661,
       "target_path": null,
       "type": "text"
     },
@@ -8124,8 +8124,8 @@
         }
       ],
       "rule_id": "evidence-reviews-root",
-      "sha256": "8ad185fd7c177a3544d9e48f21558af7aecfda32a1b14a0560e9b2ee43b7b1f8",
-      "size": 2545,
+      "sha256": "daffed46e92f536388bd1b26649e6d52e245be9d4159d37200dea3e25125cdef",
+      "size": 2556,
       "target_path": null,
       "type": "text"
     },
@@ -18971,6 +18971,19 @@
       "rule_id": "evidence-reviews-root",
       "sha256": "e0bba4c39ee357f064cf728062079db07053e1553c861be1bec3ad0375d6c853",
       "size": 1183,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-013-v3/RECU.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "c7f8231c7d1fa2d63e04e229a3e3b52f66cee21b4cf96941035969cc2a6ac485",
+      "size": 676,
       "target_path": null,
       "type": "text"
     },
@@ -84902,6 +84915,11 @@
         "referrer": "evidence/reviews/RC1-013-v2/Qwen3.7-Max.verdict.json"
       },
       {
+        "candidate": "recu-revue/1",
+        "line": 2,
+        "referrer": "evidence/reviews/RC1-013-v3/RECU.json"
+      },
+      {
         "candidate": "FR/EN",
         "line": 7,
         "referrer": "evidence/reviews/RC1-013/DeepSeek-V4-Pro.verdict.json"
@@ -124828,6 +124846,13 @@
         "severity": "hard"
       },
       {
+        "candidate": "RC1-013-v3",
+        "line": 184,
+        "referrer": "evidence/reviews/BINDING.txt",
+        "resolved": "evidence/reviews/RC1-013-v3",
+        "severity": "hard"
+      },
+      {
         "candidate": "scripts/gate_docs.py",
         "line": 11,
         "referrer": "sonar-project.properties",
@@ -147389,7 +147414,7 @@
     "by_class": {
       "ARCHIVE": 44,
       "DOCS": 16,
-      "EVIDENCE": 1371,
+      "EVIDENCE": 1372,
       "GENERATED": 5,
       "GOVERNANCE": 177,
       "PRODUCT": 112,
@@ -147407,7 +147432,7 @@
       "docs-user": 13,
       "evidence-audit-output-root": 18,
       "evidence-registres-root": 35,
-      "evidence-reviews-root": 1318,
+      "evidence-reviews-root": 1319,
       "generated-authority-map": 1,
       "generated-path-classification-json": 1,
       "generated-path-classification-markdown": 1,
@@ -147443,11 +147468,11 @@
       "working-sandbox-readme": 1
     },
     "case_collisions_total": 0,
-    "dangling_references_total": 15084,
+    "dangling_references_total": 15085,
     "generated_total": 7,
-    "load_bearing_total": 1804,
+    "load_bearing_total": 1805,
     "portability_violations_total": 0,
-    "tracked_total": 1937,
+    "tracked_total": 1938,
     "unclassified_total": 0,
     "unicode_anomalies_total": 0
   },
