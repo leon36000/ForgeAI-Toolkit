@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hashlib
 import json
 import sys
 from pathlib import Path
@@ -1167,3 +1168,146 @@ def test_g34e_anomalies_reference_sans_type_ignore_retrocompatible():
         "type_ignore" in m and "a.py" in m and "absent de la reference" in m
         for m in anomalies
     )
+
+
+# ---------------------------------------------------------------------------
+# Correctif post-revue scellée #449 (round 14) — empreintes de contenu type_ignore
+# ---------------------------------------------------------------------------
+
+def test_g35_contenus_type_ignore_capture_une_empreinte(tmp_path):
+    chemin = tmp_path / "a.py"
+    chemin.write_bytes(b"x = 1  # type: ignore\n")
+    attendu = hashlib.sha256(b"x = 1  # type: ignore").hexdigest()
+    assert mypy_gate.contenus_type_ignore(tmp_path, {"a.py"}) == {"a.py": {attendu}}
+
+
+def test_g35b_contenus_type_ignore_deux_lignes_identiques_apres_strip_une_seule_empreinte(tmp_path):
+    chemin = tmp_path / "a.py"
+    chemin.write_bytes(b"    x = 1  # type: ignore\nx = 1  # type: ignore\n")
+    assert len(mypy_gate.contenus_type_ignore(tmp_path, {"a.py"})["a.py"]) == 1
+
+
+def test_g35c_contenus_type_ignore_fichier_sans_occurrence_absent_du_resultat(tmp_path):
+    chemin = tmp_path / "a.py"
+    chemin.write_bytes(b"x = 1\n")
+    assert mypy_gate.contenus_type_ignore(tmp_path, {"a.py"}) == {}
+
+
+def test_g36_anomalies_signale_ligne_type_ignore_non_baselinee():
+    base = {
+        "version": 1,
+        "borne": {"total_erreurs": 0},
+        "fichiers_proteges": [],
+        "dette": {},
+        "type_ignore": {"a.py": 1},
+        "type_ignore_lignes": {"a.py": ["deadbeef" * 8]},
+    }
+    anomalies = mypy_gate.anomalies(
+        reels={"a.py"},
+        erreurs={},
+        base=base,
+        base_reference=None,
+        occurrences={"a.py": 1},
+        contenus={"a.py": {"cafebabe" * 8}},
+    )
+    assert any("non baselinee" in m and "a.py" in m for m in anomalies)
+
+
+def test_g36b_anomalies_meme_empreinte_que_baseline_aucune_anomalie():
+    base = {
+        "version": 1,
+        "borne": {"total_erreurs": 0},
+        "fichiers_proteges": [],
+        "dette": {},
+        "type_ignore": {"a.py": 1},
+        "type_ignore_lignes": {"a.py": ["cafebabe" * 8]},
+    }
+    anomalies = mypy_gate.anomalies(
+        reels={"a.py"},
+        erreurs={},
+        base=base,
+        base_reference=None,
+        occurrences={"a.py": 1},
+        contenus={"a.py": {"cafebabe" * 8}},
+    )
+    assert anomalies == []
+
+
+def test_g36c_anomalies_sans_contenus_aucune_regression():
+    anomalies = mypy_gate.anomalies(
+        reels={"a.py"},
+        erreurs={},
+        base=_base(total_erreurs=0),
+        base_reference=None,
+    )
+    assert anomalies == []
+
+
+def test_g37_anomalies_reference_signale_empreinte_type_ignore_lignes_ajoutee():
+    base = {
+        "version": 1,
+        "borne": {"total_erreurs": 0},
+        "fichiers_proteges": [],
+        "dette": {},
+        "type_ignore": {"a.py": 1},
+        "type_ignore_lignes": {"a.py": ["cafebabe" * 8]},
+    }
+    reference = {
+        "version": 1,
+        "borne": {"total_erreurs": 0},
+        "fichiers_proteges": [],
+        "dette": {},
+        "type_ignore": {"a.py": 1},
+        "type_ignore_lignes": {"a.py": ["deadbeef" * 8]},
+    }
+    anomalies = mypy_gate.anomalies(
+        reels={"a.py"},
+        erreurs={},
+        base=base,
+        base_reference=reference,
+        occurrences={"a.py": 1},
+        contenus={"a.py": {"cafebabe" * 8}},
+    )
+    assert any(
+        "type_ignore_lignes" in m and "a.py" in m and "absente(s) de la reference" in m
+        for m in anomalies
+    )
+
+
+def test_g37b_anomalies_reference_sans_type_ignore_lignes_retrocompatible():
+    base = {
+        "version": 1,
+        "borne": {"total_erreurs": 0},
+        "fichiers_proteges": [],
+        "dette": {},
+        "type_ignore": {"a.py": 1},
+        "type_ignore_lignes": {"a.py": ["cafebabe" * 8]},
+    }
+    reference = {
+        "version": 1,
+        "borne": {"total_erreurs": 0},
+        "fichiers_proteges": [],
+        "dette": {},
+        "type_ignore": {"a.py": 1},
+    }
+    anomalies = mypy_gate.anomalies(
+        reels={"a.py"},
+        erreurs={},
+        base=base,
+        base_reference=reference,
+        occurrences={"a.py": 1},
+        contenus={"a.py": {"cafebabe" * 8}},
+    )
+    assert any(
+        "type_ignore_lignes" in m and "a.py" in m and "absente(s) de la reference" in m
+        for m in anomalies
+    )
+
+
+def test_g38_valider_type_ignore_lignes_rejette_valeur_non_liste():
+    with pytest.raises(ValueError):
+        mypy_gate._valider_type_ignore_lignes({"a.py": "pas-une-liste"}, "base")
+
+
+def test_g38b_valider_type_ignore_lignes_absent_retourne_dict_vide():
+    assert mypy_gate._valider_type_ignore_lignes(None, "base") == {}

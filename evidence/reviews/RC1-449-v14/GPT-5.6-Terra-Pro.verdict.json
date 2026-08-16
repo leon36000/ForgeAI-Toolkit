@@ -1,0 +1,19 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "majeure",
+   "fichier": "scripts/mypy_gate.py",
+   "description": "Le cliquet `type_ignore` ne contrôle que le nombre d’occurrences par fichier, pas leur emplacement ni leur portée. Une PR peut donc déplacer une occurrence historique vers une nouvelle erreur, ou élargir un ignore ciblé (`# type: ignore[code]`) en `# type: ignore`, sans augmenter le compteur. Mypy masque alors une nouvelle régression tandis que les règles 2, 3 et 4 reçoivent zéro erreur et que la règle 7 reste satisfaite.",
+   "preuve": "`occurrences_type_ignore()` compte uniquement `len(_DIRECTIVE_TYPE_IGNORE.findall(donnees))` (scripts/mypy_gate.py, fonction `occurrences_type_ignore`, ~lignes 191-209) ; `_anomalies_type_ignore()` ne compare que `actuel > plafond` (fonction ~lignes 511-530). Exemple reproductible logique : dans un fichier ayant déjà 1 ignore baseliné, corriger l’ancienne ligne ignorée puis déplacer ce même unique `# type: ignore` sur une nouvelle violation réelle conserve `actuel == plafond`; `anomalies()` ne produit alors aucune anomalie de règle 7 et mypy ne rapporte pas la violation supprimée."
+  }
+ ],
+ "date_heure": "2026-08-16T15:18:58.483234+00:00",
+ "prompt_sha256": "6560bc64a560758e26de8a3ad2a4fb32b0523d63c0e38133589878b0e017ac3e",
+ "reviewer_model": "GPT-5.6-Terra-Pro",
+ "modele_servi": "gpt56-terra-pro-openrouter",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

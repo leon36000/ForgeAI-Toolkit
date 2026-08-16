@@ -11,6 +11,7 @@ jusqu'à ce qu'un fichier bascule dans `fichiers_proteges`.
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import re
 import subprocess
@@ -177,6 +178,36 @@ def occurrences_type_ignore(racine: Path, fichiers: set[str]) -> dict[str, int]:
     return resultat
 
 
+def contenus_type_ignore(racine: Path, fichiers: set[str]) -> dict[str, set[str]]:
+    """Pour chaque fichier de `fichiers` (qui existe dans `racine`), retourne l'ensemble des
+    empreintes sha256 (hex) de chaque ligne EXACTE (espaces de début/fin retirés, octets bruts)
+    contenant une occurrence de `# type: ignore`. Contrairement à `occurrences_type_ignore` (qui
+    ne compte que le NOMBRE total), cette fonction capture QUEL contenu est supprimé : un ignore
+    DÉPLACÉ vers une nouvelle ligne produit une empreinte absente de la base, détectable même si
+    le compte total (règle 7) reste inchangé (règle 8, round 14). L'empreinte porte sur la ligne
+    ENTIÈRE (code + commentaire), donc changer le code d'erreur entre crochets
+    (`# type: ignore[a]` -> `# type: ignore[b]`) sur une même ligne produit aussi une nouvelle
+    empreinte — considéré à raison comme une suppression différente. Lecture en octets bruts,
+    indépendante de l'encodage (PEP-263), même raisonnement que `fichiers_neutralises`. Fichier
+    illisible ou absent : ignoré silencieusement. Fichiers sans aucune occurrence : absents du
+    dict retourné (même convention que `occurrences_type_ignore`)."""
+    resultat: dict[str, set[str]] = {}
+    for f in fichiers:
+        chemin = racine / f
+        try:
+            donnees = chemin.read_bytes()
+        except OSError:
+            continue
+        empreintes = {
+            hashlib.sha256(ligne.strip()).hexdigest()
+            for ligne in donnees.splitlines()
+            if _DIRECTIVE_TYPE_IGNORE.search(ligne)
+        }
+        if empreintes:
+            resultat[f] = empreintes
+    return resultat
+
+
 def _valider_borne(borne: Any, libelle: str) -> int:
     """Valide l'objet `borne` (dict avec `total_erreurs` int >= 0 non-bool) et retourne
     `total_erreurs`. Lève ValueError avec message explicite sinon."""
@@ -235,6 +266,26 @@ def _valider_type_ignore(type_ignore: Any, libelle: str) -> dict[str, int]:
                 f"{libelle}.type_ignore[{fichier!r}] doit etre un entier strictement positif"
             )
     return type_ignore
+
+
+def _valider_type_ignore_lignes(type_ignore_lignes: Any, libelle: str) -> dict[str, list[str]]:
+    """Valide le champ optionnel `type_ignore_lignes` (dict str -> liste de chaines, empreintes
+    sha256 hex des lignes `# type: ignore` baselinees par fichier) et le retourne. Absent ou
+    null : retourne {} (champ optionnel, même traitement que `type_ignore`/`classification`)."""
+    if type_ignore_lignes is None:
+        return {}
+    if not isinstance(type_ignore_lignes, dict):
+        raise ValueError(f"{libelle}.type_ignore_lignes doit etre un objet")
+    for fichier, empreintes in type_ignore_lignes.items():
+        if not isinstance(fichier, str):
+            raise ValueError(f"{libelle}.type_ignore_lignes contient une cle non chaine")
+        if not isinstance(empreintes, list) or not all(
+            isinstance(e, str) for e in empreintes
+        ):
+            raise ValueError(
+                f"{libelle}.type_ignore_lignes[{fichier!r}] doit etre une liste de chaines"
+            )
+    return type_ignore_lignes
 
 
 def _valider_classification(
@@ -298,8 +349,9 @@ def _valider_base(base: Any, libelle: str) -> dict[str, Any]:
     """Valide la structure : `version` (int), `borne.total_erreurs` (int >= 0, pas un bool),
     `fichiers_proteges` (liste de str, sans doublon), `dette` (dict str->int, toutes les valeurs
     > 0, pas de bool), `classification` optionnelle (dict cohérent avec `dette`), `type_ignore`
-    optionnel (dict str->int>0). Valide l'invariant de disjonction ci-dessus. Lève ValueError avec
-    message explicite sinon. Retourne `base` si valide."""
+    optionnel (dict str->int>0), `type_ignore_lignes` optionnel (dict str->list[str]). Valide
+    l'invariant de disjonction ci-dessus. Lève ValueError avec message explicite sinon. Retourne
+    `base` si valide."""
     if not isinstance(base, dict):
         raise ValueError(f"{libelle} doit etre un objet JSON")
 
@@ -332,6 +384,9 @@ def _valider_base(base: Any, libelle: str) -> dict[str, Any]:
 
     # type_ignore (optionnelle, uniquement validée si présente)
     _valider_type_ignore(base.get("type_ignore"), libelle)
+
+    # type_ignore_lignes (optionnelle, uniquement validée si présente)
+    _valider_type_ignore_lignes(base.get("type_ignore_lignes"), libelle)
 
     return base
 
@@ -418,16 +473,18 @@ def _anomalies_reference(
     reference: dict[str, Any],
     proteges: set[str],
     type_ignore: dict[str, int],
+    type_ignore_lignes: dict[str, list[str]],
 ) -> list[str]:
     """Règle 5 : comparaison avec la base de référence — aucune croissance non justifiée
-    (dette, borne ou type_ignore), protection permanente des fichiers_proteges, et interdiction
-    de retirer silencieusement un fichier de la dette référencée sans le promouvoir aux
-    fichiers_proteges. Couvre également type_ignore selon le même principe de non-croissance que
-    dette (sans lien avec fichiers_proteges)."""
+    (dette, borne, type_ignore ou type_ignore_lignes), protection permanente des fichiers_proteges,
+    et interdiction de retirer silencieusement un fichier de la dette référencée sans le promouvoir
+    aux fichiers_proteges. Couvre également type_ignore et type_ignore_lignes selon le même principe
+    de non-croissance que dette (sans lien avec fichiers_proteges)."""
     resultat: list[str] = []
     ref_proteges = set(reference["fichiers_proteges"])
     ref_dette = reference["dette"]
     ref_type_ignore = reference.get("type_ignore", {})
+    ref_type_ignore_lignes = reference.get("type_ignore_lignes", {})
 
     for f in sorted(ref_proteges):
         if f not in proteges:
@@ -473,6 +530,15 @@ def _anomalies_reference(
                 "extension non justifiee"
             )
 
+    for f, empreintes in sorted(type_ignore_lignes.items()):
+        ref_empreintes = set(ref_type_ignore_lignes.get(f, []))
+        nouvelles = set(empreintes) - ref_empreintes
+        if nouvelles:
+            resultat.append(
+                f"fichier {f} : {len(nouvelles)} empreinte(s) type_ignore_lignes ajoutee(s) "
+                "depuis la reference, absente(s) de la reference : extension non justifiee"
+            )
+
     return resultat
 
 
@@ -502,6 +568,30 @@ def _anomalies_type_ignore(
     return resultat
 
 
+def _anomalies_contenu_type_ignore(
+    reels: set[str],
+    contenus: dict[str, set[str]],
+    type_ignore_lignes: dict[str, list[str]],
+) -> list[str]:
+    """Règle 8 : toute ligne `# type: ignore` dont l'empreinte sha256 n'est pas dans l'ensemble
+    baseliné pour ce fichier (`type_ignore_lignes`, liste vide si absent) est une suppression
+    non vérifiée — même si le compte total (règle 7) reste inchangé. Détecte le déplacement d'un
+    ignore existant vers une nouvelle ligne (masquant potentiellement une nouvelle violation
+    réelle) plutôt qu'une simple addition en nombre."""
+    resultat: list[str] = []
+    for f in sorted(reels):
+        actuelles = contenus.get(f, set())
+        baselinees = set(type_ignore_lignes.get(f, []))
+        nouvelles = actuelles - baselinees
+        if nouvelles:
+            resultat.append(
+                f"fichier {f} : {len(nouvelles)} ligne(s) # type: ignore non baselinee(s) "
+                "(contenu different de la base) : nouvelle suppression non verifiee, meme si le "
+                "compte total est inchange — verifier qu'aucune erreur reelle n'est masquee"
+            )
+    return resultat
+
+
 def anomalies(
     reels: set[str],
     erreurs: dict[str, int],
@@ -509,6 +599,7 @@ def anomalies(
     base_reference: dict[str, Any] | None,
     neutralises: set[str] | None = None,
     occurrences: dict[str, int] | None = None,
+    contenus: dict[str, set[str]] | None = None,
 ) -> list[str]:
     """Logique pure de comparaison — aucun I/O, aucun subprocess. Valide `base` (et
     `base_reference` si fourni) via `_valider_base`, puis contrôle dans l'ordre :
@@ -526,7 +617,7 @@ def anomalies(
        doit demeurer suivi (soit en dette, soit promu aux fichiers_proteges) — toute disparition
        silencieuse du tracking est une anomalie (anti-contournement, mirrorant
        gate_docs._charger_base_reference_git) ; la protection contre l'extension non justifiée
-       couvre désormais aussi `type_ignore`, symétriquement à `dette`.
+       couvre désormais aussi `type_ignore` et `type_ignore_lignes`, symétriquement à `dette`.
     6. si `neutralises` est fourni : tout fichier listé dans `neutralises` (typiquement
        l'ensemble complet des fichiers réels sous la cible mypy, trackés ou non par la base)
        est signalé comme contenant une directive de neutralisation mypy (`# mypy: ...`) —
@@ -535,6 +626,9 @@ def anomalies(
     7. si `occurrences` est fourni : tout fichier réel dont le nombre de commentaires `# type: ignore`
        dépasse sa valeur baselinée dans `type_ignore` (0 si absent) est signalé comme une hausse
        non baselinée (même principe de non-croissance que la règle 3).
+    8. si `contenus` est fourni : toute ligne `# type: ignore` dont l'empreinte sha256 n'est pas
+       dans l'ensemble baseliné (`type_ignore_lignes`) est signalée comme une suppression non
+       vérifiée (déplacement d'un ignore existant vers une nouvelle ligne).
 
     Retourne la liste des messages d'anomalie (vide si aucune)."""
     base_validee = _valider_base(base, "base")
@@ -562,6 +656,7 @@ def anomalies(
                 reference_validee,
                 proteges,
                 base_validee.get("type_ignore", {}),
+                base_validee.get("type_ignore_lignes", {}),
             )
         )
     if neutralises is not None:
@@ -573,6 +668,12 @@ def anomalies(
     if occurrences is not None:
         resultat.extend(
             _anomalies_type_ignore(reels, occurrences, base_validee.get("type_ignore", {}))
+        )
+    if contenus is not None:
+        resultat.extend(
+            _anomalies_contenu_type_ignore(
+                reels, contenus, base_validee.get("type_ignore_lignes", {})
+            )
         )
 
     return resultat
@@ -662,6 +763,7 @@ def main(argv: list[str] | None = None) -> int:
 
         neutralises = fichiers_neutralises(racine, reels)
         occurrences_ignore = occurrences_type_ignore(racine, reels)
+        contenus_ignore = contenus_type_ignore(racine, reels)
         rapport = anomalies(
             reels,
             erreurs,
@@ -669,6 +771,7 @@ def main(argv: list[str] | None = None) -> int:
             base_reference,
             neutralises=neutralises,
             occurrences=occurrences_ignore,
+            contenus=contenus_ignore,
         )
 
         total = sum(erreurs.get(f, 0) for f in reels)
