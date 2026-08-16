@@ -1,0 +1,19 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "majeure",
+   "fichier": "governance/PATH-CLASSIFICATION.md",
+   "description": "Incohérence comptable avec un déplacement pur de 383 fichiers. Le rendu markdown passe de 1843 à 1847 fichiers suivis (+4) et de 1716 à 1720 éléments porteurs (+4), alors que le diff fourni ne contient que 383 renommages à 100% de similarité et une ligne d'append dans mission.jsonl, sans aucun 'new file mode' ni ajout de fichier correspondant à ces +4. Un pur git mv ne modifie pas le nombre total de fichiers suivis.",
+   "preuve": "diff PATH-CLASSIFICATION.md: '- Fichiers suivis : 1843' / '+ Fichiers suivis : 1847' ; '- Éléments porteurs : 1716' / '+ Éléments porteurs : 1720' ; '- EVIDENCE : 1288' / '+ EVIDENCE : 1292'. Aucun 'new file mode' dans le pack."
+  }
+ ],
+ "date_heure": "2026-08-16T04:34:56.472433+00:00",
+ "prompt_sha256": "2851ec5a201f9a57e2077aa86e11b22b476a86680ecc11edf7596dee59d2ffa0",
+ "reviewer_model": "DeepSeek-V4-Pro",
+ "modele_servi": "deepseek-v4-pro-direct",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

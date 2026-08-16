@@ -1,0 +1,25 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "majeure",
+   "fichier": "governance/PATH-CLASSIFICATION.md",
+   "description": "Le diff fourni ne contient aucun bloc 'new file mode' alors que le résumé annonce +11 fichiers suivis (1843→1854) et +11 EVIDENCE (1288→1299). Les artefacts de revue annoncés (verdicts round 1/round 2 et RECU.json) ne sont donc pas vérifiables dans ce pack.",
+   "preuve": "Diff PATH-CLASSIFICATION.md: '- Fichiers suivis : 1843' / '+ Fichiers suivis : 1854' ; '- EVIDENCE : 1288' / '+ EVIDENCE : 1299'. Aucun 'new file mode' ailleurs dans le diff fourni."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "reviews/BINDING.txt",
+   "description": "La story liste reviews/BINDING.txt parmi les fichiers explicitement NON touchés, mais le diff ajoute une ligne à ce fichier.",
+   "preuve": "Story: 'Fichiers explicitement NON touchés ... reviews/BINDING.txt' ; diff: '+RC1-010-lot5b-PR510-v2'."
+  }
+ ],
+ "date_heure": "2026-08-16T04:52:15.697447+00:00",
+ "prompt_sha256": "ec09dda2133c7673e6eee9e2cfb682f1a5fcce39b30ae64f5f11d4f78f398167",
+ "reviewer_model": "DeepSeek-V4-Pro",
+ "modele_servi": "deepseek-v4-pro-direct",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

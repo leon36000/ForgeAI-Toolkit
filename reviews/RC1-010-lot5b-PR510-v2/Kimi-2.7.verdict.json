@@ -1,0 +1,19 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "governance/path-classification.json",
+   "description": "Ce fichier généré est explicitement exclu du diff (27 149 lignes modifiées) ; les sha256 annoncés et la commande de régénération exacte ne peuvent pas être vérifiés directement à partir du diff fourni. L'augmentation nette de 4 fichiers suivus (1843→1847) et de 4 entrées EVIDENCE (1288→1292) visible dans governance/PATH-CLASSIFICATION.md dépend donc de ce manifeste absent.",
+   "preuve": "Story : section 'Note sur le pack de revue — governance/path-classification.json EXCLU du diff' ; diff : absence de governance/path-classification.json ; diff governance/PATH-CLASSIFICATION.md lignes '- Fichiers suivis : 1843' / '+ Fichiers suivis : 1847' et '- EVIDENCE : 1288' / '+ EVIDENCE : 1292'"
+  }
+ ],
+ "date_heure": "2026-08-16T04:37:09.690617+00:00",
+ "prompt_sha256": "d7a568e1dcb6b647c0db1134af242981ebb7e8b1fc7f20825a34b32183d98a24",
+ "reviewer_model": "Kimi-2.7",
+ "modele_servi": "kimi-27-openrouter",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}
