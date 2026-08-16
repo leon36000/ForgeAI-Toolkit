@@ -254,6 +254,7 @@
   "models.budget.record.motif_obligatoire": "motif is required when exact=False",
   "models.budget.set_budget.alert_ratio_hors_intervalle": "alert_ratio must be within the interval ]0, 1]",
   "models.budget.set_budget.quota_negatif": "The token quota must be positive or zero.",
+  "models.gateway.fichier_corrompu": "{chemin} has an unexpected structure: {detail}",
   "models.gateway.non_configure": "gateway not configured (forgeai gateway set-url)",
   "models.gateway.role_sans_route": "role '{role}' (brick {brick_id}) has no associated route",
   "models.gateway.route_introuvable": "route '{route_name}' not found: {exc}",

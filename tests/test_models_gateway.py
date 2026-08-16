@@ -95,6 +95,35 @@ def test_gateway_store_get_gateway_non_configure(tmp_path):
         store.get_gateway()
 
 
+# --- RC1-456-iter3 : même famille que #482/#492/#527/#528 — gateway.json/wirings.json sont dans
+# portability.py::SETUP_FILES (import_setup les copie sans validation de structure interne, seul
+# routes.json est validé en profondeur) — un fichier édité à la main ou importé depuis un bundle
+# corrompu ne doit jamais faire lever TypeError, seulement une erreur bilingue explicite. ---
+def test_get_gateway_json_non_dict_leve_gatewayerror_pas_typeerror(tmp_path):
+    """RC1-456-iter3 : gateway.json contenant un JSON valide mais top-level non-dict (ex. une
+    liste) fait actuellement lever `TypeError: models.gateway.GatewayConfig() argument after **
+    must be a mapping, not list` au lieu d'un GatewayError explicite."""
+    home = tmp_path / "models"
+    home.mkdir(parents=True)
+    (home / "gateway.json").write_text("[1, 2, 3]", encoding="utf-8")
+    store = GatewayStore(home)
+    with pytest.raises(GatewayError):
+        store.get_gateway()
+
+
+def test_load_wirings_element_non_dict_leve_gatewayerror_pas_typeerror(tmp_path):
+    """RC1-456-iter3 : wirings.json contenant une liste dont un élément n'est pas un dict (ex.
+    fusion accidentelle de deux exports, ou édition manuelle) fait actuellement lever TypeError
+    au lieu d'un GatewayError explicite lors de `GatewayStore.wirings()`."""
+    home = tmp_path / "models"
+    home.mkdir(parents=True)
+    (home / "wirings.json").write_text(json.dumps([{"brick_id": "b1", "role": "chat"}, None]),
+                                        encoding="utf-8")
+    store = GatewayStore(home)
+    with pytest.raises(GatewayError):
+        store.wirings()
+
+
 def test_gateway_store_wire_route_introuvable(tmp_path):
     """I18N-031 : `GatewayStore.wire()` propage un GatewayError bilingue
     (`route_introuvable`) quand la route nommée n'existe pas dans le RouteStore persisté."""
