@@ -492,6 +492,34 @@
       "rationale": "La licence est une documentation juridique destinée aux utilisateurs et distributeurs."
     },
     {
+      "id": "docs-contributing",
+      "match": {
+        "kind": "exact",
+        "value": "CONTRIBUTING.md"
+      },
+      "class": "DOCS",
+      "generated": false,
+      "owner": "docs-utilisateur",
+      "target": null,
+      "target_kind": "keep",
+      "load_bearing": false,
+      "rationale": "Guide de contribution destiné aux lecteurs/contributeurs externes du projet — aucun marqueur d'état, contrairement à README.md."
+    },
+    {
+      "id": "docs-security",
+      "match": {
+        "kind": "exact",
+        "value": "SECURITY.md"
+      },
+      "class": "DOCS",
+      "generated": false,
+      "owner": "docs-utilisateur",
+      "target": null,
+      "target_kind": "keep",
+      "load_bearing": false,
+      "rationale": "Politique de signalement de vulnérabilités destinée aux lecteurs externes — aucun marqueur d'état, contrairement à README.md."
+    },
+    {
       "id": "governance-root-pyproject",
       "match": {
         "kind": "exact",

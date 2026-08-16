@@ -1,0 +1,25 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "tests/test_readme_dist_status.py",
+   "description": "La garde anti-régression de la commande d'installation nue ne correspond qu'à une ligne exactement `pip install forgeai-toolkit` sans commentaire ; l'ancienne ligne `pip install forgeai-toolkit          # cœur sans aucune dépendance (stdlib pur)` n'aurait pas été détectée par cette regex.",
+   "preuve": "Regex `^\\s*pip install forgeai-toolkit\\s*$` (lignes 53-58) vs ancienne ligne README supprimée dans le diff : `pip install forgeai-toolkit          # cœur sans aucune dépendance (stdlib pur)`."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "tests/test_readme_dist_status.py",
+   "description": "Le test des commandes sûres du README n'exécute ni `forgeai doctor` ni `forgeai web`, pourtant documentées juste après `pip install -e .` dans le README ; il n'exécute que `scripts/governance/capabilities.py`, `scripts/no_stub_scan.py --all` et l'import `forgeai.cli`.",
+   "preuve": "test_readme_safe_commands_executable (lignes 65-110) ; README.md après diff contient `forgeai doctor` et `forgeai web` (lignes 24-26)."
+  }
+ ],
+ "date_heure": "2026-08-16T10:09:49.132754+00:00",
+ "prompt_sha256": "ab5c0c4e43f6cba14af8fc57e706efbcdb6e77ca52de48cfb322220ed363330f",
+ "reviewer_model": "DeepSeek-V4-Pro",
+ "modele_servi": "deepseek-v4-pro-direct",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

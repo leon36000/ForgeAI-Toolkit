@@ -628,7 +628,7 @@
       "positions": [],
       "digest": {
         "policy": "content_sha256",
-        "value": "111532883b20075ef2b01f891e92a23b4a4938eeab52083c3f046dcd6726f31c",
+        "value": "3d469b5fb6f8e76fa33ce8ca560579e94b0420dca93feb949ac9c4085c89c76d",
         "checked_at": "2026-08-16",
         "delegated_to": null
       },
