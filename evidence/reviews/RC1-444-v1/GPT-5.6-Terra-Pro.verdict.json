@@ -1,0 +1,25 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "majeure",
+   "fichier": "scripts/governance/validate_coderabbit_config.py",
+   "description": "La validation ne vérifie pas que le répertoire exclu existe réellement, contrairement à la règle exigeant « le répertoire <dir> doit exister ET contenir au moins un fichier TRACKÉ ». Un chemin absent dont des fichiers restent présents dans l’index Git est accepté.",
+   "preuve": "Lignes 62-65 : `_chemin_mort` retourne uniquement `len(_fichiers_trackes(root, repertoire)) == 0` et n’effectue aucun contrôle de type `(root / repertoire).is_dir()`. Or `git ls-files` peut encore lister un fichier indexé après sa suppression du répertoire de travail sans `git add`."
+  },
+  {
+   "severite": "majeure",
+   "fichier": "tests/test_validate_coderabbit_config.py",
+   "description": "Le test d’acceptation requis pour un répertoire existant mais sans fichier tracké dans un répertoire non-Git est absent.",
+   "preuve": "La story exige `test_chemin_present_mais_non_trackable_est_mort` créant `tmp_path/Vide/` puis vérifiant une erreur « chemin mort ». Le diff contient `test_chemin_mort_detecte` (lignes 35-46), qui ne crée aucun répertoire, mais aucun test ne crée `Vide/` ou un autre répertoire réel vide/non-trackable."
+  }
+ ],
+ "date_heure": "2026-08-16T21:32:29.876280+00:00",
+ "prompt_sha256": "c0b21aeb3a6b48b2a29e6151757580c79762b1877ecf24e0b2887abb1223d798",
+ "reviewer_model": "GPT-5.6-Terra-Pro",
+ "modele_servi": "gpt56-terra-pro-openrouter",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

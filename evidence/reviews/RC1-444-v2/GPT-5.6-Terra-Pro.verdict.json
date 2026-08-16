@@ -1,0 +1,19 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "majeure",
+   "fichier": "tests/test_validate_coderabbit_config.py",
+   "description": "Le test exigé pour le cas « répertoire présent mais sans fichier tracké » n'est pas implémenté : il crée bien `Vide/`, mais la configuration teste `!archive/**`, qui correspond à un répertoire absent. La règle distinguant répertoire existant non tracké et répertoire absent ne possède donc aucune couverture de régression.",
+   "preuve": "Lignes 113-124 : `(tmp_path / \"Vide\").mkdir()` est créé, mais le YAML contient `- \"!archive/**\"` et les assertions recherchent `\"archive\"`. Le critère demande explicitement `path_filters: [\"!Vide/**\"]` et une erreur contenant `\"Vide\"`."
+  }
+ ],
+ "date_heure": "2026-08-16T21:46:41.802402+00:00",
+ "prompt_sha256": "f3b76d5ee97acb7d8bc4a7035f8bf4676318f57e55df3ebe5414e902eafc5577",
+ "reviewer_model": "GPT-5.6-Terra-Pro",
+ "modele_servi": "gpt56-terra-pro-openrouter",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

@@ -1,0 +1,19 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "majeure",
+   "fichier": "tests/test_validate_coderabbit_config.py",
+   "description": "Le test `test_chemin_present_mais_non_trackable_est_mort` explicitement exigé dans les critères d'acceptation est absent. Ce test devait vérifier le cas où le répertoire existe physiquement (`tmp_path/Vide/`) mais n'est pas tracké (pas de `git init`), forçant `git ls-files` à échouer et validant la gestion d'erreur (returncode != 0) dans `_fichiers_trackes`.",
+   "preuve": "Lignes 44 à 115 du diff de `tests/test_validate_coderabbit_config.py` : la fonction `test_chemin_present_mais_non_trackable_est_mort` n'est pas implémentée, seul `test_chemin_mort_detecte` (sans création de répertoire) est présent."
+  }
+ ],
+ "date_heure": "2026-08-16T21:33:06.650416+00:00",
+ "prompt_sha256": "c0b21aeb3a6b48b2a29e6151757580c79762b1877ecf24e0b2887abb1223d798",
+ "reviewer_model": "Qwen3.7-Max",
+ "modele_servi": "qwen37-max-openrouter",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

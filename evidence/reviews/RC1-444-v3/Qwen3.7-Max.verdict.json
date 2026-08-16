@@ -1,0 +1,25 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "tests/test_validate_coderabbit_config.py",
+   "description": "Les fixtures de test `test_chemin_mort_detecte` et `test_chemin_present_mais_non_trackable_est_mort` utilisent le répertoire `archive` au lieu de `Registres` et `Vide` comme spécifié littéralement dans le prompt. Bien que cela dévie de la spécification textuelle, c'est un choix technique pertinent de l'équipage pour isoler l'erreur 'chemin mort' et éviter de déclencher simultanément l'erreur 'non inventoriée' (puisque `archive` est dans l'allowlist, contrairement à `Registres`/`Vide`).",
+   "preuve": "Lignes 48-58 et 118-127 : utilisation de `!archive/**` et du répertoire `archive` au lieu de `!Registres/**` / `Registres` et `!Vide/**` / `Vide`."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "scripts/governance/validate_coderabbit_config.py",
+   "description": "Le message d'erreur pour l'allowlist a été très légèrement modifié pour ajouter le nom du script entre parenthèses, ce qui dévie de la chaîne exacte imposée dans le prompt, mais améliore la clarté pour l'utilisateur final.",
+   "preuve": "Lignes 79-82 : `ajoutez-la avec justification à _ALLOWLIST (validate_coderabbit_config.py) ou retirez-la...` au lieu de `ajoutez-la avec justification à _ALLOWLIST ou retirez-la...`."
+  }
+ ],
+ "date_heure": "2026-08-16T21:58:19.878352+00:00",
+ "prompt_sha256": "73d328bd2dc3fbefd85e6212345db878715aeb44aee37c661b3fb71505c21497",
+ "reviewer_model": "Qwen3.7-Max",
+ "modele_servi": "qwen37-max-openrouter",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}
