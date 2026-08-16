@@ -47,10 +47,15 @@ def test_g1_ingestion_redige_avant_la_memoire():
 
 def test_g1b_flux_sert_ce_que_contient_la_memoire():
     """CA1 : le flux ne fait que relayer `_DEPLOY_STATE["lines"]` — rédiger à l'ingestion suffit
-    donc à le couvrir (on vérifie le lien plutôt que de le supposer)."""
+    donc à le couvrir (on vérifie le lien plutôt que de le supposer).
+
+    #460 (RC1-030) a extrait la logique de `/api/deploy/events` de `do_GET()` (devenu un
+    dispatcher pur) vers `_get_deploy_events()` — c'est désormais elle qui porte le contrat,
+    `do_GET` ne fait plus qu'y déléguer (voir aussi `test_g1c_...` ci-dessous, qui prouve le
+    même contrat par le comportement HTTP observé plutôt que par le texte source)."""
     import inspect
 
-    source = inspect.getsource(server.ForgeAIHandler.do_GET)
+    source = inspect.getsource(server.ForgeAIHandler._get_deploy_events)
     assert '_DEPLOY_STATE["lines"]' in source
 
 
