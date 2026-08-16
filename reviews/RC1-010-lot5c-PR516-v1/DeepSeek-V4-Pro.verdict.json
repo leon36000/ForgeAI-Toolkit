@@ -1,0 +1,19 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "governance/PATH-CLASSIFICATION.md",
+   "description": "Le résumé passe de 1860 à 1861 fichiers suivis et EVIDENCE de 1305 à 1306, alors que le diff ne contient aucun ajout de fichier, uniquement des renommages 100% et une ligne appendée à mission.jsonl. Ce +1 n'est pas expliqué par un déplacement pur et n'est pas vérifiable dans le pack, path-classification.json étant exclu.",
+   "preuve": "@@ -4,21 +4,21 @@ montre - Fichiers suivis : 1860 -> 1861 et - EVIDENCE : 1305 -> 1306 ; aucun 'new file mode' dans le diff."
+  }
+ ],
+ "date_heure": "2026-08-16T05:37:53.448162+00:00",
+ "prompt_sha256": "3b9169e49059d0a63aa002e5787dc9ce755ea5a4e69c55ed533eb024ae9e1c72",
+ "reviewer_model": "DeepSeek-V4-Pro",
+ "modele_servi": "deepseek-v4-pro-direct",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}
