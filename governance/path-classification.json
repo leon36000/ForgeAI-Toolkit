@@ -19230,7 +19230,7 @@
       "path": "evidence/reviews/RC1-020-v3/RECU.json",
       "referenced_by": [],
       "rule_id": "evidence-reviews-root",
-      "sha256": "6dd0b9df74d49c2b3396a1bd710afb45af5281298c41d26fdaabe1073b303a19",
+      "sha256": "71b24888c98372eecd7c1e135ba3f942ec82f2d43c7279a569a2fb2b927f8d21",
       "size": 676,
       "target_path": null,
       "type": "text"
