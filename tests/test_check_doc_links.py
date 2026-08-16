@@ -108,8 +108,8 @@ def test_scan_repo_reel_detecte_les_references_mortes_connues():
     # Lien mort réel et actuel, T3 (CANON/ réservé à Nathan) : correction hors périmètre de #509,
     # documentée en attente d'approbation T3. Ce test sera corrigé quand ce lien le sera.
     assert any(
-        lien["referrer"] == "CANON/ETAT-SYSTEME.md"
-        and lien["link"] == "Registres/mission.jsonl"
+        lien["referrer"] == "CANON/spec-web-ui.md"
+        and lien["link"] == ".claude/launch.json"
         for lien in liens_morts
     )
 
