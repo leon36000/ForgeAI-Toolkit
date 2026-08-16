@@ -6426,6 +6426,13 @@
           "referrer": "tests/test_registre.py",
           "resolved": "evidence/registres/mission.jsonl",
           "severity": "hard"
+        },
+        {
+          "candidate": "evidence/registres/mission.jsonl",
+          "line": 453,
+          "referrer": "tests/test_registre.py",
+          "resolved": "evidence/registres/mission.jsonl",
+          "severity": "hard"
         }
       ],
       "rule_id": "evidence-registres-root",
@@ -48387,8 +48394,8 @@
         }
       ],
       "rule_id": "test-suite",
-      "sha256": "b95f6bc7e046b553b9fcff70c1e35fd069fa9fee7c755b498cd273c2afbdf893",
-      "size": 16701,
+      "sha256": "fa8bf24c80d60d103abd2e4cb816930caf31341b108f54e956f65c8952f72c26",
+      "size": 17403,
       "target_path": null,
       "type": "text"
     },
@@ -128203,6 +128210,11 @@
         "referrer": "tests/test_registre.py"
       },
       {
+        "candidate": "Registres/mission.jsonl",
+        "line": 443,
+        "referrer": "tests/test_registre.py"
+      },
+      {
         "candidate": "seq/prev_hash",
         "line": 9,
         "referrer": "tests/test_registre_concurrence.py"
@@ -155942,6 +155954,13 @@
         "severity": "hard"
       },
       {
+        "candidate": "evidence/registres/mission.jsonl",
+        "line": 453,
+        "referrer": "tests/test_registre.py",
+        "resolved": "evidence/registres/mission.jsonl",
+        "severity": "hard"
+      },
+      {
         "candidate": "scripts/registre.py",
         "line": 108,
         "referrer": "tests/test_registre_concurrence.py",
@@ -156130,7 +156149,7 @@
       "working-sandbox-readme": 1
     },
     "case_collisions_total": 0,
-    "dangling_references_total": 15784,
+    "dangling_references_total": 15785,
     "generated_total": 9,
     "load_bearing_total": 1891,
     "portability_violations_total": 0,

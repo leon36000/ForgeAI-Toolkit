@@ -435,3 +435,23 @@ def test_g_cli_append_accepte_chemin_relatif_non_prefixe_registres(tmp_path):
     )
     assert cp.returncode == 0, f"echec inattendu: {cp.stderr}"
     assert (tmp_path / "mon_dossier" / "Registres" / "mission.jsonl").exists()
+
+
+def test_g_main_cli_inprocess_refuse_chemin_deprecie(tmp_path, monkeypatch):
+    monkeypatch.chdir(tmp_path)
+    rc = registre.main_cli(
+        ["append", "Registres/mission.jsonl", "--type", "t", "--actor", "a",
+         "--payload-json", "{}"]
+    )
+    assert rc == 1
+    assert not (tmp_path / "Registres" / "mission.jsonl").exists()
+
+
+def test_g_main_cli_inprocess_accepte_chemin_canonique(tmp_path, monkeypatch):
+    monkeypatch.chdir(tmp_path)
+    rc = registre.main_cli(
+        ["append", "evidence/registres/mission.jsonl", "--type", "t", "--actor", "a",
+         "--payload-json", "{}"]
+    )
+    assert rc == 0
+    assert (tmp_path / "evidence" / "registres" / "mission.jsonl").exists()
