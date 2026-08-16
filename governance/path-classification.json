@@ -6632,8 +6632,18 @@
         }
       ],
       "rule_id": "evidence-registres-root",
+<<<<<<< HEAD
       "sha256": "ebd8baf2451dcea463d78bee323ccbc9a0f7d82f54a55044f7185d09c76a83e8",
       "size": 385506,
+=======
+<<<<<<< HEAD
+      "sha256": "532726709960c0fc6467e1dd03d52d1c8a726bf4fbfbd39660eb30f171b8c4a8",
+      "size": 384956,
+=======
+      "sha256": "5310f6d5848a57daabca1fc5b199ef22587e8141147d3a87dd31be48e860b37c",
+      "size": 384933,
+>>>>>>> 0c25926 (chore(review): scelle RC1-547 (APPROVE 3/3) — evidence/reviews/, gouvernance régénérée)
+>>>>>>> b02f2805 (chore(review): scelle RC1-547 (APPROVE 3/3) — evidence/reviews/, gouvernance régénérée)
       "target_path": null,
       "type": "text"
     },
@@ -8593,8 +8603,330 @@
         }
       ],
       "rule_id": "evidence-reviews-root",
+<<<<<<< HEAD
       "sha256": "563c164c1db6f4bbe00221fd594046d3114012c6008a0b34b914b97b80b55277",
       "size": 2723,
+=======
+<<<<<<< HEAD
+      "sha256": "7536a6af9035778e2560897b1241ca67b0fbf45869b2e1a4177cc7f5e6ae5151",
+      "size": 2715,
+=======
+<<<<<<< HEAD
+      "sha256": "2804ff4e4336eee19f3745d3fba39416c01f9e0dcddc23b287c10d7b51bb5e47",
+=======
+      "sha256": "dc9496587076852e43e73edc53bca40f60513f8f654f6f04397833684d42bae5",
+      "size": 2699,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/BINDING.txt",
+      "referenced_by": [
+        {
+          "candidate": "evidence/reviews/BINDING.txt",
+          "line": 65,
+          "referrer": "AGENTS.md",
+          "resolved": "evidence/reviews/BINDING.txt",
+          "severity": "hard"
+        },
+        {
+          "candidate": "evidence/reviews/BINDING.txt",
+          "line": 384,
+          "referrer": "scripts/governance/classify_paths.py",
+          "resolved": "evidence/reviews/BINDING.txt",
+          "severity": "hard"
+        },
+        {
+          "candidate": "evidence/reviews/BINDING.txt",
+          "line": 417,
+          "referrer": "scripts/governance/classify_paths.py",
+          "resolved": "evidence/reviews/BINDING.txt",
+          "severity": "hard"
+        },
+        {
+          "candidate": "evidence/reviews/BINDING.txt",
+          "line": 6,
+          "referrer": "scripts/governance/evidence_dedup.py",
+          "resolved": "evidence/reviews/BINDING.txt",
+          "severity": "hard"
+        },
+        {
+          "candidate": "evidence/reviews/BINDING.txt",
+          "line": 8,
+          "referrer": "scripts/reviews_gate.py",
+          "resolved": "evidence/reviews/BINDING.txt",
+          "severity": "hard"
+        },
+        {
+          "candidate": "evidence/reviews/BINDING.txt",
+          "line": 33,
+          "referrer": "scripts/reviews_gate.py",
+          "resolved": "evidence/reviews/BINDING.txt",
+          "severity": "hard"
+        },
+        {
+          "candidate": "evidence/reviews/BINDING.txt",
+          "line": 29,
+          "referrer": "stories/RC1-011.md",
+          "resolved": "evidence/reviews/BINDING.txt",
+          "severity": "hard"
+        },
+        {
+          "candidate": "evidence/reviews/BINDING.txt",
+          "line": 157,
+          "referrer": "stories/RC1-011.md",
+          "resolved": "evidence/reviews/BINDING.txt",
+          "severity": "hard"
+        },
+        {
+          "candidate": "evidence/reviews/BINDING.txt",
+          "line": 183,
+          "referrer": "stories/RC1-011.md",
+          "resolved": "evidence/reviews/BINDING.txt",
+          "severity": "hard"
+        },
+        {
+          "candidate": "evidence/reviews/BINDING.txt",
+          "line": 252,
+          "referrer": "stories/RC1-011.md",
+          "resolved": "evidence/reviews/BINDING.txt",
+          "severity": "hard"
+        },
+        {
+          "candidate": "evidence/reviews/BINDING.txt",
+          "line": 451,
+          "referrer": "tests/test_classify_paths.py",
+          "resolved": "evidence/reviews/BINDING.txt",
+          "severity": "hard"
+        },
+        {
+          "candidate": "evidence/reviews/BINDING.txt",
+          "line": 453,
+          "referrer": "tests/test_classify_paths.py",
+          "resolved": "evidence/reviews/BINDING.txt",
+          "severity": "hard"
+        },
+        {
+          "candidate": "evidence/reviews/BINDING.txt",
+          "line": 458,
+          "referrer": "tests/test_classify_paths.py",
+          "resolved": "evidence/reviews/BINDING.txt",
+          "severity": "hard"
+        },
+        {
+          "candidate": "evidence/reviews/BINDING.txt",
+          "line": 467,
+          "referrer": "tests/test_classify_paths.py",
+          "resolved": "evidence/reviews/BINDING.txt",
+          "severity": "hard"
+        },
+        {
+          "candidate": "evidence/reviews/BINDING.txt",
+          "line": 469,
+          "referrer": "tests/test_classify_paths.py",
+          "resolved": "evidence/reviews/BINDING.txt",
+          "severity": "hard"
+        },
+        {
+          "candidate": "evidence/reviews/BINDING.txt",
+          "line": 474,
+          "referrer": "tests/test_classify_paths.py",
+          "resolved": "evidence/reviews/BINDING.txt",
+          "severity": "hard"
+        },
+        {
+          "candidate": "evidence/reviews/BINDING.txt",
+          "line": 484,
+          "referrer": "tests/test_classify_paths.py",
+          "resolved": "evidence/reviews/BINDING.txt",
+          "severity": "hard"
+        },
+        {
+          "candidate": "evidence/reviews/BINDING.txt",
+          "line": 485,
+          "referrer": "tests/test_classify_paths.py",
+          "resolved": "evidence/reviews/BINDING.txt",
+          "severity": "hard"
+        },
+        {
+          "candidate": "evidence/reviews/BINDING.txt",
+          "line": 490,
+          "referrer": "tests/test_classify_paths.py",
+          "resolved": "evidence/reviews/BINDING.txt",
+          "severity": "hard"
+        },
+        {
+          "candidate": "evidence/reviews/BINDING.txt",
+          "line": 1047,
+          "referrer": "tests/test_classify_paths.py",
+          "resolved": "evidence/reviews/BINDING.txt",
+          "severity": "hard"
+        }
+      ],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "dc9496587076852e43e73edc53bca40f60513f8f654f6f04397833684d42bae5",
+      "size": 2699,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/BINDING.txt",
+      "referenced_by": [
+        {
+          "candidate": "evidence/reviews/BINDING.txt",
+          "line": 65,
+          "referrer": "AGENTS.md",
+          "resolved": "evidence/reviews/BINDING.txt",
+          "severity": "hard"
+        },
+        {
+          "candidate": "evidence/reviews/BINDING.txt",
+          "line": 384,
+          "referrer": "scripts/governance/classify_paths.py",
+          "resolved": "evidence/reviews/BINDING.txt",
+          "severity": "hard"
+        },
+        {
+          "candidate": "evidence/reviews/BINDING.txt",
+          "line": 417,
+          "referrer": "scripts/governance/classify_paths.py",
+          "resolved": "evidence/reviews/BINDING.txt",
+          "severity": "hard"
+        },
+        {
+          "candidate": "evidence/reviews/BINDING.txt",
+          "line": 6,
+          "referrer": "scripts/governance/evidence_dedup.py",
+          "resolved": "evidence/reviews/BINDING.txt",
+          "severity": "hard"
+        },
+        {
+          "candidate": "evidence/reviews/BINDING.txt",
+          "line": 8,
+          "referrer": "scripts/reviews_gate.py",
+          "resolved": "evidence/reviews/BINDING.txt",
+          "severity": "hard"
+        },
+        {
+          "candidate": "evidence/reviews/BINDING.txt",
+          "line": 33,
+          "referrer": "scripts/reviews_gate.py",
+          "resolved": "evidence/reviews/BINDING.txt",
+          "severity": "hard"
+        },
+        {
+          "candidate": "evidence/reviews/BINDING.txt",
+          "line": 29,
+          "referrer": "stories/RC1-011.md",
+          "resolved": "evidence/reviews/BINDING.txt",
+          "severity": "hard"
+        },
+        {
+          "candidate": "evidence/reviews/BINDING.txt",
+          "line": 157,
+          "referrer": "stories/RC1-011.md",
+          "resolved": "evidence/reviews/BINDING.txt",
+          "severity": "hard"
+        },
+        {
+          "candidate": "evidence/reviews/BINDING.txt",
+          "line": 183,
+          "referrer": "stories/RC1-011.md",
+          "resolved": "evidence/reviews/BINDING.txt",
+          "severity": "hard"
+        },
+        {
+          "candidate": "evidence/reviews/BINDING.txt",
+          "line": 252,
+          "referrer": "stories/RC1-011.md",
+          "resolved": "evidence/reviews/BINDING.txt",
+          "severity": "hard"
+        },
+        {
+          "candidate": "evidence/reviews/BINDING.txt",
+          "line": 451,
+          "referrer": "tests/test_classify_paths.py",
+          "resolved": "evidence/reviews/BINDING.txt",
+          "severity": "hard"
+        },
+        {
+          "candidate": "evidence/reviews/BINDING.txt",
+          "line": 453,
+          "referrer": "tests/test_classify_paths.py",
+          "resolved": "evidence/reviews/BINDING.txt",
+          "severity": "hard"
+        },
+        {
+          "candidate": "evidence/reviews/BINDING.txt",
+          "line": 458,
+          "referrer": "tests/test_classify_paths.py",
+          "resolved": "evidence/reviews/BINDING.txt",
+          "severity": "hard"
+        },
+        {
+          "candidate": "evidence/reviews/BINDING.txt",
+          "line": 467,
+          "referrer": "tests/test_classify_paths.py",
+          "resolved": "evidence/reviews/BINDING.txt",
+          "severity": "hard"
+        },
+        {
+          "candidate": "evidence/reviews/BINDING.txt",
+          "line": 469,
+          "referrer": "tests/test_classify_paths.py",
+          "resolved": "evidence/reviews/BINDING.txt",
+          "severity": "hard"
+        },
+        {
+          "candidate": "evidence/reviews/BINDING.txt",
+          "line": 474,
+          "referrer": "tests/test_classify_paths.py",
+          "resolved": "evidence/reviews/BINDING.txt",
+          "severity": "hard"
+        },
+        {
+          "candidate": "evidence/reviews/BINDING.txt",
+          "line": 484,
+          "referrer": "tests/test_classify_paths.py",
+          "resolved": "evidence/reviews/BINDING.txt",
+          "severity": "hard"
+        },
+        {
+          "candidate": "evidence/reviews/BINDING.txt",
+          "line": 485,
+          "referrer": "tests/test_classify_paths.py",
+          "resolved": "evidence/reviews/BINDING.txt",
+          "severity": "hard"
+        },
+        {
+          "candidate": "evidence/reviews/BINDING.txt",
+          "line": 490,
+          "referrer": "tests/test_classify_paths.py",
+          "resolved": "evidence/reviews/BINDING.txt",
+          "severity": "hard"
+        },
+        {
+          "candidate": "evidence/reviews/BINDING.txt",
+          "line": 1047,
+          "referrer": "tests/test_classify_paths.py",
+          "resolved": "evidence/reviews/BINDING.txt",
+          "severity": "hard"
+        }
+      ],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "dc9496587076852e43e73edc53bca40f60513f8f654f6f04397833684d42bae5",
+>>>>>>> 0c25926 (chore(review): scelle RC1-547 (APPROVE 3/3) — evidence/reviews/, gouvernance régénérée)
+      "size": 2699,
+>>>>>>> b9562ea1 (chore(review): scelle RC1-547 (APPROVE 3/3) — evidence/reviews/, gouvernance régénérée)
+>>>>>>> b02f2805 (chore(review): scelle RC1-547 (APPROVE 3/3) — evidence/reviews/, gouvernance régénérée)
       "target_path": null,
       "type": "text"
     },
@@ -22124,10 +22456,17 @@
       "generated": false,
       "load_bearing": true,
       "owner": "gouvernance-preuve",
+<<<<<<< HEAD
       "path": "evidence/reviews/RC1-546/Gemini-3.7-Flash.verdict.json",
       "referenced_by": [],
       "rule_id": "evidence-reviews-root",
       "sha256": "dcce66ad78839c458554172ae9ff4287c21f91d0e5c6d6144926e7bbdba61dbf",
+=======
+      "path": "evidence/reviews/RC1-547/Gemini-3.7-Flash.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "f7ec1b4dab603db635fb647d7c339125a65ed059aefe398f8fa620cec697af73",
+>>>>>>> 0c25926 (chore(review): scelle RC1-547 (APPROVE 3/3) — evidence/reviews/, gouvernance régénérée)
       "size": 371,
       "target_path": null,
       "type": "text"
@@ -22137,11 +22476,19 @@
       "generated": false,
       "load_bearing": true,
       "owner": "gouvernance-preuve",
+<<<<<<< HEAD
       "path": "evidence/reviews/RC1-546/Kimi-2.7.verdict.json",
       "referenced_by": [],
       "rule_id": "evidence-reviews-root",
       "sha256": "f97fa8f4c15666e8b635d89deb7880b990f5ad6dbea613ccb94e9576fb9dfcad",
       "size": 317,
+=======
+      "path": "evidence/reviews/RC1-547/MiMo-V2.5-Pro.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "f90f78e9e06fc1c57e7de635ee77fd65f5214cd0b338c2ae9ce5432395633d1e",
+      "size": 327,
+>>>>>>> 0c25926 (chore(review): scelle RC1-547 (APPROVE 3/3) — evidence/reviews/, gouvernance régénérée)
       "target_path": null,
       "type": "text"
     },
@@ -22150,10 +22497,17 @@
       "generated": false,
       "load_bearing": true,
       "owner": "gouvernance-preuve",
+<<<<<<< HEAD
       "path": "evidence/reviews/RC1-546/Qwen3.7-Max.verdict.json",
       "referenced_by": [],
       "rule_id": "evidence-reviews-root",
       "sha256": "571edf99b7d7ab689cdf36550023119a05a9bb1112fe6144678415cd38216757",
+=======
+      "path": "evidence/reviews/RC1-547/Qwen3.7-Max.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "acf0b1310088b444c90d8b2d6999e26c6044a1842ec457811dc640554700a828",
+>>>>>>> 0c25926 (chore(review): scelle RC1-547 (APPROVE 3/3) — evidence/reviews/, gouvernance régénérée)
       "size": 323,
       "target_path": null,
       "type": "text"
@@ -22163,7 +22517,11 @@
       "generated": false,
       "load_bearing": true,
       "owner": "gouvernance-preuve",
+<<<<<<< HEAD
       "path": "evidence/reviews/RC1-546/RECU.json",
+=======
+      "path": "evidence/reviews/RC1-547/RECU.json",
+>>>>>>> 0c25926 (chore(review): scelle RC1-547 (APPROVE 3/3) — evidence/reviews/, gouvernance régénérée)
       "referenced_by": [],
       "rule_id": "evidence-reviews-root",
       "sha256": null,
@@ -26211,6 +26569,468 @@
       "type": null
     },
     {
+      "class": "GENERATED",
+      "generated": true,
+      "load_bearing": true,
+      "owner": "gouvernance-generateurs",
+      "path": "governance/PATH-CLASSIFICATION.md",
+      "referenced_by": [
+        {
+          "candidate": "governance/PATH-CLASSIFICATION.md",
+          "line": 27,
+          "referrer": ".coderabbit.yaml",
+          "resolved": "governance/PATH-CLASSIFICATION.md",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/PATH-CLASSIFICATION.md",
+          "line": 8,
+          "referrer": "evidence/reviews/RC1-008-PR496-v2/DeepSeek-V4-Pro.verdict.json",
+          "resolved": "governance/PATH-CLASSIFICATION.md",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/PATH-CLASSIFICATION.md",
+          "line": 25,
+          "referrer": "evidence/reviews/RC1-008-PR496-v2/DeepSeek-V4-Pro.verdict.json",
+          "resolved": "governance/PATH-CLASSIFICATION.md",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/PATH-CLASSIFICATION.md",
+          "line": 31,
+          "referrer": "evidence/reviews/RC1-008-PR496/Kimi-2.7.verdict.json",
+          "resolved": "governance/PATH-CLASSIFICATION.md",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/PATH-CLASSIFICATION.md",
+          "line": 32,
+          "referrer": "evidence/reviews/RC1-008-PR496/Kimi-2.7.verdict.json",
+          "resolved": "governance/PATH-CLASSIFICATION.md",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/PATH-CLASSIFICATION.md",
+          "line": 8,
+          "referrer": "evidence/reviews/RC1-009-PR500-v1/DeepSeek-V4-Pro.verdict.json",
+          "resolved": "governance/PATH-CLASSIFICATION.md",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/PATH-CLASSIFICATION.md",
+          "line": 6,
+          "referrer": "evidence/reviews/RC1-010-lot5b-PR510-v1/DeepSeek-V4-Pro.verdict.json",
+          "resolved": "governance/PATH-CLASSIFICATION.md",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/PATH-CLASSIFICATION.md",
+          "line": 6,
+          "referrer": "evidence/reviews/RC1-010-lot5b-PR510-v1/Kimi-2.7.verdict.json",
+          "resolved": "governance/PATH-CLASSIFICATION.md",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/PATH-CLASSIFICATION.md",
+          "line": 8,
+          "referrer": "evidence/reviews/RC1-010-lot5b-PR510-v1/Kimi-2.7.verdict.json",
+          "resolved": "governance/PATH-CLASSIFICATION.md",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/PATH-CLASSIFICATION.md",
+          "line": 7,
+          "referrer": "evidence/reviews/RC1-010-lot5b-PR510-v2/Kimi-2.7.verdict.json",
+          "resolved": "governance/PATH-CLASSIFICATION.md",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/PATH-CLASSIFICATION.md",
+          "line": 8,
+          "referrer": "evidence/reviews/RC1-010-lot5b-PR510-v2/Kimi-2.7.verdict.json",
+          "resolved": "governance/PATH-CLASSIFICATION.md",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/PATH-CLASSIFICATION.md",
+          "line": 6,
+          "referrer": "evidence/reviews/RC1-010-lot5b-PR510-v3/DeepSeek-V4-Pro.verdict.json",
+          "resolved": "governance/PATH-CLASSIFICATION.md",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/PATH-CLASSIFICATION.md",
+          "line": 6,
+          "referrer": "evidence/reviews/RC1-010-lot5b-PR510-v4/DeepSeek-V4-Pro.verdict.json",
+          "resolved": "governance/PATH-CLASSIFICATION.md",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/PATH-CLASSIFICATION.md",
+          "line": 8,
+          "referrer": "evidence/reviews/RC1-010-lot5b-PR510-v4/DeepSeek-V4-Pro.verdict.json",
+          "resolved": "governance/PATH-CLASSIFICATION.md",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/PATH-CLASSIFICATION.md",
+          "line": 7,
+          "referrer": "evidence/reviews/RC1-010-lot5b-PR510-v4/Kimi-2.7.verdict.json",
+          "resolved": "governance/PATH-CLASSIFICATION.md",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/PATH-CLASSIFICATION.md",
+          "line": 8,
+          "referrer": "evidence/reviews/RC1-010-lot5b-PR510-v4/Kimi-2.7.verdict.json",
+          "resolved": "governance/PATH-CLASSIFICATION.md",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/PATH-CLASSIFICATION.md",
+          "line": 6,
+          "referrer": "evidence/reviews/RC1-010-lot5c-PR516-v1/DeepSeek-V4-Pro.verdict.json",
+          "resolved": "governance/PATH-CLASSIFICATION.md",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/PATH-CLASSIFICATION.md",
+          "line": 6,
+          "referrer": "evidence/reviews/RC1-010-lot5c-PR516-v1/Kimi-2.7.verdict.json",
+          "resolved": "governance/PATH-CLASSIFICATION.md",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/PATH-CLASSIFICATION.md",
+          "line": 8,
+          "referrer": "evidence/reviews/RC1-010-lot5c-PR516-v1/Kimi-2.7.verdict.json",
+          "resolved": "governance/PATH-CLASSIFICATION.md",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/PATH-CLASSIFICATION.md",
+          "line": 12,
+          "referrer": "evidence/reviews/RC1-010-lot5c-PR516-v1/Kimi-2.7.verdict.json",
+          "resolved": "governance/PATH-CLASSIFICATION.md",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/PATH-CLASSIFICATION.md",
+          "line": 14,
+          "referrer": "evidence/reviews/RC1-010-lot5c-PR516-v1/Kimi-2.7.verdict.json",
+          "resolved": "governance/PATH-CLASSIFICATION.md",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/PATH-CLASSIFICATION.md",
+          "line": 24,
+          "referrer": "evidence/reviews/RC1-010-lot5d-PR-v1/DeepSeek-V4-Pro.verdict.json",
+          "resolved": "governance/PATH-CLASSIFICATION.md",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/PATH-CLASSIFICATION.md",
+          "line": 26,
+          "referrer": "evidence/reviews/RC1-010-lot5d-PR-v1/DeepSeek-V4-Pro.verdict.json",
+          "resolved": "governance/PATH-CLASSIFICATION.md",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/PATH-CLASSIFICATION.md",
+          "line": 190,
+          "referrer": "governance/path-classification-rules.json",
+          "resolved": "governance/PATH-CLASSIFICATION.md",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/PATH-CLASSIFICATION.md",
+          "line": 797,
+          "referrer": "scripts/governance/classify_paths.py",
+          "resolved": "governance/PATH-CLASSIFICATION.md",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/PATH-CLASSIFICATION.md",
+          "line": 803,
+          "referrer": "scripts/governance/classify_paths.py",
+          "resolved": "governance/PATH-CLASSIFICATION.md",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/PATH-CLASSIFICATION.md",
+          "line": 29,
+          "referrer": "scripts/governance/validate_coderabbit_config.py",
+          "resolved": "governance/PATH-CLASSIFICATION.md",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/PATH-CLASSIFICATION.md",
+          "line": 249,
+          "referrer": "scripts/revue.py",
+          "resolved": "governance/PATH-CLASSIFICATION.md",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/PATH-CLASSIFICATION.md",
+          "line": 212,
+          "referrer": "stories/RC1-011.md",
+          "resolved": "governance/PATH-CLASSIFICATION.md",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/PATH-CLASSIFICATION.md",
+          "line": 42,
+          "referrer": "stories/RC1-504.md",
+          "resolved": "governance/PATH-CLASSIFICATION.md",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/PATH-CLASSIFICATION.md",
+          "line": 60,
+          "referrer": "stories/RC1-504.md",
+          "resolved": "governance/PATH-CLASSIFICATION.md",
+          "severity": "hard"
+        }
+      ],
+      "rule_id": "generated-path-classification-markdown",
+      "sha256": null,
+      "size": null,
+      "target_path": null,
+      "type": null
+    },
+    {
+      "class": "GENERATED",
+      "generated": true,
+      "load_bearing": true,
+      "owner": "gouvernance-generateurs",
+      "path": "governance/PATH-CLASSIFICATION.md",
+      "referenced_by": [
+        {
+          "candidate": "governance/PATH-CLASSIFICATION.md",
+          "line": 27,
+          "referrer": ".coderabbit.yaml",
+          "resolved": "governance/PATH-CLASSIFICATION.md",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/PATH-CLASSIFICATION.md",
+          "line": 8,
+          "referrer": "evidence/reviews/RC1-008-PR496-v2/DeepSeek-V4-Pro.verdict.json",
+          "resolved": "governance/PATH-CLASSIFICATION.md",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/PATH-CLASSIFICATION.md",
+          "line": 25,
+          "referrer": "evidence/reviews/RC1-008-PR496-v2/DeepSeek-V4-Pro.verdict.json",
+          "resolved": "governance/PATH-CLASSIFICATION.md",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/PATH-CLASSIFICATION.md",
+          "line": 31,
+          "referrer": "evidence/reviews/RC1-008-PR496/Kimi-2.7.verdict.json",
+          "resolved": "governance/PATH-CLASSIFICATION.md",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/PATH-CLASSIFICATION.md",
+          "line": 32,
+          "referrer": "evidence/reviews/RC1-008-PR496/Kimi-2.7.verdict.json",
+          "resolved": "governance/PATH-CLASSIFICATION.md",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/PATH-CLASSIFICATION.md",
+          "line": 8,
+          "referrer": "evidence/reviews/RC1-009-PR500-v1/DeepSeek-V4-Pro.verdict.json",
+          "resolved": "governance/PATH-CLASSIFICATION.md",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/PATH-CLASSIFICATION.md",
+          "line": 6,
+          "referrer": "evidence/reviews/RC1-010-lot5b-PR510-v1/DeepSeek-V4-Pro.verdict.json",
+          "resolved": "governance/PATH-CLASSIFICATION.md",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/PATH-CLASSIFICATION.md",
+          "line": 6,
+          "referrer": "evidence/reviews/RC1-010-lot5b-PR510-v1/Kimi-2.7.verdict.json",
+          "resolved": "governance/PATH-CLASSIFICATION.md",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/PATH-CLASSIFICATION.md",
+          "line": 8,
+          "referrer": "evidence/reviews/RC1-010-lot5b-PR510-v1/Kimi-2.7.verdict.json",
+          "resolved": "governance/PATH-CLASSIFICATION.md",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/PATH-CLASSIFICATION.md",
+          "line": 7,
+          "referrer": "evidence/reviews/RC1-010-lot5b-PR510-v2/Kimi-2.7.verdict.json",
+          "resolved": "governance/PATH-CLASSIFICATION.md",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/PATH-CLASSIFICATION.md",
+          "line": 8,
+          "referrer": "evidence/reviews/RC1-010-lot5b-PR510-v2/Kimi-2.7.verdict.json",
+          "resolved": "governance/PATH-CLASSIFICATION.md",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/PATH-CLASSIFICATION.md",
+          "line": 6,
+          "referrer": "evidence/reviews/RC1-010-lot5b-PR510-v3/DeepSeek-V4-Pro.verdict.json",
+          "resolved": "governance/PATH-CLASSIFICATION.md",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/PATH-CLASSIFICATION.md",
+          "line": 6,
+          "referrer": "evidence/reviews/RC1-010-lot5b-PR510-v4/DeepSeek-V4-Pro.verdict.json",
+          "resolved": "governance/PATH-CLASSIFICATION.md",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/PATH-CLASSIFICATION.md",
+          "line": 8,
+          "referrer": "evidence/reviews/RC1-010-lot5b-PR510-v4/DeepSeek-V4-Pro.verdict.json",
+          "resolved": "governance/PATH-CLASSIFICATION.md",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/PATH-CLASSIFICATION.md",
+          "line": 7,
+          "referrer": "evidence/reviews/RC1-010-lot5b-PR510-v4/Kimi-2.7.verdict.json",
+          "resolved": "governance/PATH-CLASSIFICATION.md",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/PATH-CLASSIFICATION.md",
+          "line": 8,
+          "referrer": "evidence/reviews/RC1-010-lot5b-PR510-v4/Kimi-2.7.verdict.json",
+          "resolved": "governance/PATH-CLASSIFICATION.md",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/PATH-CLASSIFICATION.md",
+          "line": 6,
+          "referrer": "evidence/reviews/RC1-010-lot5c-PR516-v1/DeepSeek-V4-Pro.verdict.json",
+          "resolved": "governance/PATH-CLASSIFICATION.md",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/PATH-CLASSIFICATION.md",
+          "line": 6,
+          "referrer": "evidence/reviews/RC1-010-lot5c-PR516-v1/Kimi-2.7.verdict.json",
+          "resolved": "governance/PATH-CLASSIFICATION.md",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/PATH-CLASSIFICATION.md",
+          "line": 8,
+          "referrer": "evidence/reviews/RC1-010-lot5c-PR516-v1/Kimi-2.7.verdict.json",
+          "resolved": "governance/PATH-CLASSIFICATION.md",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/PATH-CLASSIFICATION.md",
+          "line": 12,
+          "referrer": "evidence/reviews/RC1-010-lot5c-PR516-v1/Kimi-2.7.verdict.json",
+          "resolved": "governance/PATH-CLASSIFICATION.md",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/PATH-CLASSIFICATION.md",
+          "line": 14,
+          "referrer": "evidence/reviews/RC1-010-lot5c-PR516-v1/Kimi-2.7.verdict.json",
+          "resolved": "governance/PATH-CLASSIFICATION.md",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/PATH-CLASSIFICATION.md",
+          "line": 24,
+          "referrer": "evidence/reviews/RC1-010-lot5d-PR-v1/DeepSeek-V4-Pro.verdict.json",
+          "resolved": "governance/PATH-CLASSIFICATION.md",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/PATH-CLASSIFICATION.md",
+          "line": 26,
+          "referrer": "evidence/reviews/RC1-010-lot5d-PR-v1/DeepSeek-V4-Pro.verdict.json",
+          "resolved": "governance/PATH-CLASSIFICATION.md",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/PATH-CLASSIFICATION.md",
+          "line": 190,
+          "referrer": "governance/path-classification-rules.json",
+          "resolved": "governance/PATH-CLASSIFICATION.md",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/PATH-CLASSIFICATION.md",
+          "line": 797,
+          "referrer": "scripts/governance/classify_paths.py",
+          "resolved": "governance/PATH-CLASSIFICATION.md",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/PATH-CLASSIFICATION.md",
+          "line": 803,
+          "referrer": "scripts/governance/classify_paths.py",
+          "resolved": "governance/PATH-CLASSIFICATION.md",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/PATH-CLASSIFICATION.md",
+          "line": 29,
+          "referrer": "scripts/governance/validate_coderabbit_config.py",
+          "resolved": "governance/PATH-CLASSIFICATION.md",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/PATH-CLASSIFICATION.md",
+          "line": 249,
+          "referrer": "scripts/revue.py",
+          "resolved": "governance/PATH-CLASSIFICATION.md",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/PATH-CLASSIFICATION.md",
+          "line": 212,
+          "referrer": "stories/RC1-011.md",
+          "resolved": "governance/PATH-CLASSIFICATION.md",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/PATH-CLASSIFICATION.md",
+          "line": 42,
+          "referrer": "stories/RC1-504.md",
+          "resolved": "governance/PATH-CLASSIFICATION.md",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/PATH-CLASSIFICATION.md",
+          "line": 60,
+          "referrer": "stories/RC1-504.md",
+          "resolved": "governance/PATH-CLASSIFICATION.md",
+          "severity": "hard"
+        }
+      ],
+      "rule_id": "generated-path-classification-markdown",
+      "sha256": null,
+      "size": null,
+      "target_path": null,
+      "type": null
+    },
+    {
       "class": "GOVERNANCE",
       "generated": false,
       "load_bearing": true,
@@ -27049,14 +27869,14 @@
         },
         {
           "candidate": "governance/error-handling-contracts.json",
-          "line": 61,
+          "line": 64,
           "referrer": "src/forgeai/hardware/detect.py",
           "resolved": "governance/error-handling-contracts.json",
           "severity": "hard"
         },
         {
           "candidate": "governance/error-handling-contracts.json",
-          "line": 95,
+          "line": 102,
           "referrer": "src/forgeai/hardware/detect.py",
           "resolved": "governance/error-handling-contracts.json",
           "severity": "hard"
@@ -27242,6 +28062,790 @@
       "size": 24022,
       "target_path": null,
       "type": "text"
+    },
+    {
+      "class": "GENERATED",
+      "generated": true,
+      "load_bearing": true,
+      "owner": "gouvernance-generateurs",
+      "path": "governance/path-classification.json",
+      "referenced_by": [
+        {
+          "candidate": "governance/path-classification.json",
+          "line": 26,
+          "referrer": ".coderabbit.yaml",
+          "resolved": "governance/path-classification.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/path-classification.json",
+          "line": 25,
+          "referrer": "evidence/reviews/RC1-008-PR496-v2/DeepSeek-V4-Pro.verdict.json",
+          "resolved": "governance/path-classification.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/path-classification.json",
+          "line": 24,
+          "referrer": "evidence/reviews/RC1-008-PR496-v5/DeepSeek-V4-Pro.verdict.json",
+          "resolved": "governance/path-classification.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/path-classification.json",
+          "line": 26,
+          "referrer": "evidence/reviews/RC1-008-PR496-v5/DeepSeek-V4-Pro.verdict.json",
+          "resolved": "governance/path-classification.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/path-classification.json",
+          "line": 31,
+          "referrer": "evidence/reviews/RC1-008-PR496/Kimi-2.7.verdict.json",
+          "resolved": "governance/path-classification.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/path-classification.json",
+          "line": 32,
+          "referrer": "evidence/reviews/RC1-008-PR496/Kimi-2.7.verdict.json",
+          "resolved": "governance/path-classification.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/path-classification.json",
+          "line": 6,
+          "referrer": "evidence/reviews/RC1-009-PR500-v1/DeepSeek-V4-Pro.verdict.json",
+          "resolved": "governance/path-classification.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/path-classification.json",
+          "line": 8,
+          "referrer": "evidence/reviews/RC1-009-PR500-v1/DeepSeek-V4-Pro.verdict.json",
+          "resolved": "governance/path-classification.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/path-classification.json",
+          "line": 6,
+          "referrer": "evidence/reviews/RC1-009-PR500-v3/DeepSeek-V4-Pro.verdict.json",
+          "resolved": "governance/path-classification.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/path-classification.json",
+          "line": 8,
+          "referrer": "evidence/reviews/RC1-009-PR500-v3/DeepSeek-V4-Pro.verdict.json",
+          "resolved": "governance/path-classification.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/path-classification.json",
+          "line": 18,
+          "referrer": "evidence/reviews/RC1-010-lot0-PR501-v1/DeepSeek-V4-Pro.verdict.json",
+          "resolved": "governance/path-classification.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/path-classification.json",
+          "line": 20,
+          "referrer": "evidence/reviews/RC1-010-lot0-PR501-v1/DeepSeek-V4-Pro.verdict.json",
+          "resolved": "governance/path-classification.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/path-classification.json",
+          "line": 6,
+          "referrer": "evidence/reviews/RC1-010-lot0-PR501-v2/DeepSeek-V4-Pro.verdict.json",
+          "resolved": "governance/path-classification.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/path-classification.json",
+          "line": 8,
+          "referrer": "evidence/reviews/RC1-010-lot0-PR501-v2/DeepSeek-V4-Pro.verdict.json",
+          "resolved": "governance/path-classification.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/path-classification.json",
+          "line": 8,
+          "referrer": "evidence/reviews/RC1-010-lot2-PR503-v1/DeepSeek-V4-Pro.verdict.json",
+          "resolved": "governance/path-classification.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/path-classification.json",
+          "line": 14,
+          "referrer": "evidence/reviews/RC1-010-lot2-PR503-v1/DeepSeek-V4-Pro.verdict.json",
+          "resolved": "governance/path-classification.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/path-classification.json",
+          "line": 20,
+          "referrer": "evidence/reviews/RC1-010-lot2-PR503-v1/DeepSeek-V4-Pro.verdict.json",
+          "resolved": "governance/path-classification.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/path-classification.json",
+          "line": 26,
+          "referrer": "evidence/reviews/RC1-010-lot2-PR503-v1/DeepSeek-V4-Pro.verdict.json",
+          "resolved": "governance/path-classification.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/path-classification.json",
+          "line": 8,
+          "referrer": "evidence/reviews/RC1-010-lot2-PR503-v2/DeepSeek-V4-Pro.verdict.json",
+          "resolved": "governance/path-classification.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/path-classification.json",
+          "line": 6,
+          "referrer": "evidence/reviews/RC1-010-lot2-PR503-v3/DeepSeek-V4-Pro.verdict.json",
+          "resolved": "governance/path-classification.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/path-classification.json",
+          "line": 8,
+          "referrer": "evidence/reviews/RC1-010-lot2-PR503-v3/DeepSeek-V4-Pro.verdict.json",
+          "resolved": "governance/path-classification.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/path-classification.json",
+          "line": 8,
+          "referrer": "evidence/reviews/RC1-010-lot2-PR503-v3/Qwen3.7-Max.verdict.json",
+          "resolved": "governance/path-classification.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/path-classification.json",
+          "line": 6,
+          "referrer": "evidence/reviews/RC1-010-lot2-PR503-v4/DeepSeek-V4-Pro.verdict.json",
+          "resolved": "governance/path-classification.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/path-classification.json",
+          "line": 8,
+          "referrer": "evidence/reviews/RC1-010-lot2-PR503-v4/DeepSeek-V4-Pro.verdict.json",
+          "resolved": "governance/path-classification.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/path-classification.json",
+          "line": 7,
+          "referrer": "evidence/reviews/RC1-010-lot4-PR507-v1/DeepSeek-V4-Pro.verdict.json",
+          "resolved": "governance/path-classification.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/path-classification.json",
+          "line": 6,
+          "referrer": "evidence/reviews/RC1-010-lot5a-PR508-v1/DeepSeek-V4-Pro.verdict.json",
+          "resolved": "governance/path-classification.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/path-classification.json",
+          "line": 8,
+          "referrer": "evidence/reviews/RC1-010-lot5a-PR508-v1/DeepSeek-V4-Pro.verdict.json",
+          "resolved": "governance/path-classification.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/path-classification.json",
+          "line": 7,
+          "referrer": "evidence/reviews/RC1-010-lot5b-PR510-v1/Kimi-2.7.verdict.json",
+          "resolved": "governance/path-classification.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/path-classification.json",
+          "line": 6,
+          "referrer": "evidence/reviews/RC1-010-lot5b-PR510-v2/Kimi-2.7.verdict.json",
+          "resolved": "governance/path-classification.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/path-classification.json",
+          "line": 8,
+          "referrer": "evidence/reviews/RC1-010-lot5b-PR510-v2/Kimi-2.7.verdict.json",
+          "resolved": "governance/path-classification.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/path-classification.json",
+          "line": 8,
+          "referrer": "evidence/reviews/RC1-010-lot5b-PR510-v2/Kimi-2.7.verdict.json",
+          "resolved": "governance/path-classification.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/path-classification.json",
+          "line": 6,
+          "referrer": "evidence/reviews/RC1-010-lot5b-PR510-v4/Kimi-2.7.verdict.json",
+          "resolved": "governance/path-classification.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/path-classification.json",
+          "line": 8,
+          "referrer": "evidence/reviews/RC1-010-lot5b-PR510-v4/Kimi-2.7.verdict.json",
+          "resolved": "governance/path-classification.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/path-classification.json",
+          "line": 8,
+          "referrer": "evidence/reviews/RC1-010-lot5b-PR510-v4/Kimi-2.7.verdict.json",
+          "resolved": "governance/path-classification.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/path-classification.json",
+          "line": 7,
+          "referrer": "evidence/reviews/RC1-504-v1/Kimi-2.7.verdict.json",
+          "resolved": "governance/path-classification.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/path-classification.json",
+          "line": 12,
+          "referrer": "evidence/reviews/RC1-504-v1/Kimi-2.7.verdict.json",
+          "resolved": "governance/path-classification.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/path-classification.json",
+          "line": 14,
+          "referrer": "evidence/reviews/RC1-504-v1/Kimi-2.7.verdict.json",
+          "resolved": "governance/path-classification.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/path-classification.json",
+          "line": 176,
+          "referrer": "governance/path-classification-rules.json",
+          "resolved": "governance/path-classification.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/path-classification.json",
+          "line": 5,
+          "referrer": "governance/path-classification.schema.json",
+          "resolved": "governance/path-classification.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/path-classification.json",
+          "line": 723,
+          "referrer": "scripts/governance/classify_paths.py",
+          "resolved": "governance/path-classification.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/path-classification.json",
+          "line": 751,
+          "referrer": "scripts/governance/classify_paths.py",
+          "resolved": "governance/path-classification.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/path-classification.json",
+          "line": 766,
+          "referrer": "scripts/governance/classify_paths.py",
+          "resolved": "governance/path-classification.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/path-classification.json",
+          "line": 28,
+          "referrer": "scripts/governance/validate_coderabbit_config.py",
+          "resolved": "governance/path-classification.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/path-classification.json",
+          "line": 236,
+          "referrer": "scripts/revue.py",
+          "resolved": "governance/path-classification.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/path-classification.json",
+          "line": 248,
+          "referrer": "scripts/revue.py",
+          "resolved": "governance/path-classification.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/path-classification.json",
+          "line": 211,
+          "referrer": "stories/RC1-011.md",
+          "resolved": "governance/path-classification.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/path-classification.json",
+          "line": 15,
+          "referrer": "stories/RC1-504.md",
+          "resolved": "governance/path-classification.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/path-classification.json",
+          "line": 31,
+          "referrer": "stories/RC1-504.md",
+          "resolved": "governance/path-classification.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/path-classification.json",
+          "line": 42,
+          "referrer": "stories/RC1-504.md",
+          "resolved": "governance/path-classification.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/path-classification.json",
+          "line": 60,
+          "referrer": "stories/RC1-504.md",
+          "resolved": "governance/path-classification.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/path-classification.json",
+          "line": 763,
+          "referrer": "tests/test_classify_paths.py",
+          "resolved": "governance/path-classification.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/path-classification.json",
+          "line": 919,
+          "referrer": "tests/test_classify_paths.py",
+          "resolved": "governance/path-classification.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/path-classification.json",
+          "line": 951,
+          "referrer": "tests/test_classify_paths.py",
+          "resolved": "governance/path-classification.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/path-classification.json",
+          "line": 246,
+          "referrer": "tests/test_revue.py",
+          "resolved": "governance/path-classification.json",
+          "severity": "hard"
+        }
+      ],
+      "rule_id": "generated-path-classification-json",
+      "sha256": null,
+      "size": null,
+      "target_path": null,
+      "type": null
+    },
+    {
+      "class": "GENERATED",
+      "generated": true,
+      "load_bearing": true,
+      "owner": "gouvernance-generateurs",
+      "path": "governance/path-classification.json",
+      "referenced_by": [
+        {
+          "candidate": "governance/path-classification.json",
+          "line": 26,
+          "referrer": ".coderabbit.yaml",
+          "resolved": "governance/path-classification.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/path-classification.json",
+          "line": 25,
+          "referrer": "evidence/reviews/RC1-008-PR496-v2/DeepSeek-V4-Pro.verdict.json",
+          "resolved": "governance/path-classification.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/path-classification.json",
+          "line": 24,
+          "referrer": "evidence/reviews/RC1-008-PR496-v5/DeepSeek-V4-Pro.verdict.json",
+          "resolved": "governance/path-classification.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/path-classification.json",
+          "line": 26,
+          "referrer": "evidence/reviews/RC1-008-PR496-v5/DeepSeek-V4-Pro.verdict.json",
+          "resolved": "governance/path-classification.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/path-classification.json",
+          "line": 31,
+          "referrer": "evidence/reviews/RC1-008-PR496/Kimi-2.7.verdict.json",
+          "resolved": "governance/path-classification.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/path-classification.json",
+          "line": 32,
+          "referrer": "evidence/reviews/RC1-008-PR496/Kimi-2.7.verdict.json",
+          "resolved": "governance/path-classification.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/path-classification.json",
+          "line": 6,
+          "referrer": "evidence/reviews/RC1-009-PR500-v1/DeepSeek-V4-Pro.verdict.json",
+          "resolved": "governance/path-classification.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/path-classification.json",
+          "line": 8,
+          "referrer": "evidence/reviews/RC1-009-PR500-v1/DeepSeek-V4-Pro.verdict.json",
+          "resolved": "governance/path-classification.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/path-classification.json",
+          "line": 6,
+          "referrer": "evidence/reviews/RC1-009-PR500-v3/DeepSeek-V4-Pro.verdict.json",
+          "resolved": "governance/path-classification.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/path-classification.json",
+          "line": 8,
+          "referrer": "evidence/reviews/RC1-009-PR500-v3/DeepSeek-V4-Pro.verdict.json",
+          "resolved": "governance/path-classification.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/path-classification.json",
+          "line": 18,
+          "referrer": "evidence/reviews/RC1-010-lot0-PR501-v1/DeepSeek-V4-Pro.verdict.json",
+          "resolved": "governance/path-classification.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/path-classification.json",
+          "line": 20,
+          "referrer": "evidence/reviews/RC1-010-lot0-PR501-v1/DeepSeek-V4-Pro.verdict.json",
+          "resolved": "governance/path-classification.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/path-classification.json",
+          "line": 6,
+          "referrer": "evidence/reviews/RC1-010-lot0-PR501-v2/DeepSeek-V4-Pro.verdict.json",
+          "resolved": "governance/path-classification.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/path-classification.json",
+          "line": 8,
+          "referrer": "evidence/reviews/RC1-010-lot0-PR501-v2/DeepSeek-V4-Pro.verdict.json",
+          "resolved": "governance/path-classification.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/path-classification.json",
+          "line": 8,
+          "referrer": "evidence/reviews/RC1-010-lot2-PR503-v1/DeepSeek-V4-Pro.verdict.json",
+          "resolved": "governance/path-classification.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/path-classification.json",
+          "line": 14,
+          "referrer": "evidence/reviews/RC1-010-lot2-PR503-v1/DeepSeek-V4-Pro.verdict.json",
+          "resolved": "governance/path-classification.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/path-classification.json",
+          "line": 20,
+          "referrer": "evidence/reviews/RC1-010-lot2-PR503-v1/DeepSeek-V4-Pro.verdict.json",
+          "resolved": "governance/path-classification.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/path-classification.json",
+          "line": 26,
+          "referrer": "evidence/reviews/RC1-010-lot2-PR503-v1/DeepSeek-V4-Pro.verdict.json",
+          "resolved": "governance/path-classification.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/path-classification.json",
+          "line": 8,
+          "referrer": "evidence/reviews/RC1-010-lot2-PR503-v2/DeepSeek-V4-Pro.verdict.json",
+          "resolved": "governance/path-classification.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/path-classification.json",
+          "line": 6,
+          "referrer": "evidence/reviews/RC1-010-lot2-PR503-v3/DeepSeek-V4-Pro.verdict.json",
+          "resolved": "governance/path-classification.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/path-classification.json",
+          "line": 8,
+          "referrer": "evidence/reviews/RC1-010-lot2-PR503-v3/DeepSeek-V4-Pro.verdict.json",
+          "resolved": "governance/path-classification.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/path-classification.json",
+          "line": 8,
+          "referrer": "evidence/reviews/RC1-010-lot2-PR503-v3/Qwen3.7-Max.verdict.json",
+          "resolved": "governance/path-classification.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/path-classification.json",
+          "line": 6,
+          "referrer": "evidence/reviews/RC1-010-lot2-PR503-v4/DeepSeek-V4-Pro.verdict.json",
+          "resolved": "governance/path-classification.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/path-classification.json",
+          "line": 8,
+          "referrer": "evidence/reviews/RC1-010-lot2-PR503-v4/DeepSeek-V4-Pro.verdict.json",
+          "resolved": "governance/path-classification.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/path-classification.json",
+          "line": 7,
+          "referrer": "evidence/reviews/RC1-010-lot4-PR507-v1/DeepSeek-V4-Pro.verdict.json",
+          "resolved": "governance/path-classification.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/path-classification.json",
+          "line": 6,
+          "referrer": "evidence/reviews/RC1-010-lot5a-PR508-v1/DeepSeek-V4-Pro.verdict.json",
+          "resolved": "governance/path-classification.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/path-classification.json",
+          "line": 8,
+          "referrer": "evidence/reviews/RC1-010-lot5a-PR508-v1/DeepSeek-V4-Pro.verdict.json",
+          "resolved": "governance/path-classification.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/path-classification.json",
+          "line": 7,
+          "referrer": "evidence/reviews/RC1-010-lot5b-PR510-v1/Kimi-2.7.verdict.json",
+          "resolved": "governance/path-classification.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/path-classification.json",
+          "line": 6,
+          "referrer": "evidence/reviews/RC1-010-lot5b-PR510-v2/Kimi-2.7.verdict.json",
+          "resolved": "governance/path-classification.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/path-classification.json",
+          "line": 8,
+          "referrer": "evidence/reviews/RC1-010-lot5b-PR510-v2/Kimi-2.7.verdict.json",
+          "resolved": "governance/path-classification.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/path-classification.json",
+          "line": 8,
+          "referrer": "evidence/reviews/RC1-010-lot5b-PR510-v2/Kimi-2.7.verdict.json",
+          "resolved": "governance/path-classification.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/path-classification.json",
+          "line": 6,
+          "referrer": "evidence/reviews/RC1-010-lot5b-PR510-v4/Kimi-2.7.verdict.json",
+          "resolved": "governance/path-classification.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/path-classification.json",
+          "line": 8,
+          "referrer": "evidence/reviews/RC1-010-lot5b-PR510-v4/Kimi-2.7.verdict.json",
+          "resolved": "governance/path-classification.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/path-classification.json",
+          "line": 8,
+          "referrer": "evidence/reviews/RC1-010-lot5b-PR510-v4/Kimi-2.7.verdict.json",
+          "resolved": "governance/path-classification.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/path-classification.json",
+          "line": 7,
+          "referrer": "evidence/reviews/RC1-504-v1/Kimi-2.7.verdict.json",
+          "resolved": "governance/path-classification.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/path-classification.json",
+          "line": 12,
+          "referrer": "evidence/reviews/RC1-504-v1/Kimi-2.7.verdict.json",
+          "resolved": "governance/path-classification.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/path-classification.json",
+          "line": 14,
+          "referrer": "evidence/reviews/RC1-504-v1/Kimi-2.7.verdict.json",
+          "resolved": "governance/path-classification.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/path-classification.json",
+          "line": 176,
+          "referrer": "governance/path-classification-rules.json",
+          "resolved": "governance/path-classification.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/path-classification.json",
+          "line": 5,
+          "referrer": "governance/path-classification.schema.json",
+          "resolved": "governance/path-classification.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/path-classification.json",
+          "line": 723,
+          "referrer": "scripts/governance/classify_paths.py",
+          "resolved": "governance/path-classification.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/path-classification.json",
+          "line": 751,
+          "referrer": "scripts/governance/classify_paths.py",
+          "resolved": "governance/path-classification.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/path-classification.json",
+          "line": 766,
+          "referrer": "scripts/governance/classify_paths.py",
+          "resolved": "governance/path-classification.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/path-classification.json",
+          "line": 28,
+          "referrer": "scripts/governance/validate_coderabbit_config.py",
+          "resolved": "governance/path-classification.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/path-classification.json",
+          "line": 236,
+          "referrer": "scripts/revue.py",
+          "resolved": "governance/path-classification.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/path-classification.json",
+          "line": 248,
+          "referrer": "scripts/revue.py",
+          "resolved": "governance/path-classification.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/path-classification.json",
+          "line": 211,
+          "referrer": "stories/RC1-011.md",
+          "resolved": "governance/path-classification.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/path-classification.json",
+          "line": 15,
+          "referrer": "stories/RC1-504.md",
+          "resolved": "governance/path-classification.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/path-classification.json",
+          "line": 31,
+          "referrer": "stories/RC1-504.md",
+          "resolved": "governance/path-classification.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/path-classification.json",
+          "line": 42,
+          "referrer": "stories/RC1-504.md",
+          "resolved": "governance/path-classification.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/path-classification.json",
+          "line": 60,
+          "referrer": "stories/RC1-504.md",
+          "resolved": "governance/path-classification.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/path-classification.json",
+          "line": 763,
+          "referrer": "tests/test_classify_paths.py",
+          "resolved": "governance/path-classification.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/path-classification.json",
+          "line": 919,
+          "referrer": "tests/test_classify_paths.py",
+          "resolved": "governance/path-classification.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/path-classification.json",
+          "line": 951,
+          "referrer": "tests/test_classify_paths.py",
+          "resolved": "governance/path-classification.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/path-classification.json",
+          "line": 246,
+          "referrer": "tests/test_revue.py",
+          "resolved": "governance/path-classification.json",
+          "severity": "hard"
+        }
+      ],
+      "rule_id": "generated-path-classification-json",
+      "sha256": null,
+      "size": null,
+      "target_path": null,
+      "type": null
     },
     {
       "class": "GENERATED",
@@ -36499,8 +38103,8 @@
         }
       ],
       "rule_id": "product-source",
-      "sha256": "880b9de87ff0e9d924b324b970e3abea242bae4ade1f2d658b0b4fa8d3ce0c1f",
-      "size": 7270,
+      "sha256": "e4b5f65155248e1f29392cfbcf08ccf62ac5b64c50dc30bd73eaca7543368c6f",
+      "size": 7821,
       "target_path": null,
       "type": "text"
     },
@@ -46572,8 +48176,8 @@
         }
       ],
       "rule_id": "test-suite",
-      "sha256": "63db0f3ceb889a9e2c24881d27a3904479861da61e16dd31f543ac07847a4dcc",
-      "size": 8840,
+      "sha256": "123db54c3996295b3a0f635a24eb5477a56317d0bd30414cc6769d87def9403f",
+      "size": 10039,
       "target_path": null,
       "type": "text"
     },
@@ -92360,7 +93964,11 @@
       {
         "candidate": "recu-revue/1",
         "line": 2,
+<<<<<<< HEAD
         "referrer": "evidence/reviews/RC1-546/RECU.json"
+=======
+        "referrer": "evidence/reviews/RC1-547/RECU.json"
+>>>>>>> 0c25926 (chore(review): scelle RC1-547 (APPROVE 3/3) — evidence/reviews/, gouvernance régénérée)
       },
       {
         "candidate": "reviews/",
@@ -114708,6 +116316,41 @@
         "referrer": "src/forgeai/hardware/detect.py"
       },
       {
+        "candidate": "482/",
+        "line": 43,
+        "referrer": "src/forgeai/hardware/detect.py"
+      },
+      {
+        "candidate": "492/",
+        "line": 43,
+        "referrer": "src/forgeai/hardware/detect.py"
+      },
+      {
+        "candidate": "527/",
+        "line": 43,
+        "referrer": "src/forgeai/hardware/detect.py"
+      },
+      {
+        "candidate": "distro/version",
+        "line": 44,
+        "referrer": "src/forgeai/hardware/detect.py"
+      },
+      {
+        "candidate": "482/",
+        "line": 77,
+        "referrer": "src/forgeai/hardware/detect.py"
+      },
+      {
+        "candidate": "492/",
+        "line": 77,
+        "referrer": "src/forgeai/hardware/detect.py"
+      },
+      {
+        "candidate": "527/",
+        "line": 77,
+        "referrer": "src/forgeai/hardware/detect.py"
+      },
+      {
         "candidate": "Instinct/CDNA",
         "line": 128,
         "referrer": "src/forgeai/hardware/drivers.py"
@@ -128288,8 +129931,33 @@
         "referrer": "tests/test_hardware_detect.py"
       },
       {
+        "candidate": "482/",
+        "line": 63,
+        "referrer": "tests/test_hardware_detect.py"
+      },
+      {
+        "candidate": "492/",
+        "line": 63,
+        "referrer": "tests/test_hardware_detect.py"
+      },
+      {
+        "candidate": "527/",
+        "line": 63,
+        "referrer": "tests/test_hardware_detect.py"
+      },
+      {
+        "candidate": "inter-distro/locale",
+        "line": 64,
+        "referrer": "tests/test_hardware_detect.py"
+      },
+      {
+        "candidate": "FR/EN",
+        "line": 64,
+        "referrer": "tests/test_hardware_detect.py"
+      },
+      {
         "candidate": "driver/runtime",
-        "line": 172,
+        "line": 194,
         "referrer": "tests/test_hardware_detect.py"
       },
       {
@@ -137247,10 +138915,17 @@
         "severity": "hard"
       },
       {
+<<<<<<< HEAD
         "candidate": "RC1-546",
         "line": 198,
         "referrer": "evidence/reviews/BINDING.txt",
         "resolved": "evidence/reviews/RC1-546",
+=======
+        "candidate": "RC1-547",
+        "line": 198,
+        "referrer": "evidence/reviews/BINDING.txt",
+        "resolved": "evidence/reviews/RC1-547",
+>>>>>>> 0c25926 (chore(review): scelle RC1-547 (APPROVE 3/3) — evidence/reviews/, gouvernance régénérée)
         "severity": "hard"
       },
       {
@@ -158703,14 +160378,14 @@
       },
       {
         "candidate": "governance/error-handling-contracts.json",
-        "line": 61,
+        "line": 64,
         "referrer": "src/forgeai/hardware/detect.py",
         "resolved": "governance/error-handling-contracts.json",
         "severity": "hard"
       },
       {
         "candidate": "governance/error-handling-contracts.json",
-        "line": 95,
+        "line": 102,
         "referrer": "src/forgeai/hardware/detect.py",
         "resolved": "governance/error-handling-contracts.json",
         "severity": "hard"
@@ -163791,8 +165466,21 @@
     "by_class": {
       "ARCHIVE": 44,
       "DOCS": 18,
+<<<<<<< HEAD
       "EVIDENCE": 1512,
+=======
+<<<<<<< HEAD
+      "EVIDENCE": 1508,
+=======
+<<<<<<< HEAD
+      "EVIDENCE": 1504,
+>>>>>>> b9562ea1 (chore(review): scelle RC1-547 (APPROVE 3/3) — evidence/reviews/, gouvernance régénérée)
+>>>>>>> b02f2805 (chore(review): scelle RC1-547 (APPROVE 3/3) — evidence/reviews/, gouvernance régénérée)
       "GENERATED": 5,
+=======
+      "EVIDENCE": 1506,
+      "GENERATED": 9,
+>>>>>>> 0c25926 (chore(review): scelle RC1-547 (APPROVE 3/3) — evidence/reviews/, gouvernance régénérée)
       "GOVERNANCE": 193,
       "PRODUCT": 113,
       "TEST": 211,
@@ -163810,10 +165498,22 @@
       "evidence-audit-output-root": 18,
       "evidence-dedup-root": 2,
       "evidence-registres-root": 35,
+<<<<<<< HEAD
       "evidence-reviews-root": 1457,
+=======
+<<<<<<< HEAD
+      "evidence-reviews-root": 1453,
+=======
+<<<<<<< HEAD
+      "evidence-reviews-root": 1449,
+=======
+      "evidence-reviews-root": 1451,
+>>>>>>> 0c25926 (chore(review): scelle RC1-547 (APPROVE 3/3) — evidence/reviews/, gouvernance régénérée)
+>>>>>>> b9562ea1 (chore(review): scelle RC1-547 (APPROVE 3/3) — evidence/reviews/, gouvernance régénérée)
+>>>>>>> b02f2805 (chore(review): scelle RC1-547 (APPROVE 3/3) — evidence/reviews/, gouvernance régénérée)
       "generated-authority-map": 1,
-      "generated-path-classification-json": 1,
-      "generated-path-classification-markdown": 1,
+      "generated-path-classification-json": 3,
+      "generated-path-classification-markdown": 3,
       "generated-state-current-json": 1,
       "generated-state-current-markdown": 1,
       "governance-canon": 14,
@@ -163846,11 +165546,35 @@
       "working-sandbox-readme": 1
     },
     "case_collisions_total": 0,
+<<<<<<< HEAD
     "dangling_references_total": 16342,
+=======
+<<<<<<< HEAD
+    "dangling_references_total": 16329,
+=======
+<<<<<<< HEAD
+    "dangling_references_total": 16341,
+>>>>>>> b9562ea1 (chore(review): scelle RC1-547 (APPROVE 3/3) — evidence/reviews/, gouvernance régénérée)
+>>>>>>> b02f2805 (chore(review): scelle RC1-547 (APPROVE 3/3) — evidence/reviews/, gouvernance régénérée)
     "generated_total": 9,
     "load_bearing_total": 1966,
     "portability_violations_total": 0,
+<<<<<<< HEAD
     "tracked_total": 2106,
+=======
+<<<<<<< HEAD
+    "tracked_total": 2102,
+=======
+    "tracked_total": 2098,
+=======
+    "dangling_references_total": 16336,
+    "generated_total": 13,
+    "load_bearing_total": 1964,
+    "portability_violations_total": 0,
+    "tracked_total": 2104,
+>>>>>>> 0c25926 (chore(review): scelle RC1-547 (APPROVE 3/3) — evidence/reviews/, gouvernance régénérée)
+>>>>>>> b9562ea1 (chore(review): scelle RC1-547 (APPROVE 3/3) — evidence/reviews/, gouvernance régénérée)
+>>>>>>> b02f2805 (chore(review): scelle RC1-547 (APPROVE 3/3) — evidence/reviews/, gouvernance régénérée)
     "unclassified_total": 0,
     "unicode_anomalies_total": 0
   },

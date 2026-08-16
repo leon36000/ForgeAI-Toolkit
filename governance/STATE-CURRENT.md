@@ -362,7 +362,7 @@
     },
     {
       "path": "tests/test_hardware_detect.py",
-      "sha256": "63db0f3ceb889a9e2c24881d27a3904479861da61e16dd31f543ac07847a4dcc"
+      "sha256": "123db54c3996295b3a0f635a24eb5477a56317d0bd30414cc6769d87def9403f"
     },
     {
       "path": "tests/test_health029_sondes_executables.py",
