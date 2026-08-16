@@ -5,12 +5,12 @@
     "justification": "Les dispositions JUSTIFIED sont réexaminées au plus tard tous les 180 jours pour confirmer qu'elles restent exactes (le code n'a pas dérivé) et nécessaires."
   },
   "coverage": {
-    "total_except_sites_src_forgeai": 196,
+    "total_except_sites_src_forgeai": 197,
     "measured_on": "chore/RC1-023-error-handlers @ rebase sur origin/main b5e928b (comptage AST post-rebase)",
     "measured_command": "comptage AST (ast.ExceptHandler) sur src/forgeai — méthode grep (^\\s*except) abandonnée : donne 205, faux positifs confirmés dans src/forgeai/ide/guard_fs.py (script généré embarqué comme littéral de chaîne, non exécuté par ce module — grep ne distingue pas le texte d'une chaîne du code réel, l'AST si)",
-    "contracted": 31,
-    "floor": 31,
-    "note": "Campagne en lots (précédent : RC1-010/#440, 9 lots). Lot 1 = les 24 sites body_kind pass/continue (les plus silencieux, priorité de l'issue #452) + 1 site adjacent découvert en traitant l'un d'eux (web/server.py:1517, même fonction que le site 1523 inventorié). Lots suivants : catégories body_kind='autre' (29) puis 'return_default' (87) par sous-système, et contrats docstring légers sur les 42 sites 're_raise' (déjà conformes — la cause est déjà propagée, pas 'avalée' au sens du critère). `floor` augmente à chaque lot ; jamais abaissé sans suppression documentée d'une entrée existante (visible en revue). Round 11 (#452) — objection GPT-5.6-Terra-Pro : le diff de cette story a elle-même introduit 6 nouveaux sites body_kind=pass (repli ultime du print diagnostic best-effort, motif # proof:allow) non contractualisés lors de leur introduction — corrigé ici (contracted 25 -> 31). Méthode de mesure corrigée en AST pur (voir measured_command) après découverte d'un écart grep/AST non lié à cette story (guard_fs.py, script embarqué en chaîne). Round 27 (#452) — objection GPT-5.6-Terra-Pro (str_exc_sur) : src/forgeai/core/safe_repr.py ajoute 1 except (return_default, repli défensif de str_exc_sur elle-même) — total 194 -> 195, contracted/floor inchangés (return_default reste différé aux lots suivants, comme les 87 préexistants). Post-round-39 (#452) : rebase sur origin/main (b5e928b) intègre src/forgeai/network/nodes.py:65 (`except (KeyError, TypeError): continue`, story tierce non liée à #452) — total 195 -> 196, contracted/floor inchangés (site body_kind=continue hors scope de ce lot, candidat pour un lot suivant de la campagne RC1-010/#440 comme les 158+1 sites déjà hors scope)."
+    "contracted": 32,
+    "floor": 32,
+    "note": "Campagne en lots (précédent : RC1-010/#440, 9 lots). Lot 1 = les 24 sites body_kind pass/continue (les plus silencieux, priorité de l'issue #452) + 1 site adjacent découvert en traitant l'un d'eux (web/server.py:1517, même fonction que le site 1523 inventorié). Lots suivants : catégories body_kind='autre' (29) puis 'return_default' (87) par sous-système, et contrats docstring légers sur les 42 sites 're_raise' (déjà conformes — la cause est déjà propagée, pas 'avalée' au sens du critère). `floor` augmente à chaque lot ; jamais abaissé sans suppression documentée d'une entrée existante (visible en revue). Round 11 (#452) — objection GPT-5.6-Terra-Pro : le diff de cette story a elle-même introduit 6 nouveaux sites body_kind=pass (repli ultime du print diagnostic best-effort, motif # proof:allow) non contractualisés lors de leur introduction — corrigé ici (contracted 25 -> 31). Méthode de mesure corrigée en AST pur (voir measured_command) après découverte d'un écart grep/AST non lié à cette story (guard_fs.py, script embarqué en chaîne). Round 27 (#452) — objection GPT-5.6-Terra-Pro (str_exc_sur) : src/forgeai/core/safe_repr.py ajoute 1 except (return_default, repli défensif de str_exc_sur elle-même) — total 194 -> 195, contracted/floor inchangés (return_default reste différé aux lots suivants, comme les 87 préexistants). Post-round-39 (#452) : rebase sur origin/main (b5e928b) intègre src/forgeai/network/nodes.py:65 (`except (KeyError, TypeError): continue`, story tierce non liée à #452) — total 195 -> 196, contracted/floor inchangés (site body_kind=continue hors scope de ce lot, candidat pour un lot suivant de la campagne RC1-010/#440 comme les 158+1 sites déjà hors scope). Post-#519 : ajout de _marquer_revocation_echouee() (openbao_init.py) introduit 1 nouveau site body_kind=pass — total 196 -> 197, contracted/floor 31 -> 32 (contractualisé immédiatement à l'introduction, comme l'exige la discipline établie au round 11)."
   },
   "contracts": [
     {
@@ -355,10 +355,10 @@
       "accepted_risk": "Aucun — non-critique (télémétrie), comportement de sortie déjà contractualisé (None sur délai expiré)."
     },
     {
-      "id": "site:src/forgeai/secrets/openbao_init.py:209",
+      "id": "site:src/forgeai/secrets/openbao_init.py:210",
       "site": {
         "path": "src/forgeai/secrets/openbao_init.py",
-        "line": 209,
+        "line": 210,
         "function": "forgeai.secrets.openbao_init.ensure_openbao_ready"
       },
       "exception_types": [
@@ -379,10 +379,10 @@
       "accepted_risk": "Le remplacement automatique du jeton reste le comportement ; seule la visibilité change (aucun nouveau risque de comportement)."
     },
     {
-      "id": "site:src/forgeai/secrets/openbao_init.py:250",
+      "id": "site:src/forgeai/secrets/openbao_init.py:251",
       "site": {
         "path": "src/forgeai/secrets/openbao_init.py",
-        "line": 250,
+        "line": 251,
         "function": "forgeai.secrets.openbao_init.ensure_openbao_ready"
       },
       "exception_types": [
@@ -395,11 +395,11 @@
       "behavior_contract": "Après création d'un nouveau jeton, tentative de révocation de l'ANCIEN (commentaire inline : \"best effort\") ; si la révocation échoue, l'ancien jeton reste valide jusqu'à expiration naturelle (TTL `period`). Désormais journalisé (stderr) car un jeton qui aurait dû être révoqué et qui ne l'est pas est un fait de sécurité qu'un opérateur doit pouvoir constater.",
       "logging": "stderr, via t() : \"[openbao] échec de révocation de l'ancien jeton (reste valide jusqu'à expiration naturelle)\"",
       "owner": "équipe secrets ForgeAI",
-      "justification": "Contrairement au site 209 (remplacement, dégradation sans risque résiduel), ce site laisse un risque résiduel réel : un identifiant qui AURAIT DÛ être invalidé reste utilisable. Le comportement best-effort reste correct (ne pas faire échouer tout le flux d'init pour un échec de révocation), mais l'absence totale de trace était le vrai gap : c'est exactement le cas d'usage du critère « métrique ou log lorsqu'une dégradation est volontaire ». Revue scellée round 3 (#452, GPT-5.6-Terra-Pro, rôle sécurité, MAJEURE) : le signal stderr lui-même peut s'éteindre silencieusement si stderr est fermé/cassé (repli final `except Exception: pass`, nécessaire par contrat — ce site ne doit jamais lever). Décision de scope consciente : ne PAS précipiter ici un correctif de persistance durable (nouveau champ dans secret_store, risque de collision avec l'écriture du nouveau token, tests de format) sous pression de revue — ce code touche la gestion de secrets, un correctif hâtif y est plus risqué qu'utile. Suivi concret ouvert : issue #519 (https://github.com/leon36000/ForgeAI-Toolkit/issues/519), propose un marqueur durable distinct du token ou une escalade vers un canal de log structuré.",
+      "justification": "Contrairement au site 210 (remplacement, dégradation sans risque résiduel), ce site laisse un risque résiduel réel : un identifiant qui AURAIT DÛ être invalidé reste utilisable. Le comportement best-effort reste correct (ne pas faire échouer tout le flux d'init pour un échec de révocation), mais l'absence totale de trace était le vrai gap : c'est exactement le cas d'usage du critère « métrique ou log lorsqu'une dégradation est volontaire ». Revue scellée round 3 (#452, GPT-5.6-Terra-Pro, rôle sécurité, MAJEURE) : le signal stderr lui-même peut s'éteindre silencieusement si stderr est fermé/cassé (repli final `except Exception: pass`, nécessaire par contrat — ce site ne doit jamais lever). Décision de scope consciente : ne PAS précipiter ici un correctif de persistance durable (nouveau champ dans secret_store, risque de collision avec l'écriture du nouveau token, tests de format) sous pression de revue — ce code touche la gestion de secrets, un correctif hâtif y est plus risqué qu'utile. Suivi concret ouvert : issue #519 (https://github.com/leon36000/ForgeAI-Toolkit/issues/519), propose un marqueur durable distinct du token ou une escalade vers un canal de log structuré. Suivi #519 CLÔTURÉ par ce commit : `_marquer_revocation_echouee()` (site openbao_init.py:274) persiste `revocation_failed_at` dans `secret_store` en plus du print stderr — lecture-modification-écriture complète (secret_store.write() remplace tout le contenu, jamais un merge), jamais le jeton révoqué lui-même. Aucune logique d'effacement du marqueur : secret_store.write({'token': new_token}) (juste avant ce bloc) écrase déjà tout marqueur d'un run précédent avant que ce bloc ne s'exécute — une logique d'effacement serait un no-op mort.",
       "compensating_test": "tests/test_openbao_init.py::test_old_token_revoke_failure_logs_stderr",
       "compensating_test_reason": null,
       "review_due": "2027-02-10",
-      "accepted_risk": "Le flux d'init ne bloque jamais sur un échec de révocation (comportement inchangé) ; le jeton non révoqué reste borné par son TTL `period` existant. Risque résiduel documenté et TRACÉ (pas seulement écrit) : issue #519 — le signal de visibilité lui-même (print stderr) n'est pas garanti si stderr est indisponible ; correction nécessite une conception dédiée (persistance) hors scope du lot 1 (visibilité des except silencieux)."
+      "accepted_risk": "Le flux d'init ne bloque jamais sur un échec de révocation (comportement inchangé) ; le jeton non révoqué reste borné par son TTL `period` existant. Risque résiduel documenté et TRACÉ DURABLEMENT : depuis #519 (ce commit), un marqueur `revocation_failed_at` (horodatage seul, jamais le jeton révoqué) est persisté dans `secret_store` via `_marquer_revocation_echouee()` (site openbao_init.py:274, entrée séparée ci-dessous) — ce marqueur survit même si le print stderr est perdu (stderr fermé/cassé)."
     },
     {
       "id": "site:src/forgeai/web/server.py:571",
@@ -650,10 +650,10 @@
       "accepted_risk": "Si stderr devient indisponible exactement quand detect_ram_gb() tente de signaler un meminfo illisible, ce message diagnostique est perdu silencieusement — le comportement observable (0.0 Go retourné) est inchangé et non affecté."
     },
     {
-      "id": "site:src/forgeai/secrets/openbao_init.py:217",
+      "id": "site:src/forgeai/secrets/openbao_init.py:218",
       "site": {
         "path": "src/forgeai/secrets/openbao_init.py",
-        "line": 217,
+        "line": 218,
         "function": "forgeai.secrets.openbao_init.ensure_openbao_ready"
       },
       "exception_types": [
@@ -673,10 +673,10 @@
       "accepted_risk": "Si stderr devient indisponible exactement à ce moment, la notice de remplacement de token est perdue silencieusement — le remplacement effectif du token (comportement sécuritaire réel) est inchangé et non affecté."
     },
     {
-      "id": "site:src/forgeai/secrets/openbao_init.py:257",
+      "id": "site:src/forgeai/secrets/openbao_init.py:258",
       "site": {
         "path": "src/forgeai/secrets/openbao_init.py",
-        "line": 257,
+        "line": 258,
         "function": "forgeai.secrets.openbao_init.ensure_openbao_ready"
       },
       "exception_types": [
@@ -718,6 +718,30 @@
       "compensating_test_reason": "Repli déterministe et trivial (second et dernier niveau d'un double essai d'impression diagnostique best-effort) ; un test dédié nécessiterait de simuler l'échec de deux appels print() consécutifs sur stderr, un scénario disproportionné par rapport à la valeur du test pour un chemin purement diagnostique dont aucun comportement métier ne dépend.",
       "review_due": "2027-02-10",
       "accepted_risk": "Si stderr devient indisponible exactement au démarrage pendant une restauration d'état échouée, cette notice diagnostique est perdue silencieusement — le comportement observable (état vide, serveur démarre quand même) est inchangé."
+    },
+    {
+      "id": "site:src/forgeai/secrets/openbao_init.py:274",
+      "site": {
+        "path": "src/forgeai/secrets/openbao_init.py",
+        "line": 274,
+        "function": "forgeai.secrets.openbao_init._marquer_revocation_echouee"
+      },
+      "exception_types": [
+        "Exception"
+      ],
+      "risk_paths": [
+        "securite",
+        "persistance"
+      ],
+      "disposition": "JUSTIFIED",
+      "behavior_contract": "Si la persistance du marqueur durable `revocation_failed_at` échoue elle-même (store cassé, permission refusée, disque plein), l'exception est avalée. Le flux d'init n'est jamais conditionné par le succès de ce marqueur — c'est un renforcement de visibilité en plus du print stderr existant (site openbao_init.py:251), pas un chemin dont dépend un comportement métier.",
+      "logging": "aucune — le print stderr du site appelant (openbao_init.py:251) est le seul signal si cette persistance échoue aussi",
+      "owner": "équipe secrets ForgeAI",
+      "justification": "Nouveau site introduit par #519 : réponse au risque résiduel du site 251 (l'échec de révocation de l'ancien jeton n'était visible que via un print stderr non garanti). `_marquer_revocation_echouee()` fait un read-modify-write best-effort sur `secret_store` (jamais le jeton révoqué lui-même, seulement un horodatage) — le `except Exception: pass` ici est le repli ultime de CE renforcement lui-même : si la persistance du marqueur échoue à son tour, on ne fait pas échouer tout l'init pour autant (même contrat que le site appelant, ce site ne doit jamais lever). Repli ultime déterministe, même famille que les sites déjà contractualisés 218/258 (double essai d'impression diagnostique) : ici un seul niveau (pas de double essai d'encodage, une seule tentative d'écriture).",
+      "compensating_test": "tests/test_openbao_init.py::test_old_token_revoke_failure_sets_durable_marker",
+      "compensating_test_reason": null,
+      "review_due": "2027-02-10",
+      "accepted_risk": "Si la persistance du marqueur échoue (store cassé/plein/permission refusée), la visibilité durable de l'échec de révocation est perdue — seul le print stderr du site 251 reste (déjà documenté comme non garanti si stderr est indisponible). Risque en cascade jugé acceptable : requiert DEUX pannes indépendantes simultanées (stderr ET secret_store) pour une perte totale de visibilité, contre une seule avant #519."
     }
   ]
 }

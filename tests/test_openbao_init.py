@@ -5,6 +5,7 @@ from __future__ import annotations
 import http.server
 import json
 import threading
+from datetime import datetime
 
 import pytest
 from forgeai.secrets.openbao_init import (
@@ -377,6 +378,112 @@ def test_old_token_revoke_failure_logs_stderr(capsys: pytest.CaptureFixture) -> 
     assert token and token != old_token
     captured = capsys.readouterr()
     assert ("révocation" in captured.err) or ("revocation" in captured.err.lower())
+
+
+def test_old_token_revoke_failure_sets_durable_marker() -> None:
+    """Vérifie que l'échec de révocation persiste un marqueur durable (sans le jeton révoqué)."""
+    class RevokeFailsTransport(FakeTransport):
+        def request(
+            self,
+            method: str,
+            path: str,
+            *,
+            token: str | None = None,
+            payload: dict | None = None,
+        ) -> tuple[int, dict]:
+            if method == "POST" and path == "/v1/auth/token/revoke":
+                self.calls.append((method, path, token, payload))
+                raise OpenBaoInitError("openbao POST /v1/auth/token/revoke -> HTTP 500")
+            return super().request(method, path, token=token, payload=payload)
+
+    transport = RevokeFailsTransport()
+    transport._initialized = True
+    transport._sealed = False
+    transport._root_token = "my-root"
+    transport._mounts.add("secret/")
+    transport._policies["forgeai-app"] = "..."
+
+    key_store = InMemoryStore({
+        "unseal_key": "my-key",
+        "root_token": "my-root",
+    })
+    old_token = "dead-token"
+    secret_store = InMemoryStore({"token": old_token})
+
+    token = ensure_openbao_ready(transport.request, key_store, secret_store)
+
+    assert token and token != old_token
+    donnees = secret_store.read()
+    assert donnees is not None
+
+    # Le marqueur durable est présent, non vide, et parsable en ISO 8601
+    # (preuve que ce n'est pas un placeholder inventé).
+    assert "revocation_failed_at" in donnees
+    horodatage = donnees["revocation_failed_at"]
+    assert isinstance(horodatage, str) and horodatage
+    datetime.fromisoformat(horodatage)
+
+    # Le read-modify-write a conservé le NOUVEAU token persisté (pas perdu, pas l'ancien).
+    assert donnees["token"] == token
+
+    # Le jeton révoqué lui-même n'apparaît nulle part dans le marqueur persisté.
+    assert old_token not in donnees
+    assert old_token not in donnees.values()
+
+
+def test_marker_persistence_failure_does_not_crash_init() -> None:
+    """Vérifie que l'échec de persistance du marqueur lui-même ne fait jamais échouer l'init."""
+    class RevokeFailsTransport(FakeTransport):
+        def request(
+            self,
+            method: str,
+            path: str,
+            *,
+            token: str | None = None,
+            payload: dict | None = None,
+        ) -> tuple[int, dict]:
+            if method == "POST" and path == "/v1/auth/token/revoke":
+                self.calls.append((method, path, token, payload))
+                raise OpenBaoInitError("openbao POST /v1/auth/token/revoke -> HTTP 500")
+            return super().request(method, path, token=token, payload=payload)
+
+    class MarkerWriteFailsStore(InMemoryStore):
+        """Store dont la persistance du marqueur de révocation échoue (OSError).
+
+        L'écriture normale du nouveau jeton (sans clé "revocation_failed_at")
+        réussit ; seule la tentative d'écriture du marqueur lève.
+        """
+        def write(self, data: dict) -> None:
+            if "revocation_failed_at" in data:
+                raise OSError("écriture du marqueur impossible (simulée)")
+            super().write(data)
+
+    transport = RevokeFailsTransport()
+    transport._initialized = True
+    transport._sealed = False
+    transport._root_token = "my-root"
+    transport._mounts.add("secret/")
+    transport._policies["forgeai-app"] = "..."
+
+    key_store = InMemoryStore({
+        "unseal_key": "my-key",
+        "root_token": "my-root",
+    })
+    old_token = "dead-token"
+    secret_store = MarkerWriteFailsStore({"token": old_token})
+
+    # Contrat : ce site ne doit JAMAIS lever, même si le marqueur échoue à son
+    # tour — la simple absence d'exception EST l'assertion principale.
+    token = ensure_openbao_ready(transport.request, key_store, secret_store)
+
+    assert token
+    assert token != old_token
+
+    # Le chemin de révocation (en échec) a bien été exercé...
+    revoke_calls = [c for c in transport.calls if c[1] == "/v1/auth/token/revoke"]
+    assert len(revoke_calls) == 1
+    # ...et l'écriture normale du nouveau jeton, elle, a réussi et survit.
+    assert secret_store.read() == {"token": token}
 
 
 class TestReadBackInitFails:

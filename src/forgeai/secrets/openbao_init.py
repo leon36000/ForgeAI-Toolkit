@@ -11,6 +11,7 @@ import sys
 import urllib.error
 import urllib.request
 from collections.abc import Callable
+from datetime import datetime, timezone
 from typing import Any
 
 from forgeai.core.validation import valider_schema_url
@@ -256,5 +257,19 @@ def ensure_openbao_ready(
                     print(message.encode("ascii", "backslashreplace").decode("ascii"), file=sys.stderr)
                 except Exception:  # proof:allow — repli ultime du print diagnostic best-effort (jamais lever, cf. governance/error-handling-contracts.json)
                     pass
+            _marquer_revocation_echouee(secret_store)
 
     return new_token
+
+
+def _marquer_revocation_echouee(secret_store: Any) -> None:
+    """Persiste un marqueur DURABLE (jamais le jeton révoqué lui-même) quand la révocation de
+    l'ancien jeton openbao échoue — le print stderr seul n'est pas garanti si stderr est fermé
+    ou cassé. Best-effort : ne doit JAMAIS lever, même contrat que le site appelant (cf.
+    governance/error-handling-contracts.json, site openbao_init.py, disposition FIXED)."""
+    try:
+        donnees = dict(secret_store.read() or {})
+        donnees["revocation_failed_at"] = datetime.now(timezone.utc).isoformat(timespec="seconds")
+        secret_store.write(donnees)
+    except Exception:  # proof:allow — marqueur best-effort, ne doit jamais faire échouer l'init openbao
+        pass
