@@ -5806,8 +5806,8 @@
         }
       ],
       "rule_id": "evidence-registres-root",
-      "sha256": "6d8511699b061b141890ed18a186dd57ca029d4b97a275a44dca589b7b64716c",
-      "size": 367916,
+      "sha256": "b086172098a2447c69b850a35a4ac84fcce85d017348f48d62412aac4f323d39",
+      "size": 369605,
       "target_path": null,
       "type": "text"
     },
@@ -7725,8 +7725,8 @@
         }
       ],
       "rule_id": "evidence-reviews-root",
-      "sha256": "5189c006d789959f0e4d2864c37daf3113e149b23d60b4a2d53ef794fb74455e",
-      "size": 2496,
+      "sha256": "b7c17fcb9bc89b7943beb84fafdb91bbdabdf0626ecb10ad988c4f9b80c90369",
+      "size": 2504,
       "target_path": null,
       "type": "text"
     },
@@ -18406,7 +18406,7 @@
       "path": "evidence/reviews/RC1-010-lot5d-PR-v7/RECU.json",
       "referenced_by": [],
       "rule_id": "evidence-reviews-root",
-      "sha256": "aa3c4f23be4b50e1eb6c4b8bf9699c3fa8afe179a3553e80ce38a00c7b4bdb49",
+      "sha256": "feaacb5d3d9f1cf6b2669c95b4485c424fb8ab69b4b055bb40bb418190900549",
       "size": 680,
       "target_path": null,
       "type": "text"
@@ -19097,6 +19097,58 @@
       "rule_id": "evidence-reviews-root",
       "sha256": "d7d2745690ef1ba7ec4f8a1f180980a2220dbb1c813f6c8908f7cdf0941e326e",
       "size": 661,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-530/Gemini-3.1-Pro.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "6de24ad68336bab56cb985a905b23134b92d6ec9458f0ee423f15b38eb2ae9c6",
+      "size": 329,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-530/MiMo-Pro-V2.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "f4cc747aba37fcb222e3f49a400aae71a79fcf41a8e9d26f8edc89ad208dd14e",
+      "size": 1166,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-530/Qwen3.7-Max.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "526dc4573daeadd6e9008a864c47cdf10f0e65a509ff5ed53e634572f5d270b0",
+      "size": 323,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-530/RECU.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "8d72a7f56b4306be1f65cd51cd71571776a8552debe358d17ceceb89db5c7a36",
+      "size": 660,
       "target_path": null,
       "type": "text"
     },
@@ -34924,6 +34976,13 @@
         },
         {
           "candidate": "src/forgeai/web/server.py",
+          "line": 12,
+          "referrer": "evidence/reviews/RC1-530/MiMo-Pro-V2.verdict.json",
+          "resolved": "src/forgeai/web/server.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "src/forgeai/web/server.py",
           "line": 6,
           "referrer": "evidence/reviews/REL-038C/Qwen3.7-Max.verdict.json",
           "resolved": "src/forgeai/web/server.py",
@@ -34982,6 +35041,13 @@
           "candidate": "src/forgeai/web/server.py",
           "line": 5,
           "referrer": "stories/PERF-030A.md",
+          "resolved": "src/forgeai/web/server.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "src/forgeai/web/server.py",
+          "line": 4,
+          "referrer": "stories/RC1-530.md",
           "resolved": "src/forgeai/web/server.py",
           "severity": "hard"
         },
@@ -35085,8 +35151,8 @@
         }
       ],
       "rule_id": "product-source",
-      "sha256": "ef0cdd79d6b68f46645fc8f08ea88248d624a228c3aedf7852d68f988237dfae",
-      "size": 71831,
+      "sha256": "1e6e8f7d0a19c0eda42e5f6faa70d8aa5fe5215e0ec2f9de66f1ea3c0b4ef61c",
+      "size": 71852,
       "target_path": null,
       "type": "text"
     },
@@ -36366,6 +36432,19 @@
       "generated": false,
       "load_bearing": false,
       "owner": "gouvernance-stories",
+      "path": "stories/RC1-530.md",
+      "referenced_by": [],
+      "rule_id": "governance-stories",
+      "sha256": "d58ba4c25ecde37fe2fb9f1146f5053614140f5ef25fc4a8aba4d275d1887d6e",
+      "size": 3545,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "GOVERNANCE",
+      "generated": false,
+      "load_bearing": false,
+      "owner": "gouvernance-stories",
       "path": "stories/REG-029A.md",
       "referenced_by": [
         {
@@ -37610,6 +37689,13 @@
           "candidate": "tests/test_adoption_api.py",
           "line": 123,
           "referrer": "stories/D3.md",
+          "resolved": "tests/test_adoption_api.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "tests/test_adoption_api.py",
+          "line": 25,
+          "referrer": "stories/RC1-530.md",
           "resolved": "tests/test_adoption_api.py",
           "severity": "hard"
         }
@@ -38947,6 +39033,13 @@
           "candidate": "tests/test_deploy_units.py",
           "line": 268,
           "referrer": "governance/STATE-CURRENT.md",
+          "resolved": "tests/test_deploy_units.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "tests/test_deploy_units.py",
+          "line": 26,
+          "referrer": "stories/RC1-530.md",
           "resolved": "tests/test_deploy_units.py",
           "severity": "hard"
         }
@@ -43799,6 +43892,34 @@
       "generated": false,
       "load_bearing": true,
       "owner": "test-suite",
+      "path": "tests/test_rc530_port_unicode_crash.py",
+      "referenced_by": [
+        {
+          "candidate": "tests/test_rc530_port_unicode_crash.py",
+          "line": 6,
+          "referrer": "evidence/reviews/RC1-530/MiMo-Pro-V2.verdict.json",
+          "resolved": "tests/test_rc530_port_unicode_crash.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "tests/test_rc530_port_unicode_crash.py",
+          "line": 22,
+          "referrer": "stories/RC1-530.md",
+          "resolved": "tests/test_rc530_port_unicode_crash.py",
+          "severity": "hard"
+        }
+      ],
+      "rule_id": "test-suite",
+      "sha256": "2da5ae06ae57761afe8bc06c06efbe6ad8c6187cb56d46a0b54bec8e8f43abf2",
+      "size": 4629,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "TEST",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "test-suite",
       "path": "tests/test_receptacles.py",
       "referenced_by": [
         {
@@ -46449,6 +46570,13 @@
         },
         {
           "candidate": "tests/test_web_deploy.py",
+          "line": 25,
+          "referrer": "stories/RC1-530.md",
+          "resolved": "tests/test_web_deploy.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "tests/test_web_deploy.py",
           "line": 27,
           "referrer": "stories/UI-039.md",
           "resolved": "tests/test_web_deploy.py",
@@ -46724,6 +46852,13 @@
           "candidate": "tests/test_web_server.py",
           "line": 876,
           "referrer": "governance/STATE-CURRENT.md",
+          "resolved": "tests/test_web_server.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "tests/test_web_server.py",
+          "line": 25,
+          "referrer": "stories/RC1-530.md",
           "resolved": "tests/test_web_server.py",
           "severity": "hard"
         },
@@ -83815,6 +83950,11 @@
         "referrer": "evidence/reviews/RC1-504-v1/RECU.json"
       },
       {
+        "candidate": "recu-revue/1",
+        "line": 2,
+        "referrer": "evidence/reviews/RC1-530/RECU.json"
+      },
+      {
         "candidate": "reviews/",
         "line": 1,
         "referrer": "evidence/reviews/README.md"
@@ -111765,6 +111905,31 @@
         "referrer": "stories/RC1-504.md"
       },
       {
+        "candidate": "timeout/RemoteDisconnected",
+        "line": 21,
+        "referrer": "stories/RC1-530.md"
+      },
+      {
+        "candidate": "crew_dispatch.py",
+        "line": 29,
+        "referrer": "stories/RC1-530.md"
+      },
+      {
+        "candidate": "try/except",
+        "line": 36,
+        "referrer": "stories/RC1-530.md"
+      },
+      {
+        "candidate": "crew_dispatch.py",
+        "line": 43,
+        "referrer": "stories/RC1-530.md"
+      },
+      {
+        "candidate": "Kimi-K3/GPT-5.6-Luna-Pro",
+        "line": 43,
+        "referrer": "stories/RC1-530.md"
+      },
+      {
         "candidate": "hash/HMAC",
         "line": 9,
         "referrer": "stories/REG-029A.md"
@@ -119920,6 +120085,16 @@
         "referrer": "tests/test_rc1017_matrice_python.py"
       },
       {
+        "candidate": "application/json",
+        "line": 23,
+        "referrer": "tests/test_rc530_port_unicode_crash.py"
+      },
+      {
+        "candidate": "4xx/5xx",
+        "line": 28,
+        "referrer": "tests/test_rc530_port_unicode_crash.py"
+      },
+      {
         "candidate": "forgeai/receptacle",
         "line": 139,
         "referrer": "tests/test_receptacles.py"
@@ -123265,6 +123440,13 @@
         "line": 179,
         "referrer": "evidence/reviews/BINDING.txt",
         "resolved": "evidence/reviews/RC1-010-lot5d-PR-v7",
+        "severity": "hard"
+      },
+      {
+        "candidate": "RC1-530",
+        "line": 180,
+        "referrer": "evidence/reviews/BINDING.txt",
+        "resolved": "evidence/reviews/RC1-530",
         "severity": "hard"
       },
       {
@@ -135329,6 +135511,20 @@
         "severity": "hard"
       },
       {
+        "candidate": "tests/test_rc530_port_unicode_crash.py",
+        "line": 6,
+        "referrer": "evidence/reviews/RC1-530/MiMo-Pro-V2.verdict.json",
+        "resolved": "tests/test_rc530_port_unicode_crash.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "src/forgeai/web/server.py",
+        "line": 12,
+        "referrer": "evidence/reviews/RC1-530/MiMo-Pro-V2.verdict.json",
+        "resolved": "src/forgeai/web/server.py",
+        "severity": "hard"
+      },
+      {
         "candidate": ".github/workflows/gates.yml",
         "line": 6,
         "referrer": "evidence/reviews/REG-029B/Qwen3.7-Max.verdict.json",
@@ -143148,6 +143344,48 @@
         "severity": "hard"
       },
       {
+        "candidate": "src/forgeai/web/server.py",
+        "line": 4,
+        "referrer": "stories/RC1-530.md",
+        "resolved": "src/forgeai/web/server.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "tests/test_rc530_port_unicode_crash.py",
+        "line": 22,
+        "referrer": "stories/RC1-530.md",
+        "resolved": "tests/test_rc530_port_unicode_crash.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "tests/test_web_deploy.py",
+        "line": 25,
+        "referrer": "stories/RC1-530.md",
+        "resolved": "tests/test_web_deploy.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "tests/test_adoption_api.py",
+        "line": 25,
+        "referrer": "stories/RC1-530.md",
+        "resolved": "tests/test_adoption_api.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "tests/test_web_server.py",
+        "line": 25,
+        "referrer": "stories/RC1-530.md",
+        "resolved": "tests/test_web_server.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "tests/test_deploy_units.py",
+        "line": 26,
+        "referrer": "stories/RC1-530.md",
+        "resolved": "tests/test_deploy_units.py",
+        "severity": "hard"
+      },
+      {
         "candidate": "src/forgeai/core/registre_completude.py",
         "line": 5,
         "referrer": "stories/REG-029A.md",
@@ -145094,11 +145332,11 @@
     "by_class": {
       "ARCHIVE": 44,
       "DOCS": 14,
-      "EVIDENCE": 1344,
+      "EVIDENCE": 1348,
       "GENERATED": 5,
-      "GOVERNANCE": 175,
+      "GOVERNANCE": 176,
       "PRODUCT": 112,
-      "TEST": 200,
+      "TEST": 201,
       "WORKING": 10
     },
     "by_rule": {
@@ -145110,7 +145348,7 @@
       "docs-user": 13,
       "evidence-audit-output-root": 18,
       "evidence-registres-root": 35,
-      "evidence-reviews-root": 1291,
+      "evidence-reviews-root": 1295,
       "generated-authority-map": 1,
       "generated-path-classification-json": 1,
       "generated-path-classification-markdown": 1,
@@ -145138,19 +145376,19 @@
       "governance-scripts-coordination": 4,
       "governance-scripts-governance": 7,
       "governance-scripts-root": 21,
-      "governance-stories": 86,
+      "governance-stories": 87,
       "product-catalogue-checksum": 1,
       "product-source": 111,
-      "test-suite": 200,
+      "test-suite": 201,
       "working-claude-agents": 9,
       "working-sandbox-readme": 1
     },
     "case_collisions_total": 0,
-    "dangling_references_total": 15010,
+    "dangling_references_total": 15018,
     "generated_total": 7,
-    "load_bearing_total": 1775,
+    "load_bearing_total": 1780,
     "portability_violations_total": 0,
-    "tracked_total": 1904,
+    "tracked_total": 1910,
     "unclassified_total": 0,
     "unicode_anomalies_total": 0
   },
