@@ -2,13 +2,13 @@
 
 - **Commit de base analysé** : `1b09b3966be41440f023d92c82208b0a741939d9` (`origin/main`, post-merge ORCH-001)
 - **Finding source** : `FAI-U-042` (statut original `ACCEPTED_EVIDENCE`, vague V6)
-- **Scanners** : bandit 1.9.4 (`python -m bandit -r src/forgeai -f json -o AUDIT-OUTPUT/sast/bandit.json`),
-  semgrep 1.168.0 (`semgrep scan --config auto --json --output AUDIT-OUTPUT/sast/semgrep.json src/forgeai`)
+- **Scanners** : bandit 1.9.4 (`python -m bandit -r src/forgeai -f json -o evidence/audit-output/sast/bandit.json`),
+  semgrep 1.168.0 (`semgrep scan --config auto --json --output evidence/audit-output/sast/semgrep.json src/forgeai`)
 - **Statut du package** : `TRIAGE_ONLY` — **aucun fichier produit modifié dans cette branche**
   (`git diff --stat origin/main -- src/forgeai` est vide, voir preuve ci-dessous).
-- **Rapport machine-lisible complet** : `AUDIT-OUTPUT/sast/classification.json`
-- **Rapports bruts** : `AUDIT-OUTPUT/sast/bandit.json.gz` (compressé — voir note ci-dessous),
-  `AUDIT-OUTPUT/sast/semgrep.json`
+- **Rapport machine-lisible complet** : `evidence/audit-output/sast/classification.json`
+- **Rapports bruts** : `evidence/audit-output/sast/bandit.json.gz` (compressé — voir note ci-dessous),
+  `evidence/audit-output/sast/semgrep.json`
 
 ## Méthode
 
