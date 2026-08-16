@@ -5,12 +5,12 @@
     "justification": "Les dispositions JUSTIFIED sont réexaminées au plus tard tous les 180 jours pour confirmer qu'elles restent exactes (le code n'a pas dérivé) et nécessaires."
   },
   "coverage": {
-    "total_except_sites_src_forgeai": 182,
-    "measured_on": "chore/RC1-023-error-handlers @ 0bd0abb (origin/main)",
-    "measured_command": "grep -rn \"^\\s*except\" src/forgeai --include=*.py | wc -l (182 blocs ; comptage AST indépendant : 182)",
-    "contracted": 25,
-    "floor": 25,
-    "note": "Campagne en lots (précédent : RC1-010/#440, 9 lots). Lot 1 = les 24 sites body_kind pass/continue (les plus silencieux, priorité de l'issue #452) + 1 site adjacent découvert en traitant l'un d'eux (web/server.py:1517, même fonction que le site 1523 inventorié). Lots suivants : catégories body_kind='autre' (29) puis 'return_default' (87) par sous-système, et contrats docstring légers sur les 42 sites 're_raise' (déjà conformes — la cause est déjà propagée, pas 'avalée' au sens du critère). `floor` augmente à chaque lot ; jamais abaissé sans suppression documentée d'une entrée existante (visible en revue)."
+    "total_except_sites_src_forgeai": 194,
+    "measured_on": "chore/RC1-023-error-handlers @ round 11 (comptage AST post-diff)",
+    "measured_command": "comptage AST (ast.ExceptHandler) sur src/forgeai — méthode grep (^\\s*except) abandonnée : donne 205, faux positifs confirmés dans src/forgeai/ide/guard_fs.py (script généré embarqué comme littéral de chaîne, non exécuté par ce module — grep ne distingue pas le texte d'une chaîne du code réel, l'AST si)",
+    "contracted": 31,
+    "floor": 31,
+    "note": "Campagne en lots (précédent : RC1-010/#440, 9 lots). Lot 1 = les 24 sites body_kind pass/continue (les plus silencieux, priorité de l'issue #452) + 1 site adjacent découvert en traitant l'un d'eux (web/server.py:1517, même fonction que le site 1523 inventorié). Lots suivants : catégories body_kind='autre' (29) puis 'return_default' (87) par sous-système, et contrats docstring légers sur les 42 sites 're_raise' (déjà conformes — la cause est déjà propagée, pas 'avalée' au sens du critère). `floor` augmente à chaque lot ; jamais abaissé sans suppression documentée d'une entrée existante (visible en revue). Round 11 (#452) — objection GPT-5.6-Terra-Pro : le diff de cette story a elle-même introduit 6 nouveaux sites body_kind=pass (repli ultime du print diagnostic best-effort, motif # proof:allow) non contractualisés lors de leur introduction — corrigé ici (contracted 25 -> 31). Méthode de mesure corrigée en AST pur (voir measured_command) après découverte d'un écart grep/AST non lié à cette story (guard_fs.py, script embarqué en chaîne)."
   },
   "contracts": [
     {
@@ -582,6 +582,142 @@
       "compensating_test_reason": "Le comportement observable pertinent (l'URL est toujours affichée) est déjà garanti par le `print(url)` inconditionnel qui précède, hors du bloc try ; aucun test dédié n'apporterait de garantie supplémentaire.",
       "review_due": "2027-02-10",
       "accepted_risk": "Aucun — l'URL reste toujours visible via le print inconditionnel qui précède ce bloc."
+    },
+    {
+      "id": "site:src/forgeai/core/proc.py:158",
+      "site": {
+        "path": "src/forgeai/core/proc.py",
+        "line": 158,
+        "function": "forgeai.core.proc._kill_tree"
+      },
+      "exception_types": [
+        "Exception"
+      ],
+      "risk_paths": [
+        "deploiement",
+        "rollback"
+      ],
+      "disposition": "JUSTIFIED",
+      "behavior_contract": "Si le print de secours (encodage ASCII sûr) de l'avertissement 'process non réapé 5s après SIGKILL (possible D-state)' échoue aussi, l'exception est avalée : aucun canal de repli supplémentaire. Le comportement de kill_tree lui-même (SIGKILL déjà envoyé, wait() déjà tenté) est inchangé — seule cette notice diagnostique secondaire est perdue.",
+      "logging": "aucune — voir justification (stderr indisponible est précisément la condition qui déclenche ce bloc)",
+      "owner": "équipe plateforme ForgeAI",
+      "justification": "Repli ultime (# proof:allow) du double essai d'impression diagnostique introduit par cette story (round 1-2, #452) pour rendre visibles les échecs de kill_tree — documenté ici comme le contrat l'exige lui-même en commentaire inline.",
+      "compensating_test": null,
+      "compensating_test_reason": "Repli déterministe et trivial (second et dernier niveau d'un double essai d'impression diagnostique best-effort) ; un test dédié nécessiterait de simuler l'échec de deux appels print() consécutifs sur stderr, un scénario disproportionné par rapport à la valeur du test pour un chemin purement diagnostique dont aucun comportement métier ne dépend.",
+      "review_due": "2027-02-10",
+      "accepted_risk": "Si stderr devient indisponible exactement quand kill_tree tente de signaler un process potentiellement en D-state, ce message spécifique est perdu silencieusement — mais le site parent (server.py, nettoyage_incertain) reste la source de vérité structurée pour ce risque, déjà contractualisée séparément."
+    },
+    {
+      "id": "site:src/forgeai/hardware/detect.py:56",
+      "site": {
+        "path": "src/forgeai/hardware/detect.py",
+        "line": 56,
+        "function": "forgeai.hardware.detect.HardwareDetector.detect_cpu"
+      },
+      "exception_types": [
+        "Exception"
+      ],
+      "risk_paths": [],
+      "disposition": "JUSTIFIED",
+      "behavior_contract": "Si le print de secours (encodage ASCII sûr) de l'avertissement 'lscpu -J illisible, repli sur les valeurs par défaut' échoue aussi, l'exception est avalée. Le repli sur les valeurs par défaut (model='unknown', cores=0) est déjà effectué avant ce bloc — detect_cpu() ne lève jamais, avec ou sans cette notice diagnostique.",
+      "logging": "aucune — voir justification (stderr indisponible est précisément la condition qui déclenche ce bloc)",
+      "owner": "équipe plateforme ForgeAI",
+      "justification": "Repli ultime (# proof:allow) du double essai d'impression diagnostique introduit par cette story pour rendre visible un lscpu -J illisible — documenté ici comme le contrat l'exige lui-même en commentaire inline.",
+      "compensating_test": null,
+      "compensating_test_reason": "Repli déterministe et trivial (second et dernier niveau d'un double essai d'impression diagnostique best-effort) ; un test dédié nécessiterait de simuler l'échec de deux appels print() consécutifs sur stderr, un scénario disproportionné par rapport à la valeur du test pour un chemin purement diagnostique dont aucun comportement métier ne dépend.",
+      "review_due": "2027-02-10",
+      "accepted_risk": "Si stderr devient indisponible exactement quand detect_cpu() tente de signaler un lscpu illisible, ce message diagnostique est perdu silencieusement — le comportement observable (valeurs par défaut retournées) est inchangé et non affecté."
+    },
+    {
+      "id": "site:src/forgeai/hardware/detect.py:88",
+      "site": {
+        "path": "src/forgeai/hardware/detect.py",
+        "line": 88,
+        "function": "forgeai.hardware.detect.HardwareDetector.detect_ram_gb"
+      },
+      "exception_types": [
+        "Exception"
+      ],
+      "risk_paths": [],
+      "disposition": "JUSTIFIED",
+      "behavior_contract": "Si le print de secours (encodage ASCII sûr) de l'avertissement 'meminfo illisible, RAM détectée = 0.0 Go' échoue aussi, l'exception est avalée. Le retour 0.0 est déjà effectué avant ce bloc — detect_ram_gb() ne lève jamais, avec ou sans cette notice.",
+      "logging": "aucune — voir justification (stderr indisponible est précisément la condition qui déclenche ce bloc)",
+      "owner": "équipe plateforme ForgeAI",
+      "justification": "Repli ultime (# proof:allow) du double essai d'impression diagnostique introduit par cette story pour rendre visible un /proc/meminfo illisible — documenté ici comme le contrat l'exige lui-même en commentaire inline.",
+      "compensating_test": null,
+      "compensating_test_reason": "Repli déterministe et trivial (second et dernier niveau d'un double essai d'impression diagnostique best-effort) ; un test dédié nécessiterait de simuler l'échec de deux appels print() consécutifs sur stderr, un scénario disproportionné par rapport à la valeur du test pour un chemin purement diagnostique dont aucun comportement métier ne dépend.",
+      "review_due": "2027-02-10",
+      "accepted_risk": "Si stderr devient indisponible exactement quand detect_ram_gb() tente de signaler un meminfo illisible, ce message diagnostique est perdu silencieusement — le comportement observable (0.0 Go retourné) est inchangé et non affecté."
+    },
+    {
+      "id": "site:src/forgeai/secrets/openbao_init.py:217",
+      "site": {
+        "path": "src/forgeai/secrets/openbao_init.py",
+        "line": 217,
+        "function": "forgeai.secrets.openbao_init.ensure_openbao_ready"
+      },
+      "exception_types": [
+        "Exception"
+      ],
+      "risk_paths": [
+        "securite"
+      ],
+      "disposition": "JUSTIFIED",
+      "behavior_contract": "Si le print de secours (encodage ASCII sûr) de l'avertissement 'token invalide, remplacé' échoue aussi, l'exception est avalée. Le remplacement du token lui-même (logique suivante de la fonction) n'est jamais conditionné par le succès de cette notice — seule la visibilité de l'événement est affectée.",
+      "logging": "aucune — voir justification (stderr indisponible est précisément la condition qui déclenche ce bloc)",
+      "owner": "équipe secrets ForgeAI",
+      "justification": "Repli ultime (# proof:allow) du double essai d'impression diagnostique — même fonction, même mécanisme que le site déjà contractualisé openbao_init.py:209 (token_invalide_remplace) ; documenté ici comme le contrat l'exige lui-même en commentaire inline.",
+      "compensating_test": null,
+      "compensating_test_reason": "Repli déterministe et trivial (second et dernier niveau d'un double essai d'impression diagnostique best-effort) ; un test dédié nécessiterait de simuler l'échec de deux appels print() consécutifs sur stderr, un scénario disproportionné par rapport à la valeur du test pour un chemin purement diagnostique dont aucun comportement métier ne dépend.",
+      "review_due": "2027-02-10",
+      "accepted_risk": "Si stderr devient indisponible exactement à ce moment, la notice de remplacement de token est perdue silencieusement — le remplacement effectif du token (comportement sécuritaire réel) est inchangé et non affecté."
+    },
+    {
+      "id": "site:src/forgeai/secrets/openbao_init.py:257",
+      "site": {
+        "path": "src/forgeai/secrets/openbao_init.py",
+        "line": 257,
+        "function": "forgeai.secrets.openbao_init.ensure_openbao_ready"
+      },
+      "exception_types": [
+        "Exception"
+      ],
+      "risk_paths": [
+        "securite"
+      ],
+      "disposition": "JUSTIFIED",
+      "behavior_contract": "Si le print de secours (encodage ASCII sûr) de l'avertissement 'révocation de l'ancien jeton échouée' échoue aussi, l'exception est avalée. Le flux d'init continue normalement (comportement déjà documenté au site parent : le jeton non révoqué reste borné par son TTL) — seule la visibilité change.",
+      "logging": "aucune — voir justification (stderr indisponible est précisément la condition qui déclenche ce bloc)",
+      "owner": "équipe secrets ForgeAI",
+      "justification": "Repli ultime (# proof:allow) du double essai d'impression diagnostique — même fonction, même mécanisme que le site déjà contractualisé openbao_init.py:250 (revocation_ancien_jeton_echouee, issue #519) ; documenté ici comme le contrat l'exige lui-même en commentaire inline.",
+      "compensating_test": null,
+      "compensating_test_reason": "Repli déterministe et trivial (second et dernier niveau d'un double essai d'impression diagnostique best-effort) ; un test dédié nécessiterait de simuler l'échec de deux appels print() consécutifs sur stderr, un scénario disproportionné par rapport à la valeur du test pour un chemin purement diagnostique dont aucun comportement métier ne dépend.",
+      "review_due": "2027-02-10",
+      "accepted_risk": "Si stderr devient indisponible exactement à ce moment, la notice d'échec de révocation est perdue silencieusement — le risque résiduel réel (jeton non révoqué, borné par TTL, issue #519) est déjà tracé séparément et inchangé."
+    },
+    {
+      "id": "site:src/forgeai/web/server.py:607",
+      "site": {
+        "path": "src/forgeai/web/server.py",
+        "line": 607,
+        "function": "forgeai.web.server._load_deploy_state"
+      },
+      "exception_types": [
+        "Exception"
+      ],
+      "risk_paths": [
+        "persistance",
+        "deploiement"
+      ],
+      "disposition": "JUSTIFIED",
+      "behavior_contract": "Si le print de secours (encodage ASCII sûr) de l'avertissement 'échec de restauration de l'état de déploiement au démarrage' échoue aussi, l'exception est avalée. Le serveur démarre toujours avec un état vide en cas d'échec de restauration (comportement du except parent, déjà contractualisé) — inchangé.",
+      "logging": "aucune — voir justification (stderr indisponible est précisément la condition qui déclenche ce bloc)",
+      "owner": "équipe web ForgeAI",
+      "justification": "Repli ultime (# proof:allow) du double essai d'impression diagnostique — même except parent que le site déjà contractualisé server.py:592 (_load_deploy_state, échec inattendu journalisé stderr) ; documenté ici comme le contrat l'exige lui-même en commentaire inline.",
+      "compensating_test": null,
+      "compensating_test_reason": "Repli déterministe et trivial (second et dernier niveau d'un double essai d'impression diagnostique best-effort) ; un test dédié nécessiterait de simuler l'échec de deux appels print() consécutifs sur stderr, un scénario disproportionné par rapport à la valeur du test pour un chemin purement diagnostique dont aucun comportement métier ne dépend.",
+      "review_due": "2027-02-10",
+      "accepted_risk": "Si stderr devient indisponible exactement au démarrage pendant une restauration d'état échouée, cette notice diagnostique est perdue silencieusement — le comportement observable (état vide, serveur démarre quand même) est inchangé."
     }
   ]
 }

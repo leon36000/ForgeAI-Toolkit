@@ -37,14 +37,20 @@ le plan des lots suivants.
 
 ## Livrables
 
-1. `governance/error-handling-contracts.json` — inventaire machine des 25 sites (site, exception
-   attendue, comportement, journalisation, propriétaire, justification, test compensatoire ou
-   raison d'absence, échéance de révision à 180 jours, disposition).
-2. `scripts/governance/validate_error_contracts.py` — validateur stdlib : schéma complet,
+1. `governance/error-handling-contracts.json` — inventaire machine de 31 sites (25 initiaux +
+   6 ajoutés au round 11, voir note ci-dessous ; site, exception attendue, comportement,
+   journalisation, propriétaire, justification, test compensatoire ou raison d'absence, échéance
+   de révision à 180 jours, disposition).
+2. `scripts/governance/validate_error_contracts.py` — validateur stdlib : schéma complet
+   (id/site/coverage/review_horizon durcis au round 10, objections GPT-5.6-Terra-Pro),
    plancher de couverture (`coverage.floor`), dates de révision, XOR test/raison, FIXED exige un
    test réel, **dérive AST** (le site existe toujours à la ligne indiquée, le type d'exception
-   n'a pas changé) — sur les 25 sites inventoriés uniquement, pas sur les 157 autres (couverture
-   volontairement progressive, pas un remplacement mécanique de tous les `except`).
+   n'a pas changé) — sur les 31 sites inventoriés uniquement, pas sur les 163 autres (couverture
+   volontairement progressive, pas un remplacement mécanique de tous les `except`). Round 11
+   (objection GPT-5.6-Terra-Pro) : `coverage.total_except_sites_src_forgeai` recalculé en AST pur
+   (194, pas 182) après découverte d'un écart de méthode grep/AST non lié à cette story
+   (`src/forgeai/ide/guard_fs.py` embarque un script généré comme littéral de chaîne — grep
+   matchait 11 "except" texte à l'intérieur, l'AST correctement non).
 3. `governance/ERROR-HANDLING-CONTRACTS.md` — rapport généré (`--render`).
 4. `.github/workflows/error-handling-contracts.yml` — gate CI (validation + détection de
    mutation : un site déplacé doit faire échouer le gate).
