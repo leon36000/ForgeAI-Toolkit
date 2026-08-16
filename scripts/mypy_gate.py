@@ -66,12 +66,12 @@ def executer_mypy(racine: Path, cible: str) -> str:
 
 def erreurs_par_fichier(sortie_mypy: str) -> dict[str, int]:
     """Parse le texte de sortie mypy, retourne {chemin_fichier: nombre_erreurs}. Une ligne compte
-    SSI elle matche `^(chemin.py):\\d+: error:` — ignorer les lignes `note:` (continuation d'une
-    même erreur, mypy peut en émettre plusieurs par erreur) et la ligne de résumé finale
-    (`Found N errors in M files...` / `Success: no issues found...`). Fichiers absents du
-    résultat = 0 erreur (ne pas les lister)."""
+    SSI elle matche `^(chemin.py):\\d+: error:` ou `^(chemin.pyi):\\d+: error:` — ignorer les
+    lignes `note:` (continuation d'une même erreur, mypy peut en émettre plusieurs par erreur) et
+    la ligne de résumé finale (`Found N errors in M files...` / `Success: no issues found...`).
+    Fichiers absents du résultat = 0 erreur (ne pas les lister)."""
     erreurs: dict[str, int] = {}
-    pattern = re.compile(r"^(.+\.py):\d+: error:")
+    pattern = re.compile(r"^(.+\.pyi?):\d+: error:")
     for ligne in sortie_mypy.splitlines():
         if ligne.startswith(("Found ", "Success: no issues found")):
             continue
@@ -85,18 +85,20 @@ def erreurs_par_fichier(sortie_mypy: str) -> dict[str, int]:
 
 
 def fichiers_reels(racine: Path, cible: str) -> set[str]:
-    """rglob('*.py') sous racine/cible, retourne l'ensemble des chemins relatifs à `racine`, en
-    POSIX (`/`, jamais `\\`), sous forme de chaînes (ex. "src/forgeai/cli.py")."""
+    """rglob('*.py') et rglob('*.pyi') sous racine/cible, retourne l'ensemble des chemins relatifs
+    à `racine`, en POSIX (`/`, jamais `\\`), sous forme de chaînes (ex. "src/forgeai/cli.py"),
+    incluant donc les stubs `.pyi`."""
     dossier = racine / cible
     if not dossier.exists():
         return set()
     if not dossier.is_dir():
         raise ValueError(f"cible mypy invalide {str(dossier)!r} : n'est pas un répertoire")
-    return {
-        p.relative_to(racine).as_posix()
-        for p in dossier.rglob("*.py")
-        if p.is_file()
-    }
+    fichiers: set[str] = set()
+    for motif in ("*.py", "*.pyi"):
+        for p in dossier.rglob(motif):
+            if p.is_file():
+                fichiers.add(p.relative_to(racine).as_posix())
+    return fichiers
 
 
 def _valider_borne(borne: Any, libelle: str) -> int:

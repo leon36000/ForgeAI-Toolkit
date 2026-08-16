@@ -1,0 +1,19 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "majeure",
+   "fichier": "scripts/mypy_gate.py",
+   "description": "Le gate ignore les erreurs mypy émises dans des stubs `.pyi`, ce qui permet d’introduire une nouvelle erreur de typage dans `src/forgeai` sans anomalie ni incrément du total. Cela contredit la protection inconditionnelle des modules couverts.",
+   "preuve": "`erreurs_par_fichier` ne reconnaît que `^(.+\\.py):\\d+: error:` (ligne ~76), donc une sortie mypy telle que `src/forgeai/nouveau.pyi:1: error: ...` n’est pas comptée. De plus, `fichiers_reels` ne recense que `dossier.rglob(\"*.py\")` (ligne ~98), excluant également les `.pyi`. Une erreur dans un stub ne peut donc être détectée ni par les règles de fichiers non-baselinés, ni par la borne totale."
+  }
+ ],
+ "date_heure": "2026-08-16T12:16:29.146804+00:00",
+ "prompt_sha256": "857d3dd5a6b9507be3b9df9c8c22a157e9c4d3e739743bae20ef52891c04b064",
+ "reviewer_model": "GPT-5.6-Terra-Pro",
+ "modele_servi": "gpt56-terra-pro-openrouter",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

@@ -701,3 +701,28 @@ def test_g19g_valider_base_refuse_classification_incoherente():
     )
     with pytest.raises(ValueError, match="incoherente"):
         mypy_gate._valider_base(base, "base")
+
+
+# ---------------------------------------------------------------------------
+# Correctif post-revue scellée #449 (round 3) — .pyi
+# ---------------------------------------------------------------------------
+
+def test_g20_erreurs_par_fichier_reconnait_les_stubs_pyi():
+    sortie = (
+        "src/forgeai/a.py:1: error: x\n"
+        "src/forgeai/b.pyi:2: error: y\n"
+    )
+    assert mypy_gate.erreurs_par_fichier(sortie) == {
+        "src/forgeai/a.py": 1,
+        "src/forgeai/b.pyi": 1,
+    }
+
+
+def test_g21_fichiers_reels_inclut_les_stubs_pyi(tmp_path):
+    dossier = tmp_path / "src" / "forgeai"
+    dossier.mkdir(parents=True)
+    (dossier / "a.py").write_text("x = 1\n", encoding="utf-8")
+    (dossier / "b.pyi").write_text("y: int\n", encoding="utf-8")
+
+    reels = mypy_gate.fichiers_reels(tmp_path, "src/forgeai")
+    assert reels == {"src/forgeai/a.py", "src/forgeai/b.pyi"}
