@@ -1,0 +1,19 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "governance/PATH-CLASSIFICATION.md",
+   "description": "Le diff ne montre que 7 nouveaux fichiers (6 verdicts + RECU.json), mais PATH-CLASSIFICATION.md passe de 1843 à 1854 fichiers suivis (+11) et EVIDENCE de 1288 à 1299 (+11). L'écart de +4 est attribué par la story à des artefacts du lot 5a déjà trackés mais non présents dans le manifeste ; ces 4 fichiers ne figurent pas dans le diff et cette explication n'est pas vérifiable avec le seul pack.",
+   "preuve": "governance/PATH-CLASSIFICATION.md : '- Fichiers suivis : 1843' / '+ Fichiers suivis : 1854' ; '- EVIDENCE : 1288' / '+ EVIDENCE : 1299'. Diff visible : 7 blocs 'new file mode' (reviews/RC1-010-lot5b-PR510-v1/ 3 verdicts, reviews/RC1-010-lot5b-PR510-v2/ 3 verdicts + RECU.json)."
+  }
+ ],
+ "date_heure": "2026-08-16T04:55:26.082676+00:00",
+ "prompt_sha256": "c8e92d58c0b4d1a08c0244f48a15f84fea16b0fefc4df33dd828cf1a13374264",
+ "reviewer_model": "DeepSeek-V4-Pro",
+ "modele_servi": "deepseek-v4-pro-direct",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}
