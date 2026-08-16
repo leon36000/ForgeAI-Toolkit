@@ -1968,8 +1968,8 @@
         }
       ],
       "rule_id": "governance-canon",
-      "sha256": "541ae4b06fe547d3adde17c840f73852cce3379276ccd0d1a84e9bd2bfef094c",
-      "size": 7370,
+      "sha256": "1db70255ef89a5bb73adbe39095e39002075cfc2c5f968eb7ab35e52456437f4",
+      "size": 7294,
       "target_path": null,
       "type": "text"
     },
@@ -2555,8 +2555,8 @@
         }
       ],
       "rule_id": "governance-canon",
-      "sha256": "d8acc62cb10b1a01fcdcfac6470f09105d466331c2d2a239760395e114784dec",
-      "size": 4518,
+      "sha256": "b2622cbf7b9355b60eb304b9d93cf876030ff7ddc28115e5048764ac833f0a76",
+      "size": 4442,
       "target_path": null,
       "type": "text"
     },
@@ -5981,6 +5981,20 @@
         },
         {
           "candidate": "evidence/registres/mission.jsonl",
+          "line": 6,
+          "referrer": "evidence/reviews/RC1-010-lot5d-PR-v2/DeepSeek-V4-Pro.verdict.json",
+          "resolved": "evidence/registres/mission.jsonl",
+          "severity": "hard"
+        },
+        {
+          "candidate": "evidence/registres/mission.jsonl",
+          "line": 8,
+          "referrer": "evidence/reviews/RC1-010-lot5d-PR-v2/DeepSeek-V4-Pro.verdict.json",
+          "resolved": "evidence/registres/mission.jsonl",
+          "severity": "hard"
+        },
+        {
+          "candidate": "evidence/registres/mission.jsonl",
           "line": 56,
           "referrer": "governance/AUTHORITY-MAP.md",
           "resolved": "evidence/registres/mission.jsonl",
@@ -7832,20 +7846,6 @@
           "candidate": "evidence/reviews/BINDING.txt",
           "line": 65,
           "referrer": "AGENTS.md",
-          "resolved": "evidence/reviews/BINDING.txt",
-          "severity": "hard"
-        },
-        {
-          "candidate": "evidence/reviews/BINDING.txt",
-          "line": 76,
-          "referrer": "CANON/ETAT-SYSTEME.md",
-          "resolved": "evidence/reviews/BINDING.txt",
-          "severity": "hard"
-        },
-        {
-          "candidate": "evidence/reviews/BINDING.txt",
-          "line": 62,
-          "referrer": "CANON/spec-stacks.md",
           "resolved": "evidence/reviews/BINDING.txt",
           "severity": "hard"
         },
@@ -18469,6 +18469,32 @@
       "generated": false,
       "load_bearing": true,
       "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-010-lot5d-PR-v2/DeepSeek-V4-Pro.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "149b65bac2f9649537921a2a48e05b7c985f31af538eadddc8892980fa02fc1b",
+      "size": 892,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-010-lot5d-PR-v2/Qwen3.7-Max.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "65e94b05fab38eedf8b5720da7a3160645fba410b3dfc281893406dd2074c6fd",
+      "size": 322,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
       "path": "evidence/reviews/RC1-446-PR-v1/DeepSeek-V4-Pro.verdict.json",
       "referenced_by": [],
       "rule_id": "evidence-reviews-root",
@@ -23508,7 +23534,7 @@
         }
       ],
       "rule_id": "governance-core",
-      "sha256": "3ed4e95161388a0ec88284d131df59addf40c6398cd7f4d39f2fa66cb897ab9f",
+      "sha256": "40cfaa2ea101cca99fe1b66e25fe90f14e4fbc9a4d92e11baeeef8950f2b83da",
       "size": 29325,
       "target_path": null,
       "type": "text"
@@ -47261,11 +47287,6 @@
         "referrer": "CANON/ETAT-SYSTEME.md"
       },
       {
-        "candidate": "RC1-010/",
-        "line": 76,
-        "referrer": "CANON/ETAT-SYSTEME.md"
-      },
-      {
         "candidate": "NVIDIA/AMD",
         "line": 84,
         "referrer": "CANON/ETAT-SYSTEME.md"
@@ -49872,11 +49893,6 @@
       },
       {
         "candidate": "reviews/BINDING.txt",
-        "line": 62,
-        "referrer": "CANON/spec-stacks.md"
-      },
-      {
-        "candidate": "RC1-010/",
         "line": 62,
         "referrer": "CANON/spec-stacks.md"
       },
@@ -83054,6 +83070,26 @@
         "candidate": "reviews/",
         "line": 25,
         "referrer": "evidence/reviews/RC1-010-lot5d-PR-v1/DeepSeek-V4-Pro.verdict.json"
+      },
+      {
+        "candidate": "registre.py",
+        "line": 7,
+        "referrer": "evidence/reviews/RC1-010-lot5d-PR-v2/DeepSeek-V4-Pro.verdict.json"
+      },
+      {
+        "candidate": "verify/ancrage",
+        "line": 7,
+        "referrer": "evidence/reviews/RC1-010-lot5d-PR-v2/DeepSeek-V4-Pro.verdict.json"
+      },
+      {
+        "candidate": "registre.py",
+        "line": 8,
+        "referrer": "evidence/reviews/RC1-010-lot5d-PR-v2/DeepSeek-V4-Pro.verdict.json"
+      },
+      {
+        "candidate": "verify/ancrage",
+        "line": 8,
+        "referrer": "evidence/reviews/RC1-010-lot5d-PR-v2/DeepSeek-V4-Pro.verdict.json"
       },
       {
         "candidate": "e2/e3/e4/e5/e6/e7",
@@ -122882,13 +122918,6 @@
         "severity": "hard"
       },
       {
-        "candidate": "evidence/reviews/BINDING.txt",
-        "line": 76,
-        "referrer": "CANON/ETAT-SYSTEME.md",
-        "resolved": "evidence/reviews/BINDING.txt",
-        "severity": "hard"
-      },
-      {
         "candidate": "Registres/mission.jsonl",
         "line": 77,
         "referrer": "CANON/ETAT-SYSTEME.md",
@@ -123334,13 +123363,6 @@
         "line": 2,
         "referrer": "CANON/revue-template.md",
         "resolved": "scripts/revue.py",
-        "severity": "hard"
-      },
-      {
-        "candidate": "evidence/reviews/BINDING.txt",
-        "line": 62,
-        "referrer": "CANON/spec-stacks.md",
-        "resolved": "evidence/reviews/BINDING.txt",
         "severity": "hard"
       },
       {
@@ -133648,6 +133670,20 @@
         "severity": "hard"
       },
       {
+        "candidate": "evidence/registres/mission.jsonl",
+        "line": 6,
+        "referrer": "evidence/reviews/RC1-010-lot5d-PR-v2/DeepSeek-V4-Pro.verdict.json",
+        "resolved": "evidence/registres/mission.jsonl",
+        "severity": "hard"
+      },
+      {
+        "candidate": "evidence/registres/mission.jsonl",
+        "line": 8,
+        "referrer": "evidence/reviews/RC1-010-lot5d-PR-v2/DeepSeek-V4-Pro.verdict.json",
+        "resolved": "evidence/registres/mission.jsonl",
+        "severity": "hard"
+      },
+      {
         "candidate": ".github/workflows/sonar-suppressions.yml",
         "line": 6,
         "referrer": "evidence/reviews/RC1-446-PR-v1/DeepSeek-V4-Pro.verdict.json",
@@ -143700,7 +143736,7 @@
     "by_class": {
       "ARCHIVE": 44,
       "DOCS": 14,
-      "EVIDENCE": 1329,
+      "EVIDENCE": 1331,
       "GENERATED": 5,
       "GOVERNANCE": 172,
       "PRODUCT": 112,
@@ -143717,7 +143753,7 @@
       "evidence-audit-output-root": 18,
       "evidence-registres": 1,
       "evidence-registres-root": 35,
-      "evidence-reviews-root": 1275,
+      "evidence-reviews-root": 1277,
       "generated-authority-map": 1,
       "generated-path-classification-json": 1,
       "generated-path-classification-markdown": 1,
@@ -143753,11 +143789,11 @@
       "working-sandbox-readme": 1
     },
     "case_collisions_total": 0,
-    "dangling_references_total": 14861,
+    "dangling_references_total": 14863,
     "generated_total": 7,
-    "load_bearing_total": 1758,
+    "load_bearing_total": 1760,
     "portability_violations_total": 0,
-    "tracked_total": 1885,
+    "tracked_total": 1887,
     "unclassified_total": 0,
     "unicode_anomalies_total": 0
   },
