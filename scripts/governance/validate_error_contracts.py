@@ -413,13 +413,30 @@ def _erreurs_date_revision(
 
 
 def _erreurs_test_et_disposition(root: Path, entree: dict, identifiant: str) -> list[str]:
-    erreurs: list[str] = []
     test = entree.get("compensating_test")
     reason = entree.get("compensating_test_reason")
     disposition = entree.get("disposition")
 
-    a_test = test is not None and isinstance(test, str) and bool(test.strip())
-    a_reason = reason is not None and isinstance(reason, str) and bool(reason.strip())
+    # Round 25 (#452) — objection GPT-5.6-Terra-Pro (revue scellée) : un champ NON-NULL mais mal
+    # typé (ex. compensating_test: 42) était silencieusement traité comme absent — isinstance(x,
+    # str) fait échouer a_test/a_reason SANS jamais signaler que la valeur elle-même est invalide,
+    # laissant passer un inventaire malformé tant que l'AUTRE champ était valide (même famille que
+    # round 10 : ne pas confondre « absent » et « présent mais mal typé »). Erreur explicite AVANT
+    # toute logique XOR — vérifié empiriquement : compensating_test=42 + reason valide produisait
+    # erreurs == [] avant ce correctif.
+    erreurs_type: list[str] = []
+    if test is not None and (not isinstance(test, str) or not test.strip()):
+        erreurs_type.append(f"{identifiant} : compensating_test doit être null ou une chaîne non vide")
+    if reason is not None and (not isinstance(reason, str) or not reason.strip()):
+        erreurs_type.append(
+            f"{identifiant} : compensating_test_reason doit être null ou une chaîne non vide"
+        )
+    if erreurs_type:
+        return erreurs_type
+
+    erreurs: list[str] = []
+    a_test = test is not None
+    a_reason = reason is not None
 
     if not a_test and not a_reason:
         erreurs.append(f"{identifiant} : ni compensating_test ni compensating_test_reason")

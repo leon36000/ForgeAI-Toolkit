@@ -554,6 +554,45 @@ def test_compensating_test_et_reason_tous_deux_null_detectes(tmp_path: Path) -> 
     assert any("ni compensating_test ni compensating_test_reason" in e for e in erreurs)
 
 
+def test_compensating_test_type_invalide_detecte(tmp_path: Path) -> None:
+    """Round 25 (#452) — objection GPT-5.6-Terra-Pro (revue scellée) : compensating_test=42 (non
+    null, mal typé) + compensating_test_reason valide était silencieusement accepté — isinstance
+    faisait échouer a_test SANS jamais signaler que la valeur 42 elle-même est invalide."""
+    _creer_fichier_source(
+        tmp_path,
+        "src/forgeai/example.py",
+        "try:\n    pass\nexcept ValueError:\n    pass\n",
+    )
+    contrat = _entree_valide(compensating_test_reason="Raison de test valide et détaillée.")
+    contrat["compensating_test"] = 42
+    _ecrire_inventaire(tmp_path, [contrat])
+
+    erreurs = VALIDATEUR.valider(tmp_path, aujourd_hui=dt.date(2026, 1, 1))
+    assert any("compensating_test doit être null ou une chaîne non vide" in e for e in erreurs)
+
+
+def test_compensating_test_reason_type_invalide_detecte(tmp_path: Path) -> None:
+    """Symétrique : compensating_test_reason mal typé, avec compensating_test valide."""
+    _creer_fichier_source(
+        tmp_path,
+        "src/forgeai/example.py",
+        "try:\n    pass\nexcept ValueError:\n    pass\n",
+    )
+    _creer_fichier_source(
+        tmp_path,
+        "tests/test_exemple.py",
+        "def test_foo(): pass\n",
+    )
+    contrat = _entree_valide(compensating_test="tests/test_exemple.py::test_foo")
+    contrat["compensating_test_reason"] = 42
+    _ecrire_inventaire(tmp_path, [contrat])
+
+    erreurs = VALIDATEUR.valider(tmp_path, aujourd_hui=dt.date(2026, 1, 1))
+    assert any(
+        "compensating_test_reason doit être null ou une chaîne non vide" in e for e in erreurs
+    )
+
+
 def test_compensating_test_et_reason_tous_deux_renseignes_detectes(tmp_path: Path) -> None:
     _creer_fichier_source(
         tmp_path,
