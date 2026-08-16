@@ -24,7 +24,7 @@ Instruction explicite de Nathan : les méthodes établies restent EXACTEMENT les
 3. **No-stub / no-fake-done (§8bis du Plan Maître)** — inchangé. Deux états de sortie : DONE-avec-preuve ou BLOCKED-avec-raison. Le no-stub-scan bloque sans exception, y compris le code de Fable.
 4. **Revue aveugle scellée + validation à 3 modèles de 3 vendors différents + signature Fable** — inchangée. Dépouillement par script, jamais par un LLM. Rounds Delphi anonymisés si pas de consensus.
 5. **Indépendance critique** — inchangée. Aucune discussion inter-modèles avant vote; Composer et Grok (même vendor xAI) jamais appariés comme reviewers l'un de l'autre.
-6. **Fable = orchestrateur unique, juge, validateur d'étapes, codeur du difficile** — désigne toujours et uniquement l'instance Claude Fable 5 dans Claude Code. Fable ne se relit jamais lui-même (reviewers non-Anthropic sur son code).
+6. **Fable = orchestrateur unique, juge, validateur d'étapes, codeur du difficile** — nom de rôle, pas d'instance figée : désigne la session Claude Code faisant office de mission lead, quel que soit le modèle qui l'occupe. Le modèle occupant ce rôle est une décision de gouvernance versionnée (actuellement Claude Code Opus — décision #481, `governance/decisions/D-2026-08-14-mission-lead.md`), pas une propriété intrinsèque du nom. Fable ne se relit jamais lui-même (reviewers non-Anthropic sur son code).
 7. **Preuve réelle avant DONE** — inchangée. Tests bout-en-bout fonctionnels (le RAG répond, le nœud joint, le modèle complète), registres append-only horodatés, hash vérifiés.
 8. **Un seul control plane par fonction** — inchangé. Un seul gateway, une seule autorité d'état, une seule voie de production.
 9. **Prompt managing / compression de contexte** — inchangé. Context packs scopés par story, manifestes YAML machine-lisibles, préfixes stables pour le cache.
@@ -174,7 +174,7 @@ Construire le ForgeAI Toolkit — le déployeur de référence d'infrastructures
 
 | Membre | Rôle Phase A (finir le plan) | Rôle Phase B (exécution) | Justification |
 |---|---|---|---|
-| **Fable (= toujours l'instance Claude Fable 5 opérant dans Claude Code)** | Validation finale du plan après consensus; arbitre des objections non résolues | **ORCHESTRATEUR DE MISSION (session lead Claude Code) + juge/validateur de chaque étape + codeur des aspects les plus difficiles** (détection hardware, rendu double backend, bootstrap sécurisé multi-nœuds) | Demande explicite; Claude Code est le harness d'exécution et Fable en est le lead unique |
+| **Fable (= nom de rôle : la session Claude Code faisant office de mission lead — actuellement Claude Code Opus, décision #481)** | Validation finale du plan après consensus; arbitre des objections non résolues | **ORCHESTRATEUR DE MISSION (session lead Claude Code) + juge/validateur de chaque étape + codeur des aspects les plus difficiles** (détection hardware, rendu double backend, bootstrap sécurisé multi-nœuds) | Demande explicite; Claude Code est le harness d'exécution et Fable en est le lead unique |
 | **GLM-5.2** | Architecture technique détaillée (modules, schémas de données, API des hooks) | Architecte permanent — revue d'architecture de chaque story avant codage | Rôle ARCHITECTE déjà locké à l'Atlas |
 | **DeepSeek V4 Pro** | Registre des risques + mitigations; revue critique du PRD | **Juge/critique indépendant** — reviewer aveugle #1 sur chaque PR | Rôle JUGE/CRITIQUE déjà locké à l'Atlas |
 | **Kimi K2.7 Code** | Découpage du plan en stories BMAD exécutables (sa force long-horizon) | Codeur des missions longues multi-fichiers (scaffolder complet, moteur de catalogue) | Rôle CODE LONG déjà locké à l'Atlas |
@@ -246,7 +246,7 @@ Séquence obligatoire avant la première ligne de code :
 
 ## 5. RÔLE DE FABLE — ORCHESTRATEUR, juge, validateur d'étapes, codeur du difficile
 
-**Définition contractuelle : « Fable » désigne toujours et uniquement l'instance Claude Fable 5 opérant dans Claude Code (session lead). Toute référence à Fable dans les manifestes, les hooks et les registres pointe vers cette instance — jamais vers une autre interface ou un autre déploiement du modèle.**
+**Définition contractuelle : « Fable » est un nom de rôle — la session Claude Code faisant office de mission lead — pas le nom d'une instance de modèle figée. Toute référence à Fable dans les manifestes, les hooks et les registres pointe vers la session Claude Code en cours faisant office d'orchestrateur, jamais vers une interface ou un déploiement hors Claude Code. Le modèle occupant ce rôle est une décision de gouvernance versionnée, pas une propriété intrinsèque du rôle — actuellement Claude Code Opus (décision #481, `governance/decisions/D-2026-08-14-mission-lead.md`).**
 
 **Fable est l'orchestrateur unique de la mission.** Il tient la session lead Claude Code, décompose les stories, spawne les subagents (chaque membre de l'équipe = un subagent avec son modèle routé via le gateway), séquence les phases, et arrête le pipeline quand une étape n'est pas validée. Il n'y a AUCUN orchestrateur parallèle — un seul control plane par fonction, conformément à la règle Atlas.
 
