@@ -8451,11 +8451,18 @@
           "referrer": "tests/test_classify_paths.py",
           "resolved": "evidence/reviews/BINDING.txt",
           "severity": "hard"
+        },
+        {
+          "candidate": "evidence/reviews/BINDING.txt",
+          "line": 1047,
+          "referrer": "tests/test_classify_paths.py",
+          "resolved": "evidence/reviews/BINDING.txt",
+          "severity": "hard"
         }
       ],
       "rule_id": "evidence-reviews-root",
-      "sha256": "373536ba8324dbd1f80198d430fe49fd04afd066dfa9030515a21922c207d8e2",
-      "size": 2650,
+      "sha256": "cde77e3dcd95c78763071762c493c50df75de1e4b605f059e70dbc235d7ebcf9",
+      "size": 2661,
       "target_path": null,
       "type": "text"
     },
@@ -8532,10 +8539,10 @@
       "path": "evidence/reviews/BUGHUNT-2026-08-16-v3/RECU.json",
       "referenced_by": [],
       "rule_id": "evidence-reviews-root",
-      "sha256": "ad91bdcc1add0d7ba06edbfef8dabde962b93e4b70b6442983296d8c0fa1fb1a",
-      "size": 682,
+      "sha256": null,
+      "size": null,
       "target_path": null,
-      "type": "text"
+      "type": null
     },
     {
       "class": "EVIDENCE",
@@ -17781,10 +17788,10 @@
       "path": "evidence/reviews/RC1-004-PR497-v4/RECU.json",
       "referenced_by": [],
       "rule_id": "evidence-reviews-root",
-      "sha256": "add5e37e8b3cdcd1688086a594f0415e680f5ed96ce416791535e457a12bb5e4",
-      "size": 669,
+      "sha256": null,
+      "size": null,
       "target_path": null,
-      "type": "text"
+      "type": null
     },
     {
       "class": "EVIDENCE",
@@ -17833,10 +17840,10 @@
       "path": "evidence/reviews/RC1-004-PR497-v5/RECU.json",
       "referenced_by": [],
       "rule_id": "evidence-reviews-root",
-      "sha256": "59adfc90b4676da979194abbf8a78a7360c92f2192cf8fa6dd324bf80d91650b",
-      "size": 669,
+      "sha256": null,
+      "size": null,
       "target_path": null,
-      "type": "text"
+      "type": null
     },
     {
       "class": "EVIDENCE",
@@ -18314,10 +18321,10 @@
       "path": "evidence/reviews/RC1-009-PR500-v3/RECU.json",
       "referenced_by": [],
       "rule_id": "evidence-reviews-root",
-      "sha256": "aab70820f5bb491c45c94eb358b57b499e0f1b71fd1485f4b2f08403424821d6",
-      "size": 673,
+      "sha256": null,
+      "size": null,
       "target_path": null,
-      "type": "text"
+      "type": null
     },
     {
       "class": "EVIDENCE",
@@ -18374,10 +18381,10 @@
         }
       ],
       "rule_id": "evidence-reviews-root",
-      "sha256": "494f9dc552f6617f5d5e0489e15140d442df49df17b2484b09b4cbb6d6e8f63b",
-      "size": 661,
+      "sha256": null,
+      "size": null,
       "target_path": null,
-      "type": "text"
+      "type": null
     },
     {
       "class": "EVIDENCE",
@@ -18465,10 +18472,10 @@
       "path": "evidence/reviews/RC1-010-lot0-PR501-v2/RECU.json",
       "referenced_by": [],
       "rule_id": "evidence-reviews-root",
-      "sha256": "c2f6eab75e53cf63d4a374baf9fad7db34234c9e797ca5c93650f3f36c0c7ffc",
-      "size": 678,
+      "sha256": null,
+      "size": null,
       "target_path": null,
-      "type": "text"
+      "type": null
     },
     {
       "class": "EVIDENCE",
@@ -18517,10 +18524,10 @@
       "path": "evidence/reviews/RC1-010-lot1-PR502-v1/RECU.json",
       "referenced_by": [],
       "rule_id": "evidence-reviews-root",
-      "sha256": "65eac195d0615dd5e9962159a56e4d0be85ca5948432924d8ac1b2293eb161de",
-      "size": 678,
+      "sha256": null,
+      "size": null,
       "target_path": null,
-      "type": "text"
+      "type": null
     },
     {
       "class": "EVIDENCE",
@@ -18686,10 +18693,10 @@
       "path": "evidence/reviews/RC1-010-lot2-PR503-v4/RECU.json",
       "referenced_by": [],
       "rule_id": "evidence-reviews-root",
-      "sha256": "7a6c70d0d45b35bacd8287a9be588780af5fbfe92daf94be026cbc8818aab5bb",
-      "size": 678,
+      "sha256": null,
+      "size": null,
       "target_path": null,
-      "type": "text"
+      "type": null
     },
     {
       "class": "EVIDENCE",
@@ -18738,10 +18745,10 @@
       "path": "evidence/reviews/RC1-010-lot3-PR505-v1/RECU.json",
       "referenced_by": [],
       "rule_id": "evidence-reviews-root",
-      "sha256": "7f0ea95cf1afa6d732681ece025f55d3be89314736838ade11c03b12a286e1f7",
-      "size": 672,
+      "sha256": null,
+      "size": null,
       "target_path": null,
-      "type": "text"
+      "type": null
     },
     {
       "class": "EVIDENCE",
@@ -18790,10 +18797,10 @@
       "path": "evidence/reviews/RC1-010-lot3-PR505-v2/RECU.json",
       "referenced_by": [],
       "rule_id": "evidence-reviews-root",
-      "sha256": "6cc4db39717b2c0d24e4c3c9cfb60f012da06bb1aba3796233835d343dbc5448",
-      "size": 672,
+      "sha256": null,
+      "size": null,
       "target_path": null,
-      "type": "text"
+      "type": null
     },
     {
       "class": "EVIDENCE",
@@ -18842,10 +18849,10 @@
       "path": "evidence/reviews/RC1-010-lot4-PR507-v1/RECU.json",
       "referenced_by": [],
       "rule_id": "evidence-reviews-root",
-      "sha256": "e37189a295fe29275ad0b2b28ff85aeac0eebc18356c85490bca6e7fd005db5b",
-      "size": 672,
+      "sha256": null,
+      "size": null,
       "target_path": null,
-      "type": "text"
+      "type": null
     },
     {
       "class": "EVIDENCE",
@@ -18894,10 +18901,10 @@
       "path": "evidence/reviews/RC1-010-lot5a-PR508-v1/RECU.json",
       "referenced_by": [],
       "rule_id": "evidence-reviews-root",
-      "sha256": "6ddb4d554175dc34a5c4c11b48ea460ef46d44b603a8df1477bdae7e1400377d",
-      "size": 673,
+      "sha256": null,
+      "size": null,
       "target_path": null,
-      "type": "text"
+      "type": null
     },
     {
       "class": "EVIDENCE",
@@ -18985,10 +18992,10 @@
       "path": "evidence/reviews/RC1-010-lot5b-PR510-v2/RECU.json",
       "referenced_by": [],
       "rule_id": "evidence-reviews-root",
-      "sha256": "47628ea2bc3eddca4bd3d66fa80b77e7caa170633a991ba1979f210e8acb0619",
-      "size": 673,
+      "sha256": null,
+      "size": null,
       "target_path": null,
-      "type": "text"
+      "type": null
     },
     {
       "class": "EVIDENCE",
@@ -19076,10 +19083,10 @@
       "path": "evidence/reviews/RC1-010-lot5b-PR510-v4/RECU.json",
       "referenced_by": [],
       "rule_id": "evidence-reviews-root",
-      "sha256": "c468d5a8eb2a04117b901a8017fd2b2d722e8a85104fb0d4f1fc291e710d884e",
-      "size": 673,
+      "sha256": null,
+      "size": null,
       "target_path": null,
-      "type": "text"
+      "type": null
     },
     {
       "class": "EVIDENCE",
@@ -19128,10 +19135,10 @@
       "path": "evidence/reviews/RC1-010-lot5c-PR516-v1/RECU.json",
       "referenced_by": [],
       "rule_id": "evidence-reviews-root",
-      "sha256": "8a503120a0214142ca3c9ab5bc23b936071341b7ce8950e73b61c48b2a87c266",
-      "size": 673,
+      "sha256": null,
+      "size": null,
       "target_path": null,
-      "type": "text"
+      "type": null
     },
     {
       "class": "EVIDENCE",
@@ -19258,10 +19265,10 @@
       "path": "evidence/reviews/RC1-010-lot5d-PR-v7/RECU.json",
       "referenced_by": [],
       "rule_id": "evidence-reviews-root",
-      "sha256": "feaacb5d3d9f1cf6b2669c95b4485c424fb8ab69b4b055bb40bb418190900549",
-      "size": 680,
+      "sha256": null,
+      "size": null,
       "target_path": null,
-      "type": "text"
+      "type": null
     },
     {
       "class": "EVIDENCE",
@@ -19310,10 +19317,10 @@
       "path": "evidence/reviews/RC1-011-v1/RECU.json",
       "referenced_by": [],
       "rule_id": "evidence-reviews-root",
-      "sha256": "318e12ec4b64a7234d25a425f88c21f97d92c1c2d13b9dfdb7267a5d165fcfa7",
-      "size": 667,
+      "sha256": null,
+      "size": null,
       "target_path": null,
-      "type": "text"
+      "type": null
     },
     {
       "class": "EVIDENCE",
@@ -19401,10 +19408,10 @@
       "path": "evidence/reviews/RC1-013-v3/RECU.json",
       "referenced_by": [],
       "rule_id": "evidence-reviews-root",
-      "sha256": "a61e90b03616977ba7fc9dd4ad6ff0bc898e10fca41e5142f40cf5b5cbcab113",
-      "size": 676,
+      "sha256": null,
+      "size": null,
       "target_path": null,
-      "type": "text"
+      "type": null
     },
     {
       "class": "EVIDENCE",
@@ -19453,10 +19460,10 @@
       "path": "evidence/reviews/RC1-013-v4/RECU.json",
       "referenced_by": [],
       "rule_id": "evidence-reviews-root",
-      "sha256": "9664e740bc4e57989c3601df16eab62a32994c96f234881e3dcfd1cfbb9d0b77",
-      "size": 676,
+      "sha256": null,
+      "size": null,
       "target_path": null,
-      "type": "text"
+      "type": null
     },
     {
       "class": "EVIDENCE",
@@ -19583,10 +19590,10 @@
       "path": "evidence/reviews/RC1-020-v2/RECU.json",
       "referenced_by": [],
       "rule_id": "evidence-reviews-root",
-      "sha256": "558f5045fcbe796702cffa6a22acb7a6b3be55d0595b3f7d43d2473108b77485",
-      "size": 676,
+      "sha256": null,
+      "size": null,
       "target_path": null,
-      "type": "text"
+      "type": null
     },
     {
       "class": "EVIDENCE",
@@ -19635,10 +19642,10 @@
       "path": "evidence/reviews/RC1-020-v3/RECU.json",
       "referenced_by": [],
       "rule_id": "evidence-reviews-root",
-      "sha256": "71b24888c98372eecd7c1e135ba3f942ec82f2d43c7279a569a2fb2b927f8d21",
-      "size": 676,
+      "sha256": null,
+      "size": null,
       "target_path": null,
-      "type": "text"
+      "type": null
     },
     {
       "class": "EVIDENCE",
@@ -19726,10 +19733,10 @@
       "path": "evidence/reviews/RC1-021-v3/RECU.json",
       "referenced_by": [],
       "rule_id": "evidence-reviews-root",
-      "sha256": "e90df9f615a262ef25f55db6fa36497f92de1200d776ded1f1c1c0910037e0fa",
-      "size": 685,
+      "sha256": null,
+      "size": null,
       "target_path": null,
-      "type": "text"
+      "type": null
     },
     {
       "class": "EVIDENCE",
@@ -19778,10 +19785,10 @@
       "path": "evidence/reviews/RC1-021-v4/RECU.json",
       "referenced_by": [],
       "rule_id": "evidence-reviews-root",
-      "sha256": "08f2ccf1bd8eeb45de3c746e72b78d59e49f9818235a6e6dffa3c0aa3d56baac",
-      "size": 673,
+      "sha256": null,
+      "size": null,
       "target_path": null,
-      "type": "text"
+      "type": null
     },
     {
       "class": "EVIDENCE",
@@ -19830,10 +19837,10 @@
       "path": "evidence/reviews/RC1-023/RECU.json",
       "referenced_by": [],
       "rule_id": "evidence-reviews-root",
-      "sha256": "20072c454978e8a12bffd0c3cd1c6e145e9fcb250966e718af5c064d34a08dba",
-      "size": 689,
+      "sha256": null,
+      "size": null,
       "target_path": null,
-      "type": "text"
+      "type": null
     },
     {
       "class": "EVIDENCE",
@@ -19882,10 +19889,10 @@
       "path": "evidence/reviews/RC1-442/RECU.json",
       "referenced_by": [],
       "rule_id": "evidence-reviews-root",
-      "sha256": "1052b11a2c9bf6740f362da38eb90f5c78f1df3d3fcfc76c5c909a8abb9956e2",
-      "size": 670,
+      "sha256": null,
+      "size": null,
       "target_path": null,
-      "type": "text"
+      "type": null
     },
     {
       "class": "EVIDENCE",
@@ -20090,10 +20097,10 @@
       "path": "evidence/reviews/RC1-446-PR-v5/RECU.json",
       "referenced_by": [],
       "rule_id": "evidence-reviews-root",
-      "sha256": "76832aad71f5035d460c5dda3e4f14a05355b6248e233e1fa3a0a3d487ea25cc",
-      "size": 682,
+      "sha256": null,
+      "size": null,
       "target_path": null,
-      "type": "text"
+      "type": null
     },
     {
       "class": "EVIDENCE",
@@ -20701,10 +20708,10 @@
       "path": "evidence/reviews/RC1-449-v19/RECU.json",
       "referenced_by": [],
       "rule_id": "evidence-reviews-root",
-      "sha256": "dc4f2bfeccc6a7b9b85b11d264d10faa835935787a6d35eae8f08bc862314de3",
-      "size": 679,
+      "sha256": null,
+      "size": null,
       "target_path": null,
-      "type": "text"
+      "type": null
     },
     {
       "class": "EVIDENCE",
@@ -21013,10 +21020,10 @@
       "path": "evidence/reviews/RC1-459-PR517/RECU.json",
       "referenced_by": [],
       "rule_id": "evidence-reviews-root",
-      "sha256": "3c1acb0bf079699da14996b5073cf5c6f36a84546f30b6332e2e727cc136eabb",
-      "size": 672,
+      "sha256": null,
+      "size": null,
       "target_path": null,
-      "type": "text"
+      "type": null
     },
     {
       "class": "EVIDENCE",
@@ -21104,10 +21111,10 @@
       "path": "evidence/reviews/RC1-487-v1/RECU.json",
       "referenced_by": [],
       "rule_id": "evidence-reviews-root",
-      "sha256": "15ad1738f547c6b4f7330ce7c3b47d09b9334014fb3893e09025b084465cb8fa",
-      "size": 667,
+      "sha256": null,
+      "size": null,
       "target_path": null,
-      "type": "text"
+      "type": null
     },
     {
       "class": "EVIDENCE",
@@ -21156,10 +21163,10 @@
       "path": "evidence/reviews/RC1-492-PR512/RECU.json",
       "referenced_by": [],
       "rule_id": "evidence-reviews-root",
-      "sha256": "788a1bd5f6d5c14d56c84e2f043ba51e8e1d35d6f82a9d8735bbe26907ceb9ff",
-      "size": 674,
+      "sha256": null,
+      "size": null,
       "target_path": null,
-      "type": "text"
+      "type": null
     },
     {
       "class": "EVIDENCE",
@@ -21199,6 +21206,97 @@
       "size": 323,
       "target_path": null,
       "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-498-v1/GPT-5.6-Terra-Pro.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "3921f0b09a7a1b0659e8794b3485d277070709156cbd0a237d041cfc671045cd",
+      "size": 1311,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-498-v1/MiMo-Pro-V2.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "fc42d337cbdc0cf3807b8ce8025210b691ae76457fb9fd306064d3a0c73d1a87",
+      "size": 324,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-498-v1/Qwen3.7-Max.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "c74dd7fbe8affd12418bb32416ceb28609ffcce9283a8a3c6a14a2c31c34be78",
+      "size": 323,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-498-v2/GPT-5.6-Terra-Pro.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "28237107483f1b87efe0fcaba4acab3bbd963c06d81e7fcb8a9a7a6e8d9099e1",
+      "size": 334,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-498-v2/MiMo-Pro-V2.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "503aa469b785fbbbc626b4a394de42138d741f7fbcd321396d91673052c7c15d",
+      "size": 324,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-498-v2/Qwen3.7-Max.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "2d82a8ba21f2d07413d920b9303f9689c83446cb4f234a1d3a0b45da0dfafb76",
+      "size": 323,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-498-v2/RECU.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": null,
+      "size": null,
+      "target_path": null,
+      "type": null
     },
     {
       "class": "EVIDENCE",
@@ -21247,10 +21345,10 @@
       "path": "evidence/reviews/RC1-504-v1/RECU.json",
       "referenced_by": [],
       "rule_id": "evidence-reviews-root",
-      "sha256": "d7d2745690ef1ba7ec4f8a1f180980a2220dbb1c813f6c8908f7cdf0941e326e",
-      "size": 661,
+      "sha256": null,
+      "size": null,
       "target_path": null,
-      "type": "text"
+      "type": null
     },
     {
       "class": "EVIDENCE",
@@ -21299,10 +21397,10 @@
       "path": "evidence/reviews/RC1-527-v1/RECU.json",
       "referenced_by": [],
       "rule_id": "evidence-reviews-root",
-      "sha256": "818f230668072892a3b6457c1a8557388c6e878878740ccd9d32955e623d071a",
-      "size": 681,
+      "sha256": null,
+      "size": null,
       "target_path": null,
-      "type": "text"
+      "type": null
     },
     {
       "class": "EVIDENCE",
@@ -21351,10 +21449,10 @@
       "path": "evidence/reviews/RC1-528/RECU.json",
       "referenced_by": [],
       "rule_id": "evidence-reviews-root",
-      "sha256": "c89f6589417c9f7619940496f6c117474f09775c6e99d01a09a896457319cffd",
-      "size": 666,
+      "sha256": null,
+      "size": null,
       "target_path": null,
-      "type": "text"
+      "type": null
     },
     {
       "class": "EVIDENCE",
@@ -21403,10 +21501,10 @@
       "path": "evidence/reviews/RC1-538/RECU.json",
       "referenced_by": [],
       "rule_id": "evidence-reviews-root",
-      "sha256": "46555ac4575f782bc99d51b662391128a8b360f180b146828599057db3e27e55",
-      "size": 661,
+      "sha256": null,
+      "size": null,
       "target_path": null,
-      "type": "text"
+      "type": null
     },
     {
       "class": "EVIDENCE",
@@ -21455,10 +21553,10 @@
       "path": "evidence/reviews/RC1-542-v1/RECU.json",
       "referenced_by": [],
       "rule_id": "evidence-reviews-root",
-      "sha256": "365a2dbe0b9add29fb3d2717fdfe0c74be024aef6645cf3be764847347877d67",
-      "size": 677,
+      "sha256": null,
+      "size": null,
       "target_path": null,
-      "type": "text"
+      "type": null
     },
     {
       "class": "EVIDENCE",
@@ -21507,10 +21605,10 @@
       "path": "evidence/reviews/RC1-542-v2/RECU.json",
       "referenced_by": [],
       "rule_id": "evidence-reviews-root",
-      "sha256": "4f19af7024cccb672ca2c5ce36172e591cdf6d4e6d87c2b40f6a45ca9f88c6b5",
-      "size": 677,
+      "sha256": null,
+      "size": null,
       "target_path": null,
-      "type": "text"
+      "type": null
     },
     {
       "class": "EVIDENCE",
@@ -22118,10 +22216,10 @@
       "path": "evidence/reviews/ROSTER-MAJ-PR511-v1/RECU.json",
       "referenced_by": [],
       "rule_id": "evidence-reviews-root",
-      "sha256": "25354e987314345a01151a6f8cfe6a179ef90051832fd2bbbb1d9f3046f1404f",
-      "size": 688,
+      "sha256": null,
+      "size": null,
       "target_path": null,
-      "type": "text"
+      "type": null
     },
     {
       "class": "EVIDENCE",
@@ -25476,14 +25574,14 @@
         },
         {
           "candidate": "governance/PATH-CLASSIFICATION.md",
-          "line": 790,
+          "line": 797,
           "referrer": "scripts/governance/classify_paths.py",
           "resolved": "governance/PATH-CLASSIFICATION.md",
           "severity": "hard"
         },
         {
           "candidate": "governance/PATH-CLASSIFICATION.md",
-          "line": 796,
+          "line": 803,
           "referrer": "scripts/governance/classify_paths.py",
           "resolved": "governance/PATH-CLASSIFICATION.md",
           "severity": "hard"
@@ -26789,21 +26887,21 @@
         },
         {
           "candidate": "governance/path-classification.json",
-          "line": 716,
+          "line": 723,
           "referrer": "scripts/governance/classify_paths.py",
           "resolved": "governance/path-classification.json",
           "severity": "hard"
         },
         {
           "candidate": "governance/path-classification.json",
-          "line": 744,
+          "line": 751,
           "referrer": "scripts/governance/classify_paths.py",
           "resolved": "governance/path-classification.json",
           "severity": "hard"
         },
         {
           "candidate": "governance/path-classification.json",
-          "line": 759,
+          "line": 766,
           "referrer": "scripts/governance/classify_paths.py",
           "resolved": "governance/path-classification.json",
           "severity": "hard"
@@ -28916,6 +29014,13 @@
         },
         {
           "candidate": "scripts/governance/classify_paths.py",
+          "line": 8,
+          "referrer": "evidence/reviews/RC1-498-v1/GPT-5.6-Terra-Pro.verdict.json",
+          "resolved": "scripts/governance/classify_paths.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "scripts/governance/classify_paths.py",
           "line": 3,
           "referrer": "governance/path-classification-rules.json",
           "resolved": "scripts/governance/classify_paths.py",
@@ -28944,14 +29049,14 @@
         },
         {
           "candidate": "scripts/governance/classify_paths.py",
-          "line": 704,
+          "line": 711,
           "referrer": "scripts/governance/classify_paths.py",
           "resolved": "scripts/governance/classify_paths.py",
           "severity": "hard"
         },
         {
           "candidate": "scripts/governance/classify_paths.py",
-          "line": 821,
+          "line": 828,
           "referrer": "scripts/governance/classify_paths.py",
           "resolved": "scripts/governance/classify_paths.py",
           "severity": "hard"
@@ -28986,8 +29091,8 @@
         }
       ],
       "rule_id": "governance-scripts-governance",
-      "sha256": "0da60586691eb1858569d2e60b540d2f36fa7f995570ff9224cc2192e58a9c70",
-      "size": 32936,
+      "sha256": "cfb164a140e85d47132a04136fa672cdac8eb70a378abc54978cd4259bdc62f1",
+      "size": 33474,
       "target_path": null,
       "type": "text"
     },
@@ -43827,8 +43932,8 @@
         }
       ],
       "rule_id": "test-suite",
-      "sha256": "0c6fe881de3bab81b1730ba1e360e15ca45a4db66f21262219188fff5e4b4f90",
-      "size": 31252,
+      "sha256": "a2e16a87bc76ffc038ec8e6b5280e07d2f51b6840b48a35057d2cb6d2d85ff44",
+      "size": 33846,
       "target_path": null,
       "type": "text"
     },
@@ -90899,6 +91004,36 @@
         "referrer": "evidence/reviews/RC1-492-PR512/RECU.json"
       },
       {
+        "candidate": "path-classification.json",
+        "line": 6,
+        "referrer": "evidence/reviews/RC1-498-v1/GPT-5.6-Terra-Pro.verdict.json"
+      },
+      {
+        "candidate": "evidence/reviews/",
+        "line": 7,
+        "referrer": "evidence/reviews/RC1-498-v1/GPT-5.6-Terra-Pro.verdict.json"
+      },
+      {
+        "candidate": "path-classification.json",
+        "line": 8,
+        "referrer": "evidence/reviews/RC1-498-v1/GPT-5.6-Terra-Pro.verdict.json"
+      },
+      {
+        "candidate": "PATH-CLASSIFICATION.md",
+        "line": 8,
+        "referrer": "evidence/reviews/RC1-498-v1/GPT-5.6-Terra-Pro.verdict.json"
+      },
+      {
+        "candidate": "RECU.json",
+        "line": 8,
+        "referrer": "evidence/reviews/RC1-498-v1/GPT-5.6-Terra-Pro.verdict.json"
+      },
+      {
+        "candidate": "recu-revue/1",
+        "line": 2,
+        "referrer": "evidence/reviews/RC1-498-v2/RECU.json"
+      },
+      {
         "candidate": "rules.json",
         "line": 7,
         "referrer": "evidence/reviews/RC1-504-v1/Kimi-2.7.verdict.json"
@@ -95881,6 +96016,41 @@
       {
         "candidate": "A-Za-z0-9._/-",
         "line": 491,
+        "referrer": "scripts/governance/classify_paths.py"
+      },
+      {
+        "candidate": "RECU.json",
+        "line": 629,
+        "referrer": "scripts/governance/classify_paths.py"
+      },
+      {
+        "candidate": "evidence/reviews/",
+        "line": 629,
+        "referrer": "scripts/governance/classify_paths.py"
+      },
+      {
+        "candidate": "revue.py",
+        "line": 633,
+        "referrer": "scripts/governance/classify_paths.py"
+      },
+      {
+        "candidate": "path-classification.json",
+        "line": 635,
+        "referrer": "scripts/governance/classify_paths.py"
+      },
+      {
+        "candidate": "RECU.json",
+        "line": 635,
+        "referrer": "scripts/governance/classify_paths.py"
+      },
+      {
+        "candidate": "RECU.json",
+        "line": 636,
+        "referrer": "scripts/governance/classify_paths.py"
+      },
+      {
+        "candidate": ".verdict.json",
+        "line": 636,
         "referrer": "scripts/governance/classify_paths.py"
       },
       {
@@ -125164,6 +125334,36 @@
         "referrer": "tests/test_classify_paths.py"
       },
       {
+        "candidate": "evidence/reviews/",
+        "line": 1007,
+        "referrer": "tests/test_classify_paths.py"
+      },
+      {
+        "candidate": "evidence/reviews/",
+        "line": 1022,
+        "referrer": "tests/test_classify_paths.py"
+      },
+      {
+        "candidate": "evidence/reviews/",
+        "line": 1037,
+        "referrer": "tests/test_classify_paths.py"
+      },
+      {
+        "candidate": ".verdict.json",
+        "line": 1037,
+        "referrer": "tests/test_classify_paths.py"
+      },
+      {
+        "candidate": "evidence/reviews/",
+        "line": 1058,
+        "referrer": "tests/test_classify_paths.py"
+      },
+      {
+        "candidate": "recu-revue/1",
+        "line": 1068,
+        "referrer": "tests/test_classify_paths.py"
+      },
+      {
         "candidate": "cli.md",
         "line": 16,
         "referrer": "tests/test_cli_doc_coverage.py"
@@ -135492,6 +135692,13 @@
         "line": 193,
         "referrer": "evidence/reviews/BINDING.txt",
         "resolved": "evidence/reviews/RC1-023",
+        "severity": "hard"
+      },
+      {
+        "candidate": "RC1-498-v2",
+        "line": 194,
+        "referrer": "evidence/reviews/BINDING.txt",
+        "resolved": "evidence/reviews/RC1-498-v2",
         "severity": "hard"
       },
       {
@@ -149292,6 +149499,13 @@
         "severity": "hard"
       },
       {
+        "candidate": "scripts/governance/classify_paths.py",
+        "line": 8,
+        "referrer": "evidence/reviews/RC1-498-v1/GPT-5.6-Terra-Pro.verdict.json",
+        "resolved": "scripts/governance/classify_paths.py",
+        "severity": "hard"
+      },
+      {
         "candidate": "tests/test_revue.py",
         "line": 6,
         "referrer": "evidence/reviews/RC1-504-v1/Kimi-2.7.verdict.json",
@@ -155929,49 +156143,49 @@
       },
       {
         "candidate": "scripts/governance/classify_paths.py",
-        "line": 704,
+        "line": 711,
         "referrer": "scripts/governance/classify_paths.py",
         "resolved": "scripts/governance/classify_paths.py",
         "severity": "hard"
       },
       {
         "candidate": "governance/path-classification.json",
-        "line": 716,
+        "line": 723,
         "referrer": "scripts/governance/classify_paths.py",
         "resolved": "governance/path-classification.json",
         "severity": "hard"
       },
       {
         "candidate": "governance/path-classification.json",
-        "line": 744,
+        "line": 751,
         "referrer": "scripts/governance/classify_paths.py",
         "resolved": "governance/path-classification.json",
         "severity": "hard"
       },
       {
         "candidate": "governance/path-classification.json",
-        "line": 759,
+        "line": 766,
         "referrer": "scripts/governance/classify_paths.py",
         "resolved": "governance/path-classification.json",
         "severity": "hard"
       },
       {
         "candidate": "governance/PATH-CLASSIFICATION.md",
-        "line": 790,
+        "line": 797,
         "referrer": "scripts/governance/classify_paths.py",
         "resolved": "governance/PATH-CLASSIFICATION.md",
         "severity": "hard"
       },
       {
         "candidate": "governance/PATH-CLASSIFICATION.md",
-        "line": 796,
+        "line": 803,
         "referrer": "scripts/governance/classify_paths.py",
         "resolved": "governance/PATH-CLASSIFICATION.md",
         "severity": "hard"
       },
       {
         "candidate": "scripts/governance/classify_paths.py",
-        "line": 821,
+        "line": 828,
         "referrer": "scripts/governance/classify_paths.py",
         "resolved": "scripts/governance/classify_paths.py",
         "severity": "hard"
@@ -160884,6 +161098,13 @@
         "severity": "hard"
       },
       {
+        "candidate": "evidence/reviews/BINDING.txt",
+        "line": 1047,
+        "referrer": "tests/test_classify_paths.py",
+        "resolved": "evidence/reviews/BINDING.txt",
+        "severity": "hard"
+      },
+      {
         "candidate": "README.md",
         "line": 19,
         "referrer": "tests/test_cli_doc_coverage.py",
@@ -161598,7 +161819,7 @@
     "by_class": {
       "ARCHIVE": 44,
       "DOCS": 17,
-      "EVIDENCE": 1472,
+      "EVIDENCE": 1479,
       "GENERATED": 5,
       "GOVERNANCE": 192,
       "PRODUCT": 113,
@@ -161617,7 +161838,7 @@
       "evidence-audit-output-root": 18,
       "evidence-dedup-root": 2,
       "evidence-registres-root": 35,
-      "evidence-reviews-root": 1417,
+      "evidence-reviews-root": 1424,
       "generated-authority-map": 1,
       "generated-path-classification-json": 1,
       "generated-path-classification-markdown": 1,
@@ -161653,11 +161874,11 @@
       "working-sandbox-readme": 1
     },
     "case_collisions_total": 0,
-    "dangling_references_total": 16192,
+    "dangling_references_total": 16211,
     "generated_total": 9,
-    "load_bearing_total": 1924,
+    "load_bearing_total": 1931,
     "portability_violations_total": 0,
-    "tracked_total": 2063,
+    "tracked_total": 2070,
     "unclassified_total": 0,
     "unicode_anomalies_total": 0
   },
