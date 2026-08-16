@@ -48,8 +48,18 @@ def sonder_noeud(runner: CommandRunner, hostname: str) -> dict:
         if list_rc == 0:
             try:
                 data = json.loads(list_stdout)
-                names = [item["metadata"]["name"] for item in data.get("items", [])]
-            except (json.JSONDecodeError, KeyError):
+                # RC1-456-iter3 : chemin purement diagnostique (message d'erreur) — un élément
+                # non-dict, ou un `metadata`/`name` absent/`null` dans `items`, ne doit jamais
+                # empêcher la levée de la PrepareError réelle ci-dessous, même famille que
+                # #492/#527 (élément malformé ignoré, pas fatal ; .get() partout, pas
+                # d'indexation directe).
+                noms_bruts = [
+                    (item.get("metadata") or {}).get("name")
+                    for item in data.get("items", [])
+                    if isinstance(item, dict)
+                ]
+                names = [n for n in noms_bruts if isinstance(n, str)]
+            except json.JSONDecodeError:
                 pass
         raise PrepareError(
             t("network.prepare.sonder_noeud.noeud_absent", hostname=hostname,
@@ -62,13 +72,16 @@ def sonder_noeud(runner: CommandRunner, hostname: str) -> dict:
         raise PrepareError(t("network.prepare.sonder_noeud.sortie_illisible",
                               hostname=hostname, detail=exc)) from exc
 
-    status = data.get("status", {})
-    ready = _ready_value(status.get("conditions", []))
-    capacity = status.get("capacity", {})
+    status = data.get("status", {}) or {}
+    ready = _ready_value(status.get("conditions", []) or [])
+    # RC1-456-iter3 : `status.capacity`/`status.nodeInfo` peuvent être des clés PRÉSENTES avec
+    # une valeur `null` explicite (nœud dont le kubelet n'a pas fini son initialisation) —
+    # `.get(clé, défaut)` ne protège QUE l'absence de clé, jamais une valeur `null` présente.
+    capacity = status.get("capacity") or {}
     gpu_nvidia = int(capacity.get("nvidia.com/gpu", "0") or 0)
     gpu_amd = int(capacity.get("amd.com/gpu", "0") or 0)
-    arch = status.get("nodeInfo", {}).get("architecture", "")
-    labels = data.get("metadata", {}).get("labels", {})
+    arch = (status.get("nodeInfo") or {}).get("architecture", "")
+    labels = (data.get("metadata") or {}).get("labels", {}) or {}
 
     return {
         "hostname": hostname,

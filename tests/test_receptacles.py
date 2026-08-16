@@ -122,6 +122,35 @@ def test_sonde_4_profils(profiles: dict[str, tuple[int, str]]) -> None:
     assert inj["ready"] is None
 
 
+# --- RC1-456-iter3 : même famille que #482/#492/#527/#528 — un nœud kubectl dont le kubelet
+# n'a pas encore rapporté sa capacité/nodeInfo (état transitoire réel, PAS une erreur de
+# structure) renvoie la clé PRÉSENTE avec une valeur `null` explicite — `.get(clé, défaut)` ne
+# protège QUE l'absence de clé, pas une valeur `null` présente. ---
+class _RunnerCapaciteNull:
+    """Simule `kubectl get node` pour un nœud dont `status.capacity`/`nodeInfo` sont `null`."""
+
+    def run(self, argv: list[str]) -> tuple[int, str]:
+        return 0, json.dumps({
+            "metadata": {"name": "n1", "labels": {}},
+            "status": {
+                "conditions": [{"type": "Ready", "status": "True"}],
+                "capacity": None,
+                "nodeInfo": None,
+            },
+        })
+
+
+def test_sonde_capacity_et_nodeinfo_null_ne_leve_pas() -> None:
+    """RC1-456-iter3 : un nœud en cours d'initialisation (kubelet pas encore prêt) peut avoir
+    `status.capacity`/`status.nodeInfo` PRÉSENTS mais explicitement `null` — ne doit jamais lever
+    AttributeError, seulement produire des valeurs par défaut (0 GPU, arch vide)."""
+    etat = sonder_noeud(_RunnerCapaciteNull(), "n1")
+    assert etat["gpu_nvidia"] == 0
+    assert etat["gpu_amd"] == 0
+    assert etat["arch"] == ""
+    assert etat["ready"] is True
+
+
 def test_plan_gpu_expose(profiles: dict[str, tuple[int, str]]) -> None:
     runner = FakeRunner(profiles)
     etat = sonder_noeud(runner, "gpu-expose")

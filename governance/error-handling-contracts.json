@@ -285,15 +285,14 @@
       "accepted_risk": "Un port en écoute peut ne pas être détecté si la ligne `ss` correspondante est malformée."
     },
     {
-      "id": "site:src/forgeai/network/prepare.py:52",
+      "id": "site:src/forgeai/network/prepare.py:62",
       "site": {
         "path": "src/forgeai/network/prepare.py",
-        "line": 52,
+        "line": 62,
         "function": "forgeai.network.prepare.sonder_noeud"
       },
       "exception_types": [
-        "json.JSONDecodeError",
-        "KeyError"
+        "json.JSONDecodeError"
       ],
       "risk_paths": [
         "reseau",
@@ -303,7 +302,7 @@
       "behavior_contract": "Quand `kubectl get node <hostname>` échoue, tente d'enrichir le message d'erreur avec la liste des nœuds connus (pour aider au diagnostic) ; si CETTE liste échoue aussi à parser, l'enrichissement est simplement omis — mais l'erreur RÉELLE (`PrepareError`) est levée dans tous les cas, avec ou sans la liste.",
       "logging": "aucune — l'erreur primaire est de toute façon levée juste après (PrepareError), ce swallow ne concerne qu'un enrichissement optionnel du message",
       "owner": "équipe réseau ForgeAI",
-      "justification": "Ce n'est pas une exception « avalée » au sens du critère : le swallow porte uniquement sur un ENRICHISSEMENT best-effort du message d'erreur (liste des noms de nœuds connus) ; l'erreur primaire `PrepareError` est systématiquement levée juste après, que l'enrichissement réussisse ou non.",
+      "justification": "Ce n'est pas une exception « avalée » au sens du critère : le swallow porte uniquement sur un ENRICHISSEMENT best-effort du message d'erreur (liste des noms de nœuds connus) ; l'erreur primaire `PrepareError` est systématiquement levée juste après, que l'enrichissement réussisse ou non. #545 : le code d'extraction est passé d'une indexation directe (`item[\"metadata\"][\"name\"]`, pouvant lever `KeyError`) à `.get()` partout + filtre `isinstance` — `KeyError` n'est plus atteignable à ce site, retiré de `exception_types` (site remappé 52->62 par le décalage de lignes introduit par ce même correctif).",
       "compensating_test": null,
       "compensating_test_reason": "Le comportement primaire (PrepareError toujours levée) est testé ; l'enrichissement optionnel du message n'affecte pas le contrat observable de la fonction (elle lève toujours dans ce cas).",
       "review_due": "2027-02-10",
