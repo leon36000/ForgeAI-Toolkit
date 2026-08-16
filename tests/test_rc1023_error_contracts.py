@@ -444,6 +444,29 @@ def test_sites_dupliques_sous_id_distincts_detecte(tmp_path: Path) -> None:
     assert any("site dupliqué" in e and "src/forgeai/example.py:3" in e for e in erreurs)
 
 
+def test_sites_dupliques_ecritures_de_chemin_equivalentes_detecte(tmp_path: Path) -> None:
+    """Round 18 (#452) — objection GPT-5.6-Terra-Pro (revue scellée) : la dédup round 17
+    comparait la CHAÎNE BRUTE de site.path, alors que la vérification AST résout et normalise ce
+    chemin — 'src/forgeai/example.py' et 'src/forgeai/./example.py' visent le MÊME ExceptHandler
+    mais n'étaient pas détectés comme doublons sous cette dédup textuelle."""
+    _creer_fichier_source(
+        tmp_path,
+        "src/forgeai/example.py",
+        "try:\n    pass\nexcept ValueError:\n    pass\n",
+    )
+    contrat1 = _entree_valide(
+        id_contrat="site:src/forgeai/example.py:3", path="src/forgeai/example.py"
+    )
+    contrat2 = _entree_valide(
+        id_contrat="un-autre-identifiant-totalement-different",
+        path="src/forgeai/./example.py",
+    )
+    _ecrire_inventaire(tmp_path, [contrat1, contrat2])
+
+    erreurs = VALIDATEUR.valider(tmp_path, aujourd_hui=dt.date(2026, 1, 1))
+    assert any("site dupliqué" in e and "src/forgeai/example.py:3" in e for e in erreurs)
+
+
 def test_champs_obligatoires_manquants_detectes(tmp_path: Path) -> None:
     _creer_fichier_source(
         tmp_path,

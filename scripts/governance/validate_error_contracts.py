@@ -214,12 +214,33 @@ def _erreurs_identifiants_dupliques(entrees: list[dict]) -> list[str]:
     ]
 
 
-def _erreurs_sites_dupliques(entrees: list[dict]) -> list[str]:
+def _resoudre_dans_racine(root_resolu: Path, path_rel: str) -> Path | None:
+    """Résout un chemin relatif en chemin ABSOLU normalisé confiné à root_resolu, ou None s'il en
+    sort. Ne vérifie PAS si path_rel est absolu (à l'appelant de le faire s'il veut un message
+    d'erreur dédié) — centralise seulement la normalisation.
+
+    Round 18 (#452) — objection GPT-5.6-Terra-Pro (revue scellée) : _erreurs_sites_dupliques (round
+    17) et _verifier_site_ast réimplémentaient chacune leur propre résolution de chemin, et
+    avaient dérivé — la dédup comparait la CHAÎNE BRUTE (site.path) tandis que la vérif AST
+    résolvait/normalisait ce même chemin. `src/forgeai/example.py` et `src/forgeai/./example.py`
+    passaient tous deux la vérif AST sur le MÊME ExceptHandler mais n'étaient pas détectés comme
+    doublons. Centraliser la résolution dans une seule fonction empêche cette classe de dérive.
+    """
+    candidat = (root_resolu / path_rel).resolve()
+    try:
+        candidat.relative_to(root_resolu)
+    except ValueError:
+        return None
+    return candidat
+
+
+def _erreurs_sites_dupliques(entrees: list[dict], root: Path) -> list[str]:
     # Round 17 (#452) — objection GPT-5.6-Terra-Pro (revue scellée) : _erreurs_identifiants_dupliques
     # ne détecte que les `id` dupliqués, jamais deux entrées ciblant le MÊME site (site.path,
     # site.line) sous des id distincts — le plancher de couverture pouvait ainsi être atteint sans
     # que 31 sites AST réellement distincts soient contractualisés.
-    sites: list[tuple[str, int]] = []
+    root_resolu = root.resolve()
+    sites: list[tuple[Path, int]] = []
     for entree in entrees:
         if not isinstance(entree, dict):
             continue
@@ -227,10 +248,15 @@ def _erreurs_sites_dupliques(entrees: list[dict]) -> list[str]:
         if not isinstance(site, dict):
             continue
         path, line = site.get("path"), site.get("line")
-        if isinstance(path, str) and isinstance(line, int) and not isinstance(line, bool):
-            sites.append((path, line))
+        if not isinstance(path, str) or Path(path).is_absolute():
+            continue
+        if not isinstance(line, int) or isinstance(line, bool):
+            continue
+        resolu = _resoudre_dans_racine(root_resolu, path)
+        if resolu is not None:
+            sites.append((resolu, line))
     return [
-        f"site dupliqué référencé par plusieurs contrats : {chemin}:{ligne}"
+        f"site dupliqué référencé par plusieurs contrats : {chemin.relative_to(root_resolu)}:{ligne}"
         for chemin, ligne in sorted({item for item in sites if sites.count(item) > 1})
     ]
 
@@ -339,11 +365,12 @@ def _verifier_site_ast(
     if Path(path_rel).is_absolute():
         return [f"{identifiant} : site.path doit être un chemin relatif (reçu un chemin absolu)"]
     root_resolu = root.resolve()
-    fichier_source = (root_resolu / path_rel).resolve()
-    try:
-        chemin_relatif_reel = fichier_source.relative_to(root_resolu)
-    except ValueError:
+    # Round 18 (#452) : résolution centralisée dans _resoudre_dans_racine — partagée avec
+    # _erreurs_sites_dupliques pour que les deux fonctions s'accordent sur « même fichier ».
+    fichier_source = _resoudre_dans_racine(root_resolu, path_rel)
+    if fichier_source is None:
         return [f"{identifiant} : site.path sort de la racine du dépôt : {path_rel}"]
+    chemin_relatif_reel = fichier_source.relative_to(root_resolu)
     # Round 16 (#452) — objection GPT-5.6-Terra-Pro (revue scellée) : round 13 testait le préfixe
     # sur la CHAÎNE BRUTE path_rel, contournable par une traversée qui reste sous root tout en
     # s'échappant de src/forgeai/ (ex. "src/forgeai/../../tests/x.py" commence par "src/forgeai/"
@@ -478,7 +505,7 @@ def valider(root: Path, *, aujourd_hui: dt.date | None = None) -> list[str]:
     erreurs_horizon, date_maximale = _erreurs_horizon(inventaire, aujourd_hui)
     erreurs.extend(erreurs_horizon)
     erreurs.extend(_erreurs_identifiants_dupliques(contracts))
-    erreurs.extend(_erreurs_sites_dupliques(contracts))
+    erreurs.extend(_erreurs_sites_dupliques(contracts, root))
 
     # Round 17 (#452) — objection GPT-5.6-Terra-Pro (revue scellée) : coverage.total_except_sites_
     # src_forgeai n'était jamais vérifié contre un décompte AST réel — un total arbitraire passait
