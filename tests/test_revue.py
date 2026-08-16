@@ -45,7 +45,7 @@ def _recu(**changes):
         "round": 1,
         **_etat(),
         "prompt_sha256": SHA,
-        "reviewers_attendus": ["deepseek", "gemini", "longcat"],
+        "reviewers_attendus": ["deepseek", "gemini_flash", "longcat_20"],
         "codeur": ["fable"],  # jamais un vendor reviewer par défaut (anthropic n'y figure pas)
         "resultat": "APPROVE",
         "date_heure": DATE,
@@ -56,12 +56,12 @@ def _recu(**changes):
 
 
 def test_composer_et_grok_meme_vendor():
-    assert revue.vendor_of("composer") == revue.vendor_of("grok")
-    assert revue.vendor_of("composer") != revue.vendor_of("deepseek")
+    assert revue.vendor_of("composer_25") == revue.vendor_of("grok_45")
+    assert revue.vendor_of("composer_25") != revue.vendor_of("deepseek")
 
 
 def test_vendors_distincts_reconnus():
-    assert len({revue.vendor_of(model) for model in ("deepseek", "gemini", "glm52")}) == 3
+    assert len({revue.vendor_of(model) for model in ("deepseek", "gemini_flash", "glm_52")}) == 3
 
 
 def test_vendor_table_derivee_de_roles_yaml_reelle():
@@ -78,7 +78,7 @@ def test_fable_exclu_car_provider_id_null():
 
 
 def test_alias_ponctuation_variable_normalise_pareil():
-    assert revue.vendor_of("qwen37max") == revue.vendor_of("qwen") == "alibaba"
+    assert revue.vendor_of("qwen_37") == revue.vendor_of("qwen") == "alibaba"
 
 
 def test_alias_modele_reponse_routes_yaml_reconnu():
@@ -131,11 +131,11 @@ def test_ajouter_un_vendor_ne_touche_pas_revue_py(tmp_path):
 
 def test_tally_invalide_si_roster_introuvable(monkeypatch):
     monkeypatch.setattr(revue, "_vendor_table", lambda: None)
-    assert revue.tally([_v("deepseek"), _v("gemini"), _v("longcat")])["result"] == "INVALIDE"
+    assert revue.tally([_v("deepseek"), _v("gemini_flash"), _v("longcat_20")])["result"] == "INVALIDE"
 
 
 def test_tally_approve_unanime_3_vendors():
-    result = revue.tally([_v("deepseek"), _v("gemini"), _v("longcat")])
+    result = revue.tally([_v("deepseek"), _v("gemini_flash"), _v("longcat_20")])
     assert result["result"] == "APPROVE"
     assert sorted(result["vendors"]) == ["deepseek", "google", "meituan"]
 
@@ -143,35 +143,35 @@ def test_tally_approve_unanime_3_vendors():
 def test_tally_reject_si_un_reject():
     result = revue.tally([
         _v("deepseek"),
-        _v("gemini", "REJECT", [{"severity": "eleve", "file": "x.py", "line": 1, "desc": "bug"}]),
-        _v("longcat"),
+        _v("gemini_flash", "REJECT", [{"severity": "eleve", "file": "x.py", "line": 1, "desc": "bug"}]),
+        _v("longcat_20"),
     ])
     assert result["result"] == "REJECT" and result["bloquantes"]
 
 
 def test_tally_invalide_moins_de_3():
-    assert revue.tally([_v("deepseek"), _v("gemini")])["result"] == "INVALIDE"
+    assert revue.tally([_v("deepseek"), _v("gemini_flash")])["result"] == "INVALIDE"
 
 
 def test_tally_invalide_moins_de_3_vendors_distincts():
-    result = revue.tally([_v("composer"), _v("grok"), _v("gemini")])
+    result = revue.tally([_v("composer_25"), _v("grok_45"), _v("gemini_flash")])
     assert result["result"] == "INVALIDE" and "vendor" in result["reason"]
 
 
 def test_tally_invalide_prompts_non_identiques():
-    result = revue.tally([_v("deepseek"), _v("gemini", sha="b" * 64), _v("longcat")])
+    result = revue.tally([_v("deepseek"), _v("gemini_flash", sha="b" * 64), _v("longcat_20")])
     assert result["result"] == "INVALIDE" and "identiques" in result["reason"]
 
 
 def test_tally_invalide_verdict_malforme():
-    assert revue.tally([_v("deepseek"), _v("gemini", "PEUT-ETRE"), _v("longcat")])["result"] == "INVALIDE"
+    assert revue.tally([_v("deepseek"), _v("gemini_flash", "PEUT-ETRE"), _v("longcat_20")])["result"] == "INVALIDE"
 
 
 def test_tally_objections_triees_par_severite():
     result = revue.tally([
         _v("deepseek", "REJECT", [{"severity": "faible", "desc": "f"}]),
-        _v("gemini", "REJECT", [{"severity": "critique", "desc": "c"}]),
-        _v("longcat", "REJECT", [{"severity": "moyen", "desc": "m"}]),
+        _v("gemini_flash", "REJECT", [{"severity": "critique", "desc": "c"}]),
+        _v("longcat_20", "REJECT", [{"severity": "moyen", "desc": "m"}]),
     ])
     assert [objection["severity"] for objection in result["objections"]] == ["critique", "moyen", "faible"]
 
@@ -179,8 +179,8 @@ def test_tally_objections_triees_par_severite():
 def test_tally_reconnait_severite_francaise():
     result = revue.tally([
         _v("deepseek", "REJECT", [{"severite": "majeure"}]),
-        _v("gemini"),
-        _v("longcat"),
+        _v("gemini_flash"),
+        _v("longcat_20"),
     ])
     assert result["bloquantes"]
 
@@ -188,8 +188,8 @@ def test_tally_reconnait_severite_francaise():
 def test_tally_reconnait_severite_anglaise():
     result = revue.tally([
         _v("deepseek", "REJECT", [{"severity": "eleve"}]),
-        _v("gemini"),
-        _v("longcat"),
+        _v("gemini_flash"),
+        _v("longcat_20"),
     ])
     assert result["bloquantes"]
 
@@ -264,20 +264,20 @@ def test_diff_canonique_deterministe_ordre_independant():
 
 
 def test_verifier_recu_approve_nominal():
-    result = revue.verifier_recu(_recu(), [_v("deepseek"), _v("gemini"), _v("longcat")], _etat())
+    result = revue.verifier_recu(_recu(), [_v("deepseek"), _v("gemini_flash"), _v("longcat_20")], _etat())
     assert result["result"] == "APPROVE" and "reçu valide" in result["reason"]
 
 
 def test_verifier_recu_donnees_absentes():
     receipt = _recu()
     del receipt["head_commit"]
-    result = revue.verifier_recu(receipt, [_v("deepseek"), _v("gemini"), _v("longcat")], _etat())
+    result = revue.verifier_recu(receipt, [_v("deepseek"), _v("gemini_flash"), _v("longcat_20")], _etat())
     assert result["result"] == "INVALIDE" and "head_commit" in result["reason"]
 
 
 def test_verifier_recu_base_differente_rejete():
     result = revue.verifier_recu(
-        _recu(base_commit="x" * 40), [_v("deepseek"), _v("gemini"), _v("longcat")], _etat()
+        _recu(base_commit="x" * 40), [_v("deepseek"), _v("gemini_flash"), _v("longcat_20")], _etat()
     )
     assert result["result"] == "INVALIDE" and "un autre commit" in result["reason"]
 
@@ -290,7 +290,7 @@ def test_verifier_recu_approve_meme_si_head_commit_differe_de_letat_git_actuel()
     # exclut reviews/** des deux côtés) — PAS sur l'égalité stricte head_commit/head_tree.
     result = revue.verifier_recu(
         _recu(head_commit="x" * 40, head_tree="y" * 40),
-        [_v("deepseek"), _v("gemini"), _v("longcat")],
+        [_v("deepseek"), _v("gemini_flash"), _v("longcat_20")],
         _etat(),
     )
     assert result["result"] == "APPROVE"
@@ -298,15 +298,15 @@ def test_verifier_recu_approve_meme_si_head_commit_differe_de_letat_git_actuel()
 
 def test_verifier_recu_diff_modifie_apres_revue():
     result = revue.verifier_recu(
-        _recu(diff_digest="x" * 64), [_v("deepseek"), _v("gemini"), _v("longcat")], _etat()
+        _recu(diff_digest="x" * 64), [_v("deepseek"), _v("gemini_flash"), _v("longcat_20")], _etat()
     )
     assert result["result"] == "INVALIDE" and "diff modifié" in result["reason"]
 
 
 def test_verifier_recu_nombre_incorrect_de_reviewers():
     result = revue.verifier_recu(
-        _recu(reviewers_attendus=["deepseek", "gemini"]),
-        [_v("deepseek"), _v("gemini"), _v("longcat")],
+        _recu(reviewers_attendus=["deepseek", "gemini_flash"]),
+        [_v("deepseek"), _v("gemini_flash"), _v("longcat_20")],
         _etat(),
     )
     assert result["result"] == "INVALIDE" and "nombre incorrect" in result["reason"]
@@ -315,7 +315,7 @@ def test_verifier_recu_nombre_incorrect_de_reviewers():
 def test_verifier_recu_reponse_contradictoire():
     result = revue.verifier_recu(
         _recu(),
-        [_v("deepseek"), _v("gemini", "REJECT"), _v("longcat")],
+        [_v("deepseek"), _v("gemini_flash", "REJECT"), _v("longcat_20")],
         _etat(),
     )
     assert result["result"] == "REJECT" and "APPROVE" in result["reason"]
@@ -324,12 +324,12 @@ def test_verifier_recu_reponse_contradictoire():
 def test_verifier_recu_verdict_perime():
     expired = revue.verifier_recu(
         _recu(),
-        [_v("deepseek", date="2025-01-03T12:00:00+00:00"), _v("gemini"), _v("longcat")],
+        [_v("deepseek", date="2025-01-03T12:00:00+00:00"), _v("gemini_flash"), _v("longcat_20")],
         _etat(),
     )
     valid = revue.verifier_recu(
         _recu(),
-        [_v("deepseek", date="2025-01-01T14:00:00+00:00"), _v("gemini"), _v("longcat")],
+        [_v("deepseek", date="2025-01-01T14:00:00+00:00"), _v("gemini_flash"), _v("longcat_20")],
         _etat(),
     )
     assert expired["result"] == "INVALIDE" and "périmé" in expired["reason"]
@@ -338,7 +338,7 @@ def test_verifier_recu_verdict_perime():
 
 def test_verifier_recu_auteur_ne_peut_pas_etre_reviewer():
     result = revue.verifier_recu(
-        _recu(codeur=["deepseek"]), [_v("deepseek"), _v("gemini"), _v("longcat")], _etat()
+        _recu(codeur=["deepseek"]), [_v("deepseek"), _v("gemini_flash"), _v("longcat_20")], _etat()
     )
     assert result["result"] == "INVALIDE" and "auteur" in result["reason"] and "reviewer" in result["reason"]
 
@@ -346,7 +346,7 @@ def test_verifier_recu_auteur_ne_peut_pas_etre_reviewer():
 def test_verifier_recu_codeur_inconnu_echoue_dur():
     result = revue.verifier_recu(
         _recu(codeur=["id-bidon-inexistant"]),
-        [_v("deepseek"), _v("gemini"), _v("longcat")],
+        [_v("deepseek"), _v("gemini_flash"), _v("longcat_20")],
         _etat(),
     )
     assert result["result"] == "INVALIDE" and "codeur inconnu" in result["reason"]
@@ -358,7 +358,7 @@ def test_verifier_recu_codeur_vide_rejete():
     # modifié à la main avec codeur:[] ne doit JAMAIS passer, même si la CLI `recu` exige
     # --codeur (un attaquant/une erreur peut toujours écrire le fichier directement).
     result = revue.verifier_recu(
-        _recu(codeur=[]), [_v("deepseek"), _v("gemini"), _v("longcat")], _etat()
+        _recu(codeur=[]), [_v("deepseek"), _v("gemini_flash"), _v("longcat_20")], _etat()
     )
     assert result["result"] == "INVALIDE" and "codeur" in result["reason"]
 
@@ -366,8 +366,8 @@ def test_verifier_recu_codeur_vide_rejete():
 def test_verifier_recu_objection_bloquante_avec_cle_francaise():
     verdicts = [
         _v("deepseek", objs=[{"severite": "critique", "desc": "bloquant"}]),
-        _v("gemini"),
-        _v("longcat"),
+        _v("gemini_flash"),
+        _v("longcat_20"),
     ]
     tally_result = revue.tally(verdicts)
     result = revue.verifier_recu(_recu(), verdicts, _etat())
@@ -422,11 +422,11 @@ def test_cmd_recu_ecrit_fichier_avec_etat_mocke(monkeypatch, tmp_path, capsys):
     dossier.mkdir(parents=True)
     verdict = _v("deepseek")
     (dossier / "DeepSeek-V4-Pro.verdict.json").write_text(json.dumps(verdict), encoding="utf-8")
-    (dossier / "Gemini-3.1-Pro.verdict.json").write_text(
-        json.dumps(_v("gemini")), encoding="utf-8"
+    (dossier / "Gemini-3.7-Flash.verdict.json").write_text(
+        json.dumps(_v("gemini_flash")), encoding="utf-8"
     )
     (dossier / "LongCat-2.0.verdict.json").write_text(
-        json.dumps(_v("longcat")), encoding="utf-8"
+        json.dumps(_v("longcat_20")), encoding="utf-8"
     )
     monkeypatch.setattr(revue, "REPO", tmp_path)
     monkeypatch.setattr(revue, "_etat_git_reel", lambda base_ref, head_ref: _etat())

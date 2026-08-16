@@ -1,0 +1,31 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "tests/test_fix_audit_1b_reviews_gate_in_process.py",
+   "description": "Le test conserve l'identifiant DeepSeek-V4-Pro alors que le manifeste déclare le provider_id réel DeepSeek-V4-Pro-0813 ; l'alignement complet des identifiants de route n'est pas démontré pour ce cas.",
+   "preuve": "ligne modifiée: (DeepSeek-V4-Pro, MiMo-2.5-Pro, Qwen3.7-Max) ; manifests/roles.yaml: provider_id: DeepSeek-V4-Pro-0813"
+  },
+  {
+   "severite": "mineure",
+   "fichier": "tests/test_revue.py",
+   "description": "Le test nominal de reçu utilise longcat_20, membre marqué retire et non sélectionnable, comme reviewer valide ; le diff ne prouve pas que cet état est réservé à l'audit et refusé pour une nouvelle revue.",
+   "preuve": "reviewers_attendus: [deepseek, gemini_flash, longcat_20] ; manifests/roles.yaml: id: longcat_20, statut: retire, contrainte: non sélectionnable"
+  },
+  {
+   "severite": "mineure",
+   "fichier": "tests/test_revue.py",
+   "description": "Le nom de fichier DeepSeek-V4-Pro.verdict.json reste inchangé alors que le provider_id actif est DeepSeek-V4-Pro-0813 ; si la commande se base sur des noms de fichiers/identifiants réels, l'alignement n'est pas vérifiable.",
+   "preuve": "(dossier / DeepSeek-V4-Pro.verdict.json).write_text(...) ; manifests/roles.yaml: provider_id: DeepSeek-V4-Pro-0813"
+  }
+ ],
+ "date_heure": "2026-08-16T04:48:23.243657+00:00",
+ "prompt_sha256": "7f69ed4fd599eae52cfcbaf083b700b8730733fd6b743a99272d3ca2e23e59cb",
+ "reviewer_model": "Qwen3.8-2.4T",
+ "modele_servi": "b9de6bc895fe95ccacf7d9fa9b1cf29ca44d34f03e249738f325c9dee3790b78",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}
