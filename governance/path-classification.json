@@ -1724,7 +1724,7 @@
         },
         {
           "candidate": "AGENTS.md",
-          "line": 150,
+          "line": 151,
           "referrer": "scripts/governance/check_doc_links.py",
           "resolved": "AGENTS.md",
           "severity": "hard"
@@ -1812,18 +1812,11 @@
           "referrer": "tests/test_check_doc_links.py",
           "resolved": "AGENTS.md",
           "severity": "hard"
-        },
-        {
-          "candidate": "AGENTS.md",
-          "line": 70,
-          "referrer": "tests/test_check_doc_links.py",
-          "resolved": "AGENTS.md",
-          "severity": "hard"
         }
       ],
       "rule_id": "governance-root-agents",
-      "sha256": "2c3884c19fbc1e2920dfd879ccec88ae9e17470c1af95ad7291d7a65542ef75d",
-      "size": 6426,
+      "sha256": "6444aaee0f3903621644d0440c546168bde8f99ebb29781c1fce6ce3e5b99358",
+      "size": 6438,
       "target_path": null,
       "type": "text"
     },
@@ -2793,7 +2786,7 @@
         },
         {
           "candidate": "CLAUDE.md",
-          "line": 151,
+          "line": 152,
           "referrer": "scripts/governance/check_doc_links.py",
           "resolved": "CLAUDE.md",
           "severity": "hard"
@@ -3523,7 +3516,7 @@
         },
         {
           "candidate": "MASTER-PLAN.md",
-          "line": 152,
+          "line": 153,
           "referrer": "scripts/governance/check_doc_links.py",
           "resolved": "MASTER-PLAN.md",
           "severity": "hard"
@@ -3831,7 +3824,7 @@
         },
         {
           "candidate": "README.md",
-          "line": 149,
+          "line": 150,
           "referrer": "scripts/governance/check_doc_links.py",
           "resolved": "README.md",
           "severity": "hard"
@@ -6344,7 +6337,7 @@
         }
       ],
       "rule_id": "governance-core",
-      "sha256": "edf1f2dc00054bfe34f4a133a9697c44d04508098be35740332e8519222645b1",
+      "sha256": "7edcd835ead921f7416a52bfd97c90a4fb8dc7b176d2f98acc310bd4142cd686",
       "size": 29261,
       "target_path": null,
       "type": "text"
@@ -25262,8 +25255,8 @@
         }
       ],
       "rule_id": "governance-scripts-governance",
-      "sha256": "be18ffdb83eda3d0fabb34c7cbbce75c209d9974f281e8d855b35128bf76ccaa",
-      "size": 4689,
+      "sha256": "0596e6ec03dbe81a929e4f38a02f4679ca8c5d1678e38bc9c4679a85534df77c",
+      "size": 4753,
       "target_path": null,
       "type": "text"
     },
@@ -28968,6 +28961,13 @@
           "candidate": "src/forgeai/data/catalogue.json",
           "line": 5,
           "referrer": ".gitguardian.yaml",
+          "resolved": "src/forgeai/data/catalogue.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "src/forgeai/data/catalogue.json",
+          "line": 38,
+          "referrer": "AGENTS.md",
           "resolved": "src/forgeai/data/catalogue.json",
           "severity": "hard"
         },
@@ -37628,8 +37628,8 @@
         }
       ],
       "rule_id": "test-suite",
-      "sha256": "9a61ff78771ccb5e846c7b17b1dac34397c5a2599b17f03d5b17b15ebe0db4e8",
-      "size": 3378,
+      "sha256": "93f22a0d85f228008a8040674714bb30b43fc4e71640c7df7557990d432b9d37",
+      "size": 3383,
       "target_path": null,
       "type": "text"
     },
@@ -46629,11 +46629,6 @@
       },
       {
         "candidate": "catalogue/",
-        "line": 38,
-        "referrer": "AGENTS.md"
-      },
-      {
-        "candidate": "data/catalogue.json",
         "line": 38,
         "referrer": "AGENTS.md"
       },
@@ -86378,23 +86373,18 @@
         "referrer": "scripts/governance/check_doc_links.py"
       },
       {
-        "candidate": "../",
-        "line": 70,
-        "referrer": "scripts/governance/check_doc_links.py"
-      },
-      {
         "candidate": "Docs/",
-        "line": 147,
-        "referrer": "scripts/governance/check_doc_links.py"
-      },
-      {
-        "candidate": "governance/",
         "line": 148,
         "referrer": "scripts/governance/check_doc_links.py"
       },
       {
+        "candidate": "governance/",
+        "line": 149,
+        "referrer": "scripts/governance/check_doc_links.py"
+      },
+      {
         "candidate": "CANON/",
-        "line": 153,
+        "line": 154,
         "referrer": "scripts/governance/check_doc_links.py"
       },
       {
@@ -113048,6 +113038,11 @@
         "referrer": "tests/test_check_doc_links.py"
       },
       {
+        "candidate": "Docs/AGENTS.md",
+        "line": 70,
+        "referrer": "tests/test_check_doc_links.py"
+      },
+      {
         "candidate": "a.md",
         "line": 76,
         "referrer": "tests/test_check_doc_links.py"
@@ -121839,6 +121834,13 @@
         "line": 32,
         "referrer": "AGENTS.md",
         "resolved": "scripts/no_stub_scan.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "src/forgeai/data/catalogue.json",
+        "line": 38,
+        "referrer": "AGENTS.md",
+        "resolved": "src/forgeai/data/catalogue.json",
         "severity": "hard"
       },
       {
@@ -138398,28 +138400,28 @@
       },
       {
         "candidate": "README.md",
-        "line": 149,
+        "line": 150,
         "referrer": "scripts/governance/check_doc_links.py",
         "resolved": "README.md",
         "severity": "hard"
       },
       {
         "candidate": "AGENTS.md",
-        "line": 150,
+        "line": 151,
         "referrer": "scripts/governance/check_doc_links.py",
         "resolved": "AGENTS.md",
         "severity": "hard"
       },
       {
         "candidate": "CLAUDE.md",
-        "line": 151,
+        "line": 152,
         "referrer": "scripts/governance/check_doc_links.py",
         "resolved": "CLAUDE.md",
         "severity": "hard"
       },
       {
         "candidate": "MASTER-PLAN.md",
-        "line": 152,
+        "line": 153,
         "referrer": "scripts/governance/check_doc_links.py",
         "resolved": "MASTER-PLAN.md",
         "severity": "hard"
@@ -142807,13 +142809,6 @@
         "severity": "hard"
       },
       {
-        "candidate": "AGENTS.md",
-        "line": 70,
-        "referrer": "tests/test_check_doc_links.py",
-        "resolved": "AGENTS.md",
-        "severity": "hard"
-      },
-      {
         "candidate": "CANON/ETAT-SYSTEME.md",
         "line": 111,
         "referrer": "tests/test_check_doc_links.py",
@@ -143440,7 +143435,7 @@
       "working-sandbox-readme": 1
     },
     "case_collisions_total": 0,
-    "dangling_references_total": 14739,
+    "dangling_references_total": 14738,
     "generated_total": 7,
     "load_bearing_total": 1722,
     "portability_violations_total": 0,

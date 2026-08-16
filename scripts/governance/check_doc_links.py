@@ -6,7 +6,7 @@ import sys
 
 _MARKDOWN_LINK_RE = re.compile(r"\[[^\]]*\]\(([^)]+)\)")
 _BACKTICK_PATH_RE = re.compile(
-    r"`([A-Za-z0-9_.][A-Za-z0-9._/-]*/[A-Za-z0-9_.-]+\.[A-Za-z0-9]{1,10})`"
+    r"`([A-Za-z0-9_.][A-Za-z0-9._/-]*/[A-Za-z0-9_.-]+\.[A-Za-z0-9]{1,15})`"
 )
 
 EXCLUDE_PREFIXES = ["CANON/adr/", "governance/decisions/"]
@@ -64,13 +64,14 @@ def resolve_link(link: str, referrer_path: str) -> str | None:
     if not link:
         return None
 
+    fragment_index = link.find("#")
+    if fragment_index != -1:
+        link = link[:fragment_index]
+        if not link:
+            return None
+
     referrer = pathlib.PurePosixPath(referrer_path)
-    parent = referrer.parent
-
-    if link.startswith("../"):
-        parent = parent.parent
-
-    resolved = parent / link
+    resolved = referrer.parent / link
     return _normalize_posix_path(resolved)
 
 

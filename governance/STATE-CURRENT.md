@@ -194,7 +194,7 @@
     },
     {
       "path": "tests/test_check_doc_links.py",
-      "sha256": "9a61ff78771ccb5e846c7b17b1dac34397c5a2599b17f03d5b17b15ebe0db4e8"
+      "sha256": "93f22a0d85f228008a8040674714bb30b43fc4e71640c7df7557990d432b9d37"
     },
     {
       "path": "tests/test_classify_paths.py",

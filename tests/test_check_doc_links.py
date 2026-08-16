@@ -67,7 +67,7 @@ def test_resout_lien_deja_absolu():
 def test_resout_lien_avec_parent_relatif():
     assert (
         check_doc_links.resolve_link("../AGENTS.md", "Docs/how-to/x.md")
-        == "AGENTS.md"
+        == "Docs/AGENTS.md"
     )
 
 

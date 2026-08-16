@@ -110,7 +110,7 @@
       ],
       "digest": {
         "policy": "content_sha256",
-        "value": "2c3884c19fbc1e2920dfd879ccec88ae9e17470c1af95ad7291d7a65542ef75d",
+        "value": "6444aaee0f3903621644d0440c546168bde8f99ebb29781c1fce6ce3e5b99358",
         "checked_at": "2026-08-16",
         "delegated_to": null
       },
