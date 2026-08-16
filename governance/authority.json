@@ -250,14 +250,14 @@
         },
         {
           "topic": "orchestration_seat",
-          "position": "claude_code_session_lead",
+          "position": "claude_code_opus_mission_lead",
           "locator": "CANON/plan-integral.md:27"
         }
       ],
       "digest": {
         "policy": "content_sha256",
-        "value": "16f4f773d2c5bed7b464000ab87598a0af7171cd9849c50cc0c5536e46030fee",
-        "checked_at": "2026-08-14",
+        "value": "6b1cc0ea68fe4e052946d77a720bb7b4fb338181c8bcc7280d1a44954a989ad6",
+        "checked_at": "2026-08-16",
         "delegated_to": null
       },
       "retention": "in_force",
@@ -268,7 +268,7 @@
         "mission_seq": null,
         "ref": "issue-486"
       },
-      "notes": "Le document se déclare document de référence unique et affirme Fable orchestrateur unique aux lignes 27 et 251 (invariant 6) — déclaré en position sur orchestration_seat (revue RC1-001-PR431, objection critique DeepSeek-V4-Pro corrigée : cette affirmation devait être modélisée, pas seulement mentionnée en note, pour que le conflit avec agents-md/agents-md.orch-001 soit détecté par la CI)."
+      "notes": "Le document se déclare document de référence unique (position plan_of_record, résolution #486 toujours ouverte — status reste \"conflicted\" pour ce motif). orchestration_seat résolu par #487 : lignes 27/177/249 réécrites pour définir Fable comme nom de RÔLE (session Claude Code faisant office de mission lead), pas comme instance de modèle figée — aligné sur agents-md et gov.decision-mission-lead (claude_code_opus_mission_lead, décision #481)."
     },
     {
       "id": "canon.plan-maitre-bmad",
