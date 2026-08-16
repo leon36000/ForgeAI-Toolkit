@@ -1,0 +1,25 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "governance/authority.json",
+   "description": "Le digest `content_sha256` et la date `checked_at` ont été mis à jour dans le diff, mais leur exactitude ne peut être vérifiée indépendamment par le reviewer sans exécuter `python3 scripts/governance/validate_authority.py`. Cette mise à jour est attendue par la story, mais la preuve de calcul n'est pas visible dans le diff seul.",
+   "preuve": "Ligne modifiée dans `governance/authority.json`: 'value': '6b1cc0ea68fe4e052946d77a720bb7b4fb338181c8bcc7280d1a44954a989ad6', 'checked_at': '2026-08-16'"
+  },
+  {
+   "severite": "mineure",
+   "fichier": "(global)",
+   "description": "Les critères d'acceptation incluent l'exécution réussie de plusieurs scripts (`validate_authority.py`, `state_current.py`, `no_stub_scan.py`, `gate_docs.py`) et de la suite de tests complète. Le diff ne contient que les modifications de fichiers source, pas les sorties de ces commandes. Le verdict APPROVE repose sur l'analyse que les modifications sont correctes *si* les scripts s'exécutent comme attendu. Un verdict définitif nécessiterait la vérification des résultats de ces scripts.",
+   "preuve": "Story : 'python3 scripts/governance/validate_authority.py (mode check) : PASS', etc. Diff : Aucune sortie de script incluse."
+  }
+ ],
+ "date_heure": "2026-08-16T05:43:56.160014+00:00",
+ "prompt_sha256": "7b11fd6b08b154c99edb5ce640d16a1bb2c7680ecc593b3afdd16efc68361e3e",
+ "reviewer_model": "MiMo-Pro-V2",
+ "modele_servi": "mimo-pro-v2-openrouter",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}
