@@ -3,9 +3,9 @@
   "dossier": "RC1-roster-PR513",
   "issue": 492,
   "round": 1,
-  "base_commit": "0bd0abba72de85344625ddd45a28198da3798e8d",
-  "head_commit": "854a68bc70d956b4358b2d29f7dd3f8b278b1eae",
-  "head_tree": "86d29861557fb43dbe6aa6350fbcfa32f5c8037c",
+  "base_commit": "e3f7fe01d00f774a2850f52d85c9c34443cf6992",
+  "head_commit": "6232c66516b2ee55ae5a9455a628b6abd4e6e2d2",
+  "head_tree": "8d7e1e3cb47450d22c6bcc477810f99fef1fa247",
   "diff_digest": "e92d09dced314fec826ce439a6c7cb6fbaaa670e2428a58baff7e6af7c77e15f",
   "prompt_sha256": "e42efce7ce564f6b2b91cf6cc605aa288cc94caf80b05fba024c7dbcc8274995",
   "reviewers_attendus": [
@@ -17,6 +17,6 @@
     "fable"
   ],
   "resultat": "APPROVE",
-  "date_heure": "2026-08-16T01:08:02.584281-04:00",
+  "date_heure": "2026-08-16T01:26:29.463232-04:00",
   "fenetre_heures": 24
 }
