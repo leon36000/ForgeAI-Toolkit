@@ -8407,300 +8407,6 @@
       "generated": false,
       "load_bearing": true,
       "owner": "gouvernance-preuve",
-      "path": "evidence/reviews/BINDING.txt",
-      "referenced_by": [
-        {
-          "candidate": "evidence/reviews/BINDING.txt",
-          "line": 65,
-          "referrer": "AGENTS.md",
-          "resolved": "evidence/reviews/BINDING.txt",
-          "severity": "hard"
-        },
-        {
-          "candidate": "evidence/reviews/BINDING.txt",
-          "line": 384,
-          "referrer": "scripts/governance/classify_paths.py",
-          "resolved": "evidence/reviews/BINDING.txt",
-          "severity": "hard"
-        },
-        {
-          "candidate": "evidence/reviews/BINDING.txt",
-          "line": 417,
-          "referrer": "scripts/governance/classify_paths.py",
-          "resolved": "evidence/reviews/BINDING.txt",
-          "severity": "hard"
-        },
-        {
-          "candidate": "evidence/reviews/BINDING.txt",
-          "line": 6,
-          "referrer": "scripts/governance/evidence_dedup.py",
-          "resolved": "evidence/reviews/BINDING.txt",
-          "severity": "hard"
-        },
-        {
-          "candidate": "evidence/reviews/BINDING.txt",
-          "line": 8,
-          "referrer": "scripts/reviews_gate.py",
-          "resolved": "evidence/reviews/BINDING.txt",
-          "severity": "hard"
-        },
-        {
-          "candidate": "evidence/reviews/BINDING.txt",
-          "line": 33,
-          "referrer": "scripts/reviews_gate.py",
-          "resolved": "evidence/reviews/BINDING.txt",
-          "severity": "hard"
-        },
-        {
-          "candidate": "evidence/reviews/BINDING.txt",
-          "line": 29,
-          "referrer": "stories/RC1-011.md",
-          "resolved": "evidence/reviews/BINDING.txt",
-          "severity": "hard"
-        },
-        {
-          "candidate": "evidence/reviews/BINDING.txt",
-          "line": 157,
-          "referrer": "stories/RC1-011.md",
-          "resolved": "evidence/reviews/BINDING.txt",
-          "severity": "hard"
-        },
-        {
-          "candidate": "evidence/reviews/BINDING.txt",
-          "line": 183,
-          "referrer": "stories/RC1-011.md",
-          "resolved": "evidence/reviews/BINDING.txt",
-          "severity": "hard"
-        },
-        {
-          "candidate": "evidence/reviews/BINDING.txt",
-          "line": 252,
-          "referrer": "stories/RC1-011.md",
-          "resolved": "evidence/reviews/BINDING.txt",
-          "severity": "hard"
-        },
-        {
-          "candidate": "evidence/reviews/BINDING.txt",
-          "line": 451,
-          "referrer": "tests/test_classify_paths.py",
-          "resolved": "evidence/reviews/BINDING.txt",
-          "severity": "hard"
-        },
-        {
-          "candidate": "evidence/reviews/BINDING.txt",
-          "line": 453,
-          "referrer": "tests/test_classify_paths.py",
-          "resolved": "evidence/reviews/BINDING.txt",
-          "severity": "hard"
-        },
-        {
-          "candidate": "evidence/reviews/BINDING.txt",
-          "line": 458,
-          "referrer": "tests/test_classify_paths.py",
-          "resolved": "evidence/reviews/BINDING.txt",
-          "severity": "hard"
-        },
-        {
-          "candidate": "evidence/reviews/BINDING.txt",
-          "line": 467,
-          "referrer": "tests/test_classify_paths.py",
-          "resolved": "evidence/reviews/BINDING.txt",
-          "severity": "hard"
-        },
-        {
-          "candidate": "evidence/reviews/BINDING.txt",
-          "line": 469,
-          "referrer": "tests/test_classify_paths.py",
-          "resolved": "evidence/reviews/BINDING.txt",
-          "severity": "hard"
-        },
-        {
-          "candidate": "evidence/reviews/BINDING.txt",
-          "line": 474,
-          "referrer": "tests/test_classify_paths.py",
-          "resolved": "evidence/reviews/BINDING.txt",
-          "severity": "hard"
-        },
-        {
-          "candidate": "evidence/reviews/BINDING.txt",
-          "line": 484,
-          "referrer": "tests/test_classify_paths.py",
-          "resolved": "evidence/reviews/BINDING.txt",
-          "severity": "hard"
-        },
-        {
-          "candidate": "evidence/reviews/BINDING.txt",
-          "line": 485,
-          "referrer": "tests/test_classify_paths.py",
-          "resolved": "evidence/reviews/BINDING.txt",
-          "severity": "hard"
-        },
-        {
-          "candidate": "evidence/reviews/BINDING.txt",
-          "line": 490,
-          "referrer": "tests/test_classify_paths.py",
-          "resolved": "evidence/reviews/BINDING.txt",
-          "severity": "hard"
-        }
-      ],
-      "rule_id": "evidence-reviews-root",
-      "sha256": "55e381e8ed9e140c94bf097ec58503a6eac62b862e4a22b38246ed87ca5048e4",
-      "size": 2642,
-      "target_path": null,
-      "type": "text"
-    },
-    {
-      "class": "EVIDENCE",
-      "generated": false,
-      "load_bearing": true,
-      "owner": "gouvernance-preuve",
-      "path": "evidence/reviews/BINDING.txt",
-      "referenced_by": [
-        {
-          "candidate": "evidence/reviews/BINDING.txt",
-          "line": 65,
-          "referrer": "AGENTS.md",
-          "resolved": "evidence/reviews/BINDING.txt",
-          "severity": "hard"
-        },
-        {
-          "candidate": "evidence/reviews/BINDING.txt",
-          "line": 384,
-          "referrer": "scripts/governance/classify_paths.py",
-          "resolved": "evidence/reviews/BINDING.txt",
-          "severity": "hard"
-        },
-        {
-          "candidate": "evidence/reviews/BINDING.txt",
-          "line": 417,
-          "referrer": "scripts/governance/classify_paths.py",
-          "resolved": "evidence/reviews/BINDING.txt",
-          "severity": "hard"
-        },
-        {
-          "candidate": "evidence/reviews/BINDING.txt",
-          "line": 6,
-          "referrer": "scripts/governance/evidence_dedup.py",
-          "resolved": "evidence/reviews/BINDING.txt",
-          "severity": "hard"
-        },
-        {
-          "candidate": "evidence/reviews/BINDING.txt",
-          "line": 8,
-          "referrer": "scripts/reviews_gate.py",
-          "resolved": "evidence/reviews/BINDING.txt",
-          "severity": "hard"
-        },
-        {
-          "candidate": "evidence/reviews/BINDING.txt",
-          "line": 33,
-          "referrer": "scripts/reviews_gate.py",
-          "resolved": "evidence/reviews/BINDING.txt",
-          "severity": "hard"
-        },
-        {
-          "candidate": "evidence/reviews/BINDING.txt",
-          "line": 29,
-          "referrer": "stories/RC1-011.md",
-          "resolved": "evidence/reviews/BINDING.txt",
-          "severity": "hard"
-        },
-        {
-          "candidate": "evidence/reviews/BINDING.txt",
-          "line": 157,
-          "referrer": "stories/RC1-011.md",
-          "resolved": "evidence/reviews/BINDING.txt",
-          "severity": "hard"
-        },
-        {
-          "candidate": "evidence/reviews/BINDING.txt",
-          "line": 183,
-          "referrer": "stories/RC1-011.md",
-          "resolved": "evidence/reviews/BINDING.txt",
-          "severity": "hard"
-        },
-        {
-          "candidate": "evidence/reviews/BINDING.txt",
-          "line": 252,
-          "referrer": "stories/RC1-011.md",
-          "resolved": "evidence/reviews/BINDING.txt",
-          "severity": "hard"
-        },
-        {
-          "candidate": "evidence/reviews/BINDING.txt",
-          "line": 451,
-          "referrer": "tests/test_classify_paths.py",
-          "resolved": "evidence/reviews/BINDING.txt",
-          "severity": "hard"
-        },
-        {
-          "candidate": "evidence/reviews/BINDING.txt",
-          "line": 453,
-          "referrer": "tests/test_classify_paths.py",
-          "resolved": "evidence/reviews/BINDING.txt",
-          "severity": "hard"
-        },
-        {
-          "candidate": "evidence/reviews/BINDING.txt",
-          "line": 458,
-          "referrer": "tests/test_classify_paths.py",
-          "resolved": "evidence/reviews/BINDING.txt",
-          "severity": "hard"
-        },
-        {
-          "candidate": "evidence/reviews/BINDING.txt",
-          "line": 467,
-          "referrer": "tests/test_classify_paths.py",
-          "resolved": "evidence/reviews/BINDING.txt",
-          "severity": "hard"
-        },
-        {
-          "candidate": "evidence/reviews/BINDING.txt",
-          "line": 469,
-          "referrer": "tests/test_classify_paths.py",
-          "resolved": "evidence/reviews/BINDING.txt",
-          "severity": "hard"
-        },
-        {
-          "candidate": "evidence/reviews/BINDING.txt",
-          "line": 474,
-          "referrer": "tests/test_classify_paths.py",
-          "resolved": "evidence/reviews/BINDING.txt",
-          "severity": "hard"
-        },
-        {
-          "candidate": "evidence/reviews/BINDING.txt",
-          "line": 484,
-          "referrer": "tests/test_classify_paths.py",
-          "resolved": "evidence/reviews/BINDING.txt",
-          "severity": "hard"
-        },
-        {
-          "candidate": "evidence/reviews/BINDING.txt",
-          "line": 485,
-          "referrer": "tests/test_classify_paths.py",
-          "resolved": "evidence/reviews/BINDING.txt",
-          "severity": "hard"
-        },
-        {
-          "candidate": "evidence/reviews/BINDING.txt",
-          "line": 490,
-          "referrer": "tests/test_classify_paths.py",
-          "resolved": "evidence/reviews/BINDING.txt",
-          "severity": "hard"
-        }
-      ],
-      "rule_id": "evidence-reviews-root",
-      "sha256": "55e381e8ed9e140c94bf097ec58503a6eac62b862e4a22b38246ed87ca5048e4",
-      "size": 2642,
-      "target_path": null,
-      "type": "text"
-    },
-    {
-      "class": "EVIDENCE",
-      "generated": false,
-      "load_bearing": true,
-      "owner": "gouvernance-preuve",
       "path": "evidence/reviews/BUGHUNT-2026-08-16-v1/DeepSeek-V4-Pro.verdict.json",
       "referenced_by": [],
       "rule_id": "evidence-reviews-root",
@@ -21536,7 +21242,7 @@
       "path": "evidence/reviews/RC1-528/RECU.json",
       "referenced_by": [],
       "rule_id": "evidence-reviews-root",
-      "sha256": "7a33929226486fa543539c52af7cc812b13b1e7c4cf796cea9a12e1068f0f5c6",
+      "sha256": "b77edac3c93da6c8475061c88965f2b34b3a21ab3ded7ccac90201cdd6a63930",
       "size": 659,
       "target_path": null,
       "type": "text"
@@ -158891,7 +158597,7 @@
     "by_class": {
       "ARCHIVE": 44,
       "DOCS": 17,
-      "EVIDENCE": 1470,
+      "EVIDENCE": 1468,
       "GENERATED": 9,
       "GOVERNANCE": 187,
       "PRODUCT": 112,
@@ -158910,7 +158616,7 @@
       "evidence-audit-output-root": 18,
       "evidence-dedup-root": 2,
       "evidence-registres-root": 35,
-      "evidence-reviews-root": 1415,
+      "evidence-reviews-root": 1413,
       "generated-authority-map": 1,
       "generated-path-classification-json": 3,
       "generated-path-classification-markdown": 3,
@@ -158948,9 +158654,9 @@
     "case_collisions_total": 0,
     "dangling_references_total": 15881,
     "generated_total": 13,
-    "load_bearing_total": 1919,
+    "load_bearing_total": 1917,
     "portability_violations_total": 0,
-    "tracked_total": 2057,
+    "tracked_total": 2055,
     "unclassified_total": 0,
     "unicode_anomalies_total": 0
   },
