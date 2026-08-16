@@ -79,8 +79,11 @@ def _decorateur_skip_inconditionnel(decorator_list: list) -> bool:
     conditions normales de CI, ex. @posix_only dans tests/test_proc.py, vrai sur ubuntu-latest).
 
     Round 20 : `pytestmark` de module est désormais couvert (voir
-    _module_a_pytestmark_skip_inconditionnel). Reste et RESTERA hors scope, ligne dure documentée
-    ici une fois pour toutes : `pytest.skip()` appelé dans le CORPS d'un test, `__test__ = False`
+    _module_a_pytestmark_skip_inconditionnel). Round 21 : @pytest.mark.skip sur une CLASSE Test*
+    est désormais couvert aussi (appelé directement sur noeud.decorator_list dans _cherche). Les
+    TROIS sites de déclaration STATIQUE du skip inconditionnel (fonction, classe, module) sont
+    maintenant tous couverts par ce même helper. Reste et RESTERA hors scope, ligne dure
+    documentée ici une fois pour toutes : `pytest.skip()` appelé dans le CORPS d'un test, `__test__ = False`
     (round 15), `parametrize` à liste vide. Ces trois cas exigent une analyse de flot de contrôle
     (un appel conditionnel, profondément imbriqué, ou dérivé d'un état runtime n'est pas
     statiquement décidable en général) ou l'exécution réelle de pytest — un changement
@@ -172,6 +175,13 @@ def _fonction_test_existe(fichier: Path, segments: list[str]) -> bool:
                     isinstance(m, (ast.FunctionDef, ast.AsyncFunctionDef)) and m.name == "__init__"
                     for m in noeud.body
                 ):
+                    return False
+                # Round 21 (#452) — objection GPT-5.6-Terra-Pro (revue scellée) : troisième et
+                # dernier site de déclaration statique du skip inconditionnel (fonction round 19,
+                # module round 20, classe ici) — @pytest.mark.skip sur une classe Test*
+                # désactive TOUTES ses méthodes (vérifié empiriquement : "1 skipped"). Même
+                # helper que les deux niveaux précédents — pas de nouvelle logique.
+                if _decorateur_skip_inconditionnel(noeud.decorator_list):
                     return False
                 return _cherche(noeud.body, reste)
         return False

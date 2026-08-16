@@ -988,6 +988,54 @@ def test_compensating_test_pytestmark_skipif_module_reste_valide(tmp_path: Path)
     assert erreurs == []
 
 
+def test_compensating_test_classe_avec_skip_rejetee(tmp_path: Path) -> None:
+    """Round 21 (#452) — objection GPT-5.6-Terra-Pro (revue scellée) : @pytest.mark.skip sur une
+    classe Test* désactive TOUTES ses méthodes (vérifié empiriquement : 'skipped', jamais
+    exécutée) — round 19 ne vérifiait le décorateur que sur la FONCTION/MÉTHODE ciblée, jamais
+    sur la classe englobante."""
+    _creer_fichier_source(
+        tmp_path,
+        "src/forgeai/example.py",
+        "try:\n    pass\nexcept ValueError:\n    pass\n",
+    )
+    _creer_fichier_source(
+        tmp_path,
+        "tests/test_classe_skip.py",
+        "import pytest\n\n@pytest.mark.skip\nclass TestDesactivee:\n    def test_methode(self):\n        pass\n",
+    )
+    contrat = _entree_valide(
+        compensating_test="tests/test_classe_skip.py::TestDesactivee::test_methode",
+        compensating_test_reason=None,
+    )
+    _ecrire_inventaire(tmp_path, [contrat])
+
+    erreurs = VALIDATEUR.valider(tmp_path, aujourd_hui=dt.date(2026, 1, 1))
+    assert any("test compensatoire absent du dépôt" in e for e in erreurs)
+
+
+def test_compensating_test_classe_avec_skipif_reste_valide(tmp_path: Path) -> None:
+    """Contre-preuve : @pytest.mark.skipif sur une classe reste toléré — cohérence avec les
+    contre-preuves fonction (round 19) et module (round 20)."""
+    _creer_fichier_source(
+        tmp_path,
+        "src/forgeai/example.py",
+        "try:\n    pass\nexcept ValueError:\n    pass\n",
+    )
+    _creer_fichier_source(
+        tmp_path,
+        "tests/test_classe_skipif.py",
+        "import pytest\n\n@pytest.mark.skipif(False, reason='x')\nclass TestConditionnelle:\n    def test_methode(self):\n        pass\n",
+    )
+    contrat = _entree_valide(
+        compensating_test="tests/test_classe_skipif.py::TestConditionnelle::test_methode",
+        compensating_test_reason=None,
+    )
+    _ecrire_inventaire(tmp_path, [contrat])
+
+    erreurs = VALIDATEUR.valider(tmp_path, aujourd_hui=dt.date(2026, 1, 1))
+    assert erreurs == []
+
+
 def test_compensating_test_classe_avec_init_rejetee(tmp_path: Path) -> None:
     """Round 15 (#452) — objection GPT-5.6-Terra-Pro (revue scellée) : une classe Test* qui
     définit __init__ n'est PAS collectée par pytest (PytestCollectionWarning: cannot collect
