@@ -206,7 +206,7 @@
     },
     {
       "path": "tests/test_classify_paths.py",
-      "sha256": "0c6fe881de3bab81b1730ba1e360e15ca45a4db66f21262219188fff5e4b4f90"
+      "sha256": "a2e16a87bc76ffc038ec8e6b5280e07d2f51b6840b48a35057d2cb6d2d85ff44"
     },
     {
       "path": "tests/test_cli_doc_coverage.py",
