@@ -77,6 +77,9 @@ def isolate_deploy_state(tmp_path, monkeypatch):
         server._DEPLOY_STATE["lines"].clear()
         server._DEPLOY_STATE["done"] = False
         server._DEPLOY_STATE["exit_code"] = None
+        # Round 8 (#452) : manquait à cette liste — un test antérieur laissant
+        # nettoyage_incertain=True polluait silencieusement l'ordre d'exécution suivant.
+        server._DEPLOY_STATE["nettoyage_incertain"] = False
     yield
 
 
@@ -296,7 +299,11 @@ def test_persist_concurrent_pas_de_corruption(tmp_path) -> None:
     path = server._deploy_state_path()
     assert path.exists()
     data = json.loads(path.read_text(encoding="utf-8"))  # ne doit JAMAIS lever (JSON valide)
-    assert set(data) == {"done", "exit_code", "lines", "nettoyage_incertain"}
+    # Round 8 (#452, objection GPT-5.6-Terra-Pro majeure) : nettoyage_incertain n'est plus
+    # sérialisé quand False (chemin nominal de ce test — le writer() ci-dessus ne le met
+    # jamais à True) ; voir _persist_deploy_state(). Avant round 8, la clé apparaissait
+    # toujours, même sur le chemin nominal — c'était précisément le défaut signalé.
+    assert set(data) == {"done", "exit_code", "lines"}
     assert isinstance(data["lines"], list)
     assert isinstance(data["done"], bool)
 

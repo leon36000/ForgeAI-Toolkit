@@ -535,11 +535,17 @@ def _persist_deploy_state() -> None:
             snapshot = {
                 "done": _DEPLOY_STATE["done"],
                 "exit_code": _DEPLOY_STATE["exit_code"],
-                "nettoyage_incertain": _DEPLOY_STATE["nettoyage_incertain"],
                 # Les lignes sont la sortie brute du déploiement : une commande peut
                 # y avoir échotypé un secret. On rédige AVANT persistance (ERR-041A).
                 "lines": [redact_text(line) for line in _DEPLOY_STATE["lines"]],
             }
+            # Round 8 (#452, objection GPT-5.6-Terra-Pro majeure) : n'apparaît QUE si True — même
+            # principe que _deploy_resume() (round 5) et le payload de fin (round 6) : le chemin
+            # nominal (aucun nettoyage incertain) garde EXACTEMENT le format deploy-state.json
+            # d'avant round 4. _load_deploy_state() tolère déjà l'absence de la clé
+            # (.get("nettoyage_incertain", False), plus bas) : round-trip inchangé.
+            if _DEPLOY_STATE["nettoyage_incertain"]:
+                snapshot["nettoyage_incertain"] = True
         path = _deploy_state_path()
         path.parent.mkdir(parents=True, exist_ok=True)
         # Fichier temporaire UNIQUE par écriture : deux persists concurrents (le `_reader` de

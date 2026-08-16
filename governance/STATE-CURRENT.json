@@ -260,7 +260,7 @@
       },
       {
         "path": "tests/test_deploy_persist.py",
-        "sha256": "2f5609685ef8bb6ecc4d43b6517144056be22eaa7baf7384600fa91de326d02f"
+        "sha256": "cc50e60de0d91a022e469983d5081ffb634d11193dfb614dddb2efcc8d57c818"
       },
       {
         "path": "tests/test_deploy_reel.py",
