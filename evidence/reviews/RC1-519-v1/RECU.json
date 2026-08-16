@@ -1,0 +1,22 @@
+{
+  "schema": "recu-revue/1",
+  "dossier": "RC1-519-v1",
+  "issue": 519,
+  "round": 1,
+  "base_commit": "f48dd202df62cd5399aa7859dc6e479c5dafa7eb",
+  "head_commit": "c6dd51276dd0bf9d3fbcbf72faf2ae0ecfc94dca",
+  "head_tree": "0bf0cabd0d785d5958e886d15ca8c86f69751d9a",
+  "diff_digest": "d8a49ef2c68c99de19e2c602e927e497ed8a86865b76da6618051b5b37d82511",
+  "prompt_sha256": "2bede17311704a697c644c181c9324159a89d35886aa870d93f276546633639b",
+  "reviewers_attendus": [
+    "Gemini-3.1-Pro",
+    "MiMo-V2.5-Pro",
+    "Qwen3.7-Max"
+  ],
+  "codeur": [
+    "Kimi-K3"
+  ],
+  "resultat": "APPROVE",
+  "date_heure": "2026-08-16T17:16:46.019513-04:00",
+  "fenetre_heures": 24
+}
