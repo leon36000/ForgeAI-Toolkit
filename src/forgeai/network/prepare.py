@@ -53,12 +53,12 @@ def sonder_noeud(runner: CommandRunner, hostname: str) -> dict:
                 # empêcher la levée de la PrepareError réelle ci-dessous, même famille que
                 # #492/#527 (élément malformé ignoré, pas fatal ; .get() partout, pas
                 # d'indexation directe).
-                names = [
+                noms_bruts = [
                     (item.get("metadata") or {}).get("name")
                     for item in data.get("items", [])
                     if isinstance(item, dict)
                 ]
-                names = [n for n in names if isinstance(n, str)]
+                names = [n for n in noms_bruts if isinstance(n, str)]
             except json.JSONDecodeError:
                 pass
         raise PrepareError(
