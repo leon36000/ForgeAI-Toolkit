@@ -444,39 +444,10 @@ def test_graphe_authority_json_path_absent_ignore(tmp_path: pathlib.Path) -> Non
     )
 
 
-def test_graphe_binding_txt_resout_prefixe_reviews(tmp_path: pathlib.Path) -> None:
-    _ecrit_fixture_texte(tmp_path, "reviews/BINDING.txt", "B-09-civ\n")
-    _ecrit_fixture_texte(tmp_path, "reviews/B-09-civ/x.json", "{}")
-    tracked = ["reviews/BINDING.txt", "reviews/B-09-civ/x.json"]
-
-    graph = classify_paths.build_reference_graph(tmp_path, tracked)
-
-    assert any(
-        edge["referrer"] == "reviews/BINDING.txt"
-        and edge["candidate"] == "B-09-civ"
-        and edge["resolved"] == "reviews/B-09-civ"
-        and edge["severity"] == "hard"
-        for edge in graph["edges"]
-    )
-
-
-def test_graphe_binding_txt_commentaire_ignore(tmp_path: pathlib.Path) -> None:
-    _ecrit_fixture_texte(tmp_path, "reviews/BINDING.txt", "# B-09-civ\n")
-    _ecrit_fixture_texte(tmp_path, "reviews/B-09-civ/x.json", "{}")
-    tracked = ["reviews/BINDING.txt", "reviews/B-09-civ/x.json"]
-
-    graph = classify_paths.build_reference_graph(tmp_path, tracked)
-
-    assert not any(
-        entry["referrer"] == "reviews/BINDING.txt"
-        and entry["candidate"] == "B-09-civ"
-        for entry in graph["edges"] + graph["dangling"]
-    )
-
-
 def test_graphe_binding_txt_resout_prefixe_evidence_reviews(tmp_path: pathlib.Path) -> None:
-    # RC1-010 (#440) lot 5a : une fois BINDING.txt lui-même déplacé (lot 5d), les entrées
-    # doivent se résoudre contre le préfixe evidence/reviews/, pas reviews/.
+    # RC1-010 (#440) lot 5d : reviews/ est intégralement migré vers evidence/reviews/ — le
+    # repli bi-racine posé au lot 5a est retiré ; BINDING.txt et les entrées qu'il référence
+    # vivent tous sous evidence/reviews/, racine unique et sans ambiguïté.
     _ecrit_fixture_texte(tmp_path, "evidence/reviews/BINDING.txt", "S-migree\n")
     _ecrit_fixture_texte(tmp_path, "evidence/reviews/S-migree/x.json", "{}")
     tracked = ["evidence/reviews/BINDING.txt", "evidence/reviews/S-migree/x.json"]
@@ -492,20 +463,32 @@ def test_graphe_binding_txt_resout_prefixe_evidence_reviews(tmp_path: pathlib.Pa
     )
 
 
-def test_graphe_binding_txt_tolere_entree_pas_encore_migree(tmp_path: pathlib.Path) -> None:
-    # Transition (lots 5b-5c) : BINDING.txt a déjà migré, mais une entrée qu'il référence vit
-    # encore sous reviews/ (pas encore déplacée par ce lot précis) — doit rester résoluble.
-    _ecrit_fixture_texte(tmp_path, "evidence/reviews/BINDING.txt", "S-pas-encore-migree\n")
-    _ecrit_fixture_texte(tmp_path, "reviews/S-pas-encore-migree/x.json", "{}")
-    tracked = ["evidence/reviews/BINDING.txt", "reviews/S-pas-encore-migree/x.json"]
+def test_graphe_binding_txt_commentaire_ignore(tmp_path: pathlib.Path) -> None:
+    _ecrit_fixture_texte(tmp_path, "evidence/reviews/BINDING.txt", "# B-09-civ\n")
+    _ecrit_fixture_texte(tmp_path, "evidence/reviews/B-09-civ/x.json", "{}")
+    tracked = ["evidence/reviews/BINDING.txt", "evidence/reviews/B-09-civ/x.json"]
+
+    graph = classify_paths.build_reference_graph(tmp_path, tracked)
+
+    assert not any(
+        entry["referrer"] == "evidence/reviews/BINDING.txt"
+        and entry["candidate"] == "B-09-civ"
+        for entry in graph["edges"] + graph["dangling"]
+    )
+
+
+def test_graphe_binding_txt_candidat_absent_devient_dangling(tmp_path: pathlib.Path) -> None:
+    # RC1-010 (#440) lot 5d : une entrée listée dans BINDING.txt mais absente du disque (ex.
+    # dossier de revue jamais commité) ne se résout plus vers aucune racine de repli — elle
+    # doit atterrir dans `dangling`, pas silencieusement disparaître.
+    _ecrit_fixture_texte(tmp_path, "evidence/reviews/BINDING.txt", "S-absente\n")
+    tracked = ["evidence/reviews/BINDING.txt"]
 
     graph = classify_paths.build_reference_graph(tmp_path, tracked)
 
     assert any(
-        edge["referrer"] == "evidence/reviews/BINDING.txt"
-        and edge["candidate"] == "S-pas-encore-migree"
-        and edge["resolved"] == "reviews/S-pas-encore-migree"
-        for edge in graph["edges"]
+        entry["referrer"] == "evidence/reviews/BINDING.txt" and entry["candidate"] == "S-absente"
+        for entry in graph["dangling"]
     )
 
 

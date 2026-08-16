@@ -229,23 +229,21 @@ def _diff_canonique(
     base_ref: str,
     head_ref: str,
     *,
-    # RC1-010 (#440) lot 5a : reviews/ migre vers evidence/reviews/ (lots 5b-5d) — les deux
-    # préfixes sont exclus du diff canonique pendant la transition (même garde
-    # anti-paradoxe-bootstrap : le reçu et les verdicts d'une revue en cours ne doivent jamais
-    # entrer dans le hash du diff qu'ils examinent, quelle que soit leur racine du moment).
+    # RC1-010 (#440) lot 5d : reviews/ est intégralement migré vers evidence/reviews/ — le
+    # préfixe legacy "reviews/" est retiré de l'exclusion par défaut (mort : plus aucun fichier
+    # de revue n'y vit).
     #
     # #504 : governance/path-classification.json (+ son rendu .md) trace individuellement
-    # chaque fichier sous reviews/**/evidence/reviews/**, RECU.json compris — le régénérer
-    # APRÈS avoir scellé un reçu change donc TOUJOURS le diff que ce reçu prétend attester
-    # (interblocage circulaire entre les gates reviews-sealed et path-classification, main
-    # rouge sur path-classification depuis 3 merges au moment de la découverte). Ce manifeste
-    # est de toute façon déjà retiré à la main des packs de revue depuis le lot 5b — les
-    # reviewers ne le voient jamais — donc l'exclure ici aligne l'empreinte scellée sur ce qui
-    # est réellement revu, au lieu de sceller des octets jamais vus. Exclusion par nom de
-    # fichier EXACT (pas de préfixe partiel) : governance/path-classification-rules.json
-    # (écrit à la main, load_bearing) ne doit surtout PAS matcher par accident.
+    # chaque fichier sous evidence/reviews/**, RECU.json compris — le régénérer APRÈS avoir
+    # scellé un reçu change donc TOUJOURS le diff que ce reçu prétend attester (interblocage
+    # circulaire entre les gates reviews-sealed et path-classification, main rouge sur
+    # path-classification depuis 3 merges au moment de la découverte). Ce manifeste est de
+    # toute façon déjà retiré à la main des packs de revue depuis le lot 5b — les reviewers ne
+    # le voient jamais — donc l'exclure ici aligne l'empreinte scellée sur ce qui est
+    # réellement revu, au lieu de sceller des octets jamais vus. Exclusion par nom de fichier
+    # EXACT (pas de préfixe partiel) : governance/path-classification-rules.json (écrit à la
+    # main, load_bearing) ne doit surtout PAS matcher par accident.
     exclude: tuple[str, ...] = (
-        "reviews/",
         "evidence/reviews/",
         "governance/path-classification.json",
         "governance/PATH-CLASSIFICATION.md",
@@ -259,13 +257,13 @@ def _diff_canonique(
     PLOMBERIE (`git diff --raw --no-renames -z`), extrait (mode, sha_base, sha_head, chemin)
     par entrée, trie (ordre déterministe, indépendant de l'ordre retourné par git), hache.
 
-    Exclusion OBLIGATOIRE de "reviews/" : le diff d'une PR contient TOUJOURS les artefacts de
-    sa propre revue (le dossier reviews/<ID>/*.verdict.json + la ligne BINDING.txt sont ajoutés
-    dans LA MÊME PR que le code qu'ils attestent) — sans cette exclusion, l'empreinte calculée
-    par le reçu ne pourrait JAMAIS correspondre à celle du diff final (les reviewers ont vu un
-    diff SANS ces fichiers). Même raisonnement pour governance/path-classification.json/.md
-    (#504) : entièrement dérivés, re-vérifiés octet à octet par leur propre gate
-    (classify_paths.py check), jamais montrés aux reviewers non plus.
+    Exclusion OBLIGATOIRE de "evidence/reviews/" : le diff d'une PR contient TOUJOURS les
+    artefacts de sa propre revue (le dossier evidence/reviews/<ID>/*.verdict.json + la ligne
+    BINDING.txt sont ajoutés dans LA MÊME PR que le code qu'ils attestent) — sans cette
+    exclusion, l'empreinte calculée par le reçu ne pourrait JAMAIS correspondre à celle du diff
+    final (les reviewers ont vu un diff SANS ces fichiers). Même raisonnement pour
+    governance/path-classification.json/.md (#504) : entièrement dérivés, re-vérifiés octet à
+    octet par leur propre gate (classify_paths.py check), jamais montrés aux reviewers non plus.
     """
     _validate_git_ref(base_ref)
     _validate_git_ref(head_ref)
@@ -499,7 +497,8 @@ def _cmd_tally(args) -> int:
 
 
 def _cmd_recu(args) -> int:
-    dossier = REPO / "reviews" / args.dossier
+    # RC1-010 (#440) lot 5d : reviews/ est intégralement migré vers evidence/reviews/.
+    dossier = REPO / "evidence" / "reviews" / args.dossier
     verdicts = [
         json.loads(path.read_text(encoding="utf-8"))
         for path in sorted(dossier.glob("*.verdict.json"))

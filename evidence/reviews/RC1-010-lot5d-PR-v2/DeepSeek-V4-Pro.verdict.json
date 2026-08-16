@@ -1,0 +1,19 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "evidence/registres/mission.jsonl",
+   "description": "Incohérence de comptage entre la story et le diff : le diff ajoute une entrée seq 457 à un registre dont le contexte montre déjà des entrées jusqu'à seq 456, ce qui donne au moins 457 entrées finales ; la story annonce pourtant `registre.py verify/ancrage : 455 entrées`.",
+   "preuve": "Diff evidence/registres/mission.jsonl : `@@ -454,3 +454,4 @@` et ajout de `\"seq\":457` ; story : `registre.py verify/ancrage : 455 entrées, chaîne intègre`."
+  }
+ ],
+ "date_heure": "2026-08-16T07:28:59.569430+00:00",
+ "prompt_sha256": "a68967aa97e7a6e9e6927628025e056561af30debaf0ca6def1249ada0c82724",
+ "reviewer_model": "DeepSeek-V4-Pro",
+ "modele_servi": "deepseek-v4-pro-direct",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

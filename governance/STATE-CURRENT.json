@@ -192,7 +192,7 @@
       },
       {
         "path": "tests/test_classify_paths.py",
-        "sha256": "e7d8aa782fc6ca6ef5bea0beabe87bff257396e6405cf0763072edbd284672bb"
+        "sha256": "0c6fe881de3bab81b1730ba1e360e15ca45a4db66f21262219188fff5e4b4f90"
       },
       {
         "path": "tests/test_cli_doctor.py",
@@ -643,10 +643,6 @@
         "sha256": "4cfa1f3a029ff82cfca9ad868eeb02b66fbfab51ffaf076c28097a7936348d7b"
       },
       {
-        "path": "tests/test_rc530_port_unicode_crash.py",
-        "sha256": "2da5ae06ae57761afe8bc06c06efbe6ad8c6187cb56d46a0b54bec8e8f43abf2"
-      },
-      {
         "path": "tests/test_receptacles.py",
         "sha256": "e73378b496c2f6109133dfcef07f1a7b3f79e9e48cbc473882e4b53e4ef496ca"
       },
@@ -704,11 +700,11 @@
       },
       {
         "path": "tests/test_reviews_gate.py",
-        "sha256": "1a7caf387b6b95ecd190f361ea01ad5d1f2906ab1f3bdb19b4c967b1404ddb27"
+        "sha256": "678bd25ba844b501cbcbb109f6b2976463660577f035c295d799a1e4c176bec3"
       },
       {
         "path": "tests/test_revue.py",
-        "sha256": "5d7cbecd10faa0854c2315e566f747de7f76816a3725fdea88e3ad2074f3efd2"
+        "sha256": "4c2f9d713afc2a5a419ea0a59e2b89136913654ff0a261537808fdc24b787165"
       },
       {
         "path": "tests/test_routestore_concurrence.py",
@@ -896,8 +892,8 @@
     },
     "tests": {
       "js_files": 3,
-      "python_files": 186,
-      "python_functions_declared": 2006
+      "python_files": 185,
+      "python_functions_declared": 1996
     }
   },
   "observations": [
