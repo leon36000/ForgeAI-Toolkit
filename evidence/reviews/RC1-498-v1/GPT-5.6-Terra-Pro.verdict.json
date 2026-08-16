@@ -1,0 +1,19 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "majeure",
+   "fichier": "path-classification.json",
+   "description": "Le correctif change les entrées produites pour tous les `evidence/reviews/**/RECU.json` (`size`, `type` et `sha256` deviennent `null`), mais aucun artefact de classification généré n'est régénéré dans le diff. Si le manifeste tracké contient les sha256 antérieurs, l'exécution sans `--render` comparera les anciennes entrées hashées avec les nouvelles entrées nulles et signalera encore des entrées divergentes, au lieu de converger comme exigé.",
+   "preuve": "Dans `scripts/governance/classify_paths.py`, lignes ajoutées autour de 628-640, la condition `path in self_referential_generated_paths or is_recu_volatile` force `size = None`, `file_type = None`, `sha256 = None`. Le diff ne contient aucune modification de `path-classification.json` ni de `PATH-CLASSIFICATION.md`, alors que le contexte indique qu'avant correctif les `RECU.json` y étaient hashés."
+  }
+ ],
+ "date_heure": "2026-08-16T18:56:29.266062+00:00",
+ "prompt_sha256": "599334381b1d70505c4ef748425700290ecb243bcf3baacf469ee1e6fbbe5d5d",
+ "reviewer_model": "GPT-5.6-Terra-Pro",
+ "modele_servi": "gpt56-terra-pro-openrouter",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

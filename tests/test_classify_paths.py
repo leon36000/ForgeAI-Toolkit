@@ -997,3 +997,80 @@ def test_main_exit_code_processus_reflete_lechec(tmp_path: pathlib.Path) -> None
     )
 
     assert checked.returncode == 1
+
+
+def test_build_manifest_recu_json_sha256_est_null() -> None:
+    manifest = classify_paths.build_manifest(REPO)
+    recu_entries = [
+        e
+        for e in manifest["entries"]
+        if e["path"].startswith("evidence/reviews/") and e["path"].endswith("/RECU.json")
+    ]
+
+    assert len(recu_entries) > 0
+    assert all(
+        entry["sha256"] is None and entry["size"] is None and entry["type"] is None
+        for entry in recu_entries
+    )
+
+
+def test_build_manifest_recu_json_reste_classe_normalement() -> None:
+    manifest = classify_paths.build_manifest(REPO)
+    recu_entries = [
+        e
+        for e in manifest["entries"]
+        if e["path"].startswith("evidence/reviews/") and e["path"].endswith("/RECU.json")
+    ]
+
+    assert len(recu_entries) > 0
+    assert all(
+        isinstance(entry["class"], str) and bool(entry["class"].strip())
+        for entry in recu_entries
+    )
+
+
+def test_build_manifest_verdict_json_reste_hache_normalement() -> None:
+    manifest = classify_paths.build_manifest(REPO)
+    verdict_entries = [
+        e
+        for e in manifest["entries"]
+        if e["path"].startswith("evidence/reviews/") and e["path"].endswith(".verdict.json")
+    ]
+
+    assert len(verdict_entries) > 0
+    assert all(entry["sha256"] is not None for entry in verdict_entries)
+
+
+def test_build_manifest_binding_txt_reste_hache_normalement() -> None:
+    manifest = classify_paths.build_manifest(REPO)
+    binding_entry = next(
+        e for e in manifest["entries"] if e["path"] == "evidence/reviews/BINDING.txt"
+    )
+
+    assert binding_entry["sha256"] is not None
+
+
+def test_build_manifest_recu_json_contenu_modifie_ne_change_pas_lentree() -> None:
+    tracked = sorted(classify_paths.tracked_files(REPO))
+    recu_path_str = next(
+        path
+        for path in tracked
+        if path.startswith("evidence/reviews/") and path.endswith("/RECU.json")
+    )
+    chemin_reel = REPO / recu_path_str
+    original = chemin_reel.read_bytes()
+
+    try:
+        manifest_avant = classify_paths.build_manifest(REPO)
+        entree_avant = next(e for e in manifest_avant["entries"] if e["path"] == recu_path_str)
+        assert entree_avant["sha256"] is None
+
+        chemin_reel.write_bytes(b'{"schema": "recu-revue/1", "date_heure": "2099-01-01T00:00:00Z"}')
+
+        manifest_apres = classify_paths.build_manifest(REPO)
+        entree_apres = next(e for e in manifest_apres["entries"] if e["path"] == recu_path_str)
+        assert entree_apres["sha256"] is None
+    finally:
+        chemin_reel.write_bytes(original)
+
+    assert chemin_reel.read_bytes() == original
