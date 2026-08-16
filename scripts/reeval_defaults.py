@@ -76,8 +76,8 @@ def main(argv: Optional[List[str]] = None) -> int:
     parser.add_argument(
         "--registre",
         type=Path,
-        default=Path("Registres/mission.jsonl"),
-        help="Chemin du registre (défaut Registres/mission.jsonl).",
+        default=Path("evidence/registres/mission.jsonl"),
+        help="Chemin du registre (défaut evidence/registres/mission.jsonl).",
     )
     parser.add_argument(
         "--journal",

@@ -1,7 +1,7 @@
 # Routes gateway testées — checklist §9 étape 3 (test de connexion réel : prompt PONG)
 # Gateway : forge-model-bridge → LiteLLM 127.0.0.1:4000 (conteneur serveur-litellm)
 # provider_id = valeur à passer à mcp__forge-model-bridge__ask_cloud_model
-# Testé le 2026-07-14, preuve : Registres/mission.jsonl seq 2
+# Testé le 2026-07-14, preuve : evidence/registres/mission.jsonl seq 2
 version: 1
 gateway:
   bridge: forge-model-bridge

@@ -53,7 +53,7 @@ Cette carte est le rendu de `governance/authority.json`.
 | `manifests.roles` | `manifests/roles.yaml` | active | `ide_contract` | `orchestrateur` | `—` |
 | `master-plan` | `MASTER-PLAN.md` | conflicted | `plan_of_record` | `nathan` | `—` |
 | `readme` | `README.md` | active | `governance_method` | `nathan` | `—` |
-| `registres.mission` | `Registres/mission.jsonl` | active | `evidence_ledger` | `orchestrateur` | `—` |
+| `registres.mission` | `evidence/registres/mission.jsonl` | active | `evidence_ledger` | `orchestrateur` | `—` |
 | `stories.orch-001` | `stories/ORCH-001.md` | archived | `orchestration` | `copilot` | `—` |
 
 ## Précédences déclarées

@@ -14,7 +14,7 @@ reviews:
     - "!CANON/**"
     - "!Docs/**"
     - "!archive/**"
-    - "!Registres/**"
+    - "!evidence/registres/**"
     - "!reviews/**"
     - "!stories/**"
     - "!build/**"

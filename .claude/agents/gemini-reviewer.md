@@ -20,7 +20,7 @@ réponse (sections attendues présentes), itérer au besoin (max 3). Si `status:
 ## Règles (voir AGENTS.md, non négociables)
 1. §8bis : sortie = DONE-avec-preuve ou BLOCKED-avec-raison. Jamais de stub, de section
    vide ou de données inventées pour « passer ».
-2. Preuve : chaque livrable ⇒ `python3 scripts/registre.py append Registres/mission.jsonl
+2. Preuve : chaque livrable ⇒ `python3 scripts/registre.py append evidence/registres/mission.jsonl
    --type livrable --actor gemini-reviewer --payload-json '...'` (fichier, provider_id, itérations).
 3. Anti-ancrage (§3.3) : aucun verdict attendu, compte d'approbations ou identité d'autres
    reviewers dans un prompt. Les réponses du bridge sont des CLAIMS non vérifiées.

@@ -289,8 +289,8 @@ def _depot_git(tmp_path: Path) -> Path:
     """Un vrai dépôt git avec un registre commité : la référence d'ancrage est `HEAD`."""
     subprocess.run(["git", "init", "-q", str(tmp_path)], check=True, capture_output=True)
     (tmp_path / ".git" / "hooks-vides").mkdir(exist_ok=True)
-    dossier = tmp_path / "Registres"
-    dossier.mkdir()
+    dossier = tmp_path / "evidence" / "registres"
+    dossier.mkdir(parents=True)
     for i in range(4):
         append(dossier / "mission.jsonl", "story_complete", "t", {"story": f"S{i}"})
     _git(tmp_path, "add", "-A")
@@ -328,7 +328,7 @@ def test_g13b_completude_accepte_plusieurs_fichiers(tmp_path):
 def test_g14_ancrage_detecte_la_troncature_de_bout_en_bout(tmp_path):
     """CA3 — la preuve traversant le chemin RÉEL du gate : `verify` reste vert, `ancrage` rougit."""
     depot = _depot_git(tmp_path)
-    registre = depot / "Registres" / "mission.jsonl"
+    registre = depot / "evidence" / "registres" / "mission.jsonl"
     lignes = registre.read_text(encoding="utf-8").splitlines()
     registre.write_text("\n".join(lignes[:2]) + "\n", encoding="utf-8")
 
@@ -343,7 +343,7 @@ def test_g14_ancrage_detecte_la_troncature_de_bout_en_bout(tmp_path):
 def test_g14b_ancrage_detecte_un_registre_supprime(tmp_path):
     """CA4 — de bout en bout : le glob ne voit pas un fichier supprimé, l'union si."""
     depot = _depot_git(tmp_path)
-    (depot / "Registres" / "mission.jsonl").unlink()
+    (depot / "evidence" / "registres" / "mission.jsonl").unlink()
 
     resultat = _cli("ancrage", "--ref", "HEAD", cwd=depot)
     assert resultat.returncode == 1
@@ -489,7 +489,7 @@ def test_g23_la_non_croissance_est_reellement_appliquee_depuis_git(tmp_path):
     même. Ce test prouve que la référence est bien résolue depuis git ET qu'elle mord.
     """
     depot = _depot_git(tmp_path)
-    registre = depot / "Registres" / "mission.jsonl"
+    registre = depot / "evidence" / "registres" / "mission.jsonl"
     append(registre, "revue_scellee", "t", {"story": "INCOMPLETE"})
     entrees = _entrees(registre)
     seq_derniere = entrees[-1]["seq"]
@@ -535,7 +535,7 @@ def test_g24_reference_git_inaccessible_pour_la_base_echoue_durement(tmp_path):
     base = depot / "base.json"
     base.write_text(json.dumps({"version": 1, "identites": [], "bornes": {}}), encoding="utf-8")
 
-    resultat = _cli("completude", str(depot / "Registres" / "mission.jsonl"),
+    resultat = _cli("completude", str(depot / "evidence" / "registres" / "mission.jsonl"),
                     "--base", str(base), "--base-ref-git", "refs/absente", cwd=depot)
     assert resultat.returncode != 0
     assert "fetch-depth" in (resultat.stdout + resultat.stderr)
@@ -549,7 +549,7 @@ def test_g25_base_absente_de_la_reference_est_visible_pas_silencieuse(tmp_path):
     base = depot / "base.json"
     base.write_text(json.dumps({"version": 1, "identites": [], "bornes": {}}), encoding="utf-8")
 
-    resultat = _cli("completude", str(depot / "Registres" / "mission.jsonl"),
+    resultat = _cli("completude", str(depot / "evidence" / "registres" / "mission.jsonl"),
                     "--base", str(base), "--base-ref-git", "HEAD", cwd=depot)
     assert "non-croissance" in resultat.stdout, (
         "l'inapplicabilité du contrôle doit être annoncée explicitement"

@@ -64,22 +64,23 @@ jobs:
           persist-credentials: false
           fetch-depth: 0
       - name: Intégrité des chaînes de hash
-        run: python3 scripts/registre.py verify Registres/*.jsonl
+        run: python3 scripts/registre.py verify evidence/registres/*.jsonl
       # `verify` prouve l'intégrité, jamais l'absence de manque : une chaîne tronquée reste
       # parfaitement valide (ADR-TRUST-019A §2.3, lignes 64-71). L'ancrage compare chaque
       # registre à origin/main et détecte troncature, rollback et réécriture totale cohérente.
       - name: Ancrage — rollback, troncature, réécriture (REG-029B)
-        run: python3 scripts/registre.py ancrage --ref origin/main
+        run: python3 scripts/registre.py ancrage --dossier evidence/registres --ref origin/main
       # Cliquet de complétude : la dette héritée (31 anomalies, bornées à seq_max) est figée dans
       # une base versionnée ; toute anomalie NOUVELLE fait rougir. La base ne peut pas être
       # élargie pour faire passer une PR : au-delà de la borne, aucune identité n'est baselinable.
       - name: Complétude — cliquet sur la dette héritée (REG-029A/B)
         run: |
-          python3 scripts/registre.py completude Registres/*.jsonl \
-            --base Registres/BASELINE-COMPLETUDE.json \
+          python3 scripts/registre.py completude evidence/registres/*.jsonl \
+            --base evidence/registres/BASELINE-COMPLETUDE.json \
             --base-ref-git origin/main
       # governance/vision-log.jsonl (RC1-001/#431) réutilise le même format et les mêmes
-      # garanties que Registres/mission.jsonl — même chaîne verify + ancrage, dossier différent.
+      # garanties que evidence/registres/mission.jsonl — même chaîne verify + ancrage, dossier
+      # différent.
       - name: Journal de vision (governance) — intégrité + ancrage
         run: |
           python3 scripts/registre.py verify governance/vision-log.jsonl

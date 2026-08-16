@@ -425,8 +425,8 @@ def main_cli(argv: list[str] | None = None) -> int:
     )
     parser_ancrage.add_argument(
         "--dossier",
-        default="Registres",
-        help="dossier contenant les registres JSONL (defaut : Registres)",
+        default="evidence/registres",
+        help="dossier contenant les registres JSONL (defaut : evidence/registres)",
     )
     parser_ancrage.add_argument(
         "--ref",
