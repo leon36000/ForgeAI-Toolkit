@@ -1,0 +1,12 @@
+{
+ "verdict": "APPROVE",
+ "objections": [],
+ "date_heure": "2026-08-16T18:09:22.615442+00:00",
+ "prompt_sha256": "f40bdb992289d6dd38e871fe0ddd04d7781bb10ea305a7c025e2c852ebd97f84",
+ "reviewer_model": "MiMo-V2.5-Pro",
+ "modele_servi": "mimo-v25-pro-openrouter",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}
