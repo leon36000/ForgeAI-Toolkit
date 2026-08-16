@@ -142,6 +142,46 @@ cette série où l'objection reste au niveau du gate lui-même, pas d'une donné
 ignoré en silence, disposition équivalente à `SPLIT_TO_NEW_ISSUE` au niveau du gate plutôt que
 d'un site individuel.
 
+## Risque résiduel accepté (rounds 27-36, #452) — str_exc_sur() et le critère « aucun changement de comportement » des sites FIXED
+
+`src/forgeai/core/safe_repr.py::str_exc_sur()` (round 27) rend sûre l'interpolation `f"...:
+{exc}"` utilisée par les sites FIXED de cette story (`_persist_deploy_state`, `_load_deploy_state`,
+`_reader`) — mais UNIQUEMENT si `exc.__str__()` lève une `Exception` normale. Round 28 avait
+élargi à `except BaseException` pour couvrir aussi un `__str__` qui lève explicitement
+`SystemExit`/`KeyboardInterrupt` ; round 30 est revenu sur ce choix (un `except BaseException`
+avale AUSSI un Ctrl-C authentique arrivant PENDANT l'appel à `str(exc)`, sans rapport avec
+`exc.__str__()` elle-même — Python ne peut pas distinguer les deux cas). Round 36 (objection
+GPT-5.6-Terra-Pro) pointe la conséquence directe pour CETTE story spécifiquement : ce compromis
+signifie que `str_exc_sur()` peut encore, dans le cas pathologique étroit (`__str__` qui lève
+explicitement un `BaseException`), interrompre le fallback/nettoyage d'un site FIXED avant sa
+fin — un changement de comportement observable dans ce cas précis, par rapport au bloc
+`except ...: pass` d'avant cette story qui n'appelait jamais `str(exc)` du tout.
+
+**Analyse de la portée réelle (round 36)** : vérifié empiriquement que `_reader` s'exécute
+exclusivement sur un thread daemon en arrière-plan (`threading.Thread(target=_reader,
+daemon=True).start()`) — Python ne délivre JAMAIS `KeyboardInterrupt` à un thread non-principal
+via le mécanisme normal de signal (confirmé par test direct : un `SIGINT` envoyé au process
+n'atteint que le thread principal, jamais un thread secondaire). Pour ce site précis (le plus
+sévère des trois, cf. round 27 — `done` resterait bloqué à `False` sans lui), la préoccupation
+« Ctrl-C asynchrone avalé » de round 30 ne s'applique donc PAS en pratique. Il ne reste que le cas
+« `__str__` personnalisé lève explicitement `BaseException` » — un `exc` dans ce contexte provient
+exclusivement d'exceptions standard liées au sous-processus/E-S (`OSError` et consorts), dont le
+`__str__` de la stdlib est stable et testé ; le risque résiduel réel est donc doublement
+pathologique (thread + type d'exception), pas seulement théorique une fois.
+
+**Décision** : ne PAS ajouter de garde supplémentaire (ex. `except BaseException: pass` local à
+chaque site) — chaque garde de ce type est ELLE-MÊME un nouveau site `except`/`pass` à
+contractualiser (même famille body_kind que ce lot 1 priorise), rouvrant la même classe de travail
+pour une couverture marginale sur un risque déjà doublement pathologique. Le compromis round 30
+(signal-safe par défaut) reste la position finale de ce lot ; le risque résiduel exact — étroit,
+documenté dans le docstring de `str_exc_sur()`, et maintenant analysé au niveau story — est accepté
+plutôt que rouvert indéfiniment.
+
+**Suivi** : signalé sur #452/#481, disposition équivalente à `SPLIT_TO_NEW_ISSUE` — si ce risque
+devient réel en pratique (jamais observé à ce jour), la correction appropriée serait un helper
+dédié `str_exc_sur_best_effort_total()` (BaseException, réservé aux contextes déjà vérifiés
+signal-safe comme les threads daemon) plutôt qu'une garde ad hoc par site.
+
 ## Critères de validation
 
 - [x] `pytest` — suite complète verte (2224 tests collectés, 0 échec ; régression confirmée sur

@@ -570,7 +570,12 @@ def _persist_deploy_state() -> None:
     except Exception as exc:
         # Round 27 (#452) — objection GPT-5.6-Terra-Pro (revue scellée) : str_exc_sur() plutôt
         # que {exc} directement — rien n'empêche exc.__str__() de lever lui-même (vérifié
-        # empiriquement), ce qui ferait échouer CE bloc best-effort.
+        # empiriquement), ce qui ferait échouer CE bloc best-effort. Round 36 : risque résiduel
+        # (un __str__ qui lève explicitement BaseException reste non couvert, cf. docstring de
+        # str_exc_sur) documenté formellement dans la story (section « Risque résiduel —
+        # str_exc_sur et sites FIXED ») plutôt que corrigé ici par une garde supplémentaire —
+        # voir cette section pour l'analyse complète, dont la portée exacte par site appelant
+        # (cette fonction a plusieurs appelants, pas tous nécessairement sur un thread daemon).
         with _DEPLOY_STATE["lock"]:
             _DEPLOY_STATE["lines"].append(
                 f"avertissement: échec persistance état déploiement : {str_exc_sur(exc)}"
@@ -602,7 +607,12 @@ def _load_deploy_state() -> None:
     except Exception as exc:
         # Round 27 (#452) — objection GPT-5.6-Terra-Pro : str_exc_sur(), voir
         # _persist_deploy_state() ci-dessus — sans ça, une exc.__str__() qui lève ferait échouer
-        # la construction du message AVANT même d'atteindre le print de secours qui suit.
+        # la construction du message AVANT même d'atteindre le print de secours qui suit. Round 36 :
+        # risque résiduel documenté dans la story (section « Risque résiduel — str_exc_sur et
+        # sites FIXED ») — vérifié (chaîne d'appel tracée : web_command -> serve -> build_server,
+        # aucun threading.Thread) que ce site s'exécute sur le thread PRINCIPAL, le sous-cas le
+        # moins favorable de l'analyse de cette section (contrairement à _reader, prouvé
+        # signal-safe par construction).
         message = (
             f"[web.server] échec de restauration de l'état de déploiement au démarrage : "
             f"{str_exc_sur(exc)}"
@@ -1574,7 +1584,13 @@ class ForgeAIHandler(BaseHTTPRequestHandler):
                     # aux 2 sites ci-dessous — sans ça, une exc.__str__() qui lève ferait échouer
                     # CE handler AVANT de marquer le déploiement terminé et avant sa tentative de
                     # nettoyage (le plus sévère des 3 sites signalés : done resterait bloqué à
-                    # False, un déploiement fantôme jamais terminé côté API).
+                    # False, un déploiement fantôme jamais terminé côté API). Round 36 : risque
+                    # résiduel documenté dans la story (section « Risque résiduel — str_exc_sur et
+                    # sites FIXED ») — mais ce site précis est prouvé SIGNAL-SAFE par construction
+                    # (thread daemon en arrière-plan, cf. threading.Thread(target=_reader,
+                    # daemon=True) ci-dessous ; Python ne délivre jamais KeyboardInterrupt à un
+                    # thread non-principal, vérifié empiriquement) : le sous-cas résiduel qui
+                    # subsiste ici est encore plus étroit que l'analyse générale de la story.
                     with _DEPLOY_STATE["lock"]:
                         _DEPLOY_STATE["lines"].append(
                             "avertissement: le thread de lecture du déploiement a échoué : "
