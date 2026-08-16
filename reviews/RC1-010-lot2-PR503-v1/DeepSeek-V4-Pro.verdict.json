@@ -1,0 +1,37 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "majeure",
+   "fichier": "stories/ORCH-001.md",
+   "description": "Le fichier actif stories/ORCH-001.md référence encore .cursor/rules/forgeai-orchestration.mdc, désormais déplacé vers archive/cursor/rules/forgeai-orchestration.mdc, et n'est pas inclus dans les adaptations du commit.",
+   "preuve": "governance/path-classification.json ajoute une dangling_reference candidate '.cursor/rules/forgeai-orchestration.mdc', line 36, referrer 'stories/ORCH-001.md'."
+  },
+  {
+   "severite": "majeure",
+   "fichier": "governance/decisions/D-2026-08-14-mission-lead.md",
+   "description": "Ce fichier de gouvernance actif référence encore l'ancien chemin .cursor/rules/forgeai-orchestration.mdc, qui n'existe plus après le déplacement.",
+   "preuve": "governance/path-classification.json ajoute une dangling_reference candidate '.cursor/rules/forgeai-orchestration.mdc', line 19, referrer 'governance/decisions/D-2026-08-14-mission-lead.md'."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "src/forgeai/core/runner.py, src/forgeai/network/bootstrap.py, src/forgeai/network/keys.py",
+   "description": "Ces sources contiennent encore des références textuelles vers les anciens chemins Phase-A/matrice-tests-grok.md et Phase-A/revue-securite-multinoeuds-longcat.md, sans mise à jour comparable à celle faite pour src/forgeai/core/models.py.",
+   "preuve": "governance/path-classification.json ajoute des dangling_references candidates 'Phase-A/matrice-tests-grok.md' (referrer src/forgeai/core/runner.py, line 3), 'Phase-A/revue-securite-multinoeuds-longcat.md' (referrer src/forgeai/network/bootstrap.py, line 4 et src/forgeai/network/keys.py, line 3)."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "governance/path-classification-rules.json",
+   "description": "Le fichier de règles contient encore des références vers les anciens chemins .cursor/rules/forgeai-orchestration.mdc et Recherche/rall-1-agents-orchestration.yaml.",
+   "preuve": "governance/path-classification.json ajoute des dangling_references candidates '.cursor/rules/forgeai-orchestration.mdc' (lines 232, 772) et 'Recherche/rall-1-agents-orchestration.yaml' (lines 652, 772), referrer 'governance/path-classification-rules.json'."
+  }
+ ],
+ "date_heure": "2026-08-16T00:51:47.836393+00:00",
+ "prompt_sha256": "91c002642b057ee5dd3915956a82d840dabbdb287e39ab0806bc699d2cdf28ae",
+ "reviewer_model": "DeepSeek-V4-Pro",
+ "modele_servi": "deepseek-v4-pro-direct",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}
