@@ -5743,8 +5743,8 @@
         }
       ],
       "rule_id": "evidence-registres-root",
-      "sha256": "90114ac266b0e8fd46c8761fda415633a01aba88f1d43943407b52f21f82e2b8",
-      "size": 366894,
+      "sha256": "37fa085a8191560ee8d7ce671a266dde366d1c45ab80eb8f3a0b49abfd175108",
+      "size": 368583,
       "target_path": null,
       "type": "text"
     },
@@ -19513,8 +19513,8 @@
         }
       ],
       "rule_id": "evidence-reviews",
-      "sha256": "cad5e251906bf6475aff942abd5c9e005a0c0b75412d3e3443602deeec612604",
-      "size": 2476,
+      "sha256": "2ada3045631aad6c0672809cfdbe6d3da081648288d71c5d07606db9b5c911ba",
+      "size": 2484,
       "target_path": "evidence/reviews/BINDING.txt",
       "type": "text"
     },
@@ -22485,6 +22485,58 @@
       "sha256": "d7d2745690ef1ba7ec4f8a1f180980a2220dbb1c813f6c8908f7cdf0941e326e",
       "size": 661,
       "target_path": "evidence/reviews/RC1-504-v1/RECU.json",
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "reviews/RC1-530/Gemini-3.1-Pro.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews",
+      "sha256": "6de24ad68336bab56cb985a905b23134b92d6ec9458f0ee423f15b38eb2ae9c6",
+      "size": 329,
+      "target_path": "evidence/reviews/RC1-530/Gemini-3.1-Pro.verdict.json",
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "reviews/RC1-530/MiMo-Pro-V2.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews",
+      "sha256": "f4cc747aba37fcb222e3f49a400aae71a79fcf41a8e9d26f8edc89ad208dd14e",
+      "size": 1166,
+      "target_path": "evidence/reviews/RC1-530/MiMo-Pro-V2.verdict.json",
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "reviews/RC1-530/Qwen3.7-Max.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews",
+      "sha256": "526dc4573daeadd6e9008a864c47cdf10f0e65a509ff5ed53e634572f5d270b0",
+      "size": 323,
+      "target_path": "evidence/reviews/RC1-530/Qwen3.7-Max.verdict.json",
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "reviews/RC1-530/RECU.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews",
+      "sha256": "4bb7dff12a613f3a959c81d3a4d20e16a2c56ac9575c8c1013ab0fc1d2219d60",
+      "size": 660,
+      "target_path": "evidence/reviews/RC1-530/RECU.json",
       "type": "text"
     },
     {
@@ -29133,7 +29185,7 @@
         },
         {
           "candidate": "src/forgeai/core/registre.py",
-          "line": 933,
+          "line": 937,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "src/forgeai/core/registre.py",
           "severity": "hard"
@@ -34922,6 +34974,13 @@
         },
         {
           "candidate": "src/forgeai/web/server.py",
+          "line": 12,
+          "referrer": "reviews/RC1-530/MiMo-Pro-V2.verdict.json",
+          "resolved": "src/forgeai/web/server.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "src/forgeai/web/server.py",
           "line": 6,
           "referrer": "reviews/REL-038C/Qwen3.7-Max.verdict.json",
           "resolved": "src/forgeai/web/server.py",
@@ -34980,6 +35039,13 @@
           "candidate": "src/forgeai/web/server.py",
           "line": 5,
           "referrer": "stories/PERF-030A.md",
+          "resolved": "src/forgeai/web/server.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "src/forgeai/web/server.py",
+          "line": 4,
+          "referrer": "stories/RC1-530.md",
           "resolved": "src/forgeai/web/server.py",
           "severity": "hard"
         },
@@ -35083,8 +35149,8 @@
         }
       ],
       "rule_id": "product-source",
-      "sha256": "ef0cdd79d6b68f46645fc8f08ea88248d624a228c3aedf7852d68f988237dfae",
-      "size": 71831,
+      "sha256": "1e6e8f7d0a19c0eda42e5f6faa70d8aa5fe5215e0ec2f9de66f1ea3c0b4ef61c",
+      "size": 71852,
       "target_path": null,
       "type": "text"
     },
@@ -36364,6 +36430,19 @@
       "generated": false,
       "load_bearing": false,
       "owner": "gouvernance-stories",
+      "path": "stories/RC1-530.md",
+      "referenced_by": [],
+      "rule_id": "governance-stories",
+      "sha256": "d58ba4c25ecde37fe2fb9f1146f5053614140f5ef25fc4a8aba4d275d1887d6e",
+      "size": 3545,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "GOVERNANCE",
+      "generated": false,
+      "load_bearing": false,
+      "owner": "gouvernance-stories",
       "path": "stories/REG-029A.md",
       "referenced_by": [
         {
@@ -37610,6 +37689,13 @@
           "referrer": "stories/D3.md",
           "resolved": "tests/test_adoption_api.py",
           "severity": "hard"
+        },
+        {
+          "candidate": "tests/test_adoption_api.py",
+          "line": 25,
+          "referrer": "stories/RC1-530.md",
+          "resolved": "tests/test_adoption_api.py",
+          "severity": "hard"
         }
       ],
       "rule_id": "test-suite",
@@ -38642,28 +38728,28 @@
         },
         {
           "candidate": "tests/test_data002b_wal_idempotent.py",
-          "line": 921,
+          "line": 925,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_data002b_wal_idempotent.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_data002b_wal_idempotent.py",
-          "line": 927,
+          "line": 931,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_data002b_wal_idempotent.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_data002b_wal_idempotent.py",
-          "line": 941,
+          "line": 945,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_data002b_wal_idempotent.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_data002b_wal_idempotent.py",
-          "line": 947,
+          "line": 951,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_data002b_wal_idempotent.py",
           "severity": "hard"
@@ -38938,6 +39024,13 @@
           "candidate": "tests/test_deploy_units.py",
           "line": 268,
           "referrer": "governance/STATE-CURRENT.md",
+          "resolved": "tests/test_deploy_units.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "tests/test_deploy_units.py",
+          "line": 26,
+          "referrer": "stories/RC1-530.md",
           "resolved": "tests/test_deploy_units.py",
           "severity": "hard"
         }
@@ -43790,18 +43883,60 @@
       "generated": false,
       "load_bearing": true,
       "owner": "test-suite",
+      "path": "tests/test_rc530_port_unicode_crash.py",
+      "referenced_by": [
+        {
+          "candidate": "tests/test_rc530_port_unicode_crash.py",
+          "line": 646,
+          "referrer": "governance/STATE-CURRENT.json",
+          "resolved": "tests/test_rc530_port_unicode_crash.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "tests/test_rc530_port_unicode_crash.py",
+          "line": 652,
+          "referrer": "governance/STATE-CURRENT.md",
+          "resolved": "tests/test_rc530_port_unicode_crash.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "tests/test_rc530_port_unicode_crash.py",
+          "line": 6,
+          "referrer": "reviews/RC1-530/MiMo-Pro-V2.verdict.json",
+          "resolved": "tests/test_rc530_port_unicode_crash.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "tests/test_rc530_port_unicode_crash.py",
+          "line": 22,
+          "referrer": "stories/RC1-530.md",
+          "resolved": "tests/test_rc530_port_unicode_crash.py",
+          "severity": "hard"
+        }
+      ],
+      "rule_id": "test-suite",
+      "sha256": "2da5ae06ae57761afe8bc06c06efbe6ad8c6187cb56d46a0b54bec8e8f43abf2",
+      "size": 4629,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "TEST",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "test-suite",
       "path": "tests/test_receptacles.py",
       "referenced_by": [
         {
           "candidate": "tests/test_receptacles.py",
-          "line": 646,
+          "line": 650,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_receptacles.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_receptacles.py",
-          "line": 652,
+          "line": 656,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_receptacles.py",
           "severity": "hard"
@@ -43822,14 +43957,14 @@
       "referenced_by": [
         {
           "candidate": "tests/test_redaction.py",
-          "line": 650,
+          "line": 654,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_redaction.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_redaction.py",
-          "line": 656,
+          "line": 660,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_redaction.py",
           "severity": "hard"
@@ -43871,14 +44006,14 @@
       "referenced_by": [
         {
           "candidate": "tests/test_redaction_adoption.py",
-          "line": 654,
+          "line": 658,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_redaction_adoption.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_redaction_adoption.py",
-          "line": 660,
+          "line": 664,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_redaction_adoption.py",
           "severity": "hard"
@@ -43899,14 +44034,14 @@
       "referenced_by": [
         {
           "candidate": "tests/test_reeval_defaults.py",
-          "line": 658,
+          "line": 662,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_reeval_defaults.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_reeval_defaults.py",
-          "line": 664,
+          "line": 668,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_reeval_defaults.py",
           "severity": "hard"
@@ -43927,14 +44062,14 @@
       "referenced_by": [
         {
           "candidate": "tests/test_reg029a_completude.py",
-          "line": 662,
+          "line": 666,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_reg029a_completude.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_reg029a_completude.py",
-          "line": 668,
+          "line": 672,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_reg029a_completude.py",
           "severity": "hard"
@@ -43969,14 +44104,14 @@
       "referenced_by": [
         {
           "candidate": "tests/test_reg029b_ancrage.py",
-          "line": 666,
+          "line": 670,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_reg029b_ancrage.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_reg029b_ancrage.py",
-          "line": 672,
+          "line": 676,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_reg029b_ancrage.py",
           "severity": "hard"
@@ -44025,14 +44160,14 @@
         },
         {
           "candidate": "tests/test_registre.py",
-          "line": 670,
+          "line": 674,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_registre.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_registre.py",
-          "line": 676,
+          "line": 680,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_registre.py",
           "severity": "hard"
@@ -44151,14 +44286,14 @@
         },
         {
           "candidate": "tests/test_registre_concurrence.py",
-          "line": 674,
+          "line": 678,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_registre_concurrence.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_registre_concurrence.py",
-          "line": 680,
+          "line": 684,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_registre_concurrence.py",
           "severity": "hard"
@@ -44186,14 +44321,14 @@
       "referenced_by": [
         {
           "candidate": "tests/test_rel038a_prepare_persist.py",
-          "line": 678,
+          "line": 682,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_rel038a_prepare_persist.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_rel038a_prepare_persist.py",
-          "line": 684,
+          "line": 688,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_rel038a_prepare_persist.py",
           "severity": "hard"
@@ -44235,14 +44370,14 @@
         },
         {
           "candidate": "tests/test_rel038b_unicite.py",
-          "line": 682,
+          "line": 686,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_rel038b_unicite.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_rel038b_unicite.py",
-          "line": 688,
+          "line": 692,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_rel038b_unicite.py",
           "severity": "hard"
@@ -44305,14 +44440,14 @@
         },
         {
           "candidate": "tests/test_rel038c_process_groups.py",
-          "line": 686,
+          "line": 690,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_rel038c_process_groups.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_rel038c_process_groups.py",
-          "line": 692,
+          "line": 696,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_rel038c_process_groups.py",
           "severity": "hard"
@@ -44347,14 +44482,14 @@
       "referenced_by": [
         {
           "candidate": "tests/test_remote_probe.py",
-          "line": 690,
+          "line": 694,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_remote_probe.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_remote_probe.py",
-          "line": 696,
+          "line": 700,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_remote_probe.py",
           "severity": "hard"
@@ -44424,14 +44559,14 @@
         },
         {
           "candidate": "tests/test_renderers.py",
-          "line": 694,
+          "line": 698,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_renderers.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_renderers.py",
-          "line": 700,
+          "line": 704,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_renderers.py",
           "severity": "hard"
@@ -44515,14 +44650,14 @@
         },
         {
           "candidate": "tests/test_res_classes_stack_minimal.py",
-          "line": 698,
+          "line": 702,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_res_classes_stack_minimal.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_res_classes_stack_minimal.py",
-          "line": 704,
+          "line": 708,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_res_classes_stack_minimal.py",
           "severity": "hard"
@@ -44550,14 +44685,14 @@
       "referenced_by": [
         {
           "candidate": "tests/test_reviews_gate.py",
-          "line": 702,
+          "line": 706,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_reviews_gate.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_reviews_gate.py",
-          "line": 708,
+          "line": 712,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_reviews_gate.py",
           "severity": "hard"
@@ -44585,14 +44720,14 @@
       "referenced_by": [
         {
           "candidate": "tests/test_revue.py",
-          "line": 706,
+          "line": 710,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_revue.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_revue.py",
-          "line": 712,
+          "line": 716,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_revue.py",
           "severity": "hard"
@@ -44718,14 +44853,14 @@
         },
         {
           "candidate": "tests/test_routestore_concurrence.py",
-          "line": 710,
+          "line": 714,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_routestore_concurrence.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_routestore_concurrence.py",
-          "line": 716,
+          "line": 720,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_routestore_concurrence.py",
           "severity": "hard"
@@ -44753,14 +44888,14 @@
       "referenced_by": [
         {
           "candidate": "tests/test_selection_complete.py",
-          "line": 714,
+          "line": 718,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_selection_complete.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_selection_complete.py",
-          "line": 720,
+          "line": 724,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_selection_complete.py",
           "severity": "hard"
@@ -44781,14 +44916,14 @@
       "referenced_by": [
         {
           "candidate": "tests/test_selection_v2.py",
-          "line": 718,
+          "line": 722,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_selection_v2.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_selection_v2.py",
-          "line": 724,
+          "line": 728,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_selection_v2.py",
           "severity": "hard"
@@ -44809,14 +44944,14 @@
       "referenced_by": [
         {
           "candidate": "tests/test_sentinelle_sweep.py",
-          "line": 722,
+          "line": 726,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_sentinelle_sweep.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_sentinelle_sweep.py",
-          "line": 728,
+          "line": 732,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_sentinelle_sweep.py",
           "severity": "hard"
@@ -44921,14 +45056,14 @@
         },
         {
           "candidate": "tests/test_server_cache.py",
-          "line": 726,
+          "line": 730,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_server_cache.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_server_cache.py",
-          "line": 732,
+          "line": 736,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_server_cache.py",
           "severity": "hard"
@@ -44956,14 +45091,14 @@
       "referenced_by": [
         {
           "candidate": "tests/test_service_spec_injection_yaml.py",
-          "line": 730,
+          "line": 734,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_service_spec_injection_yaml.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_service_spec_injection_yaml.py",
-          "line": 736,
+          "line": 740,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_service_spec_injection_yaml.py",
           "severity": "hard"
@@ -45005,14 +45140,14 @@
         },
         {
           "candidate": "tests/test_spheres.py",
-          "line": 734,
+          "line": 738,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_spheres.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_spheres.py",
-          "line": 740,
+          "line": 744,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_spheres.py",
           "severity": "hard"
@@ -45033,14 +45168,14 @@
       "referenced_by": [
         {
           "candidate": "tests/test_ssh007_hostkey.py",
-          "line": 738,
+          "line": 742,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_ssh007_hostkey.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_ssh007_hostkey.py",
-          "line": 744,
+          "line": 748,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_ssh007_hostkey.py",
           "severity": "hard"
@@ -45082,14 +45217,14 @@
       "referenced_by": [
         {
           "candidate": "tests/test_ssh021_nodeadd.py",
-          "line": 742,
+          "line": 746,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_ssh021_nodeadd.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_ssh021_nodeadd.py",
-          "line": 748,
+          "line": 752,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_ssh021_nodeadd.py",
           "severity": "hard"
@@ -45131,14 +45266,14 @@
         },
         {
           "candidate": "tests/test_ssh030_argv_ssh.py",
-          "line": 746,
+          "line": 750,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_ssh030_argv_ssh.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_ssh030_argv_ssh.py",
-          "line": 752,
+          "line": 756,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_ssh030_argv_ssh.py",
           "severity": "hard"
@@ -45159,14 +45294,14 @@
       "referenced_by": [
         {
           "candidate": "tests/test_ssh_injection.py",
-          "line": 750,
+          "line": 754,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_ssh_injection.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_ssh_injection.py",
-          "line": 756,
+          "line": 760,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_ssh_injection.py",
           "severity": "hard"
@@ -45194,14 +45329,14 @@
         },
         {
           "candidate": "tests/test_stack_traversal.py",
-          "line": 754,
+          "line": 758,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_stack_traversal.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_stack_traversal.py",
-          "line": 760,
+          "line": 764,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_stack_traversal.py",
           "severity": "hard"
@@ -45236,14 +45371,14 @@
         },
         {
           "candidate": "tests/test_stacks.py",
-          "line": 758,
+          "line": 762,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_stacks.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_stacks.py",
-          "line": 764,
+          "line": 768,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_stacks.py",
           "severity": "hard"
@@ -45264,14 +45399,14 @@
       "referenced_by": [
         {
           "candidate": "tests/test_state_current.py",
-          "line": 762,
+          "line": 766,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_state_current.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_state_current.py",
-          "line": 768,
+          "line": 772,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_state_current.py",
           "severity": "hard"
@@ -45320,14 +45455,14 @@
       "referenced_by": [
         {
           "candidate": "tests/test_supply018.py",
-          "line": 766,
+          "line": 770,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_supply018.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_supply018.py",
-          "line": 772,
+          "line": 776,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_supply018.py",
           "severity": "hard"
@@ -45362,14 +45497,14 @@
       "referenced_by": [
         {
           "candidate": "tests/test_tailscale.py",
-          "line": 770,
+          "line": 774,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_tailscale.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_tailscale.py",
-          "line": 776,
+          "line": 780,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_tailscale.py",
           "severity": "hard"
@@ -45390,14 +45525,14 @@
       "referenced_by": [
         {
           "candidate": "tests/test_tailscale_optin.py",
-          "line": 774,
+          "line": 778,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_tailscale_optin.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_tailscale_optin.py",
-          "line": 780,
+          "line": 784,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_tailscale_optin.py",
           "severity": "hard"
@@ -45425,14 +45560,14 @@
       "referenced_by": [
         {
           "candidate": "tests/test_tally.py",
-          "line": 778,
+          "line": 782,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_tally.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_tally.py",
-          "line": 784,
+          "line": 788,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_tally.py",
           "severity": "hard"
@@ -45460,14 +45595,14 @@
         },
         {
           "candidate": "tests/test_templates.py",
-          "line": 782,
+          "line": 786,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_templates.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_templates.py",
-          "line": 788,
+          "line": 792,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_templates.py",
           "severity": "hard"
@@ -45488,14 +45623,14 @@
       "referenced_by": [
         {
           "candidate": "tests/test_traductions.py",
-          "line": 786,
+          "line": 790,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_traductions.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_traductions.py",
-          "line": 792,
+          "line": 796,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_traductions.py",
           "severity": "hard"
@@ -45537,14 +45672,14 @@
         },
         {
           "candidate": "tests/test_ui_7_etapes.py",
-          "line": 790,
+          "line": 794,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_ui_7_etapes.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_ui_7_etapes.py",
-          "line": 796,
+          "line": 800,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_ui_7_etapes.py",
           "severity": "hard"
@@ -45642,14 +45777,14 @@
         },
         {
           "candidate": "tests/test_ui_n2b.py",
-          "line": 794,
+          "line": 798,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_ui_n2b.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_ui_n2b.py",
-          "line": 800,
+          "line": 804,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_ui_n2b.py",
           "severity": "hard"
@@ -45712,14 +45847,14 @@
         },
         {
           "candidate": "tests/test_ui_s6b.py",
-          "line": 798,
+          "line": 802,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_ui_s6b.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_ui_s6b.py",
-          "line": 804,
+          "line": 808,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_ui_s6b.py",
           "severity": "hard"
@@ -45754,14 +45889,14 @@
       "referenced_by": [
         {
           "candidate": "tests/test_v1fix_erreurs.py",
-          "line": 802,
+          "line": 806,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_v1fix_erreurs.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_v1fix_erreurs.py",
-          "line": 808,
+          "line": 812,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_v1fix_erreurs.py",
           "severity": "hard"
@@ -46020,14 +46155,14 @@
         },
         {
           "candidate": "tests/test_vault.py",
-          "line": 806,
+          "line": 810,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_vault.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_vault.py",
-          "line": 812,
+          "line": 816,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_vault.py",
           "severity": "hard"
@@ -46048,14 +46183,14 @@
       "referenced_by": [
         {
           "candidate": "tests/test_vault_e2e.py",
-          "line": 810,
+          "line": 814,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_vault_e2e.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_vault_e2e.py",
-          "line": 816,
+          "line": 820,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_vault_e2e.py",
           "severity": "hard"
@@ -46083,14 +46218,14 @@
       "referenced_by": [
         {
           "candidate": "tests/test_web015_error_normalization.py",
-          "line": 814,
+          "line": 818,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_web015_error_normalization.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_web015_error_normalization.py",
-          "line": 820,
+          "line": 824,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_web015_error_normalization.py",
           "severity": "hard"
@@ -46125,14 +46260,14 @@
       "referenced_by": [
         {
           "candidate": "tests/test_web016_ratelimit_integration.py",
-          "line": 818,
+          "line": 822,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_web016_ratelimit_integration.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_web016_ratelimit_integration.py",
-          "line": 824,
+          "line": 828,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_web016_ratelimit_integration.py",
           "severity": "hard"
@@ -46167,14 +46302,14 @@
       "referenced_by": [
         {
           "candidate": "tests/test_web017_get_policy.py",
-          "line": 822,
+          "line": 826,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_web017_get_policy.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_web017_get_policy.py",
-          "line": 828,
+          "line": 832,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_web017_get_policy.py",
           "severity": "hard"
@@ -46209,14 +46344,14 @@
       "referenced_by": [
         {
           "candidate": "tests/test_web034a_security_headers.py",
-          "line": 826,
+          "line": 830,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_web034a_security_headers.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_web034a_security_headers.py",
-          "line": 832,
+          "line": 836,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_web034a_security_headers.py",
           "severity": "hard"
@@ -46251,14 +46386,14 @@
       "referenced_by": [
         {
           "candidate": "tests/test_web034b_secure_transport.py",
-          "line": 830,
+          "line": 834,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_web034b_secure_transport.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_web034b_secure_transport.py",
-          "line": 836,
+          "line": 840,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_web034b_secure_transport.py",
           "severity": "hard"
@@ -46293,14 +46428,14 @@
       "referenced_by": [
         {
           "candidate": "tests/test_web_auth.py",
-          "line": 834,
+          "line": 838,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_web_auth.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_web_auth.py",
-          "line": 840,
+          "line": 844,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_web_auth.py",
           "severity": "hard"
@@ -46377,14 +46512,14 @@
       "referenced_by": [
         {
           "candidate": "tests/test_web_bricks.py",
-          "line": 838,
+          "line": 842,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_web_bricks.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_web_bricks.py",
-          "line": 844,
+          "line": 848,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_web_bricks.py",
           "severity": "hard"
@@ -46412,15 +46547,22 @@
         },
         {
           "candidate": "tests/test_web_deploy.py",
-          "line": 842,
+          "line": 846,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_web_deploy.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_web_deploy.py",
-          "line": 848,
+          "line": 852,
           "referrer": "governance/STATE-CURRENT.md",
+          "resolved": "tests/test_web_deploy.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "tests/test_web_deploy.py",
+          "line": 25,
+          "referrer": "stories/RC1-530.md",
           "resolved": "tests/test_web_deploy.py",
           "severity": "hard"
         },
@@ -46461,14 +46603,14 @@
       "referenced_by": [
         {
           "candidate": "tests/test_web_deploy_load_stack_once.py",
-          "line": 846,
+          "line": 850,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_web_deploy_load_stack_once.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_web_deploy_load_stack_once.py",
-          "line": 852,
+          "line": 856,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_web_deploy_load_stack_once.py",
           "severity": "hard"
@@ -46503,14 +46645,14 @@
         },
         {
           "candidate": "tests/test_web_i18n.py",
-          "line": 850,
+          "line": 854,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_web_i18n.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_web_i18n.py",
-          "line": 856,
+          "line": 860,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_web_i18n.py",
           "severity": "hard"
@@ -46573,14 +46715,14 @@
       "referenced_by": [
         {
           "candidate": "tests/test_web_models.py",
-          "line": 854,
+          "line": 858,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_web_models.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_web_models.py",
-          "line": 860,
+          "line": 864,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_web_models.py",
           "severity": "hard"
@@ -46601,14 +46743,14 @@
       "referenced_by": [
         {
           "candidate": "tests/test_web_models_local.py",
-          "line": 858,
+          "line": 862,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_web_models_local.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_web_models_local.py",
-          "line": 864,
+          "line": 868,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_web_models_local.py",
           "severity": "hard"
@@ -46629,14 +46771,14 @@
       "referenced_by": [
         {
           "candidate": "tests/test_web_nodes.py",
-          "line": 862,
+          "line": 866,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_web_nodes.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_web_nodes.py",
-          "line": 868,
+          "line": 872,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_web_nodes.py",
           "severity": "hard"
@@ -46664,14 +46806,14 @@
       "referenced_by": [
         {
           "candidate": "tests/test_web_nodes_vendors.py",
-          "line": 866,
+          "line": 870,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_web_nodes_vendors.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_web_nodes_vendors.py",
-          "line": 872,
+          "line": 876,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_web_nodes_vendors.py",
           "severity": "hard"
@@ -46692,15 +46834,22 @@
       "referenced_by": [
         {
           "candidate": "tests/test_web_server.py",
-          "line": 870,
+          "line": 874,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_web_server.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_web_server.py",
-          "line": 876,
+          "line": 880,
           "referrer": "governance/STATE-CURRENT.md",
+          "resolved": "tests/test_web_server.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "tests/test_web_server.py",
+          "line": 25,
+          "referrer": "stories/RC1-530.md",
           "resolved": "tests/test_web_server.py",
           "severity": "hard"
         },
@@ -46727,14 +46876,14 @@
       "referenced_by": [
         {
           "candidate": "tests/test_web_stacks.py",
-          "line": 874,
+          "line": 878,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_web_stacks.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_web_stacks.py",
-          "line": 880,
+          "line": 884,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_web_stacks.py",
           "severity": "hard"
@@ -46769,14 +46918,14 @@
         },
         {
           "candidate": "tests/test_wizard_health.py",
-          "line": 878,
+          "line": 882,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_wizard_health.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_wizard_health.py",
-          "line": 884,
+          "line": 888,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_wizard_health.py",
           "severity": "hard"
@@ -46818,14 +46967,14 @@
         },
         {
           "candidate": "tests/test_wizard_rag_durci.py",
-          "line": 882,
+          "line": 886,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_wizard_rag_durci.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_wizard_rag_durci.py",
-          "line": 888,
+          "line": 892,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_wizard_rag_durci.py",
           "severity": "hard"
@@ -82453,17 +82602,17 @@
       },
       {
         "candidate": "repos/leon36000/ForgeAI-Toolkit",
-        "line": 907,
+        "line": 911,
         "referrer": "governance/STATE-CURRENT.json"
       },
       {
         "candidate": "repos/leon36000/ForgeAI-Toolkit",
-        "line": 917,
+        "line": 921,
         "referrer": "governance/STATE-CURRENT.json"
       },
       {
         "candidate": "skip/ex",
-        "line": 923,
+        "line": 927,
         "referrer": "governance/STATE-CURRENT.json"
       },
       {
@@ -84825,6 +84974,11 @@
         "candidate": "recu-revue/1",
         "line": 2,
         "referrer": "reviews/RC1-504-v1/RECU.json"
+      },
+      {
+        "candidate": "recu-revue/1",
+        "line": 2,
+        "referrer": "reviews/RC1-530/RECU.json"
       },
       {
         "candidate": "reviews/",
@@ -111452,6 +111606,31 @@
         "referrer": "stories/RC1-504.md"
       },
       {
+        "candidate": "timeout/RemoteDisconnected",
+        "line": 21,
+        "referrer": "stories/RC1-530.md"
+      },
+      {
+        "candidate": "crew_dispatch.py",
+        "line": 29,
+        "referrer": "stories/RC1-530.md"
+      },
+      {
+        "candidate": "try/except",
+        "line": 36,
+        "referrer": "stories/RC1-530.md"
+      },
+      {
+        "candidate": "crew_dispatch.py",
+        "line": 43,
+        "referrer": "stories/RC1-530.md"
+      },
+      {
+        "candidate": "Kimi-K3/GPT-5.6-Luna-Pro",
+        "line": 43,
+        "referrer": "stories/RC1-530.md"
+      },
+      {
         "candidate": "hash/HMAC",
         "line": 9,
         "referrer": "stories/REG-029A.md"
@@ -119622,6 +119801,16 @@
         "referrer": "tests/test_rc1017_matrice_python.py"
       },
       {
+        "candidate": "application/json",
+        "line": 23,
+        "referrer": "tests/test_rc530_port_unicode_crash.py"
+      },
+      {
+        "candidate": "4xx/5xx",
+        "line": 28,
+        "referrer": "tests/test_rc530_port_unicode_crash.py"
+      },
+      {
         "candidate": "forgeai/receptacle",
         "line": 139,
         "referrer": "tests/test_receptacles.py"
@@ -123000,6 +123189,13 @@
         "line": 178,
         "referrer": "reviews/BINDING.txt",
         "resolved": "reviews/RC1-504-v1",
+        "severity": "hard"
+      },
+      {
+        "candidate": "RC1-530",
+        "line": 179,
+        "referrer": "reviews/BINDING.txt",
+        "resolved": "reviews/RC1-530",
         "severity": "hard"
       },
       {
@@ -133636,470 +133832,477 @@
         "severity": "hard"
       },
       {
-        "candidate": "tests/test_receptacles.py",
+        "candidate": "tests/test_rc530_port_unicode_crash.py",
         "line": 646,
+        "referrer": "governance/STATE-CURRENT.json",
+        "resolved": "tests/test_rc530_port_unicode_crash.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "tests/test_receptacles.py",
+        "line": 650,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_receptacles.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_redaction.py",
-        "line": 650,
+        "line": 654,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_redaction.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_redaction_adoption.py",
-        "line": 654,
+        "line": 658,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_redaction_adoption.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_reeval_defaults.py",
-        "line": 658,
+        "line": 662,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_reeval_defaults.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_reg029a_completude.py",
-        "line": 662,
+        "line": 666,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_reg029a_completude.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_reg029b_ancrage.py",
-        "line": 666,
+        "line": 670,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_reg029b_ancrage.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_registre.py",
-        "line": 670,
+        "line": 674,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_registre.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_registre_concurrence.py",
-        "line": 674,
+        "line": 678,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_registre_concurrence.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_rel038a_prepare_persist.py",
-        "line": 678,
+        "line": 682,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_rel038a_prepare_persist.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_rel038b_unicite.py",
-        "line": 682,
+        "line": 686,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_rel038b_unicite.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_rel038c_process_groups.py",
-        "line": 686,
+        "line": 690,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_rel038c_process_groups.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_remote_probe.py",
-        "line": 690,
+        "line": 694,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_remote_probe.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_renderers.py",
-        "line": 694,
+        "line": 698,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_renderers.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_res_classes_stack_minimal.py",
-        "line": 698,
+        "line": 702,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_res_classes_stack_minimal.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_reviews_gate.py",
-        "line": 702,
+        "line": 706,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_reviews_gate.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_revue.py",
-        "line": 706,
+        "line": 710,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_revue.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_routestore_concurrence.py",
-        "line": 710,
+        "line": 714,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_routestore_concurrence.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_selection_complete.py",
-        "line": 714,
+        "line": 718,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_selection_complete.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_selection_v2.py",
-        "line": 718,
+        "line": 722,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_selection_v2.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_sentinelle_sweep.py",
-        "line": 722,
+        "line": 726,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_sentinelle_sweep.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_server_cache.py",
-        "line": 726,
+        "line": 730,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_server_cache.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_service_spec_injection_yaml.py",
-        "line": 730,
+        "line": 734,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_service_spec_injection_yaml.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_spheres.py",
-        "line": 734,
+        "line": 738,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_spheres.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_ssh007_hostkey.py",
-        "line": 738,
+        "line": 742,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_ssh007_hostkey.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_ssh021_nodeadd.py",
-        "line": 742,
+        "line": 746,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_ssh021_nodeadd.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_ssh030_argv_ssh.py",
-        "line": 746,
+        "line": 750,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_ssh030_argv_ssh.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_ssh_injection.py",
-        "line": 750,
+        "line": 754,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_ssh_injection.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_stack_traversal.py",
-        "line": 754,
+        "line": 758,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_stack_traversal.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_stacks.py",
-        "line": 758,
+        "line": 762,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_stacks.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_state_current.py",
-        "line": 762,
+        "line": 766,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_state_current.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_supply018.py",
-        "line": 766,
+        "line": 770,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_supply018.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_tailscale.py",
-        "line": 770,
+        "line": 774,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_tailscale.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_tailscale_optin.py",
-        "line": 774,
+        "line": 778,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_tailscale_optin.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_tally.py",
-        "line": 778,
+        "line": 782,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_tally.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_templates.py",
-        "line": 782,
+        "line": 786,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_templates.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_traductions.py",
-        "line": 786,
+        "line": 790,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_traductions.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_ui_7_etapes.py",
-        "line": 790,
+        "line": 794,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_ui_7_etapes.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_ui_n2b.py",
-        "line": 794,
+        "line": 798,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_ui_n2b.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_ui_s6b.py",
-        "line": 798,
+        "line": 802,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_ui_s6b.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_v1fix_erreurs.py",
-        "line": 802,
+        "line": 806,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_v1fix_erreurs.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_vault.py",
-        "line": 806,
+        "line": 810,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_vault.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_vault_e2e.py",
-        "line": 810,
+        "line": 814,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_vault_e2e.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_web015_error_normalization.py",
-        "line": 814,
+        "line": 818,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_web015_error_normalization.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_web016_ratelimit_integration.py",
-        "line": 818,
+        "line": 822,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_web016_ratelimit_integration.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_web017_get_policy.py",
-        "line": 822,
+        "line": 826,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_web017_get_policy.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_web034a_security_headers.py",
-        "line": 826,
+        "line": 830,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_web034a_security_headers.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_web034b_secure_transport.py",
-        "line": 830,
+        "line": 834,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_web034b_secure_transport.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_web_auth.py",
-        "line": 834,
+        "line": 838,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_web_auth.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_web_bricks.py",
-        "line": 838,
+        "line": 842,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_web_bricks.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_web_deploy.py",
-        "line": 842,
+        "line": 846,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_web_deploy.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_web_deploy_load_stack_once.py",
-        "line": 846,
+        "line": 850,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_web_deploy_load_stack_once.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_web_i18n.py",
-        "line": 850,
+        "line": 854,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_web_i18n.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_web_models.py",
-        "line": 854,
+        "line": 858,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_web_models.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_web_models_local.py",
-        "line": 858,
+        "line": 862,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_web_models_local.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_web_nodes.py",
-        "line": 862,
+        "line": 866,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_web_nodes.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_web_nodes_vendors.py",
-        "line": 866,
+        "line": 870,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_web_nodes_vendors.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_web_server.py",
-        "line": 870,
+        "line": 874,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_web_server.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_web_stacks.py",
-        "line": 874,
+        "line": 878,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_web_stacks.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_wizard_health.py",
-        "line": 878,
+        "line": 882,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_wizard_health.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_wizard_rag_durci.py",
-        "line": 882,
+        "line": 886,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_wizard_rag_durci.py",
         "severity": "hard"
       },
       {
         "candidate": "src/forgeai",
-        "line": 921,
+        "line": 925,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "src/forgeai",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_data002b_wal_idempotent.py",
-        "line": 921,
+        "line": 925,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_data002b_wal_idempotent.py",
         "severity": "hard"
       },
       {
         "candidate": "src/forgeai",
-        "line": 927,
+        "line": 931,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "src/forgeai",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_data002b_wal_idempotent.py",
-        "line": 927,
+        "line": 931,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_data002b_wal_idempotent.py",
         "severity": "hard"
       },
       {
         "candidate": "src/forgeai/core/registre.py",
-        "line": 933,
+        "line": 937,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "src/forgeai/core/registre.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_data002b_wal_idempotent.py",
-        "line": 941,
+        "line": 945,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_data002b_wal_idempotent.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_data002b_wal_idempotent.py",
-        "line": 947,
+        "line": 951,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_data002b_wal_idempotent.py",
         "severity": "hard"
@@ -135078,421 +135281,428 @@
         "severity": "hard"
       },
       {
-        "candidate": "tests/test_receptacles.py",
+        "candidate": "tests/test_rc530_port_unicode_crash.py",
         "line": 652,
+        "referrer": "governance/STATE-CURRENT.md",
+        "resolved": "tests/test_rc530_port_unicode_crash.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "tests/test_receptacles.py",
+        "line": 656,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_receptacles.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_redaction.py",
-        "line": 656,
+        "line": 660,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_redaction.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_redaction_adoption.py",
-        "line": 660,
+        "line": 664,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_redaction_adoption.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_reeval_defaults.py",
-        "line": 664,
+        "line": 668,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_reeval_defaults.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_reg029a_completude.py",
-        "line": 668,
+        "line": 672,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_reg029a_completude.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_reg029b_ancrage.py",
-        "line": 672,
+        "line": 676,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_reg029b_ancrage.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_registre.py",
-        "line": 676,
+        "line": 680,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_registre.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_registre_concurrence.py",
-        "line": 680,
+        "line": 684,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_registre_concurrence.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_rel038a_prepare_persist.py",
-        "line": 684,
+        "line": 688,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_rel038a_prepare_persist.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_rel038b_unicite.py",
-        "line": 688,
+        "line": 692,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_rel038b_unicite.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_rel038c_process_groups.py",
-        "line": 692,
+        "line": 696,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_rel038c_process_groups.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_remote_probe.py",
-        "line": 696,
+        "line": 700,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_remote_probe.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_renderers.py",
-        "line": 700,
+        "line": 704,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_renderers.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_res_classes_stack_minimal.py",
-        "line": 704,
+        "line": 708,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_res_classes_stack_minimal.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_reviews_gate.py",
-        "line": 708,
+        "line": 712,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_reviews_gate.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_revue.py",
-        "line": 712,
+        "line": 716,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_revue.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_routestore_concurrence.py",
-        "line": 716,
+        "line": 720,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_routestore_concurrence.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_selection_complete.py",
-        "line": 720,
+        "line": 724,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_selection_complete.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_selection_v2.py",
-        "line": 724,
+        "line": 728,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_selection_v2.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_sentinelle_sweep.py",
-        "line": 728,
+        "line": 732,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_sentinelle_sweep.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_server_cache.py",
-        "line": 732,
+        "line": 736,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_server_cache.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_service_spec_injection_yaml.py",
-        "line": 736,
+        "line": 740,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_service_spec_injection_yaml.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_spheres.py",
-        "line": 740,
+        "line": 744,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_spheres.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_ssh007_hostkey.py",
-        "line": 744,
+        "line": 748,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_ssh007_hostkey.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_ssh021_nodeadd.py",
-        "line": 748,
+        "line": 752,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_ssh021_nodeadd.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_ssh030_argv_ssh.py",
-        "line": 752,
+        "line": 756,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_ssh030_argv_ssh.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_ssh_injection.py",
-        "line": 756,
+        "line": 760,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_ssh_injection.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_stack_traversal.py",
-        "line": 760,
+        "line": 764,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_stack_traversal.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_stacks.py",
-        "line": 764,
+        "line": 768,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_stacks.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_state_current.py",
-        "line": 768,
+        "line": 772,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_state_current.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_supply018.py",
-        "line": 772,
+        "line": 776,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_supply018.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_tailscale.py",
-        "line": 776,
+        "line": 780,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_tailscale.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_tailscale_optin.py",
-        "line": 780,
+        "line": 784,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_tailscale_optin.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_tally.py",
-        "line": 784,
+        "line": 788,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_tally.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_templates.py",
-        "line": 788,
+        "line": 792,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_templates.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_traductions.py",
-        "line": 792,
+        "line": 796,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_traductions.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_ui_7_etapes.py",
-        "line": 796,
+        "line": 800,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_ui_7_etapes.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_ui_n2b.py",
-        "line": 800,
+        "line": 804,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_ui_n2b.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_ui_s6b.py",
-        "line": 804,
+        "line": 808,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_ui_s6b.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_v1fix_erreurs.py",
-        "line": 808,
+        "line": 812,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_v1fix_erreurs.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_vault.py",
-        "line": 812,
+        "line": 816,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_vault.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_vault_e2e.py",
-        "line": 816,
+        "line": 820,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_vault_e2e.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_web015_error_normalization.py",
-        "line": 820,
+        "line": 824,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_web015_error_normalization.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_web016_ratelimit_integration.py",
-        "line": 824,
+        "line": 828,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_web016_ratelimit_integration.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_web017_get_policy.py",
-        "line": 828,
+        "line": 832,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_web017_get_policy.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_web034a_security_headers.py",
-        "line": 832,
+        "line": 836,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_web034a_security_headers.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_web034b_secure_transport.py",
-        "line": 836,
+        "line": 840,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_web034b_secure_transport.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_web_auth.py",
-        "line": 840,
+        "line": 844,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_web_auth.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_web_bricks.py",
-        "line": 844,
+        "line": 848,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_web_bricks.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_web_deploy.py",
-        "line": 848,
+        "line": 852,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_web_deploy.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_web_deploy_load_stack_once.py",
-        "line": 852,
+        "line": 856,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_web_deploy_load_stack_once.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_web_i18n.py",
-        "line": 856,
+        "line": 860,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_web_i18n.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_web_models.py",
-        "line": 860,
+        "line": 864,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_web_models.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_web_models_local.py",
-        "line": 864,
+        "line": 868,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_web_models_local.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_web_nodes.py",
-        "line": 868,
+        "line": 872,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_web_nodes.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_web_nodes_vendors.py",
-        "line": 872,
+        "line": 876,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_web_nodes_vendors.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_web_server.py",
-        "line": 876,
+        "line": 880,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_web_server.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_web_stacks.py",
-        "line": 880,
+        "line": 884,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_web_stacks.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_wizard_health.py",
-        "line": 884,
+        "line": 888,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_wizard_health.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_wizard_rag_durci.py",
-        "line": 888,
+        "line": 892,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_wizard_rag_durci.py",
         "severity": "hard"
@@ -139362,6 +139572,20 @@
         "severity": "hard"
       },
       {
+        "candidate": "tests/test_rc530_port_unicode_crash.py",
+        "line": 6,
+        "referrer": "reviews/RC1-530/MiMo-Pro-V2.verdict.json",
+        "resolved": "tests/test_rc530_port_unicode_crash.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "src/forgeai/web/server.py",
+        "line": 12,
+        "referrer": "reviews/RC1-530/MiMo-Pro-V2.verdict.json",
+        "resolved": "src/forgeai/web/server.py",
+        "severity": "hard"
+      },
+      {
         "candidate": ".github/workflows/gates.yml",
         "line": 6,
         "referrer": "reviews/REG-029B/Qwen3.7-Max.verdict.json",
@@ -143058,6 +143282,48 @@
         "severity": "hard"
       },
       {
+        "candidate": "src/forgeai/web/server.py",
+        "line": 4,
+        "referrer": "stories/RC1-530.md",
+        "resolved": "src/forgeai/web/server.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "tests/test_rc530_port_unicode_crash.py",
+        "line": 22,
+        "referrer": "stories/RC1-530.md",
+        "resolved": "tests/test_rc530_port_unicode_crash.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "tests/test_web_deploy.py",
+        "line": 25,
+        "referrer": "stories/RC1-530.md",
+        "resolved": "tests/test_web_deploy.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "tests/test_adoption_api.py",
+        "line": 25,
+        "referrer": "stories/RC1-530.md",
+        "resolved": "tests/test_adoption_api.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "tests/test_web_server.py",
+        "line": 25,
+        "referrer": "stories/RC1-530.md",
+        "resolved": "tests/test_web_server.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "tests/test_deploy_units.py",
+        "line": 26,
+        "referrer": "stories/RC1-530.md",
+        "resolved": "tests/test_deploy_units.py",
+        "severity": "hard"
+      },
+      {
         "candidate": "src/forgeai/core/registre_completude.py",
         "line": 5,
         "referrer": "stories/REG-029A.md",
@@ -145046,11 +145312,11 @@
     "by_class": {
       "ARCHIVE": 44,
       "DOCS": 14,
-      "EVIDENCE": 1334,
+      "EVIDENCE": 1338,
       "GENERATED": 5,
-      "GOVERNANCE": 175,
+      "GOVERNANCE": 176,
       "PRODUCT": 112,
-      "TEST": 200,
+      "TEST": 201,
       "WORKING": 10
     },
     "by_rule": {
@@ -145062,7 +145328,7 @@
       "docs-user": 13,
       "evidence-audit-output-root": 18,
       "evidence-registres-root": 35,
-      "evidence-reviews": 413,
+      "evidence-reviews": 417,
       "evidence-reviews-root": 868,
       "generated-authority-map": 1,
       "generated-path-classification-json": 1,
@@ -145091,19 +145357,19 @@
       "governance-scripts-coordination": 4,
       "governance-scripts-governance": 7,
       "governance-scripts-root": 21,
-      "governance-stories": 86,
+      "governance-stories": 87,
       "product-catalogue-checksum": 1,
       "product-source": 111,
-      "test-suite": 200,
+      "test-suite": 201,
       "working-claude-agents": 9,
       "working-sandbox-readme": 1
     },
     "case_collisions_total": 0,
-    "dangling_references_total": 14963,
+    "dangling_references_total": 14971,
     "generated_total": 7,
-    "load_bearing_total": 1765,
+    "load_bearing_total": 1770,
     "portability_violations_total": 0,
-    "tracked_total": 1894,
+    "tracked_total": 1900,
     "unclassified_total": 0,
     "unicode_anomalies_total": 0
   },
@@ -145323,6 +145589,10 @@
         "reviews/RC1-504-v1/DeepSeek-V4-Pro.verdict.json",
         "reviews/RC1-504-v1/Qwen3.7-Max.verdict.json",
         "reviews/RC1-504-v1/RECU.json",
+        "reviews/RC1-530/Gemini-3.1-Pro.verdict.json",
+        "reviews/RC1-530/MiMo-Pro-V2.verdict.json",
+        "reviews/RC1-530/Qwen3.7-Max.verdict.json",
+        "reviews/RC1-530/RECU.json",
         "reviews/README.md",
         "reviews/REG-029A/DeepSeek-V4-Pro.verdict.json",
         "reviews/REG-029A/Gemini-3.1-Pro.verdict.json",
@@ -145515,7 +145785,7 @@
         "reviews/wh-civ/Gemini-3.1-Pro.verdict.json",
         "reviews/wh-civ/Grok-4.5.verdict.json"
       ],
-      "rollback": "Vague 0 : 403 chemin(s). Rollback = git mv evidence/reviews/BINDING.txt reviews/BINDING.txt; git mv evidence/reviews/RC1-001-PR431-v10/DeepSeek-V4-Pro.verdict.json reviews/RC1-001-PR431-v10/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-001-PR431-v10/Gemini-3.1-Pro.verdict.json reviews/RC1-001-PR431-v10/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-001-PR431-v10/Qwen3.7-Max.verdict.json reviews/RC1-001-PR431-v10/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-001-PR431-v2/DeepSeek-V4-Pro.verdict.json reviews/RC1-001-PR431-v2/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-001-PR431-v2/Gemini-3.1-Pro.verdict.json reviews/RC1-001-PR431-v2/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-001-PR431-v2/Qwen3.7-Max.verdict.json reviews/RC1-001-PR431-v2/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-001-PR431-v3/DeepSeek-V4-Pro.verdict.json reviews/RC1-001-PR431-v3/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-001-PR431-v3/Gemini-3.1-Pro.verdict.json reviews/RC1-001-PR431-v3/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-001-PR431-v3/Qwen3.7-Max.verdict.json reviews/RC1-001-PR431-v3/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-001-PR431-v4/DeepSeek-V4-Pro.verdict.json reviews/RC1-001-PR431-v4/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-001-PR431-v4/Gemini-3.1-Pro.verdict.json reviews/RC1-001-PR431-v4/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-001-PR431-v4/Qwen3.7-Max.verdict.json reviews/RC1-001-PR431-v4/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-001-PR431-v5/DeepSeek-V4-Pro.verdict.json reviews/RC1-001-PR431-v5/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-001-PR431-v5/Gemini-3.1-Pro.verdict.json reviews/RC1-001-PR431-v5/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-001-PR431-v5/Qwen3.7-Max.verdict.json reviews/RC1-001-PR431-v5/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-001-PR431-v6/DeepSeek-V4-Pro.verdict.json reviews/RC1-001-PR431-v6/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-001-PR431-v6/Gemini-3.1-Pro.verdict.json reviews/RC1-001-PR431-v6/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-001-PR431-v6/Qwen3.7-Max.verdict.json reviews/RC1-001-PR431-v6/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-001-PR431-v7/DeepSeek-V4-Pro.verdict.json reviews/RC1-001-PR431-v7/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-001-PR431-v7/Gemini-3.1-Pro.verdict.json reviews/RC1-001-PR431-v7/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-001-PR431-v7/Qwen3.7-Max.verdict.json reviews/RC1-001-PR431-v7/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-001-PR431-v8/DeepSeek-V4-Pro.verdict.json reviews/RC1-001-PR431-v8/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-001-PR431-v8/Gemini-3.1-Pro.verdict.json reviews/RC1-001-PR431-v8/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-001-PR431-v8/Qwen3.7-Max.verdict.json reviews/RC1-001-PR431-v8/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-001-PR431-v9/DeepSeek-V4-Pro.verdict.json reviews/RC1-001-PR431-v9/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-001-PR431-v9/Gemini-3.1-Pro.verdict.json reviews/RC1-001-PR431-v9/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-001-PR431-v9/Qwen3.7-Max.verdict.json reviews/RC1-001-PR431-v9/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-002-PR432-v2/DeepSeek-V4-Pro.verdict.json reviews/RC1-002-PR432-v2/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-002-PR432-v2/Gemini-3.1-Pro.verdict.json reviews/RC1-002-PR432-v2/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-002-PR432-v2/Qwen3.7-Max.verdict.json reviews/RC1-002-PR432-v2/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-002-PR432/DeepSeek-V4-Pro.verdict.json reviews/RC1-002-PR432/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-002-PR432/Gemini-3.1-Pro.verdict.json reviews/RC1-002-PR432/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-002-PR432/Qwen3.7-Max.verdict.json reviews/RC1-002-PR432/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-003-PR489-v2/DeepSeek-V4-Pro.verdict.json reviews/RC1-003-PR489-v2/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-003-PR489-v2/Gemini-3.1-Pro.verdict.json reviews/RC1-003-PR489-v2/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-003-PR489-v2/Qwen3.7-Max.verdict.json reviews/RC1-003-PR489-v2/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-003-PR489-v3/DeepSeek-V4-Pro.verdict.json reviews/RC1-003-PR489-v3/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-003-PR489-v3/Gemini-3.1-Pro.verdict.json reviews/RC1-003-PR489-v3/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-003-PR489-v3/Qwen3.7-Max.verdict.json reviews/RC1-003-PR489-v3/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-003-PR489-v4/DeepSeek-V4-Pro.verdict.json reviews/RC1-003-PR489-v4/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-003-PR489-v4/Gemini-3.1-Pro.verdict.json reviews/RC1-003-PR489-v4/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-003-PR489-v4/Qwen3.7-Max.verdict.json reviews/RC1-003-PR489-v4/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-003-PR489-v6/DeepSeek-V4-Pro.verdict.json reviews/RC1-003-PR489-v6/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-003-PR489-v6/Gemini-3.1-Pro.verdict.json reviews/RC1-003-PR489-v6/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-003-PR489-v6/Qwen3.7-Max.verdict.json reviews/RC1-003-PR489-v6/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-003-PR489-v7/Gemini-3.1-Pro.verdict.json reviews/RC1-003-PR489-v7/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-003-PR489-v7/Qwen3.7-Max.verdict.json reviews/RC1-003-PR489-v7/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-003-PR489-v8/Gemini-3.1-Pro.verdict.json reviews/RC1-003-PR489-v8/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-003-PR489-v8/Kimi-2.7.verdict.json reviews/RC1-003-PR489-v8/Kimi-2.7.verdict.json; git mv evidence/reviews/RC1-003-PR489-v8/Qwen3.7-Max.verdict.json reviews/RC1-003-PR489-v8/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-003-PR489/DeepSeek-V4-Pro.verdict.json reviews/RC1-003-PR489/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-003-PR489/Gemini-3.1-Pro.verdict.json reviews/RC1-003-PR489/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-003-PR489/Qwen3.7-Max.verdict.json reviews/RC1-003-PR489/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-004-PR497-v2/DeepSeek-V4-Pro.verdict.json reviews/RC1-004-PR497-v2/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-004-PR497-v2/Gemini-3.1-Pro.verdict.json reviews/RC1-004-PR497-v2/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-004-PR497-v2/Qwen3.7-Max.verdict.json reviews/RC1-004-PR497-v2/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-004-PR497-v3/DeepSeek-V4-Pro.verdict.json reviews/RC1-004-PR497-v3/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-004-PR497-v3/Gemini-3.1-Pro.verdict.json reviews/RC1-004-PR497-v3/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-004-PR497-v3/Qwen3.7-Max.verdict.json reviews/RC1-004-PR497-v3/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-004-PR497-v4/Gemini-3.1-Pro.verdict.json reviews/RC1-004-PR497-v4/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-004-PR497-v4/MiMo-Pro-V2.verdict.json reviews/RC1-004-PR497-v4/MiMo-Pro-V2.verdict.json; git mv evidence/reviews/RC1-004-PR497-v4/Qwen3.7-Max.verdict.json reviews/RC1-004-PR497-v4/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-004-PR497-v4/RECU.json reviews/RC1-004-PR497-v4/RECU.json; git mv evidence/reviews/RC1-004-PR497-v5/Gemini-3.1-Pro.verdict.json reviews/RC1-004-PR497-v5/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-004-PR497-v5/MiMo-Pro-V2.verdict.json reviews/RC1-004-PR497-v5/MiMo-Pro-V2.verdict.json; git mv evidence/reviews/RC1-004-PR497-v5/Qwen3.7-Max.verdict.json reviews/RC1-004-PR497-v5/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-004-PR497-v5/RECU.json reviews/RC1-004-PR497-v5/RECU.json; git mv evidence/reviews/RC1-004-PR497/DeepSeek-V4-Pro.verdict.json reviews/RC1-004-PR497/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-004-PR497/Gemini-3.1-Pro.verdict.json reviews/RC1-004-PR497/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-004-PR497/Qwen3.7-Max.verdict.json reviews/RC1-004-PR497/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-007-PR490-v2/DeepSeek-V4-Pro.verdict.json reviews/RC1-007-PR490-v2/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-007-PR490-v2/Gemini-3.1-Pro.verdict.json reviews/RC1-007-PR490-v2/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-007-PR490-v2/Kimi-2.7.verdict.json reviews/RC1-007-PR490-v2/Kimi-2.7.verdict.json; git mv evidence/reviews/RC1-007-PR490-v3/Gemini-3.1-Pro.verdict.json reviews/RC1-007-PR490-v3/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-007-PR490-v3/MiMo-Pro-V2.verdict.json reviews/RC1-007-PR490-v3/MiMo-Pro-V2.verdict.json; git mv evidence/reviews/RC1-007-PR490-v3/Qwen3.7-Max.verdict.json reviews/RC1-007-PR490-v3/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-007-PR490-v4/DeepSeek-V4-Pro.verdict.json reviews/RC1-007-PR490-v4/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-007-PR490-v4/Gemini-3.1-Pro.verdict.json reviews/RC1-007-PR490-v4/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-007-PR490-v4/MiMo-Pro-V2.verdict.json reviews/RC1-007-PR490-v4/MiMo-Pro-V2.verdict.json; git mv evidence/reviews/RC1-007-PR490/DeepSeek-V4-Pro.verdict.json reviews/RC1-007-PR490/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-007-PR490/Gemini-3.1-Pro.verdict.json reviews/RC1-007-PR490/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-007-PR490/Kimi-2.7.verdict.json reviews/RC1-007-PR490/Kimi-2.7.verdict.json; git mv evidence/reviews/RC1-008-PR496-v2/DeepSeek-V4-Pro.verdict.json reviews/RC1-008-PR496-v2/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-008-PR496-v2/Gemini-3.1-Pro.verdict.json reviews/RC1-008-PR496-v2/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-008-PR496-v2/MiMo-Pro-V2.verdict.json reviews/RC1-008-PR496-v2/MiMo-Pro-V2.verdict.json; git mv evidence/reviews/RC1-008-PR496-v4/DeepSeek-V4-Pro.verdict.json reviews/RC1-008-PR496-v4/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-008-PR496-v4/Gemini-3.1-Pro.verdict.json reviews/RC1-008-PR496-v4/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-008-PR496-v4/Qwen3.7-Max.verdict.json reviews/RC1-008-PR496-v4/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-008-PR496-v5/DeepSeek-V4-Pro.verdict.json reviews/RC1-008-PR496-v5/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-008-PR496-v5/Gemini-3.1-Pro.verdict.json reviews/RC1-008-PR496-v5/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-008-PR496-v5/MiMo-Pro-V2.verdict.json reviews/RC1-008-PR496-v5/MiMo-Pro-V2.verdict.json; git mv evidence/reviews/RC1-008-PR496/DeepSeek-V4-Pro.verdict.json reviews/RC1-008-PR496/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-008-PR496/Gemini-3.1-Pro.verdict.json reviews/RC1-008-PR496/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-008-PR496/Kimi-2.7.verdict.json reviews/RC1-008-PR496/Kimi-2.7.verdict.json; git mv evidence/reviews/RC1-009-PR500-v1/Gemini-3.1-Pro.verdict.json reviews/RC1-009-PR500-v1/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-009-PR500-v1/MiMo-Pro-V2.verdict.json reviews/RC1-009-PR500-v1/MiMo-Pro-V2.verdict.json; git mv evidence/reviews/RC1-009-PR500-v2/DeepSeek-V4-Pro.verdict.json reviews/RC1-009-PR500-v2/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-009-PR500-v2/Gemini-3.1-Pro.verdict.json reviews/RC1-009-PR500-v2/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-009-PR500-v2/MiMo-Pro-V2.verdict.json reviews/RC1-009-PR500-v2/MiMo-Pro-V2.verdict.json; git mv evidence/reviews/RC1-009-PR500-v3/Gemini-3.1-Pro.verdict.json reviews/RC1-009-PR500-v3/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-009-PR500-v3/MiMo-Pro-V2.verdict.json reviews/RC1-009-PR500-v3/MiMo-Pro-V2.verdict.json; git mv evidence/reviews/RC1-009-PR500-v3/RECU.json reviews/RC1-009-PR500-v3/RECU.json; git mv evidence/reviews/RC1-009/DeepSeek-V4-Pro.verdict.json reviews/RC1-009/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-009/Gemini-3.1-Pro.verdict.json reviews/RC1-009/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-009/Kimi-2.7.verdict.json reviews/RC1-009/Kimi-2.7.verdict.json; git mv evidence/reviews/RC1-009/RECU.json reviews/RC1-009/RECU.json; git mv evidence/reviews/RC1-010-lot0-PR501-v1/Gemini-3.1-Pro.verdict.json reviews/RC1-010-lot0-PR501-v1/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-010-lot0-PR501-v1/Qwen3.7-Max.verdict.json reviews/RC1-010-lot0-PR501-v1/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-010-lot0-PR501-v2/Gemini-3.1-Pro.verdict.json reviews/RC1-010-lot0-PR501-v2/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-010-lot0-PR501-v2/Qwen3.7-Max.verdict.json reviews/RC1-010-lot0-PR501-v2/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-010-lot0-PR501-v2/RECU.json reviews/RC1-010-lot0-PR501-v2/RECU.json; git mv evidence/reviews/RC1-010-lot1-PR502-v1/DeepSeek-V4-Pro.verdict.json reviews/RC1-010-lot1-PR502-v1/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-010-lot1-PR502-v1/Gemini-3.1-Pro.verdict.json reviews/RC1-010-lot1-PR502-v1/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-010-lot1-PR502-v1/MiMo-Pro-V2.verdict.json reviews/RC1-010-lot1-PR502-v1/MiMo-Pro-V2.verdict.json; git mv evidence/reviews/RC1-010-lot1-PR502-v1/RECU.json reviews/RC1-010-lot1-PR502-v1/RECU.json; git mv evidence/reviews/RC1-010-lot2-PR503-v1/DeepSeek-V4-Pro.verdict.json reviews/RC1-010-lot2-PR503-v1/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-010-lot2-PR503-v1/Gemini-3.1-Pro.verdict.json reviews/RC1-010-lot2-PR503-v1/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-010-lot2-PR503-v1/Qwen3.7-Max.verdict.json reviews/RC1-010-lot2-PR503-v1/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-010-lot2-PR503-v2/DeepSeek-V4-Pro.verdict.json reviews/RC1-010-lot2-PR503-v2/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-010-lot2-PR503-v2/Gemini-3.1-Pro.verdict.json reviews/RC1-010-lot2-PR503-v2/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-010-lot2-PR503-v2/Qwen3.7-Max.verdict.json reviews/RC1-010-lot2-PR503-v2/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-010-lot2-PR503-v3/Gemini-3.1-Pro.verdict.json reviews/RC1-010-lot2-PR503-v3/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-010-lot2-PR503-v3/Qwen3.7-Max.verdict.json reviews/RC1-010-lot2-PR503-v3/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-010-lot2-PR503-v4/DeepSeek-V4-Pro.verdict.json reviews/RC1-010-lot2-PR503-v4/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-010-lot2-PR503-v4/Gemini-3.1-Pro.verdict.json reviews/RC1-010-lot2-PR503-v4/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-010-lot2-PR503-v4/Qwen3.7-Max.verdict.json reviews/RC1-010-lot2-PR503-v4/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-010-lot2-PR503-v4/RECU.json reviews/RC1-010-lot2-PR503-v4/RECU.json; git mv evidence/reviews/RC1-010-lot3-PR505-v1/DeepSeek-V4-Pro.verdict.json reviews/RC1-010-lot3-PR505-v1/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-010-lot3-PR505-v1/Kimi-2.7.verdict.json reviews/RC1-010-lot3-PR505-v1/Kimi-2.7.verdict.json; git mv evidence/reviews/RC1-010-lot3-PR505-v1/Qwen3.7-Max.verdict.json reviews/RC1-010-lot3-PR505-v1/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-010-lot3-PR505-v1/RECU.json reviews/RC1-010-lot3-PR505-v1/RECU.json; git mv evidence/reviews/RC1-010-lot3-PR505-v2/DeepSeek-V4-Pro.verdict.json reviews/RC1-010-lot3-PR505-v2/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-010-lot3-PR505-v2/Kimi-2.7.verdict.json reviews/RC1-010-lot3-PR505-v2/Kimi-2.7.verdict.json; git mv evidence/reviews/RC1-010-lot3-PR505-v2/Qwen3.7-Max.verdict.json reviews/RC1-010-lot3-PR505-v2/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-010-lot3-PR505-v2/RECU.json reviews/RC1-010-lot3-PR505-v2/RECU.json; git mv evidence/reviews/RC1-010-lot4-PR507-v1/DeepSeek-V4-Pro.verdict.json reviews/RC1-010-lot4-PR507-v1/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-010-lot4-PR507-v1/Kimi-2.7.verdict.json reviews/RC1-010-lot4-PR507-v1/Kimi-2.7.verdict.json; git mv evidence/reviews/RC1-010-lot4-PR507-v1/Qwen3.7-Max.verdict.json reviews/RC1-010-lot4-PR507-v1/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-010-lot4-PR507-v1/RECU.json reviews/RC1-010-lot4-PR507-v1/RECU.json; git mv evidence/reviews/RC1-010-lot5a-PR508-v1/Kimi-2.7.verdict.json reviews/RC1-010-lot5a-PR508-v1/Kimi-2.7.verdict.json; git mv evidence/reviews/RC1-010-lot5a-PR508-v1/Qwen3.7-Max.verdict.json reviews/RC1-010-lot5a-PR508-v1/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-010-lot5a-PR508-v1/RECU.json reviews/RC1-010-lot5a-PR508-v1/RECU.json; git mv evidence/reviews/RC1-010-lot5b-PR510-v1/DeepSeek-V4-Pro.verdict.json reviews/RC1-010-lot5b-PR510-v1/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-010-lot5b-PR510-v1/Kimi-2.7.verdict.json reviews/RC1-010-lot5b-PR510-v1/Kimi-2.7.verdict.json; git mv evidence/reviews/RC1-010-lot5b-PR510-v1/Qwen3.7-Max.verdict.json reviews/RC1-010-lot5b-PR510-v1/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-010-lot5b-PR510-v2/DeepSeek-V4-Pro.verdict.json reviews/RC1-010-lot5b-PR510-v2/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-010-lot5b-PR510-v2/Kimi-2.7.verdict.json reviews/RC1-010-lot5b-PR510-v2/Kimi-2.7.verdict.json; git mv evidence/reviews/RC1-010-lot5b-PR510-v2/Qwen3.7-Max.verdict.json reviews/RC1-010-lot5b-PR510-v2/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-010-lot5b-PR510-v2/RECU.json reviews/RC1-010-lot5b-PR510-v2/RECU.json; git mv evidence/reviews/RC1-010-lot5b-PR510-v3/Kimi-2.7.verdict.json reviews/RC1-010-lot5b-PR510-v3/Kimi-2.7.verdict.json; git mv evidence/reviews/RC1-010-lot5b-PR510-v3/Qwen3.7-Max.verdict.json reviews/RC1-010-lot5b-PR510-v3/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-010-lot5b-PR510-v4/DeepSeek-V4-Pro.verdict.json reviews/RC1-010-lot5b-PR510-v4/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-010-lot5b-PR510-v4/Kimi-2.7.verdict.json reviews/RC1-010-lot5b-PR510-v4/Kimi-2.7.verdict.json; git mv evidence/reviews/RC1-010-lot5b-PR510-v4/Qwen3.7-Max.verdict.json reviews/RC1-010-lot5b-PR510-v4/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-010-lot5b-PR510-v4/RECU.json reviews/RC1-010-lot5b-PR510-v4/RECU.json; git mv evidence/reviews/RC1-010-lot5c-PR516-v1/DeepSeek-V4-Pro.verdict.json reviews/RC1-010-lot5c-PR516-v1/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-010-lot5c-PR516-v1/Kimi-2.7.verdict.json reviews/RC1-010-lot5c-PR516-v1/Kimi-2.7.verdict.json; git mv evidence/reviews/RC1-010-lot5c-PR516-v1/Qwen3.7-Max.verdict.json reviews/RC1-010-lot5c-PR516-v1/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-010-lot5c-PR516-v1/RECU.json reviews/RC1-010-lot5c-PR516-v1/RECU.json; git mv evidence/reviews/RC1-446-PR-v1/DeepSeek-V4-Pro.verdict.json reviews/RC1-446-PR-v1/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-446-PR-v1/Gemini-3.1-Pro.verdict.json reviews/RC1-446-PR-v1/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-446-PR-v1/Qwen3.7-Max.verdict.json reviews/RC1-446-PR-v1/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-446-PR-v2/DeepSeek-V4-Pro.verdict.json reviews/RC1-446-PR-v2/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-446-PR-v2/Gemini-3.1-Pro.verdict.json reviews/RC1-446-PR-v2/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-446-PR-v2/Qwen3.7-Max.verdict.json reviews/RC1-446-PR-v2/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-446-PR-v3/DeepSeek-V4-Pro.verdict.json reviews/RC1-446-PR-v3/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-446-PR-v3/Gemini-3.1-Pro.verdict.json reviews/RC1-446-PR-v3/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-446-PR-v3/Qwen3.7-Max.verdict.json reviews/RC1-446-PR-v3/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-446-PR-v4/DeepSeek-V4-Pro.verdict.json reviews/RC1-446-PR-v4/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-446-PR-v4/Gemini-3.1-Pro.verdict.json reviews/RC1-446-PR-v4/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-446-PR-v4/Qwen3.7-Max.verdict.json reviews/RC1-446-PR-v4/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-446-PR-v5/DeepSeek-V4-Pro.verdict.json reviews/RC1-446-PR-v5/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-446-PR-v5/Gemini-3.1-Pro.verdict.json reviews/RC1-446-PR-v5/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-446-PR-v5/Qwen3.7-Max.verdict.json reviews/RC1-446-PR-v5/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-446-PR-v5/RECU.json reviews/RC1-446-PR-v5/RECU.json; git mv evidence/reviews/RC1-447-PR-v1/DeepSeek-V4-Pro.verdict.json reviews/RC1-447-PR-v1/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-447-PR-v1/Gemini-3.1-Pro.verdict.json reviews/RC1-447-PR-v1/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-447-PR-v1/Qwen3.7-Max.verdict.json reviews/RC1-447-PR-v1/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-447-PR-v2/DeepSeek-V4-Pro.verdict.json reviews/RC1-447-PR-v2/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-447-PR-v2/Gemini-3.1-Pro.verdict.json reviews/RC1-447-PR-v2/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-447-PR-v2/Qwen3.7-Max.verdict.json reviews/RC1-447-PR-v2/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-447-PR-v3/DeepSeek-V4-Pro.verdict.json reviews/RC1-447-PR-v3/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-447-PR-v3/Gemini-3.1-Pro.verdict.json reviews/RC1-447-PR-v3/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-447-PR-v3/Qwen3.7-Max.verdict.json reviews/RC1-447-PR-v3/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-447-PR-v4/DeepSeek-V4-Pro.verdict.json reviews/RC1-447-PR-v4/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-447-PR-v4/Gemini-3.1-Pro.verdict.json reviews/RC1-447-PR-v4/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-447-PR-v4/Qwen3.7-Max.verdict.json reviews/RC1-447-PR-v4/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-447-PR-v5/DeepSeek-V4-Pro.verdict.json reviews/RC1-447-PR-v5/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-447-PR-v5/Gemini-3.1-Pro.verdict.json reviews/RC1-447-PR-v5/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-447-PR-v5/Qwen3.7-Max.verdict.json reviews/RC1-447-PR-v5/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-459-PR517/DeepSeek-V4-Pro.verdict.json reviews/RC1-459-PR517/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-459-PR517/Gemini-3.1-Pro.verdict.json reviews/RC1-459-PR517/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-459-PR517/MiMo-Pro-V2.verdict.json reviews/RC1-459-PR517/MiMo-Pro-V2.verdict.json; git mv evidence/reviews/RC1-459-PR517/RECU.json reviews/RC1-459-PR517/RECU.json; git mv evidence/reviews/RC1-482-PR-v1/DeepSeek-V4-Pro.verdict.json reviews/RC1-482-PR-v1/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-482-PR-v1/Gemini-3.1-Pro.verdict.json reviews/RC1-482-PR-v1/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-482-PR-v1/Qwen3.7-Max.verdict.json reviews/RC1-482-PR-v1/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-487-v1/DeepSeek-V4-Pro.verdict.json reviews/RC1-487-v1/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-487-v1/Gemini-3.1-Pro.verdict.json reviews/RC1-487-v1/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-487-v1/MiMo-Pro-V2.verdict.json reviews/RC1-487-v1/MiMo-Pro-V2.verdict.json; git mv evidence/reviews/RC1-487-v1/RECU.json reviews/RC1-487-v1/RECU.json; git mv evidence/reviews/RC1-492-PR512/DeepSeek-V4-Pro.verdict.json reviews/RC1-492-PR512/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-492-PR512/MiMo-Pro-V2.verdict.json reviews/RC1-492-PR512/MiMo-Pro-V2.verdict.json; git mv evidence/reviews/RC1-492-PR512/Qwen3.7-Max.verdict.json reviews/RC1-492-PR512/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-492-PR512/RECU.json reviews/RC1-492-PR512/RECU.json; git mv evidence/reviews/RC1-493-PR-v1/DeepSeek-V4-Pro.verdict.json reviews/RC1-493-PR-v1/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-493-PR-v1/Gemini-3.1-Pro.verdict.json reviews/RC1-493-PR-v1/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-493-PR-v1/Qwen3.7-Max.verdict.json reviews/RC1-493-PR-v1/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-504-v1/DeepSeek-V4-Pro.verdict.json reviews/RC1-504-v1/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-504-v1/Qwen3.7-Max.verdict.json reviews/RC1-504-v1/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-504-v1/RECU.json reviews/RC1-504-v1/RECU.json; git mv evidence/reviews/README.md reviews/README.md; git mv evidence/reviews/REG-029A/DeepSeek-V4-Pro.verdict.json reviews/REG-029A/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/REG-029A/Gemini-3.1-Pro.verdict.json reviews/REG-029A/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/REG-029A/Qwen3.7-Max.verdict.json reviews/REG-029A/Qwen3.7-Max.verdict.json; git mv evidence/reviews/REG-029B/DeepSeek-V4-Pro.verdict.json reviews/REG-029B/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/REG-029B/Gemini-3.1-Pro.verdict.json reviews/REG-029B/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/REG-029B/Qwen3.7-Max.verdict.json reviews/REG-029B/Qwen3.7-Max.verdict.json; git mv evidence/reviews/REL-038A/GLM-5.2.verdict.json reviews/REL-038A/GLM-5.2.verdict.json; git mv evidence/reviews/REL-038A/Grok-4.5.verdict.json reviews/REL-038A/Grok-4.5.verdict.json; git mv evidence/reviews/REL-038A/Qwen3.7-Max.verdict.json reviews/REL-038A/Qwen3.7-Max.verdict.json; git mv evidence/reviews/REL-038B/GLM-5.2.verdict.json reviews/REL-038B/GLM-5.2.verdict.json; git mv evidence/reviews/REL-038B/Grok-4.5.verdict.json reviews/REL-038B/Grok-4.5.verdict.json; git mv evidence/reviews/REL-038B/Qwen3.7-Max.verdict.json reviews/REL-038B/Qwen3.7-Max.verdict.json; git mv evidence/reviews/REL-038C/GLM-5.2.verdict.json reviews/REL-038C/GLM-5.2.verdict.json; git mv evidence/reviews/REL-038C/Grok-4.5.verdict.json reviews/REL-038C/Grok-4.5.verdict.json; git mv evidence/reviews/REL-038C/Qwen3.7-Max.verdict.json reviews/REL-038C/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RES-012A/DeepSeek-V4-Pro.verdict.json reviews/RES-012A/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RES-012A/Gemini-3.1-Pro.verdict.json reviews/RES-012A/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RES-012A/Qwen3.6-40B.verdict.json reviews/RES-012A/Qwen3.6-40B.verdict.json; git mv evidence/reviews/RES-012A/REVIEW-PACK.md reviews/RES-012A/REVIEW-PACK.md; git mv evidence/reviews/RES-012B/DeepSeek-V4-Pro.verdict.json reviews/RES-012B/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RES-012B/GREEN-focused.txt reviews/RES-012B/GREEN-focused.txt; git mv evidence/reviews/RES-012B/Gemini-3.1-Pro.verdict.json reviews/RES-012B/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RES-012B/Grok-4.5.verdict.json reviews/RES-012B/Grok-4.5.verdict.json; git mv evidence/reviews/RES-012B/RED-reproduction.txt reviews/RES-012B/RED-reproduction.txt; git mv evidence/reviews/RES-012B/REVIEW-LOG.md reviews/RES-012B/REVIEW-LOG.md; git mv evidence/reviews/RES-012B/evidence/DEPLOIEMENT-REEL.txt reviews/RES-012B/evidence/DEPLOIEMENT-REEL.txt; git mv evidence/reviews/RES-012B/evidence/GREEN.txt reviews/RES-012B/evidence/GREEN.txt; git mv evidence/reviews/RES-012B/evidence/RED.txt reviews/RES-012B/evidence/RED.txt; git mv evidence/reviews/RES-012B/evidence/mesure-litellm.txt reviews/RES-012B/evidence/mesure-litellm.txt; git mv evidence/reviews/REV-043/DATA-002/DeepSeek-V4-Pro.verdict.json reviews/REV-043/DATA-002/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/REV-043/DATA-002/Grok-4.5.verdict.json reviews/REV-043/DATA-002/Grok-4.5.verdict.json; git mv evidence/reviews/REV-043/DATA-002/Qwen3.7-Max.verdict.json reviews/REV-043/DATA-002/Qwen3.7-Max.verdict.json; git mv evidence/reviews/REV-043/DATA-002/tally.json reviews/REV-043/DATA-002/tally.json; git mv evidence/reviews/REV-043/DATA-003/DeepSeek-V4-Pro.verdict.json reviews/REV-043/DATA-003/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/REV-043/DATA-003/Grok-4.5.verdict.json reviews/REV-043/DATA-003/Grok-4.5.verdict.json; git mv evidence/reviews/REV-043/DATA-003/Qwen3.7-Max.verdict.json reviews/REV-043/DATA-003/Qwen3.7-Max.verdict.json; git mv evidence/reviews/REV-043/DATA-003/tally.json reviews/REV-043/DATA-003/tally.json; git mv evidence/reviews/REV-043/WEB-001/DeepSeek-V4-Pro.verdict.json reviews/REV-043/WEB-001/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/REV-043/WEB-001/Grok-4.5.verdict.json reviews/REV-043/WEB-001/Grok-4.5.verdict.json; git mv evidence/reviews/REV-043/WEB-001/Qwen3.7-Max.verdict.json reviews/REV-043/WEB-001/Qwen3.7-Max.verdict.json; git mv evidence/reviews/REV-043/WEB-001/tally.json reviews/REV-043/WEB-001/tally.json; git mv evidence/reviews/ROSTER-MAJ-PR511-v1/DeepSeek-V4-Pro-0813.verdict.json reviews/ROSTER-MAJ-PR511-v1/DeepSeek-V4-Pro-0813.verdict.json; git mv evidence/reviews/ROSTER-MAJ-PR511-v1/Kimi-2.7.verdict.json reviews/ROSTER-MAJ-PR511-v1/Kimi-2.7.verdict.json; git mv evidence/reviews/ROSTER-MAJ-PR511-v1/Qwen3.8-2.4T.verdict.json reviews/ROSTER-MAJ-PR511-v1/Qwen3.8-2.4T.verdict.json; git mv evidence/reviews/ROSTER-MAJ-PR511-v1/RECU.json reviews/ROSTER-MAJ-PR511-v1/RECU.json; git mv evidence/reviews/S-TAIL-tailscale-optin/Gemini-3.1-Pro.verdict.json reviews/S-TAIL-tailscale-optin/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/S-TAIL-tailscale-optin/Grok-4.5.verdict.json reviews/S-TAIL-tailscale-optin/Grok-4.5.verdict.json; git mv evidence/reviews/S-TAIL-tailscale-optin/Qwen3.7-Max.verdict.json reviews/S-TAIL-tailscale-optin/Qwen3.7-Max.verdict.json; git mv evidence/reviews/S-TAIL-tailscale-optin/pack.md reviews/S-TAIL-tailscale-optin/pack.md; git mv evidence/reviews/S-ZEN-cpu-zendnn/Gemini-3.1-Pro.verdict.json reviews/S-ZEN-cpu-zendnn/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/S-ZEN-cpu-zendnn/Grok-4.5.verdict.json reviews/S-ZEN-cpu-zendnn/Grok-4.5.verdict.json; git mv evidence/reviews/S-ZEN-cpu-zendnn/Qwen3.7-Max.verdict.json reviews/S-ZEN-cpu-zendnn/Qwen3.7-Max.verdict.json; git mv evidence/reviews/S-ZEN-cpu-zendnn/pack.md reviews/S-ZEN-cpu-zendnn/pack.md; git mv evidence/reviews/S1-gpu-rocm-runtime/Gemini-3.1-Pro.verdict.json reviews/S1-gpu-rocm-runtime/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/S1-gpu-rocm-runtime/Grok-4.5.verdict.json reviews/S1-gpu-rocm-runtime/Grok-4.5.verdict.json; git mv evidence/reviews/S1-gpu-rocm-runtime/Qwen3.7-Max.verdict.json reviews/S1-gpu-rocm-runtime/Qwen3.7-Max.verdict.json; git mv evidence/reviews/S1-gpu-rocm-runtime/pack.md reviews/S1-gpu-rocm-runtime/pack.md; git mv evidence/reviews/S2-gpu-reservation-vendor/Gemini-3.1-Pro.verdict.json reviews/S2-gpu-reservation-vendor/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/S2-gpu-reservation-vendor/Grok-4.5.verdict.json reviews/S2-gpu-reservation-vendor/Grok-4.5.verdict.json; git mv evidence/reviews/S2-gpu-reservation-vendor/Qwen3.7-Max.verdict.json reviews/S2-gpu-reservation-vendor/Qwen3.7-Max.verdict.json; git mv evidence/reviews/S2-gpu-reservation-vendor/pack.md reviews/S2-gpu-reservation-vendor/pack.md; git mv evidence/reviews/S3-amd-runtimes-k3s-gpu/Gemini-3.1-Pro.verdict.json reviews/S3-amd-runtimes-k3s-gpu/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/S3-amd-runtimes-k3s-gpu/Grok-4.5.verdict.json reviews/S3-amd-runtimes-k3s-gpu/Grok-4.5.verdict.json; git mv evidence/reviews/S3-amd-runtimes-k3s-gpu/Qwen3.7-Max.verdict.json reviews/S3-amd-runtimes-k3s-gpu/Qwen3.7-Max.verdict.json; git mv evidence/reviews/S3-amd-runtimes-k3s-gpu/pack.md reviews/S3-amd-runtimes-k3s-gpu/pack.md; git mv evidence/reviews/S3b-amd-vulkan-runtime/Gemini-3.1-Pro.verdict.json reviews/S3b-amd-vulkan-runtime/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/S3b-amd-vulkan-runtime/Grok-4.5.verdict.json reviews/S3b-amd-vulkan-runtime/Grok-4.5.verdict.json; git mv evidence/reviews/S3b-amd-vulkan-runtime/Qwen3.7-Max.verdict.json reviews/S3b-amd-vulkan-runtime/Qwen3.7-Max.verdict.json; git mv evidence/reviews/S3b-amd-vulkan-runtime/pack.md reviews/S3b-amd-vulkan-runtime/pack.md; git mv evidence/reviews/S4-engine-vendor-filter/Gemini-3.1-Pro.verdict.json reviews/S4-engine-vendor-filter/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/S4-engine-vendor-filter/Grok-4.5.verdict.json reviews/S4-engine-vendor-filter/Grok-4.5.verdict.json; git mv evidence/reviews/S4-engine-vendor-filter/Qwen3.7-Max.verdict.json reviews/S4-engine-vendor-filter/Qwen3.7-Max.verdict.json; git mv evidence/reviews/S4-engine-vendor-filter/pack.md reviews/S4-engine-vendor-filter/pack.md; git mv evidence/reviews/S5-intel-openvino/Gemini-3.1-Pro.verdict.json reviews/S5-intel-openvino/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/S5-intel-openvino/Grok-4.5.verdict.json reviews/S5-intel-openvino/Grok-4.5.verdict.json; git mv evidence/reviews/S5-intel-openvino/Qwen3.7-Max.verdict.json reviews/S5-intel-openvino/Qwen3.7-Max.verdict.json; git mv evidence/reviews/S5-intel-openvino/pack.md reviews/S5-intel-openvino/pack.md; git mv evidence/reviews/S6-surface-filtre-vendor/Gemini-3.1-Pro.verdict.json reviews/S6-surface-filtre-vendor/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/S6-surface-filtre-vendor/Grok-4.5.verdict.json reviews/S6-surface-filtre-vendor/Grok-4.5.verdict.json; git mv evidence/reviews/S6-surface-filtre-vendor/Qwen3.7-Max.verdict.json reviews/S6-surface-filtre-vendor/Qwen3.7-Max.verdict.json; git mv evidence/reviews/S6-surface-filtre-vendor/pack.md reviews/S6-surface-filtre-vendor/pack.md; git mv evidence/reviews/S6b-engine-dropdown-vendor/Gemini-3.1-Pro.verdict.json reviews/S6b-engine-dropdown-vendor/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/S6b-engine-dropdown-vendor/Grok-4.5.verdict.json reviews/S6b-engine-dropdown-vendor/Grok-4.5.verdict.json; git mv evidence/reviews/S6b-engine-dropdown-vendor/Qwen3.7-Max.verdict.json reviews/S6b-engine-dropdown-vendor/Qwen3.7-Max.verdict.json; git mv evidence/reviews/S6b-engine-dropdown-vendor/pack.md reviews/S6b-engine-dropdown-vendor/pack.md; git mv evidence/reviews/S7-cluster-view/Gemini-3.1-Pro.verdict.json reviews/S7-cluster-view/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/S7-cluster-view/Grok-4.5.verdict.json reviews/S7-cluster-view/Grok-4.5.verdict.json; git mv evidence/reviews/S7-cluster-view/Qwen3.7-Max.verdict.json reviews/S7-cluster-view/Qwen3.7-Max.verdict.json; git mv evidence/reviews/S7-cluster-view/pack.md reviews/S7-cluster-view/pack.md; git mv evidence/reviews/SAST-042/README.md reviews/SAST-042/README.md; git mv evidence/reviews/SAST-042/civ/DeepSeek-V4-Pro.verdict.json reviews/SAST-042/civ/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/SAST-042/civ/Gemini-3.1-Pro.verdict.json reviews/SAST-042/civ/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/SAST-042/civ/LongCat-2.0.verdict.json reviews/SAST-042/civ/LongCat-2.0.verdict.json; git mv evidence/reviews/SEC-SVCSPEC-INJECT/DeepSeek-V4-Pro.verdict.json reviews/SEC-SVCSPEC-INJECT/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/SEC-SVCSPEC-INJECT/Gemini-3.1-Pro.verdict.json reviews/SEC-SVCSPEC-INJECT/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/SEC-SVCSPEC-INJECT/LongCat-2.0.verdict.json reviews/SEC-SVCSPEC-INJECT/LongCat-2.0.verdict.json; git mv evidence/reviews/SEC-YAML-INJECT/DeepSeek-V4-Pro.verdict.json reviews/SEC-YAML-INJECT/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/SEC-YAML-INJECT/Gemini-3.1-Pro.verdict.json reviews/SEC-YAML-INJECT/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/SEC-YAML-INJECT/LongCat-2.0.verdict.json reviews/SEC-YAML-INJECT/LongCat-2.0.verdict.json; git mv evidence/reviews/SEC1-gitguardian-v2/Gemini-3.1-Pro.verdict.json reviews/SEC1-gitguardian-v2/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/SEC1-gitguardian-v2/LongCat-2.0.verdict.json reviews/SEC1-gitguardian-v2/LongCat-2.0.verdict.json; git mv evidence/reviews/SEC1-gitguardian-v2/Qwen3.7-Max.verdict.json reviews/SEC1-gitguardian-v2/Qwen3.7-Max.verdict.json; git mv evidence/reviews/SEC1-gitguardian/Gemini-3.1-Pro.verdict.json reviews/SEC1-gitguardian/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/SEC1-gitguardian/LongCat-2.0.verdict.json reviews/SEC1-gitguardian/LongCat-2.0.verdict.json; git mv evidence/reviews/SEC1-gitguardian/Qwen3.7-Max.verdict.json reviews/SEC1-gitguardian/Qwen3.7-Max.verdict.json; git mv evidence/reviews/SECRET-020A/civ/DeepSeek-V4-Pro.verdict.json reviews/SECRET-020A/civ/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/SECRET-020A/civ/Gemini-3.1-Pro.verdict.json reviews/SECRET-020A/civ/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/SECRET-020A/civ/LongCat-2.0.verdict.json reviews/SECRET-020A/civ/LongCat-2.0.verdict.json; git mv evidence/reviews/SECRET-020A/civ2/DeepSeek-V4-Pro.verdict.json reviews/SECRET-020A/civ2/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/SECRET-020A/civ2/Gemini-3.1-Pro.verdict.json reviews/SECRET-020A/civ2/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/SECRET-020A/civ2/LongCat-2.0.verdict.json reviews/SECRET-020A/civ2/LongCat-2.0.verdict.json; git mv evidence/reviews/SECRET-020A/civ3/DeepSeek-V4-Pro.verdict.json reviews/SECRET-020A/civ3/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/SECRET-020A/civ3/Gemini-3.1-Pro.verdict.json reviews/SECRET-020A/civ3/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/SECRET-020A/civ3/LongCat-2.0.verdict.json reviews/SECRET-020A/civ3/LongCat-2.0.verdict.json; git mv evidence/reviews/SECRET-020A/civ4/DeepSeek-V4-Pro.verdict.json reviews/SECRET-020A/civ4/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/SECRET-020A/civ4/Gemini-3.1-Pro.verdict.json reviews/SECRET-020A/civ4/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/SECRET-020A/civ4/LongCat-2.0.verdict.json reviews/SECRET-020A/civ4/LongCat-2.0.verdict.json; git mv evidence/reviews/SECRET-020B-t2/DeepSeek-V4-Pro.verdict.json reviews/SECRET-020B-t2/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/SECRET-020B-t2/Gemini-3.1-Pro-OR.verdict.json reviews/SECRET-020B-t2/Gemini-3.1-Pro-OR.verdict.json; git mv evidence/reviews/SECRET-020B-t2/Grok-4.5.verdict.json reviews/SECRET-020B-t2/Grok-4.5.verdict.json; git mv evidence/reviews/SECRET-020B-t3/DeepSeek-V4-Pro.verdict.json reviews/SECRET-020B-t3/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/SECRET-020B-t3/Gemini-3.1-Pro-OR.verdict.json reviews/SECRET-020B-t3/Gemini-3.1-Pro-OR.verdict.json; git mv evidence/reviews/SECRET-020B-t3/Grok-4.5.verdict.json reviews/SECRET-020B-t3/Grok-4.5.verdict.json; git mv evidence/reviews/SECRET-020B/DeepSeek-V4-Pro.verdict.json reviews/SECRET-020B/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/SECRET-020B/Gemini-3.1-Pro-OR.verdict.json reviews/SECRET-020B/Gemini-3.1-Pro-OR.verdict.json; git mv evidence/reviews/SECRET-020B/Grok-4.5.verdict.json reviews/SECRET-020B/Grok-4.5.verdict.json; git mv evidence/reviews/SECRET-020C/DeepSeek-V4-Pro.verdict.json reviews/SECRET-020C/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/SECRET-020C/LongCat-2.0.verdict.json reviews/SECRET-020C/LongCat-2.0.verdict.json; git mv evidence/reviews/SECRET-020C/Qwen3.7-Max.verdict.json reviews/SECRET-020C/Qwen3.7-Max.verdict.json; git mv evidence/reviews/SSH-007/Grok-4.5.verdict.json reviews/SSH-007/Grok-4.5.verdict.json; git mv evidence/reviews/SSH-007/Kimi-2.7.verdict.json reviews/SSH-007/Kimi-2.7.verdict.json; git mv evidence/reviews/SSH-007/Qwen3.7-Max.verdict.json reviews/SSH-007/Qwen3.7-Max.verdict.json; git mv evidence/reviews/SSH-021/Grok-4.5.verdict.json reviews/SSH-021/Grok-4.5.verdict.json; git mv evidence/reviews/SSH-021/MiMo-Pro-V2.verdict.json reviews/SSH-021/MiMo-Pro-V2.verdict.json; git mv evidence/reviews/SSH-021/Qwen3.7-Max.verdict.json reviews/SSH-021/Qwen3.7-Max.verdict.json; git mv evidence/reviews/SSH-030/DeepSeek-V4-Pro.verdict.json reviews/SSH-030/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/SSH-030/Gemini-3.1-Pro.verdict.json reviews/SSH-030/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/SSH-030/Qwen3.7-Max.verdict.json reviews/SSH-030/Qwen3.7-Max.verdict.json; git mv evidence/reviews/SUPPLY-018/Grok-4.5.verdict.json reviews/SUPPLY-018/Grok-4.5.verdict.json; git mv evidence/reviews/SUPPLY-018/MiMo-Pro-V2.verdict.json reviews/SUPPLY-018/MiMo-Pro-V2.verdict.json; git mv evidence/reviews/SUPPLY-018/Qwen3.7-Max.verdict.json reviews/SUPPLY-018/Qwen3.7-Max.verdict.json; git mv evidence/reviews/TRUST-019A/civ/DeepSeek-V4-Pro.verdict.json reviews/TRUST-019A/civ/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/TRUST-019A/civ/Gemini-3.1-Pro.verdict.json reviews/TRUST-019A/civ/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/TRUST-019A/civ/LongCat-2.0.verdict.json reviews/TRUST-019A/civ/LongCat-2.0.verdict.json; git mv evidence/reviews/TRUST-019A/civ2/DeepSeek-V4-Pro.verdict.json reviews/TRUST-019A/civ2/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/TRUST-019A/civ2/Gemini-3.1-Pro.verdict.json reviews/TRUST-019A/civ2/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/TRUST-019A/civ2/LongCat-2.0.verdict.json reviews/TRUST-019A/civ2/LongCat-2.0.verdict.json; git mv evidence/reviews/TRUST-019B/DeepSeek-V4-Pro.verdict.json reviews/TRUST-019B/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/TRUST-019B/GREEN-focused.txt reviews/TRUST-019B/GREEN-focused.txt; git mv evidence/reviews/TRUST-019B/Gemini-3.1-Pro.verdict.json reviews/TRUST-019B/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/TRUST-019B/Qwen3.6-40B.verdict.json reviews/TRUST-019B/Qwen3.6-40B.verdict.json; git mv evidence/reviews/TRUST-019B/RED-reproduction.txt reviews/TRUST-019B/RED-reproduction.txt; git mv evidence/reviews/TRUST-019B/REVIEW-PACK.md reviews/TRUST-019B/REVIEW-PACK.md; git mv evidence/reviews/UI-039/DeepSeek-V4-Pro.verdict.json reviews/UI-039/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/UI-039/Gemini-3.1-Pro.verdict.json reviews/UI-039/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/UI-039/LongCat-2.0.verdict.json reviews/UI-039/LongCat-2.0.verdict.json; git mv evidence/reviews/UI-040/DeepSeek-V4-Pro.verdict.json reviews/UI-040/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/UI-040/Gemini-3.1-Pro.verdict.json reviews/UI-040/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/UI-040/LongCat-2.0.verdict.json reviews/UI-040/LongCat-2.0.verdict.json; git mv evidence/reviews/V1-FIX/GLM-5.2.verdict.json reviews/V1-FIX/GLM-5.2.verdict.json; git mv evidence/reviews/V1-FIX/Grok-4.5.verdict.json reviews/V1-FIX/Grok-4.5.verdict.json; git mv evidence/reviews/V1-FIX/Qwen3.7-Max.verdict.json reviews/V1-FIX/Qwen3.7-Max.verdict.json; git mv evidence/reviews/WEB-001/final-sol-acceptance.review.json reviews/WEB-001/final-sol-acceptance.review.json; git mv evidence/reviews/WEB-001/final-sol-security.review.json reviews/WEB-001/final-sol-security.review.json; git mv evidence/reviews/WEB-001/final-tally.json reviews/WEB-001/final-tally.json; git mv evidence/reviews/WEB-001/final-terra-isolation.review.json reviews/WEB-001/final-terra-isolation.review.json; git mv evidence/reviews/WEB-001/prompt.md reviews/WEB-001/prompt.md; git mv evidence/reviews/WEB-001/round-2-prompt-manifest.md reviews/WEB-001/round-2-prompt-manifest.md; git mv evidence/reviews/WEB-001/round-2-sol-acceptance.review.json reviews/WEB-001/round-2-sol-acceptance.review.json; git mv evidence/reviews/WEB-001/round-2-sol-security.review.json reviews/WEB-001/round-2-sol-security.review.json; git mv evidence/reviews/WEB-001/round-2-tally.json reviews/WEB-001/round-2-tally.json; git mv evidence/reviews/WEB-001/round-2-terra-isolation.review.json reviews/WEB-001/round-2-terra-isolation.review.json; git mv evidence/reviews/WEB-015/Grok-4.5.verdict.json reviews/WEB-015/Grok-4.5.verdict.json; git mv evidence/reviews/WEB-015/MiMo-Pro-V2.verdict.json reviews/WEB-015/MiMo-Pro-V2.verdict.json; git mv evidence/reviews/WEB-015/Qwen3.7-Max.verdict.json reviews/WEB-015/Qwen3.7-Max.verdict.json; git mv evidence/reviews/WEB-016/GLM-5.2.verdict.json reviews/WEB-016/GLM-5.2.verdict.json; git mv evidence/reviews/WEB-016/Grok-4.5.verdict.json reviews/WEB-016/Grok-4.5.verdict.json; git mv evidence/reviews/WEB-016/Qwen3.7-Max.verdict.json reviews/WEB-016/Qwen3.7-Max.verdict.json; git mv evidence/reviews/WEB-017/Grok-4.5.verdict.json reviews/WEB-017/Grok-4.5.verdict.json; git mv evidence/reviews/WEB-017/MiMo-Pro-V2.verdict.json reviews/WEB-017/MiMo-Pro-V2.verdict.json; git mv evidence/reviews/WEB-017/Qwen3.7-Max.verdict.json reviews/WEB-017/Qwen3.7-Max.verdict.json; git mv evidence/reviews/WEB-034A/GLM-5.2.verdict.json reviews/WEB-034A/GLM-5.2.verdict.json; git mv evidence/reviews/WEB-034A/Grok-4.5.verdict.json reviews/WEB-034A/Grok-4.5.verdict.json; git mv evidence/reviews/WEB-034A/Qwen3.7-Max.verdict.json reviews/WEB-034A/Qwen3.7-Max.verdict.json; git mv evidence/reviews/WEB-034B/GLM-5.2.verdict.json reviews/WEB-034B/GLM-5.2.verdict.json; git mv evidence/reviews/WEB-034B/Grok-4.5.verdict.json reviews/WEB-034B/Grok-4.5.verdict.json; git mv evidence/reviews/WEB-034B/Qwen3.7-Max.verdict.json reviews/WEB-034B/Qwen3.7-Max.verdict.json; git mv evidence/reviews/wh-civ/GLM-5.2.verdict.json reviews/wh-civ/GLM-5.2.verdict.json; git mv evidence/reviews/wh-civ/Gemini-3.1-Pro.verdict.json reviews/wh-civ/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/wh-civ/Grok-4.5.verdict.json reviews/wh-civ/Grok-4.5.verdict.json (ordre inverse), puis git commit --amend ou nouveau commit de restauration ; ne PAS exécuter cette vague sans avoir d'abord validé les vagues précédentes."
+      "rollback": "Vague 0 : 407 chemin(s). Rollback = git mv evidence/reviews/BINDING.txt reviews/BINDING.txt; git mv evidence/reviews/RC1-001-PR431-v10/DeepSeek-V4-Pro.verdict.json reviews/RC1-001-PR431-v10/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-001-PR431-v10/Gemini-3.1-Pro.verdict.json reviews/RC1-001-PR431-v10/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-001-PR431-v10/Qwen3.7-Max.verdict.json reviews/RC1-001-PR431-v10/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-001-PR431-v2/DeepSeek-V4-Pro.verdict.json reviews/RC1-001-PR431-v2/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-001-PR431-v2/Gemini-3.1-Pro.verdict.json reviews/RC1-001-PR431-v2/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-001-PR431-v2/Qwen3.7-Max.verdict.json reviews/RC1-001-PR431-v2/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-001-PR431-v3/DeepSeek-V4-Pro.verdict.json reviews/RC1-001-PR431-v3/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-001-PR431-v3/Gemini-3.1-Pro.verdict.json reviews/RC1-001-PR431-v3/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-001-PR431-v3/Qwen3.7-Max.verdict.json reviews/RC1-001-PR431-v3/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-001-PR431-v4/DeepSeek-V4-Pro.verdict.json reviews/RC1-001-PR431-v4/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-001-PR431-v4/Gemini-3.1-Pro.verdict.json reviews/RC1-001-PR431-v4/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-001-PR431-v4/Qwen3.7-Max.verdict.json reviews/RC1-001-PR431-v4/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-001-PR431-v5/DeepSeek-V4-Pro.verdict.json reviews/RC1-001-PR431-v5/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-001-PR431-v5/Gemini-3.1-Pro.verdict.json reviews/RC1-001-PR431-v5/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-001-PR431-v5/Qwen3.7-Max.verdict.json reviews/RC1-001-PR431-v5/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-001-PR431-v6/DeepSeek-V4-Pro.verdict.json reviews/RC1-001-PR431-v6/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-001-PR431-v6/Gemini-3.1-Pro.verdict.json reviews/RC1-001-PR431-v6/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-001-PR431-v6/Qwen3.7-Max.verdict.json reviews/RC1-001-PR431-v6/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-001-PR431-v7/DeepSeek-V4-Pro.verdict.json reviews/RC1-001-PR431-v7/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-001-PR431-v7/Gemini-3.1-Pro.verdict.json reviews/RC1-001-PR431-v7/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-001-PR431-v7/Qwen3.7-Max.verdict.json reviews/RC1-001-PR431-v7/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-001-PR431-v8/DeepSeek-V4-Pro.verdict.json reviews/RC1-001-PR431-v8/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-001-PR431-v8/Gemini-3.1-Pro.verdict.json reviews/RC1-001-PR431-v8/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-001-PR431-v8/Qwen3.7-Max.verdict.json reviews/RC1-001-PR431-v8/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-001-PR431-v9/DeepSeek-V4-Pro.verdict.json reviews/RC1-001-PR431-v9/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-001-PR431-v9/Gemini-3.1-Pro.verdict.json reviews/RC1-001-PR431-v9/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-001-PR431-v9/Qwen3.7-Max.verdict.json reviews/RC1-001-PR431-v9/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-002-PR432-v2/DeepSeek-V4-Pro.verdict.json reviews/RC1-002-PR432-v2/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-002-PR432-v2/Gemini-3.1-Pro.verdict.json reviews/RC1-002-PR432-v2/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-002-PR432-v2/Qwen3.7-Max.verdict.json reviews/RC1-002-PR432-v2/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-002-PR432/DeepSeek-V4-Pro.verdict.json reviews/RC1-002-PR432/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-002-PR432/Gemini-3.1-Pro.verdict.json reviews/RC1-002-PR432/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-002-PR432/Qwen3.7-Max.verdict.json reviews/RC1-002-PR432/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-003-PR489-v2/DeepSeek-V4-Pro.verdict.json reviews/RC1-003-PR489-v2/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-003-PR489-v2/Gemini-3.1-Pro.verdict.json reviews/RC1-003-PR489-v2/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-003-PR489-v2/Qwen3.7-Max.verdict.json reviews/RC1-003-PR489-v2/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-003-PR489-v3/DeepSeek-V4-Pro.verdict.json reviews/RC1-003-PR489-v3/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-003-PR489-v3/Gemini-3.1-Pro.verdict.json reviews/RC1-003-PR489-v3/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-003-PR489-v3/Qwen3.7-Max.verdict.json reviews/RC1-003-PR489-v3/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-003-PR489-v4/DeepSeek-V4-Pro.verdict.json reviews/RC1-003-PR489-v4/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-003-PR489-v4/Gemini-3.1-Pro.verdict.json reviews/RC1-003-PR489-v4/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-003-PR489-v4/Qwen3.7-Max.verdict.json reviews/RC1-003-PR489-v4/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-003-PR489-v6/DeepSeek-V4-Pro.verdict.json reviews/RC1-003-PR489-v6/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-003-PR489-v6/Gemini-3.1-Pro.verdict.json reviews/RC1-003-PR489-v6/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-003-PR489-v6/Qwen3.7-Max.verdict.json reviews/RC1-003-PR489-v6/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-003-PR489-v7/Gemini-3.1-Pro.verdict.json reviews/RC1-003-PR489-v7/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-003-PR489-v7/Qwen3.7-Max.verdict.json reviews/RC1-003-PR489-v7/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-003-PR489-v8/Gemini-3.1-Pro.verdict.json reviews/RC1-003-PR489-v8/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-003-PR489-v8/Kimi-2.7.verdict.json reviews/RC1-003-PR489-v8/Kimi-2.7.verdict.json; git mv evidence/reviews/RC1-003-PR489-v8/Qwen3.7-Max.verdict.json reviews/RC1-003-PR489-v8/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-003-PR489/DeepSeek-V4-Pro.verdict.json reviews/RC1-003-PR489/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-003-PR489/Gemini-3.1-Pro.verdict.json reviews/RC1-003-PR489/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-003-PR489/Qwen3.7-Max.verdict.json reviews/RC1-003-PR489/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-004-PR497-v2/DeepSeek-V4-Pro.verdict.json reviews/RC1-004-PR497-v2/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-004-PR497-v2/Gemini-3.1-Pro.verdict.json reviews/RC1-004-PR497-v2/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-004-PR497-v2/Qwen3.7-Max.verdict.json reviews/RC1-004-PR497-v2/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-004-PR497-v3/DeepSeek-V4-Pro.verdict.json reviews/RC1-004-PR497-v3/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-004-PR497-v3/Gemini-3.1-Pro.verdict.json reviews/RC1-004-PR497-v3/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-004-PR497-v3/Qwen3.7-Max.verdict.json reviews/RC1-004-PR497-v3/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-004-PR497-v4/Gemini-3.1-Pro.verdict.json reviews/RC1-004-PR497-v4/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-004-PR497-v4/MiMo-Pro-V2.verdict.json reviews/RC1-004-PR497-v4/MiMo-Pro-V2.verdict.json; git mv evidence/reviews/RC1-004-PR497-v4/Qwen3.7-Max.verdict.json reviews/RC1-004-PR497-v4/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-004-PR497-v4/RECU.json reviews/RC1-004-PR497-v4/RECU.json; git mv evidence/reviews/RC1-004-PR497-v5/Gemini-3.1-Pro.verdict.json reviews/RC1-004-PR497-v5/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-004-PR497-v5/MiMo-Pro-V2.verdict.json reviews/RC1-004-PR497-v5/MiMo-Pro-V2.verdict.json; git mv evidence/reviews/RC1-004-PR497-v5/Qwen3.7-Max.verdict.json reviews/RC1-004-PR497-v5/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-004-PR497-v5/RECU.json reviews/RC1-004-PR497-v5/RECU.json; git mv evidence/reviews/RC1-004-PR497/DeepSeek-V4-Pro.verdict.json reviews/RC1-004-PR497/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-004-PR497/Gemini-3.1-Pro.verdict.json reviews/RC1-004-PR497/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-004-PR497/Qwen3.7-Max.verdict.json reviews/RC1-004-PR497/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-007-PR490-v2/DeepSeek-V4-Pro.verdict.json reviews/RC1-007-PR490-v2/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-007-PR490-v2/Gemini-3.1-Pro.verdict.json reviews/RC1-007-PR490-v2/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-007-PR490-v2/Kimi-2.7.verdict.json reviews/RC1-007-PR490-v2/Kimi-2.7.verdict.json; git mv evidence/reviews/RC1-007-PR490-v3/Gemini-3.1-Pro.verdict.json reviews/RC1-007-PR490-v3/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-007-PR490-v3/MiMo-Pro-V2.verdict.json reviews/RC1-007-PR490-v3/MiMo-Pro-V2.verdict.json; git mv evidence/reviews/RC1-007-PR490-v3/Qwen3.7-Max.verdict.json reviews/RC1-007-PR490-v3/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-007-PR490-v4/DeepSeek-V4-Pro.verdict.json reviews/RC1-007-PR490-v4/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-007-PR490-v4/Gemini-3.1-Pro.verdict.json reviews/RC1-007-PR490-v4/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-007-PR490-v4/MiMo-Pro-V2.verdict.json reviews/RC1-007-PR490-v4/MiMo-Pro-V2.verdict.json; git mv evidence/reviews/RC1-007-PR490/DeepSeek-V4-Pro.verdict.json reviews/RC1-007-PR490/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-007-PR490/Gemini-3.1-Pro.verdict.json reviews/RC1-007-PR490/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-007-PR490/Kimi-2.7.verdict.json reviews/RC1-007-PR490/Kimi-2.7.verdict.json; git mv evidence/reviews/RC1-008-PR496-v2/DeepSeek-V4-Pro.verdict.json reviews/RC1-008-PR496-v2/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-008-PR496-v2/Gemini-3.1-Pro.verdict.json reviews/RC1-008-PR496-v2/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-008-PR496-v2/MiMo-Pro-V2.verdict.json reviews/RC1-008-PR496-v2/MiMo-Pro-V2.verdict.json; git mv evidence/reviews/RC1-008-PR496-v4/DeepSeek-V4-Pro.verdict.json reviews/RC1-008-PR496-v4/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-008-PR496-v4/Gemini-3.1-Pro.verdict.json reviews/RC1-008-PR496-v4/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-008-PR496-v4/Qwen3.7-Max.verdict.json reviews/RC1-008-PR496-v4/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-008-PR496-v5/DeepSeek-V4-Pro.verdict.json reviews/RC1-008-PR496-v5/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-008-PR496-v5/Gemini-3.1-Pro.verdict.json reviews/RC1-008-PR496-v5/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-008-PR496-v5/MiMo-Pro-V2.verdict.json reviews/RC1-008-PR496-v5/MiMo-Pro-V2.verdict.json; git mv evidence/reviews/RC1-008-PR496/DeepSeek-V4-Pro.verdict.json reviews/RC1-008-PR496/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-008-PR496/Gemini-3.1-Pro.verdict.json reviews/RC1-008-PR496/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-008-PR496/Kimi-2.7.verdict.json reviews/RC1-008-PR496/Kimi-2.7.verdict.json; git mv evidence/reviews/RC1-009-PR500-v1/Gemini-3.1-Pro.verdict.json reviews/RC1-009-PR500-v1/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-009-PR500-v1/MiMo-Pro-V2.verdict.json reviews/RC1-009-PR500-v1/MiMo-Pro-V2.verdict.json; git mv evidence/reviews/RC1-009-PR500-v2/DeepSeek-V4-Pro.verdict.json reviews/RC1-009-PR500-v2/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-009-PR500-v2/Gemini-3.1-Pro.verdict.json reviews/RC1-009-PR500-v2/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-009-PR500-v2/MiMo-Pro-V2.verdict.json reviews/RC1-009-PR500-v2/MiMo-Pro-V2.verdict.json; git mv evidence/reviews/RC1-009-PR500-v3/Gemini-3.1-Pro.verdict.json reviews/RC1-009-PR500-v3/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-009-PR500-v3/MiMo-Pro-V2.verdict.json reviews/RC1-009-PR500-v3/MiMo-Pro-V2.verdict.json; git mv evidence/reviews/RC1-009-PR500-v3/RECU.json reviews/RC1-009-PR500-v3/RECU.json; git mv evidence/reviews/RC1-009/DeepSeek-V4-Pro.verdict.json reviews/RC1-009/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-009/Gemini-3.1-Pro.verdict.json reviews/RC1-009/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-009/Kimi-2.7.verdict.json reviews/RC1-009/Kimi-2.7.verdict.json; git mv evidence/reviews/RC1-009/RECU.json reviews/RC1-009/RECU.json; git mv evidence/reviews/RC1-010-lot0-PR501-v1/Gemini-3.1-Pro.verdict.json reviews/RC1-010-lot0-PR501-v1/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-010-lot0-PR501-v1/Qwen3.7-Max.verdict.json reviews/RC1-010-lot0-PR501-v1/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-010-lot0-PR501-v2/Gemini-3.1-Pro.verdict.json reviews/RC1-010-lot0-PR501-v2/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-010-lot0-PR501-v2/Qwen3.7-Max.verdict.json reviews/RC1-010-lot0-PR501-v2/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-010-lot0-PR501-v2/RECU.json reviews/RC1-010-lot0-PR501-v2/RECU.json; git mv evidence/reviews/RC1-010-lot1-PR502-v1/DeepSeek-V4-Pro.verdict.json reviews/RC1-010-lot1-PR502-v1/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-010-lot1-PR502-v1/Gemini-3.1-Pro.verdict.json reviews/RC1-010-lot1-PR502-v1/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-010-lot1-PR502-v1/MiMo-Pro-V2.verdict.json reviews/RC1-010-lot1-PR502-v1/MiMo-Pro-V2.verdict.json; git mv evidence/reviews/RC1-010-lot1-PR502-v1/RECU.json reviews/RC1-010-lot1-PR502-v1/RECU.json; git mv evidence/reviews/RC1-010-lot2-PR503-v1/DeepSeek-V4-Pro.verdict.json reviews/RC1-010-lot2-PR503-v1/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-010-lot2-PR503-v1/Gemini-3.1-Pro.verdict.json reviews/RC1-010-lot2-PR503-v1/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-010-lot2-PR503-v1/Qwen3.7-Max.verdict.json reviews/RC1-010-lot2-PR503-v1/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-010-lot2-PR503-v2/DeepSeek-V4-Pro.verdict.json reviews/RC1-010-lot2-PR503-v2/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-010-lot2-PR503-v2/Gemini-3.1-Pro.verdict.json reviews/RC1-010-lot2-PR503-v2/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-010-lot2-PR503-v2/Qwen3.7-Max.verdict.json reviews/RC1-010-lot2-PR503-v2/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-010-lot2-PR503-v3/Gemini-3.1-Pro.verdict.json reviews/RC1-010-lot2-PR503-v3/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-010-lot2-PR503-v3/Qwen3.7-Max.verdict.json reviews/RC1-010-lot2-PR503-v3/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-010-lot2-PR503-v4/DeepSeek-V4-Pro.verdict.json reviews/RC1-010-lot2-PR503-v4/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-010-lot2-PR503-v4/Gemini-3.1-Pro.verdict.json reviews/RC1-010-lot2-PR503-v4/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-010-lot2-PR503-v4/Qwen3.7-Max.verdict.json reviews/RC1-010-lot2-PR503-v4/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-010-lot2-PR503-v4/RECU.json reviews/RC1-010-lot2-PR503-v4/RECU.json; git mv evidence/reviews/RC1-010-lot3-PR505-v1/DeepSeek-V4-Pro.verdict.json reviews/RC1-010-lot3-PR505-v1/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-010-lot3-PR505-v1/Kimi-2.7.verdict.json reviews/RC1-010-lot3-PR505-v1/Kimi-2.7.verdict.json; git mv evidence/reviews/RC1-010-lot3-PR505-v1/Qwen3.7-Max.verdict.json reviews/RC1-010-lot3-PR505-v1/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-010-lot3-PR505-v1/RECU.json reviews/RC1-010-lot3-PR505-v1/RECU.json; git mv evidence/reviews/RC1-010-lot3-PR505-v2/DeepSeek-V4-Pro.verdict.json reviews/RC1-010-lot3-PR505-v2/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-010-lot3-PR505-v2/Kimi-2.7.verdict.json reviews/RC1-010-lot3-PR505-v2/Kimi-2.7.verdict.json; git mv evidence/reviews/RC1-010-lot3-PR505-v2/Qwen3.7-Max.verdict.json reviews/RC1-010-lot3-PR505-v2/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-010-lot3-PR505-v2/RECU.json reviews/RC1-010-lot3-PR505-v2/RECU.json; git mv evidence/reviews/RC1-010-lot4-PR507-v1/DeepSeek-V4-Pro.verdict.json reviews/RC1-010-lot4-PR507-v1/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-010-lot4-PR507-v1/Kimi-2.7.verdict.json reviews/RC1-010-lot4-PR507-v1/Kimi-2.7.verdict.json; git mv evidence/reviews/RC1-010-lot4-PR507-v1/Qwen3.7-Max.verdict.json reviews/RC1-010-lot4-PR507-v1/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-010-lot4-PR507-v1/RECU.json reviews/RC1-010-lot4-PR507-v1/RECU.json; git mv evidence/reviews/RC1-010-lot5a-PR508-v1/Kimi-2.7.verdict.json reviews/RC1-010-lot5a-PR508-v1/Kimi-2.7.verdict.json; git mv evidence/reviews/RC1-010-lot5a-PR508-v1/Qwen3.7-Max.verdict.json reviews/RC1-010-lot5a-PR508-v1/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-010-lot5a-PR508-v1/RECU.json reviews/RC1-010-lot5a-PR508-v1/RECU.json; git mv evidence/reviews/RC1-010-lot5b-PR510-v1/DeepSeek-V4-Pro.verdict.json reviews/RC1-010-lot5b-PR510-v1/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-010-lot5b-PR510-v1/Kimi-2.7.verdict.json reviews/RC1-010-lot5b-PR510-v1/Kimi-2.7.verdict.json; git mv evidence/reviews/RC1-010-lot5b-PR510-v1/Qwen3.7-Max.verdict.json reviews/RC1-010-lot5b-PR510-v1/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-010-lot5b-PR510-v2/DeepSeek-V4-Pro.verdict.json reviews/RC1-010-lot5b-PR510-v2/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-010-lot5b-PR510-v2/Kimi-2.7.verdict.json reviews/RC1-010-lot5b-PR510-v2/Kimi-2.7.verdict.json; git mv evidence/reviews/RC1-010-lot5b-PR510-v2/Qwen3.7-Max.verdict.json reviews/RC1-010-lot5b-PR510-v2/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-010-lot5b-PR510-v2/RECU.json reviews/RC1-010-lot5b-PR510-v2/RECU.json; git mv evidence/reviews/RC1-010-lot5b-PR510-v3/Kimi-2.7.verdict.json reviews/RC1-010-lot5b-PR510-v3/Kimi-2.7.verdict.json; git mv evidence/reviews/RC1-010-lot5b-PR510-v3/Qwen3.7-Max.verdict.json reviews/RC1-010-lot5b-PR510-v3/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-010-lot5b-PR510-v4/DeepSeek-V4-Pro.verdict.json reviews/RC1-010-lot5b-PR510-v4/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-010-lot5b-PR510-v4/Kimi-2.7.verdict.json reviews/RC1-010-lot5b-PR510-v4/Kimi-2.7.verdict.json; git mv evidence/reviews/RC1-010-lot5b-PR510-v4/Qwen3.7-Max.verdict.json reviews/RC1-010-lot5b-PR510-v4/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-010-lot5b-PR510-v4/RECU.json reviews/RC1-010-lot5b-PR510-v4/RECU.json; git mv evidence/reviews/RC1-010-lot5c-PR516-v1/DeepSeek-V4-Pro.verdict.json reviews/RC1-010-lot5c-PR516-v1/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-010-lot5c-PR516-v1/Kimi-2.7.verdict.json reviews/RC1-010-lot5c-PR516-v1/Kimi-2.7.verdict.json; git mv evidence/reviews/RC1-010-lot5c-PR516-v1/Qwen3.7-Max.verdict.json reviews/RC1-010-lot5c-PR516-v1/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-010-lot5c-PR516-v1/RECU.json reviews/RC1-010-lot5c-PR516-v1/RECU.json; git mv evidence/reviews/RC1-446-PR-v1/DeepSeek-V4-Pro.verdict.json reviews/RC1-446-PR-v1/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-446-PR-v1/Gemini-3.1-Pro.verdict.json reviews/RC1-446-PR-v1/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-446-PR-v1/Qwen3.7-Max.verdict.json reviews/RC1-446-PR-v1/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-446-PR-v2/DeepSeek-V4-Pro.verdict.json reviews/RC1-446-PR-v2/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-446-PR-v2/Gemini-3.1-Pro.verdict.json reviews/RC1-446-PR-v2/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-446-PR-v2/Qwen3.7-Max.verdict.json reviews/RC1-446-PR-v2/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-446-PR-v3/DeepSeek-V4-Pro.verdict.json reviews/RC1-446-PR-v3/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-446-PR-v3/Gemini-3.1-Pro.verdict.json reviews/RC1-446-PR-v3/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-446-PR-v3/Qwen3.7-Max.verdict.json reviews/RC1-446-PR-v3/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-446-PR-v4/DeepSeek-V4-Pro.verdict.json reviews/RC1-446-PR-v4/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-446-PR-v4/Gemini-3.1-Pro.verdict.json reviews/RC1-446-PR-v4/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-446-PR-v4/Qwen3.7-Max.verdict.json reviews/RC1-446-PR-v4/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-446-PR-v5/DeepSeek-V4-Pro.verdict.json reviews/RC1-446-PR-v5/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-446-PR-v5/Gemini-3.1-Pro.verdict.json reviews/RC1-446-PR-v5/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-446-PR-v5/Qwen3.7-Max.verdict.json reviews/RC1-446-PR-v5/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-446-PR-v5/RECU.json reviews/RC1-446-PR-v5/RECU.json; git mv evidence/reviews/RC1-447-PR-v1/DeepSeek-V4-Pro.verdict.json reviews/RC1-447-PR-v1/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-447-PR-v1/Gemini-3.1-Pro.verdict.json reviews/RC1-447-PR-v1/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-447-PR-v1/Qwen3.7-Max.verdict.json reviews/RC1-447-PR-v1/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-447-PR-v2/DeepSeek-V4-Pro.verdict.json reviews/RC1-447-PR-v2/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-447-PR-v2/Gemini-3.1-Pro.verdict.json reviews/RC1-447-PR-v2/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-447-PR-v2/Qwen3.7-Max.verdict.json reviews/RC1-447-PR-v2/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-447-PR-v3/DeepSeek-V4-Pro.verdict.json reviews/RC1-447-PR-v3/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-447-PR-v3/Gemini-3.1-Pro.verdict.json reviews/RC1-447-PR-v3/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-447-PR-v3/Qwen3.7-Max.verdict.json reviews/RC1-447-PR-v3/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-447-PR-v4/DeepSeek-V4-Pro.verdict.json reviews/RC1-447-PR-v4/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-447-PR-v4/Gemini-3.1-Pro.verdict.json reviews/RC1-447-PR-v4/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-447-PR-v4/Qwen3.7-Max.verdict.json reviews/RC1-447-PR-v4/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-447-PR-v5/DeepSeek-V4-Pro.verdict.json reviews/RC1-447-PR-v5/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-447-PR-v5/Gemini-3.1-Pro.verdict.json reviews/RC1-447-PR-v5/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-447-PR-v5/Qwen3.7-Max.verdict.json reviews/RC1-447-PR-v5/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-459-PR517/DeepSeek-V4-Pro.verdict.json reviews/RC1-459-PR517/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-459-PR517/Gemini-3.1-Pro.verdict.json reviews/RC1-459-PR517/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-459-PR517/MiMo-Pro-V2.verdict.json reviews/RC1-459-PR517/MiMo-Pro-V2.verdict.json; git mv evidence/reviews/RC1-459-PR517/RECU.json reviews/RC1-459-PR517/RECU.json; git mv evidence/reviews/RC1-482-PR-v1/DeepSeek-V4-Pro.verdict.json reviews/RC1-482-PR-v1/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-482-PR-v1/Gemini-3.1-Pro.verdict.json reviews/RC1-482-PR-v1/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-482-PR-v1/Qwen3.7-Max.verdict.json reviews/RC1-482-PR-v1/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-487-v1/DeepSeek-V4-Pro.verdict.json reviews/RC1-487-v1/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-487-v1/Gemini-3.1-Pro.verdict.json reviews/RC1-487-v1/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-487-v1/MiMo-Pro-V2.verdict.json reviews/RC1-487-v1/MiMo-Pro-V2.verdict.json; git mv evidence/reviews/RC1-487-v1/RECU.json reviews/RC1-487-v1/RECU.json; git mv evidence/reviews/RC1-492-PR512/DeepSeek-V4-Pro.verdict.json reviews/RC1-492-PR512/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-492-PR512/MiMo-Pro-V2.verdict.json reviews/RC1-492-PR512/MiMo-Pro-V2.verdict.json; git mv evidence/reviews/RC1-492-PR512/Qwen3.7-Max.verdict.json reviews/RC1-492-PR512/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-492-PR512/RECU.json reviews/RC1-492-PR512/RECU.json; git mv evidence/reviews/RC1-493-PR-v1/DeepSeek-V4-Pro.verdict.json reviews/RC1-493-PR-v1/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-493-PR-v1/Gemini-3.1-Pro.verdict.json reviews/RC1-493-PR-v1/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-493-PR-v1/Qwen3.7-Max.verdict.json reviews/RC1-493-PR-v1/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-504-v1/DeepSeek-V4-Pro.verdict.json reviews/RC1-504-v1/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RC1-504-v1/Qwen3.7-Max.verdict.json reviews/RC1-504-v1/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-504-v1/RECU.json reviews/RC1-504-v1/RECU.json; git mv evidence/reviews/RC1-530/Gemini-3.1-Pro.verdict.json reviews/RC1-530/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RC1-530/MiMo-Pro-V2.verdict.json reviews/RC1-530/MiMo-Pro-V2.verdict.json; git mv evidence/reviews/RC1-530/Qwen3.7-Max.verdict.json reviews/RC1-530/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RC1-530/RECU.json reviews/RC1-530/RECU.json; git mv evidence/reviews/README.md reviews/README.md; git mv evidence/reviews/REG-029A/DeepSeek-V4-Pro.verdict.json reviews/REG-029A/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/REG-029A/Gemini-3.1-Pro.verdict.json reviews/REG-029A/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/REG-029A/Qwen3.7-Max.verdict.json reviews/REG-029A/Qwen3.7-Max.verdict.json; git mv evidence/reviews/REG-029B/DeepSeek-V4-Pro.verdict.json reviews/REG-029B/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/REG-029B/Gemini-3.1-Pro.verdict.json reviews/REG-029B/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/REG-029B/Qwen3.7-Max.verdict.json reviews/REG-029B/Qwen3.7-Max.verdict.json; git mv evidence/reviews/REL-038A/GLM-5.2.verdict.json reviews/REL-038A/GLM-5.2.verdict.json; git mv evidence/reviews/REL-038A/Grok-4.5.verdict.json reviews/REL-038A/Grok-4.5.verdict.json; git mv evidence/reviews/REL-038A/Qwen3.7-Max.verdict.json reviews/REL-038A/Qwen3.7-Max.verdict.json; git mv evidence/reviews/REL-038B/GLM-5.2.verdict.json reviews/REL-038B/GLM-5.2.verdict.json; git mv evidence/reviews/REL-038B/Grok-4.5.verdict.json reviews/REL-038B/Grok-4.5.verdict.json; git mv evidence/reviews/REL-038B/Qwen3.7-Max.verdict.json reviews/REL-038B/Qwen3.7-Max.verdict.json; git mv evidence/reviews/REL-038C/GLM-5.2.verdict.json reviews/REL-038C/GLM-5.2.verdict.json; git mv evidence/reviews/REL-038C/Grok-4.5.verdict.json reviews/REL-038C/Grok-4.5.verdict.json; git mv evidence/reviews/REL-038C/Qwen3.7-Max.verdict.json reviews/REL-038C/Qwen3.7-Max.verdict.json; git mv evidence/reviews/RES-012A/DeepSeek-V4-Pro.verdict.json reviews/RES-012A/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RES-012A/Gemini-3.1-Pro.verdict.json reviews/RES-012A/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RES-012A/Qwen3.6-40B.verdict.json reviews/RES-012A/Qwen3.6-40B.verdict.json; git mv evidence/reviews/RES-012A/REVIEW-PACK.md reviews/RES-012A/REVIEW-PACK.md; git mv evidence/reviews/RES-012B/DeepSeek-V4-Pro.verdict.json reviews/RES-012B/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/RES-012B/GREEN-focused.txt reviews/RES-012B/GREEN-focused.txt; git mv evidence/reviews/RES-012B/Gemini-3.1-Pro.verdict.json reviews/RES-012B/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/RES-012B/Grok-4.5.verdict.json reviews/RES-012B/Grok-4.5.verdict.json; git mv evidence/reviews/RES-012B/RED-reproduction.txt reviews/RES-012B/RED-reproduction.txt; git mv evidence/reviews/RES-012B/REVIEW-LOG.md reviews/RES-012B/REVIEW-LOG.md; git mv evidence/reviews/RES-012B/evidence/DEPLOIEMENT-REEL.txt reviews/RES-012B/evidence/DEPLOIEMENT-REEL.txt; git mv evidence/reviews/RES-012B/evidence/GREEN.txt reviews/RES-012B/evidence/GREEN.txt; git mv evidence/reviews/RES-012B/evidence/RED.txt reviews/RES-012B/evidence/RED.txt; git mv evidence/reviews/RES-012B/evidence/mesure-litellm.txt reviews/RES-012B/evidence/mesure-litellm.txt; git mv evidence/reviews/REV-043/DATA-002/DeepSeek-V4-Pro.verdict.json reviews/REV-043/DATA-002/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/REV-043/DATA-002/Grok-4.5.verdict.json reviews/REV-043/DATA-002/Grok-4.5.verdict.json; git mv evidence/reviews/REV-043/DATA-002/Qwen3.7-Max.verdict.json reviews/REV-043/DATA-002/Qwen3.7-Max.verdict.json; git mv evidence/reviews/REV-043/DATA-002/tally.json reviews/REV-043/DATA-002/tally.json; git mv evidence/reviews/REV-043/DATA-003/DeepSeek-V4-Pro.verdict.json reviews/REV-043/DATA-003/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/REV-043/DATA-003/Grok-4.5.verdict.json reviews/REV-043/DATA-003/Grok-4.5.verdict.json; git mv evidence/reviews/REV-043/DATA-003/Qwen3.7-Max.verdict.json reviews/REV-043/DATA-003/Qwen3.7-Max.verdict.json; git mv evidence/reviews/REV-043/DATA-003/tally.json reviews/REV-043/DATA-003/tally.json; git mv evidence/reviews/REV-043/WEB-001/DeepSeek-V4-Pro.verdict.json reviews/REV-043/WEB-001/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/REV-043/WEB-001/Grok-4.5.verdict.json reviews/REV-043/WEB-001/Grok-4.5.verdict.json; git mv evidence/reviews/REV-043/WEB-001/Qwen3.7-Max.verdict.json reviews/REV-043/WEB-001/Qwen3.7-Max.verdict.json; git mv evidence/reviews/REV-043/WEB-001/tally.json reviews/REV-043/WEB-001/tally.json; git mv evidence/reviews/ROSTER-MAJ-PR511-v1/DeepSeek-V4-Pro-0813.verdict.json reviews/ROSTER-MAJ-PR511-v1/DeepSeek-V4-Pro-0813.verdict.json; git mv evidence/reviews/ROSTER-MAJ-PR511-v1/Kimi-2.7.verdict.json reviews/ROSTER-MAJ-PR511-v1/Kimi-2.7.verdict.json; git mv evidence/reviews/ROSTER-MAJ-PR511-v1/Qwen3.8-2.4T.verdict.json reviews/ROSTER-MAJ-PR511-v1/Qwen3.8-2.4T.verdict.json; git mv evidence/reviews/ROSTER-MAJ-PR511-v1/RECU.json reviews/ROSTER-MAJ-PR511-v1/RECU.json; git mv evidence/reviews/S-TAIL-tailscale-optin/Gemini-3.1-Pro.verdict.json reviews/S-TAIL-tailscale-optin/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/S-TAIL-tailscale-optin/Grok-4.5.verdict.json reviews/S-TAIL-tailscale-optin/Grok-4.5.verdict.json; git mv evidence/reviews/S-TAIL-tailscale-optin/Qwen3.7-Max.verdict.json reviews/S-TAIL-tailscale-optin/Qwen3.7-Max.verdict.json; git mv evidence/reviews/S-TAIL-tailscale-optin/pack.md reviews/S-TAIL-tailscale-optin/pack.md; git mv evidence/reviews/S-ZEN-cpu-zendnn/Gemini-3.1-Pro.verdict.json reviews/S-ZEN-cpu-zendnn/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/S-ZEN-cpu-zendnn/Grok-4.5.verdict.json reviews/S-ZEN-cpu-zendnn/Grok-4.5.verdict.json; git mv evidence/reviews/S-ZEN-cpu-zendnn/Qwen3.7-Max.verdict.json reviews/S-ZEN-cpu-zendnn/Qwen3.7-Max.verdict.json; git mv evidence/reviews/S-ZEN-cpu-zendnn/pack.md reviews/S-ZEN-cpu-zendnn/pack.md; git mv evidence/reviews/S1-gpu-rocm-runtime/Gemini-3.1-Pro.verdict.json reviews/S1-gpu-rocm-runtime/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/S1-gpu-rocm-runtime/Grok-4.5.verdict.json reviews/S1-gpu-rocm-runtime/Grok-4.5.verdict.json; git mv evidence/reviews/S1-gpu-rocm-runtime/Qwen3.7-Max.verdict.json reviews/S1-gpu-rocm-runtime/Qwen3.7-Max.verdict.json; git mv evidence/reviews/S1-gpu-rocm-runtime/pack.md reviews/S1-gpu-rocm-runtime/pack.md; git mv evidence/reviews/S2-gpu-reservation-vendor/Gemini-3.1-Pro.verdict.json reviews/S2-gpu-reservation-vendor/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/S2-gpu-reservation-vendor/Grok-4.5.verdict.json reviews/S2-gpu-reservation-vendor/Grok-4.5.verdict.json; git mv evidence/reviews/S2-gpu-reservation-vendor/Qwen3.7-Max.verdict.json reviews/S2-gpu-reservation-vendor/Qwen3.7-Max.verdict.json; git mv evidence/reviews/S2-gpu-reservation-vendor/pack.md reviews/S2-gpu-reservation-vendor/pack.md; git mv evidence/reviews/S3-amd-runtimes-k3s-gpu/Gemini-3.1-Pro.verdict.json reviews/S3-amd-runtimes-k3s-gpu/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/S3-amd-runtimes-k3s-gpu/Grok-4.5.verdict.json reviews/S3-amd-runtimes-k3s-gpu/Grok-4.5.verdict.json; git mv evidence/reviews/S3-amd-runtimes-k3s-gpu/Qwen3.7-Max.verdict.json reviews/S3-amd-runtimes-k3s-gpu/Qwen3.7-Max.verdict.json; git mv evidence/reviews/S3-amd-runtimes-k3s-gpu/pack.md reviews/S3-amd-runtimes-k3s-gpu/pack.md; git mv evidence/reviews/S3b-amd-vulkan-runtime/Gemini-3.1-Pro.verdict.json reviews/S3b-amd-vulkan-runtime/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/S3b-amd-vulkan-runtime/Grok-4.5.verdict.json reviews/S3b-amd-vulkan-runtime/Grok-4.5.verdict.json; git mv evidence/reviews/S3b-amd-vulkan-runtime/Qwen3.7-Max.verdict.json reviews/S3b-amd-vulkan-runtime/Qwen3.7-Max.verdict.json; git mv evidence/reviews/S3b-amd-vulkan-runtime/pack.md reviews/S3b-amd-vulkan-runtime/pack.md; git mv evidence/reviews/S4-engine-vendor-filter/Gemini-3.1-Pro.verdict.json reviews/S4-engine-vendor-filter/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/S4-engine-vendor-filter/Grok-4.5.verdict.json reviews/S4-engine-vendor-filter/Grok-4.5.verdict.json; git mv evidence/reviews/S4-engine-vendor-filter/Qwen3.7-Max.verdict.json reviews/S4-engine-vendor-filter/Qwen3.7-Max.verdict.json; git mv evidence/reviews/S4-engine-vendor-filter/pack.md reviews/S4-engine-vendor-filter/pack.md; git mv evidence/reviews/S5-intel-openvino/Gemini-3.1-Pro.verdict.json reviews/S5-intel-openvino/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/S5-intel-openvino/Grok-4.5.verdict.json reviews/S5-intel-openvino/Grok-4.5.verdict.json; git mv evidence/reviews/S5-intel-openvino/Qwen3.7-Max.verdict.json reviews/S5-intel-openvino/Qwen3.7-Max.verdict.json; git mv evidence/reviews/S5-intel-openvino/pack.md reviews/S5-intel-openvino/pack.md; git mv evidence/reviews/S6-surface-filtre-vendor/Gemini-3.1-Pro.verdict.json reviews/S6-surface-filtre-vendor/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/S6-surface-filtre-vendor/Grok-4.5.verdict.json reviews/S6-surface-filtre-vendor/Grok-4.5.verdict.json; git mv evidence/reviews/S6-surface-filtre-vendor/Qwen3.7-Max.verdict.json reviews/S6-surface-filtre-vendor/Qwen3.7-Max.verdict.json; git mv evidence/reviews/S6-surface-filtre-vendor/pack.md reviews/S6-surface-filtre-vendor/pack.md; git mv evidence/reviews/S6b-engine-dropdown-vendor/Gemini-3.1-Pro.verdict.json reviews/S6b-engine-dropdown-vendor/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/S6b-engine-dropdown-vendor/Grok-4.5.verdict.json reviews/S6b-engine-dropdown-vendor/Grok-4.5.verdict.json; git mv evidence/reviews/S6b-engine-dropdown-vendor/Qwen3.7-Max.verdict.json reviews/S6b-engine-dropdown-vendor/Qwen3.7-Max.verdict.json; git mv evidence/reviews/S6b-engine-dropdown-vendor/pack.md reviews/S6b-engine-dropdown-vendor/pack.md; git mv evidence/reviews/S7-cluster-view/Gemini-3.1-Pro.verdict.json reviews/S7-cluster-view/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/S7-cluster-view/Grok-4.5.verdict.json reviews/S7-cluster-view/Grok-4.5.verdict.json; git mv evidence/reviews/S7-cluster-view/Qwen3.7-Max.verdict.json reviews/S7-cluster-view/Qwen3.7-Max.verdict.json; git mv evidence/reviews/S7-cluster-view/pack.md reviews/S7-cluster-view/pack.md; git mv evidence/reviews/SAST-042/README.md reviews/SAST-042/README.md; git mv evidence/reviews/SAST-042/civ/DeepSeek-V4-Pro.verdict.json reviews/SAST-042/civ/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/SAST-042/civ/Gemini-3.1-Pro.verdict.json reviews/SAST-042/civ/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/SAST-042/civ/LongCat-2.0.verdict.json reviews/SAST-042/civ/LongCat-2.0.verdict.json; git mv evidence/reviews/SEC-SVCSPEC-INJECT/DeepSeek-V4-Pro.verdict.json reviews/SEC-SVCSPEC-INJECT/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/SEC-SVCSPEC-INJECT/Gemini-3.1-Pro.verdict.json reviews/SEC-SVCSPEC-INJECT/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/SEC-SVCSPEC-INJECT/LongCat-2.0.verdict.json reviews/SEC-SVCSPEC-INJECT/LongCat-2.0.verdict.json; git mv evidence/reviews/SEC-YAML-INJECT/DeepSeek-V4-Pro.verdict.json reviews/SEC-YAML-INJECT/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/SEC-YAML-INJECT/Gemini-3.1-Pro.verdict.json reviews/SEC-YAML-INJECT/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/SEC-YAML-INJECT/LongCat-2.0.verdict.json reviews/SEC-YAML-INJECT/LongCat-2.0.verdict.json; git mv evidence/reviews/SEC1-gitguardian-v2/Gemini-3.1-Pro.verdict.json reviews/SEC1-gitguardian-v2/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/SEC1-gitguardian-v2/LongCat-2.0.verdict.json reviews/SEC1-gitguardian-v2/LongCat-2.0.verdict.json; git mv evidence/reviews/SEC1-gitguardian-v2/Qwen3.7-Max.verdict.json reviews/SEC1-gitguardian-v2/Qwen3.7-Max.verdict.json; git mv evidence/reviews/SEC1-gitguardian/Gemini-3.1-Pro.verdict.json reviews/SEC1-gitguardian/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/SEC1-gitguardian/LongCat-2.0.verdict.json reviews/SEC1-gitguardian/LongCat-2.0.verdict.json; git mv evidence/reviews/SEC1-gitguardian/Qwen3.7-Max.verdict.json reviews/SEC1-gitguardian/Qwen3.7-Max.verdict.json; git mv evidence/reviews/SECRET-020A/civ/DeepSeek-V4-Pro.verdict.json reviews/SECRET-020A/civ/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/SECRET-020A/civ/Gemini-3.1-Pro.verdict.json reviews/SECRET-020A/civ/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/SECRET-020A/civ/LongCat-2.0.verdict.json reviews/SECRET-020A/civ/LongCat-2.0.verdict.json; git mv evidence/reviews/SECRET-020A/civ2/DeepSeek-V4-Pro.verdict.json reviews/SECRET-020A/civ2/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/SECRET-020A/civ2/Gemini-3.1-Pro.verdict.json reviews/SECRET-020A/civ2/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/SECRET-020A/civ2/LongCat-2.0.verdict.json reviews/SECRET-020A/civ2/LongCat-2.0.verdict.json; git mv evidence/reviews/SECRET-020A/civ3/DeepSeek-V4-Pro.verdict.json reviews/SECRET-020A/civ3/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/SECRET-020A/civ3/Gemini-3.1-Pro.verdict.json reviews/SECRET-020A/civ3/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/SECRET-020A/civ3/LongCat-2.0.verdict.json reviews/SECRET-020A/civ3/LongCat-2.0.verdict.json; git mv evidence/reviews/SECRET-020A/civ4/DeepSeek-V4-Pro.verdict.json reviews/SECRET-020A/civ4/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/SECRET-020A/civ4/Gemini-3.1-Pro.verdict.json reviews/SECRET-020A/civ4/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/SECRET-020A/civ4/LongCat-2.0.verdict.json reviews/SECRET-020A/civ4/LongCat-2.0.verdict.json; git mv evidence/reviews/SECRET-020B-t2/DeepSeek-V4-Pro.verdict.json reviews/SECRET-020B-t2/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/SECRET-020B-t2/Gemini-3.1-Pro-OR.verdict.json reviews/SECRET-020B-t2/Gemini-3.1-Pro-OR.verdict.json; git mv evidence/reviews/SECRET-020B-t2/Grok-4.5.verdict.json reviews/SECRET-020B-t2/Grok-4.5.verdict.json; git mv evidence/reviews/SECRET-020B-t3/DeepSeek-V4-Pro.verdict.json reviews/SECRET-020B-t3/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/SECRET-020B-t3/Gemini-3.1-Pro-OR.verdict.json reviews/SECRET-020B-t3/Gemini-3.1-Pro-OR.verdict.json; git mv evidence/reviews/SECRET-020B-t3/Grok-4.5.verdict.json reviews/SECRET-020B-t3/Grok-4.5.verdict.json; git mv evidence/reviews/SECRET-020B/DeepSeek-V4-Pro.verdict.json reviews/SECRET-020B/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/SECRET-020B/Gemini-3.1-Pro-OR.verdict.json reviews/SECRET-020B/Gemini-3.1-Pro-OR.verdict.json; git mv evidence/reviews/SECRET-020B/Grok-4.5.verdict.json reviews/SECRET-020B/Grok-4.5.verdict.json; git mv evidence/reviews/SECRET-020C/DeepSeek-V4-Pro.verdict.json reviews/SECRET-020C/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/SECRET-020C/LongCat-2.0.verdict.json reviews/SECRET-020C/LongCat-2.0.verdict.json; git mv evidence/reviews/SECRET-020C/Qwen3.7-Max.verdict.json reviews/SECRET-020C/Qwen3.7-Max.verdict.json; git mv evidence/reviews/SSH-007/Grok-4.5.verdict.json reviews/SSH-007/Grok-4.5.verdict.json; git mv evidence/reviews/SSH-007/Kimi-2.7.verdict.json reviews/SSH-007/Kimi-2.7.verdict.json; git mv evidence/reviews/SSH-007/Qwen3.7-Max.verdict.json reviews/SSH-007/Qwen3.7-Max.verdict.json; git mv evidence/reviews/SSH-021/Grok-4.5.verdict.json reviews/SSH-021/Grok-4.5.verdict.json; git mv evidence/reviews/SSH-021/MiMo-Pro-V2.verdict.json reviews/SSH-021/MiMo-Pro-V2.verdict.json; git mv evidence/reviews/SSH-021/Qwen3.7-Max.verdict.json reviews/SSH-021/Qwen3.7-Max.verdict.json; git mv evidence/reviews/SSH-030/DeepSeek-V4-Pro.verdict.json reviews/SSH-030/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/SSH-030/Gemini-3.1-Pro.verdict.json reviews/SSH-030/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/SSH-030/Qwen3.7-Max.verdict.json reviews/SSH-030/Qwen3.7-Max.verdict.json; git mv evidence/reviews/SUPPLY-018/Grok-4.5.verdict.json reviews/SUPPLY-018/Grok-4.5.verdict.json; git mv evidence/reviews/SUPPLY-018/MiMo-Pro-V2.verdict.json reviews/SUPPLY-018/MiMo-Pro-V2.verdict.json; git mv evidence/reviews/SUPPLY-018/Qwen3.7-Max.verdict.json reviews/SUPPLY-018/Qwen3.7-Max.verdict.json; git mv evidence/reviews/TRUST-019A/civ/DeepSeek-V4-Pro.verdict.json reviews/TRUST-019A/civ/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/TRUST-019A/civ/Gemini-3.1-Pro.verdict.json reviews/TRUST-019A/civ/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/TRUST-019A/civ/LongCat-2.0.verdict.json reviews/TRUST-019A/civ/LongCat-2.0.verdict.json; git mv evidence/reviews/TRUST-019A/civ2/DeepSeek-V4-Pro.verdict.json reviews/TRUST-019A/civ2/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/TRUST-019A/civ2/Gemini-3.1-Pro.verdict.json reviews/TRUST-019A/civ2/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/TRUST-019A/civ2/LongCat-2.0.verdict.json reviews/TRUST-019A/civ2/LongCat-2.0.verdict.json; git mv evidence/reviews/TRUST-019B/DeepSeek-V4-Pro.verdict.json reviews/TRUST-019B/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/TRUST-019B/GREEN-focused.txt reviews/TRUST-019B/GREEN-focused.txt; git mv evidence/reviews/TRUST-019B/Gemini-3.1-Pro.verdict.json reviews/TRUST-019B/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/TRUST-019B/Qwen3.6-40B.verdict.json reviews/TRUST-019B/Qwen3.6-40B.verdict.json; git mv evidence/reviews/TRUST-019B/RED-reproduction.txt reviews/TRUST-019B/RED-reproduction.txt; git mv evidence/reviews/TRUST-019B/REVIEW-PACK.md reviews/TRUST-019B/REVIEW-PACK.md; git mv evidence/reviews/UI-039/DeepSeek-V4-Pro.verdict.json reviews/UI-039/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/UI-039/Gemini-3.1-Pro.verdict.json reviews/UI-039/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/UI-039/LongCat-2.0.verdict.json reviews/UI-039/LongCat-2.0.verdict.json; git mv evidence/reviews/UI-040/DeepSeek-V4-Pro.verdict.json reviews/UI-040/DeepSeek-V4-Pro.verdict.json; git mv evidence/reviews/UI-040/Gemini-3.1-Pro.verdict.json reviews/UI-040/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/UI-040/LongCat-2.0.verdict.json reviews/UI-040/LongCat-2.0.verdict.json; git mv evidence/reviews/V1-FIX/GLM-5.2.verdict.json reviews/V1-FIX/GLM-5.2.verdict.json; git mv evidence/reviews/V1-FIX/Grok-4.5.verdict.json reviews/V1-FIX/Grok-4.5.verdict.json; git mv evidence/reviews/V1-FIX/Qwen3.7-Max.verdict.json reviews/V1-FIX/Qwen3.7-Max.verdict.json; git mv evidence/reviews/WEB-001/final-sol-acceptance.review.json reviews/WEB-001/final-sol-acceptance.review.json; git mv evidence/reviews/WEB-001/final-sol-security.review.json reviews/WEB-001/final-sol-security.review.json; git mv evidence/reviews/WEB-001/final-tally.json reviews/WEB-001/final-tally.json; git mv evidence/reviews/WEB-001/final-terra-isolation.review.json reviews/WEB-001/final-terra-isolation.review.json; git mv evidence/reviews/WEB-001/prompt.md reviews/WEB-001/prompt.md; git mv evidence/reviews/WEB-001/round-2-prompt-manifest.md reviews/WEB-001/round-2-prompt-manifest.md; git mv evidence/reviews/WEB-001/round-2-sol-acceptance.review.json reviews/WEB-001/round-2-sol-acceptance.review.json; git mv evidence/reviews/WEB-001/round-2-sol-security.review.json reviews/WEB-001/round-2-sol-security.review.json; git mv evidence/reviews/WEB-001/round-2-tally.json reviews/WEB-001/round-2-tally.json; git mv evidence/reviews/WEB-001/round-2-terra-isolation.review.json reviews/WEB-001/round-2-terra-isolation.review.json; git mv evidence/reviews/WEB-015/Grok-4.5.verdict.json reviews/WEB-015/Grok-4.5.verdict.json; git mv evidence/reviews/WEB-015/MiMo-Pro-V2.verdict.json reviews/WEB-015/MiMo-Pro-V2.verdict.json; git mv evidence/reviews/WEB-015/Qwen3.7-Max.verdict.json reviews/WEB-015/Qwen3.7-Max.verdict.json; git mv evidence/reviews/WEB-016/GLM-5.2.verdict.json reviews/WEB-016/GLM-5.2.verdict.json; git mv evidence/reviews/WEB-016/Grok-4.5.verdict.json reviews/WEB-016/Grok-4.5.verdict.json; git mv evidence/reviews/WEB-016/Qwen3.7-Max.verdict.json reviews/WEB-016/Qwen3.7-Max.verdict.json; git mv evidence/reviews/WEB-017/Grok-4.5.verdict.json reviews/WEB-017/Grok-4.5.verdict.json; git mv evidence/reviews/WEB-017/MiMo-Pro-V2.verdict.json reviews/WEB-017/MiMo-Pro-V2.verdict.json; git mv evidence/reviews/WEB-017/Qwen3.7-Max.verdict.json reviews/WEB-017/Qwen3.7-Max.verdict.json; git mv evidence/reviews/WEB-034A/GLM-5.2.verdict.json reviews/WEB-034A/GLM-5.2.verdict.json; git mv evidence/reviews/WEB-034A/Grok-4.5.verdict.json reviews/WEB-034A/Grok-4.5.verdict.json; git mv evidence/reviews/WEB-034A/Qwen3.7-Max.verdict.json reviews/WEB-034A/Qwen3.7-Max.verdict.json; git mv evidence/reviews/WEB-034B/GLM-5.2.verdict.json reviews/WEB-034B/GLM-5.2.verdict.json; git mv evidence/reviews/WEB-034B/Grok-4.5.verdict.json reviews/WEB-034B/Grok-4.5.verdict.json; git mv evidence/reviews/WEB-034B/Qwen3.7-Max.verdict.json reviews/WEB-034B/Qwen3.7-Max.verdict.json; git mv evidence/reviews/wh-civ/GLM-5.2.verdict.json reviews/wh-civ/GLM-5.2.verdict.json; git mv evidence/reviews/wh-civ/Gemini-3.1-Pro.verdict.json reviews/wh-civ/Gemini-3.1-Pro.verdict.json; git mv evidence/reviews/wh-civ/Grok-4.5.verdict.json reviews/wh-civ/Grok-4.5.verdict.json (ordre inverse), puis git commit --amend ou nouveau commit de restauration ; ne PAS exécuter cette vague sans avoir d'abord validé les vagues précédentes."
     },
     {
       "id": 1,
