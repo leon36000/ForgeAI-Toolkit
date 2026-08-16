@@ -918,6 +918,56 @@ def test_compensating_test_skipif_conditionnel_reste_valide(tmp_path: Path) -> N
     assert erreurs == []
 
 
+def test_compensating_test_skipif_condition_constante_true_rejete(tmp_path: Path) -> None:
+    """Round 22 (#452) — objection GPT-5.6-Terra-Pro (revue scellée) : @pytest.mark.skipif(True,
+    ...) est un skip inconditionnel DÉGUISÉ — la condition est littéralement toujours vraie
+    (vérifié empiriquement : 'skipped'), contrairement à @posix_only qui dépend réellement de
+    l'environnement. Round 19 tolérait tout skipif sans cette distinction."""
+    _creer_fichier_source(
+        tmp_path,
+        "src/forgeai/example.py",
+        "try:\n    pass\nexcept ValueError:\n    pass\n",
+    )
+    _creer_fichier_source(
+        tmp_path,
+        "tests/test_skipif_true.py",
+        "import pytest\n\n@pytest.mark.skipif(True, reason='toujours desactive')\ndef test_x(): pass\n",
+    )
+    contrat = _entree_valide(
+        compensating_test="tests/test_skipif_true.py::test_x",
+        compensating_test_reason=None,
+    )
+    _ecrire_inventaire(tmp_path, [contrat])
+
+    erreurs = VALIDATEUR.valider(tmp_path, aujourd_hui=dt.date(2026, 1, 1))
+    assert any("test compensatoire absent du dépôt" in e for e in erreurs)
+
+
+def test_compensating_test_skipif_expression_non_litterale_reste_valide(tmp_path: Path) -> None:
+    """Contre-preuve : une condition NON littérale mais constante-repliable (ex. 1 == 1) reste
+    hors scope par conception (cf. docstring _skipif_condition_toujours_vraie) — la replier
+    exigerait une évaluation partielle de code, la ligne dure documentée. Même motif exact que
+    @posix_only du dépôt réel (os.name != "posix", une ast.Compare, pas une ast.Constant)."""
+    _creer_fichier_source(
+        tmp_path,
+        "src/forgeai/example.py",
+        "try:\n    pass\nexcept ValueError:\n    pass\n",
+    )
+    _creer_fichier_source(
+        tmp_path,
+        "tests/test_skipif_expr.py",
+        "import pytest\n\n@pytest.mark.skipif(1 == 1, reason='x')\ndef test_x(): pass\n",
+    )
+    contrat = _entree_valide(
+        compensating_test="tests/test_skipif_expr.py::test_x",
+        compensating_test_reason=None,
+    )
+    _ecrire_inventaire(tmp_path, [contrat])
+
+    erreurs = VALIDATEUR.valider(tmp_path, aujourd_hui=dt.date(2026, 1, 1))
+    assert erreurs == []
+
+
 def test_compensating_test_pytestmark_module_skip_rejete(tmp_path: Path) -> None:
     """Round 20 (#452) — objection GPT-5.6-Terra-Pro (revue scellée) : `pytestmark =
     pytest.mark.skip` au niveau module désactive INCONDITIONNELLEMENT tous les tests du fichier

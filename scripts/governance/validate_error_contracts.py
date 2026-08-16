@@ -68,9 +68,32 @@ def _nom_marqueur_skip(noeud: ast.expr) -> str | None:
         return None
 
 
+def _skipif_condition_toujours_vraie(dec: ast.expr) -> bool:
+    """True si le décorateur est @pytest.mark.skipif(True, ...) — condition LITTÉRALEMENT
+    constante True, donc un skip inconditionnel déguisé (vérifié empiriquement : 'skipped').
+
+    Round 22 (#452) — objection GPT-5.6-Terra-Pro (revue scellée) : round 19 tolérait TOUT
+    skipif sans distinguer une condition constante d'une condition réellement dépendante de
+    l'environnement (ex. @posix_only). Portée délibérément étroite : seule une constante
+    ast.Constant(True) EXPLICITE est détectée (pattern-matching AST simple, pas d'évaluation
+    d'expression) — `skipif(1 == 1, ...)`, `skipif(not False, ...)` ou toute expression
+    constante-repliable mais non littérale restent hors scope : les replier nécessiterait une
+    évaluation partielle de code arbitraire, la même ligne dure que pytest.skip() en corps de
+    fonction (cf. docstring de _decorateur_skip_inconditionnel)."""
+    if not isinstance(dec, ast.Call):
+        return False
+    if _nom_marqueur_skip(dec) not in ("pytest.mark.skipif", "mark.skipif"):
+        return False
+    if not dec.args:
+        return False
+    premier = dec.args[0]
+    return isinstance(premier, ast.Constant) and premier.value is True
+
+
 def _decorateur_skip_inconditionnel(decorator_list: list) -> bool:
-    """True si la liste de décorateurs porte un @pytest.mark.skip SANS condition — un tel test
-    n'est JAMAIS exécuté par pytest, quelle que soit la plateforme/config.
+    """True si la liste de décorateurs porte un @pytest.mark.skip SANS condition, ou un
+    @pytest.mark.skipif(True, ...) (condition constante déguisée) — un tel test n'est JAMAIS
+    exécuté par pytest, quelle que soit la plateforme/config.
 
     Round 19 (#452) — objection GPT-5.6-Terra-Pro (revue scellée) : le validateur ne garantissait
     pas qu'un compensating_test est réellement EXÉCUTÉ, seulement présent dans l'AST avec le bon
@@ -80,22 +103,26 @@ def _decorateur_skip_inconditionnel(decorator_list: list) -> bool:
 
     Round 20 : `pytestmark` de module est désormais couvert (voir
     _module_a_pytestmark_skip_inconditionnel). Round 21 : @pytest.mark.skip sur une CLASSE Test*
-    est désormais couvert aussi (appelé directement sur noeud.decorator_list dans _cherche). Les
-    TROIS sites de déclaration STATIQUE du skip inconditionnel (fonction, classe, module) sont
-    maintenant tous couverts par ce même helper. Reste et RESTERA hors scope, ligne dure
-    documentée ici une fois pour toutes : `pytest.skip()` appelé dans le CORPS d'un test, `__test__ = False`
-    (round 15), `parametrize` à liste vide. Ces trois cas exigent une analyse de flot de contrôle
-    (un appel conditionnel, profondément imbriqué, ou dérivé d'un état runtime n'est pas
+    est désormais couvert aussi (appelé directement sur noeud.decorator_list dans _cherche).
+    Round 22 : @pytest.mark.skipif(True, ...) — condition littéralement constante, donc un skip
+    inconditionnel déguisé (voir _skipif_condition_toujours_vraie). Les TROIS sites de
+    déclaration STATIQUE du skip inconditionnel (fonction, classe, module) sont couverts par ce
+    même helper. Reste et RESTERA hors scope, ligne dure documentée ici une fois pour toutes :
+    `pytest.skip()` appelé dans le CORPS d'un test, `__test__ = False` (round 15), `parametrize`
+    à liste vide, toute condition skipif constante-repliable mais NON littérale (ex. `1 == 1`).
+    Ces cas exigent une analyse de flot de contrôle/évaluation partielle de code arbitraire (non
     statiquement décidable en général) ou l'exécution réelle de pytest — un changement
     d'architecture du gate (rapide, déterministe, sans effet de bord) vers une vérification qui
     exécute du code arbitraire, avec un coût et un profil de risque différents. Si ce point
-    devient un problème réel en pratique (pas seulement théorique, cf. le précédent round 19 où
-    @posix_only existait déjà réellement dans le dépôt), la correction appropriée est une story
-    dédiée ajoutant une vérification par `pytest --collect-only`/exécution réelle, pas une
-    nouvelle itération de filtrage AST au cas par cas.
+    devient un problème réel en pratique (comme @posix_only puis skipif(True) l'ont montré aux
+    rounds 19/22), la correction appropriée est une story dédiée ajoutant une vérification par
+    `pytest --collect-only`/exécution réelle, pas une nouvelle itération de filtrage AST au cas
+    par cas.
     """
     for dec in decorator_list:
         if _nom_marqueur_skip(dec) in ("pytest.mark.skip", "mark.skip"):
+            return True
+        if _skipif_condition_toujours_vraie(dec):
             return True
     return False
 
@@ -108,6 +135,8 @@ def _module_a_pytestmark_skip_inconditionnel(arbre: ast.Module) -> bool:
     Round 20 (#452) — objection GPT-5.6-Terra-Pro (revue scellée) : round 19 avait explicitement
     scopé ce cas hors périmètre (documenté, pas oublié) ; Terra a confirmé que ce n'est pas un cas
     d'école — même mécanisme que @pytest.mark.skip, juste au niveau module plutôt que fonction.
+    Round 22 : couvre aussi skipif(True, ...) au niveau module, même raffinement qu'au niveau
+    fonction/classe (voir _skipif_condition_toujours_vraie).
     """
     for noeud in arbre.body:
         if not isinstance(noeud, ast.Assign):
@@ -117,7 +146,11 @@ def _module_a_pytestmark_skip_inconditionnel(arbre: ast.Module) -> bool:
         valeurs = (
             noeud.value.elts if isinstance(noeud.value, (ast.List, ast.Tuple)) else [noeud.value]
         )
-        if any(_nom_marqueur_skip(v) in ("pytest.mark.skip", "mark.skip") for v in valeurs):
+        if any(
+            _nom_marqueur_skip(v) in ("pytest.mark.skip", "mark.skip")
+            or _skipif_condition_toujours_vraie(v)
+            for v in valeurs
+        ):
             return True
     return False
 
