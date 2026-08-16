@@ -1,0 +1,19 @@
+{
+  "_schema": "branch-coverage-baseline-v1",
+  "_but": "Seuil global initial de couverture de branches, défini depuis une mesure fraîche réelle (critère 2 de #451/RC1-021). INFORMATIONNEL SEULEMENT à cet incrément : pas encore câblé dans un gate CI bloquant — voir _statut.",
+  "_statut": "incrément 1 de #451 — mesure et rapport seulement, aucune règle bloquante activée. Le mécanisme empêchant une régression silencieuse (\"la baseline ne peut pas augmenter silencieusement\") et les seuils ciblés plus élevés par catégorie (orchestrateurs/sécurité/persistance/rollback) restent hors périmètre de cet incrément.",
+  "mesure_fraiche": {
+    "date_utc": "2026-08-16T17:14:15Z",
+    "commit": "bdd83df4e1a8ab9152dee0aca2a15af536ae360d",
+    "commande": "pytest -q --cov=src/forgeai --cov-branch --cov-report=json (via scripts/branch_coverage_report.py)",
+    "num_statements": 7302,
+    "missing_lines": 403,
+    "percent_covered": 93.49704890387858,
+    "num_branches": 2186,
+    "missing_branches": 214,
+    "percent_branches_covered": 90.21043000914914,
+    "fonctions_avec_branches_manquantes": 113
+  },
+  "seuil_global_initial_branches_pct": 90.21043000914914,
+  "note_seuil": "Valeur = la mesure fraîche elle-même, arrondie à rien (pas de marge ajoutée arbitrairement). Fixer un seuil INFÉRIEUR à la mesure actuelle reviendrait à autoriser une régression dès le premier jour ; ce nombre sert de point de départ pour le cliquet à construire en incrément 2, pas encore un gate."
+}

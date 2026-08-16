@@ -10,9 +10,26 @@ import pytest
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 SCRIPTS_DIR = REPO_ROOT / "scripts"
+BASELINE_PATH = REPO_ROOT / "governance" / "branch-coverage-baseline.json"
 
 sys.path.insert(0, str(SCRIPTS_DIR))
 import branch_coverage_report  # noqa: E402
+
+
+def test_baseline_json_valide_et_seuil_initial_defini() -> None:
+    """Preuve que le critère « seuil global initial depuis une mesure fraîche » (#451) est
+    réellement livré : le fichier existe, est un JSON valide, et le seuil est un nombre issu
+    d'une mesure (pas un placeholder)."""
+    contenu = json.loads(BASELINE_PATH.read_text(encoding="utf-8"))
+
+    assert contenu["_schema"] == "branch-coverage-baseline-v1"
+    mesure = contenu["mesure_fraiche"]
+    assert isinstance(mesure["num_branches"], int) and mesure["num_branches"] > 0
+    assert isinstance(mesure["percent_branches_covered"], float)
+    seuil = contenu["seuil_global_initial_branches_pct"]
+    assert isinstance(seuil, float)
+    # Le seuil doit être EXACTEMENT la mesure fraîche (pas de marge arbitraire inventée).
+    assert seuil == mesure["percent_branches_covered"]
 
 
 def test_mesurer_bout_en_bout_sur_mini_projet_jetable(tmp_path: Path) -> None:
