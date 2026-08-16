@@ -32,6 +32,11 @@ DISPOSITIONS_VALIDES = {
     "BLOCKED",
 }
 
+# Round 12 (#452) — objection GPT-5.6-Terra-Pro (revue scellée) : la valeur de 'schema' n'était
+# jamais comparée à la version attendue, seulement son type. Toute chaîne non vide (y compris une
+# version inconnue/incompatible) franchissait le gate.
+SCHEMA_VERSION_ATTENDUE = "error-handling-contracts/1"
+
 
 def _lire_json(path: Path) -> dict:
     return json.loads(path.read_text(encoding="utf-8"))
@@ -105,6 +110,11 @@ def _valider_structure_globale(inventaire: dict) -> tuple[list[str], int, int]:
     erreurs: list[str] = []
     if "schema" not in inventaire or not isinstance(inventaire["schema"], str):
         erreurs.append("champ 'schema' absent ou invalide")
+    elif inventaire["schema"] != SCHEMA_VERSION_ATTENDUE:
+        erreurs.append(
+            f"champ 'schema' inattendu : {inventaire['schema']!r} "
+            f"(attendu : {SCHEMA_VERSION_ATTENDUE!r})"
+        )
 
     review_horizon = inventaire.get("review_horizon")
     if not isinstance(review_horizon, dict) or not isinstance(

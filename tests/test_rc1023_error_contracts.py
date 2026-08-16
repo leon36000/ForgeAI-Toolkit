@@ -46,6 +46,7 @@ def _ecrire_inventaire(
     horizon_justification: object = "Horizon de test pour la validation des contrats.",
     omit_coverage_fields: list[str] | None = None,
     omit_review_horizon_fields: list[str] | None = None,
+    schema_value: object = "error-handling-contracts/1",
 ) -> None:
     nb_contrats = len(contrats)
     contracted_val = nb_contrats if contracted is None else contracted
@@ -70,7 +71,7 @@ def _ecrire_inventaire(
     (root / "governance" / "error-handling-contracts.json").write_text(
         json.dumps(
             {
-                "schema": "error-handling-contracts/1",
+                "schema": schema_value,
                 "review_horizon": review_horizon,
                 "coverage": coverage,
                 "contracts": contrats,
@@ -265,6 +266,20 @@ def test_id_null_detecte(tmp_path: Path) -> None:
 
     erreurs = VALIDATEUR.valider(tmp_path, aujourd_hui=dt.date(2026, 1, 1))
     assert any("champ 'id' doit être une chaîne non vide" in e for e in erreurs)
+
+
+def test_schema_version_inconnue_detectee(tmp_path: Path) -> None:
+    # Objection GPT-5.6-Terra-Pro (revue scellée round 12, #452) : le validateur exigeait
+    # 'schema' non vide, mais ne comparait jamais sa VALEUR à "error-handling-contracts/1" —
+    # {"schema": "incompatible/999", ...} franchissait le gate sans être détecté.
+    _creer_fichier_source(
+        tmp_path, "src/example.py", "try:\n    pass\nexcept ValueError:\n    pass\n"
+    )
+    contrat = _entree_valide()
+    _ecrire_inventaire(tmp_path, [contrat], schema_value="incompatible/999")
+
+    erreurs = VALIDATEUR.valider(tmp_path, aujourd_hui=dt.date(2026, 1, 1))
+    assert any("schema" in e for e in erreurs)
 
 
 def test_identifiant_duplique_detecte(tmp_path: Path) -> None:
