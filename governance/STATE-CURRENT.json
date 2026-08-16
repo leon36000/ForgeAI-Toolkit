@@ -672,7 +672,7 @@
       },
       {
         "path": "tests/test_rc1023_error_contracts.py",
-        "sha256": "c28f1b6f7a2b481edbad18a1ec8ce32c412dc6e37bd6ededabed1a619102a4a1"
+        "sha256": "fd3e8ca3a2c598d45c48d225ed48704fcf220573dcc6ac1a8053969a35fe2162"
       },
       {
         "path": "tests/test_readme_dist_status.py",
@@ -933,7 +933,7 @@
     "tests": {
       "js_files": 3,
       "python_files": 194,
-      "python_functions_declared": 2300
+      "python_functions_declared": 2302
     }
   },
   "observations": [

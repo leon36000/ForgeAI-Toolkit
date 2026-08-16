@@ -427,6 +427,42 @@ def test_identifiant_duplique_detecte(tmp_path: Path) -> None:
     assert any("identifiant de contrat dupliqué : site:src/forgeai/example.py:3" in e for e in erreurs)
 
 
+def test_id_non_hachable_duplique_ne_plante_pas_le_validateur(tmp_path: Path) -> None:
+    """Round 26 (#452) — objection GPT-5.6-Terra-Pro (revue scellée) : un id non-hachable
+    non-vide (ex. une liste) dupliqué faisait CRASHER le validateur (TypeError: unhashable type)
+    au lieu de retourner une liste d'erreurs — un inventaire malformé pouvait empêcher toute
+    exécution du gate plutôt que d'être proprement rejeté."""
+    _creer_fichier_source(
+        tmp_path,
+        "src/forgeai/example.py",
+        "try:\n    pass\nexcept ValueError:\n    pass\n",
+    )
+    contrat1 = _entree_valide(id_contrat=[1])
+    contrat2 = _entree_valide(id_contrat=[1])
+    _ecrire_inventaire(tmp_path, [contrat1, contrat2])
+
+    erreurs = VALIDATEUR.valider(tmp_path, aujourd_hui=dt.date(2026, 1, 1))  # ne doit JAMAIS lever
+    assert any("champ 'id' doit être une chaîne non vide" in e for e in erreurs)
+
+
+def test_ids_types_incomparables_ne_plante_pas_le_validateur(tmp_path: Path) -> None:
+    """Round 26 (#452) — même objection : des doublons d'id de types incompatibles (int et str)
+    faisaient CRASHER le tri (TypeError: '<' not supported between instances de 'str' et 'int')."""
+    _creer_fichier_source(
+        tmp_path,
+        "src/forgeai/example.py",
+        "try:\n    pass\nexcept ValueError:\n    pass\n",
+    )
+    contrat1 = _entree_valide(id_contrat=1)
+    contrat2 = _entree_valide(id_contrat=1)
+    contrat3 = _entree_valide(id_contrat="x")
+    contrat4 = _entree_valide(id_contrat="x")
+    _ecrire_inventaire(tmp_path, [contrat1, contrat2, contrat3, contrat4])
+
+    erreurs = VALIDATEUR.valider(tmp_path, aujourd_hui=dt.date(2026, 1, 1))  # ne doit JAMAIS lever
+    assert any("champ 'id' doit être une chaîne non vide" in e for e in erreurs)
+
+
 def test_sites_dupliques_sous_id_distincts_detecte(tmp_path: Path) -> None:
     """Round 17 (#452) — objection GPT-5.6-Terra-Pro (revue scellée) : deux entrées avec des id
     DISTINCTS mais ciblant le même (site.path, site.line) n'étaient jamais détectées — le plancher

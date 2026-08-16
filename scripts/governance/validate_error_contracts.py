@@ -320,7 +320,20 @@ def _erreurs_horizon(inventaire: dict, aujourd_hui: dt.date) -> tuple[list[str],
 
 
 def _erreurs_identifiants_dupliques(entrees: list[dict]) -> list[str]:
-    ids = [entree.get("id") for entree in entrees if isinstance(entree, dict)]
+    # Round 26 (#452) — objection GPT-5.6-Terra-Pro (revue scellée) : ids acceptait toute valeur
+    # de entree.get("id") sans filtrer par type avant hash/tri — un id non-hachable non-vide (ex.
+    # une liste) FAIT CRASHER le validateur (TypeError: unhashable type) au lieu de retourner une
+    # liste d'erreurs ; un mélange de types incomparables (int et str) parmi des doublons fait
+    # aussi crasher `sorted()` (TypeError: '<' not supported between instances de 'str' et
+    # 'int'). Vérifié empiriquement les deux cas avant correctif. Restreint aux id qui sont
+    # RÉELLEMENT des chaînes (le type déjà exigé par le schéma, round 10) — un id d'un autre type
+    # n'est pas perdu, juste signalé séparément par _erreurs_entree (qui s'exécute après, jamais
+    # atteint si CETTE fonction crashe avant).
+    ids = [
+        entree.get("id")
+        for entree in entrees
+        if isinstance(entree, dict) and isinstance(entree.get("id"), str)
+    ]
     return [
         f"identifiant de contrat dupliqué : {identifiant}"
         for identifiant in sorted({item for item in ids if item and ids.count(item) > 1})
