@@ -94,7 +94,10 @@ def _test_compensatoire_existe(root: Path, test_compensatoire: object) -> bool:
     if not candidat.is_file():
         return False
     if not segments:
-        return True
+        # Round 5 (#452) — objection DeepSeek-V4-Pro (reviews/RC1-023-PR-v4) : un chemin nu (sans
+        # ::fonction) était accepté dès lors que le FICHIER existait, même sans aucun rapport avec
+        # le correctif. Un compensating_test doit toujours désigner une fonction/méthode précise.
+        return False
     return _fonction_test_existe(candidat, segments)
 
 
@@ -330,9 +333,16 @@ def valider(root: Path, *, aujourd_hui: dt.date | None = None) -> list[str]:
     erreurs.extend(_erreurs_identifiants_dupliques(contracts))
 
     ast_cache: dict[Path, ast.AST | None] = {}
-    for entree in contracts:
+    for index, entree in enumerate(contracts):
         if isinstance(entree, dict):
             erreurs.extend(_erreurs_entree(root, entree, aujourd_hui, date_maximale, ast_cache))
+        else:
+            # Round 5 (#452) — objection DeepSeek-V4-Pro (reviews/RC1-023-PR-v4) : une entrée
+            # non-dict était silencieusement ignorée au lieu de signaler une violation de schéma.
+            erreurs.append(
+                f"contracts[{index}] : entrée invalide, doit être un objet (type reçu : "
+                f"{type(entree).__name__})"
+            )
 
     return erreurs
 

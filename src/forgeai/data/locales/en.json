@@ -388,7 +388,7 @@
   "renderers.k3s.volume_mal_forme": "malformed volume (expected 'name:path' or './file:path:mode'): {volume_repr}",
   "secrets.openbao_init.ensure_openbao_ready.coffre_sans_cles": "vault initialized but keys missing from the store",
   "secrets.openbao_init.ensure_openbao_ready.init_reponse_incomplete": "openbao PUT /v1/sys/init -> incomplete response",
-  "secrets.openbao_init.ensure_openbao_ready.revocation_ancien_jeton_echouee": "failed to revoke the old token (remains valid until natural expiry)",
+  "secrets.openbao_init.ensure_openbao_ready.revocation_ancien_jeton_echouee": "revocation of the old token failed (remains valid until natural expiry)",
   "secrets.openbao_init.ensure_openbao_ready.token_create_sans_client_token": "POST /v1/auth/token/create -> no client_token",
   "secrets.openbao_init.ensure_openbao_ready.token_invalide_remplace": "stored token invalid, creating a new one",
   "secrets.openbao_init.ensure_openbao_ready.unseal_echec": "PUT /v1/sys/unseal did not unseal the vault",
