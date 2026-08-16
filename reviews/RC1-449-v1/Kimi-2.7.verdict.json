@@ -1,0 +1,31 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "majeure",
+   "fichier": "scripts/mypy_gate.py",
+   "description": "La comparaison avec la base de référence ne bloque pas le déclassement d'un fichier protégé vers la dette. `_anomalies_reference` signale une extension de dette seulement quand le fichier n'était ni en dette ni protégé dans la référence (`if f not in ref_dette and f not in ref_proteges`), donc un fichier de `ref_proteges` peut être déplacé dans la dette courante sans anomalie. De plus, aucun contrôle ne vérifie que `fichiers_proteges` reste un sur-ensemble de la référence. Contre-exemple : référence {proteges:[a.py], dette:{b.py:1}, borne:1} et base courante {proteges:[], dette:{a.py:1}, borne:1} avec a.py en erreur → le total reste 1, la borne ne croît pas, et le gate passe, violant le critère 'fichiers déjà propres protégés à zéro tolérance pour toujours'.",
+   "preuve": "scripts/mypy_gate.py, fonction `_anomalies_reference` : `for f, plafond in sorted(dette.items()): ... if f not in ref_dette and f not in ref_proteges:` (aucune branche pour `f in ref_proteges`) ; absence de comparaison entre `base_validee['fichiers_proteges']` et `reference_validee['fichiers_proteges']`."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "Docs/BASELINE-MYPY.json",
+   "description": "La base ne classe les erreurs que par module (fichier) avec un compteur entier ; elle ne capture pas la cause (code d'erreur mypy), alors que le critère d'acceptation exige 'classer les erreurs par cause et module'.",
+   "preuve": "Docs/BASELINE-MYPY.json : champs 'borne.total_erreurs', 'dette' (valeurs entières) et 'fichiers_proteges' ; aucun champ 'causes' ou liste de codes d'erreur."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "requirements-ci.txt",
+   "description": "Le lockfile ajoute `ast-serialize`, `librt` et `pathspec` comme dépendances transitives de mypy (`# via mypy`), ce qui n'est pas vérifiable comme légitime depuis le seul diff et n'est pas conforme aux dépendances publiées de mypy ; cela augmente la surface d'attaque de la chaîne d'approvisionnement.",
+   "preuve": "requirements-ci.txt : blocs `ast-serialize==0.8.0 ... # via mypy`, `librt==0.15.0 ... # via mypy`, `pathspec==1.1.1 ... # via mypy`."
+  }
+ ],
+ "date_heure": "2026-08-16T10:26:52.970853+00:00",
+ "prompt_sha256": "a2cd91755ff56c89650ca44d06bc81d3fa18adc13d092659e639173639dbc1f1",
+ "reviewer_model": "Kimi-2.7",
+ "modele_servi": "kimi-27-openrouter",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

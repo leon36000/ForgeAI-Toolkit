@@ -1,0 +1,25 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "majeure",
+   "fichier": "scripts/mypy_gate.py",
+   "description": "Le contrôle contre la base de référence autorise à dégrader un fichier précédemment protégé (zéro erreur) en fichier de dette. Cela contourne la promesse de « zéro tolérance pour toujours » : une PR peut retirer un fichier de fichiers_proteges, l'ajouter à dette avec une erreur, et compenser la borne totale en réduisant une dette existante ailleurs.",
+   "preuve": "Dans _anomalies_reference (vers lignes 273-292), un fichier ajouté à dette n'est signalé que si `f not in ref_dette and f not in ref_proteges`. Un fichier présent dans `reference['fichiers_proteges']` est donc explicitement exempté. Aucune vérification n'impose que `ref_proteges` reste inclus dans les fichiers protégés courants, ni n'interdit son ajout à dette."
+  },
+  {
+   "severite": "majeure",
+   "fichier": "Docs/BASELINE-MYPY.json",
+   "description": "Le livrable ne fournit pas la classification des erreurs par cause demandée par le critère d'acceptation : il ne conserve que des compteurs agrégés par fichier.",
+   "preuve": "Les lignes dette du fichier, par exemple `\"src/forgeai/cli.py\": 4` et `\"src/forgeai/web/server.py\": 106`, ne contiennent ni code d'erreur mypy, ni catégorie, ni autre champ décrivant la cause. De plus, scripts/mypy_gate.py exécute mypy sans `--show-error-codes` (commande construite dans executer_mypy), donc le rapport généré ne permet pas davantage cette classification."
+  }
+ ],
+ "date_heure": "2026-08-16T10:25:27.705535+00:00",
+ "prompt_sha256": "a2cd91755ff56c89650ca44d06bc81d3fa18adc13d092659e639173639dbc1f1",
+ "reviewer_model": "GPT-5.6-Terra-Pro",
+ "modele_servi": "gpt56-terra-pro-openrouter",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}
