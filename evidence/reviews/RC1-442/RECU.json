@@ -4,9 +4,9 @@
   "issue": 442,
   "round": 1,
   "base_commit": "d1b1e6bc4f0e94068eae484606ebff79daac42b2",
-  "head_commit": "99fd735d5fef8de8b1eb068554cb4455dbf62df6",
-  "head_tree": "27a5a51b983e17981091e4e4a8ca30a741e5ad27",
-  "diff_digest": "04650b178fb55d15416c37f93660f3aae84016061f6981435b505701e7c08006",
+  "head_commit": "36b661020bad2bd0beaee6498c00b710721f028e",
+  "head_tree": "e44e6b77e7e676fe6facaf5d4c405467b639ad04",
+  "diff_digest": "adcb39a584ec80c03165fb653db8d5744d71f26fb98f54e33bb78e57adea109d",
   "prompt_sha256": "ab5c0c4e43f6cba14af8fc57e706efbcdb6e77ca52de48cfb322220ed363330f",
   "reviewers_attendus": [
     "DeepSeek-V4-Pro",
@@ -14,9 +14,9 @@
     "Qwen3.7-Max"
   ],
   "codeur": [
-    "gemini_flash"
+    "Gemini-3.7-Flash"
   ],
   "resultat": "APPROVE",
-  "date_heure": "2026-08-16T08:20:38.855679-04:00",
+  "date_heure": "2026-08-16T08:28:36.411458-04:00",
   "fenetre_heures": 24
 }
