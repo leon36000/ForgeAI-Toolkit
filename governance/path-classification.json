@@ -3998,426 +3998,6 @@
       "type": "text"
     },
     {
-      "class": "EVIDENCE",
-      "generated": false,
-      "load_bearing": true,
-      "owner": "gouvernance-preuve",
-      "path": "Registres/mission.jsonl",
-      "referenced_by": [
-        {
-          "candidate": "Registres/mission.jsonl",
-          "line": 77,
-          "referrer": "CANON/ETAT-SYSTEME.md",
-          "resolved": "Registres/mission.jsonl",
-          "severity": "hard"
-        },
-        {
-          "candidate": "Registres/mission.jsonl",
-          "line": 16,
-          "referrer": "CANON/adr/ADR-TRUST-019A-registres-modele-de-menace-racine-confiance.md",
-          "resolved": "Registres/mission.jsonl",
-          "severity": "hard"
-        },
-        {
-          "candidate": "Registres/mission.jsonl",
-          "line": 129,
-          "referrer": "CANON/adr/ADR-TRUST-019A-registres-modele-de-menace-racine-confiance.md",
-          "resolved": "Registres/mission.jsonl",
-          "severity": "hard"
-        },
-        {
-          "candidate": "Registres/mission.jsonl",
-          "line": 130,
-          "referrer": "CANON/adr/ADR-TRUST-019A-registres-modele-de-menace-racine-confiance.md",
-          "resolved": "Registres/mission.jsonl",
-          "severity": "hard"
-        },
-        {
-          "candidate": "Registres/mission.jsonl",
-          "line": 264,
-          "referrer": "CANON/adr/ADR-TRUST-019A-registres-modele-de-menace-racine-confiance.md",
-          "resolved": "Registres/mission.jsonl",
-          "severity": "hard"
-        },
-        {
-          "candidate": "Registres/mission.jsonl",
-          "line": 265,
-          "referrer": "CANON/adr/ADR-TRUST-019A-registres-modele-de-menace-racine-confiance.md",
-          "resolved": "Registres/mission.jsonl",
-          "severity": "hard"
-        },
-        {
-          "candidate": "Registres/mission.jsonl",
-          "line": 201,
-          "referrer": "archive/rapports/audit-gouvernance-qualite-2026-08-03.md",
-          "resolved": "Registres/mission.jsonl",
-          "severity": "hard"
-        },
-        {
-          "candidate": "Registres/mission.jsonl",
-          "line": 74,
-          "referrer": "archive/rapports/conformite-v2.0-integrale.md",
-          "resolved": "Registres/mission.jsonl",
-          "severity": "hard"
-        },
-        {
-          "candidate": "Registres/mission.jsonl",
-          "line": 899,
-          "referrer": "evidence/audit-output/audit-exhaustif-2026-08-05/findings.json",
-          "resolved": "Registres/mission.jsonl",
-          "severity": "hard"
-        },
-        {
-          "candidate": "Registres/mission.jsonl",
-          "line": 917,
-          "referrer": "evidence/audit-output/audit-exhaustif-2026-08-05/findings.json",
-          "resolved": "Registres/mission.jsonl",
-          "severity": "hard"
-        },
-        {
-          "candidate": "Registres/mission.jsonl",
-          "line": 8,
-          "referrer": "evidence/reviews/AUDIT-2026-08-03-round1-reject/Qwen3.8-Max.verdict.json",
-          "resolved": "Registres/mission.jsonl",
-          "severity": "hard"
-        },
-        {
-          "candidate": "Registres/mission.jsonl",
-          "line": 32,
-          "referrer": "evidence/reviews/AUDIT-2026-08-03-round1-reject/Qwen3.8-Max.verdict.json",
-          "resolved": "Registres/mission.jsonl",
-          "severity": "hard"
-        },
-        {
-          "candidate": "Registres/mission.jsonl",
-          "line": 428,
-          "referrer": "evidence/reviews/B-20a/pack.md",
-          "resolved": "Registres/mission.jsonl",
-          "severity": "hard"
-        },
-        {
-          "candidate": "Registres/mission.jsonl",
-          "line": 1030,
-          "referrer": "evidence/reviews/B-24cd-final/pack.md",
-          "resolved": "Registres/mission.jsonl",
-          "severity": "hard"
-        },
-        {
-          "candidate": "Registres/mission.jsonl",
-          "line": 869,
-          "referrer": "evidence/reviews/B-24cd-t2/pack.md",
-          "resolved": "Registres/mission.jsonl",
-          "severity": "hard"
-        },
-        {
-          "candidate": "Registres/mission.jsonl",
-          "line": 194,
-          "referrer": "evidence/reviews/DOC-ETAT-civ/pack.md",
-          "resolved": "Registres/mission.jsonl",
-          "severity": "hard"
-        },
-        {
-          "candidate": "Registres/mission.jsonl",
-          "line": 196,
-          "referrer": "evidence/reviews/DOC-ETAT-civ/pack.md",
-          "resolved": "Registres/mission.jsonl",
-          "severity": "hard"
-        },
-        {
-          "candidate": "Registres/mission.jsonl",
-          "line": 14,
-          "referrer": "evidence/reviews/E3a/Grok-4.5.verdict.json",
-          "resolved": "Registres/mission.jsonl",
-          "severity": "hard"
-        },
-        {
-          "candidate": "Registres/mission.jsonl",
-          "line": 6,
-          "referrer": "evidence/reviews/RC1-003-PR489-v7/DeepSeek-V4-Pro.verdict.json",
-          "resolved": "Registres/mission.jsonl",
-          "severity": "hard"
-        },
-        {
-          "candidate": "Registres/mission.jsonl",
-          "line": 7,
-          "referrer": "evidence/reviews/RC1-003-PR489-v7/DeepSeek-V4-Pro.verdict.json",
-          "resolved": "Registres/mission.jsonl",
-          "severity": "hard"
-        },
-        {
-          "candidate": "Registres/mission.jsonl",
-          "line": 8,
-          "referrer": "evidence/reviews/RC1-003-PR489-v7/DeepSeek-V4-Pro.verdict.json",
-          "resolved": "Registres/mission.jsonl",
-          "severity": "hard"
-        },
-        {
-          "candidate": "Registres/mission.jsonl",
-          "line": 8,
-          "referrer": "evidence/reviews/RC1-007-PR490/DeepSeek-V4-Pro.verdict.json",
-          "resolved": "Registres/mission.jsonl",
-          "severity": "hard"
-        },
-        {
-          "candidate": "Registres/mission.jsonl",
-          "line": 8,
-          "referrer": "evidence/reviews/RC1-007-PR490/Kimi-2.7.verdict.json",
-          "resolved": "Registres/mission.jsonl",
-          "severity": "hard"
-        },
-        {
-          "candidate": "Registres/mission.jsonl",
-          "line": 6,
-          "referrer": "evidence/reviews/RC1-010-lot0-PR501-v1/DeepSeek-V4-Pro.verdict.json",
-          "resolved": "Registres/mission.jsonl",
-          "severity": "hard"
-        },
-        {
-          "candidate": "Registres/mission.jsonl",
-          "line": 7,
-          "referrer": "evidence/reviews/RC1-010-lot0-PR501-v1/DeepSeek-V4-Pro.verdict.json",
-          "resolved": "Registres/mission.jsonl",
-          "severity": "hard"
-        },
-        {
-          "candidate": "Registres/mission.jsonl",
-          "line": 6,
-          "referrer": "evidence/reviews/RC1-010-lot3-PR505-v2/DeepSeek-V4-Pro.verdict.json",
-          "resolved": "Registres/mission.jsonl",
-          "severity": "hard"
-        },
-        {
-          "candidate": "Registres/mission.jsonl",
-          "line": 164,
-          "referrer": "stories/CAP-033A.md",
-          "resolved": "Registres/mission.jsonl",
-          "severity": "hard"
-        },
-        {
-          "candidate": "Registres/mission.jsonl",
-          "line": 86,
-          "referrer": "stories/HEALTH-030.md",
-          "resolved": "Registres/mission.jsonl",
-          "severity": "hard"
-        },
-        {
-          "candidate": "Registres/mission.jsonl",
-          "line": 101,
-          "referrer": "stories/LAB-033A.md",
-          "resolved": "Registres/mission.jsonl",
-          "severity": "hard"
-        },
-        {
-          "candidate": "Registres/mission.jsonl",
-          "line": 101,
-          "referrer": "stories/LAB-033N.md",
-          "resolved": "Registres/mission.jsonl",
-          "severity": "hard"
-        },
-        {
-          "candidate": "Registres/mission.jsonl",
-          "line": 146,
-          "referrer": "stories/ORCH-001.md",
-          "resolved": "Registres/mission.jsonl",
-          "severity": "hard"
-        },
-        {
-          "candidate": "Registres/mission.jsonl",
-          "line": 184,
-          "referrer": "stories/ORCH-001.md",
-          "resolved": "Registres/mission.jsonl",
-          "severity": "hard"
-        },
-        {
-          "candidate": "Registres/mission.jsonl",
-          "line": 216,
-          "referrer": "stories/ORCH-001.md",
-          "resolved": "Registres/mission.jsonl",
-          "severity": "hard"
-        },
-        {
-          "candidate": "Registres/mission.jsonl",
-          "line": 53,
-          "referrer": "stories/REG-029A.md",
-          "resolved": "Registres/mission.jsonl",
-          "severity": "hard"
-        },
-        {
-          "candidate": "Registres/mission.jsonl",
-          "line": 26,
-          "referrer": "stories/SAST-042.md",
-          "resolved": "Registres/mission.jsonl",
-          "severity": "hard"
-        },
-        {
-          "candidate": "Registres/mission.jsonl",
-          "line": 27,
-          "referrer": "stories/SECRET-020A.md",
-          "resolved": "Registres/mission.jsonl",
-          "severity": "hard"
-        },
-        {
-          "candidate": "Registres/mission.jsonl",
-          "line": 28,
-          "referrer": "stories/TRUST-019A.md",
-          "resolved": "Registres/mission.jsonl",
-          "severity": "hard"
-        },
-        {
-          "candidate": "Registres/mission.jsonl",
-          "line": 55,
-          "referrer": "stories/TRUST-019A.md",
-          "resolved": "Registres/mission.jsonl",
-          "severity": "hard"
-        },
-        {
-          "candidate": "Registres/mission.jsonl",
-          "line": 188,
-          "referrer": "stories/TRUST-019A.md",
-          "resolved": "Registres/mission.jsonl",
-          "severity": "hard"
-        },
-        {
-          "candidate": "Registres/mission.jsonl",
-          "line": 273,
-          "referrer": "tests/test_guard_fs.py",
-          "resolved": "Registres/mission.jsonl",
-          "severity": "hard"
-        },
-        {
-          "candidate": "Registres/mission.jsonl",
-          "line": 424,
-          "referrer": "tests/test_guard_fs.py",
-          "resolved": "Registres/mission.jsonl",
-          "severity": "hard"
-        },
-        {
-          "candidate": "Registres/mission.jsonl",
-          "line": 683,
-          "referrer": "tests/test_guard_fs.py",
-          "resolved": "Registres/mission.jsonl",
-          "severity": "hard"
-        },
-        {
-          "candidate": "Registres/mission.jsonl",
-          "line": 15,
-          "referrer": "tests/test_immudb_e2e.py",
-          "resolved": "Registres/mission.jsonl",
-          "severity": "hard"
-        },
-        {
-          "candidate": "Registres/mission.jsonl",
-          "line": 34,
-          "referrer": "tests/test_immudb_e2e.py",
-          "resolved": "Registres/mission.jsonl",
-          "severity": "hard"
-        },
-        {
-          "candidate": "Registres/mission.jsonl",
-          "line": 13,
-          "referrer": "tests/test_langfuse_e2e.py",
-          "resolved": "Registres/mission.jsonl",
-          "severity": "hard"
-        },
-        {
-          "candidate": "Registres/mission.jsonl",
-          "line": 33,
-          "referrer": "tests/test_langfuse_e2e.py",
-          "resolved": "Registres/mission.jsonl",
-          "severity": "hard"
-        },
-        {
-          "candidate": "Registres/mission.jsonl",
-          "line": 37,
-          "referrer": "tests/test_manifest_quote_escaping.py",
-          "resolved": "Registres/mission.jsonl",
-          "severity": "hard"
-        },
-        {
-          "candidate": "Registres/mission.jsonl",
-          "line": 194,
-          "referrer": "tests/test_models_budget.py",
-          "resolved": "Registres/mission.jsonl",
-          "severity": "hard"
-        },
-        {
-          "candidate": "Registres/mission.jsonl",
-          "line": 51,
-          "referrer": "tests/test_no_stub_scan.py",
-          "resolved": "Registres/mission.jsonl",
-          "severity": "hard"
-        },
-        {
-          "candidate": "Registres/mission.jsonl",
-          "line": 27,
-          "referrer": "tests/test_openbao_sidecar_k3s.py",
-          "resolved": "Registres/mission.jsonl",
-          "severity": "hard"
-        },
-        {
-          "candidate": "Registres/mission.jsonl",
-          "line": 29,
-          "referrer": "tests/test_openbao_unsealer_compose.py",
-          "resolved": "Registres/mission.jsonl",
-          "severity": "hard"
-        },
-        {
-          "candidate": "Registres/mission.jsonl",
-          "line": 33,
-          "referrer": "tests/test_proc.py",
-          "resolved": "Registres/mission.jsonl",
-          "severity": "hard"
-        },
-        {
-          "candidate": "Registres/mission.jsonl",
-          "line": 34,
-          "referrer": "tests/test_rag_durci_e2e.py",
-          "resolved": "Registres/mission.jsonl",
-          "severity": "hard"
-        },
-        {
-          "candidate": "Registres/mission.jsonl",
-          "line": 8,
-          "referrer": "tests/test_rag_rerank_e2e.py",
-          "resolved": "Registres/mission.jsonl",
-          "severity": "hard"
-        },
-        {
-          "candidate": "Registres/mission.jsonl",
-          "line": 37,
-          "referrer": "tests/test_rag_rerank_e2e.py",
-          "resolved": "Registres/mission.jsonl",
-          "severity": "hard"
-        },
-        {
-          "candidate": "Registres/mission.jsonl",
-          "line": 90,
-          "referrer": "tests/test_renderers.py",
-          "resolved": "Registres/mission.jsonl",
-          "severity": "hard"
-        },
-        {
-          "candidate": "Registres/mission.jsonl",
-          "line": 18,
-          "referrer": "tests/test_vault_e2e.py",
-          "resolved": "Registres/mission.jsonl",
-          "severity": "hard"
-        },
-        {
-          "candidate": "Registres/mission.jsonl",
-          "line": 40,
-          "referrer": "tests/test_vault_e2e.py",
-          "resolved": "Registres/mission.jsonl",
-          "severity": "hard"
-        }
-      ],
-      "rule_id": "evidence-registres",
-      "sha256": "48a45db55e134ad8e7990b3b92f53a7f6e25f357911926f1a4869fc44b63f72f",
-      "size": 1595,
-      "target_path": "evidence/registres/mission.jsonl",
-      "type": "text"
-    },
-    {
       "class": "WORKING",
       "generated": false,
       "load_bearing": false,
@@ -6226,8 +5806,8 @@
         }
       ],
       "rule_id": "evidence-registres-root",
-      "sha256": "755ea1261604c6623bcf94e82301e8a8c20806f4a5f3167660aa367a13055695",
-      "size": 365161,
+      "sha256": "6d8511699b061b141890ed18a186dd57ca029d4b97a275a44dca589b7b64716c",
+      "size": 367916,
       "target_path": null,
       "type": "text"
     },
@@ -18815,6 +18395,19 @@
       "rule_id": "evidence-reviews-root",
       "sha256": "fd79ccf3c70a7912810f17e8da56410a88c93faab153254f5d0393528a1d46f1",
       "size": 323,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-010-lot5d-PR-v7/RECU.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "aa3c4f23be4b50e1eb6c4b8bf9699c3fa8afe179a3553e80ce38a00c7b4bdb49",
+      "size": 680,
       "target_path": null,
       "type": "text"
     },
@@ -48102,6 +47695,11 @@
         "referrer": "CANON/ETAT-SYSTEME.md"
       },
       {
+        "candidate": "Registres/mission.jsonl",
+        "line": 77,
+        "referrer": "CANON/ETAT-SYSTEME.md"
+      },
+      {
         "candidate": "NVIDIA/AMD",
         "line": 84,
         "referrer": "CANON/ETAT-SYSTEME.md"
@@ -48592,6 +48190,11 @@
         "referrer": "CANON/adr/ADR-TRUST-019A-registres-modele-de-menace-racine-confiance.md"
       },
       {
+        "candidate": "Registres/mission.jsonl",
+        "line": 16,
+        "referrer": "CANON/adr/ADR-TRUST-019A-registres-modele-de-menace-racine-confiance.md"
+      },
+      {
         "candidate": "ISSUES/TRUST-019A.md",
         "line": 28,
         "referrer": "CANON/adr/ADR-TRUST-019A-registres-modele-de-menace-racine-confiance.md"
@@ -48689,6 +48292,16 @@
       {
         "candidate": "Registres/",
         "line": 128,
+        "referrer": "CANON/adr/ADR-TRUST-019A-registres-modele-de-menace-racine-confiance.md"
+      },
+      {
+        "candidate": "Registres/mission.jsonl",
+        "line": 129,
+        "referrer": "CANON/adr/ADR-TRUST-019A-registres-modele-de-menace-racine-confiance.md"
+      },
+      {
+        "candidate": "Registres/mission.jsonl",
+        "line": 130,
         "referrer": "CANON/adr/ADR-TRUST-019A-registres-modele-de-menace-racine-confiance.md"
       },
       {
@@ -48814,6 +48427,16 @@
       {
         "candidate": "reviews/B-12-civ/",
         "line": 259,
+        "referrer": "CANON/adr/ADR-TRUST-019A-registres-modele-de-menace-racine-confiance.md"
+      },
+      {
+        "candidate": "Registres/mission.jsonl",
+        "line": 264,
+        "referrer": "CANON/adr/ADR-TRUST-019A-registres-modele-de-menace-racine-confiance.md"
+      },
+      {
+        "candidate": "Registres/mission.jsonl",
+        "line": 265,
         "referrer": "CANON/adr/ADR-TRUST-019A-registres-modele-de-menace-racine-confiance.md"
       },
       {
@@ -55142,6 +54765,11 @@
         "referrer": "archive/rapports/audit-gouvernance-qualite-2026-08-03.md"
       },
       {
+        "candidate": "Registres/mission.jsonl",
+        "line": 201,
+        "referrer": "archive/rapports/audit-gouvernance-qualite-2026-08-03.md"
+      },
+      {
         "candidate": "Registres/",
         "line": 220,
         "referrer": "archive/rapports/audit-gouvernance-qualite-2026-08-03.md"
@@ -55484,6 +55112,11 @@
       {
         "candidate": "tally.py",
         "line": 72,
+        "referrer": "archive/rapports/conformite-v2.0-integrale.md"
+      },
+      {
+        "candidate": "Registres/mission.jsonl",
+        "line": 74,
         "referrer": "archive/rapports/conformite-v2.0-integrale.md"
       },
       {
@@ -56577,8 +56210,18 @@
         "referrer": "evidence/audit-output/audit-exhaustif-2026-08-05/findings.json"
       },
       {
+        "candidate": "Registres/mission.jsonl",
+        "line": 899,
+        "referrer": "evidence/audit-output/audit-exhaustif-2026-08-05/findings.json"
+      },
+      {
         "candidate": "coordination/completed.json",
         "line": 902,
+        "referrer": "evidence/audit-output/audit-exhaustif-2026-08-05/findings.json"
+      },
+      {
+        "candidate": "Registres/mission.jsonl",
+        "line": 917,
         "referrer": "evidence/audit-output/audit-exhaustif-2026-08-05/findings.json"
       },
       {
@@ -56942,6 +56585,11 @@
         "referrer": "evidence/reviews/AUDIT-2026-08-03-round1-reject/Qwen3.8-Max.verdict.json"
       },
       {
+        "candidate": "Registres/mission.jsonl",
+        "line": 8,
+        "referrer": "evidence/reviews/AUDIT-2026-08-03-round1-reject/Qwen3.8-Max.verdict.json"
+      },
+      {
         "candidate": "Registres/PATCH-WEB-001.jsonl",
         "line": 8,
         "referrer": "evidence/reviews/AUDIT-2026-08-03-round1-reject/Qwen3.8-Max.verdict.json"
@@ -56949,6 +56597,11 @@
       {
         "candidate": "B-22/B-25",
         "line": 31,
+        "referrer": "evidence/reviews/AUDIT-2026-08-03-round1-reject/Qwen3.8-Max.verdict.json"
+      },
+      {
+        "candidate": "Registres/mission.jsonl",
+        "line": 32,
         "referrer": "evidence/reviews/AUDIT-2026-08-03-round1-reject/Qwen3.8-Max.verdict.json"
       },
       {
@@ -59282,6 +58935,11 @@
         "referrer": "evidence/reviews/B-20a/pack.md"
       },
       {
+        "candidate": "Registres/mission.jsonl",
+        "line": 428,
+        "referrer": "evidence/reviews/B-20a/pack.md"
+      },
+      {
         "candidate": "budgets.json",
         "line": 510,
         "referrer": "evidence/reviews/B-20a/pack.md"
@@ -60517,6 +60175,11 @@
         "referrer": "evidence/reviews/B-24cd-final/pack.md"
       },
       {
+        "candidate": "Registres/mission.jsonl",
+        "line": 1030,
+        "referrer": "evidence/reviews/B-24cd-final/pack.md"
+      },
+      {
         "candidate": "racine/.claude/hooks/",
         "line": 1039,
         "referrer": "evidence/reviews/B-24cd-final/pack.md"
@@ -61149,6 +60812,11 @@
       {
         "candidate": "foo/../../../etc/passwd",
         "line": 848,
+        "referrer": "evidence/reviews/B-24cd-t2/pack.md"
+      },
+      {
+        "candidate": "Registres/mission.jsonl",
+        "line": 869,
         "referrer": "evidence/reviews/B-24cd-t2/pack.md"
       },
       {
@@ -66677,6 +66345,16 @@
         "referrer": "evidence/reviews/DOC-ETAT-civ/pack.md"
       },
       {
+        "candidate": "Registres/mission.jsonl",
+        "line": 194,
+        "referrer": "evidence/reviews/DOC-ETAT-civ/pack.md"
+      },
+      {
+        "candidate": "Registres/mission.jsonl",
+        "line": 196,
+        "referrer": "evidence/reviews/DOC-ETAT-civ/pack.md"
+      },
+      {
         "candidate": "B-13/B-14",
         "line": 204,
         "referrer": "evidence/reviews/DOC-ETAT-civ/pack.md"
@@ -66803,6 +66481,11 @@
       },
       {
         "candidate": "tests/test_",
+        "line": 14,
+        "referrer": "evidence/reviews/E3a/Grok-4.5.verdict.json"
+      },
+      {
+        "candidate": "Registres/mission.jsonl",
         "line": 14,
         "referrer": "evidence/reviews/E3a/Grok-4.5.verdict.json"
       },
@@ -82817,6 +82500,11 @@
         "referrer": "evidence/reviews/RC1-003-PR489-v4/DeepSeek-V4-Pro.verdict.json"
       },
       {
+        "candidate": "Registres/mission.jsonl",
+        "line": 6,
+        "referrer": "evidence/reviews/RC1-003-PR489-v7/DeepSeek-V4-Pro.verdict.json"
+      },
+      {
         "candidate": "reviews/BINDING.txt",
         "line": 6,
         "referrer": "evidence/reviews/RC1-003-PR489-v7/DeepSeek-V4-Pro.verdict.json"
@@ -82827,6 +82515,11 @@
         "referrer": "evidence/reviews/RC1-003-PR489-v7/DeepSeek-V4-Pro.verdict.json"
       },
       {
+        "candidate": "Registres/mission.jsonl",
+        "line": 7,
+        "referrer": "evidence/reviews/RC1-003-PR489-v7/DeepSeek-V4-Pro.verdict.json"
+      },
+      {
         "candidate": "reviews/BINDING.txt",
         "line": 7,
         "referrer": "evidence/reviews/RC1-003-PR489-v7/DeepSeek-V4-Pro.verdict.json"
@@ -82834,6 +82527,11 @@
       {
         "candidate": "Gemini/Qwen",
         "line": 7,
+        "referrer": "evidence/reviews/RC1-003-PR489-v7/DeepSeek-V4-Pro.verdict.json"
+      },
+      {
+        "candidate": "Registres/mission.jsonl",
+        "line": 8,
         "referrer": "evidence/reviews/RC1-003-PR489-v7/DeepSeek-V4-Pro.verdict.json"
       },
       {
@@ -83062,6 +82760,11 @@
         "referrer": "evidence/reviews/RC1-007-PR490-v4/MiMo-Pro-V2.verdict.json"
       },
       {
+        "candidate": "Registres/mission.jsonl",
+        "line": 8,
+        "referrer": "evidence/reviews/RC1-007-PR490/DeepSeek-V4-Pro.verdict.json"
+      },
+      {
         "candidate": "README.md/AGENTS.md",
         "line": 19,
         "referrer": "evidence/reviews/RC1-007-PR490/DeepSeek-V4-Pro.verdict.json"
@@ -83070,6 +82773,11 @@
         "candidate": "state_current.py",
         "line": 8,
         "referrer": "evidence/reviews/RC1-007-PR490/Gemini-3.1-Pro.verdict.json"
+      },
+      {
+        "candidate": "Registres/mission.jsonl",
+        "line": 8,
+        "referrer": "evidence/reviews/RC1-007-PR490/Kimi-2.7.verdict.json"
       },
       {
         "candidate": "size/type/hash",
@@ -83337,7 +83045,17 @@
         "referrer": "evidence/reviews/RC1-009/RECU.json"
       },
       {
+        "candidate": "Registres/mission.jsonl",
+        "line": 6,
+        "referrer": "evidence/reviews/RC1-010-lot0-PR501-v1/DeepSeek-V4-Pro.verdict.json"
+      },
+      {
         "candidate": "Registres/",
+        "line": 7,
+        "referrer": "evidence/reviews/RC1-010-lot0-PR501-v1/DeepSeek-V4-Pro.verdict.json"
+      },
+      {
+        "candidate": "Registres/mission.jsonl",
         "line": 7,
         "referrer": "evidence/reviews/RC1-010-lot0-PR501-v1/DeepSeek-V4-Pro.verdict.json"
       },
@@ -83637,6 +83355,11 @@
         "referrer": "evidence/reviews/RC1-010-lot3-PR505-v1/RECU.json"
       },
       {
+        "candidate": "Registres/mission.jsonl",
+        "line": 6,
+        "referrer": "evidence/reviews/RC1-010-lot3-PR505-v2/DeepSeek-V4-Pro.verdict.json"
+      },
+      {
         "candidate": "BASELINE-COMPLETUDE.json",
         "line": 7,
         "referrer": "evidence/reviews/RC1-010-lot3-PR505-v2/DeepSeek-V4-Pro.verdict.json"
@@ -83905,6 +83628,11 @@
         "candidate": "verify/ancrage",
         "line": 8,
         "referrer": "evidence/reviews/RC1-010-lot5d-PR-v3/DeepSeek-V4-Pro.verdict.json"
+      },
+      {
+        "candidate": "recu-revue/1",
+        "line": 2,
+        "referrer": "evidence/reviews/RC1-010-lot5d-PR-v7/RECU.json"
       },
       {
         "candidate": "e2/e3/e4/e5/e6/e7",
@@ -107507,6 +107235,11 @@
         "referrer": "stories/CAP-033A.md"
       },
       {
+        "candidate": "Registres/mission.jsonl",
+        "line": 164,
+        "referrer": "stories/CAP-033A.md"
+      },
+      {
         "candidate": "try/except",
         "line": 37,
         "referrer": "stories/CLI-013.md"
@@ -108849,6 +108582,11 @@
       {
         "candidate": "no_stub_scan.py",
         "line": 84,
+        "referrer": "stories/HEALTH-030.md"
+      },
+      {
+        "candidate": "Registres/mission.jsonl",
+        "line": 86,
         "referrer": "stories/HEALTH-030.md"
       },
       {
@@ -110787,6 +110525,11 @@
         "referrer": "stories/LAB-033A.md"
       },
       {
+        "candidate": "Registres/mission.jsonl",
+        "line": 101,
+        "referrer": "stories/LAB-033A.md"
+      },
+      {
         "candidate": "evidence/finding-passthrough-inoperant.txt",
         "line": 106,
         "referrer": "stories/LAB-033A.md"
@@ -111078,6 +110821,11 @@
       },
       {
         "candidate": "Registres/PATCH-LAB-033N.jsonl",
+        "line": 101,
+        "referrer": "stories/LAB-033N.md"
+      },
+      {
+        "candidate": "Registres/mission.jsonl",
         "line": 101,
         "referrer": "stories/LAB-033N.md"
       },
@@ -111417,6 +111165,11 @@
         "referrer": "stories/ORCH-001.md"
       },
       {
+        "candidate": "Registres/mission.jsonl",
+        "line": 146,
+        "referrer": "stories/ORCH-001.md"
+      },
+      {
         "candidate": "RED/GREEN",
         "line": 148,
         "referrer": "stories/ORCH-001.md"
@@ -111454,6 +111207,11 @@
       {
         "candidate": "ISSUES/ORCH-001.md",
         "line": 181,
+        "referrer": "stories/ORCH-001.md"
+      },
+      {
+        "candidate": "Registres/mission.jsonl",
+        "line": 184,
         "referrer": "stories/ORCH-001.md"
       },
       {
@@ -111514,6 +111272,11 @@
       {
         "candidate": "Registres/PATCH-ORCH-001.jsonl",
         "line": 215,
+        "referrer": "stories/ORCH-001.md"
+      },
+      {
+        "candidate": "Registres/mission.jsonl",
+        "line": 216,
         "referrer": "stories/ORCH-001.md"
       },
       {
@@ -112024,6 +111787,11 @@
       {
         "candidate": "reviews/X",
         "line": 51,
+        "referrer": "stories/REG-029A.md"
+      },
+      {
+        "candidate": "Registres/mission.jsonl",
+        "line": 53,
         "referrer": "stories/REG-029A.md"
       },
       {
@@ -112822,6 +112590,11 @@
         "referrer": "stories/SAST-042.md"
       },
       {
+        "candidate": "Registres/mission.jsonl",
+        "line": 26,
+        "referrer": "stories/SAST-042.md"
+      },
+      {
         "candidate": "AUDIT-OUTPUT/sast/bandit.json",
         "line": 28,
         "referrer": "stories/SAST-042.md"
@@ -113133,6 +112906,11 @@
       },
       {
         "candidate": "registre.py",
+        "line": 27,
+        "referrer": "stories/SECRET-020A.md"
+      },
+      {
+        "candidate": "Registres/mission.jsonl",
         "line": 27,
         "referrer": "stories/SECRET-020A.md"
       },
@@ -113827,6 +113605,11 @@
         "referrer": "stories/TRUST-019A.md"
       },
       {
+        "candidate": "Registres/mission.jsonl",
+        "line": 28,
+        "referrer": "stories/TRUST-019A.md"
+      },
+      {
         "candidate": "validate_coordination.py",
         "line": 29,
         "referrer": "stories/TRUST-019A.md"
@@ -113859,6 +113642,11 @@
       {
         "candidate": "Registres/",
         "line": 54,
+        "referrer": "stories/TRUST-019A.md"
+      },
+      {
+        "candidate": "Registres/mission.jsonl",
+        "line": 55,
         "referrer": "stories/TRUST-019A.md"
       },
       {
@@ -114164,6 +113952,11 @@
       {
         "candidate": "SECRET-020A/PR",
         "line": 186,
+        "referrer": "stories/TRUST-019A.md"
+      },
+      {
+        "candidate": "Registres/mission.jsonl",
+        "line": 188,
         "referrer": "stories/TRUST-019A.md"
       },
       {
@@ -117027,6 +116820,11 @@
         "referrer": "tests/test_guard_fs.py"
       },
       {
+        "candidate": "Registres/mission.jsonl",
+        "line": 273,
+        "referrer": "tests/test_guard_fs.py"
+      },
+      {
         "candidate": "garde_allow.py",
         "line": 326,
         "referrer": "tests/test_guard_fs.py"
@@ -117087,6 +116885,11 @@
         "referrer": "tests/test_guard_fs.py"
       },
       {
+        "candidate": "Registres/mission.jsonl",
+        "line": 424,
+        "referrer": "tests/test_guard_fs.py"
+      },
+      {
         "candidate": "racine/.claude/hooks/",
         "line": 433,
         "referrer": "tests/test_guard_fs.py"
@@ -117144,6 +116947,11 @@
       {
         "candidate": "settings.json",
         "line": 631,
+        "referrer": "tests/test_guard_fs.py"
+      },
+      {
+        "candidate": "Registres/mission.jsonl",
+        "line": 683,
         "referrer": "tests/test_guard_fs.py"
       },
       {
@@ -117957,6 +117765,16 @@
         "referrer": "tests/test_immudb_e2e.py"
       },
       {
+        "candidate": "Registres/mission.jsonl",
+        "line": 15,
+        "referrer": "tests/test_immudb_e2e.py"
+      },
+      {
+        "candidate": "Registres/mission.jsonl",
+        "line": 34,
+        "referrer": "tests/test_immudb_e2e.py"
+      },
+      {
         "candidate": "codenotary/immudb",
         "line": 54,
         "referrer": "tests/test_immudb_e2e.py"
@@ -118197,6 +118015,16 @@
         "referrer": "tests/test_langfuse.py"
       },
       {
+        "candidate": "Registres/mission.jsonl",
+        "line": 13,
+        "referrer": "tests/test_langfuse_e2e.py"
+      },
+      {
+        "candidate": "Registres/mission.jsonl",
+        "line": 33,
+        "referrer": "tests/test_langfuse_e2e.py"
+      },
+      {
         "candidate": "litellm-config.yaml",
         "line": 51,
         "referrer": "tests/test_langfuse_e2e.py"
@@ -118307,6 +118135,11 @@
         "referrer": "tests/test_manifest_quote_escaping.py"
       },
       {
+        "candidate": "Registres/mission.jsonl",
+        "line": 37,
+        "referrer": "tests/test_manifest_quote_escaping.py"
+      },
+      {
         "candidate": "litellm/litellm",
         "line": 62,
         "referrer": "tests/test_manifest_quote_escaping.py"
@@ -118369,6 +118202,11 @@
       {
         "candidate": "budgets.json",
         "line": 176,
+        "referrer": "tests/test_models_budget.py"
+      },
+      {
+        "candidate": "Registres/mission.jsonl",
+        "line": 194,
         "referrer": "tests/test_models_budget.py"
       },
       {
@@ -118702,6 +118540,11 @@
         "referrer": "tests/test_no_stub_scan.py"
       },
       {
+        "candidate": "Registres/mission.jsonl",
+        "line": 51,
+        "referrer": "tests/test_no_stub_scan.py"
+      },
+      {
         "candidate": "ip/user/empreinte",
         "line": 153,
         "referrer": "tests/test_node_add.py"
@@ -118907,6 +118750,11 @@
         "referrer": "tests/test_openbao_prod_render.py"
       },
       {
+        "candidate": "Registres/mission.jsonl",
+        "line": 27,
+        "referrer": "tests/test_openbao_sidecar_k3s.py"
+      },
+      {
         "candidate": "openbao/openbao",
         "line": 33,
         "referrer": "tests/test_openbao_sidecar_k3s.py"
@@ -118915,6 +118763,11 @@
         "candidate": "./openbao.hcl",
         "line": 39,
         "referrer": "tests/test_openbao_sidecar_k3s.py"
+      },
+      {
+        "candidate": "Registres/mission.jsonl",
+        "line": 29,
+        "referrer": "tests/test_openbao_unsealer_compose.py"
       },
       {
         "candidate": "openbao/openbao",
@@ -119412,6 +119265,11 @@
         "referrer": "tests/test_proc.py"
       },
       {
+        "candidate": "Registres/mission.jsonl",
+        "line": 33,
+        "referrer": "tests/test_proc.py"
+      },
+      {
         "candidate": "make_orphan.py",
         "line": 56,
         "referrer": "tests/test_proc.py"
@@ -119597,6 +119455,11 @@
         "referrer": "tests/test_rag_durci_e2e.py"
       },
       {
+        "candidate": "Registres/mission.jsonl",
+        "line": 34,
+        "referrer": "tests/test_rag_durci_e2e.py"
+      },
+      {
         "candidate": "deploy-hardened.json",
         "line": 64,
         "referrer": "tests/test_rag_durci_e2e.py"
@@ -119712,8 +119575,18 @@
         "referrer": "tests/test_rag_rerank.py"
       },
       {
+        "candidate": "Registres/mission.jsonl",
+        "line": 8,
+        "referrer": "tests/test_rag_rerank_e2e.py"
+      },
+      {
         "candidate": "pertinent/hors-sujet",
         "line": 11,
+        "referrer": "tests/test_rag_rerank_e2e.py"
+      },
+      {
+        "candidate": "Registres/mission.jsonl",
+        "line": 37,
         "referrer": "tests/test_rag_rerank_e2e.py"
       },
       {
@@ -120304,6 +120177,11 @@
       {
         "candidate": "ollama/ollama",
         "line": 36,
+        "referrer": "tests/test_renderers.py"
+      },
+      {
+        "candidate": "Registres/mission.jsonl",
+        "line": 90,
         "referrer": "tests/test_renderers.py"
       },
       {
@@ -121714,6 +121592,16 @@
       {
         "candidate": "token/valeur",
         "line": 16,
+        "referrer": "tests/test_vault_e2e.py"
+      },
+      {
+        "candidate": "Registres/mission.jsonl",
+        "line": 18,
+        "referrer": "tests/test_vault_e2e.py"
+      },
+      {
+        "candidate": "Registres/mission.jsonl",
+        "line": 40,
         "referrer": "tests/test_vault_e2e.py"
       },
       {
@@ -124206,13 +124094,6 @@
         "severity": "hard"
       },
       {
-        "candidate": "Registres/mission.jsonl",
-        "line": 77,
-        "referrer": "CANON/ETAT-SYSTEME.md",
-        "resolved": "Registres/mission.jsonl",
-        "severity": "hard"
-      },
-      {
         "candidate": "Docs/reference/gpu-drivers-support.md",
         "line": 84,
         "referrer": "CANON/ETAT-SYSTEME.md",
@@ -124367,13 +124248,6 @@
         "severity": "hard"
       },
       {
-        "candidate": "Registres/mission.jsonl",
-        "line": 16,
-        "referrer": "CANON/adr/ADR-TRUST-019A-registres-modele-de-menace-racine-confiance.md",
-        "resolved": "Registres/mission.jsonl",
-        "severity": "hard"
-      },
-      {
         "candidate": "src/forgeai/catalogue/loader.py",
         "line": 20,
         "referrer": "CANON/adr/ADR-TRUST-019A-registres-modele-de-menace-racine-confiance.md",
@@ -124413,20 +124287,6 @@
         "line": 107,
         "referrer": "CANON/adr/ADR-TRUST-019A-registres-modele-de-menace-racine-confiance.md",
         "resolved": "src/forgeai/models/vault.py",
-        "severity": "hard"
-      },
-      {
-        "candidate": "Registres/mission.jsonl",
-        "line": 129,
-        "referrer": "CANON/adr/ADR-TRUST-019A-registres-modele-de-menace-racine-confiance.md",
-        "resolved": "Registres/mission.jsonl",
-        "severity": "hard"
-      },
-      {
-        "candidate": "Registres/mission.jsonl",
-        "line": 130,
-        "referrer": "CANON/adr/ADR-TRUST-019A-registres-modele-de-menace-racine-confiance.md",
-        "resolved": "Registres/mission.jsonl",
         "severity": "hard"
       },
       {
@@ -124490,20 +124350,6 @@
         "line": 261,
         "referrer": "CANON/adr/ADR-TRUST-019A-registres-modele-de-menace-racine-confiance.md",
         "resolved": "scripts/registre.py",
-        "severity": "hard"
-      },
-      {
-        "candidate": "Registres/mission.jsonl",
-        "line": 264,
-        "referrer": "CANON/adr/ADR-TRUST-019A-registres-modele-de-menace-racine-confiance.md",
-        "resolved": "Registres/mission.jsonl",
-        "severity": "hard"
-      },
-      {
-        "candidate": "Registres/mission.jsonl",
-        "line": 265,
-        "referrer": "CANON/adr/ADR-TRUST-019A-registres-modele-de-menace-racine-confiance.md",
-        "resolved": "Registres/mission.jsonl",
         "severity": "hard"
       },
       {
@@ -126341,13 +126187,6 @@
         "severity": "hard"
       },
       {
-        "candidate": "Registres/mission.jsonl",
-        "line": 201,
-        "referrer": "archive/rapports/audit-gouvernance-qualite-2026-08-03.md",
-        "resolved": "Registres/mission.jsonl",
-        "severity": "hard"
-      },
-      {
         "candidate": "scripts/registre.py",
         "line": 221,
         "referrer": "archive/rapports/audit-gouvernance-qualite-2026-08-03.md",
@@ -126450,13 +126289,6 @@
         "line": 71,
         "referrer": "archive/rapports/conformite-v2.0-integrale.md",
         "resolved": "scripts/no_stub_scan.py",
-        "severity": "hard"
-      },
-      {
-        "candidate": "Registres/mission.jsonl",
-        "line": 74,
-        "referrer": "archive/rapports/conformite-v2.0-integrale.md",
-        "resolved": "Registres/mission.jsonl",
         "severity": "hard"
       },
       {
@@ -126772,20 +126604,6 @@
         "line": 887,
         "referrer": "evidence/audit-output/audit-exhaustif-2026-08-05/findings.json",
         "resolved": "manifests/gates.yaml",
-        "severity": "hard"
-      },
-      {
-        "candidate": "Registres/mission.jsonl",
-        "line": 899,
-        "referrer": "evidence/audit-output/audit-exhaustif-2026-08-05/findings.json",
-        "resolved": "Registres/mission.jsonl",
-        "severity": "hard"
-      },
-      {
-        "candidate": "Registres/mission.jsonl",
-        "line": 917,
-        "referrer": "evidence/audit-output/audit-exhaustif-2026-08-05/findings.json",
-        "resolved": "Registres/mission.jsonl",
         "severity": "hard"
       },
       {
@@ -128294,20 +128112,6 @@
         "severity": "hard"
       },
       {
-        "candidate": "Registres/mission.jsonl",
-        "line": 8,
-        "referrer": "evidence/reviews/AUDIT-2026-08-03-round1-reject/Qwen3.8-Max.verdict.json",
-        "resolved": "Registres/mission.jsonl",
-        "severity": "hard"
-      },
-      {
-        "candidate": "Registres/mission.jsonl",
-        "line": 32,
-        "referrer": "evidence/reviews/AUDIT-2026-08-03-round1-reject/Qwen3.8-Max.verdict.json",
-        "resolved": "Registres/mission.jsonl",
-        "severity": "hard"
-      },
-      {
         "candidate": "stories/I18N-041.md",
         "line": 61,
         "referrer": "evidence/reviews/AUDIT-2026-08-03-round1-reject/Qwen3.8-Max.verdict.json",
@@ -128623,13 +128427,6 @@
         "severity": "hard"
       },
       {
-        "candidate": "Registres/mission.jsonl",
-        "line": 428,
-        "referrer": "evidence/reviews/B-20a/pack.md",
-        "resolved": "Registres/mission.jsonl",
-        "severity": "hard"
-      },
-      {
         "candidate": "tests/test_models_budget.py",
         "line": 527,
         "referrer": "evidence/reviews/B-20a/pack.md",
@@ -128889,13 +128686,6 @@
         "severity": "hard"
       },
       {
-        "candidate": "Registres/mission.jsonl",
-        "line": 1030,
-        "referrer": "evidence/reviews/B-24cd-final/pack.md",
-        "resolved": "Registres/mission.jsonl",
-        "severity": "hard"
-      },
-      {
         "candidate": "tests/test_guard_fs.py",
         "line": 1085,
         "referrer": "evidence/reviews/B-24cd-final/pack.md",
@@ -128907,13 +128697,6 @@
         "line": 2020,
         "referrer": "evidence/reviews/B-24cd-final/pack.md",
         "resolved": "tests/test_guard_fs.py",
-        "severity": "hard"
-      },
-      {
-        "candidate": "Registres/mission.jsonl",
-        "line": 869,
-        "referrer": "evidence/reviews/B-24cd-t2/pack.md",
-        "resolved": "Registres/mission.jsonl",
         "severity": "hard"
       },
       {
@@ -130786,20 +130569,6 @@
         "severity": "hard"
       },
       {
-        "candidate": "Registres/mission.jsonl",
-        "line": 194,
-        "referrer": "evidence/reviews/DOC-ETAT-civ/pack.md",
-        "resolved": "Registres/mission.jsonl",
-        "severity": "hard"
-      },
-      {
-        "candidate": "Registres/mission.jsonl",
-        "line": 196,
-        "referrer": "evidence/reviews/DOC-ETAT-civ/pack.md",
-        "resolved": "Registres/mission.jsonl",
-        "severity": "hard"
-      },
-      {
         "candidate": "manifests/backlog.yaml",
         "line": 204,
         "referrer": "evidence/reviews/DOC-ETAT-civ/pack.md",
@@ -130832,13 +130601,6 @@
         "line": 6,
         "referrer": "evidence/reviews/E3a/Grok-4.5.verdict.json",
         "resolved": "tests/test_wizard_rag_durci.py",
-        "severity": "hard"
-      },
-      {
-        "candidate": "Registres/mission.jsonl",
-        "line": 14,
-        "referrer": "evidence/reviews/E3a/Grok-4.5.verdict.json",
-        "resolved": "Registres/mission.jsonl",
         "severity": "hard"
       },
       {
@@ -133082,27 +132844,6 @@
         "severity": "hard"
       },
       {
-        "candidate": "Registres/mission.jsonl",
-        "line": 6,
-        "referrer": "evidence/reviews/RC1-003-PR489-v7/DeepSeek-V4-Pro.verdict.json",
-        "resolved": "Registres/mission.jsonl",
-        "severity": "hard"
-      },
-      {
-        "candidate": "Registres/mission.jsonl",
-        "line": 7,
-        "referrer": "evidence/reviews/RC1-003-PR489-v7/DeepSeek-V4-Pro.verdict.json",
-        "resolved": "Registres/mission.jsonl",
-        "severity": "hard"
-      },
-      {
-        "candidate": "Registres/mission.jsonl",
-        "line": 8,
-        "referrer": "evidence/reviews/RC1-003-PR489-v7/DeepSeek-V4-Pro.verdict.json",
-        "resolved": "Registres/mission.jsonl",
-        "severity": "hard"
-      },
-      {
         "candidate": "governance/STATE-CURRENT.json",
         "line": 12,
         "referrer": "evidence/reviews/RC1-003-PR489-v7/DeepSeek-V4-Pro.verdict.json",
@@ -133579,13 +133320,6 @@
         "severity": "hard"
       },
       {
-        "candidate": "Registres/mission.jsonl",
-        "line": 8,
-        "referrer": "evidence/reviews/RC1-007-PR490/DeepSeek-V4-Pro.verdict.json",
-        "resolved": "Registres/mission.jsonl",
-        "severity": "hard"
-      },
-      {
         "candidate": "README.md",
         "line": 8,
         "referrer": "evidence/reviews/RC1-007-PR490/DeepSeek-V4-Pro.verdict.json",
@@ -133716,13 +133450,6 @@
         "line": 8,
         "referrer": "evidence/reviews/RC1-007-PR490/Kimi-2.7.verdict.json",
         "resolved": "README.md",
-        "severity": "hard"
-      },
-      {
-        "candidate": "Registres/mission.jsonl",
-        "line": 8,
-        "referrer": "evidence/reviews/RC1-007-PR490/Kimi-2.7.verdict.json",
-        "resolved": "Registres/mission.jsonl",
         "severity": "hard"
       },
       {
@@ -134321,20 +134048,6 @@
         "severity": "hard"
       },
       {
-        "candidate": "Registres/mission.jsonl",
-        "line": 6,
-        "referrer": "evidence/reviews/RC1-010-lot0-PR501-v1/DeepSeek-V4-Pro.verdict.json",
-        "resolved": "Registres/mission.jsonl",
-        "severity": "hard"
-      },
-      {
-        "candidate": "Registres/mission.jsonl",
-        "line": 7,
-        "referrer": "evidence/reviews/RC1-010-lot0-PR501-v1/DeepSeek-V4-Pro.verdict.json",
-        "resolved": "Registres/mission.jsonl",
-        "severity": "hard"
-      },
-      {
         "candidate": "governance/authority.json",
         "line": 12,
         "referrer": "evidence/reviews/RC1-010-lot0-PR501-v1/DeepSeek-V4-Pro.verdict.json",
@@ -134717,13 +134430,6 @@
         "line": 8,
         "referrer": "evidence/reviews/RC1-010-lot3-PR505-v1/DeepSeek-V4-Pro.verdict.json",
         "resolved": "README.md",
-        "severity": "hard"
-      },
-      {
-        "candidate": "Registres/mission.jsonl",
-        "line": 6,
-        "referrer": "evidence/reviews/RC1-010-lot3-PR505-v2/DeepSeek-V4-Pro.verdict.json",
-        "resolved": "Registres/mission.jsonl",
         "severity": "hard"
       },
       {
@@ -141678,13 +141384,6 @@
         "severity": "hard"
       },
       {
-        "candidate": "Registres/mission.jsonl",
-        "line": 164,
-        "referrer": "stories/CAP-033A.md",
-        "resolved": "Registres/mission.jsonl",
-        "severity": "hard"
-      },
-      {
         "candidate": "src/forgeai/core/redaction.py",
         "line": 5,
         "referrer": "stories/CLI-013.md",
@@ -142259,13 +141958,6 @@
         "severity": "hard"
       },
       {
-        "candidate": "Registres/mission.jsonl",
-        "line": 86,
-        "referrer": "stories/HEALTH-030.md",
-        "resolved": "Registres/mission.jsonl",
-        "severity": "hard"
-      },
-      {
         "candidate": "tests/test_hardware_detect.py",
         "line": 26,
         "referrer": "stories/HW-009.md",
@@ -142567,13 +142259,6 @@
         "severity": "hard"
       },
       {
-        "candidate": "Registres/mission.jsonl",
-        "line": 101,
-        "referrer": "stories/LAB-033A.md",
-        "resolved": "Registres/mission.jsonl",
-        "severity": "hard"
-      },
-      {
         "candidate": "Docs/reference/gpu-drivers-support.md",
         "line": 16,
         "referrer": "stories/LAB-033I.md",
@@ -142634,13 +142319,6 @@
         "line": 71,
         "referrer": "stories/LAB-033N.md",
         "resolved": "tests/test_res_classes_stack_minimal.py",
-        "severity": "hard"
-      },
-      {
-        "candidate": "Registres/mission.jsonl",
-        "line": 101,
-        "referrer": "stories/LAB-033N.md",
-        "resolved": "Registres/mission.jsonl",
         "severity": "hard"
       },
       {
@@ -142980,13 +142658,6 @@
         "severity": "hard"
       },
       {
-        "candidate": "Registres/mission.jsonl",
-        "line": 146,
-        "referrer": "stories/ORCH-001.md",
-        "resolved": "Registres/mission.jsonl",
-        "severity": "hard"
-      },
-      {
         "candidate": ".github/workflows/scope-guard.yml",
         "line": 149,
         "referrer": "stories/ORCH-001.md",
@@ -143022,24 +142693,10 @@
         "severity": "hard"
       },
       {
-        "candidate": "Registres/mission.jsonl",
-        "line": 184,
-        "referrer": "stories/ORCH-001.md",
-        "resolved": "Registres/mission.jsonl",
-        "severity": "hard"
-      },
-      {
         "candidate": "scripts/revue.py",
         "line": 199,
         "referrer": "stories/ORCH-001.md",
         "resolved": "scripts/revue.py",
-        "severity": "hard"
-      },
-      {
-        "candidate": "Registres/mission.jsonl",
-        "line": 216,
-        "referrer": "stories/ORCH-001.md",
-        "resolved": "Registres/mission.jsonl",
         "severity": "hard"
       },
       {
@@ -143526,13 +143183,6 @@
         "severity": "hard"
       },
       {
-        "candidate": "Registres/mission.jsonl",
-        "line": 53,
-        "referrer": "stories/REG-029A.md",
-        "resolved": "Registres/mission.jsonl",
-        "severity": "hard"
-      },
-      {
         "candidate": "src/forgeai/core/registre.py",
         "line": 15,
         "referrer": "stories/REG-029B.md",
@@ -143757,13 +143407,6 @@
         "severity": "hard"
       },
       {
-        "candidate": "Registres/mission.jsonl",
-        "line": 26,
-        "referrer": "stories/SAST-042.md",
-        "resolved": "Registres/mission.jsonl",
-        "severity": "hard"
-      },
-      {
         "candidate": "src/forgeai",
         "line": 28,
         "referrer": "stories/SAST-042.md",
@@ -143831,13 +143474,6 @@
         "line": 4,
         "referrer": "stories/SEC-YAML-INJECT.md",
         "resolved": "src/forgeai/renderers/k3s.py",
-        "severity": "hard"
-      },
-      {
-        "candidate": "Registres/mission.jsonl",
-        "line": 27,
-        "referrer": "stories/SECRET-020A.md",
-        "resolved": "Registres/mission.jsonl",
         "severity": "hard"
       },
       {
@@ -144086,13 +143722,6 @@
         "severity": "hard"
       },
       {
-        "candidate": "Registres/mission.jsonl",
-        "line": 28,
-        "referrer": "stories/TRUST-019A.md",
-        "resolved": "Registres/mission.jsonl",
-        "severity": "hard"
-      },
-      {
         "candidate": "src/forgeai/core/registre.py",
         "line": 30,
         "referrer": "stories/TRUST-019A.md",
@@ -144132,13 +143761,6 @@
         "line": 45,
         "referrer": "stories/TRUST-019A.md",
         "resolved": ".github/workflows/gates.yml",
-        "severity": "hard"
-      },
-      {
-        "candidate": "Registres/mission.jsonl",
-        "line": 55,
-        "referrer": "stories/TRUST-019A.md",
-        "resolved": "Registres/mission.jsonl",
         "severity": "hard"
       },
       {
@@ -144223,13 +143845,6 @@
         "line": 173,
         "referrer": "stories/TRUST-019A.md",
         "resolved": "CANON/adr/ADR-TRUST-019A-registres-modele-de-menace-racine-confiance.md",
-        "severity": "hard"
-      },
-      {
-        "candidate": "Registres/mission.jsonl",
-        "line": 188,
-        "referrer": "stories/TRUST-019A.md",
-        "resolved": "Registres/mission.jsonl",
         "severity": "hard"
       },
       {
@@ -145192,31 +144807,10 @@
         "severity": "hard"
       },
       {
-        "candidate": "Registres/mission.jsonl",
-        "line": 273,
-        "referrer": "tests/test_guard_fs.py",
-        "resolved": "Registres/mission.jsonl",
-        "severity": "hard"
-      },
-      {
-        "candidate": "Registres/mission.jsonl",
-        "line": 424,
-        "referrer": "tests/test_guard_fs.py",
-        "resolved": "Registres/mission.jsonl",
-        "severity": "hard"
-      },
-      {
         "candidate": "tests/test_guard_fs.py",
         "line": 479,
         "referrer": "tests/test_guard_fs.py",
         "resolved": "tests/test_guard_fs.py",
-        "severity": "hard"
-      },
-      {
-        "candidate": "Registres/mission.jsonl",
-        "line": 683,
-        "referrer": "tests/test_guard_fs.py",
-        "resolved": "Registres/mission.jsonl",
         "severity": "hard"
       },
       {
@@ -145241,38 +144835,10 @@
         "severity": "hard"
       },
       {
-        "candidate": "Registres/mission.jsonl",
-        "line": 15,
-        "referrer": "tests/test_immudb_e2e.py",
-        "resolved": "Registres/mission.jsonl",
-        "severity": "hard"
-      },
-      {
-        "candidate": "Registres/mission.jsonl",
-        "line": 34,
-        "referrer": "tests/test_immudb_e2e.py",
-        "resolved": "Registres/mission.jsonl",
-        "severity": "hard"
-      },
-      {
         "candidate": "tests/test_langfuse_e2e.py",
         "line": 6,
         "referrer": "tests/test_langfuse_e2e.py",
         "resolved": "tests/test_langfuse_e2e.py",
-        "severity": "hard"
-      },
-      {
-        "candidate": "Registres/mission.jsonl",
-        "line": 13,
-        "referrer": "tests/test_langfuse_e2e.py",
-        "resolved": "Registres/mission.jsonl",
-        "severity": "hard"
-      },
-      {
-        "candidate": "Registres/mission.jsonl",
-        "line": 33,
-        "referrer": "tests/test_langfuse_e2e.py",
-        "resolved": "Registres/mission.jsonl",
         "severity": "hard"
       },
       {
@@ -145283,45 +144849,10 @@
         "severity": "hard"
       },
       {
-        "candidate": "Registres/mission.jsonl",
-        "line": 37,
-        "referrer": "tests/test_manifest_quote_escaping.py",
-        "resolved": "Registres/mission.jsonl",
-        "severity": "hard"
-      },
-      {
         "candidate": "scripts/check_metering_sites.py",
         "line": 1,
         "referrer": "tests/test_metering_guard.py",
         "resolved": "scripts/check_metering_sites.py",
-        "severity": "hard"
-      },
-      {
-        "candidate": "Registres/mission.jsonl",
-        "line": 194,
-        "referrer": "tests/test_models_budget.py",
-        "resolved": "Registres/mission.jsonl",
-        "severity": "hard"
-      },
-      {
-        "candidate": "Registres/mission.jsonl",
-        "line": 51,
-        "referrer": "tests/test_no_stub_scan.py",
-        "resolved": "Registres/mission.jsonl",
-        "severity": "hard"
-      },
-      {
-        "candidate": "Registres/mission.jsonl",
-        "line": 27,
-        "referrer": "tests/test_openbao_sidecar_k3s.py",
-        "resolved": "Registres/mission.jsonl",
-        "severity": "hard"
-      },
-      {
-        "candidate": "Registres/mission.jsonl",
-        "line": 29,
-        "referrer": "tests/test_openbao_unsealer_compose.py",
-        "resolved": "Registres/mission.jsonl",
         "severity": "hard"
       },
       {
@@ -145360,13 +144891,6 @@
         "severity": "hard"
       },
       {
-        "candidate": "Registres/mission.jsonl",
-        "line": 33,
-        "referrer": "tests/test_proc.py",
-        "resolved": "Registres/mission.jsonl",
-        "severity": "hard"
-      },
-      {
         "candidate": "scripts/proof/prove_gpu_amd_e2e.py",
         "line": 1,
         "referrer": "tests/test_prove_gpu_amd_e2e.py",
@@ -145388,31 +144912,10 @@
         "severity": "hard"
       },
       {
-        "candidate": "Registres/mission.jsonl",
-        "line": 34,
-        "referrer": "tests/test_rag_durci_e2e.py",
-        "resolved": "Registres/mission.jsonl",
-        "severity": "hard"
-      },
-      {
         "candidate": "tests/test_rag_rerank_e2e.py",
         "line": 6,
         "referrer": "tests/test_rag_rerank_e2e.py",
         "resolved": "tests/test_rag_rerank_e2e.py",
-        "severity": "hard"
-      },
-      {
-        "candidate": "Registres/mission.jsonl",
-        "line": 8,
-        "referrer": "tests/test_rag_rerank_e2e.py",
-        "resolved": "Registres/mission.jsonl",
-        "severity": "hard"
-      },
-      {
-        "candidate": "Registres/mission.jsonl",
-        "line": 37,
-        "referrer": "tests/test_rag_rerank_e2e.py",
-        "resolved": "Registres/mission.jsonl",
         "severity": "hard"
       },
       {
@@ -145469,13 +144972,6 @@
         "line": 116,
         "referrer": "tests/test_registre_concurrence.py",
         "resolved": "scripts/registre.py",
-        "severity": "hard"
-      },
-      {
-        "candidate": "Registres/mission.jsonl",
-        "line": 90,
-        "referrer": "tests/test_renderers.py",
-        "resolved": "Registres/mission.jsonl",
         "severity": "hard"
       },
       {
@@ -145549,20 +145045,6 @@
         "severity": "hard"
       },
       {
-        "candidate": "Registres/mission.jsonl",
-        "line": 18,
-        "referrer": "tests/test_vault_e2e.py",
-        "resolved": "Registres/mission.jsonl",
-        "severity": "hard"
-      },
-      {
-        "candidate": "Registres/mission.jsonl",
-        "line": 40,
-        "referrer": "tests/test_vault_e2e.py",
-        "resolved": "Registres/mission.jsonl",
-        "severity": "hard"
-      },
-      {
         "candidate": "tests/test_web_auth.py",
         "line": 28,
         "referrer": "tests/test_web034a_security_headers.py",
@@ -145627,9 +145109,8 @@
       "docs-license": 1,
       "docs-user": 13,
       "evidence-audit-output-root": 18,
-      "evidence-registres": 1,
       "evidence-registres-root": 35,
-      "evidence-reviews-root": 1290,
+      "evidence-reviews-root": 1291,
       "generated-authority-map": 1,
       "generated-path-classification-json": 1,
       "generated-path-classification-markdown": 1,
@@ -145665,7 +145146,7 @@
       "working-sandbox-readme": 1
     },
     "case_collisions_total": 0,
-    "dangling_references_total": 14951,
+    "dangling_references_total": 15010,
     "generated_total": 7,
     "load_bearing_total": 1775,
     "portability_violations_total": 0,
@@ -145673,13 +145154,5 @@
     "unclassified_total": 0,
     "unicode_anomalies_total": 0
   },
-  "waves": [
-    {
-      "id": 0,
-      "paths": [
-        "Registres/mission.jsonl"
-      ],
-      "rollback": "Vague 0 : 1 chemin(s). Rollback = git mv evidence/registres/mission.jsonl Registres/mission.jsonl (ordre inverse), puis git commit --amend ou nouveau commit de restauration ; ne PAS exécuter cette vague sans avoir d'abord validé les vagues précédentes."
-    }
-  ]
+  "waves": []
 }
