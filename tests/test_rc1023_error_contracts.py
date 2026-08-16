@@ -395,3 +395,87 @@ def test_rendre_rapport_markdown(tmp_path: Path) -> None:
 def test_integration_inventaire_officiel_du_depot() -> None:
     erreurs = VALIDATEUR.valider(RACINE_DEPOT, aujourd_hui=dt.date(2026, 8, 16))
     assert erreurs == []
+
+
+def test_compensating_test_fonction_inexistante_detectee(tmp_path: Path) -> None:
+    _creer_fichier_source(
+        tmp_path,
+        "src/example.py",
+        "try:\n    pass\nexcept ValueError:\n    pass\n",
+    )
+    _creer_fichier_source(
+        tmp_path,
+        "tests/test_exemple.py",
+        "def test_autre_chose(): pass\n",
+    )
+    contrat = _entree_valide(
+        compensating_test="tests/test_exemple.py::test_inexistante",
+        compensating_test_reason=None,
+    )
+    _ecrire_inventaire(tmp_path, [contrat])
+
+    erreurs = VALIDATEUR.valider(tmp_path, aujourd_hui=dt.date(2026, 1, 1))
+    assert any("test compensatoire absent du dépôt : tests/test_exemple.py::test_inexistante" in e for e in erreurs)
+
+
+def test_compensating_test_fonction_existante_est_valide(tmp_path: Path) -> None:
+    _creer_fichier_source(
+        tmp_path,
+        "src/example.py",
+        "try:\n    pass\nexcept ValueError:\n    pass\n",
+    )
+    _creer_fichier_source(
+        tmp_path,
+        "tests/test_exemple.py",
+        "def test_autre_chose(): pass\n",
+    )
+    contrat = _entree_valide(
+        compensating_test="tests/test_exemple.py::test_autre_chose",
+        compensating_test_reason=None,
+    )
+    _ecrire_inventaire(tmp_path, [contrat])
+
+    erreurs = VALIDATEUR.valider(tmp_path, aujourd_hui=dt.date(2026, 1, 1))
+    assert erreurs == []
+
+
+def test_compensating_test_methode_de_classe_existante_est_valide(tmp_path: Path) -> None:
+    _creer_fichier_source(
+        tmp_path,
+        "src/example.py",
+        "try:\n    pass\nexcept ValueError:\n    pass\n",
+    )
+    _creer_fichier_source(
+        tmp_path,
+        "tests/test_classe.py",
+        "class TestExemple:\n    def test_methode(self):\n        pass\n",
+    )
+    contrat = _entree_valide(
+        compensating_test="tests/test_classe.py::TestExemple::test_methode",
+        compensating_test_reason=None,
+    )
+    _ecrire_inventaire(tmp_path, [contrat])
+
+    erreurs = VALIDATEUR.valider(tmp_path, aujourd_hui=dt.date(2026, 1, 1))
+    assert erreurs == []
+
+
+def test_compensating_test_methode_de_classe_inexistante_detectee(tmp_path: Path) -> None:
+    _creer_fichier_source(
+        tmp_path,
+        "src/example.py",
+        "try:\n    pass\nexcept ValueError:\n    pass\n",
+    )
+    _creer_fichier_source(
+        tmp_path,
+        "tests/test_classe.py",
+        "class TestExemple:\n    def test_methode(self):\n        pass\n",
+    )
+    contrat = _entree_valide(
+        compensating_test="tests/test_classe.py::TestExemple::test_absente",
+        compensating_test_reason=None,
+    )
+    _ecrire_inventaire(tmp_path, [contrat])
+
+    erreurs = VALIDATEUR.valider(tmp_path, aujourd_hui=dt.date(2026, 1, 1))
+    assert any("test compensatoire absent du dépôt : tests/test_classe.py::TestExemple::test_absente" in e for e in erreurs)

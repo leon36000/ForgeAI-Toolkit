@@ -44,11 +44,14 @@ class HardwareDetector:
                 cores = int(entries.get("CPU(s)", entries.get("Processeur(s)", "0")))
                 arch = entries.get("Architecture", arch)
             except (json.JSONDecodeError, KeyError, ValueError) as exc:
-                print(
+                message = (
                     f"[hardware.detect] lscpu -J illisible, repli sur les valeurs "
-                    f"par défaut : {exc}",
-                    file=sys.stderr,
+                    f"par défaut : {exc}"
                 )
+                try:
+                    print(message, file=sys.stderr)
+                except UnicodeEncodeError:
+                    print(message.encode("ascii", "backslashreplace").decode("ascii"), file=sys.stderr)
         return model, cores, arch
 
     @staticmethod
@@ -71,10 +74,13 @@ class HardwareDetector:
                 if line.startswith("MemTotal:"):
                     return round(int(line.split()[1]) / 1024 / 1024, 1)
         except (OSError, ValueError, IndexError) as exc:
-            print(
-                f"[hardware.detect] {self.meminfo_path} illisible, RAM détectée = 0.0 Go : {exc}",
-                file=sys.stderr,
+            message = (
+                f"[hardware.detect] {self.meminfo_path} illisible, RAM détectée = 0.0 Go : {exc}"
             )
+            try:
+                print(message, file=sys.stderr)
+            except UnicodeEncodeError:
+                print(message.encode("ascii", "backslashreplace").decode("ascii"), file=sys.stderr)
         return 0.0
 
     def detect_disks(self) -> tuple[Disk, ...]:

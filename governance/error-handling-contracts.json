@@ -175,10 +175,10 @@
       "accepted_risk": "Le repli sur les valeurs par défaut est inchangé ; seule la visibilité change (aucun nouveau risque de comportement)."
     },
     {
-      "id": "site:src/forgeai/hardware/detect.py:73",
+      "id": "site:src/forgeai/hardware/detect.py:76",
       "site": {
         "path": "src/forgeai/hardware/detect.py",
-        "line": 73,
+        "line": 76,
         "function": "forgeai.hardware.detect.HardwareDetector.detect_ram_gb"
       },
       "exception_types": [
@@ -198,10 +198,10 @@
       "accepted_risk": "Le repli à 0.0 Go est inchangé ; seule la visibilité change."
     },
     {
-      "id": "site:src/forgeai/hardware/detect.py:91",
+      "id": "site:src/forgeai/hardware/detect.py:97",
       "site": {
         "path": "src/forgeai/hardware/detect.py",
-        "line": 91,
+        "line": 97,
         "function": "forgeai.hardware.detect.HardwareDetector.detect_disks"
       },
       "exception_types": [
@@ -219,10 +219,10 @@
       "accepted_risk": "Une ligne `df` malformée fait disparaître silencieusement ce disque du rapport matériel."
     },
     {
-      "id": "site:src/forgeai/hardware/detect.py:115",
+      "id": "site:src/forgeai/hardware/detect.py:121",
       "site": {
         "path": "src/forgeai/hardware/detect.py",
-        "line": 115,
+        "line": 121,
         "function": "forgeai.hardware.detect.HardwareDetector._nvidia_gpus"
       },
       "exception_types": [
@@ -379,10 +379,10 @@
       "accepted_risk": "Le remplacement automatique du jeton reste le comportement ; seule la visibilité change (aucun nouveau risque de comportement)."
     },
     {
-      "id": "site:src/forgeai/secrets/openbao_init.py:246",
+      "id": "site:src/forgeai/secrets/openbao_init.py:247",
       "site": {
         "path": "src/forgeai/secrets/openbao_init.py",
-        "line": 246,
+        "line": 247,
         "function": "forgeai.secrets.openbao_init.ensure_openbao_ready"
       },
       "exception_types": [
@@ -450,10 +450,10 @@
       "accepted_risk": "Le serveur démarre toujours avec un état vide en cas d'échec (comportement inchangé) ; seule la visibilité change."
     },
     {
-      "id": "site:src/forgeai/web/server.py:616",
+      "id": "site:src/forgeai/web/server.py:619",
       "site": {
         "path": "src/forgeai/web/server.py",
-        "line": 616,
+        "line": 619,
         "function": "forgeai.web.server._summary_payload"
       },
       "exception_types": [
@@ -471,10 +471,10 @@
       "accepted_risk": "La page de statut affiche une liste de nœuds vide si le cluster est temporairement indisponible, sans distinction visuelle avec un cluster réellement sans nœuds."
     },
     {
-      "id": "site:src/forgeai/web/server.py:1065",
+      "id": "site:src/forgeai/web/server.py:1068",
       "site": {
         "path": "src/forgeai/web/server.py",
-        "line": 1065,
+        "line": 1068,
         "function": "forgeai.web.server.ForgeAIHandler.do_GET"
       },
       "exception_types": [
@@ -493,10 +493,10 @@
       "accepted_risk": "Aucun — déconnexion client normale."
     },
     {
-      "id": "site:src/forgeai/web/server.py:1087",
+      "id": "site:src/forgeai/web/server.py:1090",
       "site": {
         "path": "src/forgeai/web/server.py",
-        "line": 1087,
+        "line": 1090,
         "function": "forgeai.web.server.ForgeAIHandler.do_GET"
       },
       "exception_types": [
@@ -515,10 +515,10 @@
       "accepted_risk": "Aucun — déconnexion client normale."
     },
     {
-      "id": "site:src/forgeai/web/server.py:1523",
+      "id": "site:src/forgeai/web/server.py:1526",
       "site": {
         "path": "src/forgeai/web/server.py",
-        "line": 1523,
+        "line": 1526,
         "function": "forgeai.web.server._reader (closure locale de la route POST /api/deploy)"
       },
       "exception_types": [
@@ -539,10 +539,10 @@
       "accepted_risk": "Le comportement de récupération (exit_code=-1 si indisponible, done=True, tentative de kill) est inchangé ; seule la visibilité de la cause racine change."
     },
     {
-      "id": "site:src/forgeai/web/server.py:1532",
+      "id": "site:src/forgeai/web/server.py:1534",
       "site": {
         "path": "src/forgeai/web/server.py",
-        "line": 1532,
+        "line": 1534,
         "function": "forgeai.web.server._reader (closure locale de la route POST /api/deploy)"
       },
       "exception_types": [
@@ -563,10 +563,10 @@
       "accepted_risk": "Le flux de récupération (état marqué terminé) est inchangé ; un process orphelin resterait possible dans ce double-échec, désormais au moins visible en log."
     },
     {
-      "id": "site:src/forgeai/web/server.py:1666",
+      "id": "site:src/forgeai/web/server.py:1668",
       "site": {
         "path": "src/forgeai/web/server.py",
-        "line": 1666,
+        "line": 1668,
         "function": "forgeai.web.server.serve"
       },
       "exception_types": [

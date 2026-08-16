@@ -1,0 +1,21 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "majeure",
+   "fichier": "src/forgeai/web/server.py",
+   "description": "Le chemin de récupération reste FAIL-OPEN pour un processus de déploiement potentiellement vivant : si kill() ou wait() échoue, l'exception est avalée, puis l'état est forcé à done=True avec exit_code=-1. Le système peut ainsi annoncer un déploiement terminé alors qu'un processus non supervisé continue de tourner, avec consommation de ressources ou exécution persistante non signalée de façon fiable.",
+   "preuve": "src/forgeai/web/server.py:1532-1539 : `except Exception as exc_kill:` n'effectue qu'un append d'avertissement, puis exécute `_DEPLOY_STATE[\"exit_code\"] = ... else -1` et `_DEPLOY_STATE[\"done\"] = True`. Le contrat livré confirme explicitement le risque : governance/error-handling-contracts.json, entrée `site:src/forgeai/web/server.py:1532`, `accepted_risk`: \"un process orphelin resterait possible dans ce double-échec\"."
+  }
+ ],
+ "date_heure": "2026-08-16T05:29:40.563447+00:00",
+ "pack_sha256": "f2edc00114cd883411482144e863185f6e4640ee05e992e01d3f8d56601cf136",
+ "role_sha256": "1444f4a8ca1c52008a237fa623fec5ea4cb9dfe214259899c12d2978d09e7789",
+ "role": "securite",
+ "reviewer_model": "GPT-5.6-Terra-Pro",
+ "modele_servi": "gpt56-terra-pro-openrouter",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

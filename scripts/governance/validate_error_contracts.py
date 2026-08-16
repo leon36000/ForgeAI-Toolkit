@@ -51,10 +51,38 @@ def _horizon(inventaire: dict) -> int:
     return jours
 
 
+def _fonction_test_existe(fichier: Path, segments: list[str]) -> bool:
+    """Vérifie qu'une chaîne de segments (ex. ['test_fonction'] pour une fonction de module,
+    ou ['TestClasse', 'test_methode'] pour une méthode) désigne réellement une fonction de
+    test dans l'AST du fichier — pas seulement que le fichier existe."""
+    try:
+        arbre = ast.parse(fichier.read_text(encoding="utf-8"), filename=str(fichier))
+    except (OSError, SyntaxError):
+        return False
+
+    def _cherche(noeuds: list, segs: list[str]) -> bool:
+        if not segs:
+            return False
+        cible = segs[0]
+        reste = segs[1:]
+        for noeud in noeuds:
+            if isinstance(noeud, (ast.FunctionDef, ast.AsyncFunctionDef)) and noeud.name == cible:
+                return not reste
+            if isinstance(noeud, ast.ClassDef) and noeud.name == cible:
+                if not reste:
+                    return False
+                return _cherche(noeud.body, reste)
+        return False
+
+    return _cherche(arbre.body, segments)
+
+
 def _test_compensatoire_existe(root: Path, test_compensatoire: object) -> bool:
     if not isinstance(test_compensatoire, str):
         return False
-    chemin = test_compensatoire.split("::", 1)[0]
+    parties = test_compensatoire.split("::")
+    chemin = parties[0]
+    segments = parties[1:]
     if not chemin:
         return False
     root_resolu = root.resolve()
@@ -63,7 +91,11 @@ def _test_compensatoire_existe(root: Path, test_compensatoire: object) -> bool:
         candidat.relative_to(root_resolu)
     except ValueError:
         return False
-    return candidat.is_file()
+    if not candidat.is_file():
+        return False
+    if not segments:
+        return True
+    return _fonction_test_existe(candidat, segments)
 
 
 def _valider_structure_globale(inventaire: dict) -> tuple[list[str], int, int]:

@@ -1,0 +1,27 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "majeure",
+   "fichier": "scripts/governance/validate_error_contracts.py",
+   "description": "Le validateur ne vérifie pas l'existence de la fonction de test après '::', seulement l'existence du fichier. Une entrée FIXED peut donc pointer vers une fonction de test absente et être acceptée, ce qui viole le livrable 'FIXED exige un test réel' et affaiblit le gate.",
+   "preuve": "Dans _test_compensatoire_existe (lignes 49-62 du diff), le code retourne candidat.is_file() sans parser le suffixe '::'. Contre-exemple local: inventaire avec compensating_test='tests/test_exemple.py::test_inexistante' et fichier tests/test_exemple.py présent -> VALIDATEUR.valider(root) ne produit aucune erreur."
+  },
+  {
+   "severite": "majeure",
+   "fichier": "src/forgeai/secrets/openbao_init.py",
+   "description": "Les nouveaux appels print(t(...), file=sys.stderr) dans les blocs except peuvent lever UnicodeEncodeError lorsque sys.stderr.encoding est ASCII (LC_ALL=C/PYTHONIOENCODING=ascii) car les traductions contiennent des caractères accentués (ex. 'création', 'révocation'). L'exception s'échapperait alors du handler et ferait échouer l'init OpenBao, contrairement au comportement dégradé attendu et au critère 'aucun changement de comportement observable'.",
+   "preuve": "Diff src/forgeai/data/locales/fr.json ajoute 'jeton stocké invalide, nouveau jeton en cours de création' et 'échec de révocation de l'ancien jeton...'. src/forgeai/secrets/openbao_init.py les imprime dans des except OpenBaoInitError; sous PYTHONIOENCODING=ascii, print('é', file=sys.stderr) lève UnicodeEncodeError."
+  }
+ ],
+ "date_heure": "2026-08-16T05:35:28.761846+00:00",
+ "pack_sha256": "f2edc00114cd883411482144e863185f6e4640ee05e992e01d3f8d56601cf136",
+ "role_sha256": "2678fe5ffcf7912532cac896ebb1185183fdc42033d4460f07073c6d38e627a0",
+ "role": "correction",
+ "reviewer_model": "DeepSeek-V4-Pro",
+ "modele_servi": "deepseek-v4-pro-direct",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

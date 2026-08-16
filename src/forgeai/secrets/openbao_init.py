@@ -208,10 +208,11 @@ def ensure_openbao_ready(
                 return current_token
         except OpenBaoInitError:
             # token invalide -> on en crée un nouveau
-            print(
-                t("secrets.openbao_init.ensure_openbao_ready.token_invalide_remplace"),
-                file=sys.stderr,
-            )
+            message = t("secrets.openbao_init.ensure_openbao_ready.token_invalide_remplace")
+            try:
+                print(message, file=sys.stderr)
+            except UnicodeEncodeError:
+                print(message.encode("ascii", "backslashreplace").decode("ascii"), file=sys.stderr)
 
     # Créer un nouveau token
     new_token_resp = request(
@@ -244,9 +245,10 @@ def ensure_openbao_ready(
                 payload={"token": current_token},
             )
         except OpenBaoInitError:
-            print(
-                t("secrets.openbao_init.ensure_openbao_ready.revocation_ancien_jeton_echouee"),
-                file=sys.stderr,
-            )
+            message = t("secrets.openbao_init.ensure_openbao_ready.revocation_ancien_jeton_echouee")
+            try:
+                print(message, file=sys.stderr)
+            except UnicodeEncodeError:
+                print(message.encode("ascii", "backslashreplace").decode("ascii"), file=sys.stderr)
 
     return new_token

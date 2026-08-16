@@ -573,10 +573,13 @@ def _load_deploy_state() -> None:
             _DEPLOY_STATE["done"] = done
             _DEPLOY_STATE["exit_code"] = exit_code
     except Exception as exc:
-        print(
-            f"[web.server] échec de restauration de l'état de déploiement au démarrage : {exc}",
-            file=sys.stderr,
+        message = (
+            f"[web.server] échec de restauration de l'état de déploiement au démarrage : {exc}"
         )
+        try:
+            print(message, file=sys.stderr)
+        except UnicodeEncodeError:
+            print(message.encode("ascii", "backslashreplace").decode("ascii"), file=sys.stderr)
 
 
 def _models_home() -> Path:
@@ -1532,8 +1535,7 @@ class ForgeAIHandler(BaseHTTPRequestHandler):
                         )
                         if new_proc.returncode is None:
                             try:
-                                new_proc.kill()
-                                new_proc.wait()
+                                kill_tree(new_proc, grace_seconds=5.0)
                             except Exception as exc_kill:
                                 _DEPLOY_STATE["lines"].append(
                                     "avertissement: échec du nettoyage best-effort du "

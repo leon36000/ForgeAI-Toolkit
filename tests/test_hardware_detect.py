@@ -164,3 +164,22 @@ def test_machine_reellement_sans_gpu_reste_cpu():
     gpus = _detector(**{"nvidia-smi": "", "lspci": ""}).detect_gpus()
     assert not gpus  # aucun GPU (tuple vide)
     assert derive_profile(_hw(gpus)) == "minimal-cpu"
+
+
+def test_print_stderr_fallback_ascii_si_encodage_incompatible(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Vérifie que l'échec d'encodage sur stderr se replie proprement sans lever d'exception."""
+    import io
+
+    raw_buffer = io.BytesIO()
+    fake_stderr = io.TextIOWrapper(raw_buffer, encoding="ascii", errors="strict")
+    monkeypatch.setattr(sys, "stderr", fake_stderr)
+
+    detector = _detector(lscpu="ceci n'est pas du JSON")
+    model, cores, arch = detector.detect_cpu()
+    assert model == "unknown"
+    assert cores == 0
+
+    fake_stderr.flush()
+    sortie = raw_buffer.getvalue()
+    assert len(sortie) > 0
+    assert b"lscpu" in sortie
