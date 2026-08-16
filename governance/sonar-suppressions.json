@@ -471,6 +471,40 @@
       "compensating_test_reason": "Non-réductible : Sonar rattache ces alertes avancées à des flux dont le site rapporté peut varier après analyse ; une annotation inline ne garantit pas la suppression de l'alerte effectivement produite (mesuré sur e5/e6/e7).",
       "review_due": "2027-02-10",
       "accepted_risk": "Le faux positif peut masquer une occurrence S8705 dans ce fichier jusqu'à sa révision."
+    },
+    {
+      "id": "properties-multicriteria:e12",
+      "kind": "properties-multicriteria",
+      "rule": "pythonsecurity:S8705",
+      "scope": "file",
+      "sites": [
+        {
+          "path": "scripts/branch_coverage_report.py"
+        }
+      ],
+      "owner": "équipe gouvernance ForgeAI",
+      "justification": "Mesure Sonar (établie sur e5/e6/e7) : # NOSONAR(S8707) posé au site sur src/forgeai/core/registre.py:101 et :141 après retrait de e7 a été ignoré ; le scan a remonté « pythonsecurity:S8707 | src/forgeai/core/registre.py : 101 » et « pythonsecurity:S8707 | src/forgeai/core/registre.py : 141 ». NOSONAR est ignoré par les règles pythonsecurity d'analyse de sécurité avancée ; le périmètre fichier est donc le seul disponible. Même famille de site (--racine/--sortie-json argparse propagés à subprocess.run, non tracé par l'analyse de flux) introduite par RC1-021 (#451) : outil CLI local (pas de frontière réseau/HTTP), invoqué uniquement par gates.yml en CI avec des arguments contrôlés par le dépôt lui-même — exactement comme e9/e10/e11 (scripts/mypy_gate.py, scripts/gate_git_ref.py, RC1-019/#449).",
+      "compensating_test": "tests/test_branch_coverage_report.py",
+      "compensating_test_reason": "Non-réductible : Sonar rattache ces alertes avancées à des flux dont le site rapporté peut varier après analyse ; une annotation inline ne garantit pas la suppression de l'alerte effectivement produite (mesuré sur e5/e6/e7). Les tests test_main_joint_sortie_json_relative, test_main_conserve_sortie_json_absolue et test_main_utilise_la_racine_par_defaut couvrent le comportement réel de jointure/résolution de chemin.",
+      "review_due": "2027-02-10",
+      "accepted_risk": "Le faux positif peut masquer une occurrence S8705 dans ce fichier jusqu'à sa révision."
+    },
+    {
+      "id": "properties-multicriteria:e13",
+      "kind": "properties-multicriteria",
+      "rule": "pythonsecurity:S8707",
+      "scope": "file",
+      "sites": [
+        {
+          "path": "scripts/branch_coverage_report.py"
+        }
+      ],
+      "owner": "équipe gouvernance ForgeAI",
+      "justification": "Mesure Sonar (établie sur e5/e6/e7) : # NOSONAR(S8707) posé au site sur src/forgeai/core/registre.py:101 et :141 après retrait de e7 a été ignoré ; le scan a remonté « pythonsecurity:S8707 | src/forgeai/core/registre.py : 101 » et « pythonsecurity:S8707 | src/forgeai/core/registre.py : 141 ». NOSONAR est ignoré par les règles pythonsecurity d'analyse de sécurité avancée ; le périmètre fichier est donc le seul disponible. Même famille de site (lecture de sortie_json.read_text() au chemin dérivé de --sortie-json argparse, non tracé par l'analyse de flux) introduite par RC1-021 (#451) : outil CLI local (pas de frontière réseau/HTTP), invoqué uniquement par gates.yml en CI avec des arguments contrôlés par le dépôt lui-même — exactement comme e9/e10/e11 (scripts/mypy_gate.py, scripts/gate_git_ref.py, RC1-019/#449). Le chemin est déjà vérifié existant (sortie_json.exists()) avant cette lecture.",
+      "compensating_test": "tests/test_branch_coverage_report.py",
+      "compensating_test_reason": "Non-réductible : Sonar rattache ces alertes avancées à des flux dont le site rapporté peut varier après analyse ; une annotation inline ne garantit pas la suppression de l'alerte effectivement produite (mesuré sur e5/e6/e7). Les tests test_mesurer_fichier_de_couverture_absent, test_mesurer_json_invalide et test_mesurer_fichier_illisible couvrent le comportement réel de lecture (absent/invalide/illisible).",
+      "review_due": "2027-02-10",
+      "accepted_risk": "Le faux positif peut masquer une occurrence S8707 dans ce fichier jusqu'à sa révision."
     }
   ]
 }
