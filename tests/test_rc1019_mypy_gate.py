@@ -1341,3 +1341,77 @@ def test_g39_anomalies_duplication_empreinte_deja_connue_est_detectee():
         contenus={"a.py": {"hashA": 2}},
     )
     assert any("hashA" in m and "a.py" in m for m in anomalies)
+
+
+# ---------------------------------------------------------------------------
+# Correctif post-revue scellée #449 (round 17) — tokenize, littéraux vs commentaires
+# ---------------------------------------------------------------------------
+
+def test_g40_occurrences_type_ignore_ignore_litteral_de_chaine(tmp_path):
+    chemin = tmp_path / "a.py"
+    chemin.write_bytes(b'message = "# type: ignore"\n')
+    assert mypy_gate.occurrences_type_ignore(tmp_path, {"a.py"}) == {}
+
+
+def test_g40b_occurrences_type_ignore_detecte_toujours_vrai_commentaire(tmp_path):
+    chemin = tmp_path / "a.py"
+    chemin.write_bytes(b"x = 1  # type: ignore\n")
+    assert mypy_gate.occurrences_type_ignore(tmp_path, {"a.py"}) == {"a.py": 1}
+
+
+def test_g41_fichiers_neutralises_ignore_litteral_de_chaine(tmp_path):
+    chemin = tmp_path / "a.py"
+    chemin.write_bytes(b'message = "# mypy: ignore-errors"\n')
+    assert mypy_gate.fichiers_neutralises(tmp_path, {"a.py"}) == set()
+
+
+def test_g41b_fichiers_neutralises_detecte_toujours_vrai_commentaire(tmp_path):
+    chemin = tmp_path / "a.py"
+    chemin.write_bytes(b"# mypy: ignore-errors\nx = 1\n")
+    assert mypy_gate.fichiers_neutralises(tmp_path, {"a.py"}) == {"a.py"}
+
+
+def test_g42_contenus_type_ignore_ignore_litteral_de_chaine(tmp_path):
+    chemin = tmp_path / "a.py"
+    chemin.write_bytes(b'message = "# type: ignore"\n')
+    assert mypy_gate.contenus_type_ignore(tmp_path, {"a.py"}) == {}
+
+
+def test_g42b_contenus_type_ignore_detecte_toujours_vrai_commentaire(tmp_path):
+    chemin = tmp_path / "a.py"
+    chemin.write_bytes(b"x = 1  # type: ignore\n")
+    attendu = hashlib.sha256(b"x = 1  # type: ignore").hexdigest()
+    assert mypy_gate.contenus_type_ignore(tmp_path, {"a.py"}) == {"a.py": {attendu: 1}}
+
+
+def test_g43_lignes_avec_commentaire_reel_gere_fichier_illisible(tmp_path):
+    assert (
+        mypy_gate._lignes_avec_commentaire_reel(
+            tmp_path, "absent.py", mypy_gate._DIRECTIVE_TYPE_IGNORE
+        )
+        is None
+    )
+
+
+def test_g43b_lignes_avec_commentaire_reel_gere_syntaxe_invalide(tmp_path):
+    chemin = tmp_path / "invalide.py"
+    chemin.write_bytes(b"def f(:\n    pass\n")
+    assert (
+        mypy_gate._lignes_avec_commentaire_reel(
+            tmp_path, "invalide.py", mypy_gate._DIRECTIVE_TYPE_IGNORE
+        )
+        is None
+    )
+
+
+def test_g43c_lignes_avec_commentaire_reel_encodage_non_utf8(tmp_path):
+    chemin = tmp_path / "a.py"
+    chemin.write_bytes(
+        b"# -*- coding: latin-1 -*-\n# mypy: ignore-errors\nx = \"caf\xe9\"\n"
+    )
+    assert (
+        mypy_gate._lignes_avec_commentaire_reel(
+            tmp_path, "a.py", mypy_gate._DIRECTIVE_NEUTRALISATION
+        )
+        == {2}
+    )

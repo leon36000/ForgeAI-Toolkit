@@ -1,0 +1,19 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "scripts/mypy_gate.py",
+   "description": "Les scans de directives ne distinguent pas les commentaires Python des littéraux de chaîne. Une chaîne contenant le texte `# type: ignore` ou `# mypy: ...` est comptée comme une directive mypy réelle et peut bloquer le gate alors que mypy ne neutralise aucune erreur.",
+   "preuve": "`_DIRECTIVE_TYPE_IGNORE = re.compile(rb\"#\\s*type:\\s*ignore\\b\")` et `_DIRECTIVE_NEUTRALISATION = re.compile(rb\"#\\s*mypy:\\s*\\S\")` sont appliquées par recherche brute sur les octets (`findall(donnees)` dans `occurrences_type_ignore`, `_DIRECTIVE_NEUTRALISATION.search(donnees)` dans `fichiers_neutralises`). Exemple vérifiable : `message = \"# type: ignore\"` contient la regex et incrémente le compteur, mais le texte est dans une chaîne, pas dans un commentaire interprété par mypy."
+  }
+ ],
+ "date_heure": "2026-08-16T16:03:45.560734+00:00",
+ "prompt_sha256": "3e7a142efb143d11aae98361491929c7fecc87fcf0081f4882c1a748fbcecb95",
+ "reviewer_model": "GPT-5.6-Terra-Pro",
+ "modele_servi": "gpt56-terra-pro-openrouter",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

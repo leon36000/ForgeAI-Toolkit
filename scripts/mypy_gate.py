@@ -12,10 +12,12 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import io
 import json
 import re
 import subprocess
 import sys
+import tokenize
 from pathlib import Path
 from typing import Any
 
@@ -104,20 +106,44 @@ def fichiers_reels(racine: Path, cible: str) -> set[str]:
     return fichiers
 
 
+def _lignes_avec_commentaire_reel(
+    racine: Path, f: str, motif: re.Pattern[str]
+) -> set[int] | None:
+    """Retourne l'ensemble des numéros de ligne (1-indexés) d'un fichier où un token `COMMENT`
+    RÉEL (jamais un littéral de chaîne contenant un texte similaire) correspond à `motif`.
+    Utilise `tokenize.tokenize()` (stdlib, PEP-263-aware) pour classifier chaque fragment du
+    fichier en tokens typés — seuls les tokens `COMMENT` sont examinés, un `STRING` contenant le
+    même texte est ignoré par construction (contrairement à une regex brute sur les octets, qui
+    ne peut pas distinguer les deux de façon fiable pour du Python arbitraire). `tokenize`
+    respecte nativement l'encodage déclaré (PEP-263), même garantie d'indépendance à l'encodage
+    que la lecture en octets bruts utilisée ailleurs dans ce module. Retourne None si le fichier
+    est illisible OU non-tokenizable (syntaxe invalide, encodage déclaré invalide) — dans les
+    deux cas déjà couvert par une autre règle (le fichier produira sa propre erreur mypy)."""
+    chemin = racine / f
+    try:
+        donnees = chemin.read_bytes()
+    except OSError:
+        return None
+    try:
+        tokens = tokenize.tokenize(io.BytesIO(donnees).readline)
+        return {
+            tok.start[0]
+            for tok in tokens
+            if tok.type == tokenize.COMMENT and motif.search(tok.string)
+        }
+    except (tokenize.TokenError, SyntaxError, IndentationError, UnicodeDecodeError, ValueError):
+        return None
+
+
 # Correctif post-revue scellée #449 (rounds 6/7/8/9, REJECT de GPT-5.6-Terra-Pro) —
-# scripts/mypy_gate.py. La recherche se fait sur les octets bruts (`read_bytes`) pour être
-# indépendante de l'encodage déclaré du fichier (PEP-263) ; toute directive mypy inline étant
-# purement ASCII, une regex bytes la détecte quel que soit l'encodage, contrairement à une
-# lecture texte qui lèverait UnicodeDecodeError sur un fichier latin-1/cp1252 avec octets non
-# UTF-8. Round 8 : la directive `# mypy:` est généralisée à TOUTE option mypy — un fichier suivi
-# n'a jamais besoin d'une directive mypy inline, donc toute occurrence `# mypy: <...>` y est
-# suspecte. Round 9 : le périmètre d'appel couvre fichiers_proteges ET dette (voir main()), pas
-# seulement les fichiers protégés. Round 11 : le périmètre d'appel couvre `reels` (tout fichier
-# réel sous la cible mypy), pas seulement `fichiers_proteges | dette` — un nouveau fichier pas
-# encore tracké par la base, neutralisé par une directive inline, n'échappe plus au scan (il aurait
-# sinon été invisible : mypy rapporte 0 erreur pour un fichier neutralisé, donc
-# `_anomalies_non_baselinees` ne le signale pas non plus).
-_DIRECTIVE_NEUTRALISATION = re.compile(rb"#\s*mypy:\s*\S")
+# scripts/mypy_gate.py. Round 8 : la directive `# mypy:` est généralisée à TOUTE option mypy — un
+# fichier suivi n'a jamais besoin d'une directive mypy inline, donc toute occurrence
+# `# mypy: <...>` y est suspecte. Round 9 : le périmètre d'appel couvre fichiers_proteges ET dette
+# (voir main()), pas seulement les fichiers protégés. Round 11 : le périmètre d'appel couvre `reels`
+# (tout fichier réel sous la cible mypy), pas seulement `fichiers_proteges | dette` — un nouveau
+# fichier pas encore tracké par la base, neutralisé par une directive inline, n'échappe plus au scan.
+# Round 17 : motif textuel appliqué aux tokens COMMENT issus de `tokenize` (ignore les littéraux).
+_DIRECTIVE_NEUTRALISATION = re.compile(r"#\s*mypy:\s*\S")
 
 
 def fichiers_neutralises(racine: Path, fichiers: set[str]) -> set[str]:
@@ -128,19 +154,14 @@ def fichiers_neutralises(racine: Path, fichiers: set[str]) -> set[str]:
     AUCUN fichier réellement analysé par mypy ne devrait jamais avoir besoin d'une directive
     mypy inline, la présence d'une telle directive est donc toujours suspecte, qu'elle porte
     sur un fichier connu de la base ou sur un fichier tout juste ajouté au dépôt.
-    La lecture est effectuée en octets bruts (`read_bytes()`), sans décodage, afin de rester
-    indépendante de l'encodage déclaré du fichier (PEP-263) ; la directive étant composée
-    uniquement de caractères ASCII, une recherche bytes la détecte toujours, même pour un
-    fichier latin-1/cp1252 qui ferait échouer une lecture texte UTF-8. Fichier illisible ou
-    absent : ignoré silencieusement (déjà couvert par une autre règle si le fichier a disparu)."""
+    La lecture et la classification commentaire-vs-littéral passent désormais par `tokenize`
+    (round 17), afin d'ignorer tout littéral de chaîne contenant une sous-chaîne similaire.
+    Fichier illisible ou absent : ignoré silencieusement (déjà couvert par une autre règle si
+    le fichier a disparu)."""
     resultat: set[str] = set()
     for f in fichiers:
-        chemin = racine / f
-        try:
-            donnees = chemin.read_bytes()
-        except OSError:
-            continue
-        if _DIRECTIVE_NEUTRALISATION.search(donnees):
+        lignes = _lignes_avec_commentaire_reel(racine, f, _DIRECTIVE_NEUTRALISATION)
+        if lignes:
             resultat.add(f)
     return resultat
 
@@ -153,39 +174,37 @@ def fichiers_neutralises(racine: Path, fichiers: set[str]) -> set[str]:
 # est un usage normal déjà présent : la détection ne peut pas être « toute occurrence est une
 # anomalie » — ce doit être un cliquet de NON-CROISSANCE par fichier, exactement comme la dette
 # d'erreurs mypy (règle 3), baseliné dans le champ `type_ignore` de la base JSON.
-_DIRECTIVE_TYPE_IGNORE = re.compile(rb"#\s*type:\s*ignore\b")
+# Round 17 : motif textuel appliqué aux tokens COMMENT issus de `tokenize` (ignore les littéraux).
+_DIRECTIVE_TYPE_IGNORE = re.compile(r"#\s*type:\s*ignore\b")
 
 
 def occurrences_type_ignore(racine: Path, fichiers: set[str]) -> dict[str, int]:
     """Compte, pour chaque fichier de `fichiers` (qui existe dans `racine`), le nombre
     d'occurrences du commentaire de suppression standard mypy `# type: ignore` (avec ou sans
     code d'erreur entre crochets, ex. `# type: ignore[return-value]`) — PAS la directive fichier
-    `# mypy: <option>` (couverte séparément par `fichiers_neutralises`). Lecture en octets bruts
-    (`read_bytes()`), indépendante de l'encodage déclaré (PEP-263), même raisonnement que
-    `fichiers_neutralises`. Fichier illisible ou absent : compte 0 (ignoré silencieusement, déjà
-    couvert par une autre règle si le fichier a disparu). Fichiers sans aucune occurrence :
-    absents du dict retourné (même convention que `erreurs_par_fichier`)."""
+    `# mypy: <option>` (couverte séparément par `fichiers_neutralises`). La classification
+    commentaire-vs-littéral passe désormais par `tokenize` (round 17), afin de ne compter
+    que de vrais commentaires Python. Fichier illisible ou absent : compte 0 (ignoré
+    silencieusement, déjà couvert par une autre règle si le fichier a disparu). Fichiers sans
+    aucune occurrence : absents du dict retourné (même convention que `erreurs_par_fichier`)."""
     resultat: dict[str, int] = {}
     for f in fichiers:
-        chemin = racine / f
-        try:
-            donnees = chemin.read_bytes()
-        except OSError:
-            continue
-        n = len(_DIRECTIVE_TYPE_IGNORE.findall(donnees))
-        if n > 0:
-            resultat[f] = n
+        lignes = _lignes_avec_commentaire_reel(racine, f, _DIRECTIVE_TYPE_IGNORE)
+        if lignes:
+            resultat[f] = len(lignes)
     return resultat
 
 
 def contenus_type_ignore(racine: Path, fichiers: set[str]) -> dict[str, dict[str, int]]:
     """Pour chaque fichier de `fichiers` (qui existe dans `racine`), retourne un dict
     empreinte_sha256 -> nombre d'occurrences de cette empreinte EXACTE parmi les lignes
-    contenant `# type: ignore` (ligne entière, espaces de début/fin retirés, octets bruts).
-    Contrairement à un simple ensemble (round 14, insuffisant), ce compte préserve la
-    MULTIPLICITÉ : si la même ligne (après strip) apparaît 2 fois, son empreinte a un compte de
-    2 — permet de détecter qu'une occurrence supplémentaire de contenu IDENTIQUE à une empreinte
-    déjà connue a été ajoutée (round 15, corrige la perte de multiplicité d'un ensemble simple).
+    contenant un vrai commentaire `# type: ignore` (ligne entière, espaces de début/fin
+    retirés, octets bruts). La sélection des lignes candidates s'effectue via `tokenize`
+    (round 17) pour exclure les faux positifs dans les littéraux de chaînes. Contrairement à un
+    simple ensemble (round 14, insuffisant), ce compte préserve la MULTIPLICITÉ : si la même
+    ligne (après strip) apparaît 2 fois, son empreinte a un compte de 2 — permet de détecter
+    qu'une occurrence supplémentaire de contenu IDENTIQUE à une empreinte déjà connue a été
+    ajoutée (round 15, corrige la perte de multiplicité d'un ensemble simple).
 
     LIMITE RÉSIDUELLE, PROUVÉE IRRÉDUCTIBLE POUR TOUT SCHÉMA DE COMPTAGE (round 16 — correction
     d'une affirmation trop étroite du round 15, qui bornait ce cas à tort aux empreintes ayant
@@ -209,21 +228,27 @@ def contenus_type_ignore(racine: Path, fichiers: set[str]) -> dict[str, dict[str
     acteur qui devrait aussi survivre à la revue scellée à 3 vendors sur le diff réel du commit —
     un scénario nettement plus contraint qu'une simple omission de couverture.
 
-    Lecture en octets bruts, indépendante de l'encodage (PEP-263), même raisonnement que
-    `fichiers_neutralises`. Fichier illisible ou absent : ignoré silencieusement. Fichiers sans
-    aucune occurrence : absents du dict retourné (même convention que `occurrences_type_ignore`)."""
+    Lecture en octets bruts pour le hachage de ligne. Fichier illisible ou absent : ignoré
+    silencieusement. Fichiers sans aucune occurrence : absents du dict retourné (même convention
+    que `occurrences_type_ignore`)."""
     resultat: dict[str, dict[str, int]] = {}
     for f in fichiers:
+        lignes_confirmees = _lignes_avec_commentaire_reel(racine, f, _DIRECTIVE_TYPE_IGNORE)
+        if not lignes_confirmees:
+            continue
         chemin = racine / f
         try:
             donnees = chemin.read_bytes()
         except OSError:
             continue
+        toutes_lignes = donnees.splitlines()
         comptes: dict[str, int] = {}
-        for ligne in donnees.splitlines():
-            if _DIRECTIVE_TYPE_IGNORE.search(ligne):
-                empreinte = hashlib.sha256(ligne.strip()).hexdigest()
-                comptes[empreinte] = comptes.get(empreinte, 0) + 1
+        for numero in lignes_confirmees:
+            if numero - 1 >= len(toutes_lignes):
+                continue
+            ligne_brute = toutes_lignes[numero - 1]
+            empreinte = hashlib.sha256(ligne_brute.strip()).hexdigest()
+            comptes[empreinte] = comptes.get(empreinte, 0) + 1
         if comptes:
             resultat[f] = comptes
     return resultat
