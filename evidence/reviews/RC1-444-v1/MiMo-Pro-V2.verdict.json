@@ -1,0 +1,19 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "majeure",
+   "fichier": "tests/test_validate_coderabbit_config.py",
+   "description": "Test `test_chemin_present_mais_non_trackable_est_mort` spécifié par la story absent. Ce test couvre un cas distinct de `test_chemin_mort_detecte` : un répertoire qui EXISTE sur le disque mais dont aucun fichier n'est traçable (pas de dépôt git dans tmp_path → `git -C root ls-files` échoue → doit être traité comme chemin mort). Sans ce test, le contrat « git ls-files échoue ⇒ AUCUN fichier tracké ⇒ chemin mort » n'a pas de preuve de non-régression — `test_chemin_mort_detecte` utilise `archive/` (répertoire inexistant dans tmp_path), ce qui prouve un scénario différent. Le code gère correctement le cas (preuve : `_fichiers_trackes` retourne `[]` si `returncode != 0`, et `_chemin_mort` renvoie `True`), mais l'acceptance criterion de la story exige explicitement ce test.",
+   "preuve": "Story §Tests : « test_chemin_present_mais_non_trackable_est_mort (tmp_path) : créer tmp_path/Vide/ (répertoire réel mais AUCUN fichier tracké git — pas de dépôt git initialisé dans tmp_path, donc git ls-files échoue/retourne vide -- gérer ce cas : si git -C root ls-files échoue (pas un dépôt git), traiter comme AUCUN fichier tracké, donc chemin mort) : path_filters: [\"!Vide/**\"], assert erreur \"chemin mort\". » — Aucune fonction correspondante dans le fichier `tests/test_validate_coderabbit_config.py` (115 lignes, 8 tests définis, aucun ne crée un répertoire existant sans git repo pour vérifier le dead-path)."
+  }
+ ],
+ "date_heure": "2026-08-16T21:33:43.744204+00:00",
+ "prompt_sha256": "c0b21aeb3a6b48b2a29e6151757580c79762b1877ecf24e0b2887abb1223d798",
+ "reviewer_model": "MiMo-Pro-V2",
+ "modele_servi": "mimo-pro-v2-openrouter",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

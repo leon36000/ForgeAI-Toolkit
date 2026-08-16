@@ -1,0 +1,25 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "majeure",
+   "fichier": "tests/test_validate_coderabbit_config.py",
+   "description": "Le test `test_chemin_present_mais_non_trackable_est_mort` ne teste pas ce que son nom et la spec exigent. La spec demande de tester un répertoire `Vide/` réel mais sans fichiers trackés (donc chemin mort). Le diff crée bien `tmp_path / \"Vide\"` mais écrit ensuite `path_filters: [\"!archive/**\"]` au lieu de `\"!Vide/**\"`. L'assertion vérifie `\"archive\"` dans le message d'erreur — le test passe uniquement parce que `archive/` n'existe pas dans `tmp_path`, ce qui déclenche une erreur « chemin mort » via la branche `is_dir()` False, et non via la branche `git ls-files` vide. Le comportement spécifique à tester (répertoire présent mais non trackable) n'est jamais exercé.",
+   "preuve": "Diff lignes 112–122 : `(tmp_path / \"Vide\").mkdir()` puis `path_filters: [\"!archive/**\"]` et `assert any(\"chemin mort\" in err and \"archive\" in err ...` — le répertoire `Vide` est créé mais jamais référencé dans la config YAML ni dans l'assertion."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "pyproject.toml",
+   "description": "`types-pyyaml>=6` est ajouté aux dépendances `dev` de `pyproject.toml`, mais la story ne mentionne cette modification que pour `requirements-ci.in` et `requirements-ci.txt`. L'ajout dans `pyproject.toml` est implicite (le script `validate_coderabbit_config.py` importe `yaml`, les stubs `types-pyyaml` sont utiles pour `mypy`) — mais il n'est pas listé dans la section « Fichiers déjà modifiés par l'Orchestrateur » ni dans le dispatch, ce qui constitue un écart documentation/non-documentation.",
+   "preuve": "Diff `pyproject.toml` ligne 24 : `+ \"types-pyyaml>=6\",` — absent de la description textuelle de la story (seuls `requirements-ci.in` et `requirements-ci.txt` sont mentionnés)."
+  }
+ ],
+ "date_heure": "2026-08-16T21:47:11.426357+00:00",
+ "prompt_sha256": "f3b76d5ee97acb7d8bc4a7035f8bf4676318f57e55df3ebe5414e902eafc5577",
+ "reviewer_model": "MiMo-Pro-V2",
+ "modele_servi": "mimo-pro-v2-openrouter",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

@@ -1,0 +1,25 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "tests/test_validate_coderabbit_config.py",
+   "description": "Le test d’acceptation demandé pour le chemin mort historique `Registres/` n’est pas implémenté tel que spécifié : le test couvre `archive/` à la place. La régression précise issue de la migration RC1-010 n’est donc pas explicitement couverte.",
+   "preuve": "Lignes 37-47 : `test_chemin_mort_detecte` écrit le motif `\"!archive/**\"`; le critère exigeait un `.coderabbit.yaml` minimal avec `path_filters: [\"!Registres/**\"]` et une assertion contenant `\"Registres\"`."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "scripts/governance/validate_coderabbit_config.py",
+   "description": "Le message d’erreur d’allowlist ne respecte pas exactement la chaîne contractuelle demandée : un ajout parenthétique modifie le texte entre `_ALLOWLIST` et `ou retirez-la`.",
+   "preuve": "Lignes 72-76 : le script produit `ajoutez-la avec justification à _ALLOWLIST (validate_coderabbit_config.py) ou retirez-la...`, alors que le critère impose `ajoutez-la avec justification à _ALLOWLIST ou retirez-la de .coderabbit.yaml`."
+  }
+ ],
+ "date_heure": "2026-08-16T21:57:34.162387+00:00",
+ "prompt_sha256": "73d328bd2dc3fbefd85e6212345db878715aeb44aee37c661b3fb71505c21497",
+ "reviewer_model": "GPT-5.6-Terra-Pro",
+ "modele_servi": "gpt56-terra-pro-openrouter",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

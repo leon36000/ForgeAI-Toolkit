@@ -1,0 +1,25 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "majeure",
+   "fichier": "tests/test_validate_coderabbit_config.py",
+   "description": "Le test `test_chemin_present_mais_non_trackable_est_mort` est fondamentalement cassé dans son intention. Il crée le répertoire `Vide` mais configure le YAML avec `!archive/**`. L'erreur de chemin mort est levée simplement parce que `archive` n'existe pas (`is_dir()` est faux), ce qui fait que le test ne couvre absolument pas le cas cible (répertoire existant mais sans fichiers trackés / hors repo git). Il s'agit d'une erreur de copier-coller depuis le test précédent.",
+   "preuve": "Lignes 116 à 127 : `(tmp_path / \"Vide\").mkdir()` suivi de `path_filters: [\"!archive/**\"]` et assert sur `archive`."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "tests/test_validate_coderabbit_config.py",
+   "description": "Le test `test_chemin_mort_detecte` utilise le répertoire `archive` au lieu de `Registres` comme explicitement demandé dans les critères d'acceptation (`path_filters: [\"!Registres/**\"]`). Bien que la logique de chemin absent soit testée, le nom ne correspond pas au spécifié.",
+   "preuve": "Lignes 43 à 53 : utilisation de `!archive/**` et assert sur `archive` au lieu de `Registres`."
+  }
+ ],
+ "date_heure": "2026-08-16T21:47:35.015124+00:00",
+ "prompt_sha256": "f3b76d5ee97acb7d8bc4a7035f8bf4676318f57e55df3ebe5414e902eafc5577",
+ "reviewer_model": "Qwen3.7-Max",
+ "modele_servi": "qwen37-max-openrouter",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}
