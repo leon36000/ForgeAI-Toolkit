@@ -103,6 +103,44 @@ def fichiers_reels(racine: Path, cible: str) -> set[str]:
     return fichiers
 
 
+# Correctif post-revue scellée #449 (rounds 6/7/8/9, REJECT de GPT-5.6-Terra-Pro) —
+# scripts/mypy_gate.py. La recherche se fait sur les octets bruts (`read_bytes`) pour être
+# indépendante de l'encodage déclaré du fichier (PEP-263) ; toute directive mypy inline étant
+# purement ASCII, une regex bytes la détecte quel que soit l'encodage, contrairement à une
+# lecture texte qui lèverait UnicodeDecodeError sur un fichier latin-1/cp1252 avec octets non
+# UTF-8. Round 8 : la directive `# mypy:` est généralisée à TOUTE option mypy — un fichier suivi
+# n'a jamais besoin d'une directive mypy inline, donc toute occurrence `# mypy: <...>` y est
+# suspecte. Round 9 : le périmètre d'appel couvre fichiers_proteges ET dette (voir main()), pas
+# seulement les fichiers protégés.
+_DIRECTIVE_NEUTRALISATION = re.compile(rb"#\s*mypy:\s*\S")
+
+
+def fichiers_neutralises(racine: Path, fichiers: set[str]) -> set[str]:
+    """Scanne le contenu de chaque fichier de `fichiers` (qui existe dans `racine`) à la
+    recherche de toute directive mypy inline `# mypy: <...>` (n'importe où dans le fichier,
+    mypy ne l'exige pas en première ligne). Retourne l'ensemble des fichiers suivis contenant
+    une telle directive — qu'ils soient protégés (zéro tolérance) ou en dette (compte mesuré),
+    tout fichier tracké par la base est présumé ne jamais avoir besoin d'une directive mypy
+    inline, donc toute occurrence est traitée comme suspecte par principe, quelle que soit
+    l'option nommée, plutôt que d'énumérer des noms d'options spécifiques qui deviendraient
+    vite obsolètes ou incomplets. La lecture est effectuée en octets bruts (`read_bytes()`),
+    sans décodage, afin de rester indépendante de l'encodage déclaré du fichier (PEP-263) ;
+    la directive étant composée uniquement de caractères ASCII, une recherche bytes la détecte
+    toujours, même pour un fichier latin-1/cp1252 qui ferait échouer une lecture texte UTF-8.
+    Fichier illisible ou absent : ignoré silencieusement (déjà couvert par une autre règle si
+    le fichier a disparu)."""
+    resultat: set[str] = set()
+    for f in fichiers:
+        chemin = racine / f
+        try:
+            donnees = chemin.read_bytes()
+        except OSError:
+            continue
+        if _DIRECTIVE_NEUTRALISATION.search(donnees):
+            resultat.add(f)
+    return resultat
+
+
 def _valider_borne(borne: Any, libelle: str) -> int:
     """Valide l'objet `borne` (dict avec `total_erreurs` int >= 0 non-bool) et retourne
     `total_erreurs`. Lève ValueError avec message explicite sinon."""
@@ -546,43 +584,6 @@ def main(argv: list[str] | None = None) -> int:
         return 1
 
     return 1 if rapport else 0
-
-
-# Correctif post-revue scellée #449 (round 6/7/8, REJECT de GPT-5.6-Terra-Pro) — `scripts/mypy_gate.py`
-# (La fonction fichiers_neutralises et la regex sont définies ci-dessous, avant main)
-# La recherche se fait sur les octets bruts (`read_bytes`) pour être indépendante de l'encodage
-# déclaré du fichier (PEP-263) ; toute directive mypy inline étant purement ASCII, une regex bytes
-# la détecte quel que soit l'encodage, contrairement à une lecture texte qui lèverait
-# UnicodeDecodeError sur un fichier latin-1/cp1252 avec octets non UTF-8.
-# Round 8 : la directive `# mypy:` est généralisée à TOUTE option mypy — un fichier suivi n'a
-# jamais besoin d'une directive mypy inline, donc toute occurrence `# mypy: <...>` y est suspecte.
-_DIRECTIVE_NEUTRALISATION = re.compile(rb"#\s*mypy:\s*\S")
-
-
-def fichiers_neutralises(racine: Path, fichiers: set[str]) -> set[str]:
-    """Scanne le contenu de chaque fichier de `fichiers` (qui existe dans `racine`) à la
-    recherche de toute directive mypy inline `# mypy: <...>` (n'importe où dans le fichier,
-    mypy ne l'exige pas en première ligne). Retourne l'ensemble des fichiers suivis contenant
-    une telle directive — qu'ils soient protégés (zéro tolérance) ou en dette (compte mesuré),
-    tout fichier tracké par la base est présumé ne jamais avoir besoin d'une directive mypy
-    inline, donc toute occurrence est traitée comme suspecte par principe, quelle que soit
-    l'option nommée, plutôt que d'énumérer des noms d'options spécifiques qui deviendraient
-    vite obsolètes ou incomplets. La lecture est effectuée en octets bruts (`read_bytes()`),
-    sans décodage, afin de rester indépendante de l'encodage déclaré du fichier (PEP-263) ;
-    la directive étant composée uniquement de caractères ASCII, une recherche bytes la détecte
-    toujours, même pour un fichier latin-1/cp1252 qui ferait échouer une lecture texte UTF-8.
-    Fichier illisible ou absent : ignoré silencieusement (déjà couvert par une autre règle si
-    le fichier a disparu)."""
-    resultat: set[str] = set()
-    for f in fichiers:
-        chemin = racine / f
-        try:
-            donnees = chemin.read_bytes()
-        except OSError:
-            continue
-        if _DIRECTIVE_NEUTRALISATION.search(donnees):
-            resultat.add(f)
-    return resultat
 
 
 if __name__ == "__main__":
