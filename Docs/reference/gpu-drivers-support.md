@@ -22,7 +22,7 @@ suppose donc le device plugin du vendeur installé sur le cluster (il le recomma
 Le passthrough `hostPath` des devices (`/dev/kfd`, `/dev/dri`) a été RETIRÉ : mesuré
 inopérant sur Kubernetes — le cgroup devices du conteneur refuse l'accès aux char devices
 montés ainsi, et le moteur retombait silencieusement sur CPU (LAB-033A,
-`reviews/LAB-033A/evidence/finding-passthrough-inoperant.txt`).
+`evidence/reviews/LAB-033A/evidence/finding-passthrough-inoperant.txt`).
 
 Conséquence de sécurité : un plan GPU n'émettant plus aucun volume `hostPath`, le niveau
 `enforce` de son Namespace est `baseline` et non plus `privileged` (mesuré :

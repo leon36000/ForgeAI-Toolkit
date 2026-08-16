@@ -3296,6 +3296,20 @@
         },
         {
           "candidate": "Docs/reference/gpu-drivers-support.md",
+          "line": 1,
+          "referrer": "stories/RC1-538.md",
+          "resolved": "Docs/reference/gpu-drivers-support.md",
+          "severity": "hard"
+        },
+        {
+          "candidate": "Docs/reference/gpu-drivers-support.md",
+          "line": 4,
+          "referrer": "stories/RC1-538.md",
+          "resolved": "Docs/reference/gpu-drivers-support.md",
+          "severity": "hard"
+        },
+        {
+          "candidate": "Docs/reference/gpu-drivers-support.md",
           "line": 29,
           "referrer": "tests/test_docs_consistency.py",
           "resolved": "Docs/reference/gpu-drivers-support.md",
@@ -3303,8 +3317,8 @@
         }
       ],
       "rule_id": "docs-user",
-      "sha256": "e951138f9d61deb77f0bc9302dda0df8b3a9e6d59dc0576d544aa2d105ab0fc5",
-      "size": 3286,
+      "sha256": "19e652aeb9caad2aeb03c95c7156f9cb50ea6a6fb1cc8b558ea87f533880692b",
+      "size": 3295,
       "target_path": null,
       "type": "text"
     },
@@ -5806,8 +5820,8 @@
         }
       ],
       "rule_id": "evidence-registres-root",
-      "sha256": "f3e61d17bdd829313ad3eba94bad7b903757f5c1639c8400575b75a21dc48ce8",
-      "size": 369071,
+      "sha256": "b5c1bf28dec1573423f3224f975f89168b2985595a92ee9d3f610e510d311a6d",
+      "size": 369776,
       "target_path": null,
       "type": "text"
     },
@@ -7725,8 +7739,8 @@
         }
       ],
       "rule_id": "evidence-reviews-root",
-      "sha256": "bec0e1c80a1fc142df44963fa5a0cb36c7924661ff854cb75bcf627198ddc36f",
-      "size": 2518,
+      "sha256": "933e505d0a841cbe39cac0cb9c25569980ca5848e8c3d4e2785226683b87997d",
+      "size": 2526,
       "target_path": null,
       "type": "text"
     },
@@ -7792,6 +7806,19 @@
       "rule_id": "evidence-reviews-root",
       "sha256": "4cd5c749e95a131cd2cae10d6721c7fb505522f376915633aa8b519d89985c37",
       "size": 323,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/BUGHUNT-2026-08-16-v3/RECU.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "ad91bdcc1add0d7ba06edbfef8dabde962b93e4b70b6442983296d8c0fa1fb1a",
+      "size": 682,
       "target_path": null,
       "type": "text"
     },
@@ -13378,7 +13405,15 @@
       "load_bearing": true,
       "owner": "gouvernance-preuve",
       "path": "evidence/reviews/LAB-033A/evidence/finding-passthrough-inoperant.txt",
-      "referenced_by": [],
+      "referenced_by": [
+        {
+          "candidate": "evidence/reviews/LAB-033A/evidence/finding-passthrough-inoperant.txt",
+          "line": 25,
+          "referrer": "Docs/reference/gpu-drivers-support.md",
+          "resolved": "evidence/reviews/LAB-033A/evidence/finding-passthrough-inoperant.txt",
+          "severity": "hard"
+        }
+      ],
       "rule_id": "evidence-reviews-root",
       "sha256": "8f227bf549fb47c1edac0cf6d43fb560829a87c764ead4aa2a3a18db6ce8fdb1",
       "size": 4885,
@@ -19161,6 +19196,58 @@
       "referenced_by": [],
       "rule_id": "evidence-reviews-root",
       "sha256": "d7d2745690ef1ba7ec4f8a1f180980a2220dbb1c813f6c8908f7cdf0941e326e",
+      "size": 661,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-538/DeepSeek-V4-Pro.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "80ac7e084168305b56bb0ac2723793a29bf678be9f63eeacf37e03d5ce8671df",
+      "size": 328,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-538/Gemini-3.1-Pro.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "738251e3efe4c4ebbc56528b0445894068af2a9b325b6daef98e5a8abb277cfb",
+      "size": 329,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-538/Kimi-2.7.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "0504787b594b655e85f91e319e6d32da1a30e2e4d3aebbefef52949132ce38e4",
+      "size": 317,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-538/RECU.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "46555ac4575f782bc99d51b662391128a8b360f180b146828599057db3e27e55",
       "size": 661,
       "target_path": null,
       "type": "text"
@@ -25813,6 +25900,13 @@
           "candidate": "scripts/governance/check_doc_links.py",
           "line": 10,
           "referrer": "stories/RC1-009.md",
+          "resolved": "scripts/governance/check_doc_links.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "scripts/governance/check_doc_links.py",
+          "line": 10,
+          "referrer": "stories/RC1-538.md",
           "resolved": "scripts/governance/check_doc_links.py",
           "severity": "hard"
         }
@@ -36506,6 +36600,19 @@
       "rule_id": "governance-stories",
       "sha256": "94c2c2f3a479ab45bfc400faa2a2dbde033297cdb5ff9f9234e3e2e620822bc0",
       "size": 4562,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "GOVERNANCE",
+      "generated": false,
+      "load_bearing": false,
+      "owner": "gouvernance-stories",
+      "path": "stories/RC1-538.md",
+      "referenced_by": [],
+      "rule_id": "governance-stories",
+      "sha256": "25392ecaa1131261d13a26b7d1924f67121bc07e2045c9c9572697a7cfe47dcb",
+      "size": 802,
       "target_path": null,
       "type": "text"
     },
@@ -51394,11 +51501,6 @@
         "referrer": "Docs/reference/gpu-drivers-support.md"
       },
       {
-        "candidate": "reviews/LAB-033A/evidence/finding-passthrough-inoperant.txt",
-        "line": 25,
-        "referrer": "Docs/reference/gpu-drivers-support.md"
-      },
-      {
         "candidate": "contribution.json",
         "line": 15,
         "referrer": "Docs/reference/plugin-gate.md"
@@ -61472,6 +61574,11 @@
         "candidate": "b/governance/STATE-CURRENT.md",
         "line": 8,
         "referrer": "evidence/reviews/BUGHUNT-2026-08-16-v1/DeepSeek-V4-Pro.verdict.json"
+      },
+      {
+        "candidate": "recu-revue/1",
+        "line": 2,
+        "referrer": "evidence/reviews/BUGHUNT-2026-08-16-v3/RECU.json"
       },
       {
         "candidate": "proc.py",
@@ -84057,6 +84164,11 @@
         "candidate": "recu-revue/1",
         "line": 2,
         "referrer": "evidence/reviews/RC1-504-v1/RECU.json"
+      },
+      {
+        "candidate": "recu-revue/1",
+        "line": 2,
+        "referrer": "evidence/reviews/RC1-538/RECU.json"
       },
       {
         "candidate": "reviews/",
@@ -112099,6 +112211,61 @@
         "referrer": "stories/RC1-504.md"
       },
       {
+        "candidate": "reviews/LAB-033A/",
+        "line": 1,
+        "referrer": "stories/RC1-538.md"
+      },
+      {
+        "candidate": "reviews/LAB-033A/evidence/finding-",
+        "line": 4,
+        "referrer": "stories/RC1-538.md"
+      },
+      {
+        "candidate": "5b/5c/5d",
+        "line": 5,
+        "referrer": "stories/RC1-538.md"
+      },
+      {
+        "candidate": "reviews/",
+        "line": 5,
+        "referrer": "stories/RC1-538.md"
+      },
+      {
+        "candidate": "evidence/",
+        "line": 5,
+        "referrer": "stories/RC1-538.md"
+      },
+      {
+        "candidate": "reviews/",
+        "line": 6,
+        "referrer": "stories/RC1-538.md"
+      },
+      {
+        "candidate": "509/",
+        "line": 6,
+        "referrer": "stories/RC1-538.md"
+      },
+      {
+        "candidate": "evidence/",
+        "line": 6,
+        "referrer": "stories/RC1-538.md"
+      },
+      {
+        "candidate": "reviews/LAB-033A/evidence/finding-passthrough-inoperant.txt",
+        "line": 7,
+        "referrer": "stories/RC1-538.md"
+      },
+      {
+        "candidate": "CANON/",
+        "line": 11,
+        "referrer": "stories/RC1-538.md"
+      },
+      {
+        "candidate": "evidence/reviews/LAB-033A/evidence/finding-passthrough-",
+        "line": 14,
+        "referrer": "stories/RC1-538.md"
+      },
+      {
         "candidate": "hash/HMAC",
         "line": 9,
         "referrer": "stories/REG-029A.md"
@@ -123609,6 +123776,13 @@
         "severity": "hard"
       },
       {
+        "candidate": "RC1-538",
+        "line": 181,
+        "referrer": "evidence/reviews/BINDING.txt",
+        "resolved": "evidence/reviews/RC1-538",
+        "severity": "hard"
+      },
+      {
         "candidate": "scripts/gate_docs.py",
         "line": 11,
         "referrer": "sonar-project.properties",
@@ -125160,6 +125334,13 @@
         "line": 13,
         "referrer": "Docs/reference/gpu-drivers-support.md",
         "resolved": "tests/test_k3s_gpu_vendor.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "evidence/reviews/LAB-033A/evidence/finding-passthrough-inoperant.txt",
+        "line": 25,
+        "referrer": "Docs/reference/gpu-drivers-support.md",
+        "resolved": "evidence/reviews/LAB-033A/evidence/finding-passthrough-inoperant.txt",
         "severity": "hard"
       },
       {
@@ -143615,6 +143796,27 @@
         "severity": "hard"
       },
       {
+        "candidate": "Docs/reference/gpu-drivers-support.md",
+        "line": 1,
+        "referrer": "stories/RC1-538.md",
+        "resolved": "Docs/reference/gpu-drivers-support.md",
+        "severity": "hard"
+      },
+      {
+        "candidate": "Docs/reference/gpu-drivers-support.md",
+        "line": 4,
+        "referrer": "stories/RC1-538.md",
+        "resolved": "Docs/reference/gpu-drivers-support.md",
+        "severity": "hard"
+      },
+      {
+        "candidate": "scripts/governance/check_doc_links.py",
+        "line": 10,
+        "referrer": "stories/RC1-538.md",
+        "resolved": "scripts/governance/check_doc_links.py",
+        "severity": "hard"
+      },
+      {
         "candidate": "src/forgeai/core/registre_completude.py",
         "line": 5,
         "referrer": "stories/REG-029A.md",
@@ -145561,9 +145763,9 @@
     "by_class": {
       "ARCHIVE": 44,
       "DOCS": 14,
-      "EVIDENCE": 1349,
+      "EVIDENCE": 1354,
       "GENERATED": 5,
-      "GOVERNANCE": 176,
+      "GOVERNANCE": 177,
       "PRODUCT": 112,
       "TEST": 200,
       "WORKING": 10
@@ -145577,7 +145779,7 @@
       "docs-user": 13,
       "evidence-audit-output-root": 18,
       "evidence-registres-root": 35,
-      "evidence-reviews-root": 1296,
+      "evidence-reviews-root": 1301,
       "generated-authority-map": 1,
       "generated-path-classification-json": 1,
       "generated-path-classification-markdown": 1,
@@ -145605,7 +145807,7 @@
       "governance-scripts-coordination": 4,
       "governance-scripts-governance": 7,
       "governance-scripts-root": 21,
-      "governance-stories": 87,
+      "governance-stories": 88,
       "product-catalogue-checksum": 1,
       "product-source": 111,
       "test-suite": 200,
@@ -145613,11 +145815,11 @@
       "working-sandbox-readme": 1
     },
     "case_collisions_total": 0,
-    "dangling_references_total": 15036,
+    "dangling_references_total": 15048,
     "generated_total": 7,
-    "load_bearing_total": 1780,
+    "load_bearing_total": 1785,
     "portability_violations_total": 0,
-    "tracked_total": 1910,
+    "tracked_total": 1916,
     "unclassified_total": 0,
     "unicode_anomalies_total": 0
   },
