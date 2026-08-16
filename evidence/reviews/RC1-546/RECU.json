@@ -3,10 +3,10 @@
   "dossier": "RC1-546",
   "issue": 546,
   "round": 1,
-  "base_commit": "700501603e913679290cc454511549821a31694d",
-  "head_commit": "1a8cf5642d5e71599ad453d8a25d40ba0a844514",
-  "head_tree": "7c61507457cf10ca867d212d0599f4513cb9f544",
-  "diff_digest": "14685fa2c18b7233e45130f66fb66e83373ef3340be9bd25000f53f98095e61f",
+  "base_commit": "86aaf62252ff08a36c70a6ae4b61ecf3637785ad",
+  "head_commit": "fe95ff1d720748f966cde42cf5f7dae3694a4a90",
+  "head_tree": "34d695f3ee53594d605d1f533cd6b0fc0efac345",
+  "diff_digest": "2a8b6929c90e13a30a61b72c68dc809b8ab9b547710317cc8ea013bdf64e2a69",
   "prompt_sha256": "0d7a8c274358f77ad400514f3667c1c7281f0379b4f12d2cc36a24262595ddf4",
   "reviewers_attendus": [
     "Gemini-3.7-Flash",
@@ -17,6 +17,6 @@
     "fable"
   ],
   "resultat": "APPROVE",
-  "date_heure": "2026-08-16T17:53:25.907893-04:00",
+  "date_heure": "2026-08-16T18:23:20.294445-04:00",
   "fenetre_heures": 24
 }
