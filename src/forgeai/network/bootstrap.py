@@ -66,7 +66,7 @@ def render_join_plan(controller_host: str, node_host: str, node_hostkey_sha256: 
     if not tailscale_tag.startswith("tag:"):
         raise BootstrapError(t("network.bootstrap.render_join_plan.tag_invalide"))
     # Headscale souverain : le control plane doit être une URL http(s):// (EX-2, jamais un secret).
-    if login_server is not None and not login_server.startswith(("http://", "https://")):
+    if login_server is not None and not login_server.startswith(("http://", "https://")):  # NOSONAR(S5332) — Headscale privé durant le bootstrap souverain
         raise BootstrapError(
             t("network.bootstrap.render_join_plan.login_server_invalide"))
     return JoinPlan(

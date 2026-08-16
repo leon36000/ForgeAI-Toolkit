@@ -1,0 +1,37 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "critique",
+   "fichier": ".github/workflows/sonar-suppressions.yml",
+   "description": "Le critère 5 demande une mutation contrôlée démontrant qu'une nouvelle occurrence voisine reste détectée. Le workflow ne lance que le validateur et la vérification du rapport, et le test S2612 existant ne crée aucune occurrence voisine ni n'exécute SonarCloud.",
+   "preuve": ".github/workflows/sonar-suppressions.yml:17-22 ; tests/test_rc1016_sonar_suppressions.py, test_s2612_openbao_reste_limitee_aux_trois_lignes_inventoriees (assertions sur configuration uniquement)."
+  },
+  {
+   "severite": "critique",
+   "fichier": "sonar-project.properties",
+   "description": "Les suppressions e2/e3/e4/e5/e6/e7 restent au niveau fichier alors que les anciens commentaires supprimés identifiaient des lignes précises (k3s.py:249, cli.py:73) et que la PR utilise elle-même # NOSONAR <règle> pour réduire e1. La justification de e3 ne démontre pas qu'une suppression à la ligne est impossible.",
+   "preuve": "Diff de sonar-project.properties : suppression des commentaires citant k3s.py:249 et cli.py:73 ; conservation de sonar.issue.ignore.multicriteria.e2.resourceKey=src/forgeai/renderers/k3s.py, e3.resourceKey=src/forgeai/cli.py ; governance/sonar-suppressions.json, propriété properties-multicriteria:e3 compensating_test_reason='Non-réductible : SonarCloud ne comprend pas la justification noqa déjà présente dans le code.'"
+  },
+  {
+   "severite": "majeure",
+   "fichier": "scripts/governance/validate_sonar_suppressions.py",
+   "description": "Le champ review_horizon.days=180 est déclaré mais jamais utilisé par valider(). Une date d'échéance très future comme 2099-01-01 est acceptée, donc le CI ne borne pas réellement la révision à 180 jours.",
+   "preuve": "governance/sonar-suppressions.json:2-5 ; scripts/governance/validate_sonar_suppressions.py, fonction valider() ne lit que review_due ; tests/test_rc1016_sonar_suppressions.py:36-48 utilise 2099-01-01 comme valeur acceptée."
+  },
+  {
+   "severite": "majeure",
+   "fichier": "scripts/governance/validate_sonar_suppressions.py",
+   "description": "Le parseur traite # NOSONAR S2612 comme une suppression ciblée S2612, mais le diff n'apporte aucune preuve que SonarCloud reconnaît la syntaxe NOSONAR avec identifiant de règle. La forme NOSONAR usuelle supprime toutes les règles de la ligne, ce qui rendrait l'inventaire trompeur pour les trois lignes openbao.",
+   "preuve": "scripts/governance/validate_sonar_suppressions.py:13 ; src/forgeai/deploy/openbao_flow.py:102,104,109."
+  }
+ ],
+ "date_heure": "2026-08-15T21:44:03.136017+00:00",
+ "prompt_sha256": "521f30729fb212dbe4cd62a9559bd73d7cf6771025eca05f7e31a367a9abe9dd",
+ "reviewer_model": "DeepSeek-V4-Pro",
+ "modele_servi": "deepseek-v4-pro-direct",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

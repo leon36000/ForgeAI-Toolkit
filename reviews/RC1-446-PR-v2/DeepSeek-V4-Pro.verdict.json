@@ -1,0 +1,31 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "majeure",
+   "fichier": "src/forgeai/core/registre.py",
+   "description": "Les suppressions NOSONAR existantes sur `_read_entries` et `append` sont supprimées sans être remplacées par `# NOSONAR(S2083)` ni ajoutées à l'inventaire, alors que les commentaires adjacents continuent de documenter un faux positif path-traversal. L'inventaire ne contient aucune entrée S2083 pour registre.py; une alerte S2083 réelle serait donc non bornée et non tracée, ce qui contredit l'inventaire machine et le principe de ne pas transformer des alertes en bugs sans reproduction.",
+   "preuve": "Diff: `return _parse_entries_from_text(path.read_text(...))  # NOSONAR` devient sans `# NOSONAR`; `with path.open(\"a+\", encoding=\"utf-8\") as fh:  # NOSONAR` devient sans `# NOSONAR`. `governance/sonar-suppressions.json` ne contient aucune entrée `inline:src/forgeai/core/registre.py:*:S2083`."
+  },
+  {
+   "severite": "majeure",
+   "fichier": ".github/workflows/sonar-suppressions.yml",
+   "description": "La mutation contrôlée n'insère pas une nouvelle occurrence d'alerte voisine; elle ajoute une ligne `# NOSONAR(S9999)` non inventoriée et attend que le validateur la rejette. Cela démontre seulement la détection d'une suppression non inventoriée, pas qu'une nouvelle occurrence voisine (par ex. S2612/S2083) reste détectée par SonarCloud. Le critère d'acceptation 'mutation contrôlée démontrant qu’une nouvelle occurrence voisine reste détectée' n'est pas satisfait.",
+   "preuve": "`.github/workflows/sonar-suppressions.yml` : `cat >> src/forgeai/models/vault.py <<'PYTHON' ... _mutation_voisine_non_inventoriee = True  # NOSONAR(S9999) ...` puis exécute `validate_sonar_suppressions.py`, sans appel à SonarCloud."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "scripts/governance/validate_sonar_suppressions.py",
+   "description": "Le scanner de suppressions parcourt tous les fichiers Python de `sonar.sources` sans appliquer les exclusions Sonar (`sonar.exclusions`, couverture, etc.). Une suppression `# NOSONAR` présente dans un fichier exclu, par exemple sous `scripts/proof/**`, serait traitée comme une suppression active et ferait échouer la CI, alors que SonarCloud ne l'analyse pas.",
+   "preuve": "Dans `_sources_python`, `candidate.rglob(\"*.py\")` est exécuté après lecture de `sonar.sources`, sans filtrer `sonar.exclusions`/`sonar.coverage.exclusions`; `suppressions_reelles` ne filtre que `.git`, `__pycache__` et le validateur."
+  }
+ ],
+ "date_heure": "2026-08-15T22:23:56.108041+00:00",
+ "prompt_sha256": "a44b43224251127cd0c2b055ac68d05d22cdb142ecbdf6b1da38c8ea41c3372a",
+ "reviewer_model": "DeepSeek-V4-Pro",
+ "modele_servi": "deepseek-v4-pro-direct",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

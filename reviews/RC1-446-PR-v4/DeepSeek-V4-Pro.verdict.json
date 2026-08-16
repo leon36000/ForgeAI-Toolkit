@@ -1,0 +1,31 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "critique",
+   "fichier": ".github/workflows/sonar-suppressions.yml",
+   "description": "La mutation contrôlée n'introduit pas une nouvelle occurrence de la règle supprimée ; elle ajoute uniquement une suppression `# NOSONAR(S9999)` non inventoriée et vérifie que le validateur d'inventaire la rejette. Cela ne démontre pas qu'une nouvelle occurrence voisine S2612/S5332/S5443 reste détectée par SonarCloud, comme l'exige le critère.",
+   "preuve": "Workflow, étape « Détecter une suppression voisine non inventoriée » : `printf ... '_mutation_voisine_non_supprimee = True' ... '_mutation_voisine_non_inventoriee = True  # NOSONAR(S9999)' >> src/forgeai/models/vault.py`, puis `grep -F \":S9999\"`. Aucun scan Sonar ni code déclenchant réellement une règle supprimée n'est exécuté dans cette mutation."
+  },
+  {
+   "severite": "majeure",
+   "fichier": "scripts/governance/validate_sonar_suppressions.py",
+   "description": "La CI ne signale pas une suppression inline sans test compensatoire : `_erreurs_portee_large` ne contrôle que les portées `file`/`glob`, et `_erreurs_test_compensatoire` accepte `compensating_test: null`. L'inventaire contient pourtant de nombreuses suppressions ligne avec `compensating_test: null`, en violation du critère « CI qui signale une suppression expirée ou sans test ».",
+   "preuve": "`if entree[\"scope\"] not in {\"file\", \"glob\"} or test_compensatoire: return []` ; `governance/sonar-suppressions.json`, par exemple l'entrée `inline:src/forgeai/cli.py:73:S2068` avec `\"compensating_test\": null`."
+  },
+  {
+   "severite": "majeure",
+   "fichier": "governance/sonar-suppressions.json",
+   "description": "Les suppressions au niveau fichier pythonsecurity:S8705/S8707 (e5/e6/e7) ne présentent pas de preuve que le périmètre ne peut pas être réduit, seulement une justification narrative. Le critère demande explicitement une preuve.",
+   "preuve": "Entrées `properties-multicriteria:e5`, `e6`, `e7` : `compensating_test_reason` = « Non-réductible : Sonar rattache ces alertes avancées à des flux dont le site rapporté peut varier après analyse ; une annotation inline ne garantit pas la suppression de l'alerte effectivement produite. » Aucun essai inline, scan ou sortie attestant l'impossibilité de réduction n'est présent dans le diff."
+  }
+ ],
+ "date_heure": "2026-08-15T23:12:53.329923+00:00",
+ "prompt_sha256": "13b562bd392ae80a03971da6e9662aa8a773b9fb2ada1fdc69e9c05838348a63",
+ "reviewer_model": "DeepSeek-V4-Pro",
+ "modele_servi": "deepseek-v4-pro-direct",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}
