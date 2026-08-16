@@ -1,0 +1,25 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "governance/authority.json",
+   "description": "L'empreinte 8a734de4445eade7ee037caa7b4af745dfb7282d7af76d4a52fa595cb83f8650 ne peut pas être vérifiée depuis le diff seul; sans exécution de validate_authority.py et sans le contenu intégral de manifests/roles.yaml, la cohérence du digest reste un doute non vérifiable.",
+   "preuve": "Diff authority.json : \"value\": \"8a734de4445eade7ee037caa7b4af745dfb7282d7af76d4a52fa595cb83f8650\""
+  },
+  {
+   "severite": "mineure",
+   "fichier": "manifests/roles.yaml",
+   "description": "Le diff n'apporte pas la preuve que le champ codeur des reçus D9 utilise l'identifiant court \"gemini37\" plutôt que le nom de modèle \"Gemini-3.7-Flash\" ou l'alias \"crew-coder-bulk\"; la correspondance exacte avec la validation _codeur_vendor_table() reste non démontrée.",
+   "preuve": "Diff roles.yaml : \"+  - id: gemini37\" ; story : \"route --difficulty facile / --model crew-coder-bulk pointe réellement vers openrouter/google/gemini-3.7-flash\""
+  }
+ ],
+ "date_heure": "2026-08-16T05:06:59.776194+00:00",
+ "prompt_sha256": "e42efce7ce564f6b2b91cf6cc605aa288cc94caf80b05fba024c7dbcc8274995",
+ "reviewer_model": "DeepSeek-V4-Pro",
+ "modele_servi": "deepseek-v4-pro-direct",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}
