@@ -1752,7 +1752,7 @@
         },
         {
           "candidate": "AGENTS.md",
-          "line": 205,
+          "line": 195,
           "referrer": "scripts/gate_docs.py",
           "resolved": "AGENTS.md",
           "severity": "hard"
@@ -2849,7 +2849,7 @@
         },
         {
           "candidate": "CLAUDE.md",
-          "line": 205,
+          "line": 195,
           "referrer": "scripts/gate_docs.py",
           "resolved": "CLAUDE.md",
           "severity": "hard"
@@ -3038,7 +3038,7 @@
         },
         {
           "candidate": "Docs/BASELINE-CLI-DOC.json",
-          "line": 412,
+          "line": 402,
           "referrer": "scripts/gate_docs.py",
           "resolved": "Docs/BASELINE-CLI-DOC.json",
           "severity": "hard"
@@ -3761,7 +3761,7 @@
         },
         {
           "candidate": "MASTER-PLAN.md",
-          "line": 205,
+          "line": 195,
           "referrer": "scripts/gate_docs.py",
           "resolved": "MASTER-PLAN.md",
           "severity": "hard"
@@ -4111,7 +4111,7 @@
         },
         {
           "candidate": "README.md",
-          "line": 205,
+          "line": 195,
           "referrer": "scripts/gate_docs.py",
           "resolved": "README.md",
           "severity": "hard"
@@ -18982,7 +18982,7 @@
       "path": "evidence/reviews/RC1-013-v3/RECU.json",
       "referenced_by": [],
       "rule_id": "evidence-reviews-root",
-      "sha256": "c7f8231c7d1fa2d63e04e229a3e3b52f66cee21b4cf96941035969cc2a6ac485",
+      "sha256": "a61e90b03616977ba7fc9dd4ad6ff0bc898e10fca41e5142f40cf5b5cbcab113",
       "size": 676,
       "target_path": null,
       "type": "text"
@@ -26392,8 +26392,8 @@
         }
       ],
       "rule_id": "governance-scripts-root",
-      "sha256": "4c427a5f5935a676b712808cedf43bd25e6968dac97bbb97a8e74b9e310f2ede",
-      "size": 19756,
+      "sha256": "f91e86e2a415bfc6d8f3f3b1d70da068cc92889c6a329326a878c22e5b75f697",
+      "size": 19393,
       "target_path": null,
       "type": "text"
     },
@@ -89361,27 +89361,27 @@
       },
       {
         "candidate": "cli.py",
-        "line": 49,
+        "line": 73,
         "referrer": "scripts/gate_docs.py"
       },
       {
         "candidate": "cli.py",
-        "line": 201,
+        "line": 191,
         "referrer": "scripts/gate_docs.py"
       },
       {
         "candidate": "cli.py",
-        "line": 434,
+        "line": 424,
         "referrer": "scripts/gate_docs.py"
       },
       {
         "candidate": "cli.py",
-        "line": 436,
+        "line": 426,
         "referrer": "scripts/gate_docs.py"
       },
       {
         "candidate": "cli.py",
-        "line": 476,
+        "line": 467,
         "referrer": "scripts/gate_docs.py"
       },
       {
@@ -142375,35 +142375,35 @@
       },
       {
         "candidate": "README.md",
-        "line": 205,
+        "line": 195,
         "referrer": "scripts/gate_docs.py",
         "resolved": "README.md",
         "severity": "hard"
       },
       {
         "candidate": "AGENTS.md",
-        "line": 205,
+        "line": 195,
         "referrer": "scripts/gate_docs.py",
         "resolved": "AGENTS.md",
         "severity": "hard"
       },
       {
         "candidate": "MASTER-PLAN.md",
-        "line": 205,
+        "line": 195,
         "referrer": "scripts/gate_docs.py",
         "resolved": "MASTER-PLAN.md",
         "severity": "hard"
       },
       {
         "candidate": "CLAUDE.md",
-        "line": 205,
+        "line": 195,
         "referrer": "scripts/gate_docs.py",
         "resolved": "CLAUDE.md",
         "severity": "hard"
       },
       {
         "candidate": "Docs/BASELINE-CLI-DOC.json",
-        "line": 412,
+        "line": 402,
         "referrer": "scripts/gate_docs.py",
         "resolved": "Docs/BASELINE-CLI-DOC.json",
         "severity": "hard"

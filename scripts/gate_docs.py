@@ -27,8 +27,8 @@ def _valider_ref_git(ref: str) -> None:
         raise ValueError(f"reference git invalide {ref!r} : refusee avant tout appel git")
 
 
-def sous_commandes(chemin_cli: Path) -> list[str]:
-    """Extrait par AST les sous-commandes declarees par add_parser."""
+def _arbre_et_porteur(chemin_cli: Path) -> tuple[ast.AST, str]:
+    """Lit la CLI, parse son AST et trouve le porteur des sous-commandes de premier niveau."""
     try:
         source = chemin_cli.read_text(encoding="utf-8")
     except (OSError, UnicodeError) as erreur:
@@ -39,14 +39,6 @@ def sous_commandes(chemin_cli: Path) -> list[str]:
     except SyntaxError as erreur:
         raise ValueError(f"CLI invalide {str(chemin_cli)!r} : {erreur}") from erreur
 
-    # Seules les sous-commandes de PREMIER NIVEAU comptent : la documentation est reperee par la
-    # chaine « forgeai <cmd> », qui ne peut par construction jamais correspondre a une commande
-    # imbriquee (« forgeai node prepare » n'est pas « forgeai prepare »). Compter les imbriquees
-    # produirait des anomalies systematiques et indefendables — 42 au lieu de 21 ici.
-    #
-    # Le porteur du premier niveau est DERIVE, jamais code en dur : on repere la variable
-    # affectee par `add_subparsers(...)` sur l'objet `ArgumentParser` racine, c'est-a-dire le
-    # PREMIER `add_subparsers` du fichier. Renommer la variable dans cli.py reste donc sans effet.
     porteur: str | None = None
     for noeud in ast.walk(arbre):
         if not isinstance(noeud, ast.Assign) or not isinstance(noeud.value, ast.Call):
@@ -64,6 +56,21 @@ def sous_commandes(chemin_cli: Path) -> list[str]:
             "change, le gate ne peut pas conclure et refuse de verdir par defaut"
         )
 
+    return arbre, porteur
+
+
+def sous_commandes(chemin_cli: Path) -> list[str]:
+    """Extrait par AST les sous-commandes declarees par add_parser."""
+    arbre, porteur = _arbre_et_porteur(chemin_cli)
+
+    # Seules les sous-commandes de PREMIER NIVEAU comptent : la documentation est reperee par la
+    # chaine « forgeai <cmd> », qui ne peut par construction jamais correspondre a une commande
+    # imbriquee (« forgeai node prepare » n'est pas « forgeai prepare »). Compter les imbriquees
+    # produirait des anomalies systematiques et indefendables — 42 au lieu de 21 ici.
+    #
+    # Le porteur du premier niveau est DERIVE, jamais code en dur : on repere la variable
+    # affectee par `add_subparsers(...)` sur l'objet `ArgumentParser` racine, c'est-a-dire le
+    # PREMIER `add_subparsers` du fichier. Renommer la variable dans cli.py reste donc sans effet.
     resultat: set[str] = set()
     for noeud in ast.walk(arbre):
         if not isinstance(noeud, ast.Call):
@@ -88,31 +95,14 @@ def sous_commandes(chemin_cli: Path) -> list[str]:
 def _inventaire_cli(chemin_cli: Path) -> dict[str, dict[str, Any]]:
     """Inventorie les sous-commandes directes et options des parseurs de premier niveau."""
     try:
-        source = chemin_cli.read_text(encoding="utf-8")
-    except (OSError, UnicodeError) as erreur:
-        raise ValueError(f"CLI illisible {str(chemin_cli)!r} : {erreur}") from erreur
-
-    try:
-        arbre = ast.parse(source, filename=str(chemin_cli))
-    except SyntaxError as erreur:
-        raise ValueError(f"CLI invalide {str(chemin_cli)!r} : {erreur}") from erreur
-
-    porteur: str | None = None
-    for noeud in ast.walk(arbre):
-        if not isinstance(noeud, ast.Assign) or not isinstance(noeud.value, ast.Call):
-            continue
-        fonction = noeud.value.func
-        if isinstance(fonction, ast.Attribute) and fonction.attr == "add_subparsers":
-            cible = noeud.targets[0]
-            if isinstance(cible, ast.Name):
-                porteur = cible.id
-                break
-
-    if porteur is None:
-        raise ValueError(
-            f"aucun add_subparsers trouve dans {str(chemin_cli)!r} : la structure de la CLI a "
-            "change, le rapport ne peut pas conclure"
-        )
+        arbre, porteur = _arbre_et_porteur(chemin_cli)
+    except ValueError as erreur:
+        if str(erreur).startswith("aucun add_subparsers trouve"):
+            raise ValueError(
+                f"aucun add_subparsers trouve dans {str(chemin_cli)!r} : la structure de la CLI a "
+                "change, le rapport ne peut pas conclure"
+            ) from erreur
+        raise
 
     parseurs: dict[str, str] = {}
     for noeud in ast.walk(arbre):
@@ -442,7 +432,8 @@ def main(argv: list[str] | None = None) -> int:
         commandes_documentees_set = set(documentees)
         non_documentees = sorted(commandes_reelles - commandes_documentees_set)
         total = len(commandes_reelles)
-        # documentees est un sous-ensemble de reelles par construction (voir commandes_documentees) : couverture <= 100% toujours
+        # documentees est un sous-ensemble de reelles par construction, donc le nombre documente
+        # ne peut pas depasser le total et le pourcentage reste borne.
         couverture = (len(commandes_documentees_set) / total * 100) if total else 100.0
 
         print("Rapport de couverture documentaire")

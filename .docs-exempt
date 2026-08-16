@@ -103,3 +103,13 @@ de 2 conditions redondantes (candidate.startswith('http://')/('https://'), déj�
 corrigé par suppression de code mort plutôt qu'un NOSONAR gouverné. Comportement observable
 inchangé (14/14 tests, résultat identique sur le vrai dépôt). stories/RC1-009.md documente déjà
 l'outil ; aucune doc utilisateur supplémentaire concernée pour ce correctif de robustesse.
+
+scripts/gate_docs.py (RC1-013/#443, correctif SonarCloud sur PR #556 — 7.8% de duplication sur
+New Code, seuil ≤3%, check requis) : extraction de _arbre_et_porteur() partagée par
+sous_commandes() et _inventaire_cli() (ajoutée pour --report), qui dupliquaient intégralement la
+lecture fichier + parsing AST + recherche du porteur add_subparsers. Contrat CLI observable
+inchangé (mêmes arguments, mêmes exceptions ValueError, mêmes messages, mêmes codes de sortie
+pour --report et sans --report) — 27/27 tests verts (6 nouveaux + 21 test_doc032_gate_docs.py
+préexistant, non cassés). Docs/reference/cli.md documente déjà l'usage utilisateur du CLI
+ForgeAI lui-même ; ce commit ne touche que l'outillage interne du gate de documentation, aucune
+doc utilisateur supplémentaire concernée.
