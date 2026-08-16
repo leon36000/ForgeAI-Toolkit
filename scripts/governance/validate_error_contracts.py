@@ -304,7 +304,11 @@ def _erreurs_entree(
     if disposition not in DISPOSITIONS_VALIDES:
         erreurs.append(f"{identifiant} : disposition invalide : {disposition}")
 
-    for champ in ("behavior_contract", "logging", "owner", "justification", "accepted_risk"):
+    # Round 10 (#452) — objection GPT-5.6-Terra-Pro (revue scellée) : 'id' était exigé (présence,
+    # via CHAMPS_OBLIGATOIRES) mais ni son type chaîne ni son caractère non vide ne l'étaient —
+    # "id": null ou "id": "" passait la validation, invalidant le caractère machine-identifiable
+    # de l'inventaire (et rendait _erreurs_identifiants_dupliques aveugle, id étant falsy-filtré).
+    for champ in ("id", "behavior_contract", "logging", "owner", "justification", "accepted_risk"):
         valeur = entree.get(champ)
         if not isinstance(valeur, str) or not valeur.strip():
             erreurs.append(f"{identifiant} : champ '{champ}' doit être une chaîne non vide")

@@ -242,6 +242,31 @@ def test_site_function_manquante_detectee(tmp_path: Path) -> None:
     assert any("site.function" in e for e in erreurs)
 
 
+def test_id_vide_detecte(tmp_path: Path) -> None:
+    # Objection GPT-5.6-Terra-Pro (revue scellée round 10, #452) : la clé `id` était exigée
+    # (présence), mais ni son type chaîne ni son caractère non vide ne l'étaient — un contrat
+    # avec "id": "" passait la validation, invalidant le caractère machine-identifiable promis.
+    _creer_fichier_source(
+        tmp_path, "src/example.py", "try:\n    pass\nexcept ValueError:\n    pass\n"
+    )
+    contrat = _entree_valide(id_contrat="")
+    _ecrire_inventaire(tmp_path, [contrat])
+
+    erreurs = VALIDATEUR.valider(tmp_path, aujourd_hui=dt.date(2026, 1, 1))
+    assert any("champ 'id' doit être une chaîne non vide" in e for e in erreurs)
+
+
+def test_id_null_detecte(tmp_path: Path) -> None:
+    _creer_fichier_source(
+        tmp_path, "src/example.py", "try:\n    pass\nexcept ValueError:\n    pass\n"
+    )
+    contrat = _entree_valide(id_contrat=None)
+    _ecrire_inventaire(tmp_path, [contrat])
+
+    erreurs = VALIDATEUR.valider(tmp_path, aujourd_hui=dt.date(2026, 1, 1))
+    assert any("champ 'id' doit être une chaîne non vide" in e for e in erreurs)
+
+
 def test_identifiant_duplique_detecte(tmp_path: Path) -> None:
     _creer_fichier_source(
         tmp_path,
