@@ -1,0 +1,19 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "stories/RC1-569.md",
+   "description": "Les critères d'acceptation exigent des sorties littérales d'exécution (pytest, preuve git --no-abbrev, no_stub_scan), mais le diff ne les fournit que sous forme textuelle dans la story ; aucune preuve exécutable n'est présente dans le diff pour vérification indépendante. Doute non bloquant : le correctif et le test de verrouillage sont bien présents dans le diff.",
+   "preuve": "diff stories/RC1-569.md : '+   70 passed in 0.21s' ; diff stories/RC1-569.md : '+   NO-STUB-SCAN : OK (374 fichiers scannés, zéro violation)'"
+  }
+ ],
+ "date_heure": "2026-08-17T04:13:32.622296+00:00",
+ "prompt_sha256": "127b6ec695c4c745201a85b6309beb3176e897ce58145e55bd5cb8ba71975c7e",
+ "reviewer_model": "Qwen3.8-2.4T",
+ "modele_servi": "b9de6bc895fe95ccacf7d9fa9b1cf29ca44d34f03e249738f325c9dee3790b78",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}
