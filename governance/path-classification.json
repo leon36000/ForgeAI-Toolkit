@@ -6583,6 +6583,20 @@
         },
         {
           "candidate": "evidence/registres/mission.jsonl",
+          "line": 6,
+          "referrer": "evidence/reviews/RC1-registre-PR522/DeepSeek-V4-Pro.verdict.json",
+          "resolved": "evidence/registres/mission.jsonl",
+          "severity": "hard"
+        },
+        {
+          "candidate": "evidence/registres/mission.jsonl",
+          "line": 8,
+          "referrer": "evidence/reviews/RC1-registre-PR522/DeepSeek-V4-Pro.verdict.json",
+          "resolved": "evidence/registres/mission.jsonl",
+          "severity": "hard"
+        },
+        {
+          "candidate": "evidence/registres/mission.jsonl",
           "line": 56,
           "referrer": "governance/AUTHORITY-MAP.md",
           "resolved": "evidence/registres/mission.jsonl",
@@ -6632,8 +6646,8 @@
         }
       ],
       "rule_id": "evidence-registres-root",
-      "sha256": "91087be8fa8c10a3b6d647072f92d502b20d291f30ff1aff50aa6ad1b84defb9",
-      "size": 385970,
+      "sha256": "e50132f1792f477a73ac83d8696dad606fd0e05318e2bb896012ba903a750c70",
+      "size": 387308,
       "target_path": null,
       "type": "text"
     },
@@ -8593,8 +8607,8 @@
         }
       ],
       "rule_id": "evidence-reviews-root",
-      "sha256": "492bed382f102ed24c59ec0c0bf2fb019ec11aac4407f798c20e6b06ca5ae05a",
-      "size": 2731,
+      "sha256": "c6737a32fa38d0cfde8588599a6c8e816a5a6be4b9d2789ba4498a0f4a3d4207",
+      "size": 2750,
       "target_path": null,
       "type": "text"
     },
@@ -22216,6 +22230,58 @@
       "load_bearing": true,
       "owner": "gouvernance-preuve",
       "path": "evidence/reviews/RC1-547/RECU.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": null,
+      "size": null,
+      "target_path": null,
+      "type": null
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-registre-PR522/DeepSeek-V4-Pro.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "00cd4c99f46f23e23955087420bd1151dc10a0f73aaee4063ed5df1dd755ebbe",
+      "size": 841,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-registre-PR522/Gemini-3.7-Flash.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "cce76ecf307828ca0122413c55b4c63fb77181dcbd99dac8eb74c0a86da5646e",
+      "size": 371,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-registre-PR522/Qwen3.7-Max.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "c596ffd3f7c1d13ea922050512ad4faf4fdb96346dfe56dd3d0f77ec5ba33d40",
+      "size": 322,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-registre-PR522/RECU.json",
       "referenced_by": [],
       "rule_id": "evidence-reviews-root",
       "sha256": null,
@@ -92420,6 +92486,21 @@
         "referrer": "evidence/reviews/RC1-547/RECU.json"
       },
       {
+        "candidate": "registre.py",
+        "line": 7,
+        "referrer": "evidence/reviews/RC1-registre-PR522/DeepSeek-V4-Pro.verdict.json"
+      },
+      {
+        "candidate": "registre.py",
+        "line": 8,
+        "referrer": "evidence/reviews/RC1-registre-PR522/DeepSeek-V4-Pro.verdict.json"
+      },
+      {
+        "candidate": "recu-revue/1",
+        "line": 2,
+        "referrer": "evidence/reviews/RC1-registre-PR522/RECU.json"
+      },
+      {
         "candidate": "reviews/",
         "line": 1,
         "referrer": "evidence/reviews/README.md"
@@ -137392,6 +137473,13 @@
         "severity": "hard"
       },
       {
+        "candidate": "RC1-registre-PR522",
+        "line": 202,
+        "referrer": "evidence/reviews/BINDING.txt",
+        "resolved": "evidence/reviews/RC1-registre-PR522",
+        "severity": "hard"
+      },
+      {
         "candidate": "scripts/gate_docs.py",
         "line": 11,
         "referrer": "sonar-project.properties",
@@ -151483,6 +151571,20 @@
         "severity": "hard"
       },
       {
+        "candidate": "evidence/registres/mission.jsonl",
+        "line": 6,
+        "referrer": "evidence/reviews/RC1-registre-PR522/DeepSeek-V4-Pro.verdict.json",
+        "resolved": "evidence/registres/mission.jsonl",
+        "severity": "hard"
+      },
+      {
+        "candidate": "evidence/registres/mission.jsonl",
+        "line": 8,
+        "referrer": "evidence/reviews/RC1-registre-PR522/DeepSeek-V4-Pro.verdict.json",
+        "resolved": "evidence/registres/mission.jsonl",
+        "severity": "hard"
+      },
+      {
         "candidate": ".github/workflows/gates.yml",
         "line": 6,
         "referrer": "evidence/reviews/REG-029B/Qwen3.7-Max.verdict.json",
@@ -163915,7 +164017,7 @@
     "by_class": {
       "ARCHIVE": 44,
       "DOCS": 18,
-      "EVIDENCE": 1516,
+      "EVIDENCE": 1520,
       "GENERATED": 5,
       "GOVERNANCE": 193,
       "PRODUCT": 113,
@@ -163934,7 +164036,7 @@
       "evidence-audit-output-root": 18,
       "evidence-dedup-root": 2,
       "evidence-registres-root": 35,
-      "evidence-reviews-root": 1461,
+      "evidence-reviews-root": 1465,
       "generated-authority-map": 1,
       "generated-path-classification-json": 1,
       "generated-path-classification-markdown": 1,
@@ -163970,11 +164072,11 @@
       "working-sandbox-readme": 1
     },
     "case_collisions_total": 0,
-    "dangling_references_total": 16355,
+    "dangling_references_total": 16358,
     "generated_total": 9,
-    "load_bearing_total": 1970,
+    "load_bearing_total": 1974,
     "portability_violations_total": 0,
-    "tracked_total": 2110,
+    "tracked_total": 2114,
     "unclassified_total": 0,
     "unicode_anomalies_total": 0
   },
