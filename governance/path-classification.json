@@ -445,35 +445,35 @@
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 848,
+          "line": 869,
           "referrer": "scripts/governance/check_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 1933,
+          "line": 1954,
           "referrer": "scripts/governance/check_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 2509,
+          "line": 2530,
           "referrer": "scripts/governance/check_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 2603,
+          "line": 2624,
           "referrer": "scripts/governance/check_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 2604,
+          "line": 2625,
           "referrer": "scripts/governance/check_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
@@ -3414,6 +3414,13 @@
         {
           "candidate": ".gitguardian.yaml",
           "line": 4925,
+          "referrer": "tests/test_rc1015_gitguardian_scope.py",
+          "resolved": ".gitguardian.yaml",
+          "severity": "hard"
+        },
+        {
+          "candidate": ".gitguardian.yaml",
+          "line": 4945,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
@@ -9901,8 +9908,8 @@
         }
       ],
       "rule_id": "evidence-registres-root",
-      "sha256": "a31c48346ca4d615e2073d23229f4e0a5c14d3380069194d66038cf6478b89c0",
-      "size": 402311,
+      "sha256": "580fe096a6de2fdeeab7cc9cf416525f97c2a99dc7ddd40e5fc799856eee3fbe",
+      "size": 403406,
       "target_path": null,
       "type": "text"
     },
@@ -33811,8 +33818,8 @@
         }
       ],
       "rule_id": "governance-scripts-governance",
-      "sha256": "add000be051df6fc84475f964a0bb5d8a72ef511c6f0024126998398eb20f0a9",
-      "size": 166960,
+      "sha256": "1be12f1ea469cb83865ee3c47e7686dd097fc9474651b97f9190ff75d0e7cb58",
+      "size": 168601,
       "target_path": null,
       "type": "text"
     },
@@ -47404,8 +47411,8 @@
         }
       ],
       "rule_id": "governance-stories",
-      "sha256": "d2b2001375a863a52f80625fedf95c76e4e74df748be6d19d74038ca034e10b5",
-      "size": 286522,
+      "sha256": "3eb863a451e711f0bababab399a76b904234f5068d28bae05ad05592937fafc1",
+      "size": 289752,
       "target_path": null,
       "type": "text"
     },
@@ -55835,8 +55842,8 @@
         }
       ],
       "rule_id": "test-suite",
-      "sha256": "7db9bf7fadced6a79245b408c7d1367bfc1e45af52da0fa8dcab9330bda400c0",
-      "size": 273613,
+      "sha256": "5b03df6fcc01a7e1cf498242311cddf98ff917474a79f310b493aa3593ddbd35",
+      "size": 274847,
       "target_path": null,
       "type": "text"
     },
@@ -103417,252 +103424,252 @@
       },
       {
         "candidate": "comment/alias",
-        "line": 219,
+        "line": 240,
         "referrer": "scripts/governance/check_gitguardian_scope.py"
       },
       {
         "candidate": "codage/comparaison",
-        "line": 246,
+        "line": 267,
         "referrer": "scripts/governance/check_gitguardian_scope.py"
       },
       {
         "candidate": "spans/profondeur",
-        "line": 248,
+        "line": 269,
         "referrer": "scripts/governance/check_gitguardian_scope.py"
       },
       {
         "candidate": "33/35/37",
-        "line": 248,
+        "line": 269,
         "referrer": "scripts/governance/check_gitguardian_scope.py"
       },
       {
         "candidate": "double/simple-guillemets",
-        "line": 266,
+        "line": 287,
         "referrer": "scripts/governance/check_gitguardian_scope.py"
       },
       {
         "candidate": "100/101/102/103",
-        "line": 338,
+        "line": 359,
         "referrer": "scripts/governance/check_gitguardian_scope.py"
       },
       {
         "candidate": "e/tagu",
-        "line": 459,
+        "line": 480,
         "referrer": "scripts/governance/check_gitguardian_scope.py"
       },
       {
         "candidate": "scalaires/s",
-        "line": 571,
+        "line": 592,
         "referrer": "scripts/governance/check_gitguardian_scope.py"
       },
       {
         "candidate": "fermeture/s",
-        "line": 608,
+        "line": 629,
         "referrer": "scripts/governance/check_gitguardian_scope.py"
       },
       {
         "candidate": "CRLF/CR-seul/mixte",
-        "line": 860,
+        "line": 881,
         "referrer": "scripts/governance/check_gitguardian_scope.py"
       },
       {
         "candidate": "crochets/accolades",
-        "line": 941,
+        "line": 962,
         "referrer": "scripts/governance/check_gitguardian_scope.py"
       },
       {
         "candidate": "bloc/flow",
-        "line": 1004,
-        "referrer": "scripts/governance/check_gitguardian_scope.py"
-      },
-      {
-        "candidate": "doubles/simples",
         "line": 1025,
         "referrer": "scripts/governance/check_gitguardian_scope.py"
       },
       {
+        "candidate": "doubles/simples",
+        "line": 1046,
+        "referrer": "scripts/governance/check_gitguardian_scope.py"
+      },
+      {
         "candidate": "espace/tabulation",
-        "line": 1043,
+        "line": 1064,
         "referrer": "scripts/governance/check_gitguardian_scope.py"
       },
       {
         "candidate": "ligne/texte",
-        "line": 1060,
+        "line": 1081,
         "referrer": "scripts/governance/check_gitguardian_scope.py"
       },
       {
         "candidate": "doubles/simples",
-        "line": 1084,
+        "line": 1105,
         "referrer": "scripts/governance/check_gitguardian_scope.py"
       },
       {
         "candidate": "guillemet/commentaire",
-        "line": 1100,
+        "line": 1121,
         "referrer": "scripts/governance/check_gitguardian_scope.py"
       },
       {
         "candidate": "s/comment",
-        "line": 1112,
+        "line": 1133,
         "referrer": "scripts/governance/check_gitguardian_scope.py"
       },
       {
         "candidate": "virgule/accolade",
-        "line": 1145,
+        "line": 1166,
         "referrer": "scripts/governance/check_gitguardian_scope.py"
       },
       {
         "candidate": "guillemets/commentaires",
-        "line": 1152,
+        "line": 1173,
         "referrer": "scripts/governance/check_gitguardian_scope.py"
       },
       {
         "candidate": "spans/profondeur",
-        "line": 1175,
+        "line": 1196,
         "referrer": "scripts/governance/check_gitguardian_scope.py"
       },
       {
         "candidate": "guillemets/commentaires/profondeur",
-        "line": 1179,
+        "line": 1200,
         "referrer": "scripts/governance/check_gitguardian_scope.py"
       },
       {
         "candidate": "bloc/explicite",
-        "line": 1195,
+        "line": 1216,
         "referrer": "scripts/governance/check_gitguardian_scope.py"
       },
       {
         "candidate": "spans/profondeur",
-        "line": 1245,
+        "line": 1266,
         "referrer": "scripts/governance/check_gitguardian_scope.py"
       },
       {
         "candidate": "vide/commentaire",
-        "line": 1386,
+        "line": 1407,
         "referrer": "scripts/governance/check_gitguardian_scope.py"
       },
       {
         "candidate": "42-43/46/49-54",
-        "line": 1472,
+        "line": 1493,
         "referrer": "scripts/governance/check_gitguardian_scope.py"
       },
       {
         "candidate": "vide/non",
-        "line": 1579,
+        "line": 1600,
         "referrer": "scripts/governance/check_gitguardian_scope.py"
       },
       {
         "candidate": "30/55/31/56/59/60/71",
-        "line": 1688,
+        "line": 1709,
         "referrer": "scripts/governance/check_gitguardian_scope.py"
       },
       {
         "candidate": "res/descendants",
-        "line": 1712,
+        "line": 1733,
         "referrer": "scripts/governance/check_gitguardian_scope.py"
       },
       {
         "candidate": "42-43/46",
-        "line": 1731,
+        "line": 1752,
         "referrer": "scripts/governance/check_gitguardian_scope.py"
       },
       {
         "candidate": "s/commentaires",
-        "line": 1759,
+        "line": 1780,
         "referrer": "scripts/governance/check_gitguardian_scope.py"
       },
       {
         "candidate": "vide/commentaire",
-        "line": 1942,
+        "line": 1963,
         "referrer": "scripts/governance/check_gitguardian_scope.py"
       },
       {
         "candidate": "67-69/70",
-        "line": 1979,
+        "line": 2000,
         "referrer": "scripts/governance/check_gitguardian_scope.py"
       },
       {
         "candidate": "31/56/59/60",
-        "line": 1982,
+        "line": 2003,
         "referrer": "scripts/governance/check_gitguardian_scope.py"
       },
       {
         "candidate": "bloc/flow",
-        "line": 2048,
+        "line": 2069,
         "referrer": "scripts/governance/check_gitguardian_scope.py"
       },
       {
         "candidate": "32/50/67-69",
-        "line": 2081,
+        "line": 2102,
         "referrer": "scripts/governance/check_gitguardian_scope.py"
       },
       {
         "candidate": "31/56/59/60",
-        "line": 2085,
+        "line": 2106,
         "referrer": "scripts/governance/check_gitguardian_scope.py"
       },
       {
         "candidate": "a.md",
-        "line": 2390,
+        "line": 2411,
         "referrer": "scripts/governance/check_gitguardian_scope.py"
       },
       {
         "candidate": "foo.md",
-        "line": 2391,
+        "line": 2412,
         "referrer": "scripts/governance/check_gitguardian_scope.py"
       },
       {
         "candidate": "stories/bar.md",
-        "line": 2392,
+        "line": 2413,
         "referrer": "scripts/governance/check_gitguardian_scope.py"
       },
       {
         "candidate": "evidence/reviews/x.md",
-        "line": 2393,
+        "line": 2414,
         "referrer": "scripts/governance/check_gitguardian_scope.py"
       },
       {
         "candidate": "a/b/c/d.md",
-        "line": 2394,
+        "line": 2415,
         "referrer": "scripts/governance/check_gitguardian_scope.py"
       },
       {
         "candidate": "quelque-chose_de.long.md",
-        "line": 2395,
+        "line": 2416,
         "referrer": "scripts/governance/check_gitguardian_scope.py"
       },
       {
         "candidate": "dossiers/nom",
-        "line": 2407,
+        "line": 2428,
         "referrer": "scripts/governance/check_gitguardian_scope.py"
       },
       {
         "candidate": "evidence/reviews/",
-        "line": 2432,
+        "line": 2453,
         "referrer": "scripts/governance/check_gitguardian_scope.py"
       },
       {
         "candidate": "tests/fixtures/exemple.md",
-        "line": 2433,
+        "line": 2454,
         "referrer": "scripts/governance/check_gitguardian_scope.py"
       },
       {
         "candidate": "bloc/flow-ouvert",
-        "line": 2527,
+        "line": 2548,
         "referrer": "scripts/governance/check_gitguardian_scope.py"
       },
       {
         "candidate": "1/5/6",
-        "line": 2559,
+        "line": 2580,
         "referrer": "scripts/governance/check_gitguardian_scope.py"
       },
       {
         "candidate": "vide/commentaire",
-        "line": 2560,
+        "line": 2581,
         "referrer": "scripts/governance/check_gitguardian_scope.py"
       },
       {
         "candidate": "Unicode/hex",
-        "line": 2569,
+        "line": 2590,
         "referrer": "scripts/governance/check_gitguardian_scope.py"
       },
       {
@@ -129718,6 +129725,21 @@
       {
         "candidate": "ancre/tag",
         "line": 3945,
+        "referrer": "stories/RC1-015.md"
+      },
+      {
+        "candidate": "check_gitguardian_scope.py",
+        "line": 3989,
+        "referrer": "stories/RC1-015.md"
+      },
+      {
+        "candidate": "mypy_gate.py",
+        "line": 3990,
+        "referrer": "stories/RC1-015.md"
+      },
+      {
+        "candidate": "origin/main",
+        "line": 3990,
         "referrer": "stories/RC1-015.md"
       },
       {
@@ -168041,35 +168063,35 @@
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 848,
+        "line": 869,
         "referrer": "scripts/governance/check_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 1933,
+        "line": 1954,
         "referrer": "scripts/governance/check_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 2509,
+        "line": 2530,
         "referrer": "scripts/governance/check_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 2603,
+        "line": 2624,
         "referrer": "scripts/governance/check_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 2604,
+        "line": 2625,
         "referrer": "scripts/governance/check_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
@@ -177259,6 +177281,13 @@
         "severity": "hard"
       },
       {
+        "candidate": ".gitguardian.yaml",
+        "line": 4945,
+        "referrer": "tests/test_rc1015_gitguardian_scope.py",
+        "resolved": ".gitguardian.yaml",
+        "severity": "hard"
+      },
+      {
         "candidate": "src/forgeai/deploy/openbao_flow.py",
         "line": 378,
         "referrer": "tests/test_rc1016_sonar_suppressions.py",
@@ -177804,7 +177833,7 @@
       "working-sandbox-readme": 1
     },
     "case_collisions_total": 0,
-    "dangling_references_total": 16945,
+    "dangling_references_total": 16948,
     "generated_total": 9,
     "load_bearing_total": 2037,
     "portability_violations_total": 0,

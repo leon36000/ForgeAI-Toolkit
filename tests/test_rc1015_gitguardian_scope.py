@@ -4931,3 +4931,23 @@ def test_parser_scalaire_bloc_item_avec_ancre_directe_est_reconnu(tmp_path):
     ok, motifs = check_gitguardian_scope.verifier(fichier)
     assert ok is False
     assert motifs == ["**/*.md"]
+
+
+def test_parser_scalaire_bloc_item_ordre_tag_puis_ancre_est_reconnu(tmp_path):
+    # RC1-015 round 112, revue scellée GPT-5.6-Terra-Pro (MAJEUR, bug réel, via
+    # DeepSeek-V4-Pro-0813) : le correctif round 111 codait en dur l'ordre ancre-PUIS-tag
+    # (`&a !!str >-`), réintroduisant le défaut d'ordre déjà résolu ailleurs par
+    # `_PROPRIETES_NOEUD` (round 20/28) — l'ordre inverse tag-PUIS-ancre (`!!str &a >-`, YAML
+    # valide, vérifié empiriquement : PyYAML résout la même liste `['**/*.md']`) n'était pas
+    # reconnu. Corrigé en réutilisant `_PROPRIETES_NOEUD` (déjà correcte pour les deux ordres)
+    # au lieu de réinventer un fragment ad hoc — couvre les 4 combinaisons (ancre seule, tag
+    # seul, ancre-puis-tag, tag-puis-ancre), pas seulement le cas signalé.
+    fichier = tmp_path / ".gitguardian.yaml"
+    fichier.write_text(
+        'secret:\n  ignored_paths:\n    - !!str &a >-\n      **/*.md\n',  # proof:allow — clé de schéma YAML, pas un secret réel
+        encoding="utf-8",
+    )
+    assert check_gitguardian_scope.parser_ignored_paths(fichier) == ["**/*.md"]
+    ok, motifs = check_gitguardian_scope.verifier(fichier)
+    assert ok is False
+    assert motifs == ["**/*.md"]

@@ -182,20 +182,32 @@ _LIGNE_VALEUR_EXPLICITE_FLOW_OUVERTE = re.compile(r"^(\s*):\s*" + _PROPRIETES_NO
 _LIGNE_VALEUR_EXPLICITE_SECRET_FLOW_OUVERTE = re.compile(r"^(\s*):\s*" + _PROPRIETES_NOEUD + r"\{")
 _LIGNE_ITEM = re.compile(r'^(\s*)-\s*(?:"([^"]*)"|\'([^\']*)\'|(\S+))\s*(#.*)?$')
 # Round 111 (RC1-015, bug réel trouvé par revue scellée GPT-5.6-Terra-Pro) : miroir manqué de
-# `_LIGNE_CLE_BLOC` (round 12, `(?:&\S+\s+)?(?:!\S*\s+)?([|>])`) — un item de LISTE portant une
-# ancre directement sur son scalaire bloc (`- &a >-\n  **/*.md`, forme YAML valide, vérifiée
-# empiriquement : PyYAML résout `secret.ignored_paths` en `['**/*.md']`) n'était reconnu NI par
-# cette regex (qui n'autorisait qu'un TAG optionnel avant l'indicateur `[|>]`, pas une ANCRE) NI
-# par `_LIGNE_ITEM` (qui exige qu'il ne reste que `\s*(#.*)?$` après le premier jeton nu — `&a`
-# — alors qu'il reste `>-` avant la fin de ligne). La ligne tombait dans la branche
-# « non-item », la ligne de contenu suivante n'était jamais consommée comme scalaire bloc, et
-# `verifier()` concluait à tort à la conformité. Élargi symétriquement à `_LIGNE_CLE_BLOC` : tag
-# optionnel PRÉCÉDÉ d'une ancre optionnelle, même ordre. Seul `.group(1)` (indentation) est
-# consommé par les 3 appelants (`_lignes_contenu_bloc`, `_consommer_sequence_ancree`,
-# `parser_ignored_paths`) — le groupe d'ancre ajouté est NON capturant, aucun décalage d'index
-# pour les appelants existants.
+# `_LIGNE_CLE_BLOC` (round 12) — un item de LISTE portant une ancre directement sur son scalaire
+# bloc (`- &a >-\n  **/*.md`, forme YAML valide, vérifiée empiriquement : PyYAML résout
+# `secret.ignored_paths` en `['**/*.md']`) n'était reconnu NI par cette regex (qui n'autorisait
+# qu'un TAG optionnel avant l'indicateur `[|>]`, pas une ANCRE) NI par `_LIGNE_ITEM` (qui exige
+# qu'il ne reste que `\s*(#.*)?$` après le premier jeton nu — `&a` — alors qu'il reste `>-` avant
+# la fin de ligne). `verifier()` concluait à tort à la conformité.
+#
+# Round 112 (RC1-015, bug réel trouvé par revue scellée GPT-5.6-Terra-Pro, via
+# DeepSeek-V4-Pro-0813) : le correctif round 111 (`(?:&\S+\s+)?(?:!\S*\s+)?`) réintroduisait
+# EXACTEMENT le défaut d'ordre déjà résolu par `_PROPRIETES_NOEUD` (round 20/28, voir sa
+# docstring : « le spec autorise les DEUX ordres, ancre puis tag OU tag puis ancre ») — un ordre
+# unique (ancre PUIS tag) codé en dur, alors que `!!str &a >-` (tag PUIS ancre, YAML valide,
+# vérifié empiriquement : PyYAML résout la même liste `['**/*.md']`) reste non reconnu. Reprend
+# donc directement `_PROPRIETES_NOEUD` (déjà correcte, déjà partagée par `_LIGNE_CLE`/
+# `_LIGNE_CLE_FLOW_OUVERTE`/`_LIGNE_SECRET_FLOW_OUVERTE`) au lieu de réinventer un fragment ad hoc
+# — élimine la classe entière de bugs d'ordre, pas seulement le cas signalé. `_LIGNE_CLE_BLOC`
+# (round 12, JAMAIS migrée vers `_PROPRIETES_NOEUD`) souffrait du MÊME défaut symétrique côté
+# CLÉ (`secret.ignored_paths: !!str &a >-` non reconnu, vérifié empiriquement AVANT ce round) —
+# corrigée proactivement en même temps, même fragment partagé.
+#
+# Seul `.group(1)` (indentation) est consommé par les 3 appelants de `_LIGNE_ITEM_BLOC`
+# (`_lignes_contenu_bloc`, `_consommer_sequence_ancree`, `parser_ignored_paths`) — `_PROPRIETES_
+# NOEUD` ne capture rien (groupe non capturant), aucun décalage d'index pour les appelants
+# existants, ici ou pour `_LIGNE_CLE_BLOC`.
 _LIGNE_ITEM_BLOC = re.compile(
-    r"^(\s*)-\s*(?:&\S+\s+)?(?:!\S*\s+)?([|>])(?:[+-][1-9]|[1-9][+-]|[+-]|[1-9])?\s*(#.*)?$"
+    r"^(\s*)-\s*" + _PROPRIETES_NOEUD + r"([|>])(?:[+-][1-9]|[1-9][+-]|[+-]|[1-9])?\s*(#.*)?$"
 )
 _LIGNE_ITEM_ALIAS = re.compile(r"^(\s*)-\s*\*(" + _CARACTERE_ANCRE + r"+)\s*(#.*)?$")
 _CHAINE_DOUBLE_GUILLEMETS = re.compile(r'"((?:[^"\\]|\\.)*)"', re.DOTALL)
@@ -212,8 +224,17 @@ _ECHAPPEMENT_YAML = re.compile(
 # l'appelant (`_lignes_contenu_bloc`), le nom de clé lui-même n'a pas besoin d'être décodé ici
 # (cette fonction n'a pas besoin de savoir QUELLE clé porte le scalaire, seulement qu'il y en a
 # UNE, quelle que soit sa forme).
+#
+# Round 112 (RC1-015, correctif proactif — même défaut symétrique que `_LIGNE_ITEM_BLOC`,
+# corrigé le même round par bug réel trouvé par revue scellée GPT-5.6-Terra-Pro) : le fragment
+# ad hoc `(?:&\S+\s+)?(?:!\S*\s+)?` codait en dur l'ordre ancre-PUIS-tag, alors que YAML autorise
+# aussi tag-PUIS-ancre (`secret.ignored_paths: !!str &a >-`, vérifié empiriquement AVANT ce
+# round : non reconnu, `verifier()` concluait à tort à la conformité ; PyYAML résout pourtant la
+# même chaîne `'**/*.md'`). Reprend `_PROPRIETES_NOEUD` (round 20/28, déjà correcte pour les
+# DEUX ordres) au lieu du fragment ad hoc — aucun groupe capturant ajouté, aucun décalage
+# d'index pour l'appelant existant.
 _LIGNE_CLE_BLOC = re.compile(
-    r"^(\s*)" + _NOM_CLE_QUELCONQUE + r"\s*:\s*(?:&\S+\s+)?(?:!\S*\s+)?([|>])(?:[+-][1-9]|[1-9][+-]|[+-]|[1-9])?\s*(#.*)?$"
+    r"^(\s*)" + _NOM_CLE_QUELCONQUE + r"\s*:\s*" + _PROPRIETES_NOEUD + r"([|>])(?:[+-][1-9]|[1-9][+-]|[+-]|[1-9])?\s*(#.*)?$"
 )
 # Forme NON INDENTÉE (`secret`, toujours à la racine, colonne 0) : groupes 1-3 = nom de clé
 # (`_decoder_nom_cle(m, 1)`), dernier groupe = comment/alias selon la forme.
