@@ -367,3 +367,25 @@ jobs:
           python3 scripts/ruff_ratchet.py \
             --racine . \
             --base-ref-git origin/main
+
+  ruff-noqa-gate:
+    # Incrément 3b de #450 (RC1-020, dernier) : cliquet BLOQUANT séparé et indépendant sur les
+    # suppressions `# noqa: <code>` des mêmes règles "defaut_candidat" — toute suppression doit
+    # porter une justification ET une date de révision LOCALEMENT dans le commentaire (format
+    # `(révision: YYYY-MM-DD)`). N'invoque jamais ruff (lecture directe du code source) : aucune
+    # dépendance tierce, aucune installation de paquet nécessaire ici, contrairement à ruff-ratchet.
+    # fetch-depth: 0 requis, même besoin que ruff-ratchet/mypy-ratchet (comparaison git).
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+        with:
+          python-version: "3.12"
+      - name: Gate RC1-020 — cliquet noqa (justification + date de revision, aucune regression)
+        run: |
+          python3 scripts/ruff_noqa_gate.py \
+            --racine . \
+            --base-ref-git origin/main
