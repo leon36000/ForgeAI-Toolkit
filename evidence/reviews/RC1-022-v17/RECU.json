@@ -3,10 +3,10 @@
   "dossier": "RC1-022-v17",
   "issue": 463,
   "round": 17,
-  "base_commit": "2841fe370124790b9242a09c7c23d6c8f523d661",
-  "head_commit": "369c3294f46ee5ed95d0037a5dc70ed67d0221cc",
-  "head_tree": "dd6c92c6f80c8fee3fddfc0bd5858a8cb05888e0",
-  "diff_digest": "883594a603403e22aefffef023830da8ab321b5bc50c19d068ef33135c12547e",
+  "base_commit": "663835848f5fa931f8e1a6a0a15a73666c02fb0a",
+  "head_commit": "7719150c4edda4069f56865240d3f8e3b1a8c924",
+  "head_tree": "7bdabb0b31690fe64cf321859d087ec896d644ad",
+  "diff_digest": "50ea89773d0bccabd5e0e5203bc17de1dbbbd2f15cb7937d4a8dce6e87d09dd6",
   "prompt_sha256": "3064bb0eb2ccbbea16087860a2261d6401e360b3dce28ad6eda1a49c8145b00a",
   "reviewers_attendus": [
     "Kimi-2.7",
@@ -17,6 +17,6 @@
     "fable"
   ],
   "resultat": "APPROVE",
-  "date_heure": "2026-08-16T23:16:35.638408-04:00",
+  "date_heure": "2026-08-17T00:55:48.104803-04:00",
   "fenetre_heures": 24
 }
