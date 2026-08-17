@@ -9943,8 +9943,8 @@
         }
       ],
       "rule_id": "evidence-registres-root",
-      "sha256": "a41081bca6410b4dab0624dbcbe62c7ba75251320a66bdad39880bec51c41c73",
-      "size": 408926,
+      "sha256": "4b61fabb603d74eccd8af0c48607b2a33373fb48bbb6617ba6f6511c58def701",
+      "size": 410024,
       "target_path": null,
       "type": "text"
     },
@@ -23072,7 +23072,15 @@
       "load_bearing": true,
       "owner": "gouvernance-preuve",
       "path": "evidence/reviews/RC1-015-v24/RECU.json",
-      "referenced_by": [],
+      "referenced_by": [
+        {
+          "candidate": "evidence/reviews/RC1-015-v24/RECU.json",
+          "line": 4210,
+          "referrer": "stories/RC1-015.md",
+          "resolved": "evidence/reviews/RC1-015-v24/RECU.json",
+          "severity": "hard"
+        }
+      ],
       "rule_id": "evidence-reviews-root",
       "sha256": null,
       "size": null,
@@ -47620,8 +47628,8 @@
         }
       ],
       "rule_id": "governance-stories",
-      "sha256": "59834d7493b228b73cb4d7c1b1e2dc5184ecc0ad8b5bb86710e262872e39bb8d",
-      "size": 304376,
+      "sha256": "5a5dabe8d92650c9289958c21c879e2a475ff9b8087c10d6567c5305fd9c2e46",
+      "size": 306769,
       "target_path": null,
       "type": "text"
     },
@@ -130134,6 +130142,31 @@
         "referrer": "stories/RC1-015.md"
       },
       {
+        "candidate": "RECU.json",
+        "line": 4198,
+        "referrer": "stories/RC1-015.md"
+      },
+      {
+        "candidate": "RECU.json",
+        "line": 4200,
+        "referrer": "stories/RC1-015.md"
+      },
+      {
+        "candidate": "91/",
+        "line": 4202,
+        "referrer": "stories/RC1-015.md"
+      },
+      {
+        "candidate": "evidence/reviews/",
+        "line": 4202,
+        "referrer": "stories/RC1-015.md"
+      },
+      {
+        "candidate": "RECU.json",
+        "line": 4207,
+        "referrer": "stories/RC1-015.md"
+      },
+      {
         "candidate": "src/forgeai/",
         "line": 3,
         "referrer": "stories/RC1-022.md"
@@ -173234,6 +173267,13 @@
         "severity": "hard"
       },
       {
+        "candidate": "evidence/reviews/RC1-015-v24/RECU.json",
+        "line": 4210,
+        "referrer": "stories/RC1-015.md",
+        "resolved": "evidence/reviews/RC1-015-v24/RECU.json",
+        "severity": "hard"
+      },
+      {
         "candidate": "tests/test_rel038b_unicite.py",
         "line": 8,
         "referrer": "stories/RC1-022.md",
@@ -178350,7 +178390,7 @@
       "working-sandbox-readme": 1
     },
     "case_collisions_total": 0,
-    "dangling_references_total": 16983,
+    "dangling_references_total": 16988,
     "generated_total": 9,
     "load_bearing_total": 2045,
     "portability_violations_total": 0,
