@@ -256,6 +256,8 @@ def _diff_canonique(
     diff.algorithm, diff.renames et du ~/.gitconfig de qui l'exécute — instable. Utilise la
     PLOMBERIE (`git diff --raw --no-renames -z`), extrait (mode, sha_base, sha_head, chemin)
     par entrée, trie (ordre déterministe, indépendant de l'ordre retourné par git), hache.
+    Le flag --abbrev=40 neutralise core.abbrev=auto pour garantir des sha pleine longueur
+    déterministes (--full-index est un NO-OP prouvé sur le format --raw, ne pas l'utiliser).
 
     Exclusion OBLIGATOIRE de "evidence/reviews/" : le diff d'une PR contient TOUJOURS les
     artefacts de sa propre revue (le dossier evidence/reviews/<ID>/*.verdict.json + la ligne
@@ -268,7 +270,7 @@ def _diff_canonique(
     _validate_git_ref(base_ref)
     _validate_git_ref(head_ref)
     execute = _default_runner if runner is None else runner
-    raw = execute(["git", "diff", "--raw", "--no-renames", "-z", f"{base_ref}...{head_ref}"])
+    raw = execute(["git", "diff", "--raw", "--no-renames", "--abbrev=40", "-z", f"{base_ref}...{head_ref}"])
     fields = raw.split("\0")
     entries: list[tuple[str, str, str, str]] = []
     index = 0

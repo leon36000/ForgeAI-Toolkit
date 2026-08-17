@@ -280,6 +280,18 @@ def test_diff_canonique_deterministe_ordre_independant():
     )
 
 
+def test_diff_canonique_force_abbrev_40_shas_pleine_longueur():
+    # core.abbrev=auto dépend du nombre d'objets local, --abbrev=40 garantit des sha pleine longueur
+    captured: list[str] = []
+
+    def runner(cmd: list[str]) -> str:
+        captured.extend(cmd)
+        return ""
+
+    revue._diff_canonique("base", "HEAD", runner=runner)
+    assert "--abbrev=40" in captured
+
+
 def test_verifier_recu_approve_nominal():
     result = revue.verifier_recu(_recu(), [_v("deepseek"), _v("gemini_flash"), _v("longcat_20")], _etat())
     assert result["result"] == "APPROVE" and "reçu valide" in result["reason"]
