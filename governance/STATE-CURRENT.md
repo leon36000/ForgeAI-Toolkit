@@ -753,12 +753,16 @@
       "sha256": "8641c62ac1fd34c9237c6c753d444bc9a73973ab5a7dcdb78ca425c9f8f7b00b"
     },
     {
+      "path": "tests/test_ruff_mesure.py",
+      "sha256": "c7b0fd9716b407faa7e129e882686ea60f6c3d4bc4d81c44682d3e4e91e1dc8e"
+    },
+    {
       "path": "tests/test_ruff_ratchet.py",
-      "sha256": "4a45250e476ebe09a18d153caaba61e8ec58b4fa4b58153d1a5d0acb47b828cf"
+      "sha256": "334012592d8984a92830857b3a88686c45c813eb7faf87273b579b73ae3d6396"
     },
     {
       "path": "tests/test_ruff_report.py",
-      "sha256": "92a67d93d9c2a3ed76f57170cee644dcd4c79d363a32d29c72cabb2a6c0a6319"
+      "sha256": "5b88f0f4bef893cd93c23dfb667cb2846d6e9e588e74b3ebbe85075c03cbdc3b"
     },
     {
       "path": "tests/test_safe_repr.py",
@@ -950,8 +954,8 @@
   },
   "tests": {
     "js_files": 3,
-    "python_files": 197,
-    "python_functions_declared": 2400
+    "python_files": 198,
+    "python_functions_declared": 2406
   }
 }
 ```

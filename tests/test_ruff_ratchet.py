@@ -114,7 +114,7 @@ def test_mesurer_ruff_absent(
     def ruff_absent(*args: object, **kwargs: object) -> subprocess.CompletedProcess[str]:
         raise FileNotFoundError("ruff")
 
-    monkeypatch.setattr(ruff_ratchet.subprocess, "run", ruff_absent)
+    monkeypatch.setattr(ruff_ratchet.ruff_mesure.subprocess, "run", ruff_absent)
 
     with pytest.raises(RuntimeError, match="ruff est indisponible"):
         ruff_ratchet.mesurer(tmp_path, ["ARG001"])
@@ -131,7 +131,7 @@ def test_mesurer_code_retour_inattendu(
         stdout="",
         stderr="erreur ruff",
     )
-    monkeypatch.setattr(ruff_ratchet.subprocess, "run", lambda *args, **kwargs: resultat)
+    monkeypatch.setattr(ruff_ratchet.ruff_mesure.subprocess, "run", lambda *args, **kwargs: resultat)
 
     with pytest.raises(RuntimeError, match="code 2"):
         ruff_ratchet.mesurer(tmp_path, ["ARG001"])
@@ -148,7 +148,7 @@ def test_mesurer_sortie_json_invalide(
         stdout="pas du JSON",
         stderr="",
     )
-    monkeypatch.setattr(ruff_ratchet.subprocess, "run", lambda *args, **kwargs: resultat)
+    monkeypatch.setattr(ruff_ratchet.ruff_mesure.subprocess, "run", lambda *args, **kwargs: resultat)
 
     with pytest.raises(RuntimeError, match="sortie JSON de ruff est invalide"):
         ruff_ratchet.mesurer(tmp_path, ["ARG001"])
@@ -165,7 +165,7 @@ def test_mesurer_sortie_json_pas_une_liste(
         stdout="{}",
         stderr="",
     )
-    monkeypatch.setattr(ruff_ratchet.subprocess, "run", lambda *args, **kwargs: resultat)
+    monkeypatch.setattr(ruff_ratchet.ruff_mesure.subprocess, "run", lambda *args, **kwargs: resultat)
 
     with pytest.raises(RuntimeError, match="doit être une liste de violations"):
         ruff_ratchet.mesurer(tmp_path, ["ARG001"])

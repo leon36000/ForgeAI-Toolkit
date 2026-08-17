@@ -18,7 +18,7 @@
     "S607"
   ],
   "borne": {
-    "total_violations": 150
+    "total_violations": 149
   },
   "dette": {
     "scripts/branch_coverage_report.py": 1,
@@ -42,8 +42,7 @@
     "scripts/registre.py": 9,
     "scripts/reviews_gate.py": 1,
     "scripts/revue.py": 1,
-    "scripts/ruff_ratchet.py": 1,
-    "scripts/ruff_report.py": 1,
+    "scripts/ruff_mesure.py": 1,
     "scripts/sentinelle_sweep.py": 2,
     "scripts/tally.py": 1,
     "src/forgeai/audit/immudb.py": 1,
@@ -159,10 +158,7 @@
     "scripts/revue.py": {
       "S603": 1
     },
-    "scripts/ruff_ratchet.py": {
-      "S603": 1
-    },
-    "scripts/ruff_report.py": {
+    "scripts/ruff_mesure.py": {
       "S603": 1
     },
     "scripts/sentinelle_sweep.py": {

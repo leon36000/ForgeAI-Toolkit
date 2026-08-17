@@ -5,10 +5,11 @@ from __future__ import annotations
 
 import argparse
 import json
-import subprocess
 import sys
 from pathlib import Path
 from typing import Any
+
+import ruff_mesure
 
 
 _CHEMIN_CLASSIFICATION = (
@@ -56,66 +57,12 @@ SELECTION = _selection_depuis_classification(_CHEMIN_CLASSIFICATION)
 
 
 def mesurer(racine: Path) -> list[dict[str, Any]]:
-    """Exécute Ruff et retourne les violations détectées."""
-    commande = [
-        "ruff",
-        "check",
-        "--no-cache",
-        "--output-format=json",
-        "--select",
-        ",".join(SELECTION),
-        "src",
-        "scripts",
-    ]
-
-    try:
-        resultat = subprocess.run(
-            commande,
-            cwd=str(racine),
-            capture_output=True,
-            text=True,
-            check=False,
-        )
-    except FileNotFoundError as erreur:
-        raise RuntimeError(
-            "ruff est indisponible : vérifiez son installation et le PATH"
-        ) from erreur
-    except OSError as erreur:
-        raise RuntimeError(f"impossible d'exécuter ruff : {erreur}") from erreur
-
-    if resultat.returncode not in (0, 1):
-        details = resultat.stderr.strip()
-        suffixe = f" : {details}" if details else ""
-        raise RuntimeError(
-            f"ruff a échoué avec le code {resultat.returncode}{suffixe}"
-        )
-
-    try:
-        violations = json.loads(resultat.stdout)
-    except json.JSONDecodeError as erreur:
-        details = resultat.stderr.strip()
-        suffixe = f" ({details})" if details else ""
-        raise RuntimeError(
-            f"la sortie JSON de ruff est invalide{suffixe} : {erreur}"
-        ) from erreur
-
-    if not isinstance(violations, list) or not all(
-        isinstance(violation, dict) for violation in violations
-    ):
-        raise RuntimeError("la sortie JSON de ruff doit être une liste de violations")
-
-    # Ruff renvoie des chemins absolus (dépendants de la machine) : les rendre relatifs à
-    # `racine` pour un rapport lisible et stable en CI, cohérent d'une exécution à l'autre.
-    racine_resolue = Path(racine).resolve()
-    for violation in violations:
-        chemin = violation.get("filename")
-        if isinstance(chemin, str):
-            try:
-                violation["filename"] = str(Path(chemin).resolve().relative_to(racine_resolue))
-            except ValueError:
-                pass  # hors de racine (improbable) : conserve le chemin absolu tel quel
-
-    return violations
+    """Exécute Ruff et retourne les violations détectées. Délègue à la fonction partagée
+    `ruff_mesure.mesurer_violations` (extraite pour éliminer une duplication avec `mesurer()` de
+    `ruff_ratchet.py`, Quality Gate SonarCloud #572 — les deux modules restent indépendants l'un
+    de l'autre, ni l'un ni l'autre ne s'importe, chacun dépend de cette infrastructure commune,
+    même principe que `gate_git_ref.py`)."""
+    return ruff_mesure.mesurer_violations(racine, SELECTION)
 
 
 def classifier(
