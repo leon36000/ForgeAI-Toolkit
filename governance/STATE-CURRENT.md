@@ -538,7 +538,7 @@
     },
     {
       "path": "tests/test_ops031b_logs.py",
-      "sha256": "f844fbae486b97064d59501ad0235b1260488d400e24202cbdfbf12a3706dd0d"
+      "sha256": "1ea70510608628ea12404fb3d6fd6493a3b2b5e28bee832a6ce02de14c6770b2"
     },
     {
       "path": "tests/test_ops031c_diagnostic.py",

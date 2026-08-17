@@ -1361,331 +1361,379 @@ class ForgeAIHandler(BaseHTTPRequestHandler):
             return
 
         if path == "/api/detect/refresh":
-            # PERF-030A : invalidation EXPLICITE du cache matériel (OPT-001), puis re-sonde.
-            # Route MUTANTE : elle hérite des gardes ci-dessus (rate-limit, transport, jeton/CSRF/
-            # rebinding) — un refresh force des sondes sous-processus coûteuses, il ne doit jamais
-            # être anonyme (sinon vecteur d'amplification depuis une page tierce).
-            _hardware_cache_clear()
-            self._send(200, hardware_json().encode("utf-8"), "application/json; charset=utf-8")
+            self._post_detect_refresh(path, parsed)
             return
 
         if path == "/api/nodes":
-            data = self._read_json_body()
-            if data is None:
-                return
-
-            required = ["ip", "user", "password", "hostkey"]
-            missing = [field for field in required if field not in data]
-            if missing:
-                self._send_json(400, {"error": "champs manquants", "missing": missing})
-                return
-
-            ip = data["ip"]
-            user = data["user"]
-            password = data["password"]  # proof:allow (identifiant ; valeur jamais journalisee)
-            hostkey = data["hostkey"]  # SSH-021 : empreinte SHA256, pas de TOFU
-
-            try:
-                runner = SubprocessRunner()
-                pubkey, privkey = _node_keys(runner)
-                bootstrapper = (
-                    _NODE_BOOTSTRAPPER if _NODE_BOOTSTRAPPER is not None
-                    else SshBootstrapper(hostkey_sha256=hostkey)
-                )
-                record = add_node(
-                    ip,
-                    user,
-                    password,
-                    pubkey=pubkey,
-                    privkey=privkey,
-                    bootstrapper=bootstrapper,
-                    runner=runner,
-                    registre_path=_registre_path(),
-                )
-            except NodeAddError as exc:
-                self._send_json(400, {"error": str(exc)})
-                return
-            except KeyError_:
-                self._send_json(500, {"error": "erreur de gestion des clés"})
-                return
-            except FileNotFoundError as exc:
-                # outil requis absent (ex. sshpass, ssh-keygen) — réponse propre,
-                # jamais de crash silencieux du handler (preuve navigateur B-02d)
-                self._send_json(500, {"error": f"outil requis absent : {exc.filename or exc}"})
-                return
-            except Exception:
-                # aucune valeur soumise n'est reflétée
-                self._send_json(500, {"error": "erreur interne lors de l'ajout du nœud"})
-                return
-
-            self._send_json(
-                201,
-                {
-                    "node": {
-                        "ip": record.ip,
-                        "user": record.user,
-                        "key_fingerprint": record.key_fingerprint,
-                    }
-                },
-            )
+            self._post_nodes(path, parsed)
             return
 
         if path == "/api/nodes/prepare":
-            data = self._read_json_body()
-            if data is None:
-                return
-
-            if "host" not in data:
-                self._send_json(400, {"error": "host requis"})
-                return
-
-            host = data["host"]
-            if not _NODE_RE.match(host):
-                self._send_json(400, {"error": "host invalide"})
-                return
-
-            # REL-038B : test-et-marquage ATOMIQUE sous le MÊME verrou — sinon deux requêtes
-            # concurrentes voient toutes deux « libre » et lancent deux préparations du même nœud.
-            # Unicité PAR HÔTE (et non globale) : préparer plusieurs nœuds distincts en parallèle
-            # est un usage légitime d'un toolkit multi-nœuds.
-            with _PREPARE_LOCK:
-                if host in _PREPARE_ACTIVE:
-                    self._send_json(409, {"error": "préparation déjà en cours pour cet hôte"})
-                    return
-                _PREPARE_ACTIVE.add(host)
-
-            def _run_prepare() -> None:
-                try:
-                    _prepare_state_set(host, {"done": False, "resultat": None, "erreur": None})
-                    resultat, erreur = None, None
-                    try:
-                        runner = SubprocessRunner()
-                        helm_present = shutil.which("helm") is not None
-                        resultat = preparer_noeud(
-                            runner, host, appliquer=True, helm_present=helm_present
-                        )
-                    except PrepareError as exc:
-                        erreur = str(exc)
-                    except Exception:  # noqa: BLE001
-                        traceback.print_exc(file=sys.stderr)
-                        erreur = "erreur interne"
-                    _prepare_state_set(host, {"done": True, "resultat": resultat, "erreur": erreur})
-                finally:
-                    # Libération dans un `finally` : une exception ne doit JAMAIS laisser un hôte
-                    # verrouillé (sinon plus aucune préparation possible sans redémarrer).
-                    with _PREPARE_LOCK:
-                        _PREPARE_ACTIVE.discard(host)
-
-            threading.Thread(target=_run_prepare, daemon=True).start()
-            self._send_json(202, {"started": True, "host": host})
+            self._post_nodes_prepare(path, parsed)
             return
 
         if path == "/api/deploy":
-            data = self._read_json_body()
-            if data is None:
-                return
+            self._post_deploy(path, parsed)
+            return
 
-            required = ["stack", "backend", "confirm"]
-            missing = [field for field in required if field not in data]
-            if missing:
-                self._send_json(400, {"error": "champs manquants", "missing": missing})
-                return
+        if path == "/api/models":
+            self._post_models(path, parsed)
+            return
 
-            stack_id = data["stack"]
-            backend = data["backend"]
-            confirm = data["confirm"]
+        self._send_json(404, {"error": "not found"})
 
-            if confirm != "FORCER":
-                self._send_json(400, {"error": "confirmation 'FORCER' requise"})
-                return
+    def _post_detect_refresh(self, path, parsed):
+        # PERF-030A : invalidation EXPLICITE du cache matériel (OPT-001), puis re-sonde.
+        # Route MUTANTE : elle hérite des gardes ci-dessus (rate-limit, transport, jeton/CSRF/
+        # rebinding) — un refresh force des sondes sous-processus coûteuses, il ne doit jamais
+        # être anonyme (sinon vecteur d'amplification depuis une page tierce).
+        _hardware_cache_clear()
+        self._send(200, hardware_json().encode("utf-8"), "application/json; charset=utf-8")
 
-            if backend not in {"compose", "k3s"}:
-                self._send_json(400, {"error": "backend invalide"})
-                return
+    def _post_nodes(self, path, parsed):
+        data = self._read_json_body()
+        if data is None:
+            return
 
-            node = data.get("node", "local")
-            if node not in ("local", "auto") and not _NODE_RE.match(node):
-                self._send_json(400, {"error": "node invalide"})
-                return
+        required = ["ip", "user", "password", "hostkey"]
+        missing = [field for field in required if field not in data]
+        if missing:
+            self._send_json(400, {"error": "champs manquants", "missing": missing})
+            return
 
-            bricks_sel = data.get("bricks", [])
-            models_sel = data.get("models", [])
-            embeddings_sel = data.get("embeddings", [])
-            rag_node = data.get("rag_node")
-            if (not _selection_valide(bricks_sel) or not _selection_valide(models_sel)
-                    or not _selection_valide(embeddings_sel)):
-                self._send_json(400, {"error": "selection invalide"})
-                return
-            if rag_node is not None and (not isinstance(rag_node, str)
-                    or (rag_node not in ("local", "auto") and not _NODE_RE.match(rag_node))):
-                self._send_json(400, {"error": "rag_node invalide"})
-                return
+        ip = data["ip"]
+        user = data["user"]
+        password = data["password"]  # proof:allow (identifiant ; valeur jamais journalisee)
+        hostkey = data["hostkey"]  # SSH-021 : empreinte SHA256, pas de TOFU
 
-            adopt = data.get("adopt")
+        try:
+            runner = SubprocessRunner()
+            pubkey, privkey = _node_keys(runner)
+            bootstrapper = (
+                _NODE_BOOTSTRAPPER if _NODE_BOOTSTRAPPER is not None
+                else SshBootstrapper(hostkey_sha256=hostkey)
+            )
+            record = add_node(
+                ip,
+                user,
+                password,
+                pubkey=pubkey,
+                privkey=privkey,
+                bootstrapper=bootstrapper,
+                runner=runner,
+                registre_path=_registre_path(),
+            )
+        except NodeAddError as exc:
+            self._send_json(400, {"error": str(exc)})
+            return
+        except KeyError_:
+            self._send_json(500, {"error": "erreur de gestion des clés"})
+            return
+        except FileNotFoundError as exc:
+            # outil requis absent (ex. sshpass, ssh-keygen) — réponse propre,
+            # jamais de crash silencieux du handler (preuve navigateur B-02d)
+            self._send_json(500, {"error": f"outil requis absent : {exc.filename or exc}"})
+            return
+        except Exception:
+            # aucune valeur soumise n'est reflétée
+            self._send_json(500, {"error": "erreur interne lors de l'ajout du nœud"})
+            return
 
-            try:
-                # BUG-web-server-redondance (bloc B) : CET appel charge déjà le stack (pour
-                # vérifier son existence) — son résultat est réutilisé plus bas au lieu
-                # d'être jeté puis re-chargé (2e lecture disque + re-parse JSON du MÊME
-                # fichier stack_id.json, strictement redondante : load_stack est une
-                # fonction pure, sans effet de bord, le contenu ne change pas entre les
-                # deux points de la requête).
-                stack = load_stack(stack_id)
-            except FileNotFoundError:
-                self._send_json(404, {"error": "stack not found"})
-                return
-
-            # Validation de `adopt` à la FRONTIÈRE : la valeur atteint le YAML rendu et vient
-            # d'une entrée réseau. La validation en profondeur (ServiceSpec) ne dispense pas
-            # de refuser ici proprement — une ValueError qui remonterait donnerait un 500 sur
-            # une simple faute de saisie. Placée APRÈS le contrôle d'existence du stack pour
-            # ne pas transformer un 404 légitime en 500.
-            if adopt is not None:
-                # `deploy_ids` n'est calculé QUE s'il y a quelque chose à valider : sans
-                # `adopt`, cet appel serait un travail inutile. Le stack lui-même est
-                # RÉUTILISÉ (chargé une seule fois ci-dessus) — jamais rechargé ici.
-                erreur_adopt = _valider_adopt(adopt, set(deploy_ids(stack)))
-                if erreur_adopt is not None:
-                    self._send_json(400, {"error": erreur_adopt})
-                    return
-
-            with _DEPLOY_STATE["lock"]:
-                proc = _DEPLOY_STATE["proc"]
-                if proc is not None and proc.poll() is None:
-                    self._send_json(409, {"error": "déploiement déjà en cours"})
-                    return
-
-                _DEPLOY_STATE["lines"].clear()
-                _DEPLOY_STATE["done"] = False
-                _DEPLOY_STATE["exit_code"] = None
-                _DEPLOY_STATE["nettoyage_incertain"] = False
-
-                # Trace de gouvernance AVANT le spawn : un crash du backend en cours de
-                # déploiement laisse ainsi une trace `deploy_started` au registre (best-effort ;
-                # on tient déjà le lock deploy, l'except appende directement sans le reprendre).
-                try:
-                    registre.append(
-                        _registre_path(),
-                        "deploy_started",
-                        "web",
-                        {"stack": stack_id, "backend": backend, "node": node,
-                         "request_id": self.correlation_id},  # OPS-031D : audit rattachable
-                    )
-                except Exception:
-                    _DEPLOY_STATE["lines"].append(
-                        "avertissement: échec traçage registre deploy_started"
-                    )
-
-                cmd = _DEPLOY_CMD
-                if cmd is None:
-                    cmd = [
-                        sys.executable,
-                        "-m",
-                        "forgeai",
-                        "wizard",
-                        "--ci",
-                        "--workdir",
-                        str(forgeai_home() / "deploy"),
-                        "--backend",
-                        backend,
-                        "--node",
-                        node,
-                        "--stack",
-                        stack_id,
-                    ]
-                    if bricks_sel or models_sel or embeddings_sel or rag_node or adopt:
-                        workdir = forgeai_home() / "deploy"
-                        workdir.mkdir(parents=True, exist_ok=True)
-                        sel_path = workdir / "selection-demande.json"
-                        contenu = {"bricks": bricks_sel, "models": models_sel,
-                                   "embeddings": embeddings_sel}
-                        if rag_node is not None:
-                            contenu["rag_node"] = rag_node
-                        if adopt:
-                            contenu["adopt"] = adopt
-                        sel_path.write_text(json.dumps(contenu, ensure_ascii=False),
-                                            encoding="utf-8")
-                        cmd += ["--selection", str(sel_path)]
-                    if data.get("dry_run"):
-                        cmd.append("--dry-run")
-
-                # REL-038C : groupe de processus DÉDIÉ. Sans cela le déploiement partage le groupe
-                # du serveur : un Ctrl-C destiné au serveur tuerait un déploiement en cours (docker
-                # compose / k3s interrompu au milieu), et l'arrêt du serveur laisserait le
-                # sous-processus ORPHELIN. Un groupe propre le rend adressable.
-                # Le réglage est SPÉCIFIQUE À LA PLATEFORME (même convention que CLI-036 dans
-                # core/proc.py) : `start_new_session` est accepté mais SILENCIEUSEMENT IGNORÉ sous
-                # Windows (CPython : `unused_start_new_session`) — le passer seul y laisserait donc
-                # l'isolation absente alors que le code aurait l'air de la fournir.
-                popen_kwargs: dict = {
-                    "stdout": subprocess.PIPE,
-                    "stderr": subprocess.STDOUT,
-                    "text": True,
-                    "bufsize": 1,
+        self._send_json(
+            201,
+            {
+                "node": {
+                    "ip": record.ip,
+                    "user": record.user,
+                    "key_fingerprint": record.key_fingerprint,
                 }
-                if os.name == "posix":
-                    popen_kwargs["start_new_session"] = True
-                else:
-                    popen_kwargs["creationflags"] = subprocess.CREATE_NEW_PROCESS_GROUP
-                new_proc = subprocess.Popen(cmd, **popen_kwargs)
-                _DEPLOY_STATE["proc"] = new_proc
+            },
+        )
 
-            _persist_deploy_state()
+    def _post_nodes_prepare(self, path, parsed):
+        data = self._read_json_body()
+        if data is None:
+            return
 
-            def _reader() -> None:
+        if "host" not in data:
+            self._send_json(400, {"error": "host requis"})
+            return
+
+        host = data["host"]
+        if not _NODE_RE.match(host):
+            self._send_json(400, {"error": "host invalide"})
+            return
+
+        # REL-038B : test-et-marquage ATOMIQUE sous le MÊME verrou — sinon deux requêtes
+        # concurrentes voient toutes deux « libre » et lancent deux préparations du même nœud.
+        # Unicité PAR HÔTE (et non globale) : préparer plusieurs nœuds distincts en parallèle
+        # est un usage légitime d'un toolkit multi-nœuds.
+        with _PREPARE_LOCK:
+            if host in _PREPARE_ACTIVE:
+                self._send_json(409, {"error": "préparation déjà en cours pour cet hôte"})
+                return
+            _PREPARE_ACTIVE.add(host)
+
+        def _run_prepare() -> None:
+            try:
+                _prepare_state_set(host, {"done": False, "resultat": None, "erreur": None})
+                resultat, erreur = None, None
                 try:
-                    for line in new_proc.stdout:
-                        with _DEPLOY_STATE["lock"]:
-                            # OPS-031B : rédaction à l'INGESTION. ERR-041B rédigeait à l'écriture disque et
-                            # avait MANQUÉ le flux `/api/deploy/events`, qui diffusait les lignes
-                            # brutes. Rédiger au point d'ENTRÉE couvre tous les consommateurs —
-                            # présents et futurs — et la mémoire ne détient plus jamais le secret.
-                            _DEPLOY_STATE["lines"].append(redact_text(line.rstrip("\r\n")))
-                    new_proc.wait()
-                    with _DEPLOY_STATE["lock"]:
-                        _DEPLOY_STATE["exit_code"] = new_proc.returncode
-                        _DEPLOY_STATE["done"] = True
-                    _persist_deploy_state()
-                except Exception as exc:
-                    # Round 27 (#452) — objection GPT-5.6-Terra-Pro (revue scellée) : str_exc_sur()
-                    # aux 2 sites ci-dessous — sans ça, une exc.__str__() qui lève ferait échouer
-                    # CE handler AVANT de marquer le déploiement terminé et avant sa tentative de
-                    # nettoyage (le plus sévère des 3 sites signalés : done resterait bloqué à
-                    # False, un déploiement fantôme jamais terminé côté API). Round 36 : risque
-                    # résiduel documenté dans la story (section « Risque résiduel — str_exc_sur et
-                    # sites FIXED ») — mais ce site précis est prouvé SIGNAL-SAFE par construction
-                    # (thread daemon en arrière-plan, cf. threading.Thread(target=_reader,
-                    # daemon=True) ci-dessous ; Python ne délivre jamais KeyboardInterrupt à un
-                    # thread non-principal, vérifié empiriquement) : le sous-cas résiduel qui
-                    # subsiste ici est encore plus étroit que l'analyse générale de la story.
-                    with _DEPLOY_STATE["lock"]:
-                        _DEPLOY_STATE["lines"].append(
-                            "avertissement: le thread de lecture du déploiement a échoué : "
-                            f"{str_exc_sur(exc)}"
-                        )
-                        if new_proc.returncode is None:
-                            try:
-                                new_proc.kill()
-                                new_proc.wait()
-                            except Exception as exc_kill:
-                                _DEPLOY_STATE["lines"].append(
-                                    "avertissement: échec du nettoyage best-effort du "
-                                    f"process de déploiement pendant la récupération : "
-                                    f"{str_exc_sur(exc_kill)}"
-                                )
-                                _DEPLOY_STATE["nettoyage_incertain"] = True
-                        _DEPLOY_STATE["exit_code"] = new_proc.returncode if new_proc.returncode is not None else -1
-                        _DEPLOY_STATE["done"] = True
-                    _persist_deploy_state()
+                    runner = SubprocessRunner()
+                    helm_present = shutil.which("helm") is not None
+                    resultat = preparer_noeud(
+                        runner, host, appliquer=True, helm_present=helm_present
+                    )
+                except PrepareError as exc:
+                    erreur = str(exc)
+                except Exception:  # noqa: BLE001
+                    traceback.print_exc(file=sys.stderr)
+                    erreur = "erreur interne"
+                _prepare_state_set(host, {"done": True, "resultat": resultat, "erreur": erreur})
+            finally:
+                # Libération dans un `finally` : une exception ne doit JAMAIS laisser un hôte
+                # verrouillé (sinon plus aucune préparation possible sans redémarrer).
+                with _PREPARE_LOCK:
+                    _PREPARE_ACTIVE.discard(host)
 
-            threading.Thread(target=_reader, daemon=True).start()
-            self._send_json(202, {"started": True})
+        threading.Thread(target=_run_prepare, daemon=True).start()
+        self._send_json(202, {"started": True, "host": host})
+
+    def _post_deploy(self, path, parsed):
+        data = self._read_json_body()
+        if data is None:
             return
-
-        if path != "/api/models":
-            self._send_json(404, {"error": "not found"})
+        valide = self._valider_requete_deploy(data)
+        if valide is None:
             return
+        self._lancer_deploiement(data, valide)
 
+    def _valider_requete_deploy(self, data):
+        # WEB-034A (#460 lot 2, round 2) : chaîne de validation extraite de _post_deploy
+        # pour réduire sa complexité cognitive (SonarCloud C Maintainability sur do_POST
+        # après le découpage lot 2 initial) — comportement byte-identique, uniquement
+        # relocalisé. Retourne None après avoir déjà envoyé la réponse d'erreur (même
+        # convention que les autres _post_<route> qui répondent puis retournent).
+        required = ["stack", "backend", "confirm"]
+        missing = [field for field in required if field not in data]
+        if missing:
+            self._send_json(400, {"error": "champs manquants", "missing": missing})
+            return None
+
+        stack_id = data["stack"]
+        backend = data["backend"]
+        confirm = data["confirm"]
+
+        if confirm != "FORCER":
+            self._send_json(400, {"error": "confirmation 'FORCER' requise"})
+            return None
+
+        if backend not in {"compose", "k3s"}:
+            self._send_json(400, {"error": "backend invalide"})
+            return None
+
+        node = data.get("node", "local")
+        if node not in ("local", "auto") and not _NODE_RE.match(node):
+            self._send_json(400, {"error": "node invalide"})
+            return None
+
+        bricks_sel = data.get("bricks", [])
+        models_sel = data.get("models", [])
+        embeddings_sel = data.get("embeddings", [])
+        rag_node = data.get("rag_node")
+        if (not _selection_valide(bricks_sel) or not _selection_valide(models_sel)
+                or not _selection_valide(embeddings_sel)):
+            self._send_json(400, {"error": "selection invalide"})
+            return None
+        if rag_node is not None and (not isinstance(rag_node, str)
+                or (rag_node not in ("local", "auto") and not _NODE_RE.match(rag_node))):
+            self._send_json(400, {"error": "rag_node invalide"})
+            return None
+
+        adopt = data.get("adopt")
+
+        try:
+            # BUG-web-server-redondance (bloc B) : CET appel charge déjà le stack (pour
+            # vérifier son existence) — son résultat est réutilisé plus bas au lieu
+            # d'être jeté puis re-chargé (2e lecture disque + re-parse JSON du MÊME
+            # fichier stack_id.json, strictement redondante : load_stack est une
+            # fonction pure, sans effet de bord, le contenu ne change pas entre les
+            # deux points de la requête).
+            stack = load_stack(stack_id)
+        except FileNotFoundError:
+            self._send_json(404, {"error": "stack not found"})
+            return None
+
+        # Validation de `adopt` à la FRONTIÈRE : la valeur atteint le YAML rendu et vient
+        # d'une entrée réseau. La validation en profondeur (ServiceSpec) ne dispense pas
+        # de refuser ici proprement — une ValueError qui remonterait donnerait un 500 sur
+        # une simple faute de saisie. Placée APRÈS le contrôle d'existence du stack pour
+        # ne pas transformer un 404 légitime en 500.
+        if adopt is not None:
+            # `deploy_ids` n'est calculé QUE s'il y a quelque chose à valider : sans
+            # `adopt`, cet appel serait un travail inutile. Le stack lui-même est
+            # RÉUTILISÉ (chargé une seule fois ci-dessus) — jamais rechargé ici.
+            erreur_adopt = _valider_adopt(adopt, set(deploy_ids(stack)))
+            if erreur_adopt is not None:
+                self._send_json(400, {"error": erreur_adopt})
+                return None
+
+        return {
+            "stack_id": stack_id,
+            "backend": backend,
+            "node": node,
+            "bricks_sel": bricks_sel,
+            "models_sel": models_sel,
+            "embeddings_sel": embeddings_sel,
+            "rag_node": rag_node,
+            "adopt": adopt,
+        }
+
+    def _lancer_deploiement(self, data, valide):
+        # WEB-034A (#460 lot 2, round 2) : spawn + thread lecteur extraits de _post_deploy,
+        # même raison que _valider_requete_deploy ci-dessus — comportement byte-identique.
+        stack_id = valide["stack_id"]
+        backend = valide["backend"]
+        node = valide["node"]
+        bricks_sel = valide["bricks_sel"]
+        models_sel = valide["models_sel"]
+        embeddings_sel = valide["embeddings_sel"]
+        rag_node = valide["rag_node"]
+        adopt = valide["adopt"]
+
+        with _DEPLOY_STATE["lock"]:
+            proc = _DEPLOY_STATE["proc"]
+            if proc is not None and proc.poll() is None:
+                self._send_json(409, {"error": "déploiement déjà en cours"})
+                return
+
+            _DEPLOY_STATE["lines"].clear()
+            _DEPLOY_STATE["done"] = False
+            _DEPLOY_STATE["exit_code"] = None
+            _DEPLOY_STATE["nettoyage_incertain"] = False
+
+            # Trace de gouvernance AVANT le spawn : un crash du backend en cours de
+            # déploiement laisse ainsi une trace `deploy_started` au registre (best-effort ;
+            # on tient déjà le lock deploy, l'except appende directement sans le reprendre).
+            try:
+                registre.append(
+                    _registre_path(),
+                    "deploy_started",
+                    "web",
+                    {"stack": stack_id, "backend": backend, "node": node,
+                     "request_id": self.correlation_id},  # OPS-031D : audit rattachable
+                )
+            except Exception:
+                _DEPLOY_STATE["lines"].append(
+                    "avertissement: échec traçage registre deploy_started"
+                )
+
+            cmd = _DEPLOY_CMD
+            if cmd is None:
+                cmd = [
+                    sys.executable,
+                    "-m",
+                    "forgeai",
+                    "wizard",
+                    "--ci",
+                    "--workdir",
+                    str(forgeai_home() / "deploy"),
+                    "--backend",
+                    backend,
+                    "--node",
+                    node,
+                    "--stack",
+                    stack_id,
+                ]
+                if bricks_sel or models_sel or embeddings_sel or rag_node or adopt:
+                    workdir = forgeai_home() / "deploy"
+                    workdir.mkdir(parents=True, exist_ok=True)
+                    sel_path = workdir / "selection-demande.json"
+                    contenu = {"bricks": bricks_sel, "models": models_sel,
+                               "embeddings": embeddings_sel}
+                    if rag_node is not None:
+                        contenu["rag_node"] = rag_node
+                    if adopt:
+                        contenu["adopt"] = adopt
+                    sel_path.write_text(json.dumps(contenu, ensure_ascii=False),
+                                        encoding="utf-8")
+                    cmd += ["--selection", str(sel_path)]
+                if data.get("dry_run"):
+                    cmd.append("--dry-run")
+
+            # REL-038C : groupe de processus DÉDIÉ. Sans cela le déploiement partage le groupe
+            # du serveur : un Ctrl-C destiné au serveur tuerait un déploiement en cours (docker
+            # compose / k3s interrompu au milieu), et l'arrêt du serveur laisserait le
+            # sous-processus ORPHELIN. Un groupe propre le rend adressable.
+            # Le réglage est SPÉCIFIQUE À LA PLATEFORME (même convention que CLI-036 dans
+            # core/proc.py) : `start_new_session` est accepté mais SILENCIEUSEMENT IGNORÉ sous
+            # Windows (CPython : `unused_start_new_session`) — le passer seul y laisserait donc
+            # l'isolation absente alors que le code aurait l'air de la fournir.
+            popen_kwargs: dict = {
+                "stdout": subprocess.PIPE,
+                "stderr": subprocess.STDOUT,
+                "text": True,
+                "bufsize": 1,
+            }
+            if os.name == "posix":
+                popen_kwargs["start_new_session"] = True
+            else:
+                popen_kwargs["creationflags"] = subprocess.CREATE_NEW_PROCESS_GROUP
+            new_proc = subprocess.Popen(cmd, **popen_kwargs)
+            _DEPLOY_STATE["proc"] = new_proc
+
+        _persist_deploy_state()
+
+        def _reader() -> None:
+            try:
+                for line in new_proc.stdout:
+                    with _DEPLOY_STATE["lock"]:
+                        # OPS-031B : rédaction à l'INGESTION. ERR-041B rédigeait à l'écriture disque et
+                        # avait MANQUÉ le flux `/api/deploy/events`, qui diffusait les lignes
+                        # brutes. Rédiger au point d'ENTRÉE couvre tous les consommateurs —
+                        # présents et futurs — et la mémoire ne détient plus jamais le secret.
+                        _DEPLOY_STATE["lines"].append(redact_text(line.rstrip("\r\n")))
+                new_proc.wait()
+                with _DEPLOY_STATE["lock"]:
+                    _DEPLOY_STATE["exit_code"] = new_proc.returncode
+                    _DEPLOY_STATE["done"] = True
+                _persist_deploy_state()
+            except Exception as exc:
+                # Round 27 (#452) — objection GPT-5.6-Terra-Pro (revue scellée) : str_exc_sur()
+                # aux 2 sites ci-dessous — sans ça, une exc.__str__() qui lève ferait échouer
+                # CE handler AVANT de marquer le déploiement terminé et avant sa tentative de
+                # nettoyage (le plus sévère des 3 sites signalés : done resterait bloqué à
+                # False, un déploiement fantôme jamais terminé côté API). Round 36 : risque
+                # résiduel documenté dans la story (section « Risque résiduel — str_exc_sur et
+                # sites FIXED ») — mais ce site précis est prouvé SIGNAL-SAFE par construction
+                # (thread daemon en arrière-plan, cf. threading.Thread(target=_reader,
+                # daemon=True) ci-dessous ; Python ne délivre jamais KeyboardInterrupt à un
+                # thread non-principal, vérifié empiriquement) : le sous-cas résiduel qui
+                # subsiste ici est encore plus étroit que l'analyse générale de la story.
+                with _DEPLOY_STATE["lock"]:
+                    _DEPLOY_STATE["lines"].append(
+                        "avertissement: le thread de lecture du déploiement a échoué : "
+                        f"{str_exc_sur(exc)}"
+                    )
+                    if new_proc.returncode is None:
+                        try:
+                            new_proc.kill()
+                            new_proc.wait()
+                        except Exception as exc_kill:
+                            _DEPLOY_STATE["lines"].append(
+                                "avertissement: échec du nettoyage best-effort du "
+                                f"process de déploiement pendant la récupération : "
+                                f"{str_exc_sur(exc_kill)}"
+                            )
+                            _DEPLOY_STATE["nettoyage_incertain"] = True
+                    _DEPLOY_STATE["exit_code"] = new_proc.returncode if new_proc.returncode is not None else -1
+                    _DEPLOY_STATE["done"] = True
+                _persist_deploy_state()
+
+        threading.Thread(target=_reader, daemon=True).start()
+        self._send_json(202, {"started": True})
+
+    def _post_models(self, path, parsed):
         data = self._read_json_body()
         if data is None:
             return
