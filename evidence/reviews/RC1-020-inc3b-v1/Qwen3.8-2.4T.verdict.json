@@ -1,0 +1,37 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "majeure",
+   "fichier": "scripts/ruff_noqa_gate.py",
+   "description": "Le critère final exige une justification locale ET une date de révision. Or la fonction noqa_non_conformes ne contrôle que la présence du motif de date ; aucune vérification ne porte sur la présence d'une justification ou du séparateur `—` avant la date. Une suppression `# noqa: ARG001 (révision: 2027-01-01)` sans justification serait acceptée.",
+   "preuve": "scripts/ruff_noqa_gate.py lignes 8-9 : `toute suppression doit porter une justification ET une date de révision` ; ligne 164 : `if MOTIF_DATE_REVISION.search(ligne) is None:` est la seule condition de conformité"
+  },
+  {
+   "severite": "majeure",
+   "fichier": "scripts/ruff_noqa_gate.py",
+   "description": "Le contrôle ne capture qu'un seul code après `# noqa:`. Si un commentaire contient plusieurs codes, seul le premier est comparé aux règles surveillées. Une suppression d'un code defaut_candidat placé après un code non surveillé peut échapper au cliquet.",
+   "preuve": "scripts/ruff_noqa_gate.py lignes 55-59 : commentaire `le premier code capturé après noqa: est celui comparé` et définition de `MOTIF_CODE_NOQA` capturant un unique groupe de code"
+  },
+  {
+   "severite": "mineure",
+   "fichier": "scripts/ruff_noqa_gate.py",
+   "description": "Le motif de date vérifie seulement la forme YYYY-MM-DD, pas la validité calendaire réelle. Une date impossible peut être acceptée alors que le contexte parle de date ISO valide.",
+   "preuve": "scripts/ruff_noqa_gate.py lignes 64-66 : motif de date limité à un format à quatre chiffres, deux chiffres, deux chiffres sans validation de mois/jour"
+  },
+  {
+   "severite": "mineure",
+   "fichier": "scripts/ruff_noqa_gate.py",
+   "description": "Les fichiers illisibles sont ignorés silencieusement, ce qui peut masquer des suppressions non conformes dans un fichier non lisible.",
+   "preuve": "scripts/ruff_noqa_gate.py lignes 155-156 : `except (OSError, UnicodeError): continue` dans noqa_non_conformes"
+  }
+ ],
+ "date_heure": "2026-08-17T23:22:29.842527+00:00",
+ "prompt_sha256": "7c1e64c22df7e24bc4df168acaaa33dd37568f86d543621e5abde8bf3323f830",
+ "reviewer_model": "Qwen3.8-2.4T",
+ "modele_servi": "b9de6bc895fe95ccacf7d9fa9b1cf29ca44d34f03e249738f325c9dee3790b78",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

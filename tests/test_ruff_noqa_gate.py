@@ -200,6 +200,78 @@ def test_noqa_non_conformes_date_sans_accent_reconnue(tmp_path: Path) -> None:
     assert ruff_noqa_gate.noqa_non_conformes(tmp_path, REGLES_SURVEILLEES) == {}
 
 
+def test_noqa_non_conformes_date_sans_justification_est_comptee(tmp_path: Path) -> None:
+    """Round 2 de revue (defaut critique) : date presente mais AUCUNE justification -> non conforme."""
+    _ecrire_source(
+        tmp_path,
+        "src/sans_justification.py",
+        "x = 1  # noqa: ARG001 (revision: 2027-01-01)",
+    )
+
+    assert ruff_noqa_gate.noqa_non_conformes(tmp_path, REGLES_SURVEILLEES) == {
+        "src/sans_justification.py": 1
+    }
+
+
+def test_noqa_non_conformes_justification_reduite_a_la_ponctuation_est_comptee(
+    tmp_path: Path,
+) -> None:
+    """Justification reduite a des separateurs seuls (ex. '—') -> equivalente a une absence."""
+    _ecrire_source(
+        tmp_path,
+        "src/ponctuation_seule.py",
+        "x = 1  # noqa: ARG001 — (revision: 2027-01-01)",
+    )
+
+    assert ruff_noqa_gate.noqa_non_conformes(tmp_path, REGLES_SURVEILLEES) == {
+        "src/ponctuation_seule.py": 1
+    }
+
+
+def test_noqa_non_conformes_multi_codes_liste_native_ruff(tmp_path: Path) -> None:
+    """Round 2 de revue (majeur) : `# noqa: CODE1, CODE2` (syntaxe native ruff) sans
+    justification ni date -> non conforme, meme si un seul code etait auparavant capture."""
+    _ecrire_source(
+        tmp_path,
+        "src/multi_codes.py",
+        "x = 1  # noqa: ARG001, S310",
+    )
+
+    assert ruff_noqa_gate.noqa_non_conformes(tmp_path, REGLES_SURVEILLEES) == {
+        "src/multi_codes.py": 1
+    }
+
+
+def test_noqa_non_conformes_multi_codes_conforme_compte_une_seule_fois(
+    tmp_path: Path,
+) -> None:
+    """Une seule justification/date pour TOUS les codes de la liste -> 1 seule ligne, pas
+    une occurrence par code."""
+    _ecrire_source(
+        tmp_path,
+        "src/multi_codes_conforme.py",
+        "x = 1  # noqa: ARG001, S310 — justifie une bonne fois (revision: 2027-01-01)",
+    )
+
+    assert ruff_noqa_gate.noqa_non_conformes(tmp_path, REGLES_SURVEILLEES) == {}
+
+
+def test_noqa_non_conformes_multi_codes_un_seul_surveille_suffit(
+    tmp_path: Path,
+) -> None:
+    """Parmi une liste de codes, un seul code surveille suffit a rendre la ligne pertinente
+    (meme si l'autre code de la liste est hors perimetre du cliquet)."""
+    _ecrire_source(
+        tmp_path,
+        "src/multi_codes_partiel.py",
+        "x = 1  # noqa: B999, ARG001",
+    )
+
+    assert ruff_noqa_gate.noqa_non_conformes(tmp_path, REGLES_SURVEILLEES) == {
+        "src/multi_codes_partiel.py": 1
+    }
+
+
 def test_noqa_non_conformes_fichier_sans_noqa_absent(tmp_path: Path) -> None:
     """Un fichier sans aucun `# noqa` n'apparait pas dans le resultat."""
     _ecrire_source(tmp_path, "src/propre.py", "x = 1", "y = 2")

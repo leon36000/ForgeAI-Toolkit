@@ -102,7 +102,7 @@
     },
     {
       "path": ".github/workflows/gates.yml",
-      "sha256": "f4f290185790e70bcc708c5f95a597ab1c9454e6379e342189ff0c3302b71ebe"
+      "sha256": "0e86c5801e19a4df48ab7fb371356acfc4205e1ec5a56610ee42e29d4bdfdee3"
     },
     {
       "path": ".github/workflows/scope-guard.yml",
@@ -758,7 +758,7 @@
     },
     {
       "path": "tests/test_ruff_noqa_gate.py",
-      "sha256": "7ae209e4cc0d4c0eda31ddf9c8ce6ff3c6415c3d40320964e5a671bb398cfb60"
+      "sha256": "69cda9cb1105f62253aa4f3a0b3cb9119d4a570c20f681c58cf25d5d48785943"
     },
     {
       "path": "tests/test_ruff_ratchet.py",
@@ -959,7 +959,7 @@
   "tests": {
     "js_files": 3,
     "python_files": 199,
-    "python_functions_declared": 2458
+    "python_functions_declared": 2463
   }
 }
 ```

@@ -1,0 +1,31 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "majeure",
+   "fichier": "scripts/ruff_noqa_gate.py",
+   "description": "Le gate ne vérifie jamais la présence d'une justification locale. Il considère conforme une suppression telle que `# noqa: ARG001 (révision: 2027-01-01)`, alors que le format exigé impose `# noqa: CODE — <justification> (révision: YYYY-MM-DD)`. Une date seule permet donc de contourner le critère de justification.",
+   "preuve": "Dans `noqa_non_conformes` (lignes ~140-158), après reconnaissance du code surveillé, la seule condition de conformité est `if MOTIF_DATE_REVISION.search(ligne) is None:`. Aucun motif ni contrôle ne valide du texte de justification entre le code et la date."
+  },
+  {
+   "severite": "majeure",
+   "fichier": "scripts/ruff_noqa_gate.py",
+   "description": "Le scanner ne traite que le premier code d'un commentaire `noqa`, ce qui laisse contourner le gate pour les suppressions multiples supportées par Ruff. Un commentaire `# noqa: F401, ARG001` ne capture que `F401`; si `ARG001` est une règle surveillée, son absence de justification/date n'est jamais contrôlée.",
+   "preuve": "`MOTIF_CODE_NOQA` (ligne ~48) ne comporte qu'un seul groupe capturé, et `noqa_non_conformes` (ligne ~150) utilise `MOTIF_CODE_NOQA.search(ligne)` puis uniquement `correspondance.group(1)`. Le commentaire du motif confirme explicitement que « le premier code capturé après `noqa:` est celui comparé »."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "scripts/ruff_noqa_gate.py",
+   "description": "La date n'est validée que par une expression régulière numérique, pas comme une date ISO réellement valide. Des valeurs impossibles comme `(révision: 2027-99-99)` ou `(révision: 2027-02-31)` passent le gate malgré le critère annonçant une date ISO valide.",
+   "preuve": "`MOTIF_DATE_REVISION` (lignes ~53-55) est `\\d{4}-\\d{2}-\\d{2}` et aucun appel à un parseur de date n'existe avant que `noqa_non_conformes` accepte l'occurrence lorsque `MOTIF_DATE_REVISION.search(ligne)` réussit (ligne ~157)."
+  }
+ ],
+ "date_heure": "2026-08-17T23:17:33.883894+00:00",
+ "prompt_sha256": "7c1e64c22df7e24bc4df168acaaa33dd37568f86d543621e5abde8bf3323f830",
+ "reviewer_model": "GPT-5.6-Terra-Pro",
+ "modele_servi": "gpt56-terra-pro-openrouter",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}
