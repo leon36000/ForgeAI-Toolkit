@@ -126,7 +126,7 @@
     },
     {
       "path": "pyproject.toml",
-      "sha256": "79292696c4bf32ca45c5181a6415098335f545c159dbd0084a49bf8441a492cb"
+      "sha256": "84ae0cb0af64438426fba0f6c74cca2b00b05c791971aa67b92809e859f0e517"
     },
     {
       "path": "src/forgeai/__init__.py",
@@ -722,7 +722,7 @@
     },
     {
       "path": "tests/test_rel038b_unicite.py",
-      "sha256": "9b3e8ecb06bcba0a3499a9f38838bedaf99c97ca14bbc092a7c8114ae56da022"
+      "sha256": "907f9758dd173400b8f86aabccee808fa668ceaf38e4f1b129478ee48462e521"
     },
     {
       "path": "tests/test_rel038c_process_groups.py",
