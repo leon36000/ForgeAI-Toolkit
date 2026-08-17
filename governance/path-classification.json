@@ -851,6 +851,27 @@
         },
         {
           "candidate": ".github/workflows/gates.yml",
+          "line": 12,
+          "referrer": "evidence/reviews/RC1-020-inc2-v7/Qwen3.8-2.4T.verdict.json",
+          "resolved": ".github/workflows/gates.yml",
+          "severity": "hard"
+        },
+        {
+          "candidate": ".github/workflows/gates.yml",
+          "line": 14,
+          "referrer": "evidence/reviews/RC1-020-inc2-v7/Qwen3.8-2.4T.verdict.json",
+          "resolved": ".github/workflows/gates.yml",
+          "severity": "hard"
+        },
+        {
+          "candidate": ".github/workflows/gates.yml",
+          "line": 6,
+          "referrer": "evidence/reviews/RC1-020-inc2-v8/Qwen3.8-2.4T.verdict.json",
+          "resolved": ".github/workflows/gates.yml",
+          "severity": "hard"
+        },
+        {
+          "candidate": ".github/workflows/gates.yml",
           "line": 6,
           "referrer": "evidence/reviews/RC1-020-v1/DeepSeek-V4-Pro.verdict.json",
           "resolved": ".github/workflows/gates.yml",
@@ -6758,8 +6779,8 @@
         }
       ],
       "rule_id": "evidence-registres-root",
-      "sha256": "ac572854d2a9dcfc4b0d59e58e65964f8bdc42085186253bdd6a161f730c765c",
-      "size": 391334,
+      "sha256": "450d7a5713161eb70bba93d3a93caece2242a2040411234e4a7a2e34929ef6ae",
+      "size": 391781,
       "target_path": null,
       "type": "text"
     },
@@ -8719,8 +8740,8 @@
         }
       ],
       "rule_id": "evidence-reviews-root",
-      "sha256": "e9fb7462775a680a7b0d597a78b795444bfe4e4edfca15d7391dae61cdc04b2c",
-      "size": 2811,
+      "sha256": "f0cf2c91756daf2928cfcfcc19144de92a211c6197eb7261601ee1e705d71482",
+      "size": 2827,
       "target_path": null,
       "type": "text"
     },
@@ -20002,6 +20023,112 @@
       "load_bearing": true,
       "owner": "gouvernance-preuve",
       "path": "evidence/reviews/RC1-020-inc2-v6/RECU.json",
+      "referenced_by": [
+        {
+          "candidate": "evidence/reviews/RC1-020-inc2-v6/RECU.json",
+          "line": 31,
+          "referrer": "evidence/reviews/RC1-020-inc2-v8/Qwen3.8-2.4T.verdict.json",
+          "resolved": "evidence/reviews/RC1-020-inc2-v6/RECU.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "evidence/reviews/RC1-020-inc2-v6/RECU.json",
+          "line": 32,
+          "referrer": "evidence/reviews/RC1-020-inc2-v8/Qwen3.8-2.4T.verdict.json",
+          "resolved": "evidence/reviews/RC1-020-inc2-v6/RECU.json",
+          "severity": "hard"
+        }
+      ],
+      "rule_id": "evidence-reviews-root",
+      "sha256": null,
+      "size": null,
+      "target_path": null,
+      "type": null
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-020-inc2-v7/GPT-5.6-Terra-Pro.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "ba99df6696445235c720b3683a2046e4a3df288a73690aebb5d6a4c082c35c19",
+      "size": 1073,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-020-inc2-v7/MiMo-V2.5-Pro.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "c8fd0a353070325efb1afb561bc3420d65c353c48b5d06fb1a46940cdb84e9b9",
+      "size": 1818,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-020-inc2-v7/Qwen3.8-2.4T.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "f43e99006ab7f6958f6c711faa95f98f1e85c293dfc87c2d7ec6b11dbce13ec7",
+      "size": 3054,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-020-inc2-v8/GPT-5.6-Terra-Pro.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "435f661e8b4c283d2889e8cadf4c02334f73d3572e2769a2a5e51409e818a7df",
+      "size": 334,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-020-inc2-v8/MiMo-V2.5-Pro.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "fa161d88e67ab27a3a07e588bb5699a8fe8696b99d3e6f000d59aadf089a904a",
+      "size": 327,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-020-inc2-v8/Qwen3.8-2.4T.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "c334140d84208988e23df39f215190971c346b2f5dce11e67f72c4e81f9234b2",
+      "size": 2582,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-020-inc2-v8/RECU.json",
       "referenced_by": [],
       "rule_id": "evidence-reviews-root",
       "sha256": null,
@@ -28837,6 +28964,20 @@
         },
         {
           "candidate": "governance/path-classification.json",
+          "line": 30,
+          "referrer": "evidence/reviews/RC1-020-inc2-v8/Qwen3.8-2.4T.verdict.json",
+          "resolved": "governance/path-classification.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/path-classification.json",
+          "line": 32,
+          "referrer": "evidence/reviews/RC1-020-inc2-v8/Qwen3.8-2.4T.verdict.json",
+          "resolved": "governance/path-classification.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/path-classification.json",
           "line": 7,
           "referrer": "evidence/reviews/RC1-504-v1/Kimi-2.7.verdict.json",
           "resolved": "governance/path-classification.json",
@@ -29082,6 +29223,83 @@
         },
         {
           "candidate": "governance/ruff-baseline.json",
+          "line": 6,
+          "referrer": "evidence/reviews/RC1-020-inc2-v7/GPT-5.6-Terra-Pro.verdict.json",
+          "resolved": "governance/ruff-baseline.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/ruff-baseline.json",
+          "line": 8,
+          "referrer": "evidence/reviews/RC1-020-inc2-v7/GPT-5.6-Terra-Pro.verdict.json",
+          "resolved": "governance/ruff-baseline.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/ruff-baseline.json",
+          "line": 6,
+          "referrer": "evidence/reviews/RC1-020-inc2-v7/MiMo-V2.5-Pro.verdict.json",
+          "resolved": "governance/ruff-baseline.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/ruff-baseline.json",
+          "line": 8,
+          "referrer": "evidence/reviews/RC1-020-inc2-v7/MiMo-V2.5-Pro.verdict.json",
+          "resolved": "governance/ruff-baseline.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/ruff-baseline.json",
+          "line": 6,
+          "referrer": "evidence/reviews/RC1-020-inc2-v7/Qwen3.8-2.4T.verdict.json",
+          "resolved": "governance/ruff-baseline.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/ruff-baseline.json",
+          "line": 8,
+          "referrer": "evidence/reviews/RC1-020-inc2-v7/Qwen3.8-2.4T.verdict.json",
+          "resolved": "governance/ruff-baseline.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/ruff-baseline.json",
+          "line": 8,
+          "referrer": "evidence/reviews/RC1-020-inc2-v7/Qwen3.8-2.4T.verdict.json",
+          "resolved": "governance/ruff-baseline.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/ruff-baseline.json",
+          "line": 30,
+          "referrer": "evidence/reviews/RC1-020-inc2-v7/Qwen3.8-2.4T.verdict.json",
+          "resolved": "governance/ruff-baseline.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/ruff-baseline.json",
+          "line": 32,
+          "referrer": "evidence/reviews/RC1-020-inc2-v7/Qwen3.8-2.4T.verdict.json",
+          "resolved": "governance/ruff-baseline.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/ruff-baseline.json",
+          "line": 24,
+          "referrer": "evidence/reviews/RC1-020-inc2-v8/Qwen3.8-2.4T.verdict.json",
+          "resolved": "governance/ruff-baseline.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/ruff-baseline.json",
+          "line": 26,
+          "referrer": "evidence/reviews/RC1-020-inc2-v8/Qwen3.8-2.4T.verdict.json",
+          "resolved": "governance/ruff-baseline.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/ruff-baseline.json",
           "line": 12,
           "referrer": "scripts/ruff_ratchet.py",
           "resolved": "governance/ruff-baseline.json",
@@ -29189,6 +29407,48 @@
           "candidate": "governance/ruff-classification.json",
           "line": 26,
           "referrer": "evidence/reviews/RC1-020-inc2-v4/Qwen3.8-2.4T.verdict.json",
+          "resolved": "governance/ruff-classification.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/ruff-classification.json",
+          "line": 18,
+          "referrer": "evidence/reviews/RC1-020-inc2-v7/Qwen3.8-2.4T.verdict.json",
+          "resolved": "governance/ruff-classification.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/ruff-classification.json",
+          "line": 19,
+          "referrer": "evidence/reviews/RC1-020-inc2-v7/Qwen3.8-2.4T.verdict.json",
+          "resolved": "governance/ruff-classification.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/ruff-classification.json",
+          "line": 20,
+          "referrer": "evidence/reviews/RC1-020-inc2-v7/Qwen3.8-2.4T.verdict.json",
+          "resolved": "governance/ruff-classification.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/ruff-classification.json",
+          "line": 20,
+          "referrer": "evidence/reviews/RC1-020-inc2-v7/Qwen3.8-2.4T.verdict.json",
+          "resolved": "governance/ruff-classification.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/ruff-classification.json",
+          "line": 13,
+          "referrer": "evidence/reviews/RC1-020-inc2-v8/Qwen3.8-2.4T.verdict.json",
+          "resolved": "governance/ruff-classification.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/ruff-classification.json",
+          "line": 14,
+          "referrer": "evidence/reviews/RC1-020-inc2-v8/Qwen3.8-2.4T.verdict.json",
           "resolved": "governance/ruff-classification.json",
           "severity": "hard"
         },
@@ -30739,6 +30999,13 @@
           "referrer": "sonar-project.properties",
           "resolved": "scripts/gate_git_ref.py",
           "severity": "silent"
+        },
+        {
+          "candidate": "scripts/gate_git_ref.py",
+          "line": 20,
+          "referrer": "evidence/reviews/RC1-020-inc2-v8/Qwen3.8-2.4T.verdict.json",
+          "resolved": "scripts/gate_git_ref.py",
+          "severity": "hard"
         },
         {
           "candidate": "scripts/gate_git_ref.py",
@@ -34222,6 +34489,118 @@
           "candidate": "scripts/ruff_ratchet.py",
           "line": 20,
           "referrer": "evidence/reviews/RC1-020-inc2-v6/Qwen3.8-2.4T.verdict.json",
+          "resolved": "scripts/ruff_ratchet.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "scripts/ruff_ratchet.py",
+          "line": 7,
+          "referrer": "evidence/reviews/RC1-020-inc2-v7/GPT-5.6-Terra-Pro.verdict.json",
+          "resolved": "scripts/ruff_ratchet.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "scripts/ruff_ratchet.py",
+          "line": 7,
+          "referrer": "evidence/reviews/RC1-020-inc2-v7/GPT-5.6-Terra-Pro.verdict.json",
+          "resolved": "scripts/ruff_ratchet.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "scripts/ruff_ratchet.py",
+          "line": 8,
+          "referrer": "evidence/reviews/RC1-020-inc2-v7/GPT-5.6-Terra-Pro.verdict.json",
+          "resolved": "scripts/ruff_ratchet.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "scripts/ruff_ratchet.py",
+          "line": 12,
+          "referrer": "evidence/reviews/RC1-020-inc2-v7/MiMo-V2.5-Pro.verdict.json",
+          "resolved": "scripts/ruff_ratchet.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "scripts/ruff_ratchet.py",
+          "line": 7,
+          "referrer": "evidence/reviews/RC1-020-inc2-v7/Qwen3.8-2.4T.verdict.json",
+          "resolved": "scripts/ruff_ratchet.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "scripts/ruff_ratchet.py",
+          "line": 7,
+          "referrer": "evidence/reviews/RC1-020-inc2-v7/Qwen3.8-2.4T.verdict.json",
+          "resolved": "scripts/ruff_ratchet.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "scripts/ruff_ratchet.py",
+          "line": 8,
+          "referrer": "evidence/reviews/RC1-020-inc2-v7/Qwen3.8-2.4T.verdict.json",
+          "resolved": "scripts/ruff_ratchet.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "scripts/ruff_ratchet.py",
+          "line": 20,
+          "referrer": "evidence/reviews/RC1-020-inc2-v7/Qwen3.8-2.4T.verdict.json",
+          "resolved": "scripts/ruff_ratchet.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "scripts/ruff_ratchet.py",
+          "line": 24,
+          "referrer": "evidence/reviews/RC1-020-inc2-v7/Qwen3.8-2.4T.verdict.json",
+          "resolved": "scripts/ruff_ratchet.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "scripts/ruff_ratchet.py",
+          "line": 26,
+          "referrer": "evidence/reviews/RC1-020-inc2-v7/Qwen3.8-2.4T.verdict.json",
+          "resolved": "scripts/ruff_ratchet.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "scripts/ruff_ratchet.py",
+          "line": 32,
+          "referrer": "evidence/reviews/RC1-020-inc2-v7/Qwen3.8-2.4T.verdict.json",
+          "resolved": "scripts/ruff_ratchet.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "scripts/ruff_ratchet.py",
+          "line": 12,
+          "referrer": "evidence/reviews/RC1-020-inc2-v8/Qwen3.8-2.4T.verdict.json",
+          "resolved": "scripts/ruff_ratchet.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "scripts/ruff_ratchet.py",
+          "line": 14,
+          "referrer": "evidence/reviews/RC1-020-inc2-v8/Qwen3.8-2.4T.verdict.json",
+          "resolved": "scripts/ruff_ratchet.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "scripts/ruff_ratchet.py",
+          "line": 18,
+          "referrer": "evidence/reviews/RC1-020-inc2-v8/Qwen3.8-2.4T.verdict.json",
+          "resolved": "scripts/ruff_ratchet.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "scripts/ruff_ratchet.py",
+          "line": 20,
+          "referrer": "evidence/reviews/RC1-020-inc2-v8/Qwen3.8-2.4T.verdict.json",
+          "resolved": "scripts/ruff_ratchet.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "scripts/ruff_ratchet.py",
+          "line": 26,
+          "referrer": "evidence/reviews/RC1-020-inc2-v8/Qwen3.8-2.4T.verdict.json",
           "resolved": "scripts/ruff_ratchet.py",
           "severity": "hard"
         },
@@ -95547,6 +95926,86 @@
         "referrer": "evidence/reviews/RC1-020-inc2-v6/RECU.json"
       },
       {
+        "candidate": "dette/classification",
+        "line": 8,
+        "referrer": "evidence/reviews/RC1-020-inc2-v7/GPT-5.6-Terra-Pro.verdict.json"
+      },
+      {
+        "candidate": "ruff_ratchet.py",
+        "line": 8,
+        "referrer": "evidence/reviews/RC1-020-inc2-v7/GPT-5.6-Terra-Pro.verdict.json"
+      },
+      {
+        "candidate": "test_ruff_mesure.py",
+        "line": 13,
+        "referrer": "evidence/reviews/RC1-020-inc2-v7/MiMo-V2.5-Pro.verdict.json"
+      },
+      {
+        "candidate": "test_ruff_report.py",
+        "line": 13,
+        "referrer": "evidence/reviews/RC1-020-inc2-v7/MiMo-V2.5-Pro.verdict.json"
+      },
+      {
+        "candidate": "test_ruff_ratchet.py",
+        "line": 13,
+        "referrer": "evidence/reviews/RC1-020-inc2-v7/MiMo-V2.5-Pro.verdict.json"
+      },
+      {
+        "candidate": "test_ruff_ratchet.py",
+        "line": 13,
+        "referrer": "evidence/reviews/RC1-020-inc2-v7/MiMo-V2.5-Pro.verdict.json"
+      },
+      {
+        "candidate": "test_ruff_mesure.py",
+        "line": 13,
+        "referrer": "evidence/reviews/RC1-020-inc2-v7/MiMo-V2.5-Pro.verdict.json"
+      },
+      {
+        "candidate": "test_ruff_report.py",
+        "line": 13,
+        "referrer": "evidence/reviews/RC1-020-inc2-v7/MiMo-V2.5-Pro.verdict.json"
+      },
+      {
+        "candidate": "test_ruff_report.py",
+        "line": 14,
+        "referrer": "evidence/reviews/RC1-020-inc2-v7/MiMo-V2.5-Pro.verdict.json"
+      },
+      {
+        "candidate": "try/except",
+        "line": 26,
+        "referrer": "evidence/reviews/RC1-020-inc2-v7/Qwen3.8-2.4T.verdict.json"
+      },
+      {
+        "candidate": "gate_git_ref.py",
+        "line": 26,
+        "referrer": "evidence/reviews/RC1-020-inc2-v7/Qwen3.8-2.4T.verdict.json"
+      },
+      {
+        "candidate": "sent/modifi",
+        "line": 13,
+        "referrer": "evidence/reviews/RC1-020-inc2-v8/Qwen3.8-2.4T.verdict.json"
+      },
+      {
+        "candidate": "scripts/gate_git_ref.charger_base_reference_git",
+        "line": 19,
+        "referrer": "evidence/reviews/RC1-020-inc2-v8/Qwen3.8-2.4T.verdict.json"
+      },
+      {
+        "candidate": "None/message",
+        "line": 19,
+        "referrer": "evidence/reviews/RC1-020-inc2-v8/Qwen3.8-2.4T.verdict.json"
+      },
+      {
+        "candidate": "suivie/porteuse",
+        "line": 31,
+        "referrer": "evidence/reviews/RC1-020-inc2-v8/Qwen3.8-2.4T.verdict.json"
+      },
+      {
+        "candidate": "recu-revue/1",
+        "line": 2,
+        "referrer": "evidence/reviews/RC1-020-inc2-v8/RECU.json"
+      },
+      {
         "candidate": "FileNotFoundError/retourne",
         "line": 7,
         "referrer": "evidence/reviews/RC1-020-v1/DeepSeek-V4-Pro.verdict.json"
@@ -142701,6 +143160,13 @@
         "severity": "hard"
       },
       {
+        "candidate": "RC1-020-inc2-v8",
+        "line": 208,
+        "referrer": "evidence/reviews/BINDING.txt",
+        "resolved": "evidence/reviews/RC1-020-inc2-v8",
+        "severity": "hard"
+      },
+      {
         "candidate": "scripts/gate_docs.py",
         "line": 11,
         "referrer": "sonar-project.properties",
@@ -156145,6 +156611,293 @@
         "line": 20,
         "referrer": "evidence/reviews/RC1-020-inc2-v6/Qwen3.8-2.4T.verdict.json",
         "resolved": "scripts/ruff_ratchet.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "governance/ruff-baseline.json",
+        "line": 6,
+        "referrer": "evidence/reviews/RC1-020-inc2-v7/GPT-5.6-Terra-Pro.verdict.json",
+        "resolved": "governance/ruff-baseline.json",
+        "severity": "hard"
+      },
+      {
+        "candidate": "scripts/ruff_ratchet.py",
+        "line": 7,
+        "referrer": "evidence/reviews/RC1-020-inc2-v7/GPT-5.6-Terra-Pro.verdict.json",
+        "resolved": "scripts/ruff_ratchet.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "scripts/ruff_ratchet.py",
+        "line": 7,
+        "referrer": "evidence/reviews/RC1-020-inc2-v7/GPT-5.6-Terra-Pro.verdict.json",
+        "resolved": "scripts/ruff_ratchet.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "governance/ruff-baseline.json",
+        "line": 8,
+        "referrer": "evidence/reviews/RC1-020-inc2-v7/GPT-5.6-Terra-Pro.verdict.json",
+        "resolved": "governance/ruff-baseline.json",
+        "severity": "hard"
+      },
+      {
+        "candidate": "scripts/ruff_ratchet.py",
+        "line": 8,
+        "referrer": "evidence/reviews/RC1-020-inc2-v7/GPT-5.6-Terra-Pro.verdict.json",
+        "resolved": "scripts/ruff_ratchet.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "governance/ruff-baseline.json",
+        "line": 6,
+        "referrer": "evidence/reviews/RC1-020-inc2-v7/MiMo-V2.5-Pro.verdict.json",
+        "resolved": "governance/ruff-baseline.json",
+        "severity": "hard"
+      },
+      {
+        "candidate": "governance/ruff-baseline.json",
+        "line": 8,
+        "referrer": "evidence/reviews/RC1-020-inc2-v7/MiMo-V2.5-Pro.verdict.json",
+        "resolved": "governance/ruff-baseline.json",
+        "severity": "hard"
+      },
+      {
+        "candidate": "scripts/ruff_ratchet.py",
+        "line": 12,
+        "referrer": "evidence/reviews/RC1-020-inc2-v7/MiMo-V2.5-Pro.verdict.json",
+        "resolved": "scripts/ruff_ratchet.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "governance/ruff-baseline.json",
+        "line": 6,
+        "referrer": "evidence/reviews/RC1-020-inc2-v7/Qwen3.8-2.4T.verdict.json",
+        "resolved": "governance/ruff-baseline.json",
+        "severity": "hard"
+      },
+      {
+        "candidate": "scripts/ruff_ratchet.py",
+        "line": 7,
+        "referrer": "evidence/reviews/RC1-020-inc2-v7/Qwen3.8-2.4T.verdict.json",
+        "resolved": "scripts/ruff_ratchet.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "scripts/ruff_ratchet.py",
+        "line": 7,
+        "referrer": "evidence/reviews/RC1-020-inc2-v7/Qwen3.8-2.4T.verdict.json",
+        "resolved": "scripts/ruff_ratchet.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "governance/ruff-baseline.json",
+        "line": 8,
+        "referrer": "evidence/reviews/RC1-020-inc2-v7/Qwen3.8-2.4T.verdict.json",
+        "resolved": "governance/ruff-baseline.json",
+        "severity": "hard"
+      },
+      {
+        "candidate": "governance/ruff-baseline.json",
+        "line": 8,
+        "referrer": "evidence/reviews/RC1-020-inc2-v7/Qwen3.8-2.4T.verdict.json",
+        "resolved": "governance/ruff-baseline.json",
+        "severity": "hard"
+      },
+      {
+        "candidate": "scripts/ruff_ratchet.py",
+        "line": 8,
+        "referrer": "evidence/reviews/RC1-020-inc2-v7/Qwen3.8-2.4T.verdict.json",
+        "resolved": "scripts/ruff_ratchet.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": ".github/workflows/gates.yml",
+        "line": 12,
+        "referrer": "evidence/reviews/RC1-020-inc2-v7/Qwen3.8-2.4T.verdict.json",
+        "resolved": ".github/workflows/gates.yml",
+        "severity": "hard"
+      },
+      {
+        "candidate": ".github/workflows/gates.yml",
+        "line": 14,
+        "referrer": "evidence/reviews/RC1-020-inc2-v7/Qwen3.8-2.4T.verdict.json",
+        "resolved": ".github/workflows/gates.yml",
+        "severity": "hard"
+      },
+      {
+        "candidate": "governance/ruff-classification.json",
+        "line": 18,
+        "referrer": "evidence/reviews/RC1-020-inc2-v7/Qwen3.8-2.4T.verdict.json",
+        "resolved": "governance/ruff-classification.json",
+        "severity": "hard"
+      },
+      {
+        "candidate": "governance/ruff-classification.json",
+        "line": 19,
+        "referrer": "evidence/reviews/RC1-020-inc2-v7/Qwen3.8-2.4T.verdict.json",
+        "resolved": "governance/ruff-classification.json",
+        "severity": "hard"
+      },
+      {
+        "candidate": "scripts/ruff_ratchet.py",
+        "line": 20,
+        "referrer": "evidence/reviews/RC1-020-inc2-v7/Qwen3.8-2.4T.verdict.json",
+        "resolved": "scripts/ruff_ratchet.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "governance/ruff-classification.json",
+        "line": 20,
+        "referrer": "evidence/reviews/RC1-020-inc2-v7/Qwen3.8-2.4T.verdict.json",
+        "resolved": "governance/ruff-classification.json",
+        "severity": "hard"
+      },
+      {
+        "candidate": "governance/ruff-classification.json",
+        "line": 20,
+        "referrer": "evidence/reviews/RC1-020-inc2-v7/Qwen3.8-2.4T.verdict.json",
+        "resolved": "governance/ruff-classification.json",
+        "severity": "hard"
+      },
+      {
+        "candidate": "scripts/ruff_ratchet.py",
+        "line": 24,
+        "referrer": "evidence/reviews/RC1-020-inc2-v7/Qwen3.8-2.4T.verdict.json",
+        "resolved": "scripts/ruff_ratchet.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "scripts/ruff_ratchet.py",
+        "line": 26,
+        "referrer": "evidence/reviews/RC1-020-inc2-v7/Qwen3.8-2.4T.verdict.json",
+        "resolved": "scripts/ruff_ratchet.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "governance/ruff-baseline.json",
+        "line": 30,
+        "referrer": "evidence/reviews/RC1-020-inc2-v7/Qwen3.8-2.4T.verdict.json",
+        "resolved": "governance/ruff-baseline.json",
+        "severity": "hard"
+      },
+      {
+        "candidate": "governance/ruff-baseline.json",
+        "line": 32,
+        "referrer": "evidence/reviews/RC1-020-inc2-v7/Qwen3.8-2.4T.verdict.json",
+        "resolved": "governance/ruff-baseline.json",
+        "severity": "hard"
+      },
+      {
+        "candidate": "scripts/ruff_ratchet.py",
+        "line": 32,
+        "referrer": "evidence/reviews/RC1-020-inc2-v7/Qwen3.8-2.4T.verdict.json",
+        "resolved": "scripts/ruff_ratchet.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": ".github/workflows/gates.yml",
+        "line": 6,
+        "referrer": "evidence/reviews/RC1-020-inc2-v8/Qwen3.8-2.4T.verdict.json",
+        "resolved": ".github/workflows/gates.yml",
+        "severity": "hard"
+      },
+      {
+        "candidate": "scripts/ruff_ratchet.py",
+        "line": 12,
+        "referrer": "evidence/reviews/RC1-020-inc2-v8/Qwen3.8-2.4T.verdict.json",
+        "resolved": "scripts/ruff_ratchet.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "governance/ruff-classification.json",
+        "line": 13,
+        "referrer": "evidence/reviews/RC1-020-inc2-v8/Qwen3.8-2.4T.verdict.json",
+        "resolved": "governance/ruff-classification.json",
+        "severity": "hard"
+      },
+      {
+        "candidate": "scripts/ruff_ratchet.py",
+        "line": 14,
+        "referrer": "evidence/reviews/RC1-020-inc2-v8/Qwen3.8-2.4T.verdict.json",
+        "resolved": "scripts/ruff_ratchet.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "governance/ruff-classification.json",
+        "line": 14,
+        "referrer": "evidence/reviews/RC1-020-inc2-v8/Qwen3.8-2.4T.verdict.json",
+        "resolved": "governance/ruff-classification.json",
+        "severity": "hard"
+      },
+      {
+        "candidate": "scripts/ruff_ratchet.py",
+        "line": 18,
+        "referrer": "evidence/reviews/RC1-020-inc2-v8/Qwen3.8-2.4T.verdict.json",
+        "resolved": "scripts/ruff_ratchet.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "scripts/ruff_ratchet.py",
+        "line": 20,
+        "referrer": "evidence/reviews/RC1-020-inc2-v8/Qwen3.8-2.4T.verdict.json",
+        "resolved": "scripts/ruff_ratchet.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "scripts/gate_git_ref.py",
+        "line": 20,
+        "referrer": "evidence/reviews/RC1-020-inc2-v8/Qwen3.8-2.4T.verdict.json",
+        "resolved": "scripts/gate_git_ref.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "governance/ruff-baseline.json",
+        "line": 24,
+        "referrer": "evidence/reviews/RC1-020-inc2-v8/Qwen3.8-2.4T.verdict.json",
+        "resolved": "governance/ruff-baseline.json",
+        "severity": "hard"
+      },
+      {
+        "candidate": "governance/ruff-baseline.json",
+        "line": 26,
+        "referrer": "evidence/reviews/RC1-020-inc2-v8/Qwen3.8-2.4T.verdict.json",
+        "resolved": "governance/ruff-baseline.json",
+        "severity": "hard"
+      },
+      {
+        "candidate": "scripts/ruff_ratchet.py",
+        "line": 26,
+        "referrer": "evidence/reviews/RC1-020-inc2-v8/Qwen3.8-2.4T.verdict.json",
+        "resolved": "scripts/ruff_ratchet.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "governance/path-classification.json",
+        "line": 30,
+        "referrer": "evidence/reviews/RC1-020-inc2-v8/Qwen3.8-2.4T.verdict.json",
+        "resolved": "governance/path-classification.json",
+        "severity": "hard"
+      },
+      {
+        "candidate": "evidence/reviews/RC1-020-inc2-v6/RECU.json",
+        "line": 31,
+        "referrer": "evidence/reviews/RC1-020-inc2-v8/Qwen3.8-2.4T.verdict.json",
+        "resolved": "evidence/reviews/RC1-020-inc2-v6/RECU.json",
+        "severity": "hard"
+      },
+      {
+        "candidate": "governance/path-classification.json",
+        "line": 32,
+        "referrer": "evidence/reviews/RC1-020-inc2-v8/Qwen3.8-2.4T.verdict.json",
+        "resolved": "governance/path-classification.json",
+        "severity": "hard"
+      },
+      {
+        "candidate": "evidence/reviews/RC1-020-inc2-v6/RECU.json",
+        "line": 32,
+        "referrer": "evidence/reviews/RC1-020-inc2-v8/Qwen3.8-2.4T.verdict.json",
+        "resolved": "evidence/reviews/RC1-020-inc2-v6/RECU.json",
         "severity": "hard"
       },
       {
@@ -171681,7 +172434,7 @@
     "by_class": {
       "ARCHIVE": 44,
       "DOCS": 18,
-      "EVIDENCE": 1600,
+      "EVIDENCE": 1607,
       "GENERATED": 5,
       "GOVERNANCE": 198,
       "PRODUCT": 113,
@@ -171700,7 +172453,7 @@
       "evidence-audit-output-root": 18,
       "evidence-dedup-root": 2,
       "evidence-registres-root": 35,
-      "evidence-reviews-root": 1545,
+      "evidence-reviews-root": 1552,
       "generated-authority-map": 1,
       "generated-path-classification-json": 1,
       "generated-path-classification-markdown": 1,
@@ -171736,11 +172489,11 @@
       "working-sandbox-readme": 1
     },
     "case_collisions_total": 0,
-    "dangling_references_total": 16678,
+    "dangling_references_total": 16694,
     "generated_total": 9,
-    "load_bearing_total": 2059,
+    "load_bearing_total": 2066,
     "portability_violations_total": 0,
-    "tracked_total": 2201,
+    "tracked_total": 2208,
     "unclassified_total": 0,
     "unicode_anomalies_total": 0
   },
