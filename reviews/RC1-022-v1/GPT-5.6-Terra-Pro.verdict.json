@@ -1,0 +1,21 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "majeure",
+   "fichier": "tests/test_rel038b_unicite.py:131",
+   "description": "Le marqueur local `ignore` désactive entièrement la promotion en erreur pour toute occurrence de `PytestUnhandledThreadExceptionWarning` pendant ce test. Un second thread défectueux, non intentionnel et indépendant du `KeyboardInterrupt` testé, produirait le même warning et serait silencieusement masqué : le test continuerait alors comme si aucun échec de thread inattendu n'avait eu lieu. Cela crée un chemin FAIL-OPEN précisément pour la catégorie de panne que la politique globale vise à rendre bloquante.",
+   "preuve": "La ligne ajoutée `@pytest.mark.filterwarnings(\"ignore::pytest.PytestUnhandledThreadExceptionWarning\")` dans `tests/test_rel038b_unicite.py:131` ignore sans filtrage par message, thread, origine ou nombre tous les warnings de cette catégorie pour l'exécution du test. La configuration globale de `pyproject.toml:43` (`filterwarnings = [\"error::pytest.PytestUnhandledThreadExceptionWarning\"]`) est donc contournée pour toute exception non gérée survenant durant ce test."
+  }
+ ],
+ "date_heure": "2026-08-16T04:57:28.416692+00:00",
+ "pack_sha256": "faf36fe4aefa8d83255d10c4346fe9f1055d8a6051fe2c82249c8aab923a0cc8",
+ "role_sha256": "1444f4a8ca1c52008a237fa623fec5ea4cb9dfe214259899c12d2978d09e7789",
+ "role": "securite",
+ "reviewer_model": "GPT-5.6-Terra-Pro",
+ "modele_servi": "gpt56-terra-pro-openrouter",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

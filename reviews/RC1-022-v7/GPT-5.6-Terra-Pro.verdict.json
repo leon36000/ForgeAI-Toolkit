@@ -1,0 +1,21 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "majeure",
+   "fichier": "tests/test_rel038b_unicite.py",
+   "description": "Le hook global avale toute KeyboardInterrupt ayant le même type et le même message, sans établir de lien avec le thread ni avec l'invocation précise de faux_preparer_qui_echappe. Scénario FAIL-OPEN : si les deux appels attendus atteignent faux_preparer_qui_echappe mais que leurs exceptions cessent d'échapper au sommet du thread, tandis que deux threads étrangers lèvent KeyboardInterrupt(\"interruption non rattrapée\") pendant la fenêtre, les compteurs valent tous deux 2 et le test passe. Les deux exceptions étrangères sont silencieusement supprimées et la disparition des exceptions attendues n'est pas détectée. La politique globale error::pytest.PytestUnhandledThreadExceptionWarning est ainsi contournée pour ces erreurs.",
+   "preuve": "tests/test_rel038b_unicite.py, hook_capture : `if args.exc_type is KeyboardInterrupt and str(args.exc_value) == signature_attendue: exceptions_capturees.append(args)` ; aucune vérification de `args.thread`, de l'identité du thread créé par _run_prepare, ni de corrélation entre chaque élément de `appels_qui_ont_echappe` et chaque exception capturée. La branche correspondante ne délègue pas au `hook_original(args)`."
+  }
+ ],
+ "date_heure": "2026-08-16T11:41:20.734854+00:00",
+ "pack_sha256": "f8ad684d830ed2c1c2df9b3841e10ec66683a9e754e12dc610658fadec61fe65",
+ "role_sha256": "1444f4a8ca1c52008a237fa623fec5ea4cb9dfe214259899c12d2978d09e7789",
+ "role": "securite",
+ "reviewer_model": "GPT-5.6-Terra-Pro",
+ "modele_servi": "gpt56-terra-pro-openrouter",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

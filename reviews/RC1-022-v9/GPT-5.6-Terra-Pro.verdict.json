@@ -1,0 +1,21 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "majeure",
+   "fichier": "tests/test_rel038b_unicite.py",
+   "description": "La restauration de threading.excepthook est fail-open face à une modification concurrente. Le test effectue un contrôle d'identité puis une affectation distincte, sans synchronisation ni opération compare-and-swap atomique. Un composant légitime peut installer son propre excepthook après le test `if` mais avant l'affectation ; le test réinstalle alors silencieusement `hook_original` et désactive le hook du composant. Des exceptions de threads ultérieures peuvent ne plus être journalisées, remontées ou traitées par ce composant, tandis que la suite continue normalement.",
+   "preuve": "tests/test_rel038b_unicite.py:228-229 : `if threading.excepthook is hook_capture:` est suivi de `threading.excepthook = hook_original`. Ces deux opérations séparées créent une fenêtre de course vérifiable entre la vérification et l'écriture."
+  }
+ ],
+ "date_heure": "2026-08-16T12:04:12.227843+00:00",
+ "pack_sha256": "2346dc65f7ccb94564ef41ad134e0c321597fffd7fc6376176bb25e9f70e81e0",
+ "role_sha256": "1444f4a8ca1c52008a237fa623fec5ea4cb9dfe214259899c12d2978d09e7789",
+ "role": "securite",
+ "reviewer_model": "GPT-5.6-Terra-Pro",
+ "modele_servi": "gpt56-terra-pro-openrouter",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

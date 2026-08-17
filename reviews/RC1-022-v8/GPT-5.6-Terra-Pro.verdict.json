@@ -1,0 +1,21 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "majeure",
+   "fichier": "tests/test_rel038b_unicite.py",
+   "description": "Le test remplace globalement threading.excepthook puis le restaure inconditionnellement à la valeur lue avant la fenêtre. Si un autre thread, fixture ou composant installe légitimement un excepthook pendant cette fenêtre, le finally écrase silencieusement ce nouveau hook par hook_original. Les exceptions ultérieures de ce composant peuvent alors ne plus être traitées par son hook attendu : perte silencieuse d'observabilité ou de traitement d'erreur. Aucune garde ne vérifie que threading.excepthook est encore hook_capture avant restauration, ni ne sérialise cette mutation globale.",
+   "preuve": "Sortie de `git diff -- tests/test_rel038b_unicite.py` : `hook_original = threading.excepthook`, puis `threading.excepthook = hook_capture`, et enfin dans le `finally` : `threading.excepthook = hook_original  # restauration immédiate`. La restauration écrase toute modification concurrente intervenue entre ces deux affectations."
+  }
+ ],
+ "date_heure": "2026-08-16T11:50:18.167668+00:00",
+ "pack_sha256": "c18aff5ca7b6631c560494369c1801ba02d4a7ac54ff9cca0660284c1c4a872e",
+ "role_sha256": "1444f4a8ca1c52008a237fa623fec5ea4cb9dfe214259899c12d2978d09e7789",
+ "role": "securite",
+ "reviewer_model": "GPT-5.6-Terra-Pro",
+ "modele_servi": "gpt56-terra-pro-openrouter",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

@@ -1,0 +1,33 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "majeure",
+   "fichier": "tests/test_rel038b_unicite.py",
+   "description": "Le remplacement de threading.excepthook est global pendant la fenêtre des deux appels _post_json et ne délègue pas au hook original. Les assertions ne vérifient ni la provenance des exceptions capturées (thread), ni le message, ni l'association à chaque appel POST, seulement le compte final et le type. Un KeyboardInterrupt issu d'un autre thread peut donc satisfaire ou masquer partiellement le contrat, et la politique globale error::pytest.PytestUnhandledThreadExceptionWarning est contournée pour cette fenêtre.",
+   "preuve": "+    threading.excepthook = exceptions_capturees.append ; +    assert len(exceptions_capturees) == 2, ... ; +    assert all(e.exc_type is KeyboardInterrupt for e in exceptions_capturees) ; aucune assertion sur e.thread ou e.exc_value et aucun appel à hook_original hormis la restauration"
+  },
+  {
+   "severite": "mineure",
+   "fichier": "tests/test_rel038b_unicite.py",
+   "description": "Le diff introduit une référence à threading.excepthook sans ajouter de ligne import threading dans les hunks fournis. Si le module n'importe pas déjà threading, l'appelant existant test_g4 est cassé par NameError.",
+   "preuve": "+    hook_original = threading.excepthook ; aucun hunk du diff n'ajoute import threading"
+  },
+  {
+   "severite": "mineure",
+   "fichier": "governance/STATE-CURRENT.json",
+   "description": "Des fichiers nouveaux sont ajoutés (stories/RC1-022.md et reviews/...) mais aucune entrée correspondante n'apparaît dans governance/STATE-CURRENT.json ou governance/STATE-CURRENT.md. La cohérence inter-fichiers de l'état gouverné n'est pas démontrée si ces chemins sont censés être suivis.",
+   "preuve": "diff --git a/stories/RC1-022.md b/stories/RC1-022.md new file mode 100644 ; les hunks de governance/STATE-CURRENT.json ne mettent à jour que pyproject.toml et tests/test_rel038b_unicite.py"
+  }
+ ],
+ "date_heure": "2026-08-16T05:24:24.220691+00:00",
+ "pack_sha256": "bceb2840c2976e7fb2624f9c662857762698d763c0660bea29519eec39eee0c5",
+ "role_sha256": "3e836bda0d815badaccf03df40ce861daaa1745b0f17728069985cb32c45de82",
+ "role": "contrats",
+ "reviewer_model": "Qwen3.8-2.4T",
+ "modele_servi": "b9de6bc895fe95ccacf7d9fa9b1cf29ca44d34f03e249738f325c9dee3790b78",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

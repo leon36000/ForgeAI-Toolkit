@@ -1,0 +1,21 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "critique",
+   "fichier": "tests/test_rel038b_unicite.py",
+   "description": "L'assertion de provenance exige que le nom du thread contienne `_run_prepare`, mais un `threading.Thread(target=_run_prepare)` sans `name` explicite reçoit un nom par défaut de la forme `Thread-N`, qui ne contient pas le nom de la cible. Le test G4 échouera donc systématiquement sur l'exécution nominale, même lorsque le comportement attendu est correct, ce qui viole le critère d'acceptation 1 (`python3 -m pytest -q tests/test_rel038b_unicite.py -k test_g4` doit PASS).",
+   "preuve": "python3 -c \"import threading; def _run_prepare(): pass; print(threading.Thread(target=_run_prepare).name)\" affiche `Thread-1` ; dans le diff, la ligne `+        assert \"_run_prepare\" in args.thread.name, (` impose l'inverse."
+  }
+ ],
+ "date_heure": "2026-08-16T05:42:23.722819+00:00",
+ "pack_sha256": "40b079fe49221c7fcf6b2de36616d143bcdf1e9b9a137c9780b240452c59e1a3",
+ "role_sha256": "2678fe5ffcf7912532cac896ebb1185183fdc42033d4460f07073c6d38e627a0",
+ "role": "correction",
+ "reviewer_model": "DeepSeek-V4-Pro-0813",
+ "modele_servi": "1cbd427d85a4593a157a49bb0ad51ededb429b85aca980b3b23cd445246b9fcb",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

@@ -1,0 +1,39 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "critique",
+   "fichier": "stories/RC1-022.md",
+   "description": "Le critère d'acceptation 3 exige une preuve négative par retrait de pytest.warns(...), mais l'implémentation fournie n'utilise aucun pytest.warns et repose sur threading.excepthook. Le contrat d'acceptation est donc incohérent avec le diff et ne peut pas être vérifié tel quel.",
+   "preuve": "stories/RC1-022.md: '+3. Preuve négative : retirer temporairement le `pytest.warns(...)` fait échouer la suite...' ; tests/test_rel038b_unicite.py: '+    monkeypatch.setattr(threading, \"excepthook\", exceptions_capturees.append)' ; aucun `pytest.warns` ajouté dans le diff."
+  },
+  {
+   "severite": "majeure",
+   "fichier": "tests/test_rel038b_unicite.py",
+   "description": "L'ordre implicite entre la fin de _run_prepare et l'appel de threading.excepthook n'est pas garanti. Le test attend seulement que server._PREPARE_ACTIVE soit vide, puis asserte immédiatement la capture, sans join ni attente de l'exception de thread. La capture peut donc être postérieure à l'assertion ou à la restauration du monkeypatch.",
+   "preuve": "tests/test_rel038b_unicite.py (diff): attente sur 'if server._PREPARE_ACTIVE == set():' puis '+    assert len(exceptions_capturees) == 1,' sans synchronisation supplémentaire."
+  },
+  {
+   "severite": "majeure",
+   "fichier": "tests/test_rel038b_unicite.py",
+   "description": "Le remplacement de threading.excepthook reste actif après l'assertion de la première exception et pendant la suite du test, notamment la tentative code2. Toute exception de thread postérieure serait ajoutée à exceptions_capturees sans être assertée ni promue en erreur, ce qui contourne la politique globale pour le reste du test.",
+   "preuve": "tests/test_rel038b_unicite.py (diff): '+    monkeypatch.setattr(threading, \"excepthook\", exceptions_capturees.append)' ; assertions '+    assert len(exceptions_capturees) == 1,' avant la ligne de contexte 'code2, _ = _post_json(...)' ; aucune assertion finale sur exceptions_capturees ni restauration avant code2."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "stories/RC1-022.md",
+   "description": "La mesure initiale déclare exactement deux warnings PytestUnhandledThreadExceptionWarning issus du test G4, alors que l'implémentation n'asserte qu'une seule exception capturée. Aucune preuve dans le diff ne justifie que le second warning était un doublon ou qu'il est couvert par le nouveau contrat.",
+   "preuve": "stories/RC1-022.md: 'affiche exactement 2 warnings identiques PytestUnhandledThreadExceptionWarning, tous deux issus de tests/test_rel038b_unicite.py::test_g4...' ; tests/test_rel038b_unicite.py: '+    assert len(exceptions_capturees) == 1,'."
+  }
+ ],
+ "date_heure": "2026-08-16T05:07:27.778903+00:00",
+ "pack_sha256": "c5d05aadce89996c2fea604f81ac0073fddfb803888d0c82d4eb820f598f2697",
+ "role_sha256": "3e836bda0d815badaccf03df40ce861daaa1745b0f17728069985cb32c45de82",
+ "role": "contrats",
+ "reviewer_model": "Qwen3.8-2.4T",
+ "modele_servi": "b9de6bc895fe95ccacf7d9fa9b1cf29ca44d34f03e249738f325c9dee3790b78",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

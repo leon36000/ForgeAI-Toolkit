@@ -1,0 +1,21 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "majeure",
+   "fichier": "tests/test_rel038b_unicite.py",
+   "description": "Le marqueur ignore sans provenance tout `PytestUnhandledThreadExceptionWarning` émis pendant ce test, pas uniquement le `KeyboardInterrupt` volontaire de `faux_preparer_qui_echappe`. Un bug indépendant dans un autre thread actif pendant G4 (par exemple un thread serveur ou un thread de requête) peut donc être converti en silence malgré la politique globale en erreur. Les assertions sur `appels_qui_ont_echappe` prouvent seulement les deux appels au faux préparateur ; elles ne détectent ni ne relient les éventuelles exceptions d'autres threads. Le test continuerait alors vert comme si aucune exception de thread non gérée n'avait eu lieu.",
+   "preuve": "tests/test_rel038b_unicite.py: ligne ajoutée `@pytest.mark.filterwarnings(\"ignore::pytest.PytestUnhandledThreadExceptionWarning\")`; le filtre ne contient ni module, ni message, ni identité de thread. Les seules vérifications ajoutées sont `assert len(appels_qui_ont_echappe) == 1` et `assert appels_qui_ont_echappe == [hote, hote]`, qui ne contrôlent aucune exception provenant d'un autre thread."
+  }
+ ],
+ "date_heure": "2026-08-16T12:21:01.393163+00:00",
+ "pack_sha256": "5d116f17f0297b50282c951d2c024306d9a9f4b32c62e5ecbe7de3bb5471cc56",
+ "role_sha256": "1444f4a8ca1c52008a237fa623fec5ea4cb9dfe214259899c12d2978d09e7789",
+ "role": "securite",
+ "reviewer_model": "GPT-5.6-Terra-Pro",
+ "modele_servi": "gpt56-terra-pro-openrouter",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

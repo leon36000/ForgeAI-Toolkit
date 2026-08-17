@@ -1,0 +1,33 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "critique",
+   "fichier": "tests/test_rel038b_unicite.py",
+   "description": "Le test G4 modifié ne déclare pas explicitement qu'il s'attend au warning PytestUnhandledThreadExceptionWarning. Le hook personnalisé `hook_exceptions` intercepte les exceptions de thread et les redirige vers `hook_precedent` (le hook pytest) uniquement si elles ne proviennent pas du thread attendu. Pour les exceptions attendues, il les capture dans `exceptions_interceptees` et retourne sans appeler `hook_precedent`. Cela signifie que le warning pytest n'est jamais émis pour les exceptions attendues, donc le critère d'acceptation 1 (`0 warning affiché`) est satisfait par suppression du warning, mais le contrat du test n'est pas rendu explicite au sens de la story (qui demandait de déclarer l'attente du warning). De plus, le filtre global `error::pytest.PytestUnhandledThreadExceptionWarning` dans pyproject.toml n'est jamais sollicité par G4, ce qui est cohérent avec la story, mais le test ne prouve pas que le warning aurait été émis sans le hook personnalisé.",
+   "preuve": "Ligne 331 : `threading.excepthook = hook_exceptions` ; lignes 250-260 : `def hook_exceptions(args): ... if origine_connue: exceptions_interceptees.append(...); return` ; ligne 1 du diff pyproject.toml : `+filterwarnings = [\"error::pytest.PytestUnhandledThreadExceptionWarning\"]`"
+  },
+  {
+   "severite": "majeure",
+   "fichier": "tests/test_rel038b_unicite.py",
+   "description": "La preuve négative renforcée (sabotage par retrait du `raise`) n'est pas valide. La story affirme que retirer uniquement le `raise` fait échouer le test en détectant une absence d'échappement au sommet du thread (`exceptions_interceptees == []` vs `exceptions_attendues` non vide). Or, dans le code actuel, `exceptions_attendues` est rempli dans `faux_preparer_qui_echappe` avant le `raise`. Si on retire le `raise`, `exceptions_attendues` contiendra toujours l'entrée (thread, exception) car l'append est avant le `raise`. Mais `exceptions_interceptees` restera vide car aucune exception ne sera levée. L'assertion `exceptions_interceptees == exceptions_attendues` échouera bien, mais pas pour la raison invoquée (absence d'échappement au sommet) : elle échouera parce que l'exception n'a jamais été levée, donc jamais interceptée. La story prétend que cela détecte une VRAIE absence d'échappement au sommet du thread, ce qui est trompeur. De plus, le critère d'acceptation 3 admet explicitement que retirer uniquement le `raise` ne fait PAS échouer le test, ce qui contredit la story.",
+   "preuve": "Lignes 280-285 : `exception = KeyboardInterrupt(...); with verrou: appels_qui_ont_echappe.append(hote); exceptions_attendues.append((threading.current_thread(), exception)); raise exception` ; lignes 320-325 : `assert exceptions_interceptees == exceptions_attendues` ; story : 'Ce que cette preuve NE couvre PAS, assumé explicitement : retirer uniquement le `raise` (l'append restant, lui, inchangé puisqu'il le précède) ne fait PAS échouer le test'"
+  },
+  {
+   "severite": "majeure",
+   "fichier": "tests/test_rel038b_unicite.py",
+   "description": "Le test G4 modifié ne restaure pas `threading.excepthook` après le test. La story affirme que le plugin pytest le restaure lui-même, mais cela n'est pas garanti par la documentation pytest et dépend de l'implémentation interne du plugin. Si le plugin ne restaure pas le hook (par exemple, en cas d'échec du test ou d'exception dans le test), le hook personnalisé restera actif pour les tests suivants, ce qui peut masquer des warnings légitimes ou interférer avec d'autres tests. Le critère d'acceptation 2 exige que la suite complète soit 100% verte et sans warnings, mais si le hook n'est pas restauré, des warnings d'autres tests pourraient être supprimés silencieusement, faussant le résultat.",
+   "preuve": "Ligne 331 : `threading.excepthook = hook_exceptions` ; aucune ligne de restauration dans le test ; story : 'Aucune restauration manuelle de `threading.excepthook` — le plugin pytest l'installe avant l'appel et le restaure lui-même (son propre `finally`, inconditionnel) à la sortie'"
+  }
+ ],
+ "date_heure": "2026-08-17T00:43:30.557402+00:00",
+ "pack_sha256": "593bca902f9c2cd11ffd8a127d5b8a57d58f82b1aefbaea96f4c00d63566e524",
+ "role_sha256": "2678fe5ffcf7912532cac896ebb1185183fdc42033d4460f07073c6d38e627a0",
+ "role": "correction",
+ "reviewer_model": "DeepSeek-V4-Pro-0813",
+ "modele_servi": "1cbd427d85a4593a157a49bb0ad51ededb429b85aca980b3b23cd445246b9fcb",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}
