@@ -40,7 +40,10 @@ class HardwareDetector:
         model, cores, arch = "unknown", 0, platform.machine()
         if code == 0 and out.strip():
             try:
-                entries = self._flatten_lscpu(json.loads(out).get("lscpu", []))
+                # RC1-456-iter3 (même famille que #482/#492/#527/#528) : `lscpu -J` variable
+                # selon distro/version peut renvoyer la clé "lscpu" PRÉSENTE avec une valeur
+                # `null` explicite — `.get(clé, défaut)` ne protège QUE l'absence de clé.
+                entries = self._flatten_lscpu(json.loads(out).get("lscpu") or [])
                 model = entries.get("Model name", entries.get("Nom de modèle", model))
                 cores = int(entries.get("CPU(s)", entries.get("Processeur(s)", "0")))
                 arch = entries.get("Architecture", arch)
@@ -70,6 +73,10 @@ class HardwareDetector:
         stack = list(entries)
         while stack:
             entry = stack.pop()
+            # RC1-456-iter3 : une entrée non-dict (ex. `null`) au sein de la liste est ignorée,
+            # pas fatale — même famille que #482/#492/#527/#528 (élément malformé isolé).
+            if not isinstance(entry, dict):
+                continue
             field = str(entry.get("field", "")).replace("\xa0", " ").strip().rstrip(":").strip()
             if field:
                 flat[field] = str(entry.get("data", ""))

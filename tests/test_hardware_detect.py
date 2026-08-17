@@ -60,6 +60,28 @@ def test_cpu_lscpu_partiellement_invalide_conserve_les_champs_deja_extraits(
     assert "lscpu -J illisible" in captured.err
 
 
+# --- RC1-456-iter3 : même famille que #482/#492/#527/#528 — `lscpu -J` documenté variable
+# inter-distro/locale (gestion FR/EN déjà présente dans le fichier) ; la clé "lscpu" PRÉSENTE
+# avec une valeur `null` (ou une entrée `null` au sein de la liste) fait actuellement lever
+# TypeError, hors du tuple `except (JSONDecodeError, KeyError, ValueError)`. ---
+def test_cpu_lscpu_cle_null_ne_leve_pas():
+    """RC1-456-iter3 : {"lscpu": null} (clé présente, valeur null) ne doit jamais lever
+    TypeError — dégradation propre vers les valeurs par défaut, comme un JSON invalide."""
+    import json
+    model, cores, arch = _detector(lscpu=json.dumps({"lscpu": None})).detect_cpu()
+    assert model == "unknown"
+    assert cores == 0
+
+
+def test_cpu_lscpu_entree_null_dans_la_liste_ne_leve_pas():
+    """RC1-456-iter3 : une entrée `null` au milieu d'une liste `lscpu` par ailleurs valide ne
+    doit jamais lever AttributeError — l'entrée malformée est ignorée, les autres examinées."""
+    import json
+    brut = json.dumps({"lscpu": [None, {"field": "Architecture:", "data": "x86_64"}]})
+    model, cores, arch = _detector(lscpu=brut).detect_cpu()
+    assert arch == "x86_64"
+
+
 def test_ram_detectee_depuis_meminfo():
     ram = _detector().detect_ram_gb()
     assert 40 < ram < 50  # fixture réelle : 48371672 kB ≈ 46.1 GiB

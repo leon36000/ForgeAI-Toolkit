@@ -6632,8 +6632,8 @@
         }
       ],
       "rule_id": "evidence-registres-root",
-      "sha256": "ebd8baf2451dcea463d78bee323ccbc9a0f7d82f54a55044f7185d09c76a83e8",
-      "size": 385506,
+      "sha256": "91087be8fa8c10a3b6d647072f92d502b20d291f30ff1aff50aa6ad1b84defb9",
+      "size": 385970,
       "target_path": null,
       "type": "text"
     },
@@ -8593,8 +8593,8 @@
         }
       ],
       "rule_id": "evidence-reviews-root",
-      "sha256": "563c164c1db6f4bbe00221fd594046d3114012c6008a0b34b914b97b80b55277",
-      "size": 2723,
+      "sha256": "492bed382f102ed24c59ec0c0bf2fb019ec11aac4407f798c20e6b06ca5ae05a",
+      "size": 2731,
       "target_path": null,
       "type": "text"
     },
@@ -22176,6 +22176,58 @@
       "generated": false,
       "load_bearing": true,
       "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-547/Gemini-3.7-Flash.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "f7ec1b4dab603db635fb647d7c339125a65ed059aefe398f8fa620cec697af73",
+      "size": 371,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-547/MiMo-V2.5-Pro.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "f90f78e9e06fc1c57e7de635ee77fd65f5214cd0b338c2ae9ce5432395633d1e",
+      "size": 327,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-547/Qwen3.7-Max.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "acf0b1310088b444c90d8b2d6999e26c6044a1842ec457811dc640554700a828",
+      "size": 323,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-547/RECU.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": null,
+      "size": null,
+      "target_path": null,
+      "type": null
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
       "path": "evidence/reviews/README.md",
       "referenced_by": [],
       "rule_id": "evidence-reviews-root",
@@ -25974,8 +26026,8 @@
         }
       ],
       "rule_id": "governance-core",
-      "sha256": "78b007d9618c760dbcd5f5ff415048f3b5a8f09ac491fc50d10b95703d93df3b",
-      "size": 16874,
+      "sha256": "111414bd41fc59abbccbffcc0ccc1fc95545e6bb02102248035e6c167edc6201",
+      "size": 16875,
       "target_path": null,
       "type": "text"
     },
@@ -27049,14 +27101,14 @@
         },
         {
           "candidate": "governance/error-handling-contracts.json",
-          "line": 61,
+          "line": 64,
           "referrer": "src/forgeai/hardware/detect.py",
           "resolved": "governance/error-handling-contracts.json",
           "severity": "hard"
         },
         {
           "candidate": "governance/error-handling-contracts.json",
-          "line": 95,
+          "line": 102,
           "referrer": "src/forgeai/hardware/detect.py",
           "resolved": "governance/error-handling-contracts.json",
           "severity": "hard"
@@ -27112,8 +27164,8 @@
         }
       ],
       "rule_id": "governance-core",
-      "sha256": "a8584d20ff0427d7ce44e46c49e56b013b8ece9a772f683f033b48bc0c8d1759",
-      "size": 71318,
+      "sha256": "60ece66413c648b49eddbef7075960786013a6f1678a3ffa8697667fadc7f3a8",
+      "size": 71320,
       "target_path": null,
       "type": "text"
     },
@@ -36499,8 +36551,8 @@
         }
       ],
       "rule_id": "product-source",
-      "sha256": "880b9de87ff0e9d924b324b970e3abea242bae4ade1f2d658b0b4fa8d3ce0c1f",
-      "size": 7270,
+      "sha256": "e4b5f65155248e1f29392cfbcf08ccf62ac5b64c50dc30bd73eaca7543368c6f",
+      "size": 7821,
       "target_path": null,
       "type": "text"
     },
@@ -46572,8 +46624,8 @@
         }
       ],
       "rule_id": "test-suite",
-      "sha256": "63db0f3ceb889a9e2c24881d27a3904479861da61e16dd31f543ac07847a4dcc",
-      "size": 8840,
+      "sha256": "123db54c3996295b3a0f635a24eb5477a56317d0bd30414cc6769d87def9403f",
+      "size": 10039,
       "target_path": null,
       "type": "text"
     },
@@ -92363,6 +92415,11 @@
         "referrer": "evidence/reviews/RC1-546/RECU.json"
       },
       {
+        "candidate": "recu-revue/1",
+        "line": 2,
+        "referrer": "evidence/reviews/RC1-547/RECU.json"
+      },
+      {
         "candidate": "reviews/",
         "line": 1,
         "referrer": "evidence/reviews/README.md"
@@ -114708,6 +114765,41 @@
         "referrer": "src/forgeai/hardware/detect.py"
       },
       {
+        "candidate": "482/",
+        "line": 43,
+        "referrer": "src/forgeai/hardware/detect.py"
+      },
+      {
+        "candidate": "492/",
+        "line": 43,
+        "referrer": "src/forgeai/hardware/detect.py"
+      },
+      {
+        "candidate": "527/",
+        "line": 43,
+        "referrer": "src/forgeai/hardware/detect.py"
+      },
+      {
+        "candidate": "distro/version",
+        "line": 44,
+        "referrer": "src/forgeai/hardware/detect.py"
+      },
+      {
+        "candidate": "482/",
+        "line": 77,
+        "referrer": "src/forgeai/hardware/detect.py"
+      },
+      {
+        "candidate": "492/",
+        "line": 77,
+        "referrer": "src/forgeai/hardware/detect.py"
+      },
+      {
+        "candidate": "527/",
+        "line": 77,
+        "referrer": "src/forgeai/hardware/detect.py"
+      },
+      {
         "candidate": "Instinct/CDNA",
         "line": 128,
         "referrer": "src/forgeai/hardware/drivers.py"
@@ -128288,8 +128380,33 @@
         "referrer": "tests/test_hardware_detect.py"
       },
       {
+        "candidate": "482/",
+        "line": 63,
+        "referrer": "tests/test_hardware_detect.py"
+      },
+      {
+        "candidate": "492/",
+        "line": 63,
+        "referrer": "tests/test_hardware_detect.py"
+      },
+      {
+        "candidate": "527/",
+        "line": 63,
+        "referrer": "tests/test_hardware_detect.py"
+      },
+      {
+        "candidate": "inter-distro/locale",
+        "line": 64,
+        "referrer": "tests/test_hardware_detect.py"
+      },
+      {
+        "candidate": "FR/EN",
+        "line": 64,
+        "referrer": "tests/test_hardware_detect.py"
+      },
+      {
         "candidate": "driver/runtime",
-        "line": 172,
+        "line": 194,
         "referrer": "tests/test_hardware_detect.py"
       },
       {
@@ -137265,6 +137382,13 @@
         "line": 200,
         "referrer": "evidence/reviews/BINDING.txt",
         "resolved": "evidence/reviews/RC1-544",
+        "severity": "hard"
+      },
+      {
+        "candidate": "RC1-547",
+        "line": 201,
+        "referrer": "evidence/reviews/BINDING.txt",
+        "resolved": "evidence/reviews/RC1-547",
         "severity": "hard"
       },
       {
@@ -158703,14 +158827,14 @@
       },
       {
         "candidate": "governance/error-handling-contracts.json",
-        "line": 61,
+        "line": 64,
         "referrer": "src/forgeai/hardware/detect.py",
         "resolved": "governance/error-handling-contracts.json",
         "severity": "hard"
       },
       {
         "candidate": "governance/error-handling-contracts.json",
-        "line": 95,
+        "line": 102,
         "referrer": "src/forgeai/hardware/detect.py",
         "resolved": "governance/error-handling-contracts.json",
         "severity": "hard"
@@ -163791,7 +163915,7 @@
     "by_class": {
       "ARCHIVE": 44,
       "DOCS": 18,
-      "EVIDENCE": 1512,
+      "EVIDENCE": 1516,
       "GENERATED": 5,
       "GOVERNANCE": 193,
       "PRODUCT": 113,
@@ -163810,7 +163934,7 @@
       "evidence-audit-output-root": 18,
       "evidence-dedup-root": 2,
       "evidence-registres-root": 35,
-      "evidence-reviews-root": 1457,
+      "evidence-reviews-root": 1461,
       "generated-authority-map": 1,
       "generated-path-classification-json": 1,
       "generated-path-classification-markdown": 1,
@@ -163846,11 +163970,11 @@
       "working-sandbox-readme": 1
     },
     "case_collisions_total": 0,
-    "dangling_references_total": 16342,
+    "dangling_references_total": 16355,
     "generated_total": 9,
-    "load_bearing_total": 1966,
+    "load_bearing_total": 1970,
     "portability_violations_total": 0,
-    "tracked_total": 2106,
+    "tracked_total": 2110,
     "unclassified_total": 0,
     "unicode_anomalies_total": 0
   },
