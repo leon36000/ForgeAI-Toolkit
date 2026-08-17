@@ -2,11 +2,11 @@
   "schema": "recu-revue/1",
   "dossier": "RC1-566",
   "issue": 566,
-  "round": 1,
-  "base_commit": "d58a4e80ec5efd909b5cf198ec6d1901c8bfc359",
-  "head_commit": "72d1a99df536251744b6019c65697f42a47cf327",
-  "head_tree": "2ebd7149f058f58b4e21b6c6dde3bd98478ae919",
-  "diff_digest": "768611e2ffab6857d555a44a653234e6fe98ef8f42fb192fd956cf3998d70e14",
+  "round": 2,
+  "base_commit": "dce4a254bca28dc67c8cec0772cafd29a9bef98c",
+  "head_commit": "b786f313735f068befee545d2d5b8ad9f1feb7af",
+  "head_tree": "0dbd96f1f2c2229514ac47d960e92ce0e16d6962",
+  "diff_digest": "5721da1b2e961e9a3224d6835ec1264ce5a3c2c1c0b7d9f256810f14ee4c854d",
   "prompt_sha256": "03d9dfe5b4898a50f34f0857d4a979241694ff754bcb4381831052754703b632",
   "reviewers_attendus": [
     "GPT-5.6-Terra-Pro",
@@ -17,6 +17,6 @@
     "Gemini-3.7-Flash"
   ],
   "resultat": "APPROVE",
-  "date_heure": "2026-08-16T20:59:38.224314-04:00",
+  "date_heure": "2026-08-16T21:05:25.469928-04:00",
   "fenetre_heures": 24
 }
