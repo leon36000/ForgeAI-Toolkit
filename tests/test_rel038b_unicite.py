@@ -218,6 +218,19 @@ def test_g4_hote_libere_meme_sur_exception_non_rattrapee(live, monkeypatch):
         # PytestUnhandledThreadExceptionWarning normal et fait échouer le test via la politique
         # globale error::... de pyproject.toml. Un défaut de corrélation ne peut donc pas passer
         # inaperçu : il n'a pas besoin d'être prouvé séparément, ce gate déjà en place le rattrape.
+        #
+        # Vérifié empiriquement (round v16, réfutation d'une objection : `Thread._invoke_excepthook`
+        # encapsule bien l'appel au hook dans un `try/except Exception: pass` — un `warnings.warn()`
+        # SYNCHRONE à l'intérieur du hook serait effectivement avalé). Mais ce n'est PAS ce qui se
+        # passe ici : `hook_precedent` est `_pytest.threadexception.thread_exception_hook`, qui ne
+        # fait qu'ajouter l'exception à une deque (`config.stash[thread_exceptions]`) — AUCUN
+        # `warnings.warn()` n'est appelé depuis l'intérieur de l'excepthook. C'est
+        # `collect_thread_exception` (appelé par les hooks normaux `pytest_runtest_setup/call/
+        # teardown`, dans le thread PRINCIPAL, hors de toute portée `_invoke_excepthook`) qui
+        # draine la deque et appelle `warnings.warn()` — donc rien n'est avalé. Reproduit par un
+        # test autonome hors de ce dépôt (thread qui lève une RuntimeError NON reconnue, déléguée
+        # à `threading.excepthook` d'origine, `filterwarnings=error` actif) : le test ÉCHOUE bien
+        # comme attendu, confirmant que la délégation fait réellement échouer la suite.
         hook_precedent(args)
 
     def faux_preparer_qui_echappe(runner, hote, *, appliquer, helm_present):
