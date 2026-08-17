@@ -339,8 +339,20 @@ _TAG_YAML = re.compile(r"^!\S*\s+")
 # vérifié contre les spans guillemetés qui le précèdent — un `{`/`,` littéral à l'intérieur d'une
 # chaîne AVANT la clé locale pourrait en théorie déclencher cette alternative à tort ; non
 # rencontré empiriquement, hors périmètre du finding vérifié ici.
+#
+# Round 114 (RC1-015, bug réel trouvé par revue scellée GPT-5.6-Terra-Pro) : deux préfixes
+# légitimes de début de valeur manquaient encore. (1) Une ancre peut porter directement la
+# VALEUR d'une clé EXPLICITE, sur la ligne `?` elle-même (`? &paths >-\n  **/*.md\n: value`,
+# distinct du round 54 où l'ancre était sur la ligne `:` séparée) — YAML valide, vérifié
+# empiriquement : PyYAML résout `{'**/*.md': 'value', ...}`, et référencer `*paths` dans
+# `secret.ignored_paths` réintroduit une exclusion RÉELLE non détectée (`verifier()` concluait à
+# tort `ok=True` avant ce correctif). (2) Une ancre peut porter un item de liste IMBRIQUÉE
+# (`- - &paths >-`, plusieurs tirets consécutifs) — seul UN tiret unique était reconnu.
+# `-\s+` élargi en `(?:-\s+)+` (un ou plusieurs), nouvelle alternative `\?\s+` ajoutée pour le
+# préfixe clé explicite. Aucun groupe capturant ajouté (les deux ajouts sont non capturants),
+# aucun décalage d'index pour l'appelant (`_construire_table_ancres`, seul usage).
 _PREFIXE_AVANT_ANCRE = re.compile(
-    r"^\s*(?:-\s+|:\s*|(?:.*[{,]\s*)?" + _NOM_CLE_QUELCONQUE + r"\s*:\s*)?(?:!\S+\s+)?$"
+    r"^\s*(?:(?:-\s+)+|\?\s+|:\s*|(?:.*[{,]\s*)?" + _NOM_CLE_QUELCONQUE + r"\s*:\s*)?(?:!\S+\s+)?$"
 )
 # Round 57 (RC1-015, bug réel trouvé par revue scellée GPT-5.6-Terra-Pro) : la clé `secret`
 # réduite à un alias direct `*cfg` (round 30, ou fusionnée via `<<: *cfg`, round 31/56) compose
@@ -1294,7 +1306,18 @@ def _noms_fusion_dans_mapping_flow(texte: str, debut: int, fin: int) -> list[str
         position = candidat.start()
         if any(g_debut <= position < g_fin for g_debut, g_fin in spans_commentaires):
             continue
-        if any(g_debut <= position < g_fin for g_debut, g_fin in spans_guillemets):
+        # Round 114 (RC1-015, investigation proactive suite à un finding réfuté — voir
+        # `_resoudre_ignored_paths_dans_mapping_flow`, dont cette fonction est le « miroir »
+        # déclaré, round 32/59) : borne STRICTE (`<`), pas `<=`, pour rester cohérente avec sa
+        # sœur. Vérifié empiriquement que cette borne est INATTEIGNABLE ICI (contrairement à la
+        # fonction sœur) : `_CLE_FUSION_DANS_FLOW = re.compile(r"<<\s*:\s*")` ne matche jamais un
+        # candidat guillemeté (la clé de fusion `<<` n'a pas d'alternative guillemetée, contrairement
+        # à `_NOM_CLE_QUELCONQUE_FLOW`) — `position` (premier caractère `<`) ne peut donc JAMAIS
+        # coïncider avec `g_debut` (premier caractère `"`/`'` d'un span) : un même index de texte
+        # ne peut porter qu'UN seul caractère. Appliquée quand même pour l'harmonie déclarée entre
+        # les deux fonctions « miroir » — élimine toute confusion future sur cette asymétrie
+        # (traité, pas ignoré), sans risque de régression (comportement inchangé, prouvé inerte).
+        if any(g_debut < position < g_fin for g_debut, g_fin in spans_guillemets):
             continue
         if profondeurs[position] != 0:
             continue

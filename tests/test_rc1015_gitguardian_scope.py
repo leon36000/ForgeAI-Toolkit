@@ -4951,3 +4951,37 @@ def test_parser_scalaire_bloc_item_ordre_tag_puis_ancre_est_reconnu(tmp_path):
     ok, motifs = check_gitguardian_scope.verifier(fichier)
     assert ok is False
     assert motifs == ["**/*.md"]
+
+
+def test_construire_table_ancres_resout_une_ancre_portee_par_une_cle_explicite(tmp_path):
+    # RC1-015 round 114, revue scellée GPT-5.6-Terra-Pro (CRITIQUE, bug réel) :
+    # `_PREFIXE_AVANT_ANCRE` ne reconnaissait pas le préfixe `? ` (indicateur de clé EXPLICITE) —
+    # une ancre peut porter directement la VALEUR d'une clé explicite, sur la ligne `?`
+    # elle-même (distinct du round 54, où l'ancre était sur la ligne `:` séparée, déjà couvert).
+    # Repro confirmée AVANT correctif : PyYAML résout `{'**/*.md': 'value', 'secret':
+    # {'ignored_paths': ['**/*.md']}}` (forme YAML valide, exclusion réelle via l'alias
+    # `*paths`), mais `verifier()` concluait à tort à la conformité (`ok=True`), l'ancre `&paths`
+    # n'étant jamais enregistrée dans la table.
+    fichier = tmp_path / ".gitguardian.yaml"
+    fichier.write_text(
+        '? &paths >-\n  **/*.md\n: value\nsecret:\n  ignored_paths: [*paths]\n',  # proof:allow — clé de schéma YAML, pas un secret réel
+        encoding="utf-8",
+    )
+    assert check_gitguardian_scope.parser_ignored_paths(fichier) == ["**/*.md"]
+    ok, motifs = check_gitguardian_scope.verifier(fichier)
+    assert ok is False
+    assert motifs == ["**/*.md"]
+
+
+def test_construire_table_ancres_resout_une_ancre_portee_par_un_item_de_liste_imbriquee():
+    # RC1-015 round 114, revue scellée GPT-5.6-Terra-Pro (CRITIQUE, bug réel — 2e symptôme du
+    # même finding) : `_PREFIXE_AVANT_ANCRE` ne reconnaissait qu'UN SEUL tiret (`-\s+`), pas
+    # plusieurs tirets consécutifs d'une liste IMBRIQUÉE (`- - &paths >-`). Élargi en `(?:-\s+)+`
+    # (un ou plusieurs). La fonctionnalité de la valeur RÉSULTANTE côté GitGuardian pour une
+    # liste imbriquée (`ignored_paths` deviendrait `[['**/*.md']]`, pas une liste PLATE de
+    # chaînes) reste hors périmètre de ce test — seule la RECONNAISSANCE de l'ancre par la table
+    # est vérifiée ici, symétriquement au cas `? ` (test précédent).
+    texte = "secret:\n  ignored_paths:\n    - - &paths >-\n        **/*.md\n"  # proof:allow — clé de schéma YAML, pas un secret réel
+    ancres = check_gitguardian_scope._construire_table_ancres(texte, texte.splitlines())
+    assert ancres.get("paths") == "**/*.md"
+    assert check_gitguardian_scope._PREFIXE_AVANT_ANCRE.match("- - ")
