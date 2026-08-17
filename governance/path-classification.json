@@ -459,21 +459,21 @@
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 2555,
+          "line": 2561,
           "referrer": "scripts/governance/check_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 2668,
+          "line": 2679,
           "referrer": "scripts/governance/check_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 2669,
+          "line": 2680,
           "referrer": "scripts/governance/check_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
@@ -9915,6 +9915,13 @@
         },
         {
           "candidate": "evidence/registres/mission.jsonl",
+          "line": 4148,
+          "referrer": "stories/RC1-015.md",
+          "resolved": "evidence/registres/mission.jsonl",
+          "severity": "hard"
+        },
+        {
+          "candidate": "evidence/registres/mission.jsonl",
           "line": 812,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": "evidence/registres/mission.jsonl",
@@ -9936,8 +9943,8 @@
         }
       ],
       "rule_id": "evidence-registres-root",
-      "sha256": "37be2000e72146f3196ae597c180200dad169e1790673e8c1fd1a9ab64a79a31",
-      "size": 407742,
+      "sha256": "a41081bca6410b4dab0624dbcbe62c7ba75251320a66bdad39880bec51c41c73",
+      "size": 408926,
       "target_path": null,
       "type": "text"
     },
@@ -23025,6 +23032,58 @@
       "generated": false,
       "load_bearing": true,
       "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-015-v24/DeepSeek-V4-Pro.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "98ec359bf58f14e74dbfecd74550549f3a0d98c4da967f595ed3d65bc3af76fb",
+      "size": 328,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-015-v24/Gemini-3.1-Pro.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "a1851a0c6533cca8af48ac9f3de6775b159a12d5878343de3ce57188c3322255",
+      "size": 329,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-015-v24/Qwen3.7-Max.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "53f1200f6d2c4c346e78820edec5105e80e4b5ebbb069799410929ee0b9e6b46",
+      "size": 323,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-015-v24/RECU.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": null,
+      "size": null,
+      "target_path": null,
+      "type": null
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
       "path": "evidence/reviews/RC1-020-v1/DeepSeek-V4-Pro.verdict.json",
       "referenced_by": [],
       "rule_id": "evidence-reviews-root",
@@ -33451,6 +33510,13 @@
         },
         {
           "candidate": "scripts/gate_docs.py",
+          "line": 2010,
+          "referrer": "scripts/governance/check_gitguardian_scope.py",
+          "resolved": "scripts/gate_docs.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "scripts/gate_docs.py",
           "line": 221,
           "referrer": "scripts/governance/state_current.py",
           "resolved": "scripts/gate_docs.py",
@@ -33495,6 +33561,13 @@
           "candidate": "scripts/gate_docs.py",
           "line": 78,
           "referrer": "stories/DOC-032.md",
+          "resolved": "scripts/gate_docs.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "scripts/gate_docs.py",
+          "line": 4178,
+          "referrer": "stories/RC1-015.md",
           "resolved": "scripts/gate_docs.py",
           "severity": "hard"
         }
@@ -33912,8 +33985,8 @@
         }
       ],
       "rule_id": "governance-scripts-governance",
-      "sha256": "2f50331684ab31da50fdd8a7f441ac4df9056e0eb6f722d359ee20ec805c9b4a",
-      "size": 172458,
+      "sha256": "285fa18ee27bab67c441c58cf40f5e79c965435979f9bb0482ffe4c2371b2669",
+      "size": 173341,
       "target_path": null,
       "type": "text"
     },
@@ -47526,6 +47599,13 @@
         },
         {
           "candidate": "stories/RC1-015.md",
+          "line": 4148,
+          "referrer": "stories/RC1-015.md",
+          "resolved": "stories/RC1-015.md",
+          "severity": "hard"
+        },
+        {
+          "candidate": "stories/RC1-015.md",
           "line": 9,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": "stories/RC1-015.md",
@@ -47540,8 +47620,8 @@
         }
       ],
       "rule_id": "governance-stories",
-      "sha256": "020aa32c160de97c1491e470ff5f1620573c8b0c69767afce5b688b685a98291",
-      "size": 300678,
+      "sha256": "59834d7493b228b73cb4d7c1b1e2dc5184ecc0ad8b5bb86710e262872e39bb8d",
+      "size": 304376,
       "target_path": null,
       "type": "text"
     },
@@ -60138,11 +60218,6 @@
   "reference_graph": {
     "completeness": "best_effort",
     "dangling": [
-      {
-        "candidate": "RC1-015-v24",
-        "line": 208,
-        "referrer": "evidence/reviews/BINDING.txt"
-      },
       {
         "candidate": "TUI/UX",
         "line": 3,
@@ -97939,6 +98014,11 @@
         "referrer": "evidence/reviews/RC1-015-v23/RECU.json"
       },
       {
+        "candidate": "recu-revue/1",
+        "line": 2,
+        "referrer": "evidence/reviews/RC1-015-v24/RECU.json"
+      },
+      {
         "candidate": "FileNotFoundError/retourne",
         "line": 7,
         "referrer": "evidence/reviews/RC1-020-v1/DeepSeek-V4-Pro.verdict.json"
@@ -103729,93 +103809,103 @@
         "referrer": "scripts/governance/check_gitguardian_scope.py"
       },
       {
+        "candidate": "scripts/state_current.py",
+        "line": 2011,
+        "referrer": "scripts/governance/check_gitguardian_scope.py"
+      },
+      {
+        "candidate": "385/",
+        "line": 2011,
+        "referrer": "scripts/governance/check_gitguardian_scope.py"
+      },
+      {
         "candidate": "67-69/70",
-        "line": 2025,
+        "line": 2031,
         "referrer": "scripts/governance/check_gitguardian_scope.py"
       },
       {
         "candidate": "31/56/59/60",
-        "line": 2028,
+        "line": 2034,
         "referrer": "scripts/governance/check_gitguardian_scope.py"
       },
       {
         "candidate": "bloc/flow",
-        "line": 2094,
+        "line": 2100,
         "referrer": "scripts/governance/check_gitguardian_scope.py"
       },
       {
         "candidate": "32/50/67-69",
-        "line": 2127,
+        "line": 2133,
         "referrer": "scripts/governance/check_gitguardian_scope.py"
       },
       {
         "candidate": "31/56/59/60",
-        "line": 2131,
+        "line": 2137,
         "referrer": "scripts/governance/check_gitguardian_scope.py"
       },
       {
         "candidate": "a.md",
-        "line": 2436,
+        "line": 2442,
         "referrer": "scripts/governance/check_gitguardian_scope.py"
       },
       {
         "candidate": "foo.md",
-        "line": 2437,
+        "line": 2443,
         "referrer": "scripts/governance/check_gitguardian_scope.py"
       },
       {
         "candidate": "stories/bar.md",
-        "line": 2438,
+        "line": 2444,
         "referrer": "scripts/governance/check_gitguardian_scope.py"
       },
       {
         "candidate": "evidence/reviews/x.md",
-        "line": 2439,
+        "line": 2445,
         "referrer": "scripts/governance/check_gitguardian_scope.py"
       },
       {
         "candidate": "a/b/c/d.md",
-        "line": 2440,
+        "line": 2446,
         "referrer": "scripts/governance/check_gitguardian_scope.py"
       },
       {
         "candidate": "quelque-chose_de.long.md",
-        "line": 2441,
+        "line": 2447,
         "referrer": "scripts/governance/check_gitguardian_scope.py"
       },
       {
         "candidate": "dossiers/nom",
-        "line": 2453,
+        "line": 2459,
         "referrer": "scripts/governance/check_gitguardian_scope.py"
       },
       {
         "candidate": "evidence/reviews/",
-        "line": 2478,
+        "line": 2484,
         "referrer": "scripts/governance/check_gitguardian_scope.py"
       },
       {
         "candidate": "tests/fixtures/exemple.md",
-        "line": 2479,
+        "line": 2485,
         "referrer": "scripts/governance/check_gitguardian_scope.py"
       },
       {
         "candidate": "bloc/flow-ouvert",
-        "line": 2573,
+        "line": 2579,
         "referrer": "scripts/governance/check_gitguardian_scope.py"
       },
       {
         "candidate": "1/5/6",
-        "line": 2624,
+        "line": 2630,
         "referrer": "scripts/governance/check_gitguardian_scope.py"
       },
       {
         "candidate": "vide/commentaire",
-        "line": 2625,
+        "line": 2631,
         "referrer": "scripts/governance/check_gitguardian_scope.py"
       },
       {
         "candidate": "Unicode/hex",
-        "line": 2634,
+        "line": 2640,
         "referrer": "scripts/governance/check_gitguardian_scope.py"
       },
       {
@@ -129969,6 +130059,81 @@
         "referrer": "stories/RC1-015.md"
       },
       {
+        "candidate": "RECU.json",
+        "line": 4147,
+        "referrer": "stories/RC1-015.md"
+      },
+      {
+        "candidate": "Pro/deepseek",
+        "line": 4153,
+        "referrer": "stories/RC1-015.md"
+      },
+      {
+        "candidate": "Gemini-3.1-Pro/google",
+        "line": 4153,
+        "referrer": "stories/RC1-015.md"
+      },
+      {
+        "candidate": "Qwen3.7-Max/alibaba",
+        "line": 4153,
+        "referrer": "stories/RC1-015.md"
+      },
+      {
+        "candidate": "RECU.json",
+        "line": 4154,
+        "referrer": "stories/RC1-015.md"
+      },
+      {
+        "candidate": "reviews_gate.py",
+        "line": 4154,
+        "referrer": "stories/RC1-015.md"
+      },
+      {
+        "candidate": "narratif/story/registre",
+        "line": 4155,
+        "referrer": "stories/RC1-015.md"
+      },
+      {
+        "candidate": "origin/main",
+        "line": 4161,
+        "referrer": "stories/RC1-015.md"
+      },
+      {
+        "candidate": "origin/main",
+        "line": 4162,
+        "referrer": "stories/RC1-015.md"
+      },
+      {
+        "candidate": "origin/main",
+        "line": 4165,
+        "referrer": "stories/RC1-015.md"
+      },
+      {
+        "candidate": "CWE-20/CWE-22",
+        "line": 4170,
+        "referrer": "stories/RC1-015.md"
+      },
+      {
+        "candidate": "qualitygates/project_status",
+        "line": 4177,
+        "referrer": "stories/RC1-015.md"
+      },
+      {
+        "candidate": "scripts/state_current.py",
+        "line": 4178,
+        "referrer": "stories/RC1-015.md"
+      },
+      {
+        "candidate": "check_gitguardian_scope.py",
+        "line": 4190,
+        "referrer": "stories/RC1-015.md"
+      },
+      {
+        "candidate": "mypy_gate.py",
+        "line": 4190,
+        "referrer": "stories/RC1-015.md"
+      },
+      {
         "candidate": "src/forgeai/",
         "line": 3,
         "referrer": "stories/RC1-022.md"
@@ -146515,6 +146680,13 @@
         "line": 207,
         "referrer": "evidence/reviews/BINDING.txt",
         "resolved": "evidence/reviews/RC1-015-v23",
+        "severity": "hard"
+      },
+      {
+        "candidate": "RC1-015-v24",
+        "line": 208,
+        "referrer": "evidence/reviews/BINDING.txt",
+        "resolved": "evidence/reviews/RC1-015-v24",
         "severity": "hard"
       },
       {
@@ -168323,22 +168495,29 @@
         "severity": "hard"
       },
       {
+        "candidate": "scripts/gate_docs.py",
+        "line": 2010,
+        "referrer": "scripts/governance/check_gitguardian_scope.py",
+        "resolved": "scripts/gate_docs.py",
+        "severity": "hard"
+      },
+      {
         "candidate": ".gitguardian.yaml",
-        "line": 2555,
+        "line": 2561,
         "referrer": "scripts/governance/check_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 2668,
+        "line": 2679,
         "referrer": "scripts/governance/check_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 2669,
+        "line": 2680,
         "referrer": "scripts/governance/check_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
@@ -173031,6 +173210,27 @@
         "line": 4134,
         "referrer": "stories/RC1-015.md",
         "resolved": "scripts/reviews_gate.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "stories/RC1-015.md",
+        "line": 4148,
+        "referrer": "stories/RC1-015.md",
+        "resolved": "stories/RC1-015.md",
+        "severity": "hard"
+      },
+      {
+        "candidate": "evidence/registres/mission.jsonl",
+        "line": 4148,
+        "referrer": "stories/RC1-015.md",
+        "resolved": "evidence/registres/mission.jsonl",
+        "severity": "hard"
+      },
+      {
+        "candidate": "scripts/gate_docs.py",
+        "line": 4178,
+        "referrer": "stories/RC1-015.md",
+        "resolved": "scripts/gate_docs.py",
         "severity": "hard"
       },
       {
@@ -178095,7 +178295,7 @@
     "by_class": {
       "ARCHIVE": 44,
       "DOCS": 19,
-      "EVIDENCE": 1585,
+      "EVIDENCE": 1589,
       "GENERATED": 5,
       "GOVERNANCE": 197,
       "PRODUCT": 113,
@@ -178114,7 +178314,7 @@
       "evidence-audit-output-root": 18,
       "evidence-dedup-root": 2,
       "evidence-registres-root": 35,
-      "evidence-reviews-root": 1530,
+      "evidence-reviews-root": 1534,
       "generated-authority-map": 1,
       "generated-path-classification-json": 1,
       "generated-path-classification-markdown": 1,
@@ -178150,11 +178350,11 @@
       "working-sandbox-readme": 1
     },
     "case_collisions_total": 0,
-    "dangling_references_total": 16966,
+    "dangling_references_total": 16983,
     "generated_total": 9,
-    "load_bearing_total": 2041,
+    "load_bearing_total": 2045,
     "portability_violations_total": 0,
-    "tracked_total": 2185,
+    "tracked_total": 2189,
     "unclassified_total": 0,
     "unicode_anomalies_total": 0
   },

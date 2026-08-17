@@ -2005,6 +2005,12 @@ def parser_ignored_paths(fichier: Path) -> list[str]:
     avant la vraie dans le fichier, ne doit plus la masquer ; le premier candidat sans parent
     valide est ignoré et la recherche continue.
     """
+    # SonarCloud pythonsecurity:S8707 (round 117, #445) : validé explicitement AVANT tout accès
+    # disque, plutôt que de se reposer uniquement sur `main()` (appelant distant, non visible
+    # par l'analyse de flux locale de Sonar) — même idiome que scripts/gate_docs.py et
+    # scripts/state_current.py pour cette même règle (#385/#449).
+    if not fichier.is_file():
+        raise ValueError(f"fichier introuvable ou n'est pas un fichier régulier : {str(fichier)!r}")
     texte = fichier.read_text(encoding="utf-8")
     lignes = texte.splitlines()
     lignes_exclues = _lignes_contenu_bloc(lignes)
@@ -2647,6 +2653,11 @@ def verifier(fichier: Path) -> tuple[bool, list[str]]:
     if motifs_interdits:
         return (False, motifs_interdits)
 
+    # SonarCloud pythonsecurity:S8707 (round 117, #445) : même idiome que
+    # `parser_ignored_paths` ci-dessus — validé explicitement à CE site d'appel, l'analyse de
+    # flux de Sonar ne créditant pas la validation déjà effectuée par l'appel précédent.
+    if not fichier.is_file():
+        raise ValueError(f"fichier introuvable ou n'est pas un fichier régulier : {str(fichier)!r}")
     texte = fichier.read_text(encoding="utf-8")
     lignes = texte.splitlines()
     ancres = _construire_table_ancres(texte, lignes, _lignes_contenu_bloc(lignes))
