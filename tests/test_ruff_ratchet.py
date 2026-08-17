@@ -1097,6 +1097,47 @@ def test_main_reference_git_absente_est_non_bloquante(
     assert "Avertissement" in capsys.readouterr().err
 
 
+def test_main_reference_git_panne_reelle_fait_echouer_le_gate(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Round 3 de revue : une VRAIE panne (git indisponible) doit faire echouer le gate,
+
+    PAS degrader silencieusement en avertissement + continuation (contrairement au cas
+    legitime de premiere introduction, teste separement ci-dessus). Aligne sur mypy_gate.py.
+    """
+    _ecrire_classification(tmp_path)
+    _ecrire_base(
+        tmp_path,
+        _base(
+            dette={"src/pkg/mod.py": 1},
+            classification={"src/pkg/mod.py": {"ARG001": 1}},
+            total_violations=1,
+        ),
+    )
+    (tmp_path / "src" / "pkg").mkdir(parents=True)
+    (tmp_path / "src" / "pkg" / "mod.py").write_text(
+        "def f(x, y):\n    return x\n", encoding="utf-8"
+    )
+
+    def fausse_mesure(racine: Path, regles: list[str]) -> list[dict[str, object]]:
+        return [{"filename": "src/pkg/mod.py", "code": "ARG001"}]
+
+    def _reference_git_panne(*args: object, **kwargs: object) -> tuple[None, str]:
+        raise RuntimeError("git indisponible pour lire la base de reference")
+
+    monkeypatch.setattr(ruff_ratchet, "mesurer", fausse_mesure)
+    monkeypatch.setattr(
+        ruff_ratchet.gate_git_ref,
+        "charger_base_reference_git",
+        _reference_git_panne,
+    )
+
+    code = ruff_ratchet.main(["--racine", str(tmp_path)])
+
+    assert code == 1
+
+
 def test_main_regenerer_baseline_reecrit_une_base_perimee(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,

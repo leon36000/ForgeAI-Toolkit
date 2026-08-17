@@ -1,0 +1,19 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "majeure",
+   "fichier": "scripts/ruff_ratchet.py",
+   "description": "Le contrôle de non-croissance contre origin/main n’est pas bloquant : toute erreur de chargement de la baseline de référence est transformée en simple avertissement, puis le gate continue avec base_reference=None et peut retourner 0. Une baseline locale augmentée peut donc être acceptée dès que la référence Git est indisponible ou invalide, contrairement au cliquet annoncé comme bloquant avec comparaison contre origin/main.",
+   "preuve": "scripts/ruff_ratchet.py:614-625 : l’exception autour de gate_git_ref.charger_base_reference_git(...) affiche `Avertissement ... controle de non-croissance inapplicable.` puis assigne `base_reference = None`; anomalies() n’exécute sa règle 6 que sous `if reference_validee is not None` (lignes 499-558)."
+  }
+ ],
+ "date_heure": "2026-08-17T17:11:07.954823+00:00",
+ "prompt_sha256": "82ce4ed0fc8ec5543c482b98c5cae4086b72653a5f5223f066a4f9ef0786c5ee",
+ "reviewer_model": "GPT-5.6-Terra-Pro",
+ "modele_servi": "gpt56-terra-pro-openrouter",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

@@ -1,0 +1,25 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": ".github/workflows/gates.yml",
+   "description": "Le job CI installe les dépendances avec --require-hashes, mais le diff ne contient aucune modification de requirements-ci.txt permettant de vérifier que ruff y est épinglé avec hashes.",
+   "preuve": ".github/workflows/gates.yml:364 : `run: python -m pip install --no-cache-dir --require-hashes -r requirements-ci.txt`"
+  },
+  {
+   "severite": "mineure",
+   "fichier": "scripts/ruff_ratchet.py",
+   "description": "Le mode --regenerer-baseline écrit la baseline sans appel explicite à _valider_base avant sérialisation ; si une sortie ruff inattendue produisait des clés non conformes (ex. code_inconnu), une baseline invalide pourrait être écrite.",
+   "preuve": "scripts/ruff_ratchet.py:617-621 : `nouvelle_base = construire_baseline(...)` puis `chemin_base.write_text(...)` sans `_valider_base(nouvelle_base, ...)`"
+  }
+ ],
+ "date_heure": "2026-08-17T17:12:31.720254+00:00",
+ "prompt_sha256": "82ce4ed0fc8ec5543c482b98c5cae4086b72653a5f5223f066a4f9ef0786c5ee",
+ "reviewer_model": "Qwen3.8-2.4T",
+ "modele_servi": "b9de6bc895fe95ccacf7d9fa9b1cf29ca44d34f03e249738f325c9dee3790b78",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

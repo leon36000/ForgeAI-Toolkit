@@ -761,6 +761,34 @@
         {
           "candidate": ".github/workflows/gates.yml",
           "line": 6,
+          "referrer": "evidence/reviews/RC1-020-inc2-v3/DeepSeek-V4-Pro-0813.verdict.json",
+          "resolved": ".github/workflows/gates.yml",
+          "severity": "hard"
+        },
+        {
+          "candidate": ".github/workflows/gates.yml",
+          "line": 8,
+          "referrer": "evidence/reviews/RC1-020-inc2-v3/DeepSeek-V4-Pro-0813.verdict.json",
+          "resolved": ".github/workflows/gates.yml",
+          "severity": "hard"
+        },
+        {
+          "candidate": ".github/workflows/gates.yml",
+          "line": 6,
+          "referrer": "evidence/reviews/RC1-020-inc2-v3/Qwen3.8-2.4T.verdict.json",
+          "resolved": ".github/workflows/gates.yml",
+          "severity": "hard"
+        },
+        {
+          "candidate": ".github/workflows/gates.yml",
+          "line": 8,
+          "referrer": "evidence/reviews/RC1-020-inc2-v3/Qwen3.8-2.4T.verdict.json",
+          "resolved": ".github/workflows/gates.yml",
+          "severity": "hard"
+        },
+        {
+          "candidate": ".github/workflows/gates.yml",
+          "line": 6,
           "referrer": "evidence/reviews/RC1-020-v1/DeepSeek-V4-Pro.verdict.json",
           "resolved": ".github/workflows/gates.yml",
           "severity": "hard"
@@ -19754,6 +19782,45 @@
       "generated": false,
       "load_bearing": true,
       "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-020-inc2-v3/DeepSeek-V4-Pro-0813.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "845c92fe8d6828d8b5054993f1bb412cfe681847d0ac011ffded40ea4751d46e",
+      "size": 895,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-020-inc2-v3/GPT-5.6-Terra-Pro.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "7a65c9208b6fd8efd49eec8ce8563ed1c903b4af44ca0cbc430ac4bc681054a0",
+      "size": 1196,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-020-inc2-v3/Qwen3.8-2.4T.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "441553b63ad8175cb861d603effbb2cbe0212b349bc2b6b3ac208f04275bc989",
+      "size": 1296,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
       "path": "evidence/reviews/RC1-020-v1/DeepSeek-V4-Pro.verdict.json",
       "referenced_by": [],
       "rule_id": "evidence-reviews-root",
@@ -33778,6 +33845,34 @@
         },
         {
           "candidate": "scripts/ruff_ratchet.py",
+          "line": 6,
+          "referrer": "evidence/reviews/RC1-020-inc2-v3/GPT-5.6-Terra-Pro.verdict.json",
+          "resolved": "scripts/ruff_ratchet.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "scripts/ruff_ratchet.py",
+          "line": 8,
+          "referrer": "evidence/reviews/RC1-020-inc2-v3/GPT-5.6-Terra-Pro.verdict.json",
+          "resolved": "scripts/ruff_ratchet.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "scripts/ruff_ratchet.py",
+          "line": 12,
+          "referrer": "evidence/reviews/RC1-020-inc2-v3/Qwen3.8-2.4T.verdict.json",
+          "resolved": "scripts/ruff_ratchet.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "scripts/ruff_ratchet.py",
+          "line": 14,
+          "referrer": "evidence/reviews/RC1-020-inc2-v3/Qwen3.8-2.4T.verdict.json",
+          "resolved": "scripts/ruff_ratchet.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "scripts/ruff_ratchet.py",
           "line": 3,
           "referrer": "governance/ruff-baseline.json",
           "resolved": "scripts/ruff_ratchet.py",
@@ -33806,8 +33901,8 @@
         }
       ],
       "rule_id": "governance-scripts-root",
-      "sha256": "bb63c9d3dd14cc26b22b6a665e9c29317b006753497038a28387e12e425b039a",
-      "size": 34287,
+      "sha256": "2c3605f2a69ad753e56d36d203fcc767b86d96edbe70e4cbb15b62cb3a75587b",
+      "size": 35520,
       "target_path": null,
       "type": "text"
     },
@@ -55049,8 +55144,8 @@
         }
       ],
       "rule_id": "test-suite",
-      "sha256": "765b7b813e3cd507065039880ed42c424fd0d6fa3a2cb550ba6f5b873bba92ee",
-      "size": 40845,
+      "sha256": "6fdd5215a015b396028eea3023278611097cd30f702f092949be5c710aa52ee5",
+      "size": 42256,
       "target_path": null,
       "type": "text"
     },
@@ -95053,6 +95148,16 @@
         "referrer": "evidence/reviews/RC1-020-inc2-v2/Qwen3.8-2.4T.verdict.json"
       },
       {
+        "candidate": "origin/main",
+        "line": 7,
+        "referrer": "evidence/reviews/RC1-020-inc2-v3/GPT-5.6-Terra-Pro.verdict.json"
+      },
+      {
+        "candidate": "origin/main",
+        "line": 7,
+        "referrer": "evidence/reviews/RC1-020-inc2-v3/GPT-5.6-Terra-Pro.verdict.json"
+      },
+      {
         "candidate": "FileNotFoundError/retourne",
         "line": 7,
         "referrer": "evidence/reviews/RC1-020-v1/DeepSeek-V4-Pro.verdict.json"
@@ -102235,6 +102340,21 @@
       {
         "candidate": "humaine/scell",
         "line": 616,
+        "referrer": "scripts/ruff_ratchet.py"
+      },
+      {
+        "candidate": "mypy_gate.py",
+        "line": 643,
+        "referrer": "scripts/ruff_ratchet.py"
+      },
+      {
+        "candidate": "try/except",
+        "line": 644,
+        "referrer": "scripts/ruff_ratchet.py"
+      },
+      {
+        "candidate": "try/except",
+        "line": 652,
         "referrer": "scripts/ruff_ratchet.py"
       },
       {
@@ -139223,58 +139343,43 @@
         "referrer": "tests/test_ruff_ratchet.py"
       },
       {
-        "candidate": "src/ancien.py",
-        "line": 1109,
+        "candidate": "mypy_gate.py",
+        "line": 1107,
         "referrer": "tests/test_ruff_ratchet.py"
       },
       {
-        "candidate": "src/ancien.py",
-        "line": 1110,
+        "candidate": "src/pkg/mod.py",
+        "line": 1113,
+        "referrer": "tests/test_ruff_ratchet.py"
+      },
+      {
+        "candidate": "src/pkg/mod.py",
+        "line": 1114,
         "referrer": "tests/test_ruff_ratchet.py"
       },
       {
         "candidate": "mod.py",
-        "line": 1115,
+        "line": 1119,
         "referrer": "tests/test_ruff_ratchet.py"
       },
       {
         "candidate": "src/pkg/mod.py",
-        "line": 1120,
-        "referrer": "tests/test_ruff_ratchet.py"
-      },
-      {
-        "candidate": "ruff-baseline.json",
-        "line": 1127,
+        "line": 1124,
         "referrer": "tests/test_ruff_ratchet.py"
       },
       {
         "candidate": "src/ancien.py",
-        "line": 1129,
+        "line": 1150,
         "referrer": "tests/test_ruff_ratchet.py"
       },
       {
-        "candidate": "src/pkg/mod.py",
-        "line": 1131,
-        "referrer": "tests/test_ruff_ratchet.py"
-      },
-      {
-        "candidate": "src/pkg/mod.py",
-        "line": 1132,
+        "candidate": "src/ancien.py",
+        "line": 1151,
         "referrer": "tests/test_ruff_ratchet.py"
       },
       {
         "candidate": "mod.py",
-        "line": 1146,
-        "referrer": "tests/test_ruff_ratchet.py"
-      },
-      {
-        "candidate": "ruff-baseline.json",
-        "line": 1149,
-        "referrer": "tests/test_ruff_ratchet.py"
-      },
-      {
-        "candidate": "src/pkg/mod.py",
-        "line": 1153,
+        "line": 1156,
         "referrer": "tests/test_ruff_ratchet.py"
       },
       {
@@ -139283,8 +139388,48 @@
         "referrer": "tests/test_ruff_ratchet.py"
       },
       {
+        "candidate": "ruff-baseline.json",
+        "line": 1168,
+        "referrer": "tests/test_ruff_ratchet.py"
+      },
+      {
+        "candidate": "src/ancien.py",
+        "line": 1170,
+        "referrer": "tests/test_ruff_ratchet.py"
+      },
+      {
         "candidate": "src/pkg/mod.py",
-        "line": 1162,
+        "line": 1172,
+        "referrer": "tests/test_ruff_ratchet.py"
+      },
+      {
+        "candidate": "src/pkg/mod.py",
+        "line": 1173,
+        "referrer": "tests/test_ruff_ratchet.py"
+      },
+      {
+        "candidate": "mod.py",
+        "line": 1187,
+        "referrer": "tests/test_ruff_ratchet.py"
+      },
+      {
+        "candidate": "ruff-baseline.json",
+        "line": 1190,
+        "referrer": "tests/test_ruff_ratchet.py"
+      },
+      {
+        "candidate": "src/pkg/mod.py",
+        "line": 1194,
+        "referrer": "tests/test_ruff_ratchet.py"
+      },
+      {
+        "candidate": "src/pkg/mod.py",
+        "line": 1202,
+        "referrer": "tests/test_ruff_ratchet.py"
+      },
+      {
+        "candidate": "src/pkg/mod.py",
+        "line": 1203,
         "referrer": "tests/test_ruff_ratchet.py"
       },
       {
@@ -155287,6 +155432,62 @@
       {
         "candidate": ".github/workflows/gates.yml",
         "line": 6,
+        "referrer": "evidence/reviews/RC1-020-inc2-v3/DeepSeek-V4-Pro-0813.verdict.json",
+        "resolved": ".github/workflows/gates.yml",
+        "severity": "hard"
+      },
+      {
+        "candidate": ".github/workflows/gates.yml",
+        "line": 8,
+        "referrer": "evidence/reviews/RC1-020-inc2-v3/DeepSeek-V4-Pro-0813.verdict.json",
+        "resolved": ".github/workflows/gates.yml",
+        "severity": "hard"
+      },
+      {
+        "candidate": "scripts/ruff_ratchet.py",
+        "line": 6,
+        "referrer": "evidence/reviews/RC1-020-inc2-v3/GPT-5.6-Terra-Pro.verdict.json",
+        "resolved": "scripts/ruff_ratchet.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "scripts/ruff_ratchet.py",
+        "line": 8,
+        "referrer": "evidence/reviews/RC1-020-inc2-v3/GPT-5.6-Terra-Pro.verdict.json",
+        "resolved": "scripts/ruff_ratchet.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": ".github/workflows/gates.yml",
+        "line": 6,
+        "referrer": "evidence/reviews/RC1-020-inc2-v3/Qwen3.8-2.4T.verdict.json",
+        "resolved": ".github/workflows/gates.yml",
+        "severity": "hard"
+      },
+      {
+        "candidate": ".github/workflows/gates.yml",
+        "line": 8,
+        "referrer": "evidence/reviews/RC1-020-inc2-v3/Qwen3.8-2.4T.verdict.json",
+        "resolved": ".github/workflows/gates.yml",
+        "severity": "hard"
+      },
+      {
+        "candidate": "scripts/ruff_ratchet.py",
+        "line": 12,
+        "referrer": "evidence/reviews/RC1-020-inc2-v3/Qwen3.8-2.4T.verdict.json",
+        "resolved": "scripts/ruff_ratchet.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "scripts/ruff_ratchet.py",
+        "line": 14,
+        "referrer": "evidence/reviews/RC1-020-inc2-v3/Qwen3.8-2.4T.verdict.json",
+        "resolved": "scripts/ruff_ratchet.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": ".github/workflows/gates.yml",
+        "line": 6,
         "referrer": "evidence/reviews/RC1-020-v1/DeepSeek-V4-Pro.verdict.json",
         "resolved": ".github/workflows/gates.yml",
         "severity": "hard"
@@ -170818,7 +171019,7 @@
     "by_class": {
       "ARCHIVE": 44,
       "DOCS": 18,
-      "EVIDENCE": 1587,
+      "EVIDENCE": 1590,
       "GENERATED": 5,
       "GOVERNANCE": 197,
       "PRODUCT": 113,
@@ -170837,7 +171038,7 @@
       "evidence-audit-output-root": 18,
       "evidence-dedup-root": 2,
       "evidence-registres-root": 35,
-      "evidence-reviews-root": 1532,
+      "evidence-reviews-root": 1535,
       "generated-authority-map": 1,
       "generated-path-classification-json": 1,
       "generated-path-classification-markdown": 1,
@@ -170873,11 +171074,11 @@
       "working-sandbox-readme": 1
     },
     "case_collisions_total": 0,
-    "dangling_references_total": 16647,
+    "dangling_references_total": 16657,
     "generated_total": 9,
-    "load_bearing_total": 2044,
+    "load_bearing_total": 2047,
     "portability_violations_total": 0,
-    "tracked_total": 2186,
+    "tracked_total": 2189,
     "unclassified_total": 0,
     "unicode_anomalies_total": 0
   },

@@ -613,10 +613,15 @@ def main(argv: list[str] | None = None) -> int:
     # baseline — il la REMPLACE intégralement (le fichier n'a donc pas besoin d'exister pour
     # être (re)généré la première fois) et ne fait AUCUNE comparaison de non-croissance. Le
     # fichier généré reste un artefact commité, review-visible via le diff git, toujours suivi
-    # d'une revue humaine/scellée avant merge.
+    # d'une revue humaine/scellée avant merge. La baseline nouvellement construite est validée
+    # par `_valider_base` AVANT sérialisation : `construire_baseline` est censée toujours
+    # produire un schéma valide, mais cette validation supplémentaire est un filet de sécurité
+    # peu coûteux contre un bug futur dans `construire_baseline` ou `agreger` — on n'écrit
+    # jamais sur disque une baseline qui échouerait à la relecture.
     if arguments.regenerer_baseline:
         try:
             nouvelle_base = construire_baseline(racine, regles)
+            _valider_base(nouvelle_base, "baseline regeneree")
             texte_base = json.dumps(nouvelle_base, indent=2, ensure_ascii=False) + "\n"
             chemin_base.write_text(texte_base, encoding="utf-8")
         except (OSError, UnicodeError, ValueError, RuntimeError) as erreur:
@@ -635,11 +640,22 @@ def main(argv: list[str] | None = None) -> int:
         print(str(erreur), file=sys.stderr)
         return 1
 
-    # Référence git : JAMAIS bloquante. Absente à cette ref (premier commit du mécanisme) ou
-    # inaccessible (fetch-depth insuffisant, git indisponible) : avertissement sur stderr et
-    # base_reference = None — le contrôle de non-croissance est alors simplement inapplicable.
-    base_reference: dict[str, Any] | None = None
+    # Référence git — aligné EXACTEMENT sur le comportement de `mypy_gate.py` (précédent #449) :
+    # l'appel à `charger_base_reference_git` n'est PAS entouré d'un try/except qui dégraderait
+    # silencieusement le contrôle de non-croissance. Deux chemins bien distincts :
+    # - absence LÉGITIME de la baseline à cette ref (premier commit du mécanisme) : retour
+    #   NORMAL `(None, message)` de `charger_base_reference_git`, jamais d'exception —
+    #   avertissement stderr et `base_reference = None`, le gate continue avec le seul contrôle
+    #   local ;
+    # - VRAIE panne d'infrastructure (git indisponible → RuntimeError, JSON de la référence
+    #   invalide ou schéma non conforme → ValueError levée par `_valider_base` passé en
+    #   callback) : l'exception se PROPAGE jusqu'au try/except de haut niveau ci-dessous, qui
+    #   affiche le message sur stderr et fait ÉCHOUER le gate (return 1). Un simple
+    #   avertissement suivi d'une continuation transformerait une panne réelle (ex. fetch-depth
+    #   insuffisant en CI) en désactivation silencieuse de TOUT le contrôle de non-croissance —
+    #   précisément le trou qu'une PR gonflant la baseline locale pourrait exploiter.
     try:
+        base_reference: dict[str, Any] | None
         base_reference, message_reference = gate_git_ref.charger_base_reference_git(
             racine,
             chemin_base,
@@ -649,12 +665,8 @@ def main(argv: list[str] | None = None) -> int:
         if message_reference:
             print(f"Avertissement : {message_reference}", file=sys.stderr)
     except (OSError, ValueError, RuntimeError) as erreur:
-        print(
-            f"Avertissement : reference git {arguments.base_ref_git!r} inutilisable "
-            f"({erreur}) : controle de non-croissance inapplicable.",
-            file=sys.stderr,
-        )
-        base_reference = None
+        print(str(erreur), file=sys.stderr)
+        return 1
 
     try:
         violations = mesurer(racine, regles)
