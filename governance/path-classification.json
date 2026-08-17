@@ -6632,8 +6632,8 @@
         }
       ],
       "rule_id": "evidence-registres-root",
-      "sha256": "532726709960c0fc6467e1dd03d52d1c8a726bf4fbfbd39660eb30f171b8c4a8",
-      "size": 384956,
+      "sha256": "ebd8baf2451dcea463d78bee323ccbc9a0f7d82f54a55044f7185d09c76a83e8",
+      "size": 385506,
       "target_path": null,
       "type": "text"
     },
@@ -8593,8 +8593,8 @@
         }
       ],
       "rule_id": "evidence-reviews-root",
-      "sha256": "7536a6af9035778e2560897b1241ca67b0fbf45869b2e1a4177cc7f5e6ae5151",
-      "size": 2715,
+      "sha256": "563c164c1db6f4bbe00221fd594046d3114012c6008a0b34b914b97b80b55277",
+      "size": 2723,
       "target_path": null,
       "type": "text"
     },
@@ -22008,6 +22008,58 @@
       "load_bearing": true,
       "owner": "gouvernance-preuve",
       "path": "evidence/reviews/RC1-542-v2/RECU.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": null,
+      "size": null,
+      "target_path": null,
+      "type": null
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-544/Gemini-3.7-Flash.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "0e8459622f944db5bfee2a93e9b5c14f13a4634c40546c6e569ba042b6160803",
+      "size": 371,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-544/Kimi-2.7.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "70384a661defa363922a08f4e577cffbc9f18c53133f5e41d44a6ddc689d6bf4",
+      "size": 317,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-544/Qwen3.7-Max.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "15a81e3df312cfe0c979016fcc5ca221e6312aa9a828b1db82c206846a344fe4",
+      "size": 786,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-544/RECU.json",
       "referenced_by": [],
       "rule_id": "evidence-reviews-root",
       "sha256": null,
@@ -39199,14 +39251,21 @@
         {
           "candidate": "src/forgeai/rag/hardened.py",
           "line": 6,
+          "referrer": "evidence/reviews/RC1-544/Qwen3.7-Max.verdict.json",
+          "resolved": "src/forgeai/rag/hardened.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "src/forgeai/rag/hardened.py",
+          "line": 6,
           "referrer": "stories/RAG-004A.md",
           "resolved": "src/forgeai/rag/hardened.py",
           "severity": "hard"
         }
       ],
       "rule_id": "product-source",
-      "sha256": "626e3673404b814b0b45b048044f777e3d96a1cf570935f9adf9a80e08ca6eea",
-      "size": 11106,
+      "sha256": "f305b62e1404f64b4bd34ad32c388bdce069bac62df8666bd8c49e08fd631ffa",
+      "size": 12099,
       "target_path": null,
       "type": "text"
     },
@@ -50027,8 +50086,8 @@
         }
       ],
       "rule_id": "test-suite",
-      "sha256": "b57622176b0965619e972b3217f50260f0f0f039fcac73de827e17ab1db88cd7",
-      "size": 15607,
+      "sha256": "fbf6fdd22869db35d16a1f061c91098ba3e46a0583041280a72eb526749b89ee",
+      "size": 17254,
       "target_path": null,
       "type": "text"
     },
@@ -92291,6 +92350,11 @@
       {
         "candidate": "recu-revue/1",
         "line": 2,
+        "referrer": "evidence/reviews/RC1-544/RECU.json"
+      },
+      {
+        "candidate": "recu-revue/1",
+        "line": 2,
         "referrer": "evidence/reviews/RC1-545/RECU.json"
       },
       {
@@ -115449,6 +115513,26 @@
         "referrer": "src/forgeai/rag/hardened.py"
       },
       {
+        "candidate": "482/",
+        "line": 200,
+        "referrer": "src/forgeai/rag/hardened.py"
+      },
+      {
+        "candidate": "492/",
+        "line": 200,
+        "referrer": "src/forgeai/rag/hardened.py"
+      },
+      {
+        "candidate": "527/",
+        "line": 200,
+        "referrer": "src/forgeai/rag/hardened.py"
+      },
+      {
+        "candidate": "passerelle/API",
+        "line": 200,
+        "referrer": "src/forgeai/rag/hardened.py"
+      },
+      {
         "candidate": "sidecar/service",
         "line": 9,
         "referrer": "src/forgeai/renderers/_openbao.py"
@@ -130209,93 +130293,133 @@
         "referrer": "tests/test_rag_durci.py"
       },
       {
+        "candidate": "RC1-456-iter3/",
+        "line": 31,
+        "referrer": "tests/test_rag_durci.py"
+      },
+      {
         "candidate": "application/json",
-        "line": 43,
+        "line": 44,
         "referrer": "tests/test_rag_durci.py"
       },
       {
         "candidate": "doc.md",
-        "line": 112,
+        "line": 117,
+        "referrer": "tests/test_rag_durci.py"
+      },
+      {
+        "candidate": "482/",
+        "line": 129,
+        "referrer": "tests/test_rag_durci.py"
+      },
+      {
+        "candidate": "492/",
+        "line": 129,
+        "referrer": "tests/test_rag_durci.py"
+      },
+      {
+        "candidate": "527/",
+        "line": 129,
+        "referrer": "tests/test_rag_durci.py"
+      },
+      {
+        "candidate": "gateway/API",
+        "line": 132,
+        "referrer": "tests/test_rag_durci.py"
+      },
+      {
+        "candidate": "doc.md",
+        "line": 135,
+        "referrer": "tests/test_rag_durci.py"
+      },
+      {
+        "candidate": "proxy/gateway",
+        "line": 142,
+        "referrer": "tests/test_rag_durci.py"
+      },
+      {
+        "candidate": "doc.md",
+        "line": 144,
         "referrer": "tests/test_rag_durci.py"
       },
       {
         "candidate": "z.md",
-        "line": 136,
-        "referrer": "tests/test_rag_durci.py"
-      },
-      {
-        "candidate": "a.md",
-        "line": 137,
-        "referrer": "tests/test_rag_durci.py"
-      },
-      {
-        "candidate": "z.md",
-        "line": 138,
-        "referrer": "tests/test_rag_durci.py"
-      },
-      {
-        "candidate": "a.md",
-        "line": 141,
-        "referrer": "tests/test_rag_durci.py"
-      },
-      {
-        "candidate": "z.md",
-        "line": 141,
-        "referrer": "tests/test_rag_durci.py"
-      },
-      {
-        "candidate": "s.md",
-        "line": 146,
-        "referrer": "tests/test_rag_durci.py"
-      },
-      {
-        "candidate": "ingest/_search",
         "line": 163,
         "referrer": "tests/test_rag_durci.py"
       },
       {
-        "candidate": "doc.md",
+        "candidate": "a.md",
+        "line": 164,
+        "referrer": "tests/test_rag_durci.py"
+      },
+      {
+        "candidate": "z.md",
         "line": 165,
         "referrer": "tests/test_rag_durci.py"
       },
       {
+        "candidate": "a.md",
+        "line": 168,
+        "referrer": "tests/test_rag_durci.py"
+      },
+      {
+        "candidate": "z.md",
+        "line": 168,
+        "referrer": "tests/test_rag_durci.py"
+      },
+      {
+        "candidate": "s.md",
+        "line": 173,
+        "referrer": "tests/test_rag_durci.py"
+      },
+      {
+        "candidate": "ingest/_search",
+        "line": 190,
+        "referrer": "tests/test_rag_durci.py"
+      },
+      {
+        "candidate": "doc.md",
+        "line": 192,
+        "referrer": "tests/test_rag_durci.py"
+      },
+      {
         "candidate": "origin/main",
-        "line": 195,
+        "line": 222,
         "referrer": "tests/test_rag_durci.py"
       },
       {
         "candidate": "faq.md",
-        "line": 211,
+        "line": 238,
         "referrer": "tests/test_rag_durci.py"
       },
       {
         "candidate": "corpus-adversarial.json",
-        "line": 234,
+        "line": 261,
         "referrer": "tests/test_rag_durci.py"
       },
       {
         "candidate": "faq.md",
-        "line": 279,
+        "line": 306,
         "referrer": "tests/test_rag_durci.py"
       },
       {
         "candidate": "faq.md",
-        "line": 281,
+        "line": 308,
         "referrer": "tests/test_rag_durci.py"
       },
       {
         "candidate": "faq.md",
-        "line": 293,
+        "line": 320,
         "referrer": "tests/test_rag_durci.py"
       },
       {
         "candidate": "faq.md",
-        "line": 298,
+        "line": 325,
         "referrer": "tests/test_rag_durci.py"
       },
       {
         "candidate": "faq.md",
-        "line": 307,
+        "line": 334,
         "referrer": "tests/test_rag_durci.py"
       },
       {
@@ -137134,6 +137258,13 @@
         "line": 199,
         "referrer": "evidence/reviews/BINDING.txt",
         "resolved": "evidence/reviews/RC1-440-lot6-v1",
+        "severity": "hard"
+      },
+      {
+        "candidate": "RC1-544",
+        "line": 200,
+        "referrer": "evidence/reviews/BINDING.txt",
+        "resolved": "evidence/reviews/RC1-544",
         "severity": "hard"
       },
       {
@@ -151221,6 +151352,13 @@
         "severity": "hard"
       },
       {
+        "candidate": "src/forgeai/rag/hardened.py",
+        "line": 6,
+        "referrer": "evidence/reviews/RC1-544/Qwen3.7-Max.verdict.json",
+        "resolved": "src/forgeai/rag/hardened.py",
+        "severity": "hard"
+      },
+      {
         "candidate": ".github/workflows/gates.yml",
         "line": 6,
         "referrer": "evidence/reviews/REG-029B/Qwen3.7-Max.verdict.json",
@@ -163653,7 +163791,7 @@
     "by_class": {
       "ARCHIVE": 44,
       "DOCS": 18,
-      "EVIDENCE": 1508,
+      "EVIDENCE": 1512,
       "GENERATED": 5,
       "GOVERNANCE": 193,
       "PRODUCT": 113,
@@ -163672,7 +163810,7 @@
       "evidence-audit-output-root": 18,
       "evidence-dedup-root": 2,
       "evidence-registres-root": 35,
-      "evidence-reviews-root": 1453,
+      "evidence-reviews-root": 1457,
       "generated-authority-map": 1,
       "generated-path-classification-json": 1,
       "generated-path-classification-markdown": 1,
@@ -163708,11 +163846,11 @@
       "working-sandbox-readme": 1
     },
     "case_collisions_total": 0,
-    "dangling_references_total": 16329,
+    "dangling_references_total": 16342,
     "generated_total": 9,
-    "load_bearing_total": 1962,
+    "load_bearing_total": 1966,
     "portability_violations_total": 0,
-    "tracked_total": 2102,
+    "tracked_total": 2106,
     "unclassified_total": 0,
     "unicode_anomalies_total": 0
   },

@@ -197,7 +197,20 @@ class HardenedRagClient(RagClient):
                 self.agent, tokens, exact=exact,
                 motif=None if exact else "usage_absent",
             )
-        answer = response["choices"][0]["message"]["content"].strip()
+        # RC1-456-iter3 : même famille que #482/#492/#527/#528 — une passerelle/API cloud
+        # compatible OpenAI mal configurée peut répondre HTTP 200 avec un JSON valide mais non
+        # conforme (choices vide — filtrage de contenu, cas documenté chez Azure OpenAI —, ou
+        # corps d'erreur {"error": {...}} sans clé "choices"). Traité comme "pas de réponse
+        # exploitable", même contrat que B3 (contexte vide) : jamais d'exception fatale.
+        choix = response.get("choices") if isinstance(response, dict) else None
+        premier = choix[0] if isinstance(choix, list) and choix else None
+        message = premier.get("message") if isinstance(premier, dict) else None
+        contenu = message.get("content") if isinstance(message, dict) else None
+        if not isinstance(contenu, str):
+            return {"answer": "", "sources": [], "grounding": "unknown",
+                    "blocked": "réponse de la passerelle non conforme",
+                    "sanitization_events": evenements}
+        answer = contenu.strip()
 
         # Liste close des passages effectivement injectés dans le prompt : on
         # utilise le texte ORIGINAL du retrieval (et non la version neutralisée)
