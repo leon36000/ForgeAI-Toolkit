@@ -113,7 +113,7 @@ SUIVI (ERR-041B/C, hors story) : rendus d'erreur CLI (CLI-013/036), env Langfuse
 
 ## 5. STRATÉGIE DE TEST TDAD — rouge d'abord
 
-`tests/test_redaction.py` écrit en entier AVANT le module (rouge = ImportError), implémenté jusqu'au vert sans retouche des tests. Secrets de test : fixtures longues et distinctives (ex. `sk-test00000000000000000000SECRET`, hex de 64) n'apparaissant nulle part ailleurs dans les sorties attendues — la preuve d'absence ne peut pas être un faux positif.
+`tests/test_redaction.py` écrit en entier AVANT le module (rouge = ImportError), implémenté jusqu'au vert sans retouche des tests. Secrets de test : fixtures longues et distinctives (constante `SK` du module de test, hex de 64) n'apparaissant nulle part ailleurs dans les sorties attendues — la preuve d'absence ne peut pas être un faux positif.
 
 1. **Chaque forme de la surface** (paramétré) : `Bearer <clé>` ; `sk-…` seul ; `api_key`, `key`, `token`, `password`, `passphrase` (séparateurs `=`/`:`, casses variées) ; les cinq env nommées (`FORGEAI_API_TOKEN`, `FORGEAI_BAO_TOKEN`, `FORGEAI_GATEWAY_KEY`, `FORGEAI_LANGFUSE_ENCRYPTION_KEY`, `FORGEAI_LANGFUSE_NEXTAUTH_SECRET`) ; hex 32/40/64 → pour chacun : secret absent, marqueur présent.
 2. **Bornes de M4** : hex de 7 (git court) NON rédigé ; hex de 32 rédigé.
