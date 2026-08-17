@@ -9894,8 +9894,8 @@
         }
       ],
       "rule_id": "evidence-registres-root",
-      "sha256": "c6d4b88b1ea8fc87b0c0ecdc2c4df136908e2dd71f1f99658e08c13e1870840f",
-      "size": 399827,
+      "sha256": "416c7343c73f1e83763ae0920080270d09cab577e64339987115354bbb44861e",
+      "size": 401185,
       "target_path": null,
       "type": "text"
     },
@@ -47397,8 +47397,8 @@
         }
       ],
       "rule_id": "governance-stories",
-      "sha256": "2506d54155bbceffdb98c90a5a77b7536a304e13eb529c01c7150f0315601a9d",
-      "size": 281606,
+      "sha256": "53f76eb320de016d06a3c6c4ca79b9f16e1b09fc823937df55d7968a0cf2705c",
+      "size": 283801,
       "target_path": null,
       "type": "text"
     },
@@ -129684,6 +129684,11 @@
         "referrer": "stories/RC1-015.md"
       },
       {
+        "candidate": "evidence/reviews/RC1-015-v17",
+        "line": 3886,
+        "referrer": "stories/RC1-015.md"
+      },
+      {
         "candidate": "src/forgeai/",
         "line": 3,
         "referrer": "stories/RC1-022.md"
@@ -177760,7 +177765,7 @@
       "working-sandbox-readme": 1
     },
     "case_collisions_total": 0,
-    "dangling_references_total": 16939,
+    "dangling_references_total": 16940,
     "generated_total": 9,
     "load_bearing_total": 2037,
     "portability_violations_total": 0,
