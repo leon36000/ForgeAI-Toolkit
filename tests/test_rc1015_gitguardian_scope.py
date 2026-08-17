@@ -4911,3 +4911,23 @@ def test_lignes_dans_bloc_secret_racine_ne_retourne_jamais_none_pour_cas_simple(
     assert resultat is not None
     assert isinstance(resultat, list)
     assert all(isinstance(v, bool) for v in resultat)
+
+
+def test_parser_scalaire_bloc_item_avec_ancre_directe_est_reconnu(tmp_path):
+    # RC1-015 round 111, revue scellée GPT-5.6-Terra-Pro (CRITIQUE, bug réel) : miroir manqué de
+    # `_LIGNE_CLE_BLOC` (round 12, ancre optionnelle avant tag optionnel avant indicateur) — un
+    # item de LISTE portant une ancre directement sur son scalaire bloc (`- &a >-\n  **/*.md`)
+    # n'était reconnu ni par `_LIGNE_ITEM_BLOC` (tag seul autorisé, pas d'ancre) ni par
+    # `_LIGNE_ITEM` (le jeton nu `&a` laisse `>-` non consommé avant la fin de ligne attendue).
+    # Repro confirmée AVANT correctif : PyYAML résout `secret.ignored_paths` en `['**/*.md']`
+    # (forme YAML valide), mais `verifier()` concluait à tort à la conformité (`ok=True`), la
+    # ligne de contenu `**/*.md` n'étant jamais consommée comme scalaire bloc.
+    fichier = tmp_path / ".gitguardian.yaml"
+    fichier.write_text(
+        'secret:\n  ignored_paths:\n    - &a >-\n      **/*.md\n',  # proof:allow — clé de schéma YAML, pas un secret réel
+        encoding="utf-8",
+    )
+    assert check_gitguardian_scope.parser_ignored_paths(fichier) == ["**/*.md"]
+    ok, motifs = check_gitguardian_scope.verifier(fichier)
+    assert ok is False
+    assert motifs == ["**/*.md"]

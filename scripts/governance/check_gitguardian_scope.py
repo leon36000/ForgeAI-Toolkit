@@ -181,8 +181,21 @@ _LIGNE_VALEUR_EXPLICITE_ALIAS = re.compile(r"^(\s*):\s*\*(" + _CARACTERE_ANCRE +
 _LIGNE_VALEUR_EXPLICITE_FLOW_OUVERTE = re.compile(r"^(\s*):\s*" + _PROPRIETES_NOEUD + r"\[")
 _LIGNE_VALEUR_EXPLICITE_SECRET_FLOW_OUVERTE = re.compile(r"^(\s*):\s*" + _PROPRIETES_NOEUD + r"\{")
 _LIGNE_ITEM = re.compile(r'^(\s*)-\s*(?:"([^"]*)"|\'([^\']*)\'|(\S+))\s*(#.*)?$')
+# Round 111 (RC1-015, bug réel trouvé par revue scellée GPT-5.6-Terra-Pro) : miroir manqué de
+# `_LIGNE_CLE_BLOC` (round 12, `(?:&\S+\s+)?(?:!\S*\s+)?([|>])`) — un item de LISTE portant une
+# ancre directement sur son scalaire bloc (`- &a >-\n  **/*.md`, forme YAML valide, vérifiée
+# empiriquement : PyYAML résout `secret.ignored_paths` en `['**/*.md']`) n'était reconnu NI par
+# cette regex (qui n'autorisait qu'un TAG optionnel avant l'indicateur `[|>]`, pas une ANCRE) NI
+# par `_LIGNE_ITEM` (qui exige qu'il ne reste que `\s*(#.*)?$` après le premier jeton nu — `&a`
+# — alors qu'il reste `>-` avant la fin de ligne). La ligne tombait dans la branche
+# « non-item », la ligne de contenu suivante n'était jamais consommée comme scalaire bloc, et
+# `verifier()` concluait à tort à la conformité. Élargi symétriquement à `_LIGNE_CLE_BLOC` : tag
+# optionnel PRÉCÉDÉ d'une ancre optionnelle, même ordre. Seul `.group(1)` (indentation) est
+# consommé par les 3 appelants (`_lignes_contenu_bloc`, `_consommer_sequence_ancree`,
+# `parser_ignored_paths`) — le groupe d'ancre ajouté est NON capturant, aucun décalage d'index
+# pour les appelants existants.
 _LIGNE_ITEM_BLOC = re.compile(
-    r"^(\s*)-\s*(?:!\S*\s+)?([|>])(?:[+-][1-9]|[1-9][+-]|[+-]|[1-9])?\s*(#.*)?$"
+    r"^(\s*)-\s*(?:&\S+\s+)?(?:!\S*\s+)?([|>])(?:[+-][1-9]|[1-9][+-]|[+-]|[1-9])?\s*(#.*)?$"
 )
 _LIGNE_ITEM_ALIAS = re.compile(r"^(\s*)-\s*\*(" + _CARACTERE_ANCRE + r"+)\s*(#.*)?$")
 _CHAINE_DOUBLE_GUILLEMETS = re.compile(r'"((?:[^"\\]|\\.)*)"', re.DOTALL)
