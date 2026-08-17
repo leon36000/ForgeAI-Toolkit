@@ -50,13 +50,19 @@ def test_g1b_flux_sert_ce_que_contient_la_memoire():
     donc à le couvrir (on vérifie le lien plutôt que de le supposer).
 
     #460 (RC1-030) a extrait la logique de `/api/deploy/events` de `do_GET()` (devenu un
-    dispatcher pur) vers `_get_deploy_events()` — c'est désormais elle qui porte le contrat,
-    `do_GET` ne fait plus qu'y déléguer (voir aussi `test_g1c_...` ci-dessous, qui prouve le
-    même contrat par le comportement HTTP observé plutôt que par le texte source)."""
+    dispatcher pur) vers `_get_deploy_events()`. Un correctif SonarCloud ultérieur de la même
+    story a ensuite redécoupé `_get_deploy_events()` elle-même (réduction de complexité
+    cyclomatique) en un dispatcher de ~6 lignes qui délègue à `_deploy_events_replay()` (proc
+    terminé, relecture mémorisée) ou `_deploy_events_stream()` (proc encore actif) — ce sont
+    désormais CES DEUX méthodes qui portent le contrat, pas `_get_deploy_events()` elle-même
+    (voir aussi `test_g1c_...` ci-dessous, qui prouve le même contrat par le comportement HTTP
+    observé plutôt que par le texte source)."""
     import inspect
 
-    source = inspect.getsource(server.ForgeAIHandler._get_deploy_events)
-    assert '_DEPLOY_STATE["lines"]' in source
+    source_replay = inspect.getsource(server.ForgeAIHandler._deploy_events_replay)
+    source_stream = inspect.getsource(server.ForgeAIHandler._deploy_events_stream)
+    assert '_DEPLOY_STATE["lines"]' in source_replay
+    assert '_DEPLOY_STATE["lines"]' in source_stream
 
 
 def test_g2_sortie_bornee_par_defaut(tmp_path):
