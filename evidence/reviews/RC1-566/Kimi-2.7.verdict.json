@@ -1,0 +1,15 @@
+{
+ "verdict": "APPROVE",
+ "objections": [],
+ "date_heure": "2026-08-17T00:58:34.696841+00:00",
+ "prompt_sha256": "03d9dfe5b4898a50f34f0857d4a979241694ff754bcb4381831052754703b632",
+ "reviewer_model": "Kimi-2.7",
+ "via": "mcp__forge-model-bridge__ask_cloud_model (civ_review.py indisponible : LITELLM_API_KEY absent du shell de cette session)",
+ "bridge_job": {
+  "provider_id": "Kimi-2.7",
+  "job_id": "7351f77f-6360-456f-8986-343ce152be92",
+  "attempts": 1,
+  "elapsed_ms": 143468
+ },
+ "note_swap": "remplace DeepSeek-V4-Pro-0813 (pool de rotation, roles.yaml) apres 2 echecs consecutifs TRUNCATED_COMPLETION (job 23e53e03 puis 2e11eead) sur le trio scelle standard"
+}

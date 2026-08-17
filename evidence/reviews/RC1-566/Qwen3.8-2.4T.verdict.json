@@ -1,0 +1,14 @@
+{
+ "verdict": "APPROVE",
+ "objections": [],
+ "date_heure": "2026-08-17T00:52:17.540563+00:00",
+ "prompt_sha256": "03d9dfe5b4898a50f34f0857d4a979241694ff754bcb4381831052754703b632",
+ "reviewer_model": "Qwen3.8-2.4T",
+ "via": "mcp__forge-model-bridge__ask_cloud_model (civ_review.py indisponible : LITELLM_API_KEY absent du shell de cette session)",
+ "bridge_job": {
+  "provider_id": "Qwen3.8-2.4T",
+  "job_id": "bbd05eea-b821-41b1-ad4b-6fad7f5f11eb",
+  "attempts": 1,
+  "elapsed_ms": 15850
+ }
+}

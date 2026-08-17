@@ -1,0 +1,14 @@
+{
+ "verdict": "APPROVE",
+ "objections": [],
+ "date_heure": "2026-08-17T00:52:29.153736+00:00",
+ "prompt_sha256": "03d9dfe5b4898a50f34f0857d4a979241694ff754bcb4381831052754703b632",
+ "reviewer_model": "GPT-5.6-Terra-Pro",
+ "via": "mcp__forge-model-bridge__ask_cloud_model (civ_review.py indisponible : LITELLM_API_KEY absent du shell de cette session)",
+ "bridge_job": {
+  "provider_id": "GPT-5.6-Terra-Pro",
+  "job_id": "3f0b3068-7af8-40c1-99cb-cdb4a378a6ed",
+  "attempts": 1,
+  "elapsed_ms": 10827
+ }
+}
