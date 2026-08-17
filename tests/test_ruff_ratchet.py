@@ -1,0 +1,822 @@
+from __future__ import annotations
+
+import json
+import subprocess
+import sys
+from pathlib import Path
+
+import pytest
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
+
+import ruff_ratchet  # noqa: E402
+
+
+def _base(dette=None, classification=None, total_violations=0, version=1, regles_activees=None):
+    """Fabrique une base ruff-baseline-v1 valide pour les tests.
+
+    Valeurs par défaut cohérentes : dette/classification vides, borne à 0, version 1,
+    regles_activees triées. `regles_activees=None` (et non `[]`) garde la possibilité de
+    passer explicitement une liste vide pour les tests de validation.
+    """
+    return {
+        "version": version,
+        "regles_activees": (
+            list(regles_activees)
+            if regles_activees is not None
+            else ["ARG001", "B904"]
+        ),
+        "borne": {"total_violations": total_violations},
+        "dette": dict(dette or {}),
+        "classification": {
+            fichier: dict(comptes) for fichier, comptes in (classification or {}).items()
+        },
+    }
+
+
+def _classification_ruff_factice() -> dict:
+    """Classification Ruff factice : deux regles defaut_candidat et une regle style."""
+    return {
+        "_familles_candidates": ["ARG", "B"],
+        "regles": {
+            "ARG001": {"categorie": "defaut_candidat"},
+            "B904": {"categorie": "defaut_candidat"},
+            "S101": {"categorie": "style"},
+        },
+    }
+
+
+def _ecrire_classification(racine: Path) -> None:
+    """Ecrit governance/ruff-classification.json dans la racine factice."""
+    dossier = racine / "governance"
+    dossier.mkdir(parents=True, exist_ok=True)
+    (dossier / "ruff-classification.json").write_text(
+        json.dumps(_classification_ruff_factice()), encoding="utf-8"
+    )
+
+
+def _ecrire_base(racine: Path, base: dict) -> None:
+    """Ecrit governance/ruff-baseline.json dans la racine factice."""
+    dossier = racine / "governance"
+    dossier.mkdir(parents=True, exist_ok=True)
+    (dossier / "ruff-baseline.json").write_text(json.dumps(base), encoding="utf-8")
+
+
+def _reference_git_absente(*args: object, **kwargs: object) -> tuple[None, str]:
+    """Simule une reference git non chargeable (premiere introduction du mecanisme)."""
+    return None, "reference git absente a cette ref"
+
+
+# ---------------------------------------------------------------------------
+# regles_defaut_candidat
+# ---------------------------------------------------------------------------
+
+def test_regles_defaut_candidat_classification_vide_leve_valueerror() -> None:
+    """Une classification sans aucune regle defaut_candidat est refusee."""
+    with pytest.raises(ValueError, match="aucune regle categorisee"):
+        ruff_ratchet.regles_defaut_candidat({"regles": {}})
+
+
+def test_regles_defaut_candidat_champ_regles_absent_leve_valueerror() -> None:
+    """Le champ 'regles' absent est refuse : jamais de cliquet sur un ensemble vide."""
+    with pytest.raises(ValueError, match="aucune regle categorisee"):
+        ruff_ratchet.regles_defaut_candidat({})
+
+
+def test_regles_defaut_candidat_filtre_et_trie() -> None:
+    """Seuls les codes defaut_candidat sont retenus, tries alphabetiquement."""
+    classification = {
+        "regles": {
+            "B904": {"categorie": "defaut_candidat"},
+            "S101": {"categorie": "style"},
+            "ARG001": {"categorie": "defaut_candidat"},
+            "F401": {"categorie": "dette"},
+        }
+    }
+
+    assert ruff_ratchet.regles_defaut_candidat(classification) == ["ARG001", "B904"]
+
+
+# ---------------------------------------------------------------------------
+# mesurer — chemins d'erreur (subprocess.run mocke)
+# ---------------------------------------------------------------------------
+
+def test_mesurer_ruff_absent(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """ruff introuvable sur le PATH -> RuntimeError explicite."""
+
+    def ruff_absent(*args: object, **kwargs: object) -> subprocess.CompletedProcess[str]:
+        raise FileNotFoundError("ruff")
+
+    monkeypatch.setattr(ruff_ratchet.subprocess, "run", ruff_absent)
+
+    with pytest.raises(RuntimeError, match="ruff est indisponible"):
+        ruff_ratchet.mesurer(tmp_path, ["ARG001"])
+
+
+def test_mesurer_code_retour_inattendu(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Un code de sortie hors 0/1 -> RuntimeError mentionnant le code."""
+    resultat = subprocess.CompletedProcess(
+        args=["ruff"],
+        returncode=2,
+        stdout="",
+        stderr="erreur ruff",
+    )
+    monkeypatch.setattr(ruff_ratchet.subprocess, "run", lambda *args, **kwargs: resultat)
+
+    with pytest.raises(RuntimeError, match="code 2"):
+        ruff_ratchet.mesurer(tmp_path, ["ARG001"])
+
+
+def test_mesurer_sortie_json_invalide(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Une sortie non JSON -> RuntimeError."""
+    resultat = subprocess.CompletedProcess(
+        args=["ruff"],
+        returncode=1,
+        stdout="pas du JSON",
+        stderr="",
+    )
+    monkeypatch.setattr(ruff_ratchet.subprocess, "run", lambda *args, **kwargs: resultat)
+
+    with pytest.raises(RuntimeError, match="sortie JSON de ruff est invalide"):
+        ruff_ratchet.mesurer(tmp_path, ["ARG001"])
+
+
+def test_mesurer_sortie_json_pas_une_liste(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Un JSON valide mais qui n'est pas une liste de violations -> RuntimeError."""
+    resultat = subprocess.CompletedProcess(
+        args=["ruff"],
+        returncode=0,
+        stdout="{}",
+        stderr="",
+    )
+    monkeypatch.setattr(ruff_ratchet.subprocess, "run", lambda *args, **kwargs: resultat)
+
+    with pytest.raises(RuntimeError, match="doit être une liste de violations"):
+        ruff_ratchet.mesurer(tmp_path, ["ARG001"])
+
+
+# ---------------------------------------------------------------------------
+# mesurer + agreger — unique test avec ruff REEL sur un mini-projet jetable
+# ---------------------------------------------------------------------------
+
+def test_mesurer_et_agreger_sur_mini_projet_reel(tmp_path: Path) -> None:
+    """ruff reel sur un projet jetable : ARG001 detecte, chemin relatif POSIX, agregats exacts."""
+    (tmp_path / "src" / "pkg").mkdir(parents=True)
+    (tmp_path / "scripts").mkdir()
+    (tmp_path / "src" / "pkg" / "mod.py").write_text(
+        "def f(x, y):\n    return x\n", encoding="utf-8"
+    )
+
+    violations = ruff_ratchet.mesurer(tmp_path, ["ARG001"])
+
+    assert any(
+        violation.get("code") == "ARG001"
+        and violation.get("filename") == "src/pkg/mod.py"
+        for violation in violations
+    )
+
+    dette, classification = ruff_ratchet.agreger(violations)
+    assert dette == {"src/pkg/mod.py": 1}
+    assert classification == {"src/pkg/mod.py": {"ARG001": 1}}
+
+
+# ---------------------------------------------------------------------------
+# agreger — cas synthetiques (sans ruff reel)
+# ---------------------------------------------------------------------------
+
+def test_agreger_plusieurs_codes_sur_meme_fichier() -> None:
+    """La dette est la somme toutes regles confondues, la classification ventile par code."""
+    violations = [
+        {"filename": "src/a.py", "code": "ARG001"},
+        {"filename": "src/a.py", "code": "B904"},
+        {"filename": "src/a.py", "code": "ARG001"},
+    ]
+
+    dette, classification = ruff_ratchet.agreger(violations)
+
+    assert dette == {"src/a.py": 3}
+    assert classification == {"src/a.py": {"ARG001": 2, "B904": 1}}
+
+
+def test_agreger_violations_incompletes_ne_levent_pas() -> None:
+    """Cles absentes ou non chaines -> conventions fichier_inconnu / code_inconnu."""
+    violations = [
+        {"filename": None, "code": 101},
+        {"code": "ARG001"},
+        {"filename": "src/b.py"},
+    ]
+
+    dette, classification = ruff_ratchet.agreger(violations)
+
+    assert dette == {"fichier_inconnu": 2, "src/b.py": 1}
+    assert classification == {
+        "fichier_inconnu": {"code_inconnu": 1, "ARG001": 1},
+        "src/b.py": {"code_inconnu": 1},
+    }
+
+
+def test_agreger_liste_vide() -> None:
+    """Aucune violation -> agregats vides."""
+    assert ruff_ratchet.agreger([]) == ({}, {})
+
+
+# ---------------------------------------------------------------------------
+# fichiers_reels
+# ---------------------------------------------------------------------------
+
+def test_fichiers_reels_src_et_scripts(tmp_path: Path) -> None:
+    """Les .py de src/ et scripts/ sont retenus, en chemins relatifs POSIX."""
+    (tmp_path / "src" / "sub").mkdir(parents=True)
+    (tmp_path / "scripts").mkdir()
+    (tmp_path / "src" / "a.py").write_text("x = 1\n", encoding="utf-8")
+    (tmp_path / "scripts" / "b.py").write_text("y = 2\n", encoding="utf-8")
+    (tmp_path / "src" / "sub" / "c.py").write_text("z = 3\n", encoding="utf-8")
+
+    reels = ruff_ratchet.fichiers_reels(tmp_path)
+
+    assert reels == {"src/a.py", "scripts/b.py", "src/sub/c.py"}
+    assert all("\\" not in f for f in reels)
+
+
+def test_fichiers_reels_scripts_absent_ne_leve_pas(tmp_path: Path) -> None:
+    """Un dossier scripts/ absent est simplement ignore."""
+    (tmp_path / "src").mkdir()
+    (tmp_path / "src" / "a.py").write_text("x = 1\n", encoding="utf-8")
+
+    assert ruff_ratchet.fichiers_reels(tmp_path) == {"src/a.py"}
+
+
+def test_fichiers_reels_ignore_les_non_python(tmp_path: Path) -> None:
+    """Seuls les fichiers .py sont retenus."""
+    (tmp_path / "src").mkdir()
+    (tmp_path / "src" / "a.py").write_text("x = 1\n", encoding="utf-8")
+    (tmp_path / "src" / "note.txt").write_text("pas du python\n", encoding="utf-8")
+
+    assert ruff_ratchet.fichiers_reels(tmp_path) == {"src/a.py"}
+
+
+# ---------------------------------------------------------------------------
+# Validation de schema (_valider_base)
+# ---------------------------------------------------------------------------
+
+def test_valider_base_version_non_entier() -> None:
+    """version non entiere (chaine) -> ValueError."""
+    base = _base(version="1")
+
+    with pytest.raises(ValueError, match="version doit etre un entier"):
+        ruff_ratchet._valider_base(base, "base locale")
+
+
+def test_valider_base_regles_activees_vide() -> None:
+    """regles_activees vide -> ValueError."""
+    base = _base(regles_activees=[])
+
+    with pytest.raises(ValueError, match="regles_activees doit etre une liste non vide"):
+        ruff_ratchet._valider_base(base, "base locale")
+
+
+def test_valider_base_regles_activees_doublon() -> None:
+    """regles_activees avec doublon -> ValueError."""
+    base = _base(regles_activees=["ARG001", "ARG001"])
+
+    with pytest.raises(ValueError, match="regles_activees contient des doublons"):
+        ruff_ratchet._valider_base(base, "base locale")
+
+
+def test_valider_base_regles_activees_non_triee() -> None:
+    """regles_activees non triee alphabetiquement -> ValueError."""
+    base = _base(regles_activees=["B904", "ARG001"])
+
+    with pytest.raises(ValueError, match="regles_activees doit etre triee alphabetiquement"):
+        ruff_ratchet._valider_base(base, "base locale")
+
+
+def test_valider_base_borne_negative() -> None:
+    """borne.total_violations negatif -> ValueError."""
+    base = _base(total_violations=-1)
+
+    with pytest.raises(
+        ValueError, match="total_violations doit etre un entier positif ou nul"
+    ):
+        ruff_ratchet._valider_base(base, "base locale")
+
+
+def test_valider_base_borne_booleenne() -> None:
+    """borne.total_violations booleen -> ValueError (bool est une sous-classe de int)."""
+    base = _base(total_violations=True)
+
+    with pytest.raises(
+        ValueError, match="total_violations doit etre un entier positif ou nul"
+    ):
+        ruff_ratchet._valider_base(base, "base locale")
+
+
+def test_valider_base_dette_nulle() -> None:
+    """dette avec une valeur 0 -> ValueError (representation creuse, stricte positivite)."""
+    base = _base(dette={"src/a.py": 0})
+
+    with pytest.raises(ValueError, match="dette.*strictement positif"):
+        ruff_ratchet._valider_base(base, "base locale")
+
+
+def test_valider_base_dette_booleenne() -> None:
+    """dette avec une valeur booleenne -> ValueError."""
+    base = _base(dette={"src/a.py": True})
+
+    with pytest.raises(ValueError, match="dette.*strictement positif"):
+        ruff_ratchet._valider_base(base, "base locale")
+
+
+def test_valider_base_classification_cle_en_trop() -> None:
+    """classification avec une cle absente de dette -> ValueError."""
+    base = _base(
+        dette={"src/a.py": 1},
+        classification={"src/a.py": {"ARG001": 1}, "src/b.py": {"ARG001": 1}},
+    )
+
+    with pytest.raises(ValueError, match="en trop pour"):
+        ruff_ratchet._valider_base(base, "base locale")
+
+
+def test_valider_base_classification_cle_manquante() -> None:
+    """classification sans une cle presente dans dette -> ValueError."""
+    base = _base(
+        dette={"src/a.py": 1, "src/b.py": 2},
+        classification={"src/a.py": {"ARG001": 1}},
+    )
+
+    with pytest.raises(ValueError, match="manquantes pour"):
+        ruff_ratchet._valider_base(base, "base locale")
+
+
+def test_valider_base_classification_somme_incoherente() -> None:
+    """Somme des comptes d'un fichier differente de dette[fichier] -> ValueError."""
+    base = _base(dette={"src/a.py": 2}, classification={"src/a.py": {"ARG001": 1}})
+
+    with pytest.raises(ValueError, match="somme des codes"):
+        ruff_ratchet._valider_base(base, "base locale")
+
+
+def test_valider_base_classification_regle_fantome() -> None:
+    """Un code absent de regles_activees dans classification -> ValueError."""
+    base = _base(dette={"src/a.py": 1}, classification={"src/a.py": {"S101": 1}})
+
+    with pytest.raises(ValueError, match="regle fantome"):
+        ruff_ratchet._valider_base(base, "base locale")
+
+
+def test_valider_base_valide_retourne_base_inchangee() -> None:
+    """Une base bien formee (pleine ou vide) est retournee sans erreur."""
+    base = _base(
+        dette={"src/a.py": 2},
+        classification={"src/a.py": {"ARG001": 1, "B904": 1}},
+        total_violations=2,
+    )
+
+    assert ruff_ratchet._valider_base(base, "base locale") == base
+    assert ruff_ratchet._valider_base(_base(), "base locale") == _base()
+
+
+# ---------------------------------------------------------------------------
+# anomalies — logique pure, une regle par test
+# ---------------------------------------------------------------------------
+
+def test_anomalies_vert_total_quand_mesure_egale_base() -> None:
+    """Mesure exactement egale a la base locale, sans reference -> aucune anomalie."""
+    base = _base(
+        dette={"src/a.py": 1},
+        classification={"src/a.py": {"ARG001": 1}},
+        total_violations=1,
+    )
+
+    assert ruff_ratchet.anomalies(
+        mesure_dette={"src/a.py": 1},
+        mesure_classification={"src/a.py": {"ARG001": 1}},
+        fichiers_reels={"src/a.py"},
+        base_locale=base,
+        base_reference=None,
+    ) == []
+
+
+def test_anomalies_regle1_fichier_reel_en_violation_absent_de_la_base() -> None:
+    """Un fichier reel en violation jamais baseline est signale."""
+    resultat = ruff_ratchet.anomalies(
+        mesure_dette={"src/nouveau.py": 2},
+        mesure_classification={"src/nouveau.py": {"ARG001": 2}},
+        fichiers_reels={"src/nouveau.py"},
+        base_locale=_base(),
+        base_reference=None,
+    )
+
+    assert any(
+        "src/nouveau.py" in m and "absent de la base" in m for m in resultat
+    )
+
+
+def test_anomalies_regle2_dette_fichier_depassee() -> None:
+    """Un fichier baseline dont le compte mesure depasse le plafond -> regression."""
+    base = _base(
+        dette={"src/a.py": 1},
+        classification={"src/a.py": {"ARG001": 1}},
+        total_violations=10,
+    )
+
+    resultat = ruff_ratchet.anomalies(
+        mesure_dette={"src/a.py": 3},
+        mesure_classification={"src/a.py": {"ARG001": 3}},
+        fichiers_reels={"src/a.py"},
+        base_locale=base,
+        base_reference=None,
+    )
+
+    assert any(
+        "src/a.py" in m and "depasse sa dette baselinee" in m and "(3 > 1)" in m
+        for m in resultat
+    )
+
+
+def test_anomalies_regle3_fichier_devenu_propre_doit_sortir_de_la_base() -> None:
+    """Un fichier baseline dont le compte mesure tombe a 0 doit etre retire de la base."""
+    base = _base(
+        dette={"src/a.py": 2},
+        classification={"src/a.py": {"ARG001": 2}},
+        total_violations=2,
+    )
+
+    resultat = ruff_ratchet.anomalies(
+        mesure_dette={},
+        mesure_classification={},
+        fichiers_reels={"src/a.py"},
+        base_locale=base,
+        base_reference=None,
+    )
+
+    assert any(
+        "src/a.py" in m and "desormais propre" in m and "retirer" in m
+        for m in resultat
+    )
+
+
+def test_anomalies_regle3_amelioration_partielle_sans_faux_positif() -> None:
+    """Compte mesure > 0 mais inferieur au plafond : amelioration legitime, aucune anomalie."""
+    base = _base(
+        dette={"src/a.py": 3},
+        classification={"src/a.py": {"ARG001": 3}},
+        total_violations=3,
+    )
+
+    assert ruff_ratchet.anomalies(
+        mesure_dette={"src/a.py": 1},
+        mesure_classification={"src/a.py": {"ARG001": 1}},
+        fichiers_reels={"src/a.py"},
+        base_locale=base,
+        base_reference=None,
+    ) == []
+
+
+def test_anomalies_regle4_code_en_hausse_compense_par_baisse_d_un_autre_code() -> None:
+    """Total du fichier stable mais un code depasse son plafond propre -> regle 4 seule."""
+    base = _base(
+        dette={"src/a.py": 2},
+        classification={"src/a.py": {"ARG001": 1, "B904": 1}},
+        total_violations=2,
+    )
+
+    resultat = ruff_ratchet.anomalies(
+        mesure_dette={"src/a.py": 2},
+        mesure_classification={"src/a.py": {"ARG001": 2}},
+        fichiers_reels={"src/a.py"},
+        base_locale=base,
+        base_reference=None,
+    )
+
+    assert any(
+        "src/a.py" in m and "regle ARG001 en hausse" in m and "(2 > 1" in m
+        for m in resultat
+    )
+    assert not any("depasse sa dette baselinee" in m for m in resultat)
+
+
+def test_anomalies_regle5_borne_totale_depassee_sans_depassement_individuel() -> None:
+    """Aucun fichier ne depasse son plafond, mais le total mesure depasse la borne."""
+    base = _base(
+        dette={"src/a.py": 1, "src/b.py": 1},
+        classification={"src/a.py": {"ARG001": 1}, "src/b.py": {"ARG001": 1}},
+        total_violations=1,
+    )
+
+    resultat = ruff_ratchet.anomalies(
+        mesure_dette={"src/a.py": 1, "src/b.py": 1},
+        mesure_classification={"src/a.py": {"ARG001": 1}, "src/b.py": {"ARG001": 1}},
+        fichiers_reels={"src/a.py", "src/b.py"},
+        base_locale=base,
+        base_reference=None,
+    )
+
+    assert any(
+        "total des violations" in m and "est de 2" in m and "borne est fixee a 1" in m
+        for m in resultat
+    )
+    assert not any("depasse sa dette baselinee" in m for m in resultat)
+
+
+def test_anomalies_regle6_absence_de_reference_ne_produit_aucune_anomalie() -> None:
+    """Sans base de reference, aucun controle de non-croissance n'est applicable."""
+    base = _base(
+        dette={"src/a.py": 5},
+        classification={"src/a.py": {"ARG001": 5}},
+        total_violations=5,
+    )
+
+    assert ruff_ratchet.anomalies(
+        mesure_dette={"src/a.py": 5},
+        mesure_classification={"src/a.py": {"ARG001": 5}},
+        fichiers_reels={"src/a.py"},
+        base_locale=base,
+        base_reference=None,
+    ) == []
+
+
+def test_anomalies_regle6_dette_augmentee_depuis_reference_detectee_seule() -> None:
+    """Plafond de dette gonfle vs la reference : detecte UNIQUEMENT par la regle 6."""
+    reference = _base(
+        dette={"src/a.py": 1},
+        classification={"src/a.py": {"ARG001": 1}},
+        total_violations=2,
+    )
+    locale = _base(
+        dette={"src/a.py": 2},
+        classification={"src/a.py": {"ARG001": 2}},
+        total_violations=2,
+    )
+
+    resultat = ruff_ratchet.anomalies(
+        mesure_dette={"src/a.py": 2},
+        mesure_classification={"src/a.py": {"ARG001": 2}},
+        fichiers_reels={"src/a.py"},
+        base_locale=locale,
+        base_reference=reference,
+    )
+
+    assert resultat
+    assert any(
+        "dette baselinee pour src/a.py augmentee depuis la reference" in m
+        for m in resultat
+    )
+    assert all("reference" in m for m in resultat)
+
+
+def test_anomalies_regle6_classification_augmentee_depuis_reference() -> None:
+    """Un couple (fichier, code) gonfle vs la reference, total du fichier inchange."""
+    reference = _base(
+        dette={"src/a.py": 2},
+        classification={"src/a.py": {"ARG001": 1, "B904": 1}},
+        total_violations=2,
+    )
+    locale = _base(
+        dette={"src/a.py": 2},
+        classification={"src/a.py": {"ARG001": 2}},
+        total_violations=2,
+    )
+
+    resultat = ruff_ratchet.anomalies(
+        mesure_dette={"src/a.py": 2},
+        mesure_classification={"src/a.py": {"ARG001": 2}},
+        fichiers_reels={"src/a.py"},
+        base_locale=locale,
+        base_reference=reference,
+    )
+
+    assert resultat
+    assert any(
+        "classification baselinee pour src/a.py" in m
+        and "ARG001" in m
+        and "reference" in m
+        for m in resultat
+    )
+    assert all("reference" in m for m in resultat)
+
+
+def test_anomalies_regle6_borne_totale_augmentee_depuis_reference() -> None:
+    """borne.total_violations gonflee vs la reference -> extension non justifiee."""
+    reference = _base(
+        dette={"src/a.py": 1},
+        classification={"src/a.py": {"ARG001": 1}},
+        total_violations=1,
+    )
+    locale = _base(
+        dette={"src/a.py": 1},
+        classification={"src/a.py": {"ARG001": 1}},
+        total_violations=2,
+    )
+
+    resultat = ruff_ratchet.anomalies(
+        mesure_dette={"src/a.py": 1},
+        mesure_classification={"src/a.py": {"ARG001": 1}},
+        fichiers_reels={"src/a.py"},
+        base_locale=locale,
+        base_reference=reference,
+    )
+
+    assert resultat
+    assert any(
+        "borne totale augmentee" in m and "extension non justifiee" in m
+        for m in resultat
+    )
+    assert all("reference" in m for m in resultat)
+
+
+def test_anomalies_regle6_retrait_non_justifie_si_fichier_encore_en_violation() -> None:
+    """Fichier retire de la dette de reference alors qu'il a encore des violations."""
+    reference = _base(
+        dette={"src/a.py": 2},
+        classification={"src/a.py": {"ARG001": 2}},
+        total_violations=5,
+    )
+    locale = _base(total_violations=5)
+
+    resultat = ruff_ratchet.anomalies(
+        mesure_dette={"src/a.py": 1},
+        mesure_classification={"src/a.py": {"ARG001": 1}},
+        fichiers_reels={"src/a.py"},
+        base_locale=locale,
+        base_reference=reference,
+    )
+
+    assert any(
+        "retire de la dette de reference" in m and "retrait non justifie" in m
+        for m in resultat
+    )
+
+
+def test_anomalies_regle6_retrait_legitime_si_fichier_reellement_propre() -> None:
+    """Fichier retire de la dette de reference et reellement a 0 violation : legitime."""
+    reference = _base(
+        dette={"src/a.py": 2},
+        classification={"src/a.py": {"ARG001": 2}},
+        total_violations=5,
+    )
+    locale = _base(total_violations=5)
+
+    assert ruff_ratchet.anomalies(
+        mesure_dette={},
+        mesure_classification={},
+        fichiers_reels={"src/a.py"},
+        base_locale=locale,
+        base_reference=reference,
+    ) == []
+
+
+def test_anomalies_regle6_decroissance_legitime_de_la_base() -> None:
+    """Un plafond de dette plus bas que la reference (dette reduite) -> aucune anomalie."""
+    reference = _base(
+        dette={"src/a.py": 3},
+        classification={"src/a.py": {"ARG001": 3}},
+        total_violations=3,
+    )
+    locale = _base(
+        dette={"src/a.py": 1},
+        classification={"src/a.py": {"ARG001": 1}},
+        total_violations=1,
+    )
+
+    assert ruff_ratchet.anomalies(
+        mesure_dette={"src/a.py": 1},
+        mesure_classification={"src/a.py": {"ARG001": 1}},
+        fichiers_reels={"src/a.py"},
+        base_locale=locale,
+        base_reference=reference,
+    ) == []
+
+
+# ---------------------------------------------------------------------------
+# main() — bout en bout via mock de ruff_ratchet.mesurer (jamais subprocess ici)
+# ---------------------------------------------------------------------------
+
+def test_main_retourne_0_quand_la_mesure_respecte_la_base(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Cliquet vert : mesure exactement egale a la base -> code de retour 0."""
+    _ecrire_classification(tmp_path)
+    _ecrire_base(
+        tmp_path,
+        _base(
+            dette={"src/pkg/mod.py": 1},
+            classification={"src/pkg/mod.py": {"ARG001": 1}},
+            total_violations=1,
+        ),
+    )
+    (tmp_path / "src" / "pkg").mkdir(parents=True)
+    (tmp_path / "src" / "pkg" / "mod.py").write_text(
+        "def f(x, y):\n    return x\n", encoding="utf-8"
+    )
+
+    def fausse_mesure(racine: Path, regles: list[str]) -> list[dict[str, object]]:
+        return [{"filename": "src/pkg/mod.py", "code": "ARG001"}]
+
+    monkeypatch.setattr(ruff_ratchet, "mesurer", fausse_mesure)
+    monkeypatch.setattr(
+        ruff_ratchet.gate_git_ref,
+        "charger_base_reference_git",
+        _reference_git_absente,
+    )
+
+    assert ruff_ratchet.main(["--racine", str(tmp_path)]) == 0
+
+
+def test_main_retourne_1_quand_la_mesure_depasse_la_base(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Cliquet rouge : mesure au-dela du plafond baseline -> code de retour 1."""
+    _ecrire_classification(tmp_path)
+    _ecrire_base(
+        tmp_path,
+        _base(
+            dette={"src/pkg/mod.py": 1},
+            classification={"src/pkg/mod.py": {"ARG001": 1}},
+            total_violations=1,
+        ),
+    )
+    (tmp_path / "src" / "pkg").mkdir(parents=True)
+    (tmp_path / "src" / "pkg" / "mod.py").write_text(
+        "def f(x, y):\n    return x\n", encoding="utf-8"
+    )
+
+    def fausse_mesure(racine: Path, regles: list[str]) -> list[dict[str, object]]:
+        return [
+            {"filename": "src/pkg/mod.py", "code": "ARG001"},
+            {"filename": "src/pkg/mod.py", "code": "ARG001"},
+        ]
+
+    monkeypatch.setattr(ruff_ratchet, "mesurer", fausse_mesure)
+    monkeypatch.setattr(
+        ruff_ratchet.gate_git_ref,
+        "charger_base_reference_git",
+        _reference_git_absente,
+    )
+
+    assert ruff_ratchet.main(["--racine", str(tmp_path)]) == 1
+
+
+def test_main_retourne_1_si_classification_absente(tmp_path: Path) -> None:
+    """governance/ruff-classification.json absent -> code 1, sans traceback."""
+    _ecrire_base(tmp_path, _base())
+
+    assert ruff_ratchet.main(["--racine", str(tmp_path)]) == 1
+
+
+def test_main_retourne_1_si_baseline_absente(tmp_path: Path) -> None:
+    """governance/ruff-baseline.json absent -> code 1, sans traceback."""
+    _ecrire_classification(tmp_path)
+
+    assert ruff_ratchet.main(["--racine", str(tmp_path)]) == 1
+
+
+def test_main_reference_git_absente_est_non_bloquante(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    """Premiere introduction : reference non chargeable -> avertissement, cliquet local vert."""
+    _ecrire_classification(tmp_path)
+    _ecrire_base(
+        tmp_path,
+        _base(
+            dette={"src/pkg/mod.py": 1},
+            classification={"src/pkg/mod.py": {"ARG001": 1}},
+            total_violations=1,
+        ),
+    )
+    (tmp_path / "src" / "pkg").mkdir(parents=True)
+    (tmp_path / "src" / "pkg" / "mod.py").write_text(
+        "def f(x, y):\n    return x\n", encoding="utf-8"
+    )
+
+    def fausse_mesure(racine: Path, regles: list[str]) -> list[dict[str, object]]:
+        return [{"filename": "src/pkg/mod.py", "code": "ARG001"}]
+
+    monkeypatch.setattr(ruff_ratchet, "mesurer", fausse_mesure)
+    monkeypatch.setattr(
+        ruff_ratchet.gate_git_ref,
+        "charger_base_reference_git",
+        _reference_git_absente,
+    )
+
+    code = ruff_ratchet.main(["--racine", str(tmp_path)])
+
+    assert code == 0
+    assert "Avertissement" in capsys.readouterr().err

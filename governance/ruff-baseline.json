@@ -1,0 +1,273 @@
+{
+  "_schema": "ruff-baseline-v1",
+  "_description": "Cliquet Ruff bloquant (RC1-020 #450, increment 2) sur les 13 regles categorisees defaut_candidat par governance/ruff-classification.json (increment 1). Genere par scripts/ruff_ratchet.py (mesure reelle, jamais a la main) — voir scripts/ruff_ratchet.py pour la semantique complete du cliquet.",
+  "version": 1,
+  "regles_activees": [
+    "A002",
+    "ARG001",
+    "ARG005",
+    "B007",
+    "B904",
+    "B905",
+    "S105",
+    "S107",
+    "S108",
+    "S110",
+    "S310",
+    "S603",
+    "S607"
+  ],
+  "borne": {
+    "total_violations": 150
+  },
+  "dette": {
+    "scripts/branch_coverage_report.py": 1,
+    "scripts/coordination/scope_guard.py": 3,
+    "scripts/coordination/test_scope_guard.py": 9,
+    "scripts/coordination/test_validate_coordination.py": 1,
+    "scripts/gate_git_ref.py": 4,
+    "scripts/governance/capabilities.py": 2,
+    "scripts/governance/classify_paths.py": 2,
+    "scripts/governance/validate_coderabbit_config.py": 2,
+    "scripts/mypy_gate.py": 1,
+    "scripts/no_stub_scan.py": 2,
+    "scripts/plugin_gate.py": 2,
+    "scripts/proof/prove_gpu_amd_e2e.py": 9,
+    "scripts/proof/prove_gpu_intel_e2e.py": 8,
+    "scripts/proof/prove_gpu_nvidia_e2e.py": 9,
+    "scripts/proof/prove_openbao_prod.py": 5,
+    "scripts/proof/prove_ubuntu_vierge_inner.py": 3,
+    "scripts/rall.py": 1,
+    "scripts/rall_verify_urls.py": 2,
+    "scripts/registre.py": 9,
+    "scripts/reviews_gate.py": 1,
+    "scripts/revue.py": 1,
+    "scripts/ruff_ratchet.py": 1,
+    "scripts/ruff_report.py": 1,
+    "scripts/sentinelle_sweep.py": 2,
+    "scripts/tally.py": 1,
+    "src/forgeai/audit/immudb.py": 1,
+    "src/forgeai/cli.py": 6,
+    "src/forgeai/core/proc.py": 5,
+    "src/forgeai/core/redaction.py": 1,
+    "src/forgeai/core/registre.py": 1,
+    "src/forgeai/core/runner.py": 1,
+    "src/forgeai/deploy/compose.py": 6,
+    "src/forgeai/deploy/k3s.py": 2,
+    "src/forgeai/deploy/openbao_flow.py": 2,
+    "src/forgeai/hardware/detect.py": 2,
+    "src/forgeai/loop.py": 1,
+    "src/forgeai/models/budget.py": 1,
+    "src/forgeai/models/gateway.py": 2,
+    "src/forgeai/models/local.py": 3,
+    "src/forgeai/models/probe.py": 2,
+    "src/forgeai/models/vault.py": 3,
+    "src/forgeai/network/discover.py": 1,
+    "src/forgeai/network/node_add.py": 2,
+    "src/forgeai/network/remote_probe.py": 6,
+    "src/forgeai/observability/langfuse.py": 1,
+    "src/forgeai/rag/client.py": 5,
+    "src/forgeai/rag/hardened.py": 2,
+    "src/forgeai/renderers/k3s.py": 2,
+    "src/forgeai/secrets/openbao_init.py": 6,
+    "src/forgeai/secrets/vault.py": 1,
+    "src/forgeai/web/server.py": 3
+  },
+  "classification": {
+    "scripts/branch_coverage_report.py": {
+      "S603": 1
+    },
+    "scripts/coordination/scope_guard.py": {
+      "S603": 1,
+      "S607": 2
+    },
+    "scripts/coordination/test_scope_guard.py": {
+      "ARG001": 3,
+      "ARG005": 6
+    },
+    "scripts/coordination/test_validate_coordination.py": {
+      "S603": 1
+    },
+    "scripts/gate_git_ref.py": {
+      "S603": 2,
+      "S607": 2
+    },
+    "scripts/governance/capabilities.py": {
+      "S603": 1,
+      "S607": 1
+    },
+    "scripts/governance/classify_paths.py": {
+      "S603": 1,
+      "S607": 1
+    },
+    "scripts/governance/validate_coderabbit_config.py": {
+      "S603": 1,
+      "S607": 1
+    },
+    "scripts/mypy_gate.py": {
+      "S603": 1
+    },
+    "scripts/no_stub_scan.py": {
+      "S603": 1,
+      "S607": 1
+    },
+    "scripts/plugin_gate.py": {
+      "S310": 2
+    },
+    "scripts/proof/prove_gpu_amd_e2e.py": {
+      "S108": 2,
+      "S310": 4,
+      "S603": 2,
+      "S607": 1
+    },
+    "scripts/proof/prove_gpu_intel_e2e.py": {
+      "S108": 1,
+      "S310": 4,
+      "S603": 2,
+      "S607": 1
+    },
+    "scripts/proof/prove_gpu_nvidia_e2e.py": {
+      "S108": 2,
+      "S310": 4,
+      "S603": 2,
+      "S607": 1
+    },
+    "scripts/proof/prove_openbao_prod.py": {
+      "S310": 4,
+      "S603": 1
+    },
+    "scripts/proof/prove_ubuntu_vierge_inner.py": {
+      "S310": 1,
+      "S603": 1,
+      "S607": 1
+    },
+    "scripts/rall.py": {
+      "B007": 1
+    },
+    "scripts/rall_verify_urls.py": {
+      "S603": 1,
+      "S607": 1
+    },
+    "scripts/registre.py": {
+      "B905": 1,
+      "S603": 4,
+      "S607": 4
+    },
+    "scripts/reviews_gate.py": {
+      "S603": 1
+    },
+    "scripts/revue.py": {
+      "S603": 1
+    },
+    "scripts/ruff_ratchet.py": {
+      "S603": 1
+    },
+    "scripts/ruff_report.py": {
+      "S603": 1
+    },
+    "scripts/sentinelle_sweep.py": {
+      "S603": 1,
+      "S607": 1
+    },
+    "scripts/tally.py": {
+      "B904": 1
+    },
+    "src/forgeai/audit/immudb.py": {
+      "S310": 1
+    },
+    "src/forgeai/cli.py": {
+      "ARG001": 3,
+      "ARG005": 1,
+      "B904": 1,
+      "S105": 1
+    },
+    "src/forgeai/core/proc.py": {
+      "ARG001": 2,
+      "S110": 1,
+      "S603": 1,
+      "S607": 1
+    },
+    "src/forgeai/core/redaction.py": {
+      "ARG001": 1
+    },
+    "src/forgeai/core/registre.py": {
+      "B904": 1
+    },
+    "src/forgeai/core/runner.py": {
+      "S603": 1
+    },
+    "src/forgeai/deploy/compose.py": {
+      "S310": 2,
+      "S603": 2,
+      "S607": 2
+    },
+    "src/forgeai/deploy/k3s.py": {
+      "S603": 1,
+      "S607": 1
+    },
+    "src/forgeai/deploy/openbao_flow.py": {
+      "A002": 1,
+      "S603": 1
+    },
+    "src/forgeai/hardware/detect.py": {
+      "S110": 2
+    },
+    "src/forgeai/loop.py": {
+      "ARG001": 1
+    },
+    "src/forgeai/models/budget.py": {
+      "B904": 1
+    },
+    "src/forgeai/models/gateway.py": {
+      "B904": 2
+    },
+    "src/forgeai/models/local.py": {
+      "ARG005": 2,
+      "S310": 1
+    },
+    "src/forgeai/models/probe.py": {
+      "S310": 2
+    },
+    "src/forgeai/models/vault.py": {
+      "B904": 1,
+      "B905": 2
+    },
+    "src/forgeai/network/discover.py": {
+      "B905": 1
+    },
+    "src/forgeai/network/node_add.py": {
+      "S603": 2
+    },
+    "src/forgeai/network/remote_probe.py": {
+      "ARG005": 1,
+      "S603": 3,
+      "S607": 2
+    },
+    "src/forgeai/observability/langfuse.py": {
+      "S310": 1
+    },
+    "src/forgeai/rag/client.py": {
+      "B905": 1,
+      "S310": 4
+    },
+    "src/forgeai/rag/hardened.py": {
+      "S310": 2
+    },
+    "src/forgeai/renderers/k3s.py": {
+      "S105": 1,
+      "S108": 1
+    },
+    "src/forgeai/secrets/openbao_init.py": {
+      "S107": 1,
+      "S110": 3,
+      "S310": 2
+    },
+    "src/forgeai/secrets/vault.py": {
+      "S310": 1
+    },
+    "src/forgeai/web/server.py": {
+      "S110": 2,
+      "S603": 1
+    }
+  }
+}
