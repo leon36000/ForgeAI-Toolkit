@@ -6646,8 +6646,8 @@
         }
       ],
       "rule_id": "evidence-registres-root",
-      "sha256": "e50132f1792f477a73ac83d8696dad606fd0e05318e2bb896012ba903a750c70",
-      "size": 387308,
+      "sha256": "4f58936f5fac37408af52e329a069aad8340b97c656e037d7200a9b2589a4d47",
+      "size": 390047,
       "target_path": null,
       "type": "text"
     },
@@ -8607,8 +8607,8 @@
         }
       ],
       "rule_id": "evidence-reviews-root",
-      "sha256": "49d6ebdd31a7dc11a4fa4de83b270715b5a15c4b6122f8e68ce99ec22e93d549",
-      "size": 2773,
+      "sha256": "82a21d5449f8fe76a5a9cb7f44d0f2cbadebc7658078e38362c5b4c7b165ed91",
+      "size": 2787,
       "target_path": null,
       "type": "text"
     },
@@ -21956,6 +21956,58 @@
       "generated": false,
       "load_bearing": true,
       "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-460-PR520/GPT-5.6-Terra-Pro.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "baa58a874404b85f360d1bc71a2479e6428b4db11d8c5c07e17375051a0f69f0",
+      "size": 333,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-460-PR520/MiMo-V2.5-Pro.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "c547dc1b4ba29b6812a0d527a7c6c488303e0dca38c39d92442a15ba233dea23",
+      "size": 328,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-460-PR520/Qwen3.7-Max.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "f3a801d1c8c63cff7f3a60cf44d40189b6a0c655f872cd2598266dac40a3f082",
+      "size": 324,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-460-PR520/RECU.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": null,
+      "size": null,
+      "target_path": null,
+      "type": null
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
       "path": "evidence/reviews/RC1-482-PR-v1/DeepSeek-V4-Pro.verdict.json",
       "referenced_by": [],
       "rule_id": "evidence-reviews-root",
@@ -26781,8 +26833,8 @@
         }
       ],
       "rule_id": "governance-core",
-      "sha256": "111414bd41fc59abbccbffcc0ccc1fc95545e6bb02102248035e6c167edc6201",
-      "size": 16875,
+      "sha256": "998b0364d574090ba1fb2c508b10c0b0226518467078f8fdbe807fc159e19f8c",
+      "size": 17044,
       "target_path": null,
       "type": "text"
     },
@@ -27982,8 +28034,8 @@
         }
       ],
       "rule_id": "governance-core",
-      "sha256": "60ece66413c648b49eddbef7075960786013a6f1678a3ffa8697667fadc7f3a8",
-      "size": 71320,
+      "sha256": "2ead64c84282351c796990d70d40e209789261761acf062f527b60580e73a1e2",
+      "size": 73735,
       "target_path": null,
       "type": "text"
     },
@@ -42297,8 +42349,8 @@
         }
       ],
       "rule_id": "product-source",
-      "sha256": "4a544e90fd2d4f811a06bf5f7735eb9347621e8ceed1ec9e8bb64b1418cdf610",
-      "size": 78262,
+      "sha256": "561ab80bbfb4f74b15a4b0e3e9f14c3181d5ed8e3ef2ca527dd8f64de5ed67ae",
+      "size": 79054,
       "target_path": null,
       "type": "text"
     },
@@ -50333,8 +50385,8 @@
         }
       ],
       "rule_id": "test-suite",
-      "sha256": "b29e5af1612c2d95838b8f91466a017a9ddfd892376702856fff605fed0155cb",
-      "size": 7409,
+      "sha256": "f844fbae486b97064d59501ad0235b1260488d400e24202cbdfbf12a3706dd0d",
+      "size": 8287,
       "target_path": null,
       "type": "text"
     },
@@ -94215,6 +94267,11 @@
         "referrer": "evidence/reviews/RC1-459-PR517/RECU.json"
       },
       {
+        "candidate": "recu-revue/1",
+        "line": 2,
+        "referrer": "evidence/reviews/RC1-460-PR520/RECU.json"
+      },
+      {
         "candidate": "validate_authority.py",
         "line": 13,
         "referrer": "evidence/reviews/RC1-487-v1/MiMo-Pro-V2.verdict.json"
@@ -97677,6 +97734,16 @@
       {
         "candidate": "BrokenPipe/ConnectionReset",
         "line": 485,
+        "referrer": "governance/error-handling-contracts.json"
+      },
+      {
+        "candidate": "origin/main",
+        "line": 507,
+        "referrer": "governance/error-handling-contracts.json"
+      },
+      {
+        "candidate": "BrokenPipe/ConnectionReset",
+        "line": 507,
         "referrer": "governance/error-handling-contracts.json"
       },
       {
@@ -118086,132 +118153,132 @@
       },
       {
         "candidate": "text/plain",
-        "line": 914,
+        "line": 902,
         "referrer": "src/forgeai/web/server.py"
       },
       {
         "candidate": "text/html",
-        "line": 916,
+        "line": 904,
         "referrer": "src/forgeai/web/server.py"
       },
       {
         "candidate": "application/json",
-        "line": 922,
+        "line": 909,
         "referrer": "src/forgeai/web/server.py"
       },
       {
         "candidate": "application/json",
-        "line": 931,
+        "line": 917,
         "referrer": "src/forgeai/web/server.py"
       },
       {
         "candidate": "anti-CSRF/rebinding",
-        "line": 939,
+        "line": 924,
         "referrer": "src/forgeai/web/server.py"
       },
       {
         "candidate": "locales/",
-        "line": 956,
+        "line": 940,
         "referrer": "src/forgeai/web/server.py"
       },
       {
         "candidate": "modeles-locaux.json",
-        "line": 970,
+        "line": 953,
         "referrer": "src/forgeai/web/server.py"
       },
       {
         "candidate": "moteurs-inference.json",
-        "line": 976,
+        "line": 958,
         "referrer": "src/forgeai/web/server.py"
       },
       {
         "candidate": "moteurs-inference.json",
-        "line": 985,
+        "line": 966,
         "referrer": "src/forgeai/web/server.py"
       },
       {
         "candidate": "text/event-stream",
-        "line": 1098,
+        "line": 1070,
         "referrer": "src/forgeai/web/server.py"
       },
       {
         "candidate": "son/ses",
-        "line": 1160,
+        "line": 1137,
         "referrer": "src/forgeai/web/server.py"
       },
       {
         "candidate": "network/nodes.py",
-        "line": 1176,
+        "line": 1152,
         "referrer": "src/forgeai/web/server.py"
       },
       {
         "candidate": "labels/capacit",
-        "line": 1177,
+        "line": 1153,
         "referrer": "src/forgeai/web/server.py"
       },
       {
         "candidate": "GPU/ready",
-        "line": 1177,
+        "line": 1153,
         "referrer": "src/forgeai/web/server.py"
       },
       {
         "candidate": "tat/arch",
-        "line": 1177,
+        "line": 1153,
         "referrer": "src/forgeai/web/server.py"
       },
       {
         "candidate": "forgeai/receptacle",
-        "line": 1193,
+        "line": 1169,
         "referrer": "src/forgeai/web/server.py"
       },
       {
         "candidate": "application/json",
-        "line": 1228,
+        "line": 1294,
         "referrer": "src/forgeai/web/server.py"
       },
       {
         "candidate": "application/json",
-        "line": 1239,
+        "line": 1305,
         "referrer": "src/forgeai/web/server.py"
       },
       {
         "candidate": "TLS/tunnel",
-        "line": 1257,
+        "line": 1323,
         "referrer": "src/forgeai/web/server.py"
       },
       {
         "candidate": "loopback/tunnel",
-        "line": 1262,
+        "line": 1328,
         "referrer": "src/forgeai/web/server.py"
       },
       {
         "candidate": "origine/h",
-        "line": 1282,
+        "line": 1348,
         "referrer": "src/forgeai/web/server.py"
       },
       {
         "candidate": "jeton/CSRF/",
-        "line": 1299,
+        "line": 1365,
         "referrer": "src/forgeai/web/server.py"
       },
       {
         "candidate": "application/json",
-        "line": 1303,
+        "line": 1369,
         "referrer": "src/forgeai/web/server.py"
       },
       {
         "candidate": "stack_id.json",
-        "line": 1464,
+        "line": 1530,
         "referrer": "src/forgeai/web/server.py"
       },
       {
         "candidate": "selection-demande.json",
-        "line": 1533,
+        "line": 1599,
         "referrer": "src/forgeai/web/server.py"
       },
       {
         "candidate": "core/proc.py",
-        "line": 1551,
+        "line": 1617,
         "referrer": "src/forgeai/web/server.py"
       },
       {
@@ -131976,22 +132043,22 @@
       },
       {
         "candidate": "inexistant.json",
-        "line": 100,
+        "line": 111,
         "referrer": "tests/test_ops031b_logs.py"
       },
       {
         "candidate": "casse.json",
-        "line": 102,
+        "line": 113,
         "referrer": "tests/test_ops031b_logs.py"
       },
       {
         "candidate": "sans.json",
-        "line": 106,
+        "line": 117,
         "referrer": "tests/test_ops031b_logs.py"
       },
       {
         "candidate": "rien.json",
-        "line": 132,
+        "line": 143,
         "referrer": "tests/test_ops031b_logs.py"
       },
       {
@@ -139575,6 +139642,13 @@
         "line": 204,
         "referrer": "evidence/reviews/BINDING.txt",
         "resolved": "evidence/reviews/RC1-022-v17",
+        "severity": "hard"
+      },
+      {
+        "candidate": "RC1-460-PR520",
+        "line": 205,
+        "referrer": "evidence/reviews/BINDING.txt",
+        "resolved": "evidence/reviews/RC1-460-PR520",
         "severity": "hard"
       },
       {
@@ -167207,7 +167281,7 @@
     "by_class": {
       "ARCHIVE": 44,
       "DOCS": 18,
-      "EVIDENCE": 1573,
+      "EVIDENCE": 1577,
       "GENERATED": 5,
       "GOVERNANCE": 195,
       "PRODUCT": 113,
@@ -167226,7 +167300,7 @@
       "evidence-audit-output-root": 18,
       "evidence-dedup-root": 2,
       "evidence-registres-root": 35,
-      "evidence-reviews-root": 1518,
+      "evidence-reviews-root": 1522,
       "generated-authority-map": 1,
       "generated-path-classification-json": 1,
       "generated-path-classification-markdown": 1,
@@ -167262,11 +167336,11 @@
       "working-sandbox-readme": 1
     },
     "case_collisions_total": 0,
-    "dangling_references_total": 16413,
+    "dangling_references_total": 16416,
     "generated_total": 9,
-    "load_bearing_total": 2027,
+    "load_bearing_total": 2031,
     "portability_violations_total": 0,
-    "tracked_total": 2169,
+    "tracked_total": 2173,
     "unclassified_total": 0,
     "unicode_anomalies_total": 0
   },

@@ -470,11 +470,11 @@
       "accepted_risk": "La page de statut affiche une liste de nœuds vide si le cluster est temporairement indisponible, sans distinction visuelle avec un cluster réellement sans nœuds."
     },
     {
-      "id": "site:src/forgeai/web/server.py:1120",
+      "id": "site:src/forgeai/web/server.py:1097",
       "site": {
         "path": "src/forgeai/web/server.py",
-        "line": 1120,
-        "function": "forgeai.web.server.ForgeAIHandler.do_GET"
+        "line": 1097,
+        "function": "forgeai.web.server.ForgeAIHandler._deploy_events_replay"
       },
       "exception_types": [
         "BrokenPipeError",
@@ -485,18 +485,18 @@
       "behavior_contract": "Flux SSE (Server-Sent Events) de relecture des lignes de déploiement mémorisées ; si le client a fermé la connexion pendant l'écriture (onglet fermé, navigation ailleurs), l'écriture échoue avec BrokenPipe/ConnectionReset — motif universellement accepté pour un serveur HTTP en streaming.",
       "logging": "aucune — se produit à CHAQUE fermeture normale d'onglet côté client ; journaliser serait du bruit permanent sans valeur diagnostique",
       "owner": "équipe web ForgeAI",
-      "justification": "Motif standard et déjà correctement scopé (2 types précis, pas `Exception` nue) pour tout serveur HTTP servant du streaming SSE : un client qui ferme son onglet ou navigue ailleurs pendant qu'un flux est actif produit systématiquement ces deux exceptions côté serveur — c'est un événement NORMAL et fréquent, pas une dégradation.",
+      "justification": "Motif standard et déjà correctement scopé (2 types précis, pas `Exception` nue) pour tout serveur HTTP servant du streaming SSE : un client qui ferme son onglet ou navigue ailleurs pendant qu'un flux est actif produit systématiquement ces deux exceptions côté serveur — c'est un événement NORMAL et fréquent, pas une dégradation. (site remappé 1120->1097 par RC1-460 : découpage de do_GET, ce bloc devient le corps de la méthode dédiée _deploy_events_replay ; comportement byte-identique, code inchangé.)",
       "compensating_test": null,
       "compensating_test_reason": "Comportement déjà couvert par les tests existants du endpoint SSE de déploiement ; ajouter un test dédié au client-disconnect n'apporterait pas de garantie supplémentaire sur un motif aussi standard.",
       "review_due": "2027-02-10",
       "accepted_risk": "Aucun — déconnexion client normale."
     },
     {
-      "id": "site:src/forgeai/web/server.py:1135",
+      "id": "site:src/forgeai/web/server.py:1112",
       "site": {
         "path": "src/forgeai/web/server.py",
-        "line": 1135,
-        "function": "forgeai.web.server.ForgeAIHandler.do_GET"
+        "line": 1112,
+        "function": "forgeai.web.server.ForgeAIHandler._deploy_events_stream"
       },
       "exception_types": [
         "BrokenPipeError",
@@ -504,20 +504,20 @@
       ],
       "risk_paths": [],
       "disposition": "JUSTIFIED",
-      "behavior_contract": "Même flux SSE que le site 1120, cette fois lors de l'écriture de l'événement final `end` signalant la fin du déploiement au client connecté en direct.",
-      "logging": "aucune — même raisonnement que le site 1120",
+      "behavior_contract": "Site remappé 1135->1112 par RC1-460 (découpage de do_GET) — à cette occasion, correction d'une description erronée héritée de l'inventaire #452 : le texte d'origine décrivait ce site comme « l'écriture de l'événement final end » du MÊME flux que le site 1097 (proc terminé, relecture mémorisée) ; l'AST réel (vérifié sur origin/main AVANT tout remap, indépendamment de RC1-460) montre que ce site est en fait dans la branche OPPOSÉE — flux SSE d'un déploiement ENCORE EN COURS (proc vivant), lors de l'écriture d'une ligne de sortie courante au client connecté en direct. Si ce client a fermé la connexion pendant l'écriture, BrokenPipe/ConnectionReset — motif universellement accepté pour un serveur HTTP en streaming.",
+      "logging": "aucune — se produit à CHAQUE fermeture normale d'onglet côté client pendant un déploiement actif ; journaliser serait du bruit permanent sans valeur diagnostique",
       "owner": "équipe web ForgeAI",
-      "justification": "Identique au site 1120 (même fonction, même flux SSE, même motif de déconnexion client normale sur l'événement de clôture plutôt que sur les lignes intermédiaires).",
+      "justification": "Motif standard de déconnexion client SSE (même famille que le site 1097, mais branche « stream en direct » plutôt que « relecture »): un client qui ferme son onglet pendant qu'un déploiement tourne encore produit systématiquement ces deux exceptions au prochain write — événement NORMAL et fréquent. Le `return` immédiat (plutôt qu'un `pass`) arrête simplement la diffusion pour CE thread de requête ; le déploiement lui-même, indépendant de la connexion HTTP, continue sans interruption.",
       "compensating_test": null,
-      "compensating_test_reason": "Même raisonnement que le site 1120.",
+      "compensating_test_reason": "Comportement déjà couvert par les tests existants du endpoint SSE de déploiement ; ajouter un test dédié au client-disconnect n'apporterait pas de garantie supplémentaire sur un motif aussi standard.",
       "review_due": "2027-02-10",
       "accepted_risk": "Aucun — déconnexion client normale."
     },
     {
-      "id": "site:src/forgeai/web/server.py:1583",
+      "id": "site:src/forgeai/web/server.py:1649",
       "site": {
         "path": "src/forgeai/web/server.py",
-        "line": 1583,
+        "line": 1649,
         "function": "forgeai.web.server._reader (closure locale de la route POST /api/deploy)"
       },
       "exception_types": [
@@ -528,20 +528,20 @@
         "rollback"
       ],
       "disposition": "FIXED",
-      "behavior_contract": "Thread de fond qui lit la sortie du process de déploiement en continu et met à jour l'état partagé ; si CE thread échoue de façon inattendue (pas le process de déploiement lui-même, la boucle de lecture/état autour), l'état est marqué terminé avec le code de sortie disponible (ou -1) et le nettoyage du process est tenté. Comportement inchangé pour toute `Exception` levée par `exc.__str__()` ; l'échec racine, jusqu'ici totalement invisible, est désormais journalisé. Cas pathologique hors de cette garantie (`__str__` qui lève un `BaseException` non-`Exception`) : `str_exc_sur(exc)` propagerait avant la mise à jour de exit_code/done — le site le plus sévère des 3, mais prouvé signal-safe (thread daemon, KeyboardInterrupt jamais délivré) et accepté comme risque résiduel étroit (stories/RC1-023-error-handling-contracts.md, « Risque résiduel accepté (rounds 27-37) »).",
-      "logging": "_DEPLOY_STATE[\"lines\"].append(f\"avertissement: le thread de lecture du déploiement a échoué : {str_exc_sur(exc)}\") — AJOUTÉ DANS le bloc `with _DEPLOY_STATE[\"lock\"]:` déjà ouvert plus bas pour la mise à jour de exit_code/done, PAS avant (le lock n'est pas encore tenu à ce point du except) et SANS ré-acquérir (piège deadlock évité : `threading.Lock()` non réentrant, cf. site 1604 même bloc) ; `str_exc_sur()` (pas `{exc}` nu, round 27) protège l'interpolation elle-même contre un `__str__` défaillant",
+      "behavior_contract": "Site remappé 1583->1649 par RC1-460 (découpage de do_GET, décale toutes les lignes en aval dans le même fichier ; ce bloc lui-même, dans do_POST, est inchangé). Thread de fond qui lit la sortie du process de déploiement en continu et met à jour l'état partagé ; si CE thread échoue de façon inattendue (pas le process de déploiement lui-même, la boucle de lecture/état autour), l'état est marqué terminé avec le code de sortie disponible (ou -1) et le nettoyage du process est tenté. Comportement inchangé pour toute `Exception` levée par `exc.__str__()` ; l'échec racine, jusqu'ici totalement invisible, est désormais journalisé. Cas pathologique hors de cette garantie (`__str__` qui lève un `BaseException` non-`Exception`) : `str_exc_sur(exc)` propagerait avant la mise à jour de exit_code/done — le site le plus sévère des 3, mais prouvé signal-safe (thread daemon, KeyboardInterrupt jamais délivré) et accepté comme risque résiduel étroit (stories/RC1-023-error-handling-contracts.md, « Risque résiduel accepté (rounds 27-37) »).",
+      "logging": "_DEPLOY_STATE[\"lines\"].append(f\"avertissement: le thread de lecture du déploiement a échoué : {str_exc_sur(exc)}\") — AJOUTÉ DANS le bloc `with _DEPLOY_STATE[\"lock\"]:` déjà ouvert plus bas pour la mise à jour de exit_code/done, PAS avant (le lock n'est pas encore tenu à ce point du except) et SANS ré-acquérir (piège deadlock évité : `threading.Lock()` non réentrant, cf. site 1670 même bloc) ; `str_exc_sur()` (pas `{exc}` nu, round 27) protège l'interpolation elle-même contre un `__str__` défaillant",
       "owner": "équipe web ForgeAI",
-      "justification": "Site adjacent découvert en traitant le site 1604 (même fonction `_reader`, même except englobant) : c'est en réalité le gap le plus important des deux, car l'except À CE niveau est celui qui absorbe la cause RACINE de l'échec du thread lecteur (le site 1604, lui, ne concerne que le nettoyage secondaire du process une fois qu'on est déjà dans ce bloc). Sans ce log, un déploiement qui échoue à cause d'un bug dans la boucle de lecture (pas le déploiement lui-même) affichait juste « terminé, code -1 » sans aucune piste. Ajouté au lot 1 pour cohérence : corriger le site 1604 sans corriger celui-ci aurait laissé le gap le plus significatif des deux non traité dans la même fonction.",
+      "justification": "Site adjacent découvert en traitant le site 1670 (même fonction `_reader`, même except englobant) : c'est en réalité le gap le plus important des deux, car l'except À CE niveau est celui qui absorbe la cause RACINE de l'échec du thread lecteur (le site 1670, lui, ne concerne que le nettoyage secondaire du process une fois qu'on est déjà dans ce bloc). Sans ce log, un déploiement qui échoue à cause d'un bug dans la boucle de lecture (pas le déploiement lui-même) affichait juste « terminé, code -1 » sans aucune piste. Ajouté au lot 1 pour cohérence : corriger le site 1670 sans corriger celui-ci aurait laissé le gap le plus significatif des deux non traité dans la même fonction.",
       "compensating_test": "tests/test_rel038c_process_groups.py::test_reader_thread_echec_ajoute_avertissement",
       "compensating_test_reason": null,
       "review_due": "2027-02-10",
       "accepted_risk": "Le comportement de récupération (exit_code=-1 si indisponible, done=True, tentative de kill) est inchangé pour toute Exception levée par exc.__str__() ; seule la visibilité de la cause racine change. Risque résiduel étroit distinct et déjà accepté (rounds 27-37) : un __str__ pathologique qui lève explicitement un BaseException ferait échouer str_exc_sur(exc) avant cette mise à jour d'état — voir stories/RC1-023-error-handling-contracts.md."
     },
     {
-      "id": "site:src/forgeai/web/server.py:1604",
+      "id": "site:src/forgeai/web/server.py:1670",
       "site": {
         "path": "src/forgeai/web/server.py",
-        "line": 1604,
+        "line": 1670,
         "function": "forgeai.web.server._reader (closure locale de la route POST /api/deploy)"
       },
       "exception_types": [
@@ -552,8 +552,8 @@
         "rollback"
       ],
       "disposition": "FIXED",
-      "behavior_contract": "Nettoyage best-effort à l'intérieur du handler d'erreur du thread lecteur : tente de tuer le process de déploiement encore vivant (`new_proc.kill(); new_proc.wait()`) pendant la récupération d'erreur. Si CE nettoyage secondaire échoue aussi : (1) journalisé (comme avant), ET (2) désormais un signal STRUCTURÉ `_DEPLOY_STATE[\"nettoyage_incertain\"] = True` est levé — exposé (uniquement quand True — round 5 : la clé est OMISE quand False pour ne changer aucun comportement observable sur le chemin nominal, objection CRITIQUE DeepSeek-V4-Pro reviews/RC1-023-PR-v5) par `_deploy_resume()` (source de `/api/status`), l'endpoint SSE `/api/deploy/events` (les deux payloads), et persisté/restauré (toujours présent, défaut False — état interne, jamais consommé par un client externe) (`_persist_deploy_state`/`_load_deploy_state`, repli `False` pour les fichiers pré-correctif). Un consommateur de l'API qui ne lit QUE les champs structurés (sans parser le texte libre de `lines`) peut désormais distinguer une fin de déploiement normale d'un nettoyage secondaire raté — le flux continue à marquer l'état `done=True, exit_code=-1` (comportement inchangé pour toute Exception levée par exc_kill.__str__()), mais n'annonce plus un état qui a l'air propre sans nuance. Cas pathologique hors de cette garantie : un `__str__` qui lève un `BaseException` non-`Exception` ferait échouer `str_exc_sur(exc_kill)` avant même la marque `nettoyage_incertain=True` — risque résiduel étroit, accepté et documenté au niveau story (stories/RC1-023-error-handling-contracts.md, « Risque résiduel accepté (rounds 27-37) »).",
-      "logging": "_DEPLOY_STATE[\"lines\"].append(f\"avertissement: échec du nettoyage best-effort du process de déploiement pendant la récupération : {str_exc_sur(exc_kill)}\") — ce site est DÉJÀ à l'intérieur du bloc `with _DEPLOY_STATE[\"lock\"]:` ouvert plus haut dans le même except (voir site 1583) : append DIRECT, SANS `with` (le lock est déjà tenu par le thread courant ; le ré-acquérir avec `threading.Lock()`, non réentrant, bloquerait indéfiniment ce même thread — piège identifié en spec, à couvrir explicitement par le test compensatoire) ; `str_exc_sur()` (pas `{exc_kill}` nu, round 27) protège l'interpolation elle-même contre un `__str__` défaillant",
+      "behavior_contract": "Site remappé 1604->1670 par RC1-460 (découpage de do_GET, décale toutes les lignes en aval dans le même fichier ; ce bloc lui-même, dans do_POST, est inchangé). Nettoyage best-effort à l'intérieur du handler d'erreur du thread lecteur : tente de tuer le process de déploiement encore vivant (`new_proc.kill(); new_proc.wait()`) pendant la récupération d'erreur. Si CE nettoyage secondaire échoue aussi : (1) journalisé (comme avant), ET (2) désormais un signal STRUCTURÉ `_DEPLOY_STATE[\"nettoyage_incertain\"] = True` est levé — exposé (uniquement quand True — round 5 : la clé est OMISE quand False pour ne changer aucun comportement observable sur le chemin nominal, objection CRITIQUE DeepSeek-V4-Pro reviews/RC1-023-PR-v5) par `_deploy_resume()` (source de `/api/status`), l'endpoint SSE `/api/deploy/events` (les deux payloads), et persisté/restauré (toujours présent, défaut False — état interne, jamais consommé par un client externe) (`_persist_deploy_state`/`_load_deploy_state`, repli `False` pour les fichiers pré-correctif). Un consommateur de l'API qui ne lit QUE les champs structurés (sans parser le texte libre de `lines`) peut désormais distinguer une fin de déploiement normale d'un nettoyage secondaire raté — le flux continue à marquer l'état `done=True, exit_code=-1` (comportement inchangé pour toute Exception levée par exc_kill.__str__()), mais n'annonce plus un état qui a l'air propre sans nuance. Cas pathologique hors de cette garantie : un `__str__` qui lève un `BaseException` non-`Exception` ferait échouer `str_exc_sur(exc_kill)` avant même la marque `nettoyage_incertain=True` — risque résiduel étroit, accepté et documenté au niveau story (stories/RC1-023-error-handling-contracts.md, « Risque résiduel accepté (rounds 27-37) »).",
+      "logging": "_DEPLOY_STATE[\"lines\"].append(f\"avertissement: échec du nettoyage best-effort du process de déploiement pendant la récupération : {str_exc_sur(exc_kill)}\") — ce site est DÉJÀ à l'intérieur du bloc `with _DEPLOY_STATE[\"lock\"]:` ouvert plus haut dans le même except (voir site 1649) : append DIRECT, SANS `with` (le lock est déjà tenu par le thread courant ; le ré-acquérir avec `threading.Lock()`, non réentrant, bloquerait indéfiniment ce même thread — piège identifié en spec, à couvrir explicitement par le test compensatoire) ; `str_exc_sur()` (pas `{exc_kill}` nu, round 27) protège l'interpolation elle-même contre un `__str__` défaillant",
       "owner": "équipe web ForgeAI",
       "justification": "Chemin de rollback/nettoyage sur un échec DÉJÀ en cours de traitement (double échec) : un `kill()` qui échoue pour une raison autre que « déjà mort » (ex. permissions) sur un process de déploiement laisserait potentiellement un process orphelin sans qu'aucune trace n'existe nulle part — contrairement à core/proc.py où ce cas est déjà bien couvert par des types d'exception précis, ici c'est un `except Exception` nu sur une opération de nettoyage critique en contexte de déploiement. Round 2 avait tenté de remplacer new_proc.kill()/wait() par kill_tree(grace_seconds=5.0) pour renforcer ce nettoyage — REVERTÉ après objections convergentes de 2 reviewers (correction, contrats) : ce changement modifiait le comportement observable (SIGTERM+grâce 5s sur le groupe de processus au lieu de SIGKILL immédiat sur le process seul, verrou _DEPLOY_STATE tenu plus longtemps) — exactement ce que le critère \"aucun changement de comportement\" interdit. Round 3 (revue GPT-5.6-Terra-Pro, sécurité, MAJEURE 3e occurrence) a maintenu l'objection malgré la documentation seule (round 1 et 2) : « poursuite du système dans un état mensonger ». Round 4 : correctif structurel ADDITIF distinct du mécanisme de kill lui-même — un booléen `nettoyage_incertain` qui rend l'incertitude EXPLICITE dans l'état structuré au lieu d'un exit_code=-1 indistinguable d'une fin normale. Ne touche ni au kill/wait, ni au scope/durée du lock — respecte le critère \"aucun changement de comportement\" du mécanisme lui-même tout en corrigeant le problème de VÉRACITÉ de l'état rapporté que 3 rounds de revue ont identifié comme le vrai coeur de l'objection. Couverture complémentaire (même mécanisme, cas additionnels) : tests/test_rel038c_process_groups.py::test_reader_succes_ne_marque_pas_nettoyage_incertain, tests/test_rel038c_process_groups.py::test_nouveau_deploiement_reinitialise_nettoyage_incertain, tests/test_deploy_persist.py::test_deploy_state_persiste_et_recharge_nettoyage_incertain, tests/test_deploy_persist.py::test_load_deploy_state_sans_nettoyage_incertain_par_defaut_false. Round 5 (#452, objection DeepSeek-V4-Pro CRITIQUE, reviews/RC1-023-PR-v5) : la sérialisation round 4 exposait la clé nettoyage_incertain de façon INCONDITIONNELLE dans _deploy_resume()/SSE, y compris sur le chemin nominal (nettoyage_incertain=False) — un changement de comportement observable même sur un déploiement réussi (un consommateur à schéma JSON strict aurait pu échouer). Corrigé : la clé est désormais OMISE quand False, byte-identique à avant round 4 sur le succès ; seul le cas nettoyage_incertain=True (l'objet même du correctif round 4) fait apparaître la clé. L'état interne _DEPLOY_STATE et le fichier persisté gardent le champ toujours présent (jamais consommés par un client externe, donc hors du critère \"aucun changement observable\").",
       "compensating_test": "tests/test_rel038c_process_groups.py::test_reader_secondary_kill_echec_ajoute_avertissement",
@@ -562,10 +562,10 @@
       "accepted_risk": "Le mécanisme de nettoyage lui-même reste plafonné à `kill()`/`wait()` (un SIGKILL qui échoue — ex. process en D-state — reste un plafond OS qu'aucun code applicatif ne peut lever ; retry/escalade plus agressive serait un changement de comportement, hors scope de #452 lot 1). Ce qui a changé : l'état RAPPORTÉ n'est plus mensonger — un consommateur structuré de l'API voit maintenant explicitement `nettoyage_incertain=True` au lieu d'un `exit_code=-1` d'apparence normale. Risque résiduel restreint et documenté : un process potentiellement orphelin peut encore exister après ce point (limite OS), mais ce fait est désormais VISIBLE et interrogeable, pas silencieux. Amélioration du mécanisme de kill lui-même (retry, signal plus fort, supervision externe) : candidate explicite pour une story dédiée de lot 2+, pas traitée ici pour ne pas élargir le scope au-delà de la véracité de l'état rapporté."
     },
     {
-      "id": "site:src/forgeai/web/server.py:1740",
+      "id": "site:src/forgeai/web/server.py:1806",
       "site": {
         "path": "src/forgeai/web/server.py",
-        "line": 1740,
+        "line": 1806,
         "function": "forgeai.web.server.serve"
       },
       "exception_types": [
@@ -573,8 +573,8 @@
       ],
       "risk_paths": [],
       "disposition": "JUSTIFIED",
-      "behavior_contract": "Tentative d'ouverture automatique du navigateur par défaut (`webbrowser.open`) au démarrage du serveur ; si elle échoue (headless, pas de DISPLAY, pas de navigateur configuré), le serveur continue de démarrer normalement.",
-      "logging": "aucune — inutile : l'URL est déjà affichée inconditionnellement par `print(url)` juste AVANT cette tentative (ligne 1719), que l'ouverture du navigateur réussisse ou échoue. Aucune information n'est perdue.",
+      "behavior_contract": "Site remappé 1740->1806 par RC1-460 (découpage de do_GET en amont dans le même fichier décale toutes les lignes en aval ; ce bloc lui-même, dans serve(), est inchangé). Découvert au passage que ce remap n'était PAS mécaniquement détecté par le gate AVANT ce correctif : le décalage faisait coïncidentally atterrir l'ancien numéro de ligne sur un except Exception SANS RAPPORT dans do_POST (audit best-effort de l'ajout de route cloud) — même type d'exception, même fichier, donc AST-valide mais site.function et behavior_contract totalement faux (faux négatif silencieux, cf. mémoire de session sur la discipline de remap AST). Tentative d'ouverture automatique du navigateur par défaut (`webbrowser.open`) au démarrage du serveur ; si elle échoue (headless, pas de DISPLAY, pas de navigateur configuré), le serveur continue de démarrer normalement.",
+      "logging": "aucune — inutile : l'URL est déjà affichée inconditionnellement par `print(url)` juste AVANT cette tentative (ligne 1802), que l'ouverture du navigateur réussisse ou échoue. Aucune information n'est perdue.",
       "owner": "équipe web ForgeAI",
       "justification": "L'échec de `webbrowser.open` est un cas extrêmement courant et bénin (environnements headless, SSH, conteneurs) déjà largement accepté comme non-actionnable dans l'écosystème Python. Ce qui rendrait un log utile — l'URL — est DÉJÀ imprimée inconditionnellement juste avant, donc journaliser l'échec spécifique du navigateur n'ajouterait aucune information exploitable.",
       "compensating_test": null,

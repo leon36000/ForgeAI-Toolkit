@@ -896,6 +896,302 @@ class ForgeAIHandler(BaseHTTPRequestHandler):
 
         return data
 
+    def _get_index(self) -> None:
+        data = _asset_bytes("index.html")
+        if data is None:
+            self._send(500, b"index.html missing", "text/plain; charset=utf-8")
+        else:
+            self._send(200, data, "text/html; charset=utf-8")
+
+    def _get_detect(self) -> None:
+        try:
+            body = hardware_json().encode("utf-8")
+            self._send(200, body, "application/json; charset=utf-8")
+        except Exception as exc:  # noqa: BLE001
+            self._send_internal_error(exc)
+
+    def _get_health(self) -> None:
+        self._send(
+            200,
+            json.dumps({"status": "ok"}, ensure_ascii=False).encode("utf-8"),
+            "application/json; charset=utf-8",
+        )
+
+    def _get_status(self) -> None:
+        # OPS-031A : santé PROFONDE. `/api/health` reste la liveness statique et publique ;
+        # cette route-ci révèle l'état de l'infra ET coûte des sondes, elle est donc SENSIBLE —
+        # ce que la classification fail-closed de WEB-017 lui applique d'office (jeton hors
+        # loopback, anti-CSRF/rebinding), sans une ligne de garde ici. « Re-sondable » : elle lit
+        # à travers les caches TTL (OPT-001), donc re-sonde quand ils sont périmés, sans devenir
+        # un levier d'amplification (l'invalidation explicite reste POST /api/detect/refresh).
+        self._send_json(200, collect_status(
+            backends=_available_backends,
+            cluster=_cluster_status_cache,
+            deploiement=_deploy_resume,
+            materiel=lambda: json.loads(hardware_json()),
+        ))
+
+    def _get_i18n(self, path: str) -> None:
+        lang = path[len("/api/i18n/") :]
+        if lang not in {"fr", "en"}:
+            self._send_json(404, {"error": "locale not found"})
+            return
+        try:
+            locale_data = json.loads(_read_data_text(f"locales/{lang}.json"))
+        except (FileNotFoundError, ModuleNotFoundError, json.JSONDecodeError):
+            self._send_json(500, {"error": "locale unavailable"})
+            return
+        web = locale_data.get("web")
+        if not isinstance(web, dict):
+            self._send_json(500, {"error": "locale invalid"})
+            return
+        self._send_json(200, web)
+
+    def _get_models_local(self) -> None:
+        # Registre des modeles open-weight verifies HF — expose TEL QUEL :
+        # aucun filtrage par materiel local (directive permanente), l'UI informe seulement.
+        data = json.loads(_read_data_text("modeles-locaux.json"))
+        self._send_json(200, data)
+
+    def _get_engines(self) -> None:
+        try:
+            data = json.loads(_read_data_text("moteurs-inference.json"))
+        except (FileNotFoundError, ModuleNotFoundError, json.JSONDecodeError):
+            self._send_json(500, {"error": "engines registry unavailable"})
+            return
+        self._send_json(200, data)
+
+    def _get_engines_compatible(self, parsed: urllib.parse.ParseResult) -> None:
+        # S6 : liste de choix FILTRÉE par vendor du nœud (?vendor=amd|nvidia|intel|cpu).
+        # S'appuie sur forgeai.engines.compatible_engines (moteurs-inference.json gpu_vendors).
+        from forgeai.engines import compatible_engines
+        vendor = (urllib.parse.parse_qs(parsed.query).get("vendor") or [""])[0]
+        self._send_json(200, {"vendor": vendor, "moteurs": compatible_engines(vendor)})
+
+    def _get_models(self) -> None:
+        store = RouteStore(_models_home())
+        self._send_json(200, [r.public_dict() for r in store.list()])
+
+    def _get_stacks_recommended(self) -> None:
+        try:
+            detect = json.loads(hardware_json())
+            self._send_json(200, {"recommended_id": recommended_stack_id(detect)})
+        except Exception as exc:  # noqa: BLE001
+            self._send_internal_error(exc)
+
+    def _get_stacks(self) -> None:
+        stack_ids = list_stacks()
+        ordered = [sid for sid in stack_ids if sid != "tout-en-un"]
+        if "tout-en-un" in stack_ids:
+            ordered.append("tout-en-un")
+        summaries = []
+        for sid in ordered:
+            stack = load_stack(sid)
+            summaries.append(
+                {
+                    "id": stack.get("id", sid),
+                    "name": stack.get("name", sid),
+                    "description_fr": stack.get("description_fr", ""),
+                    "description_en": stack.get("description_en", ""),
+                    "n_deploy": len(deploy_ids(stack)),
+                    "defaults": stack.get("default_by_sphere", {}),
+                    "surface": stack.get("surface"),
+                }
+            )
+        self._send_json(200, summaries)
+
+    def _get_stacks_id(self, path: str) -> None:
+        sid = path[len("/api/stacks/") :]
+        if not sid or "/" in sid:
+            self._send_json(404, {"error": "stack not found"})
+            return
+        try:
+            stack = load_stack(sid)
+            self._send_json(200, stack)
+        except FileNotFoundError:
+            self._send_json(404, {"error": "stack not found"})
+
+    def _get_spheres(self) -> None:
+        entries = _catalogue_entries()
+        index = spheres_index(entries)
+        spheres = [
+            {
+                "id": sphere.id,
+                "num": sphere.num,
+                "name_fr": sphere.name_fr,
+                "name_en": sphere.name_en,
+                "count": len(index.get(sphere.id, [])),
+            }
+            for sphere in sorted(SPHERES, key=lambda s: s.num)
+        ]
+        self._send_json(200, spheres)
+
+    def _get_bricks(self, parsed: urllib.parse.ParseResult) -> None:
+        query = urllib.parse.parse_qs(parsed.query)
+        sphere_list = query.get("sphere")
+        if not sphere_list:
+            self._send_json(400, {"error": "sphere requis"})
+            return
+        sphere_id = sphere_list[0]
+        stack_id = query.get("stack", [None])[0]
+        payload = bricks_payload(sphere_id, stack_id)
+        if payload is None:
+            self._send_json(404, {"error": "not found"})
+            return
+        self._send_json(200, payload)
+
+    def _get_summary(self, parsed: urllib.parse.ParseResult) -> None:
+        query = urllib.parse.parse_qs(parsed.query)
+        stack_list = query.get("stack")
+        if not stack_list:
+            self._send_json(400, {"error": "stack requis"})
+            return
+        stack_id = stack_list[0]
+        try:
+            self._send_json(200, _summary_payload(stack_id))
+        except FileNotFoundError:
+            self._send_json(404, {"error": "stack not found"})
+
+    def _get_discover(self, parsed: urllib.parse.ParseResult) -> None:
+        query = urllib.parse.parse_qs(parsed.query)
+        node_list = query.get("node")
+        if not node_list or node_list[0] != "local":
+            self._send_json(400, {"error": "seul 'local' est supporté par cette route"})
+            return
+        try:
+            signatures = charger_signatures()
+            payload = inventaire(SubprocessRunner(), signatures)
+            self._send_json(200, payload)
+        except Exception as exc:  # noqa: BLE001
+            self._send_internal_error(exc)
+
+    def _get_deploy_events(self) -> None:
+        self.send_response(200)
+        self.send_header("Content-Type", "text/event-stream")
+        self.send_header("Cache-Control", "no-cache")
+        self.end_headers()
+
+        if _DEPLOY_STATE["proc"] is None:
+            self._deploy_events_replay()
+        else:
+            self._deploy_events_stream()
+
+    def _deploy_events_replay(self) -> None:
+        # Aucun process vivant : soit aucun deploy n'a tourné, soit l'état a été
+        # restauré du disque après un restart (proc perdu, statut reportable). On
+        # rejoue les lignes mémorisées puis on clôt avec l'exit_code connu (#139).
+        with _DEPLOY_STATE["lock"]:
+            lines = list(_DEPLOY_STATE["lines"])
+            done = _DEPLOY_STATE["done"]
+            exit_code = _DEPLOY_STATE["exit_code"]
+            nettoyage_incertain = _DEPLOY_STATE["nettoyage_incertain"]
+        fin = {"exit_code": exit_code if done else None}
+        if nettoyage_incertain:
+            fin["nettoyage_incertain"] = True
+        payload = json.dumps(fin, ensure_ascii=False)
+        try:
+            for line in lines:
+                self.wfile.write(f"data: {line}\n\n".encode("utf-8"))
+            self.wfile.write(f"event: end\ndata: {payload}\n\n".encode("utf-8"))
+            self.wfile.flush()
+        except (BrokenPipeError, ConnectionResetError):
+            pass
+
+    def _deploy_events_stream(self) -> None:
+        idx = 0
+        while True:
+            with _DEPLOY_STATE["lock"]:
+                lines = _DEPLOY_STATE["lines"]
+                done = _DEPLOY_STATE["done"]
+                exit_code = _DEPLOY_STATE["exit_code"]
+                nettoyage_incertain = _DEPLOY_STATE["nettoyage_incertain"]
+                while idx < len(lines):
+                    try:
+                        self.wfile.write(f"data: {lines[idx]}\n\n".encode("utf-8"))
+                        self.wfile.flush()
+                    except (BrokenPipeError, ConnectionResetError):
+                        return
+                    idx += 1
+                if done:
+                    fin = {"exit_code": exit_code}
+                    if nettoyage_incertain:
+                        fin["nettoyage_incertain"] = True
+                    payload = json.dumps(fin, ensure_ascii=False)
+                    try:
+                        self.wfile.write(f"event: end\ndata: {payload}\n\n".encode("utf-8"))
+                        self.wfile.flush()
+                    except (BrokenPipeError, ConnectionResetError):
+                        pass
+                    return
+            time.sleep(0.2)
+
+    def _get_nodes_status(self) -> None:
+        runner = SubprocessRunner()
+        try:
+            nodes = cluster_status(runner)
+        except ClusterError as exc:
+            # WEB-015 : ClusterError peut encapsuler un {exc} interne (kubectl illisible) ;
+            # rédige le détail avant de l'exposer au client (secret-safe).
+            self._send_json(200, {"nodes": [], "detail": redact_text(str(exc))})
+            return
+        # S6b : enrichit chaque nœud de son/ses vendor(s) GPU (sondes node_hardware du
+        # registre) pour que le dropdown moteur de l'UI se filtre par vendor. Nœud sans
+        # sonde => vendors:[] (le champ existe toujours, jamais absent ni None).
+        vendors_by_host = _node_vendors_by_host(_registre_path())
+        for node in nodes:
+            node["vendors"] = vendors_by_host.get(node.get("name"), [])
+        self._send_json(200, {"nodes": nodes})
+
+    def _get_nodes_receptacles(self) -> None:
+        runner = SubprocessRunner()
+        helm_present = shutil.which("helm") is not None
+        nodes_out: list[dict] = []
+        detail: str | None = None
+        try:
+            # BUG-web-server-redondance (bloc A) : `cluster_status` sonde déjà TOUS les
+            # nœuds en UN seul appel kubectl et (depuis network/nodes.py) expose les
+            # champs labels/capacité GPU/ready tri-état/arch nécessaires ici — plus
+            # besoin de re-sonder chaque nœud individuellement via `sonder_noeud`
+            # (c'était un N+1 : 1 appel liste + N appels par nœud, potentiellement
+            # coûteux pour des nœuds distants). Un seul appel, quel que soit N.
+            nodes = cluster_status(runner)
+            for n in nodes:
+                etat = {
+                    "hostname": n["name"],
+                    "ready": n.get("ready_tristate"),
+                    "gpu_nvidia": n.get("gpu_capacity_nvidia", 0),
+                    "gpu_amd": n.get("gpu_capacity_amd", 0),
+                    "arch": n.get("arch", ""),
+                    "labels": n.get("labels", {}),
+                }
+                plan = plan_preparation(etat, helm_present)
+                labels = etat["labels"]
+                current = labels.get("forgeai/receptacle")
+                pret = current in ("pret", "pret-cpu")
+                restantes = sum(1 for s in plan if s.get("commande") is not None)
+                nodes_out.append(
+                    {
+                        "hostname": etat["hostname"],
+                        "ready": etat["ready"],
+                        "gpu_nvidia": etat["gpu_nvidia"],
+                        "gpu_amd": etat["gpu_amd"],
+                        "receptacle_actuel": current,
+                        "pret": pret,
+                        "etapes_restantes": restantes,
+                    }
+                )
+        except ClusterError as exc:
+            detail = redact_text(str(exc))  # WEB-015 : secret-safe (ClusterError wrappe {exc})
+        if detail is not None:
+            self._send_json(200, {"nodes": [], "detail": detail})
+        else:
+            self._send_json(200, {"nodes": nodes_out})
+
+    def _get_nodes_prepare(self, path: str) -> None:
+        host = path[len("/api/nodes/prepare/") :]
+        state = _prepare_state_get(host)
+        self._send_json(200, state)
+
     def do_GET(self) -> None:  # noqa: N802
         parsed = urllib.parse.urlparse(self.path)
         path = parsed.path
@@ -909,313 +1205,83 @@ class ForgeAIHandler(BaseHTTPRequestHandler):
             return
 
         if path in ("/", "/index.html"):
-            data = _asset_bytes("index.html")
-            if data is None:
-                self._send(500, b"index.html missing", "text/plain; charset=utf-8")
-            else:
-                self._send(200, data, "text/html; charset=utf-8")
+            self._get_index()
             return
 
         if path == "/api/detect":
-            try:
-                body = hardware_json().encode("utf-8")
-                self._send(200, body, "application/json; charset=utf-8")
-            except Exception as exc:  # noqa: BLE001
-                self._send_internal_error(exc)
+            self._get_detect()
             return
 
         if path == "/api/health":
-            self._send(
-                200,
-                json.dumps({"status": "ok"}, ensure_ascii=False).encode("utf-8"),
-                "application/json; charset=utf-8",
-            )
+            self._get_health()
             return
 
         if path == "/api/status":
-            # OPS-031A : santé PROFONDE. `/api/health` reste la liveness statique et publique ;
-            # cette route-ci révèle l'état de l'infra ET coûte des sondes, elle est donc SENSIBLE —
-            # ce que la classification fail-closed de WEB-017 lui applique d'office (jeton hors
-            # loopback, anti-CSRF/rebinding), sans une ligne de garde ici. « Re-sondable » : elle lit
-            # à travers les caches TTL (OPT-001), donc re-sonde quand ils sont périmés, sans devenir
-            # un levier d'amplification (l'invalidation explicite reste POST /api/detect/refresh).
-            self._send_json(200, collect_status(
-                backends=_available_backends,
-                cluster=_cluster_status_cache,
-                deploiement=_deploy_resume,
-                materiel=lambda: json.loads(hardware_json()),
-            ))
+            self._get_status()
             return
 
         if path.startswith("/api/i18n/"):
-            lang = path[len("/api/i18n/") :]
-            if lang not in {"fr", "en"}:
-                self._send_json(404, {"error": "locale not found"})
-                return
-            try:
-                locale_data = json.loads(_read_data_text(f"locales/{lang}.json"))
-            except (FileNotFoundError, ModuleNotFoundError, json.JSONDecodeError):
-                self._send_json(500, {"error": "locale unavailable"})
-                return
-            web = locale_data.get("web")
-            if not isinstance(web, dict):
-                self._send_json(500, {"error": "locale invalid"})
-                return
-            self._send_json(200, web)
+            self._get_i18n(path)
             return
 
         if path == "/api/models/local":
-            # Registre des modeles open-weight verifies HF — expose TEL QUEL :
-            # aucun filtrage par materiel local (directive permanente), l'UI informe seulement.
-            data = json.loads(_read_data_text("modeles-locaux.json"))
-            self._send_json(200, data)
+            self._get_models_local()
             return
 
         if path == "/api/engines":
-            try:
-                data = json.loads(_read_data_text("moteurs-inference.json"))
-            except (FileNotFoundError, ModuleNotFoundError, json.JSONDecodeError):
-                self._send_json(500, {"error": "engines registry unavailable"})
-                return
-            self._send_json(200, data)
+            self._get_engines()
             return
 
         if path == "/api/engines/compatible":
-            # S6 : liste de choix FILTRÉE par vendor du nœud (?vendor=amd|nvidia|intel|cpu).
-            # S'appuie sur forgeai.engines.compatible_engines (moteurs-inference.json gpu_vendors).
-            from forgeai.engines import compatible_engines
-            vendor = (urllib.parse.parse_qs(parsed.query).get("vendor") or [""])[0]
-            self._send_json(200, {"vendor": vendor, "moteurs": compatible_engines(vendor)})
+            self._get_engines_compatible(parsed)
             return
 
         if path == "/api/models":
-            store = RouteStore(_models_home())
-            self._send_json(200, [r.public_dict() for r in store.list()])
+            self._get_models()
             return
 
         if path == "/api/stacks/recommended":
-            try:
-                detect = json.loads(hardware_json())
-                self._send_json(200, {"recommended_id": recommended_stack_id(detect)})
-            except Exception as exc:  # noqa: BLE001
-                self._send_internal_error(exc)
+            self._get_stacks_recommended()
             return
 
         if path == "/api/stacks":
-            stack_ids = list_stacks()
-            ordered = [sid for sid in stack_ids if sid != "tout-en-un"]
-            if "tout-en-un" in stack_ids:
-                ordered.append("tout-en-un")
-            summaries = []
-            for sid in ordered:
-                stack = load_stack(sid)
-                summaries.append(
-                    {
-                        "id": stack.get("id", sid),
-                        "name": stack.get("name", sid),
-                        "description_fr": stack.get("description_fr", ""),
-                        "description_en": stack.get("description_en", ""),
-                        "n_deploy": len(deploy_ids(stack)),
-                        "defaults": stack.get("default_by_sphere", {}),
-                        "surface": stack.get("surface"),
-                    }
-                )
-            self._send_json(200, summaries)
+            self._get_stacks()
             return
 
         if path.startswith("/api/stacks/"):
-            sid = path[len("/api/stacks/") :]
-            if not sid or "/" in sid:
-                self._send_json(404, {"error": "stack not found"})
-                return
-            try:
-                stack = load_stack(sid)
-                self._send_json(200, stack)
-            except FileNotFoundError:
-                self._send_json(404, {"error": "stack not found"})
+            self._get_stacks_id(path)
             return
 
         if path == "/api/spheres":
-            entries = _catalogue_entries()
-            index = spheres_index(entries)
-            spheres = [
-                {
-                    "id": sphere.id,
-                    "num": sphere.num,
-                    "name_fr": sphere.name_fr,
-                    "name_en": sphere.name_en,
-                    "count": len(index.get(sphere.id, [])),
-                }
-                for sphere in sorted(SPHERES, key=lambda s: s.num)
-            ]
-            self._send_json(200, spheres)
+            self._get_spheres()
             return
 
         if path == "/api/bricks":
-            query = urllib.parse.parse_qs(parsed.query)
-            sphere_list = query.get("sphere")
-            if not sphere_list:
-                self._send_json(400, {"error": "sphere requis"})
-                return
-            sphere_id = sphere_list[0]
-            stack_id = query.get("stack", [None])[0]
-            payload = bricks_payload(sphere_id, stack_id)
-            if payload is None:
-                self._send_json(404, {"error": "not found"})
-                return
-            self._send_json(200, payload)
+            self._get_bricks(parsed)
             return
 
         if path == "/api/summary":
-            query = urllib.parse.parse_qs(parsed.query)
-            stack_list = query.get("stack")
-            if not stack_list:
-                self._send_json(400, {"error": "stack requis"})
-                return
-            stack_id = stack_list[0]
-            try:
-                self._send_json(200, _summary_payload(stack_id))
-            except FileNotFoundError:
-                self._send_json(404, {"error": "stack not found"})
+            self._get_summary(parsed)
             return
 
         if path == "/api/discover":
-            query = urllib.parse.parse_qs(parsed.query)
-            node_list = query.get("node")
-            if not node_list or node_list[0] != "local":
-                self._send_json(400, {"error": "seul 'local' est supporté par cette route"})
-                return
-            try:
-                signatures = charger_signatures()
-                payload = inventaire(SubprocessRunner(), signatures)
-                self._send_json(200, payload)
-            except Exception as exc:  # noqa: BLE001
-                self._send_internal_error(exc)
+            self._get_discover(parsed)
             return
 
         if path == "/api/deploy/events":
-            self.send_response(200)
-            self.send_header("Content-Type", "text/event-stream")
-            self.send_header("Cache-Control", "no-cache")
-            self.end_headers()
-
-            if _DEPLOY_STATE["proc"] is None:
-                # Aucun process vivant : soit aucun deploy n'a tourné, soit l'état a été
-                # restauré du disque après un restart (proc perdu, statut reportable). On
-                # rejoue les lignes mémorisées puis on clôt avec l'exit_code connu (#139).
-                with _DEPLOY_STATE["lock"]:
-                    lines = list(_DEPLOY_STATE["lines"])
-                    done = _DEPLOY_STATE["done"]
-                    exit_code = _DEPLOY_STATE["exit_code"]
-                    nettoyage_incertain = _DEPLOY_STATE["nettoyage_incertain"]
-                fin = {"exit_code": exit_code if done else None}
-                if nettoyage_incertain:
-                    fin["nettoyage_incertain"] = True
-                payload = json.dumps(fin, ensure_ascii=False)
-                try:
-                    for line in lines:
-                        self.wfile.write(f"data: {line}\n\n".encode("utf-8"))
-                    self.wfile.write(f"event: end\ndata: {payload}\n\n".encode("utf-8"))
-                    self.wfile.flush()
-                except (BrokenPipeError, ConnectionResetError):
-                    pass
-                return
-
-            idx = 0
-            while True:
-                with _DEPLOY_STATE["lock"]:
-                    lines = _DEPLOY_STATE["lines"]
-                    done = _DEPLOY_STATE["done"]
-                    exit_code = _DEPLOY_STATE["exit_code"]
-                    nettoyage_incertain = _DEPLOY_STATE["nettoyage_incertain"]
-                    while idx < len(lines):
-                        try:
-                            self.wfile.write(f"data: {lines[idx]}\n\n".encode("utf-8"))
-                            self.wfile.flush()
-                        except (BrokenPipeError, ConnectionResetError):
-                            return
-                        idx += 1
-                    if done:
-                        fin = {"exit_code": exit_code}
-                        if nettoyage_incertain:
-                            fin["nettoyage_incertain"] = True
-                        payload = json.dumps(fin, ensure_ascii=False)
-                        try:
-                            self.wfile.write(f"event: end\ndata: {payload}\n\n".encode("utf-8"))
-                            self.wfile.flush()
-                        except (BrokenPipeError, ConnectionResetError):
-                            pass
-                        return
-                time.sleep(0.2)
+            self._get_deploy_events()
+            return
 
         if path == "/api/nodes/status":
-            runner = SubprocessRunner()
-            try:
-                nodes = cluster_status(runner)
-            except ClusterError as exc:
-                # WEB-015 : ClusterError peut encapsuler un {exc} interne (kubectl illisible) ;
-                # rédige le détail avant de l'exposer au client (secret-safe).
-                self._send_json(200, {"nodes": [], "detail": redact_text(str(exc))})
-                return
-            # S6b : enrichit chaque nœud de son/ses vendor(s) GPU (sondes node_hardware du
-            # registre) pour que le dropdown moteur de l'UI se filtre par vendor. Nœud sans
-            # sonde => vendors:[] (le champ existe toujours, jamais absent ni None).
-            vendors_by_host = _node_vendors_by_host(_registre_path())
-            for node in nodes:
-                node["vendors"] = vendors_by_host.get(node.get("name"), [])
-            self._send_json(200, {"nodes": nodes})
+            self._get_nodes_status()
             return
 
         if path == "/api/nodes/receptacles":
-            runner = SubprocessRunner()
-            helm_present = shutil.which("helm") is not None
-            nodes_out: list[dict] = []
-            detail: str | None = None
-            try:
-                # BUG-web-server-redondance (bloc A) : `cluster_status` sonde déjà TOUS les
-                # nœuds en UN seul appel kubectl et (depuis network/nodes.py) expose les
-                # champs labels/capacité GPU/ready tri-état/arch nécessaires ici — plus
-                # besoin de re-sonder chaque nœud individuellement via `sonder_noeud`
-                # (c'était un N+1 : 1 appel liste + N appels par nœud, potentiellement
-                # coûteux pour des nœuds distants). Un seul appel, quel que soit N.
-                nodes = cluster_status(runner)
-                for n in nodes:
-                    etat = {
-                        "hostname": n["name"],
-                        "ready": n.get("ready_tristate"),
-                        "gpu_nvidia": n.get("gpu_capacity_nvidia", 0),
-                        "gpu_amd": n.get("gpu_capacity_amd", 0),
-                        "arch": n.get("arch", ""),
-                        "labels": n.get("labels", {}),
-                    }
-                    plan = plan_preparation(etat, helm_present)
-                    labels = etat["labels"]
-                    current = labels.get("forgeai/receptacle")
-                    pret = current in ("pret", "pret-cpu")
-                    restantes = sum(1 for s in plan if s.get("commande") is not None)
-                    nodes_out.append(
-                        {
-                            "hostname": etat["hostname"],
-                            "ready": etat["ready"],
-                            "gpu_nvidia": etat["gpu_nvidia"],
-                            "gpu_amd": etat["gpu_amd"],
-                            "receptacle_actuel": current,
-                            "pret": pret,
-                            "etapes_restantes": restantes,
-                        }
-                    )
-            except ClusterError as exc:
-                detail = redact_text(str(exc))  # WEB-015 : secret-safe (ClusterError wrappe {exc})
-            if detail is not None:
-                self._send_json(200, {"nodes": [], "detail": detail})
-            else:
-                self._send_json(200, {"nodes": nodes_out})
+            self._get_nodes_receptacles()
             return
 
         if path.startswith("/api/nodes/prepare/"):
-            host = path[len("/api/nodes/prepare/") :]
-            state = _prepare_state_get(host)
-            self._send_json(200, state)
+            self._get_nodes_prepare(path)
             return
 
         basename = path.rsplit("/", 1)[-1]
