@@ -22489,11 +22489,11 @@
       "generated": false,
       "load_bearing": true,
       "owner": "gouvernance-preuve",
-      "path": "evidence/reviews/RC1-533/Gemini-3.7-Flash.verdict.json",
+      "path": "evidence/reviews/RC1-533/GPT-5.6-Terra-Pro.verdict.json",
       "referenced_by": [],
       "rule_id": "evidence-reviews-root",
-      "sha256": "7a56da9db8cf9dc44d5b7399ff7db66044148f1ac42526a7f74e75cf7fb7eea0",
-      "size": 371,
+      "sha256": "2438fede225d920faa645a895d5dac937baedddbbc8ef6d8492c07d738fd880c",
+      "size": 319,
       "target_path": null,
       "type": "text"
     },
@@ -22505,8 +22505,8 @@
       "path": "evidence/reviews/RC1-533/MiMo-V2.5-Pro.verdict.json",
       "referenced_by": [],
       "rule_id": "evidence-reviews-root",
-      "sha256": "29f23d91b2c36f55c749f8999896774fa109eeeb82ad41c47e21b8ff564908f6",
-      "size": 327,
+      "sha256": "32778b754e9631c339ad3a885d109991818e8843c1a586353f31ba196fad2cd9",
+      "size": 311,
       "target_path": null,
       "type": "text"
     },
@@ -22518,8 +22518,8 @@
       "path": "evidence/reviews/RC1-533/Qwen3.7-Max.verdict.json",
       "referenced_by": [],
       "rule_id": "evidence-reviews-root",
-      "sha256": "3144ab8520572479757b49b3188dd032441dccaaa73659026a78f87b5d5e9c37",
-      "size": 323,
+      "sha256": "898e9cb5c42c545b2587ad7420b174d90b7d1b00acc0926df12d39f55d14f5bd",
+      "size": 307,
       "target_path": null,
       "type": "text"
     },
@@ -28086,8 +28086,8 @@
         }
       ],
       "rule_id": "governance-core",
-      "sha256": "46f6cbad84f480e70dd3c242b16125549f3a74aec849b8a708ca13b2810c5dbf",
-      "size": 73560,
+      "sha256": "6deaa73dd48abef6d3c89becf4b650f98cf2c41fb7cb5b8571ff8bdc04ea9368",
+      "size": 74238,
       "target_path": null,
       "type": "text"
     },
@@ -97804,6 +97804,11 @@
         "referrer": "governance/error-handling-contracts.json"
       },
       {
+        "candidate": "_post_deploy/_valider_requete_deploy/_lancer_deploiement",
+        "line": 531,
+        "referrer": "governance/error-handling-contracts.json"
+      },
+      {
         "candidate": "lecture/",
         "line": 531,
         "referrer": "governance/error-handling-contracts.json"
@@ -97816,6 +97821,11 @@
       {
         "candidate": "exit_code/done",
         "line": 532,
+        "referrer": "governance/error-handling-contracts.json"
+      },
+      {
+        "candidate": "_post_deploy/_valider_requete_deploy/_lancer_deploiement",
+        "line": 555,
         "referrer": "governance/error-handling-contracts.json"
       },
       {
@@ -97851,6 +97861,11 @@
       {
         "candidate": "retry/escalade",
         "line": 562,
+        "referrer": "governance/error-handling-contracts.json"
+      },
+      {
+        "candidate": "_post_deploy/_valider_requete_deploy/_lancer_deploiement",
+        "line": 576,
         "referrer": "governance/error-handling-contracts.json"
       },
       {
@@ -167400,7 +167415,7 @@
       "working-sandbox-readme": 1
     },
     "case_collisions_total": 0,
-    "dangling_references_total": 16417,
+    "dangling_references_total": 16420,
     "generated_total": 9,
     "load_bearing_total": 2035,
     "portability_violations_total": 0,
