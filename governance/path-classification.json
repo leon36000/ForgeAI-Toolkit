@@ -9810,6 +9810,13 @@
         },
         {
           "candidate": "evidence/registres/mission.jsonl",
+          "line": 3674,
+          "referrer": "stories/RC1-015.md",
+          "resolved": "evidence/registres/mission.jsonl",
+          "severity": "hard"
+        },
+        {
+          "candidate": "evidence/registres/mission.jsonl",
           "line": 357,
           "referrer": "tests/test_registre.py",
           "resolved": "evidence/registres/mission.jsonl",
@@ -9824,8 +9831,8 @@
         }
       ],
       "rule_id": "evidence-registres-root",
-      "sha256": "0a6f2b957ddef55dffa9c6cd10f0e2f7a5c0ea3f53201626d9b65c9ccc864ade",
-      "size": 392913,
+      "sha256": "2a1bd7c9394d9c031adef456f829a18b10c89717727696436d96ceafd828e22c",
+      "size": 394397,
       "target_path": null,
       "type": "text"
     },
@@ -45712,6 +45719,13 @@
         },
         {
           "candidate": "src/forgeai/web/server.py",
+          "line": 3671,
+          "referrer": "stories/RC1-015.md",
+          "resolved": "src/forgeai/web/server.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "src/forgeai/web/server.py",
           "line": 10,
           "referrer": "stories/RC1-022.md",
           "resolved": "src/forgeai/web/server.py",
@@ -47320,8 +47334,8 @@
         }
       ],
       "rule_id": "governance-stories",
-      "sha256": "dea82870f402bb93fad8adb6735058608ad89192c90c6ce5c009644ae5bfc753",
-      "size": 266369,
+      "sha256": "284d802e66dbcc541f1f866e372277958959771e454c90072ca7ab29317ef8a2",
+      "size": 267216,
       "target_path": null,
       "type": "text"
     },
@@ -50195,6 +50209,13 @@
           "candidate": "tests/test_data002b_wal_idempotent.py",
           "line": 83,
           "referrer": "stories/HEALTH-030.md",
+          "resolved": "tests/test_data002b_wal_idempotent.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "tests/test_data002b_wal_idempotent.py",
+          "line": 3669,
+          "referrer": "stories/RC1-015.md",
           "resolved": "tests/test_data002b_wal_idempotent.py",
           "severity": "hard"
         },
@@ -56922,6 +56943,13 @@
           "candidate": "tests/test_rel038b_unicite.py",
           "line": 728,
           "referrer": "governance/STATE-CURRENT.md",
+          "resolved": "tests/test_rel038b_unicite.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "tests/test_rel038b_unicite.py",
+          "line": 3668,
+          "referrer": "stories/RC1-015.md",
           "resolved": "tests/test_rel038b_unicite.py",
           "severity": "hard"
         },
@@ -129458,6 +129486,21 @@
         "referrer": "stories/RC1-015.md"
       },
       {
+        "candidate": "mypy_gate.py",
+        "line": 3665,
+        "referrer": "stories/RC1-015.md"
+      },
+      {
+        "candidate": "origin/main",
+        "line": 3665,
+        "referrer": "stories/RC1-015.md"
+      },
+      {
+        "candidate": "tests/",
+        "line": 3669,
+        "referrer": "stories/RC1-015.md"
+      },
+      {
         "candidate": "src/forgeai/",
         "line": 3,
         "referrer": "stories/RC1-022.md"
@@ -172335,6 +172378,34 @@
       },
       {
         "candidate": "tests/test_rel038b_unicite.py",
+        "line": 3668,
+        "referrer": "stories/RC1-015.md",
+        "resolved": "tests/test_rel038b_unicite.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "tests/test_data002b_wal_idempotent.py",
+        "line": 3669,
+        "referrer": "stories/RC1-015.md",
+        "resolved": "tests/test_data002b_wal_idempotent.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "src/forgeai/web/server.py",
+        "line": 3671,
+        "referrer": "stories/RC1-015.md",
+        "resolved": "src/forgeai/web/server.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "evidence/registres/mission.jsonl",
+        "line": 3674,
+        "referrer": "stories/RC1-015.md",
+        "resolved": "evidence/registres/mission.jsonl",
+        "severity": "hard"
+      },
+      {
+        "candidate": "tests/test_rel038b_unicite.py",
         "line": 8,
         "referrer": "stories/RC1-022.md",
         "resolved": "tests/test_rel038b_unicite.py",
@@ -177408,7 +177479,7 @@
       "working-sandbox-readme": 1
     },
     "case_collisions_total": 0,
-    "dangling_references_total": 16905,
+    "dangling_references_total": 16908,
     "generated_total": 9,
     "load_bearing_total": 2037,
     "portability_violations_total": 0,
