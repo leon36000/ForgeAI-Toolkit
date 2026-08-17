@@ -1,0 +1,43 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": ".github/workflows/gates.yml",
+   "description": "Le job installe les dépendances avec --require-hashes mais requirements-ci.txt n'est pas inclus dans le diff ; impossible de vérifier depuis le diff que ruff y est épinglé avec hashes.",
+   "preuve": "Étape ajoutée : `python -m pip install --no-cache-dir --require-hashes -r requirements-ci.txt`."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "scripts/ruff_ratchet.py",
+   "description": "La dérivation dynamique des règles dépend de governance/ruff-classification.json, qui n'est pas présent/modifié dans le diff ; impossible de vérifier que les 13 codes sont bien actuellement classés defaut_candidat.",
+   "preuve": "scripts/ruff_ratchet.py : `regles = regles_defaut_candidat(classification_ruff)` ; `governance/ruff-classification.json` n'est pas dans le diff."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "scripts/ruff_ratchet.py",
+   "description": "Le contrat précis de scripts/gate_git_ref.charger_base_reference_git (retour normal None/message vs exception en panne réelle) n'est pas vérifiable dans le diff ; le script suppose ce comportement.",
+   "preuve": "scripts/ruff_ratchet.py : appel à `gate_git_ref.charger_base_reference_git(...)` puis gestion d'exception ; `scripts/gate_git_ref.py` n'est pas dans le diff."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "governance/ruff-baseline.json",
+   "description": "La baseline est déclarée générée par script mais aucune sortie d'exécution de génération n'est fournie dans le diff ; la génération effective reste déclaréе.",
+   "preuve": "governance/ruff-baseline.json : `Fichier GENERE par scripts/ruff_ratchet.py --regenerer-baseline`."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "governance/path-classification.json",
+   "description": "L'entrée du fichier evidence/reviews/RC1-020-inc2-v6/RECU.json est classée suivie/porteuse mais avec sha256, size et type nuls ; cela laisse un doute sur la complétude du classement généré.",
+   "preuve": "governance/path-classification.json : entrée `evidence/reviews/RC1-020-inc2-v6/RECU.json` avec `\"sha256\": null`, `\"size\": null`, `\"type\": null`."
+  }
+ ],
+ "date_heure": "2026-08-17T19:56:23.183237+00:00",
+ "prompt_sha256": "456b1bba23b926843ed0b075b7875fc1ab1bf40c9662084d0b590b3d13cf25a6",
+ "reviewer_model": "Qwen3.8-2.4T",
+ "modele_servi": "b9de6bc895fe95ccacf7d9fa9b1cf29ca44d34f03e249738f325c9dee3790b78",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

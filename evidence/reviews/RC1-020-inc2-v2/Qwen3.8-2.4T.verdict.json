@@ -1,0 +1,25 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "majeure",
+   "fichier": "scripts/ruff_ratchet.py",
+   "description": "La règle 4 ne contrôle que les couples (fichier, règle) déjà présents dans la baseline locale. Un fichier déjà baseliné peut donc introduire une nouvelle violation d'une règle defaut_candidat absente de sa classification baseline, à condition de compenser en supprimant une autre violation du même fichier : le total par fichier et le total global restent stables, et aucune anomalie n'est émise. Cela affaiblit le cliquet bloquant par couple (fichier, règle) annoncé par la story.",
+   "preuve": "scripts/ruff_ratchet.py:483-493 : la boucle de la règle 4 parcourt uniquement `classification_base` (`for fichier, comptes in sorted(classification_base.items())` puis `for code, plafond in sorted(comptes.items())`) ; il n'y a aucune boucle symétrique sur `mesure_classification` pour signaler un code mesuré absent de `classification_base` (plafond implicite 0). scripts/ruff_ratchet.py:459-467 : la règle 1 ne couvre que les fichiers absents de `dette_base`, pas les couples fichier/règle absents de la baseline."
+  },
+  {
+   "severite": "mineure",
+   "fichier": ".github/workflows/gates.yml",
+   "description": "Le job CI dépend de requirements-ci.txt avec --require-hashes, mais le diff ne permet pas de vérifier que ce fichier contient réellement ruff épinglé et ses dépendances avec hashes.",
+   "preuve": ".github/workflows/gates.yml:364 : `run: python -m pip install --no-cache-dir --require-hashes -r requirements-ci.txt` ; aucune modification de requirements-ci.txt n'est présente dans le diff."
+  }
+ ],
+ "date_heure": "2026-08-17T16:52:28.488038+00:00",
+ "prompt_sha256": "472ed88d8dc15f495ac6e5847327e6f12cbdd12006afae4f2b1102488eb12083",
+ "reviewer_model": "Qwen3.8-2.4T",
+ "modele_servi": "b9de6bc895fe95ccacf7d9fa9b1cf29ca44d34f03e249738f325c9dee3790b78",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

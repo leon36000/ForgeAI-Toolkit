@@ -1,0 +1,37 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "majeure",
+   "fichier": "scripts/ruff_ratchet.py",
+   "description": "La règle 6 de non-croissance ne compare que les fichiers et couples déjà présents dans la référence. Une entrée absente de la référence, donc avec plafond implicite 0, peut être ajoutée à la baseline locale sans anomalie si la borne totale n'augmente pas. Cela permet de baseliner de nouvelles violations après compensation, ce qui contredit l'objectif de cliquet bloquant.",
+   "preuve": "scripts/ruff_ratchet.py:433 — `if fichier in dette_ref and plafond > dette_ref[fichier]:` ; scripts/ruff_ratchet.py:453-454 — `if code in comptes_ref and plafond > comptes_ref[code]:` ; aucun contrôle lorsque l'entrée est absente de la référence, alors que scripts/ruff_ratchet.py:15-16 indique qu'un fichier absent de `dette` a implicitement un plafond de 0."
+  },
+  {
+   "severite": "majeure",
+   "fichier": "scripts/ruff_ratchet.py",
+   "description": "La story indique que la baseline est générée par le script lui-même, jamais à la main. Or le script ne fournit aucun mode de génération ou d'écriture de la baseline et déclare explicitement ne jamais l'écrire. Toute mise à jour future de la baseline devra donc être faite manuellement ou via un mécanisme absent du diff.",
+   "preuve": "scripts/ruff_ratchet.py:23-24 — `Ce script ne fait que LIRE et VALIDER la baseline : il ne l'écrit jamais` ; scripts/ruff_ratchet.py:474-483 — argparse limité à `--racine` et `--base-ref-git`, aucun argument ou fonction d'écriture de `governance/ruff-baseline.json`."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "scripts/ruff_ratchet.py",
+   "description": "Le script calcule dynamiquement les règles `defaut_candidat` mais ne vérifie jamais que `regles_activees` dans la baseline locale correspond exactement à cet ensemble courant. Une classification modifiée peut donc laisser une baseline déclarativement obsolète sans anomalie.",
+   "preuve": "scripts/ruff_ratchet.py:492-493 — `regles = regles_defaut_candidat(classification_ruff)` puis `base_locale = _valider_base(_charger_json(chemin_base), 'base locale')` ; aucune comparaison avec `regles_activees`, et `anomalies()` est appelée sans les règles courantes (scripts/ruff_ratchet.py:523-529)."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "scripts/ruff_ratchet.py",
+   "description": "La validation du schéma de baseline n'impose pas que `borne.total_violations` soit égal à la somme de `dette`. Une borne supérieure à la dette réelle introduirait une marge permettant d'absorber des violations sans déclencher la règle 5.",
+   "preuve": "scripts/ruff_ratchet.py:318-339 — `_valider_base` valide version, `regles_activees`, `borne`, `dette`, `classification`, mais ne contient pas de contrôle `sum(dette.values()) == borne.total_violations` ; scripts/ruff_ratchet.py:417-424 — la règle 5 compare seulement le total mesuré à la borne."
+  }
+ ],
+ "date_heure": "2026-08-17T16:25:22.355109+00:00",
+ "prompt_sha256": "4103c0a31e23eda0547b1787b6972cc35df1b04e2a04ab431829fd97d0a23420",
+ "reviewer_model": "Qwen3.8-2.4T",
+ "modele_servi": "b9de6bc895fe95ccacf7d9fa9b1cf29ca44d34f03e249738f325c9dee3790b78",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

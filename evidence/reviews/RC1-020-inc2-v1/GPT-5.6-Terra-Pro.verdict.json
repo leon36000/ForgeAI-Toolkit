@@ -1,0 +1,25 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "majeure",
+   "fichier": "scripts/ruff_ratchet.py",
+   "description": "Le script ne permet pas de générer la baseline, alors que le livré exige une baseline « générée par le script lui-même (jamais à la main) ». Il ne fait que la lire et la valider ; aucun argument ni chemin d’exécution ne sérialise les mesures dans governance/ruff-baseline.json.",
+   "preuve": "Docstring lignes 18-20 : « Ce script ne fait que LIRE et VALIDER la baseline : il ne l'écrit jamais ». main() lignes 478-543 ne propose aucun mode de génération ni écriture de chemin_base."
+  },
+  {
+   "severite": "majeure",
+   "fichier": "scripts/ruff_ratchet.py",
+   "description": "La liste de règles réellement mesurée est dynamique, mais il n'existe aucun invariant imposant que baseline.regles_activees soit identique à la liste dérivée de governance/ruff-classification.json. Après ajout futur d'une règle defaut_candidat, une violation de cette nouvelle règle dans un fichier déjà baseliné peut ne pas être contrôlée par la borne fine par couple ; elle peut être masquée par une baisse d'une autre règle tant que les bornes fichier et totale restent respectées.",
+   "preuve": "main() lignes 486-488 dérive `regles` puis valide seulement `base_locale` via `_valider_base`; aucun test d'égalité entre `regles` et `base_locale[\"regles_activees\"]`. `_valider_base` lignes 307-309 valide la structure de regles_activees, mais pas sa cohérence avec la classification Ruff dérivée."
+  }
+ ],
+ "date_heure": "2026-08-17T16:20:15.108031+00:00",
+ "prompt_sha256": "4103c0a31e23eda0547b1787b6972cc35df1b04e2a04ab431829fd97d0a23420",
+ "reviewer_model": "GPT-5.6-Terra-Pro",
+ "modele_servi": "gpt56-terra-pro-openrouter",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

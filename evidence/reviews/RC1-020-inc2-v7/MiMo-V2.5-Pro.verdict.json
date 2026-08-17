@@ -1,0 +1,25 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "governance/ruff-baseline.json",
+   "description": "La story déclare « 150 violations réelles sur 51 fichiers » mais la baseline commitée (borne.total_violations=149, somme des 51 clés de dette=149) contient 149 violations, pas 150. L'écart d'une unité peut indiquer que la baseline a été régénérée après la rédaction de la story, mais la story n'a pas été mise à jour. Discrepancy déclarative — aucun impact fonctionnel : le code (_valider_base, borne==somme) valide correctement la cohérence interne de la baseline.",
+   "preuve": "governance/ruff-baseline.json:7 : `\"total_violations\": 149` ; somme manuelle des 51 valeurs de `dette` = 149 ; story « 150 violations réelles sur 51 fichiers »."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "scripts/ruff_ratchet.py",
+   "description": "La story affirme « 92 tests TDD au total sur test_ruff_mesure.py + test_ruff_report.py + test_ruff_ratchet.py ». Le diff ajoute ~46 fonctions de test dans test_ruff_ratchet.py et ~6 dans test_ruff_mesure.py, mais les fonctions existantes de test_ruff_report.py (non modifiées dans ce diff) ne sont pas comptabilisables. Non vérifiable depuis le diff seul — déclaration non contradictoire mais invérifiable.",
+   "preuve": "Aucune section du diff ne contient le décompte total des fonctions de test de test_ruff_report.py (seuls 8 hunks de monkeypatch.setattr sont visibles, ne couvrant qu'une partie des tests)."
+  }
+ ],
+ "date_heure": "2026-08-17T19:44:33.263002+00:00",
+ "prompt_sha256": "7dedeb3fe4d9af0ae6be880a97b43b1bb7b0b9194b5c559a9397fba44e4fa79c",
+ "reviewer_model": "MiMo-V2.5-Pro",
+ "modele_servi": "mimo-v25-pro-openrouter",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

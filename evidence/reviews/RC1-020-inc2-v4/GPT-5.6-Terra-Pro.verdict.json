@@ -1,0 +1,19 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "requirements-ci.txt",
+   "description": "Le job CI suppose que Ruff est déjà présent, épinglé et couvert par des hashes dans requirements-ci.txt, mais ce fichier n'est pas modifié ni fourni dans le diff. Il est donc impossible de vérifier que le nouveau job peut effectivement installer puis exécuter Ruff avec --require-hashes.",
+   "preuve": ".github/workflows/gates.yml:364 exécute `python -m pip install --no-cache-dir --require-hashes -r requirements-ci.txt`; aucune section du diff ne contient requirements-ci.txt ni une preuve de la présence de Ruff."
+  }
+ ],
+ "date_heure": "2026-08-17T17:26:35.886796+00:00",
+ "prompt_sha256": "890ef349d1637a78d37d8e306b40176e8a3923e57f0b425d31116e9f3589e89b",
+ "reviewer_model": "GPT-5.6-Terra-Pro",
+ "modele_servi": "gpt56-terra-pro-openrouter",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

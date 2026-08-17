@@ -1,0 +1,19 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "majeure",
+   "fichier": "scripts/ruff_ratchet.py",
+   "description": "Le cliquet ne détecte pas une nouvelle règle sur un fichier déjà baseliné lorsqu'elle est compensée par la disparition d'une violation d'une règle déjà présente. La règle 4 ne parcourt que les couples présents dans `classification_base`; ainsi, si `ARG001` passe de 1 à 0 et qu'une nouvelle violation `B904` apparaît sur le même fichier, avec une dette totale inchangée, ni la borne par fichier, ni la borne totale, ni la comparaison Git de la baseline ne signalent cette régression. Cela contredit le suivi requis par couple (fichier, règle) et l'objectif de bloquer les nouvelles violations `defaut_candidat`.",
+   "preuve": "scripts/ruff_ratchet.py, règle 4 : `for fichier, comptes in sorted(classification_base.items()):` puis `for code, plafond in sorted(comptes.items()):` ne vérifie aucun code présent dans `mesure_classification` mais absent de `comptes`. Le docstring lignes 27-31 reconnaît explicitement que « la règle 4 ... ne parcourt que les couples déjà présents dans classification » et qu'un nouveau code peut échapper au contrôle en compensant le total du fichier."
+  }
+ ],
+ "date_heure": "2026-08-17T16:43:26.996817+00:00",
+ "prompt_sha256": "472ed88d8dc15f495ac6e5847327e6f12cbdd12006afae4f2b1102488eb12083",
+ "reviewer_model": "GPT-5.6-Terra-Pro",
+ "modele_servi": "gpt56-terra-pro-openrouter",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

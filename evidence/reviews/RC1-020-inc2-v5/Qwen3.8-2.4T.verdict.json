@@ -1,0 +1,25 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "scripts/ruff_ratchet.py",
+   "description": "Lorsque la baseline est absente de la référence git (cas de première introduction), le gate continue avec base_reference=None et peut retourner 0 ; le contrôle de non-croissance contre origin/main n'est alors pas appliqué.",
+   "preuve": "main() : après `base_reference, message_reference = gate_git_ref.charger_base_reference_git(...)`, si `message_reference` est affiché le script poursuit et retourne 0 quand `rapport` est vide."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "governance/ruff-baseline.json",
+   "description": "Le diff seul ne permet pas de vérifier que la baseline commitée provient bien d'une exécution de --regenerer-baseline et correspond à la mesure réelle du dépôt au moment du commit.",
+   "preuve": "governance/ruff-baseline.json contient `\"total_violations\": 150` ; scripts/ruff_ratchet.py propose `--regenerer-baseline` mais aucune sortie/exécution de génération n'est jointe au diff."
+  }
+ ],
+ "date_heure": "2026-08-17T17:52:16.257906+00:00",
+ "prompt_sha256": "9646e1249a1b63347b9d4107bd032f895ad1eb166079d229784e55968ee3ec70",
+ "reviewer_model": "Qwen3.8-2.4T",
+ "modele_servi": "b9de6bc895fe95ccacf7d9fa9b1cf29ca44d34f03e249738f325c9dee3790b78",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

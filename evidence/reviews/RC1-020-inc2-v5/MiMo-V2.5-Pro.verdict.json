@@ -1,0 +1,19 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": ".github/workflows/gates.yml",
+   "description": "Le diff ne contient aucune modification de requirements-ci.txt ; impossible de vérifier à partir du diff seul que ce fichier contient réellement ruff épinglé avec hashes. La story affirme que requirements-ci.txt est déjà conforme (grep vérifié), mais le reviewer diff-only ne peut pas le confirmer.",
+   "preuve": ".github/workflows/gates.yml:364 : `run: python -m pip install --no-cache-dir --require-hashes -r requirements-ci.txt` — aucun fichier requirements-ci.txt dans le diff."
+  }
+ ],
+ "date_heure": "2026-08-17T18:16:57.702003+00:00",
+ "prompt_sha256": "9646e1249a1b63347b9d4107bd032f895ad1eb166079d229784e55968ee3ec70",
+ "reviewer_model": "MiMo-V2.5-Pro",
+ "modele_servi": "mimo-v25-pro-openrouter",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

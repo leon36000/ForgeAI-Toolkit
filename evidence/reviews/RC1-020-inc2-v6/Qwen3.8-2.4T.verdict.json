@@ -1,0 +1,31 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": ".github/workflows/gates.yml",
+   "description": "Le diff ne permet pas de vérifier que requirements-ci.txt contient réellement ruff épinglé avec hashes ; si ce n'est pas le cas, l'installation avec --require-hashes échouera.",
+   "preuve": ".github/workflows/gates.yml:364 : `run: python -m pip install --no-cache-dir --require-hashes -r requirements-ci.txt` ; aucun hunk de requirements-ci.txt n'est présent dans le diff."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "scripts/ruff_ratchet.py",
+   "description": "Le comportement réel de scripts/gate_git_ref.charger_base_reference_git n'est pas vérifiable dans le diff ; une panne réelle doit lever une exception pour ne pas dégrader silencieusement le contrôle de non-croissance.",
+   "preuve": "scripts/ruff_ratchet.py : appel `gate_git_ref.charger_base_reference_git(racine, chemin_base, arguments.base_ref_git, _valider_base)` dans un try/except, sans que le code de gate_git_ref.py soit inclus ; les tests utilisent des mocks."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "governance/ruff-baseline.json",
+   "description": "Le diff seul ne prouve pas que la baseline a été générée par le script plutôt que saisie manuellement ; seule une mention déclarative est présente.",
+   "preuve": "governance/ruff-baseline.json:3 : `Fichier GENERE par scripts/ruff_ratchet.py --regenerer-baseline` ; aucune sortie d'exécution de génération n'est fournie dans le diff."
+  }
+ ],
+ "date_heure": "2026-08-17T18:35:16.524928+00:00",
+ "prompt_sha256": "72312363da4077afb0b02863bd1f78fba7bdd64e2b07c35d44b589a10f3b12ff",
+ "reviewer_model": "Qwen3.8-2.4T",
+ "modele_servi": "b9de6bc895fe95ccacf7d9fa9b1cf29ca44d34f03e249738f325c9dee3790b78",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

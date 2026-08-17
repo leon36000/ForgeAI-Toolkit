@@ -129,7 +129,7 @@ def test_mesurer_ruff_absent(
     def ruff_absent(*args: object, **kwargs: object) -> subprocess.CompletedProcess[str]:
         raise FileNotFoundError("ruff")
 
-    monkeypatch.setattr(ruff_report.subprocess, "run", ruff_absent)
+    monkeypatch.setattr(ruff_report.ruff_mesure.subprocess, "run", ruff_absent)
 
     with pytest.raises(RuntimeError, match="ruff est indisponible"):
         ruff_report.mesurer(tmp_path)
@@ -145,7 +145,7 @@ def test_mesurer_erreur_systeme(
     ) -> subprocess.CompletedProcess[str]:
         raise OSError("exécution impossible")
 
-    monkeypatch.setattr(ruff_report.subprocess, "run", execution_impossible)
+    monkeypatch.setattr(ruff_report.ruff_mesure.subprocess, "run", execution_impossible)
 
     with pytest.raises(RuntimeError, match="impossible d'exécuter ruff"):
         ruff_report.mesurer(tmp_path)
@@ -161,7 +161,7 @@ def test_mesurer_code_ruff_inattendu(
         stdout="",
         stderr="erreur ruff",
     )
-    monkeypatch.setattr(ruff_report.subprocess, "run", lambda *args, **kwargs: resultat)
+    monkeypatch.setattr(ruff_report.ruff_mesure.subprocess, "run", lambda *args, **kwargs: resultat)
 
     with pytest.raises(RuntimeError, match="code 2"):
         ruff_report.mesurer(tmp_path)
@@ -177,7 +177,7 @@ def test_mesurer_sortie_json_invalide(
         stdout="pas du JSON",
         stderr="",
     )
-    monkeypatch.setattr(ruff_report.subprocess, "run", lambda *args, **kwargs: resultat)
+    monkeypatch.setattr(ruff_report.ruff_mesure.subprocess, "run", lambda *args, **kwargs: resultat)
 
     with pytest.raises(RuntimeError, match="sortie JSON de ruff est invalide"):
         ruff_report.mesurer(tmp_path)
@@ -195,7 +195,7 @@ def test_mesurer_sortie_json_structure_invalide(
         stdout=sortie,
         stderr="",
     )
-    monkeypatch.setattr(ruff_report.subprocess, "run", lambda *args, **kwargs: resultat)
+    monkeypatch.setattr(ruff_report.ruff_mesure.subprocess, "run", lambda *args, **kwargs: resultat)
 
     with pytest.raises(
         RuntimeError,
@@ -225,7 +225,7 @@ def test_mesurer_normalise_les_chemins_et_conserve_un_chemin_externe(
         ),
         stderr="",
     )
-    monkeypatch.setattr(ruff_report.subprocess, "run", lambda *args, **kwargs: resultat)
+    monkeypatch.setattr(ruff_report.ruff_mesure.subprocess, "run", lambda *args, **kwargs: resultat)
 
     violations = ruff_report.mesurer(tmp_path)
 

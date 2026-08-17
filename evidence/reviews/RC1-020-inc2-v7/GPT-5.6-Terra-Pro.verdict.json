@@ -1,0 +1,19 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "majeure",
+   "fichier": "governance/ruff-baseline.json",
+   "description": "La baseline livrée ne satisfait pas le volume et la couverture explicitement requis : la story annonce 150 violations sur 51 fichiers, dont une violation S603 dans scripts/ruff_ratchet.py. Le fichier commité déclare 149 violations et ne référence pas scripts/ruff_ratchet.py dans dette ni classification.",
+   "preuve": "governance/ruff-baseline.json:20 déclare \"total_violations\": 149 ; les clés de dette/classification (lignes 22-269) ne contiennent pas \"scripts/ruff_ratchet.py\". Le diff de la story exige au contraire « 150 violations réelles sur 51 fichiers, incluant 1 violation S603 sur ruff_ratchet.py lui-même »."
+  }
+ ],
+ "date_heure": "2026-08-17T19:37:27.111749+00:00",
+ "prompt_sha256": "7dedeb3fe4d9af0ae6be880a97b43b1bb7b0b9194b5c559a9397fba44e4fa79c",
+ "reviewer_model": "GPT-5.6-Terra-Pro",
+ "modele_servi": "gpt56-terra-pro-openrouter",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

@@ -1,0 +1,37 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": ".github/workflows/gates.yml",
+   "description": "Le job CI installe les dépendances avec --require-hashes, mais le diff ne contient aucune modification de requirements-ci.txt permettant de vérifier que ruff y est réellement épinglé avec hashes. Si ce n'est pas le cas, le job échouera ou la garantie de version ne sera pas démontrée.",
+   "preuve": ".github/workflows/gates.yml:364 : `run: python -m pip install --no-cache-dir --require-hashes -r requirements-ci.txt` ; aucune modification de requirements-ci.txt n'est présente dans le diff."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "governance/STATE-CURRENT.json",
+   "description": "La story annonce 46 tests TDD, mais le diff met à jour le nombre de fonctions Python déclarées de 2339 à 2398, soit +59 fonctions, ce qui correspond à un volume de tests supérieur au volume annoncé sans justification dans le diff.",
+   "preuve": "governance/STATE-CURRENT.json (hunk @@ -940,8 +944,8 @@) : `-      \"python_functions_declared\": 2339` / `+      \"python_functions_declared\": 2398`."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "scripts/ruff_ratchet.py",
+   "description": "Le cliquet mesure uniquement les répertoires `src` et `scripts`. La story ne limite pas explicitement le périmètre bloquant à ces deux répertoires ; des violations `defaut_candidat` introduites dans d'autres répertoires Python, par exemple `tests/`, ne seraient pas bloquées par ce gate.",
+   "preuve": "scripts/ruff_ratchet.py:99-108 : `commande = [\"ruff\", \"check\", ..., \"src\", \"scripts\"]`."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "governance/ruff-classification.json",
+   "description": "Le diff ne montre ni le contenu ni une modification de governance/ruff-classification.json permettant de vérifier que les 13 règles listées dans la baseline sont bien actuellement catégorisées `defaut_candidat`. La dérivation dynamique est donc seulement présumée pour l'état courant du dépôt.",
+   "preuve": "governance/ruff-baseline.json:5-18 liste les 13 `regles_activees` ; aucun hunk de `governance/ruff-classification.json` n'est présent dans le diff."
+  }
+ ],
+ "date_heure": "2026-08-17T17:28:18.895603+00:00",
+ "prompt_sha256": "890ef349d1637a78d37d8e306b40176e8a3923e57f0b425d31116e9f3589e89b",
+ "reviewer_model": "Qwen3.8-2.4T",
+ "modele_servi": "b9de6bc895fe95ccacf7d9fa9b1cf29ca44d34f03e249738f325c9dee3790b78",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}
