@@ -3,9 +3,9 @@
   "dossier": "RC1-544",
   "issue": 544,
   "round": 1,
-  "base_commit": "0ae6cd5e7a167bceb120046df5a3fde92c9c399e",
-  "head_commit": "ca09e8b6efc0e870e6a72fa70132391437ead12f",
-  "head_tree": "037bba4f0bb83e66de6adfdb43b648f5722b6e58",
+  "base_commit": "1c546a8a70600dccffe0fe4be16d5e59f15cfd65",
+  "head_commit": "6b7ec26b4151b95bb7d7e2dee1cf98e3b871bc26",
+  "head_tree": "daf60f8ce672087ca06d4c87225f8110e622b0c9",
   "diff_digest": "a91c6298cc431251943a46d366ee694c6b54f2cebff8184f5054c6cf12f4645a",
   "prompt_sha256": "726bce95061bdc04a7210109d3bae2af1e5812e7fc4454e04f90cb04d44be982",
   "reviewers_attendus": [
@@ -17,6 +17,6 @@
     "fable"
   ],
   "resultat": "APPROVE",
-  "date_heure": "2026-08-16T19:45:18.597135-04:00",
+  "date_heure": "2026-08-16T20:05:03.487897-04:00",
   "fenetre_heures": 24
 }
