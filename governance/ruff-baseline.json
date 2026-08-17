@@ -1,6 +1,6 @@
 {
   "_schema": "ruff-baseline-v1",
-  "_description": "Cliquet Ruff bloquant (RC1-020 #450, increment 2) sur les 13 regles categorisees defaut_candidat par governance/ruff-classification.json (increment 1). Genere par scripts/ruff_ratchet.py (mesure reelle, jamais a la main) — voir scripts/ruff_ratchet.py pour la semantique complete du cliquet.",
+  "_description": "Baseline du cliquet Ruff (regles defaut_candidat), RC1-020 #450. Fichier GENERE par scripts/ruff_ratchet.py --regenerer-baseline : ne jamais editer a la main. Toute regeneration est une operation de maintenance declaree, review-visible via le diff git, toujours suivie d'une revue humaine/scellee avant merge.",
   "version": 1,
   "regles_activees": [
     "A002",

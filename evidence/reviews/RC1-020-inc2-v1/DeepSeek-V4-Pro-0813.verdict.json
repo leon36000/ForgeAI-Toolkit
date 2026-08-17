@@ -1,0 +1,25 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "critique",
+   "fichier": "scripts/ruff_ratchet.py",
+   "description": "La règle 6 de non-croissance dans anomalies() ne contrôle pas l'ajout de nouveaux fichiers ou de nouveaux couples (fichier, règle) dans la baseline par rapport à la référence. La boucle ne teste que `if fichier in dette_ref and plafond > dette_ref[fichier]`. Ainsi, une nouvelle violation peut être introduite dans un nouveau fichier, ajoutée à governance/ruff-baseline.json, puis compensée par une réduction de dette ailleurs : la borne totale n'augmente pas et le gate passe alors que la base s'étend. C'est contraire au but bloquant du cliquet.",
+   "preuve": "scripts/ruff_ratchet.py:428-429 : `for fichier, plafond in sorted(dette_base.items()): if fichier in dette_ref and plafond > dette_ref[fichier]` ; aucun symétrique `if fichier not in dette_ref`."
+  },
+  {
+   "severite": "majeure",
+   "fichier": "scripts/ruff_ratchet.py",
+   "description": "La liste dynamique `regles_defaut_candidat` n'est pas vérifiée contre `base_locale['regles_activees']` après chargement. Une règle nouvellement classée defaut_candidat serait mesurée par `mesurer`, mais la baseline ne la plafonnerait pas si elle n'a pas été régénérée ; une violation de cette règle sur un fichier déjà baseliné et compensée par une baisse d'un autre code peut passer inaperçue.",
+   "preuve": "scripts/ruff_ratchet.py:491-493 : `regles = regles_defaut_candidat(classification_ruff)`, `base_locale = _valider_base(...)` sans comparaison `base_locale['regles_activees'] == regles`."
+  }
+ ],
+ "date_heure": "2026-08-17T16:25:16.668165+00:00",
+ "prompt_sha256": "4103c0a31e23eda0547b1787b6972cc35df1b04e2a04ab431829fd97d0a23420",
+ "reviewer_model": "DeepSeek-V4-Pro-0813",
+ "modele_servi": "1cbd427d85a4593a157a49bb0ad51ededb429b85aca980b3b23cd445246b9fcb",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

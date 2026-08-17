@@ -20,8 +20,12 @@ Une granularité en revanche ajoutée : la dette est bornée À LA FOIS par fich
 couple (fichier, règle) (`classification`, champ OBLIGATOIRE ici — alors qu'il est optionnel et
 seulement informationnel dans mypy_gate).
 
-Ce script ne fait que LIRE et VALIDER la baseline : il ne l'écrit jamais (artefact commité
-séparément, review-visible), ne modifie jamais de fichier source, n'appelle jamais `ruff --fix`.
+En fonctionnement normal, ce script ne fait que LIRE et VALIDER la baseline : il ne modifie
+jamais de fichier source et n'appelle jamais `ruff --fix`. La SEULE exception est le mode de
+maintenance explicite `--regenerer-baseline` (opération déclarée, review-visible via le diff git
+du fichier généré, toujours suivie d'une revue humaine/scellée avant merge, jamais automatique
+en CI), qui réécrit intégralement la baseline depuis une mesure fraîche — la baseline reste un
+artefact commité, symétriquement à `Docs/BASELINE-MYPY.json` pour `mypy_gate.py`.
 
 LIMITE RÉSIDUELLE ASSUMÉE (même nature que celle documentée dans `mypy_gate.py` pour
 `type_ignore_lignes`) : la règle 4 (comparaison par couple fichier/règle) ne parcourt que les
@@ -199,6 +203,42 @@ def agreger(
     return dette, classification
 
 
+def construire_baseline(racine: Path, regles: list[str]) -> dict[str, Any]:
+    """Construit une baseline `ruff-baseline-v1` COMPLÈTE depuis une mesure fraîche : appelle
+    `mesurer(racine, regles)` puis `agreger(...)`, et retourne un dict conforme au schéma validé
+    par `_valider_base` — `_schema`, `_description`, `version` (1), `regles_activees` (triées
+    alphabétiquement), `borne.total_violations` (EXACTEMENT la somme de `dette`, sans aucune
+    marge cachée), `dette` (triée par clé fichier) et `classification` (triée par clé fichier,
+    puis par clé code à l'intérieur de chaque fichier — les dicts Python conservent l'ordre
+    d'insertion, donc le JSON sérialisé est déterministe et diff-stable).
+
+    AUCUN I/O fichier ici : la fonction n'écrit jamais `governance/ruff-baseline.json`
+    elle-même — la sérialisation et l'écriture sont la responsabilité de l'appelant (`main`,
+    mode `--regenerer-baseline`), afin que cette fonction reste directement testable. Seul I/O
+    indirect : le subprocess `ruff check` invoqué par `mesurer`."""
+    violations = mesurer(racine, regles)
+    dette, classification = agreger(violations)
+    dette_triee = {fichier: dette[fichier] for fichier in sorted(dette)}
+    classification_triee = {
+        fichier: {code: classification[fichier][code] for code in sorted(classification[fichier])}
+        for fichier in sorted(classification)
+    }
+    return {
+        "_schema": "ruff-baseline-v1",
+        "_description": (
+            "Baseline du cliquet Ruff (regles defaut_candidat), RC1-020 #450. Fichier GENERE "
+            "par scripts/ruff_ratchet.py --regenerer-baseline : ne jamais editer a la main. "
+            "Toute regeneration est une operation de maintenance declaree, review-visible via "
+            "le diff git, toujours suivie d'une revue humaine/scellee avant merge."
+        ),
+        "version": 1,
+        "regles_activees": sorted(regles),
+        "borne": {"total_violations": sum(dette_triee.values())},
+        "dette": dette_triee,
+        "classification": classification_triee,
+    }
+
+
 def _valider_regles_activees(regles_activees: Any, libelle: str) -> list[str]:
     """Valide `regles_activees` (liste non vide de chaînes non vides, sans doublon, triée
     alphabétiquement) et la retourne. Lève ValueError avec message explicite sinon."""
@@ -251,6 +291,23 @@ def _valider_dette(dette: Any, libelle: str) -> dict[str, int]:
                 f"{libelle}.dette[{fichier!r}] doit etre un entier strictement positif"
             )
     return dette
+
+
+def _valider_coherence_borne_dette(
+    total_violations: int, dette: dict[str, int], libelle: str
+) -> None:
+    """Vérifie que `borne.total_violations` est EXACTEMENT égale à la somme des plafonds de
+    `dette` (correctif post-revue : sans cette égalité, une borne gonflée au-dessus de la somme
+    réelle des plafonds offrirait une marge cachée capable d'absorber de nouvelles violations
+    sans jamais déclencher la règle 5 de `anomalies`). Lève ValueError avec message explicite
+    en cas d'écart."""
+    somme_dette = sum(dette.values())
+    if total_violations != somme_dette:
+        raise ValueError(
+            f"{libelle}.borne.total_violations ({total_violations}) ne correspond pas a la "
+            f"somme de dette ({somme_dette}) : aucune marge cachee n'est admise entre la "
+            "borne totale et la dette par fichier"
+        )
 
 
 def _valider_classification(
@@ -318,12 +375,13 @@ def _valider_classification(
 def _valider_base(base: Any, libelle: str) -> dict[str, Any]:
     """Valide l'intégralité du schéma `ruff-baseline-v1` : `version` (entier non booléen),
     `regles_activees` (liste non vide de chaînes non vides, sans doublon, triée
-    alphabétiquement), `borne.total_violations` (entier >= 0 non booléen), `dette` (dict
-    chemin -> entier strictement positif non booléen), `classification` (obligatoire, clés
-    exactement celles de `dette`, somme par fichier égale à `dette[fichier]`, aucun code hors de
-    `regles_activees`). `libelle` est un texte court (ex. "base locale", "base de reference")
-    permettant à l'appelant de distinguer quelle base a échoué. Lève ValueError avec message
-    explicite si un invariant est violé. Retourne `base` si valide."""
+    alphabétiquement), `borne.total_violations` (entier >= 0 non booléen, et EXACTEMENT égal à
+    la somme des plafonds de `dette` — aucune marge cachée), `dette` (dict chemin -> entier
+    strictement positif non booléen), `classification` (obligatoire, clés exactement celles de
+    `dette`, somme par fichier égale à `dette[fichier]`, aucun code hors de `regles_activees`).
+    `libelle` est un texte court (ex. "base locale", "base de reference") permettant à
+    l'appelant de distinguer quelle base a échoué. Lève ValueError avec message explicite si un
+    invariant est violé. Retourne `base` si valide."""
     if not isinstance(base, dict):
         raise ValueError(f"{libelle} doit etre un objet JSON")
 
@@ -332,8 +390,9 @@ def _valider_base(base: Any, libelle: str) -> dict[str, Any]:
         raise ValueError(f"{libelle}.version doit etre un entier")
 
     regles_activees = _valider_regles_activees(base.get("regles_activees"), libelle)
-    _valider_borne(base.get("borne"), libelle)
+    total_violations = _valider_borne(base.get("borne"), libelle)
     dette = _valider_dette(base.get("dette"), libelle)
+    _valider_coherence_borne_dette(total_violations, dette, libelle)
     _valider_classification(base.get("classification"), dette, regles_activees, libelle)
 
     return base
@@ -343,12 +402,17 @@ def anomalies(
     mesure_dette: dict[str, int],
     mesure_classification: dict[str, dict[str, int]],
     fichiers_reels: set[str],
+    regles_courantes: list[str],
     base_locale: dict[str, Any],
     base_reference: dict[str, Any] | None,
 ) -> list[str]:
     """Logique pure de comparaison — aucun I/O, aucun subprocess. Valide `base_locale` (et
     `base_reference` si fournie) via `_valider_base`, puis contrôle dans l'ordre :
 
+    0. cohérence des règles : `regles_activees` de la baseline doit correspondre EXACTEMENT
+       (aux tris près) aux règles `defaut_candidat` réellement dérivées de la classification
+       courante (`regles_courantes`) — sinon la baseline est périmée et doit être régénérée,
+       même si tous les comptes sont verts ;
     1. fichier réel en violation absent de la base locale (nouveau fichier jamais baseliné) ;
     2. dette dépassée par fichier (régression vs le plafond baseliné) ;
     3. fichier baseliné en dette mais désormais propre (doit être retiré — la base doit
@@ -359,10 +423,14 @@ def anomalies(
     5. borne totale inconditionnelle (`borne.total_violations`) ;
     6. si `base_reference` est fournie (`None` = référence non chargeable, ex. premier commit du
        mécanisme — PAS une erreur) : aucun plafond de `dette` augmenté vs la référence pour un
-       fichier présent dans les deux ; un fichier retiré de la `dette` de référence n'est
-       légitime que si son décompte réel actuel est 0 (nettoyage cohérent), sinon retrait non
-       justifié ; aucun compte `classification[fichier][code]` augmenté vs la référence pour un
-       couple présent dans les deux ; `borne.total_violations` non augmentée vs la référence.
+       fichier présent dans les deux ; TOUT fichier de la `dette` locale ABSENT de la `dette`
+       de référence est une extension non justifiée (le plafond implicite de référence d'un
+       fichier jamais vu est 0 — philosophie mypy_gate : la dette décroît, jamais l'inverse) ;
+       un fichier retiré de la `dette` de référence n'est légitime que si son décompte réel
+       actuel est 0 (nettoyage cohérent), sinon retrait non justifié ; aucun compte
+       `classification[fichier][code]` augmenté vs la référence pour un couple présent dans les
+       deux, et TOUT couple (fichier, code) local ABSENT de la référence est une extension non
+       justifiée ; `borne.total_violations` non augmentée vs la référence.
 
     Retourne la liste des messages d'anomalie (vide si aucune) — chaque message est une phrase
     française explicite et actionnable : quoi, valeurs concrètes, pourquoi c'est un problème."""
@@ -377,6 +445,16 @@ def anomalies(
     classification_base = base_validee["classification"]
     borne_totale = base_validee["borne"]["total_violations"]
     resultat: list[str] = []
+
+    # Règle 0 : les règles activées de la baseline doivent refléter la classification courante.
+    regles_baseline_triees = sorted(base_validee["regles_activees"])
+    regles_courantes_triees = sorted(regles_courantes)
+    if regles_baseline_triees != regles_courantes_triees:
+        resultat.append(
+            f"les regles activees de la baseline ({regles_baseline_triees}) ne correspondent "
+            f"plus aux regles defaut_candidat actuelles de la classification "
+            f"({regles_courantes_triees}) : regenerer governance/ruff-baseline.json"
+        )
 
     # Règle 1 : fichier réel en violation absent de la base locale.
     for fichier in sorted(fichiers_reels):
@@ -430,7 +508,12 @@ def anomalies(
         borne_ref = reference_validee["borne"]["total_violations"]
 
         for fichier, plafond in sorted(dette_base.items()):
-            if fichier in dette_ref and plafond > dette_ref[fichier]:
+            if fichier not in dette_ref:
+                resultat.append(
+                    f"fichier {fichier} ajoute a la dette baselinee, absent de la base de "
+                    "reference : extension non justifiee"
+                )
+            elif plafond > dette_ref[fichier]:
                 resultat.append(
                     f"dette baselinee pour {fichier} augmentee depuis la reference "
                     f"({plafond} > {dette_ref[fichier]}) : la base doit decroitre, jamais "
@@ -451,7 +534,12 @@ def anomalies(
         for fichier, comptes in sorted(classification_base.items()):
             comptes_ref = classification_ref.get(fichier, {})
             for code, plafond in sorted(comptes.items()):
-                if code in comptes_ref and plafond > comptes_ref[code]:
+                if code not in comptes_ref:
+                    resultat.append(
+                        f"fichier {fichier} : regle {code} ajoutee a la classification "
+                        "baselinee, absente de la base de reference : extension non justifiee"
+                    )
+                elif plafond > comptes_ref[code]:
                     resultat.append(
                         f"classification baselinee pour {fichier}[{code}] augmentee depuis "
                         f"la reference ({plafond} > {comptes_ref[code]}) : la base doit "
@@ -470,7 +558,9 @@ def anomalies(
 def main(argv: list[str] | None = None) -> int:
     """Execute le gate de cliquet Ruff (règles defaut_candidat). Retourne 0 si le cliquet est
     vert, 1 si au moins une anomalie est détectée ou si une erreur attendue survient (jamais de
-    traceback brut qui fuite en CI)."""
+    traceback brut qui fuite en CI). Avec `--regenerer-baseline`, régénère intégralement
+    `governance/ruff-baseline.json` depuis une mesure fraîche (opération de maintenance
+    déclarée, jamais automatique en CI), affiche un résumé et retourne 0 (1 en cas d'erreur)."""
     parser = argparse.ArgumentParser(
         description="Controle le cliquet Ruff (regles defaut_candidat) de ForgeAI."
     )
@@ -481,6 +571,15 @@ def main(argv: list[str] | None = None) -> int:
         metavar="REF",
         help="reference git de la base pour le controle de non-croissance",
     )
+    parser.add_argument(
+        "--regenerer-baseline",
+        action="store_true",
+        help=(
+            "regenere governance/ruff-baseline.json depuis une mesure fraiche, puis quitte "
+            "(operation de maintenance declaree, review-visible via le diff git, jamais "
+            "automatique en CI)"
+        ),
+    )
     arguments = parser.parse_args(argv)
 
     racine = Path(arguments.racine)
@@ -490,6 +589,31 @@ def main(argv: list[str] | None = None) -> int:
     try:
         classification_ruff = _charger_json(chemin_classification)
         regles = regles_defaut_candidat(classification_ruff)
+    except (OSError, UnicodeError, ValueError, RuntimeError) as erreur:
+        print(str(erreur), file=sys.stderr)
+        return 1
+
+    # Mode maintenance --regenerer-baseline : s'exécute AVANT tout chargement de l'ancienne
+    # baseline — il la REMPLACE intégralement (le fichier n'a donc pas besoin d'exister pour
+    # être (re)généré la première fois) et ne fait AUCUNE comparaison de non-croissance. Le
+    # fichier généré reste un artefact commité, review-visible via le diff git, toujours suivi
+    # d'une revue humaine/scellée avant merge.
+    if arguments.regenerer_baseline:
+        try:
+            nouvelle_base = construire_baseline(racine, regles)
+            texte_base = json.dumps(nouvelle_base, indent=2, ensure_ascii=False) + "\n"
+            chemin_base.write_text(texte_base, encoding="utf-8")
+        except (OSError, UnicodeError, ValueError, RuntimeError) as erreur:
+            print(str(erreur), file=sys.stderr)
+            return 1
+        print(
+            f"Baseline regeneree dans {str(chemin_base)} : "
+            f"{nouvelle_base['borne']['total_violations']} violation(s) defaut_candidat "
+            f"sur {len(nouvelle_base['dette'])} fichier(s) — a committer apres revue."
+        )
+        return 0
+
+    try:
         base_locale = _valider_base(_charger_json(chemin_base), "base locale")
     except (OSError, UnicodeError, ValueError, RuntimeError) as erreur:
         print(str(erreur), file=sys.stderr)
@@ -524,6 +648,7 @@ def main(argv: list[str] | None = None) -> int:
             mesure_dette,
             mesure_classification,
             reels,
+            regles,
             base_locale,
             base_reference,
         )
