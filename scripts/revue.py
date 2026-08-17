@@ -268,7 +268,20 @@ def _diff_canonique(
     _validate_git_ref(base_ref)
     _validate_git_ref(head_ref)
     execute = _default_runner if runner is None else runner
-    raw = execute(["git", "diff", "--raw", "--no-renames", "-z", f"{base_ref}...{head_ref}"])
+    # --no-abbrev (#569) : SANS ce flag, git --raw abrège les hash d'objet à la longueur la plus
+    # courte qu'IL juge unique — une heuristique qui dépend du NOMBRE TOTAL D'OBJETS du dépôt
+    # LOCAL (donc de l'historique de fetch de la machine qui exécute), pas seulement du contenu
+    # des deux extrémités du diff. Un worktree partageant le `.git` du dépôt principal (des
+    # dizaines de milliers d'objets accumulés) et un clone frais (seulement ce qui est sur
+    # GitHub) abrègent alors à des longueurs DIFFÉRENTES pour le MÊME diff logique, produisant
+    # un digest différent — le gate reviews-sealed en CI (toujours un clone frais) peut alors
+    # rejeter à tort un reçu généré localement (worktree). --full-index NE corrige PAS ce cas :
+    # ce flag ne s'applique qu'au format patch normal (ligne `index aaaa..bbbb`), jamais au
+    # format `--raw`. Vérifié : avec --no-abbrev, les deux environnements produisent des hash
+    # SHA-1 complets (40 caractères) strictement identiques pour un même diff logique.
+    raw = execute(
+        ["git", "diff", "--raw", "--no-renames", "--no-abbrev", "-z", f"{base_ref}...{head_ref}"]
+    )
     fields = raw.split("\0")
     entries: list[tuple[str, str, str, str]] = []
     index = 0
