@@ -1,0 +1,37 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "tests/test_revue.py",
+   "description": "Le critère d'acceptation 1 exige que tests/test_revue.py et tests/test_reviews_gate.py soient 100% verts, mais le diff ne fournit aucune sortie d'exécution permettant de le vérifier.",
+   "preuve": "Story RC1-569, Critères d'acceptation 1 : « tests/test_revue.py et tests/test_reviews_gate.py : 100% verts » ; le diff ajoute seulement test_diff_canonique_invoque_git_avec_no_abbrev sans log de suite verte."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "scripts/revue.py",
+   "description": "Le critère d'acceptation 2 exige une preuve reproduite d'identité du digest entre worktree et clone frais sur la PR #568 ; cette preuve n'est pas fournie dans le diff, seulement une affirmation dans un commentaire.",
+   "preuve": "Story RC1-569, Critères d'acceptation 2 : « Preuve reproduite : le digest ... IDENTIQUE entre un worktree ... et un clone frais ... vérifié sur le diff réel de la PR #568 » ; diff scripts/revue.py : commentaire « Vérifié : avec --no-abbrev... » sans artefact de preuve."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "scripts/no_stub_scan.py",
+   "description": "Le critère d'acceptation 3 exige que python3 scripts/no_stub_scan.py --all passe, mais aucune sortie de cette commande n'est présente dans le diff.",
+   "preuve": "Story RC1-569, Critères d'acceptation 3 : « python3 scripts/no_stub_scan.py --all passe » ; aucune sortie de commande dans le diff."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "tests/test_revue.py",
+   "description": "Le test ajouté vérifie uniquement la présence de --no-abbrev dans la commande simulée ; il ne démontre pas l'identité du digest entre dépôts locaux différents exigée par le critère 2.",
+   "preuve": "tests/test_revue.py, test_diff_canonique_invoque_git_avec_no_abbrev : « assert '--no-abbrev' in commandes_recues[0] »."
+  }
+ ],
+ "date_heure": "2026-08-17T04:11:15.295081+00:00",
+ "prompt_sha256": "f162ebb4421c4c9d1ec0b13b29b9a6a5483bc599da87b86a4748a618307c0097",
+ "reviewer_model": "Qwen3.8-2.4T",
+ "modele_servi": "b9de6bc895fe95ccacf7d9fa9b1cf29ca44d34f03e249738f325c9dee3790b78",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

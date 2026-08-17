@@ -1,0 +1,25 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "scripts/revue.py",
+   "description": "La preuve de reproduction du critère d'acceptation n'est pas intégrée dans le diff (test d'intégration manquant). La story affirme la reproduction sur le diff réel de la PR #568, mais aucune trace d'exécution n'est fournie.",
+   "preuve": "Story RC1-569 : 'Vérifié : avec ce flag, worktree et clone frais produisent des hash SHA-1 complets (40 caractères) strictement identiques pour un même diff logique.' Aucun test dans le diff ne valide cette affirmation."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "scripts/no_stub_scan.py",
+   "description": "Le critère 'python3 scripts/no_stub_scan.py --all passe' ne peut pas être vérifié à partir du diff seul.",
+   "preuve": "Absence d'exécution du script dans le diff."
+  }
+ ],
+ "date_heure": "2026-08-17T04:11:15.289265+00:00",
+ "prompt_sha256": "f162ebb4421c4c9d1ec0b13b29b9a6a5483bc599da87b86a4748a618307c0097",
+ "reviewer_model": "MiMo-V2.5-Pro",
+ "modele_servi": "mimo-v25-pro-openrouter",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}
