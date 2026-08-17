@@ -1,0 +1,45 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "majeure",
+   "fichier": "tests/test_rel038b_unicite.py",
+   "description": "Le contrat annoncé impose une capture par signature exacte (type + message). Or le hook utilise une inclusion de sous-chaîne, ce qui élargit la capture à tout KeyboardInterrupt contenant ce fragment au lieu de le déléguer. Ce n'est pas une simple logique interne : c'est le contrat de filtrage du hook.",
+   "preuve": "+        if args.exc_type is KeyboardInterrupt and signature_attendue in str(args.exc_value):"
+  },
+  {
+   "severite": "mineure",
+   "fichier": "tests/test_rel038b_unicite.py",
+   "description": "Le diff introduit l'usage de threading.excepthook sans aucun hunk d'import visible. Si threading n'était pas déjà importé dans ce fichier, l'appelant est cassé (NameError). Le diff ne permet pas de lever ce doute.",
+   "preuve": "+    threading.excepthook = hook_capture (aucun ajout d'import threading visible dans le diff)"
+  },
+  {
+   "severite": "mineure",
+   "fichier": "stories/RC1-022.md",
+   "description": "Ajout d'un fichier de story non répercuté dans governance/STATE-CURRENT.json ni governance/STATE-CURRENT.md. Si ces fichiers constituent l'inventaire d'intégrité du dépôt, l'ajout crée une incohérence inter-fichiers.",
+   "preuve": "+++ b/stories/RC1-022.md (nouveau fichier) sans ajout d'entrée correspondante dans les hunks de governance/STATE-CURRENT.json"
+  },
+  {
+   "severite": "mineure",
+   "fichier": "pyproject.toml",
+   "description": "La nouvelle entrée filterwarnings change le contrat global de pytest pour tous les tests : tout PytestUnhandledThreadExceptionWarning non intercepté devient une erreur. Le diff ne contient aucune preuve que les autres tests existants ne déclenchent pas ce warning ; le doute contractuel sur les appelants existants n'est pas levé.",
+   "preuve": "+filterwarnings = [\"error::pytest.PytestUnhandledThreadExceptionWarning\"]"
+  },
+  {
+   "severite": "mineure",
+   "fichier": "tests/test_rel038b_unicite.py",
+   "description": "Les assertions finales ne vérifient que le type des exceptions capturées, pas leur message, alors que le contrat de capture repose sur type + message. Une dérive du filtre de message ne serait pas détectée par les assertions.",
+   "preuve": "+    assert all(e.exc_type is KeyboardInterrupt for e in exceptions_capturees)"
+  }
+ ],
+ "date_heure": "2026-08-16T06:26:01.374089+00:00",
+ "pack_sha256": "713caa98042c15f28641c691522a6000eafb5e9112465abee7afbc9838e22c4d",
+ "role_sha256": "3e836bda0d815badaccf03df40ce861daaa1745b0f17728069985cb32c45de82",
+ "role": "contrats",
+ "reviewer_model": "Qwen3.8-2.4T",
+ "modele_servi": "b9de6bc895fe95ccacf7d9fa9b1cf29ca44d34f03e249738f325c9dee3790b78",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

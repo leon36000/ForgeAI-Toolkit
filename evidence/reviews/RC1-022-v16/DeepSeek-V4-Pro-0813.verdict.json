@@ -1,0 +1,25 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "critique",
+   "fichier": "pyproject.toml",
+   "description": "Le filtre global `error::pytest.PytestUnhandledThreadExceptionWarning` ne peut pas transformer une occurrence inattendue en échec de test. En CPython, `threading.excepthook` est invoqué par `Thread._invoke_excepthook`, qui encapsule l'appel dans un try/except Exception et avale l'exception levée par le hook. Sous action `error`, le hook pytest `_thread_exception_handler` lève l'instance de `PytestUnhandledThreadExceptionWarning` via `warnings.warn`; cette instance étant une sous-classe d'Exception, elle est avalée par `threading` et n'atteint jamais pytest ni le test en cours.",
+   "preuve": "`pyproject.toml` ligne ajoutée : `filterwarnings = [\"error::pytest.PytestUnhandledThreadExceptionWarning\"]` ; comportement standard de CPython `Thread._invoke_excepthook` (`try: excepthook(args) except Exception: pass`)."
+  },
+  {
+   "severite": "majeure",
+   "fichier": "tests/test_rel038b_unicite.py",
+   "description": "Le commentaire de filet de sécurité structurel est inopérant : une exception non reconnue est déléguée à `hook_precedent` (le hook pytest normal), censé faire échouer le test via la politique globale `error::...`. Comme cette politique est avalée par `threading` (voir objection critique), une exception non reconnue pendant G4 serait ignorée sans faire échouer le test. Les assertions finales ne vérifient que les exceptions reconnues, donc ce cas serait masqué.",
+   "preuve": "Commentaire dans le diff : « Filet de sécurité structurel ... fait échouer le test via la politique globale error::... de pyproject.toml » puis ligne `hook_precedent(args)` ; assertion finale `assert exceptions_interceptees == exceptions_attendues` qui ignore les exceptions non reconnues."
+  }
+ ],
+ "date_heure": "2026-08-17T02:48:13.132417+00:00",
+ "prompt_sha256": "691b77706708e643ad0be68a24cf8eb04d7900193eb0cc0b5552077d1b3b81fc",
+ "reviewer_model": "DeepSeek-V4-Pro-0813",
+ "modele_servi": "1cbd427d85a4593a157a49bb0ad51ededb429b85aca980b3b23cd445246b9fcb",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

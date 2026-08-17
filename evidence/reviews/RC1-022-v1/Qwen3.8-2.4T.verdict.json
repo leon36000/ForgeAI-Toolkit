@@ -1,0 +1,33 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "critique",
+   "fichier": "tests/test_rel038b_unicite.py",
+   "description": "La story exige d'envelopper la portion du test G4 dans pytest.warns(...) pour transformer le warning en assertion explicite ; le diff remplace ce contrat par un marqueur filterwarnings ignore. Le critère d'acceptation 3, qui demande une preuve négative en retirant pytest.warns(...), devient impossible à satisfaire tel que rédigé.",
+   "preuve": "diff tests/test_rel038b_unicite.py : +@pytest.mark.filterwarnings(\"ignore::pytest.PytestUnhandledThreadExceptionWarning\") ; stories/RC1-022.md : 3. Preuve négative : retirer temporairement le pytest.warns(...) fait échouer la suite"
+  },
+  {
+   "severite": "majeure",
+   "fichier": "tests/test_rel038b_unicite.py",
+   "description": "Le warning n'est plus asserté mais ignoré : si le warning disparaît, change de catégorie ou n'est plus émis, le test passe silencieusement. Cela affaiblit le contrôle de non-régression annoncé par la story et le contrat implicite selon lequel le warning attendu doit être vérifié.",
+   "preuve": "diff tests/test_rel038b_unicite.py : +@pytest.mark.filterwarnings(\"ignore::pytest.PytestUnhandledThreadExceptionWarning\")"
+  },
+  {
+   "severite": "mineure",
+   "fichier": "stories/RC1-022.md",
+   "description": "Les critères d'acceptation exigent une suite complète verte, une absence de warnings summary et une preuve négative, mais le diff ne fournit aucune sortie de commande vérifiable permettant de lever ce doute.",
+   "preuve": "stories/RC1-022.md : 2. python3 -m pytest -q (suite complète, hors test_data002b_wal_idempotent.py — problème distinct) : 100% vert, section « warnings summary » absente ; aucune sortie de commande dans le diff"
+  }
+ ],
+ "date_heure": "2026-08-16T04:57:50.381981+00:00",
+ "pack_sha256": "faf36fe4aefa8d83255d10c4346fe9f1055d8a6051fe2c82249c8aab923a0cc8",
+ "role_sha256": "3e836bda0d815badaccf03df40ce861daaa1745b0f17728069985cb32c45de82",
+ "role": "contrats",
+ "reviewer_model": "Qwen3.8-2.4T",
+ "modele_servi": "b9de6bc895fe95ccacf7d9fa9b1cf29ca44d34f03e249738f325c9dee3790b78",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

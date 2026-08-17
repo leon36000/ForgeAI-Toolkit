@@ -1,0 +1,27 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "critique",
+   "fichier": "tests/test_rel038b_unicite.py",
+   "description": "Course entre la libération de l'hôte dans le finally et l'appel de threading.excepthook. La boucle d'attente sort dès que `_PREPARE_ACTIVE == set()`, mais l'exception n'est interceptée par l'excepthook qu'après la propagation hors de `Thread.run()`. Rien ne garantit que `exceptions_capturees` contienne déjà l'élément au moment de l'assertion. Le test peut échouer de manière intermittente avec `len(exceptions_capturees) == 0` alors que le comportement produit est correct.",
+   "preuve": "Diff tests/test_rel038b_unicite.py: après la boucle `for _ in range(50): if server._PREPARE_ACTIVE == set(): break; time.sleep(0.1)`, l'assertion ajoutée `assert len(exceptions_capturees) == 1` est exécutée sans jointure du thread ni attente de l'excepthook. La libération de `_PREPARE_ACTIVE` a lieu dans le `finally` de `_run_prepare`, avant que l'exception ne remonte jusqu'au `Thread.run()` et ne déclenche `threading.excepthook`."
+  },
+  {
+   "severite": "majeure",
+   "fichier": "stories/RC1-022.md",
+   "description": "Le critère d'acceptation 3 exige de retirer temporairement le `pytest.warns(...)` pour prouver le filtre global, mais le diff ne contient aucun `pytest.warns(...)` (la story elle-même indique que cette approche ne fonctionne pas). Le critère est donc insatisfaisable tel que rédigé, et la preuve négative demandée n'est pas fournie.",
+   "preuve": "stories/RC1-022.md: '3. Preuve négative : retirer temporairement le `pytest.warns(...)` fait échouer la suite avec `PytestUnhandledThreadExceptionWarning` promu en erreur' ; diff tests/test_rel038b_unicite.py: aucune ligne `pytest.warns`, uniquement `monkeypatch.setattr(threading, \"excepthook\", exceptions_capturees.append)`."
+  }
+ ],
+ "date_heure": "2026-08-16T05:05:56.421528+00:00",
+ "pack_sha256": "c5d05aadce89996c2fea604f81ac0073fddfb803888d0c82d4eb820f598f2697",
+ "role_sha256": "2678fe5ffcf7912532cac896ebb1185183fdc42033d4460f07073c6d38e627a0",
+ "role": "correction",
+ "reviewer_model": "DeepSeek-V4-Pro-0813",
+ "modele_servi": "1cbd427d85a4593a157a49bb0ad51ededb429b85aca980b3b23cd445246b9fcb",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

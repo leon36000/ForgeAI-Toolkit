@@ -1,0 +1,21 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "majeure",
+   "fichier": "tests/test_rel038b_unicite.py",
+   "description": "Le hook global avale toute exception de thread dont le type et le message correspondent, sans établir qu'elle provient du thread créé par `_run_prepare` ni de l'appel testé. Un thread concurrent peut lever `KeyboardInterrupt(\"interruption non rattrapée\")` pendant la fenêtre : son échec ne sera plus remonté à pytest. Deux telles exceptions concurrentes peuvent en outre satisfaire les compteurs `== 1` et `== 2`, masquant la disparition des exceptions attendues de `faux_preparer_qui_echappe` et faisant passer le test comme si le contrat avait été vérifié.",
+   "preuve": "tests/test_rel038b_unicite.py, fonction `hook_capture`: `if args.exc_type is KeyboardInterrupt and str(args.exc_value) == signature_attendue: exceptions_capturees.append(args)` ; la branche ne vérifie aucune identité, cible, provenance ou appartenance de `args.thread` au thread lancé par `_run_prepare`, tandis que la branche correspondante ne délègue pas au `hook_original`."
+  }
+ ],
+ "date_heure": "2026-08-16T11:31:29.092070+00:00",
+ "pack_sha256": "267937565dd7778dc5b8a91df8ab9036bb62bb0a9b87e5427f7a7e92bc361c22",
+ "role_sha256": "1444f4a8ca1c52008a237fa623fec5ea4cb9dfe214259899c12d2978d09e7789",
+ "role": "securite",
+ "reviewer_model": "GPT-5.6-Terra-Pro",
+ "modele_servi": "gpt56-terra-pro-openrouter",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

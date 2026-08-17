@@ -1,0 +1,19 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "tests/test_rel038b_unicite.py",
+   "description": "Le filet de sécurité contre une exception non corrélée dépend de la transformation du warning en erreur par la politique pytest, mais le diff seul ne permet pas de vérifier qu'une erreur déclenchée depuis threading.excepthook dans un thread est bien propagée comme échec du test.",
+   "preuve": "Dans `hook_exceptions` : `hook_precedent(args)` ; dans `pyproject.toml` : `filterwarnings = [\"error::pytest.PytestUnhandledThreadExceptionWarning\"]`."
+  }
+ ],
+ "date_heure": "2026-08-17T01:21:58.587696+00:00",
+ "prompt_sha256": "28628ae1e51a23c63733566f2fb2e786969d2a06649d19e14b5079bd5cfe1a15",
+ "reviewer_model": "Qwen3.8-2.4T",
+ "modele_servi": "b9de6bc895fe95ccacf7d9fa9b1cf29ca44d34f03e249738f325c9dee3790b78",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

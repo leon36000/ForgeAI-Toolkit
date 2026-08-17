@@ -1,0 +1,31 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "stories/RC1-022.md",
+   "description": "Les critères d'acceptation runtime (pytest G4, suite complète, no_stub_scan) sont affirmés mais aucune sortie n'est présente dans le diff; le reviewer ne peut pas les vérifier statiquement.",
+   "preuve": "+3. Suite complète re-vérifiée 100% verte, 0 warning résiduel."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "tests/test_rel038b_unicite.py",
+   "description": "Le docstring du test référence l'ancien répertoire `reviews/` alors que la story indique la migration vers `evidence/reviews/`; incohérence documentaire.",
+   "preuve": "+    Design retenu après 9 rounds de revue scellée rejetés (voir `reviews/RC1-022-v1/` à `-v10/` —"
+  },
+  {
+   "severite": "mineure",
+   "fichier": "tests/test_rel038b_unicite.py",
+   "description": "L'accès à `server._PREPARE_ACTIVE` dans le test n'est pas synchronisé alors que des threads serveur peuvent modifier cet ensemble; doute sur une lecture concurrente.",
+   "preuve": "+        if server._PREPARE_ACTIVE == set():"
+  }
+ ],
+ "date_heure": "2026-08-17T03:11:02.197936+00:00",
+ "prompt_sha256": "3064bb0eb2ccbbea16087860a2261d6401e360b3dce28ad6eda1a49c8145b00a",
+ "reviewer_model": "Qwen3.8-2.4T",
+ "modele_servi": "b9de6bc895fe95ccacf7d9fa9b1cf29ca44d34f03e249738f325c9dee3790b78",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

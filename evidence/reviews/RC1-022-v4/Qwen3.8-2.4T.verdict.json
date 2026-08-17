@@ -1,0 +1,39 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "majeure",
+   "fichier": "tests/test_rel038b_unicite.py",
+   "description": "Le test impose comme contrat de provenance que le nom du thread contienne `_run_prepare`, mais la story déclare que les warnings initiaux étaient portés par `Thread-440`/`Thread-442`. Ce n'est pas cohérent avec un nom de thread fiable; l'assertion peut donc échouer ou dépendre d'un comportement de nommage non garanti.",
+   "preuve": "tests/test_rel038b_unicite.py:+        assert \"_run_prepare\" in args.thread.name, ( | stories/RC1-022.md:+      2 warnings distincts (`Thread-440`/`Thread-442`), pas 1"
+  },
+  {
+   "severite": "mineure",
+   "fichier": "tests/test_rel038b_unicite.py",
+   "description": "Le hunk introduit l'usage de `threading.excepthook` sans montrer l'import de `threading`; si l'import n'existe pas en tête de fichier, l'appelant pytest échouera avec NameError.",
+   "preuve": "tests/test_rel038b_unicite.py:+    threading.excepthook = hook_capture"
+  },
+  {
+   "severite": "mineure",
+   "fichier": "governance/STATE-CURRENT.json",
+   "description": "Le diff ajoute un nouveau fichier `stories/RC1-022.md`, mais les hunks de STATE-CURRENT ne montrent aucune entrée pour ce chemin; la migration de l'état gouverné n'est pas vérifiable.",
+   "preuve": "stories/RC1-022.md:+# Story RC1-022 — Politique de warnings pytest (issue #463) ; governance/STATE-CURRENT.json n'ajoute aucun champ path pour stories/RC1-022.md"
+  },
+  {
+   "severite": "mineure",
+   "fichier": "pyproject.toml",
+   "description": "Le filtre global transforme tout `PytestUnhandledThreadExceptionWarning` en erreur pour tous les tests; le diff seul ne prouve pas qu'aucun autre appelant existant ne déclenchera plus ce warning, donc le contrat global n'est pas levé sans exécution.",
+   "preuve": "pyproject.toml:+filterwarnings = [\"error::pytest.PytestUnhandledThreadExceptionWarning\"]"
+  }
+ ],
+ "date_heure": "2026-08-16T05:43:21.726910+00:00",
+ "pack_sha256": "40b079fe49221c7fcf6b2de36616d143bcdf1e9b9a137c9780b240452c59e1a3",
+ "role_sha256": "3e836bda0d815badaccf03df40ce861daaa1745b0f17728069985cb32c45de82",
+ "role": "contrats",
+ "reviewer_model": "Qwen3.8-2.4T",
+ "modele_servi": "b9de6bc895fe95ccacf7d9fa9b1cf29ca44d34f03e249738f325c9dee3790b78",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

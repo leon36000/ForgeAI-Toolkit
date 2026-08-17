@@ -1,0 +1,21 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "majeure",
+   "fichier": "tests/test_rel038b_unicite.py",
+   "description": "Le remplacement global de threading.excepthook avale silencieusement toute KeyboardInterrupt dont le message contient la chaîne attendue, sans pouvoir établir qu'elle provient du thread créé par _run_prepare. Un autre thread actif pendant la fenêtre peut donc voir son exception supprimée ; il peut aussi satisfaire artificiellement les compteurs du test si le thread ciblé ne lève plus. Le système de test continue alors comme si le comportement attendu avait été observé.",
+   "preuve": "Dans hook_capture : `if args.exc_type is KeyboardInterrupt and signature_attendue in str(args.exc_value): exceptions_capturees.append(args)`, sans contrôle d'identité, d'origine ou de création du thread ; sinon seulement `hook_original(args)`. La condition utilise en outre une sous-chaîne (`in`) et non une égalité de message."
+  }
+ ],
+ "date_heure": "2026-08-16T06:24:05.994672+00:00",
+ "pack_sha256": "713caa98042c15f28641c691522a6000eafb5e9112465abee7afbc9838e22c4d",
+ "role_sha256": "1444f4a8ca1c52008a237fa623fec5ea4cb9dfe214259899c12d2978d09e7789",
+ "role": "securite",
+ "reviewer_model": "GPT-5.6-Terra-Pro",
+ "modele_servi": "gpt56-terra-pro-openrouter",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

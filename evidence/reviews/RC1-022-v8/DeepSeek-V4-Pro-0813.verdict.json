@@ -1,0 +1,21 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "critique",
+   "fichier": "tests/test_rel038b_unicite.py",
+   "description": "Le diff introduit des références à `threading.excepthook` et `threading.current_thread()` dans le test G4, mais aucun hunk du diff n'ajoute `import threading`. Si ce module n'est pas déjà importé dans le fichier (l'ancien test G4 n'utilisait pas `threading` explicitement), le test échoue immédiatement par `NameError`, ce qui viole le critère d'acceptation 1 (`PASS`).",
+   "preuve": "Lignes ajoutées dans le diff : `+    hook_original = threading.excepthook` et `+        threads_qui_ont_echappe.append(threading.current_thread())` ; aucun ajout d'import `threading` n'est présent dans le diff."
+  }
+ ],
+ "date_heure": "2026-08-16T11:56:31.904716+00:00",
+ "pack_sha256": "c18aff5ca7b6631c560494369c1801ba02d4a7ac54ff9cca0660284c1c4a872e",
+ "role_sha256": "2678fe5ffcf7912532cac896ebb1185183fdc42033d4460f07073c6d38e627a0",
+ "role": "correction",
+ "reviewer_model": "DeepSeek-V4-Pro-0813",
+ "modele_servi": "1cbd427d85a4593a157a49bb0ad51ededb429b85aca980b3b23cd445246b9fcb",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

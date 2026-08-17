@@ -1,0 +1,21 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "majeure",
+   "fichier": "tests/test_rel038b_unicite.py:153-170",
+   "description": "Le remplacement global de threading.excepthook avale toute exception non gérée de n'importe quel thread pendant la durée du test, sans déléguer au hook pytest d'origine. L'unique contrôle de len(exceptions_capturees) intervient avant la fin du test : une exception d'un autre thread survenant après cette assertion, notamment pendant les opérations finales du test, est ajoutée à la liste mais jamais vérifiée ni promue en erreur. Le test et la suite peuvent donc continuer avec un échec de thread silencieusement masqué.",
+   "preuve": "Le diff ajoute `monkeypatch.setattr(threading, \"excepthook\", exceptions_capturees.append)`, qui remplace le hook pytest sans appel au hook précédent. Les assertions `assert len(exceptions_capturees) == 1` et `assert exceptions_capturees[0].exc_type is KeyboardInterrupt` sont exécutées une seule fois avant la poursuite du test (`code2, _ = _post_json(...)`). Toute exception de thread capturée après ces assertions n'est ni réassertée ni transmise à `_pytest.threadexception`; la politique `error::pytest.PytestUnhandledThreadExceptionWarning` de `pyproject.toml:43` est alors contournée."
+  }
+ ],
+ "date_heure": "2026-08-16T05:06:08.121519+00:00",
+ "pack_sha256": "c5d05aadce89996c2fea604f81ac0073fddfb803888d0c82d4eb820f598f2697",
+ "role_sha256": "1444f4a8ca1c52008a237fa623fec5ea4cb9dfe214259899c12d2978d09e7789",
+ "role": "securite",
+ "reviewer_model": "GPT-5.6-Terra-Pro",
+ "modele_servi": "gpt56-terra-pro-openrouter",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

@@ -1,0 +1,39 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "critique",
+   "fichier": "tests/test_rel038b_unicite.py",
+   "description": "Le test G4 modifie `threading.excepthook` sans le restaurer, ce qui contamine les tests suivants. Si un test ultérieur lève une exception de thread non gérée, elle sera traitée par `hook_exceptions` qui référence `exceptions_attendues` et `exceptions_interceptees` locales au test G4, désormais hors de portée. Cela provoquera une `NameError` ou un comportement indéfini, masquant potentiellement de vrais bugs de thread.",
+   "preuve": "Ligne 337 : `threading.excepthook = hook_exceptions` sans restauration dans un bloc `finally` ou `try/finally`. Le hook capture `exceptions_attendues` et `exceptions_interceptees` définies lignes 290-291, qui sont des variables locales au test G4. Après la fin du test, ces variables n'existent plus, mais le hook reste installé globalement."
+  },
+  {
+   "severite": "majeure",
+   "fichier": "tests/test_rel038b_unicite.py",
+   "description": "La corrélation par identité d'objet (`args.thread is thread_attendu and args.exc_value is exception_attendue`) ne garantit pas que l'exception interceptée provient de l'appel `_post_json` attendu. Un thread étranger pourrait théoriquement lever le même objet `KeyboardInterrupt` si celui-ci est partagé ou réutilisé, bien que cela soit improbable. Plus important, le test ne vérifie pas que les deux interceptions correspondent aux deux appels POST dans l'ordre, seulement que les listes finales sont égales.",
+   "preuve": "Lignes 300-303 : la corrélation utilise `is` sur l'objet exception, mais l'objet est créé localement dans `faux_preparer_qui_echappe` (ligne 320) et ajouté à `exceptions_attendues`. Si un autre thread lève le même objet (par exemple via une référence partagée), il serait faussement reconnu. De plus, l'assertion ligne 360 compare les listes entières sans vérifier l'ordre d'arrivée."
+  },
+  {
+   "severite": "majeure",
+   "fichier": "tests/test_rel038b_unicite.py",
+   "description": "La boucle d'attente de la première interception (lignes 330-335) peut se terminer prématurément si `exceptions_interceptees` contient déjà une entrée d'un test précédent (contamination due au hook non restauré). Cela fausserait les assertions suivantes.",
+   "preuve": "Lignes 330-335 : `if len(exceptions_interceptees) >= 1: break`. Si le hook global a été laissé par un test précédent et a déjà intercepté une exception, cette condition serait vraie immédiatement, sans attendre l'exception du test G4."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "pyproject.toml",
+   "description": "La politique globale `filterwarnings = [\"error::pytest.PytestUnhandledThreadExceptionWarning\"]` transforme tout warning de ce type en erreur, y compris ceux qui pourraient être légitimes dans d'autres tests. Cela pourrait casser des tests existants qui ne sont pas liés à l'issue #463.",
+   "preuve": "Ligne 49 de pyproject.toml : `filterwarnings = [\"error::pytest.PytestUnhandledThreadExceptionWarning\"]`. Aucune vérification n'est faite que les autres tests de la suite ne génèrent pas ce type de warning."
+  }
+ ],
+ "date_heure": "2026-08-17T00:53:34.121750+00:00",
+ "pack_sha256": "11b8da9ca453b639c012fbcc193c4d770559c96bec969bae7921833b252dec3f",
+ "role_sha256": "2678fe5ffcf7912532cac896ebb1185183fdc42033d4460f07073c6d38e627a0",
+ "role": "correction",
+ "reviewer_model": "DeepSeek-V4-Pro-0813",
+ "modele_servi": "1cbd427d85a4593a157a49bb0ad51ededb429b85aca980b3b23cd445246b9fcb",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

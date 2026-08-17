@@ -1,0 +1,21 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "majeure",
+   "fichier": "tests/test_rel038b_unicite.py:174-204",
+   "description": "Le hook global remplace le mécanisme pytest par une simple collecte sans vérifier que les deux exceptions capturées proviennent bien des deux threads créés par les appels POST testés. Un thread sans rapport qui lève KeyboardInterrupt pendant cette fenêtre peut se substituer à une exception attendue si l'un des faux préparateurs cesse silencieusement d'échapper. Les contrôles finaux ne vérifient que le nombre et exc_type ; le test peut donc rester vert tout en ayant absorbé une panne de thread externe et sans avoir réellement observé les deux échecs ciblés.",
+   "preuve": "La ligne `threading.excepthook = exceptions_capturees.append` intercepte globalement toutes les exceptions de threads. Les seules validations après restauration sont `assert len(exceptions_capturees) == 2` et `assert all(e.exc_type is KeyboardInterrupt for e in exceptions_capturees)`. Aucune assertion ne contrôle `e.thread`, son identité, son nom, ni une origine liée à `_run_prepare` ou à `faux_preparer_qui_echappe`."
+  }
+ ],
+ "date_heure": "2026-08-16T05:24:24.207814+00:00",
+ "pack_sha256": "bceb2840c2976e7fb2624f9c662857762698d763c0660bea29519eec39eee0c5",
+ "role_sha256": "1444f4a8ca1c52008a237fa623fec5ea4cb9dfe214259899c12d2978d09e7789",
+ "role": "securite",
+ "reviewer_model": "GPT-5.6-Terra-Pro",
+ "modele_servi": "gpt56-terra-pro-openrouter",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

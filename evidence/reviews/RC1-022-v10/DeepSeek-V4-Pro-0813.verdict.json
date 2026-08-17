@@ -1,0 +1,21 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "majeure",
+   "fichier": "tests/test_rel038b_unicite.py",
+   "description": "Le marqueur @pytest.mark.filterwarnings(\"ignore::pytest.PytestUnhandledThreadExceptionWarning\") est appliqué au test G4, mais le warning PytestUnhandledThreadExceptionWarning est émis par le plugin threadexception APRÈS la fin de la fonction de test (comme documenté dans la story : « le plugin _pytest.threadexception émet le warning APRÈS le retour de la fonction de test »). Or, le filtre global ajouté dans pyproject.toml transforme ce même warning en erreur. Si le marqueur ignore n'est plus actif au moment où le warning est émis (ce qui est plausible car les filtres de marqueurs sont généralement limités à la durée d'exécution du test, pas au teardown), le warning sera converti en erreur par le filtre global et le test G4 échouera, violant le critère d'acceptation n°1 (PASS, 0 warning affiché). Aucune preuve d'exécution n'est fournie dans le diff pour démontrer que le marqueur supprime effectivement le warning en présence du filtre global error.",
+   "preuve": "Ligne ajoutée dans tests/test_rel038b_unicite.py : +@pytest.mark.filterwarnings(\"ignore::pytest.PytestUnhandledThreadExceptionWarning\") ; ligne ajoutée dans pyproject.toml : +filterwarnings = [\"error::pytest.PytestUnhandledThreadExceptionWarning\"]. La story elle-même indique que le warning est émis après le retour de la fonction de test, ce qui soulève un doute sur la portée du marqueur."
+  }
+ ],
+ "date_heure": "2026-08-16T12:21:14.066682+00:00",
+ "pack_sha256": "5d116f17f0297b50282c951d2c024306d9a9f4b32c62e5ecbe7de3bb5471cc56",
+ "role_sha256": "2678fe5ffcf7912532cac896ebb1185183fdc42033d4460f07073c6d38e627a0",
+ "role": "correction",
+ "reviewer_model": "DeepSeek-V4-Pro-0813",
+ "modele_servi": "1cbd427d85a4593a157a49bb0ad51ededb429b85aca980b3b23cd445246b9fcb",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

@@ -1,0 +1,21 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "majeure",
+   "fichier": "tests/test_rel038b_unicite.py",
+   "description": "Le marqueur ignore un warning selon son seul message et sa catégorie, sans identité du thread ni lien causal avec `faux_preparer_qui_echappe`. Pendant G4, un thread indépendant qui échoue avec un `PytestUnhandledThreadExceptionWarning` dont le texte contient « interruption non rattrapée » sera silencieusement ignoré au lieu d'être transformé en erreur par la politique globale. Le test peut donc continuer au vert alors qu'une exception non gérée distincte est survenue.",
+   "preuve": "tests/test_rel038b_unicite.py:119-121 contient `@pytest.mark.filterwarnings(r\"ignore:(?s).*interruption non rattrapée.*:pytest.PytestUnhandledThreadExceptionWarning\")`. Cette règle ne comporte aucun critère de provenance (thread, fonction, objet ou pile) ; elle matche toute occurrence de cette catégorie dont le message satisfait la regex pendant l'exécution de G4."
+  }
+ ],
+ "date_heure": "2026-08-16T12:34:00.218637+00:00",
+ "pack_sha256": "7b66e7811d65212b18c382654326258b7a578cfc16694d1d356614e25716eb74",
+ "role_sha256": "1444f4a8ca1c52008a237fa623fec5ea4cb9dfe214259899c12d2978d09e7789",
+ "role": "securite",
+ "reviewer_model": "GPT-5.6-Terra-Pro",
+ "modele_servi": "gpt56-terra-pro-openrouter",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

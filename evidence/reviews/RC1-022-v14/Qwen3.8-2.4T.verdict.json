@@ -1,0 +1,33 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "pyproject.toml",
+   "description": "Le filtre ajouté est global à tout pytest : il change le contrat de toutes les suites/tests du dépôt. Le diff ne prouve pas l'absence d'autres tests appelants susceptibles d'émettre encore un PytestUnhandledThreadExceptionWarning ; pour eux, le warning deviendrait une erreur.",
+   "preuve": "+filterwarnings = [\"error::pytest.PytestUnhandledThreadExceptionWarning\"]"
+  },
+  {
+   "severite": "mineure",
+   "fichier": "tests/test_rel038b_unicite.py",
+   "description": "Dans G4, une exception non reconnue est déléguée à hook_precedent depuis un thread de fond. Le diff ne contient aucune propagation explicite d'un échec éventuel vers l'item pytest ; si hook_precedent émet le warning/error dans le thread de fond, l'échec du test n'est pas garanti contractuellement.",
+   "preuve": "+        hook_precedent(args)"
+  },
+  {
+   "severite": "mineure",
+   "fichier": "pyproject.toml",
+   "description": "La story exige une suite complète vérifiée hors tests/test_data002b_wal_idempotent.py, mais la configuration pytest ne déclare aucune exclusion de ce fichier. Si le fichier est présent dans tests/, la commande standard pytest -q ne peut pas être contractuellement équivalente à la suite 'hors' ce fichier.",
+   "preuve": " testpaths = [\"tests\"]"
+  }
+ ],
+ "date_heure": "2026-08-17T01:12:47.489450+00:00",
+ "pack_sha256": "38bf3deb97a357b5fb5caa1b4ac9e8384d38bb337619925ebca46693d6e746d9",
+ "role_sha256": "3e836bda0d815badaccf03df40ce861daaa1745b0f17728069985cb32c45de82",
+ "role": "contrats",
+ "reviewer_model": "Qwen3.8-2.4T",
+ "modele_servi": "b9de6bc895fe95ccacf7d9fa9b1cf29ca44d34f03e249738f325c9dee3790b78",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

@@ -1,0 +1,21 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "critique",
+   "fichier": "tests/test_rel038b_unicite.py",
+   "description": "Le périmètre de la story exige explicitement d'envelopper la portion du test G4 dans pytest.warns(pytest.PytestUnhandledThreadExceptionWarning). Le diff utilise à la place un marqueur @pytest.mark.filterwarnings(\"ignore::pytest.PytestUnhandledThreadExceptionWarning\"), ce qui ne correspond pas à la spécification. Le critère d'acceptation 3 demande de retirer temporairement le pytest.warns(...) pour prouver que le filtre global agit ; cette preuve est impossible car aucun pytest.warns n'est présent.",
+   "preuve": "Ligne ajoutée dans le diff : +@pytest.mark.filterwarnings(\"ignore::pytest.PytestUnhandledThreadExceptionWarning\") ; le commentaire ajouté indique « pytest.warns() ne convient PAS » alors que la story l'impose."
+  }
+ ],
+ "date_heure": "2026-08-16T04:57:24.783498+00:00",
+ "pack_sha256": "faf36fe4aefa8d83255d10c4346fe9f1055d8a6051fe2c82249c8aab923a0cc8",
+ "role_sha256": "2678fe5ffcf7912532cac896ebb1185183fdc42033d4460f07073c6d38e627a0",
+ "role": "correction",
+ "reviewer_model": "DeepSeek-V4-Pro-0813",
+ "modele_servi": "1cbd427d85a4593a157a49bb0ad51ededb429b85aca980b3b23cd445246b9fcb",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

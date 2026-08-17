@@ -1,0 +1,21 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "majeure",
+   "fichier": "tests/test_rel038b_unicite.py",
+   "description": "Le hook global avale une exception de thread avant de vérifier sa provenance. Il accepte toute KeyboardInterrupt dont le message contient la sous-chaîne attendue, puis ne contrôle le nom du thread qu'après restauration du hook. Un thread concurrent non lié peut donc choisir ce message et un nom contenant \"_run_prepare\" ; ses exceptions seront retirées du détecteur global pytest et peuvent satisfaire les deux occurrences attendues si les threads réellement testés cessent d'émettre. Le test peut alors rester vert tout en masquant une exception de thread non gérée : chemin FAIL-OPEN du contrôle de non-régression.",
+   "preuve": "Sortie de `git diff -- tests/test_rel038b_unicite.py` : `if args.exc_type is KeyboardInterrupt and signature_attendue in str(args.exc_value): exceptions_capturees.append(args)` ; la délégation `hook_original(args)` n'a lieu que dans le `else`, tandis que la provenance n'est vérifiée qu'ultérieurement par `assert \"_run_prepare\" in args.thread.name`."
+  }
+ ],
+ "date_heure": "2026-08-16T05:40:35.639331+00:00",
+ "pack_sha256": "40b079fe49221c7fcf6b2de36616d143bcdf1e9b9a137c9780b240452c59e1a3",
+ "role_sha256": "1444f4a8ca1c52008a237fa623fec5ea4cb9dfe214259899c12d2978d09e7789",
+ "role": "securite",
+ "reviewer_model": "GPT-5.6-Terra-Pro",
+ "modele_servi": "gpt56-terra-pro-openrouter",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

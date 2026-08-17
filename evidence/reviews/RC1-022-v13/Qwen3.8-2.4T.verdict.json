@@ -1,0 +1,33 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "majeure",
+   "fichier": "tests/test_rel038b_unicite.py",
+   "description": "Le test remplace le hook global `threading.excepthook` sans restauration locale (ni `monkeypatch`, ni `finally`). La restauration est déléguée à un comportement supposé du plugin pytest, ce qui crée un effet de bord global non garanti par le diff pour les tests suivants ou les threads tardifs.",
+   "preuve": "+    threading.excepthook = hook_exceptions"
+  },
+  {
+   "severite": "mineure",
+   "fichier": "pyproject.toml",
+   "description": "La politique globale change le contrat de warning pour toute la suite pytest. Le diff ne prouve pas l'absence d'autres tests ou appelants existants susceptibles d'émettre `PytestUnhandledThreadExceptionWarning`, donc la compatibilité avec le reste du dépôt n'est pas levée.",
+   "preuve": "+filterwarnings = [\"error::pytest.PytestUnhandledThreadExceptionWarning\"]"
+  },
+  {
+   "severite": "mineure",
+   "fichier": "tests/test_rel038b_unicite.py",
+   "description": "La structure partagée `appels_qui_ont_echappe` est mutée sous verrou mais lue sans verrou dans la boucle d'attente et dans l'assertion finale, ce qui rompt le contrat implicite d'accès concurrentiel établi par l'introduction de `verrou`.",
+   "preuve": "+        if len(appels_qui_ont_echappe) >= 2 and deux_interceptees:"
+  }
+ ],
+ "date_heure": "2026-08-17T00:58:03.839541+00:00",
+ "pack_sha256": "11b8da9ca453b639c012fbcc193c4d770559c96bec969bae7921833b252dec3f",
+ "role_sha256": "3e836bda0d815badaccf03df40ce861daaa1745b0f17728069985cb32c45de82",
+ "role": "contrats",
+ "reviewer_model": "Qwen3.8-2.4T",
+ "modele_servi": "b9de6bc895fe95ccacf7d9fa9b1cf29ca44d34f03e249738f325c9dee3790b78",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

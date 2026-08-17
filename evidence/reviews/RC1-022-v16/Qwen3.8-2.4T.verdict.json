@@ -1,0 +1,31 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "stories/RC1-022.md",
+   "description": "Le diff ajoute un fichier de story non mentionné dans le périmètre strict (tests/test_rel038b_unicite.py et pyproject.toml) et contenant des affirmations empiriques non vérifiables dans le diff.",
+   "preuve": "diff: new file stories/RC1-022.md; lignes '+0 échec sur 20 exécutions répétées, suite complète verte, `no_stub_scan` OK.'"
+  },
+  {
+   "severite": "mineure",
+   "fichier": "tests/test_rel038b_unicite.py",
+   "description": "Le mécanisme de sécurité pour les exceptions non corrélées dépend de l'efficacité de `error::pytest.PytestUnhandledThreadExceptionWarning` depuis un excepthook de thread ; cette transformation effective en échec n'est pas démontrée dans le diff.",
+   "preuve": "tests/test_rel038b_unicite.py: `hook_precedent(args)`; pyproject.toml: `filterwarnings = [\"error::pytest.PytestUnhandledThreadExceptionWarning\"]`"
+  },
+  {
+   "severite": "mineure",
+   "fichier": "stories/RC1-022.md",
+   "description": "La date de preuve de claim est postérieure à la date de revue courante et reste invérifiable.",
+   "preuve": "stories/RC1-022.md: 'Commentaire posté sur https://github.com/leon36000/ForgeAI-Toolkit/issues/463 le 2026-08-16'"
+  }
+ ],
+ "date_heure": "2026-08-17T02:49:18.204014+00:00",
+ "prompt_sha256": "691b77706708e643ad0be68a24cf8eb04d7900193eb0cc0b5552077d1b3b81fc",
+ "reviewer_model": "Qwen3.8-2.4T",
+ "modele_servi": "b9de6bc895fe95ccacf7d9fa9b1cf29ca44d34f03e249738f325c9dee3790b78",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}
