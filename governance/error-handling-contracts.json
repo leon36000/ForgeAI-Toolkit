@@ -574,7 +574,7 @@
       "risk_paths": [],
       "disposition": "JUSTIFIED",
       "behavior_contract": "Site remappé 1821->1854 par RC1-460 round 2 (découpage de _post_deploy en _post_deploy/_valider_requete_deploy/_lancer_deploiement pour réduire sa complexité cognitive, SonarCloud Maintainability sur do_POST round 1 ; ce bloc lui-même, dans serve(), est inchangé) — voir aussi les 2 remaps antérieurs de ce même site : 1806->1821 (découpage de do_POST en méthodes _post_<route> dédiées) et 1740->1806 (découpage de do_GET), chacun décalant toutes les lignes en aval dans le même fichier. Tentative d'ouverture automatique du navigateur par défaut (`webbrowser.open`) au démarrage du serveur ; si elle échoue (headless, pas de DISPLAY, pas de navigateur configuré), le serveur continue de démarrer normalement.",
-      "logging": "aucune — inutile : l'URL est déjà affichée inconditionnellement par `print(url)` juste AVANT cette tentative (ligne 1817), que l'ouverture du navigateur réussisse ou échoue. Aucune information n'est perdue.",
+      "logging": "aucune — inutile : l'URL est déjà affichée inconditionnellement par `print(url)` juste AVANT cette tentative (ligne 1850), que l'ouverture du navigateur réussisse ou échoue. Aucune information n'est perdue.",
       "owner": "équipe web ForgeAI",
       "justification": "L'échec de `webbrowser.open` est un cas extrêmement courant et bénin (environnements headless, SSH, conteneurs) déjà largement accepté comme non-actionnable dans l'écosystème Python. Ce qui rendrait un log utile — l'URL — est DÉJÀ imprimée inconditionnellement juste avant, donc journaliser l'échec spécifique du navigateur n'ajouterait aucune information exploitable.",
       "compensating_test": null,
