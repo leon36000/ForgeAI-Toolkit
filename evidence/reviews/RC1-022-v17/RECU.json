@@ -1,0 +1,22 @@
+{
+  "schema": "recu-revue/1",
+  "dossier": "RC1-022-v17",
+  "issue": 463,
+  "round": 17,
+  "base_commit": "2841fe370124790b9242a09c7c23d6c8f523d661",
+  "head_commit": "369c3294f46ee5ed95d0037a5dc70ed67d0221cc",
+  "head_tree": "dd6c92c6f80c8fee3fddfc0bd5858a8cb05888e0",
+  "diff_digest": "883594a603403e22aefffef023830da8ab321b5bc50c19d068ef33135c12547e",
+  "prompt_sha256": "3064bb0eb2ccbbea16087860a2261d6401e360b3dce28ad6eda1a49c8145b00a",
+  "reviewers_attendus": [
+    "Kimi-2.7",
+    "MiMo-V2.5-Pro",
+    "Qwen3.8-2.4T"
+  ],
+  "codeur": [
+    "fable"
+  ],
+  "resultat": "APPROVE",
+  "date_heure": "2026-08-16T23:16:35.638408-04:00",
+  "fenetre_heures": 24
+}
