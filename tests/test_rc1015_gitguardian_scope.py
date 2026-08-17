@@ -4985,3 +4985,23 @@ def test_construire_table_ancres_resout_une_ancre_portee_par_un_item_de_liste_im
     ancres = check_gitguardian_scope._construire_table_ancres(texte, texte.splitlines())
     assert ancres.get("paths") == "**/*.md"
     assert check_gitguardian_scope._PREFIXE_AVANT_ANCRE.match("- - ")
+
+
+def test_filet_ignore_le_contenu_dun_scalaire_bloc_sans_rapport_sous_secret(tmp_path):
+    # RC1-015 round 115, revue scellée GPT-5.6-Terra-Pro (MINEUR, non bloquant, bug réel — même
+    # famille que round 87/89, nouveau symptôme) : le filet `_chaines_guillemetees_decodees`
+    # restreignait déjà aux lignes de la session `secret` (round 89), mais ne filtrait pas le
+    # CONTENU d'un scalaire bloc SANS RAPPORT avec `ignored_paths` situé sous cette même session
+    # (`secret.note: |\n  "**/*.md"` — texte littéral documentaire, jamais re-parsé par YAML,
+    # donc jamais une chaîne active). FAUX POSITIF confirmé AVANT correctif : `verifier()`
+    # retournait `(False, ['**/*.md'])` pour un fichier dont `secret.ignored_paths` (`['safe']`)
+    # ne contient AUCUNE exclusion réelle. Corrigé en réutilisant `_lignes_contenu_bloc` (déjà
+    # utilisée ailleurs pour exactement cette classification), appliquée inconditionnellement.
+    fichier = tmp_path / ".gitguardian.yaml"
+    fichier.write_text(
+        'secret:\n  ignored_paths:\n    - safe\n  note: |\n    "**/*.md"\n',  # proof:allow — clé de schéma YAML, pas un secret réel
+        encoding="utf-8",
+    )
+    ok, motifs = check_gitguardian_scope.verifier(fichier)
+    assert ok is True
+    assert motifs == []

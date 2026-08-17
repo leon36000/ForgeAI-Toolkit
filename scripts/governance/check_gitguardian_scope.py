@@ -2574,19 +2574,38 @@ def _chaines_guillemetees_decodees(
     considère plus que les chaînes de CETTE session — sinon (racine par alias, forme explicite,
     ou `ancres` non fourni), repli INCHANGÉ sur le balayage intégral (couverture jamais réduite
     dans les cas ambigus).
+
+    Round 115 (RC1-015, bug réel trouvé par revue scellée GPT-5.6-Terra-Pro, MINEURE, non
+    bloquante — même famille que round 87/89, nouveau symptôme) : même en restreignant à la
+    session `secret`, ce filet ne filtrait pas le CONTENU d'un scalaire bloc SANS RAPPORT avec
+    `ignored_paths` mais SITUÉ SOUS `secret` (ex. `secret.note: |\n  "**/*.md"` — texte littéral
+    documentaire, pas une chaîne YAML active). Repro confirmée AVANT correctif : `verifier()`
+    retournait à tort `(False, ['**/*.md'])` pour un fichier dont `secret.ignored_paths` ne
+    contient AUCUNE exclusion Markdown. Un scalaire bloc n'est JAMAIS re-parsé par YAML (son
+    contenu est un texte littéral opaque, y compris tout caractère `"`/`'` qu'il porte) — exclure
+    ces lignes du filet ne peut donc jamais masquer une exclusion RÉELLE (le round 108 a déjà
+    établi qu'un scalaire bloc porté DIRECTEMENT par `ignored_paths` n'est de toute façon jamais
+    une liste fonctionnelle ; un scalaire bloc porté par un AUTRE item de liste PASSE par
+    l'analyseur structurel dédié, pas par ce filet textuel). Réutilise `_lignes_contenu_bloc`
+    (déjà utilisée ailleurs, round 44+, pour exactement cette classification) — appliquée
+    INCONDITIONNELLEMENT (indépendamment de `ancres`), la propriété « un scalaire bloc n'est
+    jamais re-parsé » étant vraie quelle que soit la délimitation de la session `secret`.
     """
     spans_guillemets = _spans_guillemets(texte)
     spans_commentaires = _spans_commentaires(texte, spans_guillemets)
     lignes_dans_secret = (  # proof:allow — identifiant de variable, pas un secret réel
         _lignes_dans_bloc_secret_racine(texte, ancres) if ancres is not None else None
     )
+    lignes_contenu_bloc = _lignes_contenu_bloc(texte.splitlines())
 
     def _garder(m: re.Match) -> bool:
         if any(g_debut <= m.start() < g_fin for g_debut, g_fin in spans_commentaires):
             return False
+        indice_ligne = texte.count("\n", 0, m.start())
+        if indice_ligne in lignes_contenu_bloc:
+            return False
         if lignes_dans_secret is None:
             return True
-        indice_ligne = texte.count("\n", 0, m.start())
         return lignes_dans_secret[indice_ligne]
 
     resultats = [

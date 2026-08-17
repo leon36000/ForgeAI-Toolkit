@@ -466,14 +466,14 @@
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 2649,
+          "line": 2668,
           "referrer": "scripts/governance/check_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 2650,
+          "line": 2669,
           "referrer": "scripts/governance/check_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
@@ -1244,6 +1244,13 @@
         {
           "candidate": ".gitguardian.yaml",
           "line": 3858,
+          "referrer": "stories/RC1-015.md",
+          "resolved": ".gitguardian.yaml",
+          "severity": "hard"
+        },
+        {
+          "candidate": ".gitguardian.yaml",
+          "line": 4093,
           "referrer": "stories/RC1-015.md",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
@@ -3428,6 +3435,13 @@
         {
           "candidate": ".gitguardian.yaml",
           "line": 4965,
+          "referrer": "tests/test_rc1015_gitguardian_scope.py",
+          "resolved": ".gitguardian.yaml",
+          "severity": "hard"
+        },
+        {
+          "candidate": ".gitguardian.yaml",
+          "line": 5000,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
@@ -9922,8 +9936,8 @@
         }
       ],
       "rule_id": "evidence-registres-root",
-      "sha256": "f1157c6677a9b7c994d4b7097f7f65a94188790e2a569162eb670c20bcbee342",
-      "size": 405640,
+      "sha256": "92c20ef946c078b6639a74ce934a22d0e402131fd7ae5fcc93823adc26e49a14",
+      "size": 406736,
       "target_path": null,
       "type": "text"
     },
@@ -33839,8 +33853,8 @@
         }
       ],
       "rule_id": "governance-scripts-governance",
-      "sha256": "4d2c9be91b2a12d31e6aa4f18c38400f1fe8ecf0ceebcb4417a83aec090f5e82",
-      "size": 170873,
+      "sha256": "2f50331684ab31da50fdd8a7f441ac4df9056e0eb6f722d359ee20ec805c9b4a",
+      "size": 172458,
       "target_path": null,
       "type": "text"
     },
@@ -47453,8 +47467,8 @@
         }
       ],
       "rule_id": "governance-stories",
-      "sha256": "30b40a488c873421b696bd6c8239be102f93a37123606dc97c8f23ca8025f301",
-      "size": 296109,
+      "sha256": "b0d995556686e088b87331a7c015c623f111d5660def87e572d37c9868801a55",
+      "size": 298693,
       "target_path": null,
       "type": "text"
     },
@@ -55891,8 +55905,8 @@
         }
       ],
       "rule_id": "test-suite",
-      "sha256": "e2a27f6b2042b0422544f34a74aa2426ab5c96675d6489d2243102ae827f613d",
-      "size": 277176,
+      "sha256": "d92a52c41ed109b871382e00245fb2d2d167ba3a7c84acab5eaf65b6426a9f02",
+      "size": 278484,
       "target_path": null,
       "type": "text"
     },
@@ -103708,17 +103722,17 @@
       },
       {
         "candidate": "1/5/6",
-        "line": 2605,
+        "line": 2624,
         "referrer": "scripts/governance/check_gitguardian_scope.py"
       },
       {
         "candidate": "vide/commentaire",
-        "line": 2606,
+        "line": 2625,
         "referrer": "scripts/governance/check_gitguardian_scope.py"
       },
       {
         "candidate": "Unicode/hex",
-        "line": 2615,
+        "line": 2634,
         "referrer": "scripts/governance/check_gitguardian_scope.py"
       },
       {
@@ -129814,6 +129828,21 @@
       {
         "candidate": "origin/main",
         "line": 4078,
+        "referrer": "stories/RC1-015.md"
+      },
+      {
+        "candidate": "check_gitguardian_scope.py",
+        "line": 4111,
+        "referrer": "stories/RC1-015.md"
+      },
+      {
+        "candidate": "mypy_gate.py",
+        "line": 4112,
+        "referrer": "stories/RC1-015.md"
+      },
+      {
+        "candidate": "origin/main",
+        "line": 4112,
         "referrer": "stories/RC1-015.md"
       },
       {
@@ -168172,14 +168201,14 @@
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 2649,
+        "line": 2668,
         "referrer": "scripts/governance/check_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 2650,
+        "line": 2669,
         "referrer": "scripts/governance/check_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
@@ -172847,6 +172876,13 @@
         "severity": "hard"
       },
       {
+        "candidate": ".gitguardian.yaml",
+        "line": 4093,
+        "referrer": "stories/RC1-015.md",
+        "resolved": ".gitguardian.yaml",
+        "severity": "hard"
+      },
+      {
         "candidate": "tests/test_rel038b_unicite.py",
         "line": 8,
         "referrer": "stories/RC1-022.md",
@@ -177411,6 +177447,13 @@
         "severity": "hard"
       },
       {
+        "candidate": ".gitguardian.yaml",
+        "line": 5000,
+        "referrer": "tests/test_rc1015_gitguardian_scope.py",
+        "resolved": ".gitguardian.yaml",
+        "severity": "hard"
+      },
+      {
         "candidate": "src/forgeai/deploy/openbao_flow.py",
         "line": 378,
         "referrer": "tests/test_rc1016_sonar_suppressions.py",
@@ -177956,7 +177999,7 @@
       "working-sandbox-readme": 1
     },
     "case_collisions_total": 0,
-    "dangling_references_total": 16953,
+    "dangling_references_total": 16956,
     "generated_total": 9,
     "load_bearing_total": 2037,
     "portability_violations_total": 0,
