@@ -18,10 +18,11 @@ suppressions `# noqa` (hors périmètre explicite de cet incrément : ruff les a
 une ligne supprimée par `# noqa` n'apparaît simplement pas dans la sortie JSON de `ruff check`).
 Une granularité en revanche ajoutée : la dette est bornée À LA FOIS par fichier (`dette`) ET par
 couple (fichier, règle) (`classification`, champ OBLIGATOIRE ici — alors qu'il est optionnel et
-seulement informationnel dans mypy_gate). La comparaison par couple parcourt, pour chaque fichier
-déjà baseliné, l'UNION des codes baselinés et des codes réellement mesurés : un code jamais vu
-sur un fichier a un plafond implicite de 0, donc toute violation réelle d'un code nouveau y est
-détectée, même si elle est compensée par la baisse d'un autre code sur le même fichier.
+seulement informationnel dans mypy_gate). La comparaison par couple parcourt, pour chaque
+fichier déjà baseliné, l'UNION des codes baselinés et des codes réellement mesurés : un code
+jamais vu sur un fichier a un plafond implicite de 0, donc toute violation réelle d'un code
+nouveau y est détectée, même si elle est compensée par la baisse d'un autre code sur le même
+fichier.
 
 En fonctionnement normal, ce script ne fait que LIRE et VALIDER la baseline : il ne modifie
 jamais de fichier source et n'appelle jamais `ruff --fix`. La SEULE exception est le mode de
@@ -241,7 +242,7 @@ def _valider_coherence_borne_dette(
         raise ValueError(
             f"{libelle}.borne.total_violations ({total_violations}) ne correspond pas a la "
             f"somme de dette ({somme_dette}) : aucune marge cachee n'est admise entre la "
-            "borne totale et la dette par fichier"
+            f"borne totale et la dette par fichier"
         )
 
 
@@ -367,8 +368,8 @@ def anomalies(
        baseliné, l'UNION des codes baselinés et des codes réellement mesurés sur ce fichier est
        parcourue, avec un plafond implicite de 0 pour tout code jamais vu ; une hausse d'un
        code compensée par la baisse d'un autre code sur le MÊME fichier est donc détectée ici,
-       même si le total du fichier (règle 2) n'a pas augmenté — y compris quand le code en
-       hausse était totalement absent de la classification baselinée ;
+       même si le total du fichier (règle 2) n'a pas augmenté — y compris quand le code en hausse
+       était totalement absent de la classification baselinée ;
     5. borne totale inconditionnelle (`borne.total_violations`) ;
     6. si `base_reference` est fournie (`None` = référence non chargeable, ex. premier commit du
        mécanisme — PAS une erreur) : aucun plafond de `dette` augmenté vs la référence pour un
@@ -524,6 +525,73 @@ def anomalies(
     return resultat
 
 
+def plan_reduction(
+    mesure_dette: dict[str, int],
+    mesure_classification: dict[str, dict[str, int]],
+    base_locale: dict[str, Any],
+) -> dict[str, Any]:
+    """Calcule un plan de réduction priorisé depuis la mesure et la baseline locale."""
+    total_actuel = sum(mesure_dette.values())
+    total_baseline = base_locale["borne"]["total_violations"]
+    totaux: dict[str, int] = {}
+    fichiers_par_regle: dict[str, list[dict[str, Any]]] = {}
+
+    for code in base_locale["regles_activees"]:
+        total = 0
+        fichiers: list[dict[str, Any]] = []
+        for fichier, comptes in mesure_classification.items():
+            occurrences = comptes.get(code, 0)
+            if occurrences > 0:
+                total += occurrences
+                fichiers.append(
+                    {"fichier": fichier, "occurrences": occurrences}
+                )
+        fichiers.sort(key=lambda element: (-element["occurrences"], element["fichier"]))
+        totaux[code] = total
+        fichiers_par_regle[code] = fichiers[:5]
+
+    par_regle = [
+        {
+            "code": code,
+            "total": totaux[code],
+            "fichiers_prioritaires": fichiers_par_regle[code],
+        }
+        for code in sorted(totaux, key=lambda regle: (-totaux[regle], regle))
+    ]
+
+    return {
+        "total_actuel": total_actuel,
+        "total_baseline": total_baseline,
+        "delta": total_actuel - total_baseline,
+        "par_regle": par_regle,
+    }
+
+
+def _afficher_plan_reduction(plan: dict[str, Any]) -> None:
+    """Affiche le plan de réduction Ruff."""
+    print("Plan de réduction Ruff")
+    print()
+    print(f"Total actuel : {plan['total_actuel']}")
+    print(f"Total baseline : {plan['total_baseline']}")
+    delta = plan["delta"]
+    signe_delta = f"{delta:+d}" if delta else "0"
+    print(f"Delta : {signe_delta}")
+
+    for entree in plan["par_regle"]:
+        print()
+        print(f"Règle : {entree['code']}")
+        print(f"Total : {entree['total']}")
+        print("Fichiers prioritaires :")
+        fichiers = entree["fichiers_prioritaires"]
+        if entree["total"] == 0:
+            print("- aucune violation")
+        elif fichiers:
+            for element in fichiers:
+                print(f"- {element['fichier']} : {element['occurrences']}")
+        else:
+            print("- aucune violation")
+
+
 def main(argv: list[str] | None = None) -> int:
     """Execute le gate de cliquet Ruff (règles defaut_candidat). Retourne 0 si le cliquet est
     vert, 1 si au moins une anomalie est détectée ou si une erreur attendue survient (jamais de
@@ -549,6 +617,11 @@ def main(argv: list[str] | None = None) -> int:
             "automatique en CI)"
         ),
     )
+    parser.add_argument(
+        "--rapport",
+        action="store_true",
+        help="affiche un plan de reduction Ruff informationnel sans bloquer",
+    )
     arguments = parser.parse_args(argv)
 
     racine = Path(arguments.racine)
@@ -561,6 +634,22 @@ def main(argv: list[str] | None = None) -> int:
     except (OSError, UnicodeError, ValueError, RuntimeError) as erreur:
         print(str(erreur), file=sys.stderr)
         return 1
+
+    if arguments.rapport:
+        try:
+            base_locale = _valider_base(_charger_json(chemin_base), "base locale")
+            violations = mesurer(racine, regles)
+            mesure_dette, mesure_classification = agreger(violations)
+            plan = plan_reduction(
+                mesure_dette,
+                mesure_classification,
+                base_locale,
+            )
+            _afficher_plan_reduction(plan)
+        except (OSError, UnicodeError, ValueError, RuntimeError) as erreur:
+            print(str(erreur), file=sys.stderr)
+            return 1
+        return 0
 
     # Mode maintenance --regenerer-baseline : s'exécute AVANT tout chargement de l'ancienne
     # baseline — il la REMPLACE intégralement (le fichier n'a donc pas besoin d'exister pour

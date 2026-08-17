@@ -1228,3 +1228,273 @@ def test_main_regenerer_baseline_cree_le_fichier_si_absent(
     assert base_creee["borne"] == {"total_violations": 1}
     assert base_creee["regles_activees"] == ["ARG001", "B904"]
     assert ruff_ratchet._valider_base(base_creee, "base creee") == base_creee
+
+
+def test_plan_reduction_mesure_vide_contient_une_entree_par_regle() -> None:
+    """Une mesure vide produit un plan nul mais conserve toutes les règles activées."""
+    base = _base(regles_activees=["ARG001", "B904"], total_violations=0)
+
+    plan = ruff_ratchet.plan_reduction({}, {}, base)
+
+    assert plan["total_actuel"] == 0
+    assert plan["total_baseline"] == 0
+    assert plan["delta"] == 0
+    assert len(plan["par_regle"]) == 2
+    assert {entree["code"] for entree in plan["par_regle"]} == {"ARG001", "B904"}
+    assert all(
+        entree["total"] == 0 and entree["fichiers_prioritaires"] == []
+        for entree in plan["par_regle"]
+    )
+
+
+def test_plan_reduction_trie_les_regles_par_total_decroissant() -> None:
+    """Les règles sont classées selon le nombre total de violations."""
+    mesure_classification = {
+        "src/a.py": {"ARG001": 3, "B904": 2},
+        "src/b.py": {"ARG001": 2},
+    }
+    base = _base(
+        dette={"src/a.py": 5, "src/b.py": 2},
+        classification={
+            "src/a.py": {"ARG001": 3, "B904": 2},
+            "src/b.py": {"ARG001": 2},
+        },
+        total_violations=7,
+    )
+
+    plan = ruff_ratchet.plan_reduction(
+        {"src/a.py": 5, "src/b.py": 2},
+        mesure_classification,
+        base,
+    )
+
+    assert [entree["code"] for entree in plan["par_regle"]] == ["ARG001", "B904"]
+    assert [entree["total"] for entree in plan["par_regle"]] == [5, 2]
+
+
+def test_plan_reduction_trie_les_regles_a_egalite_par_code() -> None:
+    """À total égal, les règles sont classées alphabétiquement."""
+    mesure_classification = {
+        "src/a.py": {"B904": 1, "ARG001": 2},
+        "src/b.py": {"B904": 2, "ARG001": 1},
+    }
+    base = _base(
+        dette={"src/a.py": 3, "src/b.py": 3},
+        classification={
+            "src/a.py": {"B904": 1, "ARG001": 2},
+            "src/b.py": {"B904": 2, "ARG001": 1},
+        },
+        total_violations=6,
+    )
+
+    plan = ruff_ratchet.plan_reduction(
+        {"src/a.py": 3, "src/b.py": 3},
+        mesure_classification,
+        base,
+    )
+
+    assert [entree["code"] for entree in plan["par_regle"]] == ["ARG001", "B904"]
+
+
+def test_plan_reduction_plafonne_et_trie_les_fichiers_prioritaires() -> None:
+    """Les cinq fichiers prioritaires sont les cinq plus chargés, dans l'ordre décroissant."""
+    occurrences = {
+        "src/f1.py": 10,
+        "src/f2.py": 9,
+        "src/f3.py": 8,
+        "src/f4.py": 7,
+        "src/f5.py": 6,
+        "src/f6.py": 5,
+        "src/f7.py": 4,
+    }
+    mesure_classification = {
+        fichier: {"ARG001": compte} for fichier, compte in occurrences.items()
+    }
+    mesure_dette = dict(occurrences)
+    base = _base(
+        dette=mesure_dette,
+        classification=mesure_classification,
+        total_violations=sum(occurrences.values()),
+        regles_activees=["ARG001"],
+    )
+
+    plan = ruff_ratchet.plan_reduction(
+        mesure_dette,
+        mesure_classification,
+        base,
+    )
+
+    prioritaires = plan["par_regle"][0]["fichiers_prioritaires"]
+    assert len(prioritaires) == 5
+    assert [element["occurrences"] for element in prioritaires] == [10, 9, 8, 7, 6]
+    assert [element["fichier"] for element in prioritaires] == [
+        "src/f1.py",
+        "src/f2.py",
+        "src/f3.py",
+        "src/f4.py",
+        "src/f5.py",
+    ]
+
+
+def test_plan_reduction_trie_les_fichiers_a_egalite_d_occurrences() -> None:
+    """À occurrences égales, les fichiers prioritaires sont classés alphabétiquement."""
+    mesure_dette = {"src/z.py": 3, "src/a.py": 3}
+    mesure_classification = {
+        "src/z.py": {"ARG001": 3},
+        "src/a.py": {"ARG001": 3},
+    }
+    base = _base(
+        dette=mesure_dette,
+        classification=mesure_classification,
+        total_violations=6,
+        regles_activees=["ARG001"],
+    )
+
+    plan = ruff_ratchet.plan_reduction(
+        mesure_dette,
+        mesure_classification,
+        base,
+    )
+
+    assert [element["fichier"] for element in plan["par_regle"][0]["fichiers_prioritaires"]] == [
+        "src/a.py",
+        "src/z.py",
+    ]
+
+
+def test_plan_reduction_calcule_un_delta_positif_et_negatif() -> None:
+    """Le delta mesure aussi bien une régression qu'une amélioration."""
+    base = _base(total_violations=7)
+
+    plan_positif = ruff_ratchet.plan_reduction(
+        {"src/a.py": 6, "src/b.py": 4},
+        {
+            "src/a.py": {"ARG001": 6},
+            "src/b.py": {"B904": 4},
+        },
+        base,
+    )
+    plan_negatif = ruff_ratchet.plan_reduction(
+        {"src/a.py": 4},
+        {"src/a.py": {"ARG001": 4}},
+        base,
+    )
+
+    assert plan_positif["delta"] == 3
+    assert plan_negatif["delta"] == -3
+
+
+def test_afficher_plan_reduction_affiche_totaux_regles_et_zero(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    """L'affichage expose les totaux, le delta signé, chaque règle et les règles propres."""
+    plan = {
+        "total_actuel": 5,
+        "total_baseline": 3,
+        "delta": 2,
+        "par_regle": [
+            {
+                "code": "ARG001",
+                "total": 5,
+                "fichiers_prioritaires": [
+                    {"fichier": "src/a.py", "occurrences": 5},
+                ],
+            },
+            {
+                "code": "B904",
+                "total": 0,
+                "fichiers_prioritaires": [],
+            },
+        ],
+    }
+
+    ruff_ratchet._afficher_plan_reduction(plan)
+    sortie = capsys.readouterr().out
+
+    assert "Total actuel : 5" in sortie
+    assert "Total baseline : 3" in sortie
+    assert "Delta : +2" in sortie
+    assert "Règle : ARG001" in sortie
+    assert "Règle : B904" in sortie
+    assert "- aucune violation" in sortie
+
+
+def test_main_rapport_retourne_zero_meme_si_la_dette_augmente(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    """Le rapport est informationnel et ne bloque pas malgré une régression mesurée."""
+    _ecrire_classification(tmp_path)
+    _ecrire_base(
+        tmp_path,
+        _base(
+            dette={"src/pkg/mod.py": 1},
+            classification={"src/pkg/mod.py": {"ARG001": 1}},
+            total_violations=1,
+        ),
+    )
+    (tmp_path / "src" / "pkg").mkdir(parents=True)
+    (tmp_path / "src" / "pkg" / "mod.py").write_text(
+        "def f(x, y):\n    return x\n", encoding="utf-8"
+    )
+
+    def fausse_mesure(racine: Path, regles: list[str]) -> list[dict[str, object]]:
+        return [
+            {"filename": "src/pkg/mod.py", "code": "ARG001"},
+            {"filename": "src/pkg/mod.py", "code": "ARG001"},
+        ]
+
+    monkeypatch.setattr(ruff_ratchet, "mesurer", fausse_mesure)
+    monkeypatch.setattr(
+        ruff_ratchet.gate_git_ref,
+        "charger_base_reference_git",
+        _reference_git_absente,
+    )
+
+    assert ruff_ratchet.main(["--racine", str(tmp_path)]) == 1
+    assert ruff_ratchet.main(["--racine", str(tmp_path), "--rapport"]) == 0
+
+    sortie = capsys.readouterr().out
+    assert "Total actuel : 2" in sortie
+    assert "Règle : ARG001" in sortie
+
+
+def test_main_rapport_classification_absente_retourne_un(tmp_path: Path) -> None:
+    """Le mode rapport échoue si la classification Ruff est absente."""
+    assert ruff_ratchet.main(["--racine", str(tmp_path), "--rapport"]) == 1
+
+
+def test_main_rapport_ne_consulte_jamais_la_reference_git(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Le mode rapport ne charge aucune baseline de référence git."""
+    _ecrire_classification(tmp_path)
+    _ecrire_base(
+        tmp_path,
+        _base(
+            dette={"src/pkg/mod.py": 1},
+            classification={"src/pkg/mod.py": {"ARG001": 1}},
+            total_violations=1,
+        ),
+    )
+    (tmp_path / "src" / "pkg").mkdir(parents=True)
+    (tmp_path / "src" / "pkg" / "mod.py").write_text(
+        "def f(x, y):\n    return x\n", encoding="utf-8"
+    )
+
+    def fausse_mesure(racine: Path, regles: list[str]) -> list[dict[str, object]]:
+        return [{"filename": "src/pkg/mod.py", "code": "ARG001"}]
+
+    def _jamais_appelee(*args: object, **kwargs: object) -> tuple[None, str]:
+        raise AssertionError("ne doit pas etre appelee en mode --rapport")
+
+    monkeypatch.setattr(ruff_ratchet, "mesurer", fausse_mesure)
+    monkeypatch.setattr(
+        ruff_ratchet.gate_git_ref,
+        "charger_base_reference_git",
+        _jamais_appelee,
+    )
+
+    assert ruff_ratchet.main(["--racine", str(tmp_path), "--rapport"]) == 0
