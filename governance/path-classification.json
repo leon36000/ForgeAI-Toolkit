@@ -11918,8 +11918,8 @@
         }
       ],
       "rule_id": "evidence-reviews-root",
-      "sha256": "207a40096d43847f57d71c2be1d1e3a0f42e1e447f0c7040e22a0a30e1c13e3d",
-      "size": 2795,
+      "sha256": "662cd718fe0742a75d32934ab4df0861e4702f0adc443ad051ef90e1848e3a67",
+      "size": 2807,
       "target_path": null,
       "type": "text"
     },
@@ -60065,6 +60065,11 @@
   "reference_graph": {
     "completeness": "best_effort",
     "dangling": [
+      {
+        "candidate": "RC1-015-v23",
+        "line": 207,
+        "referrer": "evidence/reviews/BINDING.txt"
+      },
       {
         "candidate": "TUI/UX",
         "line": 3,
@@ -177999,7 +178004,7 @@
       "working-sandbox-readme": 1
     },
     "case_collisions_total": 0,
-    "dangling_references_total": 16956,
+    "dangling_references_total": 16957,
     "generated_total": 9,
     "load_bearing_total": 2037,
     "portability_violations_total": 0,
