@@ -786,6 +786,64 @@ def test_ggshield_reel_ignored_paths_seules_deux_formes_couvrent_tout_markdown()
             )
 
 
+def test_ggshield_reel_scalaire_explicite_nest_pas_une_exclusion_fonctionnelle(tmp_path):
+    # RC1-015 round 108, revue scellée GPT-5.6-Terra-Pro (mineure, RÉFUTÉE avec preuve
+    # exécutable réelle) : le cliquet ne traite pas `? ignored_paths\n: >-\n  **/*.md` (valeur
+    # SCALAIRE bloc après le séparateur d'une clé explicite) — le reviewer note lui-même que
+    # « l'acceptation de ce scalaire par le schéma précis GitGuardian n'est pas démontrée ».
+    # PyYAML confirme la forme SYNTAXIQUEMENT valide (résout en `ignored_paths: '**/*.md'`, une
+    # CHAÎNE, pas une liste) — mais ggshield RÉEL (v2.169.1, exécutable CLI, outil de dev
+    # optionnel — SKIP si absent, jamais une dépendance du produit `dependencies=[]`) prouve que
+    # cette forme n'exclut RIEN en pratique : comparaison directe de deux dépôts minimaux,
+    # `ignored_paths` en LISTE propre exclut réellement `tests_docs/foo.md` du scan (absent de
+    # `entities_with_incidents`), tandis que la MÊME forme en scalaire explicite laisse le
+    # fichier scanné (présent dans `entities_with_incidents`) — GitGuardian exige une LISTE pour
+    # `ignored_paths`, un scalaire nu est silencieusement ignoré. Le cliquet n'a donc aucune
+    # raison de détecter cette forme : elle ne réintroduit aucun risque réel.
+    import json
+    import shutil
+    import subprocess
+
+    pytest.importorskip("ggshield", reason="ggshield est un outil de dev optionnel (voir capabilities.py)")
+    executable = shutil.which("ggshield")
+    if executable is None:
+        pytest.skip(
+            "exécutable ggshield introuvable sur PATH (outil de dev optionnel, voir "
+            "evidence/registres/mission.jsonl seq 490 pour la justification round 108)"
+        )
+
+    def _scanner(nom_depot: str, config_yaml: str) -> list[str]:
+        # Round 108 : `ggshield` applique `ignored_paths` par rapport à la RACINE scannée — le
+        # chemin cible doit être « . » avec le répertoire courant DANS le dépôt (comme la
+        # reproduction manuelle originale), pas un chemin absolu passé de l'extérieur, sous
+        # peine de comparer `ignored_paths` à un chemin absolu qui ne matche jamais le glob.
+        depot = tmp_path / nom_depot
+        (depot / "tests_docs").mkdir(parents=True)
+        (depot / "tests_docs" / "foo.md").write_text("contenu inoffensif\n", encoding="utf-8")
+        (depot / ".gitguardian.yaml").write_text(config_yaml, encoding="utf-8")
+        subprocess.run(["git", "init", "-q", str(depot)], check=True)
+        subprocess.run(["git", "-C", str(depot), "add", "-A"], check=True)
+        rapport = depot / "rapport.json"
+        subprocess.run(
+            [executable, "secret", "scan", "path", "--recursive", "--yes",
+             "--format", "json", "-o", str(rapport), "."],
+            check=False, capture_output=True, text=True, cwd=str(depot),
+        )
+        donnees = json.loads(rapport.read_text(encoding="utf-8"))
+        return [e["filename"] for e in donnees["entities_with_incidents"] if "foo.md" in e["filename"]]
+
+    config_liste = 'version: 2\nsecret:\n  ignored_paths:\n    - "**/*.md"\n'  # proof:allow — clé de schéma YAML, pas un secret réel
+    fichiers_liste = _scanner("depot-liste", config_liste)
+    assert fichiers_liste == [], "ggshield devrait exclure foo.md avec ignored_paths en liste"
+
+    config_scalaire = 'secret:\n  ? ignored_paths\n  : >-\n    **/*.md\n'  # proof:allow — clé de schéma YAML, pas un secret réel
+    fichiers_scalaire = _scanner("depot-scalaire", config_scalaire)
+    assert len(fichiers_scalaire) == 1, (
+        "ggshield ne devrait PAS exclure foo.md avec ignored_paths en scalaire explicite "
+        "(confirme que cette forme n'est pas une exclusion fonctionnelle)"
+    )
+
+
 # ---------------------------------------------------------------------------
 # verifier() — vérification bout en bout
 # ---------------------------------------------------------------------------

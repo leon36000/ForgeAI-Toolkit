@@ -1509,336 +1509,315 @@
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 794,
+          "line": 823,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 805,
+          "line": 852,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 816,
+          "line": 863,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 830,
+          "line": 874,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 846,
+          "line": 888,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 860,
+          "line": 904,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 885,
+          "line": 918,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 913,
+          "line": 943,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 941,
+          "line": 971,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 955,
+          "line": 999,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 969,
+          "line": 1013,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 983,
+          "line": 1027,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 997,
+          "line": 1041,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 1026,
+          "line": 1055,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 1038,
+          "line": 1084,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 1057,
+          "line": 1096,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 1075,
+          "line": 1115,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 1088,
+          "line": 1133,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 1100,
+          "line": 1146,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 1138,
+          "line": 1158,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 1160,
+          "line": 1196,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 1174,
+          "line": 1218,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 1191,
+          "line": 1232,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 1204,
+          "line": 1249,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 1228,
+          "line": 1262,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 1242,
+          "line": 1286,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 1255,
+          "line": 1300,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 1278,
+          "line": 1313,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 1291,
+          "line": 1336,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 1305,
+          "line": 1349,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 1326,
+          "line": 1363,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 1340,
+          "line": 1384,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 1359,
+          "line": 1398,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 1374,
+          "line": 1417,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 1390,
+          "line": 1432,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 1404,
+          "line": 1448,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 1422,
+          "line": 1462,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 1437,
+          "line": 1480,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 1454,
+          "line": 1495,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 1468,
+          "line": 1512,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 1482,
+          "line": 1526,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 1500,
+          "line": 1540,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 1514,
+          "line": 1558,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 1532,
+          "line": 1572,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 1546,
-          "referrer": "tests/test_rc1015_gitguardian_scope.py",
-          "resolved": ".gitguardian.yaml",
-          "severity": "hard"
-        },
-        {
-          "candidate": ".gitguardian.yaml",
-          "line": 1564,
-          "referrer": "tests/test_rc1015_gitguardian_scope.py",
-          "resolved": ".gitguardian.yaml",
-          "severity": "hard"
-        },
-        {
-          "candidate": ".gitguardian.yaml",
-          "line": 1577,
-          "referrer": "tests/test_rc1015_gitguardian_scope.py",
-          "resolved": ".gitguardian.yaml",
-          "severity": "hard"
-        },
-        {
-          "candidate": ".gitguardian.yaml",
-          "line": 1594,
+          "line": 1590,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
@@ -1859,84 +1838,84 @@
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 1636,
+          "line": 1635,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 1650,
+          "line": 1652,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 1668,
+          "line": 1662,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 1683,
+          "line": 1680,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 1697,
+          "line": 1694,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 1715,
+          "line": 1708,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 1730,
+          "line": 1726,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 1744,
+          "line": 1741,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 1761,
+          "line": 1755,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 1774,
+          "line": 1773,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 1787,
+          "line": 1788,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 1800,
+          "line": 1802,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
@@ -1950,70 +1929,70 @@
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 1837,
+          "line": 1832,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 1852,
+          "line": 1845,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 1870,
+          "line": 1858,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 1883,
+          "line": 1877,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 1898,
+          "line": 1895,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 1917,
+          "line": 1910,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 1932,
+          "line": 1928,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 1948,
+          "line": 1941,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 1962,
+          "line": 1956,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 1976,
+          "line": 1975,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
@@ -2027,147 +2006,147 @@
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 2004,
+          "line": 2006,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 2016,
+          "line": 2020,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 2029,
+          "line": 2034,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 2043,
+          "line": 2048,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 2059,
+          "line": 2062,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 2078,
+          "line": 2074,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 2093,
+          "line": 2087,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 2107,
+          "line": 2101,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 2122,
+          "line": 2117,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 2139,
+          "line": 2136,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 2154,
+          "line": 2151,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 2168,
+          "line": 2165,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 2183,
+          "line": 2180,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 2199,
+          "line": 2197,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 2214,
+          "line": 2212,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 2229,
+          "line": 2226,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 2243,
+          "line": 2241,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 2254,
+          "line": 2257,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 2274,
+          "line": 2272,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 2289,
+          "line": 2287,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 2302,
+          "line": 2301,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
@@ -2181,413 +2160,413 @@
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 2327,
+          "line": 2332,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 2340,
+          "line": 2347,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 2350,
+          "line": 2360,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 2363,
+          "line": 2370,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 2378,
+          "line": 2385,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 2391,
+          "line": 2398,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 2405,
+          "line": 2408,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 2420,
+          "line": 2421,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 2433,
+          "line": 2436,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 2446,
+          "line": 2449,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 2464,
+          "line": 2463,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 2479,
+          "line": 2478,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 2492,
+          "line": 2491,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 2501,
+          "line": 2504,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 2516,
+          "line": 2522,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 2531,
+          "line": 2537,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 2544,
+          "line": 2550,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 2556,
+          "line": 2559,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 2572,
+          "line": 2574,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 2586,
+          "line": 2589,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 2596,
+          "line": 2602,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 2610,
+          "line": 2614,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 2627,
+          "line": 2630,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 2642,
+          "line": 2644,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 2655,
+          "line": 2654,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 2664,
+          "line": 2668,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 2679,
+          "line": 2685,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 2694,
+          "line": 2700,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 2707,
+          "line": 2713,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 2717,
+          "line": 2722,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 2732,
+          "line": 2737,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 2747,
+          "line": 2752,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 2760,
+          "line": 2765,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 2769,
+          "line": 2775,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 2784,
+          "line": 2790,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 2799,
+          "line": 2805,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 2812,
+          "line": 2818,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 2821,
+          "line": 2827,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 2836,
+          "line": 2842,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 2851,
+          "line": 2857,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 2864,
+          "line": 2870,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 2875,
+          "line": 2879,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 2890,
+          "line": 2894,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 2903,
+          "line": 2909,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 2912,
+          "line": 2922,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 2927,
+          "line": 2933,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 2942,
+          "line": 2948,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 2955,
+          "line": 2961,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 2964,
+          "line": 2970,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 2978,
+          "line": 2985,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 2993,
+          "line": 3000,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 3009,
+          "line": 3013,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 3024,
+          "line": 3022,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 3039,
+          "line": 3036,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 3054,
+          "line": 3051,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 3065,
+          "line": 3067,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 3076,
+          "line": 3082,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 3092,
+          "line": 3097,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 3106,
+          "line": 3112,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
@@ -2601,35 +2580,35 @@
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 3138,
+          "line": 3134,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 3157,
+          "line": 3150,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 3173,
+          "line": 3164,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 3187,
+          "line": 3181,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 3202,
+          "line": 3196,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
@@ -2643,28 +2622,28 @@
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 3226,
+          "line": 3231,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 3240,
+          "line": 3245,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 3253,
+          "line": 3260,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 3270,
+          "line": 3273,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
@@ -2685,231 +2664,231 @@
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 3309,
+          "line": 3311,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 3320,
+          "line": 3328,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 3336,
+          "line": 3342,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 3352,
+          "line": 3356,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 3371,
+          "line": 3367,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 3387,
+          "line": 3378,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 3400,
+          "line": 3394,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 3416,
+          "line": 3410,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 3434,
+          "line": 3429,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 3447,
+          "line": 3445,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 3462,
+          "line": 3458,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 3541,
+          "line": 3474,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 3556,
+          "line": 3492,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 3573,
+          "line": 3505,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 3584,
+          "line": 3520,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 3598,
+          "line": 3599,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 3615,
+          "line": 3614,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 3629,
+          "line": 3631,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 3646,
+          "line": 3642,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 3661,
+          "line": 3656,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 3682,
+          "line": 3673,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 3698,
+          "line": 3687,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 3716,
+          "line": 3704,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 3731,
+          "line": 3719,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 3746,
+          "line": 3740,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 3761,
+          "line": 3756,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 3775,
+          "line": 3774,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 3790,
+          "line": 3789,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 3801,
+          "line": 3804,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 3816,
+          "line": 3819,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 3831,
+          "line": 3833,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 3847,
+          "line": 3848,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 3860,
+          "line": 3859,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
@@ -2923,28 +2902,28 @@
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 3885,
+          "line": 3889,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 3900,
+          "line": 3905,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 3914,
+          "line": 3918,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 3928,
+          "line": 3932,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
@@ -2965,252 +2944,252 @@
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 3971,
+          "line": 3972,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 3981,
+          "line": 3986,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 3998,
+          "line": 4001,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 4013,
+          "line": 4016,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 4026,
+          "line": 4029,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 4041,
+          "line": 4039,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 4058,
+          "line": 4056,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 4073,
+          "line": 4071,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 4088,
+          "line": 4084,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 4100,
+          "line": 4099,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 4115,
+          "line": 4116,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 4129,
+          "line": 4131,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 4145,
+          "line": 4146,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 4159,
+          "line": 4158,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 4170,
+          "line": 4173,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 4184,
+          "line": 4187,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 4198,
+          "line": 4203,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 4212,
+          "line": 4217,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 4226,
+          "line": 4228,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 4237,
+          "line": 4242,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 4251,
+          "line": 4256,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 4265,
+          "line": 4270,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 4280,
+          "line": 4284,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 4290,
+          "line": 4295,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 4304,
+          "line": 4309,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 4321,
+          "line": 4323,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 4336,
+          "line": 4338,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 4351,
+          "line": 4348,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 4365,
+          "line": 4362,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 4381,
+          "line": 4379,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 4395,
+          "line": 4394,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 4410,
+          "line": 4409,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 4426,
+          "line": 4423,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 4441,
+          "line": 4439,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 4452,
+          "line": 4453,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 4469,
+          "line": 4468,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
@@ -3231,21 +3210,21 @@
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 4516,
+          "line": 4510,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 4531,
+          "line": 4527,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 4543,
+          "line": 4542,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
@@ -3259,35 +3238,35 @@
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 4572,
+          "line": 4574,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 4586,
+          "line": 4589,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 4600,
+          "line": 4601,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 4616,
+          "line": 4615,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 4631,
+          "line": 4630,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
@@ -3301,21 +3280,21 @@
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 4657,
+          "line": 4658,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 4671,
+          "line": 4674,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 4688,
+          "line": 4689,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
@@ -3329,49 +3308,77 @@
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 4718,
+          "line": 4715,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 4723,
+          "line": 4729,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 4764,
+          "line": 4746,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 4773,
+          "line": 4760,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 4786,
+          "line": 4776,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 4800,
+          "line": 4781,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 4833,
+          "line": 4822,
+          "referrer": "tests/test_rc1015_gitguardian_scope.py",
+          "resolved": ".gitguardian.yaml",
+          "severity": "hard"
+        },
+        {
+          "candidate": ".gitguardian.yaml",
+          "line": 4831,
+          "referrer": "tests/test_rc1015_gitguardian_scope.py",
+          "resolved": ".gitguardian.yaml",
+          "severity": "hard"
+        },
+        {
+          "candidate": ".gitguardian.yaml",
+          "line": 4844,
+          "referrer": "tests/test_rc1015_gitguardian_scope.py",
+          "resolved": ".gitguardian.yaml",
+          "severity": "hard"
+        },
+        {
+          "candidate": ".gitguardian.yaml",
+          "line": 4858,
+          "referrer": "tests/test_rc1015_gitguardian_scope.py",
+          "resolved": ".gitguardian.yaml",
+          "severity": "hard"
+        },
+        {
+          "candidate": ".gitguardian.yaml",
+          "line": 4891,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
@@ -9838,6 +9845,13 @@
         },
         {
           "candidate": "evidence/registres/mission.jsonl",
+          "line": 812,
+          "referrer": "tests/test_rc1015_gitguardian_scope.py",
+          "resolved": "evidence/registres/mission.jsonl",
+          "severity": "hard"
+        },
+        {
+          "candidate": "evidence/registres/mission.jsonl",
           "line": 357,
           "referrer": "tests/test_registre.py",
           "resolved": "evidence/registres/mission.jsonl",
@@ -9852,8 +9866,8 @@
         }
       ],
       "rule_id": "evidence-registres-root",
-      "sha256": "f50934d796ead46b76c8587ac8d4983f3016156e6dcdda2b0e9f202d31208e91",
-      "size": 397919,
+      "sha256": "6c9e7c134e775752d46d654ebb06945a4dcd55c3c39ffb6db0e625faa8711797",
+      "size": 399202,
       "target_path": null,
       "type": "text"
     },
@@ -39377,7 +39391,7 @@
         },
         {
           "candidate": "src/forgeai/data/catalogue.json",
-          "line": 4724,
+          "line": 4782,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": "src/forgeai/data/catalogue.json",
           "severity": "hard"
@@ -47348,15 +47362,15 @@
         },
         {
           "candidate": "stories/RC1-015.md",
-          "line": 4733,
+          "line": 4791,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": "stories/RC1-015.md",
           "severity": "hard"
         }
       ],
       "rule_id": "governance-stories",
-      "sha256": "dc468df53d4956bf35fc73fd1ca1888fa767427b3b60e569d00dc85f751c1911",
-      "size": 274530,
+      "sha256": "52b40d99a2d381b53a223c72bab2b1aa049463cf24b81fef7a7cafe0911256f0",
+      "size": 277179,
       "target_path": null,
       "type": "text"
     },
@@ -55786,8 +55800,8 @@
         }
       ],
       "rule_id": "test-suite",
-      "sha256": "a3c41e05efa9a20c08396447b5774f246567e6de4652cb1b0c4261da1297bbe0",
-      "size": 268569,
+      "sha256": "8310d72d55638e8e2dc462667dabe8f6e3968ef248c8338ff25c8e0044816a8d",
+      "size": 272356,
       "target_path": null,
       "type": "text"
     },
@@ -129542,6 +129556,26 @@
         "referrer": "stories/RC1-015.md"
       },
       {
+        "candidate": "73/85/86/94/97",
+        "line": 3802,
+        "referrer": "stories/RC1-015.md"
+      },
+      {
+        "candidate": "tests_docs/foo.md",
+        "line": 3806,
+        "referrer": "stories/RC1-015.md"
+      },
+      {
+        "candidate": "tests_docs/foo.md",
+        "line": 3809,
+        "referrer": "stories/RC1-015.md"
+      },
+      {
+        "candidate": "73/85/86/94/97",
+        "line": 3824,
+        "referrer": "stories/RC1-015.md"
+      },
+      {
         "candidate": "src/forgeai/",
         "line": 3,
         "referrer": "stories/RC1-022.md"
@@ -139207,143 +139241,168 @@
         "referrer": "tests/test_rc1015_gitguardian_scope.py"
       },
       {
-        "candidate": "tests/fixtures/",
-        "line": 796,
+        "candidate": "tests_docs/foo.md",
+        "line": 798,
         "referrer": "tests/test_rc1015_gitguardian_scope.py"
       },
       {
-        "candidate": "tests/fixtures/",
+        "candidate": "capabilities.py",
         "line": 807,
         "referrer": "tests/test_rc1015_gitguardian_scope.py"
       },
       {
-        "candidate": "evidence/reviews/",
-        "line": 818,
+        "candidate": "foo.md",
+        "line": 822,
+        "referrer": "tests/test_rc1015_gitguardian_scope.py"
+      },
+      {
+        "candidate": "rapport.json",
+        "line": 826,
+        "referrer": "tests/test_rc1015_gitguardian_scope.py"
+      },
+      {
+        "candidate": "foo.md",
+        "line": 833,
+        "referrer": "tests/test_rc1015_gitguardian_scope.py"
+      },
+      {
+        "candidate": "foo.md",
+        "line": 837,
+        "referrer": "tests/test_rc1015_gitguardian_scope.py"
+      },
+      {
+        "candidate": "foo.md",
+        "line": 842,
+        "referrer": "tests/test_rc1015_gitguardian_scope.py"
+      },
+      {
+        "candidate": "tests/fixtures/",
+        "line": 854,
+        "referrer": "tests/test_rc1015_gitguardian_scope.py"
+      },
+      {
+        "candidate": "tests/fixtures/",
+        "line": 865,
         "referrer": "tests/test_rc1015_gitguardian_scope.py"
       },
       {
         "candidate": "evidence/reviews/",
-        "line": 859,
+        "line": 876,
         "referrer": "tests/test_rc1015_gitguardian_scope.py"
       },
       {
         "candidate": "evidence/reviews/",
-        "line": 862,
+        "line": 917,
+        "referrer": "tests/test_rc1015_gitguardian_scope.py"
+      },
+      {
+        "candidate": "evidence/reviews/",
+        "line": 920,
         "referrer": "tests/test_rc1015_gitguardian_scope.py"
       },
       {
         "candidate": "ancres/alias",
-        "line": 931,
+        "line": 989,
         "referrer": "tests/test_rc1015_gitguardian_scope.py"
       },
       {
         "candidate": "evidence/reviews/",
-        "line": 967,
+        "line": 1025,
         "referrer": "tests/test_rc1015_gitguardian_scope.py"
       },
       {
         "candidate": "evidence/reviews/",
-        "line": 971,
+        "line": 1029,
         "referrer": "tests/test_rc1015_gitguardian_scope.py"
       },
       {
         "candidate": "b/",
-        "line": 999,
+        "line": 1057,
         "referrer": "tests/test_rc1015_gitguardian_scope.py"
       },
       {
         "candidate": "b/",
-        "line": 1002,
+        "line": 1060,
         "referrer": "tests/test_rc1015_gitguardian_scope.py"
       },
       {
         "candidate": "evidence/reviews/",
-        "line": 1102,
+        "line": 1160,
         "referrer": "tests/test_rc1015_gitguardian_scope.py"
       },
       {
         "candidate": "spec/PyYAML",
-        "line": 1127,
+        "line": 1185,
         "referrer": "tests/test_rc1015_gitguardian_scope.py"
       },
       {
         "candidate": "evidence/reviews/",
-        "line": 1176,
+        "line": 1234,
         "referrer": "tests/test_rc1015_gitguardian_scope.py"
       },
       {
         "candidate": "evidence/reviews/",
-        "line": 1206,
+        "line": 1264,
         "referrer": "tests/test_rc1015_gitguardian_scope.py"
       },
       {
         "candidate": "evidence/reviews/",
-        "line": 1257,
+        "line": 1315,
         "referrer": "tests/test_rc1015_gitguardian_scope.py"
       },
       {
         "candidate": "evidence/reviews/",
-        "line": 1260,
+        "line": 1318,
         "referrer": "tests/test_rc1015_gitguardian_scope.py"
       },
       {
         "candidate": "evidence/reviews/",
-        "line": 1307,
+        "line": 1365,
         "referrer": "tests/test_rc1015_gitguardian_scope.py"
       },
       {
         "candidate": "evidence/reviews/",
-        "line": 1310,
+        "line": 1368,
         "referrer": "tests/test_rc1015_gitguardian_scope.py"
       },
       {
         "candidate": "evidence/reviews/",
-        "line": 1342,
+        "line": 1400,
         "referrer": "tests/test_rc1015_gitguardian_scope.py"
       },
       {
         "candidate": "evidence/reviews/",
-        "line": 1345,
+        "line": 1403,
         "referrer": "tests/test_rc1015_gitguardian_scope.py"
       },
       {
         "candidate": "evidence/reviews/",
-        "line": 1376,
+        "line": 1434,
         "referrer": "tests/test_rc1015_gitguardian_scope.py"
       },
       {
         "candidate": "evidence/reviews/",
-        "line": 1406,
+        "line": 1464,
         "referrer": "tests/test_rc1015_gitguardian_scope.py"
       },
       {
         "candidate": "evidence/reviews/",
-        "line": 1439,
+        "line": 1497,
         "referrer": "tests/test_rc1015_gitguardian_scope.py"
       },
       {
         "candidate": "evidence/reviews/",
-        "line": 1484,
+        "line": 1542,
         "referrer": "tests/test_rc1015_gitguardian_scope.py"
       },
       {
         "candidate": "evidence/reviews/",
-        "line": 1516,
+        "line": 1574,
         "referrer": "tests/test_rc1015_gitguardian_scope.py"
       },
       {
         "candidate": "ligne/commentaire",
-        "line": 1529,
-        "referrer": "tests/test_rc1015_gitguardian_scope.py"
-      },
-      {
-        "candidate": "evidence/reviews/",
-        "line": 1548,
-        "referrer": "tests/test_rc1015_gitguardian_scope.py"
-      },
-      {
-        "candidate": "ancre/tag",
-        "line": 1563,
+        "line": 1587,
         "referrer": "tests/test_rc1015_gitguardian_scope.py"
       },
       {
@@ -139352,38 +139411,28 @@
         "referrer": "tests/test_rc1015_gitguardian_scope.py"
       },
       {
+        "candidate": "ancre/tag",
+        "line": 1621,
+        "referrer": "tests/test_rc1015_gitguardian_scope.py"
+      },
+      {
+        "candidate": "evidence/reviews/",
+        "line": 1664,
+        "referrer": "tests/test_rc1015_gitguardian_scope.py"
+      },
+      {
         "candidate": "et/ou",
-        "line": 1620,
+        "line": 1678,
         "referrer": "tests/test_rc1015_gitguardian_scope.py"
       },
       {
         "candidate": "evidence/reviews/",
-        "line": 1652,
+        "line": 1710,
         "referrer": "tests/test_rc1015_gitguardian_scope.py"
       },
       {
         "candidate": "evidence/reviews/",
-        "line": 1685,
-        "referrer": "tests/test_rc1015_gitguardian_scope.py"
-      },
-      {
-        "candidate": "evidence/reviews/",
-        "line": 1688,
-        "referrer": "tests/test_rc1015_gitguardian_scope.py"
-      },
-      {
-        "candidate": "evidence/reviews/",
-        "line": 1699,
-        "referrer": "tests/test_rc1015_gitguardian_scope.py"
-      },
-      {
-        "candidate": "evidence/reviews/",
-        "line": 1732,
-        "referrer": "tests/test_rc1015_gitguardian_scope.py"
-      },
-      {
-        "candidate": "evidence/reviews/",
-        "line": 1735,
+        "line": 1743,
         "referrer": "tests/test_rc1015_gitguardian_scope.py"
       },
       {
@@ -139393,27 +139442,42 @@
       },
       {
         "candidate": "evidence/reviews/",
-        "line": 1802,
+        "line": 1757,
         "referrer": "tests/test_rc1015_gitguardian_scope.py"
       },
       {
         "candidate": "evidence/reviews/",
-        "line": 1854,
+        "line": 1790,
         "referrer": "tests/test_rc1015_gitguardian_scope.py"
       },
       {
         "candidate": "evidence/reviews/",
-        "line": 1900,
+        "line": 1793,
+        "referrer": "tests/test_rc1015_gitguardian_scope.py"
+      },
+      {
+        "candidate": "evidence/reviews/",
+        "line": 1804,
+        "referrer": "tests/test_rc1015_gitguardian_scope.py"
+      },
+      {
+        "candidate": "evidence/reviews/",
+        "line": 1860,
+        "referrer": "tests/test_rc1015_gitguardian_scope.py"
+      },
+      {
+        "candidate": "evidence/reviews/",
+        "line": 1912,
+        "referrer": "tests/test_rc1015_gitguardian_scope.py"
+      },
+      {
+        "candidate": "evidence/reviews/",
+        "line": 1958,
         "referrer": "tests/test_rc1015_gitguardian_scope.py"
       },
       {
         "candidate": "guillemets/commentaires",
-        "line": 1910,
-        "referrer": "tests/test_rc1015_gitguardian_scope.py"
-      },
-      {
-        "candidate": "evidence/reviews/",
-        "line": 1934,
+        "line": 1968,
         "referrer": "tests/test_rc1015_gitguardian_scope.py"
       },
       {
@@ -139423,82 +139487,72 @@
       },
       {
         "candidate": "evidence/reviews/",
-        "line": 2045,
+        "line": 2050,
         "referrer": "tests/test_rc1015_gitguardian_scope.py"
       },
       {
         "candidate": "evidence/reviews/",
-        "line": 2124,
+        "line": 2103,
         "referrer": "tests/test_rc1015_gitguardian_scope.py"
       },
       {
         "candidate": "evidence/reviews/",
-        "line": 2185,
+        "line": 2182,
         "referrer": "tests/test_rc1015_gitguardian_scope.py"
       },
       {
         "candidate": "evidence/reviews/",
-        "line": 2231,
+        "line": 2243,
         "referrer": "tests/test_rc1015_gitguardian_scope.py"
       },
       {
         "candidate": "evidence/reviews/",
-        "line": 2291,
+        "line": 2289,
         "referrer": "tests/test_rc1015_gitguardian_scope.py"
       },
       {
         "candidate": "evidence/reviews/",
-        "line": 2329,
+        "line": 2349,
+        "referrer": "tests/test_rc1015_gitguardian_scope.py"
+      },
+      {
+        "candidate": "evidence/reviews/",
+        "line": 2387,
         "referrer": "tests/test_rc1015_gitguardian_scope.py"
       },
       {
         "candidate": "vide/non",
-        "line": 2347,
+        "line": 2405,
         "referrer": "tests/test_rc1015_gitguardian_scope.py"
       },
       {
         "candidate": "evidence/reviews/",
-        "line": 2380,
+        "line": 2438,
         "referrer": "tests/test_rc1015_gitguardian_scope.py"
       },
       {
         "candidate": "evidence/reviews/",
-        "line": 2422,
+        "line": 2480,
         "referrer": "tests/test_rc1015_gitguardian_scope.py"
       },
       {
         "candidate": "evidence/reviews/",
-        "line": 2466,
+        "line": 2524,
         "referrer": "tests/test_rc1015_gitguardian_scope.py"
       },
       {
         "candidate": "evidence/reviews/",
-        "line": 2481,
+        "line": 2539,
         "referrer": "tests/test_rc1015_gitguardian_scope.py"
       },
       {
         "candidate": "mapping/alias",
-        "line": 2490,
+        "line": 2548,
         "referrer": "tests/test_rc1015_gitguardian_scope.py"
       },
       {
         "candidate": "evidence/reviews/",
-        "line": 2533,
-        "referrer": "tests/test_rc1015_gitguardian_scope.py"
-      },
-      {
-        "candidate": "evidence/reviews/",
-        "line": 2574,
-        "referrer": "tests/test_rc1015_gitguardian_scope.py"
-      },
-      {
-        "candidate": "42-43/46",
-        "line": 2592,
-        "referrer": "tests/test_rc1015_gitguardian_scope.py"
-      },
-      {
-        "candidate": "evidence/reviews/",
-        "line": 2629,
+        "line": 2591,
         "referrer": "tests/test_rc1015_gitguardian_scope.py"
       },
       {
@@ -139507,333 +139561,348 @@
         "referrer": "tests/test_rc1015_gitguardian_scope.py"
       },
       {
-        "candidate": "evidence/reviews/",
-        "line": 2644,
+        "candidate": "42-43/46",
+        "line": 2650,
         "referrer": "tests/test_rc1015_gitguardian_scope.py"
       },
       {
         "candidate": "evidence/reviews/",
-        "line": 2681,
+        "line": 2687,
         "referrer": "tests/test_rc1015_gitguardian_scope.py"
       },
       {
         "candidate": "evidence/reviews/",
-        "line": 2684,
+        "line": 2690,
         "referrer": "tests/test_rc1015_gitguardian_scope.py"
       },
       {
         "candidate": "evidence/reviews/",
-        "line": 2696,
+        "line": 2702,
+        "referrer": "tests/test_rc1015_gitguardian_scope.py"
+      },
+      {
+        "candidate": "evidence/reviews/",
+        "line": 2739,
+        "referrer": "tests/test_rc1015_gitguardian_scope.py"
+      },
+      {
+        "candidate": "evidence/reviews/",
+        "line": 2742,
+        "referrer": "tests/test_rc1015_gitguardian_scope.py"
+      },
+      {
+        "candidate": "evidence/reviews/",
+        "line": 2754,
         "referrer": "tests/test_rc1015_gitguardian_scope.py"
       },
       {
         "candidate": "et/ou",
-        "line": 2714,
+        "line": 2772,
         "referrer": "tests/test_rc1015_gitguardian_scope.py"
       },
       {
         "candidate": "evidence/reviews/",
-        "line": 2749,
+        "line": 2807,
         "referrer": "tests/test_rc1015_gitguardian_scope.py"
       },
       {
         "candidate": "ancre/tag",
-        "line": 2758,
+        "line": 2816,
         "referrer": "tests/test_rc1015_gitguardian_scope.py"
       },
       {
         "candidate": "evidence/reviews/",
-        "line": 2801,
+        "line": 2859,
         "referrer": "tests/test_rc1015_gitguardian_scope.py"
       },
       {
         "candidate": "liste/mapping",
-        "line": 2811,
+        "line": 2869,
         "referrer": "tests/test_rc1015_gitguardian_scope.py"
       },
       {
         "candidate": "evidence/reviews/",
-        "line": 2853,
+        "line": 2911,
         "referrer": "tests/test_rc1015_gitguardian_scope.py"
       },
       {
         "candidate": "evidence/reviews/",
-        "line": 2892,
+        "line": 2950,
         "referrer": "tests/test_rc1015_gitguardian_scope.py"
       },
       {
         "candidate": "evidence/reviews/",
-        "line": 2929,
+        "line": 2987,
         "referrer": "tests/test_rc1015_gitguardian_scope.py"
       },
       {
         "candidate": "evidence/reviews/",
-        "line": 2932,
+        "line": 2990,
         "referrer": "tests/test_rc1015_gitguardian_scope.py"
       },
       {
         "candidate": "evidence/reviews/",
-        "line": 2944,
+        "line": 3002,
         "referrer": "tests/test_rc1015_gitguardian_scope.py"
       },
       {
         "candidate": "evidence/reviews/",
-        "line": 2996,
+        "line": 3054,
         "referrer": "tests/test_rc1015_gitguardian_scope.py"
       },
       {
         "candidate": "evidence/reviews/",
-        "line": 2999,
+        "line": 3057,
         "referrer": "tests/test_rc1015_gitguardian_scope.py"
       },
       {
         "candidate": "evidence/reviews/",
-        "line": 3042,
+        "line": 3100,
         "referrer": "tests/test_rc1015_gitguardian_scope.py"
       },
       {
         "candidate": "evidence/reviews/",
-        "line": 3045,
+        "line": 3103,
         "referrer": "tests/test_rc1015_gitguardian_scope.py"
       },
       {
         "candidate": "evidence/reviews/",
-        "line": 3190,
+        "line": 3248,
         "referrer": "tests/test_rc1015_gitguardian_scope.py"
       },
       {
         "candidate": "evidence/reviews/",
-        "line": 3193,
+        "line": 3251,
         "referrer": "tests/test_rc1015_gitguardian_scope.py"
       },
       {
         "candidate": "evidence/reviews/",
-        "line": 3204,
+        "line": 3262,
         "referrer": "tests/test_rc1015_gitguardian_scope.py"
       },
       {
         "candidate": "alias/fusion",
-        "line": 3214,
+        "line": 3272,
         "referrer": "tests/test_rc1015_gitguardian_scope.py"
       },
       {
         "candidate": "evidence/reviews/",
-        "line": 3242,
+        "line": 3300,
         "referrer": "tests/test_rc1015_gitguardian_scope.py"
       },
       {
         "candidate": "evidence/reviews/",
-        "line": 3256,
+        "line": 3314,
         "referrer": "tests/test_rc1015_gitguardian_scope.py"
       },
       {
         "candidate": "evidence/reviews/",
-        "line": 3259,
+        "line": 3317,
         "referrer": "tests/test_rc1015_gitguardian_scope.py"
       },
       {
         "candidate": "evidence/reviews/",
-        "line": 3356,
+        "line": 3414,
         "referrer": "tests/test_rc1015_gitguardian_scope.py"
       },
       {
         "candidate": "evidence/reviews/",
-        "line": 3359,
+        "line": 3417,
         "referrer": "tests/test_rc1015_gitguardian_scope.py"
       },
       {
         "candidate": "evidence/reviews/",
-        "line": 3374,
+        "line": 3432,
         "referrer": "tests/test_rc1015_gitguardian_scope.py"
       },
       {
         "candidate": "evidence/reviews/",
-        "line": 3618,
+        "line": 3676,
         "referrer": "tests/test_rc1015_gitguardian_scope.py"
       },
       {
         "candidate": "evidence/reviews/",
-        "line": 3631,
+        "line": 3689,
         "referrer": "tests/test_rc1015_gitguardian_scope.py"
       },
       {
         "candidate": "ancre/alias",
-        "line": 3668,
+        "line": 3726,
         "referrer": "tests/test_rc1015_gitguardian_scope.py"
       },
       {
         "candidate": "ancre/alias",
-        "line": 3671,
+        "line": 3729,
         "referrer": "tests/test_rc1015_gitguardian_scope.py"
       },
       {
         "candidate": "scalaire/bloc/guillemet",
-        "line": 3713,
+        "line": 3771,
         "referrer": "tests/test_rc1015_gitguardian_scope.py"
       },
       {
         "candidate": "evidence/reviews/",
-        "line": 3749,
+        "line": 3807,
         "referrer": "tests/test_rc1015_gitguardian_scope.py"
       },
       {
         "candidate": "evidence/reviews/",
-        "line": 3752,
+        "line": 3810,
         "referrer": "tests/test_rc1015_gitguardian_scope.py"
       },
       {
         "candidate": "evidence/reviews/",
-        "line": 3763,
+        "line": 3821,
         "referrer": "tests/test_rc1015_gitguardian_scope.py"
       },
       {
         "candidate": "45/49/55",
-        "line": 3828,
+        "line": 3886,
         "referrer": "tests/test_rc1015_gitguardian_scope.py"
       },
       {
         "candidate": "evidence/reviews/",
-        "line": 3835,
+        "line": 3893,
         "referrer": "tests/test_rc1015_gitguardian_scope.py"
       },
       {
         "candidate": "evidence/reviews/",
-        "line": 3838,
+        "line": 3896,
         "referrer": "tests/test_rc1015_gitguardian_scope.py"
       },
       {
         "candidate": "evidence/reviews/",
-        "line": 3849,
+        "line": 3907,
         "referrer": "tests/test_rc1015_gitguardian_scope.py"
       },
       {
         "candidate": "evidence/reviews/",
-        "line": 3931,
+        "line": 3989,
         "referrer": "tests/test_rc1015_gitguardian_scope.py"
       },
       {
         "candidate": "evidence/reviews/",
-        "line": 3934,
+        "line": 3992,
         "referrer": "tests/test_rc1015_gitguardian_scope.py"
       },
       {
         "candidate": "evidence/reviews/",
-        "line": 3945,
+        "line": 4003,
         "referrer": "tests/test_rc1015_gitguardian_scope.py"
       },
       {
         "candidate": "evidence/reviews/",
-        "line": 3960,
+        "line": 4018,
         "referrer": "tests/test_rc1015_gitguardian_scope.py"
       },
       {
         "candidate": "evidence/reviews/",
-        "line": 4015,
+        "line": 4073,
         "referrer": "tests/test_rc1015_gitguardian_scope.py"
       },
       {
         "candidate": "evidence/reviews/",
-        "line": 4117,
+        "line": 4175,
         "referrer": "tests/test_rc1015_gitguardian_scope.py"
       },
       {
         "candidate": "evidence/reviews/",
-        "line": 4186,
+        "line": 4244,
         "referrer": "tests/test_rc1015_gitguardian_scope.py"
       },
       {
         "candidate": "evidence/reviews/",
-        "line": 4253,
+        "line": 4311,
         "referrer": "tests/test_rc1015_gitguardian_scope.py"
       },
       {
         "candidate": "31/56/59/60",
-        "line": 4288,
+        "line": 4346,
         "referrer": "tests/test_rc1015_gitguardian_scope.py"
       },
       {
         "candidate": "evidence/reviews/",
-        "line": 4306,
+        "line": 4364,
         "referrer": "tests/test_rc1015_gitguardian_scope.py"
       },
       {
         "candidate": "evidence/reviews/",
-        "line": 4323,
+        "line": 4381,
         "referrer": "tests/test_rc1015_gitguardian_scope.py"
       },
       {
         "candidate": "evidence/reviews/",
-        "line": 4326,
+        "line": 4384,
         "referrer": "tests/test_rc1015_gitguardian_scope.py"
       },
       {
         "candidate": "fusion/ancre-flow",
-        "line": 4349,
-        "referrer": "tests/test_rc1015_gitguardian_scope.py"
-      },
-      {
-        "candidate": "evidence/reviews/",
-        "line": 4383,
-        "referrer": "tests/test_rc1015_gitguardian_scope.py"
-      },
-      {
-        "candidate": "evidence/reviews/",
-        "line": 4397,
-        "referrer": "tests/test_rc1015_gitguardian_scope.py"
-      },
-      {
-        "candidate": "evidence/reviews/",
-        "line": 4400,
-        "referrer": "tests/test_rc1015_gitguardian_scope.py"
-      },
-      {
-        "candidate": "gression/g",
         "line": 4407,
         "referrer": "tests/test_rc1015_gitguardian_scope.py"
       },
       {
-        "candidate": "gression/g",
-        "line": 4481,
-        "referrer": "tests/test_rc1015_gitguardian_scope.py"
-      },
-      {
-        "candidate": "gression/g",
-        "line": 4612,
+        "candidate": "evidence/reviews/",
+        "line": 4441,
         "referrer": "tests/test_rc1015_gitguardian_scope.py"
       },
       {
         "candidate": "evidence/reviews/",
+        "line": 4455,
+        "referrer": "tests/test_rc1015_gitguardian_scope.py"
+      },
+      {
+        "candidate": "evidence/reviews/",
+        "line": 4458,
+        "referrer": "tests/test_rc1015_gitguardian_scope.py"
+      },
+      {
+        "candidate": "gression/g",
+        "line": 4465,
+        "referrer": "tests/test_rc1015_gitguardian_scope.py"
+      },
+      {
+        "candidate": "gression/g",
+        "line": 4539,
+        "referrer": "tests/test_rc1015_gitguardian_scope.py"
+      },
+      {
+        "candidate": "gression/g",
         "line": 4670,
         "referrer": "tests/test_rc1015_gitguardian_scope.py"
       },
       {
         "candidate": "evidence/reviews/",
-        "line": 4673,
+        "line": 4728,
+        "referrer": "tests/test_rc1015_gitguardian_scope.py"
+      },
+      {
+        "candidate": "evidence/reviews/",
+        "line": 4731,
         "referrer": "tests/test_rc1015_gitguardian_scope.py"
       },
       {
         "candidate": "tests/fixtures/",
-        "line": 4704,
+        "line": 4762,
         "referrer": "tests/test_rc1015_gitguardian_scope.py"
       },
       {
         "candidate": "tests/fixtures/",
-        "line": 4707,
+        "line": 4765,
         "referrer": "tests/test_rc1015_gitguardian_scope.py"
       },
       {
         "candidate": "tests/fixtures/",
-        "line": 4724,
+        "line": 4782,
         "referrer": "tests/test_rc1015_gitguardian_scope.py"
       },
       {
         "candidate": "check_gitguardian_scope.py",
-        "line": 4766,
+        "line": 4824,
         "referrer": "tests/test_rc1015_gitguardian_scope.py"
       },
       {
         "candidate": "check_gitguardian_scope.py",
-        "line": 4775,
+        "line": 4833,
         "referrer": "tests/test_rc1015_gitguardian_scope.py"
       },
       {
@@ -175113,337 +175182,323 @@
         "severity": "hard"
       },
       {
+        "candidate": "evidence/registres/mission.jsonl",
+        "line": 812,
+        "referrer": "tests/test_rc1015_gitguardian_scope.py",
+        "resolved": "evidence/registres/mission.jsonl",
+        "severity": "hard"
+      },
+      {
         "candidate": ".gitguardian.yaml",
-        "line": 794,
+        "line": 823,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 805,
+        "line": 852,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 816,
+        "line": 863,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 830,
+        "line": 874,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 846,
+        "line": 888,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 860,
+        "line": 904,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 885,
+        "line": 918,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 913,
+        "line": 943,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 941,
+        "line": 971,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 955,
+        "line": 999,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 969,
+        "line": 1013,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 983,
+        "line": 1027,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 997,
+        "line": 1041,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 1026,
+        "line": 1055,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 1038,
+        "line": 1084,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 1057,
+        "line": 1096,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 1075,
+        "line": 1115,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 1088,
+        "line": 1133,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 1100,
+        "line": 1146,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 1138,
+        "line": 1158,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 1160,
+        "line": 1196,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 1174,
+        "line": 1218,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 1191,
+        "line": 1232,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 1204,
+        "line": 1249,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 1228,
+        "line": 1262,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 1242,
+        "line": 1286,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 1255,
+        "line": 1300,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 1278,
+        "line": 1313,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 1291,
+        "line": 1336,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 1305,
+        "line": 1349,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 1326,
+        "line": 1363,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 1340,
+        "line": 1384,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 1359,
+        "line": 1398,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 1374,
+        "line": 1417,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 1390,
+        "line": 1432,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 1404,
+        "line": 1448,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 1422,
+        "line": 1462,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 1437,
+        "line": 1480,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 1454,
+        "line": 1495,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 1468,
+        "line": 1512,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 1482,
+        "line": 1526,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 1500,
+        "line": 1540,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 1514,
+        "line": 1558,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 1532,
+        "line": 1572,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 1546,
-        "referrer": "tests/test_rc1015_gitguardian_scope.py",
-        "resolved": ".gitguardian.yaml",
-        "severity": "hard"
-      },
-      {
-        "candidate": ".gitguardian.yaml",
-        "line": 1564,
-        "referrer": "tests/test_rc1015_gitguardian_scope.py",
-        "resolved": ".gitguardian.yaml",
-        "severity": "hard"
-      },
-      {
-        "candidate": ".gitguardian.yaml",
-        "line": 1577,
-        "referrer": "tests/test_rc1015_gitguardian_scope.py",
-        "resolved": ".gitguardian.yaml",
-        "severity": "hard"
-      },
-      {
-        "candidate": ".gitguardian.yaml",
-        "line": 1594,
+        "line": 1590,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
@@ -175464,84 +175519,84 @@
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 1636,
+        "line": 1635,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 1650,
+        "line": 1652,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 1668,
+        "line": 1662,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 1683,
+        "line": 1680,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 1697,
+        "line": 1694,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 1715,
+        "line": 1708,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 1730,
+        "line": 1726,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 1744,
+        "line": 1741,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 1761,
+        "line": 1755,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 1774,
+        "line": 1773,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 1787,
+        "line": 1788,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 1800,
+        "line": 1802,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
@@ -175555,70 +175610,70 @@
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 1837,
+        "line": 1832,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 1852,
+        "line": 1845,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 1870,
+        "line": 1858,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 1883,
+        "line": 1877,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 1898,
+        "line": 1895,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 1917,
+        "line": 1910,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 1932,
+        "line": 1928,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 1948,
+        "line": 1941,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 1962,
+        "line": 1956,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 1976,
+        "line": 1975,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
@@ -175632,147 +175687,147 @@
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 2004,
+        "line": 2006,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 2016,
+        "line": 2020,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 2029,
+        "line": 2034,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 2043,
+        "line": 2048,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 2059,
+        "line": 2062,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 2078,
+        "line": 2074,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 2093,
+        "line": 2087,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 2107,
+        "line": 2101,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 2122,
+        "line": 2117,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 2139,
+        "line": 2136,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 2154,
+        "line": 2151,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 2168,
+        "line": 2165,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 2183,
+        "line": 2180,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 2199,
+        "line": 2197,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 2214,
+        "line": 2212,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 2229,
+        "line": 2226,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 2243,
+        "line": 2241,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 2254,
+        "line": 2257,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 2274,
+        "line": 2272,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 2289,
+        "line": 2287,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 2302,
+        "line": 2301,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
@@ -175786,413 +175841,413 @@
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 2327,
+        "line": 2332,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 2340,
+        "line": 2347,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 2350,
+        "line": 2360,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 2363,
+        "line": 2370,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 2378,
+        "line": 2385,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 2391,
+        "line": 2398,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 2405,
+        "line": 2408,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 2420,
+        "line": 2421,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 2433,
+        "line": 2436,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 2446,
+        "line": 2449,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 2464,
+        "line": 2463,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 2479,
+        "line": 2478,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 2492,
+        "line": 2491,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 2501,
+        "line": 2504,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 2516,
+        "line": 2522,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 2531,
+        "line": 2537,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 2544,
+        "line": 2550,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 2556,
+        "line": 2559,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 2572,
+        "line": 2574,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 2586,
+        "line": 2589,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 2596,
+        "line": 2602,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 2610,
+        "line": 2614,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 2627,
+        "line": 2630,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 2642,
+        "line": 2644,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 2655,
+        "line": 2654,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 2664,
+        "line": 2668,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 2679,
+        "line": 2685,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 2694,
+        "line": 2700,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 2707,
+        "line": 2713,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 2717,
+        "line": 2722,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 2732,
+        "line": 2737,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 2747,
+        "line": 2752,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 2760,
+        "line": 2765,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 2769,
+        "line": 2775,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 2784,
+        "line": 2790,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 2799,
+        "line": 2805,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 2812,
+        "line": 2818,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 2821,
+        "line": 2827,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 2836,
+        "line": 2842,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 2851,
+        "line": 2857,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 2864,
+        "line": 2870,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 2875,
+        "line": 2879,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 2890,
+        "line": 2894,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 2903,
+        "line": 2909,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 2912,
+        "line": 2922,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 2927,
+        "line": 2933,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 2942,
+        "line": 2948,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 2955,
+        "line": 2961,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 2964,
+        "line": 2970,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 2978,
+        "line": 2985,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 2993,
+        "line": 3000,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 3009,
+        "line": 3013,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 3024,
+        "line": 3022,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 3039,
+        "line": 3036,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 3054,
+        "line": 3051,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 3065,
+        "line": 3067,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 3076,
+        "line": 3082,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 3092,
+        "line": 3097,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 3106,
+        "line": 3112,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
@@ -176206,35 +176261,35 @@
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 3138,
+        "line": 3134,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 3157,
+        "line": 3150,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 3173,
+        "line": 3164,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 3187,
+        "line": 3181,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 3202,
+        "line": 3196,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
@@ -176248,28 +176303,28 @@
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 3226,
+        "line": 3231,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 3240,
+        "line": 3245,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 3253,
+        "line": 3260,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 3270,
+        "line": 3273,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
@@ -176290,231 +176345,231 @@
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 3309,
+        "line": 3311,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 3320,
+        "line": 3328,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 3336,
+        "line": 3342,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 3352,
+        "line": 3356,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 3371,
+        "line": 3367,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 3387,
+        "line": 3378,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 3400,
+        "line": 3394,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 3416,
+        "line": 3410,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 3434,
+        "line": 3429,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 3447,
+        "line": 3445,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 3462,
+        "line": 3458,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 3541,
+        "line": 3474,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 3556,
+        "line": 3492,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 3573,
+        "line": 3505,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 3584,
+        "line": 3520,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 3598,
+        "line": 3599,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 3615,
+        "line": 3614,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 3629,
+        "line": 3631,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 3646,
+        "line": 3642,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 3661,
+        "line": 3656,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 3682,
+        "line": 3673,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 3698,
+        "line": 3687,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 3716,
+        "line": 3704,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 3731,
+        "line": 3719,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 3746,
+        "line": 3740,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 3761,
+        "line": 3756,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 3775,
+        "line": 3774,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 3790,
+        "line": 3789,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 3801,
+        "line": 3804,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 3816,
+        "line": 3819,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 3831,
+        "line": 3833,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 3847,
+        "line": 3848,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 3860,
+        "line": 3859,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
@@ -176528,28 +176583,28 @@
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 3885,
+        "line": 3889,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 3900,
+        "line": 3905,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 3914,
+        "line": 3918,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 3928,
+        "line": 3932,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
@@ -176570,252 +176625,252 @@
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 3971,
+        "line": 3972,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 3981,
+        "line": 3986,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 3998,
+        "line": 4001,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 4013,
+        "line": 4016,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 4026,
+        "line": 4029,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 4041,
+        "line": 4039,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 4058,
+        "line": 4056,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 4073,
+        "line": 4071,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 4088,
+        "line": 4084,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 4100,
+        "line": 4099,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 4115,
+        "line": 4116,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 4129,
+        "line": 4131,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 4145,
+        "line": 4146,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 4159,
+        "line": 4158,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 4170,
+        "line": 4173,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 4184,
+        "line": 4187,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 4198,
+        "line": 4203,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 4212,
+        "line": 4217,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 4226,
+        "line": 4228,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 4237,
+        "line": 4242,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 4251,
+        "line": 4256,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 4265,
+        "line": 4270,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 4280,
+        "line": 4284,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 4290,
+        "line": 4295,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 4304,
+        "line": 4309,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 4321,
+        "line": 4323,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 4336,
+        "line": 4338,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 4351,
+        "line": 4348,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 4365,
+        "line": 4362,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 4381,
+        "line": 4379,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 4395,
+        "line": 4394,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 4410,
+        "line": 4409,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 4426,
+        "line": 4423,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 4441,
+        "line": 4439,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 4452,
+        "line": 4453,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 4469,
+        "line": 4468,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
@@ -176836,21 +176891,21 @@
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 4516,
+        "line": 4510,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 4531,
+        "line": 4527,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 4543,
+        "line": 4542,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
@@ -176864,35 +176919,35 @@
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 4572,
+        "line": 4574,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 4586,
+        "line": 4589,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 4600,
+        "line": 4601,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 4616,
+        "line": 4615,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 4631,
+        "line": 4630,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
@@ -176906,21 +176961,21 @@
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 4657,
+        "line": 4658,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 4671,
+        "line": 4674,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 4688,
+        "line": 4689,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
@@ -176934,63 +176989,91 @@
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 4718,
+        "line": 4715,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 4723,
+        "line": 4729,
+        "referrer": "tests/test_rc1015_gitguardian_scope.py",
+        "resolved": ".gitguardian.yaml",
+        "severity": "hard"
+      },
+      {
+        "candidate": ".gitguardian.yaml",
+        "line": 4746,
+        "referrer": "tests/test_rc1015_gitguardian_scope.py",
+        "resolved": ".gitguardian.yaml",
+        "severity": "hard"
+      },
+      {
+        "candidate": ".gitguardian.yaml",
+        "line": 4760,
+        "referrer": "tests/test_rc1015_gitguardian_scope.py",
+        "resolved": ".gitguardian.yaml",
+        "severity": "hard"
+      },
+      {
+        "candidate": ".gitguardian.yaml",
+        "line": 4776,
+        "referrer": "tests/test_rc1015_gitguardian_scope.py",
+        "resolved": ".gitguardian.yaml",
+        "severity": "hard"
+      },
+      {
+        "candidate": ".gitguardian.yaml",
+        "line": 4781,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": "src/forgeai/data/catalogue.json",
-        "line": 4724,
+        "line": 4782,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": "src/forgeai/data/catalogue.json",
         "severity": "hard"
       },
       {
         "candidate": "stories/RC1-015.md",
-        "line": 4733,
+        "line": 4791,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": "stories/RC1-015.md",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 4764,
+        "line": 4822,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 4773,
+        "line": 4831,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 4786,
+        "line": 4844,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 4800,
+        "line": 4858,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 4833,
+        "line": 4891,
         "referrer": "tests/test_rc1015_gitguardian_scope.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
@@ -177541,7 +177624,7 @@
       "working-sandbox-readme": 1
     },
     "case_collisions_total": 0,
-    "dangling_references_total": 16912,
+    "dangling_references_total": 16923,
     "generated_total": 9,
     "load_bearing_total": 2037,
     "portability_violations_total": 0,
