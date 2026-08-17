@@ -18,7 +18,10 @@ suppressions `# noqa` (hors périmètre explicite de cet incrément : ruff les a
 une ligne supprimée par `# noqa` n'apparaît simplement pas dans la sortie JSON de `ruff check`).
 Une granularité en revanche ajoutée : la dette est bornée À LA FOIS par fichier (`dette`) ET par
 couple (fichier, règle) (`classification`, champ OBLIGATOIRE ici — alors qu'il est optionnel et
-seulement informationnel dans mypy_gate).
+seulement informationnel dans mypy_gate). La comparaison par couple parcourt, pour chaque fichier
+déjà baseliné, l'UNION des codes baselinés et des codes réellement mesurés : un code jamais vu
+sur un fichier a un plafond implicite de 0, donc toute violation réelle d'un code nouveau y est
+détectée, même si elle est compensée par la baisse d'un autre code sur le même fichier.
 
 En fonctionnement normal, ce script ne fait que LIRE et VALIDER la baseline : il ne modifie
 jamais de fichier source et n'appelle jamais `ruff --fix`. La SEULE exception est le mode de
@@ -26,16 +29,6 @@ maintenance explicite `--regenerer-baseline` (opération déclarée, review-visi
 du fichier généré, toujours suivie d'une revue humaine/scellée avant merge, jamais automatique
 en CI), qui réécrit intégralement la baseline depuis une mesure fraîche — la baseline reste un
 artefact commité, symétriquement à `Docs/BASELINE-MYPY.json` pour `mypy_gate.py`.
-
-LIMITE RÉSIDUELLE ASSUMÉE (même nature que celle documentée dans `mypy_gate.py` pour
-`type_ignore_lignes`) : la règle 4 (comparaison par couple fichier/règle) ne parcourt que les
-couples déjà présents dans `classification` de la base — un couple retiré de `classification`
-tout en gonflant artificiellement le plafond d'un AUTRE code du même fichier, pour absorber le
-compte sans faire décroître `dette[fichier]`, échapperait à cette règle précise. Rule 2 (dette
-totale par fichier) reste néanmoins le filet de sécurité : elle capture toute régression réelle
-tant que le total mesuré dépasse le total baseliné. Fermer ce résidu exigerait une comparaison
-par provenance (diff git réel), hors périmètre de cet incrément — et une telle manipulation du
-JSON commité devrait de toute façon survivre à la revue scellée à 3 vendors sur le diff réel.
 """
 
 from __future__ import annotations
@@ -417,9 +410,12 @@ def anomalies(
     2. dette dépassée par fichier (régression vs le plafond baseliné) ;
     3. fichier baseliné en dette mais désormais propre (doit être retiré — la base doit
        décroître, une amélioration totale ne passe pas silencieusement) ;
-    4. dette dépassée par couple (fichier, règle) — granularité fine : une hausse d'un code
-       compensée par la baisse d'un autre code sur le MÊME fichier est détectée ici, même si le
-       total du fichier (règle 2) n'a pas augmenté ;
+    4. dette dépassée par couple (fichier, règle) — granularité fine : pour chaque fichier déjà
+       baseliné, l'UNION des codes baselinés et des codes réellement mesurés sur ce fichier est
+       parcourue, avec un plafond implicite de 0 pour tout code jamais vu ; une hausse d'un
+       code compensée par la baisse d'un autre code sur le MÊME fichier est donc détectée ici,
+       même si le total du fichier (règle 2) n'a pas augmenté — y compris quand le code en
+       hausse était totalement absent de la classification baselinée ;
     5. borne totale inconditionnelle (`borne.total_violations`) ;
     6. si `base_reference` est fournie (`None` = référence non chargeable, ex. premier commit du
        mécanisme — PAS une erreur) : aucun plafond de `dette` augmenté vs la référence pour un
@@ -427,10 +423,11 @@ def anomalies(
        de référence est une extension non justifiée (le plafond implicite de référence d'un
        fichier jamais vu est 0 — philosophie mypy_gate : la dette décroît, jamais l'inverse) ;
        un fichier retiré de la `dette` de référence n'est légitime que si son décompte réel
-       actuel est 0 (nettoyage cohérent), sinon retrait non justifié ; aucun compte
-       `classification[fichier][code]` augmenté vs la référence pour un couple présent dans les
-       deux, et TOUT couple (fichier, code) local ABSENT de la référence est une extension non
-       justifiée ; `borne.total_violations` non augmentée vs la référence.
+       actuel est 0 (nettoyage cohérent), sinon retrait non justifié ; pour chaque fichier
+       présent dans les deux, l'UNION des codes de la classification locale et de celle de
+       référence est parcourue : aucun compte `classification[fichier][code]` augmenté vs la
+       référence, et TOUT code local ABSENT de la référence est une extension non justifiée ;
+       `borne.total_violations` non augmentée vs la référence.
 
     Retourne la liste des messages d'anomalie (vide si aucune) — chaque message est une phrase
     française explicite et actionnable : quoi, valeurs concrètes, pourquoi c'est un problème."""
@@ -480,10 +477,17 @@ def anomalies(
                 "fichier de la dette et de la classification (la base doit decroitre)"
             )
 
-    # Règle 4 : dette dépassée par couple (fichier, règle).
-    for fichier, comptes in sorted(classification_base.items()):
+    # Règle 4 : dette dépassée par couple (fichier, règle). L'itération porte sur l'UNION des
+    # codes déjà baselinés ET des codes réellement mesurés pour chaque fichier déjà baseliné :
+    # un code jamais vu sur ce fichier a un plafond implicite de 0, donc toute violation réelle
+    # d'un code nouveau y est détectée, même si elle est compensée par la baisse d'un autre
+    # code déjà tracké (le cas d'un fichier ENTIÈREMENT absent de la base reste couvert par la
+    # règle 1, sans duplication ici).
+    for fichier in sorted(dette_base):
+        comptes_base_fichier = classification_base.get(fichier, {})
         comptes_mesures = mesure_classification.get(fichier, {})
-        for code, plafond in sorted(comptes.items()):
+        for code in sorted(set(comptes_base_fichier) | set(comptes_mesures)):
+            plafond = comptes_base_fichier.get(code, 0)
             actuel = comptes_mesures.get(code, 0)
             if actuel > plafond:
                 resultat.append(
@@ -531,18 +535,30 @@ def anomalies(
                         "sortir de la base"
                     )
 
-        for fichier, comptes in sorted(classification_base.items()):
+        # Comparaison par couple (fichier, règle) contre la référence. Seuls les fichiers
+        # présents dans les deux dettes sont examinés ici (un fichier entièrement nouveau dans
+        # la base locale est déjà signalé ci-dessus) ; pour chacun, l'UNION des codes de la
+        # classification locale et de celle de référence est parcourue : un code présent
+        # uniquement dans la base locale est une extension non justifiée, un code présent dans
+        # les deux ne peut pas avoir augmenté, et un code présent uniquement dans la référence
+        # (plafond local implicite 0) est une décroissance légitime — rien à signaler.
+        for fichier in sorted(dette_base):
+            if fichier not in dette_ref:
+                continue
+            comptes_base_fichier = classification_base.get(fichier, {})
             comptes_ref = classification_ref.get(fichier, {})
-            for code, plafond in sorted(comptes.items()):
+            for code in sorted(set(comptes_base_fichier) | set(comptes_ref)):
+                plafond = comptes_base_fichier.get(code, 0)
+                plafond_ref = comptes_ref.get(code, 0)
                 if code not in comptes_ref:
                     resultat.append(
                         f"fichier {fichier} : regle {code} ajoutee a la classification "
                         "baselinee, absente de la base de reference : extension non justifiee"
                     )
-                elif plafond > comptes_ref[code]:
+                elif plafond > plafond_ref:
                     resultat.append(
                         f"classification baselinee pour {fichier}[{code}] augmentee depuis "
-                        f"la reference ({plafond} > {comptes_ref[code]}) : la base doit "
+                        f"la reference ({plafond} > {plafond_ref}) : la base doit "
                         "decroitre, jamais s'etendre"
                     )
 

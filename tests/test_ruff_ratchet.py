@@ -655,6 +655,37 @@ def test_anomalies_regle4_code_en_hausse_compense_par_baisse_d_un_autre_code() -
         "src/a.py" in m and "regle ARG001 en hausse" in m and "(2 > 1" in m
         for m in resultat
     )
+
+
+def test_anomalies_regle4_nouveau_code_jamais_baseline_compense_par_baisse_d_un_autre() -> None:
+    """Round 2 de revue : ARG001 corrige (1->0), B904 apparait — jamais dans classification_base.
+
+    Dette totale du fichier inchangee (1 -> 1). Sans l'union baseline/mesure sur les codes,
+    B904 (absent de classification_base) n'aurait jamais ete examine par la regle 4.
+    """
+    base = _base(
+        dette={"src/a.py": 1},
+        classification={"src/a.py": {"ARG001": 1}},
+        total_violations=1,
+    )
+
+    resultat = ruff_ratchet.anomalies(
+        mesure_dette={"src/a.py": 1},
+        mesure_classification={"src/a.py": {"B904": 1}},
+        fichiers_reels={"src/a.py"},
+        regles_courantes=["ARG001", "B904"],
+        base_locale=base,
+        base_reference=None,
+    )
+
+    assert any(
+        "src/a.py" in m and "regle B904 en hausse" in m and "(1 > 0" in m
+        for m in resultat
+    )
+    # Preuve que ni la regle 2 (total fichier stable) ni la regle 5 (total global stable)
+    # ne l'auraient detecte seules.
+    assert not any("depasse sa dette baselinee" in m for m in resultat)
+    assert not any("total des violations" in m for m in resultat)
     assert not any("depasse sa dette baselinee" in m for m in resultat)
 
 

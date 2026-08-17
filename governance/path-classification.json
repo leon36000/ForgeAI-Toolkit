@@ -746,6 +746,20 @@
         },
         {
           "candidate": ".github/workflows/gates.yml",
+          "line": 12,
+          "referrer": "evidence/reviews/RC1-020-inc2-v2/Qwen3.8-2.4T.verdict.json",
+          "resolved": ".github/workflows/gates.yml",
+          "severity": "hard"
+        },
+        {
+          "candidate": ".github/workflows/gates.yml",
+          "line": 14,
+          "referrer": "evidence/reviews/RC1-020-inc2-v2/Qwen3.8-2.4T.verdict.json",
+          "resolved": ".github/workflows/gates.yml",
+          "severity": "hard"
+        },
+        {
+          "candidate": ".github/workflows/gates.yml",
           "line": 6,
           "referrer": "evidence/reviews/RC1-020-v1/DeepSeek-V4-Pro.verdict.json",
           "resolved": ".github/workflows/gates.yml",
@@ -3339,7 +3353,7 @@
         },
         {
           "candidate": "Docs/BASELINE-MYPY.json",
-          "line": 28,
+          "line": 31,
           "referrer": "scripts/ruff_ratchet.py",
           "resolved": "Docs/BASELINE-MYPY.json",
           "severity": "hard"
@@ -19701,6 +19715,45 @@
       "generated": false,
       "load_bearing": true,
       "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-020-inc2-v2/DeepSeek-V4-Pro-0813.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "299d02024a04500ae405d545ca15c0b9eef267832ab3d1bdd8f493a4bb2dcf5e",
+      "size": 375,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-020-inc2-v2/GPT-5.6-Terra-Pro.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "acb11d57b4d970d12ec5c95a2ccabcdea790b84bf988e156b425e7bcf2c67331",
+      "size": 1542,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-020-inc2-v2/Qwen3.8-2.4T.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "8046ffc56547940893e02ee36383fc865282104a7a8ceaafeb16db9371c14f84",
+      "size": 1993,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
       "path": "evidence/reviews/RC1-020-v1/DeepSeek-V4-Pro.verdict.json",
       "referenced_by": [],
       "rule_id": "evidence-reviews-root",
@@ -28720,28 +28773,21 @@
         },
         {
           "candidate": "governance/ruff-baseline.json",
-          "line": 215,
+          "line": 208,
           "referrer": "scripts/ruff_ratchet.py",
           "resolved": "governance/ruff-baseline.json",
           "severity": "hard"
         },
         {
           "candidate": "governance/ruff-baseline.json",
-          "line": 456,
+          "line": 453,
           "referrer": "scripts/ruff_ratchet.py",
           "resolved": "governance/ruff-baseline.json",
           "severity": "hard"
         },
         {
           "candidate": "governance/ruff-baseline.json",
-          "line": 466,
-          "referrer": "scripts/ruff_ratchet.py",
-          "resolved": "governance/ruff-baseline.json",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/ruff-baseline.json",
-          "line": 562,
+          "line": 463,
           "referrer": "scripts/ruff_ratchet.py",
           "resolved": "governance/ruff-baseline.json",
           "severity": "hard"
@@ -28749,6 +28795,13 @@
         {
           "candidate": "governance/ruff-baseline.json",
           "line": 578,
+          "referrer": "scripts/ruff_ratchet.py",
+          "resolved": "governance/ruff-baseline.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/ruff-baseline.json",
+          "line": 594,
           "referrer": "scripts/ruff_ratchet.py",
           "resolved": "governance/ruff-baseline.json",
           "severity": "hard"
@@ -28769,7 +28822,7 @@
         },
         {
           "candidate": "governance/ruff-baseline.json",
-          "line": 1027,
+          "line": 1058,
           "referrer": "tests/test_ruff_ratchet.py",
           "resolved": "governance/ruff-baseline.json",
           "severity": "hard"
@@ -28811,7 +28864,7 @@
         },
         {
           "candidate": "governance/ruff-classification.json",
-          "line": 75,
+          "line": 68,
           "referrer": "scripts/ruff_ratchet.py",
           "resolved": "governance/ruff-classification.json",
           "severity": "hard"
@@ -28825,7 +28878,7 @@
         },
         {
           "candidate": "governance/ruff-classification.json",
-          "line": 1020,
+          "line": 1051,
           "referrer": "tests/test_ruff_ratchet.py",
           "resolved": "governance/ruff-classification.json",
           "severity": "hard"
@@ -33690,6 +33743,41 @@
         },
         {
           "candidate": "scripts/ruff_ratchet.py",
+          "line": 6,
+          "referrer": "evidence/reviews/RC1-020-inc2-v2/GPT-5.6-Terra-Pro.verdict.json",
+          "resolved": "scripts/ruff_ratchet.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "scripts/ruff_ratchet.py",
+          "line": 8,
+          "referrer": "evidence/reviews/RC1-020-inc2-v2/GPT-5.6-Terra-Pro.verdict.json",
+          "resolved": "scripts/ruff_ratchet.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "scripts/ruff_ratchet.py",
+          "line": 6,
+          "referrer": "evidence/reviews/RC1-020-inc2-v2/Qwen3.8-2.4T.verdict.json",
+          "resolved": "scripts/ruff_ratchet.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "scripts/ruff_ratchet.py",
+          "line": 8,
+          "referrer": "evidence/reviews/RC1-020-inc2-v2/Qwen3.8-2.4T.verdict.json",
+          "resolved": "scripts/ruff_ratchet.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "scripts/ruff_ratchet.py",
+          "line": 8,
+          "referrer": "evidence/reviews/RC1-020-inc2-v2/Qwen3.8-2.4T.verdict.json",
+          "resolved": "scripts/ruff_ratchet.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "scripts/ruff_ratchet.py",
           "line": 3,
           "referrer": "governance/ruff-baseline.json",
           "resolved": "scripts/ruff_ratchet.py",
@@ -33711,15 +33799,15 @@
         },
         {
           "candidate": "scripts/ruff_ratchet.py",
-          "line": 230,
+          "line": 223,
           "referrer": "scripts/ruff_ratchet.py",
           "resolved": "scripts/ruff_ratchet.py",
           "severity": "hard"
         }
       ],
       "rule_id": "governance-scripts-root",
-      "sha256": "43c82ca9af7b24422ea544b6422801c3073c19afe1f724ff756b723a7af96593",
-      "size": 32938,
+      "sha256": "bb63c9d3dd14cc26b22b6a665e9c29317b006753497038a28387e12e425b039a",
+      "size": 34287,
       "target_path": null,
       "type": "text"
     },
@@ -35046,7 +35134,7 @@
         },
         {
           "candidate": "src/forgeai/cli.py",
-          "line": 170,
+          "line": 163,
           "referrer": "scripts/ruff_ratchet.py",
           "resolved": "src/forgeai/cli.py",
           "severity": "hard"
@@ -54961,8 +55049,8 @@
         }
       ],
       "rule_id": "test-suite",
-      "sha256": "2e90c9dbe23ec7a79b7a67474f64a2cd7685257ed50ad7045fe6bc7b7d3e381b",
-      "size": 39660,
+      "sha256": "765b7b813e3cd507065039880ed42c424fd0d6fa3a2cb550ba6f5b873bba92ee",
+      "size": 40845,
       "target_path": null,
       "type": "text"
     },
@@ -94960,6 +95048,11 @@
         "referrer": "evidence/reviews/RC1-013/Qwen3.7-Max.verdict.json"
       },
       {
+        "candidate": "fichier/r",
+        "line": 8,
+        "referrer": "evidence/reviews/RC1-020-inc2-v2/Qwen3.8-2.4T.verdict.json"
+      },
+      {
         "candidate": "FileNotFoundError/retourne",
         "line": 7,
         "referrer": "evidence/reviews/RC1-020-v1/DeepSeek-V4-Pro.verdict.json"
@@ -102066,92 +102159,82 @@
       },
       {
         "candidate": "humaine/scell",
-        "line": 26,
+        "line": 29,
         "referrer": "scripts/ruff_ratchet.py"
       },
       {
         "candidate": "mypy_gate.py",
-        "line": 28,
-        "referrer": "scripts/ruff_ratchet.py"
-      },
-      {
-        "candidate": "mypy_gate.py",
-        "line": 30,
-        "referrer": "scripts/ruff_ratchet.py"
-      },
-      {
-        "candidate": "fichier/r",
         "line": 31,
         "referrer": "scripts/ruff_ratchet.py"
       },
       {
         "candidate": "ruff_report.py",
-        "line": 56,
+        "line": 49,
         "referrer": "scripts/ruff_ratchet.py"
       },
       {
         "candidate": "ruff_report.py",
-        "line": 102,
+        "line": 95,
         "referrer": "scripts/ruff_ratchet.py"
       },
       {
         "candidate": "racine/src",
-        "line": 169,
+        "line": 162,
         "referrer": "scripts/ruff_ratchet.py"
       },
       {
         "candidate": "racine/scripts",
-        "line": 170,
+        "line": 163,
         "referrer": "scripts/ruff_ratchet.py"
       },
       {
         "candidate": "mypy_gate.py",
-        "line": 171,
+        "line": 164,
         "referrer": "scripts/ruff_ratchet.py"
       },
       {
         "candidate": "ruff_report.py",
-        "line": 192,
+        "line": 185,
         "referrer": "scripts/ruff_ratchet.py"
       },
       {
         "candidate": "I/O",
-        "line": 215,
+        "line": 208,
         "referrer": "scripts/ruff_ratchet.py"
       },
       {
         "candidate": "I/O",
-        "line": 217,
+        "line": 210,
         "referrer": "scripts/ruff_ratchet.py"
       },
       {
         "candidate": "humaine/scellee",
-        "line": 232,
+        "line": 225,
         "referrer": "scripts/ruff_ratchet.py"
       },
       {
         "candidate": "I/O",
-        "line": 409,
+        "line": 402,
         "referrer": "scripts/ruff_ratchet.py"
       },
       {
         "candidate": "origin/main",
-        "line": 570,
-        "referrer": "scripts/ruff_ratchet.py"
-      },
-      {
-        "candidate": "ruff-classification.json",
         "line": 586,
         "referrer": "scripts/ruff_ratchet.py"
       },
       {
+        "candidate": "ruff-classification.json",
+        "line": 602,
+        "referrer": "scripts/ruff_ratchet.py"
+      },
+      {
         "candidate": "ruff-baseline.json",
-        "line": 587,
+        "line": 603,
         "referrer": "scripts/ruff_ratchet.py"
       },
       {
         "candidate": "humaine/scell",
-        "line": 600,
+        "line": 616,
         "referrer": "scripts/ruff_ratchet.py"
       },
       {
@@ -138680,13 +138763,28 @@
         "referrer": "tests/test_ruff_ratchet.py"
       },
       {
-        "candidate": "src/a.py",
-        "line": 669,
+        "candidate": "baseline/mesure",
+        "line": 663,
         "referrer": "tests/test_ruff_ratchet.py"
       },
       {
         "candidate": "src/a.py",
-        "line": 670,
+        "line": 667,
+        "referrer": "tests/test_ruff_ratchet.py"
+      },
+      {
+        "candidate": "src/a.py",
+        "line": 668,
+        "referrer": "tests/test_ruff_ratchet.py"
+      },
+      {
+        "candidate": "src/a.py",
+        "line": 673,
+        "referrer": "tests/test_ruff_ratchet.py"
+      },
+      {
+        "candidate": "src/a.py",
+        "line": 674,
         "referrer": "tests/test_ruff_ratchet.py"
       },
       {
@@ -138695,83 +138793,48 @@
         "referrer": "tests/test_ruff_ratchet.py"
       },
       {
+        "candidate": "src/a.py",
+        "line": 682,
+        "referrer": "tests/test_ruff_ratchet.py"
+      },
+      {
+        "candidate": "src/a.py",
+        "line": 700,
+        "referrer": "tests/test_ruff_ratchet.py"
+      },
+      {
+        "candidate": "src/a.py",
+        "line": 701,
+        "referrer": "tests/test_ruff_ratchet.py"
+      },
+      {
+        "candidate": "src/a.py",
+        "line": 706,
+        "referrer": "tests/test_ruff_ratchet.py"
+      },
+      {
         "candidate": "src/b.py",
-        "line": 675,
+        "line": 706,
         "referrer": "tests/test_ruff_ratchet.py"
       },
       {
         "candidate": "src/a.py",
-        "line": 677,
+        "line": 708,
         "referrer": "tests/test_ruff_ratchet.py"
       },
       {
         "candidate": "src/b.py",
-        "line": 678,
+        "line": 709,
         "referrer": "tests/test_ruff_ratchet.py"
       },
       {
         "candidate": "src/a.py",
-        "line": 680,
+        "line": 711,
         "referrer": "tests/test_ruff_ratchet.py"
       },
       {
         "candidate": "src/b.py",
-        "line": 680,
-        "referrer": "tests/test_ruff_ratchet.py"
-      },
-      {
-        "candidate": "src/a.py",
-        "line": 696,
-        "referrer": "tests/test_ruff_ratchet.py"
-      },
-      {
-        "candidate": "src/a.py",
-        "line": 697,
-        "referrer": "tests/test_ruff_ratchet.py"
-      },
-      {
-        "candidate": "src/a.py",
-        "line": 702,
-        "referrer": "tests/test_ruff_ratchet.py"
-      },
-      {
-        "candidate": "src/a.py",
-        "line": 703,
-        "referrer": "tests/test_ruff_ratchet.py"
-      },
-      {
-        "candidate": "src/a.py",
-        "line": 704,
-        "referrer": "tests/test_ruff_ratchet.py"
-      },
-      {
-        "candidate": "src/a.py",
-        "line": 714,
-        "referrer": "tests/test_ruff_ratchet.py"
-      },
-      {
-        "candidate": "src/a.py",
-        "line": 715,
-        "referrer": "tests/test_ruff_ratchet.py"
-      },
-      {
-        "candidate": "src/a.py",
-        "line": 719,
-        "referrer": "tests/test_ruff_ratchet.py"
-      },
-      {
-        "candidate": "src/a.py",
-        "line": 720,
-        "referrer": "tests/test_ruff_ratchet.py"
-      },
-      {
-        "candidate": "src/a.py",
-        "line": 725,
-        "referrer": "tests/test_ruff_ratchet.py"
-      },
-      {
-        "candidate": "src/a.py",
-        "line": 726,
+        "line": 711,
         "referrer": "tests/test_ruff_ratchet.py"
       },
       {
@@ -138781,12 +138844,22 @@
       },
       {
         "candidate": "src/a.py",
-        "line": 735,
+        "line": 728,
         "referrer": "tests/test_ruff_ratchet.py"
       },
       {
         "candidate": "src/a.py",
-        "line": 744,
+        "line": 733,
+        "referrer": "tests/test_ruff_ratchet.py"
+      },
+      {
+        "candidate": "src/a.py",
+        "line": 734,
+        "referrer": "tests/test_ruff_ratchet.py"
+      },
+      {
+        "candidate": "src/a.py",
+        "line": 735,
         "referrer": "tests/test_ruff_ratchet.py"
       },
       {
@@ -138796,7 +138869,7 @@
       },
       {
         "candidate": "src/a.py",
-        "line": 749,
+        "line": 746,
         "referrer": "tests/test_ruff_ratchet.py"
       },
       {
@@ -138806,7 +138879,7 @@
       },
       {
         "candidate": "src/a.py",
-        "line": 755,
+        "line": 751,
         "referrer": "tests/test_ruff_ratchet.py"
       },
       {
@@ -138821,7 +138894,22 @@
       },
       {
         "candidate": "src/a.py",
-        "line": 765,
+        "line": 758,
+        "referrer": "tests/test_ruff_ratchet.py"
+      },
+      {
+        "candidate": "src/a.py",
+        "line": 766,
+        "referrer": "tests/test_ruff_ratchet.py"
+      },
+      {
+        "candidate": "src/a.py",
+        "line": 775,
+        "referrer": "tests/test_ruff_ratchet.py"
+      },
+      {
+        "candidate": "src/a.py",
+        "line": 776,
         "referrer": "tests/test_ruff_ratchet.py"
       },
       {
@@ -138836,32 +138924,22 @@
       },
       {
         "candidate": "src/a.py",
-        "line": 785,
-        "referrer": "tests/test_ruff_ratchet.py"
-      },
-      {
-        "candidate": "src/a.py",
         "line": 786,
         "referrer": "tests/test_ruff_ratchet.py"
       },
       {
         "candidate": "src/a.py",
-        "line": 791,
+        "line": 787,
         "referrer": "tests/test_ruff_ratchet.py"
       },
       {
         "candidate": "src/a.py",
-        "line": 792,
+        "line": 788,
         "referrer": "tests/test_ruff_ratchet.py"
       },
       {
         "candidate": "src/a.py",
-        "line": 793,
-        "referrer": "tests/test_ruff_ratchet.py"
-      },
-      {
-        "candidate": "src/a.py",
-        "line": 810,
+        "line": 796,
         "referrer": "tests/test_ruff_ratchet.py"
       },
       {
@@ -138871,57 +138949,57 @@
       },
       {
         "candidate": "src/a.py",
+        "line": 812,
+        "referrer": "tests/test_ruff_ratchet.py"
+      },
+      {
+        "candidate": "src/a.py",
+        "line": 816,
+        "referrer": "tests/test_ruff_ratchet.py"
+      },
+      {
+        "candidate": "src/a.py",
         "line": 817,
         "referrer": "tests/test_ruff_ratchet.py"
       },
       {
         "candidate": "src/a.py",
-        "line": 818,
+        "line": 822,
         "referrer": "tests/test_ruff_ratchet.py"
       },
       {
         "candidate": "src/a.py",
-        "line": 819,
+        "line": 823,
         "referrer": "tests/test_ruff_ratchet.py"
       },
       {
         "candidate": "src/a.py",
-        "line": 834,
+        "line": 824,
         "referrer": "tests/test_ruff_ratchet.py"
       },
       {
         "candidate": "src/a.py",
-        "line": 835,
+        "line": 841,
         "referrer": "tests/test_ruff_ratchet.py"
       },
       {
         "candidate": "src/a.py",
-        "line": 843,
+        "line": 842,
         "referrer": "tests/test_ruff_ratchet.py"
       },
       {
         "candidate": "src/a.py",
-        "line": 853,
+        "line": 848,
         "referrer": "tests/test_ruff_ratchet.py"
       },
       {
         "candidate": "src/a.py",
-        "line": 854,
+        "line": 849,
         "referrer": "tests/test_ruff_ratchet.py"
       },
       {
         "candidate": "src/a.py",
-        "line": 858,
-        "referrer": "tests/test_ruff_ratchet.py"
-      },
-      {
-        "candidate": "src/a.py",
-        "line": 859,
-        "referrer": "tests/test_ruff_ratchet.py"
-      },
-      {
-        "candidate": "src/a.py",
-        "line": 864,
+        "line": 850,
         "referrer": "tests/test_ruff_ratchet.py"
       },
       {
@@ -138936,12 +139014,12 @@
       },
       {
         "candidate": "src/a.py",
-        "line": 880,
+        "line": 874,
         "referrer": "tests/test_ruff_ratchet.py"
       },
       {
         "candidate": "src/a.py",
-        "line": 881,
+        "line": 884,
         "referrer": "tests/test_ruff_ratchet.py"
       },
       {
@@ -138950,28 +139028,18 @@
         "referrer": "tests/test_ruff_ratchet.py"
       },
       {
-        "candidate": "src/nouveau.py",
-        "line": 885,
+        "candidate": "src/a.py",
+        "line": 889,
         "referrer": "tests/test_ruff_ratchet.py"
       },
       {
         "candidate": "src/a.py",
-        "line": 887,
-        "referrer": "tests/test_ruff_ratchet.py"
-      },
-      {
-        "candidate": "src/nouveau.py",
-        "line": 888,
+        "line": 890,
         "referrer": "tests/test_ruff_ratchet.py"
       },
       {
         "candidate": "src/a.py",
-        "line": 894,
-        "referrer": "tests/test_ruff_ratchet.py"
-      },
-      {
-        "candidate": "src/nouveau.py",
-        "line": 894,
+        "line": 895,
         "referrer": "tests/test_ruff_ratchet.py"
       },
       {
@@ -138980,33 +139048,38 @@
         "referrer": "tests/test_ruff_ratchet.py"
       },
       {
-        "candidate": "src/nouveau.py",
+        "candidate": "src/a.py",
         "line": 897,
         "referrer": "tests/test_ruff_ratchet.py"
       },
       {
         "candidate": "src/a.py",
-        "line": 899,
-        "referrer": "tests/test_ruff_ratchet.py"
-      },
-      {
-        "candidate": "src/nouveau.py",
-        "line": 899,
-        "referrer": "tests/test_ruff_ratchet.py"
-      },
-      {
-        "candidate": "src/nouveau.py",
-        "line": 906,
+        "line": 911,
         "referrer": "tests/test_ruff_ratchet.py"
       },
       {
         "candidate": "src/a.py",
-        "line": 920,
+        "line": 912,
         "referrer": "tests/test_ruff_ratchet.py"
       },
       {
         "candidate": "src/a.py",
-        "line": 921,
+        "line": 916,
+        "referrer": "tests/test_ruff_ratchet.py"
+      },
+      {
+        "candidate": "src/nouveau.py",
+        "line": 916,
+        "referrer": "tests/test_ruff_ratchet.py"
+      },
+      {
+        "candidate": "src/a.py",
+        "line": 918,
+        "referrer": "tests/test_ruff_ratchet.py"
+      },
+      {
+        "candidate": "src/nouveau.py",
+        "line": 919,
         "referrer": "tests/test_ruff_ratchet.py"
       },
       {
@@ -139015,48 +139088,78 @@
         "referrer": "tests/test_ruff_ratchet.py"
       },
       {
-        "candidate": "src/a.py",
-        "line": 926,
+        "candidate": "src/nouveau.py",
+        "line": 925,
         "referrer": "tests/test_ruff_ratchet.py"
       },
       {
         "candidate": "src/a.py",
-        "line": 931,
+        "line": 927,
+        "referrer": "tests/test_ruff_ratchet.py"
+      },
+      {
+        "candidate": "src/nouveau.py",
+        "line": 928,
         "referrer": "tests/test_ruff_ratchet.py"
       },
       {
         "candidate": "src/a.py",
-        "line": 932,
+        "line": 930,
+        "referrer": "tests/test_ruff_ratchet.py"
+      },
+      {
+        "candidate": "src/nouveau.py",
+        "line": 930,
+        "referrer": "tests/test_ruff_ratchet.py"
+      },
+      {
+        "candidate": "src/nouveau.py",
+        "line": 937,
         "referrer": "tests/test_ruff_ratchet.py"
       },
       {
         "candidate": "src/a.py",
-        "line": 933,
+        "line": 951,
         "referrer": "tests/test_ruff_ratchet.py"
       },
       {
         "candidate": "src/a.py",
-        "line": 943,
+        "line": 952,
         "referrer": "tests/test_ruff_ratchet.py"
       },
       {
-        "candidate": "src/pkg/mod.py",
-        "line": 961,
+        "candidate": "src/a.py",
+        "line": 956,
         "referrer": "tests/test_ruff_ratchet.py"
       },
       {
-        "candidate": "src/pkg/mod.py",
+        "candidate": "src/a.py",
+        "line": 957,
+        "referrer": "tests/test_ruff_ratchet.py"
+      },
+      {
+        "candidate": "src/a.py",
         "line": 962,
         "referrer": "tests/test_ruff_ratchet.py"
       },
       {
-        "candidate": "mod.py",
-        "line": 967,
+        "candidate": "src/a.py",
+        "line": 963,
+        "referrer": "tests/test_ruff_ratchet.py"
+      },
+      {
+        "candidate": "src/a.py",
+        "line": 964,
+        "referrer": "tests/test_ruff_ratchet.py"
+      },
+      {
+        "candidate": "src/a.py",
+        "line": 974,
         "referrer": "tests/test_ruff_ratchet.py"
       },
       {
         "candidate": "src/pkg/mod.py",
-        "line": 972,
+        "line": 992,
         "referrer": "tests/test_ruff_ratchet.py"
       },
       {
@@ -139065,83 +139168,68 @@
         "referrer": "tests/test_ruff_ratchet.py"
       },
       {
+        "candidate": "mod.py",
+        "line": 998,
+        "referrer": "tests/test_ruff_ratchet.py"
+      },
+      {
         "candidate": "src/pkg/mod.py",
-        "line": 994,
+        "line": 1003,
+        "referrer": "tests/test_ruff_ratchet.py"
+      },
+      {
+        "candidate": "src/pkg/mod.py",
+        "line": 1024,
+        "referrer": "tests/test_ruff_ratchet.py"
+      },
+      {
+        "candidate": "src/pkg/mod.py",
+        "line": 1025,
         "referrer": "tests/test_ruff_ratchet.py"
       },
       {
         "candidate": "mod.py",
-        "line": 999,
+        "line": 1030,
         "referrer": "tests/test_ruff_ratchet.py"
       },
       {
         "candidate": "src/pkg/mod.py",
-        "line": 1005,
+        "line": 1036,
         "referrer": "tests/test_ruff_ratchet.py"
       },
       {
         "candidate": "src/pkg/mod.py",
-        "line": 1006,
+        "line": 1037,
         "referrer": "tests/test_ruff_ratchet.py"
       },
       {
         "candidate": "src/pkg/mod.py",
-        "line": 1043,
+        "line": 1074,
         "referrer": "tests/test_ruff_ratchet.py"
       },
       {
         "candidate": "src/pkg/mod.py",
-        "line": 1044,
+        "line": 1075,
         "referrer": "tests/test_ruff_ratchet.py"
       },
       {
         "candidate": "mod.py",
-        "line": 1049,
+        "line": 1080,
         "referrer": "tests/test_ruff_ratchet.py"
       },
       {
         "candidate": "src/pkg/mod.py",
-        "line": 1054,
+        "line": 1085,
         "referrer": "tests/test_ruff_ratchet.py"
       },
       {
         "candidate": "src/ancien.py",
-        "line": 1078,
+        "line": 1109,
         "referrer": "tests/test_ruff_ratchet.py"
       },
       {
         "candidate": "src/ancien.py",
-        "line": 1079,
-        "referrer": "tests/test_ruff_ratchet.py"
-      },
-      {
-        "candidate": "mod.py",
-        "line": 1084,
-        "referrer": "tests/test_ruff_ratchet.py"
-      },
-      {
-        "candidate": "src/pkg/mod.py",
-        "line": 1089,
-        "referrer": "tests/test_ruff_ratchet.py"
-      },
-      {
-        "candidate": "ruff-baseline.json",
-        "line": 1096,
-        "referrer": "tests/test_ruff_ratchet.py"
-      },
-      {
-        "candidate": "src/ancien.py",
-        "line": 1098,
-        "referrer": "tests/test_ruff_ratchet.py"
-      },
-      {
-        "candidate": "src/pkg/mod.py",
-        "line": 1100,
-        "referrer": "tests/test_ruff_ratchet.py"
-      },
-      {
-        "candidate": "src/pkg/mod.py",
-        "line": 1101,
+        "line": 1110,
         "referrer": "tests/test_ruff_ratchet.py"
       },
       {
@@ -139150,23 +139238,53 @@
         "referrer": "tests/test_ruff_ratchet.py"
       },
       {
+        "candidate": "src/pkg/mod.py",
+        "line": 1120,
+        "referrer": "tests/test_ruff_ratchet.py"
+      },
+      {
         "candidate": "ruff-baseline.json",
-        "line": 1118,
+        "line": 1127,
         "referrer": "tests/test_ruff_ratchet.py"
       },
       {
-        "candidate": "src/pkg/mod.py",
-        "line": 1122,
-        "referrer": "tests/test_ruff_ratchet.py"
-      },
-      {
-        "candidate": "src/pkg/mod.py",
-        "line": 1130,
+        "candidate": "src/ancien.py",
+        "line": 1129,
         "referrer": "tests/test_ruff_ratchet.py"
       },
       {
         "candidate": "src/pkg/mod.py",
         "line": 1131,
+        "referrer": "tests/test_ruff_ratchet.py"
+      },
+      {
+        "candidate": "src/pkg/mod.py",
+        "line": 1132,
+        "referrer": "tests/test_ruff_ratchet.py"
+      },
+      {
+        "candidate": "mod.py",
+        "line": 1146,
+        "referrer": "tests/test_ruff_ratchet.py"
+      },
+      {
+        "candidate": "ruff-baseline.json",
+        "line": 1149,
+        "referrer": "tests/test_ruff_ratchet.py"
+      },
+      {
+        "candidate": "src/pkg/mod.py",
+        "line": 1153,
+        "referrer": "tests/test_ruff_ratchet.py"
+      },
+      {
+        "candidate": "src/pkg/mod.py",
+        "line": 1161,
+        "referrer": "tests/test_ruff_ratchet.py"
+      },
+      {
+        "candidate": "src/pkg/mod.py",
+        "line": 1162,
         "referrer": "tests/test_ruff_ratchet.py"
       },
       {
@@ -155118,6 +155236,55 @@
         "severity": "hard"
       },
       {
+        "candidate": "scripts/ruff_ratchet.py",
+        "line": 6,
+        "referrer": "evidence/reviews/RC1-020-inc2-v2/GPT-5.6-Terra-Pro.verdict.json",
+        "resolved": "scripts/ruff_ratchet.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "scripts/ruff_ratchet.py",
+        "line": 8,
+        "referrer": "evidence/reviews/RC1-020-inc2-v2/GPT-5.6-Terra-Pro.verdict.json",
+        "resolved": "scripts/ruff_ratchet.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "scripts/ruff_ratchet.py",
+        "line": 6,
+        "referrer": "evidence/reviews/RC1-020-inc2-v2/Qwen3.8-2.4T.verdict.json",
+        "resolved": "scripts/ruff_ratchet.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "scripts/ruff_ratchet.py",
+        "line": 8,
+        "referrer": "evidence/reviews/RC1-020-inc2-v2/Qwen3.8-2.4T.verdict.json",
+        "resolved": "scripts/ruff_ratchet.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "scripts/ruff_ratchet.py",
+        "line": 8,
+        "referrer": "evidence/reviews/RC1-020-inc2-v2/Qwen3.8-2.4T.verdict.json",
+        "resolved": "scripts/ruff_ratchet.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": ".github/workflows/gates.yml",
+        "line": 12,
+        "referrer": "evidence/reviews/RC1-020-inc2-v2/Qwen3.8-2.4T.verdict.json",
+        "resolved": ".github/workflows/gates.yml",
+        "severity": "hard"
+      },
+      {
+        "candidate": ".github/workflows/gates.yml",
+        "line": 14,
+        "referrer": "evidence/reviews/RC1-020-inc2-v2/Qwen3.8-2.4T.verdict.json",
+        "resolved": ".github/workflows/gates.yml",
+        "severity": "hard"
+      },
+      {
         "candidate": ".github/workflows/gates.yml",
         "line": 6,
         "referrer": "evidence/reviews/RC1-020-v1/DeepSeek-V4-Pro.verdict.json",
@@ -165192,56 +165359,49 @@
       },
       {
         "candidate": "Docs/BASELINE-MYPY.json",
-        "line": 28,
+        "line": 31,
         "referrer": "scripts/ruff_ratchet.py",
         "resolved": "Docs/BASELINE-MYPY.json",
         "severity": "hard"
       },
       {
         "candidate": "governance/ruff-classification.json",
-        "line": 75,
+        "line": 68,
         "referrer": "scripts/ruff_ratchet.py",
         "resolved": "governance/ruff-classification.json",
         "severity": "hard"
       },
       {
         "candidate": "src/forgeai/cli.py",
-        "line": 170,
+        "line": 163,
         "referrer": "scripts/ruff_ratchet.py",
         "resolved": "src/forgeai/cli.py",
         "severity": "hard"
       },
       {
         "candidate": "governance/ruff-baseline.json",
-        "line": 215,
+        "line": 208,
         "referrer": "scripts/ruff_ratchet.py",
         "resolved": "governance/ruff-baseline.json",
         "severity": "hard"
       },
       {
         "candidate": "scripts/ruff_ratchet.py",
-        "line": 230,
+        "line": 223,
         "referrer": "scripts/ruff_ratchet.py",
         "resolved": "scripts/ruff_ratchet.py",
         "severity": "hard"
       },
       {
         "candidate": "governance/ruff-baseline.json",
-        "line": 456,
+        "line": 453,
         "referrer": "scripts/ruff_ratchet.py",
         "resolved": "governance/ruff-baseline.json",
         "severity": "hard"
       },
       {
         "candidate": "governance/ruff-baseline.json",
-        "line": 466,
-        "referrer": "scripts/ruff_ratchet.py",
-        "resolved": "governance/ruff-baseline.json",
-        "severity": "hard"
-      },
-      {
-        "candidate": "governance/ruff-baseline.json",
-        "line": 562,
+        "line": 463,
         "referrer": "scripts/ruff_ratchet.py",
         "resolved": "governance/ruff-baseline.json",
         "severity": "hard"
@@ -165249,6 +165409,13 @@
       {
         "candidate": "governance/ruff-baseline.json",
         "line": 578,
+        "referrer": "scripts/ruff_ratchet.py",
+        "resolved": "governance/ruff-baseline.json",
+        "severity": "hard"
+      },
+      {
+        "candidate": "governance/ruff-baseline.json",
+        "line": 594,
         "referrer": "scripts/ruff_ratchet.py",
         "resolved": "governance/ruff-baseline.json",
         "severity": "hard"
@@ -170477,14 +170644,14 @@
       },
       {
         "candidate": "governance/ruff-classification.json",
-        "line": 1020,
+        "line": 1051,
         "referrer": "tests/test_ruff_ratchet.py",
         "resolved": "governance/ruff-classification.json",
         "severity": "hard"
       },
       {
         "candidate": "governance/ruff-baseline.json",
-        "line": 1027,
+        "line": 1058,
         "referrer": "tests/test_ruff_ratchet.py",
         "resolved": "governance/ruff-baseline.json",
         "severity": "hard"
@@ -170651,7 +170818,7 @@
     "by_class": {
       "ARCHIVE": 44,
       "DOCS": 18,
-      "EVIDENCE": 1584,
+      "EVIDENCE": 1587,
       "GENERATED": 5,
       "GOVERNANCE": 197,
       "PRODUCT": 113,
@@ -170670,7 +170837,7 @@
       "evidence-audit-output-root": 18,
       "evidence-dedup-root": 2,
       "evidence-registres-root": 35,
-      "evidence-reviews-root": 1529,
+      "evidence-reviews-root": 1532,
       "generated-authority-map": 1,
       "generated-path-classification-json": 1,
       "generated-path-classification-markdown": 1,
@@ -170706,11 +170873,11 @@
       "working-sandbox-readme": 1
     },
     "case_collisions_total": 0,
-    "dangling_references_total": 16641,
+    "dangling_references_total": 16647,
     "generated_total": 9,
-    "load_bearing_total": 2041,
+    "load_bearing_total": 2044,
     "portability_violations_total": 0,
-    "tracked_total": 2183,
+    "tracked_total": 2186,
     "unclassified_total": 0,
     "unicode_anomalies_total": 0
   },

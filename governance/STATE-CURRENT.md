@@ -754,7 +754,7 @@
     },
     {
       "path": "tests/test_ruff_ratchet.py",
-      "sha256": "2e90c9dbe23ec7a79b7a67474f64a2cd7685257ed50ad7045fe6bc7b7d3e381b"
+      "sha256": "765b7b813e3cd507065039880ed42c424fd0d6fa3a2cb550ba6f5b873bba92ee"
     },
     {
       "path": "tests/test_ruff_report.py",
@@ -951,7 +951,7 @@
   "tests": {
     "js_files": 3,
     "python_files": 197,
-    "python_functions_declared": 2396
+    "python_functions_declared": 2397
   }
 }
 ```
