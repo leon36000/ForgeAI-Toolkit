@@ -660,7 +660,7 @@
       },
       {
         "path": "tests/test_rc1015_gitguardian_scope.py",
-        "sha256": "6fe6f4a9b909711959bcecde969e1370c5310de30d9b82195a6c687b0310fa65"
+        "sha256": "a3c41e05efa9a20c08396447b5774f246567e6de4652cb1b0c4261da1297bbe0"
       },
       {
         "path": "tests/test_rc1016_sonar_suppressions.py",
@@ -945,7 +945,7 @@
     "tests": {
       "js_files": 3,
       "python_files": 197,
-      "python_functions_declared": 2662
+      "python_functions_declared": 2663
     }
   },
   "observations": [

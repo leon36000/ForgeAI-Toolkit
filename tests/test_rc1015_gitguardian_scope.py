@@ -3502,6 +3502,32 @@ def test_position_fusion_ne_collisionne_jamais_avec_une_position_entiere_reelle(
     assert 9 < check_gitguardian_scope._position_fusion(10, 1_000_000) <= 10
 
 
+def test_position_fusion_arithmetique_exacte_aucune_perte_de_precision_flottante():
+    # RC1-015 round 106, revue scellée GPT-5.6-Terra-Pro (finding mineur, réel) : la garantie
+    # « `index_jeton / (index_jeton + 1)` mathématiquement < 1 pour TOUT `index_jeton` » (round
+    # 102) était FAUSSE en arithmétique FLOTTANTE IEEE-754 (précision finie, ~15-17 chiffres
+    # significatifs) — pour un `index_jeton` suffisamment grand, la division flottante
+    # s'arrondissait à `1.0` pile, recréant la collision. Vérifié empiriquement AVANT correctif :
+    # `_position_fusion(10, 10**20) == 9.0` (le test round 101/102 ne couvrait que jusqu'à
+    # `10**12`, jamais assez grand pour révéler la perte de précision).
+    #
+    # Round 106 : `fractions.Fraction` (arithmétique rationnelle EXACTE, stdlib pur) au lieu de
+    # `float` — ce test prouve l'absence de perte de précision jusqu'à des grandeurs où AUCUNE
+    # représentation flottante ne pourrait plus tenir la garantie (10**1000, largement au-delà
+    # de toute limite flottante réaliste).
+    for index_jeton in (10**16, 10**20, 10**100, 10**1000):
+        valeur = check_gitguardian_scope._position_fusion(10, index_jeton)
+        assert 9 < valeur <= 10
+        assert valeur != 9
+    # Reproduction EXACTE de la collision round 106 (perte de précision flottante) : confirmée
+    # résolue.
+    from fractions import Fraction
+
+    assert isinstance(
+        check_gitguardian_scope._position_fusion(10, 10**20) - 9, Fraction
+    )
+
+
 def test_parser_fusion_liste_flow_racine_ne_masque_pas_une_occurrence_secret_anterieure(tmp_path):
     # RC1-015 round 101 : reproduction du RISQUE identifié par le reviewer (collision entre le
     # décalage d'un élément démoté et la position d'une occurrence ANTÉRIEURE et indépendante de

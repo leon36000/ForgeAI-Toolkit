@@ -41,6 +41,7 @@ from __future__ import annotations
 import argparse
 import re
 import sys
+from fractions import Fraction
 from pathlib import Path
 
 # Jeu de caractères d'un nom d'ancre/alias YAML — large volontairement (spec YAML 6.9.2 :
@@ -316,10 +317,12 @@ _PREFIXE_AVANT_ANCRE = re.compile(
 _SUITE_ANCRE_FLOW_OUVERTE = re.compile(r"^\s*(?:!\S+\s*)?\{")
 
 
-def _position_fusion(position_base: int | float, index_jeton: int) -> int | float:
+def _position_fusion(
+    position_base: int | float | Fraction, index_jeton: int
+) -> int | float | Fraction:
     """Position EFFECTIVE d'un élément d'une fusion-LISTE (`<<: [*a, *b, …]`), à l'index
     `index_jeton` (0 = premier élément), dérivée de `position_base` (position de la ligne `<<:`
-    ou du mapping flow racine portant la fusion) — round 100/101/102 (RC1-015).
+    ou du mapping flow racine portant la fusion) — round 100/101/102/103 (RC1-015).
 
     Round 100 : chaque élément recevait `position_base - index_jeton` (décalage ENTIER) pour
     reproduire la préséance YAML merge-key (le premier élément de la liste gagne). Round 101
@@ -335,20 +338,30 @@ def _position_fusion(position_base: int | float, index_jeton: int) -> int | floa
     recréant la collision que round 101 prétendait éliminer (`_position_fusion(10, 1_000_000)
     == 9`, PAS strictement `> 9`).
 
-    Round 102 : diviseur DYNAMIQUE `index_jeton + 1` (au lieu d'une constante fixe) — la
-    fraction `index_jeton / (index_jeton + 1)` est mathématiquement < 1 pour TOUT `index_jeton
-    >= 0` (le numérateur est TOUJOURS strictement inférieur au dénominateur, par construction,
-    quelle que soit l'ampleur de `index_jeton` — plus besoin d'aucune borne/limite arbitraire).
-    Le résultat reste donc TOUJOURS strictement compris dans l'intervalle ouvert
-    `(position_base - 1, position_base]`, pour une liste de fusion de N'IMPORTE QUELLE longueur,
-    sans exception ni cas limite — élimine mathématiquement tout risque de collision avec une
-    position RÉELLE (toujours un entier). L'ORDRE relatif entre éléments de la MÊME liste reste
-    préservé : `index_jeton / (index_jeton + 1)` est strictement croissante avec `index_jeton`
-    (tend vers 1 sans jamais l'atteindre), donc le décalage total reste strictement décroissant.
+    Round 102 : diviseur DYNAMIQUE `index_jeton + 1` (au lieu d'une constante fixe), calculé en
+    arithmétique FLOTTANTE (`float`, `/`). Round 103 (bug réel trouvé par revue scellée
+    GPT-5.6-Terra-Pro) : la garantie « `index_jeton / (index_jeton + 1)` mathématiquement `< 1`
+    pour TOUT `index_jeton` » est FAUSSE en arithmétique FLOTTANTE IEEE-754 (précision finie,
+    ~15-17 chiffres significatifs) — pour un `index_jeton` suffisamment grand (`>= 10**16`
+    environ), la division flottante s'ARRONDIT à `1.0` pile, recréant la collision. Vérifié
+    empiriquement AVANT correctif : `_position_fusion(10, 10**20) == 9.0` (PAS strictement
+    `> 9`), alors que le test round 101/102 ne couvrait que jusqu'à `10**12` (jamais assez grand
+    pour révéler la perte de précision).
+
+    Round 103 : remplace la division FLOTTANTE par `fractions.Fraction` (stdlib pur,
+    `dependencies=[]` respecté) — arithmétique RATIONNELLE EXACTE, AUCUNE perte de précision
+    possible quelle que soit l'ampleur de `index_jeton` (contrairement à `float`, une `Fraction`
+    représente exactement n'importe quel rapport de deux entiers, aussi grands soient-ils).
+    `Fraction(index_jeton, index_jeton + 1) < 1` est donc VRAIMENT garanti pour TOUT
+    `index_jeton >= 0`, sans aucune approximation numérique — la propriété mathématique visée
+    depuis le round 102 est enfin RÉELLEMENT sans exception, pas seulement en théorie idéalisée.
+    Comparaisons (`>`) avec des positions `int`/`float` ordinaires ailleurs dans ce fichier
+    restent correctes : `Fraction` implémente nativement les opérateurs de comparaison avec les
+    autres types numériques Python, sans conversion avec perte.
     """
     if index_jeton == 0:
         return position_base
-    return position_base - index_jeton / (index_jeton + 1)
+    return position_base - Fraction(index_jeton, index_jeton + 1)
 
 
 def _remplacer_un_echappement(match: re.Match) -> str:
@@ -1280,8 +1293,8 @@ def _noms_fusion_dans_mapping_flow(texte: str, debut: int, fin: int) -> list[str
 
 
 def _noms_ancres_fusionnees_dans_ancres_flow(
-    texte: str, lignes: list[str], lignes_exclues: set[int], position_alias_racine: dict[str, int | float]
-) -> dict[str, int | float]:
+    texte: str, lignes: list[str], lignes_exclues: set[int], position_alias_racine: dict[str, int | float | Fraction]
+) -> dict[str, int | float | Fraction]:
     """Noms d'ancre fusionnés (`<<`) À L'INTÉRIEUR de la valeur mapping FLOW d'une ancre déjà
     dans `position_alias_racine` — round 59 (RC1-015, bug réel trouvé par revue scellée
     GPT-5.6-Terra-Pro).
@@ -1304,7 +1317,7 @@ def _noms_ancres_fusionnees_dans_ancres_flow(
     fusionne `inner`, `inner` est défini avant la première occurrence de la clé racine, mais
     c'est un alias direct vers `cfg` bien plus tardif qui doit l'emporter).
     """
-    noms: dict[str, int | float] = {}
+    noms: dict[str, int | float | Fraction] = {}
     if not position_alias_racine:
         return noms
     offset = 0
@@ -1338,7 +1351,7 @@ def _noms_fusion_dans_flow_racine_secret(
     lignes: list[str],
     lignes_exclues: set[int],
     ancres: dict[str, str | list[str]] | None = None,
-) -> dict[str, int | float]:
+) -> dict[str, int | float | Fraction]:
     """Noms d'ancre fusionnés (`<<`) au sein du mapping FLOW de la clé racine `secret`
     ELLE-MÊME (valeur `{<<: *nom}` directement en clé racine, sans aucune indirection d'ancre)
     — round 60 (RC1-015, bug réel trouvé par revue scellée GPT-5.6-Terra-Pro).
@@ -1369,7 +1382,7 @@ def _noms_fusion_dans_flow_racine_secret(
     (optionnel) permet de résoudre un alias utilisé comme nom de la clé racine `secret`
     elle-même, même mécanisme qu'ailleurs (round 80/81).
     """
-    noms: dict[str, int | float] = {}
+    noms: dict[str, int | float | Fraction] = {}
     offset = 0
     for idx, ligne in enumerate(lignes):
         if idx not in lignes_exclues:
@@ -1424,7 +1437,7 @@ def _noms_ancres_aliasees_secret(
     lignes: list[str],
     lignes_exclues: set[int],
     ancres: dict[str, str | list[str]] | None = None,
-) -> dict[str, int | float]:
+) -> dict[str, int | float | Fraction]:
     """Noms d'ancre référencés par un alias DIRECT du mapping `secret` tout entier (la clé
     `secret` réduite à une simple référence `*nom` comme valeur) trouvé n'importe où dans le
     fichier — round 30 (RC1-015). Sert à
@@ -1463,7 +1476,7 @@ def _noms_ancres_aliasees_secret(
     (round 80), étendu ici à la clé racine et transmis à `_nom_ancre_secret_explicite_alias`
     pour la forme explicite jumelle.
     """
-    noms: dict[str, int | float] = {}
+    noms: dict[str, int | float | Fraction] = {}
     for idx, ligne in enumerate(lignes):
         if idx in lignes_exclues:
             continue
@@ -1644,9 +1657,9 @@ def _est_descendante_de_secret(
     lignes: list[str],
     indice: int,
     indentation_cle: int,
-    position_alias_racine: dict[str, int | float] | None = None,
+    position_alias_racine: dict[str, int | float | Fraction] | None = None,
     ancres: dict[str, str | list[str]] | None = None,
-) -> int | float | None:
+) -> int | float | Fraction | None:
     """Position EFFECTIVE à utiliser pour la comparaison « dernière occurrence gagne » si
     `lignes[indice]` (portant une clé `ignored_paths` à `indentation_cle`) est bien un
     DESCENDANT du mapping secret (clé de schéma YAML, pas un secret réel — voir
@@ -1767,9 +1780,9 @@ def _noms_ancres_fusionnees_dans_secret(
     texte: str,
     lignes: list[str],
     lignes_exclues: set[int],
-    position_alias_racine: dict[str, int | float],
+    position_alias_racine: dict[str, int | float | Fraction],
     ancres: dict[str, str | list[str]] | None = None,
-) -> dict[str, int | float]:
+) -> dict[str, int | float | Fraction]:
     """Noms d'ancre fusionnés dans le mapping `secret` via une clé de FUSION YAML
     (`<<: *nom`) qui est elle-même descendante de `secret` — round 31 (RC1-015).
 
@@ -1826,7 +1839,7 @@ def _noms_ancres_fusionnees_dans_secret(
     à l'identique de PyYAML dans les deux cas), sans jamais changer l'ordonnancement relatif à
     une occurrence provenant d'une AUTRE ligne `<<:` distincte.
     """
-    noms: dict[str, int | float] = {}
+    noms: dict[str, int | float | Fraction] = {}
     for idx, ligne in enumerate(lignes):
         if idx in lignes_exclues:
             continue
@@ -1958,7 +1971,7 @@ def parser_ignored_paths(fichier: Path) -> list[str]:
     # fusion racine bloc round 31/56, fusion racine flow round 60, fusion dans ancre-flow
     # round 59) sont désormais fusionnées dans le MÊME dict `position_alias_racine`, en
     # conservant la position la PLUS TARDIVE en cas de nom découvert par plusieurs sources.
-    position_alias_racine: dict[str, int | float] = dict(
+    position_alias_racine: dict[str, int | float | Fraction] = dict(
         _noms_ancres_aliasees_secret(texte, lignes, lignes_exclues, ancres)
     )
     for nom, pos in _noms_fusion_dans_flow_racine_secret(
@@ -1979,7 +1992,7 @@ def parser_ignored_paths(fichier: Path) -> list[str]:
     # par `len(lignes)`, espace de noms fini.
     noms_alias_racine = frozenset(position_alias_racine)
     while True:
-        candidats: dict[str, int | float] = {}
+        candidats: dict[str, int | float | Fraction] = {}
         for source in (
             _noms_ancres_fusionnees_dans_secret(
                 texte, lignes, lignes_exclues, position_alias_racine, ancres
@@ -2016,7 +2029,7 @@ def parser_ignored_paths(fichier: Path) -> list[str]:
     # d'alias racine elle-même, pas celle de la définition de l'ancre référencée — une
     # combinaison non encore rencontrée empiriquement.
     meilleur_trouve: list[str] | None = None
-    meilleur_trouve_ligne: int | float | None = None
+    meilleur_trouve_ligne: int | float | Fraction | None = None
 
     # Round 32 : `secret` peut être un mapping YAML FLOW entier (accolades) contenant
     # `ignored_paths` en son sein — vérifié AVANT la recherche bloc/flow de `ignored_paths`
@@ -2148,7 +2161,7 @@ def parser_ignored_paths(fichier: Path) -> list[str]:
 
     indentation_cle: int | None = None
     dans_la_liste = False
-    indice_cle_courante: int | float | None = None
+    indice_cle_courante: int | float | Fraction | None = None
     # Round 67 (RC1-015, bug réel trouvé par revue scellée GPT-5.6-Terra-Pro) : YAML (PyYAML,
     # vérifié empiriquement) accepte silencieusement une clé `ignored_paths` DUPLIQUÉE au sein
     # du même mapping `secret` — la DERNIÈRE occurrence l'emporte, jamais une erreur. La boucle
