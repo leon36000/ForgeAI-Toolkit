@@ -3,8 +3,8 @@
  "objections": [],
  "date_heure": "2026-08-17T05:53:08.352024+00:00",
  "prompt_sha256": "9f6408b3d18dac78b54a962db5093bcf4d6b93e342e4fb9978fccb84d03ceb92",
- "reviewer_model": "MiMo-V2.5-Pro",
- "modele_servi": "mimo-v25-pro-openrouter",
+ "reviewer_model": "GPT-5.6-Terra-Pro",
+ "modele_servi": "gpt-5.6-terra-pro-direct",
  "gateway_resilience": {
   "retries": "0",
   "fallbacks": "0"
