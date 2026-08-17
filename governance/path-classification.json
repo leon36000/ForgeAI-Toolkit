@@ -6779,8 +6779,8 @@
         }
       ],
       "rule_id": "evidence-registres-root",
-      "sha256": "450d7a5713161eb70bba93d3a93caece2242a2040411234e4a7a2e34929ef6ae",
-      "size": 391781,
+      "sha256": "08c44fe6d75ac5a4b49ed884d78ad46b935d87a0fb40dcebff5c3e749db2064a",
+      "size": 392163,
       "target_path": null,
       "type": "text"
     },
@@ -8740,8 +8740,8 @@
         }
       ],
       "rule_id": "evidence-reviews-root",
-      "sha256": "f0cf2c91756daf2928cfcfcc19144de92a211c6197eb7261601ee1e705d71482",
-      "size": 2827,
+      "sha256": "c6ecdfdfee03f1e0282e1df1f1bbae8c03f23963437c47342911f307c4f1394c",
+      "size": 2844,
       "target_path": null,
       "type": "text"
     },
@@ -20141,6 +20141,58 @@
       "generated": false,
       "load_bearing": true,
       "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-020-inc3a-v1/DeepSeek-V4-Pro-0813.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "473aa79c4a25e9d25eea6de02e931d45c3956a6c4df1e2c6099a20c1ea64f3da",
+      "size": 912,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-020-inc3a-v1/MiMo-V2.5-Pro.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "86c26eb5fcae37219e60e151406e6bdae52db53052220dc48b1a6e23216883c9",
+      "size": 1104,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-020-inc3a-v1/Qwen3.8-2.4T.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "d65299ef38d7b021c35931cba8d1a03bf89ec3c4838125e5f911a4a96991e8c6",
+      "size": 2083,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-020-inc3a-v1/RECU.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": null,
+      "size": null,
+      "target_path": null,
+      "type": null
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
       "path": "evidence/reviews/RC1-020-v1/DeepSeek-V4-Pro.verdict.json",
       "referenced_by": [],
       "rule_id": "evidence-reviews-root",
@@ -27546,6 +27598,13 @@
         },
         {
           "candidate": "governance/PATH-CLASSIFICATION.md",
+          "line": 18,
+          "referrer": "evidence/reviews/RC1-020-inc3a-v1/Qwen3.8-2.4T.verdict.json",
+          "resolved": "governance/PATH-CLASSIFICATION.md",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/PATH-CLASSIFICATION.md",
           "line": 190,
           "referrer": "governance/path-classification-rules.json",
           "resolved": "governance/PATH-CLASSIFICATION.md",
@@ -34601,6 +34660,55 @@
           "candidate": "scripts/ruff_ratchet.py",
           "line": 26,
           "referrer": "evidence/reviews/RC1-020-inc2-v8/Qwen3.8-2.4T.verdict.json",
+          "resolved": "scripts/ruff_ratchet.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "scripts/ruff_ratchet.py",
+          "line": 6,
+          "referrer": "evidence/reviews/RC1-020-inc3a-v1/DeepSeek-V4-Pro-0813.verdict.json",
+          "resolved": "scripts/ruff_ratchet.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "scripts/ruff_ratchet.py",
+          "line": 8,
+          "referrer": "evidence/reviews/RC1-020-inc3a-v1/DeepSeek-V4-Pro-0813.verdict.json",
+          "resolved": "scripts/ruff_ratchet.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "scripts/ruff_ratchet.py",
+          "line": 6,
+          "referrer": "evidence/reviews/RC1-020-inc3a-v1/MiMo-V2.5-Pro.verdict.json",
+          "resolved": "scripts/ruff_ratchet.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "scripts/ruff_ratchet.py",
+          "line": 12,
+          "referrer": "evidence/reviews/RC1-020-inc3a-v1/MiMo-V2.5-Pro.verdict.json",
+          "resolved": "scripts/ruff_ratchet.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "scripts/ruff_ratchet.py",
+          "line": 6,
+          "referrer": "evidence/reviews/RC1-020-inc3a-v1/Qwen3.8-2.4T.verdict.json",
+          "resolved": "scripts/ruff_ratchet.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "scripts/ruff_ratchet.py",
+          "line": 12,
+          "referrer": "evidence/reviews/RC1-020-inc3a-v1/Qwen3.8-2.4T.verdict.json",
+          "resolved": "scripts/ruff_ratchet.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "scripts/ruff_ratchet.py",
+          "line": 24,
+          "referrer": "evidence/reviews/RC1-020-inc3a-v1/Qwen3.8-2.4T.verdict.json",
           "resolved": "scripts/ruff_ratchet.py",
           "severity": "hard"
         },
@@ -96006,6 +96114,11 @@
         "referrer": "evidence/reviews/RC1-020-inc2-v8/RECU.json"
       },
       {
+        "candidate": "recu-revue/1",
+        "line": 2,
+        "referrer": "evidence/reviews/RC1-020-inc3a-v1/RECU.json"
+      },
+      {
         "candidate": "FileNotFoundError/retourne",
         "line": 7,
         "referrer": "evidence/reviews/RC1-020-v1/DeepSeek-V4-Pro.verdict.json"
@@ -143417,6 +143530,13 @@
         "severity": "hard"
       },
       {
+        "candidate": "RC1-020-inc3a-v1",
+        "line": 209,
+        "referrer": "evidence/reviews/BINDING.txt",
+        "resolved": "evidence/reviews/RC1-020-inc3a-v1",
+        "severity": "hard"
+      },
+      {
         "candidate": "scripts/gate_docs.py",
         "line": 11,
         "referrer": "sonar-project.properties",
@@ -157148,6 +157268,62 @@
         "line": 32,
         "referrer": "evidence/reviews/RC1-020-inc2-v8/Qwen3.8-2.4T.verdict.json",
         "resolved": "evidence/reviews/RC1-020-inc2-v6/RECU.json",
+        "severity": "hard"
+      },
+      {
+        "candidate": "scripts/ruff_ratchet.py",
+        "line": 6,
+        "referrer": "evidence/reviews/RC1-020-inc3a-v1/DeepSeek-V4-Pro-0813.verdict.json",
+        "resolved": "scripts/ruff_ratchet.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "scripts/ruff_ratchet.py",
+        "line": 8,
+        "referrer": "evidence/reviews/RC1-020-inc3a-v1/DeepSeek-V4-Pro-0813.verdict.json",
+        "resolved": "scripts/ruff_ratchet.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "scripts/ruff_ratchet.py",
+        "line": 6,
+        "referrer": "evidence/reviews/RC1-020-inc3a-v1/MiMo-V2.5-Pro.verdict.json",
+        "resolved": "scripts/ruff_ratchet.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "scripts/ruff_ratchet.py",
+        "line": 12,
+        "referrer": "evidence/reviews/RC1-020-inc3a-v1/MiMo-V2.5-Pro.verdict.json",
+        "resolved": "scripts/ruff_ratchet.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "scripts/ruff_ratchet.py",
+        "line": 6,
+        "referrer": "evidence/reviews/RC1-020-inc3a-v1/Qwen3.8-2.4T.verdict.json",
+        "resolved": "scripts/ruff_ratchet.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "scripts/ruff_ratchet.py",
+        "line": 12,
+        "referrer": "evidence/reviews/RC1-020-inc3a-v1/Qwen3.8-2.4T.verdict.json",
+        "resolved": "scripts/ruff_ratchet.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "governance/PATH-CLASSIFICATION.md",
+        "line": 18,
+        "referrer": "evidence/reviews/RC1-020-inc3a-v1/Qwen3.8-2.4T.verdict.json",
+        "resolved": "governance/PATH-CLASSIFICATION.md",
+        "severity": "hard"
+      },
+      {
+        "candidate": "scripts/ruff_ratchet.py",
+        "line": 24,
+        "referrer": "evidence/reviews/RC1-020-inc3a-v1/Qwen3.8-2.4T.verdict.json",
+        "resolved": "scripts/ruff_ratchet.py",
         "severity": "hard"
       },
       {
@@ -172684,7 +172860,7 @@
     "by_class": {
       "ARCHIVE": 44,
       "DOCS": 18,
-      "EVIDENCE": 1607,
+      "EVIDENCE": 1611,
       "GENERATED": 5,
       "GOVERNANCE": 198,
       "PRODUCT": 113,
@@ -172703,7 +172879,7 @@
       "evidence-audit-output-root": 18,
       "evidence-dedup-root": 2,
       "evidence-registres-root": 35,
-      "evidence-reviews-root": 1552,
+      "evidence-reviews-root": 1556,
       "generated-authority-map": 1,
       "generated-path-classification-json": 1,
       "generated-path-classification-markdown": 1,
@@ -172739,11 +172915,11 @@
       "working-sandbox-readme": 1
     },
     "case_collisions_total": 0,
-    "dangling_references_total": 16744,
+    "dangling_references_total": 16745,
     "generated_total": 9,
-    "load_bearing_total": 2066,
+    "load_bearing_total": 2070,
     "portability_violations_total": 0,
-    "tracked_total": 2208,
+    "tracked_total": 2212,
     "unclassified_total": 0,
     "unicode_anomalies_total": 0
   },

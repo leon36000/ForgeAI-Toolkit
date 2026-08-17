@@ -1,0 +1,25 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "scripts/ruff_ratchet.py",
+   "description": "Lignes reformattées sans changement fonctionnel (wrap) dans un diff inclus — acceptable pour la lisibilité mais typiquement hors périmètre d'une revue fonctionnelle.",
+   "preuve": "Lignes 21-25 : reformattage du paragraphe de commentaire sans modification de contenu."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "scripts/ruff_ratchet.py",
+   "description": "Correction d'un bug latent (f-string manquant) non lié à l'incrément 3a — devrait idéalement être dans une PR séparée ou documenté comme fix incident.",
+   "preuve": "Ligne 242 : `f\"borne totale et la dette par fichier\"` corrigé en `f\"borne totale et la dette par fichier\"` (f-prefix ajouté)."
+  }
+ ],
+ "date_heure": "2026-08-17T21:44:34.776266+00:00",
+ "prompt_sha256": "507a6e0040dc0673780940aa3bdc9551899d0259d4bf5cb5c50c7d80029d1138",
+ "reviewer_model": "MiMo-V2.5-Pro",
+ "modele_servi": "mimo-v25-pro-openrouter",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

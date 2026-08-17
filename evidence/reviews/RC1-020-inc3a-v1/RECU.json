@@ -1,0 +1,22 @@
+{
+  "schema": "recu-revue/1",
+  "dossier": "RC1-020-inc3a-v1",
+  "issue": 450,
+  "round": 1,
+  "base_commit": "3637beb4215e616546624d29e688816257f62fe1",
+  "head_commit": "b53cc0b508731e645f8ab2939d1373d5b9dc0a22",
+  "head_tree": "9048a1fa719f2b1986a77fe715488d8fd6ee8391",
+  "diff_digest": "e3823ad1da6f24cd56bffe848a4575ca7d2fcb4de58cf727d80af731f2f89e27",
+  "prompt_sha256": "507a6e0040dc0673780940aa3bdc9551899d0259d4bf5cb5c50c7d80029d1138",
+  "reviewers_attendus": [
+    "DeepSeek-V4-Pro-0813",
+    "MiMo-V2.5-Pro",
+    "Qwen3.8-2.4T"
+  ],
+  "codeur": [
+    "GPT-5.6-Luna-Pro"
+  ],
+  "resultat": "APPROVE",
+  "date_heure": "2026-08-17T17:44:40.470692-04:00",
+  "fenetre_heures": 24
+}
