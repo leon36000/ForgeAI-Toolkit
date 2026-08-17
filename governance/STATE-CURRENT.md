@@ -947,7 +947,7 @@
   "tests": {
     "js_files": 3,
     "python_files": 196,
-    "python_functions_declared": 2336
+    "python_functions_declared": 2338
   }
 }
 ```
