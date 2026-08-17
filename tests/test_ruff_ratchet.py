@@ -23,6 +23,7 @@ def _base(dette=None, classification=None, total_violations=0, version=1, regles
     comportement visé.
     """
     return {
+        "_schema": "ruff-baseline-v1",
         "version": version,
         "regles_activees": (
             list(regles_activees)
@@ -306,6 +307,29 @@ def test_valider_base_version_non_entier() -> None:
 
     with pytest.raises(ValueError, match="version doit etre un entier"):
         ruff_ratchet._valider_base(base, "base locale")
+
+
+def test_valider_base_version_differente_de_1() -> None:
+    """Round 5 de revue : version entiere mais != 1 -> ValueError (contrat de versionnement)."""
+    base = _base(version=2)
+
+    with pytest.raises(ValueError, match="version doit etre 1"):
+        ruff_ratchet._valider_base(base, "base locale")
+
+
+def test_valider_base_schema_absent_ou_incorrect() -> None:
+    """Round 5 de revue : champ _schema manquant ou incorrect -> ValueError."""
+    base = _base()
+    del base["_schema"]
+
+    with pytest.raises(ValueError, match="_schema doit etre 'ruff-baseline-v1'"):
+        ruff_ratchet._valider_base(base, "base locale")
+
+    base_incorrecte = _base()
+    base_incorrecte["_schema"] = "autre-schema-v2"
+
+    with pytest.raises(ValueError, match="_schema doit etre 'ruff-baseline-v1'"):
+        ruff_ratchet._valider_base(base_incorrecte, "base locale")
 
 
 def test_valider_base_regles_activees_vide() -> None:

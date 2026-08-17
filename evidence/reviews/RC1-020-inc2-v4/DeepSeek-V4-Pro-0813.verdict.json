@@ -1,0 +1,19 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": ".github/workflows/gates.yml",
+   "description": "Le diff ne modifie pas requirements-ci.txt ; il est donc impossible de vérifier depuis le diff que ce fichier verrouillé contient bien ruff épinglé avec hashes, comme l'exige l'installation --require-hashes utilisée par le job.",
+   "preuve": ".github/workflows/gates.yml:364 : run: python -m pip install --no-cache-dir --require-hashes -r requirements-ci.txt"
+  }
+ ],
+ "date_heure": "2026-08-17T17:42:37.778156+00:00",
+ "prompt_sha256": "890ef349d1637a78d37d8e306b40176e8a3923e57f0b425d31116e9f3589e89b",
+ "reviewer_model": "DeepSeek-V4-Pro-0813",
+ "modele_servi": "1cbd427d85a4593a157a49bb0ad51ededb429b85aca980b3b23cd445246b9fcb",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

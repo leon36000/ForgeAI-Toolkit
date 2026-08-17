@@ -199,11 +199,11 @@ def agreger(
 def construire_baseline(racine: Path, regles: list[str]) -> dict[str, Any]:
     """Construit une baseline `ruff-baseline-v1` COMPLÈTE depuis une mesure fraîche : appelle
     `mesurer(racine, regles)` puis `agreger(...)`, et retourne un dict conforme au schéma validé
-    par `_valider_base` — `_schema`, `_description`, `version` (1), `regles_activees` (triées
-    alphabétiquement), `borne.total_violations` (EXACTEMENT la somme de `dette`, sans aucune
-    marge cachée), `dette` (triée par clé fichier) et `classification` (triée par clé fichier,
-    puis par clé code à l'intérieur de chaque fichier — les dicts Python conservent l'ordre
-    d'insertion, donc le JSON sérialisé est déterministe et diff-stable).
+    par `_valider_base` — `_schema` (`"ruff-baseline-v1"`), `_description`, `version` (1),
+    `regles_activees` (triées alphabétiquement), `borne.total_violations` (EXACTEMENT la somme
+    de `dette`, sans aucune marge cachée), `dette` (triée par clé fichier) et `classification`
+    (triée par clé fichier, puis par clé code à l'intérieur de chaque fichier — les dicts Python
+    conservent l'ordre d'insertion, donc le JSON sérialisé est déterministe et diff-stable).
 
     AUCUN I/O fichier ici : la fonction n'écrit jamais `governance/ruff-baseline.json`
     elle-même — la sérialisation et l'écriture sont la responsabilité de l'appelant (`main`,
@@ -366,21 +366,32 @@ def _valider_classification(
 
 
 def _valider_base(base: Any, libelle: str) -> dict[str, Any]:
-    """Valide l'intégralité du schéma `ruff-baseline-v1` : `version` (entier non booléen),
-    `regles_activees` (liste non vide de chaînes non vides, sans doublon, triée
-    alphabétiquement), `borne.total_violations` (entier >= 0 non booléen, et EXACTEMENT égal à
-    la somme des plafonds de `dette` — aucune marge cachée), `dette` (dict chemin -> entier
-    strictement positif non booléen), `classification` (obligatoire, clés exactement celles de
-    `dette`, somme par fichier égale à `dette[fichier]`, aucun code hors de `regles_activees`).
-    `libelle` est un texte court (ex. "base locale", "base de reference") permettant à
-    l'appelant de distinguer quelle base a échoué. Lève ValueError avec message explicite si un
-    invariant est violé. Retourne `base` si valide."""
+    """Valide l'intégralité du schéma `ruff-baseline-v1` : `_schema` (chaîne EXACTEMENT égale à
+    `"ruff-baseline-v1"` — contrat de versionnement du format : une baseline dépourvue de ce
+    champ, ou portant une valeur différente, n'est pas reconnue par ce script), `version`
+    (entier non booléen, ET EXACTEMENT égal à 1 — toute autre valeur entière signifie un format
+    de baseline que ce script ne sait pas valider), `regles_activees` (liste non vide de chaînes
+    non vides, sans doublon, triée alphabétiquement), `borne.total_violations` (entier >= 0 non
+    booléen, et EXACTEMENT égal à la somme des plafonds de `dette` — aucune marge cachée),
+    `dette` (dict chemin -> entier strictement positif non booléen), `classification`
+    (obligatoire, clés exactement celles de `dette`, somme par fichier égale à
+    `dette[fichier]`, aucun code hors de `regles_activees`). `libelle` est un texte court (ex.
+    "base locale", "base de reference") permettant à l'appelant de distinguer quelle base a
+    échoué. Lève ValueError avec message explicite si un invariant est violé. Retourne `base`
+    si valide."""
     if not isinstance(base, dict):
         raise ValueError(f"{libelle} doit etre un objet JSON")
+
+    if base.get("_schema") != "ruff-baseline-v1":
+        raise ValueError(f"{libelle}._schema doit etre 'ruff-baseline-v1'")
 
     version = base.get("version")
     if isinstance(version, bool) or not isinstance(version, int):
         raise ValueError(f"{libelle}.version doit etre un entier")
+    if version != 1:
+        raise ValueError(
+            f"{libelle}.version doit etre 1 (schema ruff-baseline-v1), recu {version}"
+        )
 
     regles_activees = _valider_regles_activees(base.get("regles_activees"), libelle)
     total_violations = _valider_borne(base.get("borne"), libelle)

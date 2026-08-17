@@ -1,0 +1,19 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "scripts/ruff_ratchet.py",
+   "description": "La validation annoncée du schéma `ruff-baseline-v1` ne vérifie ni le champ `_schema`, ni que `version` vaut 1. Une baseline étiquetée avec une version incompatible reste donc acceptée tant que ses autres champs ont une structure compatible, ce qui invalide le contrat explicite de versionnement du format.",
+   "preuve": "`_valider_base()` (vers lignes 369-389) lit seulement `version = base.get(\"version\")` et rejette uniquement un type non-entier ; aucun accès ni contrôle de `base[\"_schema\"]`, et aucune condition `version != 1`. La baseline générée déclare pourtant `_schema: \"ruff-baseline-v1\"` et `version: 1` dans `governance/ruff-baseline.json:2-4`."
+  }
+ ],
+ "date_heure": "2026-08-17T17:44:05.645235+00:00",
+ "prompt_sha256": "9646e1249a1b63347b9d4107bd032f895ad1eb166079d229784e55968ee3ec70",
+ "reviewer_model": "GPT-5.6-Terra-Pro",
+ "modele_servi": "gpt56-terra-pro-openrouter",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}
