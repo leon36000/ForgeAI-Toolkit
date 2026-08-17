@@ -16,12 +16,14 @@ RC1-011/#441) ou un chemin de fixture individuel reste acceptable si présente e
 
 Complexité assumée (Sentinelle Grok-4.6, round 37 RC1-015 — traité, pas ignoré) : ce fichier a
 grandi d'un analyseur ligne par ligne minimal vers ~20 regex couvrant ancres/alias, fusions
-`<<:`, mappings/listes flow imbriqués et scalaires bloc, au fil de 37 rounds de revue aveugle
-scellée (3 vendors distincts, `civ_review.py`). Ce n'est PAS une accumulation non maîtrisée de
-rustines : CHAQUE règle a été ajoutée en réponse à une reproduction YAML concrète, vérifiée
+`<<:`, mappings/listes flow imbriqués et scalaires bloc, au fil d'une longue campagne de revue
+aveugle scellée (3 vendors distincts, `civ_review.py`) — décompte exact des rounds et des tests
+dans `stories/RC1-015.md`, qui reste la source à jour plutôt qu'un chiffre figé ici. Ce n'est PAS
+une accumulation non maîtrisée de rustines : CHAQUE règle a été ajoutée en réponse à une
+reproduction YAML concrète, vérifiée
 empiriquement contre PyYAML AVANT correctif (jamais par supposition), avec un test de
-non-régression dédié — `tests/test_rc1015_gitguardian_scope.py` (100+ tests) documente et fige
-chaque cas. L'alternative (dépendre de PyYAML) romprait la convention `dependencies=[]` du dépôt
+non-régression dédié — `tests/test_rc1015_gitguardian_scope.py` documente et fige chaque cas.
+L'alternative (dépendre de PyYAML) romprait la convention `dependencies=[]` du dépôt
 pour ce seul script ; elle a été explicitement examinée et écartée (voir `stories/RC1-015.md`,
 addendum round 37). La surface de faux négatifs reste structurellement bornée par construction :
 un scan par motifs ne peut jamais couvrir TOUTE la grammaire YAML — c'est pourquoi `gitleaks`

@@ -102,7 +102,7 @@
     },
     {
       "path": ".github/workflows/gates.yml",
-      "sha256": "c855ca50c16250ff385301a6c6de5308f7041985cabdffc8ab90372284e09d7b"
+      "sha256": "8e320b268c44c293c3d9e7a617b1e6c844d0d954c92deeb4dc2cb8791b20d921"
     },
     {
       "path": ".github/workflows/scope-guard.yml",

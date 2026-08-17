@@ -54,8 +54,9 @@ jobs:
 
   gitguardian-markdown-scope:
     # RC1-015 (#445), round 97 : cliquet dédié (scripts/governance/check_gitguardian_scope.py,
-    # 96 rounds de revue scellée) qui interdit toute exclusion Markdown globale (**/*.md ou
-    # équivalent) dans `.gitguardian.yaml`. Sans cette étape CI explicite, une réintroduction
+    # voir stories/RC1-015.md pour l'historique complet de revue scellée) qui interdit toute
+    # exclusion Markdown globale (**/*.md ou équivalent) dans `.gitguardian.yaml`. Sans cette
+    # étape CI explicite, une réintroduction
     # future de l'exclusion ne dépendait QUE du test de non-régression dans la suite pytest
     # générale (indirect, silencieux si ce fichier de test était un jour exclu/quarantiné) —
     # même motif que le job `no-stub-scan` ci-dessus (gate §8bis), qui a sa propre étape dédiée
