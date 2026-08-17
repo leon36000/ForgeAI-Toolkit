@@ -1222,6 +1222,34 @@
         },
         {
           "candidate": ".gitguardian.yaml",
+          "line": 3845,
+          "referrer": "stories/RC1-015.md",
+          "resolved": ".gitguardian.yaml",
+          "severity": "hard"
+        },
+        {
+          "candidate": ".gitguardian.yaml",
+          "line": 3847,
+          "referrer": "stories/RC1-015.md",
+          "resolved": ".gitguardian.yaml",
+          "severity": "hard"
+        },
+        {
+          "candidate": ".gitguardian.yaml",
+          "line": 3855,
+          "referrer": "stories/RC1-015.md",
+          "resolved": ".gitguardian.yaml",
+          "severity": "hard"
+        },
+        {
+          "candidate": ".gitguardian.yaml",
+          "line": 3858,
+          "referrer": "stories/RC1-015.md",
+          "resolved": ".gitguardian.yaml",
+          "severity": "hard"
+        },
+        {
+          "candidate": ".gitguardian.yaml",
           "line": 3,
           "referrer": "tests/test_rc1015_gitguardian_scope.py",
           "resolved": ".gitguardian.yaml",
@@ -9866,8 +9894,8 @@
         }
       ],
       "rule_id": "evidence-registres-root",
-      "sha256": "6c9e7c134e775752d46d654ebb06945a4dcd55c3c39ffb6db0e625faa8711797",
-      "size": 399202,
+      "sha256": "c6d4b88b1ea8fc87b0c0ecdc2c4df136908e2dd71f1f99658e08c13e1870840f",
+      "size": 399827,
       "target_path": null,
       "type": "text"
     },
@@ -47369,8 +47397,8 @@
         }
       ],
       "rule_id": "governance-stories",
-      "sha256": "52b40d99a2d381b53a223c72bab2b1aa049463cf24b81fef7a7cafe0911256f0",
-      "size": 277179,
+      "sha256": "2506d54155bbceffdb98c90a5a77b7536a304e13eb529c01c7150f0315601a9d",
+      "size": 281606,
       "target_path": null,
       "type": "text"
     },
@@ -129576,6 +129604,86 @@
         "referrer": "stories/RC1-015.md"
       },
       {
+        "candidate": "tests_docs/foo.md",
+        "line": 3831,
+        "referrer": "stories/RC1-015.md"
+      },
+      {
+        "candidate": "foo.md",
+        "line": 3832,
+        "referrer": "stories/RC1-015.md"
+      },
+      {
+        "candidate": ".git/HEAD",
+        "line": 3844,
+        "referrer": "stories/RC1-015.md"
+      },
+      {
+        "candidate": ".git/config",
+        "line": 3845,
+        "referrer": "stories/RC1-015.md"
+      },
+      {
+        "candidate": ".git/description",
+        "line": 3845,
+        "referrer": "stories/RC1-015.md"
+      },
+      {
+        "candidate": "foo.md",
+        "line": 3845,
+        "referrer": "stories/RC1-015.md"
+      },
+      {
+        "candidate": ".git/config",
+        "line": 3847,
+        "referrer": "stories/RC1-015.md"
+      },
+      {
+        "candidate": ".git/description",
+        "line": 3847,
+        "referrer": "stories/RC1-015.md"
+      },
+      {
+        "candidate": ".git/HEAD",
+        "line": 3847,
+        "referrer": "stories/RC1-015.md"
+      },
+      {
+        "candidate": "tests_docs/foo.md",
+        "line": 3847,
+        "referrer": "stories/RC1-015.md"
+      },
+      {
+        "candidate": "foo.md",
+        "line": 3847,
+        "referrer": "stories/RC1-015.md"
+      },
+      {
+        "candidate": ".../tests_docs/foo.md",
+        "line": 3848,
+        "referrer": "stories/RC1-015.md"
+      },
+      {
+        "candidate": ".git/description",
+        "line": 3855,
+        "referrer": "stories/RC1-015.md"
+      },
+      {
+        "candidate": ".git/HEAD",
+        "line": 3855,
+        "referrer": "stories/RC1-015.md"
+      },
+      {
+        "candidate": "gles/allowlists",
+        "line": 3868,
+        "referrer": "stories/RC1-015.md"
+      },
+      {
+        "candidate": "sence/absence",
+        "line": 3873,
+        "referrer": "stories/RC1-015.md"
+      },
+      {
         "candidate": "src/forgeai/",
         "line": 3,
         "referrer": "stories/RC1-022.md"
@@ -172536,6 +172644,34 @@
         "severity": "hard"
       },
       {
+        "candidate": ".gitguardian.yaml",
+        "line": 3845,
+        "referrer": "stories/RC1-015.md",
+        "resolved": ".gitguardian.yaml",
+        "severity": "hard"
+      },
+      {
+        "candidate": ".gitguardian.yaml",
+        "line": 3847,
+        "referrer": "stories/RC1-015.md",
+        "resolved": ".gitguardian.yaml",
+        "severity": "hard"
+      },
+      {
+        "candidate": ".gitguardian.yaml",
+        "line": 3855,
+        "referrer": "stories/RC1-015.md",
+        "resolved": ".gitguardian.yaml",
+        "severity": "hard"
+      },
+      {
+        "candidate": ".gitguardian.yaml",
+        "line": 3858,
+        "referrer": "stories/RC1-015.md",
+        "resolved": ".gitguardian.yaml",
+        "severity": "hard"
+      },
+      {
         "candidate": "tests/test_rel038b_unicite.py",
         "line": 8,
         "referrer": "stories/RC1-022.md",
@@ -177624,7 +177760,7 @@
       "working-sandbox-readme": 1
     },
     "case_collisions_total": 0,
-    "dangling_references_total": 16923,
+    "dangling_references_total": 16939,
     "generated_total": 9,
     "load_bearing_total": 2037,
     "portability_violations_total": 0,
