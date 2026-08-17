@@ -1,0 +1,31 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "scripts/revue.py",
+   "description": "Le critère d'acceptation 2 (preuve reproduite : digest identique entre un worktree partageant l'object-store et un clone frais) n'est pas vérifiable à partir du seul diff fourni ; aucune capture de sortie, script de reproduction ou rapport CI n'est joint.",
+   "preuve": "Le diff ne modifie que scripts/revue.py (bloc remplaçant la commande git) et crée stories/RC1-569.md ; aucun artefact de preuve d'exécution (sortie de _diff_canonique dans les deux environnements, log CI, etc.) n'est présent."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "tests/test_revue.py",
+   "description": "Le critère d'acceptation 1 (tests/test_revue.py et tests/test_reviews_gate.py 100% verts) n'est pas démontré. De plus, l'ajout de `--no-abbrev` dans la commande invoquée par `_diff_canonique` peut casser les tests existants qui mocquent `runner` et assertent la liste exacte des arguments ; aucune mise à jour de test n'est visible.",
+   "preuve": "Le diff ne contient aucune modification sous tests/ ; la commande attendue par un éventuel test mocké passe de `[\"git\", \"diff\", \"--raw\", \"--no-renames\", \"-z\", ...]` à `[\"git\", \"diff\", \"--raw\", \"--no-renames\", \"--no-abbrev\", \"-z\", ...]` (scripts/revue.py, bloc remplacé)."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "stories/RC1-569.md",
+   "description": "Le critère d'acceptation 3 (`python3 scripts/no_stub_scan.py --all` passe) n'est pas vérifiable à partir du diff ; aucun résultat de scan n'est fourni.",
+   "preuve": "Aucune modification ou rapport lié à scripts/no_stub_scan.py dans le diff fourni."
+  }
+ ],
+ "date_heure": "2026-08-17T04:07:11.215013+00:00",
+ "prompt_sha256": "67ecb8a3974475b1bdc8b329708f6c5a4c3766e28f53342e7bfd16d079519510",
+ "reviewer_model": "Kimi-2.7",
+ "modele_servi": "kimi-27-openrouter",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

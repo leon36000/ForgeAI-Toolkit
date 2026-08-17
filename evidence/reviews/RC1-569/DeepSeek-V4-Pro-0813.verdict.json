@@ -1,0 +1,25 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "scripts/revue.py",
+   "description": "Le texte de documentation de `_diff_canonique` n'est pas aligné sur l'appel réel : il mentionne encore `git diff --raw --no-renames -z` sans `--no-abbrev`.",
+   "preuve": "Ligne non modifiée : `Utilise la PLOMBERIE (`git diff --raw --no-renames -z`), extrait...` ; commande modifiée : `[\"git\", \"diff\", \"--raw\", \"--no-renames\", \"--no-abbrev\", \"-z\", ...]`."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "scripts/revue.py",
+   "description": "L'affirmation de reproduction ajoutée en commentaire n'est pas étayée dans le diff par une sortie ou une comparaison de digests ; elle reste non vérifiable dans ce périmètre de revue.",
+   "preuve": "Ligne ajoutée : `# Vérifié : avec --no-abbrev, les deux environnements produisent des hash SHA-1 complets (40 caractères) strictement identiques pour un même diff logique.`"
+  }
+ ],
+ "date_heure": "2026-08-17T04:06:18.877925+00:00",
+ "prompt_sha256": "67ecb8a3974475b1bdc8b329708f6c5a4c3766e28f53342e7bfd16d079519510",
+ "reviewer_model": "DeepSeek-V4-Pro-0813",
+ "modele_servi": "1cbd427d85a4593a157a49bb0ad51ededb429b85aca980b3b23cd445246b9fcb",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

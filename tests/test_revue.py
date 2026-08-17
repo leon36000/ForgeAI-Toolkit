@@ -280,6 +280,22 @@ def test_diff_canonique_deterministe_ordre_independant():
     )
 
 
+def test_diff_canonique_invoque_git_avec_no_abbrev():
+    """#569 : sans --no-abbrev, git --raw abrège les hash à une longueur qui dépend du nombre
+    total d'objets du dépôt LOCAL (pas seulement du contenu diffé) — un worktree partageant le
+    .git du dépôt principal et un clone frais produisent alors des digests différents pour le
+    même diff logique. Ce test verrouille la présence du flag dans la commande invoquée."""
+    commandes_recues = []
+
+    def runner_espion(commande):
+        commandes_recues.append(commande)
+        return ""
+
+    revue._diff_canonique("base", "HEAD", runner=runner_espion)
+    assert len(commandes_recues) == 1
+    assert "--no-abbrev" in commandes_recues[0]
+
+
 def test_verifier_recu_approve_nominal():
     result = revue.verifier_recu(_recu(), [_v("deepseek"), _v("gemini_flash"), _v("longcat_20")], _etat())
     assert result["result"] == "APPROVE" and "reçu valide" in result["reason"]

@@ -1,0 +1,31 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "stories/RC1-569.md",
+   "description": "Le diff ajoute un fichier story alors que la section Périmètre de la story ne mentionne que scripts/revue.py ; cette extension n'est pas explicitement listée dans le périmètre fourni.",
+   "preuve": "diff : 'new file mode 100644' puis '+++ b/stories/RC1-569.md' ; story : '## Périmètre' -> '1. scripts/revue.py, fonction _diff_canonique : ajouter --no-abbrev à l'appel git diff --raw.'"
+  },
+  {
+   "severite": "mineure",
+   "fichier": "scripts/revue.py",
+   "description": "Les critères d'acceptation exigent des tests verts et l'exécution de no_stub_scan, mais le diff ne fournit ni sortie de test ni modification de tests permettant de vérifier directement l'absence de régression après l'ajout du flag.",
+   "preuve": "story : '1. tests/test_revue.py et tests/test_reviews_gate.py : 100% verts' et '3. python3 scripts/no_stub_scan.py --all passe' ; le diff verbatim ne contient ni tests/test_revue.py, ni tests/test_reviews_gate.py, ni log d'exécution."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "scripts/revue.py",
+   "description": "La preuve de reproduction du digest identique entre worktree et clone frais n'est pas matérialisée dans le diff ; elle repose sur le récit de la story.",
+   "preuve": "story : '2. Preuve reproduite : le digest calculé par _diff_canonique ... IDENTIQUE entre un worktree ... et un clone frais depuis GitHub' ; le diff ne contient pas de log ou d'artefact démontrant cette exécution."
+  }
+ ],
+ "date_heure": "2026-08-17T04:06:18.880076+00:00",
+ "prompt_sha256": "67ecb8a3974475b1bdc8b329708f6c5a4c3766e28f53342e7bfd16d079519510",
+ "reviewer_model": "Qwen3.8-2.4T",
+ "modele_servi": "b9de6bc895fe95ccacf7d9fa9b1cf29ca44d34f03e249738f325c9dee3790b78",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

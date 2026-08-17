@@ -1,0 +1,25 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "scripts/revue.py",
+   "description": "La docstring de `_diff_canonique` mentionne encore `git diff --raw --no-renames -z` sans `--no-abbrev`, alors que l'appel réel contient désormais ce flag. Documentation interne incohérente avec le code.",
+   "preuve": "Docstring : « Utilise la PLOMBERIE (`git diff --raw --no-renames -z`), extrait ... » ; appel modifié : `[\"git\", \"diff\", \"--raw\", \"--no-renames\", \"--no-abbrev\", \"-z\", ...]`"
+  },
+  {
+   "severite": "mineure",
+   "fichier": "tests/test_revue.py",
+   "description": "Le diff ne contient pas la preuve reproduite exigée par le critère d'acceptation 2 (digests identiques worktree/clone frais). Le test ajouté vérifie uniquement la présence du flag, pas l'égalité des digests entre environnements.",
+   "preuve": "`test_diff_canonique_invoque_git_avec_no_abbrev` : `assert \"--no-abbrev\" in commandes_recues[0]` ; aucune comparaison de digests entre deux exécutions."
+  }
+ ],
+ "date_heure": "2026-08-17T04:11:15.305739+00:00",
+ "prompt_sha256": "f162ebb4421c4c9d1ec0b13b29b9a6a5483bc599da87b86a4748a618307c0097",
+ "reviewer_model": "DeepSeek-V4-Pro-0813",
+ "modele_servi": "1cbd427d85a4593a157a49bb0ad51ededb429b85aca980b3b23cd445246b9fcb",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}
