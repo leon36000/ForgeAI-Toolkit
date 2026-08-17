@@ -2,22 +2,21 @@
   "schema": "recu-revue/1",
   "dossier": "RC1-460-PR520",
   "issue": 460,
-  "round": 2,
-  "base_commit": "d1b1e6bc4f0e94068eae484606ebff79daac42b2",
-  "head_commit": "bed4d51ce15c32064349776ac73da09d3a2eac9d",
-  "head_tree": "84501cf5d9d99c74c612d222d72ff87fe7c5cd14",
-  "diff_digest": "9c73eef08bf18f1ce675a97754f94563cad53d78a921aedddb05c238cc82cca0",
-  "prompt_sha256": "b175ace0c9429c1cff4584fd6636d4b22444c3ee9c3e3abda27d7525471ab362",
+  "round": 3,
+  "base_commit": "902125be482199396e08835e77aee12e792aa99c",
+  "head_commit": "fbfafc943113553c130062eab5ff97e0b698fd3d",
+  "head_tree": "80d4d45569007f51d2423f9516371d5ee064ab3d",
+  "diff_digest": "99847ef6bdff24939ffcafdf55dc33ecfa6f53da65635d8f54086d00ecc889d7",
+  "prompt_sha256": "9f6408b3d18dac78b54a962db5093bcf4d6b93e342e4fb9978fccb84d03ceb92",
   "reviewers_attendus": [
-    "DeepSeek-V4-Pro",
+    "GPT-5.6-Terra-Pro",
     "MiMo-V2.5-Pro",
     "Qwen3.7-Max"
   ],
   "codeur": [
-    "gemini_flash",
     "fable"
   ],
   "resultat": "APPROVE",
-  "date_heure": "2026-08-16T08:44:31.393965-04:00",
+  "date_heure": "2026-08-17T02:04:16.781610-04:00",
   "fenetre_heures": 24
 }
