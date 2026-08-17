@@ -20232,6 +20232,45 @@
       "generated": false,
       "load_bearing": true,
       "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-020-inc3b-v2/DeepSeek-V4-Pro-0813.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "ec14fc5db3e9f44bb6fa4045f9f4ab33fb4cca65d808a21df61ba4941dc224e5",
+      "size": 1955,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-020-inc3b-v2/GPT-5.6-Terra-Pro.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "3db3ca97e5b417c1097c32a644add0da6ac313e6b0c62a5a3df38d6244278e02",
+      "size": 1478,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-020-inc3b-v2/Qwen3.8-2.4T.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "6bcf130c257551ea294e51ccedc95eb7a42cbc093540fe6a6dc036378ce2f370",
+      "size": 2858,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
       "path": "evidence/reviews/RC1-020-v1/DeepSeek-V4-Pro.verdict.json",
       "referenced_by": [],
       "rule_id": "evidence-reviews-root",
@@ -29559,7 +29598,7 @@
         },
         {
           "candidate": "governance/ruff-classification.json",
-          "line": 105,
+          "line": 123,
           "referrer": "scripts/ruff_noqa_gate.py",
           "resolved": "governance/ruff-classification.json",
           "severity": "hard"
@@ -29587,7 +29626,7 @@
         },
         {
           "candidate": "governance/ruff-classification.json",
-          "line": 642,
+          "line": 698,
           "referrer": "tests/test_ruff_noqa_gate.py",
           "resolved": "governance/ruff-classification.json",
           "severity": "hard"
@@ -29622,28 +29661,56 @@
       "referenced_by": [
         {
           "candidate": "governance/ruff-noqa-baseline.json",
-          "line": 37,
+          "line": 14,
+          "referrer": "evidence/reviews/RC1-020-inc3b-v2/DeepSeek-V4-Pro-0813.verdict.json",
+          "resolved": "governance/ruff-noqa-baseline.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/ruff-noqa-baseline.json",
+          "line": 8,
+          "referrer": "evidence/reviews/RC1-020-inc3b-v2/GPT-5.6-Terra-Pro.verdict.json",
+          "resolved": "governance/ruff-noqa-baseline.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/ruff-noqa-baseline.json",
+          "line": 6,
+          "referrer": "evidence/reviews/RC1-020-inc3b-v2/Qwen3.8-2.4T.verdict.json",
+          "resolved": "governance/ruff-noqa-baseline.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/ruff-noqa-baseline.json",
+          "line": 8,
+          "referrer": "evidence/reviews/RC1-020-inc3b-v2/Qwen3.8-2.4T.verdict.json",
+          "resolved": "governance/ruff-noqa-baseline.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/ruff-noqa-baseline.json",
+          "line": 48,
           "referrer": "scripts/ruff_noqa_gate.py",
           "resolved": "governance/ruff-noqa-baseline.json",
           "severity": "hard"
         },
         {
           "candidate": "governance/ruff-noqa-baseline.json",
-          "line": 347,
+          "line": 392,
           "referrer": "scripts/ruff_noqa_gate.py",
           "resolved": "governance/ruff-noqa-baseline.json",
           "severity": "hard"
         },
         {
           "candidate": "governance/ruff-noqa-baseline.json",
-          "line": 415,
+          "line": 460,
           "referrer": "scripts/ruff_noqa_gate.py",
           "resolved": "governance/ruff-noqa-baseline.json",
           "severity": "hard"
         },
         {
           "candidate": "governance/ruff-noqa-baseline.json",
-          "line": 434,
+          "line": 479,
           "referrer": "scripts/ruff_noqa_gate.py",
           "resolved": "governance/ruff-noqa-baseline.json",
           "severity": "hard"
@@ -29657,8 +29724,8 @@
         }
       ],
       "rule_id": "governance-core",
-      "sha256": "178556388951442bbd887a57db5a101bffdc932146679dde5216ca2d8eb9bd4b",
-      "size": 702,
+      "sha256": "4ac207ff5099670421c1be46aa257c5083670d6c8ce57f90f8029bb0e4931ad4",
+      "size": 666,
       "target_path": null,
       "type": "text"
     },
@@ -32716,7 +32783,7 @@
         },
         {
           "candidate": "scripts/mypy_gate.py",
-          "line": 36,
+          "line": 47,
           "referrer": "scripts/ruff_noqa_gate.py",
           "resolved": "scripts/mypy_gate.py",
           "severity": "hard"
@@ -34508,6 +34575,125 @@
         },
         {
           "candidate": "scripts/ruff_noqa_gate.py",
+          "line": 6,
+          "referrer": "evidence/reviews/RC1-020-inc3b-v2/DeepSeek-V4-Pro-0813.verdict.json",
+          "resolved": "scripts/ruff_noqa_gate.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "scripts/ruff_noqa_gate.py",
+          "line": 12,
+          "referrer": "evidence/reviews/RC1-020-inc3b-v2/DeepSeek-V4-Pro-0813.verdict.json",
+          "resolved": "scripts/ruff_noqa_gate.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "scripts/ruff_noqa_gate.py",
+          "line": 13,
+          "referrer": "evidence/reviews/RC1-020-inc3b-v2/DeepSeek-V4-Pro-0813.verdict.json",
+          "resolved": "scripts/ruff_noqa_gate.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "scripts/ruff_noqa_gate.py",
+          "line": 14,
+          "referrer": "evidence/reviews/RC1-020-inc3b-v2/DeepSeek-V4-Pro-0813.verdict.json",
+          "resolved": "scripts/ruff_noqa_gate.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "scripts/ruff_noqa_gate.py",
+          "line": 14,
+          "referrer": "evidence/reviews/RC1-020-inc3b-v2/DeepSeek-V4-Pro-0813.verdict.json",
+          "resolved": "scripts/ruff_noqa_gate.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "scripts/ruff_noqa_gate.py",
+          "line": 18,
+          "referrer": "evidence/reviews/RC1-020-inc3b-v2/DeepSeek-V4-Pro-0813.verdict.json",
+          "resolved": "scripts/ruff_noqa_gate.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "scripts/ruff_noqa_gate.py",
+          "line": 6,
+          "referrer": "evidence/reviews/RC1-020-inc3b-v2/GPT-5.6-Terra-Pro.verdict.json",
+          "resolved": "scripts/ruff_noqa_gate.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "scripts/ruff_noqa_gate.py",
+          "line": 8,
+          "referrer": "evidence/reviews/RC1-020-inc3b-v2/GPT-5.6-Terra-Pro.verdict.json",
+          "resolved": "scripts/ruff_noqa_gate.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "scripts/ruff_noqa_gate.py",
+          "line": 8,
+          "referrer": "evidence/reviews/RC1-020-inc3b-v2/GPT-5.6-Terra-Pro.verdict.json",
+          "resolved": "scripts/ruff_noqa_gate.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "scripts/ruff_noqa_gate.py",
+          "line": 7,
+          "referrer": "evidence/reviews/RC1-020-inc3b-v2/Qwen3.8-2.4T.verdict.json",
+          "resolved": "scripts/ruff_noqa_gate.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "scripts/ruff_noqa_gate.py",
+          "line": 8,
+          "referrer": "evidence/reviews/RC1-020-inc3b-v2/Qwen3.8-2.4T.verdict.json",
+          "resolved": "scripts/ruff_noqa_gate.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "scripts/ruff_noqa_gate.py",
+          "line": 8,
+          "referrer": "evidence/reviews/RC1-020-inc3b-v2/Qwen3.8-2.4T.verdict.json",
+          "resolved": "scripts/ruff_noqa_gate.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "scripts/ruff_noqa_gate.py",
+          "line": 12,
+          "referrer": "evidence/reviews/RC1-020-inc3b-v2/Qwen3.8-2.4T.verdict.json",
+          "resolved": "scripts/ruff_noqa_gate.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "scripts/ruff_noqa_gate.py",
+          "line": 14,
+          "referrer": "evidence/reviews/RC1-020-inc3b-v2/Qwen3.8-2.4T.verdict.json",
+          "resolved": "scripts/ruff_noqa_gate.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "scripts/ruff_noqa_gate.py",
+          "line": 18,
+          "referrer": "evidence/reviews/RC1-020-inc3b-v2/Qwen3.8-2.4T.verdict.json",
+          "resolved": "scripts/ruff_noqa_gate.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "scripts/ruff_noqa_gate.py",
+          "line": 24,
+          "referrer": "evidence/reviews/RC1-020-inc3b-v2/Qwen3.8-2.4T.verdict.json",
+          "resolved": "scripts/ruff_noqa_gate.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "scripts/ruff_noqa_gate.py",
+          "line": 30,
+          "referrer": "evidence/reviews/RC1-020-inc3b-v2/Qwen3.8-2.4T.verdict.json",
+          "resolved": "scripts/ruff_noqa_gate.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "scripts/ruff_noqa_gate.py",
           "line": 3,
           "referrer": "governance/ruff-noqa-baseline.json",
           "resolved": "scripts/ruff_noqa_gate.py",
@@ -34515,22 +34701,15 @@
         },
         {
           "candidate": "scripts/ruff_noqa_gate.py",
-          "line": 9,
-          "referrer": "governance/ruff-noqa-baseline.json",
-          "resolved": "scripts/ruff_noqa_gate.py",
-          "severity": "hard"
-        },
-        {
-          "candidate": "scripts/ruff_noqa_gate.py",
-          "line": 287,
+          "line": 332,
           "referrer": "scripts/ruff_noqa_gate.py",
           "resolved": "scripts/ruff_noqa_gate.py",
           "severity": "hard"
         }
       ],
       "rule_id": "governance-scripts-root",
-      "sha256": "566b4cce626f7df7eb4d0475a1d053dccd40b8b6e9618fd9df66813321576390",
-      "size": 27801,
+      "sha256": "5da59f067671cb75fd56610e914acd4461142414e1aa84931a07fca6e47c29e1",
+      "size": 31189,
       "target_path": null,
       "type": "text"
     },
@@ -35402,7 +35581,7 @@
         },
         {
           "candidate": "src/forgeai/audit/immudb.py",
-          "line": 10,
+          "line": 9,
           "referrer": "governance/ruff-noqa-baseline.json",
           "resolved": "src/forgeai/audit/immudb.py",
           "severity": "hard"
@@ -36277,7 +36456,7 @@
         },
         {
           "candidate": "src/forgeai/cli.py",
-          "line": 11,
+          "line": 10,
           "referrer": "governance/ruff-noqa-baseline.json",
           "resolved": "src/forgeai/cli.py",
           "severity": "hard"
@@ -36326,7 +36505,7 @@
         },
         {
           "candidate": "src/forgeai/cli.py",
-          "line": 133,
+          "line": 151,
           "referrer": "scripts/ruff_noqa_gate.py",
           "resolved": "src/forgeai/cli.py",
           "severity": "hard"
@@ -42220,7 +42399,7 @@
         },
         {
           "candidate": "src/forgeai/observability/langfuse.py",
-          "line": 12,
+          "line": 11,
           "referrer": "governance/ruff-noqa-baseline.json",
           "resolved": "src/forgeai/observability/langfuse.py",
           "severity": "hard"
@@ -43592,7 +43771,7 @@
         },
         {
           "candidate": "src/forgeai/secrets/vault.py",
-          "line": 13,
+          "line": 12,
           "referrer": "governance/ruff-noqa-baseline.json",
           "resolved": "src/forgeai/secrets/vault.py",
           "severity": "hard"
@@ -56290,8 +56469,8 @@
         }
       ],
       "rule_id": "test-suite",
-      "sha256": "69cda9cb1105f62253aa4f3a0b3cb9119d4a570c20f681c58cf25d5d48785943",
-      "size": 26686,
+      "sha256": "8aad329284993f5a3adbdbd9bb8254e3e112cedee0bc17e907ea2058a43143a0",
+      "size": 28794,
       "target_path": null,
       "type": "text"
     },
@@ -96482,6 +96661,51 @@
         "referrer": "evidence/reviews/RC1-020-inc3b-v1/Qwen3.8-2.4T.verdict.json"
       },
       {
+        "candidate": "datetime/date",
+        "line": 8,
+        "referrer": "evidence/reviews/RC1-020-inc3b-v2/DeepSeek-V4-Pro-0813.verdict.json"
+      },
+      {
+        "candidate": "commentaires/docstrings",
+        "line": 13,
+        "referrer": "evidence/reviews/RC1-020-inc3b-v2/DeepSeek-V4-Pro-0813.verdict.json"
+      },
+      {
+        "candidate": "origin/main",
+        "line": 7,
+        "referrer": "evidence/reviews/RC1-020-inc3b-v2/GPT-5.6-Terra-Pro.verdict.json"
+      },
+      {
+        "candidate": "origin/main",
+        "line": 7,
+        "referrer": "evidence/reviews/RC1-020-inc3b-v2/Qwen3.8-2.4T.verdict.json"
+      },
+      {
+        "candidate": "origin/main",
+        "line": 8,
+        "referrer": "evidence/reviews/RC1-020-inc3b-v2/Qwen3.8-2.4T.verdict.json"
+      },
+      {
+        "candidate": "immudb.py",
+        "line": 8,
+        "referrer": "evidence/reviews/RC1-020-inc3b-v2/Qwen3.8-2.4T.verdict.json"
+      },
+      {
+        "candidate": "cli.py",
+        "line": 8,
+        "referrer": "evidence/reviews/RC1-020-inc3b-v2/Qwen3.8-2.4T.verdict.json"
+      },
+      {
+        "candidate": "langfuse.py",
+        "line": 8,
+        "referrer": "evidence/reviews/RC1-020-inc3b-v2/Qwen3.8-2.4T.verdict.json"
+      },
+      {
+        "candidate": "secrets/vault.py",
+        "line": 8,
+        "referrer": "evidence/reviews/RC1-020-inc3b-v2/Qwen3.8-2.4T.verdict.json"
+      },
+      {
         "candidate": "FileNotFoundError/retourne",
         "line": 7,
         "referrer": "evidence/reviews/RC1-020-v1/DeepSeek-V4-Pro.verdict.json"
@@ -103638,122 +103862,122 @@
       },
       {
         "candidate": "locale/LAN",
-        "line": 32,
+        "line": 34,
         "referrer": "scripts/ruff_noqa_gate.py"
       },
       {
         "candidate": "origin/main",
-        "line": 33,
+        "line": 35,
         "referrer": "scripts/ruff_noqa_gate.py"
       },
       {
         "candidate": "ruff_ratchet.py",
-        "line": 36,
+        "line": 47,
         "referrer": "scripts/ruff_noqa_gate.py"
       },
       {
         "candidate": "origin/main",
-        "line": 39,
+        "line": 50,
         "referrer": "scripts/ruff_noqa_gate.py"
       },
       {
         "candidate": "humaine/scell",
-        "line": 44,
+        "line": 55,
         "referrer": "scripts/ruff_noqa_gate.py"
       },
       {
         "candidate": "ruff_ratchet.py",
-        "line": 86,
+        "line": 104,
         "referrer": "scripts/ruff_noqa_gate.py"
       },
       {
         "candidate": "ruff_ratchet.py",
-        "line": 110,
+        "line": 128,
         "referrer": "scripts/ruff_noqa_gate.py"
       },
       {
         "candidate": "racine/src",
-        "line": 131,
+        "line": 149,
         "referrer": "scripts/ruff_noqa_gate.py"
       },
       {
         "candidate": "racine/scripts",
-        "line": 132,
+        "line": 150,
         "referrer": "scripts/ruff_noqa_gate.py"
       },
       {
         "candidate": "ruff_ratchet.py",
-        "line": 134,
+        "line": 152,
         "referrer": "scripts/ruff_noqa_gate.py"
       },
       {
         "candidate": "justification/date",
-        "line": 163,
+        "line": 191,
         "referrer": "scripts/ruff_noqa_gate.py"
       },
       {
         "candidate": "ruff_ratchet.py",
-        "line": 178,
+        "line": 212,
         "referrer": "scripts/ruff_noqa_gate.py"
       },
       {
         "candidate": "humaine/scellee",
-        "line": 289,
+        "line": 334,
         "referrer": "scripts/ruff_noqa_gate.py"
       },
       {
         "candidate": "I/O",
-        "line": 303,
+        "line": 348,
         "referrer": "scripts/ruff_noqa_gate.py"
       },
       {
         "candidate": "ruff_ratchet.py",
-        "line": 305,
+        "line": 350,
         "referrer": "scripts/ruff_noqa_gate.py"
       },
       {
         "candidate": "ruff_ratchet.py",
-        "line": 319,
+        "line": 364,
         "referrer": "scripts/ruff_noqa_gate.py"
       },
       {
         "candidate": "origin/main",
-        "line": 426,
+        "line": 471,
         "referrer": "scripts/ruff_noqa_gate.py"
       },
       {
         "candidate": "ruff-classification.json",
-        "line": 442,
+        "line": 487,
         "referrer": "scripts/ruff_noqa_gate.py"
       },
       {
         "candidate": "ruff-noqa-baseline.json",
-        "line": 443,
+        "line": 488,
         "referrer": "scripts/ruff_noqa_gate.py"
       },
       {
         "candidate": "humaine/scell",
-        "line": 456,
+        "line": 501,
         "referrer": "scripts/ruff_noqa_gate.py"
       },
       {
         "candidate": "ruff_ratchet.py",
-        "line": 478,
+        "line": 523,
         "referrer": "scripts/ruff_noqa_gate.py"
       },
       {
         "candidate": "try/except",
-        "line": 479,
+        "line": 524,
         "referrer": "scripts/ruff_noqa_gate.py"
       },
       {
         "candidate": "try/except",
-        "line": 481,
+        "line": 526,
         "referrer": "scripts/ruff_noqa_gate.py"
       },
       {
         "candidate": "try/except",
-        "line": 489,
+        "line": 534,
         "referrer": "scripts/ruff_noqa_gate.py"
       },
       {
@@ -140077,148 +140301,103 @@
         "referrer": "tests/test_ruff_noqa_gate.py"
       },
       {
+        "candidate": "src/doc_pure.py",
+        "line": 281,
+        "referrer": "tests/test_ruff_noqa_gate.py"
+      },
+      {
+        "candidate": "src/vrai_code.py",
+        "line": 296,
+        "referrer": "tests/test_ruff_noqa_gate.py"
+      },
+      {
+        "candidate": "src/vrai_code.py",
+        "line": 301,
+        "referrer": "tests/test_ruff_noqa_gate.py"
+      },
+      {
+        "candidate": "src/date_impossible.py",
+        "line": 310,
+        "referrer": "tests/test_ruff_noqa_gate.py"
+      },
+      {
+        "candidate": "src/date_impossible.py",
+        "line": 315,
+        "referrer": "tests/test_ruff_noqa_gate.py"
+      },
+      {
+        "candidate": "src/date_bissextile.py",
+        "line": 324,
+        "referrer": "tests/test_ruff_noqa_gate.py"
+      },
+      {
         "candidate": "src/propre.py",
-        "line": 277,
+        "line": 333,
         "referrer": "tests/test_ruff_noqa_gate.py"
       },
       {
         "candidate": "src/conforme.py",
-        "line": 286,
+        "line": 342,
         "referrer": "tests/test_ruff_noqa_gate.py"
       },
       {
         "candidate": "scripts/propre.py",
-        "line": 289,
+        "line": 345,
         "referrer": "tests/test_ruff_noqa_gate.py"
       },
       {
         "candidate": "src/un.py",
-        "line": 302,
+        "line": 358,
         "referrer": "tests/test_ruff_noqa_gate.py"
       },
       {
         "candidate": "scripts/deux.py",
-        "line": 305,
+        "line": 361,
         "referrer": "tests/test_ruff_noqa_gate.py"
       },
       {
         "candidate": "scripts/deux.py",
-        "line": 314,
+        "line": 370,
         "referrer": "tests/test_ruff_noqa_gate.py"
       },
       {
         "candidate": "src/un.py",
-        "line": 314,
+        "line": 370,
         "referrer": "tests/test_ruff_noqa_gate.py"
       },
       {
         "candidate": "scripts/deux.py",
-        "line": 315,
+        "line": 371,
         "referrer": "tests/test_ruff_noqa_gate.py"
       },
       {
         "candidate": "src/un.py",
-        "line": 315,
-        "referrer": "tests/test_ruff_noqa_gate.py"
-      },
-      {
-        "candidate": "src/a.py",
         "line": 371,
         "referrer": "tests/test_ruff_noqa_gate.py"
       },
       {
         "candidate": "src/a.py",
-        "line": 379,
+        "line": 427,
         "referrer": "tests/test_ruff_noqa_gate.py"
       },
       {
         "candidate": "src/a.py",
-        "line": 387,
+        "line": 435,
         "referrer": "tests/test_ruff_noqa_gate.py"
       },
       {
         "candidate": "src/a.py",
-        "line": 395,
+        "line": 443,
+        "referrer": "tests/test_ruff_noqa_gate.py"
+      },
+      {
+        "candidate": "src/a.py",
+        "line": 451,
         "referrer": "tests/test_ruff_noqa_gate.py"
       },
       {
         "candidate": "borne/somme",
-        "line": 402,
-        "referrer": "tests/test_ruff_noqa_gate.py"
-      },
-      {
-        "candidate": "src/a.py",
-        "line": 403,
-        "referrer": "tests/test_ruff_noqa_gate.py"
-      },
-      {
-        "candidate": "src/b.py",
-        "line": 403,
-        "referrer": "tests/test_ruff_noqa_gate.py"
-      },
-      {
-        "candidate": "src/a.py",
-        "line": 414,
-        "referrer": "tests/test_ruff_noqa_gate.py"
-      },
-      {
-        "candidate": "src/a.py",
-        "line": 416,
-        "referrer": "tests/test_ruff_noqa_gate.py"
-      },
-      {
-        "candidate": "src/a.py",
-        "line": 416,
-        "referrer": "tests/test_ruff_noqa_gate.py"
-      },
-      {
-        "candidate": "src/nouveau.py",
-        "line": 422,
-        "referrer": "tests/test_ruff_noqa_gate.py"
-      },
-      {
-        "candidate": "src/nouveau.py",
-        "line": 422,
-        "referrer": "tests/test_ruff_noqa_gate.py"
-      },
-      {
-        "candidate": "src/nouveau.py",
-        "line": 426,
-        "referrer": "tests/test_ruff_noqa_gate.py"
-      },
-      {
-        "candidate": "src/a.py",
-        "line": 433,
-        "referrer": "tests/test_ruff_noqa_gate.py"
-      },
-      {
-        "candidate": "src/a.py",
-        "line": 435,
-        "referrer": "tests/test_ruff_noqa_gate.py"
-      },
-      {
-        "candidate": "src/a.py",
-        "line": 435,
-        "referrer": "tests/test_ruff_noqa_gate.py"
-      },
-      {
-        "candidate": "src/a.py",
-        "line": 438,
-        "referrer": "tests/test_ruff_noqa_gate.py"
-      },
-      {
-        "candidate": "src/a.py",
-        "line": 445,
-        "referrer": "tests/test_ruff_noqa_gate.py"
-      },
-      {
-        "candidate": "src/a.py",
-        "line": 447,
-        "referrer": "tests/test_ruff_noqa_gate.py"
-      },
-      {
-        "candidate": "src/a.py",
-        "line": 450,
+        "line": 458,
         "referrer": "tests/test_ruff_noqa_gate.py"
       },
       {
@@ -140227,83 +140406,63 @@
         "referrer": "tests/test_ruff_noqa_gate.py"
       },
       {
-        "candidate": "src/a.py",
-        "line": 461,
-        "referrer": "tests/test_ruff_noqa_gate.py"
-      },
-      {
-        "candidate": "src/a.py",
-        "line": 461,
-        "referrer": "tests/test_ruff_noqa_gate.py"
-      },
-      {
         "candidate": "src/b.py",
-        "line": 469,
-        "referrer": "tests/test_ruff_noqa_gate.py"
-      },
-      {
-        "candidate": "src/c.py",
-        "line": 469,
+        "line": 459,
         "referrer": "tests/test_ruff_noqa_gate.py"
       },
       {
         "candidate": "src/a.py",
-        "line": 473,
+        "line": 470,
         "referrer": "tests/test_ruff_noqa_gate.py"
       },
       {
         "candidate": "src/a.py",
-        "line": 474,
-        "referrer": "tests/test_ruff_noqa_gate.py"
-      },
-      {
-        "candidate": "src/b.py",
-        "line": 474,
-        "referrer": "tests/test_ruff_noqa_gate.py"
-      },
-      {
-        "candidate": "src/c.py",
-        "line": 474,
+        "line": 472,
         "referrer": "tests/test_ruff_noqa_gate.py"
       },
       {
         "candidate": "src/a.py",
-        "line": 475,
-        "referrer": "tests/test_ruff_noqa_gate.py"
-      },
-      {
-        "candidate": "src/b.py",
-        "line": 475,
-        "referrer": "tests/test_ruff_noqa_gate.py"
-      },
-      {
-        "candidate": "src/c.py",
-        "line": 475,
-        "referrer": "tests/test_ruff_noqa_gate.py"
-      },
-      {
-        "candidate": "src/a.py",
-        "line": 488,
-        "referrer": "tests/test_ruff_noqa_gate.py"
-      },
-      {
-        "candidate": "src/a.py",
-        "line": 490,
-        "referrer": "tests/test_ruff_noqa_gate.py"
-      },
-      {
-        "candidate": "src/a.py",
-        "line": 490,
-        "referrer": "tests/test_ruff_noqa_gate.py"
-      },
-      {
-        "candidate": "src/a.py",
-        "line": 502,
+        "line": 472,
         "referrer": "tests/test_ruff_noqa_gate.py"
       },
       {
         "candidate": "src/nouveau.py",
-        "line": 502,
+        "line": 478,
+        "referrer": "tests/test_ruff_noqa_gate.py"
+      },
+      {
+        "candidate": "src/nouveau.py",
+        "line": 478,
+        "referrer": "tests/test_ruff_noqa_gate.py"
+      },
+      {
+        "candidate": "src/nouveau.py",
+        "line": 482,
+        "referrer": "tests/test_ruff_noqa_gate.py"
+      },
+      {
+        "candidate": "src/a.py",
+        "line": 489,
+        "referrer": "tests/test_ruff_noqa_gate.py"
+      },
+      {
+        "candidate": "src/a.py",
+        "line": 491,
+        "referrer": "tests/test_ruff_noqa_gate.py"
+      },
+      {
+        "candidate": "src/a.py",
+        "line": 491,
+        "referrer": "tests/test_ruff_noqa_gate.py"
+      },
+      {
+        "candidate": "src/a.py",
+        "line": 494,
+        "referrer": "tests/test_ruff_noqa_gate.py"
+      },
+      {
+        "candidate": "src/a.py",
+        "line": 501,
         "referrer": "tests/test_ruff_noqa_gate.py"
       },
       {
@@ -140313,107 +140472,92 @@
       },
       {
         "candidate": "src/a.py",
-        "line": 504,
-        "referrer": "tests/test_ruff_noqa_gate.py"
-      },
-      {
-        "candidate": "src/nouveau.py",
-        "line": 504,
+        "line": 506,
         "referrer": "tests/test_ruff_noqa_gate.py"
       },
       {
         "candidate": "src/a.py",
-        "line": 505,
-        "referrer": "tests/test_ruff_noqa_gate.py"
-      },
-      {
-        "candidate": "src/nouveau.py",
-        "line": 505,
-        "referrer": "tests/test_ruff_noqa_gate.py"
-      },
-      {
-        "candidate": "src/nouveau.py",
-        "line": 510,
+        "line": 515,
         "referrer": "tests/test_ruff_noqa_gate.py"
       },
       {
         "candidate": "src/a.py",
-        "line": 521,
+        "line": 517,
         "referrer": "tests/test_ruff_noqa_gate.py"
       },
       {
         "candidate": "src/a.py",
-        "line": 522,
+        "line": 517,
+        "referrer": "tests/test_ruff_noqa_gate.py"
+      },
+      {
+        "candidate": "src/b.py",
+        "line": 525,
+        "referrer": "tests/test_ruff_noqa_gate.py"
+      },
+      {
+        "candidate": "src/c.py",
+        "line": 525,
         "referrer": "tests/test_ruff_noqa_gate.py"
       },
       {
         "candidate": "src/a.py",
-        "line": 524,
+        "line": 529,
         "referrer": "tests/test_ruff_noqa_gate.py"
       },
       {
         "candidate": "src/a.py",
-        "line": 524,
+        "line": 530,
+        "referrer": "tests/test_ruff_noqa_gate.py"
+      },
+      {
+        "candidate": "src/b.py",
+        "line": 530,
+        "referrer": "tests/test_ruff_noqa_gate.py"
+      },
+      {
+        "candidate": "src/c.py",
+        "line": 530,
         "referrer": "tests/test_ruff_noqa_gate.py"
       },
       {
         "candidate": "src/a.py",
-        "line": 527,
+        "line": 531,
+        "referrer": "tests/test_ruff_noqa_gate.py"
+      },
+      {
+        "candidate": "src/b.py",
+        "line": 531,
+        "referrer": "tests/test_ruff_noqa_gate.py"
+      },
+      {
+        "candidate": "src/c.py",
+        "line": 531,
         "referrer": "tests/test_ruff_noqa_gate.py"
       },
       {
         "candidate": "src/a.py",
-        "line": 536,
+        "line": 544,
         "referrer": "tests/test_ruff_noqa_gate.py"
       },
       {
         "candidate": "src/a.py",
-        "line": 538,
-        "referrer": "tests/test_ruff_noqa_gate.py"
-      },
-      {
-        "candidate": "src/ancien.py",
-        "line": 538,
-        "referrer": "tests/test_ruff_noqa_gate.py"
-      },
-      {
-        "candidate": "src/a.py",
-        "line": 540,
-        "referrer": "tests/test_ruff_noqa_gate.py"
-      },
-      {
-        "candidate": "src/ancien.py",
-        "line": 540,
-        "referrer": "tests/test_ruff_noqa_gate.py"
-      },
-      {
-        "candidate": "src/a.py",
-        "line": 541,
-        "referrer": "tests/test_ruff_noqa_gate.py"
-      },
-      {
-        "candidate": "src/ancien.py",
-        "line": 541,
-        "referrer": "tests/test_ruff_noqa_gate.py"
-      },
-      {
-        "candidate": "src/ancien.py",
         "line": 546,
         "referrer": "tests/test_ruff_noqa_gate.py"
       },
       {
         "candidate": "src/a.py",
-        "line": 555,
+        "line": 546,
         "referrer": "tests/test_ruff_noqa_gate.py"
       },
       {
         "candidate": "src/a.py",
-        "line": 557,
+        "line": 558,
         "referrer": "tests/test_ruff_noqa_gate.py"
       },
       {
-        "candidate": "src/ancien.py",
-        "line": 557,
+        "candidate": "src/nouveau.py",
+        "line": 558,
         "referrer": "tests/test_ruff_noqa_gate.py"
       },
       {
@@ -140427,38 +140571,33 @@
         "referrer": "tests/test_ruff_noqa_gate.py"
       },
       {
-        "candidate": "src/ancien.py",
+        "candidate": "src/nouveau.py",
         "line": 560,
         "referrer": "tests/test_ruff_noqa_gate.py"
       },
       {
         "candidate": "src/a.py",
-        "line": 569,
+        "line": 561,
+        "referrer": "tests/test_ruff_noqa_gate.py"
+      },
+      {
+        "candidate": "src/nouveau.py",
+        "line": 561,
+        "referrer": "tests/test_ruff_noqa_gate.py"
+      },
+      {
+        "candidate": "src/nouveau.py",
+        "line": 566,
         "referrer": "tests/test_ruff_noqa_gate.py"
       },
       {
         "candidate": "src/a.py",
-        "line": 570,
+        "line": 577,
         "referrer": "tests/test_ruff_noqa_gate.py"
       },
       {
         "candidate": "src/a.py",
-        "line": 572,
-        "referrer": "tests/test_ruff_noqa_gate.py"
-      },
-      {
-        "candidate": "src/a.py",
-        "line": 572,
-        "referrer": "tests/test_ruff_noqa_gate.py"
-      },
-      {
-        "candidate": "src/a.py",
-        "line": 579,
-        "referrer": "tests/test_ruff_noqa_gate.py"
-      },
-      {
-        "candidate": "src/b.py",
-        "line": 579,
+        "line": 578,
         "referrer": "tests/test_ruff_noqa_gate.py"
       },
       {
@@ -140467,73 +140606,188 @@
         "referrer": "tests/test_ruff_noqa_gate.py"
       },
       {
-        "candidate": "src/b.py",
+        "candidate": "src/a.py",
         "line": 580,
         "referrer": "tests/test_ruff_noqa_gate.py"
       },
       {
         "candidate": "src/a.py",
-        "line": 581,
-        "referrer": "tests/test_ruff_noqa_gate.py"
-      },
-      {
-        "candidate": "src/b.py",
-        "line": 581,
+        "line": 583,
         "referrer": "tests/test_ruff_noqa_gate.py"
       },
       {
         "candidate": "src/a.py",
-        "line": 582,
+        "line": 592,
+        "referrer": "tests/test_ruff_noqa_gate.py"
+      },
+      {
+        "candidate": "src/a.py",
+        "line": 594,
+        "referrer": "tests/test_ruff_noqa_gate.py"
+      },
+      {
+        "candidate": "src/ancien.py",
+        "line": 594,
+        "referrer": "tests/test_ruff_noqa_gate.py"
+      },
+      {
+        "candidate": "src/a.py",
+        "line": 596,
+        "referrer": "tests/test_ruff_noqa_gate.py"
+      },
+      {
+        "candidate": "src/ancien.py",
+        "line": 596,
+        "referrer": "tests/test_ruff_noqa_gate.py"
+      },
+      {
+        "candidate": "src/a.py",
+        "line": 597,
+        "referrer": "tests/test_ruff_noqa_gate.py"
+      },
+      {
+        "candidate": "src/ancien.py",
+        "line": 597,
+        "referrer": "tests/test_ruff_noqa_gate.py"
+      },
+      {
+        "candidate": "src/ancien.py",
+        "line": 602,
+        "referrer": "tests/test_ruff_noqa_gate.py"
+      },
+      {
+        "candidate": "src/a.py",
+        "line": 611,
+        "referrer": "tests/test_ruff_noqa_gate.py"
+      },
+      {
+        "candidate": "src/a.py",
+        "line": 613,
+        "referrer": "tests/test_ruff_noqa_gate.py"
+      },
+      {
+        "candidate": "src/ancien.py",
+        "line": 613,
+        "referrer": "tests/test_ruff_noqa_gate.py"
+      },
+      {
+        "candidate": "src/a.py",
+        "line": 615,
+        "referrer": "tests/test_ruff_noqa_gate.py"
+      },
+      {
+        "candidate": "src/a.py",
+        "line": 616,
+        "referrer": "tests/test_ruff_noqa_gate.py"
+      },
+      {
+        "candidate": "src/ancien.py",
+        "line": 616,
+        "referrer": "tests/test_ruff_noqa_gate.py"
+      },
+      {
+        "candidate": "src/a.py",
+        "line": 625,
+        "referrer": "tests/test_ruff_noqa_gate.py"
+      },
+      {
+        "candidate": "src/a.py",
+        "line": 626,
+        "referrer": "tests/test_ruff_noqa_gate.py"
+      },
+      {
+        "candidate": "src/a.py",
+        "line": 628,
+        "referrer": "tests/test_ruff_noqa_gate.py"
+      },
+      {
+        "candidate": "src/a.py",
+        "line": 628,
+        "referrer": "tests/test_ruff_noqa_gate.py"
+      },
+      {
+        "candidate": "src/a.py",
+        "line": 635,
         "referrer": "tests/test_ruff_noqa_gate.py"
       },
       {
         "candidate": "src/b.py",
-        "line": 582,
+        "line": 635,
+        "referrer": "tests/test_ruff_noqa_gate.py"
+      },
+      {
+        "candidate": "src/a.py",
+        "line": 636,
+        "referrer": "tests/test_ruff_noqa_gate.py"
+      },
+      {
+        "candidate": "src/b.py",
+        "line": 636,
+        "referrer": "tests/test_ruff_noqa_gate.py"
+      },
+      {
+        "candidate": "src/a.py",
+        "line": 637,
+        "referrer": "tests/test_ruff_noqa_gate.py"
+      },
+      {
+        "candidate": "src/b.py",
+        "line": 637,
+        "referrer": "tests/test_ruff_noqa_gate.py"
+      },
+      {
+        "candidate": "src/a.py",
+        "line": 638,
+        "referrer": "tests/test_ruff_noqa_gate.py"
+      },
+      {
+        "candidate": "src/b.py",
+        "line": 638,
         "referrer": "tests/test_ruff_noqa_gate.py"
       },
       {
         "candidate": "src/propre.py",
-        "line": 605,
+        "line": 661,
         "referrer": "tests/test_ruff_noqa_gate.py"
       },
       {
         "candidate": "scripts/conforme.py",
-        "line": 608,
+        "line": 664,
         "referrer": "tests/test_ruff_noqa_gate.py"
       },
       {
         "candidate": "src/violation.py",
-        "line": 629,
+        "line": 685,
         "referrer": "tests/test_ruff_noqa_gate.py"
       },
       {
         "candidate": "src/propre.py",
-        "line": 644,
+        "line": 700,
         "referrer": "tests/test_ruff_noqa_gate.py"
       },
       {
         "candidate": "src/propre.py",
-        "line": 655,
+        "line": 711,
         "referrer": "tests/test_ruff_noqa_gate.py"
       },
       {
         "candidate": "src/propre.py",
-        "line": 673,
+        "line": 729,
         "referrer": "tests/test_ruff_noqa_gate.py"
       },
       {
         "candidate": "src/cible.py",
-        "line": 696,
+        "line": 752,
         "referrer": "tests/test_ruff_noqa_gate.py"
       },
       {
         "candidate": "ruff-noqa-baseline.json",
-        "line": 709,
+        "line": 765,
         "referrer": "tests/test_ruff_noqa_gate.py"
       },
       {
         "candidate": "src/cible.py",
-        "line": 720,
+        "line": 776,
         "referrer": "tests/test_ruff_noqa_gate.py"
       },
       {
@@ -158538,6 +158792,153 @@
         "severity": "hard"
       },
       {
+        "candidate": "scripts/ruff_noqa_gate.py",
+        "line": 6,
+        "referrer": "evidence/reviews/RC1-020-inc3b-v2/DeepSeek-V4-Pro-0813.verdict.json",
+        "resolved": "scripts/ruff_noqa_gate.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "scripts/ruff_noqa_gate.py",
+        "line": 12,
+        "referrer": "evidence/reviews/RC1-020-inc3b-v2/DeepSeek-V4-Pro-0813.verdict.json",
+        "resolved": "scripts/ruff_noqa_gate.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "scripts/ruff_noqa_gate.py",
+        "line": 13,
+        "referrer": "evidence/reviews/RC1-020-inc3b-v2/DeepSeek-V4-Pro-0813.verdict.json",
+        "resolved": "scripts/ruff_noqa_gate.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "governance/ruff-noqa-baseline.json",
+        "line": 14,
+        "referrer": "evidence/reviews/RC1-020-inc3b-v2/DeepSeek-V4-Pro-0813.verdict.json",
+        "resolved": "governance/ruff-noqa-baseline.json",
+        "severity": "hard"
+      },
+      {
+        "candidate": "scripts/ruff_noqa_gate.py",
+        "line": 14,
+        "referrer": "evidence/reviews/RC1-020-inc3b-v2/DeepSeek-V4-Pro-0813.verdict.json",
+        "resolved": "scripts/ruff_noqa_gate.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "scripts/ruff_noqa_gate.py",
+        "line": 14,
+        "referrer": "evidence/reviews/RC1-020-inc3b-v2/DeepSeek-V4-Pro-0813.verdict.json",
+        "resolved": "scripts/ruff_noqa_gate.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "scripts/ruff_noqa_gate.py",
+        "line": 18,
+        "referrer": "evidence/reviews/RC1-020-inc3b-v2/DeepSeek-V4-Pro-0813.verdict.json",
+        "resolved": "scripts/ruff_noqa_gate.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "scripts/ruff_noqa_gate.py",
+        "line": 6,
+        "referrer": "evidence/reviews/RC1-020-inc3b-v2/GPT-5.6-Terra-Pro.verdict.json",
+        "resolved": "scripts/ruff_noqa_gate.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "scripts/ruff_noqa_gate.py",
+        "line": 8,
+        "referrer": "evidence/reviews/RC1-020-inc3b-v2/GPT-5.6-Terra-Pro.verdict.json",
+        "resolved": "scripts/ruff_noqa_gate.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "scripts/ruff_noqa_gate.py",
+        "line": 8,
+        "referrer": "evidence/reviews/RC1-020-inc3b-v2/GPT-5.6-Terra-Pro.verdict.json",
+        "resolved": "scripts/ruff_noqa_gate.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "governance/ruff-noqa-baseline.json",
+        "line": 8,
+        "referrer": "evidence/reviews/RC1-020-inc3b-v2/GPT-5.6-Terra-Pro.verdict.json",
+        "resolved": "governance/ruff-noqa-baseline.json",
+        "severity": "hard"
+      },
+      {
+        "candidate": "governance/ruff-noqa-baseline.json",
+        "line": 6,
+        "referrer": "evidence/reviews/RC1-020-inc3b-v2/Qwen3.8-2.4T.verdict.json",
+        "resolved": "governance/ruff-noqa-baseline.json",
+        "severity": "hard"
+      },
+      {
+        "candidate": "scripts/ruff_noqa_gate.py",
+        "line": 7,
+        "referrer": "evidence/reviews/RC1-020-inc3b-v2/Qwen3.8-2.4T.verdict.json",
+        "resolved": "scripts/ruff_noqa_gate.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "governance/ruff-noqa-baseline.json",
+        "line": 8,
+        "referrer": "evidence/reviews/RC1-020-inc3b-v2/Qwen3.8-2.4T.verdict.json",
+        "resolved": "governance/ruff-noqa-baseline.json",
+        "severity": "hard"
+      },
+      {
+        "candidate": "scripts/ruff_noqa_gate.py",
+        "line": 8,
+        "referrer": "evidence/reviews/RC1-020-inc3b-v2/Qwen3.8-2.4T.verdict.json",
+        "resolved": "scripts/ruff_noqa_gate.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "scripts/ruff_noqa_gate.py",
+        "line": 8,
+        "referrer": "evidence/reviews/RC1-020-inc3b-v2/Qwen3.8-2.4T.verdict.json",
+        "resolved": "scripts/ruff_noqa_gate.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "scripts/ruff_noqa_gate.py",
+        "line": 12,
+        "referrer": "evidence/reviews/RC1-020-inc3b-v2/Qwen3.8-2.4T.verdict.json",
+        "resolved": "scripts/ruff_noqa_gate.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "scripts/ruff_noqa_gate.py",
+        "line": 14,
+        "referrer": "evidence/reviews/RC1-020-inc3b-v2/Qwen3.8-2.4T.verdict.json",
+        "resolved": "scripts/ruff_noqa_gate.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "scripts/ruff_noqa_gate.py",
+        "line": 18,
+        "referrer": "evidence/reviews/RC1-020-inc3b-v2/Qwen3.8-2.4T.verdict.json",
+        "resolved": "scripts/ruff_noqa_gate.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "scripts/ruff_noqa_gate.py",
+        "line": 24,
+        "referrer": "evidence/reviews/RC1-020-inc3b-v2/Qwen3.8-2.4T.verdict.json",
+        "resolved": "scripts/ruff_noqa_gate.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "scripts/ruff_noqa_gate.py",
+        "line": 30,
+        "referrer": "evidence/reviews/RC1-020-inc3b-v2/Qwen3.8-2.4T.verdict.json",
+        "resolved": "scripts/ruff_noqa_gate.py",
+        "severity": "hard"
+      },
+      {
         "candidate": ".github/workflows/gates.yml",
         "line": 6,
         "referrer": "evidence/reviews/RC1-020-v1/DeepSeek-V4-Pro.verdict.json",
@@ -167134,36 +167535,29 @@
         "severity": "hard"
       },
       {
-        "candidate": "scripts/ruff_noqa_gate.py",
-        "line": 9,
-        "referrer": "governance/ruff-noqa-baseline.json",
-        "resolved": "scripts/ruff_noqa_gate.py",
-        "severity": "hard"
-      },
-      {
         "candidate": "src/forgeai/audit/immudb.py",
-        "line": 10,
+        "line": 9,
         "referrer": "governance/ruff-noqa-baseline.json",
         "resolved": "src/forgeai/audit/immudb.py",
         "severity": "hard"
       },
       {
         "candidate": "src/forgeai/cli.py",
-        "line": 11,
+        "line": 10,
         "referrer": "governance/ruff-noqa-baseline.json",
         "resolved": "src/forgeai/cli.py",
         "severity": "hard"
       },
       {
         "candidate": "src/forgeai/observability/langfuse.py",
-        "line": 12,
+        "line": 11,
         "referrer": "governance/ruff-noqa-baseline.json",
         "resolved": "src/forgeai/observability/langfuse.py",
         "severity": "hard"
       },
       {
         "candidate": "src/forgeai/secrets/vault.py",
-        "line": 13,
+        "line": 12,
         "referrer": "governance/ruff-noqa-baseline.json",
         "resolved": "src/forgeai/secrets/vault.py",
         "severity": "hard"
@@ -168661,56 +169055,56 @@
       },
       {
         "candidate": "scripts/mypy_gate.py",
-        "line": 36,
+        "line": 47,
         "referrer": "scripts/ruff_noqa_gate.py",
         "resolved": "scripts/mypy_gate.py",
         "severity": "hard"
       },
       {
         "candidate": "governance/ruff-noqa-baseline.json",
-        "line": 37,
+        "line": 48,
         "referrer": "scripts/ruff_noqa_gate.py",
         "resolved": "governance/ruff-noqa-baseline.json",
         "severity": "hard"
       },
       {
         "candidate": "governance/ruff-classification.json",
-        "line": 105,
+        "line": 123,
         "referrer": "scripts/ruff_noqa_gate.py",
         "resolved": "governance/ruff-classification.json",
         "severity": "hard"
       },
       {
         "candidate": "src/forgeai/cli.py",
-        "line": 133,
+        "line": 151,
         "referrer": "scripts/ruff_noqa_gate.py",
         "resolved": "src/forgeai/cli.py",
         "severity": "hard"
       },
       {
         "candidate": "scripts/ruff_noqa_gate.py",
-        "line": 287,
+        "line": 332,
         "referrer": "scripts/ruff_noqa_gate.py",
         "resolved": "scripts/ruff_noqa_gate.py",
         "severity": "hard"
       },
       {
         "candidate": "governance/ruff-noqa-baseline.json",
-        "line": 347,
+        "line": 392,
         "referrer": "scripts/ruff_noqa_gate.py",
         "resolved": "governance/ruff-noqa-baseline.json",
         "severity": "hard"
       },
       {
         "candidate": "governance/ruff-noqa-baseline.json",
-        "line": 415,
+        "line": 460,
         "referrer": "scripts/ruff_noqa_gate.py",
         "resolved": "governance/ruff-noqa-baseline.json",
         "severity": "hard"
       },
       {
         "candidate": "governance/ruff-noqa-baseline.json",
-        "line": 434,
+        "line": 479,
         "referrer": "scripts/ruff_noqa_gate.py",
         "resolved": "governance/ruff-noqa-baseline.json",
         "severity": "hard"
@@ -174023,7 +174417,7 @@
       },
       {
         "candidate": "governance/ruff-classification.json",
-        "line": 642,
+        "line": 698,
         "referrer": "tests/test_ruff_noqa_gate.py",
         "resolved": "governance/ruff-classification.json",
         "severity": "hard"
@@ -174225,7 +174619,7 @@
     "by_class": {
       "ARCHIVE": 44,
       "DOCS": 18,
-      "EVIDENCE": 1614,
+      "EVIDENCE": 1617,
       "GENERATED": 5,
       "GOVERNANCE": 200,
       "PRODUCT": 113,
@@ -174244,7 +174638,7 @@
       "evidence-audit-output-root": 18,
       "evidence-dedup-root": 2,
       "evidence-registres-root": 35,
-      "evidence-reviews-root": 1559,
+      "evidence-reviews-root": 1562,
       "generated-authority-map": 1,
       "generated-path-classification-json": 1,
       "generated-path-classification-markdown": 1,
@@ -174280,11 +174674,11 @@
       "working-sandbox-readme": 1
     },
     "case_collisions_total": 0,
-    "dangling_references_total": 16901,
+    "dangling_references_total": 16916,
     "generated_total": 9,
-    "load_bearing_total": 2076,
+    "load_bearing_total": 2079,
     "portability_violations_total": 0,
-    "tracked_total": 2218,
+    "tracked_total": 2221,
     "unclassified_total": 0,
     "unicode_anomalies_total": 0
   },

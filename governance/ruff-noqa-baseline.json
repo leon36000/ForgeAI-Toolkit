@@ -3,10 +3,9 @@
   "_description": "Baseline du cliquet noqa (justification + date de revision) sur les regles defaut_candidat, RC1-020 #450 increment 3b. Fichier GENERE par scripts/ruff_noqa_gate.py --regenerer-baseline : ne jamais editer a la main. Toute regeneration est une operation de maintenance declaree, review-visible via le diff git, toujours suivie d'une revue humaine/scellee avant merge.",
   "version": 1,
   "borne": {
-    "total_occurrences": 5
+    "total_occurrences": 4
   },
   "occurrences": {
-    "scripts/ruff_noqa_gate.py": 1,
     "src/forgeai/audit/immudb.py": 1,
     "src/forgeai/cli.py": 1,
     "src/forgeai/observability/langfuse.py": 1,

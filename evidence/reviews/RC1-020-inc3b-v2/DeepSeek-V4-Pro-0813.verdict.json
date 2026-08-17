@@ -1,0 +1,31 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "scripts/ruff_noqa_gate.py",
+   "description": "La validation de la date de révision est purement lexicale : une valeur impossible comme 2027-99-99 est acceptée comme date ISO valide, alors que le contexte annonce une date ISO valide (format YYYY-MM-DD). La non-expiration reste hors périmètre, mais la validité calendaire n'est pas vérifiée.",
+   "preuve": "MOTIF_DATE_REVISION utilise le motif r\"\\(r[ée]vision\\s*:\\s*\\d{4}-\\d{2}-\\d{2}\\)\" ; aucun parseur datetime/date n'est appelé avant acceptation dans noqa_non_conformes."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "scripts/ruff_noqa_gate.py",
+   "description": "Le scan ligne à ligne traite des mentions `# noqa: <code>` présentes dans des commentaires/docstrings comme de vraies suppressions. La baseline ajoutée contient déjà `scripts/ruff_noqa_gate.py: 1` pour une ligne de commentaire documentant la syntaxe (`ex. `# noqa: F401, F841``), ce qui illustre un faux positif plutôt qu'une suppression effective.",
+   "preuve": "governance/ruff-noqa-baseline.json occurrences contient \"scripts/ruff_noqa_gate.py\": 1 ; scripts/ruff_noqa_gate.py contient en commentaire \"ex. `# noqa: F401, F841`\"."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "scripts/ruff_noqa_gate.py",
+   "description": "Les fichiers illisibles sont ignorés silencieusement, ce qui peut masquer une suppression non conforme si un fichier source devient illisible au moment du scan.",
+   "preuve": "Dans noqa_non_conformes : `except (OSError, UnicodeError): continue`."
+  }
+ ],
+ "date_heure": "2026-08-17T23:41:30.274361+00:00",
+ "prompt_sha256": "7989a582280e484afee4c82229e7a95b716757076ddd9f1a4158f8d433495a9f",
+ "reviewer_model": "DeepSeek-V4-Pro-0813",
+ "modele_servi": "1cbd427d85a4593a157a49bb0ad51ededb429b85aca980b3b23cd445246b9fcb",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

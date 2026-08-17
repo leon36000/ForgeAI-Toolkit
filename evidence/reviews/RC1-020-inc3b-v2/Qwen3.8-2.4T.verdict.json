@@ -1,0 +1,43 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "majeure",
+   "fichier": "governance/ruff-noqa-baseline.json",
+   "description": "La baseline livrée contient une occurrence dans un fichier nouveau (scripts/ruff_noqa_gate.py), alors que le contexte annonce uniquement le grand-parentage des 4 occurrences déjà présentes sur origin/main. Cela revient à baseliner une nouvelle occurrence mesurée non conforme par le propre cliquet.",
+   "preuve": "governance/ruff-noqa-baseline.json, lignes 6 et 9 : total_occurrences=5 et scripts/ruff_noqa_gate.py=1 ; le diff montre scripts/ruff_noqa_gate.py comme nouveau fichier ; le contexte annonce 4 occurrences grand-parentées sur origin/main (immudb.py, cli.py, langfuse.py, secrets/vault.py)."
+  },
+  {
+   "severite": "majeure",
+   "fichier": "scripts/ruff_noqa_gate.py",
+   "description": "Le script du cliquet introduit lui-même un motif noqa non conforme (date tronquée sur la même ligne) qui est ensuite couvert par la baseline, ce qui contredit l'objectif final d'exceptions localement justifiées et datées.",
+   "preuve": "scripts/ruff_noqa_gate.py contient le commentaire : '... (ex. `# noqa: S310 — (révision:' puis la date sur la ligne suivante ; MOTIF_DATE_REVISION exige la date complète sur la même ligne, donc cette occurrence est mesurée non conforme et apparaît dans la baseline."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "scripts/ruff_noqa_gate.py",
+   "description": "La date de révision est validée uniquement par forme regex, sans validation calendaire ISO ; des dates impossibles peuvent passer.",
+   "preuve": "MOTIF_DATE_REVISION se limite à la forme YYYY-MM-DD ; aucun parseur de date n'est appelé dans noqa_non_conformes."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "scripts/ruff_noqa_gate.py",
+   "description": "Le contrôle de justification n'impose pas explicitement le séparateur `—` du format annoncé ; il accepte tout texte non vide après suppression des séparateurs, même sans tiret cadratin.",
+   "preuve": "noqa_non_conformes extrait la justification entre la fin des codes et la date, puis fait seulement strip(CARACTERES_SEPARATEURS_JUSTIFICATION) ; aucune présence obligatoire de `—` n'est testée."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "scripts/ruff_noqa_gate.py",
+   "description": "Les fichiers illisibles sont ignorés silencieusement, ce qui peut masquer des suppressions non conformes.",
+   "preuve": "noqa_non_conformes contient except (OSError, UnicodeError): continue."
+  }
+ ],
+ "date_heure": "2026-08-17T23:41:00.954251+00:00",
+ "prompt_sha256": "7989a582280e484afee4c82229e7a95b716757076ddd9f1a4158f8d433495a9f",
+ "reviewer_model": "Qwen3.8-2.4T",
+ "modele_servi": "b9de6bc895fe95ccacf7d9fa9b1cf29ca44d34f03e249738f325c9dee3790b78",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

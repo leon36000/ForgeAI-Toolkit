@@ -272,6 +272,62 @@ def test_noqa_non_conformes_multi_codes_un_seul_surveille_suffit(
     }
 
 
+def test_noqa_non_conformes_ligne_de_commentaire_pur_ignoree(tmp_path: Path) -> None:
+    """Round 3 de revue (2 REJECT convergents) : un texte '# noqa: CODE' a l'interieur d'un
+    bloc de COMMENTAIRE PUR (rien avant le # sauf des espaces) n'est jamais une vraie
+    directive -> ignore integralement, meme sans justification ni date."""
+    _ecrire_source(
+        tmp_path,
+        "src/doc_pure.py",
+        "# Exemple de syntaxe attendue : # noqa: ARG001 sans aucune justification ni date",
+        "  # Meme chose avec indentation avant le premier #",
+        "x = 1",
+    )
+
+    assert ruff_noqa_gate.noqa_non_conformes(tmp_path, REGLES_SURVEILLEES) == {}
+
+
+def test_noqa_non_conformes_ligne_de_code_avec_noqa_toujours_detectee(
+    tmp_path: Path,
+) -> None:
+    """Le filtre ne touche PAS aux vraies directives : du code reel avant le # reste detecte."""
+    _ecrire_source(
+        tmp_path,
+        "src/vrai_code.py",
+        "resultat = appel_dangereux()  # noqa: ARG001 sans justification ni date",
+    )
+
+    assert ruff_noqa_gate.noqa_non_conformes(tmp_path, REGLES_SURVEILLEES) == {
+        "src/vrai_code.py": 1
+    }
+
+
+def test_noqa_non_conformes_date_calendaire_invalide_est_comptee(tmp_path: Path) -> None:
+    """Round 3 de revue (mineur, DeepSeek) : une date de forme valide mais calendairement
+    impossible (mois 99) est traitee comme une date ABSENTE -> non conforme."""
+    _ecrire_source(
+        tmp_path,
+        "src/date_impossible.py",
+        "x = 1  # noqa: ARG001 — justifie (révision: 2027-99-99)",
+    )
+
+    assert ruff_noqa_gate.noqa_non_conformes(tmp_path, REGLES_SURVEILLEES) == {
+        "src/date_impossible.py": 1
+    }
+
+
+def test_noqa_non_conformes_date_calendaire_valide_reste_conforme(tmp_path: Path) -> None:
+    """Non-regression : une date calendairement valide (29 fevrier d'une annee bissextile)
+    reste acceptee."""
+    _ecrire_source(
+        tmp_path,
+        "src/date_bissextile.py",
+        "x = 1  # noqa: ARG001 — justifie (révision: 2028-02-29)",
+    )
+
+    assert ruff_noqa_gate.noqa_non_conformes(tmp_path, REGLES_SURVEILLEES) == {}
+
+
 def test_noqa_non_conformes_fichier_sans_noqa_absent(tmp_path: Path) -> None:
     """Un fichier sans aucun `# noqa` n'apparait pas dans le resultat."""
     _ecrire_source(tmp_path, "src/propre.py", "x = 1", "y = 2")
