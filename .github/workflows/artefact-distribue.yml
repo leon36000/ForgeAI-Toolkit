@@ -1,0 +1,188 @@
+name: Artefact distribué
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  build-install-outside-checkout:
+    runs-on: ubuntu-latest
+    env:
+      SOURCE_DATE_EPOCH: "0"
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+        with:
+          python-version: "3.12"
+
+      - name: Construire le wheel et le sdist
+        run: |
+          # L'isolation installe le backend déclaré par pyproject.toml.
+          python -m pip install --no-cache-dir "build==1.2.2.post1"
+          rm -rf dist
+          python -m build --wheel --sdist --outdir dist
+
+      - name: Vérifier les deux artefacts distribués
+        run: python scripts/verifier_artefact_distribue.py dist/*.whl dist/*.tar.gz
+
+      - name: Installer chaque artefact et l'exécuter hors checkout
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          verifier_artefact() (
+            set -euo pipefail
+
+            artefact="$1"
+            travail="$(mktemp -d)"
+            pid_web=""
+
+            nettoyer() {
+              if [ -n "$pid_web" ]; then
+                kill -INT "$pid_web" 2>/dev/null || true
+                wait "$pid_web" 2>/dev/null || true
+              fi
+              rm -rf "$travail"
+            }
+            trap nettoyer EXIT
+
+            python -m venv "$travail/venv"
+            "$travail/venv/bin/python" -m pip install --no-cache-dir "$artefact"
+
+            cd /tmp
+            "$travail/venv/bin/forgeai" --help
+            "$travail/venv/bin/forgeai" doctor
+            "$travail/venv/bin/python" -c '
+            import json
+            from importlib import resources
+
+            catalogue = resources.files("forgeai.data").joinpath("catalogue.json")
+            assert catalogue.is_file(), catalogue
+            assert json.loads(catalogue.read_text(encoding="utf-8")) is not None
+            '
+
+            "$travail/venv/bin/forgeai" web --host 127.0.0.1 --port 8765 >"$travail/web.log" 2>&1 &
+            pid_web=$!
+
+            python - <<'PY'
+            import time
+            from urllib.request import urlopen
+
+            for _ in range(50):
+                try:
+                    with urlopen("http://127.0.0.1:8765/", timeout=1) as response:
+                        if response.status == 200:
+                            break
+                except OSError:
+                    time.sleep(0.1)
+            else:
+                raise SystemExit("La web-app installée n'a pas démarré ; consultez le journal.")
+            PY
+
+            kill -INT "$pid_web"
+            statut=0
+            wait "$pid_web" || statut=$?
+            pid_web=""
+            test "$statut" -eq 0 -o "$statut" -eq 130
+
+            "$travail/venv/bin/python" -m pip uninstall --yes forgeai-toolkit
+            "$travail/venv/bin/python" -c '
+            import importlib.util
+            import site
+            from pathlib import Path
+
+            assert importlib.util.find_spec("forgeai") is None
+            restes = []
+            for dossier in site.getsitepackages():
+                for chemin in Path(dossier).iterdir():
+                    if chemin.name.lower().startswith(("forgeai", "forgeai_toolkit")):
+                        restes.append(str(chemin))
+            assert not restes, "Fichiers ForgeAI restants dans site-packages : " + ", ".join(restes)
+            '
+          )
+
+          verifier_artefact "$GITHUB_WORKSPACE"/dist/*.whl
+          verifier_artefact "$GITHUB_WORKSPACE"/dist/*.tar.gz
+
+      - name: Double construction reproductible et comparaison détaillée
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf dist-premier dist-second
+          python -m build --wheel --sdist --outdir dist-premier
+          python -m build --wheel --sdist --outdir dist-second
+          python - <<'PY'
+          import hashlib
+          import sys
+          import tarfile
+          import zipfile
+          from pathlib import Path
+
+          def digest(path):
+              return hashlib.sha256(path.read_bytes()).hexdigest()
+
+          def members(path):
+              if path.suffix == ".whl":
+                  with zipfile.ZipFile(path) as archive:
+                      return {
+                          name: archive.read(name)
+                          for name in archive.namelist()
+                          if not name.endswith("/")
+                      }
+              with tarfile.open(path, "r:gz") as archive:
+                  result = {}
+                  for member in archive.getmembers():
+                      if member.isfile():
+                          stream = archive.extractfile(member)
+                          result[member.name] = stream.read() if stream else b""
+                  return result
+
+          premier = Path("dist-premier")
+          second = Path("dist-second")
+          erreurs = []
+          for artefact in sorted(premier.iterdir()):
+              correspondant = second / artefact.name
+              if not correspondant.is_file():
+                  erreurs.append(f"Artefact absent de la seconde construction : {correspondant}")
+                  continue
+              if digest(artefact) == digest(correspondant):
+                  continue
+              erreurs.append(
+                  f"Empreintes différentes pour {artefact.name} : "
+                  f"{digest(artefact)} != {digest(correspondant)}"
+              )
+              membres_a = members(artefact)
+              membres_b = members(correspondant)
+              for nom in sorted(set(membres_a) | set(membres_b)):
+                  if membres_a.get(nom) != membres_b.get(nom):
+                      erreurs.append(f"  membre différent : {nom}")
+
+          for artefact in sorted(second.iterdir()):
+              if not (premier / artefact.name).is_file():
+                  erreurs.append(f"Artefact absent de la première construction : {artefact}")
+
+          if erreurs:
+              print("\n".join(erreurs), file=sys.stderr)
+              raise SystemExit(1)
+          PY
+
+      - name: Produire les empreintes des artefacts publiés
+        shell: bash
+        run: sha256sum dist/* > dist/SHA256SUMS
+
+      - name: Publier les artefacts et leurs empreintes
+        uses: actions/upload-artifact@65462800fd760344b1a7b4382951275a0abb4808 # v4.3.3
+        with:
+          name: forgeai-toolkit-distribution
+          if-no-files-found: error
+          path: |
+            dist/*.whl
+            dist/*.tar.gz
+            dist/SHA256SUMS
