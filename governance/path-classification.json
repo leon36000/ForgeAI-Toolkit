@@ -838,6 +838,20 @@
         {
           "candidate": ".github/workflows/gates.yml",
           "line": 6,
+          "referrer": "evidence/reviews/RC1-020-inc2-v6/Qwen3.8-2.4T.verdict.json",
+          "resolved": ".github/workflows/gates.yml",
+          "severity": "hard"
+        },
+        {
+          "candidate": ".github/workflows/gates.yml",
+          "line": 8,
+          "referrer": "evidence/reviews/RC1-020-inc2-v6/Qwen3.8-2.4T.verdict.json",
+          "resolved": ".github/workflows/gates.yml",
+          "severity": "hard"
+        },
+        {
+          "candidate": ".github/workflows/gates.yml",
+          "line": 6,
           "referrer": "evidence/reviews/RC1-020-v1/DeepSeek-V4-Pro.verdict.json",
           "resolved": ".github/workflows/gates.yml",
           "severity": "hard"
@@ -6744,8 +6758,8 @@
         }
       ],
       "rule_id": "evidence-registres-root",
-      "sha256": "13fbdcbaab11e8dee2358c3c4166f1b2efcca1f6a3e67c29383f4283275892c1",
-      "size": 390959,
+      "sha256": "ac572854d2a9dcfc4b0d59e58e65964f8bdc42085186253bdd6a161f730c765c",
+      "size": 391334,
       "target_path": null,
       "type": "text"
     },
@@ -8705,8 +8719,8 @@
         }
       ],
       "rule_id": "evidence-reviews-root",
-      "sha256": "207a40096d43847f57d71c2be1d1e3a0f42e1e447f0c7040e22a0a30e1c13e3d",
-      "size": 2795,
+      "sha256": "e9fb7462775a680a7b0d597a78b795444bfe4e4edfca15d7391dae61cdc04b2c",
+      "size": 2811,
       "target_path": null,
       "type": "text"
     },
@@ -19948,6 +19962,58 @@
       "generated": false,
       "load_bearing": true,
       "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-020-inc2-v6/GPT-5.6-Terra-Pro.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "d46cf58a7fbf7b9151c05b94f41e2d4c0f1b762acce96616b926c14dc2bc0464",
+      "size": 334,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-020-inc2-v6/MiMo-V2.5-Pro.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "e0d58eb9f4f18729edd2340299372429113201472bf6477a82745956ff004b06",
+      "size": 327,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-020-inc2-v6/Qwen3.8-2.4T.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "a5676dd5e30a549fd2a0cc10f7f326ebfb87719d74045cfc27ab83f53e712080",
+      "size": 1865,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-020-inc2-v6/RECU.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": null,
+      "size": null,
+      "target_path": null,
+      "type": null
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
       "path": "evidence/reviews/RC1-020-v1/DeepSeek-V4-Pro.verdict.json",
       "referenced_by": [],
       "rule_id": "evidence-reviews-root",
@@ -29002,6 +29068,20 @@
         },
         {
           "candidate": "governance/ruff-baseline.json",
+          "line": 18,
+          "referrer": "evidence/reviews/RC1-020-inc2-v6/Qwen3.8-2.4T.verdict.json",
+          "resolved": "governance/ruff-baseline.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/ruff-baseline.json",
+          "line": 20,
+          "referrer": "evidence/reviews/RC1-020-inc2-v6/Qwen3.8-2.4T.verdict.json",
+          "resolved": "governance/ruff-baseline.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/ruff-baseline.json",
           "line": 12,
           "referrer": "scripts/ruff_ratchet.py",
           "resolved": "governance/ruff-baseline.json",
@@ -34093,6 +34173,27 @@
           "candidate": "scripts/ruff_ratchet.py",
           "line": 14,
           "referrer": "evidence/reviews/RC1-020-inc2-v5/Qwen3.8-2.4T.verdict.json",
+          "resolved": "scripts/ruff_ratchet.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "scripts/ruff_ratchet.py",
+          "line": 12,
+          "referrer": "evidence/reviews/RC1-020-inc2-v6/Qwen3.8-2.4T.verdict.json",
+          "resolved": "scripts/ruff_ratchet.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "scripts/ruff_ratchet.py",
+          "line": 14,
+          "referrer": "evidence/reviews/RC1-020-inc2-v6/Qwen3.8-2.4T.verdict.json",
+          "resolved": "scripts/ruff_ratchet.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "scripts/ruff_ratchet.py",
+          "line": 20,
+          "referrer": "evidence/reviews/RC1-020-inc2-v6/Qwen3.8-2.4T.verdict.json",
           "resolved": "scripts/ruff_ratchet.py",
           "severity": "hard"
         },
@@ -95398,6 +95499,26 @@
         "referrer": "evidence/reviews/RC1-020-inc2-v5/Qwen3.8-2.4T.verdict.json"
       },
       {
+        "candidate": "scripts/gate_git_ref.charger_base_reference_git",
+        "line": 13,
+        "referrer": "evidence/reviews/RC1-020-inc2-v6/Qwen3.8-2.4T.verdict.json"
+      },
+      {
+        "candidate": "try/except",
+        "line": 14,
+        "referrer": "evidence/reviews/RC1-020-inc2-v6/Qwen3.8-2.4T.verdict.json"
+      },
+      {
+        "candidate": "gate_git_ref.py",
+        "line": 14,
+        "referrer": "evidence/reviews/RC1-020-inc2-v6/Qwen3.8-2.4T.verdict.json"
+      },
+      {
+        "candidate": "recu-revue/1",
+        "line": 2,
+        "referrer": "evidence/reviews/RC1-020-inc2-v6/RECU.json"
+      },
+      {
         "candidate": "FileNotFoundError/retourne",
         "line": 7,
         "referrer": "evidence/reviews/RC1-020-v1/DeepSeek-V4-Pro.verdict.json"
@@ -142475,6 +142596,13 @@
         "severity": "hard"
       },
       {
+        "candidate": "RC1-020-inc2-v6",
+        "line": 207,
+        "referrer": "evidence/reviews/BINDING.txt",
+        "resolved": "evidence/reviews/RC1-020-inc2-v6",
+        "severity": "hard"
+      },
+      {
         "candidate": "scripts/gate_docs.py",
         "line": 11,
         "referrer": "sonar-project.properties",
@@ -155869,6 +155997,55 @@
         "candidate": "scripts/ruff_ratchet.py",
         "line": 14,
         "referrer": "evidence/reviews/RC1-020-inc2-v5/Qwen3.8-2.4T.verdict.json",
+        "resolved": "scripts/ruff_ratchet.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": ".github/workflows/gates.yml",
+        "line": 6,
+        "referrer": "evidence/reviews/RC1-020-inc2-v6/Qwen3.8-2.4T.verdict.json",
+        "resolved": ".github/workflows/gates.yml",
+        "severity": "hard"
+      },
+      {
+        "candidate": ".github/workflows/gates.yml",
+        "line": 8,
+        "referrer": "evidence/reviews/RC1-020-inc2-v6/Qwen3.8-2.4T.verdict.json",
+        "resolved": ".github/workflows/gates.yml",
+        "severity": "hard"
+      },
+      {
+        "candidate": "scripts/ruff_ratchet.py",
+        "line": 12,
+        "referrer": "evidence/reviews/RC1-020-inc2-v6/Qwen3.8-2.4T.verdict.json",
+        "resolved": "scripts/ruff_ratchet.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "scripts/ruff_ratchet.py",
+        "line": 14,
+        "referrer": "evidence/reviews/RC1-020-inc2-v6/Qwen3.8-2.4T.verdict.json",
+        "resolved": "scripts/ruff_ratchet.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "governance/ruff-baseline.json",
+        "line": 18,
+        "referrer": "evidence/reviews/RC1-020-inc2-v6/Qwen3.8-2.4T.verdict.json",
+        "resolved": "governance/ruff-baseline.json",
+        "severity": "hard"
+      },
+      {
+        "candidate": "governance/ruff-baseline.json",
+        "line": 20,
+        "referrer": "evidence/reviews/RC1-020-inc2-v6/Qwen3.8-2.4T.verdict.json",
+        "resolved": "governance/ruff-baseline.json",
+        "severity": "hard"
+      },
+      {
+        "candidate": "scripts/ruff_ratchet.py",
+        "line": 20,
+        "referrer": "evidence/reviews/RC1-020-inc2-v6/Qwen3.8-2.4T.verdict.json",
         "resolved": "scripts/ruff_ratchet.py",
         "severity": "hard"
       },
@@ -171406,7 +171583,7 @@
     "by_class": {
       "ARCHIVE": 44,
       "DOCS": 18,
-      "EVIDENCE": 1596,
+      "EVIDENCE": 1600,
       "GENERATED": 5,
       "GOVERNANCE": 197,
       "PRODUCT": 113,
@@ -171425,7 +171602,7 @@
       "evidence-audit-output-root": 18,
       "evidence-dedup-root": 2,
       "evidence-registres-root": 35,
-      "evidence-reviews-root": 1541,
+      "evidence-reviews-root": 1545,
       "generated-authority-map": 1,
       "generated-path-classification-json": 1,
       "generated-path-classification-markdown": 1,
@@ -171461,11 +171638,11 @@
       "working-sandbox-readme": 1
     },
     "case_collisions_total": 0,
-    "dangling_references_total": 16660,
+    "dangling_references_total": 16664,
     "generated_total": 9,
-    "load_bearing_total": 2053,
+    "load_bearing_total": 2057,
     "portability_violations_total": 0,
-    "tracked_total": 2195,
+    "tracked_total": 2199,
     "unclassified_total": 0,
     "unicode_anomalies_total": 0
   },
