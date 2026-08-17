@@ -38,12 +38,16 @@ def test_g1_ingestion_redige_avant_la_memoire():
     `/api/deploy/events`, qui diffuse `_DEPLOY_STATE["lines"]`, ne peut plus fuiter.
 
     #460 (RC1-030, lot 2) a extrait la logique de `/api/deploy` de `do_POST()` (devenu un
-    dispatcher pur) vers `_post_deploy()` — c'est désormais elle qui porte le contrat, `do_POST`
-    ne fait plus qu'y déléguer (voir aussi `test_g1c_...` ci-dessous, qui prouve le même contrat
-    par le comportement HTTP observé plutôt que par le texte source)."""
+    dispatcher pur) vers `_post_deploy()`. Un correctif SonarCloud ultérieur de la même story
+    (round 2, complexité cognitive E(32) trop élevée) a ensuite redécoupé `_post_deploy()`
+    elle-même en un orchestrateur de 3 lignes qui délègue à `_valider_requete_deploy()` (validation
+    de la requête) puis `_lancer_deploiement()` (spawn du process + thread lecteur) — c'est
+    désormais CETTE DERNIÈRE qui porte le contrat de rédaction, pas `_post_deploy()` (voir aussi
+    `test_g1c_...` ci-dessous, qui prouve le même contrat par le comportement HTTP observé plutôt
+    que par le texte source)."""
     import inspect
 
-    source = inspect.getsource(server.ForgeAIHandler._post_deploy)
+    source = inspect.getsource(server.ForgeAIHandler._lancer_deploiement)
     assert 'redact_text(line.rstrip' in source, (
         "les lignes de déploiement doivent être rédigées à l'INGESTION : rédiger à chaque sortie "
         "a déjà laissé passer le flux /api/deploy/events (ERR-041B)"

@@ -1503,12 +1503,22 @@ class ForgeAIHandler(BaseHTTPRequestHandler):
         data = self._read_json_body()
         if data is None:
             return
+        valide = self._valider_requete_deploy(data)
+        if valide is None:
+            return
+        self._lancer_deploiement(data, valide)
 
+    def _valider_requete_deploy(self, data):
+        # WEB-034A (#460 lot 2, round 2) : chaîne de validation extraite de _post_deploy
+        # pour réduire sa complexité cognitive (SonarCloud C Maintainability sur do_POST
+        # après le découpage lot 2 initial) — comportement byte-identique, uniquement
+        # relocalisé. Retourne None après avoir déjà envoyé la réponse d'erreur (même
+        # convention que les autres _post_<route> qui répondent puis retournent).
         required = ["stack", "backend", "confirm"]
         missing = [field for field in required if field not in data]
         if missing:
             self._send_json(400, {"error": "champs manquants", "missing": missing})
-            return
+            return None
 
         stack_id = data["stack"]
         backend = data["backend"]
@@ -1516,16 +1526,16 @@ class ForgeAIHandler(BaseHTTPRequestHandler):
 
         if confirm != "FORCER":
             self._send_json(400, {"error": "confirmation 'FORCER' requise"})
-            return
+            return None
 
         if backend not in {"compose", "k3s"}:
             self._send_json(400, {"error": "backend invalide"})
-            return
+            return None
 
         node = data.get("node", "local")
         if node not in ("local", "auto") and not _NODE_RE.match(node):
             self._send_json(400, {"error": "node invalide"})
-            return
+            return None
 
         bricks_sel = data.get("bricks", [])
         models_sel = data.get("models", [])
@@ -1534,11 +1544,11 @@ class ForgeAIHandler(BaseHTTPRequestHandler):
         if (not _selection_valide(bricks_sel) or not _selection_valide(models_sel)
                 or not _selection_valide(embeddings_sel)):
             self._send_json(400, {"error": "selection invalide"})
-            return
+            return None
         if rag_node is not None and (not isinstance(rag_node, str)
                 or (rag_node not in ("local", "auto") and not _NODE_RE.match(rag_node))):
             self._send_json(400, {"error": "rag_node invalide"})
-            return
+            return None
 
         adopt = data.get("adopt")
 
@@ -1552,7 +1562,7 @@ class ForgeAIHandler(BaseHTTPRequestHandler):
             stack = load_stack(stack_id)
         except FileNotFoundError:
             self._send_json(404, {"error": "stack not found"})
-            return
+            return None
 
         # Validation de `adopt` à la FRONTIÈRE : la valeur atteint le YAML rendu et vient
         # d'une entrée réseau. La validation en profondeur (ServiceSpec) ne dispense pas
@@ -1566,7 +1576,30 @@ class ForgeAIHandler(BaseHTTPRequestHandler):
             erreur_adopt = _valider_adopt(adopt, set(deploy_ids(stack)))
             if erreur_adopt is not None:
                 self._send_json(400, {"error": erreur_adopt})
-                return
+                return None
+
+        return {
+            "stack_id": stack_id,
+            "backend": backend,
+            "node": node,
+            "bricks_sel": bricks_sel,
+            "models_sel": models_sel,
+            "embeddings_sel": embeddings_sel,
+            "rag_node": rag_node,
+            "adopt": adopt,
+        }
+
+    def _lancer_deploiement(self, data, valide):
+        # WEB-034A (#460 lot 2, round 2) : spawn + thread lecteur extraits de _post_deploy,
+        # même raison que _valider_requete_deploy ci-dessus — comportement byte-identique.
+        stack_id = valide["stack_id"]
+        backend = valide["backend"]
+        node = valide["node"]
+        bricks_sel = valide["bricks_sel"]
+        models_sel = valide["models_sel"]
+        embeddings_sel = valide["embeddings_sel"]
+        rag_node = valide["rag_node"]
+        adopt = valide["adopt"]
 
         with _DEPLOY_STATE["lock"]:
             proc = _DEPLOY_STATE["proc"]
