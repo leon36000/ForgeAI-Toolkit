@@ -1,0 +1,19 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": ".github/workflows/artefact-distribue.yml",
+   "description": "Les scripts Python inline via `python3 -c '...'` conservent l'indentation YAML (10+ espaces) sur la première ligne de code. Python lève normalement `IndentationError: unexpected indent` dans ce cas car il ne dé-indente pas automatiquement les chaînes passées via `-c`. Bien que la story mentionne une validation empirique 15/15 (suggérant un comportement spécifique au runner, au shell ou à la version de Python), cette pratique n'est pas portable et risque de casser silencieusement sur d'autres environnements. Il serait plus sûr de dé-indenter le texte ou d'utiliser des fichiers temporaires.",
+   "preuve": "Lignes 62-70, 76-88, 113-176 (ex: `          import json` après le saut de ligne)."
+  }
+ ],
+ "date_heure": "2026-08-18T08:52:22.535766+00:00",
+ "prompt_sha256": "fff9684465af8146ff9db1082af026c4b62ceeee248ddd323add29f16ca246f5",
+ "reviewer_model": "Qwen3.7-Max",
+ "modele_servi": "qwen37-max-openrouter",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

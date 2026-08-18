@@ -466,8 +466,8 @@
         }
       ],
       "rule_id": "governance-github-ci",
-      "sha256": "5fdc8a2b8a12903e5ebb022720edc2f3a1f898c9bb19ed757a6342d281d3fae9",
-      "size": 6590,
+      "sha256": "5530f83868d4e29d36f766dff31274fe70b47c4df7e9d1433d44064a1474c148",
+      "size": 8037,
       "target_path": null,
       "type": "text"
     },
@@ -6814,8 +6814,8 @@
         }
       ],
       "rule_id": "evidence-registres-root",
-      "sha256": "da96b74278063ee9e449d4b53020b8deed9270eba334aaf9592cbaac0e61abea",
-      "size": 393686,
+      "sha256": "fa657d8940c6efe5dc3aa42ff94fd9be843a99f9b5523e5317ac15569013e3e2",
+      "size": 394387,
       "target_path": null,
       "type": "text"
     },
@@ -8775,7 +8775,7 @@
         }
       ],
       "rule_id": "evidence-reviews-root",
-      "sha256": "0f8ba31634ab4a4dc3f955da0615f62b0f237224c2370a1d5eb81f10f34a9866",
+      "sha256": "6eafd5d9e8ea6403cf8a8143cc88b5bb8537b1ca36d134c35c75c21a7eed557a",
       "size": 2872,
       "target_path": null,
       "type": "text"
@@ -59118,7 +59118,7 @@
     "completeness": "best_effort",
     "dangling": [
       {
-        "candidate": "RC1-018-v4",
+        "candidate": "RC1-018-v5",
         "line": 211,
         "referrer": "evidence/reviews/BINDING.txt"
       },
@@ -59324,42 +59324,42 @@
       },
       {
         "candidate": "travail/venv/bin/python",
-        "line": 95,
+        "line": 113,
         "referrer": ".github/workflows/artefact-distribue.yml"
       },
       {
         "candidate": "travail/venv/bin/python",
-        "line": 96,
+        "line": 114,
         "referrer": ".github/workflows/artefact-distribue.yml"
       },
       {
         "candidate": "dist/",
-        "line": 178,
+        "line": 196,
         "referrer": ".github/workflows/artefact-distribue.yml"
       },
       {
         "candidate": "dist/SHA256SUMS",
-        "line": 178,
+        "line": 196,
         "referrer": ".github/workflows/artefact-distribue.yml"
       },
       {
         "candidate": "actions/upload-artifact",
-        "line": 181,
+        "line": 199,
         "referrer": ".github/workflows/artefact-distribue.yml"
       },
       {
         "candidate": "dist/",
-        "line": 186,
+        "line": 204,
         "referrer": ".github/workflows/artefact-distribue.yml"
       },
       {
         "candidate": "dist/",
-        "line": 187,
+        "line": 205,
         "referrer": ".github/workflows/artefact-distribue.yml"
       },
       {
         "candidate": "dist/SHA256SUMS",
-        "line": 188,
+        "line": 206,
         "referrer": ".github/workflows/artefact-distribue.yml"
       },
       {
