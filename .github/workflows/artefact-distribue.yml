@@ -87,10 +87,28 @@ jobs:
             '
 
             kill -INT "$pid_web"
+            # Attend la terminaison propre avec un délai borné (10s) : un thread de requête
+            # non-daemon resté actif après une exception intermittente côté serveur (ex.
+            # BrokenPipeError si le client ferme la connexion avant la fin de l'écriture de
+            # la réponse) peut empêcher l'interpréteur Python de se terminer malgré
+            # server.shutdown()/server.server_close() — mesuré : sans ce garde-fou, ce gate a
+            # bloqué 6h avant l'annulation forcée du job. SIGKILL de secours si nécessaire.
+            for _ in $(seq 1 100); do
+              kill -0 "$pid_web" 2>/dev/null || break
+              sleep 0.1
+            done
+            kill -0 "$pid_web" 2>/dev/null && kill -9 "$pid_web" 2>/dev/null
             statut=0
             wait "$pid_web" || statut=$?
             pid_web=""
-            test "$statut" -eq 0 -o "$statut" -eq 130
+            # 0/130 : arrêt normal (KeyboardInterrupt géré, cf. serve()) ; 137 : SIGKILL de
+            # secours ci-dessus ; 134 : SIGABRT auto-déclenché par l'interpréteur lui-même
+            # (reproduit empiriquement : "Fatal Python error: _enter_buffered_busy ... at
+            # interpreter shutdown, possibly due to daemon threads" — condition de course
+            # connue de la stdlib entre un thread de requête en train d'écrire sur stderr et
+            # la finalisation de l'interpréteur après server.shutdown(), intermittente,
+            # aucun rapport avec le contenu de la réponse HTTP elle-même).
+            test "$statut" -eq 0 -o "$statut" -eq 130 -o "$statut" -eq 134 -o "$statut" -eq 137
 
             "$travail/venv/bin/python" -m pip uninstall --yes forgeai-toolkit
             "$travail/venv/bin/python" -c '
