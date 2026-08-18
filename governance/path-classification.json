@@ -6814,8 +6814,8 @@
         }
       ],
       "rule_id": "evidence-registres-root",
-      "sha256": "db226d8eb2fa1c8ab2e5e793233df0d3109d7621f2898f73512c45b36e9d4af2",
-      "size": 393169,
+      "sha256": "da96b74278063ee9e449d4b53020b8deed9270eba334aaf9592cbaac0e61abea",
+      "size": 393686,
       "target_path": null,
       "type": "text"
     },
@@ -8775,8 +8775,8 @@
         }
       ],
       "rule_id": "evidence-reviews-root",
-      "sha256": "9e5ef86faacc258f818e67879a90e28b362ae203d36530d808033264615b54ab",
-      "size": 2878,
+      "sha256": "0f8ba31634ab4a4dc3f955da0615f62b0f237224c2370a1d5eb81f10f34a9866",
+      "size": 2872,
       "target_path": null,
       "type": "text"
     },
@@ -59117,6 +59117,11 @@
   "reference_graph": {
     "completeness": "best_effort",
     "dangling": [
+      {
+        "candidate": "RC1-018-v4",
+        "line": 211,
+        "referrer": "evidence/reviews/BINDING.txt"
+      },
       {
         "candidate": "TUI/UX",
         "line": 3,
@@ -145743,13 +145748,6 @@
         "severity": "hard"
       },
       {
-        "candidate": "RC1-448-PR506-v3",
-        "line": 211,
-        "referrer": "evidence/reviews/BINDING.txt",
-        "resolved": "evidence/reviews/RC1-448-PR506-v3",
-        "severity": "hard"
-      },
-      {
         "candidate": "scripts/gate_docs.py",
         "line": 11,
         "referrer": "sonar-project.properties",
@@ -175716,7 +175714,7 @@
       "working-sandbox-readme": 1
     },
     "case_collisions_total": 0,
-    "dangling_references_total": 17011,
+    "dangling_references_total": 17012,
     "generated_total": 9,
     "load_bearing_total": 2090,
     "portability_violations_total": 0,
