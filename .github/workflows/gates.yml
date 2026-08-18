@@ -490,6 +490,14 @@ jobs:
       - ruff-noqa-gate
     if: always()
     steps:
+      # Round 1 de revue scellée (#580, objection critique unanime 3/3) : sans
+      # checkout, le workspace du runner est VIDE -- scripts/governance/
+      # verifier_agregat_tests.py serait introuvable et le check requis
+      # échouerait systématiquement, bloquant TOUTE PR au lieu de corriger le
+      # contexte fantôme. Erreur d'oubli confirmée, pas un faux positif.
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
       - name: Vérifier que tous les gates release-critical de ce fichier ont réussi
         env:
           RESULTATS_NEEDS: ${{ toJSON(needs) }}

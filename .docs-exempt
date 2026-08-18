@@ -236,3 +236,9 @@ scripts/governance/classify_paths.py (commit 1/7, RC1-008/#438) : brique interne
 utilisateur, pas de documentation README/AGENTS.md distincte requise. L'issue #580 documente
 déjà le contexte complet (contexte requis "tests" fantôme, agrégateur stable comme correctif).
 Aucune doc utilisateur supplémentaire concernée.
+
+.github/workflows/gates.yml + scripts/governance/verifier_agregat_tests.py + tests/
+test_rc1580_tests_aggregate.py (RC1-580/#580, correctif round 1 de revue scellée — ajoute
+actions/checkout manquant sur le job tests-required, garde défensif isinstance dans
+gates_en_echec) : durcissement d'une fonctionnalité déjà décrite par la story (#580). Aucune
+doc utilisateur supplémentaire concernée.

@@ -61,6 +61,15 @@ def test_gates_en_echec_plusieurs_defaillances_toutes_listees() -> None:
     assert resultat == {"a": "failure", "b": "skipped"}
 
 
+def test_gates_en_echec_valeur_scalaire_signalee_sans_lever() -> None:
+    """Round 1 de revue scellée (#580, objection mineure) : une entrée dont la
+    valeur n'est pas un objet {"result": ...} doit être signalée comme un
+    échec, jamais lever AttributeError.
+    """
+    resultat = vat.gates_en_echec({"a": "success_litteral_pas_un_objet"})
+    assert resultat == {"a": "success_litteral_pas_un_objet"}
+
+
 # --- main() : intégration via variable d'environnement -----------------
 
 

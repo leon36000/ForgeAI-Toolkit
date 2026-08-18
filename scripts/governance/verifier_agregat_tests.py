@@ -21,9 +21,10 @@ from __future__ import annotations
 import json
 import os
 import sys
+from typing import Any
 
 
-def gates_en_echec(resultats_needs: dict) -> dict[str, str]:
+def gates_en_echec(resultats_needs: dict[str, Any]) -> dict[str, Any]:
     """Retourne ``{nom_job: resultat}`` pour chaque dépendance dont le
     résultat n'est PAS ``success`` (échec, annulation, skip, etc.).
 
@@ -33,11 +34,18 @@ def gates_en_echec(resultats_needs: dict) -> dict[str, str]:
     succès ici — c'est précisément le défaut que ce script corrige (un job
     skip silencieusement compte comme succès pour GitHub, jamais pour cet
     agrégateur).
+
+    Pourquoi ``isinstance(info, dict)`` (round 1 de revue scellée, #580,
+    objection mineure) : le contexte ``needs`` de GitHub Actions produit
+    toujours un objet par job, mais un appelant qui construirait ce JSON
+    autrement (test, script tiers) pourrait fournir une valeur scalaire —
+    ``.get()`` lèverait alors une ``AttributeError`` brute au lieu d'un
+    diagnostic clair. Une entrée non conforme est elle-même un échec.
     """
     return {
-        nom: info.get("result")
+        nom: (info.get("result") if isinstance(info, dict) else info)
         for nom, info in resultats_needs.items()
-        if info.get("result") != "success"
+        if not isinstance(info, dict) or info.get("result") != "success"
     }
 
 
