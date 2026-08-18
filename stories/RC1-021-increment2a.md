@@ -114,6 +114,24 @@ ci-dessus pour ne plus citer ce critère comme couvert ici ; code non modifié (
   (sous-processus totalement indépendant, jamais d'interférence entre jobs) — question de
   performance CI (double calcul), pas un défaut fonctionnel.
 
+## Round 2 de revue scellée — REJECT 2/3 APPROVE (Qwen3.8-2.4T + un second reviewer APPROVE ;
+1 objection majeure bloquante, fondée)
+
+Réfutation du round 1 tenue (plus aucune objection sur le sujet « augmenter/baisser »). Nouvelle
+objection majeure, cette fois retenue et corrigée : le job `branch-coverage-ratchet` relançait sa
+propre exécution de `scripts/branch_coverage_report.py` au lieu de réutiliser le JSON DÉJÀ PRODUIT
+et publié comme artefact CI par le job `branch-coverage-report` — contredisait la promesse
+explicite de la story/docstring (« réutilise le JSON déjà produit... ne relance JAMAIS sa propre
+mesure séparée »), causait un double calcul de couverture à chaque run CI.
+
+**Corrigé** : `branch-coverage-ratchet` a maintenant `needs: branch-coverage-report` et télécharge
+l'artefact réel (`actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0` —
+SHA vérifié via `gh api repos/actions/download-artifact/tags`, jamais deviné) au lieu de relancer
+`branch_coverage_report.py`. Vérifié avant ce correctif que `branch-coverage-report` est déjà
+dans `needs:` de l'agrégateur `tests` (#580) — la nouvelle dépendance directe n'introduit donc
+aucun nouveau risque net de blocage en cascade (un skip serait de toute façon détecté comme échec
+par `verifier_agregat_tests.py`, qui vérifie `result == "success"` sur chaque dépendance).
+
 ## Hors périmètre (incrément 2b, story distincte)
 
 Campagne de mutation ciblée sur les gardes/compensations, disposition de chaque mutant survivant,
