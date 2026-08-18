@@ -68,3 +68,72 @@ jobs:
             governance/STATE-CURRENT.md
           if-no-files-found: error
           retention-days: 1
+
+  governance-render-sync:
+    if: >-
+      github.event_name == 'pull_request' &&
+      github.event.pull_request.head.repo.full_name == github.repository &&
+      contains(github.event.pull_request.body, '[sync-governance-views]')
+    needs: governance-render-preview
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: read
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha }}
+      - name: Régénérer les quatre vues autorisées
+        run: |
+          python3 scripts/governance/classify_paths.py --render
+          python3 scripts/governance/state_current.py --render
+      - name: Refuser toute mutation hors des quatre vues déterministes
+        run: |
+          python3 - <<'PY'
+          import subprocess
+          import sys
+
+          allowed = {
+              "governance/path-classification.json",
+              "governance/PATH-CLASSIFICATION.md",
+              "governance/STATE-CURRENT.json",
+              "governance/STATE-CURRENT.md",
+          }
+          output = subprocess.run(
+              ["git", "status", "--porcelain=v1"],
+              check=True,
+              capture_output=True,
+              text=True,
+          ).stdout
+          changed = {line[3:] for line in output.splitlines() if line.strip()}
+          unexpected = sorted(changed - allowed)
+          if unexpected:
+              print("FAIL — renderer a muté des chemins non autorisés:", file=sys.stderr)
+              for path in unexpected:
+                  print(f"  - {path}", file=sys.stderr)
+              raise SystemExit(1)
+          print(f"OK — mutations bornées aux vues: {sorted(changed)}")
+          PY
+      - name: Commit fast-forward des vues seulement si nécessaire
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          PR_HEAD_REF: ${{ github.head_ref }}
+        run: |
+          git add -- \
+            governance/path-classification.json \
+            governance/PATH-CLASSIFICATION.md \
+            governance/STATE-CURRENT.json \
+            governance/STATE-CURRENT.md
+          if git diff --cached --quiet; then
+            echo "Aucune vue à synchroniser."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "chore(governance): sync generated views (#${PR_NUMBER})"
+          auth="$(printf 'x-access-token:%s' "$GITHUB_TOKEN" | base64 -w0)"
+          git -c "http.https://github.com/.extraheader=AUTHORIZATION: basic ${auth}" \
+            push origin "HEAD:${PR_HEAD_REF}"
