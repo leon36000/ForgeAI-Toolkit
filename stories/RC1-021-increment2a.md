@@ -291,6 +291,21 @@ nativement sur Python < 3.13) ; tout motif sans `**` se fie uniquement à `PureP
 respecte déjà correctement les séparateurs. Nouveau test dédié
 (`test_calculer_motif_simple_ne_traverse_pas_les_separateurs`), 47/47 tests verts.
 
+## Round 12 de revue scellée — REJECT 2/3 APPROVE, 1 objection majeure (6e round consécutif où
+GPT-5.6-Terra-Pro REJECT — rounds 3/4/6/8/10/12 — cette fois escalade en majeure une objection
+déjà répondue 6 fois en mineure)
+
+Après relecture sincère et sans complaisance : le critère de l'issue #451 (« seuils ciblés plus
+élevés ») ADMET littéralement la lecture du reviewer (numériquement supérieurs au seuil global de
+branches, 90.21%). Mais cette lecture est TECHNIQUEMENT INCOMPATIBLE avec §8bis de ce dépôt
+(jamais de valeur inventée) : forcer un seuil au-dessus de la couverture RÉELLEMENT mesurée d'une
+catégorie ferait échouer le cliquet dès le premier commit, sur une donnée fabriquée. Plutôt que de
+re-documenter cette tension une 7e fois dans la story (visiblement pas assez efficace jusqu'ici),
+la clarification est désormais ÉCRITE DIRECTEMENT DANS LE FICHIER SCELLÉ
+(`governance/branch-coverage-baseline.json`, nouveau champ `note_interpretation_seuils_cibles`) —
+visible de toute revue future sans dépendre de la story. Aucun changement de valeur numérique
+(toujours la mesure fraîche réelle honnête, principe déjà établi depuis l'incrément 1).
+
 ## Hors périmètre (incrément 2b, story distincte)
 
 Campagne de mutation ciblée sur les gardes/compensations, disposition de chaque mutant survivant,

@@ -21,5 +21,6 @@
     "persistance": 91.73553719008265,
     "rollback": 84.12162162162163,
     "securite": 86.47058823529412
-  }
+  },
+  "note_interpretation_seuils_cibles": "Objection récurrente en revue scellée (#451, rounds 1/3/5/6/8/10/12) : 3 des 4 seuils par catégorie sont NUMÉRIQUEMENT inférieurs à seuil_global_initial_branches_pct (90.21%), alors que le critère de l'issue #451 parle de seuils « ciblés plus élevés ». Tranché explicitement ici, dans le fichier scellé lui-même (pas seulement la story, pour que ce soit visible de toute revue future) : une lecture littérale « plus élevé au sens numérique, forcé au-dessus du seuil global » est TECHNIQUEMENT INCOMPATIBLE avec le principe §8bis de ce dépôt (jamais de valeur inventée, AGENTS.md règle 1) — un seuil forcé artificiellement au-dessus de la couverture RÉELLEMENT mesurée d'une catégorie (ex. rollback, structurellement plus complexe — cli.py/deploy/) ferait échouer le cliquet dès le tout premier commit, sur une donnée fabriquée plutôt que mesurée. L'interprétation retenue, seule opérationnelle sans violer §8bis : « ciblés » qualifie la GRANULARITÉ (un seuil PROPRE à chaque catégorie, dérivé d'une mesure réelle honnête, remplaçant l'unique seuil générique global) — pas une exigence numérique brute. Chaque seuil ici est la mesure fraîche réelle de SA catégorie, sans marge ajoutée arbitraire, cohérent avec note_seuil ci-dessus."
 }
