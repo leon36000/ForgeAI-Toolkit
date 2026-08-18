@@ -473,8 +473,8 @@
         }
       ],
       "rule_id": "governance-github-ci",
-      "sha256": "5530f83868d4e29d36f766dff31274fe70b47c4df7e9d1433d44064a1474c148",
-      "size": 8037,
+      "sha256": "1cbbd322be7e6317009f7a48e5f396ce4de80d5f8d983ae2fe5852a7606ae162",
+      "size": 8380,
       "target_path": null,
       "type": "text"
     },
@@ -59387,18 +59387,33 @@
         "referrer": ".github/workflows/artefact-distribue.yml"
       },
       {
+        "candidate": "PKG-INFO/setup.cfg",
+        "line": 172,
+        "referrer": ".github/workflows/artefact-distribue.yml"
+      },
+      {
+        "candidate": "wheel/zip",
+        "line": 173,
+        "referrer": ".github/workflows/artefact-distribue.yml"
+      },
+      {
         "candidate": "dist/",
-        "line": 196,
+        "line": 195,
         "referrer": ".github/workflows/artefact-distribue.yml"
       },
       {
         "candidate": "dist/SHA256SUMS",
-        "line": 196,
+        "line": 195,
         "referrer": ".github/workflows/artefact-distribue.yml"
       },
       {
         "candidate": "actions/upload-artifact",
-        "line": 199,
+        "line": 198,
+        "referrer": ".github/workflows/artefact-distribue.yml"
+      },
+      {
+        "candidate": "dist/",
+        "line": 203,
         "referrer": ".github/workflows/artefact-distribue.yml"
       },
       {
@@ -59407,13 +59422,8 @@
         "referrer": ".github/workflows/artefact-distribue.yml"
       },
       {
-        "candidate": "dist/",
-        "line": 205,
-        "referrer": ".github/workflows/artefact-distribue.yml"
-      },
-      {
         "candidate": "dist/SHA256SUMS",
-        "line": 206,
+        "line": 205,
         "referrer": ".github/workflows/artefact-distribue.yml"
       },
       {
@@ -175787,7 +175797,7 @@
       "working-sandbox-readme": 1
     },
     "case_collisions_total": 0,
-    "dangling_references_total": 17012,
+    "dangling_references_total": 17014,
     "generated_total": 9,
     "load_bearing_total": 2094,
     "portability_violations_total": 0,
