@@ -487,8 +487,8 @@
         }
       ],
       "rule_id": "governance-github-ci",
-      "sha256": "d23d100dfeb1c2d9a8d6f873d7bca5c80a0182de1326c330ecbbb100bee90bc5",
-      "size": 11322,
+      "sha256": "58041bf3b6ffd2538222ff3f63fcf1cc04dbc526ab056be227a8b12a85bfbdaa",
+      "size": 12051,
       "target_path": null,
       "type": "text"
     },
@@ -33783,7 +33783,7 @@
         },
         {
           "candidate": "scripts/rapport_composants.py",
-          "line": 39,
+          "line": 50,
           "referrer": ".github/workflows/artefact-distribue.yml",
           "resolved": "scripts/rapport_composants.py",
           "severity": "hard"
@@ -35855,7 +35855,7 @@
         },
         {
           "candidate": "scripts/verifier_artefact_distribue.py",
-          "line": 71,
+          "line": 82,
           "referrer": ".github/workflows/artefact-distribue.yml",
           "resolved": "scripts/verifier_artefact_distribue.py",
           "severity": "hard"
@@ -59613,133 +59613,148 @@
         "referrer": ".gitguardian.yaml"
       },
       {
+        "candidate": "pip/_internal/build_env.py",
+        "line": 25,
+        "referrer": ".github/workflows/artefact-distribue.yml"
+      },
+      {
+        "candidate": "pypa/build",
+        "line": 26,
+        "referrer": ".github/workflows/artefact-distribue.yml"
+      },
+      {
+        "candidate": "build/env.py",
+        "line": 27,
+        "referrer": ".github/workflows/artefact-distribue.yml"
+      },
+      {
         "candidate": "actions/checkout",
-        "line": 24,
+        "line": 35,
         "referrer": ".github/workflows/artefact-distribue.yml"
       },
       {
         "candidate": "actions/setup-python",
-        "line": 28,
+        "line": 39,
         "referrer": ".github/workflows/artefact-distribue.yml"
       },
       {
         "candidate": "actions/setup-python",
-        "line": 47,
+        "line": 58,
         "referrer": ".github/workflows/artefact-distribue.yml"
       },
       {
         "candidate": "build/pyproject_hooks/",
-        "line": 48,
+        "line": 59,
         "referrer": ".github/workflows/artefact-distribue.yml"
       },
       {
         "candidate": "actions/setup-python",
-        "line": 54,
+        "line": 65,
         "referrer": ".github/workflows/artefact-distribue.yml"
       },
       {
         "candidate": "build/pyproject_hooks/packaging",
-        "line": 55,
+        "line": 66,
         "referrer": ".github/workflows/artefact-distribue.yml"
       },
       {
         "candidate": "dist/",
-        "line": 71,
+        "line": 82,
         "referrer": ".github/workflows/artefact-distribue.yml"
       },
       {
         "candidate": "dist/",
-        "line": 71,
+        "line": 82,
         "referrer": ".github/workflows/artefact-distribue.yml"
       },
       {
         "candidate": "travail/venv",
-        "line": 94,
+        "line": 105,
         "referrer": ".github/workflows/artefact-distribue.yml"
       },
       {
         "candidate": "travail/venv/bin/python",
-        "line": 95,
+        "line": 106,
         "referrer": ".github/workflows/artefact-distribue.yml"
       },
       {
         "candidate": "travail/venv/bin/forgeai",
-        "line": 98,
+        "line": 109,
         "referrer": ".github/workflows/artefact-distribue.yml"
       },
       {
         "candidate": "travail/venv/bin/forgeai",
-        "line": 99,
+        "line": 110,
         "referrer": ".github/workflows/artefact-distribue.yml"
       },
       {
         "candidate": "travail/venv/bin/python",
-        "line": 100,
+        "line": 111,
         "referrer": ".github/workflows/artefact-distribue.yml"
       },
       {
         "candidate": "catalogue.json",
-        "line": 104,
+        "line": 115,
         "referrer": ".github/workflows/artefact-distribue.yml"
       },
       {
         "candidate": "travail/venv/bin/forgeai",
-        "line": 109,
+        "line": 120,
         "referrer": ".github/workflows/artefact-distribue.yml"
       },
       {
         "candidate": "travail/web.log",
-        "line": 109,
+        "line": 120,
         "referrer": ".github/workflows/artefact-distribue.yml"
       },
       {
         "candidate": "travail/venv/bin/python",
-        "line": 151,
+        "line": 162,
         "referrer": ".github/workflows/artefact-distribue.yml"
       },
       {
         "candidate": "travail/venv/bin/python",
-        "line": 152,
+        "line": 163,
         "referrer": ".github/workflows/artefact-distribue.yml"
       },
       {
         "candidate": "PKG-INFO/setup.cfg",
-        "line": 210,
+        "line": 221,
         "referrer": ".github/workflows/artefact-distribue.yml"
       },
       {
         "candidate": "wheel/zip",
-        "line": 211,
+        "line": 222,
         "referrer": ".github/workflows/artefact-distribue.yml"
       },
       {
         "candidate": "dist/",
-        "line": 233,
+        "line": 244,
         "referrer": ".github/workflows/artefact-distribue.yml"
       },
       {
         "candidate": "dist/SHA256SUMS",
-        "line": 233,
+        "line": 244,
         "referrer": ".github/workflows/artefact-distribue.yml"
       },
       {
         "candidate": "actions/upload-artifact",
-        "line": 236,
+        "line": 247,
         "referrer": ".github/workflows/artefact-distribue.yml"
       },
       {
         "candidate": "dist/",
-        "line": 241,
+        "line": 252,
         "referrer": ".github/workflows/artefact-distribue.yml"
       },
       {
         "candidate": "dist/",
-        "line": 242,
+        "line": 253,
         "referrer": ".github/workflows/artefact-distribue.yml"
       },
       {
         "candidate": "dist/SHA256SUMS",
-        "line": 243,
+        "line": 254,
         "referrer": ".github/workflows/artefact-distribue.yml"
       },
       {
@@ -147577,14 +147592,14 @@
       },
       {
         "candidate": "scripts/rapport_composants.py",
-        "line": 39,
+        "line": 50,
         "referrer": ".github/workflows/artefact-distribue.yml",
         "resolved": "scripts/rapport_composants.py",
         "severity": "hard"
       },
       {
         "candidate": "scripts/verifier_artefact_distribue.py",
-        "line": 71,
+        "line": 82,
         "referrer": ".github/workflows/artefact-distribue.yml",
         "resolved": "scripts/verifier_artefact_distribue.py",
         "severity": "hard"
@@ -177340,7 +177355,7 @@
       "working-sandbox-readme": 1
     },
     "case_collisions_total": 0,
-    "dangling_references_total": 17224,
+    "dangling_references_total": 17227,
     "generated_total": 9,
     "load_bearing_total": 2102,
     "portability_violations_total": 0,

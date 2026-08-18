@@ -94,7 +94,7 @@
   "inputs": [
     {
       "path": ".github/workflows/artefact-distribue.yml",
-      "sha256": "d23d100dfeb1c2d9a8d6f873d7bca5c80a0182de1326c330ecbbb100bee90bc5"
+      "sha256": "58041bf3b6ffd2538222ff3f63fcf1cc04dbc526ab056be227a8b12a85bfbdaa"
     },
     {
       "path": ".github/workflows/ci-deps-update.yml",
