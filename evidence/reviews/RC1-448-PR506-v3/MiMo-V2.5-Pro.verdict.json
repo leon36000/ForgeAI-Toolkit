@@ -1,0 +1,11 @@
+{
+ "verdict": "APPROVE",
+ "objections": [],
+ "date_heure": "2026-08-17T01:09:15.000000+00:00",
+ "prompt_sha256": "1cabfeabba592408edd95aa661df7696fb7963614a666ef658243c0fe9ebc22b",
+ "reviewer_model": "MiMo-V2.5-Pro",
+ "modele_servi": "ask_cloud_model/forge-model-bridge",
+ "gateway_resilience": {
+  "note": "dispatché via mcp__forge-model-bridge__ask_cloud_model (civ_review.py non exécutable : LITELLM_API_KEY absent de la session, interdiction de le rechercher soi-même) ; prompt byte-identique construit depuis ~/proof-method/reviews/TEMPLATE-prompt-revue-neutre.md + pack (story+diff verbatim) via pack_build.sh PROOF_COMPRESS=0 ; job_id=99a15b20-eb99-4b79-887f-9c2bfe4fc9e1 (1er essai job_id=1ad6ab2f avait échoué TRUNCATED_COMPLETION, retenté avec succès) ; date_heure horodatée par l'orchestrateur au moment de réception (le modèle a renvoyé une date fantaisiste dans son JSON, non fiable, remplacée) ; réponse incluait une justification critère-par-critère après le JSON, ignorée par le parsing (premier objet JSON valide seul retenu, conforme extract_json de civ_review.py)"
+ }
+}

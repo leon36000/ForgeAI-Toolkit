@@ -1,0 +1,12 @@
+{
+ "verdict": "APPROVE",
+ "objections": [],
+ "date_heure": "2026-08-18T09:54:33.227377+00:00",
+ "prompt_sha256": "29a8264a5070515e3efb3a6a7a230565a2af2d2b7f96e1a186e894d00a704b54",
+ "reviewer_model": "Gemini-3.7-Flash",
+ "modele_servi": "cbb68403d99be4d2ba89269a9d4e157eab494c5bdf7f6360691ad59a8d70da46",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

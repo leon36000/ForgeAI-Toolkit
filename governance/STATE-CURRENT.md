@@ -14,8 +14,8 @@
     "sha256_recomputed_ok": true
   },
   "ci": {
-    "jobs_total": 25,
-    "workflows": 6
+    "jobs_total": 26,
+    "workflows": 7
   },
   "cli": {
     "subcommands": [
@@ -92,6 +92,10 @@
     "review_quorum": "3/3"
   },
   "inputs": [
+    {
+      "path": ".github/workflows/artefact-distribue.yml",
+      "sha256": "1cbbd322be7e6317009f7a48e5f396ce4de80d5f8d983ae2fe5852a7606ae162"
+    },
     {
       "path": ".github/workflows/ci-deps-update.yml",
       "sha256": "fe4aafcac163054f203e14b309da1dffe9272155d72a91298c05954ce5e79e66"
@@ -673,6 +677,10 @@
       "sha256": "4cfa1f3a029ff82cfca9ad868eeb02b66fbfab51ffaf076c28097a7936348d7b"
     },
     {
+      "path": "tests/test_rc1018_artefact_distribue.py",
+      "sha256": "d36ea6fae56aa4ff36afdeb12177cc0254bc74f21a51c7cb81c5e2ff25e6f9d8"
+    },
+    {
       "path": "tests/test_rc1019_mypy_gate.py",
       "sha256": "fd87c625c8afc7df802ac23e1e6a57948bb12af65070c24a2c162a890ff4d582"
     },
@@ -877,6 +885,10 @@
       "sha256": "dad755645b807bbe9d887ba42af48a435aba2e04c40c63c82a6c81a19ddc4d22"
     },
     {
+      "path": "tests/test_verifier_artefact_distribue.py",
+      "sha256": "f6c83b8f19b234013273e6edf8ce4c4ec8fd82a4d6deb720ffeb83edae5be85c"
+    },
+    {
       "path": "tests/test_web015_error_normalization.py",
       "sha256": "94117fe834fd654cc7db61e79ea9a7f11956672afd14ba48cbfa87bb8adae61f"
     },
@@ -958,8 +970,8 @@
   },
   "tests": {
     "js_files": 3,
-    "python_files": 199,
-    "python_functions_declared": 2470
+    "python_files": 201,
+    "python_functions_declared": 2533
   }
 }
 ```
