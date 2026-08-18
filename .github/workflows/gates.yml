@@ -130,6 +130,15 @@ jobs:
             --base Docs/BASELINE-CLI-DOC.json \
             --base-ref-git origin/main
 
+  exit-codes:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - name: "Gate #443 — codes de sortie CLI documentés"
+        run: python3 scripts/gate_exit_codes.py
+
   mypy-ratchet:
     runs-on: ubuntu-latest
     steps:
@@ -476,6 +485,7 @@ jobs:
       - state-current
       - path-classification
       - docs
+      - exit-codes
       - mypy-ratchet
       - metering-sites
       - catalogue

@@ -1,0 +1,298 @@
+{
+  "_schema": "exit-codes-v1",
+  "codes_globaux": {
+    "0": "succès",
+    "1": "échec générique (exception non prévue)",
+    "130": "interrompu (SIGINT/Ctrl-C)"
+  },
+  "codes_par_commande": {
+    "budget": [
+      {
+        "code": 10,
+        "ligne": 1126,
+        "signification": "budget set quota/agent invalide (BudgetError)"
+      },
+      {
+        "code": 10,
+        "ligne": 1145,
+        "signification": "budget status agent inconnu (BudgetError)"
+      }
+    ],
+    "export": [
+      {
+        "code": 11,
+        "ligne": 1262,
+        "signification": "échec export du bundle portable (PortabilityError)"
+      }
+    ],
+    "gateway": [
+      {
+        "code": 10,
+        "ligne": 1024,
+        "signification": "gateway set-url URL/config invalide (GatewayError)"
+      },
+      {
+        "code": 10,
+        "ligne": 1038,
+        "signification": "gateway wire câblage brique→route invalide (GatewayError)"
+      },
+      {
+        "code": 10,
+        "ligne": 1053,
+        "signification": "gateway verify GatewayError"
+      },
+      {
+        "code": 10,
+        "ligne": 1058,
+        "signification": "gateway verify invariant violé, brique hors gateway détectée"
+      }
+    ],
+    "gpu": [
+      {
+        "code": 12,
+        "ligne": 613,
+        "signification": "gpu drivers échec détection/plan pilotes (DriverError)"
+      }
+    ],
+    "ide": [
+      {
+        "code": 12,
+        "ligne": 1168,
+        "signification": "ide configure gateway non configuré (GatewayError)"
+      },
+      {
+        "code": 12,
+        "ligne": 1174,
+        "signification": "ide configure IDEError"
+      },
+      {
+        "code": 12,
+        "ligne": 1192,
+        "signification": "ide mcp spec --server malformée, absence de ="
+      },
+      {
+        "code": 12,
+        "ligne": 1198,
+        "signification": "ide mcp IDEError"
+      },
+      {
+        "code": 12,
+        "ligne": 1214,
+        "signification": "ide governance IDEError"
+      }
+    ],
+    "import": [
+      {
+        "code": 11,
+        "ligne": 1279,
+        "signification": "échec import du bundle (PortabilityError)"
+      }
+    ],
+    "loop": [
+      {
+        "code": 14,
+        "ligne": 1241,
+        "signification": "loop run timeout d'une commande step/until (RunnerTimeoutError)"
+      },
+      {
+        "code": 15,
+        "ligne": 1245,
+        "signification": "loop run commande annulée (RunnerCancelledError)"
+      },
+      {
+        "code": 12,
+        "ligne": 1248,
+        "signification": "loop run échec de boucle générique (LoopError)"
+      },
+      {
+        "code": 13,
+        "ligne": 1254,
+        "signification": "loop run budget --max-iter épuisé sans que --until réussisse"
+      }
+    ],
+    "model": [
+      {
+        "code": 9,
+        "ligne": 959,
+        "signification": "model add-cloud RouteError"
+      },
+      {
+        "code": 9,
+        "ligne": 988,
+        "signification": "model add-local LocalModelError"
+      },
+      {
+        "code": 9,
+        "ligne": 1012,
+        "signification": "model test route/passphrase invalide (RouteError/KeyError)"
+      },
+      {
+        "code": 9,
+        "ligne": 1016,
+        "signification": "model test test de connexion échoué (result.ok faux)"
+      }
+    ],
+    "node": [
+      {
+        "code": 12,
+        "ligne": 754,
+        "signification": "node probe RemoteProbeError"
+      },
+      {
+        "code": 12,
+        "ligne": 788,
+        "signification": "node tailscale TailscaleError/BootstrapError"
+      },
+      {
+        "code": 12,
+        "ligne": 807,
+        "signification": "node add variable d'env mot de passe vide/absente"
+      },
+      {
+        "code": 12,
+        "ligne": 816,
+        "signification": "node add échec bootstrap SSH (NodeAddError/RemoteProbeError)"
+      },
+      {
+        "code": 11,
+        "ligne": 836,
+        "signification": "node prepare PrepareError"
+      },
+      {
+        "code": 12,
+        "ligne": 871,
+        "signification": "node discover --hostkey requis manquant"
+      },
+      {
+        "code": 12,
+        "ligne": 874,
+        "signification": "node discover --user/--keyfile requis manquants"
+      },
+      {
+        "code": 12,
+        "ligne": 882,
+        "signification": "node discover DiscoverError"
+      },
+      {
+        "code": 8,
+        "ligne": 912,
+        "signification": "node status lecture cluster impossible (ClusterError)"
+      }
+    ],
+    "operators": [
+      {
+        "code": 8,
+        "ligne": 733,
+        "signification": "operators opérateur nommé inconnu, hors OPERATORS"
+      }
+    ],
+    "route": [
+      {
+        "code": 9,
+        "ligne": 1108,
+        "signification": "route configure RouteError, config cache invalide"
+      }
+    ],
+    "strategy": [
+      {
+        "code": 10,
+        "ligne": 1070,
+        "signification": "strategy set StrategyError, rôles/stratégie invalides"
+      },
+      {
+        "code": 10,
+        "ligne": 1077,
+        "signification": "strategy set reconfiguration d'une stratégie déjà définie sans --confirm"
+      }
+    ],
+    "template": [
+      {
+        "code": 12,
+        "ligne": 1313,
+        "signification": "template show TemplateError, template/alias inconnu"
+      },
+      {
+        "code": 12,
+        "ligne": 1332,
+        "signification": "template resolve TemplateError"
+      }
+    ],
+    "wizard": [
+      {
+        "code": 7,
+        "ligne": 185,
+        "signification": "wizard échec dérivation profil hardware hors --dry-run (ProfileError)"
+      },
+      {
+        "code": 8,
+        "ligne": 204,
+        "signification": "wizard validation stack inconnu"
+      },
+      {
+        "code": 8,
+        "ligne": 232,
+        "signification": "wizard validation sélection illisible"
+      },
+      {
+        "code": 8,
+        "ligne": 238,
+        "signification": "wizard validation briques inconnues"
+      },
+      {
+        "code": 8,
+        "ligne": 252,
+        "signification": "wizard validation modèles inconnus"
+      },
+      {
+        "code": 8,
+        "ligne": 257,
+        "signification": "wizard validation moteurs inconnus"
+      },
+      {
+        "code": 8,
+        "ligne": 271,
+        "signification": "wizard validation moteur/vendor incompatible"
+      },
+      {
+        "code": 8,
+        "ligne": 277,
+        "signification": "wizard validation nœuds invalides"
+      },
+      {
+        "code": 8,
+        "ligne": 283,
+        "signification": "wizard validation embeddings hors famille"
+      },
+      {
+        "code": 8,
+        "ligne": 288,
+        "signification": "wizard validation rag_node invalide"
+      },
+      {
+        "code": 9,
+        "ligne": 292,
+        "signification": "wizard rag_node distant incompatible avec --backend compose"
+      },
+      {
+        "code": 8,
+        "ligne": 306,
+        "signification": "wizard adopt référence des services absents du plan"
+      },
+      {
+        "code": 6,
+        "ligne": 404,
+        "signification": "wizard backend cible indisponible après préflight"
+      },
+      {
+        "code": 8,
+        "ligne": 1703,
+        "signification": "wizard échec de déploiement compose/k3s (DeployError, déclenché L433 openbao_k3s ou L452 healthchecks_k3s)"
+      },
+      {
+        "code": 9,
+        "ligne": 518,
+        "signification": "wizard fait attendu absent de la réponse RAG, vérification factuelle échouée"
+      }
+    ]
+  }
+}
