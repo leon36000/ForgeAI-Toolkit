@@ -222,3 +222,8 @@ round 13 de revue scellée — épingle pip lui-même, centralise les licences d
 directement épinglés dans une table nommée) : élargit encore la même fonctionnalité
 d'inventaire déjà décrite par la story. Aucune doc utilisateur supplémentaire concernée — même
 raisonnement que tous les correctifs précédents pour ce même script.
+
+scripts/rapport_composants.py (RC1-024/#454, correctif round 16 de revue scellée — docstring du
+module mise à jour pour mentionner l'entrée pip-bootstrap du round 15, aucun changement de
+comportement) : correction documentaire pure d'une fonctionnalité déjà décrite par la story.
+Aucune doc utilisateur supplémentaire concernée.

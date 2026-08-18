@@ -5,17 +5,21 @@ Pourquoi ce script : l'audit supply-chain EXT-029 exige la liste exhaustive des
 paquets Python (versions + licences) mobilisés pour construire les artefacts
 distribués RC1 (wheel/sdist) — et non celles du produit livré, qui reste stdlib
 pure (``dependencies = []`` dans ``pyproject.toml``). Quatre sources, vérifiées
-empiriquement : ``requirements-ci.txt`` (lockfile à empreintes couvrant tout
+empiriquement, PLUS un signalement honnête d'un composant non épinglable
+(round 15) : ``requirements-ci.txt`` (lockfile à empreintes couvrant tout
 l'outillage CI/test/lint) ; ``pip``/``build==1.2.2.post1`` (installés en direct
 dans ``.github/workflows/artefact-distribue.yml``, hors lockfile — ``pip`` est
 l'outil qui installe tout le reste, round 13, sans dépendance propre, vendoring
-délibéré vérifié via PyPI ``requires_dist`` vide) ET la fermeture des
-dépendances directes propres de ``build`` (``pyproject_hooks``/``packaging`` —
-vérifié via l'API PyPI ``requires_dist`` de la version exacte épinglée, pas
-supposé) ; le backend PEP 517 déclaré (``[build-system].requires``, ex.
-``setuptools`` — build isolé rendu déterministe via ``PIP_CONSTRAINT``,
-``requirements-build-constraints.txt``) ; le projet lui-même. Le rapport est
-non bloquant : il documente, il ne gate pas — même philosophie que
+délibéré vérifié via PyPI ``requires_dist`` vide — SAUF le pip de BOOTSTRAP
+lui-même, fourni par ``actions/setup-python``, jamais épinglable par
+construction : signalé honnêtement avec une version explicitement non figée
+plutôt qu'omis, round 15) ET la fermeture des dépendances directes propres de
+``build`` (``pyproject_hooks``/``packaging`` — vérifié via l'API PyPI
+``requires_dist`` de la version exacte épinglée, pas supposé) ; le backend
+PEP 517 déclaré (``[build-system].requires``, ex. ``setuptools`` — build isolé
+rendu déterministe via ``PIP_CONSTRAINT``, ``requirements-build-constraints.txt``) ;
+le projet lui-même. Le rapport est non bloquant : il documente, il ne gate pas
+— même philosophie que
 ``scripts/ruff_report.py``.
 """
 
