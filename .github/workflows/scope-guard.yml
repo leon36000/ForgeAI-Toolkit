@@ -32,7 +32,14 @@ jobs:
         with:
           persist-credentials: false
           fetch-depth: 0
-      - name: Vérifier que les fichiers modifiés sont dans l'allowlist du claim de CETTE PR
+          # Sur pull_request, GitHub checkout sinon le merge synthétique refs/pull/*/merge.
+          # Le budget doit mesurer la vraie branche pour que `behind` reste honnête.
+          ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
+      - name: Vérifier le budget quantitatif puis le périmètre historique éventuel
         env:
           GITHUB_HEAD_REF: ${{ github.head_ref }}
-        run: python3 scripts/coordination/scope_guard.py
+          BASE_BRANCH: ${{ github.base_ref || 'main' }}
+        run: >-
+          python3 scripts/coordination/scope_guard.py
+          --base-ref "origin/${BASE_BRANCH}"
+          --head-ref HEAD
