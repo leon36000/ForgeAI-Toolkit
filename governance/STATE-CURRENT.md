@@ -94,7 +94,7 @@
   "inputs": [
     {
       "path": ".github/workflows/artefact-distribue.yml",
-      "sha256": "c605932b580b073c91ac936e142fbb3470868eda657d39c400611fcb62985ce5"
+      "sha256": "afca7d68418379d394b8078e347244861abd392ed1ee6bf4e8f53a4225249f54"
     },
     {
       "path": ".github/workflows/ci-deps-update.yml",
@@ -654,7 +654,7 @@
     },
     {
       "path": "tests/test_rapport_composants.py",
-      "sha256": "cf60517fd607a1a058b1cf342684a0e5e50f91aec540bf995a8e7ac54aabd3de"
+      "sha256": "5801cf755dda171c97f43e3267e03115edcf91f0c035b08b6ffde0cfbb917bc5"
     },
     {
       "path": "tests/test_ratelimit.py",
@@ -975,7 +975,7 @@
   "tests": {
     "js_files": 3,
     "python_files": 202,
-    "python_functions_declared": 2577
+    "python_functions_declared": 2580
   }
 }
 ```
