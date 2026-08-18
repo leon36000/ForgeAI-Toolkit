@@ -162,6 +162,26 @@ fichier ne matche ». Corrigé : le test porte désormais sur `couverture[cat]["
 réelle), pas sur l'agrégat de branches. Nouveau test dédié
 (`test_main_fichier_matche_sans_branche_ne_declenche_pas_categorie_vide`).
 
+## Round 6 de revue scellée — correctif Quality Gate SonarCloud (11 issues réelles)
+
+Round 5 APPROVE 3/3 a passé la CI de gates.yml intégralement, mais le check externe posté
+directement par l'App SonarCloud (« SonarCloud Code Analysis », distinct du job interne
+`sonarcloud-scan`) a échoué : « 4.3% Duplication on New Code (required ≤ 3%) » et « C Security
+Rating on New Code (required ≥ A) ». 11 issues réelles, toutes dans
+`scripts/branch_coverage_ratchet.py` : 1 vulnérabilité `pythonsecurity:S8707` (path non validé
+avant lecture disque — même pattern déjà corrigé ailleurs dans ce dépôt, `gate_docs.py`/
+`mypy_gate.py`), 4 `python:S5713` (exception `UnicodeError` redondante avec `ValueError` qu'elle
+hérite déjà), 1 `python:S1854` (variable locale jamais relue), 5 `python:S3776` (complexité
+cognitive > 15, dont `main()` à 60 — accumulation naturelle de 5 rounds de correctifs
+successifs sans jamais reconsolider), et la duplication entre `_valider_baseline`/
+`_valider_baseline_reference` (quasi-identiques).
+
+Corrigé par refactoring pur (extraction de 5 fonctions internes, aucun changement de
+comportement observable) : les 43 tests existants passent SANS AUCUNE modification, le scénario
+réel contre `origin/main` reste `exit 0`/« aucune régression ». Ce refactoring invalide
+mécaniquement la revue scellée round 5 (le code change substantiellement) — round 6 requis
+malgré l'absence de changement fonctionnel.
+
 ## Hors périmètre (incrément 2b, story distincte)
 
 Campagne de mutation ciblée sur les gardes/compensations, disposition de chaque mutant survivant,
