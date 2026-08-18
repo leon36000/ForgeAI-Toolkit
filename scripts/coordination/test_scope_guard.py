@@ -145,7 +145,11 @@ def _write_coord(tmp_path: Path, claims: list[dict] | None, packages: dict | Non
 def _stable_budget_for_main_tests(monkeypatch: pytest.MonkeyPatch, request: pytest.FixtureRequest) -> None:
     """Les tests main historiques isolent le contrôle de claims du budget Git réel."""
     if request.node.name.startswith("test_main_"):
-        monkeypatch.setattr(sg, "collect_scope_metrics", lambda *args, **kwargs: _small_metrics())
+        monkeypatch.setattr(
+            sg,
+            "collect_scope_metrics",
+            lambda *_args, **_kwargs: _small_metrics(),
+        )
 
 
 def test_main_skips_when_coordination_files_absent(
@@ -174,7 +178,7 @@ def test_main_skips_when_no_changed_files(
 ) -> None:
     _write_coord(tmp_path, claims=CONCURRENT_CLAIMS, packages=_pkg_by_id())
     monkeypatch.setattr(sg, "COORD_DIR", tmp_path / "coordination")
-    monkeypatch.setattr(sg, "get_changed_files", lambda base_ref="origin/main": [])
+    monkeypatch.setattr(sg, "get_changed_files", lambda _base_ref="origin/main": [])
     assert sg.main() == 0
     assert "aucun fichier modifié" in capsys.readouterr().out
 
@@ -184,7 +188,7 @@ def test_main_skips_when_branch_has_no_claim(
 ) -> None:
     _write_coord(tmp_path, claims=CONCURRENT_CLAIMS, packages=_pkg_by_id())
     monkeypatch.setattr(sg, "COORD_DIR", tmp_path / "coordination")
-    monkeypatch.setattr(sg, "get_changed_files", lambda base_ref="origin/main": ["README.md"])
+    monkeypatch.setattr(sg, "get_changed_files", lambda _base_ref="origin/main": ["README.md"])
     monkeypatch.setattr(sg, "current_branch", lambda: "branche-hors-coordination")
     assert sg.main() == 0
     assert "aucun claim actif ne correspond" in capsys.readouterr().out
@@ -197,7 +201,9 @@ def test_main_passes_for_own_claim_despite_concurrent_claim(
     _write_coord(tmp_path, claims=CONCURRENT_CLAIMS, packages=_pkg_by_id())
     monkeypatch.setattr(sg, "COORD_DIR", tmp_path / "coordination")
     monkeypatch.setattr(
-        sg, "get_changed_files", lambda base_ref="origin/main": ["coordination/work-packages.json"]
+        sg,
+        "get_changed_files",
+        lambda _base_ref="origin/main": ["coordination/work-packages.json"],
     )
     monkeypatch.setattr(sg, "current_branch", lambda: "br-orch-001")
     assert sg.main() == 0
@@ -209,7 +215,7 @@ def test_main_fails_on_forbidden_path(
 ) -> None:
     _write_coord(tmp_path, claims=CONCURRENT_CLAIMS, packages=_pkg_by_id())
     monkeypatch.setattr(sg, "COORD_DIR", tmp_path / "coordination")
-    monkeypatch.setattr(sg, "get_changed_files", lambda base_ref="origin/main": ["build/artifact.bin"])
+    monkeypatch.setattr(sg, "get_changed_files", lambda _base_ref="origin/main": ["build/artifact.bin"])
     monkeypatch.setattr(sg, "current_branch", lambda: "br-orch-001")
     assert sg.main() == 1
     assert "INTERDIT" in capsys.readouterr().err
@@ -218,7 +224,7 @@ def test_main_fails_on_forbidden_path(
 def test_get_changed_files_raises_on_git_error(monkeypatch: pytest.MonkeyPatch) -> None:
     import subprocess
 
-    def _boom(*args, **kwargs):
+    def _boom(*_args, **_kwargs):
         raise subprocess.CalledProcessError(1, "git diff")
 
     monkeypatch.setattr(subprocess, "run", _boom)
@@ -234,7 +240,7 @@ def test_main_fail_on_git_diff_error(
     _write_coord(tmp_path, claims=CONCURRENT_CLAIMS, packages=_pkg_by_id())
     monkeypatch.setattr(sg, "COORD_DIR", tmp_path / "coordination")
 
-    def _boom(base_ref: str = "origin/main"):
+    def _boom(_base_ref: str = "origin/main"):
         raise subprocess.CalledProcessError(1, "git diff")
 
     monkeypatch.setattr(sg, "get_changed_files", _boom)
@@ -254,7 +260,7 @@ def test_current_branch_falls_back_to_git(monkeypatch: pytest.MonkeyPatch) -> No
     class _Result:
         stdout = "local-branch\n"
 
-    monkeypatch.setattr(subprocess, "run", lambda *a, **k: _Result())
+    monkeypatch.setattr(subprocess, "run", lambda *_args, **_kwargs: _Result())
     assert sg.current_branch() == "local-branch"
 
 
@@ -357,7 +363,11 @@ def test_main_budget_blocks_before_legacy_claim_skip(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture
 ) -> None:
     monkeypatch.setattr(sg, "COORD_DIR", tmp_path / "coordination")
-    monkeypatch.setattr(sg, "collect_scope_metrics", lambda *args, **kwargs: _runaway_metrics())
+    monkeypatch.setattr(
+        sg,
+        "collect_scope_metrics",
+        lambda *_args, **_kwargs: _runaway_metrics(),
+    )
     assert sg.main([]) == 1
     captured = capsys.readouterr()
     assert "budget quantitatif" in captured.err
@@ -389,7 +399,7 @@ def test_main_metric_failure_is_fail_closed_before_legacy_skip(
 
     monkeypatch.setattr(sg, "COORD_DIR", tmp_path / "coordination")
 
-    def _boom(*args, **kwargs):
+    def _boom(*_args, **_kwargs):
         raise subprocess.CalledProcessError(128, "git rev-list")
 
     monkeypatch.setattr(sg, "collect_scope_metrics", _boom)
