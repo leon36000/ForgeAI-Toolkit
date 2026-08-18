@@ -26,6 +26,15 @@ from typing import Any
 import gate_git_ref
 
 
+def _within_repo(racine: Path, candidate: Path) -> Path:
+    """Résout un chemin et garantit qu'il reste dans le dépôt."""
+    resolved_root = racine.resolve()
+    resolved_candidate = candidate.resolve()
+    if not resolved_candidate.is_relative_to(resolved_root):
+        raise ValueError(f"chemin hors du dépôt: {candidate}")
+    return resolved_candidate
+
+
 def _charger_json(chemin: Path) -> dict[str, Any]:
     if not chemin.is_file():
         raise ValueError(f"fichier JSON introuvable : {str(chemin)!r}")
@@ -193,7 +202,6 @@ def _afficher_couverture(couverture: dict[str, dict[str, Any]], seuils: dict[str
 
 
 def _regenerer_baseline(
-    racine: Path,
     categories: dict[str, Any],
     chemin_baseline: Path,
     sortie_json: Path,
@@ -301,6 +309,14 @@ def main(argv: list[str] | None = None) -> int:
         sortie_json = racine / sortie_json
 
     try:
+        chemin_categories = _within_repo(racine, chemin_categories)
+        chemin_baseline = _within_repo(racine, chemin_baseline)
+        sortie_json = _within_repo(racine, sortie_json)
+    except ValueError as erreur:
+        print(str(erreur), file=sys.stderr)
+        return 1
+
+    try:
         categories_brutes = _charger_json(chemin_categories)
         categories = _valider_categories(categories_brutes, "categories")
     except (OSError, ValueError, RuntimeError) as erreur:
@@ -308,7 +324,7 @@ def main(argv: list[str] | None = None) -> int:
         return 1
 
     if arguments.regenerer_baseline:
-        return _regenerer_baseline(racine, categories, chemin_baseline, sortie_json)
+        return _regenerer_baseline(categories, chemin_baseline, sortie_json)
 
     try:
         baseline_brute = _charger_json(chemin_baseline)

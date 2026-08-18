@@ -244,6 +244,21 @@ fichier baseline inchangé en cas de refus, nouveau test dédié) ; 3 non retenu
 documentée comme suffisante rounds précédents ; absence de la sortie de mesure dans le diff —
 limitation structurelle du format de revue, déjà vérifiée empiriquement et documentée).
 
+## Post-round-9 : CI a révélé 2 défauts supplémentaires non détectés par la revue scellée
+
+Après le scellage APPROVE 3/3 (round 9), le premier run CI complet sur PR #582 a révélé 2 défauts
+que ni les tests locaux ni les 9 rounds de revue n'avaient détectés :
+- **`ruff-ratchet`** (cliquet bloquant #450) : `ARG001` (argument `racine` jamais utilisé) dans
+  `_regenerer_baseline`, introduit par le refactoring SonarCloud (round 6) qui avait copié la
+  signature d'une fonction sœur sans vérifier l'usage réel. Corrigé : paramètre retiré.
+- **`SonarCloud Code Analysis`** : Quality Gate « E Security Rating » — 2 vulnérabilités réelles
+  (`pythonsecurity:S2083` BLOCKER + `S8707` MAJOR). La garde `is_file()` déjà en place (round 6)
+  n'est PAS suffisante pour SonarCloud : il exige une preuve de CONFINEMENT explicite au dépôt,
+  pas seulement « le fichier existe ». Corrigé en réutilisant tel quel le pattern déjà établi
+  dans `scripts/governance/validate_authority.py` (`_within_repo()` — résout les deux chemins,
+  vérifie `is_relative_to()`), appliqué aux 3 chemins dérivés de `--racine` dans `main()` avant
+  tout accès disque. 46/46 tests existants verts sans modification.
+
 ## Hors périmètre (incrément 2b, story distincte)
 
 Campagne de mutation ciblée sur les gardes/compensations, disposition de chaque mutant survivant,
