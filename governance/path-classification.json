@@ -1075,6 +1075,13 @@
         },
         {
           "candidate": ".github/workflows/gates.yml",
+          "line": 40,
+          "referrer": "stories/RC1-021-increment2a.md",
+          "resolved": ".github/workflows/gates.yml",
+          "severity": "hard"
+        },
+        {
+          "candidate": ".github/workflows/gates.yml",
           "line": 159,
           "referrer": "stories/REG-029B.md",
           "resolved": ".github/workflows/gates.yml",
@@ -1110,8 +1117,8 @@
         }
       ],
       "rule_id": "governance-github-ci",
-      "sha256": "f917bac6e7e94c0acae99ba47fe2422f090f2598a82ee489392362547b05e4ea",
-      "size": 26526,
+      "sha256": "9c55b1f7cf0e335342cd2fbe0e3abbd821e97a2eeeed08ccea544e576ca3d85f",
+      "size": 26549,
       "target_path": null,
       "type": "text"
     },
@@ -1124,7 +1131,7 @@
       "referenced_by": [
         {
           "candidate": ".github/workflows/scope-guard.yml",
-          "line": 476,
+          "line": 478,
           "referrer": ".github/workflows/gates.yml",
           "resolved": ".github/workflows/scope-guard.yml",
           "severity": "hard"
@@ -1264,7 +1271,7 @@
       "referenced_by": [
         {
           "candidate": ".github/workflows/sonarcloud.yml",
-          "line": 477,
+          "line": 479,
           "referrer": ".github/workflows/gates.yml",
           "resolved": ".github/workflows/sonarcloud.yml",
           "severity": "hard"
@@ -6863,8 +6870,8 @@
         }
       ],
       "rule_id": "evidence-registres-root",
-      "sha256": "949dd5c787abf560de56599c0c55fc8117a2fa472dece70918ac91f69a5ab7f8",
-      "size": 397966,
+      "sha256": "db3628e665ef7cd29b89fa69b1f327f29a462ea3b3eb870b987f5a394cb936e4",
+      "size": 398798,
       "target_path": null,
       "type": "text"
     },
@@ -8824,8 +8831,8 @@
         }
       ],
       "rule_id": "evidence-reviews-root",
-      "sha256": "969bcbf553daca01fb5b601d8e60bfd6649ea93887c843b1e151b640818f1d83",
-      "size": 2895,
+      "sha256": "b16ecdde9227adb00d3f107193cfc684bfd3350527c2171b35ea4ec937bdd4d5",
+      "size": 2906,
       "target_path": null,
       "type": "text"
     },
@@ -20618,6 +20625,19 @@
       "generated": false,
       "load_bearing": true,
       "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-021-2a/RECU.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": null,
+      "size": null,
+      "target_path": null,
+      "type": null
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
       "path": "evidence/reviews/RC1-021-v1/DeepSeek-V4-Pro.verdict.json",
       "referenced_by": [],
       "rule_id": "evidence-reviews-root",
@@ -28884,8 +28904,36 @@
         },
         {
           "candidate": "governance/branch-coverage-baseline.json",
-          "line": 194,
+          "line": 197,
           "referrer": "scripts/branch_coverage_ratchet.py",
+          "resolved": "governance/branch-coverage-baseline.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/branch-coverage-baseline.json",
+          "line": 5,
+          "referrer": "stories/RC1-021-increment2a.md",
+          "resolved": "governance/branch-coverage-baseline.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/branch-coverage-baseline.json",
+          "line": 37,
+          "referrer": "stories/RC1-021-increment2a.md",
+          "resolved": "governance/branch-coverage-baseline.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/branch-coverage-baseline.json",
+          "line": 47,
+          "referrer": "stories/RC1-021-increment2a.md",
+          "resolved": "governance/branch-coverage-baseline.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/branch-coverage-baseline.json",
+          "line": 61,
+          "referrer": "stories/RC1-021-increment2a.md",
           "resolved": "governance/branch-coverage-baseline.json",
           "severity": "hard"
         }
@@ -28912,8 +28960,22 @@
         },
         {
           "candidate": "governance/branch-coverage-categories.json",
-          "line": 269,
+          "line": 272,
           "referrer": "scripts/branch_coverage_ratchet.py",
+          "resolved": "governance/branch-coverage-categories.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/branch-coverage-categories.json",
+          "line": 282,
+          "referrer": "scripts/branch_coverage_ratchet.py",
+          "resolved": "governance/branch-coverage-categories.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/branch-coverage-categories.json",
+          "line": 31,
+          "referrer": "stories/RC1-021-increment2a.md",
           "resolved": "governance/branch-coverage-categories.json",
           "severity": "hard"
         }
@@ -29752,7 +29814,7 @@
       "referenced_by": [
         {
           "candidate": "governance/ruff-baseline.json",
-          "line": 406,
+          "line": 408,
           "referrer": ".github/workflows/gates.yml",
           "resolved": "governance/ruff-baseline.json",
           "severity": "hard"
@@ -29976,7 +30038,7 @@
       "referenced_by": [
         {
           "candidate": "governance/ruff-classification.json",
-          "line": 404,
+          "line": 406,
           "referrer": ".github/workflows/gates.yml",
           "resolved": "governance/ruff-classification.json",
           "severity": "hard"
@@ -31007,7 +31069,7 @@
       "referenced_by": [
         {
           "candidate": "scripts/branch_coverage_ratchet.py",
-          "line": 400,
+          "line": 402,
           "referrer": ".github/workflows/gates.yml",
           "resolved": "scripts/branch_coverage_ratchet.py",
           "severity": "hard"
@@ -31018,11 +31080,25 @@
           "referrer": "governance/branch-coverage-baseline.json",
           "resolved": "scripts/branch_coverage_ratchet.py",
           "severity": "hard"
+        },
+        {
+          "candidate": "scripts/branch_coverage_ratchet.py",
+          "line": 34,
+          "referrer": "stories/RC1-021-increment2a.md",
+          "resolved": "scripts/branch_coverage_ratchet.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "scripts/branch_coverage_ratchet.py",
+          "line": 77,
+          "referrer": "stories/RC1-021-increment2a.md",
+          "resolved": "scripts/branch_coverage_ratchet.py",
+          "severity": "hard"
         }
       ],
       "rule_id": "governance-scripts-root",
-      "sha256": "5c6c2967eeaf447631dcc959a0dd9f043c823fd55b50ad2ae2476e71d8217c6f",
-      "size": 16227,
+      "sha256": "21c5d61adc08a66005a8f615a1182444f836f8a4df8ce5d87026fd9e2006d3cb",
+      "size": 17247,
       "target_path": null,
       "type": "text"
     },
@@ -31057,13 +31133,6 @@
         {
           "candidate": "scripts/branch_coverage_report.py",
           "line": 377,
-          "referrer": ".github/workflows/gates.yml",
-          "resolved": "scripts/branch_coverage_report.py",
-          "severity": "hard"
-        },
-        {
-          "candidate": "scripts/branch_coverage_report.py",
-          "line": 398,
           "referrer": ".github/workflows/gates.yml",
           "resolved": "scripts/branch_coverage_report.py",
           "severity": "hard"
@@ -31163,6 +31232,20 @@
           "candidate": "scripts/branch_coverage_report.py",
           "line": 4,
           "referrer": "scripts/branch_coverage_ratchet.py",
+          "resolved": "scripts/branch_coverage_report.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "scripts/branch_coverage_report.py",
+          "line": 4,
+          "referrer": "stories/RC1-021-increment2a.md",
+          "resolved": "scripts/branch_coverage_report.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "scripts/branch_coverage_report.py",
+          "line": 122,
+          "referrer": "stories/RC1-021-increment2a.md",
           "resolved": "scripts/branch_coverage_report.py",
           "severity": "hard"
         }
@@ -33027,7 +33110,7 @@
       "referenced_by": [
         {
           "candidate": "scripts/governance/verifier_agregat_tests.py",
-          "line": 522,
+          "line": 524,
           "referrer": ".github/workflows/gates.yml",
           "resolved": "scripts/governance/verifier_agregat_tests.py",
           "severity": "hard"
@@ -35155,7 +35238,7 @@
       "referenced_by": [
         {
           "candidate": "scripts/ruff_noqa_gate.py",
-          "line": 445,
+          "line": 447,
           "referrer": ".github/workflows/gates.yml",
           "resolved": "scripts/ruff_noqa_gate.py",
           "severity": "hard"
@@ -35463,14 +35546,14 @@
       "referenced_by": [
         {
           "candidate": "scripts/ruff_ratchet.py",
-          "line": 405,
+          "line": 407,
           "referrer": ".github/workflows/gates.yml",
           "resolved": "scripts/ruff_ratchet.py",
           "severity": "hard"
         },
         {
           "candidate": "scripts/ruff_ratchet.py",
-          "line": 423,
+          "line": 425,
           "referrer": ".github/workflows/gates.yml",
           "resolved": "scripts/ruff_ratchet.py",
           "severity": "hard"
@@ -47262,6 +47345,19 @@
       "generated": false,
       "load_bearing": false,
       "owner": "gouvernance-stories",
+      "path": "stories/RC1-021-increment2a.md",
+      "referenced_by": [],
+      "rule_id": "governance-stories",
+      "sha256": "6249b074a90c72ff05bd53df0325a13a983ffd5941ee414b399fa62f4afa53c7",
+      "size": 12805,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "GOVERNANCE",
+      "generated": false,
+      "load_bearing": false,
+      "owner": "gouvernance-stories",
       "path": "stories/RC1-022.md",
       "referenced_by": [
         {
@@ -49338,11 +49434,18 @@
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_branch_coverage_ratchet.py",
           "severity": "hard"
+        },
+        {
+          "candidate": "tests/test_branch_coverage_ratchet.py",
+          "line": 43,
+          "referrer": "stories/RC1-021-increment2a.md",
+          "resolved": "tests/test_branch_coverage_ratchet.py",
+          "severity": "hard"
         }
       ],
       "rule_id": "test-suite",
-      "sha256": "460f0667d59ef3242f0083dd8007476ec5a1fa8432f60b510e4c17477cd4f8bd",
-      "size": 27492,
+      "sha256": "e728d067d23b988ef4420ac47ceab975914d3651819c4b4abdccf92a42dca7d3",
+      "size": 29238,
       "target_path": null,
       "type": "text"
     },
@@ -50148,6 +50251,13 @@
           "candidate": "tests/test_data002b_wal_idempotent.py",
           "line": 83,
           "referrer": "stories/HEALTH-030.md",
+          "resolved": "tests/test_data002b_wal_idempotent.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "tests/test_data002b_wal_idempotent.py",
+          "line": 85,
+          "referrer": "stories/RC1-021-increment2a.md",
           "resolved": "tests/test_data002b_wal_idempotent.py",
           "severity": "hard"
         },
@@ -55827,6 +55937,13 @@
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_rc1580_tests_aggregate.py",
           "severity": "hard"
+        },
+        {
+          "candidate": "tests/test_rc1580_tests_aggregate.py",
+          "line": 46,
+          "referrer": "stories/RC1-021-increment2a.md",
+          "resolved": "tests/test_rc1580_tests_aggregate.py",
+          "severity": "hard"
         }
       ],
       "rule_id": "test-suite",
@@ -60521,92 +60638,92 @@
       },
       {
         "candidate": "actions/checkout",
-        "line": 388,
+        "line": 389,
         "referrer": ".github/workflows/gates.yml"
       },
       {
         "candidate": "actions/setup-python",
-        "line": 392,
+        "line": 393,
         "referrer": ".github/workflows/gates.yml"
       },
       {
-        "candidate": "branch-coverage.json",
+        "candidate": "actions/download-artifact",
         "line": 398,
         "referrer": ".github/workflows/gates.yml"
       },
       {
         "candidate": "branch-coverage.json",
-        "line": 400,
+        "line": 402,
         "referrer": ".github/workflows/gates.yml"
       },
       {
         "candidate": "origin/main",
-        "line": 400,
+        "line": 402,
         "referrer": ".github/workflows/gates.yml"
       },
       {
         "candidate": "origin/main",
-        "line": 407,
+        "line": 409,
         "referrer": ".github/workflows/gates.yml"
       },
       {
         "candidate": "actions/checkout",
-        "line": 412,
+        "line": 414,
         "referrer": ".github/workflows/gates.yml"
       },
       {
         "candidate": "actions/setup-python",
-        "line": 416,
+        "line": 418,
         "referrer": ".github/workflows/gates.yml"
       },
       {
         "candidate": "origin/main",
-        "line": 425,
+        "line": 427,
         "referrer": ".github/workflows/gates.yml"
       },
       {
         "candidate": "ruff-ratchet/mypy-ratchet",
-        "line": 433,
+        "line": 435,
         "referrer": ".github/workflows/gates.yml"
       },
       {
         "candidate": "actions/checkout",
-        "line": 436,
+        "line": 438,
         "referrer": ".github/workflows/gates.yml"
       },
       {
         "candidate": "actions/setup-python",
-        "line": 440,
+        "line": 442,
         "referrer": ".github/workflows/gates.yml"
       },
       {
         "candidate": "origin/main",
-        "line": 447,
+        "line": 449,
         "referrer": ".github/workflows/gates.yml"
       },
       {
         "candidate": "success/skipped/neutral",
-        "line": 468,
+        "line": 470,
         "referrer": ".github/workflows/gates.yml"
       },
       {
         "candidate": "scope-guard/coordination-validation",
-        "line": 476,
+        "line": 478,
         "referrer": ".github/workflows/gates.yml"
       },
       {
         "candidate": "scripts/governance/",
-        "line": 512,
+        "line": 514,
         "referrer": ".github/workflows/gates.yml"
       },
       {
         "candidate": "verifier_agregat_tests.py",
-        "line": 513,
+        "line": 515,
         "referrer": ".github/workflows/gates.yml"
       },
       {
         "candidate": "actions/checkout",
-        "line": 516,
+        "line": 518,
         "referrer": ".github/workflows/gates.yml"
       },
       {
@@ -98165,6 +98282,11 @@
         "referrer": "evidence/reviews/RC1-020-v3/RECU.json"
       },
       {
+        "candidate": "recu-revue/1",
+        "line": 2,
+        "referrer": "evidence/reviews/RC1-021-2a/RECU.json"
+      },
+      {
         "candidate": "branch-coverage.json",
         "line": 13,
         "referrer": "evidence/reviews/RC1-021-v2/MiniMax-M3.verdict.json"
@@ -103470,23 +103592,33 @@
         "referrer": "scripts/branch_coverage_ratchet.py"
       },
       {
+        "candidate": "vide/malform",
+        "line": 131,
+        "referrer": "scripts/branch_coverage_ratchet.py"
+      },
+      {
         "candidate": "branch-coverage.json",
-        "line": 192,
+        "line": 195,
         "referrer": "scripts/branch_coverage_ratchet.py"
       },
       {
         "candidate": "origin/main",
-        "line": 193,
+        "line": 196,
         "referrer": "scripts/branch_coverage_ratchet.py"
       },
       {
         "candidate": "branch-coverage-categories.json",
-        "line": 198,
+        "line": 201,
         "referrer": "scripts/branch_coverage_ratchet.py"
       },
       {
         "candidate": "branch-coverage-baseline.json",
-        "line": 199,
+        "line": 202,
+        "referrer": "scripts/branch_coverage_ratchet.py"
+      },
+      {
+        "candidate": "s/renomm",
+        "line": 282,
         "referrer": "scripts/branch_coverage_ratchet.py"
       },
       {
@@ -129260,6 +129392,181 @@
         "referrer": "stories/RC1-018.md"
       },
       {
+        "candidate": "origin/main",
+        "line": 12,
+        "referrer": "stories/RC1-021-increment2a.md"
+      },
+      {
+        "candidate": "gate_git_ref.py",
+        "line": 12,
+        "referrer": "stories/RC1-021-increment2a.md"
+      },
+      {
+        "candidate": "ruff_ratchet.py",
+        "line": 20,
+        "referrer": "stories/RC1-021-increment2a.md"
+      },
+      {
+        "candidate": "mypy_gate.py",
+        "line": 20,
+        "referrer": "stories/RC1-021-increment2a.md"
+      },
+      {
+        "candidate": "branch_coverage_report.py",
+        "line": 35,
+        "referrer": "stories/RC1-021-increment2a.md"
+      },
+      {
+        "candidate": "gate_git_ref.py",
+        "line": 38,
+        "referrer": "stories/RC1-021-increment2a.md"
+      },
+      {
+        "candidate": "ruff_ratchet.py",
+        "line": 38,
+        "referrer": "stories/RC1-021-increment2a.md"
+      },
+      {
+        "candidate": "mypy_gate.py",
+        "line": 38,
+        "referrer": "stories/RC1-021-increment2a.md"
+      },
+      {
+        "candidate": "gates.yml",
+        "line": 45,
+        "referrer": "stories/RC1-021-increment2a.md"
+      },
+      {
+        "candidate": "ruff_ratchet.py",
+        "line": 57,
+        "referrer": "stories/RC1-021-increment2a.md"
+      },
+      {
+        "candidate": "origin/main",
+        "line": 60,
+        "referrer": "stories/RC1-021-increment2a.md"
+      },
+      {
+        "candidate": "origin/main",
+        "line": 61,
+        "referrer": "stories/RC1-021-increment2a.md"
+      },
+      {
+        "candidate": "gories/r",
+        "line": 69,
+        "referrer": "stories/RC1-021-increment2a.md"
+      },
+      {
+        "candidate": "nes/distances",
+        "line": 71,
+        "referrer": "stories/RC1-021-increment2a.md"
+      },
+      {
+        "candidate": "test_rc1580_tests_aggregate.py",
+        "line": 73,
+        "referrer": "stories/RC1-021-increment2a.md"
+      },
+      {
+        "candidate": "branch-coverage.json",
+        "line": 77,
+        "referrer": "stories/RC1-021-increment2a.md"
+      },
+      {
+        "candidate": "origin/main",
+        "line": 78,
+        "referrer": "stories/RC1-021-increment2a.md"
+      },
+      {
+        "candidate": "ruff/mypy",
+        "line": 81,
+        "referrer": "stories/RC1-021-increment2a.md"
+      },
+      {
+        "candidate": "gates.yml",
+        "line": 82,
+        "referrer": "stories/RC1-021-increment2a.md"
+      },
+      {
+        "candidate": "branch-coverage-categories.json",
+        "line": 82,
+        "referrer": "stories/RC1-021-increment2a.md"
+      },
+      {
+        "candidate": "branch-coverage-baseline.json",
+        "line": 83,
+        "referrer": "stories/RC1-021-increment2a.md"
+      },
+      {
+        "candidate": "no_stub_scan.py",
+        "line": 84,
+        "referrer": "stories/RC1-021-increment2a.md"
+      },
+      {
+        "candidate": "ruff_ratchet.py",
+        "line": 97,
+        "referrer": "stories/RC1-021-increment2a.md"
+      },
+      {
+        "candidate": "cli.py",
+        "line": 106,
+        "referrer": "stories/RC1-021-increment2a.md"
+      },
+      {
+        "candidate": "deploy/",
+        "line": 106,
+        "referrer": "stories/RC1-021-increment2a.md"
+      },
+      {
+        "candidate": "augmenter/baisser",
+        "line": 120,
+        "referrer": "stories/RC1-021-increment2a.md"
+      },
+      {
+        "candidate": "story/docstring",
+        "line": 124,
+        "referrer": "stories/RC1-021-increment2a.md"
+      },
+      {
+        "candidate": "actions/download-artifact",
+        "line": 128,
+        "referrer": "stories/RC1-021-increment2a.md"
+      },
+      {
+        "candidate": "repos/actions/download-artifact/tags",
+        "line": 129,
+        "referrer": "stories/RC1-021-increment2a.md"
+      },
+      {
+        "candidate": "branch_coverage_report.py",
+        "line": 130,
+        "referrer": "stories/RC1-021-increment2a.md"
+      },
+      {
+        "candidate": "verifier_agregat_tests.py",
+        "line": 133,
+        "referrer": "stories/RC1-021-increment2a.md"
+      },
+      {
+        "candidate": "majeure/critique",
+        "line": 141,
+        "referrer": "stories/RC1-021-increment2a.md"
+      },
+      {
+        "candidate": "majeure/critique",
+        "line": 155,
+        "referrer": "stories/RC1-021-increment2a.md"
+      },
+      {
+        "candidate": "gardes/compensations",
+        "line": 167,
+        "referrer": "stories/RC1-021-increment2a.md"
+      },
+      {
+        "candidate": "mutmut/cosmic-ray/mutpy",
+        "line": 169,
+        "referrer": "stories/RC1-021-increment2a.md"
+      },
+      {
         "candidate": "src/forgeai/",
         "line": 3,
         "referrer": "stories/RC1-022.md"
@@ -133340,108 +133647,133 @@
         "referrer": "tests/test_branch_coverage_ratchet.py"
       },
       {
-        "candidate": "branch-coverage.json",
-        "line": 518,
+        "candidate": "src/forgeai/deploy/a.py",
+        "line": 517,
         "referrer": "tests/test_branch_coverage_ratchet.py"
       },
       {
         "candidate": "branch-coverage.json",
-        "line": 525,
+        "line": 520,
+        "referrer": "tests/test_branch_coverage_ratchet.py"
+      },
+      {
+        "candidate": "src/forgeai/deploy/a.py",
+        "line": 537,
+        "referrer": "tests/test_branch_coverage_ratchet.py"
+      },
+      {
+        "candidate": "src/forgeai/secrets/const.py",
+        "line": 538,
         "referrer": "tests/test_branch_coverage_ratchet.py"
       },
       {
         "candidate": "branch-coverage.json",
-        "line": 533,
+        "line": 541,
         "referrer": "tests/test_branch_coverage_ratchet.py"
       },
       {
         "candidate": "branch-coverage.json",
-        "line": 540,
+        "line": 552,
         "referrer": "tests/test_branch_coverage_ratchet.py"
       },
       {
         "candidate": "branch-coverage.json",
-        "line": 542,
+        "line": 559,
+        "referrer": "tests/test_branch_coverage_ratchet.py"
+      },
+      {
+        "candidate": "branch-coverage.json",
+        "line": 567,
+        "referrer": "tests/test_branch_coverage_ratchet.py"
+      },
+      {
+        "candidate": "branch-coverage.json",
+        "line": 574,
+        "referrer": "tests/test_branch_coverage_ratchet.py"
+      },
+      {
+        "candidate": "branch-coverage.json",
+        "line": 576,
         "referrer": "tests/test_branch_coverage_ratchet.py"
       },
       {
         "candidate": "branch-coverage-categories.json",
-        "line": 548,
+        "line": 582,
         "referrer": "tests/test_branch_coverage_ratchet.py"
       },
       {
         "candidate": "branch-coverage.json",
-        "line": 551,
-        "referrer": "tests/test_branch_coverage_ratchet.py"
-      },
-      {
-        "candidate": "branch-coverage-baseline.json",
-        "line": 558,
-        "referrer": "tests/test_branch_coverage_ratchet.py"
-      },
-      {
-        "candidate": "branch-coverage.json",
-        "line": 560,
-        "referrer": "tests/test_branch_coverage_ratchet.py"
-      },
-      {
-        "candidate": "branch-coverage.json",
-        "line": 569,
-        "referrer": "tests/test_branch_coverage_ratchet.py"
-      },
-      {
-        "candidate": "branch-coverage-categories.json",
-        "line": 575,
-        "referrer": "tests/test_branch_coverage_ratchet.py"
-      },
-      {
-        "candidate": "branch-coverage.json",
-        "line": 578,
-        "referrer": "tests/test_branch_coverage_ratchet.py"
-      },
-      {
-        "candidate": "branch-coverage-baseline.json",
         "line": 585,
         "referrer": "tests/test_branch_coverage_ratchet.py"
       },
       {
-        "candidate": "branch-coverage.json",
-        "line": 587,
-        "referrer": "tests/test_branch_coverage_ratchet.py"
-      },
-      {
-        "candidate": "gates.yml",
+        "candidate": "branch-coverage-baseline.json",
         "line": 592,
         "referrer": "tests/test_branch_coverage_ratchet.py"
       },
       {
-        "candidate": "gates.yml",
-        "line": 598,
+        "candidate": "branch-coverage.json",
+        "line": 594,
         "referrer": "tests/test_branch_coverage_ratchet.py"
       },
       {
-        "candidate": "gates.yml",
-        "line": 602,
+        "candidate": "branch-coverage.json",
+        "line": 603,
         "referrer": "tests/test_branch_coverage_ratchet.py"
       },
       {
-        "candidate": "branch_coverage_ratchet.py",
-        "line": 610,
+        "candidate": "branch-coverage-categories.json",
+        "line": 609,
         "referrer": "tests/test_branch_coverage_ratchet.py"
       },
       {
-        "candidate": "branch_coverage_ratchet.py",
+        "candidate": "branch-coverage.json",
         "line": 612,
         "referrer": "tests/test_branch_coverage_ratchet.py"
       },
       {
-        "candidate": "gates.yml",
-        "line": 612,
+        "candidate": "branch-coverage-baseline.json",
+        "line": 619,
+        "referrer": "tests/test_branch_coverage_ratchet.py"
+      },
+      {
+        "candidate": "branch-coverage.json",
+        "line": 621,
         "referrer": "tests/test_branch_coverage_ratchet.py"
       },
       {
         "candidate": "gates.yml",
-        "line": 614,
+        "line": 626,
+        "referrer": "tests/test_branch_coverage_ratchet.py"
+      },
+      {
+        "candidate": "gates.yml",
+        "line": 632,
+        "referrer": "tests/test_branch_coverage_ratchet.py"
+      },
+      {
+        "candidate": "gates.yml",
+        "line": 636,
+        "referrer": "tests/test_branch_coverage_ratchet.py"
+      },
+      {
+        "candidate": "branch_coverage_ratchet.py",
+        "line": 644,
+        "referrer": "tests/test_branch_coverage_ratchet.py"
+      },
+      {
+        "candidate": "branch_coverage_ratchet.py",
+        "line": 646,
+        "referrer": "tests/test_branch_coverage_ratchet.py"
+      },
+      {
+        "candidate": "gates.yml",
+        "line": 646,
+        "referrer": "tests/test_branch_coverage_ratchet.py"
+      },
+      {
+        "candidate": "gates.yml",
+        "line": 648,
         "referrer": "tests/test_branch_coverage_ratchet.py"
       },
       {
@@ -148281,6 +148613,13 @@
         "severity": "hard"
       },
       {
+        "candidate": "RC1-021-2a",
+        "line": 214,
+        "referrer": "evidence/reviews/BINDING.txt",
+        "resolved": "evidence/reviews/RC1-021-2a",
+        "severity": "hard"
+      },
+      {
         "candidate": "scripts/gate_docs.py",
         "line": 11,
         "referrer": "sonar-project.properties",
@@ -149058,71 +149397,64 @@
         "severity": "hard"
       },
       {
-        "candidate": "scripts/branch_coverage_report.py",
-        "line": 398,
-        "referrer": ".github/workflows/gates.yml",
-        "resolved": "scripts/branch_coverage_report.py",
-        "severity": "hard"
-      },
-      {
         "candidate": "scripts/branch_coverage_ratchet.py",
-        "line": 400,
+        "line": 402,
         "referrer": ".github/workflows/gates.yml",
         "resolved": "scripts/branch_coverage_ratchet.py",
         "severity": "hard"
       },
       {
         "candidate": "governance/ruff-classification.json",
-        "line": 404,
+        "line": 406,
         "referrer": ".github/workflows/gates.yml",
         "resolved": "governance/ruff-classification.json",
         "severity": "hard"
       },
       {
         "candidate": "scripts/ruff_ratchet.py",
-        "line": 405,
+        "line": 407,
         "referrer": ".github/workflows/gates.yml",
         "resolved": "scripts/ruff_ratchet.py",
         "severity": "hard"
       },
       {
         "candidate": "governance/ruff-baseline.json",
-        "line": 406,
+        "line": 408,
         "referrer": ".github/workflows/gates.yml",
         "resolved": "governance/ruff-baseline.json",
         "severity": "hard"
       },
       {
         "candidate": "scripts/ruff_ratchet.py",
-        "line": 423,
+        "line": 425,
         "referrer": ".github/workflows/gates.yml",
         "resolved": "scripts/ruff_ratchet.py",
         "severity": "hard"
       },
       {
         "candidate": "scripts/ruff_noqa_gate.py",
-        "line": 445,
+        "line": 447,
         "referrer": ".github/workflows/gates.yml",
         "resolved": "scripts/ruff_noqa_gate.py",
         "severity": "hard"
       },
       {
         "candidate": ".github/workflows/scope-guard.yml",
-        "line": 476,
+        "line": 478,
         "referrer": ".github/workflows/gates.yml",
         "resolved": ".github/workflows/scope-guard.yml",
         "severity": "hard"
       },
       {
         "candidate": ".github/workflows/sonarcloud.yml",
-        "line": 477,
+        "line": 479,
         "referrer": ".github/workflows/gates.yml",
         "resolved": ".github/workflows/sonarcloud.yml",
         "severity": "hard"
       },
       {
         "candidate": "scripts/governance/verifier_agregat_tests.py",
-        "line": 522,
+        "line": 524,
         "referrer": ".github/workflows/gates.yml",
         "resolved": "scripts/governance/verifier_agregat_tests.py",
         "severity": "hard"
@@ -172103,14 +172435,21 @@
       },
       {
         "candidate": "governance/branch-coverage-baseline.json",
-        "line": 194,
+        "line": 197,
         "referrer": "scripts/branch_coverage_ratchet.py",
         "resolved": "governance/branch-coverage-baseline.json",
         "severity": "hard"
       },
       {
         "candidate": "governance/branch-coverage-categories.json",
-        "line": 269,
+        "line": 272,
+        "referrer": "scripts/branch_coverage_ratchet.py",
+        "resolved": "governance/branch-coverage-categories.json",
+        "severity": "hard"
+      },
+      {
+        "candidate": "governance/branch-coverage-categories.json",
+        "line": 282,
         "referrer": "scripts/branch_coverage_ratchet.py",
         "resolved": "governance/branch-coverage-categories.json",
         "severity": "hard"
@@ -175658,6 +175997,97 @@
         "severity": "hard"
       },
       {
+        "candidate": "scripts/branch_coverage_report.py",
+        "line": 4,
+        "referrer": "stories/RC1-021-increment2a.md",
+        "resolved": "scripts/branch_coverage_report.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "governance/branch-coverage-baseline.json",
+        "line": 5,
+        "referrer": "stories/RC1-021-increment2a.md",
+        "resolved": "governance/branch-coverage-baseline.json",
+        "severity": "hard"
+      },
+      {
+        "candidate": "governance/branch-coverage-categories.json",
+        "line": 31,
+        "referrer": "stories/RC1-021-increment2a.md",
+        "resolved": "governance/branch-coverage-categories.json",
+        "severity": "hard"
+      },
+      {
+        "candidate": "scripts/branch_coverage_ratchet.py",
+        "line": 34,
+        "referrer": "stories/RC1-021-increment2a.md",
+        "resolved": "scripts/branch_coverage_ratchet.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "governance/branch-coverage-baseline.json",
+        "line": 37,
+        "referrer": "stories/RC1-021-increment2a.md",
+        "resolved": "governance/branch-coverage-baseline.json",
+        "severity": "hard"
+      },
+      {
+        "candidate": ".github/workflows/gates.yml",
+        "line": 40,
+        "referrer": "stories/RC1-021-increment2a.md",
+        "resolved": ".github/workflows/gates.yml",
+        "severity": "hard"
+      },
+      {
+        "candidate": "tests/test_branch_coverage_ratchet.py",
+        "line": 43,
+        "referrer": "stories/RC1-021-increment2a.md",
+        "resolved": "tests/test_branch_coverage_ratchet.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "tests/test_rc1580_tests_aggregate.py",
+        "line": 46,
+        "referrer": "stories/RC1-021-increment2a.md",
+        "resolved": "tests/test_rc1580_tests_aggregate.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "governance/branch-coverage-baseline.json",
+        "line": 47,
+        "referrer": "stories/RC1-021-increment2a.md",
+        "resolved": "governance/branch-coverage-baseline.json",
+        "severity": "hard"
+      },
+      {
+        "candidate": "governance/branch-coverage-baseline.json",
+        "line": 61,
+        "referrer": "stories/RC1-021-increment2a.md",
+        "resolved": "governance/branch-coverage-baseline.json",
+        "severity": "hard"
+      },
+      {
+        "candidate": "scripts/branch_coverage_ratchet.py",
+        "line": 77,
+        "referrer": "stories/RC1-021-increment2a.md",
+        "resolved": "scripts/branch_coverage_ratchet.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "tests/test_data002b_wal_idempotent.py",
+        "line": 85,
+        "referrer": "stories/RC1-021-increment2a.md",
+        "resolved": "tests/test_data002b_wal_idempotent.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "scripts/branch_coverage_report.py",
+        "line": 122,
+        "referrer": "stories/RC1-021-increment2a.md",
+        "resolved": "scripts/branch_coverage_report.py",
+        "severity": "hard"
+      },
+      {
         "candidate": "tests/test_rel038b_unicite.py",
         "line": 8,
         "referrer": "stories/RC1-022.md",
@@ -178640,9 +179070,9 @@
     "by_class": {
       "ARCHIVE": 44,
       "DOCS": 18,
-      "EVIDENCE": 1641,
+      "EVIDENCE": 1642,
       "GENERATED": 5,
-      "GOVERNANCE": 208,
+      "GOVERNANCE": 209,
       "PRODUCT": 113,
       "TEST": 219,
       "WORKING": 10
@@ -178659,7 +179089,7 @@
       "evidence-audit-output-root": 18,
       "evidence-dedup-root": 2,
       "evidence-registres-root": 35,
-      "evidence-reviews-root": 1586,
+      "evidence-reviews-root": 1587,
       "generated-authority-map": 1,
       "generated-path-classification-json": 1,
       "generated-path-classification-markdown": 1,
@@ -178688,7 +179118,7 @@
       "governance-scripts-coordination": 4,
       "governance-scripts-governance": 12,
       "governance-scripts-root": 31,
-      "governance-stories": 94,
+      "governance-stories": 95,
       "product-catalogue-checksum": 1,
       "product-source": 112,
       "test-suite": 219,
@@ -178696,11 +179126,11 @@
       "working-sandbox-readme": 1
     },
     "case_collisions_total": 0,
-    "dangling_references_total": 17358,
+    "dangling_references_total": 17401,
     "generated_total": 9,
-    "load_bearing_total": 2115,
+    "load_bearing_total": 2116,
     "portability_violations_total": 0,
-    "tracked_total": 2258,
+    "tracked_total": 2260,
     "unclassified_total": 0,
     "unicode_anomalies_total": 0
   },

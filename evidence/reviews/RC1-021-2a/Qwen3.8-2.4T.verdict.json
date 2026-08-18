@@ -1,0 +1,31 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "governance/branch-coverage-baseline.json",
+   "description": "La story mentionne des seuils ciblés « plus élevés » pour orchestrateurs, sécurité, persistance et rollback, mais trois seuils par catégorie sont inférieurs au seuil global ; l'interprétation exacte de « plus élevés » n'est pas vérifiable uniquement à partir du diff.",
+   "preuve": "seuil_global_initial_branches_pct: 90.21043000914914 ; seuils_par_categorie: orchestrateurs 85.96837944664031, securite 86.47058823529412, rollback 84.12162162162163"
+  },
+  {
+   "severite": "mineure",
+   "fichier": "scripts/branch_coverage_ratchet.py",
+   "description": "Le rapport JSON de couverture est consommé avec une validation partielle : des entrées invalides sont ignorées silencieusement et les booléens sont acceptés comme entiers pour num_branches/missing_branches ; un rapport malformé pourrait donc être partiellement pris en compte.",
+   "preuve": "if not isinstance(num, int) or not isinstance(missing, int): continue"
+  },
+  {
+   "severite": "mineure",
+   "fichier": "scripts/branch_coverage_ratchet.py",
+   "description": "En mode --regenerer-baseline, aucune vérification n'est faite pour refuser une catégorie sans fichier matché ; une catégorie vide peut alors recevoir un seuil de 100%.",
+   "preuve": "calculer_couverture_par_categorie(...) puis baseline_brute['seuils_par_categorie'] = nouveaux_seuils sans contrôle d'anomalie sur couverture[cat]['fichiers'] en mode régénération"
+  }
+ ],
+ "date_heure": "2026-08-18T19:49:46.662140+00:00",
+ "prompt_sha256": "28ea38d5015dc13b2cfe80e13c05b28b57fad17201d3b5b2c748e5ecf88a9423",
+ "reviewer_model": "Qwen3.8-2.4T",
+ "modele_servi": "b9de6bc895fe95ccacf7d9fa9b1cf29ca44d34f03e249738f325c9dee3790b78",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}
