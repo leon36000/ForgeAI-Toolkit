@@ -8789,8 +8789,8 @@
         }
       ],
       "rule_id": "evidence-reviews-root",
-      "sha256": "958d40ac1647190eadd3052ef4ae5d7a4b3e9818ac4a6eb2ba293430d067a26c",
-      "size": 2872,
+      "sha256": "8d6776cb0718a4587e943d91463bc562a3df32b38fbaf046889f5566fa16fbfd",
+      "size": 2883,
       "target_path": null,
       "type": "text"
     },
@@ -21325,6 +21325,58 @@
       "load_bearing": true,
       "owner": "gouvernance-preuve",
       "path": "evidence/reviews/RC1-023/RECU.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": null,
+      "size": null,
+      "target_path": null,
+      "type": null
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-024-v3/DeepSeek-V4-Pro-0813.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "e9352cef4e9f76e3a03fcce9b422e0ced8997b6a42fc6a5ca160754d06a15fa6",
+      "size": 375,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-024-v3/GPT-5.6-Terra-Pro.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "cef6fad270e154095a3e2bb349ce24c336064b81a8fcbc60926d883edeb5e127",
+      "size": 334,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-024-v3/MiMo-V2.5-Pro.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "aae8e78656db20bd7f61034bb12224554a222169cf26909f5bc314bce666a747",
+      "size": 327,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-024-v3/RECU.json",
       "referenced_by": [],
       "rule_id": "evidence-reviews-root",
       "sha256": null,
@@ -97596,6 +97648,11 @@
       {
         "candidate": "recu-revue/1",
         "line": 2,
+        "referrer": "evidence/reviews/RC1-024-v3/RECU.json"
+      },
+      {
+        "candidate": "recu-revue/1",
+        "line": 2,
         "referrer": "evidence/reviews/RC1-440-lot6-v1/RECU.json"
       },
       {
@@ -146736,6 +146793,13 @@
         "severity": "hard"
       },
       {
+        "candidate": "RC1-024-v3",
+        "line": 212,
+        "referrer": "evidence/reviews/BINDING.txt",
+        "resolved": "evidence/reviews/RC1-024-v3",
+        "severity": "hard"
+      },
+      {
         "candidate": "scripts/gate_docs.py",
         "line": 11,
         "referrer": "sonar-project.properties",
@@ -176759,7 +176823,7 @@
     "by_class": {
       "ARCHIVE": 44,
       "DOCS": 18,
-      "EVIDENCE": 1629,
+      "EVIDENCE": 1633,
       "GENERATED": 5,
       "GOVERNANCE": 204,
       "PRODUCT": 113,
@@ -176778,7 +176842,7 @@
       "evidence-audit-output-root": 18,
       "evidence-dedup-root": 2,
       "evidence-registres-root": 35,
-      "evidence-reviews-root": 1574,
+      "evidence-reviews-root": 1578,
       "generated-authority-map": 1,
       "generated-path-classification-json": 1,
       "generated-path-classification-markdown": 1,
@@ -176814,11 +176878,11 @@
       "working-sandbox-readme": 1
     },
     "case_collisions_total": 0,
-    "dangling_references_total": 17167,
+    "dangling_references_total": 17168,
     "generated_total": 9,
-    "load_bearing_total": 2097,
+    "load_bearing_total": 2101,
     "portability_violations_total": 0,
-    "tracked_total": 2240,
+    "tracked_total": 2244,
     "unclassified_total": 0,
     "unicode_anomalies_total": 0
   },
