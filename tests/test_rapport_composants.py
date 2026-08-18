@@ -447,6 +447,19 @@ def test_charger_pyproject_introuvable_leve_value_error_avec_chemin(
         rc._charger_pyproject(chemin)
 
 
+def test_charger_pyproject_encodage_invalide_leve_value_error(tmp_path: Path) -> None:
+    """Round 12 de revue scellée (#454, objection mineure) : UnicodeDecodeError
+    hérite déjà de ValueError (vérifié empiriquement — main() ne crashait donc
+    pas sans ce correctif), mais le message restait le brut de tomllib au lieu
+    du format homogène des autres erreurs — cohérence de message uniquement.
+    """
+    chemin = tmp_path / "pyproject.toml"
+    chemin.write_bytes(b'[project]\nname = "x"\nversion = "\xff\xfe invalide"\n')
+
+    with pytest.raises(ValueError, match="encodage invalide"):
+        rc._charger_pyproject(chemin)
+
+
 def test_entree_projet_table_project_absente_leve(tmp_path: Path) -> None:
     (tmp_path / "pyproject.toml").write_text(
         "[tool.autre]\nvaleur = 1\n", encoding="utf-8"

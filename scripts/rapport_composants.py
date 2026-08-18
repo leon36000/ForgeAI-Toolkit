@@ -132,6 +132,16 @@ def _charger_pyproject(chemin: Path) -> dict[str, Any]:
         raise ValueError(
             f"pyproject.toml TOML invalide {str(chemin)!r} : {erreur}"
         ) from erreur
+    except UnicodeDecodeError as erreur:
+        # Revue scellée round 12 (#454) : UnicodeDecodeError hérite DÉJÀ de
+        # ValueError (vérifié empiriquement — main() l'aurait donc capturée
+        # sans crash même sans ce bloc), mais SANS lui, le message brut de
+        # tomllib fuite tel quel au lieu du format normalisé homogène des
+        # autres erreurs ci-dessus — cohérence de message, pas correction
+        # d'un crash qui n'existait pas.
+        raise ValueError(
+            f"pyproject.toml encodage invalide {str(chemin)!r} : {erreur}"
+        ) from erreur
 
 
 def _entree_projet(racine: Path) -> dict[str, Any]:
