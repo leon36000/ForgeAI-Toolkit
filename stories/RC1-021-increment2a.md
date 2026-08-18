@@ -4,13 +4,27 @@ Suite de l'incrément 1 (PR #560, mergée `21df914`) qui a livré la MESURE info
 (`scripts/branch_coverage_report.py`, job CI `branch-coverage-report`,
 `governance/branch-coverage-baseline.json` avec un seuil global initial NON bloquant).
 
-Couvre 2 des 5 critères restants de #451 :
+Couvre 1 des 5 critères restants de #451, plus un mécanisme de cliquet anti-régression sur les
+seuils par catégorie (non explicitement listé comme critère séparé, mais nécessaire pour rendre
+le premier critère réellement bloquant plutôt que déclaratif) :
 - [x] seuils ciblés plus élevés pour orchestrateurs, sécurité, persistance et rollback ;
-- [x] la baseline ne peut pas augmenter silencieusement ;
+- [x] (complément) un seuil de couverture par catégorie ne peut pas **baisser** silencieusement
+  (comparaison locale ET contre `origin/main` via `gate_git_ref.py`) — voir précision ci-dessous
+  sur la formulation exacte de l'issue.
 
-Les 3 autres critères (mutation ciblée, disposition des mutants survivants, tests négatifs de
-garde) restent **hors périmètre** — incrément 2b distinct, nécessite l'introduction d'un outil
-tiers de mutation testing.
+**Précision importante (round 1 de revue, voir plus bas)** : le critère de l'issue original
+formulé « la baseline ne peut pas augmenter silencieusement » (ligne 17 du corps de #451) est
+positionné dans le bloc mutation testing de l'issue (entre « chaque mutant survivant reçoit une
+disposition » et « tests négatifs prouvant que retirer une garde importante rend le job rouge »)
+— il porte sur la baseline du NOMBRE DE MUTANTS SURVIVANTS TOLÉRÉS (une dette, comme pour
+`ruff_ratchet.py`/`mypy_gate.py` : plus de dette ne doit jamais passer silencieusement), PAS sur
+les seuils de couverture par catégorie de cet incrément. Une version antérieure de cette story
+citait ce critère par erreur comme couvert ici — corrigé.
+
+Les 3 autres critères (mutation ciblée, disposition des mutants survivants, la vraie baseline de
+mutants « ne peut pas augmenter silencieusement », tests négatifs de garde) restent **hors
+périmètre** — incrément 2b distinct, nécessite l'introduction d'un outil tiers de mutation
+testing.
 
 ## Livré
 
@@ -69,6 +83,36 @@ tiers de mutation testing.
   `branch-coverage-baseline.json`) valides.
 - `no_stub_scan.py --all` : 390 fichiers, zéro violation.
 - Suite complète du dépôt verte (`--ignore=tests/test_data002b_wal_idempotent.py`, exit 0).
+
+## Round 1 de revue scellée — REJECT 1/3 (Qwen3.8-2.4T APPROVE ; DeepSeek-V4-Pro-0813 et
+GPT-5.6-Terra-Pro REJECT, 2 objections majeures identiques)
+
+**Objection majeure (réfutée avec preuve textuelle, code inchangé)** : « le critère dit "la
+baseline ne peut pas augmenter silencieusement", l'implémentation ne bloque que les baisses de
+seuil ». Vérifié directement sur le corps de l'issue #451 (`gh issue view 451 --json body`,
+lignes numérotées) : le critère cité est la ligne 17, entourée des lignes 15-16 (« campagne de
+mutation ciblée », « chaque mutant survivant reçoit une disposition ») et 18 (« tests négatifs
+prouvant que retirer une garde importante rend le job rouge ») — un bloc cohérent sur la
+MUTATION TESTING, hors périmètre explicite de cet incrément 2a. « La baseline » de ce critère est la baseline de mutants
+survivants tolérés (une dette, croissante = mauvais signe, symétrique à `ruff_ratchet.py`), pas
+mon `seuils_par_categorie` (un pourcentage de couverture, où c'est l'inverse qui est vrai :
+empêcher une BAISSE protège la qualité, bloquer une HAUSSE bloquerait au contraire toute
+amélioration légitime de couverture — contraire à l'esprit d'un cliquet). Story corrigée
+ci-dessus pour ne plus citer ce critère comme couvert ici ; code non modifié (déjà correct).
+
+**Objections mineures — vérifiées, non retenues (documentées, pas de changement de code)** :
+- « seuils par catégorie parfois < seuil global (90.21%) » : attendu et voulu — chaque seuil est
+  la mesure fraîche réelle de SA catégorie (ex. `rollback` 84.12%, structurellement plus complexe
+  — `cli.py`/`deploy/`), pas une valeur artificiellement forcée au-dessus d'une moyenne globale
+  (violerait le principe déjà établi dans le fichier baseline lui-même : « aucune marge ajoutée
+  arbitrairement »).
+- « catégorie sans fichier matché = 100%, permet une suppression de fichiers de passer le
+  cliquet » : angle mort réel mais mineur (confirmé par le reviewer lui-même comme non
+  bloquant) — laissé pour un futur raffinement, hors périmètre de ce round.
+- « le job CI relance sa propre mesure au lieu de réutiliser l'artefact de `branch-coverage-
+  report` » : choix délibéré, cohérent avec le job existant `branch-coverage-report` lui-même
+  (sous-processus totalement indépendant, jamais d'interférence entre jobs) — question de
+  performance CI (double calcul), pas un défaut fonctionnel.
 
 ## Hors périmètre (incrément 2b, story distincte)
 
