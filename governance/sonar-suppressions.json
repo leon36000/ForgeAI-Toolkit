@@ -526,6 +526,23 @@
       "compensating_test_reason": "Non-réductible : Sonar rattache cette alerte avancée au flux de données et non à un site stable (mesuré identiquement sur registre.py e7, evidence_dedup.py e8) ; une annotation inline peut ne pas viser le site finalement signalé. La suite de tests dédiée (75 cas, dont 3 ciblant spécifiquement _nom_membre_sur/le rejet de membres non sûrs — noms absolus, \"..\", rejet avant toute lecture de contenu) couvre le comportement réel bout-en-bout ; tests/test_rc1018_artefact_distribue.py (10 tests d'intégration complémentaires) reste également en vigueur.",
       "review_due": "2027-02-14",
       "accepted_risk": "Le faux positif peut masquer une occurrence S8707 dans ce fichier jusqu'à sa révision."
+    },
+    {
+      "id": "properties-multicriteria:e15",
+      "kind": "properties-multicriteria",
+      "rule": "pythonsecurity:S8707",
+      "scope": "file",
+      "sites": [
+        {
+          "path": "scripts/rapport_composants.py"
+        }
+      ],
+      "owner": "équipe gouvernance ForgeAI",
+      "justification": "Même famille que e14 (RC1-018/#448, scripts/verifier_artefact_distribue.py) : le scanner de sécurité avancée pythonsecurity:S8707 (path traversal) remonte --racine/--sortie (argparse) comme sinks non sûrs — outil CLI local (pas de frontière réseau/HTTP), les deux paramètres acceptent délibérément tout chemin fourni par l'opérateur exécutant le script, exactement comme --racine/--sortie de evidence_dedup.py (e8) et branch_coverage_report.py (e12/e13). Différence notable et plus favorable que e14 : --sortie porte un garde-fou ACTIF (Path.is_relative_to() sur le chemin résolu, ajouté en réponse à une revue scellée round 2 — rejette tout chemin qui s'évaderait de --racine, absolu OU relatif avec remontées \"..\"), vérifié empiriquement rejeter les deux cas AVANT toute écriture.",
+      "compensating_test": "tests/test_rapport_composants.py",
+      "compensating_test_reason": "Non-réductible : Sonar rattache cette alerte avancée au flux de données et non à un site stable (mesuré identiquement sur e7/e8/e10/e12/e13/e14) ; une annotation inline peut ne pas viser le site finalement signalé. La suite de tests dédiée (34 cas, dont 2 ciblant spécifiquement le garde-fou --sortie — absolu et remontée relative rejetés sans écrire hors racine) couvre le comportement réel bout-en-bout.",
+      "review_due": "2027-02-14",
+      "accepted_risk": "Le faux positif peut masquer une occurrence S8707 dans ce fichier jusqu'à sa révision."
     }
   ]
 }

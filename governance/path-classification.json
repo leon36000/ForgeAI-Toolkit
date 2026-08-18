@@ -28025,8 +28025,8 @@
       "path": "governance/SONAR-SUPPRESSIONS.md",
       "referenced_by": [],
       "rule_id": "governance-core",
-      "sha256": "44e0c980c75a9fbd5d8449d1e1ab3bdf3d40c10a68890bf2b73121cebc1271e5",
-      "size": 9525,
+      "sha256": "e3ebb51ab2fbf573a7d3f662a4fd643232def57210eca5b3cae8f6ddeb323f03",
+      "size": 9758,
       "target_path": null,
       "type": "text"
     },
@@ -30102,8 +30102,8 @@
         }
       ],
       "rule_id": "governance-core",
-      "sha256": "d2b501c4176e9e4bdd98d639afe5ed5c8d18b430261a6754cf60a672d4d1d1ad",
-      "size": 31661,
+      "sha256": "14f0eac7bc80ff4d06192bf4c33e462efbd6400aafdeea74bd1514d825caf839",
+      "size": 33471,
       "target_path": null,
       "type": "text"
     },
@@ -33749,6 +33749,13 @@
       "referenced_by": [
         {
           "candidate": "scripts/rapport_composants.py",
+          "line": 51,
+          "referrer": "sonar-project.properties",
+          "resolved": "scripts/rapport_composants.py",
+          "severity": "silent"
+        },
+        {
+          "candidate": "scripts/rapport_composants.py",
           "line": 327,
           "referrer": ".github/workflows/gates.yml",
           "resolved": "scripts/rapport_composants.py",
@@ -33758,6 +33765,20 @@
           "candidate": "scripts/rapport_composants.py",
           "line": 349,
           "referrer": ".github/workflows/gates.yml",
+          "resolved": "scripts/rapport_composants.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "scripts/rapport_composants.py",
+          "line": 72,
+          "referrer": "governance/SONAR-SUPPRESSIONS.md",
+          "resolved": "scripts/rapport_composants.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "scripts/rapport_composants.py",
+          "line": 537,
+          "referrer": "governance/sonar-suppressions.json",
           "resolved": "scripts/rapport_composants.py",
           "severity": "hard"
         },
@@ -35807,6 +35828,13 @@
         },
         {
           "candidate": "scripts/verifier_artefact_distribue.py",
+          "line": 541,
+          "referrer": "governance/sonar-suppressions.json",
+          "resolved": "scripts/verifier_artefact_distribue.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "scripts/verifier_artefact_distribue.py",
           "line": 29,
           "referrer": "stories/RC1-018.md",
           "resolved": "scripts/verifier_artefact_distribue.py",
@@ -35827,8 +35855,8 @@
       "path": "sonar-project.properties",
       "referenced_by": [],
       "rule_id": "governance-root-sonar",
-      "sha256": "a6e21bb026aff1b5d9ace2947e90e147e6eeae59be7dab832ddd755d3672ff09",
-      "size": 3217,
+      "sha256": "2dabff5b4de53bb2ab5d52b9c771a75e071db2bb45a5a634451242c5bee0ed34",
+      "size": 3884,
       "target_path": null,
       "type": "text"
     },
@@ -54851,6 +54879,13 @@
       "referenced_by": [
         {
           "candidate": "tests/test_rapport_composants.py",
+          "line": 72,
+          "referrer": "governance/SONAR-SUPPRESSIONS.md",
+          "resolved": "tests/test_rapport_composants.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "tests/test_rapport_composants.py",
           "line": 650,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_rapport_composants.py",
@@ -54860,6 +54895,13 @@
           "candidate": "tests/test_rapport_composants.py",
           "line": 656,
           "referrer": "governance/STATE-CURRENT.md",
+          "resolved": "tests/test_rapport_composants.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "tests/test_rapport_composants.py",
+          "line": 542,
+          "referrer": "governance/sonar-suppressions.json",
           "resolved": "tests/test_rapport_composants.py",
           "severity": "hard"
         }
@@ -102256,6 +102298,46 @@
         "referrer": "governance/sonar-suppressions.json"
       },
       {
+        "candidate": "RC1-018/",
+        "line": 541,
+        "referrer": "governance/sonar-suppressions.json"
+      },
+      {
+        "candidate": "racine/--sortie",
+        "line": 541,
+        "referrer": "governance/sonar-suppressions.json"
+      },
+      {
+        "candidate": "seau/HTTP",
+        "line": 541,
+        "referrer": "governance/sonar-suppressions.json"
+      },
+      {
+        "candidate": "racine/--sortie",
+        "line": 541,
+        "referrer": "governance/sonar-suppressions.json"
+      },
+      {
+        "candidate": "evidence_dedup.py",
+        "line": 541,
+        "referrer": "governance/sonar-suppressions.json"
+      },
+      {
+        "candidate": "branch_coverage_report.py",
+        "line": 541,
+        "referrer": "governance/sonar-suppressions.json"
+      },
+      {
+        "candidate": "e12/e13",
+        "line": 541,
+        "referrer": "governance/sonar-suppressions.json"
+      },
+      {
+        "candidate": "e7/e8/e10/e12/e13/e14",
+        "line": 543,
+        "referrer": "governance/sonar-suppressions.json"
+      },
+      {
         "candidate": "defs/input",
         "line": 129,
         "referrer": "governance/state-current.schema.json"
@@ -146870,6 +146952,13 @@
         "severity": "silent"
       },
       {
+        "candidate": "scripts/rapport_composants.py",
+        "line": 51,
+        "referrer": "sonar-project.properties",
+        "resolved": "scripts/rapport_composants.py",
+        "severity": "silent"
+      },
+      {
         "candidate": "manifests/roles.yaml",
         "line": 3,
         "referrer": ".claude/agents/composer-tui.md",
@@ -164769,6 +164858,20 @@
         "severity": "hard"
       },
       {
+        "candidate": "scripts/rapport_composants.py",
+        "line": 72,
+        "referrer": "governance/SONAR-SUPPRESSIONS.md",
+        "resolved": "scripts/rapport_composants.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "tests/test_rapport_composants.py",
+        "line": 72,
+        "referrer": "governance/SONAR-SUPPRESSIONS.md",
+        "resolved": "tests/test_rapport_composants.py",
+        "severity": "hard"
+      },
+      {
         "candidate": ".github/workflows/artefact-distribue.yml",
         "line": 90,
         "referrer": "governance/STATE-CURRENT.json",
@@ -170240,6 +170343,27 @@
         "line": 526,
         "referrer": "governance/sonar-suppressions.json",
         "resolved": "tests/test_rc1018_artefact_distribue.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "scripts/rapport_composants.py",
+        "line": 537,
+        "referrer": "governance/sonar-suppressions.json",
+        "resolved": "scripts/rapport_composants.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "scripts/verifier_artefact_distribue.py",
+        "line": 541,
+        "referrer": "governance/sonar-suppressions.json",
+        "resolved": "scripts/verifier_artefact_distribue.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "tests/test_rapport_composants.py",
+        "line": 542,
+        "referrer": "governance/sonar-suppressions.json",
+        "resolved": "tests/test_rapport_composants.py",
         "severity": "hard"
       },
       {
@@ -176878,7 +177002,7 @@
       "working-sandbox-readme": 1
     },
     "case_collisions_total": 0,
-    "dangling_references_total": 17168,
+    "dangling_references_total": 17176,
     "generated_total": 9,
     "load_bearing_total": 2101,
     "portability_violations_total": 0,
