@@ -1,0 +1,37 @@
+{
+  "orchestrateurs": {
+    "description": "Orchestration CLI, déploiement, réseau et planification",
+    "chemins": [
+      "src/forgeai/cli.py",
+      "src/forgeai/deploy/**",
+      "src/forgeai/network/**",
+      "src/forgeai/planner/**"
+    ]
+  },
+  "securite": {
+    "description": "Secrets, vault, probes et guardrails",
+    "chemins": [
+      "src/forgeai/secrets/**",
+      "src/forgeai/models/vault*.py",
+      "src/forgeai/models/probe*.py",
+      "src/forgeai/guardrails/**"
+    ]
+  },
+  "persistance": {
+    "description": "Persistance : coeur, routes, locking, local et catalogue",
+    "chemins": [
+      "src/forgeai/core/**",
+      "src/forgeai/models/routes.py",
+      "src/forgeai/models/_locking.py",
+      "src/forgeai/models/local*.py",
+      "src/forgeai/catalogue/**"
+    ]
+  },
+  "rollback": {
+    "description": "Rollback (recouvrement volontaire avec orchestrateurs)",
+    "chemins": [
+      "src/forgeai/cli.py",
+      "src/forgeai/deploy/**"
+    ]
+  }
+}

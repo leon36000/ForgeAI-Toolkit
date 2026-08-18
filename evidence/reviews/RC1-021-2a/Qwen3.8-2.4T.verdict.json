@@ -1,0 +1,31 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "governance/branch-coverage-baseline.json",
+   "description": "Le libellé de la story parle de « seuils ciblés plus élevés » pour les quatre catégories, mais trois seuils sont inférieurs au seuil global initial. La story documente que ce sont les mesures réelles par catégorie et non des valeurs forcées au-dessus du global ; l'ambiguïté reste donc documentaire plus que fonctionnelle.",
+   "preuve": "seuils_par_categorie ajoute 'orchestrateurs': 85.96837944664031, 'rollback': 84.12162162162163, 'securite': 86.47058823529412, tandis que 'seuil_global_initial_branches_pct': 90.21043000914914."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "tests/test_branch_coverage_ratchet.py",
+   "description": "Le test structurel de gates.yml ne vérifie ni que le job 'branch-coverage-ratchet' dépend de 'branch-coverage-report', ni que l'artefact téléchargé porte le nom attendu ; une divergence de workflow pourrait donc échapper à ce test tout en cassant la CI.",
+   "preuve": "test_gates_yml_branch_coverage_ratchet_configure assertit seulement fetch-depth == 0, présence de 'branch_coverage_ratchet.py' dans un run, et présence dans needs du job tests ; aucune assertion sur job['needs'] ou sur le paramètre name de actions/download-artifact."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "governance/branch-coverage-baseline.json",
+   "description": "La mise à jour de '_statut' peut prêter à confusion : elle indique que le seuil global reste informationnel puis évoque '--cov-fail-under=85' comme bloquant « sur ce nombre-là », alors que le seuil global affiché est 90.2104%.",
+   "preuve": "ligne '_statut' : '... seul le job `tests` (lignes, --cov-fail-under=85) est bloquant sur ce nombre-là.' à côté de 'seuil_global_initial_branches_pct': 90.21043000914914."
+  }
+ ],
+ "date_heure": "2026-08-18T21:15:15.347813+00:00",
+ "prompt_sha256": "b217cd8e9b09ba914e6483da87ef5a258d36beb1bb042d927143eefd65f75f8f",
+ "reviewer_model": "Qwen3.8-2.4T",
+ "modele_servi": "b9de6bc895fe95ccacf7d9fa9b1cf29ca44d34f03e249738f325c9dee3790b78",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

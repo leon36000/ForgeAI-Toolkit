@@ -242,3 +242,14 @@ test_rc1580_tests_aggregate.py (RC1-580/#580, correctif round 1 de revue scellé
 actions/checkout manquant sur le job tests-required, garde défensif isinstance dans
 gates_en_echec) : durcissement d'une fonctionnalité déjà décrite par la story (#580). Aucune
 doc utilisateur supplémentaire concernée.
+
+scripts/branch_coverage_ratchet.py (RC1-021/#451 incrément 2a, correctif Quality Gate
+SonarCloud sur PR #582 — 11 issues réelles : 1 vulnérabilité S8707 path-traversal, 4 exceptions
+redondantes S5713, 1 variable morte S1854, 5 complexités cognitives S3776 > 15 dont main()=60,
+duplication 4.3%>3% entre deux fonctions de validation) : durcissement défensif + extraction de
+4 fonctions internes (_valider_seuils_par_categorie, _valider_entree_categorie,
+_agreger_categorie, _regenerer_baseline, _verifier_reference_git) — aucun changement de
+comportement observable, 43/43 tests existants verts SANS modification, scénario réel
+(origin/main) vérifié identique (exit 0, aucune régression). L'issue #451 et stories/RC1-021-
+increment2a.md documentent déjà le contexte complet. Aucune doc utilisateur supplémentaire
+concernée pour ce correctif de qualité interne.
