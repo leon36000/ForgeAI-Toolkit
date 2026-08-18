@@ -4,12 +4,15 @@
 Pourquoi ce script : l'audit supply-chain EXT-029 exige la liste exhaustive des
 paquets Python (versions + licences) mobilisés pour construire les artefacts
 distribués RC1 (wheel/sdist) — et non celles du produit livré, qui reste stdlib
-pure (``dependencies = []`` dans ``pyproject.toml``). Deux sources exhaustives et
-suffisantes, vérifiées empiriquement : ``requirements-ci.txt`` (lockfile à
-empreintes couvrant tout l'outillage CI/test/lint) et ``build==1.2.2.post1``
-(installé en direct dans ``.github/workflows/artefact-distribue.yml``, hors
-lockfile). Le rapport est non bloquant : il documente, il ne gate pas — même
-philosophie que ``scripts/ruff_report.py``.
+pure (``dependencies = []`` dans ``pyproject.toml``). Trois sources, vérifiées
+empiriquement : ``requirements-ci.txt`` (lockfile à empreintes couvrant tout
+l'outillage CI/test/lint) ; ``build==1.2.2.post1`` (installé en direct dans
+``.github/workflows/artefact-distribue.yml``, hors lockfile) ET la fermeture de
+SES dépendances directes propres (``pyproject_hooks`` — ``packaging`` est aussi
+une dépendance directe de ``build`` mais déjà couverte par le lockfile, non
+dupliquée — vérifié via l'API PyPI ``requires_dist`` de la version exacte
+épinglée, pas supposé) ; le projet lui-même. Le rapport est non bloquant : il
+documente, il ne gate pas — même philosophie que ``scripts/ruff_report.py``.
 """
 
 from __future__ import annotations
@@ -170,9 +173,13 @@ def construire_rapport(racine: Path) -> dict[str, Any]:
     Pourquoi trois sources : le lockfile ``requirements-ci.txt`` couvre tout
     l'outillage CI/test/lint ; ``build`` est l'unique outil externe installé hors
     lockfile (épinglé en dur dans ``artefact-distribue.yml``) et c'est lui qui
-    construit RÉELLEMENT les artefacts ; le projet lui-même figure pour mémoire
-    afin de rappeler que le produit livré n'embarque aucune dépendance runtime.
-    Le tri final par nom (insensible à la casse) rend la sortie déterministe.
+    construit RÉELLEMENT les artefacts — SA PROPRE fermeture de dépendances
+    directes est incluse (``pyproject_hooks``, absente du lockfile ;
+    ``packaging`` aussi mais déjà présente donc non dupliquée) pour que
+    l'inventaire ne s'arrête pas à l'outil épinglé lui-même ; le projet lui-même
+    figure pour mémoire afin de rappeler que le produit livré n'embarque aucune
+    dépendance runtime. Le tri final par nom (insensible à la casse) rend la
+    sortie déterministe.
     """
     composants: list[dict[str, Any]] = [
         {
@@ -189,6 +196,24 @@ def construire_rapport(racine: Path) -> dict[str, Any]:
             "version": "1.2.2.post1",
             "licence": _licence_installee("build"),
             "source": "artefact-distribue.yml (installation directe, hors requirements-ci.txt)",
+        }
+    )
+    # Fermeture des dépendances DIRECTES de build==1.2.2.post1 (requires_dist PyPI,
+    # vérifié empiriquement 2026-08-18) : packaging>=19.1 (inconditionnelle, déjà
+    # couverte par requirements-ci.txt — pas dupliquée ici) + pyproject_hooks
+    # (inconditionnelle, absente du lockfile — ajoutée ci-dessous) + 3 dépendances
+    # CONDITIONNELLES qui ne s'appliquent PAS à l'environnement réel de construction
+    # (ubuntu-latest, Python 3.12, artefact-distribue.yml) : colorama exige
+    # os_name=="nt" (Windows), importlib-metadata exige python_full_version<"3.10.2",
+    # tomli exige python_version<"3.11" — aucune des trois n'est vraie ici. packaging
+    # et pyproject_hooks n'ont eux-mêmes AUCUNE dépendance propre (vérifié PyPI) :
+    # fermeture complète à ce niveau, pas un arrêt arbitraire.
+    composants.append(
+        {
+            "nom": "pyproject_hooks",
+            "version": "non épinglée (dépendance transitive de build, non verrouillée)",
+            "licence": _licence_installee("pyproject_hooks"),
+            "source": "dépendance directe de build==1.2.2.post1 (PyPI requires_dist)",
         }
     )
     composants.append(_entree_projet(racine))

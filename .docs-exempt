@@ -148,3 +148,14 @@ ModuleNotFoundError n'est délibérément pas normalisé (scénario hors de l'en
 requirements-ci.txt garantit tomli présent). Aucun changement de comportement observable, 34/34
 tests inchangés. L'issue #454 et le scratchpad de story documentent déjà le contexte complet ;
 aucune doc utilisateur supplémentaire concernée pour ce correctif.
+
+scripts/rapport_composants.py + tests/test_rapport_composants.py (RC1-024/#454, correctif
+round 6 de revue scellée — objection majeure) : ajoute pyproject_hooks à l'inventaire (fermeture
+des dépendances directes propres de build==1.2.2.post1, vérifiée empiriquement via l'API PyPI
+requires_dist — packaging, l'autre dépendance directe, était déjà couvert par
+requirements-ci.txt, non dupliqué). Élargit une fonctionnalité déjà décrite par la story
+(exhaustivité de l'inventaire de composants de build) plutôt que d'en introduire une nouvelle ;
+docstrings du module et de construire_rapport mises à jour en conséquence. L'issue #454 et le
+scratchpad de story documentent le contexte complet de cette itération ; aucune doc utilisateur
+supplémentaire concernée (le rapport JSON généré reste auto-descriptif via son propre champ
+_description, comme documenté depuis le commit initial de ce script).

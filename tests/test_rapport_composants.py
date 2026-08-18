@@ -286,6 +286,41 @@ def test_construire_rapport_entree_build_toujours_presente(tmp_path: Path) -> No
     )
 
 
+def test_construire_rapport_entree_pyproject_hooks_toujours_presente(
+    tmp_path: Path,
+) -> None:
+    """Fermeture des dépendances directes de build (round 6 de revue scellée,
+    #454) : packaging est déjà couvert par requirements-ci.txt (non dupliqué,
+    voir test dédié ci-dessous) ; pyproject_hooks est la seule dépendance
+    directe inconditionnelle de build absente du lockfile — doit apparaître.
+    """
+    _preparer_racine(tmp_path, requirements="alpha-factice==1.0\n")
+
+    rapport = rc.construire_rapport(tmp_path)
+    par_nom = _par_nom(rapport)
+
+    assert par_nom["pyproject_hooks"]["source"] == (
+        "dépendance directe de build==1.2.2.post1 (PyPI requires_dist)"
+    )
+    assert "non épinglée" in par_nom["pyproject_hooks"]["version"]
+
+
+def test_construire_rapport_packaging_du_lockfile_non_duplique_par_la_fermeture(
+    tmp_path: Path,
+) -> None:
+    """packaging est AUSSI une dépendance directe de build (comme
+    pyproject_hooks), mais déjà présente dans requirements-ci.txt — la
+    fermeture ne doit pas en ajouter une 2e entrée en double.
+    """
+    _preparer_racine(tmp_path, requirements="packaging==26.3\n")
+
+    rapport = rc.construire_rapport(tmp_path)
+
+    occurrences = [c for c in rapport["composants"] if c["nom"] == "packaging"]
+    assert len(occurrences) == 1
+    assert occurrences[0]["source"] == "requirements-ci.txt"
+
+
 def test_construire_rapport_entree_projet_lue_depuis_pyproject(tmp_path: Path) -> None:
     _preparer_racine(
         tmp_path,
@@ -304,16 +339,17 @@ def test_construire_rapport_entree_projet_lue_depuis_pyproject(tmp_path: Path) -
     assert "pyproject.toml" in entree["source"]
 
 
-def test_construire_rapport_requirements_vide_compte_build_et_projet(
+def test_construire_rapport_requirements_vide_compte_build_hooks_et_projet(
     tmp_path: Path,
 ) -> None:
     _preparer_racine(tmp_path, requirements="")
 
     rapport = rc.construire_rapport(tmp_path)
 
-    assert rapport["nombre_composants"] == 2
+    assert rapport["nombre_composants"] == 3
     assert {composant["nom"] for composant in rapport["composants"]} == {
         "build",
+        "pyproject_hooks",
         "projet-factice",
     }
 
