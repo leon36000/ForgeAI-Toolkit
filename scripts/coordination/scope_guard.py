@@ -8,6 +8,7 @@ silencieusement jusqu'à des milliers de lignes/rounds.
 """
 from __future__ import annotations
 
+import argparse
 import fnmatch
 import json
 import os
@@ -139,7 +140,7 @@ def collect_scope_metrics(
 
 
 def evaluate_scope(metrics: dict[str, int]) -> tuple[bool, list[str]]:
-    """Applique les coupe-circuits quantitatifs sans mécanisme de bypass implicite."""
+    """Applique les coupe-circuits quantitatifs sans bypass implicite."""
     labels = {
         "ahead": "ahead commits",
         "behind": "behind commits",
@@ -197,46 +198,88 @@ def load(path: Path) -> dict:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
-def main() -> int:
+def _parse_args(argv: list[str] | None) -> argparse.Namespace:
+    parser = argparse.ArgumentParser(description="Coupe-circuit de scope ForgeAI")
+    parser.add_argument("--base-ref", default="origin/main")
+    parser.add_argument("--head-ref", default="HEAD")
+    parser.add_argument("--round", type=int, dest="review_round")
+    parser.add_argument("--replanned", action="store_true")
+    return parser.parse_args(argv)
+
+
+def _quantitative_preflight(args: argparse.Namespace) -> bool:
+    try:
+        metrics = collect_scope_metrics(args.base_ref, args.head_ref)
+    except (subprocess.CalledProcessError, ValueError) as exc:
+        print(f"FAIL — mesure Git impossible: {exc}", file=sys.stderr)
+        return False
+
+    ok, report = evaluate_scope(metrics)
+    if not ok:
+        print("FAIL — budget quantitatif dépassé; STOP/SPLIT/REPLAN requis:", file=sys.stderr)
+        for line in report:
+            print(f"  • {line}", file=sys.stderr)
+        return False
+    for line in report:
+        print(line)
+
+    if args.review_round is not None:
+        allowed, mode = review_round_policy(args.review_round, replanned=args.replanned)
+        if not allowed:
+            print(
+                f"FAIL — round de revue {args.review_round} refusé ({mode}); "
+                "STOP/SPLIT/REPLAN avant toute nouvelle dépense multi-vendor",
+                file=sys.stderr,
+            )
+            return False
+        print(f"PASS — round de revue {args.review_round}: {mode}")
+    return True
+
+
+def main(argv: list[str] | None = None) -> int:
+    args = _parse_args(argv)
+    if not _quantitative_preflight(args):
+        return 1
+
     claims_path = COORD_DIR / "active-claims.json"
     wp_path = COORD_DIR / "work-packages.json"
 
     if not claims_path.exists() or not wp_path.exists():
-        print("SKIP — fichiers de coordination absents (bootstrap initial)")
+        print("SKIP legacy-claim — fichiers de coordination absents (budget déjà contrôlé)")
         return 0
 
     claims_data = load(claims_path)
     claims: list[dict] = claims_data.get("claims", [])
     if not claims:
-        print("SKIP — aucun claim actif")
+        print("SKIP legacy-claim — aucun claim actif (budget déjà contrôlé)")
         return 0
 
     wp_data = load(wp_path)
     pkg_by_id = {p["id"]: p for p in wp_data.get("packages", [])}
 
     try:
-        changed = get_changed_files()
+        changed = get_changed_files(args.base_ref)
     except subprocess.CalledProcessError as exc:
         print(f"FAIL — git diff impossible: {exc}", file=sys.stderr)
         return 1
     if not changed:
-        print("SKIP — aucun fichier modifié")
+        print("SKIP legacy-claim — aucun fichier modifié")
         return 0
 
     branch = current_branch()
     claim = find_claim_for_branch(claims, branch)
     if claim is None:
         print(
-            f"SKIP — aucun claim actif ne correspond à la branche '{branch}' "
-            "(PR hors coordination ou claim non enregistré)"
+            f"SKIP legacy-claim — aucun claim actif ne correspond à la branche '{branch}' "
+            "(budget quantitatif déjà contrôlé)"
         )
         return 0
 
     errors = check_scope(changed, claim, pkg_by_id)
     if errors:
         print("FAIL — violations de périmètre:", file=sys.stderr)
-        for e in errors:
-            print(f"  • {e}", file=sys.stderr)
+        for error in errors:
+            print(f"  • {error}", file=sys.stderr)
         return 1
 
     print(
