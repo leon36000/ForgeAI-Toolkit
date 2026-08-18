@@ -261,7 +261,11 @@
       "kind": "properties-multicriteria",
       "rule": "pythonsecurity:S8707",
       "scope": "file",
-      "sites": [{"path": "scripts/governance/evidence_dedup.py"}],
+      "sites": [
+        {
+          "path": "scripts/governance/evidence_dedup.py"
+        }
+      ],
       "owner": "équipe gouvernance ForgeAI",
       "justification": "Même mesure que e7 (RC1-011/#441) : # NOSONAR(S8707) posé au site sur evidence_dedup.py:167 (écriture --sortie, déjà résolue et validée avant accès disque — répertoire parent vérifié existant) a été ignoré par le scanner ; le périmètre fichier est donc le seul disponible pour cette règle pythonsecurity avancée. Outil CLI local (pas de frontière réseau/HTTP) : --racine/--sortie/--verifier acceptent délibérément tout chemin fourni par l'opérateur, exactement comme --racine de scripts/governance/check_md_packs.py et --out de scripts/revue.py (code préexistant, non retouché par cette PR, donc hors du gate New Code).",
       "compensating_test": "tests/test_rc1011_dedup.py",
@@ -504,6 +508,23 @@
       "compensating_test": "tests/test_branch_coverage_report.py",
       "compensating_test_reason": "Non-réductible : Sonar rattache ces alertes avancées à des flux dont le site rapporté peut varier après analyse ; une annotation inline ne garantit pas la suppression de l'alerte effectivement produite (mesuré sur e5/e6/e7). Les tests test_mesurer_fichier_de_couverture_absent, test_mesurer_json_invalide et test_mesurer_fichier_illisible couvrent le comportement réel de lecture (absent/invalide/illisible).",
       "review_due": "2027-02-10",
+      "accepted_risk": "Le faux positif peut masquer une occurrence S8707 dans ce fichier jusqu'à sa révision."
+    },
+    {
+      "id": "properties-multicriteria:e14",
+      "kind": "properties-multicriteria",
+      "rule": "pythonsecurity:S8707",
+      "scope": "file",
+      "sites": [
+        {
+          "path": "scripts/verifier_artefact_distribue.py"
+        }
+      ],
+      "owner": "équipe gouvernance ForgeAI",
+      "justification": "Même famille que e8 (RC1-011/#441, evidence_dedup.py) : le scanner de sécurité avancée pythonsecurity:S8707 (path traversal) remonte le chemin ARTEFACT positionnel comme sink non sûr — outil CLI local (pas de frontière réseau/HTTP), --artefacts (nargs=\"+\", type=Path) accepte délibérément tout chemin fourni par l'opérateur exécutant le script, exactement comme --racine/--sortie de evidence_dedup.py. Différence notable et plus favorable que e8 : ici l'accès est en LECTURE SEULE via zipfile.ZipFile()/tarfile.open() (jamais d'écriture ni d'extractall() sur disque), donc aucune primitive d'écriture arbitraire n'est jamais atteinte même en cas de chemin malveillant. Durcissement supplémentaire (RC1-018/#448, round CI) : _nom_membre_sur() valide explicitement chaque nom de membre AVANT toute lecture de contenu (rejette noms absolus et segments \"..\"), défense en profondeur active — pas seulement l'absence structurelle d'écriture.",
+      "compensating_test": "tests/test_verifier_artefact_distribue.py",
+      "compensating_test_reason": "Non-réductible : Sonar rattache cette alerte avancée au flux de données et non à un site stable (mesuré identiquement sur registre.py e7, evidence_dedup.py e8) ; une annotation inline peut ne pas viser le site finalement signalé. La suite de tests dédiée (75 cas, dont 3 ciblant spécifiquement _nom_membre_sur/le rejet de membres non sûrs — noms absolus, \"..\", rejet avant toute lecture de contenu) couvre le comportement réel bout-en-bout ; tests/test_rc1018_artefact_distribue.py (10 tests d'intégration complémentaires) reste également en vigueur.",
+      "review_due": "2027-02-14",
       "accepted_risk": "Le faux positif peut masquer une occurrence S8707 dans ce fichier jusqu'à sa révision."
     }
   ]

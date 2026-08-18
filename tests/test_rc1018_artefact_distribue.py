@@ -7,7 +7,7 @@ from pathlib import Path
 
 import pytest
 
-from verifier_artefact_distribue import ErreurVerification, verifier_artefact
+from verifier_artefact_distribue import ErreurVerification, main, verifier_artefact
 
 
 METADATA = """Metadata-Version: 2.1
@@ -136,3 +136,58 @@ def test_rejette_un_sdist_contenant_reviews(tmp_path: Path) -> None:
 
     with pytest.raises(ErreurVerification, match="reviews/"):
         verifier_artefact(sdist)
+
+
+def test_main_retourne_0_et_imprime_ok_pour_un_seul_artefact_valide(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    wheel = tmp_path / "forgeai_toolkit-0.1.0-py3-none-any.whl"
+    ecrire_wheel(wheel, fichiers_paquet())
+
+    code = main([str(wheel)])
+
+    assert code == 0
+    assert f"OK : {wheel}" in capsys.readouterr().out
+
+
+def test_main_verifie_plusieurs_artefacts_dans_l_ordre(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    wheel = tmp_path / "forgeai_toolkit-0.1.0-py3-none-any.whl"
+    sdist = tmp_path / "forgeai_toolkit-0.1.0.tar.gz"
+    ecrire_wheel(wheel, fichiers_paquet())
+    ecrire_sdist(sdist, fichiers_paquet())
+
+    code = main([str(wheel), str(sdist)])
+
+    sortie = capsys.readouterr().out
+    assert code == 0
+    assert f"OK : {wheel}" in sortie
+    assert f"OK : {sdist}" in sortie
+
+
+def test_main_retourne_1_et_imprime_erreur_sur_stderr_pour_artefact_invalide(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    wheel = tmp_path / "forgeai_toolkit-0.1.0-py3-none-any.whl"
+    ecrire_wheel(wheel, fichiers_paquet(sans="forgeai/data/locales/en.json"))
+
+    code = main([str(wheel)])
+
+    assert code == 1
+    assert "ERREUR" in capsys.readouterr().err
+
+
+def test_main_arrete_la_boucle_au_premier_artefact_invalide(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    wheel_invalide = tmp_path / "forgeai_toolkit-0.1.0-py3-none-any.whl"
+    ecrire_wheel(wheel_invalide, fichiers_paquet(sans="forgeai/data/locales/en.json"))
+    sdist_jamais_atteint = tmp_path / "forgeai_toolkit-0.1.0.tar.gz"
+    ecrire_sdist(sdist_jamais_atteint, fichiers_paquet())
+
+    code = main([str(wheel_invalide), str(sdist_jamais_atteint)])
+
+    sortie = capsys.readouterr()
+    assert code == 1
+    assert f"OK : {sdist_jamais_atteint}" not in sortie.out

@@ -35,6 +35,23 @@ class ErreurVerification(Exception):
     """Signale un artefact de distribution non conforme."""
 
 
+def _nom_membre_sur(nom: str) -> bool:
+    """Retourne True si le nom d'un membre d'archive est sûr à exploiter.
+
+    Défense en profondeur contre les archives malveillantes (règle
+    pythonsecurity:S8707) : un nom est sûr s'il est non vide après
+    normalisation des séparateurs « \\ » en « / », relatif (ne commence pas
+    par « / ») et dépourvu de tout segment exactement égal à « .. »
+    (remontée de répertoire).
+    """
+    normalise = nom.replace("\\", "/")
+    if not normalise:
+        return False
+    if normalise.startswith("/"):
+        return False
+    return ".." not in normalise.split("/")
+
+
 def _membres_wheel(chemin: Path) -> tuple[list[str], dict[str, bytes], bytes]:
     try:
         with zipfile.ZipFile(chemin) as archive:
@@ -59,6 +76,15 @@ def _membres_sdist(chemin: Path) -> tuple[list[str], dict[str, bytes], bytes]:
     try:
         with tarfile.open(chemin, "r:gz") as archive:
             membres = [membre for membre in archive.getmembers() if membre.isfile()]
+            rejetes = sorted(
+                {membre.name for membre in membres if not _nom_membre_sur(membre.name)}
+            )
+            if rejetes:
+                raise ErreurVerification(
+                    f"{chemin}: nom(s) de membre non sûr(s) dans le sdist : "
+                    f"{', '.join(rejetes)}."
+                )
+            membres = [membre for membre in membres if _nom_membre_sur(membre.name)]
             noms = [membre.name for membre in membres]
             contenus: dict[str, bytes] = {}
             for membre in membres:
