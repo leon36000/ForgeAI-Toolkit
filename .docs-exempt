@@ -159,3 +159,11 @@ docstrings du module et de construire_rapport mises à jour en conséquence. L'i
 scratchpad de story documentent le contexte complet de cette itération ; aucune doc utilisateur
 supplémentaire concernée (le rapport JSON généré reste auto-descriptif via son propre champ
 _description, comme documenté depuis le commit initial de ce script).
+
+scripts/rapport_composants.py + tests/test_rapport_composants.py (RC1-024/#454, correctif
+round 7 de revue scellée — 3 objections majeures, bookkeeping + robustesse) : ajoute
+_version_installee(), miroir exact de _licence_installee() déjà présent et déjà couvert par la
+doc de conception existante (même fichier, même docstring de module) ; corrige un comptage de
+tests erroné dans governance/sonar-suppressions.json (entrée e15 déjà gouvernée). Aucune
+nouvelle fonctionnalité utilisateur, aucune doc supplémentaire concernée — même raisonnement que
+les correctifs round 4/5/6 déjà journalisés ci-dessus pour ce même script.

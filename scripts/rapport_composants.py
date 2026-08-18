@@ -110,6 +110,25 @@ def _licence_installee(nom: str) -> str:
     return "licence inconnue (métadonnées absentes)"
 
 
+def _version_installee(nom: str) -> str:
+    """Extrait la version installée d'un paquet, sans jamais deviner (miroir de
+    ``_licence_installee`` ci-dessus, même logique de repli honnête).
+
+    Pourquoi (revue scellée round 7, #454) : une dépendance transitive de
+    ``build`` non verrouillée par un lockfile (ex. ``pyproject_hooks``) n'a pas
+    de version connue A PRIORI depuis les fichiers versionnés du dépôt — mais si
+    elle se trouve installée dans l'environnement qui exécute CE script (poste
+    de dev, ou tout environnement où ``build`` a été installé), l'introspection
+    donne la vraie version résolue plutôt qu'une étiquette statique. Absente
+    d'un tel environnement (cas du job CI ``rapport-composants``, qui n'installe
+    pas ``build``) : honnête « version inconnue » plutôt qu'une valeur inventée.
+    """
+    try:
+        return importlib.metadata.version(nom)
+    except importlib.metadata.PackageNotFoundError:
+        return "version inconnue (paquet non installé dans cet environnement)"
+
+
 def _charger_pyproject(chemin: Path) -> dict[str, Any]:
     """Charge ``pyproject.toml`` en normalisant toute erreur en ``ValueError``.
 
@@ -211,7 +230,7 @@ def construire_rapport(racine: Path) -> dict[str, Any]:
     composants.append(
         {
             "nom": "pyproject_hooks",
-            "version": "non épinglée (dépendance transitive de build, non verrouillée)",
+            "version": _version_installee("pyproject_hooks"),
             "licence": _licence_installee("pyproject_hooks"),
             "source": "dépendance directe de build==1.2.2.post1 (PyPI requires_dist)",
         }
