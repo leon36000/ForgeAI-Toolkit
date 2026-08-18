@@ -1103,7 +1103,7 @@
         },
         {
           "candidate": ".github/workflows/gates.yml",
-          "line": 120,
+          "line": 157,
           "referrer": "tests/test_gate_exit_codes.py",
           "resolved": ".github/workflows/gates.yml",
           "severity": "hard"
@@ -3710,14 +3710,14 @@
         },
         {
           "candidate": "Docs/exit-codes.json",
-          "line": 86,
+          "line": 84,
           "referrer": "scripts/gate_exit_codes.py",
           "resolved": "Docs/exit-codes.json",
           "severity": "hard"
         },
         {
           "candidate": "Docs/exit-codes.json",
-          "line": 117,
+          "line": 123,
           "referrer": "scripts/gate_exit_codes.py",
           "resolved": "Docs/exit-codes.json",
           "severity": "hard"
@@ -3766,8 +3766,8 @@
         }
       ],
       "rule_id": "docs-user",
-      "sha256": "b27cff4acc9e0587fbbb26c03e166b538c3b6bab690ccab1072ac1d3d2dec880",
-      "size": 7456,
+      "sha256": "153c80333682959d81508e201090d004a6e5abf3dadb812a6dd9ed24f970c203",
+      "size": 7164,
       "target_path": null,
       "type": "text"
     },
@@ -4044,8 +4044,8 @@
         }
       ],
       "rule_id": "docs-user",
-      "sha256": "89f6a8cbfe672e1ef3a26ff07b4d2f5b1c1fc29e776be5b1c5d38914aa9e569e",
-      "size": 28926,
+      "sha256": "9f05d04f5ea607bf37032bff931d2e09e9e3997edb6d0069fbfd128e01b887f4",
+      "size": 29497,
       "target_path": null,
       "type": "text"
     },
@@ -31858,22 +31858,22 @@
         },
         {
           "candidate": "scripts/gate_exit_codes.py",
-          "line": 132,
+          "line": 169,
           "referrer": "tests/test_gate_exit_codes.py",
           "resolved": "scripts/gate_exit_codes.py",
           "severity": "hard"
         },
         {
           "candidate": "scripts/gate_exit_codes.py",
-          "line": 133,
+          "line": 170,
           "referrer": "tests/test_gate_exit_codes.py",
           "resolved": "scripts/gate_exit_codes.py",
           "severity": "hard"
         }
       ],
       "rule_id": "governance-scripts-root",
-      "sha256": "76aad9d1c9c2a8a3072161ade570c26112ce94eb6b2abc08e7230eff42f98688",
-      "size": 4716,
+      "sha256": "edf9b70bc112541f0eabe61e81ca0352e608e6c3a8fb418f78539ac805857cc2",
+      "size": 5072,
       "target_path": null,
       "type": "text"
     },
@@ -34398,42 +34398,42 @@
         },
         {
           "candidate": "scripts/registre.py",
-          "line": 276,
+          "line": 280,
           "referrer": "Docs/reference/cli.md",
           "resolved": "scripts/registre.py",
           "severity": "hard"
         },
         {
           "candidate": "scripts/registre.py",
-          "line": 281,
+          "line": 285,
           "referrer": "Docs/reference/cli.md",
           "resolved": "scripts/registre.py",
           "severity": "hard"
         },
         {
           "candidate": "scripts/registre.py",
-          "line": 289,
+          "line": 293,
           "referrer": "Docs/reference/cli.md",
           "resolved": "scripts/registre.py",
           "severity": "hard"
         },
         {
           "candidate": "scripts/registre.py",
-          "line": 299,
+          "line": 303,
           "referrer": "Docs/reference/cli.md",
           "resolved": "scripts/registre.py",
           "severity": "hard"
         },
         {
           "candidate": "scripts/registre.py",
-          "line": 309,
+          "line": 313,
           "referrer": "Docs/reference/cli.md",
           "resolved": "scripts/registre.py",
           "severity": "hard"
         },
         {
           "candidate": "scripts/registre.py",
-          "line": 317,
+          "line": 321,
           "referrer": "Docs/reference/cli.md",
           "resolved": "scripts/registre.py",
           "severity": "hard"
@@ -37413,7 +37413,7 @@
         },
         {
           "candidate": "src/forgeai/cli.py",
-          "line": 86,
+          "line": 84,
           "referrer": "scripts/gate_exit_codes.py",
           "resolved": "src/forgeai/cli.py",
           "severity": "hard"
@@ -51152,8 +51152,8 @@
         }
       ],
       "rule_id": "test-suite",
-      "sha256": "798c01fab9fbd291ab78bb921e98e7b14f03a702ae2c105055b55da0f6fdb880",
-      "size": 5786,
+      "sha256": "a5cf5d28f54b7746013b87c4b688e414c93a82dc8171a1a8e32c51a2b280b70e",
+      "size": 7805,
       "target_path": null,
       "type": "text"
     },
@@ -64429,52 +64429,52 @@
       },
       {
         "candidate": "route/passphrase",
-        "line": 127,
+        "line": 122,
         "referrer": "Docs/exit-codes.json"
       },
       {
         "candidate": "RouteError/KeyError",
-        "line": 127,
+        "line": 122,
         "referrer": "Docs/exit-codes.json"
       },
       {
         "candidate": "TailscaleError/BootstrapError",
-        "line": 144,
+        "line": 134,
         "referrer": "Docs/exit-codes.json"
       },
       {
         "candidate": "vide/absente",
-        "line": 149,
+        "line": 139,
         "referrer": "Docs/exit-codes.json"
       },
       {
         "candidate": "NodeAddError/RemoteProbeError",
-        "line": 154,
+        "line": 144,
         "referrer": "Docs/exit-codes.json"
       },
       {
         "candidate": "user/--keyfile",
-        "line": 169,
+        "line": 159,
         "referrer": "Docs/exit-codes.json"
       },
       {
         "candidate": "les/strat",
-        "line": 200,
+        "line": 190,
         "referrer": "Docs/exit-codes.json"
       },
       {
         "candidate": "template/alias",
-        "line": 212,
+        "line": 202,
         "referrer": "Docs/exit-codes.json"
       },
       {
         "candidate": "moteur/vendor",
-        "line": 254,
+        "line": 244,
         "referrer": "Docs/exit-codes.json"
       },
       {
         "candidate": "compose/k3s",
-        "line": 289,
+        "line": 279,
         "referrer": "Docs/exit-codes.json"
       },
       {
@@ -64978,23 +64978,28 @@
         "referrer": "Docs/reference/cli.md"
       },
       {
+        "candidate": "cli.py",
+        "line": 111,
+        "referrer": "Docs/reference/cli.md"
+      },
+      {
         "candidate": "lection/stack",
-        "line": 109,
+        "line": 113,
         "referrer": "Docs/reference/cli.md"
       },
       {
         "candidate": "origin/main",
-        "line": 320,
+        "line": 324,
         "referrer": "Docs/reference/cli.md"
       },
       {
         "candidate": "origin/main",
-        "line": 336,
+        "line": 340,
         "referrer": "Docs/reference/cli.md"
       },
       {
         "candidate": "FR/EN",
-        "line": 344,
+        "line": 348,
         "referrer": "Docs/reference/cli.md"
       },
       {
@@ -103994,12 +103999,12 @@
       },
       {
         "candidate": "exit-codes.json",
-        "line": 96,
+        "line": 94,
         "referrer": "scripts/gate_exit_codes.py"
       },
       {
         "candidate": "cli.py",
-        "line": 97,
+        "line": 95,
         "referrer": "scripts/gate_exit_codes.py"
       },
       {
@@ -135364,32 +135369,32 @@
       },
       {
         "candidate": "registre.json",
-        "line": 73,
+        "line": 93,
         "referrer": "tests/test_gate_exit_codes.py"
       },
       {
         "candidate": "absent.json",
-        "line": 79,
+        "line": 99,
         "referrer": "tests/test_gate_exit_codes.py"
       },
       {
         "candidate": "bad.json",
-        "line": 85,
+        "line": 105,
         "referrer": "tests/test_gate_exit_codes.py"
       },
       {
         "candidate": "gates.yml",
-        "line": 125,
+        "line": 162,
         "referrer": "tests/test_gate_exit_codes.py"
       },
       {
         "candidate": "gate_exit_codes.py",
-        "line": 136,
+        "line": 173,
         "referrer": "tests/test_gate_exit_codes.py"
       },
       {
         "candidate": "gate_exit_codes.py",
-        "line": 140,
+        "line": 177,
         "referrer": "tests/test_gate_exit_codes.py"
       },
       {
@@ -150742,42 +150747,42 @@
       },
       {
         "candidate": "scripts/registre.py",
-        "line": 276,
+        "line": 280,
         "referrer": "Docs/reference/cli.md",
         "resolved": "scripts/registre.py",
         "severity": "hard"
       },
       {
         "candidate": "scripts/registre.py",
-        "line": 281,
+        "line": 285,
         "referrer": "Docs/reference/cli.md",
         "resolved": "scripts/registre.py",
         "severity": "hard"
       },
       {
         "candidate": "scripts/registre.py",
-        "line": 289,
+        "line": 293,
         "referrer": "Docs/reference/cli.md",
         "resolved": "scripts/registre.py",
         "severity": "hard"
       },
       {
         "candidate": "scripts/registre.py",
-        "line": 299,
+        "line": 303,
         "referrer": "Docs/reference/cli.md",
         "resolved": "scripts/registre.py",
         "severity": "hard"
       },
       {
         "candidate": "scripts/registre.py",
-        "line": 309,
+        "line": 313,
         "referrer": "Docs/reference/cli.md",
         "resolved": "scripts/registre.py",
         "severity": "hard"
       },
       {
         "candidate": "scripts/registre.py",
-        "line": 317,
+        "line": 321,
         "referrer": "Docs/reference/cli.md",
         "resolved": "scripts/registre.py",
         "severity": "hard"
@@ -172043,21 +172048,21 @@
       },
       {
         "candidate": "Docs/exit-codes.json",
-        "line": 86,
+        "line": 84,
         "referrer": "scripts/gate_exit_codes.py",
         "resolved": "Docs/exit-codes.json",
         "severity": "hard"
       },
       {
         "candidate": "src/forgeai/cli.py",
-        "line": 86,
+        "line": 84,
         "referrer": "scripts/gate_exit_codes.py",
         "resolved": "src/forgeai/cli.py",
         "severity": "hard"
       },
       {
         "candidate": "Docs/exit-codes.json",
-        "line": 117,
+        "line": 123,
         "referrer": "scripts/gate_exit_codes.py",
         "resolved": "Docs/exit-codes.json",
         "severity": "hard"
@@ -177762,21 +177767,21 @@
       },
       {
         "candidate": ".github/workflows/gates.yml",
-        "line": 120,
+        "line": 157,
         "referrer": "tests/test_gate_exit_codes.py",
         "resolved": ".github/workflows/gates.yml",
         "severity": "hard"
       },
       {
         "candidate": "scripts/gate_exit_codes.py",
-        "line": 132,
+        "line": 169,
         "referrer": "tests/test_gate_exit_codes.py",
         "resolved": "scripts/gate_exit_codes.py",
         "severity": "hard"
       },
       {
         "candidate": "scripts/gate_exit_codes.py",
-        "line": 133,
+        "line": 170,
         "referrer": "tests/test_gate_exit_codes.py",
         "resolved": "scripts/gate_exit_codes.py",
         "severity": "hard"
@@ -178671,7 +178676,7 @@
       "working-sandbox-readme": 1
     },
     "case_collisions_total": 0,
-    "dangling_references_total": 17317,
+    "dangling_references_total": 17318,
     "generated_total": 9,
     "load_bearing_total": 2114,
     "portability_violations_total": 0,

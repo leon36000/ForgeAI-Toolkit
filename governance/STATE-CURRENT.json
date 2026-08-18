@@ -332,7 +332,7 @@
       },
       {
         "path": "tests/test_gate_exit_codes.py",
-        "sha256": "798c01fab9fbd291ab78bb921e98e7b14f03a702ae2c105055b55da0f6fdb880"
+        "sha256": "a5cf5d28f54b7746013b87c4b688e414c93a82dc8171a1a8e32c51a2b280b70e"
       },
       {
         "path": "tests/test_gate_git_ref.py",
@@ -977,7 +977,7 @@
     "tests": {
       "js_files": 3,
       "python_files": 204,
-      "python_functions_declared": 2623
+      "python_functions_declared": 2627
     }
   },
   "observations": [
