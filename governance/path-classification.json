@@ -298,8 +298,8 @@
       "path": ".docs-exempt",
       "referenced_by": [],
       "rule_id": "governance-docs-exempt",
-      "sha256": "0571c7a233ffbae591f9601feca94997ab1c87fc88f25f7d8dc92d512c944b1f",
-      "size": 11799,
+      "sha256": "04e35df7b690a63d00eac0dc396eee4d250a3bc6408ecc25a0229e2122acddad",
+      "size": 12726,
       "target_path": null,
       "type": "text"
     },
@@ -33791,8 +33791,8 @@
         }
       ],
       "rule_id": "governance-scripts-root",
-      "sha256": "611c8b1dbc6c583ae4d0067cb86b53fa6d5f580aad4c79d415d0c2383dc864b3",
-      "size": 11865,
+      "sha256": "a065d54b57edb953ab3434ec0069a6b01356fd719e54cf80034a6da8d43f4582",
+      "size": 13559,
       "target_path": null,
       "type": "text"
     },
@@ -35667,7 +35667,7 @@
         },
         {
           "candidate": "scripts/ruff_report.py",
-          "line": 12,
+          "line": 15,
           "referrer": "scripts/rapport_composants.py",
           "resolved": "scripts/ruff_report.py",
           "severity": "hard"
@@ -54907,8 +54907,8 @@
         }
       ],
       "rule_id": "test-suite",
-      "sha256": "eb6508881956c64b1a43e03b65b190b2e6603f67f4ff97be86667b518c500dc9",
-      "size": 16242,
+      "sha256": "bf07f3fda55986fad239d6c67e476dcf69f430cd065fa38e0caaf62dea433370",
+      "size": 17668,
       "target_path": null,
       "type": "text"
     },
@@ -104429,47 +104429,52 @@
       },
       {
         "candidate": "et/ou",
-        "line": 39,
+        "line": 42,
         "referrer": "scripts/rapport_composants.py"
       },
       {
         "candidate": "ruff/pytest/mypy",
-        "line": 84,
+        "line": 87,
         "referrer": "scripts/rapport_composants.py"
       },
       {
         "candidate": "CI/test/lint",
-        "line": 171,
+        "line": 174,
         "referrer": "scripts/rapport_composants.py"
       },
       {
         "candidate": "artefact-distribue.yml",
-        "line": 172,
+        "line": 175,
         "referrer": "scripts/rapport_composants.py"
       },
       {
         "candidate": "artefact-distribue.yml",
-        "line": 191,
+        "line": 198,
+        "referrer": "scripts/rapport_composants.py"
+      },
+      {
+        "candidate": "artefact-distribue.yml",
+        "line": 206,
         "referrer": "scripts/rapport_composants.py"
       },
       {
         "candidate": "wheel/sdist",
-        "line": 202,
+        "line": 227,
         "referrer": "scripts/rapport_composants.py"
       },
       {
         "candidate": "CI/dev/build",
-        "line": 203,
+        "line": 228,
         "referrer": "scripts/rapport_composants.py"
       },
       {
         "candidate": "composants-rc1.json",
-        "line": 226,
+        "line": 251,
         "referrer": "scripts/rapport_composants.py"
       },
       {
         "candidate": "../../etc/passwd",
-        "line": 240,
+        "line": 265,
         "referrer": "scripts/rapport_composants.py"
       },
       {
@@ -137444,47 +137449,47 @@
       },
       {
         "candidate": "composants-rc1.json",
-        "line": 334,
+        "line": 370,
         "referrer": "tests/test_rapport_composants.py"
       },
       {
         "candidate": "rapport-personnalise.json",
-        "line": 348,
+        "line": 384,
         "referrer": "tests/test_rapport_composants.py"
       },
       {
         "candidate": "rapport-personnalise.json",
-        "line": 352,
+        "line": 388,
         "referrer": "tests/test_rapport_composants.py"
       },
       {
         "candidate": "composants-rc1.json",
-        "line": 353,
+        "line": 389,
         "referrer": "tests/test_rapport_composants.py"
       },
       {
         "candidate": "composants-rc1.json",
-        "line": 365,
+        "line": 401,
         "referrer": "tests/test_rapport_composants.py"
       },
       {
         "candidate": "composants-rc1.json",
-        "line": 375,
+        "line": 411,
         "referrer": "tests/test_rapport_composants.py"
       },
       {
         "candidate": "ne-doit-jamais-exister.json",
-        "line": 463,
+        "line": 499,
         "referrer": "tests/test_rapport_composants.py"
       },
       {
         "candidate": "ne-doit-jamais-exister-non-plus.json",
-        "line": 483,
+        "line": 519,
         "referrer": "tests/test_rapport_composants.py"
       },
       {
         "candidate": "../",
-        "line": 484,
+        "line": 520,
         "referrer": "tests/test_rapport_composants.py"
       },
       {
@@ -171159,7 +171164,7 @@
       },
       {
         "candidate": "scripts/ruff_report.py",
-        "line": 12,
+        "line": 15,
         "referrer": "scripts/rapport_composants.py",
         "resolved": "scripts/ruff_report.py",
         "severity": "hard"
@@ -177002,7 +177007,7 @@
       "working-sandbox-readme": 1
     },
     "case_collisions_total": 0,
-    "dangling_references_total": 17176,
+    "dangling_references_total": 17177,
     "generated_total": 9,
     "load_bearing_total": 2101,
     "portability_violations_total": 0,

@@ -648,7 +648,7 @@
       },
       {
         "path": "tests/test_rapport_composants.py",
-        "sha256": "eb6508881956c64b1a43e03b65b190b2e6603f67f4ff97be86667b518c500dc9"
+        "sha256": "bf07f3fda55986fad239d6c67e476dcf69f430cd065fa38e0caaf62dea433370"
       },
       {
         "path": "tests/test_ratelimit.py",
@@ -969,7 +969,7 @@
     "tests": {
       "js_files": 3,
       "python_files": 202,
-      "python_functions_declared": 2567
+      "python_functions_declared": 2569
     }
   },
   "observations": [
