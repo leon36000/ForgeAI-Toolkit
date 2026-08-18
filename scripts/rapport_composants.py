@@ -223,6 +223,18 @@ def main(argv: list[str] | None = None) -> int:
 
     racine = Path(arguments.racine)
 
+    # Path("/a") / "/b" retourne Path("/b") : un opérande ABSOLU à droite de l'opérateur
+    # pathlib « / » écrase silencieusement le côté gauche (comportement stdlib documenté,
+    # vérifié empiriquement) — sans ce garde-fou, --sortie absolu contournerait --racine en
+    # silence, contrairement au contrat annoncé par --help ci-dessus ("relatif à --racine").
+    if Path(arguments.sortie).is_absolute():
+        print(
+            f"--sortie doit être un chemin RELATIF à --racine, reçu un chemin absolu : "
+            f"{arguments.sortie!r}",
+            file=sys.stderr,
+        )
+        return 1
+
     try:
         rapport = construire_rapport(racine)
     except ValueError as erreur:

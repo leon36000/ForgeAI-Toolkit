@@ -321,10 +321,13 @@ jobs:
     # #454 (RC1-024), source audit EXT-029 : liste des composants (paquets Python, versions,
     # licences) utilisés pour CONSTRUIRE les artefacts RC1 (requirements-ci.txt + build, jamais
     # les dépendances du produit livré — dependencies=[] stdlib pure). Rapport SEULEMENT,
-    # jamais bloquant (même philosophie que ruff-report) — scripts/rapport_composants.py
-    # retourne 0 sauf panne d'outillage réelle (requirements-ci.txt/pyproject.toml illisibles).
-    # Publié comme artefact CI pour conservation avec le commit correspondant. `build` n'est
-    # PAS installé dans ce job (contrairement à artefact-distribue.yml) : le test
+    # jamais bloquant — `continue-on-error: true` explicite au niveau du job (revue scellée
+    # round 1, 2 reviewers indépendants : contrairement à ruff-report/branch-coverage-report,
+    # dont les scripts ne peuvent structurellement retourner que 0 sur leur mesure normale,
+    # scripts/rapport_composants.py retourne explicitement 1 sur une panne d'installation ou
+    # d'écriture — une ambiguïté documentaire seule n'aurait pas suffi ici, contrairement au
+    # cas similaire déjà rencontré sur #450). `build` n'est PAS installé dans ce job
+    # (contrairement à artefact-distribue.yml) : le test
     # test_rc1017_matrice_python.py::test_aucune_liste_de_dependances_de_test_n_est_dupliquee
     # exige que toute commande d'installation de paquets de CE fichier référence
     # requirements-ci.txt, --require-hashes et --no-cache-dir (cohérence du lockfile unique) —
@@ -332,6 +335,7 @@ jobs:
     # licence est rapportée comme « inconnue » ici faute d'installation, honnêtement plutôt
     # qu'inventée.
     runs-on: ubuntu-latest
+    continue-on-error: true
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:

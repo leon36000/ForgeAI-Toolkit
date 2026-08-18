@@ -450,3 +450,23 @@ def test_main_erreur_ecriture_retourne_1(
     capture = capsys.readouterr()
     assert code_retour == 1
     assert "impossible d'écrire" in capture.err
+
+
+def test_main_sortie_absolue_rejetee_sans_ecrire_ni_contourner_la_racine(
+    tmp_path: Path,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    """Path("/a") / "/b" == Path("/b") (stdlib) : sans garde-fou, --sortie absolu
+    écrirait hors de --racine en silence, contrairement au contrat annoncé par --help
+    ("relatif à --racine") — revue scellée round 1, objection GPT-5.6-Terra-Pro."""
+    _preparer_racine(tmp_path)
+    cible_hors_racine = tmp_path.parent / "ne-doit-jamais-exister.json"
+
+    code_retour = rc.main(
+        ["--racine", str(tmp_path), "--sortie", str(cible_hors_racine)]
+    )
+
+    capture = capsys.readouterr()
+    assert code_retour == 1
+    assert "chemin RELATIF" in capture.err
+    assert not cible_hors_racine.exists()
