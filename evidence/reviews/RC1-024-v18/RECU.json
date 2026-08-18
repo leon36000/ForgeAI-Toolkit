@@ -1,0 +1,22 @@
+{
+  "schema": "recu-revue/1",
+  "dossier": "RC1-024-v18",
+  "issue": 454,
+  "round": 18,
+  "base_commit": "04819561da8a8453a95f7ac8f88e0b5d4ba68e41",
+  "head_commit": "240563146806c7a3cf75fd1a576290984f5cbb68",
+  "head_tree": "375bebf29ce9a93beca47a4ba2e37946d1af55f7",
+  "diff_digest": "747cb025f7fa68d897d4fcaf817682fa2a5e828860e0bc8ab964c3cd0ba16032",
+  "prompt_sha256": "ca1925b7c5490777b5404c426ed30c12174a2baf37284d8f51de9b9dd133f1ff",
+  "reviewers_attendus": [
+    "GPT-5.6-Terra-Pro",
+    "Kimi-2.7",
+    "MiMo-V2.5-Pro"
+  ],
+  "codeur": [
+    "fable"
+  ],
+  "resultat": "APPROVE",
+  "date_heure": "2026-08-18T12:20:27.476360-04:00",
+  "fenetre_heures": 24
+}
