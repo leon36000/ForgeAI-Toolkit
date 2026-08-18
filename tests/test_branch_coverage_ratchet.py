@@ -508,6 +508,22 @@ def test_main_reference_git_ancien_schema_sans_seuils_par_categorie_tolere(
     assert code == 0
 
 
+def test_main_categorie_sans_fichier_matche_echoue(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    _ecrire_categories(tmp_path, _categories_deux())
+    _ecrire_baseline(tmp_path, _baseline_deux({"orchestrateurs": 50.0, "securite": 50.0}))
+    _ecrire_rapport_fichier(tmp_path, _rapport({
+        "src/forgeai/deploy/a.py": _fichier_summary(10, 1),
+    }))
+    monkeypatch.setattr(gate_git_ref, "charger_base_reference_git", _reference_absente)
+    code = branch_coverage_ratchet.main(["--racine", str(tmp_path), "--sortie-json", str(tmp_path / "branch-coverage.json")])
+    assert code == 1
+    err = capsys.readouterr().err
+    assert "securite" in err
+    assert "aucun fichier" in err
+
+
 # ---------------------------------------------------------------------------
 # Fichiers JSON absents / invalides
 # ---------------------------------------------------------------------------

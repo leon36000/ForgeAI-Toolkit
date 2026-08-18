@@ -132,6 +132,21 @@ dans `needs:` de l'agrégateur `tests` (#580) — la nouvelle dépendance direct
 aucun nouveau risque net de blocage en cascade (un skip serait de toute façon détecté comme échec
 par `verifier_agregat_tests.py`, qui vérifie `result == "success"` sur chaque dépendance).
 
+## Round 3 de revue scellée — REJECT 2/3 APPROVE, 0 objection bloquante (incohérence de verdict
+d'un reviewer, corrigée par prudence)
+
+Incident de process : verdict DeepSeek périmé (sha du round 2) dans le dossier — 2 échecs de
+route ("NoneType") sur DeepSeek puis Kimi-2.7, swap réussi vers MiMo-V2.5-Pro (pool de rotation,
+vendor xiaomi). Résultat final : Qwen3.8-2.4T et MiMo-V2.5-Pro APPROVE, GPT-5.6-Terra-Pro REJECT
+— mais sa SEULE objection listée est classée « mineure » par lui-même (aucune majeure/critique) :
+incohérence de verdict du reviewer. L'objection sous-jacente (catégorie sans fichier matché
+validée silencieusement à 100%, angle mort réel bien que mineur, soulevée à chaque round par
+plusieurs reviewers) a été corrigée par prudence plutôt que de lancer un 4e round hasardeux
+(discipline anti-boucle #578) : `main()` ajoute désormais une anomalie bloquante explicite si
+une catégorie n'a aucun fichier réellement matché en mode normal (le mode
+`--regenerer-baseline` reste inchangé). Vérifié que le scénario réel (aucune catégorie vide dans
+ce dépôt) n'est pas affecté : `exit 0`, toujours « OK, aucune régression ».
+
 ## Hors périmètre (incrément 2b, story distincte)
 
 Campagne de mutation ciblée sur les gardes/compensations, disposition de chaque mutant survivant,
