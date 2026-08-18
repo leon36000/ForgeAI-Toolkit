@@ -445,13 +445,6 @@
       "referenced_by": [
         {
           "candidate": ".github/workflows/artefact-distribue.yml",
-          "line": 6,
-          "referrer": "evidence/reviews/RC1-018-v5/Qwen3.7-Max.verdict.json",
-          "resolved": ".github/workflows/artefact-distribue.yml",
-          "severity": "hard"
-        },
-        {
-          "candidate": ".github/workflows/artefact-distribue.yml",
           "line": 90,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": ".github/workflows/artefact-distribue.yml",
@@ -6821,8 +6814,8 @@
         }
       ],
       "rule_id": "evidence-registres-root",
-      "sha256": "fa657d8940c6efe5dc3aa42ff94fd9be843a99f9b5523e5317ac15569013e3e2",
-      "size": 394387,
+      "sha256": "7d13437ef7fcb57df753beb903d0a37781a5defb3712382dba4b8a8f5758a8f0",
+      "size": 395069,
       "target_path": null,
       "type": "text"
     },
@@ -8782,7 +8775,7 @@
         }
       ],
       "rule_id": "evidence-reviews-root",
-      "sha256": "6eafd5d9e8ea6403cf8a8143cc88b5bb8537b1ca36d134c35c75c21a7eed557a",
+      "sha256": "497f70e334218b2d2d170dd56a583dbb3677b4a97ee0af30959e5b6cea54cf04",
       "size": 2872,
       "target_path": null,
       "type": "text"
@@ -19824,58 +19817,6 @@
       "size": 2013,
       "target_path": null,
       "type": "text"
-    },
-    {
-      "class": "EVIDENCE",
-      "generated": false,
-      "load_bearing": true,
-      "owner": "gouvernance-preuve",
-      "path": "evidence/reviews/RC1-018-v5/Gemini-3.7-Flash.verdict.json",
-      "referenced_by": [],
-      "rule_id": "evidence-reviews-root",
-      "sha256": "e6f40a5077d617a5b0b8bdef7b0dfc8db3b015574e6f61fce35cf03bf96030f0",
-      "size": 371,
-      "target_path": null,
-      "type": "text"
-    },
-    {
-      "class": "EVIDENCE",
-      "generated": false,
-      "load_bearing": true,
-      "owner": "gouvernance-preuve",
-      "path": "evidence/reviews/RC1-018-v5/MiMo-V2.5-Pro.verdict.json",
-      "referenced_by": [],
-      "rule_id": "evidence-reviews-root",
-      "sha256": "c44583ec514b042abb3a87194783ac8baa806a3ac1e88f7ea170e77478b4b90d",
-      "size": 327,
-      "target_path": null,
-      "type": "text"
-    },
-    {
-      "class": "EVIDENCE",
-      "generated": false,
-      "load_bearing": true,
-      "owner": "gouvernance-preuve",
-      "path": "evidence/reviews/RC1-018-v5/Qwen3.7-Max.verdict.json",
-      "referenced_by": [],
-      "rule_id": "evidence-reviews-root",
-      "sha256": "122e35fdd8e30b7c80aace48c874e718e92b83fb73312bf7bf0fac58777055be",
-      "size": 1143,
-      "target_path": null,
-      "type": "text"
-    },
-    {
-      "class": "EVIDENCE",
-      "generated": false,
-      "load_bearing": true,
-      "owner": "gouvernance-preuve",
-      "path": "evidence/reviews/RC1-018-v5/RECU.json",
-      "referenced_by": [],
-      "rule_id": "evidence-reviews-root",
-      "sha256": null,
-      "size": null,
-      "target_path": null,
-      "type": null
     },
     {
       "class": "EVIDENCE",
@@ -59177,6 +59118,11 @@
     "completeness": "best_effort",
     "dangling": [
       {
+        "candidate": "RC1-018-v6",
+        "line": 211,
+        "referrer": "evidence/reviews/BINDING.txt"
+      },
+      {
         "candidate": "TUI/UX",
         "line": 3,
         "referrer": ".claude/agents/composer-tui.md"
@@ -97040,11 +96986,6 @@
         "candidate": "FR/EN",
         "line": 8,
         "referrer": "evidence/reviews/RC1-013/Qwen3.7-Max.verdict.json"
-      },
-      {
-        "candidate": "recu-revue/1",
-        "line": 2,
-        "referrer": "evidence/reviews/RC1-018-v5/RECU.json"
       },
       {
         "candidate": "fichier/r",
@@ -145817,13 +145758,6 @@
         "severity": "hard"
       },
       {
-        "candidate": "RC1-018-v5",
-        "line": 211,
-        "referrer": "evidence/reviews/BINDING.txt",
-        "resolved": "evidence/reviews/RC1-018-v5",
-        "severity": "hard"
-      },
-      {
         "candidate": "scripts/gate_docs.py",
         "line": 11,
         "referrer": "sonar-project.properties",
@@ -158820,13 +158754,6 @@
         "line": 26,
         "referrer": "evidence/reviews/RC1-013/Qwen3.7-Max.verdict.json",
         "resolved": "README.md",
-        "severity": "hard"
-      },
-      {
-        "candidate": ".github/workflows/artefact-distribue.yml",
-        "line": 6,
-        "referrer": "evidence/reviews/RC1-018-v5/Qwen3.7-Max.verdict.json",
-        "resolved": ".github/workflows/artefact-distribue.yml",
         "severity": "hard"
       },
       {
@@ -175742,7 +175669,7 @@
     "by_class": {
       "ARCHIVE": 44,
       "DOCS": 18,
-      "EVIDENCE": 1629,
+      "EVIDENCE": 1625,
       "GENERATED": 5,
       "GOVERNANCE": 203,
       "PRODUCT": 113,
@@ -175761,7 +175688,7 @@
       "evidence-audit-output-root": 18,
       "evidence-dedup-root": 2,
       "evidence-registres-root": 35,
-      "evidence-reviews-root": 1574,
+      "evidence-reviews-root": 1570,
       "generated-authority-map": 1,
       "generated-path-classification-json": 1,
       "generated-path-classification-markdown": 1,
@@ -175799,9 +175726,9 @@
     "case_collisions_total": 0,
     "dangling_references_total": 17014,
     "generated_total": 9,
-    "load_bearing_total": 2094,
+    "load_bearing_total": 2090,
     "portability_violations_total": 0,
-    "tracked_total": 2237,
+    "tracked_total": 2233,
     "unclassified_total": 0,
     "unicode_anomalies_total": 0
   },
