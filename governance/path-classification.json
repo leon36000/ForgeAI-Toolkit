@@ -4586,7 +4586,7 @@
         },
         {
           "candidate": "README.md",
-          "line": 187,
+          "line": 191,
           "referrer": "scripts/coordination/test_scope_guard.py",
           "resolved": "README.md",
           "severity": "hard"
@@ -31157,8 +31157,8 @@
         }
       ],
       "rule_id": "governance-scripts-coordination",
-      "sha256": "0e8963db231f7163508e6aaa6af232d2ecf54348cb3dadddf4dea02f2ad6bca6",
-      "size": 10025,
+      "sha256": "c1ee8b1ac09cf88a7055cc6d27176802bc6d262ecf50d0192386d6f88157654e",
+      "size": 9876,
       "target_path": null,
       "type": "text"
     },
@@ -31248,8 +31248,8 @@
         }
       ],
       "rule_id": "coordination-sonar-test-scope-guard",
-      "sha256": "b7dc352854d60edd901137a683a8e1dee24be0681285617583cf39594a0c8bc7",
-      "size": 14715,
+      "sha256": "cc75d7456b88df6b3fe9087640564efea38a9c594cd15a34617105cf777fc2fe",
+      "size": 14833,
       "target_path": null,
       "type": "text"
     },
@@ -102810,27 +102810,27 @@
       },
       {
         "candidate": "origin/main",
-        "line": 203,
+        "line": 197,
         "referrer": "scripts/coordination/scope_guard.py"
       },
       {
         "candidate": "STOP/SPLIT/REPLAN",
-        "line": 219,
+        "line": 213,
         "referrer": "scripts/coordination/scope_guard.py"
       },
       {
         "candidate": "STOP/SPLIT/REPLAN",
-        "line": 231,
+        "line": 225,
         "referrer": "scripts/coordination/scope_guard.py"
       },
       {
         "candidate": "active-claims.json",
-        "line": 244,
+        "line": 238,
         "referrer": "scripts/coordination/scope_guard.py"
       },
       {
         "candidate": "work-packages.json",
-        "line": 245,
+        "line": 239,
         "referrer": "scripts/coordination/scope_guard.py"
       },
       {
@@ -102920,82 +102920,82 @@
       },
       {
         "candidate": "origin/main",
-        "line": 177,
+        "line": 181,
         "referrer": "scripts/coordination/test_scope_guard.py"
       },
       {
         "candidate": "origin/main",
-        "line": 187,
+        "line": 191,
         "referrer": "scripts/coordination/test_scope_guard.py"
       },
       {
         "candidate": "origin/main",
-        "line": 200,
+        "line": 206,
         "referrer": "scripts/coordination/test_scope_guard.py"
       },
       {
         "candidate": "coordination/work-packages.json",
-        "line": 200,
+        "line": 206,
         "referrer": "scripts/coordination/test_scope_guard.py"
       },
       {
         "candidate": "origin/main",
-        "line": 212,
+        "line": 218,
         "referrer": "scripts/coordination/test_scope_guard.py"
       },
       {
         "candidate": "build/artifact.bin",
-        "line": 212,
+        "line": 218,
         "referrer": "scripts/coordination/test_scope_guard.py"
       },
       {
         "candidate": "origin/main",
-        "line": 237,
+        "line": 243,
         "referrer": "scripts/coordination/test_scope_guard.py"
       },
       {
         "candidate": "absent.json",
-        "line": 263,
+        "line": 269,
         "referrer": "scripts/coordination/test_scope_guard.py"
       },
       {
         "candidate": "origin/main..HEAD",
-        "line": 326,
-        "referrer": "scripts/coordination/test_scope_guard.py"
-      },
-      {
-        "candidate": "tsrc/forgeai/a.py",
-        "line": 329,
-        "referrer": "scripts/coordination/test_scope_guard.py"
-      },
-      {
-        "candidate": "ttests/test_a.py",
-        "line": 330,
-        "referrer": "scripts/coordination/test_scope_guard.py"
-      },
-      {
-        "candidate": "tstories/S.md",
-        "line": 331,
-        "referrer": "scripts/coordination/test_scope_guard.py"
-      },
-      {
-        "candidate": "tgovernance/path-classification.json",
         "line": 332,
         "referrer": "scripts/coordination/test_scope_guard.py"
       },
       {
-        "candidate": "tevidence/reviews/S/x.verdict.json",
-        "line": 333,
+        "candidate": "tsrc/forgeai/a.py",
+        "line": 335,
         "referrer": "scripts/coordination/test_scope_guard.py"
       },
       {
-        "candidate": "origin/main",
+        "candidate": "ttests/test_a.py",
+        "line": 336,
+        "referrer": "scripts/coordination/test_scope_guard.py"
+      },
+      {
+        "candidate": "tstories/S.md",
         "line": 337,
         "referrer": "scripts/coordination/test_scope_guard.py"
       },
       {
+        "candidate": "tgovernance/path-classification.json",
+        "line": 338,
+        "referrer": "scripts/coordination/test_scope_guard.py"
+      },
+      {
+        "candidate": "tevidence/reviews/S/x.verdict.json",
+        "line": 339,
+        "referrer": "scripts/coordination/test_scope_guard.py"
+      },
+      {
+        "candidate": "origin/main",
+        "line": 343,
+        "referrer": "scripts/coordination/test_scope_guard.py"
+      },
+      {
         "candidate": "feature/sans-claim-json",
-        "line": 353,
+        "line": 359,
         "referrer": "scripts/coordination/test_scope_guard.py"
       },
       {
@@ -170519,7 +170519,7 @@
       },
       {
         "candidate": "README.md",
-        "line": 187,
+        "line": 191,
         "referrer": "scripts/coordination/test_scope_guard.py",
         "resolved": "README.md",
         "severity": "hard"
