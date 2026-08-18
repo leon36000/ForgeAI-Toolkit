@@ -18,12 +18,11 @@
     "S607"
   ],
   "borne": {
-    "total_violations": 149
+    "total_violations": 138
   },
   "dette": {
     "scripts/branch_coverage_report.py": 1,
-    "scripts/coordination/scope_guard.py": 3,
-    "scripts/coordination/test_scope_guard.py": 9,
+    "scripts/coordination/scope_guard.py": 1,
     "scripts/coordination/test_validate_coordination.py": 1,
     "scripts/gate_git_ref.py": 4,
     "scripts/governance/capabilities.py": 2,
@@ -77,12 +76,7 @@
       "S603": 1
     },
     "scripts/coordination/scope_guard.py": {
-      "S603": 1,
-      "S607": 2
-    },
-    "scripts/coordination/test_scope_guard.py": {
-      "ARG001": 3,
-      "ARG005": 6
+      "S603": 1
     },
     "scripts/coordination/test_validate_coordination.py": {
       "S603": 1
