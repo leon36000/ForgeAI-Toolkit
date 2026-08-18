@@ -1,0 +1,25 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "majeure",
+   "fichier": "scripts/gate_exit_codes.py",
+   "description": "Le gate ne valide pas le schéma du registre et peut donc réussir avec un registre JSON structurellement invalide, sans vérifier aucune entrée. Cela contredit le rôle bloquant du registre imposé par le schéma `exit-codes-v1` et le cas attendu de registre invalide.",
+   "preuve": "Aux lignes 41-44, `codes_par_commande` non dictionnaire produit simplement `[]`; aux lignes 105-113, un registre tel que `{\"codes_par_commande\": []}` conduit à `n = 0`, puis au retour 0. Un registre JSON racine `[]` provoque en plus un `AttributeError` sur `registre.get(...)`, non capturé par le `except` des lignes 100-103. Les tests ne couvrent qu'un JSON syntaxiquement invalide (`tests/test_gate_exit_codes.py`, lignes 85-88), pas un JSON valide mais hors schéma."
+  },
+  {
+   "severite": "majeure",
+   "fichier": "scripts/gate_exit_codes.py",
+   "description": "La vérification ne respecte pas la règle demandée : vérifier que la ligne contient la sous-chaîne littérale `return <code>`. Elle impose au contraire une fin de ligne précise et accepte une forme ternaire qui ne contient pas cette sous-chaîne.",
+   "preuve": "Aux lignes 60-66, la conformité est calculée avec `fin_ligne.endswith(attendu_return)` ou `fin_ligne.endswith(attendu_ternaire)`. Une ligne Python valide telle que `return 10  # commentaire` contient bien `return 10` mais serait signalée en dérive. Inversement, `return 0 if x else 9` est acceptée pour le code 9 alors qu'elle ne contient pas la sous-chaîne requise `return 9`; ce comportement est explicitement testé dans `tests/test_gate_exit_codes.py`, lignes 48-51."
+  }
+ ],
+ "date_heure": "2026-08-18T23:37:56.751855+00:00",
+ "prompt_sha256": "621700a6fd55af1d759f52ce03d2e2f8f824b355e0d3d35963f3b1dce2beebb7",
+ "reviewer_model": "GPT-5.6-Terra-Pro",
+ "modele_servi": "gpt56-terra-pro-openrouter",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

@@ -1,0 +1,31 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "majeure",
+   "fichier": "scripts/gate_exit_codes.py",
+   "description": "Le critère exige que le gate vérifie que la ligne indiquée contient la sous-chaîne littérale `return <code>`. L'implémentation ne fait pas cette vérification : elle exige que la ligne se termine par `return <code>` et accepte aussi qu'elle se termine par `else <code>`, ce qui peut valider une ligne sans `return <code>`.",
+   "preuve": "scripts/gate_exit_codes.py lignes 61-62 : `attendu_return = f'return {code_int}'` et `attendu_ternaire = f'else {code_int}'` ; lignes 71-73 : `conforme = fin_ligne.endswith(attendu_return) or fin_ligne.endswith(attendu_ternaire)` ; tests/test_gate_exit_codes.py lignes 49-52 : `test_anomalies_pattern_ternaire_else_n_pas_anomalie` accepte `'    return 0 if x else 9'` pour un code 9."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "Docs/reference/cli.md",
+   "description": "L'annexe de reconnaissance demande explicitement de traiter la commande `web` comme binaire standard dans la documentation, avec une note renvoyant vers `forgeai.web`. Les nouvelles sections de `Docs/reference/cli.md` ne contiennent pas cette note.",
+   "preuve": "stories/RC1-013-increment2a-rapport-codes-sortie.md lignes 60-62 : « - **web** : aucun code identifiable ... Traiter comme binaire standard dans la doc, avec une note ... » ; le hunk ajoutant `## Codes de sortie` et `## Variables d'environnement` dans Docs/reference/cli.md ne contient aucune occurrence de `web`."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "tests/test_gate_exit_codes.py",
+   "description": "Le cas « fichier registre absent/invalide » est couvert uniquement au niveau de `charger_registre()`, pas au niveau de `main()` alors que le comportement attendu du gate est que `main()` retourne un entier non nul sur registre absent/invalide.",
+   "preuve": "tests/test_gate_exit_codes.py lignes 78-88 : `test_charger_registre_fichier_absent` et `test_charger_registre_json_invalide` testent seulement `pytest.raises(FileNotFoundError)` et `pytest.raises(ValueError)` ; aucun test n'appelle `gate_exit_codes.main([])` avec registre absent ou invalide pour vérifier le retour 1."
+  }
+ ],
+ "date_heure": "2026-08-18T23:42:31.468036+00:00",
+ "prompt_sha256": "621700a6fd55af1d759f52ce03d2e2f8f824b355e0d3d35963f3b1dce2beebb7",
+ "reviewer_model": "Qwen3.8-2.4T",
+ "modele_servi": "b9de6bc895fe95ccacf7d9fa9b1cf29ca44d34f03e249738f325c9dee3790b78",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}
