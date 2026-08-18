@@ -524,6 +524,24 @@ def test_main_categorie_sans_fichier_matche_echoue(
     assert "aucun fichier" in err
 
 
+def test_main_fichier_matche_sans_branche_ne_declenche_pas_categorie_vide(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Round 4 de revue scellée (#451, objection mineure fondée) : un fichier qui matche un
+    glob mais n'a aucune branche (ex. module de pures constantes) ne doit JAMAIS être rapporté
+    comme « aucun fichier ne matche » — seule l'absence RÉELLE de fichier matché est suspecte.
+    """
+    _ecrire_categories(tmp_path, _categories_deux())
+    _ecrire_baseline(tmp_path, _baseline_deux({"orchestrateurs": 50.0, "securite": 50.0}))
+    _ecrire_rapport_fichier(tmp_path, _rapport({
+        "src/forgeai/deploy/a.py": _fichier_summary(10, 1),
+        "src/forgeai/secrets/const.py": _fichier_summary(0, 0),
+    }))
+    monkeypatch.setattr(gate_git_ref, "charger_base_reference_git", _reference_absente)
+    code = branch_coverage_ratchet.main(["--racine", str(tmp_path), "--sortie-json", str(tmp_path / "branch-coverage.json")])
+    assert code == 0
+
+
 # ---------------------------------------------------------------------------
 # Fichiers JSON absents / invalides
 # ---------------------------------------------------------------------------

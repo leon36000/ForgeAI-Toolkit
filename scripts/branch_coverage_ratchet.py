@@ -274,7 +274,11 @@ def main(argv: list[str] | None = None) -> int:
 
     anomalies: list[str] = []
     for cat in sorted(categories):
-        if couverture[cat]["num_branches"] == 0:
+        # Round 4 de revue scellée (#451, objection mineure fondée) : teste la liste RÉELLE de
+        # fichiers matchés (`fichiers`), pas `num_branches == 0` — un fichier peut légitimement
+        # matcher un glob sans posséder la moindre branche (ex. module de pures constantes), ce
+        # qui n'est PAS suspect et ne doit jamais être rapporté comme « aucun fichier ne matche ».
+        if not couverture[cat]["fichiers"]:
             anomalies.append(f"catégorie {cat!r} : aucun fichier du rapport ne matche ses globs ({categories[cat]['chemins']}) — vérifier `governance/branch-coverage-categories.json` (fichiers supprimés/renommés hors périmètre, ou config de globs erronée)")
     for cat in sorted(categories):
         percent = couverture[cat]["percent_branches_covered"]

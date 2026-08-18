@@ -147,6 +147,21 @@ une catégorie n'a aucun fichier réellement matché en mode normal (le mode
 `--regenerer-baseline` reste inchangé). Vérifié que le scénario réel (aucune catégorie vide dans
 ce dépôt) n'est pas affecté : `exit 0`, toujours « OK, aucune régression ».
 
+## Round 4 de revue scellée — REJECT 2/3 APPROVE, 0 objection bloquante (même pattern qu'au
+round 3, objection technique valide corrigée par prudence)
+
+Nouvel incident de process : DeepSeek en échec de route ("NoneType") 2 fois de suite, swap
+direct vers MiMo-V2.5-Pro (déjà fiable au round 3). GPT-5.6-Terra-Pro REJECT à nouveau alors
+qu'aucune de ses 3 objections n'est classée majeure/critique par lui-même.
+
+Objection technique retenue cette fois (fondée, corrigée) : le contrôle « catégorie sans fichier
+matché » du round 3 testait `num_branches == 0` plutôt que la liste réelle de fichiers matchés
+— un fichier peut légitimement matcher un glob sans posséder la moindre branche (ex. module de
+pures constantes), ce qui n'est PAS suspect et n'aurait jamais dû déclencher le message « aucun
+fichier ne matche ». Corrigé : le test porte désormais sur `couverture[cat]["fichiers"]` (liste
+réelle), pas sur l'agrégat de branches. Nouveau test dédié
+(`test_main_fichier_matche_sans_branche_ne_declenche_pas_categorie_vide`).
+
 ## Hors périmètre (incrément 2b, story distincte)
 
 Campagne de mutation ciblée sur les gardes/compensations, disposition de chaque mutant survivant,
