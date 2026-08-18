@@ -141,12 +141,21 @@ def _write_coord(tmp_path: Path, claims: list[dict] | None, packages: dict | Non
     return coord
 
 
+@pytest.fixture(autouse=True)
+def _stable_budget_for_main_tests(monkeypatch: pytest.MonkeyPatch, request: pytest.FixtureRequest) -> None:
+    """Les tests main historiques isolent le contrôle de claims du budget Git réel."""
+    if request.node.name.startswith("test_main_"):
+        monkeypatch.setattr(sg, "collect_scope_metrics", lambda *args, **kwargs: _small_metrics())
+
+
 def test_main_skips_when_coordination_files_absent(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture
 ) -> None:
     monkeypatch.setattr(sg, "COORD_DIR", tmp_path / "coordination")
     assert sg.main() == 0
-    assert "SKIP" in capsys.readouterr().out
+    output = capsys.readouterr().out
+    assert "PASS — budget quantitatif" in output
+    assert "SKIP" in output
 
 
 def test_main_skips_when_no_active_claims(
@@ -155,7 +164,9 @@ def test_main_skips_when_no_active_claims(
     _write_coord(tmp_path, claims=[], packages=_pkg_by_id())
     monkeypatch.setattr(sg, "COORD_DIR", tmp_path / "coordination")
     assert sg.main() == 0
-    assert "aucun claim actif" in capsys.readouterr().out
+    output = capsys.readouterr().out
+    assert "PASS — budget quantitatif" in output
+    assert "aucun claim actif" in output
 
 
 def test_main_skips_when_no_changed_files(
@@ -182,8 +193,7 @@ def test_main_skips_when_branch_has_no_claim(
 def test_main_passes_for_own_claim_despite_concurrent_claim(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture
 ) -> None:
-    """Test d'intégration bout-en-bout du correctif via main(): 2 claims actifs, la PR
-    ne touche que des fichiers dans le périmètre de SON claim (ORCH-001)."""
+    """Test d'intégration bout-en-bout : 2 claims, la PR respecte SON claim."""
     _write_coord(tmp_path, claims=CONCURRENT_CLAIMS, packages=_pkg_by_id())
     monkeypatch.setattr(sg, "COORD_DIR", tmp_path / "coordination")
     monkeypatch.setattr(
@@ -269,13 +279,8 @@ def _small_metrics() -> dict[str, int]:
     }
 
 
-def test_quantitative_scope_accepts_small_pr() -> None:
-    ok, report = sg.evaluate_scope(_small_metrics())
-    assert ok is True, report
-
-
-def test_quantitative_scope_blocks_rc1015_runaway_profile() -> None:
-    metrics = {
+def _runaway_metrics() -> dict[str, int]:
+    return {
         "ahead": 24,
         "behind": 50,
         "changed_files": 25,
@@ -285,7 +290,15 @@ def test_quantitative_scope_blocks_rc1015_runaway_profile() -> None:
         "story_churn": 4220,
         "generated_churn": 202651,
     }
-    ok, report = sg.evaluate_scope(metrics)
+
+
+def test_quantitative_scope_accepts_small_pr() -> None:
+    ok, report = sg.evaluate_scope(_small_metrics())
+    assert ok is True, report
+
+
+def test_quantitative_scope_blocks_rc1015_runaway_profile() -> None:
+    ok, report = sg.evaluate_scope(_runaway_metrics())
     assert ok is False
     text = "\n".join(report)
     for signal in ("ahead", "behind", "substantive", "fichier", "tests", "story", "généré"):
@@ -338,3 +351,47 @@ def test_quantitative_guard_does_not_depend_on_archived_claim() -> None:
     ok, _ = sg.evaluate_scope(_small_metrics())
     assert ok is True
     assert sg.find_claim_for_branch([], "feature/sans-claim-json") is None
+
+
+def test_main_budget_blocks_before_legacy_claim_skip(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture
+) -> None:
+    monkeypatch.setattr(sg, "COORD_DIR", tmp_path / "coordination")
+    monkeypatch.setattr(sg, "collect_scope_metrics", lambda *args, **kwargs: _runaway_metrics())
+    assert sg.main([]) == 1
+    captured = capsys.readouterr()
+    assert "budget quantitatif" in captured.err
+    assert "behind" in captured.err
+
+
+def test_main_round4_stops_before_legacy_claim_logic(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture
+) -> None:
+    monkeypatch.setattr(sg, "COORD_DIR", tmp_path / "coordination")
+    assert sg.main(["--round", "4", "--replanned"]) == 1
+    assert "round" in capsys.readouterr().err.lower()
+
+
+def test_main_round3_with_replan_can_continue_to_legacy_skip(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture
+) -> None:
+    monkeypatch.setattr(sg, "COORD_DIR", tmp_path / "coordination")
+    assert sg.main(["--round", "3", "--replanned"]) == 0
+    output = capsys.readouterr().out
+    assert "REPLAN" in output
+    assert "SKIP" in output
+
+
+def test_main_metric_failure_is_fail_closed_before_legacy_skip(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture
+) -> None:
+    import subprocess
+
+    monkeypatch.setattr(sg, "COORD_DIR", tmp_path / "coordination")
+
+    def _boom(*args, **kwargs):
+        raise subprocess.CalledProcessError(128, "git rev-list")
+
+    monkeypatch.setattr(sg, "collect_scope_metrics", _boom)
+    assert sg.main([]) == 1
+    assert "mesure Git impossible" in capsys.readouterr().err
