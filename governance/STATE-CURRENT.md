@@ -14,8 +14,8 @@
     "sha256_recomputed_ok": true
   },
   "ci": {
-    "jobs_total": 25,
-    "workflows": 6
+    "jobs_total": 26,
+    "workflows": 7
   },
   "cli": {
     "subcommands": [
@@ -92,6 +92,10 @@
     "review_quorum": "3/3"
   },
   "inputs": [
+    {
+      "path": ".github/workflows/artefact-distribue.yml",
+      "sha256": "5fdc8a2b8a12903e5ebb022720edc2f3a1f898c9bb19ed757a6342d281d3fae9"
+    },
     {
       "path": ".github/workflows/ci-deps-update.yml",
       "sha256": "fe4aafcac163054f203e14b309da1dffe9272155d72a91298c05954ce5e79e66"
@@ -673,6 +677,10 @@
       "sha256": "4cfa1f3a029ff82cfca9ad868eeb02b66fbfab51ffaf076c28097a7936348d7b"
     },
     {
+      "path": "tests/test_rc1018_artefact_distribue.py",
+      "sha256": "d644685541133c6b953a468a7af7c4fe0eb2521b39f9a96b2148a402b80f3364"
+    },
+    {
       "path": "tests/test_rc1019_mypy_gate.py",
       "sha256": "fd87c625c8afc7df802ac23e1e6a57948bb12af65070c24a2c162a890ff4d582"
     },
@@ -958,8 +966,8 @@
   },
   "tests": {
     "js_files": 3,
-    "python_files": 199,
-    "python_functions_declared": 2470
+    "python_files": 200,
+    "python_functions_declared": 2476
   }
 }
 ```
