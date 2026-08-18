@@ -46,10 +46,30 @@ def test_anomalies_ligne_hors_bornes():
     assert "hors bornes" in resultat[0]
 
 
-def test_anomalies_pattern_ternaire_else_n_pas_anomalie():
+def test_anomalies_ligne_ternaire_sans_return_litteral_signalee():
+    """Round 1 de revue scellée (#443, 3 objections majeures) : une ligne ternaire
+    (`return 0 if x else 9`) ne contient PAS la sous-chaîne littérale `return 9`
+    exigée par la story — elle doit être signalée, pas acceptée."""
     registre = {"codes_par_commande": {"cmd": [{"code": 9, "ligne": 1}]}}
     lignes_cli = ["    return 0 if x else 9"]
+    resultat = gate_exit_codes.anomalies(registre, lignes_cli)
+    assert len(resultat) == 1
+
+
+def test_anomalies_commentaire_fin_ligne_pas_anomalie():
+    """Round 1 de revue scellée : `return 10  # commentaire` contient bien la
+    sous-chaîne `return 10` et ne doit pas être signalé (faux négatif corrigé,
+    l'ancienne implémentation `endswith()` le rejetait à tort)."""
+    registre = {"codes_par_commande": {"cmd": [{"code": 10, "ligne": 1}]}}
+    lignes_cli = ["    return 10  # commentaire"]
     assert gate_exit_codes.anomalies(registre, lignes_cli) == []
+
+
+def test_anomalies_frontiere_mot_return_8_ne_matche_pas_return_80():
+    registre = {"codes_par_commande": {"cmd": [{"code": 8, "ligne": 1}]}}
+    lignes_cli = ["    return 80"]
+    resultat = gate_exit_codes.anomalies(registre, lignes_cli)
+    assert len(resultat) == 1
 
 
 def test_anomalies_codes_par_commande_vide():
@@ -114,6 +134,23 @@ def test_main_defaut_avec_derive_simulee_retourne_un(monkeypatch: pytest.MonkeyP
     assert gate_exit_codes.main([]) == 1
     err = capsys.readouterr().err
     assert "dérive simulée" in err
+
+
+def test_main_registre_racine_liste_retourne_un(monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]):
+    """Round 1 de revue scellée : un registre JSON valide mais dont la racine
+    n'est pas un objet (ex. une liste `[]`) doit être rejeté proprement par
+    main(), sans AttributeError non capturée."""
+    monkeypatch.setattr(gate_exit_codes, "charger_registre", lambda chemin: [])
+    assert gate_exit_codes.main([]) == 1
+    assert "invalide" in capsys.readouterr().err.lower()
+
+
+def test_main_codes_par_commande_liste_retourne_un(monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]):
+    """Round 1 de revue scellée : codes_par_commande présent mais non-objet
+    (liste au lieu de dict) doit être rejeté, pas traité comme 0 entrée."""
+    monkeypatch.setattr(gate_exit_codes, "charger_registre", lambda chemin: {"codes_par_commande": []})
+    assert gate_exit_codes.main([]) == 1
+    assert "invalide" in capsys.readouterr().err.lower()
 
 
 # ---------------------------------------------------------------------------

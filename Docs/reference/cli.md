@@ -49,14 +49,14 @@ Ces codes s'appliquent à toute commande :
 - **14** — loop run timeout d'une commande step/until (RunnerTimeoutError)
 - **15** — loop run commande annulée (RunnerCancelledError)
 - **12** — loop run échec de boucle générique (LoopError)
-- **13** — loop run budget --max-iter épuisé sans que --until réussisse
+- **13** — loop run budget --max-iter épuisé sans que --until réussisse (retour exprimé par une expression ternaire en fin de fonction, non couvert par le gate mécanique qui vérifie littéralement `return <code>`)
 
 ### forgeai model
 
 - **9** — model add-cloud RouteError
 - **9** — model add-local LocalModelError
 - **9** — model test route/passphrase invalide (RouteError/KeyError)
-- **9** — model test test de connexion échoué (result.ok faux)
+- **9** — model test test de connexion échoué (result.ok faux) (retour exprimé par une expression ternaire en fin de fonction, non couvert par le gate mécanique qui vérifie littéralement `return <code>`)
 
 ### forgeai node
 
@@ -105,6 +105,10 @@ Ces codes s'appliquent à toute commande :
 - **6** — wizard backend cible indisponible après préflight
 - **8** — wizard échec de déploiement compose/k3s (DeployError, déclenché L433 openbao_k3s ou L452 healthchecks_k3s)
 - **9** — wizard fait attendu absent de la réponse RAG, vérification factuelle échouée
+
+### forgeai web
+
+Aucun code de sortie spécifique identifiable depuis `cli.py` — le handler `web_command` est défini dans le module `forgeai.web`, hors périmètre de cet inventaire. Traité comme commande binaire standard (0/1) ; voir le module `forgeai.web` pour le détail.
 
 > **Note :** Le code `8` est réutilisé avec des significations différentes selon la commande — par exemple validation de sélection/stack et échec de déploiement pour `wizard`, opérateur inconnu pour `operators`, ou lecture cluster impossible pour `node status`. Il n'existe pas de convention globale par valeur : chaque commande définit sa propre sémantique pour ce code.
 

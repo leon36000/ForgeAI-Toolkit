@@ -14,6 +14,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import sys
 from pathlib import Path
 
@@ -37,13 +38,15 @@ def anomalies(registre: dict, lignes_cli: list[str]) -> list[str]:
 
     Pour chaque entrée de ``codes_par_commande``, vérifie que la ligne
     indiquée (1-indexée) contient la sous-chaîne littérale
-    ``return <code>``. Une anomalie est émise si l'index est hors bornes
-    ou si la sous-chaîne est absente.
+    ``return <code>`` avec frontière de mot. Une anomalie est émise si
+    l'index est hors bornes ou si la sous-chaîne est absente.
     """
     resultat: list[str] = []
+    if not isinstance(registre, dict):
+        return [f"registre invalide : n'est pas un objet {registre!r}"]
     codes_par_commande = registre.get("codes_par_commande", {})
     if not isinstance(codes_par_commande, dict):
-        return resultat
+        return ["registre invalide : codes_par_commande absent ou n'est pas un objet"]
     for commande, entrees in codes_par_commande.items():
         if not isinstance(entrees, list):
             continue
@@ -58,8 +61,6 @@ def anomalies(registre: dict, lignes_cli: list[str]) -> list[str]:
             except Exception:
                 resultat.append(f"{commande} : entrée invalide {entree!r}")
                 continue
-            attendu_return = f"return {code_int}"
-            attendu_ternaire = f"else {code_int}"
             if ligne_int < 1 or ligne_int > len(lignes_cli):
                 resultat.append(
                     f"{commande} : ligne {ligne_int} hors bornes du fichier "
@@ -67,14 +68,11 @@ def anomalies(registre: dict, lignes_cli: list[str]) -> list[str]:
                 )
             else:
                 contenu_reel = lignes_cli[ligne_int - 1]
-                fin_ligne = contenu_reel.rstrip()
-                conforme = fin_ligne.endswith(attendu_return) or fin_ligne.endswith(
-                    attendu_ternaire
-                )
-                if not conforme:
+                pattern = rf"(?<!\d)return\s+{code_int}(?!\d)"
+                if not re.search(pattern, contenu_reel):
                     resultat.append(
                         f"{commande} : ligne {ligne_int} attendue avec "
-                        f"'{attendu_return}' (ou ternaire '{attendu_ternaire}') mais contient "
+                        f"'return {code_int}' mais contient "
                         f"'{contenu_reel.strip()}'"
                     )
     return resultat
@@ -101,6 +99,14 @@ def main(argv: list[str] | None = None) -> int:
         lignes_cli = chemin_cli.read_text(encoding="utf-8").splitlines()
     except (OSError, ValueError, json.JSONDecodeError) as erreur:
         print(str(erreur), file=sys.stderr)
+        return 1
+
+    if not isinstance(registre, dict):
+        print(f"registre invalide : n'est pas un objet {registre!r}", file=sys.stderr)
+        return 1
+    codes_par_commande_brut = registre.get("codes_par_commande", {})
+    if not isinstance(codes_par_commande_brut, dict):
+        print("registre invalide : codes_par_commande absent ou n'est pas un objet", file=sys.stderr)
         return 1
 
     rapport = anomalies(registre, lignes_cli)
