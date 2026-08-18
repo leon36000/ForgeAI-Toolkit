@@ -298,8 +298,8 @@
       "path": ".docs-exempt",
       "referenced_by": [],
       "rule_id": "governance-docs-exempt",
-      "sha256": "eb13ee8d14c07a4f89990b4657b84c9ca7dd3410d802b7cb7c4fc827136d9887",
-      "size": 10953,
+      "sha256": "0571c7a233ffbae591f9601feca94997ab1c87fc88f25f7d8dc92d512c944b1f",
+      "size": 11799,
       "target_path": null,
       "type": "text"
     },
@@ -33791,8 +33791,8 @@
         }
       ],
       "rule_id": "governance-scripts-root",
-      "sha256": "1d3c62f5312f325bf3abf47d5921b40f2ebde243694e386ac6f93e993d9f7f46",
-      "size": 11227,
+      "sha256": "611c8b1dbc6c583ae4d0067cb86b53fa6d5f580aad4c79d415d0c2383dc864b3",
+      "size": 11865,
       "target_path": null,
       "type": "text"
     },
@@ -104429,47 +104429,47 @@
       },
       {
         "candidate": "et/ou",
-        "line": 32,
+        "line": 39,
         "referrer": "scripts/rapport_composants.py"
       },
       {
         "candidate": "ruff/pytest/mypy",
-        "line": 77,
+        "line": 84,
         "referrer": "scripts/rapport_composants.py"
       },
       {
         "candidate": "CI/test/lint",
-        "line": 164,
+        "line": 171,
         "referrer": "scripts/rapport_composants.py"
       },
       {
         "candidate": "artefact-distribue.yml",
-        "line": 165,
+        "line": 172,
         "referrer": "scripts/rapport_composants.py"
       },
       {
         "candidate": "artefact-distribue.yml",
-        "line": 184,
+        "line": 191,
         "referrer": "scripts/rapport_composants.py"
       },
       {
         "candidate": "wheel/sdist",
-        "line": 195,
+        "line": 202,
         "referrer": "scripts/rapport_composants.py"
       },
       {
         "candidate": "CI/dev/build",
-        "line": 196,
+        "line": 203,
         "referrer": "scripts/rapport_composants.py"
       },
       {
         "candidate": "composants-rc1.json",
-        "line": 219,
+        "line": 226,
         "referrer": "scripts/rapport_composants.py"
       },
       {
         "candidate": "../../etc/passwd",
-        "line": 230,
+        "line": 240,
         "referrer": "scripts/rapport_composants.py"
       },
       {
