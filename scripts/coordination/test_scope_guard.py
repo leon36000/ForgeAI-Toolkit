@@ -58,7 +58,6 @@ def test_matches_any(path: str, patterns: list[str], expected: bool) -> None:
 # ---------------------------------------------------------------------------
 # find_claim_for_branch
 # ---------------------------------------------------------------------------
-
 def test_find_claim_for_branch_found() -> None:
     claim = sg.find_claim_for_branch(CONCURRENT_CLAIMS, "br-orch-001")
     assert claim is not None
@@ -130,7 +129,6 @@ def test_check_scope_unknown_package() -> None:
 # ---------------------------------------------------------------------------
 # main() — bootstrap / skip / fail / pass, via monkeypatch de COORD_DIR
 # ---------------------------------------------------------------------------
-
 def _write_coord(tmp_path: Path, claims: list[dict] | None, packages: dict | None) -> Path:
     coord = tmp_path / "coordination"
     coord.mkdir()
@@ -253,3 +251,90 @@ def test_current_branch_falls_back_to_git(monkeypatch: pytest.MonkeyPatch) -> No
 def test_load_missing_file_raises(tmp_path: Path) -> None:
     with pytest.raises(FileNotFoundError):
         sg.load(tmp_path / "absent.json")
+
+
+# ---------------------------------------------------------------------------
+# #578 — budget quantitatif de branche + coupe-circuit des rounds de revue
+# ---------------------------------------------------------------------------
+def _small_metrics() -> dict[str, int]:
+    return {
+        "ahead": 3,
+        "behind": 2,
+        "changed_files": 12,
+        "substantive_churn": 850,
+        "max_file_churn": 280,
+        "tests_churn": 340,
+        "story_churn": 120,
+        "generated_churn": 900,
+    }
+
+
+def test_quantitative_scope_accepts_small_pr() -> None:
+    ok, report = sg.evaluate_scope(_small_metrics())
+    assert ok is True, report
+
+
+def test_quantitative_scope_blocks_rc1015_runaway_profile() -> None:
+    metrics = {
+        "ahead": 24,
+        "behind": 50,
+        "changed_files": 25,
+        "substantive_churn": 11950,
+        "max_file_churn": 5007,
+        "tests_churn": 5007,
+        "story_churn": 4220,
+        "generated_churn": 202651,
+    }
+    ok, report = sg.evaluate_scope(metrics)
+    assert ok is False
+    text = "\n".join(report)
+    for signal in ("ahead", "behind", "substantive", "fichier", "tests", "story", "généré"):
+        assert signal in text
+
+
+def test_review_rounds_1_and_2_are_automatic() -> None:
+    assert sg.review_round_policy(1) == (True, "AUTO")
+    assert sg.review_round_policy(2) == (True, "AUTO")
+
+
+def test_review_round_3_requires_explicit_replan() -> None:
+    assert sg.review_round_policy(3, replanned=False)[0] is False
+    assert sg.review_round_policy(3, replanned=True) == (True, "REPLAN")
+
+
+def test_review_round_4_plus_are_always_rejected() -> None:
+    assert sg.review_round_policy(4, replanned=True)[0] is False
+    assert sg.review_round_policy(120, replanned=True)[0] is False
+
+
+def test_collect_scope_metrics_parses_numstat_and_separates_generated() -> None:
+    def runner(command: list[str]) -> str:
+        if command[:3] == ["git", "rev-list", "--count"]:
+            return "4\n" if command[-1] == "origin/main..HEAD" else "6\n"
+        if command[:3] == ["git", "diff", "--numstat"]:
+            return (
+                "20\t10\tsrc/forgeai/a.py\n"
+                "50\t5\ttests/test_a.py\n"
+                "30\t0\tstories/S.md\n"
+                "500\t400\tgovernance/path-classification.json\n"
+                "2\t1\tevidence/reviews/S/x.verdict.json\n"
+            )
+        raise AssertionError(command)
+
+    metrics = sg.collect_scope_metrics("origin/main", "HEAD", runner=runner)
+    assert metrics == {
+        "ahead": 4,
+        "behind": 6,
+        "changed_files": 5,
+        "substantive_churn": 115,
+        "max_file_churn": 55,
+        "tests_churn": 55,
+        "story_churn": 30,
+        "generated_churn": 903,
+    }
+
+
+def test_quantitative_guard_does_not_depend_on_archived_claim() -> None:
+    ok, _ = sg.evaluate_scope(_small_metrics())
+    assert ok is True
+    assert sg.find_claim_for_branch([], "feature/sans-claim-json") is None
