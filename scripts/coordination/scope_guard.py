@@ -1,14 +1,10 @@
 #!/usr/bin/env python3
-"""Scope-guard : vérifie que les fichiers modifiés par CETTE PR respectent le
-périmètre (allowed_paths/forbidden_paths) du SEUL claim actif associé à sa branche.
+"""Scope-guard : périmètre historique + coupe-circuit quantitatif de branche.
 
-Correctif (revue aveugle scellée ORCH-001-civ, verdict REJECT de Gemini-3.1-Pro,
-objection majeure) : la version initiale (inline dans scope-guard.yml) itérait sur
-TOUS les claims actifs et exigeait la conformité aux allowed_paths de CHAQUE claim.
-Avec jusqu'à 6 claims concurrents autorisés (cf. AGENTS.md), toute PR valide pour
-son propre package échouait dès qu'un second claim était actif, car ses fichiers
-n'étaient pas dans les allowed_paths de CET AUTRE claim. La correction identifie le
-claim propriétaire de la PR via le champ 'branch' et n'applique que SES règles.
+Le contrôle historique vérifie les chemins d'une PR contre le claim JSON de sa
+branche lorsqu'un tel claim existe encore. #578 ajoute un budget indépendant des
+claims archivés afin qu'une branche ou une boucle de revue ne puisse plus croître
+silencieusement jusqu'à des milliers de lignes/rounds.
 """
 from __future__ import annotations
 
@@ -17,10 +13,32 @@ import json
 import os
 import subprocess
 import sys
+from collections.abc import Callable
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 COORD_DIR = REPO_ROOT / "archive" / "coordination"
+
+# Circuit breakers, jamais des objectifs à consommer. Une branche légitime qui les
+# dépasse doit être replanifiée/découpée plutôt que faire augmenter le seuil.
+SCOPE_LIMITS = {
+    "ahead": 20,
+    "behind": 30,
+    "changed_files": 80,
+    "substantive_churn": 6000,
+    "max_file_churn": 2000,
+    "tests_churn": 3000,
+    "story_churn": 1500,
+    "generated_churn": 50000,
+}
+GENERATED_PATHS = {
+    "governance/path-classification.json",
+    "governance/PATH-CLASSIFICATION.md",
+    "governance/STATE-CURRENT.json",
+    "governance/STATE-CURRENT.md",
+}
+GENERATED_PREFIXES = ("evidence/reviews/", "evidence/registres/")
+GitRunner = Callable[[list[str]], str]
 
 
 def matches_any(path: str, patterns: list[str]) -> bool:
@@ -31,11 +49,7 @@ def matches_any(path: str, patterns: list[str]) -> bool:
 
 
 def find_claim_for_branch(claims: list[dict], branch: str) -> dict | None:
-    """Retourne le claim dont le champ 'branch' correspond exactement à `branch`.
-
-    Si aucun claim n'a de champ 'branch' renseigné correspondant, retourne None
-    (le guard SKIP alors — une PR non enregistrée dans un claim n'est pas jugée
-    contre les règles d'un claim qui n'est pas le sien)."""
+    """Retourne le claim historique dont `branch` correspond exactement."""
     for claim in claims:
         if claim.get("branch") == branch:
             return claim
@@ -43,10 +57,7 @@ def find_claim_for_branch(claims: list[dict], branch: str) -> dict | None:
 
 
 def check_scope(changed_files: list[str], claim: dict, pkg_by_id: dict[str, dict]) -> list[str]:
-    """Vérifie changed_files contre le SEUL claim déjà résolu pour la branche courante.
-
-    Retourne la liste des erreurs (vide = OK). Ne regarde JAMAIS les autres claims :
-    c'est précisément ce qui corrige le défaut rapporté en revue."""
+    """Vérifie changed_files contre le SEUL claim déjà résolu pour la branche."""
     pid = claim.get("package")
     pkg = pkg_by_id.get(pid)
     if pkg is None:
@@ -64,6 +75,103 @@ def check_scope(changed_files: list[str], claim: dict, pkg_by_id: dict[str, dict
     return errors
 
 
+def _run_git(command: list[str]) -> str:
+    return subprocess.run(command, capture_output=True, text=True, check=True).stdout
+
+
+def _is_generated(path: str) -> bool:
+    return path in GENERATED_PATHS or path.startswith(GENERATED_PREFIXES)
+
+
+def _numstat_churn(insertions: str, deletions: str) -> int:
+    add = 0 if insertions == "-" else int(insertions)
+    delete = 0 if deletions == "-" else int(deletions)
+    return add + delete
+
+
+def collect_scope_metrics(
+    base_ref: str = "origin/main",
+    head_ref: str = "HEAD",
+    *,
+    runner: GitRunner | None = None,
+) -> dict[str, int]:
+    """Mesure la divergence et le churn d'une branche depuis son merge-base."""
+    run = runner or _run_git
+    ahead = int(run(["git", "rev-list", "--count", f"{base_ref}..{head_ref}"]).strip())
+    behind = int(run(["git", "rev-list", "--count", f"{head_ref}..{base_ref}"]).strip())
+    raw = run(["git", "diff", "--numstat", "--no-renames", f"{base_ref}...{head_ref}"])
+
+    substantive = 0
+    generated = 0
+    max_file = 0
+    tests = 0
+    story = 0
+    changed = 0
+    for line in raw.splitlines():
+        if not line:
+            continue
+        parts = line.split("\t", 2)
+        if len(parts) != 3:
+            raise ValueError(f"numstat illisible: {line!r}")
+        insertions, deletions, path = parts
+        churn = _numstat_churn(insertions, deletions)
+        changed += 1
+        if _is_generated(path):
+            generated += churn
+            continue
+        substantive += churn
+        max_file = max(max_file, churn)
+        if path.startswith("tests/") or path.startswith("scripts/coordination/test_"):
+            tests += churn
+        if path.startswith("stories/"):
+            story += churn
+
+    return {
+        "ahead": ahead,
+        "behind": behind,
+        "changed_files": changed,
+        "substantive_churn": substantive,
+        "max_file_churn": max_file,
+        "tests_churn": tests,
+        "story_churn": story,
+        "generated_churn": generated,
+    }
+
+
+def evaluate_scope(metrics: dict[str, int]) -> tuple[bool, list[str]]:
+    """Applique les coupe-circuits quantitatifs sans mécanisme de bypass implicite."""
+    labels = {
+        "ahead": "ahead commits",
+        "behind": "behind commits",
+        "changed_files": "fichiers modifiés",
+        "substantive_churn": "churn substantive",
+        "max_file_churn": "churn max par fichier",
+        "tests_churn": "churn tests",
+        "story_churn": "churn story",
+        "generated_churn": "churn généré/preuve",
+    }
+    failures: list[str] = []
+    for key, limit in SCOPE_LIMITS.items():
+        value = metrics.get(key, 0)
+        if value > limit:
+            failures.append(f"FAIL — {labels[key]}: {value} > limite {limit}")
+    if failures:
+        return False, failures
+    summary = ", ".join(f"{key}={metrics.get(key, 0)}" for key in SCOPE_LIMITS)
+    return True, [f"PASS — budget quantitatif: {summary}"]
+
+
+def review_round_policy(round_number: int, *, replanned: bool = False) -> tuple[bool, str]:
+    """Borne la revue : 2 rounds auto, un 3e après replan, jamais davantage."""
+    if round_number <= 0:
+        return False, "INVALID"
+    if round_number <= 2:
+        return True, "AUTO"
+    if round_number == 3:
+        return (True, "REPLAN") if replanned else (False, "REPLAN_REQUIRED")
+    return False, "STOP"
+
+
 def get_changed_files(base_ref: str = "origin/main") -> list[str]:
     res = subprocess.run(
         ["git", "diff", "--name-only", f"{base_ref}...HEAD"],
@@ -75,9 +183,7 @@ def get_changed_files(base_ref: str = "origin/main") -> list[str]:
 
 
 def current_branch() -> str:
-    """Résout la branche de la PR : `GITHUB_HEAD_REF` (contexte GitHub Actions
-    `pull_request`, où HEAD est détaché) en priorité, sinon `git branch --show-current`
-    (exécution locale / autres contextes)."""
+    """Résout la branche de la PR, puis la branche Git locale en repli."""
     branch = os.environ.get("GITHUB_HEAD_REF")
     if branch:
         return branch
