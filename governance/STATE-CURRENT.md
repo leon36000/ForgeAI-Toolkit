@@ -14,7 +14,7 @@
     "sha256_recomputed_ok": true
   },
   "ci": {
-    "jobs_total": 26,
+    "jobs_total": 27,
     "workflows": 7
   },
   "cli": {
@@ -94,7 +94,7 @@
   "inputs": [
     {
       "path": ".github/workflows/artefact-distribue.yml",
-      "sha256": "1cbbd322be7e6317009f7a48e5f396ce4de80d5f8d983ae2fe5852a7606ae162"
+      "sha256": "58041bf3b6ffd2538222ff3f63fcf1cc04dbc526ab056be227a8b12a85bfbdaa"
     },
     {
       "path": ".github/workflows/ci-deps-update.yml",
@@ -106,7 +106,7 @@
     },
     {
       "path": ".github/workflows/gates.yml",
-      "sha256": "0e86c5801e19a4df48ab7fb371356acfc4205e1ec5a56610ee42e29d4bdfdee3"
+      "sha256": "8c38d4aeb45cc6fb874553868a2c834829c551d719bc3b52ad2be68916bc6bbb"
     },
     {
       "path": ".github/workflows/scope-guard.yml",
@@ -653,6 +653,10 @@
       "sha256": "26acbe97310ca531bd9cb6dc0df71d59f66a9877758b169e067114072be319d9"
     },
     {
+      "path": "tests/test_rapport_composants.py",
+      "sha256": "777ef63d5990b1035490974689237160b358c49b83551f4520b3fc679ce99934"
+    },
+    {
       "path": "tests/test_ratelimit.py",
       "sha256": "f49b854e41d0fddedb54237307da60a63e5064d99c115f7d05c4c62839623a10"
     },
@@ -970,8 +974,8 @@
   },
   "tests": {
     "js_files": 3,
-    "python_files": 201,
-    "python_functions_declared": 2533
+    "python_files": 202,
+    "python_functions_declared": 2586
   }
 }
 ```

@@ -13,6 +13,24 @@ jobs:
     runs-on: ubuntu-latest
     env:
       SOURCE_DATE_EPOCH: "0"
+      # Round 10 de revue scellée (#454) : force une résolution DÉTERMINISTE
+      # du backend PEP 517 dans l'environnement de build ISOLÉ, sans
+      # désactiver l'isolation elle-même (vérifié empiriquement : PIP_CONSTRAINT
+      # est bien honoré par les installations internes de `python -m build`).
+      # Voir requirements-build-constraints.txt pour le détail et la
+      # justification de la version épinglée.
+      #
+      # PAS PIP_BUILD_CONSTRAINT (round 17, objection de revue vérifiée et
+      # non retenue) : pip déprécie bien PIP_CONSTRAINT pour SA PROPRE gestion
+      # interne d'environnement isolé (pip/_internal/build_env.py,
+      # gone_in="26.2") -- mais `python -m build` (pypa/build) utilise SA
+      # PROPRE isolation (build/env.py, via `-c <fichier>`, JAMAIS
+      # `--build-constraint`), qui n'invoque jamais la classe pip concernée
+      # par cette dépréciation. Reproduit réellement à deux reprises avec
+      # pip==26.2.1 exactement (venv jetable dédié) : sortie verbeuse SANS
+      # aucune DEPRECATION, contrainte bien appliquée (version demandée
+      # installée, pas une version flottante).
+      PIP_CONSTRAINT: ${{ github.workspace }}/requirements-build-constraints.txt
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
@@ -25,7 +43,38 @@ jobs:
       - name: Construire le wheel et le sdist
         run: |
           # L'isolation installe le backend déclaré par pyproject.toml.
-          python -m pip install --no-cache-dir "build==1.2.2.post1"
+          # pyproject_hooks et packaging épinglés explicitement (rounds 8 et 9
+          # de revue scellée, #454) : dépendances directes inconditionnelles
+          # de build, sinon laissées flottantes (pip installerait la dernière
+          # version compatible au moment du run, jamais reproductible pour
+          # l'audit supply-chain EXT-029) -- scripts/rapport_composants.py
+          # reflète CES pins exacts. packaging==26.3 : même version que
+          # requirements-ci.txt (round 9 -- ce job n'installe PAS ce lockfile,
+          # donc la version qui y était rapportée n'était vérifiable nulle
+          # part ici ; épingler la MÊME version rend les deux cohérents, mais
+          # les deux doivent être mis à jour ensemble si l'un bouge). pip
+          # lui-même épinglé (round 13) : c'est LUI qui installe tout le
+          # reste ci-dessus -- sans pin, sa version flotterait (celle fournie
+          # par actions/setup-python, hors contrôle de ce dépôt), rendant le
+          # rapport incomplet pour le même motif que build/pyproject_hooks/
+          # packaging. pip==26.2.1 : vérifié PyPI comme AUTO-CONTENU (aucune
+          # dépendance propre, requires_dist vide -- vendoring délibéré de
+          # l'écosystème pip, terminaison naturelle de cette fermeture).
+          # Round 14 (objection majeure) : pip==26.2.1 doit être installé en
+          # PREMIER, dans une invocation SÉPARÉE -- sinon c'est le pip flottant
+          # fourni par actions/setup-python (jamais épinglé, hors contrôle de
+          # ce dépôt) qui installerait build/pyproject_hooks/packaging, rendant
+          # le pin de pip cosmétique. Avec ce découpage, pip==26.2.1 est bien
+          # actif (site-packages mis à jour) AVANT d'installer le reste -- et
+          # donc aussi avant `python -m build`, qui invoque pip en interne pour
+          # l'environnement isolé du backend PEP 517. Le bootstrap initial
+          # (pip flottant installant pip==26.2.1 lui-même) reste, par nature,
+          # non épinglable : aucun outil ne peut installer une version de
+          # lui-même plus récente qu'il n'existe déjà -- même limitation
+          # universelle que « qui a compilé le premier compilateur C », hors
+          # périmètre de ce correctif.
+          python -m pip install --no-cache-dir --upgrade "pip==26.2.1"
+          python -m pip install --no-cache-dir "build==1.2.2.post1" "pyproject_hooks==1.2.0" "packaging==26.3"
           rm -rf dist
           python -m build --wheel --sdist --outdir dist
 

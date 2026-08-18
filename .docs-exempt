@@ -138,3 +138,92 @@ de numéros de ligne suite à l'édition des docstrings (governance/PATH-CLASSIF
 référence pas les lignes précises, donc inchangé pour ce commit précis). L'issue #450 et le
 scratchpad de story documentent déjà le
 contexte complet de cet incrément ; aucune doc utilisateur supplémentaire concernée.
+
+scripts/rapport_composants.py (RC1-024/#454, correctif round 4 de revue scellée — objections
+mineures uniquement, l'objection majeure bloquante était sur evidence/reviews/BINDING.txt, pas
+sur ce script) : aide argparse --sortie reformulée pour refléter le comportement déjà en place
+depuis le round 2 (garde is_relative_to() acceptant aussi un chemin absolu tant qu'il reste sous
+--racine) ; commentaire ajouté au-dessus du repli d'import tomli expliquant pourquoi son
+ModuleNotFoundError n'est délibérément pas normalisé (scénario hors de l'environnement supporté,
+requirements-ci.txt garantit tomli présent). Aucun changement de comportement observable, 34/34
+tests inchangés. L'issue #454 et le scratchpad de story documentent déjà le contexte complet ;
+aucune doc utilisateur supplémentaire concernée pour ce correctif.
+
+scripts/rapport_composants.py + tests/test_rapport_composants.py (RC1-024/#454, correctif
+round 6 de revue scellée — objection majeure) : ajoute pyproject_hooks à l'inventaire (fermeture
+des dépendances directes propres de build==1.2.2.post1, vérifiée empiriquement via l'API PyPI
+requires_dist — packaging, l'autre dépendance directe, était déjà couvert par
+requirements-ci.txt, non dupliqué). Élargit une fonctionnalité déjà décrite par la story
+(exhaustivité de l'inventaire de composants de build) plutôt que d'en introduire une nouvelle ;
+docstrings du module et de construire_rapport mises à jour en conséquence. L'issue #454 et le
+scratchpad de story documentent le contexte complet de cette itération ; aucune doc utilisateur
+supplémentaire concernée (le rapport JSON généré reste auto-descriptif via son propre champ
+_description, comme documenté depuis le commit initial de ce script).
+
+scripts/rapport_composants.py + tests/test_rapport_composants.py (RC1-024/#454, correctif
+round 7 de revue scellée — 3 objections majeures, bookkeeping + robustesse) : ajoute
+_version_installee(), miroir exact de _licence_installee() déjà présent et déjà couvert par la
+doc de conception existante (même fichier, même docstring de module) ; corrige un comptage de
+tests erroné dans governance/sonar-suppressions.json (entrée e15 déjà gouvernée). Aucune
+nouvelle fonctionnalité utilisateur, aucune doc supplémentaire concernée — même raisonnement que
+les correctifs round 4/5/6 déjà journalisés ci-dessus pour ce même script.
+
+scripts/rapport_composants.py + tests/test_rapport_composants.py (RC1-024/#454, correctif
+round 8 de revue scellée — remplace l'introspection dynamique round 7 par un pin explicite dans
+.github/workflows/artefact-distribue.yml, même mécanisme déjà en place pour build) : retire
+_version_installee() devenue morte, simplifie le test correspondant. Aucune nouvelle
+fonctionnalité utilisateur, aucune doc supplémentaire concernée — même raisonnement que les
+correctifs précédents pour ce même script.
+
+scripts/rapport_composants.py + tests/test_rapport_composants.py (RC1-024/#454, correctif
+round 9 de revue scellée — épingle packaging (même mécanisme déjà établi pour pyproject_hooks)
+et ajoute _entrees_backend_build() pour inventorier [build-system].requires, élargissant la
+fonctionnalité déjà décrite par la story (exhaustivité de l'inventaire de composants de build)
+plutôt que d'en introduire une nouvelle) : docstring de construire_rapport mise à jour en
+conséquence. L'issue #454 et le scratchpad de story documentent le contexte complet ; aucune doc
+utilisateur supplémentaire concernée (même raisonnement que les correctifs précédents pour ce
+même script — le rapport JSON généré reste auto-descriptif via son propre champ _description).
+
+scripts/rapport_composants.py + tests/test_rapport_composants.py + requirements-build-
+constraints.txt (RC1-024/#454, correctif round 10 de revue scellée — résout la version du
+backend PEP 517 via PIP_CONSTRAINT au lieu de rapporter seulement la contrainte déclarée) :
+élargit encore la même fonctionnalité d'inventaire déjà décrite par la story. Le nouveau fichier
+requirements-build-constraints.txt est lui-même auto-documenté (commentaire d'en-tête complet
+expliquant son rôle et sa vérification). Aucune doc utilisateur supplémentaire concernée — même
+raisonnement que tous les correctifs précédents pour ce même script.
+
+scripts/rapport_composants.py + tests/test_rapport_composants.py (RC1-024/#454, correctif
+round 11 de revue scellée — table de licences vérifiées pour les paquets épinglés via
+requirements-build-constraints.txt, garde-fou de cohérence build/pyproject_hooks symétrique à
+celui déjà ajouté pour packaging au round 10) : élargit encore la même fonctionnalité
+d'inventaire déjà décrite par la story. Aucune doc utilisateur supplémentaire concernée — même
+raisonnement que tous les correctifs précédents pour ce même script.
+
+scripts/rapport_composants.py + tests/test_rapport_composants.py + .github/workflows/gates.yml
+(RC1-024/#454, correctif round 15 de revue scellée — signale honnêtement le pip de bootstrap
+non épinglable, corrige un commentaire périmé sur la licence de build) : élargit encore la
+même fonctionnalité d'inventaire déjà décrite par la story. Aucune doc utilisateur
+supplémentaire concernée — même raisonnement que tous les correctifs précédents.
+
+scripts/rapport_composants.py + tests/test_rapport_composants.py (RC1-024/#454, correctif
+round 14 de revue scellée — scinde l'installation pip en 2 étapes, normalise le format des
+licences dans _LICENCES_OUTILS_EPINGLES, ajoute un test PEP 621) : durcissement et cohérence
+d'une fonctionnalité déjà décrite par la story. Aucune doc utilisateur supplémentaire concernée
+— même raisonnement que tous les correctifs précédents pour ce même script.
+
+scripts/rapport_composants.py + tests/test_rapport_composants.py (RC1-024/#454, correctif
+round 12 de revue scellée — normalise UnicodeDecodeError en ValueError dans
+_charger_pyproject(), cohérence de message pure, aucun changement de comportement observable) :
+durcissement défensif mineur d'une fonction déjà existante. Aucune doc utilisateur
+supplémentaire concernée — même raisonnement que tous les correctifs précédents.
+
+scripts/rapport_composants.py + tests/test_rapport_composants.py (RC1-024/#454, correctif
+round 13 de revue scellée — épingle pip lui-même, centralise les licences des outils
+directement épinglés dans une table nommée) : élargit encore la même fonctionnalité
+d'inventaire déjà décrite par la story. Aucune doc utilisateur supplémentaire concernée — même
+raisonnement que tous les correctifs précédents pour ce même script.
+
+scripts/rapport_composants.py (RC1-024/#454, correctif round 16 de revue scellée — docstring du
+module mise à jour pour mentionner l'entrée pip-bootstrap du round 15, aucun changement de
+comportement) : correction documentaire pure d'une fonctionnalité déjà décrite par la story.
+Aucune doc utilisateur supplémentaire concernée.

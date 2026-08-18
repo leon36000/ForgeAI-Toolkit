@@ -298,8 +298,8 @@
       "path": ".docs-exempt",
       "referenced_by": [],
       "rule_id": "governance-docs-exempt",
-      "sha256": "eb13ee8d14c07a4f89990b4657b84c9ca7dd3410d802b7cb7c4fc827136d9887",
-      "size": 10953,
+      "sha256": "ad66a7b715d22a9e9500c359e81db9ec240ec63d5bb758c8b316385cd4c38aad",
+      "size": 18025,
       "target_path": null,
       "type": "text"
     },
@@ -459,6 +459,27 @@
         },
         {
           "candidate": ".github/workflows/artefact-distribue.yml",
+          "line": 646,
+          "referrer": "governance/path-classification-rules.json",
+          "resolved": ".github/workflows/artefact-distribue.yml",
+          "severity": "hard"
+        },
+        {
+          "candidate": ".github/workflows/artefact-distribue.yml",
+          "line": 2,
+          "referrer": "requirements-build-constraints.txt",
+          "resolved": ".github/workflows/artefact-distribue.yml",
+          "severity": "hard"
+        },
+        {
+          "candidate": ".github/workflows/artefact-distribue.yml",
+          "line": 11,
+          "referrer": "scripts/rapport_composants.py",
+          "resolved": ".github/workflows/artefact-distribue.yml",
+          "severity": "hard"
+        },
+        {
+          "candidate": ".github/workflows/artefact-distribue.yml",
           "line": 33,
           "referrer": "stories/RC1-018.md",
           "resolved": ".github/workflows/artefact-distribue.yml",
@@ -466,8 +487,8 @@
         }
       ],
       "rule_id": "governance-github-ci",
-      "sha256": "1cbbd322be7e6317009f7a48e5f396ce4de80d5f8d983ae2fe5852a7606ae162",
-      "size": 8380,
+      "sha256": "58041bf3b6ffd2538222ff3f63fcf1cc04dbc526ab056be227a8b12a85bfbdaa",
+      "size": 12051,
       "target_path": null,
       "type": "text"
     },
@@ -1082,8 +1103,8 @@
         }
       ],
       "rule_id": "governance-github-ci",
-      "sha256": "0e86c5801e19a4df48ab7fb371356acfc4205e1ec5a56610ee42e29d4bdfdee3",
-      "size": 19352,
+      "sha256": "8c38d4aeb45cc6fb874553868a2c834829c551d719bc3b52ad2be68916bc6bbb",
+      "size": 21946,
       "target_path": null,
       "type": "text"
     },
@@ -5019,7 +5040,7 @@
         },
         {
           "candidate": "archive/coordination/work-packages.json",
-          "line": 702,
+          "line": 716,
           "referrer": "governance/path-classification-rules.json",
           "resolved": "archive/coordination/work-packages.json",
           "severity": "hard"
@@ -6821,8 +6842,8 @@
         }
       ],
       "rule_id": "evidence-registres-root",
-      "sha256": "fcfb90c63a023e5c43cec7360ab49f5330672c110d512d4979a3dd0447d220a3",
-      "size": 395658,
+      "sha256": "33d79c6f432338963d5217651526b5745c21ae1a99522e3d7e07d9fe604b7776",
+      "size": 397089,
       "target_path": null,
       "type": "text"
     },
@@ -8782,8 +8803,8 @@
         }
       ],
       "rule_id": "evidence-reviews-root",
-      "sha256": "958d40ac1647190eadd3052ef4ae5d7a4b3e9818ac4a6eb2ba293430d067a26c",
-      "size": 2872,
+      "sha256": "478ed8d9c25506c568d47bac617e852852ac04989affad772a10a6cd4b2d4310",
+      "size": 2884,
       "target_path": null,
       "type": "text"
     },
@@ -21330,6 +21351,110 @@
       "generated": false,
       "load_bearing": true,
       "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-024-v18/GPT-5.6-Terra-Pro.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "68443324aa14c08ca15a27113946c34a8b4784b073b17ffd7927df42c2454e89",
+      "size": 334,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-024-v18/Kimi-2.7.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "9bc87e9d43788dcec4e92c6b4b14b439da36f958ba477e47748eb00904bee33b",
+      "size": 317,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-024-v18/MiMo-V2.5-Pro.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "abd6b5400aba1f6953764258c7d565e4935d6ca05678cc5051410b2d7360efb0",
+      "size": 1385,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-024-v18/RECU.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": null,
+      "size": null,
+      "target_path": null,
+      "type": null
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-024-v3/DeepSeek-V4-Pro-0813.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "e9352cef4e9f76e3a03fcce9b422e0ced8997b6a42fc6a5ca160754d06a15fa6",
+      "size": 375,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-024-v3/GPT-5.6-Terra-Pro.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "cef6fad270e154095a3e2bb349ce24c336064b81a8fcbc60926d883edeb5e127",
+      "size": 334,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-024-v3/MiMo-V2.5-Pro.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "aae8e78656db20bd7f61034bb12224554a222169cf26909f5bc314bce666a747",
+      "size": 327,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-024-v3/RECU.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": null,
+      "size": null,
+      "target_path": null,
+      "type": null
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
       "path": "evidence/reviews/RC1-440-lot6-v1/GPT-5.6-Terra-Pro.verdict.json",
       "referenced_by": [],
       "rule_id": "evidence-reviews-root",
@@ -27966,8 +28091,8 @@
       "path": "governance/SONAR-SUPPRESSIONS.md",
       "referenced_by": [],
       "rule_id": "governance-core",
-      "sha256": "44e0c980c75a9fbd5d8449d1e1ab3bdf3d40c10a68890bf2b73121cebc1271e5",
-      "size": 9525,
+      "sha256": "e3ebb51ab2fbf573a7d3f662a4fd643232def57210eca5b3cae8f6ddeb323f03",
+      "size": 9758,
       "target_path": null,
       "type": "text"
     },
@@ -29063,8 +29188,8 @@
         }
       ],
       "rule_id": "governance-core",
-      "sha256": "d44e0fe8b2ff4fb4a3021ee5f10ed46635392d165a626018954b3e9010afc88e",
-      "size": 24022,
+      "sha256": "5f338edfc286d6bf002e6612a50be6fb46e8e963f471125382b6b02298f70b57",
+      "size": 24947,
       "target_path": null,
       "type": "text"
     },
@@ -29504,7 +29629,7 @@
       "referenced_by": [
         {
           "candidate": "governance/ruff-baseline.json",
-          "line": 350,
+          "line": 389,
           "referrer": ".github/workflows/gates.yml",
           "resolved": "governance/ruff-baseline.json",
           "severity": "hard"
@@ -29728,7 +29853,7 @@
       "referenced_by": [
         {
           "candidate": "governance/ruff-classification.json",
-          "line": 348,
+          "line": 387,
           "referrer": ".github/workflows/gates.yml",
           "resolved": "governance/ruff-classification.json",
           "severity": "hard"
@@ -29973,6 +30098,20 @@
       "referenced_by": [
         {
           "candidate": "governance/sonar-suppressions.json",
+          "line": 7,
+          "referrer": "evidence/reviews/RC1-024-v18/MiMo-V2.5-Pro.verdict.json",
+          "resolved": "governance/sonar-suppressions.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/sonar-suppressions.json",
+          "line": 8,
+          "referrer": "evidence/reviews/RC1-024-v18/MiMo-V2.5-Pro.verdict.json",
+          "resolved": "governance/sonar-suppressions.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/sonar-suppressions.json",
           "line": 14,
           "referrer": "evidence/reviews/RC1-446-PR-v1/DeepSeek-V4-Pro.verdict.json",
           "resolved": "governance/sonar-suppressions.json",
@@ -30043,8 +30182,8 @@
         }
       ],
       "rule_id": "governance-core",
-      "sha256": "d2b501c4176e9e4bdd98d639afe5ed5c8d18b430261a6754cf60a672d4d1d1ad",
-      "size": 31661,
+      "sha256": "58128466e7b1d4b08746ed217b878ca487faae8122c8a2898b59b55e616bb036",
+      "size": 33471,
       "target_path": null,
       "type": "text"
     },
@@ -30702,6 +30841,19 @@
       "generated": false,
       "load_bearing": true,
       "owner": "gouvernance-ci",
+      "path": "requirements-build-constraints.txt",
+      "referenced_by": [],
+      "rule_id": "governance-root-requirements-build-constraints",
+      "sha256": "a7d7e727c243ba6c5ff876448d74874f1dc541a90fc144b5a7270238360f58f2",
+      "size": 1427,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "GOVERNANCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-ci",
       "path": "requirements-ci.in",
       "referenced_by": [],
       "rule_id": "governance-root-requirements-ci-in",
@@ -30746,14 +30898,14 @@
         },
         {
           "candidate": "scripts/branch_coverage_report.py",
-          "line": 322,
+          "line": 361,
           "referrer": ".github/workflows/gates.yml",
           "resolved": "scripts/branch_coverage_report.py",
           "severity": "hard"
         },
         {
           "candidate": "scripts/branch_coverage_report.py",
-          "line": 338,
+          "line": 377,
           "referrer": ".github/workflows/gates.yml",
           "resolved": "scripts/branch_coverage_report.py",
           "severity": "hard"
@@ -32164,7 +32316,7 @@
         },
         {
           "candidate": "scripts/governance/evidence_dedup.py",
-          "line": 688,
+          "line": 702,
           "referrer": "governance/path-classification-rules.json",
           "resolved": "scripts/governance/evidence_dedup.py",
           "severity": "hard"
@@ -33686,6 +33838,83 @@
       "generated": false,
       "load_bearing": true,
       "owner": "gouvernance-scripts",
+      "path": "scripts/rapport_composants.py",
+      "referenced_by": [
+        {
+          "candidate": "scripts/rapport_composants.py",
+          "line": 51,
+          "referrer": "sonar-project.properties",
+          "resolved": "scripts/rapport_composants.py",
+          "severity": "silent"
+        },
+        {
+          "candidate": "scripts/rapport_composants.py",
+          "line": 50,
+          "referrer": ".github/workflows/artefact-distribue.yml",
+          "resolved": "scripts/rapport_composants.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "scripts/rapport_composants.py",
+          "line": 327,
+          "referrer": ".github/workflows/gates.yml",
+          "resolved": "scripts/rapport_composants.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "scripts/rapport_composants.py",
+          "line": 352,
+          "referrer": ".github/workflows/gates.yml",
+          "resolved": "scripts/rapport_composants.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "scripts/rapport_composants.py",
+          "line": 72,
+          "referrer": "governance/SONAR-SUPPRESSIONS.md",
+          "resolved": "scripts/rapport_composants.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "scripts/rapport_composants.py",
+          "line": 646,
+          "referrer": "governance/path-classification-rules.json",
+          "resolved": "scripts/rapport_composants.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "scripts/rapport_composants.py",
+          "line": 537,
+          "referrer": "governance/sonar-suppressions.json",
+          "resolved": "scripts/rapport_composants.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "scripts/rapport_composants.py",
+          "line": 13,
+          "referrer": "requirements-build-constraints.txt",
+          "resolved": "scripts/rapport_composants.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "scripts/rapport_composants.py",
+          "line": 1,
+          "referrer": "tests/test_rapport_composants.py",
+          "resolved": "scripts/rapport_composants.py",
+          "severity": "hard"
+        }
+      ],
+      "rule_id": "governance-scripts-root",
+      "sha256": "3da05c02c94f3f740f7b30681324a3549fbef1cfbbc2e4bb8ca377eb6a459ee0",
+      "size": 23278,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "GOVERNANCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-scripts",
       "path": "scripts/reeval_defaults.py",
       "referenced_by": [
         {
@@ -34733,7 +34962,7 @@
       "referenced_by": [
         {
           "candidate": "scripts/ruff_noqa_gate.py",
-          "line": 389,
+          "line": 428,
           "referrer": ".github/workflows/gates.yml",
           "resolved": "scripts/ruff_noqa_gate.py",
           "severity": "hard"
@@ -35041,14 +35270,14 @@
       "referenced_by": [
         {
           "candidate": "scripts/ruff_ratchet.py",
-          "line": 349,
+          "line": 388,
           "referrer": ".github/workflows/gates.yml",
           "resolved": "scripts/ruff_ratchet.py",
           "severity": "hard"
         },
         {
           "candidate": "scripts/ruff_ratchet.py",
-          "line": 367,
+          "line": 406,
           "referrer": ".github/workflows/gates.yml",
           "resolved": "scripts/ruff_ratchet.py",
           "severity": "hard"
@@ -35552,6 +35781,13 @@
         },
         {
           "candidate": "scripts/ruff_report.py",
+          "line": 23,
+          "referrer": "scripts/rapport_composants.py",
+          "resolved": "scripts/ruff_report.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "scripts/ruff_report.py",
           "line": 4,
           "referrer": "scripts/ruff_noqa_gate.py",
           "resolved": "scripts/ruff_report.py",
@@ -35685,7 +35921,7 @@
         },
         {
           "candidate": "scripts/verifier_artefact_distribue.py",
-          "line": 33,
+          "line": 82,
           "referrer": ".github/workflows/artefact-distribue.yml",
           "resolved": "scripts/verifier_artefact_distribue.py",
           "severity": "hard"
@@ -35700,6 +35936,13 @@
         {
           "candidate": "scripts/verifier_artefact_distribue.py",
           "line": 520,
+          "referrer": "governance/sonar-suppressions.json",
+          "resolved": "scripts/verifier_artefact_distribue.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "scripts/verifier_artefact_distribue.py",
+          "line": 541,
           "referrer": "governance/sonar-suppressions.json",
           "resolved": "scripts/verifier_artefact_distribue.py",
           "severity": "hard"
@@ -35726,8 +35969,8 @@
       "path": "sonar-project.properties",
       "referenced_by": [],
       "rule_id": "governance-root-sonar",
-      "sha256": "a6e21bb026aff1b5d9ace2947e90e147e6eeae59be7dab832ddd755d3672ff09",
-      "size": 3217,
+      "sha256": "2dabff5b4de53bb2ab5d52b9c771a75e071db2bb45a5a634451242c5bee0ed34",
+      "size": 3884,
       "target_path": null,
       "type": "text"
     },
@@ -37755,7 +37998,7 @@
         },
         {
           "candidate": "src/forgeai/core/registre.py",
-          "line": 1005,
+          "line": 1009,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "src/forgeai/core/registre.py",
           "severity": "hard"
@@ -49535,28 +49778,28 @@
         },
         {
           "candidate": "tests/test_data002b_wal_idempotent.py",
-          "line": 993,
+          "line": 997,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_data002b_wal_idempotent.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_data002b_wal_idempotent.py",
-          "line": 999,
+          "line": 1003,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_data002b_wal_idempotent.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_data002b_wal_idempotent.py",
-          "line": 1013,
+          "line": 1017,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_data002b_wal_idempotent.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_data002b_wal_idempotent.py",
-          "line": 1019,
+          "line": 1023,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_data002b_wal_idempotent.py",
           "severity": "hard"
@@ -54746,6 +54989,62 @@
       "generated": false,
       "load_bearing": true,
       "owner": "test-suite",
+      "path": "tests/test_rapport_composants.py",
+      "referenced_by": [
+        {
+          "candidate": "tests/test_rapport_composants.py",
+          "line": 7,
+          "referrer": "evidence/reviews/RC1-024-v18/MiMo-V2.5-Pro.verdict.json",
+          "resolved": "tests/test_rapport_composants.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "tests/test_rapport_composants.py",
+          "line": 8,
+          "referrer": "evidence/reviews/RC1-024-v18/MiMo-V2.5-Pro.verdict.json",
+          "resolved": "tests/test_rapport_composants.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "tests/test_rapport_composants.py",
+          "line": 72,
+          "referrer": "governance/SONAR-SUPPRESSIONS.md",
+          "resolved": "tests/test_rapport_composants.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "tests/test_rapport_composants.py",
+          "line": 650,
+          "referrer": "governance/STATE-CURRENT.json",
+          "resolved": "tests/test_rapport_composants.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "tests/test_rapport_composants.py",
+          "line": 656,
+          "referrer": "governance/STATE-CURRENT.md",
+          "resolved": "tests/test_rapport_composants.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "tests/test_rapport_composants.py",
+          "line": 542,
+          "referrer": "governance/sonar-suppressions.json",
+          "resolved": "tests/test_rapport_composants.py",
+          "severity": "hard"
+        }
+      ],
+      "rule_id": "test-suite",
+      "sha256": "777ef63d5990b1035490974689237160b358c49b83551f4520b3fc679ce99934",
+      "size": 32560,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "TEST",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "test-suite",
       "path": "tests/test_ratelimit.py",
       "referenced_by": [
         {
@@ -54757,14 +55056,14 @@
         },
         {
           "candidate": "tests/test_ratelimit.py",
-          "line": 650,
+          "line": 654,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_ratelimit.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_ratelimit.py",
-          "line": 656,
+          "line": 660,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_ratelimit.py",
           "severity": "hard"
@@ -54820,14 +55119,14 @@
         },
         {
           "candidate": "tests/test_rc1009_racines_documentaires.py",
-          "line": 654,
+          "line": 658,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_rc1009_racines_documentaires.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_rc1009_racines_documentaires.py",
-          "line": 660,
+          "line": 664,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_rc1009_racines_documentaires.py",
           "severity": "hard"
@@ -54855,14 +55154,14 @@
         },
         {
           "candidate": "tests/test_rc1011_dedup.py",
-          "line": 658,
+          "line": 662,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_rc1011_dedup.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_rc1011_dedup.py",
-          "line": 664,
+          "line": 668,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_rc1011_dedup.py",
           "severity": "hard"
@@ -54918,14 +55217,14 @@
       "referenced_by": [
         {
           "candidate": "tests/test_rc1011_packs_md.py",
-          "line": 662,
+          "line": 666,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_rc1011_packs_md.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_rc1011_packs_md.py",
-          "line": 668,
+          "line": 672,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_rc1011_packs_md.py",
           "severity": "hard"
@@ -54981,14 +55280,14 @@
         },
         {
           "candidate": "tests/test_rc1016_sonar_suppressions.py",
-          "line": 666,
+          "line": 670,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_rc1016_sonar_suppressions.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_rc1016_sonar_suppressions.py",
-          "line": 672,
+          "line": 676,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_rc1016_sonar_suppressions.py",
           "severity": "hard"
@@ -55016,14 +55315,14 @@
         },
         {
           "candidate": "tests/test_rc1017_matrice_python.py",
-          "line": 670,
+          "line": 674,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_rc1017_matrice_python.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_rc1017_matrice_python.py",
-          "line": 676,
+          "line": 680,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_rc1017_matrice_python.py",
           "severity": "hard"
@@ -55058,14 +55357,14 @@
       "referenced_by": [
         {
           "candidate": "tests/test_rc1018_artefact_distribue.py",
-          "line": 674,
+          "line": 678,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_rc1018_artefact_distribue.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_rc1018_artefact_distribue.py",
-          "line": 680,
+          "line": 684,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_rc1018_artefact_distribue.py",
           "severity": "hard"
@@ -55128,14 +55427,14 @@
         },
         {
           "candidate": "tests/test_rc1019_mypy_gate.py",
-          "line": 678,
+          "line": 682,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_rc1019_mypy_gate.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_rc1019_mypy_gate.py",
-          "line": 684,
+          "line": 688,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_rc1019_mypy_gate.py",
           "severity": "hard"
@@ -55177,14 +55476,14 @@
       "referenced_by": [
         {
           "candidate": "tests/test_rc1023_error_contracts.py",
-          "line": 682,
+          "line": 686,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_rc1023_error_contracts.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_rc1023_error_contracts.py",
-          "line": 688,
+          "line": 692,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_rc1023_error_contracts.py",
           "severity": "hard"
@@ -55219,14 +55518,14 @@
         },
         {
           "candidate": "tests/test_readme_dist_status.py",
-          "line": 686,
+          "line": 690,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_readme_dist_status.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_readme_dist_status.py",
-          "line": 692,
+          "line": 696,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_readme_dist_status.py",
           "severity": "hard"
@@ -55247,14 +55546,14 @@
       "referenced_by": [
         {
           "candidate": "tests/test_receptacles.py",
-          "line": 690,
+          "line": 694,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_receptacles.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_receptacles.py",
-          "line": 696,
+          "line": 700,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_receptacles.py",
           "severity": "hard"
@@ -55275,14 +55574,14 @@
       "referenced_by": [
         {
           "candidate": "tests/test_redaction.py",
-          "line": 694,
+          "line": 698,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_redaction.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_redaction.py",
-          "line": 700,
+          "line": 704,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_redaction.py",
           "severity": "hard"
@@ -55324,14 +55623,14 @@
       "referenced_by": [
         {
           "candidate": "tests/test_redaction_adoption.py",
-          "line": 698,
+          "line": 702,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_redaction_adoption.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_redaction_adoption.py",
-          "line": 704,
+          "line": 708,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_redaction_adoption.py",
           "severity": "hard"
@@ -55352,14 +55651,14 @@
       "referenced_by": [
         {
           "candidate": "tests/test_reeval_defaults.py",
-          "line": 702,
+          "line": 706,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_reeval_defaults.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_reeval_defaults.py",
-          "line": 708,
+          "line": 712,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_reeval_defaults.py",
           "severity": "hard"
@@ -55380,14 +55679,14 @@
       "referenced_by": [
         {
           "candidate": "tests/test_reg029a_completude.py",
-          "line": 706,
+          "line": 710,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_reg029a_completude.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_reg029a_completude.py",
-          "line": 712,
+          "line": 716,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_reg029a_completude.py",
           "severity": "hard"
@@ -55429,15 +55728,22 @@
         },
         {
           "candidate": "tests/test_reg029b_ancrage.py",
-          "line": 710,
+          "line": 714,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_reg029b_ancrage.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_reg029b_ancrage.py",
-          "line": 716,
+          "line": 720,
           "referrer": "governance/STATE-CURRENT.md",
+          "resolved": "tests/test_reg029b_ancrage.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "tests/test_reg029b_ancrage.py",
+          "line": 826,
+          "referrer": "tests/test_rapport_composants.py",
           "resolved": "tests/test_reg029b_ancrage.py",
           "severity": "hard"
         }
@@ -55534,14 +55840,14 @@
         },
         {
           "candidate": "tests/test_registre.py",
-          "line": 714,
+          "line": 718,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_registre.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_registre.py",
-          "line": 720,
+          "line": 724,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_registre.py",
           "severity": "hard"
@@ -55604,14 +55910,14 @@
         },
         {
           "candidate": "tests/test_registre_concurrence.py",
-          "line": 718,
+          "line": 722,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_registre_concurrence.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_registre_concurrence.py",
-          "line": 724,
+          "line": 728,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_registre_concurrence.py",
           "severity": "hard"
@@ -55639,14 +55945,14 @@
       "referenced_by": [
         {
           "candidate": "tests/test_rel038a_prepare_persist.py",
-          "line": 722,
+          "line": 726,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_rel038a_prepare_persist.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_rel038a_prepare_persist.py",
-          "line": 728,
+          "line": 732,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_rel038a_prepare_persist.py",
           "severity": "hard"
@@ -56143,14 +56449,14 @@
         },
         {
           "candidate": "tests/test_rel038b_unicite.py",
-          "line": 726,
+          "line": 730,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_rel038b_unicite.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_rel038b_unicite.py",
-          "line": 732,
+          "line": 736,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_rel038b_unicite.py",
           "severity": "hard"
@@ -56262,14 +56568,14 @@
         },
         {
           "candidate": "tests/test_rel038c_process_groups.py",
-          "line": 730,
+          "line": 734,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_rel038c_process_groups.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_rel038c_process_groups.py",
-          "line": 736,
+          "line": 740,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_rel038c_process_groups.py",
           "severity": "hard"
@@ -56332,14 +56638,14 @@
       "referenced_by": [
         {
           "candidate": "tests/test_remote_probe.py",
-          "line": 734,
+          "line": 738,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_remote_probe.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_remote_probe.py",
-          "line": 740,
+          "line": 744,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_remote_probe.py",
           "severity": "hard"
@@ -56409,14 +56715,14 @@
         },
         {
           "candidate": "tests/test_renderers.py",
-          "line": 738,
+          "line": 742,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_renderers.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_renderers.py",
-          "line": 744,
+          "line": 748,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_renderers.py",
           "severity": "hard"
@@ -56500,14 +56806,14 @@
         },
         {
           "candidate": "tests/test_res_classes_stack_minimal.py",
-          "line": 742,
+          "line": 746,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_res_classes_stack_minimal.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_res_classes_stack_minimal.py",
-          "line": 748,
+          "line": 752,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_res_classes_stack_minimal.py",
           "severity": "hard"
@@ -56584,14 +56890,14 @@
         },
         {
           "candidate": "tests/test_reviews_gate.py",
-          "line": 746,
+          "line": 750,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_reviews_gate.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_reviews_gate.py",
-          "line": 752,
+          "line": 756,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_reviews_gate.py",
           "severity": "hard"
@@ -56745,14 +57051,14 @@
         },
         {
           "candidate": "tests/test_revue.py",
-          "line": 750,
+          "line": 754,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_revue.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_revue.py",
-          "line": 756,
+          "line": 760,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_revue.py",
           "severity": "hard"
@@ -56843,14 +57149,14 @@
         },
         {
           "candidate": "tests/test_routestore_concurrence.py",
-          "line": 754,
+          "line": 758,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_routestore_concurrence.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_routestore_concurrence.py",
-          "line": 760,
+          "line": 764,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_routestore_concurrence.py",
           "severity": "hard"
@@ -56871,14 +57177,14 @@
       "referenced_by": [
         {
           "candidate": "tests/test_ruff_mesure.py",
-          "line": 758,
+          "line": 762,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_ruff_mesure.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_ruff_mesure.py",
-          "line": 764,
+          "line": 768,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_ruff_mesure.py",
           "severity": "hard"
@@ -56899,14 +57205,14 @@
       "referenced_by": [
         {
           "candidate": "tests/test_ruff_noqa_gate.py",
-          "line": 762,
+          "line": 766,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_ruff_noqa_gate.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_ruff_noqa_gate.py",
-          "line": 768,
+          "line": 772,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_ruff_noqa_gate.py",
           "severity": "hard"
@@ -56927,14 +57233,14 @@
       "referenced_by": [
         {
           "candidate": "tests/test_ruff_ratchet.py",
-          "line": 766,
+          "line": 770,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_ruff_ratchet.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_ruff_ratchet.py",
-          "line": 772,
+          "line": 776,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_ruff_ratchet.py",
           "severity": "hard"
@@ -56955,14 +57261,14 @@
       "referenced_by": [
         {
           "candidate": "tests/test_ruff_report.py",
-          "line": 770,
+          "line": 774,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_ruff_report.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_ruff_report.py",
-          "line": 776,
+          "line": 780,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_ruff_report.py",
           "severity": "hard"
@@ -56983,14 +57289,14 @@
       "referenced_by": [
         {
           "candidate": "tests/test_safe_repr.py",
-          "line": 774,
+          "line": 778,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_safe_repr.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_safe_repr.py",
-          "line": 780,
+          "line": 784,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_safe_repr.py",
           "severity": "hard"
@@ -57011,14 +57317,14 @@
       "referenced_by": [
         {
           "candidate": "tests/test_selection_complete.py",
-          "line": 778,
+          "line": 782,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_selection_complete.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_selection_complete.py",
-          "line": 784,
+          "line": 788,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_selection_complete.py",
           "severity": "hard"
@@ -57039,14 +57345,14 @@
       "referenced_by": [
         {
           "candidate": "tests/test_selection_v2.py",
-          "line": 782,
+          "line": 786,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_selection_v2.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_selection_v2.py",
-          "line": 788,
+          "line": 792,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_selection_v2.py",
           "severity": "hard"
@@ -57067,14 +57373,14 @@
       "referenced_by": [
         {
           "candidate": "tests/test_sentinelle_sweep.py",
-          "line": 786,
+          "line": 790,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_sentinelle_sweep.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_sentinelle_sweep.py",
-          "line": 792,
+          "line": 796,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_sentinelle_sweep.py",
           "severity": "hard"
@@ -57179,14 +57485,14 @@
         },
         {
           "candidate": "tests/test_server_cache.py",
-          "line": 790,
+          "line": 794,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_server_cache.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_server_cache.py",
-          "line": 796,
+          "line": 800,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_server_cache.py",
           "severity": "hard"
@@ -57214,14 +57520,14 @@
       "referenced_by": [
         {
           "candidate": "tests/test_service_spec_injection_yaml.py",
-          "line": 794,
+          "line": 798,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_service_spec_injection_yaml.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_service_spec_injection_yaml.py",
-          "line": 800,
+          "line": 804,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_service_spec_injection_yaml.py",
           "severity": "hard"
@@ -57263,14 +57569,14 @@
         },
         {
           "candidate": "tests/test_spheres.py",
-          "line": 798,
+          "line": 802,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_spheres.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_spheres.py",
-          "line": 804,
+          "line": 808,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_spheres.py",
           "severity": "hard"
@@ -57298,14 +57604,14 @@
         },
         {
           "candidate": "tests/test_ssh007_hostkey.py",
-          "line": 802,
+          "line": 806,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_ssh007_hostkey.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_ssh007_hostkey.py",
-          "line": 808,
+          "line": 812,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_ssh007_hostkey.py",
           "severity": "hard"
@@ -57340,14 +57646,14 @@
       "referenced_by": [
         {
           "candidate": "tests/test_ssh021_nodeadd.py",
-          "line": 806,
+          "line": 810,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_ssh021_nodeadd.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_ssh021_nodeadd.py",
-          "line": 812,
+          "line": 816,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_ssh021_nodeadd.py",
           "severity": "hard"
@@ -57389,14 +57695,14 @@
         },
         {
           "candidate": "tests/test_ssh030_argv_ssh.py",
-          "line": 810,
+          "line": 814,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_ssh030_argv_ssh.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_ssh030_argv_ssh.py",
-          "line": 816,
+          "line": 820,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_ssh030_argv_ssh.py",
           "severity": "hard"
@@ -57417,14 +57723,14 @@
       "referenced_by": [
         {
           "candidate": "tests/test_ssh_injection.py",
-          "line": 814,
+          "line": 818,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_ssh_injection.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_ssh_injection.py",
-          "line": 820,
+          "line": 824,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_ssh_injection.py",
           "severity": "hard"
@@ -57452,14 +57758,14 @@
         },
         {
           "candidate": "tests/test_stack_traversal.py",
-          "line": 818,
+          "line": 822,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_stack_traversal.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_stack_traversal.py",
-          "line": 824,
+          "line": 828,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_stack_traversal.py",
           "severity": "hard"
@@ -57494,14 +57800,14 @@
         },
         {
           "candidate": "tests/test_stacks.py",
-          "line": 822,
+          "line": 826,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_stacks.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_stacks.py",
-          "line": 828,
+          "line": 832,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_stacks.py",
           "severity": "hard"
@@ -57550,14 +57856,14 @@
         },
         {
           "candidate": "tests/test_state_current.py",
-          "line": 826,
+          "line": 830,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_state_current.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_state_current.py",
-          "line": 832,
+          "line": 836,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_state_current.py",
           "severity": "hard"
@@ -57578,14 +57884,14 @@
       "referenced_by": [
         {
           "candidate": "tests/test_supply018.py",
-          "line": 830,
+          "line": 834,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_supply018.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_supply018.py",
-          "line": 836,
+          "line": 840,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_supply018.py",
           "severity": "hard"
@@ -57620,14 +57926,14 @@
       "referenced_by": [
         {
           "candidate": "tests/test_tailscale.py",
-          "line": 834,
+          "line": 838,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_tailscale.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_tailscale.py",
-          "line": 840,
+          "line": 844,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_tailscale.py",
           "severity": "hard"
@@ -57655,14 +57961,14 @@
         },
         {
           "candidate": "tests/test_tailscale_optin.py",
-          "line": 838,
+          "line": 842,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_tailscale_optin.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_tailscale_optin.py",
-          "line": 844,
+          "line": 848,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_tailscale_optin.py",
           "severity": "hard"
@@ -57683,14 +57989,14 @@
       "referenced_by": [
         {
           "candidate": "tests/test_tally.py",
-          "line": 842,
+          "line": 846,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_tally.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_tally.py",
-          "line": 848,
+          "line": 852,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_tally.py",
           "severity": "hard"
@@ -57718,14 +58024,14 @@
         },
         {
           "candidate": "tests/test_templates.py",
-          "line": 846,
+          "line": 850,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_templates.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_templates.py",
-          "line": 852,
+          "line": 856,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_templates.py",
           "severity": "hard"
@@ -57746,14 +58052,14 @@
       "referenced_by": [
         {
           "candidate": "tests/test_traductions.py",
-          "line": 850,
+          "line": 854,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_traductions.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_traductions.py",
-          "line": 856,
+          "line": 860,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_traductions.py",
           "severity": "hard"
@@ -57795,14 +58101,14 @@
         },
         {
           "candidate": "tests/test_ui_7_etapes.py",
-          "line": 854,
+          "line": 858,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_ui_7_etapes.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_ui_7_etapes.py",
-          "line": 860,
+          "line": 864,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_ui_7_etapes.py",
           "severity": "hard"
@@ -57900,14 +58206,14 @@
         },
         {
           "candidate": "tests/test_ui_n2b.py",
-          "line": 858,
+          "line": 862,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_ui_n2b.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_ui_n2b.py",
-          "line": 864,
+          "line": 868,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_ui_n2b.py",
           "severity": "hard"
@@ -57970,14 +58276,14 @@
         },
         {
           "candidate": "tests/test_ui_s6b.py",
-          "line": 862,
+          "line": 866,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_ui_s6b.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_ui_s6b.py",
-          "line": 868,
+          "line": 872,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_ui_s6b.py",
           "severity": "hard"
@@ -58012,14 +58318,14 @@
       "referenced_by": [
         {
           "candidate": "tests/test_v1fix_erreurs.py",
-          "line": 866,
+          "line": 870,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_v1fix_erreurs.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_v1fix_erreurs.py",
-          "line": 872,
+          "line": 876,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_v1fix_erreurs.py",
           "severity": "hard"
@@ -58117,14 +58423,14 @@
         },
         {
           "candidate": "tests/test_validate_coderabbit_config.py",
-          "line": 870,
+          "line": 874,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_validate_coderabbit_config.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_validate_coderabbit_config.py",
-          "line": 876,
+          "line": 880,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_validate_coderabbit_config.py",
           "severity": "hard"
@@ -58383,14 +58689,14 @@
         },
         {
           "candidate": "tests/test_vault.py",
-          "line": 874,
+          "line": 878,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_vault.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_vault.py",
-          "line": 880,
+          "line": 884,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_vault.py",
           "severity": "hard"
@@ -58411,14 +58717,14 @@
       "referenced_by": [
         {
           "candidate": "tests/test_vault_e2e.py",
-          "line": 878,
+          "line": 882,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_vault_e2e.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_vault_e2e.py",
-          "line": 884,
+          "line": 888,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_vault_e2e.py",
           "severity": "hard"
@@ -58453,14 +58759,14 @@
         },
         {
           "candidate": "tests/test_verifier_artefact_distribue.py",
-          "line": 882,
+          "line": 886,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_verifier_artefact_distribue.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_verifier_artefact_distribue.py",
-          "line": 888,
+          "line": 892,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_verifier_artefact_distribue.py",
           "severity": "hard"
@@ -58488,14 +58794,14 @@
       "referenced_by": [
         {
           "candidate": "tests/test_web015_error_normalization.py",
-          "line": 886,
+          "line": 890,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_web015_error_normalization.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_web015_error_normalization.py",
-          "line": 892,
+          "line": 896,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_web015_error_normalization.py",
           "severity": "hard"
@@ -58530,14 +58836,14 @@
       "referenced_by": [
         {
           "candidate": "tests/test_web016_ratelimit_integration.py",
-          "line": 890,
+          "line": 894,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_web016_ratelimit_integration.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_web016_ratelimit_integration.py",
-          "line": 896,
+          "line": 900,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_web016_ratelimit_integration.py",
           "severity": "hard"
@@ -58572,14 +58878,14 @@
       "referenced_by": [
         {
           "candidate": "tests/test_web017_get_policy.py",
-          "line": 894,
+          "line": 898,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_web017_get_policy.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_web017_get_policy.py",
-          "line": 900,
+          "line": 904,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_web017_get_policy.py",
           "severity": "hard"
@@ -58614,14 +58920,14 @@
       "referenced_by": [
         {
           "candidate": "tests/test_web034a_security_headers.py",
-          "line": 898,
+          "line": 902,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_web034a_security_headers.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_web034a_security_headers.py",
-          "line": 904,
+          "line": 908,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_web034a_security_headers.py",
           "severity": "hard"
@@ -58656,14 +58962,14 @@
       "referenced_by": [
         {
           "candidate": "tests/test_web034b_secure_transport.py",
-          "line": 902,
+          "line": 906,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_web034b_secure_transport.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_web034b_secure_transport.py",
-          "line": 908,
+          "line": 912,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_web034b_secure_transport.py",
           "severity": "hard"
@@ -58698,14 +59004,14 @@
       "referenced_by": [
         {
           "candidate": "tests/test_web_auth.py",
-          "line": 906,
+          "line": 910,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_web_auth.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_web_auth.py",
-          "line": 912,
+          "line": 916,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_web_auth.py",
           "severity": "hard"
@@ -58782,14 +59088,14 @@
       "referenced_by": [
         {
           "candidate": "tests/test_web_bricks.py",
-          "line": 910,
+          "line": 914,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_web_bricks.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_web_bricks.py",
-          "line": 916,
+          "line": 920,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_web_bricks.py",
           "severity": "hard"
@@ -58817,14 +59123,14 @@
         },
         {
           "candidate": "tests/test_web_deploy.py",
-          "line": 914,
+          "line": 918,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_web_deploy.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_web_deploy.py",
-          "line": 920,
+          "line": 924,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_web_deploy.py",
           "severity": "hard"
@@ -58866,14 +59172,14 @@
       "referenced_by": [
         {
           "candidate": "tests/test_web_deploy_load_stack_once.py",
-          "line": 918,
+          "line": 922,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_web_deploy_load_stack_once.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_web_deploy_load_stack_once.py",
-          "line": 924,
+          "line": 928,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_web_deploy_load_stack_once.py",
           "severity": "hard"
@@ -58908,14 +59214,14 @@
         },
         {
           "candidate": "tests/test_web_i18n.py",
-          "line": 922,
+          "line": 926,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_web_i18n.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_web_i18n.py",
-          "line": 928,
+          "line": 932,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_web_i18n.py",
           "severity": "hard"
@@ -58978,14 +59284,14 @@
       "referenced_by": [
         {
           "candidate": "tests/test_web_models.py",
-          "line": 926,
+          "line": 930,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_web_models.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_web_models.py",
-          "line": 932,
+          "line": 936,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_web_models.py",
           "severity": "hard"
@@ -59006,14 +59312,14 @@
       "referenced_by": [
         {
           "candidate": "tests/test_web_models_local.py",
-          "line": 930,
+          "line": 934,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_web_models_local.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_web_models_local.py",
-          "line": 936,
+          "line": 940,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_web_models_local.py",
           "severity": "hard"
@@ -59034,14 +59340,14 @@
       "referenced_by": [
         {
           "candidate": "tests/test_web_nodes.py",
-          "line": 934,
+          "line": 938,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_web_nodes.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_web_nodes.py",
-          "line": 940,
+          "line": 944,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_web_nodes.py",
           "severity": "hard"
@@ -59069,14 +59375,14 @@
       "referenced_by": [
         {
           "candidate": "tests/test_web_nodes_vendors.py",
-          "line": 938,
+          "line": 942,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_web_nodes_vendors.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_web_nodes_vendors.py",
-          "line": 944,
+          "line": 948,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_web_nodes_vendors.py",
           "severity": "hard"
@@ -59097,14 +59403,14 @@
       "referenced_by": [
         {
           "candidate": "tests/test_web_server.py",
-          "line": 942,
+          "line": 946,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_web_server.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_web_server.py",
-          "line": 948,
+          "line": 952,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_web_server.py",
           "severity": "hard"
@@ -59132,14 +59438,14 @@
       "referenced_by": [
         {
           "candidate": "tests/test_web_stacks.py",
-          "line": 946,
+          "line": 950,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_web_stacks.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_web_stacks.py",
-          "line": 952,
+          "line": 956,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_web_stacks.py",
           "severity": "hard"
@@ -59174,14 +59480,14 @@
         },
         {
           "candidate": "tests/test_wizard_health.py",
-          "line": 950,
+          "line": 954,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_wizard_health.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_wizard_health.py",
-          "line": 956,
+          "line": 960,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_wizard_health.py",
           "severity": "hard"
@@ -59223,14 +59529,14 @@
         },
         {
           "candidate": "tests/test_wizard_rag_durci.py",
-          "line": 954,
+          "line": 958,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_wizard_rag_durci.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_wizard_rag_durci.py",
-          "line": 960,
+          "line": 964,
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_wizard_rag_durci.py",
           "severity": "hard"
@@ -59387,113 +59693,148 @@
         "referrer": ".gitguardian.yaml"
       },
       {
+        "candidate": "pip/_internal/build_env.py",
+        "line": 25,
+        "referrer": ".github/workflows/artefact-distribue.yml"
+      },
+      {
+        "candidate": "pypa/build",
+        "line": 26,
+        "referrer": ".github/workflows/artefact-distribue.yml"
+      },
+      {
+        "candidate": "build/env.py",
+        "line": 27,
+        "referrer": ".github/workflows/artefact-distribue.yml"
+      },
+      {
         "candidate": "actions/checkout",
-        "line": 17,
+        "line": 35,
         "referrer": ".github/workflows/artefact-distribue.yml"
       },
       {
         "candidate": "actions/setup-python",
-        "line": 21,
+        "line": 39,
         "referrer": ".github/workflows/artefact-distribue.yml"
       },
       {
-        "candidate": "dist/",
-        "line": 33,
+        "candidate": "actions/setup-python",
+        "line": 58,
         "referrer": ".github/workflows/artefact-distribue.yml"
       },
       {
-        "candidate": "dist/",
-        "line": 33,
+        "candidate": "build/pyproject_hooks/",
+        "line": 59,
         "referrer": ".github/workflows/artefact-distribue.yml"
       },
       {
-        "candidate": "travail/venv",
-        "line": 56,
+        "candidate": "actions/setup-python",
+        "line": 65,
         "referrer": ".github/workflows/artefact-distribue.yml"
       },
       {
-        "candidate": "travail/venv/bin/python",
-        "line": 57,
-        "referrer": ".github/workflows/artefact-distribue.yml"
-      },
-      {
-        "candidate": "travail/venv/bin/forgeai",
-        "line": 60,
-        "referrer": ".github/workflows/artefact-distribue.yml"
-      },
-      {
-        "candidate": "travail/venv/bin/forgeai",
-        "line": 61,
-        "referrer": ".github/workflows/artefact-distribue.yml"
-      },
-      {
-        "candidate": "travail/venv/bin/python",
-        "line": 62,
-        "referrer": ".github/workflows/artefact-distribue.yml"
-      },
-      {
-        "candidate": "catalogue.json",
+        "candidate": "build/pyproject_hooks/packaging",
         "line": 66,
         "referrer": ".github/workflows/artefact-distribue.yml"
       },
       {
+        "candidate": "dist/",
+        "line": 82,
+        "referrer": ".github/workflows/artefact-distribue.yml"
+      },
+      {
+        "candidate": "dist/",
+        "line": 82,
+        "referrer": ".github/workflows/artefact-distribue.yml"
+      },
+      {
+        "candidate": "travail/venv",
+        "line": 105,
+        "referrer": ".github/workflows/artefact-distribue.yml"
+      },
+      {
+        "candidate": "travail/venv/bin/python",
+        "line": 106,
+        "referrer": ".github/workflows/artefact-distribue.yml"
+      },
+      {
         "candidate": "travail/venv/bin/forgeai",
-        "line": 71,
+        "line": 109,
+        "referrer": ".github/workflows/artefact-distribue.yml"
+      },
+      {
+        "candidate": "travail/venv/bin/forgeai",
+        "line": 110,
+        "referrer": ".github/workflows/artefact-distribue.yml"
+      },
+      {
+        "candidate": "travail/venv/bin/python",
+        "line": 111,
+        "referrer": ".github/workflows/artefact-distribue.yml"
+      },
+      {
+        "candidate": "catalogue.json",
+        "line": 115,
+        "referrer": ".github/workflows/artefact-distribue.yml"
+      },
+      {
+        "candidate": "travail/venv/bin/forgeai",
+        "line": 120,
         "referrer": ".github/workflows/artefact-distribue.yml"
       },
       {
         "candidate": "travail/web.log",
-        "line": 71,
+        "line": 120,
         "referrer": ".github/workflows/artefact-distribue.yml"
       },
       {
         "candidate": "travail/venv/bin/python",
-        "line": 113,
+        "line": 162,
         "referrer": ".github/workflows/artefact-distribue.yml"
       },
       {
         "candidate": "travail/venv/bin/python",
-        "line": 114,
+        "line": 163,
         "referrer": ".github/workflows/artefact-distribue.yml"
       },
       {
         "candidate": "PKG-INFO/setup.cfg",
-        "line": 172,
+        "line": 221,
         "referrer": ".github/workflows/artefact-distribue.yml"
       },
       {
         "candidate": "wheel/zip",
-        "line": 173,
+        "line": 222,
         "referrer": ".github/workflows/artefact-distribue.yml"
       },
       {
         "candidate": "dist/",
-        "line": 195,
+        "line": 244,
         "referrer": ".github/workflows/artefact-distribue.yml"
       },
       {
         "candidate": "dist/SHA256SUMS",
-        "line": 195,
+        "line": 244,
         "referrer": ".github/workflows/artefact-distribue.yml"
       },
       {
         "candidate": "actions/upload-artifact",
-        "line": 198,
+        "line": 247,
         "referrer": ".github/workflows/artefact-distribue.yml"
       },
       {
         "candidate": "dist/",
-        "line": 203,
+        "line": 252,
         "referrer": ".github/workflows/artefact-distribue.yml"
       },
       {
         "candidate": "dist/",
-        "line": 204,
+        "line": 253,
         "referrer": ".github/workflows/artefact-distribue.yml"
       },
       {
         "candidate": "dist/SHA256SUMS",
-        "line": 205,
+        "line": 254,
         "referrer": ".github/workflows/artefact-distribue.yml"
       },
       {
@@ -59762,68 +60103,113 @@
         "referrer": ".github/workflows/gates.yml"
       },
       {
-        "candidate": "actions/checkout",
-        "line": 329,
+        "candidate": "ruff-report/branch-coverage-report",
+        "line": 325,
         "referrer": ".github/workflows/gates.yml"
       },
       {
-        "candidate": "actions/setup-python",
-        "line": 332,
+        "candidate": "artefact-distribue.yml",
+        "line": 330,
         "referrer": ".github/workflows/gates.yml"
       },
       {
-        "candidate": "branch-coverage.json",
+        "candidate": "test_rc1017_matrice_python.py",
+        "line": 331,
+        "referrer": ".github/workflows/gates.yml"
+      },
+      {
+        "candidate": "artefact-distribue.yml",
+        "line": 337,
+        "referrer": ".github/workflows/gates.yml"
+      },
+      {
+        "candidate": "nom/version/licence",
         "line": 338,
         "referrer": ".github/workflows/gates.yml"
       },
       {
-        "candidate": "actions/upload-artifact",
-        "line": 340,
-        "referrer": ".github/workflows/gates.yml"
-      },
-      {
-        "candidate": "branch-coverage.json",
+        "candidate": "actions/checkout",
         "line": 343,
         "referrer": ".github/workflows/gates.yml"
       },
       {
-        "candidate": "origin/main",
-        "line": 351,
+        "candidate": "actions/setup-python",
+        "line": 346,
+        "referrer": ".github/workflows/gates.yml"
+      },
+      {
+        "candidate": "actions/upload-artifact",
+        "line": 353,
+        "referrer": ".github/workflows/gates.yml"
+      },
+      {
+        "candidate": "composants-rc1.json",
+        "line": 357,
         "referrer": ".github/workflows/gates.yml"
       },
       {
         "candidate": "actions/checkout",
-        "line": 356,
+        "line": 368,
         "referrer": ".github/workflows/gates.yml"
       },
       {
         "candidate": "actions/setup-python",
-        "line": 360,
+        "line": 371,
         "referrer": ".github/workflows/gates.yml"
       },
       {
-        "candidate": "origin/main",
-        "line": 369,
-        "referrer": ".github/workflows/gates.yml"
-      },
-      {
-        "candidate": "ruff-ratchet/mypy-ratchet",
+        "candidate": "branch-coverage.json",
         "line": 377,
         "referrer": ".github/workflows/gates.yml"
       },
       {
-        "candidate": "actions/checkout",
-        "line": 380,
+        "candidate": "actions/upload-artifact",
+        "line": 379,
         "referrer": ".github/workflows/gates.yml"
       },
       {
-        "candidate": "actions/setup-python",
-        "line": 384,
+        "candidate": "branch-coverage.json",
+        "line": 382,
         "referrer": ".github/workflows/gates.yml"
       },
       {
         "candidate": "origin/main",
-        "line": 391,
+        "line": 390,
+        "referrer": ".github/workflows/gates.yml"
+      },
+      {
+        "candidate": "actions/checkout",
+        "line": 395,
+        "referrer": ".github/workflows/gates.yml"
+      },
+      {
+        "candidate": "actions/setup-python",
+        "line": 399,
+        "referrer": ".github/workflows/gates.yml"
+      },
+      {
+        "candidate": "origin/main",
+        "line": 408,
+        "referrer": ".github/workflows/gates.yml"
+      },
+      {
+        "candidate": "ruff-ratchet/mypy-ratchet",
+        "line": 416,
+        "referrer": ".github/workflows/gates.yml"
+      },
+      {
+        "candidate": "actions/checkout",
+        "line": 419,
+        "referrer": ".github/workflows/gates.yml"
+      },
+      {
+        "candidate": "actions/setup-python",
+        "line": 423,
+        "referrer": ".github/workflows/gates.yml"
+      },
+      {
+        "candidate": "origin/main",
+        "line": 430,
         "referrer": ".github/workflows/gates.yml"
       },
       {
@@ -97482,6 +97868,21 @@
         "referrer": "evidence/reviews/RC1-023/RECU.json"
       },
       {
+        "candidate": "stories/RC1-024.md",
+        "line": 6,
+        "referrer": "evidence/reviews/RC1-024-v18/MiMo-V2.5-Pro.verdict.json"
+      },
+      {
+        "candidate": "recu-revue/1",
+        "line": 2,
+        "referrer": "evidence/reviews/RC1-024-v18/RECU.json"
+      },
+      {
+        "candidate": "recu-revue/1",
+        "line": 2,
+        "referrer": "evidence/reviews/RC1-024-v3/RECU.json"
+      },
+      {
         "candidate": "recu-revue/1",
         "line": 2,
         "referrer": "evidence/reviews/RC1-440-lot6-v1/RECU.json"
@@ -100958,17 +101359,17 @@
       },
       {
         "candidate": "repos/leon36000/ForgeAI-Toolkit",
-        "line": 979,
+        "line": 983,
         "referrer": "governance/STATE-CURRENT.json"
       },
       {
         "candidate": "repos/leon36000/ForgeAI-Toolkit",
-        "line": 989,
+        "line": 993,
         "referrer": "governance/STATE-CURRENT.json"
       },
       {
         "candidate": "skip/ex",
-        "line": 995,
+        "line": 999,
         "referrer": "governance/STATE-CURRENT.json"
       },
       {
@@ -101623,26 +102024,11 @@
       },
       {
         "candidate": "evidence/reviews/",
-        "line": 638,
-        "referrer": "governance/path-classification-rules.json"
-      },
-      {
-        "candidate": "reviews/",
-        "line": 646,
-        "referrer": "governance/path-classification-rules.json"
-      },
-      {
-        "candidate": "classify_paths.py",
-        "line": 646,
-        "referrer": "governance/path-classification-rules.json"
-      },
-      {
-        "candidate": "evidence/registres/",
         "line": 652,
         "referrer": "governance/path-classification-rules.json"
       },
       {
-        "candidate": "Registres/",
+        "candidate": "reviews/",
         "line": 660,
         "referrer": "governance/path-classification-rules.json"
       },
@@ -101652,12 +102038,12 @@
         "referrer": "governance/path-classification-rules.json"
       },
       {
-        "candidate": "evidence/audit-output/",
+        "candidate": "evidence/registres/",
         "line": 666,
         "referrer": "governance/path-classification-rules.json"
       },
       {
-        "candidate": "AUDIT-OUTPUT/",
+        "candidate": "Registres/",
         "line": 674,
         "referrer": "governance/path-classification-rules.json"
       },
@@ -101667,68 +102053,83 @@
         "referrer": "governance/path-classification-rules.json"
       },
       {
-        "candidate": "evidence/dedup/",
+        "candidate": "evidence/audit-output/",
         "line": 680,
         "referrer": "governance/path-classification-rules.json"
       },
       {
-        "candidate": "avant/apr",
+        "candidate": "AUDIT-OUTPUT/",
         "line": 688,
-        "referrer": "governance/path-classification-rules.json"
-      },
-      {
-        "candidate": "evidence/",
-        "line": 688,
-        "referrer": "governance/path-classification-rules.json"
-      },
-      {
-        "candidate": "canonique/r",
-        "line": 688,
-        "referrer": "governance/path-classification-rules.json"
-      },
-      {
-        "candidate": "reviews_gate.py",
-        "line": 688,
-        "referrer": "governance/path-classification-rules.json"
-      },
-      {
-        "candidate": "archive/",
-        "line": 694,
-        "referrer": "governance/path-classification-rules.json"
-      },
-      {
-        "candidate": "coordination/",
-        "line": 702,
-        "referrer": "governance/path-classification-rules.json"
-      },
-      {
-        "candidate": "Phase-A/",
-        "line": 702,
-        "referrer": "governance/path-classification-rules.json"
-      },
-      {
-        "candidate": "Rapports/",
-        "line": 702,
-        "referrer": "governance/path-classification-rules.json"
-      },
-      {
-        "candidate": "Recherche/rall-1-agents-orchestration.yaml",
-        "line": 702,
-        "referrer": "governance/path-classification-rules.json"
-      },
-      {
-        "candidate": ".cursor/rules/forgeai-orchestration.mdc",
-        "line": 702,
         "referrer": "governance/path-classification-rules.json"
       },
       {
         "candidate": "classify_paths.py",
+        "line": 688,
+        "referrer": "governance/path-classification-rules.json"
+      },
+      {
+        "candidate": "evidence/dedup/",
+        "line": 694,
+        "referrer": "governance/path-classification-rules.json"
+      },
+      {
+        "candidate": "avant/apr",
         "line": 702,
         "referrer": "governance/path-classification-rules.json"
       },
       {
-        "candidate": "validate_coordination.py/state_current.py",
+        "candidate": "evidence/",
         "line": 702,
+        "referrer": "governance/path-classification-rules.json"
+      },
+      {
+        "candidate": "canonique/r",
+        "line": 702,
+        "referrer": "governance/path-classification-rules.json"
+      },
+      {
+        "candidate": "reviews_gate.py",
+        "line": 702,
+        "referrer": "governance/path-classification-rules.json"
+      },
+      {
+        "candidate": "archive/",
+        "line": 708,
+        "referrer": "governance/path-classification-rules.json"
+      },
+      {
+        "candidate": "coordination/",
+        "line": 716,
+        "referrer": "governance/path-classification-rules.json"
+      },
+      {
+        "candidate": "Phase-A/",
+        "line": 716,
+        "referrer": "governance/path-classification-rules.json"
+      },
+      {
+        "candidate": "Rapports/",
+        "line": 716,
+        "referrer": "governance/path-classification-rules.json"
+      },
+      {
+        "candidate": "Recherche/rall-1-agents-orchestration.yaml",
+        "line": 716,
+        "referrer": "governance/path-classification-rules.json"
+      },
+      {
+        "candidate": ".cursor/rules/forgeai-orchestration.mdc",
+        "line": 716,
+        "referrer": "governance/path-classification-rules.json"
+      },
+      {
+        "candidate": "classify_paths.py",
+        "line": 716,
+        "referrer": "governance/path-classification-rules.json"
+      },
+      {
+        "candidate": "validate_coordination.py/state_current.py",
+        "line": 716,
         "referrer": "governance/path-classification-rules.json"
       },
       {
@@ -102084,6 +102485,46 @@
       {
         "candidate": "_nom_membre_sur/le",
         "line": 526,
+        "referrer": "governance/sonar-suppressions.json"
+      },
+      {
+        "candidate": "RC1-018/",
+        "line": 541,
+        "referrer": "governance/sonar-suppressions.json"
+      },
+      {
+        "candidate": "racine/--sortie",
+        "line": 541,
+        "referrer": "governance/sonar-suppressions.json"
+      },
+      {
+        "candidate": "seau/HTTP",
+        "line": 541,
+        "referrer": "governance/sonar-suppressions.json"
+      },
+      {
+        "candidate": "racine/--sortie",
+        "line": 541,
+        "referrer": "governance/sonar-suppressions.json"
+      },
+      {
+        "candidate": "evidence_dedup.py",
+        "line": 541,
+        "referrer": "governance/sonar-suppressions.json"
+      },
+      {
+        "candidate": "branch_coverage_report.py",
+        "line": 541,
+        "referrer": "governance/sonar-suppressions.json"
+      },
+      {
+        "candidate": "e12/e13",
+        "line": 541,
+        "referrer": "governance/sonar-suppressions.json"
+      },
+      {
+        "candidate": "e7/e8/e10/e12/e13/e14",
+        "line": 543,
         "referrer": "governance/sonar-suppressions.json"
       },
       {
@@ -102545,6 +102986,11 @@
         "candidate": "assets/",
         "line": 37,
         "referrer": "pyproject.toml"
+      },
+      {
+        "candidate": "test/docs",
+        "line": 20,
+        "referrer": "requirements-build-constraints.txt"
       },
       {
         "candidate": "n/d",
@@ -104165,6 +104611,166 @@
         "candidate": "404/slug",
         "line": 99,
         "referrer": "scripts/rall_verify_urls.py"
+      },
+      {
+        "candidate": "wheel/sdist",
+        "line": 6,
+        "referrer": "scripts/rapport_composants.py"
+      },
+      {
+        "candidate": "CI/test/lint",
+        "line": 10,
+        "referrer": "scripts/rapport_composants.py"
+      },
+      {
+        "candidate": "actions/setup-python",
+        "line": 14,
+        "referrer": "scripts/rapport_composants.py"
+      },
+      {
+        "candidate": "et/ou",
+        "line": 50,
+        "referrer": "scripts/rapport_composants.py"
+      },
+      {
+        "candidate": "ruff/pytest/mypy",
+        "line": 95,
+        "referrer": "scripts/rapport_composants.py"
+      },
+      {
+        "candidate": "artefact-distribue.yml",
+        "line": 195,
+        "referrer": "scripts/rapport_composants.py"
+      },
+      {
+        "candidate": "gates.yml",
+        "line": 196,
+        "referrer": "scripts/rapport_composants.py"
+      },
+      {
+        "candidate": "artefact-distribue.yml",
+        "line": 205,
+        "referrer": "scripts/rapport_composants.py"
+      },
+      {
+        "candidate": "e/document",
+        "line": 211,
+        "referrer": "scripts/rapport_composants.py"
+      },
+      {
+        "candidate": "rifier/mettre",
+        "line": 212,
+        "referrer": "scripts/rapport_composants.py"
+      },
+      {
+        "candidate": "build/pip",
+        "line": 217,
+        "referrer": "scripts/rapport_composants.py"
+      },
+      {
+        "candidate": "build/pyproject_hooks/pip",
+        "line": 219,
+        "referrer": "scripts/rapport_composants.py"
+      },
+      {
+        "candidate": "artefact-distribue.yml",
+        "line": 231,
+        "referrer": "scripts/rapport_composants.py"
+      },
+      {
+        "candidate": "CI/test/lint",
+        "line": 314,
+        "referrer": "scripts/rapport_composants.py"
+      },
+      {
+        "candidate": "artefact-distribue.yml",
+        "line": 315,
+        "referrer": "scripts/rapport_composants.py"
+      },
+      {
+        "candidate": "artefact-distribue.yml",
+        "line": 319,
+        "referrer": "scripts/rapport_composants.py"
+      },
+      {
+        "candidate": "actions/setup-python",
+        "line": 343,
+        "referrer": "scripts/rapport_composants.py"
+      },
+      {
+        "candidate": "artefact-distribue.yml",
+        "line": 346,
+        "referrer": "scripts/rapport_composants.py"
+      },
+      {
+        "candidate": "actions/setup-python",
+        "line": 354,
+        "referrer": "scripts/rapport_composants.py"
+      },
+      {
+        "candidate": "actions/setup-python",
+        "line": 359,
+        "referrer": "scripts/rapport_composants.py"
+      },
+      {
+        "candidate": "artefact-distribue.yml",
+        "line": 369,
+        "referrer": "scripts/rapport_composants.py"
+      },
+      {
+        "candidate": "artefact-distribue.yml",
+        "line": 377,
+        "referrer": "scripts/rapport_composants.py"
+      },
+      {
+        "candidate": "artefact-distribue.yml",
+        "line": 385,
+        "referrer": "scripts/rapport_composants.py"
+      },
+      {
+        "candidate": "gates.yml",
+        "line": 392,
+        "referrer": "scripts/rapport_composants.py"
+      },
+      {
+        "candidate": "version/licence",
+        "line": 394,
+        "referrer": "scripts/rapport_composants.py"
+      },
+      {
+        "candidate": "artefact-distribue.yml",
+        "line": 396,
+        "referrer": "scripts/rapport_composants.py"
+      },
+      {
+        "candidate": "rifiable/reproductible",
+        "line": 397,
+        "referrer": "scripts/rapport_composants.py"
+      },
+      {
+        "candidate": "artefact-distribue.yml",
+        "line": 406,
+        "referrer": "scripts/rapport_composants.py"
+      },
+      {
+        "candidate": "wheel/sdist",
+        "line": 418,
+        "referrer": "scripts/rapport_composants.py"
+      },
+      {
+        "candidate": "CI/dev/build",
+        "line": 419,
+        "referrer": "scripts/rapport_composants.py"
+      },
+      {
+        "candidate": "composants-rc1.json",
+        "line": 442,
+        "referrer": "scripts/rapport_composants.py"
+      },
+      {
+        "candidate": "../../etc/passwd",
+        "line": 456,
+        "referrer": "scripts/rapport_composants.py"
       },
       {
         "candidate": "CLI/CI",
@@ -137127,6 +137733,161 @@
         "referrer": "tests/test_rall.py"
       },
       {
+        "candidate": "Production/Stable",
+        "line": 212,
+        "referrer": "tests/test_rapport_composants.py"
+      },
+      {
+        "candidate": "artefact-distribue.yml",
+        "line": 291,
+        "referrer": "tests/test_rapport_composants.py"
+      },
+      {
+        "candidate": "build/pyproject_hooks/packaging",
+        "line": 297,
+        "referrer": "tests/test_rapport_composants.py"
+      },
+      {
+        "candidate": "artefact-distribue.yml",
+        "line": 310,
+        "referrer": "tests/test_rapport_composants.py"
+      },
+      {
+        "candidate": "actions/setup-python",
+        "line": 319,
+        "referrer": "tests/test_rapport_composants.py"
+      },
+      {
+        "candidate": "actions/setup-python",
+        "line": 331,
+        "referrer": "tests/test_rapport_composants.py"
+      },
+      {
+        "candidate": "Version/licence",
+        "line": 341,
+        "referrer": "tests/test_rapport_composants.py"
+      },
+      {
+        "candidate": "artefact-distribue.yml",
+        "line": 342,
+        "referrer": "tests/test_rapport_composants.py"
+      },
+      {
+        "candidate": "artefact-distribue.yml",
+        "line": 354,
+        "referrer": "tests/test_rapport_composants.py"
+      },
+      {
+        "candidate": "composants-rc1.json",
+        "line": 422,
+        "referrer": "tests/test_rapport_composants.py"
+      },
+      {
+        "candidate": "rapport-personnalise.json",
+        "line": 436,
+        "referrer": "tests/test_rapport_composants.py"
+      },
+      {
+        "candidate": "rapport-personnalise.json",
+        "line": 440,
+        "referrer": "tests/test_rapport_composants.py"
+      },
+      {
+        "candidate": "composants-rc1.json",
+        "line": 441,
+        "referrer": "tests/test_rapport_composants.py"
+      },
+      {
+        "candidate": "composants-rc1.json",
+        "line": 453,
+        "referrer": "tests/test_rapport_composants.py"
+      },
+      {
+        "candidate": "composants-rc1.json",
+        "line": 463,
+        "referrer": "tests/test_rapport_composants.py"
+      },
+      {
+        "candidate": "ne-doit-jamais-exister.json",
+        "line": 768,
+        "referrer": "tests/test_rapport_composants.py"
+      },
+      {
+        "candidate": "ne-doit-jamais-exister-non-plus.json",
+        "line": 788,
+        "referrer": "tests/test_rapport_composants.py"
+      },
+      {
+        "candidate": "../",
+        "line": 789,
+        "referrer": "tests/test_rapport_composants.py"
+      },
+      {
+        "candidate": "artefact-distribue.yml",
+        "line": 819,
+        "referrer": "tests/test_rapport_composants.py"
+      },
+      {
+        "candidate": "artefact-distribue.yml",
+        "line": 833,
+        "referrer": "tests/test_rapport_composants.py"
+      },
+      {
+        "candidate": "artefact-distribue.yml",
+        "line": 844,
+        "referrer": "tests/test_rapport_composants.py"
+      },
+      {
+        "candidate": "artefact-distribue.yml",
+        "line": 855,
+        "referrer": "tests/test_rapport_composants.py"
+      },
+      {
+        "candidate": "build/pyproject_hooks",
+        "line": 862,
+        "referrer": "tests/test_rapport_composants.py"
+      },
+      {
+        "candidate": "artefact-distribue.yml",
+        "line": 866,
+        "referrer": "tests/test_rapport_composants.py"
+      },
+      {
+        "candidate": "artefact-distribue.yml",
+        "line": 876,
+        "referrer": "tests/test_rapport_composants.py"
+      },
+      {
+        "candidate": "rapport_composants.py",
+        "line": 897,
+        "referrer": "tests/test_rapport_composants.py"
+      },
+      {
+        "candidate": "artefact-distribue.yml",
+        "line": 898,
+        "referrer": "tests/test_rapport_composants.py"
+      },
+      {
+        "candidate": "rapport_composants.py",
+        "line": 901,
+        "referrer": "tests/test_rapport_composants.py"
+      },
+      {
+        "candidate": "artefact-distribue.yml",
+        "line": 902,
+        "referrer": "tests/test_rapport_composants.py"
+      },
+      {
+        "candidate": "rapport_composants.py",
+        "line": 905,
+        "referrer": "tests/test_rapport_composants.py"
+      },
+      {
+        "candidate": "artefact-distribue.yml",
+        "line": 906,
+        "referrer": "tests/test_rapport_composants.py"
+      },
+      {
         "candidate": "Docs/",
         "line": 1,
         "referrer": "tests/test_rc1009_racines_documentaires.py"
@@ -146514,6 +147275,13 @@
         "severity": "hard"
       },
       {
+        "candidate": "RC1-024-v18",
+        "line": 212,
+        "referrer": "evidence/reviews/BINDING.txt",
+        "resolved": "evidence/reviews/RC1-024-v18",
+        "severity": "hard"
+      },
+      {
         "candidate": "scripts/gate_docs.py",
         "line": 11,
         "referrer": "sonar-project.properties",
@@ -146581,6 +147349,13 @@
         "line": 43,
         "referrer": "sonar-project.properties",
         "resolved": "scripts/verifier_artefact_distribue.py",
+        "severity": "silent"
+      },
+      {
+        "candidate": "scripts/rapport_composants.py",
+        "line": 51,
+        "referrer": "sonar-project.properties",
+        "resolved": "scripts/rapport_composants.py",
         "severity": "silent"
       },
       {
@@ -146906,8 +147681,15 @@
         "severity": "hard"
       },
       {
+        "candidate": "scripts/rapport_composants.py",
+        "line": 50,
+        "referrer": ".github/workflows/artefact-distribue.yml",
+        "resolved": "scripts/rapport_composants.py",
+        "severity": "hard"
+      },
+      {
         "candidate": "scripts/verifier_artefact_distribue.py",
-        "line": 33,
+        "line": 82,
         "referrer": ".github/workflows/artefact-distribue.yml",
         "resolved": "scripts/verifier_artefact_distribue.py",
         "severity": "hard"
@@ -147249,50 +148031,64 @@
         "severity": "hard"
       },
       {
+        "candidate": "scripts/rapport_composants.py",
+        "line": 327,
+        "referrer": ".github/workflows/gates.yml",
+        "resolved": "scripts/rapport_composants.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "scripts/rapport_composants.py",
+        "line": 352,
+        "referrer": ".github/workflows/gates.yml",
+        "resolved": "scripts/rapport_composants.py",
+        "severity": "hard"
+      },
+      {
         "candidate": "scripts/branch_coverage_report.py",
-        "line": 322,
+        "line": 361,
         "referrer": ".github/workflows/gates.yml",
         "resolved": "scripts/branch_coverage_report.py",
         "severity": "hard"
       },
       {
         "candidate": "scripts/branch_coverage_report.py",
-        "line": 338,
+        "line": 377,
         "referrer": ".github/workflows/gates.yml",
         "resolved": "scripts/branch_coverage_report.py",
         "severity": "hard"
       },
       {
         "candidate": "governance/ruff-classification.json",
-        "line": 348,
+        "line": 387,
         "referrer": ".github/workflows/gates.yml",
         "resolved": "governance/ruff-classification.json",
         "severity": "hard"
       },
       {
         "candidate": "scripts/ruff_ratchet.py",
-        "line": 349,
+        "line": 388,
         "referrer": ".github/workflows/gates.yml",
         "resolved": "scripts/ruff_ratchet.py",
         "severity": "hard"
       },
       {
         "candidate": "governance/ruff-baseline.json",
-        "line": 350,
+        "line": 389,
         "referrer": ".github/workflows/gates.yml",
         "resolved": "governance/ruff-baseline.json",
         "severity": "hard"
       },
       {
         "candidate": "scripts/ruff_ratchet.py",
-        "line": 367,
+        "line": 406,
         "referrer": ".github/workflows/gates.yml",
         "resolved": "scripts/ruff_ratchet.py",
         "severity": "hard"
       },
       {
         "candidate": "scripts/ruff_noqa_gate.py",
-        "line": 389,
+        "line": 428,
         "referrer": ".github/workflows/gates.yml",
         "resolved": "scripts/ruff_noqa_gate.py",
         "severity": "hard"
@@ -161466,6 +162262,34 @@
         "severity": "hard"
       },
       {
+        "candidate": "tests/test_rapport_composants.py",
+        "line": 7,
+        "referrer": "evidence/reviews/RC1-024-v18/MiMo-V2.5-Pro.verdict.json",
+        "resolved": "tests/test_rapport_composants.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "governance/sonar-suppressions.json",
+        "line": 7,
+        "referrer": "evidence/reviews/RC1-024-v18/MiMo-V2.5-Pro.verdict.json",
+        "resolved": "governance/sonar-suppressions.json",
+        "severity": "hard"
+      },
+      {
+        "candidate": "tests/test_rapport_composants.py",
+        "line": 8,
+        "referrer": "evidence/reviews/RC1-024-v18/MiMo-V2.5-Pro.verdict.json",
+        "resolved": "tests/test_rapport_composants.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "governance/sonar-suppressions.json",
+        "line": 8,
+        "referrer": "evidence/reviews/RC1-024-v18/MiMo-V2.5-Pro.verdict.json",
+        "resolved": "governance/sonar-suppressions.json",
+        "severity": "hard"
+      },
+      {
         "candidate": "tests/test_readme_dist_status.py",
         "line": 6,
         "referrer": "evidence/reviews/RC1-442/DeepSeek-V4-Pro.verdict.json",
@@ -164469,6 +165293,20 @@
         "severity": "hard"
       },
       {
+        "candidate": "scripts/rapport_composants.py",
+        "line": 72,
+        "referrer": "governance/SONAR-SUPPRESSIONS.md",
+        "resolved": "scripts/rapport_composants.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "tests/test_rapport_composants.py",
+        "line": 72,
+        "referrer": "governance/SONAR-SUPPRESSIONS.md",
+        "resolved": "tests/test_rapport_composants.py",
+        "severity": "hard"
+      },
+      {
         "candidate": ".github/workflows/artefact-distribue.yml",
         "line": 90,
         "referrer": "governance/STATE-CURRENT.json",
@@ -165442,589 +166280,596 @@
         "severity": "hard"
       },
       {
-        "candidate": "tests/test_ratelimit.py",
+        "candidate": "tests/test_rapport_composants.py",
         "line": 650,
+        "referrer": "governance/STATE-CURRENT.json",
+        "resolved": "tests/test_rapport_composants.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "tests/test_ratelimit.py",
+        "line": 654,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_ratelimit.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_rc1009_racines_documentaires.py",
-        "line": 654,
+        "line": 658,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_rc1009_racines_documentaires.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_rc1011_dedup.py",
-        "line": 658,
+        "line": 662,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_rc1011_dedup.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_rc1011_packs_md.py",
-        "line": 662,
+        "line": 666,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_rc1011_packs_md.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_rc1016_sonar_suppressions.py",
-        "line": 666,
+        "line": 670,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_rc1016_sonar_suppressions.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_rc1017_matrice_python.py",
-        "line": 670,
+        "line": 674,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_rc1017_matrice_python.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_rc1018_artefact_distribue.py",
-        "line": 674,
+        "line": 678,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_rc1018_artefact_distribue.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_rc1019_mypy_gate.py",
-        "line": 678,
+        "line": 682,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_rc1019_mypy_gate.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_rc1023_error_contracts.py",
-        "line": 682,
+        "line": 686,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_rc1023_error_contracts.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_readme_dist_status.py",
-        "line": 686,
+        "line": 690,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_readme_dist_status.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_receptacles.py",
-        "line": 690,
+        "line": 694,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_receptacles.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_redaction.py",
-        "line": 694,
+        "line": 698,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_redaction.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_redaction_adoption.py",
-        "line": 698,
+        "line": 702,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_redaction_adoption.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_reeval_defaults.py",
-        "line": 702,
+        "line": 706,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_reeval_defaults.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_reg029a_completude.py",
-        "line": 706,
+        "line": 710,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_reg029a_completude.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_reg029b_ancrage.py",
-        "line": 710,
+        "line": 714,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_reg029b_ancrage.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_registre.py",
-        "line": 714,
+        "line": 718,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_registre.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_registre_concurrence.py",
-        "line": 718,
+        "line": 722,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_registre_concurrence.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_rel038a_prepare_persist.py",
-        "line": 722,
+        "line": 726,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_rel038a_prepare_persist.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_rel038b_unicite.py",
-        "line": 726,
+        "line": 730,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_rel038b_unicite.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_rel038c_process_groups.py",
-        "line": 730,
+        "line": 734,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_rel038c_process_groups.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_remote_probe.py",
-        "line": 734,
+        "line": 738,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_remote_probe.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_renderers.py",
-        "line": 738,
+        "line": 742,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_renderers.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_res_classes_stack_minimal.py",
-        "line": 742,
+        "line": 746,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_res_classes_stack_minimal.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_reviews_gate.py",
-        "line": 746,
+        "line": 750,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_reviews_gate.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_revue.py",
-        "line": 750,
+        "line": 754,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_revue.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_routestore_concurrence.py",
-        "line": 754,
+        "line": 758,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_routestore_concurrence.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_ruff_mesure.py",
-        "line": 758,
+        "line": 762,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_ruff_mesure.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_ruff_noqa_gate.py",
-        "line": 762,
+        "line": 766,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_ruff_noqa_gate.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_ruff_ratchet.py",
-        "line": 766,
+        "line": 770,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_ruff_ratchet.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_ruff_report.py",
-        "line": 770,
+        "line": 774,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_ruff_report.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_safe_repr.py",
-        "line": 774,
+        "line": 778,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_safe_repr.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_selection_complete.py",
-        "line": 778,
+        "line": 782,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_selection_complete.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_selection_v2.py",
-        "line": 782,
+        "line": 786,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_selection_v2.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_sentinelle_sweep.py",
-        "line": 786,
+        "line": 790,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_sentinelle_sweep.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_server_cache.py",
-        "line": 790,
+        "line": 794,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_server_cache.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_service_spec_injection_yaml.py",
-        "line": 794,
+        "line": 798,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_service_spec_injection_yaml.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_spheres.py",
-        "line": 798,
+        "line": 802,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_spheres.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_ssh007_hostkey.py",
-        "line": 802,
+        "line": 806,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_ssh007_hostkey.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_ssh021_nodeadd.py",
-        "line": 806,
+        "line": 810,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_ssh021_nodeadd.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_ssh030_argv_ssh.py",
-        "line": 810,
+        "line": 814,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_ssh030_argv_ssh.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_ssh_injection.py",
-        "line": 814,
+        "line": 818,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_ssh_injection.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_stack_traversal.py",
-        "line": 818,
+        "line": 822,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_stack_traversal.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_stacks.py",
-        "line": 822,
+        "line": 826,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_stacks.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_state_current.py",
-        "line": 826,
+        "line": 830,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_state_current.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_supply018.py",
-        "line": 830,
+        "line": 834,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_supply018.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_tailscale.py",
-        "line": 834,
+        "line": 838,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_tailscale.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_tailscale_optin.py",
-        "line": 838,
+        "line": 842,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_tailscale_optin.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_tally.py",
-        "line": 842,
+        "line": 846,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_tally.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_templates.py",
-        "line": 846,
+        "line": 850,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_templates.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_traductions.py",
-        "line": 850,
+        "line": 854,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_traductions.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_ui_7_etapes.py",
-        "line": 854,
+        "line": 858,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_ui_7_etapes.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_ui_n2b.py",
-        "line": 858,
+        "line": 862,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_ui_n2b.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_ui_s6b.py",
-        "line": 862,
+        "line": 866,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_ui_s6b.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_v1fix_erreurs.py",
-        "line": 866,
+        "line": 870,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_v1fix_erreurs.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_validate_coderabbit_config.py",
-        "line": 870,
+        "line": 874,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_validate_coderabbit_config.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_vault.py",
-        "line": 874,
+        "line": 878,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_vault.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_vault_e2e.py",
-        "line": 878,
+        "line": 882,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_vault_e2e.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_verifier_artefact_distribue.py",
-        "line": 882,
+        "line": 886,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_verifier_artefact_distribue.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_web015_error_normalization.py",
-        "line": 886,
+        "line": 890,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_web015_error_normalization.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_web016_ratelimit_integration.py",
-        "line": 890,
+        "line": 894,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_web016_ratelimit_integration.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_web017_get_policy.py",
-        "line": 894,
+        "line": 898,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_web017_get_policy.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_web034a_security_headers.py",
-        "line": 898,
+        "line": 902,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_web034a_security_headers.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_web034b_secure_transport.py",
-        "line": 902,
+        "line": 906,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_web034b_secure_transport.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_web_auth.py",
-        "line": 906,
+        "line": 910,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_web_auth.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_web_bricks.py",
-        "line": 910,
+        "line": 914,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_web_bricks.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_web_deploy.py",
-        "line": 914,
+        "line": 918,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_web_deploy.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_web_deploy_load_stack_once.py",
-        "line": 918,
+        "line": 922,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_web_deploy_load_stack_once.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_web_i18n.py",
-        "line": 922,
+        "line": 926,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_web_i18n.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_web_models.py",
-        "line": 926,
+        "line": 930,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_web_models.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_web_models_local.py",
-        "line": 930,
+        "line": 934,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_web_models_local.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_web_nodes.py",
-        "line": 934,
+        "line": 938,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_web_nodes.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_web_nodes_vendors.py",
-        "line": 938,
+        "line": 942,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_web_nodes_vendors.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_web_server.py",
-        "line": 942,
+        "line": 946,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_web_server.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_web_stacks.py",
-        "line": 946,
+        "line": 950,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_web_stacks.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_wizard_health.py",
-        "line": 950,
+        "line": 954,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_wizard_health.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_wizard_rag_durci.py",
-        "line": 954,
+        "line": 958,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_wizard_rag_durci.py",
         "severity": "hard"
       },
       {
         "candidate": "src/forgeai",
-        "line": 993,
+        "line": 997,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "src/forgeai",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_data002b_wal_idempotent.py",
-        "line": 993,
+        "line": 997,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_data002b_wal_idempotent.py",
         "severity": "hard"
       },
       {
         "candidate": "src/forgeai",
-        "line": 999,
+        "line": 1003,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "src/forgeai",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_data002b_wal_idempotent.py",
-        "line": 999,
+        "line": 1003,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_data002b_wal_idempotent.py",
         "severity": "hard"
       },
       {
         "candidate": "src/forgeai/core/registre.py",
-        "line": 1005,
+        "line": 1009,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "src/forgeai/core/registre.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_data002b_wal_idempotent.py",
-        "line": 1013,
+        "line": 1017,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_data002b_wal_idempotent.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_data002b_wal_idempotent.py",
-        "line": 1019,
+        "line": 1023,
         "referrer": "governance/STATE-CURRENT.json",
         "resolved": "tests/test_data002b_wal_idempotent.py",
         "severity": "hard"
@@ -167010,540 +167855,547 @@
         "severity": "hard"
       },
       {
-        "candidate": "tests/test_ratelimit.py",
+        "candidate": "tests/test_rapport_composants.py",
         "line": 656,
+        "referrer": "governance/STATE-CURRENT.md",
+        "resolved": "tests/test_rapport_composants.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "tests/test_ratelimit.py",
+        "line": 660,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_ratelimit.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_rc1009_racines_documentaires.py",
-        "line": 660,
+        "line": 664,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_rc1009_racines_documentaires.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_rc1011_dedup.py",
-        "line": 664,
+        "line": 668,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_rc1011_dedup.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_rc1011_packs_md.py",
-        "line": 668,
+        "line": 672,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_rc1011_packs_md.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_rc1016_sonar_suppressions.py",
-        "line": 672,
+        "line": 676,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_rc1016_sonar_suppressions.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_rc1017_matrice_python.py",
-        "line": 676,
+        "line": 680,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_rc1017_matrice_python.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_rc1018_artefact_distribue.py",
-        "line": 680,
+        "line": 684,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_rc1018_artefact_distribue.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_rc1019_mypy_gate.py",
-        "line": 684,
+        "line": 688,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_rc1019_mypy_gate.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_rc1023_error_contracts.py",
-        "line": 688,
+        "line": 692,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_rc1023_error_contracts.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_readme_dist_status.py",
-        "line": 692,
+        "line": 696,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_readme_dist_status.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_receptacles.py",
-        "line": 696,
+        "line": 700,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_receptacles.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_redaction.py",
-        "line": 700,
+        "line": 704,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_redaction.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_redaction_adoption.py",
-        "line": 704,
+        "line": 708,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_redaction_adoption.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_reeval_defaults.py",
-        "line": 708,
+        "line": 712,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_reeval_defaults.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_reg029a_completude.py",
-        "line": 712,
+        "line": 716,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_reg029a_completude.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_reg029b_ancrage.py",
-        "line": 716,
+        "line": 720,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_reg029b_ancrage.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_registre.py",
-        "line": 720,
+        "line": 724,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_registre.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_registre_concurrence.py",
-        "line": 724,
+        "line": 728,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_registre_concurrence.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_rel038a_prepare_persist.py",
-        "line": 728,
+        "line": 732,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_rel038a_prepare_persist.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_rel038b_unicite.py",
-        "line": 732,
+        "line": 736,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_rel038b_unicite.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_rel038c_process_groups.py",
-        "line": 736,
+        "line": 740,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_rel038c_process_groups.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_remote_probe.py",
-        "line": 740,
+        "line": 744,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_remote_probe.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_renderers.py",
-        "line": 744,
+        "line": 748,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_renderers.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_res_classes_stack_minimal.py",
-        "line": 748,
+        "line": 752,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_res_classes_stack_minimal.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_reviews_gate.py",
-        "line": 752,
+        "line": 756,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_reviews_gate.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_revue.py",
-        "line": 756,
+        "line": 760,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_revue.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_routestore_concurrence.py",
-        "line": 760,
+        "line": 764,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_routestore_concurrence.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_ruff_mesure.py",
-        "line": 764,
+        "line": 768,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_ruff_mesure.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_ruff_noqa_gate.py",
-        "line": 768,
+        "line": 772,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_ruff_noqa_gate.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_ruff_ratchet.py",
-        "line": 772,
+        "line": 776,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_ruff_ratchet.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_ruff_report.py",
-        "line": 776,
+        "line": 780,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_ruff_report.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_safe_repr.py",
-        "line": 780,
+        "line": 784,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_safe_repr.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_selection_complete.py",
-        "line": 784,
+        "line": 788,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_selection_complete.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_selection_v2.py",
-        "line": 788,
+        "line": 792,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_selection_v2.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_sentinelle_sweep.py",
-        "line": 792,
+        "line": 796,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_sentinelle_sweep.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_server_cache.py",
-        "line": 796,
+        "line": 800,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_server_cache.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_service_spec_injection_yaml.py",
-        "line": 800,
+        "line": 804,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_service_spec_injection_yaml.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_spheres.py",
-        "line": 804,
+        "line": 808,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_spheres.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_ssh007_hostkey.py",
-        "line": 808,
+        "line": 812,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_ssh007_hostkey.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_ssh021_nodeadd.py",
-        "line": 812,
+        "line": 816,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_ssh021_nodeadd.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_ssh030_argv_ssh.py",
-        "line": 816,
+        "line": 820,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_ssh030_argv_ssh.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_ssh_injection.py",
-        "line": 820,
+        "line": 824,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_ssh_injection.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_stack_traversal.py",
-        "line": 824,
+        "line": 828,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_stack_traversal.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_stacks.py",
-        "line": 828,
+        "line": 832,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_stacks.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_state_current.py",
-        "line": 832,
+        "line": 836,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_state_current.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_supply018.py",
-        "line": 836,
+        "line": 840,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_supply018.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_tailscale.py",
-        "line": 840,
+        "line": 844,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_tailscale.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_tailscale_optin.py",
-        "line": 844,
+        "line": 848,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_tailscale_optin.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_tally.py",
-        "line": 848,
+        "line": 852,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_tally.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_templates.py",
-        "line": 852,
+        "line": 856,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_templates.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_traductions.py",
-        "line": 856,
+        "line": 860,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_traductions.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_ui_7_etapes.py",
-        "line": 860,
+        "line": 864,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_ui_7_etapes.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_ui_n2b.py",
-        "line": 864,
+        "line": 868,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_ui_n2b.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_ui_s6b.py",
-        "line": 868,
+        "line": 872,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_ui_s6b.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_v1fix_erreurs.py",
-        "line": 872,
+        "line": 876,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_v1fix_erreurs.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_validate_coderabbit_config.py",
-        "line": 876,
+        "line": 880,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_validate_coderabbit_config.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_vault.py",
-        "line": 880,
+        "line": 884,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_vault.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_vault_e2e.py",
-        "line": 884,
+        "line": 888,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_vault_e2e.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_verifier_artefact_distribue.py",
-        "line": 888,
+        "line": 892,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_verifier_artefact_distribue.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_web015_error_normalization.py",
-        "line": 892,
+        "line": 896,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_web015_error_normalization.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_web016_ratelimit_integration.py",
-        "line": 896,
+        "line": 900,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_web016_ratelimit_integration.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_web017_get_policy.py",
-        "line": 900,
+        "line": 904,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_web017_get_policy.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_web034a_security_headers.py",
-        "line": 904,
+        "line": 908,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_web034a_security_headers.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_web034b_secure_transport.py",
-        "line": 908,
+        "line": 912,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_web034b_secure_transport.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_web_auth.py",
-        "line": 912,
+        "line": 916,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_web_auth.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_web_bricks.py",
-        "line": 916,
+        "line": 920,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_web_bricks.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_web_deploy.py",
-        "line": 920,
+        "line": 924,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_web_deploy.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_web_deploy_load_stack_once.py",
-        "line": 924,
+        "line": 928,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_web_deploy_load_stack_once.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_web_i18n.py",
-        "line": 928,
+        "line": 932,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_web_i18n.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_web_models.py",
-        "line": 932,
+        "line": 936,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_web_models.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_web_models_local.py",
-        "line": 936,
+        "line": 940,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_web_models_local.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_web_nodes.py",
-        "line": 940,
+        "line": 944,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_web_nodes.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_web_nodes_vendors.py",
-        "line": 944,
+        "line": 948,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_web_nodes_vendors.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_web_server.py",
-        "line": 948,
+        "line": 952,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_web_server.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_web_stacks.py",
-        "line": 952,
+        "line": 956,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_web_stacks.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_wizard_health.py",
-        "line": 956,
+        "line": 960,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_wizard_health.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_wizard_rag_durci.py",
-        "line": 960,
+        "line": 964,
         "referrer": "governance/STATE-CURRENT.md",
         "resolved": "tests/test_wizard_rag_durci.py",
         "severity": "hard"
@@ -168592,15 +169444,29 @@
         "severity": "hard"
       },
       {
+        "candidate": ".github/workflows/artefact-distribue.yml",
+        "line": 646,
+        "referrer": "governance/path-classification-rules.json",
+        "resolved": ".github/workflows/artefact-distribue.yml",
+        "severity": "hard"
+      },
+      {
+        "candidate": "scripts/rapport_composants.py",
+        "line": 646,
+        "referrer": "governance/path-classification-rules.json",
+        "resolved": "scripts/rapport_composants.py",
+        "severity": "hard"
+      },
+      {
         "candidate": "scripts/governance/evidence_dedup.py",
-        "line": 688,
+        "line": 702,
         "referrer": "governance/path-classification-rules.json",
         "resolved": "scripts/governance/evidence_dedup.py",
         "severity": "hard"
       },
       {
         "candidate": "archive/coordination/work-packages.json",
-        "line": 702,
+        "line": 716,
         "referrer": "governance/path-classification-rules.json",
         "resolved": "archive/coordination/work-packages.json",
         "severity": "hard"
@@ -169929,6 +170795,27 @@
         "severity": "hard"
       },
       {
+        "candidate": "scripts/rapport_composants.py",
+        "line": 537,
+        "referrer": "governance/sonar-suppressions.json",
+        "resolved": "scripts/rapport_composants.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "scripts/verifier_artefact_distribue.py",
+        "line": 541,
+        "referrer": "governance/sonar-suppressions.json",
+        "resolved": "scripts/verifier_artefact_distribue.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "tests/test_rapport_composants.py",
+        "line": 542,
+        "referrer": "governance/sonar-suppressions.json",
+        "resolved": "tests/test_rapport_composants.py",
+        "severity": "hard"
+      },
+      {
         "candidate": "governance/STATE-CURRENT.json",
         "line": 5,
         "referrer": "governance/state-current.schema.json",
@@ -170059,6 +170946,20 @@
         "line": 23,
         "referrer": "pyproject.toml",
         "resolved": "CANON/spec-web-ui.md",
+        "severity": "hard"
+      },
+      {
+        "candidate": ".github/workflows/artefact-distribue.yml",
+        "line": 2,
+        "referrer": "requirements-build-constraints.txt",
+        "resolved": ".github/workflows/artefact-distribue.yml",
+        "severity": "hard"
+      },
+      {
+        "candidate": "scripts/rapport_composants.py",
+        "line": 13,
+        "referrer": "requirements-build-constraints.txt",
+        "resolved": "scripts/rapport_composants.py",
         "severity": "hard"
       },
       {
@@ -170710,6 +171611,20 @@
         "line": 20,
         "referrer": "scripts/proof/prove_openbao_prod.py",
         "resolved": "scripts/proof/prove_openbao_prod.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": ".github/workflows/artefact-distribue.yml",
+        "line": 11,
+        "referrer": "scripts/rapport_composants.py",
+        "resolved": ".github/workflows/artefact-distribue.yml",
+        "severity": "hard"
+      },
+      {
+        "candidate": "scripts/ruff_report.py",
+        "line": 23,
+        "referrer": "scripts/rapport_composants.py",
+        "resolved": "scripts/ruff_report.py",
         "severity": "hard"
       },
       {
@@ -175809,6 +176724,20 @@
         "severity": "hard"
       },
       {
+        "candidate": "scripts/rapport_composants.py",
+        "line": 1,
+        "referrer": "tests/test_rapport_composants.py",
+        "resolved": "scripts/rapport_composants.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "tests/test_reg029b_ancrage.py",
+        "line": 826,
+        "referrer": "tests/test_rapport_composants.py",
+        "resolved": "tests/test_reg029b_ancrage.py",
+        "severity": "hard"
+      },
+      {
         "candidate": "stories/RC1-011.md",
         "line": 3,
         "referrer": "tests/test_rc1011_dedup.py",
@@ -176483,16 +177412,16 @@
     ],
     "method": "static_text_scan"
   },
-  "rules_sha256": "d44e0fe8b2ff4fb4a3021ee5f10ed46635392d165a626018954b3e9010afc88e",
+  "rules_sha256": "5f338edfc286d6bf002e6612a50be6fb46e8e963f471125382b6b02298f70b57",
   "summary": {
     "by_class": {
       "ARCHIVE": 44,
       "DOCS": 18,
-      "EVIDENCE": 1629,
+      "EVIDENCE": 1637,
       "GENERATED": 5,
-      "GOVERNANCE": 203,
+      "GOVERNANCE": 205,
       "PRODUCT": 113,
-      "TEST": 216,
+      "TEST": 217,
       "WORKING": 10
     },
     "by_rule": {
@@ -176507,7 +177436,7 @@
       "evidence-audit-output-root": 18,
       "evidence-dedup-root": 2,
       "evidence-registres-root": 35,
-      "evidence-reviews-root": 1574,
+      "evidence-reviews-root": 1582,
       "generated-authority-map": 1,
       "generated-path-classification-json": 1,
       "generated-path-classification-markdown": 1,
@@ -176529,25 +177458,26 @@
       "governance-root-precommit": 1,
       "governance-root-pyproject": 1,
       "governance-root-readme": 1,
+      "governance-root-requirements-build-constraints": 1,
       "governance-root-requirements-ci-in": 1,
       "governance-root-requirements-ci-txt": 1,
       "governance-root-sonar": 1,
       "governance-scripts-coordination": 4,
       "governance-scripts-governance": 11,
-      "governance-scripts-root": 29,
+      "governance-scripts-root": 30,
       "governance-stories": 94,
       "product-catalogue-checksum": 1,
       "product-source": 112,
-      "test-suite": 216,
+      "test-suite": 217,
       "working-claude-agents": 9,
       "working-sandbox-readme": 1
     },
     "case_collisions_total": 0,
-    "dangling_references_total": 17138,
+    "dangling_references_total": 17229,
     "generated_total": 9,
-    "load_bearing_total": 2095,
+    "load_bearing_total": 2106,
     "portability_violations_total": 0,
-    "tracked_total": 2238,
+    "tracked_total": 2249,
     "unclassified_total": 0,
     "unicode_anomalies_total": 0
   },

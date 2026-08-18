@@ -632,6 +632,20 @@
       "rationale": "Ce lockfile est entièrement généré par uv pip compile requirements-ci.in --universal --python-version 3.10 --generate-hashes et régénéré automatiquement par .github/workflows/ci-deps-update.yml; il ne doit jamais être édité à la main. Il est référencé en dur par .github/workflows/gates.yml, .github/workflows/sonarcloud.yml, .github/workflows/ci-deps-update.yml et tests/test_rc1017_matrice_python.py; le déplacer casserait la CI."
     },
     {
+      "id": "governance-root-requirements-build-constraints",
+      "match": {
+        "kind": "exact",
+        "value": "requirements-build-constraints.txt"
+      },
+      "class": "GOVERNANCE",
+      "generated": false,
+      "owner": "gouvernance-ci",
+      "target": null,
+      "target_kind": "keep",
+      "load_bearing": true,
+      "rationale": "RC1-024 (#454), round 10 de revue scellée : contraintes de version (PIP_CONSTRAINT) pour l'environnement ISOLÉ PEP 517 de python -m build — écrit à la main, PAS un lockfile pip-compile (pas de --require-hashes). Référencé en dur par .github/workflows/artefact-distribue.yml (variable d'environnement PIP_CONSTRAINT au niveau du job) et lu par scripts/rapport_composants.py pour rapporter la version RÉELLEMENT résolue du backend PEP 517 ; le déplacer ou le supprimer casserait le déterminisme du build ET l'exactitude du rapport de composants."
+    },
+    {
       "id": "evidence-reviews-root",
       "match": {
         "kind": "prefix",

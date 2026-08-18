@@ -1,0 +1,495 @@
+#!/usr/bin/env python3
+"""Génère le rapport des composants utilisés pour CONSTRUIRE les artefacts RC1.
+
+Pourquoi ce script : l'audit supply-chain EXT-029 exige la liste exhaustive des
+paquets Python (versions + licences) mobilisés pour construire les artefacts
+distribués RC1 (wheel/sdist) — et non celles du produit livré, qui reste stdlib
+pure (``dependencies = []`` dans ``pyproject.toml``). Quatre sources, vérifiées
+empiriquement, PLUS un signalement honnête d'un composant non épinglable
+(round 15) : ``requirements-ci.txt`` (lockfile à empreintes couvrant tout
+l'outillage CI/test/lint) ; ``pip``/``build==1.2.2.post1`` (installés en direct
+dans ``.github/workflows/artefact-distribue.yml``, hors lockfile — ``pip`` est
+l'outil qui installe tout le reste, round 13, sans dépendance propre, vendoring
+délibéré vérifié via PyPI ``requires_dist`` vide — SAUF le pip de BOOTSTRAP
+lui-même, fourni par ``actions/setup-python``, jamais épinglable par
+construction : signalé honnêtement avec une version explicitement non figée
+plutôt qu'omis, round 15) ET la fermeture des dépendances directes propres de
+``build`` (``pyproject_hooks``/``packaging`` — vérifié via l'API PyPI
+``requires_dist`` de la version exacte épinglée, pas supposé) ; le backend
+PEP 517 déclaré (``[build-system].requires``, ex. ``setuptools`` — build isolé
+rendu déterministe via ``PIP_CONSTRAINT``, ``requirements-build-constraints.txt``) ;
+le projet lui-même. Le rapport est non bloquant : il documente, il ne gate pas
+— même philosophie que
+``scripts/ruff_report.py``.
+"""
+
+from __future__ import annotations
+
+import argparse
+import importlib.metadata
+import json
+import re
+import sys
+from pathlib import Path
+from typing import Any
+
+# Repli non normalisé en ValueError (contrairement aux erreurs gérées dans
+# _charger_pyproject ci-dessous) : ce ModuleNotFoundError ne peut survenir que si
+# tomli est ABSENT sur Python <3.11, un scénario hors de l'environnement supporté
+# de ce script — requirements-ci.txt (lockfile CI à empreintes) garantit tomli
+# comme dépendance transitive de mypy, donc toujours présent quand ce script
+# tourne dans l'environnement pour lequel il est conçu (revue scellée round 4,
+# objection mineure non retenue pour ce motif).
+try:
+    import tomllib
+except ModuleNotFoundError:
+    import tomli as tomllib
+
+
+# Motif d'une ligne de paquet pip-compile : ``nom==version``, éventuellement suivi
+# d'un marqueur d'environnement ``; ...`` et/ou d'un ``\`` de continuation vers les
+# lignes ``--hash=sha256:...`` (ignorées car non ancrées en début de ligne).
+_MOTIF_PAQUET = re.compile(r"^([A-Za-z0-9_.-]+)(?:\[[^\]]*\])?==([^\s;\\]+)")
+
+
+def _parser_requirements(chemin: Path) -> list[tuple[str, str]]:
+    """Parse le lockfile pip-compile et retourne les couples (nom, version) triés.
+
+    Pourquoi une déduplication sur (nom, version) strictement identique : le
+    lockfile peut lister le MÊME paquet sous deux versions distinctes avec des
+    marqueurs d'environnement disjoints (ex. ``rpds-py``) — les deux versions
+    participent réellement au build selon la plateforme et doivent toutes deux
+    figurer au rapport. Seul un doublon exact est éliminé. Le tri par nom
+    (insensible à la casse) garantit une sortie déterministe et diff-stable.
+    """
+    try:
+        contenu = chemin.read_text(encoding="utf-8")
+    except FileNotFoundError as erreur:
+        raise ValueError(f"requirements introuvable : {str(chemin)!r}") from erreur
+    except (OSError, UnicodeError) as erreur:
+        raise ValueError(
+            f"requirements illisible {str(chemin)!r} : {erreur}"
+        ) from erreur
+
+    vues: set[tuple[str, str]] = set()
+    paquets: list[tuple[str, str]] = []
+    for ligne in contenu.splitlines():
+        correspondance = _MOTIF_PAQUET.match(ligne)
+        if correspondance is None:
+            continue
+        entree = (correspondance.group(1), correspondance.group(2))
+        if entree in vues:
+            continue
+        vues.add(entree)
+        paquets.append(entree)
+
+    paquets.sort(key=lambda element: element[0].lower())
+    return paquets
+
+
+def _licence_installee(nom: str) -> str:
+    """Extrait la licence d'un paquet installé, sans jamais deviner.
+
+    Pourquoi cet ordre de préférence (vérifié empiriquement sur ce dépôt) :
+    ``License-Expression`` (PEP 639, SPDX moderne) est le seul champ exposé par
+    ruff/pytest/mypy, tandis que pyyaml n'expose que le classifier historique —
+    les deux niveaux sont donc nécessaires. Le champ ``License`` brut sert de
+    dernier recours mais vaut souvent ``UNKNOWN``. Mieux vaut un « licence
+    inconnue » honnête qu'une licence inventée : un rapport d'audit qui devine
+    donne une illusion de conformité.
+    """
+    try:
+        metadonnees = importlib.metadata.metadata(nom)
+    except importlib.metadata.PackageNotFoundError:
+        return "licence inconnue (paquet non installé dans cet environnement)"
+
+    expression = metadonnees.get("License-Expression")
+    if expression:
+        return expression
+
+    for classifier in metadonnees.get_all("Classifier", []):
+        if classifier.startswith("License :: "):
+            return classifier[len("License :: "):]
+
+    licence_brute = metadonnees.get("License", "")
+    if licence_brute.strip() and licence_brute.strip().upper() != "UNKNOWN":
+        return licence_brute
+
+    return "licence inconnue (métadonnées absentes)"
+
+
+def _charger_pyproject(chemin: Path) -> dict[str, Any]:
+    """Charge ``pyproject.toml`` en normalisant toute erreur en ``ValueError``.
+
+    Pourquoi normaliser : ``main`` ne capture que ``ValueError`` (lecture) et
+    ``OSError`` (écriture) — convertir ici garantit qu'aucun traceback brut ne
+    fuite, quelle que soit la panne (fichier absent, illisible, TOML invalide).
+    """
+    try:
+        with chemin.open("rb") as flux:
+            return tomllib.load(flux)
+    except FileNotFoundError as erreur:
+        raise ValueError(f"pyproject.toml introuvable : {str(chemin)!r}") from erreur
+    except OSError as erreur:
+        raise ValueError(
+            f"pyproject.toml illisible {str(chemin)!r} : {erreur}"
+        ) from erreur
+    except tomllib.TOMLDecodeError as erreur:
+        raise ValueError(
+            f"pyproject.toml TOML invalide {str(chemin)!r} : {erreur}"
+        ) from erreur
+    except UnicodeDecodeError as erreur:
+        # Revue scellée round 12 (#454) : UnicodeDecodeError hérite DÉJÀ de
+        # ValueError (vérifié empiriquement — main() l'aurait donc capturée
+        # sans crash même sans ce bloc), mais SANS lui, le message brut de
+        # tomllib fuite tel quel au lieu du format normalisé homogène des
+        # autres erreurs ci-dessus — cohérence de message, pas correction
+        # d'un crash qui n'existait pas.
+        raise ValueError(
+            f"pyproject.toml encodage invalide {str(chemin)!r} : {erreur}"
+        ) from erreur
+
+
+def _entree_projet(racine: Path) -> dict[str, Any]:
+    """Construit l'entrée du produit livré lui-même, lue depuis ``pyproject.toml``.
+
+    Pourquoi valider chaque champ : le tri final porte sur ``nom.lower()`` — un
+    champ absent ou d'un type inattendu (ex. ``license`` en sous-objet
+    ``{text = ...}`` au lieu de la chaîne SPDX directe attendue ici) y
+    provoquerait un ``AttributeError`` brut. Échouer tôt en ``ValueError`` avec
+    un message explicite vaut mieux qu'un rapport silencieusement faussé.
+    """
+    donnees = _charger_pyproject(racine / "pyproject.toml")
+    projet = donnees.get("project")
+    if not isinstance(projet, dict):
+        raise ValueError("pyproject.toml : table 'project' absente ou invalide")
+
+    nom = projet.get("name")
+    version = projet.get("version")
+    licence = projet.get("license")
+    if not isinstance(nom, str) or not nom:
+        raise ValueError("pyproject.toml : champ 'project.name' absent ou invalide")
+    if not isinstance(version, str) or not version:
+        raise ValueError("pyproject.toml : champ 'project.version' absent ou invalide")
+    if not isinstance(licence, str) or not licence:
+        raise ValueError(
+            "pyproject.toml : champ 'project.license' absent ou invalide "
+            "(chaîne SPDX directe attendue)"
+        )
+
+    return {
+        "nom": nom,
+        "version": version,
+        "licence": licence,
+        "source": "pyproject.toml (produit livré, dependencies=[] — stdlib pure)",
+    }
+
+
+_MOTIF_NOM_SPECIFICATION = re.compile(r"^([A-Za-z0-9_.-]+)")
+
+
+# Licences vérifiées manuellement (API PyPI, round 11 de revue scellée, #454)
+# pour les paquets épinglés via requirements-build-constraints.txt.
+# _licence_installee() seul ne suffit PAS ici : il introspecte l'environnement
+# qui EXÉCUTE ce script, pas celui qui installe RÉELLEMENT le paquet via
+# PIP_CONSTRAINT (job CI distinct, artefact-distribue.yml — rapport-composants
+# n'installe jamais build-system.requires, cf. gates.yml). Un paquet épinglé
+# mais absent de cette table retombe sur l'introspection dynamique (honnête
+# « inconnue » si non installé localement plutôt qu'une valeur fictive) —
+# mêmes garanties que pour la VERSION ci-dessous.
+_LICENCES_BACKEND_EPINGLEES = {
+    "setuptools": "MIT",
+}
+
+# Licences vérifiées manuellement (API PyPI, round 13 de revue scellée, #454)
+# pour les outils épinglés DIRECTEMENT dans artefact-distribue.yml (par
+# opposition aux dépendances du backend PEP 517 ci-dessus, table séparée
+# car mécanisme de résolution différent : ici la version elle-même est déjà
+# un littéral en dur dans construire_rapport, pas lue depuis un fichier de
+# contraintes). Centralise ce qui était auparavant des littéraux dispersés
+# dans le code (objection mineure round 13 : pyproject_hooks n'avait aucune
+# table nommée/documentée, contrairement à setuptools) — un seul endroit à
+# vérifier/mettre à jour si les métadonnées PyPI de ces paquets changent.
+# Forme SPDX courte partout (round 14, objection mineure de cohérence) :
+# pyproject_hooks n'expose pas de License-Expression sur PyPI (seulement le
+# classifier "License :: OSI Approved :: MIT License"), mais la licence
+# RÉELLE reste MIT sans ambiguïté — normalisé ici à la même forme que
+# build/pip pour la lisibilité de l'audit, plutôt que de laisser deux
+# conventions différentes cohabiter dans la même table pour la même famille
+# de composants (build/pyproject_hooks/pip installés ensemble).
+_LICENCES_OUTILS_EPINGLES = {
+    "build": "MIT",
+    "pyproject_hooks": "MIT",
+    "pip": "MIT",
+}
+
+
+def _entrees_backend_build(racine: Path) -> list[dict[str, Any]]:
+    """Inventorie le backend PEP 517 déclaré dans ``[build-system].requires``.
+
+    Pourquoi (revue scellée round 9, #454) : ``python -m build``
+    (``artefact-distribue.yml``) effectue par défaut un build ISOLÉ — installe
+    SES PROPRES dépendances (``build-system.requires``, ex. ``setuptools``)
+    dans un environnement éphémère. Round 10 : un audit exige la version
+    RÉELLEMENT employée, pas seulement la contrainte déclarée — corrigé par
+    ``requirements-build-constraints.txt`` (``PIP_CONSTRAINT``, vérifié
+    empiriquement forcer une résolution déterministe SANS désactiver
+    l'isolation PEP 517, contrairement à ``--no-isolation`` qui changerait le
+    mécanisme de build lui-même). Ce fichier fait donc AUTORITÉ : la version
+    qu'il épingle pour un paquet donné est celle RÉELLEMENT résolue, rapportée
+    telle quelle (mêmes garanties que ``build``/``pyproject_hooks``/
+    ``packaging`` ci-dessus). Un paquet DÉCLARÉ dans ``build-system.requires``
+    mais ABSENT de ce fichier de contraintes retombe sur la contrainte
+    déclarée, honnêtement marquée « non résolue » plutôt qu'une valeur
+    inventée — signal clair d'un futur ajout non encore épinglé. Tolérant
+    (retourne une liste vide plutôt que lever) si ``[build-system]``/
+    ``requires`` est absent ou mal formé — contrairement à ``_entree_projet``
+    ci-dessus, cette entrée est un COMPLÉMENT d'inventaire, pas le cœur du
+    rapport.
+    """
+    try:
+        donnees = _charger_pyproject(racine / "pyproject.toml")
+    except ValueError:
+        return []
+
+    backend = donnees.get("build-system")
+    if not isinstance(backend, dict):
+        return []
+
+    specifications = backend.get("requires")
+    if not isinstance(specifications, list):
+        return []
+
+    try:
+        contraintes = dict(
+            _parser_requirements(racine / "requirements-build-constraints.txt")
+        )
+    except ValueError:
+        contraintes = {}
+
+    entrees: list[dict[str, Any]] = []
+    for specification in specifications:
+        if not isinstance(specification, str):
+            continue
+        correspondance = _MOTIF_NOM_SPECIFICATION.match(specification.strip())
+        if correspondance is None:
+            continue
+        nom = correspondance.group(1)
+        contrainte = specification.strip()[len(nom):].strip()
+
+        version_epinglee = contraintes.get(nom)
+        if version_epinglee is not None:
+            version = (
+                f"{version_epinglee} (épinglée via PIP_CONSTRAINT, "
+                "requirements-build-constraints.txt — résolution déterministe "
+                "vérifiée empiriquement)"
+            )
+            licence = _LICENCES_BACKEND_EPINGLEES.get(nom, _licence_installee(nom))
+        else:
+            version = (
+                f"contrainte déclarée {contrainte!r} — non résolue "
+                "(build isolé PEP 517, pip choisit la version à chaque "
+                "exécution)"
+                if contrainte
+                else "aucune contrainte déclarée — non résolue (build "
+                "isolé PEP 517, pip choisit la version à chaque exécution)"
+            )
+            licence = _licence_installee(nom)
+
+        entrees.append(
+            {
+                "nom": nom,
+                "version": version,
+                "licence": licence,
+                "source": "pyproject.toml [build-system].requires (backend PEP 517)",
+            }
+        )
+    return entrees
+
+
+def construire_rapport(racine: Path) -> dict[str, Any]:
+    """Construit le rapport complet des composants (fonction pure, aucune écriture).
+
+    Pourquoi quatre sources : le lockfile ``requirements-ci.txt`` couvre tout
+    l'outillage CI/test/lint ; ``build`` est l'unique outil externe installé hors
+    lockfile (épinglé en dur dans ``artefact-distribue.yml``) et c'est lui qui
+    construit RÉELLEMENT les artefacts — SA PROPRE fermeture de dépendances
+    directes est incluse (``pyproject_hooks``, absente du lockfile ;
+    ``packaging`` aussi mais déjà présente donc non dupliquée, ET désormais
+    épinglée dans ``artefact-distribue.yml`` — round 9 — pour que la version
+    rapportée soit garantie identique à celle réellement installée dans ce
+    job, pas seulement dans le job CI distinct ``rapport-composants``) pour
+    que l'inventaire ne s'arrête pas à l'outil épinglé lui-même ; le backend
+    PEP 517 déclaré (``[build-system].requires``, ex. ``setuptools`` — build
+    ISOLÉ par défaut, mais rendu déterministe depuis le round 10 via
+    ``PIP_CONSTRAINT``/``requirements-build-constraints.txt`` : version
+    RÉELLEMENT résolue rapportée quand ce fichier l'épingle, contrainte
+    déclarée honnête en repli sinon) ; le projet lui-même figure pour mémoire
+    afin de rappeler que le produit livré n'embarque aucune dépendance
+    runtime. Le tri final par nom (insensible à la casse) rend la sortie
+    déterministe.
+    """
+    composants: list[dict[str, Any]] = [
+        {
+            "nom": nom,
+            "version": version,
+            "licence": _licence_installee(nom),
+            "source": "requirements-ci.txt",
+        }
+        for nom, version in _parser_requirements(racine / "requirements-ci.txt")
+    ]
+    # Round 15 de revue scellée (#454) : pip==26.2.1 (entrée ci-dessous) ne devient
+    # actif qu'APRÈS avoir été installé — par le pip DÉJÀ présent, fourni par
+    # actions/setup-python (bootstrap flottant, hors contrôle de ce dépôt,
+    # jamais épinglable par construction : aucun outil ne peut installer une
+    # version de lui-même plus récente que celle qui existe déjà, cf.
+    # commentaire dans artefact-distribue.yml). Ce composant participe
+    # RÉELLEMENT à la construction (c'est lui qui exécute la toute première
+    # installation) : le signaler honnêtement, avec une version non figée
+    # plutôt que devinée, ferme le trou plutôt que de l'ignorer silencieusement.
+    composants.append(
+        {
+            "nom": "pip (bootstrap, avant mise à niveau)",
+            "version": (
+                "non figée — fournie par actions/setup-python (image du "
+                "runner GitHub Actions), hors contrôle de ce dépôt"
+            ),
+            "licence": _LICENCES_OUTILS_EPINGLES["pip"],
+            "source": (
+                "actions/setup-python (bootstrap implicite, exécute la "
+                "première installation avant tout pin de ce dépôt)"
+            ),
+        }
+    )
+    composants.append(
+        {
+            "nom": "pip",
+            "version": "26.2.1",
+            "licence": _LICENCES_OUTILS_EPINGLES["pip"],
+            "source": "artefact-distribue.yml (installation directe, hors requirements-ci.txt)",
+        }
+    )
+    composants.append(
+        {
+            "nom": "build",
+            "version": "1.2.2.post1",
+            "licence": _LICENCES_OUTILS_EPINGLES["build"],
+            "source": "artefact-distribue.yml (installation directe, hors requirements-ci.txt)",
+        }
+    )
+    # Fermeture des dépendances DIRECTES de build==1.2.2.post1 (requires_dist PyPI,
+    # vérifié empiriquement 2026-08-18) : packaging>=19.1 (inconditionnelle, déjà
+    # couverte par requirements-ci.txt — pas dupliquée ici) + pyproject_hooks
+    # (inconditionnelle, absente du lockfile — ajoutée ci-dessous) + 3 dépendances
+    # CONDITIONNELLES qui ne s'appliquent PAS à l'environnement réel de construction
+    # (ubuntu-latest, Python 3.12, artefact-distribue.yml) : colorama exige
+    # os_name=="nt" (Windows), importlib-metadata exige python_full_version<"3.10.2",
+    # tomli exige python_version<"3.11" — aucune des trois n'est vraie ici. packaging
+    # et pyproject_hooks n'ont eux-mêmes AUCUNE dépendance propre (vérifié PyPI) :
+    # fermeture complète à ce niveau, pas un arrêt arbitraire.
+    #
+    # Round 8 de revue scellée (#454) : une introspection dynamique ne rapporte
+    # rien d'utile dans le job CI réel (rapport-composants, gates.yml) qui
+    # n'installe ni build ni pyproject_hooks ni pip — l'inventaire publié
+    # aurait donc « version/licence inconnue » pour un composant réellement
+    # mobilisé par la construction. Corrigé en épinglant EXPLICITEMENT
+    # pyproject_hooks==1.2.0 dans artefact-distribue.yml (même job qui
+    # installe build), rendant cette version aussi vérifiable/reproductible
+    # que celle de build lui-même — valeur ci-dessous COPIÉE de ce pin,
+    # jamais introspectée ni devinée. Licence : voir _LICENCES_OUTILS_EPINGLES
+    # ci-dessus (round 13 — centralisée, plus un littéral isolé).
+    composants.append(
+        {
+            "nom": "pyproject_hooks",
+            "version": "1.2.0",
+            "licence": _LICENCES_OUTILS_EPINGLES["pyproject_hooks"],
+            "source": "artefact-distribue.yml (installation directe, hors requirements-ci.txt)",
+        }
+    )
+    composants.extend(_entrees_backend_build(racine))
+    composants.append(_entree_projet(racine))
+
+    composants.sort(key=lambda composant: composant["nom"].lower())
+
+    return {
+        "_schema": "rapport-composants-v1",
+        "_description": (
+            "Composants (paquets Python, versions et licences) utilisés pour "
+            "CONSTRUIRE les artefacts distribués RC1 (wheel/sdist) : outillage "
+            "de CI/dev/build uniquement. Le produit livré reste stdlib pure "
+            "(dependencies = [] dans pyproject.toml) — rien de tout cela n'est "
+            "une dépendance runtime du produit. La licence vaut « licence "
+            "inconnue » lorsque le paquet n'est pas installé dans "
+            "l'environnement d'exécution de ce script ou que ses métadonnées "
+            "n'exposent aucune information de licence."
+        ),
+        "nombre_composants": len(composants),
+        "composants": composants,
+    }
+
+
+def main(argv: list[str] | None = None) -> int:
+    """Génère le rapport JSON des composants RC1 et l'écrit sous ``--racine``."""
+    parser = argparse.ArgumentParser(
+        description=(
+            "Génère le rapport JSON des composants utilisés pour construire "
+            "les artefacts distribués RC1 (rapport non bloquant)."
+        )
+    )
+    parser.add_argument("--racine", default=".", help="racine du dépôt")
+    parser.add_argument(
+        "--sortie",
+        default="composants-rc1.json",
+        help=(
+            "fichier de sortie du rapport JSON (relatif à --racine, ou absolu à "
+            "condition de rester sous --racine une fois résolu)"
+        ),
+    )
+    arguments = parser.parse_args(argv)
+
+    racine = Path(arguments.racine)
+
+    # Deux façons distinctes de contourner « --sortie relatif à --racine » (revue scellée
+    # round 2, DeepSeek-V4-Pro-0813 et Qwen3.8-2.4T convergents), vérifiées empiriquement
+    # toutes les deux : (1) Path("/a") / "/b" == Path("/b") — un opérande ABSOLU à droite de
+    # l'opérateur pathlib « / » écrase silencieusement le côté gauche ; (2) un chemin RELATIF
+    # contenant des remontées ".." (ex. "../../etc/passwd") reste accepté par is_absolute()
+    # mais s'évade de --racine une fois résolu. Le SEUL garde-fou fiable contre les deux
+    # est de comparer le chemin RÉSOLU final à la racine résolue via is_relative_to() (stdlib
+    # ≥3.9) — is_absolute() seul (round 1) ne couvrait que le premier cas.
+    chemin = racine / arguments.sortie
+    if not chemin.resolve().is_relative_to(racine.resolve()):
+        print(
+            f"--sortie doit rester à l'intérieur de --racine, reçu un chemin qui s'en évade : "
+            f"{arguments.sortie!r}",
+            file=sys.stderr,
+        )
+        return 1
+
+    try:
+        rapport = construire_rapport(racine)
+    except ValueError as erreur:
+        print(str(erreur), file=sys.stderr)
+        return 1
+
+    # sort_keys=False : l'ordre des clés du dict est volontairement choisi dans
+    # construire_rapport (schéma, description, compteur, liste) — ne pas le retrier.
+    contenu = json.dumps(rapport, indent=2, ensure_ascii=False, sort_keys=False) + "\n"
+    try:
+        chemin.write_text(contenu, encoding="utf-8")
+    except OSError as erreur:
+        print(
+            f"impossible d'écrire le rapport {str(chemin)!r} : {erreur}",
+            file=sys.stderr,
+        )
+        return 1
+
+    print(
+        f"Rapport composants généré : {chemin} "
+        f"({rapport['nombre_composants']} composant(s))."
+    )
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
