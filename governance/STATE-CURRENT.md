@@ -14,7 +14,7 @@
     "sha256_recomputed_ok": true
   },
   "ci": {
-    "jobs_total": 26,
+    "jobs_total": 27,
     "workflows": 7
   },
   "cli": {
@@ -106,7 +106,7 @@
     },
     {
       "path": ".github/workflows/gates.yml",
-      "sha256": "0e86c5801e19a4df48ab7fb371356acfc4205e1ec5a56610ee42e29d4bdfdee3"
+      "sha256": "5164d2014383ad93de5bc0739c47af48e1fb3bdba6a487748cd2ee0b9f873ec3"
     },
     {
       "path": ".github/workflows/scope-guard.yml",
@@ -653,6 +653,10 @@
       "sha256": "26acbe97310ca531bd9cb6dc0df71d59f66a9877758b169e067114072be319d9"
     },
     {
+      "path": "tests/test_rapport_composants.py",
+      "sha256": "0d41f40b151b027c4480670624926f5995210b67c66263b87959d459c3b4235a"
+    },
+    {
       "path": "tests/test_ratelimit.py",
       "sha256": "f49b854e41d0fddedb54237307da60a63e5064d99c115f7d05c4c62839623a10"
     },
@@ -970,8 +974,8 @@
   },
   "tests": {
     "js_files": 3,
-    "python_files": 201,
-    "python_functions_declared": 2533
+    "python_files": 202,
+    "python_functions_declared": 2564
   }
 }
 ```
