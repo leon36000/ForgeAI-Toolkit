@@ -110,25 +110,6 @@ def _licence_installee(nom: str) -> str:
     return "licence inconnue (métadonnées absentes)"
 
 
-def _version_installee(nom: str) -> str:
-    """Extrait la version installée d'un paquet, sans jamais deviner (miroir de
-    ``_licence_installee`` ci-dessus, même logique de repli honnête).
-
-    Pourquoi (revue scellée round 7, #454) : une dépendance transitive de
-    ``build`` non verrouillée par un lockfile (ex. ``pyproject_hooks``) n'a pas
-    de version connue A PRIORI depuis les fichiers versionnés du dépôt — mais si
-    elle se trouve installée dans l'environnement qui exécute CE script (poste
-    de dev, ou tout environnement où ``build`` a été installé), l'introspection
-    donne la vraie version résolue plutôt qu'une étiquette statique. Absente
-    d'un tel environnement (cas du job CI ``rapport-composants``, qui n'installe
-    pas ``build``) : honnête « version inconnue » plutôt qu'une valeur inventée.
-    """
-    try:
-        return importlib.metadata.version(nom)
-    except importlib.metadata.PackageNotFoundError:
-        return "version inconnue (paquet non installé dans cet environnement)"
-
-
 def _charger_pyproject(chemin: Path) -> dict[str, Any]:
     """Charge ``pyproject.toml`` en normalisant toute erreur en ``ValueError``.
 
@@ -227,12 +208,22 @@ def construire_rapport(racine: Path) -> dict[str, Any]:
     # tomli exige python_version<"3.11" — aucune des trois n'est vraie ici. packaging
     # et pyproject_hooks n'ont eux-mêmes AUCUNE dépendance propre (vérifié PyPI) :
     # fermeture complète à ce niveau, pas un arrêt arbitraire.
+    #
+    # Round 8 de revue scellée (#454) : une introspection dynamique (comme pour
+    # build ci-dessus, dont seule la LICENCE reste introspectée) ne rapporte
+    # rien d'utile dans le job CI réel (rapport-composants, gates.yml) qui
+    # n'installe ni build ni pyproject_hooks — l'inventaire publié aurait donc
+    # « version/licence inconnue » pour un composant réellement mobilisé par la
+    # construction. Corrigé en épinglant EXPLICITEMENT pyproject_hooks==1.2.0
+    # dans artefact-distribue.yml (même job qui installe build), rendant cette
+    # version aussi vérifiable/reproductible que celle de build lui-même —
+    # valeur ci-dessous COPIÉE de ce pin, jamais introspectée ni devinée.
     composants.append(
         {
             "nom": "pyproject_hooks",
-            "version": _version_installee("pyproject_hooks"),
-            "licence": _licence_installee("pyproject_hooks"),
-            "source": "dépendance directe de build==1.2.2.post1 (PyPI requires_dist)",
+            "version": "1.2.0",
+            "licence": "OSI Approved :: MIT License",
+            "source": "artefact-distribue.yml (installation directe, hors requirements-ci.txt)",
         }
     )
     composants.append(_entree_projet(racine))

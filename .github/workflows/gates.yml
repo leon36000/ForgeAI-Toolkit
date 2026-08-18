@@ -333,7 +333,9 @@ jobs:
     # requirements-ci.txt, --require-hashes et --no-cache-dir (cohérence du lockfile unique) —
     # nom et version de `build` restent connus (épinglés en dur dans le script), seule sa
     # licence est rapportée comme « inconnue » ici faute d'installation, honnêtement plutôt
-    # qu'inventée.
+    # qu'inventée. Même traitement pour `pyproject_hooks` (dépendance directe de `build`,
+    # round 8 de revue scellée) : nom/version/licence en dur dans le script, copiés du pin
+    # explicite ajouté à artefact-distribue.yml — pas de gap ici, contrairement à `build`.
     runs-on: ubuntu-latest
     continue-on-error: true
     steps:

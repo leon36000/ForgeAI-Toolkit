@@ -25,7 +25,12 @@ jobs:
       - name: Construire le wheel et le sdist
         run: |
           # L'isolation installe le backend déclaré par pyproject.toml.
-          python -m pip install --no-cache-dir "build==1.2.2.post1"
+          # pyproject_hooks épinglé explicitement (round 8 de revue scellée,
+          # #454) : dépendance directe inconditionnelle de build, sinon
+          # laissée flottante (pip installerait la dernière version compatible
+          # au moment du run, jamais reproductible pour l'audit supply-chain
+          # EXT-029) -- scripts/rapport_composants.py reflète CE pin exact.
+          python -m pip install --no-cache-dir "build==1.2.2.post1" "pyproject_hooks==1.2.0"
           rm -rf dist
           python -m build --wheel --sdist --outdir dist
 

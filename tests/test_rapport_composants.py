@@ -240,19 +240,6 @@ def test_licence_installee_license_unknown_vaut_metadonnees_absentes() -> None:
         )
 
 
-def test_version_installee_paquet_reel_retourne_chaine_non_vide() -> None:
-    version = rc._version_installee("pytest")
-
-    assert isinstance(version, str)
-    assert version
-
-
-def test_version_installee_paquet_inexistant_retourne_message_sans_lever() -> None:
-    version = rc._version_installee("ce-paquet-nexiste-vraiment-pas-du-tout-12345")
-
-    assert version == "version inconnue (paquet non installé dans cet environnement)"
-
-
 def test_construire_rapport_structure_schema_compteur_et_tri(tmp_path: Path) -> None:
     _preparer_racine(
         tmp_path,
@@ -306,20 +293,21 @@ def test_construire_rapport_entree_pyproject_hooks_toujours_presente(
     #454) : packaging est déjà couvert par requirements-ci.txt (non dupliqué,
     voir test dédié ci-dessous) ; pyproject_hooks est la seule dépendance
     directe inconditionnelle de build absente du lockfile — doit apparaître.
+    Version/licence en dur (round 8) : épinglées explicitement dans
+    artefact-distribue.yml au même titre que build, jamais introspectées —
+    aucun mock nécessaire, valeurs identiques quel que soit l'hôte de test.
     """
     _preparer_racine(tmp_path, requirements="alpha-factice==1.0\n")
 
-    # Version introspectée dynamiquement (round 7, _version_installee) — mockée
-    # ici pour un résultat déterministe indépendant de l'hôte qui exécute le test
-    # (pyproject_hooks peut ou non être installé selon la machine).
-    with mock.patch.object(rc, "_version_installee", return_value="1.2.0"):
-        rapport = rc.construire_rapport(tmp_path)
+    rapport = rc.construire_rapport(tmp_path)
     par_nom = _par_nom(rapport)
 
-    assert par_nom["pyproject_hooks"]["source"] == (
-        "dépendance directe de build==1.2.2.post1 (PyPI requires_dist)"
-    )
     assert par_nom["pyproject_hooks"]["version"] == "1.2.0"
+    assert par_nom["pyproject_hooks"]["licence"] == "OSI Approved :: MIT License"
+    assert (
+        par_nom["pyproject_hooks"]["source"]
+        == "artefact-distribue.yml (installation directe, hors requirements-ci.txt)"
+    )
 
 
 def test_construire_rapport_packaging_du_lockfile_non_duplique_par_la_fermeture(
