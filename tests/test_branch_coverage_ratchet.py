@@ -441,6 +441,30 @@ def test_main_regenerer_baseline_rapport_sans_files_echoue(
     assert code == 1
 
 
+def test_main_regenerer_baseline_categorie_sans_fichier_refuse(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """Round 8 de revue scellée (#451, objection mineure fondée) : --regenerer-baseline ne doit
+    jamais écrire un seuil de 100% factice pour une catégorie sans aucun fichier matché — le
+    mode normal la rejetterait aussitôt après, la régénération doit échouer AVANT d'écrire."""
+    _ecrire_categories(tmp_path, _categories_deux())
+    _ecrire_baseline(tmp_path, _baseline_deux())
+    _ecrire_rapport_fichier(tmp_path, _rapport({
+        "src/forgeai/deploy/a.py": _fichier_summary(10, 1),
+    }))
+    ancien_contenu = (tmp_path / "governance" / "branch-coverage-baseline.json").read_text(encoding="utf-8")
+    code = branch_coverage_ratchet.main([
+        "--racine", str(tmp_path),
+        "--sortie-json", str(tmp_path / "branch-coverage.json"),
+        "--regenerer-baseline",
+    ])
+    assert code == 1
+    err = capsys.readouterr().err
+    assert "securite" in err
+    nouveau_contenu = (tmp_path / "governance" / "branch-coverage-baseline.json").read_text(encoding="utf-8")
+    assert nouveau_contenu == ancien_contenu
+
+
 def test_main_regenerer_baseline_amorcage_sans_seuils_existants(tmp_path: Path) -> None:
     _ecrire_categories(tmp_path, _categories_deux())
     baseline_initiale = {

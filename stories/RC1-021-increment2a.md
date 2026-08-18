@@ -230,6 +230,20 @@ signalée. 2 nouveaux tests dédiés couvrant les deux sens symétriquement
 (`test_main_reference_git_nouvelle_categorie_locale_pas_bloquante`,
 `test_main_reference_git_categorie_disparue_localement_bloquante`).
 
+## Round 8 de revue scellée — REJECT 2/3 APPROVE, 0 objection bloquante (4e round consécutif où
+GPT-5.6-Terra-Pro REJECT sans aucune objection majeure/critique — pattern désormais établi pour
+ce reviewer précis sur cette story, rounds 3/4/6/8)
+
+Qwen3.8-2.4T + MiMo-V2.5-Pro (pool de rotation, DeepSeek en échec de route persistant depuis
+plusieurs rounds) APPROVE. 4 objections mineures de GPT-Terra : 1 fondée et corrigée
+(asymétrie `--regenerer-baseline`/mode normal sur une catégorie sans fichier matché — la
+régénération pouvait écrire un seuil de 100% factice que le mode normal rejetterait aussitôt
+après ; corrigé par la même garde dans `_regenerer_baseline`, échec AVANT toute écriture,
+fichier baseline inchangé en cas de refus, nouveau test dédié) ; 3 non retenues (comportement de
+`gate_git_ref.py` non modifié par cette PR, déjà établi et testé ; couverture de test déjà
+documentée comme suffisante rounds précédents ; absence de la sortie de mesure dans le diff —
+limitation structurelle du format de revue, déjà vérifiée empiriquement et documentée).
+
 ## Hors périmètre (incrément 2b, story distincte)
 
 Campagne de mutation ciblée sur les gardes/compensations, disposition de chaque mutant survivant,

@@ -211,6 +211,16 @@ def _regenerer_baseline(
         if not isinstance(donnees.get("files"), dict):
             raise ValueError(f"le rapport de couverture {str(sortie_json)!r} ne contient pas de clé 'files' valide")
         couverture = calculer_couverture_par_categorie(donnees, categories)
+        # Round 8 de revue scellée (#451, objection mineure fondée) : même garde qu'en mode
+        # normal (main(), plus bas) — une catégorie sans AUCUN fichier réellement matché ne doit
+        # jamais être écrite avec un seuil de 100% factice ; sans ce contrôle, --regenerer-
+        # baseline pouvait produire une baseline que le mode normal rejetterait aussitôt après.
+        sans_fichier = sorted(cat for cat in categories if not couverture[cat]["fichiers"])
+        if sans_fichier:
+            raise ValueError(
+                f"catégorie(s) sans aucun fichier matché, refus de régénérer une baseline "
+                f"factice : {sans_fichier} — vérifier governance/branch-coverage-categories.json"
+            )
         nouveaux_seuils: dict[str, float] = {}
         for cat in sorted(categories):
             nouveaux_seuils[cat] = float(couverture[cat]["percent_branches_covered"])
