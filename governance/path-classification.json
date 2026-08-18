@@ -6842,8 +6842,8 @@
         }
       ],
       "rule_id": "evidence-registres-root",
-      "sha256": "86442c2f7acacbf040a7f64372d218afe88c583d78d6299bda1e15bd7a9d8af0",
-      "size": 396139,
+      "sha256": "33d79c6f432338963d5217651526b5745c21ae1a99522e3d7e07d9fe604b7776",
+      "size": 397089,
       "target_path": null,
       "type": "text"
     },
@@ -8803,8 +8803,8 @@
         }
       ],
       "rule_id": "evidence-reviews-root",
-      "sha256": "8d6776cb0718a4587e943d91463bc562a3df32b38fbaf046889f5566fa16fbfd",
-      "size": 2883,
+      "sha256": "478ed8d9c25506c568d47bac617e852852ac04989affad772a10a6cd4b2d4310",
+      "size": 2884,
       "target_path": null,
       "type": "text"
     },
@@ -21351,6 +21351,58 @@
       "generated": false,
       "load_bearing": true,
       "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-024-v18/GPT-5.6-Terra-Pro.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "68443324aa14c08ca15a27113946c34a8b4784b073b17ffd7927df42c2454e89",
+      "size": 334,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-024-v18/Kimi-2.7.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "9bc87e9d43788dcec4e92c6b4b14b439da36f958ba477e47748eb00904bee33b",
+      "size": 317,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-024-v18/MiMo-V2.5-Pro.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "abd6b5400aba1f6953764258c7d565e4935d6ca05678cc5051410b2d7360efb0",
+      "size": 1385,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-024-v18/RECU.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": null,
+      "size": null,
+      "target_path": null,
+      "type": null
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
       "path": "evidence/reviews/RC1-024-v3/DeepSeek-V4-Pro-0813.verdict.json",
       "referenced_by": [],
       "rule_id": "evidence-reviews-root",
@@ -30044,6 +30096,20 @@
       "owner": "gouvernance-config",
       "path": "governance/sonar-suppressions.json",
       "referenced_by": [
+        {
+          "candidate": "governance/sonar-suppressions.json",
+          "line": 7,
+          "referrer": "evidence/reviews/RC1-024-v18/MiMo-V2.5-Pro.verdict.json",
+          "resolved": "governance/sonar-suppressions.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/sonar-suppressions.json",
+          "line": 8,
+          "referrer": "evidence/reviews/RC1-024-v18/MiMo-V2.5-Pro.verdict.json",
+          "resolved": "governance/sonar-suppressions.json",
+          "severity": "hard"
+        },
         {
           "candidate": "governance/sonar-suppressions.json",
           "line": 14,
@@ -54925,6 +54991,20 @@
       "owner": "test-suite",
       "path": "tests/test_rapport_composants.py",
       "referenced_by": [
+        {
+          "candidate": "tests/test_rapport_composants.py",
+          "line": 7,
+          "referrer": "evidence/reviews/RC1-024-v18/MiMo-V2.5-Pro.verdict.json",
+          "resolved": "tests/test_rapport_composants.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "tests/test_rapport_composants.py",
+          "line": 8,
+          "referrer": "evidence/reviews/RC1-024-v18/MiMo-V2.5-Pro.verdict.json",
+          "resolved": "tests/test_rapport_composants.py",
+          "severity": "hard"
+        },
         {
           "candidate": "tests/test_rapport_composants.py",
           "line": 72,
@@ -97786,6 +97866,16 @@
         "candidate": "recu-revue/1",
         "line": 2,
         "referrer": "evidence/reviews/RC1-023/RECU.json"
+      },
+      {
+        "candidate": "stories/RC1-024.md",
+        "line": 6,
+        "referrer": "evidence/reviews/RC1-024-v18/MiMo-V2.5-Pro.verdict.json"
+      },
+      {
+        "candidate": "recu-revue/1",
+        "line": 2,
+        "referrer": "evidence/reviews/RC1-024-v18/RECU.json"
       },
       {
         "candidate": "recu-revue/1",
@@ -147185,10 +147275,10 @@
         "severity": "hard"
       },
       {
-        "candidate": "RC1-024-v3",
+        "candidate": "RC1-024-v18",
         "line": 212,
         "referrer": "evidence/reviews/BINDING.txt",
-        "resolved": "evidence/reviews/RC1-024-v3",
+        "resolved": "evidence/reviews/RC1-024-v18",
         "severity": "hard"
       },
       {
@@ -162169,6 +162259,34 @@
         "line": 8,
         "referrer": "evidence/reviews/RC1-022-v9/GPT-5.6-Terra-Pro.verdict.json",
         "resolved": "tests/test_rel038b_unicite.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "tests/test_rapport_composants.py",
+        "line": 7,
+        "referrer": "evidence/reviews/RC1-024-v18/MiMo-V2.5-Pro.verdict.json",
+        "resolved": "tests/test_rapport_composants.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "governance/sonar-suppressions.json",
+        "line": 7,
+        "referrer": "evidence/reviews/RC1-024-v18/MiMo-V2.5-Pro.verdict.json",
+        "resolved": "governance/sonar-suppressions.json",
+        "severity": "hard"
+      },
+      {
+        "candidate": "tests/test_rapport_composants.py",
+        "line": 8,
+        "referrer": "evidence/reviews/RC1-024-v18/MiMo-V2.5-Pro.verdict.json",
+        "resolved": "tests/test_rapport_composants.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "governance/sonar-suppressions.json",
+        "line": 8,
+        "referrer": "evidence/reviews/RC1-024-v18/MiMo-V2.5-Pro.verdict.json",
+        "resolved": "governance/sonar-suppressions.json",
         "severity": "hard"
       },
       {
@@ -177299,7 +177417,7 @@
     "by_class": {
       "ARCHIVE": 44,
       "DOCS": 18,
-      "EVIDENCE": 1633,
+      "EVIDENCE": 1637,
       "GENERATED": 5,
       "GOVERNANCE": 205,
       "PRODUCT": 113,
@@ -177318,7 +177436,7 @@
       "evidence-audit-output-root": 18,
       "evidence-dedup-root": 2,
       "evidence-registres-root": 35,
-      "evidence-reviews-root": 1578,
+      "evidence-reviews-root": 1582,
       "generated-authority-map": 1,
       "generated-path-classification-json": 1,
       "generated-path-classification-markdown": 1,
@@ -177355,11 +177473,11 @@
       "working-sandbox-readme": 1
     },
     "case_collisions_total": 0,
-    "dangling_references_total": 17227,
+    "dangling_references_total": 17229,
     "generated_total": 9,
-    "load_bearing_total": 2102,
+    "load_bearing_total": 2106,
     "portability_violations_total": 0,
-    "tracked_total": 2245,
+    "tracked_total": 2249,
     "unclassified_total": 0,
     "unicode_anomalies_total": 0
   },
