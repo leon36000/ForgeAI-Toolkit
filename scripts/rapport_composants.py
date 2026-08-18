@@ -22,6 +22,13 @@ import sys
 from pathlib import Path
 from typing import Any
 
+# Repli non normalisé en ValueError (contrairement aux erreurs gérées dans
+# _charger_pyproject ci-dessous) : ce ModuleNotFoundError ne peut survenir que si
+# tomli est ABSENT sur Python <3.11, un scénario hors de l'environnement supporté
+# de ce script — requirements-ci.txt (lockfile CI à empreintes) garantit tomli
+# comme dépendance transitive de mypy, donc toujours présent quand ce script
+# tourne dans l'environnement pour lequel il est conçu (revue scellée round 4,
+# objection mineure non retenue pour ce motif).
 try:
     import tomllib
 except ModuleNotFoundError:
@@ -217,7 +224,10 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument(
         "--sortie",
         default="composants-rc1.json",
-        help="fichier de sortie du rapport JSON (relatif à --racine)",
+        help=(
+            "fichier de sortie du rapport JSON (relatif à --racine, ou absolu à "
+            "condition de rester sous --racine une fois résolu)"
+        ),
     )
     arguments = parser.parse_args(argv)
 

@@ -138,3 +138,13 @@ de numéros de ligne suite à l'édition des docstrings (governance/PATH-CLASSIF
 référence pas les lignes précises, donc inchangé pour ce commit précis). L'issue #450 et le
 scratchpad de story documentent déjà le
 contexte complet de cet incrément ; aucune doc utilisateur supplémentaire concernée.
+
+scripts/rapport_composants.py (RC1-024/#454, correctif round 4 de revue scellée — objections
+mineures uniquement, l'objection majeure bloquante était sur evidence/reviews/BINDING.txt, pas
+sur ce script) : aide argparse --sortie reformulée pour refléter le comportement déjà en place
+depuis le round 2 (garde is_relative_to() acceptant aussi un chemin absolu tant qu'il reste sous
+--racine) ; commentaire ajouté au-dessus du repli d'import tomli expliquant pourquoi son
+ModuleNotFoundError n'est délibérément pas normalisé (scénario hors de l'environnement supporté,
+requirements-ci.txt garantit tomli présent). Aucun changement de comportement observable, 34/34
+tests inchangés. L'issue #454 et le scratchpad de story documentent déjà le contexte complet ;
+aucune doc utilisateur supplémentaire concernée pour ce correctif.
