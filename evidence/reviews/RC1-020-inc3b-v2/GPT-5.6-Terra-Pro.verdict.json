@@ -1,0 +1,19 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "majeure",
+   "fichier": "scripts/ruff_noqa_gate.py",
+   "description": "Le scanner traite toute sous-chaîne `# noqa:` trouvée dans le texte brut d'un fichier Python comme une suppression, y compris dans les docstrings et les commentaires explicatifs du script lui-même. Il ne distingue donc pas les directives noqa effectives des exemples documentaires. Cela a déjà produit une occurrence parasite dans la baseline et contredit le livrable annoncé, qui devait grand-père uniquement les quatre occurrences légitimes présentes sur `origin/main`.",
+   "preuve": "`noqa_non_conformes` lit chaque fichier avec `read_text`, puis applique `MOTIF_CODE_NOQA.search(ligne)` à chaque ligne sans analyse lexicale (scripts/ruff_noqa_gate.py, lignes 155-161). Le script contient lui-même des exemples textuels tels que `# noqa: F401, F841` dans son commentaire de définition du motif (lignes 55-59). La baseline générée déclare pourtant `total_occurrences: 5` et ajoute `scripts/ruff_noqa_gate.py: 1` en plus des quatre fichiers explicitement listés dans la story (governance/ruff-noqa-baseline.json, lignes 6-14)."
+  }
+ ],
+ "date_heure": "2026-08-17T23:35:27.280102+00:00",
+ "prompt_sha256": "7989a582280e484afee4c82229e7a95b716757076ddd9f1a4158f8d433495a9f",
+ "reviewer_model": "GPT-5.6-Terra-Pro",
+ "modele_servi": "gpt56-terra-pro-openrouter",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

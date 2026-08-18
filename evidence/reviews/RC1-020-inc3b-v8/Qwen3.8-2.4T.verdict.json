@@ -1,0 +1,31 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "scripts/ruff_noqa_gate.py",
+   "description": "Les fichiers illisibles ou non tokenizables sont ignorés sans anomalie, ce qui peut masquer des suppressions non conformes si un fichier devient invalide juste avant ce cliquet.",
+   "preuve": "noqa_non_conformes : `except OSError: continue` puis `except (tokenize.TokenError, SyntaxError, IndentationError, UnicodeDecodeError, ValueError): continue`."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "scripts/ruff_noqa_gate.py",
+   "description": "Le filtre « commentaire pur » ignore tout commentaire dont la ligne physique n'a pas de code avant `#`; des cas limites de directives noqa dans des lignes de continuation ne sont pas vérifiables dans le diff.",
+   "preuve": "noqa_non_conformes : `if not tok.line[: tok.start[1]].strip(): continue`."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "governance/ruff-noqa-baseline.json",
+   "description": "L'exactitude des 4 occurrences grand-parentées n'est pas vérifiable dans le diff car les fichiers sources existants concernés ne sont pas montrés.",
+   "preuve": "Baseline : `\"total_occurrences\": 4` et entrées `src/forgeai/audit/immudb.py`, `src/forgeai/cli.py`, `src/forgeai/observability/langfuse.py`, `src/forgeai/secrets/vault.py` sans diff de ces occurrences."
+  }
+ ],
+ "date_heure": "2026-08-18T01:20:25.993894+00:00",
+ "prompt_sha256": "727c0cbdc6dca5fe5e200e3ad0891881cd637a786d05bf91defeeaa39a837d50",
+ "reviewer_model": "Qwen3.8-2.4T",
+ "modele_servi": "b9de6bc895fe95ccacf7d9fa9b1cf29ca44d34f03e249738f325c9dee3790b78",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

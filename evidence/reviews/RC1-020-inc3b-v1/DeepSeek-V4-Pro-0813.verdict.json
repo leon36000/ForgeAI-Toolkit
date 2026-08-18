@@ -1,0 +1,25 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "critique",
+   "fichier": "scripts/ruff_noqa_gate.py",
+   "description": "Le cliquet ne vérifie que la présence du motif de date de révision, pas la présence d'une justification locale non vide. Une ligne `# noqa: ARG001 (révision: 2027-01-01)` sans aucune justification serait mesurée comme conforme, ce qui ne satisfait pas le critère d'acceptation « exceptions avec justification locale et date de révision ».",
+   "preuve": "Dans `noqa_non_conformes`, l'unique condition de non-conformité est `if MOTIF_DATE_REVISION.search(ligne) is None:` (ligne 166). Aucun test de justification n'existe; le docstring confirme « Absence du motif de date → une occurrence NON CONFORME »."
+  },
+  {
+   "severite": "majeure",
+   "fichier": "scripts/ruff_noqa_gate.py",
+   "description": "Le motif `MOTIF_CODE_NOQA` ne capture que le premier code après `noqa:` et ignore les codes suivants sur la même ligne. Une suppression multi-code valide comme `# noqa: E501, ARG001` sans date voit `E501` capturé, est ignorée car hors règles surveillées, et la suppression de `ARG001` échappe au cliquet.",
+   "preuve": "`MOTIF_CODE_NOQA = re.compile(r\"#\\s*noqa:\\s*([A-Za-z]+\\d+)\")` (ligne 58), puis `if correspondance.group(1).upper() not in codes_surveilles: continue` (ligne 164)."
+  }
+ ],
+ "date_heure": "2026-08-17T23:18:43.172239+00:00",
+ "prompt_sha256": "7c1e64c22df7e24bc4df168acaaa33dd37568f86d543621e5abde8bf3323f830",
+ "reviewer_model": "DeepSeek-V4-Pro-0813",
+ "modele_servi": "1cbd427d85a4593a157a49bb0ad51ededb429b85aca980b3b23cd445246b9fcb",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

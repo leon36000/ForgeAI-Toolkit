@@ -1,0 +1,31 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "scripts/ruff_noqa_gate.py",
+   "description": "La date de révision est validée uniquement par forme regex puis parseur ISO, mais aucune vérification d'expiration (date dans le futur) n'est effectuée. Le contexte indique explicitement « amélioration possible pour une itération future, hors mandat » — cohérent, mais cela laisse passer des suppressions avec des dates déjà révolues, réduisant la portée du garde-fou dans le temps.",
+   "preuve": "scripts/ruff_noqa_gate.py, fonction noqa_non_conformes : `date.fromisoformat(correspondance_date.group(1))` valide la forme calendaire (ligne ~287) ; aucun test de comparaison avec `date.today()` n'existe nulle part."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "scripts/ruff_noqa_gate.py",
+   "description": "Les fichiers Python illisibles (OSError) ou non tokenizables (TokenError, SyntaxError, etc.) sont traités silencieusement comme ayant 0 occurrence non conforme via un `continue`. Un fichier corrompu ou dont l'encodage PEP-263 est invalide masque ainsi toute suppression non conforme qu'il contient. Le contexte documente ce choix de conception (aligné sur ruff_ratchet.py/mypy_gate.py) et justifie que d'autres gates détectent les fichiers non compilables en amont — acceptable, mais constitue un angle mort reconnu.",
+   "preuve": "scripts/ruff_noqa_gate.py, noqa_non_conformes : `except (OSError): continue` (lecture brut) et `except (tokenize.TokenError, SyntaxError, IndentationError, UnicodeDecodeError, ValueError): continue` (tokenisation)."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "governance/ruff-noqa-baseline.json",
+   "description": "La baseline commitée contient exactement 4 occurrences (immudb.py, cli.py, langfuse.py, vault.py), conformément au contexte. Les verdicts JSON v2 des reviewers (Qwen3.8-2.4T, GPT-5.6-Terra-Pro) mentionnent une baseline à 5 occurrences incluant scripts/ruff_noqa_gate.py — indiquant qu'une itération intermédiaire a compté un faux positif (commentaire documentaire du script lui-même). Le problème semble avoir été corrigé entre les reviews v2 et le commit final (la baseline livrée n'inclut pas le script), mais les preuves dans evidence/ référencent un état antérieur, ce qui peut induire une confusion lors d'une audit trail.",
+   "preuve": "governance/ruff-noqa-baseline.json (commité) : 4 occurrences, pas de scripts/ruff_noqa_gate.py. evidence/reviews/RC1-020-inc3b-v2/Qwen3.8-2.4T.verdict.json : « total_occurrences=5 et scripts/ruff_noqa_gate.py=1 ». evidence/reviews/RC1-020-inc3b-v2/GPT-5.6-Terra-Pro.verdict.json : même observation."
+  }
+ ],
+ "date_heure": "2026-08-18T01:20:18.761697+00:00",
+ "prompt_sha256": "727c0cbdc6dca5fe5e200e3ad0891881cd637a786d05bf91defeeaa39a837d50",
+ "reviewer_model": "MiMo-V2.5-Pro",
+ "modele_servi": "mimo-v25-pro-openrouter",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}
