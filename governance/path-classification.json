@@ -298,8 +298,8 @@
       "path": ".docs-exempt",
       "referenced_by": [],
       "rule_id": "governance-docs-exempt",
-      "sha256": "70486cc4b0d5dd6ec6123d511ff6012b60bf0c48109925cf54cb357fce1ae7e1",
-      "size": 9696,
+      "sha256": "5e3ccb62a98404b6e16078f187fe6c1a64f1d0ba971b16dbeec33e2099b78e03",
+      "size": 10623,
       "target_path": null,
       "type": "text"
     },

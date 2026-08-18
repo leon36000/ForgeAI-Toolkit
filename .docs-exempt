@@ -129,8 +129,12 @@ reformulation PURE de docstrings internes (règle de justification exprimée par
 critère de rejet plutôt que par une permissivité générale suivie d'une exception, ambiguë et
 source d'une objection majeure convergente sur 2 rounds de revue) — aucun changement de
 comportement, aucune interface CLI ni contrat observable modifié, 54/54 tests déjà verts
-inchangés. Ce commit ne touche exceptionnellement aucun fichier `.md` (seul
-governance/path-classification.json bouge, par décalage de numéros de ligne suite à l'édition
-des docstrings — governance/PATH-CLASSIFICATION.md reste inchangé car son contenu résumé ne
-référence pas les lignes précises). L'issue #450 et le scratchpad de story documentent déjà le
+inchangés. Précision (note mineure de revue, round 7 : le diff CUMULÉ de la branche vs
+origin/main contient bien des modifications aux .md générés — apportées par des COMMITS
+ANTÉRIEURS de cette même branche, chacun déjà couvert par sa propre entrée ci-dessus) : SEUL
+CE commit précis (round 6, HEAD au moment de l'écriture de cette entrée) ne touche aucun
+fichier `.md` — seul governance/path-classification.json bouge DANS CE COMMIT, par décalage
+de numéros de ligne suite à l'édition des docstrings (governance/PATH-CLASSIFICATION.md ne
+référence pas les lignes précises, donc inchangé pour ce commit précis). L'issue #450 et le
+scratchpad de story documentent déjà le
 contexte complet de cet incrément ; aucune doc utilisateur supplémentaire concernée.
