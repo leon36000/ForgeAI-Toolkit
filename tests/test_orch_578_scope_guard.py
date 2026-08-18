@@ -6,10 +6,10 @@ from pathlib import Path
 
 REPO = Path(__file__).resolve().parent.parent
 spec = importlib.util.spec_from_file_location(
-    "reviews_gate", REPO / "scripts" / "reviews_gate.py"
+    "scope_guard", REPO / "scripts" / "coordination" / "scope_guard.py"
 )
-gate = importlib.util.module_from_spec(spec)
-spec.loader.exec_module(gate)
+guard = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(guard)
 
 
 def _small_metrics() -> dict[str, int]:
@@ -26,7 +26,7 @@ def _small_metrics() -> dict[str, int]:
 
 
 def test_scope_guard_accepte_une_petite_pr():
-    ok, report = gate.evaluate_scope(_small_metrics())
+    ok, report = guard.evaluate_scope(_small_metrics())
     assert ok is True, report
 
 
@@ -41,7 +41,7 @@ def test_scope_guard_bloque_le_profil_runaway_rc1_015():
         "story_churn": 4220,
         "generated_churn": 202651,
     }
-    ok, report = gate.evaluate_scope(metrics)
+    ok, report = guard.evaluate_scope(metrics)
     assert ok is False
     texte = "\n".join(report)
     for signal in ("ahead", "behind", "substantive", "fichier", "tests", "story", "généré"):
@@ -49,18 +49,18 @@ def test_scope_guard_bloque_le_profil_runaway_rc1_015():
 
 
 def test_rounds_1_et_2_sont_automatiques():
-    assert gate.review_round_policy(1) == (True, "AUTO")
-    assert gate.review_round_policy(2) == (True, "AUTO")
+    assert guard.review_round_policy(1) == (True, "AUTO")
+    assert guard.review_round_policy(2) == (True, "AUTO")
 
 
 def test_round_3_exige_un_replan_explicite():
-    assert gate.review_round_policy(3, replanned=False)[0] is False
-    assert gate.review_round_policy(3, replanned=True) == (True, "REPLAN")
+    assert guard.review_round_policy(3, replanned=False)[0] is False
+    assert guard.review_round_policy(3, replanned=True) == (True, "REPLAN")
 
 
 def test_round_4_et_plus_sont_toujours_refuses():
-    assert gate.review_round_policy(4, replanned=True)[0] is False
-    assert gate.review_round_policy(120, replanned=True)[0] is False
+    assert guard.review_round_policy(4, replanned=True)[0] is False
+    assert guard.review_round_policy(120, replanned=True)[0] is False
 
 
 def test_collecte_scope_parse_numstat_et_separe_genere():
@@ -77,7 +77,7 @@ def test_collecte_scope_parse_numstat_et_separe_genere():
             )
         raise AssertionError(command)
 
-    metrics = gate.collect_scope_metrics("origin/main", "HEAD", runner=runner)
+    metrics = guard.collect_scope_metrics("origin/main", "HEAD", runner=runner)
     assert metrics == {
         "ahead": 4,
         "behind": 6,
@@ -88,3 +88,11 @@ def test_collecte_scope_parse_numstat_et_separe_genere():
         "story_churn": 30,
         "generated_churn": 903,
     }
+
+
+def test_quantitative_guard_ne_depend_pas_d_un_claim_archive():
+    metrics = _small_metrics()
+    ok, _ = guard.evaluate_scope(metrics)
+    assert ok is True
+    # Le guard quantitatif reste applicable même si aucun claim JSON historique n'existe.
+    assert guard.find_claim_for_branch([], "feature/sans-claim-json") is None
