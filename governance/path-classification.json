@@ -298,8 +298,8 @@
       "path": ".docs-exempt",
       "referenced_by": [],
       "rule_id": "governance-docs-exempt",
-      "sha256": "04e35df7b690a63d00eac0dc396eee4d250a3bc6408ecc25a0229e2122acddad",
-      "size": 12726,
+      "sha256": "af6187c696588302812a5dcccf08228ae84d031bd51a79bb2ab09d98d987c906",
+      "size": 13377,
       "target_path": null,
       "type": "text"
     },
@@ -30102,7 +30102,7 @@
         }
       ],
       "rule_id": "governance-core",
-      "sha256": "14f0eac7bc80ff4d06192bf4c33e462efbd6400aafdeea74bd1514d825caf839",
+      "sha256": "2bba2699f3331ce001e937f9bf7164306c74e0ea17f2689d5147f2349b107469",
       "size": 33471,
       "target_path": null,
       "type": "text"
@@ -33791,8 +33791,8 @@
         }
       ],
       "rule_id": "governance-scripts-root",
-      "sha256": "a065d54b57edb953ab3434ec0069a6b01356fd719e54cf80034a6da8d43f4582",
-      "size": 13559,
+      "sha256": "515bc93a81efab3fe55887e061019f6bbc3088aa95e57a9e321988a553579457",
+      "size": 14576,
       "target_path": null,
       "type": "text"
     },
@@ -54907,8 +54907,8 @@
         }
       ],
       "rule_id": "test-suite",
-      "sha256": "bf07f3fda55986fad239d6c67e476dcf69f430cd065fa38e0caaf62dea433370",
-      "size": 17668,
+      "sha256": "acf9d59261261494bbd6760eefafb661b7e3ca136ff90cf5f31ecfeb9132326c",
+      "size": 18417,
       "target_path": null,
       "type": "text"
     },
@@ -104439,42 +104439,42 @@
       },
       {
         "candidate": "CI/test/lint",
-        "line": 174,
+        "line": 193,
         "referrer": "scripts/rapport_composants.py"
       },
       {
         "candidate": "artefact-distribue.yml",
-        "line": 175,
+        "line": 194,
         "referrer": "scripts/rapport_composants.py"
       },
       {
         "candidate": "artefact-distribue.yml",
-        "line": 198,
+        "line": 217,
         "referrer": "scripts/rapport_composants.py"
       },
       {
         "candidate": "artefact-distribue.yml",
-        "line": 206,
+        "line": 225,
         "referrer": "scripts/rapport_composants.py"
       },
       {
         "candidate": "wheel/sdist",
-        "line": 227,
+        "line": 246,
         "referrer": "scripts/rapport_composants.py"
       },
       {
         "candidate": "CI/dev/build",
-        "line": 228,
+        "line": 247,
         "referrer": "scripts/rapport_composants.py"
       },
       {
         "candidate": "composants-rc1.json",
-        "line": 251,
+        "line": 270,
         "referrer": "scripts/rapport_composants.py"
       },
       {
         "candidate": "../../etc/passwd",
-        "line": 265,
+        "line": 284,
         "referrer": "scripts/rapport_composants.py"
       },
       {
@@ -137444,52 +137444,52 @@
       },
       {
         "candidate": "artefact-distribue.yml",
-        "line": 285,
+        "line": 298,
         "referrer": "tests/test_rapport_composants.py"
       },
       {
         "candidate": "composants-rc1.json",
-        "line": 370,
+        "line": 387,
         "referrer": "tests/test_rapport_composants.py"
       },
       {
         "candidate": "rapport-personnalise.json",
-        "line": 384,
-        "referrer": "tests/test_rapport_composants.py"
-      },
-      {
-        "candidate": "rapport-personnalise.json",
-        "line": 388,
-        "referrer": "tests/test_rapport_composants.py"
-      },
-      {
-        "candidate": "composants-rc1.json",
-        "line": 389,
-        "referrer": "tests/test_rapport_composants.py"
-      },
-      {
-        "candidate": "composants-rc1.json",
         "line": 401,
         "referrer": "tests/test_rapport_composants.py"
       },
       {
+        "candidate": "rapport-personnalise.json",
+        "line": 405,
+        "referrer": "tests/test_rapport_composants.py"
+      },
+      {
         "candidate": "composants-rc1.json",
-        "line": 411,
+        "line": 406,
+        "referrer": "tests/test_rapport_composants.py"
+      },
+      {
+        "candidate": "composants-rc1.json",
+        "line": 418,
+        "referrer": "tests/test_rapport_composants.py"
+      },
+      {
+        "candidate": "composants-rc1.json",
+        "line": 428,
         "referrer": "tests/test_rapport_composants.py"
       },
       {
         "candidate": "ne-doit-jamais-exister.json",
-        "line": 499,
+        "line": 516,
         "referrer": "tests/test_rapport_composants.py"
       },
       {
         "candidate": "ne-doit-jamais-exister-non-plus.json",
-        "line": 519,
+        "line": 536,
         "referrer": "tests/test_rapport_composants.py"
       },
       {
         "candidate": "../",
-        "line": 520,
+        "line": 537,
         "referrer": "tests/test_rapport_composants.py"
       },
       {
