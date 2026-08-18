@@ -186,7 +186,7 @@
     },
     {
       "path": "tests/test_branch_coverage_ratchet.py",
-      "sha256": "e728d067d23b988ef4420ac47ceab975914d3651819c4b4abdccf92a42dca7d3"
+      "sha256": "9763e8eb87468063adcfa5af30449b8a1acf3245da64423969b03dac9c8ac8e2"
     },
     {
       "path": "tests/test_branch_coverage_report.py",
@@ -983,7 +983,7 @@
   "tests": {
     "js_files": 3,
     "python_files": 204,
-    "python_functions_declared": 2650
+    "python_functions_declared": 2653
   }
 }
 ```

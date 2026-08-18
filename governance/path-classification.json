@@ -298,8 +298,8 @@
       "path": ".docs-exempt",
       "referenced_by": [],
       "rule_id": "governance-docs-exempt",
-      "sha256": "f09b935ed99406de503baddfd3aa656bc28c1413e03fac5411ea2bb93f6e2633",
-      "size": 19129,
+      "sha256": "c7ce46c15f3678af56a91db8488955fbd94d7b3fcb8576a8070ee1f7b8802fe3",
+      "size": 20010,
       "target_path": null,
       "type": "text"
     },
@@ -6870,8 +6870,8 @@
         }
       ],
       "rule_id": "evidence-registres-root",
-      "sha256": "db3628e665ef7cd29b89fa69b1f327f29a462ea3b3eb870b987f5a394cb936e4",
-      "size": 398798,
+      "sha256": "eb69aff83c110c12855b1e252fb0600fd98138f75c2c1723ef77b869b07e62ec",
+      "size": 399935,
       "target_path": null,
       "type": "text"
     },
@@ -20625,11 +20625,11 @@
       "generated": false,
       "load_bearing": true,
       "owner": "gouvernance-preuve",
-      "path": "evidence/reviews/RC1-021-2a/DeepSeek-V4-Pro-0813.verdict.json",
+      "path": "evidence/reviews/RC1-021-2a/GPT-5.6-Terra-Pro.verdict.json",
       "referenced_by": [],
       "rule_id": "evidence-reviews-root",
-      "sha256": "c65ecac8876743d0180a4d9f48f9ca765c15b550a77c82cc92156381348455d3",
-      "size": 375,
+      "sha256": "fef4f749ee2471c8710839c5da21b1ba743343efdf37418c9a38e459c8a38fc1",
+      "size": 334,
       "target_path": null,
       "type": "text"
     },
@@ -20638,11 +20638,11 @@
       "generated": false,
       "load_bearing": true,
       "owner": "gouvernance-preuve",
-      "path": "evidence/reviews/RC1-021-2a/GPT-5.6-Terra-Pro.verdict.json",
+      "path": "evidence/reviews/RC1-021-2a/MiMo-V2.5-Pro.verdict.json",
       "referenced_by": [],
       "rule_id": "evidence-reviews-root",
-      "sha256": "590e52fd550083379b2b950b207d3dc7e1cc64e6bf5cd486bd7530228153c063",
-      "size": 334,
+      "sha256": "1391b801ee6ca6f0ca6b5cd40f1f53cd376e7041a668b0d9777ea51516a6c0af",
+      "size": 327,
       "target_path": null,
       "type": "text"
     },
@@ -20654,23 +20654,10 @@
       "path": "evidence/reviews/RC1-021-2a/Qwen3.8-2.4T.verdict.json",
       "referenced_by": [],
       "rule_id": "evidence-reviews-root",
-      "sha256": "8e9d905f2a3c672dcd3f70abd709c327e9729cc8b6327458f4217fc1bad25d28",
-      "size": 1902,
+      "sha256": "1c454a9464631c6ddb2a7b1e93767c9ca7c9f509da39794ab2ba565085f0cdae",
+      "size": 2223,
       "target_path": null,
       "type": "text"
-    },
-    {
-      "class": "EVIDENCE",
-      "generated": false,
-      "load_bearing": true,
-      "owner": "gouvernance-preuve",
-      "path": "evidence/reviews/RC1-021-2a/RECU.json",
-      "referenced_by": [],
-      "rule_id": "evidence-reviews-root",
-      "sha256": null,
-      "size": null,
-      "target_path": null,
-      "type": null
     },
     {
       "class": "EVIDENCE",
@@ -28943,6 +28930,13 @@
         },
         {
           "candidate": "governance/branch-coverage-baseline.json",
+          "line": 18,
+          "referrer": "evidence/reviews/RC1-021-2a/Qwen3.8-2.4T.verdict.json",
+          "resolved": "governance/branch-coverage-baseline.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/branch-coverage-baseline.json",
           "line": 10,
           "referrer": "scripts/branch_coverage_ratchet.py",
           "resolved": "governance/branch-coverage-baseline.json",
@@ -28950,7 +28944,7 @@
         },
         {
           "candidate": "governance/branch-coverage-baseline.json",
-          "line": 197,
+          "line": 293,
           "referrer": "scripts/branch_coverage_ratchet.py",
           "resolved": "governance/branch-coverage-baseline.json",
           "severity": "hard"
@@ -29006,14 +29000,21 @@
         },
         {
           "candidate": "governance/branch-coverage-categories.json",
-          "line": 272,
+          "line": 222,
           "referrer": "scripts/branch_coverage_ratchet.py",
           "resolved": "governance/branch-coverage-categories.json",
           "severity": "hard"
         },
         {
           "candidate": "governance/branch-coverage-categories.json",
-          "line": 282,
+          "line": 343,
+          "referrer": "scripts/branch_coverage_ratchet.py",
+          "resolved": "governance/branch-coverage-categories.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/branch-coverage-categories.json",
+          "line": 353,
           "referrer": "scripts/branch_coverage_ratchet.py",
           "resolved": "governance/branch-coverage-categories.json",
           "severity": "hard"
@@ -31122,20 +31123,6 @@
         },
         {
           "candidate": "scripts/branch_coverage_ratchet.py",
-          "line": 12,
-          "referrer": "evidence/reviews/RC1-021-2a/Qwen3.8-2.4T.verdict.json",
-          "resolved": "scripts/branch_coverage_ratchet.py",
-          "severity": "hard"
-        },
-        {
-          "candidate": "scripts/branch_coverage_ratchet.py",
-          "line": 18,
-          "referrer": "evidence/reviews/RC1-021-2a/Qwen3.8-2.4T.verdict.json",
-          "resolved": "scripts/branch_coverage_ratchet.py",
-          "severity": "hard"
-        },
-        {
-          "candidate": "scripts/branch_coverage_ratchet.py",
           "line": 4,
           "referrer": "governance/branch-coverage-baseline.json",
           "resolved": "scripts/branch_coverage_ratchet.py",
@@ -31154,11 +31141,18 @@
           "referrer": "stories/RC1-021-increment2a.md",
           "resolved": "scripts/branch_coverage_ratchet.py",
           "severity": "hard"
+        },
+        {
+          "candidate": "scripts/branch_coverage_ratchet.py",
+          "line": 171,
+          "referrer": "stories/RC1-021-increment2a.md",
+          "resolved": "scripts/branch_coverage_ratchet.py",
+          "severity": "hard"
         }
       ],
       "rule_id": "governance-scripts-root",
-      "sha256": "21c5d61adc08a66005a8f615a1182444f836f8a4df8ce5d87026fd9e2006d3cb",
-      "size": 17247,
+      "sha256": "08c0f5c8b3171915f9a87d08d185ecaf7d6c1f0344ec7bcdb5d58297549349cc",
+      "size": 18525,
       "target_path": null,
       "type": "text"
     },
@@ -42625,14 +42619,21 @@
         },
         {
           "candidate": "src/forgeai/models/vault.py",
-          "line": 454,
+          "line": 478,
           "referrer": "tests/test_branch_coverage_ratchet.py",
           "resolved": "src/forgeai/models/vault.py",
           "severity": "hard"
         },
         {
           "candidate": "src/forgeai/models/vault.py",
-          "line": 474,
+          "line": 498,
+          "referrer": "tests/test_branch_coverage_ratchet.py",
+          "resolved": "src/forgeai/models/vault.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "src/forgeai/models/vault.py",
+          "line": 551,
           "referrer": "tests/test_branch_coverage_ratchet.py",
           "resolved": "src/forgeai/models/vault.py",
           "severity": "hard"
@@ -47408,8 +47409,8 @@
       "path": "stories/RC1-021-increment2a.md",
       "referenced_by": [],
       "rule_id": "governance-stories",
-      "sha256": "6249b074a90c72ff05bd53df0325a13a983ffd5941ee414b399fa62f4afa53c7",
-      "size": 12805,
+      "sha256": "edb519dc57d1d624e98b08fe96308e3904ddbce32d188883ff069a2578e6641c",
+      "size": 19095,
       "target_path": null,
       "type": "text"
     },
@@ -49483,6 +49484,13 @@
       "referenced_by": [
         {
           "candidate": "tests/test_branch_coverage_ratchet.py",
+          "line": 12,
+          "referrer": "evidence/reviews/RC1-021-2a/Qwen3.8-2.4T.verdict.json",
+          "resolved": "tests/test_branch_coverage_ratchet.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "tests/test_branch_coverage_ratchet.py",
           "line": 182,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_branch_coverage_ratchet.py",
@@ -49504,8 +49512,8 @@
         }
       ],
       "rule_id": "test-suite",
-      "sha256": "e728d067d23b988ef4420ac47ceab975914d3651819c4b4abdccf92a42dca7d3",
-      "size": 29238,
+      "sha256": "9763e8eb87468063adcfa5af30449b8a1acf3245da64423969b03dac9c8ac8e2",
+      "size": 33326,
       "target_path": null,
       "type": "text"
     },
@@ -98342,14 +98350,19 @@
         "referrer": "evidence/reviews/RC1-020-v3/RECU.json"
       },
       {
-        "candidate": "num_branches/missing_branches",
+        "candidate": "gates.yml",
         "line": 13,
         "referrer": "evidence/reviews/RC1-021-2a/Qwen3.8-2.4T.verdict.json"
       },
       {
-        "candidate": "recu-revue/1",
-        "line": 2,
-        "referrer": "evidence/reviews/RC1-021-2a/RECU.json"
+        "candidate": "branch_coverage_ratchet.py",
+        "line": 14,
+        "referrer": "evidence/reviews/RC1-021-2a/Qwen3.8-2.4T.verdict.json"
+      },
+      {
+        "candidate": "actions/download-artifact",
+        "line": 14,
+        "referrer": "evidence/reviews/RC1-021-2a/Qwen3.8-2.4T.verdict.json"
       },
       {
         "candidate": "branch-coverage.json",
@@ -103658,32 +103671,37 @@
       },
       {
         "candidate": "vide/malform",
-        "line": 131,
-        "referrer": "scripts/branch_coverage_ratchet.py"
-      },
-      {
-        "candidate": "branch-coverage.json",
-        "line": 195,
+        "line": 129,
         "referrer": "scripts/branch_coverage_ratchet.py"
       },
       {
         "candidate": "origin/main",
-        "line": 196,
+        "line": 273,
+        "referrer": "scripts/branch_coverage_ratchet.py"
+      },
+      {
+        "candidate": "branch-coverage.json",
+        "line": 291,
+        "referrer": "scripts/branch_coverage_ratchet.py"
+      },
+      {
+        "candidate": "origin/main",
+        "line": 292,
         "referrer": "scripts/branch_coverage_ratchet.py"
       },
       {
         "candidate": "branch-coverage-categories.json",
-        "line": 201,
+        "line": 297,
         "referrer": "scripts/branch_coverage_ratchet.py"
       },
       {
         "candidate": "branch-coverage-baseline.json",
-        "line": 202,
+        "line": 298,
         "referrer": "scripts/branch_coverage_ratchet.py"
       },
       {
         "candidate": "s/renomm",
-        "line": 282,
+        "line": 353,
         "referrer": "scripts/branch_coverage_ratchet.py"
       },
       {
@@ -129622,13 +129640,88 @@
         "referrer": "stories/RC1-021-increment2a.md"
       },
       {
-        "candidate": "gardes/compensations",
+        "candidate": "gates.yml",
         "line": 167,
         "referrer": "stories/RC1-021-increment2a.md"
       },
       {
+        "candidate": "gate_docs.py",
+        "line": 172,
+        "referrer": "stories/RC1-021-increment2a.md"
+      },
+      {
+        "candidate": "mypy_gate.py",
+        "line": 173,
+        "referrer": "stories/RC1-021-increment2a.md"
+      },
+      {
+        "candidate": "origin/main",
+        "line": 181,
+        "referrer": "stories/RC1-021-increment2a.md"
+      },
+      {
+        "candidate": "ruff_ratchet.py",
+        "line": 196,
+        "referrer": "stories/RC1-021-increment2a.md"
+      },
+      {
+        "candidate": "mypy_gate.py",
+        "line": 197,
+        "referrer": "stories/RC1-021-increment2a.md"
+      },
+      {
+        "candidate": "origin/main",
+        "line": 197,
+        "referrer": "stories/RC1-021-increment2a.md"
+      },
+      {
+        "candidate": "origin/main",
+        "line": 201,
+        "referrer": "stories/RC1-021-increment2a.md"
+      },
+      {
+        "candidate": "1/3/5",
+        "line": 209,
+        "referrer": "stories/RC1-021-increment2a.md"
+      },
+      {
+        "candidate": "download/upload",
+        "line": 210,
+        "referrer": "stories/RC1-021-increment2a.md"
+      },
+      {
+        "candidate": "actions/download-artifact",
+        "line": 211,
+        "referrer": "stories/RC1-021-increment2a.md"
+      },
+      {
+        "candidate": "alibaba/deepseek/openai",
+        "line": 218,
+        "referrer": "stories/RC1-021-increment2a.md"
+      },
+      {
+        "candidate": "majeure/critique",
+        "line": 234,
+        "referrer": "stories/RC1-021-increment2a.md"
+      },
+      {
+        "candidate": "3/4/6/8",
+        "line": 235,
+        "referrer": "stories/RC1-021-increment2a.md"
+      },
+      {
+        "candidate": "gate_git_ref.py",
+        "line": 243,
+        "referrer": "stories/RC1-021-increment2a.md"
+      },
+      {
+        "candidate": "gardes/compensations",
+        "line": 249,
+        "referrer": "stories/RC1-021-increment2a.md"
+      },
+      {
         "candidate": "mutmut/cosmic-ray/mutpy",
-        "line": 169,
+        "line": 251,
         "referrer": "stories/RC1-021-increment2a.md"
       },
       {
@@ -133658,12 +133751,12 @@
       },
       {
         "candidate": "src/forgeai/deploy/a.py",
-        "line": 452,
+        "line": 453,
         "referrer": "tests/test_branch_coverage_ratchet.py"
       },
       {
-        "candidate": "src/forgeai/secrets/b.py",
-        "line": 453,
+        "candidate": "branch-coverage-baseline.json",
+        "line": 455,
         "referrer": "tests/test_branch_coverage_ratchet.py"
       },
       {
@@ -133673,72 +133766,77 @@
       },
       {
         "candidate": "branch-coverage-baseline.json",
-        "line": 462,
+        "line": 464,
         "referrer": "tests/test_branch_coverage_ratchet.py"
       },
       {
         "candidate": "src/forgeai/deploy/a.py",
-        "line": 472,
+        "line": 476,
         "referrer": "tests/test_branch_coverage_ratchet.py"
       },
       {
         "candidate": "src/forgeai/secrets/b.py",
-        "line": 473,
+        "line": 477,
         "referrer": "tests/test_branch_coverage_ratchet.py"
       },
       {
         "candidate": "branch-coverage.json",
-        "line": 478,
-        "referrer": "tests/test_branch_coverage_ratchet.py"
-      },
-      {
-        "candidate": "branch-coverage-baseline.json",
         "line": 482,
         "referrer": "tests/test_branch_coverage_ratchet.py"
       },
       {
-        "candidate": "src/forgeai/deploy/a.py",
-        "line": 495,
+        "candidate": "branch-coverage-baseline.json",
+        "line": 486,
         "referrer": "tests/test_branch_coverage_ratchet.py"
       },
       {
-        "candidate": "src/forgeai/secrets/b.py",
+        "candidate": "src/forgeai/deploy/a.py",
         "line": 496,
         "referrer": "tests/test_branch_coverage_ratchet.py"
       },
       {
+        "candidate": "src/forgeai/secrets/b.py",
+        "line": 497,
+        "referrer": "tests/test_branch_coverage_ratchet.py"
+      },
+      {
         "candidate": "branch-coverage.json",
-        "line": 507,
+        "line": 502,
+        "referrer": "tests/test_branch_coverage_ratchet.py"
+      },
+      {
+        "candidate": "branch-coverage-baseline.json",
+        "line": 506,
         "referrer": "tests/test_branch_coverage_ratchet.py"
       },
       {
         "candidate": "src/forgeai/deploy/a.py",
-        "line": 517,
+        "line": 519,
         "referrer": "tests/test_branch_coverage_ratchet.py"
       },
       {
-        "candidate": "branch-coverage.json",
+        "candidate": "src/forgeai/secrets/b.py",
         "line": 520,
         "referrer": "tests/test_branch_coverage_ratchet.py"
       },
       {
+        "candidate": "branch-coverage.json",
+        "line": 531,
+        "referrer": "tests/test_branch_coverage_ratchet.py"
+      },
+      {
+        "candidate": "src/forgeai/models/",
+        "line": 543,
+        "referrer": "tests/test_branch_coverage_ratchet.py"
+      },
+      {
         "candidate": "src/forgeai/deploy/a.py",
-        "line": 537,
+        "line": 549,
         "referrer": "tests/test_branch_coverage_ratchet.py"
       },
       {
-        "candidate": "src/forgeai/secrets/const.py",
-        "line": 538,
-        "referrer": "tests/test_branch_coverage_ratchet.py"
-      },
-      {
-        "candidate": "branch-coverage.json",
-        "line": 541,
-        "referrer": "tests/test_branch_coverage_ratchet.py"
-      },
-      {
-        "candidate": "branch-coverage.json",
-        "line": 552,
+        "candidate": "src/forgeai/secrets/b.py",
+        "line": 550,
         "referrer": "tests/test_branch_coverage_ratchet.py"
       },
       {
@@ -133747,98 +133845,158 @@
         "referrer": "tests/test_branch_coverage_ratchet.py"
       },
       {
-        "candidate": "branch-coverage.json",
+        "candidate": "categories.json",
         "line": 567,
         "referrer": "tests/test_branch_coverage_ratchet.py"
       },
       {
-        "candidate": "branch-coverage.json",
-        "line": 574,
+        "candidate": "baseline.json",
+        "line": 567,
+        "referrer": "tests/test_branch_coverage_ratchet.py"
+      },
+      {
+        "candidate": "src/forgeai/secrets/",
+        "line": 570,
+        "referrer": "tests/test_branch_coverage_ratchet.py"
+      },
+      {
+        "candidate": "src/forgeai/secrets/b.py",
+        "line": 575,
         "referrer": "tests/test_branch_coverage_ratchet.py"
       },
       {
         "candidate": "branch-coverage.json",
-        "line": 576,
+        "line": 583,
         "referrer": "tests/test_branch_coverage_ratchet.py"
       },
       {
-        "candidate": "branch-coverage-categories.json",
-        "line": 582,
-        "referrer": "tests/test_branch_coverage_ratchet.py"
-      },
-      {
-        "candidate": "branch-coverage.json",
-        "line": 585,
-        "referrer": "tests/test_branch_coverage_ratchet.py"
-      },
-      {
-        "candidate": "branch-coverage-baseline.json",
-        "line": 592,
+        "candidate": "src/forgeai/deploy/a.py",
+        "line": 596,
         "referrer": "tests/test_branch_coverage_ratchet.py"
       },
       {
         "candidate": "branch-coverage.json",
-        "line": 594,
+        "line": 599,
+        "referrer": "tests/test_branch_coverage_ratchet.py"
+      },
+      {
+        "candidate": "src/forgeai/deploy/a.py",
+        "line": 616,
+        "referrer": "tests/test_branch_coverage_ratchet.py"
+      },
+      {
+        "candidate": "src/forgeai/secrets/const.py",
+        "line": 617,
         "referrer": "tests/test_branch_coverage_ratchet.py"
       },
       {
         "candidate": "branch-coverage.json",
-        "line": 603,
-        "referrer": "tests/test_branch_coverage_ratchet.py"
-      },
-      {
-        "candidate": "branch-coverage-categories.json",
-        "line": 609,
+        "line": 620,
         "referrer": "tests/test_branch_coverage_ratchet.py"
       },
       {
         "candidate": "branch-coverage.json",
-        "line": 612,
-        "referrer": "tests/test_branch_coverage_ratchet.py"
-      },
-      {
-        "candidate": "branch-coverage-baseline.json",
-        "line": 619,
+        "line": 631,
         "referrer": "tests/test_branch_coverage_ratchet.py"
       },
       {
         "candidate": "branch-coverage.json",
-        "line": 621,
+        "line": 638,
         "referrer": "tests/test_branch_coverage_ratchet.py"
       },
       {
-        "candidate": "gates.yml",
-        "line": 626,
-        "referrer": "tests/test_branch_coverage_ratchet.py"
-      },
-      {
-        "candidate": "gates.yml",
-        "line": 632,
-        "referrer": "tests/test_branch_coverage_ratchet.py"
-      },
-      {
-        "candidate": "gates.yml",
-        "line": 636,
-        "referrer": "tests/test_branch_coverage_ratchet.py"
-      },
-      {
-        "candidate": "branch_coverage_ratchet.py",
-        "line": 644,
-        "referrer": "tests/test_branch_coverage_ratchet.py"
-      },
-      {
-        "candidate": "branch_coverage_ratchet.py",
+        "candidate": "branch-coverage.json",
         "line": 646,
         "referrer": "tests/test_branch_coverage_ratchet.py"
       },
       {
-        "candidate": "gates.yml",
-        "line": 646,
+        "candidate": "branch-coverage.json",
+        "line": 653,
+        "referrer": "tests/test_branch_coverage_ratchet.py"
+      },
+      {
+        "candidate": "branch-coverage.json",
+        "line": 655,
+        "referrer": "tests/test_branch_coverage_ratchet.py"
+      },
+      {
+        "candidate": "branch-coverage-categories.json",
+        "line": 661,
+        "referrer": "tests/test_branch_coverage_ratchet.py"
+      },
+      {
+        "candidate": "branch-coverage.json",
+        "line": 664,
+        "referrer": "tests/test_branch_coverage_ratchet.py"
+      },
+      {
+        "candidate": "branch-coverage-baseline.json",
+        "line": 671,
+        "referrer": "tests/test_branch_coverage_ratchet.py"
+      },
+      {
+        "candidate": "branch-coverage.json",
+        "line": 673,
+        "referrer": "tests/test_branch_coverage_ratchet.py"
+      },
+      {
+        "candidate": "branch-coverage.json",
+        "line": 682,
+        "referrer": "tests/test_branch_coverage_ratchet.py"
+      },
+      {
+        "candidate": "branch-coverage-categories.json",
+        "line": 688,
+        "referrer": "tests/test_branch_coverage_ratchet.py"
+      },
+      {
+        "candidate": "branch-coverage.json",
+        "line": 691,
+        "referrer": "tests/test_branch_coverage_ratchet.py"
+      },
+      {
+        "candidate": "branch-coverage-baseline.json",
+        "line": 698,
+        "referrer": "tests/test_branch_coverage_ratchet.py"
+      },
+      {
+        "candidate": "branch-coverage.json",
+        "line": 700,
         "referrer": "tests/test_branch_coverage_ratchet.py"
       },
       {
         "candidate": "gates.yml",
-        "line": 648,
+        "line": 705,
+        "referrer": "tests/test_branch_coverage_ratchet.py"
+      },
+      {
+        "candidate": "gates.yml",
+        "line": 711,
+        "referrer": "tests/test_branch_coverage_ratchet.py"
+      },
+      {
+        "candidate": "gates.yml",
+        "line": 715,
+        "referrer": "tests/test_branch_coverage_ratchet.py"
+      },
+      {
+        "candidate": "branch_coverage_ratchet.py",
+        "line": 723,
+        "referrer": "tests/test_branch_coverage_ratchet.py"
+      },
+      {
+        "candidate": "branch_coverage_ratchet.py",
+        "line": 725,
+        "referrer": "tests/test_branch_coverage_ratchet.py"
+      },
+      {
+        "candidate": "gates.yml",
+        "line": 725,
+        "referrer": "tests/test_branch_coverage_ratchet.py"
+      },
+      {
+        "candidate": "gates.yml",
+        "line": 727,
         "referrer": "tests/test_branch_coverage_ratchet.py"
       },
       {
@@ -162972,17 +163130,17 @@
         "severity": "hard"
       },
       {
-        "candidate": "scripts/branch_coverage_ratchet.py",
+        "candidate": "tests/test_branch_coverage_ratchet.py",
         "line": 12,
         "referrer": "evidence/reviews/RC1-021-2a/Qwen3.8-2.4T.verdict.json",
-        "resolved": "scripts/branch_coverage_ratchet.py",
+        "resolved": "tests/test_branch_coverage_ratchet.py",
         "severity": "hard"
       },
       {
-        "candidate": "scripts/branch_coverage_ratchet.py",
+        "candidate": "governance/branch-coverage-baseline.json",
         "line": 18,
         "referrer": "evidence/reviews/RC1-021-2a/Qwen3.8-2.4T.verdict.json",
-        "resolved": "scripts/branch_coverage_ratchet.py",
+        "resolved": "governance/branch-coverage-baseline.json",
         "severity": "hard"
       },
       {
@@ -172520,22 +172678,29 @@
         "severity": "hard"
       },
       {
+        "candidate": "governance/branch-coverage-categories.json",
+        "line": 222,
+        "referrer": "scripts/branch_coverage_ratchet.py",
+        "resolved": "governance/branch-coverage-categories.json",
+        "severity": "hard"
+      },
+      {
         "candidate": "governance/branch-coverage-baseline.json",
-        "line": 197,
+        "line": 293,
         "referrer": "scripts/branch_coverage_ratchet.py",
         "resolved": "governance/branch-coverage-baseline.json",
         "severity": "hard"
       },
       {
         "candidate": "governance/branch-coverage-categories.json",
-        "line": 272,
+        "line": 343,
         "referrer": "scripts/branch_coverage_ratchet.py",
         "resolved": "governance/branch-coverage-categories.json",
         "severity": "hard"
       },
       {
         "candidate": "governance/branch-coverage-categories.json",
-        "line": 282,
+        "line": 353,
         "referrer": "scripts/branch_coverage_ratchet.py",
         "resolved": "governance/branch-coverage-categories.json",
         "severity": "hard"
@@ -176174,6 +176339,13 @@
         "severity": "hard"
       },
       {
+        "candidate": "scripts/branch_coverage_ratchet.py",
+        "line": 171,
+        "referrer": "stories/RC1-021-increment2a.md",
+        "resolved": "scripts/branch_coverage_ratchet.py",
+        "severity": "hard"
+      },
+      {
         "candidate": "tests/test_rel038b_unicite.py",
         "line": 8,
         "referrer": "stories/RC1-022.md",
@@ -177890,14 +178062,21 @@
       },
       {
         "candidate": "src/forgeai/models/vault.py",
-        "line": 454,
+        "line": 478,
         "referrer": "tests/test_branch_coverage_ratchet.py",
         "resolved": "src/forgeai/models/vault.py",
         "severity": "hard"
       },
       {
         "candidate": "src/forgeai/models/vault.py",
-        "line": 474,
+        "line": 498,
+        "referrer": "tests/test_branch_coverage_ratchet.py",
+        "resolved": "src/forgeai/models/vault.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "src/forgeai/models/vault.py",
+        "line": 551,
         "referrer": "tests/test_branch_coverage_ratchet.py",
         "resolved": "src/forgeai/models/vault.py",
         "severity": "hard"
@@ -179156,7 +179335,7 @@
     "by_class": {
       "ARCHIVE": 44,
       "DOCS": 18,
-      "EVIDENCE": 1645,
+      "EVIDENCE": 1644,
       "GENERATED": 5,
       "GOVERNANCE": 209,
       "PRODUCT": 113,
@@ -179175,7 +179354,7 @@
       "evidence-audit-output-root": 18,
       "evidence-dedup-root": 2,
       "evidence-registres-root": 35,
-      "evidence-reviews-root": 1590,
+      "evidence-reviews-root": 1589,
       "generated-authority-map": 1,
       "generated-path-classification-json": 1,
       "generated-path-classification-markdown": 1,
@@ -179212,11 +179391,11 @@
       "working-sandbox-readme": 1
     },
     "case_collisions_total": 0,
-    "dangling_references_total": 17402,
+    "dangling_references_total": 17432,
     "generated_total": 9,
-    "load_bearing_total": 2119,
+    "load_bearing_total": 2118,
     "portability_violations_total": 0,
-    "tracked_total": 2263,
+    "tracked_total": 2262,
     "unclassified_total": 0,
     "unicode_anomalies_total": 0
   },

@@ -1,10 +1,10 @@
 {
  "verdict": "APPROVE",
  "objections": [],
- "date_heure": "2026-08-18T21:09:21.366477+00:00",
+ "date_heure": "2026-08-18T21:09:45.388454+00:00",
  "prompt_sha256": "b217cd8e9b09ba914e6483da87ef5a258d36beb1bb042d927143eefd65f75f8f",
- "reviewer_model": "GPT-5.6-Terra-Pro",
- "modele_servi": "gpt56-terra-pro-openrouter",
+ "reviewer_model": "MiMo-V2.5-Pro",
+ "modele_servi": "mimo-v25-pro-openrouter",
  "gateway_resilience": {
   "retries": "0",
   "fallbacks": "0"
