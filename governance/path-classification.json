@@ -33718,8 +33718,8 @@
         }
       ],
       "rule_id": "governance-scripts-root",
-      "sha256": "1ceaf3ab84b36879b33a7a40e8dc8b2f35a2728c7a944ec0335ef006efd0d27e",
-      "size": 10821,
+      "sha256": "1d3c62f5312f325bf3abf47d5921b40f2ebde243694e386ac6f93e993d9f7f46",
+      "size": 11227,
       "target_path": null,
       "type": "text"
     },
@@ -54813,8 +54813,8 @@
         }
       ],
       "rule_id": "test-suite",
-      "sha256": "354c763272c398b87e8e0d19fe94efd1eee5ed26e761d6e7df8aed400d833524",
-      "size": 14790,
+      "sha256": "eb6508881956c64b1a43e03b65b190b2e6603f67f4ff97be86667b518c500dc9",
+      "size": 16242,
       "target_path": null,
       "type": "text"
     },
@@ -104329,6 +104329,11 @@
         "referrer": "scripts/rapport_composants.py"
       },
       {
+        "candidate": "../../etc/passwd",
+        "line": 230,
+        "referrer": "scripts/rapport_composants.py"
+      },
+      {
         "candidate": "CLI/CI",
         "line": 2,
         "referrer": "scripts/registre.py"
@@ -137331,6 +137336,16 @@
       {
         "candidate": "ne-doit-jamais-exister.json",
         "line": 463,
+        "referrer": "tests/test_rapport_composants.py"
+      },
+      {
+        "candidate": "ne-doit-jamais-exister-non-plus.json",
+        "line": 483,
+        "referrer": "tests/test_rapport_composants.py"
+      },
+      {
+        "candidate": "../",
+        "line": 484,
         "referrer": "tests/test_rapport_composants.py"
       },
       {
@@ -176799,7 +176814,7 @@
       "working-sandbox-readme": 1
     },
     "case_collisions_total": 0,
-    "dangling_references_total": 17164,
+    "dangling_references_total": 17167,
     "generated_total": 9,
     "load_bearing_total": 2097,
     "portability_violations_total": 0,

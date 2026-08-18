@@ -468,5 +468,42 @@ def test_main_sortie_absolue_rejetee_sans_ecrire_ni_contourner_la_racine(
 
     capture = capsys.readouterr()
     assert code_retour == 1
-    assert "chemin RELATIF" in capture.err
+    assert "s'en évade" in capture.err
     assert not cible_hors_racine.exists()
+
+
+def test_main_sortie_relative_avec_remontee_rejetee_sans_ecrire_hors_racine(
+    tmp_path: Path,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    """is_absolute() seul (round 1) ne détecte pas une remontée ".." qui reste
+    syntaxiquement relative mais s'évade de --racine une fois résolue — revue
+    scellée round 2, objections convergentes DeepSeek-V4-Pro-0813 et Qwen3.8-2.4T."""
+    _preparer_racine(tmp_path)
+    cible_hors_racine = tmp_path.parent / "ne-doit-jamais-exister-non-plus.json"
+    sortie_relative_evasive = f"../{cible_hors_racine.name}"
+
+    code_retour = rc.main(
+        ["--racine", str(tmp_path), "--sortie", sortie_relative_evasive]
+    )
+
+    capture = capsys.readouterr()
+    assert code_retour == 1
+    assert "s'en évade" in capture.err
+    assert not cible_hors_racine.exists()
+
+
+def test_parser_requirements_extras_pep508_ignores_nom_et_version_extraits(
+    tmp_path: Path,
+) -> None:
+    """`paquet[extra1,extra2]==version` (extras PEP 508) doit rester détecté — le
+    lockfile réel de ce dépôt n'en contient pas aujourd'hui (vérifié empiriquement),
+    mais rien n'exclut qu'un futur ajout en introduise — revue scellée round 2,
+    objections convergentes DeepSeek-V4-Pro-0813 et Qwen3.8-2.4T."""
+    chemin = _ecrire_requirements(
+        tmp_path, "requests[security,socks]==2.28.0\n"
+    )
+
+    resultat = rc._parser_requirements(chemin)
+
+    assert resultat == [("requests", "2.28.0")]

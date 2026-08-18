@@ -31,7 +31,7 @@ except ModuleNotFoundError:
 # Motif d'une ligne de paquet pip-compile : ``nom==version``, éventuellement suivi
 # d'un marqueur d'environnement ``; ...`` et/ou d'un ``\`` de continuation vers les
 # lignes ``--hash=sha256:...`` (ignorées car non ancrées en début de ligne).
-_MOTIF_PAQUET = re.compile(r"^([A-Za-z0-9_.-]+)==([^\s;\\]+)")
+_MOTIF_PAQUET = re.compile(r"^([A-Za-z0-9_.-]+)(?:\[[^\]]*\])?==([^\s;\\]+)")
 
 
 def _parser_requirements(chemin: Path) -> list[tuple[str, str]]:
@@ -223,13 +223,18 @@ def main(argv: list[str] | None = None) -> int:
 
     racine = Path(arguments.racine)
 
-    # Path("/a") / "/b" retourne Path("/b") : un opérande ABSOLU à droite de l'opérateur
-    # pathlib « / » écrase silencieusement le côté gauche (comportement stdlib documenté,
-    # vérifié empiriquement) — sans ce garde-fou, --sortie absolu contournerait --racine en
-    # silence, contrairement au contrat annoncé par --help ci-dessus ("relatif à --racine").
-    if Path(arguments.sortie).is_absolute():
+    # Deux façons distinctes de contourner « --sortie relatif à --racine » (revue scellée
+    # round 2, DeepSeek-V4-Pro-0813 et Qwen3.8-2.4T convergents), vérifiées empiriquement
+    # toutes les deux : (1) Path("/a") / "/b" == Path("/b") — un opérande ABSOLU à droite de
+    # l'opérateur pathlib « / » écrase silencieusement le côté gauche ; (2) un chemin RELATIF
+    # contenant des remontées ".." (ex. "../../etc/passwd") reste accepté par is_absolute()
+    # mais s'évade de --racine une fois résolu. Le SEUL garde-fou fiable contre les deux
+    # est de comparer le chemin RÉSOLU final à la racine résolue via is_relative_to() (stdlib
+    # ≥3.9) — is_absolute() seul (round 1) ne couvrait que le premier cas.
+    chemin = racine / arguments.sortie
+    if not chemin.resolve().is_relative_to(racine.resolve()):
         print(
-            f"--sortie doit être un chemin RELATIF à --racine, reçu un chemin absolu : "
+            f"--sortie doit rester à l'intérieur de --racine, reçu un chemin qui s'en évade : "
             f"{arguments.sortie!r}",
             file=sys.stderr,
         )
@@ -241,7 +246,6 @@ def main(argv: list[str] | None = None) -> int:
         print(str(erreur), file=sys.stderr)
         return 1
 
-    chemin = racine / arguments.sortie
     # sort_keys=False : l'ordre des clés du dict est volontairement choisi dans
     # construire_rapport (schéma, description, compteur, liste) — ne pas le retrier.
     contenu = json.dumps(rapport, indent=2, ensure_ascii=False, sort_keys=False) + "\n"
