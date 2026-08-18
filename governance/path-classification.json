@@ -20625,6 +20625,45 @@
       "generated": false,
       "load_bearing": true,
       "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-021-2a/DeepSeek-V4-Pro-0813.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "c65ecac8876743d0180a4d9f48f9ca765c15b550a77c82cc92156381348455d3",
+      "size": 375,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-021-2a/GPT-5.6-Terra-Pro.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "590e52fd550083379b2b950b207d3dc7e1cc64e6bf5cd486bd7530228153c063",
+      "size": 334,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-021-2a/Qwen3.8-2.4T.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "8e9d905f2a3c672dcd3f70abd709c327e9729cc8b6327458f4217fc1bad25d28",
+      "size": 1902,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
       "path": "evidence/reviews/RC1-021-2a/RECU.json",
       "referenced_by": [],
       "rule_id": "evidence-reviews-root",
@@ -28897,6 +28936,13 @@
       "referenced_by": [
         {
           "candidate": "governance/branch-coverage-baseline.json",
+          "line": 6,
+          "referrer": "evidence/reviews/RC1-021-2a/Qwen3.8-2.4T.verdict.json",
+          "resolved": "governance/branch-coverage-baseline.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/branch-coverage-baseline.json",
           "line": 10,
           "referrer": "scripts/branch_coverage_ratchet.py",
           "resolved": "governance/branch-coverage-baseline.json",
@@ -31071,6 +31117,20 @@
           "candidate": "scripts/branch_coverage_ratchet.py",
           "line": 402,
           "referrer": ".github/workflows/gates.yml",
+          "resolved": "scripts/branch_coverage_ratchet.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "scripts/branch_coverage_ratchet.py",
+          "line": 12,
+          "referrer": "evidence/reviews/RC1-021-2a/Qwen3.8-2.4T.verdict.json",
+          "resolved": "scripts/branch_coverage_ratchet.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "scripts/branch_coverage_ratchet.py",
+          "line": 18,
+          "referrer": "evidence/reviews/RC1-021-2a/Qwen3.8-2.4T.verdict.json",
           "resolved": "scripts/branch_coverage_ratchet.py",
           "severity": "hard"
         },
@@ -98282,6 +98342,11 @@
         "referrer": "evidence/reviews/RC1-020-v3/RECU.json"
       },
       {
+        "candidate": "num_branches/missing_branches",
+        "line": 13,
+        "referrer": "evidence/reviews/RC1-021-2a/Qwen3.8-2.4T.verdict.json"
+      },
+      {
         "candidate": "recu-revue/1",
         "line": 2,
         "referrer": "evidence/reviews/RC1-021-2a/RECU.json"
@@ -162900,6 +162965,27 @@
         "severity": "hard"
       },
       {
+        "candidate": "governance/branch-coverage-baseline.json",
+        "line": 6,
+        "referrer": "evidence/reviews/RC1-021-2a/Qwen3.8-2.4T.verdict.json",
+        "resolved": "governance/branch-coverage-baseline.json",
+        "severity": "hard"
+      },
+      {
+        "candidate": "scripts/branch_coverage_ratchet.py",
+        "line": 12,
+        "referrer": "evidence/reviews/RC1-021-2a/Qwen3.8-2.4T.verdict.json",
+        "resolved": "scripts/branch_coverage_ratchet.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "scripts/branch_coverage_ratchet.py",
+        "line": 18,
+        "referrer": "evidence/reviews/RC1-021-2a/Qwen3.8-2.4T.verdict.json",
+        "resolved": "scripts/branch_coverage_ratchet.py",
+        "severity": "hard"
+      },
+      {
         "candidate": "scripts/branch_coverage_report.py",
         "line": 6,
         "referrer": "evidence/reviews/RC1-021-v1/DeepSeek-V4-Pro.verdict.json",
@@ -179070,7 +179156,7 @@
     "by_class": {
       "ARCHIVE": 44,
       "DOCS": 18,
-      "EVIDENCE": 1642,
+      "EVIDENCE": 1645,
       "GENERATED": 5,
       "GOVERNANCE": 209,
       "PRODUCT": 113,
@@ -179089,7 +179175,7 @@
       "evidence-audit-output-root": 18,
       "evidence-dedup-root": 2,
       "evidence-registres-root": 35,
-      "evidence-reviews-root": 1587,
+      "evidence-reviews-root": 1590,
       "generated-authority-map": 1,
       "generated-path-classification-json": 1,
       "generated-path-classification-markdown": 1,
@@ -179126,11 +179212,11 @@
       "working-sandbox-readme": 1
     },
     "case_collisions_total": 0,
-    "dangling_references_total": 17401,
+    "dangling_references_total": 17402,
     "generated_total": 9,
-    "load_bearing_total": 2116,
+    "load_bearing_total": 2119,
     "portability_violations_total": 0,
-    "tracked_total": 2260,
+    "tracked_total": 2263,
     "unclassified_total": 0,
     "unicode_anomalies_total": 0
   },
