@@ -4,15 +4,17 @@
 Pourquoi ce script : l'audit supply-chain EXT-029 exige la liste exhaustive des
 paquets Python (versions + licences) mobilisés pour construire les artefacts
 distribués RC1 (wheel/sdist) — et non celles du produit livré, qui reste stdlib
-pure (``dependencies = []`` dans ``pyproject.toml``). Trois sources, vérifiées
+pure (``dependencies = []`` dans ``pyproject.toml``). Quatre sources, vérifiées
 empiriquement : ``requirements-ci.txt`` (lockfile à empreintes couvrant tout
 l'outillage CI/test/lint) ; ``build==1.2.2.post1`` (installé en direct dans
 ``.github/workflows/artefact-distribue.yml``, hors lockfile) ET la fermeture de
-SES dépendances directes propres (``pyproject_hooks`` — ``packaging`` est aussi
-une dépendance directe de ``build`` mais déjà couverte par le lockfile, non
-dupliquée — vérifié via l'API PyPI ``requires_dist`` de la version exacte
-épinglée, pas supposé) ; le projet lui-même. Le rapport est non bloquant : il
-documente, il ne gate pas — même philosophie que ``scripts/ruff_report.py``.
+SES dépendances directes propres (``pyproject_hooks``/``packaging`` — vérifié
+via l'API PyPI ``requires_dist`` de la version exacte épinglée, pas supposé) ;
+le backend PEP 517 déclaré (``[build-system].requires``, ex. ``setuptools`` —
+build isolé rendu déterministe via ``PIP_CONSTRAINT``,
+``requirements-build-constraints.txt``) ; le projet lui-même. Le rapport est
+non bloquant : il documente, il ne gate pas — même philosophie que
+``scripts/ruff_report.py``.
 """
 
 from __future__ import annotations
@@ -176,17 +178,22 @@ def _entrees_backend_build(racine: Path) -> list[dict[str, Any]]:
     Pourquoi (revue scellée round 9, #454) : ``python -m build``
     (``artefact-distribue.yml``) effectue par défaut un build ISOLÉ — installe
     SES PROPRES dépendances (``build-system.requires``, ex. ``setuptools``)
-    dans un environnement éphémère, jamais épinglées ailleurs dans ce dépôt.
-    Contrairement à ``build``/``pyproject_hooks``/``packaging`` (épinglés
-    explicitement, version exacte connue et reproductible), la version
-    RÉELLEMENT installée par l'isolation PEP 517 n'est PAS figée par ce
-    dépôt — pip résout la dernière version compatible À CHAQUE run. Inventer
-    une version résolue serait pire que ne pas la rapporter : on rapporte
-    donc la CONTRAINTE déclarée telle quelle (ex. ``>=68``), honnête sur
-    l'absence de précision, plutôt qu'une valeur fictive. Tolérant (retourne
-    une liste vide plutôt que lever) si ``[build-system]``/``requires`` est
-    absent ou mal formé — contrairement à ``_entree_projet`` ci-dessus, cette
-    entrée est un COMPLÉMENT d'inventaire, pas le cœur du rapport.
+    dans un environnement éphémère. Round 10 : un audit exige la version
+    RÉELLEMENT employée, pas seulement la contrainte déclarée — corrigé par
+    ``requirements-build-constraints.txt`` (``PIP_CONSTRAINT``, vérifié
+    empiriquement forcer une résolution déterministe SANS désactiver
+    l'isolation PEP 517, contrairement à ``--no-isolation`` qui changerait le
+    mécanisme de build lui-même). Ce fichier fait donc AUTORITÉ : la version
+    qu'il épingle pour un paquet donné est celle RÉELLEMENT résolue, rapportée
+    telle quelle (mêmes garanties que ``build``/``pyproject_hooks``/
+    ``packaging`` ci-dessus). Un paquet DÉCLARÉ dans ``build-system.requires``
+    mais ABSENT de ce fichier de contraintes retombe sur la contrainte
+    déclarée, honnêtement marquée « non résolue » plutôt qu'une valeur
+    inventée — signal clair d'un futur ajout non encore épinglé. Tolérant
+    (retourne une liste vide plutôt que lever) si ``[build-system]``/
+    ``requires`` est absent ou mal formé — contrairement à ``_entree_projet``
+    ci-dessus, cette entrée est un COMPLÉMENT d'inventaire, pas le cœur du
+    rapport.
     """
     try:
         donnees = _charger_pyproject(racine / "pyproject.toml")
@@ -201,6 +208,13 @@ def _entrees_backend_build(racine: Path) -> list[dict[str, Any]]:
     if not isinstance(specifications, list):
         return []
 
+    try:
+        contraintes = dict(
+            _parser_requirements(racine / "requirements-build-constraints.txt")
+        )
+    except ValueError:
+        contraintes = {}
+
     entrees: list[dict[str, Any]] = []
     for specification in specifications:
         if not isinstance(specification, str):
@@ -210,17 +224,28 @@ def _entrees_backend_build(racine: Path) -> list[dict[str, Any]]:
             continue
         nom = correspondance.group(1)
         contrainte = specification.strip()[len(nom):].strip()
+
+        version_epinglee = contraintes.get(nom)
+        if version_epinglee is not None:
+            version = (
+                f"{version_epinglee} (épinglée via PIP_CONSTRAINT, "
+                "requirements-build-constraints.txt — résolution déterministe "
+                "vérifiée empiriquement)"
+            )
+        else:
+            version = (
+                f"contrainte déclarée {contrainte!r} — non résolue "
+                "(build isolé PEP 517, pip choisit la version à chaque "
+                "exécution)"
+                if contrainte
+                else "aucune contrainte déclarée — non résolue (build "
+                "isolé PEP 517, pip choisit la version à chaque exécution)"
+            )
+
         entrees.append(
             {
                 "nom": nom,
-                "version": (
-                    f"contrainte déclarée {contrainte!r} — non résolue "
-                    "(build isolé PEP 517, pip choisit la version à chaque "
-                    "exécution)"
-                    if contrainte
-                    else "aucune contrainte déclarée — non résolue (build "
-                    "isolé PEP 517, pip choisit la version à chaque exécution)"
-                ),
+                "version": version,
                 "licence": _licence_installee(nom),
                 "source": "pyproject.toml [build-system].requires (backend PEP 517)",
             }
@@ -231,7 +256,7 @@ def _entrees_backend_build(racine: Path) -> list[dict[str, Any]]:
 def construire_rapport(racine: Path) -> dict[str, Any]:
     """Construit le rapport complet des composants (fonction pure, aucune écriture).
 
-    Pourquoi trois sources : le lockfile ``requirements-ci.txt`` couvre tout
+    Pourquoi quatre sources : le lockfile ``requirements-ci.txt`` couvre tout
     l'outillage CI/test/lint ; ``build`` est l'unique outil externe installé hors
     lockfile (épinglé en dur dans ``artefact-distribue.yml``) et c'est lui qui
     construit RÉELLEMENT les artefacts — SA PROPRE fermeture de dépendances
@@ -242,11 +267,13 @@ def construire_rapport(racine: Path) -> dict[str, Any]:
     job, pas seulement dans le job CI distinct ``rapport-composants``) pour
     que l'inventaire ne s'arrête pas à l'outil épinglé lui-même ; le backend
     PEP 517 déclaré (``[build-system].requires``, ex. ``setuptools`` — build
-    ISOLÉ par défaut, version non figée par ce dépôt, contrainte déclarée
-    rapportée honnêtement plutôt qu'une version inventée) ; le projet
-    lui-même figure pour mémoire afin de rappeler que le produit livré
-    n'embarque aucune dépendance runtime. Le tri final par nom (insensible à
-    la casse) rend la sortie déterministe.
+    ISOLÉ par défaut, mais rendu déterministe depuis le round 10 via
+    ``PIP_CONSTRAINT``/``requirements-build-constraints.txt`` : version
+    RÉELLEMENT résolue rapportée quand ce fichier l'épingle, contrainte
+    déclarée honnête en repli sinon) ; le projet lui-même figure pour mémoire
+    afin de rappeler que le produit livré n'embarque aucune dépendance
+    runtime. Le tri final par nom (insensible à la casse) rend la sortie
+    déterministe.
     """
     composants: list[dict[str, Any]] = [
         {

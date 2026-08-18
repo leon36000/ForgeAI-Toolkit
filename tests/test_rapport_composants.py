@@ -2,12 +2,17 @@
 
 Chaque test construit ses propres ``requirements-ci.txt``/``pyproject.toml``
 factices dans ``tmp_path`` : aucun ne dépend des vrais fichiers de ce dépôt,
-qui peuvent évoluer indépendamment du contrat verrouillé ici.
+qui peuvent évoluer indépendamment du contrat verrouillé ici — SAUF
+``test_packaging_epingle_dans_artefact_distribue_coherent_avec_lockfile``
+(round 10), dont le but EST précisément de vérifier une cohérence entre deux
+vrais fichiers du dépôt (garde-fou anti-dérive, pas un test de comportement
+du script isolé de son environnement).
 """
 
 from __future__ import annotations
 
 import json
+import re
 import sys
 from email.message import Message
 from pathlib import Path
@@ -570,6 +575,52 @@ def test_entrees_backend_build_pyproject_absent_retourne_liste_vide(
     assert rc._entrees_backend_build(tmp_path) == []
 
 
+def test_entrees_backend_build_version_epinglee_via_contraintes_rapportee_resolue(
+    tmp_path: Path,
+) -> None:
+    """Round 10 de revue scellée (#454) : quand requirements-build-constraints.txt
+    épingle le paquet, la version RÉSOLUE (pas la contrainte brute) doit
+    apparaître — c'est le fichier de contraintes qui fait autorité.
+    """
+    (tmp_path / "pyproject.toml").write_text(
+        '[build-system]\nrequires = ["setuptools>=68"]\n'
+        '[project]\nname = "x"\nversion = "0.1.0"\nlicense = "MIT"\n',
+        encoding="utf-8",
+    )
+    (tmp_path / "requirements-build-constraints.txt").write_text(
+        "setuptools==84.0.0\n", encoding="utf-8"
+    )
+
+    entrees = rc._entrees_backend_build(tmp_path)
+
+    assert entrees[0]["nom"] == "setuptools"
+    assert "84.0.0" in entrees[0]["version"]
+    assert "épinglée via PIP_CONSTRAINT" in entrees[0]["version"]
+    assert "non résolue" not in entrees[0]["version"]
+
+
+def test_entrees_backend_build_paquet_absent_des_contraintes_reste_non_resolu(
+    tmp_path: Path,
+) -> None:
+    """Un fichier de contraintes présent mais qui n'épingle PAS ce paquet précis
+    ne doit pas faire croire à une résolution — repli honnête inchangé.
+    """
+    (tmp_path / "pyproject.toml").write_text(
+        '[build-system]\nrequires = ["setuptools>=68", "wheel"]\n'
+        '[project]\nname = "x"\nversion = "0.1.0"\nlicense = "MIT"\n',
+        encoding="utf-8",
+    )
+    (tmp_path / "requirements-build-constraints.txt").write_text(
+        "setuptools==84.0.0\n", encoding="utf-8"
+    )
+
+    entrees = rc._entrees_backend_build(tmp_path)
+    par_nom_local = {entree["nom"]: entree for entree in entrees}
+
+    assert "84.0.0" in par_nom_local["setuptools"]["version"]
+    assert "non résolue" in par_nom_local["wheel"]["version"]
+
+
 def test_construire_rapport_backend_build_inclus_dans_inventaire_complet(
     tmp_path: Path,
 ) -> None:
@@ -659,3 +710,47 @@ def test_parser_requirements_extras_pep508_ignores_nom_et_version_extraits(
     resultat = rc._parser_requirements(chemin)
 
     assert resultat == [("requests", "2.28.0")]
+
+
+def test_packaging_epingle_dans_artefact_distribue_coherent_avec_lockfile() -> None:
+    """Round 10 de revue scellée (#454, objection mineure) : le pin `packaging`
+    de `artefact-distribue.yml` et celui de `requirements-ci.txt` doivent
+    rester identiques (couplage documenté en commentaire dans le workflow) —
+    ce test transforme cette exigence en garde-fou vérifié plutôt qu'en simple
+    commentaire, sur le VRAI dépôt (pas une racine factice).
+
+    Interroge la STRUCTURE YAML, pas le texte brut : un découpage de chaîne se
+    trompe silencieusement sur un futur réagencement de la commande (même
+    motif déjà établi par tests/test_reg029b_ancrage.py::
+    test_g11_le_gate_ci_appelle_reellement_les_controles).
+    """
+    yaml = pytest.importorskip("yaml", reason="pyyaml est installé par le job `tests` de la CI")
+    racine = Path(__file__).resolve().parents[1]
+
+    workflow = yaml.safe_load(
+        (racine / ".github" / "workflows" / "artefact-distribue.yml").read_text(
+            encoding="utf-8"
+        )
+    )
+    etapes = workflow["jobs"]["build-install-outside-checkout"]["steps"]
+    construction = next(
+        etape for etape in etapes if "Construire le wheel" in etape.get("name", "")
+    )
+    correspondance = re.search(r'"packaging==([^"]+)"', construction["run"])
+    assert correspondance is not None, (
+        "le pin packaging doit rester présent et entre guillemets dans la "
+        "commande d'installation de artefact-distribue.yml"
+    )
+    version_workflow = correspondance.group(1)
+
+    (versions_lockfile,) = (
+        version
+        for nom, version in rc._parser_requirements(racine / "requirements-ci.txt")
+        if nom == "packaging"
+    )
+
+    assert version_workflow == versions_lockfile, (
+        f"packaging=={version_workflow!r} dans artefact-distribue.yml diverge de "
+        f"packaging=={versions_lockfile!r} dans requirements-ci.txt — les deux "
+        "doivent être mis à jour ensemble (voir commentaire dans le workflow)"
+    )

@@ -13,6 +13,13 @@ jobs:
     runs-on: ubuntu-latest
     env:
       SOURCE_DATE_EPOCH: "0"
+      # Round 10 de revue scellée (#454) : force une résolution DÉTERMINISTE
+      # du backend PEP 517 dans l'environnement de build ISOLÉ, sans
+      # désactiver l'isolation elle-même (vérifié empiriquement : PIP_CONSTRAINT
+      # est bien honoré par les installations internes de `python -m build`).
+      # Voir requirements-build-constraints.txt pour le détail et la
+      # justification de la version épinglée.
+      PIP_CONSTRAINT: ${{ github.workspace }}/requirements-build-constraints.txt
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:

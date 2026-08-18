@@ -1,0 +1,22 @@
+# Contraintes de version pour l'environnement ISOLÉ PEP 517 (python -m build,
+# .github/workflows/artefact-distribue.yml) — PAS un lockfile pip-compile
+# (pas de --require-hashes, ni de dépendances transitives supplémentaires).
+#
+# Pourquoi ce fichier (revue scellée round 10, #454) : un build PEP 517 isolé
+# résout et installe le backend déclaré par [build-system].requires
+# (pyproject.toml) dans un environnement éphémère, JAMAIS reproductible sans
+# contrainte externe — pip choisirait la dernière version compatible à
+# chaque exécution. La variable d'environnement PIP_CONSTRAINT (mécanisme pip
+# officiel, vérifié empiriquement : force une résolution vers la version
+# exacte demandée SANS désactiver l'isolation elle-même — contrairement à
+# --no-isolation, qui changerait le mécanisme de build lui-même) rend cette
+# résolution déterministe. scripts/rapport_composants.py lit ce fichier pour
+# rapporter la version RÉELLEMENT installée, jamais une valeur devinée.
+#
+# setuptools==84.0.0 : dernière version stable au 2026-08-18 (vérifié
+# empiriquement via l'API PyPI), satisfait la contrainte déclarée
+# [build-system].requires = ["setuptools>=68"] (pyproject.toml). Aucune
+# dépendance propre inconditionnelle (vérifié PyPI requires_dist — 50
+# entrées, toutes conditionnelles à des extras test/docs, aucune ne
+# s'applique à une installation nue).
+setuptools==84.0.0
