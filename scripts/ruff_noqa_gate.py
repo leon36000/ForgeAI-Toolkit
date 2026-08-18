@@ -23,15 +23,19 @@ violation supprimée n'apparaît tout simplement pas dans la sortie JSON de `ruf
 seul endroit où auditer les suppressions est donc le code source lui-même, lu directement en
 octets bruts (`Path.read_bytes`) puis découpé en tokens typés par la stdlib `tokenize`.
 
-Format exigé : une directive noqa porteuse d'un code surveillé — un COMMENTAIRE Python (au
+Format contrôlé : une directive noqa porteuse d'un code surveillé — un COMMENTAIRE Python (au
 sens `tokenize.COMMENT`) en fin d'une ligne de code réel, puisque c'est là et SEULEMENT là
 que ruff l'applique — suivie, sur le reste de la même ligne, d'une justification NON VIDE
 et du motif `(révision: YYYY-MM-DD)` (accent optionnel sur é : `(revision: 2026-08-17)` aussi
 accepté), la date devant être calendairement VALIDE (pas seulement de forme `AAAA-MM-JJ` :
-`2027-99-99` est rejetée). La justification est le texte compris ENTRE la fin de la liste des
-codes et le début du motif de date : réduite à des espaces et séparateurs de ponctuation seuls
-(`-`, `—`, `:`, `,`), elle est considérée ABSENTE et le commentaire est non conforme, même
-avec une date. Exemple CONFORME (sur une ligne de code) :
+`2027-99-99` est rejetée). La justification est un texte LIBRE : n'importe quel texte non
+vide entre la fin de la liste des codes et le début du motif de date est accepté, quel que
+soit le caractère utilisé pour l'introduire ; seule une « justification » réduite, une fois
+dépouillée, à des espaces et séparateurs de ponctuation seuls (`-`, `—`, `:`, `,` — voir
+`CARACTERES_SEPARATEURS_JUSTIFICATION`) est considérée ABSENTE et rend le commentaire non
+conforme, même avec une date. Le tiret cadratin `—` employé dans les exemples de la présente
+documentation est un simple style illustratif recommandé, PAS une exigence syntaxique du
+contrôle. Exemple CONFORME (sur une ligne de code) :
 `x = urlopen(url)  # noqa: S310 — URL locale/LAN du socle (révision: 2027-02-17)`. Les
 occurrences déjà présentes sur `origin/main` avec justification mais SANS date sont
 grand-parentées dans la baseline, PAS corrigées dans cet incrément.
@@ -97,9 +101,19 @@ import gate_git_ref
 # du périmètre de ce cliquet. Ce motif n'est appliqué qu'aux tokens COMMENT issus de
 # `tokenize` ET précédés de code réel sur leur ligne physique — voir les filtres
 # structurels de `noqa_non_conformes` : un texte identique dans un littéral de chaîne ou
-# dans une ligne de commentaire pur n'est jamais examiné.
+# dans une ligne de commentaire pur n'est jamais examiné. Le flag `re.IGNORECASE` couvre le
+# mot-clé de suppression lui-même, insensible à la casse côté Ruff (vérifié empiriquement sur
+# ruff 0.15.20 : la variante toute en majuscules supprime une violation exactement comme la
+# variante toute en minuscules) — le contrôle doit donc détecter la directive quelle que soit
+# sa casse pour ne jamais sous-compter une suppression réelle (le préfixe des codes
+# `[A-Za-z]+\d+` couvre déjà les deux casses et la comparaison finale se fait via `.upper()`,
+# aucun autre ajustement nécessaire de ce côté). Aucun exemple littéral du mot-clé n'est cité
+# ici : le faire, précédé d'un second symbole dièse sur cette ligne, serait lui-même interprété
+# par Ruff comme une tentative de directive et émettrait un avertissement parasite, sans
+# rapport avec le cliquet lui-même — piège rencontré et évité en écrivant ce commentaire.
 MOTIF_CODE_NOQA: re.Pattern[str] = re.compile(
-    r"#\s*noqa:\s*([A-Za-z]+\d+(?:\s*,\s*[A-Za-z]+\d+)*)"
+    r"#\s*noqa:\s*([A-Za-z]+\d+(?:\s*,\s*[A-Za-z]+\d+)*)",
+    re.IGNORECASE,
 )
 
 # Motif de la date de révision exigée : `(révision: YYYY-MM-DD)`, accent optionnel sur é,
@@ -119,7 +133,10 @@ MOTIF_DATE_REVISION: re.Pattern[str] = re.compile(
 # non vide : espaces et séparateurs de ponctuation seuls (`-`, `—`, `:`, `,`). Une
 # « justification » réduite à ces seuls caractères (par exemple une suppression dont le texte
 # entre les codes et la date ne contient qu'un tiret cadratin) n'est PAS une justification :
-# le commentaire est non conforme même avec une date.
+# le commentaire est non conforme même avec une date. À l'inverse, TOUT autre contenu non
+# vide est une justification valide : le texte est libre, aucun séparateur précis n'est
+# exigé (le tiret cadratin des exemples de documentation est un simple style illustratif
+# recommandé, pas une règle du contrôle).
 CARACTERES_SEPARATEURS_JUSTIFICATION: str = " \t\r\n\f\v-—:,"
 
 
@@ -192,7 +209,12 @@ def noqa_non_conformes(racine: Path, regles: list[str]) -> dict[str, int]:
     `regles` et NON CONFORMES — c'est-à-dire dépourvus soit d'une date de révision
     `(révision: YYYY-MM-DD)` (accent optionnel) calendairement VALIDE placée APRÈS la liste
     des codes, soit d'une justification NON VIDE entre la liste des codes et le motif de
-    date.
+    date. La justification est un texte LIBRE : n'importe quel contenu non vide y fait foi,
+    quel que soit le caractère qui l'introduit — le tiret cadratin `—` des exemples de la
+    documentation est un simple style illustratif recommandé, PAS une exigence syntaxique
+    du contrôle (seule une « justification » réduite, une fois dépouillée, aux espaces et
+    séparateurs de ponctuation listés dans `CARACTERES_SEPARATEURS_JUSTIFICATION` est
+    considérée absente).
 
     MÉCANIQUE DE SCAN — `tokenize`, jamais de découpage texte brut de lignes. Chaque fichier
     de `fichiers_reels(racine)` est lu en OCTETS BRUTS (`Path.read_bytes`, PAS

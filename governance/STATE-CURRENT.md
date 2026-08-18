@@ -762,7 +762,7 @@
     },
     {
       "path": "tests/test_ruff_noqa_gate.py",
-      "sha256": "aecba5ecb99d1f1ef36f154f0c24fde25172c00b3781bc9dc8cd9a5d58c19130"
+      "sha256": "e9396be7c64e83db2bfbe92b4d149f44a52ac7d53e5e74d8902c506b66104877"
     },
     {
       "path": "tests/test_ruff_ratchet.py",
@@ -963,7 +963,7 @@
   "tests": {
     "js_files": 3,
     "python_files": 200,
-    "python_functions_declared": 2469
+    "python_functions_declared": 2470
   }
 }
 ```

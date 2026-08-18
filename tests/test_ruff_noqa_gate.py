@@ -322,6 +322,22 @@ def test_noqa_non_conformes_chaine_litterale_ignoree_scan_tokenize(
     }
 
 
+def test_noqa_non_conformes_casse_majuscule_detectee(tmp_path: Path) -> None:
+    """Round 5 de revue (note Qwen3.8-2.4T, vérifiée empiriquement sur ruff 0.15.20) : Ruff
+    applique la directive `noqa` independamment de sa casse. Le controle doit donc la
+    detecter aussi bien en `NOQA`/`NoQa` qu'en `noqa`, sous peine de sous-compter une
+    suppression reelle."""
+    _ecrire_source(
+        tmp_path,
+        "src/casse_majuscule.py",
+        "x = 1  # NOQA: ARG001 sans justification ni date",
+    )
+
+    assert ruff_noqa_gate.noqa_non_conformes(tmp_path, REGLES_SURVEILLEES) == {
+        "src/casse_majuscule.py": 1
+    }
+
+
 def test_noqa_non_conformes_fstring_avec_accolades_ignore(tmp_path: Path) -> None:
     """Cas limite du scan tokenize : une f-string dont le texte ressemble a une directive
     (y compris avec des accolades d'interpolation) reste un token STRING, jamais examine."""
