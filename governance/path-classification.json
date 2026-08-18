@@ -1145,8 +1145,8 @@
         }
       ],
       "rule_id": "governance-github-ci",
-      "sha256": "77e4efb2f01162442d4ad3be6f864155bda668e5e1190fa11751bd1f5fd366cb",
-      "size": 865,
+      "sha256": "f70b0019c68f9436830556d723ab710552b04e0a1c5b87bff49183f3dd204c3f",
+      "size": 5605,
       "target_path": null,
       "type": "text"
     },
@@ -2069,13 +2069,6 @@
           "candidate": "AGENTS.md",
           "line": 123,
           "referrer": "governance/state-current.schema.json",
-          "resolved": "AGENTS.md",
-          "severity": "hard"
-        },
-        {
-          "candidate": "AGENTS.md",
-          "line": 8,
-          "referrer": "scripts/coordination/scope_guard.py",
           "resolved": "AGENTS.md",
           "severity": "hard"
         },
@@ -4593,7 +4586,7 @@
         },
         {
           "candidate": "README.md",
-          "line": 178,
+          "line": 187,
           "referrer": "scripts/coordination/test_scope_guard.py",
           "resolved": "README.md",
           "severity": "hard"
@@ -8677,7 +8670,7 @@
         },
         {
           "candidate": "evidence/reviews/BINDING.txt",
-          "line": 33,
+          "line": 36,
           "referrer": "scripts/reviews_gate.py",
           "resolved": "evidence/reviews/BINDING.txt",
           "severity": "hard"
@@ -27736,6 +27729,27 @@
         },
         {
           "candidate": "governance/PATH-CLASSIFICATION.md",
+          "line": 66,
+          "referrer": ".github/workflows/scope-guard.yml",
+          "resolved": "governance/PATH-CLASSIFICATION.md",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/PATH-CLASSIFICATION.md",
+          "line": 100,
+          "referrer": ".github/workflows/scope-guard.yml",
+          "resolved": "governance/PATH-CLASSIFICATION.md",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/PATH-CLASSIFICATION.md",
+          "line": 127,
+          "referrer": ".github/workflows/scope-guard.yml",
+          "resolved": "governance/PATH-CLASSIFICATION.md",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/PATH-CLASSIFICATION.md",
           "line": 8,
           "referrer": "evidence/reviews/RC1-008-PR496-v2/DeepSeek-V4-Pro.verdict.json",
           "resolved": "governance/PATH-CLASSIFICATION.md",
@@ -27904,6 +27918,13 @@
         },
         {
           "candidate": "governance/PATH-CLASSIFICATION.md",
+          "line": 37,
+          "referrer": "scripts/coordination/scope_guard.py",
+          "resolved": "governance/PATH-CLASSIFICATION.md",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/PATH-CLASSIFICATION.md",
           "line": 797,
           "referrer": "scripts/governance/classify_paths.py",
           "resolved": "governance/PATH-CLASSIFICATION.md",
@@ -27982,6 +28003,27 @@
           "candidate": "governance/STATE-CURRENT.json",
           "line": 24,
           "referrer": ".coderabbit.yaml",
+          "resolved": "governance/STATE-CURRENT.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/STATE-CURRENT.json",
+          "line": 67,
+          "referrer": ".github/workflows/scope-guard.yml",
+          "resolved": "governance/STATE-CURRENT.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/STATE-CURRENT.json",
+          "line": 101,
+          "referrer": ".github/workflows/scope-guard.yml",
+          "resolved": "governance/STATE-CURRENT.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/STATE-CURRENT.json",
+          "line": 128,
+          "referrer": ".github/workflows/scope-guard.yml",
           "resolved": "governance/STATE-CURRENT.json",
           "severity": "hard"
         },
@@ -28197,6 +28239,13 @@
         },
         {
           "candidate": "governance/STATE-CURRENT.json",
+          "line": 38,
+          "referrer": "scripts/coordination/scope_guard.py",
+          "resolved": "governance/STATE-CURRENT.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/STATE-CURRENT.json",
           "line": 621,
           "referrer": "scripts/governance/classify_paths.py",
           "resolved": "governance/STATE-CURRENT.json",
@@ -28260,6 +28309,27 @@
         },
         {
           "candidate": "governance/STATE-CURRENT.md",
+          "line": 68,
+          "referrer": ".github/workflows/scope-guard.yml",
+          "resolved": "governance/STATE-CURRENT.md",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/STATE-CURRENT.md",
+          "line": 102,
+          "referrer": ".github/workflows/scope-guard.yml",
+          "resolved": "governance/STATE-CURRENT.md",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/STATE-CURRENT.md",
+          "line": 129,
+          "referrer": ".github/workflows/scope-guard.yml",
+          "resolved": "governance/STATE-CURRENT.md",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/STATE-CURRENT.md",
           "line": 7,
           "referrer": "evidence/reviews/BUGHUNT-2026-08-16-v1/DeepSeek-V4-Pro.verdict.json",
           "resolved": "governance/STATE-CURRENT.md",
@@ -28297,6 +28367,13 @@
           "candidate": "governance/STATE-CURRENT.md",
           "line": 148,
           "referrer": "governance/path-classification-rules.json",
+          "resolved": "governance/STATE-CURRENT.md",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/STATE-CURRENT.md",
+          "line": 39,
+          "referrer": "scripts/coordination/scope_guard.py",
           "resolved": "governance/STATE-CURRENT.md",
           "severity": "hard"
         },
@@ -29084,6 +29161,27 @@
         },
         {
           "candidate": "governance/path-classification.json",
+          "line": 65,
+          "referrer": ".github/workflows/scope-guard.yml",
+          "resolved": "governance/path-classification.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/path-classification.json",
+          "line": 99,
+          "referrer": ".github/workflows/scope-guard.yml",
+          "resolved": "governance/path-classification.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/path-classification.json",
+          "line": 126,
+          "referrer": ".github/workflows/scope-guard.yml",
+          "resolved": "governance/path-classification.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/path-classification.json",
           "line": 25,
           "referrer": "evidence/reviews/RC1-008-PR496-v2/DeepSeek-V4-Pro.verdict.json",
           "resolved": "governance/path-classification.json",
@@ -29359,6 +29457,13 @@
           "candidate": "governance/path-classification.json",
           "line": 5,
           "referrer": "governance/path-classification.schema.json",
+          "resolved": "governance/path-classification.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/path-classification.json",
+          "line": 36,
+          "referrer": "scripts/coordination/scope_guard.py",
           "resolved": "governance/path-classification.json",
           "severity": "hard"
         },
@@ -31010,7 +31115,7 @@
       "referenced_by": [
         {
           "candidate": "scripts/coordination/scope_guard.py",
-          "line": 31,
+          "line": 43,
           "referrer": ".github/workflows/scope-guard.yml",
           "resolved": "scripts/coordination/scope_guard.py",
           "severity": "hard"
@@ -31038,6 +31143,13 @@
         },
         {
           "candidate": "scripts/coordination/scope_guard.py",
+          "line": 25,
+          "referrer": "scripts/reviews_gate.py",
+          "resolved": "scripts/coordination/scope_guard.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "scripts/coordination/scope_guard.py",
           "line": 164,
           "referrer": "stories/ORCH-001.md",
           "resolved": "scripts/coordination/scope_guard.py",
@@ -31045,8 +31157,8 @@
         }
       ],
       "rule_id": "governance-scripts-coordination",
-      "sha256": "124f055f8de0c75fb15d9237510862d838088eac117b7d498e94efa4eaf721c9",
-      "size": 5107,
+      "sha256": "0e8963db231f7163508e6aaa6af232d2ecf54348cb3dadddf4dea02f2ad6bca6",
+      "size": 10025,
       "target_path": null,
       "type": "text"
     },
@@ -31094,6 +31206,13 @@
       "referenced_by": [
         {
           "candidate": "scripts/coordination/test_scope_guard.py",
+          "line": 24,
+          "referrer": ".github/workflows/scope-guard.yml",
+          "resolved": "scripts/coordination/test_scope_guard.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "scripts/coordination/test_scope_guard.py",
           "line": 78,
           "referrer": "governance/path-classification-rules.json",
           "resolved": "scripts/coordination/test_scope_guard.py",
@@ -31129,8 +31248,8 @@
         }
       ],
       "rule_id": "coordination-sonar-test-scope-guard",
-      "sha256": "9f8201dce1286b38c70b004eea9e865463a028c48ba2d9e9ba3a1e90b3d0a768",
-      "size": 9604,
+      "sha256": "b7dc352854d60edd901137a683a8e1dee24be0681285617583cf39594a0c8bc7",
+      "size": 14715,
       "target_path": null,
       "type": "text"
     },
@@ -31213,7 +31332,7 @@
       "referenced_by": [
         {
           "candidate": "scripts/coordination/validate_coordination.py",
-          "line": 19,
+          "line": 26,
           "referrer": ".github/workflows/scope-guard.yml",
           "resolved": "scripts/coordination/validate_coordination.py",
           "severity": "hard"
@@ -31849,6 +31968,20 @@
         },
         {
           "candidate": "scripts/governance/classify_paths.py",
+          "line": 58,
+          "referrer": ".github/workflows/scope-guard.yml",
+          "resolved": "scripts/governance/classify_paths.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "scripts/governance/classify_paths.py",
+          "line": 90,
+          "referrer": ".github/workflows/scope-guard.yml",
+          "resolved": "scripts/governance/classify_paths.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "scripts/governance/classify_paths.py",
           "line": 6,
           "referrer": "evidence/reviews/RC1-008-PR496-v2/DeepSeek-V4-Pro.verdict.json",
           "resolved": "scripts/governance/classify_paths.py",
@@ -32201,6 +32334,20 @@
           "candidate": "scripts/governance/state_current.py",
           "line": 105,
           "referrer": ".github/workflows/gates.yml",
+          "resolved": "scripts/governance/state_current.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "scripts/governance/state_current.py",
+          "line": 59,
+          "referrer": ".github/workflows/scope-guard.yml",
+          "resolved": "scripts/governance/state_current.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "scripts/governance/state_current.py",
+          "line": 91,
+          "referrer": ".github/workflows/scope-guard.yml",
           "resolved": "scripts/governance/state_current.py",
           "severity": "hard"
         },
@@ -34215,8 +34362,8 @@
         }
       ],
       "rule_id": "governance-scripts-root",
-      "sha256": "8342733027875ed23dd397b4b043995eb3ee59f4fe99b585dd22b83d53134502",
-      "size": 9858,
+      "sha256": "ef0a190c257a3b248ee20277d49769ddfbced78c70a45835cd9c1d6721cda248",
+      "size": 11708,
       "target_path": null,
       "type": "text"
     },
@@ -40387,14 +40534,14 @@
         },
         {
           "candidate": "src/forgeai/hardware/detect.py",
-          "line": 84,
+          "line": 83,
           "referrer": "scripts/coordination/test_scope_guard.py",
           "resolved": "src/forgeai/hardware/detect.py",
           "severity": "hard"
         },
         {
           "candidate": "src/forgeai/hardware/detect.py",
-          "line": 96,
+          "line": 95,
           "referrer": "scripts/coordination/test_scope_guard.py",
           "resolved": "src/forgeai/hardware/detect.py",
           "severity": "hard"
@@ -59832,8 +59979,38 @@
         "referrer": ".github/workflows/scope-guard.yml"
       },
       {
+        "candidate": "actions/setup-python",
+        "line": 18,
+        "referrer": ".github/workflows/scope-guard.yml"
+      },
+      {
         "candidate": "actions/checkout",
-        "line": 24,
+        "line": 31,
+        "referrer": ".github/workflows/scope-guard.yml"
+      },
+      {
+        "candidate": "refs/pull/",
+        "line": 35,
+        "referrer": ".github/workflows/scope-guard.yml"
+      },
+      {
+        "candidate": "origin/",
+        "line": 44,
+        "referrer": ".github/workflows/scope-guard.yml"
+      },
+      {
+        "candidate": "actions/checkout",
+        "line": 51,
+        "referrer": ".github/workflows/scope-guard.yml"
+      },
+      {
+        "candidate": "actions/upload-artifact",
+        "line": 61,
+        "referrer": ".github/workflows/scope-guard.yml"
+      },
+      {
+        "candidate": "actions/checkout",
+        "line": 83,
         "referrer": ".github/workflows/scope-guard.yml"
       },
       {
@@ -102587,28 +102764,73 @@
         "referrer": "scripts/catalogue_gate.py"
       },
       {
-        "candidate": "allowed_paths/forbidden_paths",
-        "line": 3,
+        "candidate": "lignes/rounds",
+        "line": 7,
         "referrer": "scripts/coordination/scope_guard.py"
       },
       {
-        "candidate": "scope-guard.yml",
-        "line": 6,
+        "candidate": "e/d",
+        "line": 24,
+        "referrer": "scripts/coordination/scope_guard.py"
+      },
+      {
+        "candidate": "evidence/reviews/",
+        "line": 41,
+        "referrer": "scripts/coordination/scope_guard.py"
+      },
+      {
+        "candidate": "evidence/registres/",
+        "line": 41,
         "referrer": "scripts/coordination/scope_guard.py"
       },
       {
         "candidate": "origin/main",
-        "line": 67,
+        "line": 94,
+        "referrer": "scripts/coordination/scope_guard.py"
+      },
+      {
+        "candidate": "tests/",
+        "line": 125,
+        "referrer": "scripts/coordination/scope_guard.py"
+      },
+      {
+        "candidate": "scripts/coordination/test_",
+        "line": 125,
+        "referrer": "scripts/coordination/scope_guard.py"
+      },
+      {
+        "candidate": "stories/",
+        "line": 127,
+        "referrer": "scripts/coordination/scope_guard.py"
+      },
+      {
+        "candidate": "origin/main",
+        "line": 176,
+        "referrer": "scripts/coordination/scope_guard.py"
+      },
+      {
+        "candidate": "origin/main",
+        "line": 203,
+        "referrer": "scripts/coordination/scope_guard.py"
+      },
+      {
+        "candidate": "STOP/SPLIT/REPLAN",
+        "line": 219,
+        "referrer": "scripts/coordination/scope_guard.py"
+      },
+      {
+        "candidate": "STOP/SPLIT/REPLAN",
+        "line": 231,
         "referrer": "scripts/coordination/scope_guard.py"
       },
       {
         "candidate": "active-claims.json",
-        "line": 95,
+        "line": 244,
         "referrer": "scripts/coordination/scope_guard.py"
       },
       {
         "candidate": "work-packages.json",
-        "line": 96,
+        "line": 245,
         "referrer": "scripts/coordination/scope_guard.py"
       },
       {
@@ -102668,72 +102890,112 @@
       },
       {
         "candidate": "coordination/work-packages.json",
-        "line": 78,
+        "line": 77,
         "referrer": "scripts/coordination/test_scope_guard.py"
       },
       {
         "candidate": "build/artifact.bin",
-        "line": 90,
+        "line": 89,
         "referrer": "scripts/coordination/test_scope_guard.py"
       },
       {
         "candidate": "coordination/work-packages.json",
-        "line": 117,
+        "line": 116,
         "referrer": "scripts/coordination/test_scope_guard.py"
       },
       {
         "candidate": "x.py",
-        "line": 125,
+        "line": 124,
         "referrer": "scripts/coordination/test_scope_guard.py"
       },
       {
         "candidate": "work-packages.json",
-        "line": 138,
+        "line": 136,
         "referrer": "scripts/coordination/test_scope_guard.py"
       },
       {
         "candidate": "active-claims.json",
-        "line": 142,
+        "line": 140,
         "referrer": "scripts/coordination/test_scope_guard.py"
       },
       {
         "candidate": "origin/main",
-        "line": 168,
+        "line": 177,
         "referrer": "scripts/coordination/test_scope_guard.py"
       },
       {
         "candidate": "origin/main",
-        "line": 178,
+        "line": 187,
         "referrer": "scripts/coordination/test_scope_guard.py"
       },
       {
         "candidate": "origin/main",
-        "line": 192,
+        "line": 200,
         "referrer": "scripts/coordination/test_scope_guard.py"
       },
       {
         "candidate": "coordination/work-packages.json",
-        "line": 192,
+        "line": 200,
         "referrer": "scripts/coordination/test_scope_guard.py"
       },
       {
         "candidate": "origin/main",
-        "line": 204,
+        "line": 212,
         "referrer": "scripts/coordination/test_scope_guard.py"
       },
       {
         "candidate": "build/artifact.bin",
-        "line": 204,
+        "line": 212,
         "referrer": "scripts/coordination/test_scope_guard.py"
       },
       {
         "candidate": "origin/main",
-        "line": 229,
+        "line": 237,
         "referrer": "scripts/coordination/test_scope_guard.py"
       },
       {
         "candidate": "absent.json",
-        "line": 255,
+        "line": 263,
+        "referrer": "scripts/coordination/test_scope_guard.py"
+      },
+      {
+        "candidate": "origin/main..HEAD",
+        "line": 326,
+        "referrer": "scripts/coordination/test_scope_guard.py"
+      },
+      {
+        "candidate": "tsrc/forgeai/a.py",
+        "line": 329,
+        "referrer": "scripts/coordination/test_scope_guard.py"
+      },
+      {
+        "candidate": "ttests/test_a.py",
+        "line": 330,
+        "referrer": "scripts/coordination/test_scope_guard.py"
+      },
+      {
+        "candidate": "tstories/S.md",
+        "line": 331,
+        "referrer": "scripts/coordination/test_scope_guard.py"
+      },
+      {
+        "candidate": "tgovernance/path-classification.json",
+        "line": 332,
+        "referrer": "scripts/coordination/test_scope_guard.py"
+      },
+      {
+        "candidate": "tevidence/reviews/S/x.verdict.json",
+        "line": 333,
+        "referrer": "scripts/coordination/test_scope_guard.py"
+      },
+      {
+        "candidate": "origin/main",
+        "line": 337,
+        "referrer": "scripts/coordination/test_scope_guard.py"
+      },
+      {
+        "candidate": "feature/sans-claim-json",
+        "line": 353,
         "referrer": "scripts/coordination/test_scope_guard.py"
       },
       {
@@ -104228,72 +104490,77 @@
       },
       {
         "candidate": "RECU.json",
-        "line": 26,
-        "referrer": "scripts/reviews_gate.py"
-      },
-      {
-        "candidate": "RECU.json",
         "line": 29,
         "referrer": "scripts/reviews_gate.py"
       },
       {
+        "candidate": "RECU.json",
+        "line": 32,
+        "referrer": "scripts/reviews_gate.py"
+      },
+      {
         "candidate": "reviews_gate.py",
-        "line": 33,
+        "line": 36,
         "referrer": "scripts/reviews_gate.py"
       },
       {
         "candidate": "revue.py",
-        "line": 51,
+        "line": 54,
+        "referrer": "scripts/reviews_gate.py"
+      },
+      {
+        "candidate": "scope_guard.py",
+        "line": 61,
         "referrer": "scripts/reviews_gate.py"
       },
       {
         "candidate": ".verdict.json",
-        "line": 132,
+        "line": 159,
         "referrer": "scripts/reviews_gate.py"
       },
       {
         "candidate": "absent/vide",
-        "line": 135,
+        "line": 162,
         "referrer": "scripts/reviews_gate.py"
       },
       {
         "candidate": "RECU.json",
-        "line": 160,
+        "line": 187,
         "referrer": "scripts/reviews_gate.py"
       },
       {
         "candidate": "origin/main",
-        "line": 176,
+        "line": 212,
         "referrer": "scripts/reviews_gate.py"
       },
       {
         "candidate": "439/PR500",
-        "line": 178,
+        "line": 214,
         "referrer": "scripts/reviews_gate.py"
       },
       {
         "candidate": "RECU.json",
-        "line": 180,
+        "line": 216,
         "referrer": "scripts/reviews_gate.py"
       },
       {
         "candidate": "RECU.json",
-        "line": 191,
+        "line": 227,
         "referrer": "scripts/reviews_gate.py"
       },
       {
         "candidate": "_diff_canonique/_etat_git_reel",
-        "line": 192,
+        "line": 228,
         "referrer": "scripts/reviews_gate.py"
       },
       {
         "candidate": "RECU.json",
-        "line": 196,
+        "line": 232,
         "referrer": "scripts/reviews_gate.py"
       },
       {
         "candidate": "liste/null",
-        "line": 196,
+        "line": 232,
         "referrer": "scripts/reviews_gate.py"
       },
       {
@@ -147298,17 +147565,136 @@
         "severity": "hard"
       },
       {
+        "candidate": "scripts/coordination/test_scope_guard.py",
+        "line": 24,
+        "referrer": ".github/workflows/scope-guard.yml",
+        "resolved": "scripts/coordination/test_scope_guard.py",
+        "severity": "hard"
+      },
+      {
         "candidate": "scripts/coordination/validate_coordination.py",
-        "line": 19,
+        "line": 26,
         "referrer": ".github/workflows/scope-guard.yml",
         "resolved": "scripts/coordination/validate_coordination.py",
         "severity": "hard"
       },
       {
         "candidate": "scripts/coordination/scope_guard.py",
-        "line": 31,
+        "line": 43,
         "referrer": ".github/workflows/scope-guard.yml",
         "resolved": "scripts/coordination/scope_guard.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "scripts/governance/classify_paths.py",
+        "line": 58,
+        "referrer": ".github/workflows/scope-guard.yml",
+        "resolved": "scripts/governance/classify_paths.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "scripts/governance/state_current.py",
+        "line": 59,
+        "referrer": ".github/workflows/scope-guard.yml",
+        "resolved": "scripts/governance/state_current.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "governance/path-classification.json",
+        "line": 65,
+        "referrer": ".github/workflows/scope-guard.yml",
+        "resolved": "governance/path-classification.json",
+        "severity": "hard"
+      },
+      {
+        "candidate": "governance/PATH-CLASSIFICATION.md",
+        "line": 66,
+        "referrer": ".github/workflows/scope-guard.yml",
+        "resolved": "governance/PATH-CLASSIFICATION.md",
+        "severity": "hard"
+      },
+      {
+        "candidate": "governance/STATE-CURRENT.json",
+        "line": 67,
+        "referrer": ".github/workflows/scope-guard.yml",
+        "resolved": "governance/STATE-CURRENT.json",
+        "severity": "hard"
+      },
+      {
+        "candidate": "governance/STATE-CURRENT.md",
+        "line": 68,
+        "referrer": ".github/workflows/scope-guard.yml",
+        "resolved": "governance/STATE-CURRENT.md",
+        "severity": "hard"
+      },
+      {
+        "candidate": "scripts/governance/classify_paths.py",
+        "line": 90,
+        "referrer": ".github/workflows/scope-guard.yml",
+        "resolved": "scripts/governance/classify_paths.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "scripts/governance/state_current.py",
+        "line": 91,
+        "referrer": ".github/workflows/scope-guard.yml",
+        "resolved": "scripts/governance/state_current.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "governance/path-classification.json",
+        "line": 99,
+        "referrer": ".github/workflows/scope-guard.yml",
+        "resolved": "governance/path-classification.json",
+        "severity": "hard"
+      },
+      {
+        "candidate": "governance/PATH-CLASSIFICATION.md",
+        "line": 100,
+        "referrer": ".github/workflows/scope-guard.yml",
+        "resolved": "governance/PATH-CLASSIFICATION.md",
+        "severity": "hard"
+      },
+      {
+        "candidate": "governance/STATE-CURRENT.json",
+        "line": 101,
+        "referrer": ".github/workflows/scope-guard.yml",
+        "resolved": "governance/STATE-CURRENT.json",
+        "severity": "hard"
+      },
+      {
+        "candidate": "governance/STATE-CURRENT.md",
+        "line": 102,
+        "referrer": ".github/workflows/scope-guard.yml",
+        "resolved": "governance/STATE-CURRENT.md",
+        "severity": "hard"
+      },
+      {
+        "candidate": "governance/path-classification.json",
+        "line": 126,
+        "referrer": ".github/workflows/scope-guard.yml",
+        "resolved": "governance/path-classification.json",
+        "severity": "hard"
+      },
+      {
+        "candidate": "governance/PATH-CLASSIFICATION.md",
+        "line": 127,
+        "referrer": ".github/workflows/scope-guard.yml",
+        "resolved": "governance/PATH-CLASSIFICATION.md",
+        "severity": "hard"
+      },
+      {
+        "candidate": "governance/STATE-CURRENT.json",
+        "line": 128,
+        "referrer": ".github/workflows/scope-guard.yml",
+        "resolved": "governance/STATE-CURRENT.json",
+        "severity": "hard"
+      },
+      {
+        "candidate": "governance/STATE-CURRENT.md",
+        "line": 129,
+        "referrer": ".github/workflows/scope-guard.yml",
+        "resolved": "governance/STATE-CURRENT.md",
         "severity": "hard"
       },
       {
@@ -170069,10 +170455,31 @@
         "severity": "hard"
       },
       {
-        "candidate": "AGENTS.md",
-        "line": 8,
+        "candidate": "governance/path-classification.json",
+        "line": 36,
         "referrer": "scripts/coordination/scope_guard.py",
-        "resolved": "AGENTS.md",
+        "resolved": "governance/path-classification.json",
+        "severity": "hard"
+      },
+      {
+        "candidate": "governance/PATH-CLASSIFICATION.md",
+        "line": 37,
+        "referrer": "scripts/coordination/scope_guard.py",
+        "resolved": "governance/PATH-CLASSIFICATION.md",
+        "severity": "hard"
+      },
+      {
+        "candidate": "governance/STATE-CURRENT.json",
+        "line": 38,
+        "referrer": "scripts/coordination/scope_guard.py",
+        "resolved": "governance/STATE-CURRENT.json",
+        "severity": "hard"
+      },
+      {
+        "candidate": "governance/STATE-CURRENT.md",
+        "line": 39,
+        "referrer": "scripts/coordination/scope_guard.py",
+        "resolved": "governance/STATE-CURRENT.md",
         "severity": "hard"
       },
       {
@@ -170098,21 +170505,21 @@
       },
       {
         "candidate": "src/forgeai/hardware/detect.py",
-        "line": 84,
+        "line": 83,
         "referrer": "scripts/coordination/test_scope_guard.py",
         "resolved": "src/forgeai/hardware/detect.py",
         "severity": "hard"
       },
       {
         "candidate": "src/forgeai/hardware/detect.py",
-        "line": 96,
+        "line": 95,
         "referrer": "scripts/coordination/test_scope_guard.py",
         "resolved": "src/forgeai/hardware/detect.py",
         "severity": "hard"
       },
       {
         "candidate": "README.md",
-        "line": 178,
+        "line": 187,
         "referrer": "scripts/coordination/test_scope_guard.py",
         "resolved": "README.md",
         "severity": "hard"
@@ -170769,15 +171176,22 @@
         "severity": "hard"
       },
       {
+        "candidate": "scripts/coordination/scope_guard.py",
+        "line": 25,
+        "referrer": "scripts/reviews_gate.py",
+        "resolved": "scripts/coordination/scope_guard.py",
+        "severity": "hard"
+      },
+      {
         "candidate": "evidence/reviews/BINDING.txt",
-        "line": 33,
+        "line": 36,
         "referrer": "scripts/reviews_gate.py",
         "resolved": "evidence/reviews/BINDING.txt",
         "severity": "hard"
       },
       {
         "candidate": "evidence/reviews",
-        "line": 34,
+        "line": 37,
         "referrer": "scripts/reviews_gate.py",
         "resolved": "evidence/reviews",
         "severity": "hard"
@@ -176543,7 +176957,7 @@
       "working-sandbox-readme": 1
     },
     "case_collisions_total": 0,
-    "dangling_references_total": 17138,
+    "dangling_references_total": 17162,
     "generated_total": 9,
     "load_bearing_total": 2095,
     "portability_violations_total": 0,

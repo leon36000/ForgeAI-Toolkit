@@ -8,7 +8,7 @@
       "sha256_recomputed_ok": true
     },
     "ci": {
-      "jobs_total": 26,
+      "jobs_total": 28,
       "workflows": 7
     },
     "cli": {
@@ -104,7 +104,7 @@
       },
       {
         "path": ".github/workflows/scope-guard.yml",
-        "sha256": "77e4efb2f01162442d4ad3be6f864155bda668e5e1190fa11751bd1f5fd366cb"
+        "sha256": "f70b0019c68f9436830556d723ab710552b04e0a1c5b87bff49183f3dd204c3f"
       },
       {
         "path": ".github/workflows/sonar-suppressions.yml",
