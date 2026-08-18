@@ -1,7 +1,7 @@
 {
   "_schema": "branch-coverage-baseline-v1",
-  "_but": "Seuil global initial de couverture de branches, défini depuis une mesure fraîche réelle (critère 2 de #451/RC1-021). INFORMATIONNEL SEULEMENT à cet incrément : pas encore câblé dans un gate CI bloquant — voir _statut.",
-  "_statut": "incrément 1 de #451 — mesure et rapport seulement, aucune règle bloquante activée. Le mécanisme empêchant une régression silencieuse (\"la baseline ne peut pas augmenter silencieusement\") et les seuils ciblés plus élevés par catégorie (orchestrateurs/sécurité/persistance/rollback) restent hors périmètre de cet incrément.",
+  "_but": "Seuil global initial de couverture de branches (incrément 1, informationnel) ET seuils ciblés par catégorie (incrément 2a, BLOQUANT — voir seuils_par_categorie) de #451/RC1-021.",
+  "_statut": "incrément 2a de #451 livré : seuils_par_categorie est désormais lu par scripts/branch_coverage_ratchet.py, job CI bloquant `branch-coverage-ratchet` (dans needs: de l'agrégateur `tests`, #580). Le seuil global ci-dessous (`seuil_global_initial_branches_pct`) reste informationnel, inchangé depuis l'incrément 1 — seul le job `tests` (lignes, --cov-fail-under=85) est bloquant sur ce nombre-là. Restent hors périmètre de 2a : campagne de mutation ciblée, disposition des mutants survivants, tests négatifs de garde (incrément 2b, nécessite un outil de mutation testing tiers).",
   "mesure_fraiche": {
     "date_utc": "2026-08-16T17:14:15Z",
     "commit": "bdd83df4e1a8ab9152dee0aca2a15af536ae360d",
@@ -15,5 +15,11 @@
     "fonctions_avec_branches_manquantes": 113
   },
   "seuil_global_initial_branches_pct": 90.21043000914914,
-  "note_seuil": "Valeur = la mesure fraîche elle-même, arrondie à rien (pas de marge ajoutée arbitrairement). Fixer un seuil INFÉRIEUR à la mesure actuelle reviendrait à autoriser une régression dès le premier jour ; ce nombre sert de point de départ pour le cliquet à construire en incrément 2, pas encore un gate."
+  "note_seuil": "Valeur = la mesure fraîche elle-même, arrondie à rien (pas de marge ajoutée arbitrairement). Fixer un seuil INFÉRIEUR à la mesure actuelle reviendrait à autoriser une régression dès le premier jour ; ce nombre sert de point de départ pour le cliquet à construire en incrément 2, pas encore un gate.",
+  "seuils_par_categorie": {
+    "orchestrateurs": 85.96837944664031,
+    "persistance": 91.73553719008265,
+    "rollback": 84.12162162162163,
+    "securite": 86.47058823529412
+  }
 }
