@@ -331,11 +331,12 @@ jobs:
     # test_rc1017_matrice_python.py::test_aucune_liste_de_dependances_de_test_n_est_dupliquee
     # exige que toute commande d'installation de paquets de CE fichier référence
     # requirements-ci.txt, --require-hashes et --no-cache-dir (cohérence du lockfile unique) —
-    # nom et version de `build` restent connus (épinglés en dur dans le script), seule sa
-    # licence est rapportée comme « inconnue » ici faute d'installation, honnêtement plutôt
-    # qu'inventée. Même traitement pour `pyproject_hooks` (dépendance directe de `build`,
-    # round 8 de revue scellée) : nom/version/licence en dur dans le script, copiés du pin
-    # explicite ajouté à artefact-distribue.yml — pas de gap ici, contrairement à `build`.
+    # nom, version ET licence de `build` restent connus (épinglés en dur dans le script,
+    # licence vérifiée manuellement via l'API PyPI depuis le round 13 — plus de gap « inconnue »
+    # faute d'installation ici, contrairement à l'état antérieur du round 4). Même traitement
+    # pour `pyproject_hooks` et `pip` (installés directement dans artefact-distribue.yml,
+    # rounds 8/13) : nom/version/licence en dur dans le script, copiés des pins explicites de
+    # ce workflow, table `_LICENCES_OUTILS_EPINGLES` centralisée depuis le round 13.
     runs-on: ubuntu-latest
     continue-on-error: true
     steps:

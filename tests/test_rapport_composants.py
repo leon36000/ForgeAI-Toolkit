@@ -311,6 +311,26 @@ def test_construire_rapport_entree_pip_toujours_presente(tmp_path: Path) -> None
     )
 
 
+def test_construire_rapport_entree_pip_bootstrap_toujours_presente(
+    tmp_path: Path,
+) -> None:
+    """Round 15 de revue scellée (#454, objection majeure) : pip==26.2.1 ne
+    devient actif qu'APRÈS avoir été installé par le pip DÉJÀ présent
+    (fourni par actions/setup-python, jamais épinglé par ce dépôt) — ce
+    bootstrap participe réellement à la construction et doit être signalé,
+    même sans version figée (aucune ne serait honnête ici).
+    """
+    _preparer_racine(tmp_path, requirements="alpha-factice==1.0\n")
+
+    rapport = rc.construire_rapport(tmp_path)
+    par_nom = _par_nom(rapport)
+
+    entree = par_nom["pip (bootstrap, avant mise à niveau)"]
+    assert "non figée" in entree["version"]
+    assert entree["licence"] == "MIT"
+    assert "actions/setup-python" in entree["source"]
+
+
 def test_construire_rapport_entree_pyproject_hooks_toujours_presente(
     tmp_path: Path,
 ) -> None:
@@ -376,8 +396,9 @@ def test_construire_rapport_requirements_vide_compte_build_hooks_et_projet(
 
     rapport = rc.construire_rapport(tmp_path)
 
-    assert rapport["nombre_composants"] == 4
+    assert rapport["nombre_composants"] == 5
     assert {composant["nom"] for composant in rapport["composants"]} == {
+        "pip (bootstrap, avant mise à niveau)",
         "pip",
         "build",
         "pyproject_hooks",

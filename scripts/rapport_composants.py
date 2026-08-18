@@ -334,6 +334,29 @@ def construire_rapport(racine: Path) -> dict[str, Any]:
         }
         for nom, version in _parser_requirements(racine / "requirements-ci.txt")
     ]
+    # Round 15 de revue scellée (#454) : pip==26.2.1 (entrée ci-dessous) ne devient
+    # actif qu'APRÈS avoir été installé — par le pip DÉJÀ présent, fourni par
+    # actions/setup-python (bootstrap flottant, hors contrôle de ce dépôt,
+    # jamais épinglable par construction : aucun outil ne peut installer une
+    # version de lui-même plus récente que celle qui existe déjà, cf.
+    # commentaire dans artefact-distribue.yml). Ce composant participe
+    # RÉELLEMENT à la construction (c'est lui qui exécute la toute première
+    # installation) : le signaler honnêtement, avec une version non figée
+    # plutôt que devinée, ferme le trou plutôt que de l'ignorer silencieusement.
+    composants.append(
+        {
+            "nom": "pip (bootstrap, avant mise à niveau)",
+            "version": (
+                "non figée — fournie par actions/setup-python (image du "
+                "runner GitHub Actions), hors contrôle de ce dépôt"
+            ),
+            "licence": _LICENCES_OUTILS_EPINGLES["pip"],
+            "source": (
+                "actions/setup-python (bootstrap implicite, exécute la "
+                "première installation avant tout pin de ce dépôt)"
+            ),
+        }
+    )
     composants.append(
         {
             "nom": "pip",
