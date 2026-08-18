@@ -106,7 +106,7 @@
     },
     {
       "path": ".github/workflows/gates.yml",
-      "sha256": "822b257b2b10267be3231ca3cd4d70b7be67a2d8e15280bf71e0f6d7f6589be5"
+      "sha256": "13b7a1fe3228846e624c4e43d6048bebd300948ee2e95f941304b8f9d3d0c125"
     },
     {
       "path": ".github/workflows/scope-guard.yml",
@@ -694,7 +694,7 @@
     },
     {
       "path": "tests/test_rc1580_tests_aggregate.py",
-      "sha256": "43a70291b9da07bbf37ed8e6cfe3976e314999dac7177db8c99d6942b6b09dc3"
+      "sha256": "e02c55911543042df4da7156fe3d4526946a1d24e509a5512d41029fc36ce834"
     },
     {
       "path": "tests/test_readme_dist_status.py",
@@ -979,7 +979,7 @@
   "tests": {
     "js_files": 3,
     "python_files": 203,
-    "python_functions_declared": 2606
+    "python_functions_declared": 2607
   }
 }
 ```

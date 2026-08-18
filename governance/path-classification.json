@@ -298,8 +298,8 @@
       "path": ".docs-exempt",
       "referenced_by": [],
       "rule_id": "governance-docs-exempt",
-      "sha256": "b968091b9ed79aae4404501a97ad7767493342c2d0d7756d260e22945639fbc7",
-      "size": 18725,
+      "sha256": "f09b935ed99406de503baddfd3aa656bc28c1413e03fac5411ea2bb93f6e2633",
+      "size": 19129,
       "target_path": null,
       "type": "text"
     },
@@ -1110,8 +1110,8 @@
         }
       ],
       "rule_id": "governance-github-ci",
-      "sha256": "822b257b2b10267be3231ca3cd4d70b7be67a2d8e15280bf71e0f6d7f6589be5",
-      "size": 25151,
+      "sha256": "13b7a1fe3228846e624c4e43d6048bebd300948ee2e95f941304b8f9d3d0c125",
+      "size": 25659,
       "target_path": null,
       "type": "text"
     },
@@ -32883,7 +32883,7 @@
       "referenced_by": [
         {
           "candidate": "scripts/governance/verifier_agregat_tests.py",
-          "line": 496,
+          "line": 504,
           "referrer": ".github/workflows/gates.yml",
           "resolved": "scripts/governance/verifier_agregat_tests.py",
           "severity": "hard"
@@ -32897,8 +32897,8 @@
         }
       ],
       "rule_id": "governance-scripts-governance",
-      "sha256": "6c60ff6c6749b8be5c57dd2c98d8f6b7b5d7843409f07e8bf703c0ca492e10b6",
-      "size": 3177,
+      "sha256": "4ffc2a05a9c4b3504de5c3224a4507837347b1ae6bd8183db39bdcb00881f83e",
+      "size": 3721,
       "target_path": null,
       "type": "text"
     },
@@ -55567,8 +55567,8 @@
         }
       ],
       "rule_id": "test-suite",
-      "sha256": "43a70291b9da07bbf37ed8e6cfe3976e314999dac7177db8c99d6942b6b09dc3",
-      "size": 8475,
+      "sha256": "e02c55911543042df4da7156fe3d4526946a1d24e509a5512d41029fc36ce834",
+      "size": 8890,
       "target_path": null,
       "type": "text"
     },
@@ -60304,6 +60304,21 @@
       {
         "candidate": "scope-guard/coordination-validation",
         "line": 459,
+        "referrer": ".github/workflows/gates.yml"
+      },
+      {
+        "candidate": "scripts/governance/",
+        "line": 494,
+        "referrer": ".github/workflows/gates.yml"
+      },
+      {
+        "candidate": "verifier_agregat_tests.py",
+        "line": 495,
+        "referrer": ".github/workflows/gates.yml"
+      },
+      {
+        "candidate": "actions/checkout",
+        "line": 498,
         "referrer": ".github/workflows/gates.yml"
       },
       {
@@ -141018,17 +141033,17 @@
       },
       {
         "candidate": "gates.yml",
-        "line": 139,
+        "line": 148,
         "referrer": "tests/test_rc1580_tests_aggregate.py"
       },
       {
         "candidate": "gates.yml",
-        "line": 168,
+        "line": 177,
         "referrer": "tests/test_rc1580_tests_aggregate.py"
       },
       {
         "candidate": "verifier_agregat_tests.py",
-        "line": 216,
+        "line": 225,
         "referrer": "tests/test_rc1580_tests_aggregate.py"
       },
       {
@@ -148238,7 +148253,7 @@
       },
       {
         "candidate": "scripts/governance/verifier_agregat_tests.py",
-        "line": 496,
+        "line": 504,
         "referrer": ".github/workflows/gates.yml",
         "resolved": "scripts/governance/verifier_agregat_tests.py",
         "severity": "hard"
@@ -177658,7 +177673,7 @@
       "working-sandbox-readme": 1
     },
     "case_collisions_total": 0,
-    "dangling_references_total": 17238,
+    "dangling_references_total": 17241,
     "generated_total": 9,
     "load_bearing_total": 2108,
     "portability_violations_total": 0,
