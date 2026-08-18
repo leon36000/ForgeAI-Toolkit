@@ -137,14 +137,10 @@ jobs:
           python -m build --wheel --sdist --outdir dist-premier
           python -m build --wheel --sdist --outdir dist-second
           python3 -c '
-          import hashlib
           import sys
           import tarfile
           import zipfile
           from pathlib import Path
-
-          def digest(path):
-              return hashlib.sha256(path.read_bytes()).hexdigest()
 
           def members(path):
               if path.suffix == ".whl":
@@ -170,14 +166,17 @@ jobs:
               if not correspondant.is_file():
                   erreurs.append(f"Artefact absent de la seconde construction : {correspondant}")
                   continue
-              if digest(artefact) == digest(correspondant):
-                  continue
-              erreurs.append(
-                  f"Empreintes différentes pour {artefact.name} : "
-                  f"{digest(artefact)} != {digest(correspondant)}"
-              )
+              # Décision basée sur le CONTENU logique (membres(), noms+bytes des fichiers dans
+              # l archive), jamais sur le hash brut du fichier archive entier : le format tar.gz
+              # du sdist n honore pas SOURCE_DATE_EPOCH pour les métadonnées internes (mtime des
+              # répertoires et de PKG-INFO/setup.cfg générés à la volée, vérifié empiriquement —
+              # le wheel/zip, lui, est byte-identique) — un hash brut produirait donc un faux
+              # négatif systématique sur le sdist malgré un contenu réellement identique.
               membres_a = members(artefact)
               membres_b = members(correspondant)
+              if membres_a == membres_b:
+                  continue
+              erreurs.append(f"Contenu différent pour {artefact.name} :")
               for nom in sorted(set(membres_a) | set(membres_b)):
                   if membres_a.get(nom) != membres_b.get(nom):
                       erreurs.append(f"  membre différent : {nom}")
