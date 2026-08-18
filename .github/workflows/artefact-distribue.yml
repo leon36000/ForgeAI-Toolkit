@@ -60,31 +60,31 @@ jobs:
             "$travail/venv/bin/forgeai" --help
             "$travail/venv/bin/forgeai" doctor
             "$travail/venv/bin/python" -c '
-            import json
-            from importlib import resources
+          import json
+          from importlib import resources
 
-            catalogue = resources.files("forgeai.data").joinpath("catalogue.json")
-            assert catalogue.is_file(), catalogue
-            assert json.loads(catalogue.read_text(encoding="utf-8")) is not None
+          catalogue = resources.files("forgeai.data").joinpath("catalogue.json")
+          assert catalogue.is_file(), catalogue
+          assert json.loads(catalogue.read_text(encoding="utf-8")) is not None
             '
 
             "$travail/venv/bin/forgeai" web --host 127.0.0.1 --port 8765 >"$travail/web.log" 2>&1 &
             pid_web=$!
 
-            python - <<'PY'
-            import time
-            from urllib.request import urlopen
+            python3 -c '
+          import time
+          from urllib.request import urlopen
 
-            for _ in range(50):
-                try:
-                    with urlopen("http://127.0.0.1:8765/", timeout=1) as response:
-                        if response.status == 200:
-                            break
-                except OSError:
-                    time.sleep(0.1)
-            else:
-                raise SystemExit("La web-app installée n'a pas démarré ; consultez le journal.")
-            PY
+          for _ in range(50):
+              try:
+                  with urlopen("http://127.0.0.1:8765/", timeout=1) as response:
+                      if response.status == 200:
+                          break
+              except OSError:
+                  time.sleep(0.1)
+          else:
+              raise SystemExit("La web-app installee ne repond pas ; consultez le journal.")
+            '
 
             kill -INT "$pid_web"
             statut=0
@@ -94,17 +94,17 @@ jobs:
 
             "$travail/venv/bin/python" -m pip uninstall --yes forgeai-toolkit
             "$travail/venv/bin/python" -c '
-            import importlib.util
-            import site
-            from pathlib import Path
+          import importlib.util
+          import site
+          from pathlib import Path
 
-            assert importlib.util.find_spec("forgeai") is None
-            restes = []
-            for dossier in site.getsitepackages():
-                for chemin in Path(dossier).iterdir():
-                    if chemin.name.lower().startswith(("forgeai", "forgeai_toolkit")):
-                        restes.append(str(chemin))
-            assert not restes, "Fichiers ForgeAI restants dans site-packages : " + ", ".join(restes)
+          assert importlib.util.find_spec("forgeai") is None
+          restes = []
+          for dossier in site.getsitepackages():
+              for chemin in Path(dossier).iterdir():
+                  if chemin.name.lower().startswith(("forgeai", "forgeai_toolkit")):
+                      restes.append(str(chemin))
+          assert not restes, "Fichiers ForgeAI restants dans site-packages : " + ", ".join(restes)
             '
           )
 
@@ -118,7 +118,7 @@ jobs:
           rm -rf dist-premier dist-second
           python -m build --wheel --sdist --outdir dist-premier
           python -m build --wheel --sdist --outdir dist-second
-          python - <<'PY'
+          python3 -c '
           import hashlib
           import sys
           import tarfile
@@ -171,7 +171,7 @@ jobs:
           if erreurs:
               print("\n".join(erreurs), file=sys.stderr)
               raise SystemExit(1)
-          PY
+          '
 
       - name: Produire les empreintes des artefacts publiés
         shell: bash
