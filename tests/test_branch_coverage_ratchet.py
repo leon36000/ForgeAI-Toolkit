@@ -145,6 +145,24 @@ def test_calculer_matching_motif_fichier_simple_vault_etoile() -> None:
     assert sorted(cov["securite"]["fichiers"]) == ["src/forgeai/models/vault.py", "src/forgeai/models/vault_utils.py"]
 
 
+def test_calculer_motif_simple_ne_traverse_pas_les_separateurs() -> None:
+    """Round 11 de revue scellée (#451, objection mineure fondée) : un motif SANS `**` (ex.
+    `vault*.py`) ne doit jamais matcher un fichier dans un SOUS-répertoire — contrairement à
+    fnmatch seul (qui ne distingue pas `*` de `**`), PurePath.match() respecte les séparateurs
+    de chemin et c'est le comportement voulu pour un motif simple, non récursif."""
+    categories = {
+        "securite": {"description": "x", "chemins": ["src/forgeai/models/vault*.py"]},
+    }
+    donnees = _rapport({
+        "src/forgeai/models/vault.py": _fichier_summary(10, 1),
+        "src/forgeai/models/vault/sub.py": _fichier_summary(100, 50),
+    })
+    cov = branch_coverage_ratchet.calculer_couverture_par_categorie(donnees, categories)
+    assert cov["securite"]["fichiers"] == ["src/forgeai/models/vault.py"]
+    assert cov["securite"]["num_branches"] == 10
+    assert cov["securite"]["missing_branches"] == 1
+
+
 def test_calculer_fichiers_sans_summary_ignores() -> None:
     categories = {
         "orchestrateurs": {"description": "x", "chemins": ["src/forgeai/deploy/**"]},

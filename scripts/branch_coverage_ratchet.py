@@ -129,8 +129,21 @@ def _valider_baseline_reference(data: Any, libelle: str) -> dict[str, Any]:
 
 
 def _fichier_matche(chemin: str, globs: list[str]) -> bool:
+    # Round 11 de revue scellée (#451, objection mineure fondée) : le repli fnmatch était
+    # auparavant INCONDITIONNEL (testé même quand PurePath.match() répond proprement False,
+    # pas seulement sur exception) — fnmatch ne fait aucune distinction entre `*` et `**`
+    # (les deux traversent les séparateurs de chemin), donc un motif SIMPLE comme
+    # `vault*.py` matchait à tort un fichier de sous-répertoire (`vault/sub.py`). Corrigé :
+    # fnmatch n'est utilisé QUE pour les motifs contenant explicitement `**` (glob récursif,
+    # nécessaire car PurePath.match() ne le supporte pas nativement sur Python < 3.13 — voir
+    # test_calculer_matching_glob_double_etoile_dossier_entier) ; tout motif SANS `**` se fie
+    # uniquement à PurePath.match(), qui respecte déjà correctement les séparateurs.
     pure = PurePath(chemin)
     for pattern in globs:
+        if "**" in pattern:
+            if fnmatch.fnmatch(chemin, pattern) or fnmatch.fnmatch(pure.as_posix(), pattern):
+                return True
+            continue
         try:
             if pure.match(pattern):
                 return True
@@ -138,11 +151,8 @@ def _fichier_matche(chemin: str, globs: list[str]) -> bool:
             # PurePath.match() lève ValueError sur un pattern vide/malformé — bascule sur
             # fnmatch ci-dessous plutôt que de faire échouer tout le calcul de couverture pour
             # un seul glob mal formé (toute autre exception, elle, doit remonter).
-            pass
-        if fnmatch.fnmatch(chemin, pattern):
-            return True
-        if fnmatch.fnmatch(PurePath(chemin).as_posix(), pattern):
-            return True
+            if fnmatch.fnmatch(chemin, pattern) or fnmatch.fnmatch(pure.as_posix(), pattern):
+                return True
     return False
 
 

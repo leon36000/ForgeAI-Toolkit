@@ -274,6 +274,23 @@ Les 3 autres objections mineures restent non-actionnables (limitations structure
 de revue — le reviewer ne voit qu'un diff, jamais l'exécution empirique ni le contenu complet de
 fichiers non modifiés par cette PR) : documentées identiquement depuis les rounds 1/3/5/6/8.
 
+## Round 11 de revue scellée — REJECT 2/3 APPROVE, 0 objection bloquante, 1 objection majeure
+FONDÉE trouvée (bug latent réel, corrigé)
+
+Objection technique nouvelle et vérifiée empiriquement : le repli `fnmatch` de `_fichier_matche`
+était testé INCONDITIONNELLEMENT après un `PurePath.match()` qui répond proprement `False` (pas
+seulement en cas d'exception) — `fnmatch` ne distingue pas `*` de `**` (les deux traversent les
+séparateurs de chemin), donc un motif SIMPLE comme `vault*.py` aurait matché à tort un fichier
+d'un sous-répertoire (`vault/sub.py`), faussant silencieusement l'agrégat d'une catégorie. Vérifié
+qu'aucun sous-répertoire de ce type n'existe actuellement dans le dépôt réel (`find
+src/forgeai/models -path '*/vault/*' -o -path '*/probe/*' -o -path '*/local/*'` vide) — la mesure
+actuelle n'était pas faussée aujourd'hui, mais le bug était réellement atteignable pour toute
+future addition. **Corrigé** : `fnmatch` n'est désormais utilisé QUE pour les motifs contenant
+explicitement `**` (glob récursif, nécessaire car `PurePath.match()` ne le supporte pas
+nativement sur Python < 3.13) ; tout motif sans `**` se fie uniquement à `PurePath.match()`, qui
+respecte déjà correctement les séparateurs. Nouveau test dédié
+(`test_calculer_motif_simple_ne_traverse_pas_les_separateurs`), 47/47 tests verts.
+
 ## Hors périmètre (incrément 2b, story distincte)
 
 Campagne de mutation ciblée sur les gardes/compensations, disposition de chaque mutant survivant,
