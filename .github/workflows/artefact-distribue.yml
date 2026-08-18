@@ -49,7 +49,21 @@ jobs:
           # packaging. pip==26.2.1 : vérifié PyPI comme AUTO-CONTENU (aucune
           # dépendance propre, requires_dist vide -- vendoring délibéré de
           # l'écosystème pip, terminaison naturelle de cette fermeture).
-          python -m pip install --no-cache-dir "pip==26.2.1" "build==1.2.2.post1" "pyproject_hooks==1.2.0" "packaging==26.3"
+          # Round 14 (objection majeure) : pip==26.2.1 doit être installé en
+          # PREMIER, dans une invocation SÉPARÉE -- sinon c'est le pip flottant
+          # fourni par actions/setup-python (jamais épinglé, hors contrôle de
+          # ce dépôt) qui installerait build/pyproject_hooks/packaging, rendant
+          # le pin de pip cosmétique. Avec ce découpage, pip==26.2.1 est bien
+          # actif (site-packages mis à jour) AVANT d'installer le reste -- et
+          # donc aussi avant `python -m build`, qui invoque pip en interne pour
+          # l'environnement isolé du backend PEP 517. Le bootstrap initial
+          # (pip flottant installant pip==26.2.1 lui-même) reste, par nature,
+          # non épinglable : aucun outil ne peut installer une version de
+          # lui-même plus récente qu'il n'existe déjà -- même limitation
+          # universelle que « qui a compilé le premier compilateur C », hors
+          # périmètre de ce correctif.
+          python -m pip install --no-cache-dir --upgrade "pip==26.2.1"
+          python -m pip install --no-cache-dir "build==1.2.2.post1" "pyproject_hooks==1.2.0" "packaging==26.3"
           rm -rf dist
           python -m build --wheel --sdist --outdir dist
 

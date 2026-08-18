@@ -328,7 +328,7 @@ def test_construire_rapport_entree_pyproject_hooks_toujours_presente(
     par_nom = _par_nom(rapport)
 
     assert par_nom["pyproject_hooks"]["version"] == "1.2.0"
-    assert par_nom["pyproject_hooks"]["licence"] == "OSI Approved :: MIT License"
+    assert par_nom["pyproject_hooks"]["licence"] == "MIT"
     assert (
         par_nom["pyproject_hooks"]["source"]
         == "artefact-distribue.yml (installation directe, hors requirements-ci.txt)"
@@ -510,6 +510,24 @@ def test_entree_projet_version_absente_leve(tmp_path: Path) -> None:
 def test_entree_projet_licence_absente_leve(tmp_path: Path) -> None:
     (tmp_path / "pyproject.toml").write_text(
         '[project]\nname = "x"\nversion = "0.1.0"\n', encoding="utf-8"
+    )
+
+    with pytest.raises(ValueError, match="'project.license'"):
+        rc._entree_projet(tmp_path)
+
+
+def test_entree_projet_licence_table_pep621_leve_value_error(tmp_path: Path) -> None:
+    """Round 14 de revue scellée (#454, objection mineure) : project.license
+    en table PEP 621 ({text = "..."}) plutôt qu'en chaîne SPDX directe n'était
+    couvert par aucun test — déjà géré correctement (ValueError propre, pas
+    de crash, vérifié empiriquement round 2), mais jamais prouvé par un test
+    dédié jusqu'ici. Le VRAI pyproject.toml de ce dépôt utilise une chaîne
+    simple (non affecté), mais rien n'empêche un futur pyproject.toml externe
+    d'utiliser la forme table.
+    """
+    (tmp_path / "pyproject.toml").write_text(
+        '[project]\nname = "x"\nversion = "0.1.0"\nlicense = {text = "MIT"}\n',
+        encoding="utf-8",
     )
 
     with pytest.raises(ValueError, match="'project.license'"):

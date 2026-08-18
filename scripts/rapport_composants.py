@@ -206,9 +206,16 @@ _LICENCES_BACKEND_EPINGLEES = {
 # dans le code (objection mineure round 13 : pyproject_hooks n'avait aucune
 # table nommée/documentée, contrairement à setuptools) — un seul endroit à
 # vérifier/mettre à jour si les métadonnées PyPI de ces paquets changent.
+# Forme SPDX courte partout (round 14, objection mineure de cohérence) :
+# pyproject_hooks n'expose pas de License-Expression sur PyPI (seulement le
+# classifier "License :: OSI Approved :: MIT License"), mais la licence
+# RÉELLE reste MIT sans ambiguïté — normalisé ici à la même forme que
+# build/pip pour la lisibilité de l'audit, plutôt que de laisser deux
+# conventions différentes cohabiter dans la même table pour la même famille
+# de composants (build/pyproject_hooks/pip installés ensemble).
 _LICENCES_OUTILS_EPINGLES = {
     "build": "MIT",
-    "pyproject_hooks": "OSI Approved :: MIT License",
+    "pyproject_hooks": "MIT",
     "pip": "MIT",
 }
 
