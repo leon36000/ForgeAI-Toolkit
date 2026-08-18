@@ -174,13 +174,8 @@ def review_round_policy(round_number: int, *, replanned: bool = False) -> tuple[
 
 
 def get_changed_files(base_ref: str = "origin/main") -> list[str]:
-    res = subprocess.run(
-        ["git", "diff", "--name-only", f"{base_ref}...HEAD"],
-        capture_output=True,
-        text=True,
-        check=True,
-    )
-    return [line for line in res.stdout.splitlines() if line]
+    output = _run_git(["git", "diff", "--name-only", f"{base_ref}...HEAD"])
+    return [line for line in output.splitlines() if line]
 
 
 def current_branch() -> str:
@@ -188,8 +183,7 @@ def current_branch() -> str:
     branch = os.environ.get("GITHUB_HEAD_REF")
     if branch:
         return branch
-    res = subprocess.run(["git", "branch", "--show-current"], capture_output=True, text=True)
-    return res.stdout.strip()
+    return _run_git(["git", "branch", "--show-current"]).strip()
 
 
 def load(path: Path) -> dict:
