@@ -182,6 +182,36 @@ réel contre `origin/main` reste `exit 0`/« aucune régression ». Ce refactori
 mécaniquement la revue scellée round 5 (le code change substantiellement) — round 6 requis
 malgré l'absence de changement fonctionnel.
 
+## Round 6 de revue scellée — REJECT 2/3 APPROVE (Qwen3.8-2.4T + MiMo-V2.5-Pro APPROVE ;
+GPT-5.6-Terra-Pro REJECT, objection majeure réfutée avec preuve technique détaillée)
+
+Incident de process : DeepSeek 2 échecs de route ("NoneType"), swap vers MiMo-V2.5-Pro (pool de
+rotation, déjà fiable aux rounds 3/4).
+
+**Objection majeure (réfutée, code inchangé)** : « si la référence git ne peut pas être
+chargée, le gate continue et peut valider une baseline locale abaissée — baisse silencieuse
+possible ». Analysé précisément via le code réel de `gate_git_ref.charger_base_reference_git` :
+un retour gracieux `(None, message)` (non bloquant) ne survient QUE dans un seul cas précis —
+`git show {ref}:{chemin}` échoue car le FICHIER n'existe pas encore à cette référence (motif
+« premier commit du mécanisme », même principe déjà établi pour `ruff_ratchet.py`/
+`mypy_gate.py`). TOUTE panne réelle (git absent, `origin/main` inaccessible faute de
+`fetch-depth: 0`, JSON invalide à la référence) lève une exception (`RuntimeError`/`ValueError`)
+qui EST capturée par `main()` et fait échouer le gate (`return 1`) — prouvé empiriquement par
+`test_main_reference_git_panne_fait_echouer` (déjà présent, inchangé, vert). Pour toute
+catégorie DÉJÀ établie dans `origin/main` (notre cas réel dès que cette PR est mergée — les 4
+catégories actuelles auront alors toutes un seuil non-vide dans la référence), la comparaison
+anti-baisse s'applique normalement et détecte toute régression. Le seul scénario où la
+comparaison est sautée est l'ajout futur d'une TOUTE NOUVELLE catégorie jamais vue dans la
+référence — comportement voulu (impossible de comparer un premier seuil à une référence qui n'a
+jamais eu cette catégorie), pas une brèche exploitable sur une catégorie existante.
+
+**Objections mineures — vérifiées, non retenues** : ambiguïté « seuils plus élevés » (déjà
+documentée round 1/3/5, réponse inchangée) ; test structurel ne vérifie pas explicitement le
+nom d'artefact download/upload (vrai mais mineur, le job échouerait de toute façon bruyamment en
+CI si le nom divergeait — `actions/download-artifact` échoue explicitement si l'artefact nommé
+n'existe pas) ; repli `fnmatch` pouvant élargir un glob à travers des séparateurs (comportement
+`fnmatch` standard documenté, déjà utilisé ailleurs dans ce dépôt sans incident).
+
 ## Hors périmètre (incrément 2b, story distincte)
 
 Campagne de mutation ciblée sur les gardes/compensations, disposition de chaque mutant survivant,
