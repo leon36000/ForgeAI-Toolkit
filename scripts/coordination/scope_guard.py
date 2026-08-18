@@ -204,7 +204,7 @@ def _parse_args(argv: list[str] | None) -> argparse.Namespace:
     parser.add_argument("--head-ref", default="HEAD")
     parser.add_argument("--round", type=int, dest="review_round")
     parser.add_argument("--replanned", action="store_true")
-    return parser.parse_args(argv)
+    return parser.parse_args([] if argv is None else argv)
 
 
 def _quantitative_preflight(args: argparse.Namespace) -> bool:
@@ -290,4 +290,4 @@ def main(argv: list[str] | None = None) -> int:
 
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    raise SystemExit(main(sys.argv[1:]))
