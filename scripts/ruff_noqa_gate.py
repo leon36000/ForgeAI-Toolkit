@@ -20,29 +20,48 @@ non-croissance contre une référence git — aucune réinvention de cette parti
 Différence structurelle majeure avec `ruff_ratchet.py` : ce cliquet N'INVOQUE JAMAIS ruff —
 aucun subprocess nulle part dans ce fichier. Ruff applique nativement les `# noqa` : une
 violation supprimée n'apparaît tout simplement pas dans la sortie JSON de `ruff check`. Le
-seul endroit où auditer les suppressions est donc le code source lui-même, lu directement
-(`Path.read_text`).
+seul endroit où auditer les suppressions est donc le code source lui-même, lu directement en
+octets bruts (`Path.read_bytes`) puis découpé en tokens typés par la stdlib `tokenize`.
 
-Format exigé : une directive noqa porteuse d'un code surveillé, placée en fin d'une ligne de
-CODE RÉEL (jamais sur une ligne de commentaire pur), suivie, sur le reste de la même ligne,
-d'une justification NON VIDE et du motif `(révision: YYYY-MM-DD)` (accent optionnel sur é :
-`(revision: 2026-08-17)` aussi accepté), la date devant être calendairement VALIDE (pas
-seulement de forme `AAAA-MM-JJ` : `2027-99-99` est rejetée). La justification est le texte
-compris ENTRE la fin de la liste des codes et le début du motif de date : réduite à des
-espaces et séparateurs de ponctuation seuls (`-`, `—`, `:`, `,`), elle est considérée ABSENTE
-et la ligne est non conforme, même avec une date. Exemple CONFORME (sur une ligne de code) :
+Format exigé : une directive noqa porteuse d'un code surveillé — un COMMENTAIRE Python (au
+sens `tokenize.COMMENT`) en fin d'une ligne de code réel, puisque c'est là et SEULEMENT là
+que ruff l'applique — suivie, sur le reste de la même ligne, d'une justification NON VIDE
+et du motif `(révision: YYYY-MM-DD)` (accent optionnel sur é : `(revision: 2026-08-17)` aussi
+accepté), la date devant être calendairement VALIDE (pas seulement de forme `AAAA-MM-JJ` :
+`2027-99-99` est rejetée). La justification est le texte compris ENTRE la fin de la liste des
+codes et le début du motif de date : réduite à des espaces et séparateurs de ponctuation seuls
+(`-`, `—`, `:`, `,`), elle est considérée ABSENTE et le commentaire est non conforme, même
+avec une date. Exemple CONFORME (sur une ligne de code) :
 `x = urlopen(url)  # noqa: S310 — URL locale/LAN du socle (révision: 2027-02-17)`. Les
 occurrences déjà présentes sur `origin/main` avec justification mais SANS date sont
 grand-parentées dans la baseline, PAS corrigées dans cet incrément.
 
-Distinction essentielle du scanner : une VRAIE directive noqa supprime une violation sur une
-ligne de CODE RÉEL — elle est toujours en fin de ligne, jamais sur une ligne de commentaire
-pur. Toute ligne qui, une fois dépouillée de ses espaces de début, COMMENCE directement par
-`#` est un bloc de commentaire explicatif pur (aucun code avant le `#`) : elle est ignorée
-intégralement, même si elle contient un texte ressemblant à une directive (ex. les exemples
-littéraux de la présente docstring ou des commentaires documentaires). Sans ce filtre, le
-scanner confondrait la documentation du format avec de vraies suppressions et s'auditerait
-lui-même.
+Distinction essentielle du scanner : une VRAIE directive noqa est un COMMENTAIRE Python — un
+token `COMMENT` au sens de la stdlib `tokenize` — jamais un littéral de chaîne contenant un
+texte ressemblant. Le scan repose donc sur `tokenize.tokenize` (PEP-263-aware, lecture en
+octets bruts) et ne traite QUE les tokens de type `tokenize.COMMENT` : un token `STRING`
+(littéral de chaîne, docstring en position code, f-string — par exemple une affectation dont
+la valeur est un littéral documentant le format attendu) contenant une sous-chaîne identique
+à une directive est ignoré par construction — il est structurellement impossible de le
+confondre avec un vrai commentaire, quel que soit son contenu textuel. C'est exactement le
+précédent déjà résolu et en production de `scripts/mypy_gate.py` (fonction
+`_lignes_avec_commentaire_reel`, « Round 17 » de la revue #449) : même problème (distinguer
+un vrai commentaire d'un texte similaire dans un littéral), même solution — aucune
+heuristique de texte brut. Un filtre du type « la ligne commence par `#` » ne suffirait PAS :
+une ligne de code réel peut contenir un littéral de chaîne portant un texte de directive sans
+qu'aucune violation ne soit réellement supprimée. Sans ce filtre structurel, le scanner
+compterait de fausses suppressions et s'auditerait lui-même (les exemples littéraux de la
+présente docstring sont des tokens STRING : jamais examinés).
+
+Distinction complémentaire, AU SEIN des tokens COMMENT : une ligne de COMMENTAIRE PUR (rien
+avant le `#` sur la ligne physique sauf des espaces/tabulations d'indentation — typiquement
+un exemple de syntaxe documenté dans une docstring ou un commentaire explicatif autonome)
+n'est JAMAIS une vraie suppression, puisque Ruff n'applique un `# noqa` qu'à la ligne de code
+que le commentaire termine. De tels commentaires sont ignorés COMPLÈTEMENT, même si leur
+texte ressemble exactement à une directive conforme. Ce filtre n'exige AUCUN re-découpage
+texte du fichier : chaque `TokenInfo` porte nativement `tok.line` (la ligne physique source
+complète, déjà décodée) et `tok.start[1]` (l'offset 0-based du `#` dans cette ligne) — voir
+`noqa_non_conformes`.
 
 Philosophie reprise de `ruff_ratchet.py` (elle-même alignée sur `scripts/mypy_gate.py`,
 #449) : baseline JSON commitée (`governance/ruff-noqa-baseline.json`) avec borne totale +
@@ -59,42 +78,48 @@ baseline depuis une mesure fraîche.
 from __future__ import annotations
 
 import argparse
+import io
 import json
 import re
 import sys
+import tokenize
 from datetime import date
 from pathlib import Path
 from typing import Any
 
 import gate_git_ref
 
-# Motif d'une suppression `# noqa: <CODE>` : capture la LISTE COMPLÈTE des codes après
-# `noqa:` (syntaxe native ruff, codes séparés par virgules — ex. `# noqa: F401, F841`), pas
-# seulement le premier. Le groupe capturé est ensuite découpé sur les virgules pour obtenir
-# les codes individuels (comparaison insensible à la casse du préfixe — ex. `s310` vaut
-# `S310`). Un `# noqa` nu (sans code) n'est pas capturé par ce motif : il ne supprime pas un
-# code defaut_candidat précis et reste hors du périmètre de ce cliquet. Ce motif n'est
-# appliqué qu'aux lignes comportant du CODE RÉEL avant le `#` — voir le filtre des lignes de
-# commentaire pur dans `noqa_non_conformes`.
+# Motif d'une suppression noqa codifiée : capture la LISTE COMPLÈTE des codes après
+# `noqa:` (syntaxe native ruff, codes séparés par virgules), pas seulement le premier. Le
+# groupe capturé est ensuite découpé sur les virgules pour obtenir les codes individuels
+# (comparaison insensible à la casse du préfixe). Un commentaire noqa nu (sans code) n'est
+# pas capturé par ce motif : il ne supprime pas un code defaut_candidat précis et reste hors
+# du périmètre de ce cliquet. Ce motif n'est appliqué qu'aux tokens COMMENT issus de
+# `tokenize` ET précédés de code réel sur leur ligne physique — voir les filtres
+# structurels de `noqa_non_conformes` : un texte identique dans un littéral de chaîne ou
+# dans une ligne de commentaire pur n'est jamais examiné.
 MOTIF_CODE_NOQA: re.Pattern[str] = re.compile(
     r"#\s*noqa:\s*([A-Za-z]+\d+(?:\s*,\s*[A-Za-z]+\d+)*)"
 )
 
 # Motif de la date de révision exigée : `(révision: YYYY-MM-DD)`, accent optionnel sur é,
-# espaces autour de `:` tolérés. Recherché sur la ligne ENTIÈRE (pas seulement après le
-# noqa), pour rester simple et robuste. Le groupe capturé est la chaîne de date brute
-# `AAAA-MM-JJ` : la forme regex seule ne suffit pas (une date calendaire impossible comme
-# `2027-99-99` passerait), elle est donc ensuite validée calendairement via
-# `datetime.date.fromisoformat` dans `noqa_non_conformes` — une date invalide est traitée
-# comme une date ABSENTE (ligne non conforme), jamais comme une exception qui remonte.
+# espaces autour de `:` tolérés. Recherché dans le commentaire APRÈS la fin du match des
+# codes (paramètre de position `search(chaine, pos)` dans `noqa_non_conformes`), afin qu'un
+# motif de date situé AVANT la directive dans le même commentaire ne soit pas pris pour la
+# date exigée après les codes. Le groupe capturé est la chaîne de date brute `AAAA-MM-JJ` :
+# la forme regex seule ne suffit pas (une date calendaire impossible comme `2027-99-99`
+# passerait), elle est donc ensuite validée calendairement via `datetime.date.fromisoformat`
+# dans `noqa_non_conformes` — une date invalide est traitée comme une date ABSENTE
+# (commentaire non conforme), jamais comme une exception qui remonte.
 MOTIF_DATE_REVISION: re.Pattern[str] = re.compile(
     r"\(r[ée]vision\s*:\s*(\d{4}-\d{2}-\d{2})\)"
 )
 
 # Caractères dépouillés aux extrémités de la justification candidate pour décider si elle est
 # non vide : espaces et séparateurs de ponctuation seuls (`-`, `—`, `:`, `,`). Une
-# « justification » réduite à ces seuls caractères (ex. `# noqa: S310 — (révision:
-# 2027-01-01)`) n'est PAS une justification : la ligne est non conforme même avec une date.
+# « justification » réduite à ces seuls caractères (par exemple une suppression dont le texte
+# entre les codes et la date ne contient qu'un tiret cadratin) n'est PAS une justification :
+# le commentaire est non conforme même avec une date.
 CARACTERES_SEPARATEURS_JUSTIFICATION: str = " \t\r\n\f\v-—:,"
 
 
@@ -163,86 +188,139 @@ def fichiers_reels(racine: Path) -> set[str]:
 
 
 def noqa_non_conformes(racine: Path, regles: list[str]) -> dict[str, int]:
-    """Compte, par fichier, les lignes de suppression `# noqa: <CODE>[, <CODE>...]` NON
-    CONFORMES visant au moins une règle de `regles` — c'est-à-dire dépourvues soit d'une date
-    de révision `(révision: YYYY-MM-DD)` (accent optionnel) calendairement VALIDE sur la
-    ligne, soit d'une justification NON VIDE entre la liste des codes et le motif de date.
+    """Compte, par fichier, les commentaires de suppression portant au moins un code de
+    `regles` et NON CONFORMES — c'est-à-dire dépourvus soit d'une date de révision
+    `(révision: YYYY-MM-DD)` (accent optionnel) calendairement VALIDE placée APRÈS la liste
+    des codes, soit d'une justification NON VIDE entre la liste des codes et le motif de
+    date.
 
-    Lecture directe de chaque fichier de `fichiers_reels(racine)` via `Path.read_text` : ce
-    cliquet n'invoque JAMAIS ruff ni aucun subprocess — ruff applique nativement les `# noqa`
-    (une violation supprimée n'apparaît pas dans sa sortie JSON), donc le code source est le
-    seul endroit où les suppressions peuvent être auditées.
+    MÉCANIQUE DE SCAN — `tokenize`, jamais de découpage texte brut de lignes. Chaque fichier
+    de `fichiers_reels(racine)` est lu en OCTETS BRUTS (`Path.read_bytes`, PAS
+    `Path.read_text` : `tokenize` a besoin d'octets pour respecter l'encodage déclaré
+    PEP-263) puis découpé en tokens typés via
+    `tokenize.tokenize(io.BytesIO(contenu_brut).readline)`. SEULS les tokens de type
+    `tokenize.COMMENT` sont examinés : un token `STRING` (littéral de chaîne, docstring en
+    position code, f-string) contenant un texte ressemblant à une directive n'est JAMAIS
+    examiné — il est structurellement impossible de le confondre avec un vrai commentaire,
+    quel que soit son contenu textuel. Précédent déjà résolu et en production :
+    `scripts/mypy_gate.py`, fonction `_lignes_avec_commentaire_reel` (« Round 17 » de la
+    revue #449) — même problème exact pour les directives mypy, même solution, aucune
+    heuristique de texte brut. Ce cliquet n'invoque JAMAIS ruff ni aucun subprocess : ruff
+    applique nativement les suppressions (une violation supprimée n'apparaît pas dans sa
+    sortie JSON), donc le code source est le seul endroit où elles peuvent être auditées.
 
-    FILTRE PRÉALABLE — lignes de commentaire pur : une VRAIE directive noqa supprime une
-    violation sur une ligne de CODE RÉEL ; elle est toujours en fin de ligne, jamais seule
-    sur sa ligne. Toute ligne qui, une fois dépouillée de ses espaces de début, COMMENCE
-    directement par `#` (`ligne.lstrip().startswith("#")`) est un bloc de commentaire
-    explicatif pur — aucun code avant le `#` — et est ignorée INTÉGRALEMENT, même si elle
-    contient un texte ressemblant à `# noqa: CODE` (ex. les exemples littéraux documentant le
-    format attendu dans les docstrings et commentaires de ce fichier lui-même). Sans ce
-    filtre, le scanner confondrait la documentation du format avec de vraies suppressions et
-    s'auditerait lui-même (occurrence parasite dans la baseline).
+    Pour chaque token COMMENT (`tok.string` est le commentaire COMPLET, du `#` jusqu'à la
+    fin de la ligne physique — inutile de re-découper la ligne source, et une directive, sa
+    justification et sa date ne peuvent être que dans le commentaire lui-même, jamais avant
+    le `#`) :
 
-    Pour chaque LIGNE restante de chaque fichier : recherche le motif
-    `# noqa: <CODE>[, <CODE>...]` (liste native ruff de codes séparés par virgules, capturée
-    EN ENTIER puis découpée sur les virgules) ; si AU MOINS UN des codes de la liste
-    (comparaison insensible à la casse du préfixe) appartient à `regles`, la ligne est
-    pertinente pour ce cliquet et sa conformité est vérifiée UNE SEULE FOIS pour la ligne
-    entière (un seul commentaire noqa, une seule justification/date pour TOUS les codes
-    qu'il supprime — pas une vérification par code individuel) :
+    0. FILTRE « COMMENTAIRE PUR », appliqué AVANT toute autre logique : `tok.line` est la
+       ligne physique SOURCE COMPLÈTE (déjà décodée en `str`) où le token commence, et
+       `tok.start[1]` l'offset (0-based) du caractère `#` dans cette ligne — deux
+       informations natives du `TokenInfo`, sans ré-ouvrir ni re-découper le fichier. Si
+       `tok.line[:tok.start[1]].strip()` est VIDE (rien avant le `#` sauf des
+       espaces/tabulations d'indentation), le commentaire est un commentaire PUR
+       (documentaire/explicatif autonome, typiquement un exemple de syntaxe) : Ruff
+       n'applique un `# noqa` qu'à la ligne de code que le commentaire termine, donc un
+       tel commentaire n'est JAMAIS une vraie suppression, même si son texte ressemble
+       exactement à une directive conforme — il est ignoré COMPLÈTEMENT, exactement comme
+       s'il n'avait aucune correspondance. Sinon (du code réel précède le `#`, même
+       partiellement, par exemple `x = 1  # noqa: ...` ou `x = 1; y = 2  # noqa: ...`), la
+       conformité est vérifiée normalement ;
+    1. recherche du motif de suppression `MOTIF_CODE_NOQA` (liste native ruff de codes
+       séparés par virgules, capturée EN ENTIER puis découpée sur les virgules) ; si AUCUN
+       des codes (comparaison insensible à la casse du préfixe) n'appartient à `regles`, le
+       commentaire est hors périmètre et ignoré ; sinon sa conformité est vérifiée UNE SEULE
+       FOIS pour le commentaire entier (un seul commentaire de suppression, une seule
+       justification/date pour TOUS les codes qu'il supprime — pas une vérification par code
+       individuel) ;
+    2. le motif de date est recherché UNIQUEMENT dans la portion du commentaire qui SUIT la
+       fin du match des codes — via le paramètre de position
+       `MOTIF_DATE_REVISION.search(tok.string, correspondance.end())` — afin qu'un motif de
+       date apparaissant AVANT la directive dans le même commentaire (situation artificielle
+       mais possible) ne soit pas confondu avec la date exigée APRÈS les codes ; absence →
+       commentaire NON CONFORME ;
+    3. si le motif de date est trouvé, la chaîne capturée `AAAA-MM-JJ` est validée
+       CALENDAIREMENT via `datetime.date.fromisoformat` : une date impossible (par exemple
+       mois 99) lève `ValueError`, interceptée ici — le commentaire est alors traité comme
+       SI la date était absente (NON CONFORME), jamais comme une exception qui remonte. La
+       validation de non-expiration (date dans le futur, horizon de révision) reste
+       explicitement hors périmètre de cet incrément ;
+    4. si la date est présente ET valide, la sous-chaîne comprise ENTRE la fin du match des
+       codes et le début du motif de date est extraite ; dépouillée des espaces ET des
+       séparateurs de ponctuation seuls (`-`, `—`, `:`, `,`), si elle est VIDE →
+       justification absente → commentaire NON CONFORME, même avec une date.
 
-    1. le motif de date est recherché sur la ligne ENTIÈRE (pas seulement après le noqa,
-       pour rester simple et robuste) ; absence → ligne NON CONFORME (ancienne règle,
-       inchangée) ;
-    2. si le motif de date est trouvé, la chaîne capturée `AAAA-MM-JJ` est validée
-       CALENDAIREMENT via `datetime.date.fromisoformat` : une date impossible (ex.
-       `2027-99-99`) lève `ValueError`, interceptée ici — la ligne est alors traitée comme
-       SI le motif de date était absent (NON CONFORME), jamais comme une exception qui
-       remonte. La validation de non-expiration (date dans le futur, horizon de révision)
-       reste explicitement hors périmètre de cet incrément ;
-    3. si la date est présente ET valide, la sous-chaîne comprise ENTRE la fin du motif
-       `# noqa: <codes>` et le début du motif `(révision: ...)` est extraite ; dépouillée
-       des espaces ET des séparateurs de ponctuation seuls (`-`, `—`, `:`, `,`), si elle
-       est VIDE → justification absente → ligne NON CONFORME, même avec une date.
+    Gestion des erreurs : un fichier illisible (`OSError` à la lecture) OU non tokenizable
+    (`tokenize.TokenError`, `SyntaxError`, `IndentationError`, `UnicodeDecodeError`,
+    `ValueError` — syntaxe invalide, encodage déclaré invalide, etc.) est traité comme
+    n'ayant AUCUNE occurrence non conforme (on passe au fichier suivant) — jamais
+    d'exception propagée, cohérent avec le traitement des chemins hors racine dans
+    `ruff_ratchet.py` et avec `_lignes_avec_commentaire_reel` de `scripts/mypy_gate.py`.
 
     Retourne un dict `{fichier: nombre_occurrences_non_conformes}` en représentation creuse
-    (fichiers à 0 absents), comptage par LIGNE : une ligne non conforme compte pour 1
-    occurrence, quel que soit le nombre de codes surveillés qu'elle supprime. Un fichier
-    illisible (`OSError`, `UnicodeError`) est ignoré silencieusement — pas d'exception
-    propagée, cohérent avec le traitement des chemins hors racine dans `ruff_ratchet.py`."""
+    (fichiers à 0 absents), comptage par COMMENTAIRE : un commentaire non conforme compte
+    pour 1 occurrence, quel que soit le nombre de codes surveillés qu'il supprime (au plus un
+    commentaire par ligne physique en Python, donc équivalent à un comptage par ligne)."""
     codes_surveilles = {code.upper() for code in regles}
     resultat: dict[str, int] = {}
     for fichier in sorted(fichiers_reels(racine)):
         try:
-            contenu = (racine / fichier).read_text(encoding="utf-8")
-        except (OSError, UnicodeError):
+            contenu_brut = (racine / fichier).read_bytes()
+        except OSError:
             continue
         non_conformes = 0
-        for ligne in contenu.splitlines():
-            # Ligne de commentaire pur (rien avant le `#` sauf des espaces) : jamais une
-            # vraie directive noqa — ignorée intégralement, même si son texte y ressemble.
-            if ligne.lstrip().startswith("#"):
-                continue
-            correspondance = MOTIF_CODE_NOQA.search(ligne)
-            if correspondance is None:
-                continue
-            codes_ligne = re.split(r"\s*,\s*", correspondance.group(1))
-            if not any(code.upper() in codes_surveilles for code in codes_ligne):
-                continue
-            correspondance_date = MOTIF_DATE_REVISION.search(ligne)
-            if correspondance_date is None:
-                non_conformes += 1
-                continue
-            try:
-                date.fromisoformat(correspondance_date.group(1))
-            except ValueError:
-                # Date calendaire impossible (ex. 2027-99-99) : traitée comme une date
-                # ABSENTE — ligne non conforme, jamais d'exception propagée.
-                non_conformes += 1
-                continue
-            justification = ligne[correspondance.end() : correspondance_date.start()]
-            if not justification.strip(CARACTERES_SEPARATEURS_JUSTIFICATION):
-                non_conformes += 1
+        try:
+            for tok in tokenize.tokenize(io.BytesIO(contenu_brut).readline):
+                # Seuls les vrais commentaires Python sont examinés : un token STRING (ou
+                # tout autre type) contenant un texte ressemblant à une directive n'est
+                # jamais concerné, structurellement.
+                if tok.type != tokenize.COMMENT:
+                    continue
+                # Filtre « commentaire pur » : `tok.line` est la ligne physique source
+                # complète où le token commence et `tok.start[1]` l'offset (0-based) du
+                # caractère `#` dans cette ligne. Si rien ne précède le `#` sauf des
+                # espaces/tabulations d'indentation, c'est un commentaire
+                # documentaire/explicatif autonome — jamais une vraie suppression Ruff,
+                # qui ne s'applique qu'à la ligne de code qu'elle termine — donc ignoré
+                # COMPLÈTEMENT, même si son texte ressemble exactement à une directive.
+                if not tok.line[: tok.start[1]].strip():
+                    continue
+                correspondance = MOTIF_CODE_NOQA.search(tok.string)
+                if correspondance is None:
+                    continue
+                codes_ligne = re.split(r"\s*,\s*", correspondance.group(1))
+                if not any(code.upper() in codes_surveilles for code in codes_ligne):
+                    continue
+                correspondance_date = MOTIF_DATE_REVISION.search(
+                    tok.string, correspondance.end()
+                )
+                if correspondance_date is None:
+                    non_conformes += 1
+                    continue
+                try:
+                    date.fromisoformat(correspondance_date.group(1))
+                except ValueError:
+                    # Date calendaire impossible (ex. 2027-99-99) : traitée comme une date
+                    # ABSENTE — commentaire non conforme, jamais d'exception propagée.
+                    non_conformes += 1
+                    continue
+                justification = tok.string[
+                    correspondance.end() : correspondance_date.start()
+                ]
+                if not justification.strip(CARACTERES_SEPARATEURS_JUSTIFICATION):
+                    non_conformes += 1
+        except (
+            tokenize.TokenError,
+            SyntaxError,
+            IndentationError,
+            UnicodeDecodeError,
+            ValueError,
+        ):
+            # Fichier non tokenizable (syntaxe invalide, encodage déclaré invalide, etc.) :
+            # traité comme n'ayant AUCUNE occurrence non conforme, jamais d'exception
+            # propagée — même comportement que pour un fichier illisible.
+            continue
         if non_conformes > 0:
             resultat[fichier] = non_conformes
     return resultat

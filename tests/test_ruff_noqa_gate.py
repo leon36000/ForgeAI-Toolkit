@@ -302,6 +302,39 @@ def test_noqa_non_conformes_ligne_de_code_avec_noqa_toujours_detectee(
     }
 
 
+def test_noqa_non_conformes_chaine_litterale_ignoree_scan_tokenize(
+    tmp_path: Path,
+) -> None:
+    """Round 4 de revue (1 majeure) : un texte '# noqa: CODE' a l'interieur d'un LITTERAL
+    DE CHAINE Python (sur une ligne de code reel, donc PAS filtre par le filtre
+    commentaire-pur du round 3) n'est jamais une vraie directive -> structurellement ignore
+    par le scan base sur `tokenize` (seuls les tokens COMMENT sont examines, jamais un token
+    STRING). La vraie directive en commentaire de fin de ligne, elle, reste detectee."""
+    _ecrire_source(
+        tmp_path,
+        "src/avec_chaine.py",
+        'message = "exemple # noqa: ARG001"',
+        "x = 1  # noqa: ARG001 -- vrai commentaire sans date",
+    )
+
+    assert ruff_noqa_gate.noqa_non_conformes(tmp_path, REGLES_SURVEILLEES) == {
+        "src/avec_chaine.py": 1
+    }
+
+
+def test_noqa_non_conformes_fstring_avec_accolades_ignore(tmp_path: Path) -> None:
+    """Cas limite du scan tokenize : une f-string dont le texte ressemble a une directive
+    (y compris avec des accolades d'interpolation) reste un token STRING, jamais examine."""
+    _ecrire_source(
+        tmp_path,
+        "src/avec_fstring.py",
+        'nom = "ARG001"',
+        'message = f"voir # noqa: {nom} pour details"',
+    )
+
+    assert ruff_noqa_gate.noqa_non_conformes(tmp_path, REGLES_SURVEILLEES) == {}
+
+
 def test_noqa_non_conformes_date_calendaire_invalide_est_comptee(tmp_path: Path) -> None:
     """Round 3 de revue (mineur, DeepSeek) : une date de forme valide mais calendairement
     impossible (mois 99) est traitee comme une date ABSENTE -> non conforme."""
