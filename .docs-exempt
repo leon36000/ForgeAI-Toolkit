@@ -227,3 +227,12 @@ scripts/rapport_composants.py (RC1-024/#454, correctif round 16 de revue scellé
 module mise à jour pour mentionner l'entrée pip-bootstrap du round 15, aucun changement de
 comportement) : correction documentaire pure d'une fonctionnalité déjà décrite par la story.
 Aucune doc utilisateur supplémentaire concernée.
+
+scripts/governance/verifier_agregat_tests.py (RC1-580/#580, nouveau) : outillage interne de
+gouvernance CI, aucune interface utilisateur ni commande CLI de produit exposée (invoqué
+uniquement par le job `tests-required` de .github/workflows/gates.yml via une variable
+d'environnement injectée par GitHub Actions, ${{ toJSON(needs) }}) — même traitement que
+scripts/governance/classify_paths.py (commit 1/7, RC1-008/#438) : brique interne sans sortie
+utilisateur, pas de documentation README/AGENTS.md distincte requise. L'issue #580 documente
+déjà le contexte complet (contexte requis "tests" fantôme, agrégateur stable comme correctif).
+Aucune doc utilisateur supplémentaire concernée.

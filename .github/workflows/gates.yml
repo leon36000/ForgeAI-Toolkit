@@ -428,3 +428,69 @@ jobs:
           python3 scripts/ruff_noqa_gate.py \
             --racine . \
             --base-ref-git origin/main
+
+  # RC1-580 (#580) : agrégateur STABLE pour le contexte requis "tests" de la
+  # protection de branche `main` (vérifié en lecture seule via GraphQL
+  # branchProtectionRules -- requiredStatusCheckContexts contient la chaîne
+  # littérale "tests", qui ne correspond JAMAIS aux jobs matriciels réels
+  # "tests (3.10)"/"tests (3.11)"/... -- contexte fantôme structurellement
+  # impossible à satisfaire, confirmé empiriquement sur plusieurs PR de ce
+  # dépôt qui ont dû merger via l'API brute /pulls/{n}/merge). L'id du job
+  # matriciel existant `tests` reste INCHANGÉ (aucune rupture des noms de
+  # check historiques) -- ce job-ci porte un id DIFFÉRENT mais `name: tests`
+  # (vérifié : la protection de branche filtre sur le champ `name`, pas sur
+  # l'id du job -- une chaîne de check "tests (3.10)" issue du job matriciel
+  # ne collisionne jamais avec la chaîne exacte "tests" issue de celui-ci).
+  #
+  # needs: la liste de TOUS les jobs bloquants de CE fichier (continue-on-
+  # error != true) -- seul rapport-composants (round #454) en est exclu,
+  # délibérément non bloquant par conception. `if: always()` est
+  # OBLIGATOIRE : un job avec needs: sans cette clause est SILENCIEUSEMENT
+  # SKIPPED si une dépendance échoue, et un check SKIPPED compte comme
+  # RÉUSSI pour la protection de branche (vérifié dans la documentation
+  # GitHub : success/skipped/neutral sont TOUS des statuts positifs) --
+  # sans always(), cet agrégateur ne bloquerait JAMAIS rien, exactement le
+  # défaut déjà mesuré sur `scope-guard` (#578, SKIP silencieux = SUCCESS).
+  # Le contrôle explicite needs.*.result est fait en Python (pas en
+  # expression GHA contains(needs.*.result, ...) -- bug connu documenté de
+  # ce motif avec le filtre étoile sur les jobs conditionnels) pour rester
+  # fiable et testable.
+  #
+  # scope-guard/coordination-validation (.github/workflows/scope-guard.yml)
+  # et sonarcloud-scan (.github/workflows/sonarcloud.yml) ne peuvent PAS
+  # être ajoutés à needs: ici -- GitHub Actions n'autorise needs: qu'ENTRE
+  # jobs d'un MÊME fichier de workflow, jamais entre fichiers séparés. Gap
+  # résiduel documenté, hors périmètre de #580 (explicitement distinct de
+  # #578 selon le texte de l'issue) -- SonarCloud Code Analysis et
+  # GitGuardian Security Checks restent déjà des contextes requis séparés
+  # et fonctionnels (posts directs par leurs Apps GitHub respectives, pas
+  # affectés par ce défaut de contexte fantôme).
+  tests-required:
+    name: tests
+    runs-on: ubuntu-latest
+    needs:
+      - guard-fs-multi-os
+      - no-stub-scan
+      - registres
+      - authority-map
+      - state-current
+      - path-classification
+      - docs
+      - mypy-ratchet
+      - metering-sites
+      - catalogue
+      - js
+      - tests
+      - tests-os-subset
+      - gitleaks
+      - reviews-sealed
+      - ruff-report
+      - branch-coverage-report
+      - ruff-ratchet
+      - ruff-noqa-gate
+    if: always()
+    steps:
+      - name: Vérifier que tous les gates release-critical de ce fichier ont réussi
+        env:
+          RESULTATS_NEEDS: ${{ toJSON(needs) }}
+        run: python3 scripts/governance/verifier_agregat_tests.py
