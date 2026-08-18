@@ -41,8 +41,15 @@ jobs:
           # requirements-ci.txt (round 9 -- ce job n'installe PAS ce lockfile,
           # donc la version qui y était rapportée n'était vérifiable nulle
           # part ici ; épingler la MÊME version rend les deux cohérents, mais
-          # les deux doivent être mis à jour ensemble si l'un bouge).
-          python -m pip install --no-cache-dir "build==1.2.2.post1" "pyproject_hooks==1.2.0" "packaging==26.3"
+          # les deux doivent être mis à jour ensemble si l'un bouge). pip
+          # lui-même épinglé (round 13) : c'est LUI qui installe tout le
+          # reste ci-dessus -- sans pin, sa version flotterait (celle fournie
+          # par actions/setup-python, hors contrôle de ce dépôt), rendant le
+          # rapport incomplet pour le même motif que build/pyproject_hooks/
+          # packaging. pip==26.2.1 : vérifié PyPI comme AUTO-CONTENU (aucune
+          # dépendance propre, requires_dist vide -- vendoring délibéré de
+          # l'écosystème pip, terminaison naturelle de cette fermeture).
+          python -m pip install --no-cache-dir "pip==26.2.1" "build==1.2.2.post1" "pyproject_hooks==1.2.0" "packaging==26.3"
           rm -rf dist
           python -m build --wheel --sdist --outdir dist
 

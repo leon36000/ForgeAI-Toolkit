@@ -6,12 +6,14 @@ paquets Python (versions + licences) mobilisés pour construire les artefacts
 distribués RC1 (wheel/sdist) — et non celles du produit livré, qui reste stdlib
 pure (``dependencies = []`` dans ``pyproject.toml``). Quatre sources, vérifiées
 empiriquement : ``requirements-ci.txt`` (lockfile à empreintes couvrant tout
-l'outillage CI/test/lint) ; ``build==1.2.2.post1`` (installé en direct dans
-``.github/workflows/artefact-distribue.yml``, hors lockfile) ET la fermeture de
-SES dépendances directes propres (``pyproject_hooks``/``packaging`` — vérifié
-via l'API PyPI ``requires_dist`` de la version exacte épinglée, pas supposé) ;
-le backend PEP 517 déclaré (``[build-system].requires``, ex. ``setuptools`` —
-build isolé rendu déterministe via ``PIP_CONSTRAINT``,
+l'outillage CI/test/lint) ; ``pip``/``build==1.2.2.post1`` (installés en direct
+dans ``.github/workflows/artefact-distribue.yml``, hors lockfile — ``pip`` est
+l'outil qui installe tout le reste, round 13, sans dépendance propre, vendoring
+délibéré vérifié via PyPI ``requires_dist`` vide) ET la fermeture des
+dépendances directes propres de ``build`` (``pyproject_hooks``/``packaging`` —
+vérifié via l'API PyPI ``requires_dist`` de la version exacte épinglée, pas
+supposé) ; le backend PEP 517 déclaré (``[build-system].requires``, ex.
+``setuptools`` — build isolé rendu déterministe via ``PIP_CONSTRAINT``,
 ``requirements-build-constraints.txt``) ; le projet lui-même. Le rapport est
 non bloquant : il documente, il ne gate pas — même philosophie que
 ``scripts/ruff_report.py``.
@@ -195,6 +197,21 @@ _LICENCES_BACKEND_EPINGLEES = {
     "setuptools": "MIT",
 }
 
+# Licences vérifiées manuellement (API PyPI, round 13 de revue scellée, #454)
+# pour les outils épinglés DIRECTEMENT dans artefact-distribue.yml (par
+# opposition aux dépendances du backend PEP 517 ci-dessus, table séparée
+# car mécanisme de résolution différent : ici la version elle-même est déjà
+# un littéral en dur dans construire_rapport, pas lue depuis un fichier de
+# contraintes). Centralise ce qui était auparavant des littéraux dispersés
+# dans le code (objection mineure round 13 : pyproject_hooks n'avait aucune
+# table nommée/documentée, contrairement à setuptools) — un seul endroit à
+# vérifier/mettre à jour si les métadonnées PyPI de ces paquets changent.
+_LICENCES_OUTILS_EPINGLES = {
+    "build": "MIT",
+    "pyproject_hooks": "OSI Approved :: MIT License",
+    "pip": "MIT",
+}
+
 
 def _entrees_backend_build(racine: Path) -> list[dict[str, Any]]:
     """Inventorie le backend PEP 517 déclaré dans ``[build-system].requires``.
@@ -312,9 +329,17 @@ def construire_rapport(racine: Path) -> dict[str, Any]:
     ]
     composants.append(
         {
+            "nom": "pip",
+            "version": "26.2.1",
+            "licence": _LICENCES_OUTILS_EPINGLES["pip"],
+            "source": "artefact-distribue.yml (installation directe, hors requirements-ci.txt)",
+        }
+    )
+    composants.append(
+        {
             "nom": "build",
             "version": "1.2.2.post1",
-            "licence": _licence_installee("build"),
+            "licence": _LICENCES_OUTILS_EPINGLES["build"],
             "source": "artefact-distribue.yml (installation directe, hors requirements-ci.txt)",
         }
     )
@@ -329,20 +354,21 @@ def construire_rapport(racine: Path) -> dict[str, Any]:
     # et pyproject_hooks n'ont eux-mêmes AUCUNE dépendance propre (vérifié PyPI) :
     # fermeture complète à ce niveau, pas un arrêt arbitraire.
     #
-    # Round 8 de revue scellée (#454) : une introspection dynamique (comme pour
-    # build ci-dessus, dont seule la LICENCE reste introspectée) ne rapporte
+    # Round 8 de revue scellée (#454) : une introspection dynamique ne rapporte
     # rien d'utile dans le job CI réel (rapport-composants, gates.yml) qui
-    # n'installe ni build ni pyproject_hooks — l'inventaire publié aurait donc
-    # « version/licence inconnue » pour un composant réellement mobilisé par la
-    # construction. Corrigé en épinglant EXPLICITEMENT pyproject_hooks==1.2.0
-    # dans artefact-distribue.yml (même job qui installe build), rendant cette
-    # version aussi vérifiable/reproductible que celle de build lui-même —
-    # valeur ci-dessous COPIÉE de ce pin, jamais introspectée ni devinée.
+    # n'installe ni build ni pyproject_hooks ni pip — l'inventaire publié
+    # aurait donc « version/licence inconnue » pour un composant réellement
+    # mobilisé par la construction. Corrigé en épinglant EXPLICITEMENT
+    # pyproject_hooks==1.2.0 dans artefact-distribue.yml (même job qui
+    # installe build), rendant cette version aussi vérifiable/reproductible
+    # que celle de build lui-même — valeur ci-dessous COPIÉE de ce pin,
+    # jamais introspectée ni devinée. Licence : voir _LICENCES_OUTILS_EPINGLES
+    # ci-dessus (round 13 — centralisée, plus un littéral isolé).
     composants.append(
         {
             "nom": "pyproject_hooks",
             "version": "1.2.0",
-            "licence": "OSI Approved :: MIT License",
+            "licence": _LICENCES_OUTILS_EPINGLES["pyproject_hooks"],
             "source": "artefact-distribue.yml (installation directe, hors requirements-ci.txt)",
         }
     )

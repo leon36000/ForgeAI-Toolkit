@@ -4,7 +4,7 @@ Chaque test construit ses propres ``requirements-ci.txt``/``pyproject.toml``
 factices dans ``tmp_path`` : aucun ne dépend des vrais fichiers de ce dépôt,
 qui peuvent évoluer indépendamment du contrat verrouillé ici — SAUF
 ``test_packaging_epingle_dans_artefact_distribue_coherent_avec_lockfile``
-(round 10) et ``test_build_et_pyproject_hooks_coherents_avec_artefact_distribue``
+(round 10) et ``test_pip_build_et_pyproject_hooks_coherents_avec_artefact_distribue``
 (round 11), dont le but EST précisément de vérifier une cohérence entre de
 vrais fichiers du dépôt (garde-fous anti-dérive, pas des tests de
 comportement du script isolé de son environnement).
@@ -292,6 +292,25 @@ def test_construire_rapport_entree_build_toujours_presente(tmp_path: Path) -> No
     )
 
 
+def test_construire_rapport_entree_pip_toujours_presente(tmp_path: Path) -> None:
+    """Round 13 de revue scellée (#454, objection majeure) : pip lui-même est
+    l'outil qui installe build/pyproject_hooks/packaging — sans l'épingler,
+    l'inventaire n'était pas exhaustif pour l'environnement réel de
+    construction (aucune version garantie pour l'outil bootstrap).
+    """
+    _preparer_racine(tmp_path, requirements="alpha-factice==1.0\n")
+
+    rapport = rc.construire_rapport(tmp_path)
+    par_nom = _par_nom(rapport)
+
+    assert par_nom["pip"]["version"] == "26.2.1"
+    assert par_nom["pip"]["licence"] == "MIT"
+    assert (
+        par_nom["pip"]["source"]
+        == "artefact-distribue.yml (installation directe, hors requirements-ci.txt)"
+    )
+
+
 def test_construire_rapport_entree_pyproject_hooks_toujours_presente(
     tmp_path: Path,
 ) -> None:
@@ -357,8 +376,9 @@ def test_construire_rapport_requirements_vide_compte_build_hooks_et_projet(
 
     rapport = rc.construire_rapport(tmp_path)
 
-    assert rapport["nombre_composants"] == 3
+    assert rapport["nombre_composants"] == 4
     assert {composant["nom"] for composant in rapport["composants"]} == {
+        "pip",
         "build",
         "pyproject_hooks",
         "projet-factice",
@@ -799,12 +819,13 @@ def test_packaging_epingle_dans_artefact_distribue_coherent_avec_lockfile() -> N
     )
 
 
-def test_build_et_pyproject_hooks_coherents_avec_artefact_distribue() -> None:
-    """Round 11 de revue scellée (#454, objection mineure) : contrairement à
-    packaging (garde-fou ci-dessus, round 10), les versions en dur de build
-    et pyproject_hooks dans construire_rapport() n'avaient aucun garde-fou
-    les reliant au pin réel de artefact-distribue.yml — une modification du
-    workflow aurait pu rendre le rapport silencieusement inexact.
+def test_pip_build_et_pyproject_hooks_coherents_avec_artefact_distribue() -> None:
+    """Round 11 (build/pyproject_hooks) puis round 13 (pip, #454) de revue
+    scellée, objections mineure puis majeure : contrairement à packaging
+    (garde-fou ci-dessus, round 10), les versions en dur de ces outils dans
+    construire_rapport() n'avaient aucun garde-fou les reliant à leurs pins
+    réels de artefact-distribue.yml — une modification du workflow aurait pu
+    rendre le rapport silencieusement inexact.
 
     Même motif que le test ci-dessus (structure YAML, pas texte brut), sur
     le VRAI dépôt — même exception documentée en tête de fichier.
@@ -823,14 +844,20 @@ def test_build_et_pyproject_hooks_coherents_avec_artefact_distribue() -> None:
     )
     run = construction["run"]
 
+    correspondance_pip = re.search(r'"pip==([^"]+)"', run)
     correspondance_build = re.search(r'"build==([^"]+)"', run)
     correspondance_hooks = re.search(r'"pyproject_hooks==([^"]+)"', run)
+    assert correspondance_pip is not None, "le pin pip doit rester présent"
     assert correspondance_build is not None, "le pin build doit rester présent"
     assert correspondance_hooks is not None, "le pin pyproject_hooks doit rester présent"
 
     rapport = rc.construire_rapport(racine)
     par_nom = _par_nom(rapport)
 
+    assert par_nom["pip"]["version"] == correspondance_pip.group(1), (
+        "la version de pip en dur dans rapport_composants.py diverge du pin "
+        "réel de artefact-distribue.yml"
+    )
     assert par_nom["build"]["version"] == correspondance_build.group(1), (
         "la version de build en dur dans rapport_composants.py diverge du pin "
         "réel de artefact-distribue.yml"
