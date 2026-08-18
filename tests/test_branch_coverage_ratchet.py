@@ -723,6 +723,22 @@ def test_gates_yml_branch_coverage_ratchet_configure() -> None:
         "branch_coverage_ratchet.py" in str(step.get("run", ""))
         for step in steps
     ), "invocation branch_coverage_ratchet.py manquante dans gates.yml"
+    # Round 10 de revue scellée (#451, objection récurrente depuis le round 2 — enfin fermée) :
+    # verrouille les deux propriétés qui protègent contre le double calcul de couverture
+    # (correctif round 2) — needs: branch-coverage-report ET l'étape download-artifact avec le
+    # bon nom, jamais juste la présence du job.
+    needs_ratchet = job.get("needs") or []
+    if isinstance(needs_ratchet, str):
+        needs_ratchet = [needs_ratchet]
+    assert "branch-coverage-report" in needs_ratchet, (
+        "branch-coverage-ratchet doit dépendre de branch-coverage-report (needs:) — "
+        "sans quoi rien ne garantit que l'artefact existe avant le téléchargement"
+    )
+    assert any(
+        "download-artifact" in str(step.get("uses", ""))
+        and step.get("with", {}).get("name") == "branch-coverage-report"
+        for step in steps
+    ), "étape download-artifact avec name: branch-coverage-report manquante — sans elle, rien ne garantit la réutilisation de l'artefact plutôt qu'un recalcul"
     aggregateur = next((j for j in jobs.values() if j.get("name") == "tests"), None)
     assert aggregateur is not None, "job avec name: tests introuvable dans gates.yml"
     needs = aggregateur.get("needs") or []

@@ -259,6 +259,21 @@ que ni les tests locaux ni les 9 rounds de revue n'avaient détectés :
   vérifie `is_relative_to()`), appliqué aux 3 chemins dérivés de `--racine` dans `main()` avant
   tout accès disque. 46/46 tests existants verts sans modification.
 
+## Round 10 de revue scellée — REJECT 2/3 APPROVE, 0 objection bloquante (5e round consécutif
+où GPT-5.6-Terra-Pro REJECT sans aucune objection majeure/critique — rounds 3/4/6/8/10, pattern
+définitivement établi ; Qwen3.8-2.4T + MiMo-V2.5-Pro, 2 vendors distincts, APPROVE constant)
+
+Fermé définitivement le seul point récurrent réellement actionnable, signalé sans discontinuer
+depuis le round 2 : le test structurel de `gates.yml` ne verrouillait que la présence du job, pas
+sa dépendance (`needs: branch-coverage-report`) ni le nom exact de l'artefact téléchargé — une
+dérive future aurait pu réintroduire le double calcul (correctif round 2) sans qu'aucun test ne
+le détecte. Corrigé : 2 nouvelles assertions dans `test_gates_yml_branch_coverage_ratchet_configure`
+(inchangé par ailleurs, 46/46 tests toujours verts).
+
+Les 3 autres objections mineures restent non-actionnables (limitations structurelles du format
+de revue — le reviewer ne voit qu'un diff, jamais l'exécution empirique ni le contenu complet de
+fichiers non modifiés par cette PR) : documentées identiquement depuis les rounds 1/3/5/6/8.
+
 ## Hors périmètre (incrément 2b, story distincte)
 
 Campagne de mutation ciblée sur les gardes/compensations, disposition de chaque mutant survivant,
