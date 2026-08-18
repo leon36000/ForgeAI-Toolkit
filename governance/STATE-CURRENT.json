@@ -672,7 +672,7 @@
       },
       {
         "path": "tests/test_rc1018_artefact_distribue.py",
-        "sha256": "d644685541133c6b953a468a7af7c4fe0eb2521b39f9a96b2148a402b80f3364"
+        "sha256": "d36ea6fae56aa4ff36afdeb12177cc0254bc74f21a51c7cb81c5e2ff25e6f9d8"
       },
       {
         "path": "tests/test_rc1019_mypy_gate.py",
@@ -879,6 +879,10 @@
         "sha256": "dad755645b807bbe9d887ba42af48a435aba2e04c40c63c82a6c81a19ddc4d22"
       },
       {
+        "path": "tests/test_verifier_artefact_distribue.py",
+        "sha256": "f6c83b8f19b234013273e6edf8ce4c4ec8fd82a4d6deb720ffeb83edae5be85c"
+      },
+      {
         "path": "tests/test_web015_error_normalization.py",
         "sha256": "94117fe834fd654cc7db61e79ea9a7f11956672afd14ba48cbfa87bb8adae61f"
       },
@@ -960,8 +964,8 @@
     },
     "tests": {
       "js_files": 3,
-      "python_files": 200,
-      "python_functions_declared": 2476
+      "python_files": 201,
+      "python_functions_declared": 2533
     }
   },
   "observations": [
