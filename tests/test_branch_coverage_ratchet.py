@@ -508,6 +508,61 @@ def test_main_reference_git_ancien_schema_sans_seuils_par_categorie_tolere(
     assert code == 0
 
 
+def test_main_reference_git_nouvelle_categorie_locale_pas_bloquante(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Round 7 de revue scellée (#451, objection majeure fondée) : une catégorie ajoutée
+    localement (jamais vue dans la référence git) ne doit PAS bloquer le cliquet — sans ce
+    comportement, aucune nouvelle catégorie n'aurait jamais pu être ajoutée après le premier
+    merge de ce mécanisme (la référence ne peut évidemment pas la connaître par avance)."""
+    categories = dict(_categories_deux())
+    categories["nouvelle_cat"] = {"description": "x", "chemins": ["src/forgeai/models/*.py"]}
+    _ecrire_categories(tmp_path, categories)
+    _ecrire_baseline(tmp_path, _baseline_deux({
+        "orchestrateurs": 80.0, "securite": 80.0, "nouvelle_cat": 90.0,
+    }))
+    _ecrire_rapport_fichier(tmp_path, _rapport({
+        "src/forgeai/deploy/a.py": _fichier_summary(10, 1),
+        "src/forgeai/secrets/b.py": _fichier_summary(10, 1),
+        "src/forgeai/models/vault.py": _fichier_summary(10, 1),
+    }))
+
+    def _ref_deux_categories(racine: Path, chemin_base: Path, ref: str, valider):
+        ref_baseline = _baseline_deux({"orchestrateurs": 70.0, "securite": 70.0})
+        return valider(ref_baseline, "base de reference git"), ""
+
+    monkeypatch.setattr(gate_git_ref, "charger_base_reference_git", _ref_deux_categories)
+    code = branch_coverage_ratchet.main(["--racine", str(tmp_path), "--sortie-json", str(tmp_path / "branch-coverage.json")])
+    assert code == 0
+
+
+def test_main_reference_git_categorie_disparue_localement_bloquante(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """Symétrique du test précédent : une catégorie présente dans la référence git mais absente
+    localement (categories.json ET baseline.json modifiés ensemble pour la retirer) reste
+    suspecte et DOIT bloquer — seul l'AJOUT d'une catégorie est toléré, jamais sa disparition."""
+    categories = {
+        "securite": {"description": "x", "chemins": ["src/forgeai/secrets/**"]},
+    }
+    _ecrire_categories(tmp_path, categories)
+    _ecrire_baseline(tmp_path, _baseline_deux({"securite": 80.0}))
+    _ecrire_rapport_fichier(tmp_path, _rapport({
+        "src/forgeai/secrets/b.py": _fichier_summary(10, 1),
+    }))
+
+    def _ref_deux_categories(racine: Path, chemin_base: Path, ref: str, valider):
+        ref_baseline = _baseline_deux({"orchestrateurs": 70.0, "securite": 70.0})
+        return valider(ref_baseline, "base de reference git"), ""
+
+    monkeypatch.setattr(gate_git_ref, "charger_base_reference_git", _ref_deux_categories)
+    code = branch_coverage_ratchet.main(["--racine", str(tmp_path), "--sortie-json", str(tmp_path / "branch-coverage.json")])
+    assert code == 1
+    err = capsys.readouterr().err
+    assert "orchestrateurs" in err
+    assert "incohérence" in err
+
+
 def test_main_categorie_sans_fichier_matche_echoue(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
 ) -> None:

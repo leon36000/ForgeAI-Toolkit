@@ -252,15 +252,22 @@ def _verifier_reference_git(
     # de schéma tolère déjà ce cas via _valider_baseline_reference, mais cette comparaison
     # devait aussi le traiter comme "rien à comparer", pas comme une incohérence).
     if cats_ref:
-        if cats_baseline != cats_ref:
-            manquantes_ref = sorted(cats_ref - cats_baseline)
-            en_trop_ref = sorted(cats_baseline - cats_ref)
-            details_ref: list[str] = []
-            if manquantes_ref:
-                details_ref.append(f"catégories de référence absentes de la baseline locale : {manquantes_ref}")
-            if en_trop_ref:
-                details_ref.append(f"catégories locales absentes de la référence : {en_trop_ref}")
-            anomalies.append("incohérence de catégories avec la référence git : " + "; ".join(details_ref))
+        # Round 7 de revue scellée (#451, objection majeure fondée) : seule une catégorie
+        # DISPARUE (présente dans la référence, absente localement) est suspecte — pourrait
+        # cacher la suppression complète d'une catégorie pour échapper au cliquet. Une
+        # catégorie EN PLUS localement (ajout légitime, jamais vue dans la référence) ne doit
+        # PAS être signalée comme une incohérence : elle n'a simplement rien à comparer,
+        # exactement comme le cas cats_ref vide ci-dessus (même principe, à l'échelle d'une
+        # seule catégorie plutôt que de la baseline entière). Sans ce correctif, AUCUNE
+        # nouvelle catégorie n'aurait jamais pu être ajoutée après ce premier merge : le job CI
+        # aurait bloqué systématiquement le premier ajout, contre la comparaison à origin/main
+        # qui ne peut évidemment pas encore la connaître.
+        manquantes_ref = sorted(cats_ref - cats_baseline)
+        if manquantes_ref:
+            anomalies.append(
+                "incohérence de catégories avec la référence git : catégories de référence "
+                f"absentes de la baseline locale : {manquantes_ref}"
+            )
         for cat in sorted(cats_baseline & cats_ref):
             seuil_local = float(seuils[cat])
             seuil_ref = float(seuils_ref[cat])

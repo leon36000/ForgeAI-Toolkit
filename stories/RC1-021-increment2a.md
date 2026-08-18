@@ -212,6 +212,24 @@ CI si le nom divergeait — `actions/download-artifact` échoue explicitement si
 n'existe pas) ; repli `fnmatch` pouvant élargir un glob à travers des séparateurs (comportement
 `fnmatch` standard documenté, déjà utilisé ailleurs dans ce dépôt sans incident).
 
+## Round 7 de revue scellée — REJECT 1/3, objection majeure FONDÉE (correctif réel, pas une
+réfutation)
+
+Trio complet cette fois (alibaba/deepseek/openai). Objection majeure : ma propre réfutation du
+round 6 affirmait que l'ajout d'une nouvelle catégorie serait « traité comme un scénario sans
+comparaison possible, pas une incohérence bloquante » — mais le CODE RÉEL de
+`_verifier_reference_git` comparait `cats_baseline != cats_ref` de façon STRICTE (les deux sens),
+donc toute catégorie ajoutée localement (absente de la référence) levait bien une anomalie
+bloquante — l'exact inverse de ce que j'avais documenté. Sans correctif, AUCUNE nouvelle
+catégorie n'aurait jamais pu être ajoutée après ce premier merge : le premier ajout aurait
+toujours échoué contre une référence qui ne peut évidemment pas encore la connaître.
+
+**Corrigé** : seule une catégorie qui a DISPARU (présente dans la référence, absente localement)
+reste suspecte et bloque — une catégorie EN PLUS localement (ajout légitime) n'est plus
+signalée. 2 nouveaux tests dédiés couvrant les deux sens symétriquement
+(`test_main_reference_git_nouvelle_categorie_locale_pas_bloquante`,
+`test_main_reference_git_categorie_disparue_localement_bloquante`).
+
 ## Hors périmètre (incrément 2b, story distincte)
 
 Campagne de mutation ciblée sur les gardes/compensations, disposition de chaque mutant survivant,
