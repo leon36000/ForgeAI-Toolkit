@@ -174,3 +174,12 @@ round 8 de revue scellée — remplace l'introspection dynamique round 7 par un 
 _version_installee() devenue morte, simplifie le test correspondant. Aucune nouvelle
 fonctionnalité utilisateur, aucune doc supplémentaire concernée — même raisonnement que les
 correctifs précédents pour ce même script.
+
+scripts/rapport_composants.py + tests/test_rapport_composants.py (RC1-024/#454, correctif
+round 9 de revue scellée — épingle packaging (même mécanisme déjà établi pour pyproject_hooks)
+et ajoute _entrees_backend_build() pour inventorier [build-system].requires, élargissant la
+fonctionnalité déjà décrite par la story (exhaustivité de l'inventaire de composants de build)
+plutôt que d'en introduire une nouvelle) : docstring de construire_rapport mise à jour en
+conséquence. L'issue #454 et le scratchpad de story documentent le contexte complet ; aucune doc
+utilisateur supplémentaire concernée (même raisonnement que les correctifs précédents pour ce
+même script — le rapport JSON généré reste auto-descriptif via son propre champ _description).

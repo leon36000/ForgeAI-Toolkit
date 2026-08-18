@@ -167,6 +167,67 @@ def _entree_projet(racine: Path) -> dict[str, Any]:
     }
 
 
+_MOTIF_NOM_SPECIFICATION = re.compile(r"^([A-Za-z0-9_.-]+)")
+
+
+def _entrees_backend_build(racine: Path) -> list[dict[str, Any]]:
+    """Inventorie le backend PEP 517 déclaré dans ``[build-system].requires``.
+
+    Pourquoi (revue scellée round 9, #454) : ``python -m build``
+    (``artefact-distribue.yml``) effectue par défaut un build ISOLÉ — installe
+    SES PROPRES dépendances (``build-system.requires``, ex. ``setuptools``)
+    dans un environnement éphémère, jamais épinglées ailleurs dans ce dépôt.
+    Contrairement à ``build``/``pyproject_hooks``/``packaging`` (épinglés
+    explicitement, version exacte connue et reproductible), la version
+    RÉELLEMENT installée par l'isolation PEP 517 n'est PAS figée par ce
+    dépôt — pip résout la dernière version compatible À CHAQUE run. Inventer
+    une version résolue serait pire que ne pas la rapporter : on rapporte
+    donc la CONTRAINTE déclarée telle quelle (ex. ``>=68``), honnête sur
+    l'absence de précision, plutôt qu'une valeur fictive. Tolérant (retourne
+    une liste vide plutôt que lever) si ``[build-system]``/``requires`` est
+    absent ou mal formé — contrairement à ``_entree_projet`` ci-dessus, cette
+    entrée est un COMPLÉMENT d'inventaire, pas le cœur du rapport.
+    """
+    try:
+        donnees = _charger_pyproject(racine / "pyproject.toml")
+    except ValueError:
+        return []
+
+    backend = donnees.get("build-system")
+    if not isinstance(backend, dict):
+        return []
+
+    specifications = backend.get("requires")
+    if not isinstance(specifications, list):
+        return []
+
+    entrees: list[dict[str, Any]] = []
+    for specification in specifications:
+        if not isinstance(specification, str):
+            continue
+        correspondance = _MOTIF_NOM_SPECIFICATION.match(specification.strip())
+        if correspondance is None:
+            continue
+        nom = correspondance.group(1)
+        contrainte = specification.strip()[len(nom):].strip()
+        entrees.append(
+            {
+                "nom": nom,
+                "version": (
+                    f"contrainte déclarée {contrainte!r} — non résolue "
+                    "(build isolé PEP 517, pip choisit la version à chaque "
+                    "exécution)"
+                    if contrainte
+                    else "aucune contrainte déclarée — non résolue (build "
+                    "isolé PEP 517, pip choisit la version à chaque exécution)"
+                ),
+                "licence": _licence_installee(nom),
+                "source": "pyproject.toml [build-system].requires (backend PEP 517)",
+            }
+        )
+    return entrees
+
+
 def construire_rapport(racine: Path) -> dict[str, Any]:
     """Construit le rapport complet des composants (fonction pure, aucune écriture).
 
@@ -175,11 +236,17 @@ def construire_rapport(racine: Path) -> dict[str, Any]:
     lockfile (épinglé en dur dans ``artefact-distribue.yml``) et c'est lui qui
     construit RÉELLEMENT les artefacts — SA PROPRE fermeture de dépendances
     directes est incluse (``pyproject_hooks``, absente du lockfile ;
-    ``packaging`` aussi mais déjà présente donc non dupliquée) pour que
-    l'inventaire ne s'arrête pas à l'outil épinglé lui-même ; le projet lui-même
-    figure pour mémoire afin de rappeler que le produit livré n'embarque aucune
-    dépendance runtime. Le tri final par nom (insensible à la casse) rend la
-    sortie déterministe.
+    ``packaging`` aussi mais déjà présente donc non dupliquée, ET désormais
+    épinglée dans ``artefact-distribue.yml`` — round 9 — pour que la version
+    rapportée soit garantie identique à celle réellement installée dans ce
+    job, pas seulement dans le job CI distinct ``rapport-composants``) pour
+    que l'inventaire ne s'arrête pas à l'outil épinglé lui-même ; le backend
+    PEP 517 déclaré (``[build-system].requires``, ex. ``setuptools`` — build
+    ISOLÉ par défaut, version non figée par ce dépôt, contrainte déclarée
+    rapportée honnêtement plutôt qu'une version inventée) ; le projet
+    lui-même figure pour mémoire afin de rappeler que le produit livré
+    n'embarque aucune dépendance runtime. Le tri final par nom (insensible à
+    la casse) rend la sortie déterministe.
     """
     composants: list[dict[str, Any]] = [
         {
@@ -226,6 +293,7 @@ def construire_rapport(racine: Path) -> dict[str, Any]:
             "source": "artefact-distribue.yml (installation directe, hors requirements-ci.txt)",
         }
     )
+    composants.extend(_entrees_backend_build(racine))
     composants.append(_entree_projet(racine))
 
     composants.sort(key=lambda composant: composant["nom"].lower())

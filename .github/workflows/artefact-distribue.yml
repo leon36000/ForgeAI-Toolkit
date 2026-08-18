@@ -25,12 +25,17 @@ jobs:
       - name: Construire le wheel et le sdist
         run: |
           # L'isolation installe le backend déclaré par pyproject.toml.
-          # pyproject_hooks épinglé explicitement (round 8 de revue scellée,
-          # #454) : dépendance directe inconditionnelle de build, sinon
-          # laissée flottante (pip installerait la dernière version compatible
-          # au moment du run, jamais reproductible pour l'audit supply-chain
-          # EXT-029) -- scripts/rapport_composants.py reflète CE pin exact.
-          python -m pip install --no-cache-dir "build==1.2.2.post1" "pyproject_hooks==1.2.0"
+          # pyproject_hooks et packaging épinglés explicitement (rounds 8 et 9
+          # de revue scellée, #454) : dépendances directes inconditionnelles
+          # de build, sinon laissées flottantes (pip installerait la dernière
+          # version compatible au moment du run, jamais reproductible pour
+          # l'audit supply-chain EXT-029) -- scripts/rapport_composants.py
+          # reflète CES pins exacts. packaging==26.3 : même version que
+          # requirements-ci.txt (round 9 -- ce job n'installe PAS ce lockfile,
+          # donc la version qui y était rapportée n'était vérifiable nulle
+          # part ici ; épingler la MÊME version rend les deux cohérents, mais
+          # les deux doivent être mis à jour ensemble si l'un bouge).
+          python -m pip install --no-cache-dir "build==1.2.2.post1" "pyproject_hooks==1.2.0" "packaging==26.3"
           rm -rf dist
           python -m build --wheel --sdist --outdir dist
 

@@ -477,6 +477,117 @@ def test_entree_projet_licence_absente_leve(tmp_path: Path) -> None:
         rc._entree_projet(tmp_path)
 
 
+def test_entrees_backend_build_setuptools_contrainte_declaree_non_resolue(
+    tmp_path: Path,
+) -> None:
+    """Round 9 de revue scellée (#454) : [build-system].requires DOIT être
+    inventorié, mais un build PEP 517 isolé ne fige aucune version résolue —
+    la contrainte déclarée est rapportée telle quelle, jamais devinée.
+    """
+    (tmp_path / "pyproject.toml").write_text(
+        '[build-system]\nrequires = ["setuptools>=68"]\n'
+        'build-backend = "setuptools.build_meta"\n'
+        '[project]\nname = "x"\nversion = "0.1.0"\nlicense = "MIT"\n',
+        encoding="utf-8",
+    )
+
+    entrees = rc._entrees_backend_build(tmp_path)
+
+    assert len(entrees) == 1
+    assert entrees[0]["nom"] == "setuptools"
+    assert ">=68" in entrees[0]["version"]
+    assert "non résolue" in entrees[0]["version"]
+    assert entrees[0]["source"] == (
+        "pyproject.toml [build-system].requires (backend PEP 517)"
+    )
+
+
+def test_entrees_backend_build_sans_contrainte_de_version(tmp_path: Path) -> None:
+    (tmp_path / "pyproject.toml").write_text(
+        '[build-system]\nrequires = ["wheel"]\n'
+        '[project]\nname = "x"\nversion = "0.1.0"\nlicense = "MIT"\n',
+        encoding="utf-8",
+    )
+
+    entrees = rc._entrees_backend_build(tmp_path)
+
+    assert entrees[0]["nom"] == "wheel"
+    assert "aucune contrainte déclarée" in entrees[0]["version"]
+
+
+def test_entrees_backend_build_plusieurs_entrees_toutes_incluses(
+    tmp_path: Path,
+) -> None:
+    (tmp_path / "pyproject.toml").write_text(
+        '[build-system]\nrequires = ["setuptools>=68", "wheel"]\n'
+        '[project]\nname = "x"\nversion = "0.1.0"\nlicense = "MIT"\n',
+        encoding="utf-8",
+    )
+
+    entrees = rc._entrees_backend_build(tmp_path)
+
+    assert {entree["nom"] for entree in entrees} == {"setuptools", "wheel"}
+
+
+def test_entrees_backend_build_section_absente_retourne_liste_vide(
+    tmp_path: Path,
+) -> None:
+    (tmp_path / "pyproject.toml").write_text(
+        '[project]\nname = "x"\nversion = "0.1.0"\nlicense = "MIT"\n',
+        encoding="utf-8",
+    )
+
+    assert rc._entrees_backend_build(tmp_path) == []
+
+
+def test_entrees_backend_build_requires_vide_retourne_liste_vide(
+    tmp_path: Path,
+) -> None:
+    (tmp_path / "pyproject.toml").write_text(
+        '[build-system]\nrequires = []\n'
+        '[project]\nname = "x"\nversion = "0.1.0"\nlicense = "MIT"\n',
+        encoding="utf-8",
+    )
+
+    assert rc._entrees_backend_build(tmp_path) == []
+
+
+def test_entrees_backend_build_requires_type_invalide_retourne_liste_vide(
+    tmp_path: Path,
+) -> None:
+    (tmp_path / "pyproject.toml").write_text(
+        '[build-system]\nrequires = "setuptools"\n'
+        '[project]\nname = "x"\nversion = "0.1.0"\nlicense = "MIT"\n',
+        encoding="utf-8",
+    )
+
+    assert rc._entrees_backend_build(tmp_path) == []
+
+
+def test_entrees_backend_build_pyproject_absent_retourne_liste_vide(
+    tmp_path: Path,
+) -> None:
+    assert rc._entrees_backend_build(tmp_path) == []
+
+
+def test_construire_rapport_backend_build_inclus_dans_inventaire_complet(
+    tmp_path: Path,
+) -> None:
+    _ecrire_requirements(tmp_path, "alpha-factice==1.0\n")
+    (tmp_path / "pyproject.toml").write_text(
+        '[build-system]\nrequires = ["setuptools>=68"]\n'
+        'build-backend = "setuptools.build_meta"\n'
+        '[project]\nname = "projet-factice"\nversion = "0.1.0"\nlicense = "MIT"\n',
+        encoding="utf-8",
+    )
+
+    rapport = rc.construire_rapport(tmp_path)
+    par_nom = _par_nom(rapport)
+
+    assert "setuptools" in par_nom
+    assert ">=68" in par_nom["setuptools"]["version"]
+
+
 def test_main_erreur_ecriture_retourne_1(
     tmp_path: Path,
     capsys: pytest.CaptureFixture[str],
