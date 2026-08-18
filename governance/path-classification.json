@@ -298,8 +298,8 @@
       "path": ".docs-exempt",
       "referenced_by": [],
       "rule_id": "governance-docs-exempt",
-      "sha256": "816f6d6eb0f706f4369e0e40bfb0a8471addaa3d0c3d411de7ce5649211bfeae",
-      "size": 17220,
+      "sha256": "996cdeb336a108a33e8746ddb06124e3e0fb7f774c5c8a3c94fd7daa5ca3f54c",
+      "size": 17684,
       "target_path": null,
       "type": "text"
     },
@@ -1103,8 +1103,8 @@
         }
       ],
       "rule_id": "governance-github-ci",
-      "sha256": "57cbe90162064e82b68ae073cb4277cb509af399eb65ad41138d27dfc6f470d0",
-      "size": 21853,
+      "sha256": "8c38d4aeb45cc6fb874553868a2c834829c551d719bc3b52ad2be68916bc6bbb",
+      "size": 21946,
       "target_path": null,
       "type": "text"
     },
@@ -29577,7 +29577,7 @@
       "referenced_by": [
         {
           "candidate": "governance/ruff-baseline.json",
-          "line": 388,
+          "line": 389,
           "referrer": ".github/workflows/gates.yml",
           "resolved": "governance/ruff-baseline.json",
           "severity": "hard"
@@ -29801,7 +29801,7 @@
       "referenced_by": [
         {
           "candidate": "governance/ruff-classification.json",
-          "line": 386,
+          "line": 387,
           "referrer": ".github/workflows/gates.yml",
           "resolved": "governance/ruff-classification.json",
           "severity": "hard"
@@ -30116,7 +30116,7 @@
         }
       ],
       "rule_id": "governance-core",
-      "sha256": "db80b6927dd2898777cd99957c19cef264274065ddc0dfc6e0e83c73d05a6741",
+      "sha256": "58128466e7b1d4b08746ed217b878ca487faae8122c8a2898b59b55e616bb036",
       "size": 33471,
       "target_path": null,
       "type": "text"
@@ -30832,14 +30832,14 @@
         },
         {
           "candidate": "scripts/branch_coverage_report.py",
-          "line": 360,
+          "line": 361,
           "referrer": ".github/workflows/gates.yml",
           "resolved": "scripts/branch_coverage_report.py",
           "severity": "hard"
         },
         {
           "candidate": "scripts/branch_coverage_report.py",
-          "line": 376,
+          "line": 377,
           "referrer": ".github/workflows/gates.yml",
           "resolved": "scripts/branch_coverage_report.py",
           "severity": "hard"
@@ -33797,7 +33797,7 @@
         },
         {
           "candidate": "scripts/rapport_composants.py",
-          "line": 351,
+          "line": 352,
           "referrer": ".github/workflows/gates.yml",
           "resolved": "scripts/rapport_composants.py",
           "severity": "hard"
@@ -33839,8 +33839,8 @@
         }
       ],
       "rule_id": "governance-scripts-root",
-      "sha256": "cf41745ff446ba052d458ab4fbc618258d709874f30516f9108d4b0b3db612c1",
-      "size": 21749,
+      "sha256": "f2f5a2418ade4169b76b7976637232a5ed22b8aeec11ba5b13e3c12b80c85208",
+      "size": 23001,
       "target_path": null,
       "type": "text"
     },
@@ -34896,7 +34896,7 @@
       "referenced_by": [
         {
           "candidate": "scripts/ruff_noqa_gate.py",
-          "line": 427,
+          "line": 428,
           "referrer": ".github/workflows/gates.yml",
           "resolved": "scripts/ruff_noqa_gate.py",
           "severity": "hard"
@@ -35204,14 +35204,14 @@
       "referenced_by": [
         {
           "candidate": "scripts/ruff_ratchet.py",
-          "line": 387,
+          "line": 388,
           "referrer": ".github/workflows/gates.yml",
           "resolved": "scripts/ruff_ratchet.py",
           "severity": "hard"
         },
         {
           "candidate": "scripts/ruff_ratchet.py",
-          "line": 405,
+          "line": 406,
           "referrer": ".github/workflows/gates.yml",
           "resolved": "scripts/ruff_ratchet.py",
           "severity": "hard"
@@ -54955,8 +54955,8 @@
         }
       ],
       "rule_id": "test-suite",
-      "sha256": "1ba7a2311d704547327388fd114d818903337a963fd902887c7620ec7045b878",
-      "size": 31681,
+      "sha256": "777ef63d5990b1035490974689237160b358c49b83551f4520b3fc679ce99934",
+      "size": 32560,
       "target_path": null,
       "type": "text"
     },
@@ -55662,7 +55662,7 @@
         },
         {
           "candidate": "tests/test_reg029b_ancrage.py",
-          "line": 805,
+          "line": 826,
           "referrer": "tests/test_rapport_composants.py",
           "resolved": "tests/test_reg029b_ancrage.py",
           "severity": "hard"
@@ -60023,98 +60023,98 @@
         "referrer": ".github/workflows/gates.yml"
       },
       {
-        "candidate": "nom/version/licence",
+        "candidate": "artefact-distribue.yml",
         "line": 337,
         "referrer": ".github/workflows/gates.yml"
       },
       {
-        "candidate": "artefact-distribue.yml",
+        "candidate": "nom/version/licence",
         "line": 338,
         "referrer": ".github/workflows/gates.yml"
       },
       {
         "candidate": "actions/checkout",
-        "line": 342,
+        "line": 343,
         "referrer": ".github/workflows/gates.yml"
       },
       {
         "candidate": "actions/setup-python",
-        "line": 345,
+        "line": 346,
         "referrer": ".github/workflows/gates.yml"
       },
       {
         "candidate": "actions/upload-artifact",
-        "line": 352,
+        "line": 353,
         "referrer": ".github/workflows/gates.yml"
       },
       {
         "candidate": "composants-rc1.json",
-        "line": 356,
+        "line": 357,
         "referrer": ".github/workflows/gates.yml"
       },
       {
         "candidate": "actions/checkout",
-        "line": 367,
+        "line": 368,
         "referrer": ".github/workflows/gates.yml"
       },
       {
         "candidate": "actions/setup-python",
-        "line": 370,
+        "line": 371,
         "referrer": ".github/workflows/gates.yml"
       },
       {
         "candidate": "branch-coverage.json",
-        "line": 376,
+        "line": 377,
         "referrer": ".github/workflows/gates.yml"
       },
       {
         "candidate": "actions/upload-artifact",
-        "line": 378,
+        "line": 379,
         "referrer": ".github/workflows/gates.yml"
       },
       {
         "candidate": "branch-coverage.json",
-        "line": 381,
+        "line": 382,
         "referrer": ".github/workflows/gates.yml"
       },
       {
         "candidate": "origin/main",
-        "line": 389,
+        "line": 390,
         "referrer": ".github/workflows/gates.yml"
       },
       {
         "candidate": "actions/checkout",
-        "line": 394,
+        "line": 395,
         "referrer": ".github/workflows/gates.yml"
       },
       {
         "candidate": "actions/setup-python",
-        "line": 398,
+        "line": 399,
         "referrer": ".github/workflows/gates.yml"
       },
       {
         "candidate": "origin/main",
-        "line": 407,
+        "line": 408,
         "referrer": ".github/workflows/gates.yml"
       },
       {
         "candidate": "ruff-ratchet/mypy-ratchet",
-        "line": 415,
+        "line": 416,
         "referrer": ".github/workflows/gates.yml"
       },
       {
         "candidate": "actions/checkout",
-        "line": 418,
+        "line": 419,
         "referrer": ".github/workflows/gates.yml"
       },
       {
         "candidate": "actions/setup-python",
-        "line": 422,
+        "line": 423,
         "referrer": ".github/workflows/gates.yml"
       },
       {
         "candidate": "origin/main",
-        "line": 429,
+        "line": 430,
         "referrer": ".github/workflows/gates.yml"
       },
       {
@@ -104583,63 +104583,83 @@
         "referrer": "scripts/rapport_composants.py"
       },
       {
+        "candidate": "actions/setup-python",
+        "line": 339,
+        "referrer": "scripts/rapport_composants.py"
+      },
+      {
         "candidate": "artefact-distribue.yml",
         "line": 342,
         "referrer": "scripts/rapport_composants.py"
       },
       {
-        "candidate": "artefact-distribue.yml",
+        "candidate": "actions/setup-python",
         "line": 350,
         "referrer": "scripts/rapport_composants.py"
       },
       {
-        "candidate": "artefact-distribue.yml",
-        "line": 358,
+        "candidate": "actions/setup-python",
+        "line": 355,
         "referrer": "scripts/rapport_composants.py"
       },
       {
-        "candidate": "gates.yml",
+        "candidate": "artefact-distribue.yml",
         "line": 365,
         "referrer": "scripts/rapport_composants.py"
       },
       {
+        "candidate": "artefact-distribue.yml",
+        "line": 373,
+        "referrer": "scripts/rapport_composants.py"
+      },
+      {
+        "candidate": "artefact-distribue.yml",
+        "line": 381,
+        "referrer": "scripts/rapport_composants.py"
+      },
+      {
+        "candidate": "gates.yml",
+        "line": 388,
+        "referrer": "scripts/rapport_composants.py"
+      },
+      {
         "candidate": "version/licence",
-        "line": 367,
+        "line": 390,
         "referrer": "scripts/rapport_composants.py"
       },
       {
         "candidate": "artefact-distribue.yml",
-        "line": 369,
-        "referrer": "scripts/rapport_composants.py"
-      },
-      {
-        "candidate": "rifiable/reproductible",
-        "line": 370,
-        "referrer": "scripts/rapport_composants.py"
-      },
-      {
-        "candidate": "artefact-distribue.yml",
-        "line": 379,
-        "referrer": "scripts/rapport_composants.py"
-      },
-      {
-        "candidate": "wheel/sdist",
-        "line": 391,
-        "referrer": "scripts/rapport_composants.py"
-      },
-      {
-        "candidate": "CI/dev/build",
         "line": 392,
         "referrer": "scripts/rapport_composants.py"
       },
       {
-        "candidate": "composants-rc1.json",
+        "candidate": "rifiable/reproductible",
+        "line": 393,
+        "referrer": "scripts/rapport_composants.py"
+      },
+      {
+        "candidate": "artefact-distribue.yml",
+        "line": 402,
+        "referrer": "scripts/rapport_composants.py"
+      },
+      {
+        "candidate": "wheel/sdist",
+        "line": 414,
+        "referrer": "scripts/rapport_composants.py"
+      },
+      {
+        "candidate": "CI/dev/build",
         "line": 415,
         "referrer": "scripts/rapport_composants.py"
       },
       {
+        "candidate": "composants-rc1.json",
+        "line": 438,
+        "referrer": "scripts/rapport_composants.py"
+      },
+      {
         "candidate": "../../etc/passwd",
-        "line": 429,
+        "line": 452,
         "referrer": "scripts/rapport_composants.py"
       },
       {
@@ -137623,93 +137643,88 @@
         "referrer": "tests/test_rapport_composants.py"
       },
       {
+        "candidate": "actions/setup-python",
+        "line": 319,
+        "referrer": "tests/test_rapport_composants.py"
+      },
+      {
+        "candidate": "actions/setup-python",
+        "line": 331,
+        "referrer": "tests/test_rapport_composants.py"
+      },
+      {
         "candidate": "Version/licence",
-        "line": 321,
+        "line": 341,
         "referrer": "tests/test_rapport_composants.py"
       },
       {
         "candidate": "artefact-distribue.yml",
-        "line": 322,
+        "line": 342,
         "referrer": "tests/test_rapport_composants.py"
       },
       {
         "candidate": "artefact-distribue.yml",
-        "line": 334,
+        "line": 354,
         "referrer": "tests/test_rapport_composants.py"
       },
       {
         "candidate": "composants-rc1.json",
-        "line": 401,
+        "line": 422,
         "referrer": "tests/test_rapport_composants.py"
       },
       {
         "candidate": "rapport-personnalise.json",
-        "line": 415,
+        "line": 436,
         "referrer": "tests/test_rapport_composants.py"
       },
       {
         "candidate": "rapport-personnalise.json",
-        "line": 419,
+        "line": 440,
         "referrer": "tests/test_rapport_composants.py"
       },
       {
         "candidate": "composants-rc1.json",
-        "line": 420,
+        "line": 441,
         "referrer": "tests/test_rapport_composants.py"
       },
       {
         "candidate": "composants-rc1.json",
-        "line": 432,
+        "line": 453,
         "referrer": "tests/test_rapport_composants.py"
       },
       {
         "candidate": "composants-rc1.json",
-        "line": 442,
+        "line": 463,
         "referrer": "tests/test_rapport_composants.py"
       },
       {
         "candidate": "ne-doit-jamais-exister.json",
-        "line": 747,
-        "referrer": "tests/test_rapport_composants.py"
-      },
-      {
-        "candidate": "ne-doit-jamais-exister-non-plus.json",
-        "line": 767,
-        "referrer": "tests/test_rapport_composants.py"
-      },
-      {
-        "candidate": "../",
         "line": 768,
         "referrer": "tests/test_rapport_composants.py"
       },
       {
-        "candidate": "artefact-distribue.yml",
-        "line": 798,
+        "candidate": "ne-doit-jamais-exister-non-plus.json",
+        "line": 788,
+        "referrer": "tests/test_rapport_composants.py"
+      },
+      {
+        "candidate": "../",
+        "line": 789,
         "referrer": "tests/test_rapport_composants.py"
       },
       {
         "candidate": "artefact-distribue.yml",
-        "line": 812,
+        "line": 819,
         "referrer": "tests/test_rapport_composants.py"
       },
       {
         "candidate": "artefact-distribue.yml",
-        "line": 823,
+        "line": 833,
         "referrer": "tests/test_rapport_composants.py"
       },
       {
         "candidate": "artefact-distribue.yml",
-        "line": 834,
-        "referrer": "tests/test_rapport_composants.py"
-      },
-      {
-        "candidate": "build/pyproject_hooks",
-        "line": 841,
-        "referrer": "tests/test_rapport_composants.py"
-      },
-      {
-        "candidate": "artefact-distribue.yml",
-        "line": 845,
+        "line": 844,
         "referrer": "tests/test_rapport_composants.py"
       },
       {
@@ -137718,33 +137733,48 @@
         "referrer": "tests/test_rapport_composants.py"
       },
       {
-        "candidate": "rapport_composants.py",
+        "candidate": "build/pyproject_hooks",
+        "line": 862,
+        "referrer": "tests/test_rapport_composants.py"
+      },
+      {
+        "candidate": "artefact-distribue.yml",
+        "line": 866,
+        "referrer": "tests/test_rapport_composants.py"
+      },
+      {
+        "candidate": "artefact-distribue.yml",
         "line": 876,
         "referrer": "tests/test_rapport_composants.py"
       },
       {
+        "candidate": "rapport_composants.py",
+        "line": 897,
+        "referrer": "tests/test_rapport_composants.py"
+      },
+      {
         "candidate": "artefact-distribue.yml",
-        "line": 877,
+        "line": 898,
         "referrer": "tests/test_rapport_composants.py"
       },
       {
         "candidate": "rapport_composants.py",
-        "line": 880,
+        "line": 901,
         "referrer": "tests/test_rapport_composants.py"
       },
       {
         "candidate": "artefact-distribue.yml",
-        "line": 881,
+        "line": 902,
         "referrer": "tests/test_rapport_composants.py"
       },
       {
         "candidate": "rapport_composants.py",
-        "line": 884,
+        "line": 905,
         "referrer": "tests/test_rapport_composants.py"
       },
       {
         "candidate": "artefact-distribue.yml",
-        "line": 885,
+        "line": 906,
         "referrer": "tests/test_rapport_composants.py"
       },
       {
@@ -147899,56 +147929,56 @@
       },
       {
         "candidate": "scripts/rapport_composants.py",
-        "line": 351,
+        "line": 352,
         "referrer": ".github/workflows/gates.yml",
         "resolved": "scripts/rapport_composants.py",
         "severity": "hard"
       },
       {
         "candidate": "scripts/branch_coverage_report.py",
-        "line": 360,
+        "line": 361,
         "referrer": ".github/workflows/gates.yml",
         "resolved": "scripts/branch_coverage_report.py",
         "severity": "hard"
       },
       {
         "candidate": "scripts/branch_coverage_report.py",
-        "line": 376,
+        "line": 377,
         "referrer": ".github/workflows/gates.yml",
         "resolved": "scripts/branch_coverage_report.py",
         "severity": "hard"
       },
       {
         "candidate": "governance/ruff-classification.json",
-        "line": 386,
+        "line": 387,
         "referrer": ".github/workflows/gates.yml",
         "resolved": "governance/ruff-classification.json",
         "severity": "hard"
       },
       {
         "candidate": "scripts/ruff_ratchet.py",
-        "line": 387,
+        "line": 388,
         "referrer": ".github/workflows/gates.yml",
         "resolved": "scripts/ruff_ratchet.py",
         "severity": "hard"
       },
       {
         "candidate": "governance/ruff-baseline.json",
-        "line": 388,
+        "line": 389,
         "referrer": ".github/workflows/gates.yml",
         "resolved": "governance/ruff-baseline.json",
         "severity": "hard"
       },
       {
         "candidate": "scripts/ruff_ratchet.py",
-        "line": 405,
+        "line": 406,
         "referrer": ".github/workflows/gates.yml",
         "resolved": "scripts/ruff_ratchet.py",
         "severity": "hard"
       },
       {
         "candidate": "scripts/ruff_noqa_gate.py",
-        "line": 427,
+        "line": 428,
         "referrer": ".github/workflows/gates.yml",
         "resolved": "scripts/ruff_noqa_gate.py",
         "severity": "hard"
@@ -176564,7 +176594,7 @@
       },
       {
         "candidate": "tests/test_reg029b_ancrage.py",
-        "line": 805,
+        "line": 826,
         "referrer": "tests/test_rapport_composants.py",
         "resolved": "tests/test_reg029b_ancrage.py",
         "severity": "hard"
@@ -177305,7 +177335,7 @@
       "working-sandbox-readme": 1
     },
     "case_collisions_total": 0,
-    "dangling_references_total": 17217,
+    "dangling_references_total": 17223,
     "generated_total": 9,
     "load_bearing_total": 2102,
     "portability_violations_total": 0,
