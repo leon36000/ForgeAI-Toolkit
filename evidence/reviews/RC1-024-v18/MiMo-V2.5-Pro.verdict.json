@@ -1,0 +1,19 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "stories/RC1-024.md (contexte, pas dans le diff)",
+   "description": "Le récit des rounds du storypack mentionne 36 tests (round 8 post-retrait de _version_installee), puis 51 (round 13), alors que le fichier réel `tests/test_rapport_composants.py` contient 53 fonctions `def test_*` — comptage confirmé par le diff lui-même (907 lignes, 53 occurrences) et cohérent avec `governance/sonar-suppressions.json` (e15: '53 cas'). Cette incohérence documentaire ne touche aucun code, aucun test, aucun artefact CI — c'est un défaut de bookkeeping dans le récit de rounds, pas dans le livrable.",
+   "preuve": "Diff tests/test_rapport_composants.py : 907 lignes ajoutées, exactement 53 fonctions `def test_`. governance/sonar-suppressions.json e15 compensating_test_reason : '53 cas'. Story round 8 : '36 tests au total désormais', story round 13 : '51 (valeur réelle après le nouveau test ajouté DANS ce même correctif)'. Ni l'un ni l'autre n'atteint 53, mais les 53 sont réellement présents."
+  }
+ ],
+ "date_heure": "2026-08-18T15:46:01.284273+00:00",
+ "prompt_sha256": "ca1925b7c5490777b5404c426ed30c12174a2baf37284d8f51de9b9dd133f1ff",
+ "reviewer_model": "MiMo-V2.5-Pro",
+ "modele_servi": "mimo-v25-pro-openrouter",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}
