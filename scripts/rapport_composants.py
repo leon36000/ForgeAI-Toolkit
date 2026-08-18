@@ -172,6 +172,20 @@ def _entree_projet(racine: Path) -> dict[str, Any]:
 _MOTIF_NOM_SPECIFICATION = re.compile(r"^([A-Za-z0-9_.-]+)")
 
 
+# Licences vérifiées manuellement (API PyPI, round 11 de revue scellée, #454)
+# pour les paquets épinglés via requirements-build-constraints.txt.
+# _licence_installee() seul ne suffit PAS ici : il introspecte l'environnement
+# qui EXÉCUTE ce script, pas celui qui installe RÉELLEMENT le paquet via
+# PIP_CONSTRAINT (job CI distinct, artefact-distribue.yml — rapport-composants
+# n'installe jamais build-system.requires, cf. gates.yml). Un paquet épinglé
+# mais absent de cette table retombe sur l'introspection dynamique (honnête
+# « inconnue » si non installé localement plutôt qu'une valeur fictive) —
+# mêmes garanties que pour la VERSION ci-dessous.
+_LICENCES_BACKEND_EPINGLEES = {
+    "setuptools": "MIT",
+}
+
+
 def _entrees_backend_build(racine: Path) -> list[dict[str, Any]]:
     """Inventorie le backend PEP 517 déclaré dans ``[build-system].requires``.
 
@@ -232,6 +246,7 @@ def _entrees_backend_build(racine: Path) -> list[dict[str, Any]]:
                 "requirements-build-constraints.txt — résolution déterministe "
                 "vérifiée empiriquement)"
             )
+            licence = _LICENCES_BACKEND_EPINGLEES.get(nom, _licence_installee(nom))
         else:
             version = (
                 f"contrainte déclarée {contrainte!r} — non résolue "
@@ -241,12 +256,13 @@ def _entrees_backend_build(racine: Path) -> list[dict[str, Any]]:
                 else "aucune contrainte déclarée — non résolue (build "
                 "isolé PEP 517, pip choisit la version à chaque exécution)"
             )
+            licence = _licence_installee(nom)
 
         entrees.append(
             {
                 "nom": nom,
                 "version": version,
-                "licence": _licence_installee(nom),
+                "licence": licence,
                 "source": "pyproject.toml [build-system].requires (backend PEP 517)",
             }
         )

@@ -4,9 +4,10 @@ Chaque test construit ses propres ``requirements-ci.txt``/``pyproject.toml``
 factices dans ``tmp_path`` : aucun ne dépend des vrais fichiers de ce dépôt,
 qui peuvent évoluer indépendamment du contrat verrouillé ici — SAUF
 ``test_packaging_epingle_dans_artefact_distribue_coherent_avec_lockfile``
-(round 10), dont le but EST précisément de vérifier une cohérence entre deux
-vrais fichiers du dépôt (garde-fou anti-dérive, pas un test de comportement
-du script isolé de son environnement).
+(round 10) et ``test_build_et_pyproject_hooks_coherents_avec_artefact_distribue``
+(round 11), dont le but EST précisément de vérifier une cohérence entre de
+vrais fichiers du dépôt (garde-fous anti-dérive, pas des tests de
+comportement du script isolé de son environnement).
 """
 
 from __future__ import annotations
@@ -596,6 +597,35 @@ def test_entrees_backend_build_version_epinglee_via_contraintes_rapportee_resolu
     assert entrees[0]["nom"] == "setuptools"
     assert "84.0.0" in entrees[0]["version"]
     assert "épinglée via PIP_CONSTRAINT" in entrees[0]["version"]
+
+
+def test_entrees_backend_build_licence_epinglee_verifiee_pas_introspectee(
+    tmp_path: Path,
+) -> None:
+    """Round 11 de revue scellée (#454, objection majeure) : la licence d'un
+    paquet épinglé via requirements-build-constraints.txt doit venir d'une
+    table vérifiée manuellement, PAS de _licence_installee() seul — ce
+    dernier introspecte l'environnement qui EXÉCUTE ce script, pas celui qui
+    installe réellement le paquet via PIP_CONSTRAINT (job CI distinct).
+    Prouvé en mockant _licence_installee pour renvoyer une valeur
+    manifestement fausse : si la licence en dur gagne, le test passe ;
+    si _licence_installee() était encore consultée en premier, il échouerait.
+    """
+    (tmp_path / "pyproject.toml").write_text(
+        '[build-system]\nrequires = ["setuptools>=68"]\n'
+        '[project]\nname = "x"\nversion = "0.1.0"\nlicense = "MIT"\n',
+        encoding="utf-8",
+    )
+    (tmp_path / "requirements-build-constraints.txt").write_text(
+        "setuptools==84.0.0\n", encoding="utf-8"
+    )
+
+    with mock.patch.object(
+        rc, "_licence_installee", return_value="valeur-factice-ne-doit-jamais-apparaitre"
+    ):
+        entrees = rc._entrees_backend_build(tmp_path)
+
+    assert entrees[0]["licence"] == "MIT"
     assert "non résolue" not in entrees[0]["version"]
 
 
@@ -753,4 +783,46 @@ def test_packaging_epingle_dans_artefact_distribue_coherent_avec_lockfile() -> N
         f"packaging=={version_workflow!r} dans artefact-distribue.yml diverge de "
         f"packaging=={versions_lockfile!r} dans requirements-ci.txt — les deux "
         "doivent être mis à jour ensemble (voir commentaire dans le workflow)"
+    )
+
+
+def test_build_et_pyproject_hooks_coherents_avec_artefact_distribue() -> None:
+    """Round 11 de revue scellée (#454, objection mineure) : contrairement à
+    packaging (garde-fou ci-dessus, round 10), les versions en dur de build
+    et pyproject_hooks dans construire_rapport() n'avaient aucun garde-fou
+    les reliant au pin réel de artefact-distribue.yml — une modification du
+    workflow aurait pu rendre le rapport silencieusement inexact.
+
+    Même motif que le test ci-dessus (structure YAML, pas texte brut), sur
+    le VRAI dépôt — même exception documentée en tête de fichier.
+    """
+    yaml = pytest.importorskip("yaml", reason="pyyaml est installé par le job `tests` de la CI")
+    racine = Path(__file__).resolve().parents[1]
+
+    workflow = yaml.safe_load(
+        (racine / ".github" / "workflows" / "artefact-distribue.yml").read_text(
+            encoding="utf-8"
+        )
+    )
+    etapes = workflow["jobs"]["build-install-outside-checkout"]["steps"]
+    construction = next(
+        etape for etape in etapes if "Construire le wheel" in etape.get("name", "")
+    )
+    run = construction["run"]
+
+    correspondance_build = re.search(r'"build==([^"]+)"', run)
+    correspondance_hooks = re.search(r'"pyproject_hooks==([^"]+)"', run)
+    assert correspondance_build is not None, "le pin build doit rester présent"
+    assert correspondance_hooks is not None, "le pin pyproject_hooks doit rester présent"
+
+    rapport = rc.construire_rapport(racine)
+    par_nom = _par_nom(rapport)
+
+    assert par_nom["build"]["version"] == correspondance_build.group(1), (
+        "la version de build en dur dans rapport_composants.py diverge du pin "
+        "réel de artefact-distribue.yml"
+    )
+    assert par_nom["pyproject_hooks"]["version"] == correspondance_hooks.group(1), (
+        "la version de pyproject_hooks en dur dans rapport_composants.py "
+        "diverge du pin réel de artefact-distribue.yml"
     )
