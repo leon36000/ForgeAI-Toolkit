@@ -6828,8 +6828,8 @@
         }
       ],
       "rule_id": "evidence-registres-root",
-      "sha256": "fcfb90c63a023e5c43cec7360ab49f5330672c110d512d4979a3dd0447d220a3",
-      "size": 395658,
+      "sha256": "86442c2f7acacbf040a7f64372d218afe88c583d78d6299bda1e15bd7a9d8af0",
+      "size": 396139,
       "target_path": null,
       "type": "text"
     },
