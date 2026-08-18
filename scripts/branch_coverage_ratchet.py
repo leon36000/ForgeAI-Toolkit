@@ -42,7 +42,11 @@ def _charger_json(chemin: Path) -> dict[str, Any]:
         contenu = json.loads(chemin.read_text(encoding="utf-8"))
     except json.JSONDecodeError as erreur:
         raise ValueError(f"fichier JSON invalide {str(chemin)!r} : {erreur}") from erreur
-    except (OSError, ValueError) as erreur:
+    except OSError as erreur:
+        # Round 13 de revue scellée (#451, objection mineure fondée) : `ValueError` retiré de ce
+        # tuple — `json.JSONDecodeError` (déjà catché ci-dessus) EST un `ValueError` (hérite de
+        # lui), donc ce second except ne pouvait jamais capturer un `ValueError` indépendant,
+        # seul `OSError` était effectif (même famille que S5713, rounds 6/11 sur ce fichier).
         raise ValueError(f"fichier JSON illisible {str(chemin)!r} : {erreur}") from erreur
     if not isinstance(contenu, dict):
         raise ValueError(f"le contenu de {str(chemin)!r} doit être un objet JSON")

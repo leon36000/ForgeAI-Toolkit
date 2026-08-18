@@ -4,10 +4,28 @@ Suite de l'incrément 1 (PR #560, mergée `21df914`) qui a livré la MESURE info
 (`scripts/branch_coverage_report.py`, job CI `branch-coverage-report`,
 `governance/branch-coverage-baseline.json` avec un seuil global initial NON bloquant).
 
-Couvre 1 des 5 critères restants de #451, plus un mécanisme de cliquet anti-régression sur les
-seuils par catégorie (non explicitement listé comme critère séparé, mais nécessaire pour rendre
-le premier critère réellement bloquant plutôt que déclaratif) :
-- [x] seuils ciblés plus élevés pour orchestrateurs, sécurité, persistance et rollback ;
+**État honnête après 13 rounds de revue scellée** — le critère original de l'issue est formulé
+« seuils ciblés plus élevés pour orchestrateurs, sécurité, persistance et rollback ». Deux
+lectures sont possibles et ont été activement débattues en revue (rounds 1/3/5/6/8/10/12/13) :
+- lecture NUMÉRIQUE LITTÉRALE (chaque seuil supérieur au seuil global 90.21%) : **NON satisfaite**
+  — 3 des 4 seuils réels (orchestrateurs 85.97%, sécurité 86.47%, rollback 84.12%) sont
+  structurellement en dessous, `persistance` (91.74%) seule au-dessus. Impossible à satisfaire
+  SANS violer §8bis de ce dépôt (AGENTS.md règle 1, zéro donnée inventée) : forcer un seuil
+  au-dessus de la couverture RÉELLEMENT mesurée ferait échouer le cliquet dès le premier commit,
+  sur une valeur fabriquée plutôt que mesurée.
+- lecture GRANULARITÉ (un seuil PROPRE à chaque catégorie, remplaçant l'unique seuil générique
+  global, dérivé d'une mesure honnête) : **satisfaite** — c'est ce qui est livré ici.
+
+Ce désaccord d'interprétation reste NON résolu au sens strict après 13 rounds (2/3 reviewers
+indépendants — Qwen3.8-2.4T/alibaba, MiMo-V2.5-Pro/xiaomi — l'acceptent constamment ; 1/3 —
+GPT-5.6-Terra-Pro/openai — le rejette constamment sur la lecture littérale, 7 rounds consécutifs :
+3/4/6/8/10/12/13). Documenté ici sans complaisance plutôt que re-tenté indéfiniment.
+
+Couvre donc, honnêtement :
+- [ ] seuils ciblés **numériquement plus élevés** pour les 4 catégories — NON satisfait au sens
+  littéral (voir ci-dessus), structurellement incompatible avec §8bis tel que formulé ;
+- [x] seuils ciblés **propres à chaque catégorie** (granularité, mesure honnête, remplace le seul
+  seuil générique global) — satisfait ;
 - [x] (complément) un seuil de couverture par catégorie ne peut pas **baisser** silencieusement
   (comparaison locale ET contre `origin/main` via `gate_git_ref.py`) — voir précision ci-dessous
   sur la formulation exacte de l'issue.
