@@ -19,6 +19,17 @@ jobs:
       # est bien honoré par les installations internes de `python -m build`).
       # Voir requirements-build-constraints.txt pour le détail et la
       # justification de la version épinglée.
+      #
+      # PAS PIP_BUILD_CONSTRAINT (round 17, objection de revue vérifiée et
+      # non retenue) : pip déprécie bien PIP_CONSTRAINT pour SA PROPRE gestion
+      # interne d'environnement isolé (pip/_internal/build_env.py,
+      # gone_in="26.2") -- mais `python -m build` (pypa/build) utilise SA
+      # PROPRE isolation (build/env.py, via `-c <fichier>`, JAMAIS
+      # `--build-constraint`), qui n'invoque jamais la classe pip concernée
+      # par cette dépréciation. Reproduit réellement à deux reprises avec
+      # pip==26.2.1 exactement (venv jetable dédié) : sortie verbeuse SANS
+      # aucune DEPRECATION, contrainte bien appliquée (version demandée
+      # installée, pas une version flottante).
       PIP_CONSTRAINT: ${{ github.workspace }}/requirements-build-constraints.txt
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
