@@ -123,3 +123,14 @@ aucun comportement produit changé — le gate bloquant existant (job `tests`,
 --cov-fail-under=85, lignes seules) reste inchangé, vérifié par exécution locale (94.48%,
 identique à la baseline). L'issue #451 elle-même documente le contexte et les critères ;
 aucune doc utilisateur supplémentaire concernée pour cet incrément de reconnaissance/outillage.
+
+scripts/ruff_noqa_gate.py (RC1-020/#450, incrément 3b, correctif round 6 de revue scellée) :
+reformulation PURE de docstrings internes (règle de justification exprimée par son seul
+critère de rejet plutôt que par une permissivité générale suivie d'une exception, ambiguë et
+source d'une objection majeure convergente sur 2 rounds de revue) — aucun changement de
+comportement, aucune interface CLI ni contrat observable modifié, 54/54 tests déjà verts
+inchangés. Ce commit ne touche exceptionnellement aucun fichier `.md` (seul
+governance/path-classification.json bouge, par décalage de numéros de ligne suite à l'édition
+des docstrings — governance/PATH-CLASSIFICATION.md reste inchangé car son contenu résumé ne
+référence pas les lignes précises). L'issue #450 et le scratchpad de story documentent déjà le
+contexte complet de cet incrément ; aucune doc utilisateur supplémentaire concernée.

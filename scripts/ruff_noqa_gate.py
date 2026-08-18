@@ -28,14 +28,18 @@ sens `tokenize.COMMENT`) en fin d'une ligne de code réel, puisque c'est là et 
 que ruff l'applique — suivie, sur le reste de la même ligne, d'une justification NON VIDE
 et du motif `(révision: YYYY-MM-DD)` (accent optionnel sur é : `(revision: 2026-08-17)` aussi
 accepté), la date devant être calendairement VALIDE (pas seulement de forme `AAAA-MM-JJ` :
-`2027-99-99` est rejetée). La justification est un texte LIBRE : n'importe quel texte non
-vide entre la fin de la liste des codes et le début du motif de date est accepté, quel que
-soit le caractère utilisé pour l'introduire ; seule une « justification » réduite, une fois
-dépouillée, à des espaces et séparateurs de ponctuation seuls (`-`, `—`, `:`, `,` — voir
-`CARACTERES_SEPARATEURS_JUSTIFICATION`) est considérée ABSENTE et rend le commentaire non
-conforme, même avec une date. Le tiret cadratin `—` employé dans les exemples de la présente
-documentation est un simple style illustratif recommandé, PAS une exigence syntaxique du
-contrôle. Exemple CONFORME (sur une ligne de code) :
+`2027-99-99` est rejetée). Règle de la justification, formulée par son SEUL critère de rejet
+(aucun format, longueur minimale ni vocabulaire n'est par ailleurs imposé) : le texte compris
+entre la fin de la liste des codes et le début du motif de date est dépouillé des espaces ET
+des séparateurs de ponctuation seuls (`-`, `—`, `:`, `,` — voir
+`CARACTERES_SEPARATEURS_JUSTIFICATION`) ; si RIEN ne subsiste après ce dépouillement (par
+exemple un simple `:` ou `—` isolé entre les codes et la date), la justification est ABSENTE
+et le commentaire est non conforme, même avec une date valide ; si NE SERAIT-CE QU'UN SEUL
+caractère hors de cette liste subsiste, la justification est valide, quel qu'il soit — le
+tiret cadratin `—` employé dans les exemples de la présente documentation est un simple style
+illustratif recommandé pour SÉPARER visuellement les codes de la justification, PAS une
+exigence syntaxique du contrôle (un texte de justification commençant par tout autre
+caractère non-séparateur est tout aussi valide). Exemple CONFORME (sur une ligne de code) :
 `x = urlopen(url)  # noqa: S310 — URL locale/LAN du socle (révision: 2027-02-17)`. Les
 occurrences déjà présentes sur `origin/main` avec justification mais SANS date sont
 grand-parentées dans la baseline, PAS corrigées dans cet incrément.
@@ -208,13 +212,15 @@ def noqa_non_conformes(racine: Path, regles: list[str]) -> dict[str, int]:
     """Compte, par fichier, les commentaires de suppression portant au moins un code de
     `regles` et NON CONFORMES — c'est-à-dire dépourvus soit d'une date de révision
     `(révision: YYYY-MM-DD)` (accent optionnel) calendairement VALIDE placée APRÈS la liste
-    des codes, soit d'une justification NON VIDE entre la liste des codes et le motif de
-    date. La justification est un texte LIBRE : n'importe quel contenu non vide y fait foi,
-    quel que soit le caractère qui l'introduit — le tiret cadratin `—` des exemples de la
-    documentation est un simple style illustratif recommandé, PAS une exigence syntaxique
-    du contrôle (seule une « justification » réduite, une fois dépouillée, aux espaces et
-    séparateurs de ponctuation listés dans `CARACTERES_SEPARATEURS_JUSTIFICATION` est
-    considérée absente).
+    des codes, soit d'une justification ABSENTE entre la liste des codes et le motif de
+    date — critère de rejet SEUL (aucun format, longueur minimale ni vocabulaire n'est par
+    ailleurs imposé) : ce texte est dépouillé des espaces ET des séparateurs de ponctuation
+    listés dans `CARACTERES_SEPARATEURS_JUSTIFICATION` ; s'il ne reste RIEN, la justification
+    est absente (par exemple un simple `:` ou `—` isolé entre les codes et la date) ; si
+    NE SERAIT-CE QU'UN SEUL caractère hors de cette liste subsiste, elle est valide, quel
+    qu'il soit — le tiret cadratin `—` des exemples de la documentation est un simple style
+    illustratif recommandé pour séparer visuellement les codes de la justification, PAS une
+    exigence syntaxique du contrôle.
 
     MÉCANIQUE DE SCAN — `tokenize`, jamais de découpage texte brut de lignes. Chaque fichier
     de `fichiers_reels(racine)` est lu en OCTETS BRUTS (`Path.read_bytes`, PAS
