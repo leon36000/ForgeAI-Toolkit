@@ -445,6 +445,13 @@
       "referenced_by": [
         {
           "candidate": ".github/workflows/artefact-distribue.yml",
+          "line": 6,
+          "referrer": "evidence/reviews/RC1-018-v5/Qwen3.7-Max.verdict.json",
+          "resolved": ".github/workflows/artefact-distribue.yml",
+          "severity": "hard"
+        },
+        {
+          "candidate": ".github/workflows/artefact-distribue.yml",
           "line": 90,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": ".github/workflows/artefact-distribue.yml",
@@ -19817,6 +19824,58 @@
       "size": 2013,
       "target_path": null,
       "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-018-v5/Gemini-3.7-Flash.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "e6f40a5077d617a5b0b8bdef7b0dfc8db3b015574e6f61fce35cf03bf96030f0",
+      "size": 371,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-018-v5/MiMo-V2.5-Pro.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "c44583ec514b042abb3a87194783ac8baa806a3ac1e88f7ea170e77478b4b90d",
+      "size": 327,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-018-v5/Qwen3.7-Max.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "122e35fdd8e30b7c80aace48c874e718e92b83fb73312bf7bf0fac58777055be",
+      "size": 1143,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-018-v5/RECU.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": null,
+      "size": null,
+      "target_path": null,
+      "type": null
     },
     {
       "class": "EVIDENCE",
@@ -59118,11 +59177,6 @@
     "completeness": "best_effort",
     "dangling": [
       {
-        "candidate": "RC1-018-v5",
-        "line": 211,
-        "referrer": "evidence/reviews/BINDING.txt"
-      },
-      {
         "candidate": "TUI/UX",
         "line": 3,
         "referrer": ".claude/agents/composer-tui.md"
@@ -96976,6 +97030,11 @@
         "candidate": "FR/EN",
         "line": 8,
         "referrer": "evidence/reviews/RC1-013/Qwen3.7-Max.verdict.json"
+      },
+      {
+        "candidate": "recu-revue/1",
+        "line": 2,
+        "referrer": "evidence/reviews/RC1-018-v5/RECU.json"
       },
       {
         "candidate": "fichier/r",
@@ -145748,6 +145807,13 @@
         "severity": "hard"
       },
       {
+        "candidate": "RC1-018-v5",
+        "line": 211,
+        "referrer": "evidence/reviews/BINDING.txt",
+        "resolved": "evidence/reviews/RC1-018-v5",
+        "severity": "hard"
+      },
+      {
         "candidate": "scripts/gate_docs.py",
         "line": 11,
         "referrer": "sonar-project.properties",
@@ -158744,6 +158810,13 @@
         "line": 26,
         "referrer": "evidence/reviews/RC1-013/Qwen3.7-Max.verdict.json",
         "resolved": "README.md",
+        "severity": "hard"
+      },
+      {
+        "candidate": ".github/workflows/artefact-distribue.yml",
+        "line": 6,
+        "referrer": "evidence/reviews/RC1-018-v5/Qwen3.7-Max.verdict.json",
+        "resolved": ".github/workflows/artefact-distribue.yml",
         "severity": "hard"
       },
       {
@@ -175659,7 +175732,7 @@
     "by_class": {
       "ARCHIVE": 44,
       "DOCS": 18,
-      "EVIDENCE": 1625,
+      "EVIDENCE": 1629,
       "GENERATED": 5,
       "GOVERNANCE": 203,
       "PRODUCT": 113,
@@ -175678,7 +175751,7 @@
       "evidence-audit-output-root": 18,
       "evidence-dedup-root": 2,
       "evidence-registres-root": 35,
-      "evidence-reviews-root": 1570,
+      "evidence-reviews-root": 1574,
       "generated-authority-map": 1,
       "generated-path-classification-json": 1,
       "generated-path-classification-markdown": 1,
@@ -175716,9 +175789,9 @@
     "case_collisions_total": 0,
     "dangling_references_total": 17012,
     "generated_total": 9,
-    "load_bearing_total": 2090,
+    "load_bearing_total": 2094,
     "portability_violations_total": 0,
-    "tracked_total": 2233,
+    "tracked_total": 2237,
     "unclassified_total": 0,
     "unicode_anomalies_total": 0
   },
