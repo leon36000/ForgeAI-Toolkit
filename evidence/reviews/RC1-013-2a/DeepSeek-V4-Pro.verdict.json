@@ -4,12 +4,18 @@
   {
    "severite": "majeure",
    "fichier": "scripts/gate_exit_codes.py",
-   "description": "Le gate n'impose pas la sous-chaîne `return <code>` pour toutes les entrées : la branche `pattern_else` accepte toute ligne se terminant par `else <code>` sans exiger de `return` devant. Une ligne modifiée comme `x = 1 if cond else 9` serait validée pour le code 9 alors qu'elle ne contient pas de `return`, ce qui peut laisser passer une dérive du code.",
-   "preuve": "`pattern_else = rf'(?<!\\d)else\\s+{code_int}(?!\\d)\\s*$'` puis `if not (re.search(pattern_return, contenu_reel) or re.search(pattern_else, contenu_rstrip))` dans scripts/gate_exit_codes.py."
+   "description": "Le gate n'exige pas la sous-chaîne littérale `return <code>` pour toutes les entrées. La condition accepte en plus une ligne commençant par `return` et se terminant par `else <code>` via `pattern_ternaire`, donc `return 0 if x else 9` est validée pour le code 9 alors qu'elle ne contient pas `return 9`, contrairement au critère demandé.",
+   "preuve": "`pattern_ternaire = rf\"^\\s*return\\b.*\\belse\\s+{code_int}(?!\\d)\\s*$\"` puis `if not (re.search(pattern_return, contenu_reel) or re.search(pattern_ternaire, contenu_rstrip))` dans scripts/gate_exit_codes.py ; test_anomalies_pattern_ternaire_else_n_en_fin_ligne_pas_anomalie confirme explicitement que `return 0 if x else 9` n'est pas signalé pour le code 9."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "tests/test_gate_exit_codes.py",
+   "description": "Le cas de dérive demandé par la story n'est pas réalisé en modifiant réellement une ligne de code pour ne plus contenir le bon `return N` ; il est simulé par monkeypatch de `anomalies()`, donc le chemin complet ligne réelle → `main()` retournant 1 n'est pas vérifié.",
+   "preuve": "test `test_main_defaut_avec_derive_simulee_retourne_un` : `monkeypatch.setattr(gate_exit_codes, \"anomalies\", lambda *a, **k: [\"dérive simulée\"])`."
   }
  ],
- "date_heure": "2026-08-19T00:10:45.327492+00:00",
- "prompt_sha256": "4fd0f0552c5010d0e297c3cf3747518439244e6626590482cefe1659cd001368",
+ "date_heure": "2026-08-19T02:57:02.217150+00:00",
+ "prompt_sha256": "f0879e7878bb0a20b65f23c48e441ad0608c46d7885bf238ecedab5ffcc5d300",
  "reviewer_model": "DeepSeek-V4-Pro",
  "modele_servi": "deepseek-v4-pro-direct",
  "gateway_resilience": {

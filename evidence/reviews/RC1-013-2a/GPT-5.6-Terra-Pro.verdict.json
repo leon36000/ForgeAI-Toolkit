@@ -4,12 +4,12 @@
   {
    "severite": "majeure",
    "fichier": "scripts/gate_exit_codes.py",
-   "description": "Le gate ne respecte pas la vérification exigée de la sous-chaîne littérale `return <code>` : il accepte aussi un `else <code>` terminal dans une expression ternaire. Une entrée de registre peut donc être validée alors que la ligne indiquée ne contient pas `return <code>` comme requis.",
-   "preuve": "`anomalies()` définit `pattern_else = rf\"(?<!\\\\d)else\\\\s+{code_int}(?!\\\\d)\\\\s*$\"` et accepte la ligne si `re.search(pattern_return, ...) or re.search(pattern_else, ...)` (lignes 72-74). Le test `test_anomalies_pattern_ternaire_else_n_en_fin_ligne_pas_anomalie` confirme explicitement que `return 0 if x else 9` valide une entrée pour le code 9, bien que cette ligne ne contienne pas la sous-chaîne `return 9`."
+   "description": "Le gate n'applique pas la vérification exigée de la sous-chaîne littérale `return <code>` à la ligne enregistrée : il accepte une expression ternaire dont la branche `else` porte le code, même lorsque la ligne ne contient pas `return <code>`. Cela ne respecte pas le contrat de détection de dérive spécifié pour chaque entrée du registre.",
+   "preuve": "Dans `anomalies()`, `pattern_ternaire = rf\"^\\s*return\\b.*\\belse\\s+{code_int}(?!\\d)\\s*$\"` est accepté avec `or re.search(pattern_ternaire, contenu_rstrip)`. Ainsi, `return 0 if x else 9` valide une entrée de code 9 alors que cette ligne ne contient pas `return 9`. Le test `test_anomalies_pattern_ternaire_else_n_en_fin_ligne_pas_anomalie` de `tests/test_gate_exit_codes.py` confirme explicitement cette acceptation."
   }
  ],
- "date_heure": "2026-08-19T00:07:50.387040+00:00",
- "prompt_sha256": "4fd0f0552c5010d0e297c3cf3747518439244e6626590482cefe1659cd001368",
+ "date_heure": "2026-08-19T02:53:00.847881+00:00",
+ "prompt_sha256": "f0879e7878bb0a20b65f23c48e441ad0608c46d7885bf238ecedab5ffcc5d300",
  "reviewer_model": "GPT-5.6-Terra-Pro",
  "modele_servi": "gpt56-terra-pro-openrouter",
  "gateway_resilience": {

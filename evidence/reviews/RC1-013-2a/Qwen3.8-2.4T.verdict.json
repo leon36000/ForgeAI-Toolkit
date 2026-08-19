@@ -4,24 +4,30 @@
   {
    "severite": "majeure",
    "fichier": "scripts/gate_exit_codes.py",
-   "description": "Le livrable exige une vérification de la sous-chaîne littérale `return <code>` à la ligne indiquée. L'implémentation ne fait pas cette vérification littérale : elle accepte des espaces multiples après `return` et accepte aussi une forme `else <code>` en fin de ligne, ce qui peut valider une ligne ne contenant pas `return <code>` (par ex. une affectation ternaire `x = 1 if cond else 10`).",
-   "preuve": "lignes 75-77 : `pattern_return = rf\"(?<!\\d)return\\s+{code_int}(?!\\d)\"` ; `pattern_else = rf\"(?<!\\d)else\\s+{code_int}(?!\\d)\\s*$\"` ; `if not (re.search(pattern_return, contenu_reel) or re.search(pattern_else, contenu_rstrip)):`"
+   "description": "Le gate ne vérifie pas la sous-chaîne littérale `return <code>` exigée par la story. Il accepte une ligne ternaire commençant par `return` mais dont la valeur finale est après `else`, donc sans sous-chaîne `return <code>` pour la valeur documentée. Par exemple `return 0 if x else 9` est accepté pour le code 9 alors que la ligne ne contient pas `return 9`.",
+   "preuve": "tests/test_gate_exit_codes.py : `lignes_cli = ['    return 0 if x else 9']` puis `assert gate_exit_codes.anomalies(registre, lignes_cli) == []` pour une entrée `code: 9` ; dans scripts/gate_exit_codes.py, la condition accepte soit `pattern_return`, soit `pattern_ternaire`."
   },
   {
    "severite": "mineure",
    "fichier": "tests/test_gate_exit_codes.py",
-   "description": "Le scénario 'fichier registre absent/invalide' n'est pas vérifié au niveau de `main()` alors que le comportement attendu du gate est un retour 1 sur registre introuvable ou JSON invalide.",
-   "preuve": "tests `test_charger_registre_fichier_absent` et `test_charger_registre_json_invalide` utilisent seulement `pytest.raises` sur `charger_registre()` ; aucun test n'appelle `gate_exit_codes.main([])` avec un registre absent ou un fichier JSON invalide."
+   "description": "Le cas de dérive demandé pour `main()` n'est pas testé en modifiant réellement une ligne du code contrôlé ; il est simulé par monkeypatch de `anomalies()`, alors que la story demande une ligne modifiée pour ne plus contenir le bon `return N`.",
+   "preuve": "test `test_main_defaut_avec_derive_simulee_retourne_un` : `monkeypatch.setattr(gate_exit_codes, 'anomalies', lambda *a, **k: ['dérive simulée'])` puis `assert gate_exit_codes.main([]) == 1`."
   },
   {
    "severite": "mineure",
    "fichier": "tests/test_gate_exit_codes.py",
-   "description": "Le cas de dérive demandé ('ligne modifiée pour ne plus contenir le bon `return N`, `main()` retourne 1') n'est pas testé en modifiant réellement une ligne de code ; il est simulé par monkeypatch de `anomalies()`.",
-   "preuve": "test `test_main_defaut_avec_derive_simulee_retourne_un` : `monkeypatch.setattr(gate_exit_codes, \"anomalies\", lambda *a, **k: [\"dérive simulée\"])`."
+   "description": "Le scénario registre absent/invalide n'est pas couvert au niveau de `main()` avec un fichier réellement absent ou un JSON invalide sur disque ; seuls `charger_registre()` ou des monkeypatches de retour sont testés.",
+   "preuve": "tests `test_charger_registre_fichier_absent` et `test_charger_registre_json_invalide` testent seulement `charger_registre()` avec `pytest.raises` ; aucun test n'appelle `gate_exit_codes.main([])` avec un registre absent ou un fichier JSON invalide."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "Docs/exit-codes.json",
+   "description": "La story annonce 13 codes numériques distincts, mais le registre n'utilise que 10 valeurs distinctes dans `codes_par_commande`.",
+   "preuve": "Story : '13 codes numériques distincts couvrant les 21 commandes' ; `Docs/exit-codes.json` contient uniquement les valeurs 6, 7, 8, 9, 10, 11, 12, 13, 14, 15."
   }
  ],
- "date_heure": "2026-08-19T00:10:16.434472+00:00",
- "prompt_sha256": "4fd0f0552c5010d0e297c3cf3747518439244e6626590482cefe1659cd001368",
+ "date_heure": "2026-08-19T02:53:55.892120+00:00",
+ "prompt_sha256": "f0879e7878bb0a20b65f23c48e441ad0608c46d7885bf238ecedab5ffcc5d300",
  "reviewer_model": "Qwen3.8-2.4T",
  "modele_servi": "b9de6bc895fe95ccacf7d9fa9b1cf29ca44d34f03e249738f325c9dee3790b78",
  "gateway_resilience": {
