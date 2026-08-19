@@ -750,7 +750,7 @@
     },
     {
       "path": "tests/test_renderers.py",
-      "sha256": "83f2300eafc6da928719bc5496185e59b7c9f4f60df97e16d7e7aaa40b47003e"
+      "sha256": "01fdbf3a89e50106262c13794498d88a0e3ada9f3329bf6affe5a56eb76db83e"
     },
     {
       "path": "tests/test_res_classes_stack_minimal.py",
@@ -979,7 +979,7 @@
   "tests": {
     "js_files": 3,
     "python_files": 203,
-    "python_functions_declared": 2616
+    "python_functions_declared": 2620
   }
 }
 ```

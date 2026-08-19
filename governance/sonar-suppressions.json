@@ -543,6 +543,24 @@
       "compensating_test_reason": "Non-réductible : Sonar rattache cette alerte avancée au flux de données et non à un site stable (mesuré identiquement sur e7/e8/e10/e12/e13/e14) ; une annotation inline peut ne pas viser le site finalement signalé. La suite de tests dédiée (53 cas, dont 2 ciblant spécifiquement le garde-fou --sortie — absolu et remontée relative rejetés sans écrire hors racine) couvre le comportement réel bout-en-bout.",
       "review_due": "2027-02-14",
       "accepted_risk": "Le faux positif peut masquer une occurrence S8707 dans ce fichier jusqu'à sa révision."
+    },
+    {
+      "id": "inline:src/forgeai/renderers/compose.py:145:S3776",
+      "kind": "inline",
+      "rule": "S3776",
+      "scope": "line",
+      "sites": [
+        {
+          "path": "src/forgeai/renderers/compose.py",
+          "line": 145
+        }
+      ],
+      "owner": "équipe runtime ForgeAI",
+      "justification": "render_compose() a une complexité cognitive de 75 (seuil : 15), preexistante bien avant #586 (fonction historique de rendu Compose, nombreuses branches GPU/adoption/openbao/depends_on). #586 modifie uniquement la ligne de signature (project: str = 'forgeai-minimal' -> project: str | None = None + garde de 6 lignes) pour corriger un defaut d'identite de projet sans rapport avec la structure de la fonction. SonarCloud attribue la totalite de la complexite preexistante au 'nouveau code' des qu'une seule ligne de la fonction (ici la ligne de signature) est modifiee -- un artefact de mesure, pas une regression introduite par ce correctif. Refactoriser cette fonction pour reduire sa complexite est un changement structurel large, hors perimetre d'un correctif chirurgical de bug (#586) ; candidate explicite pour une story dediee.",
+      "compensating_test": null,
+      "compensating_test_reason": "Un test ne reduit pas une complexite cognitive/cyclomatique -- seul un refactor le ferait. Le comportement de render_compose() reste entierement couvert par les tests existants de tests/test_renderers.py (dont les 4 nouveaux tests de #586), qui valident deja chaque branche exercee par la fonction ; aucun test supplementaire ne compenserait la metrique de complexite elle-meme.",
+      "review_due": "2027-02-15",
+      "accepted_risk": "Le code de render_compose() reste inchange dans sa structure/branches (seule la resolution de project change) ; la suppression masque uniquement S3776 sur cette ligne de signature, pas d'autres regles ni d'autres sites. Risque accepte : la fonction reste difficile a maintenir en l'etat, documente ici pour une story de refactor future plutot que masque silencieusement."
     }
   ]
 }
