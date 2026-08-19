@@ -28400,8 +28400,8 @@
       "path": "governance/SONAR-SUPPRESSIONS.md",
       "referenced_by": [],
       "rule_id": "governance-core",
-      "sha256": "e3ebb51ab2fbf573a7d3f662a4fd643232def57210eca5b3cae8f6ddeb323f03",
-      "size": 9758,
+      "sha256": "e7e6e28f1b787efc75a6cddb6dbf58bd9a151904703f8bb441c06a561ae743b0",
+      "size": 10607,
       "target_path": null,
       "type": "text"
     },
@@ -30498,8 +30498,8 @@
         }
       ],
       "rule_id": "governance-core",
-      "sha256": "58128466e7b1d4b08746ed217b878ca487faae8122c8a2898b59b55e616bb036",
-      "size": 33471,
+      "sha256": "2ce367bed009bceaba0d405fe13eaa8dec74021a24e4ab2cec1e026e1606e75c",
+      "size": 35522,
       "target_path": null,
       "type": "text"
     },
@@ -44208,6 +44208,27 @@
         },
         {
           "candidate": "src/forgeai/renderers/compose.py",
+          "line": 73,
+          "referrer": "governance/SONAR-SUPPRESSIONS.md",
+          "resolved": "src/forgeai/renderers/compose.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "src/forgeai/renderers/compose.py",
+          "line": 548,
+          "referrer": "governance/sonar-suppressions.json",
+          "resolved": "src/forgeai/renderers/compose.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "src/forgeai/renderers/compose.py",
+          "line": 554,
+          "referrer": "governance/sonar-suppressions.json",
+          "resolved": "src/forgeai/renderers/compose.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "src/forgeai/renderers/compose.py",
           "line": 4,
           "referrer": "stories/COMPOSE-025.md",
           "resolved": "src/forgeai/renderers/compose.py",
@@ -44257,8 +44278,8 @@
         }
       ],
       "rule_id": "product-source",
-      "sha256": "3a85ac56d8b35ed763a8c8ca4422f569952d46c6daeebce4b00eb88807bf03ce",
-      "size": 18960,
+      "sha256": "9f46043c21c04278685cfd22a22261d08889b0945afaa2f2f996ed41b3bae281",
+      "size": 18978,
       "target_path": null,
       "type": "text"
     },
@@ -57406,6 +57427,13 @@
         },
         {
           "candidate": "tests/test_renderers.py",
+          "line": 73,
+          "referrer": "governance/SONAR-SUPPRESSIONS.md",
+          "resolved": "tests/test_renderers.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "tests/test_renderers.py",
           "line": 746,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_renderers.py",
@@ -57415,6 +57443,13 @@
           "candidate": "tests/test_renderers.py",
           "line": 752,
           "referrer": "governance/STATE-CURRENT.md",
+          "resolved": "tests/test_renderers.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "tests/test_renderers.py",
+          "line": 561,
+          "referrer": "governance/sonar-suppressions.json",
           "resolved": "tests/test_renderers.py",
           "severity": "hard"
         },
@@ -102152,6 +102187,16 @@
         "referrer": "governance/SONAR-SUPPRESSIONS.md"
       },
       {
+        "candidate": "structure/branches",
+        "line": 73,
+        "referrer": "governance/SONAR-SUPPRESSIONS.md"
+      },
+      {
+        "candidate": "cognitive/cyclomatique",
+        "line": 73,
+        "referrer": "governance/SONAR-SUPPRESSIONS.md"
+      },
+      {
         "candidate": "repos/leon36000/ForgeAI-Toolkit",
         "line": 987,
         "referrer": "governance/STATE-CURRENT.json"
@@ -103344,6 +103389,21 @@
       {
         "candidate": "e7/e8/e10/e12/e13/e14",
         "line": 543,
+        "referrer": "governance/sonar-suppressions.json"
+      },
+      {
+        "candidate": "GPU/adoption/openbao/depends_on",
+        "line": 559,
+        "referrer": "governance/sonar-suppressions.json"
+      },
+      {
+        "candidate": "cognitive/cyclomatique",
+        "line": 561,
+        "referrer": "governance/sonar-suppressions.json"
+      },
+      {
+        "candidate": "structure/branches",
+        "line": 563,
         "referrer": "governance/sonar-suppressions.json"
       },
       {
@@ -166360,6 +166420,20 @@
         "severity": "hard"
       },
       {
+        "candidate": "src/forgeai/renderers/compose.py",
+        "line": 73,
+        "referrer": "governance/SONAR-SUPPRESSIONS.md",
+        "resolved": "src/forgeai/renderers/compose.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "tests/test_renderers.py",
+        "line": 73,
+        "referrer": "governance/SONAR-SUPPRESSIONS.md",
+        "resolved": "tests/test_renderers.py",
+        "severity": "hard"
+      },
+      {
         "candidate": ".github/workflows/artefact-distribue.yml",
         "line": 90,
         "referrer": "governance/STATE-CURRENT.json",
@@ -171880,6 +171954,27 @@
         "line": 542,
         "referrer": "governance/sonar-suppressions.json",
         "resolved": "tests/test_rapport_composants.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "src/forgeai/renderers/compose.py",
+        "line": 548,
+        "referrer": "governance/sonar-suppressions.json",
+        "resolved": "src/forgeai/renderers/compose.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "src/forgeai/renderers/compose.py",
+        "line": 554,
+        "referrer": "governance/sonar-suppressions.json",
+        "resolved": "src/forgeai/renderers/compose.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "tests/test_renderers.py",
+        "line": 561,
+        "referrer": "governance/sonar-suppressions.json",
+        "resolved": "tests/test_renderers.py",
         "severity": "hard"
       },
       {
@@ -178820,7 +178915,7 @@
       "working-sandbox-readme": 1
     },
     "case_collisions_total": 0,
-    "dangling_references_total": 17272,
+    "dangling_references_total": 17277,
     "generated_total": 9,
     "load_bearing_total": 2128,
     "portability_violations_total": 0,
