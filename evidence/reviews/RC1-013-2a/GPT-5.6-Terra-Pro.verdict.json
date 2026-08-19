@@ -3,13 +3,19 @@
  "objections": [
   {
    "severite": "majeure",
-   "fichier": "scripts/gate_exit_codes.py",
-   "description": "Le gate n'applique pas la vérification exigée de la sous-chaîne littérale `return <code>` à la ligne enregistrée : il accepte une expression ternaire dont la branche `else` porte le code, même lorsque la ligne ne contient pas `return <code>`. Cela ne respecte pas le contrat de détection de dérive spécifié pour chaque entrée du registre.",
-   "preuve": "Dans `anomalies()`, `pattern_ternaire = rf\"^\\s*return\\b.*\\belse\\s+{code_int}(?!\\d)\\s*$\"` est accepté avec `or re.search(pattern_ternaire, contenu_rstrip)`. Ainsi, `return 0 if x else 9` valide une entrée de code 9 alors que cette ligne ne contient pas `return 9`. Le test `test_anomalies_pattern_ternaire_else_n_en_fin_ligne_pas_anomalie` de `tests/test_gate_exit_codes.py` confirme explicitement cette acceptation."
+   "fichier": "Docs/exit-codes.json",
+   "description": "Le registre structuré n'est pas exhaustif : deux retours non binaires inventoriés par l'annexe sont absents de `codes_par_commande`, alors que le livrable exige une entrée par code significatif trouvé dans l'annexe.",
+   "preuve": "`stories/RC1-013-increment2a-rapport-codes-sortie.md` liste `loop run` code 13 à L1254 et `model test` code 9 à L1016. `Docs/exit-codes.json` ne contient aucune entrée avec `\"ligne\": 1254` ni `\"ligne\": 1016`; les sections `loop` et `model` de `Docs/reference/cli.md` indiquent elles-mêmes que ces codes ne sont pas couverts par le registre/gate."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "tests/test_gate_exit_codes.py",
+   "description": "Le scénario demandé où une ligne réellement lue par `main()` dérive et provoque un retour 1 n'est pas couvert : le test remplace directement la fonction qui détecte les anomalies.",
+   "preuve": "`test_main_defaut_avec_derive_simulee_retourne_un` fait `monkeypatch.setattr(gate_exit_codes, \"anomalies\", lambda *a, **k: [\"dérive simulée\"])`; il ne modifie ni le contenu de `src/forgeai/cli.py` lu par `main()`, ni un chemin de registre/CLI injectable."
   }
  ],
- "date_heure": "2026-08-19T02:53:00.847881+00:00",
- "prompt_sha256": "f0879e7878bb0a20b65f23c48e441ad0608c46d7885bf238ecedab5ffcc5d300",
+ "date_heure": "2026-08-19T03:06:11.951528+00:00",
+ "prompt_sha256": "9b8f7898614f41be8a67a95fbcc8504f792ab2a07240ca06fd53084e015b7b5e",
  "reviewer_model": "GPT-5.6-Terra-Pro",
  "modele_servi": "gpt56-terra-pro-openrouter",
  "gateway_resilience": {
