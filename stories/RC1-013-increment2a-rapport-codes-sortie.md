@@ -15,7 +15,26 @@ quelles pour construire `Docs/exit-codes.json` et les nouvelles sections de `Doc
 - `8` (cas global additionnel) : `DeployError` capturé ligne 1703 — en pratique atteignable
   uniquement via `wizard` (aucun autre handler n'appelle compose_up/compose_down/k3s_*).
 
-## Codes par commande (13 codes numériques distincts au total : 6,7,8,9,10,11,12,13,14,15)
+## Codes par commande (10 codes numériques distincts documentés au total : 6,7,8,9,10,11,12,13,
+14,15 — correction 2026-08-19 : le texte original comptait "13 codes" en listant en réalité 10
+valeurs ; erreur de comptage repérée en round 4 de revue scellée sur l'incrément 2a, sans lien
+avec le point ci-dessous)
+
+**Périmètre du gate mécanique `scripts/gate_exit_codes.py` (précision ajoutée round 4, revue
+scellée #443 2a)** : le gate vérifie que la ligne enregistrée contient littéralement la
+sous-chaîne `return <code>` — 8 des 10 codes ci-dessus (tous sauf `13` et une occurrence de `9`)
+s'expriment ainsi dans le code réel et sont vérifiés mécaniquement (50 entrées dans
+`Docs/exit-codes.json`). Les 2 cas suivants s'expriment via une expression ternaire Python
+(`return X if cond else <code>`, qui ne contient jamais littéralement `return <code>`) : `13` —
+`loop run` budget `--max-iter` épuisé (L1254) ; `9` — `model test` test de connexion échoué
+(L1016). Après 4 rounds de revue scellée ayant exploré toutes les combinaisons (accepter le
+ternaire dans le gate → viole la règle littérale ; l'exiger strictement → ces 2 lignes ne peuvent
+jamais la satisfaire, quel que soit le pattern), ces 2 cas sont documentés UNIQUEMENT en
+narratif dans `Docs/reference/cli.md` (note explicite sur chaque puce concernée), hors du
+registre structuré vérifiable — décision qui privilégie la règle littérale de vérification
+mécanique (zéro faux positif possible) plutôt que l'exhaustivité totale du registre structuré, un
+arbitrage entre deux exigences de cette story qui se sont révélées mutuellement incompatibles
+pour ces 2 lignes précises, sans solution technique qui satisfasse les deux simultanément.
 
 - **budget** (non binaire) : `10` — `budget set` quota/agent invalide (BudgetError, L1126) ;
   `10` — `budget status` agent inconnu (BudgetError, L1145).
