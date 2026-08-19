@@ -1,8 +1,27 @@
 {
  "verdict": "APPROVE",
- "objections": [],
- "date_heure": "2026-08-19T07:50:49.017146+00:00",
- "prompt_sha256": "9d603d5d8a568f59beb6605f191c1f6f8b5a43abb3a4382f082c29858622c811",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "src/forgeai/renderers/compose.py",
+   "description": "La consigne demandait un remplacement exact de la signature et du bloc projet ; le diff ajoute un commentaire inline `# NOSONAR(S3776)` non spécifié au livrable. Cette annotation est sans impact fonctionnel mais constitue un écart formel.",
+   "preuve": "Hunk src/forgeai/renderers/compose.py ligne +145 : `def render_compose(plan: DeploymentPlan, project: str | None = None) -> str:  # NOSONAR(S3776)`"
+  },
+  {
+   "severite": "mineure",
+   "fichier": "tests/test_renderers.py",
+   "description": "Le nouveau test `test_compose_deux_plans_identites_disjointes` construit directement `DeploymentPlan(...)` ; le diff ne montre aucun ajout d'import de ce nom, et la portion visible ne permet pas de confirmer qu'il est déjà présent dans le scope du module. Si absent, le test échouera avec NameError.",
+   "preuve": "Hunk tests/test_renderers.py lignes +254-256 : `plan_b = DeploymentPlan(...)` sans hunk d'import correspondant."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "governance/sonar-suppressions.json",
+   "description": "Le diff contient des modifications de fichiers de gouvernance/preuve hors du périmètre strict du livrable (seuls src/forgeai/renderers/compose.py et tests/test_renderers.py étaient attendus). Ces ajouts n'impactent pas le correctif Compose mais représentent un écart formel.",
+   "preuve": "diff --git a/governance/SONAR-SUPPRESSIONS.md ... ; diff --git a/governance/sonar-suppressions.json ... ; diff --git a/governance/path-classification.json ..."
+  }
+ ],
+ "date_heure": "2026-08-19T08:29:08.936546+00:00",
+ "prompt_sha256": "a5431c4a129862f785c3e6d0780b0db6104d76d36ab96c94617b889d7b9648e6",
  "reviewer_model": "DeepSeek-V4-Pro-0813",
  "modele_servi": "1cbd427d85a4593a157a49bb0ad51ededb429b85aca980b3b23cd445246b9fcb",
  "gateway_resilience": {

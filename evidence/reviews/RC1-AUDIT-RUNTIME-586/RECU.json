@@ -2,12 +2,12 @@
   "schema": "recu-revue/1",
   "dossier": "RC1-AUDIT-RUNTIME-586",
   "issue": 586,
-  "round": 2,
+  "round": 3,
   "base_commit": "df4af0d19c0b1f7f4c5b2cf56155a51bc2fede82",
-  "head_commit": "27ac7e9277420102882ca393512589102bf0c39d",
-  "head_tree": "a9b741b97f1222ee3c187d9d915b63483e59a7f5",
-  "diff_digest": "348961e783a1a0367f6184b86434f1e4d82f5eea13f23339aff3a0fceb0d90c7",
-  "prompt_sha256": "9d603d5d8a568f59beb6605f191c1f6f8b5a43abb3a4382f082c29858622c811",
+  "head_commit": "213d06b868e600175593c86acb103a804256748c",
+  "head_tree": "203fa32e26440fdc7588307ce796136eb328356b",
+  "diff_digest": "c9ca0d19eef40366c33cb6e00ca6eba1d16986115d330c66856dff6a2d28ed6b",
+  "prompt_sha256": "a5431c4a129862f785c3e6d0780b0db6104d76d36ab96c94617b889d7b9648e6",
   "reviewers_attendus": [
     "DeepSeek-V4-Pro-0813",
     "Kimi-2.7",
@@ -17,6 +17,6 @@
     "luna"
   ],
   "resultat": "APPROVE",
-  "date_heure": "2026-08-19T03:51:16.018788-04:00",
+  "date_heure": "2026-08-19T04:29:29.274550-04:00",
   "fenetre_heures": 24
 }

@@ -4,12 +4,18 @@
   {
    "severite": "mineure",
    "fichier": "tests/test_renderers.py",
-   "description": "Le diff n'ajoute pas d'import de DeploymentPlan et la portion affichée du fichier ne permet pas de vérifier que ce nom est déjà dans le scope du module ; s'il est absent, test_compose_deux_plans_identites_disjointes échouera avec NameError.",
-   "preuve": "Hunk tests/test_renderers.py lignes +247-284 : construction `DeploymentPlan(plan_id=..., profile=..., target=..., services=..., model=..., embed_model=...)` sans hunk d'import correspondant dans le diff."
+   "description": "Le diff n'affiche que l'ajout en fin de fichier (hunk +247/+284) ; il ne permet pas de vérifier que DeploymentPlan et render_compose sont déjà importés dans le module. Si l'un des deux noms n'est pas dans le scope, les 4 nouveaux tests échoueront avec NameError au lieu de tester le correctif.",
+   "preuve": "Hunk tests/test_renderers.py lignes +247-284 : utilisation de `render_compose(plan)` et construction `DeploymentPlan(...)` sans hunk d'import correspondant dans le diff."
+  },
+  {
+   "severite": "mineure",
+   "fichier": "evidence/registres/mission.jsonl",
+   "description": "Le commit modifie des artefacts de gouvernance et de preuve (evidence/registres/mission.jsonl, evidence/reviews/RC1-AUDIT-RUNTIME-586/*, governance/PATH-CLASSIFICATION.md, governance/STATE-CURRENT.*, governance/path-classification.json, governance/SONAR-SUPPRESSIONS.md, governance/sonar-suppressions.json, stories/RC1-AUDIT-RUNTIME-586-compose-identity.md) qui ne figurent pas dans le livrable attendu de la story et ne sont pas explicitement autorisés par les contraintes. Cela ne semble pas impacter le comportement de render_compose, mais constitue un écart formel de périmètre non vérifiable depuis le seul diff.",
+   "preuve": "diff --git a/evidence/registres/mission.jsonl ; diff --git a/evidence/reviews/RC1-AUDIT-RUNTIME-586/* ; diff --git a/governance/PATH-CLASSIFICATION.md ; diff --git a/governance/STATE-CURRENT.json ; diff --git a/governance/path-classification.json ; diff --git a/governance/SONAR-SUPPRESSIONS.md ; diff --git a/governance/sonar-suppressions.json ; diff --git a/stories/RC1-AUDIT-RUNTIME-586-compose-identity.md"
   }
  ],
- "date_heure": "2026-08-19T07:50:58.330081+00:00",
- "prompt_sha256": "9d603d5d8a568f59beb6605f191c1f6f8b5a43abb3a4382f082c29858622c811",
+ "date_heure": "2026-08-19T08:28:09.499346+00:00",
+ "prompt_sha256": "a5431c4a129862f785c3e6d0780b0db6104d76d36ab96c94617b889d7b9648e6",
  "reviewer_model": "Kimi-2.7",
  "modele_servi": "kimi-27-openrouter",
  "gateway_resilience": {

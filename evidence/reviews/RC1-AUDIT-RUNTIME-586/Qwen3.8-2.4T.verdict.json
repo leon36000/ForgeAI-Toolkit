@@ -3,19 +3,31 @@
  "objections": [
   {
    "severite": "mineure",
-   "fichier": "evidence/registres/mission.jsonl",
-   "description": "Le diff inclut des modifications de fichiers de gouvernance/preuve hors du périmètre strict de la story, alors que la consigne indique de ne toucher aucun autre fichier ; cela ne semble pas impacter le correctif Compose mais constitue un écart formel.",
-   "preuve": "diff --git a/evidence/registres/mission.jsonl ... ; diff --git a/governance/PATH-CLASSIFICATION.md ... ; diff --git a/stories/RC1-AUDIT-RUNTIME-586-compose-identity.md ..."
+   "fichier": "src/forgeai/renderers/compose.py",
+   "description": "La signature ajoutée contient un commentaire inline NOSONAR(S3776) alors que le livrable demandait un remplacement exact de la ligne ; cela ne change pas le comportement runtime mais constitue un écart formel.",
+   "preuve": "+def render_compose(plan: DeploymentPlan, project: str | None = None) -> str:  # NOSONAR(S3776)"
   },
   {
    "severite": "mineure",
    "fichier": "tests/test_renderers.py",
-   "description": "Les tests ajoutés appellent render_compose et DeploymentPlan, mais le diff ne montre ni les imports existants ni une sortie d'exécution des tests ; leur disponibilité et leur succès ne sont pas vérifiables depuis le diff seul.",
-   "preuve": "+    out = render_compose(plan) ... ; +    plan_b = DeploymentPlan(...)"
+   "description": "Les tests ajoutés utilisent render_compose et DeploymentPlan, mais le diff ne montre pas les imports correspondants ; si ces symboles ne sont pas déjà importés, les tests échoueront avec NameError.",
+   "preuve": "+    out = render_compose(plan) ; +    plan_b = DeploymentPlan("
+  },
+  {
+   "severite": "mineure",
+   "fichier": "tests/test_renderers.py",
+   "description": "Le diff ne montre ni la définition de la fixture _plan ni une exécution des tests ; la disponibilité de _plan() et le succès des nouveaux tests ne sont pas vérifiables depuis le diff seul.",
+   "preuve": "+    plan = _plan()"
+  },
+  {
+   "severite": "mineure",
+   "fichier": "governance/sonar-suppressions.json",
+   "description": "Le diff ajoute une suppression Sonar pour src/forgeai/renderers/compose.py alors que la story limite le livrable au correctif de rendu et aux tests ; cet ajout est hors du périmètre strict demandé.",
+   "preuve": "+      \"id\": \"inline:src/forgeai/renderers/compose.py:145:S3776\","
   }
  ],
- "date_heure": "2026-08-19T07:50:30.979781+00:00",
- "prompt_sha256": "9d603d5d8a568f59beb6605f191c1f6f8b5a43abb3a4382f082c29858622c811",
+ "date_heure": "2026-08-19T08:28:47.223951+00:00",
+ "prompt_sha256": "a5431c4a129862f785c3e6d0780b0db6104d76d36ab96c94617b889d7b9648e6",
  "reviewer_model": "Qwen3.8-2.4T",
  "modele_servi": "b9de6bc895fe95ccacf7d9fa9b1cf29ca44d34f03e249738f325c9dee3790b78",
  "gateway_resilience": {
