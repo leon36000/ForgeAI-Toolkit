@@ -1103,7 +1103,7 @@
         },
         {
           "candidate": ".github/workflows/gates.yml",
-          "line": 157,
+          "line": 187,
           "referrer": "tests/test_gate_exit_codes.py",
           "resolved": ".github/workflows/gates.yml",
           "severity": "hard"
@@ -3703,6 +3703,41 @@
       "referenced_by": [
         {
           "candidate": "Docs/exit-codes.json",
+          "line": 6,
+          "referrer": "evidence/reviews/RC1-013-2a/DeepSeek-V4-Pro.verdict.json",
+          "resolved": "Docs/exit-codes.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "Docs/exit-codes.json",
+          "line": 6,
+          "referrer": "evidence/reviews/RC1-013-2a/GPT-5.6-Terra-Pro.verdict.json",
+          "resolved": "Docs/exit-codes.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "Docs/exit-codes.json",
+          "line": 8,
+          "referrer": "evidence/reviews/RC1-013-2a/GPT-5.6-Terra-Pro.verdict.json",
+          "resolved": "Docs/exit-codes.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "Docs/exit-codes.json",
+          "line": 6,
+          "referrer": "evidence/reviews/RC1-013-2a/Qwen3.8-2.4T.verdict.json",
+          "resolved": "Docs/exit-codes.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "Docs/exit-codes.json",
+          "line": 8,
+          "referrer": "evidence/reviews/RC1-013-2a/Qwen3.8-2.4T.verdict.json",
+          "resolved": "Docs/exit-codes.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "Docs/exit-codes.json",
           "line": 5,
           "referrer": "scripts/gate_exit_codes.py",
           "resolved": "Docs/exit-codes.json",
@@ -3710,14 +3745,14 @@
         },
         {
           "candidate": "Docs/exit-codes.json",
-          "line": 84,
+          "line": 90,
           "referrer": "scripts/gate_exit_codes.py",
           "resolved": "Docs/exit-codes.json",
           "severity": "hard"
         },
         {
           "candidate": "Docs/exit-codes.json",
-          "line": 123,
+          "line": 135,
           "referrer": "scripts/gate_exit_codes.py",
           "resolved": "Docs/exit-codes.json",
           "severity": "hard"
@@ -3766,8 +3801,8 @@
         }
       ],
       "rule_id": "docs-user",
-      "sha256": "153c80333682959d81508e201090d004a6e5abf3dadb812a6dd9ed24f970c203",
-      "size": 7164,
+      "sha256": "b27cff4acc9e0587fbbb26c03e166b538c3b6bab690ccab1072ac1d3d2dec880",
+      "size": 7456,
       "target_path": null,
       "type": "text"
     },
@@ -3918,6 +3953,27 @@
         },
         {
           "candidate": "Docs/reference/cli.md",
+          "line": 8,
+          "referrer": "evidence/reviews/RC1-013-2a/GPT-5.6-Terra-Pro.verdict.json",
+          "resolved": "Docs/reference/cli.md",
+          "severity": "hard"
+        },
+        {
+          "candidate": "Docs/reference/cli.md",
+          "line": 7,
+          "referrer": "evidence/reviews/RC1-013-2a/Qwen3.8-2.4T.verdict.json",
+          "resolved": "Docs/reference/cli.md",
+          "severity": "hard"
+        },
+        {
+          "candidate": "Docs/reference/cli.md",
+          "line": 8,
+          "referrer": "evidence/reviews/RC1-013-2a/Qwen3.8-2.4T.verdict.json",
+          "resolved": "Docs/reference/cli.md",
+          "severity": "hard"
+        },
+        {
+          "candidate": "Docs/reference/cli.md",
           "line": 6,
           "referrer": "evidence/reviews/RC1-013-v2/DeepSeek-V4-Pro.verdict.json",
           "resolved": "Docs/reference/cli.md",
@@ -4044,8 +4100,8 @@
         }
       ],
       "rule_id": "docs-user",
-      "sha256": "9f05d04f5ea607bf37032bff931d2e09e9e3997edb6d0069fbfd128e01b887f4",
-      "size": 29497,
+      "sha256": "0e7ee14540263594bdaea4b74878698a73f45a243e848a8dbe4032708d70e36d",
+      "size": 29207,
       "target_path": null,
       "type": "text"
     },
@@ -19802,6 +19858,45 @@
       "generated": false,
       "load_bearing": true,
       "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-013-2a/DeepSeek-V4-Pro.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "d433e5f9df290dfe044239af20fc6e7d6499e3124496b861d21db9d4077112a4",
+      "size": 2329,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-013-2a/GPT-5.6-Terra-Pro.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "44cc42133ce36d83f35d31bd0e877dc186be2579e856a31d6536aa0209fa62e4",
+      "size": 1973,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-013-2a/Qwen3.8-2.4T.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "bf8bb0ea1c5287271b2a5de5b46b13e698e343675cef0f4c33950b62a2f78ada",
+      "size": 2276,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
       "path": "evidence/reviews/RC1-013-v2/DeepSeek-V4-Pro.verdict.json",
       "referenced_by": [],
       "rule_id": "evidence-reviews-root",
@@ -31844,6 +31939,48 @@
         },
         {
           "candidate": "scripts/gate_exit_codes.py",
+          "line": 12,
+          "referrer": "evidence/reviews/RC1-013-2a/DeepSeek-V4-Pro.verdict.json",
+          "resolved": "scripts/gate_exit_codes.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "scripts/gate_exit_codes.py",
+          "line": 12,
+          "referrer": "evidence/reviews/RC1-013-2a/GPT-5.6-Terra-Pro.verdict.json",
+          "resolved": "scripts/gate_exit_codes.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "scripts/gate_exit_codes.py",
+          "line": 12,
+          "referrer": "evidence/reviews/RC1-013-2a/Qwen3.8-2.4T.verdict.json",
+          "resolved": "scripts/gate_exit_codes.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "scripts/gate_exit_codes.py",
+          "line": 14,
+          "referrer": "evidence/reviews/RC1-013-2a/Qwen3.8-2.4T.verdict.json",
+          "resolved": "scripts/gate_exit_codes.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "scripts/gate_exit_codes.py",
+          "line": 18,
+          "referrer": "evidence/reviews/RC1-013-2a/Qwen3.8-2.4T.verdict.json",
+          "resolved": "scripts/gate_exit_codes.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "scripts/gate_exit_codes.py",
+          "line": 20,
+          "referrer": "evidence/reviews/RC1-013-2a/Qwen3.8-2.4T.verdict.json",
+          "resolved": "scripts/gate_exit_codes.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "scripts/gate_exit_codes.py",
           "line": 52,
           "referrer": "stories/RC1-013-increment2a-codes-retour-variables.md",
           "resolved": "scripts/gate_exit_codes.py",
@@ -31858,22 +31995,22 @@
         },
         {
           "candidate": "scripts/gate_exit_codes.py",
-          "line": 169,
+          "line": 199,
           "referrer": "tests/test_gate_exit_codes.py",
           "resolved": "scripts/gate_exit_codes.py",
           "severity": "hard"
         },
         {
           "candidate": "scripts/gate_exit_codes.py",
-          "line": 170,
+          "line": 200,
           "referrer": "tests/test_gate_exit_codes.py",
           "resolved": "scripts/gate_exit_codes.py",
           "severity": "hard"
         }
       ],
       "rule_id": "governance-scripts-root",
-      "sha256": "edf9b70bc112541f0eabe61e81ca0352e608e6c3a8fb418f78539ac805857cc2",
-      "size": 5072,
+      "sha256": "4f6cc8a58e1e4e9550c9542be3eca81ae9b27bf38e6e25746853ab50d799b9df",
+      "size": 6270,
       "target_path": null,
       "type": "text"
     },
@@ -37413,7 +37550,7 @@
         },
         {
           "candidate": "src/forgeai/cli.py",
-          "line": 84,
+          "line": 90,
           "referrer": "scripts/gate_exit_codes.py",
           "resolved": "src/forgeai/cli.py",
           "severity": "hard"
@@ -47321,6 +47458,27 @@
       "referenced_by": [
         {
           "candidate": "stories/RC1-013-increment2a-rapport-codes-sortie.md",
+          "line": 8,
+          "referrer": "evidence/reviews/RC1-013-2a/DeepSeek-V4-Pro.verdict.json",
+          "resolved": "stories/RC1-013-increment2a-rapport-codes-sortie.md",
+          "severity": "hard"
+        },
+        {
+          "candidate": "stories/RC1-013-increment2a-rapport-codes-sortie.md",
+          "line": 8,
+          "referrer": "evidence/reviews/RC1-013-2a/GPT-5.6-Terra-Pro.verdict.json",
+          "resolved": "stories/RC1-013-increment2a-rapport-codes-sortie.md",
+          "severity": "hard"
+        },
+        {
+          "candidate": "stories/RC1-013-increment2a-rapport-codes-sortie.md",
+          "line": 8,
+          "referrer": "evidence/reviews/RC1-013-2a/Qwen3.8-2.4T.verdict.json",
+          "resolved": "stories/RC1-013-increment2a-rapport-codes-sortie.md",
+          "severity": "hard"
+        },
+        {
+          "candidate": "stories/RC1-013-increment2a-rapport-codes-sortie.md",
           "line": 14,
           "referrer": "stories/RC1-013-increment2a-codes-retour-variables.md",
           "resolved": "stories/RC1-013-increment2a-rapport-codes-sortie.md",
@@ -51131,6 +51289,13 @@
       "referenced_by": [
         {
           "candidate": "tests/test_gate_exit_codes.py",
+          "line": 18,
+          "referrer": "evidence/reviews/RC1-013-2a/DeepSeek-V4-Pro.verdict.json",
+          "resolved": "tests/test_gate_exit_codes.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "tests/test_gate_exit_codes.py",
           "line": 338,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_gate_exit_codes.py",
@@ -51152,8 +51317,8 @@
         }
       ],
       "rule_id": "test-suite",
-      "sha256": "a5cf5d28f54b7746013b87c4b688e414c93a82dc8171a1a8e32c51a2b280b70e",
-      "size": 7805,
+      "sha256": "232f767fe580744b94cfaf8b070b63a9a4b741b6692e49d3214eb0fcb55aa8c8",
+      "size": 9137,
       "target_path": null,
       "type": "text"
     },
@@ -64429,52 +64594,52 @@
       },
       {
         "candidate": "route/passphrase",
-        "line": 122,
+        "line": 127,
         "referrer": "Docs/exit-codes.json"
       },
       {
         "candidate": "RouteError/KeyError",
-        "line": 122,
+        "line": 127,
         "referrer": "Docs/exit-codes.json"
       },
       {
         "candidate": "TailscaleError/BootstrapError",
-        "line": 134,
-        "referrer": "Docs/exit-codes.json"
-      },
-      {
-        "candidate": "vide/absente",
-        "line": 139,
-        "referrer": "Docs/exit-codes.json"
-      },
-      {
-        "candidate": "NodeAddError/RemoteProbeError",
         "line": 144,
         "referrer": "Docs/exit-codes.json"
       },
       {
+        "candidate": "vide/absente",
+        "line": 149,
+        "referrer": "Docs/exit-codes.json"
+      },
+      {
+        "candidate": "NodeAddError/RemoteProbeError",
+        "line": 154,
+        "referrer": "Docs/exit-codes.json"
+      },
+      {
         "candidate": "user/--keyfile",
-        "line": 159,
+        "line": 169,
         "referrer": "Docs/exit-codes.json"
       },
       {
         "candidate": "les/strat",
-        "line": 190,
+        "line": 200,
         "referrer": "Docs/exit-codes.json"
       },
       {
         "candidate": "template/alias",
-        "line": 202,
+        "line": 212,
         "referrer": "Docs/exit-codes.json"
       },
       {
         "candidate": "moteur/vendor",
-        "line": 244,
+        "line": 254,
         "referrer": "Docs/exit-codes.json"
       },
       {
         "candidate": "compose/k3s",
-        "line": 279,
+        "line": 289,
         "referrer": "Docs/exit-codes.json"
       },
       {
@@ -98058,6 +98223,21 @@
         "referrer": "evidence/reviews/RC1-011-v1/RECU.json"
       },
       {
+        "candidate": "absent/invalide",
+        "line": 19,
+        "referrer": "evidence/reviews/RC1-013-2a/DeepSeek-V4-Pro.verdict.json"
+      },
+      {
+        "candidate": "14/15/12",
+        "line": 8,
+        "referrer": "evidence/reviews/RC1-013-2a/Qwen3.8-2.4T.verdict.json"
+      },
+      {
+        "candidate": "959/988/1012",
+        "line": 8,
+        "referrer": "evidence/reviews/RC1-013-2a/Qwen3.8-2.4T.verdict.json"
+      },
+      {
         "candidate": "FR/EN",
         "line": 7,
         "referrer": "evidence/reviews/RC1-013-v2/DeepSeek-V4-Pro.verdict.json"
@@ -103999,12 +104179,12 @@
       },
       {
         "candidate": "exit-codes.json",
-        "line": 94,
+        "line": 100,
         "referrer": "scripts/gate_exit_codes.py"
       },
       {
         "candidate": "cli.py",
-        "line": 95,
+        "line": 101,
         "referrer": "scripts/gate_exit_codes.py"
       },
       {
@@ -135369,32 +135549,32 @@
       },
       {
         "candidate": "registre.json",
-        "line": 93,
+        "line": 111,
         "referrer": "tests/test_gate_exit_codes.py"
       },
       {
         "candidate": "absent.json",
-        "line": 99,
+        "line": 117,
         "referrer": "tests/test_gate_exit_codes.py"
       },
       {
         "candidate": "bad.json",
-        "line": 105,
+        "line": 123,
         "referrer": "tests/test_gate_exit_codes.py"
       },
       {
         "candidate": "gates.yml",
-        "line": 162,
+        "line": 192,
         "referrer": "tests/test_gate_exit_codes.py"
       },
       {
         "candidate": "gate_exit_codes.py",
-        "line": 173,
+        "line": 203,
         "referrer": "tests/test_gate_exit_codes.py"
       },
       {
         "candidate": "gate_exit_codes.py",
-        "line": 177,
+        "line": 207,
         "referrer": "tests/test_gate_exit_codes.py"
       },
       {
@@ -161085,6 +161265,132 @@
         "severity": "hard"
       },
       {
+        "candidate": "Docs/exit-codes.json",
+        "line": 6,
+        "referrer": "evidence/reviews/RC1-013-2a/DeepSeek-V4-Pro.verdict.json",
+        "resolved": "Docs/exit-codes.json",
+        "severity": "hard"
+      },
+      {
+        "candidate": "stories/RC1-013-increment2a-rapport-codes-sortie.md",
+        "line": 8,
+        "referrer": "evidence/reviews/RC1-013-2a/DeepSeek-V4-Pro.verdict.json",
+        "resolved": "stories/RC1-013-increment2a-rapport-codes-sortie.md",
+        "severity": "hard"
+      },
+      {
+        "candidate": "scripts/gate_exit_codes.py",
+        "line": 12,
+        "referrer": "evidence/reviews/RC1-013-2a/DeepSeek-V4-Pro.verdict.json",
+        "resolved": "scripts/gate_exit_codes.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "tests/test_gate_exit_codes.py",
+        "line": 18,
+        "referrer": "evidence/reviews/RC1-013-2a/DeepSeek-V4-Pro.verdict.json",
+        "resolved": "tests/test_gate_exit_codes.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "Docs/exit-codes.json",
+        "line": 6,
+        "referrer": "evidence/reviews/RC1-013-2a/GPT-5.6-Terra-Pro.verdict.json",
+        "resolved": "Docs/exit-codes.json",
+        "severity": "hard"
+      },
+      {
+        "candidate": "stories/RC1-013-increment2a-rapport-codes-sortie.md",
+        "line": 8,
+        "referrer": "evidence/reviews/RC1-013-2a/GPT-5.6-Terra-Pro.verdict.json",
+        "resolved": "stories/RC1-013-increment2a-rapport-codes-sortie.md",
+        "severity": "hard"
+      },
+      {
+        "candidate": "Docs/reference/cli.md",
+        "line": 8,
+        "referrer": "evidence/reviews/RC1-013-2a/GPT-5.6-Terra-Pro.verdict.json",
+        "resolved": "Docs/reference/cli.md",
+        "severity": "hard"
+      },
+      {
+        "candidate": "Docs/exit-codes.json",
+        "line": 8,
+        "referrer": "evidence/reviews/RC1-013-2a/GPT-5.6-Terra-Pro.verdict.json",
+        "resolved": "Docs/exit-codes.json",
+        "severity": "hard"
+      },
+      {
+        "candidate": "scripts/gate_exit_codes.py",
+        "line": 12,
+        "referrer": "evidence/reviews/RC1-013-2a/GPT-5.6-Terra-Pro.verdict.json",
+        "resolved": "scripts/gate_exit_codes.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "Docs/exit-codes.json",
+        "line": 6,
+        "referrer": "evidence/reviews/RC1-013-2a/Qwen3.8-2.4T.verdict.json",
+        "resolved": "Docs/exit-codes.json",
+        "severity": "hard"
+      },
+      {
+        "candidate": "Docs/reference/cli.md",
+        "line": 7,
+        "referrer": "evidence/reviews/RC1-013-2a/Qwen3.8-2.4T.verdict.json",
+        "resolved": "Docs/reference/cli.md",
+        "severity": "hard"
+      },
+      {
+        "candidate": "stories/RC1-013-increment2a-rapport-codes-sortie.md",
+        "line": 8,
+        "referrer": "evidence/reviews/RC1-013-2a/Qwen3.8-2.4T.verdict.json",
+        "resolved": "stories/RC1-013-increment2a-rapport-codes-sortie.md",
+        "severity": "hard"
+      },
+      {
+        "candidate": "Docs/exit-codes.json",
+        "line": 8,
+        "referrer": "evidence/reviews/RC1-013-2a/Qwen3.8-2.4T.verdict.json",
+        "resolved": "Docs/exit-codes.json",
+        "severity": "hard"
+      },
+      {
+        "candidate": "Docs/reference/cli.md",
+        "line": 8,
+        "referrer": "evidence/reviews/RC1-013-2a/Qwen3.8-2.4T.verdict.json",
+        "resolved": "Docs/reference/cli.md",
+        "severity": "hard"
+      },
+      {
+        "candidate": "scripts/gate_exit_codes.py",
+        "line": 12,
+        "referrer": "evidence/reviews/RC1-013-2a/Qwen3.8-2.4T.verdict.json",
+        "resolved": "scripts/gate_exit_codes.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "scripts/gate_exit_codes.py",
+        "line": 14,
+        "referrer": "evidence/reviews/RC1-013-2a/Qwen3.8-2.4T.verdict.json",
+        "resolved": "scripts/gate_exit_codes.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "scripts/gate_exit_codes.py",
+        "line": 18,
+        "referrer": "evidence/reviews/RC1-013-2a/Qwen3.8-2.4T.verdict.json",
+        "resolved": "scripts/gate_exit_codes.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "scripts/gate_exit_codes.py",
+        "line": 20,
+        "referrer": "evidence/reviews/RC1-013-2a/Qwen3.8-2.4T.verdict.json",
+        "resolved": "scripts/gate_exit_codes.py",
+        "severity": "hard"
+      },
+      {
         "candidate": "Docs/reference/cli.md",
         "line": 6,
         "referrer": "evidence/reviews/RC1-013-v2/DeepSeek-V4-Pro.verdict.json",
@@ -172048,21 +172354,21 @@
       },
       {
         "candidate": "Docs/exit-codes.json",
-        "line": 84,
+        "line": 90,
         "referrer": "scripts/gate_exit_codes.py",
         "resolved": "Docs/exit-codes.json",
         "severity": "hard"
       },
       {
         "candidate": "src/forgeai/cli.py",
-        "line": 84,
+        "line": 90,
         "referrer": "scripts/gate_exit_codes.py",
         "resolved": "src/forgeai/cli.py",
         "severity": "hard"
       },
       {
         "candidate": "Docs/exit-codes.json",
-        "line": 123,
+        "line": 135,
         "referrer": "scripts/gate_exit_codes.py",
         "resolved": "Docs/exit-codes.json",
         "severity": "hard"
@@ -177767,21 +178073,21 @@
       },
       {
         "candidate": ".github/workflows/gates.yml",
-        "line": 157,
+        "line": 187,
         "referrer": "tests/test_gate_exit_codes.py",
         "resolved": ".github/workflows/gates.yml",
         "severity": "hard"
       },
       {
         "candidate": "scripts/gate_exit_codes.py",
-        "line": 169,
+        "line": 199,
         "referrer": "tests/test_gate_exit_codes.py",
         "resolved": "scripts/gate_exit_codes.py",
         "severity": "hard"
       },
       {
         "candidate": "scripts/gate_exit_codes.py",
-        "line": 170,
+        "line": 200,
         "referrer": "tests/test_gate_exit_codes.py",
         "resolved": "scripts/gate_exit_codes.py",
         "severity": "hard"
@@ -178620,7 +178926,7 @@
     "by_class": {
       "ARCHIVE": 44,
       "DOCS": 19,
-      "EVIDENCE": 1641,
+      "EVIDENCE": 1644,
       "GENERATED": 5,
       "GOVERNANCE": 209,
       "PRODUCT": 113,
@@ -178639,7 +178945,7 @@
       "evidence-audit-output-root": 18,
       "evidence-dedup-root": 2,
       "evidence-registres-root": 35,
-      "evidence-reviews-root": 1586,
+      "evidence-reviews-root": 1589,
       "generated-authority-map": 1,
       "generated-path-classification-json": 1,
       "generated-path-classification-markdown": 1,
@@ -178676,11 +178982,11 @@
       "working-sandbox-readme": 1
     },
     "case_collisions_total": 0,
-    "dangling_references_total": 17318,
+    "dangling_references_total": 17321,
     "generated_total": 9,
-    "load_bearing_total": 2114,
+    "load_bearing_total": 2117,
     "portability_violations_total": 0,
-    "tracked_total": 2260,
+    "tracked_total": 2263,
     "unclassified_total": 0,
     "unicode_anomalies_total": 0
   },
