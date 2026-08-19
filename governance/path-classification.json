@@ -24191,7 +24191,7 @@
       "path": "evidence/reviews/RC1-AUDIT-WEB-587/DeepSeek-V4-Pro-0813.verdict.json",
       "referenced_by": [],
       "rule_id": "evidence-reviews-root",
-      "sha256": "6f469a9abf6c35165fba6b5e8ffb73fd9ad65c848c9050af0bb45eed68e4356e",
+      "sha256": "a6bce90f7d73b0925ddea6028e3d0361edcf9b5b319f50d257d5e130b760f09a",
       "size": 375,
       "target_path": null,
       "type": "text"
@@ -24204,7 +24204,7 @@
       "path": "evidence/reviews/RC1-AUDIT-WEB-587/Kimi-2.7.verdict.json",
       "referenced_by": [],
       "rule_id": "evidence-reviews-root",
-      "sha256": "3e47ba585be4f146ba66eaa4c1b0bd12298c8381473fcba91e2d6fc42b2e8da2",
+      "sha256": "6f00e9cc234f88c2629b506f173f88500d6697494b5741bbf451c2967b209241",
       "size": 317,
       "target_path": null,
       "type": "text"
@@ -24214,11 +24214,11 @@
       "generated": false,
       "load_bearing": true,
       "owner": "gouvernance-preuve",
-      "path": "evidence/reviews/RC1-AUDIT-WEB-587/Qwen3.8-2.4T.verdict.json",
+      "path": "evidence/reviews/RC1-AUDIT-WEB-587/MiMo-V2.5-Pro.verdict.json",
       "referenced_by": [],
       "rule_id": "evidence-reviews-root",
-      "sha256": "006417a7e147060e439cf8faa1a2ce1bf6ae4f686d532ce5a871a69cf4beeb05",
-      "size": 367,
+      "sha256": "4d9029329b22aed39d1504b57c1c8b2e8d2aa87705142c527e6fb75beb799bc1",
+      "size": 327,
       "target_path": null,
       "type": "text"
     },
@@ -28090,7 +28090,7 @@
         }
       ],
       "rule_id": "governance-core",
-      "sha256": "93c48912399406326ad1a7a2e2ea3a4b39eec23b8a18aca346e923f1246b5dd2",
+      "sha256": "a3b08912ad222e3c8b17b2104e7eafd01a19ea6261174dff5f5db9813c3756d1",
       "size": 17044,
       "target_path": null,
       "type": "text"
