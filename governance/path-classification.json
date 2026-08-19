@@ -6884,8 +6884,8 @@
         }
       ],
       "rule_id": "evidence-registres-root",
-      "sha256": "4ebeaba886de9d4ea5c8d1c7f862a92f01fba5f3e3a19bb275a92036d2bea497",
-      "size": 399520,
+      "sha256": "4a59b7e20d33b35fbcacd6f47438aacb050d90860ff1a7bc5ee6e11e94766892",
+      "size": 399987,
       "target_path": null,
       "type": "text"
     },
@@ -37562,6 +37562,20 @@
         },
         {
           "candidate": "src/forgeai/cli.py",
+          "line": 13,
+          "referrer": "stories/RC1-AUDIT-RUNTIME-586-compose-identity.md",
+          "resolved": "src/forgeai/cli.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "src/forgeai/cli.py",
+          "line": 102,
+          "referrer": "stories/RC1-AUDIT-RUNTIME-586-compose-identity.md",
+          "resolved": "src/forgeai/cli.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "src/forgeai/cli.py",
           "line": 7,
           "referrer": "stories/SSH-007.md",
           "resolved": "src/forgeai/cli.py",
@@ -39986,6 +40000,27 @@
           "candidate": "src/forgeai/deploy/compose.py",
           "line": 228,
           "referrer": "stories/HEALTH-028A.md",
+          "resolved": "src/forgeai/deploy/compose.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "src/forgeai/deploy/compose.py",
+          "line": 7,
+          "referrer": "stories/RC1-AUDIT-RUNTIME-586-compose-identity.md",
+          "resolved": "src/forgeai/deploy/compose.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "src/forgeai/deploy/compose.py",
+          "line": 16,
+          "referrer": "stories/RC1-AUDIT-RUNTIME-586-compose-identity.md",
+          "resolved": "src/forgeai/deploy/compose.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "src/forgeai/deploy/compose.py",
+          "line": 102,
+          "referrer": "stories/RC1-AUDIT-RUNTIME-586-compose-identity.md",
           "resolved": "src/forgeai/deploy/compose.py",
           "severity": "hard"
         }
@@ -43540,6 +43575,13 @@
         },
         {
           "candidate": "src/forgeai/planner/assemble.py",
+          "line": 10,
+          "referrer": "stories/RC1-AUDIT-RUNTIME-586-compose-identity.md",
+          "resolved": "src/forgeai/planner/assemble.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "src/forgeai/planner/assemble.py",
           "line": 7,
           "referrer": "stories/SUPPLY-018.md",
           "resolved": "src/forgeai/planner/assemble.py",
@@ -44121,6 +44163,20 @@
         },
         {
           "candidate": "src/forgeai/renderers/compose.py",
+          "line": 5,
+          "referrer": "stories/RC1-AUDIT-RUNTIME-586-compose-identity.md",
+          "resolved": "src/forgeai/renderers/compose.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "src/forgeai/renderers/compose.py",
+          "line": 32,
+          "referrer": "stories/RC1-AUDIT-RUNTIME-586-compose-identity.md",
+          "resolved": "src/forgeai/renderers/compose.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "src/forgeai/renderers/compose.py",
           "line": 29,
           "referrer": "stories/SECRET-020A.md",
           "resolved": "src/forgeai/renderers/compose.py",
@@ -44142,8 +44198,8 @@
         }
       ],
       "rule_id": "product-source",
-      "sha256": "b6a860760f483ea5e627cbc02788c06e16645de009398a5ee3e93ff892068afc",
-      "size": 18465,
+      "sha256": "3a85ac56d8b35ed763a8c8ca4422f569952d46c6daeebce4b00eb88807bf03ce",
+      "size": 18960,
       "target_path": null,
       "type": "text"
     },
@@ -44382,6 +44438,13 @@
           "candidate": "src/forgeai/renderers/k3s.py",
           "line": 103,
           "referrer": "stories/I18N-041.md",
+          "resolved": "src/forgeai/renderers/k3s.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "src/forgeai/renderers/k3s.py",
+          "line": 103,
+          "referrer": "stories/RC1-AUDIT-RUNTIME-586-compose-identity.md",
           "resolved": "src/forgeai/renderers/k3s.py",
           "severity": "hard"
         },
@@ -47734,6 +47797,19 @@
       "rule_id": "governance-stories",
       "sha256": "2cd0bf00001eb2c73e129f9956ffcb668427b1c34c33d73e25e047de70b5eb4e",
       "size": 4096,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "GOVERNANCE",
+      "generated": false,
+      "load_bearing": false,
+      "owner": "gouvernance-stories",
+      "path": "stories/RC1-AUDIT-RUNTIME-586-compose-identity.md",
+      "referenced_by": [],
+      "rule_id": "governance-stories",
+      "sha256": "19a0b2eafac629b3b88936c63b53af0325f2431398a511a59b93fffde4dd887b",
+      "size": 5943,
       "target_path": null,
       "type": "text"
     },
@@ -57268,11 +57344,25 @@
           "referrer": "stories/COMPOSE-025.md",
           "resolved": "tests/test_renderers.py",
           "severity": "hard"
+        },
+        {
+          "candidate": "tests/test_renderers.py",
+          "line": 56,
+          "referrer": "stories/RC1-AUDIT-RUNTIME-586-compose-identity.md",
+          "resolved": "tests/test_renderers.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "tests/test_renderers.py",
+          "line": 107,
+          "referrer": "stories/RC1-AUDIT-RUNTIME-586-compose-identity.md",
+          "resolved": "tests/test_renderers.py",
+          "severity": "hard"
         }
       ],
       "rule_id": "test-suite",
-      "sha256": "83f2300eafc6da928719bc5496185e59b7c9f4f60df97e16d7e7aaa40b47003e",
-      "size": 12196,
+      "sha256": "46639ff00a776777090f23d11ff49af3f251b9af671c4918e03f390ebbd5d6bc",
+      "size": 13844,
       "target_path": null,
       "type": "text"
     },
@@ -123028,22 +123118,22 @@
       },
       {
         "candidate": "try/except",
-        "line": 171,
+        "line": 178,
         "referrer": "src/forgeai/renderers/compose.py"
       },
       {
         "candidate": "setuid/sudo/cap",
-        "line": 189,
+        "line": 196,
         "referrer": "src/forgeai/renderers/compose.py"
       },
       {
         "candidate": "renderers/k3s.py",
-        "line": 191,
+        "line": 198,
         "referrer": "src/forgeai/renderers/compose.py"
       },
       {
         "candidate": "L162/L183/L220",
-        "line": 296,
+        "line": 303,
         "referrer": "src/forgeai/renderers/compose.py"
       },
       {
@@ -129915,6 +130005,21 @@
         "candidate": "b.md",
         "line": 51,
         "referrer": "stories/RC1-AUDIT-RAG-584-qdrant-ids.md"
+      },
+      {
+        "candidate": "render/health-check",
+        "line": 27,
+        "referrer": "stories/RC1-AUDIT-RUNTIME-586-compose-identity.md"
+      },
+      {
+        "candidate": "corrects/align",
+        "line": 105,
+        "referrer": "stories/RC1-AUDIT-RUNTIME-586-compose-identity.md"
+      },
+      {
+        "candidate": "tests/",
+        "line": 109,
+        "referrer": "stories/RC1-AUDIT-RUNTIME-586-compose-identity.md"
       },
       {
         "candidate": "try/except",
@@ -142068,37 +142173,37 @@
       },
       {
         "candidate": "100m/128Mi",
-        "line": 137,
+        "line": 174,
         "referrer": "tests/test_renderers.py"
       },
       {
         "candidate": "CPU/1Gi",
-        "line": 137,
+        "line": 174,
         "referrer": "tests/test_renderers.py"
       },
       {
         "candidate": "ollama/ollama",
-        "line": 160,
+        "line": 197,
         "referrer": "tests/test_renderers.py"
       },
       {
         "candidate": "qdrant/qdrant",
-        "line": 169,
+        "line": 206,
         "referrer": "tests/test_renderers.py"
       },
       {
         "candidate": "Mi/Gi",
-        "line": 191,
+        "line": 228,
         "referrer": "tests/test_renderers.py"
       },
       {
         "candidate": "CPU/m",
-        "line": 241,
+        "line": 278,
         "referrer": "tests/test_renderers.py"
       },
       {
         "candidate": "ollama/ollama",
-        "line": 242,
+        "line": 279,
         "referrer": "tests/test_renderers.py"
       },
       {
@@ -175775,6 +175880,83 @@
         "severity": "hard"
       },
       {
+        "candidate": "src/forgeai/renderers/compose.py",
+        "line": 5,
+        "referrer": "stories/RC1-AUDIT-RUNTIME-586-compose-identity.md",
+        "resolved": "src/forgeai/renderers/compose.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "src/forgeai/deploy/compose.py",
+        "line": 7,
+        "referrer": "stories/RC1-AUDIT-RUNTIME-586-compose-identity.md",
+        "resolved": "src/forgeai/deploy/compose.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "src/forgeai/planner/assemble.py",
+        "line": 10,
+        "referrer": "stories/RC1-AUDIT-RUNTIME-586-compose-identity.md",
+        "resolved": "src/forgeai/planner/assemble.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "src/forgeai/cli.py",
+        "line": 13,
+        "referrer": "stories/RC1-AUDIT-RUNTIME-586-compose-identity.md",
+        "resolved": "src/forgeai/cli.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "src/forgeai/deploy/compose.py",
+        "line": 16,
+        "referrer": "stories/RC1-AUDIT-RUNTIME-586-compose-identity.md",
+        "resolved": "src/forgeai/deploy/compose.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "src/forgeai/renderers/compose.py",
+        "line": 32,
+        "referrer": "stories/RC1-AUDIT-RUNTIME-586-compose-identity.md",
+        "resolved": "src/forgeai/renderers/compose.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "tests/test_renderers.py",
+        "line": 56,
+        "referrer": "stories/RC1-AUDIT-RUNTIME-586-compose-identity.md",
+        "resolved": "tests/test_renderers.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "src/forgeai/deploy/compose.py",
+        "line": 102,
+        "referrer": "stories/RC1-AUDIT-RUNTIME-586-compose-identity.md",
+        "resolved": "src/forgeai/deploy/compose.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "src/forgeai/cli.py",
+        "line": 102,
+        "referrer": "stories/RC1-AUDIT-RUNTIME-586-compose-identity.md",
+        "resolved": "src/forgeai/cli.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "src/forgeai/renderers/k3s.py",
+        "line": 103,
+        "referrer": "stories/RC1-AUDIT-RUNTIME-586-compose-identity.md",
+        "resolved": "src/forgeai/renderers/k3s.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "tests/test_renderers.py",
+        "line": 107,
+        "referrer": "stories/RC1-AUDIT-RUNTIME-586-compose-identity.md",
+        "resolved": "tests/test_renderers.py",
+        "severity": "hard"
+      },
+      {
         "candidate": "src/forgeai/data/catalogue.schema.json",
         "line": 5,
         "referrer": "stories/RC1-AUDIT-SUPPLY-585-catalogue-types.md",
@@ -178444,7 +178626,7 @@
       "DOCS": 18,
       "EVIDENCE": 1653,
       "GENERATED": 5,
-      "GOVERNANCE": 209,
+      "GOVERNANCE": 210,
       "PRODUCT": 113,
       "TEST": 218,
       "WORKING": 10
@@ -178490,7 +178672,7 @@
       "governance-scripts-coordination": 4,
       "governance-scripts-governance": 12,
       "governance-scripts-root": 30,
-      "governance-stories": 97,
+      "governance-stories": 98,
       "product-catalogue-checksum": 1,
       "product-source": 112,
       "test-suite": 218,
@@ -178498,11 +178680,11 @@
       "working-sandbox-readme": 1
     },
     "case_collisions_total": 0,
-    "dangling_references_total": 17264,
+    "dangling_references_total": 17267,
     "generated_total": 9,
     "load_bearing_total": 2124,
     "portability_violations_total": 0,
-    "tracked_total": 2270,
+    "tracked_total": 2271,
     "unclassified_total": 0,
     "unicode_anomalies_total": 0
   },
