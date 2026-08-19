@@ -1,0 +1,22 @@
+{
+  "schema": "recu-revue/1",
+  "dossier": "RC1-AUDIT-WEB-589",
+  "issue": 589,
+  "round": 1,
+  "base_commit": "ebb6ed1876d16a4b4e668964f923e291dca08c2f",
+  "head_commit": "b0b80a4aa87db39770f638aa85754d8ca8ae29a3",
+  "head_tree": "a02b9c514dde84124a32beb9a8f7b1bd4599d88e",
+  "diff_digest": "a22e179fe5246c594e81bd27dd7a2053599e79d4ad09219b19f3b318ad914452",
+  "prompt_sha256": "97c65027d458f8ffd7de9ff782fa21726090a6270f1db1cdace0e5c6e95dd7f1",
+  "reviewers_attendus": [
+    "DeepSeek-V4-Pro-0813",
+    "Kimi-2.7",
+    "Qwen3.8-2.4T"
+  ],
+  "codeur": [
+    "luna"
+  ],
+  "resultat": "APPROVE",
+  "date_heure": "2026-08-19T05:22:03.728465-04:00",
+  "fenetre_heures": 24
+}

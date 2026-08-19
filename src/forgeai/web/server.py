@@ -1098,31 +1098,38 @@ class ForgeAIHandler(BaseHTTPRequestHandler):
             pass
 
     def _deploy_events_stream(self) -> None:
+        # #589 : le verrou protège UNIQUEMENT la capture d'un instantané cohérent de
+        # _DEPLOY_STATE — jamais l'E/S réseau. Un client SSE lent (backpressure) qui
+        # ralentit self.wfile.write() retenait auparavant le verrou, bloquant
+        # _deploy_resume() (/api/status) et le thread _reader pendant toute la durée du
+        # blocage réseau. `list(...)` copie la liste : un `.clear()` concurrent (nouveau
+        # déploiement démarré pendant qu'on écrit encore l'ancien flux) ne peut plus
+        # corrompre l'itération en cours, contrairement à une référence directe.
         idx = 0
         while True:
             with _DEPLOY_STATE["lock"]:
-                lines = _DEPLOY_STATE["lines"]
+                lines = list(_DEPLOY_STATE["lines"])
                 done = _DEPLOY_STATE["done"]
                 exit_code = _DEPLOY_STATE["exit_code"]
                 nettoyage_incertain = _DEPLOY_STATE["nettoyage_incertain"]
-                while idx < len(lines):
-                    try:
-                        self.wfile.write(f"data: {lines[idx]}\n\n".encode("utf-8"))
-                        self.wfile.flush()
-                    except (BrokenPipeError, ConnectionResetError):
-                        return
-                    idx += 1
-                if done:
-                    fin = {"exit_code": exit_code}
-                    if nettoyage_incertain:
-                        fin["nettoyage_incertain"] = True
-                    payload = json.dumps(fin, ensure_ascii=False)
-                    try:
-                        self.wfile.write(f"event: end\ndata: {payload}\n\n".encode("utf-8"))
-                        self.wfile.flush()
-                    except (BrokenPipeError, ConnectionResetError):
-                        pass
+            while idx < len(lines):
+                try:
+                    self.wfile.write(f"data: {lines[idx]}\n\n".encode("utf-8"))
+                    self.wfile.flush()
+                except (BrokenPipeError, ConnectionResetError):
                     return
+                idx += 1
+            if done:
+                fin = {"exit_code": exit_code}
+                if nettoyage_incertain:
+                    fin["nettoyage_incertain"] = True
+                payload = json.dumps(fin, ensure_ascii=False)
+                try:
+                    self.wfile.write(f"event: end\ndata: {payload}\n\n".encode("utf-8"))
+                    self.wfile.flush()
+                except (BrokenPipeError, ConnectionResetError):
+                    pass
+                return
             time.sleep(0.2)
 
     def _get_nodes_status(self) -> None:
