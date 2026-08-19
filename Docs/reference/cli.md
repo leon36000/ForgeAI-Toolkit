@@ -2,6 +2,128 @@
 
 La source de vérité reste `forgeai <commande> --help`. Le gate `scripts/gate_docs.py` vérifie qu’aucune commande n’est ajoutée sans documentation.
 
+## Codes de sortie
+
+### Codes globaux
+
+Ces codes s'appliquent à toute commande :
+
+- **0** — succès.
+- **1** — échec générique (exception non prévue).
+- **130** — interrompu (SIGINT/Ctrl-C).
+
+### forgeai budget
+
+- **10** — budget set quota/agent invalide (BudgetError)
+- **10** — budget status agent inconnu (BudgetError)
+
+### forgeai export
+
+- **11** — échec export du bundle portable (PortabilityError)
+
+### forgeai gateway
+
+- **10** — gateway set-url URL/config invalide (GatewayError)
+- **10** — gateway wire câblage brique→route invalide (GatewayError)
+- **10** — gateway verify GatewayError
+- **10** — gateway verify invariant violé, brique hors gateway détectée
+
+### forgeai gpu
+
+- **12** — gpu drivers échec détection/plan pilotes (DriverError)
+
+### forgeai ide
+
+- **12** — ide configure gateway non configuré (GatewayError)
+- **12** — ide configure IDEError
+- **12** — ide mcp spec --server malformée, absence de =
+- **12** — ide mcp IDEError
+- **12** — ide governance IDEError
+
+### forgeai import
+
+- **11** — échec import du bundle (PortabilityError)
+
+### forgeai loop
+
+- **14** — loop run timeout d'une commande step/until (RunnerTimeoutError)
+- **15** — loop run commande annulée (RunnerCancelledError)
+- **12** — loop run échec de boucle générique (LoopError)
+- **13** — loop run budget --max-iter épuisé sans que --until réussisse (retour exprimé par une expression ternaire en fin de fonction, non couvert par le gate mécanique qui vérifie littéralement `return <code>`)
+
+### forgeai model
+
+- **9** — model add-cloud RouteError
+- **9** — model add-local LocalModelError
+- **9** — model test route/passphrase invalide (RouteError/KeyError)
+- **9** — model test test de connexion échoué (result.ok faux) (retour exprimé par une expression ternaire en fin de fonction, non couvert par le gate mécanique qui vérifie littéralement `return <code>`)
+
+### forgeai node
+
+- **12** — node probe RemoteProbeError
+- **12** — node tailscale TailscaleError/BootstrapError
+- **12** — node add variable d'env mot de passe vide/absente
+- **12** — node add échec bootstrap SSH (NodeAddError/RemoteProbeError)
+- **11** — node prepare PrepareError
+- **12** — node discover --hostkey requis manquant
+- **12** — node discover --user/--keyfile requis manquants
+- **12** — node discover DiscoverError
+- **8** — node status lecture cluster impossible (ClusterError)
+
+### forgeai operators
+
+- **8** — operators opérateur nommé inconnu, hors OPERATORS
+
+### forgeai route
+
+- **9** — route configure RouteError, config cache invalide
+
+### forgeai strategy
+
+- **10** — strategy set StrategyError, rôles/stratégie invalides
+- **10** — strategy set reconfiguration d'une stratégie déjà définie sans --confirm
+
+### forgeai template
+
+- **12** — template show TemplateError, template/alias inconnu
+- **12** — template resolve TemplateError
+
+### forgeai wizard
+
+- **7** — wizard échec dérivation profil hardware hors --dry-run (ProfileError)
+- **8** — wizard validation stack inconnu
+- **8** — wizard validation sélection illisible
+- **8** — wizard validation briques inconnues
+- **8** — wizard validation modèles inconnus
+- **8** — wizard validation moteurs inconnus
+- **8** — wizard validation moteur/vendor incompatible
+- **8** — wizard validation nœuds invalides
+- **8** — wizard validation embeddings hors famille
+- **8** — wizard validation rag_node invalide
+- **9** — wizard rag_node distant incompatible avec --backend compose
+- **8** — wizard adopt référence des services absents du plan
+- **6** — wizard backend cible indisponible après préflight
+- **8** — wizard échec de déploiement compose/k3s (DeployError, déclenché L433 openbao_k3s ou L452 healthchecks_k3s)
+- **9** — wizard fait attendu absent de la réponse RAG, vérification factuelle échouée
+
+### forgeai web
+
+Aucun code de sortie spécifique identifiable depuis `cli.py` — le handler `web_command` est défini dans le module `forgeai.web`, hors périmètre de cet inventaire. Traité comme commande binaire standard (0/1) ; voir le module `forgeai.web` pour le détail.
+
+> **Note :** Le code `8` est réutilisé avec des significations différentes selon la commande — par exemple validation de sélection/stack et échec de déploiement pour `wizard`, opérateur inconnu pour `operators`, ou lecture cluster impossible pour `node status`. Il n'existe pas de convention globale par valeur : chaque commande définit sa propre sémantique pour ce code.
+
+## Variables d'environnement
+
+### FORGEAI_LANG
+
+Définit la langue par défaut de l'ensemble de la CLI, en surcharge de l'option `--lang`. Si la variable est absente ou contient une valeur hors des locales disponibles, la CLI retombe sur `fr`. Elle est évaluée au démarrage dans `_run()`.
+
+### FORGEAI_DEBUG
+
+Si cette variable est définie et non vide, les exceptions non prévues par un handler spécifique sont relevées avec leur traceback complet au lieu d'être capturées et transformées en message d'erreur avec code `1`. Elle est évaluée dans `main()` et sert uniquement au débogage. Elle n'est jamais nécessaire en usage normal.
+
+> **Note :** Les options `--password-env` (`node add`) et le paramètre interne `env_var` de `_read_secret()` ne sont pas des variables d'environnement fixes : le nom de la variable à lire est paramétrable par l'utilisateur. Elles sont donc documentées via leurs options CLI respectives et ne figurent pas dans cette section.
+
 ## `forgeai status`
 
 ### Rôle

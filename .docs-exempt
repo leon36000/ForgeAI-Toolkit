@@ -242,3 +242,11 @@ test_rc1580_tests_aggregate.py (RC1-580/#580, correctif round 1 de revue scellé
 actions/checkout manquant sur le job tests-required, garde défensif isinstance dans
 gates_en_echec) : durcissement d'une fonctionnalité déjà décrite par la story (#580). Aucune
 doc utilisateur supplémentaire concernée.
+
+scripts/gate_exit_codes.py + tests/test_gate_exit_codes.py (RC1-013/#443 incrément 2a, correctif
+round 3 de revue scellée) : durcissement du pattern de détection de dérive (exige `return` sur la
+ligne du motif ternaire, pas seulement `else <code>`) — corrige un vrai trou de détection signalé
+par 3/3 reviewers, aucun changement de comportement utilisateur ni de contenu documentaire déjà
+livré au commit précédent de cette même story (sections `## Codes de sortie`/`## Variables
+d'environnement` de Docs/reference/cli.md, déjà présentes). Aucune doc utilisateur supplémentaire
+concernée.

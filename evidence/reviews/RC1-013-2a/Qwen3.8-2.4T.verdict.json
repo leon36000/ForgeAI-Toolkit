@@ -1,0 +1,31 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "tests/test_gate_exit_codes.py",
+   "description": "Le cas de dérive demandé pour main() est simulé par monkeypatch de anomalies() plutôt que par une ligne réellement modifiée du fichier contrôlé ; le chemin complet ligne réelle → main() retournant 1 n'est pas couvert bout en bout.",
+   "preuve": "lignes 132-136 : monkeypatch.setattr(gate_exit_codes, \"anomalies\", lambda *a, **k: [\"dérive simulée\"]) puis assert gate_exit_codes.main([]) == 1"
+  },
+  {
+   "severite": "mineure",
+   "fichier": "scripts/gate_exit_codes.py",
+   "description": "La story demande la sous-chaîne littérale `return <code>` ; la vérification utilise une regex qui accepte un ou plusieurs espaces après `return`, ce qui est légèrement plus permissif que la literalité exigée.",
+   "preuve": "ligne 71 : pattern = rf\"(?<!\\d)return\\s+{code_int}(?!\\d)\""
+  },
+  {
+   "severite": "mineure",
+   "fichier": "tests/test_gate_exit_codes.py",
+   "description": "Les cas registre absent/invalide ne sont pas testés au niveau de main() avec un fichier réellement absent ou un JSON invalide sur disque ; seuls charger_registre() et des monkeypatches de retour sont exercés.",
+   "preuve": "lignes 98-108 : tests de charger_registre() avec pytest.raises ; lignes 139-153 : main() testé via monkeypatch de charger_registre(), sans fichier réel manquant/invalide"
+  }
+ ],
+ "date_heure": "2026-08-19T03:08:11.834265+00:00",
+ "prompt_sha256": "9b8f7898614f41be8a67a95fbcc8504f792ab2a07240ca06fd53084e015b7b5e",
+ "reviewer_model": "Qwen3.8-2.4T",
+ "modele_servi": "b9de6bc895fe95ccacf7d9fa9b1cf29ca44d34f03e249738f325c9dee3790b78",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}
