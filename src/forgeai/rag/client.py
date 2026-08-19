@@ -9,6 +9,7 @@ from __future__ import annotations
 import json
 import urllib.error
 import urllib.request
+import uuid
 from dataclasses import dataclass
 
 from forgeai.core.validation import valider_schema_url
@@ -88,7 +89,11 @@ class RagClient:
         vectors = self._embed(chunks)
         self.ensure_collection(dim=len(vectors[0]))
         points = [
-            {"id": i, "vector": vec, "payload": {"text": chunk, "source": source}}
+            {
+                "id": str(uuid.uuid5(uuid.NAMESPACE_URL, f"{self.collection}:{source}:{i}")),
+                "vector": vec,
+                "payload": {"text": chunk, "source": source},
+            }
             for i, (chunk, vec) in enumerate(zip(chunks, vectors))
         ]
         _put(f"{self.qdrant_url}/collections/{self.collection}/points?wait=true",

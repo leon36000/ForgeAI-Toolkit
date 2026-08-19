@@ -89,3 +89,41 @@ def test_ensure_collection_erreur_non_409_remonte(monkeypatch):
     with pytest.raises(urllib.error.HTTPError) as exc_info:
         _client().ensure_collection(dim=4)
     assert exc_info.value.code == 500
+
+
+def test_ingest_ids_disjoints_entre_documents_differents(fake_http):
+    """AUDIT-RAG #584 — deux ingestions successives avec sources différentes
+    doivent produire des IDs disjoints (pas de collision par compteur local)."""
+    c = _client()
+    c.ingest("doc A", "a.md")
+    ids_a = {p["id"] for p in fake_http["put"][-1][1]["points"]}
+    c.ingest("doc B", "b.md")
+    ids_b = {p["id"] for p in fake_http["put"][-1][1]["points"]}
+    assert ids_a.isdisjoint(ids_b)
+    assert len(ids_a) > 0
+    assert len(ids_b) > 0
+
+
+def test_ingest_reingestion_idempotente_meme_ids(fake_http):
+    """AUDIT-RAG #584 — ré-ingestion du même texte/source produit les mêmes UUID
+    déterministes (idempotence)."""
+    c = _client()
+    texte = "meme texte pour idempotence"
+    source = "same.md"
+    c.ingest(texte, source)
+    ids_1 = [p["id"] for p in fake_http["put"][-1][1]["points"]]
+    c.ingest(texte, source)
+    ids_2 = [p["id"] for p in fake_http["put"][-1][1]["points"]]
+    assert ids_1 == ids_2
+
+
+def test_ingest_sources_differentes_meme_contenu_ids_differents(fake_http):
+    """AUDIT-RAG #584 — deux sources différentes avec contenu identique
+    produisent des IDs différents (source participe à l'espace de noms)."""
+    c = _client()
+    texte = "contenu identique chunké de façon identique"
+    c.ingest(texte, "source1.md")
+    ids_1 = {p["id"] for p in fake_http["put"][-1][1]["points"]}
+    c.ingest(texte, "source2.md")
+    ids_2 = {p["id"] for p in fake_http["put"][-1][1]["points"]}
+    assert ids_1.isdisjoint(ids_2)
