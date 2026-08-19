@@ -142,7 +142,14 @@ class RienADeployerError(Exception):
     pas la vraie cause. Ce n'est PAS une erreur de l'utilisateur, mais un état à lui signaler."""
 
 
-def render_compose(plan: DeploymentPlan, project: str = "forgeai-minimal") -> str:
+def render_compose(plan: DeploymentPlan, project: str | None = None) -> str:
+    # #586 : l'identité de projet Compose DOIT dériver de plan.plan_id — un défaut codé en
+    # dur ("forgeai-minimal") faisait collisionner tous les plans entre eux (rendu) ET
+    # divergeait de `_etats_docker()` qui interroge déjà `-p plan.plan_id` (health-check).
+    # `project` reste surchageable explicitement (tests, cas d'usage futurs), mais son défaut
+    # est maintenant l'identité canonique du plan, jamais une constante.
+    if project is None:
+        project = plan.plan_id
     # Rien à déployer : tous les services sont déjà présents sur le nœud. On refuse AVANT de
     # construire quoi que ce soit — un compose sans section `services` est rejeté par Docker
     # avec un message qui masque la vraie cause.
