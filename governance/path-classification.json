@@ -24188,6 +24188,58 @@
       "generated": false,
       "load_bearing": true,
       "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-AUDIT-WEB-587/DeepSeek-V4-Pro-0813.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "6f469a9abf6c35165fba6b5e8ffb73fd9ad65c848c9050af0bb45eed68e4356e",
+      "size": 375,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-AUDIT-WEB-587/Kimi-2.7.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "3e47ba585be4f146ba66eaa4c1b0bd12298c8381473fcba91e2d6fc42b2e8da2",
+      "size": 317,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-AUDIT-WEB-587/Qwen3.8-2.4T.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "006417a7e147060e439cf8faa1a2ce1bf6ae4f686d532ce5a871a69cf4beeb05",
+      "size": 367,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-AUDIT-WEB-587/RECU.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": null,
+      "size": null,
+      "target_path": null,
+      "type": null
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
       "path": "evidence/reviews/RC1-registre-PR522/DeepSeek-V4-Pro.verdict.json",
       "referenced_by": [],
       "rule_id": "evidence-reviews-root",
@@ -60049,11 +60101,6 @@
   "reference_graph": {
     "completeness": "best_effort",
     "dangling": [
-      {
-        "candidate": "RC1-AUDIT-WEB-587",
-        "line": 216,
-        "referrer": "evidence/reviews/BINDING.txt"
-      },
       {
         "candidate": "TUI/UX",
         "line": 3,
@@ -99028,6 +99075,11 @@
         "candidate": "recu-revue/1",
         "line": 2,
         "referrer": "evidence/reviews/RC1-AUDIT-SUPPLY-585/RECU.json"
+      },
+      {
+        "candidate": "recu-revue/1",
+        "line": 2,
+        "referrer": "evidence/reviews/RC1-AUDIT-WEB-587/RECU.json"
       },
       {
         "candidate": "registre.py",
@@ -147975,6 +148027,13 @@
         "severity": "hard"
       },
       {
+        "candidate": "RC1-AUDIT-WEB-587",
+        "line": 216,
+        "referrer": "evidence/reviews/BINDING.txt",
+        "resolved": "evidence/reviews/RC1-AUDIT-WEB-587",
+        "severity": "hard"
+      },
+      {
         "candidate": "scripts/gate_docs.py",
         "line": 11,
         "referrer": "sonar-project.properties",
@@ -178383,7 +178442,7 @@
     "by_class": {
       "ARCHIVE": 44,
       "DOCS": 18,
-      "EVIDENCE": 1649,
+      "EVIDENCE": 1653,
       "GENERATED": 5,
       "GOVERNANCE": 209,
       "PRODUCT": 113,
@@ -178402,7 +178461,7 @@
       "evidence-audit-output-root": 18,
       "evidence-dedup-root": 2,
       "evidence-registres-root": 35,
-      "evidence-reviews-root": 1594,
+      "evidence-reviews-root": 1598,
       "generated-authority-map": 1,
       "generated-path-classification-json": 1,
       "generated-path-classification-markdown": 1,
@@ -178441,9 +178500,9 @@
     "case_collisions_total": 0,
     "dangling_references_total": 17264,
     "generated_total": 9,
-    "load_bearing_total": 2120,
+    "load_bearing_total": 2124,
     "portability_violations_total": 0,
-    "tracked_total": 2266,
+    "tracked_total": 2270,
     "unclassified_total": 0,
     "unicode_anomalies_total": 0
   },
