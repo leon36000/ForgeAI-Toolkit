@@ -41,7 +41,7 @@ def anomalies(registre: dict, lignes_cli: list[str]) -> list[str]:
     ``return <code>`` avec frontière de mot. Une anomalie est émise si
     l'index est hors bornes ou si la sous-chaîne est absente.
 
-    Accepte deux formes syntaxiques légitimes par lesquelles Python exprime un retour de code : `return <code>` directement, ou `else <code>` en fin d'expression ternaire (`return X if cond else <code>`) — les deux sont des preuves mécaniques équivalentes que le code est retourné à cette ligne précise ; seule la seconde forme est ancrée en fin de ligne pour éviter un faux positif sur un `else <code>` non terminal.
+    Accepte deux formes syntaxiques légitimes par lesquelles Python exprime un retour de code : `return <code>` directement, ou `else <code>` en fin d'expression ternaire (`return X if cond else <code>`) — les deux sont des preuves mécaniques équivalentes que le code est retourné à cette ligne précise ; la seconde forme exige en plus que la ligne commence par `return` — un simple `else <code>` en fin de ligne sans `return` en tête (ex. une affectation `x = 1 if cond else <code>`) N'est PAS une preuve valide de retour et reste signalé comme anomalie.
     """
     resultat: list[str] = []
     if not isinstance(registre, dict):
@@ -74,8 +74,11 @@ def anomalies(registre: dict, lignes_cli: list[str]) -> list[str]:
                 contenu_reel = lignes_cli[ligne_int - 1]
                 contenu_rstrip = contenu_reel.rstrip()
                 pattern_return = rf"(?<!\d)return\s+{code_int}(?!\d)"
-                pattern_else = rf"(?<!\d)else\s+{code_int}(?!\d)\s*$"
-                if not (re.search(pattern_return, contenu_reel) or re.search(pattern_else, contenu_rstrip)):
+                pattern_ternaire = rf"^\s*return\b.*\belse\s+{code_int}(?!\d)\s*$"
+                if not (
+                    re.search(pattern_return, contenu_reel)
+                    or re.search(pattern_ternaire, contenu_rstrip)
+                ):
                     resultat.append(
                         f"{commande} : ligne {ligne_int} attendue avec "
                         f"'return {code_int}' mais contient "

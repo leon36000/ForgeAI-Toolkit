@@ -62,6 +62,17 @@ def test_anomalies_else_n_pas_en_fin_ligne_signalee():
     assert len(resultat) == 1
 
 
+def test_anomalies_affectation_ternaire_sans_return_signalee():
+    """Round 3 de revue scellée (3 objections majeures, unanimes) : une ligne comme
+    `x = 1 if cond else 9` se termine par `else 9` mais n'est PAS un `return` — ne
+    doit PAS être acceptée comme preuve de retour, même si le mot `else <code>` est
+    bien en toute fin de ligne."""
+    registre = {"codes_par_commande": {"cmd": [{"code": 9, "ligne": 1}]}}
+    lignes_cli = ["    x = 1 if cond else 9"]
+    resultat = gate_exit_codes.anomalies(registre, lignes_cli)
+    assert len(resultat) == 1
+
+
 def test_anomalies_commentaire_fin_ligne_pas_anomalie():
     """Round 1 de revue scellée : `return 10  # commentaire` contient bien la
     sous-chaîne `return 10` et ne doit pas être signalé (faux négatif corrigé,
