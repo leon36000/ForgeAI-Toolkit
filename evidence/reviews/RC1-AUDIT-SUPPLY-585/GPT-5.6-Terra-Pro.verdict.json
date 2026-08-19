@@ -1,0 +1,19 @@
+{
+ "verdict": "REJECT",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "scripts/catalogue_gate.py",
+   "description": "La preuve demandée de l'exécution réelle du gate CLI sur le catalogue complet est absente du diff ; sa non-régression sur les 1576 entrées ne peut donc pas être vérifiée ici.",
+   "preuve": "Le diff ajoute l'implémentation et des tests dans `tests/test_catalogue_gate.py`, mais ne contient aucune sortie ni artefact attestant l'exécution de `python3 scripts/catalogue_gate.py`."
+  }
+ ],
+ "date_heure": "2026-08-19T03:25:31.742915+00:00",
+ "prompt_sha256": "f7ac0d33c5ad60a8cc4838c1b64d971a2e30a01a6b1b1a2bdb57b20ec3054bc5",
+ "reviewer_model": "GPT-5.6-Terra-Pro",
+ "modele_servi": "gpt56-terra-pro-openrouter",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

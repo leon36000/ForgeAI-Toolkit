@@ -1,0 +1,19 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "stories/RC1-AUDIT-SUPPLY-585-catalogue-types.md",
+   "description": "L'exécution CLI réelle demandée pour prouver la non-régression sur le vrai catalogue n'est pas matérialisée dans le diff ; elle n'est donc pas vérifiable ici.",
+   "preuve": "Story ajoutée, ligne 50 : `3. Rejouer python3 scripts/catalogue_gate.py en CLI réel...` ; le diff ne fournit aucune sortie de cette commande ni log de gate réel."
+  }
+ ],
+ "date_heure": "2026-08-19T03:26:37.431020+00:00",
+ "prompt_sha256": "f7ac0d33c5ad60a8cc4838c1b64d971a2e30a01a6b1b1a2bdb57b20ec3054bc5",
+ "reviewer_model": "Qwen3.8-2.4T",
+ "modele_servi": "b9de6bc895fe95ccacf7d9fa9b1cf29ca44d34f03e249738f325c9dee3790b78",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}
