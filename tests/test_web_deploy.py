@@ -1,6 +1,8 @@
 import json
 import sys
 import threading
+import time
+import types
 import urllib.error
 import urllib.request
 
@@ -161,3 +163,83 @@ def test_deploy_popen_echoue_puis_nouveau_deploy_reussit(server, fake_deploy, mo
     status2, body2 = _request(f"{server}/api/deploy", data=payload, method="POST")
     assert status2 == 202
     assert json.loads(body2)["started"] is True
+
+
+class _WfileBloquant:
+    """wfile factice : write() bloque jusqu'à ce que l'événement soit levé — simule un
+    client SSE lent (backpressure) sans dépendre d'un vrai socket réseau."""
+    def __init__(self, event_debloque):
+        self.event_debloque = event_debloque
+        self.ecrits = []
+        self.flushes = 0
+
+    def write(self, data):
+        self.event_debloque.wait(timeout=5)
+        self.ecrits.append(data)
+
+    def flush(self):
+        self.flushes += 1
+
+
+def test_sse_ecriture_bloquante_ne_bloque_pas_deploy_resume():
+    """#589 — reproduction exacte du défaut : _deploy_resume() (/api/status) doit terminer
+    rapidement MÊME si le flux SSE est encore bloqué en écriture réseau."""
+    with _DEPLOY_STATE["lock"]:
+        _DEPLOY_STATE["proc"] = None
+        _DEPLOY_STATE["lines"] = ["etape 1"]
+        _DEPLOY_STATE["done"] = True
+        _DEPLOY_STATE["exit_code"] = 0
+        _DEPLOY_STATE["nettoyage_incertain"] = False
+
+    event_debloque = threading.Event()
+    fake_self = types.SimpleNamespace(wfile=_WfileBloquant(event_debloque))
+
+    thread_stream = threading.Thread(
+        target=srv_mod.ForgeAIHandler._deploy_events_stream, args=(fake_self,), daemon=True
+    )
+    thread_stream.start()
+    time.sleep(0.2)  # laisse le stream entrer dans write() (bloqué)
+
+    resume_termine = threading.Event()
+    resultat = {}
+
+    def _appeler_resume():
+        resultat["valeur"] = srv_mod._deploy_resume()
+        resume_termine.set()
+
+    thread_resume = threading.Thread(target=_appeler_resume, daemon=True)
+    thread_resume.start()
+
+    try:
+        assert resume_termine.wait(timeout=1.0), (
+            "_deploy_resume() est resté bloqué par le verrou SSE"
+        )
+        assert resultat["valeur"]["done"] is True
+    finally:
+        event_debloque.set()
+        thread_stream.join(timeout=5)
+        thread_resume.join(timeout=5)
+
+
+def test_sse_stream_envoie_toutes_les_lignes_et_termine(fake_deploy):
+    """Non-régression : le contenu et l'ordre du flux SSE restent inchangés après le
+    déplacement de l'écriture hors du verrou (même scénario que test_deploy_et_sse)."""
+    with _DEPLOY_STATE["lock"]:
+        _DEPLOY_STATE["proc"] = None
+        _DEPLOY_STATE["lines"] = ["ligne 1", "ligne 2", "ligne 3"]
+        _DEPLOY_STATE["done"] = True
+        _DEPLOY_STATE["exit_code"] = 0
+        _DEPLOY_STATE["nettoyage_incertain"] = False
+
+    fake_self = types.SimpleNamespace(wfile=_WfileBloquant(threading.Event()))
+    fake_self.wfile.event_debloque.set()  # jamais bloqué dans ce test
+
+    srv_mod.ForgeAIHandler._deploy_events_stream(fake_self)
+
+    sortie = b"".join(fake_self.wfile.ecrits).decode("utf-8")
+    assert "data: ligne 1" in sortie
+    assert "data: ligne 2" in sortie
+    assert "data: ligne 3" in sortie
+    assert sortie.index("ligne 1") < sortie.index("ligne 2") < sortie.index("ligne 3")
+    assert "event: end" in sortie
+    assert '"exit_code": 0' in sortie
