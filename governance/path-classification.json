@@ -24084,6 +24084,45 @@
       "generated": false,
       "load_bearing": true,
       "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-AUDIT-SUPPLY-585/DeepSeek-V4-Pro.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "7fd43f513c753265f43fdcae05c65e849f6dd372d5474fab52ae0b59e2682fac",
+      "size": 328,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-AUDIT-SUPPLY-585/GPT-5.6-Terra-Pro.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "3535085e455351b41601dd167ed4ec43bf745f3eafe28c56dfea688784df65de",
+      "size": 334,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-AUDIT-SUPPLY-585/Qwen3.8-2.4T.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "10a054b0313e2091a6554967563f3de4bcbdb0455a02d55b6d70dc0207302905",
+      "size": 839,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
       "path": "evidence/reviews/RC1-registre-PR522/DeepSeek-V4-Pro.verdict.json",
       "referenced_by": [],
       "rule_id": "evidence-reviews-root",
@@ -31161,6 +31200,13 @@
           "candidate": "scripts/catalogue_gate.py",
           "line": 24,
           "referrer": "evidence/reviews/IMPL-2-civ/pack.md",
+          "resolved": "scripts/catalogue_gate.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "scripts/catalogue_gate.py",
+          "line": 7,
+          "referrer": "evidence/reviews/RC1-AUDIT-SUPPLY-585/Qwen3.8-2.4T.verdict.json",
           "resolved": "scripts/catalogue_gate.py",
           "severity": "hard"
         },
@@ -47539,7 +47585,15 @@
       "load_bearing": false,
       "owner": "gouvernance-stories",
       "path": "stories/RC1-AUDIT-SUPPLY-585-catalogue-types.md",
-      "referenced_by": [],
+      "referenced_by": [
+        {
+          "candidate": "stories/RC1-AUDIT-SUPPLY-585-catalogue-types.md",
+          "line": 6,
+          "referrer": "evidence/reviews/RC1-AUDIT-SUPPLY-585/Qwen3.8-2.4T.verdict.json",
+          "resolved": "stories/RC1-AUDIT-SUPPLY-585-catalogue-types.md",
+          "severity": "hard"
+        }
+      ],
       "rule_id": "governance-stories",
       "sha256": "2e4c3a690a9fe7bdfc334e63b901cb3bee3ba1cca134816cad46c2962d5afe50",
       "size": 5755,
@@ -164021,6 +164075,20 @@
         "severity": "hard"
       },
       {
+        "candidate": "stories/RC1-AUDIT-SUPPLY-585-catalogue-types.md",
+        "line": 6,
+        "referrer": "evidence/reviews/RC1-AUDIT-SUPPLY-585/Qwen3.8-2.4T.verdict.json",
+        "resolved": "stories/RC1-AUDIT-SUPPLY-585-catalogue-types.md",
+        "severity": "hard"
+      },
+      {
+        "candidate": "scripts/catalogue_gate.py",
+        "line": 7,
+        "referrer": "evidence/reviews/RC1-AUDIT-SUPPLY-585/Qwen3.8-2.4T.verdict.json",
+        "resolved": "scripts/catalogue_gate.py",
+        "severity": "hard"
+      },
+      {
         "candidate": "evidence/registres/mission.jsonl",
         "line": 6,
         "referrer": "evidence/reviews/RC1-registre-PR522/DeepSeek-V4-Pro.verdict.json",
@@ -177993,7 +178061,7 @@
     "by_class": {
       "ARCHIVE": 44,
       "DOCS": 18,
-      "EVIDENCE": 1641,
+      "EVIDENCE": 1644,
       "GENERATED": 5,
       "GOVERNANCE": 207,
       "PRODUCT": 113,
@@ -178012,7 +178080,7 @@
       "evidence-audit-output-root": 18,
       "evidence-dedup-root": 2,
       "evidence-registres-root": 35,
-      "evidence-reviews-root": 1586,
+      "evidence-reviews-root": 1589,
       "generated-authority-map": 1,
       "generated-path-classification-json": 1,
       "generated-path-classification-markdown": 1,
@@ -178051,9 +178119,9 @@
     "case_collisions_total": 0,
     "dangling_references_total": 17243,
     "generated_total": 9,
-    "load_bearing_total": 2112,
+    "load_bearing_total": 2115,
     "portability_violations_total": 0,
-    "tracked_total": 2256,
+    "tracked_total": 2259,
     "unclassified_total": 0,
     "unicode_anomalies_total": 0
   },
