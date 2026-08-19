@@ -1,0 +1,19 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "tests/test_renderers.py",
+   "description": "Le diff n'ajoute pas d'import de DeploymentPlan et la portion affichée du fichier ne permet pas de vérifier que ce nom est déjà dans le scope du module ; s'il est absent, test_compose_deux_plans_identites_disjointes échouera avec NameError.",
+   "preuve": "Hunk tests/test_renderers.py lignes +247-284 : construction `DeploymentPlan(plan_id=..., profile=..., target=..., services=..., model=..., embed_model=...)` sans hunk d'import correspondant dans le diff."
+  }
+ ],
+ "date_heure": "2026-08-19T07:50:58.330081+00:00",
+ "prompt_sha256": "9d603d5d8a568f59beb6605f191c1f6f8b5a43abb3a4382f082c29858622c811",
+ "reviewer_model": "Kimi-2.7",
+ "modele_servi": "kimi-27-openrouter",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}
