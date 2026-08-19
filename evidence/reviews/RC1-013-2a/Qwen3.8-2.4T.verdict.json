@@ -3,25 +3,25 @@
  "objections": [
   {
    "severite": "majeure",
-   "fichier": "Docs/exit-codes.json",
-   "description": "Le registre omet des codes significatifs explicitement listés dans l'annexe de reconnaissance, alors que la story impose que le contenu exact du registre provienne de cette annexe. Les codes `13` pour `loop` (L1254) et `9` pour `model` (L1016) sont absents de `codes_par_commande`, tandis que la documentation `Docs/reference/cli.md` les mentionne, créant une divergence entre registre et documentation.",
-   "preuve": "stories/RC1-013-increment2a-rapport-codes-sortie.md liste `loop` : `13` — budget `--max-iter` épuisé (L1254) et `model` : `9` — test de connexion échoué (L1016). Dans Docs/exit-codes.json, la section `loop` ne contient que 14/15/12 et la section `model` seulement les lignes 959/988/1012. Docs/reference/cli.md ajoute en revanche `- **13** — loop run budget --max-iter épuisé...` et `- **9** — model test test de connexion échoué...`."
+   "fichier": "scripts/gate_exit_codes.py",
+   "description": "Le livrable exige une vérification de la sous-chaîne littérale `return <code>` à la ligne indiquée. L'implémentation ne fait pas cette vérification littérale : elle accepte des espaces multiples après `return` et accepte aussi une forme `else <code>` en fin de ligne, ce qui peut valider une ligne ne contenant pas `return <code>` (par ex. une affectation ternaire `x = 1 if cond else 10`).",
+   "preuve": "lignes 75-77 : `pattern_return = rf\"(?<!\\d)return\\s+{code_int}(?!\\d)\"` ; `pattern_else = rf\"(?<!\\d)else\\s+{code_int}(?!\\d)\\s*$\"` ; `if not (re.search(pattern_return, contenu_reel) or re.search(pattern_else, contenu_rstrip)):`"
   },
   {
    "severite": "mineure",
-   "fichier": "scripts/gate_exit_codes.py",
-   "description": "La vérification n'est pas strictement la sous-chaîne littérale `return <code>` exigée par la story : l'implémentation utilise une expression rationnelle acceptant plusieurs caractères d'espacement après `return`, ce qui peut valider une ligne ne contenant pas la sous-chaîne littérale exacte `return <code>`.",
-   "preuve": "scripts/gate_exit_codes.py : `pattern = rf\"(?<!\\d)return\\s+{code_int}(?!\\d)\"`."
+   "fichier": "tests/test_gate_exit_codes.py",
+   "description": "Le scénario 'fichier registre absent/invalide' n'est pas vérifié au niveau de `main()` alors que le comportement attendu du gate est un retour 1 sur registre introuvable ou JSON invalide.",
+   "preuve": "tests `test_charger_registre_fichier_absent` et `test_charger_registre_json_invalide` utilisent seulement `pytest.raises` sur `charger_registre()` ; aucun test n'appelle `gate_exit_codes.main([])` avec un registre absent ou un fichier JSON invalide."
   },
   {
    "severite": "mineure",
-   "fichier": "scripts/gate_exit_codes.py",
-   "description": "Des entrées structurellement invalides du registre peuvent être ignorées silencieusement au lieu d'être signalées comme anomalies, ce qui affaiblit la validation du schéma attendu.",
-   "preuve": "scripts/gate_exit_codes.py : `if not isinstance(entrees, list): continue` puis `if not isinstance(entree, dict): continue`."
+   "fichier": "tests/test_gate_exit_codes.py",
+   "description": "Le cas de dérive demandé ('ligne modifiée pour ne plus contenir le bon `return N`, `main()` retourne 1') n'est pas testé en modifiant réellement une ligne de code ; il est simulé par monkeypatch de `anomalies()`.",
+   "preuve": "test `test_main_defaut_avec_derive_simulee_retourne_un` : `monkeypatch.setattr(gate_exit_codes, \"anomalies\", lambda *a, **k: [\"dérive simulée\"])`."
   }
  ],
- "date_heure": "2026-08-18T23:55:13.352491+00:00",
- "prompt_sha256": "144c8643ce6671d5c311a49a69b87abacd1dd161ebfd0f9893610de01021d8e6",
+ "date_heure": "2026-08-19T00:10:16.434472+00:00",
+ "prompt_sha256": "4fd0f0552c5010d0e297c3cf3747518439244e6626590482cefe1659cd001368",
  "reviewer_model": "Qwen3.8-2.4T",
  "modele_servi": "b9de6bc895fe95ccacf7d9fa9b1cf29ca44d34f03e249738f325c9dee3790b78",
  "gateway_resilience": {

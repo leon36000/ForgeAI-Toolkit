@@ -3,19 +3,13 @@
  "objections": [
   {
    "severite": "majeure",
-   "fichier": "Docs/exit-codes.json",
-   "description": "Le registre censé constituer l'inventaire exhaustif omet le code spécifique 13 de `loop run`. La documentation le mentionne, mais aucune entrée JSON ne le porte : le registre n'est donc pas la source de vérité exhaustive demandée.",
-   "preuve": "L'annexe `stories/RC1-013-increment2a-rapport-codes-sortie.md`, lignes 39-40, recense `13` pour `loop run` à la ligne 1254. `Docs/reference/cli.md` ajouté, section `forgeai loop`, documente également `**13**`. Dans `Docs/exit-codes.json`, le tableau `codes_par_commande.loop` ne contient que les codes 14 (ligne 1241), 15 (ligne 1245) et 12 (ligne 1248), et aucune occurrence de `\"code\": 13` n'existe."
-  },
-  {
-   "severite": "majeure",
    "fichier": "scripts/gate_exit_codes.py",
-   "description": "Le gate accepte des registres JSON structurellement invalides au regard du schéma imposé, notamment un objet vide ou un `_schema` erroné, et retourne alors 0 sans contrôler aucune entrée. Il ne valide ni `_schema`, ni `codes_globaux`, ni la structure obligatoire des entrées.",
-   "preuve": "Aux lignes 103-108, seul le type racine puis le type de `codes_par_commande` sont contrôlés, avec `registre.get(\"codes_par_commande\", {})` : `{}` est donc accepté. Aux lignes 117-122, ce registre donne `n = 0`; puis, sans anomalie, la ligne 134 retourne 0. Un contenu tel que `{\"_schema\":\"autre\",\"codes_par_commande\":{}}` est également accepté, alors que le schéma demandé impose `_schema: \"exit-codes-v1\"`, `codes_globaux` et des entrées `code`/`ligne`/`signification`."
+   "description": "Le gate ne respecte pas la vérification exigée de la sous-chaîne littérale `return <code>` : il accepte aussi un `else <code>` terminal dans une expression ternaire. Une entrée de registre peut donc être validée alors que la ligne indiquée ne contient pas `return <code>` comme requis.",
+   "preuve": "`anomalies()` définit `pattern_else = rf\"(?<!\\\\d)else\\\\s+{code_int}(?!\\\\d)\\\\s*$\"` et accepte la ligne si `re.search(pattern_return, ...) or re.search(pattern_else, ...)` (lignes 72-74). Le test `test_anomalies_pattern_ternaire_else_n_en_fin_ligne_pas_anomalie` confirme explicitement que `return 0 if x else 9` valide une entrée pour le code 9, bien que cette ligne ne contienne pas la sous-chaîne `return 9`."
   }
  ],
- "date_heure": "2026-08-18T23:53:57.563194+00:00",
- "prompt_sha256": "144c8643ce6671d5c311a49a69b87abacd1dd161ebfd0f9893610de01021d8e6",
+ "date_heure": "2026-08-19T00:07:50.387040+00:00",
+ "prompt_sha256": "4fd0f0552c5010d0e297c3cf3747518439244e6626590482cefe1659cd001368",
  "reviewer_model": "GPT-5.6-Terra-Pro",
  "modele_servi": "gpt56-terra-pro-openrouter",
  "gateway_resilience": {

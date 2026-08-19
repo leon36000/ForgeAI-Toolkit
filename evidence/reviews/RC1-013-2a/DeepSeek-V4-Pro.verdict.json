@@ -3,25 +3,13 @@
  "objections": [
   {
    "severite": "majeure",
-   "fichier": "Docs/exit-codes.json",
-   "description": "Le registre n'est pas exhaustif par rapport à l'annexe de reconnaissance : il omet le code 13 de `loop run` (budget --max-iter épuisé, L1254) et le code 9 de `model test` (test de connexion échoué, L1016), pourtant listés comme codes significatifs. Le gate ne vérifiera donc pas ces deux codes, contrairement au critère « une entrée par code significatif trouvé dans l'annexe ».",
-   "preuve": "Le JSON ne contient ni `\"code\": 13` ni d'entrée `model` à `ligne: 1016` ; l'annexe `stories/RC1-013-increment2a-rapport-codes-sortie.md` cite `13` (L1254) et `9` (L1016)."
-  },
-  {
-   "severite": "majeure",
    "fichier": "scripts/gate_exit_codes.py",
-   "description": "Le gate ignore silencieusement les structures de registre malformées (valeurs non-listes ou entrées non-objets), ce qui peut le faire réussir sans vérifier aucune entrée. Un registre JSON valide comme `{\"codes_par_commande\": {\"cmd\": {\"code\": 10, \"ligne\": 1126}}}` produit 0 anomalie et n=0, puis `main()` retourne 0.",
-   "preuve": "`for commande, entrees in codes_par_commande.items(): if not isinstance(entrees, list): continue` et `for entree in entrees: if not isinstance(entree, dict): continue` ; `n = sum(len(v) for v in codes_par_commande.values() if isinstance(v, list))` ; aucune anomalie n'est ajoutée pour ces types."
-  },
-  {
-   "severite": "mineure",
-   "fichier": "tests/test_gate_exit_codes.py",
-   "description": "Le scénario « fichier registre absent/invalide » n'est testé qu'au niveau de `charger_registre()` et pas au niveau de `main()`, alors que le comportement attendu du gate est que `main()` retourne 1 sur registre absent ou JSON invalide.",
-   "preuve": "`test_charger_registre_fichier_absent` et `test_charger_registre_json_invalide` utilisent `pytest.raises` ; aucun test n'appelle `gate_exit_codes.main([])` avec un chemin absent ou un JSON invalide pour vérifier le retour 1."
+   "description": "Le gate n'impose pas la sous-chaîne `return <code>` pour toutes les entrées : la branche `pattern_else` accepte toute ligne se terminant par `else <code>` sans exiger de `return` devant. Une ligne modifiée comme `x = 1 if cond else 9` serait validée pour le code 9 alors qu'elle ne contient pas de `return`, ce qui peut laisser passer une dérive du code.",
+   "preuve": "`pattern_else = rf'(?<!\\d)else\\s+{code_int}(?!\\d)\\s*$'` puis `if not (re.search(pattern_return, contenu_reel) or re.search(pattern_else, contenu_rstrip))` dans scripts/gate_exit_codes.py."
   }
  ],
- "date_heure": "2026-08-18T23:56:19.359084+00:00",
- "prompt_sha256": "144c8643ce6671d5c311a49a69b87abacd1dd161ebfd0f9893610de01021d8e6",
+ "date_heure": "2026-08-19T00:10:45.327492+00:00",
+ "prompt_sha256": "4fd0f0552c5010d0e297c3cf3747518439244e6626590482cefe1659cd001368",
  "reviewer_model": "DeepSeek-V4-Pro",
  "modele_servi": "deepseek-v4-pro-direct",
  "gateway_resilience": {
