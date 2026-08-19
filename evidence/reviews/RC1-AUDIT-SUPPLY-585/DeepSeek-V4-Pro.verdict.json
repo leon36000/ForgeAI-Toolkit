@@ -1,15 +1,8 @@
 {
  "verdict": "APPROVE",
- "objections": [
-  {
-   "severite": "mineure",
-   "fichier": "evidence/registres/mission.jsonl",
-   "description": "La story exige une preuve d'exécution CLI réelle de python3 scripts/catalogue_gate.py ; le diff ne contient aucune sortie brute de cette commande, seulement un résumé déclaratif dans le registre de mission.",
-   "preuve": "evidence/registres/mission.jsonl:497 contient uniquement resume:'validation type JSON Schema au gate catalogue... zero regression 1576 entrees reelles' ; aucune sortie de script n'est incluse dans le diff."
-  }
- ],
- "date_heure": "2026-08-19T03:27:53.462107+00:00",
- "prompt_sha256": "f7ac0d33c5ad60a8cc4838c1b64d971a2e30a01a6b1b1a2bdb57b20ec3054bc5",
+ "objections": [],
+ "date_heure": "2026-08-19T03:32:29.174472+00:00",
+ "prompt_sha256": "2e3c3ebae18f1daddee47a8ae4863f871999c82299efabc126c61c5be547615d",
  "reviewer_model": "DeepSeek-V4-Pro",
  "modele_servi": "deepseek-v4-pro-direct",
  "gateway_resilience": {
