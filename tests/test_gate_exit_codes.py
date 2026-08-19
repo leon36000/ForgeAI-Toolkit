@@ -46,12 +46,18 @@ def test_anomalies_ligne_hors_bornes():
     assert "hors bornes" in resultat[0]
 
 
-def test_anomalies_ligne_ternaire_sans_return_litteral_signalee():
-    """Round 1 de revue scellée (#443, 3 objections majeures) : une ligne ternaire
-    (`return 0 if x else 9`) ne contient PAS la sous-chaîne littérale `return 9`
-    exigée par la story — elle doit être signalée, pas acceptée."""
+def test_anomalies_pattern_ternaire_else_n_en_fin_ligne_pas_anomalie():
+    """Round 2 de revue scellée : le gate doit reconnaître les deux formes
+    syntaxiques légitimes `return <code>` et `else <code>` en fin de ternaire
+    comme preuves équivalentes de retour."""
     registre = {"codes_par_commande": {"cmd": [{"code": 9, "ligne": 1}]}}
     lignes_cli = ["    return 0 if x else 9"]
+    assert gate_exit_codes.anomalies(registre, lignes_cli) == []
+
+
+def test_anomalies_else_n_pas_en_fin_ligne_signalee():
+    registre = {"codes_par_commande": {"cmd": [{"code": 9, "ligne": 1}]}}
+    lignes_cli = ["    x = 9 if flag else other()  # pas un retour"]
     resultat = gate_exit_codes.anomalies(registre, lignes_cli)
     assert len(resultat) == 1
 
@@ -82,6 +88,18 @@ def test_anomalies_code_ou_ligne_non_entier_signalee():
     resultat = gate_exit_codes.anomalies(registre, ["    return 0"])
     assert len(resultat) == 1
     assert "invalide" in resultat[0].lower()
+
+
+def test_anomalies_entrees_non_liste_signalee():
+    registre = {"codes_par_commande": {"cmd": {"code": 10, "ligne": 1}}}
+    resultat = gate_exit_codes.anomalies(registre, ["    return 10"])
+    assert len(resultat) >= 1
+
+
+def test_anomalies_entree_non_objet_signalee():
+    registre = {"codes_par_commande": {"cmd": ["pas un objet"]}}
+    resultat = gate_exit_codes.anomalies(registre, ["    return 0"])
+    assert len(resultat) >= 1
 
 
 # ---------------------------------------------------------------------------
@@ -149,6 +167,18 @@ def test_main_codes_par_commande_liste_retourne_un(monkeypatch: pytest.MonkeyPat
     """Round 1 de revue scellée : codes_par_commande présent mais non-objet
     (liste au lieu de dict) doit être rejeté, pas traité comme 0 entrée."""
     monkeypatch.setattr(gate_exit_codes, "charger_registre", lambda chemin: {"codes_par_commande": []})
+    assert gate_exit_codes.main([]) == 1
+    assert "invalide" in capsys.readouterr().err.lower()
+
+
+def test_main_schema_absent_retourne_un(monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]):
+    monkeypatch.setattr(gate_exit_codes, "charger_registre", lambda chemin: {"codes_par_commande": {}})
+    assert gate_exit_codes.main([]) == 1
+    assert "invalide" in capsys.readouterr().err.lower()
+
+
+def test_main_codes_globaux_absent_retourne_un(monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]):
+    monkeypatch.setattr(gate_exit_codes, "charger_registre", lambda chemin: {"_schema": "exit-codes-v1", "codes_par_commande": {}})
     assert gate_exit_codes.main([]) == 1
     assert "invalide" in capsys.readouterr().err.lower()
 

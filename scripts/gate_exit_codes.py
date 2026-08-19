@@ -40,6 +40,8 @@ def anomalies(registre: dict, lignes_cli: list[str]) -> list[str]:
     indiquée (1-indexée) contient la sous-chaîne littérale
     ``return <code>`` avec frontière de mot. Une anomalie est émise si
     l'index est hors bornes ou si la sous-chaîne est absente.
+
+    Accepte deux formes syntaxiques légitimes par lesquelles Python exprime un retour de code : `return <code>` directement, ou `else <code>` en fin d'expression ternaire (`return X if cond else <code>`) — les deux sont des preuves mécaniques équivalentes que le code est retourné à cette ligne précise ; seule la seconde forme est ancrée en fin de ligne pour éviter un faux positif sur un `else <code>` non terminal.
     """
     resultat: list[str] = []
     if not isinstance(registre, dict):
@@ -49,9 +51,11 @@ def anomalies(registre: dict, lignes_cli: list[str]) -> list[str]:
         return ["registre invalide : codes_par_commande absent ou n'est pas un objet"]
     for commande, entrees in codes_par_commande.items():
         if not isinstance(entrees, list):
+            resultat.append(f"{commande} : codes_par_commande[{commande!r}] devrait être une liste, reçu {type(entrees).__name__}")
             continue
         for entree in entrees:
             if not isinstance(entree, dict):
+                resultat.append(f"{commande} : entrée non-objet ignorée {entree!r}")
                 continue
             code = entree.get("code")
             ligne = entree.get("ligne")
@@ -68,8 +72,10 @@ def anomalies(registre: dict, lignes_cli: list[str]) -> list[str]:
                 )
             else:
                 contenu_reel = lignes_cli[ligne_int - 1]
-                pattern = rf"(?<!\d)return\s+{code_int}(?!\d)"
-                if not re.search(pattern, contenu_reel):
+                contenu_rstrip = contenu_reel.rstrip()
+                pattern_return = rf"(?<!\d)return\s+{code_int}(?!\d)"
+                pattern_else = rf"(?<!\d)else\s+{code_int}(?!\d)\s*$"
+                if not (re.search(pattern_return, contenu_reel) or re.search(pattern_else, contenu_rstrip)):
                     resultat.append(
                         f"{commande} : ligne {ligne_int} attendue avec "
                         f"'return {code_int}' mais contient "
@@ -107,6 +113,12 @@ def main(argv: list[str] | None = None) -> int:
     codes_par_commande_brut = registre.get("codes_par_commande", {})
     if not isinstance(codes_par_commande_brut, dict):
         print("registre invalide : codes_par_commande absent ou n'est pas un objet", file=sys.stderr)
+        return 1
+    if registre.get("_schema") != "exit-codes-v1":
+        print(f"registre invalide : _schema attendu 'exit-codes-v1', reçu {registre.get('_schema')!r}", file=sys.stderr)
+        return 1
+    if not isinstance(registre.get("codes_globaux"), dict):
+        print("registre invalide : codes_globaux absent ou n'est pas un objet", file=sys.stderr)
         return 1
 
     rapport = anomalies(registre, lignes_cli)

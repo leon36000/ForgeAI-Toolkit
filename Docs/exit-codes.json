@@ -103,6 +103,11 @@
         "code": 12,
         "ligne": 1248,
         "signification": "loop run échec de boucle générique (LoopError)"
+      },
+      {
+        "code": 13,
+        "ligne": 1254,
+        "signification": "loop run budget --max-iter épuisé sans que --until réussisse"
       }
     ],
     "model": [
@@ -120,6 +125,11 @@
         "code": 9,
         "ligne": 1012,
         "signification": "model test route/passphrase invalide (RouteError/KeyError)"
+      },
+      {
+        "code": 9,
+        "ligne": 1016,
+        "signification": "model test test de connexion échoué (result.ok faux)"
       }
     ],
     "node": [

@@ -49,14 +49,14 @@ Ces codes s'appliquent à toute commande :
 - **14** — loop run timeout d'une commande step/until (RunnerTimeoutError)
 - **15** — loop run commande annulée (RunnerCancelledError)
 - **12** — loop run échec de boucle générique (LoopError)
-- **13** — loop run budget --max-iter épuisé sans que --until réussisse (retour exprimé par une expression ternaire en fin de fonction, non couvert par le gate mécanique qui vérifie littéralement `return <code>`)
+- **13** — loop run budget --max-iter épuisé sans que --until réussisse
 
 ### forgeai model
 
 - **9** — model add-cloud RouteError
 - **9** — model add-local LocalModelError
 - **9** — model test route/passphrase invalide (RouteError/KeyError)
-- **9** — model test test de connexion échoué (result.ok faux) (retour exprimé par une expression ternaire en fin de fonction, non couvert par le gate mécanique qui vérifie littéralement `return <code>`)
+- **9** — model test test de connexion échoué (result.ok faux)
 
 ### forgeai node
 
