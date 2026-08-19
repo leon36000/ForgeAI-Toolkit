@@ -750,7 +750,7 @@
     },
     {
       "path": "tests/test_renderers.py",
-      "sha256": "46639ff00a776777090f23d11ff49af3f251b9af671c4918e03f390ebbd5d6bc"
+      "sha256": "01fdbf3a89e50106262c13794498d88a0e3ada9f3329bf6affe5a56eb76db83e"
     },
     {
       "path": "tests/test_res_classes_stack_minimal.py",

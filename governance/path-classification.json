@@ -57361,7 +57361,7 @@
         }
       ],
       "rule_id": "test-suite",
-      "sha256": "46639ff00a776777090f23d11ff49af3f251b9af671c4918e03f390ebbd5d6bc",
+      "sha256": "01fdbf3a89e50106262c13794498d88a0e3ada9f3329bf6affe5a56eb76db83e",
       "size": 13844,
       "target_path": null,
       "type": "text"
@@ -142173,37 +142173,37 @@
       },
       {
         "candidate": "100m/128Mi",
-        "line": 174,
+        "line": 137,
         "referrer": "tests/test_renderers.py"
       },
       {
         "candidate": "CPU/1Gi",
-        "line": 174,
+        "line": 137,
         "referrer": "tests/test_renderers.py"
       },
       {
         "candidate": "ollama/ollama",
-        "line": 197,
+        "line": 160,
         "referrer": "tests/test_renderers.py"
       },
       {
         "candidate": "qdrant/qdrant",
-        "line": 206,
+        "line": 169,
         "referrer": "tests/test_renderers.py"
       },
       {
         "candidate": "Mi/Gi",
-        "line": 228,
+        "line": 191,
         "referrer": "tests/test_renderers.py"
       },
       {
         "candidate": "CPU/m",
-        "line": 278,
+        "line": 241,
         "referrer": "tests/test_renderers.py"
       },
       {
         "candidate": "ollama/ollama",
-        "line": 279,
+        "line": 242,
         "referrer": "tests/test_renderers.py"
       },
       {
