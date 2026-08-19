@@ -118,3 +118,76 @@ def test_champ_requis_manquant_detecte():
               "additionalProperties": False}
     v = schema_violations([{"id": "a"}], schema)
     assert any("requis manquant" in s for s in v)
+
+
+def test_verified_string_au_lieu_de_boolean_detecte():
+    from scripts.catalogue_gate import schema_violations
+    schema = {
+        "properties": {
+            "id": {"type": "string"},
+            "name": {"type": "string"},
+            "verified": {"type": "boolean"},
+        },
+        "required": ["id", "name"],
+        "additionalProperties": False,
+    }
+    entries = [{"id": "a", "name": "n", "verified": "false"}]
+    v = schema_violations(entries, schema)
+    assert any("verified" in s and "type invalide" in s for s in v), f"Attendu violation type pour verified, obtenu : {v}"
+    assert any("attendu 'boolean'" in s for s in v)
+
+
+def test_string_recoit_entier_detecte():
+    from scripts.catalogue_gate import schema_violations
+    schema = {
+        "properties": {
+            "id": {"type": "string"},
+            "name": {"type": "string"},
+        },
+        "required": ["id", "name"],
+        "additionalProperties": False,
+    }
+    entries = [{"id": "a", "name": 123}]
+    v = schema_violations(entries, schema)
+    assert any("name" in s and "type invalide" in s for s in v), f"Attendu violation type pour name, obtenu : {v}"
+    assert any("attendu 'string'" in s for s in v)
+
+
+def test_type_union_boolean_null_accepte_true_false_none():
+    from scripts.catalogue_gate import schema_violations
+    schema = {
+        "properties": {
+            "id": {"type": "string"},
+            "name": {"type": "string"},
+            "default": {"type": ["boolean", "null"]},
+        },
+        "required": ["id", "name"],
+        "additionalProperties": False,
+    }
+    for valeur in [True, False, None]:
+        entries = [{"id": "a", "name": "n", "default": valeur}]
+        v = schema_violations(entries, schema)
+        assert v == [], f"Aucune violation attendue pour default={valeur!r}, obtenu : {v}"
+    # Contre-exemple : une chaîne ne doit pas passer pour ce type union
+    entries = [{"id": "a", "name": "n", "default": "true"}]
+    v = schema_violations(entries, schema)
+    assert any("default" in s and "type invalide" in s for s in v)
+
+
+def test_champ_requis_absent_pas_de_double_violation_type():
+    from scripts.catalogue_gate import schema_violations
+    schema = {
+        "properties": {
+            "id": {"type": "string"},
+            "name": {"type": "string"},
+            "verified": {"type": "boolean"},
+        },
+        "required": ["id", "name", "verified"],
+        "additionalProperties": False,
+    }
+    entries = [{"id": "a", "name": "n"}]
+    v = schema_violations(entries, schema)
+    # Une seule violation "requis manquant" pour verified, pas de "type invalide" en plus
+    assert len([s for s in v if "verified" in s]) == 1, f"Une seule violation attendue pour verified absent, obtenu : {v}"
+    assert any("requis manquant" in s and "verified" in s for s in v)
+    assert not any("type invalide" in s and "verified" in s for s in v)
