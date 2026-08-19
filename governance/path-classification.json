@@ -6884,8 +6884,8 @@
         }
       ],
       "rule_id": "evidence-registres-root",
-      "sha256": "a27015dee695bbab8cd02951ccc791155831771ccba8a50e1c8d4f4431ee6717",
-      "size": 398502,
+      "sha256": "ba5b071dbcc26ce30373cf01d1b1fb164ff61ceddee07301c52bfed81a4880a6",
+      "size": 399013,
       "target_path": null,
       "type": "text"
     },
@@ -43706,11 +43706,25 @@
           "referrer": "governance/ruff-baseline.json",
           "resolved": "src/forgeai/rag/client.py",
           "severity": "hard"
+        },
+        {
+          "candidate": "src/forgeai/rag/client.py",
+          "line": 5,
+          "referrer": "stories/RC1-AUDIT-RAG-584-qdrant-ids.md",
+          "resolved": "src/forgeai/rag/client.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "src/forgeai/rag/client.py",
+          "line": 18,
+          "referrer": "stories/RC1-AUDIT-RAG-584-qdrant-ids.md",
+          "resolved": "src/forgeai/rag/client.py",
+          "severity": "hard"
         }
       ],
       "rule_id": "product-source",
-      "sha256": "c3a461da380566c20bcf1dd35984bfc12838c0ccec51178489ef69c9dbf14ded",
-      "size": 4807,
+      "sha256": "d50659fff8051b5d982670330f15f7631d983deae063437440cee68f6d081bd5",
+      "size": 4951,
       "target_path": null,
       "type": "text"
     },
@@ -47589,6 +47603,19 @@
       "rule_id": "governance-stories",
       "sha256": "3296e9389ec23f689937be2fc068d54754b33d770300c70e4f15501bbbc855d6",
       "size": 4557,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "GOVERNANCE",
+      "generated": false,
+      "load_bearing": false,
+      "owner": "gouvernance-stories",
+      "path": "stories/RC1-AUDIT-RAG-584-qdrant-ids.md",
+      "referenced_by": [],
+      "rule_id": "governance-stories",
+      "sha256": "2cd0bf00001eb2c73e129f9956ffcb668427b1c34c33d73e25e047de70b5eb4e",
+      "size": 4096,
       "target_path": null,
       "type": "text"
     },
@@ -55262,11 +55289,18 @@
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_rag_units.py",
           "severity": "hard"
+        },
+        {
+          "candidate": "tests/test_rag_units.py",
+          "line": 48,
+          "referrer": "stories/RC1-AUDIT-RAG-584-qdrant-ids.md",
+          "resolved": "tests/test_rag_units.py",
+          "severity": "hard"
         }
       ],
       "rule_id": "test-suite",
-      "sha256": "766111867a8797b49729523922615864192b33b808d47f96c9693c0ccfc188d9",
-      "size": 3386,
+      "sha256": "58b3d3a09e20b7f4026ff82debe98536f76ac5fbba6900772958fdd643ad9010",
+      "size": 4936,
       "target_path": null,
       "type": "text"
     },
@@ -55841,6 +55875,13 @@
           "candidate": "tests/test_rc1580_tests_aggregate.py",
           "line": 696,
           "referrer": "governance/STATE-CURRENT.md",
+          "resolved": "tests/test_rc1580_tests_aggregate.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "tests/test_rc1580_tests_aggregate.py",
+          "line": 65,
+          "referrer": "stories/RC1-AUDIT-RAG-584-qdrant-ids.md",
           "resolved": "tests/test_rc1580_tests_aggregate.py",
           "severity": "hard"
         }
@@ -122727,12 +122768,12 @@
       },
       {
         "candidate": "application/json",
-        "line": 21,
+        "line": 22,
         "referrer": "src/forgeai/rag/client.py"
       },
       {
         "candidate": "application/json",
-        "line": 31,
+        "line": 32,
         "referrer": "src/forgeai/rag/client.py"
       },
       {
@@ -129669,6 +129710,31 @@
         "candidate": "origin/main...HEAD",
         "line": 74,
         "referrer": "stories/RC1-569.md"
+      },
+      {
+        "candidate": ".../points",
+        "line": 9,
+        "referrer": "stories/RC1-AUDIT-RAG-584-qdrant-ids.md"
+      },
+      {
+        "candidate": "a.md",
+        "line": 13,
+        "referrer": "stories/RC1-AUDIT-RAG-584-qdrant-ids.md"
+      },
+      {
+        "candidate": "b.md",
+        "line": 13,
+        "referrer": "stories/RC1-AUDIT-RAG-584-qdrant-ids.md"
+      },
+      {
+        "candidate": "a.md",
+        "line": 51,
+        "referrer": "stories/RC1-AUDIT-RAG-584-qdrant-ids.md"
+      },
+      {
+        "candidate": "b.md",
+        "line": 51,
+        "referrer": "stories/RC1-AUDIT-RAG-584-qdrant-ids.md"
       },
       {
         "candidate": "hash/HMAC",
@@ -138118,6 +138184,36 @@
       {
         "candidate": "tests/",
         "line": 1,
+        "referrer": "tests/test_rag_units.py"
+      },
+      {
+        "candidate": "a.md",
+        "line": 98,
+        "referrer": "tests/test_rag_units.py"
+      },
+      {
+        "candidate": "b.md",
+        "line": 100,
+        "referrer": "tests/test_rag_units.py"
+      },
+      {
+        "candidate": "texte/source",
+        "line": 108,
+        "referrer": "tests/test_rag_units.py"
+      },
+      {
+        "candidate": "same.md",
+        "line": 112,
+        "referrer": "tests/test_rag_units.py"
+      },
+      {
+        "candidate": "source1.md",
+        "line": 125,
+        "referrer": "tests/test_rag_units.py"
+      },
+      {
+        "candidate": "source2.md",
+        "line": 127,
         "referrer": "tests/test_rag_units.py"
       },
       {
@@ -175447,6 +175543,34 @@
         "severity": "hard"
       },
       {
+        "candidate": "src/forgeai/rag/client.py",
+        "line": 5,
+        "referrer": "stories/RC1-AUDIT-RAG-584-qdrant-ids.md",
+        "resolved": "src/forgeai/rag/client.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "src/forgeai/rag/client.py",
+        "line": 18,
+        "referrer": "stories/RC1-AUDIT-RAG-584-qdrant-ids.md",
+        "resolved": "src/forgeai/rag/client.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "tests/test_rag_units.py",
+        "line": 48,
+        "referrer": "stories/RC1-AUDIT-RAG-584-qdrant-ids.md",
+        "resolved": "tests/test_rag_units.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "tests/test_rc1580_tests_aggregate.py",
+        "line": 65,
+        "referrer": "stories/RC1-AUDIT-RAG-584-qdrant-ids.md",
+        "resolved": "tests/test_rc1580_tests_aggregate.py",
+        "severity": "hard"
+      },
+      {
         "candidate": "src/forgeai/data/catalogue.schema.json",
         "line": 5,
         "referrer": "stories/RC1-AUDIT-SUPPLY-585-catalogue-types.md",
@@ -178088,7 +178212,7 @@
       "DOCS": 18,
       "EVIDENCE": 1645,
       "GENERATED": 5,
-      "GOVERNANCE": 207,
+      "GOVERNANCE": 208,
       "PRODUCT": 113,
       "TEST": 218,
       "WORKING": 10
@@ -178134,7 +178258,7 @@
       "governance-scripts-coordination": 4,
       "governance-scripts-governance": 12,
       "governance-scripts-root": 30,
-      "governance-stories": 95,
+      "governance-stories": 96,
       "product-catalogue-checksum": 1,
       "product-source": 112,
       "test-suite": 218,
@@ -178142,11 +178266,11 @@
       "working-sandbox-readme": 1
     },
     "case_collisions_total": 0,
-    "dangling_references_total": 17244,
+    "dangling_references_total": 17255,
     "generated_total": 9,
     "load_bearing_total": 2116,
     "portability_violations_total": 0,
-    "tracked_total": 2260,
+    "tracked_total": 2261,
     "unclassified_total": 0,
     "unicode_anomalies_total": 0
   },
