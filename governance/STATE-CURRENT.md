@@ -646,7 +646,7 @@
     },
     {
       "path": "tests/test_rag_units.py",
-      "sha256": "766111867a8797b49729523922615864192b33b808d47f96c9693c0ccfc188d9"
+      "sha256": "58b3d3a09e20b7f4026ff82debe98536f76ac5fbba6900772958fdd643ad9010"
     },
     {
       "path": "tests/test_rall.py",
@@ -979,7 +979,7 @@
   "tests": {
     "js_files": 3,
     "python_files": 203,
-    "python_functions_declared": 2611
+    "python_functions_declared": 2614
   }
 }
 ```

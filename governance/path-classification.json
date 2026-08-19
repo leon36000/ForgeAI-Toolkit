@@ -6884,8 +6884,8 @@
         }
       ],
       "rule_id": "evidence-registres-root",
-      "sha256": "a27015dee695bbab8cd02951ccc791155831771ccba8a50e1c8d4f4431ee6717",
-      "size": 398502,
+      "sha256": "ba5b071dbcc26ce30373cf01d1b1fb164ff61ceddee07301c52bfed81a4880a6",
+      "size": 399013,
       "target_path": null,
       "type": "text"
     },
@@ -8845,8 +8845,8 @@
         }
       ],
       "rule_id": "evidence-reviews-root",
-      "sha256": "0c21af3e54f648367954d48ce5df9f6a7a10685cd3dd452198901204ca77c66e",
-      "size": 2916,
+      "sha256": "9e3c255167cf30387ea555e9460c5ae72feb0ebf7a076eee9d653981a0efebe5",
+      "size": 2934,
       "target_path": null,
       "type": "text"
     },
@@ -24072,6 +24072,58 @@
       "load_bearing": true,
       "owner": "gouvernance-preuve",
       "path": "evidence/reviews/RC1-580-v2/RECU.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": null,
+      "size": null,
+      "target_path": null,
+      "type": null
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-AUDIT-RAG-584/DeepSeek-V4-Pro.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "48509fb3b0bc0ceac21d66837c8eac63672d6c550e3096a5947a862cfb76515d",
+      "size": 328,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-AUDIT-RAG-584/GPT-5.6-Terra-Pro.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "76c5a8851cd44d4bc89fd9aa4b1bc27067dace7aeaed1b7000d6bbac9c22f99e",
+      "size": 334,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-AUDIT-RAG-584/Qwen3.8-2.4T.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "0c28aa1ddbce663cee621d78a2479f335cb8464c114faf1fb50c16d11ed4b71b",
+      "size": 367,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-AUDIT-RAG-584/RECU.json",
       "referenced_by": [],
       "rule_id": "evidence-reviews-root",
       "sha256": null,
@@ -43706,11 +43758,25 @@
           "referrer": "governance/ruff-baseline.json",
           "resolved": "src/forgeai/rag/client.py",
           "severity": "hard"
+        },
+        {
+          "candidate": "src/forgeai/rag/client.py",
+          "line": 5,
+          "referrer": "stories/RC1-AUDIT-RAG-584-qdrant-ids.md",
+          "resolved": "src/forgeai/rag/client.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "src/forgeai/rag/client.py",
+          "line": 18,
+          "referrer": "stories/RC1-AUDIT-RAG-584-qdrant-ids.md",
+          "resolved": "src/forgeai/rag/client.py",
+          "severity": "hard"
         }
       ],
       "rule_id": "product-source",
-      "sha256": "c3a461da380566c20bcf1dd35984bfc12838c0ccec51178489ef69c9dbf14ded",
-      "size": 4807,
+      "sha256": "d50659fff8051b5d982670330f15f7631d983deae063437440cee68f6d081bd5",
+      "size": 4951,
       "target_path": null,
       "type": "text"
     },
@@ -47589,6 +47655,19 @@
       "rule_id": "governance-stories",
       "sha256": "3296e9389ec23f689937be2fc068d54754b33d770300c70e4f15501bbbc855d6",
       "size": 4557,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "GOVERNANCE",
+      "generated": false,
+      "load_bearing": false,
+      "owner": "gouvernance-stories",
+      "path": "stories/RC1-AUDIT-RAG-584-qdrant-ids.md",
+      "referenced_by": [],
+      "rule_id": "governance-stories",
+      "sha256": "2cd0bf00001eb2c73e129f9956ffcb668427b1c34c33d73e25e047de70b5eb4e",
+      "size": 4096,
       "target_path": null,
       "type": "text"
     },
@@ -55262,11 +55341,18 @@
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_rag_units.py",
           "severity": "hard"
+        },
+        {
+          "candidate": "tests/test_rag_units.py",
+          "line": 48,
+          "referrer": "stories/RC1-AUDIT-RAG-584-qdrant-ids.md",
+          "resolved": "tests/test_rag_units.py",
+          "severity": "hard"
         }
       ],
       "rule_id": "test-suite",
-      "sha256": "766111867a8797b49729523922615864192b33b808d47f96c9693c0ccfc188d9",
-      "size": 3386,
+      "sha256": "58b3d3a09e20b7f4026ff82debe98536f76ac5fbba6900772958fdd643ad9010",
+      "size": 4936,
       "target_path": null,
       "type": "text"
     },
@@ -55841,6 +55927,13 @@
           "candidate": "tests/test_rc1580_tests_aggregate.py",
           "line": 696,
           "referrer": "governance/STATE-CURRENT.md",
+          "resolved": "tests/test_rc1580_tests_aggregate.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "tests/test_rc1580_tests_aggregate.py",
+          "line": 65,
+          "referrer": "stories/RC1-AUDIT-RAG-584-qdrant-ids.md",
           "resolved": "tests/test_rc1580_tests_aggregate.py",
           "severity": "hard"
         }
@@ -98883,6 +98976,11 @@
       {
         "candidate": "recu-revue/1",
         "line": 2,
+        "referrer": "evidence/reviews/RC1-AUDIT-RAG-584/RECU.json"
+      },
+      {
+        "candidate": "recu-revue/1",
+        "line": 2,
         "referrer": "evidence/reviews/RC1-AUDIT-SUPPLY-585/RECU.json"
       },
       {
@@ -122727,12 +122825,12 @@
       },
       {
         "candidate": "application/json",
-        "line": 21,
+        "line": 22,
         "referrer": "src/forgeai/rag/client.py"
       },
       {
         "candidate": "application/json",
-        "line": 31,
+        "line": 32,
         "referrer": "src/forgeai/rag/client.py"
       },
       {
@@ -129669,6 +129767,31 @@
         "candidate": "origin/main...HEAD",
         "line": 74,
         "referrer": "stories/RC1-569.md"
+      },
+      {
+        "candidate": ".../points",
+        "line": 9,
+        "referrer": "stories/RC1-AUDIT-RAG-584-qdrant-ids.md"
+      },
+      {
+        "candidate": "a.md",
+        "line": 13,
+        "referrer": "stories/RC1-AUDIT-RAG-584-qdrant-ids.md"
+      },
+      {
+        "candidate": "b.md",
+        "line": 13,
+        "referrer": "stories/RC1-AUDIT-RAG-584-qdrant-ids.md"
+      },
+      {
+        "candidate": "a.md",
+        "line": 51,
+        "referrer": "stories/RC1-AUDIT-RAG-584-qdrant-ids.md"
+      },
+      {
+        "candidate": "b.md",
+        "line": 51,
+        "referrer": "stories/RC1-AUDIT-RAG-584-qdrant-ids.md"
       },
       {
         "candidate": "hash/HMAC",
@@ -138118,6 +138241,36 @@
       {
         "candidate": "tests/",
         "line": 1,
+        "referrer": "tests/test_rag_units.py"
+      },
+      {
+        "candidate": "a.md",
+        "line": 98,
+        "referrer": "tests/test_rag_units.py"
+      },
+      {
+        "candidate": "b.md",
+        "line": 100,
+        "referrer": "tests/test_rag_units.py"
+      },
+      {
+        "candidate": "texte/source",
+        "line": 108,
+        "referrer": "tests/test_rag_units.py"
+      },
+      {
+        "candidate": "same.md",
+        "line": 112,
+        "referrer": "tests/test_rag_units.py"
+      },
+      {
+        "candidate": "source1.md",
+        "line": 125,
+        "referrer": "tests/test_rag_units.py"
+      },
+      {
+        "candidate": "source2.md",
+        "line": 127,
         "referrer": "tests/test_rag_units.py"
       },
       {
@@ -147731,6 +147884,13 @@
         "line": 214,
         "referrer": "evidence/reviews/BINDING.txt",
         "resolved": "evidence/reviews/RC1-AUDIT-SUPPLY-585",
+        "severity": "hard"
+      },
+      {
+        "candidate": "RC1-AUDIT-RAG-584",
+        "line": 215,
+        "referrer": "evidence/reviews/BINDING.txt",
+        "resolved": "evidence/reviews/RC1-AUDIT-RAG-584",
         "severity": "hard"
       },
       {
@@ -175447,6 +175607,34 @@
         "severity": "hard"
       },
       {
+        "candidate": "src/forgeai/rag/client.py",
+        "line": 5,
+        "referrer": "stories/RC1-AUDIT-RAG-584-qdrant-ids.md",
+        "resolved": "src/forgeai/rag/client.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "src/forgeai/rag/client.py",
+        "line": 18,
+        "referrer": "stories/RC1-AUDIT-RAG-584-qdrant-ids.md",
+        "resolved": "src/forgeai/rag/client.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "tests/test_rag_units.py",
+        "line": 48,
+        "referrer": "stories/RC1-AUDIT-RAG-584-qdrant-ids.md",
+        "resolved": "tests/test_rag_units.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "tests/test_rc1580_tests_aggregate.py",
+        "line": 65,
+        "referrer": "stories/RC1-AUDIT-RAG-584-qdrant-ids.md",
+        "resolved": "tests/test_rc1580_tests_aggregate.py",
+        "severity": "hard"
+      },
+      {
         "candidate": "src/forgeai/data/catalogue.schema.json",
         "line": 5,
         "referrer": "stories/RC1-AUDIT-SUPPLY-585-catalogue-types.md",
@@ -178086,9 +178274,9 @@
     "by_class": {
       "ARCHIVE": 44,
       "DOCS": 18,
-      "EVIDENCE": 1645,
+      "EVIDENCE": 1649,
       "GENERATED": 5,
-      "GOVERNANCE": 207,
+      "GOVERNANCE": 208,
       "PRODUCT": 113,
       "TEST": 218,
       "WORKING": 10
@@ -178105,7 +178293,7 @@
       "evidence-audit-output-root": 18,
       "evidence-dedup-root": 2,
       "evidence-registres-root": 35,
-      "evidence-reviews-root": 1590,
+      "evidence-reviews-root": 1594,
       "generated-authority-map": 1,
       "generated-path-classification-json": 1,
       "generated-path-classification-markdown": 1,
@@ -178134,7 +178322,7 @@
       "governance-scripts-coordination": 4,
       "governance-scripts-governance": 12,
       "governance-scripts-root": 30,
-      "governance-stories": 95,
+      "governance-stories": 96,
       "product-catalogue-checksum": 1,
       "product-source": 112,
       "test-suite": 218,
@@ -178142,11 +178330,11 @@
       "working-sandbox-readme": 1
     },
     "case_collisions_total": 0,
-    "dangling_references_total": 17244,
+    "dangling_references_total": 17256,
     "generated_total": 9,
-    "load_bearing_total": 2116,
+    "load_bearing_total": 2120,
     "portability_violations_total": 0,
-    "tracked_total": 2260,
+    "tracked_total": 2265,
     "unclassified_total": 0,
     "unicode_anomalies_total": 0
   },
