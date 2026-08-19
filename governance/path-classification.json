@@ -8845,8 +8845,8 @@
         }
       ],
       "rule_id": "evidence-reviews-root",
-      "sha256": "0c21af3e54f648367954d48ce5df9f6a7a10685cd3dd452198901204ca77c66e",
-      "size": 2916,
+      "sha256": "9e3c255167cf30387ea555e9460c5ae72feb0ebf7a076eee9d653981a0efebe5",
+      "size": 2934,
       "target_path": null,
       "type": "text"
     },
@@ -24117,6 +24117,19 @@
       "size": 367,
       "target_path": null,
       "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-AUDIT-RAG-584/RECU.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": null,
+      "size": null,
+      "target_path": null,
+      "type": null
     },
     {
       "class": "EVIDENCE",
@@ -98963,6 +98976,11 @@
       {
         "candidate": "recu-revue/1",
         "line": 2,
+        "referrer": "evidence/reviews/RC1-AUDIT-RAG-584/RECU.json"
+      },
+      {
+        "candidate": "recu-revue/1",
+        "line": 2,
         "referrer": "evidence/reviews/RC1-AUDIT-SUPPLY-585/RECU.json"
       },
       {
@@ -147869,6 +147887,13 @@
         "severity": "hard"
       },
       {
+        "candidate": "RC1-AUDIT-RAG-584",
+        "line": 215,
+        "referrer": "evidence/reviews/BINDING.txt",
+        "resolved": "evidence/reviews/RC1-AUDIT-RAG-584",
+        "severity": "hard"
+      },
+      {
         "candidate": "scripts/gate_docs.py",
         "line": 11,
         "referrer": "sonar-project.properties",
@@ -178249,7 +178274,7 @@
     "by_class": {
       "ARCHIVE": 44,
       "DOCS": 18,
-      "EVIDENCE": 1648,
+      "EVIDENCE": 1649,
       "GENERATED": 5,
       "GOVERNANCE": 208,
       "PRODUCT": 113,
@@ -178268,7 +178293,7 @@
       "evidence-audit-output-root": 18,
       "evidence-dedup-root": 2,
       "evidence-registres-root": 35,
-      "evidence-reviews-root": 1593,
+      "evidence-reviews-root": 1594,
       "generated-authority-map": 1,
       "generated-path-classification-json": 1,
       "generated-path-classification-markdown": 1,
@@ -178305,11 +178330,11 @@
       "working-sandbox-readme": 1
     },
     "case_collisions_total": 0,
-    "dangling_references_total": 17255,
+    "dangling_references_total": 17256,
     "generated_total": 9,
-    "load_bearing_total": 2119,
+    "load_bearing_total": 2120,
     "portability_violations_total": 0,
-    "tracked_total": 2264,
+    "tracked_total": 2265,
     "unclassified_total": 0,
     "unicode_anomalies_total": 0
   },
