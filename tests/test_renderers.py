@@ -120,43 +120,6 @@ def test_compose_no_new_privileges_couvre_chaque_service():
     assert out.count("no-new-privileges:true") == len(plan.services)
 
 
-def test_compose_name_derive_du_plan_id():
-    plan = _plan()
-    out = render_compose(plan)
-    assert f"name: {plan.plan_id}" in out
-    assert "name: forgeai-minimal" not in out
-
-
-def test_compose_deux_plans_identites_disjointes():
-    plan_a = _plan()
-    plan_b = DeploymentPlan(
-        plan_id="p1-autre-plan", profile=plan_a.profile, target=plan_a.target,
-        services=plan_a.services, model=plan_a.model, embed_model=plan_a.embed_model,
-    )
-    name_a = [l for l in render_compose(plan_a).splitlines() if l.startswith("name:")][0]
-    name_b = [l for l in render_compose(plan_b).splitlines() if l.startswith("name:")][0]
-    assert name_a != name_b
-
-
-def test_compose_meme_plan_id_identite_stable():
-    """Reprise sur état existant : re-rendre le MÊME plan (même plan_id) produit
-    TOUJOURS la même identité — un `docker compose up` répété reconnecte la pile
-    existante au lieu d'en créer une nouvelle sous un nom différent."""
-    plan = _plan()
-    name_1 = [l for l in render_compose(plan).splitlines() if l.startswith("name:")][0]
-    name_2 = [l for l in render_compose(plan).splitlines() if l.startswith("name:")][0]
-    assert name_1 == name_2
-
-
-def test_compose_identite_rendu_correspond_a_celle_du_healthcheck():
-    """Ferme la boucle rendu -> _etats_docker sans nécessiter de vrai daemon Docker :
-    l'identité extraite du YAML rendu doit être EXACTEMENT celle que _etats_docker()
-    interroge déjà via `-p str(plan.plan_id)` (#586)."""
-    plan = _plan()
-    name_line = [l for l in render_compose(plan).splitlines() if l.startswith("name:")][0]
-    assert name_line == f"name: {plan.plan_id}"
-
-
 def test_chunking_regroupe_les_paragraphes():
     text = "\n\n".join(f"Paragraphe {i} " + "x" * 100 for i in range(10))
     chunks = chunk_text(text, max_chars=300)
@@ -281,3 +244,40 @@ def test_branche_gpu_preservee():
     res = _res_du_manifeste(render_k3s(_plan_res([svc])), "ollama")
     assert res["limits"]["nvidia.com/gpu"] in ("1", 1)
     assert res["limits"]["memory"] == "8Gi", "la classe llm gouverne toujours la RAM"
+
+
+def test_compose_name_derive_du_plan_id():
+    plan = _plan()
+    out = render_compose(plan)
+    assert f"name: {plan.plan_id}" in out
+    assert "name: forgeai-minimal" not in out
+
+
+def test_compose_deux_plans_identites_disjointes():
+    plan_a = _plan()
+    plan_b = DeploymentPlan(
+        plan_id="p1-autre-plan", profile=plan_a.profile, target=plan_a.target,
+        services=plan_a.services, model=plan_a.model, embed_model=plan_a.embed_model,
+    )
+    name_a = [l for l in render_compose(plan_a).splitlines() if l.startswith("name:")][0]
+    name_b = [l for l in render_compose(plan_b).splitlines() if l.startswith("name:")][0]
+    assert name_a != name_b
+
+
+def test_compose_meme_plan_id_identite_stable():
+    """Reprise sur état existant : re-rendre le MÊME plan (même plan_id) produit
+    TOUJOURS la même identité — un `docker compose up` répété reconnecte la pile
+    existante au lieu d'en créer une nouvelle sous un nom différent."""
+    plan = _plan()
+    name_1 = [l for l in render_compose(plan).splitlines() if l.startswith("name:")][0]
+    name_2 = [l for l in render_compose(plan).splitlines() if l.startswith("name:")][0]
+    assert name_1 == name_2
+
+
+def test_compose_identite_rendu_correspond_a_celle_du_healthcheck():
+    """Ferme la boucle rendu -> _etats_docker sans nécessiter de vrai daemon Docker :
+    l'identité extraite du YAML rendu doit être EXACTEMENT celle que _etats_docker()
+    interroge déjà via `-p str(plan.plan_id)` (#586)."""
+    plan = _plan()
+    name_line = [l for l in render_compose(plan).splitlines() if l.startswith("name:")][0]
+    assert name_line == f"name: {plan.plan_id}"
