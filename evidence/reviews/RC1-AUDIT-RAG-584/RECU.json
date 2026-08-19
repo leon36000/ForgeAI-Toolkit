@@ -1,0 +1,22 @@
+{
+  "schema": "recu-revue/1",
+  "dossier": "RC1-AUDIT-RAG-584",
+  "issue": 584,
+  "round": 1,
+  "base_commit": "d1abd0c6ca468145d0cbda659da01114b8e899f1",
+  "head_commit": "9df2aadaea3b50cb7417b0895341705b4458943a",
+  "head_tree": "d71813aecf1fe12d9071db2679ad8f0178600589",
+  "diff_digest": "3a2294aa0dcb66cf02fc91be75a3be0ac2f4d6807647e8a0311ee943bb718aaa",
+  "prompt_sha256": "555f57af027afb2dcfad2eba28eb1b05f364d1350caa06d1ac6df14ae1acdf49",
+  "reviewers_attendus": [
+    "DeepSeek-V4-Pro",
+    "GPT-5.6-Terra-Pro",
+    "Qwen3.8-2.4T"
+  ],
+  "codeur": [
+    "muse"
+  ],
+  "resultat": "APPROVE",
+  "date_heure": "2026-08-19T00:32:57.715126-04:00",
+  "fenetre_heures": 24
+}
