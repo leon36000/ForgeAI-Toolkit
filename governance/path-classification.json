@@ -6884,8 +6884,8 @@
         }
       ],
       "rule_id": "evidence-registres-root",
-      "sha256": "ba5b071dbcc26ce30373cf01d1b1fb164ff61ceddee07301c52bfed81a4880a6",
-      "size": 399013,
+      "sha256": "4ebeaba886de9d4ea5c8d1c7f862a92f01fba5f3e3a19bb275a92036d2bea497",
+      "size": 399520,
       "target_path": null,
       "type": "text"
     },
@@ -29267,8 +29267,8 @@
         }
       ],
       "rule_id": "governance-core",
-      "sha256": "6deaa73dd48abef6d3c89becf4b650f98cf2c41fb7cb5b8571ff8bdc04ea9368",
-      "size": 74238,
+      "sha256": "41091bcc094ea62d90a778c6f0f8752667731b3a4234232c99e2611d921d7b2d",
+      "size": 75503,
       "target_path": null,
       "type": "text"
     },
@@ -45883,6 +45883,20 @@
         {
           "candidate": "src/forgeai/web/server.py",
           "line": 5,
+          "referrer": "stories/RC1-AUDIT-WEB-587-deploy-spawn-500.md",
+          "resolved": "src/forgeai/web/server.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "src/forgeai/web/server.py",
+          "line": 28,
+          "referrer": "stories/RC1-AUDIT-WEB-587-deploy-spawn-500.md",
+          "resolved": "src/forgeai/web/server.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "src/forgeai/web/server.py",
+          "line": 5,
           "referrer": "stories/REL-038A.md",
           "resolved": "src/forgeai/web/server.py",
           "severity": "hard"
@@ -45980,8 +45994,8 @@
         }
       ],
       "rule_id": "product-source",
-      "sha256": "38ddf9080958b02f4c77f1de2459dedf35db8dd35d66dc6bf2c70b855c114d6c",
-      "size": 79902,
+      "sha256": "96339bb8b3daac0cf2aeef76a7b28568f9617885063d7dc6cb6cfcd419b5621b",
+      "size": 80798,
       "target_path": null,
       "type": "text"
     },
@@ -47689,6 +47703,19 @@
       "rule_id": "governance-stories",
       "sha256": "2e4c3a690a9fe7bdfc334e63b901cb3bee3ba1cca134816cad46c2962d5afe50",
       "size": 5755,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "GOVERNANCE",
+      "generated": false,
+      "load_bearing": false,
+      "owner": "gouvernance-stories",
+      "path": "stories/RC1-AUDIT-WEB-587-deploy-spawn-500.md",
+      "referenced_by": [],
+      "rule_id": "governance-stories",
+      "sha256": "26f85566f27e1a6c2297fdcd3a8408502c687bae130d68d3a94ec216130a5153",
+      "size": 6856,
       "target_path": null,
       "type": "text"
     },
@@ -59593,6 +59620,20 @@
         },
         {
           "candidate": "tests/test_web_deploy.py",
+          "line": 82,
+          "referrer": "stories/RC1-AUDIT-WEB-587-deploy-spawn-500.md",
+          "resolved": "tests/test_web_deploy.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "tests/test_web_deploy.py",
+          "line": 134,
+          "referrer": "stories/RC1-AUDIT-WEB-587-deploy-spawn-500.md",
+          "resolved": "tests/test_web_deploy.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "tests/test_web_deploy.py",
           "line": 27,
           "referrer": "stories/UI-039.md",
           "resolved": "tests/test_web_deploy.py",
@@ -59614,8 +59655,8 @@
         }
       ],
       "rule_id": "test-suite",
-      "sha256": "523555de9c26ba413d661f45e911dab383937233af15800503392bb128f14b1e",
-      "size": 3988,
+      "sha256": "8d56fdd26dbe1486477e3b740638f7e6626be646a36738a73378fdd73df9273a",
+      "size": 5786,
       "target_path": null,
       "type": "text"
     },
@@ -102169,6 +102210,16 @@
         "referrer": "governance/error-handling-contracts.json"
       },
       {
+        "candidate": "web/server.py",
+        "line": 13,
+        "referrer": "governance/error-handling-contracts.json"
+      },
+      {
+        "candidate": "contracted/floor",
+        "line": 13,
+        "referrer": "governance/error-handling-contracts.json"
+      },
+      {
         "candidate": "registre.py",
         "line": 33,
         "referrer": "governance/error-handling-contracts.json"
@@ -102284,6 +102335,11 @@
         "referrer": "governance/error-handling-contracts.json"
       },
       {
+        "candidate": "try/except",
+        "line": 531,
+        "referrer": "governance/error-handling-contracts.json"
+      },
+      {
         "candidate": "_post_deploy/_valider_requete_deploy/_lancer_deploiement",
         "line": 531,
         "referrer": "governance/error-handling-contracts.json"
@@ -102301,6 +102357,11 @@
       {
         "candidate": "exit_code/done",
         "line": 532,
+        "referrer": "governance/error-handling-contracts.json"
+      },
+      {
+        "candidate": "try/except",
+        "line": 555,
         "referrer": "governance/error-handling-contracts.json"
       },
       {
@@ -102341,6 +102402,11 @@
       {
         "candidate": "retry/escalade",
         "line": 562,
+        "referrer": "governance/error-handling-contracts.json"
+      },
+      {
+        "candidate": "try/except",
+        "line": 576,
         "referrer": "governance/error-handling-contracts.json"
       },
       {
@@ -129794,6 +129860,16 @@
         "referrer": "stories/RC1-AUDIT-RAG-584-qdrant-ids.md"
       },
       {
+        "candidate": "try/except",
+        "line": 8,
+        "referrer": "stories/RC1-AUDIT-WEB-587-deploy-spawn-500.md"
+      },
+      {
+        "candidate": "processus/FD",
+        "line": 9,
+        "referrer": "stories/RC1-AUDIT-WEB-587-deploy-spawn-500.md"
+      },
+      {
         "candidate": "hash/HMAC",
         "line": 9,
         "referrer": "stories/REG-029A.md"
@@ -146095,12 +146171,12 @@
       },
       {
         "candidate": "application/json",
-        "line": 15,
+        "line": 16,
         "referrer": "tests/test_web_deploy.py"
       },
       {
         "candidate": "4xx/5xx",
-        "line": 20,
+        "line": 21,
         "referrer": "tests/test_web_deploy.py"
       },
       {
@@ -175761,6 +175837,34 @@
         "severity": "hard"
       },
       {
+        "candidate": "src/forgeai/web/server.py",
+        "line": 5,
+        "referrer": "stories/RC1-AUDIT-WEB-587-deploy-spawn-500.md",
+        "resolved": "src/forgeai/web/server.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "src/forgeai/web/server.py",
+        "line": 28,
+        "referrer": "stories/RC1-AUDIT-WEB-587-deploy-spawn-500.md",
+        "resolved": "src/forgeai/web/server.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "tests/test_web_deploy.py",
+        "line": 82,
+        "referrer": "stories/RC1-AUDIT-WEB-587-deploy-spawn-500.md",
+        "resolved": "tests/test_web_deploy.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "tests/test_web_deploy.py",
+        "line": 134,
+        "referrer": "stories/RC1-AUDIT-WEB-587-deploy-spawn-500.md",
+        "resolved": "tests/test_web_deploy.py",
+        "severity": "hard"
+      },
+      {
         "candidate": "src/forgeai/core/registre_completude.py",
         "line": 5,
         "referrer": "stories/REG-029A.md",
@@ -178276,7 +178380,7 @@
       "DOCS": 18,
       "EVIDENCE": 1649,
       "GENERATED": 5,
-      "GOVERNANCE": 208,
+      "GOVERNANCE": 209,
       "PRODUCT": 113,
       "TEST": 218,
       "WORKING": 10
@@ -178322,7 +178426,7 @@
       "governance-scripts-coordination": 4,
       "governance-scripts-governance": 12,
       "governance-scripts-root": 30,
-      "governance-stories": 96,
+      "governance-stories": 97,
       "product-catalogue-checksum": 1,
       "product-source": 112,
       "test-suite": 218,
@@ -178330,11 +178434,11 @@
       "working-sandbox-readme": 1
     },
     "case_collisions_total": 0,
-    "dangling_references_total": 17256,
+    "dangling_references_total": 17263,
     "generated_total": 9,
     "load_bearing_total": 2120,
     "portability_violations_total": 0,
-    "tracked_total": 2265,
+    "tracked_total": 2266,
     "unclassified_total": 0,
     "unicode_anomalies_total": 0
   },
