@@ -6884,8 +6884,8 @@
         }
       ],
       "rule_id": "evidence-registres-root",
-      "sha256": "ba5b071dbcc26ce30373cf01d1b1fb164ff61ceddee07301c52bfed81a4880a6",
-      "size": 399013,
+      "sha256": "4ebeaba886de9d4ea5c8d1c7f862a92f01fba5f3e3a19bb275a92036d2bea497",
+      "size": 399520,
       "target_path": null,
       "type": "text"
     },
@@ -8845,8 +8845,8 @@
         }
       ],
       "rule_id": "evidence-reviews-root",
-      "sha256": "9e3c255167cf30387ea555e9460c5ae72feb0ebf7a076eee9d653981a0efebe5",
-      "size": 2934,
+      "sha256": "d9476f132037690dca0e9e9504849b4bd19dde8a13f7da05e548279b90ad0ec4",
+      "size": 2952,
       "target_path": null,
       "type": "text"
     },
@@ -24188,6 +24188,58 @@
       "generated": false,
       "load_bearing": true,
       "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-AUDIT-WEB-587/DeepSeek-V4-Pro-0813.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "a6bce90f7d73b0925ddea6028e3d0361edcf9b5b319f50d257d5e130b760f09a",
+      "size": 375,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-AUDIT-WEB-587/Kimi-2.7.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "6f00e9cc234f88c2629b506f173f88500d6697494b5741bbf451c2967b209241",
+      "size": 317,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-AUDIT-WEB-587/MiMo-V2.5-Pro.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "4d9029329b22aed39d1504b57c1c8b2e8d2aa87705142c527e6fb75beb799bc1",
+      "size": 327,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-AUDIT-WEB-587/RECU.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": null,
+      "size": null,
+      "target_path": null,
+      "type": null
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
       "path": "evidence/reviews/RC1-registre-PR522/DeepSeek-V4-Pro.verdict.json",
       "referenced_by": [],
       "rule_id": "evidence-reviews-root",
@@ -28038,7 +28090,7 @@
         }
       ],
       "rule_id": "governance-core",
-      "sha256": "93c48912399406326ad1a7a2e2ea3a4b39eec23b8a18aca346e923f1246b5dd2",
+      "sha256": "a3b08912ad222e3c8b17b2104e7eafd01a19ea6261174dff5f5db9813c3756d1",
       "size": 17044,
       "target_path": null,
       "type": "text"
@@ -29267,8 +29319,8 @@
         }
       ],
       "rule_id": "governance-core",
-      "sha256": "6deaa73dd48abef6d3c89becf4b650f98cf2c41fb7cb5b8571ff8bdc04ea9368",
-      "size": 74238,
+      "sha256": "41091bcc094ea62d90a778c6f0f8752667731b3a4234232c99e2611d921d7b2d",
+      "size": 75503,
       "target_path": null,
       "type": "text"
     },
@@ -45883,6 +45935,20 @@
         {
           "candidate": "src/forgeai/web/server.py",
           "line": 5,
+          "referrer": "stories/RC1-AUDIT-WEB-587-deploy-spawn-500.md",
+          "resolved": "src/forgeai/web/server.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "src/forgeai/web/server.py",
+          "line": 28,
+          "referrer": "stories/RC1-AUDIT-WEB-587-deploy-spawn-500.md",
+          "resolved": "src/forgeai/web/server.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "src/forgeai/web/server.py",
+          "line": 5,
           "referrer": "stories/REL-038A.md",
           "resolved": "src/forgeai/web/server.py",
           "severity": "hard"
@@ -45980,8 +46046,8 @@
         }
       ],
       "rule_id": "product-source",
-      "sha256": "38ddf9080958b02f4c77f1de2459dedf35db8dd35d66dc6bf2c70b855c114d6c",
-      "size": 79902,
+      "sha256": "96339bb8b3daac0cf2aeef76a7b28568f9617885063d7dc6cb6cfcd419b5621b",
+      "size": 80798,
       "target_path": null,
       "type": "text"
     },
@@ -47689,6 +47755,19 @@
       "rule_id": "governance-stories",
       "sha256": "2e4c3a690a9fe7bdfc334e63b901cb3bee3ba1cca134816cad46c2962d5afe50",
       "size": 5755,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "GOVERNANCE",
+      "generated": false,
+      "load_bearing": false,
+      "owner": "gouvernance-stories",
+      "path": "stories/RC1-AUDIT-WEB-587-deploy-spawn-500.md",
+      "referenced_by": [],
+      "rule_id": "governance-stories",
+      "sha256": "26f85566f27e1a6c2297fdcd3a8408502c687bae130d68d3a94ec216130a5153",
+      "size": 6856,
       "target_path": null,
       "type": "text"
     },
@@ -59593,6 +59672,20 @@
         },
         {
           "candidate": "tests/test_web_deploy.py",
+          "line": 82,
+          "referrer": "stories/RC1-AUDIT-WEB-587-deploy-spawn-500.md",
+          "resolved": "tests/test_web_deploy.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "tests/test_web_deploy.py",
+          "line": 134,
+          "referrer": "stories/RC1-AUDIT-WEB-587-deploy-spawn-500.md",
+          "resolved": "tests/test_web_deploy.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "tests/test_web_deploy.py",
           "line": 27,
           "referrer": "stories/UI-039.md",
           "resolved": "tests/test_web_deploy.py",
@@ -59614,8 +59707,8 @@
         }
       ],
       "rule_id": "test-suite",
-      "sha256": "523555de9c26ba413d661f45e911dab383937233af15800503392bb128f14b1e",
-      "size": 3988,
+      "sha256": "8d56fdd26dbe1486477e3b740638f7e6626be646a36738a73378fdd73df9273a",
+      "size": 5786,
       "target_path": null,
       "type": "text"
     },
@@ -98984,6 +99077,11 @@
         "referrer": "evidence/reviews/RC1-AUDIT-SUPPLY-585/RECU.json"
       },
       {
+        "candidate": "recu-revue/1",
+        "line": 2,
+        "referrer": "evidence/reviews/RC1-AUDIT-WEB-587/RECU.json"
+      },
+      {
         "candidate": "registre.py",
         "line": 7,
         "referrer": "evidence/reviews/RC1-registre-PR522/DeepSeek-V4-Pro.verdict.json"
@@ -102169,6 +102267,16 @@
         "referrer": "governance/error-handling-contracts.json"
       },
       {
+        "candidate": "web/server.py",
+        "line": 13,
+        "referrer": "governance/error-handling-contracts.json"
+      },
+      {
+        "candidate": "contracted/floor",
+        "line": 13,
+        "referrer": "governance/error-handling-contracts.json"
+      },
+      {
         "candidate": "registre.py",
         "line": 33,
         "referrer": "governance/error-handling-contracts.json"
@@ -102284,6 +102392,11 @@
         "referrer": "governance/error-handling-contracts.json"
       },
       {
+        "candidate": "try/except",
+        "line": 531,
+        "referrer": "governance/error-handling-contracts.json"
+      },
+      {
         "candidate": "_post_deploy/_valider_requete_deploy/_lancer_deploiement",
         "line": 531,
         "referrer": "governance/error-handling-contracts.json"
@@ -102301,6 +102414,11 @@
       {
         "candidate": "exit_code/done",
         "line": 532,
+        "referrer": "governance/error-handling-contracts.json"
+      },
+      {
+        "candidate": "try/except",
+        "line": 555,
         "referrer": "governance/error-handling-contracts.json"
       },
       {
@@ -102341,6 +102459,11 @@
       {
         "candidate": "retry/escalade",
         "line": 562,
+        "referrer": "governance/error-handling-contracts.json"
+      },
+      {
+        "candidate": "try/except",
+        "line": 576,
         "referrer": "governance/error-handling-contracts.json"
       },
       {
@@ -129794,6 +129917,16 @@
         "referrer": "stories/RC1-AUDIT-RAG-584-qdrant-ids.md"
       },
       {
+        "candidate": "try/except",
+        "line": 8,
+        "referrer": "stories/RC1-AUDIT-WEB-587-deploy-spawn-500.md"
+      },
+      {
+        "candidate": "processus/FD",
+        "line": 9,
+        "referrer": "stories/RC1-AUDIT-WEB-587-deploy-spawn-500.md"
+      },
+      {
         "candidate": "hash/HMAC",
         "line": 9,
         "referrer": "stories/REG-029A.md"
@@ -146095,12 +146228,12 @@
       },
       {
         "candidate": "application/json",
-        "line": 15,
+        "line": 16,
         "referrer": "tests/test_web_deploy.py"
       },
       {
         "candidate": "4xx/5xx",
-        "line": 20,
+        "line": 21,
         "referrer": "tests/test_web_deploy.py"
       },
       {
@@ -147891,6 +148024,13 @@
         "line": 215,
         "referrer": "evidence/reviews/BINDING.txt",
         "resolved": "evidence/reviews/RC1-AUDIT-RAG-584",
+        "severity": "hard"
+      },
+      {
+        "candidate": "RC1-AUDIT-WEB-587",
+        "line": 216,
+        "referrer": "evidence/reviews/BINDING.txt",
+        "resolved": "evidence/reviews/RC1-AUDIT-WEB-587",
         "severity": "hard"
       },
       {
@@ -175761,6 +175901,34 @@
         "severity": "hard"
       },
       {
+        "candidate": "src/forgeai/web/server.py",
+        "line": 5,
+        "referrer": "stories/RC1-AUDIT-WEB-587-deploy-spawn-500.md",
+        "resolved": "src/forgeai/web/server.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "src/forgeai/web/server.py",
+        "line": 28,
+        "referrer": "stories/RC1-AUDIT-WEB-587-deploy-spawn-500.md",
+        "resolved": "src/forgeai/web/server.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "tests/test_web_deploy.py",
+        "line": 82,
+        "referrer": "stories/RC1-AUDIT-WEB-587-deploy-spawn-500.md",
+        "resolved": "tests/test_web_deploy.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "tests/test_web_deploy.py",
+        "line": 134,
+        "referrer": "stories/RC1-AUDIT-WEB-587-deploy-spawn-500.md",
+        "resolved": "tests/test_web_deploy.py",
+        "severity": "hard"
+      },
+      {
         "candidate": "src/forgeai/core/registre_completude.py",
         "line": 5,
         "referrer": "stories/REG-029A.md",
@@ -178274,9 +178442,9 @@
     "by_class": {
       "ARCHIVE": 44,
       "DOCS": 18,
-      "EVIDENCE": 1649,
+      "EVIDENCE": 1653,
       "GENERATED": 5,
-      "GOVERNANCE": 208,
+      "GOVERNANCE": 209,
       "PRODUCT": 113,
       "TEST": 218,
       "WORKING": 10
@@ -178293,7 +178461,7 @@
       "evidence-audit-output-root": 18,
       "evidence-dedup-root": 2,
       "evidence-registres-root": 35,
-      "evidence-reviews-root": 1594,
+      "evidence-reviews-root": 1598,
       "generated-authority-map": 1,
       "generated-path-classification-json": 1,
       "generated-path-classification-markdown": 1,
@@ -178322,7 +178490,7 @@
       "governance-scripts-coordination": 4,
       "governance-scripts-governance": 12,
       "governance-scripts-root": 30,
-      "governance-stories": 96,
+      "governance-stories": 97,
       "product-catalogue-checksum": 1,
       "product-source": 112,
       "test-suite": 218,
@@ -178330,11 +178498,11 @@
       "working-sandbox-readme": 1
     },
     "case_collisions_total": 0,
-    "dangling_references_total": 17256,
+    "dangling_references_total": 17264,
     "generated_total": 9,
-    "load_bearing_total": 2120,
+    "load_bearing_total": 2124,
     "portability_violations_total": 0,
-    "tracked_total": 2265,
+    "tracked_total": 2270,
     "unclassified_total": 0,
     "unicode_anomalies_total": 0
   },

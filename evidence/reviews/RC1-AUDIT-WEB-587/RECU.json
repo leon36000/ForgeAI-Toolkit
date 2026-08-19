@@ -1,0 +1,22 @@
+{
+  "schema": "recu-revue/1",
+  "dossier": "RC1-AUDIT-WEB-587",
+  "issue": 587,
+  "round": 2,
+  "base_commit": "1966c864771fc79aff4a3a551cd079bba0092a9c",
+  "head_commit": "9922dcbea69aeb085c7bb466489229f95f8f781e",
+  "head_tree": "7b9fcaa6f56b3a7a0351f7657ddcc5b492c43a4e",
+  "diff_digest": "882d38ec86ff339d0884e7e42a4d1219173d6bb230c3d40813e0535b72690bd1",
+  "prompt_sha256": "41a8cb1a772a9d9cc76214c7a425b5d8f573dfd06648902e6a6361c2c60442b1",
+  "reviewers_attendus": [
+    "DeepSeek-V4-Pro-0813",
+    "Kimi-2.7",
+    "MiMo-V2.5-Pro"
+  ],
+  "codeur": [
+    "luna"
+  ],
+  "resultat": "APPROVE",
+  "date_heure": "2026-08-19T02:39:52.386991-04:00",
+  "fenetre_heures": 24
+}

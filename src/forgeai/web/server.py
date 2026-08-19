@@ -1679,10 +1679,28 @@ class ForgeAIHandler(BaseHTTPRequestHandler):
                 popen_kwargs["start_new_session"] = True
             else:
                 popen_kwargs["creationflags"] = subprocess.CREATE_NEW_PROCESS_GROUP
-            new_proc = subprocess.Popen(cmd, **popen_kwargs)
-            _DEPLOY_STATE["proc"] = new_proc
+            try:
+                new_proc = subprocess.Popen(cmd, **popen_kwargs)
+            except OSError as exc:
+                # WEB-015 (#587) : un spawn qui échoue (exécutable absent, ressource système
+                # épuisée, permission) ne doit jamais laisser le handler HTTP sans réponse ni
+                # l'état de déploiement faussement « en cours » — aucun `_reader` n'existe alors
+                # pour jamais marquer `done` à True.
+                new_proc = None
+                _DEPLOY_STATE["exit_code"] = -1
+                _DEPLOY_STATE["done"] = True
+                _DEPLOY_STATE["lines"].append(
+                    "avertissement: échec du démarrage du processus de déploiement : "
+                    f"{str_exc_sur(exc)}"
+                )
+            else:
+                _DEPLOY_STATE["proc"] = new_proc
 
         _persist_deploy_state()
+
+        if new_proc is None:
+            self._send_json(500, {"error": "erreur interne lors du démarrage du déploiement"})
+            return
 
         def _reader() -> None:
             try:

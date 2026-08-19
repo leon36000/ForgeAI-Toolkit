@@ -926,7 +926,7 @@
     },
     {
       "path": "tests/test_web_deploy.py",
-      "sha256": "523555de9c26ba413d661f45e911dab383937233af15800503392bb128f14b1e"
+      "sha256": "8d56fdd26dbe1486477e3b740638f7e6626be646a36738a73378fdd73df9273a"
     },
     {
       "path": "tests/test_web_deploy_load_stack_once.py",
@@ -979,7 +979,7 @@
   "tests": {
     "js_files": 3,
     "python_files": 203,
-    "python_functions_declared": 2614
+    "python_functions_declared": 2616
   }
 }
 ```

@@ -6,6 +6,7 @@ import urllib.request
 
 import pytest
 
+from forgeai.web import server as srv_mod
 from forgeai.web.server import _DEPLOY_STATE, build_server
 
 
@@ -120,3 +121,43 @@ def test_non_regression(server):
     for path in ("/api/stacks", "/api/models", "/api/nodes/status"):
         status, _ = _request(f"{server}{path}")
         assert status == 200, path
+
+
+def test_deploy_popen_echoue_renvoie_500_generique(server, fake_deploy, monkeypatch):
+    def fake_popen(*a, **k):
+        raise OSError("spawn impossible")
+
+    monkeypatch.setattr(srv_mod.subprocess, "Popen", fake_popen)
+
+    payload = json.dumps({"stack": "agentique", "backend": "compose", "confirm": "FORCER"}).encode("utf-8")
+    status, body = _request(f"{server}/api/deploy", data=payload, method="POST")
+
+    assert status == 500
+    data = json.loads(body)
+    assert "error" in data
+    assert "spawn impossible" not in data["error"]  # WEB-015 : pas de détail interne au client
+
+    with _DEPLOY_STATE["lock"]:
+        assert _DEPLOY_STATE["proc"] is None
+        assert _DEPLOY_STATE["done"] is True
+        assert _DEPLOY_STATE["exit_code"] == -1
+
+
+def test_deploy_popen_echoue_puis_nouveau_deploy_reussit(server, fake_deploy, monkeypatch):
+    real_popen = srv_mod.subprocess.Popen
+
+    def fake_popen(*a, **k):
+        raise OSError("spawn impossible")
+
+    monkeypatch.setattr(srv_mod.subprocess, "Popen", fake_popen)
+    payload = json.dumps({"stack": "agentique", "backend": "compose", "confirm": "FORCER"}).encode("utf-8")
+    status, _ = _request(f"{server}/api/deploy", data=payload, method="POST")
+    assert status == 500
+
+    # Ré-applique setattr (pas monkeypatch.undo()) : `fake_deploy` partage la même instance
+    # `monkeypatch` (fixture function-scoped) et a déjà patché `_DEPLOY_CMD` — un `.undo()`
+    # global annulerait aussi CE patch et ferait fuir la vraie commande wizard dans le test.
+    monkeypatch.setattr(srv_mod.subprocess, "Popen", real_popen)
+    status2, body2 = _request(f"{server}/api/deploy", data=payload, method="POST")
+    assert status2 == 202
+    assert json.loads(body2)["started"] is True
