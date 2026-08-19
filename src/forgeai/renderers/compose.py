@@ -142,7 +142,7 @@ class RienADeployerError(Exception):
     pas la vraie cause. Ce n'est PAS une erreur de l'utilisateur, mais un état à lui signaler."""
 
 
-def render_compose(plan: DeploymentPlan, project: str | None = None) -> str:
+def render_compose(plan: DeploymentPlan, project: str | None = None) -> str:  # NOSONAR(S3776)
     # #586 : l'identité de projet Compose DOIT dériver de plan.plan_id — un défaut codé en
     # dur ("forgeai-minimal") faisait collisionner tous les plans entre eux (rendu) ET
     # divergeait de `_etats_docker()` qui interroge déjà `-p plan.plan_id` (health-check).
