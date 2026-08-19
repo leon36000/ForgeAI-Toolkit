@@ -72,3 +72,15 @@ gate), pas ces scripts de gouvernance (hors périmètre, non modifiés).
   périmètre de cette story (frontière = le gate mécanique uniquement).
 - Zéro nouvelle dépendance tierce (stdlib pur, cohérent avec le fichier existant).
 - `schema_violations()` garde sa signature actuelle `(entries, schema) -> List[str]`.
+
+## Preuve d'exécution (round 1 de revue scellée, 3 objections mineures : sortie CLI absente du diff)
+
+Sortie brute de `python3 scripts/catalogue_gate.py` sur le vrai catalogue (1576 entrées), après
+application du correctif ci-dessus :
+
+```text
+CATALOGUE-GATE : OK (1576 entrées, zéro ambiguïté)
+```
+
+Code de sortie : `0`. Confirme la non-régression sur les données réelles (aucune des 1576
+entrées n'a de type incohérent avec `src/forgeai/data/catalogue.schema.json`).
