@@ -8845,8 +8845,8 @@
         }
       ],
       "rule_id": "evidence-reviews-root",
-      "sha256": "9e3c255167cf30387ea555e9460c5ae72feb0ebf7a076eee9d653981a0efebe5",
-      "size": 2934,
+      "sha256": "d9476f132037690dca0e9e9504849b4bd19dde8a13f7da05e548279b90ad0ec4",
+      "size": 2952,
       "target_path": null,
       "type": "text"
     },
@@ -60049,6 +60049,11 @@
   "reference_graph": {
     "completeness": "best_effort",
     "dangling": [
+      {
+        "candidate": "RC1-AUDIT-WEB-587",
+        "line": 216,
+        "referrer": "evidence/reviews/BINDING.txt"
+      },
       {
         "candidate": "TUI/UX",
         "line": 3,
@@ -178434,7 +178439,7 @@
       "working-sandbox-readme": 1
     },
     "case_collisions_total": 0,
-    "dangling_references_total": 17263,
+    "dangling_references_total": 17264,
     "generated_total": 9,
     "load_bearing_total": 2120,
     "portability_violations_total": 0,
