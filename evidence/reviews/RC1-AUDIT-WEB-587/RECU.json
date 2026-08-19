@@ -2,21 +2,21 @@
   "schema": "recu-revue/1",
   "dossier": "RC1-AUDIT-WEB-587",
   "issue": 587,
-  "round": 1,
+  "round": 2,
   "base_commit": "1966c864771fc79aff4a3a551cd079bba0092a9c",
-  "head_commit": "1cf20849552b330fa65a6f019a9bb719ed9809d2",
-  "head_tree": "757fae586845c0c448c20ae2d761a40271801fb3",
-  "diff_digest": "92880bbfe60a3a9083d46dc43fc28621b51073a31c9557c43141eaf910fd5ac8",
-  "prompt_sha256": "c317552d0c69800782f34676bb5567e0e28520e40b25e2300ff79bb9d8364528",
+  "head_commit": "9922dcbea69aeb085c7bb466489229f95f8f781e",
+  "head_tree": "7b9fcaa6f56b3a7a0351f7657ddcc5b492c43a4e",
+  "diff_digest": "882d38ec86ff339d0884e7e42a4d1219173d6bb230c3d40813e0535b72690bd1",
+  "prompt_sha256": "41a8cb1a772a9d9cc76214c7a425b5d8f573dfd06648902e6a6361c2c60442b1",
   "reviewers_attendus": [
     "DeepSeek-V4-Pro-0813",
     "Kimi-2.7",
-    "Qwen3.8-2.4T"
+    "MiMo-V2.5-Pro"
   ],
   "codeur": [
     "luna"
   ],
   "resultat": "APPROVE",
-  "date_heure": "2026-08-19T01:59:04.484619-04:00",
+  "date_heure": "2026-08-19T02:39:52.386991-04:00",
   "fenetre_heures": 24
 }
