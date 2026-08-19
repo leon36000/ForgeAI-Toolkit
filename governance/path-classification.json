@@ -1075,6 +1075,27 @@
         },
         {
           "candidate": ".github/workflows/gates.yml",
+          "line": 13,
+          "referrer": "stories/RC1-AUDIT-SUPPLY-585-catalogue-types.md",
+          "resolved": ".github/workflows/gates.yml",
+          "severity": "hard"
+        },
+        {
+          "candidate": ".github/workflows/gates.yml",
+          "line": 65,
+          "referrer": "stories/RC1-AUDIT-SUPPLY-585-catalogue-types.md",
+          "resolved": ".github/workflows/gates.yml",
+          "severity": "hard"
+        },
+        {
+          "candidate": ".github/workflows/gates.yml",
+          "line": 70,
+          "referrer": "stories/RC1-AUDIT-SUPPLY-585-catalogue-types.md",
+          "resolved": ".github/workflows/gates.yml",
+          "severity": "hard"
+        },
+        {
+          "candidate": ".github/workflows/gates.yml",
           "line": 159,
           "referrer": "stories/REG-029B.md",
           "resolved": ".github/workflows/gates.yml",
@@ -6863,8 +6884,8 @@
         }
       ],
       "rule_id": "evidence-registres-root",
-      "sha256": "949dd5c787abf560de56599c0c55fc8117a2fa472dece70918ac91f69a5ab7f8",
-      "size": 397966,
+      "sha256": "a27015dee695bbab8cd02951ccc791155831771ccba8a50e1c8d4f4431ee6717",
+      "size": 398502,
       "target_path": null,
       "type": "text"
     },
@@ -8824,8 +8845,8 @@
         }
       ],
       "rule_id": "evidence-reviews-root",
-      "sha256": "969bcbf553daca01fb5b601d8e60bfd6649ea93887c843b1e151b640818f1d83",
-      "size": 2895,
+      "sha256": "0c21af3e54f648367954d48ce5df9f6a7a10685cd3dd452198901204ca77c66e",
+      "size": 2916,
       "target_path": null,
       "type": "text"
     },
@@ -24063,6 +24084,58 @@
       "generated": false,
       "load_bearing": true,
       "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-AUDIT-SUPPLY-585/DeepSeek-V4-Pro.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "7fd43f513c753265f43fdcae05c65e849f6dd372d5474fab52ae0b59e2682fac",
+      "size": 328,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-AUDIT-SUPPLY-585/GPT-5.6-Terra-Pro.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "3535085e455351b41601dd167ed4ec43bf745f3eafe28c56dfea688784df65de",
+      "size": 334,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-AUDIT-SUPPLY-585/Qwen3.8-2.4T.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "10a054b0313e2091a6554967563f3de4bcbdb0455a02d55b6d70dc0207302905",
+      "size": 839,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-AUDIT-SUPPLY-585/RECU.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": null,
+      "size": null,
+      "target_path": null,
+      "type": null
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
       "path": "evidence/reviews/RC1-registre-PR522/DeepSeek-V4-Pro.verdict.json",
       "referenced_by": [],
       "rule_id": "evidence-reviews-root",
@@ -31145,15 +31218,50 @@
         },
         {
           "candidate": "scripts/catalogue_gate.py",
+          "line": 7,
+          "referrer": "evidence/reviews/RC1-AUDIT-SUPPLY-585/Qwen3.8-2.4T.verdict.json",
+          "resolved": "scripts/catalogue_gate.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "scripts/catalogue_gate.py",
           "line": 4,
           "referrer": "src/forgeai/data/catalogue.schema.json",
+          "resolved": "scripts/catalogue_gate.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "scripts/catalogue_gate.py",
+          "line": 9,
+          "referrer": "stories/RC1-AUDIT-SUPPLY-585-catalogue-types.md",
+          "resolved": "scripts/catalogue_gate.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "scripts/catalogue_gate.py",
+          "line": 29,
+          "referrer": "stories/RC1-AUDIT-SUPPLY-585-catalogue-types.md",
+          "resolved": "scripts/catalogue_gate.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "scripts/catalogue_gate.py",
+          "line": 64,
+          "referrer": "stories/RC1-AUDIT-SUPPLY-585-catalogue-types.md",
+          "resolved": "scripts/catalogue_gate.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "scripts/catalogue_gate.py",
+          "line": 78,
+          "referrer": "stories/RC1-AUDIT-SUPPLY-585-catalogue-types.md",
           "resolved": "scripts/catalogue_gate.py",
           "severity": "hard"
         }
       ],
       "rule_id": "governance-scripts-root",
-      "sha256": "ef993307cc9d8b90fe6e4232b0e9a2d23c7d14e437d6e8b1e0b9477202df69cb",
-      "size": 4791,
+      "sha256": "c3480b25ae9a0597780ecaffdf4bc382deeebb04308802744069f6567cd2a19c",
+      "size": 6452,
       "target_path": null,
       "type": "text"
     },
@@ -33905,6 +34013,20 @@
           "referrer": "governance/ruff-baseline.json",
           "resolved": "scripts/rall.py",
           "severity": "hard"
+        },
+        {
+          "candidate": "scripts/rall.py",
+          "line": 22,
+          "referrer": "stories/RC1-AUDIT-SUPPLY-585-catalogue-types.md",
+          "resolved": "scripts/rall.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "scripts/rall.py",
+          "line": 70,
+          "referrer": "stories/RC1-AUDIT-SUPPLY-585-catalogue-types.md",
+          "resolved": "scripts/rall.py",
+          "severity": "hard"
         }
       ],
       "rule_id": "governance-scripts-root",
@@ -33931,6 +34053,20 @@
           "candidate": "scripts/rall_verify_urls.py",
           "line": 146,
           "referrer": "governance/ruff-baseline.json",
+          "resolved": "scripts/rall_verify_urls.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "scripts/rall_verify_urls.py",
+          "line": 22,
+          "referrer": "stories/RC1-AUDIT-SUPPLY-585-catalogue-types.md",
+          "resolved": "scripts/rall_verify_urls.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "scripts/rall_verify_urls.py",
+          "line": 70,
+          "referrer": "stories/RC1-AUDIT-SUPPLY-585-catalogue-types.md",
           "resolved": "scripts/rall_verify_urls.py",
           "severity": "hard"
         }
@@ -36692,6 +36828,13 @@
         },
         {
           "candidate": "src/forgeai/catalogue/loader.py",
+          "line": 21,
+          "referrer": "stories/RC1-AUDIT-SUPPLY-585-catalogue-types.md",
+          "resolved": "src/forgeai/catalogue/loader.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "src/forgeai/catalogue/loader.py",
           "line": 31,
           "referrer": "stories/TRUST-019A.md",
           "resolved": "src/forgeai/catalogue/loader.py",
@@ -38957,6 +39100,20 @@
           "referrer": "src/forgeai/data/catalogue.schema.json",
           "resolved": "src/forgeai/data/catalogue.json",
           "severity": "hard"
+        },
+        {
+          "candidate": "src/forgeai/data/catalogue.json",
+          "line": 16,
+          "referrer": "stories/RC1-AUDIT-SUPPLY-585-catalogue-types.md",
+          "resolved": "src/forgeai/data/catalogue.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "src/forgeai/data/catalogue.json",
+          "line": 71,
+          "referrer": "stories/RC1-AUDIT-SUPPLY-585-catalogue-types.md",
+          "resolved": "src/forgeai/data/catalogue.json",
+          "severity": "hard"
         }
       ],
       "rule_id": "product-source",
@@ -38983,6 +39140,27 @@
           "candidate": "src/forgeai/data/catalogue.schema.json",
           "line": 1,
           "referrer": "evidence/audit-output/sast/semgrep.json",
+          "resolved": "src/forgeai/data/catalogue.schema.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "src/forgeai/data/catalogue.schema.json",
+          "line": 5,
+          "referrer": "stories/RC1-AUDIT-SUPPLY-585-catalogue-types.md",
+          "resolved": "src/forgeai/data/catalogue.schema.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "src/forgeai/data/catalogue.schema.json",
+          "line": 71,
+          "referrer": "stories/RC1-AUDIT-SUPPLY-585-catalogue-types.md",
+          "resolved": "src/forgeai/data/catalogue.schema.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "src/forgeai/data/catalogue.schema.json",
+          "line": 86,
+          "referrer": "stories/RC1-AUDIT-SUPPLY-585-catalogue-types.md",
           "resolved": "src/forgeai/data/catalogue.schema.json",
           "severity": "hard"
         }
@@ -47419,6 +47597,27 @@
       "generated": false,
       "load_bearing": false,
       "owner": "gouvernance-stories",
+      "path": "stories/RC1-AUDIT-SUPPLY-585-catalogue-types.md",
+      "referenced_by": [
+        {
+          "candidate": "stories/RC1-AUDIT-SUPPLY-585-catalogue-types.md",
+          "line": 6,
+          "referrer": "evidence/reviews/RC1-AUDIT-SUPPLY-585/Qwen3.8-2.4T.verdict.json",
+          "resolved": "stories/RC1-AUDIT-SUPPLY-585-catalogue-types.md",
+          "severity": "hard"
+        }
+      ],
+      "rule_id": "governance-stories",
+      "sha256": "2e4c3a690a9fe7bdfc334e63b901cb3bee3ba1cca134816cad46c2962d5afe50",
+      "size": 5755,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "GOVERNANCE",
+      "generated": false,
+      "load_bearing": false,
+      "owner": "gouvernance-stories",
       "path": "stories/REG-029A.md",
       "referenced_by": [
         {
@@ -49274,11 +49473,18 @@
           "referrer": "governance/STATE-CURRENT.md",
           "resolved": "tests/test_catalogue_gate.py",
           "severity": "hard"
+        },
+        {
+          "candidate": "tests/test_catalogue_gate.py",
+          "line": 51,
+          "referrer": "stories/RC1-AUDIT-SUPPLY-585-catalogue-types.md",
+          "resolved": "tests/test_catalogue_gate.py",
+          "severity": "hard"
         }
       ],
       "rule_id": "test-suite",
-      "sha256": "5f3cd70637f7bb2e11f928af524bfcaea98a101bfbddf46da20fb2198df70a0a",
-      "size": 4059,
+      "sha256": "8ba391c998196343e7c4c576cd252f64f17b0900cac635375262c0ff4d4ad47c",
+      "size": 6957,
       "target_path": null,
       "type": "text"
     },
@@ -98675,6 +98881,11 @@
         "referrer": "evidence/reviews/RC1-580-v2/RECU.json"
       },
       {
+        "candidate": "recu-revue/1",
+        "line": 2,
+        "referrer": "evidence/reviews/RC1-AUDIT-SUPPLY-585/RECU.json"
+      },
+      {
         "candidate": "registre.py",
         "line": 7,
         "referrer": "evidence/reviews/RC1-registre-PR522/DeepSeek-V4-Pro.verdict.json"
@@ -103221,7 +103432,7 @@
       },
       {
         "candidate": "catalogue.json",
-        "line": 117,
+        "line": 154,
         "referrer": "scripts/catalogue_gate.py"
       },
       {
@@ -147516,6 +147727,13 @@
         "severity": "hard"
       },
       {
+        "candidate": "RC1-AUDIT-SUPPLY-585",
+        "line": 214,
+        "referrer": "evidence/reviews/BINDING.txt",
+        "resolved": "evidence/reviews/RC1-AUDIT-SUPPLY-585",
+        "severity": "hard"
+      },
+      {
         "candidate": "scripts/gate_docs.py",
         "line": 11,
         "referrer": "sonar-project.properties",
@@ -163882,6 +164100,20 @@
         "severity": "hard"
       },
       {
+        "candidate": "stories/RC1-AUDIT-SUPPLY-585-catalogue-types.md",
+        "line": 6,
+        "referrer": "evidence/reviews/RC1-AUDIT-SUPPLY-585/Qwen3.8-2.4T.verdict.json",
+        "resolved": "stories/RC1-AUDIT-SUPPLY-585-catalogue-types.md",
+        "severity": "hard"
+      },
+      {
+        "candidate": "scripts/catalogue_gate.py",
+        "line": 7,
+        "referrer": "evidence/reviews/RC1-AUDIT-SUPPLY-585/Qwen3.8-2.4T.verdict.json",
+        "resolved": "scripts/catalogue_gate.py",
+        "severity": "hard"
+      },
+      {
         "candidate": "evidence/registres/mission.jsonl",
         "line": 6,
         "referrer": "evidence/reviews/RC1-registre-PR522/DeepSeek-V4-Pro.verdict.json",
@@ -175215,6 +175447,132 @@
         "severity": "hard"
       },
       {
+        "candidate": "src/forgeai/data/catalogue.schema.json",
+        "line": 5,
+        "referrer": "stories/RC1-AUDIT-SUPPLY-585-catalogue-types.md",
+        "resolved": "src/forgeai/data/catalogue.schema.json",
+        "severity": "hard"
+      },
+      {
+        "candidate": "scripts/catalogue_gate.py",
+        "line": 9,
+        "referrer": "stories/RC1-AUDIT-SUPPLY-585-catalogue-types.md",
+        "resolved": "scripts/catalogue_gate.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": ".github/workflows/gates.yml",
+        "line": 13,
+        "referrer": "stories/RC1-AUDIT-SUPPLY-585-catalogue-types.md",
+        "resolved": ".github/workflows/gates.yml",
+        "severity": "hard"
+      },
+      {
+        "candidate": "src/forgeai/data/catalogue.json",
+        "line": 16,
+        "referrer": "stories/RC1-AUDIT-SUPPLY-585-catalogue-types.md",
+        "resolved": "src/forgeai/data/catalogue.json",
+        "severity": "hard"
+      },
+      {
+        "candidate": "src/forgeai/catalogue/loader.py",
+        "line": 21,
+        "referrer": "stories/RC1-AUDIT-SUPPLY-585-catalogue-types.md",
+        "resolved": "src/forgeai/catalogue/loader.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "scripts/rall.py",
+        "line": 22,
+        "referrer": "stories/RC1-AUDIT-SUPPLY-585-catalogue-types.md",
+        "resolved": "scripts/rall.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "scripts/rall_verify_urls.py",
+        "line": 22,
+        "referrer": "stories/RC1-AUDIT-SUPPLY-585-catalogue-types.md",
+        "resolved": "scripts/rall_verify_urls.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "scripts/catalogue_gate.py",
+        "line": 29,
+        "referrer": "stories/RC1-AUDIT-SUPPLY-585-catalogue-types.md",
+        "resolved": "scripts/catalogue_gate.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "tests/test_catalogue_gate.py",
+        "line": 51,
+        "referrer": "stories/RC1-AUDIT-SUPPLY-585-catalogue-types.md",
+        "resolved": "tests/test_catalogue_gate.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "scripts/catalogue_gate.py",
+        "line": 64,
+        "referrer": "stories/RC1-AUDIT-SUPPLY-585-catalogue-types.md",
+        "resolved": "scripts/catalogue_gate.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": ".github/workflows/gates.yml",
+        "line": 65,
+        "referrer": "stories/RC1-AUDIT-SUPPLY-585-catalogue-types.md",
+        "resolved": ".github/workflows/gates.yml",
+        "severity": "hard"
+      },
+      {
+        "candidate": "scripts/rall.py",
+        "line": 70,
+        "referrer": "stories/RC1-AUDIT-SUPPLY-585-catalogue-types.md",
+        "resolved": "scripts/rall.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "scripts/rall_verify_urls.py",
+        "line": 70,
+        "referrer": "stories/RC1-AUDIT-SUPPLY-585-catalogue-types.md",
+        "resolved": "scripts/rall_verify_urls.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": ".github/workflows/gates.yml",
+        "line": 70,
+        "referrer": "stories/RC1-AUDIT-SUPPLY-585-catalogue-types.md",
+        "resolved": ".github/workflows/gates.yml",
+        "severity": "hard"
+      },
+      {
+        "candidate": "src/forgeai/data/catalogue.schema.json",
+        "line": 71,
+        "referrer": "stories/RC1-AUDIT-SUPPLY-585-catalogue-types.md",
+        "resolved": "src/forgeai/data/catalogue.schema.json",
+        "severity": "hard"
+      },
+      {
+        "candidate": "src/forgeai/data/catalogue.json",
+        "line": 71,
+        "referrer": "stories/RC1-AUDIT-SUPPLY-585-catalogue-types.md",
+        "resolved": "src/forgeai/data/catalogue.json",
+        "severity": "hard"
+      },
+      {
+        "candidate": "scripts/catalogue_gate.py",
+        "line": 78,
+        "referrer": "stories/RC1-AUDIT-SUPPLY-585-catalogue-types.md",
+        "resolved": "scripts/catalogue_gate.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "src/forgeai/data/catalogue.schema.json",
+        "line": 86,
+        "referrer": "stories/RC1-AUDIT-SUPPLY-585-catalogue-types.md",
+        "resolved": "src/forgeai/data/catalogue.schema.json",
+        "severity": "hard"
+      },
+      {
         "candidate": "src/forgeai/core/registre_completude.py",
         "line": 5,
         "referrer": "stories/REG-029A.md",
@@ -177728,9 +178086,9 @@
     "by_class": {
       "ARCHIVE": 44,
       "DOCS": 18,
-      "EVIDENCE": 1641,
+      "EVIDENCE": 1645,
       "GENERATED": 5,
-      "GOVERNANCE": 206,
+      "GOVERNANCE": 207,
       "PRODUCT": 113,
       "TEST": 218,
       "WORKING": 10
@@ -177747,7 +178105,7 @@
       "evidence-audit-output-root": 18,
       "evidence-dedup-root": 2,
       "evidence-registres-root": 35,
-      "evidence-reviews-root": 1586,
+      "evidence-reviews-root": 1590,
       "generated-authority-map": 1,
       "generated-path-classification-json": 1,
       "generated-path-classification-markdown": 1,
@@ -177776,7 +178134,7 @@
       "governance-scripts-coordination": 4,
       "governance-scripts-governance": 12,
       "governance-scripts-root": 30,
-      "governance-stories": 94,
+      "governance-stories": 95,
       "product-catalogue-checksum": 1,
       "product-source": 112,
       "test-suite": 218,
@@ -177784,11 +178142,11 @@
       "working-sandbox-readme": 1
     },
     "case_collisions_total": 0,
-    "dangling_references_total": 17243,
+    "dangling_references_total": 17244,
     "generated_total": 9,
-    "load_bearing_total": 2112,
+    "load_bearing_total": 2116,
     "portability_violations_total": 0,
-    "tracked_total": 2255,
+    "tracked_total": 2260,
     "unclassified_total": 0,
     "unicode_anomalies_total": 0
   },

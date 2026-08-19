@@ -89,12 +89,35 @@ def load_schema(path: Path) -> Dict[str, Any]:
         return json.load(fh)
 
 
+def _valeur_conforme_au_type(valeur: Any, type_declare: Any) -> bool:
+    """Vérifie qu'une valeur Python est conforme à un type JSON Schema déclaré."""
+    if isinstance(type_declare, list):
+        return any(_valeur_conforme_au_type(valeur, t) for t in type_declare)
+    if type_declare == "string":
+        return isinstance(valeur, str)
+    if type_declare == "boolean":
+        return isinstance(valeur, bool)
+    if type_declare == "integer":
+        return isinstance(valeur, int) and not isinstance(valeur, bool)
+    if type_declare == "number":
+        return isinstance(valeur, (int, float)) and not isinstance(valeur, bool)
+    if type_declare == "array":
+        return isinstance(valeur, list)
+    if type_declare == "object":
+        return isinstance(valeur, dict)
+    if type_declare == "null":
+        return valeur is None
+    return True
+
+
 def schema_violations(entries: List[Dict[str, Any]], schema: Dict[str, Any]) -> List[str]:
     """Conformité au schéma : champs déclarés (si additionalProperties=false) et requis présents.
-    Rend le champ 'disambiguation' (et tout autre) explicitement DÉCLARÉ au schéma."""
+    Rend le champ 'disambiguation' (et tout autre) explicitement DÉCLARÉ au schéma.
+    Valide aussi le type déclaré de chaque propriété déjà présente dans l'entrée."""
     props = set(schema.get("properties", {}))
     required = set(schema.get("required", []))
     allow_extra = schema.get("additionalProperties", True)
+    properties = schema.get("properties", {})
     violations: List[str] = []
     for entry in entries:
         who = entry.get("id") or entry.get("name", "?")
@@ -104,6 +127,20 @@ def schema_violations(entries: List[Dict[str, Any]], schema: Dict[str, Any]) -> 
                 violations.append(f"champ non déclaré au schéma : '{k}' (entrée '{who}')")
         for r in required - keys:
             violations.append(f"champ requis manquant : '{r}' (entrée '{who}')")
+        # Validation des types pour les champs présents et déclarés
+        for champ, valeur in entry.items():
+            if champ not in properties:
+                continue
+            prop_schema = properties[champ]
+            if not isinstance(prop_schema, dict):
+                continue
+            if "type" not in prop_schema:
+                continue
+            type_declare = prop_schema["type"]
+            if not _valeur_conforme_au_type(valeur, type_declare):
+                violations.append(
+                    f"type invalide pour '{champ}' : attendu {type_declare!r}, reçu {type(valeur).__name__} (entrée '{who}')"
+                )
     return sorted(violations)
 
 

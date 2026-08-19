@@ -188,7 +188,7 @@
       },
       {
         "path": "tests/test_catalogue_gate.py",
-        "sha256": "5f3cd70637f7bb2e11f928af524bfcaea98a101bfbddf46da20fb2198df70a0a"
+        "sha256": "8ba391c998196343e7c4c576cd252f64f17b0900cac635375262c0ff4d4ad47c"
       },
       {
         "path": "tests/test_catalogue_loader.py",
@@ -973,7 +973,7 @@
     "tests": {
       "js_files": 3,
       "python_files": 203,
-      "python_functions_declared": 2607
+      "python_functions_declared": 2611
     }
   },
   "observations": [
