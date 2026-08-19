@@ -3,19 +3,19 @@
  "objections": [
   {
    "severite": "majeure",
-   "fichier": "scripts/gate_exit_codes.py",
-   "description": "Le gate ne valide pas le schéma du registre et peut donc réussir avec un registre JSON structurellement invalide, sans vérifier aucune entrée. Cela contredit le rôle bloquant du registre imposé par le schéma `exit-codes-v1` et le cas attendu de registre invalide.",
-   "preuve": "Aux lignes 41-44, `codes_par_commande` non dictionnaire produit simplement `[]`; aux lignes 105-113, un registre tel que `{\"codes_par_commande\": []}` conduit à `n = 0`, puis au retour 0. Un registre JSON racine `[]` provoque en plus un `AttributeError` sur `registre.get(...)`, non capturé par le `except` des lignes 100-103. Les tests ne couvrent qu'un JSON syntaxiquement invalide (`tests/test_gate_exit_codes.py`, lignes 85-88), pas un JSON valide mais hors schéma."
+   "fichier": "Docs/exit-codes.json",
+   "description": "Le registre censé constituer l'inventaire exhaustif omet le code spécifique 13 de `loop run`. La documentation le mentionne, mais aucune entrée JSON ne le porte : le registre n'est donc pas la source de vérité exhaustive demandée.",
+   "preuve": "L'annexe `stories/RC1-013-increment2a-rapport-codes-sortie.md`, lignes 39-40, recense `13` pour `loop run` à la ligne 1254. `Docs/reference/cli.md` ajouté, section `forgeai loop`, documente également `**13**`. Dans `Docs/exit-codes.json`, le tableau `codes_par_commande.loop` ne contient que les codes 14 (ligne 1241), 15 (ligne 1245) et 12 (ligne 1248), et aucune occurrence de `\"code\": 13` n'existe."
   },
   {
    "severite": "majeure",
    "fichier": "scripts/gate_exit_codes.py",
-   "description": "La vérification ne respecte pas la règle demandée : vérifier que la ligne contient la sous-chaîne littérale `return <code>`. Elle impose au contraire une fin de ligne précise et accepte une forme ternaire qui ne contient pas cette sous-chaîne.",
-   "preuve": "Aux lignes 60-66, la conformité est calculée avec `fin_ligne.endswith(attendu_return)` ou `fin_ligne.endswith(attendu_ternaire)`. Une ligne Python valide telle que `return 10  # commentaire` contient bien `return 10` mais serait signalée en dérive. Inversement, `return 0 if x else 9` est acceptée pour le code 9 alors qu'elle ne contient pas la sous-chaîne requise `return 9`; ce comportement est explicitement testé dans `tests/test_gate_exit_codes.py`, lignes 48-51."
+   "description": "Le gate accepte des registres JSON structurellement invalides au regard du schéma imposé, notamment un objet vide ou un `_schema` erroné, et retourne alors 0 sans contrôler aucune entrée. Il ne valide ni `_schema`, ni `codes_globaux`, ni la structure obligatoire des entrées.",
+   "preuve": "Aux lignes 103-108, seul le type racine puis le type de `codes_par_commande` sont contrôlés, avec `registre.get(\"codes_par_commande\", {})` : `{}` est donc accepté. Aux lignes 117-122, ce registre donne `n = 0`; puis, sans anomalie, la ligne 134 retourne 0. Un contenu tel que `{\"_schema\":\"autre\",\"codes_par_commande\":{}}` est également accepté, alors que le schéma demandé impose `_schema: \"exit-codes-v1\"`, `codes_globaux` et des entrées `code`/`ligne`/`signification`."
   }
  ],
- "date_heure": "2026-08-18T23:37:56.751855+00:00",
- "prompt_sha256": "621700a6fd55af1d759f52ce03d2e2f8f824b355e0d3d35963f3b1dce2beebb7",
+ "date_heure": "2026-08-18T23:53:57.563194+00:00",
+ "prompt_sha256": "144c8643ce6671d5c311a49a69b87abacd1dd161ebfd0f9893610de01021d8e6",
  "reviewer_model": "GPT-5.6-Terra-Pro",
  "modele_servi": "gpt56-terra-pro-openrouter",
  "gateway_resilience": {

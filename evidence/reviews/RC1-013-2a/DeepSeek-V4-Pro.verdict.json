@@ -1,27 +1,27 @@
 {
- "verdict": "APPROVE",
+ "verdict": "REJECT",
  "objections": [
   {
-   "severite": "mineure",
+   "severite": "majeure",
+   "fichier": "Docs/exit-codes.json",
+   "description": "Le registre n'est pas exhaustif par rapport à l'annexe de reconnaissance : il omet le code 13 de `loop run` (budget --max-iter épuisé, L1254) et le code 9 de `model test` (test de connexion échoué, L1016), pourtant listés comme codes significatifs. Le gate ne vérifiera donc pas ces deux codes, contrairement au critère « une entrée par code significatif trouvé dans l'annexe ».",
+   "preuve": "Le JSON ne contient ni `\"code\": 13` ni d'entrée `model` à `ligne: 1016` ; l'annexe `stories/RC1-013-increment2a-rapport-codes-sortie.md` cite `13` (L1254) et `9` (L1016)."
+  },
+  {
+   "severite": "majeure",
    "fichier": "scripts/gate_exit_codes.py",
-   "description": "La vérification demandée était la sous-chaîne littérale `return <code>`. L'implémentation utilise `endswith` et accepte aussi `else <code>`, ce qui peut ne pas signaler une ligne ne contenant pas `return <code>` (ex. `return 0 if x else 9`).",
-   "preuve": "`attendu_ternaire = f\"else {code_int}\"` puis `conforme = fin_ligne.endswith(attendu_return) or fin_ligne.endswith(attendu_ternaire)` ; test `test_anomalies_pattern_ternaire_else_n_pas_anomalie`."
+   "description": "Le gate ignore silencieusement les structures de registre malformées (valeurs non-listes ou entrées non-objets), ce qui peut le faire réussir sans vérifier aucune entrée. Un registre JSON valide comme `{\"codes_par_commande\": {\"cmd\": {\"code\": 10, \"ligne\": 1126}}}` produit 0 anomalie et n=0, puis `main()` retourne 0.",
+   "preuve": "`for commande, entrees in codes_par_commande.items(): if not isinstance(entrees, list): continue` et `for entree in entrees: if not isinstance(entree, dict): continue` ; `n = sum(len(v) for v in codes_par_commande.values() if isinstance(v, list))` ; aucune anomalie n'est ajoutée pour ces types."
   },
   {
    "severite": "mineure",
-   "fichier": "Docs/reference/cli.md",
-   "description": "L'annexe demandait pour la commande `web` un traitement binaire standard avec une note explicite renvoyant vers `forgeai.web`. Cette note est absente des nouvelles sections.",
-   "preuve": "Le bloc `## Codes de sortie` ajouté ne contient aucun texte mentionnant `forgeai web` ni `forgeai.web`."
-  },
-  {
-   "severite": "mineure",
-   "fichier": "scripts/gate_exit_codes.py",
-   "description": "Un registre JSON valide mais non-objet (ex. `[]`) n'est pas géré comme registre invalide : `registre.get()` lève `AttributeError`, donc `main()` ne retourne pas l'entier 1 attendu.",
-   "preuve": "`main()` ne capture que `OSError`, `ValueError`, `json.JSONDecodeError` ; `anomalies()` commence par `registre.get(...)` sans contrôle de type."
+   "fichier": "tests/test_gate_exit_codes.py",
+   "description": "Le scénario « fichier registre absent/invalide » n'est testé qu'au niveau de `charger_registre()` et pas au niveau de `main()`, alors que le comportement attendu du gate est que `main()` retourne 1 sur registre absent ou JSON invalide.",
+   "preuve": "`test_charger_registre_fichier_absent` et `test_charger_registre_json_invalide` utilisent `pytest.raises` ; aucun test n'appelle `gate_exit_codes.main([])` avec un chemin absent ou un JSON invalide pour vérifier le retour 1."
   }
  ],
- "date_heure": "2026-08-18T23:41:29.271911+00:00",
- "prompt_sha256": "621700a6fd55af1d759f52ce03d2e2f8f824b355e0d3d35963f3b1dce2beebb7",
+ "date_heure": "2026-08-18T23:56:19.359084+00:00",
+ "prompt_sha256": "144c8643ce6671d5c311a49a69b87abacd1dd161ebfd0f9893610de01021d8e6",
  "reviewer_model": "DeepSeek-V4-Pro",
  "modele_servi": "deepseek-v4-pro-direct",
  "gateway_resilience": {
