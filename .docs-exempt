@@ -133,6 +133,10 @@ Le contrôle de chaîne distingue les lignées par issue et merge-base afin de n
 des PR successives légitimes après rebase. Cette précision reste interne au gate de revue et ne
 modifie aucun contrat utilisateur.
 
+governance/error-handling-contracts.json + governance/ERROR-HANDLING-CONTRACTS.md : régénération
+déterministe des ancrages AST après le durcissement de lecture HTTP; il s'agit d'un inventaire
+interne, pas d'une documentation utilisateur nouvelle.
+
 scripts/branch_coverage_report.py + job .github/workflows/gates.yml `branch-coverage-report`
 (RC1-021/#451, incrément 1) : nouvel outillage interne CI, mesure et rapport de couverture de
 branches par fonction, jamais bloquant (miroir exact de scripts/ruff_report.py / job
