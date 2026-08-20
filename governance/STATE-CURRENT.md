@@ -929,6 +929,10 @@
       "sha256": "e0ad31047c92ca91a43ea3cb352039f6495eddc1cf5ecaa82b82a2e3e336a6c9"
     },
     {
+      "path": "tests/test_web_body_timeout.py",
+      "sha256": "055ae6d7e26eac8f3f8b177eef5e65815cb501df5f2bf2920ec343ee351fa0d4"
+    },
+    {
       "path": "tests/test_web_bricks.py",
       "sha256": "c469e2196778a3eb3c0dfc17962010ca209e4fc59358223108a21cf03d890c0f"
     },
@@ -986,8 +990,8 @@
   },
   "tests": {
     "js_files": 3,
-    "python_files": 205,
-    "python_functions_declared": 2623
+    "python_files": 206,
+    "python_functions_declared": 2625
   }
 }
 ```
