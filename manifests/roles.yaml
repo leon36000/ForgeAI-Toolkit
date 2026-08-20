@@ -77,6 +77,33 @@ membres:
     phase_b: Reviewer aveugle scellé ; synthétiseur de preuves proposé, non confirmé
     contrainte: civ_review.py hors session pour les revues ; synthétiseur proposé, non confirmé
 
+  # Trio actif de revue 2026-08 : les identités historiques ci-dessus restent résolubles
+  # pour les reçus archivés; ces trois routes sont les reviewers par défaut des nouvelles
+  # stories et conservent trois vendors distincts (laguna/alibaba/openai).
+  - id: laguna_reviewer
+    modele: Laguna S 2.1
+    vendor: laguna
+    provider_id: Laguna-S-2.1-PC4
+    phase_a: Reviewer aveugle scellé local
+    phase_b: Reviewer aveugle scellé local
+    contrainte: route locale; ne code jamais la story qu'il review
+
+  - id: qwen_pc3
+    modele: Qwen 3.8 27B PC3
+    vendor: alibaba
+    provider_id: Qwen3.8-27B
+    phase_a: Reviewer aveugle scellé local
+    phase_b: Reviewer aveugle scellé local
+    contrainte: route locale PC3; ne code jamais la story qu'il review
+
+  - id: daybreak
+    modele: Daybreak Blue
+    vendor: openai
+    provider_id: gpt-daybreak-blue-latest
+    phase_a: Reviewer aveugle scellé
+    phase_b: Reviewer aveugle scellé
+    contrainte: route Codex dédiée; ne code jamais la story qu'il review
+
   - id: qwen_38_max
     modele: Qwen 3.8 Max
     vendor: alibaba
@@ -232,7 +259,7 @@ regles_revue:
   vendors_par_story: 3
   paires_interdites: []
   # Règle explicite : ChatGPT Terra Pro 5.6 ne doit jamais reviewer une story qu'il a codée.
-  reviewers_aveugles: "DeepSeek V4 Pro 0813, Qwen 3.8 2.4T, ChatGPT Terra Pro 5.6"
+  reviewers_aveugles: "Laguna S 2.1, Qwen 3.8 27B PC3, Daybreak Blue"
   revue_aveugle_mecanisme: civ_review.py hors session
   sentinelles: "Qwen 3.8 Max, Grok 4.6, Gemini 3.7 Flash"
   synthese_preuves: "Qwen 3.8 2.4T — proposé, non confirmé"

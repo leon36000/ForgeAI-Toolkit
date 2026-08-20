@@ -8,6 +8,12 @@ gateway:
   routeur: http://127.0.0.1:4000 (LiteLLM, auth par clé — jamais en HTTP direct depuis les agents)
   sante: {status: ok, models: 36}
 routes:
+  - {membre: laguna_reviewer, provider_id: Laguna-S-2.1-PC4, modele_reponse: Laguna-S-2.1-PC4, statut: ok,
+     note: "route locale de revue; l'identité vendor est laguna"}
+  - {membre: qwen_pc3, provider_id: Qwen3.8-27B, modele_reponse: Qwen3.8-27B, statut: ok,
+     note: "route locale PC3 de revue; l'identité vendor est alibaba"}
+  - {membre: daybreak, provider_id: gpt-daybreak-blue-latest, modele_reponse: gpt-daybreak-blue-latest, statut: ok,
+     note: "route Codex de revue; l'identité vendor est openai"}
   - {membre: glm,      provider_id: glm52,          modele_reponse: GLM-5.2,        statut: ok}
   - {membre: deepseek, provider_id: deepseek,       modele_reponse: DeepSeek-V4-Pro, statut: ok}
   - {membre: kimi,     provider_id: kimi,           modele_reponse: Kimi-2.7,       statut: ok}
