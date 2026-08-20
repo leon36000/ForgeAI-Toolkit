@@ -8,7 +8,7 @@
       "sha256_recomputed_ok": true
     },
     "ci": {
-      "jobs_total": 28,
+      "jobs_total": 31,
       "workflows": 7
     },
     "cli": {
@@ -104,7 +104,7 @@
       },
       {
         "path": ".github/workflows/scope-guard.yml",
-        "sha256": "77e4efb2f01162442d4ad3be6f864155bda668e5e1190fa11751bd1f5fd366cb"
+        "sha256": "312e4e7e4f7bffc1503be4fad3992ac2b4392b75a2105b174f6c113831240eba"
       },
       {
         "path": ".github/workflows/sonar-suppressions.yml",
@@ -551,6 +551,10 @@
         "sha256": "1d9db5d5c5590b9352f0d1da0d01e72e75d8e32d6388e4bf0d9e400665ca5737"
       },
       {
+        "path": "tests/test_orch_578_review_round_gate.py",
+        "sha256": "57e8ffd4fe22136ed3d351ca3fd57348a58555d2ef0fa848d1b963f8e6869852"
+      },
+      {
         "path": "tests/test_perf030a_refresh.py",
         "sha256": "c954cc882c958e98d5f5312f589e8f1625d9f3a3d72a2584d918ca0a2ed29b13"
       },
@@ -972,8 +976,8 @@
     },
     "tests": {
       "js_files": 3,
-      "python_files": 203,
-      "python_functions_declared": 2622
+      "python_files": 204,
+      "python_functions_declared": 2626
     }
   },
   "observations": [

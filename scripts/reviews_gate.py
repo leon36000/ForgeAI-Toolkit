@@ -21,6 +21,9 @@ drapeau, reste STRICTEMENT identique à avant cette story) :
     habituel, exige qu'AU MOINS UNE entrée liante porte un evidence/reviews/<ID>/RECU.json qui
     se vérifie contre l'état git RÉEL de la PR courante (commit, arbre, diff canonique hors
     evidence/reviews/**). Sans reçu valide couvrant le changement courant : échec explicite.
+    Depuis #578, un reçu COURANT n'est admissible que si son round respecte le coupe-circuit
+    partagé de `scripts/coordination/scope_guard.py` (1-2 automatiques, 3 maximum après replan ;
+    >3 interdit). Les reçus historiques restent lisibles et ne sont pas réécrits.
 
   --mode archive : dépouillement legacy habituel pour toutes les entrées ; en plus, pour
     chaque entrée qui porte un RECU.json, vérifie que son commit est un ANCÊTRE du HEAD
@@ -52,6 +55,30 @@ def _load_revue():
     mod = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(mod)
     return mod
+
+
+def _load_scope_guard():
+    path = REPO / "scripts" / "coordination" / "scope_guard.py"
+    spec = importlib.util.spec_from_file_location("scope_guard", path)
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    return mod
+
+
+def _current_receipt_round_allowed(receipt: object) -> tuple[bool, str]:
+    """Applique prospectivement le coupe-circuit #578 au reçu qui couvre la PR courante.
+
+    Le mode archive ne passe jamais ici : un historique ancien peut donc conserver fidèlement
+    ses rounds élevés sans être réécrit. `replanned=True` autorise le round 3 au niveau du gate
+    de merge ; la preuve du replan doit avoir été exigée AVANT la dépense par le preflight CLI.
+    """
+    if not isinstance(receipt, dict):
+        return False, "INVALID_RECEIPT"
+    round_number = receipt.get("round")
+    if not isinstance(round_number, int) or isinstance(round_number, bool):
+        return False, "INVALID_ROUND"
+    guard = _load_scope_guard()
+    return guard.review_round_policy(round_number, replanned=True)
 
 
 def _default_runner(command: list[str]) -> str:
@@ -168,6 +195,15 @@ def check(
                 continue
             receipt_result = revue.verifier_recu(receipt, verdicts, etat_git)
             if receipt_result.get("result") == "APPROVE":
+                round_allowed, round_mode = _current_receipt_round_allowed(receipt)
+                if not round_allowed:
+                    ok = False
+                    round_value = receipt.get("round") if isinstance(receipt, dict) else None
+                    report.append(
+                        f"ECHEC {entry} : reçu courant round={round_value!r} refusé "
+                        f"par le coupe-circuit #578 ({round_mode}); maximum prospectif = 3"
+                    )
+                    continue
                 received_current = True
                 report.append(f"OK    {entry} : reçu couvre le changement courant")
             else:
