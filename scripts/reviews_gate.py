@@ -84,6 +84,55 @@ def _current_receipt_round_allowed(receipt: object) -> tuple[bool, str]:
     return guard.review_round_policy(round_number, replanned=replanned)
 
 
+def _receipt_round_chain_allowed(
+    receipt: object,
+    current_entry: str,
+    binding: list[str],
+    reviews_root: Path,
+) -> tuple[bool, str]:
+    """Refuse un rollback de round pour une même issue.
+
+    Le round ne doit pas être un compteur que l'orchestrateur peut réinitialiser en changeant
+    de dossier. Les reçus antérieurs versionnés dans le manifeste, pour la même issue et le même
+    merge-base, forment la chaîne de référence; une première revue est round 1, puis chaque
+    tentative suivante doit être exactement le round précédent + 1. Un même numéro d'issue peut
+    légitimement avoir plusieurs PR successives après rebase de main : leur merge-base distingue
+    ces lignées.
+    """
+    if not isinstance(receipt, dict):
+        return False, "INVALID_RECEIPT"
+    issue = receipt.get("issue")
+    round_number = receipt.get("round")
+    if isinstance(issue, bool) or not isinstance(issue, int):
+        return False, "INVALID_ISSUE"
+    if isinstance(round_number, bool) or not isinstance(round_number, int):
+        return False, "INVALID_ROUND"
+
+    prior_max = 0
+    for entry in binding:
+        if entry == current_entry:
+            continue
+        candidate = (reviews_root / entry).resolve() / "RECU.json"
+        try:
+            prior = json.loads(candidate.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            continue
+        if (
+            not isinstance(prior, dict)
+            or prior.get("issue") != issue
+            or prior.get("base_commit") != receipt.get("base_commit")
+        ):
+            continue
+        prior_round = prior.get("round")
+        if isinstance(prior_round, int) and not isinstance(prior_round, bool):
+            prior_max = max(prior_max, prior_round)
+
+    expected = prior_max + 1
+    if round_number != expected:
+        return False, "ROUND_NOT_MONOTONIC"
+    return True, "CHAIN"
+
+
 def _default_runner(command: list[str]) -> str:
     return subprocess.run(
         command,
@@ -207,8 +256,21 @@ def check(
                         f"par le coupe-circuit #578 ({round_mode}); maximum prospectif = 3"
                     )
                     continue
+                chain_allowed, chain_mode = _receipt_round_chain_allowed(
+                    receipt, entry, binding, reviews_root
+                )
+                if not chain_allowed:
+                    ok = False
+                    round_value = receipt.get("round") if isinstance(receipt, dict) else None
+                    report.append(
+                        f"ECHEC {entry} : reçu courant round={round_value!r} refusé "
+                        f"par la chaîne monotone des reçus ({chain_mode})"
+                    )
+                    continue
                 received_current = True
-                report.append(f"OK    {entry} : reçu couvre le changement courant")
+                report.append(
+                    f"OK    {entry} : reçu couvre le changement courant ({chain_mode})"
+                )
             else:
                 # PAS un ECHEC de cette entrée : un reçu qui ne valide plus contre l'état git
                 # COURANT est l'état normal et permanent de toute entrée HISTORIQUE (déjà

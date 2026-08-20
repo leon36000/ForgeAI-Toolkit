@@ -125,6 +125,14 @@ Correctif de suivi de la même garde interne : suppression du job CI de synchron
 écriture et alignement du diff de claims sur le head-ref effectivement mesuré. Le job de preview
 sans écriture reste la source d'artefacts; aucun contrat utilisateur nouveau n'est introduit.
 
+scripts/reviews_gate.py + tests/test_orch_578_review_round_gate.py : la chaîne des reçus de
+revue impose désormais un round monotone par issue, en complément du plafond 1-2-3. C'est un
+durcissement interne du gate; aucune documentation utilisateur supplémentaire n'est requise.
+
+Le contrôle de chaîne distingue les lignées par issue et merge-base afin de ne pas confondre
+des PR successives légitimes après rebase. Cette précision reste interne au gate de revue et ne
+modifie aucun contrat utilisateur.
+
 scripts/branch_coverage_report.py + job .github/workflows/gates.yml `branch-coverage-report`
 (RC1-021/#451, incrément 1) : nouvel outillage interne CI, mesure et rapport de couverture de
 branches par fonction, jamais bloquant (miroir exact de scripts/ruff_report.py / job

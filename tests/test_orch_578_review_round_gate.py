@@ -35,3 +35,32 @@ def test_current_receipt_replan_requires_boolean() -> None:
         False,
         "INVALID_REPLAN",
     )
+
+
+def test_receipt_round_chain_is_monotone_by_issue(tmp_path: Path) -> None:
+    prior = tmp_path / "prior"
+    prior.mkdir()
+    (prior / "RECU.json").write_text(
+        '{"issue": 597, "round": 1, "base_commit": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"}',
+        encoding="utf-8",
+    )
+    root = tmp_path
+
+    assert gate._receipt_round_chain_allowed(
+        {"issue": 597, "round": 1, "base_commit": "b" * 40},
+        "current",
+        ["prior", "current"],
+        root,
+    ) == (False, "ROUND_NOT_MONOTONIC")
+    assert gate._receipt_round_chain_allowed(
+        {"issue": 597, "round": 2, "base_commit": "b" * 40},
+        "current",
+        ["prior", "current"],
+        root,
+    ) == (True, "CHAIN")
+    assert gate._receipt_round_chain_allowed(
+        {"issue": 598, "round": 1, "base_commit": "b" * 40},
+        "current",
+        ["prior", "current"],
+        root,
+    ) == (True, "CHAIN")
