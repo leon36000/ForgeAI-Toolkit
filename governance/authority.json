@@ -176,7 +176,7 @@
       ],
       "digest": {
         "policy": "content_sha256",
-        "value": "49ea52c8a896b8426693c797b265ea79241f9d3e7bbe31455dca03d5b0efe765",
+        "value": "015d4ffed0efecc3837523c048c7d72bc336268fb69838ff08d99d4d066b9f9f",
         "checked_at": "2026-08-16",
         "delegated_to": null
       },
@@ -598,7 +598,7 @@
       "positions": [],
       "digest": {
         "policy": "content_sha256",
-        "value": "24652c67583a02d436c78ff0fd73b3d8223fc6179d2e704a5dfa0b7faf0b367f",
+        "value": "5729db7d628f6da31d5041dc5c867a67c3c3e4d8c383b86a07b3059777f060ba",
         "checked_at": "2026-08-14",
         "delegated_to": null
       },
