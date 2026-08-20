@@ -15,6 +15,13 @@ jobs:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
           persist-credentials: false
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+        with:
+          python-version: "3.12"
+      - name: Installer les dépendances de test verrouillées
+        run: python -m pip install --no-cache-dir --require-hashes -r requirements-ci.txt
+      - name: Tests du scope guard — comportement réellement exécuté en CI
+        run: python -m pytest scripts/coordination/test_scope_guard.py -q
       - name: Valider la coordination multi-IDE (claims, lanes, deps)
         run: python3 scripts/coordination/validate_coordination.py
 
@@ -25,7 +32,134 @@ jobs:
         with:
           persist-credentials: false
           fetch-depth: 0
-      - name: Vérifier que les fichiers modifiés sont dans l'allowlist du claim de CETTE PR
+          # Sur pull_request, GitHub checkout sinon le merge synthétique refs/pull/*/merge.
+          # Le budget doit mesurer la vraie branche pour que `behind` reste honnête.
+          ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
+      - name: Vérifier le budget quantitatif puis le périmètre historique éventuel
         env:
           GITHUB_HEAD_REF: ${{ github.head_ref }}
-        run: python3 scripts/coordination/scope_guard.py
+          BASE_BRANCH: ${{ github.base_ref || 'main' }}
+        run: >-
+          python3 scripts/coordination/scope_guard.py
+          --base-ref "origin/${BASE_BRANCH}"
+          --head-ref HEAD
+
+  governance-render-preview:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha }}
+      - name: Régénérer localement les vues de gouvernance sans écrire au dépôt
+        run: |
+          python3 scripts/governance/classify_paths.py --render
+          python3 scripts/governance/state_current.py --render
+      - name: Publier les vues exactes comme artefact de correction
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: governance-render-${{ github.event.pull_request.number }}
+          path: |
+            governance/path-classification.json
+            governance/PATH-CLASSIFICATION.md
+            governance/STATE-CURRENT.json
+            governance/STATE-CURRENT.md
+          if-no-files-found: error
+          retention-days: 1
+
+  ruff-baseline-maintenance-preview:
+    if: >-
+      github.event_name == 'pull_request' &&
+      contains(github.event.pull_request.body, '[maintenance-regenerate-ruff-baseline]')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha }}
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+        with:
+          python-version: "3.12"
+      - name: Installer les dépendances Ruff verrouillées
+        run: python -m pip install --no-cache-dir --require-hashes -r requirements-ci.txt
+      - name: Régénérer explicitement la baseline Ruff sans écrire au dépôt distant
+        run: python3 scripts/ruff_ratchet.py --racine . --base-ref-git origin/main --regenerer-baseline
+      - name: Publier la baseline générée comme artefact de maintenance
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: ruff-baseline-${{ github.event.pull_request.number }}
+          path: governance/ruff-baseline.json
+          if-no-files-found: error
+          retention-days: 1
+
+  governance-render-sync:
+    if: >-
+      github.event_name == 'pull_request' &&
+      github.event.pull_request.head.repo.full_name == github.repository &&
+      contains(github.event.pull_request.body, '[sync-governance-views]')
+    needs: governance-render-preview
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: read
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha }}
+      - name: Régénérer les quatre vues autorisées
+        run: |
+          python3 scripts/governance/classify_paths.py --render
+          python3 scripts/governance/state_current.py --render
+      - name: Refuser toute mutation hors des quatre vues déterministes
+        run: |
+          python3 - <<'PY'
+          import subprocess
+          import sys
+
+          allowed = {
+              "governance/path-classification.json",
+              "governance/PATH-CLASSIFICATION.md",
+              "governance/STATE-CURRENT.json",
+              "governance/STATE-CURRENT.md",
+          }
+          output = subprocess.run(
+              ["git", "status", "--porcelain=v1"],
+              check=True,
+              capture_output=True,
+              text=True,
+          ).stdout
+          changed = {line[3:] for line in output.splitlines() if line.strip()}
+          unexpected = sorted(changed - allowed)
+          if unexpected:
+              print("FAIL — renderer a muté des chemins non autorisés:", file=sys.stderr)
+              for path in unexpected:
+                  print(f"  - {path}", file=sys.stderr)
+              raise SystemExit(1)
+          print(f"OK — mutations bornées aux vues: {sorted(changed)}")
+          PY
+      - name: Commit fast-forward des vues seulement si nécessaire
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          PR_HEAD_REF: ${{ github.head_ref }}
+        run: |
+          git add -- \
+            governance/path-classification.json \
+            governance/PATH-CLASSIFICATION.md \
+            governance/STATE-CURRENT.json \
+            governance/STATE-CURRENT.md
+          if git diff --cached --quiet; then
+            echo "Aucune vue à synchroniser."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "chore(governance): sync generated views (#${PR_NUMBER})"
+          auth="$(printf 'x-access-token:%s' "$GITHUB_TOKEN" | base64 -w0)"
+          git -c "http.https://github.com/.extraheader=AUTHORIZATION: basic ${auth}" \
+            push origin "HEAD:${PR_HEAD_REF}"

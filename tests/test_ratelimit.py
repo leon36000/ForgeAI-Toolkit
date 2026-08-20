@@ -1,6 +1,5 @@
 """Tests unitaires déterministes de RateLimiter (horloge factice, sans sleep)."""
 
-import os
 import threading
 import time
 
@@ -17,6 +16,17 @@ class MockClock:
 
     def __call__(self) -> float:
         return self.t
+
+
+def test_constructeur_expose_ses_valeurs_par_defaut():
+    rl = RateLimiter()
+
+    assert rl.rate_max == 100
+    assert rl.rate_window_s == 60.0
+    assert rl.auth_max == 5
+    assert rl.auth_window_s == 600.0
+    assert rl.lockout_s == 900.0
+    assert rl._evict_threshold == 4096
 
 
 def test_bucket_autorise_sous_seuil():
@@ -37,6 +47,45 @@ def test_bucket_recharge_apres_fenetre():
     assert rl.check("192.0.2.1", is_loopback=False) is not None
     clock.t += 2.0
     assert rl.check("192.0.2.1", is_loopback=False) is None
+
+
+def test_bucket_recharge_partielle_est_calculable():
+    """Une recharge partielle ne doit ni saturer ni autoriser trop tôt le bucket."""
+    clock = MockClock()
+    rl = RateLimiter(rate_max=2, rate_window_s=4.0, clock=clock)
+    ip = "192.0.2.2"
+
+    assert rl.check(ip, is_loopback=False) is None
+    assert rl.check(ip, is_loopback=False) is None
+    clock.t = 1.0
+    assert rl.check(ip, is_loopback=False) == pytest.approx(1.0)
+    assert rl._state[ip]["last_seen"] == 1.0
+
+
+def test_recharge_repart_de_la_derniere_date_de_recharge():
+    clock = MockClock()
+    rl = RateLimiter(rate_max=2, rate_window_s=4.0, clock=clock)
+    ip = "192.0.2.3"
+
+    assert rl.check(ip, is_loopback=False) is None
+    assert rl.check(ip, is_loopback=False) is None
+    clock.t = 1.0
+    assert rl.check(ip, is_loopback=False) is not None
+    clock.t = 2.0
+    assert rl.check(ip, is_loopback=False) is None
+    clock.t = 3.0
+    assert rl.check(ip, is_loopback=False) == pytest.approx(1.0)
+
+
+def test_fenetre_de_recharge_unitaire_reste_active():
+    clock = MockClock()
+    rl = RateLimiter(rate_max=2, rate_window_s=1.0, clock=clock)
+    ip = "192.0.2.4"
+
+    assert rl.check(ip, is_loopback=False) is None
+    assert rl.check(ip, is_loopback=False) is None
+    clock.t = 0.25
+    assert rl.check(ip, is_loopback=False) == pytest.approx(0.25)
 
 
 def test_loopback_exempt_du_bucket():
@@ -69,6 +118,16 @@ def test_lockout_expire():
     assert rl.check(ip, is_loopback=False) is None
 
 
+def test_rate_max_unitaire_recharge_partielle_ne_contourne_pas_la_garde():
+    clock = MockClock()
+    rl = RateLimiter(rate_max=1, rate_window_s=2.0, clock=clock)
+    ip = "10.1.0.3"
+
+    assert rl.check(ip, is_loopback=False) is None
+    clock.t = 1.0
+    assert rl.check(ip, is_loopback=False) == pytest.approx(1.0)
+
+
 def test_echecs_hors_fenetre_ne_lockout_pas():
     """Des échecs espacés au-delà de la fenêtre glissante ne déclenchent pas de lockout."""
     clock = MockClock()
@@ -79,6 +138,18 @@ def test_echecs_hors_fenetre_ne_lockout_pas():
     clock.t += 31.0
     for _ in range(2):
         rl.record_auth_failure(ip)
+    assert rl.check(ip, is_loopback=False) is None
+
+
+def test_echec_exactement_a_la_limite_est_hors_fenetre():
+    clock = MockClock()
+    rl = RateLimiter(auth_max=2, auth_window_s=30.0, lockout_s=60.0, clock=clock)
+    ip = "10.2.0.4"
+
+    rl.record_auth_failure(ip)
+    clock.t = 30.0
+    rl.record_auth_failure(ip)
+
     assert rl.check(ip, is_loopback=False) is None
 
 
@@ -95,6 +166,24 @@ def test_lockout_ne_reset_pas_sur_succes():
     assert rl.check(ip, is_loopback=False) is None
     clock.t += 1.0
     assert rl.check(ip, is_loopback=False) is None
+
+
+def test_echec_rafraichit_last_seen_avant_toute_requete():
+    clock = MockClock()
+    rl = RateLimiter(auth_max=3, clock=clock)
+    ip = "10.3.0.5"
+
+    rl.check(ip, is_loopback=True)
+    clock.t = 4.0
+    rl.record_auth_failure(ip)
+
+    assert rl._state[ip]["last_seen"] == 4.0
+
+
+def test_rate_max_zero_retourne_la_fenetre_de_reessai_exacte():
+    rl = RateLimiter(rate_max=0, rate_window_s=0.5, clock=MockClock())
+
+    assert rl.check("203.0.113.8", is_loopback=False) == pytest.approx(0.5)
 
 
 def test_thread_safety():
@@ -181,3 +270,104 @@ def test_from_env_rate_max_zero_ne_leve_pas(monkeypatch):
     rl = RateLimiter.from_env()
     retry = rl.check("203.0.113.7", is_loopback=False)
     assert isinstance(retry, float) and retry > 0
+
+
+def test_from_env_charge_tous_les_parametres(monkeypatch):
+    valeurs = {
+        "FORGEAI_RATE_MAX": "7",
+        "FORGEAI_RATE_WINDOW_S": "12.5",
+        "FORGEAI_AUTH_MAX": "4",
+        "FORGEAI_AUTH_WINDOW_S": "33.5",
+        "FORGEAI_LOCKOUT_S": "44.5",
+    }
+    for cle, valeur in valeurs.items():
+        monkeypatch.setenv(cle, valeur)
+
+    rl = RateLimiter.from_env()
+
+    assert rl.rate_max == 7
+    assert rl.rate_window_s == 12.5
+    assert rl.auth_max == 4
+    assert rl.auth_window_s == 33.5
+    assert rl.lockout_s == 44.5
+
+
+def test_from_env_valeurs_invalides_reprennent_les_defauts(monkeypatch):
+    for cle in (
+        "FORGEAI_RATE_MAX",
+        "FORGEAI_RATE_WINDOW_S",
+        "FORGEAI_AUTH_MAX",
+        "FORGEAI_AUTH_WINDOW_S",
+        "FORGEAI_LOCKOUT_S",
+    ):
+        monkeypatch.setenv(cle, "pas-un-nombre")
+
+    rl = RateLimiter.from_env()
+
+    assert rl.rate_max == 100
+    assert rl.rate_window_s == 60.0
+    assert rl.auth_max == 5
+    assert rl.auth_window_s == 600.0
+    assert rl.lockout_s == 900.0
+
+
+def test_lockout_retourne_le_temps_restant_exact_et_rafraichit_l_activite():
+    clock = MockClock()
+    rl = RateLimiter(auth_max=1, lockout_s=10.0, clock=clock)
+    ip = "10.4.0.1"
+    rl.record_auth_failure(ip)
+
+    clock.t = 3.0
+    assert rl.check(ip, is_loopback=True) == pytest.approx(7.0)
+    assert rl._state[ip]["last_seen"] == 3.0
+
+
+def test_loopback_cree_et_rafraichit_l_etat():
+    clock = MockClock()
+    rl = RateLimiter(clock=clock)
+    ip = "127.0.0.2"
+
+    assert rl.check(ip, is_loopback=True) is None
+    assert rl._state[ip]["last_seen"] == 0.0
+    clock.t = 8.0
+    assert rl.check(ip, is_loopback=True) is None
+    assert rl._state[ip]["last_seen"] == 8.0
+
+
+def test_eviction_ne_se_declenche_pas_au_seuil_exact():
+    clock = MockClock(start=10.0)
+    rl = RateLimiter(rate_window_s=1.0, auth_window_s=1.0, clock=clock)
+    rl._evict_threshold = 2
+    rl.check("203.0.113.10", is_loopback=True)
+    rl.check("203.0.113.11", is_loopback=True)
+    clock.t = 200.0
+
+    rl._maybe_evict()
+
+    assert len(rl._state) == 2
+
+
+def test_eviction_respecte_exactement_la_duree_d_inactivite():
+    clock = MockClock(start=10.0)
+    rl = RateLimiter(rate_window_s=100.0, auth_window_s=100.0, clock=clock)
+    rl._evict_threshold = 0
+    rl.check("203.0.113.12", is_loopback=True)
+    clock.t = 110.0
+
+    rl._maybe_evict()
+
+    assert "203.0.113.12" in rl._state
+
+
+def test_eviction_supprime_un_lockout_arrive_a_echeance():
+    clock = MockClock(start=0.0)
+    rl = RateLimiter(rate_window_s=1.0, auth_window_s=1.0, clock=clock)
+    rl._evict_threshold = 0
+    rl.record_auth_failure("203.0.113.13")
+    rl._state["203.0.113.13"]["locked_until"] = 10.0
+    rl._state["203.0.113.13"]["last_seen"] = 0.0
+    clock.t = 10.0
+
+    rl._maybe_evict()
+
+    assert "203.0.113.13" not in rl._state

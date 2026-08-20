@@ -14,7 +14,7 @@
     "sha256_recomputed_ok": true
   },
   "ci": {
-    "jobs_total": 28,
+    "jobs_total": 31,
     "workflows": 7
   },
   "cli": {
@@ -110,7 +110,7 @@
     },
     {
       "path": ".github/workflows/scope-guard.yml",
-      "sha256": "77e4efb2f01162442d4ad3be6f864155bda668e5e1190fa11751bd1f5fd366cb"
+      "sha256": "312e4e7e4f7bffc1503be4fad3992ac2b4392b75a2105b174f6c113831240eba"
     },
     {
       "path": ".github/workflows/sonar-suppressions.yml",
@@ -130,7 +130,7 @@
     },
     {
       "path": "pyproject.toml",
-      "sha256": "84ae0cb0af64438426fba0f6c74cca2b00b05c791971aa67b92809e859f0e517"
+      "sha256": "88ae9547fb001a8d01f0c407f17397f5b522c32054f95fbb4d40368fb80288d7"
     },
     {
       "path": "src/forgeai/__init__.py",
@@ -143,6 +143,10 @@
     {
       "path": "src/forgeai/data/catalogue.sha256",
       "sha256": "a08b9eaa38c1e60068acebaab151b305991aa8c2de3901b37ba235e807933271"
+    },
+    {
+      "path": "tests/__init__.py",
+      "sha256": "470d1c998d943eaf75d9cc776dc84067931b64a61f02e68bc1bca83b09a97c5f"
     },
     {
       "path": "tests/js/adoption.test.cjs",
@@ -557,6 +561,10 @@
       "sha256": "1d9db5d5c5590b9352f0d1da0d01e72e75d8e32d6388e4bf0d9e400665ca5737"
     },
     {
+      "path": "tests/test_orch_578_review_round_gate.py",
+      "sha256": "57e8ffd4fe22136ed3d351ca3fd57348a58555d2ef0fa848d1b963f8e6869852"
+    },
+    {
       "path": "tests/test_perf030a_refresh.py",
       "sha256": "c954cc882c958e98d5f5312f589e8f1625d9f3a3d72a2584d918ca0a2ed29b13"
     },
@@ -658,7 +666,7 @@
     },
     {
       "path": "tests/test_ratelimit.py",
-      "sha256": "f49b854e41d0fddedb54237307da60a63e5064d99c115f7d05c4c62839623a10"
+      "sha256": "dbe06931d934d2857259cfb8626c1990054ff1cbda702799887c5ec578365df6"
     },
     {
       "path": "tests/test_rc1009_racines_documentaires.py",
@@ -861,6 +869,10 @@
       "sha256": "48196af7f890a4ff913fa8850a1dadb78f44d9f65bb45af8e0ec8d44b4df79c1"
     },
     {
+      "path": "tests/test_tests_package_shadow.py",
+      "sha256": "95da30bd4e093cf64d9a43ff5cb58713963a66192ae9df389274b275b4ece5e7"
+    },
+    {
       "path": "tests/test_traductions.py",
       "sha256": "a44e45f8ff73f6ff9cbc1cdb91f27562e6e1532a1f6486eaa918561d9961db18"
     },
@@ -921,6 +933,10 @@
       "sha256": "e0ad31047c92ca91a43ea3cb352039f6495eddc1cf5ecaa82b82a2e3e336a6c9"
     },
     {
+      "path": "tests/test_web_body_timeout.py",
+      "sha256": "055ae6d7e26eac8f3f8b177eef5e65815cb501df5f2bf2920ec343ee351fa0d4"
+    },
+    {
       "path": "tests/test_web_bricks.py",
       "sha256": "c469e2196778a3eb3c0dfc17962010ca209e4fc59358223108a21cf03d890c0f"
     },
@@ -978,8 +994,8 @@
   },
   "tests": {
     "js_files": 3,
-    "python_files": 203,
-    "python_functions_declared": 2622
+    "python_files": 207,
+    "python_functions_declared": 2644
   }
 }
 ```

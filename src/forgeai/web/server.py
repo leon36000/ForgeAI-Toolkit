@@ -8,6 +8,7 @@ import os
 import re
 import secrets
 import shutil
+import socket
 import ssl
 import subprocess
 import sys
@@ -84,6 +85,7 @@ def _asset_bytes(name: str) -> bytes | None:
 # saturation ~8 clients (p99>1 s à 16). Un seul cache TTL thread-safe, invalidation explicite.
 _HARDWARE_TTL_S = 60.0  # matériel stable ; TTL borné pour hotplug/driver
 _PROBE_TIMEOUT_S = 3.0  # OPT-002 : sondes du chemin HTTP bornées court (20 s reste pour le déploiement)
+_BODY_READ_TIMEOUT_S = 3.0  # RC1-AUDIT-WEB-590 : un corps partiel ne doit pas retenir un thread
 
 _hardware_profile_cache = None
 _hardware_profile_cache_time: float = 0.0
@@ -884,7 +886,15 @@ class ForgeAIHandler(BaseHTTPRequestHandler):
             return None
 
         try:
+            self.connection.settimeout(_BODY_READ_TIMEOUT_S)
             body = self.rfile.read(length)
+        except socket.timeout:
+            self._send_json(408, {"error": "délai de lecture du corps dépassé"})
+            return None
+        finally:
+            self.connection.settimeout(None)
+
+        try:
             data = json.loads(body.decode("utf-8"))
         except (json.JSONDecodeError, UnicodeDecodeError):
             self._send_json(400, {"error": "JSON invalide"})
