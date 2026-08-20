@@ -64,3 +64,15 @@ def test_receipt_round_chain_is_monotone_by_issue(tmp_path: Path) -> None:
         ["prior", "current"],
         root,
     ) == (True, "CHAIN")
+
+
+def test_receipt_round_chain_fail_closed_sur_recu_corrompu(tmp_path: Path) -> None:
+    prior = tmp_path / "prior"
+    prior.mkdir()
+    (prior / "RECU.json").write_text("{not-json", encoding="utf-8")
+    assert gate._receipt_round_chain_allowed(
+        {"issue": 597, "round": 1, "base_commit": "b" * 40},
+        "current",
+        ["prior", "current"],
+        tmp_path,
+    ) == (False, "PRIOR_RECEIPT_UNREADABLE")

@@ -113,10 +113,12 @@ def _receipt_round_chain_allowed(
         if entry == current_entry:
             continue
         candidate = (reviews_root / entry).resolve() / "RECU.json"
+        if not candidate.is_file():
+            continue
         try:
             prior = json.loads(candidate.read_text(encoding="utf-8"))
         except (OSError, json.JSONDecodeError):
-            continue
+            return False, "PRIOR_RECEIPT_UNREADABLE"
         if (
             not isinstance(prior, dict)
             or prior.get("issue") != issue

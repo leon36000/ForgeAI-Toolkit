@@ -137,6 +137,9 @@ governance/error-handling-contracts.json + governance/ERROR-HANDLING-CONTRACTS.m
 déterministe des ancrages AST après le durcissement de lecture HTTP; il s'agit d'un inventaire
 interne, pas d'une documentation utilisateur nouvelle.
 
+scripts/reviews_gate.py : un reçu antérieur présent mais illisible fait désormais échouer fermé
+la chaîne de rounds, au lieu de permettre une réinitialisation silencieuse; durcissement interne.
+
 src/forgeai/web/server.py : fermeture explicite de la connexion après timeout de lecture d'un
 corps partiel, durcissement interne du serveur HTTP sans nouveau contrat utilisateur.
 
