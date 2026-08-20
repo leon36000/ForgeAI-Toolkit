@@ -69,16 +69,19 @@ def _current_receipt_round_allowed(receipt: object) -> tuple[bool, str]:
     """Applique prospectivement le coupe-circuit #578 au reçu qui couvre la PR courante.
 
     Le mode archive ne passe jamais ici : un historique ancien peut donc conserver fidèlement
-    ses rounds élevés sans être réécrit. `replanned=True` autorise le round 3 au niveau du gate
-    de merge ; la preuve du replan doit avoir été exigée AVANT la dépense par le preflight CLI.
+    ses rounds élevés sans être réécrit. Le reçu doit porter explicitement `replanned: true`
+    pour le round 3 ; le gate ne déduit jamais ce fait du seul numéro de round.
     """
     if not isinstance(receipt, dict):
         return False, "INVALID_RECEIPT"
     round_number = receipt.get("round")
     if not isinstance(round_number, int) or isinstance(round_number, bool):
         return False, "INVALID_ROUND"
+    replanned = receipt.get("replanned", False)
+    if not isinstance(replanned, bool):
+        return False, "INVALID_REPLAN"
     guard = _load_scope_guard()
-    return guard.review_round_policy(round_number, replanned=True)
+    return guard.review_round_policy(round_number, replanned=replanned)
 
 
 def _default_runner(command: list[str]) -> str:

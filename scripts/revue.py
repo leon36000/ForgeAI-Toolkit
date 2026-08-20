@@ -523,6 +523,7 @@ def _cmd_recu(args) -> int:
         "dossier": args.dossier,
         "issue": args.issue,
         "round": args.round,
+        "replanned": getattr(args, "replanned", False),
         **etat,
         "prompt_sha256": result.get("prompt_sha256"),
         "reviewers_attendus": [
@@ -568,6 +569,7 @@ def main() -> None:
     pr.add_argument("--head-ref", default="HEAD")
     pr.add_argument("--issue", required=True, type=int)
     pr.add_argument("--round", required=True, type=int)
+    pr.add_argument("--replanned", action="store_true")
     # OBLIGATOIRE (≥1) : un --codeur silencieusement optionnel (défaut []) permettait de
     # contourner l'anti-auto-review par simple omission (revue scellée RC1-004-PR497,
     # DeepSeek-V4-Pro — majeure). verifier_recu() reste tolérant à une liste vide construite

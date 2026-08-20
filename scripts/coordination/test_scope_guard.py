@@ -353,6 +353,18 @@ def test_collect_scope_metrics_parses_numstat_and_separates_generated() -> None:
     }
 
 
+def test_collect_scope_metrics_refuse_les_diff_binaire_non_mesurables() -> None:
+    def runner(command: list[str]) -> str:
+        if command[:3] == ["git", "rev-list", "--count"]:
+            return "0\n"
+        if command[:3] == ["git", "diff", "--numstat"]:
+            return "-\t-\tassets/blob.bin\n"
+        raise AssertionError(command)
+
+    with pytest.raises(ValueError, match="binaire"):
+        sg.collect_scope_metrics("origin/main", "HEAD", runner=runner)
+
+
 def test_quantitative_guard_does_not_depend_on_archived_claim() -> None:
     ok, _ = sg.evaluate_scope(_small_metrics())
     assert ok is True

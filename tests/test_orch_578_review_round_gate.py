@@ -12,7 +12,8 @@ spec.loader.exec_module(gate)
 
 def test_current_receipt_rounds_1_and_3_are_admissible() -> None:
     assert gate._current_receipt_round_allowed({"round": 1}) == (True, "AUTO")
-    assert gate._current_receipt_round_allowed({"round": 3}) == (True, "REPLAN")
+    assert gate._current_receipt_round_allowed({"round": 3}) == (False, "REPLAN_REQUIRED")
+    assert gate._current_receipt_round_allowed({"round": 3, "replanned": True}) == (True, "REPLAN")
 
 
 def test_current_receipt_round_4_is_rejected() -> None:
@@ -27,3 +28,10 @@ def test_current_receipt_requires_integer_round() -> None:
     assert gate._current_receipt_round_allowed({}) == (False, "INVALID_ROUND")
     assert gate._current_receipt_round_allowed({"round": True}) == (False, "INVALID_ROUND")
     assert gate._current_receipt_round_allowed(None) == (False, "INVALID_RECEIPT")
+
+
+def test_current_receipt_replan_requires_boolean() -> None:
+    assert gate._current_receipt_round_allowed({"round": 3, "replanned": "yes"}) == (
+        False,
+        "INVALID_REPLAN",
+    )

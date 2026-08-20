@@ -85,8 +85,10 @@ def _is_generated(path: str) -> bool:
 
 
 def _numstat_churn(insertions: str, deletions: str) -> int:
-    add = 0 if insertions == "-" else int(insertions)
-    delete = 0 if deletions == "-" else int(deletions)
+    if insertions == "-" or deletions == "-":
+        raise ValueError("diff binaire non mesurable par numstat; contrôle de scope refusé")
+    add = int(insertions)
+    delete = int(deletions)
     return add + delete
 
 
