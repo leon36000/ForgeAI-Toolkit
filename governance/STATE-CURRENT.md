@@ -994,8 +994,8 @@
   },
   "tests": {
     "js_files": 3,
-    "python_files": 204,
-    "python_functions_declared": 2626
+    "python_files": 207,
+    "python_functions_declared": 2644
   }
 }
 ```
