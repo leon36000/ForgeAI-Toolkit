@@ -42,6 +42,11 @@ addopts = "-q"
 pythonpath = ["src", "scripts"]
 filterwarnings = ["error::pytest.PytestUnhandledThreadExceptionWarning"]
 
+[tool.mutmut]
+source_paths = ["src/forgeai/web/ratelimit.py"]
+pytest_add_cli_args_test_selection = ["tests/test_ratelimit.py"]
+mutate_only_covered_lines = true
+
 [tool.ruff]
 target-version = "py310"
 

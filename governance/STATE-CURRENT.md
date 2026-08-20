@@ -130,7 +130,7 @@
     },
     {
       "path": "pyproject.toml",
-      "sha256": "84ae0cb0af64438426fba0f6c74cca2b00b05c791971aa67b92809e859f0e517"
+      "sha256": "88ae9547fb001a8d01f0c407f17397f5b522c32054f95fbb4d40368fb80288d7"
     },
     {
       "path": "src/forgeai/__init__.py",
@@ -662,7 +662,7 @@
     },
     {
       "path": "tests/test_ratelimit.py",
-      "sha256": "f49b854e41d0fddedb54237307da60a63e5064d99c115f7d05c4c62839623a10"
+      "sha256": "dbe06931d934d2857259cfb8626c1990054ff1cbda702799887c5ec578365df6"
     },
     {
       "path": "tests/test_rc1009_racines_documentaires.py",
@@ -991,7 +991,7 @@
   "tests": {
     "js_files": 3,
     "python_files": 206,
-    "python_functions_declared": 2625
+    "python_functions_declared": 2640
   }
 }
 ```
