@@ -902,6 +902,7 @@ class ForgeAIHandler(BaseHTTPRequestHandler):
                 remaining -= len(chunk)
             body = b"".join(chunks)
         except socket.timeout:
+            self.close_connection = True
             self._send_json(408, {"error": "délai de lecture du corps dépassé"})
             return None
         finally:

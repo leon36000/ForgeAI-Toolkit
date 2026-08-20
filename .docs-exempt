@@ -137,6 +137,9 @@ governance/error-handling-contracts.json + governance/ERROR-HANDLING-CONTRACTS.m
 déterministe des ancrages AST après le durcissement de lecture HTTP; il s'agit d'un inventaire
 interne, pas d'une documentation utilisateur nouvelle.
 
+src/forgeai/web/server.py : fermeture explicite de la connexion après timeout de lecture d'un
+corps partiel, durcissement interne du serveur HTTP sans nouveau contrat utilisateur.
+
 scripts/branch_coverage_report.py + job .github/workflows/gates.yml `branch-coverage-report`
 (RC1-021/#451, incrément 1) : nouvel outillage interne CI, mesure et rapport de couverture de
 branches par fonction, jamais bloquant (miroir exact de scripts/ruff_report.py / job
