@@ -145,6 +145,10 @@
       "sha256": "a08b9eaa38c1e60068acebaab151b305991aa8c2de3901b37ba235e807933271"
     },
     {
+      "path": "tests/__init__.py",
+      "sha256": "470d1c998d943eaf75d9cc776dc84067931b64a61f02e68bc1bca83b09a97c5f"
+    },
+    {
       "path": "tests/js/adoption.test.cjs",
       "sha256": "241e8d04a915161a59cba6fa33f26c3be5072f5636a8c9106f5314a516ff0c9f"
     },
@@ -861,6 +865,10 @@
       "sha256": "48196af7f890a4ff913fa8850a1dadb78f44d9f65bb45af8e0ec8d44b4df79c1"
     },
     {
+      "path": "tests/test_tests_package_shadow.py",
+      "sha256": "95da30bd4e093cf64d9a43ff5cb58713963a66192ae9df389274b275b4ece5e7"
+    },
+    {
       "path": "tests/test_traductions.py",
       "sha256": "a44e45f8ff73f6ff9cbc1cdb91f27562e6e1532a1f6486eaa918561d9961db18"
     },
@@ -978,8 +986,8 @@
   },
   "tests": {
     "js_files": 3,
-    "python_files": 203,
-    "python_functions_declared": 2622
+    "python_files": 205,
+    "python_functions_declared": 2623
   }
 }
 ```
