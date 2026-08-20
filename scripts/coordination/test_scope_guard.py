@@ -178,7 +178,7 @@ def test_main_skips_when_no_changed_files(
 ) -> None:
     _write_coord(tmp_path, claims=CONCURRENT_CLAIMS, packages=_pkg_by_id())
     monkeypatch.setattr(sg, "COORD_DIR", tmp_path / "coordination")
-    monkeypatch.setattr(sg, "get_changed_files", lambda _base_ref="origin/main": [])
+    monkeypatch.setattr(sg, "get_changed_files", lambda _base_ref="origin/main", _head_ref="HEAD": [])
     assert sg.main() == 0
     assert "aucun fichier modifié" in capsys.readouterr().out
 
@@ -188,7 +188,9 @@ def test_main_skips_when_branch_has_no_claim(
 ) -> None:
     _write_coord(tmp_path, claims=CONCURRENT_CLAIMS, packages=_pkg_by_id())
     monkeypatch.setattr(sg, "COORD_DIR", tmp_path / "coordination")
-    monkeypatch.setattr(sg, "get_changed_files", lambda _base_ref="origin/main": ["README.md"])
+    monkeypatch.setattr(
+        sg, "get_changed_files", lambda _base_ref="origin/main", _head_ref="HEAD": ["README.md"]
+    )
     monkeypatch.setattr(sg, "current_branch", lambda: "branche-hors-coordination")
     assert sg.main() == 0
     assert "aucun claim actif ne correspond" in capsys.readouterr().out
@@ -203,7 +205,7 @@ def test_main_passes_for_own_claim_despite_concurrent_claim(
     monkeypatch.setattr(
         sg,
         "get_changed_files",
-        lambda _base_ref="origin/main": ["coordination/work-packages.json"],
+        lambda _base_ref="origin/main", _head_ref="HEAD": ["coordination/work-packages.json"],
     )
     monkeypatch.setattr(sg, "current_branch", lambda: "br-orch-001")
     assert sg.main() == 0
@@ -215,7 +217,9 @@ def test_main_fails_on_forbidden_path(
 ) -> None:
     _write_coord(tmp_path, claims=CONCURRENT_CLAIMS, packages=_pkg_by_id())
     monkeypatch.setattr(sg, "COORD_DIR", tmp_path / "coordination")
-    monkeypatch.setattr(sg, "get_changed_files", lambda _base_ref="origin/main": ["build/artifact.bin"])
+    monkeypatch.setattr(
+        sg, "get_changed_files", lambda _base_ref="origin/main", _head_ref="HEAD": ["build/artifact.bin"]
+    )
     monkeypatch.setattr(sg, "current_branch", lambda: "br-orch-001")
     assert sg.main() == 1
     assert "INTERDIT" in capsys.readouterr().err
@@ -240,7 +244,7 @@ def test_main_fail_on_git_diff_error(
     _write_coord(tmp_path, claims=CONCURRENT_CLAIMS, packages=_pkg_by_id())
     monkeypatch.setattr(sg, "COORD_DIR", tmp_path / "coordination")
 
-    def _boom(_base_ref: str = "origin/main"):
+    def _boom(_base_ref: str = "origin/main", _head_ref: str = "HEAD"):
         raise subprocess.CalledProcessError(1, "git diff")
 
     monkeypatch.setattr(sg, "get_changed_files", _boom)
@@ -369,6 +373,14 @@ def test_quantitative_guard_does_not_depend_on_archived_claim() -> None:
     ok, _ = sg.evaluate_scope(_small_metrics())
     assert ok is True
     assert sg.find_claim_for_branch([], "feature/sans-claim-json") is None
+
+
+def test_get_changed_files_respecte_le_head_ref_demande(monkeypatch: pytest.MonkeyPatch) -> None:
+    commands: list[list[str]] = []
+    monkeypatch.setattr(sg, "_run_git", lambda command: commands.append(command) or "a.py\n")
+
+    assert sg.get_changed_files("origin/main", "refs/pull/597/head") == ["a.py"]
+    assert commands == [["git", "diff", "--name-only", "origin/main...refs/pull/597/head"]]
 
 
 def test_main_budget_blocks_before_legacy_claim_skip(

@@ -121,6 +121,10 @@ CLI et HTTP existants restent inchangés pour les entrées valides; les nouveaux
 des entrées non mesurables ou des reçus de round 3 sans replan explicite. Les tests ciblés
 couvrent ces comportements; aucune documentation utilisateur supplémentaire n'est requise.
 
+Correctif de suivi de la même garde interne : suppression du job CI de synchronisation avec
+écriture et alignement du diff de claims sur le head-ref effectivement mesuré. Le job de preview
+sans écriture reste la source d'artefacts; aucun contrat utilisateur nouveau n'est introduit.
+
 scripts/branch_coverage_report.py + job .github/workflows/gates.yml `branch-coverage-report`
 (RC1-021/#451, incrément 1) : nouvel outillage interne CI, mesure et rapport de couverture de
 branches par fonction, jamais bloquant (miroir exact de scripts/ruff_report.py / job

@@ -175,8 +175,8 @@ def review_round_policy(round_number: int, *, replanned: bool = False) -> tuple[
     return False, "STOP"
 
 
-def get_changed_files(base_ref: str = "origin/main") -> list[str]:
-    output = _run_git(["git", "diff", "--name-only", f"{base_ref}...HEAD"])
+def get_changed_files(base_ref: str = "origin/main", head_ref: str = "HEAD") -> list[str]:
+    output = _run_git(["git", "diff", "--name-only", f"{base_ref}...{head_ref}"])
     return [line for line in output.splitlines() if line]
 
 
@@ -254,7 +254,7 @@ def main(argv: list[str] | None = None) -> int:
     pkg_by_id = {p["id"]: p for p in wp_data.get("packages", [])}
 
     try:
-        changed = get_changed_files(args.base_ref)
+        changed = get_changed_files(args.base_ref, args.head_ref)
     except subprocess.CalledProcessError as exc:
         print(f"FAIL — git diff impossible: {exc}", file=sys.stderr)
         return 1
