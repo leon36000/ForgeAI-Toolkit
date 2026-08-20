@@ -288,7 +288,9 @@ jobs:
       # PR, on ne vérifie plus qu'un ancêtre, jamais un diff agrégé.
       - name: Gate D9 — revue liante couvrant le changement de la PR
         if: github.event_name == 'pull_request'
-        run: python3 scripts/reviews_gate.py --exiger-recu-courant --base-ref origin/main
+        run: >-
+          python3 scripts/reviews_gate.py --exiger-recu-courant --base-ref origin/main
+          --issue "${{ github.event.pull_request.number }}"
       # push est déjà restreint à branches: [main] par le déclencheur `on:` du fichier
       # (ligne 4) — github.event_name == 'push' ne peut donc jamais se déclencher sur une
       # branche de fonctionnalité, aucun filtre github.ref supplémentaire n'est nécessaire

@@ -153,6 +153,23 @@ def test_mode_pr_reussit_avec_recu_valide(tmp_path):
     assert ok is True and any("reçu couvre le changement courant" in line for line in report)
 
 
+def test_mode_pr_rejette_un_recu_dune_autre_issue(tmp_path):
+    root = tmp_path / "reviews"
+    directory = _make_review(
+        root, "S", [_verdict("deepseek"), _verdict("gemini_flash"), _verdict("mimo")]
+    )
+    (directory / "RECU.json").write_text(json.dumps(_receipt()), encoding="utf-8")
+    ok, report = gate.check(
+        _manifest(tmp_path, ["S"]),
+        root,
+        exiger_recu_courant=True,
+        base_ref="origin/main",
+        expected_issue=435,
+        runner=_runner,
+    )
+    assert ok is False and any("différent de la PR" in line for line in report)
+
+
 def test_mode_archive_rejette_recu_commit_non_fusionne(tmp_path):
     root = tmp_path / "reviews"
     directory = _make_review(

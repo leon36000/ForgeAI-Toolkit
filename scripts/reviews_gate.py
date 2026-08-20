@@ -170,6 +170,7 @@ def check(
     *,
     exiger_recu_courant: bool = False,
     base_ref: str | None = None,
+    expected_issue: int | None = None,
     mode: str | None = None,
     runner: GitRunner | None = None,
 ) -> tuple[bool, list[str]]:
@@ -249,6 +250,16 @@ def check(
                 continue
             receipt_result = revue.verifier_recu(receipt, verdicts, etat_git)
             if receipt_result.get("result") == "APPROVE":
+                if expected_issue is not None and (
+                    not isinstance(receipt, dict) or receipt.get("issue") != expected_issue
+                ):
+                    ok = False
+                    actual_issue = receipt.get("issue") if isinstance(receipt, dict) else None
+                    report.append(
+                        f"ECHEC {entry} : reçu issue={actual_issue!r} différent de la PR "
+                        f"courante issue={expected_issue}"
+                    )
+                    continue
                 round_allowed, round_mode = _current_receipt_round_allowed(receipt)
                 if not round_allowed:
                     ok = False
@@ -318,6 +329,7 @@ def main(argv: list[str] | None = None, *, runner: GitRunner | None = None) -> i
     ap.add_argument("--reviews-root", default=str(REPO / "evidence" / "reviews"))
     ap.add_argument("--exiger-recu-courant", action="store_true")
     ap.add_argument("--base-ref")
+    ap.add_argument("--issue", type=int)
     ap.add_argument("--mode", choices=("archive",))
     args = ap.parse_args(argv)
 
@@ -326,6 +338,7 @@ def main(argv: list[str] | None = None, *, runner: GitRunner | None = None) -> i
         Path(args.reviews_root),
         exiger_recu_courant=args.exiger_recu_courant,
         base_ref=args.base_ref,
+        expected_issue=args.issue,
         mode=args.mode,
         runner=runner,
     )
