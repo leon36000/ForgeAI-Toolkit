@@ -51947,8 +51947,8 @@
         }
       ],
       "rule_id": "test-suite",
-      "sha256": "4f6fce8728809ebbec4a20430d15899f685f57e4282692973c414e028387e801",
-      "size": 2042,
+      "sha256": "c33db0c216ab37dfe48c4d6974087bbb05cc32e28d62af9fc69bef987c1fdb7b",
+      "size": 2168,
       "target_path": null,
       "type": "text"
     },
@@ -136612,12 +136612,12 @@
       },
       {
         "candidate": "tests/fixtures/",
-        "line": 66,
+        "line": 70,
         "referrer": "tests/test_gitguardian_config.py"
       },
       {
         "candidate": "evidence/reviews/",
-        "line": 67,
+        "line": 71,
         "referrer": "tests/test_gitguardian_config.py"
       },
       {

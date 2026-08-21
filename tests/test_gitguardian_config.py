@@ -52,13 +52,17 @@ def test_markdown_probe_contains_generated_value_for_scan_procedure(
     tmp_path: Path,
 ) -> None:
     """Keep a runtime-generated probe available to the documented operator scan."""
-    fake_value = "ghp_" + "f" * 36
+    fake_value = "forgeai-markdown-probe-" + "f" * 24
     document = tmp_path / "Docs" / "ordinary.md"
     document.parent.mkdir()
-    document.write_text(f"# Fixture\n\n{fake_value}\n", encoding="utf-8")
+    try:
+        document.write_text(f"# Fixture\n\n{fake_value}\n", encoding="utf-8")
 
-    assert fake_value in document.read_text(encoding="utf-8")
-    assert "**/*.md" not in _ignored_paths()
+        assert fake_value in document.read_text(encoding="utf-8")
+        assert "**/*.md" not in _ignored_paths()
+    finally:
+        document.unlink(missing_ok=True)
+        document.parent.rmdir()
 
 
 def test_bounded_fixture_exclusion_remains_explicit() -> None:
