@@ -340,7 +340,7 @@
       },
       {
         "path": "tests/test_gitguardian_config.py",
-        "sha256": "043a0da5c03c04140b911c26f81669ca96d4e527970425f489650fd801ca2c5e"
+        "sha256": "4f6fce8728809ebbec4a20430d15899f685f57e4282692973c414e028387e801"
       },
       {
         "path": "tests/test_governance_capabilities.py",

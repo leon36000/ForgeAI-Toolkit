@@ -410,7 +410,7 @@
         },
         {
           "candidate": ".gitguardian.yaml",
-          "line": 11,
+          "line": 12,
           "referrer": "tests/test_gitguardian_config.py",
           "resolved": ".gitguardian.yaml",
           "severity": "hard"
@@ -4872,7 +4872,7 @@
         },
         {
           "candidate": "README.md",
-          "line": 39,
+          "line": 40,
           "referrer": "tests/test_gitguardian_config.py",
           "resolved": "README.md",
           "severity": "hard"
@@ -39584,7 +39584,7 @@
         },
         {
           "candidate": "src/forgeai/data/catalogue.json",
-          "line": 14,
+          "line": 15,
           "referrer": "tests/test_gitguardian_config.py",
           "resolved": "src/forgeai/data/catalogue.json",
           "severity": "hard"
@@ -47938,8 +47938,8 @@
       "path": "stories/RC1-015.md",
       "referenced_by": [],
       "rule_id": "governance-stories",
-      "sha256": "a11e1a4b8fefbb69e4f8e28c2960ce718f4ebfb66a3add2741f85ff67fb6b4c2",
-      "size": 1808,
+      "sha256": "e3a8e4c0cc4266026e69ffd9744b2f2f3e24e9bc64f15c6480fd4dc18f7b8844",
+      "size": 1912,
       "target_path": null,
       "type": "text"
     },
@@ -51933,22 +51933,22 @@
         },
         {
           "candidate": "tests/test_gitguardian_config.py",
-          "line": 33,
+          "line": 34,
           "referrer": "stories/RC1-015.md",
           "resolved": "tests/test_gitguardian_config.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_gitguardian_config.py",
-          "line": 34,
+          "line": 35,
           "referrer": "stories/RC1-015.md",
           "resolved": "tests/test_gitguardian_config.py",
           "severity": "hard"
         }
       ],
       "rule_id": "test-suite",
-      "sha256": "043a0da5c03c04140b911c26f81669ca96d4e527970425f489650fd801ca2c5e",
-      "size": 1853,
+      "sha256": "4f6fce8728809ebbec4a20430d15899f685f57e4282692973c414e028387e801",
+      "size": 2042,
       "target_path": null,
       "type": "text"
     },
@@ -59822,7 +59822,7 @@
         },
         {
           "candidate": "tests/test_validate_coderabbit_config.py",
-          "line": 34,
+          "line": 35,
           "referrer": "stories/RC1-015.md",
           "resolved": "tests/test_validate_coderabbit_config.py",
           "severity": "hard"
@@ -136587,37 +136587,37 @@
       },
       {
         "candidate": "tests/fixtures/",
-        "line": 13,
+        "line": 14,
         "referrer": "tests/test_gitguardian_config.py"
       },
       {
         "candidate": "Docs/ordinary.md",
-        "line": 40,
-        "referrer": "tests/test_gitguardian_config.py"
-      },
-      {
-        "candidate": "stories/ordinary.md",
         "line": 41,
         "referrer": "tests/test_gitguardian_config.py"
       },
       {
-        "candidate": "evidence/reviews/ordinary.md",
+        "candidate": "stories/ordinary.md",
         "line": 42,
         "referrer": "tests/test_gitguardian_config.py"
       },
       {
+        "candidate": "evidence/reviews/ordinary.md",
+        "line": 43,
+        "referrer": "tests/test_gitguardian_config.py"
+      },
+      {
         "candidate": "ordinary.md",
-        "line": 49,
+        "line": 56,
         "referrer": "tests/test_gitguardian_config.py"
       },
       {
         "candidate": "tests/fixtures/",
-        "line": 59,
+        "line": 66,
         "referrer": "tests/test_gitguardian_config.py"
       },
       {
         "candidate": "evidence/reviews/",
-        "line": 60,
+        "line": 67,
         "referrer": "tests/test_gitguardian_config.py"
       },
       {
@@ -177253,21 +177253,21 @@
       },
       {
         "candidate": "tests/test_gitguardian_config.py",
-        "line": 33,
+        "line": 34,
         "referrer": "stories/RC1-015.md",
         "resolved": "tests/test_gitguardian_config.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_gitguardian_config.py",
-        "line": 34,
+        "line": 35,
         "referrer": "stories/RC1-015.md",
         "resolved": "tests/test_gitguardian_config.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_validate_coderabbit_config.py",
-        "line": 34,
+        "line": 35,
         "referrer": "stories/RC1-015.md",
         "resolved": "tests/test_validate_coderabbit_config.py",
         "severity": "hard"
@@ -179682,21 +179682,21 @@
       },
       {
         "candidate": ".gitguardian.yaml",
-        "line": 11,
+        "line": 12,
         "referrer": "tests/test_gitguardian_config.py",
         "resolved": ".gitguardian.yaml",
         "severity": "hard"
       },
       {
         "candidate": "src/forgeai/data/catalogue.json",
-        "line": 14,
+        "line": 15,
         "referrer": "tests/test_gitguardian_config.py",
         "resolved": "src/forgeai/data/catalogue.json",
         "severity": "hard"
       },
       {
         "candidate": "README.md",
-        "line": 39,
+        "line": 40,
         "referrer": "tests/test_gitguardian_config.py",
         "resolved": "README.md",
         "severity": "hard"

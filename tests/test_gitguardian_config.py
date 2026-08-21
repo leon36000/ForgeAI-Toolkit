@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from fnmatch import fnmatchcase
 from pathlib import Path
 
 import yaml
@@ -34,17 +35,23 @@ def test_real_config_contains_only_bounded_exclusions() -> None:
 
 
 def test_ordinary_markdown_locations_remain_in_scan_scope() -> None:
-    ignored = set(_ignored_paths())
+    ignored = _ignored_paths()
     ordinary_markdown = (
         "README.md",
         "Docs/ordinary.md",
         "stories/ordinary.md",
         "evidence/reviews/ordinary.md",
     )
-    assert all(path not in ignored for path in ordinary_markdown)
+    assert all(
+        not any(fnmatchcase(path, pattern) for pattern in ignored)
+        for path in ordinary_markdown
+    )
 
 
-def test_fake_secret_fixture_stays_in_markdown_scan_input(tmp_path: Path) -> None:
+def test_markdown_probe_contains_generated_value_for_scan_procedure(
+    tmp_path: Path,
+) -> None:
+    """Keep a runtime-generated probe available to the documented operator scan."""
     fake_value = "ghp_" + "f" * 36
     document = tmp_path / "Docs" / "ordinary.md"
     document.parent.mkdir()
