@@ -106,7 +106,7 @@
     },
     {
       "path": ".github/workflows/gates.yml",
-      "sha256": "f98e6253367deb65530a87ac8cbf163b276af859616eb3d4f737bd3595b5e863"
+      "sha256": "9597b302a09e606e250525ce52333addd77efef6062202ce624f0e95f17bffb2"
     },
     {
       "path": ".github/workflows/scope-guard.yml",
@@ -502,7 +502,7 @@
     },
     {
       "path": "tests/test_mutation_gate.py",
-      "sha256": "75a22537e0353d3df84121c87cc1c7dcde9d9b9f13d2423e60c837d188eae302"
+      "sha256": "a2e940646fc565cbd2f9cc8036fa99c68bcf0f1452c4c559b7071172128c4188"
     },
     {
       "path": "tests/test_network.py",
@@ -999,7 +999,7 @@
   "tests": {
     "js_files": 3,
     "python_files": 208,
-    "python_functions_declared": 2652
+    "python_functions_declared": 2653
   }
 }
 ```
