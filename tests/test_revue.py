@@ -91,7 +91,10 @@ def test_alias_modele_reponse_routes_yaml_reconnu():
 
 
 def test_alias_qwen_pc3_expose_par_litellm_resout_alibaba():
-    assert revue.vendor_of("Qwen3.8-Flagship-PC3") == "alibaba"
+    assert {
+        revue.vendor_of("Qwen3.8-27B"),
+        revue.vendor_of("Qwen3.8-Flagship-PC3"),
+    } == {"alibaba"}
 
 
 def test_route_modele_reponse_avec_espace_reconnu(tmp_path):
