@@ -3332,8 +3332,8 @@
         }
       ],
       "rule_id": "governance-root-claude",
-      "sha256": "015d4ffed0efecc3837523c048c7d72bc336268fb69838ff08d99d4d066b9f9f",
-      "size": 3357,
+      "sha256": "a5dc93ed5492c490ffc2e70d3c039d6374dd773fbd9126f8ef4670d2b1cd88ef",
+      "size": 3363,
       "target_path": null,
       "type": "text"
     },
@@ -29195,7 +29195,7 @@
         }
       ],
       "rule_id": "governance-core",
-      "sha256": "b5f8488ce3a0c7cbacbb0254e175f1621c401290778781346ffa04c439e4f064",
+      "sha256": "a0d26b99888aa8fe8e16d45e78ca6ffe622679f64c3374c369be2c9c0e4eb476",
       "size": 29325,
       "target_path": null,
       "type": "text"
@@ -31257,8 +31257,8 @@
         }
       ],
       "rule_id": "governance-manifests",
-      "sha256": "5729db7d628f6da31d5041dc5c867a67c3c3e4d8c383b86a07b3059777f060ba",
-      "size": 10174,
+      "sha256": "c5c68bd435e9e1da64d52747ffbf044763381e4770099e0c171c02c4d5cfdf00",
+      "size": 10482,
       "target_path": null,
       "type": "text"
     },
@@ -31292,8 +31292,8 @@
         }
       ],
       "rule_id": "governance-manifests",
-      "sha256": "647a7ced255ec287a3e4b4aa56e4d16c5e235b2e0bd0940fd170dbb15bf7d912",
-      "size": 2184,
+      "sha256": "9f78a4a8928e0c0e8e0eac76e0b1d2e8ac861dc713709bc5d7ed560c384def16",
+      "size": 2380,
       "target_path": null,
       "type": "text"
     },
@@ -58201,8 +58201,8 @@
         }
       ],
       "rule_id": "test-suite",
-      "sha256": "feca4731edb22e3bec852a5c7ef60fa466f41ae6b153b8913ae3492106fc0905",
-      "size": 19529,
+      "sha256": "1dc2d502b4e5d2b4f58a1a7fe71c5ee3bef9c7b2336a30606aad323cd5b17443",
+      "size": 19537,
       "target_path": null,
       "type": "text"
     },
@@ -104416,13 +104416,13 @@
         "referrer": "manifests/roles.yaml"
       },
       {
-        "candidate": "laguna/alibaba/openai",
+        "candidate": "deepseek/alibaba/openai",
         "line": 82,
         "referrer": "manifests/roles.yaml"
       },
       {
         "candidate": "civ_review.py",
-        "line": 263,
+        "line": 271,
         "referrer": "manifests/roles.yaml"
       },
       {

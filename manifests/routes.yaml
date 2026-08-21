@@ -8,6 +8,8 @@ gateway:
   routeur: http://127.0.0.1:4000 (LiteLLM, auth par clé — jamais en HTTP direct depuis les agents)
   sante: {status: ok, models: 36}
 routes:
+  - {membre: deepseek_local_reviewer, provider_id: DeepSeek-V4-Flash-0731, modele_reponse: DeepSeek-V4-Flash-0731, statut: ok,
+     note: "route locale de revue; l'identité vendor est deepseek"}
   - {membre: laguna_reviewer, provider_id: Laguna-S-2.1-PC4, modele_reponse: Laguna-S-2.1-PC4, statut: ok,
      note: "route locale de revue; l'identité vendor est laguna"}
   - {membre: qwen_pc3, provider_id: Qwen3.8-27B, modele_reponse: Qwen3.8-27B, statut: ok,
