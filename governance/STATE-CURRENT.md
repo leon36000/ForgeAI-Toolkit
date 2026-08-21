@@ -345,6 +345,10 @@
       "sha256": "e58391b1424bf45b57d6affd11dde3d829db55c768f19d9fb32d7420e5887618"
     },
     {
+      "path": "tests/test_gitguardian_config.py",
+      "sha256": "043a0da5c03c04140b911c26f81669ca96d4e527970425f489650fd801ca2c5e"
+    },
+    {
       "path": "tests/test_governance_capabilities.py",
       "sha256": "240aa5646b1eeb5882a673702fdf304ab01251e67730a121cbebb333f7ca055f"
     },
@@ -998,8 +1002,8 @@
   },
   "tests": {
     "js_files": 3,
-    "python_files": 208,
-    "python_functions_declared": 2655
+    "python_files": 209,
+    "python_functions_declared": 2659
   }
 }
 ```
