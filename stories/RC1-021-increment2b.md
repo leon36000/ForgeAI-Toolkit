@@ -46,6 +46,10 @@ dans l'artefact CI.
 La copie de test recopie aussi la configuration pytest disponible (`pyproject.toml`, `pytest.ini`,
 `tox.ini`, `setup.cfg`, `conftest.py`) et nettoie son répertoire temporaire sur toute erreur de
 préparation. En CI, le rapport est écrit sous `$RUNNER_TEMP`, jamais dans le worktree contrôlé.
+Les caches Python sont exclus de la copie `src` comme de la copie `tests`; le `PYTHONPATH` de la
+copie temporaire est prioritaire mais les chemins préexistants sont conservés en repli. Le
+rapport ne recopie pas les textes `avant`/`apres` des mutations, seulement leurs métadonnées
+nécessaires à l'audit.
 
 ## Bornes
 

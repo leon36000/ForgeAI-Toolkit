@@ -17,7 +17,7 @@ import shutil
 import subprocess
 import sys
 import tempfile
-from dataclasses import asdict, dataclass
+from dataclasses import dataclass
 from pathlib import Path
 
 
@@ -28,6 +28,15 @@ class Mutation:
     avant: str
     apres: str
     contrat: str
+
+
+def _metadonnees_rapport(mutation: Mutation) -> dict[str, str]:
+    """Sélectionne les métadonnées utiles sans recopier le texte muté."""
+    return {
+        "identifiant": mutation.identifiant,
+        "fichier": mutation.fichier,
+        "contrat": mutation.contrat,
+    }
 
 
 MUTATIONS = (
@@ -58,7 +67,11 @@ MUTATIONS = (
 def _copie_de_test(racine: Path, mutation: Mutation) -> Path:
     travail = Path(tempfile.mkdtemp(prefix="forgeai-mutation-"))
     try:
-        shutil.copytree(racine / "src", travail / "src")
+        shutil.copytree(
+            racine / "src",
+            travail / "src",
+            ignore=shutil.ignore_patterns("__pycache__", ".pytest_cache", "*.pyc"),
+        )
         shutil.copytree(racine / "tests", travail / "tests", ignore=shutil.ignore_patterns(
             "__pycache__", ".pytest_cache", "*.pyc"
         ))
@@ -86,7 +99,11 @@ def executer_mutation(racine: Path, mutation: Mutation, timeout: int = 180) -> d
     travail = _copie_de_test(racine, mutation)
     try:
         environnement = os.environ.copy()
-        environnement["PYTHONPATH"] = str(travail / "src")
+        chemins_python = [str(travail / "src")]
+        ancien_pythonpath = environnement.get("PYTHONPATH")
+        if ancien_pythonpath:
+            chemins_python.append(ancien_pythonpath)
+        environnement["PYTHONPATH"] = os.pathsep.join(chemins_python)
         try:
             resultat = subprocess.run(  # noqa: S603 — commande et arguments constants, copie temporaire contrôlée (révision: 2026-08-21)
                 [sys.executable, "-m", "pytest", "-q", "tests/test_ratelimit.py"],
@@ -99,7 +116,7 @@ def executer_mutation(racine: Path, mutation: Mutation, timeout: int = 180) -> d
             )
         except subprocess.TimeoutExpired:
             return {
-                **asdict(mutation),
+                **_metadonnees_rapport(mutation),
                 "statut": "runner-error",
                 "disposition": "FAIL: délai dépassé du runner pytest",
                 "code_retour": None,
@@ -119,7 +136,7 @@ def executer_mutation(racine: Path, mutation: Mutation, timeout: int = 180) -> d
             statut = "runner-error"
             disposition = f"FAIL: erreur du runner pytest ({resultat.returncode})"
         return {
-            **asdict(mutation),
+            **_metadonnees_rapport(mutation),
             "statut": statut,
             "disposition": disposition,
             "code_retour": resultat.returncode,
@@ -144,7 +161,7 @@ def campagne(racine: Path) -> dict[str, object]:
             # le rapport pour que l'artefact CI soit exploitable.
             resultats.append(
                 {
-                    **asdict(mutation),
+                    **_metadonnees_rapport(mutation),
                     "statut": "runner-error",
                     "disposition": "FAIL: erreur de préparation de la campagne",
                     "code_retour": None,

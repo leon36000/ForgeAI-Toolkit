@@ -33427,8 +33427,8 @@
         }
       ],
       "rule_id": "governance-scripts-root",
-      "sha256": "76c2ca15be6203de8be827c334d5337251931ee024fce210a12356bf2d91c396",
-      "size": 7215,
+      "sha256": "80bdff9ca979542dad16ef5c942c00f573efb66dcba86474d72f508c7cf390b0",
+      "size": 7852,
       "target_path": null,
       "type": "text"
     },
@@ -45731,28 +45731,28 @@
         },
         {
           "candidate": "src/forgeai/web/ratelimit.py",
-          "line": 36,
+          "line": 45,
           "referrer": "scripts/mutation_gate.py",
           "resolved": "src/forgeai/web/ratelimit.py",
           "severity": "hard"
         },
         {
           "candidate": "src/forgeai/web/ratelimit.py",
-          "line": 43,
+          "line": 52,
           "referrer": "scripts/mutation_gate.py",
           "resolved": "src/forgeai/web/ratelimit.py",
           "severity": "hard"
         },
         {
           "candidate": "src/forgeai/web/ratelimit.py",
-          "line": 50,
+          "line": 59,
           "referrer": "scripts/mutation_gate.py",
           "resolved": "src/forgeai/web/ratelimit.py",
           "severity": "hard"
         },
         {
           "candidate": "src/forgeai/web/ratelimit.py",
-          "line": 158,
+          "line": 175,
           "referrer": "scripts/mutation_gate.py",
           "resolved": "src/forgeai/web/ratelimit.py",
           "severity": "hard"
@@ -47861,8 +47861,8 @@
       "path": "stories/RC1-021-increment2b.md",
       "referenced_by": [],
       "rule_id": "governance-stories",
-      "sha256": "8ee6365d0fe22fde74ac37f9b2cef3d5e32329eaee33c6f87b0a8414924173bd",
-      "size": 3315,
+      "sha256": "0c7d172218a2ca3ae1fbb73f40d861dc821d9519b7d9371b74184305aa4dce27",
+      "size": 3625,
       "target_path": null,
       "type": "text"
     },
@@ -56135,7 +56135,7 @@
         },
         {
           "candidate": "tests/test_ratelimit.py",
-          "line": 92,
+          "line": 109,
           "referrer": "scripts/mutation_gate.py",
           "resolved": "tests/test_ratelimit.py",
           "severity": "hard"
@@ -105713,7 +105713,7 @@
       },
       {
         "candidate": "conftest.py",
-        "line": 67,
+        "line": 80,
         "referrer": "scripts/mutation_gate.py"
       },
       {
@@ -173968,35 +173968,35 @@
       },
       {
         "candidate": "src/forgeai/web/ratelimit.py",
-        "line": 36,
+        "line": 45,
         "referrer": "scripts/mutation_gate.py",
         "resolved": "src/forgeai/web/ratelimit.py",
         "severity": "hard"
       },
       {
         "candidate": "src/forgeai/web/ratelimit.py",
-        "line": 43,
+        "line": 52,
         "referrer": "scripts/mutation_gate.py",
         "resolved": "src/forgeai/web/ratelimit.py",
         "severity": "hard"
       },
       {
         "candidate": "src/forgeai/web/ratelimit.py",
-        "line": 50,
+        "line": 59,
         "referrer": "scripts/mutation_gate.py",
         "resolved": "src/forgeai/web/ratelimit.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_ratelimit.py",
-        "line": 92,
+        "line": 109,
         "referrer": "scripts/mutation_gate.py",
         "resolved": "tests/test_ratelimit.py",
         "severity": "hard"
       },
       {
         "candidate": "src/forgeai/web/ratelimit.py",
-        "line": 158,
+        "line": 175,
         "referrer": "scripts/mutation_gate.py",
         "resolved": "src/forgeai/web/ratelimit.py",
         "severity": "hard"
