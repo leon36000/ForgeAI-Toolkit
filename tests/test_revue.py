@@ -90,6 +90,13 @@ def test_alias_modele_reponse_routes_yaml_reconnu():
     assert revue.vendor_of("DeepSeek-V4-Pro") == revue.vendor_of("deepseek") == "deepseek"
 
 
+def test_alias_qwen_pc3_expose_par_litellm_resout_alibaba():
+    assert {
+        revue.vendor_of("Qwen3.8-27B"),
+        revue.vendor_of("Qwen3.8-Flagship-PC3"),
+    } == {"alibaba"}
+
+
 def test_route_modele_reponse_avec_espace_reconnu(tmp_path):
     roles = tmp_path / "manifests" / "roles.yaml"
     routes = tmp_path / "manifests" / "routes.yaml"
