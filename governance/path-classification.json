@@ -31368,8 +31368,8 @@
         }
       ],
       "rule_id": "governance-manifests",
-      "sha256": "770887e867b49fa84cac9b8e836a0d022ab669ad472b4685c36f31d6576868fe",
-      "size": 2564,
+      "sha256": "c52be9b1a8b3592e1c7ea3afa388c309f31dd77e70a979094efc67e80d472f66",
+      "size": 2587,
       "target_path": null,
       "type": "text"
     },
@@ -51947,8 +51947,8 @@
         }
       ],
       "rule_id": "test-suite",
-      "sha256": "4eb284eb5dda037321c02e3f12df56104950f1b3b73a2084539e5d4997e0a66d",
-      "size": 2138,
+      "sha256": "61fa58cefddb2303bf10cbd9416f06572d122e7d409ae95e4f1b169925267aad",
+      "size": 2236,
       "target_path": null,
       "type": "text"
     },
@@ -136607,17 +136607,17 @@
       },
       {
         "candidate": "ordinary.md",
-        "line": 56,
+        "line": 57,
         "referrer": "tests/test_gitguardian_config.py"
       },
       {
         "candidate": "tests/fixtures/",
-        "line": 66,
+        "line": 69,
         "referrer": "tests/test_gitguardian_config.py"
       },
       {
         "candidate": "evidence/reviews/",
-        "line": 67,
+        "line": 70,
         "referrer": "tests/test_gitguardian_config.py"
       },
       {

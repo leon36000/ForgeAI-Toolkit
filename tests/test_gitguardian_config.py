@@ -43,10 +43,11 @@ def test_ordinary_markdown_locations_remain_in_scan_scope() -> None:
         "stories/ordinary.md",
         "evidence/reviews/ordinary.md",
     )
-    assert all(
-        not any(fnmatchcase(path, pattern) for pattern in ignored)
-        for path in ordinary_markdown
-    )
+    for path in ordinary_markdown:
+        matching_exclusions = [
+            pattern for pattern in ignored if fnmatchcase(path, pattern)
+        ]
+        assert matching_exclusions == []
 
 
 def test_markdown_probe_contains_sentinel_for_scan_procedure() -> None:
@@ -59,6 +60,8 @@ def test_markdown_probe_contains_sentinel_for_scan_procedure() -> None:
 
         assert fake_value in document.read_text(encoding="utf-8")
         assert "**/*.md" not in _ignored_paths()
+
+    assert not document.exists()
 
 
 def test_bounded_fixture_exclusion_remains_explicit() -> None:
