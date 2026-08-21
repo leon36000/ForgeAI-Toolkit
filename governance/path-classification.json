@@ -20030,6 +20030,19 @@
       "generated": false,
       "load_bearing": true,
       "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-015-v1/RECU.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": null,
+      "size": null,
+      "target_path": null,
+      "type": null
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
       "path": "evidence/reviews/RC1-018-v7/Gemini-3.7-Flash.verdict.json",
       "referenced_by": [],
       "rule_id": "evidence-reviews-root",
@@ -99155,6 +99168,11 @@
         "candidate": "ordinary.md",
         "line": 8,
         "referrer": "evidence/reviews/RC1-015-v1/Qwen3.8-27B.verdict.json"
+      },
+      {
+        "candidate": "recu-revue/1",
+        "line": 2,
+        "referrer": "evidence/reviews/RC1-015-v1/RECU.json"
       },
       {
         "candidate": "recu-revue/1",
@@ -180631,7 +180649,7 @@
     "by_class": {
       "ARCHIVE": 44,
       "DOCS": 19,
-      "EVIDENCE": 1664,
+      "EVIDENCE": 1665,
       "GENERATED": 5,
       "GOVERNANCE": 214,
       "PRODUCT": 113,
@@ -180650,7 +180668,7 @@
       "evidence-audit-output-root": 18,
       "evidence-dedup-root": 2,
       "evidence-registres-root": 35,
-      "evidence-reviews-root": 1609,
+      "evidence-reviews-root": 1610,
       "generated-authority-map": 1,
       "generated-path-classification-json": 1,
       "generated-path-classification-markdown": 1,
@@ -180687,11 +180705,11 @@
       "working-sandbox-readme": 1
     },
     "case_collisions_total": 0,
-    "dangling_references_total": 17360,
+    "dangling_references_total": 17361,
     "generated_total": 9,
-    "load_bearing_total": 2142,
+    "load_bearing_total": 2143,
     "portability_violations_total": 0,
-    "tracked_total": 2293,
+    "tracked_total": 2294,
     "unclassified_total": 0,
     "unicode_anomalies_total": 0
   },
