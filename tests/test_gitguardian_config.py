@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from fnmatch import fnmatchcase
 from pathlib import Path
+from tempfile import TemporaryDirectory
 
 import yaml
 
@@ -48,21 +49,16 @@ def test_ordinary_markdown_locations_remain_in_scan_scope() -> None:
     )
 
 
-def test_markdown_probe_contains_generated_value_for_scan_procedure(
-    tmp_path: Path,
-) -> None:
-    """Keep a runtime-generated probe available to the documented operator scan."""
-    fake_value = "forgeai-markdown-probe-" + "f" * 24
-    document = tmp_path / "Docs" / "ordinary.md"
-    document.parent.mkdir()
-    try:
+def test_markdown_probe_contains_sentinel_for_scan_procedure() -> None:
+    """Keep a non-sensitive probe available to the documented operator scan."""
+    fake_value = "markdown-scan-sentinel"
+    with TemporaryDirectory() as temporary_root:
+        document = Path(temporary_root) / "Docs" / "ordinary.md"
+        document.parent.mkdir()
         document.write_text(f"# Fixture\n\n{fake_value}\n", encoding="utf-8")
 
         assert fake_value in document.read_text(encoding="utf-8")
         assert "**/*.md" not in _ignored_paths()
-    finally:
-        document.unlink(missing_ok=True)
-        document.parent.rmdir()
 
 
 def test_bounded_fixture_exclusion_remains_explicit() -> None:
