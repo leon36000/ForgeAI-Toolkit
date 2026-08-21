@@ -1,0 +1,23 @@
+{
+  "schema": "recu-revue/1",
+  "dossier": "RC1-015-v1",
+  "issue": 445,
+  "round": 1,
+  "replanned": false,
+  "base_commit": "e81b16edfcf6098c1b03fd86ec187433145f4aee",
+  "head_commit": "5494269d55859596573ffbbd0c0146c3407fb760",
+  "head_tree": "9fdd882f511b5830208c69b2c678f2d317886d77",
+  "diff_digest": "8e4bc3ad61648584d3d4d36904e6d26ec8cbe6cf553a49eca204e5084363c3c1",
+  "prompt_sha256": "3f2110d1cb88907091757b0d0233e345cc3cb6a582a3d73e594e7dd7d6cf3b3a",
+  "reviewers_attendus": [
+    "DeepSeek-V4-Pro",
+    "Laguna-S-2.1-PC4",
+    "Qwen3.8-27B"
+  ],
+  "codeur": [
+    "fable"
+  ],
+  "resultat": "APPROVE",
+  "date_heure": "2026-08-21T19:18:20.850647-04:00",
+  "fenetre_heures": 24
+}
