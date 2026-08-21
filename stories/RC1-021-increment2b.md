@@ -43,6 +43,9 @@ préparation (copie illisible ou site de mutation non unique) sont elles aussi r
 La sortie stdout/stderr de pytest est également exclue du rapport : seule une synthèse fixe du
 code retour est conservée, afin qu'un test défaillant ne puisse pas exfiltrer une valeur sensible
 dans l'artefact CI.
+La copie de test recopie aussi la configuration pytest disponible (`pyproject.toml`, `pytest.ini`,
+`tox.ini`, `setup.cfg`, `conftest.py`) et nettoie son répertoire temporaire sur toute erreur de
+préparation. En CI, le rapport est écrit sous `$RUNNER_TEMP`, jamais dans le worktree contrôlé.
 
 ## Bornes
 

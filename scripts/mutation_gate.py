@@ -57,20 +57,29 @@ MUTATIONS = (
 
 def _copie_de_test(racine: Path, mutation: Mutation) -> Path:
     travail = Path(tempfile.mkdtemp(prefix="forgeai-mutation-"))
-    shutil.copytree(racine / "src", travail / "src")
-    shutil.copytree(racine / "tests", travail / "tests", ignore=shutil.ignore_patterns(
-        "__pycache__", ".pytest_cache", "*.pyc"
-    ))
-    cible = travail / mutation.fichier
-    contenu = cible.read_text(encoding="utf-8")
-    occurrences = contenu.count(mutation.avant)
-    if occurrences != 1:
-        shutil.rmtree(travail)
-        raise RuntimeError(
-            f"{mutation.identifiant}: site de mutation non unique ({occurrences})"
-        )
-    cible.write_text(contenu.replace(mutation.avant, mutation.apres, 1), encoding="utf-8")
-    return travail
+    try:
+        shutil.copytree(racine / "src", travail / "src")
+        shutil.copytree(racine / "tests", travail / "tests", ignore=shutil.ignore_patterns(
+            "__pycache__", ".pytest_cache", "*.pyc"
+        ))
+        # Rejoue la configuration pytest du dépôt pour que la copie conserve les mêmes
+        # options de découverte et de warnings que la suite principale.
+        for nom in ("pyproject.toml", "pytest.ini", "tox.ini", "setup.cfg", "conftest.py"):
+            source = racine / nom
+            if source.is_file():
+                shutil.copy2(source, travail / nom)
+        cible = travail / mutation.fichier
+        contenu = cible.read_text(encoding="utf-8")
+        occurrences = contenu.count(mutation.avant)
+        if occurrences != 1:
+            raise RuntimeError(
+                f"{mutation.identifiant}: site de mutation non unique ({occurrences})"
+            )
+        cible.write_text(contenu.replace(mutation.avant, mutation.apres, 1), encoding="utf-8")
+        return travail
+    except Exception:
+        shutil.rmtree(travail, ignore_errors=True)
+        raise
 
 
 def executer_mutation(racine: Path, mutation: Mutation, timeout: int = 180) -> dict[str, object]:
