@@ -51,3 +51,18 @@ def test_timeout_runner_est_conserve_comme_erreur_bloquante(monkeypatch) -> None
     assert rapport["statut"] == "runner-error"
     assert rapport["disposition"] == "FAIL: délai dépassé du runner pytest"
     assert rapport["code_retour"] is None
+
+
+def test_erreur_preparation_est_rapportee_comme_erreur_runner(monkeypatch) -> None:
+    racine = Path(__file__).resolve().parent.parent
+
+    def lever_erreur(*args, **kwargs):
+        raise RuntimeError("site de mutation non unique")
+
+    monkeypatch.setattr(mutation_gate, "executer_mutation", lever_erreur)
+
+    rapport = mutation_gate.campagne(racine)
+
+    assert rapport["statut"] == "FAIL"
+    assert rapport["erreurs_runner"] == rapport["total"]
+    assert all(m["statut"] == "runner-error" for m in rapport["mutants"])

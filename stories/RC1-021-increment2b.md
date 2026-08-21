@@ -36,6 +36,10 @@ fausse preuve de mutation. Le rapport est téléversé avec `if: always()` afin 
 consultable même lorsque la campagne échoue.
 Un `TimeoutExpired` pytest est traité de la même façon : erreur de runner bloquante, entrée
 conservée dans le rapport, nettoyage de la copie temporaire garanti.
+Le message de timeout est fixe et ne réutilise aucune représentation d'exception; un secret ou
+une donnée d'environnement ne peut donc pas être recopié dans l'artefact. Les erreurs de
+préparation (copie illisible ou site de mutation non unique) sont elles aussi rapportées comme
+`runner-error` bloquant.
 
 ## Bornes
 

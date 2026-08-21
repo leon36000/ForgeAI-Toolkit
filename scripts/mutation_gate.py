@@ -88,13 +88,13 @@ def executer_mutation(racine: Path, mutation: Mutation, timeout: int = 180) -> d
                 timeout=timeout,
                 check=False,
             )
-        except subprocess.TimeoutExpired as erreur:
+        except subprocess.TimeoutExpired:
             return {
                 **asdict(mutation),
                 "statut": "runner-error",
                 "disposition": "FAIL: délai dépassé du runner pytest",
                 "code_retour": None,
-                "sortie_tail": str(erreur)[-2000:],
+                "sortie_tail": f"pytest a dépassé le délai configuré ({timeout}s)",
             }
         # pytest code 1 signifie qu'un test a échoué : le mutant est effectivement tué.
         # Les autres codes non nuls signalent une erreur du runner (usage, interruption,
@@ -121,7 +121,23 @@ def executer_mutation(racine: Path, mutation: Mutation, timeout: int = 180) -> d
 
 
 def campagne(racine: Path) -> dict[str, object]:
-    resultats = [executer_mutation(racine, mutation) for mutation in MUTATIONS]
+    resultats = []
+    for mutation in MUTATIONS:
+        try:
+            resultats.append(executer_mutation(racine, mutation))
+        except Exception:
+            # Une erreur de préparation (source absente, site non unique, copie illisible)
+            # est une panne de campagne, pas un mutant tué; elle doit néanmoins rester dans
+            # le rapport pour que l'artefact CI soit exploitable.
+            resultats.append(
+                {
+                    **asdict(mutation),
+                    "statut": "runner-error",
+                    "disposition": "FAIL: erreur de préparation de la campagne",
+                    "code_retour": None,
+                    "sortie_tail": "échec lors de la préparation d'un mutant",
+                }
+            )
     survivants = [r for r in resultats if r["statut"] == "survived"]
     erreurs_runner = [r for r in resultats if r["statut"] == "runner-error"]
     return {
