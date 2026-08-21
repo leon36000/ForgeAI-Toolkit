@@ -79,7 +79,15 @@ membres:
 
   # Trio actif de revue 2026-08 : les identités historiques ci-dessus restent résolubles
   # pour les reçus archivés; ces trois routes sont les reviewers par défaut des nouvelles
-  # stories et conservent trois vendors distincts (laguna/alibaba/openai).
+  # stories et conservent trois vendors distincts (deepseek/alibaba/openai).
+  - id: deepseek_local_reviewer
+    modele: DeepSeek V4 Flash 0731 local
+    vendor: deepseek
+    provider_id: DeepSeek-V4-Flash-0731
+    phase_a: Reviewer aveugle scellé local
+    phase_b: Reviewer aveugle scellé local
+    contrainte: route locale; ne code jamais la story qu'il review
+
   - id: laguna_reviewer
     modele: Laguna S 2.1
     vendor: laguna
@@ -259,7 +267,7 @@ regles_revue:
   vendors_par_story: 3
   paires_interdites: []
   # Règle explicite : ChatGPT Terra Pro 5.6 ne doit jamais reviewer une story qu'il a codée.
-  reviewers_aveugles: "Laguna S 2.1, Qwen 3.8 27B PC3, Daybreak Blue"
+  reviewers_aveugles: "DeepSeek V4 Flash 0731 local, Qwen 3.8 27B PC3, Daybreak Blue"
   revue_aveugle_mecanisme: civ_review.py hors session
   sentinelles: "Qwen 3.8 Max, Grok 4.6, Gemini 3.7 Flash"
   synthese_preuves: "Qwen 3.8 2.4T — proposé, non confirmé"
