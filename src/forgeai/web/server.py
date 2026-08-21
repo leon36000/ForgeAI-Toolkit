@@ -887,8 +887,22 @@ class ForgeAIHandler(BaseHTTPRequestHandler):
 
         try:
             self.connection.settimeout(_BODY_READ_TIMEOUT_S)
-            body = self.rfile.read(length)
+            deadline = time.monotonic() + _BODY_READ_TIMEOUT_S
+            chunks: list[bytes] = []
+            remaining = length
+            while remaining:
+                timeout = deadline - time.monotonic()
+                if timeout <= 0:
+                    raise socket.timeout
+                self.connection.settimeout(timeout)
+                chunk = self.rfile.read1(min(remaining, 65536))
+                if not chunk:
+                    raise socket.timeout
+                chunks.append(chunk)
+                remaining -= len(chunk)
+            body = b"".join(chunks)
         except socket.timeout:
+            self.close_connection = True
             self._send_json(408, {"error": "délai de lecture du corps dépassé"})
             return None
         finally:

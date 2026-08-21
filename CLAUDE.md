@@ -45,7 +45,7 @@ de secrets, et `CIV_MODELS` (3 modèles de vendors distincts) avant d'invoquer `
 
 ```text
 export LITELLM_BASE_URL=http://localhost:4000
-export CIV_MODELS="DeepSeek-V4-Pro,Gemini-3.1-Pro,LongCat-2.0"
+export CIV_MODELS="Laguna-S-2.1-PC4,Qwen3.8-27B,gpt-daybreak-blue-latest"
 PROOF_COMPRESS=0 bash ~/proof-method/scripts/pack_build.sh stories/<ID>.md /tmp/<ID>.diff /tmp/<ID>-pack.md
 python3 ~/proof-method/scripts/civ_review.py --story evidence/reviews/<ID> --pack /tmp/<ID>-pack.md
 python3 scripts/revue.py tally evidence/reviews/<ID>

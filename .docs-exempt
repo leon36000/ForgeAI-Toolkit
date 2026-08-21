@@ -114,6 +114,38 @@ préexistant, non cassés). Docs/reference/cli.md documente déjà l'usage utili
 ForgeAI lui-même ; ce commit ne touche que l'outillage interne du gate de documentation, aucune
 doc utilisateur supplémentaire concernée.
 
+scripts/coordination/scope_guard.py + scripts/reviews_gate.py + scripts/revue.py +
+src/forgeai/web/server.py + .github/workflows/scope-guard.yml : durcissement interne des
+coupe-circuits de revue, du calcul de scope et de la lecture bornée des requêtes. Les contrats
+CLI et HTTP existants restent inchangés pour les entrées valides; les nouveaux cas refusés sont
+des entrées non mesurables ou des reçus de round 3 sans replan explicite. Les tests ciblés
+couvrent ces comportements; aucune documentation utilisateur supplémentaire n'est requise.
+
+Correctif de suivi de la même garde interne : suppression du job CI de synchronisation avec
+écriture et alignement du diff de claims sur le head-ref effectivement mesuré. Le job de preview
+sans écriture reste la source d'artefacts; aucun contrat utilisateur nouveau n'est introduit.
+
+scripts/reviews_gate.py + tests/test_orch_578_review_round_gate.py : la chaîne des reçus de
+revue impose désormais un round monotone par issue, en complément du plafond 1-2-3. C'est un
+durcissement interne du gate; aucune documentation utilisateur supplémentaire n'est requise.
+
+Le contrôle de chaîne distingue les lignées par issue et merge-base afin de ne pas confondre
+des PR successives légitimes après rebase. Cette précision reste interne au gate de revue et ne
+modifie aucun contrat utilisateur.
+
+governance/error-handling-contracts.json + governance/ERROR-HANDLING-CONTRACTS.md : régénération
+déterministe des ancrages AST après le durcissement de lecture HTTP; il s'agit d'un inventaire
+interne, pas d'une documentation utilisateur nouvelle.
+
+scripts/reviews_gate.py : un reçu antérieur présent mais illisible fait désormais échouer fermé
+la chaîne de rounds, au lieu de permettre une réinitialisation silencieuse; durcissement interne.
+
+scripts/reviews_gate.py + .github/workflows/gates.yml : le numéro de PR GitHub est désormais
+transmis au gate et comparé au champ issue du reçu courant; durcissement de traçabilité interne.
+
+src/forgeai/web/server.py : fermeture explicite de la connexion après timeout de lecture d'un
+corps partiel, durcissement interne du serveur HTTP sans nouveau contrat utilisateur.
+
 scripts/branch_coverage_report.py + job .github/workflows/gates.yml `branch-coverage-report`
 (RC1-021/#451, incrément 1) : nouvel outillage interne CI, mesure et rapport de couverture de
 branches par fonction, jamais bloquant (miroir exact de scripts/ruff_report.py / job

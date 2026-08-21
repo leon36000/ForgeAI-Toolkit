@@ -64,6 +64,11 @@ def test_vendors_distincts_reconnus():
     assert len({revue.vendor_of(model) for model in ("deepseek", "gemini_flash", "glm_52")}) == 3
 
 
+def test_trio_actif_de_revue_resout_trois_vendors_distincts():
+    trio = ("Laguna-S-2.1-PC4", "Qwen3.8-27B", "gpt-daybreak-blue-latest")
+    assert {revue.vendor_of(model) for model in trio} == {"laguna", "alibaba", "openai"}
+
+
 def test_vendor_table_derivee_de_roles_yaml_reelle():
     table = revue._vendor_table()
     assert table is not None

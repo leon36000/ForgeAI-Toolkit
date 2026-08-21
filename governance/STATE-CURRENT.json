@@ -8,7 +8,7 @@
       "sha256_recomputed_ok": true
     },
     "ci": {
-      "jobs_total": 31,
+      "jobs_total": 30,
       "workflows": 7
     },
     "cli": {
@@ -100,11 +100,11 @@
       },
       {
         "path": ".github/workflows/gates.yml",
-        "sha256": "13b7a1fe3228846e624c4e43d6048bebd300948ee2e95f941304b8f9d3d0c125"
+        "sha256": "7a25382c3c626b0d2f4c370f87695c6eb260934abeb360b416850ff86dc3393f"
       },
       {
         "path": ".github/workflows/scope-guard.yml",
-        "sha256": "312e4e7e4f7bffc1503be4fad3992ac2b4392b75a2105b174f6c113831240eba"
+        "sha256": "d055afe8ace43a192f6ccc844874085dce9bc862ceedfc62601759867cb4fbb4"
       },
       {
         "path": ".github/workflows/sonar-suppressions.yml",
@@ -556,7 +556,7 @@
       },
       {
         "path": "tests/test_orch_578_review_round_gate.py",
-        "sha256": "57e8ffd4fe22136ed3d351ca3fd57348a58555d2ef0fa848d1b963f8e6869852"
+        "sha256": "2ae68819c267cd1e5ffc7200064e33acb5b995519ec2f7272150c51185e5a207"
       },
       {
         "path": "tests/test_perf030a_refresh.py",
@@ -760,11 +760,11 @@
       },
       {
         "path": "tests/test_reviews_gate.py",
-        "sha256": "678bd25ba844b501cbcbb109f6b2976463660577f035c295d799a1e4c176bec3"
+        "sha256": "28189c31d7b4d04b4b00b851fce69498f250555257ae021e20ff4d7c11dd7ffa"
       },
       {
         "path": "tests/test_revue.py",
-        "sha256": "04e449cd9edcbad615e679580980b0d6035d86644ea715c6aba97a8351a879f2"
+        "sha256": "feca4731edb22e3bec852a5c7ef60fa466f41ae6b153b8913ae3492106fc0905"
       },
       {
         "path": "tests/test_routestore_concurrence.py",
@@ -989,7 +989,7 @@
     "tests": {
       "js_files": 3,
       "python_files": 207,
-      "python_functions_declared": 2644
+      "python_functions_declared": 2649
     }
   },
   "observations": [
