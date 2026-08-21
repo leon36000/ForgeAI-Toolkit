@@ -78,7 +78,7 @@ def executer_mutation(racine: Path, mutation: Mutation, timeout: int = 180) -> d
     try:
         environnement = os.environ.copy()
         environnement["PYTHONPATH"] = str(travail / "src")
-        resultat = subprocess.run(
+        resultat = subprocess.run(  # noqa: S603 — commande et arguments constants, copie temporaire contrôlée (révision: 2026-08-21)
             [sys.executable, "-m", "pytest", "-q", "tests/test_ratelimit.py"],
             cwd=travail,
             env=environnement,

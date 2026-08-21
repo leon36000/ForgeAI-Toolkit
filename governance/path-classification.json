@@ -33427,8 +33427,8 @@
         }
       ],
       "rule_id": "governance-scripts-root",
-      "sha256": "e5835678e8f5328e52336217229fabdf65761d6dd8a3b7254898159834c32599",
-      "size": 4616,
+      "sha256": "7eee18c00d304cf4b1989e627296662b77b7652f09597d623ef9a322c1275ac3",
+      "size": 4720,
       "target_path": null,
       "type": "text"
     },

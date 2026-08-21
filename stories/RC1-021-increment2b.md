@@ -24,6 +24,11 @@ documentés par le test explicite des variables absentes; le code final conserve
 fallback `None` explicite et typé afin que le gate mypy reste strict. La campagne ciblée
 versionnée tue ensuite les trois mutants de garde (`3/3`, zéro survivant).
 
+La commande pytest interne de la campagne porte une justification `noqa: S603` directement
+sur la ligne d'appel multilignes : c'est la forme reconnue par Ruff 0.14.5, version du gate CI.
+La commande, ses arguments et sa copie de travail sont entièrement construits par le script;
+aucune entrée shell utilisateur n'est interpolée.
+
 ## Bornes
 
 Cet incrément ne prétend pas couvrir tout le dépôt ni produire un score global de mutation. Les
