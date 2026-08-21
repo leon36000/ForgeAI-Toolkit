@@ -19,9 +19,10 @@ survivant` est donc bloquante, jamais une dette silencieuse.
 ## Corrections et preuves
 
 La campagne `mutmut` initiale sur la cible existante a produit 195 mutants tués et 6 survivants
-équivalents dans la lecture des variables d'environnement. Les valeurs par défaut redondantes
-ont été supprimées (`os.environ.get(key)`), et un test explicite couvre les variables absentes.
-La campagne ciblée versionnée tue ensuite les trois mutants de garde (`3/3`, zéro survivant).
+équivalents dans la lecture des variables d'environnement. Ces survivants équivalents sont
+documentés par le test explicite des variables absentes; le code final conserve en plus un
+fallback `None` explicite et typé afin que le gate mypy reste strict. La campagne ciblée
+versionnée tue ensuite les trois mutants de garde (`3/3`, zéro survivant).
 
 ## Bornes
 
