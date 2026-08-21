@@ -1,0 +1,132 @@
+#!/usr/bin/env python3
+"""Campagne de mutation ciblée et bloquante pour les gardes du rate limiter.
+
+Chaque mutation est volontaire, bornée à un site de décision critique et exécutée dans une
+copie temporaire du paquet ``src``. Une mutation qui laisse la suite ciblée verte est un
+mutant survivant : le rapport le conserve comme disposition ``FAIL`` et la commande retourne
+un code non nul. Le job CI peut donc prouver que supprimer une garde importante rend le job
+rouge, sans modifier le worktree ni dépendre d'un état de mutation persistant.
+"""
+
+from __future__ import annotations
+
+import argparse
+import json
+import os
+import shutil
+import subprocess
+import sys
+import tempfile
+from dataclasses import asdict, dataclass
+from pathlib import Path
+
+
+@dataclass(frozen=True)
+class Mutation:
+    identifiant: str
+    fichier: str
+    avant: str
+    apres: str
+    contrat: str
+
+
+MUTATIONS = (
+    Mutation(
+        "loopback-bypass-inverse",
+        "src/forgeai/web/ratelimit.py",
+        "if is_loopback:",
+        "if not is_loopback:",
+        "une requête loopback saine reste exemptée du bucket global",
+    ),
+    Mutation(
+        "lockout-seuil-strict",
+        "src/forgeai/web/ratelimit.py",
+        'if len(state["failures"]) >= self.auth_max:',
+        'if len(state["failures"]) > self.auth_max:',
+        "le seuil auth_max arme le lockout dès le dernier échec requis",
+    ),
+    Mutation(
+        "zero-rate-max-autorise",
+        "src/forgeai/web/ratelimit.py",
+        "if self.rate_max <= 0:",
+        "if self.rate_max < 0:",
+        "rate_max nul refuse toujours le trafic distant sans division par zéro",
+    ),
+)
+
+
+def _copie_de_test(racine: Path, mutation: Mutation) -> Path:
+    travail = Path(tempfile.mkdtemp(prefix="forgeai-mutation-"))
+    shutil.copytree(racine / "src", travail / "src")
+    shutil.copytree(racine / "tests", travail / "tests", ignore=shutil.ignore_patterns(
+        "__pycache__", ".pytest_cache", "*.pyc"
+    ))
+    cible = travail / mutation.fichier
+    contenu = cible.read_text(encoding="utf-8")
+    occurrences = contenu.count(mutation.avant)
+    if occurrences != 1:
+        shutil.rmtree(travail)
+        raise RuntimeError(
+            f"{mutation.identifiant}: site de mutation non unique ({occurrences})"
+        )
+    cible.write_text(contenu.replace(mutation.avant, mutation.apres, 1), encoding="utf-8")
+    return travail
+
+
+def executer_mutation(racine: Path, mutation: Mutation, timeout: int = 180) -> dict[str, object]:
+    travail = _copie_de_test(racine, mutation)
+    try:
+        environnement = os.environ.copy()
+        environnement["PYTHONPATH"] = str(travail / "src")
+        resultat = subprocess.run(
+            [sys.executable, "-m", "pytest", "-q", "tests/test_ratelimit.py"],
+            cwd=travail,
+            env=environnement,
+            capture_output=True,
+            text=True,
+            timeout=timeout,
+            check=False,
+        )
+        tue = resultat.returncode != 0
+        return {
+            **asdict(mutation),
+            "statut": "killed" if tue else "survived",
+            "disposition": "PASS" if tue else "FAIL: mutant survivant",
+            "code_retour": resultat.returncode,
+            "sortie_tail": (resultat.stdout + resultat.stderr)[-2000:],
+        }
+    finally:
+        shutil.rmtree(travail, ignore_errors=True)
+
+
+def campagne(racine: Path) -> dict[str, object]:
+    resultats = [executer_mutation(racine, mutation) for mutation in MUTATIONS]
+    survivants = [r for r in resultats if r["statut"] == "survived"]
+    return {
+        "_schema": "mutation-gate-v1",
+        "cible": "src/forgeai/web/ratelimit.py",
+        "mutants": resultats,
+        "total": len(resultats),
+        "tues": len(resultats) - len(survivants),
+        "survivants": len(survivants),
+        "statut": "PASS" if not survivants else "FAIL",
+    }
+
+
+def main(argv: list[str] | None = None) -> int:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--racine", type=Path, default=Path("."))
+    parser.add_argument("--sortie-json", type=Path)
+    args = parser.parse_args(argv)
+    rapport = campagne(args.racine.resolve())
+    texte = json.dumps(rapport, ensure_ascii=False, indent=2) + "\n"
+    if args.sortie_json:
+        sortie = args.sortie_json if args.sortie_json.is_absolute() else args.racine / args.sortie_json
+        sortie.parent.mkdir(parents=True, exist_ok=True)
+        sortie.write_text(texte, encoding="utf-8")
+    print(texte, end="")
+    return 0 if rapport["statut"] == "PASS" else 1
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

@@ -43,13 +43,13 @@ class RateLimiter:
     def from_env(cls) -> "RateLimiter":
         def _int(key: str, default: int) -> int:
             try:
-                return int(os.environ.get(key, ""))
+                return int(os.environ.get(key))
             except (ValueError, TypeError):
                 return default
 
         def _float(key: str, default: float) -> float:
             try:
-                return float(os.environ.get(key, ""))
+                return float(os.environ.get(key))
             except (ValueError, TypeError):
                 return default
 

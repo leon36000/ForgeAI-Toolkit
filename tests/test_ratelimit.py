@@ -311,6 +311,22 @@ def test_from_env_valeurs_invalides_reprennent_les_defauts(monkeypatch):
     assert rl.lockout_s == 900.0
 
 
+def test_from_env_variables_absentes_reprennent_les_defauts(monkeypatch):
+    for cle in (
+        "FORGEAI_RATE_MAX",
+        "FORGEAI_RATE_WINDOW_S",
+        "FORGEAI_AUTH_MAX",
+        "FORGEAI_AUTH_WINDOW_S",
+        "FORGEAI_LOCKOUT_S",
+    ):
+        monkeypatch.delenv(cle, raising=False)
+
+    rl = RateLimiter.from_env()
+
+    assert (rl.rate_max, rl.rate_window_s) == (100, 60.0)
+    assert (rl.auth_max, rl.auth_window_s, rl.lockout_s) == (5, 600.0, 900.0)
+
+
 def test_lockout_retourne_le_temps_restant_exact_et_rafraichit_l_activite():
     clock = MockClock()
     rl = RateLimiter(auth_max=1, lockout_s=10.0, clock=clock)
