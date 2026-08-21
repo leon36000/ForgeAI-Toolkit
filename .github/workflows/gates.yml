@@ -401,6 +401,7 @@ jobs:
       - name: Campagne de mutation ciblée — gardes rate limiter
         run: python3 scripts/mutation_gate.py --sortie-json mutation-report.json
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
         with:
           name: targeted-mutation-report
           if-no-files-found: error

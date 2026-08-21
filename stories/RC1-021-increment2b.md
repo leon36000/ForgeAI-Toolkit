@@ -29,6 +29,12 @@ sur la ligne d'appel multilignes : c'est la forme reconnue par Ruff 0.14.5, vers
 La commande, ses arguments et sa copie de travail sont entièrement construits par le script;
 aucune entrée shell utilisateur n'est interpolée.
 
+Un retour pytest `1` est le seul cas compté comme mutant tué (échec de test). Les codes `2`,
+`3`, `4` et `5` restent des erreurs de runner bloquantes et sont conservés dans le rapport;
+ainsi une interruption, une erreur interne ou une absence de tests ne peut pas produire une
+fausse preuve de mutation. Le rapport est téléversé avec `if: always()` afin de rester
+consultable même lorsque la campagne échoue.
+
 ## Bornes
 
 Cet incrément ne prétend pas couvrir tout le dépôt ni produire un score global de mutation. Les

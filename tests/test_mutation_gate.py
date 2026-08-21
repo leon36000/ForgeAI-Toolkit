@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from pathlib import Path
+from types import SimpleNamespace
 
 from scripts import mutation_gate
 
@@ -19,3 +20,19 @@ def test_campagne_reelle_tue_les_mutants_de_garde() -> None:
     assert rapport["statut"] == "PASS"
     assert rapport["survivants"] == 0
     assert rapport["tues"] == rapport["total"]
+
+
+def test_code_retour_runner_non_nul_n_est_pas_une_preuve_de_mutant_tue(monkeypatch) -> None:
+    racine = Path(__file__).resolve().parent.parent
+    monkeypatch.setattr(
+        mutation_gate.subprocess,
+        "run",
+        lambda *args, **kwargs: SimpleNamespace(
+            returncode=2, stdout="", stderr="erreur interne pytest"
+        ),
+    )
+
+    rapport = mutation_gate.executer_mutation(racine, mutation_gate.MUTATIONS[0])
+
+    assert rapport["statut"] == "runner-error"
+    assert rapport["disposition"] == "FAIL: erreur du runner pytest (2)"

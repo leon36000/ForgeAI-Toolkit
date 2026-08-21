@@ -87,11 +87,23 @@ def executer_mutation(racine: Path, mutation: Mutation, timeout: int = 180) -> d
             timeout=timeout,
             check=False,
         )
-        tue = resultat.returncode != 0
+        # pytest code 1 signifie qu'un test a échoué : le mutant est effectivement tué.
+        # Les autres codes non nuls signalent une erreur du runner (usage, interruption,
+        # erreur interne ou absence de tests) et doivent faire échouer la campagne, jamais
+        # être transformés en preuve de mutation efficace.
+        if resultat.returncode == 0:
+            statut = "survived"
+            disposition = "FAIL: mutant survivant"
+        elif resultat.returncode == 1:
+            statut = "killed"
+            disposition = "PASS"
+        else:
+            statut = "runner-error"
+            disposition = f"FAIL: erreur du runner pytest ({resultat.returncode})"
         return {
             **asdict(mutation),
-            "statut": "killed" if tue else "survived",
-            "disposition": "PASS" if tue else "FAIL: mutant survivant",
+            "statut": statut,
+            "disposition": disposition,
             "code_retour": resultat.returncode,
             "sortie_tail": (resultat.stdout + resultat.stderr)[-2000:],
         }
@@ -102,14 +114,16 @@ def executer_mutation(racine: Path, mutation: Mutation, timeout: int = 180) -> d
 def campagne(racine: Path) -> dict[str, object]:
     resultats = [executer_mutation(racine, mutation) for mutation in MUTATIONS]
     survivants = [r for r in resultats if r["statut"] == "survived"]
+    erreurs_runner = [r for r in resultats if r["statut"] == "runner-error"]
     return {
         "_schema": "mutation-gate-v1",
         "cible": "src/forgeai/web/ratelimit.py",
         "mutants": resultats,
         "total": len(resultats),
-        "tues": len(resultats) - len(survivants),
+        "tues": sum(r["statut"] == "killed" for r in resultats),
         "survivants": len(survivants),
-        "statut": "PASS" if not survivants else "FAIL",
+        "erreurs_runner": len(erreurs_runner),
+        "statut": "PASS" if not survivants and not erreurs_runner else "FAIL",
     }
 
 
