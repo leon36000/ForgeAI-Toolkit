@@ -30109,7 +30109,7 @@
         },
         {
           "candidate": "governance/path-classification.json",
-          "line": 251,
+          "line": 255,
           "referrer": "tests/test_revue.py",
           "resolved": "governance/path-classification.json",
           "severity": "hard"
@@ -31368,8 +31368,8 @@
         }
       ],
       "rule_id": "governance-manifests",
-      "sha256": "9f78a4a8928e0c0e8e0eac76e0b1d2e8ac861dc713709bc5d7ed560c384def16",
-      "size": 2380,
+      "sha256": "770887e867b49fa84cac9b8e836a0d022ab669ad472b4685c36f31d6576868fe",
+      "size": 2564,
       "target_path": null,
       "type": "text"
     },
@@ -47938,8 +47938,8 @@
       "path": "stories/RC1-015.md",
       "referenced_by": [],
       "rule_id": "governance-stories",
-      "sha256": "e3a8e4c0cc4266026e69ffd9744b2f2f3e24e9bc64f15c6480fd4dc18f7b8844",
-      "size": 1912,
+      "sha256": "71006da78d77b2a1073501215ef7d8c8b1e2fa9119212c87156f80004ae122e8",
+      "size": 2088,
       "target_path": null,
       "type": "text"
     },
@@ -51933,14 +51933,14 @@
         },
         {
           "candidate": "tests/test_gitguardian_config.py",
-          "line": 34,
+          "line": 36,
           "referrer": "stories/RC1-015.md",
           "resolved": "tests/test_gitguardian_config.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_gitguardian_config.py",
-          "line": 35,
+          "line": 37,
           "referrer": "stories/RC1-015.md",
           "resolved": "tests/test_gitguardian_config.py",
           "severity": "hard"
@@ -58464,8 +58464,8 @@
         }
       ],
       "rule_id": "test-suite",
-      "sha256": "1dc2d502b4e5d2b4f58a1a7fe71c5ee3bef9c7b2336a30606aad323cd5b17443",
-      "size": 19537,
+      "sha256": "065415e3f13e3375b2734213223116fbce6db23cfa8cdce74aec44d3d7918cd4",
+      "size": 19664,
       "target_path": null,
       "type": "text"
     },
@@ -59822,7 +59822,7 @@
         },
         {
           "candidate": "tests/test_validate_coderabbit_config.py",
-          "line": 35,
+          "line": 37,
           "referrer": "stories/RC1-015.md",
           "resolved": "tests/test_validate_coderabbit_config.py",
           "severity": "hard"
@@ -143637,202 +143637,202 @@
       },
       {
         "candidate": "roles.yaml",
-        "line": 94,
+        "line": 98,
         "referrer": "tests/test_revue.py"
       },
       {
         "candidate": "routes.yaml",
-        "line": 95,
+        "line": 99,
         "referrer": "tests/test_revue.py"
       },
       {
         "candidate": "roles.yaml",
-        "line": 112,
+        "line": 116,
         "referrer": "tests/test_revue.py"
       },
       {
         "candidate": "roles.yaml",
-        "line": 125,
+        "line": 129,
         "referrer": "tests/test_revue.py"
       },
       {
         "candidate": "x.py",
-        "line": 151,
+        "line": 155,
         "referrer": "tests/test_revue.py"
       },
       {
         "candidate": "a.py",
-        "line": 203,
+        "line": 207,
         "referrer": "tests/test_revue.py"
       },
       {
         "candidate": "a.py",
-        "line": 204,
+        "line": 208,
         "referrer": "tests/test_revue.py"
       },
       {
         "candidate": "bad.md",
-        "line": 220,
+        "line": 224,
         "referrer": "tests/test_revue.py"
       },
       {
         "candidate": "evidence/reviews/",
-        "line": 239,
-        "referrer": "tests/test_revue.py"
-      },
-      {
-        "candidate": "reviews/",
-        "line": 239,
-        "referrer": "tests/test_revue.py"
-      },
-      {
-        "candidate": "0src/a.py",
         "line": 243,
         "referrer": "tests/test_revue.py"
       },
       {
+        "candidate": "reviews/",
+        "line": 243,
+        "referrer": "tests/test_revue.py"
+      },
+      {
+        "candidate": "0src/a.py",
+        "line": 247,
+        "referrer": "tests/test_revue.py"
+      },
+      {
         "candidate": "0evidence/reviews/S/RECU.json",
-        "line": 244,
+        "line": 248,
         "referrer": "tests/test_revue.py"
       },
       {
         "candidate": "classify_paths.py",
-        "line": 251,
+        "line": 255,
         "referrer": "tests/test_revue.py"
       },
       {
         "candidate": "reviews/",
-        "line": 252,
+        "line": 256,
         "referrer": "tests/test_revue.py"
       },
       {
         "candidate": "RECU.json/",
-        "line": 253,
+        "line": 257,
         "referrer": "tests/test_revue.py"
       },
       {
         "candidate": ".verdict.json",
-        "line": 253,
+        "line": 257,
         "referrer": "tests/test_revue.py"
       },
       {
         "candidate": "0src/a.py",
-        "line": 258,
+        "line": 262,
         "referrer": "tests/test_revue.py"
       },
       {
         "candidate": "0governance/path-classification.json",
-        "line": 259,
+        "line": 263,
         "referrer": "tests/test_revue.py"
       },
       {
         "candidate": "0src/a.py",
-        "line": 268,
+        "line": 272,
         "referrer": "tests/test_revue.py"
       },
       {
         "candidate": "0governance/PATH-CLASSIFICATION.md",
-        "line": 269,
+        "line": 273,
         "referrer": "tests/test_revue.py"
       },
       {
         "candidate": "0z.py",
-        "line": 281,
+        "line": 285,
         "referrer": "tests/test_revue.py"
       },
       {
         "candidate": "0a.py",
-        "line": 281,
+        "line": 285,
         "referrer": "tests/test_revue.py"
       },
       {
         "candidate": "0a.py",
-        "line": 282,
+        "line": 286,
         "referrer": "tests/test_revue.py"
       },
       {
         "candidate": "0z.py",
-        "line": 282,
+        "line": 286,
         "referrer": "tests/test_revue.py"
       },
       {
         "candidate": "reviews/",
-        "line": 328,
+        "line": 332,
         "referrer": "tests/test_revue.py"
       },
       {
         "candidate": "head_commit/head_tree",
-        "line": 328,
+        "line": 332,
         "referrer": "tests/test_revue.py"
       },
       {
         "candidate": "RECU.json",
-        "line": 395,
+        "line": 399,
         "referrer": "tests/test_revue.py"
       },
       {
         "candidate": "attaquant/une",
-        "line": 397,
+        "line": 401,
         "referrer": "tests/test_revue.py"
       },
       {
         "candidate": "revue.py",
-        "line": 423,
+        "line": 427,
         "referrer": "tests/test_revue.py"
       },
       {
         "candidate": "origin/main",
-        "line": 425,
+        "line": 429,
         "referrer": "tests/test_revue.py"
       },
       {
         "candidate": "origin/main",
-        "line": 437,
+        "line": 441,
         "referrer": "tests/test_revue.py"
       },
       {
         "candidate": "revue.py",
-        "line": 449,
+        "line": 453,
         "referrer": "tests/test_revue.py"
       },
       {
         "candidate": "origin/main",
-        "line": 449,
+        "line": 453,
         "referrer": "tests/test_revue.py"
       },
       {
         "candidate": "DeepSeek-V4-Pro.verdict.json",
-        "line": 462,
-        "referrer": "tests/test_revue.py"
-      },
-      {
-        "candidate": "Gemini-3.7-Flash.verdict.json",
-        "line": 463,
-        "referrer": "tests/test_revue.py"
-      },
-      {
-        "candidate": "LongCat-2.0.verdict.json",
         "line": 466,
         "referrer": "tests/test_revue.py"
       },
       {
+        "candidate": "Gemini-3.7-Flash.verdict.json",
+        "line": 467,
+        "referrer": "tests/test_revue.py"
+      },
+      {
+        "candidate": "LongCat-2.0.verdict.json",
+        "line": 470,
+        "referrer": "tests/test_revue.py"
+      },
+      {
         "candidate": "RECU.json",
-        "line": 471,
+        "line": 475,
         "referrer": "tests/test_revue.py"
       },
       {
         "candidate": "origin/main",
-        "line": 474,
+        "line": 478,
         "referrer": "tests/test_revue.py"
       },
       {
         "candidate": "DeepSeek-V4-Pro.verdict.json",
-        "line": 495,
+        "line": 499,
         "referrer": "tests/test_revue.py"
       },
       {
         "candidate": "origin/main",
-        "line": 502,
+        "line": 506,
         "referrer": "tests/test_revue.py"
       },
       {
@@ -177253,21 +177253,21 @@
       },
       {
         "candidate": "tests/test_gitguardian_config.py",
-        "line": 34,
+        "line": 36,
         "referrer": "stories/RC1-015.md",
         "resolved": "tests/test_gitguardian_config.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_gitguardian_config.py",
-        "line": 35,
+        "line": 37,
         "referrer": "stories/RC1-015.md",
         "resolved": "tests/test_gitguardian_config.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_validate_coderabbit_config.py",
-        "line": 35,
+        "line": 37,
         "referrer": "stories/RC1-015.md",
         "resolved": "tests/test_validate_coderabbit_config.py",
         "severity": "hard"
@@ -180312,7 +180312,7 @@
       },
       {
         "candidate": "governance/path-classification.json",
-        "line": 251,
+        "line": 255,
         "referrer": "tests/test_revue.py",
         "resolved": "governance/path-classification.json",
         "severity": "hard"

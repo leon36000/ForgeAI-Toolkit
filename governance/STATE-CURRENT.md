@@ -778,7 +778,7 @@
     },
     {
       "path": "tests/test_revue.py",
-      "sha256": "1dc2d502b4e5d2b4f58a1a7fe71c5ee3bef9c7b2336a30606aad323cd5b17443"
+      "sha256": "065415e3f13e3375b2734213223116fbce6db23cfa8cdce74aec44d3d7918cd4"
     },
     {
       "path": "tests/test_routestore_concurrence.py",
@@ -1003,7 +1003,7 @@
   "tests": {
     "js_files": 3,
     "python_files": 209,
-    "python_functions_declared": 2659
+    "python_functions_declared": 2660
   }
 }
 ```
