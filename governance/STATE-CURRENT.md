@@ -502,7 +502,7 @@
     },
     {
       "path": "tests/test_mutation_gate.py",
-      "sha256": "a2e940646fc565cbd2f9cc8036fa99c68bcf0f1452c4c559b7071172128c4188"
+      "sha256": "c8fccf24781bca7a70569f6f9f38036955e68c40d194ac15ea4c870b52124df8"
     },
     {
       "path": "tests/test_network.py",
@@ -999,7 +999,7 @@
   "tests": {
     "js_files": 3,
     "python_files": 208,
-    "python_functions_declared": 2653
+    "python_functions_declared": 2654
   }
 }
 ```

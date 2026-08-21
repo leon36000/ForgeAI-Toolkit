@@ -78,15 +78,24 @@ def executer_mutation(racine: Path, mutation: Mutation, timeout: int = 180) -> d
     try:
         environnement = os.environ.copy()
         environnement["PYTHONPATH"] = str(travail / "src")
-        resultat = subprocess.run(  # noqa: S603 — commande et arguments constants, copie temporaire contrôlée (révision: 2026-08-21)
-            [sys.executable, "-m", "pytest", "-q", "tests/test_ratelimit.py"],
-            cwd=travail,
-            env=environnement,
-            capture_output=True,
-            text=True,
-            timeout=timeout,
-            check=False,
-        )
+        try:
+            resultat = subprocess.run(  # noqa: S603 — commande et arguments constants, copie temporaire contrôlée (révision: 2026-08-21)
+                [sys.executable, "-m", "pytest", "-q", "tests/test_ratelimit.py"],
+                cwd=travail,
+                env=environnement,
+                capture_output=True,
+                text=True,
+                timeout=timeout,
+                check=False,
+            )
+        except subprocess.TimeoutExpired as erreur:
+            return {
+                **asdict(mutation),
+                "statut": "runner-error",
+                "disposition": "FAIL: délai dépassé du runner pytest",
+                "code_retour": None,
+                "sortie_tail": str(erreur)[-2000:],
+            }
         # pytest code 1 signifie qu'un test a échoué : le mutant est effectivement tué.
         # Les autres codes non nuls signalent une erreur du runner (usage, interruption,
         # erreur interne ou absence de tests) et doivent faire échouer la campagne, jamais

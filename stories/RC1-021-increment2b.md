@@ -34,6 +34,8 @@ Un retour pytest `1` est le seul cas compté comme mutant tué (échec de test).
 ainsi une interruption, une erreur interne ou une absence de tests ne peut pas produire une
 fausse preuve de mutation. Le rapport est téléversé avec `if: always()` afin de rester
 consultable même lorsque la campagne échoue.
+Un `TimeoutExpired` pytest est traité de la même façon : erreur de runner bloquante, entrée
+conservée dans le rapport, nettoyage de la copie temporaire garanti.
 
 ## Bornes
 

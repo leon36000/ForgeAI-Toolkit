@@ -36,3 +36,18 @@ def test_code_retour_runner_non_nul_n_est_pas_une_preuve_de_mutant_tue(monkeypat
 
     assert rapport["statut"] == "runner-error"
     assert rapport["disposition"] == "FAIL: erreur du runner pytest (2)"
+
+
+def test_timeout_runner_est_conserve_comme_erreur_bloquante(monkeypatch) -> None:
+    racine = Path(__file__).resolve().parent.parent
+
+    def lever_timeout(*args, **kwargs):
+        raise mutation_gate.subprocess.TimeoutExpired(cmd=args[0], timeout=kwargs["timeout"])
+
+    monkeypatch.setattr(mutation_gate.subprocess, "run", lever_timeout)
+
+    rapport = mutation_gate.executer_mutation(racine, mutation_gate.MUTATIONS[0])
+
+    assert rapport["statut"] == "runner-error"
+    assert rapport["disposition"] == "FAIL: délai dépassé du runner pytest"
+    assert rapport["code_retour"] is None

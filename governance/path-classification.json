@@ -33427,8 +33427,8 @@
         }
       ],
       "rule_id": "governance-scripts-root",
-      "sha256": "4b101fcd14497c3ecb2b449cd3d450f0897eb2dbae3d9b072ea9709097d20722",
-      "size": 5474,
+      "sha256": "475d6286805af631bd959234c060a018532938f374c76e35f417c9591ba1334b",
+      "size": 5851,
       "target_path": null,
       "type": "text"
     },
@@ -45752,7 +45752,7 @@
         },
         {
           "candidate": "src/forgeai/web/ratelimit.py",
-          "line": 120,
+          "line": 129,
           "referrer": "scripts/mutation_gate.py",
           "resolved": "src/forgeai/web/ratelimit.py",
           "severity": "hard"
@@ -47861,8 +47861,8 @@
       "path": "stories/RC1-021-increment2b.md",
       "referenced_by": [],
       "rule_id": "governance-stories",
-      "sha256": "f5f63f6aae7767a76069e182c528dfffa92b879c4b3b8e3c08a32e26413c4be4",
-      "size": 2325,
+      "sha256": "bfeabd42f685a40c0afd26151e3d9a26cf9060f291cb0be4a348ae44145d7742",
+      "size": 2491,
       "target_path": null,
       "type": "text"
     },
@@ -53972,8 +53972,8 @@
         }
       ],
       "rule_id": "test-suite",
-      "sha256": "a2e940646fc565cbd2f9cc8036fa99c68bcf0f1452c4c559b7071172128c4188",
-      "size": 1373,
+      "sha256": "c8fccf24781bca7a70569f6f9f38036955e68c40d194ac15ea4c870b52124df8",
+      "size": 1969,
       "target_path": null,
       "type": "text"
     },
@@ -56135,7 +56135,7 @@
         },
         {
           "candidate": "tests/test_ratelimit.py",
-          "line": 82,
+          "line": 83,
           "referrer": "scripts/mutation_gate.py",
           "resolved": "tests/test_ratelimit.py",
           "severity": "hard"
@@ -173979,14 +173979,14 @@
       },
       {
         "candidate": "tests/test_ratelimit.py",
-        "line": 82,
+        "line": 83,
         "referrer": "scripts/mutation_gate.py",
         "resolved": "tests/test_ratelimit.py",
         "severity": "hard"
       },
       {
         "candidate": "src/forgeai/web/ratelimit.py",
-        "line": 120,
+        "line": 129,
         "referrer": "scripts/mutation_gate.py",
         "resolved": "src/forgeai/web/ratelimit.py",
         "severity": "hard"
