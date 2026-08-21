@@ -1,0 +1,19 @@
+{
+ "verdict": "APPROVE",
+ "objections": [
+  {
+   "severite": "mineure",
+   "fichier": "Docs/reference/secrets-scanning.md",
+   "description": "La procédure documentée référence un chemin temporaire fixe (/tmp/forgeai-secret-probe/Docs/ordinary.md), tandis que le test de fixture utilise un TemporaryDirectory aléatoire; l’alignement exact entre la procédure opérateur et la fixture testée n’est pas démontré.",
+   "preuve": "Docs/reference/secrets-scanning.md: ggshield ... /tmp/forgeai-secret-probe/Docs/ordinary.md ; tests/test_gitguardian_config.py: with TemporaryDirectory() as temporary_root: document = Path(temporary_root) / \"Docs\" / \"ordinary.md\""
+  }
+ ],
+ "date_heure": "2026-08-21T23:13:03.072155+00:00",
+ "prompt_sha256": "3f2110d1cb88907091757b0d0233e345cc3cb6a582a3d73e594e7dd7d6cf3b3a",
+ "reviewer_model": "Qwen3.8-27B",
+ "modele_servi": "8a317f3b6a6f1cbb8cc59d3217dd9da332c8c6c84377b1ccad9cfc103922eedb",
+ "gateway_resilience": {
+  "retries": "0",
+  "fallbacks": "0"
+ }
+}

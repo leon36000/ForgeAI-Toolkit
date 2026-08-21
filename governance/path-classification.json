@@ -4192,7 +4192,22 @@
       "load_bearing": false,
       "owner": "docs-utilisateur",
       "path": "Docs/reference/secrets-scanning.md",
-      "referenced_by": [],
+      "referenced_by": [
+        {
+          "candidate": "Docs/reference/secrets-scanning.md",
+          "line": 6,
+          "referrer": "evidence/reviews/RC1-015-v1/Qwen3.8-27B.verdict.json",
+          "resolved": "Docs/reference/secrets-scanning.md",
+          "severity": "hard"
+        },
+        {
+          "candidate": "Docs/reference/secrets-scanning.md",
+          "line": 8,
+          "referrer": "evidence/reviews/RC1-015-v1/Qwen3.8-27B.verdict.json",
+          "resolved": "Docs/reference/secrets-scanning.md",
+          "severity": "hard"
+        }
+      ],
       "rule_id": "docs-user",
       "sha256": "c483128e805cccc850c5160968cebc519aba1da94210d6ed3e9fd325f7e42f01",
       "size": 2305,
@@ -19968,6 +19983,45 @@
       "rule_id": "evidence-reviews-root",
       "sha256": "fb2b3d6b91cb91414d1a78692effe71fef22868c7814fb5b212e1ec8d83348c9",
       "size": 2013,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-015-v1/DeepSeek-V4-Pro.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "411ca041a5b32e90659167edde861556099734aa4f7fa6d17caba13ac47ec9af",
+      "size": 328,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-015-v1/Laguna-S-2.1-PC4.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "0d3240f9ad013d406d5e737b90378de633864fe57daaa06ac1a5be89c0b1ac1a",
+      "size": 323,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/RC1-015-v1/Qwen3.8-27B.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "5d8169488b60f6e4f97e2fa7bf65d8bc89c2cdf8594560af3a67c60a09f45720",
+      "size": 1004,
       "target_path": null,
       "type": "text"
     },
@@ -51919,6 +51973,13 @@
         },
         {
           "candidate": "tests/test_gitguardian_config.py",
+          "line": 8,
+          "referrer": "evidence/reviews/RC1-015-v1/Qwen3.8-27B.verdict.json",
+          "resolved": "tests/test_gitguardian_config.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "tests/test_gitguardian_config.py",
           "line": 342,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_gitguardian_config.py",
@@ -61035,11 +61096,6 @@
   "reference_graph": {
     "completeness": "best_effort",
     "dangling": [
-      {
-        "candidate": "RC1-015-v1",
-        "line": 219,
-        "referrer": "evidence/reviews/BINDING.txt"
-      },
       {
         "candidate": "TUI/UX",
         "line": 3,
@@ -99094,6 +99150,11 @@
         "candidate": "FR/EN",
         "line": 8,
         "referrer": "evidence/reviews/RC1-013/Qwen3.7-Max.verdict.json"
+      },
+      {
+        "candidate": "ordinary.md",
+        "line": 8,
+        "referrer": "evidence/reviews/RC1-015-v1/Qwen3.8-27B.verdict.json"
       },
       {
         "candidate": "recu-revue/1",
@@ -149462,6 +149523,13 @@
         "severity": "hard"
       },
       {
+        "candidate": "RC1-015-v1",
+        "line": 219,
+        "referrer": "evidence/reviews/BINDING.txt",
+        "resolved": "evidence/reviews/RC1-015-v1",
+        "severity": "hard"
+      },
+      {
         "candidate": "scripts/gate_docs.py",
         "line": 11,
         "referrer": "sonar-project.properties",
@@ -162633,6 +162701,27 @@
         "line": 26,
         "referrer": "evidence/reviews/RC1-013/Qwen3.7-Max.verdict.json",
         "resolved": "README.md",
+        "severity": "hard"
+      },
+      {
+        "candidate": "Docs/reference/secrets-scanning.md",
+        "line": 6,
+        "referrer": "evidence/reviews/RC1-015-v1/Qwen3.8-27B.verdict.json",
+        "resolved": "Docs/reference/secrets-scanning.md",
+        "severity": "hard"
+      },
+      {
+        "candidate": "Docs/reference/secrets-scanning.md",
+        "line": 8,
+        "referrer": "evidence/reviews/RC1-015-v1/Qwen3.8-27B.verdict.json",
+        "resolved": "Docs/reference/secrets-scanning.md",
+        "severity": "hard"
+      },
+      {
+        "candidate": "tests/test_gitguardian_config.py",
+        "line": 8,
+        "referrer": "evidence/reviews/RC1-015-v1/Qwen3.8-27B.verdict.json",
+        "resolved": "tests/test_gitguardian_config.py",
         "severity": "hard"
       },
       {
@@ -180542,7 +180631,7 @@
     "by_class": {
       "ARCHIVE": 44,
       "DOCS": 19,
-      "EVIDENCE": 1661,
+      "EVIDENCE": 1664,
       "GENERATED": 5,
       "GOVERNANCE": 214,
       "PRODUCT": 113,
@@ -180561,7 +180650,7 @@
       "evidence-audit-output-root": 18,
       "evidence-dedup-root": 2,
       "evidence-registres-root": 35,
-      "evidence-reviews-root": 1606,
+      "evidence-reviews-root": 1609,
       "generated-authority-map": 1,
       "generated-path-classification-json": 1,
       "generated-path-classification-markdown": 1,
@@ -180600,9 +180689,9 @@
     "case_collisions_total": 0,
     "dangling_references_total": 17360,
     "generated_total": 9,
-    "load_bearing_total": 2139,
+    "load_bearing_total": 2142,
     "portability_violations_total": 0,
-    "tracked_total": 2290,
+    "tracked_total": 2293,
     "unclassified_total": 0,
     "unicode_anomalies_total": 0
   },
