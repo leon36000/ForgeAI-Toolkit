@@ -6,6 +6,9 @@ on:
     branches:
       - main
 
+permissions:
+  contents: read
+
 jobs:
   validate:
     runs-on: ubuntu-latest
@@ -45,3 +48,22 @@ jobs:
 
           test "$statut" -ne 0
           printf '%s\n' "$sortie" | grep -F "site introuvable"
+
+  export-source:
+    if: github.event_name == 'pull_request' && github.head_ref == 'audit/export-source-e81b16e'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha }}
+      - name: Archiver le tree Git exact
+        shell: bash
+        run: git archive --format=tar.gz --output="forgeai-source-${GITHUB_SHA}.tar.gz" HEAD
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: source-snapshot-${{ github.event.pull_request.head.sha }}
+          path: forgeai-source-${{ github.sha }}.tar.gz
+          if-no-files-found: error
+          retention-days: 1
