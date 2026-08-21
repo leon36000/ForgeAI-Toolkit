@@ -33427,8 +33427,8 @@
         }
       ],
       "rule_id": "governance-scripts-root",
-      "sha256": "d3c24534a6ea6872a94d2cf88a270237264ef5c71fc9f81b123b31467adb8026",
-      "size": 6574,
+      "sha256": "db312200cbe895bed0841b008e60225f4ea6b150b51b56039ce262133c4d4ac2",
+      "size": 6724,
       "target_path": null,
       "type": "text"
     },
@@ -45752,7 +45752,7 @@
         },
         {
           "candidate": "src/forgeai/web/ratelimit.py",
-          "line": 145,
+          "line": 149,
           "referrer": "scripts/mutation_gate.py",
           "resolved": "src/forgeai/web/ratelimit.py",
           "severity": "hard"
@@ -47861,8 +47861,8 @@
       "path": "stories/RC1-021-increment2b.md",
       "referenced_by": [],
       "rule_id": "governance-stories",
-      "sha256": "1f5df0928e9950c9b130b0e5255404e073c6d3210436e1fee361c458e5cb80e5",
-      "size": 2802,
+      "sha256": "167bf85d3007658cb9640e041eef0f747554e69ca9dae96c12eccfb6c70044ae",
+      "size": 3019,
       "target_path": null,
       "type": "text"
     },
@@ -53972,8 +53972,8 @@
         }
       ],
       "rule_id": "test-suite",
-      "sha256": "bd864aba2f97558e7e8280c6929f003cd3fd73396ff80f70d37be34c169c0e29",
-      "size": 2497,
+      "sha256": "d1d8c9d22f08f3c5af018542a8daa8cad1831cee2e5c51b49f1b3db1d805a383",
+      "size": 2577,
       "target_path": null,
       "type": "text"
     },
@@ -130492,6 +130492,11 @@
         "referrer": "stories/RC1-018.md"
       },
       {
+        "candidate": "stdout/stderr",
+        "line": 43,
+        "referrer": "stories/RC1-021-increment2b.md"
+      },
+      {
         "candidate": "src/forgeai/",
         "line": 3,
         "referrer": "stories/RC1-022.md"
@@ -173986,7 +173991,7 @@
       },
       {
         "candidate": "src/forgeai/web/ratelimit.py",
-        "line": 145,
+        "line": 149,
         "referrer": "scripts/mutation_gate.py",
         "resolved": "src/forgeai/web/ratelimit.py",
         "severity": "hard"
@@ -180243,7 +180248,7 @@
       "working-sandbox-readme": 1
     },
     "case_collisions_total": 0,
-    "dangling_references_total": 17346,
+    "dangling_references_total": 17347,
     "generated_total": 9,
     "load_bearing_total": 2138,
     "portability_violations_total": 0,

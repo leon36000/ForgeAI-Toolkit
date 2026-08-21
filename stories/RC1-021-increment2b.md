@@ -40,6 +40,9 @@ Le message de timeout est fixe et ne réutilise aucune représentation d'excepti
 une donnée d'environnement ne peut donc pas être recopié dans l'artefact. Les erreurs de
 préparation (copie illisible ou site de mutation non unique) sont elles aussi rapportées comme
 `runner-error` bloquant.
+La sortie stdout/stderr de pytest est également exclue du rapport : seule une synthèse fixe du
+code retour est conservée, afin qu'un test défaillant ne puisse pas exfiltrer une valeur sensible
+dans l'artefact CI.
 
 ## Bornes
 

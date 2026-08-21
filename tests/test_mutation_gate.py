@@ -36,6 +36,7 @@ def test_code_retour_runner_non_nul_n_est_pas_une_preuve_de_mutant_tue(monkeypat
 
     assert rapport["statut"] == "runner-error"
     assert rapport["disposition"] == "FAIL: erreur du runner pytest (2)"
+    assert rapport["sortie_tail"] == "pytest a échoué (code 2); sortie omise"
 
 
 def test_timeout_runner_est_conserve_comme_erreur_bloquante(monkeypatch) -> None:

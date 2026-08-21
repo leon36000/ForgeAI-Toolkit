@@ -114,7 +114,11 @@ def executer_mutation(racine: Path, mutation: Mutation, timeout: int = 180) -> d
             "statut": statut,
             "disposition": disposition,
             "code_retour": resultat.returncode,
-            "sortie_tail": (resultat.stdout + resultat.stderr)[-2000:],
+            "sortie_tail": (
+                "pytest a réussi; sortie omise"
+                if resultat.returncode == 0
+                else f"pytest a échoué (code {resultat.returncode}); sortie omise"
+            ),
         }
     finally:
         shutil.rmtree(travail, ignore_errors=True)
