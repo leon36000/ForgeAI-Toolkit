@@ -344,11 +344,13 @@ def check(
                 )
 
         if mode == "archive" and receipt_path.is_file():
+            reviewed_commit = None
             try:
                 receipt = json.loads(receipt_path.read_text(encoding="utf-8"))
                 if isinstance(receipt, dict) and receipt.get("mode") == "sol_blind":
                     revue._validate_sol_archive_receipt(receipt, execute)
                     commit = receipt["head_commit"]
+                    reviewed_commit = receipt["reviewed_head_commit"]
                 else:
                     commit = receipt["head_commit"]
                     # Legacy receipts retain their historical ref validation; only the Sol
@@ -364,6 +366,11 @@ def check(
             if not _is_ancestor(commit, execute):
                 ok = False
                 report.append(f"ECHEC {entry} : reçu pointe un commit jamais fusionné")
+            if reviewed_commit is not None and not _is_ancestor(reviewed_commit, execute):
+                ok = False
+                report.append(
+                    f"ECHEC {entry} : reçu Sol reviewed_head_commit jamais fusionné"
+                )
 
     if exiger_recu_courant and not received_current:
         ok = False

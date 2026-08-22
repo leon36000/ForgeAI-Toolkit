@@ -351,6 +351,45 @@ def test_archive_gate_rejects_symbolic_sol_receipt_commit(tmp_path):
     assert any("reçu archive illisible" in line for line in report)
 
 
+def test_archive_gate_rejects_unmerged_sol_reviewed_head_even_with_merged_head(tmp_path):
+    root = tmp_path / "reviews"
+    historical_prompt, historical_prompt_sha = revue._canonical_sol_prompt(
+        "S-sol", BASE_CURRENT, HISTORICAL_HEAD, runner=_runner
+    )
+    directory = _write_review(
+        root,
+        "S-sol-unmerged-reviewed",
+        _receipt(
+            reviewed_head_commit=HISTORICAL_HEAD,
+            reviewed_head_tree=HISTORICAL_TREE,
+            prompt_sha256=historical_prompt_sha,
+        ),
+        _verdict(
+            reviewed_head_commit=HISTORICAL_HEAD,
+            reviewed_head_tree=HISTORICAL_TREE,
+            prompt_sha256=historical_prompt_sha,
+        ),
+    )
+    (directory / "SOL-PROMPT.md").write_bytes(historical_prompt)
+
+    def archive_runner(command):
+        if command[:3] == ["git", "merge-base", "--is-ancestor"]:
+            if command[3] == HISTORICAL_HEAD:
+                raise subprocess.CalledProcessError(1, command)
+            return ""
+        return _runner(command)
+
+    ok, report = gate.check(
+        _manifest(tmp_path, ["S-sol-unmerged-reviewed"]),
+        root,
+        mode="archive",
+        runner=archive_runner,
+    )
+
+    assert ok is False
+    assert any("reviewed_head_commit" in line for line in report), report
+
+
 def test_archive_sol_receipt_requires_head_tree_to_match_commit():
     receipt = _receipt(head_tree="d" * 40)
 
