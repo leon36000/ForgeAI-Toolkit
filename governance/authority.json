@@ -105,7 +105,7 @@
         {
           "topic": "workspace_confinement",
           "position": "repo_plus_external_governance_tooling",
-          "locator": "AGENTS.md:125-129"
+          "locator": "AGENTS.md:130-133"
         }
       ],
       "digest": {
@@ -122,7 +122,7 @@
         "mission_seq": null,
         "ref": "issue-487"
       },
-      "notes": "Auto-contradiction interne resolue par #432 (Mission affirme desormais Claude Code Opus, section ORCH-001 remplacee) ; conflit RESIDUEL avec canon.plan-integral (toujours \"Fable orchestrateur unique\", hors perimetre de #432 -- CANON exige son propre circuit de revue) suivi par #487. Empreinte fusionnee (#433 x #437, merge sur main post-9d97b529) : #433 remplace les lignes 49-67 (pointe vers capabilities.py, decale le paragraphe Perimetre a +3 lignes) ; #437 insere un marqueur <!-- state:catalogue.entries_total --> autour du compteur manuel (AGENTS.md:38), sans decalage de lignes. Les deux changements sont sur des zones disjointes du fichier, fusionnes automatiquement par git (aucun conflit textuel) ; seule l'empreinte ci-dessus reflete desormais le contenu final combine. Locator workspace_confinement pointe maintenant les lignes AGENTS.md:125-129, qui portent la doctrine active « Confinement au repo » et l'outillage de gouvernance autorise."
+      "notes": "Auto-contradiction interne resolue par #432 (Mission affirme desormais Claude Code Opus, section ORCH-001 remplacee) ; conflit RESIDUEL avec canon.plan-integral (toujours \"Fable orchestrateur unique\", hors perimetre de #432 -- CANON exige son propre circuit de revue) suivi par #487. Empreinte fusionnee (#433 x #437, merge sur main post-9d97b529) : #433 remplace les lignes 49-67 (pointe vers capabilities.py, decale le paragraphe Perimetre a +3 lignes) ; #437 insere un marqueur <!-- state:catalogue.entries_total --> autour du compteur manuel (AGENTS.md:38), sans decalage de lignes. Les deux changements sont sur des zones disjointes du fichier, fusionnes automatiquement par git (aucun conflit textuel) ; seule l'empreinte ci-dessus reflete desormais le contenu final combine. Locator workspace_confinement pointe maintenant les lignes AGENTS.md:130-133, qui portent la doctrine active « Confinement au repo » et l'outillage de gouvernance autorise."
     },
     {
       "id": "agents-md.orch-001",

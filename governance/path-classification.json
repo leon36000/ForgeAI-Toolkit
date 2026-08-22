@@ -1577,8 +1577,8 @@
         }
       ],
       "rule_id": "working-superpowers-sdd",
-      "sha256": "f67bb73d2d74c02b7421478c1c16009e639412edd1993a69222b07cb2684ab10",
-      "size": 10837,
+      "sha256": "fad96e7156463d7b1b51287d3ecc7814b1002c2bc340126805deb6d0337b8060",
+      "size": 11169,
       "target_path": null,
       "type": "text"
     },
@@ -1825,6 +1825,19 @@
       "rule_id": "working-superpowers-sdd",
       "sha256": "59cf26397d1c35f83635d82c98ea97173814ca80d82332b01559228cefa43250",
       "size": 2164,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "WORKING",
+      "generated": false,
+      "load_bearing": false,
+      "owner": "working-cockpit",
+      "path": ".superpowers/sdd/2026-08-22-autonomous-luna-sol/task-5-review-round3-report.md",
+      "referenced_by": [],
+      "rule_id": "working-superpowers-sdd",
+      "sha256": "1202bc0465563f7cb0bd90d0036f36b92a196190a899dfc886f02335827e6a0b",
+      "size": 1871,
       "target_path": null,
       "type": "text"
     },
@@ -7710,8 +7723,8 @@
         }
       ],
       "rule_id": "evidence-registres-root",
-      "sha256": "47b96112671eeb254edafc84304bc604d918fef22b0f095c270cad6066c68a94",
-      "size": 417842,
+      "sha256": "630b98cbf27e0f9dda13a19c30e7c5fedb277e4efff329e9f47b23d0ee002f34",
+      "size": 419009,
       "target_path": null,
       "type": "text"
     },
@@ -30129,7 +30142,7 @@
         }
       ],
       "rule_id": "governance-core",
-      "sha256": "a7dfcebdfa92be2e64b96be7b84caa0eaab27699bc280fc9f00bea55b71f3f74",
+      "sha256": "fd12ac7b01636654c747599325a5ca389e8212e4e7c8a65a397b7686f1019a86",
       "size": 30639,
       "target_path": null,
       "type": "text"
@@ -37310,6 +37323,13 @@
           "candidate": "scripts/ruff_noqa_gate.py",
           "line": 36,
           "referrer": ".superpowers/sdd/2026-08-22-autonomous-luna-sol/task-5-review-round2-report.md",
+          "resolved": "scripts/ruff_noqa_gate.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "scripts/ruff_noqa_gate.py",
+          "line": 30,
+          "referrer": ".superpowers/sdd/2026-08-22-autonomous-luna-sol/task-5-review-round3-report.md",
           "resolved": "scripts/ruff_noqa_gate.py",
           "severity": "hard"
         },
@@ -64740,6 +64760,11 @@
         "referrer": ".superpowers/sdd/2026-08-22-autonomous-luna-sol/progress.md"
       },
       {
+        "candidate": "locator/note",
+        "line": 77,
+        "referrer": ".superpowers/sdd/2026-08-22-autonomous-luna-sol/progress.md"
+      },
+      {
         "candidate": "SOL-PROMPT.md",
         "line": 13,
         "referrer": ".superpowers/sdd/2026-08-22-autonomous-luna-sol/task-3-fix1-report.md"
@@ -65023,6 +65048,16 @@
         "candidate": "classify_paths.py",
         "line": 37,
         "referrer": ".superpowers/sdd/2026-08-22-autonomous-luna-sol/task-5-review-round2-report.md"
+      },
+      {
+        "candidate": "SOL-PROMPT.md",
+        "line": 15,
+        "referrer": ".superpowers/sdd/2026-08-22-autonomous-luna-sol/task-5-review-round3-report.md"
+      },
+      {
+        "candidate": "Sol/review-gate",
+        "line": 28,
+        "referrer": ".superpowers/sdd/2026-08-22-autonomous-luna-sol/task-5-review-round3-report.md"
       },
       {
         "candidate": "SOL-PROMPT.md",
@@ -155268,6 +155303,13 @@
         "severity": "hard"
       },
       {
+        "candidate": "scripts/ruff_noqa_gate.py",
+        "line": 30,
+        "referrer": ".superpowers/sdd/2026-08-22-autonomous-luna-sol/task-5-review-round3-report.md",
+        "resolved": "scripts/ruff_noqa_gate.py",
+        "severity": "hard"
+      },
+      {
         "candidate": "tests/test_rc1011_packs_md.py",
         "line": 20,
         "referrer": ".superpowers/sdd/2026-08-22-autonomous-luna-sol/task-5-verification-round1b-report.md",
@@ -186668,7 +186710,7 @@
       "GOVERNANCE": 217,
       "PRODUCT": 113,
       "TEST": 229,
-      "WORKING": 24
+      "WORKING": 25
     },
     "by_rule": {
       "archive-root": 44,
@@ -186717,14 +186759,14 @@
       "test-suite": 229,
       "working-claude-agents": 9,
       "working-sandbox-readme": 1,
-      "working-superpowers-sdd": 14
+      "working-superpowers-sdd": 15
     },
     "case_collisions_total": 0,
-    "dangling_references_total": 17609,
+    "dangling_references_total": 17612,
     "generated_total": 9,
     "load_bearing_total": 2150,
     "portability_violations_total": 0,
-    "tracked_total": 2319,
+    "tracked_total": 2320,
     "unclassified_total": 0,
     "unicode_anomalies_total": 0
   },

@@ -28,7 +28,9 @@ remaining bypasses:
 - Focused Sol/review-gate suite: green, including all three new regressions.
 - `python3 -m pytest -q`: 3046 collected, exit 0, 100% complete; existing declared skips only.
 - Ruff changed-file check and `python3 scripts/ruff_noqa_gate.py`: OK.
-- Authority/state/path generators were rerun after documentation and digest changes.
+- The first final-suite pass exposed one stale AGENTS authority locator after the documentation
+  edit; the locator and its explanatory note were corrected, the authority map was regenerated,
+  and the subsequent full suite completed with exit 0.
 - `git diff --check`: clean.
 
 No final Sol approval is claimed by this report. The coordinator must generate a new prompt from
