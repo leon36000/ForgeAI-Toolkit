@@ -30,6 +30,10 @@ def test_autonomy_policy_has_literal_contract_values():
     assert policy["worker"]["max_active_writer_lanes"] == 2
     assert policy["review"]["default_mode"] == "sol_blind"
     assert policy["review"]["reviewer_model"] == "GPT-5.6 Sol"
+    assert all(
+        policy["review"][field] is True
+        for field in ("fresh_context", "blind", "reviewer_read_only", "read_only")
+    )
     assert set(policy["terminal_states"]) == {
         "DONE_WITH_EVIDENCE",
         "BLOCKED_WITH_REASON",
@@ -60,6 +64,33 @@ def test_autonomy_policy_rejects_three_writer_lanes(tmp_path):
 
     with pytest.raises(ValueError, match="max_active_writer_lanes"):
         load_policy(invalid_path)
+
+
+def test_production_policy_rejects_one_lane_and_missing_sol_requirement(tmp_path):
+    policy = json.loads(POLICY_PATH.read_text(encoding="utf-8"))
+    policy["worker"]["max_active_writer_lanes"] = 1
+    policy["review"].pop("blind")
+    invalid_path = tmp_path / "autonomy-policy.json"
+    invalid_path.write_text(json.dumps(policy), encoding="utf-8")
+
+    with pytest.raises(ValueError, match="max_active_writer_lanes"):
+        revue.load_autonomy_policy(invalid_path)
+
+    policy["worker"]["max_active_writer_lanes"] = 2
+    invalid_path.write_text(json.dumps(policy), encoding="utf-8")
+    with pytest.raises(ValueError, match="blind"):
+        revue.load_autonomy_policy(invalid_path)
+
+
+@pytest.mark.parametrize("lanes", [True, 1])
+def test_production_policy_requires_exact_integer_two(tmp_path, lanes):
+    policy = json.loads(POLICY_PATH.read_text(encoding="utf-8"))
+    policy["worker"]["max_active_writer_lanes"] = lanes
+    invalid_path = tmp_path / "autonomy-policy.json"
+    invalid_path.write_text(json.dumps(policy), encoding="utf-8")
+
+    with pytest.raises(ValueError, match="max_active_writer_lanes"):
+        revue.load_autonomy_policy(invalid_path)
 
 
 def test_active_luna_and_sol_roster_identities_are_resolvable():

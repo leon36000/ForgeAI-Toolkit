@@ -1,6 +1,7 @@
 """Contrat RED du dépouillement strict `sol_blind` (#603)."""
 from __future__ import annotations
 
+import hashlib
 import importlib.util
 from pathlib import Path
 
@@ -11,12 +12,24 @@ spec = importlib.util.spec_from_file_location("revue", REPO / "scripts" / "revue
 revue = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(revue)
 
-PROMPT_SHA = "a" * 64
-DIFF_DIGEST = "b" * 64
+PROMPT_BYTES = b"stored Sol prompt\n"
+PROMPT_SHA = hashlib.sha256(PROMPT_BYTES).hexdigest()
+DIFF_DIGEST = hashlib.sha256(b"").hexdigest()
 BASE_COMMIT = "c" * 40
 HEAD_COMMIT = "d" * 40
 HEAD_TREE = "e" * 40
 REVIEWED_AT = "2026-08-22T12:00:00+00:00"
+
+
+def _git_runner(command):
+    if command[:3] == ["git", "rev-parse", "--verify"]:
+        ref = command[-1]
+        if ref.endswith("^{tree}"):
+            return HEAD_TREE
+        return ref[: -len("^{commit}")] if ref.endswith("^{commit}") else ref
+    if command[:3] == ["git", "diff", "--raw"]:
+        return ""
+    raise AssertionError(command)
 
 
 def _expected() -> dict[str, str]:
@@ -80,12 +93,15 @@ def _receipt(**changes) -> dict:
     return receipt
 
 
-def test_sol_blind_exact_binding_approves_and_receipt_is_accepted():
+def test_sol_blind_exact_binding_approves_and_receipt_is_accepted(tmp_path):
     verdict = _sol_verdict()
     expected = _expected()
+    (tmp_path / "SOL-PROMPT.md").write_bytes(PROMPT_BYTES)
 
     result = revue.tally_sol_blind([verdict], expected=expected, codeurs=["luna_writer"])
-    receipt_result = revue.verifier_recu(_receipt(), [verdict], expected)
+    receipt_result = revue.verifier_recu(
+        _receipt(), [verdict], expected, review_dir=tmp_path, runner=_git_runner
+    )
 
     assert result["result"] == "APPROVE"
     assert receipt_result["result"] == "APPROVE"
@@ -121,6 +137,15 @@ def test_sol_blind_rejects_codewriter_sol_identity():
 
     assert result["result"] != "APPROVE"
     assert "codeur" in result["reason"] or "auteur" in result["reason"]
+
+
+def test_sol_blind_rejects_unknown_codewriter_identity():
+    result = revue.tally_sol_blind(
+        [_sol_verdict()], expected=_expected(), codeurs=["writer-that-is-not-rostered"]
+    )
+
+    assert result["result"] != "APPROVE"
+    assert "codeur" in result["reason"] or "inconnu" in result["reason"]
 
 
 def test_sol_blind_allows_luna_writer_and_sol_reviewer_same_vendor():

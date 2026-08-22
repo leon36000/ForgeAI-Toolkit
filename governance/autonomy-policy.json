@@ -7,7 +7,11 @@
   },
   "review": {
     "default_mode": "sol_blind",
-    "reviewer_model": "GPT-5.6 Sol"
+    "reviewer_model": "GPT-5.6 Sol",
+    "fresh_context": true,
+    "blind": true,
+    "reviewer_read_only": true,
+    "read_only": true
   },
   "terminal_states": [
     "DONE_WITH_EVIDENCE",

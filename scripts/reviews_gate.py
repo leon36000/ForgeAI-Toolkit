@@ -238,33 +238,53 @@ def check(
                     continue
 
         receipt_mode = receipt.get("mode", "multi_vendor") if isinstance(receipt, dict) else "multi_vendor"
+        sol_covers_current = False
+        sol_proof_loaded = False
+        historical_sol = False
         if receipt_mode not in ("multi_vendor", "sol_blind"):
             result = {"result": "INVALIDE", "reason": f"mode de reçu inconnu : {receipt_mode!r}"}
         elif receipt_mode == "sol_blind":
-            expected = (
-                revue._sol_expected_from_receipt(receipt, etat_git)
-                if etat_git is not None
-                else revue._sol_expected_from_receipt(receipt, receipt)
-            )
-            result = revue.tally_sol_blind(
-                verdicts, expected=expected, codeurs=receipt.get("codeur", [])
-            )
+            try:
+                expected = revue._sol_expected_from_git(
+                    receipt,
+                    etat_git,
+                    directory,
+                    verdicts,
+                    runner=execute,
+                )
+                sol_covers_current = bool(expected.pop("_covers_current", False))
+                sol_proof_loaded = True
+                result = revue.tally_sol_blind(
+                    verdicts, expected=expected, codeurs=receipt.get("codeur", [])
+                )
+                historical_sol = exiger_recu_courant and not sol_covers_current
+            except (OSError, TypeError, ValueError, subprocess.CalledProcessError) as error:
+                result = {"result": "INVALIDE", "reason": f"preuve Git/prompt Sol invalide : {error}"}
         else:
             result = revue.tally(verdicts)
         if result.get("result") != "APPROVE":
-            ok = False
-            report.append(
-                f"ECHEC {entry} : dépouillement = {result.get('result')} "
-                f"({result.get('reason', '')})"
-            )
+            if historical_sol and sol_proof_loaded:
+                report.append(
+                    f"info  {entry} : revue Sol historique non couvrante = "
+                    f"{result.get('result')} ({result.get('reason', '')})"
+                )
+            else:
+                ok = False
+                report.append(
+                    f"ECHEC {entry} : dépouillement = {result.get('result')} "
+                    f"({result.get('reason', '')})"
+                )
         else:
+            prefix = "info  " if historical_sol else "OK    "
             report.append(
-                f"OK    {entry} : APPROVE {result.get('reason', '')} "
+                f"{prefix}{entry} : APPROVE {result.get('reason', '')} "
                 f"vendors {result.get('vendors')}"
             )
 
         if exiger_recu_courant and receipt_path.is_file():
-            receipt_result = revue.verifier_recu(receipt, verdicts, etat_git)
+            receipt_result = revue.verifier_recu(
+                receipt, verdicts, etat_git, review_dir=directory, runner=execute
+            )
             if receipt_result.get("result") == "APPROVE":
                 if expected_issue is not None and (
                     not isinstance(receipt, dict) or receipt.get("issue") != expected_issue
@@ -318,10 +338,19 @@ def check(
             try:
                 receipt = json.loads(receipt_path.read_text(encoding="utf-8"))
                 commit = receipt["head_commit"]
-                # Anti-injection : commit vient d'un RECU.json lu au disque, même garde que
-                # les refs de _diff_canonique/_etat_git_reel (objection mineure revue scellée
-                # RC1-004-PR497-v2, DeepSeek-V4-Pro).
-                revue._validate_git_ref(commit)
+                if isinstance(receipt, dict) and receipt.get("mode") == "sol_blind":
+                    for field in (
+                        "base_commit",
+                        "head_commit",
+                        "head_tree",
+                        "reviewed_head_commit",
+                        "reviewed_head_tree",
+                    ):
+                        revue._validate_object_id(receipt[field], field)
+                else:
+                    # Legacy receipts retain their historical ref validation; only the Sol
+                    # schema requires exact object IDs for every commit/tree field.
+                    revue._validate_git_ref(commit)
             except (OSError, json.JSONDecodeError, KeyError, ValueError, TypeError) as error:
                 # TypeError : RECU.json valide en JSON mais pas un objet (ex. liste/null) —
                 # receipt["head_commit"] lèverait sinon une exception non gérée (objection

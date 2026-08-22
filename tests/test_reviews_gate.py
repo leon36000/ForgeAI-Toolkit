@@ -16,7 +16,8 @@ spec = importlib.util.spec_from_file_location("reviews_gate", REPO / "scripts" /
 gate = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(gate)
 
-SHA = "a" * 64
+SOL_PROMPT_BYTES = b"stored Sol prompt\n"
+SHA = hashlib.sha256(SOL_PROMPT_BYTES).hexdigest()
 DATE = "2025-01-01T12:00:00+00:00"
 
 
@@ -51,10 +52,15 @@ def _runner(command):
         return ""
     if command[:2] == ["git", "merge-base"]:
         return "b" * 40
-    if command[:2] == ["git", "rev-parse"]:
-        return ("d" * 40 if command[-1].endswith("^{tree}") else "c" * 40)
     if command[:3] == ["git", "diff", "--raw"]:
         return ""
+    if command[:3] == ["git", "rev-parse", "--verify"]:
+        ref = command[-1]
+        if ref.endswith("^{tree}"):
+            return "d" * 40
+        return ref[: -len("^{commit}")] if ref.endswith("^{commit}") else ref
+    if command[:2] == ["git", "rev-parse"]:
+        return ("d" * 40 if command[-1].endswith("^{tree}") else "c" * 40)
     raise AssertionError(command)
 
 
@@ -374,6 +380,7 @@ def test_gate_dispatch_sol_blind_receipt_avec_un_seul_verdict(tmp_path):
             }
         ],
     )
+    (directory / "SOL-PROMPT.md").write_bytes(SOL_PROMPT_BYTES)
     (directory / "RECU.json").write_text(
         json.dumps(
             {
