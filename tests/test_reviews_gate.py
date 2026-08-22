@@ -6,6 +6,7 @@ Réutilise le dépouillement déterministe (scripts/revue.py) via scripts/review
 from __future__ import annotations
 
 import importlib.util
+import hashlib
 import json
 import subprocess
 from pathlib import Path
@@ -347,6 +348,72 @@ def test_defaut_sans_drapeau_comportement_inchange(tmp_path):
     _make_review(root, "S", [_verdict("deepseek"), _verdict("gemini_flash"), _verdict("mimo")])
     ok, report = gate.check(_manifest(tmp_path, ["S"]), root)
     assert ok is True and any("APPROVE" in line for line in report)
+
+
+def test_gate_dispatch_sol_blind_receipt_avec_un_seul_verdict(tmp_path):
+    root = tmp_path / "reviews"
+    directory = _make_review(
+        root,
+        "S-sol",
+        [
+            {
+                "vendor": "sol",
+                "fresh_context": True,
+                "blind": True,
+                "reviewer_read_only": True,
+                "reviewer_model": "GPT-5.6-Sol",
+                "candidate_diff_digest": hashlib.sha256(b"").hexdigest(),
+                "diff_digest": hashlib.sha256(b"").hexdigest(),
+                "base_commit": "b" * 40,
+                "reviewed_head_commit": "c" * 40,
+                "reviewed_head_tree": "d" * 40,
+                "prompt_sha256": SHA,
+                "verdict": "APPROVE",
+                "blocking_findings": [],
+                "reviewed_at": "2026-08-22T12:00:00+00:00",
+            }
+        ],
+    )
+    (directory / "RECU.json").write_text(
+        json.dumps(
+            {
+                "schema": "recu-revue/2",
+                "mode": "sol_blind",
+                "candidate_diff_digest": hashlib.sha256(b"").hexdigest(),
+                "diff_digest": hashlib.sha256(b"").hexdigest(),
+                "base_commit": "b" * 40,
+                "head_commit": "c" * 40,
+                "head_tree": "d" * 40,
+                "reviewed_head_commit": "c" * 40,
+                "reviewed_head_tree": "d" * 40,
+                "prompt_sha256": SHA,
+                "dossier": "S-sol",
+                "issue": 603,
+                "round": 1,
+                "reviewers_attendus": ["GPT-5.6-Sol"],
+                "codeur": ["fable"],
+                "resultat": "APPROVE",
+                "reviewed_at": "2026-08-22T12:00:00+00:00",
+                "verdict": "APPROVE",
+                "reviewer_model": "GPT-5.6-Sol",
+                "date_heure": "2026-08-22T12:00:00+00:00",
+                "fenetre_heures": 24,
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    ok, report = gate.check(
+        _manifest(tmp_path, ["S-sol"]),
+        root,
+        exiger_recu_courant=True,
+        base_ref="origin/main",
+        runner=_runner,
+    )
+
+    assert ok is True, report
+    assert not any("< 3" in line for line in report)
+    assert any("APPROVE" in line for line in report)
 
 
 def test_manifeste_reel_du_depot_est_approve():

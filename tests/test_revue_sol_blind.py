@@ -1,0 +1,127 @@
+"""Contrat RED du dépouillement strict `sol_blind` (#603)."""
+from __future__ import annotations
+
+import importlib.util
+from pathlib import Path
+
+import pytest
+
+REPO = Path(__file__).resolve().parent.parent
+spec = importlib.util.spec_from_file_location("revue", REPO / "scripts" / "revue.py")
+revue = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(revue)
+
+PROMPT_SHA = "a" * 64
+DIFF_DIGEST = "b" * 64
+BASE_COMMIT = "c" * 40
+HEAD_COMMIT = "d" * 40
+HEAD_TREE = "e" * 40
+REVIEWED_AT = "2026-08-22T12:00:00+00:00"
+
+
+def _expected() -> dict[str, str]:
+    return {
+        "candidate_diff_digest": DIFF_DIGEST,
+        "diff_digest": DIFF_DIGEST,
+        "base_commit": BASE_COMMIT,
+        "reviewed_head_commit": HEAD_COMMIT,
+        "reviewed_head_tree": HEAD_TREE,
+        "prompt_sha256": PROMPT_SHA,
+        "reviewed_at": REVIEWED_AT,
+    }
+
+
+def _sol_verdict(**changes) -> dict:
+    verdict = {
+        "fresh_context": True,
+        "blind": True,
+        "reviewer_read_only": True,
+        "reviewer_model": "GPT-5.6-Sol",
+        "candidate_diff_digest": DIFF_DIGEST,
+        "base_commit": BASE_COMMIT,
+        "reviewed_head_commit": HEAD_COMMIT,
+        "reviewed_head_tree": HEAD_TREE,
+        "prompt_sha256": PROMPT_SHA,
+        "verdict": "APPROVE",
+        "blocking_findings": [],
+        "reviewed_at": REVIEWED_AT,
+    }
+    verdict.update(changes)
+    return verdict
+
+
+def _receipt(**changes) -> dict:
+    receipt = {
+        "schema": "recu-revue/2",
+        "mode": "sol_blind",
+        "dossier": "S-sol",
+        "issue": 603,
+        "round": 1,
+        "candidate_diff_digest": DIFF_DIGEST,
+        "diff_digest": DIFF_DIGEST,
+        "base_commit": BASE_COMMIT,
+        "head_commit": HEAD_COMMIT,
+        "head_tree": HEAD_TREE,
+        "reviewed_head_commit": HEAD_COMMIT,
+        "reviewed_head_tree": HEAD_TREE,
+        "prompt_sha256": PROMPT_SHA,
+        "reviewers_attendus": ["GPT-5.6-Sol"],
+        "codeur": ["fable"],
+        "resultat": "APPROVE",
+        "reviewed_at": REVIEWED_AT,
+        "verdict": "APPROVE",
+        "reviewer_model": "GPT-5.6-Sol",
+        "date_heure": REVIEWED_AT,
+        "fenetre_heures": 24,
+    }
+    receipt.update(changes)
+    return receipt
+
+
+def test_sol_blind_exact_binding_approves_and_receipt_is_accepted():
+    verdict = _sol_verdict()
+    expected = _expected()
+
+    result = revue.tally_sol_blind([verdict], expected=expected)
+    receipt_result = revue.verifier_recu(_receipt(), [verdict], expected)
+
+    assert result["result"] == "APPROVE"
+    assert receipt_result["result"] == "APPROVE"
+
+
+@pytest.mark.parametrize(
+    ("change", "reason"),
+    [
+        ({"fresh_context": False}, "fresh_context"),
+        ({"blind": False}, "blind"),
+        ({"reviewer_read_only": False}, "reviewer_read_only"),
+        ({"reviewed_at": "2025-01-01T12:00:00+00:00"}, "reviewed_at"),
+        ({"candidate_diff_digest": "f" * 64}, "candidate_diff_digest"),
+        ({"reviewer_model": None}, "reviewer_model"),
+        ({"reviewer_model": "GPT-5.6-Luna-Pro"}, "reviewer_model"),
+        ({"verdict": "REJECT"}, "verdict"),
+        ({"blocking_findings": [{"severity": "critical", "description": "unsafe"}]}, "blocking_findings"),
+    ],
+)
+def test_sol_blind_rejects_each_bypass(change, reason):
+    result = revue.tally_sol_blind([_sol_verdict(**change)], expected=_expected())
+
+    assert result["result"] != "APPROVE"
+    assert reason in result["reason"]
+
+
+def test_historical_three_vendor_tally_remains_compatible():
+    def historical(vendor):
+        return {
+            "vendor": vendor,
+            "prompt_sha256": PROMPT_SHA,
+            "verdict": "APPROVE",
+            "objections": [],
+            "date_heure": "2025-01-01T12:00:00+00:00",
+        }
+
+    result = revue.tally(
+        [historical("deepseek"), historical("gemini_flash"), historical("longcat_20")]
+    )
+
+    assert result["result"] == "APPROVE"
