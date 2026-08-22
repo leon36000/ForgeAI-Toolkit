@@ -30,6 +30,7 @@ def test_autonomy_policy_has_literal_contract_values():
     assert policy["worker"]["max_active_writer_lanes"] == 2
     assert policy["review"]["default_mode"] == "sol_blind"
     assert policy["review"]["reviewer_model"] == "GPT-5.6 Sol"
+    assert policy["review"]["story_id"] == "stories/ORCH-LUNA-SOL-603.md"
     assert all(
         policy["review"][field] is True
         for field in ("fresh_context", "blind", "reviewer_read_only", "read_only")

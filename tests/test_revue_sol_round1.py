@@ -27,6 +27,7 @@ gate = _load("reviews_gate_round1", REPO / "scripts" / "reviews_gate.py")
 PROMPT_BYTES = b""
 PROMPT_SHA = ""
 DIFF_DIGEST = hashlib.sha256(b"").hexdigest()
+TEMPLATE_SHA = hashlib.sha256(revue.TEMPLATE.read_bytes()).hexdigest()
 BASE_CURRENT = "b" * 40
 BASE_HISTORICAL = "a" * 40
 REVIEWED_HEAD = "c" * 40
@@ -88,7 +89,7 @@ def _runner(command):
 
 
 PROMPT_BYTES, PROMPT_SHA = revue._canonical_sol_prompt(
-    "S-sol", BASE_CURRENT, REVIEWED_HEAD, runner=_runner
+    revue._SOL_CANONICAL_STORY_ID, BASE_CURRENT, REVIEWED_HEAD, runner=_runner
 )
 
 
@@ -112,6 +113,7 @@ def _verdict(
         "reviewed_head_commit": reviewed_head_commit,
         "reviewed_head_tree": reviewed_head_tree,
         "prompt_sha256": prompt_sha256 or PROMPT_SHA,
+        "template_sha256": TEMPLATE_SHA,
         "verdict": "APPROVE",
         "blocking_findings": [],
         "reviewed_at": DATE,
@@ -120,7 +122,7 @@ def _verdict(
 
 def _receipt(
     *,
-    story: str = "S-sol",
+    story: str = revue._SOL_CANONICAL_STORY_ID,
     base_commit: str = BASE_CURRENT,
     head_commit: str = CURRENT_HEAD,
     head_tree: str = CURRENT_TREE,
@@ -300,7 +302,10 @@ def test_cmd_recu_persists_story_separately_from_review_dossier(monkeypatch, tmp
 
 @pytest.mark.parametrize(
     "field",
-    ["candidate_diff_digest", "base_commit", "reviewed_head_commit", "reviewed_head_tree", "prompt_sha256"],
+    [
+        "candidate_diff_digest", "base_commit", "reviewed_head_commit", "reviewed_head_tree",
+        "prompt_sha256", "template_sha256",
+    ],
 )
 def test_sol_tally_rejects_malformed_expected_hashes(field):
     expected = {
@@ -310,6 +315,7 @@ def test_sol_tally_rejects_malformed_expected_hashes(field):
         "reviewed_head_commit": REVIEWED_HEAD,
         "reviewed_head_tree": REVIEWED_TREE,
         "prompt_sha256": PROMPT_SHA,
+        "template_sha256": TEMPLATE_SHA,
         "reviewed_at": DATE,
     }
     expected[field] = None if field != "prompt_sha256" else "not-a-sha256"
@@ -380,7 +386,7 @@ def test_sol_prompt_rejects_artifact_not_generated_from_git_refs(monkeypatch, tm
             SimpleNamespace(
                 artefact=str(artefact),
                 criteres=None,
-                story="S-sol",
+                story=revue._SOL_CANONICAL_STORY_ID,
                 mode="sol_blind",
                 base_ref="origin/main",
                 head_ref="HEAD",
@@ -408,7 +414,7 @@ def test_build_sol_prompt_cannot_pair_arbitrary_artifact_with_git_metadata(monke
 
     with pytest.raises(ValueError, match="artefact"):
         revue.build_prompt(
-            "S-sol",
+            revue._SOL_CANONICAL_STORY_ID,
             "criteria",
             "caller.diff",
             "arbitrary caller artifact",
@@ -435,7 +441,7 @@ def test_archive_gate_rejects_symbolic_sol_receipt_commit(tmp_path):
 def test_archive_gate_rejects_unmerged_sol_reviewed_head_even_with_merged_head(tmp_path):
     root = tmp_path / "reviews"
     historical_prompt, historical_prompt_sha = revue._canonical_sol_prompt(
-        "S-sol", BASE_CURRENT, HISTORICAL_HEAD, runner=_runner
+        revue._SOL_CANONICAL_STORY_ID, BASE_CURRENT, HISTORICAL_HEAD, runner=_runner
     )
     directory = _write_review(
         root,

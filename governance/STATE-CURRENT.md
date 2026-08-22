@@ -186,11 +186,11 @@
     },
     {
       "path": "tests/test_autonomy_docs.py",
-      "sha256": "e0c359c9897bd3b10531a79404f88fc4ca328cb704d018e162ac9d193898e6df"
+      "sha256": "c0c713802ca5ea2a2e39702c40d18098f379e831a291515f61caf17c966d1a2c"
     },
     {
       "path": "tests/test_autonomy_policy.py",
-      "sha256": "10cec9a6302d6ad62d7429da6e3fd2239e5beac98ae03ea305fbe6a14446630a"
+      "sha256": "e22d9f50f8b60bea1ce6b95327c5d2c15b5c41cf4397dab4b1b71d80d4f2c29e"
     },
     {
       "path": "tests/test_backend_k8s.py",
@@ -782,7 +782,7 @@
     },
     {
       "path": "tests/test_reviews_gate.py",
-      "sha256": "85d8e903306b0d5c6dcf77b8bd267fe6ab318b51c6ca1a65391050c060021b64"
+      "sha256": "8b1cdaeaead989e39e969bb25a6e3702b1a2c8d8e4397dcd0c115610617eb65d"
     },
     {
       "path": "tests/test_revue.py",
@@ -790,15 +790,15 @@
     },
     {
       "path": "tests/test_revue_sol_blind.py",
-      "sha256": "3b2127fa00be2fabd45c9bcd677ce3df6de655a2dd6401f52b90a167d303f967"
+      "sha256": "db72cf454719ad73139d20c692a18f53bc97005b27034ab80c41f7d135f4b97d"
     },
     {
       "path": "tests/test_revue_sol_round1.py",
-      "sha256": "454b9100c9fa9502ad3112c4ca190f7340bd5fc8690d33fff2b2055afb1efbc1"
+      "sha256": "1a80f54366d432728dbaf13df882ad634158d358da8bf433d6a3ed4112c39da9"
     },
     {
       "path": "tests/test_revue_sol_round2.py",
-      "sha256": "5cd790c412df9e91b154ba998875f0b7603204f11e945f30f009db72007dbab2"
+      "sha256": "898abd8f07f7f4f63b987e42f7ed2e5223d1032169f3d9fa8b930dddda45d9eb"
     },
     {
       "path": "tests/test_routestore_concurrence.py",
@@ -1023,7 +1023,7 @@
   "tests": {
     "js_files": 3,
     "python_files": 214,
-    "python_functions_declared": 2718
+    "python_functions_declared": 2721
   }
 }
 ```

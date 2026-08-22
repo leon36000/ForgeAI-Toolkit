@@ -26,6 +26,7 @@ BASE = "b" * 40
 HEAD = "c" * 40
 TREE = "d" * 40
 DIFF = hashlib.sha256(b"").hexdigest()
+TEMPLATE_SHA = hashlib.sha256(revue.TEMPLATE.read_bytes()).hexdigest()
 NOW = datetime(2026, 8, 22, 12, 0, tzinfo=timezone.utc)
 DATE = NOW.isoformat()
 
@@ -50,7 +51,7 @@ def _runner(command):
 
 
 CANONICAL_PROMPT, CANONICAL_SHA = revue._canonical_sol_prompt(
-    "S-sol", BASE, HEAD, runner=_runner
+    revue._SOL_CANONICAL_STORY_ID, BASE, HEAD, runner=_runner
 )
 
 
@@ -66,6 +67,7 @@ def _verdict(*, reviewed_at: str = DATE, prompt_sha256: str | None = None) -> di
         "reviewed_head_commit": HEAD,
         "reviewed_head_tree": TREE,
         "prompt_sha256": prompt_sha256 or hashlib.sha256(b"canonical").hexdigest(),
+        "template_sha256": TEMPLATE_SHA,
         "verdict": "APPROVE",
         "blocking_findings": [],
         "reviewed_at": reviewed_at,
@@ -82,7 +84,7 @@ def _receipt(
     return {
         "schema": schema,
         "mode": "sol_blind",
-        "story": "S-sol",
+        "story": revue._SOL_CANONICAL_STORY_ID,
         "dossier": "S-sol",
         "issue": 603,
         "round": 1,
@@ -310,6 +312,7 @@ def test_sol_verifier_rejects_noncanonical_active_sol_roster(monkeypatch, change
             "reviewed_head_commit": HEAD,
             "reviewed_head_tree": TREE,
             "prompt_sha256": hashlib.sha256(b"canonical").hexdigest(),
+            "template_sha256": TEMPLATE_SHA,
             "reviewed_at": DATE,
         },
         codeurs=["luna_writer"],

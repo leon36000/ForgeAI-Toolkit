@@ -14,8 +14,13 @@
 
 - Preserve historical multi-vendor receipts and the default `tally()` behavior.
 - `max_active_writer_lanes` is exactly `2`; lane values outside `1..2` are rejected.
-- `sol_blind` requires a recognized GPT-5.6 Sol identity, fresh context, blind prompt, read-only review, exact diff digest, and zero blocking findings.
-- The codewriter cannot be the Sol reviewer, even when both identities resolve to the same vendor.
+- `sol_blind` requires the recognized GPT-5.6 Sol identity, fresh context,
+  blind prompt, read-only review, exact diff and template digests, the
+  immutable story identifier, active `luna_writer` codewriter identity, and
+  zero blocking findings.
+- Fresh evidence accepts exactly the active `luna_writer` codewriter identity;
+  it cannot be the Sol reviewer, even when both identities resolve to the same
+  vendor. Archive-only compatibility may resolve historical codewriters.
 - No workflow in the PR may write repository contents, force-push, decode embedded source, or mutate itself.
 - No secret, runtime/backend, hardware probe, external ruleset, or public release change is in scope.
 - Every committed deliverable receives a registry entry and regenerated authority/state/path views.

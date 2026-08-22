@@ -8,6 +8,7 @@
   "review": {
     "default_mode": "sol_blind",
     "reviewer_model": "GPT-5.6 Sol",
+    "story_id": "stories/ORCH-LUNA-SOL-603.md",
     "fresh_context": true,
     "blind": true,
     "reviewer_read_only": true,

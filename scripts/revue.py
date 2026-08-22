@@ -58,6 +58,8 @@ _SOL_CANONICAL_MODEL = "GPT-5.6 Sol"
 _SOL_CANONICAL_VENDOR = "openai"
 _SOL_CANONICAL_PROVIDER_ID = "GPT-5.6-Sol"
 _SOL_CANONICAL_STATUS = "actif"
+_SOL_CANONICAL_CODEUR_ID = "luna_writer"
+_SOL_CANONICAL_STORY_ID = "stories/ORCH-LUNA-SOL-603.md"
 _SOL_CLOCK_SKEW = timedelta(minutes=5)
 _SOL_MAX_WINDOW_HOURS = 24
 
@@ -292,6 +294,26 @@ def _validate_sol_dossier(dossier: object, review_dir: Path | None = None) -> st
     if review_dir is not None and Path(review_dir).name != dossier:
         raise ValueError("dossier Sol différent du répertoire de revue")
     return dossier
+
+
+def _validate_sol_story_id(story: object, issue: object) -> str:
+    """Accept only the immutable story bound to this Sol contract.
+
+    The story is copied into the canonical prompt, so accepting an arbitrary receipt-controlled
+    string would make the prompt byte-identically reconstructable while silently changing the
+    work item (or injecting newlines/instructions).  The current policy has one explicit story
+    binding; future contracts must add a new policy constant rather than widening this input.
+    """
+    try:
+        policy_story = load_autonomy_policy()["review"]["story_id"]
+    except (KeyError, TypeError, ValueError) as error:
+        raise ValueError("story Sol impossible à lier à la politique") from error
+    if story != policy_story:
+        raise ValueError("story Sol différente de l'identifiant canonique")
+    expected_issue = int(Path(policy_story).stem.rsplit("-", 1)[-1])
+    if isinstance(issue, bool) or issue != expected_issue:
+        raise ValueError("issue Sol différente de l'identifiant canonique")
+    return policy_story
 
 
 def _diff_artifact_canonique(
@@ -540,6 +562,33 @@ def _canonical_sol_prompt(
     return prompt.encode("utf-8"), prompt_sha
 
 
+def _sol_prompt_metadata(prompt: bytes) -> dict:
+    """Extract the exact Git metadata object from a generated Sol prompt."""
+    try:
+        text = prompt.decode("utf-8")
+    except UnicodeDecodeError as error:
+        raise ValueError("prompt Sol non UTF-8") from error
+    marker = "MÉTADONNÉES GIT EXACTES (à recopier sans modification) :\n"
+    if marker not in text:
+        raise ValueError("métadonnées Git absentes du prompt Sol")
+    line = text.split(marker, 1)[1].splitlines()[0]
+    try:
+        metadata = json.loads(line)
+    except json.JSONDecodeError as error:
+        raise ValueError("métadonnées Git du prompt Sol invalides") from error
+    if not isinstance(metadata, dict):
+        raise ValueError("métadonnées Git du prompt Sol invalides")
+    for field in ("base_commit", "reviewed_head_commit", "reviewed_head_tree"):
+        if field not in metadata:
+            raise ValueError(f"métadonnée Git absente du prompt Sol : {field}")
+        _validate_object_id(metadata[field], field)
+    for field in ("candidate_diff_digest", "template_sha256"):
+        if field not in metadata:
+            raise ValueError(f"métadonnée Git absente du prompt Sol : {field}")
+        _validate_digest(metadata[field], field)
+    return metadata
+
+
 def _severity(objection: dict) -> str:
     """Sévérité normalisée d'une objection — accepte les clés française ET anglaise."""
     return str(objection.get("severite") or objection.get("severity") or "faible").lower()
@@ -570,6 +619,8 @@ def load_autonomy_policy(path: Path = AUTONOMY_POLICY) -> dict:
         raise ValueError("review.default_mode doit être sol_blind")
     if review.get("reviewer_model") != "GPT-5.6 Sol":
         raise ValueError("review.reviewer_model doit être GPT-5.6 Sol")
+    if review.get("story_id") != _SOL_CANONICAL_STORY_ID:
+        raise ValueError("review.story_id doit être l'identifiant Sol canonique")
     for requirement in ("fresh_context", "blind", "reviewer_read_only", "read_only"):
         if review.get(requirement) is not True:
             raise ValueError(f"review.{requirement} doit être true")
@@ -745,8 +796,7 @@ def _sol_expected_from_git(
     for field in required:
         if field not in recu:
             raise ValueError(f"métadonnée Sol absente : {field}")
-    if not isinstance(recu["story"], str) or not recu["story"].strip():
-        raise ValueError("story Sol invalide")
+    _validate_sol_story_id(recu["story"], recu.get("issue"))
     for field in ("base_commit", "head_commit", "head_tree", "reviewed_head_commit", "reviewed_head_tree"):
         _validate_object_id(recu[field], field)
     for field in ("candidate_diff_digest", "diff_digest", "prompt_sha256"):
@@ -775,6 +825,8 @@ def _sol_expected_from_git(
         reviewed_head_commit,
         runner=execute,
     )
+    template_content = _git_blob(execute, reviewed_head_commit, _SOL_TEMPLATE_PATH)
+    template_sha = hashlib.sha256(template_content.encode("utf-8")).hexdigest()
     stored_prompt = _sol_prompt_bytes(review_dir)
     if stored_prompt != canonical_prompt:
         raise ValueError(
@@ -815,6 +867,7 @@ def _sol_expected_from_git(
         "reviewed_head_commit": reviewed_head_commit,
         "reviewed_head_tree": reviewed_head_tree,
         "prompt_sha256": prompt_sha,
+        "template_sha256": template_sha,
         "reviewed_at": reviewed_at,
         "_covers_current": covers_current,
     }
@@ -886,14 +939,23 @@ def tally_sol_blind(
     codeur_table = _codeur_identity_table(include_retired=allow_retired_codeurs)
     if codeur_table is None:
         return {"result": "INVALIDE", "reason": "roster de codeurs introuvable"}
+    resolved_codeurs = []
     for codeur in codeurs:
         if not isinstance(codeur, str):
             return {"result": "INVALIDE", "reason": f"codeur invalide : {codeur!r}"}
         codeur_key = _normalize(codeur)
         if codeur_key not in codeur_table:
             return {"result": "INVALIDE", "reason": f"codeur inconnu : {codeur}"}
+        resolved_codeurs.append(codeur_table[codeur_key])
         if codeur_table[codeur_key] == _SOL_CANONICAL_ID:
             return {"result": "INVALIDE", "reason": "le codeur ne peut pas être Sol"}
+    if not allow_retired_codeurs and (
+        len(resolved_codeurs) != 1 or resolved_codeurs[0] != _SOL_CANONICAL_CODEUR_ID
+    ):
+        return {
+            "result": "INVALIDE",
+            "reason": "le codeur Sol frais doit résoudre vers luna_writer",
+        }
 
     for field in ("fresh_context", "blind", "reviewer_read_only"):
         if verdict.get(field) is not True:
@@ -903,7 +965,7 @@ def tally_sol_blind(
         return {"result": "INVALIDE", "reason": "métadonnées attendues invalides"}
     expected_fields = (
         "candidate_diff_digest", "diff_digest", "base_commit", "reviewed_head_commit",
-        "reviewed_head_tree", "prompt_sha256", "reviewed_at",
+        "reviewed_head_tree", "prompt_sha256", "template_sha256", "reviewed_at",
     )
     missing = [field for field in expected_fields if field not in expected]
     if missing:
@@ -911,7 +973,9 @@ def tally_sol_blind(
     try:
         for field in ("base_commit", "reviewed_head_commit", "reviewed_head_tree"):
             _validate_object_id(expected[field], field)
-        for field in ("candidate_diff_digest", "diff_digest", "prompt_sha256"):
+        for field in (
+            "candidate_diff_digest", "diff_digest", "prompt_sha256", "template_sha256"
+        ):
             _validate_digest(expected[field], field)
     except ValueError as error:
         return {"result": "INVALIDE", "reason": str(error)}
@@ -924,10 +988,14 @@ def tally_sol_blind(
         _validate_digest(verdict.get("candidate_diff_digest"), "candidate_diff_digest verdict")
         for field in ("base_commit", "reviewed_head_commit", "reviewed_head_tree"):
             _validate_object_id(verdict.get(field), f"{field} verdict")
-        _validate_digest(verdict.get("prompt_sha256"), "prompt_sha256 verdict")
+        for field in ("prompt_sha256", "template_sha256"):
+            _validate_digest(verdict.get(field), f"{field} verdict")
     except ValueError as error:
         return {"result": "INVALIDE", "reason": str(error)}
-    for field in ("base_commit", "reviewed_head_commit", "reviewed_head_tree", "prompt_sha256"):
+    for field in (
+        "base_commit", "reviewed_head_commit", "reviewed_head_tree",
+        "prompt_sha256", "template_sha256",
+    ):
         if verdict.get(field) != expected[field]:
             return {"result": "INVALIDE", "reason": f"{field} différent des métadonnées attendues"}
     if verdict.get("reviewed_at") != expected["reviewed_at"]:
@@ -1205,8 +1273,7 @@ def _validate_sol_archive_receipt(
         raise ValueError("schema Sol doit être exactement recu-revue/2")
     if recu.get("mode") != "sol_blind":
         raise ValueError("mode Sol archive invalide")
-    if not isinstance(recu["story"], str) or not recu["story"].strip():
-        raise ValueError("story Sol archive invalide")
+    _validate_sol_story_id(recu["story"], recu.get("issue"))
     _validate_sol_dossier(recu["dossier"], review_dir)
     if recu["resultat"] != "APPROVE":
         raise ValueError("resultat Sol archive doit être APPROVE")
@@ -1228,6 +1295,21 @@ def _validate_sol_archive_receipt(
         for field in ("reviewer_model", "verdict", "blocking_findings", "reviewed_at"):
             if recu[field] != verdict.get(field):
                 raise ValueError(f"{field} du reçu Sol archive contradictoire")
+        if review_dir is None:
+            raise ValueError("dossier de revue Sol archive requis")
+        expected = _sol_expected_from_git(
+            recu, None, Path(review_dir), verdicts, runner=execute
+        )
+        tally_result = tally_sol_blind(
+            verdicts,
+            expected=expected,
+            codeurs=recu["codeur"],
+            allow_retired_codeurs=True,
+        )
+        if tally_result["result"] != "APPROVE":
+            raise ValueError(
+                f"verdict Sol archive non conforme : {tally_result.get('reason', '')}"
+            )
     for field in (
         "base_commit", "head_commit", "head_tree", "reviewed_head_commit",
         "reviewed_head_tree",
@@ -1344,6 +1426,7 @@ def _cmd_recu(args) -> int:
         story = getattr(args, "story", None)
         if not isinstance(story, str) or not story.strip():
             raise ValueError("--story est obligatoire avec --mode sol_blind")
+        _validate_sol_story_id(story, args.issue)
         try:
             canonical_prompt, prompt_sha = _canonical_sol_prompt(
                 story,
@@ -1366,6 +1449,9 @@ def _cmd_recu(args) -> int:
                 "reviewed_head_commit": etat["head_commit"],
                 "reviewed_head_tree": etat["head_tree"],
                 "prompt_sha256": prompt_sha,
+                "template_sha256": _sol_prompt_metadata(canonical_prompt)[
+                    "template_sha256"
+                ],
                 "reviewed_at": verdicts[0].get("reviewed_at"),
             }
             result = tally_sol_blind(verdicts, expected=expected, codeurs=args.codeur)

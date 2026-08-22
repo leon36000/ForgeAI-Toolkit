@@ -188,7 +188,12 @@ def check(
         return False, [f"ECHEC : mode inconnu {mode!r}"]
 
     etat_git = None
+    current_receipt_mode = None
     if exiger_recu_courant:
+        try:
+            current_receipt_mode = revue.load_autonomy_policy()["review"]["default_mode"]
+        except (OSError, TypeError, ValueError, KeyError) as error:
+            return False, [f"ECHEC : politique de revue courante invalide : {error}"]
         try:
             etat_git = revue._etat_git_reel(base_ref, "HEAD", runner=execute)
         except (OSError, ValueError, subprocess.CalledProcessError) as error:
@@ -300,6 +305,13 @@ def check(
                 now=now,
             )
             if receipt_result.get("result") == "APPROVE":
+                if receipt_mode != current_receipt_mode:
+                    ok = False
+                    report.append(
+                        f"ECHEC {entry} : reçu courant mode={receipt_mode!r} refusé ; "
+                        f"mode de politique requis = {current_receipt_mode!r}"
+                    )
+                    continue
                 if expected_issue is not None and (
                     not isinstance(receipt, dict) or receipt.get("issue") != expected_issue
                 ):

@@ -72,8 +72,11 @@ def _runner(command):
 
 
 SOL_PROMPT_BYTES, SOL_SHA = gate._load_revue()._canonical_sol_prompt(
-    "S-sol", "b" * 40, "c" * 40, runner=_runner
+    gate._load_revue()._SOL_CANONICAL_STORY_ID, "b" * 40, "c" * 40, runner=_runner
 )
+SOL_TEMPLATE_SHA = hashlib.sha256(
+    gate._load_revue().TEMPLATE.read_bytes()
+).hexdigest()
 
 
 def _receipt():
@@ -117,6 +120,7 @@ def _make_sol_blind_gate_review(
                 "reviewed_head_commit": "c" * 40,
                 "reviewed_head_tree": "d" * 40,
                 "prompt_sha256": SOL_SHA,
+                "template_sha256": SOL_TEMPLATE_SHA,
                 "verdict": "APPROVE",
                 "blocking_findings": [],
                 "reviewed_at": "2026-08-22T12:00:00+00:00",
@@ -127,7 +131,7 @@ def _make_sol_blind_gate_review(
     receipt = {
         "schema": "recu-revue/2",
         "mode": "sol_blind",
-        "story": "S-sol",
+        "story": gate._load_revue()._SOL_CANONICAL_STORY_ID,
         "candidate_diff_digest": hashlib.sha256(b"").hexdigest(),
         "diff_digest": hashlib.sha256(b"").hexdigest(),
         "base_commit": "b" * 40,
@@ -217,7 +221,7 @@ def test_mode_pr_echoue_sans_recu_couvrant(tmp_path):
     assert ok is False and any("aucun reçu ne couvre le changement courant" in line for line in report)
 
 
-def test_mode_pr_reussit_avec_recu_valide(tmp_path):
+def test_mode_pr_rejette_recu_multi_vendor_courant(tmp_path):
     root = tmp_path / "reviews"
     directory = _make_review(
         root, "S", [_verdict("deepseek"), _verdict("gemini_flash"), _verdict("mimo")]
@@ -230,7 +234,8 @@ def test_mode_pr_reussit_avec_recu_valide(tmp_path):
         base_ref="origin/main",
         runner=_runner,
     )
-    assert ok is True and any("reçu couvre le changement courant" in line for line in report)
+    assert ok is False
+    assert any("mode de politique requis" in line for line in report)
 
 
 def test_mode_pr_rejette_un_recu_dune_autre_issue(tmp_path):
@@ -247,7 +252,7 @@ def test_mode_pr_rejette_un_recu_dune_autre_issue(tmp_path):
         expected_issue=435,
         runner=_runner,
     )
-    assert ok is False and any("différent de la PR" in line for line in report)
+    assert ok is False and any("mode de politique requis" in line for line in report)
 
 
 def test_mode_archive_rejette_recu_commit_non_fusionne(tmp_path):
@@ -367,14 +372,21 @@ def test_mode_pr_ignore_recu_historique_non_couvrant(tmp_path):
     courante = _make_review(
         root, "S-courante", [_verdict("deepseek"), _verdict("gemini_flash"), _verdict("mimo")]
     )
-    (courante / "RECU.json").write_text(json.dumps(_receipt()), encoding="utf-8")
+    recu_courante_historique = _receipt()
+    recu_courante_historique["base_commit"] = "e" * 40
+    (courante / "RECU.json").write_text(
+        json.dumps(recu_courante_historique), encoding="utf-8"
+    )
+    current_sol = _make_sol_blind_gate_review(root)
 
     ok, report = gate.check(
-        _manifest(tmp_path, ["S-ancienne", "S-courante"]),
+        _manifest(tmp_path, ["S-ancienne", "S-courante", current_sol.name]),
         root,
         exiger_recu_courant=True,
         base_ref="origin/main",
+        expected_issue=603,
         runner=_runner,
+        now=SOL_NOW,
     )
 
     assert ok is True, report
@@ -400,6 +412,7 @@ def test_mode_pr_historical_invalid_sol_binding_is_informational(tmp_path):
                 "reviewed_head_commit": "3" * 40,
                 "reviewed_head_tree": "4" * 40,
                 "prompt_sha256": SOL_SHA,
+                "template_sha256": SOL_TEMPLATE_SHA,
                 "verdict": "APPROVE",
                 "blocking_findings": [],
                 "reviewed_at": "2026-08-22T12:00:00+00:00",
@@ -412,7 +425,7 @@ def test_mode_pr_historical_invalid_sol_binding_is_informational(tmp_path):
             {
                 "schema": "recu-revue/2",
                 "mode": "sol_blind",
-                "story": "S-sol",
+                "story": gate._load_revue()._SOL_CANONICAL_STORY_ID,
                 "dossier": "S-ancienne-sol",
                 "candidate_diff_digest": hashlib.sha256(b"").hexdigest(),
                 "diff_digest": hashlib.sha256(b"").hexdigest(),
@@ -454,6 +467,7 @@ def test_mode_pr_historical_invalid_sol_binding_is_informational(tmp_path):
                 "reviewed_head_commit": "c" * 40,
                 "reviewed_head_tree": "d" * 40,
                 "prompt_sha256": SOL_SHA,
+                "template_sha256": SOL_TEMPLATE_SHA,
                 "verdict": "APPROVE",
                 "blocking_findings": [],
                 "reviewed_at": "2026-08-22T12:00:00+00:00",
@@ -467,8 +481,9 @@ def test_mode_pr_historical_invalid_sol_binding_is_informational(tmp_path):
                 **_receipt(),
                     "schema": "recu-revue/2",
                     "mode": "sol_blind",
-                    "story": "S-sol",
+                    "story": gate._load_revue()._SOL_CANONICAL_STORY_ID,
                     "dossier": "S-courante-sol",
+                    "issue": 603,
                 "prompt_sha256": SOL_SHA,
                 "candidate_diff_digest": hashlib.sha256(b"").hexdigest(),
                 "reviewed_head_commit": "c" * 40,
@@ -490,7 +505,7 @@ def test_mode_pr_historical_invalid_sol_binding_is_informational(tmp_path):
         root,
         exiger_recu_courant=True,
         base_ref="origin/main",
-        expected_issue=434,
+        expected_issue=603,
         runner=_runner,
         now=SOL_NOW,
     )

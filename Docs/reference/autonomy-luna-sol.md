@@ -15,6 +15,9 @@ Le roster actif de `manifests/roles.yaml` contient :
 - `luna_writer` — provider identity `GPT-5.6-Luna-Writer`, writer primaire
   `GPT-5.6 Luna`;
 - `sol` — provider identity `GPT-5.6-Sol`, reviewer `GPT-5.6 Sol`.
+The policy binds this contract to the immutable story identifier
+`stories/ORCH-LUNA-SOL-603.md`; a receipt cannot substitute another story or
+inject prompt text through that field.
 
 `luna` / `GPT-5.6-Luna-Pro` est une identité historique retirée, conservée
 pour résoudre les anciens reçus. Le contrat autorise exactement
@@ -29,7 +32,9 @@ Le mode historique multi-vendor reste compatible pour les anciennes preuves.
 Le mode explicite `sol_blind` exige un seul verdict Sol, dans un contexte fresh,
 blind et read-only. Sol ne reçoit ni verdict attendu ni verdict d'un autre
 reviewer. Le codeur ne peut pas résoudre vers Sol, même si Luna et Sol ont le
-même vendor.
+même vendor. Une preuve fraîche doit déclarer exactement l'identité active
+`luna_writer` comme codeur; une autre identité active, une identité retirée ou
+plusieurs codeurs ne passent pas le tally frais.
 
 Le verdict doit contenir exactement les éléments de liaison utiles suivants :
 
@@ -39,6 +44,8 @@ Le verdict doit contenir exactement les éléments de liaison utiles suivants :
 - `base_commit`, `reviewed_head_commit` et `reviewed_head_tree` égaux aux
   métadonnées Git attendues;
 - `prompt_sha256` égal au hash du prompt canonique livré à Sol;
+- `template_sha256` égal au hash du template versionné émis dans les métadonnées
+  Git du prompt;
 - `reviewed_at` avec un fuseau et dans la fenêtre de fraîcheur, plafonnée à 24 heures;
 - `verdict: APPROVE` et `blocking_findings: []`.
 
@@ -48,12 +55,16 @@ comme un claim et le compare à la PR ou au diff courant; le head conservé sert
 reçu. Les artefacts de revue et les vues générées restent hors du digest
 canonique.
 
-Le reçu porte aussi `story`, l’identifiant immuable utilisé pour reconstruire le
+Le reçu porte aussi `story`, l'identifiant immuable utilisé pour reconstruire le
 prompt, séparément de `dossier`, qui désigne le répertoire des artefacts sous
 `evidence/reviews/`. La commande `recu --mode sol_blind` exige donc
 `--story <story-id>` afin que le prompt produit et le prompt vérifié utilisent
-exactement la même valeur; le gate vérifie aussi que `dossier` correspond au
-répertoire effectivement chargé.
+exactement `stories/ORCH-LUNA-SOL-603.md`; le gate vérifie aussi que `dossier`
+correspond au répertoire effectivement chargé.
+
+For a current PR, the receipt mode must equal the policy default
+`sol_blind`. A current legacy `multi_vendor` receipt is never sufficient; that
+mode remains available only for historical/archive evidence.
 
 In `reviews_gate.py`, receipt-mode dispatch preserves `multi_vendor`'s historical 3/3 tally;
 active `sol_blind` requires exactly one `GPT-5.6-Sol` verdict.

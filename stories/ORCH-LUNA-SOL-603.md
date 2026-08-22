@@ -22,6 +22,10 @@ The exact limit is two writer lanes. The historical Luna identity remains
 resolvable only for historical receipts. This story changes governance prose,
 the executable-contract reference, the ledgers and generated views; it does
 not claim runtime, hardware, external-service or final review evidence.
+The active policy binds fresh Sol receipts to the immutable story identifier
+`stories/ORCH-LUNA-SOL-603.md`, the exact `luna_writer` codewriter identity and
+the versioned prompt `template_sha256`; a current PR cannot be covered by a
+legacy `multi_vendor` receipt.
 
 ## Critères d’acceptation
 
@@ -30,8 +34,9 @@ not claim runtime, hardware, external-service or final review evidence.
   the safe merge path, the restart source of truth, the T3 boundary and the
   only terminal states.
 - [x] `Docs/reference/autonomy-luna-sol.md` lists the exact verdict/receipt
-  binding fields, the two lanes, loop/resume behavior, no-write rule, safe
-  merge gates, T3 boundary and verification commands.
+  binding fields, including `template_sha256`, immutable story binding and
+  active `luna_writer` codewriter, the two lanes, loop/resume behavior,
+  no-write rule, safe merge gates, T3 boundary and verification commands.
 - [x] No workflow described by this story uses `contents: write`, `force-push`,
   `decode` of embedded source or a `self-writing` path.
 - [x] The decision and deliverable records are appended with
