@@ -4,23 +4,23 @@ NE PAS ÉDITER À LA MAIN — généré par scripts/governance/classify_paths.py
 
 ## Résumé
 
-- Fichiers suivis : 2294
+- Fichiers suivis : 2301
 - Fichiers générés : 9
-- Éléments porteurs : 2143
+- Éléments porteurs : 2148
 - Fichiers non classés : 0
 - Collisions de casse : 0
 - Anomalies Unicode NFC : 0
 - Violations de portabilité : 0
-- Références pendantes : 17361
+- Références pendantes : 17581
 (balayage textuel best-effort — une majorité de ces candidats sont du bruit connu : unités de mesure, clés de labels, ratios ; à trier manuellement avant toute décision de migration, voir governance/path-classification.json → reference_graph.dangling)
 
 ## Répartition par classe
 
 - ARCHIVE : 44
-- DOCS : 19
-- EVIDENCE : 1665
+- DOCS : 20
+- EVIDENCE : 1668
 - GENERATED : 5
-- GOVERNANCE : 214
+- GOVERNANCE : 217
 - PRODUCT : 113
 - TEST : 224
 - WORKING : 10
@@ -31,6 +31,6 @@ NE PAS ÉDITER À LA MAIN — généré par scripts/governance/classify_paths.py
 
 ## Intégrité
 
-- SHA-256 des règles : `5f338edfc286d6bf002e6612a50be6fb46e8e963f471125382b6b02298f70b57`
+- SHA-256 des règles : `4688159bb109607f66a4849d6d4b2cae5c48bba23c779ed618b17515ccb52ac9`
 
 L'inventaire complet des chemins est disponible dans `governance/path-classification.json`.
