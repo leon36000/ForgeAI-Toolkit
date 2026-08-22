@@ -9,6 +9,7 @@ import hashlib
 import importlib.util
 import json
 import subprocess
+from datetime import datetime
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parent.parent
@@ -16,9 +17,11 @@ spec = importlib.util.spec_from_file_location("reviews_gate", REPO / "scripts" /
 gate = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(gate)
 
-SOL_PROMPT_BYTES = b"stored Sol prompt\n"
-SHA = hashlib.sha256(SOL_PROMPT_BYTES).hexdigest()
+SOL_PROMPT_BYTES = b""
+SOL_SHA = ""
+SHA = hashlib.sha256(b"historical multi-vendor prompt\n").hexdigest()
 DATE = "2025-01-01T12:00:00+00:00"
+SOL_NOW = datetime.fromisoformat("2026-08-22T12:00:00+00:00")
 
 
 def _verdict(vendor, verdict="APPROVE"):
@@ -61,7 +64,16 @@ def _runner(command):
         return ref[: -len("^{commit}")] if ref.endswith("^{commit}") else ref
     if command[:2] == ["git", "rev-parse"]:
         return ("d" * 40 if command[-1].endswith("^{tree}") else "c" * 40)
+    if command[:2] == ["git", "diff"]:
+        return ""
+    if command[:2] == ["git", "show"]:
+        return gate._load_revue().TEMPLATE.read_text(encoding="utf-8")
     raise AssertionError(command)
+
+
+SOL_PROMPT_BYTES, SOL_SHA = gate._load_revue()._canonical_sol_prompt(
+    "S-sol", "b" * 40, "c" * 40, runner=_runner
+)
 
 
 def _receipt():
@@ -326,7 +338,7 @@ def test_mode_pr_historical_invalid_sol_binding_is_informational(tmp_path):
                 "base_commit": "a" * 40,
                 "reviewed_head_commit": "3" * 40,
                 "reviewed_head_tree": "4" * 40,
-                "prompt_sha256": SHA,
+                "prompt_sha256": SOL_SHA,
                 "verdict": "APPROVE",
                 "blocking_findings": [],
                 "reviewed_at": "2026-08-22T12:00:00+00:00",
@@ -339,6 +351,7 @@ def test_mode_pr_historical_invalid_sol_binding_is_informational(tmp_path):
             {
                 "schema": "recu-revue/2",
                 "mode": "sol_blind",
+                "dossier": "S-ancienne-sol",
                 "candidate_diff_digest": hashlib.sha256(b"").hexdigest(),
                 "diff_digest": hashlib.sha256(b"").hexdigest(),
                 "base_commit": "a" * 40,
@@ -346,8 +359,7 @@ def test_mode_pr_historical_invalid_sol_binding_is_informational(tmp_path):
                 "head_tree": "d" * 40,
                 "reviewed_head_commit": "3" * 40,
                 "reviewed_head_tree": "4" * 40,
-                "prompt_sha256": SHA,
-                "dossier": "S-ancienne-sol",
+                "prompt_sha256": SOL_SHA,
                 "issue": 603,
                 "round": 1,
                 "reviewers_attendus": ["GPT-5.6-Sol"],
@@ -378,7 +390,7 @@ def test_mode_pr_historical_invalid_sol_binding_is_informational(tmp_path):
                 "base_commit": "b" * 40,
                 "reviewed_head_commit": "c" * 40,
                 "reviewed_head_tree": "d" * 40,
-                "prompt_sha256": SHA,
+                "prompt_sha256": SOL_SHA,
                 "verdict": "APPROVE",
                 "blocking_findings": [],
                 "reviewed_at": "2026-08-22T12:00:00+00:00",
@@ -390,7 +402,10 @@ def test_mode_pr_historical_invalid_sol_binding_is_informational(tmp_path):
         json.dumps(
             {
                 **_receipt(),
+                "schema": "recu-revue/2",
                 "mode": "sol_blind",
+                "dossier": "S-sol",
+                "prompt_sha256": SOL_SHA,
                 "candidate_diff_digest": hashlib.sha256(b"").hexdigest(),
                 "reviewed_head_commit": "c" * 40,
                 "reviewed_head_tree": "d" * 40,
@@ -399,6 +414,7 @@ def test_mode_pr_historical_invalid_sol_binding_is_informational(tmp_path):
                 "reviewer_model": "GPT-5.6-Sol",
                 "codeur": ["luna_writer"],
                 "reviewers_attendus": ["GPT-5.6-Sol"],
+                "date_heure": "2026-08-22T12:00:00+00:00",
             }
         ),
         encoding="utf-8",
@@ -411,6 +427,7 @@ def test_mode_pr_historical_invalid_sol_binding_is_informational(tmp_path):
         base_ref="origin/main",
         expected_issue=434,
         runner=_runner,
+        now=SOL_NOW,
     )
 
     assert ok is True, report
@@ -482,7 +499,7 @@ def test_gate_dispatch_sol_blind_receipt_avec_un_seul_verdict(tmp_path):
                 "base_commit": "b" * 40,
                 "reviewed_head_commit": "c" * 40,
                 "reviewed_head_tree": "d" * 40,
-                "prompt_sha256": SHA,
+                "prompt_sha256": SOL_SHA,
                 "verdict": "APPROVE",
                 "blocking_findings": [],
                 "reviewed_at": "2026-08-22T12:00:00+00:00",
@@ -502,7 +519,7 @@ def test_gate_dispatch_sol_blind_receipt_avec_un_seul_verdict(tmp_path):
                 "head_tree": "d" * 40,
                 "reviewed_head_commit": "c" * 40,
                 "reviewed_head_tree": "d" * 40,
-                "prompt_sha256": SHA,
+                "prompt_sha256": SOL_SHA,
                 "dossier": "S-sol",
                 "issue": 603,
                 "round": 1,
@@ -525,6 +542,7 @@ def test_gate_dispatch_sol_blind_receipt_avec_un_seul_verdict(tmp_path):
         exiger_recu_courant=True,
         base_ref="origin/main",
         runner=_runner,
+        now=SOL_NOW,
     )
 
     assert ok is True, report

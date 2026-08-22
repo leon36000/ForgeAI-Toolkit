@@ -31,10 +31,11 @@ from __future__ import annotations
 
 import hashlib
 import json
+import math
 import re
 import subprocess
 import sys
-from datetime import datetime
+from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Callable
 
@@ -49,6 +50,15 @@ _NON_ALNUM = re.compile(r"[^a-z0-9]")
 _OBJECT_ID = re.compile(r"^[0-9a-f]{40}$")
 _DIGEST = re.compile(r"^[0-9a-f]{64}$")
 _SOL_PROMPT_FILENAME = "SOL-PROMPT.md"
+_SOL_TEMPLATE_PATH = "CANON/revue-template.md"
+_SOL_ARTIFACT_PATH = "canonical-git-diff"
+_SOL_CRITERIA = "(voir story)"
+_SOL_CANONICAL_ID = "sol"
+_SOL_CANONICAL_MODEL = "GPT-5.6 Sol"
+_SOL_CANONICAL_VENDOR = "openai"
+_SOL_CANONICAL_PROVIDER_ID = "GPT-5.6-Sol"
+_SOL_CANONICAL_STATUS = "actif"
+_SOL_CLOCK_SKEW = timedelta(minutes=5)
 
 REPO = Path(__file__).resolve().parent.parent
 TEMPLATE = REPO / "CANON" / "revue-template.md"
@@ -256,15 +266,20 @@ def _resolve_commit_tree(execute: GitRunner, commit: str) -> str:
     return tree
 
 
-def _sol_prompt_sha256(review_dir: Path) -> str:
+def _sol_prompt_bytes(review_dir: Path) -> bytes:
     prompt_path = review_dir / _SOL_PROMPT_FILENAME
+    if prompt_path.is_symlink():
+        raise ValueError(f"{_SOL_PROMPT_FILENAME} doit être un fichier régulier, pas un symlink")
     if not prompt_path.is_file():
         raise ValueError(f"{_SOL_PROMPT_FILENAME} absent du dossier de revue")
     try:
-        prompt_bytes = prompt_path.read_bytes()
+        return prompt_path.read_bytes()
     except OSError as error:
         raise ValueError(f"{_SOL_PROMPT_FILENAME} illisible") from error
-    return hashlib.sha256(prompt_bytes).hexdigest()
+
+
+def _sol_prompt_sha256(review_dir: Path) -> str:
+    return hashlib.sha256(_sol_prompt_bytes(review_dir)).hexdigest()
 
 
 def _diff_artifact_canonique(
@@ -398,9 +413,16 @@ def _etat_git_reel(
 def build_prompt(story_id: str, criteres: str, artefact_path: str, artefact: str,
                  template_path: Path = TEMPLATE, *, mode: str = "multi_vendor",
                  expected: dict | None = None, base_ref: str | None = None,
-                 head_ref: str | None = None, runner: GitRunner | None = None) -> tuple[str, str]:
+                 head_ref: str | None = None, runner: GitRunner | None = None,
+                 template_content: str | None = None) -> tuple[str, str]:
     """Rend (prompt_exact, sha256). Le template est lu au canon ; aucun texte n'est ajouté."""
-    tpl = template_path.read_text(encoding="utf-8")
+    if template_content is None:
+        tpl = template_path.read_text(encoding="utf-8")
+    elif isinstance(template_content, str):
+        tpl = template_content
+    else:
+        raise ValueError("contenu du template invalide")
+    template_sha256 = hashlib.sha256(tpl.encode("utf-8")).hexdigest()
     # On ne garde que le corps (après le commentaire HTML d'en-tête) pour le prompt envoyé.
     # Le marqueur est OBLIGATOIRE : sans lui, l'en-tête (instructions internes) fuiterait dans
     # le prompt envoyé aux reviewers → non-neutralité (revue aveugle Nemotron). On échoue fort.
@@ -431,6 +453,7 @@ def build_prompt(story_id: str, criteres: str, artefact_path: str, artefact: str
             "reviewed_head_commit": git_state["head_commit"],
             "reviewed_head_tree": git_state["head_tree"],
             "candidate_diff_digest": git_state["diff_digest"],
+            "template_sha256": template_sha256,
         }
         if expected is not None:
             for field, value in metadata.items():
@@ -465,6 +488,44 @@ def build_prompt(story_id: str, criteres: str, artefact_path: str, artefact: str
     elif mode != "multi_vendor":
         raise ValueError(f"mode de revue inconnu : {mode!r}")
     return prompt, hashlib.sha256(prompt.encode("utf-8")).hexdigest()
+
+
+def _git_blob(execute: GitRunner, commit: str, path: str) -> str:
+    """Read a fixed versioned text input from an already frozen commit."""
+    _validate_object_id(commit, "commit")
+    if not path or path.startswith("/") or ".." in Path(path).parts:
+        raise ValueError("chemin Git versionné invalide")
+    content = execute(["git", "show", f"{commit}:{path}"])
+    if not isinstance(content, str):
+        raise ValueError("entrée Git versionnée illisible")
+    return content
+
+
+def _canonical_sol_prompt(
+    story_id: str,
+    base_commit: str,
+    reviewed_head_commit: str,
+    *,
+    runner: GitRunner | None = None,
+) -> tuple[bytes, str]:
+    """Rebuild the exact Sol prompt from frozen Git objects and versioned inputs."""
+    execute = _default_runner if runner is None else runner
+    frozen_base = _resolve_commit(execute, base_commit)
+    frozen_head = _resolve_commit(execute, reviewed_head_commit)
+    template_content = _git_blob(execute, frozen_head, _SOL_TEMPLATE_PATH)
+    artifact = _diff_artifact_canonique(frozen_base, frozen_head, runner=execute)
+    prompt, prompt_sha = build_prompt(
+        story_id,
+        _SOL_CRITERIA,
+        _SOL_ARTIFACT_PATH,
+        artifact,
+        mode="sol_blind",
+        base_ref=frozen_base,
+        head_ref=frozen_head,
+        runner=execute,
+        template_content=template_content,
+    )
+    return prompt.encode("utf-8"), prompt_sha
 
 
 def _severity(objection: dict) -> str:
@@ -505,34 +566,68 @@ def load_autonomy_policy(path: Path = AUTONOMY_POLICY) -> dict:
     return policy
 
 
-def _sol_aliases(table: dict[str, str] | None) -> set[str] | None:
-    """Retourne les alias du Sol actif, ou None si son identité n'est pas vérifiable."""
-    if table is None:
+def _canonical_sol_member() -> dict[str, str] | None:
+    """Return Sol only when the active roster entry matches the policy contract exactly."""
+    try:
+        policy = load_autonomy_policy()
+    except ValueError:
         return None
-    expected_provider = _normalize("GPT-5.6-Sol")
-    if table.get(_normalize("sol")) != "openai" or table.get(expected_provider) != "openai":
+    if policy["review"]["reviewer_model"] != _SOL_CANONICAL_MODEL:
         return None
     roles = _load_roles_yaml(REPO / "manifests" / "roles.yaml")
-    active_sol = next(
-        (
-            member
-            for member in roles
-            if _normalize(str(member.get("id", ""))) == _normalize("sol")
-            and str(member.get("statut", "")).strip().lower() == "actif"
-        ),
-        None,
-    )
-    if active_sol is None:
+    matches = [member for member in roles if member.get("id") == _SOL_CANONICAL_ID]
+    if len(matches) != 1:
+        return None
+    member = matches[0]
+    expected = {
+        "id": _SOL_CANONICAL_ID,
+        "modele": _SOL_CANONICAL_MODEL,
+        "statut": _SOL_CANONICAL_STATUS,
+        "vendor": _SOL_CANONICAL_VENDOR,
+        "provider_id": _SOL_CANONICAL_PROVIDER_ID,
+    }
+    if any(member.get(field) != value for field, value in expected.items()):
+        return None
+    return expected
+
+
+def _sol_aliases(table: dict[str, str] | None) -> set[str] | None:
+    """Return only aliases of the exact canonical active Sol member."""
+    member = _canonical_sol_member()
+    if table is None or member is None:
         return None
     aliases = {
-        _normalize("sol"),
-        _normalize("GPT-5.6-Sol"),
-        _normalize(active_sol.get("id", "")),
-        _normalize(active_sol.get("provider_id", "")),
-        _normalize(active_sol.get("modele", "")),
+        _normalize(member["id"]),
+        _normalize(member["provider_id"]),
+        _normalize(member["modele"]),
     }
-    aliases.discard("")
+    if any(table.get(alias) != _SOL_CANONICAL_VENDOR for alias in aliases):
+        return None
     return aliases
+
+
+def _codeur_identity_table(
+    roles_path: Path = REPO / "manifests" / "roles.yaml",
+) -> dict[str, str] | None:
+    """Resolve every codewriter alias to one canonical roster member ID."""
+    roles = _load_roles_yaml(roles_path)
+    if not roles:
+        return None
+    table: dict[str, str] = {}
+    for member in roles:
+        member_id = member.get("id")
+        if not isinstance(member_id, str) or not member_id:
+            continue
+        aliases = [member.get("id"), member.get("provider_id"), member.get("modele")]
+        for alias in aliases:
+            if not isinstance(alias, str) or not alias:
+                continue
+            key = _normalize(alias)
+            previous = table.get(key)
+            if previous is not None and previous != member_id:
+                return None
+            table[key] = member_id
+    return table or None
 
 
 def _aware_timestamp(value: object) -> datetime | None:
@@ -547,6 +642,64 @@ def _aware_timestamp(value: object) -> datetime | None:
     return timestamp
 
 
+def _validation_time(now: datetime | None) -> datetime:
+    if now is None:
+        return datetime.now().astimezone()
+    if not isinstance(now, datetime) or now.tzinfo is None or now.utcoffset() is None:
+        raise ValueError("horloge de validation doit être un timestamp avec fuseau")
+    return now
+
+
+def _sol_window_hours(value: object, default: object) -> float:
+    window = default if value is None else value
+    if isinstance(window, bool) or not isinstance(window, (int, float)):
+        raise ValueError("fenêtre Sol invalide")
+    if not math.isfinite(float(window)) or window < 0:
+        raise ValueError("fenêtre Sol invalide")
+    return float(window)
+
+
+def _validate_sol_freshness(
+    recu: dict,
+    verdicts: list[dict],
+    *,
+    fenetre_heures_defaut: int | float = 24,
+    now: datetime | None = None,
+) -> None:
+    """Validate current Sol receipt timestamps with an injectable validation clock."""
+    if len(verdicts) != 1 or not isinstance(verdicts[0], dict):
+        raise ValueError("sol_blind exige exactement un verdict objet")
+    validation_time = _validation_time(now)
+    receipt_time = _aware_timestamp(recu.get("date_heure"))
+    receipt_reviewed_at = _aware_timestamp(recu.get("reviewed_at"))
+    verdict_reviewed_at = _aware_timestamp(verdicts[0].get("reviewed_at"))
+    if receipt_time is None:
+        raise ValueError("date_heure du reçu doit avoir un fuseau")
+    if receipt_reviewed_at is None or verdict_reviewed_at is None:
+        raise ValueError("reviewed_at doit avoir un fuseau")
+    if receipt_reviewed_at != verdict_reviewed_at:
+        raise ValueError("reviewed_at du reçu ne correspond pas au verdict")
+    verdict_date_value = verdicts[0].get("date_heure")
+    verdict_date = None
+    if verdict_date_value is not None:
+        verdict_date = _aware_timestamp(verdict_date_value)
+        if verdict_date is None:
+            raise ValueError("date_heure du verdict doit avoir un fuseau")
+    window = _sol_window_hours(recu.get("fenetre_heures"), fenetre_heures_defaut)
+    if receipt_reviewed_at > receipt_time:
+        raise ValueError("reviewed_at postérieur à date_heure")
+    if verdict_date is not None and verdict_date < receipt_reviewed_at:
+        raise ValueError("date_heure du verdict antérieure à reviewed_at")
+    if receipt_time > validation_time + _SOL_CLOCK_SKEW:
+        raise ValueError("date_heure du reçu futur")
+    if receipt_reviewed_at > validation_time + _SOL_CLOCK_SKEW:
+        raise ValueError("reviewed_at du verdict futur")
+    if verdict_date is not None and verdict_date > validation_time + _SOL_CLOCK_SKEW:
+        raise ValueError("date_heure du verdict futur")
+    if validation_time - receipt_reviewed_at > timedelta(hours=window) + _SOL_CLOCK_SKEW:
+        raise ValueError("preuve Sol périmée")
+
+
 def _sol_expected_from_git(
     recu: dict,
     etat_git: dict | None,
@@ -558,6 +711,8 @@ def _sol_expected_from_git(
     """Construit les attentes Sol depuis Git, le prompt stocké et le verdict séparé."""
     if not isinstance(recu, dict):
         raise ValueError("reçu Sol invalide")
+    if recu.get("schema") != "recu-revue/2":
+        raise ValueError("schema Sol doit être exactement recu-revue/2")
     required = (
         "base_commit", "head_commit", "head_tree", "reviewed_head_commit",
         "reviewed_head_tree", "candidate_diff_digest", "diff_digest", "prompt_sha256",
@@ -586,11 +741,24 @@ def _sol_expected_from_git(
         raise ValueError("candidate_diff_digest différent du diff Git examiné")
     if recu["diff_digest"] != canonical_digest:
         raise ValueError("diff_digest différent du diff Git examiné")
-    prompt_sha = _sol_prompt_sha256(review_dir)
-    if recu["prompt_sha256"] != prompt_sha:
-        raise ValueError("prompt_sha256 différent des octets de SOL-PROMPT.md")
     if len(verdicts) != 1 or not isinstance(verdicts[0], dict):
         raise ValueError("sol_blind exige exactement un verdict objet")
+    canonical_prompt, canonical_prompt_sha = _canonical_sol_prompt(
+        str(recu.get("dossier", "")),
+        base_commit,
+        reviewed_head_commit,
+        runner=execute,
+    )
+    stored_prompt = _sol_prompt_bytes(review_dir)
+    if stored_prompt != canonical_prompt:
+        raise ValueError(
+            f"{_SOL_PROMPT_FILENAME} différent du prompt Sol canonique généré depuis Git"
+        )
+    prompt_sha = hashlib.sha256(stored_prompt).hexdigest()
+    if prompt_sha != canonical_prompt_sha:
+        raise ValueError("sha256 du prompt canonique incohérent")
+    if recu["prompt_sha256"] != prompt_sha:
+        raise ValueError("prompt_sha256 différent des octets de SOL-PROMPT.md canonique")
     reviewed_at = verdicts[0].get("reviewed_at")
     if _aware_timestamp(reviewed_at) is None:
         raise ValueError("reviewed_at du verdict doit avoir un fuseau")
@@ -670,12 +838,17 @@ def tally_sol_blind(verdicts: list[dict], expected: dict, codeurs: list[str]) ->
     reviewer_model = verdict.get("reviewer_model")
     if not isinstance(reviewer_model, str) or _normalize(reviewer_model) not in sol_aliases:
         return {"result": "INVALIDE", "reason": "reviewer_model n'est pas l'identité Sol"}
-    if "vendor" in verdict and vendor_of(str(verdict.get("vendor", "")), table) != "openai":
-        return {"result": "INVALIDE", "reason": "vendor du reviewer n'est pas Sol/openai"}
+    if "vendor" in verdict:
+        vendor = verdict.get("vendor")
+        if not isinstance(vendor, str) or _normalize(vendor) not in {
+            _normalize(_SOL_CANONICAL_ID),
+            _normalize(_SOL_CANONICAL_VENDOR),
+        }:
+            return {"result": "INVALIDE", "reason": "vendor du reviewer n'est pas Sol/openai"}
 
     if not isinstance(codeurs, list) or not codeurs:
         return {"result": "INVALIDE", "reason": "codeur requis pour sol_blind"}
-    codeur_table = _codeur_vendor_table()
+    codeur_table = _codeur_identity_table()
     if codeur_table is None:
         return {"result": "INVALIDE", "reason": "roster de codeurs introuvable"}
     for codeur in codeurs:
@@ -684,7 +857,7 @@ def tally_sol_blind(verdicts: list[dict], expected: dict, codeurs: list[str]) ->
         codeur_key = _normalize(codeur)
         if codeur_key not in codeur_table:
             return {"result": "INVALIDE", "reason": f"codeur inconnu : {codeur}"}
-        if codeur_key in sol_aliases:
+        if codeur_table[codeur_key] == _SOL_CANONICAL_ID:
             return {"result": "INVALIDE", "reason": "le codeur ne peut pas être Sol"}
 
     for field in ("fresh_context", "blind", "reviewer_read_only"):
@@ -788,7 +961,7 @@ def _verifier_recu_multi_vendor(
     verdicts: list[dict],
     etat_git: dict,
     *,
-    fenetre_heures_defaut: int = 24,
+    fenetre_heures_defaut: int | float = 24,
 ) -> dict:
     """Vérifie PUREMENT un reçu de revue (reviews/<ID>/RECU.json) contre son état git déjà
     résolu (aucun appel git ici — testable sans git réel, cf. `_etat_git_reel` pour
@@ -887,6 +1060,8 @@ def _verifier_recu_sol_blind(
     *,
     review_dir: Path | None = None,
     runner: GitRunner | None = None,
+    fenetre_heures_defaut: int | float = 24,
+    now: datetime | None = None,
 ) -> dict:
     required = (
         "schema", "mode", "dossier", "issue", "round", "base_commit", "head_commit",
@@ -900,6 +1075,8 @@ def _verifier_recu_sol_blind(
     for key in required:
         if key not in recu:
             return {"result": "INVALIDE", "reason": f"données absentes : {key}"}
+    if recu.get("schema") != "recu-revue/2":
+        return {"result": "INVALIDE", "reason": "schema Sol doit être exactement recu-revue/2"}
     if recu.get("mode") != "sol_blind":
         return {"result": "INVALIDE", "reason": "mode de reçu inconnu"}
     if not isinstance(etat_git, dict):
@@ -915,6 +1092,15 @@ def _verifier_recu_sol_blind(
         return {"result": "INVALIDE", "reason": "diff modifié après revue"}
     if recu["candidate_diff_digest"] != current_digest:
         return {"result": "INVALIDE", "reason": "candidate_diff_digest différent du diff courant"}
+    try:
+        _validate_sol_freshness(
+            recu,
+            verdicts,
+            fenetre_heures_defaut=fenetre_heures_defaut,
+            now=now,
+        )
+    except ValueError as error:
+        return {"result": "INVALIDE", "reason": str(error)}
     if review_dir is None:
         return {"result": "INVALIDE", "reason": f"{_SOL_PROMPT_FILENAME} requis pour sol_blind"}
     try:
@@ -949,6 +1135,8 @@ def _validate_sol_archive_receipt(recu: object, execute: GitRunner) -> None:
     """Validate exact Sol archive object IDs and the trees they name."""
     if not isinstance(recu, dict):
         raise ValueError("reçu Sol archive invalide")
+    if recu.get("schema") != "recu-revue/2":
+        raise ValueError("schema Sol doit être exactement recu-revue/2")
     for field in (
         "base_commit", "head_commit", "head_tree", "reviewed_head_commit",
         "reviewed_head_tree",
@@ -973,16 +1161,23 @@ def verifier_recu(
     verdicts: list[dict],
     etat_git: dict,
     *,
-    fenetre_heures_defaut: int = 24,
+    fenetre_heures_defaut: int | float = 24,
     review_dir: Path | None = None,
     runner: GitRunner | None = None,
+    now: datetime | None = None,
 ) -> dict:
     """Dispatch le mode explicite; les reçus sans mode restent multi-vendor."""
     if isinstance(recu, dict):
         mode = recu.get("mode", "multi_vendor")
         if mode == "sol_blind":
             return _verifier_recu_sol_blind(
-                recu, verdicts, etat_git, review_dir=review_dir, runner=runner
+                recu,
+                verdicts,
+                etat_git,
+                review_dir=review_dir,
+                runner=runner,
+                fenetre_heures_defaut=fenetre_heures_defaut,
+                now=now,
             )
         if mode not in ("multi_vendor", "sol_blind"):
             return {"result": "INVALIDE", "reason": f"mode de reçu inconnu : {mode!r}"}
@@ -995,6 +1190,7 @@ def _cmd_prompt(args) -> int:
     artefact = Path(args.artefact).read_text(encoding="utf-8")
     criteres = Path(args.criteres).read_text(encoding="utf-8") if args.criteres else "(voir story)"
     mode = getattr(args, "mode", "multi_vendor")
+    template_content = None
     if mode == "sol_blind":
         base_ref = getattr(args, "base_ref", None)
         if not base_ref:
@@ -1002,17 +1198,31 @@ def _cmd_prompt(args) -> int:
         if not args.out or Path(args.out).name != _SOL_PROMPT_FILENAME:
             raise ValueError(f"--out doit désigner {_SOL_PROMPT_FILENAME} en mode sol_blind")
         head_ref = getattr(args, "head_ref", "HEAD")
+        git_state = _etat_git_reel(base_ref, head_ref)
+        frozen_base = _validate_object_id(git_state["base_commit"], "base_commit Git")
+        frozen_head = _validate_object_id(git_state["head_commit"], "head_commit Git")
+        canonical_artifact = _diff_artifact_canonique(frozen_base, frozen_head)
+        if artefact != canonical_artifact:
+            raise ValueError("artefact fourni différent du diff Git canonique")
+        artefact = canonical_artifact
+        base_ref = frozen_base
+        head_ref = frozen_head
+        criteres = _SOL_CRITERIA
+        template_content = _git_blob(_default_runner, frozen_head, _SOL_TEMPLATE_PATH)
+        artefact_path = _SOL_ARTIFACT_PATH
     else:
         base_ref = None
         head_ref = None
+        artefact_path = args.artefact
     prompt, sha = build_prompt(
         args.story,
         criteres,
-        args.artefact,
+        artefact_path,
         artefact,
         mode=mode,
         base_ref=base_ref,
         head_ref=head_ref,
+        template_content=template_content,
     )
     if args.out:
         Path(args.out).write_text(prompt, encoding="utf-8")
@@ -1041,8 +1251,16 @@ def _cmd_recu(args) -> int:
     mode = getattr(args, "mode", "multi_vendor")
     if mode == "sol_blind":
         try:
-            prompt_sha = _sol_prompt_sha256(dossier)
-        except (OSError, ValueError) as error:
+            canonical_prompt, prompt_sha = _canonical_sol_prompt(
+                args.dossier,
+                etat["base_commit"],
+                etat["head_commit"],
+            )
+            if _sol_prompt_bytes(dossier) != canonical_prompt:
+                raise ValueError(
+                    f"{_SOL_PROMPT_FILENAME} différent du prompt Sol canonique généré depuis Git"
+                )
+        except (OSError, ValueError, subprocess.CalledProcessError) as error:
             prompt_sha = None
             result = {"result": "INVALIDE", "reason": str(error)}
         if len(verdicts) != 1:

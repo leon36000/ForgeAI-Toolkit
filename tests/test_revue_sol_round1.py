@@ -5,6 +5,7 @@ import hashlib
 import importlib.util
 import json
 import subprocess
+from datetime import datetime
 from pathlib import Path
 from types import SimpleNamespace
 
@@ -23,8 +24,8 @@ def _load(name: str, path: Path):
 revue = _load("revue_round1", REPO / "scripts" / "revue.py")
 gate = _load("reviews_gate_round1", REPO / "scripts" / "reviews_gate.py")
 
-PROMPT_BYTES = b"stored Sol prompt\n"
-PROMPT_SHA = hashlib.sha256(PROMPT_BYTES).hexdigest()
+PROMPT_BYTES = b""
+PROMPT_SHA = ""
 DIFF_DIGEST = hashlib.sha256(b"").hexdigest()
 BASE_CURRENT = "b" * 40
 BASE_HISTORICAL = "a" * 40
@@ -37,13 +38,14 @@ HISTORICAL_TREE = "2" * 40
 UNBACKED_HEAD = "3" * 40
 UNBACKED_TREE = "4" * 40
 DATE = "2026-08-22T12:00:00+00:00"
+VALIDATION_NOW = datetime.fromisoformat(DATE)
 
 
 def _runner(command):
     if command[:3] == ["git", "merge-base", "--is-ancestor"]:
         return ""
     if command[:2] == ["git", "merge-base"]:
-        return BASE_CURRENT
+        return BASE_HISTORICAL if BASE_HISTORICAL in command else BASE_CURRENT
     if command[:3] == ["git", "diff", "--raw"]:
         return ""
     if command[:3] == ["git", "rev-parse", "--verify"]:
@@ -69,8 +71,25 @@ def _runner(command):
                 return object_id
         raise subprocess.CalledProcessError(128, command)
     if command[:2] == ["git", "rev-parse"]:
-        return CURRENT_TREE if command[-1].endswith("^{tree}") else CURRENT_HEAD
+        if command[-1].endswith("^{tree}"):
+            return CURRENT_TREE
+        return command[-1] if command[-1] in {
+            BASE_CURRENT,
+            BASE_HISTORICAL,
+            REVIEWED_HEAD,
+            CURRENT_HEAD,
+            HISTORICAL_HEAD,
+        } else CURRENT_HEAD
+    if command[:2] == ["git", "diff"]:
+        return ""
+    if command[:2] == ["git", "show"]:
+        return revue.TEMPLATE.read_text(encoding="utf-8")
     raise AssertionError(command)
+
+
+PROMPT_BYTES, PROMPT_SHA = revue._canonical_sol_prompt(
+    "S-sol", BASE_CURRENT, REVIEWED_HEAD, runner=_runner
+)
 
 
 def _verdict(
@@ -78,7 +97,7 @@ def _verdict(
     base_commit: str = BASE_CURRENT,
     reviewed_head_commit: str = REVIEWED_HEAD,
     reviewed_head_tree: str = REVIEWED_TREE,
-    prompt_sha256: str = PROMPT_SHA,
+    prompt_sha256: str | None = None,
     candidate_diff_digest: str = DIFF_DIGEST,
     reviewer_model: str = "GPT-5.6-Sol",
 ) -> dict:
@@ -92,7 +111,7 @@ def _verdict(
         "base_commit": base_commit,
         "reviewed_head_commit": reviewed_head_commit,
         "reviewed_head_tree": reviewed_head_tree,
-        "prompt_sha256": prompt_sha256,
+        "prompt_sha256": prompt_sha256 or PROMPT_SHA,
         "verdict": "APPROVE",
         "blocking_findings": [],
         "reviewed_at": DATE,
@@ -106,7 +125,7 @@ def _receipt(
     head_tree: str = CURRENT_TREE,
     reviewed_head_commit: str = REVIEWED_HEAD,
     reviewed_head_tree: str = REVIEWED_TREE,
-    prompt_sha256: str = PROMPT_SHA,
+    prompt_sha256: str | None = None,
     candidate_diff_digest: str = DIFF_DIGEST,
 ) -> dict:
     return {
@@ -122,7 +141,7 @@ def _receipt(
         "reviewed_head_tree": reviewed_head_tree,
         "candidate_diff_digest": candidate_diff_digest,
         "diff_digest": DIFF_DIGEST,
-        "prompt_sha256": prompt_sha256,
+        "prompt_sha256": prompt_sha256 or PROMPT_SHA,
         "reviewers_attendus": ["GPT-5.6-Sol"],
         "codeur": ["luna_writer"],
         "resultat": "APPROVE",
@@ -167,6 +186,7 @@ def test_sol_receipt_cannot_self_authenticate_git_metadata(tmp_path):
         },
         review_dir=directory,
         runner=_runner,
+        now=VALIDATION_NOW,
     )
 
     assert result["result"] != "APPROVE"
@@ -191,6 +211,7 @@ def test_sol_receipt_prompt_hash_comes_from_stored_prompt_bytes(tmp_path):
         },
         review_dir=directory,
         runner=_runner,
+        now=VALIDATION_NOW,
     )
 
     assert result["result"] != "APPROVE"
@@ -244,6 +265,7 @@ def test_current_gate_ignores_historical_sol_binding_when_current_sol_binding_is
         base_ref="origin/main",
         expected_issue=603,
         runner=_runner,
+        now=VALIDATION_NOW,
     )
 
     assert ok is True, report

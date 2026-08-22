@@ -43,6 +43,7 @@ import argparse
 import importlib.util
 import json
 import subprocess
+from datetime import datetime
 from pathlib import Path
 from typing import Callable
 
@@ -173,6 +174,7 @@ def check(
     expected_issue: int | None = None,
     mode: str | None = None,
     runner: GitRunner | None = None,
+    now: datetime | None = None,
 ) -> tuple[bool, list[str]]:
     revue = _load_revue()
     execute = _default_runner if runner is None else runner
@@ -285,7 +287,12 @@ def check(
 
         if exiger_recu_courant and receipt_path.is_file():
             receipt_result = revue.verifier_recu(
-                receipt, verdicts, etat_git, review_dir=directory, runner=execute
+                receipt,
+                verdicts,
+                etat_git,
+                review_dir=directory,
+                runner=execute,
+                now=now,
             )
             if receipt_result.get("result") == "APPROVE":
                 if expected_issue is not None and (

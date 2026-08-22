@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import hashlib
 import importlib.util
+from datetime import datetime
 from pathlib import Path
 
 import pytest
@@ -12,16 +13,19 @@ spec = importlib.util.spec_from_file_location("revue", REPO / "scripts" / "revue
 revue = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(revue)
 
-PROMPT_BYTES = b"stored Sol prompt\n"
-PROMPT_SHA = hashlib.sha256(PROMPT_BYTES).hexdigest()
+PROMPT_BYTES = b""
+PROMPT_SHA = ""
 DIFF_DIGEST = hashlib.sha256(b"").hexdigest()
 BASE_COMMIT = "c" * 40
 HEAD_COMMIT = "d" * 40
 HEAD_TREE = "e" * 40
 REVIEWED_AT = "2026-08-22T12:00:00+00:00"
+VALIDATION_NOW = datetime.fromisoformat(REVIEWED_AT)
 
 
 def _git_runner(command):
+    if command[:2] == ["git", "merge-base"]:
+        return BASE_COMMIT
     if command[:3] == ["git", "rev-parse", "--verify"]:
         ref = command[-1]
         if ref.endswith("^{tree}"):
@@ -29,7 +33,18 @@ def _git_runner(command):
         return ref[: -len("^{commit}")] if ref.endswith("^{commit}") else ref
     if command[:3] == ["git", "diff", "--raw"]:
         return ""
+    if command[:2] == ["git", "diff"]:
+        return ""
+    if command[:2] == ["git", "show"]:
+        return revue.TEMPLATE.read_text(encoding="utf-8")
+    if command[:2] == ["git", "rev-parse"]:
+        return HEAD_TREE if command[-1].endswith("^{tree}") else HEAD_COMMIT
     raise AssertionError(command)
+
+
+PROMPT_BYTES, PROMPT_SHA = revue._canonical_sol_prompt(
+    "S-sol", BASE_COMMIT, HEAD_COMMIT, runner=_git_runner
+)
 
 
 def _expected() -> dict[str, str]:
@@ -46,7 +61,7 @@ def _expected() -> dict[str, str]:
     }
 
 
-def _sol_verdict(**changes) -> dict:
+def _sol_verdict(*, prompt_sha256: str | None = None, **changes) -> dict:
     verdict = {
         "fresh_context": True,
         "blind": True,
@@ -56,7 +71,7 @@ def _sol_verdict(**changes) -> dict:
         "base_commit": BASE_COMMIT,
         "reviewed_head_commit": HEAD_COMMIT,
         "reviewed_head_tree": HEAD_TREE,
-        "prompt_sha256": PROMPT_SHA,
+        "prompt_sha256": prompt_sha256 or PROMPT_SHA,
         "verdict": "APPROVE",
         "blocking_findings": [],
         "reviewed_at": REVIEWED_AT,
@@ -100,7 +115,12 @@ def test_sol_blind_exact_binding_approves_and_receipt_is_accepted(tmp_path):
 
     result = revue.tally_sol_blind([verdict], expected=expected, codeurs=["luna_writer"])
     receipt_result = revue.verifier_recu(
-        _receipt(), [verdict], expected, review_dir=tmp_path, runner=_git_runner
+        _receipt(),
+        [verdict],
+        expected,
+        review_dir=tmp_path,
+        runner=_git_runner,
+        now=VALIDATION_NOW,
     )
 
     assert result["result"] == "APPROVE"
