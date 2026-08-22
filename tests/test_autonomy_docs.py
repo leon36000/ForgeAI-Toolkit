@@ -54,12 +54,16 @@ FORBIDDEN_WORKFLOW_MARKERS = (
     "decode",
     "self-writing",
 )
+WORKFLOW_ACTION_PATTERN = (
+    r"(?:contents:\s*write|force-push|decode(?:\s+(?:embedded\s+)?source)?|self-writing)"
+)
+AUTHORIZATION_PATTERN = (
+    r"(?:allow(?:s|ed)?|permit(?:s|ted)?|authori[sz](?:e|es|ed)|enable(?:d|s)?)"
+)
 PERMISSIVE_WORKFLOW_PATTERNS = (
     r"\bno workflow restriction applies\b",
-    r"contents:\s*write.{0,30}\b(?:is\s+)?(?:allowed|permitted|enabled|authori[sz]ed)\b",
-    r"force-push.{0,30}\b(?:is\s+)?(?:allowed|permitted|enabled|authori[sz]ed)\b",
-    r"decode.{0,40}\b(?:is\s+)?(?:allowed|permitted|enabled|authori[sz]ed)\b",
-    r"self-writing.{0,30}\b(?:is\s+)?(?:allowed|permitted|enabled|authori[sz]ed)\b",
+    rf"\b{WORKFLOW_ACTION_PATTERN}\b.{{0,40}}\b{AUTHORIZATION_PATTERN}\b",
+    rf"\b{AUTHORIZATION_PATTERN}\b.{{0,40}}\b{WORKFLOW_ACTION_PATTERN}\b",
 )
 ACTIVE_MULTI_VENDOR_MARKERS = (
     "3/3",
@@ -105,6 +109,11 @@ EXPECTED_CLASSIFICATIONS = {
         "owner": "working-cockpit",
     },
     ".superpowers/sdd/2026-08-22-autonomous-luna-sol/task-4-fix3-report.md": {
+        "class": "WORKING",
+        "rule_id": "working-superpowers-sdd",
+        "owner": "working-cockpit",
+    },
+    ".superpowers/sdd/2026-08-22-autonomous-luna-sol/task-4-fix4-report.md": {
         "class": "WORKING",
         "rule_id": "working-superpowers-sdd",
         "owner": "working-cockpit",
@@ -181,6 +190,11 @@ def _assert_story_status(text: str) -> None:
     assert task5_declarations == [("task 5 status", "PENDING")], (
         "story must declare exactly one Task 5 PENDING status"
     )
+    assert not [
+        declaration
+        for declaration in declarations
+        if declaration[0] in {"terminal state", "terminal status"}
+    ], "story contains an extra terminal status/state declaration"
     assert [
         declaration
         for declaration in declarations
@@ -369,10 +383,10 @@ def test_no_write_rule_is_semantic_and_rejects_marker_only_text():
 
 def test_no_write_rule_rejects_late_authorization_in_real_documents():
     contradictory_paragraphs = (
-        "A later exception makes contents: write is allowed.",
-        "A later emergency path makes force-push permitted.",
-        "A later helper makes decode source allowed.",
-        "A later workflow may be self-writing and is authorized.",
+        "A later exception permits contents: write.",
+        "A later emergency procedure authorizes force-push.",
+        "A later helper is allowed to decode embedded source.",
+        "A later workflow is authorized to be self-writing.",
     )
     for path in (REPO / "AGENTS.md", REPO / "CLAUDE.md", REFERENCE):
         text = path.read_text(encoding="utf-8")
@@ -413,6 +427,9 @@ def test_story_has_testable_acceptance_and_explicit_checkpoint_status():
         "Task 5 status: DONE_WITH_EVIDENCE — final evidence is complete.",
         "Overall status: DONE",
         "Terminal state: BLOCKED_WITH_REASON — final evidence is blocked.",
+        "Terminal status: FAILED",
+        "Terminal status: CANCELLED",
+        "Terminal state: PENDING",
     )
     for mutation in mutations:
         with pytest.raises(AssertionError):
@@ -512,4 +529,5 @@ def test_generated_views_reference_the_task4_paths_and_contract_source():
     assert ".superpowers/sdd/2026-08-22-autonomous-luna-sol/task-4-fix1-report.md" in classified
     assert ".superpowers/sdd/2026-08-22-autonomous-luna-sol/task-4-fix2-report.md" in classified
     assert ".superpowers/sdd/2026-08-22-autonomous-luna-sol/task-4-fix3-report.md" in classified
+    assert ".superpowers/sdd/2026-08-22-autonomous-luna-sol/task-4-fix4-report.md" in classified
     assert "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md" in classified
