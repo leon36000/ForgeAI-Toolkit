@@ -428,8 +428,13 @@ def _sol_expected_from_receipt_shape(
         raise ValueError("reviewed_at du reçu différent du verdict Sol")
     if recu["reviewer_model"] != verdict.get("reviewer_model"):
         raise ValueError("reviewer_model du reçu différent du verdict Sol")
+    if recu["reviewer_model"] != _SOL_CANONICAL_PROVIDER_ID:
+        raise ValueError("reviewer_model Sol non canonique")
     if recu["verdict"] != verdict.get("verdict"):
         raise ValueError("verdict du reçu différent du verdict Sol")
+    for field in ("fresh_context", "blind", "reviewer_read_only"):
+        if verdict.get(field) is not True:
+            raise ValueError(f"{field} doit être true dans le verdict Sol")
     # These fields are repeated in the signed-off verdict and must agree with the receipt
     # before PR mode is allowed to resolve any Git object. `diff_digest` and the post-review
     # sealing head are receipt-only fields; Sol's verdict contract intentionally binds the

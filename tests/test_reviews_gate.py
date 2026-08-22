@@ -865,6 +865,67 @@ def test_mode_pr_rejette_schema_prompt_contradictoire_avant_acces_git(tmp_path):
     assert not any(command[:2] == ["git", "merge-base"] for command in commands)
 
 
+def test_mode_pr_rejette_identite_sol_noncanonique_avant_acces_git(tmp_path):
+    root = tmp_path / "reviews"
+    directory = _make_sol_blind_gate_review(root)
+    verdict_path = next(directory.glob("*.verdict.json"))
+    verdict = json.loads(verdict_path.read_text(encoding="utf-8"))
+    verdict["reviewer_model"] = "Not-Sol"
+    verdict_path.write_text(json.dumps(verdict), encoding="utf-8")
+    receipt_path = directory / "RECU.json"
+    receipt = json.loads(receipt_path.read_text(encoding="utf-8"))
+    receipt["reviewer_model"] = "Not-Sol"
+    receipt["reviewers_attendus"] = ["Not-Sol"]
+    receipt_path.write_text(json.dumps(receipt), encoding="utf-8")
+    commands = []
+
+    def recording_runner(command):
+        commands.append(command)
+        return _runner(command)
+
+    ok, report = gate.check(
+        _manifest(tmp_path, [directory.name]),
+        root,
+        exiger_recu_courant=True,
+        base_ref="origin/main",
+        expected_issue=603,
+        runner=recording_runner,
+        now=SOL_NOW,
+    )
+
+    assert ok is False
+    assert any("non canonique" in line for line in report)
+    assert not any(command[:2] == ["git", "merge-base"] for command in commands)
+
+
+def test_mode_pr_rejette_contexte_sol_non_frais_avant_acces_git(tmp_path):
+    root = tmp_path / "reviews"
+    directory = _make_sol_blind_gate_review(root)
+    verdict_path = next(directory.glob("*.verdict.json"))
+    verdict = json.loads(verdict_path.read_text(encoding="utf-8"))
+    verdict["fresh_context"] = False
+    verdict_path.write_text(json.dumps(verdict), encoding="utf-8")
+    commands = []
+
+    def recording_runner(command):
+        commands.append(command)
+        return _runner(command)
+
+    ok, report = gate.check(
+        _manifest(tmp_path, [directory.name]),
+        root,
+        exiger_recu_courant=True,
+        base_ref="origin/main",
+        expected_issue=603,
+        runner=recording_runner,
+        now=SOL_NOW,
+    )
+
+    assert ok is False
+    assert any("fresh_context" in line for line in report)
+    assert not any(command[:2] == ["git", "merge-base"] for command in commands)
+
+
 def test_mode_pr_rejette_recu_sol_incomplet_sans_acces_git(tmp_path):
     root = tmp_path / "reviews"
     directory = _make_sol_blind_gate_review(root)
