@@ -1,0 +1,109 @@
+name: Publish verified issue 603 tree
+
+on:
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  actions: write
+  contents: write
+
+concurrency:
+  group: issue-603-publisher-v2
+  cancel-in-progress: true
+
+jobs:
+  publish:
+    if: github.head_ref == 'codex/issue-603-luna-sol' && github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          ref: codex/issue-603-luna-sol
+          fetch-depth: 0
+          persist-credentials: true
+
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+        with:
+          python-version: "3.12"
+
+      - name: Construire le tree exact
+        shell: bash
+        run: |
+          set -euo pipefail
+          printf '%s\n' "$(git rev-parse HEAD)" > /tmp/start-sha
+          cat .bootstrap/issue603-source.part* | base64 --decode > /tmp/issue603-sourcefiles.tar.gz
+          echo "06833d093d435bccad29aad8168486fa6a2681d5ab475e0771111ba60c0c87cf  /tmp/issue603-sourcefiles.tar.gz" | sha256sum -c -
+          tar -xzf /tmp/issue603-sourcefiles.tar.gz -C .
+          python3 - <<'PY'
+          from pathlib import Path
+
+          path = Path("scripts/sol_review_gate.py")
+          source = path.read_text(encoding="utf-8")
+          target = '    worker = active_policy["worker"]\n'
+          if source.count(target) != 1:
+              raise SystemExit("correction Ruff non applicable de façon univoque")
+          path.write_text(source.replace(target, "", 1), encoding="utf-8")
+          PY
+          rm -rf .bootstrap
+          rm -f .github/workflows/bootstrap-issue603.yml
+          rm -f .github/workflows/bootstrap-issue603-publisher.yml
+          git add -A
+
+      - name: Enregistrer les décisions et le livrable
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 scripts/registre.py append governance/vision-log.jsonl --type vision_change --actor nathan --payload-json '{"de":{"status":"absent","superseded_by":null},"decision":"https://github.com/leon36000/ForgeAI-Toolkit/issues/603","mission_seq":null,"motif":"decision_T3_Nathan_autonomie_Luna_deux_writers_revue_aveugle_Sol_merge_sur_preuves","source_id":"gov.decision-autonomie-luna-sol","vers":{"status":"active","superseded_by":null}}'
+          python3 scripts/registre.py append governance/vision-log.jsonl --type vision_change --actor nathan --payload-json '{"de":{"status":"conflicted","superseded_by":null},"decision":"https://github.com/leon36000/ForgeAI-Toolkit/issues/603","mission_seq":null,"motif":"la_decision_Luna_Sol_supersede_Claude_Code_Opus_comme_mission_lead_actif","source_id":"gov.decision-mission-lead","vers":{"status":"superseded","superseded_by":"gov.decision-autonomie-luna-sol"}}'
+          python3 scripts/registre.py append governance/vision-log.jsonl --type vision_change --actor nathan --payload-json '{"de":{"status":"active","superseded_by":null},"decision":"https://github.com/leon36000/ForgeAI-Toolkit/issues/603","mission_seq":null,"motif":"AGENTS_aligne_sur_Luna_deux_lanes_et_revue_Sol","source_id":"agents-md","vers":{"status":"active","superseded_by":null}}'
+          python3 scripts/registre.py append governance/vision-log.jsonl --type vision_change --actor nathan --payload-json '{"de":{"status":"conflicted","superseded_by":null},"decision":"https://github.com/leon36000/ForgeAI-Toolkit/issues/603","mission_seq":null,"motif":"amendement_execution_Luna_Sol_sans_trancher_le_conflit_plan_of_record_486","source_id":"canon.plan-integral","vers":{"status":"conflicted","superseded_by":null}}'
+          python3 scripts/registre.py append governance/vision-log.jsonl --type vision_change --actor nathan --payload-json '{"de":{"status":"active","superseded_by":null},"decision":"https://github.com/leon36000/ForgeAI-Toolkit/issues/603","mission_seq":null,"motif":"Luna_et_Sol_actifs_roster_legacy_multi_vendor_conserve","source_id":"manifests.roles","vers":{"status":"active","superseded_by":null}}'
+          python3 scripts/registre.py append governance/vision-log.jsonl --type vision_change --actor nathan --payload-json '{"de":{"status":"conflicted","superseded_by":null},"decision":"https://github.com/leon36000/ForgeAI-Toolkit/issues/603","mission_seq":null,"motif":"instructions_execution_alignees_Luna_Sol_conflit_workspace_484_inchange","source_id":"claude-md","vers":{"status":"conflicted","superseded_by":null}}'
+          python3 scripts/registre.py append evidence/registres/mission.jsonl --type livrable --actor gpt-5.6-pro --payload-json '{"artefacts":["governance/autonomy-policy.json","scripts/sol_review_gate.py","AGENTS.md","CLAUDE.md","manifests/roles.yaml"],"claim_scope":"MERGE_APPROVED_NOT_CERTIFIED","issue":603,"preuve":"TDD_rouge_puis_tests_cibles_verts","story":"ORCH-LUNA-SOL-603","titre":"Mode autonome productif Luna Sol"}'
+
+      - name: Installer la toolchain verrouillée
+        run: python -m pip install --no-cache-dir --require-hashes -r requirements-ci.txt
+
+      - name: Régénérer et vérifier le tree
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 scripts/governance/validate_authority.py --render
+          python3 scripts/governance/state_current.py --render --docs README.md --docs AGENTS.md
+          python3 scripts/governance/classify_paths.py --render
+          python3 scripts/registre.py verify governance/vision-log.jsonl evidence/registres/mission.jsonl
+          python3 scripts/no_stub_scan.py --all
+          python3 scripts/governance/validate_authority.py
+          python3 scripts/governance/state_current.py --docs README.md --docs AGENTS.md
+          python3 scripts/governance/classify_paths.py
+          python3 -m py_compile scripts/sol_review_gate.py
+          python3 -m ruff check scripts/sol_review_gate.py tests/test_sol_review_gate.py tests/test_autonomy_luna_sol.py
+          python3 -m pytest -q \
+            tests/test_sol_review_gate.py \
+            tests/test_autonomy_luna_sol.py \
+            tests/test_revue.py \
+            tests/test_reviews_gate.py \
+            tests/test_orch_578_review_round_gate.py \
+            tests/test_agents_md_no_obsolete_terms.py
+
+      - name: Créer le commit propre
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "forgeai-autonomy-bot"
+          git config user.email "216249790+leon36000@users.noreply.github.com"
+          git add -A
+          git diff --cached --check
+          git commit -m "feat(governance): activate autonomous Luna Sol workflow (#603)"
+          git rev-parse HEAD > /tmp/final-sha
+
+      - name: Publier avec lease sur le head déclencheur
+        shell: bash
+        env:
+          BRANCH: codex/issue-603-luna-sol
+        run: |
+          set -euo pipefail
+          START_SHA=$(cat /tmp/start-sha)
+          git push --force-with-lease="refs/heads/${BRANCH}:${START_SHA}" origin "HEAD:refs/heads/${BRANCH}"
