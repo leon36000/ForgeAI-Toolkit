@@ -36,6 +36,8 @@ Elle impose également l’identité canonique `GPT-5.6-Sol` et les trois marque
 fraîche/aveugle/read-only avant cette résolution.
 Le schéma de réponse exige aussi ses champs `verdict`, `blocking_findings`, `reviewed_at` et
 `prompt_sha256` exacts; la date du verdict ne peut pas dépasser celle du scellement.
+Le digest canonique exclut uniquement les fichiers générés nommés exactement et les répertoires
+de preuve par préfixe; un chemin ressemblant à un manifeste reste donc couvert.
 Pour distinguer un reçu historique d’un reçu courant, le mode PR vérifie d’abord les dates
 intrinsèques et les futures, classe la liaison via Git, puis applique la fenêtre actuelle au
 reçu courant; l’historique est validé à l’heure de son scellement.

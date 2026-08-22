@@ -720,6 +720,14 @@ def _diff_canonique(
     )
     fields = raw.split("\0")
     entries: list[tuple[str, str, str, str]] = []
+
+    def excluded_path(path: str) -> bool:
+        """Apply directory rules by prefix and generated-file rules by exact equality."""
+        return any(
+            path.startswith(rule) if rule.endswith("/") else path == rule
+            for rule in exclude
+        )
+
     index = 0
     while index + 1 < len(fields):
         metadata = fields[index]
@@ -733,7 +741,7 @@ def _diff_canonique(
         mode_head = parts[1]
         sha_base = parts[2]
         sha_head = parts[3]
-        if not any(path.startswith(prefix) for prefix in exclude):
+        if not excluded_path(path):
             entries.append((mode_head, sha_base, sha_head, path))
     entries.sort()
     canonical = "".join(

@@ -269,6 +269,14 @@ def test_diff_canonique_exclut_path_classification_json():
     )
 
 
+def test_diff_canonique_n_exclut_pas_un_fichier_qui_ressemble_au_manifeste():
+    code = ":100644 100644 a b M\0src/a.py\0"
+    disguised = code + ":100644 100644 d e A\0governance/path-classification.json.backdoor.py\0"
+    assert revue._diff_canonique("base", "HEAD", runner=lambda _: code) != revue._diff_canonique(
+        "base", "HEAD", runner=lambda _: disguised
+    )
+
+
 def test_diff_canonique_exclut_sdd_review_history():
     code = ":100644 100644 a b M\0src/a.py\0"
     reviewed = code + ":100644 100644 d e M\0.superpowers/sdd/old-review.md\0"
