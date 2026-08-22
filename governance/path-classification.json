@@ -60920,8 +60920,8 @@
         }
       ],
       "rule_id": "test-suite",
-      "sha256": "397ebf46a7ee82f71808397dcdc30ee006c795a0d86c038560fec49ee03defc1",
-      "size": 12648,
+      "sha256": "9e2a7d10d652cbf28f51feb17533d32b247e64f2863d7a45c7221620f7f3f525",
+      "size": 12681,
       "target_path": null,
       "type": "text"
     },
@@ -60969,8 +60969,8 @@
         }
       ],
       "rule_id": "test-suite",
-      "sha256": "dc765fcbba60eec894647934b2a6360ce97d285d8cb40b3a97aa13f7d61b7762",
-      "size": 10083,
+      "sha256": "9f87bece55f327280255c7ab4520839c320b723bdaba69c684690676319d95b6",
+      "size": 10116,
       "target_path": null,
       "type": "text"
     },
@@ -147317,52 +147317,52 @@
       },
       {
         "candidate": "SOL-PROMPT.md",
-        "line": 159,
-        "referrer": "tests/test_revue_sol_round1.py"
-      },
-      {
-        "candidate": "sol.verdict.json",
         "line": 160,
         "referrer": "tests/test_revue_sol_round1.py"
       },
       {
-        "candidate": "RECU.json",
+        "candidate": "sol.verdict.json",
         "line": 161,
         "referrer": "tests/test_revue_sol_round1.py"
       },
       {
-        "candidate": "SOL-PROMPT.md",
-        "line": 174,
+        "candidate": "RECU.json",
+        "line": 162,
         "referrer": "tests/test_revue_sol_round1.py"
       },
       {
         "candidate": "SOL-PROMPT.md",
-        "line": 199,
+        "line": 175,
+        "referrer": "tests/test_revue_sol_round1.py"
+      },
+      {
+        "candidate": "SOL-PROMPT.md",
+        "line": 200,
         "referrer": "tests/test_revue_sol_round1.py"
       },
       {
         "candidate": "origin/main",
-        "line": 265,
+        "line": 266,
         "referrer": "tests/test_revue_sol_round1.py"
       },
       {
         "candidate": "SOL-PROMPT.md",
-        "line": 279,
+        "line": 280,
         "referrer": "tests/test_revue_sol_round1.py"
       },
       {
         "candidate": "origin/main",
-        "line": 304,
+        "line": 305,
         "referrer": "tests/test_revue_sol_round1.py"
       },
       {
         "candidate": "origin/main",
-        "line": 335,
+        "line": 336,
         "referrer": "tests/test_revue_sol_round1.py"
       },
       {
         "candidate": "SOL-PROMPT.md",
-        "line": 373,
+        "line": 374,
         "referrer": "tests/test_revue_sol_round1.py"
       },
       {
@@ -147382,57 +147382,57 @@
       },
       {
         "candidate": "SOL-PROMPT.md",
-        "line": 119,
-        "referrer": "tests/test_revue_sol_round2.py"
-      },
-      {
-        "candidate": "sol.verdict.json",
         "line": 120,
         "referrer": "tests/test_revue_sol_round2.py"
       },
       {
-        "candidate": "RECU.json",
+        "candidate": "sol.verdict.json",
         "line": 121,
         "referrer": "tests/test_revue_sol_round2.py"
       },
       {
-        "candidate": "SOL-PROMPT.md",
-        "line": 138,
+        "candidate": "RECU.json",
+        "line": 122,
         "referrer": "tests/test_revue_sol_round2.py"
       },
       {
         "candidate": "SOL-PROMPT.md",
-        "line": 162,
+        "line": 139,
         "referrer": "tests/test_revue_sol_round2.py"
       },
       {
         "candidate": "SOL-PROMPT.md",
-        "line": 195,
+        "line": 163,
+        "referrer": "tests/test_revue_sol_round2.py"
+      },
+      {
+        "candidate": "SOL-PROMPT.md",
+        "line": 196,
         "referrer": "tests/test_revue_sol_round2.py"
       },
       {
         "candidate": "origin/main",
-        "line": 235,
+        "line": 236,
         "referrer": "tests/test_revue_sol_round2.py"
       },
       {
         "candidate": "recu-revue/1",
-        "line": 248,
+        "line": 249,
         "referrer": "tests/test_revue_sol_round2.py"
       },
       {
         "candidate": "SOL-PROMPT.md",
-        "line": 252,
+        "line": 253,
         "referrer": "tests/test_revue_sol_round2.py"
       },
       {
         "candidate": "recu-revue/1",
-        "line": 269,
+        "line": 270,
         "referrer": "tests/test_revue_sol_round2.py"
       },
       {
         "candidate": "SOL-PROMPT.md",
-        "line": 328,
+        "line": 329,
         "referrer": "tests/test_revue_sol_round2.py"
       },
       {

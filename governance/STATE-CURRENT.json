@@ -788,11 +788,11 @@
       },
       {
         "path": "tests/test_revue_sol_round1.py",
-        "sha256": "397ebf46a7ee82f71808397dcdc30ee006c795a0d86c038560fec49ee03defc1"
+        "sha256": "9e2a7d10d652cbf28f51feb17533d32b247e64f2863d7a45c7221620f7f3f525"
       },
       {
         "path": "tests/test_revue_sol_round2.py",
-        "sha256": "dc765fcbba60eec894647934b2a6360ce97d285d8cb40b3a97aa13f7d61b7762"
+        "sha256": "9f87bece55f327280255c7ab4520839c320b723bdaba69c684690676319d95b6"
       },
       {
         "path": "tests/test_routestore_concurrence.py",

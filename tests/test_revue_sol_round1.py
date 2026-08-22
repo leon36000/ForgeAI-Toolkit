@@ -150,6 +150,7 @@ def _receipt(
         "reviewer_model": "GPT-5.6-Sol",
         "date_heure": DATE,
         "fenetre_heures": 24,
+        "blocking_findings": [],
     }
 
 
