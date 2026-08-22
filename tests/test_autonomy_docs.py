@@ -13,6 +13,7 @@ REPO = Path(__file__).resolve().parent.parent
 POLICY = REPO / "governance" / "autonomy-policy.json"
 REFERENCE = REPO / "Docs" / "reference" / "autonomy-luna-sol.md"
 STORY = REPO / "stories" / "ORCH-LUNA-SOL-603.md"
+DECISION = REPO / "governance" / "decisions" / "D-2026-08-21-autonomie-luna-sol.md"
 AUTHORITY = REPO / "governance" / "authority.json"
 PATH_CLASSIFICATION = REPO / "governance" / "path-classification.json"
 REVIEWS_GATE = REPO / "scripts" / "reviews_gate.py"
@@ -44,6 +45,7 @@ SOL_BINDING_FIELDS = (
     "reviewed_head_commit",
     "reviewed_head_tree",
     "prompt_sha256",
+    "template_sha256",
     "reviewed_at",
     "verdict: APPROVE",
     "blocking_findings: []",
@@ -444,6 +446,15 @@ def test_policy_values_and_sol_binding_fields_are_exact():
         assert field in reference_text, f"reference omits Sol binding field: {field}"
     assert "mode: sol_blind" in reference_text
     assert "exactly one" in reference_text
+
+
+def test_active_decision_matches_policy_default_and_historical_scope():
+    text = DECISION.read_text(encoding="utf-8")
+    normalized = " ".join(text.split()).lower()
+    assert "sol_blind" in normalized
+    assert "mode par défaut pour les pr courantes" in normalized
+    assert "multi-vendor reste compatible pour les reçus d’archive" in normalized
+    assert "multi-vendor par défaut" not in normalized
 
 
 def test_reviews_gate_declares_receipt_dispatch_and_single_sol_verdict():

@@ -129,17 +129,24 @@ def analyser(texte: str) -> list[dict]:
 def scanner(racine: Path) -> dict[str, list[dict]]:
     """Scanne récursivement `racine` pour les documents Markdown de preuve.
 
-    Les prompts générés `SOL-PROMPT.md` sont exclus : ils contiennent le diff brut canonique,
-    donc peuvent embarquer des fences imbriquées qui ne sont pas une structure de pack à valider.
-    Les autres documents Markdown, notamment `pack.md` et `REVIEW-PACK.md`, restent entièrement
-    soumis au scanner.
+    Seuls les prompts générés situés sous le chemin canonique
+    `evidence/reviews/<dossier>/SOL-PROMPT.md` sont exclus : ils contiennent le diff brut
+    canonique, donc peuvent embarquer des fences imbriquées qui ne sont pas une structure de pack
+    à valider. Un document nommé `SOL-PROMPT.md` ailleurs reste entièrement soumis au scanner,
+    comme `pack.md` et `REVIEW-PACK.md`.
 
     N'utilise PAS git (Path.rglob uniquement) : doit fonctionner dans un clone/extraction sans
     .git (vérification "extraction dans un clone propre" du critère de l'issue #441).
     """
     resultats: dict[str, list[dict]] = {}
     for chemin in sorted(racine.rglob("*.md")):
-        if chemin.name == "SOL-PROMPT.md":
+        parties = chemin.resolve().parts
+        if (
+            chemin.name == "SOL-PROMPT.md"
+            and len(parties) >= 4
+            and parties[-3:] == ("reviews", parties[-2], "SOL-PROMPT.md")
+            and parties[-4] == "evidence"
+        ):
             continue
         try:
             texte = chemin.read_text(encoding="utf-8")

@@ -10,9 +10,12 @@ GPT-5.6 Luna conduit et écrit les changements dans un mode explicite plafonné 
 deux lanes d’écriture actives. GPT-5.6 Sol intervient comme reviewer frais,
 aveugle et en lecture seule pour les livraisons soumises au mode sol_blind.
 
-Le dépôt conserve son mode historique multi-vendor par défaut. Les identités
-actives luna_writer et sol sont ajoutées au roster sans supprimer
-l’identité historique luna, qui reste résoluble pour les reçus archivés.
+La politique active définit `sol_blind` comme mode par défaut pour les PR
+courantes et exige ce mode dans le reçu qui les couvre. Le mode historique
+multi-vendor reste compatible pour les reçus d’archive; il ne peut pas couvrir
+une PR courante. Les identités actives luna_writer et sol sont ajoutées au
+roster sans supprimer l’identité historique luna, qui reste résoluble pour
+les reçus archivés.
 
 ## Portée et limites
 

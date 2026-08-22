@@ -6,7 +6,14 @@ L’issue #603 autorise un mode d’exécution où GPT-5.6 Luna conduit et écri
 
 ## Contrat observable
 
-Le dépôt conserve son mode historique multi-vendor par défaut. Un nouveau mode explicite `sol_blind` est accepté uniquement lorsqu’un reçu contient une preuve fraîche et liée au changement examiné : base commit, head commit et head tree examinés, empreinte canonique du diff, empreinte du prompt, provider ID Sol exact `GPT-5.6-Sol`, contexte frais, revue aveugle, lecture seule, verdict `APPROVE` et liste d’objections bloquantes vide. La fenêtre de fraîcheur est plafonnée à 24 heures. Le codeur ne peut pas être Sol.
+Le dépôt conserve la compatibilité de ses reçus historiques multi-vendor. Pour
+une PR courante, la politique active exige le mode `sol_blind`, accepté
+uniquement lorsqu’un reçu contient une preuve fraîche et liée au changement
+examiné : base commit, head commit et head tree examinés, empreinte canonique du
+diff, empreinte du prompt, provider ID Sol exact `GPT-5.6-Sol`, contexte frais,
+revue aveugle, lecture seule, verdict `APPROVE` et liste d’objections
+bloquantes vide. La fenêtre de fraîcheur est plafonnée à 24 heures. Le codeur
+ne peut pas être Sol.
 
 Le reçu conserve `story`, qui doit être exactement
 `stories/ORCH-LUNA-SOL-603.md`, l’identifiant immuable employé pour reconstruire

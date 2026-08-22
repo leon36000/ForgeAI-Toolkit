@@ -236,8 +236,12 @@ def test_scanner_ignore_prompt_sol_genere_mais_scan_pack_voisin(tmp_path):
     prompt.write_text("```diff\n+diff brut\n", encoding="utf-8")
     pack = dossier / "pack.md"
     pack.write_text("```diff\ndiff --git a b\n```\n", encoding="utf-8")
+    decoy = tmp_path / "not-a-review" / "SOL-PROMPT.md"
+    decoy.parent.mkdir(parents=True)
+    decoy.write_text("```diff\nnon canonique\n", encoding="utf-8")
 
     resultats = check_md_packs.scanner(tmp_path)
 
     assert str(prompt) not in resultats
     assert resultats[str(pack)] == []
+    assert resultats[str(decoy)] == [{"regle": "R1", "ligne": 1}]

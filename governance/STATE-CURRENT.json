@@ -180,7 +180,7 @@
       },
       {
         "path": "tests/test_autonomy_docs.py",
-        "sha256": "c0c713802ca5ea2a2e39702c40d18098f379e831a291515f61caf17c966d1a2c"
+        "sha256": "c7f3c61fc3f9be9dd0d316484411b5ba8efb72280609ca52c57e721bcf16190a"
       },
       {
         "path": "tests/test_autonomy_policy.py",
@@ -688,7 +688,7 @@
       },
       {
         "path": "tests/test_rc1011_packs_md.py",
-        "sha256": "30fd444297cc226a61fffd914610e75eb52c37d6e0f67455fa569e32b6110a78"
+        "sha256": "0ccbe4116159aa1d3277bcf270e8000230bbce41f0688db5cf23c780d13387fc"
       },
       {
         "path": "tests/test_rc1016_sonar_suppressions.py",
@@ -1017,7 +1017,7 @@
     "tests": {
       "js_files": 3,
       "python_files": 214,
-      "python_functions_declared": 2721
+      "python_functions_declared": 2722
     }
   },
   "observations": [
