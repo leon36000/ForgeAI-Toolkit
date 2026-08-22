@@ -23,8 +23,9 @@ resolvable only for historical receipts. This story changes governance prose,
 the executable-contract reference, the ledgers and generated views; it does
 not claim runtime, hardware, external-service or final review evidence.
 The active policy binds fresh Sol receipts to the immutable story identifier
-`stories/ORCH-LUNA-SOL-603.md`, the exact `luna_writer` codewriter identity and
-the versioned prompt `template_sha256`, which is copied into the receipt. The
+`stories/ORCH-LUNA-SOL-603.md`, the exact `luna_writer` codewriter identity,
+the versioned prompt `template_sha256`, and the separate `sdd_diff_digest` for
+excluded coordination logs, all copied into the receipt. The
 declared review commits must resolve to their trees and remain on the current
 Git ancestry, allowing only later sealing commits. The roster record must remain unique
 and canonical (`GPT-5.6 Luna`, `openai`, `GPT-5.6-Luna-Writer`, `actif`); a
@@ -37,7 +38,7 @@ current PR cannot be covered by a legacy `multi_vendor` receipt.
   the safe merge path, the restart source of truth, the T3 boundary and the
   only terminal states.
 - [x] `Docs/reference/autonomy-luna-sol.md` lists the exact verdict/receipt
-  binding fields, including `template_sha256`, immutable story binding and
+  binding fields, including `template_sha256`, `sdd_diff_digest`, immutable story binding and
   active `luna_writer` codewriter, the two lanes, loop/resume behavior,
   no-write rule, safe merge gates, T3 boundary and verification commands.
 - [x] No workflow described by this story uses `contents: write`, `force-push`,

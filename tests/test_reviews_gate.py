@@ -77,6 +77,7 @@ SOL_PROMPT_BYTES, SOL_SHA = gate._load_revue()._canonical_sol_prompt(
 SOL_TEMPLATE_SHA = hashlib.sha256(
     gate._load_revue().TEMPLATE.read_bytes()
 ).hexdigest()
+SOL_SDD_DIGEST = hashlib.sha256(b"").hexdigest()
 
 
 def _receipt():
@@ -89,6 +90,7 @@ def _receipt():
         "head_commit": "c" * 40,
         "head_tree": "d" * 40,
         "diff_digest": __import__("hashlib").sha256(b"").hexdigest(),
+        "sdd_diff_digest": SOL_SDD_DIGEST,
         "prompt_sha256": SHA,
         "template_sha256": SOL_TEMPLATE_SHA,
         "reviewers_attendus": ["deepseek", "gemini_flash", "mimo"],
@@ -117,6 +119,7 @@ def _make_sol_blind_gate_review(
                 "reviewer_model": "GPT-5.6-Sol",
                 "candidate_diff_digest": hashlib.sha256(b"").hexdigest(),
                 "diff_digest": hashlib.sha256(b"").hexdigest(),
+                "sdd_diff_digest": SOL_SDD_DIGEST,
                 "base_commit": "b" * 40,
                 "reviewed_head_commit": "c" * 40,
                 "reviewed_head_tree": "d" * 40,
@@ -135,6 +138,7 @@ def _make_sol_blind_gate_review(
         "story": gate._load_revue()._SOL_CANONICAL_STORY_ID,
         "candidate_diff_digest": hashlib.sha256(b"").hexdigest(),
         "diff_digest": hashlib.sha256(b"").hexdigest(),
+        "sdd_diff_digest": SOL_SDD_DIGEST,
         "base_commit": "b" * 40,
         "head_commit": "c" * 40,
         "head_tree": "d" * 40,
@@ -436,8 +440,9 @@ def test_mode_pr_historical_invalid_sol_binding_is_informational(tmp_path):
                 "candidate_diff_digest": hashlib.sha256(b"").hexdigest(),
                 "diff_digest": hashlib.sha256(b"").hexdigest(),
                 "base_commit": "a" * 40,
+                "sdd_diff_digest": SOL_SDD_DIGEST,
                 "reviewed_head_commit": "3" * 40,
-                "reviewed_head_tree": "4" * 40,
+                "reviewed_head_tree": "d" * 40,
                 "prompt_sha256": SOL_SHA,
                 "template_sha256": SOL_TEMPLATE_SHA,
                 "verdict": "APPROVE",
@@ -457,10 +462,11 @@ def test_mode_pr_historical_invalid_sol_binding_is_informational(tmp_path):
                 "candidate_diff_digest": hashlib.sha256(b"").hexdigest(),
                 "diff_digest": hashlib.sha256(b"").hexdigest(),
                 "base_commit": "a" * 40,
+                "sdd_diff_digest": SOL_SDD_DIGEST,
                 "head_commit": "c" * 40,
                 "head_tree": "d" * 40,
                 "reviewed_head_commit": "3" * 40,
-                "reviewed_head_tree": "4" * 40,
+                "reviewed_head_tree": "d" * 40,
                 "prompt_sha256": SOL_SHA,
                 "template_sha256": SOL_TEMPLATE_SHA,
                 "issue": 603,
@@ -495,6 +501,7 @@ def test_mode_pr_historical_invalid_sol_binding_is_informational(tmp_path):
                 "reviewed_head_commit": "c" * 40,
                 "reviewed_head_tree": "d" * 40,
                 "prompt_sha256": SOL_SHA,
+                "sdd_diff_digest": SOL_SDD_DIGEST,
                 "template_sha256": SOL_TEMPLATE_SHA,
                 "verdict": "APPROVE",
                 "blocking_findings": [],
@@ -541,6 +548,38 @@ def test_mode_pr_historical_invalid_sol_binding_is_informational(tmp_path):
     assert ok is True, report
     assert any("info  S-ancienne-sol" in line for line in report)
     assert any("reçu couvre le changement courant" in line for line in report)
+
+
+def test_mode_pr_historical_sol_tampering_is_blocking_even_with_current_receipt(tmp_path):
+    root = tmp_path / "reviews"
+    current = _make_sol_blind_gate_review(root)
+    current.rename(root / "S-current-sol")
+    current_receipt_path = root / "S-current-sol" / "RECU.json"
+    current_receipt = json.loads(current_receipt_path.read_text(encoding="utf-8"))
+    current_receipt["dossier"] = "S-current-sol"
+    current_receipt_path.write_text(json.dumps(current_receipt), encoding="utf-8")
+
+    historical = _make_sol_blind_gate_review(root)
+    historical_receipt_path = historical / "RECU.json"
+    historical_receipt = json.loads(historical_receipt_path.read_text(encoding="utf-8"))
+    historical_receipt["dossier"] = historical.name
+    historical_receipt["base_commit"] = "a" * 40
+    historical_receipt["sdd_diff_digest"] = "0" * 64
+    historical_receipt_path.write_text(json.dumps(historical_receipt), encoding="utf-8")
+
+    ok, report = gate.check(
+        _manifest(tmp_path, [historical.name, "S-current-sol"]),
+        root,
+        exiger_recu_courant=True,
+        base_ref="origin/main",
+        expected_issue=603,
+        runner=_runner,
+        now=SOL_NOW,
+    )
+
+    assert ok is False
+    assert any("intrinsèquement invalide" in line for line in report)
+    assert any("S-current-sol : reçu couvre" in line for line in report)
 
 
 def test_mode_pr_recu_invalide_rapporte_raison(tmp_path):

@@ -27,6 +27,7 @@ gate = _load("reviews_gate_round1", REPO / "scripts" / "reviews_gate.py")
 PROMPT_BYTES = b""
 PROMPT_SHA = ""
 DIFF_DIGEST = hashlib.sha256(b"").hexdigest()
+SDD_DIGEST = hashlib.sha256(b"").hexdigest()
 TEMPLATE_SHA = hashlib.sha256(revue.TEMPLATE.read_bytes()).hexdigest()
 BASE_CURRENT = "b" * 40
 BASE_HISTORICAL = "a" * 40
@@ -113,6 +114,7 @@ def _verdict(
         "reviewed_head_commit": reviewed_head_commit,
         "reviewed_head_tree": reviewed_head_tree,
         "prompt_sha256": prompt_sha256 or PROMPT_SHA,
+        "sdd_diff_digest": SDD_DIGEST,
         "template_sha256": TEMPLATE_SHA,
         "verdict": "APPROVE",
         "blocking_findings": [],
@@ -147,6 +149,7 @@ def _receipt(
         "candidate_diff_digest": candidate_diff_digest,
         "diff_digest": DIFF_DIGEST,
         "prompt_sha256": prompt_sha256 or PROMPT_SHA,
+        "sdd_diff_digest": SDD_DIGEST,
         "template_sha256": TEMPLATE_SHA,
         "reviewers_attendus": ["GPT-5.6-Sol"],
         "codeur": ["luna_writer"],
@@ -192,6 +195,7 @@ def test_sol_receipt_cannot_self_authenticate_git_metadata(tmp_path):
             "head_commit": CURRENT_HEAD,
             "head_tree": CURRENT_TREE,
             "diff_digest": DIFF_DIGEST,
+            "sdd_diff_digest": SDD_DIGEST,
         },
         review_dir=directory,
         runner=_runner,
@@ -217,6 +221,7 @@ def test_sol_receipt_prompt_hash_comes_from_stored_prompt_bytes(tmp_path):
             "head_commit": CURRENT_HEAD,
             "head_tree": CURRENT_TREE,
             "diff_digest": DIFF_DIGEST,
+            "sdd_diff_digest": SDD_DIGEST,
         },
         review_dir=directory,
         runner=_runner,
@@ -246,6 +251,7 @@ def test_sol_verifier_rebuilds_prompt_from_story_not_review_dossier(tmp_path):
             "head_commit": CURRENT_HEAD,
             "head_tree": CURRENT_TREE,
             "diff_digest": DIFF_DIGEST,
+            "sdd_diff_digest": SDD_DIGEST,
         },
         review_dir=directory,
         runner=_runner,
@@ -271,6 +277,7 @@ def test_cmd_recu_persists_story_separately_from_review_dossier(monkeypatch, tmp
             "head_commit": CURRENT_HEAD,
             "head_tree": CURRENT_TREE,
             "diff_digest": DIFF_DIGEST,
+            "sdd_diff_digest": SDD_DIGEST,
         },
     )
     monkeypatch.setattr(
@@ -316,6 +323,7 @@ def test_sol_tally_rejects_malformed_expected_hashes(field):
         "reviewed_head_commit": REVIEWED_HEAD,
         "reviewed_head_tree": REVIEWED_TREE,
         "prompt_sha256": PROMPT_SHA,
+        "sdd_diff_digest": SDD_DIGEST,
         "template_sha256": TEMPLATE_SHA,
         "reviewed_at": DATE,
     }
@@ -329,6 +337,12 @@ def test_sol_tally_rejects_malformed_expected_hashes(field):
 
 def test_current_gate_ignores_historical_sol_binding_when_current_sol_binding_is_valid(tmp_path):
     root = tmp_path / "reviews"
+    historical_prompt, historical_prompt_sha = revue._canonical_sol_prompt(
+        revue._SOL_CANONICAL_STORY_ID,
+        BASE_HISTORICAL,
+        HISTORICAL_HEAD,
+        runner=_runner,
+    )
     historical = _write_review(
         root,
         "S-historical-sol",
@@ -337,13 +351,16 @@ def test_current_gate_ignores_historical_sol_binding_when_current_sol_binding_is
             base_commit=BASE_HISTORICAL,
             reviewed_head_commit=HISTORICAL_HEAD,
             reviewed_head_tree=HISTORICAL_TREE,
+            prompt_sha256=historical_prompt_sha,
         ),
         _verdict(
             base_commit=BASE_HISTORICAL,
             reviewed_head_commit=HISTORICAL_HEAD,
             reviewed_head_tree=HISTORICAL_TREE,
+            prompt_sha256=historical_prompt_sha,
         ),
     )
+    (historical / "SOL-PROMPT.md").write_bytes(historical_prompt)
     _write_review(root, "S-current-sol", _receipt(dossier="S-current-sol"), _verdict())
 
     ok, report = gate.check(
@@ -373,6 +390,7 @@ def test_sol_prompt_rejects_artifact_not_generated_from_git_refs(monkeypatch, tm
             "head_commit": CURRENT_HEAD,
             "head_tree": CURRENT_TREE,
             "diff_digest": DIFF_DIGEST,
+            "sdd_diff_digest": SDD_DIGEST,
         },
     )
     monkeypatch.setattr(
@@ -410,6 +428,7 @@ def test_build_sol_prompt_cannot_pair_arbitrary_artifact_with_git_metadata(monke
             "head_commit": CURRENT_HEAD,
             "head_tree": CURRENT_TREE,
             "diff_digest": DIFF_DIGEST,
+            "sdd_diff_digest": SDD_DIGEST,
         },
     )
 

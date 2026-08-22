@@ -363,6 +363,40 @@ def _diff_artifact_canonique(
     )
 
 
+def _diff_sdd_canonique(
+    base_ref: str,
+    head_ref: str,
+    *,
+    runner: GitRunner | None = None,
+) -> str:
+    """Hash the excluded SDD coordination diff so its state remains receipt-bound."""
+    _validate_git_ref(base_ref)
+    _validate_git_ref(head_ref)
+    execute = _default_runner if runner is None else runner
+    raw = execute(
+        ["git", "diff", "--raw", "--no-renames", "--no-abbrev", "-z", f"{base_ref}...{head_ref}"]
+    )
+    fields = raw.split("\0")
+    entries: list[tuple[str, str, str, str]] = []
+    index = 0
+    while index + 1 < len(fields):
+        metadata = fields[index]
+        path = fields[index + 1]
+        index += 2
+        if not metadata or not path.startswith(".superpowers/sdd/"):
+            continue
+        parts = metadata.split()
+        if len(parts) != 5 or not parts[0].startswith(":"):
+            raise ValueError(f"sortie git --raw SDD invalide: {metadata!r}")
+        entries.append((parts[1], parts[2], parts[3], path))
+    entries.sort()
+    canonical = "".join(
+        f"{mode}\0{base_sha}\0{head_sha}\0{path}\n"
+        for mode, base_sha, head_sha, path in entries
+    )
+    return hashlib.sha256(canonical.encode("utf-8")).hexdigest()
+
+
 def _diff_canonique(
     base_ref: str,
     head_ref: str,
@@ -469,6 +503,7 @@ def _etat_git_reel(
         "head_commit": execute(["git", "rev-parse", head_ref]).strip(),
         "head_tree": execute(["git", "rev-parse", f"{head_ref}^{{tree}}"]).strip(),
         "diff_digest": _diff_canonique(base_ref, head_ref, runner=execute),
+        "sdd_diff_digest": _diff_sdd_canonique(base_ref, head_ref, runner=execute),
     }
 
 
@@ -519,6 +554,9 @@ def build_prompt(story_id: str, criteres: str, artefact_path: str, artefact: str
             "reviewed_head_commit": git_state["head_commit"],
             "reviewed_head_tree": git_state["head_tree"],
             "candidate_diff_digest": git_state["diff_digest"],
+            "sdd_diff_digest": _diff_sdd_canonique(
+                base_ref, head_ref, runner=runner
+            ),
             "template_sha256": template_sha256,
         }
         if expected is not None:
@@ -632,7 +670,7 @@ def _sol_prompt_metadata(prompt: bytes) -> dict:
         if field not in metadata:
             raise ValueError(f"métadonnée Git absente du prompt Sol : {field}")
         _validate_object_id(metadata[field], field)
-    for field in ("candidate_diff_digest", "template_sha256"):
+    for field in ("candidate_diff_digest", "sdd_diff_digest", "template_sha256"):
         if field not in metadata:
             raise ValueError(f"métadonnée Git absente du prompt Sol : {field}")
         _validate_digest(metadata[field], field)
@@ -870,7 +908,7 @@ def _sol_expected_from_git(
     required = (
         "story", "base_commit", "head_commit", "head_tree", "reviewed_head_commit",
         "reviewed_head_tree", "candidate_diff_digest", "diff_digest", "prompt_sha256",
-        "template_sha256", "reviewed_at",
+        "sdd_diff_digest", "template_sha256", "reviewed_at",
     )
     for field in required:
         if field not in recu:
@@ -878,7 +916,9 @@ def _sol_expected_from_git(
     _validate_sol_story_id(recu["story"], recu.get("issue"))
     for field in ("base_commit", "head_commit", "head_tree", "reviewed_head_commit", "reviewed_head_tree"):
         _validate_object_id(recu[field], field)
-    for field in ("candidate_diff_digest", "diff_digest", "prompt_sha256"):
+    for field in (
+        "candidate_diff_digest", "diff_digest", "sdd_diff_digest", "prompt_sha256"
+    ):
         _validate_digest(recu[field], field)
     execute = _default_runner if runner is None else runner
     base_commit = _resolve_commit(execute, recu["base_commit"])
@@ -896,6 +936,11 @@ def _sol_expected_from_git(
         raise ValueError("candidate_diff_digest différent du diff Git examiné")
     if recu["diff_digest"] != canonical_digest:
         raise ValueError("diff_digest différent du diff Git examiné")
+    canonical_sdd_digest = _diff_sdd_canonique(
+        base_commit, reviewed_head_commit, runner=execute
+    )
+    if recu["sdd_diff_digest"] != canonical_sdd_digest:
+        raise ValueError("sdd_diff_digest différent du journal SDD Git examiné")
     if len(verdicts) != 1 or not isinstance(verdicts[0], dict):
         raise ValueError("sol_blind exige exactement un verdict objet")
     canonical_prompt, canonical_prompt_sha = _canonical_sol_prompt(
@@ -931,10 +976,14 @@ def _sol_expected_from_git(
         current_head = _validate_object_id(etat_git.get("head_commit"), "head_commit courant")
         current_tree = _validate_object_id(etat_git.get("head_tree"), "head_tree courant")
         current_digest = _validate_digest(etat_git.get("diff_digest"), "diff_digest courant")
+        current_sdd_digest = _validate_digest(
+            etat_git.get("sdd_diff_digest"), "sdd_diff_digest courant"
+        )
         covers_current = (
             base_commit == current_base
             and canonical_digest == current_digest
             and recu["candidate_diff_digest"] == current_digest
+            and recu["sdd_diff_digest"] == current_sdd_digest
         )
         # current_head/current_tree are resolved by _etat_git_reel; retaining the explicit
         # shape checks here prevents a malformed injected state from becoming an expectation.
@@ -955,6 +1004,7 @@ def _sol_expected_from_git(
         "reviewed_head_commit": reviewed_head_commit,
         "reviewed_head_tree": reviewed_head_tree,
         "prompt_sha256": prompt_sha,
+        "sdd_diff_digest": canonical_sdd_digest,
         "template_sha256": template_sha,
         "reviewed_at": reviewed_at,
         "_covers_current": covers_current,
@@ -971,14 +1021,21 @@ def _sol_receipt_binding_matches_current(recu: object, etat_git: object) -> bool
         candidate_digest = _validate_digest(
             recu.get("candidate_diff_digest"), "candidate_diff_digest"
         )
+        receipt_sdd_digest = _validate_digest(
+            recu.get("sdd_diff_digest"), "sdd_diff_digest"
+        )
         current_base = _validate_object_id(etat_git.get("base_commit"), "base_commit courant")
         current_digest = _validate_digest(etat_git.get("diff_digest"), "diff_digest courant")
+        current_sdd_digest = _validate_digest(
+            etat_git.get("sdd_diff_digest"), "sdd_diff_digest courant"
+        )
     except ValueError:
         return False
     return (
         receipt_base == current_base
         and receipt_digest == current_digest
         and candidate_digest == current_digest
+        and receipt_sdd_digest == current_sdd_digest
     )
 
 
@@ -1058,7 +1115,8 @@ def tally_sol_blind(
         return {"result": "INVALIDE", "reason": "métadonnées attendues invalides"}
     expected_fields = (
         "candidate_diff_digest", "diff_digest", "base_commit", "reviewed_head_commit",
-        "reviewed_head_tree", "prompt_sha256", "template_sha256", "reviewed_at",
+        "reviewed_head_tree", "prompt_sha256", "sdd_diff_digest", "template_sha256",
+        "reviewed_at",
     )
     missing = [field for field in expected_fields if field not in expected]
     if missing:
@@ -1067,7 +1125,8 @@ def tally_sol_blind(
         for field in ("base_commit", "reviewed_head_commit", "reviewed_head_tree"):
             _validate_object_id(expected[field], field)
         for field in (
-            "candidate_diff_digest", "diff_digest", "prompt_sha256", "template_sha256"
+            "candidate_diff_digest", "diff_digest", "sdd_diff_digest", "prompt_sha256",
+            "template_sha256",
         ):
             _validate_digest(expected[field], field)
     except ValueError as error:
@@ -1081,13 +1140,13 @@ def tally_sol_blind(
         _validate_digest(verdict.get("candidate_diff_digest"), "candidate_diff_digest verdict")
         for field in ("base_commit", "reviewed_head_commit", "reviewed_head_tree"):
             _validate_object_id(verdict.get(field), f"{field} verdict")
-        for field in ("prompt_sha256", "template_sha256"):
+        for field in ("prompt_sha256", "sdd_diff_digest", "template_sha256"):
             _validate_digest(verdict.get(field), f"{field} verdict")
     except ValueError as error:
         return {"result": "INVALIDE", "reason": str(error)}
     for field in (
         "base_commit", "reviewed_head_commit", "reviewed_head_tree",
-        "prompt_sha256", "template_sha256",
+        "prompt_sha256", "sdd_diff_digest", "template_sha256",
     ):
         if verdict.get(field) != expected[field]:
             return {"result": "INVALIDE", "reason": f"{field} différent des métadonnées attendues"}
@@ -1105,6 +1164,7 @@ def tally_sol_blind(
         "vendors": ["openai"],
         "reviewer_model": reviewer_model,
         "prompt_sha256": expected["prompt_sha256"],
+        "sdd_diff_digest": expected["sdd_diff_digest"],
         "template_sha256": expected["template_sha256"],
         "reviewed_at": expected["reviewed_at"],
         "blocking_findings": [],
@@ -1263,7 +1323,8 @@ def _verifier_recu_sol_blind(
     required = (
         "schema", "mode", "story", "dossier", "issue", "round", "base_commit", "head_commit",
         "head_tree", "diff_digest", "candidate_diff_digest", "reviewed_head_commit",
-        "reviewed_head_tree", "prompt_sha256", "template_sha256", "reviewers_attendus",
+        "reviewed_head_tree", "prompt_sha256", "sdd_diff_digest", "template_sha256",
+        "reviewers_attendus",
         "codeur", "resultat",
         "reviewed_at", "verdict", "reviewer_model", "date_heure",
         "fenetre_heures", "blocking_findings",
@@ -1286,6 +1347,9 @@ def _verifier_recu_sol_blind(
     try:
         current_base = _validate_object_id(etat_git.get("base_commit"), "base_commit courant")
         current_digest = _validate_digest(etat_git.get("diff_digest"), "diff_digest courant")
+        current_sdd_digest = _validate_digest(
+            etat_git.get("sdd_diff_digest"), "sdd_diff_digest courant"
+        )
     except ValueError as error:
         return {"result": "INVALIDE", "reason": str(error)}
     if recu["base_commit"] != current_base:
@@ -1294,7 +1358,10 @@ def _verifier_recu_sol_blind(
         return {"result": "INVALIDE", "reason": "diff modifié après revue"}
     if recu["candidate_diff_digest"] != current_digest:
         return {"result": "INVALIDE", "reason": "candidate_diff_digest différent du diff courant"}
+    if recu["sdd_diff_digest"] != current_sdd_digest:
+        return {"result": "INVALIDE", "reason": "sdd_diff_digest différent du journal SDD courant"}
     try:
+        _validate_digest(recu["sdd_diff_digest"], "sdd_diff_digest")
         _validate_digest(recu["template_sha256"], "template_sha256")
     except ValueError as error:
         return {"result": "INVALIDE", "reason": str(error)}
@@ -1326,6 +1393,8 @@ def _verifier_recu_sol_blind(
         return {"result": "INVALIDE", "reason": "réponse contradictoire"}
     if recu["template_sha256"] != tally_result.get("template_sha256"):
         return {"result": "INVALIDE", "reason": "template_sha256 du reçu contradictoire"}
+    if recu["sdd_diff_digest"] != tally_result.get("sdd_diff_digest"):
+        return {"result": "INVALIDE", "reason": "sdd_diff_digest du reçu contradictoire"}
     if recu["resultat"] != tally_result["result"]:
         return {"result": "INVALIDE", "reason": "réponse contradictoire"}
     if recu["blocking_findings"] != []:
@@ -1364,7 +1433,8 @@ def _validate_sol_archive_receipt(
         "schema", "mode", "story", "dossier", "issue", "round", "base_commit",
         "head_commit", "head_tree", "candidate_diff_digest", "diff_digest",
         "reviewed_head_commit", "reviewed_head_tree", "prompt_sha256",
-        "template_sha256", "reviewers_attendus", "codeur", "resultat", "reviewed_at", "verdict",
+        "sdd_diff_digest", "template_sha256", "reviewers_attendus", "codeur", "resultat",
+        "reviewed_at", "verdict",
         "reviewer_model", "date_heure", "fenetre_heures", "blocking_findings",
     )
     for field in required:
@@ -1398,6 +1468,7 @@ def _validate_sol_archive_receipt(
             "verdict",
             "blocking_findings",
             "reviewed_at",
+            "sdd_diff_digest",
             "template_sha256",
         ):
             if recu[field] != verdict.get(field):
@@ -1424,7 +1495,10 @@ def _validate_sol_archive_receipt(
         _validate_object_id(recu.get(field), field)
     for field in ("base_commit", "head_commit", "reviewed_head_commit"):
         _resolve_commit(execute, recu[field])
-    for field in ("candidate_diff_digest", "diff_digest", "prompt_sha256", "template_sha256"):
+    for field in (
+        "candidate_diff_digest", "diff_digest", "sdd_diff_digest", "prompt_sha256",
+        "template_sha256",
+    ):
         _validate_digest(recu[field], field)
     for commit_field, tree_field in (
         ("head_commit", "head_tree"),
@@ -1533,6 +1607,7 @@ def _cmd_recu(args) -> int:
     mode = getattr(args, "mode", "multi_vendor")
     if mode == "sol_blind":
         template_sha256 = None
+        sdd_diff_digest = None
         story = getattr(args, "story", None)
         if not isinstance(story, str) or not story.strip():
             raise ValueError("--story est obligatoire avec --mode sol_blind")
@@ -1553,13 +1628,16 @@ def _cmd_recu(args) -> int:
         if len(verdicts) != 1:
             result = {"result": "INVALIDE", "reason": "sol_blind exige exactement 1 verdict"}
         elif prompt_sha is not None:
-            template_sha256 = _sol_prompt_metadata(canonical_prompt)["template_sha256"]
+            prompt_metadata = _sol_prompt_metadata(canonical_prompt)
+            template_sha256 = prompt_metadata["template_sha256"]
+            sdd_diff_digest = prompt_metadata["sdd_diff_digest"]
             expected = {
                 **etat,
                 "candidate_diff_digest": etat["diff_digest"],
                 "reviewed_head_commit": etat["head_commit"],
                 "reviewed_head_tree": etat["head_tree"],
                 "prompt_sha256": prompt_sha,
+                "sdd_diff_digest": sdd_diff_digest,
                 "template_sha256": template_sha256,
                 "reviewed_at": verdicts[0].get("reviewed_at"),
             }
@@ -1585,6 +1663,7 @@ def _cmd_recu(args) -> int:
             "verdict": reviewer.get("verdict"),
             "reviewer_model": reviewer.get("reviewer_model"),
             "template_sha256": template_sha256,
+            "sdd_diff_digest": sdd_diff_digest,
             "blocking_findings": reviewer.get("blocking_findings", []),
             "date_heure": datetime.now().astimezone().isoformat(),
             "fenetre_heures": args.fenetre_heures,

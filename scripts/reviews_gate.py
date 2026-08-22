@@ -253,6 +253,33 @@ def check(
             and exiger_recu_courant
             and not revue._sol_receipt_binding_matches_current(receipt, etat_git)
         )
+        historical_sol_valid = True
+        if historical_sol:
+            # A historical receipt may stop covering the current diff, but that status must not
+            # turn an intrinsically malformed/tampered receipt into informational noise. Validate
+            # its own immutable contract against the reviewed Git objects and stored prompt first;
+            # only the later current-state mismatch is exempted.
+            try:
+                revue._validate_sol_archive_receipt(
+                    receipt,
+                    execute,
+                    verdicts=verdicts,
+                    review_dir=directory,
+                )
+            except (
+                OSError,
+                json.JSONDecodeError,
+                KeyError,
+                TypeError,
+                ValueError,
+                subprocess.CalledProcessError,
+            ) as error:
+                historical_sol_valid = False
+                historical_sol = False
+                ok = False
+                report.append(
+                    f"ECHEC {entry} : preuve Sol historique intrinsèquement invalide = {error}"
+                )
         if receipt_mode not in ("multi_vendor", "sol_blind"):
             result = {"result": "INVALIDE", "reason": f"mode de reçu inconnu : {receipt_mode!r}"}
         elif receipt_mode == "sol_blind":
@@ -354,11 +381,18 @@ def check(
                 # bas via received_current). Régression #439/PR500 : le mode PR faisait
                 # échouer le gate sur CHAQUE reçu historique déjà mergé, bloquant toute PR
                 # future dès qu'une entrée liante antérieure portait un RECU.json.
-                report.append(
-                    f"info  {entry} : reçu invalide = {receipt_result.get('result')} "
-                    f"({receipt_result.get('reason', '')}) — ignoré si un autre reçu couvre "
-                    f"le changement courant"
-                )
+                if receipt_mode == "sol_blind" and not historical_sol_valid:
+                    ok = False
+                    report.append(
+                        f"ECHEC {entry} : reçu Sol historique intrinsèquement invalide = "
+                        f"{receipt_result.get('result')} ({receipt_result.get('reason', '')})"
+                    )
+                else:
+                    report.append(
+                        f"info  {entry} : reçu invalide = {receipt_result.get('result')} "
+                        f"({receipt_result.get('reason', '')}) — ignoré si un autre reçu couvre "
+                        f"le changement courant"
+                    )
 
         if mode == "archive" and receipt_path.is_file():
             reviewed_commit = None

@@ -277,6 +277,18 @@ def test_diff_canonique_exclut_sdd_review_history():
     )
 
 
+def test_diff_sdd_canonique_lie_le_journal_exclu_separement():
+    code = ":100644 100644 a b M\0src/a.py\0"
+    reviewed = code + ":100644 100644 d e M\0.superpowers/sdd/old-review.md\0"
+    empty_sdd = revue._diff_sdd_canonique("base", "HEAD", runner=lambda _: code)
+    changed_sdd = revue._diff_sdd_canonique("base", "HEAD", runner=lambda _: reviewed)
+
+    assert empty_sdd != changed_sdd
+    assert revue._diff_canonique("base", "HEAD", runner=lambda _: code) == revue._diff_canonique(
+        "base", "HEAD", runner=lambda _: reviewed
+    )
+
+
 def test_diff_canonique_exclut_path_classification_markdown():
     # Même motif que ci-dessus pour le rendu Markdown (les compteurs affichés varient pour la
     # même raison — sans cette exclusion, le cycle se rouvrirait via ce second fichier généré).

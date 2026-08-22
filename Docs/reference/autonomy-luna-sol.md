@@ -45,6 +45,9 @@ Le verdict doit contenir exactement les éléments de liaison utiles suivants :
 - `fresh_context: true`, `blind: true`, `reviewer_read_only: true`;
 - `reviewer_model: GPT-5.6-Sol` comme provider ID canonique exact, reconnu par le roster;
 - `candidate_diff_digest` égal au digest canonique du diff Git examiné;
+- `sdd_diff_digest` égal à un digest canonique séparé de tous les changements
+  `.superpowers/sdd/**` exclus de l’artefact aveugle; ces journaux ne sont pas
+  évalués comme code produit, mais leur état reste lié au verdict et au reçu;
 - `base_commit`, `reviewed_head_commit` et `reviewed_head_tree` égaux aux
   métadonnées Git attendues;
 - `prompt_sha256` égal au hash du prompt canonique livré à Sol;
@@ -60,8 +63,10 @@ rester dans la lignée ancestrale du head Git courant; les commits de scellement
 ajoutant le receipt restent donc permis sans comparaison circulaire exacte avec
 ce commit. Les artefacts de revue et les vues générées restent hors du digest
 canonique. Les journaux `.superpowers/sdd/`, qui peuvent contenir les résultats
-de revues antérieures, sont également hors du prompt et du digest Sol aveugles;
-ils restent disponibles pour l'audit de coordination.
+de revues antérieures, sont hors de l’artefact et du digest produit Sol aveugles;
+leur état est toutefois scellé par `sdd_diff_digest`, un digest séparé recopié
+dans le verdict et le reçu. Ils restent disponibles pour l’audit de coordination
+sans pouvoir changer silencieusement la preuve examinée.
 
 Le reçu porte aussi `story`, l'identifiant immuable utilisé pour reconstruire le
 prompt, séparément de `dossier`, qui désigne le répertoire des artefacts sous

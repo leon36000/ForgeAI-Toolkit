@@ -68,12 +68,14 @@ diff Git exact et identité Sol distincte du codeur.
 
 La liaison minimale du reçu exige `story` (distinct du `dossier` d'artefacts),
 `reviewer_model` exact `GPT-5.6-Sol`, `candidate_diff_digest`, `base_commit`,
-`reviewed_head_commit`, `reviewed_head_tree`, `prompt_sha256`, un `reviewed_at`
+`reviewed_head_commit`, `reviewed_head_tree`, `sdd_diff_digest`, `prompt_sha256`, un `reviewed_at`
 avec fuseau dans une fenêtre maximale de 24 heures, `verdict: APPROVE` et
 `blocking_findings: []`. Le `dossier` doit correspondre au répertoire de revue
 effectivement chargé.
 Le reviewer ne reçoit aucun verdict attendu. Le claim est revérifié par le
 gate contre Git courant; aucune preuve runtime ou externe n'est prétendue.
+Les journaux `.superpowers/sdd/**` sont exclus de l’artefact aveugle pour ne pas
+réinjecter d’anciens verdicts, mais restent liés par `sdd_diff_digest`.
 
 In `reviews_gate.py`, receipt-mode dispatch preserves `multi_vendor`'s historical 3/3 tally; active
 `sol_blind` requires exactly one `GPT-5.6-Sol` verdict.
