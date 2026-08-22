@@ -1,19 +1,17 @@
 # Story ORCH-LUNA-SOL-603 — Contrat autonome Luna/Sol
 
-Status: DONE_WITH_EVIDENCE — repository-native implementation, documentation,
-deterministic checks and fresh Sol evidence are recorded. No final runtime or
-external evidence is claimed.
+Status: IN_PROGRESS — overall story remains active. No final runtime or external
+evidence is claimed.
 
 Task 4 status: DONE_WITH_EVIDENCE — the repository documentation, ledgers,
 generated views and deterministic checks for this slice are complete.
 
-Task 5 status: DONE_WITH_EVIDENCE — one fresh blind read-only Sol verdict is
-bound to the exact final diff and receipt.
+Task 5 status: PENDING — final fresh Sol evidence remains pending.
 
 Checkpoint: Task 4 records the active policy, safe repository-native merge
 path, `max_active_writer_lanes: 2` and exactly two writer lanes, `sol_blind`
-binding, restart source of truth, T3 boundary and terminal states. Task 5 is
-complete with fresh exact-diff Sol evidence and a passing current review gate.
+binding, restart source of truth, T3 boundary and terminal states. Final fresh
+Sol evidence remains a Task 5 gate.
 
 ## Contexte et périmètre
 
@@ -50,19 +48,20 @@ current PR cannot be covered by a legacy `multi_vendor` receipt.
   views without manually maintained generated hashes.
 - [x] Focused documentation/generator tests machine-check the required prose,
   paths and terminal states; no test treats an unverified claim as evidence.
-- [x] Task 5 obtains and binds one fresh final `sol_blind` verdict over the
+- [ ] Task 5 obtains and binds one fresh final `sol_blind` verdict over the
   exact final diff, or records a concrete `BLOCKED_WITH_REASON`.
 
 ## Evidence plan and status discipline
 
 The Task 4 evidence is limited to repository files, append-only ledger output,
-generated views and deterministic checks. The final Sol review uses a fresh
-prompt over the exact final diff and is recorded separately. The status rule
-is: no final runtime or external evidence is claimed. Task 4 is
-`DONE_WITH_EVIDENCE` for this bounded repository/documentation slice, and Task
-5 is `DONE_WITH_EVIDENCE` because its exact final binding is recorded. Task 5
-may terminate only as `DONE_WITH_EVIDENCE` or `BLOCKED_WITH_REASON` with a
-concrete reason. These are the only terminal states.
+generated views and deterministic checks. The final Sol review, if obtained,
+must use a fresh prompt over the exact final diff and be recorded separately.
+The status rule is: no final runtime or external evidence is claimed. Task 4
+may be `DONE_WITH_EVIDENCE` only for this bounded repository/documentation
+slice. The overall story remains `IN_PROGRESS` while Task 5's final binding is
+pending; Task 5 may terminate only as `DONE_WITH_EVIDENCE` or
+`BLOCKED_WITH_REASON` with a concrete reason. These are the only terminal
+states.
 
 ## Safe verification path
 

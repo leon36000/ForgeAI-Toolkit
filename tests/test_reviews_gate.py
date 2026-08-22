@@ -286,6 +286,31 @@ def test_mode_archive_recu_malforme_echoue_proprement(tmp_path):
     assert ok is False and any("reçu archive illisible" in line for line in report)
 
 
+def test_mode_archive_recu_sol_commit_absent_echoue_proprement(tmp_path):
+    root = tmp_path / "reviews"
+    directory = _make_sol_blind_gate_review(root)
+    receipt_path = directory / "RECU.json"
+    receipt = json.loads(receipt_path.read_text(encoding="utf-8"))
+    missing_commit = "f" * 40
+    receipt["head_commit"] = missing_commit
+    receipt_path.write_text(json.dumps(receipt), encoding="utf-8")
+
+    def missing_commit_runner(command):
+        if command[:2] == ["git", "rev-parse"] and missing_commit in command[-1]:
+            raise subprocess.CalledProcessError(128, command)
+        return _runner(command)
+
+    ok, report = gate.check(
+        _manifest(tmp_path, [directory.name]),
+        root,
+        mode="archive",
+        runner=missing_commit_runner,
+    )
+
+    assert ok is False
+    assert any("reçu archive illisible" in line for line in report)
+
+
 def test_mode_archive_accepte_recu_ancetre_valide(tmp_path):
     root = tmp_path / "reviews"
     directory = _make_review(

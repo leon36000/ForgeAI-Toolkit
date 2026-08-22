@@ -378,7 +378,14 @@ def check(
                     # Legacy receipts retain their historical ref validation; only the Sol
                     # schema requires exact object IDs for every commit/tree field.
                     revue._validate_git_ref(commit)
-            except (OSError, json.JSONDecodeError, KeyError, ValueError, TypeError) as error:
+            except (
+                OSError,
+                json.JSONDecodeError,
+                KeyError,
+                ValueError,
+                TypeError,
+                subprocess.CalledProcessError,
+            ) as error:
                 # TypeError : RECU.json valide en JSON mais pas un objet (ex. liste/null) —
                 # receipt["head_commit"] lèverait sinon une exception non gérée (objection
                 # mineure round 3, DeepSeek-V4-Pro).

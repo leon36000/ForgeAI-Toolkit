@@ -129,9 +129,8 @@ Les seuls états terminaux sont :
   raison consignée et sans preuve inventée.
 
 Task 4 est `DONE_WITH_EVIDENCE` pour cette tranche documentaire et déterministe.
-Task 5 est `DONE_WITH_EVIDENCE` : un verdict Sol frais, aveugle et en lecture
-seule est lié au diff final exact, au receipt et au gate courant. Aucune preuve
-runtime ou externe finale n'est prétendue ici.
+Task 5 reste `PENDING` : final fresh Sol evidence remains pending, et aucune
+preuve runtime ou externe finale n'est prétendue ici.
 
 ## Vérifier
 

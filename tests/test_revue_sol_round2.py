@@ -465,6 +465,32 @@ def test_current_sol_verifier_rejects_excessive_window(tmp_path):
     assert "fenêtre" in result["reason"].lower() or "window" in result["reason"].lower()
 
 
+def test_current_sol_verifier_rejects_overflowing_window(tmp_path):
+    timestamp = "2000-01-01T00:00:00+00:00"
+    receipt = _receipt(
+        reviewed_at=timestamp,
+        date_heure=timestamp,
+        prompt_sha256=CANONICAL_SHA,
+    )
+    receipt["fenetre_heures"] = 10**1000
+    verdict = _verdict(reviewed_at=timestamp, prompt_sha256=CANONICAL_SHA)
+    directory = tmp_path / "S-sol"
+    directory.mkdir()
+    (directory / "SOL-PROMPT.md").write_bytes(CANONICAL_PROMPT)
+
+    result = revue.verifier_recu(
+        receipt,
+        [verdict],
+        _state(),
+        review_dir=directory,
+        runner=_runner,
+        now=NOW,
+    )
+
+    assert result["result"] == "INVALIDE"
+    assert "fenêtre" in result["reason"].lower() or "window" in result["reason"].lower()
+
+
 def test_current_sol_verifier_binds_dossier_to_review_directory(tmp_path):
     receipt = _receipt()
     receipt["dossier"] = "claimed-other-directory"

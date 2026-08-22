@@ -754,13 +754,17 @@ def _sol_window_hours(value: object, default: object) -> float:
     window = default if value is None else value
     if isinstance(window, bool) or not isinstance(window, (int, float)):
         raise ValueError("fenêtre Sol invalide")
+    try:
+        numeric_window = float(window)
+    except (OverflowError, ValueError) as error:
+        raise ValueError("fenêtre Sol invalide") from error
     if (
-        not math.isfinite(float(window))
-        or window < 0
-        or window > _SOL_MAX_WINDOW_HOURS
+        not math.isfinite(numeric_window)
+        or numeric_window < 0
+        or numeric_window > _SOL_MAX_WINDOW_HOURS
     ):
         raise ValueError("fenêtre Sol invalide")
-    return float(window)
+    return numeric_window
 
 
 def _validate_sol_freshness(

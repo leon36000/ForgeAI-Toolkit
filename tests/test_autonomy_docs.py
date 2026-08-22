@@ -218,14 +218,14 @@ def _assert_story_status(text: str) -> None:
         for declaration in declarations
         if declaration[0] == "task 5 status"
     ]
-    assert len(overall_declarations) == 1 and overall_declarations[0][1] == "DONE_WITH_EVIDENCE", (
-        "story must declare exactly one overall DONE_WITH_EVIDENCE status"
+    assert len(overall_declarations) == 1 and overall_declarations[0][1] == "IN_PROGRESS", (
+        "story must declare exactly one overall IN_PROGRESS status"
     )
     assert task4_declarations == [("task 4 status", "DONE_WITH_EVIDENCE")], (
         "story must declare exactly one Task 4 DONE_WITH_EVIDENCE status"
     )
-    assert task5_declarations == [("task 5 status", "DONE_WITH_EVIDENCE")], (
-        "story must declare exactly one Task 5 DONE_WITH_EVIDENCE status"
+    assert task5_declarations == [("task 5 status", "PENDING")], (
+        "story must declare exactly one Task 5 PENDING status"
     )
     assert not [
         declaration
@@ -236,20 +236,16 @@ def _assert_story_status(text: str) -> None:
         declaration
         for declaration in declarations
         if declaration[1] in TERMINAL_STATUS_VALUES
-    ] == [
-        ("status", "DONE_WITH_EVIDENCE"),
-        ("task 4 status", "DONE_WITH_EVIDENCE"),
-        ("task 5 status", "DONE_WITH_EVIDENCE"),
-    ], (
+    ] == [("task 4 status", "DONE_WITH_EVIDENCE")], (
         "story contains an extra terminal or complete declaration"
     )
     assert "Task 4 status: DONE_WITH_EVIDENCE" in text
-    assert "Task 5 status: DONE_WITH_EVIDENCE — one fresh blind read-only Sol verdict is" in text
+    assert "Task 5 status: PENDING — final fresh Sol evidence remains pending." in text
     assert "being synchronized" not in text
     assert "Checkpoint:" in text
     assert "## Critères d’acceptation" in text
     assert "- [x]" in text
-    assert "- [ ]" not in text
+    assert "- [ ]" in text
     assert "DONE_WITH_EVIDENCE" in text
     assert "BLOCKED_WITH_REASON" in text
     assert "no final runtime or external evidence is claimed" in text
@@ -477,7 +473,7 @@ def test_story_has_testable_acceptance_and_explicit_checkpoint_status():
     _assert_story_status(text)
 
     mutations = (
-        "Task 5 status: PENDING — final fresh Sol evidence remains pending.",
+        "Task 5 status: DONE_WITH_EVIDENCE — final evidence is complete.",
         "Overall status: DONE",
         "Terminal state: BLOCKED_WITH_REASON — final evidence is blocked.",
         "Terminal status: FAILED",
