@@ -352,7 +352,7 @@ def check(
                         # future-dated seal is never admissible against the real validation
                         # clock (SOL603-B03).
                         receipt_time = revue._aware_timestamp(receipt.get("date_heure"))
-                        if receipt_time > revue._validation_time(now) + revue._SOL_CLOCK_SKEW:
+                        if receipt_time > revue._validation_time(now):
                             raise ValueError("date_heure du reçu futur")
                     expected = revue._sol_expected_from_git(
                         receipt,

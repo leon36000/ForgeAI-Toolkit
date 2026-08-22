@@ -762,7 +762,8 @@ def test_mode_archive_rejette_date_future_avant_objets_git(tmp_path):
     directory = _make_sol_blind_gate_review(root)
     receipt_path = directory / "RECU.json"
     receipt = json.loads(receipt_path.read_text(encoding="utf-8"))
-    receipt["date_heure"] = "2099-01-01T00:00:00+00:00"
+    # One minute is enough: the archive seal has no clock-skew grace period.
+    receipt["date_heure"] = "2026-08-22T12:01:00+00:00"
     receipt["reviewed_at"] = receipt["date_heure"]
     receipt_path.write_text(json.dumps(receipt), encoding="utf-8")
     verdict_path = next(directory.glob("*.verdict.json"))
@@ -787,6 +788,34 @@ def test_mode_archive_rejette_date_future_avant_objets_git(tmp_path):
     assert ok is False
     assert any("date_heure du reçu futur" in line for line in report)
     assert not any(command[:3] == ["git", "rev-parse", "--verify"] for command in commands)
+
+
+def test_mode_pr_rejette_incoherence_verdict_avant_acces_git(tmp_path):
+    root = tmp_path / "reviews"
+    directory = _make_sol_blind_gate_review(root)
+    verdict_path = next(directory.glob("*.verdict.json"))
+    verdict = json.loads(verdict_path.read_text(encoding="utf-8"))
+    verdict["base_commit"] = "f" * 40
+    verdict_path.write_text(json.dumps(verdict), encoding="utf-8")
+    commands = []
+
+    def recording_runner(command):
+        commands.append(command)
+        return _runner(command)
+
+    ok, report = gate.check(
+        _manifest(tmp_path, [directory.name]),
+        root,
+        exiger_recu_courant=True,
+        base_ref="origin/main",
+        expected_issue=603,
+        runner=recording_runner,
+        now=SOL_NOW,
+    )
+
+    assert ok is False
+    assert any("base_commit du verdict différent" in line for line in report)
+    assert not any(command[:2] == ["git", "merge-base"] for command in commands)
 
 
 def test_mode_pr_rejette_recu_sol_incomplet_sans_acces_git(tmp_path):

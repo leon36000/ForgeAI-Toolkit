@@ -25,6 +25,8 @@ La fenêtre de fraîcheur est vérifiée entre la revue et le scellement; le mod
 l’horloge courante, tandis que l’archive ne fait pas expirer un reçu ancien déjà scellé.
 Une prétention de scellement future est refusée contre l’horloge de validation, et le mode PR
 ne résout l’état Git qu’après la validation locale du triplet reçu/prompt/verdict.
+Cette validation locale compare aussi les métadonnées d’empreinte répétées dans le verdict Sol
+au reçu avant toute résolution d’objet Git.
 
 Les limites T3 restent humaines : paiements, secrets de production,
 suppressions définitives et engagements externes. Les états terminaux sont

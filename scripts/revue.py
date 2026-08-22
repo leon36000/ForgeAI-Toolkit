@@ -431,6 +431,17 @@ def _sol_expected_from_receipt_shape(
         raise ValueError("reviewer_model du reçu différent du verdict Sol")
     if recu["verdict"] != verdict.get("verdict"):
         raise ValueError("verdict du reçu différent du verdict Sol")
+    # These fields are repeated in the signed-off verdict and must agree with the receipt
+    # before PR mode is allowed to resolve any Git object. `diff_digest` and the post-review
+    # sealing head are receipt-only fields; Sol's verdict contract intentionally binds the
+    # reviewed head and the canonical evidence digests listed here.
+    for field in (
+        "base_commit", "reviewed_head_commit", "reviewed_head_tree",
+        "candidate_diff_digest", "prompt_sha256", "sdd_diff_digest",
+        "mission_diff_digest", "template_sha256",
+    ):
+        if verdict.get(field) != recu[field]:
+            raise ValueError(f"{field} du verdict différent du reçu Sol")
     reviewers = recu["reviewers_attendus"]
     if not isinstance(reviewers, list) or len(reviewers) != 1:
         raise ValueError("nombre incorrect de reviewers Sol")
@@ -1741,7 +1752,7 @@ def _validate_sol_archive_receipt(
     receipt_time = _aware_timestamp(recu.get("date_heure"))
     if receipt_time is None:
         raise ValueError("date_heure Sol archive doit avoir un fuseau")
-    if receipt_time > _validation_time(now) + _SOL_CLOCK_SKEW:
+    if receipt_time > _validation_time(now):
         raise ValueError("date_heure du reçu futur")
     if verdicts is not None and review_dir is not None:
         _sol_expected_from_receipt_shape(
