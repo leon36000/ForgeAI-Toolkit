@@ -75,6 +75,9 @@ gate contre Git courant; aucune preuve runtime ou externe n'est prétendue.
 In `reviews_gate.py`, receipt-mode dispatch preserves `multi_vendor`'s historical 3/3 tally; active
 `sol_blind` requires exactly one `GPT-5.6-Sol` verdict.
 
+Issue tracking may cover at most four disjoint issues, but it is subordinate to the policy: never
+more than two active writer lanes.
+
 Le merge sûr est repository-native : reprendre depuis l'issue/PR GitHub, l'état
 Git et les registres vérifiés, exécuter les tests/gates, prolonger les registres
 avec `scripts/registre.py append`, vérifier avec `scripts/registre.py verify`,

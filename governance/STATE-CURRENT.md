@@ -186,7 +186,7 @@
     },
     {
       "path": "tests/test_autonomy_docs.py",
-      "sha256": "746bbd199597e7c60bcf53a44a9c592bfb8369a0e04277232a2129283bba042e"
+      "sha256": "a66f8f484710033e19fc75dc3a01b3ea93b2bb5a56df0e6128c2a9bcd153ea59"
     },
     {
       "path": "tests/test_autonomy_policy.py",
@@ -1023,7 +1023,7 @@
   "tests": {
     "js_files": 3,
     "python_files": 214,
-    "python_functions_declared": 2704
+    "python_functions_declared": 2705
   }
 }
 ```

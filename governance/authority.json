@@ -110,7 +110,7 @@
       ],
       "digest": {
         "policy": "content_sha256",
-        "value": "55407f868824e5dde35b57e39e3358c07ba6d6eddbb660fd036d143c6f0fbdf1",
+        "value": "e76b84ca2c6638ecb15328c46a8bdee2d53195596119cdee7e37af5f5832841d",
         "checked_at": "2026-08-22",
         "delegated_to": null
       },
@@ -176,7 +176,7 @@
       ],
       "digest": {
         "policy": "content_sha256",
-        "value": "05e3c89f5ba6579ef47befd02a49131d8760bec0deccff67734648c1442a3cbc",
+        "value": "4a30136d1737dcd23ec3a372ded1c79317b2123f559fcaee073f0af3444bcd1d",
         "checked_at": "2026-08-22",
         "delegated_to": null
       },

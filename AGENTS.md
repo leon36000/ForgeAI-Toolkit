@@ -140,8 +140,11 @@ traitement de chaque issue, selon le format exact :
 « Claim — session Claude Code (writer unique #NNN) ».
 Aucun fichier JSON de claims ne constitue le protocole de claim actif.
 
-Le parallélisme est limité à un maximum de 4 issues simultanées, uniquement sur des chemins de
-fichiers disjoints.
+Le parallélisme de suivi est limité à un maximum de 4 issues simultanées, uniquement sur des
+chemins de fichiers disjoints. Cette limite concerne le suivi de claims/branches, pas la capacité
+d'écriture : elle est subordonnée à la politique active.
+Issue tracking may cover at most four disjoint issues, but it is subordinate to the policy: never
+more than two active writer lanes.
 
 Les reviewers sont en lecture seule ; la revue aveugle scellée est définie à la règle 3.
 Nathan conserve les décisions T3, conformément à la règle 5.

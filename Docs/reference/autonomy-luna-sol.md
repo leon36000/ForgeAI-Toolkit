@@ -20,6 +20,8 @@ Le roster actif de `manifests/roles.yaml` contient :
 pour résoudre les anciens reçus. Le contrat autorise exactement
 `max_active_writer_lanes = 2`. Une lane d'écriture est possédée par un seul
 writer; les reviewers ne sont pas des writers et restent read-only.
+Issue tracking may cover at most four disjoint issues, but it is subordinate to the policy: never
+more than two active writer lanes.
 
 ## Mode `sol_blind`
 

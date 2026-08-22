@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import json
 import re
+from copy import deepcopy
 from pathlib import Path
 
 import pytest
@@ -18,6 +19,9 @@ REVIEWS_GATE = REPO / "scripts" / "reviews_gate.py"
 REVUE = REPO / "scripts" / "revue.py"
 
 
+EXPECTED_TERMINAL_STATES = ("DONE_WITH_EVIDENCE", "BLOCKED_WITH_REASON")
+
+
 LEGACY_SCOPE_SENTENCE = (
     "Historical `multi_vendor` doctrine only: the legacy 3/3 review and merge statements "
     "below remain unchanged."
@@ -25,6 +29,10 @@ LEGACY_SCOPE_SENTENCE = (
 DISPATCH_SENTENCE = (
     "In `reviews_gate.py`, receipt-mode dispatch preserves `multi_vendor`'s historical 3/3 "
     "tally; active `sol_blind` requires exactly one `GPT-5.6-Sol` verdict."
+)
+LANE_SCOPE_SENTENCE = (
+    "Issue tracking may cover at most four disjoint issues, but it is subordinate to the policy: "
+    "never more than two active writer lanes."
 )
 SOL_BINDING_FIELDS = (
     "fresh_context: true",
@@ -45,6 +53,21 @@ FORBIDDEN_WORKFLOW_MARKERS = (
     "force-push",
     "decode",
     "self-writing",
+)
+PERMISSIVE_WORKFLOW_PATTERNS = (
+    r"\bno workflow restriction applies\b",
+    r"contents:\s*write.{0,30}\b(?:is\s+)?(?:allowed|permitted|enabled|authori[sz]ed)\b",
+    r"force-push.{0,30}\b(?:is\s+)?(?:allowed|permitted|enabled|authori[sz]ed)\b",
+    r"decode.{0,40}\b(?:is\s+)?(?:allowed|permitted|enabled|authori[sz]ed)\b",
+    r"self-writing.{0,30}\b(?:is\s+)?(?:allowed|permitted|enabled|authori[sz]ed)\b",
+)
+ACTIVE_MULTI_VENDOR_MARKERS = (
+    "3/3",
+    "3-of-3",
+    "3 of 3",
+    "3 vendors",
+    "three vendor",
+    "three-vendor",
 )
 EXPECTED_CLASSIFICATIONS = {
     "Docs/reference/autonomy-luna-sol.md": {
@@ -67,6 +90,11 @@ EXPECTED_CLASSIFICATIONS = {
         "rule_id": "working-superpowers-sdd",
         "owner": "working-cockpit",
     },
+    ".superpowers/sdd/2026-08-22-autonomous-luna-sol/task-4-fix2-report.md": {
+        "class": "WORKING",
+        "rule_id": "working-superpowers-sdd",
+        "owner": "working-cockpit",
+    },
     "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md": {
         "class": "WORKING",
         "rule_id": "working-superpowers-docs",
@@ -77,6 +105,134 @@ EXPECTED_CLASSIFICATIONS = {
 
 def _contains_normalized(text: str, phrase: str) -> bool:
     return " ".join(phrase.split()) in " ".join(text.split())
+
+
+def _assert_mode_contract(text: str, label: str) -> None:
+    normalized = " ".join(text.split()).lower()
+    assert _contains_normalized(text, DISPATCH_SENTENCE), (
+        f"{label} omits the explicit receipt-mode contract"
+    )
+    assert re.search(r"historical.{0,80}multi_vendor|multi_vendor.{0,80}historical", normalized)
+    for clause in re.split(r"[.;\n]+", normalized):
+        if "sol_blind" in clause and any(marker in clause for marker in ACTIVE_MULTI_VENDOR_MARKERS):
+            raise AssertionError(
+                f"{label} applies a multi-vendor quorum to active sol_blind"
+            )
+
+
+def _assert_writer_lane_scope(text: str, label: str) -> None:
+    normalized = " ".join(text.split()).lower()
+    assert re.search(r"max_active_writer_lanes\s*[:=]\s*2", normalized), (
+        f"{label} omits the exact two-lane policy value"
+    )
+    assert _contains_normalized(text, LANE_SCOPE_SENTENCE), (
+        f"{label} does not subordinate issue tracking to the two-lane cap"
+    )
+    assert not re.search(
+        r"\b(?:up to|at most)\s+(?:four|4)\s+(?:active\s+)?writer lanes?\b",
+        normalized,
+    ), f"{label} permits four active writer lanes"
+
+
+def _assert_story_status(text: str) -> None:
+    overall_lines = [
+        line.strip()
+        for line in text.splitlines()
+        if re.match(r"(?i)^(?:status|overall status|story status|overall):", line.strip())
+    ]
+    assert overall_lines == [
+        "Status: IN_PROGRESS — overall story remains active. No final runtime or external"
+    ] or (
+        len(overall_lines) == 1
+        and overall_lines[0].startswith("Status: IN_PROGRESS — overall story remains active.")
+    ), "story has an ambiguous or terminal overall status"
+    assert "Task 4 status: DONE_WITH_EVIDENCE" in text
+    assert "Task 5 status: PENDING — final fresh Sol evidence remains pending." in text
+    assert not re.search(
+        r"(?im)^(?:overall status|story status|overall):.*\b(?:done|complete|completed)\b",
+        text,
+    )
+    assert "being synchronized" not in text
+    assert "Checkpoint:" in text
+    assert "## Critères d’acceptation" in text
+    assert "- [x]" in text
+    assert "- [ ]" in text
+    assert "DONE_WITH_EVIDENCE" in text
+    assert "BLOCKED_WITH_REASON" in text
+    assert "no final runtime or external evidence is claimed" in text
+
+
+def _assert_exact_policy(policy: dict) -> None:
+    assert policy == {
+        "schema": "autonomy-policy/1",
+        "decision": "D-2026-08-21-autonomie-luna-sol",
+        "worker": {
+            "primary_model": "GPT-5.6 Luna",
+            "max_active_writer_lanes": 2,
+        },
+        "review": {
+            "default_mode": "sol_blind",
+            "reviewer_model": "GPT-5.6 Sol",
+            "fresh_context": True,
+            "blind": True,
+            "reviewer_read_only": True,
+            "read_only": True,
+        },
+        "terminal_states": list(EXPECTED_TERMINAL_STATES),
+        "t3_limits": [
+            "payments",
+            "production_secrets",
+            "permanent_deletions",
+            "external_commitments",
+        ],
+    }
+
+
+def _assert_expected_classifications(manifest: dict) -> None:
+    entries = {entry["path"]: entry for entry in manifest["entries"]}
+    for path, expected in EXPECTED_CLASSIFICATIONS.items():
+        assert path in entries, f"path classification missing {path}"
+        for key, value in expected.items():
+            assert entries[path][key] == value, f"{path}: unexpected {key}"
+
+
+def _assert_authority_locators(authority: dict) -> None:
+    topic_markers = {
+        "orchestration_seat": ("claude", "opus"),
+        "workspace_confinement": ("repo", "dépôt", "external", "outillage"),
+        "plan_of_record": ("plan",),
+    }
+
+    for source in authority["sources"]:
+        for position in source.get("positions", []):
+            locator = position["locator"]
+            match = re.fullmatch(r"([^:]+):(\d+)(?:-(\d+))?", locator)
+            assert match, f"invalid locator in test fixture: {locator}"
+            relative_path, start, end = match.group(1), int(match.group(2)), match.group(3)
+            target = (REPO / relative_path).resolve()
+            assert target.is_relative_to(REPO.resolve())
+            lines = target.read_text(encoding="utf-8").splitlines()
+            excerpt = " ".join(lines[start - 1 : int(end) if end else start]).lower()
+            assert excerpt.strip(), f"empty authority locator: {locator}"
+            markers = topic_markers.get(position["topic"], ())
+            assert any(marker in excerpt for marker in markers), (
+                f"{locator} does not resolve to {position['topic']} doctrine"
+            )
+
+    agents_positions = next(
+        source for source in authority["sources"] if source["id"] == "agents-md"
+    )["positions"]
+    confinement = next(
+        position
+        for position in agents_positions
+        if position["topic"] == "workspace_confinement"
+    )
+    assert confinement["locator"] != "AGENTS.md:73-76"
+    match = re.fullmatch(r"([^:]+):(\d+)(?:-(\d+))?", confinement["locator"])
+    assert match
+    lines = (REPO / match.group(1)).read_text(encoding="utf-8").splitlines()
+    excerpt = " ".join(lines[int(match.group(2)) - 1 : int(match.group(3) or match.group(2))])
+    assert "Confinement au repo" in excerpt
 
 
 COMMON_MARKERS = (
@@ -121,9 +277,8 @@ def test_active_contract_is_documented_without_runtime_or_external_claims():
 
     for path in (REPO / "AGENTS.md", REPO / "CLAUDE.md", REFERENCE):
         text = path.read_text(encoding="utf-8")
-        assert _contains_normalized(text, DISPATCH_SENTENCE), (
-            f"{path.relative_to(REPO)} omits receipt dispatch"
-        )
+        _assert_mode_contract(text, str(path))
+        _assert_writer_lane_scope(text, str(path))
 
     for path in (REPO / "AGENTS.md", REPO / "CLAUDE.md"):
         text = path.read_text(encoding="utf-8")
@@ -146,6 +301,9 @@ def _assert_semantic_no_write_rule(text: str, label: str) -> None:
         assert negative_workflow, (
             f"{label} lists forbidden workflow markers without a prohibition"
         )
+        assert not any(
+            re.search(pattern, normalized) for pattern in PERMISSIVE_WORKFLOW_PATTERNS
+        ), f"{label} permits a forbidden workflow action"
         return
     raise AssertionError(f"{label} lacks one semantic no-write workflow rule")
 
@@ -158,33 +316,19 @@ def test_no_write_rule_is_semantic_and_rejects_marker_only_text():
         _assert_semantic_no_write_rule(
             "sol_blind contents: write force-push decode self-writing", "bad document"
         )
+    for mutation in (
+        "No workflow restriction applies: contents: write allowed; force-push permitted; "
+        "decode source allowed; self-writing allowed.",
+        "A workflow may receive contents: write; force-push is permitted; decode source "
+        "is allowed; self-writing is enabled.",
+    ):
+        with pytest.raises(AssertionError):
+            _assert_semantic_no_write_rule(mutation, "permissive mutation")
 
 
 def test_policy_values_and_sol_binding_fields_are_exact():
     policy = json.loads(POLICY.read_text(encoding="utf-8"))
-    assert policy == {
-        "schema": "autonomy-policy/1",
-        "decision": "D-2026-08-21-autonomie-luna-sol",
-        "worker": {
-            "primary_model": "GPT-5.6 Luna",
-            "max_active_writer_lanes": 2,
-        },
-        "review": {
-            "default_mode": "sol_blind",
-            "reviewer_model": "GPT-5.6 Sol",
-            "fresh_context": True,
-            "blind": True,
-            "reviewer_read_only": True,
-            "read_only": True,
-        },
-        "terminal_states": ["DONE_WITH_EVIDENCE", "BLOCKED_WITH_REASON"],
-        "t3_limits": [
-            "payments",
-            "production_secrets",
-            "permanent_deletions",
-            "external_commitments",
-        ],
-    }
+    _assert_exact_policy(policy)
 
     reference_text = REFERENCE.read_text(encoding="utf-8")
     for field in SOL_BINDING_FIELDS:
@@ -206,18 +350,10 @@ def test_reviews_gate_declares_receipt_dispatch_and_single_sol_verdict():
 
 def test_story_has_testable_acceptance_and_explicit_checkpoint_status():
     text = STORY.read_text(encoding="utf-8")
+    _assert_story_status(text)
 
-    assert "Status: IN_PROGRESS — overall story remains active." in text
-    assert "Task 4 status: DONE_WITH_EVIDENCE" in text
-    assert "Task 5 status: PENDING — final fresh Sol evidence remains pending." in text
-    assert "being synchronized" not in text
-    assert "Checkpoint:" in text
-    assert "## Critères d’acceptation" in text
-    assert "- [x]" in text
-    assert "- [ ]" in text
-    assert "DONE_WITH_EVIDENCE" in text
-    assert "BLOCKED_WITH_REASON" in text
-    assert "no final runtime or external evidence is claimed" in text
+    with pytest.raises(AssertionError):
+        _assert_story_status(text + "\nOverall status: COMPLETE\n")
 
 
 def test_policy_keeps_the_documented_terminal_contract():
@@ -226,10 +362,8 @@ def test_policy_keeps_the_documented_terminal_contract():
     assert policy["worker"]["max_active_writer_lanes"] == 2
     assert policy["review"]["default_mode"] == "sol_blind"
     assert policy["review"]["reviewer_read_only"] is True
-    assert policy["terminal_states"] == [
-        "DONE_WITH_EVIDENCE",
-        "BLOCKED_WITH_REASON",
-    ]
+    assert set(policy["terminal_states"]) == set(EXPECTED_TERMINAL_STATES)
+    assert len(policy["terminal_states"]) == len(EXPECTED_TERMINAL_STATES)
 
     for path in (REPO / "AGENTS.md", REPO / "CLAUDE.md", REFERENCE, STORY):
         text = path.read_text(encoding="utf-8")
@@ -239,51 +373,56 @@ def test_policy_keeps_the_documented_terminal_contract():
 
 def test_declared_authority_locators_resolve_to_doctrine_text():
     authority = json.loads(AUTHORITY.read_text(encoding="utf-8"))
-    topic_markers = {
-        "orchestration_seat": ("claude", "opus"),
-        "workspace_confinement": ("repo", "dépôt", "external", "outillage"),
-        "plan_of_record": ("plan",),
-    }
+    _assert_authority_locators(authority)
 
-    for source in authority["sources"]:
-        for position in source.get("positions", []):
-            locator = position["locator"]
-            match = re.fullmatch(r"([^:]+):(\d+)(?:-(\d+))?", locator)
-            assert match, f"invalid locator in test fixture: {locator}"
-            relative_path, start, end = match.group(1), int(match.group(2)), match.group(3)
-            target = (REPO / relative_path).resolve()
-            assert target.is_relative_to(REPO.resolve())
-            lines = target.read_text(encoding="utf-8").splitlines()
-            excerpt = " ".join(lines[start - 1 : int(end) if end else start]).lower()
-            assert excerpt.strip(), f"empty authority locator: {locator}"
-            markers = topic_markers.get(position["topic"], ())
-            assert any(marker in excerpt for marker in markers), (
-                f"{locator} does not resolve to {position['topic']} doctrine"
-            )
-
-    agents_positions = next(
-        source for source in authority["sources"] if source["id"] == "agents-md"
-    )["positions"]
-    confinement = next(
+    bad_authority = deepcopy(authority)
+    bad_position = next(
         position
-        for position in agents_positions
+        for source in bad_authority["sources"]
+        if source["id"] == "agents-md"
+        for position in source["positions"]
         if position["topic"] == "workspace_confinement"
     )
-    assert confinement["locator"] != "AGENTS.md:73-76"
-    match = re.fullmatch(r"([^:]+):(\d+)(?:-(\d+))?", confinement["locator"])
-    assert match
-    lines = (REPO / match.group(1)).read_text(encoding="utf-8").splitlines()
-    excerpt = " ".join(lines[int(match.group(2)) - 1 : int(match.group(3) or match.group(2))])
-    assert "Confinement au repo" in excerpt
+    bad_position["locator"] = "AGENTS.md:73-76"
+    with pytest.raises(AssertionError):
+        _assert_authority_locators(bad_authority)
 
 
 def test_changed_sdd_and_document_paths_keep_expected_classification_rules():
     manifest = json.loads(PATH_CLASSIFICATION.read_text(encoding="utf-8"))
-    entries = {entry["path"]: entry for entry in manifest["entries"]}
-    for path, expected in EXPECTED_CLASSIFICATIONS.items():
-        assert path in entries, f"path classification missing {path}"
-        for key, value in expected.items():
-            assert entries[path][key] == value, f"{path}: unexpected {key}"
+    _assert_expected_classifications(manifest)
+
+    bad_manifest = deepcopy(manifest)
+    bad_entry = next(
+        entry
+        for entry in bad_manifest["entries"]
+        if entry["path"] == "Docs/reference/autonomy-luna-sol.md"
+    )
+    bad_entry["rule_id"] = "governance-stories"
+    with pytest.raises(AssertionError):
+        _assert_expected_classifications(bad_manifest)
+
+
+def test_adversarial_mode_and_policy_mutations_fail_closed():
+    reference_text = REFERENCE.read_text(encoding="utf-8")
+    with pytest.raises(AssertionError):
+        _assert_mode_contract(
+            reference_text + "\nActive `sol_blind` uses 3 vendors and a 3-of-3 quorum.\n",
+            "active-mode mutation",
+        )
+
+    policy = json.loads(POLICY.read_text(encoding="utf-8"))
+    bad_policy = deepcopy(policy)
+    bad_policy["terminal_states"] = ["DONE_WITH_EVIDENCE", "BLOCKED_WITH_REASON", "DONE"]
+    with pytest.raises(AssertionError):
+        _assert_exact_policy(bad_policy)
+
+    with pytest.raises(AssertionError):
+        _assert_writer_lane_scope(
+            REFERENCE.read_text(encoding="utf-8")
+            + "\nAt most four active writer lanes are allowed.\n",
+            "writer-lane mutation",
+        )
 
 
 def test_generated_views_reference_the_task4_paths_and_contract_source():
@@ -308,4 +447,5 @@ def test_generated_views_reference_the_task4_paths_and_contract_source():
     assert "Docs/reference/autonomy-luna-sol.md" in classified
     assert "stories/ORCH-LUNA-SOL-603.md" in classified
     assert ".superpowers/sdd/2026-08-22-autonomous-luna-sol/task-4-fix1-report.md" in classified
+    assert ".superpowers/sdd/2026-08-22-autonomous-luna-sol/task-4-fix2-report.md" in classified
     assert "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md" in classified
