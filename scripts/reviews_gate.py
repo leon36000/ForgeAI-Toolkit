@@ -226,7 +226,31 @@ def check(
             report.append(f"ECHEC {entry} : verdict illisible : {error}")
             continue
 
-        result = revue.tally(verdicts)
+        receipt_path = directory / "RECU.json"
+        receipt = None
+        if receipt_path.is_file():
+            try:
+                receipt = json.loads(receipt_path.read_text(encoding="utf-8"))
+            except (OSError, json.JSONDecodeError) as error:
+                if exiger_recu_courant:
+                    ok = False
+                    report.append(f"ECHEC {entry} : reçu illisible : {error}")
+                    continue
+
+        receipt_mode = receipt.get("mode", "multi_vendor") if isinstance(receipt, dict) else "multi_vendor"
+        if receipt_mode not in ("multi_vendor", "sol_blind"):
+            result = {"result": "INVALIDE", "reason": f"mode de reçu inconnu : {receipt_mode!r}"}
+        elif receipt_mode == "sol_blind":
+            expected = (
+                revue._sol_expected_from_receipt(receipt, etat_git)
+                if etat_git is not None
+                else revue._sol_expected_from_receipt(receipt, receipt)
+            )
+            result = revue.tally_sol_blind(
+                verdicts, expected=expected, codeurs=receipt.get("codeur", [])
+            )
+        else:
+            result = revue.tally(verdicts)
         if result.get("result") != "APPROVE":
             ok = False
             report.append(
@@ -239,15 +263,7 @@ def check(
                 f"vendors {result.get('vendors')}"
             )
 
-        receipt_path = directory / "RECU.json"
-
         if exiger_recu_courant and receipt_path.is_file():
-            try:
-                receipt = json.loads(receipt_path.read_text(encoding="utf-8"))
-            except (OSError, json.JSONDecodeError) as error:
-                ok = False
-                report.append(f"ECHEC {entry} : reçu illisible : {error}")
-                continue
             receipt_result = revue.verifier_recu(receipt, verdicts, etat_git)
             if receipt_result.get("result") == "APPROVE":
                 if expected_issue is not None and (

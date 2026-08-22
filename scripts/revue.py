@@ -40,7 +40,7 @@ from typing import Callable
 
 _PLACEHOLDER = re.compile(r"\{(story_id|criteres|artefact_path|artefact)\}")
 _MEMBER_START = re.compile(r"^\s*-\s*id:\s*(\S+)\s*(?:#.*)?$")
-_MEMBER_FIELD = re.compile(r"^\s+(vendor|provider_id|modele):\s*(.+?)\s*(?:#.*)?$")
+_MEMBER_FIELD = re.compile(r"^\s+(vendor|provider_id|modele|statut):\s*(.+?)\s*(?:#.*)?$")
 # manifests/routes.yaml : mapping flow-style (une route par ligne) — membre/modele_reponse
 # toujours sur la 1ère ligne de l'entrée (une éventuelle "note:" continue sur la ligne
 # suivante, jamais capturée ici, pas pertinente pour l'identité vendor).
@@ -49,6 +49,7 @@ _NON_ALNUM = re.compile(r"[^a-z0-9]")
 
 REPO = Path(__file__).resolve().parent.parent
 TEMPLATE = REPO / "CANON" / "revue-template.md"
+AUTONOMY_POLICY = REPO / "governance" / "autonomy-policy.json"
 
 # _SEVERITY_RANK/_BLOCKING couvrent DEUX vocabulaires : les verdicts réels du dépôt écrivent
 # la clé française "severite" avec l'échelle mineure/majeure/critique, alors que le code
@@ -327,7 +328,8 @@ def _etat_git_reel(
 
 
 def build_prompt(story_id: str, criteres: str, artefact_path: str, artefact: str,
-                 template_path: Path = TEMPLATE) -> tuple[str, str]:
+                 template_path: Path = TEMPLATE, *, mode: str = "multi_vendor",
+                 expected: dict | None = None) -> tuple[str, str]:
     """Rend (prompt_exact, sha256). Le template est lu au canon ; aucun texte n'est ajouté."""
     tpl = template_path.read_text(encoding="utf-8")
     # On ne garde que le corps (après le commentaire HTML d'en-tête) pour le prompt envoyé.
@@ -342,12 +344,187 @@ def build_prompt(story_id: str, criteres: str, artefact_path: str, artefact: str
     # donc un champ contenant « {artefact} » ne peut pas injecter un autre champ. Corrige le
     # défaut d'injection croisée des .replace() chaînés (revue aveugle Qwen, criterion #4).
     prompt = _PLACEHOLDER.sub(lambda m: values[m.group(1)], tpl)
+    if mode == "sol_blind":
+        if not isinstance(expected, dict):
+            raise ValueError("expected requis pour le mode sol_blind")
+        metadata = {
+            "base_commit": expected.get("base_commit"),
+            "reviewed_head_commit": expected.get(
+                "reviewed_head_commit", expected.get("head_commit")
+            ),
+            "reviewed_head_tree": expected.get(
+                "reviewed_head_tree", expected.get("head_tree")
+            ),
+            "candidate_diff_digest": expected.get(
+                "candidate_diff_digest", expected.get("diff_digest")
+            ),
+        }
+        if any(value is None for value in metadata.values()):
+            raise ValueError("métadonnées Git incomplètes pour sol_blind")
+        prompt = (
+            "Tu es reviewer de code Sol. Analyse uniquement l'ARTEFACT ci-dessous dans "
+            "un contexte frais et en lecture seule.\n"
+            "Ne consulte aucun autre verdict et ne suppose aucun résultat attendu.\n\n"
+            f"STORY : {story_id}\n"
+            f"CRITÈRES D'ACCEPTATION :\n{criteres.strip()}\n\n"
+            f"ARTEFACT — {artefact_path} :\n{artefact}\n\n"
+            "MODE DE REVUE : sol_blind\n"
+            "MÉTADONNÉES GIT EXACTES (à recopier sans modification) :\n"
+            f"{json.dumps(metadata, ensure_ascii=False, sort_keys=True)}\n\n"
+            "Réponds STRICTEMENT avec un objet JSON valide, rien avant, rien après, "
+            "conforme à ce schéma :\n"
+        )
+        response_schema = {
+            "fresh_context": True,
+            "blind": True,
+            "reviewer_read_only": True,
+            "reviewer_model": "GPT-5.6-Sol",
+            **metadata,
+            "prompt_sha256": "sha256 du prompt reçu",
+            "verdict": "APPROVE ou REJECT",
+            "blocking_findings": [],
+            "reviewed_at": "timestamp ISO-8601 avec fuseau",
+        }
+        prompt += json.dumps(response_schema, ensure_ascii=False, sort_keys=True)
+    elif mode != "multi_vendor":
+        raise ValueError(f"mode de revue inconnu : {mode!r}")
     return prompt, hashlib.sha256(prompt.encode("utf-8")).hexdigest()
 
 
 def _severity(objection: dict) -> str:
     """Sévérité normalisée d'une objection — accepte les clés française ET anglaise."""
     return str(objection.get("severite") or objection.get("severity") or "faible").lower()
+
+
+def load_autonomy_policy(path: Path = AUTONOMY_POLICY) -> dict:
+    """Charge et valide le contrat d'autonomie utilisé par les chemins de production."""
+    try:
+        policy = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as error:
+        raise ValueError(f"politique d'autonomie illisible : {path}") from error
+    if not isinstance(policy, dict):
+        raise ValueError("politique d'autonomie invalide")
+    worker = policy.get("worker")
+    if not isinstance(worker, dict):
+        raise ValueError("politique d'autonomie: worker manquant")
+    lanes = worker.get("max_active_writer_lanes")
+    if isinstance(lanes, bool) or not isinstance(lanes, int) or lanes not in (1, 2):
+        raise ValueError("max_active_writer_lanes doit être compris entre 1 et 2")
+    return policy
+
+
+def _sol_aliases(table: dict[str, str] | None) -> set[str] | None:
+    """Retourne les alias du Sol actif, ou None si son identité n'est pas vérifiable."""
+    if table is None:
+        return None
+    expected_provider = _normalize("GPT-5.6-Sol")
+    if table.get(_normalize("sol")) != "openai" or table.get(expected_provider) != "openai":
+        return None
+    roles = _load_roles_yaml(REPO / "manifests" / "roles.yaml")
+    active_sol = next(
+        (
+            member
+            for member in roles
+            if _normalize(str(member.get("id", ""))) == _normalize("sol")
+            and str(member.get("statut", "")).strip().lower() == "actif"
+        ),
+        None,
+    )
+    if active_sol is None:
+        return None
+    aliases = {
+        _normalize("sol"),
+        _normalize("GPT-5.6-Sol"),
+        _normalize(active_sol.get("id", "")),
+        _normalize(active_sol.get("provider_id", "")),
+        _normalize(active_sol.get("modele", "")),
+    }
+    aliases.discard("")
+    return aliases
+
+
+def _aware_timestamp(value: object) -> datetime | None:
+    if not isinstance(value, str):
+        return None
+    try:
+        timestamp = datetime.fromisoformat(value)
+    except ValueError:
+        return None
+    if timestamp.tzinfo is None or timestamp.utcoffset() is None:
+        return None
+    return timestamp
+
+
+def tally_sol_blind(verdicts: list[dict], expected: dict, codeurs: list[str]) -> dict:
+    """Dépouille strictement l'unique verdict frais du reviewer Sol."""
+    if not isinstance(verdicts, list) or len(verdicts) != 1:
+        count = len(verdicts) if isinstance(verdicts, list) else "invalide"
+        return {"result": "INVALIDE", "reason": f"sol_blind exige exactement 1 verdict (reçu: {count})"}
+    verdict = verdicts[0]
+    if not isinstance(verdict, dict):
+        return {"result": "INVALIDE", "reason": "verdict Sol invalide"}
+    try:
+        load_autonomy_policy()
+    except ValueError as error:
+        return {"result": "INVALIDE", "reason": str(error)}
+
+    table = _vendor_table()
+    sol_aliases = _sol_aliases(table)
+    if sol_aliases is None:
+        return {
+            "result": "INVALIDE",
+            "reason": "identité Sol active absente du roster ou non vérifiable",
+        }
+    reviewer_model = verdict.get("reviewer_model")
+    if not isinstance(reviewer_model, str) or _normalize(reviewer_model) not in sol_aliases:
+        return {"result": "INVALIDE", "reason": "reviewer_model n'est pas l'identité Sol"}
+    if "vendor" in verdict and vendor_of(str(verdict.get("vendor", "")), table) != "openai":
+        return {"result": "INVALIDE", "reason": "vendor du reviewer n'est pas Sol/openai"}
+
+    if not isinstance(codeurs, list) or not codeurs:
+        return {"result": "INVALIDE", "reason": "codeur requis pour sol_blind"}
+    for codeur in codeurs:
+        if not isinstance(codeur, str):
+            return {"result": "INVALIDE", "reason": f"codeur invalide : {codeur!r}"}
+        if _normalize(codeur) in sol_aliases:
+            return {"result": "INVALIDE", "reason": "le codeur ne peut pas être Sol"}
+
+    for field in ("fresh_context", "blind", "reviewer_read_only"):
+        if verdict.get(field) is not True:
+            return {"result": "INVALIDE", "reason": f"{field} doit être true"}
+
+    if not isinstance(expected, dict):
+        return {"result": "INVALIDE", "reason": "métadonnées attendues invalides"}
+    expected_fields = (
+        "candidate_diff_digest", "base_commit", "reviewed_head_commit",
+        "reviewed_head_tree", "prompt_sha256", "reviewed_at",
+    )
+    missing = [field for field in expected_fields if field not in expected]
+    if missing:
+        return {"result": "INVALIDE", "reason": f"métadonnées attendues absentes : {missing[0]}"}
+    expected_digest = expected["candidate_diff_digest"]
+    if verdict.get("candidate_diff_digest") != expected_digest:
+        return {"result": "INVALIDE", "reason": "candidate_diff_digest différent du diff attendu"}
+    for field in ("base_commit", "reviewed_head_commit", "reviewed_head_tree", "prompt_sha256"):
+        if verdict.get(field) != expected[field]:
+            return {"result": "INVALIDE", "reason": f"{field} différent des métadonnées attendues"}
+    if verdict.get("reviewed_at") != expected["reviewed_at"]:
+        return {"result": "INVALIDE", "reason": "reviewed_at différent ou non frais"}
+    if _aware_timestamp(verdict.get("reviewed_at")) is None:
+        return {"result": "INVALIDE", "reason": "reviewed_at doit être un timestamp avec fuseau"}
+    if verdict.get("verdict") != "APPROVE":
+        return {"result": "REJECT", "reason": "verdict Sol différent de APPROVE"}
+    if verdict.get("blocking_findings") != []:
+        return {"result": "REJECT", "reason": "blocking_findings non vide"}
+    return {
+        "result": "APPROVE",
+        "reason": "Sol APPROVE sur le diff exact",
+        "vendors": ["openai"],
+        "reviewer_model": reviewer_model,
+        "prompt_sha256": expected["prompt_sha256"],
+        "reviewed_at": expected["reviewed_at"],
+        "blocking_findings": [],
+    }
 
 
 def tally(verdicts: list[dict]) -> dict:
@@ -392,7 +569,7 @@ def tally(verdicts: list[dict]) -> dict:
             "objections": objections, "bloquantes": bloquantes}
 
 
-def verifier_recu(
+def _verifier_recu_multi_vendor(
     recu: dict,
     verdicts: list[dict],
     etat_git: dict,
@@ -489,10 +666,104 @@ def verifier_recu(
     }
 
 
+def _sol_expected_from_receipt(recu: dict, etat_git: dict) -> dict:
+    return {
+        "candidate_diff_digest": etat_git.get(
+            "candidate_diff_digest", etat_git.get("diff_digest")
+        ),
+        "base_commit": etat_git.get("base_commit"),
+        "reviewed_head_commit": etat_git.get(
+            "reviewed_head_commit", recu.get("reviewed_head_commit")
+        ),
+        "reviewed_head_tree": etat_git.get(
+            "reviewed_head_tree", recu.get("reviewed_head_tree")
+        ),
+        "prompt_sha256": etat_git.get("prompt_sha256", recu.get("prompt_sha256")),
+        "reviewed_at": etat_git.get("reviewed_at", recu.get("reviewed_at")),
+    }
+
+
+def _verifier_recu_sol_blind(recu: dict, verdicts: list[dict], etat_git: dict) -> dict:
+    required = (
+        "schema", "mode", "dossier", "issue", "round", "base_commit", "head_commit",
+        "head_tree", "diff_digest", "candidate_diff_digest", "reviewed_head_commit",
+        "reviewed_head_tree", "prompt_sha256", "reviewers_attendus", "codeur", "resultat",
+        "reviewed_at", "date_heure", "fenetre_heures",
+    )
+    if not isinstance(recu, dict):
+        return {"result": "INVALIDE", "reason": "données absentes : reçu"}
+    for key in required:
+        if key not in recu:
+            return {"result": "INVALIDE", "reason": f"données absentes : {key}"}
+    if recu.get("mode") != "sol_blind":
+        return {"result": "INVALIDE", "reason": "mode de reçu inconnu"}
+    if recu["base_commit"] != etat_git.get("base_commit"):
+        return {"result": "INVALIDE", "reason": "reçu lié à un autre commit"}
+    expected_digest = etat_git.get("candidate_diff_digest", etat_git.get("diff_digest"))
+    if recu["diff_digest"] != etat_git.get("diff_digest"):
+        return {"result": "INVALIDE", "reason": "diff modifié après revue"}
+    if recu["candidate_diff_digest"] != expected_digest:
+        return {"result": "INVALIDE", "reason": "candidate_diff_digest différent du diff courant"}
+    if _aware_timestamp(recu.get("reviewed_at")) is None:
+        return {"result": "INVALIDE", "reason": "reviewed_at doit être un timestamp avec fuseau"}
+
+    tally_result = tally_sol_blind(
+        verdicts,
+        expected=_sol_expected_from_receipt(recu, etat_git),
+        codeurs=recu["codeur"],
+    )
+    if tally_result["result"] != "APPROVE":
+        return {"result": tally_result["result"], "reason": tally_result["reason"]}
+    if recu["prompt_sha256"] != tally_result.get("prompt_sha256"):
+        return {"result": "INVALIDE", "reason": "réponse contradictoire"}
+    if recu["resultat"] != tally_result["result"]:
+        return {"result": "INVALIDE", "reason": "réponse contradictoire"}
+    reviewers = recu["reviewers_attendus"]
+    if not isinstance(reviewers, list) or len(reviewers) != 1:
+        return {"result": "INVALIDE", "reason": "nombre incorrect de reviewers Sol"}
+    reviewer_model = verdicts[0].get("reviewer_model") if verdicts else None
+    if reviewers != [reviewer_model]:
+        return {"result": "INVALIDE", "reason": "identité reviewer contradictoire"}
+    return {
+        **tally_result,
+        "result": "APPROVE",
+        "reason": f"reçu Sol valide, lié au commit {etat_git.get('head_commit')}",
+    }
+
+
+def verifier_recu(
+    recu: dict,
+    verdicts: list[dict],
+    etat_git: dict,
+    *,
+    fenetre_heures_defaut: int = 24,
+) -> dict:
+    """Dispatch le mode explicite; les reçus sans mode restent multi-vendor."""
+    if isinstance(recu, dict):
+        mode = recu.get("mode", "multi_vendor")
+        if mode == "sol_blind":
+            return _verifier_recu_sol_blind(recu, verdicts, etat_git)
+        if mode not in ("multi_vendor", "sol_blind"):
+            return {"result": "INVALIDE", "reason": f"mode de reçu inconnu : {mode!r}"}
+    return _verifier_recu_multi_vendor(
+        recu, verdicts, etat_git, fenetre_heures_defaut=fenetre_heures_defaut
+    )
+
+
 def _cmd_prompt(args) -> int:
     artefact = Path(args.artefact).read_text(encoding="utf-8")
     criteres = Path(args.criteres).read_text(encoding="utf-8") if args.criteres else "(voir story)"
-    prompt, sha = build_prompt(args.story, criteres, args.artefact, artefact)
+    mode = getattr(args, "mode", "multi_vendor")
+    expected = None
+    if mode == "sol_blind":
+        base_ref = getattr(args, "base_ref", None)
+        if not base_ref:
+            raise ValueError("--base-ref est obligatoire avec --mode sol_blind")
+        expected = _etat_git_reel(base_ref, getattr(args, "head_ref", "HEAD"))
+        expected["candidate_diff_digest"] = expected["diff_digest"]
+    prompt, sha = build_prompt(
+        args.story, criteres, args.artefact, artefact, mode=mode, expected=expected
+    )
     if args.out:
         Path(args.out).write_text(prompt, encoding="utf-8")
     else:
@@ -516,24 +787,62 @@ def _cmd_recu(args) -> int:
         json.loads(path.read_text(encoding="utf-8"))
         for path in sorted(dossier.glob("*.verdict.json"))
     ]
-    result = tally(verdicts)
     etat = _etat_git_reel(args.base_ref, args.head_ref)
-    recu = {
-        "schema": "recu-revue/1",
-        "dossier": args.dossier,
-        "issue": args.issue,
-        "round": args.round,
-        "replanned": getattr(args, "replanned", False),
-        **etat,
-        "prompt_sha256": result.get("prompt_sha256"),
-        "reviewers_attendus": [
-            v.get("vendor") or v.get("reviewer_model", "") for v in verdicts
-        ],
-        "codeur": args.codeur,
-        "resultat": result["result"],
-        "date_heure": datetime.now().astimezone().isoformat(),
-        "fenetre_heures": args.fenetre_heures,
-    }
+    mode = getattr(args, "mode", "multi_vendor")
+    if mode == "sol_blind":
+        if len(verdicts) != 1:
+            result = {"result": "INVALIDE", "reason": "sol_blind exige exactement 1 verdict"}
+        else:
+            expected = {
+                **etat,
+                "candidate_diff_digest": etat["diff_digest"],
+                "reviewed_head_commit": etat["head_commit"],
+                "reviewed_head_tree": etat["head_tree"],
+                "prompt_sha256": verdicts[0].get("prompt_sha256"),
+                "reviewed_at": verdicts[0].get("reviewed_at"),
+            }
+            result = tally_sol_blind(verdicts, expected=expected, codeurs=args.codeur)
+        reviewer = verdicts[0] if len(verdicts) == 1 else {}
+        recu = {
+            "schema": "recu-revue/2",
+            "mode": "sol_blind",
+            "dossier": args.dossier,
+            "issue": args.issue,
+            "round": args.round,
+            "replanned": getattr(args, "replanned", False),
+            **etat,
+            "candidate_diff_digest": etat["diff_digest"],
+            "reviewed_head_commit": etat["head_commit"],
+            "reviewed_head_tree": etat["head_tree"],
+            "prompt_sha256": result.get("prompt_sha256"),
+            "reviewers_attendus": [reviewer.get("reviewer_model", "")],
+            "codeur": args.codeur,
+            "resultat": result["result"],
+            "reviewed_at": reviewer.get("reviewed_at"),
+            "verdict": reviewer.get("verdict"),
+            "reviewer_model": reviewer.get("reviewer_model"),
+            "blocking_findings": reviewer.get("blocking_findings", []),
+            "date_heure": datetime.now().astimezone().isoformat(),
+            "fenetre_heures": args.fenetre_heures,
+        }
+    else:
+        result = tally(verdicts)
+        recu = {
+            "schema": "recu-revue/1",
+            "dossier": args.dossier,
+            "issue": args.issue,
+            "round": args.round,
+            "replanned": getattr(args, "replanned", False),
+            **etat,
+            "prompt_sha256": result.get("prompt_sha256"),
+            "reviewers_attendus": [
+                v.get("vendor") or v.get("reviewer_model", "") for v in verdicts
+            ],
+            "codeur": args.codeur,
+            "resultat": result["result"],
+            "date_heure": datetime.now().astimezone().isoformat(),
+            "fenetre_heures": args.fenetre_heures,
+        }
     content = json.dumps(recu, ensure_ascii=False, indent=2)
     if args.out:
         Path(args.out).write_text(content + "\n", encoding="utf-8")
@@ -556,6 +865,9 @@ def main() -> None:
     pp.add_argument("--artefact", required=True)
     pp.add_argument("--story", required=True)
     pp.add_argument("--criteres", default=None)
+    pp.add_argument("--mode", choices=("multi_vendor", "sol_blind"), default="multi_vendor")
+    pp.add_argument("--base-ref", default=None)
+    pp.add_argument("--head-ref", default="HEAD")
     pp.add_argument("--out", default=None)
     pp.set_defaults(func=_cmd_prompt)
 
@@ -569,6 +881,7 @@ def main() -> None:
     pr.add_argument("--head-ref", default="HEAD")
     pr.add_argument("--issue", required=True, type=int)
     pr.add_argument("--round", required=True, type=int)
+    pr.add_argument("--mode", choices=("multi_vendor", "sol_blind"), default="multi_vendor")
     pr.add_argument("--replanned", action="store_true")
     # OBLIGATOIRE (≥1) : un --codeur silencieusement optionnel (défaut []) permettait de
     # contourner l'anti-auto-review par simple omission (revue scellée RC1-004-PR497,
