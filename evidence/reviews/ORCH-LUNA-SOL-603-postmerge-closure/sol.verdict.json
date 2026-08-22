@@ -1,0 +1,20 @@
+{
+  "fresh_context": true,
+  "blind": true,
+  "reviewer_read_only": true,
+  "reviewer_model": "GPT-5.6-Sol",
+  "base_commit": "06f50825b7f2dc0c632859749f7a065d5c082f3f",
+  "reviewed_head_commit": "544d8304da3fb3617e2ab5d38e942a10018a1425",
+  "reviewed_head_tree": "5da9061b8e2b091002d98d878ad082d143c95bfd",
+  "candidate_diff_digest": "5bc682bd909a3a5f6859f0ae06bc43ba4c096bebf1a9761e7c27cc475498c87f",
+  "artifact_sha256": "047c06b6620e91bcba5f8f7b5f5d290f308086b4cf3c40237225170bb44fdb32",
+  "sdd_diff_digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "mission_diff_digest": "5d39266207902743fc01444cf5382b871dedac090a12e0d2312e9cd1a18ae29e",
+  "template_sha256": "a5bebc60556f4fc38d6ca96a3d0372577550f23157377af4d852e6144e25f137",
+  "prompt_sha256": "f5458a80e66f455baade8a06916e737613d8d0cb0a1134c39c4f06cc499807cb",
+  "verdict": "REJECT",
+  "blocking_findings": [
+    "Le prompt ne présentait ni sortie du gate archive post-merge ni transaction de registre vérifiable; les seules affirmations documentaires ne suffisaient pas à justifier DONE_WITH_EVIDENCE."
+  ],
+  "reviewed_at": "2026-08-22T19:16:32-04:00"
+}
