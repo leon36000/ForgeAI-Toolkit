@@ -1,7 +1,7 @@
 # Story ORCH-LUNA-SOL-603 — contrat autonome Luna/Sol
 
-Status: IN_PROGRESS — implémentation finale prête; scellement de la preuve Sol
-et passage à l’état terminal après la revue aveugle.
+Status: DONE_WITH_EVIDENCE — preuve Sol scellée, gates CI passés et archive
+post-merge vérifiée sur `main`.
 
 ## Contexte et périmètre
 
@@ -21,10 +21,10 @@ les archives uniquement.
 - [x] La documentation, les registres, les vues et le test de non-régression du
   gate archive sont prêts. Le contrôle de l’archive de preuve est effectué par
   `reviews_gate.py`, séparément du diff canonique présenté au reviewer Sol.
-- [ ] Le reçu Sol final est scellé dans
-  `evidence/reviews/ORCH-LUNA-SOL-603-final-seal/RECU.json`, lié au manifeste
-  actif, puis le gate PR et le gate archive sur `main` fusionné passent.
-- [ ] La story passe à `DONE_WITH_EVIDENCE` uniquement après ces preuves;
+- [x] Le reçu Sol courant est scellé dans
+  `evidence/reviews/ORCH-LUNA-SOL-603-final-seal-r3/RECU.json`, lié au manifeste
+  actif; le gate PR, les gates CI et le gate archive sur `main` fusionné passent.
+- [x] La story passe à `DONE_WITH_EVIDENCE` uniquement après ces preuves;
   aucune réussite runtime, matérielle, réseau ou externe n’est revendiquée.
 
 ## Limites
