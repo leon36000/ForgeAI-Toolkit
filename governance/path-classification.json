@@ -1577,8 +1577,8 @@
         }
       ],
       "rule_id": "working-superpowers-sdd",
-      "sha256": "d2b95ca0e08b42cc93b361dd0c26b3a536af367997966f8951d36741312da790",
-      "size": 9015,
+      "sha256": "c238920c8fec7580013245fb821ea72695188ddb39904fadb78495707f69ca21",
+      "size": 9315,
       "target_path": null,
       "type": "text"
     },
@@ -64473,43 +64473,58 @@
         "referrer": ".superpowers/sdd/2026-08-22-autonomous-luna-sol/progress.md"
       },
       {
+        "candidate": "governance/docs/parser",
+        "line": 64,
+        "referrer": ".superpowers/sdd/2026-08-22-autonomous-luna-sol/progress.md"
+      },
+      {
+        "candidate": "authority/state/path",
+        "line": 65,
+        "referrer": ".superpowers/sdd/2026-08-22-autonomous-luna-sol/progress.md"
+      },
+      {
+        "candidate": "focused/legacy",
+        "line": 65,
+        "referrer": ".superpowers/sdd/2026-08-22-autonomous-luna-sol/progress.md"
+      },
+      {
         "candidate": "documentation/governance",
-        "line": 64,
-        "referrer": ".superpowers/sdd/2026-08-22-autonomous-luna-sol/progress.md"
-      },
-      {
-        "candidate": "two-lane/no-write/restart/T3",
-        "line": 64,
-        "referrer": ".superpowers/sdd/2026-08-22-autonomous-luna-sol/progress.md"
-      },
-      {
-        "candidate": "classify_paths.py",
-        "line": 64,
-        "referrer": ".superpowers/sdd/2026-08-22-autonomous-luna-sol/progress.md"
-      },
-      {
-        "candidate": "no-write/mode/status/policy/classification/authority",
         "line": 66,
         "referrer": ".superpowers/sdd/2026-08-22-autonomous-luna-sol/progress.md"
       },
       {
+        "candidate": "two-lane/no-write/restart/T3",
+        "line": 66,
+        "referrer": ".superpowers/sdd/2026-08-22-autonomous-luna-sol/progress.md"
+      },
+      {
+        "candidate": "classify_paths.py",
+        "line": 66,
+        "referrer": ".superpowers/sdd/2026-08-22-autonomous-luna-sol/progress.md"
+      },
+      {
+        "candidate": "no-write/mode/status/policy/classification/authority",
+        "line": 68,
+        "referrer": ".superpowers/sdd/2026-08-22-autonomous-luna-sol/progress.md"
+      },
+      {
         "candidate": "authorization/action",
-        "line": 68,
+        "line": 70,
         "referrer": ".superpowers/sdd/2026-08-22-autonomous-luna-sol/progress.md"
       },
       {
         "candidate": "status/state",
-        "line": 68,
+        "line": 70,
         "referrer": ".superpowers/sdd/2026-08-22-autonomous-luna-sol/progress.md"
       },
       {
         "candidate": "status/state",
-        "line": 69,
+        "line": 71,
         "referrer": ".superpowers/sdd/2026-08-22-autonomous-luna-sol/progress.md"
       },
       {
         "candidate": "ordered/unordered/task",
-        "line": 70,
+        "line": 72,
         "referrer": ".superpowers/sdd/2026-08-22-autonomous-luna-sol/progress.md"
       },
       {
@@ -153993,14 +154008,14 @@
       },
       {
         "candidate": ".superpowers/sdd",
-        "line": 64,
+        "line": 66,
         "referrer": ".superpowers/sdd/2026-08-22-autonomous-luna-sol/progress.md",
         "resolved": ".superpowers/sdd",
         "severity": "hard"
       },
       {
         "candidate": "docs/superpowers",
-        "line": 64,
+        "line": 66,
         "referrer": ".superpowers/sdd/2026-08-22-autonomous-luna-sol/progress.md",
         "resolved": "docs/superpowers",
         "severity": "hard"
@@ -186208,7 +186223,7 @@
       "working-superpowers-sdd": 11
     },
     "case_collisions_total": 0,
-    "dangling_references_total": 17566,
+    "dangling_references_total": 17569,
     "generated_total": 9,
     "load_bearing_total": 2150,
     "portability_violations_total": 0,
