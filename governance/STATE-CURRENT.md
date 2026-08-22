@@ -778,7 +778,7 @@
     },
     {
       "path": "tests/test_reviews_gate.py",
-      "sha256": "60b2a4c0ac50fca960dcdfcebbbda0b2abdef7099cb502204eaf82b9b475ea3e"
+      "sha256": "3dbb970bb750334935e9d05edbb126f4925df131b7f068a3a5ae3d3901fb6e60"
     },
     {
       "path": "tests/test_revue.py",

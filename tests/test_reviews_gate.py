@@ -1131,7 +1131,13 @@ def test_manifeste_reel_du_depot_est_approve():
     assert ok is True, report
 
 
-def test_manifeste_reel_du_depot_est_archiveable():
+def test_manifeste_reel_du_depot_est_archiveable_sur_l_arbre_courant():
+    """L'archive vérifie les ancêtres du checkout courant, avant ou après merge.
+
+    Le reçu final est généré sur le commit déjà revu, puis ajouté dans un commit
+    de preuve enfant : ce commit revu reste donc un ancêtre du checkout de la
+    branche PR comme de l'arbre main après fusion.
+    """
     ok, report = gate.check(
         REPO / "evidence" / "reviews" / "BINDING.txt",
         REPO / "evidence" / "reviews",

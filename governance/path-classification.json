@@ -3859,6 +3859,13 @@
           "referrer": "CLAUDE.md",
           "resolved": "Docs/reference/autonomy-luna-sol.md",
           "severity": "hard"
+        },
+        {
+          "candidate": "Docs/reference/autonomy-luna-sol.md",
+          "line": 13,
+          "referrer": "evidence/reviews/ORCH-LUNA-SOL-603-final-r4/sol.verdict.json",
+          "resolved": "Docs/reference/autonomy-luna-sol.md",
+          "severity": "hard"
         }
       ],
       "rule_id": "docs-user",
@@ -4265,8 +4272,8 @@
         }
       ],
       "rule_id": "docs-user",
-      "sha256": "f4ffc097ca910bd9b963ee35731af1ad5dc0ec4ab7a094302a5584278eaf370b",
-      "size": 2205,
+      "sha256": "ef8bc6b49968da8a05b0530272619866495f32cefad17b129794ec712a63bc54",
+      "size": 1915,
       "target_path": null,
       "type": "text"
     },
@@ -7058,8 +7065,8 @@
         }
       ],
       "rule_id": "evidence-registres-root",
-      "sha256": "fd5f506b5f81f0fbf7e40afec469a0940973cd3e7397e4e3896e636d853aab22",
-      "size": 403234,
+      "sha256": "e7579a87edbf508949e8f7861882cf88ab2d7fef056a20d454c3619e9775cc9e",
+      "size": 403749,
       "target_path": null,
       "type": "text"
     },
@@ -8930,6 +8937,13 @@
           "candidate": "evidence/reviews/BINDING.txt",
           "line": 9,
           "referrer": "evidence/reviews/ORCH-LUNA-SOL-603-final-r1/sol.verdict.json",
+          "resolved": "evidence/reviews/BINDING.txt",
+          "severity": "hard"
+        },
+        {
+          "candidate": "evidence/reviews/BINDING.txt",
+          "line": 7,
+          "referrer": "evidence/reviews/ORCH-LUNA-SOL-603-final-r4/sol.verdict.json",
           "resolved": "evidence/reviews/BINDING.txt",
           "severity": "hard"
         },
@@ -15960,6 +15974,32 @@
       "rule_id": "evidence-reviews-root",
       "sha256": "248d14ca8b859237cc5c31420cc85a7de41faa095e05ba3542f2726196874c97",
       "size": 1086,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/ORCH-LUNA-SOL-603-final-r4/SOL-PROMPT.md",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "afaf90bd02d427dad28d7cda0dae57701232626a02c01868df822492d0646bee",
+      "size": 15352,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/ORCH-LUNA-SOL-603-final-r4/sol.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "4886ae7726f88b2d0d5b16776526744317ac1813a5e49336d1dadbb52105f051",
+      "size": 1388,
       "target_path": null,
       "type": "text"
     },
@@ -59086,8 +59126,8 @@
         }
       ],
       "rule_id": "test-suite",
-      "sha256": "60b2a4c0ac50fca960dcdfcebbbda0b2abdef7099cb502204eaf82b9b475ea3e",
-      "size": 42035,
+      "sha256": "3dbb970bb750334935e9d05edbb126f4925df131b7f068a3a5ae3d3901fb6e60",
+      "size": 42367,
       "target_path": null,
       "type": "text"
     },
@@ -94902,6 +94942,11 @@
         "candidate": "RECU.json",
         "line": 9,
         "referrer": "evidence/reviews/ORCH-LUNA-SOL-603-final-r1/sol.verdict.json"
+      },
+      {
+        "candidate": "ORCH-LUNA-SOL-603-final-r3/RECU.json",
+        "line": 15,
+        "referrer": "evidence/reviews/ORCH-LUNA-SOL-603-final-r4/sol.verdict.json"
       },
       {
         "candidate": "recu-revue/2",
@@ -161068,6 +161113,20 @@
         "severity": "hard"
       },
       {
+        "candidate": "evidence/reviews/BINDING.txt",
+        "line": 7,
+        "referrer": "evidence/reviews/ORCH-LUNA-SOL-603-final-r4/sol.verdict.json",
+        "resolved": "evidence/reviews/BINDING.txt",
+        "severity": "hard"
+      },
+      {
+        "candidate": "Docs/reference/autonomy-luna-sol.md",
+        "line": 13,
+        "referrer": "evidence/reviews/ORCH-LUNA-SOL-603-final-r4/sol.verdict.json",
+        "resolved": "Docs/reference/autonomy-luna-sol.md",
+        "severity": "hard"
+      },
+      {
         "candidate": "stories/ORCH-LUNA-SOL-603.md",
         "line": 4,
         "referrer": "evidence/reviews/ORCH-LUNA-SOL-603-phaseA-r2/RECU.json",
@@ -182446,7 +182505,7 @@
     "by_class": {
       "ARCHIVE": 44,
       "DOCS": 22,
-      "EVIDENCE": 1685,
+      "EVIDENCE": 1687,
       "GENERATED": 5,
       "GOVERNANCE": 217,
       "PRODUCT": 113,
@@ -182465,7 +182524,7 @@
       "evidence-audit-output-root": 18,
       "evidence-dedup-root": 2,
       "evidence-registres-root": 35,
-      "evidence-reviews-root": 1630,
+      "evidence-reviews-root": 1632,
       "generated-authority-map": 1,
       "generated-path-classification-json": 1,
       "generated-path-classification-markdown": 1,
@@ -182502,11 +182561,11 @@
       "working-sandbox-readme": 1
     },
     "case_collisions_total": 0,
-    "dangling_references_total": 17510,
+    "dangling_references_total": 17511,
     "generated_total": 9,
-    "load_bearing_total": 2165,
+    "load_bearing_total": 2167,
     "portability_violations_total": 0,
-    "tracked_total": 2320,
+    "tracked_total": 2322,
     "unclassified_total": 0,
     "unicode_anomalies_total": 0
   },

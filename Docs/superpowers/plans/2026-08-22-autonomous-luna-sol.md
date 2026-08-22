@@ -33,10 +33,3 @@ le même défaut.
 Le travail n’est terminé que si le gate archive, le gate PR, les tests complets,
 les registres et les vues générées passent, et si la preuve Sol finale est
 liée au diff exact. Sinon la story reste bloquée avec une raison vérifiable.
-
-## Itération de revue
-
-Le premier prompt final a été rejeté parce que le statut terminal précédait le
-scellement visible de la preuve. Ce rejet est conservé hors liaison dans
-`ORCH-LUNA-SOL-603-final-r1`; la story a été remise explicitement en
-`IN_PROGRESS` avant le round final.
