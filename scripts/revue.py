@@ -697,24 +697,42 @@ def _sol_prompt_metadata(prompt: bytes) -> dict:
     marker = "MÉTADONNÉES GIT EXACTES (à recopier sans modification) :\n"
     if marker not in text:
         raise ValueError("métadonnées Git absentes du prompt Sol")
-    line = text.split(marker, 1)[1].splitlines()[0]
-    try:
-        metadata = json.loads(line)
-    except json.JSONDecodeError as error:
-        raise ValueError("métadonnées Git du prompt Sol invalides") from error
-    if not isinstance(metadata, dict):
+    candidates: list[dict] = []
+    offset = 0
+    while True:
+        marker_start = text.find(marker, offset)
+        if marker_start < 0:
+            break
+        line = text[marker_start + len(marker) :].split("\n", 1)[0]
+        offset = marker_start + len(marker)
+        try:
+            metadata = json.loads(line)
+        except json.JSONDecodeError:
+            continue
+        if not isinstance(metadata, dict):
+            continue
+        try:
+            for field in ("base_commit", "reviewed_head_commit", "reviewed_head_tree"):
+                if field not in metadata:
+                    raise ValueError(f"métadonnée Git absente du prompt Sol : {field}")
+                _validate_object_id(metadata[field], field)
+            for field in (
+                "candidate_diff_digest",
+                "sdd_diff_digest",
+                "mission_diff_digest",
+                "template_sha256",
+            ):
+                if field not in metadata:
+                    raise ValueError(f"métadonnée Git absente du prompt Sol : {field}")
+                _validate_digest(metadata[field], field)
+        except (TypeError, ValueError):
+            continue
+        candidates.append(metadata)
+    if not candidates:
         raise ValueError("métadonnées Git du prompt Sol invalides")
-    for field in ("base_commit", "reviewed_head_commit", "reviewed_head_tree"):
-        if field not in metadata:
-            raise ValueError(f"métadonnée Git absente du prompt Sol : {field}")
-        _validate_object_id(metadata[field], field)
-    for field in (
-        "candidate_diff_digest", "sdd_diff_digest", "mission_diff_digest", "template_sha256"
-    ):
-        if field not in metadata:
-            raise ValueError(f"métadonnée Git absente du prompt Sol : {field}")
-        _validate_digest(metadata[field], field)
-    return metadata
+    if len(candidates) != 1:
+        raise ValueError("métadonnées Git du prompt Sol ambiguës")
+    return candidates[0]
 
 
 def _severity(objection: dict) -> str:

@@ -58,6 +58,18 @@ CANONICAL_PROMPT, CANONICAL_SHA = revue._canonical_sol_prompt(
 )
 
 
+def test_sol_prompt_metadata_skips_template_marker_inside_artifact_diff():
+    marker = "MÉTADONNÉES GIT EXACTES (à recopier sans modification) :\n"
+    decoy = ("diff --git a/CANON/revue-template.md b/CANON/revue-template.md\n"
+             f"{marker}{{metadata_json}}\n").encode("utf-8")
+
+    metadata = revue._sol_prompt_metadata(decoy + CANONICAL_PROMPT)
+
+    assert metadata["base_commit"] == BASE
+    assert metadata["reviewed_head_commit"] == HEAD
+    assert metadata["template_sha256"] == TEMPLATE_SHA
+
+
 def _verdict(*, reviewed_at: str = DATE, prompt_sha256: str | None = None) -> dict:
     return {
         "vendor": "sol",
