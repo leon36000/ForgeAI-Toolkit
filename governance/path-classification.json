@@ -5953,6 +5953,32 @@
       "generated": false,
       "load_bearing": false,
       "owner": "gouvernance-preuve",
+      "path": "evidence/audit-output/ORCH-LUNA-SOL-603-postmerge-archive.txt",
+      "referenced_by": [],
+      "rule_id": "evidence-audit-output-root",
+      "sha256": "1bafbd41febdee1f23167070bdec7e488cf8ff1b20d6d287ac660e8fd9826709",
+      "size": 16277,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": false,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/audit-output/ORCH-LUNA-SOL-603-postmerge-proof.md",
+      "referenced_by": [],
+      "rule_id": "evidence-audit-output-root",
+      "sha256": "3c487c5db4ea2572884ce61d28fd83689100cc6431a1d56e216c6e5daab2861e",
+      "size": 1242,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": false,
+      "owner": "gouvernance-preuve",
       "path": "evidence/audit-output/audit-exhaustif-2026-08-05/RAPPORT-AUDIT.md",
       "referenced_by": [],
       "rule_id": "evidence-audit-output-root",
@@ -6892,6 +6918,13 @@
           "candidate": "evidence/registres/mission.jsonl",
           "line": 146,
           "referrer": "README.md",
+          "resolved": "evidence/registres/mission.jsonl",
+          "severity": "hard"
+        },
+        {
+          "candidate": "evidence/registres/mission.jsonl",
+          "line": 13,
+          "referrer": "evidence/audit-output/ORCH-LUNA-SOL-603-postmerge-proof.md",
           "resolved": "evidence/registres/mission.jsonl",
           "severity": "hard"
         },
@@ -16125,6 +16158,13 @@
         },
         {
           "candidate": "evidence/reviews/ORCH-LUNA-SOL-603-final-seal-r3/RECU.json",
+          "line": 12,
+          "referrer": "evidence/audit-output/ORCH-LUNA-SOL-603-postmerge-proof.md",
+          "resolved": "evidence/reviews/ORCH-LUNA-SOL-603-final-seal-r3/RECU.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "evidence/reviews/ORCH-LUNA-SOL-603-final-seal-r3/RECU.json",
           "line": 25,
           "referrer": "stories/ORCH-LUNA-SOL-603.md",
           "resolved": "evidence/reviews/ORCH-LUNA-SOL-603-final-seal-r3/RECU.json",
@@ -16394,6 +16434,32 @@
       "rule_id": "evidence-reviews-root",
       "sha256": "b4a09fbaab13ee2dcff2d23a165cc7451fc791884ba7547c1f5863dbac0432d0",
       "size": 963,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/ORCH-LUNA-SOL-603-postmerge-closure/SOL-PROMPT.md",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "f5458a80e66f455baade8a06916e737613d8d0cb0a1134c39c4f06cc499807cb",
+      "size": 6519,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/ORCH-LUNA-SOL-603-postmerge-closure/sol.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "847e37605333e9929de0e5b7bab8c7ebfd5f9c6ba652b9b8a22faa628dd3227a",
+      "size": 1148,
       "target_path": null,
       "type": "text"
     },
@@ -35995,6 +36061,13 @@
           "candidate": "scripts/reviews_gate.py",
           "line": 69,
           "referrer": "Docs/reference/autonomy-luna-sol.md",
+          "resolved": "scripts/reviews_gate.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "scripts/reviews_gate.py",
+          "line": 10,
+          "referrer": "evidence/audit-output/ORCH-LUNA-SOL-603-postmerge-proof.md",
           "resolved": "scripts/reviews_gate.py",
           "severity": "hard"
         },
@@ -155882,6 +155955,27 @@
         "severity": "hard"
       },
       {
+        "candidate": "scripts/reviews_gate.py",
+        "line": 10,
+        "referrer": "evidence/audit-output/ORCH-LUNA-SOL-603-postmerge-proof.md",
+        "resolved": "scripts/reviews_gate.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "evidence/reviews/ORCH-LUNA-SOL-603-final-seal-r3/RECU.json",
+        "line": 12,
+        "referrer": "evidence/audit-output/ORCH-LUNA-SOL-603-postmerge-proof.md",
+        "resolved": "evidence/reviews/ORCH-LUNA-SOL-603-final-seal-r3/RECU.json",
+        "severity": "hard"
+      },
+      {
+        "candidate": "evidence/registres/mission.jsonl",
+        "line": 13,
+        "referrer": "evidence/audit-output/ORCH-LUNA-SOL-603-postmerge-proof.md",
+        "resolved": "evidence/registres/mission.jsonl",
+        "severity": "hard"
+      },
+      {
         "candidate": "MASTER-PLAN.md",
         "line": 90,
         "referrer": "evidence/audit-output/audit-exhaustif-2026-08-05/RAPPORT-AUDIT.md",
@@ -182860,7 +182954,7 @@
     "by_class": {
       "ARCHIVE": 44,
       "DOCS": 22,
-      "EVIDENCE": 1702,
+      "EVIDENCE": 1706,
       "GENERATED": 5,
       "GOVERNANCE": 217,
       "PRODUCT": 113,
@@ -182876,10 +182970,10 @@
       "docs-license": 1,
       "docs-security": 1,
       "docs-user": 19,
-      "evidence-audit-output-root": 18,
+      "evidence-audit-output-root": 20,
       "evidence-dedup-root": 2,
       "evidence-registres-root": 35,
-      "evidence-reviews-root": 1647,
+      "evidence-reviews-root": 1649,
       "generated-authority-map": 1,
       "generated-path-classification-json": 1,
       "generated-path-classification-markdown": 1,
@@ -182918,9 +183012,9 @@
     "case_collisions_total": 0,
     "dangling_references_total": 17516,
     "generated_total": 9,
-    "load_bearing_total": 2182,
+    "load_bearing_total": 2184,
     "portability_violations_total": 0,
-    "tracked_total": 2337,
+    "tracked_total": 2341,
     "unclassified_total": 0,
     "unicode_anomalies_total": 0
   },
