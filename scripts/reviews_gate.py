@@ -239,6 +239,8 @@ def check(
                     report.append(f"ECHEC {entry} : reçu illisible : {error}")
                     continue
 
+        # Receipt mode is the dispatch contract: legacy multi_vendor keeps its 3/3 tally;
+        # active sol_blind is delegated to the exact-one-Sol validator without weakening legacy.
         receipt_mode = receipt.get("mode", "multi_vendor") if isinstance(receipt, dict) else "multi_vendor"
         sol_covers_current = False
         historical_sol = (

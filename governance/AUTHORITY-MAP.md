@@ -64,11 +64,11 @@ Cette carte est le rendu de `governance/authority.json`.
 ## Positions déclarées
 
 - `agents-md` : `orchestration_seat` = `claude_code_opus_mission_lead` (AGENTS.md:9)
-- `agents-md` : `workspace_confinement` = `repo_plus_external_governance_tooling` (AGENTS.md:73-76)
+- `agents-md` : `workspace_confinement` = `repo_plus_external_governance_tooling` (AGENTS.md:125-129)
 - `canon.directives-perimetre` : `workspace_confinement` = `repo_only_strict` (CANON/directives-perimetre.md:7)
 - `canon.plan-integral` : `plan_of_record` = `canon_plan_integral` (CANON/plan-integral.md:4)
 - `canon.plan-integral` : `orchestration_seat` = `claude_code_opus_mission_lead` (CANON/plan-integral.md:27)
 - `canon.plan-maitre-bmad` : `plan_of_record` = `canon_plan_maitre_bmad_v1` (CANON/PLAN-MAITRE-EXECUTION-BMAD-v1.0.md:1-2)
-- `claude-md` : `workspace_confinement` = `repo_plus_external_governance_tooling` (CLAUDE.md:39)
+- `claude-md` : `workspace_confinement` = `repo_plus_external_governance_tooling` (CLAUDE.md:44-49)
 - `gov.decision-mission-lead` : `orchestration_seat` = `claude_code_opus_mission_lead` (governance/decisions/D-2026-08-14-mission-lead.md:9)
 - `master-plan` : `plan_of_record` = `master_plan_v1` (MASTER-PLAN.md:7)

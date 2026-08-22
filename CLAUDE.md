@@ -19,7 +19,12 @@ subagent-driven → TDD). Les overrides PROOF s'appliquent : le skill `proof-rev
 self-review inline de Superpowers (hook `PreToolUse Agent|Task` bloque le « Senior Code Reviewer »),
 et chaque subagent reçoit la discipline PROOF (hook `SubagentStart`). Complétion ⇒ skill `proof-done`.
 
-## Réconciliation (adoption pleine, décision Nathan)
+## Réconciliation historique — mode `multi_vendor` (adoption pleine, décision Nathan)
+
+Historical `multi_vendor` doctrine only: the legacy 3/3 review and merge statements below remain
+unchanged. Ce bloc conserve le comportement historique uniquement pour les reçus
+`multi_vendor`; le contrat actif `sol_blind` est distinct.
+
 
 - **Livreur de revue** : la pièce qui manquait est fournie par le canon —
   `~/proof-method/scripts/civ_review.py`. Il livre le prompt byte-identique aux N reviewers,
@@ -66,6 +71,9 @@ La liaison minimale du reçu exige `candidate_diff_digest`, `base_commit`,
 `reviewed_at` avec fuseau, `verdict: APPROVE` et `blocking_findings: []`.
 Le reviewer ne reçoit aucun verdict attendu. Le claim est revérifié par le
 gate contre Git courant; aucune preuve runtime ou externe n'est prétendue.
+
+In `reviews_gate.py`, receipt-mode dispatch preserves `multi_vendor`'s historical 3/3 tally; active
+`sol_blind` requires exactly one `GPT-5.6-Sol` verdict.
 
 Le merge sûr est repository-native : reprendre depuis l'issue/PR GitHub, l'état
 Git et les registres vérifiés, exécuter les tests/gates, prolonger les registres

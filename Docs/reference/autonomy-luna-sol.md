@@ -46,6 +46,9 @@ comme un claim et le compare à la PR ou au diff courant; le head conservé sert
 reçu. Les artefacts de revue et les vues générées restent hors du digest
 canonique.
 
+In `reviews_gate.py`, receipt-mode dispatch preserves `multi_vendor`'s historical 3/3 tally;
+active `sol_blind` requires exactly one `GPT-5.6-Sol` verdict.
+
 ## Boucle, reprise et source de vérité
 
 La boucle sûre est : lire la politique et le plan, inspecter l'issue et le diff,
@@ -101,8 +104,9 @@ Les seuls états terminaux sont :
 - `BLOCKED_WITH_REASON` — une condition concrète manque ou échoue, avec sa
   raison consignée et sans preuve inventée.
 
-Task 4 documente ce contrat et ses registres, mais ne prétend pas fournir la
-preuve finale `sol_blind` de Task 5.
+Task 4 est `DONE_WITH_EVIDENCE` pour cette tranche documentaire et déterministe.
+Task 5 reste `PENDING` : final fresh Sol evidence remains pending, et aucune
+preuve runtime ou externe finale n'est prétendue ici.
 
 ## Vérifier
 

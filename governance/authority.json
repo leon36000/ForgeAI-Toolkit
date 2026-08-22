@@ -105,12 +105,12 @@
         {
           "topic": "workspace_confinement",
           "position": "repo_plus_external_governance_tooling",
-          "locator": "AGENTS.md:73-76"
+          "locator": "AGENTS.md:125-129"
         }
       ],
       "digest": {
         "policy": "content_sha256",
-        "value": "ef9dc4d50d509c63f31d5d2083c47b18efc9d551538249b749493c684d3ef274",
+        "value": "55407f868824e5dde35b57e39e3358c07ba6d6eddbb660fd036d143c6f0fbdf1",
         "checked_at": "2026-08-22",
         "delegated_to": null
       },
@@ -122,7 +122,7 @@
         "mission_seq": null,
         "ref": "issue-487"
       },
-      "notes": "Auto-contradiction interne resolue par #432 (Mission affirme desormais Claude Code Opus, section ORCH-001 remplacee) ; conflit RESIDUEL avec canon.plan-integral (toujours \"Fable orchestrateur unique\", hors perimetre de #432 -- CANON exige son propre circuit de revue) suivi par #487. Empreinte fusionnee (#433 x #437, merge sur main post-9d97b529) : #433 remplace les lignes 49-67 (pointe vers capabilities.py, decale le paragraphe Perimetre a +3 lignes) ; #437 insere un marqueur <!-- state:catalogue.entries_total --> autour du compteur manuel (AGENTS.md:38), sans decalage de lignes. Les deux changements sont sur des zones disjointes du fichier, fusionnes automatiquement par git (aucun conflit textuel) ; seule l'empreinte ci-dessus reflete desormais le contenu final combine. Locator workspace_confinement verifie a AGENTS.md:73-76 apres fusion."
+      "notes": "Auto-contradiction interne resolue par #432 (Mission affirme desormais Claude Code Opus, section ORCH-001 remplacee) ; conflit RESIDUEL avec canon.plan-integral (toujours \"Fable orchestrateur unique\", hors perimetre de #432 -- CANON exige son propre circuit de revue) suivi par #487. Empreinte fusionnee (#433 x #437, merge sur main post-9d97b529) : #433 remplace les lignes 49-67 (pointe vers capabilities.py, decale le paragraphe Perimetre a +3 lignes) ; #437 insere un marqueur <!-- state:catalogue.entries_total --> autour du compteur manuel (AGENTS.md:38), sans decalage de lignes. Les deux changements sont sur des zones disjointes du fichier, fusionnes automatiquement par git (aucun conflit textuel) ; seule l'empreinte ci-dessus reflete desormais le contenu final combine. Locator workspace_confinement pointe maintenant les lignes AGENTS.md:125-129, qui portent la doctrine active « Confinement au repo » et l'outillage de gouvernance autorise."
     },
     {
       "id": "agents-md.orch-001",
@@ -171,12 +171,12 @@
         {
           "topic": "workspace_confinement",
           "position": "repo_plus_external_governance_tooling",
-          "locator": "CLAUDE.md:39"
+          "locator": "CLAUDE.md:44-49"
         }
       ],
       "digest": {
         "policy": "content_sha256",
-        "value": "59ca857c0ec44bda259d6d21dd90f50f8fa38743bc6ab38312a2d30e9987163a",
+        "value": "05e3c89f5ba6579ef47befd02a49131d8760bec0deccff67734648c1442a3cbc",
         "checked_at": "2026-08-22",
         "delegated_to": null
       },
@@ -188,7 +188,7 @@
         "mission_seq": null,
         "ref": "issue-484"
       },
-      "notes": "Le contrat autorise l'outillage de gouvernance externe pendant la construction. Empreinte/locator recalcules par #433 (reecriture complete : distingue capacites toujours disponibles vs outillage externe optionnel, supprime la commande d'extraction de secret docker inspect) -- la position et le statut CONFLICTED envers #484 restent inchanges, #433 ne tranche pas ce conflit."
+      "notes": "Le contrat autorise l'outillage de gouvernance externe pendant la construction. Empreinte/locator recalcules par #433 (reecriture complete : distingue capacites toujours disponibles vs outillage externe optionnel, supprime la commande d'extraction de secret docker inspect) -- la position et le statut CONFLICTED envers #484 restent inchanges, #433 ne tranche pas ce conflit. Locator workspace_confinement verifie maintenant a CLAUDE.md:44-49, qui porte le flux externe optionnel de construction."
     },
     {
       "id": "canon.directives-perimetre",
