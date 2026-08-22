@@ -69,6 +69,17 @@ _SOL_CANONICAL_T3_LIMITS = (
     "permanent_deletions",
     "external_commitments",
 )
+# The Phase-A receipt predates the displayed-artifact seal.  Its exemption is deliberately
+# exact rather than dossier-name based: any new/current Sol receipt must carry artifact_sha256.
+_SOL_LEGACY_ARTIFACT_EXEMPTION = {
+    "dossier": "ORCH-LUNA-SOL-603-phaseA-r5",
+    "base_commit": "d4d46ef36fcac3cdeb92a00577f78c8e698c17c0",
+    "head_commit": "c6a26100033512106be8aaf056bf9ee906108379",
+    "reviewed_head_commit": "c6a26100033512106be8aaf056bf9ee906108379",
+    "candidate_diff_digest": "ec404cfd230c26599c20beed847b0b9542e0a623067cef765805c1a6e6c0127b",
+    "prompt_sha256": "aa8d7621249e1b3326d627ef9319a77fe74d3ba020b7ecf0662643c9f774a769",
+    "template_sha256": "a5bebc60556f4fc38d6ca96a3d0372577550f23157377af4d852e6144e25f137",
+}
 # Freeze every Git setting that can change the textual patch or make the diff
 # plumbing fail under a caller's global configuration. The order file is a
 # tracked empty repository file, so this remains portable across Git hosts.
@@ -107,6 +118,14 @@ _SEVERITY_RANK = {
 _BLOCKING = {"critique", "eleve", "majeure"}
 
 GitRunner = Callable[[list[str]], str]
+
+
+def _sol_legacy_artifact_exemption(recu: object) -> bool:
+    """Return true only for the one immutable Phase-A receipt without artifact_sha256."""
+    return isinstance(recu, dict) and all(
+        recu.get(field) == value
+        for field, value in _SOL_LEGACY_ARTIFACT_EXEMPTION.items()
+    )
 
 
 def _normalize(value: str) -> str:
@@ -404,6 +423,8 @@ def _sol_expected_from_receipt_shape(
         "mission_diff_digest", "template_sha256",
     ):
         _validate_digest(recu[field], field)
+    if "artifact_sha256" not in recu and not _sol_legacy_artifact_exemption(recu):
+        raise ValueError("artifact_sha256 requis pour tout reçu Sol courant")
     if "artifact_sha256" in recu:
         _validate_digest(recu["artifact_sha256"], "artifact_sha256")
     if recu["diff_digest"] != recu["candidate_diff_digest"]:
@@ -1269,6 +1290,8 @@ def _sol_expected_from_git(
         "prompt_sha256"
     ):
         _validate_digest(recu[field], field)
+    if "artifact_sha256" not in recu and not _sol_legacy_artifact_exemption(recu):
+        raise ValueError("artifact_sha256 requis pour tout reçu Sol courant")
     if "artifact_sha256" in recu:
         _validate_digest(recu["artifact_sha256"], "artifact_sha256")
     execute = _default_runner if runner is None else runner
@@ -1310,7 +1333,7 @@ def _sol_expected_from_git(
         base_commit,
         reviewed_head_commit,
         runner=execute,
-        include_artifact_sha256="artifact_sha256" in recu,
+        include_artifact_sha256=not _sol_legacy_artifact_exemption(recu),
     )
     template_content = _git_blob(execute, reviewed_head_commit, _SOL_TEMPLATE_PATH)
     template_sha = hashlib.sha256(template_content.encode("utf-8")).hexdigest()

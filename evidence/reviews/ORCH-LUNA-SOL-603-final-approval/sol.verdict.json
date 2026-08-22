@@ -1,0 +1,20 @@
+{
+  "fresh_context": true,
+  "blind": true,
+  "reviewer_read_only": true,
+  "reviewer_model": "GPT-5.6-Sol",
+  "base_commit": "5e25de16bd38f8a6ffc16e120919beff128f95aa",
+  "reviewed_head_commit": "167c6219a86e20df84e6f0a61360c83f434d2719",
+  "reviewed_head_tree": "9a40a1b68bfafe4f12f966e42a247eea588b2639",
+  "candidate_diff_digest": "9cff0ecec2d1f6253521a3f5a7b7817e7da668569f5b96fd7166869c2c3a9571",
+  "artifact_sha256": "b19c9e436b2b80cd05310e14e76244acf2846d32ae0be2b5c2399c1e11581ead",
+  "sdd_diff_digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "mission_diff_digest": "f1000e979d1c67813da9a5be098a089d9d2ebb986c6bc420ef9eba2b349c1f9a",
+  "template_sha256": "a5bebc60556f4fc38d6ca96a3d0372577550f23157377af4d852e6144e25f137",
+  "prompt_sha256": "d560892d5e933fcb3aa184802aead8e3e561e38e4e41fd7ccb9962357917f086",
+  "verdict": "REJECT",
+  "blocking_findings": [
+    "artifact_sha256 restait facultatif pour les reçus courants; un reçu pouvait omettre simultanément cette liaison et conserver l'ancien format de prompt."
+  ],
+  "reviewed_at": "2026-08-22T18:07:21-04:00"
+}

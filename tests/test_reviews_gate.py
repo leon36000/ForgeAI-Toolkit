@@ -460,14 +460,7 @@ def test_mode_pr_ignore_recu_historique_non_couvrant(tmp_path):
 
 def test_mode_pr_historical_invalid_sol_binding_is_informational(tmp_path):
     root = tmp_path / "reviews"
-    legacy_prompt, _ = gate._load_revue()._canonical_sol_prompt(
-        gate._load_revue()._SOL_CANONICAL_STORY_ID,
-        "b" * 40,
-        "c" * 40,
-        runner=_runner,
-        include_artifact_sha256=False,
-    )
-    historical_prompt = legacy_prompt.replace(b"b" * 40, b"a" * 40).replace(
+    historical_prompt = SOL_PROMPT_BYTES.replace(b"b" * 40, b"a" * 40).replace(
         b"c" * 40, b"3" * 40
     )
     historical_prompt_sha = hashlib.sha256(historical_prompt).hexdigest()
@@ -489,6 +482,7 @@ def test_mode_pr_historical_invalid_sol_binding_is_informational(tmp_path):
                 "reviewed_head_commit": "3" * 40,
                 "reviewed_head_tree": "d" * 40,
                 "prompt_sha256": historical_prompt_sha,
+                "artifact_sha256": SOL_ARTIFACT_SHA,
                 "template_sha256": SOL_TEMPLATE_SHA,
                 "verdict": "APPROVE",
                 "blocking_findings": [],
@@ -514,6 +508,7 @@ def test_mode_pr_historical_invalid_sol_binding_is_informational(tmp_path):
                 "reviewed_head_commit": "3" * 40,
                 "reviewed_head_tree": "d" * 40,
                 "prompt_sha256": historical_prompt_sha,
+                "artifact_sha256": SOL_ARTIFACT_SHA,
                 "template_sha256": SOL_TEMPLATE_SHA,
                 "issue": 603,
                 "round": 1,
@@ -732,6 +727,27 @@ def test_gate_sol_blind_defaut_rejette_recu_incomplet(tmp_path):
 
     assert ok is False
     assert any("schema" in line for line in report)
+
+
+def test_gate_sol_blind_pr_exige_lempreinte_du_diff_affiche(tmp_path):
+    root = tmp_path / "reviews"
+    directory = _make_sol_blind_gate_review(root)
+    receipt_path = directory / "RECU.json"
+    receipt = json.loads(receipt_path.read_text(encoding="utf-8"))
+    receipt.pop("artifact_sha256")
+    receipt_path.write_text(json.dumps(receipt), encoding="utf-8")
+
+    ok, report = gate.check(
+        _manifest(tmp_path, [directory.name]),
+        root,
+        exiger_recu_courant=True,
+        base_ref="origin/main",
+        runner=_runner,
+        now=SOL_NOW,
+    )
+
+    assert ok is False
+    assert any("artifact_sha256" in line for line in report)
 
 
 def test_gate_sol_blind_mode_pr_rejette_preuve_perimee(tmp_path):

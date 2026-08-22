@@ -22,7 +22,7 @@ les archives uniquement.
   gate archive sont prêts. Le contrôle de l’archive de preuve est effectué par
   `reviews_gate.py`, séparément du diff canonique présenté au reviewer Sol.
 - [ ] Le reçu Sol final est scellé dans
-  `evidence/reviews/ORCH-LUNA-SOL-603-final-approval/RECU.json`, lié au manifeste
+  `evidence/reviews/ORCH-LUNA-SOL-603-final-seal/RECU.json`, lié au manifeste
   actif, puis le gate PR et le gate archive sur `main` fusionné passent.
 - [ ] La story passe à `DONE_WITH_EVIDENCE` uniquement après ces preuves;
   aucune réussite runtime, matérielle, réseau ou externe n’est revendiquée.
