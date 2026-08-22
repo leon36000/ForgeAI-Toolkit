@@ -129,10 +129,10 @@ EXPECTED_CLASSIFICATIONS = {
         "rule_id": "working-superpowers-sdd",
         "owner": "working-cockpit",
     },
-    "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md": {
-        "class": "WORKING",
-        "rule_id": "working-superpowers-docs",
-        "owner": "working-cockpit",
+    "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md": {
+        "class": "DOCS",
+        "rule_id": "docs-user",
+        "owner": "docs-utilisateur",
     },
 }
 
@@ -578,4 +578,4 @@ def test_generated_views_reference_the_task4_paths_and_contract_source():
     assert ".superpowers/sdd/2026-08-22-autonomous-luna-sol/task-4-fix4-report.md" in classified
     assert ".superpowers/sdd/2026-08-22-autonomous-luna-sol/task-4-fix5-report.md" in classified
     assert ".superpowers/sdd/2026-08-22-autonomous-luna-sol/task-4-fix6-report.md" in classified
-    assert "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md" in classified
+    assert "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md" in classified

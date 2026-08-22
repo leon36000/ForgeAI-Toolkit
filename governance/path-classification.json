@@ -1577,7 +1577,7 @@
         }
       ],
       "rule_id": "working-superpowers-sdd",
-      "sha256": "c238920c8fec7580013245fb821ea72695188ddb39904fadb78495707f69ca21",
+      "sha256": "4a58f84dd3fb4abbaa97f3e964ff553971ca6257455adfc43b41585c6a06b82e",
       "size": 9315,
       "target_path": null,
       "type": "text"
@@ -2035,6 +2035,27 @@
         },
         {
           "candidate": "AGENTS.md",
+          "line": 118,
+          "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+          "resolved": "AGENTS.md",
+          "severity": "hard"
+        },
+        {
+          "candidate": "AGENTS.md",
+          "line": 140,
+          "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+          "resolved": "AGENTS.md",
+          "severity": "hard"
+        },
+        {
+          "candidate": "AGENTS.md",
+          "line": 144,
+          "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+          "resolved": "AGENTS.md",
+          "severity": "hard"
+        },
+        {
+          "candidate": "AGENTS.md",
           "line": 125,
           "referrer": "README.md",
           "resolved": "AGENTS.md",
@@ -2086,27 +2107,6 @@
           "candidate": "AGENTS.md",
           "line": 26,
           "referrer": "archive/phase-a/catalogue-production-15-qwen.yaml",
-          "resolved": "AGENTS.md",
-          "severity": "hard"
-        },
-        {
-          "candidate": "AGENTS.md",
-          "line": 118,
-          "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
-          "resolved": "AGENTS.md",
-          "severity": "hard"
-        },
-        {
-          "candidate": "AGENTS.md",
-          "line": 140,
-          "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
-          "resolved": "AGENTS.md",
-          "severity": "hard"
-        },
-        {
-          "candidate": "AGENTS.md",
-          "line": 144,
-          "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
           "resolved": "AGENTS.md",
           "severity": "hard"
         },
@@ -3594,6 +3594,20 @@
         },
         {
           "candidate": "CLAUDE.md",
+          "line": 119,
+          "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+          "resolved": "CLAUDE.md",
+          "severity": "hard"
+        },
+        {
+          "candidate": "CLAUDE.md",
+          "line": 144,
+          "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+          "resolved": "CLAUDE.md",
+          "severity": "hard"
+        },
+        {
+          "candidate": "CLAUDE.md",
           "line": 29,
           "referrer": "archive/coordination/work-packages.json",
           "resolved": "CLAUDE.md",
@@ -3617,20 +3631,6 @@
           "candidate": "CLAUDE.md",
           "line": 23,
           "referrer": "archive/phase-a/catalogue-production-16-qwen.yaml",
-          "resolved": "CLAUDE.md",
-          "severity": "hard"
-        },
-        {
-          "candidate": "CLAUDE.md",
-          "line": 119,
-          "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
-          "resolved": "CLAUDE.md",
-          "severity": "hard"
-        },
-        {
-          "candidate": "CLAUDE.md",
-          "line": 144,
-          "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
           "resolved": "CLAUDE.md",
           "severity": "hard"
         },
@@ -4321,14 +4321,14 @@
         {
           "candidate": "Docs/reference/autonomy-luna-sol.md",
           "line": 120,
-          "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+          "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
           "resolved": "Docs/reference/autonomy-luna-sol.md",
           "severity": "hard"
         },
         {
           "candidate": "Docs/reference/autonomy-luna-sol.md",
           "line": 144,
-          "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+          "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
           "resolved": "Docs/reference/autonomy-luna-sol.md",
           "severity": "hard"
         },
@@ -4362,8 +4362,8 @@
         }
       ],
       "rule_id": "docs-user",
-      "sha256": "33735bdd16274f50054bff78bd30232b8b1f9435de0e825be9b5da81e8a1c501",
-      "size": 6109,
+      "sha256": "94c00b89479e612fda519b2bf2654b3c2c989e5ab6eab62d3cec57fc03c7af65",
+      "size": 6101,
       "target_path": null,
       "type": "text"
     },
@@ -4754,6 +4754,76 @@
       "generated": false,
       "load_bearing": false,
       "owner": "docs-utilisateur",
+      "path": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+      "referenced_by": [
+        {
+          "candidate": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+          "line": 1,
+          "referrer": ".superpowers/sdd/2026-08-22-autonomous-luna-sol/progress.md",
+          "resolved": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+          "severity": "hard"
+        },
+        {
+          "candidate": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+          "line": 132,
+          "referrer": "tests/test_autonomy_docs.py",
+          "resolved": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+          "severity": "hard"
+        },
+        {
+          "candidate": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+          "line": 581,
+          "referrer": "tests/test_autonomy_docs.py",
+          "resolved": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+          "severity": "hard"
+        }
+      ],
+      "rule_id": "docs-user",
+      "sha256": "8d27ea1c1eecd63ff5a6c42607632ff627ffd6b792a5c4cc80d319199b38317c",
+      "size": 12659,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "DOCS",
+      "generated": false,
+      "load_bearing": false,
+      "owner": "docs-utilisateur",
+      "path": "Docs/superpowers/specs/2026-08-22-autonomous-luna-sol-design.md",
+      "referenced_by": [
+        {
+          "candidate": "Docs/superpowers/specs/2026-08-22-autonomous-luna-sol-design.md",
+          "line": 10,
+          "referrer": ".superpowers/sdd/2026-08-22-autonomous-luna-sol/progress.md",
+          "resolved": "Docs/superpowers/specs/2026-08-22-autonomous-luna-sol-design.md",
+          "severity": "hard"
+        },
+        {
+          "candidate": "Docs/superpowers/specs/2026-08-22-autonomous-luna-sol-design.md",
+          "line": 9,
+          "referrer": "Docs/reference/autonomy-luna-sol.md",
+          "resolved": "Docs/superpowers/specs/2026-08-22-autonomous-luna-sol-design.md",
+          "severity": "hard"
+        },
+        {
+          "candidate": "Docs/superpowers/specs/2026-08-22-autonomous-luna-sol-design.md",
+          "line": 11,
+          "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+          "resolved": "Docs/superpowers/specs/2026-08-22-autonomous-luna-sol-design.md",
+          "severity": "hard"
+        }
+      ],
+      "rule_id": "docs-user",
+      "sha256": "d98b15c994045daecbe94564b0ee47e79ee520fe9106c48ce4d2458dc0d9be6f",
+      "size": 3019,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "DOCS",
+      "generated": false,
+      "load_bearing": false,
+      "owner": "docs-utilisateur",
       "path": "LICENSE",
       "referenced_by": [],
       "rule_id": "docs-license",
@@ -5030,6 +5100,13 @@
         },
         {
           "candidate": "README.md",
+          "line": 140,
+          "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+          "resolved": "README.md",
+          "severity": "hard"
+        },
+        {
+          "candidate": "README.md",
           "line": 965,
           "referrer": "archive/coordination/work-packages.json",
           "resolved": "README.md",
@@ -5039,13 +5116,6 @@
           "candidate": "README.md",
           "line": 1048,
           "referrer": "archive/coordination/work-packages.json",
-          "resolved": "README.md",
-          "severity": "hard"
-        },
-        {
-          "candidate": "README.md",
-          "line": 140,
-          "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
           "resolved": "README.md",
           "severity": "hard"
         },
@@ -6416,76 +6486,6 @@
       "type": "text"
     },
     {
-      "class": "WORKING",
-      "generated": false,
-      "load_bearing": false,
-      "owner": "working-cockpit",
-      "path": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
-      "referenced_by": [
-        {
-          "candidate": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
-          "line": 1,
-          "referrer": ".superpowers/sdd/2026-08-22-autonomous-luna-sol/progress.md",
-          "resolved": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
-          "severity": "hard"
-        },
-        {
-          "candidate": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
-          "line": 132,
-          "referrer": "tests/test_autonomy_docs.py",
-          "resolved": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
-          "severity": "hard"
-        },
-        {
-          "candidate": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
-          "line": 581,
-          "referrer": "tests/test_autonomy_docs.py",
-          "resolved": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
-          "severity": "hard"
-        }
-      ],
-      "rule_id": "working-superpowers-docs",
-      "sha256": "87d89ac70965fdec3efba5d9aee0db959bcbb17e99357a19015780ff8757a0b6",
-      "size": 12659,
-      "target_path": null,
-      "type": "text"
-    },
-    {
-      "class": "WORKING",
-      "generated": false,
-      "load_bearing": false,
-      "owner": "working-cockpit",
-      "path": "docs/superpowers/specs/2026-08-22-autonomous-luna-sol-design.md",
-      "referenced_by": [
-        {
-          "candidate": "docs/superpowers/specs/2026-08-22-autonomous-luna-sol-design.md",
-          "line": 10,
-          "referrer": ".superpowers/sdd/2026-08-22-autonomous-luna-sol/progress.md",
-          "resolved": "docs/superpowers/specs/2026-08-22-autonomous-luna-sol-design.md",
-          "severity": "hard"
-        },
-        {
-          "candidate": "docs/superpowers/specs/2026-08-22-autonomous-luna-sol-design.md",
-          "line": 9,
-          "referrer": "Docs/reference/autonomy-luna-sol.md",
-          "resolved": "docs/superpowers/specs/2026-08-22-autonomous-luna-sol-design.md",
-          "severity": "hard"
-        },
-        {
-          "candidate": "docs/superpowers/specs/2026-08-22-autonomous-luna-sol-design.md",
-          "line": 11,
-          "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
-          "resolved": "docs/superpowers/specs/2026-08-22-autonomous-luna-sol-design.md",
-          "severity": "hard"
-        }
-      ],
-      "rule_id": "working-superpowers-docs",
-      "sha256": "d98b15c994045daecbe94564b0ee47e79ee520fe9106c48ce4d2458dc0d9be6f",
-      "size": 3019,
-      "target_path": null,
-      "type": "text"
-    },
-    {
       "class": "GOVERNANCE",
       "generated": false,
       "load_bearing": true,
@@ -7447,6 +7447,27 @@
         },
         {
           "candidate": "evidence/registres/mission.jsonl",
+          "line": 123,
+          "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+          "resolved": "evidence/registres/mission.jsonl",
+          "severity": "hard"
+        },
+        {
+          "candidate": "evidence/registres/mission.jsonl",
+          "line": 140,
+          "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+          "resolved": "evidence/registres/mission.jsonl",
+          "severity": "hard"
+        },
+        {
+          "candidate": "evidence/registres/mission.jsonl",
+          "line": 144,
+          "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+          "resolved": "evidence/registres/mission.jsonl",
+          "severity": "hard"
+        },
+        {
+          "candidate": "evidence/registres/mission.jsonl",
           "line": 98,
           "referrer": "README.md",
           "resolved": "evidence/registres/mission.jsonl",
@@ -7463,27 +7484,6 @@
           "candidate": "evidence/registres/mission.jsonl",
           "line": 146,
           "referrer": "README.md",
-          "resolved": "evidence/registres/mission.jsonl",
-          "severity": "hard"
-        },
-        {
-          "candidate": "evidence/registres/mission.jsonl",
-          "line": 123,
-          "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
-          "resolved": "evidence/registres/mission.jsonl",
-          "severity": "hard"
-        },
-        {
-          "candidate": "evidence/registres/mission.jsonl",
-          "line": 140,
-          "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
-          "resolved": "evidence/registres/mission.jsonl",
-          "severity": "hard"
-        },
-        {
-          "candidate": "evidence/registres/mission.jsonl",
-          "line": 144,
-          "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
           "resolved": "evidence/registres/mission.jsonl",
           "severity": "hard"
         },
@@ -7664,8 +7664,8 @@
         }
       ],
       "rule_id": "evidence-registres-root",
-      "sha256": "7348917473c2c55cb48fa1e99cb71376dc0a5e5d5cc5278f184141df7948141a",
-      "size": 412450,
+      "sha256": "cfb4d6e33c4560c24567d4c3940db1859e6d69e37e69a4d354d879fe2d993162",
+      "size": 413427,
       "target_path": null,
       "type": "text"
     },
@@ -9493,7 +9493,7 @@
         {
           "candidate": "evidence/reviews/BINDING.txt",
           "line": 150,
-          "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+          "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
           "resolved": "evidence/reviews/BINDING.txt",
           "severity": "hard"
         },
@@ -28921,36 +28921,36 @@
         },
         {
           "candidate": "governance/AUTHORITY-MAP.md",
-          "line": 6,
-          "referrer": "README.md",
-          "resolved": "governance/AUTHORITY-MAP.md",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/AUTHORITY-MAP.md",
-          "line": 6,
-          "referrer": "README.md",
-          "resolved": "governance/AUTHORITY-MAP.md",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/AUTHORITY-MAP.md",
-          "line": 125,
-          "referrer": "README.md",
-          "resolved": "governance/AUTHORITY-MAP.md",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/AUTHORITY-MAP.md",
-          "line": 125,
-          "referrer": "README.md",
-          "resolved": "governance/AUTHORITY-MAP.md",
-          "severity": "hard"
-        },
-        {
-          "candidate": "governance/AUTHORITY-MAP.md",
           "line": 124,
-          "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+          "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+          "resolved": "governance/AUTHORITY-MAP.md",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/AUTHORITY-MAP.md",
+          "line": 6,
+          "referrer": "README.md",
+          "resolved": "governance/AUTHORITY-MAP.md",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/AUTHORITY-MAP.md",
+          "line": 6,
+          "referrer": "README.md",
+          "resolved": "governance/AUTHORITY-MAP.md",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/AUTHORITY-MAP.md",
+          "line": 125,
+          "referrer": "README.md",
+          "resolved": "governance/AUTHORITY-MAP.md",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/AUTHORITY-MAP.md",
+          "line": 125,
+          "referrer": "README.md",
           "resolved": "governance/AUTHORITY-MAP.md",
           "severity": "hard"
         },
@@ -29069,7 +29069,7 @@
         {
           "candidate": "governance/PATH-CLASSIFICATION.md",
           "line": 124,
-          "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+          "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
           "resolved": "governance/PATH-CLASSIFICATION.md",
           "severity": "hard"
         },
@@ -29657,7 +29657,7 @@
         {
           "candidate": "governance/STATE-CURRENT.md",
           "line": 124,
-          "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+          "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
           "resolved": "governance/STATE-CURRENT.md",
           "severity": "hard"
         },
@@ -29762,21 +29762,21 @@
         {
           "candidate": "governance/authority.json",
           "line": 29,
-          "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+          "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
           "resolved": "governance/authority.json",
           "severity": "hard"
         },
         {
           "candidate": "governance/authority.json",
           "line": 46,
-          "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+          "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
           "resolved": "governance/authority.json",
           "severity": "hard"
         },
         {
           "candidate": "governance/authority.json",
           "line": 54,
-          "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+          "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
           "resolved": "governance/authority.json",
           "severity": "hard"
         },
@@ -30139,28 +30139,28 @@
         {
           "candidate": "governance/autonomy-policy.json",
           "line": 26,
-          "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+          "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
           "resolved": "governance/autonomy-policy.json",
           "severity": "hard"
         },
         {
           "candidate": "governance/autonomy-policy.json",
           "line": 33,
-          "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+          "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
           "resolved": "governance/autonomy-policy.json",
           "severity": "hard"
         },
         {
           "candidate": "governance/autonomy-policy.json",
           "line": 54,
-          "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+          "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
           "resolved": "governance/autonomy-policy.json",
           "severity": "hard"
         },
         {
           "candidate": "governance/autonomy-policy.json",
           "line": 15,
-          "referrer": "docs/superpowers/specs/2026-08-22-autonomous-luna-sol-design.md",
+          "referrer": "Docs/superpowers/specs/2026-08-22-autonomous-luna-sol-design.md",
           "resolved": "governance/autonomy-policy.json",
           "severity": "hard"
         },
@@ -30404,14 +30404,14 @@
         {
           "candidate": "governance/decisions/D-2026-08-21-autonomie-luna-sol.md",
           "line": 27,
-          "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+          "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
           "resolved": "governance/decisions/D-2026-08-21-autonomie-luna-sol.md",
           "severity": "hard"
         },
         {
           "candidate": "governance/decisions/D-2026-08-21-autonomie-luna-sol.md",
           "line": 54,
-          "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+          "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
           "resolved": "governance/decisions/D-2026-08-21-autonomie-luna-sol.md",
           "severity": "hard"
         },
@@ -30641,8 +30641,8 @@
         }
       ],
       "rule_id": "governance-core",
-      "sha256": "5bf5610396f9c3f73a09dc403d924ad93d2408a1525ff12fb8922542845c3970",
-      "size": 25878,
+      "sha256": "4688159bb109607f66a4849d6d4b2cae5c48bba23c779ed618b17515ccb52ac9",
+      "size": 25430,
       "target_path": null,
       "type": "text"
     },
@@ -30670,7 +30670,7 @@
         {
           "candidate": "governance/path-classification.json",
           "line": 124,
-          "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+          "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
           "resolved": "governance/path-classification.json",
           "severity": "hard"
         },
@@ -31818,14 +31818,14 @@
         {
           "candidate": "governance/vision-log.jsonl",
           "line": 122,
-          "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+          "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
           "resolved": "governance/vision-log.jsonl",
           "severity": "hard"
         },
         {
           "candidate": "governance/vision-log.jsonl",
           "line": 140,
-          "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+          "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
           "resolved": "governance/vision-log.jsonl",
           "severity": "hard"
         },
@@ -32264,36 +32264,36 @@
         },
         {
           "candidate": "manifests/roles.yaml",
-          "line": 29,
-          "referrer": "archive/rapports/conformite-v2.0-integrale.md",
-          "resolved": "manifests/roles.yaml",
-          "severity": "hard"
-        },
-        {
-          "candidate": "manifests/roles.yaml",
           "line": 28,
-          "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+          "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
           "resolved": "manifests/roles.yaml",
           "severity": "hard"
         },
         {
           "candidate": "manifests/roles.yaml",
           "line": 34,
-          "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+          "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
           "resolved": "manifests/roles.yaml",
           "severity": "hard"
         },
         {
           "candidate": "manifests/roles.yaml",
           "line": 54,
-          "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+          "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
           "resolved": "manifests/roles.yaml",
           "severity": "hard"
         },
         {
           "candidate": "manifests/roles.yaml",
           "line": 16,
-          "referrer": "docs/superpowers/specs/2026-08-22-autonomous-luna-sol-design.md",
+          "referrer": "Docs/superpowers/specs/2026-08-22-autonomous-luna-sol-design.md",
+          "resolved": "manifests/roles.yaml",
+          "severity": "hard"
+        },
+        {
+          "candidate": "manifests/roles.yaml",
+          "line": 29,
+          "referrer": "archive/rapports/conformite-v2.0-integrale.md",
           "resolved": "manifests/roles.yaml",
           "severity": "hard"
         },
@@ -33665,7 +33665,7 @@
         {
           "candidate": "scripts/governance/classify_paths.py",
           "line": 140,
-          "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+          "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
           "resolved": "scripts/governance/classify_paths.py",
           "severity": "hard"
         },
@@ -34057,7 +34057,7 @@
         {
           "candidate": "scripts/governance/state_current.py",
           "line": 140,
-          "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+          "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
           "resolved": "scripts/governance/state_current.py",
           "severity": "hard"
         },
@@ -34253,7 +34253,7 @@
         {
           "candidate": "scripts/governance/validate_authority.py",
           "line": 140,
-          "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+          "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
           "resolved": "scripts/governance/validate_authority.py",
           "severity": "hard"
         },
@@ -35113,6 +35113,13 @@
         },
         {
           "candidate": "scripts/no_stub_scan.py",
+          "line": 155,
+          "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+          "resolved": "scripts/no_stub_scan.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "scripts/no_stub_scan.py",
           "line": 120,
           "referrer": "MASTER-PLAN.md",
           "resolved": "scripts/no_stub_scan.py",
@@ -35150,13 +35157,6 @@
           "candidate": "scripts/no_stub_scan.py",
           "line": 71,
           "referrer": "archive/rapports/conformite-v2.0-integrale.md",
-          "resolved": "scripts/no_stub_scan.py",
-          "severity": "hard"
-        },
-        {
-          "candidate": "scripts/no_stub_scan.py",
-          "line": 155,
-          "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
           "resolved": "scripts/no_stub_scan.py",
           "severity": "hard"
         },
@@ -36121,6 +36121,27 @@
         },
         {
           "candidate": "scripts/registre.py",
+          "line": 128,
+          "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+          "resolved": "scripts/registre.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "scripts/registre.py",
+          "line": 136,
+          "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+          "resolved": "scripts/registre.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "scripts/registre.py",
+          "line": 140,
+          "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+          "resolved": "scripts/registre.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "scripts/registre.py",
           "line": 98,
           "referrer": "README.md",
           "resolved": "scripts/registre.py",
@@ -36137,27 +36158,6 @@
           "candidate": "scripts/registre.py",
           "line": 221,
           "referrer": "archive/rapports/audit-gouvernance-qualite-2026-08-03.md",
-          "resolved": "scripts/registre.py",
-          "severity": "hard"
-        },
-        {
-          "candidate": "scripts/registre.py",
-          "line": 128,
-          "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
-          "resolved": "scripts/registre.py",
-          "severity": "hard"
-        },
-        {
-          "candidate": "scripts/registre.py",
-          "line": 136,
-          "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
-          "resolved": "scripts/registre.py",
-          "severity": "hard"
-        },
-        {
-          "candidate": "scripts/registre.py",
-          "line": 140,
-          "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
           "resolved": "scripts/registre.py",
           "severity": "hard"
         },
@@ -36465,35 +36465,35 @@
         {
           "candidate": "scripts/reviews_gate.py",
           "line": 86,
-          "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+          "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
           "resolved": "scripts/reviews_gate.py",
           "severity": "hard"
         },
         {
           "candidate": "scripts/reviews_gate.py",
           "line": 109,
-          "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+          "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
           "resolved": "scripts/reviews_gate.py",
           "severity": "hard"
         },
         {
           "candidate": "scripts/reviews_gate.py",
           "line": 113,
-          "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+          "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
           "resolved": "scripts/reviews_gate.py",
           "severity": "hard"
         },
         {
           "candidate": "scripts/reviews_gate.py",
           "line": 155,
-          "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+          "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
           "resolved": "scripts/reviews_gate.py",
           "severity": "hard"
         },
         {
           "candidate": "scripts/reviews_gate.py",
           "line": 18,
-          "referrer": "docs/superpowers/specs/2026-08-22-autonomous-luna-sol-design.md",
+          "referrer": "Docs/superpowers/specs/2026-08-22-autonomous-luna-sol-design.md",
           "resolved": "scripts/reviews_gate.py",
           "severity": "hard"
         },
@@ -36682,35 +36682,35 @@
         {
           "candidate": "scripts/revue.py",
           "line": 34,
-          "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+          "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
           "resolved": "scripts/revue.py",
           "severity": "hard"
         },
         {
           "candidate": "scripts/revue.py",
           "line": 85,
-          "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+          "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
           "resolved": "scripts/revue.py",
           "severity": "hard"
         },
         {
           "candidate": "scripts/revue.py",
           "line": 109,
-          "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+          "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
           "resolved": "scripts/revue.py",
           "severity": "hard"
         },
         {
           "candidate": "scripts/revue.py",
           "line": 113,
-          "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+          "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
           "resolved": "scripts/revue.py",
           "severity": "hard"
         },
         {
           "candidate": "scripts/revue.py",
           "line": 17,
-          "referrer": "docs/superpowers/specs/2026-08-22-autonomous-luna-sol-design.md",
+          "referrer": "Docs/superpowers/specs/2026-08-22-autonomous-luna-sol-design.md",
           "resolved": "scripts/revue.py",
           "severity": "hard"
         },
@@ -37200,7 +37200,7 @@
         {
           "candidate": "scripts/ruff_noqa_gate.py",
           "line": 155,
-          "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+          "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
           "resolved": "scripts/ruff_noqa_gate.py",
           "severity": "hard"
         },
@@ -49256,21 +49256,21 @@
         {
           "candidate": "stories/ORCH-LUNA-SOL-603.md",
           "line": 121,
-          "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+          "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
           "resolved": "stories/ORCH-LUNA-SOL-603.md",
           "severity": "hard"
         },
         {
           "candidate": "stories/ORCH-LUNA-SOL-603.md",
           "line": 144,
-          "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+          "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
           "resolved": "stories/ORCH-LUNA-SOL-603.md",
           "severity": "hard"
         },
         {
           "candidate": "stories/ORCH-LUNA-SOL-603.md",
           "line": 151,
-          "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+          "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
           "resolved": "stories/ORCH-LUNA-SOL-603.md",
           "severity": "hard"
         },
@@ -51891,8 +51891,8 @@
         }
       ],
       "rule_id": "test-suite",
-      "sha256": "cf767a53ad13f528578268b6b6660d523fb8a533e8b5c89487e9d1f237ab5f10",
-      "size": 22213,
+      "sha256": "e0c359c9897bd3b10531a79404f88fc4ca328cb704d018e162ac9d193898e6df",
+      "size": 22196,
       "target_path": null,
       "type": "text"
     },
@@ -51990,56 +51990,56 @@
         {
           "candidate": "tests/test_autonomy_policy.py",
           "line": 30,
-          "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+          "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
           "resolved": "tests/test_autonomy_policy.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_autonomy_policy.py",
           "line": 33,
-          "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+          "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
           "resolved": "tests/test_autonomy_policy.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_autonomy_policy.py",
           "line": 42,
-          "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+          "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
           "resolved": "tests/test_autonomy_policy.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_autonomy_policy.py",
           "line": 50,
-          "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+          "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
           "resolved": "tests/test_autonomy_policy.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_autonomy_policy.py",
           "line": 54,
-          "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+          "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
           "resolved": "tests/test_autonomy_policy.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_autonomy_policy.py",
           "line": 109,
-          "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+          "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
           "resolved": "tests/test_autonomy_policy.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_autonomy_policy.py",
           "line": 109,
-          "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+          "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
           "resolved": "tests/test_autonomy_policy.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_autonomy_policy.py",
           "line": 113,
-          "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+          "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
           "resolved": "tests/test_autonomy_policy.py",
           "severity": "hard"
         },
@@ -60271,42 +60271,42 @@
         {
           "candidate": "tests/test_reviews_gate.py",
           "line": 60,
-          "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+          "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
           "resolved": "tests/test_reviews_gate.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_reviews_gate.py",
           "line": 80,
-          "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+          "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
           "resolved": "tests/test_reviews_gate.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_reviews_gate.py",
           "line": 88,
-          "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+          "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
           "resolved": "tests/test_reviews_gate.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_reviews_gate.py",
           "line": 109,
-          "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+          "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
           "resolved": "tests/test_reviews_gate.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_reviews_gate.py",
           "line": 109,
-          "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+          "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
           "resolved": "tests/test_reviews_gate.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_reviews_gate.py",
           "line": 113,
-          "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+          "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
           "resolved": "tests/test_reviews_gate.py",
           "severity": "hard"
         },
@@ -60446,14 +60446,14 @@
         {
           "candidate": "tests/test_revue.py",
           "line": 50,
-          "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+          "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
           "resolved": "tests/test_revue.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_revue.py",
           "line": 109,
-          "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+          "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
           "resolved": "tests/test_revue.py",
           "severity": "hard"
         },
@@ -60740,42 +60740,42 @@
         {
           "candidate": "tests/test_revue_sol_blind.py",
           "line": 59,
-          "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+          "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
           "resolved": "tests/test_revue_sol_blind.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_revue_sol_blind.py",
           "line": 80,
-          "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+          "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
           "resolved": "tests/test_revue_sol_blind.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_revue_sol_blind.py",
           "line": 87,
-          "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+          "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
           "resolved": "tests/test_revue_sol_blind.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_revue_sol_blind.py",
           "line": 109,
-          "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+          "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
           "resolved": "tests/test_revue_sol_blind.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_revue_sol_blind.py",
           "line": 109,
-          "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+          "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
           "resolved": "tests/test_revue_sol_blind.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_revue_sol_blind.py",
           "line": 113,
-          "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+          "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
           "resolved": "tests/test_revue_sol_blind.py",
           "severity": "hard"
         },
@@ -64494,6 +64494,11 @@
       },
       {
         "candidate": "two-lane/no-write/restart/T3",
+        "line": 66,
+        "referrer": ".superpowers/sdd/2026-08-22-autonomous-luna-sol/progress.md"
+      },
+      {
+        "candidate": "docs/superpowers",
         "line": 66,
         "referrer": ".superpowers/sdd/2026-08-22-autonomous-luna-sol/progress.md"
       },
@@ -68768,7 +68773,7 @@
         "referrer": "Docs/reference/autonomy-luna-sol.md"
       },
       {
-        "candidate": "../../docs/superpowers/specs/2026-08-22-autonomous-luna-sol-design.md",
+        "candidate": "../superpowers/specs/2026-08-22-autonomous-luna-sol-design.md",
         "line": 9,
         "referrer": "Docs/reference/autonomy-luna-sol.md"
       },
@@ -68891,6 +68896,136 @@
         "candidate": "tests/fixtures/",
         "line": 16,
         "referrer": "Docs/reference/secrets-scanning.md"
+      },
+      {
+        "candidate": "Luna/Sol",
+        "line": 1,
+        "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md"
+      },
+      {
+        "candidate": "revue.py",
+        "line": 7,
+        "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md"
+      },
+      {
+        "candidate": "reviews_gate.py",
+        "line": 7,
+        "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md"
+      },
+      {
+        "candidate": "JSON/YAML",
+        "line": 9,
+        "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md"
+      },
+      {
+        "candidate": "runtime/backend",
+        "line": 20,
+        "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md"
+      },
+      {
+        "candidate": "authority/state/path",
+        "line": 21,
+        "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md"
+      },
+      {
+        "candidate": "loader/import",
+        "line": 42,
+        "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md"
+      },
+      {
+        "candidate": "historical/non-fresh",
+        "line": 72,
+        "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md"
+      },
+      {
+        "candidate": "mode/validator",
+        "line": 80,
+        "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md"
+      },
+      {
+        "candidate": "revue.py",
+        "line": 93,
+        "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md"
+      },
+      {
+        "candidate": "freshness/blindness/read-only",
+        "line": 97,
+        "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md"
+      },
+      {
+        "candidate": "governance/state-current.json",
+        "line": 124,
+        "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md"
+      },
+      {
+        "candidate": "documentation/generator",
+        "line": 130,
+        "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md"
+      },
+      {
+        "candidate": "AGENTS/CLAUDE",
+        "line": 136,
+        "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md"
+      },
+      {
+        "candidate": "evidence/reviews/ORCH-LUNA-SOL-603/",
+        "line": 149,
+        "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md"
+      },
+      {
+        "candidate": "RECU.json",
+        "line": 149,
+        "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md"
+      },
+      {
+        "candidate": "authority/state/path-classification",
+        "line": 155,
+        "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md"
+      },
+      {
+        "candidate": "origin/main",
+        "line": 155,
+        "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md"
+      },
+      {
+        "candidate": "origin/main...HEAD",
+        "line": 159,
+        "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md"
+      },
+      {
+        "candidate": "base/head/tree",
+        "line": 159,
+        "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md"
+      },
+      {
+        "candidate": "codex/issue-603-clean",
+        "line": 167,
+        "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md"
+      },
+      {
+        "candidate": "origin/main",
+        "line": 171,
+        "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md"
+      },
+      {
+        "candidate": "metadata/comments",
+        "line": 176,
+        "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md"
+      },
+      {
+        "candidate": "PR/commit",
+        "line": 180,
+        "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md"
+      },
+      {
+        "candidate": "Luna/Sol",
+        "line": 1,
+        "referrer": "Docs/superpowers/specs/2026-08-22-autonomous-luna-sol-design.md"
+      },
+      {
+        "candidate": "historique/non",
+        "line": 27,
+        "referrer": "Docs/superpowers/specs/2026-08-22-autonomous-luna-sol-design.md"
       },
       {
         "candidate": "scripts/",
@@ -72976,136 +73111,6 @@
         "candidate": "web/control",
         "line": 52,
         "referrer": "archive/recherche/rall-1-agents-orchestration.yaml"
-      },
-      {
-        "candidate": "Luna/Sol",
-        "line": 1,
-        "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md"
-      },
-      {
-        "candidate": "revue.py",
-        "line": 7,
-        "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md"
-      },
-      {
-        "candidate": "reviews_gate.py",
-        "line": 7,
-        "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md"
-      },
-      {
-        "candidate": "JSON/YAML",
-        "line": 9,
-        "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md"
-      },
-      {
-        "candidate": "runtime/backend",
-        "line": 20,
-        "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md"
-      },
-      {
-        "candidate": "authority/state/path",
-        "line": 21,
-        "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md"
-      },
-      {
-        "candidate": "loader/import",
-        "line": 42,
-        "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md"
-      },
-      {
-        "candidate": "historical/non-fresh",
-        "line": 72,
-        "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md"
-      },
-      {
-        "candidate": "mode/validator",
-        "line": 80,
-        "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md"
-      },
-      {
-        "candidate": "revue.py",
-        "line": 93,
-        "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md"
-      },
-      {
-        "candidate": "freshness/blindness/read-only",
-        "line": 97,
-        "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md"
-      },
-      {
-        "candidate": "governance/state-current.json",
-        "line": 124,
-        "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md"
-      },
-      {
-        "candidate": "documentation/generator",
-        "line": 130,
-        "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md"
-      },
-      {
-        "candidate": "AGENTS/CLAUDE",
-        "line": 136,
-        "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md"
-      },
-      {
-        "candidate": "evidence/reviews/ORCH-LUNA-SOL-603/",
-        "line": 149,
-        "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md"
-      },
-      {
-        "candidate": "RECU.json",
-        "line": 149,
-        "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md"
-      },
-      {
-        "candidate": "authority/state/path-classification",
-        "line": 155,
-        "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md"
-      },
-      {
-        "candidate": "origin/main",
-        "line": 155,
-        "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md"
-      },
-      {
-        "candidate": "origin/main...HEAD",
-        "line": 159,
-        "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md"
-      },
-      {
-        "candidate": "base/head/tree",
-        "line": 159,
-        "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md"
-      },
-      {
-        "candidate": "codex/issue-603-clean",
-        "line": 167,
-        "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md"
-      },
-      {
-        "candidate": "origin/main",
-        "line": 171,
-        "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md"
-      },
-      {
-        "candidate": "metadata/comments",
-        "line": 176,
-        "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md"
-      },
-      {
-        "candidate": "PR/commit",
-        "line": 180,
-        "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md"
-      },
-      {
-        "candidate": "Luna/Sol",
-        "line": 1,
-        "referrer": "docs/superpowers/specs/2026-08-22-autonomous-luna-sol-design.md"
-      },
-      {
-        "candidate": "historique/non",
-        "line": 27,
-        "referrer": "docs/superpowers/specs/2026-08-22-autonomous-luna-sol-design.md"
       },
       {
         "candidate": "leon36000/ForgeAI-Toolkit",
@@ -106925,11 +106930,6 @@
       {
         "candidate": ".superpowers/sdd/",
         "line": 722,
-        "referrer": "governance/path-classification-rules.json"
-      },
-      {
-        "candidate": "docs/superpowers/",
-        "line": 736,
         "referrer": "governance/path-classification-rules.json"
       },
       {
@@ -153972,17 +153972,17 @@
         "severity": "hard"
       },
       {
-        "candidate": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+        "candidate": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
         "line": 1,
         "referrer": ".superpowers/sdd/2026-08-22-autonomous-luna-sol/progress.md",
-        "resolved": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+        "resolved": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
         "severity": "hard"
       },
       {
-        "candidate": "docs/superpowers/specs/2026-08-22-autonomous-luna-sol-design.md",
+        "candidate": "Docs/superpowers/specs/2026-08-22-autonomous-luna-sol-design.md",
         "line": 10,
         "referrer": ".superpowers/sdd/2026-08-22-autonomous-luna-sol/progress.md",
-        "resolved": "docs/superpowers/specs/2026-08-22-autonomous-luna-sol-design.md",
+        "resolved": "Docs/superpowers/specs/2026-08-22-autonomous-luna-sol-design.md",
         "severity": "hard"
       },
       {
@@ -154011,13 +154011,6 @@
         "line": 66,
         "referrer": ".superpowers/sdd/2026-08-22-autonomous-luna-sol/progress.md",
         "resolved": ".superpowers/sdd",
-        "severity": "hard"
-      },
-      {
-        "candidate": "docs/superpowers",
-        "line": 66,
-        "referrer": ".superpowers/sdd/2026-08-22-autonomous-luna-sol/progress.md",
-        "resolved": "docs/superpowers",
         "severity": "hard"
       },
       {
@@ -156513,10 +156506,10 @@
         "severity": "hard"
       },
       {
-        "candidate": "docs/superpowers/specs/2026-08-22-autonomous-luna-sol-design.md",
+        "candidate": "Docs/superpowers/specs/2026-08-22-autonomous-luna-sol-design.md",
         "line": 9,
         "referrer": "Docs/reference/autonomy-luna-sol.md",
-        "resolved": "docs/superpowers/specs/2026-08-22-autonomous-luna-sol-design.md",
+        "resolved": "Docs/superpowers/specs/2026-08-22-autonomous-luna-sol-design.md",
         "severity": "hard"
       },
       {
@@ -156930,6 +156923,531 @@
         "line": 40,
         "referrer": "Docs/reference/secrets-scanning.md",
         "resolved": ".gitguardian.yaml",
+        "severity": "hard"
+      },
+      {
+        "candidate": "Docs/superpowers/specs/2026-08-22-autonomous-luna-sol-design.md",
+        "line": 11,
+        "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+        "resolved": "Docs/superpowers/specs/2026-08-22-autonomous-luna-sol-design.md",
+        "severity": "hard"
+      },
+      {
+        "candidate": "governance/autonomy-policy.json",
+        "line": 26,
+        "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+        "resolved": "governance/autonomy-policy.json",
+        "severity": "hard"
+      },
+      {
+        "candidate": "governance/decisions/D-2026-08-21-autonomie-luna-sol.md",
+        "line": 27,
+        "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+        "resolved": "governance/decisions/D-2026-08-21-autonomie-luna-sol.md",
+        "severity": "hard"
+      },
+      {
+        "candidate": "manifests/roles.yaml",
+        "line": 28,
+        "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+        "resolved": "manifests/roles.yaml",
+        "severity": "hard"
+      },
+      {
+        "candidate": "governance/authority.json",
+        "line": 29,
+        "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+        "resolved": "governance/authority.json",
+        "severity": "hard"
+      },
+      {
+        "candidate": "tests/test_autonomy_policy.py",
+        "line": 30,
+        "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+        "resolved": "tests/test_autonomy_policy.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "tests/test_autonomy_policy.py",
+        "line": 33,
+        "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+        "resolved": "tests/test_autonomy_policy.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "governance/autonomy-policy.json",
+        "line": 33,
+        "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+        "resolved": "governance/autonomy-policy.json",
+        "severity": "hard"
+      },
+      {
+        "candidate": "scripts/revue.py",
+        "line": 34,
+        "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+        "resolved": "scripts/revue.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "manifests/roles.yaml",
+        "line": 34,
+        "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+        "resolved": "manifests/roles.yaml",
+        "severity": "hard"
+      },
+      {
+        "candidate": "tests/test_autonomy_policy.py",
+        "line": 42,
+        "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+        "resolved": "tests/test_autonomy_policy.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "governance/authority.json",
+        "line": 46,
+        "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+        "resolved": "governance/authority.json",
+        "severity": "hard"
+      },
+      {
+        "candidate": "tests/test_autonomy_policy.py",
+        "line": 50,
+        "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+        "resolved": "tests/test_autonomy_policy.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "tests/test_revue.py",
+        "line": 50,
+        "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+        "resolved": "tests/test_revue.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "governance/autonomy-policy.json",
+        "line": 54,
+        "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+        "resolved": "governance/autonomy-policy.json",
+        "severity": "hard"
+      },
+      {
+        "candidate": "governance/decisions/D-2026-08-21-autonomie-luna-sol.md",
+        "line": 54,
+        "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+        "resolved": "governance/decisions/D-2026-08-21-autonomie-luna-sol.md",
+        "severity": "hard"
+      },
+      {
+        "candidate": "manifests/roles.yaml",
+        "line": 54,
+        "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+        "resolved": "manifests/roles.yaml",
+        "severity": "hard"
+      },
+      {
+        "candidate": "governance/authority.json",
+        "line": 54,
+        "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+        "resolved": "governance/authority.json",
+        "severity": "hard"
+      },
+      {
+        "candidate": "tests/test_autonomy_policy.py",
+        "line": 54,
+        "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+        "resolved": "tests/test_autonomy_policy.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "tests/test_revue_sol_blind.py",
+        "line": 59,
+        "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+        "resolved": "tests/test_revue_sol_blind.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "tests/test_reviews_gate.py",
+        "line": 60,
+        "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+        "resolved": "tests/test_reviews_gate.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "tests/test_revue_sol_blind.py",
+        "line": 80,
+        "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+        "resolved": "tests/test_revue_sol_blind.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "tests/test_reviews_gate.py",
+        "line": 80,
+        "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+        "resolved": "tests/test_reviews_gate.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "scripts/revue.py",
+        "line": 85,
+        "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+        "resolved": "scripts/revue.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "scripts/reviews_gate.py",
+        "line": 86,
+        "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+        "resolved": "scripts/reviews_gate.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "tests/test_revue_sol_blind.py",
+        "line": 87,
+        "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+        "resolved": "tests/test_revue_sol_blind.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "tests/test_reviews_gate.py",
+        "line": 88,
+        "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+        "resolved": "tests/test_reviews_gate.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "tests/test_autonomy_policy.py",
+        "line": 109,
+        "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+        "resolved": "tests/test_autonomy_policy.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "tests/test_revue_sol_blind.py",
+        "line": 109,
+        "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+        "resolved": "tests/test_revue_sol_blind.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "tests/test_reviews_gate.py",
+        "line": 109,
+        "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+        "resolved": "tests/test_reviews_gate.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "tests/test_revue.py",
+        "line": 109,
+        "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+        "resolved": "tests/test_revue.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "scripts/revue.py",
+        "line": 109,
+        "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+        "resolved": "scripts/revue.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "scripts/reviews_gate.py",
+        "line": 109,
+        "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+        "resolved": "scripts/reviews_gate.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "tests/test_autonomy_policy.py",
+        "line": 109,
+        "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+        "resolved": "tests/test_autonomy_policy.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "tests/test_revue_sol_blind.py",
+        "line": 109,
+        "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+        "resolved": "tests/test_revue_sol_blind.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "tests/test_reviews_gate.py",
+        "line": 109,
+        "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+        "resolved": "tests/test_reviews_gate.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "scripts/revue.py",
+        "line": 113,
+        "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+        "resolved": "scripts/revue.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "scripts/reviews_gate.py",
+        "line": 113,
+        "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+        "resolved": "scripts/reviews_gate.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "tests/test_autonomy_policy.py",
+        "line": 113,
+        "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+        "resolved": "tests/test_autonomy_policy.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "tests/test_revue_sol_blind.py",
+        "line": 113,
+        "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+        "resolved": "tests/test_revue_sol_blind.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "tests/test_reviews_gate.py",
+        "line": 113,
+        "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+        "resolved": "tests/test_reviews_gate.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "AGENTS.md",
+        "line": 118,
+        "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+        "resolved": "AGENTS.md",
+        "severity": "hard"
+      },
+      {
+        "candidate": "CLAUDE.md",
+        "line": 119,
+        "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+        "resolved": "CLAUDE.md",
+        "severity": "hard"
+      },
+      {
+        "candidate": "Docs/reference/autonomy-luna-sol.md",
+        "line": 120,
+        "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+        "resolved": "Docs/reference/autonomy-luna-sol.md",
+        "severity": "hard"
+      },
+      {
+        "candidate": "stories/ORCH-LUNA-SOL-603.md",
+        "line": 121,
+        "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+        "resolved": "stories/ORCH-LUNA-SOL-603.md",
+        "severity": "hard"
+      },
+      {
+        "candidate": "governance/vision-log.jsonl",
+        "line": 122,
+        "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+        "resolved": "governance/vision-log.jsonl",
+        "severity": "hard"
+      },
+      {
+        "candidate": "evidence/registres/mission.jsonl",
+        "line": 123,
+        "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+        "resolved": "evidence/registres/mission.jsonl",
+        "severity": "hard"
+      },
+      {
+        "candidate": "governance/AUTHORITY-MAP.md",
+        "line": 124,
+        "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+        "resolved": "governance/AUTHORITY-MAP.md",
+        "severity": "hard"
+      },
+      {
+        "candidate": "governance/STATE-CURRENT.md",
+        "line": 124,
+        "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+        "resolved": "governance/STATE-CURRENT.md",
+        "severity": "hard"
+      },
+      {
+        "candidate": "governance/path-classification.json",
+        "line": 124,
+        "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+        "resolved": "governance/path-classification.json",
+        "severity": "hard"
+      },
+      {
+        "candidate": "governance/PATH-CLASSIFICATION.md",
+        "line": 124,
+        "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+        "resolved": "governance/PATH-CLASSIFICATION.md",
+        "severity": "hard"
+      },
+      {
+        "candidate": "scripts/registre.py",
+        "line": 128,
+        "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+        "resolved": "scripts/registre.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "scripts/registre.py",
+        "line": 136,
+        "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+        "resolved": "scripts/registre.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "scripts/governance/validate_authority.py",
+        "line": 140,
+        "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+        "resolved": "scripts/governance/validate_authority.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "scripts/governance/state_current.py",
+        "line": 140,
+        "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+        "resolved": "scripts/governance/state_current.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "README.md",
+        "line": 140,
+        "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+        "resolved": "README.md",
+        "severity": "hard"
+      },
+      {
+        "candidate": "AGENTS.md",
+        "line": 140,
+        "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+        "resolved": "AGENTS.md",
+        "severity": "hard"
+      },
+      {
+        "candidate": "scripts/governance/classify_paths.py",
+        "line": 140,
+        "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+        "resolved": "scripts/governance/classify_paths.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "scripts/registre.py",
+        "line": 140,
+        "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+        "resolved": "scripts/registre.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "governance/vision-log.jsonl",
+        "line": 140,
+        "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+        "resolved": "governance/vision-log.jsonl",
+        "severity": "hard"
+      },
+      {
+        "candidate": "evidence/registres/mission.jsonl",
+        "line": 140,
+        "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+        "resolved": "evidence/registres/mission.jsonl",
+        "severity": "hard"
+      },
+      {
+        "candidate": "AGENTS.md",
+        "line": 144,
+        "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+        "resolved": "AGENTS.md",
+        "severity": "hard"
+      },
+      {
+        "candidate": "CLAUDE.md",
+        "line": 144,
+        "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+        "resolved": "CLAUDE.md",
+        "severity": "hard"
+      },
+      {
+        "candidate": "Docs/reference/autonomy-luna-sol.md",
+        "line": 144,
+        "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+        "resolved": "Docs/reference/autonomy-luna-sol.md",
+        "severity": "hard"
+      },
+      {
+        "candidate": "stories/ORCH-LUNA-SOL-603.md",
+        "line": 144,
+        "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+        "resolved": "stories/ORCH-LUNA-SOL-603.md",
+        "severity": "hard"
+      },
+      {
+        "candidate": "evidence/registres/mission.jsonl",
+        "line": 144,
+        "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+        "resolved": "evidence/registres/mission.jsonl",
+        "severity": "hard"
+      },
+      {
+        "candidate": "evidence/reviews/BINDING.txt",
+        "line": 150,
+        "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+        "resolved": "evidence/reviews/BINDING.txt",
+        "severity": "hard"
+      },
+      {
+        "candidate": "stories/ORCH-LUNA-SOL-603.md",
+        "line": 151,
+        "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+        "resolved": "stories/ORCH-LUNA-SOL-603.md",
+        "severity": "hard"
+      },
+      {
+        "candidate": "scripts/no_stub_scan.py",
+        "line": 155,
+        "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+        "resolved": "scripts/no_stub_scan.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "scripts/ruff_noqa_gate.py",
+        "line": 155,
+        "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+        "resolved": "scripts/ruff_noqa_gate.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "scripts/reviews_gate.py",
+        "line": 155,
+        "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+        "resolved": "scripts/reviews_gate.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "governance/autonomy-policy.json",
+        "line": 15,
+        "referrer": "Docs/superpowers/specs/2026-08-22-autonomous-luna-sol-design.md",
+        "resolved": "governance/autonomy-policy.json",
+        "severity": "hard"
+      },
+      {
+        "candidate": "manifests/roles.yaml",
+        "line": 16,
+        "referrer": "Docs/superpowers/specs/2026-08-22-autonomous-luna-sol-design.md",
+        "resolved": "manifests/roles.yaml",
+        "severity": "hard"
+      },
+      {
+        "candidate": "scripts/revue.py",
+        "line": 17,
+        "referrer": "Docs/superpowers/specs/2026-08-22-autonomous-luna-sol-design.md",
+        "resolved": "scripts/revue.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "scripts/reviews_gate.py",
+        "line": 18,
+        "referrer": "Docs/superpowers/specs/2026-08-22-autonomous-luna-sol-design.md",
+        "resolved": "scripts/reviews_gate.py",
         "severity": "hard"
       },
       {
@@ -158463,531 +158981,6 @@
         "line": 93,
         "referrer": "archive/rapports/conformite-v2.0-integrale.md",
         "resolved": "manifests/backlog.yaml",
-        "severity": "hard"
-      },
-      {
-        "candidate": "docs/superpowers/specs/2026-08-22-autonomous-luna-sol-design.md",
-        "line": 11,
-        "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
-        "resolved": "docs/superpowers/specs/2026-08-22-autonomous-luna-sol-design.md",
-        "severity": "hard"
-      },
-      {
-        "candidate": "governance/autonomy-policy.json",
-        "line": 26,
-        "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
-        "resolved": "governance/autonomy-policy.json",
-        "severity": "hard"
-      },
-      {
-        "candidate": "governance/decisions/D-2026-08-21-autonomie-luna-sol.md",
-        "line": 27,
-        "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
-        "resolved": "governance/decisions/D-2026-08-21-autonomie-luna-sol.md",
-        "severity": "hard"
-      },
-      {
-        "candidate": "manifests/roles.yaml",
-        "line": 28,
-        "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
-        "resolved": "manifests/roles.yaml",
-        "severity": "hard"
-      },
-      {
-        "candidate": "governance/authority.json",
-        "line": 29,
-        "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
-        "resolved": "governance/authority.json",
-        "severity": "hard"
-      },
-      {
-        "candidate": "tests/test_autonomy_policy.py",
-        "line": 30,
-        "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
-        "resolved": "tests/test_autonomy_policy.py",
-        "severity": "hard"
-      },
-      {
-        "candidate": "tests/test_autonomy_policy.py",
-        "line": 33,
-        "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
-        "resolved": "tests/test_autonomy_policy.py",
-        "severity": "hard"
-      },
-      {
-        "candidate": "governance/autonomy-policy.json",
-        "line": 33,
-        "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
-        "resolved": "governance/autonomy-policy.json",
-        "severity": "hard"
-      },
-      {
-        "candidate": "scripts/revue.py",
-        "line": 34,
-        "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
-        "resolved": "scripts/revue.py",
-        "severity": "hard"
-      },
-      {
-        "candidate": "manifests/roles.yaml",
-        "line": 34,
-        "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
-        "resolved": "manifests/roles.yaml",
-        "severity": "hard"
-      },
-      {
-        "candidate": "tests/test_autonomy_policy.py",
-        "line": 42,
-        "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
-        "resolved": "tests/test_autonomy_policy.py",
-        "severity": "hard"
-      },
-      {
-        "candidate": "governance/authority.json",
-        "line": 46,
-        "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
-        "resolved": "governance/authority.json",
-        "severity": "hard"
-      },
-      {
-        "candidate": "tests/test_autonomy_policy.py",
-        "line": 50,
-        "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
-        "resolved": "tests/test_autonomy_policy.py",
-        "severity": "hard"
-      },
-      {
-        "candidate": "tests/test_revue.py",
-        "line": 50,
-        "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
-        "resolved": "tests/test_revue.py",
-        "severity": "hard"
-      },
-      {
-        "candidate": "governance/autonomy-policy.json",
-        "line": 54,
-        "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
-        "resolved": "governance/autonomy-policy.json",
-        "severity": "hard"
-      },
-      {
-        "candidate": "governance/decisions/D-2026-08-21-autonomie-luna-sol.md",
-        "line": 54,
-        "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
-        "resolved": "governance/decisions/D-2026-08-21-autonomie-luna-sol.md",
-        "severity": "hard"
-      },
-      {
-        "candidate": "manifests/roles.yaml",
-        "line": 54,
-        "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
-        "resolved": "manifests/roles.yaml",
-        "severity": "hard"
-      },
-      {
-        "candidate": "governance/authority.json",
-        "line": 54,
-        "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
-        "resolved": "governance/authority.json",
-        "severity": "hard"
-      },
-      {
-        "candidate": "tests/test_autonomy_policy.py",
-        "line": 54,
-        "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
-        "resolved": "tests/test_autonomy_policy.py",
-        "severity": "hard"
-      },
-      {
-        "candidate": "tests/test_revue_sol_blind.py",
-        "line": 59,
-        "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
-        "resolved": "tests/test_revue_sol_blind.py",
-        "severity": "hard"
-      },
-      {
-        "candidate": "tests/test_reviews_gate.py",
-        "line": 60,
-        "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
-        "resolved": "tests/test_reviews_gate.py",
-        "severity": "hard"
-      },
-      {
-        "candidate": "tests/test_revue_sol_blind.py",
-        "line": 80,
-        "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
-        "resolved": "tests/test_revue_sol_blind.py",
-        "severity": "hard"
-      },
-      {
-        "candidate": "tests/test_reviews_gate.py",
-        "line": 80,
-        "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
-        "resolved": "tests/test_reviews_gate.py",
-        "severity": "hard"
-      },
-      {
-        "candidate": "scripts/revue.py",
-        "line": 85,
-        "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
-        "resolved": "scripts/revue.py",
-        "severity": "hard"
-      },
-      {
-        "candidate": "scripts/reviews_gate.py",
-        "line": 86,
-        "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
-        "resolved": "scripts/reviews_gate.py",
-        "severity": "hard"
-      },
-      {
-        "candidate": "tests/test_revue_sol_blind.py",
-        "line": 87,
-        "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
-        "resolved": "tests/test_revue_sol_blind.py",
-        "severity": "hard"
-      },
-      {
-        "candidate": "tests/test_reviews_gate.py",
-        "line": 88,
-        "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
-        "resolved": "tests/test_reviews_gate.py",
-        "severity": "hard"
-      },
-      {
-        "candidate": "tests/test_autonomy_policy.py",
-        "line": 109,
-        "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
-        "resolved": "tests/test_autonomy_policy.py",
-        "severity": "hard"
-      },
-      {
-        "candidate": "tests/test_revue_sol_blind.py",
-        "line": 109,
-        "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
-        "resolved": "tests/test_revue_sol_blind.py",
-        "severity": "hard"
-      },
-      {
-        "candidate": "tests/test_reviews_gate.py",
-        "line": 109,
-        "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
-        "resolved": "tests/test_reviews_gate.py",
-        "severity": "hard"
-      },
-      {
-        "candidate": "tests/test_revue.py",
-        "line": 109,
-        "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
-        "resolved": "tests/test_revue.py",
-        "severity": "hard"
-      },
-      {
-        "candidate": "scripts/revue.py",
-        "line": 109,
-        "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
-        "resolved": "scripts/revue.py",
-        "severity": "hard"
-      },
-      {
-        "candidate": "scripts/reviews_gate.py",
-        "line": 109,
-        "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
-        "resolved": "scripts/reviews_gate.py",
-        "severity": "hard"
-      },
-      {
-        "candidate": "tests/test_autonomy_policy.py",
-        "line": 109,
-        "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
-        "resolved": "tests/test_autonomy_policy.py",
-        "severity": "hard"
-      },
-      {
-        "candidate": "tests/test_revue_sol_blind.py",
-        "line": 109,
-        "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
-        "resolved": "tests/test_revue_sol_blind.py",
-        "severity": "hard"
-      },
-      {
-        "candidate": "tests/test_reviews_gate.py",
-        "line": 109,
-        "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
-        "resolved": "tests/test_reviews_gate.py",
-        "severity": "hard"
-      },
-      {
-        "candidate": "scripts/revue.py",
-        "line": 113,
-        "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
-        "resolved": "scripts/revue.py",
-        "severity": "hard"
-      },
-      {
-        "candidate": "scripts/reviews_gate.py",
-        "line": 113,
-        "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
-        "resolved": "scripts/reviews_gate.py",
-        "severity": "hard"
-      },
-      {
-        "candidate": "tests/test_autonomy_policy.py",
-        "line": 113,
-        "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
-        "resolved": "tests/test_autonomy_policy.py",
-        "severity": "hard"
-      },
-      {
-        "candidate": "tests/test_revue_sol_blind.py",
-        "line": 113,
-        "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
-        "resolved": "tests/test_revue_sol_blind.py",
-        "severity": "hard"
-      },
-      {
-        "candidate": "tests/test_reviews_gate.py",
-        "line": 113,
-        "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
-        "resolved": "tests/test_reviews_gate.py",
-        "severity": "hard"
-      },
-      {
-        "candidate": "AGENTS.md",
-        "line": 118,
-        "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
-        "resolved": "AGENTS.md",
-        "severity": "hard"
-      },
-      {
-        "candidate": "CLAUDE.md",
-        "line": 119,
-        "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
-        "resolved": "CLAUDE.md",
-        "severity": "hard"
-      },
-      {
-        "candidate": "Docs/reference/autonomy-luna-sol.md",
-        "line": 120,
-        "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
-        "resolved": "Docs/reference/autonomy-luna-sol.md",
-        "severity": "hard"
-      },
-      {
-        "candidate": "stories/ORCH-LUNA-SOL-603.md",
-        "line": 121,
-        "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
-        "resolved": "stories/ORCH-LUNA-SOL-603.md",
-        "severity": "hard"
-      },
-      {
-        "candidate": "governance/vision-log.jsonl",
-        "line": 122,
-        "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
-        "resolved": "governance/vision-log.jsonl",
-        "severity": "hard"
-      },
-      {
-        "candidate": "evidence/registres/mission.jsonl",
-        "line": 123,
-        "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
-        "resolved": "evidence/registres/mission.jsonl",
-        "severity": "hard"
-      },
-      {
-        "candidate": "governance/AUTHORITY-MAP.md",
-        "line": 124,
-        "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
-        "resolved": "governance/AUTHORITY-MAP.md",
-        "severity": "hard"
-      },
-      {
-        "candidate": "governance/STATE-CURRENT.md",
-        "line": 124,
-        "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
-        "resolved": "governance/STATE-CURRENT.md",
-        "severity": "hard"
-      },
-      {
-        "candidate": "governance/path-classification.json",
-        "line": 124,
-        "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
-        "resolved": "governance/path-classification.json",
-        "severity": "hard"
-      },
-      {
-        "candidate": "governance/PATH-CLASSIFICATION.md",
-        "line": 124,
-        "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
-        "resolved": "governance/PATH-CLASSIFICATION.md",
-        "severity": "hard"
-      },
-      {
-        "candidate": "scripts/registre.py",
-        "line": 128,
-        "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
-        "resolved": "scripts/registre.py",
-        "severity": "hard"
-      },
-      {
-        "candidate": "scripts/registre.py",
-        "line": 136,
-        "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
-        "resolved": "scripts/registre.py",
-        "severity": "hard"
-      },
-      {
-        "candidate": "scripts/governance/validate_authority.py",
-        "line": 140,
-        "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
-        "resolved": "scripts/governance/validate_authority.py",
-        "severity": "hard"
-      },
-      {
-        "candidate": "scripts/governance/state_current.py",
-        "line": 140,
-        "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
-        "resolved": "scripts/governance/state_current.py",
-        "severity": "hard"
-      },
-      {
-        "candidate": "README.md",
-        "line": 140,
-        "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
-        "resolved": "README.md",
-        "severity": "hard"
-      },
-      {
-        "candidate": "AGENTS.md",
-        "line": 140,
-        "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
-        "resolved": "AGENTS.md",
-        "severity": "hard"
-      },
-      {
-        "candidate": "scripts/governance/classify_paths.py",
-        "line": 140,
-        "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
-        "resolved": "scripts/governance/classify_paths.py",
-        "severity": "hard"
-      },
-      {
-        "candidate": "scripts/registre.py",
-        "line": 140,
-        "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
-        "resolved": "scripts/registre.py",
-        "severity": "hard"
-      },
-      {
-        "candidate": "governance/vision-log.jsonl",
-        "line": 140,
-        "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
-        "resolved": "governance/vision-log.jsonl",
-        "severity": "hard"
-      },
-      {
-        "candidate": "evidence/registres/mission.jsonl",
-        "line": 140,
-        "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
-        "resolved": "evidence/registres/mission.jsonl",
-        "severity": "hard"
-      },
-      {
-        "candidate": "AGENTS.md",
-        "line": 144,
-        "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
-        "resolved": "AGENTS.md",
-        "severity": "hard"
-      },
-      {
-        "candidate": "CLAUDE.md",
-        "line": 144,
-        "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
-        "resolved": "CLAUDE.md",
-        "severity": "hard"
-      },
-      {
-        "candidate": "Docs/reference/autonomy-luna-sol.md",
-        "line": 144,
-        "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
-        "resolved": "Docs/reference/autonomy-luna-sol.md",
-        "severity": "hard"
-      },
-      {
-        "candidate": "stories/ORCH-LUNA-SOL-603.md",
-        "line": 144,
-        "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
-        "resolved": "stories/ORCH-LUNA-SOL-603.md",
-        "severity": "hard"
-      },
-      {
-        "candidate": "evidence/registres/mission.jsonl",
-        "line": 144,
-        "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
-        "resolved": "evidence/registres/mission.jsonl",
-        "severity": "hard"
-      },
-      {
-        "candidate": "evidence/reviews/BINDING.txt",
-        "line": 150,
-        "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
-        "resolved": "evidence/reviews/BINDING.txt",
-        "severity": "hard"
-      },
-      {
-        "candidate": "stories/ORCH-LUNA-SOL-603.md",
-        "line": 151,
-        "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
-        "resolved": "stories/ORCH-LUNA-SOL-603.md",
-        "severity": "hard"
-      },
-      {
-        "candidate": "scripts/no_stub_scan.py",
-        "line": 155,
-        "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
-        "resolved": "scripts/no_stub_scan.py",
-        "severity": "hard"
-      },
-      {
-        "candidate": "scripts/ruff_noqa_gate.py",
-        "line": 155,
-        "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
-        "resolved": "scripts/ruff_noqa_gate.py",
-        "severity": "hard"
-      },
-      {
-        "candidate": "scripts/reviews_gate.py",
-        "line": 155,
-        "referrer": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
-        "resolved": "scripts/reviews_gate.py",
-        "severity": "hard"
-      },
-      {
-        "candidate": "governance/autonomy-policy.json",
-        "line": 15,
-        "referrer": "docs/superpowers/specs/2026-08-22-autonomous-luna-sol-design.md",
-        "resolved": "governance/autonomy-policy.json",
-        "severity": "hard"
-      },
-      {
-        "candidate": "manifests/roles.yaml",
-        "line": 16,
-        "referrer": "docs/superpowers/specs/2026-08-22-autonomous-luna-sol-design.md",
-        "resolved": "manifests/roles.yaml",
-        "severity": "hard"
-      },
-      {
-        "candidate": "scripts/revue.py",
-        "line": 17,
-        "referrer": "docs/superpowers/specs/2026-08-22-autonomous-luna-sol-design.md",
-        "resolved": "scripts/revue.py",
-        "severity": "hard"
-      },
-      {
-        "candidate": "scripts/reviews_gate.py",
-        "line": 18,
-        "referrer": "docs/superpowers/specs/2026-08-22-autonomous-luna-sol-design.md",
-        "resolved": "scripts/reviews_gate.py",
         "severity": "hard"
       },
       {
@@ -184681,10 +184674,10 @@
         "severity": "hard"
       },
       {
-        "candidate": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+        "candidate": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
         "line": 132,
         "referrer": "tests/test_autonomy_docs.py",
-        "resolved": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+        "resolved": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
         "severity": "hard"
       },
       {
@@ -184877,10 +184870,10 @@
         "severity": "hard"
       },
       {
-        "candidate": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+        "candidate": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
         "line": 581,
         "referrer": "tests/test_autonomy_docs.py",
-        "resolved": "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+        "resolved": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
         "severity": "hard"
       },
       {
@@ -186160,17 +186153,17 @@
     ],
     "method": "static_text_scan"
   },
-  "rules_sha256": "5bf5610396f9c3f73a09dc403d924ad93d2408a1525ff12fb8922542845c3970",
+  "rules_sha256": "4688159bb109607f66a4849d6d4b2cae5c48bba23c779ed618b17515ccb52ac9",
   "summary": {
     "by_class": {
       "ARCHIVE": 44,
-      "DOCS": 20,
+      "DOCS": 22,
       "EVIDENCE": 1665,
       "GENERATED": 5,
       "GOVERNANCE": 217,
       "PRODUCT": 113,
       "TEST": 229,
-      "WORKING": 23
+      "WORKING": 21
     },
     "by_rule": {
       "archive-root": 44,
@@ -186180,7 +186173,7 @@
       "docs-contributing": 1,
       "docs-license": 1,
       "docs-security": 1,
-      "docs-user": 17,
+      "docs-user": 19,
       "evidence-audit-output-root": 18,
       "evidence-dedup-root": 2,
       "evidence-registres-root": 35,
@@ -186219,7 +186212,6 @@
       "test-suite": 229,
       "working-claude-agents": 9,
       "working-sandbox-readme": 1,
-      "working-superpowers-docs": 2,
       "working-superpowers-sdd": 11
     },
     "case_collisions_total": 0,

@@ -6,7 +6,7 @@ d'un service externe. Explicitly, no runtime evidence and no external evidence
 are claimed here. La politique versionnée est la source de vérité :
 [`governance/autonomy-policy.json`](../../governance/autonomy-policy.json).
 Le design de référence est
-[`docs/superpowers/specs/2026-08-22-autonomous-luna-sol-design.md`](../../docs/superpowers/specs/2026-08-22-autonomous-luna-sol-design.md).
+[`Docs/superpowers/specs/2026-08-22-autonomous-luna-sol-design.md`](../superpowers/specs/2026-08-22-autonomous-luna-sol-design.md).
 
 ## Roster et lanes
 

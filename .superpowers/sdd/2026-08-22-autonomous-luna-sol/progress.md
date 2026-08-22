@@ -1,4 +1,4 @@
-# SDD ledger — plan: docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md
+# SDD ledger — plan: Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md
 
 ## Preflight
 
@@ -7,7 +7,7 @@ Branch: `codex/issue-603-clean`
 Base: `d4d46ef36fcac3cdeb92a00577f78c8e698c17c0`
 Unsafe predecessor: PR #604, not executed and not copied.
 
-The written spec is `docs/superpowers/specs/2026-08-22-autonomous-luna-sol-design.md`. The plan was self-reviewed for criterion coverage, type/name consistency, and prohibited placeholders; `git diff --check` passed before its design commit.
+The written spec is `Docs/superpowers/specs/2026-08-22-autonomous-luna-sol-design.md`. The plan was self-reviewed for criterion coverage, type/name consistency, and prohibited placeholders; `git diff --check` passed before its design commit.
 
 The first full baseline command, `python3 -m pytest -q`, was terminated with exit 143 by the environment after reaching approximately 9% without a reported assertion failure. This is recorded as partial baseline evidence, not as a product pass; focused tests and a later proportionate suite run remain required.
 

@@ -17,13 +17,13 @@ NE PAS ÉDITER À LA MAIN — généré par scripts/governance/classify_paths.py
 ## Répartition par classe
 
 - ARCHIVE : 44
-- DOCS : 20
+- DOCS : 22
 - EVIDENCE : 1665
 - GENERATED : 5
 - GOVERNANCE : 217
 - PRODUCT : 113
 - TEST : 229
-- WORKING : 23
+- WORKING : 21
 
 ## Plan de migration
 
@@ -31,6 +31,6 @@ NE PAS ÉDITER À LA MAIN — généré par scripts/governance/classify_paths.py
 
 ## Intégrité
 
-- SHA-256 des règles : `5bf5610396f9c3f73a09dc403d924ad93d2408a1525ff12fb8922542845c3970`
+- SHA-256 des règles : `4688159bb109607f66a4849d6d4b2cae5c48bba23c779ed618b17515ccb52ac9`
 
 L'inventaire complet des chemins est disponible dans `governance/path-classification.json`.

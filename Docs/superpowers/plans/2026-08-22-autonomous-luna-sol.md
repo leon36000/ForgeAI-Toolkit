@@ -8,7 +8,7 @@
 
 **Tech Stack:** Python 3.10–3.13, pytest, JSON/YAML repository manifests, Git raw-diff hashing, existing governance generators, GitHub Actions read-only validation.
 
-**Spec:** `docs/superpowers/specs/2026-08-22-autonomous-luna-sol-design.md`
+**Spec:** `Docs/superpowers/specs/2026-08-22-autonomous-luna-sol-design.md`
 
 ## Global Constraints
 
