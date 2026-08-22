@@ -3869,7 +3869,7 @@
         }
       ],
       "rule_id": "docs-user",
-      "sha256": "4356bce34b088095fef5c62c179e38ae70d703aa3ef6a371fd6479c32f31b4e2",
+      "sha256": "6b130243103ffa9e413db189d6af7710b2bbae4deb4232debfc48bf52c757958",
       "size": 4704,
       "target_path": null,
       "type": "text"
@@ -4279,8 +4279,8 @@
         }
       ],
       "rule_id": "docs-user",
-      "sha256": "7339f9f229bd9c9362dc02fff58bb1c3d16a36714aed8b7f544d93f4545cc203",
-      "size": 1920,
+      "sha256": "0ff1a50d7dd87e518a8607afc35a0b08f086e1c25b8a343c06aeeed365f0bd59",
+      "size": 1923,
       "target_path": null,
       "type": "text"
     },
@@ -7072,8 +7072,8 @@
         }
       ],
       "rule_id": "evidence-registres-root",
-      "sha256": "17456710575ed76de9f7485284ec8228a344a9d8fec7ed72fc465d1eee08c2cf",
-      "size": 406573,
+      "sha256": "ab814c4c8e1455c4d7dc8604d0833e9a1bd30ec702c886c4307e17d84c3587ab",
+      "size": 407250,
       "target_path": null,
       "type": "text"
     },
@@ -16115,7 +16115,22 @@
       "load_bearing": true,
       "owner": "gouvernance-preuve",
       "path": "evidence/reviews/ORCH-LUNA-SOL-603-final-seal-r3/RECU.json",
-      "referenced_by": [],
+      "referenced_by": [
+        {
+          "candidate": "evidence/reviews/ORCH-LUNA-SOL-603-final-seal-r3/RECU.json",
+          "line": 20,
+          "referrer": "Docs/reference/autonomy-luna-sol.md",
+          "resolved": "evidence/reviews/ORCH-LUNA-SOL-603-final-seal-r3/RECU.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "evidence/reviews/ORCH-LUNA-SOL-603-final-seal-r3/RECU.json",
+          "line": 25,
+          "referrer": "stories/ORCH-LUNA-SOL-603.md",
+          "resolved": "evidence/reviews/ORCH-LUNA-SOL-603-final-seal-r3/RECU.json",
+          "severity": "hard"
+        }
+      ],
       "rule_id": "evidence-reviews-root",
       "sha256": null,
       "size": null,
@@ -16154,22 +16169,7 @@
       "load_bearing": true,
       "owner": "gouvernance-preuve",
       "path": "evidence/reviews/ORCH-LUNA-SOL-603-final-seal/RECU.json",
-      "referenced_by": [
-        {
-          "candidate": "evidence/reviews/ORCH-LUNA-SOL-603-final-seal/RECU.json",
-          "line": 20,
-          "referrer": "Docs/reference/autonomy-luna-sol.md",
-          "resolved": "evidence/reviews/ORCH-LUNA-SOL-603-final-seal/RECU.json",
-          "severity": "hard"
-        },
-        {
-          "candidate": "evidence/reviews/ORCH-LUNA-SOL-603-final-seal/RECU.json",
-          "line": 25,
-          "referrer": "stories/ORCH-LUNA-SOL-603.md",
-          "resolved": "evidence/reviews/ORCH-LUNA-SOL-603-final-seal/RECU.json",
-          "severity": "hard"
-        }
-      ],
+      "referenced_by": [],
       "rule_id": "evidence-reviews-root",
       "sha256": null,
       "size": null,
@@ -48770,8 +48770,8 @@
         }
       ],
       "rule_id": "governance-stories",
-      "sha256": "e00e9a764c5e9a1c341a440a6a31db3b16ed3f5f7c89692da84f1b905889149c",
-      "size": 1999,
+      "sha256": "5898b126f64bc3817b490ee48d539f24d8d0516fe1592bf8c13772580a482161",
+      "size": 1986,
       "target_path": null,
       "type": "text"
     },
@@ -153978,10 +153978,10 @@
         "severity": "hard"
       },
       {
-        "candidate": "evidence/reviews/ORCH-LUNA-SOL-603-final-seal/RECU.json",
+        "candidate": "evidence/reviews/ORCH-LUNA-SOL-603-final-seal-r3/RECU.json",
         "line": 20,
         "referrer": "Docs/reference/autonomy-luna-sol.md",
-        "resolved": "evidence/reviews/ORCH-LUNA-SOL-603-final-seal/RECU.json",
+        "resolved": "evidence/reviews/ORCH-LUNA-SOL-603-final-seal-r3/RECU.json",
         "severity": "hard"
       },
       {
@@ -178940,10 +178940,10 @@
         "severity": "hard"
       },
       {
-        "candidate": "evidence/reviews/ORCH-LUNA-SOL-603-final-seal/RECU.json",
+        "candidate": "evidence/reviews/ORCH-LUNA-SOL-603-final-seal-r3/RECU.json",
         "line": 25,
         "referrer": "stories/ORCH-LUNA-SOL-603.md",
-        "resolved": "evidence/reviews/ORCH-LUNA-SOL-603-final-seal/RECU.json",
+        "resolved": "evidence/reviews/ORCH-LUNA-SOL-603-final-seal-r3/RECU.json",
         "severity": "hard"
       },
       {
