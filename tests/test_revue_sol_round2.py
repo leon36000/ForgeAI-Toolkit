@@ -322,6 +322,100 @@ def test_sol_verifier_rejects_noncanonical_active_sol_roster(monkeypatch, change
     assert any(marker in result["reason"].lower() for marker in ("sol", "identit", "roster"))
 
 
+@pytest.mark.parametrize(
+    "change",
+    [
+        {"modele": "GPT-5.6 Luna Pro"},
+        {"vendor": "anthropic"},
+        {"provider_id": "GPT-5.6-Luna-Pro"},
+        {"statut": "retire"},
+        {"id": "luna_writer_alias"},
+    ],
+)
+def test_sol_verifier_rejects_noncanonical_active_luna_writer_roster(monkeypatch, change):
+    roles = [
+        {
+            "id": "luna_writer",
+            "vendor": "openai",
+            "provider_id": "GPT-5.6-Luna-Writer",
+            "modele": "GPT-5.6 Luna",
+            "statut": "actif",
+        },
+        {
+            "id": "sol",
+            "vendor": "openai",
+            "provider_id": "GPT-5.6-Sol",
+            "modele": "GPT-5.6 Sol",
+            "statut": "actif",
+        },
+    ]
+    roles[0].update(change)
+    monkeypatch.setattr(revue, "_load_roles_yaml", lambda path: roles)
+
+    result = revue.tally_sol_blind(
+        [_verdict()],
+        expected={
+            "candidate_diff_digest": DIFF,
+            "diff_digest": DIFF,
+            "base_commit": BASE,
+            "reviewed_head_commit": HEAD,
+            "reviewed_head_tree": TREE,
+            "prompt_sha256": _verdict()["prompt_sha256"],
+            "template_sha256": TEMPLATE_SHA,
+            "reviewed_at": DATE,
+        },
+        codeurs=["luna_writer"],
+    )
+
+    assert result["result"] == "INVALIDE"
+    assert any(marker in result["reason"].lower() for marker in ("luna", "identit", "roster"))
+
+
+def test_sol_verifier_rejects_duplicate_luna_writer_roster(monkeypatch):
+    roles = [
+        {
+            "id": "luna_writer",
+            "vendor": "openai",
+            "provider_id": "GPT-5.6-Luna-Writer",
+            "modele": "GPT-5.6 Luna",
+            "statut": "actif",
+        },
+        {
+            "id": "luna_writer",
+            "vendor": "openai",
+            "provider_id": "GPT-5.6-Luna-Writer-duplicate",
+            "modele": "GPT-5.6 Luna duplicate",
+            "statut": "actif",
+        },
+        {
+            "id": "sol",
+            "vendor": "openai",
+            "provider_id": "GPT-5.6-Sol",
+            "modele": "GPT-5.6 Sol",
+            "statut": "actif",
+        },
+    ]
+    monkeypatch.setattr(revue, "_load_roles_yaml", lambda path: roles)
+
+    result = revue.tally_sol_blind(
+        [_verdict()],
+        expected={
+            "candidate_diff_digest": DIFF,
+            "diff_digest": DIFF,
+            "base_commit": BASE,
+            "reviewed_head_commit": HEAD,
+            "reviewed_head_tree": TREE,
+            "prompt_sha256": _verdict()["prompt_sha256"],
+            "template_sha256": TEMPLATE_SHA,
+            "reviewed_at": DATE,
+        },
+        codeurs=["luna_writer"],
+    )
+
+    assert result["result"] == "INVALIDE"
+    assert "luna" in result["reason"].lower() or "roster" in result["reason"].lower()
+
+
 def test_current_sol_verifier_rejects_negative_window(tmp_path):
     prompt = b"canonical"
     prompt_sha = hashlib.sha256(prompt).hexdigest()

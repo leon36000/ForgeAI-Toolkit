@@ -18,6 +18,10 @@ Le roster actif de `manifests/roles.yaml` contient :
 The policy binds this contract to the immutable story identifier
 `stories/ORCH-LUNA-SOL-603.md`; a receipt cannot substitute another story or
 inject prompt text through that field.
+The fresh codewriter identity is canonicalized against the roster as the
+unique active record `luna_writer` with model `GPT-5.6 Luna`, vendor `openai`
+and provider ID `GPT-5.6-Luna-Writer`; changing, duplicating or disabling any
+of those fields fails closed.
 
 `luna` / `GPT-5.6-Luna-Pro` est une identité historique retirée, conservée
 pour résoudre les anciens reçus. Le contrat autorise exactement

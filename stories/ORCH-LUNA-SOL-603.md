@@ -24,8 +24,9 @@ the executable-contract reference, the ledgers and generated views; it does
 not claim runtime, hardware, external-service or final review evidence.
 The active policy binds fresh Sol receipts to the immutable story identifier
 `stories/ORCH-LUNA-SOL-603.md`, the exact `luna_writer` codewriter identity and
-the versioned prompt `template_sha256`; a current PR cannot be covered by a
-legacy `multi_vendor` receipt.
+the versioned prompt `template_sha256`. The roster record must remain unique
+and canonical (`GPT-5.6 Luna`, `openai`, `GPT-5.6-Luna-Writer`, `actif`); a
+current PR cannot be covered by a legacy `multi_vendor` receipt.
 
 ## Critères d’acceptation
 

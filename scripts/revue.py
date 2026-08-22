@@ -60,6 +60,10 @@ _SOL_CANONICAL_PROVIDER_ID = "GPT-5.6-Sol"
 _SOL_CANONICAL_STATUS = "actif"
 _SOL_CANONICAL_CODEUR_ID = "luna_writer"
 _SOL_CANONICAL_STORY_ID = "stories/ORCH-LUNA-SOL-603.md"
+_LUNA_CANONICAL_MODEL = "GPT-5.6 Luna"
+_LUNA_CANONICAL_VENDOR = "openai"
+_LUNA_CANONICAL_PROVIDER_ID = "GPT-5.6-Luna-Writer"
+_LUNA_CANONICAL_STATUS = "actif"
 _SOL_CLOCK_SKEW = timedelta(minutes=5)
 _SOL_MAX_WINDOW_HOURS = 24
 
@@ -669,6 +673,31 @@ def _sol_aliases(table: dict[str, str] | None) -> set[str] | None:
     return aliases
 
 
+def _canonical_luna_member() -> dict[str, str] | None:
+    """Return Luna writer only when the active roster entry is canonical and unique."""
+    try:
+        policy = load_autonomy_policy()
+    except ValueError:
+        return None
+    if policy["worker"]["primary_model"] != _LUNA_CANONICAL_MODEL:
+        return None
+    roles = _load_roles_yaml(REPO / "manifests" / "roles.yaml")
+    matches = [member for member in roles if member.get("id") == _SOL_CANONICAL_CODEUR_ID]
+    if len(matches) != 1:
+        return None
+    member = matches[0]
+    expected = {
+        "id": _SOL_CANONICAL_CODEUR_ID,
+        "modele": _LUNA_CANONICAL_MODEL,
+        "statut": _LUNA_CANONICAL_STATUS,
+        "vendor": _LUNA_CANONICAL_VENDOR,
+        "provider_id": _LUNA_CANONICAL_PROVIDER_ID,
+    }
+    if any(member.get(field) != value for field, value in expected.items()):
+        return None
+    return expected
+
+
 def _codeur_identity_table(
     roles_path: Path = REPO / "manifests" / "roles.yaml",
     *,
@@ -939,6 +968,11 @@ def tally_sol_blind(
     codeur_table = _codeur_identity_table(include_retired=allow_retired_codeurs)
     if codeur_table is None:
         return {"result": "INVALIDE", "reason": "roster de codeurs introuvable"}
+    if not allow_retired_codeurs and _canonical_luna_member() is None:
+        return {
+            "result": "INVALIDE",
+            "reason": "identité active canonique luna_writer absente du roster",
+        }
     resolved_codeurs = []
     for codeur in codeurs:
         if not isinstance(codeur, str):

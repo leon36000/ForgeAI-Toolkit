@@ -22,6 +22,9 @@ valeurs ne sont pas interchangeables; le dossier déclaré doit correspondre au
 répertoire effectivement chargé par le vérificateur. Une preuve fraîche doit
 également résoudre son codeur vers l'identité active `luna_writer` et lier le
 `template_sha256` du template versionné.
+Cette identité est validée comme l'unique entrée canonique du roster: modèle
+`GPT-5.6 Luna`, vendor `openai`, provider ID `GPT-5.6-Luna-Writer` et statut
+`actif`; une entrée absente, dupliquée ou modifiée échoue fermé.
 
 Le reçu reste un claim que le gate réfute contre l’état Git courant. Le digest canonique continue d’exclure les artefacts de revue et les vues générées afin d’éviter l’auto-référence; la base et le digest lient donc la preuve au diff qui sera fusionné. Le head commit et le head tree examinés sont conservés pour la traçabilité, sans comparaison circulaire avec le commit qui ajoute le reçu.
 
