@@ -144,10 +144,11 @@ def test_sol_blind_fails_closed_when_active_sol_roster_entry_is_unavailable(
         encoding="utf-8",
     )
     routes.write_text("routes:\n", encoding="utf-8")
+    real_vendor_table = revue._vendor_table
     monkeypatch.setattr(
         revue,
         "_vendor_table",
-        lambda: revue._vendor_table(roles_path=roles, routes_path=routes),
+        lambda: real_vendor_table(roles_path=roles, routes_path=routes),
     )
 
     result = revue.tally_sol_blind(
