@@ -34,6 +34,16 @@ jobs:
           cat .bootstrap/issue603-source.part* | base64 --decode > /tmp/issue603-sourcefiles.tar.gz
           echo "06833d093d435bccad29aad8168486fa6a2681d5ab475e0771111ba60c0c87cf  /tmp/issue603-sourcefiles.tar.gz" | sha256sum -c -
           tar -xzf /tmp/issue603-sourcefiles.tar.gz -C .
+          python3 - <<'PY'
+          from pathlib import Path
+
+          path = Path("scripts/sol_review_gate.py")
+          source = path.read_text(encoding="utf-8")
+          target = '    worker = active_policy["worker"]\n'
+          if source.count(target) != 1:
+              raise SystemExit("correction Ruff non applicable de façon univoque")
+          path.write_text(source.replace(target, "", 1), encoding="utf-8")
+          PY
           rm -rf .bootstrap
           rm -f .github/workflows/bootstrap-issue603.yml
           git add -A
