@@ -9314,8 +9314,8 @@
         }
       ],
       "rule_id": "evidence-reviews-root",
-      "sha256": "379440c9e0b7099a8e5f10e3b5c7203ac4aa649ff3213310bf7da1c1ebd55748",
-      "size": 3028,
+      "sha256": "b9e486b797549a3ac856bcbe52a118854ca223592ec0afc7bbf3b1d9b939316d",
+      "size": 3056,
       "target_path": null,
       "type": "text"
     },
@@ -62654,6 +62654,11 @@
   "reference_graph": {
     "completeness": "best_effort",
     "dangling": [
+      {
+        "candidate": "ORCH-LUNA-SOL-603-phaseA-r2",
+        "line": 221,
+        "referrer": "evidence/reviews/BINDING.txt"
+      },
       {
         "candidate": "TUI/UX",
         "line": 3,
@@ -185026,7 +185031,7 @@
       "working-sandbox-readme": 1
     },
     "case_collisions_total": 0,
-    "dangling_references_total": 17625,
+    "dangling_references_total": 17626,
     "generated_total": 9,
     "load_bearing_total": 2148,
     "portability_violations_total": 0,
