@@ -147,6 +147,7 @@ def _receipt(
         "candidate_diff_digest": candidate_diff_digest,
         "diff_digest": DIFF_DIGEST,
         "prompt_sha256": prompt_sha256 or PROMPT_SHA,
+        "template_sha256": TEMPLATE_SHA,
         "reviewers_attendus": ["GPT-5.6-Sol"],
         "codeur": ["luna_writer"],
         "resultat": "APPROVE",

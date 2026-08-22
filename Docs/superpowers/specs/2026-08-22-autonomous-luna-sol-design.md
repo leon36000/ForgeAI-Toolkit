@@ -10,7 +10,7 @@ Le dépôt conserve la compatibilité de ses reçus historiques multi-vendor. Po
 une PR courante, la politique active exige le mode `sol_blind`, accepté
 uniquement lorsqu’un reçu contient une preuve fraîche et liée au changement
 examiné : base commit, head commit et head tree examinés, empreinte canonique du
-diff, empreinte du prompt, provider ID Sol exact `GPT-5.6-Sol`, contexte frais,
+diff, empreinte du prompt et `template_sha256` recopiée dans le receipt, provider ID Sol exact `GPT-5.6-Sol`, contexte frais,
 revue aveugle, lecture seule, verdict `APPROVE` et liste d’objections
 bloquantes vide. La fenêtre de fraîcheur est plafonnée à 24 heures. Le codeur
 ne peut pas être Sol.
@@ -26,7 +26,7 @@ Cette identité est validée comme l'unique entrée canonique du roster: modèle
 `GPT-5.6 Luna`, vendor `openai`, provider ID `GPT-5.6-Luna-Writer` et statut
 `actif`; une entrée absente, dupliquée ou modifiée échoue fermé.
 
-Le reçu reste un claim que le gate réfute contre l’état Git courant. Le digest canonique continue d’exclure les artefacts de revue et les vues générées afin d’éviter l’auto-référence; la base et le digest lient donc la preuve au diff qui sera fusionné. Le head commit et le head tree examinés sont conservés pour la traçabilité, sans comparaison circulaire avec le commit qui ajoute le reçu.
+Le reçu reste un claim que le gate réfute contre l’état Git courant. Le digest canonique continue d’exclure les artefacts de revue et les vues générées afin d’éviter l’auto-référence; la base et le digest lient donc la preuve au diff qui sera fusionné. Les commits `head_commit` et `reviewed_head_commit` doivent résoudre vers leurs arbres déclarés et appartenir à la lignée ancestrale du head courant; les commits de scellement restent permis sans comparaison circulaire exacte avec le commit qui ajoute le reçu.
 
 ## Composants
 

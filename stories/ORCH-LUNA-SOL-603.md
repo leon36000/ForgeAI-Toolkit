@@ -24,7 +24,9 @@ the executable-contract reference, the ledgers and generated views; it does
 not claim runtime, hardware, external-service or final review evidence.
 The active policy binds fresh Sol receipts to the immutable story identifier
 `stories/ORCH-LUNA-SOL-603.md`, the exact `luna_writer` codewriter identity and
-the versioned prompt `template_sha256`. The roster record must remain unique
+the versioned prompt `template_sha256`, which is copied into the receipt. The
+declared review commits must resolve to their trees and remain on the current
+Git ancestry, allowing only later sealing commits. The roster record must remain unique
 and canonical (`GPT-5.6 Luna`, `openai`, `GPT-5.6-Luna-Writer`, `actif`); a
 current PR cannot be covered by a legacy `multi_vendor` receipt.
 

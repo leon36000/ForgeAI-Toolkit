@@ -4,6 +4,7 @@ from __future__ import annotations
 import hashlib
 import importlib.util
 import json
+import subprocess
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -96,6 +97,7 @@ def _receipt(
         "candidate_diff_digest": DIFF,
         "diff_digest": DIFF,
         "prompt_sha256": prompt_sha256 or hashlib.sha256(b"canonical").hexdigest(),
+        "template_sha256": TEMPLATE_SHA,
         "reviewers_attendus": ["GPT-5.6-Sol"],
         "codeur": ["luna_writer"],
         "resultat": "APPROVE",
@@ -439,6 +441,28 @@ def test_current_sol_verifier_rejects_negative_window(tmp_path):
     assert "fenêtre" in result["reason"].lower() or "window" in result["reason"].lower()
 
 
+def test_sol_prompt_uses_the_versioned_template_body():
+    template = revue.TEMPLATE.read_text(encoding="utf-8")
+    mutated = template.replace(
+        "Tu es reviewer de code Sol.",
+        "Tu es reviewer de code Sol — template mutation sentinel.",
+    )
+
+    prompt, _ = revue.build_prompt(
+        revue._SOL_CANONICAL_STORY_ID,
+        revue._SOL_CRITERIA,
+        revue._SOL_ARTIFACT_PATH,
+        "",
+        mode="sol_blind",
+        base_ref=BASE,
+        head_ref=HEAD,
+        runner=_runner,
+        template_content=mutated,
+    )
+
+    assert "template mutation sentinel" in prompt
+
+
 def test_current_sol_verifier_rejects_excessive_window(tmp_path):
     timestamp = "2000-01-01T00:00:00+00:00"
     receipt = _receipt(
@@ -509,3 +533,59 @@ def test_current_sol_verifier_binds_dossier_to_review_directory(tmp_path):
 
     assert result["result"] == "INVALIDE"
     assert "dossier" in result["reason"].lower()
+
+
+@pytest.mark.parametrize("change", [{"template_sha256": None}, {"template_sha256": "0" * 64}])
+def test_current_sol_verifier_requires_receipt_template_binding(tmp_path, change):
+    receipt = _receipt()
+    if change["template_sha256"] is None:
+        receipt.pop("template_sha256")
+    else:
+        receipt.update(change)
+    directory = tmp_path / "S-sol"
+    directory.mkdir()
+    (directory / "SOL-PROMPT.md").write_bytes(CANONICAL_PROMPT)
+
+    result = revue.verifier_recu(
+        receipt,
+        [_verdict()],
+        _state(),
+        review_dir=directory,
+        runner=_runner,
+        now=NOW,
+    )
+
+    assert result["result"] == "INVALIDE"
+    assert "template_sha256" in result["reason"]
+
+
+@pytest.mark.parametrize("field", ["head_commit", "reviewed_head_commit"])
+def test_current_sol_verifier_rejects_head_outside_current_git_lineage(field, tmp_path):
+    unrelated = "e" * 40
+    receipt = _receipt()
+    receipt[field] = unrelated
+    receipt["head_tree"] = TREE
+    receipt["reviewed_head_tree"] = TREE
+    verdict = _verdict()
+    verdict["reviewed_head_commit"] = unrelated
+    verdict["reviewed_head_tree"] = TREE
+    directory = tmp_path / "S-sol"
+    directory.mkdir()
+    (directory / "SOL-PROMPT.md").write_bytes(CANONICAL_PROMPT)
+
+    def unrelated_runner(command):
+        if command[:3] == ["git", "merge-base", "--is-ancestor"] and unrelated in command:
+            raise subprocess.CalledProcessError(1, command)
+        return _runner(command)
+
+    result = revue.verifier_recu(
+        receipt,
+        [verdict],
+        _state(),
+        review_dir=directory,
+        runner=unrelated_runner,
+        now=NOW,
+    )
+
+    assert result["result"] == "INVALIDE"
+    assert any(marker in result["reason"].lower() for marker in ("git", "lignée", "head", "commit"))

@@ -49,14 +49,16 @@ Le verdict doit contenir exactement les éléments de liaison utiles suivants :
   métadonnées Git attendues;
 - `prompt_sha256` égal au hash du prompt canonique livré à Sol;
 - `template_sha256` égal au hash du template versionné émis dans les métadonnées
-  Git du prompt;
+  Git du prompt, et recopié à l'identique dans le receipt;
 - `reviewed_at` avec un fuseau et dans la fenêtre de fraîcheur, plafonnée à 24 heures;
 - `verdict: APPROVE` et `blocking_findings: []`.
 
 Le reçu conserve ces liaisons avec `mode: sol_blind`. Le gate traite le reçu
-comme un claim et le compare à la PR ou au diff courant; le head conservé sert
-à la traçabilité sans comparaison circulaire avec le commit qui ajoute le
-reçu. Les artefacts de revue et les vues générées restent hors du digest
+comme un claim et le compare à la PR ou au diff courant. Le `head_commit` et le
+`reviewed_head_commit` déclarés doivent résoudre vers les arbres déclarés et
+rester dans la lignée ancestrale du head Git courant; les commits de scellement
+ajoutant le receipt restent donc permis sans comparaison circulaire exacte avec
+ce commit. Les artefacts de revue et les vues générées restent hors du digest
 canonique.
 
 Le reçu porte aussi `story`, l'identifiant immuable utilisé pour reconstruire le

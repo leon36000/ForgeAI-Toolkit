@@ -39,7 +39,9 @@ from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Callable
 
-_PLACEHOLDER = re.compile(r"\{(story_id|criteres|artefact_path|artefact)\}")
+_TEMPLATE_FIELD = re.compile(
+    r"\{(story_id|criteres|artefact_path|artefact|metadata_json|response_schema)\}"
+)
 _MEMBER_START = re.compile(r"^\s*-\s*id:\s*(\S+)\s*(?:#.*)?$")
 _MEMBER_FIELD = re.compile(r"^\s+(vendor|provider_id|modele|statut):\s*(.+?)\s*(?:#.*)?$")
 # manifests/routes.yaml : mapping flow-style (une route par ligne) — membre/modele_reponse
@@ -273,6 +275,19 @@ def _resolve_commit_tree(execute: GitRunner, commit: str) -> str:
     return tree
 
 
+def _require_commit_ancestor(
+    execute: GitRunner,
+    ancestor: str,
+    descendant: str,
+    field: str,
+) -> None:
+    """Require a declared review commit to remain on the current Git lineage."""
+    try:
+        execute(["git", "merge-base", "--is-ancestor", ancestor, descendant])
+    except subprocess.CalledProcessError as error:
+        raise ValueError(f"{field} hors de la lignée Git courante") from error
+
+
 def _sol_prompt_bytes(review_dir: Path) -> bytes:
     prompt_path = review_dir / _SOL_PROMPT_FILENAME
     if prompt_path.is_symlink():
@@ -448,31 +463,35 @@ def _etat_git_reel(
     }
 
 
+def _template_mode_body(template_content: str, mode: str, template_path: Path) -> str:
+    """Select one mode section from the versioned template without adding prose in code."""
+    if "-->" not in template_content:
+        raise ValueError(f"template {template_path} sans marqueur '-->' : en-tête non séparable")
+    body = template_content.split("-->", 1)[1].lstrip("\n")
+    start = f"<!-- MODE:{mode} -->"
+    end = f"<!-- END MODE:{mode} -->"
+    if start not in body or end not in body:
+        raise ValueError(f"template {template_path} sans section {mode!r}")
+    selected = body.split(start, 1)[1].split(end, 1)[0]
+    return selected.strip("\n")
+
+
 def build_prompt(story_id: str, criteres: str, artefact_path: str, artefact: str,
                  template_path: Path = TEMPLATE, *, mode: str = "multi_vendor",
                  expected: dict | None = None, base_ref: str | None = None,
                  head_ref: str | None = None, runner: GitRunner | None = None,
                  template_content: str | None = None) -> tuple[str, str]:
-    """Rend (prompt_exact, sha256). Le template est lu au canon ; aucun texte n'est ajouté."""
+    """Render one exact, versioned prompt section and return its SHA-256."""
     if template_content is None:
         tpl = template_path.read_text(encoding="utf-8")
     elif isinstance(template_content, str):
         tpl = template_content
     else:
         raise ValueError("contenu du template invalide")
+    if mode not in ("multi_vendor", "sol_blind"):
+        raise ValueError(f"mode de revue inconnu : {mode!r}")
     template_sha256 = hashlib.sha256(tpl.encode("utf-8")).hexdigest()
-    # On ne garde que le corps (après le commentaire HTML d'en-tête) pour le prompt envoyé.
-    # Le marqueur est OBLIGATOIRE : sans lui, l'en-tête (instructions internes) fuiterait dans
-    # le prompt envoyé aux reviewers → non-neutralité (revue aveugle Nemotron). On échoue fort.
-    if "-->" not in tpl:
-        raise ValueError(f"template {template_path} sans marqueur '-->' : en-tête non séparable")
-    tpl = tpl.split("-->", 1)[1].lstrip("\n")
-    values = {"story_id": story_id, "criteres": criteres.strip(),
-              "artefact_path": artefact_path, "artefact": artefact}
-    # Substitution EN UN SEUL PASSAGE (re.sub) : le texte substitué n'est JAMAIS re-scanné,
-    # donc un champ contenant « {artefact} » ne peut pas injecter un autre champ. Corrige le
-    # défaut d'injection croisée des .replace() chaînés (revue aveugle Qwen, criterion #4).
-    prompt = _PLACEHOLDER.sub(lambda m: values[m.group(1)], tpl)
+    template_path_label = template_path
     if mode == "sol_blind":
         if not base_ref or not head_ref:
             raise ValueError("base_ref et head_ref requis pour le mode sol_blind")
@@ -498,19 +517,6 @@ def build_prompt(story_id: str, criteres: str, artefact_path: str, artefact: str
                 expected_value = expected.get(field)
                 if expected_value is not None and expected_value != value:
                     raise ValueError(f"métadonnée Git {field} contradictoire")
-        prompt = (
-            "Tu es reviewer de code Sol. Analyse uniquement l'ARTEFACT ci-dessous dans "
-            "un contexte frais et en lecture seule.\n"
-            "Ne consulte aucun autre verdict et ne suppose aucun résultat attendu.\n\n"
-            f"STORY : {story_id}\n"
-            f"CRITÈRES D'ACCEPTATION :\n{criteres.strip()}\n\n"
-            f"ARTEFACT — {artefact_path} :\n{artefact}\n\n"
-            "MODE DE REVUE : sol_blind\n"
-            "MÉTADONNÉES GIT EXACTES (à recopier sans modification) :\n"
-            f"{json.dumps(metadata, ensure_ascii=False, sort_keys=True)}\n\n"
-            "Réponds STRICTEMENT avec un objet JSON valide, rien avant, rien après, "
-            "conforme à ce schéma :\n"
-        )
         response_schema = {
             "fresh_context": True,
             "blind": True,
@@ -522,9 +528,40 @@ def build_prompt(story_id: str, criteres: str, artefact_path: str, artefact: str
             "blocking_findings": [],
             "reviewed_at": "timestamp ISO-8601 avec fuseau",
         }
-        prompt += json.dumps(response_schema, ensure_ascii=False, sort_keys=True)
-    elif mode != "multi_vendor":
-        raise ValueError(f"mode de revue inconnu : {mode!r}")
+        values = {
+            "story_id": story_id,
+            "criteres": criteres.strip(),
+            "artefact_path": artefact_path,
+            "artefact": artefact,
+            "metadata_json": json.dumps(metadata, ensure_ascii=False, sort_keys=True),
+            "response_schema": json.dumps(response_schema, ensure_ascii=False, sort_keys=True),
+        }
+    else:
+        values = {
+            "story_id": story_id,
+            "criteres": criteres.strip(),
+            "artefact_path": artefact_path,
+            "artefact": artefact,
+            "metadata_json": "",
+            "response_schema": json.dumps(
+                {
+                    "verdict": "APPROVE ou REJECT",
+                    "objections": [
+                        {
+                            "severity": "critique|eleve|moyen|faible",
+                            "file": "chemin",
+                            "line": "entier ou null",
+                            "desc": "défaut réel et vérifiable",
+                        }
+                    ],
+                },
+                ensure_ascii=False,
+                separators=(",", ":"),
+            ),
+        }
+    template_body = _template_mode_body(tpl, mode, template_path_label)
+    # One substitution pass: substituted fields are never rescanned for placeholders.
+    prompt = _TEMPLATE_FIELD.sub(lambda match: values[match.group(1)], template_body)
     return prompt, hashlib.sha256(prompt.encode("utf-8")).hexdigest()
 
 
@@ -824,7 +861,7 @@ def _sol_expected_from_git(
     required = (
         "story", "base_commit", "head_commit", "head_tree", "reviewed_head_commit",
         "reviewed_head_tree", "candidate_diff_digest", "diff_digest", "prompt_sha256",
-        "reviewed_at",
+        "template_sha256", "reviewed_at",
     )
     for field in required:
         if field not in recu:
@@ -860,6 +897,9 @@ def _sol_expected_from_git(
     )
     template_content = _git_blob(execute, reviewed_head_commit, _SOL_TEMPLATE_PATH)
     template_sha = hashlib.sha256(template_content.encode("utf-8")).hexdigest()
+    _validate_digest(recu["template_sha256"], "template_sha256")
+    if recu["template_sha256"] != template_sha:
+        raise ValueError("template_sha256 différent du template Git examiné")
     stored_prompt = _sol_prompt_bytes(review_dir)
     if stored_prompt != canonical_prompt:
         raise ValueError(
@@ -891,6 +931,12 @@ def _sol_expected_from_git(
         # shape checks here prevents a malformed injected state from becoming an expectation.
         if not current_head or not current_tree:
             raise ValueError("état Git courant incomplet")
+        _require_commit_ancestor(
+            execute, head_commit, reviewed_head_commit, "head_commit"
+        )
+        _require_commit_ancestor(
+            execute, reviewed_head_commit, current_head, "reviewed_head_commit"
+        )
     return {
         "candidate_diff_digest": canonical_digest,
         "diff_digest": canonical_digest,
@@ -1050,6 +1096,7 @@ def tally_sol_blind(
         "vendors": ["openai"],
         "reviewer_model": reviewer_model,
         "prompt_sha256": expected["prompt_sha256"],
+        "template_sha256": expected["template_sha256"],
         "reviewed_at": expected["reviewed_at"],
         "blocking_findings": [],
     }
@@ -1207,7 +1254,8 @@ def _verifier_recu_sol_blind(
     required = (
         "schema", "mode", "story", "dossier", "issue", "round", "base_commit", "head_commit",
         "head_tree", "diff_digest", "candidate_diff_digest", "reviewed_head_commit",
-        "reviewed_head_tree", "prompt_sha256", "reviewers_attendus", "codeur", "resultat",
+        "reviewed_head_tree", "prompt_sha256", "template_sha256", "reviewers_attendus",
+        "codeur", "resultat",
         "reviewed_at", "verdict", "reviewer_model", "date_heure",
         "fenetre_heures", "blocking_findings",
     )
@@ -1238,6 +1286,10 @@ def _verifier_recu_sol_blind(
     if recu["candidate_diff_digest"] != current_digest:
         return {"result": "INVALIDE", "reason": "candidate_diff_digest différent du diff courant"}
     try:
+        _validate_digest(recu["template_sha256"], "template_sha256")
+    except ValueError as error:
+        return {"result": "INVALIDE", "reason": str(error)}
+    try:
         _validate_sol_freshness(
             recu,
             verdicts,
@@ -1263,6 +1315,8 @@ def _verifier_recu_sol_blind(
         return {"result": tally_result["result"], "reason": tally_result["reason"]}
     if recu["prompt_sha256"] != tally_result.get("prompt_sha256"):
         return {"result": "INVALIDE", "reason": "réponse contradictoire"}
+    if recu["template_sha256"] != tally_result.get("template_sha256"):
+        return {"result": "INVALIDE", "reason": "template_sha256 du reçu contradictoire"}
     if recu["resultat"] != tally_result["result"]:
         return {"result": "INVALIDE", "reason": "réponse contradictoire"}
     if recu["blocking_findings"] != []:
@@ -1301,7 +1355,7 @@ def _validate_sol_archive_receipt(
         "schema", "mode", "story", "dossier", "issue", "round", "base_commit",
         "head_commit", "head_tree", "candidate_diff_digest", "diff_digest",
         "reviewed_head_commit", "reviewed_head_tree", "prompt_sha256",
-        "reviewers_attendus", "codeur", "resultat", "reviewed_at", "verdict",
+        "template_sha256", "reviewers_attendus", "codeur", "resultat", "reviewed_at", "verdict",
         "reviewer_model", "date_heure", "fenetre_heures", "blocking_findings",
     )
     for field in required:
@@ -1330,7 +1384,13 @@ def _validate_sol_archive_receipt(
         if len(verdicts) != 1 or not isinstance(verdicts[0], dict):
             raise ValueError("sol_blind exige exactement un verdict objet")
         verdict = verdicts[0]
-        for field in ("reviewer_model", "verdict", "blocking_findings", "reviewed_at"):
+        for field in (
+            "reviewer_model",
+            "verdict",
+            "blocking_findings",
+            "reviewed_at",
+            "template_sha256",
+        ):
             if recu[field] != verdict.get(field):
                 raise ValueError(f"{field} du reçu Sol archive contradictoire")
         if review_dir is None:
@@ -1355,6 +1415,8 @@ def _validate_sol_archive_receipt(
         _validate_object_id(recu.get(field), field)
     for field in ("base_commit", "head_commit", "reviewed_head_commit"):
         _resolve_commit(execute, recu[field])
+    for field in ("candidate_diff_digest", "diff_digest", "prompt_sha256", "template_sha256"):
+        _validate_digest(recu[field], field)
     for commit_field, tree_field in (
         ("head_commit", "head_tree"),
         ("reviewed_head_commit", "reviewed_head_tree"),
@@ -1461,6 +1523,7 @@ def _cmd_recu(args) -> int:
     etat = _etat_git_reel(args.base_ref, args.head_ref)
     mode = getattr(args, "mode", "multi_vendor")
     if mode == "sol_blind":
+        template_sha256 = None
         story = getattr(args, "story", None)
         if not isinstance(story, str) or not story.strip():
             raise ValueError("--story est obligatoire avec --mode sol_blind")
@@ -1481,15 +1544,14 @@ def _cmd_recu(args) -> int:
         if len(verdicts) != 1:
             result = {"result": "INVALIDE", "reason": "sol_blind exige exactement 1 verdict"}
         elif prompt_sha is not None:
+            template_sha256 = _sol_prompt_metadata(canonical_prompt)["template_sha256"]
             expected = {
                 **etat,
                 "candidate_diff_digest": etat["diff_digest"],
                 "reviewed_head_commit": etat["head_commit"],
                 "reviewed_head_tree": etat["head_tree"],
                 "prompt_sha256": prompt_sha,
-                "template_sha256": _sol_prompt_metadata(canonical_prompt)[
-                    "template_sha256"
-                ],
+                "template_sha256": template_sha256,
                 "reviewed_at": verdicts[0].get("reviewed_at"),
             }
             result = tally_sol_blind(verdicts, expected=expected, codeurs=args.codeur)
@@ -1513,6 +1575,7 @@ def _cmd_recu(args) -> int:
             "reviewed_at": reviewer.get("reviewed_at"),
             "verdict": reviewer.get("verdict"),
             "reviewer_model": reviewer.get("reviewer_model"),
+            "template_sha256": template_sha256,
             "blocking_findings": reviewer.get("blocking_findings", []),
             "date_heure": datetime.now().astimezone().isoformat(),
             "fenetre_heures": args.fenetre_heures,

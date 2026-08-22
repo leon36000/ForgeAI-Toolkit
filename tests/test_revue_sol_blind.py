@@ -99,6 +99,7 @@ def _receipt(*, include_blocking_findings: bool = True, **changes) -> dict:
         "reviewed_head_commit": HEAD_COMMIT,
         "reviewed_head_tree": HEAD_TREE,
         "prompt_sha256": PROMPT_SHA,
+        "template_sha256": TEMPLATE_SHA,
         "reviewers_attendus": ["GPT-5.6-Sol"],
         "codeur": ["luna_writer"],
         "resultat": "APPROVE",
