@@ -1,0 +1,24 @@
+{
+  "fresh_context": true,
+  "blind": true,
+  "reviewer_read_only": true,
+  "reviewer_model": "GPT-5.6-Sol",
+  "base_commit": "5e25de16bd38f8a6ffc16e120919beff128f95aa",
+  "reviewed_head_commit": "6112aa82a3baa05f9c51ce04daa309e5a5cc3477",
+  "reviewed_head_tree": "f12e559cc6c755c380bbb672f4ff2bdf1aaad115",
+  "candidate_diff_digest": "01dc4c59ba7b64e97a6cb5b54c5f0a59b5e8fc923d81c3db774b1fb2883e1e47",
+  "sdd_diff_digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "mission_diff_digest": "68870acd51fa03638debb03f6a61bcadd9ed094f361d4ceba9c5acc99c1f887f",
+  "template_sha256": "a5bebc60556f4fc38d6ca96a3d0372577550f23157377af4d852e6144e25f137",
+  "prompt_sha256": "bf262d30a4b070290f3c34e1e8129a674622519566cbb09523e86af2e1be9633",
+  "verdict": "REJECT",
+  "blocking_findings": [
+    {
+      "severity": "high",
+      "file": "evidence/reviews/ORCH-LUNA-SOL-603-final-approved/SOL-PROMPT.md",
+      "line": 276,
+      "reason": "candidate_diff_digest ne correspond pas au SHA-256 du texte canonique ARTEFACT affiche; le digest du texte observe est 244396f3e0051c2a40f3808a5114ffc197d44b4d682cc3e6625c47b8a3f38b47."
+    }
+  ],
+  "reviewed_at": "2026-08-22T17:53:32-04:00"
+}

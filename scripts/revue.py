@@ -404,6 +404,8 @@ def _sol_expected_from_receipt_shape(
         "mission_diff_digest", "template_sha256",
     ):
         _validate_digest(recu[field], field)
+    if "artifact_sha256" in recu:
+        _validate_digest(recu["artifact_sha256"], "artifact_sha256")
     if recu["diff_digest"] != recu["candidate_diff_digest"]:
         raise ValueError("diff_digest différent de candidate_diff_digest")
     if _aware_timestamp(recu["date_heure"]) is None:
@@ -446,6 +448,8 @@ def _sol_expected_from_receipt_shape(
     ):
         if verdict.get(field) != recu[field]:
             raise ValueError(f"{field} du verdict différent du reçu Sol")
+    if "artifact_sha256" in recu and verdict.get("artifact_sha256") != recu["artifact_sha256"]:
+        raise ValueError("artifact_sha256 du verdict différent du reçu Sol")
     reviewers = recu["reviewers_attendus"]
     if not isinstance(reviewers, list) or len(reviewers) != 1:
         raise ValueError("nombre incorrect de reviewers Sol")
@@ -467,6 +471,8 @@ def _sol_expected_from_receipt_shape(
     ):
         if recu[field] != metadata[field]:
             raise ValueError(f"{field} différent des métadonnées du prompt Sol")
+    if "artifact_sha256" in recu and recu["artifact_sha256"] != metadata.get("artifact_sha256"):
+        raise ValueError("artifact_sha256 différent des métadonnées du prompt Sol")
     response_marker = "conforme à ce\nschéma :\n"
     response_tail = prompt_text.split(response_marker, 1)
     if len(response_tail) != 2:
@@ -496,13 +502,15 @@ def _sol_expected_from_receipt_shape(
         "blocking_findings": [],
         "reviewed_at": "timestamp ISO-8601 avec fuseau",
     }
+    if "artifact_sha256" in metadata:
+        response_expectations["artifact_sha256"] = metadata["artifact_sha256"]
     for field, expected_value in response_expectations.items():
         if response_schema.get(field) != expected_value:
             raise ValueError(f"{field} différent des métadonnées du schéma Sol")
     story_marker = f"STORY : {recu['story']}\n"
     if story_marker not in prompt_text:
         raise ValueError("story absente du prompt Sol")
-    return {
+    result = {
         "candidate_diff_digest": recu["candidate_diff_digest"],
         "diff_digest": recu["diff_digest"],
         "base_commit": recu["base_commit"],
@@ -514,6 +522,9 @@ def _sol_expected_from_receipt_shape(
         "template_sha256": recu["template_sha256"],
         "reviewed_at": recu["reviewed_at"],
     }
+    if "artifact_sha256" in recu:
+        result["artifact_sha256"] = recu["artifact_sha256"]
+    return result
 
 
 def _diff_artifact_canonique(
@@ -789,7 +800,8 @@ def build_prompt(story_id: str, criteres: str, artefact_path: str, artefact: str
                  template_path: Path = TEMPLATE, *, mode: str = "multi_vendor",
                  expected: dict | None = None, base_ref: str | None = None,
                  head_ref: str | None = None, runner: GitRunner | None = None,
-                 template_content: str | None = None) -> tuple[str, str]:
+                 template_content: str | None = None,
+                 include_artifact_sha256: bool = True) -> tuple[str, str]:
     """Render one exact, versioned prompt section and return its SHA-256."""
     if template_content is None:
         tpl = template_path.read_text(encoding="utf-8")
@@ -823,6 +835,10 @@ def build_prompt(story_id: str, criteres: str, artefact_path: str, artefact: str
             "mission_diff_digest": git_state["mission_diff_digest"],
             "template_sha256": template_sha256,
         }
+        if include_artifact_sha256:
+            metadata["artifact_sha256"] = hashlib.sha256(
+                canonical_artifact.encode("utf-8")
+            ).hexdigest()
         if expected is not None:
             for field, value in metadata.items():
                 expected_value = expected.get(field)
@@ -912,6 +928,7 @@ def _canonical_sol_prompt(
     reviewed_head_commit: str,
     *,
     runner: GitRunner | None = None,
+    include_artifact_sha256: bool = True,
 ) -> tuple[bytes, str]:
     """Rebuild the exact Sol prompt from frozen Git objects and versioned inputs."""
     execute = _default_runner if runner is None else runner
@@ -930,6 +947,7 @@ def _canonical_sol_prompt(
         head_ref=frozen_head,
         runner=execute,
         template_content=template_content,
+        include_artifact_sha256=include_artifact_sha256,
     )
     return prompt.encode("utf-8"), prompt_sha
 
@@ -971,6 +989,8 @@ def _sol_prompt_metadata(prompt: bytes) -> dict:
                 if field not in metadata:
                     raise ValueError(f"métadonnée Git absente du prompt Sol : {field}")
                 _validate_digest(metadata[field], field)
+            if "artifact_sha256" in metadata:
+                _validate_digest(metadata["artifact_sha256"], "artifact_sha256")
         except (TypeError, ValueError):
             continue
         candidates.append(metadata)
@@ -1249,6 +1269,8 @@ def _sol_expected_from_git(
         "prompt_sha256"
     ):
         _validate_digest(recu[field], field)
+    if "artifact_sha256" in recu:
+        _validate_digest(recu["artifact_sha256"], "artifact_sha256")
     execute = _default_runner if runner is None else runner
     base_commit = _resolve_commit(execute, recu["base_commit"])
     head_commit = _resolve_commit(execute, recu["head_commit"])
@@ -1259,6 +1281,12 @@ def _sol_expected_from_git(
         raise ValueError("head_tree différent de l'arbre Git du head_commit")
     if recu["reviewed_head_tree"] != reviewed_head_tree:
         raise ValueError("reviewed_head_tree différent de l'arbre Git examiné")
+    canonical_artifact = _diff_artifact_canonique(
+        base_commit, reviewed_head_commit, runner=execute
+    )
+    canonical_artifact_sha256 = hashlib.sha256(canonical_artifact.encode("utf-8")).hexdigest()
+    if "artifact_sha256" in recu and recu["artifact_sha256"] != canonical_artifact_sha256:
+        raise ValueError("artifact_sha256 différent du diff texte Git examiné")
     canonical_digest = _diff_canonique(base_commit, reviewed_head_commit, runner=execute)
     _validate_digest(canonical_digest, "candidate_diff_digest Git")
     if recu["candidate_diff_digest"] != canonical_digest:
@@ -1282,6 +1310,7 @@ def _sol_expected_from_git(
         base_commit,
         reviewed_head_commit,
         runner=execute,
+        include_artifact_sha256="artifact_sha256" in recu,
     )
     template_content = _git_blob(execute, reviewed_head_commit, _SOL_TEMPLATE_PATH)
     template_sha = hashlib.sha256(template_content.encode("utf-8")).hexdigest()
@@ -1297,6 +1326,8 @@ def _sol_expected_from_git(
     ):
         if prompt_metadata[field] != recu[field]:
             raise ValueError(f"{field} différent des métadonnées du prompt Sol")
+    if "artifact_sha256" in recu and prompt_metadata.get("artifact_sha256") != recu["artifact_sha256"]:
+        raise ValueError("artifact_sha256 différent des métadonnées du prompt Sol")
     if stored_prompt != canonical_prompt:
         raise ValueError(
             f"{_SOL_PROMPT_FILENAME} différent du prompt Sol canonique généré depuis Git"
@@ -1341,7 +1372,7 @@ def _sol_expected_from_git(
         _require_commit_ancestor(
             execute, reviewed_head_commit, current_head, "reviewed_head_commit"
         )
-    return {
+    result = {
         "candidate_diff_digest": canonical_digest,
         "diff_digest": canonical_digest,
         "base_commit": base_commit,
@@ -1356,6 +1387,9 @@ def _sol_expected_from_git(
         "reviewed_at": reviewed_at,
         "_covers_current": covers_current,
     }
+    if "artifact_sha256" in recu:
+        result["artifact_sha256"] = recu["artifact_sha256"]
+    return result
 
 
 def _sol_receipt_binding_matches_current(recu: object, etat_git: object) -> bool:
@@ -1485,6 +1519,8 @@ def tally_sol_blind(
             "template_sha256",
         ):
             _validate_digest(expected[field], field)
+        if "artifact_sha256" in expected:
+            _validate_digest(expected["artifact_sha256"], "artifact_sha256")
     except ValueError as error:
         return {"result": "INVALIDE", "reason": str(error)}
     if expected["candidate_diff_digest"] != expected["diff_digest"]:
@@ -1508,6 +1544,8 @@ def tally_sol_blind(
     ):
         if verdict.get(field) != expected[field]:
             return {"result": "INVALIDE", "reason": f"{field} différent des métadonnées attendues"}
+    if "artifact_sha256" in expected and verdict.get("artifact_sha256") != expected["artifact_sha256"]:
+        return {"result": "INVALIDE", "reason": "artifact_sha256 différent des métadonnées attendues"}
     if verdict.get("reviewed_at") != expected["reviewed_at"]:
         return {"result": "INVALIDE", "reason": "reviewed_at différent ou non frais"}
     if _aware_timestamp(verdict.get("reviewed_at")) is None:
@@ -1729,6 +1767,8 @@ def _verifier_recu_sol_blind(
         _validate_digest(recu["sdd_diff_digest"], "sdd_diff_digest")
         _validate_digest(recu["mission_diff_digest"], "mission_diff_digest")
         _validate_digest(recu["template_sha256"], "template_sha256")
+        if "artifact_sha256" in recu:
+            _validate_digest(recu["artifact_sha256"], "artifact_sha256")
     except ValueError as error:
         return {"result": "INVALIDE", "reason": str(error)}
     try:
@@ -1860,6 +1900,8 @@ def _validate_sol_archive_receipt(
         ):
             if recu[field] != verdict.get(field):
                 raise ValueError(f"{field} du reçu Sol archive contradictoire")
+        if "artifact_sha256" in recu and recu["artifact_sha256"] != verdict.get("artifact_sha256"):
+            raise ValueError("artifact_sha256 du reçu Sol archive contradictoire")
         if review_dir is None:
             raise ValueError("dossier de revue Sol archive requis")
         expected = _sol_expected_from_git(
@@ -1888,6 +1930,8 @@ def _validate_sol_archive_receipt(
         "template_sha256",
     ):
         _validate_digest(recu[field], field)
+    if "artifact_sha256" in recu:
+        _validate_digest(recu["artifact_sha256"], "artifact_sha256")
     for commit_field, tree_field in (
         ("head_commit", "head_tree"),
         ("reviewed_head_commit", "reviewed_head_tree"),
@@ -1998,6 +2042,7 @@ def _cmd_recu(args) -> int:
         template_sha256 = None
         sdd_diff_digest = None
         mission_diff_digest = None
+        artifact_sha256 = None
         story = getattr(args, "story", None)
         if not isinstance(story, str) or not story.strip():
             raise ValueError("--story est obligatoire avec --mode sol_blind")
@@ -2022,6 +2067,7 @@ def _cmd_recu(args) -> int:
             template_sha256 = prompt_metadata["template_sha256"]
             sdd_diff_digest = prompt_metadata["sdd_diff_digest"]
             mission_diff_digest = prompt_metadata["mission_diff_digest"]
+            artifact_sha256 = prompt_metadata.get("artifact_sha256")
             expected = {
                 **etat,
                 "candidate_diff_digest": etat["diff_digest"],
@@ -2033,6 +2079,8 @@ def _cmd_recu(args) -> int:
                 "template_sha256": template_sha256,
                 "reviewed_at": verdicts[0].get("reviewed_at"),
             }
+            if artifact_sha256 is not None:
+                expected["artifact_sha256"] = artifact_sha256
             result = tally_sol_blind(verdicts, expected=expected, codeurs=args.codeur)
         reviewer = verdicts[0] if len(verdicts) == 1 else {}
         recu = {
@@ -2057,6 +2105,7 @@ def _cmd_recu(args) -> int:
             "template_sha256": template_sha256,
             "sdd_diff_digest": sdd_diff_digest,
             "mission_diff_digest": mission_diff_digest,
+            "artifact_sha256": artifact_sha256,
             "blocking_findings": reviewer.get("blocking_findings", []),
             "date_heure": datetime.now().astimezone().isoformat(),
             "fenetre_heures": args.fenetre_heures,

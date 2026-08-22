@@ -3869,8 +3869,8 @@
         }
       ],
       "rule_id": "docs-user",
-      "sha256": "1d11df51c94e406ce25843990dc44e4a0c396f9098cc695fe77603906a326379",
-      "size": 4535,
+      "sha256": "dc97ebf3e64f95c55559c0cb362345d3ba08de40ad666b6d18e012456d374eb4",
+      "size": 4708,
       "target_path": null,
       "type": "text"
     },
@@ -4269,10 +4269,17 @@
           "referrer": "evidence/reviews/ORCH-LUNA-SOL-603-final-r2/sol.verdict.json",
           "resolved": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
           "severity": "hard"
+        },
+        {
+          "candidate": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+          "line": 7,
+          "referrer": "evidence/reviews/ORCH-LUNA-SOL-603-final/sol.verdict.json",
+          "resolved": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+          "severity": "hard"
         }
       ],
       "rule_id": "docs-user",
-      "sha256": "96dbe87967eb2e286edbed50c6f68620b5cd47b43d4599d2b3a31aced360b5f4",
+      "sha256": "bc0e24ce35f535932bbf9b056fd0b3b9d9b9e05bb20882bea34b521a3f9fc7c5",
       "size": 1924,
       "target_path": null,
       "type": "text"
@@ -7037,7 +7044,7 @@
         },
         {
           "candidate": "evidence/registres/mission.jsonl",
-          "line": 656,
+          "line": 667,
           "referrer": "scripts/revue.py",
           "resolved": "evidence/registres/mission.jsonl",
           "severity": "hard"
@@ -7065,8 +7072,8 @@
         }
       ],
       "rule_id": "evidence-registres-root",
-      "sha256": "82a4ad97fc3e3accfdd7a813eb5a04afa524958e38128db410d80e53a3b92cfc",
-      "size": 404283,
+      "sha256": "cef8bfdeabc8dd1422f939ec72f56b23d5a453e98af80839c003c671257c66ec",
+      "size": 404923,
       "target_path": null,
       "type": "text"
     },
@@ -7079,7 +7086,7 @@
       "referenced_by": [
         {
           "candidate": "evidence/reviews/ARCHIVE-UNMERGED.txt",
-          "line": 51,
+          "line": 53,
           "referrer": "Docs/reference/autonomy-luna-sol.md",
           "resolved": "evidence/reviews/ARCHIVE-UNMERGED.txt",
           "severity": "hard"
@@ -8928,7 +8935,7 @@
         },
         {
           "candidate": "evidence/reviews/BINDING.txt",
-          "line": 48,
+          "line": 50,
           "referrer": "Docs/reference/autonomy-luna-sol.md",
           "resolved": "evidence/reviews/BINDING.txt",
           "severity": "hard"
@@ -16013,6 +16020,19 @@
       "rule_id": "evidence-reviews-root",
       "sha256": "7d34892c4eda06495a67ebc94042ca2832e39e30cb616e2c7b46c5b88464782b",
       "size": 15388,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/ORCH-LUNA-SOL-603-final/sol.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "41b8aad579805565df2f040243a3a4b67ec1d48e83e80684a8d28338ab641888",
+      "size": 1484,
       "target_path": null,
       "type": "text"
     },
@@ -29007,14 +29027,14 @@
         },
         {
           "candidate": "governance/PATH-CLASSIFICATION.md",
-          "line": 553,
+          "line": 564,
           "referrer": "scripts/revue.py",
           "resolved": "governance/PATH-CLASSIFICATION.md",
           "severity": "hard"
         },
         {
           "candidate": "governance/PATH-CLASSIFICATION.md",
-          "line": 674,
+          "line": 685,
           "referrer": "scripts/revue.py",
           "resolved": "governance/PATH-CLASSIFICATION.md",
           "severity": "hard"
@@ -30307,7 +30327,7 @@
         },
         {
           "candidate": "governance/path-classification-rules.json",
-          "line": 667,
+          "line": 678,
           "referrer": "scripts/revue.py",
           "resolved": "governance/path-classification-rules.json",
           "severity": "hard"
@@ -30699,21 +30719,21 @@
         },
         {
           "candidate": "governance/path-classification.json",
-          "line": 552,
+          "line": 563,
           "referrer": "scripts/revue.py",
           "resolved": "governance/path-classification.json",
           "severity": "hard"
         },
         {
           "candidate": "governance/path-classification.json",
-          "line": 659,
+          "line": 670,
           "referrer": "scripts/revue.py",
           "resolved": "governance/path-classification.json",
           "severity": "hard"
         },
         {
           "candidate": "governance/path-classification.json",
-          "line": 673,
+          "line": 684,
           "referrer": "scripts/revue.py",
           "resolved": "governance/path-classification.json",
           "severity": "hard"
@@ -31993,7 +32013,7 @@
         },
         {
           "candidate": "manifests/roles.yaml",
-          "line": 1540,
+          "line": 1578,
           "referrer": "scripts/revue.py",
           "resolved": "manifests/roles.yaml",
           "severity": "hard"
@@ -33296,7 +33316,7 @@
         },
         {
           "candidate": "scripts/governance/classify_paths.py",
-          "line": 65,
+          "line": 67,
           "referrer": "Docs/reference/autonomy-luna-sol.md",
           "resolved": "scripts/governance/classify_paths.py",
           "severity": "hard"
@@ -33667,7 +33687,7 @@
         },
         {
           "candidate": "scripts/governance/state_current.py",
-          "line": 64,
+          "line": 66,
           "referrer": "Docs/reference/autonomy-luna-sol.md",
           "resolved": "scripts/governance/state_current.py",
           "severity": "hard"
@@ -33842,7 +33862,7 @@
         },
         {
           "candidate": "scripts/governance/validate_authority.py",
-          "line": 63,
+          "line": 65,
           "referrer": "Docs/reference/autonomy-luna-sol.md",
           "resolved": "scripts/governance/validate_authority.py",
           "severity": "hard"
@@ -35774,14 +35794,14 @@
         },
         {
           "candidate": "scripts/reviews_gate.py",
-          "line": 66,
+          "line": 68,
           "referrer": "Docs/reference/autonomy-luna-sol.md",
           "resolved": "scripts/reviews_gate.py",
           "severity": "hard"
         },
         {
           "candidate": "scripts/reviews_gate.py",
-          "line": 67,
+          "line": 69,
           "referrer": "Docs/reference/autonomy-luna-sol.md",
           "resolved": "scripts/reviews_gate.py",
           "severity": "hard"
@@ -36397,8 +36417,8 @@
         }
       ],
       "rule_id": "governance-scripts-root",
-      "sha256": "392e973a0883531ddb5f07aa18a86c427db2a2d9e3205876c0f1b7d5031d1058",
-      "size": 96093,
+      "sha256": "09345b68b56c0cb2fae9dda0816451f2c92269faf95aad12efcf7dec21ed1824",
+      "size": 99069,
       "target_path": null,
       "type": "text"
     },
@@ -48537,7 +48557,7 @@
         }
       ],
       "rule_id": "governance-stories",
-      "sha256": "07abc2840a869ac421156656bd2b62ba4b74757acd903b9de47f3b09eec909d4",
+      "sha256": "c82c84df379d544f073b89606064bdd5112b5e409a81f495b89ebce0659f95fb",
       "size": 2003,
       "target_path": null,
       "type": "text"
@@ -59069,6 +59089,13 @@
       "referenced_by": [
         {
           "candidate": "tests/test_reviews_gate.py",
+          "line": 13,
+          "referrer": "evidence/reviews/ORCH-LUNA-SOL-603-final/sol.verdict.json",
+          "resolved": "tests/test_reviews_gate.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "tests/test_reviews_gate.py",
           "line": 8,
           "referrer": "evidence/reviews/RC1-004-PR497-v2/DeepSeek-V4-Pro.verdict.json",
           "resolved": "tests/test_reviews_gate.py",
@@ -59139,8 +59166,8 @@
         }
       ],
       "rule_id": "test-suite",
-      "sha256": "3dbb970bb750334935e9d05edbb126f4925df131b7f068a3a5ae3d3901fb6e60",
-      "size": 42367,
+      "sha256": "ed8d6c8b129e814b84efeb5f23b1d2e353530d7e69c4f74a50ca47f4a8737f79",
+      "size": 43272,
       "target_path": null,
       "type": "text"
     },
@@ -66837,28 +66864,28 @@
         "referrer": "Docs/reference/autonomy-luna-sol.md"
       },
       {
-        "candidate": "evidence/reviews/ORCH-LUNA-SOL-603-final-approved/RECU.json",
+        "candidate": "evidence/reviews/ORCH-LUNA-SOL-603-final-approval/RECU.json",
         "line": 20,
         "referrer": "Docs/reference/autonomy-luna-sol.md"
       },
       {
         "candidate": "forme/coh",
-        "line": 25,
+        "line": 27,
         "referrer": "Docs/reference/autonomy-luna-sol.md"
       },
       {
         "candidate": "u/prompt/verdict",
-        "line": 34,
+        "line": 36,
         "referrer": "Docs/reference/autonomy-luna-sol.md"
       },
       {
         "candidate": "che/aveugle/read-only",
-        "line": 38,
+        "line": 40,
         "referrer": "Docs/reference/autonomy-luna-sol.md"
       },
       {
         "candidate": "origin/main",
-        "line": 66,
+        "line": 68,
         "referrer": "Docs/reference/autonomy-luna-sol.md"
       },
       {
@@ -94962,6 +94989,11 @@
         "referrer": "evidence/reviews/ORCH-LUNA-SOL-603-final-r4/sol.verdict.json"
       },
       {
+        "candidate": "pytest/CI",
+        "line": 15,
+        "referrer": "evidence/reviews/ORCH-LUNA-SOL-603-final/sol.verdict.json"
+      },
+      {
         "candidate": "recu-revue/2",
         "line": 2,
         "referrer": "evidence/reviews/ORCH-LUNA-SOL-603-phaseA-r2/RECU.json"
@@ -108048,267 +108080,267 @@
       },
       {
         "candidate": "evidence/reviews/",
-        "line": 549,
+        "line": 560,
         "referrer": "scripts/revue.py"
       },
       {
         "candidate": ".superpowers/sdd/",
-        "line": 550,
+        "line": 561,
         "referrer": "scripts/revue.py"
       },
       {
         "candidate": "evidence/registres/",
-        "line": 551,
+        "line": 562,
         "referrer": "scripts/revue.py"
       },
       {
         "candidate": ".superpowers/sdd/",
-        "line": 587,
+        "line": 598,
         "referrer": "scripts/revue.py"
       },
       {
         "candidate": "evidence/registres/",
-        "line": 630,
+        "line": 641,
         "referrer": "scripts/revue.py"
       },
       {
         "candidate": "reviews/",
-        "line": 648,
+        "line": 659,
         "referrer": "scripts/revue.py"
       },
       {
         "candidate": "evidence/reviews/",
-        "line": 648,
+        "line": 659,
         "referrer": "scripts/revue.py"
       },
       {
         "candidate": "reviews/",
-        "line": 649,
-        "referrer": "scripts/revue.py"
-      },
-      {
-        "candidate": ".superpowers/sdd/",
-        "line": 652,
-        "referrer": "scripts/revue.py"
-      },
-      {
-        "candidate": "evidence/reviews/",
         "line": 660,
         "referrer": "scripts/revue.py"
       },
       {
-        "candidate": "RECU.json",
-        "line": 660,
+        "candidate": ".superpowers/sdd/",
+        "line": 663,
         "referrer": "scripts/revue.py"
       },
       {
         "candidate": "evidence/reviews/",
-        "line": 670,
-        "referrer": "scripts/revue.py"
-      },
-      {
-        "candidate": ".superpowers/sdd/",
         "line": 671,
         "referrer": "scripts/revue.py"
       },
       {
-        "candidate": "evidence/registres/",
-        "line": 672,
+        "candidate": "RECU.json",
+        "line": 671,
         "referrer": "scripts/revue.py"
       },
       {
         "candidate": "evidence/reviews/",
-        "line": 685,
-        "referrer": "scripts/revue.py"
-      },
-      {
-        "candidate": ".verdict.json",
-        "line": 686,
+        "line": 681,
         "referrer": "scripts/revue.py"
       },
       {
         "candidate": ".superpowers/sdd/",
-        "line": 689,
+        "line": 682,
         "referrer": "scripts/revue.py"
       },
       {
-        "candidate": "governance/path-classification.json/.md",
-        "line": 692,
-        "referrer": "scripts/revue.py"
-      },
-      {
-        "candidate": "classify_paths.py",
-        "line": 693,
-        "referrer": "scripts/revue.py"
-      },
-      {
-        "candidate": "autonomy-policy/1",
-        "line": 997,
-        "referrer": "scripts/revue.py"
-      },
-      {
-        "candidate": "roles.yaml",
-        "line": 1036,
-        "referrer": "scripts/revue.py"
-      },
-      {
-        "candidate": "roles.yaml",
-        "line": 1076,
-        "referrer": "scripts/revue.py"
-      },
-      {
-        "candidate": "roles.yaml",
-        "line": 1094,
-        "referrer": "scripts/revue.py"
-      },
-      {
-        "candidate": "ordering/future",
-        "line": 1183,
-        "referrer": "scripts/revue.py"
-      },
-      {
-        "candidate": "recu-revue/2",
-        "line": 1234,
-        "referrer": "scripts/revue.py"
-      },
-      {
-        "candidate": "recu-revue/2",
-        "line": 1235,
-        "referrer": "scripts/revue.py"
-      },
-      {
-        "candidate": "SOL-PROMPT.md",
-        "line": 1308,
-        "referrer": "scripts/revue.py"
-      },
-      {
-        "candidate": "current_head/current_tree",
-        "line": 1334,
-        "referrer": "scripts/revue.py"
-      },
-      {
-        "candidate": "base/diff",
-        "line": 1362,
-        "referrer": "scripts/revue.py"
-      },
-      {
-        "candidate": "Sol/openai",
-        "line": 1434,
-        "referrer": "scripts/revue.py"
-      },
-      {
-        "candidate": "APPROVE/REJECT",
-        "line": 1562,
-        "referrer": "scripts/revue.py"
-      },
-      {
-        "candidate": "commit/diff",
-        "line": 1602,
-        "referrer": "scripts/revue.py"
-      },
-      {
-        "candidate": "head_commit/head_tree",
-        "line": 1602,
-        "referrer": "scripts/revue.py"
-      },
-      {
-        "candidate": "revue.py",
-        "line": 1603,
-        "referrer": "scripts/revue.py"
-      },
-      {
-        "candidate": "commit/arbre",
-        "line": 1604,
-        "referrer": "scripts/revue.py"
-      },
-      {
-        "candidate": "head_commit/",
-        "line": 1605,
-        "referrer": "scripts/revue.py"
-      },
-      {
-        "candidate": "reviews/",
-        "line": 1609,
-        "referrer": "scripts/revue.py"
-      },
-      {
-        "candidate": "RECU.json",
-        "line": 1631,
-        "referrer": "scripts/revue.py"
-      },
-      {
-        "candidate": "crit/modifi",
-        "line": 1631,
-        "referrer": "scripts/revue.py"
-      },
-      {
-        "candidate": "recu-revue/2",
-        "line": 1697,
-        "referrer": "scripts/revue.py"
-      },
-      {
-        "candidate": "recu-revue/2",
-        "line": 1698,
-        "referrer": "scripts/revue.py"
-      },
-      {
-        "candidate": "Git/prompt",
-        "line": 1754,
-        "referrer": "scripts/revue.py"
-      },
-      {
-        "candidate": "recu-revue/2",
-        "line": 1813,
-        "referrer": "scripts/revue.py"
-      },
-      {
-        "candidate": "recu-revue/2",
-        "line": 1814,
-        "referrer": "scripts/revue.py"
-      },
-      {
-        "candidate": ".verdict.json",
-        "line": 1982,
-        "referrer": "scripts/revue.py"
-      },
-      {
-        "candidate": "reviews/",
-        "line": 1989,
+        "candidate": "evidence/registres/",
+        "line": 683,
         "referrer": "scripts/revue.py"
       },
       {
         "candidate": "evidence/reviews/",
-        "line": 1989,
+        "line": 696,
         "referrer": "scripts/revue.py"
       },
       {
         "candidate": ".verdict.json",
-        "line": 1993,
+        "line": 697,
+        "referrer": "scripts/revue.py"
+      },
+      {
+        "candidate": ".superpowers/sdd/",
+        "line": 700,
+        "referrer": "scripts/revue.py"
+      },
+      {
+        "candidate": "governance/path-classification.json/.md",
+        "line": 703,
+        "referrer": "scripts/revue.py"
+      },
+      {
+        "candidate": "classify_paths.py",
+        "line": 704,
+        "referrer": "scripts/revue.py"
+      },
+      {
+        "candidate": "autonomy-policy/1",
+        "line": 1017,
+        "referrer": "scripts/revue.py"
+      },
+      {
+        "candidate": "roles.yaml",
+        "line": 1056,
+        "referrer": "scripts/revue.py"
+      },
+      {
+        "candidate": "roles.yaml",
+        "line": 1096,
+        "referrer": "scripts/revue.py"
+      },
+      {
+        "candidate": "roles.yaml",
+        "line": 1114,
+        "referrer": "scripts/revue.py"
+      },
+      {
+        "candidate": "ordering/future",
+        "line": 1203,
         "referrer": "scripts/revue.py"
       },
       {
         "candidate": "recu-revue/2",
-        "line": 2039,
+        "line": 1254,
         "referrer": "scripts/revue.py"
       },
       {
-        "candidate": "recu-revue/1",
-        "line": 2067,
+        "candidate": "recu-revue/2",
+        "line": 1255,
+        "referrer": "scripts/revue.py"
+      },
+      {
+        "candidate": "SOL-PROMPT.md",
+        "line": 1339,
+        "referrer": "scripts/revue.py"
+      },
+      {
+        "candidate": "current_head/current_tree",
+        "line": 1365,
+        "referrer": "scripts/revue.py"
+      },
+      {
+        "candidate": "base/diff",
+        "line": 1396,
+        "referrer": "scripts/revue.py"
+      },
+      {
+        "candidate": "Sol/openai",
+        "line": 1468,
+        "referrer": "scripts/revue.py"
+      },
+      {
+        "candidate": "APPROVE/REJECT",
+        "line": 1600,
+        "referrer": "scripts/revue.py"
+      },
+      {
+        "candidate": "commit/diff",
+        "line": 1640,
+        "referrer": "scripts/revue.py"
+      },
+      {
+        "candidate": "head_commit/head_tree",
+        "line": 1640,
         "referrer": "scripts/revue.py"
       },
       {
         "candidate": "revue.py",
-        "line": 2097,
+        "line": 1641,
+        "referrer": "scripts/revue.py"
+      },
+      {
+        "candidate": "commit/arbre",
+        "line": 1642,
+        "referrer": "scripts/revue.py"
+      },
+      {
+        "candidate": "head_commit/",
+        "line": 1643,
+        "referrer": "scripts/revue.py"
+      },
+      {
+        "candidate": "reviews/",
+        "line": 1647,
+        "referrer": "scripts/revue.py"
+      },
+      {
+        "candidate": "RECU.json",
+        "line": 1669,
+        "referrer": "scripts/revue.py"
+      },
+      {
+        "candidate": "crit/modifi",
+        "line": 1669,
+        "referrer": "scripts/revue.py"
+      },
+      {
+        "candidate": "recu-revue/2",
+        "line": 1735,
+        "referrer": "scripts/revue.py"
+      },
+      {
+        "candidate": "recu-revue/2",
+        "line": 1736,
+        "referrer": "scripts/revue.py"
+      },
+      {
+        "candidate": "Git/prompt",
+        "line": 1794,
+        "referrer": "scripts/revue.py"
+      },
+      {
+        "candidate": "recu-revue/2",
+        "line": 1853,
+        "referrer": "scripts/revue.py"
+      },
+      {
+        "candidate": "recu-revue/2",
+        "line": 1854,
         "referrer": "scripts/revue.py"
       },
       {
         "candidate": ".verdict.json",
-        "line": 2110,
+        "line": 2026,
+        "referrer": "scripts/revue.py"
+      },
+      {
+        "candidate": "reviews/",
+        "line": 2033,
+        "referrer": "scripts/revue.py"
+      },
+      {
+        "candidate": "evidence/reviews/",
+        "line": 2033,
+        "referrer": "scripts/revue.py"
+      },
+      {
+        "candidate": ".verdict.json",
+        "line": 2037,
+        "referrer": "scripts/revue.py"
+      },
+      {
+        "candidate": "recu-revue/2",
+        "line": 2087,
+        "referrer": "scripts/revue.py"
+      },
+      {
+        "candidate": "recu-revue/1",
+        "line": 2116,
+        "referrer": "scripts/revue.py"
+      },
+      {
+        "candidate": "revue.py",
+        "line": 2146,
+        "referrer": "scripts/revue.py"
+      },
+      {
+        "candidate": ".verdict.json",
+        "line": 2159,
         "referrer": "scripts/revue.py"
       },
       {
         "candidate": "test/receipt",
-        "line": 2130,
+        "line": 2179,
         "referrer": "scripts/revue.py"
       },
       {
@@ -131112,7 +131144,7 @@
         "referrer": "stories/ORCH-LUNA-SOL-603.md"
       },
       {
-        "candidate": "evidence/reviews/ORCH-LUNA-SOL-603-final-approved/RECU.json",
+        "candidate": "evidence/reviews/ORCH-LUNA-SOL-603-final-approval/RECU.json",
         "line": 25,
         "referrer": "stories/ORCH-LUNA-SOL-603.md"
       },
@@ -144833,72 +144865,67 @@
       },
       {
         "candidate": "recu-revue/1",
-        "line": 99,
+        "line": 100,
         "referrer": "tests/test_reviews_gate.py"
       },
       {
         "candidate": "SOL-PROMPT.md",
-        "line": 150,
-        "referrer": "tests/test_reviews_gate.py"
-      },
-      {
-        "candidate": "recu-revue/2",
         "line": 152,
         "referrer": "tests/test_reviews_gate.py"
       },
       {
+        "candidate": "recu-revue/2",
+        "line": 154,
+        "referrer": "tests/test_reviews_gate.py"
+      },
+      {
         "candidate": "RECU.json",
-        "line": 182,
+        "line": 185,
         "referrer": "tests/test_reviews_gate.py"
       },
       {
         "candidate": "reviews/",
-        "line": 187,
+        "line": 200,
         "referrer": "tests/test_reviews_gate.py"
       },
       {
         "candidate": "evidence/reviews/",
-        "line": 187,
+        "line": 200,
         "referrer": "tests/test_reviews_gate.py"
       },
       {
         "candidate": "evidence/reviews/",
-        "line": 192,
+        "line": 205,
         "referrer": "tests/test_reviews_gate.py"
       },
       {
         "candidate": "../ailleurs",
-        "line": 230,
+        "line": 243,
         "referrer": "tests/test_reviews_gate.py"
       },
       {
         "candidate": "origin/main",
-        "line": 241,
+        "line": 254,
         "referrer": "tests/test_reviews_gate.py"
       },
       {
         "candidate": "RECU.json",
-        "line": 252,
+        "line": 265,
         "referrer": "tests/test_reviews_gate.py"
       },
       {
         "candidate": "origin/main",
-        "line": 257,
+        "line": 270,
         "referrer": "tests/test_reviews_gate.py"
       },
       {
         "candidate": "RECU.json",
-        "line": 269,
+        "line": 282,
         "referrer": "tests/test_reviews_gate.py"
       },
       {
         "candidate": "origin/main",
-        "line": 274,
-        "referrer": "tests/test_reviews_gate.py"
-      },
-      {
-        "candidate": "RECU.json",
-        "line": 286,
+        "line": 287,
         "referrer": "tests/test_reviews_gate.py"
       },
       {
@@ -144908,162 +144935,162 @@
       },
       {
         "candidate": "RECU.json",
-        "line": 305,
+        "line": 312,
         "referrer": "tests/test_reviews_gate.py"
       },
       {
         "candidate": "RECU.json",
-        "line": 315,
+        "line": 318,
         "referrer": "tests/test_reviews_gate.py"
       },
       {
         "candidate": "RECU.json",
-        "line": 342,
+        "line": 328,
+        "referrer": "tests/test_reviews_gate.py"
+      },
+      {
+        "candidate": "RECU.json",
+        "line": 355,
         "referrer": "tests/test_reviews_gate.py"
       },
       {
         "candidate": "origin/main",
-        "line": 374,
-        "referrer": "tests/test_reviews_gate.py"
-      },
-      {
-        "candidate": "deepseek.verdict.json",
         "line": 387,
         "referrer": "tests/test_reviews_gate.py"
       },
       {
-        "candidate": "RECU.json",
-        "line": 399,
-        "referrer": "tests/test_reviews_gate.py"
-      },
-      {
-        "candidate": "origin/main",
-        "line": 402,
-        "referrer": "tests/test_reviews_gate.py"
-      },
-      {
-        "candidate": "439/PR500",
-        "line": 409,
+        "candidate": "deepseek.verdict.json",
+        "line": 400,
         "referrer": "tests/test_reviews_gate.py"
       },
       {
         "candidate": "RECU.json",
-        "line": 410,
-        "referrer": "tests/test_reviews_gate.py"
-      },
-      {
-        "candidate": "origin/main",
         "line": 412,
         "referrer": "tests/test_reviews_gate.py"
       },
       {
-        "candidate": "RECU.json",
-        "line": 421,
+        "candidate": "origin/main",
+        "line": 415,
+        "referrer": "tests/test_reviews_gate.py"
+      },
+      {
+        "candidate": "439/PR500",
+        "line": 422,
         "referrer": "tests/test_reviews_gate.py"
       },
       {
         "candidate": "RECU.json",
-        "line": 428,
+        "line": 423,
         "referrer": "tests/test_reviews_gate.py"
       },
       {
         "candidate": "origin/main",
-        "line": 437,
+        "line": 425,
+        "referrer": "tests/test_reviews_gate.py"
+      },
+      {
+        "candidate": "RECU.json",
+        "line": 434,
+        "referrer": "tests/test_reviews_gate.py"
+      },
+      {
+        "candidate": "RECU.json",
+        "line": 441,
+        "referrer": "tests/test_reviews_gate.py"
+      },
+      {
+        "candidate": "origin/main",
+        "line": 450,
         "referrer": "tests/test_reviews_gate.py"
       },
       {
         "candidate": "SOL-PROMPT.md",
-        "line": 479,
+        "line": 499,
         "referrer": "tests/test_reviews_gate.py"
       },
       {
         "candidate": "RECU.json",
-        "line": 480,
+        "line": 500,
         "referrer": "tests/test_reviews_gate.py"
       },
       {
         "candidate": "recu-revue/2",
-        "line": 483,
+        "line": 503,
         "referrer": "tests/test_reviews_gate.py"
       },
       {
         "candidate": "SOL-PROMPT.md",
-        "line": 539,
+        "line": 560,
         "referrer": "tests/test_reviews_gate.py"
       },
       {
         "candidate": "RECU.json",
-        "line": 540,
+        "line": 561,
         "referrer": "tests/test_reviews_gate.py"
       },
       {
         "candidate": "recu-revue/2",
-        "line": 544,
+        "line": 565,
         "referrer": "tests/test_reviews_gate.py"
       },
       {
         "candidate": "origin/main",
-        "line": 576,
+        "line": 598,
         "referrer": "tests/test_reviews_gate.py"
       },
       {
         "candidate": "RECU.json",
-        "line": 591,
+        "line": 613,
         "referrer": "tests/test_reviews_gate.py"
       },
       {
         "candidate": "RECU.json",
-        "line": 597,
+        "line": 619,
         "referrer": "tests/test_reviews_gate.py"
       },
       {
         "candidate": "origin/main",
-        "line": 608,
+        "line": 630,
         "referrer": "tests/test_reviews_gate.py"
       },
       {
         "candidate": "RECU.json",
-        "line": 626,
+        "line": 648,
         "referrer": "tests/test_reviews_gate.py"
       },
       {
         "candidate": "origin/main",
-        "line": 629,
+        "line": 651,
         "referrer": "tests/test_reviews_gate.py"
       },
       {
         "candidate": "origin/main",
-        "line": 674,
+        "line": 696,
         "referrer": "tests/test_reviews_gate.py"
       },
       {
         "candidate": "RECU.json",
-        "line": 704,
+        "line": 726,
         "referrer": "tests/test_reviews_gate.py"
       },
       {
         "candidate": ".verdict.json",
-        "line": 718,
+        "line": 740,
         "referrer": "tests/test_reviews_gate.py"
       },
       {
         "candidate": "RECU.json",
-        "line": 722,
-        "referrer": "tests/test_reviews_gate.py"
-      },
-      {
-        "candidate": "origin/main",
-        "line": 732,
-        "referrer": "tests/test_reviews_gate.py"
-      },
-      {
-        "candidate": ".verdict.json",
         "line": 744,
         "referrer": "tests/test_reviews_gate.py"
       },
       {
-        "candidate": "RECU.json",
-        "line": 748,
+        "candidate": "origin/main",
+        "line": 754,
+        "referrer": "tests/test_reviews_gate.py"
+      },
+      {
+        "candidate": ".verdict.json",
+        "line": 766,
         "referrer": "tests/test_reviews_gate.py"
       },
       {
@@ -145072,138 +145099,143 @@
         "referrer": "tests/test_reviews_gate.py"
       },
       {
-        "candidate": ".verdict.json",
-        "line": 776,
+        "candidate": "RECU.json",
+        "line": 792,
         "referrer": "tests/test_reviews_gate.py"
       },
       {
         "candidate": ".verdict.json",
-        "line": 803,
+        "line": 798,
+        "referrer": "tests/test_reviews_gate.py"
+      },
+      {
+        "candidate": ".verdict.json",
+        "line": 825,
         "referrer": "tests/test_reviews_gate.py"
       },
       {
         "candidate": "origin/main",
-        "line": 817,
+        "line": 839,
         "referrer": "tests/test_reviews_gate.py"
       },
       {
         "candidate": "SOL-PROMPT.md",
-        "line": 831,
+        "line": 853,
         "referrer": "tests/test_reviews_gate.py"
       },
       {
         "candidate": "RECU.json",
-        "line": 846,
+        "line": 868,
         "referrer": "tests/test_reviews_gate.py"
       },
       {
         "candidate": ".verdict.json",
-        "line": 850,
+        "line": 872,
         "referrer": "tests/test_reviews_gate.py"
       },
       {
         "candidate": "origin/main",
-        "line": 864,
+        "line": 886,
         "referrer": "tests/test_reviews_gate.py"
       },
       {
         "candidate": "SOL-PROMPT.md",
-        "line": 878,
+        "line": 900,
         "referrer": "tests/test_reviews_gate.py"
       },
       {
         "candidate": "RECU.json",
-        "line": 894,
+        "line": 916,
         "referrer": "tests/test_reviews_gate.py"
       },
       {
         "candidate": ".verdict.json",
-        "line": 898,
+        "line": 920,
         "referrer": "tests/test_reviews_gate.py"
       },
       {
         "candidate": "origin/main",
-        "line": 912,
+        "line": 934,
         "referrer": "tests/test_reviews_gate.py"
       },
       {
         "candidate": "RECU.json",
-        "line": 926,
+        "line": 948,
         "referrer": "tests/test_reviews_gate.py"
       },
       {
         "candidate": ".verdict.json",
-        "line": 930,
+        "line": 952,
         "referrer": "tests/test_reviews_gate.py"
       },
       {
         "candidate": "origin/main",
-        "line": 944,
+        "line": 966,
         "referrer": "tests/test_reviews_gate.py"
       },
       {
         "candidate": ".verdict.json",
-        "line": 958,
+        "line": 980,
         "referrer": "tests/test_reviews_gate.py"
       },
       {
         "candidate": "RECU.json",
-        "line": 962,
+        "line": 984,
         "referrer": "tests/test_reviews_gate.py"
       },
       {
         "candidate": "origin/main",
-        "line": 977,
+        "line": 999,
         "referrer": "tests/test_reviews_gate.py"
       },
       {
         "candidate": ".verdict.json",
-        "line": 991,
+        "line": 1013,
         "referrer": "tests/test_reviews_gate.py"
       },
       {
         "candidate": "origin/main",
-        "line": 1005,
+        "line": 1027,
         "referrer": "tests/test_reviews_gate.py"
       },
       {
         "candidate": "RECU.json",
-        "line": 1019,
+        "line": 1041,
         "referrer": "tests/test_reviews_gate.py"
       },
       {
         "candidate": "origin/main",
-        "line": 1033,
+        "line": 1055,
         "referrer": "tests/test_reviews_gate.py"
       },
       {
         "candidate": "origin/main",
-        "line": 1052,
+        "line": 1074,
         "referrer": "tests/test_reviews_gate.py"
       },
       {
         "candidate": "origin/main",
-        "line": 1072,
+        "line": 1094,
         "referrer": "tests/test_reviews_gate.py"
       },
       {
         "candidate": "RECU.json",
-        "line": 1085,
-        "referrer": "tests/test_reviews_gate.py"
-      },
-      {
-        "candidate": ".verdict.json",
-        "line": 1090,
-        "referrer": "tests/test_reviews_gate.py"
-      },
-      {
-        "candidate": "RECU.json",
-        "line": 1108,
+        "line": 1107,
         "referrer": "tests/test_reviews_gate.py"
       },
       {
         "candidate": ".verdict.json",
         "line": 1112,
+        "referrer": "tests/test_reviews_gate.py"
+      },
+      {
+        "candidate": "RECU.json",
+        "line": 1130,
+        "referrer": "tests/test_reviews_gate.py"
+      },
+      {
+        "candidate": ".verdict.json",
+        "line": 1134,
         "referrer": "tests/test_reviews_gate.py"
       },
       {
@@ -153693,49 +153725,49 @@
       },
       {
         "candidate": "evidence/reviews/BINDING.txt",
-        "line": 48,
+        "line": 50,
         "referrer": "Docs/reference/autonomy-luna-sol.md",
         "resolved": "evidence/reviews/BINDING.txt",
         "severity": "hard"
       },
       {
         "candidate": "evidence/reviews/ARCHIVE-UNMERGED.txt",
-        "line": 51,
+        "line": 53,
         "referrer": "Docs/reference/autonomy-luna-sol.md",
         "resolved": "evidence/reviews/ARCHIVE-UNMERGED.txt",
         "severity": "hard"
       },
       {
         "candidate": "scripts/governance/validate_authority.py",
-        "line": 63,
+        "line": 65,
         "referrer": "Docs/reference/autonomy-luna-sol.md",
         "resolved": "scripts/governance/validate_authority.py",
         "severity": "hard"
       },
       {
         "candidate": "scripts/governance/state_current.py",
-        "line": 64,
+        "line": 66,
         "referrer": "Docs/reference/autonomy-luna-sol.md",
         "resolved": "scripts/governance/state_current.py",
         "severity": "hard"
       },
       {
         "candidate": "scripts/governance/classify_paths.py",
-        "line": 65,
+        "line": 67,
         "referrer": "Docs/reference/autonomy-luna-sol.md",
         "resolved": "scripts/governance/classify_paths.py",
         "severity": "hard"
       },
       {
         "candidate": "scripts/reviews_gate.py",
-        "line": 66,
+        "line": 68,
         "referrer": "Docs/reference/autonomy-luna-sol.md",
         "resolved": "scripts/reviews_gate.py",
         "severity": "hard"
       },
       {
         "candidate": "scripts/reviews_gate.py",
-        "line": 67,
+        "line": 69,
         "referrer": "Docs/reference/autonomy-luna-sol.md",
         "resolved": "scripts/reviews_gate.py",
         "severity": "hard"
@@ -161137,6 +161169,20 @@
         "line": 13,
         "referrer": "evidence/reviews/ORCH-LUNA-SOL-603-final-r4/sol.verdict.json",
         "resolved": "Docs/reference/autonomy-luna-sol.md",
+        "severity": "hard"
+      },
+      {
+        "candidate": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+        "line": 7,
+        "referrer": "evidence/reviews/ORCH-LUNA-SOL-603-final/sol.verdict.json",
+        "resolved": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+        "severity": "hard"
+      },
+      {
+        "candidate": "tests/test_reviews_gate.py",
+        "line": 13,
+        "referrer": "evidence/reviews/ORCH-LUNA-SOL-603-final/sol.verdict.json",
+        "resolved": "tests/test_reviews_gate.py",
         "severity": "hard"
       },
       {
@@ -176394,56 +176440,56 @@
       },
       {
         "candidate": "governance/path-classification.json",
-        "line": 552,
+        "line": 563,
         "referrer": "scripts/revue.py",
         "resolved": "governance/path-classification.json",
         "severity": "hard"
       },
       {
         "candidate": "governance/PATH-CLASSIFICATION.md",
-        "line": 553,
+        "line": 564,
         "referrer": "scripts/revue.py",
         "resolved": "governance/PATH-CLASSIFICATION.md",
         "severity": "hard"
       },
       {
         "candidate": "evidence/registres/mission.jsonl",
-        "line": 656,
+        "line": 667,
         "referrer": "scripts/revue.py",
         "resolved": "evidence/registres/mission.jsonl",
         "severity": "hard"
       },
       {
         "candidate": "governance/path-classification.json",
-        "line": 659,
+        "line": 670,
         "referrer": "scripts/revue.py",
         "resolved": "governance/path-classification.json",
         "severity": "hard"
       },
       {
         "candidate": "governance/path-classification-rules.json",
-        "line": 667,
+        "line": 678,
         "referrer": "scripts/revue.py",
         "resolved": "governance/path-classification-rules.json",
         "severity": "hard"
       },
       {
         "candidate": "governance/path-classification.json",
-        "line": 673,
+        "line": 684,
         "referrer": "scripts/revue.py",
         "resolved": "governance/path-classification.json",
         "severity": "hard"
       },
       {
         "candidate": "governance/PATH-CLASSIFICATION.md",
-        "line": 674,
+        "line": 685,
         "referrer": "scripts/revue.py",
         "resolved": "governance/PATH-CLASSIFICATION.md",
         "severity": "hard"
       },
       {
         "candidate": "manifests/roles.yaml",
-        "line": 1540,
+        "line": 1578,
         "referrer": "scripts/revue.py",
         "resolved": "manifests/roles.yaml",
         "severity": "hard"
@@ -182518,7 +182564,7 @@
     "by_class": {
       "ARCHIVE": 44,
       "DOCS": 22,
-      "EVIDENCE": 1688,
+      "EVIDENCE": 1689,
       "GENERATED": 5,
       "GOVERNANCE": 217,
       "PRODUCT": 113,
@@ -182537,7 +182583,7 @@
       "evidence-audit-output-root": 18,
       "evidence-dedup-root": 2,
       "evidence-registres-root": 35,
-      "evidence-reviews-root": 1633,
+      "evidence-reviews-root": 1634,
       "generated-authority-map": 1,
       "generated-path-classification-json": 1,
       "generated-path-classification-markdown": 1,
@@ -182574,11 +182620,11 @@
       "working-sandbox-readme": 1
     },
     "case_collisions_total": 0,
-    "dangling_references_total": 17511,
+    "dangling_references_total": 17512,
     "generated_total": 9,
-    "load_bearing_total": 2168,
+    "load_bearing_total": 2169,
     "portability_violations_total": 0,
-    "tracked_total": 2323,
+    "tracked_total": 2324,
     "unclassified_total": 0,
     "unicode_anomalies_total": 0
   },

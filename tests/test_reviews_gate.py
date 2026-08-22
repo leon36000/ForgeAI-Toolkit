@@ -92,6 +92,7 @@ SOL_TEMPLATE_SHA = hashlib.sha256(
 ).hexdigest()
 SOL_SDD_DIGEST = hashlib.sha256(b"").hexdigest()
 SOL_MISSION_DIGEST = hashlib.sha256(b"").hexdigest()
+SOL_ARTIFACT_SHA = hashlib.sha256(b"").hexdigest()
 
 
 def _receipt():
@@ -133,6 +134,7 @@ def _make_sol_blind_gate_review(
                 "reviewer_read_only": True,
                 "reviewer_model": "GPT-5.6-Sol",
                 "candidate_diff_digest": hashlib.sha256(b"").hexdigest(),
+                "artifact_sha256": SOL_ARTIFACT_SHA,
                 "diff_digest": hashlib.sha256(b"").hexdigest(),
                 "sdd_diff_digest": SOL_SDD_DIGEST,
                 "mission_diff_digest": SOL_MISSION_DIGEST,
@@ -153,6 +155,7 @@ def _make_sol_blind_gate_review(
         "mode": "sol_blind",
         "story": gate._load_revue()._SOL_CANONICAL_STORY_ID,
         "candidate_diff_digest": hashlib.sha256(b"").hexdigest(),
+        "artifact_sha256": SOL_ARTIFACT_SHA,
         "diff_digest": hashlib.sha256(b"").hexdigest(),
         "sdd_diff_digest": SOL_SDD_DIGEST,
         "mission_diff_digest": SOL_MISSION_DIGEST,
@@ -181,6 +184,16 @@ def _make_sol_blind_gate_review(
         )
     (directory / "RECU.json").write_text(json.dumps(receipt), encoding="utf-8")
     return directory
+
+
+def test_sol_prompt_expose_lempreinte_du_diff_texte_affiche():
+    revue = gate._load_revue()
+    artifact = revue._diff_artifact_canonique("b" * 40, "c" * 40, runner=_runner)
+    metadata = revue._sol_prompt_metadata(SOL_PROMPT_BYTES)
+
+    assert artifact == ""
+    assert metadata["artifact_sha256"] == hashlib.sha256(artifact.encode("utf-8")).hexdigest()
+    assert metadata["artifact_sha256"] == SOL_ARTIFACT_SHA
 
 
 def test_gate_ok_si_toutes_approve(tmp_path):
@@ -447,7 +460,14 @@ def test_mode_pr_ignore_recu_historique_non_couvrant(tmp_path):
 
 def test_mode_pr_historical_invalid_sol_binding_is_informational(tmp_path):
     root = tmp_path / "reviews"
-    historical_prompt = SOL_PROMPT_BYTES.replace(b"b" * 40, b"a" * 40).replace(
+    legacy_prompt, _ = gate._load_revue()._canonical_sol_prompt(
+        gate._load_revue()._SOL_CANONICAL_STORY_ID,
+        "b" * 40,
+        "c" * 40,
+        runner=_runner,
+        include_artifact_sha256=False,
+    )
+    historical_prompt = legacy_prompt.replace(b"b" * 40, b"a" * 40).replace(
         b"c" * 40, b"3" * 40
     )
     historical_prompt_sha = hashlib.sha256(historical_prompt).hexdigest()
@@ -527,6 +547,7 @@ def test_mode_pr_historical_invalid_sol_binding_is_informational(tmp_path):
                 "reviewed_head_commit": "c" * 40,
                 "reviewed_head_tree": "d" * 40,
                 "prompt_sha256": SOL_SHA,
+                "artifact_sha256": SOL_ARTIFACT_SHA,
                 "sdd_diff_digest": SOL_SDD_DIGEST,
                 "mission_diff_digest": SOL_MISSION_DIGEST,
                 "template_sha256": SOL_TEMPLATE_SHA,
@@ -546,8 +567,9 @@ def test_mode_pr_historical_invalid_sol_binding_is_informational(tmp_path):
                     "story": gate._load_revue()._SOL_CANONICAL_STORY_ID,
                     "dossier": "S-courante-sol",
                     "issue": 603,
-                "prompt_sha256": SOL_SHA,
-                "candidate_diff_digest": hashlib.sha256(b"").hexdigest(),
+                    "prompt_sha256": SOL_SHA,
+                    "artifact_sha256": SOL_ARTIFACT_SHA,
+                    "candidate_diff_digest": hashlib.sha256(b"").hexdigest(),
                 "reviewed_head_commit": "c" * 40,
                 "reviewed_head_tree": "d" * 40,
                 "reviewed_at": "2026-08-22T12:00:00+00:00",
