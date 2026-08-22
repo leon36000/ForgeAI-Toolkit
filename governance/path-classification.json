@@ -5969,8 +5969,8 @@
       "path": "evidence/audit-output/ORCH-LUNA-SOL-603-postmerge-proof.md",
       "referenced_by": [],
       "rule_id": "evidence-audit-output-root",
-      "sha256": "3c487c5db4ea2572884ce61d28fd83689100cc6431a1d56e216c6e5daab2861e",
-      "size": 1242,
+      "sha256": "354b9e5cfb79a9fa47a4af3f822460b4d8fc866c92ec37374c24cdf4e3db7d75",
+      "size": 2009,
       "target_path": null,
       "type": "text"
     },
@@ -6924,6 +6924,13 @@
         {
           "candidate": "evidence/registres/mission.jsonl",
           "line": 13,
+          "referrer": "evidence/audit-output/ORCH-LUNA-SOL-603-postmerge-proof.md",
+          "resolved": "evidence/registres/mission.jsonl",
+          "severity": "hard"
+        },
+        {
+          "candidate": "evidence/registres/mission.jsonl",
+          "line": 23,
           "referrer": "evidence/audit-output/ORCH-LUNA-SOL-603-postmerge-proof.md",
           "resolved": "evidence/registres/mission.jsonl",
           "severity": "hard"
@@ -16165,6 +16172,13 @@
         },
         {
           "candidate": "evidence/reviews/ORCH-LUNA-SOL-603-final-seal-r3/RECU.json",
+          "line": 26,
+          "referrer": "evidence/audit-output/ORCH-LUNA-SOL-603-postmerge-proof.md",
+          "resolved": "evidence/reviews/ORCH-LUNA-SOL-603-final-seal-r3/RECU.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "evidence/reviews/ORCH-LUNA-SOL-603-final-seal-r3/RECU.json",
           "line": 25,
           "referrer": "stories/ORCH-LUNA-SOL-603.md",
           "resolved": "evidence/reviews/ORCH-LUNA-SOL-603-final-seal-r3/RECU.json",
@@ -16434,6 +16448,32 @@
       "rule_id": "evidence-reviews-root",
       "sha256": "b4a09fbaab13ee2dcff2d23a165cc7451fc791884ba7547c1f5863dbac0432d0",
       "size": 963,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/ORCH-LUNA-SOL-603-postmerge-closure-final/SOL-PROMPT.md",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "02d2b212f9d9a8b4fdf09568b16f95894579d568631e37f89bb92001f5e92f7b",
+      "size": 24938,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/ORCH-LUNA-SOL-603-postmerge-closure-final/sol.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "ca3cf8b7487aa75a8113fb010b6ee6fc45f17e12b948eacec4141d234ec566f6",
+      "size": 1263,
       "target_path": null,
       "type": "text"
     },
@@ -155976,6 +156016,20 @@
         "severity": "hard"
       },
       {
+        "candidate": "evidence/registres/mission.jsonl",
+        "line": 23,
+        "referrer": "evidence/audit-output/ORCH-LUNA-SOL-603-postmerge-proof.md",
+        "resolved": "evidence/registres/mission.jsonl",
+        "severity": "hard"
+      },
+      {
+        "candidate": "evidence/reviews/ORCH-LUNA-SOL-603-final-seal-r3/RECU.json",
+        "line": 26,
+        "referrer": "evidence/audit-output/ORCH-LUNA-SOL-603-postmerge-proof.md",
+        "resolved": "evidence/reviews/ORCH-LUNA-SOL-603-final-seal-r3/RECU.json",
+        "severity": "hard"
+      },
+      {
         "candidate": "MASTER-PLAN.md",
         "line": 90,
         "referrer": "evidence/audit-output/audit-exhaustif-2026-08-05/RAPPORT-AUDIT.md",
@@ -182954,7 +183008,7 @@
     "by_class": {
       "ARCHIVE": 44,
       "DOCS": 22,
-      "EVIDENCE": 1706,
+      "EVIDENCE": 1708,
       "GENERATED": 5,
       "GOVERNANCE": 217,
       "PRODUCT": 113,
@@ -182973,7 +183027,7 @@
       "evidence-audit-output-root": 20,
       "evidence-dedup-root": 2,
       "evidence-registres-root": 35,
-      "evidence-reviews-root": 1649,
+      "evidence-reviews-root": 1651,
       "generated-authority-map": 1,
       "generated-path-classification-json": 1,
       "generated-path-classification-markdown": 1,
@@ -183012,9 +183066,9 @@
     "case_collisions_total": 0,
     "dangling_references_total": 17516,
     "generated_total": 9,
-    "load_bearing_total": 2184,
+    "load_bearing_total": 2186,
     "portability_violations_total": 0,
-    "tracked_total": 2341,
+    "tracked_total": 2343,
     "unclassified_total": 0,
     "unicode_anomalies_total": 0
   },

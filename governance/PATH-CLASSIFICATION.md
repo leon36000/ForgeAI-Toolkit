@@ -4,9 +4,9 @@ NE PAS ÉDITER À LA MAIN — généré par scripts/governance/classify_paths.py
 
 ## Résumé
 
-- Fichiers suivis : 2341
+- Fichiers suivis : 2343
 - Fichiers générés : 9
-- Éléments porteurs : 2184
+- Éléments porteurs : 2186
 - Fichiers non classés : 0
 - Collisions de casse : 0
 - Anomalies Unicode NFC : 0
@@ -18,7 +18,7 @@ NE PAS ÉDITER À LA MAIN — généré par scripts/governance/classify_paths.py
 
 - ARCHIVE : 44
 - DOCS : 22
-- EVIDENCE : 1706
+- EVIDENCE : 1708
 - GENERATED : 5
 - GOVERNANCE : 217
 - PRODUCT : 113
