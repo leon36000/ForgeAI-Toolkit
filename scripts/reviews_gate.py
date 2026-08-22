@@ -354,7 +354,10 @@ def check(
                 receipt = json.loads(receipt_path.read_text(encoding="utf-8"))
                 if isinstance(receipt, dict) and receipt.get("mode") == "sol_blind":
                     revue._validate_sol_archive_receipt(
-                        receipt, execute, verdicts=verdicts
+                        receipt,
+                        execute,
+                        verdicts=verdicts,
+                        review_dir=directory,
                     )
                     commit = receipt["head_commit"]
                     reviewed_commit = receipt["reviewed_head_commit"]

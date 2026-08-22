@@ -468,7 +468,7 @@ def test_mode_pr_historical_invalid_sol_binding_is_informational(tmp_path):
                     "schema": "recu-revue/2",
                     "mode": "sol_blind",
                     "story": "S-sol",
-                    "dossier": "S-sol",
+                    "dossier": "S-courante-sol",
                 "prompt_sha256": SOL_SHA,
                 "candidate_diff_digest": hashlib.sha256(b"").hexdigest(),
                 "reviewed_head_commit": "c" * 40,

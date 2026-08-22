@@ -114,14 +114,16 @@ def _receipt(*, include_blocking_findings: bool = True, **changes) -> dict:
 def test_sol_blind_exact_binding_approves_and_receipt_is_accepted(tmp_path):
     verdict = _sol_verdict()
     expected = _expected()
-    (tmp_path / "SOL-PROMPT.md").write_bytes(PROMPT_BYTES)
+    directory = tmp_path / "S-sol"
+    directory.mkdir()
+    (directory / "SOL-PROMPT.md").write_bytes(PROMPT_BYTES)
 
     result = revue.tally_sol_blind([verdict], expected=expected, codeurs=["luna_writer"])
     receipt_result = revue.verifier_recu(
         _receipt(),
         [verdict],
         expected,
-        review_dir=tmp_path,
+        review_dir=directory,
         runner=_git_runner,
         now=VALIDATION_NOW,
     )
@@ -140,6 +142,8 @@ def test_sol_blind_exact_binding_approves_and_receipt_is_accepted(tmp_path):
         ({"candidate_diff_digest": "f" * 64}, "candidate_diff_digest"),
         ({"reviewer_model": None}, "reviewer_model"),
         ({"reviewer_model": "GPT-5.6-Luna-Pro"}, "reviewer_model"),
+        ({"reviewer_model": "sol"}, "reviewer_model"),
+        ({"reviewer_model": "GPT-5.6 Sol"}, "reviewer_model"),
         ({"verdict": "REJECT"}, "verdict"),
         ({"blocking_findings": [{"severity": "critical", "description": "unsafe"}]}, "blocking_findings"),
     ],
@@ -254,13 +258,15 @@ def test_sol_blind_receipt_requires_blocking_findings_field(tmp_path):
 
 
 def test_sol_blind_receipt_rejects_non_empty_blocking_findings_field(tmp_path):
-    (tmp_path / "SOL-PROMPT.md").write_bytes(PROMPT_BYTES)
+    directory = tmp_path / "S-sol"
+    directory.mkdir()
+    (directory / "SOL-PROMPT.md").write_bytes(PROMPT_BYTES)
 
     result = revue.verifier_recu(
         _receipt(blocking_findings=[{"severity": "critical", "description": "unsafe"}]),
         [_sol_verdict()],
         _expected(),
-        review_dir=tmp_path,
+        review_dir=directory,
         runner=_git_runner,
         now=VALIDATION_NOW,
     )

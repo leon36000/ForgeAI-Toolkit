@@ -59,6 +59,7 @@ _SOL_CANONICAL_VENDOR = "openai"
 _SOL_CANONICAL_PROVIDER_ID = "GPT-5.6-Sol"
 _SOL_CANONICAL_STATUS = "actif"
 _SOL_CLOCK_SKEW = timedelta(minutes=5)
+_SOL_MAX_WINDOW_HOURS = 24
 
 REPO = Path(__file__).resolve().parent.parent
 TEMPLATE = REPO / "CANON" / "revue-template.md"
@@ -280,6 +281,17 @@ def _sol_prompt_bytes(review_dir: Path) -> bytes:
 
 def _sol_prompt_sha256(review_dir: Path) -> str:
     return hashlib.sha256(_sol_prompt_bytes(review_dir)).hexdigest()
+
+
+def _validate_sol_dossier(dossier: object, review_dir: Path | None = None) -> str:
+    """Validate the receipt directory identifier and, when available, its loaded directory."""
+    if not isinstance(dossier, str) or not dossier.strip():
+        raise ValueError("dossier Sol invalide")
+    if dossier in {".", ".."} or Path(dossier).name != dossier:
+        raise ValueError("dossier Sol doit être un nom de répertoire simple")
+    if review_dir is not None and Path(review_dir).name != dossier:
+        raise ValueError("dossier Sol différent du répertoire de revue")
+    return dossier
 
 
 def _diff_artifact_canonique(
@@ -662,7 +674,11 @@ def _sol_window_hours(value: object, default: object) -> float:
     window = default if value is None else value
     if isinstance(window, bool) or not isinstance(window, (int, float)):
         raise ValueError("fenêtre Sol invalide")
-    if not math.isfinite(float(window)) or window < 0:
+    if (
+        not math.isfinite(float(window))
+        or window < 0
+        or window > _SOL_MAX_WINDOW_HOURS
+    ):
         raise ValueError("fenêtre Sol invalide")
     return float(window)
 
@@ -852,8 +868,11 @@ def tally_sol_blind(
             "reason": "identité Sol active absente du roster ou non vérifiable",
         }
     reviewer_model = verdict.get("reviewer_model")
-    if not isinstance(reviewer_model, str) or _normalize(reviewer_model) not in sol_aliases:
-        return {"result": "INVALIDE", "reason": "reviewer_model n'est pas l'identité Sol"}
+    if reviewer_model != _SOL_CANONICAL_PROVIDER_ID:
+        return {
+            "result": "INVALIDE",
+            "reason": "reviewer_model n'est pas l'identité provider canonique Sol",
+        }
     if "vendor" in verdict:
         vendor = verdict.get("vendor")
         if not isinstance(vendor, str) or _normalize(vendor) not in {
@@ -1098,6 +1117,10 @@ def _verifier_recu_sol_blind(
     if not isinstance(etat_git, dict):
         return {"result": "INVALIDE", "reason": "état Git courant invalide"}
     try:
+        _validate_sol_dossier(recu["dossier"])
+    except ValueError as error:
+        return {"result": "INVALIDE", "reason": str(error)}
+    try:
         current_base = _validate_object_id(etat_git.get("base_commit"), "base_commit courant")
         current_digest = _validate_digest(etat_git.get("diff_digest"), "diff_digest courant")
     except ValueError as error:
@@ -1119,6 +1142,10 @@ def _verifier_recu_sol_blind(
         return {"result": "INVALIDE", "reason": str(error)}
     if review_dir is None:
         return {"result": "INVALIDE", "reason": f"{_SOL_PROMPT_FILENAME} requis pour sol_blind"}
+    try:
+        _validate_sol_dossier(recu["dossier"], Path(review_dir))
+    except ValueError as error:
+        return {"result": "INVALIDE", "reason": str(error)}
     try:
         expected = _sol_expected_from_git(
             recu, etat_git, Path(review_dir), verdicts, runner=runner
@@ -1159,6 +1186,7 @@ def _validate_sol_archive_receipt(
     execute: GitRunner,
     *,
     verdicts: list[dict] | None = None,
+    review_dir: Path | None = None,
 ) -> None:
     """Validate the immutable Sol receipt contract and exact archive object IDs."""
     if not isinstance(recu, dict):
@@ -1179,6 +1207,7 @@ def _validate_sol_archive_receipt(
         raise ValueError("mode Sol archive invalide")
     if not isinstance(recu["story"], str) or not recu["story"].strip():
         raise ValueError("story Sol archive invalide")
+    _validate_sol_dossier(recu["dossier"], review_dir)
     if recu["resultat"] != "APPROVE":
         raise ValueError("resultat Sol archive doit être APPROVE")
     if recu["verdict"] != "APPROVE":

@@ -43,7 +43,9 @@ aveugle et strictement read-only (`fresh_context`, `blind` et
 `reviewed_head_tree` et `prompt_sha256`, avec un `reviewed_at` horodaté avec
 fuseau, `verdict: APPROVE` et `blocking_findings: []`. Il conserve aussi un
 identifiant `story` immuable, distinct du `dossier` d'artefacts, afin que la
-reconstruction du prompt soit byte-identique. L'identité du codeur ne
+reconstruction du prompt soit byte-identique; le dossier doit correspondre au
+répertoire réellement chargé, le provider ID Sol est exactement
+`GPT-5.6-Sol`, et la fenêtre de fraîcheur est plafonnée à 24 heures. L'identité du codeur ne
 peut pas être Sol. Un reçu est un claim : le gate le réfute contre l'état Git
 courant; aucune preuve externe, runtime ou matérielle n'est implicite.
 

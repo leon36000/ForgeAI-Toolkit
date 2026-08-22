@@ -34,12 +34,12 @@ même vendor.
 Le verdict doit contenir exactement les éléments de liaison utiles suivants :
 
 - `fresh_context: true`, `blind: true`, `reviewer_read_only: true`;
-- `reviewer_model: GPT-5.6-Sol` reconnu par le roster;
+- `reviewer_model: GPT-5.6-Sol` comme provider ID canonique exact, reconnu par le roster;
 - `candidate_diff_digest` égal au digest canonique du diff Git examiné;
 - `base_commit`, `reviewed_head_commit` et `reviewed_head_tree` égaux aux
   métadonnées Git attendues;
 - `prompt_sha256` égal au hash du prompt canonique livré à Sol;
-- `reviewed_at` avec un fuseau et dans la fenêtre de fraîcheur;
+- `reviewed_at` avec un fuseau et dans la fenêtre de fraîcheur, plafonnée à 24 heures;
 - `verdict: APPROVE` et `blocking_findings: []`.
 
 Le reçu conserve ces liaisons avec `mode: sol_blind`. Le gate traite le reçu
@@ -52,7 +52,8 @@ Le reçu porte aussi `story`, l’identifiant immuable utilisé pour reconstruir
 prompt, séparément de `dossier`, qui désigne le répertoire des artefacts sous
 `evidence/reviews/`. La commande `recu --mode sol_blind` exige donc
 `--story <story-id>` afin que le prompt produit et le prompt vérifié utilisent
-exactement la même valeur.
+exactement la même valeur; le gate vérifie aussi que `dossier` correspond au
+répertoire effectivement chargé.
 
 In `reviews_gate.py`, receipt-mode dispatch preserves `multi_vendor`'s historical 3/3 tally;
 active `sol_blind` requires exactly one `GPT-5.6-Sol` verdict.

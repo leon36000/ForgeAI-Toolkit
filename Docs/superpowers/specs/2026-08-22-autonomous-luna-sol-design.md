@@ -6,11 +6,12 @@ L’issue #603 autorise un mode d’exécution où GPT-5.6 Luna conduit et écri
 
 ## Contrat observable
 
-Le dépôt conserve son mode historique multi-vendor par défaut. Un nouveau mode explicite `sol_blind` est accepté uniquement lorsqu’un reçu contient une preuve fraîche et liée au changement examiné : base commit, head commit et head tree examinés, empreinte canonique du diff, empreinte du prompt, identité Sol reconnue par le roster, contexte frais, revue aveugle, lecture seule, verdict `APPROVE` et liste d’objections bloquantes vide. Le codeur ne peut pas être Sol.
+Le dépôt conserve son mode historique multi-vendor par défaut. Un nouveau mode explicite `sol_blind` est accepté uniquement lorsqu’un reçu contient une preuve fraîche et liée au changement examiné : base commit, head commit et head tree examinés, empreinte canonique du diff, empreinte du prompt, provider ID Sol exact `GPT-5.6-Sol`, contexte frais, revue aveugle, lecture seule, verdict `APPROVE` et liste d’objections bloquantes vide. La fenêtre de fraîcheur est plafonnée à 24 heures. Le codeur ne peut pas être Sol.
 
 Le reçu conserve `story`, l’identifiant immuable employé pour reconstruire le
 prompt, séparément de `dossier`, le répertoire des artefacts. Les deux valeurs
-ne sont pas interchangeables.
+ne sont pas interchangeables; le dossier déclaré doit correspondre au répertoire
+effectivement chargé par le vérificateur.
 
 Le reçu reste un claim que le gate réfute contre l’état Git courant. Le digest canonique continue d’exclure les artefacts de revue et les vues générées afin d’éviter l’auto-référence; la base et le digest lient donc la preuve au diff qui sera fusionné. Le head commit et le head tree examinés sont conservés pour la traçabilité, sans comparaison circulaire avec le commit qui ajoute le reçu.
 

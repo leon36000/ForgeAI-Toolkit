@@ -175,7 +175,7 @@ def _manifest(tmp_path: Path, entries: list[str]) -> Path:
 
 
 def test_sol_receipt_cannot_self_authenticate_git_metadata(tmp_path):
-    directory = tmp_path / "review"
+    directory = tmp_path / "S-sol"
     directory.mkdir()
     (directory / "SOL-PROMPT.md").write_bytes(PROMPT_BYTES)
     receipt = _receipt(reviewed_head_commit=UNBACKED_HEAD, reviewed_head_tree=UNBACKED_TREE)
@@ -200,7 +200,7 @@ def test_sol_receipt_cannot_self_authenticate_git_metadata(tmp_path):
 
 
 def test_sol_receipt_prompt_hash_comes_from_stored_prompt_bytes(tmp_path):
-    directory = tmp_path / "review"
+    directory = tmp_path / "S-sol"
     directory.mkdir()
     (directory / "SOL-PROMPT.md").write_bytes(PROMPT_BYTES)
     receipt = _receipt(prompt_sha256="0" * 64)
@@ -326,6 +326,7 @@ def test_current_gate_ignores_historical_sol_binding_when_current_sol_binding_is
         root,
         "S-historical-sol",
         _receipt(
+            dossier="S-historical-sol",
             base_commit=BASE_HISTORICAL,
             reviewed_head_commit=HISTORICAL_HEAD,
             reviewed_head_tree=HISTORICAL_TREE,
@@ -336,7 +337,7 @@ def test_current_gate_ignores_historical_sol_binding_when_current_sol_binding_is
             reviewed_head_tree=HISTORICAL_TREE,
         ),
     )
-    _write_review(root, "S-current-sol", _receipt(), _verdict())
+    _write_review(root, "S-current-sol", _receipt(dossier="S-current-sol"), _verdict())
 
     ok, report = gate.check(
         _manifest(tmp_path, [historical.name, "S-current-sol"]),
@@ -440,6 +441,7 @@ def test_archive_gate_rejects_unmerged_sol_reviewed_head_even_with_merged_head(t
         root,
         "S-sol-unmerged-reviewed",
         _receipt(
+            dossier="S-sol-unmerged-reviewed",
             reviewed_head_commit=HISTORICAL_HEAD,
             reviewed_head_tree=HISTORICAL_TREE,
             prompt_sha256=historical_prompt_sha,
@@ -502,7 +504,10 @@ def test_archive_sol_receipt_requires_consistent_approve_contract(field, value, 
 
 def test_archive_gate_rejects_sol_receipt_contract_mismatch(tmp_path):
     root = tmp_path / "reviews"
-    receipt = _receipt(blocking_findings=[{"severity": "critical"}])
+    receipt = _receipt(
+        dossier="S-sol-archive-contract",
+        blocking_findings=[{"severity": "critical"}],
+    )
     _write_review(root, "S-sol-archive-contract", receipt, _verdict())
 
     ok, report = gate.check(

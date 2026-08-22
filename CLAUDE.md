@@ -67,9 +67,11 @@ deux writer lanes. Le mode est `sol_blind`: contexte frais, blind, read-only,
 diff Git exact et identité Sol distincte du codeur.
 
 La liaison minimale du reçu exige `story` (distinct du `dossier` d'artefacts),
-`candidate_diff_digest`, `base_commit`, `reviewed_head_commit`,
-`reviewed_head_tree`, `prompt_sha256`, un `reviewed_at` avec fuseau,
-`verdict: APPROVE` et `blocking_findings: []`.
+`reviewer_model` exact `GPT-5.6-Sol`, `candidate_diff_digest`, `base_commit`,
+`reviewed_head_commit`, `reviewed_head_tree`, `prompt_sha256`, un `reviewed_at`
+avec fuseau dans une fenêtre maximale de 24 heures, `verdict: APPROVE` et
+`blocking_findings: []`. Le `dossier` doit correspondre au répertoire de revue
+effectivement chargé.
 Le reviewer ne reçoit aucun verdict attendu. Le claim est revérifié par le
 gate contre Git courant; aucune preuve runtime ou externe n'est prétendue.
 
