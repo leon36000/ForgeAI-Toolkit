@@ -95,6 +95,66 @@ def _receipt():
     }
 
 
+def _make_sol_blind_gate_review(
+    root: Path,
+    *,
+    include_receipt_blocking_findings: bool = True,
+    receipt_blocking_findings: list[dict] | None = None,
+) -> Path:
+    directory = _make_review(
+        root,
+        "S-sol",
+        [
+            {
+                "vendor": "sol",
+                "fresh_context": True,
+                "blind": True,
+                "reviewer_read_only": True,
+                "reviewer_model": "GPT-5.6-Sol",
+                "candidate_diff_digest": hashlib.sha256(b"").hexdigest(),
+                "diff_digest": hashlib.sha256(b"").hexdigest(),
+                "base_commit": "b" * 40,
+                "reviewed_head_commit": "c" * 40,
+                "reviewed_head_tree": "d" * 40,
+                "prompt_sha256": SOL_SHA,
+                "verdict": "APPROVE",
+                "blocking_findings": [],
+                "reviewed_at": "2026-08-22T12:00:00+00:00",
+            }
+        ],
+    )
+    (directory / "SOL-PROMPT.md").write_bytes(SOL_PROMPT_BYTES)
+    receipt = {
+        "schema": "recu-revue/2",
+        "mode": "sol_blind",
+        "candidate_diff_digest": hashlib.sha256(b"").hexdigest(),
+        "diff_digest": hashlib.sha256(b"").hexdigest(),
+        "base_commit": "b" * 40,
+        "head_commit": "c" * 40,
+        "head_tree": "d" * 40,
+        "reviewed_head_commit": "c" * 40,
+        "reviewed_head_tree": "d" * 40,
+        "prompt_sha256": SOL_SHA,
+        "dossier": "S-sol",
+        "issue": 603,
+        "round": 1,
+        "reviewers_attendus": ["GPT-5.6-Sol"],
+        "codeur": ["luna_writer"],
+        "resultat": "APPROVE",
+        "reviewed_at": "2026-08-22T12:00:00+00:00",
+        "verdict": "APPROVE",
+        "reviewer_model": "GPT-5.6-Sol",
+        "date_heure": "2026-08-22T12:00:00+00:00",
+        "fenetre_heures": 24,
+    }
+    if include_receipt_blocking_findings:
+        receipt["blocking_findings"] = (
+            [] if receipt_blocking_findings is None else receipt_blocking_findings
+        )
+    (directory / "RECU.json").write_text(json.dumps(receipt), encoding="utf-8")
+    return directory
+
+
 def test_gate_ok_si_toutes_approve(tmp_path):
     # RC1-010 (#440) lot 5d : reviews/ est intégralement migré vers evidence/reviews/ — le
     # repli bi-racine posé au lot 5a (une entrée liante pouvait vivre sous l'une OU l'autre
@@ -367,6 +427,7 @@ def test_mode_pr_historical_invalid_sol_binding_is_informational(tmp_path):
                 "resultat": "APPROVE",
                 "reviewed_at": "2026-08-22T12:00:00+00:00",
                 "verdict": "APPROVE",
+                "blocking_findings": [],
                 "reviewer_model": "GPT-5.6-Sol",
                 "date_heure": "2026-08-22T12:00:00+00:00",
                 "fenetre_heures": 24,
@@ -411,6 +472,7 @@ def test_mode_pr_historical_invalid_sol_binding_is_informational(tmp_path):
                 "reviewed_head_tree": "d" * 40,
                 "reviewed_at": "2026-08-22T12:00:00+00:00",
                 "verdict": "APPROVE",
+                "blocking_findings": [],
                 "reviewer_model": "GPT-5.6-Sol",
                 "codeur": ["luna_writer"],
                 "reviewers_attendus": ["GPT-5.6-Sol"],
@@ -484,57 +546,7 @@ def test_defaut_sans_drapeau_comportement_inchange(tmp_path):
 
 def test_gate_dispatch_sol_blind_receipt_avec_un_seul_verdict(tmp_path):
     root = tmp_path / "reviews"
-    directory = _make_review(
-        root,
-        "S-sol",
-        [
-            {
-                "vendor": "sol",
-                "fresh_context": True,
-                "blind": True,
-                "reviewer_read_only": True,
-                "reviewer_model": "GPT-5.6-Sol",
-                "candidate_diff_digest": hashlib.sha256(b"").hexdigest(),
-                "diff_digest": hashlib.sha256(b"").hexdigest(),
-                "base_commit": "b" * 40,
-                "reviewed_head_commit": "c" * 40,
-                "reviewed_head_tree": "d" * 40,
-                "prompt_sha256": SOL_SHA,
-                "verdict": "APPROVE",
-                "blocking_findings": [],
-                "reviewed_at": "2026-08-22T12:00:00+00:00",
-            }
-        ],
-    )
-    (directory / "SOL-PROMPT.md").write_bytes(SOL_PROMPT_BYTES)
-    (directory / "RECU.json").write_text(
-        json.dumps(
-            {
-                "schema": "recu-revue/2",
-                "mode": "sol_blind",
-                "candidate_diff_digest": hashlib.sha256(b"").hexdigest(),
-                "diff_digest": hashlib.sha256(b"").hexdigest(),
-                "base_commit": "b" * 40,
-                "head_commit": "c" * 40,
-                "head_tree": "d" * 40,
-                "reviewed_head_commit": "c" * 40,
-                "reviewed_head_tree": "d" * 40,
-                "prompt_sha256": SOL_SHA,
-                "dossier": "S-sol",
-                "issue": 603,
-                "round": 1,
-                "reviewers_attendus": ["GPT-5.6-Sol"],
-                "codeur": ["luna_writer"],
-                "resultat": "APPROVE",
-                "reviewed_at": "2026-08-22T12:00:00+00:00",
-                "verdict": "APPROVE",
-                "reviewer_model": "GPT-5.6-Sol",
-                "date_heure": "2026-08-22T12:00:00+00:00",
-                "fenetre_heures": 24,
-            }
-        ),
-        encoding="utf-8",
-    )
+    _make_sol_blind_gate_review(root)
 
     ok, report = gate.check(
         _manifest(tmp_path, ["S-sol"]),
@@ -548,6 +560,43 @@ def test_gate_dispatch_sol_blind_receipt_avec_un_seul_verdict(tmp_path):
     assert ok is True, report
     assert not any("< 3" in line for line in report)
     assert any("APPROVE" in line for line in report)
+
+
+def test_gate_dispatch_sol_blind_receipt_requires_blocking_findings(tmp_path):
+    root = tmp_path / "reviews"
+    _make_sol_blind_gate_review(root, include_receipt_blocking_findings=False)
+
+    ok, report = gate.check(
+        _manifest(tmp_path, ["S-sol"]),
+        root,
+        exiger_recu_courant=True,
+        base_ref="origin/main",
+        runner=_runner,
+        now=SOL_NOW,
+    )
+
+    assert ok is False
+    assert any("blocking_findings" in line for line in report)
+
+
+def test_gate_dispatch_sol_blind_receipt_rejects_non_empty_blocking_findings(tmp_path):
+    root = tmp_path / "reviews"
+    _make_sol_blind_gate_review(
+        root,
+        receipt_blocking_findings=[{"severity": "critical", "description": "unsafe"}],
+    )
+
+    ok, report = gate.check(
+        _manifest(tmp_path, ["S-sol"]),
+        root,
+        exiger_recu_courant=True,
+        base_ref="origin/main",
+        runner=_runner,
+        now=SOL_NOW,
+    )
+
+    assert ok is False
+    assert any("blocking_findings" in line for line in report)
 
 
 def test_manifeste_reel_du_depot_est_approve():

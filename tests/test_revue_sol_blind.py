@@ -80,7 +80,7 @@ def _sol_verdict(*, prompt_sha256: str | None = None, **changes) -> dict:
     return verdict
 
 
-def _receipt(**changes) -> dict:
+def _receipt(*, include_blocking_findings: bool = True, **changes) -> dict:
     receipt = {
         "schema": "recu-revue/2",
         "mode": "sol_blind",
@@ -104,6 +104,8 @@ def _receipt(**changes) -> dict:
         "date_heure": REVIEWED_AT,
         "fenetre_heures": 24,
     }
+    if include_blocking_findings:
+        receipt["blocking_findings"] = []
     receipt.update(changes)
     return receipt
 
@@ -223,6 +225,38 @@ def test_sol_blind_receipt_rejects_mismatched_candidate_digest_without_tally_cal
 
     assert result["result"] != "APPROVE"
     assert "diff" in result["reason"] or "digest" in result["reason"]
+
+
+def test_sol_blind_receipt_requires_blocking_findings_field(tmp_path):
+    (tmp_path / "SOL-PROMPT.md").write_bytes(PROMPT_BYTES)
+
+    result = revue.verifier_recu(
+        _receipt(include_blocking_findings=False),
+        [_sol_verdict()],
+        _expected(),
+        review_dir=tmp_path,
+        runner=_git_runner,
+        now=VALIDATION_NOW,
+    )
+
+    assert result["result"] == "INVALIDE"
+    assert "blocking_findings" in result["reason"]
+
+
+def test_sol_blind_receipt_rejects_non_empty_blocking_findings_field(tmp_path):
+    (tmp_path / "SOL-PROMPT.md").write_bytes(PROMPT_BYTES)
+
+    result = revue.verifier_recu(
+        _receipt(blocking_findings=[{"severity": "critical", "description": "unsafe"}]),
+        [_sol_verdict()],
+        _expected(),
+        review_dir=tmp_path,
+        runner=_git_runner,
+        now=VALIDATION_NOW,
+    )
+
+    assert result["result"] == "REJECT"
+    assert "blocking_findings" in result["reason"]
 
 
 def test_historical_three_vendor_tally_remains_compatible():

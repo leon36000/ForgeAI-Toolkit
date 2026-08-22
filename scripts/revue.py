@@ -1068,7 +1068,7 @@ def _verifier_recu_sol_blind(
         "head_tree", "diff_digest", "candidate_diff_digest", "reviewed_head_commit",
         "reviewed_head_tree", "prompt_sha256", "reviewers_attendus", "codeur", "resultat",
         "reviewed_at", "verdict", "reviewer_model", "date_heure",
-        "fenetre_heures",
+        "fenetre_heures", "blocking_findings",
     )
     if not isinstance(recu, dict):
         return {"result": "INVALIDE", "reason": "données absentes : reçu"}
@@ -1116,6 +1116,13 @@ def _verifier_recu_sol_blind(
         return {"result": "INVALIDE", "reason": "réponse contradictoire"}
     if recu["resultat"] != tally_result["result"]:
         return {"result": "INVALIDE", "reason": "réponse contradictoire"}
+    if recu["blocking_findings"] != []:
+        return {"result": "REJECT", "reason": "blocking_findings du reçu non vide"}
+    if recu["blocking_findings"] != verdicts[0].get("blocking_findings"):
+        return {
+            "result": "INVALIDE",
+            "reason": "blocking_findings du reçu différent du verdict Sol",
+        }
     reviewers = recu["reviewers_attendus"]
     if not isinstance(reviewers, list) or len(reviewers) != 1:
         return {"result": "INVALIDE", "reason": "nombre incorrect de reviewers Sol"}
