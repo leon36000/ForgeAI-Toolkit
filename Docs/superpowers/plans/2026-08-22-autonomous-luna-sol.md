@@ -18,7 +18,7 @@ le même défaut.
 4. Ajouter l’événement de livraison au registre avec `scripts/registre.py
    append`, régénérer les vues et vérifier l’autorité.
 5. Construire un prompt Sol frais et aveugle pour le diff final, obtenir son
-   APPROVE, sceller le reçu `ORCH-LUNA-SOL-603-final`, l’ajouter à
+   APPROVE, sceller le reçu `ORCH-LUNA-SOL-603-final-approved`, l’ajouter à
    `BINDING.txt`, puis exécuter les gates PR locaux et CI avant le merge. La
    story reste `IN_PROGRESS` pendant cette étape.
 6. Après le merge, rejouer le mode archive sur `main` fusionné. Si ce contrôle
