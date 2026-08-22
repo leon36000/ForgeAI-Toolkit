@@ -1,0 +1,17 @@
+{
+  "base_commit": "d4d46ef36fcac3cdeb92a00577f78c8e698c17c0",
+  "candidate_diff_digest": "b7180d0cd52ab675d82696e51372211fb3958692ab9cdf854568ff559074bf74",
+  "mission_diff_digest": "2cfb4452eee254826c2a7b8d149629209454fee8c02ce54dd96d0c3446d703fd",
+  "reviewed_head_commit": "2b969fdac66f90c721608ed9fda6afd436d63ada",
+  "reviewed_head_tree": "f2d8e3f4858d60b0096147de091691de302dd2ca",
+  "sdd_diff_digest": "30ebdb50ec80117fb0534d5ccfc885ca415dd2a2fa41088fc58661a05c81860d",
+  "template_sha256": "a5bebc60556f4fc38d6ca96a3d0372577550f23157377af4d852e6144e25f137",
+  "prompt_sha256": "7611711289dd49f9ef9e88a522287534d11e6dc2fadd85cb504d29b8be8c587c",
+  "fresh_context": true,
+  "blind": true,
+  "reviewer_read_only": true,
+  "reviewer_model": "GPT-5.6-Sol",
+  "reviewed_at": "2026-08-22T12:12:50-04:00",
+  "verdict": "APPROVE",
+  "blocking_findings": []
+}
