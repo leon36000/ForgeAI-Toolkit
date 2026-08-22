@@ -339,6 +339,10 @@
         "sha256": "e58391b1424bf45b57d6affd11dde3d829db55c768f19d9fb32d7420e5887618"
       },
       {
+        "path": "tests/test_gitguardian_config.py",
+        "sha256": "61fa58cefddb2303bf10cbd9416f06572d122e7d409ae95e4f1b169925267aad"
+      },
+      {
         "path": "tests/test_governance_capabilities.py",
         "sha256": "240aa5646b1eeb5882a673702fdf304ab01251e67730a121cbebb333f7ca055f"
       },
@@ -768,7 +772,7 @@
       },
       {
         "path": "tests/test_revue.py",
-        "sha256": "1dc2d502b4e5d2b4f58a1a7fe71c5ee3bef9c7b2336a30606aad323cd5b17443"
+        "sha256": "d9209636686e2e4d2bde8004195aa5bc1b9a749b61eb5018eecb1c8471fdcaad"
       },
       {
         "path": "tests/test_routestore_concurrence.py",
@@ -992,8 +996,8 @@
     },
     "tests": {
       "js_files": 3,
-      "python_files": 208,
-      "python_functions_declared": 2655
+      "python_files": 209,
+      "python_functions_declared": 2660
     }
   },
   "observations": [
