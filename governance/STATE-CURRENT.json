@@ -768,7 +768,7 @@
       },
       {
         "path": "tests/test_reviews_gate.py",
-        "sha256": "d3616c2ed9f621221ec918bf0017a903e5fac2708a69b492e5797e85df5fcf02"
+        "sha256": "10423a4df2d81d22c49f7dac8fa668e5143989039f234e0fd18b5d74d07ed2cb"
       },
       {
         "path": "tests/test_revue.py",
@@ -997,7 +997,7 @@
     "tests": {
       "js_files": 3,
       "python_files": 209,
-      "python_functions_declared": 2683
+      "python_functions_declared": 2685
     }
   },
   "observations": [
