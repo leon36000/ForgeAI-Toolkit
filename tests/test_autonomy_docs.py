@@ -69,6 +69,15 @@ ACTIVE_MULTI_VENDOR_MARKERS = (
     "three vendor",
     "three-vendor",
 )
+STATUS_DECLARATION_RE = re.compile(
+    r"^\s*(?P<label>status|overall status|story status|overall|task 4 status|"
+    r"task 5 status|terminal state|terminal status)\s*:\s*"
+    r"(?P<value>[A-Za-z][A-Za-z0-9_]*)\b",
+    re.IGNORECASE,
+)
+TERMINAL_STATUS_VALUES = frozenset(
+    {"DONE", "DONE_WITH_EVIDENCE", "BLOCKED_WITH_REASON", "COMPLETE", "COMPLETED"}
+)
 EXPECTED_CLASSIFICATIONS = {
     "Docs/reference/autonomy-luna-sol.md": {
         "class": "DOCS",
@@ -91,6 +100,11 @@ EXPECTED_CLASSIFICATIONS = {
         "owner": "working-cockpit",
     },
     ".superpowers/sdd/2026-08-22-autonomous-luna-sol/task-4-fix2-report.md": {
+        "class": "WORKING",
+        "rule_id": "working-superpowers-sdd",
+        "owner": "working-cockpit",
+    },
+    ".superpowers/sdd/2026-08-22-autonomous-luna-sol/task-4-fix3-report.md": {
         "class": "WORKING",
         "rule_id": "working-superpowers-sdd",
         "owner": "working-cockpit",
@@ -135,23 +149,47 @@ def _assert_writer_lane_scope(text: str, label: str) -> None:
 
 
 def _assert_story_status(text: str) -> None:
-    overall_lines = [
-        line.strip()
-        for line in text.splitlines()
-        if re.match(r"(?i)^(?:status|overall status|story status|overall):", line.strip())
+    declarations = []
+    for line in text.splitlines():
+        match = STATUS_DECLARATION_RE.match(line)
+        if match:
+            declarations.append(
+                (match.group("label").lower(), match.group("value").upper())
+            )
+
+    overall_declarations = [
+        declaration
+        for declaration in declarations
+        if declaration[0] in {"status", "overall status", "story status", "overall"}
     ]
-    assert overall_lines == [
-        "Status: IN_PROGRESS — overall story remains active. No final runtime or external"
-    ] or (
-        len(overall_lines) == 1
-        and overall_lines[0].startswith("Status: IN_PROGRESS — overall story remains active.")
-    ), "story has an ambiguous or terminal overall status"
+    task4_declarations = [
+        declaration
+        for declaration in declarations
+        if declaration[0] == "task 4 status"
+    ]
+    task5_declarations = [
+        declaration
+        for declaration in declarations
+        if declaration[0] == "task 5 status"
+    ]
+    assert len(overall_declarations) == 1 and overall_declarations[0][1] == "IN_PROGRESS", (
+        "story must declare exactly one overall IN_PROGRESS status"
+    )
+    assert task4_declarations == [("task 4 status", "DONE_WITH_EVIDENCE")], (
+        "story must declare exactly one Task 4 DONE_WITH_EVIDENCE status"
+    )
+    assert task5_declarations == [("task 5 status", "PENDING")], (
+        "story must declare exactly one Task 5 PENDING status"
+    )
+    assert [
+        declaration
+        for declaration in declarations
+        if declaration[1] in TERMINAL_STATUS_VALUES
+    ] == [("task 4 status", "DONE_WITH_EVIDENCE")], (
+        "story contains an extra terminal or complete declaration"
+    )
     assert "Task 4 status: DONE_WITH_EVIDENCE" in text
     assert "Task 5 status: PENDING — final fresh Sol evidence remains pending." in text
-    assert not re.search(
-        r"(?im)^(?:overall status|story status|overall):.*\b(?:done|complete|completed)\b",
-        text,
-    )
     assert "being synchronized" not in text
     assert "Checkpoint:" in text
     assert "## Critères d’acceptation" in text
@@ -289,7 +327,13 @@ def test_active_contract_is_documented_without_runtime_or_external_claims():
 
 def _assert_semantic_no_write_rule(text: str, label: str) -> None:
     """Require one negative workflow rule, not merely a bag of forbidden words."""
+    normalized_document = " ".join(text.split()).lower()
+    assert not any(
+        re.search(pattern, normalized_document) for pattern in PERMISSIVE_WORKFLOW_PATTERNS
+    ), f"{label} permits a forbidden workflow action"
+
     paragraphs = ("\n\n" + text).split("\n\n")
+    found_prohibition = False
     for paragraph in paragraphs:
         normalized = " ".join(paragraph.split()).lower()
         if not all(marker in normalized for marker in FORBIDDEN_WORKFLOW_MARKERS):
@@ -301,11 +345,8 @@ def _assert_semantic_no_write_rule(text: str, label: str) -> None:
         assert negative_workflow, (
             f"{label} lists forbidden workflow markers without a prohibition"
         )
-        assert not any(
-            re.search(pattern, normalized) for pattern in PERMISSIVE_WORKFLOW_PATTERNS
-        ), f"{label} permits a forbidden workflow action"
-        return
-    raise AssertionError(f"{label} lacks one semantic no-write workflow rule")
+        found_prohibition = True
+    assert found_prohibition, f"{label} lacks one semantic no-write workflow rule"
 
 
 def test_no_write_rule_is_semantic_and_rejects_marker_only_text():
@@ -324,6 +365,22 @@ def test_no_write_rule_is_semantic_and_rejects_marker_only_text():
     ):
         with pytest.raises(AssertionError):
             _assert_semantic_no_write_rule(mutation, "permissive mutation")
+
+
+def test_no_write_rule_rejects_late_authorization_in_real_documents():
+    contradictory_paragraphs = (
+        "A later exception makes contents: write is allowed.",
+        "A later emergency path makes force-push permitted.",
+        "A later helper makes decode source allowed.",
+        "A later workflow may be self-writing and is authorized.",
+    )
+    for path in (REPO / "AGENTS.md", REPO / "CLAUDE.md", REFERENCE):
+        text = path.read_text(encoding="utf-8")
+        for paragraph in contradictory_paragraphs:
+            with pytest.raises(AssertionError):
+                _assert_semantic_no_write_rule(
+                    f"{text}\n\n{paragraph}", f"{path} with late authorization"
+                )
 
 
 def test_policy_values_and_sol_binding_fields_are_exact():
@@ -352,8 +409,14 @@ def test_story_has_testable_acceptance_and_explicit_checkpoint_status():
     text = STORY.read_text(encoding="utf-8")
     _assert_story_status(text)
 
-    with pytest.raises(AssertionError):
-        _assert_story_status(text + "\nOverall status: COMPLETE\n")
+    mutations = (
+        "Task 5 status: DONE_WITH_EVIDENCE — final evidence is complete.",
+        "Overall status: DONE",
+        "Terminal state: BLOCKED_WITH_REASON — final evidence is blocked.",
+    )
+    for mutation in mutations:
+        with pytest.raises(AssertionError):
+            _assert_story_status(f"{text}\n{mutation}\n")
 
 
 def test_policy_keeps_the_documented_terminal_contract():
@@ -448,4 +511,5 @@ def test_generated_views_reference_the_task4_paths_and_contract_source():
     assert "stories/ORCH-LUNA-SOL-603.md" in classified
     assert ".superpowers/sdd/2026-08-22-autonomous-luna-sol/task-4-fix1-report.md" in classified
     assert ".superpowers/sdd/2026-08-22-autonomous-luna-sol/task-4-fix2-report.md" in classified
+    assert ".superpowers/sdd/2026-08-22-autonomous-luna-sol/task-4-fix3-report.md" in classified
     assert "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md" in classified
