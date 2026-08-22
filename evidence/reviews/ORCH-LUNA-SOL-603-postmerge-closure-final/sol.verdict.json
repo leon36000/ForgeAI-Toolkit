@@ -1,0 +1,20 @@
+{
+  "fresh_context": true,
+  "blind": true,
+  "reviewer_read_only": true,
+  "reviewer_model": "GPT-5.6-Sol",
+  "base_commit": "06f50825b7f2dc0c632859749f7a065d5c082f3f",
+  "reviewed_head_commit": "54a65b450ecde1cf0f203f8528b4b0609c36b330",
+  "reviewed_head_tree": "f6e18d5177793ba38d0853cefb08a82ea1c96ec2",
+  "candidate_diff_digest": "6f3542e403f002536e89037cd826f97bb98d0ec62a01d596452e243b3bdf9fc9",
+  "artifact_sha256": "3508ca18c96665b3ab0413202134969a55fc995a3818905620505610eaf1c996",
+  "sdd_diff_digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "mission_diff_digest": "5d39266207902743fc01444cf5382b871dedac090a12e0d2312e9cd1a18ae29e",
+  "template_sha256": "a5bebc60556f4fc38d6ca96a3d0372577550f23157377af4d852e6144e25f137",
+  "prompt_sha256": "02d2b212f9d9a8b4fdf09568b16f95894579d568631e37f89bb92001f5e92f7b",
+  "verdict": "REJECT",
+  "blocking_findings": [
+    "La transaction terminale n’était pas exposée dans l’artefact : seul un résumé mentionnait mission.jsonl seq=513 et ses hashes. Sans le contenu canonique de l’événement, son hash et les champs archive_gate, ci_gate, preuve_runtime et preuve_externe n’étaient pas vérifiables indépendamment."
+  ],
+  "reviewed_at": "2026-08-22T19:19:12-04:00"
+}
