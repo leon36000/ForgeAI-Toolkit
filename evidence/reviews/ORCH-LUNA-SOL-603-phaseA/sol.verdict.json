@@ -1,0 +1,19 @@
+{
+  "vendor": "sol",
+  "fresh_context": true,
+  "blind": true,
+  "reviewer_read_only": true,
+  "reviewer_model": "GPT-5.6-Sol",
+  "base_commit": "d4d46ef36fcac3cdeb92a00577f78c8e698c17c0",
+  "reviewed_head_commit": "6211210a8e894164889249a05f59027bb8cece6e",
+  "reviewed_head_tree": "e681251cb74e0a584901d93fd1a946e91066db26",
+  "candidate_diff_digest": "475c66af11c5647bde41fa83895855dc3bc973f2e5b75d75ba7c16e8bddd49fa",
+  "diff_digest": "475c66af11c5647bde41fa83895855dc3bc973f2e5b75d75ba7c16e8bddd49fa",
+  "sdd_diff_digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "mission_diff_digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "template_sha256": "a5bebc60556f4fc38d6ca96a3d0372577550f23157377af4d852e6144e25f137",
+  "prompt_sha256": "0ef1277387cbcdfb3447239129d41ac2f47d2a81d2080dc5966b28b9c47f1513",
+  "verdict": "APPROVE",
+  "blocking_findings": [],
+  "reviewed_at": "2026-08-22T13:08:14-04:00"
+}

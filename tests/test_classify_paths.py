@@ -542,6 +542,28 @@ def test_graphe_balayage_generique_resout_prefixe_repertoire(tmp_path: pathlib.P
     )
 
 
+def test_graphe_exclut_artefact_prompt_sol_du_scan_generique(tmp_path: pathlib.Path) -> None:
+    _ecrit_fixture_texte(
+        tmp_path,
+        "evidence/reviews/S-sol/SOL-PROMPT.md",
+        "ARTEFACT — src/x.py\nVoir governance/authority.json\n",
+    )
+    _ecrit_fixture_texte(tmp_path, "src/x.py", "pass\n")
+    _ecrit_fixture_texte(tmp_path, "governance/authority.json", "{}\n")
+    tracked = [
+        "evidence/reviews/S-sol/SOL-PROMPT.md",
+        "src/x.py",
+        "governance/authority.json",
+    ]
+
+    graph = classify_paths.build_reference_graph(tmp_path, tracked)
+
+    assert not any(
+        edge["referrer"] == "evidence/reviews/S-sol/SOL-PROMPT.md"
+        for edge in graph["edges"] + graph["dangling"]
+    )
+
+
 def test_graphe_url_jamais_une_arete(tmp_path: pathlib.Path) -> None:
     _ecrit_fixture_texte(
         tmp_path,
