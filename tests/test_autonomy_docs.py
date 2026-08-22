@@ -74,9 +74,10 @@ ACTIVE_MULTI_VENDOR_MARKERS = (
     "three-vendor",
 )
 STATUS_DECLARATION_RE = re.compile(
-    r"^\s*(?P<label>status|overall status|story status|overall|task 4 status|"
-    r"task 5 status|terminal state|terminal status)\s*:\s*"
-    r"(?P<value>[A-Za-z][A-Za-z0-9_]*)\b",
+    r"^\s*(?:[-*+]\s+)?(?:\*\*|__)?"
+    r"(?P<label>status|overall status|story status|overall|task 4 status|"
+    r"task 5 status|terminal state|terminal status)"
+    r"(?:\*\*|__)?\s*:\s*(?P<value>\S+)?",
     re.IGNORECASE,
 )
 TERMINAL_STATUS_VALUES = frozenset(
@@ -114,6 +115,11 @@ EXPECTED_CLASSIFICATIONS = {
         "owner": "working-cockpit",
     },
     ".superpowers/sdd/2026-08-22-autonomous-luna-sol/task-4-fix4-report.md": {
+        "class": "WORKING",
+        "rule_id": "working-superpowers-sdd",
+        "owner": "working-cockpit",
+    },
+    ".superpowers/sdd/2026-08-22-autonomous-luna-sol/task-4-fix5-report.md": {
         "class": "WORKING",
         "rule_id": "working-superpowers-sdd",
         "owner": "working-cockpit",
@@ -163,7 +169,10 @@ def _assert_story_status(text: str) -> None:
         match = STATUS_DECLARATION_RE.match(line)
         if match:
             declarations.append(
-                (match.group("label").lower(), match.group("value").upper())
+                (
+                    match.group("label").lower(),
+                    (match.group("value") or "").upper(),
+                )
             )
 
     overall_declarations = [
@@ -430,6 +439,10 @@ def test_story_has_testable_acceptance_and_explicit_checkpoint_status():
         "Terminal status: FAILED",
         "Terminal status: CANCELLED",
         "Terminal state: PENDING",
+        "Terminal status: 123",
+        "Terminal state: ???",
+        "**Terminal status:** FAILED",
+        "- Terminal state: FAILED",
     )
     for mutation in mutations:
         with pytest.raises(AssertionError):
@@ -530,4 +543,5 @@ def test_generated_views_reference_the_task4_paths_and_contract_source():
     assert ".superpowers/sdd/2026-08-22-autonomous-luna-sol/task-4-fix2-report.md" in classified
     assert ".superpowers/sdd/2026-08-22-autonomous-luna-sol/task-4-fix3-report.md" in classified
     assert ".superpowers/sdd/2026-08-22-autonomous-luna-sol/task-4-fix4-report.md" in classified
+    assert ".superpowers/sdd/2026-08-22-autonomous-luna-sol/task-4-fix5-report.md" in classified
     assert "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md" in classified
