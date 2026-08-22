@@ -239,8 +239,11 @@ def check(
 
         receipt_mode = receipt.get("mode", "multi_vendor") if isinstance(receipt, dict) else "multi_vendor"
         sol_covers_current = False
-        sol_proof_loaded = False
-        historical_sol = False
+        historical_sol = (
+            receipt_mode == "sol_blind"
+            and exiger_recu_courant
+            and not revue._sol_receipt_binding_matches_current(receipt, etat_git)
+        )
         if receipt_mode not in ("multi_vendor", "sol_blind"):
             result = {"result": "INVALIDE", "reason": f"mode de reçu inconnu : {receipt_mode!r}"}
         elif receipt_mode == "sol_blind":
@@ -253,7 +256,6 @@ def check(
                     runner=execute,
                 )
                 sol_covers_current = bool(expected.pop("_covers_current", False))
-                sol_proof_loaded = True
                 result = revue.tally_sol_blind(
                     verdicts, expected=expected, codeurs=receipt.get("codeur", [])
                 )
@@ -263,7 +265,7 @@ def check(
         else:
             result = revue.tally(verdicts)
         if result.get("result") != "APPROVE":
-            if historical_sol and sol_proof_loaded:
+            if historical_sol:
                 report.append(
                     f"info  {entry} : revue Sol historique non couvrante = "
                     f"{result.get('result')} ({result.get('reason', '')})"
@@ -337,17 +339,11 @@ def check(
         if mode == "archive" and receipt_path.is_file():
             try:
                 receipt = json.loads(receipt_path.read_text(encoding="utf-8"))
-                commit = receipt["head_commit"]
                 if isinstance(receipt, dict) and receipt.get("mode") == "sol_blind":
-                    for field in (
-                        "base_commit",
-                        "head_commit",
-                        "head_tree",
-                        "reviewed_head_commit",
-                        "reviewed_head_tree",
-                    ):
-                        revue._validate_object_id(receipt[field], field)
+                    revue._validate_sol_archive_receipt(receipt, execute)
+                    commit = receipt["head_commit"]
                 else:
+                    commit = receipt["head_commit"]
                     # Legacy receipts retain their historical ref validation; only the Sol
                     # schema requires exact object IDs for every commit/tree field.
                     revue._validate_git_ref(commit)

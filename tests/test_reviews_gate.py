@@ -309,6 +309,115 @@ def test_mode_pr_ignore_recu_historique_non_couvrant(tmp_path):
     assert not any("ECHEC S-ancienne" in line for line in report)
 
 
+def test_mode_pr_historical_invalid_sol_binding_is_informational(tmp_path):
+    root = tmp_path / "reviews"
+    historical = _make_review(
+        root,
+        "S-ancienne-sol",
+        [
+            {
+                "vendor": "sol",
+                "fresh_context": True,
+                "blind": True,
+                "reviewer_read_only": True,
+                "reviewer_model": "GPT-5.6-Sol",
+                "candidate_diff_digest": hashlib.sha256(b"").hexdigest(),
+                "diff_digest": hashlib.sha256(b"").hexdigest(),
+                "base_commit": "a" * 40,
+                "reviewed_head_commit": "3" * 40,
+                "reviewed_head_tree": "4" * 40,
+                "prompt_sha256": SHA,
+                "verdict": "APPROVE",
+                "blocking_findings": [],
+                "reviewed_at": "2026-08-22T12:00:00+00:00",
+            }
+        ],
+    )
+    (historical / "SOL-PROMPT.md").write_bytes(SOL_PROMPT_BYTES)
+    (historical / "RECU.json").write_text(
+        json.dumps(
+            {
+                "schema": "recu-revue/2",
+                "mode": "sol_blind",
+                "candidate_diff_digest": hashlib.sha256(b"").hexdigest(),
+                "diff_digest": hashlib.sha256(b"").hexdigest(),
+                "base_commit": "a" * 40,
+                "head_commit": "c" * 40,
+                "head_tree": "d" * 40,
+                "reviewed_head_commit": "3" * 40,
+                "reviewed_head_tree": "4" * 40,
+                "prompt_sha256": SHA,
+                "dossier": "S-ancienne-sol",
+                "issue": 603,
+                "round": 1,
+                "reviewers_attendus": ["GPT-5.6-Sol"],
+                "codeur": ["luna_writer"],
+                "resultat": "APPROVE",
+                "reviewed_at": "2026-08-22T12:00:00+00:00",
+                "verdict": "APPROVE",
+                "reviewer_model": "GPT-5.6-Sol",
+                "date_heure": "2026-08-22T12:00:00+00:00",
+                "fenetre_heures": 24,
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    current = _make_review(
+        root,
+        "S-courante-sol",
+        [
+            {
+                "vendor": "sol",
+                "fresh_context": True,
+                "blind": True,
+                "reviewer_read_only": True,
+                "reviewer_model": "GPT-5.6-Sol",
+                "candidate_diff_digest": hashlib.sha256(b"").hexdigest(),
+                "diff_digest": hashlib.sha256(b"").hexdigest(),
+                "base_commit": "b" * 40,
+                "reviewed_head_commit": "c" * 40,
+                "reviewed_head_tree": "d" * 40,
+                "prompt_sha256": SHA,
+                "verdict": "APPROVE",
+                "blocking_findings": [],
+                "reviewed_at": "2026-08-22T12:00:00+00:00",
+            }
+        ],
+    )
+    (current / "SOL-PROMPT.md").write_bytes(SOL_PROMPT_BYTES)
+    (current / "RECU.json").write_text(
+        json.dumps(
+            {
+                **_receipt(),
+                "mode": "sol_blind",
+                "candidate_diff_digest": hashlib.sha256(b"").hexdigest(),
+                "reviewed_head_commit": "c" * 40,
+                "reviewed_head_tree": "d" * 40,
+                "reviewed_at": "2026-08-22T12:00:00+00:00",
+                "verdict": "APPROVE",
+                "reviewer_model": "GPT-5.6-Sol",
+                "codeur": ["luna_writer"],
+                "reviewers_attendus": ["GPT-5.6-Sol"],
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    ok, report = gate.check(
+        _manifest(tmp_path, [historical.name, current.name]),
+        root,
+        exiger_recu_courant=True,
+        base_ref="origin/main",
+        expected_issue=434,
+        runner=_runner,
+    )
+
+    assert ok is True, report
+    assert any("info  S-ancienne-sol" in line for line in report)
+    assert any("reçu couvre le changement courant" in line for line in report)
+
+
 def test_mode_pr_recu_invalide_rapporte_raison(tmp_path):
     root = tmp_path / "reviews"
     directory = _make_review(

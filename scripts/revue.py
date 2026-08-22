@@ -397,7 +397,8 @@ def _etat_git_reel(
 
 def build_prompt(story_id: str, criteres: str, artefact_path: str, artefact: str,
                  template_path: Path = TEMPLATE, *, mode: str = "multi_vendor",
-                 expected: dict | None = None) -> tuple[str, str]:
+                 expected: dict | None = None, base_ref: str | None = None,
+                 head_ref: str | None = None, runner: GitRunner | None = None) -> tuple[str, str]:
     """Rend (prompt_exact, sha256). Le template est lu au canon ; aucun texte n'est ajouté."""
     tpl = template_path.read_text(encoding="utf-8")
     # On ne garde que le corps (après le commentaire HTML d'en-tête) pour le prompt envoyé.
@@ -413,22 +414,29 @@ def build_prompt(story_id: str, criteres: str, artefact_path: str, artefact: str
     # défaut d'injection croisée des .replace() chaînés (revue aveugle Qwen, criterion #4).
     prompt = _PLACEHOLDER.sub(lambda m: values[m.group(1)], tpl)
     if mode == "sol_blind":
-        if not isinstance(expected, dict):
-            raise ValueError("expected requis pour le mode sol_blind")
+        if not base_ref or not head_ref:
+            raise ValueError("base_ref et head_ref requis pour le mode sol_blind")
+        if runner is None:
+            canonical_artifact = _diff_artifact_canonique(base_ref, head_ref)
+            git_state = _etat_git_reel(base_ref, head_ref)
+        else:
+            canonical_artifact = _diff_artifact_canonique(
+                base_ref, head_ref, runner=runner
+            )
+            git_state = _etat_git_reel(base_ref, head_ref, runner=runner)
+        if artefact != canonical_artifact:
+            raise ValueError("artefact fourni différent du diff Git canonique")
         metadata = {
-            "base_commit": expected.get("base_commit"),
-            "reviewed_head_commit": expected.get(
-                "reviewed_head_commit", expected.get("head_commit")
-            ),
-            "reviewed_head_tree": expected.get(
-                "reviewed_head_tree", expected.get("head_tree")
-            ),
-            "candidate_diff_digest": expected.get(
-                "candidate_diff_digest", expected.get("diff_digest")
-            ),
+            "base_commit": git_state["base_commit"],
+            "reviewed_head_commit": git_state["head_commit"],
+            "reviewed_head_tree": git_state["head_tree"],
+            "candidate_diff_digest": git_state["diff_digest"],
         }
-        if any(value is None for value in metadata.values()):
-            raise ValueError("métadonnées Git incomplètes pour sol_blind")
+        if expected is not None:
+            for field, value in metadata.items():
+                expected_value = expected.get(field)
+                if expected_value is not None and expected_value != value:
+                    raise ValueError(f"métadonnée Git {field} contradictoire")
         prompt = (
             "Tu es reviewer de code Sol. Analyse uniquement l'ARTEFACT ci-dessous dans "
             "un contexte frais et en lecture seule.\n"
@@ -472,9 +480,13 @@ def load_autonomy_policy(path: Path = AUTONOMY_POLICY) -> dict:
         raise ValueError(f"politique d'autonomie illisible : {path}") from error
     if not isinstance(policy, dict):
         raise ValueError("politique d'autonomie invalide")
+    if policy.get("schema") != "autonomy-policy/1":
+        raise ValueError("schema de politique d'autonomie invalide")
     worker = policy.get("worker")
     if not isinstance(worker, dict):
         raise ValueError("politique d'autonomie: worker manquant")
+    if worker.get("primary_model") != "GPT-5.6 Luna":
+        raise ValueError("worker.primary_model doit être GPT-5.6 Luna")
     lanes = worker.get("max_active_writer_lanes")
     if isinstance(lanes, bool) or not isinstance(lanes, int) or lanes != 2:
         raise ValueError("max_active_writer_lanes doit être exactement 2")
@@ -488,6 +500,8 @@ def load_autonomy_policy(path: Path = AUTONOMY_POLICY) -> dict:
     for requirement in ("fresh_context", "blind", "reviewer_read_only", "read_only"):
         if review.get(requirement) is not True:
             raise ValueError(f"review.{requirement} doit être true")
+    if policy.get("terminal_states") != ["DONE_WITH_EVIDENCE", "BLOCKED_WITH_REASON"]:
+        raise ValueError("terminal_states de politique d'autonomie invalides")
     return policy
 
 
@@ -552,6 +566,10 @@ def _sol_expected_from_git(
     for field in required:
         if field not in recu:
             raise ValueError(f"métadonnée Sol absente : {field}")
+    for field in ("base_commit", "head_commit", "head_tree", "reviewed_head_commit", "reviewed_head_tree"):
+        _validate_object_id(recu[field], field)
+    for field in ("candidate_diff_digest", "diff_digest", "prompt_sha256"):
+        _validate_digest(recu[field], field)
     execute = _default_runner if runner is None else runner
     base_commit = _resolve_commit(execute, recu["base_commit"])
     head_commit = _resolve_commit(execute, recu["head_commit"])
@@ -608,6 +626,27 @@ def _sol_expected_from_git(
     }
 
 
+def _sol_receipt_binding_matches_current(recu: object, etat_git: object) -> bool:
+    """Classifie uniquement la liaison base/diff; full proof reste séparée."""
+    if not isinstance(recu, dict) or not isinstance(etat_git, dict):
+        return False
+    try:
+        receipt_base = _validate_object_id(recu.get("base_commit"), "base_commit")
+        receipt_digest = _validate_digest(recu.get("diff_digest"), "diff_digest")
+        candidate_digest = _validate_digest(
+            recu.get("candidate_diff_digest"), "candidate_diff_digest"
+        )
+        current_base = _validate_object_id(etat_git.get("base_commit"), "base_commit courant")
+        current_digest = _validate_digest(etat_git.get("diff_digest"), "diff_digest courant")
+    except ValueError:
+        return False
+    return (
+        receipt_base == current_base
+        and receipt_digest == current_digest
+        and candidate_digest == current_digest
+    )
+
+
 def tally_sol_blind(verdicts: list[dict], expected: dict, codeurs: list[str]) -> dict:
     """Dépouille strictement l'unique verdict frais du reviewer Sol."""
     if not isinstance(verdicts, list) or len(verdicts) != 1:
@@ -655,15 +694,31 @@ def tally_sol_blind(verdicts: list[dict], expected: dict, codeurs: list[str]) ->
     if not isinstance(expected, dict):
         return {"result": "INVALIDE", "reason": "métadonnées attendues invalides"}
     expected_fields = (
-        "candidate_diff_digest", "base_commit", "reviewed_head_commit",
+        "candidate_diff_digest", "diff_digest", "base_commit", "reviewed_head_commit",
         "reviewed_head_tree", "prompt_sha256", "reviewed_at",
     )
     missing = [field for field in expected_fields if field not in expected]
     if missing:
         return {"result": "INVALIDE", "reason": f"métadonnées attendues absentes : {missing[0]}"}
+    try:
+        for field in ("base_commit", "reviewed_head_commit", "reviewed_head_tree"):
+            _validate_object_id(expected[field], field)
+        for field in ("candidate_diff_digest", "diff_digest", "prompt_sha256"):
+            _validate_digest(expected[field], field)
+    except ValueError as error:
+        return {"result": "INVALIDE", "reason": str(error)}
+    if expected["candidate_diff_digest"] != expected["diff_digest"]:
+        return {"result": "INVALIDE", "reason": "diff_digest différent du diff attendu"}
     expected_digest = expected["candidate_diff_digest"]
     if verdict.get("candidate_diff_digest") != expected_digest:
         return {"result": "INVALIDE", "reason": "candidate_diff_digest différent du diff attendu"}
+    try:
+        _validate_digest(verdict.get("candidate_diff_digest"), "candidate_diff_digest verdict")
+        for field in ("base_commit", "reviewed_head_commit", "reviewed_head_tree"):
+            _validate_object_id(verdict.get(field), f"{field} verdict")
+        _validate_digest(verdict.get("prompt_sha256"), "prompt_sha256 verdict")
+    except ValueError as error:
+        return {"result": "INVALIDE", "reason": str(error)}
     for field in ("base_commit", "reviewed_head_commit", "reviewed_head_tree", "prompt_sha256"):
         if verdict.get(field) != expected[field]:
             return {"result": "INVALIDE", "reason": f"{field} différent des métadonnées attendues"}
@@ -890,6 +945,29 @@ def _verifier_recu_sol_blind(
     }
 
 
+def _validate_sol_archive_receipt(recu: object, execute: GitRunner) -> None:
+    """Validate exact Sol archive object IDs and the trees they name."""
+    if not isinstance(recu, dict):
+        raise ValueError("reçu Sol archive invalide")
+    for field in (
+        "base_commit", "head_commit", "head_tree", "reviewed_head_commit",
+        "reviewed_head_tree",
+    ):
+        _validate_object_id(recu.get(field), field)
+    for field in ("base_commit", "head_commit", "reviewed_head_commit"):
+        _resolve_commit(execute, recu[field])
+    for commit_field, tree_field in (
+        ("head_commit", "head_tree"),
+        ("reviewed_head_commit", "reviewed_head_tree"),
+    ):
+        actual_tree = execute(
+            ["git", "rev-parse", "--verify", f"{recu[commit_field]}^{{tree}}"]
+        ).strip()
+        _validate_object_id(actual_tree, f"{commit_field} tree Git")
+        if actual_tree != recu[tree_field]:
+            raise ValueError(f"{tree_field} différent de l'arbre Git du commit")
+
+
 def verifier_recu(
     recu: dict,
     verdicts: list[dict],
@@ -917,22 +995,24 @@ def _cmd_prompt(args) -> int:
     artefact = Path(args.artefact).read_text(encoding="utf-8")
     criteres = Path(args.criteres).read_text(encoding="utf-8") if args.criteres else "(voir story)"
     mode = getattr(args, "mode", "multi_vendor")
-    expected = None
     if mode == "sol_blind":
         base_ref = getattr(args, "base_ref", None)
         if not base_ref:
             raise ValueError("--base-ref est obligatoire avec --mode sol_blind")
         if not args.out or Path(args.out).name != _SOL_PROMPT_FILENAME:
             raise ValueError(f"--out doit désigner {_SOL_PROMPT_FILENAME} en mode sol_blind")
-        canonical_artifact = _diff_artifact_canonique(
-            base_ref, getattr(args, "head_ref", "HEAD")
-        )
-        if artefact != canonical_artifact:
-            raise ValueError("artefact fourni différent du diff Git canonique")
-        expected = _etat_git_reel(base_ref, getattr(args, "head_ref", "HEAD"))
-        expected["candidate_diff_digest"] = expected["diff_digest"]
+        head_ref = getattr(args, "head_ref", "HEAD")
+    else:
+        base_ref = None
+        head_ref = None
     prompt, sha = build_prompt(
-        args.story, criteres, args.artefact, artefact, mode=mode, expected=expected
+        args.story,
+        criteres,
+        args.artefact,
+        artefact,
+        mode=mode,
+        base_ref=base_ref,
+        head_ref=head_ref,
     )
     if args.out:
         Path(args.out).write_text(prompt, encoding="utf-8")

@@ -93,6 +93,32 @@ def test_production_policy_requires_exact_integer_two(tmp_path, lanes):
         revue.load_autonomy_policy(invalid_path)
 
 
+@pytest.mark.parametrize(
+    ("path", "value", "message"),
+    [
+        (("schema",), "wrong-schema", "schema"),
+        (("worker", "primary_model"), "GPT-5.6-Sol", "primary_model"),
+        (("review", "default_mode"), "multi_vendor", "default_mode"),
+        (("review", "reviewer_model"), "GPT-5.6 Luna", "reviewer_model"),
+        (("review", "fresh_context"), 1, "fresh_context"),
+        (("review", "blind"), 1, "blind"),
+        (("review", "reviewer_read_only"), 1, "reviewer_read_only"),
+        (("review", "read_only"), 1, "read_only"),
+    ],
+)
+def test_production_policy_rejects_every_invalid_contract_field(tmp_path, path, value, message):
+    policy = json.loads(POLICY_PATH.read_text(encoding="utf-8"))
+    target = policy
+    for key in path[:-1]:
+        target = target[key]
+    target[path[-1]] = value
+    invalid_path = tmp_path / "autonomy-policy.json"
+    invalid_path.write_text(json.dumps(policy), encoding="utf-8")
+
+    with pytest.raises(ValueError, match=message):
+        revue.load_autonomy_policy(invalid_path)
+
+
 def test_active_luna_and_sol_roster_identities_are_resolvable():
     assert revue.vendor_of("GPT-5.6-Luna-Writer") == "openai"
     assert revue.vendor_of("GPT-5.6-Sol") == "openai"

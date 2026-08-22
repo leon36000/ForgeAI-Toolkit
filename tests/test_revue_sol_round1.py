@@ -197,6 +197,28 @@ def test_sol_receipt_prompt_hash_comes_from_stored_prompt_bytes(tmp_path):
     assert "prompt" in result["reason"] or "sha" in result["reason"]
 
 
+@pytest.mark.parametrize(
+    "field",
+    ["candidate_diff_digest", "base_commit", "reviewed_head_commit", "reviewed_head_tree", "prompt_sha256"],
+)
+def test_sol_tally_rejects_malformed_expected_hashes(field):
+    expected = {
+        "candidate_diff_digest": DIFF_DIGEST,
+        "diff_digest": DIFF_DIGEST,
+        "base_commit": BASE_CURRENT,
+        "reviewed_head_commit": REVIEWED_HEAD,
+        "reviewed_head_tree": REVIEWED_TREE,
+        "prompt_sha256": PROMPT_SHA,
+        "reviewed_at": DATE,
+    }
+    expected[field] = None if field != "prompt_sha256" else "not-a-sha256"
+
+    result = revue.tally_sol_blind([_verdict()], expected=expected, codeurs=["luna_writer"])
+
+    assert result["result"] == "INVALIDE"
+    assert field.split("_")[0] in result["reason"] or "hash" in result["reason"]
+
+
 def test_current_gate_ignores_historical_sol_binding_when_current_sol_binding_is_valid(tmp_path):
     root = tmp_path / "reviews"
     historical = _write_review(
@@ -264,6 +286,36 @@ def test_sol_prompt_rejects_artifact_not_generated_from_git_refs(monkeypatch, tm
         )
 
 
+def test_build_sol_prompt_cannot_pair_arbitrary_artifact_with_git_metadata(monkeypatch):
+    monkeypatch.setattr(
+        revue,
+        "_diff_artifact_canonique",
+        lambda base_ref, head_ref: "canonical Git artifact",
+    )
+    monkeypatch.setattr(
+        revue,
+        "_etat_git_reel",
+        lambda base_ref, head_ref: {
+            "base_commit": BASE_CURRENT,
+            "head_commit": CURRENT_HEAD,
+            "head_tree": CURRENT_TREE,
+            "diff_digest": DIFF_DIGEST,
+        },
+    )
+
+    with pytest.raises(ValueError, match="artefact"):
+        revue.build_prompt(
+            "S-sol",
+            "criteria",
+            "caller.diff",
+            "arbitrary caller artifact",
+            mode="sol_blind",
+            base_ref="origin/main",
+            head_ref="HEAD",
+            expected={"base_commit": BASE_CURRENT},
+        )
+
+
 def test_archive_gate_rejects_symbolic_sol_receipt_commit(tmp_path):
     root = tmp_path / "reviews"
     receipt = _receipt(head_commit="HEAD")
@@ -275,3 +327,10 @@ def test_archive_gate_rejects_symbolic_sol_receipt_commit(tmp_path):
 
     assert ok is False
     assert any("reçu archive illisible" in line for line in report)
+
+
+def test_archive_sol_receipt_requires_head_tree_to_match_commit():
+    receipt = _receipt(head_tree="d" * 40)
+
+    with pytest.raises(ValueError, match="arbre"):
+        revue._validate_sol_archive_receipt(receipt, _runner)
