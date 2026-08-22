@@ -1637,7 +1637,7 @@
         },
         {
           "candidate": ".superpowers/sdd/2026-08-22-autonomous-luna-sol/task-4-fix1-report.md",
-          "line": 589,
+          "line": 593,
           "referrer": "tests/test_autonomy_docs.py",
           "resolved": ".superpowers/sdd/2026-08-22-autonomous-luna-sol/task-4-fix1-report.md",
           "severity": "hard"
@@ -1665,7 +1665,7 @@
         },
         {
           "candidate": ".superpowers/sdd/2026-08-22-autonomous-luna-sol/task-4-fix2-report.md",
-          "line": 590,
+          "line": 594,
           "referrer": "tests/test_autonomy_docs.py",
           "resolved": ".superpowers/sdd/2026-08-22-autonomous-luna-sol/task-4-fix2-report.md",
           "severity": "hard"
@@ -1693,7 +1693,7 @@
         },
         {
           "candidate": ".superpowers/sdd/2026-08-22-autonomous-luna-sol/task-4-fix3-report.md",
-          "line": 591,
+          "line": 595,
           "referrer": "tests/test_autonomy_docs.py",
           "resolved": ".superpowers/sdd/2026-08-22-autonomous-luna-sol/task-4-fix3-report.md",
           "severity": "hard"
@@ -1721,7 +1721,7 @@
         },
         {
           "candidate": ".superpowers/sdd/2026-08-22-autonomous-luna-sol/task-4-fix4-report.md",
-          "line": 592,
+          "line": 596,
           "referrer": "tests/test_autonomy_docs.py",
           "resolved": ".superpowers/sdd/2026-08-22-autonomous-luna-sol/task-4-fix4-report.md",
           "severity": "hard"
@@ -1749,7 +1749,7 @@
         },
         {
           "candidate": ".superpowers/sdd/2026-08-22-autonomous-luna-sol/task-4-fix5-report.md",
-          "line": 593,
+          "line": 597,
           "referrer": "tests/test_autonomy_docs.py",
           "resolved": ".superpowers/sdd/2026-08-22-autonomous-luna-sol/task-4-fix5-report.md",
           "severity": "hard"
@@ -1777,7 +1777,7 @@
         },
         {
           "candidate": ".superpowers/sdd/2026-08-22-autonomous-luna-sol/task-4-fix6-report.md",
-          "line": 594,
+          "line": 598,
           "referrer": "tests/test_autonomy_docs.py",
           "resolved": ".superpowers/sdd/2026-08-22-autonomous-luna-sol/task-4-fix6-report.md",
           "severity": "hard"
@@ -1864,6 +1864,19 @@
       "rule_id": "working-superpowers-sdd",
       "sha256": "e461ae05cd604cae0ad13bd74b593a0a33eabaa4579ff58e05667cec76532d38",
       "size": 1315,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "WORKING",
+      "generated": false,
+      "load_bearing": false,
+      "owner": "working-cockpit",
+      "path": ".superpowers/sdd/2026-08-22-autonomous-luna-sol/task-5-review-round6-report.md",
+      "referenced_by": [],
+      "rule_id": "working-superpowers-sdd",
+      "sha256": "6b512fb20d511bc00780df299f8dd0c8b4d9a2b238970f12df968f6e09967c8e",
+      "size": 1044,
       "target_path": null,
       "type": "text"
     },
@@ -2652,7 +2665,7 @@
         },
         {
           "candidate": "AGENTS.md",
-          "line": 33,
+          "line": 35,
           "referrer": "stories/ORCH-LUNA-SOL-603.md",
           "resolved": "AGENTS.md",
           "severity": "hard"
@@ -2694,56 +2707,56 @@
         },
         {
           "candidate": "AGENTS.md",
-          "line": 320,
+          "line": 324,
           "referrer": "tests/test_autonomy_docs.py",
           "resolved": "AGENTS.md",
           "severity": "hard"
         },
         {
           "candidate": "AGENTS.md",
-          "line": 345,
+          "line": 349,
           "referrer": "tests/test_autonomy_docs.py",
           "resolved": "AGENTS.md",
           "severity": "hard"
         },
         {
           "candidate": "AGENTS.md",
-          "line": 370,
+          "line": 374,
           "referrer": "tests/test_autonomy_docs.py",
           "resolved": "AGENTS.md",
           "severity": "hard"
         },
         {
           "candidate": "AGENTS.md",
-          "line": 375,
+          "line": 379,
           "referrer": "tests/test_autonomy_docs.py",
           "resolved": "AGENTS.md",
           "severity": "hard"
         },
         {
           "candidate": "AGENTS.md",
-          "line": 407,
+          "line": 411,
           "referrer": "tests/test_autonomy_docs.py",
           "resolved": "AGENTS.md",
           "severity": "hard"
         },
         {
           "candidate": "AGENTS.md",
-          "line": 431,
+          "line": 435,
           "referrer": "tests/test_autonomy_docs.py",
           "resolved": "AGENTS.md",
           "severity": "hard"
         },
         {
           "candidate": "AGENTS.md",
-          "line": 508,
+          "line": 512,
           "referrer": "tests/test_autonomy_docs.py",
           "resolved": "AGENTS.md",
           "severity": "hard"
         },
         {
           "candidate": "AGENTS.md",
-          "line": 526,
+          "line": 530,
           "referrer": "tests/test_autonomy_docs.py",
           "resolved": "AGENTS.md",
           "severity": "hard"
@@ -3840,7 +3853,7 @@
         },
         {
           "candidate": "CLAUDE.md",
-          "line": 33,
+          "line": 35,
           "referrer": "stories/ORCH-LUNA-SOL-603.md",
           "resolved": "CLAUDE.md",
           "severity": "hard"
@@ -3861,42 +3874,42 @@
         },
         {
           "candidate": "CLAUDE.md",
-          "line": 345,
+          "line": 349,
           "referrer": "tests/test_autonomy_docs.py",
           "resolved": "CLAUDE.md",
           "severity": "hard"
         },
         {
           "candidate": "CLAUDE.md",
-          "line": 370,
+          "line": 374,
           "referrer": "tests/test_autonomy_docs.py",
           "resolved": "CLAUDE.md",
           "severity": "hard"
         },
         {
           "candidate": "CLAUDE.md",
-          "line": 375,
+          "line": 379,
           "referrer": "tests/test_autonomy_docs.py",
           "resolved": "CLAUDE.md",
           "severity": "hard"
         },
         {
           "candidate": "CLAUDE.md",
-          "line": 407,
+          "line": 411,
           "referrer": "tests/test_autonomy_docs.py",
           "resolved": "CLAUDE.md",
           "severity": "hard"
         },
         {
           "candidate": "CLAUDE.md",
-          "line": 431,
+          "line": 435,
           "referrer": "tests/test_autonomy_docs.py",
           "resolved": "CLAUDE.md",
           "severity": "hard"
         },
         {
           "candidate": "CLAUDE.md",
-          "line": 508,
+          "line": 512,
           "referrer": "tests/test_autonomy_docs.py",
           "resolved": "CLAUDE.md",
           "severity": "hard"
@@ -4412,7 +4425,7 @@
         },
         {
           "candidate": "Docs/reference/autonomy-luna-sol.md",
-          "line": 37,
+          "line": 39,
           "referrer": "stories/ORCH-LUNA-SOL-603.md",
           "resolved": "Docs/reference/autonomy-luna-sol.md",
           "severity": "hard"
@@ -4426,22 +4439,22 @@
         },
         {
           "candidate": "Docs/reference/autonomy-luna-sol.md",
-          "line": 539,
+          "line": 543,
           "referrer": "tests/test_autonomy_docs.py",
           "resolved": "Docs/reference/autonomy-luna-sol.md",
           "severity": "hard"
         },
         {
           "candidate": "Docs/reference/autonomy-luna-sol.md",
-          "line": 587,
+          "line": 591,
           "referrer": "tests/test_autonomy_docs.py",
           "resolved": "Docs/reference/autonomy-luna-sol.md",
           "severity": "hard"
         }
       ],
       "rule_id": "docs-user",
-      "sha256": "7a518a6626e5787bfc096acdfd366a5e941c0951685e97ae7ffa952fee0203eb",
-      "size": 7550,
+      "sha256": "ac44843b32cd89b02e58d24a7e5c3db3287d1ac86ab18db689ff1bb2c0ade5f5",
+      "size": 7625,
       "target_path": null,
       "type": "text"
     },
@@ -4850,7 +4863,7 @@
         },
         {
           "candidate": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
-          "line": 595,
+          "line": 599,
           "referrer": "tests/test_autonomy_docs.py",
           "resolved": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
           "severity": "hard"
@@ -7721,7 +7734,7 @@
         },
         {
           "candidate": "evidence/registres/mission.jsonl",
-          "line": 70,
+          "line": 71,
           "referrer": "stories/ORCH-LUNA-SOL-603.md",
           "resolved": "evidence/registres/mission.jsonl",
           "severity": "hard"
@@ -30258,14 +30271,14 @@
         },
         {
           "candidate": "governance/autonomy-policy.json",
-          "line": 19,
+          "line": 21,
           "referrer": "stories/ORCH-LUNA-SOL-603.md",
           "resolved": "governance/autonomy-policy.json",
           "severity": "hard"
         },
         {
           "candidate": "governance/autonomy-policy.json",
-          "line": 329,
+          "line": 333,
           "referrer": "tests/test_autonomy_docs.py",
           "resolved": "governance/autonomy-policy.json",
           "severity": "hard"
@@ -30509,7 +30522,7 @@
         },
         {
           "candidate": "governance/decisions/D-2026-08-21-autonomie-luna-sol.md",
-          "line": 582,
+          "line": 586,
           "referrer": "tests/test_autonomy_docs.py",
           "resolved": "governance/decisions/D-2026-08-21-autonomie-luna-sol.md",
           "severity": "hard"
@@ -32049,7 +32062,7 @@
         },
         {
           "candidate": "governance/vision-log.jsonl",
-          "line": 70,
+          "line": 71,
           "referrer": "stories/ORCH-LUNA-SOL-603.md",
           "resolved": "governance/vision-log.jsonl",
           "severity": "hard"
@@ -34029,7 +34042,7 @@
         },
         {
           "candidate": "scripts/governance/classify_paths.py",
-          "line": 73,
+          "line": 74,
           "referrer": "stories/ORCH-LUNA-SOL-603.md",
           "resolved": "scripts/governance/classify_paths.py",
           "severity": "hard"
@@ -34281,7 +34294,7 @@
         },
         {
           "candidate": "scripts/governance/state_current.py",
-          "line": 72,
+          "line": 73,
           "referrer": "stories/ORCH-LUNA-SOL-603.md",
           "resolved": "scripts/governance/state_current.py",
           "severity": "hard"
@@ -34463,7 +34476,7 @@
         },
         {
           "candidate": "scripts/governance/validate_authority.py",
-          "line": 71,
+          "line": 72,
           "referrer": "stories/ORCH-LUNA-SOL-603.md",
           "resolved": "scripts/governance/validate_authority.py",
           "severity": "hard"
@@ -36346,21 +36359,21 @@
         },
         {
           "candidate": "scripts/registre.py",
-          "line": 44,
+          "line": 46,
           "referrer": "stories/ORCH-LUNA-SOL-603.md",
           "resolved": "scripts/registre.py",
           "severity": "hard"
         },
         {
           "candidate": "scripts/registre.py",
-          "line": 44,
+          "line": 46,
           "referrer": "stories/ORCH-LUNA-SOL-603.md",
           "resolved": "scripts/registre.py",
           "severity": "hard"
         },
         {
           "candidate": "scripts/registre.py",
-          "line": 70,
+          "line": 71,
           "referrer": "stories/ORCH-LUNA-SOL-603.md",
           "resolved": "scripts/registre.py",
           "severity": "hard"
@@ -36416,7 +36429,7 @@
         },
         {
           "candidate": "scripts/registre.py",
-          "line": 364,
+          "line": 368,
           "referrer": "tests/test_autonomy_docs.py",
           "resolved": "scripts/registre.py",
           "severity": "hard"
@@ -49445,7 +49458,7 @@
         },
         {
           "candidate": "stories/ORCH-LUNA-SOL-603.md",
-          "line": 142,
+          "line": 143,
           "referrer": "Docs/reference/autonomy-luna-sol.md",
           "resolved": "stories/ORCH-LUNA-SOL-603.md",
           "severity": "hard"
@@ -49494,7 +49507,7 @@
         },
         {
           "candidate": "stories/ORCH-LUNA-SOL-603.md",
-          "line": 26,
+          "line": 28,
           "referrer": "stories/ORCH-LUNA-SOL-603.md",
           "resolved": "stories/ORCH-LUNA-SOL-603.md",
           "severity": "hard"
@@ -49508,21 +49521,21 @@
         },
         {
           "candidate": "stories/ORCH-LUNA-SOL-603.md",
-          "line": 265,
+          "line": 269,
           "referrer": "tests/test_autonomy_docs.py",
           "resolved": "stories/ORCH-LUNA-SOL-603.md",
           "severity": "hard"
         },
         {
           "candidate": "stories/ORCH-LUNA-SOL-603.md",
-          "line": 360,
+          "line": 364,
           "referrer": "tests/test_autonomy_docs.py",
           "resolved": "stories/ORCH-LUNA-SOL-603.md",
           "severity": "hard"
         },
         {
           "candidate": "stories/ORCH-LUNA-SOL-603.md",
-          "line": 588,
+          "line": 592,
           "referrer": "tests/test_autonomy_docs.py",
           "resolved": "stories/ORCH-LUNA-SOL-603.md",
           "severity": "hard"
@@ -49557,8 +49570,8 @@
         }
       ],
       "rule_id": "governance-stories",
-      "sha256": "4b0bb35f80aa31f95a249c2807f011f23d73348ed44aae830380537ac9357afc",
-      "size": 3985,
+      "sha256": "5e85a1c0d4f9f21025da1ad33939954ff098e63fa1b843e63d9154618ecd372f",
+      "size": 4135,
       "target_path": null,
       "type": "text"
     },
@@ -52123,7 +52136,7 @@
         },
         {
           "candidate": "tests/test_autonomy_docs.py",
-          "line": 137,
+          "line": 138,
           "referrer": "Docs/reference/autonomy-luna-sol.md",
           "resolved": "tests/test_autonomy_docs.py",
           "severity": "hard"
@@ -52144,22 +52157,22 @@
         },
         {
           "candidate": "tests/test_autonomy_docs.py",
-          "line": 69,
+          "line": 70,
           "referrer": "stories/ORCH-LUNA-SOL-603.md",
           "resolved": "tests/test_autonomy_docs.py",
           "severity": "hard"
         },
         {
           "candidate": "tests/test_autonomy_docs.py",
-          "line": 583,
+          "line": 587,
           "referrer": "tests/test_autonomy_docs.py",
           "resolved": "tests/test_autonomy_docs.py",
           "severity": "hard"
         }
       ],
       "rule_id": "test-suite",
-      "sha256": "c7f3c61fc3f9be9dd0d316484411b5ba8efb72280609ca52c57e721bcf16190a",
-      "size": 22840,
+      "sha256": "5712bd0f4ca2e68eed8ffc88715854127715e7b2d3f09dee8ebeacaa69cb33e4",
+      "size": 22999,
       "target_path": null,
       "type": "text"
     },
@@ -52249,7 +52262,7 @@
         },
         {
           "candidate": "tests/test_autonomy_policy.py",
-          "line": 138,
+          "line": 139,
           "referrer": "Docs/reference/autonomy-luna-sol.md",
           "resolved": "tests/test_autonomy_policy.py",
           "severity": "hard"
@@ -52326,7 +52339,7 @@
         },
         {
           "candidate": "tests/test_autonomy_policy.py",
-          "line": 69,
+          "line": 70,
           "referrer": "stories/ORCH-LUNA-SOL-603.md",
           "resolved": "tests/test_autonomy_policy.py",
           "severity": "hard"
@@ -60544,7 +60557,7 @@
         },
         {
           "candidate": "tests/test_reviews_gate.py",
-          "line": 139,
+          "line": 140,
           "referrer": "Docs/reference/autonomy-luna-sol.md",
           "resolved": "tests/test_reviews_gate.py",
           "severity": "hard"
@@ -60656,7 +60669,7 @@
         },
         {
           "candidate": "tests/test_reviews_gate.py",
-          "line": 69,
+          "line": 70,
           "referrer": "stories/ORCH-LUNA-SOL-603.md",
           "resolved": "tests/test_reviews_gate.py",
           "severity": "hard"
@@ -61020,7 +61033,7 @@
         },
         {
           "candidate": "tests/test_revue_sol_blind.py",
-          "line": 138,
+          "line": 139,
           "referrer": "Docs/reference/autonomy-luna-sol.md",
           "resolved": "tests/test_revue_sol_blind.py",
           "severity": "hard"
@@ -61083,7 +61096,7 @@
         },
         {
           "candidate": "tests/test_revue_sol_blind.py",
-          "line": 69,
+          "line": 70,
           "referrer": "stories/ORCH-LUNA-SOL-603.md",
           "resolved": "tests/test_revue_sol_blind.py",
           "severity": "hard"
@@ -65196,6 +65209,11 @@
         "referrer": ".superpowers/sdd/2026-08-22-autonomous-luna-sol/task-5-review-round5-report.md"
       },
       {
+        "candidate": "Sol/gate/policy/documentation",
+        "line": 20,
+        "referrer": ".superpowers/sdd/2026-08-22-autonomous-luna-sol/task-5-review-round6-report.md"
+      },
+      {
         "candidate": "SOL-PROMPT.md",
         "line": 12,
         "referrer": ".superpowers/sdd/2026-08-22-autonomous-luna-sol/task-5-verification-round1b-report.md"
@@ -69252,7 +69270,7 @@
       },
       {
         "candidate": "../../stories/ORCH-LUNA-SOL-603.md",
-        "line": 142,
+        "line": 143,
         "referrer": "Docs/reference/autonomy-luna-sol.md"
       },
       {
@@ -133477,37 +133495,37 @@
       },
       {
         "candidate": "verdict/receipt",
-        "line": 37,
-        "referrer": "stories/ORCH-LUNA-SOL-603.md"
-      },
-      {
-        "candidate": "loop/resume",
         "line": 39,
         "referrer": "stories/ORCH-LUNA-SOL-603.md"
       },
       {
+        "candidate": "loop/resume",
+        "line": 41,
+        "referrer": "stories/ORCH-LUNA-SOL-603.md"
+      },
+      {
         "candidate": "validate_authority.py",
-        "line": 46,
+        "line": 48,
         "referrer": "stories/ORCH-LUNA-SOL-603.md"
       },
       {
         "candidate": "state_current.py",
-        "line": 46,
+        "line": 48,
         "referrer": "stories/ORCH-LUNA-SOL-603.md"
       },
       {
         "candidate": "classify_paths.py",
-        "line": 47,
-        "referrer": "stories/ORCH-LUNA-SOL-603.md"
-      },
-      {
-        "candidate": "documentation/generator",
         "line": 49,
         "referrer": "stories/ORCH-LUNA-SOL-603.md"
       },
       {
+        "candidate": "documentation/generator",
+        "line": 51,
+        "referrer": "stories/ORCH-LUNA-SOL-603.md"
+      },
+      {
         "candidate": "repository/documentation",
-        "line": 60,
+        "line": 62,
         "referrer": "stories/ORCH-LUNA-SOL-603.md"
       },
       {
@@ -138182,22 +138200,22 @@
       },
       {
         "candidate": "autonomy-policy/1",
-        "line": 256,
+        "line": 260,
         "referrer": "tests/test_autonomy_docs.py"
       },
       {
         "candidate": "AUTHORITY-MAP.md",
-        "line": 569,
-        "referrer": "tests/test_autonomy_docs.py"
-      },
-      {
-        "candidate": "STATE-CURRENT.json",
         "line": 573,
         "referrer": "tests/test_autonomy_docs.py"
       },
       {
+        "candidate": "STATE-CURRENT.json",
+        "line": 577,
+        "referrer": "tests/test_autonomy_docs.py"
+      },
+      {
         "candidate": "path-classification.json",
-        "line": 576,
+        "line": 580,
         "referrer": "tests/test_autonomy_docs.py"
       },
       {
@@ -157314,35 +157332,35 @@
       },
       {
         "candidate": "tests/test_autonomy_docs.py",
-        "line": 137,
+        "line": 138,
         "referrer": "Docs/reference/autonomy-luna-sol.md",
         "resolved": "tests/test_autonomy_docs.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_autonomy_policy.py",
-        "line": 138,
+        "line": 139,
         "referrer": "Docs/reference/autonomy-luna-sol.md",
         "resolved": "tests/test_autonomy_policy.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_revue_sol_blind.py",
-        "line": 138,
+        "line": 139,
         "referrer": "Docs/reference/autonomy-luna-sol.md",
         "resolved": "tests/test_revue_sol_blind.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_reviews_gate.py",
-        "line": 139,
+        "line": 140,
         "referrer": "Docs/reference/autonomy-luna-sol.md",
         "resolved": "tests/test_reviews_gate.py",
         "severity": "hard"
       },
       {
         "candidate": "stories/ORCH-LUNA-SOL-603.md",
-        "line": 142,
+        "line": 143,
         "referrer": "Docs/reference/autonomy-luna-sol.md",
         "resolved": "stories/ORCH-LUNA-SOL-603.md",
         "severity": "hard"
@@ -182654,119 +182672,119 @@
       },
       {
         "candidate": "governance/autonomy-policy.json",
-        "line": 19,
+        "line": 21,
         "referrer": "stories/ORCH-LUNA-SOL-603.md",
         "resolved": "governance/autonomy-policy.json",
         "severity": "hard"
       },
       {
         "candidate": "stories/ORCH-LUNA-SOL-603.md",
-        "line": 26,
+        "line": 28,
         "referrer": "stories/ORCH-LUNA-SOL-603.md",
         "resolved": "stories/ORCH-LUNA-SOL-603.md",
         "severity": "hard"
       },
       {
         "candidate": "AGENTS.md",
-        "line": 33,
+        "line": 35,
         "referrer": "stories/ORCH-LUNA-SOL-603.md",
         "resolved": "AGENTS.md",
         "severity": "hard"
       },
       {
         "candidate": "CLAUDE.md",
-        "line": 33,
+        "line": 35,
         "referrer": "stories/ORCH-LUNA-SOL-603.md",
         "resolved": "CLAUDE.md",
         "severity": "hard"
       },
       {
         "candidate": "Docs/reference/autonomy-luna-sol.md",
-        "line": 37,
+        "line": 39,
         "referrer": "stories/ORCH-LUNA-SOL-603.md",
         "resolved": "Docs/reference/autonomy-luna-sol.md",
         "severity": "hard"
       },
       {
         "candidate": "scripts/registre.py",
-        "line": 44,
+        "line": 46,
         "referrer": "stories/ORCH-LUNA-SOL-603.md",
         "resolved": "scripts/registre.py",
         "severity": "hard"
       },
       {
         "candidate": "scripts/registre.py",
-        "line": 44,
+        "line": 46,
         "referrer": "stories/ORCH-LUNA-SOL-603.md",
         "resolved": "scripts/registre.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_autonomy_docs.py",
-        "line": 69,
+        "line": 70,
         "referrer": "stories/ORCH-LUNA-SOL-603.md",
         "resolved": "tests/test_autonomy_docs.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_autonomy_policy.py",
-        "line": 69,
+        "line": 70,
         "referrer": "stories/ORCH-LUNA-SOL-603.md",
         "resolved": "tests/test_autonomy_policy.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_revue_sol_blind.py",
-        "line": 69,
+        "line": 70,
         "referrer": "stories/ORCH-LUNA-SOL-603.md",
         "resolved": "tests/test_revue_sol_blind.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_reviews_gate.py",
-        "line": 69,
+        "line": 70,
         "referrer": "stories/ORCH-LUNA-SOL-603.md",
         "resolved": "tests/test_reviews_gate.py",
         "severity": "hard"
       },
       {
         "candidate": "scripts/registre.py",
-        "line": 70,
+        "line": 71,
         "referrer": "stories/ORCH-LUNA-SOL-603.md",
         "resolved": "scripts/registre.py",
         "severity": "hard"
       },
       {
         "candidate": "governance/vision-log.jsonl",
-        "line": 70,
+        "line": 71,
         "referrer": "stories/ORCH-LUNA-SOL-603.md",
         "resolved": "governance/vision-log.jsonl",
         "severity": "hard"
       },
       {
         "candidate": "evidence/registres/mission.jsonl",
-        "line": 70,
+        "line": 71,
         "referrer": "stories/ORCH-LUNA-SOL-603.md",
         "resolved": "evidence/registres/mission.jsonl",
         "severity": "hard"
       },
       {
         "candidate": "scripts/governance/validate_authority.py",
-        "line": 71,
+        "line": 72,
         "referrer": "stories/ORCH-LUNA-SOL-603.md",
         "resolved": "scripts/governance/validate_authority.py",
         "severity": "hard"
       },
       {
         "candidate": "scripts/governance/state_current.py",
-        "line": 72,
+        "line": 73,
         "referrer": "stories/ORCH-LUNA-SOL-603.md",
         "resolved": "scripts/governance/state_current.py",
         "severity": "hard"
       },
       {
         "candidate": "scripts/governance/classify_paths.py",
-        "line": 73,
+        "line": 74,
         "referrer": "stories/ORCH-LUNA-SOL-603.md",
         "resolved": "scripts/governance/classify_paths.py",
         "severity": "hard"
@@ -185433,210 +185451,210 @@
       },
       {
         "candidate": "stories/ORCH-LUNA-SOL-603.md",
-        "line": 265,
+        "line": 269,
         "referrer": "tests/test_autonomy_docs.py",
         "resolved": "stories/ORCH-LUNA-SOL-603.md",
         "severity": "hard"
       },
       {
         "candidate": "AGENTS.md",
-        "line": 320,
+        "line": 324,
         "referrer": "tests/test_autonomy_docs.py",
         "resolved": "AGENTS.md",
         "severity": "hard"
       },
       {
         "candidate": "governance/autonomy-policy.json",
-        "line": 329,
+        "line": 333,
         "referrer": "tests/test_autonomy_docs.py",
         "resolved": "governance/autonomy-policy.json",
         "severity": "hard"
       },
       {
         "candidate": "AGENTS.md",
-        "line": 345,
+        "line": 349,
         "referrer": "tests/test_autonomy_docs.py",
         "resolved": "AGENTS.md",
         "severity": "hard"
       },
       {
         "candidate": "CLAUDE.md",
-        "line": 345,
+        "line": 349,
         "referrer": "tests/test_autonomy_docs.py",
         "resolved": "CLAUDE.md",
         "severity": "hard"
       },
       {
         "candidate": "stories/ORCH-LUNA-SOL-603.md",
-        "line": 360,
+        "line": 364,
         "referrer": "tests/test_autonomy_docs.py",
         "resolved": "stories/ORCH-LUNA-SOL-603.md",
         "severity": "hard"
       },
       {
         "candidate": "scripts/registre.py",
-        "line": 364,
+        "line": 368,
         "referrer": "tests/test_autonomy_docs.py",
         "resolved": "scripts/registre.py",
         "severity": "hard"
       },
       {
         "candidate": "AGENTS.md",
-        "line": 370,
+        "line": 374,
         "referrer": "tests/test_autonomy_docs.py",
         "resolved": "AGENTS.md",
         "severity": "hard"
       },
       {
         "candidate": "CLAUDE.md",
-        "line": 370,
+        "line": 374,
         "referrer": "tests/test_autonomy_docs.py",
         "resolved": "CLAUDE.md",
         "severity": "hard"
       },
       {
         "candidate": "AGENTS.md",
-        "line": 375,
+        "line": 379,
         "referrer": "tests/test_autonomy_docs.py",
         "resolved": "AGENTS.md",
         "severity": "hard"
       },
       {
         "candidate": "CLAUDE.md",
-        "line": 375,
+        "line": 379,
         "referrer": "tests/test_autonomy_docs.py",
         "resolved": "CLAUDE.md",
         "severity": "hard"
       },
       {
         "candidate": "AGENTS.md",
-        "line": 407,
+        "line": 411,
         "referrer": "tests/test_autonomy_docs.py",
         "resolved": "AGENTS.md",
         "severity": "hard"
       },
       {
         "candidate": "CLAUDE.md",
-        "line": 407,
+        "line": 411,
         "referrer": "tests/test_autonomy_docs.py",
         "resolved": "CLAUDE.md",
         "severity": "hard"
       },
       {
         "candidate": "AGENTS.md",
-        "line": 431,
+        "line": 435,
         "referrer": "tests/test_autonomy_docs.py",
         "resolved": "AGENTS.md",
         "severity": "hard"
       },
       {
         "candidate": "CLAUDE.md",
-        "line": 431,
+        "line": 435,
         "referrer": "tests/test_autonomy_docs.py",
         "resolved": "CLAUDE.md",
         "severity": "hard"
       },
       {
         "candidate": "AGENTS.md",
-        "line": 508,
+        "line": 512,
         "referrer": "tests/test_autonomy_docs.py",
         "resolved": "AGENTS.md",
         "severity": "hard"
       },
       {
         "candidate": "CLAUDE.md",
-        "line": 508,
+        "line": 512,
         "referrer": "tests/test_autonomy_docs.py",
         "resolved": "CLAUDE.md",
         "severity": "hard"
       },
       {
         "candidate": "AGENTS.md",
-        "line": 526,
+        "line": 530,
         "referrer": "tests/test_autonomy_docs.py",
         "resolved": "AGENTS.md",
         "severity": "hard"
       },
       {
         "candidate": "Docs/reference/autonomy-luna-sol.md",
-        "line": 539,
+        "line": 543,
         "referrer": "tests/test_autonomy_docs.py",
         "resolved": "Docs/reference/autonomy-luna-sol.md",
         "severity": "hard"
       },
       {
         "candidate": "governance/decisions/D-2026-08-21-autonomie-luna-sol.md",
-        "line": 582,
+        "line": 586,
         "referrer": "tests/test_autonomy_docs.py",
         "resolved": "governance/decisions/D-2026-08-21-autonomie-luna-sol.md",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_autonomy_docs.py",
-        "line": 583,
+        "line": 587,
         "referrer": "tests/test_autonomy_docs.py",
         "resolved": "tests/test_autonomy_docs.py",
         "severity": "hard"
       },
       {
         "candidate": "Docs/reference/autonomy-luna-sol.md",
-        "line": 587,
+        "line": 591,
         "referrer": "tests/test_autonomy_docs.py",
         "resolved": "Docs/reference/autonomy-luna-sol.md",
         "severity": "hard"
       },
       {
         "candidate": "stories/ORCH-LUNA-SOL-603.md",
-        "line": 588,
+        "line": 592,
         "referrer": "tests/test_autonomy_docs.py",
         "resolved": "stories/ORCH-LUNA-SOL-603.md",
         "severity": "hard"
       },
       {
         "candidate": ".superpowers/sdd/2026-08-22-autonomous-luna-sol/task-4-fix1-report.md",
-        "line": 589,
+        "line": 593,
         "referrer": "tests/test_autonomy_docs.py",
         "resolved": ".superpowers/sdd/2026-08-22-autonomous-luna-sol/task-4-fix1-report.md",
         "severity": "hard"
       },
       {
         "candidate": ".superpowers/sdd/2026-08-22-autonomous-luna-sol/task-4-fix2-report.md",
-        "line": 590,
+        "line": 594,
         "referrer": "tests/test_autonomy_docs.py",
         "resolved": ".superpowers/sdd/2026-08-22-autonomous-luna-sol/task-4-fix2-report.md",
         "severity": "hard"
       },
       {
         "candidate": ".superpowers/sdd/2026-08-22-autonomous-luna-sol/task-4-fix3-report.md",
-        "line": 591,
+        "line": 595,
         "referrer": "tests/test_autonomy_docs.py",
         "resolved": ".superpowers/sdd/2026-08-22-autonomous-luna-sol/task-4-fix3-report.md",
         "severity": "hard"
       },
       {
         "candidate": ".superpowers/sdd/2026-08-22-autonomous-luna-sol/task-4-fix4-report.md",
-        "line": 592,
+        "line": 596,
         "referrer": "tests/test_autonomy_docs.py",
         "resolved": ".superpowers/sdd/2026-08-22-autonomous-luna-sol/task-4-fix4-report.md",
         "severity": "hard"
       },
       {
         "candidate": ".superpowers/sdd/2026-08-22-autonomous-luna-sol/task-4-fix5-report.md",
-        "line": 593,
+        "line": 597,
         "referrer": "tests/test_autonomy_docs.py",
         "resolved": ".superpowers/sdd/2026-08-22-autonomous-luna-sol/task-4-fix5-report.md",
         "severity": "hard"
       },
       {
         "candidate": ".superpowers/sdd/2026-08-22-autonomous-luna-sol/task-4-fix6-report.md",
-        "line": 594,
+        "line": 598,
         "referrer": "tests/test_autonomy_docs.py",
         "resolved": ".superpowers/sdd/2026-08-22-autonomous-luna-sol/task-4-fix6-report.md",
         "severity": "hard"
       },
       {
         "candidate": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
-        "line": 595,
+        "line": 599,
         "referrer": "tests/test_autonomy_docs.py",
         "resolved": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
         "severity": "hard"
@@ -186956,7 +186974,7 @@
       "GOVERNANCE": 217,
       "PRODUCT": 113,
       "TEST": 229,
-      "WORKING": 27
+      "WORKING": 28
     },
     "by_rule": {
       "archive-root": 44,
@@ -187005,14 +187023,14 @@
       "test-suite": 229,
       "working-claude-agents": 9,
       "working-sandbox-readme": 1,
-      "working-superpowers-sdd": 17
+      "working-superpowers-sdd": 18
     },
     "case_collisions_total": 0,
-    "dangling_references_total": 17628,
+    "dangling_references_total": 17629,
     "generated_total": 9,
     "load_bearing_total": 2150,
     "portability_violations_total": 0,
-    "tracked_total": 2322,
+    "tracked_total": 2323,
     "unclassified_total": 0,
     "unicode_anomalies_total": 0
   },
