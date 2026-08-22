@@ -66,9 +66,10 @@ retiré. Le plafond est exactement `max_active_writer_lanes: 2`, donc exactement
 deux writer lanes. Le mode est `sol_blind`: contexte frais, blind, read-only,
 diff Git exact et identité Sol distincte du codeur.
 
-La liaison minimale du reçu exige `candidate_diff_digest`, `base_commit`,
-`reviewed_head_commit`, `reviewed_head_tree`, `prompt_sha256`, un
-`reviewed_at` avec fuseau, `verdict: APPROVE` et `blocking_findings: []`.
+La liaison minimale du reçu exige `story` (distinct du `dossier` d'artefacts),
+`candidate_diff_digest`, `base_commit`, `reviewed_head_commit`,
+`reviewed_head_tree`, `prompt_sha256`, un `reviewed_at` avec fuseau,
+`verdict: APPROVE` et `blocking_findings: []`.
 Le reviewer ne reçoit aucun verdict attendu. Le claim est revérifié par le
 gate contre Git courant; aucune preuve runtime ou externe n'est prétendue.
 

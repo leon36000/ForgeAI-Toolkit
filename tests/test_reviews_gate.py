@@ -127,6 +127,7 @@ def _make_sol_blind_gate_review(
     receipt = {
         "schema": "recu-revue/2",
         "mode": "sol_blind",
+        "story": "S-sol",
         "candidate_diff_digest": hashlib.sha256(b"").hexdigest(),
         "diff_digest": hashlib.sha256(b"").hexdigest(),
         "base_commit": "b" * 40,
@@ -411,6 +412,7 @@ def test_mode_pr_historical_invalid_sol_binding_is_informational(tmp_path):
             {
                 "schema": "recu-revue/2",
                 "mode": "sol_blind",
+                "story": "S-sol",
                 "dossier": "S-ancienne-sol",
                 "candidate_diff_digest": hashlib.sha256(b"").hexdigest(),
                 "diff_digest": hashlib.sha256(b"").hexdigest(),
@@ -463,9 +465,10 @@ def test_mode_pr_historical_invalid_sol_binding_is_informational(tmp_path):
         json.dumps(
             {
                 **_receipt(),
-                "schema": "recu-revue/2",
-                "mode": "sol_blind",
-                "dossier": "S-sol",
+                    "schema": "recu-revue/2",
+                    "mode": "sol_blind",
+                    "story": "S-sol",
+                    "dossier": "S-sol",
                 "prompt_sha256": SOL_SHA,
                 "candidate_diff_digest": hashlib.sha256(b"").hexdigest(),
                 "reviewed_head_commit": "c" * 40,

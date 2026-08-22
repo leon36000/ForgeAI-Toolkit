@@ -48,6 +48,12 @@ comme un claim et le compare à la PR ou au diff courant; le head conservé sert
 reçu. Les artefacts de revue et les vues générées restent hors du digest
 canonique.
 
+Le reçu porte aussi `story`, l’identifiant immuable utilisé pour reconstruire le
+prompt, séparément de `dossier`, qui désigne le répertoire des artefacts sous
+`evidence/reviews/`. La commande `recu --mode sol_blind` exige donc
+`--story <story-id>` afin que le prompt produit et le prompt vérifié utilisent
+exactement la même valeur.
+
 In `reviews_gate.py`, receipt-mode dispatch preserves `multi_vendor`'s historical 3/3 tally;
 active `sol_blind` requires exactly one `GPT-5.6-Sol` verdict.
 

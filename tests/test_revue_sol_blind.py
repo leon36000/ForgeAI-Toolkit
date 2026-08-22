@@ -84,6 +84,7 @@ def _receipt(*, include_blocking_findings: bool = True, **changes) -> dict:
     receipt = {
         "schema": "recu-revue/2",
         "mode": "sol_blind",
+        "story": "S-sol",
         "dossier": "S-sol",
         "issue": 603,
         "round": 1,
@@ -159,6 +160,15 @@ def test_sol_blind_rejects_codewriter_sol_identity():
 
     assert result["result"] != "APPROVE"
     assert "codeur" in result["reason"] or "auteur" in result["reason"]
+
+
+def test_sol_blind_rejects_retired_luna_codewriter():
+    result = revue.tally_sol_blind(
+        [_sol_verdict()], expected=_expected(), codeurs=["luna"]
+    )
+
+    assert result["result"] != "APPROVE"
+    assert "codeur" in result["reason"] or "retir" in result["reason"]
 
 
 def test_sol_blind_rejects_unknown_codewriter_identity():

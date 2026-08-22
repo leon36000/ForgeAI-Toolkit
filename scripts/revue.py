@@ -608,13 +608,21 @@ def _sol_aliases(table: dict[str, str] | None) -> set[str] | None:
 
 def _codeur_identity_table(
     roles_path: Path = REPO / "manifests" / "roles.yaml",
+    *,
+    include_retired: bool = False,
 ) -> dict[str, str] | None:
-    """Resolve every codewriter alias to one canonical roster member ID."""
+    """Resolve selectable codewriter aliases to canonical roster member IDs.
+
+    Retired identities remain resolvable by legacy audit paths, but are not accepted for fresh
+    ``sol_blind`` evidence unless an archive caller explicitly opts into them.
+    """
     roles = _load_roles_yaml(roles_path)
     if not roles:
         return None
     table: dict[str, str] = {}
     for member in roles:
+        if not include_retired and member.get("statut") == "retire":
+            continue
         member_id = member.get("id")
         if not isinstance(member_id, str) or not member_id:
             continue
@@ -714,13 +722,15 @@ def _sol_expected_from_git(
     if recu.get("schema") != "recu-revue/2":
         raise ValueError("schema Sol doit être exactement recu-revue/2")
     required = (
-        "base_commit", "head_commit", "head_tree", "reviewed_head_commit",
+        "story", "base_commit", "head_commit", "head_tree", "reviewed_head_commit",
         "reviewed_head_tree", "candidate_diff_digest", "diff_digest", "prompt_sha256",
         "reviewed_at",
     )
     for field in required:
         if field not in recu:
             raise ValueError(f"métadonnée Sol absente : {field}")
+    if not isinstance(recu["story"], str) or not recu["story"].strip():
+        raise ValueError("story Sol invalide")
     for field in ("base_commit", "head_commit", "head_tree", "reviewed_head_commit", "reviewed_head_tree"):
         _validate_object_id(recu[field], field)
     for field in ("candidate_diff_digest", "diff_digest", "prompt_sha256"):
@@ -744,7 +754,7 @@ def _sol_expected_from_git(
     if len(verdicts) != 1 or not isinstance(verdicts[0], dict):
         raise ValueError("sol_blind exige exactement un verdict objet")
     canonical_prompt, canonical_prompt_sha = _canonical_sol_prompt(
-        str(recu.get("dossier", "")),
+        recu["story"],
         base_commit,
         reviewed_head_commit,
         runner=execute,
@@ -815,7 +825,13 @@ def _sol_receipt_binding_matches_current(recu: object, etat_git: object) -> bool
     )
 
 
-def tally_sol_blind(verdicts: list[dict], expected: dict, codeurs: list[str]) -> dict:
+def tally_sol_blind(
+    verdicts: list[dict],
+    expected: dict,
+    codeurs: list[str],
+    *,
+    allow_retired_codeurs: bool = False,
+) -> dict:
     """Dépouille strictement l'unique verdict frais du reviewer Sol."""
     if not isinstance(verdicts, list) or len(verdicts) != 1:
         count = len(verdicts) if isinstance(verdicts, list) else "invalide"
@@ -848,7 +864,7 @@ def tally_sol_blind(verdicts: list[dict], expected: dict, codeurs: list[str]) ->
 
     if not isinstance(codeurs, list) or not codeurs:
         return {"result": "INVALIDE", "reason": "codeur requis pour sol_blind"}
-    codeur_table = _codeur_identity_table()
+    codeur_table = _codeur_identity_table(include_retired=allow_retired_codeurs)
     if codeur_table is None:
         return {"result": "INVALIDE", "reason": "roster de codeurs introuvable"}
     for codeur in codeurs:
@@ -1064,7 +1080,7 @@ def _verifier_recu_sol_blind(
     now: datetime | None = None,
 ) -> dict:
     required = (
-        "schema", "mode", "dossier", "issue", "round", "base_commit", "head_commit",
+        "schema", "mode", "story", "dossier", "issue", "round", "base_commit", "head_commit",
         "head_tree", "diff_digest", "candidate_diff_digest", "reviewed_head_commit",
         "reviewed_head_tree", "prompt_sha256", "reviewers_attendus", "codeur", "resultat",
         "reviewed_at", "verdict", "reviewer_model", "date_heure",
@@ -1138,12 +1154,51 @@ def _verifier_recu_sol_blind(
     }
 
 
-def _validate_sol_archive_receipt(recu: object, execute: GitRunner) -> None:
-    """Validate exact Sol archive object IDs and the trees they name."""
+def _validate_sol_archive_receipt(
+    recu: object,
+    execute: GitRunner,
+    *,
+    verdicts: list[dict] | None = None,
+) -> None:
+    """Validate the immutable Sol receipt contract and exact archive object IDs."""
     if not isinstance(recu, dict):
         raise ValueError("reçu Sol archive invalide")
+    required = (
+        "schema", "mode", "story", "dossier", "issue", "round", "base_commit",
+        "head_commit", "head_tree", "candidate_diff_digest", "diff_digest",
+        "reviewed_head_commit", "reviewed_head_tree", "prompt_sha256",
+        "reviewers_attendus", "codeur", "resultat", "reviewed_at", "verdict",
+        "reviewer_model", "date_heure", "fenetre_heures", "blocking_findings",
+    )
+    for field in required:
+        if field not in recu:
+            raise ValueError(f"métadonnée Sol archive absente : {field}")
     if recu.get("schema") != "recu-revue/2":
         raise ValueError("schema Sol doit être exactement recu-revue/2")
+    if recu.get("mode") != "sol_blind":
+        raise ValueError("mode Sol archive invalide")
+    if not isinstance(recu["story"], str) or not recu["story"].strip():
+        raise ValueError("story Sol archive invalide")
+    if recu["resultat"] != "APPROVE":
+        raise ValueError("resultat Sol archive doit être APPROVE")
+    if recu["verdict"] != "APPROVE":
+        raise ValueError("verdict Sol archive doit être APPROVE")
+    if recu["blocking_findings"] != []:
+        raise ValueError("blocking_findings Sol archive doit être vide")
+    reviewers = recu["reviewers_attendus"]
+    if not isinstance(reviewers, list) or len(reviewers) != 1:
+        raise ValueError("reviewers_attendus Sol archive invalide")
+    if reviewers != [recu["reviewer_model"]]:
+        raise ValueError("reviewer_model Sol archive contradictoire")
+    if not isinstance(recu["codeur"], list) or not recu["codeur"]:
+        raise ValueError("codeur Sol archive requis")
+    if verdicts is not None:
+        if len(verdicts) != 1 or not isinstance(verdicts[0], dict):
+            raise ValueError("sol_blind exige exactement un verdict objet")
+        verdict = verdicts[0]
+        for field in ("reviewer_model", "verdict", "blocking_findings", "reviewed_at"):
+            if recu[field] != verdict.get(field):
+                raise ValueError(f"{field} du reçu Sol archive contradictoire")
     for field in (
         "base_commit", "head_commit", "head_tree", "reviewed_head_commit",
         "reviewed_head_tree",
@@ -1257,9 +1312,12 @@ def _cmd_recu(args) -> int:
     etat = _etat_git_reel(args.base_ref, args.head_ref)
     mode = getattr(args, "mode", "multi_vendor")
     if mode == "sol_blind":
+        story = getattr(args, "story", None)
+        if not isinstance(story, str) or not story.strip():
+            raise ValueError("--story est obligatoire avec --mode sol_blind")
         try:
             canonical_prompt, prompt_sha = _canonical_sol_prompt(
-                args.dossier,
+                story,
                 etat["base_commit"],
                 etat["head_commit"],
             )
@@ -1286,6 +1344,7 @@ def _cmd_recu(args) -> int:
         recu = {
             "schema": "recu-revue/2",
             "mode": "sol_blind",
+            "story": story,
             "dossier": args.dossier,
             "issue": args.issue,
             "round": args.round,
@@ -1362,6 +1421,11 @@ def main() -> None:
     pr.add_argument("--issue", required=True, type=int)
     pr.add_argument("--round", required=True, type=int)
     pr.add_argument("--mode", choices=("multi_vendor", "sol_blind"), default="multi_vendor")
+    pr.add_argument(
+        "--story",
+        default=None,
+        help="identifiant immuable de la story pour --mode sol_blind",
+    )
     pr.add_argument("--replanned", action="store_true")
     # OBLIGATOIRE (≥1) : un --codeur silencieusement optionnel (défaut []) permettait de
     # contourner l'anti-auto-review par simple omission (revue scellée RC1-004-PR497,

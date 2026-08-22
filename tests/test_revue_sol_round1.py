@@ -120,6 +120,7 @@ def _verdict(
 
 def _receipt(
     *,
+    story: str = "S-sol",
     base_commit: str = BASE_CURRENT,
     head_commit: str = CURRENT_HEAD,
     head_tree: str = CURRENT_TREE,
@@ -127,10 +128,12 @@ def _receipt(
     reviewed_head_tree: str = REVIEWED_TREE,
     prompt_sha256: str | None = None,
     candidate_diff_digest: str = DIFF_DIGEST,
+    **changes,
 ) -> dict:
-    return {
+    receipt = {
         "schema": "recu-revue/2",
         "mode": "sol_blind",
+        "story": story,
         "dossier": "S-sol",
         "issue": 603,
         "round": 1,
@@ -152,6 +155,8 @@ def _receipt(
         "fenetre_heures": 24,
         "blocking_findings": [],
     }
+    receipt.update(changes)
+    return receipt
 
 
 def _write_review(root: Path, name: str, receipt: dict, verdict: dict) -> Path:
@@ -217,6 +222,80 @@ def test_sol_receipt_prompt_hash_comes_from_stored_prompt_bytes(tmp_path):
 
     assert result["result"] != "APPROVE"
     assert "prompt" in result["reason"] or "sha" in result["reason"]
+
+
+def test_sol_verifier_rebuilds_prompt_from_story_not_review_dossier(tmp_path):
+    story = "stories/ORCH-LUNA-SOL-603.md"
+    prompt, prompt_sha = revue._canonical_sol_prompt(
+        story, BASE_CURRENT, REVIEWED_HEAD, runner=_runner
+    )
+    directory = tmp_path / "S-sol"
+    directory.mkdir()
+    (directory / "SOL-PROMPT.md").write_bytes(prompt)
+    receipt = _receipt(story=story, prompt_sha256=prompt_sha)
+    verdict = _verdict(prompt_sha256=prompt_sha)
+
+    result = revue.verifier_recu(
+        receipt,
+        [verdict],
+        {
+            "base_commit": BASE_CURRENT,
+            "head_commit": CURRENT_HEAD,
+            "head_tree": CURRENT_TREE,
+            "diff_digest": DIFF_DIGEST,
+        },
+        review_dir=directory,
+        runner=_runner,
+        now=VALIDATION_NOW,
+    )
+
+    assert result["result"] == "APPROVE"
+
+
+def test_cmd_recu_persists_story_separately_from_review_dossier(monkeypatch, tmp_path):
+    dossier = tmp_path / "evidence" / "reviews" / "S-sol"
+    dossier.mkdir(parents=True)
+    (dossier / "GPT-5.6-Sol.verdict.json").write_text(
+        json.dumps(_verdict()), encoding="utf-8"
+    )
+    (dossier / "SOL-PROMPT.md").write_bytes(PROMPT_BYTES)
+    monkeypatch.setattr(revue, "REPO", tmp_path)
+    monkeypatch.setattr(
+        revue,
+        "_etat_git_reel",
+        lambda base_ref, head_ref: {
+            "base_commit": BASE_CURRENT,
+            "head_commit": CURRENT_HEAD,
+            "head_tree": CURRENT_TREE,
+            "diff_digest": DIFF_DIGEST,
+        },
+    )
+    monkeypatch.setattr(
+        revue,
+        "_canonical_sol_prompt",
+        lambda story, base_commit, reviewed_head_commit: (PROMPT_BYTES, PROMPT_SHA),
+    )
+    out = tmp_path / "RECU.json"
+
+    rc = revue._cmd_recu(
+        SimpleNamespace(
+            dossier="S-sol",
+            story="stories/ORCH-LUNA-SOL-603.md",
+            base_ref="origin/main",
+            head_ref="HEAD",
+            issue=603,
+            round=1,
+            mode="sol_blind",
+            codeur=["luna_writer"],
+            fenetre_heures=24,
+            out=str(out),
+        )
+    )
+
+    assert rc == 0
+    receipt = json.loads(out.read_text(encoding="utf-8"))
+    assert receipt["story"] == "stories/ORCH-LUNA-SOL-603.md"
+    assert receipt["dossier"] == "S-sol"
 
 
 @pytest.mark.parametrize(
@@ -396,3 +475,42 @@ def test_archive_sol_receipt_requires_head_tree_to_match_commit():
 
     with pytest.raises(ValueError, match="arbre"):
         revue._validate_sol_archive_receipt(receipt, _runner)
+
+
+@pytest.mark.parametrize(
+    ("field", "value", "marker"),
+    [
+        ("blocking_findings", None, "blocking_findings"),
+        ("blocking_findings", [{"severity": "critical"}], "blocking_findings"),
+        ("resultat", "REJECT", "resultat"),
+        ("verdict", "REJECT", "verdict"),
+        ("reviewer_model", "GPT-5.6-Luna-Pro", "reviewer_model"),
+    ],
+)
+def test_archive_sol_receipt_requires_consistent_approve_contract(field, value, marker):
+    receipt = _receipt()
+    if value is None:
+        receipt.pop(field)
+    else:
+        receipt[field] = value
+
+    with pytest.raises(ValueError, match=marker):
+        revue._validate_sol_archive_receipt(
+            receipt, _runner, verdicts=[_verdict()]
+        )
+
+
+def test_archive_gate_rejects_sol_receipt_contract_mismatch(tmp_path):
+    root = tmp_path / "reviews"
+    receipt = _receipt(blocking_findings=[{"severity": "critical"}])
+    _write_review(root, "S-sol-archive-contract", receipt, _verdict())
+
+    ok, report = gate.check(
+        _manifest(tmp_path, ["S-sol-archive-contract"]),
+        root,
+        mode="archive",
+        runner=_runner,
+    )
+
+    assert ok is False
+    assert any("blocking_findings" in line for line in report)

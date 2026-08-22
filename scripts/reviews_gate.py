@@ -261,7 +261,10 @@ def check(
                 )
                 sol_covers_current = bool(expected.pop("_covers_current", False))
                 result = revue.tally_sol_blind(
-                    verdicts, expected=expected, codeurs=receipt.get("codeur", [])
+                    verdicts,
+                    expected=expected,
+                    codeurs=receipt.get("codeur", []),
+                    allow_retired_codeurs=(mode == "archive"),
                 )
                 historical_sol = exiger_recu_courant and not sol_covers_current
             except (OSError, TypeError, ValueError, subprocess.CalledProcessError) as error:
@@ -350,7 +353,9 @@ def check(
             try:
                 receipt = json.loads(receipt_path.read_text(encoding="utf-8"))
                 if isinstance(receipt, dict) and receipt.get("mode") == "sol_blind":
-                    revue._validate_sol_archive_receipt(receipt, execute)
+                    revue._validate_sol_archive_receipt(
+                        receipt, execute, verdicts=verdicts
+                    )
                     commit = receipt["head_commit"]
                     reviewed_commit = receipt["reviewed_head_commit"]
                 else:

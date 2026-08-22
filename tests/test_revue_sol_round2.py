@@ -82,6 +82,7 @@ def _receipt(
     return {
         "schema": schema,
         "mode": "sol_blind",
+        "story": "S-sol",
         "dossier": "S-sol",
         "issue": 603,
         "round": 1,
