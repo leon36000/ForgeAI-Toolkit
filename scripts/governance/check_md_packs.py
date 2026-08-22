@@ -127,13 +127,20 @@ def analyser(texte: str) -> list[dict]:
 
 
 def scanner(racine: Path) -> dict[str, list[dict]]:
-    """Scanne récursivement `racine` pour tout fichier .md, retourne {chemin: défauts}.
+    """Scanne récursivement `racine` pour les documents Markdown de preuve.
+
+    Les prompts générés `SOL-PROMPT.md` sont exclus : ils contiennent le diff brut canonique,
+    donc peuvent embarquer des fences imbriquées qui ne sont pas une structure de pack à valider.
+    Les autres documents Markdown, notamment `pack.md` et `REVIEW-PACK.md`, restent entièrement
+    soumis au scanner.
 
     N'utilise PAS git (Path.rglob uniquement) : doit fonctionner dans un clone/extraction sans
     .git (vérification "extraction dans un clone propre" du critère de l'issue #441).
     """
     resultats: dict[str, list[dict]] = {}
     for chemin in sorted(racine.rglob("*.md")):
+        if chemin.name == "SOL-PROMPT.md":
+            continue
         try:
             texte = chemin.read_text(encoding="utf-8")
         except (OSError, UnicodeDecodeError):

@@ -227,3 +227,17 @@ def test_main_retourne_1_si_defaut_non_connu(tmp_path, monkeypatch):
     monkeypatch.setattr(sys, "argv", ["check_md_packs.py", "--racine", str(tmp_path)])
     rc = check_md_packs.main()
     assert rc == 1
+
+
+def test_scanner_ignore_prompt_sol_genere_mais_scan_pack_voisin(tmp_path):
+    dossier = tmp_path / "evidence" / "reviews" / "S-sol"
+    dossier.mkdir(parents=True)
+    prompt = dossier / "SOL-PROMPT.md"
+    prompt.write_text("```diff\n+diff brut\n", encoding="utf-8")
+    pack = dossier / "pack.md"
+    pack.write_text("```diff\ndiff --git a b\n```\n", encoding="utf-8")
+
+    resultats = check_md_packs.scanner(tmp_path)
+
+    assert str(prompt) not in resultats
+    assert resultats[str(pack)] == []

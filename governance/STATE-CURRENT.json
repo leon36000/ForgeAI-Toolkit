@@ -688,7 +688,7 @@
       },
       {
         "path": "tests/test_rc1011_packs_md.py",
-        "sha256": "71363f9130dfca106e3ff1b8161303ba1c94525932dc527a763a9f930b908474"
+        "sha256": "30fd444297cc226a61fffd914610e75eb52c37d6e0f67455fa569e32b6110a78"
       },
       {
         "path": "tests/test_rc1016_sonar_suppressions.py",
@@ -1017,7 +1017,7 @@
     "tests": {
       "js_files": 3,
       "python_files": 214,
-      "python_functions_declared": 2710
+      "python_functions_declared": 2711
     }
   },
   "observations": [

@@ -33635,8 +33635,8 @@
         }
       ],
       "rule_id": "governance-scripts-governance",
-      "sha256": "f2e706d83a5b08bb5964cce3fe184913326336bc7ae159b5e2ecee73d2ceb2af",
-      "size": 9169,
+      "sha256": "6b573994a7868158b9836b0fb778281f09e250ef24cc7a06d1d2000f57015c67",
+      "size": 9538,
       "target_path": null,
       "type": "text"
     },
@@ -58498,8 +58498,8 @@
         }
       ],
       "rule_id": "test-suite",
-      "sha256": "71363f9130dfca106e3ff1b8161303ba1c94525932dc527a763a9f930b908474",
-      "size": 11935,
+      "sha256": "30fd444297cc226a61fffd914610e75eb52c37d6e0f67455fa569e32b6110a78",
+      "size": 12438,
       "target_path": null,
       "type": "text"
     },
@@ -108481,13 +108481,33 @@
         "referrer": "scripts/governance/check_md_packs.py"
       },
       {
-        "candidate": "clone/extraction",
+        "candidate": "SOL-PROMPT.md",
         "line": 132,
         "referrer": "scripts/governance/check_md_packs.py"
       },
       {
+        "candidate": "pack.md",
+        "line": 134,
+        "referrer": "scripts/governance/check_md_packs.py"
+      },
+      {
+        "candidate": "REVIEW-PACK.md",
+        "line": 134,
+        "referrer": "scripts/governance/check_md_packs.py"
+      },
+      {
+        "candidate": "clone/extraction",
+        "line": 137,
+        "referrer": "scripts/governance/check_md_packs.py"
+      },
+      {
+        "candidate": "SOL-PROMPT.md",
+        "line": 142,
+        "referrer": "scripts/governance/check_md_packs.py"
+      },
+      {
         "candidate": "args.json",
-        "line": 156,
+        "line": 163,
         "referrer": "scripts/governance/check_md_packs.py"
       },
       {
@@ -143788,6 +143808,16 @@
       {
         "candidate": "check_md_packs.py",
         "line": 227,
+        "referrer": "tests/test_rc1011_packs_md.py"
+      },
+      {
+        "candidate": "SOL-PROMPT.md",
+        "line": 235,
+        "referrer": "tests/test_rc1011_packs_md.py"
+      },
+      {
+        "candidate": "pack.md",
+        "line": 237,
         "referrer": "tests/test_rc1011_packs_md.py"
       },
       {
@@ -186348,7 +186378,7 @@
       "working-superpowers-sdd": 12
     },
     "case_collisions_total": 0,
-    "dangling_references_total": 17579,
+    "dangling_references_total": 17585,
     "generated_total": 9,
     "load_bearing_total": 2150,
     "portability_violations_total": 0,
