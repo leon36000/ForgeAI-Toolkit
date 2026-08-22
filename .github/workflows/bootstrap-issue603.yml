@@ -36,6 +36,7 @@ jobs:
           tar -xzf /tmp/issue603-sourcefiles.tar.gz -C .
           rm -rf .bootstrap
           rm -f .github/workflows/bootstrap-issue603.yml
+          git add -A
 
       - name: Enregistrer les décisions et le livrable
         shell: bash
