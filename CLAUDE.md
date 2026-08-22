@@ -88,7 +88,8 @@ Le merge sûr est repository-native : reprendre depuis l'issue/PR GitHub, l'éta
 Git et les registres vérifiés, exécuter les tests/gates, prolonger les registres
 avec `scripts/registre.py append`, vérifier avec `scripts/registre.py verify`,
 régénérer les vues, inspecter le diff et passer les hooks normaux. Aucun workflow
-ne doit utiliser `contents: write`, `force-push`, `decode` de source embarquée
-ou un flux `self-writing`. Les seules sorties terminales sont
+du contrat Luna/Sol ne doit utiliser `contents: write`, `force-push`, `decode`
+de source embarquée ou un flux `self-writing`; les automatisations indépendantes
+du dépôt restent hors de ce périmètre. Les seules sorties terminales sont
 `DONE_WITH_EVIDENCE` et `BLOCKED_WITH_REASON`; les frontières T3 de Nathan
 restent actives. Voir [la référence exécutable](Docs/reference/autonomy-luna-sol.md).

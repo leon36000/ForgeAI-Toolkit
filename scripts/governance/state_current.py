@@ -13,9 +13,9 @@ import sys
 from pathlib import Path
 from typing import Any
 
-# INVARIANT DE POLITIQUE fixée par AGENTS.md : revue aveugle scellée 3/3.
-# Ce n'est pas une donnée mesurée qui dérive d'une source externe.
-_REVIEW_QUORUM = "3/3"
+# Fallback historique pour les fixtures et les dépôts qui n'ont pas encore adopté la
+# politique active. Le dépôt ForgeAI réel dérive le texte affiché de governance/autonomy-policy.json.
+_LEGACY_REVIEW_QUORUM = "3/3"
 
 _SCHEMA = "state-current-v1"
 _CATALOGUE = Path("src/forgeai/data/catalogue.json")
@@ -24,6 +24,7 @@ _LEGACY_CATALOGUE_SIDECAR = Path("src/forgeai/data/catalogue.json.sha256")
 _STATE_JSON = Path("governance/STATE-CURRENT.json")
 _STATE_MARKDOWN = Path("governance/STATE-CURRENT.md")
 _OBSERVATIONS = Path("governance/state-observations.json")
+_AUTONOMY_POLICY = Path("governance/autonomy-policy.json")
 _OPEN_MARKER_RE = re.compile(r"<!-- state:([A-Za-z0-9_.-]+) -->")
 _CLOSE_MARKER = "<!-- /state -->"
 _PROJECT_SECTION_RE = re.compile(
@@ -73,6 +74,25 @@ def _load_json(repo_root: Path, relative: Path) -> Any:
         return json.loads(_read_text(repo_root, relative))
     except json.JSONDecodeError as exc:
         raise ValueError(f"JSON invalide: {relative}: {exc}") from exc
+
+
+def _review_quorum(repo_root: Path) -> str:
+    """Expose le mode de revue actif et conserve explicitement le quorum historique."""
+    policy_path = _path(repo_root, _AUTONOMY_POLICY)
+    if not policy_path.is_file():
+        return _LEGACY_REVIEW_QUORUM
+    policy = _load_json(repo_root, _AUTONOMY_POLICY)
+    if not isinstance(policy, dict) or not isinstance(policy.get("review"), dict):
+        raise ValueError("governance/autonomy-policy.json: section review absente")
+    review = policy["review"]
+    if review.get("default_mode") != "sol_blind":
+        return _LEGACY_REVIEW_QUORUM
+    reviewer_model = review.get("reviewer_model")
+    if reviewer_model != "GPT-5.6 Sol":
+        raise ValueError(
+            "governance/autonomy-policy.json: reviewer_model Sol inattendu"
+        )
+    return "1/1 Sol (sol_blind); historique multi_vendor 3/3"
 
 
 def _pyproject_version(text: str) -> str:
@@ -495,7 +515,7 @@ def collect(repo_root: Path) -> dict:
             "concurrency_total": _coordination_total(packages_value, claims),
         },
         "governance": {
-            "review_quorum": _REVIEW_QUORUM,
+            "review_quorum": _review_quorum(repo_root),
         },
         "inputs": input_list,
     }

@@ -83,7 +83,7 @@
       "work_packages_total": 70
     },
     "governance": {
-      "review_quorum": "3/3"
+      "review_quorum": "1/1 Sol (sol_blind); historique multi_vendor 3/3"
     },
     "inputs": [
       {
@@ -848,7 +848,7 @@
       },
       {
         "path": "tests/test_state_current.py",
-        "sha256": "9ed30f3a8ed62da9929aa947cd08aa93c35a1214b99debdd95a449ff2aac86a6"
+        "sha256": "adcc6f7a6f1eb1433b7c2e72247e9071db5dfb458dfddbcf6912d4fd6bcf25bd"
       },
       {
         "path": "tests/test_supply018.py",
@@ -997,7 +997,7 @@
     "tests": {
       "js_files": 3,
       "python_files": 209,
-      "python_functions_declared": 2687
+      "python_functions_declared": 2688
     }
   },
   "observations": [
