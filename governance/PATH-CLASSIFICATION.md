@@ -4,7 +4,7 @@ NE PAS ÉDITER À LA MAIN — généré par scripts/governance/classify_paths.py
 
 ## Résumé
 
-- Fichiers suivis : 2329
+- Fichiers suivis : 2330
 - Fichiers générés : 9
 - Éléments porteurs : 2150
 - Fichiers non classés : 0
@@ -23,7 +23,7 @@ NE PAS ÉDITER À LA MAIN — généré par scripts/governance/classify_paths.py
 - GOVERNANCE : 217
 - PRODUCT : 113
 - TEST : 229
-- WORKING : 34
+- WORKING : 35
 
 ## Plan de migration
 

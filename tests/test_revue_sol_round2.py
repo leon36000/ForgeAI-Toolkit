@@ -321,6 +321,22 @@ def test_sol_archive_requires_exact_receipt_schema():
 
 
 @pytest.mark.parametrize(
+    ("field", "value", "message"),
+    [
+        ("fenetre_heures", 1_000_000, "fenêtre"),
+        ("fenetre_heures", True, "fenêtre"),
+        ("date_heure", 123, "date_heure"),
+    ],
+)
+def test_sol_archive_rejects_invalid_freshness_contract(field, value, message):
+    receipt = _receipt()
+    receipt[field] = value
+
+    with pytest.raises(ValueError, match=message):
+        revue._validate_sol_archive_receipt(receipt, _runner)
+
+
+@pytest.mark.parametrize(
     "change",
     [
         {"modele": "GPT-5.6 Luna"},

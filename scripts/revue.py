@@ -1537,6 +1537,11 @@ def _validate_sol_archive_receipt(
         raise ValueError("mode Sol archive invalide")
     _validate_sol_story_id(recu["story"], recu.get("issue"))
     _validate_sol_dossier(recu["dossier"], review_dir)
+    if _aware_timestamp(recu["date_heure"]) is None:
+        raise ValueError("date_heure Sol archive doit avoir un fuseau")
+    if _aware_timestamp(recu["reviewed_at"]) is None:
+        raise ValueError("reviewed_at Sol archive doit avoir un fuseau")
+    _sol_window_hours(recu["fenetre_heures"], 24)
     if recu["resultat"] != "APPROVE":
         raise ValueError("resultat Sol archive doit être APPROVE")
     if recu["verdict"] != "APPROVE":
