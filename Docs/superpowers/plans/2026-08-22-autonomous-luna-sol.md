@@ -18,11 +18,15 @@ le même défaut.
 4. Ajouter l’événement de livraison au registre avec `scripts/registre.py
    append`, régénérer les vues et vérifier l’autorité.
 5. Construire un prompt Sol frais et aveugle pour le diff final, obtenir son
-   APPROVE, puis sceller le reçu `ORCH-LUNA-SOL-603-final-r2`, l’ajouter à
-   `BINDING.txt`, passer la story à `DONE_WITH_EVIDENCE` et exécuter les gates
-   locaux et CI avant merge.
-6. Rejouer le mode archive sur `main` fusionné et vérifier que la story est
-   terminale.
+   APPROVE, sceller le reçu `ORCH-LUNA-SOL-603-final-r2`, l’ajouter à
+   `BINDING.txt`, puis exécuter les gates PR locaux et CI avant le merge. La
+   story reste `IN_PROGRESS` pendant cette étape.
+6. Après le merge, rejouer le mode archive sur `main` fusionné. Si ce contrôle
+   passe, créer la transaction de clôture post-merge qui passe la story à
+   `DONE_WITH_EVIDENCE` et ajoute l’événement terminal au registre; sinon
+   conserver `BLOCKED_WITH_REASON` avec la sortie du gate.
+7. Vérifier les vues régénérées et l’état terminal après cette clôture; aucune
+   transition terminale n’est faite avant le contrôle archive post-merge.
 
 ## Critère d’arrêt
 
