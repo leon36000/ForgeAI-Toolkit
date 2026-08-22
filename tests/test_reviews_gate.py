@@ -55,7 +55,7 @@ def _runner(command):
         return ""
     if command[:2] == ["git", "merge-base"]:
         return "b" * 40
-    if command[:3] == ["git", "diff", "--raw"]:
+    if command[0] == "git" and "diff" in command and "--raw" in command:
         return ""
     if command[:8] == [
         "git",

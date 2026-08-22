@@ -69,6 +69,17 @@ _SOL_CANONICAL_T3_LIMITS = (
     "permanent_deletions",
     "external_commitments",
 )
+# Freeze every Git setting that can change the textual patch or make the diff
+# plumbing fail under a caller's global configuration. The order file is a
+# tracked empty repository file, so this remains portable across Git hosts.
+_SOL_GIT_DIFF_CONFIG = (
+    "-c",
+    "core.attributesFile=",
+    "-c",
+    "diff.orderFile=scripts/coordination/__init__.py",
+    "-c",
+    "diff.suppressBlankEmpty=false",
+)
 _LUNA_CANONICAL_MODEL = "GPT-5.6 Luna"
 _LUNA_CANONICAL_VENDOR = "openai"
 _LUNA_CANONICAL_PROVIDER_ID = "GPT-5.6-Luna-Writer"
@@ -359,14 +370,7 @@ def _diff_artifact_canonique(
     return execute(
         [
             "git",
-            "-c",
-            "core.attributesFile=",
-            "-c",
-            # A tracked empty file overrides any user-supplied order file without
-            # relying on a platform-specific null device path.
-            "diff.orderFile=scripts/coordination/__init__.py",
-            "-c",
-            "diff.suppressBlankEmpty=false",
+            *_SOL_GIT_DIFF_CONFIG,
             "diff",
             "--no-ext-diff",
             "--no-textconv",
@@ -403,7 +407,16 @@ def _diff_sdd_canonique(
     _validate_git_ref(head_ref)
     execute = _default_runner if runner is None else runner
     raw = execute(
-        ["git", "diff", "--raw", "--no-renames", "--no-abbrev", "-z", f"{base_ref}...{head_ref}"]
+        [
+            "git",
+            *_SOL_GIT_DIFF_CONFIG,
+            "diff",
+            "--raw",
+            "--no-renames",
+            "--no-abbrev",
+            "-z",
+            f"{base_ref}...{head_ref}",
+        ]
     )
     fields = raw.split("\0")
     entries: list[tuple[str, str, str, str]] = []
@@ -437,7 +450,16 @@ def _diff_mission_canonique(
     _validate_git_ref(head_ref)
     execute = _default_runner if runner is None else runner
     raw = execute(
-        ["git", "diff", "--raw", "--no-renames", "--no-abbrev", "-z", f"{base_ref}...{head_ref}"]
+        [
+            "git",
+            *_SOL_GIT_DIFF_CONFIG,
+            "diff",
+            "--raw",
+            "--no-renames",
+            "--no-abbrev",
+            "-z",
+            f"{base_ref}...{head_ref}",
+        ]
     )
     fields = raw.split("\0")
     entries: list[tuple[str, str, str, str]] = []
@@ -526,7 +548,16 @@ def _diff_canonique(
     # format `--raw`. Vérifié : avec --no-abbrev, les deux environnements produisent des hash
     # SHA-1 complets (40 caractères) strictement identiques pour un même diff logique.
     raw = execute(
-        ["git", "diff", "--raw", "--no-renames", "--no-abbrev", "-z", f"{base_ref}...{head_ref}"]
+        [
+            "git",
+            *_SOL_GIT_DIFF_CONFIG,
+            "diff",
+            "--raw",
+            "--no-renames",
+            "--no-abbrev",
+            "-z",
+            f"{base_ref}...{head_ref}",
+        ]
     )
     fields = raw.split("\0")
     entries: list[tuple[str, str, str, str]] = []

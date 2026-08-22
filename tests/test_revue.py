@@ -373,6 +373,27 @@ def test_diff_artifact_sol_fige_la_configuration_git():
         assert option in commande
 
 
+def test_digests_sol_figent_la_configuration_git():
+    expected_prefix = [
+        "git",
+        "-c",
+        "core.attributesFile=",
+        "-c",
+        "diff.orderFile=scripts/coordination/__init__.py",
+        "-c",
+        "diff.suppressBlankEmpty=false",
+        "diff",
+    ]
+    for digest in (
+        revue._diff_canonique,
+        revue._diff_sdd_canonique,
+        revue._diff_mission_canonique,
+    ):
+        commands = []
+        digest("base", "HEAD", runner=lambda command: commands.append(command) or "")
+        assert commands[0][:8] == expected_prefix
+
+
 def test_sol_criteria_lit_la_section_de_la_story_figee():
     story = "# Story\n\n## Critères d’acceptation\n\n- [x] contrat\n\n## Limites\n"
 
