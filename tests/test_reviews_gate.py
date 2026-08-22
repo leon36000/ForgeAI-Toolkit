@@ -57,7 +57,16 @@ def _runner(command):
         return "b" * 40
     if command[:3] == ["git", "diff", "--raw"]:
         return ""
-    if command[:4] == ["git", "-c", "diff.suppressBlankEmpty=false", "diff"]:
+    if command[:8] == [
+        "git",
+        "-c",
+        "core.attributesFile=",
+        "-c",
+        "diff.orderFile=scripts/coordination/__init__.py",
+        "-c",
+        "diff.suppressBlankEmpty=false",
+        "diff",
+    ]:
         return ""
     if command[:3] == ["git", "rev-parse", "--verify"]:
         ref = command[-1]

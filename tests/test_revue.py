@@ -349,7 +349,16 @@ def test_diff_artifact_sol_fige_la_configuration_git():
         runner=lambda commande: commandes_recues.append(commande) or "",
     )
     commande = commandes_recues[0]
-    assert commande[:4] == ["git", "-c", "diff.suppressBlankEmpty=false", "diff"]
+    assert commande[:8] == [
+        "git",
+        "-c",
+        "core.attributesFile=",
+        "-c",
+        "diff.orderFile=scripts/coordination/__init__.py",
+        "-c",
+        "diff.suppressBlankEmpty=false",
+        "diff",
+    ]
     for option in (
         "--no-textconv",
         "--full-index",

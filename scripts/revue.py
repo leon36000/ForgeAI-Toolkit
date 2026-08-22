@@ -360,6 +360,12 @@ def _diff_artifact_canonique(
         [
             "git",
             "-c",
+            "core.attributesFile=",
+            "-c",
+            # A tracked empty file overrides any user-supplied order file without
+            # relying on a platform-specific null device path.
+            "diff.orderFile=scripts/coordination/__init__.py",
+            "-c",
             "diff.suppressBlankEmpty=false",
             "diff",
             "--no-ext-diff",
