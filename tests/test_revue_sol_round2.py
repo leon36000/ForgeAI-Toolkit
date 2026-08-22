@@ -28,6 +28,7 @@ HEAD = "c" * 40
 TREE = "d" * 40
 DIFF = hashlib.sha256(b"").hexdigest()
 SDD_DIGEST = hashlib.sha256(b"").hexdigest()
+MISSION_DIGEST = hashlib.sha256(b"").hexdigest()
 TEMPLATE_SHA = hashlib.sha256(revue.TEMPLATE.read_bytes()).hexdigest()
 NOW = datetime(2026, 8, 22, 12, 0, tzinfo=timezone.utc)
 DATE = NOW.isoformat()
@@ -70,6 +71,7 @@ def _verdict(*, reviewed_at: str = DATE, prompt_sha256: str | None = None) -> di
         "reviewed_head_tree": TREE,
         "prompt_sha256": prompt_sha256 or hashlib.sha256(b"canonical").hexdigest(),
         "sdd_diff_digest": SDD_DIGEST,
+        "mission_diff_digest": MISSION_DIGEST,
         "template_sha256": TEMPLATE_SHA,
         "verdict": "APPROVE",
         "blocking_findings": [],
@@ -100,6 +102,7 @@ def _receipt(
         "diff_digest": DIFF,
         "prompt_sha256": prompt_sha256 or hashlib.sha256(b"canonical").hexdigest(),
         "sdd_diff_digest": SDD_DIGEST,
+        "mission_diff_digest": MISSION_DIGEST,
         "template_sha256": TEMPLATE_SHA,
         "reviewers_attendus": ["GPT-5.6-Sol"],
         "codeur": ["luna_writer"],
@@ -120,6 +123,7 @@ def _state() -> dict:
         "head_tree": TREE,
         "diff_digest": DIFF,
         "sdd_diff_digest": SDD_DIGEST,
+        "mission_diff_digest": MISSION_DIGEST,
     }
 
 
@@ -319,6 +323,7 @@ def test_sol_verifier_rejects_noncanonical_active_sol_roster(monkeypatch, change
             "reviewed_head_tree": TREE,
             "prompt_sha256": hashlib.sha256(b"canonical").hexdigest(),
             "sdd_diff_digest": SDD_DIGEST,
+            "mission_diff_digest": MISSION_DIGEST,
             "template_sha256": TEMPLATE_SHA,
             "reviewed_at": DATE,
         },
@@ -369,6 +374,7 @@ def test_sol_verifier_rejects_noncanonical_active_luna_writer_roster(monkeypatch
             "reviewed_head_tree": TREE,
             "prompt_sha256": _verdict()["prompt_sha256"],
             "sdd_diff_digest": SDD_DIGEST,
+            "mission_diff_digest": MISSION_DIGEST,
             "template_sha256": TEMPLATE_SHA,
             "reviewed_at": DATE,
         },
@@ -415,6 +421,7 @@ def test_sol_verifier_rejects_duplicate_luna_writer_roster(monkeypatch):
             "reviewed_head_tree": TREE,
             "prompt_sha256": _verdict()["prompt_sha256"],
             "sdd_diff_digest": SDD_DIGEST,
+            "mission_diff_digest": MISSION_DIGEST,
             "template_sha256": TEMPLATE_SHA,
             "reviewed_at": DATE,
         },

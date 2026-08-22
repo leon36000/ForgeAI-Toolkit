@@ -40,7 +40,7 @@ Le mode actif de revue est `sol_blind`. Sol doit être un reviewer frais,
 aveugle et strictement read-only (`fresh_context`, `blind` et
 `reviewer_read_only` vrais). Le reçu doit lier la revue au diff Git exact par
 `candidate_diff_digest`, `base_commit`, `reviewed_head_commit`,
-`reviewed_head_tree`, `sdd_diff_digest` et `prompt_sha256`, avec un `reviewed_at` horodaté avec
+`reviewed_head_tree`, `sdd_diff_digest`, `mission_diff_digest` et `prompt_sha256`, avec un `reviewed_at` horodaté avec
 fuseau, `verdict: APPROVE` et `blocking_findings: []`. Il conserve aussi un
 identifiant `story` immuable, distinct du `dossier` d'artefacts, afin que la
 reconstruction du prompt soit byte-identique; le dossier doit correspondre au
@@ -48,7 +48,7 @@ répertoire réellement chargé, le provider ID Sol est exactement
 `GPT-5.6-Sol`, et la fenêtre de fraîcheur est plafonnée à 24 heures. L'identité du codeur ne
 peut pas être Sol. Un reçu est un claim : le gate le réfute contre l'état Git
 courant; `.superpowers/sdd/**` est exclu de l'artefact Sol mais lié par
-`sdd_diff_digest`; aucune preuve externe, runtime ou matérielle n'est implicite.
+`sdd_diff_digest` et `mission_diff_digest`; aucune preuve externe, runtime ou matérielle n'est implicite.
 
 In `reviews_gate.py`, receipt-mode dispatch preserves `multi_vendor`'s historical 3/3 tally; active
 `sol_blind` requires exactly one `GPT-5.6-Sol` verdict.

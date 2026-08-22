@@ -48,6 +48,9 @@ Le verdict doit contenir exactement les éléments de liaison utiles suivants :
 - `sdd_diff_digest` égal à un digest canonique séparé de tous les changements
   `.superpowers/sdd/**` exclus de l’artefact aveugle; ces journaux ne sont pas
   évalués comme code produit, mais leur état reste lié au verdict et au reçu;
+- `mission_diff_digest` égal au digest séparé du registre append-only
+  `evidence/registres/**`, exclu de l’artefact pour ne pas exposer les conclusions
+  de rounds antérieurs, mais lié au verdict et au reçu;
 - `base_commit`, `reviewed_head_commit` et `reviewed_head_tree` égaux aux
   métadonnées Git attendues;
 - `prompt_sha256` égal au hash du prompt canonique livré à Sol;
@@ -65,8 +68,9 @@ ce commit. Les artefacts de revue et les vues générées restent hors du digest
 canonique. Les journaux `.superpowers/sdd/`, qui peuvent contenir les résultats
 de revues antérieures, sont hors de l’artefact et du digest produit Sol aveugles;
 leur état est toutefois scellé par `sdd_diff_digest`, un digest séparé recopié
-dans le verdict et le reçu. Ils restent disponibles pour l’audit de coordination
-sans pouvoir changer silencieusement la preuve examinée.
+dans le verdict et le reçu. Le registre de mission append-only est soumis à la
+même frontière et à `mission_diff_digest`. Ces éléments restent disponibles
+pour l’audit de coordination sans pouvoir changer silencieusement la preuve.
 
 Le reçu porte aussi `story`, l'identifiant immuable utilisé pour reconstruire le
 prompt, séparément de `dossier`, qui désigne le répertoire des artefacts sous

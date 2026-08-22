@@ -289,6 +289,18 @@ def test_diff_sdd_canonique_lie_le_journal_exclu_separement():
     )
 
 
+def test_diff_mission_canonique_lie_le_registre_exclu_separement():
+    code = ":100644 100644 a b M\0src/a.py\0"
+    reviewed = code + ":100644 100644 d e M\0evidence/registres/mission.jsonl\0"
+    empty_mission = revue._diff_mission_canonique("base", "HEAD", runner=lambda _: code)
+    changed_mission = revue._diff_mission_canonique("base", "HEAD", runner=lambda _: reviewed)
+
+    assert empty_mission != changed_mission
+    assert revue._diff_canonique("base", "HEAD", runner=lambda _: code) == revue._diff_canonique(
+        "base", "HEAD", runner=lambda _: reviewed
+    )
+
+
 def test_diff_canonique_exclut_path_classification_markdown():
     # Même motif que ci-dessus pour le rendu Markdown (les compteurs affichés varient pour la
     # même raison — sans cette exclusion, le cycle se rouvrirait via ce second fichier généré).

@@ -10,7 +10,9 @@ Le dépôt conserve la compatibilité de ses reçus historiques multi-vendor. Po
 une PR courante, la politique active exige le mode `sol_blind`, accepté
 uniquement lorsqu’un reçu contient une preuve fraîche et liée au changement
 examiné : base commit, head commit et head tree examinés, empreinte canonique du
-diff, digest séparé `sdd_diff_digest` pour les journaux SDD exclus, empreinte du prompt et `template_sha256` recopiée dans le receipt, provider ID Sol exact `GPT-5.6-Sol`, contexte frais,
+diff, digest séparé `sdd_diff_digest` pour les journaux SDD exclus, digest
+séparé `mission_diff_digest` pour le registre append-only de mission exclu,
+empreinte du prompt et `template_sha256` recopiée dans le receipt, provider ID Sol exact `GPT-5.6-Sol`, contexte frais,
 revue aveugle, lecture seule, verdict `APPROVE` et liste d’objections
 bloquantes vide. La fenêtre de fraîcheur est plafonnée à 24 heures. Le codeur
 ne peut pas être Sol.
@@ -23,7 +25,8 @@ répertoire effectivement chargé par le vérificateur. Une preuve fraîche doit
 également résoudre son codeur vers l'identité active `luna_writer` et lier le
 `template_sha256` du template versionné. Les journaux `.superpowers/sdd/**`
 restent hors du diff produit envoyé à Sol pour éviter la fuite de verdicts
-antérieurs, mais leurs changements sont liés par `sdd_diff_digest`; un reçu
+antérieurs, mais leurs changements sont liés par `sdd_diff_digest`; le registre
+de mission est lié par `mission_diff_digest`; un reçu
 historique non couvrant le diff courant reste informatif seulement si cette
 preuve intrinsèque demeure valide.
 Cette identité est validée comme l'unique entrée canonique du roster: modèle

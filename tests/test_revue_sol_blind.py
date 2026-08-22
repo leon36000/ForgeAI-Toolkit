@@ -17,6 +17,7 @@ PROMPT_BYTES = b""
 PROMPT_SHA = ""
 DIFF_DIGEST = hashlib.sha256(b"").hexdigest()
 SDD_DIGEST = hashlib.sha256(b"").hexdigest()
+MISSION_DIGEST = hashlib.sha256(b"").hexdigest()
 TEMPLATE_SHA = hashlib.sha256(revue.TEMPLATE.read_bytes()).hexdigest()
 BASE_COMMIT = "c" * 40
 HEAD_COMMIT = "d" * 40
@@ -60,6 +61,7 @@ def _expected() -> dict[str, str]:
         "reviewed_head_tree": HEAD_TREE,
         "prompt_sha256": PROMPT_SHA,
         "sdd_diff_digest": SDD_DIGEST,
+        "mission_diff_digest": MISSION_DIGEST,
         "template_sha256": TEMPLATE_SHA,
         "reviewed_at": REVIEWED_AT,
     }
@@ -77,6 +79,7 @@ def _sol_verdict(*, prompt_sha256: str | None = None, **changes) -> dict:
         "reviewed_head_tree": HEAD_TREE,
         "prompt_sha256": prompt_sha256 or PROMPT_SHA,
         "sdd_diff_digest": SDD_DIGEST,
+        "mission_diff_digest": MISSION_DIGEST,
         "template_sha256": TEMPLATE_SHA,
         "verdict": "APPROVE",
         "blocking_findings": [],
@@ -103,6 +106,7 @@ def _receipt(*, include_blocking_findings: bool = True, **changes) -> dict:
         "reviewed_head_tree": HEAD_TREE,
         "prompt_sha256": PROMPT_SHA,
         "sdd_diff_digest": SDD_DIGEST,
+        "mission_diff_digest": MISSION_DIGEST,
         "template_sha256": TEMPLATE_SHA,
         "reviewers_attendus": ["GPT-5.6-Sol"],
         "codeur": ["luna_writer"],

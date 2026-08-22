@@ -357,6 +357,7 @@ def _diff_artifact_canonique(
             ".",
             ":(exclude)evidence/reviews/**",
             ":(exclude).superpowers/sdd/**",
+            ":(exclude)evidence/registres/**",
             ":(exclude)governance/path-classification.json",
             ":(exclude)governance/PATH-CLASSIFICATION.md",
         ]
@@ -397,6 +398,40 @@ def _diff_sdd_canonique(
     return hashlib.sha256(canonical.encode("utf-8")).hexdigest()
 
 
+def _diff_mission_canonique(
+    base_ref: str,
+    head_ref: str,
+    *,
+    runner: GitRunner | None = None,
+) -> str:
+    """Hash the excluded mission registry so prior review conclusions stay receipt-bound."""
+    _validate_git_ref(base_ref)
+    _validate_git_ref(head_ref)
+    execute = _default_runner if runner is None else runner
+    raw = execute(
+        ["git", "diff", "--raw", "--no-renames", "--no-abbrev", "-z", f"{base_ref}...{head_ref}"]
+    )
+    fields = raw.split("\0")
+    entries: list[tuple[str, str, str, str]] = []
+    index = 0
+    while index + 1 < len(fields):
+        metadata = fields[index]
+        path = fields[index + 1]
+        index += 2
+        if not metadata or not path.startswith("evidence/registres/"):
+            continue
+        parts = metadata.split()
+        if len(parts) != 5 or not parts[0].startswith(":"):
+            raise ValueError(f"sortie git --raw mission invalide: {metadata!r}")
+        entries.append((parts[1], parts[2], parts[3], path))
+    entries.sort()
+    canonical = "".join(
+        f"{mode}\0{base_sha}\0{head_sha}\0{path}\n"
+        for mode, base_sha, head_sha, path in entries
+    )
+    return hashlib.sha256(canonical.encode("utf-8")).hexdigest()
+
+
 def _diff_canonique(
     base_ref: str,
     head_ref: str,
@@ -409,6 +444,8 @@ def _diff_canonique(
     # coordination; les exclure empêche une revue Sol aveugle de recevoir des verdicts
     # antérieurs par transitivité. Ils restent versionnés pour l'audit, mais ne sont pas
     # des changements produit évalués par le prompt courant.
+    # Le registre append-only evidence/registres/mission.jsonl porte également des conclusions
+    # de rounds antérieurs; il est hors du prompt courant et lié par mission_diff_digest.
     #
     # #504 : governance/path-classification.json (+ son rendu .md) trace individuellement
     # chaque fichier sous evidence/reviews/**, RECU.json compris — le régénérer APRÈS avoir
@@ -423,6 +460,7 @@ def _diff_canonique(
     exclude: tuple[str, ...] = (
         "evidence/reviews/",
         ".superpowers/sdd/",
+        "evidence/registres/",
         "governance/path-classification.json",
         "governance/PATH-CLASSIFICATION.md",
     ),
@@ -504,6 +542,7 @@ def _etat_git_reel(
         "head_tree": execute(["git", "rev-parse", f"{head_ref}^{{tree}}"]).strip(),
         "diff_digest": _diff_canonique(base_ref, head_ref, runner=execute),
         "sdd_diff_digest": _diff_sdd_canonique(base_ref, head_ref, runner=execute),
+        "mission_diff_digest": _diff_mission_canonique(base_ref, head_ref, runner=execute),
     }
 
 
@@ -554,9 +593,8 @@ def build_prompt(story_id: str, criteres: str, artefact_path: str, artefact: str
             "reviewed_head_commit": git_state["head_commit"],
             "reviewed_head_tree": git_state["head_tree"],
             "candidate_diff_digest": git_state["diff_digest"],
-            "sdd_diff_digest": _diff_sdd_canonique(
-                base_ref, head_ref, runner=runner
-            ),
+            "sdd_diff_digest": git_state["sdd_diff_digest"],
+            "mission_diff_digest": git_state["mission_diff_digest"],
             "template_sha256": template_sha256,
         }
         if expected is not None:
@@ -670,7 +708,9 @@ def _sol_prompt_metadata(prompt: bytes) -> dict:
         if field not in metadata:
             raise ValueError(f"métadonnée Git absente du prompt Sol : {field}")
         _validate_object_id(metadata[field], field)
-    for field in ("candidate_diff_digest", "sdd_diff_digest", "template_sha256"):
+    for field in (
+        "candidate_diff_digest", "sdd_diff_digest", "mission_diff_digest", "template_sha256"
+    ):
         if field not in metadata:
             raise ValueError(f"métadonnée Git absente du prompt Sol : {field}")
         _validate_digest(metadata[field], field)
@@ -908,7 +948,7 @@ def _sol_expected_from_git(
     required = (
         "story", "base_commit", "head_commit", "head_tree", "reviewed_head_commit",
         "reviewed_head_tree", "candidate_diff_digest", "diff_digest", "prompt_sha256",
-        "sdd_diff_digest", "template_sha256", "reviewed_at",
+        "sdd_diff_digest", "mission_diff_digest", "template_sha256", "reviewed_at",
     )
     for field in required:
         if field not in recu:
@@ -917,7 +957,8 @@ def _sol_expected_from_git(
     for field in ("base_commit", "head_commit", "head_tree", "reviewed_head_commit", "reviewed_head_tree"):
         _validate_object_id(recu[field], field)
     for field in (
-        "candidate_diff_digest", "diff_digest", "sdd_diff_digest", "prompt_sha256"
+        "candidate_diff_digest", "diff_digest", "sdd_diff_digest", "mission_diff_digest",
+        "prompt_sha256"
     ):
         _validate_digest(recu[field], field)
     execute = _default_runner if runner is None else runner
@@ -941,6 +982,11 @@ def _sol_expected_from_git(
     )
     if recu["sdd_diff_digest"] != canonical_sdd_digest:
         raise ValueError("sdd_diff_digest différent du journal SDD Git examiné")
+    canonical_mission_digest = _diff_mission_canonique(
+        base_commit, reviewed_head_commit, runner=execute
+    )
+    if recu["mission_diff_digest"] != canonical_mission_digest:
+        raise ValueError("mission_diff_digest différent du registre de mission Git examiné")
     if len(verdicts) != 1 or not isinstance(verdicts[0], dict):
         raise ValueError("sol_blind exige exactement un verdict objet")
     canonical_prompt, canonical_prompt_sha = _canonical_sol_prompt(
@@ -979,11 +1025,15 @@ def _sol_expected_from_git(
         current_sdd_digest = _validate_digest(
             etat_git.get("sdd_diff_digest"), "sdd_diff_digest courant"
         )
+        current_mission_digest = _validate_digest(
+            etat_git.get("mission_diff_digest"), "mission_diff_digest courant"
+        )
         covers_current = (
             base_commit == current_base
             and canonical_digest == current_digest
             and recu["candidate_diff_digest"] == current_digest
             and recu["sdd_diff_digest"] == current_sdd_digest
+            and recu["mission_diff_digest"] == current_mission_digest
         )
         # current_head/current_tree are resolved by _etat_git_reel; retaining the explicit
         # shape checks here prevents a malformed injected state from becoming an expectation.
@@ -1005,6 +1055,7 @@ def _sol_expected_from_git(
         "reviewed_head_tree": reviewed_head_tree,
         "prompt_sha256": prompt_sha,
         "sdd_diff_digest": canonical_sdd_digest,
+        "mission_diff_digest": canonical_mission_digest,
         "template_sha256": template_sha,
         "reviewed_at": reviewed_at,
         "_covers_current": covers_current,
@@ -1024,10 +1075,16 @@ def _sol_receipt_binding_matches_current(recu: object, etat_git: object) -> bool
         receipt_sdd_digest = _validate_digest(
             recu.get("sdd_diff_digest"), "sdd_diff_digest"
         )
+        receipt_mission_digest = _validate_digest(
+            recu.get("mission_diff_digest"), "mission_diff_digest"
+        )
         current_base = _validate_object_id(etat_git.get("base_commit"), "base_commit courant")
         current_digest = _validate_digest(etat_git.get("diff_digest"), "diff_digest courant")
         current_sdd_digest = _validate_digest(
             etat_git.get("sdd_diff_digest"), "sdd_diff_digest courant"
+        )
+        current_mission_digest = _validate_digest(
+            etat_git.get("mission_diff_digest"), "mission_diff_digest courant"
         )
     except ValueError:
         return False
@@ -1036,6 +1093,7 @@ def _sol_receipt_binding_matches_current(recu: object, etat_git: object) -> bool
         and receipt_digest == current_digest
         and candidate_digest == current_digest
         and receipt_sdd_digest == current_sdd_digest
+        and receipt_mission_digest == current_mission_digest
     )
 
 
@@ -1115,7 +1173,8 @@ def tally_sol_blind(
         return {"result": "INVALIDE", "reason": "métadonnées attendues invalides"}
     expected_fields = (
         "candidate_diff_digest", "diff_digest", "base_commit", "reviewed_head_commit",
-        "reviewed_head_tree", "prompt_sha256", "sdd_diff_digest", "template_sha256",
+        "reviewed_head_tree", "prompt_sha256", "sdd_diff_digest", "mission_diff_digest",
+        "template_sha256",
         "reviewed_at",
     )
     missing = [field for field in expected_fields if field not in expected]
@@ -1125,7 +1184,8 @@ def tally_sol_blind(
         for field in ("base_commit", "reviewed_head_commit", "reviewed_head_tree"):
             _validate_object_id(expected[field], field)
         for field in (
-            "candidate_diff_digest", "diff_digest", "sdd_diff_digest", "prompt_sha256",
+            "candidate_diff_digest", "diff_digest", "sdd_diff_digest", "mission_diff_digest",
+            "prompt_sha256",
             "template_sha256",
         ):
             _validate_digest(expected[field], field)
@@ -1140,13 +1200,15 @@ def tally_sol_blind(
         _validate_digest(verdict.get("candidate_diff_digest"), "candidate_diff_digest verdict")
         for field in ("base_commit", "reviewed_head_commit", "reviewed_head_tree"):
             _validate_object_id(verdict.get(field), f"{field} verdict")
-        for field in ("prompt_sha256", "sdd_diff_digest", "template_sha256"):
+        for field in (
+            "prompt_sha256", "sdd_diff_digest", "mission_diff_digest", "template_sha256"
+        ):
             _validate_digest(verdict.get(field), f"{field} verdict")
     except ValueError as error:
         return {"result": "INVALIDE", "reason": str(error)}
     for field in (
         "base_commit", "reviewed_head_commit", "reviewed_head_tree",
-        "prompt_sha256", "sdd_diff_digest", "template_sha256",
+        "prompt_sha256", "sdd_diff_digest", "mission_diff_digest", "template_sha256",
     ):
         if verdict.get(field) != expected[field]:
             return {"result": "INVALIDE", "reason": f"{field} différent des métadonnées attendues"}
@@ -1165,6 +1227,7 @@ def tally_sol_blind(
         "reviewer_model": reviewer_model,
         "prompt_sha256": expected["prompt_sha256"],
         "sdd_diff_digest": expected["sdd_diff_digest"],
+        "mission_diff_digest": expected["mission_diff_digest"],
         "template_sha256": expected["template_sha256"],
         "reviewed_at": expected["reviewed_at"],
         "blocking_findings": [],
@@ -1323,7 +1386,8 @@ def _verifier_recu_sol_blind(
     required = (
         "schema", "mode", "story", "dossier", "issue", "round", "base_commit", "head_commit",
         "head_tree", "diff_digest", "candidate_diff_digest", "reviewed_head_commit",
-        "reviewed_head_tree", "prompt_sha256", "sdd_diff_digest", "template_sha256",
+        "reviewed_head_tree", "prompt_sha256", "sdd_diff_digest", "mission_diff_digest",
+        "template_sha256",
         "reviewers_attendus",
         "codeur", "resultat",
         "reviewed_at", "verdict", "reviewer_model", "date_heure",
@@ -1350,6 +1414,9 @@ def _verifier_recu_sol_blind(
         current_sdd_digest = _validate_digest(
             etat_git.get("sdd_diff_digest"), "sdd_diff_digest courant"
         )
+        current_mission_digest = _validate_digest(
+            etat_git.get("mission_diff_digest"), "mission_diff_digest courant"
+        )
     except ValueError as error:
         return {"result": "INVALIDE", "reason": str(error)}
     if recu["base_commit"] != current_base:
@@ -1360,8 +1427,11 @@ def _verifier_recu_sol_blind(
         return {"result": "INVALIDE", "reason": "candidate_diff_digest différent du diff courant"}
     if recu["sdd_diff_digest"] != current_sdd_digest:
         return {"result": "INVALIDE", "reason": "sdd_diff_digest différent du journal SDD courant"}
+    if recu["mission_diff_digest"] != current_mission_digest:
+        return {"result": "INVALIDE", "reason": "mission_diff_digest différent du registre courant"}
     try:
         _validate_digest(recu["sdd_diff_digest"], "sdd_diff_digest")
+        _validate_digest(recu["mission_diff_digest"], "mission_diff_digest")
         _validate_digest(recu["template_sha256"], "template_sha256")
     except ValueError as error:
         return {"result": "INVALIDE", "reason": str(error)}
@@ -1395,6 +1465,8 @@ def _verifier_recu_sol_blind(
         return {"result": "INVALIDE", "reason": "template_sha256 du reçu contradictoire"}
     if recu["sdd_diff_digest"] != tally_result.get("sdd_diff_digest"):
         return {"result": "INVALIDE", "reason": "sdd_diff_digest du reçu contradictoire"}
+    if recu["mission_diff_digest"] != tally_result.get("mission_diff_digest"):
+        return {"result": "INVALIDE", "reason": "mission_diff_digest du reçu contradictoire"}
     if recu["resultat"] != tally_result["result"]:
         return {"result": "INVALIDE", "reason": "réponse contradictoire"}
     if recu["blocking_findings"] != []:
@@ -1433,7 +1505,8 @@ def _validate_sol_archive_receipt(
         "schema", "mode", "story", "dossier", "issue", "round", "base_commit",
         "head_commit", "head_tree", "candidate_diff_digest", "diff_digest",
         "reviewed_head_commit", "reviewed_head_tree", "prompt_sha256",
-        "sdd_diff_digest", "template_sha256", "reviewers_attendus", "codeur", "resultat",
+        "sdd_diff_digest", "mission_diff_digest", "template_sha256", "reviewers_attendus",
+        "codeur", "resultat",
         "reviewed_at", "verdict",
         "reviewer_model", "date_heure", "fenetre_heures", "blocking_findings",
     )
@@ -1469,6 +1542,7 @@ def _validate_sol_archive_receipt(
             "blocking_findings",
             "reviewed_at",
             "sdd_diff_digest",
+            "mission_diff_digest",
             "template_sha256",
         ):
             if recu[field] != verdict.get(field):
@@ -1496,7 +1570,8 @@ def _validate_sol_archive_receipt(
     for field in ("base_commit", "head_commit", "reviewed_head_commit"):
         _resolve_commit(execute, recu[field])
     for field in (
-        "candidate_diff_digest", "diff_digest", "sdd_diff_digest", "prompt_sha256",
+        "candidate_diff_digest", "diff_digest", "sdd_diff_digest", "mission_diff_digest",
+        "prompt_sha256",
         "template_sha256",
     ):
         _validate_digest(recu[field], field)
@@ -1608,6 +1683,7 @@ def _cmd_recu(args) -> int:
     if mode == "sol_blind":
         template_sha256 = None
         sdd_diff_digest = None
+        mission_diff_digest = None
         story = getattr(args, "story", None)
         if not isinstance(story, str) or not story.strip():
             raise ValueError("--story est obligatoire avec --mode sol_blind")
@@ -1631,6 +1707,7 @@ def _cmd_recu(args) -> int:
             prompt_metadata = _sol_prompt_metadata(canonical_prompt)
             template_sha256 = prompt_metadata["template_sha256"]
             sdd_diff_digest = prompt_metadata["sdd_diff_digest"]
+            mission_diff_digest = prompt_metadata["mission_diff_digest"]
             expected = {
                 **etat,
                 "candidate_diff_digest": etat["diff_digest"],
@@ -1638,6 +1715,7 @@ def _cmd_recu(args) -> int:
                 "reviewed_head_tree": etat["head_tree"],
                 "prompt_sha256": prompt_sha,
                 "sdd_diff_digest": sdd_diff_digest,
+                "mission_diff_digest": mission_diff_digest,
                 "template_sha256": template_sha256,
                 "reviewed_at": verdicts[0].get("reviewed_at"),
             }
@@ -1664,6 +1742,7 @@ def _cmd_recu(args) -> int:
             "reviewer_model": reviewer.get("reviewer_model"),
             "template_sha256": template_sha256,
             "sdd_diff_digest": sdd_diff_digest,
+            "mission_diff_digest": mission_diff_digest,
             "blocking_findings": reviewer.get("blocking_findings", []),
             "date_heure": datetime.now().astimezone().isoformat(),
             "fenetre_heures": args.fenetre_heures,

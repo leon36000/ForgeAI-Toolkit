@@ -78,6 +78,7 @@ SOL_TEMPLATE_SHA = hashlib.sha256(
     gate._load_revue().TEMPLATE.read_bytes()
 ).hexdigest()
 SOL_SDD_DIGEST = hashlib.sha256(b"").hexdigest()
+SOL_MISSION_DIGEST = hashlib.sha256(b"").hexdigest()
 
 
 def _receipt():
@@ -91,6 +92,7 @@ def _receipt():
         "head_tree": "d" * 40,
         "diff_digest": __import__("hashlib").sha256(b"").hexdigest(),
         "sdd_diff_digest": SOL_SDD_DIGEST,
+        "mission_diff_digest": SOL_MISSION_DIGEST,
         "prompt_sha256": SHA,
         "template_sha256": SOL_TEMPLATE_SHA,
         "reviewers_attendus": ["deepseek", "gemini_flash", "mimo"],
@@ -120,6 +122,7 @@ def _make_sol_blind_gate_review(
                 "candidate_diff_digest": hashlib.sha256(b"").hexdigest(),
                 "diff_digest": hashlib.sha256(b"").hexdigest(),
                 "sdd_diff_digest": SOL_SDD_DIGEST,
+                "mission_diff_digest": SOL_MISSION_DIGEST,
                 "base_commit": "b" * 40,
                 "reviewed_head_commit": "c" * 40,
                 "reviewed_head_tree": "d" * 40,
@@ -139,6 +142,7 @@ def _make_sol_blind_gate_review(
         "candidate_diff_digest": hashlib.sha256(b"").hexdigest(),
         "diff_digest": hashlib.sha256(b"").hexdigest(),
         "sdd_diff_digest": SOL_SDD_DIGEST,
+        "mission_diff_digest": SOL_MISSION_DIGEST,
         "base_commit": "b" * 40,
         "head_commit": "c" * 40,
         "head_tree": "d" * 40,
@@ -441,6 +445,7 @@ def test_mode_pr_historical_invalid_sol_binding_is_informational(tmp_path):
                 "diff_digest": hashlib.sha256(b"").hexdigest(),
                 "base_commit": "a" * 40,
                 "sdd_diff_digest": SOL_SDD_DIGEST,
+                "mission_diff_digest": SOL_MISSION_DIGEST,
                 "reviewed_head_commit": "3" * 40,
                 "reviewed_head_tree": "d" * 40,
                 "prompt_sha256": SOL_SHA,
@@ -463,6 +468,7 @@ def test_mode_pr_historical_invalid_sol_binding_is_informational(tmp_path):
                 "diff_digest": hashlib.sha256(b"").hexdigest(),
                 "base_commit": "a" * 40,
                 "sdd_diff_digest": SOL_SDD_DIGEST,
+                "mission_diff_digest": SOL_MISSION_DIGEST,
                 "head_commit": "c" * 40,
                 "head_tree": "d" * 40,
                 "reviewed_head_commit": "3" * 40,
@@ -502,6 +508,7 @@ def test_mode_pr_historical_invalid_sol_binding_is_informational(tmp_path):
                 "reviewed_head_tree": "d" * 40,
                 "prompt_sha256": SOL_SHA,
                 "sdd_diff_digest": SOL_SDD_DIGEST,
+                "mission_diff_digest": SOL_MISSION_DIGEST,
                 "template_sha256": SOL_TEMPLATE_SHA,
                 "verdict": "APPROVE",
                 "blocking_findings": [],
