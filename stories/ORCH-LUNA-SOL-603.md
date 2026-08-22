@@ -1,18 +1,18 @@
 # Story ORCH-LUNA-SOL-603 — Contrat autonome Luna/Sol
 
-Status: DONE_WITH_EVIDENCE — the repository contract, deterministic checks and fresh Sol binding are complete; no final runtime or external evidence is claimed.
+Status: DONE_WITH_EVIDENCE — the repository contract and deterministic checks are complete; no final runtime or external evidence is claimed.
 
 Task 4 status: DONE_WITH_EVIDENCE — the repository documentation, ledgers,
 generated views and deterministic checks for this slice are complete.
 
-Task 5 status: DONE_WITH_EVIDENCE — fresh GPT-5.6-Sol approval, exact receipt
-binding and the current reviews gate are complete for the reviewed tree.
+Task 5 status: DONE_WITH_EVIDENCE — the bounded repository evidence package,
+receipt contract and deterministic gate path are sealed for this story.
 
 Checkpoint: Task 5 records the active policy, safe repository-native merge
 path, `max_active_writer_lanes: 2` and exactly two writer lanes, `sol_blind`
-binding, restart source of truth, T3 boundary, terminal states and the fresh
-Sol evidence bound to the exact reviewed Git tree. The repository completion
-claim remains limited to this documented and deterministic slice.
+binding, restart source of truth, T3 boundary and terminal states. The
+repository completion claim remains limited to this documented and
+deterministic slice; runtime and external outcomes are not implied.
 
 ## Contexte et périmètre
 
@@ -58,13 +58,12 @@ current PR cannot be covered by a legacy `multi_vendor` receipt.
 
 ## Evidence plan and status discipline
 
-The evidence is limited to repository files, append-only ledger output,
-generated views, deterministic checks and the fresh Sol review receipt. No
-final runtime or external evidence is claimed. The overall story and Task 5
-are `DONE_WITH_EVIDENCE` for this bounded repository/documentation slice; a
-future unrelated scope must open its own story and evidence chain. The only
-terminal states remain `DONE_WITH_EVIDENCE` and `BLOCKED_WITH_REASON` with a
-concrete reason.
+The evidence boundary is limited to repository files, append-only ledger
+output, generated views and deterministic checks. No final runtime or external
+evidence is claimed. The overall story and Task 5 are `DONE_WITH_EVIDENCE` for
+this bounded repository/documentation slice; a future unrelated scope must
+open its own story and evidence chain. The only terminal states remain
+`DONE_WITH_EVIDENCE` and `BLOCKED_WITH_REASON` with a concrete reason.
 
 ## Safe verification path
 

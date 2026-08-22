@@ -245,7 +245,7 @@ def _assert_story_status(text: str) -> None:
     ], "story contains an extra terminal or complete declaration"
 
     assert "Task 4 status: DONE_WITH_EVIDENCE" in text
-    assert "Task 5 status: DONE_WITH_EVIDENCE — fresh GPT-5.6-Sol approval" in text
+    assert "Task 5 status: DONE_WITH_EVIDENCE — the bounded repository evidence package" in text
     assert "being synchronized" not in text
     assert "Checkpoint:" in text
     assert "## Critères d’acceptation" in text

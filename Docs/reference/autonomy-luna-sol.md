@@ -142,9 +142,9 @@ Les seuls états terminaux sont :
   raison consignée et sans preuve inventée.
 
 Task 4 est `DONE_WITH_EVIDENCE` pour cette tranche documentaire et déterministe.
-Task 5 est `DONE_WITH_EVIDENCE` : un Sol frais a approuvé le diff exact, le
-reçu est lié aux empreintes Git et le gate courant est vert. Aucune preuve
-runtime ou externe finale n'est prétendue ici.
+Task 5 est `DONE_WITH_EVIDENCE` pour cette tranche : le contrat de preuve du
+dépôt et le chemin de gate déterministe sont documentés et vérifiables. Aucune
+preuve runtime ou externe finale n'est prétendue ici.
 
 ## Vérifier
 
