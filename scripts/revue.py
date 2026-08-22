@@ -491,12 +491,14 @@ def _sol_expected_from_receipt_shape(
                 "template_sha256",
             )
         },
+        "prompt_sha256": "sha256 du prompt reçu",
+        "verdict": "APPROVE ou REJECT",
+        "blocking_findings": [],
+        "reviewed_at": "timestamp ISO-8601 avec fuseau",
     }
     for field, expected_value in response_expectations.items():
         if response_schema.get(field) != expected_value:
             raise ValueError(f"{field} différent des métadonnées du schéma Sol")
-    if not isinstance(response_schema.get("prompt_sha256"), str):
-        raise ValueError("prompt_sha256 absent du schéma de réponse Sol")
     story_marker = f"STORY : {recu['story']}\n"
     if story_marker not in prompt_text:
         raise ValueError("story absente du prompt Sol")
@@ -1199,6 +1201,8 @@ def _validate_sol_temporal_claim(
         raise ValueError("reviewed_at postérieur à date_heure")
     if verdict_date is not None and verdict_date < receipt_reviewed_at:
         raise ValueError("date_heure du verdict antérieure à reviewed_at")
+    if verdict_date is not None and verdict_date > receipt_time:
+        raise ValueError("date_heure du verdict postérieure à date_heure")
     if receipt_time > validation_time:
         raise ValueError("date_heure du reçu futur")
     if receipt_reviewed_at > validation_time:

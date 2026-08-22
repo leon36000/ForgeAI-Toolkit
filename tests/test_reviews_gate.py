@@ -865,6 +865,86 @@ def test_mode_pr_rejette_schema_prompt_contradictoire_avant_acces_git(tmp_path):
     assert not any(command[:2] == ["git", "merge-base"] for command in commands)
 
 
+def test_mode_pr_rejette_champ_schema_prompt_absent_avant_acces_git(tmp_path):
+    root = tmp_path / "reviews"
+    directory = _make_sol_blind_gate_review(root)
+    prompt_path = directory / "SOL-PROMPT.md"
+    prompt = prompt_path.read_bytes()
+    marker = "conforme à ce\nschéma :\n".encode("utf-8")
+    before, separator, after = prompt.partition(marker)
+    assert separator
+    schema_line, newline, tail = after.partition(b"\n")
+    schema = json.loads(schema_line.decode("utf-8"))
+    schema.pop("verdict")
+    prompt_path.write_bytes(
+        before
+        + separator
+        + json.dumps(schema, ensure_ascii=False, sort_keys=True).encode("utf-8")
+        + newline
+        + tail
+    )
+    prompt_sha = hashlib.sha256(prompt_path.read_bytes()).hexdigest()
+    receipt_path = directory / "RECU.json"
+    receipt = json.loads(receipt_path.read_text(encoding="utf-8"))
+    receipt["prompt_sha256"] = prompt_sha
+    receipt_path.write_text(json.dumps(receipt), encoding="utf-8")
+    verdict_path = next(directory.glob("*.verdict.json"))
+    verdict = json.loads(verdict_path.read_text(encoding="utf-8"))
+    verdict["prompt_sha256"] = prompt_sha
+    verdict_path.write_text(json.dumps(verdict), encoding="utf-8")
+    commands = []
+
+    def recording_runner(command):
+        commands.append(command)
+        return _runner(command)
+
+    ok, report = gate.check(
+        _manifest(tmp_path, [directory.name]),
+        root,
+        exiger_recu_courant=True,
+        base_ref="origin/main",
+        expected_issue=603,
+        runner=recording_runner,
+        now=SOL_NOW,
+    )
+
+    assert ok is False
+    assert any("verdict différent des métadonnées du schéma" in line for line in report)
+    assert not any(command[:2] == ["git", "merge-base"] for command in commands)
+
+
+def test_mode_pr_rejette_verdict_post_scellement_avant_acces_git(tmp_path):
+    root = tmp_path / "reviews"
+    directory = _make_sol_blind_gate_review(root)
+    receipt_path = directory / "RECU.json"
+    receipt = json.loads(receipt_path.read_text(encoding="utf-8"))
+    receipt["date_heure"] = "2026-08-22T12:15:00+00:00"
+    receipt_path.write_text(json.dumps(receipt), encoding="utf-8")
+    verdict_path = next(directory.glob("*.verdict.json"))
+    verdict = json.loads(verdict_path.read_text(encoding="utf-8"))
+    verdict["date_heure"] = "2026-08-22T12:30:00+00:00"
+    verdict_path.write_text(json.dumps(verdict), encoding="utf-8")
+    commands = []
+
+    def recording_runner(command):
+        commands.append(command)
+        return _runner(command)
+
+    ok, report = gate.check(
+        _manifest(tmp_path, [directory.name]),
+        root,
+        exiger_recu_courant=True,
+        base_ref="origin/main",
+        expected_issue=603,
+        runner=recording_runner,
+        now=SOL_NOW,
+    )
+
+    assert ok is False
+    assert any("postérieure à date_heure" in line for line in report)
+    assert not any(command[:2] == ["git", "merge-base"] for command in commands)
+
+
 def test_mode_pr_rejette_identite_sol_noncanonique_avant_acces_git(tmp_path):
     root = tmp_path / "reviews"
     directory = _make_sol_blind_gate_review(root)
