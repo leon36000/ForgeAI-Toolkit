@@ -8992,8 +8992,8 @@
         }
       ],
       "rule_id": "evidence-reviews-root",
-      "sha256": "0fd2c02d9d11a6305c75b16d79cdbe86d8de78e31977c739d984e9e2b4a09a34",
-      "size": 3003,
+      "sha256": "e988fa2cb7d386c804d5b6b39b9215e17cd6896290ec0888725875082114c970",
+      "size": 3031,
       "target_path": null,
       "type": "text"
     },
@@ -15892,6 +15892,19 @@
       "size": 1944,
       "target_path": null,
       "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/ORCH-LUNA-SOL-603-phaseA-r5/RECU.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": null,
+      "size": null,
+      "target_path": null,
+      "type": null
     },
     {
       "class": "EVIDENCE",
@@ -48249,6 +48262,13 @@
           "candidate": "stories/ORCH-LUNA-SOL-603.md",
           "line": 4,
           "referrer": "evidence/reviews/ORCH-LUNA-SOL-603-phaseA-r2/RECU.json",
+          "resolved": "stories/ORCH-LUNA-SOL-603.md",
+          "severity": "hard"
+        },
+        {
+          "candidate": "stories/ORCH-LUNA-SOL-603.md",
+          "line": 4,
+          "referrer": "evidence/reviews/ORCH-LUNA-SOL-603-phaseA-r5/RECU.json",
           "resolved": "stories/ORCH-LUNA-SOL-603.md",
           "severity": "hard"
         },
@@ -94673,6 +94693,11 @@
         "candidate": "recu-revue/2",
         "line": 2,
         "referrer": "evidence/reviews/ORCH-LUNA-SOL-603-phaseA-r2/RECU.json"
+      },
+      {
+        "candidate": "recu-revue/2",
+        "line": 2,
+        "referrer": "evidence/reviews/ORCH-LUNA-SOL-603-phaseA-r5/RECU.json"
       },
       {
         "candidate": "recu-revue/2",
@@ -150802,6 +150827,13 @@
         "severity": "hard"
       },
       {
+        "candidate": "ORCH-LUNA-SOL-603-phaseA-r5",
+        "line": 220,
+        "referrer": "evidence/reviews/BINDING.txt",
+        "resolved": "evidence/reviews/ORCH-LUNA-SOL-603-phaseA-r5",
+        "severity": "hard"
+      },
+      {
         "candidate": "scripts/gate_docs.py",
         "line": 11,
         "referrer": "sonar-project.properties",
@@ -160872,6 +160904,13 @@
         "line": 13,
         "referrer": "evidence/reviews/ORCH-LUNA-SOL-603-phaseA-r4/sol.verdict.json",
         "resolved": "scripts/reviews_gate.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "stories/ORCH-LUNA-SOL-603.md",
+        "line": 4,
+        "referrer": "evidence/reviews/ORCH-LUNA-SOL-603-phaseA-r5/RECU.json",
+        "resolved": "stories/ORCH-LUNA-SOL-603.md",
         "severity": "hard"
       },
       {
@@ -182211,7 +182250,7 @@
     "by_class": {
       "ARCHIVE": 44,
       "DOCS": 20,
-      "EVIDENCE": 1677,
+      "EVIDENCE": 1678,
       "GENERATED": 5,
       "GOVERNANCE": 217,
       "PRODUCT": 113,
@@ -182230,7 +182269,7 @@
       "evidence-audit-output-root": 18,
       "evidence-dedup-root": 2,
       "evidence-registres-root": 35,
-      "evidence-reviews-root": 1622,
+      "evidence-reviews-root": 1623,
       "generated-authority-map": 1,
       "generated-path-classification-json": 1,
       "generated-path-classification-markdown": 1,
@@ -182267,11 +182306,11 @@
       "working-sandbox-readme": 1
     },
     "case_collisions_total": 0,
-    "dangling_references_total": 17502,
+    "dangling_references_total": 17503,
     "generated_total": 9,
-    "load_bearing_total": 2157,
+    "load_bearing_total": 2158,
     "portability_violations_total": 0,
-    "tracked_total": 2310,
+    "tracked_total": 2311,
     "unclassified_total": 0,
     "unicode_anomalies_total": 0
   },
