@@ -17,9 +17,10 @@ le même défaut.
    la spécification de conception.
 4. Ajouter l’événement de livraison au registre avec `scripts/registre.py
    append`, régénérer les vues et vérifier l’autorité.
-5. Construire un prompt Sol frais et aveugle pour le diff final, sceller le
-   reçu `ORCH-LUNA-SOL-603-final-r1`, l’ajouter à `BINDING.txt`, puis exécuter
-   les gates locaux et CI avant merge.
+5. Construire un prompt Sol frais et aveugle pour le diff final, obtenir son
+   APPROVE, puis sceller le reçu `ORCH-LUNA-SOL-603-final-r2`, l’ajouter à
+   `BINDING.txt`, passer la story à `DONE_WITH_EVIDENCE` et exécuter les gates
+   locaux et CI avant merge.
 6. Rejouer le mode archive sur `main` fusionné et vérifier que la story est
    terminale.
 
@@ -28,3 +29,10 @@ le même défaut.
 Le travail n’est terminé que si le gate archive, le gate PR, les tests complets,
 les registres et les vues générées passent, et si la preuve Sol finale est
 liée au diff exact. Sinon la story reste bloquée avec une raison vérifiable.
+
+## Itération de revue
+
+Le premier prompt final a été rejeté parce que le statut terminal précédait le
+scellement visible de la preuve. Ce rejet est conservé hors liaison dans
+`ORCH-LUNA-SOL-603-final-r1`; la story a été remise explicitement en
+`IN_PROGRESS` avant le round final.

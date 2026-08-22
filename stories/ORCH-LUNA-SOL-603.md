@@ -1,7 +1,7 @@
 # Story ORCH-LUNA-SOL-603 — contrat autonome Luna/Sol
 
-Status: DONE_WITH_EVIDENCE — contrat, preuve Sol finale, documentation,
-registres et archive vérifiés.
+Status: IN_PROGRESS — implémentation finale prête; scellement de la preuve Sol
+et passage à l’état terminal après la revue aveugle.
 
 ## Contexte et périmètre
 
@@ -18,14 +18,14 @@ les archives uniquement.
   exige un unique reviewer Sol pour `sol_blind`.
 - [x] Le reçu Sol lie le diff Git, l’arbre, le prompt, les journaux exclus et
   les limites de fraîcheur sans dépendre de la configuration locale de Git.
-- [x] La documentation, les registres, les vues finales et la preuve Sol
-  finale sont scellés dans la phase de livraison bornée. La preuve est
-  `evidence/reviews/ORCH-LUNA-SOL-603-final-r1/RECU.json` et le manifeste actif
-  la lie; les anciens reçus non ancêtres restent conservés et sont listés dans
-  `evidence/reviews/ARCHIVE-UNMERGED.txt`.
-- [x] Le gate PR, le gate archive sur `main` fusionné et la suite complète de
-  tests passent; aucune réussite runtime, matérielle, réseau ou externe n’est
-  revendiquée.
+- [x] La documentation, les registres, les vues et le nettoyage contrôlé de
+  l’archive sont prêts; les anciens reçus non ancêtres restent conservés et
+  sont listés dans `evidence/reviews/ARCHIVE-UNMERGED.txt`.
+- [ ] Le reçu Sol final est scellé dans
+  `evidence/reviews/ORCH-LUNA-SOL-603-final-r2/RECU.json`, lié au manifeste
+  actif, puis le gate PR et le gate archive sur `main` fusionné passent.
+- [ ] La story passe à `DONE_WITH_EVIDENCE` uniquement après ces preuves;
+  aucune réussite runtime, matérielle, réseau ou externe n’est revendiquée.
 
 ## Limites
 

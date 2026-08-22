@@ -3862,8 +3862,8 @@
         }
       ],
       "rule_id": "docs-user",
-      "sha256": "1233e0c4bebbf962bae15c23814771f35327b1cc00aad75ccd347256d39e5778",
-      "size": 4432,
+      "sha256": "b77db8309f8dba70cb7f63c1bdf84eb1cd61fbad9a0e68f2ab54f7ac9f678b17",
+      "size": 4529,
       "target_path": null,
       "type": "text"
     },
@@ -4246,6 +4246,32 @@
       "rule_id": "docs-user",
       "sha256": "c483128e805cccc850c5160968cebc519aba1da94210d6ed3e9fd325f7e42f01",
       "size": 2305,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "DOCS",
+      "generated": false,
+      "load_bearing": false,
+      "owner": "docs-utilisateur",
+      "path": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+      "referenced_by": [],
+      "rule_id": "docs-user",
+      "sha256": "8c3d4ee866ab45ed57e22d19c7242c2d24196ed6bd6b41907fc03c247123aaa4",
+      "size": 1824,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "DOCS",
+      "generated": false,
+      "load_bearing": false,
+      "owner": "docs-utilisateur",
+      "path": "Docs/superpowers/specs/2026-08-22-autonomous-luna-sol-design.md",
+      "referenced_by": [],
+      "rule_id": "docs-user",
+      "sha256": "67ba2bfe5ca6616b002baff7909f059e04c1f03a7802112847979568a9292b20",
+      "size": 1943,
       "target_path": null,
       "type": "text"
     },
@@ -7024,8 +7050,43 @@
         }
       ],
       "rule_id": "evidence-registres-root",
-      "sha256": "85b37987836c68b5e6ceec6dc954910fcd3de0a7399c8d8270f9cd085128fb39",
-      "size": 401197,
+      "sha256": "c71b6b45a32bb7691fd642f11de25bddc10472c6ead0268c822459f152abad2d",
+      "size": 401751,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/ARCHIVE-UNMERGED.txt",
+      "referenced_by": [
+        {
+          "candidate": "evidence/reviews/ARCHIVE-UNMERGED.txt",
+          "line": 51,
+          "referrer": "Docs/reference/autonomy-luna-sol.md",
+          "resolved": "evidence/reviews/ARCHIVE-UNMERGED.txt",
+          "severity": "hard"
+        },
+        {
+          "candidate": "evidence/reviews/ARCHIVE-UNMERGED.txt",
+          "line": 31,
+          "referrer": "Docs/superpowers/specs/2026-08-22-autonomous-luna-sol-design.md",
+          "resolved": "evidence/reviews/ARCHIVE-UNMERGED.txt",
+          "severity": "hard"
+        },
+        {
+          "candidate": "evidence/reviews/ARCHIVE-UNMERGED.txt",
+          "line": 23,
+          "referrer": "stories/ORCH-LUNA-SOL-603.md",
+          "resolved": "evidence/reviews/ARCHIVE-UNMERGED.txt",
+          "severity": "hard"
+        }
+      ],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "9f9649139536c5f1e24ff57fc07daf929f7b46d000e34fd26791841a961eaf37",
+      "size": 1973,
       "target_path": null,
       "type": "text"
     },
@@ -8852,7 +8913,7 @@
         },
         {
           "candidate": "evidence/reviews/BINDING.txt",
-          "line": 47,
+          "line": 48,
           "referrer": "Docs/reference/autonomy-luna-sol.md",
           "resolved": "evidence/reviews/BINDING.txt",
           "severity": "hard"
@@ -33089,7 +33150,7 @@
         },
         {
           "candidate": "scripts/governance/classify_paths.py",
-          "line": 64,
+          "line": 65,
           "referrer": "Docs/reference/autonomy-luna-sol.md",
           "resolved": "scripts/governance/classify_paths.py",
           "severity": "hard"
@@ -33460,7 +33521,7 @@
         },
         {
           "candidate": "scripts/governance/state_current.py",
-          "line": 63,
+          "line": 64,
           "referrer": "Docs/reference/autonomy-luna-sol.md",
           "resolved": "scripts/governance/state_current.py",
           "severity": "hard"
@@ -33635,7 +33696,7 @@
         },
         {
           "candidate": "scripts/governance/validate_authority.py",
-          "line": 62,
+          "line": 63,
           "referrer": "Docs/reference/autonomy-luna-sol.md",
           "resolved": "scripts/governance/validate_authority.py",
           "severity": "hard"
@@ -35378,6 +35439,13 @@
         },
         {
           "candidate": "scripts/registre.py",
+          "line": 18,
+          "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+          "resolved": "scripts/registre.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "scripts/registre.py",
           "line": 98,
           "referrer": "README.md",
           "resolved": "scripts/registre.py",
@@ -35560,14 +35628,14 @@
         },
         {
           "candidate": "scripts/reviews_gate.py",
-          "line": 65,
+          "line": 66,
           "referrer": "Docs/reference/autonomy-luna-sol.md",
           "resolved": "scripts/reviews_gate.py",
           "severity": "hard"
         },
         {
           "candidate": "scripts/reviews_gate.py",
-          "line": 66,
+          "line": 67,
           "referrer": "Docs/reference/autonomy-luna-sol.md",
           "resolved": "scripts/reviews_gate.py",
           "severity": "hard"
@@ -48309,8 +48377,8 @@
         }
       ],
       "rule_id": "governance-stories",
-      "sha256": "0863c662d879aff16c9967b251dca95a44833d502358c59d2c972ebc583ffa0b",
-      "size": 1898,
+      "sha256": "010fe230f65ea40a7388bdc4f4ebceddbe8d0ca7f66abe60600e8f4241192174",
+      "size": 1973,
       "target_path": null,
       "type": "text"
     },
@@ -66609,33 +66677,28 @@
         "referrer": "Docs/reference/autonomy-luna-sol.md"
       },
       {
-        "candidate": "evidence/reviews/ORCH-LUNA-SOL-603-final-r1/RECU.json",
-        "line": 19,
+        "candidate": "evidence/reviews/ORCH-LUNA-SOL-603-final-r2/RECU.json",
+        "line": 20,
         "referrer": "Docs/reference/autonomy-luna-sol.md"
       },
       {
         "candidate": "forme/coh",
-        "line": 24,
+        "line": 25,
         "referrer": "Docs/reference/autonomy-luna-sol.md"
       },
       {
         "candidate": "u/prompt/verdict",
-        "line": 33,
+        "line": 34,
         "referrer": "Docs/reference/autonomy-luna-sol.md"
       },
       {
         "candidate": "che/aveugle/read-only",
-        "line": 37,
-        "referrer": "Docs/reference/autonomy-luna-sol.md"
-      },
-      {
-        "candidate": "evidence/reviews/ARCHIVE-UNMERGED.txt",
-        "line": 50,
+        "line": 38,
         "referrer": "Docs/reference/autonomy-luna-sol.md"
       },
       {
         "candidate": "origin/main",
-        "line": 65,
+        "line": 66,
         "referrer": "Docs/reference/autonomy-luna-sol.md"
       },
       {
@@ -66742,6 +66805,21 @@
         "candidate": "tests/fixtures/",
         "line": 16,
         "referrer": "Docs/reference/secrets-scanning.md"
+      },
+      {
+        "candidate": "Luna/Sol",
+        "line": 1,
+        "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md"
+      },
+      {
+        "candidate": "Luna/Sol",
+        "line": 1,
+        "referrer": "Docs/superpowers/specs/2026-08-22-autonomous-luna-sol-design.md"
+      },
+      {
+        "candidate": "fresh/blind/read-only",
+        "line": 18,
+        "referrer": "Docs/superpowers/specs/2026-08-22-autonomous-luna-sol-design.md"
       },
       {
         "candidate": "scripts/",
@@ -130859,12 +130937,7 @@
         "referrer": "stories/ORCH-LUNA-SOL-603.md"
       },
       {
-        "candidate": "evidence/reviews/ORCH-LUNA-SOL-603-final-r1/RECU.json",
-        "line": 23,
-        "referrer": "stories/ORCH-LUNA-SOL-603.md"
-      },
-      {
-        "candidate": "evidence/reviews/ARCHIVE-UNMERGED.txt",
+        "candidate": "evidence/reviews/ORCH-LUNA-SOL-603-final-r2/RECU.json",
         "line": 25,
         "referrer": "stories/ORCH-LUNA-SOL-603.md"
       },
@@ -153445,42 +153518,49 @@
       },
       {
         "candidate": "evidence/reviews/BINDING.txt",
-        "line": 47,
+        "line": 48,
         "referrer": "Docs/reference/autonomy-luna-sol.md",
         "resolved": "evidence/reviews/BINDING.txt",
         "severity": "hard"
       },
       {
+        "candidate": "evidence/reviews/ARCHIVE-UNMERGED.txt",
+        "line": 51,
+        "referrer": "Docs/reference/autonomy-luna-sol.md",
+        "resolved": "evidence/reviews/ARCHIVE-UNMERGED.txt",
+        "severity": "hard"
+      },
+      {
         "candidate": "scripts/governance/validate_authority.py",
-        "line": 62,
+        "line": 63,
         "referrer": "Docs/reference/autonomy-luna-sol.md",
         "resolved": "scripts/governance/validate_authority.py",
         "severity": "hard"
       },
       {
         "candidate": "scripts/governance/state_current.py",
-        "line": 63,
+        "line": 64,
         "referrer": "Docs/reference/autonomy-luna-sol.md",
         "resolved": "scripts/governance/state_current.py",
         "severity": "hard"
       },
       {
         "candidate": "scripts/governance/classify_paths.py",
-        "line": 64,
+        "line": 65,
         "referrer": "Docs/reference/autonomy-luna-sol.md",
         "resolved": "scripts/governance/classify_paths.py",
         "severity": "hard"
       },
       {
         "candidate": "scripts/reviews_gate.py",
-        "line": 65,
+        "line": 66,
         "referrer": "Docs/reference/autonomy-luna-sol.md",
         "resolved": "scripts/reviews_gate.py",
         "severity": "hard"
       },
       {
         "candidate": "scripts/reviews_gate.py",
-        "line": 66,
+        "line": 67,
         "referrer": "Docs/reference/autonomy-luna-sol.md",
         "resolved": "scripts/reviews_gate.py",
         "severity": "hard"
@@ -153784,6 +153864,20 @@
         "line": 40,
         "referrer": "Docs/reference/secrets-scanning.md",
         "resolved": ".gitguardian.yaml",
+        "severity": "hard"
+      },
+      {
+        "candidate": "scripts/registre.py",
+        "line": 18,
+        "referrer": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+        "resolved": "scripts/registre.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "evidence/reviews/ARCHIVE-UNMERGED.txt",
+        "line": 31,
+        "referrer": "Docs/superpowers/specs/2026-08-22-autonomous-luna-sol-design.md",
+        "resolved": "evidence/reviews/ARCHIVE-UNMERGED.txt",
         "severity": "hard"
       },
       {
@@ -178287,6 +178381,13 @@
         "severity": "hard"
       },
       {
+        "candidate": "evidence/reviews/ARCHIVE-UNMERGED.txt",
+        "line": 23,
+        "referrer": "stories/ORCH-LUNA-SOL-603.md",
+        "resolved": "evidence/reviews/ARCHIVE-UNMERGED.txt",
+        "severity": "hard"
+      },
+      {
         "candidate": "src/forgeai/web/server.py",
         "line": 5,
         "referrer": "stories/PERF-030A.md",
@@ -182199,8 +182300,8 @@
   "summary": {
     "by_class": {
       "ARCHIVE": 44,
-      "DOCS": 20,
-      "EVIDENCE": 1678,
+      "DOCS": 22,
+      "EVIDENCE": 1679,
       "GENERATED": 5,
       "GOVERNANCE": 217,
       "PRODUCT": 113,
@@ -182215,11 +182316,11 @@
       "docs-contributing": 1,
       "docs-license": 1,
       "docs-security": 1,
-      "docs-user": 17,
+      "docs-user": 19,
       "evidence-audit-output-root": 18,
       "evidence-dedup-root": 2,
       "evidence-registres-root": 35,
-      "evidence-reviews-root": 1623,
+      "evidence-reviews-root": 1624,
       "generated-authority-map": 1,
       "generated-path-classification-json": 1,
       "generated-path-classification-markdown": 1,
@@ -182256,11 +182357,11 @@
       "working-sandbox-readme": 1
     },
     "case_collisions_total": 0,
-    "dangling_references_total": 17507,
+    "dangling_references_total": 17508,
     "generated_total": 9,
-    "load_bearing_total": 2158,
+    "load_bearing_total": 2159,
     "portability_violations_total": 0,
-    "tracked_total": 2311,
+    "tracked_total": 2314,
     "unclassified_total": 0,
     "unicode_anomalies_total": 0
   },

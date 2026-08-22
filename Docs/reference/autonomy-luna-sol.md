@@ -1,7 +1,7 @@
 # Référence exécutable — autonomie Luna/Sol
 
-Cette référence décrit la livraison vérifiable de l’issue #603. La source de
-vérité est `governance/autonomy-policy.json`; la décision associée est
+Cette référence décrit l’implémentation finale et son protocole de scellement
+pour l’issue #603. La source de vérité est `governance/autonomy-policy.json`; la décision associée est
 `governance/decisions/D-2026-08-21-autonomie-luna-sol.md`.
 
 La règle d’absence d’écriture distante s’applique aux workflows du contrat
@@ -15,11 +15,12 @@ aveugle et strictement read-only. `multi_vendor` reste un mode historique
 d’archive et conserve son quorum 3/3.
 
 Le prompt Sol est reconstruit depuis le diff Git exact et les critères de la
-story `stories/ORCH-LUNA-SOL-603.md`. Le reçu final
-`evidence/reviews/ORCH-LUNA-SOL-603-final-r1/RECU.json` lie les commits, arbres,
-digest du diff, prompt, template, journaux SDD et registre de mission; les
-digests neutralisent les configurations Git globales qui pourraient modifier
-ou ordonner la sortie. Le reviewer n’écrit jamais dans le dépôt.
+story `stories/ORCH-LUNA-SOL-603.md`. Après approbation de l’implémentation,
+le reçu final attendu sera
+`evidence/reviews/ORCH-LUNA-SOL-603-final-r2/RECU.json`; il liera les commits,
+arbres, digest du diff, prompt, template, journaux SDD et registre de mission.
+Les digests neutralisent les configurations Git globales qui pourraient
+modifier ou ordonner la sortie. Le reviewer n’écrit jamais dans le dépôt.
 
 Le gate sans drapeau conserve le dépouillement historique, vérifie la forme/cohérence interne
 du reçu et le hash du prompt, mais ne recharge pas ses objets Git; cela reste compatible avec
