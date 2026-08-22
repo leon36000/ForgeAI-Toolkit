@@ -1,7 +1,7 @@
 # Référence exécutable — autonomie Luna/Sol
 
-Cette phase versionne le noyau du contrat de l’issue #603. La source de vérité
-est `governance/autonomy-policy.json`; la décision associée est
+Cette référence décrit la livraison vérifiable de l’issue #603. La source de
+vérité est `governance/autonomy-policy.json`; la décision associée est
 `governance/decisions/D-2026-08-21-autonomie-luna-sol.md`.
 
 La règle d’absence d’écriture distante s’applique aux workflows du contrat
@@ -15,10 +15,11 @@ aveugle et strictement read-only. `multi_vendor` reste un mode historique
 d’archive et conserve son quorum 3/3.
 
 Le prompt Sol est reconstruit depuis le diff Git exact et les critères de la
-story `stories/ORCH-LUNA-SOL-603.md`. Le reçu lie les commits, arbres, digest
-du diff, prompt, template, journaux SDD et registre de mission; les digests
-neutralisent les configurations Git globales qui pourraient modifier ou
-ordonner la sortie. Le reviewer n’écrit jamais dans le dépôt.
+story `stories/ORCH-LUNA-SOL-603.md`. Le reçu final
+`evidence/reviews/ORCH-LUNA-SOL-603-final-r1/RECU.json` lie les commits, arbres,
+digest du diff, prompt, template, journaux SDD et registre de mission; les
+digests neutralisent les configurations Git globales qui pourraient modifier
+ou ordonner la sortie. Le reviewer n’écrit jamais dans le dépôt.
 
 Le gate sans drapeau conserve le dépouillement historique, vérifie la forme/cohérence interne
 du reçu et le hash du prompt, mais ne recharge pas ses objets Git; cela reste compatible avec
@@ -42,9 +43,17 @@ Pour distinguer un reçu historique d’un reçu courant, le mode PR vérifie d�
 intrinsèques et les futures, classe la liaison via Git, puis applique la fenêtre actuelle au
 reçu courant; l’historique est validé à l’heure de son scellement.
 
+Le mode archive exige en plus que chaque reçu encore présent dans
+`evidence/reviews/BINDING.txt` pointe vers un commit ancêtre de `main`. Les
+quatorze reçus historiques qui ne satisfaisaient plus cette preuve ont été
+retirés du manifeste actif, sans supprimer leurs dossiers; leurs identités et
+commits sont consignés dans `evidence/reviews/ARCHIVE-UNMERGED.txt`. Ils restent
+consultables mais ne sont pas réintroduits comme preuve liante sans nouvelle
+revue.
+
 Les limites T3 restent humaines : paiements, secrets de production,
 suppressions définitives et engagements externes. Les états terminaux sont
-`DONE_WITH_EVIDENCE` et `BLOCKED_WITH_REASON`; cette phase ne prétend aucun
+`DONE_WITH_EVIDENCE` et `BLOCKED_WITH_REASON`; cette livraison ne prétend aucun
 résultat runtime, matériel ou externe.
 
 Vérifications de la phase :
@@ -54,8 +63,11 @@ python3 scripts/governance/validate_authority.py
 python3 scripts/governance/state_current.py
 python3 scripts/governance/classify_paths.py
 python3 scripts/reviews_gate.py --exiger-recu-courant --base-ref origin/main --issue <pr>
+python3 scripts/reviews_gate.py --mode archive
 python3 -m pytest -q
 ```
 
-La preuve Sol et le dossier documentaire final sont ajoutés dans une phase
-bornée ultérieure, avec les fichiers qu’ils déclarent réellement.
+Le statut `DONE_WITH_EVIDENCE` de la story n’est recevable que lorsque ces
+commandes passent, que `BINDING.txt` contient le reçu final et que le mode
+archive réussit sur l’arbre fusionné. Une preuve non retrouvée reste
+`BLOCKED_WITH_REASON`; aucun transcript ou état runtime ne la remplace.

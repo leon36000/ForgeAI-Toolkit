@@ -1,0 +1,25 @@
+# Reçus historiques sortis du manifeste liant
+
+Ces dossiers restent conservés intégralement pour la traçabilité, mais ne sont
+plus dans BINDING.txt : leur commit de revue n'est pas un ancêtre de main. Le
+mode archive ne peut donc pas prouver leur intégration exacte dans l'historique
+actuel (notamment après des intégrations qui ont réécrit le commit source).
+Ils ne doivent pas être réintroduits dans BINDING.txt sans une nouvelle preuve
+scellée sur l'arbre courant.
+
+Format : dossier | issue | reviewed commit | constat
+
+RC1-459-PR517 | 459 | bafad9fd6e9908eb1412f62cfd70af9471bf1f11 | commit de revue non ancêtre de main
+RC1-492-PR512 | 492 | 857ff14d932fd83342ce6126aa1a08153fad8c29 | commit de revue non ancêtre de main
+RC1-487-v1 | 487 | d8dee7610ccff113473d143c6ab234d51e1a1c7c | commit de revue non ancêtre de main
+RC1-011-v1 | 441 | bae86037ac18c5cb1fb4794fa70d2be7062a39d0 | commit de revue non ancêtre de main
+RC1-021-v3 | 451 | 2275fbf76a61ba39af762576389a44e0c04e1a76 | commit de revue non ancêtre de main
+RC1-569-r3 | 569 | ca335757925322a33b4d25c362e83a2b0c02ba0e | commit de revue non ancêtre de main
+RC1-022-v17 | 463 | 7719150c4edda4069f56865240d3f8e3b1a8c924 | commit de revue non ancêtre de main
+RC1-024-v18 | 454 | 240563146806c7a3cf75fd1a576290984f5cbb68 | commit de revue non ancêtre de main
+RC1-580-v2 | 580 | c0298e6f787f18b5c9ccb93bd201d64fad4b66ef | commit de revue non ancêtre de main
+RC1-AUDIT-SUPPLY-585 | 585 | 111712f3eb2fb0e4c6729fdd1a0f7605224e3c02 | commit de revue non ancêtre de main
+RC1-AUDIT-RAG-584 | 584 | 9df2aadaea3b50cb7417b0895341705b4458943a | commit de revue non ancêtre de main
+RC1-AUDIT-WEB-587 | 587 | 9922dcbea69aeb085c7bb466489229f95f8f781e | commit de revue non ancêtre de main
+RC1-AUDIT-RUNTIME-586 | 586 | 213d06b868e600175593c86acb103a804256748c | commit de revue non ancêtre de main
+RC1-AUDIT-WEB-589 | 589 | b0b80a4aa87db39770f638aa85754d8ca8ae29a3 | commit de revue non ancêtre de main

@@ -3862,8 +3862,8 @@
         }
       ],
       "rule_id": "docs-user",
-      "sha256": "bc8cea55e836f60deb895b4a212a4ef2b560d66c732d4686f02b091ed67f83f2",
-      "size": 3687,
+      "sha256": "1233e0c4bebbf962bae15c23814771f35327b1cc00aad75ccd347256d39e5778",
+      "size": 4432,
       "target_path": null,
       "type": "text"
     },
@@ -7024,8 +7024,8 @@
         }
       ],
       "rule_id": "evidence-registres-root",
-      "sha256": "a9a79092d07a60987bd8dd63ef8a6ad0cf9b61f6e3e348393ac97b9862a8b55f",
-      "size": 400498,
+      "sha256": "85b37987836c68b5e6ceec6dc954910fcd3de0a7399c8d8270f9cd085128fb39",
+      "size": 401197,
       "target_path": null,
       "type": "text"
     },
@@ -8852,6 +8852,13 @@
         },
         {
           "candidate": "evidence/reviews/BINDING.txt",
+          "line": 47,
+          "referrer": "Docs/reference/autonomy-luna-sol.md",
+          "resolved": "evidence/reviews/BINDING.txt",
+          "severity": "hard"
+        },
+        {
+          "candidate": "evidence/reviews/BINDING.txt",
           "line": 7,
           "referrer": "evidence/reviews/ORCH-LUNA-SOL-603-phaseA-r4/sol.verdict.json",
           "resolved": "evidence/reviews/BINDING.txt",
@@ -8992,8 +8999,8 @@
         }
       ],
       "rule_id": "evidence-reviews-root",
-      "sha256": "e988fa2cb7d386c804d5b6b39b9215e17cd6896290ec0888725875082114c970",
-      "size": 3031,
+      "sha256": "6a926c8b4b8fca459c905cd9f096bf8be7a21fd5ebc38dc3aae86415a2dcb882",
+      "size": 2827,
       "target_path": null,
       "type": "text"
     },
@@ -33082,7 +33089,7 @@
         },
         {
           "candidate": "scripts/governance/classify_paths.py",
-          "line": 55,
+          "line": 64,
           "referrer": "Docs/reference/autonomy-luna-sol.md",
           "resolved": "scripts/governance/classify_paths.py",
           "severity": "hard"
@@ -33453,7 +33460,7 @@
         },
         {
           "candidate": "scripts/governance/state_current.py",
-          "line": 54,
+          "line": 63,
           "referrer": "Docs/reference/autonomy-luna-sol.md",
           "resolved": "scripts/governance/state_current.py",
           "severity": "hard"
@@ -33628,7 +33635,7 @@
         },
         {
           "candidate": "scripts/governance/validate_authority.py",
-          "line": 53,
+          "line": 62,
           "referrer": "Docs/reference/autonomy-luna-sol.md",
           "resolved": "scripts/governance/validate_authority.py",
           "severity": "hard"
@@ -35553,7 +35560,14 @@
         },
         {
           "candidate": "scripts/reviews_gate.py",
-          "line": 56,
+          "line": 65,
+          "referrer": "Docs/reference/autonomy-luna-sol.md",
+          "resolved": "scripts/reviews_gate.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "scripts/reviews_gate.py",
+          "line": 66,
           "referrer": "Docs/reference/autonomy-luna-sol.md",
           "resolved": "scripts/reviews_gate.py",
           "severity": "hard"
@@ -48295,8 +48309,8 @@
         }
       ],
       "rule_id": "governance-stories",
-      "sha256": "4a4df7f990c6291153f24ca35478662384f99cab7c2f384cbbf5f6fc0eadc5c8",
-      "size": 1554,
+      "sha256": "0863c662d879aff16c9967b251dca95a44833d502358c59d2c972ebc583ffa0b",
+      "size": 1898,
       "target_path": null,
       "type": "text"
     },
@@ -58897,8 +58911,8 @@
         }
       ],
       "rule_id": "test-suite",
-      "sha256": "7cb06c0393ef774f86bcb511949523bc6b494c88e59fbe3a37293b37f7962e90",
-      "size": 41798,
+      "sha256": "60b2a4c0ac50fca960dcdfcebbbda0b2abdef7099cb502204eaf82b9b475ea3e",
+      "size": 42035,
       "target_path": null,
       "type": "text"
     },
@@ -66595,23 +66609,33 @@
         "referrer": "Docs/reference/autonomy-luna-sol.md"
       },
       {
+        "candidate": "evidence/reviews/ORCH-LUNA-SOL-603-final-r1/RECU.json",
+        "line": 19,
+        "referrer": "Docs/reference/autonomy-luna-sol.md"
+      },
+      {
         "candidate": "forme/coh",
-        "line": 23,
+        "line": 24,
         "referrer": "Docs/reference/autonomy-luna-sol.md"
       },
       {
         "candidate": "u/prompt/verdict",
-        "line": 32,
+        "line": 33,
         "referrer": "Docs/reference/autonomy-luna-sol.md"
       },
       {
         "candidate": "che/aveugle/read-only",
-        "line": 36,
+        "line": 37,
+        "referrer": "Docs/reference/autonomy-luna-sol.md"
+      },
+      {
+        "candidate": "evidence/reviews/ARCHIVE-UNMERGED.txt",
+        "line": 50,
         "referrer": "Docs/reference/autonomy-luna-sol.md"
       },
       {
         "candidate": "origin/main",
-        "line": 56,
+        "line": 65,
         "referrer": "Docs/reference/autonomy-luna-sol.md"
       },
       {
@@ -130835,8 +130859,18 @@
         "referrer": "stories/ORCH-LUNA-SOL-603.md"
       },
       {
+        "candidate": "evidence/reviews/ORCH-LUNA-SOL-603-final-r1/RECU.json",
+        "line": 23,
+        "referrer": "stories/ORCH-LUNA-SOL-603.md"
+      },
+      {
+        "candidate": "evidence/reviews/ARCHIVE-UNMERGED.txt",
+        "line": 25,
+        "referrer": "stories/ORCH-LUNA-SOL-603.md"
+      },
+      {
         "candidate": "Luna/Sol",
-        "line": 27,
+        "line": 33,
         "referrer": "stories/ORCH-LUNA-SOL-603.md"
       },
       {
@@ -150512,323 +150546,225 @@
         "severity": "hard"
       },
       {
-        "candidate": "RC1-459-PR517",
-        "line": 175,
-        "referrer": "evidence/reviews/BINDING.txt",
-        "resolved": "evidence/reviews/RC1-459-PR517",
-        "severity": "hard"
-      },
-      {
-        "candidate": "RC1-492-PR512",
-        "line": 176,
-        "referrer": "evidence/reviews/BINDING.txt",
-        "resolved": "evidence/reviews/RC1-492-PR512",
-        "severity": "hard"
-      },
-      {
-        "candidate": "RC1-487-v1",
-        "line": 177,
-        "referrer": "evidence/reviews/BINDING.txt",
-        "resolved": "evidence/reviews/RC1-487-v1",
-        "severity": "hard"
-      },
-      {
         "candidate": "RC1-504-v1",
-        "line": 178,
+        "line": 175,
         "referrer": "evidence/reviews/BINDING.txt",
         "resolved": "evidence/reviews/RC1-504-v1",
         "severity": "hard"
       },
       {
         "candidate": "RC1-010-lot5d-PR-v7",
-        "line": 179,
+        "line": 176,
         "referrer": "evidence/reviews/BINDING.txt",
         "resolved": "evidence/reviews/RC1-010-lot5d-PR-v7",
         "severity": "hard"
       },
       {
         "candidate": "BUGHUNT-2026-08-16-v3",
-        "line": 180,
+        "line": 177,
         "referrer": "evidence/reviews/BINDING.txt",
         "resolved": "evidence/reviews/BUGHUNT-2026-08-16-v3",
         "severity": "hard"
       },
       {
         "candidate": "RC1-538",
-        "line": 181,
+        "line": 178,
         "referrer": "evidence/reviews/BINDING.txt",
         "resolved": "evidence/reviews/RC1-538",
         "severity": "hard"
       },
       {
         "candidate": "RC1-442",
-        "line": 182,
+        "line": 179,
         "referrer": "evidence/reviews/BINDING.txt",
         "resolved": "evidence/reviews/RC1-442",
         "severity": "hard"
       },
       {
         "candidate": "RC1-527-v1",
-        "line": 183,
+        "line": 180,
         "referrer": "evidence/reviews/BINDING.txt",
         "resolved": "evidence/reviews/RC1-527-v1",
         "severity": "hard"
       },
       {
         "candidate": "RC1-013-v4",
-        "line": 184,
+        "line": 181,
         "referrer": "evidence/reviews/BINDING.txt",
         "resolved": "evidence/reviews/RC1-013-v4",
         "severity": "hard"
       },
       {
         "candidate": "RC1-020-v3",
-        "line": 185,
+        "line": 182,
         "referrer": "evidence/reviews/BINDING.txt",
         "resolved": "evidence/reviews/RC1-020-v3",
         "severity": "hard"
       },
       {
-        "candidate": "RC1-011-v1",
-        "line": 186,
-        "referrer": "evidence/reviews/BINDING.txt",
-        "resolved": "evidence/reviews/RC1-011-v1",
-        "severity": "hard"
-      },
-      {
         "candidate": "RC1-449-v19",
-        "line": 187,
+        "line": 183,
         "referrer": "evidence/reviews/BINDING.txt",
         "resolved": "evidence/reviews/RC1-449-v19",
         "severity": "hard"
       },
       {
         "candidate": "RC1-542-v1",
-        "line": 188,
+        "line": 184,
         "referrer": "evidence/reviews/BINDING.txt",
         "resolved": "evidence/reviews/RC1-542-v1",
         "severity": "hard"
       },
       {
         "candidate": "RC1-542-v2",
-        "line": 189,
+        "line": 185,
         "referrer": "evidence/reviews/BINDING.txt",
         "resolved": "evidence/reviews/RC1-542-v2",
         "severity": "hard"
       },
       {
-        "candidate": "RC1-021-v3",
-        "line": 190,
-        "referrer": "evidence/reviews/BINDING.txt",
-        "resolved": "evidence/reviews/RC1-021-v3",
-        "severity": "hard"
-      },
-      {
         "candidate": "RC1-021-v4",
-        "line": 191,
+        "line": 186,
         "referrer": "evidence/reviews/BINDING.txt",
         "resolved": "evidence/reviews/RC1-021-v4",
         "severity": "hard"
       },
       {
         "candidate": "RC1-528",
-        "line": 192,
+        "line": 187,
         "referrer": "evidence/reviews/BINDING.txt",
         "resolved": "evidence/reviews/RC1-528",
         "severity": "hard"
       },
       {
         "candidate": "RC1-023",
-        "line": 193,
+        "line": 188,
         "referrer": "evidence/reviews/BINDING.txt",
         "resolved": "evidence/reviews/RC1-023",
         "severity": "hard"
       },
       {
         "candidate": "RC1-498-v2",
-        "line": 194,
+        "line": 189,
         "referrer": "evidence/reviews/BINDING.txt",
         "resolved": "evidence/reviews/RC1-498-v2",
         "severity": "hard"
       },
       {
         "candidate": "RC1-519-v1",
-        "line": 195,
+        "line": 190,
         "referrer": "evidence/reviews/BINDING.txt",
         "resolved": "evidence/reviews/RC1-519-v1",
         "severity": "hard"
       },
       {
         "candidate": "RC1-545",
-        "line": 196,
+        "line": 191,
         "referrer": "evidence/reviews/BINDING.txt",
         "resolved": "evidence/reviews/RC1-545",
         "severity": "hard"
       },
       {
         "candidate": "RC1-444-v4",
-        "line": 197,
+        "line": 192,
         "referrer": "evidence/reviews/BINDING.txt",
         "resolved": "evidence/reviews/RC1-444-v4",
         "severity": "hard"
       },
       {
         "candidate": "RC1-546",
-        "line": 198,
+        "line": 193,
         "referrer": "evidence/reviews/BINDING.txt",
         "resolved": "evidence/reviews/RC1-546",
         "severity": "hard"
       },
       {
         "candidate": "RC1-440-lot6-v1",
-        "line": 199,
+        "line": 194,
         "referrer": "evidence/reviews/BINDING.txt",
         "resolved": "evidence/reviews/RC1-440-lot6-v1",
         "severity": "hard"
       },
       {
         "candidate": "RC1-544",
-        "line": 200,
+        "line": 195,
         "referrer": "evidence/reviews/BINDING.txt",
         "resolved": "evidence/reviews/RC1-544",
         "severity": "hard"
       },
       {
         "candidate": "RC1-547",
-        "line": 201,
+        "line": 196,
         "referrer": "evidence/reviews/BINDING.txt",
         "resolved": "evidence/reviews/RC1-547",
         "severity": "hard"
       },
       {
         "candidate": "RC1-registre-PR522",
-        "line": 202,
+        "line": 197,
         "referrer": "evidence/reviews/BINDING.txt",
         "resolved": "evidence/reviews/RC1-registre-PR522",
         "severity": "hard"
       },
       {
-        "candidate": "RC1-569-r3",
-        "line": 203,
-        "referrer": "evidence/reviews/BINDING.txt",
-        "resolved": "evidence/reviews/RC1-569-r3",
-        "severity": "hard"
-      },
-      {
-        "candidate": "RC1-022-v17",
-        "line": 204,
-        "referrer": "evidence/reviews/BINDING.txt",
-        "resolved": "evidence/reviews/RC1-022-v17",
-        "severity": "hard"
-      },
-      {
         "candidate": "RC1-460-PR520",
-        "line": 205,
+        "line": 198,
         "referrer": "evidence/reviews/BINDING.txt",
         "resolved": "evidence/reviews/RC1-460-PR520",
         "severity": "hard"
       },
       {
         "candidate": "RC1-533",
-        "line": 206,
+        "line": 199,
         "referrer": "evidence/reviews/BINDING.txt",
         "resolved": "evidence/reviews/RC1-533",
         "severity": "hard"
       },
       {
         "candidate": "RC1-020-inc2-v6",
-        "line": 207,
+        "line": 200,
         "referrer": "evidence/reviews/BINDING.txt",
         "resolved": "evidence/reviews/RC1-020-inc2-v6",
         "severity": "hard"
       },
       {
         "candidate": "RC1-020-inc2-v8",
-        "line": 208,
+        "line": 201,
         "referrer": "evidence/reviews/BINDING.txt",
         "resolved": "evidence/reviews/RC1-020-inc2-v8",
         "severity": "hard"
       },
       {
         "candidate": "RC1-020-inc3a-v1",
-        "line": 209,
+        "line": 202,
         "referrer": "evidence/reviews/BINDING.txt",
         "resolved": "evidence/reviews/RC1-020-inc3a-v1",
         "severity": "hard"
       },
       {
         "candidate": "RC1-020-inc3b-v8",
-        "line": 210,
+        "line": 203,
         "referrer": "evidence/reviews/BINDING.txt",
         "resolved": "evidence/reviews/RC1-020-inc3b-v8",
         "severity": "hard"
       },
       {
         "candidate": "RC1-018-v7",
-        "line": 211,
+        "line": 204,
         "referrer": "evidence/reviews/BINDING.txt",
         "resolved": "evidence/reviews/RC1-018-v7",
         "severity": "hard"
       },
       {
-        "candidate": "RC1-024-v18",
-        "line": 212,
-        "referrer": "evidence/reviews/BINDING.txt",
-        "resolved": "evidence/reviews/RC1-024-v18",
-        "severity": "hard"
-      },
-      {
-        "candidate": "RC1-580-v2",
-        "line": 213,
-        "referrer": "evidence/reviews/BINDING.txt",
-        "resolved": "evidence/reviews/RC1-580-v2",
-        "severity": "hard"
-      },
-      {
-        "candidate": "RC1-AUDIT-SUPPLY-585",
-        "line": 214,
-        "referrer": "evidence/reviews/BINDING.txt",
-        "resolved": "evidence/reviews/RC1-AUDIT-SUPPLY-585",
-        "severity": "hard"
-      },
-      {
-        "candidate": "RC1-AUDIT-RAG-584",
-        "line": 215,
-        "referrer": "evidence/reviews/BINDING.txt",
-        "resolved": "evidence/reviews/RC1-AUDIT-RAG-584",
-        "severity": "hard"
-      },
-      {
-        "candidate": "RC1-AUDIT-WEB-587",
-        "line": 216,
-        "referrer": "evidence/reviews/BINDING.txt",
-        "resolved": "evidence/reviews/RC1-AUDIT-WEB-587",
-        "severity": "hard"
-      },
-      {
-        "candidate": "RC1-AUDIT-RUNTIME-586",
-        "line": 217,
-        "referrer": "evidence/reviews/BINDING.txt",
-        "resolved": "evidence/reviews/RC1-AUDIT-RUNTIME-586",
-        "severity": "hard"
-      },
-      {
-        "candidate": "RC1-AUDIT-WEB-589",
-        "line": 218,
-        "referrer": "evidence/reviews/BINDING.txt",
-        "resolved": "evidence/reviews/RC1-AUDIT-WEB-589",
-        "severity": "hard"
-      },
-      {
         "candidate": "RC1-015-v1",
-        "line": 219,
+        "line": 205,
         "referrer": "evidence/reviews/BINDING.txt",
         "resolved": "evidence/reviews/RC1-015-v1",
         "severity": "hard"
       },
       {
         "candidate": "ORCH-LUNA-SOL-603-phaseA-r5",
-        "line": 220,
+        "line": 206,
         "referrer": "evidence/reviews/BINDING.txt",
         "resolved": "evidence/reviews/ORCH-LUNA-SOL-603-phaseA-r5",
         "severity": "hard"
@@ -153508,29 +153444,43 @@
         "severity": "hard"
       },
       {
+        "candidate": "evidence/reviews/BINDING.txt",
+        "line": 47,
+        "referrer": "Docs/reference/autonomy-luna-sol.md",
+        "resolved": "evidence/reviews/BINDING.txt",
+        "severity": "hard"
+      },
+      {
         "candidate": "scripts/governance/validate_authority.py",
-        "line": 53,
+        "line": 62,
         "referrer": "Docs/reference/autonomy-luna-sol.md",
         "resolved": "scripts/governance/validate_authority.py",
         "severity": "hard"
       },
       {
         "candidate": "scripts/governance/state_current.py",
-        "line": 54,
+        "line": 63,
         "referrer": "Docs/reference/autonomy-luna-sol.md",
         "resolved": "scripts/governance/state_current.py",
         "severity": "hard"
       },
       {
         "candidate": "scripts/governance/classify_paths.py",
-        "line": 55,
+        "line": 64,
         "referrer": "Docs/reference/autonomy-luna-sol.md",
         "resolved": "scripts/governance/classify_paths.py",
         "severity": "hard"
       },
       {
         "candidate": "scripts/reviews_gate.py",
-        "line": 56,
+        "line": 65,
+        "referrer": "Docs/reference/autonomy-luna-sol.md",
+        "resolved": "scripts/reviews_gate.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "scripts/reviews_gate.py",
+        "line": 66,
         "referrer": "Docs/reference/autonomy-luna-sol.md",
         "resolved": "scripts/reviews_gate.py",
         "severity": "hard"
@@ -182306,7 +182256,7 @@
       "working-sandbox-readme": 1
     },
     "case_collisions_total": 0,
-    "dangling_references_total": 17503,
+    "dangling_references_total": 17507,
     "generated_total": 9,
     "load_bearing_total": 2158,
     "portability_violations_total": 0,

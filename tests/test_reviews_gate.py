@@ -1129,3 +1129,12 @@ def test_manifeste_reel_du_depot_est_approve():
         REPO / "evidence" / "reviews" / "BINDING.txt", REPO / "evidence" / "reviews"
     )
     assert ok is True, report
+
+
+def test_manifeste_reel_du_depot_est_archiveable():
+    ok, report = gate.check(
+        REPO / "evidence" / "reviews" / "BINDING.txt",
+        REPO / "evidence" / "reviews",
+        mode="archive",
+    )
+    assert ok is True, report
