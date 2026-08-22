@@ -142,8 +142,9 @@ Les seuls états terminaux sont :
   raison consignée et sans preuve inventée.
 
 Task 4 est `DONE_WITH_EVIDENCE` pour cette tranche documentaire et déterministe.
-Task 5 reste `PENDING` : final fresh Sol evidence remains pending, et aucune
-preuve runtime ou externe finale n'est prétendue ici.
+Task 5 est `DONE_WITH_EVIDENCE` : un Sol frais a approuvé le diff exact, le
+reçu est lié aux empreintes Git et le gate courant est vert. Aucune preuve
+runtime ou externe finale n'est prétendue ici.
 
 ## Vérifier
 
@@ -153,4 +154,5 @@ tests/test_reviews_gate.py`. Les checks de gouvernance et de registre sont
 ceux des commandes ci-dessus; les vues doivent rester synchronisées et les
 registres append-only. La story
 [`stories/ORCH-LUNA-SOL-603.md`](../../stories/ORCH-LUNA-SOL-603.md) conserve le
-statut et le checkpoint de la tranche en cours.
+statut terminal et le checkpoint de la tranche documentée; toute nouvelle
+portée doit ouvrir sa propre story et sa propre chaîne de preuve.
