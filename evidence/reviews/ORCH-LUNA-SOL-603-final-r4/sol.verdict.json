@@ -1,0 +1,26 @@
+{
+  "reviewer_model": "GPT-5.6-Sol",
+  "verdict": "REJECT",
+  "blocking_findings": [
+    {
+      "severity": "high",
+      "file": "evidence/reviews/BINDING.txt",
+      "line": null,
+      "description": "Le diff canonique ne modifie ni BINDING.txt ni ARCHIVE-UNMERGED.txt, alors que le critère marqué satisfait exige le retrait contrôlé des reçus non ancêtres et leur consignation; cette implémentation revendiquée n’est donc ni présente ni vérifiable dans le diff soumis."
+    },
+    {
+      "severity": "high",
+      "file": "Docs/reference/autonomy-luna-sol.md",
+      "line": 20,
+      "description": "La preuve finale est imposée sous ORCH-LUNA-SOL-603-final-r3/RECU.json, mais le prompt effectivement soumis appartient au round final-r4; sceller cette revue r4 sous le chemin r3 créerait une incohérence de round et ne lierait pas sans ambiguïté le reçu au prompt examiné."
+    }
+  ],
+  "reviewed_at": "2026-08-22T17:46:53-04:00",
+  "fresh_context": true,
+  "blind": true,
+  "reviewer_read_only": true,
+  "sdd_diff_digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "mission_diff_digest": "cf7bc2a9257d8d0a34446379f8b40d7fb69c81109aec971ae8dc02e04c950836",
+  "template_sha256": "a5bebc60556f4fc38d6ca96a3d0372577550f23157377af4d852e6144e25f137",
+  "prompt_sha256": "afaf90bd02d427dad28d7cda0dae57701232626a02c01868df822492d0646bee"
+}

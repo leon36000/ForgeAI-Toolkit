@@ -17,7 +17,7 @@ d’archive et conserve son quorum 3/3.
 Le prompt Sol est reconstruit depuis le diff Git exact et les critères de la
 story `stories/ORCH-LUNA-SOL-603.md`. Après approbation de l’implémentation,
 le reçu final attendu sera
-`evidence/reviews/ORCH-LUNA-SOL-603-final-r3/RECU.json`; il liera les commits,
+`evidence/reviews/ORCH-LUNA-SOL-603-final/RECU.json`; il liera les commits,
 arbres, digest du diff, prompt, template, journaux SDD et registre de mission.
 Les digests neutralisent les configurations Git globales qui pourraient
 modifier ou ordonner la sortie. Le reviewer n’écrit jamais dans le dépôt.

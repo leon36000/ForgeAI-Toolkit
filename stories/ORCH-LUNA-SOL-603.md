@@ -18,11 +18,11 @@ les archives uniquement.
   exige un unique reviewer Sol pour `sol_blind`.
 - [x] Le reçu Sol lie le diff Git, l’arbre, le prompt, les journaux exclus et
   les limites de fraîcheur sans dépendre de la configuration locale de Git.
-- [x] La documentation, les registres, les vues et le nettoyage contrôlé de
-  l’archive sont prêts; les anciens reçus non ancêtres restent conservés et
-  sont listés dans `evidence/reviews/ARCHIVE-UNMERGED.txt`.
+- [x] La documentation, les registres, les vues et le test de non-régression du
+  gate archive sont prêts. Le contrôle de l’archive de preuve est effectué par
+  `reviews_gate.py`, séparément du diff canonique présenté au reviewer Sol.
 - [ ] Le reçu Sol final est scellé dans
-  `evidence/reviews/ORCH-LUNA-SOL-603-final-r3/RECU.json`, lié au manifeste
+  `evidence/reviews/ORCH-LUNA-SOL-603-final/RECU.json`, lié au manifeste
   actif, puis le gate PR et le gate archive sur `main` fusionné passent.
 - [ ] La story passe à `DONE_WITH_EVIDENCE` uniquement après ces preuves;
   aucune réussite runtime, matérielle, réseau ou externe n’est revendiquée.
