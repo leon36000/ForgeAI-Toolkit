@@ -92,6 +92,7 @@ SOL_TEMPLATE_SHA = hashlib.sha256(
 ).hexdigest()
 SOL_SDD_DIGEST = hashlib.sha256(b"").hexdigest()
 SOL_MISSION_DIGEST = hashlib.sha256(b"").hexdigest()
+SOL_ARTIFACT_SHA = hashlib.sha256(b"").hexdigest()
 
 
 def _receipt():
@@ -133,6 +134,7 @@ def _make_sol_blind_gate_review(
                 "reviewer_read_only": True,
                 "reviewer_model": "GPT-5.6-Sol",
                 "candidate_diff_digest": hashlib.sha256(b"").hexdigest(),
+                "artifact_sha256": SOL_ARTIFACT_SHA,
                 "diff_digest": hashlib.sha256(b"").hexdigest(),
                 "sdd_diff_digest": SOL_SDD_DIGEST,
                 "mission_diff_digest": SOL_MISSION_DIGEST,
@@ -153,6 +155,7 @@ def _make_sol_blind_gate_review(
         "mode": "sol_blind",
         "story": gate._load_revue()._SOL_CANONICAL_STORY_ID,
         "candidate_diff_digest": hashlib.sha256(b"").hexdigest(),
+        "artifact_sha256": SOL_ARTIFACT_SHA,
         "diff_digest": hashlib.sha256(b"").hexdigest(),
         "sdd_diff_digest": SOL_SDD_DIGEST,
         "mission_diff_digest": SOL_MISSION_DIGEST,
@@ -181,6 +184,16 @@ def _make_sol_blind_gate_review(
         )
     (directory / "RECU.json").write_text(json.dumps(receipt), encoding="utf-8")
     return directory
+
+
+def test_sol_prompt_expose_lempreinte_du_diff_texte_affiche():
+    revue = gate._load_revue()
+    artifact = revue._diff_artifact_canonique("b" * 40, "c" * 40, runner=_runner)
+    metadata = revue._sol_prompt_metadata(SOL_PROMPT_BYTES)
+
+    assert artifact == ""
+    assert metadata["artifact_sha256"] == hashlib.sha256(artifact.encode("utf-8")).hexdigest()
+    assert metadata["artifact_sha256"] == SOL_ARTIFACT_SHA
 
 
 def test_gate_ok_si_toutes_approve(tmp_path):
@@ -469,6 +482,7 @@ def test_mode_pr_historical_invalid_sol_binding_is_informational(tmp_path):
                 "reviewed_head_commit": "3" * 40,
                 "reviewed_head_tree": "d" * 40,
                 "prompt_sha256": historical_prompt_sha,
+                "artifact_sha256": SOL_ARTIFACT_SHA,
                 "template_sha256": SOL_TEMPLATE_SHA,
                 "verdict": "APPROVE",
                 "blocking_findings": [],
@@ -494,6 +508,7 @@ def test_mode_pr_historical_invalid_sol_binding_is_informational(tmp_path):
                 "reviewed_head_commit": "3" * 40,
                 "reviewed_head_tree": "d" * 40,
                 "prompt_sha256": historical_prompt_sha,
+                "artifact_sha256": SOL_ARTIFACT_SHA,
                 "template_sha256": SOL_TEMPLATE_SHA,
                 "issue": 603,
                 "round": 1,
@@ -527,6 +542,7 @@ def test_mode_pr_historical_invalid_sol_binding_is_informational(tmp_path):
                 "reviewed_head_commit": "c" * 40,
                 "reviewed_head_tree": "d" * 40,
                 "prompt_sha256": SOL_SHA,
+                "artifact_sha256": SOL_ARTIFACT_SHA,
                 "sdd_diff_digest": SOL_SDD_DIGEST,
                 "mission_diff_digest": SOL_MISSION_DIGEST,
                 "template_sha256": SOL_TEMPLATE_SHA,
@@ -546,8 +562,9 @@ def test_mode_pr_historical_invalid_sol_binding_is_informational(tmp_path):
                     "story": gate._load_revue()._SOL_CANONICAL_STORY_ID,
                     "dossier": "S-courante-sol",
                     "issue": 603,
-                "prompt_sha256": SOL_SHA,
-                "candidate_diff_digest": hashlib.sha256(b"").hexdigest(),
+                    "prompt_sha256": SOL_SHA,
+                    "artifact_sha256": SOL_ARTIFACT_SHA,
+                    "candidate_diff_digest": hashlib.sha256(b"").hexdigest(),
                 "reviewed_head_commit": "c" * 40,
                 "reviewed_head_tree": "d" * 40,
                 "reviewed_at": "2026-08-22T12:00:00+00:00",
@@ -710,6 +727,27 @@ def test_gate_sol_blind_defaut_rejette_recu_incomplet(tmp_path):
 
     assert ok is False
     assert any("schema" in line for line in report)
+
+
+def test_gate_sol_blind_pr_exige_lempreinte_du_diff_affiche(tmp_path):
+    root = tmp_path / "reviews"
+    directory = _make_sol_blind_gate_review(root)
+    receipt_path = directory / "RECU.json"
+    receipt = json.loads(receipt_path.read_text(encoding="utf-8"))
+    receipt.pop("artifact_sha256")
+    receipt_path.write_text(json.dumps(receipt), encoding="utf-8")
+
+    ok, report = gate.check(
+        _manifest(tmp_path, [directory.name]),
+        root,
+        exiger_recu_courant=True,
+        base_ref="origin/main",
+        runner=_runner,
+        now=SOL_NOW,
+    )
+
+    assert ok is False
+    assert any("artifact_sha256" in line for line in report)
 
 
 def test_gate_sol_blind_mode_pr_rejette_preuve_perimee(tmp_path):
@@ -1127,5 +1165,20 @@ def test_gate_flagless_sol_rejette_coherence_temporelle_future(tmp_path):
 def test_manifeste_reel_du_depot_est_approve():
     ok, report = gate.check(
         REPO / "evidence" / "reviews" / "BINDING.txt", REPO / "evidence" / "reviews"
+    )
+    assert ok is True, report
+
+
+def test_manifeste_reel_du_depot_est_archiveable_sur_l_arbre_courant():
+    """L'archive vérifie les ancêtres du checkout courant, avant ou après merge.
+
+    Le reçu final est généré sur le commit déjà revu, puis ajouté dans un commit
+    de preuve enfant : ce commit revu reste donc un ancêtre du checkout de la
+    branche PR comme de l'arbre main après fusion.
+    """
+    ok, report = gate.check(
+        REPO / "evidence" / "reviews" / "BINDING.txt",
+        REPO / "evidence" / "reviews",
+        mode="archive",
     )
     assert ok is True, report

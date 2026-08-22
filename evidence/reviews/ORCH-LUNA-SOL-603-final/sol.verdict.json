@@ -1,0 +1,26 @@
+{
+  "reviewer_model": "GPT-5.6-Sol",
+  "verdict": "REJECT",
+  "blocking_findings": [
+    {
+      "severity": "high",
+      "file": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+      "line": 39,
+      "description": "Le diff divulgue explicitement le verdict du round précédent (« rejeté ») et sa justification dans le prompt sol_blind. Le reviewer reçoit donc un autre verdict et un signal sur le correctif attendu, ce qui viole l’exigence de revue aveugle."
+    },
+    {
+      "severity": "high",
+      "file": "tests/test_reviews_gate.py",
+      "line": 1140,
+      "description": "Le nouveau test exécute inconditionnellement le mode archive sur BINDING.txt réel. Or le workflow exige d’y lier le reçu final avant le merge, tandis que ce mode exige que chaque commit lié soit déjà ancêtre de main. Le commit revu ne le devient qu’après le merge : la suite pytest/CI pré-merge exigée échouera dès l’ajout du reçu final, bloquant le workflow décrit."
+    }
+  ],
+  "reviewed_at": "2026-08-22T17:49:47-04:00",
+  "fresh_context": true,
+  "blind": true,
+  "reviewer_read_only": true,
+  "sdd_diff_digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca4959919b7852b855",
+  "mission_diff_digest": "bddb25a6db50d8e1ddebf974def1f4ae32b2f37f8b34311f89cf9221e400ee60",
+  "template_sha256": "a5bebc60556f4fc38d6ca96a3d0372577550f23157377af4d852e6144e25f137",
+  "prompt_sha256": "7d34892c4eda06495a67ebc94042ca2832e39e30cb616e2c7b46c5b88464782b"
+}

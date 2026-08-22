@@ -1,0 +1,20 @@
+{
+  "reviewer_model": "GPT-5.6-Sol",
+  "verdict": "REJECT",
+  "blocking_findings": [
+    {
+      "severity": "high",
+      "file": "stories/ORCH-LUNA-SOL-603.md",
+      "line": 3,
+      "description": "Le statut passe à DONE_WITH_EVIDENCE, mais le diff canonique ne contient aucune modification de evidence/reviews/BINDING.txt, aucun evidence/reviews/ARCHIVE-UNMERGED.txt ni aucun RECU.json final. L’artefact fourni ne démontre donc pas le scellement de la preuve finale, sa liaison par le manifeste actif, ni le retrait documenté des quatorze reçus non ancêtres exigés par les critères d’acceptation."
+    }
+  ],
+  "reviewed_at": "2026-08-22T17:39:22-04:00",
+  "fresh_context": true,
+  "blind": true,
+  "reviewer_read_only": true,
+  "sdd_diff_digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "mission_diff_digest": "d8dc152ac122a7b1607431d7c9b8a6973e031b77558ba86df68a7b833e31d9c2",
+  "template_sha256": "a5bebc60556f4fc38d6ca96a3d0372577550f23157377af4d852e6144e25f137",
+  "prompt_sha256": "afa07fb41d63efc010702a0f6945da40d665699047d706a1d0479cc859ceb1f0"
+}

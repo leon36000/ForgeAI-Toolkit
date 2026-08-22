@@ -1,7 +1,7 @@
 # Story ORCH-LUNA-SOL-603 — contrat autonome Luna/Sol
 
-Status: IN_PROGRESS — phase compacte du contrat versionné; la preuve finale et
-la livraison documentaire complète restent dans une phase bornée ultérieure.
+Status: IN_PROGRESS — implémentation finale prête; scellement de la preuve Sol
+et passage à l’état terminal après la revue aveugle.
 
 ## Contexte et périmètre
 
@@ -18,8 +18,14 @@ les archives uniquement.
   exige un unique reviewer Sol pour `sol_blind`.
 - [x] Le reçu Sol lie le diff Git, l’arbre, le prompt, les journaux exclus et
   les limites de fraîcheur sans dépendre de la configuration locale de Git.
-- [ ] La documentation, les registres, les vues finales et la preuve Sol
-  finale sont scellés dans la phase de livraison bornée.
+- [x] La documentation, les registres, les vues et le test de non-régression du
+  gate archive sont prêts. Le contrôle de l’archive de preuve est effectué par
+  `reviews_gate.py`, séparément du diff canonique présenté au reviewer Sol.
+- [ ] Le reçu Sol final est scellé dans
+  `evidence/reviews/ORCH-LUNA-SOL-603-final-seal/RECU.json`, lié au manifeste
+  actif, puis le gate PR et le gate archive sur `main` fusionné passent.
+- [ ] La story passe à `DONE_WITH_EVIDENCE` uniquement après ces preuves;
+  aucune réussite runtime, matérielle, réseau ou externe n’est revendiquée.
 
 ## Limites
 

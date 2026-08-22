@@ -1,0 +1,20 @@
+{
+  "reviewer_model": "GPT-5.6-Sol",
+  "verdict": "REJECT",
+  "blocking_findings": [
+    {
+      "severity": "high",
+      "file": "Docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md",
+      "line": 22,
+      "description": "L’étape 5 ordonne le passage à DONE_WITH_EVIDENCE et l’exécution des gates avant le merge, alors que le critère d’acceptation et la section Terminalité exigent que ce statut ne soit atteint qu’après la réussite du gate archive sur main fusionné. Cette séquence peut donc terminaliser la story sans la preuve requise."
+    }
+  ],
+  "reviewed_at": "2026-08-22T17:42:25-04:00",
+  "fresh_context": true,
+  "blind": true,
+  "reviewer_read_only": true,
+  "sdd_diff_digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "mission_diff_digest": "bb236de1c446ee9b127ea57f25e68d98aeb235136c32f9eca16072c13ca3614a",
+  "template_sha256": "a5bebc60556f4fc38d6ca96a3d0372577550f23157377af4d852e6144e25f137",
+  "prompt_sha256": "db05edcee6cbfef5e6c9139148cc9e5622f0b62a7750bef31470cbf1aa15d558"
+}
