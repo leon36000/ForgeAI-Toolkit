@@ -22,7 +22,7 @@ les archives uniquement.
   l’archive sont prêts; les anciens reçus non ancêtres restent conservés et
   sont listés dans `evidence/reviews/ARCHIVE-UNMERGED.txt`.
 - [ ] Le reçu Sol final est scellé dans
-  `evidence/reviews/ORCH-LUNA-SOL-603-final-r2/RECU.json`, lié au manifeste
+  `evidence/reviews/ORCH-LUNA-SOL-603-final-r3/RECU.json`, lié au manifeste
   actif, puis le gate PR et le gate archive sur `main` fusionné passent.
 - [ ] La story passe à `DONE_WITH_EVIDENCE` uniquement après ces preuves;
   aucune réussite runtime, matérielle, réseau ou externe n’est revendiquée.
