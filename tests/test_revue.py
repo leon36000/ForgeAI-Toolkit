@@ -269,6 +269,38 @@ def test_diff_canonique_exclut_path_classification_json():
     )
 
 
+def test_diff_canonique_exclut_sdd_review_history():
+    code = ":100644 100644 a b M\0src/a.py\0"
+    reviewed = code + ":100644 100644 d e M\0.superpowers/sdd/old-review.md\0"
+    assert revue._diff_canonique("base", "HEAD", runner=lambda _: code) == revue._diff_canonique(
+        "base", "HEAD", runner=lambda _: reviewed
+    )
+
+
+def test_diff_sdd_canonique_lie_le_journal_exclu_separement():
+    code = ":100644 100644 a b M\0src/a.py\0"
+    reviewed = code + ":100644 100644 d e M\0.superpowers/sdd/old-review.md\0"
+    empty_sdd = revue._diff_sdd_canonique("base", "HEAD", runner=lambda _: code)
+    changed_sdd = revue._diff_sdd_canonique("base", "HEAD", runner=lambda _: reviewed)
+
+    assert empty_sdd != changed_sdd
+    assert revue._diff_canonique("base", "HEAD", runner=lambda _: code) == revue._diff_canonique(
+        "base", "HEAD", runner=lambda _: reviewed
+    )
+
+
+def test_diff_mission_canonique_lie_le_registre_exclu_separement():
+    code = ":100644 100644 a b M\0src/a.py\0"
+    reviewed = code + ":100644 100644 d e M\0evidence/registres/mission.jsonl\0"
+    empty_mission = revue._diff_mission_canonique("base", "HEAD", runner=lambda _: code)
+    changed_mission = revue._diff_mission_canonique("base", "HEAD", runner=lambda _: reviewed)
+
+    assert empty_mission != changed_mission
+    assert revue._diff_canonique("base", "HEAD", runner=lambda _: code) == revue._diff_canonique(
+        "base", "HEAD", runner=lambda _: reviewed
+    )
+
+
 def test_diff_canonique_exclut_path_classification_markdown():
     # Même motif que ci-dessus pour le rendu Markdown (les compteurs affichés varient pour la
     # même raison — sans cette exclusion, le cycle se rouvrirait via ce second fichier généré).
@@ -306,6 +338,99 @@ def test_diff_canonique_invoque_git_avec_no_abbrev():
     revue._diff_canonique("base", "HEAD", runner=runner_espion)
     assert len(commandes_recues) == 1
     assert "--no-abbrev" in commandes_recues[0]
+
+
+def test_diff_artifact_sol_fige_la_configuration_git():
+    commandes_recues = []
+
+    revue._diff_artifact_canonique(
+        "base",
+        "HEAD",
+        runner=lambda commande: commandes_recues.append(commande) or "",
+    )
+    commande = commandes_recues[0]
+    assert commande[:8] == [
+        "git",
+        "-c",
+        "core.attributesFile=",
+        "-c",
+        "diff.orderFile=scripts/coordination/__init__.py",
+        "-c",
+        "diff.suppressBlankEmpty=false",
+        "diff",
+    ]
+    for option in (
+        "--no-textconv",
+        "--full-index",
+        "--diff-algorithm=myers",
+        "--no-indent-heuristic",
+        "--unified=3",
+        "--inter-hunk-context=0",
+        "--no-color",
+        "--no-prefix",
+        "--no-relative",
+    ):
+        assert option in commande
+
+
+def test_digests_sol_figent_la_configuration_git():
+    expected_prefix = [
+        "git",
+        "-c",
+        "core.attributesFile=",
+        "-c",
+        "diff.orderFile=scripts/coordination/__init__.py",
+        "-c",
+        "diff.suppressBlankEmpty=false",
+        "diff",
+    ]
+    for digest in (
+        revue._diff_canonique,
+        revue._diff_sdd_canonique,
+        revue._diff_mission_canonique,
+    ):
+        commands = []
+        digest("base", "HEAD", runner=lambda command: commands.append(command) or "")
+        assert commands[0][:8] == expected_prefix
+
+
+def test_sol_criteria_lit_la_section_de_la_story_figee():
+    story = "# Story\n\n## Critères d’acceptation\n\n- [x] contrat\n\n## Limites\n"
+
+    def runner(command):
+        assert command[:2] == ["git", "show"]
+        return story
+
+    criteria = revue._sol_criteria_from_git(
+        runner,
+        "b" * 40,
+        revue._SOL_CANONICAL_STORY_ID,
+    )
+    assert criteria == "- [x] contrat"
+
+
+def test_sol_issue_est_le_numero_de_pr_et_non_le_numero_de_story():
+    assert (
+        revue._validate_sol_story_id(revue._SOL_CANONICAL_STORY_ID, 607)
+        == revue._SOL_CANONICAL_STORY_ID
+    )
+    with pytest.raises(ValueError):
+        revue._validate_sol_story_id(revue._SOL_CANONICAL_STORY_ID, 0)
+
+
+def test_politique_sol_verifie_decision_et_frontieres_t3(tmp_path):
+    policy = revue.load_autonomy_policy()
+    policy["decision"] = "arbitrary"
+    path = tmp_path / "policy.json"
+    path.write_text(json.dumps(policy), encoding="utf-8")
+    with pytest.raises(ValueError, match="decision"):
+        revue.load_autonomy_policy(path)
+
+    policy = revue.load_autonomy_policy()
+    policy["t3_limits"] = []
+    path.write_text(json.dumps(policy), encoding="utf-8")
+    with pytest.raises(ValueError, match="t3_limits"):
+        revue.load_autonomy_policy(path)
 
 
 def test_verifier_recu_approve_nominal():
