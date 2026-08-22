@@ -714,6 +714,34 @@
       "target_kind": "keep",
       "load_bearing": true,
       "rationale": "RC1-010 (#440) lot 0 : racine de destination unique pour la migration de coordination/**, Phase-A/**, Rapports/**, Recherche/rall-1-agents-orchestration.yaml et .cursor/rules/forgeai-orchestration.mdc (lots 1-2). Ajoutée en amont de tout déplacement pour que classify_paths.py ne lève pas 'chemin non classé' dès le premier fichier déplacé. load_bearing=true car archive/coordination/work-packages.json restera lu par validate_coordination.py/state_current.py après son déplacement (lot 1)."
+    },
+    {
+      "id": "working-superpowers-sdd",
+      "match": {
+        "kind": "prefix",
+        "value": ".superpowers/sdd/"
+      },
+      "class": "WORKING",
+      "generated": false,
+      "owner": "working-cockpit",
+      "target": null,
+      "target_kind": "keep",
+      "load_bearing": false,
+      "rationale": "Les plans et rapports SDD sont des artefacts du cockpit de travail, versionnés pour la traçabilité de l'exécution mais non livrés comme code produit."
+    },
+    {
+      "id": "working-superpowers-docs",
+      "match": {
+        "kind": "prefix",
+        "value": "docs/superpowers/"
+      },
+      "class": "WORKING",
+      "generated": false,
+      "owner": "working-cockpit",
+      "target": null,
+      "target_kind": "keep",
+      "load_bearing": false,
+      "rationale": "Les plans et spécifications Superpowers sont des artefacts de préparation et de traçabilité du cockpit de travail."
     }
   ]
 }

@@ -185,6 +185,14 @@
       "sha256": "e04342413a41a746c1ef7f5b8c7fc7b58c1ad36bf690a4b005583f4a3758e400"
     },
     {
+      "path": "tests/test_autonomy_docs.py",
+      "sha256": "62a206787b9d039f1f8a700d1e6d77ed49b4394e7cfe8dca0014c1cc15fbd05c"
+    },
+    {
+      "path": "tests/test_autonomy_policy.py",
+      "sha256": "10cec9a6302d6ad62d7429da6e3fd2239e5beac98ae03ea305fbe6a14446630a"
+    },
+    {
       "path": "tests/test_backend_k8s.py",
       "sha256": "548a0db5bda3d66a205d6b7677bf93528841710e9acc07bb5dbc6229d2030518"
     },
@@ -774,11 +782,23 @@
     },
     {
       "path": "tests/test_reviews_gate.py",
-      "sha256": "28189c31d7b4d04b4b00b851fce69498f250555257ae021e20ff4d7c11dd7ffa"
+      "sha256": "473fd657c2eac8b6ab9fe4e6d7184530d1fc17fc7ca26735f9d57db3c37112e1"
     },
     {
       "path": "tests/test_revue.py",
       "sha256": "d9209636686e2e4d2bde8004195aa5bc1b9a749b61eb5018eecb1c8471fdcaad"
+    },
+    {
+      "path": "tests/test_revue_sol_blind.py",
+      "sha256": "45d823bf199850c14876b16f332b49ae75ab36926d509870efec620fcf1ddb26"
+    },
+    {
+      "path": "tests/test_revue_sol_round1.py",
+      "sha256": "397ebf46a7ee82f71808397dcdc30ee006c795a0d86c038560fec49ee03defc1"
+    },
+    {
+      "path": "tests/test_revue_sol_round2.py",
+      "sha256": "dc765fcbba60eec894647934b2a6360ce97d285d8cb40b3a97aa13f7d61b7762"
     },
     {
       "path": "tests/test_routestore_concurrence.py",
@@ -1002,8 +1022,8 @@
   },
   "tests": {
     "js_files": 3,
-    "python_files": 209,
-    "python_functions_declared": 2660
+    "python_files": 214,
+    "python_functions_declared": 2699
   }
 }
 ```

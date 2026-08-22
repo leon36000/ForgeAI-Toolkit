@@ -110,8 +110,8 @@
       ],
       "digest": {
         "policy": "content_sha256",
-        "value": "490eebd6f8aa26b65eb80acfc4e0090bcf5c89b4609e35e1493a436df94454df",
-        "checked_at": "2026-08-16",
+        "value": "ef9dc4d50d509c63f31d5d2083c47b18efc9d551538249b749493c684d3ef274",
+        "checked_at": "2026-08-22",
         "delegated_to": null
       },
       "retention": "in_force",
@@ -176,8 +176,8 @@
       ],
       "digest": {
         "policy": "content_sha256",
-        "value": "a5dc93ed5492c490ffc2e70d3c039d6374dd773fbd9126f8ef4670d2b1cd88ef",
-        "checked_at": "2026-08-16",
+        "value": "59ca857c0ec44bda259d6d21dd90f50f8fa38743bc6ab38312a2d30e9987163a",
+        "checked_at": "2026-08-22",
         "delegated_to": null
       },
       "retention": "in_force",
@@ -598,8 +598,8 @@
       "positions": [],
       "digest": {
         "policy": "content_sha256",
-        "value": "c5c68bd435e9e1da64d52747ffbf044763381e4770099e0c171c02c4d5cfdf00",
-        "checked_at": "2026-08-14",
+        "value": "ce7b4c9abaa253d543bd24c0d08d192847a924cda3e7778ac2cd2963ebcee34f",
+        "checked_at": "2026-08-22",
         "delegated_to": null
       },
       "retention": "in_force",
@@ -814,8 +814,8 @@
       "positions": [],
       "digest": {
         "policy": "content_sha256",
-        "value": null,
-        "checked_at": null,
+        "value": "d426efdd352b435b5966b890f4c02acac5eb9bb90af1e458bcb2e96fe54ee4db",
+        "checked_at": "2026-08-22",
         "delegated_to": null
       },
       "retention": "in_force",

@@ -26,6 +26,47 @@ Claude Code Opus est mission lead, gestionnaire du DAG et intégrateur ; les mem
 5. **T3 = Nathan** : paiements, secrets de production, suppressions définitives,
    engagements externes. Le consensus recommande; l'humain lève.
 
+## Contrat autonome Luna/Sol actif (#603)
+
+La source de vérité du contrat actif est
+`governance/autonomy-policy.json`, complétée par le roster versionné de
+`manifests/roles.yaml`. GPT-5.6 Luna conduit et écrit dans le rôle
+`luna_writer`; GPT-5.6 Sol est le reviewer dans le rôle `sol`. Le plafond est
+exactement `max_active_writer_lanes: 2` : il y a exactement deux writer lanes
+autorisées, jamais davantage. L'identité historique `GPT-5.6-Luna-Pro` reste
+résoluble pour les anciens reçus mais n'est pas le writer actif.
+
+Le mode actif de revue est `sol_blind`. Sol doit être un reviewer frais,
+aveugle et strictement read-only (`fresh_context`, `blind` et
+`reviewer_read_only` vrais). Le reçu doit lier la revue au diff Git exact par
+`candidate_diff_digest`, `base_commit`, `reviewed_head_commit`,
+`reviewed_head_tree` et `prompt_sha256`, avec un `reviewed_at` horodaté avec
+fuseau, `verdict: APPROVE` et `blocking_findings: []`. L'identité du codeur ne
+peut pas être Sol. Un reçu est un claim : le gate le réfute contre l'état Git
+courant; aucune preuve externe, runtime ou matérielle n'est implicite.
+
+Le chemin de merge sûr reste repository-native : reprendre depuis l'issue/PR
+et l'arbre Git courants, lire la politique, travailler dans les deux lanes,
+tester, vérifier les registres, régénérer les vues, inspecter le diff, puis
+laisser les hooks normaux valider le commit et les checks requis avant merge.
+Les registres se prolongent uniquement avec
+`python3 scripts/registre.py append ...`, jamais par édition de hash; l'oracle
+est `python3 scripts/registre.py verify ...`. Les vues se régénèrent avec les
+commandes documentées dans [Docs/reference/autonomy-luna-sol.md](Docs/reference/autonomy-luna-sol.md).
+
+Aucun workflow de ce contrat ne peut recevoir `contents: write`, faire un
+`force-push`, utiliser `decode` pour du code source embarqué ou être
+`self-writing`. Les reviewers
+restent en lecture seule. La source de vérité pour une reprise est la politique
+versionnée, l'issue/PR GitHub, l'état Git et les registres vérifiés; un transcript
+ou un état runtime précédent ne suffit pas. Les frontières T3 de Nathan restent
+inchangées.
+
+Les seuls états terminaux sont `DONE_WITH_EVIDENCE` et
+`BLOCKED_WITH_REASON`. Une livraison sans preuve vérifiable doit rester
+bloquée avec sa raison concrète; elle ne doit pas être transformée en preuve
+inventée.
+
 ## Commandes
 ```bash
 python3 scripts/registre.py append evidence/registres/mission.jsonl --type <type> --actor <actor> --payload-json '<json>'

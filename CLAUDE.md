@@ -50,3 +50,28 @@ PROOF_COMPRESS=0 bash ~/proof-method/scripts/pack_build.sh stories/<ID>.md /tmp/
 python3 ~/proof-method/scripts/civ_review.py --story evidence/reviews/<ID> --pack /tmp/<ID>-pack.md
 python3 scripts/revue.py tally evidence/reviews/<ID>
 ```
+
+## Contrat actif Luna/Sol — issue #603
+
+La politique versionnée `governance/autonomy-policy.json` est la source de
+vérité. Le roster actif est `luna_writer` / `GPT-5.6-Luna-Writer` pour l'écriture
+(`GPT-5.6 Luna`) et `sol` / `GPT-5.6-Sol` pour la revue (`GPT-5.6 Sol`);
+`GPT-5.6-Luna-Pro` est historique et
+retiré. Le plafond est exactement `max_active_writer_lanes: 2`, donc exactement
+deux writer lanes. Le mode est `sol_blind`: contexte frais, blind, read-only,
+diff Git exact et identité Sol distincte du codeur.
+
+La liaison minimale du reçu exige `candidate_diff_digest`, `base_commit`,
+`reviewed_head_commit`, `reviewed_head_tree`, `prompt_sha256`, un
+`reviewed_at` avec fuseau, `verdict: APPROVE` et `blocking_findings: []`.
+Le reviewer ne reçoit aucun verdict attendu. Le claim est revérifié par le
+gate contre Git courant; aucune preuve runtime ou externe n'est prétendue.
+
+Le merge sûr est repository-native : reprendre depuis l'issue/PR GitHub, l'état
+Git et les registres vérifiés, exécuter les tests/gates, prolonger les registres
+avec `scripts/registre.py append`, vérifier avec `scripts/registre.py verify`,
+régénérer les vues, inspecter le diff et passer les hooks normaux. Aucun workflow
+ne doit utiliser `contents: write`, `force-push`, `decode` de source embarquée
+ou un flux `self-writing`. Les seules sorties terminales sont
+`DONE_WITH_EVIDENCE` et `BLOCKED_WITH_REASON`; les frontières T3 de Nathan
+restent actives. Voir [la référence exécutable](Docs/reference/autonomy-luna-sol.md).
