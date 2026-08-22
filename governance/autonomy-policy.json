@@ -1,0 +1,22 @@
+{
+  "schema": "autonomy-policy/1",
+  "decision": "D-2026-08-21-autonomie-luna-sol",
+  "worker": {
+    "primary_model": "GPT-5.6 Luna",
+    "max_active_writer_lanes": 2
+  },
+  "review": {
+    "default_mode": "sol_blind",
+    "reviewer_model": "GPT-5.6 Sol"
+  },
+  "terminal_states": [
+    "DONE_WITH_EVIDENCE",
+    "BLOCKED_WITH_REASON"
+  ],
+  "t3_limits": [
+    "payments",
+    "production_secrets",
+    "permanent_deletions",
+    "external_commitments"
+  ]
+}
