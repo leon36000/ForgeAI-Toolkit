@@ -9096,8 +9096,8 @@
         }
       ],
       "rule_id": "evidence-reviews-root",
-      "sha256": "6a926c8b4b8fca459c905cd9f096bf8be7a21fd5ebc38dc3aae86415a2dcb882",
-      "size": 2827,
+      "sha256": "2f23beea8eeb57bb7f2766aaef95b6036479779c1068cadc64f279e134abf791",
+      "size": 2856,
       "target_path": null,
       "type": "text"
     },
@@ -15903,6 +15903,32 @@
       "rule_id": "evidence-reviews-root",
       "sha256": "c0a0bbbe90fa2a6de040d296742cb95b67dac947e06f32cd9123b632a01ec633",
       "size": 215,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/ORCH-LUNA-SOL-603-final-approval/SOL-PROMPT.md",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "d560892d5e933fcb3aa184802aead8e3e561e38e4e41fd7ccb9962357917f086",
+      "size": 31801,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "EVIDENCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-preuve",
+      "path": "evidence/reviews/ORCH-LUNA-SOL-603-final-approval/sol.verdict.json",
+      "referenced_by": [],
+      "rule_id": "evidence-reviews-root",
+      "sha256": "37760da00bfcee2652b2d0b2ac48c3d9dba35dc43fb72273b06811be9c18768f",
+      "size": 1111,
       "target_path": null,
       "type": "text"
     },
@@ -61967,6 +61993,11 @@
   "reference_graph": {
     "completeness": "best_effort",
     "dangling": [
+      {
+        "candidate": "ORCH-LUNA-SOL-603-final-seal",
+        "line": 207,
+        "referrer": "evidence/reviews/BINDING.txt"
+      },
       {
         "candidate": "TUI/UX",
         "line": 3,
@@ -182620,7 +182651,7 @@
     "by_class": {
       "ARCHIVE": 44,
       "DOCS": 22,
-      "EVIDENCE": 1691,
+      "EVIDENCE": 1693,
       "GENERATED": 5,
       "GOVERNANCE": 217,
       "PRODUCT": 113,
@@ -182639,7 +182670,7 @@
       "evidence-audit-output-root": 18,
       "evidence-dedup-root": 2,
       "evidence-registres-root": 35,
-      "evidence-reviews-root": 1636,
+      "evidence-reviews-root": 1638,
       "generated-authority-map": 1,
       "generated-path-classification-json": 1,
       "generated-path-classification-markdown": 1,
@@ -182676,11 +182707,11 @@
       "working-sandbox-readme": 1
     },
     "case_collisions_total": 0,
-    "dangling_references_total": 17515,
+    "dangling_references_total": 17516,
     "generated_total": 9,
-    "load_bearing_total": 2171,
+    "load_bearing_total": 2173,
     "portability_violations_total": 0,
-    "tracked_total": 2326,
+    "tracked_total": 2328,
     "unclassified_total": 0,
     "unicode_anomalies_total": 0
   },

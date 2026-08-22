@@ -1,0 +1,34 @@
+{
+  "schema": "recu-revue/2",
+  "mode": "sol_blind",
+  "story": "stories/ORCH-LUNA-SOL-603.md",
+  "dossier": "ORCH-LUNA-SOL-603-final-seal",
+  "issue": 610,
+  "round": 1,
+  "replanned": false,
+  "base_commit": "5e25de16bd38f8a6ffc16e120919beff128f95aa",
+  "head_commit": "aa71d5a20cb5df753e927e6b5c641637b3375c88",
+  "head_tree": "3ec0e960d9225e165128228fbf8d3cc8cbd48e14",
+  "diff_digest": "47d02a930ec5950295e03a293c246284e510bd100d1972395e63041f5eddfe7a",
+  "sdd_diff_digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "mission_diff_digest": "b5ff599c26285b5df69f5a2487fe885870c89467c2fc357b321fcea3445ad1b1",
+  "candidate_diff_digest": "47d02a930ec5950295e03a293c246284e510bd100d1972395e63041f5eddfe7a",
+  "reviewed_head_commit": "aa71d5a20cb5df753e927e6b5c641637b3375c88",
+  "reviewed_head_tree": "3ec0e960d9225e165128228fbf8d3cc8cbd48e14",
+  "prompt_sha256": "875dc35611fbff9b0ca101edfa159f25f98573c7759532652d8f31d3c648b60d",
+  "reviewers_attendus": [
+    "GPT-5.6-Sol"
+  ],
+  "codeur": [
+    "luna_writer"
+  ],
+  "resultat": "APPROVE",
+  "reviewed_at": "2026-08-22T18:17:22-04:00",
+  "verdict": "APPROVE",
+  "reviewer_model": "GPT-5.6-Sol",
+  "template_sha256": "a5bebc60556f4fc38d6ca96a3d0372577550f23157377af4d852e6144e25f137",
+  "artifact_sha256": "12e55ca5d832c93cb13d1f6777bb00b1305e2daa61f24156bbb5e243edd4b621",
+  "blocking_findings": [],
+  "date_heure": "2026-08-22T18:18:00.547318-04:00",
+  "fenetre_heures": 24
+}
