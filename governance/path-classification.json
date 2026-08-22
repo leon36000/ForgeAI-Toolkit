@@ -1187,8 +1187,8 @@
         }
       ],
       "rule_id": "governance-github-ci",
-      "sha256": "4a4c4519e976179434e86130482d2171e4e830c050fde11a37e830d6f1ccae9b",
-      "size": 26921,
+      "sha256": "6f44eedfc9ba4099b3ba40afd4ca1866ded770f833fdea4cb6ef134163bd163b",
+      "size": 27165,
       "target_path": null,
       "type": "text"
     },
@@ -1201,7 +1201,7 @@
       "referenced_by": [
         {
           "candidate": ".github/workflows/scope-guard.yml",
-          "line": 485,
+          "line": 489,
           "referrer": ".github/workflows/gates.yml",
           "resolved": ".github/workflows/scope-guard.yml",
           "severity": "hard"
@@ -1341,7 +1341,7 @@
       "referenced_by": [
         {
           "candidate": ".github/workflows/sonarcloud.yml",
-          "line": 486,
+          "line": 490,
           "referrer": ".github/workflows/gates.yml",
           "resolved": ".github/workflows/sonarcloud.yml",
           "severity": "hard"
@@ -7072,8 +7072,8 @@
         }
       ],
       "rule_id": "evidence-registres-root",
-      "sha256": "90de287982646287a6f1fd13cc1fb0553b38e61800b8fcb5ef1e85fa7e3c9d2e",
-      "size": 406071,
+      "sha256": "17456710575ed76de9f7485284ec8228a344a9d8fec7ed72fc465d1eee08c2cf",
+      "size": 406573,
       "target_path": null,
       "type": "text"
     },
@@ -9096,8 +9096,8 @@
         }
       ],
       "rule_id": "evidence-reviews-root",
-      "sha256": "2f23beea8eeb57bb7f2766aaef95b6036479779c1068cadc64f279e134abf791",
-      "size": 2856,
+      "sha256": "44a43584bf90ef0950a6eda9a57055e321669a96f8bd8edff6c9c21ba6653b77",
+      "size": 2888,
       "target_path": null,
       "type": "text"
     },
@@ -30952,7 +30952,7 @@
       "referenced_by": [
         {
           "candidate": "governance/ruff-baseline.json",
-          "line": 415,
+          "line": 419,
           "referrer": ".github/workflows/gates.yml",
           "resolved": "governance/ruff-baseline.json",
           "severity": "hard"
@@ -31183,7 +31183,7 @@
       "referenced_by": [
         {
           "candidate": "governance/ruff-classification.json",
-          "line": 413,
+          "line": 417,
           "referrer": ".github/workflows/gates.yml",
           "resolved": "governance/ruff-classification.json",
           "severity": "hard"
@@ -32256,14 +32256,14 @@
         },
         {
           "candidate": "scripts/branch_coverage_report.py",
-          "line": 363,
+          "line": 367,
           "referrer": ".github/workflows/gates.yml",
           "resolved": "scripts/branch_coverage_report.py",
           "severity": "hard"
         },
         {
           "candidate": "scripts/branch_coverage_report.py",
-          "line": 379,
+          "line": 383,
           "referrer": ".github/workflows/gates.yml",
           "resolved": "scripts/branch_coverage_report.py",
           "severity": "hard"
@@ -34319,7 +34319,7 @@
       "referenced_by": [
         {
           "candidate": "scripts/governance/verifier_agregat_tests.py",
-          "line": 531,
+          "line": 535,
           "referrer": ".github/workflows/gates.yml",
           "resolved": "scripts/governance/verifier_agregat_tests.py",
           "severity": "hard"
@@ -34347,7 +34347,7 @@
       "referenced_by": [
         {
           "candidate": "scripts/mutation_gate.py",
-          "line": 402,
+          "line": 406,
           "referrer": ".github/workflows/gates.yml",
           "resolved": "scripts/mutation_gate.py",
           "severity": "hard"
@@ -35397,14 +35397,14 @@
         },
         {
           "candidate": "scripts/rapport_composants.py",
-          "line": 329,
+          "line": 333,
           "referrer": ".github/workflows/gates.yml",
           "resolved": "scripts/rapport_composants.py",
           "severity": "hard"
         },
         {
           "candidate": "scripts/rapport_composants.py",
-          "line": 354,
+          "line": 358,
           "referrer": ".github/workflows/gates.yml",
           "resolved": "scripts/rapport_composants.py",
           "severity": "hard"
@@ -35887,14 +35887,14 @@
       "referenced_by": [
         {
           "candidate": "scripts/reviews_gate.py",
-          "line": 292,
+          "line": 296,
           "referrer": ".github/workflows/gates.yml",
           "resolved": "scripts/reviews_gate.py",
           "severity": "hard"
         },
         {
           "candidate": "scripts/reviews_gate.py",
-          "line": 301,
+          "line": 305,
           "referrer": ".github/workflows/gates.yml",
           "resolved": "scripts/reviews_gate.py",
           "severity": "hard"
@@ -36573,7 +36573,7 @@
       "referenced_by": [
         {
           "candidate": "scripts/ruff_noqa_gate.py",
-          "line": 454,
+          "line": 458,
           "referrer": ".github/workflows/gates.yml",
           "resolved": "scripts/ruff_noqa_gate.py",
           "severity": "hard"
@@ -36881,14 +36881,14 @@
       "referenced_by": [
         {
           "candidate": "scripts/ruff_ratchet.py",
-          "line": 414,
+          "line": 418,
           "referrer": ".github/workflows/gates.yml",
           "resolved": "scripts/ruff_ratchet.py",
           "severity": "hard"
         },
         {
           "candidate": "scripts/ruff_ratchet.py",
-          "line": 432,
+          "line": 436,
           "referrer": ".github/workflows/gates.yml",
           "resolved": "scripts/ruff_ratchet.py",
           "severity": "hard"
@@ -37350,14 +37350,14 @@
       "referenced_by": [
         {
           "candidate": "scripts/ruff_report.py",
-          "line": 305,
+          "line": 309,
           "referrer": ".github/workflows/gates.yml",
           "resolved": "scripts/ruff_report.py",
           "severity": "hard"
         },
         {
           "candidate": "scripts/ruff_report.py",
-          "line": 320,
+          "line": 324,
           "referrer": ".github/workflows/gates.yml",
           "resolved": "scripts/ruff_report.py",
           "severity": "hard"
@@ -53127,7 +53127,7 @@
         },
         {
           "candidate": "tests/test_guard_fs.py",
-          "line": 253,
+          "line": 257,
           "referrer": ".github/workflows/gates.yml",
           "resolved": "tests/test_guard_fs.py",
           "severity": "hard"
@@ -55535,7 +55535,7 @@
         },
         {
           "candidate": "tests/test_openbao_flow_import.py",
-          "line": 253,
+          "line": 257,
           "referrer": ".github/workflows/gates.yml",
           "resolved": "tests/test_openbao_flow_import.py",
           "severity": "hard"
@@ -56424,7 +56424,7 @@
         },
         {
           "candidate": "tests/test_portable_lock.py",
-          "line": 253,
+          "line": 257,
           "referrer": ".github/workflows/gates.yml",
           "resolved": "tests/test_portable_lock.py",
           "severity": "hard"
@@ -58195,7 +58195,7 @@
         },
         {
           "candidate": "tests/test_registre_concurrence.py",
-          "line": 253,
+          "line": 257,
           "referrer": ".github/workflows/gates.yml",
           "resolved": "tests/test_registre_concurrence.py",
           "severity": "hard"
@@ -62055,6 +62055,11 @@
     "completeness": "best_effort",
     "dangling": [
       {
+        "candidate": "ORCH-LUNA-SOL-603-final-seal-r2",
+        "line": 208,
+        "referrer": "evidence/reviews/BINDING.txt"
+      },
+      {
         "candidate": "TUI/UX",
         "line": 3,
         "referrer": ".claude/agents/composer-tui.md"
@@ -62536,227 +62541,227 @@
       },
       {
         "candidate": "actions/setup-python",
-        "line": 200,
+        "line": 204,
         "referrer": ".github/workflows/gates.yml"
       },
       {
         "candidate": "actions/checkout",
-        "line": 244,
+        "line": 248,
         "referrer": ".github/workflows/gates.yml"
       },
       {
         "candidate": "actions/setup-python",
-        "line": 247,
+        "line": 251,
         "referrer": ".github/workflows/gates.yml"
       },
       {
         "candidate": "actions/checkout",
-        "line": 258,
-        "referrer": ".github/workflows/gates.yml"
-      },
-      {
-        "candidate": "gitleaks/gitleaks-action",
         "line": 262,
         "referrer": ".github/workflows/gates.yml"
       },
       {
+        "candidate": "gitleaks/gitleaks-action",
+        "line": 266,
+        "referrer": ".github/workflows/gates.yml"
+      },
+      {
         "candidate": "origin/main...HEAD",
-        "line": 269,
+        "line": 273,
         "referrer": ".github/workflows/gates.yml"
       },
       {
         "candidate": "actions/checkout",
-        "line": 271,
+        "line": 275,
         "referrer": ".github/workflows/gates.yml"
       },
       {
         "candidate": "refs/pull/N/merge",
-        "line": 272,
+        "line": 276,
         "referrer": ".github/workflows/gates.yml"
       },
       {
         "candidate": "actions/checkout",
-        "line": 277,
+        "line": 281,
         "referrer": ".github/workflows/gates.yml"
       },
       {
         "candidate": "origin/main",
-        "line": 284,
+        "line": 288,
         "referrer": ".github/workflows/gates.yml"
       },
       {
         "candidate": "origin/main",
-        "line": 292,
+        "line": 296,
         "referrer": ".github/workflows/gates.yml"
       },
       {
         "candidate": "actions/checkout",
-        "line": 311,
+        "line": 315,
         "referrer": ".github/workflows/gates.yml"
       },
       {
         "candidate": "actions/setup-python",
-        "line": 314,
+        "line": 318,
         "referrer": ".github/workflows/gates.yml"
       },
       {
         "candidate": "faut/dette/style",
-        "line": 319,
+        "line": 323,
         "referrer": ".github/workflows/gates.yml"
       },
       {
         "candidate": "ruff-report/branch-coverage-report",
-        "line": 327,
+        "line": 331,
         "referrer": ".github/workflows/gates.yml"
       },
       {
         "candidate": "artefact-distribue.yml",
-        "line": 332,
+        "line": 336,
         "referrer": ".github/workflows/gates.yml"
       },
       {
         "candidate": "test_rc1017_matrice_python.py",
-        "line": 333,
+        "line": 337,
         "referrer": ".github/workflows/gates.yml"
       },
       {
         "candidate": "artefact-distribue.yml",
-        "line": 339,
+        "line": 343,
         "referrer": ".github/workflows/gates.yml"
       },
       {
         "candidate": "nom/version/licence",
-        "line": 340,
+        "line": 344,
         "referrer": ".github/workflows/gates.yml"
       },
       {
         "candidate": "actions/checkout",
-        "line": 345,
+        "line": 349,
         "referrer": ".github/workflows/gates.yml"
       },
       {
         "candidate": "actions/setup-python",
-        "line": 348,
+        "line": 352,
         "referrer": ".github/workflows/gates.yml"
       },
       {
         "candidate": "actions/upload-artifact",
-        "line": 355,
-        "referrer": ".github/workflows/gates.yml"
-      },
-      {
-        "candidate": "composants-rc1.json",
         "line": 359,
         "referrer": ".github/workflows/gates.yml"
       },
       {
+        "candidate": "composants-rc1.json",
+        "line": 363,
+        "referrer": ".github/workflows/gates.yml"
+      },
+      {
         "candidate": "actions/checkout",
-        "line": 370,
+        "line": 374,
         "referrer": ".github/workflows/gates.yml"
       },
       {
         "candidate": "actions/setup-python",
-        "line": 373,
+        "line": 377,
         "referrer": ".github/workflows/gates.yml"
       },
       {
         "candidate": "branch-coverage.json",
-        "line": 379,
+        "line": 383,
         "referrer": ".github/workflows/gates.yml"
       },
       {
         "candidate": "actions/upload-artifact",
-        "line": 381,
+        "line": 385,
         "referrer": ".github/workflows/gates.yml"
       },
       {
         "candidate": "branch-coverage.json",
-        "line": 384,
+        "line": 388,
         "referrer": ".github/workflows/gates.yml"
       },
       {
         "candidate": "actions/checkout",
-        "line": 393,
+        "line": 397,
         "referrer": ".github/workflows/gates.yml"
       },
       {
         "candidate": "actions/setup-python",
-        "line": 396,
+        "line": 400,
         "referrer": ".github/workflows/gates.yml"
       },
       {
         "candidate": "RUNNER_TEMP/mutation-report.json",
-        "line": 402,
+        "line": 406,
         "referrer": ".github/workflows/gates.yml"
       },
       {
         "candidate": "actions/upload-artifact",
-        "line": 403,
+        "line": 407,
         "referrer": ".github/workflows/gates.yml"
       },
       {
         "candidate": "origin/main",
-        "line": 416,
+        "line": 420,
         "referrer": ".github/workflows/gates.yml"
       },
       {
         "candidate": "actions/checkout",
-        "line": 421,
-        "referrer": ".github/workflows/gates.yml"
-      },
-      {
-        "candidate": "actions/setup-python",
         "line": 425,
         "referrer": ".github/workflows/gates.yml"
       },
       {
+        "candidate": "actions/setup-python",
+        "line": 429,
+        "referrer": ".github/workflows/gates.yml"
+      },
+      {
         "candidate": "origin/main",
-        "line": 434,
+        "line": 438,
         "referrer": ".github/workflows/gates.yml"
       },
       {
         "candidate": "ruff-ratchet/mypy-ratchet",
-        "line": 442,
+        "line": 446,
         "referrer": ".github/workflows/gates.yml"
       },
       {
         "candidate": "actions/checkout",
-        "line": 445,
-        "referrer": ".github/workflows/gates.yml"
-      },
-      {
-        "candidate": "actions/setup-python",
         "line": 449,
         "referrer": ".github/workflows/gates.yml"
       },
       {
+        "candidate": "actions/setup-python",
+        "line": 453,
+        "referrer": ".github/workflows/gates.yml"
+      },
+      {
         "candidate": "origin/main",
-        "line": 456,
+        "line": 460,
         "referrer": ".github/workflows/gates.yml"
       },
       {
         "candidate": "success/skipped/neutral",
-        "line": 477,
+        "line": 481,
         "referrer": ".github/workflows/gates.yml"
       },
       {
         "candidate": "scope-guard/coordination-validation",
-        "line": 485,
+        "line": 489,
         "referrer": ".github/workflows/gates.yml"
       },
       {
         "candidate": "scripts/governance/",
-        "line": 521,
+        "line": 525,
         "referrer": ".github/workflows/gates.yml"
       },
       {
         "candidate": "verifier_agregat_tests.py",
-        "line": 522,
+        "line": 526,
         "referrer": ".github/workflows/gates.yml"
       },
       {
         "candidate": "actions/checkout",
-        "line": 525,
+        "line": 529,
         "referrer": ".github/workflows/gates.yml"
       },
       {
@@ -151875,154 +151880,154 @@
       },
       {
         "candidate": "src/forgeai",
-        "line": 224,
+        "line": 228,
         "referrer": ".github/workflows/gates.yml",
         "resolved": "src/forgeai",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_guard_fs.py",
-        "line": 253,
+        "line": 257,
         "referrer": ".github/workflows/gates.yml",
         "resolved": "tests/test_guard_fs.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_portable_lock.py",
-        "line": 253,
+        "line": 257,
         "referrer": ".github/workflows/gates.yml",
         "resolved": "tests/test_portable_lock.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_registre_concurrence.py",
-        "line": 253,
+        "line": 257,
         "referrer": ".github/workflows/gates.yml",
         "resolved": "tests/test_registre_concurrence.py",
         "severity": "hard"
       },
       {
         "candidate": "tests/test_openbao_flow_import.py",
-        "line": 253,
+        "line": 257,
         "referrer": ".github/workflows/gates.yml",
         "resolved": "tests/test_openbao_flow_import.py",
         "severity": "hard"
       },
       {
         "candidate": "scripts/reviews_gate.py",
-        "line": 292,
+        "line": 296,
         "referrer": ".github/workflows/gates.yml",
         "resolved": "scripts/reviews_gate.py",
         "severity": "hard"
       },
       {
         "candidate": "scripts/reviews_gate.py",
-        "line": 301,
+        "line": 305,
         "referrer": ".github/workflows/gates.yml",
         "resolved": "scripts/reviews_gate.py",
         "severity": "hard"
       },
       {
         "candidate": "scripts/ruff_report.py",
-        "line": 305,
+        "line": 309,
         "referrer": ".github/workflows/gates.yml",
         "resolved": "scripts/ruff_report.py",
         "severity": "hard"
       },
       {
         "candidate": "scripts/ruff_report.py",
-        "line": 320,
+        "line": 324,
         "referrer": ".github/workflows/gates.yml",
         "resolved": "scripts/ruff_report.py",
         "severity": "hard"
       },
       {
         "candidate": "scripts/rapport_composants.py",
-        "line": 329,
+        "line": 333,
         "referrer": ".github/workflows/gates.yml",
         "resolved": "scripts/rapport_composants.py",
         "severity": "hard"
       },
       {
         "candidate": "scripts/rapport_composants.py",
-        "line": 354,
+        "line": 358,
         "referrer": ".github/workflows/gates.yml",
         "resolved": "scripts/rapport_composants.py",
         "severity": "hard"
       },
       {
         "candidate": "scripts/branch_coverage_report.py",
-        "line": 363,
+        "line": 367,
         "referrer": ".github/workflows/gates.yml",
         "resolved": "scripts/branch_coverage_report.py",
         "severity": "hard"
       },
       {
         "candidate": "scripts/branch_coverage_report.py",
-        "line": 379,
+        "line": 383,
         "referrer": ".github/workflows/gates.yml",
         "resolved": "scripts/branch_coverage_report.py",
         "severity": "hard"
       },
       {
         "candidate": "scripts/mutation_gate.py",
-        "line": 402,
+        "line": 406,
         "referrer": ".github/workflows/gates.yml",
         "resolved": "scripts/mutation_gate.py",
         "severity": "hard"
       },
       {
         "candidate": "governance/ruff-classification.json",
-        "line": 413,
+        "line": 417,
         "referrer": ".github/workflows/gates.yml",
         "resolved": "governance/ruff-classification.json",
         "severity": "hard"
       },
       {
         "candidate": "scripts/ruff_ratchet.py",
-        "line": 414,
+        "line": 418,
         "referrer": ".github/workflows/gates.yml",
         "resolved": "scripts/ruff_ratchet.py",
         "severity": "hard"
       },
       {
         "candidate": "governance/ruff-baseline.json",
-        "line": 415,
+        "line": 419,
         "referrer": ".github/workflows/gates.yml",
         "resolved": "governance/ruff-baseline.json",
         "severity": "hard"
       },
       {
         "candidate": "scripts/ruff_ratchet.py",
-        "line": 432,
+        "line": 436,
         "referrer": ".github/workflows/gates.yml",
         "resolved": "scripts/ruff_ratchet.py",
         "severity": "hard"
       },
       {
         "candidate": "scripts/ruff_noqa_gate.py",
-        "line": 454,
+        "line": 458,
         "referrer": ".github/workflows/gates.yml",
         "resolved": "scripts/ruff_noqa_gate.py",
         "severity": "hard"
       },
       {
         "candidate": ".github/workflows/scope-guard.yml",
-        "line": 485,
+        "line": 489,
         "referrer": ".github/workflows/gates.yml",
         "resolved": ".github/workflows/scope-guard.yml",
         "severity": "hard"
       },
       {
         "candidate": ".github/workflows/sonarcloud.yml",
-        "line": 486,
+        "line": 490,
         "referrer": ".github/workflows/gates.yml",
         "resolved": ".github/workflows/sonarcloud.yml",
         "severity": "hard"
       },
       {
         "candidate": "scripts/governance/verifier_agregat_tests.py",
-        "line": 531,
+        "line": 535,
         "referrer": ".github/workflows/gates.yml",
         "resolved": "scripts/governance/verifier_agregat_tests.py",
         "severity": "hard"
@@ -182786,7 +182791,7 @@
       "working-sandbox-readme": 1
     },
     "case_collisions_total": 0,
-    "dangling_references_total": 17514,
+    "dangling_references_total": 17515,
     "generated_total": 9,
     "load_bearing_total": 2176,
     "portability_violations_total": 0,

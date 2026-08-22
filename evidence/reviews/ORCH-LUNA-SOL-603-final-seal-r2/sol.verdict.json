@@ -1,0 +1,18 @@
+{
+  "fresh_context": true,
+  "blind": true,
+  "reviewer_read_only": true,
+  "reviewer_model": "GPT-5.6-Sol",
+  "base_commit": "5e25de16bd38f8a6ffc16e120919beff128f95aa",
+  "reviewed_head_commit": "231ec02a065deeae44235c7b15897c782cf22f20",
+  "reviewed_head_tree": "af4b1a6dc0b5e65ca544a921efa5d16dff0b65a4",
+  "candidate_diff_digest": "2b2879e34b9117c0408dc9f4c397fd0e53185ca3961ae38609fb0e05353c4610",
+  "artifact_sha256": "4881601c9484518a171d0ce4c3cf25d8d6f4a17347dad2fabdd2297ca568bbb9",
+  "sdd_diff_digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "mission_diff_digest": "b5ff599c26285b5df69f5a2487fe885870c89467c2fc357b321fcea3445ad1b1",
+  "template_sha256": "a5bebc60556f4fc38d6ca96a3d0372577550f23157377af4d852e6144e25f137",
+  "prompt_sha256": "16b874bac665c21a3a3bc8503f8162f0e5a13dda203f73128dc705d8e5ac2bfa",
+  "verdict": "APPROVE",
+  "blocking_findings": [],
+  "reviewed_at": "2026-08-22T18:41:33-04:00"
+}
