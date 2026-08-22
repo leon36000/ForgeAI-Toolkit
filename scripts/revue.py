@@ -362,6 +362,7 @@ def _diff_artifact_canonique(
             "diff",
             "--no-ext-diff",
             "--no-textconv",
+            "--no-suppress-blank-empty",
             "--binary",
             "--full-index",
             "--diff-algorithm=myers",

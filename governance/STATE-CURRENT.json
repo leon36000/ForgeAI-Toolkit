@@ -772,7 +772,7 @@
       },
       {
         "path": "tests/test_revue.py",
-        "sha256": "986a2f739f360f34af1982e7c8145ded40160b26ecb9bf755a929158f4526205"
+        "sha256": "a9d8705ad6c2891a880347eb67af152f59ff28bc221020faf9d287edb9947092"
       },
       {
         "path": "tests/test_routestore_concurrence.py",

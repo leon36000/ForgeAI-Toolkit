@@ -2144,14 +2144,14 @@
         },
         {
           "candidate": "AGENTS.md",
-          "line": 66,
+          "line": 67,
           "referrer": "governance/AUTHORITY-MAP.md",
           "resolved": "AGENTS.md",
           "severity": "hard"
         },
         {
           "candidate": "AGENTS.md",
-          "line": 67,
+          "line": 68,
           "referrer": "governance/AUTHORITY-MAP.md",
           "resolved": "AGENTS.md",
           "severity": "hard"
@@ -2556,7 +2556,7 @@
         },
         {
           "candidate": "CANON/PLAN-MAITRE-EXECUTION-BMAD-v1.0.md",
-          "line": 71,
+          "line": 72,
           "referrer": "governance/AUTHORITY-MAP.md",
           "resolved": "CANON/PLAN-MAITRE-EXECUTION-BMAD-v1.0.md",
           "severity": "hard"
@@ -2835,7 +2835,7 @@
         },
         {
           "candidate": "CANON/directives-perimetre.md",
-          "line": 68,
+          "line": 69,
           "referrer": "governance/AUTHORITY-MAP.md",
           "resolved": "CANON/directives-perimetre.md",
           "severity": "hard"
@@ -2961,14 +2961,14 @@
         },
         {
           "candidate": "CANON/plan-integral.md",
-          "line": 69,
+          "line": 70,
           "referrer": "governance/AUTHORITY-MAP.md",
           "resolved": "CANON/plan-integral.md",
           "severity": "hard"
         },
         {
           "candidate": "CANON/plan-integral.md",
-          "line": 70,
+          "line": 71,
           "referrer": "governance/AUTHORITY-MAP.md",
           "resolved": "CANON/plan-integral.md",
           "severity": "hard"
@@ -3297,7 +3297,7 @@
         },
         {
           "candidate": "CLAUDE.md",
-          "line": 72,
+          "line": 73,
           "referrer": "governance/AUTHORITY-MAP.md",
           "resolved": "CLAUDE.md",
           "severity": "hard"
@@ -4362,14 +4362,14 @@
         },
         {
           "candidate": "MASTER-PLAN.md",
-          "line": 55,
+          "line": 56,
           "referrer": "governance/AUTHORITY-MAP.md",
           "resolved": "MASTER-PLAN.md",
           "severity": "hard"
         },
         {
           "candidate": "MASTER-PLAN.md",
-          "line": 74,
+          "line": 75,
           "referrer": "governance/AUTHORITY-MAP.md",
           "resolved": "MASTER-PLAN.md",
           "severity": "hard"
@@ -4705,7 +4705,7 @@
         },
         {
           "candidate": "README.md",
-          "line": 56,
+          "line": 57,
           "referrer": "governance/AUTHORITY-MAP.md",
           "resolved": "README.md",
           "severity": "hard"
@@ -6940,7 +6940,7 @@
         },
         {
           "candidate": "evidence/registres/mission.jsonl",
-          "line": 57,
+          "line": 58,
           "referrer": "governance/AUTHORITY-MAP.md",
           "resolved": "evidence/registres/mission.jsonl",
           "severity": "hard"
@@ -6968,7 +6968,7 @@
         },
         {
           "candidate": "evidence/registres/mission.jsonl",
-          "line": 467,
+          "line": 468,
           "referrer": "scripts/revue.py",
           "resolved": "evidence/registres/mission.jsonl",
           "severity": "hard"
@@ -6996,8 +6996,8 @@
         }
       ],
       "rule_id": "evidence-registres-root",
-      "sha256": "f0316344ec483882d2e2b0eff8eb7a8d637324d2fa98f965ac01f2e79abb176d",
-      "size": 430711,
+      "sha256": "a9a79092d07a60987bd8dd63ef8a6ad0cf9b61f6e3e348393ac97b9862a8b55f",
+      "size": 400498,
       "target_path": null,
       "type": "text"
     },
@@ -28589,14 +28589,14 @@
         },
         {
           "candidate": "governance/PATH-CLASSIFICATION.md",
-          "line": 382,
+          "line": 383,
           "referrer": "scripts/revue.py",
           "resolved": "governance/PATH-CLASSIFICATION.md",
           "severity": "hard"
         },
         {
           "candidate": "governance/PATH-CLASSIFICATION.md",
-          "line": 485,
+          "line": 486,
           "referrer": "scripts/revue.py",
           "resolved": "governance/PATH-CLASSIFICATION.md",
           "severity": "hard"
@@ -29359,8 +29359,8 @@
         }
       ],
       "rule_id": "governance-core",
-      "sha256": "07ce9f84f278e614d15c99f1ec297a451af38293f19a1c27072bc65c4fb16bdd",
-      "size": 30639,
+      "sha256": "c5c0daf34fbcce74c54eef9189b64a61fc99bf11ba67af4a79be49c87a0622f6",
+      "size": 31681,
       "target_path": null,
       "type": "text"
     },
@@ -29386,6 +29386,13 @@
       "referenced_by": [
         {
           "candidate": "governance/autonomy-policy.json",
+          "line": 0,
+          "referrer": "governance/authority.json",
+          "resolved": "governance/autonomy-policy.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/autonomy-policy.json",
           "line": 32,
           "referrer": "AGENTS.md",
           "resolved": "governance/autonomy-policy.json",
@@ -29395,6 +29402,13 @@
           "candidate": "governance/autonomy-policy.json",
           "line": 61,
           "referrer": "CLAUDE.md",
+          "resolved": "governance/autonomy-policy.json",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/autonomy-policy.json",
+          "line": 50,
+          "referrer": "governance/AUTHORITY-MAP.md",
           "resolved": "governance/autonomy-policy.json",
           "severity": "hard"
         },
@@ -29518,14 +29532,14 @@
         },
         {
           "candidate": "governance/decisions/D-2026-08-14-mission-lead.md",
-          "line": 52,
+          "line": 53,
           "referrer": "governance/AUTHORITY-MAP.md",
           "resolved": "governance/decisions/D-2026-08-14-mission-lead.md",
           "severity": "hard"
         },
         {
           "candidate": "governance/decisions/D-2026-08-14-mission-lead.md",
-          "line": 73,
+          "line": 74,
           "referrer": "governance/AUTHORITY-MAP.md",
           "resolved": "governance/decisions/D-2026-08-14-mission-lead.md",
           "severity": "hard"
@@ -29553,7 +29567,7 @@
         },
         {
           "candidate": "governance/decisions/D-2026-08-15-arborescence-evidence-work-archive.md",
-          "line": 50,
+          "line": 51,
           "referrer": "governance/AUTHORITY-MAP.md",
           "resolved": "governance/decisions/D-2026-08-15-arborescence-evidence-work-archive.md",
           "severity": "hard"
@@ -29595,7 +29609,7 @@
         },
         {
           "candidate": "governance/decisions/D-2026-08-15-racines-documentaires.md",
-          "line": 53,
+          "line": 54,
           "referrer": "governance/AUTHORITY-MAP.md",
           "resolved": "governance/decisions/D-2026-08-15-racines-documentaires.md",
           "severity": "hard"
@@ -29623,7 +29637,7 @@
         },
         {
           "candidate": "governance/decisions/D-2026-08-21-autonomie-luna-sol.md",
-          "line": 51,
+          "line": 52,
           "referrer": "governance/AUTHORITY-MAP.md",
           "resolved": "governance/decisions/D-2026-08-21-autonomie-luna-sol.md",
           "severity": "hard"
@@ -29798,7 +29812,7 @@
         },
         {
           "candidate": "governance/path-classification-rules.json",
-          "line": 478,
+          "line": 479,
           "referrer": "scripts/revue.py",
           "resolved": "governance/path-classification-rules.json",
           "severity": "hard"
@@ -30190,21 +30204,21 @@
         },
         {
           "candidate": "governance/path-classification.json",
-          "line": 381,
+          "line": 382,
           "referrer": "scripts/revue.py",
           "resolved": "governance/path-classification.json",
           "severity": "hard"
         },
         {
           "candidate": "governance/path-classification.json",
-          "line": 470,
+          "line": 471,
           "referrer": "scripts/revue.py",
           "resolved": "governance/path-classification.json",
           "severity": "hard"
         },
         {
           "candidate": "governance/path-classification.json",
-          "line": 484,
+          "line": 485,
           "referrer": "scripts/revue.py",
           "resolved": "governance/path-classification.json",
           "severity": "hard"
@@ -31463,7 +31477,7 @@
         },
         {
           "candidate": "manifests/roles.yaml",
-          "line": 54,
+          "line": 55,
           "referrer": "governance/AUTHORITY-MAP.md",
           "resolved": "manifests/roles.yaml",
           "severity": "hard"
@@ -31484,7 +31498,7 @@
         },
         {
           "candidate": "manifests/roles.yaml",
-          "line": 1306,
+          "line": 1307,
           "referrer": "scripts/revue.py",
           "resolved": "manifests/roles.yaml",
           "severity": "hard"
@@ -35796,8 +35810,8 @@
         }
       ],
       "rule_id": "governance-scripts-root",
-      "sha256": "15089d227892e81c52c9a7b8b73c3a84792f27d9c642df741c5937bfe45816b9",
-      "size": 85443,
+      "sha256": "1da01b968a40a8fedd1958292ecd19c281876500759dcc401eb28075ab1b6c85",
+      "size": 85484,
       "target_path": null,
       "type": "text"
     },
@@ -47845,7 +47859,7 @@
         },
         {
           "candidate": "stories/ORCH-001.md",
-          "line": 58,
+          "line": 59,
           "referrer": "governance/AUTHORITY-MAP.md",
           "resolved": "stories/ORCH-001.md",
           "severity": "hard"
@@ -58692,8 +58706,8 @@
         }
       ],
       "rule_id": "test-suite",
-      "sha256": "986a2f739f360f34af1982e7c8145ded40160b26ecb9bf755a929158f4526205",
-      "size": 23035,
+      "sha256": "a9d8705ad6c2891a880347eb67af152f59ff28bc221020faf9d287edb9947092",
+      "size": 23072,
       "target_path": null,
       "type": "text"
     },
@@ -107280,37 +107294,27 @@
       },
       {
         "candidate": "evidence/reviews/",
-        "line": 378,
-        "referrer": "scripts/revue.py"
-      },
-      {
-        "candidate": ".superpowers/sdd/",
         "line": 379,
         "referrer": "scripts/revue.py"
       },
       {
-        "candidate": "evidence/registres/",
+        "candidate": ".superpowers/sdd/",
         "line": 380,
         "referrer": "scripts/revue.py"
       },
       {
+        "candidate": "evidence/registres/",
+        "line": 381,
+        "referrer": "scripts/revue.py"
+      },
+      {
         "candidate": ".superpowers/sdd/",
-        "line": 407,
+        "line": 408,
         "referrer": "scripts/revue.py"
       },
       {
         "candidate": "evidence/registres/",
-        "line": 441,
-        "referrer": "scripts/revue.py"
-      },
-      {
-        "candidate": "reviews/",
-        "line": 459,
-        "referrer": "scripts/revue.py"
-      },
-      {
-        "candidate": "evidence/reviews/",
-        "line": 459,
+        "line": 442,
         "referrer": "scripts/revue.py"
       },
       {
@@ -107319,83 +107323,88 @@
         "referrer": "scripts/revue.py"
       },
       {
+        "candidate": "evidence/reviews/",
+        "line": 460,
+        "referrer": "scripts/revue.py"
+      },
+      {
+        "candidate": "reviews/",
+        "line": 461,
+        "referrer": "scripts/revue.py"
+      },
+      {
         "candidate": ".superpowers/sdd/",
-        "line": 463,
+        "line": 464,
         "referrer": "scripts/revue.py"
       },
       {
         "candidate": "evidence/reviews/",
-        "line": 471,
+        "line": 472,
         "referrer": "scripts/revue.py"
       },
       {
         "candidate": "RECU.json",
-        "line": 471,
+        "line": 472,
         "referrer": "scripts/revue.py"
       },
       {
         "candidate": "evidence/reviews/",
-        "line": 481,
-        "referrer": "scripts/revue.py"
-      },
-      {
-        "candidate": ".superpowers/sdd/",
         "line": 482,
         "referrer": "scripts/revue.py"
       },
       {
-        "candidate": "evidence/registres/",
+        "candidate": ".superpowers/sdd/",
         "line": 483,
         "referrer": "scripts/revue.py"
       },
       {
-        "candidate": "evidence/reviews/",
-        "line": 496,
+        "candidate": "evidence/registres/",
+        "line": 484,
         "referrer": "scripts/revue.py"
       },
       {
-        "candidate": ".verdict.json",
+        "candidate": "evidence/reviews/",
         "line": 497,
         "referrer": "scripts/revue.py"
       },
       {
+        "candidate": ".verdict.json",
+        "line": 498,
+        "referrer": "scripts/revue.py"
+      },
+      {
         "candidate": ".superpowers/sdd/",
-        "line": 500,
+        "line": 501,
         "referrer": "scripts/revue.py"
       },
       {
         "candidate": "governance/path-classification.json/.md",
-        "line": 503,
-        "referrer": "scripts/revue.py"
-      },
-      {
-        "candidate": "classify_paths.py",
         "line": 504,
         "referrer": "scripts/revue.py"
       },
       {
+        "candidate": "classify_paths.py",
+        "line": 505,
+        "referrer": "scripts/revue.py"
+      },
+      {
         "candidate": "autonomy-policy/1",
-        "line": 791,
+        "line": 792,
         "referrer": "scripts/revue.py"
       },
       {
         "candidate": "roles.yaml",
-        "line": 830,
+        "line": 831,
         "referrer": "scripts/revue.py"
       },
       {
         "candidate": "roles.yaml",
-        "line": 870,
+        "line": 871,
         "referrer": "scripts/revue.py"
       },
       {
         "candidate": "roles.yaml",
-        "line": 888,
-        "referrer": "scripts/revue.py"
-      },
-      {
-        "candidate": "recu-revue/2",
-        "line": 1008,
+        "line": 889,
         "referrer": "scripts/revue.py"
       },
       {
@@ -107404,73 +107413,73 @@
         "referrer": "scripts/revue.py"
       },
       {
+        "candidate": "recu-revue/2",
+        "line": 1010,
+        "referrer": "scripts/revue.py"
+      },
+      {
         "candidate": "SOL-PROMPT.md",
-        "line": 1074,
+        "line": 1075,
         "referrer": "scripts/revue.py"
       },
       {
         "candidate": "current_head/current_tree",
-        "line": 1100,
+        "line": 1101,
         "referrer": "scripts/revue.py"
       },
       {
         "candidate": "base/diff",
-        "line": 1128,
+        "line": 1129,
         "referrer": "scripts/revue.py"
       },
       {
         "candidate": "Sol/openai",
-        "line": 1200,
+        "line": 1201,
         "referrer": "scripts/revue.py"
       },
       {
         "candidate": "APPROVE/REJECT",
-        "line": 1328,
+        "line": 1329,
         "referrer": "scripts/revue.py"
       },
       {
         "candidate": "commit/diff",
-        "line": 1368,
-        "referrer": "scripts/revue.py"
-      },
-      {
-        "candidate": "head_commit/head_tree",
-        "line": 1368,
-        "referrer": "scripts/revue.py"
-      },
-      {
-        "candidate": "revue.py",
         "line": 1369,
         "referrer": "scripts/revue.py"
       },
       {
-        "candidate": "commit/arbre",
+        "candidate": "head_commit/head_tree",
+        "line": 1369,
+        "referrer": "scripts/revue.py"
+      },
+      {
+        "candidate": "revue.py",
         "line": 1370,
         "referrer": "scripts/revue.py"
       },
       {
-        "candidate": "head_commit/",
+        "candidate": "commit/arbre",
         "line": 1371,
         "referrer": "scripts/revue.py"
       },
       {
+        "candidate": "head_commit/",
+        "line": 1372,
+        "referrer": "scripts/revue.py"
+      },
+      {
         "candidate": "reviews/",
-        "line": 1375,
+        "line": 1376,
         "referrer": "scripts/revue.py"
       },
       {
         "candidate": "RECU.json",
-        "line": 1397,
+        "line": 1398,
         "referrer": "scripts/revue.py"
       },
       {
         "candidate": "crit/modifi",
-        "line": 1397,
-        "referrer": "scripts/revue.py"
-      },
-      {
-        "candidate": "recu-revue/2",
-        "line": 1463,
+        "line": 1398,
         "referrer": "scripts/revue.py"
       },
       {
@@ -107479,13 +107488,13 @@
         "referrer": "scripts/revue.py"
       },
       {
-        "candidate": "Git/prompt",
-        "line": 1520,
+        "candidate": "recu-revue/2",
+        "line": 1465,
         "referrer": "scripts/revue.py"
       },
       {
-        "candidate": "recu-revue/2",
-        "line": 1578,
+        "candidate": "Git/prompt",
+        "line": 1521,
         "referrer": "scripts/revue.py"
       },
       {
@@ -107494,48 +107503,53 @@
         "referrer": "scripts/revue.py"
       },
       {
+        "candidate": "recu-revue/2",
+        "line": 1580,
+        "referrer": "scripts/revue.py"
+      },
+      {
         "candidate": ".verdict.json",
-        "line": 1736,
+        "line": 1737,
         "referrer": "scripts/revue.py"
       },
       {
         "candidate": "reviews/",
-        "line": 1743,
+        "line": 1744,
         "referrer": "scripts/revue.py"
       },
       {
         "candidate": "evidence/reviews/",
-        "line": 1743,
+        "line": 1744,
         "referrer": "scripts/revue.py"
       },
       {
         "candidate": ".verdict.json",
-        "line": 1747,
+        "line": 1748,
         "referrer": "scripts/revue.py"
       },
       {
         "candidate": "recu-revue/2",
-        "line": 1793,
+        "line": 1794,
         "referrer": "scripts/revue.py"
       },
       {
         "candidate": "recu-revue/1",
-        "line": 1821,
+        "line": 1822,
         "referrer": "scripts/revue.py"
       },
       {
         "candidate": "revue.py",
-        "line": 1851,
+        "line": 1852,
         "referrer": "scripts/revue.py"
       },
       {
         "candidate": ".verdict.json",
-        "line": 1864,
+        "line": 1865,
         "referrer": "scripts/revue.py"
       },
       {
         "candidate": "test/receipt",
-        "line": 1884,
+        "line": 1885,
         "referrer": "scripts/revue.py"
       },
       {
@@ -144390,87 +144404,87 @@
       },
       {
         "candidate": "policy.json",
-        "line": 393,
+        "line": 394,
         "referrer": "tests/test_revue.py"
       },
       {
         "candidate": "reviews/",
-        "line": 429,
+        "line": 430,
         "referrer": "tests/test_revue.py"
       },
       {
         "candidate": "head_commit/head_tree",
-        "line": 429,
+        "line": 430,
         "referrer": "tests/test_revue.py"
       },
       {
         "candidate": "RECU.json",
-        "line": 496,
+        "line": 497,
         "referrer": "tests/test_revue.py"
       },
       {
         "candidate": "attaquant/une",
-        "line": 498,
+        "line": 499,
         "referrer": "tests/test_revue.py"
       },
       {
         "candidate": "revue.py",
-        "line": 524,
+        "line": 525,
         "referrer": "tests/test_revue.py"
       },
       {
         "candidate": "origin/main",
-        "line": 526,
+        "line": 527,
         "referrer": "tests/test_revue.py"
       },
       {
         "candidate": "origin/main",
-        "line": 538,
+        "line": 539,
         "referrer": "tests/test_revue.py"
       },
       {
         "candidate": "revue.py",
-        "line": 550,
+        "line": 551,
         "referrer": "tests/test_revue.py"
       },
       {
         "candidate": "origin/main",
-        "line": 550,
+        "line": 551,
         "referrer": "tests/test_revue.py"
       },
       {
         "candidate": "DeepSeek-V4-Pro.verdict.json",
-        "line": 563,
-        "referrer": "tests/test_revue.py"
-      },
-      {
-        "candidate": "Gemini-3.7-Flash.verdict.json",
         "line": 564,
         "referrer": "tests/test_revue.py"
       },
       {
+        "candidate": "Gemini-3.7-Flash.verdict.json",
+        "line": 565,
+        "referrer": "tests/test_revue.py"
+      },
+      {
         "candidate": "LongCat-2.0.verdict.json",
-        "line": 567,
+        "line": 568,
         "referrer": "tests/test_revue.py"
       },
       {
         "candidate": "RECU.json",
-        "line": 572,
+        "line": 573,
         "referrer": "tests/test_revue.py"
       },
       {
         "candidate": "origin/main",
-        "line": 575,
+        "line": 576,
         "referrer": "tests/test_revue.py"
       },
       {
         "candidate": "DeepSeek-V4-Pro.verdict.json",
-        "line": 596,
+        "line": 597,
         "referrer": "tests/test_revue.py"
       },
       {
         "candidate": "origin/main",
-        "line": 603,
+        "line": 604,
         "referrer": "tests/test_revue.py"
       },
       {
@@ -148627,6 +148641,13 @@
         "line": 0,
         "referrer": "governance/authority.json",
         "resolved": "governance/decisions/D-2026-08-21-autonomie-luna-sol.md",
+        "severity": "hard"
+      },
+      {
+        "candidate": "governance/autonomy-policy.json",
+        "line": 0,
+        "referrer": "governance/authority.json",
+        "resolved": "governance/autonomy-policy.json",
         "severity": "hard"
       },
       {
@@ -167866,73 +167887,73 @@
         "severity": "hard"
       },
       {
-        "candidate": "governance/decisions/D-2026-08-15-arborescence-evidence-work-archive.md",
+        "candidate": "governance/autonomy-policy.json",
         "line": 50,
+        "referrer": "governance/AUTHORITY-MAP.md",
+        "resolved": "governance/autonomy-policy.json",
+        "severity": "hard"
+      },
+      {
+        "candidate": "governance/decisions/D-2026-08-15-arborescence-evidence-work-archive.md",
+        "line": 51,
         "referrer": "governance/AUTHORITY-MAP.md",
         "resolved": "governance/decisions/D-2026-08-15-arborescence-evidence-work-archive.md",
         "severity": "hard"
       },
       {
         "candidate": "governance/decisions/D-2026-08-21-autonomie-luna-sol.md",
-        "line": 51,
+        "line": 52,
         "referrer": "governance/AUTHORITY-MAP.md",
         "resolved": "governance/decisions/D-2026-08-21-autonomie-luna-sol.md",
         "severity": "hard"
       },
       {
         "candidate": "governance/decisions/D-2026-08-14-mission-lead.md",
-        "line": 52,
+        "line": 53,
         "referrer": "governance/AUTHORITY-MAP.md",
         "resolved": "governance/decisions/D-2026-08-14-mission-lead.md",
         "severity": "hard"
       },
       {
         "candidate": "governance/decisions/D-2026-08-15-racines-documentaires.md",
-        "line": 53,
+        "line": 54,
         "referrer": "governance/AUTHORITY-MAP.md",
         "resolved": "governance/decisions/D-2026-08-15-racines-documentaires.md",
         "severity": "hard"
       },
       {
         "candidate": "manifests/roles.yaml",
-        "line": 54,
+        "line": 55,
         "referrer": "governance/AUTHORITY-MAP.md",
         "resolved": "manifests/roles.yaml",
         "severity": "hard"
       },
       {
         "candidate": "MASTER-PLAN.md",
-        "line": 55,
+        "line": 56,
         "referrer": "governance/AUTHORITY-MAP.md",
         "resolved": "MASTER-PLAN.md",
         "severity": "hard"
       },
       {
         "candidate": "README.md",
-        "line": 56,
+        "line": 57,
         "referrer": "governance/AUTHORITY-MAP.md",
         "resolved": "README.md",
         "severity": "hard"
       },
       {
         "candidate": "evidence/registres/mission.jsonl",
-        "line": 57,
+        "line": 58,
         "referrer": "governance/AUTHORITY-MAP.md",
         "resolved": "evidence/registres/mission.jsonl",
         "severity": "hard"
       },
       {
         "candidate": "stories/ORCH-001.md",
-        "line": 58,
+        "line": 59,
         "referrer": "governance/AUTHORITY-MAP.md",
         "resolved": "stories/ORCH-001.md",
-        "severity": "hard"
-      },
-      {
-        "candidate": "AGENTS.md",
-        "line": 66,
-        "referrer": "governance/AUTHORITY-MAP.md",
-        "resolved": "AGENTS.md",
         "severity": "hard"
       },
       {
@@ -167943,17 +167964,17 @@
         "severity": "hard"
       },
       {
-        "candidate": "CANON/directives-perimetre.md",
+        "candidate": "AGENTS.md",
         "line": 68,
         "referrer": "governance/AUTHORITY-MAP.md",
-        "resolved": "CANON/directives-perimetre.md",
+        "resolved": "AGENTS.md",
         "severity": "hard"
       },
       {
-        "candidate": "CANON/plan-integral.md",
+        "candidate": "CANON/directives-perimetre.md",
         "line": 69,
         "referrer": "governance/AUTHORITY-MAP.md",
-        "resolved": "CANON/plan-integral.md",
+        "resolved": "CANON/directives-perimetre.md",
         "severity": "hard"
       },
       {
@@ -167964,29 +167985,36 @@
         "severity": "hard"
       },
       {
-        "candidate": "CANON/PLAN-MAITRE-EXECUTION-BMAD-v1.0.md",
+        "candidate": "CANON/plan-integral.md",
         "line": 71,
+        "referrer": "governance/AUTHORITY-MAP.md",
+        "resolved": "CANON/plan-integral.md",
+        "severity": "hard"
+      },
+      {
+        "candidate": "CANON/PLAN-MAITRE-EXECUTION-BMAD-v1.0.md",
+        "line": 72,
         "referrer": "governance/AUTHORITY-MAP.md",
         "resolved": "CANON/PLAN-MAITRE-EXECUTION-BMAD-v1.0.md",
         "severity": "hard"
       },
       {
         "candidate": "CLAUDE.md",
-        "line": 72,
+        "line": 73,
         "referrer": "governance/AUTHORITY-MAP.md",
         "resolved": "CLAUDE.md",
         "severity": "hard"
       },
       {
         "candidate": "governance/decisions/D-2026-08-14-mission-lead.md",
-        "line": 73,
+        "line": 74,
         "referrer": "governance/AUTHORITY-MAP.md",
         "resolved": "governance/decisions/D-2026-08-14-mission-lead.md",
         "severity": "hard"
       },
       {
         "candidate": "MASTER-PLAN.md",
-        "line": 74,
+        "line": 75,
         "referrer": "governance/AUTHORITY-MAP.md",
         "resolved": "MASTER-PLAN.md",
         "severity": "hard"
@@ -175238,56 +175266,56 @@
       },
       {
         "candidate": "governance/path-classification.json",
-        "line": 381,
+        "line": 382,
         "referrer": "scripts/revue.py",
         "resolved": "governance/path-classification.json",
         "severity": "hard"
       },
       {
         "candidate": "governance/PATH-CLASSIFICATION.md",
-        "line": 382,
+        "line": 383,
         "referrer": "scripts/revue.py",
         "resolved": "governance/PATH-CLASSIFICATION.md",
         "severity": "hard"
       },
       {
         "candidate": "evidence/registres/mission.jsonl",
-        "line": 467,
+        "line": 468,
         "referrer": "scripts/revue.py",
         "resolved": "evidence/registres/mission.jsonl",
         "severity": "hard"
       },
       {
         "candidate": "governance/path-classification.json",
-        "line": 470,
+        "line": 471,
         "referrer": "scripts/revue.py",
         "resolved": "governance/path-classification.json",
         "severity": "hard"
       },
       {
         "candidate": "governance/path-classification-rules.json",
-        "line": 478,
+        "line": 479,
         "referrer": "scripts/revue.py",
         "resolved": "governance/path-classification-rules.json",
         "severity": "hard"
       },
       {
         "candidate": "governance/path-classification.json",
-        "line": 484,
+        "line": 485,
         "referrer": "scripts/revue.py",
         "resolved": "governance/path-classification.json",
         "severity": "hard"
       },
       {
         "candidate": "governance/PATH-CLASSIFICATION.md",
-        "line": 485,
+        "line": 486,
         "referrer": "scripts/revue.py",
         "resolved": "governance/PATH-CLASSIFICATION.md",
         "severity": "hard"
       },
       {
         "candidate": "manifests/roles.yaml",
-        "line": 1306,
+        "line": 1307,
         "referrer": "scripts/revue.py",
         "resolved": "manifests/roles.yaml",
         "severity": "hard"

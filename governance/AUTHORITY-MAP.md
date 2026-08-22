@@ -47,6 +47,7 @@ Cette carte est le rendu de `governance/authority.json`.
 | `coord.active-claims` | `archive/coordination/active-claims.json` | superseded | `coordination_ops` | `copilot` | `gov.decision-mission-lead` |
 | `coord.work-packages` | `archive/coordination/work-packages.json` | superseded | `coordination_ops` | `copilot` | `gov.decision-mission-lead` |
 | `cursor.orchestration-rules` | `archive/cursor/rules/forgeai-orchestration.mdc` | superseded | `ide_contract` | `copilot` | `gov.decision-mission-lead` |
+| `gov.autonomy-policy` | `governance/autonomy-policy.json` | active | `orchestration` | `nathan` | `—` |
 | `gov.decision-arborescence-evidence-work-archive` | `governance/decisions/D-2026-08-15-arborescence-evidence-work-archive.md` | active | `governance_method` | `orchestrateur` | `—` |
 | `gov.decision-autonomie-luna-sol` | `governance/decisions/D-2026-08-21-autonomie-luna-sol.md` | active | `orchestration` | `nathan` | `—` |
 | `gov.decision-mission-lead` | `governance/decisions/D-2026-08-14-mission-lead.md` | conflicted | `orchestration` | `nathan` | `—` |

@@ -351,6 +351,7 @@ def test_diff_artifact_sol_fige_la_configuration_git():
     commande = commandes_recues[0]
     for option in (
         "--no-textconv",
+        "--no-suppress-blank-empty",
         "--full-index",
         "--diff-algorithm=myers",
         "--no-indent-heuristic",
