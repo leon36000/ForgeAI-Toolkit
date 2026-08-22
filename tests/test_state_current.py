@@ -509,6 +509,14 @@ def test_subcommands_by_group_compte_node_a_sept() -> None:
     assert state["cli"]["subcommands_by_group"]["node"] == 7
 
 
+def test_quorum_reflete_la_politique_sol_active() -> None:
+    state = state_current.collect(REPO)
+
+    assert state["governance"]["review_quorum"] == (
+        "1/1 Sol (sol_blind); historique multi_vendor 3/3"
+    )
+
+
 def test_observation_sans_provenance_rejetee(tmp_path: pathlib.Path) -> None:
     observations_path = tmp_path / "state-observations.json"
     _write_json(

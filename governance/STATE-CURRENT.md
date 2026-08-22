@@ -89,7 +89,7 @@
     "work_packages_total": 70
   },
   "governance": {
-    "review_quorum": "3/3"
+    "review_quorum": "1/1 Sol (sol_blind); historique multi_vendor 3/3"
   },
   "inputs": [
     {
@@ -127,6 +127,10 @@
     {
       "path": "archive/coordination/work-packages.json",
       "sha256": "8952b9c2ab50546782a129e59999e5df23305a6fca315438510865b4a1633d54"
+    },
+    {
+      "path": "governance/autonomy-policy.json",
+      "sha256": "50f8b11467e3219d2cf3df52fa0d075dce63a8ad8bced94fad6ba293c2a1f624"
     },
     {
       "path": "pyproject.toml",
@@ -686,7 +690,7 @@
     },
     {
       "path": "tests/test_rc1011_packs_md.py",
-      "sha256": "71363f9130dfca106e3ff1b8161303ba1c94525932dc527a763a9f930b908474"
+      "sha256": "0ccbe4116159aa1d3277bcf270e8000230bbce41f0688db5cf23c780d13387fc"
     },
     {
       "path": "tests/test_rc1016_sonar_suppressions.py",
@@ -774,11 +778,11 @@
     },
     {
       "path": "tests/test_reviews_gate.py",
-      "sha256": "28189c31d7b4d04b4b00b851fce69498f250555257ae021e20ff4d7c11dd7ffa"
+      "sha256": "0a82a179ea6ffaa4880d418250f408f73587ed0a698d03d318776b71fd8bf171"
     },
     {
       "path": "tests/test_revue.py",
-      "sha256": "d9209636686e2e4d2bde8004195aa5bc1b9a749b61eb5018eecb1c8471fdcaad"
+      "sha256": "d47ff1252aec67a6449db1791043465f4ad1af50f439496b3576f16c7b634702"
     },
     {
       "path": "tests/test_routestore_concurrence.py",
@@ -854,7 +858,7 @@
     },
     {
       "path": "tests/test_state_current.py",
-      "sha256": "9ed30f3a8ed62da9929aa947cd08aa93c35a1214b99debdd95a449ff2aac86a6"
+      "sha256": "adcc6f7a6f1eb1433b7c2e72247e9071db5dfb458dfddbcf6912d4fd6bcf25bd"
     },
     {
       "path": "tests/test_supply018.py",
@@ -1003,7 +1007,7 @@
   "tests": {
     "js_files": 3,
     "python_files": 209,
-    "python_functions_declared": 2660
+    "python_functions_declared": 2689
   }
 }
 ```
