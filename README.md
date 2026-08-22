@@ -145,6 +145,6 @@ PYTHONPATH=src python3 -m forgeai wizard --ci \
 
 Preuves scellées : `evidence/registres/mission.jsonl` (chaîne sha256 vérifiée) — e2e Compose
 `CI_WITNESS=2a0b6221…`, e2e K3s `CI_WITNESS=bf9e40c7…`. Couverture minimale exigée et vérifiée en CI : seuil global `--cov-fail-under=85` sur `src/forgeai` et `--fail-under=95` sur le sous-système de registre (`src/forgeai/core/registre.py`),
-revue aveugle code <!-- state:governance.review_quorum -->3/3<!-- /state --> APPROVE (vendors non-Anthropic). Le multi-nœuds est livré (<!-- state:cli.subcommands_by_group.node -->7<!-- /state --> sous-commandes `forgeai node`) et les
+revue active <!-- state:governance.review_quorum -->1/1 Sol (sol_blind); historique multi_vendor 3/3<!-- /state --> APPROVE (contrat Luna/Sol; multi_vendor historique). Le multi-nœuds est livré (<!-- state:cli.subcommands_by_group.node -->7<!-- /state --> sous-commandes `forgeai node`) et les
 traductions EN sont complètes (<!-- state:catalogue.descriptions_en_missing -->0<!-- /state --> `description_en` vide sur <!-- state:catalogue.entries_total -->1576<!-- /state --> briques) : l'ancien BLOCKED
 sur la revue sécurité multi-nœuds est levé. Voir `Docs/reference/cli.md` pour la surface CLI (<!-- state:cli.subcommands_total -->49<!-- /state --> sous-commandes au total sur <!-- state:catalogue.categories_total -->14<!-- /state --> catégories).

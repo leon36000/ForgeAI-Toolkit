@@ -498,6 +498,13 @@ def build_reference_graph(repo_root: Path, tracked: list[str]) -> dict:
         path_name = Path(referrer)
         if referrer in excluded_generic_referrers:
             continue
+        # Les prompts Sol sont des artefacts de revue contenant le diff Git complet. Ils
+        # ne constituent pas une documentation du dépôt : les analyser comme des sources
+        # de références ferait exploser la vue dérivée avec chaque chemin cité dans le
+        # diff, sans changer les dépendances réelles. Le lien BINDING.txt reste traité
+        # séparément plus haut.
+        if path_name.name == "SOL-PROMPT.md" and referrer.startswith("evidence/reviews/"):
+            continue
         if (
             path_name.suffix not in allowed_extensions
             and path_name.name != ".gitignore"

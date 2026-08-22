@@ -14,8 +14,8 @@ Le dépouillement réutilise `scripts/revue.py` (fonction pure `tally`, invarian
 LLM n'écrit un score). Le gate échoue (exit 1) si un dossier liant n'est pas APPROVE, est
 absent, ou n'a pas ses verdicts.
 
-#434 — deux modes supplémentaires, OPT-IN par drapeau (le comportement PAR DÉFAUT, sans
-drapeau, reste STRICTEMENT identique à avant cette story) :
+#434 — deux modes supplémentaires, OPT-IN par drapeau; le quorum multi_vendor par défaut
+#reste inchangé, tandis qu'un reçu sol_blind actif doit conserver sa forme et sa fraîcheur :
 
   --exiger-recu-courant --base-ref <ref>   (mode PR) : en plus du dépouillement legacy
     habituel, exige qu'AU MOINS UNE entrée liante porte un evidence/reviews/<ID>/RECU.json qui
@@ -43,6 +43,7 @@ import argparse
 import importlib.util
 import json
 import subprocess
+from datetime import datetime
 from pathlib import Path
 from typing import Callable
 
@@ -173,6 +174,7 @@ def check(
     expected_issue: int | None = None,
     mode: str | None = None,
     runner: GitRunner | None = None,
+    now: datetime | None = None,
 ) -> tuple[bool, list[str]]:
     revue = _load_revue()
     execute = _default_runner if runner is None else runner
@@ -186,11 +188,27 @@ def check(
         return False, [f"ECHEC : mode inconnu {mode!r}"]
 
     etat_git = None
+    git_state_error: Exception | None = None
+    current_receipt_mode = None
     if exiger_recu_courant:
+        try:
+            current_receipt_mode = revue.load_autonomy_policy()["review"]["default_mode"]
+        except (OSError, TypeError, ValueError, KeyError) as error:
+            return False, [f"ECHEC : politique de revue courante invalide : {error}"]
+
+    def current_git_state() -> dict:
+        """Resolve the PR state only after local receipt coherence has passed."""
+        nonlocal etat_git, git_state_error
+        if etat_git is not None:
+            return etat_git
+        if git_state_error is not None:
+            raise git_state_error
         try:
             etat_git = revue._etat_git_reel(base_ref, "HEAD", runner=execute)
         except (OSError, ValueError, subprocess.CalledProcessError) as error:
-            return False, [f"ECHEC : état git courant inaccessible : {error}"]
+            git_state_error = error
+            raise
+        return etat_git
 
     if not binding:
         ok = False
@@ -226,30 +244,232 @@ def check(
             report.append(f"ECHEC {entry} : verdict illisible : {error}")
             continue
 
-        result = revue.tally(verdicts)
-        if result.get("result") != "APPROVE":
-            ok = False
-            report.append(
-                f"ECHEC {entry} : dépouillement = {result.get('result')} "
-                f"({result.get('reason', '')})"
-            )
-        else:
-            report.append(
-                f"OK    {entry} : APPROVE {result.get('reason', '')} "
-                f"vendors {result.get('vendors')}"
-            )
-
         receipt_path = directory / "RECU.json"
-
-        if exiger_recu_courant and receipt_path.is_file():
+        receipt = None
+        if receipt_path.is_file():
             try:
                 receipt = json.loads(receipt_path.read_text(encoding="utf-8"))
             except (OSError, json.JSONDecodeError) as error:
+                if exiger_recu_courant:
+                    ok = False
+                    report.append(f"ECHEC {entry} : reçu illisible : {error}")
+                    continue
+
+        # Receipt mode is the dispatch contract: legacy multi_vendor keeps its 3/3 tally;
+        # active sol_blind is delegated to the exact-one-Sol validator without weakening legacy.
+        receipt_mode = receipt.get("mode", "multi_vendor") if isinstance(receipt, dict) else "multi_vendor"
+        sol_covers_current = False
+        sol_shape_error: Exception | None = None
+        sol_freshness_error: Exception | None = None
+        sol_git_error: Exception | None = None
+        historical_sol = False
+        historical_sol_valid = True
+        if receipt_mode == "sol_blind" and exiger_recu_courant:
+            # The local receipt/prompt/verdict contract is intentionally checked before the
+            # first Git command. A malformed or forged claim must not get to choose what Git
+            # object the gate resolves (SOL603-B01).
+            try:
+                revue._sol_expected_from_receipt_shape(
+                    receipt,
+                    verdicts,
+                    directory,
+                    enforce_freshness=False,
+                )
+                revue._validate_sol_temporal_claim(receipt, verdicts, now=now)
+            except (
+                OSError,
+                json.JSONDecodeError,
+                KeyError,
+                TypeError,
+                ValueError,
+                subprocess.CalledProcessError,
+            ) as error:
+                sol_shape_error = error
+            if sol_shape_error is None:
+                try:
+                    current_state = current_git_state()
+                except (
+                    OSError,
+                    ValueError,
+                    subprocess.CalledProcessError,
+                ) as error:
+                    sol_git_error = error
+                else:
+                    historical_sol = not revue._sol_receipt_binding_matches_current(
+                        receipt, current_state
+                    )
+                    if not historical_sol:
+                        try:
+                            revue._sol_expected_from_receipt_shape(
+                                receipt,
+                                verdicts,
+                                directory,
+                                enforce_freshness=True,
+                                freshness_now=now,
+                            )
+                        except (
+                            OSError,
+                            json.JSONDecodeError,
+                            KeyError,
+                            TypeError,
+                            ValueError,
+                            subprocess.CalledProcessError,
+                        ) as error:
+                            sol_freshness_error = error
+        if historical_sol:
+            # A historical receipt may stop covering the current diff, but that status must not
+            # turn an intrinsically malformed/tampered receipt into informational noise. Validate
+            # its own immutable contract against the reviewed Git objects and stored prompt first;
+            # only the later current-state mismatch is exempted.
+            try:
+                revue._validate_sol_archive_receipt(
+                    receipt,
+                    execute,
+                    verdicts=verdicts,
+                    review_dir=directory,
+                    now=now,
+                )
+            except (
+                OSError,
+                json.JSONDecodeError,
+                KeyError,
+                TypeError,
+                ValueError,
+                subprocess.CalledProcessError,
+            ) as error:
+                historical_sol_valid = False
+                historical_sol = False
                 ok = False
-                report.append(f"ECHEC {entry} : reçu illisible : {error}")
-                continue
-            receipt_result = revue.verifier_recu(receipt, verdicts, etat_git)
+                report.append(
+                    f"ECHEC {entry} : preuve Sol historique intrinsèquement invalide = {error}"
+                )
+        if receipt_mode not in ("multi_vendor", "sol_blind"):
+            result = {"result": "INVALIDE", "reason": f"mode de reçu inconnu : {receipt_mode!r}"}
+        elif receipt_mode == "sol_blind":
+            try:
+                if sol_shape_error is not None:
+                    raise sol_shape_error
+                if sol_freshness_error is not None:
+                    raise sol_freshness_error
+                if sol_git_error is not None:
+                    raise sol_git_error
+                if exiger_recu_courant or mode == "archive":
+                    # Validate all local receipt/verdict/prompt bindings before touching any
+                    # Git object. This keeps malformed claims cheap and deterministic to reject.
+                    freshness_now = revue._aware_timestamp(receipt.get("date_heure"))
+                    if exiger_recu_courant and not historical_sol:
+                        freshness_now = now
+                    revue._sol_expected_from_receipt_shape(
+                        receipt,
+                        verdicts,
+                        directory,
+                        enforce_freshness=True,
+                        freshness_now=freshness_now,
+                    )
+                    if mode == "archive":
+                        # Archive freshness is evaluated at its sealing timestamp, but a
+                        # future-dated seal is never admissible against the real validation
+                        # clock (SOL603-B03).
+                        receipt_time = revue._aware_timestamp(receipt.get("date_heure"))
+                        if receipt_time > revue._validation_time(now):
+                            raise ValueError("date_heure du reçu futur")
+                    expected = revue._sol_expected_from_git(
+                        receipt,
+                        etat_git,
+                        directory,
+                        verdicts,
+                        runner=execute,
+                    )
+                    sol_covers_current = bool(expected.pop("_covers_current", False))
+                else:
+                    # The legacy/default gate validates the receipt's complete local shape and
+                    # prompt binding, but does not require the shallow CI checkout to resolve
+                    # every frozen Git object. PR/archive modes perform the stronger Git proof.
+                    # Keep the intrinsic order/future checks even though this compatibility path
+                    # deliberately does not expire old receipts against the current wall clock.
+                    revue._validate_sol_temporal_claim(receipt, verdicts, now=now)
+                    expected = revue._sol_expected_from_receipt_shape(
+                        receipt,
+                        verdicts,
+                        directory,
+                        # The flagless gate is the compatibility/shape path. It must not
+                        # expire an already sealed receipt against the wall clock; current
+                        # freshness belongs to the explicit PR proof path above, while
+                        # archive mode evaluates age at the receipt's sealing timestamp.
+                        enforce_freshness=False,
+                    )
+                result = revue.tally_sol_blind(
+                    verdicts,
+                    expected=expected,
+                    codeurs=receipt.get("codeur", []),
+                    allow_retired_codeurs=(mode == "archive"),
+                )
+                historical_sol = exiger_recu_courant and not sol_covers_current
+            except (OSError, TypeError, ValueError, subprocess.CalledProcessError) as error:
+                result = {"result": "INVALIDE", "reason": f"preuve Git/prompt Sol invalide : {error}"}
+        else:
+            result = revue.tally(verdicts)
+        if result.get("result") != "APPROVE":
+            if sol_shape_error is not None:
+                ok = False
+                report.append(
+                    f"ECHEC {entry} : preuve Sol intrinsèquement invalide = "
+                    f"{result.get('reason', '')}"
+                )
+            elif historical_sol:
+                report.append(
+                    f"info  {entry} : revue Sol historique non couvrante = "
+                    f"{result.get('result')} ({result.get('reason', '')})"
+                )
+            else:
+                ok = False
+                report.append(
+                    f"ECHEC {entry} : dépouillement = {result.get('result')} "
+                    f"({result.get('reason', '')})"
+                )
+        else:
+            prefix = "info  " if historical_sol else "OK    "
+            report.append(
+                f"{prefix}{entry} : APPROVE {result.get('reason', '')} "
+                f"vendors {result.get('vendors')}"
+            )
+
+        if exiger_recu_courant and receipt_path.is_file():
+            if receipt_mode == "sol_blind" and (
+                sol_shape_error is not None or sol_git_error is not None or etat_git is None
+            ):
+                reason = sol_shape_error or sol_git_error or git_state_error
+                receipt_result = {
+                    "result": "INVALIDE",
+                    "reason": f"preuve Sol locale/inaccessible : {reason}",
+                }
+            else:
+                try:
+                    if etat_git is None:
+                        etat_git = current_git_state()
+                    receipt_result = revue.verifier_recu(
+                        receipt,
+                        verdicts,
+                        etat_git,
+                        review_dir=directory,
+                        runner=execute,
+                        now=now,
+                    )
+                except (
+                    OSError,
+                    TypeError,
+                    ValueError,
+                    subprocess.CalledProcessError,
+                ) as error:
+                    receipt_result = {"result": "INVALIDE", "reason": str(error)}
             if receipt_result.get("result") == "APPROVE":
+                if receipt_mode != current_receipt_mode:
+                    ok = False
+                    report.append(
+                        f"ECHEC {entry} : reçu courant mode={receipt_mode!r} refusé ; "
+                        f"mode de politique requis = {current_receipt_mode!r}"
+                    )
+                    continue
                 if expected_issue is not None and (
                     not isinstance(receipt, dict) or receipt.get("issue") != expected_issue
                 ):
@@ -292,21 +512,46 @@ def check(
                 # bas via received_current). Régression #439/PR500 : le mode PR faisait
                 # échouer le gate sur CHAQUE reçu historique déjà mergé, bloquant toute PR
                 # future dès qu'une entrée liante antérieure portait un RECU.json.
-                report.append(
-                    f"info  {entry} : reçu invalide = {receipt_result.get('result')} "
-                    f"({receipt_result.get('reason', '')}) — ignoré si un autre reçu couvre "
-                    f"le changement courant"
-                )
+                if receipt_mode == "sol_blind" and not historical_sol_valid:
+                    ok = False
+                    report.append(
+                        f"ECHEC {entry} : reçu Sol historique intrinsèquement invalide = "
+                        f"{receipt_result.get('result')} ({receipt_result.get('reason', '')})"
+                    )
+                else:
+                    report.append(
+                        f"info  {entry} : reçu invalide = {receipt_result.get('result')} "
+                        f"({receipt_result.get('reason', '')}) — ignoré si un autre reçu couvre "
+                        f"le changement courant"
+                    )
 
         if mode == "archive" and receipt_path.is_file():
+            reviewed_commit = None
             try:
                 receipt = json.loads(receipt_path.read_text(encoding="utf-8"))
-                commit = receipt["head_commit"]
-                # Anti-injection : commit vient d'un RECU.json lu au disque, même garde que
-                # les refs de _diff_canonique/_etat_git_reel (objection mineure revue scellée
-                # RC1-004-PR497-v2, DeepSeek-V4-Pro).
-                revue._validate_git_ref(commit)
-            except (OSError, json.JSONDecodeError, KeyError, ValueError, TypeError) as error:
+                if isinstance(receipt, dict) and receipt.get("mode") == "sol_blind":
+                    revue._validate_sol_archive_receipt(
+                        receipt,
+                        execute,
+                        verdicts=verdicts,
+                        review_dir=directory,
+                        now=now,
+                    )
+                    commit = receipt["head_commit"]
+                    reviewed_commit = receipt["reviewed_head_commit"]
+                else:
+                    commit = receipt["head_commit"]
+                    # Legacy receipts retain their historical ref validation; only the Sol
+                    # schema requires exact object IDs for every commit/tree field.
+                    revue._validate_git_ref(commit)
+            except (
+                OSError,
+                json.JSONDecodeError,
+                KeyError,
+                ValueError,
+                TypeError,
+                subprocess.CalledProcessError,
+            ) as error:
                 # TypeError : RECU.json valide en JSON mais pas un objet (ex. liste/null) —
                 # receipt["head_commit"] lèverait sinon une exception non gérée (objection
                 # mineure round 3, DeepSeek-V4-Pro).
@@ -316,6 +561,11 @@ def check(
             if not _is_ancestor(commit, execute):
                 ok = False
                 report.append(f"ECHEC {entry} : reçu pointe un commit jamais fusionné")
+            if reviewed_commit is not None and not _is_ancestor(reviewed_commit, execute):
+                ok = False
+                report.append(
+                    f"ECHEC {entry} : reçu Sol reviewed_head_commit jamais fusionné"
+                )
 
     if exiger_recu_courant and not received_current:
         ok = False

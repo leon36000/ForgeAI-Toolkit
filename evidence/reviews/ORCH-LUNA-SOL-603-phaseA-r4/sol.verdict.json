@@ -1,0 +1,31 @@
+{
+  "base_commit": "d4d46ef36fcac3cdeb92a00577f78c8e698c17c0",
+  "blind": true,
+  "blocking_findings": [
+    {
+      "severity": "high",
+      "file": "evidence/reviews/BINDING.txt",
+      "line": 220,
+      "description": "Le reçu liant ORCH-LUNA-SOL-603-phaseA référence 6211210a8e894164889249a05f59027bb8cece6e, qui n’est pas ancêtre de HEAD. scripts/reviews_gate.py --mode archive retourne 1 avec « reçu pointe un commit jamais fusionné » et « reviewed_head_commit jamais fusionné »; la branche archive CI restera bloquée après fusion."
+    },
+    {
+      "severity": "high",
+      "file": "scripts/reviews_gate.py",
+      "line": 396,
+      "description": "Le chemin sans drapeau appelle _sol_expected_from_receipt_shape(..., enforce_freshness=False) sans exécuter _validate_sol_temporal_claim. Il accepte donc un reçu et un verdict dont reviewed_at est en 2099 alors que date_heure du scellement est en 2026, et tally_sol_blind retourne APPROVE. Désactiver l’expiration murale ne doit pas supprimer la cohérence temporelle intrinsèque ni la fenêtre revue-scellement."
+    }
+  ],
+  "candidate_diff_digest": "7bf744b51daad96afedc927ab2fe654367bc924c86cc067fb4d8ce74882b17c2",
+  "diff_digest": "7bf744b51daad96afedc927ab2fe654367bc924c86cc067fb4d8ce74882b17c2",
+  "fresh_context": true,
+  "mission_diff_digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "prompt_sha256": "c42930ea332b9d3e5e7786ed2fd15a731e41f312cba28d530a739f7b6754ceb6",
+  "reviewed_at": "2026-08-22T16:46:45-04:00",
+  "reviewed_head_commit": "7e21e51e34ab22b2c1f9bc2fe8b5504e7d51a6ac",
+  "reviewed_head_tree": "73f8243d0d445f8c7066331852c79c06e75a740e",
+  "reviewer_model": "GPT-5.6-Sol",
+  "reviewer_read_only": true,
+  "sdd_diff_digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "template_sha256": "a5bebc60556f4fc38d6ca96a3d0372577550f23157377af4d852e6144e25f137",
+  "verdict": "REJECT"
+}

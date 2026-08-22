@@ -1,0 +1,25 @@
+{
+  "verdict": "REJECT",
+  "blocking_findings": [
+    {
+      "severity": "high",
+      "file": "scripts/reviews_gate.py",
+      "line": 392,
+      "description": "Le chemin sans drapeau applique la fraîcheur Sol par rapport à l’horloge courante. Les reçus Sol persistants de BINDING.txt deviennent donc invalides après 24 heures; test_manifeste_reel_du_depot_est_approve appelle ce chemin sans horloge figée, ce qui fera échouer toute la matrice pytest CI dès l’expiration des reçus scellés."
+    }
+  ],
+  "reviewer_model": "GPT-5.6-Sol",
+  "fresh_context": true,
+  "blind": true,
+  "reviewer_read_only": true,
+  "base_commit": "d4d46ef36fcac3cdeb92a00577f78c8e698c17c0",
+  "reviewed_head_commit": "874774f71c9fa741ec2e79d10d1efab78d570a42",
+  "reviewed_head_tree": "f4af431e7176e25210b1668a4cd25a928a192eab",
+  "candidate_diff_digest": "a596a88aeb50f6df85f62d92a90d68afee88c23fd5c91be57d6bd291b954400e",
+  "diff_digest": "a596a88aeb50f6df85f62d92a90d68afee88c23fd5c91be57d6bd291b954400e",
+  "sdd_diff_digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "mission_diff_digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "template_sha256": "a5bebc60556f4fc38d6ca96a3d0372577550f23157377af4d852e6144e25f137",
+  "prompt_sha256": "c5803c26bfab2ed66d4670c92775f72d71d58212efc325ab0534c0dbbfe3e3d9",
+  "reviewed_at": "2026-08-22T16:40:24-04:00"
+}

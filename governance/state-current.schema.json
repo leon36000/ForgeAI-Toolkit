@@ -120,7 +120,7 @@
           "properties": {
             "review_quorum": {
               "type": "string",
-              "description": "Invariant de politique fixé par AGENTS.md (revue aveugle scellée 3/3), pas une donnée mesurée qui dérive d'une source externe."
+              "description": "Résumé dérivé de la politique de revue active; distingue le mode sol_blind courant du quorum historique multi_vendor."
             }
           }
         },
