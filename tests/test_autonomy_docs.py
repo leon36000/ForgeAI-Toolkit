@@ -124,6 +124,11 @@ EXPECTED_CLASSIFICATIONS = {
         "rule_id": "working-superpowers-sdd",
         "owner": "working-cockpit",
     },
+    ".superpowers/sdd/2026-08-22-autonomous-luna-sol/task-4-fix6-report.md": {
+        "class": "WORKING",
+        "rule_id": "working-superpowers-sdd",
+        "owner": "working-cockpit",
+    },
     "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md": {
         "class": "WORKING",
         "rule_id": "working-superpowers-docs",
@@ -163,10 +168,31 @@ def _assert_writer_lane_scope(text: str, label: str) -> None:
     ), f"{label} permits four active writer lanes"
 
 
+def _normalize_status_line(line: str) -> str:
+    normalized = line.strip()
+    for _ in range(8):
+        previous = normalized
+        normalized = re.sub(r"^(?:>\s*)+", "", normalized)
+        normalized = re.sub(r"^#{1,6}\s+", "", normalized)
+        normalized = re.sub(r"^(?:[-*+]\s+|\d+[.)]\s+)", "", normalized)
+        normalized = re.sub(r"^\[[ xX]\]\s+", "", normalized)
+        normalized = re.sub(r"^[`*_]+", "", normalized)
+        normalized = re.sub(
+            r"^(?P<label>status|overall status|story status|overall|task 4 status|"
+            r"task 5 status|terminal state|terminal status)[`*_]+(?=\s*:)",
+            r"\g<label>",
+            normalized,
+            flags=re.IGNORECASE,
+        )
+        if normalized == previous:
+            break
+    return normalized
+
+
 def _assert_story_status(text: str) -> None:
     declarations = []
     for line in text.splitlines():
-        match = STATUS_DECLARATION_RE.match(line)
+        match = STATUS_DECLARATION_RE.match(_normalize_status_line(line))
         if match:
             declarations.append(
                 (
@@ -443,6 +469,13 @@ def test_story_has_testable_acceptance_and_explicit_checkpoint_status():
         "Terminal state: ???",
         "**Terminal status:** FAILED",
         "- Terminal state: FAILED",
+        "*Terminal status:* FAILED",
+        "_Terminal state:_ FAILED",
+        "> Terminal status: FAILED",
+        "# Terminal state: FAILED",
+        "1. Terminal status: FAILED",
+        "- [ ] Terminal state: FAILED",
+        "`Terminal status`: FAILED",
     )
     for mutation in mutations:
         with pytest.raises(AssertionError):
@@ -544,4 +577,5 @@ def test_generated_views_reference_the_task4_paths_and_contract_source():
     assert ".superpowers/sdd/2026-08-22-autonomous-luna-sol/task-4-fix3-report.md" in classified
     assert ".superpowers/sdd/2026-08-22-autonomous-luna-sol/task-4-fix4-report.md" in classified
     assert ".superpowers/sdd/2026-08-22-autonomous-luna-sol/task-4-fix5-report.md" in classified
+    assert ".superpowers/sdd/2026-08-22-autonomous-luna-sol/task-4-fix6-report.md" in classified
     assert "docs/superpowers/plans/2026-08-22-autonomous-luna-sol.md" in classified

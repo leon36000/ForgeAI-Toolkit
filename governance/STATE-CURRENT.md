@@ -186,7 +186,7 @@
     },
     {
       "path": "tests/test_autonomy_docs.py",
-      "sha256": "6368b348c9ddee93d2e65558753dc3bfb53b2fb1e6091bab7f1866fe955d4283"
+      "sha256": "cf767a53ad13f528578268b6b6660d523fb8a533e8b5c89487e9d1f237ab5f10"
     },
     {
       "path": "tests/test_autonomy_policy.py",
