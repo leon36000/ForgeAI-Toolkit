@@ -269,6 +269,14 @@ def test_diff_canonique_exclut_path_classification_json():
     )
 
 
+def test_diff_canonique_exclut_sdd_review_history():
+    code = ":100644 100644 a b M\0src/a.py\0"
+    reviewed = code + ":100644 100644 d e M\0.superpowers/sdd/old-review.md\0"
+    assert revue._diff_canonique("base", "HEAD", runner=lambda _: code) == revue._diff_canonique(
+        "base", "HEAD", runner=lambda _: reviewed
+    )
+
+
 def test_diff_canonique_exclut_path_classification_markdown():
     # Même motif que ci-dessus pour le rendu Markdown (les compteurs affichés varient pour la
     # même raison — sans cette exclusion, le cycle se rouvrirait via ce second fichier généré).

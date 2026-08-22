@@ -780,7 +780,7 @@
       },
       {
         "path": "tests/test_revue.py",
-        "sha256": "d9209636686e2e4d2bde8004195aa5bc1b9a749b61eb5018eecb1c8471fdcaad"
+        "sha256": "6119bf921f794a70d6fad7d0781b2de0f89dcfc12ce9a9160ff002fbd9f82a92"
       },
       {
         "path": "tests/test_revue_sol_blind.py",
@@ -1017,7 +1017,7 @@
     "tests": {
       "js_files": 3,
       "python_files": 214,
-      "python_functions_declared": 2729
+      "python_functions_declared": 2730
     }
   },
   "observations": [

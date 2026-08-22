@@ -356,6 +356,7 @@ def _diff_artifact_canonique(
             "--",
             ".",
             ":(exclude)evidence/reviews/**",
+            ":(exclude).superpowers/sdd/**",
             ":(exclude)governance/path-classification.json",
             ":(exclude)governance/PATH-CLASSIFICATION.md",
         ]
@@ -370,6 +371,11 @@ def _diff_canonique(
     # préfixe legacy "reviews/" est retiré de l'exclusion par défaut (mort : plus aucun fichier
     # de revue n'y vit).
     #
+    # #603 : les journaux .superpowers/sdd/ contiennent les résultats des itérations de
+    # coordination; les exclure empêche une revue Sol aveugle de recevoir des verdicts
+    # antérieurs par transitivité. Ils restent versionnés pour l'audit, mais ne sont pas
+    # des changements produit évalués par le prompt courant.
+    #
     # #504 : governance/path-classification.json (+ son rendu .md) trace individuellement
     # chaque fichier sous evidence/reviews/**, RECU.json compris — le régénérer APRÈS avoir
     # scellé un reçu change donc TOUJOURS le diff que ce reçu prétend attester (interblocage
@@ -382,6 +388,7 @@ def _diff_canonique(
     # main, load_bearing) ne doit surtout PAS matcher par accident.
     exclude: tuple[str, ...] = (
         "evidence/reviews/",
+        ".superpowers/sdd/",
         "governance/path-classification.json",
         "governance/PATH-CLASSIFICATION.md",
     ),
@@ -398,7 +405,9 @@ def _diff_canonique(
     artefacts de sa propre revue (le dossier evidence/reviews/<ID>/*.verdict.json + la ligne
     BINDING.txt sont ajoutés dans LA MÊME PR que le code qu'ils attestent) — sans cette
     exclusion, l'empreinte calculée par le reçu ne pourrait JAMAIS correspondre à celle du diff
-    final (les reviewers ont vu un diff SANS ces fichiers). Même raisonnement pour
+    final (les reviewers ont vu un diff SANS ces fichiers). Les journaux `.superpowers/sdd/`
+    sont également exclus du prompt Sol : ils peuvent contenir des conclusions de revues
+    antérieures et ne sont pas du code produit. Même raisonnement pour
     governance/path-classification.json/.md (#504) : entièrement dérivés, re-vérifiés octet à
     octet par leur propre gate (classify_paths.py check), jamais montrés aux reviewers non plus.
     """

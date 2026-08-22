@@ -59,7 +59,9 @@ comme un claim et le compare à la PR ou au diff courant. Le `head_commit` et le
 rester dans la lignée ancestrale du head Git courant; les commits de scellement
 ajoutant le receipt restent donc permis sans comparaison circulaire exacte avec
 ce commit. Les artefacts de revue et les vues générées restent hors du digest
-canonique.
+canonique. Les journaux `.superpowers/sdd/`, qui peuvent contenir les résultats
+de revues antérieures, sont également hors du prompt et du digest Sol aveugles;
+ils restent disponibles pour l'audit de coordination.
 
 Le reçu porte aussi `story`, l'identifiant immuable utilisé pour reconstruire le
 prompt, séparément de `dossier`, qui désigne le répertoire des artefacts sous
