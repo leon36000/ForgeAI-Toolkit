@@ -29397,6 +29397,13 @@
           "referrer": "CLAUDE.md",
           "resolved": "governance/autonomy-policy.json",
           "severity": "hard"
+        },
+        {
+          "candidate": "governance/autonomy-policy.json",
+          "line": 23,
+          "referrer": "governance/decisions/D-2026-08-21-autonomie-luna-sol.md",
+          "resolved": "governance/autonomy-policy.json",
+          "severity": "hard"
         }
       ],
       "rule_id": "governance-core",
@@ -29597,6 +29604,34 @@
       "rule_id": "governance-core",
       "sha256": "cc5d281c9dd40cc8decb1717d0cff8e8af169148e29b02376c37898d42ca49f5",
       "size": 1316,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "GOVERNANCE",
+      "generated": false,
+      "load_bearing": true,
+      "owner": "gouvernance-config",
+      "path": "governance/decisions/D-2026-08-21-autonomie-luna-sol.md",
+      "referenced_by": [
+        {
+          "candidate": "governance/decisions/D-2026-08-21-autonomie-luna-sol.md",
+          "line": 0,
+          "referrer": "governance/authority.json",
+          "resolved": "governance/decisions/D-2026-08-21-autonomie-luna-sol.md",
+          "severity": "hard"
+        },
+        {
+          "candidate": "governance/decisions/D-2026-08-21-autonomie-luna-sol.md",
+          "line": 51,
+          "referrer": "governance/AUTHORITY-MAP.md",
+          "resolved": "governance/decisions/D-2026-08-21-autonomie-luna-sol.md",
+          "severity": "hard"
+        }
+      ],
+      "rule_id": "governance-core",
+      "sha256": "746d57bf201121f5c9cbd716a5f508a6078eebecb967ab4c4cbcfd71c1023b2b",
+      "size": 1244,
       "target_path": null,
       "type": "text"
     },
@@ -47833,6 +47868,34 @@
       "rule_id": "governance-stories",
       "sha256": "94ca50e6f0d55e6bb4cc6aaff44b6b7976afe8980eacf7a4144f27443a6f1086",
       "size": 11603,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "GOVERNANCE",
+      "generated": false,
+      "load_bearing": false,
+      "owner": "gouvernance-stories",
+      "path": "stories/ORCH-LUNA-SOL-603.md",
+      "referenced_by": [
+        {
+          "candidate": "stories/ORCH-LUNA-SOL-603.md",
+          "line": 11,
+          "referrer": "governance/autonomy-policy.json",
+          "resolved": "stories/ORCH-LUNA-SOL-603.md",
+          "severity": "hard"
+        },
+        {
+          "candidate": "stories/ORCH-LUNA-SOL-603.md",
+          "line": 64,
+          "referrer": "scripts/revue.py",
+          "resolved": "stories/ORCH-LUNA-SOL-603.md",
+          "severity": "hard"
+        }
+      ],
+      "rule_id": "governance-stories",
+      "sha256": "c8ca06f9481ca5138c73a9d6ac1fbfc2d080c6b345ced1cb9ca99dce5d91e7b5",
+      "size": 1339,
       "target_path": null,
       "type": "text"
     },
@@ -103231,11 +103294,6 @@
         "referrer": "evidence/reviews/plan-v1.0/round-2/mimo.verdict.json"
       },
       {
-        "candidate": "governance/decisions/D-2026-08-21-autonomie-luna-sol.md",
-        "line": 51,
-        "referrer": "governance/AUTHORITY-MAP.md"
-      },
-      {
         "candidate": "cluster.py",
         "line": 8,
         "referrer": "governance/ERROR-HANDLING-CONTRACTS.md"
@@ -103338,11 +103396,6 @@
       {
         "candidate": "autonomy-policy/1",
         "line": 2,
-        "referrer": "governance/autonomy-policy.json"
-      },
-      {
-        "candidate": "stories/ORCH-LUNA-SOL-603.md",
-        "line": 11,
         "referrer": "governance/autonomy-policy.json"
       },
       {
@@ -103559,6 +103612,16 @@
         "candidate": "docs/politique-versions-python.md",
         "line": 23,
         "referrer": "governance/decisions/D-2026-08-15-racines-documentaires.md"
+      },
+      {
+        "candidate": "Luna/Sol",
+        "line": 1,
+        "referrer": "governance/decisions/D-2026-08-21-autonomie-luna-sol.md"
+      },
+      {
+        "candidate": "Luna/Sol",
+        "line": 5,
+        "referrer": "governance/decisions/D-2026-08-21-autonomie-luna-sol.md"
       },
       {
         "candidate": "error-handling-contracts/1",
@@ -107153,11 +107216,6 @@
       {
         "candidate": "SOL-PROMPT.md",
         "line": 54,
-        "referrer": "scripts/revue.py"
-      },
-      {
-        "candidate": "stories/ORCH-LUNA-SOL-603.md",
-        "line": 64,
         "referrer": "scripts/revue.py"
       },
       {
@@ -130261,6 +130319,21 @@
         "referrer": "stories/ORCH-001.md"
       },
       {
+        "candidate": "Luna/Sol",
+        "line": 1,
+        "referrer": "stories/ORCH-LUNA-SOL-603.md"
+      },
+      {
+        "candidate": "Luna/Sol",
+        "line": 8,
+        "referrer": "stories/ORCH-LUNA-SOL-603.md"
+      },
+      {
+        "candidate": "frais/aveugle/read-only",
+        "line": 16,
+        "referrer": "stories/ORCH-LUNA-SOL-603.md"
+      },
+      {
         "candidate": "hotplug/driver",
         "line": 10,
         "referrer": "stories/PERF-030A.md"
@@ -148547,6 +148620,13 @@
         "line": 0,
         "referrer": "governance/authority.json",
         "resolved": "CANON/adr/ADR-SECRET-020A-openbao-unseal-permissions.md",
+        "severity": "hard"
+      },
+      {
+        "candidate": "governance/decisions/D-2026-08-21-autonomie-luna-sol.md",
+        "line": 0,
+        "referrer": "governance/authority.json",
+        "resolved": "governance/decisions/D-2026-08-21-autonomie-luna-sol.md",
         "severity": "hard"
       },
       {
@@ -167793,6 +167873,13 @@
         "severity": "hard"
       },
       {
+        "candidate": "governance/decisions/D-2026-08-21-autonomie-luna-sol.md",
+        "line": 51,
+        "referrer": "governance/AUTHORITY-MAP.md",
+        "resolved": "governance/decisions/D-2026-08-21-autonomie-luna-sol.md",
+        "severity": "hard"
+      },
+      {
         "candidate": "governance/decisions/D-2026-08-14-mission-lead.md",
         "line": 52,
         "referrer": "governance/AUTHORITY-MAP.md",
@@ -171713,6 +171800,13 @@
         "severity": "hard"
       },
       {
+        "candidate": "stories/ORCH-LUNA-SOL-603.md",
+        "line": 11,
+        "referrer": "governance/autonomy-policy.json",
+        "resolved": "stories/ORCH-LUNA-SOL-603.md",
+        "severity": "hard"
+      },
+      {
         "candidate": "src/forgeai",
         "line": 8,
         "referrer": "governance/branch-coverage-baseline.json",
@@ -171843,6 +171937,13 @@
         "line": 30,
         "referrer": "governance/decisions/D-2026-08-15-racines-documentaires.md",
         "resolved": "governance/authority.json",
+        "severity": "hard"
+      },
+      {
+        "candidate": "governance/autonomy-policy.json",
+        "line": 23,
+        "referrer": "governance/decisions/D-2026-08-21-autonomie-luna-sol.md",
+        "resolved": "governance/autonomy-policy.json",
         "severity": "hard"
       },
       {
@@ -175098,6 +175199,13 @@
         "line": 55,
         "referrer": "scripts/revue.py",
         "resolved": "CANON/revue-template.md",
+        "severity": "hard"
+      },
+      {
+        "candidate": "stories/ORCH-LUNA-SOL-603.md",
+        "line": 64,
+        "referrer": "scripts/revue.py",
+        "resolved": "stories/ORCH-LUNA-SOL-603.md",
         "severity": "hard"
       },
       {
@@ -181214,7 +181322,7 @@
       "DOCS": 19,
       "EVIDENCE": 1665,
       "GENERATED": 5,
-      "GOVERNANCE": 215,
+      "GOVERNANCE": 217,
       "PRODUCT": 113,
       "TEST": 224,
       "WORKING": 10
@@ -181238,7 +181346,7 @@
       "generated-state-current-json": 1,
       "generated-state-current-markdown": 1,
       "governance-canon": 14,
-      "governance-core": 20,
+      "governance-core": 21,
       "governance-docs-exempt": 1,
       "governance-github-ci": 8,
       "governance-manifests": 6,
@@ -181260,7 +181368,7 @@
       "governance-scripts-coordination": 4,
       "governance-scripts-governance": 12,
       "governance-scripts-root": 31,
-      "governance-stories": 101,
+      "governance-stories": 102,
       "product-catalogue-checksum": 1,
       "product-source": 112,
       "test-suite": 224,
@@ -181268,11 +181376,11 @@
       "working-sandbox-readme": 1
     },
     "case_collisions_total": 0,
-    "dangling_references_total": 17440,
+    "dangling_references_total": 17442,
     "generated_total": 9,
-    "load_bearing_total": 2144,
+    "load_bearing_total": 2145,
     "portability_violations_total": 0,
-    "tracked_total": 2295,
+    "tracked_total": 2297,
     "unclassified_total": 0,
     "unicode_anomalies_total": 0
   },
