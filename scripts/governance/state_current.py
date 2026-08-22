@@ -390,6 +390,9 @@ def collect(repo_root: Path) -> dict:
     sidecar_path = _catalogue_sidecar(repo_root)
     sidecar_relative = Path(_relative(repo_root, sidecar_path))
     sidecar_bytes = source(sidecar_relative)
+    policy_path = _path(repo_root, _AUTONOMY_POLICY)
+    if policy_path.is_file():
+        source(_AUTONOMY_POLICY)
 
     try:
         pyproject_version = _pyproject_version(pyproject_text)

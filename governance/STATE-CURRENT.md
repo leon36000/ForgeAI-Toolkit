@@ -129,6 +129,10 @@
       "sha256": "8952b9c2ab50546782a129e59999e5df23305a6fca315438510865b4a1633d54"
     },
     {
+      "path": "governance/autonomy-policy.json",
+      "sha256": "50f8b11467e3219d2cf3df52fa0d075dce63a8ad8bced94fad6ba293c2a1f624"
+    },
+    {
       "path": "pyproject.toml",
       "sha256": "88ae9547fb001a8d01f0c407f17397f5b522c32054f95fbb4d40368fb80288d7"
     },
