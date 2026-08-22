@@ -550,6 +550,13 @@
       "referenced_by": [
         {
           "candidate": ".github/workflows/ci-deps-update.yml",
+          "line": 9,
+          "referrer": "Docs/reference/autonomy-luna-sol.md",
+          "resolved": ".github/workflows/ci-deps-update.yml",
+          "severity": "hard"
+        },
+        {
+          "candidate": ".github/workflows/ci-deps-update.yml",
           "line": 6,
           "referrer": "evidence/reviews/RC1-447-PR-v1/DeepSeek-V4-Pro.verdict.json",
           "resolved": ".github/workflows/ci-deps-update.yml",
@@ -4135,8 +4142,8 @@
         }
       ],
       "rule_id": "docs-user",
-      "sha256": "c640a751271b6c9f8deb473a58ebf749659881f4d88165a7ea23e047fdc75cde",
-      "size": 3236,
+      "sha256": "5d2bc8af4f5f8e5fcd6522a0da6ed97bc609e4a7ff35e1ccc305f2a27b85ac41",
+      "size": 3504,
       "target_path": null,
       "type": "text"
     },
@@ -33701,7 +33708,7 @@
         },
         {
           "candidate": "scripts/governance/classify_paths.py",
-          "line": 48,
+          "line": 53,
           "referrer": "Docs/reference/autonomy-luna-sol.md",
           "resolved": "scripts/governance/classify_paths.py",
           "severity": "hard"
@@ -34079,7 +34086,7 @@
         },
         {
           "candidate": "scripts/governance/state_current.py",
-          "line": 47,
+          "line": 52,
           "referrer": "Docs/reference/autonomy-luna-sol.md",
           "resolved": "scripts/governance/state_current.py",
           "severity": "hard"
@@ -34261,7 +34268,7 @@
         },
         {
           "candidate": "scripts/governance/validate_authority.py",
-          "line": 46,
+          "line": 51,
           "referrer": "Docs/reference/autonomy-luna-sol.md",
           "resolved": "scripts/governance/validate_authority.py",
           "severity": "hard"
@@ -36228,7 +36235,7 @@
         },
         {
           "candidate": "scripts/reviews_gate.py",
-          "line": 49,
+          "line": 54,
           "referrer": "Docs/reference/autonomy-luna-sol.md",
           "resolved": "scripts/reviews_gate.py",
           "severity": "hard"
@@ -49019,7 +49026,7 @@
       "referenced_by": [
         {
           "candidate": "stories/ORCH-LUNA-SOL-603.md",
-          "line": 13,
+          "line": 18,
           "referrer": "Docs/reference/autonomy-luna-sol.md",
           "resolved": "stories/ORCH-LUNA-SOL-603.md",
           "severity": "hard"
@@ -49096,8 +49103,8 @@
         }
       ],
       "rule_id": "governance-stories",
-      "sha256": "c8ca06f9481ca5138c73a9d6ac1fbfc2d080c6b345ced1cb9ca99dce5d91e7b5",
-      "size": 1339,
+      "sha256": "4a4df7f990c6291153f24ca35478662384f99cab7c2f384cbbf5f6fc0eadc5c8",
+      "size": 1554,
       "target_path": null,
       "type": "text"
     },
@@ -67540,23 +67547,28 @@
         "referrer": "Docs/reference/autonomy-luna-sol.md"
       },
       {
+        "candidate": "Luna/Sol",
+        "line": 8,
+        "referrer": "Docs/reference/autonomy-luna-sol.md"
+      },
+      {
         "candidate": "forme/coh",
-        "line": 18,
+        "line": 23,
         "referrer": "Docs/reference/autonomy-luna-sol.md"
       },
       {
         "candidate": "u/prompt/verdict",
-        "line": 27,
+        "line": 32,
         "referrer": "Docs/reference/autonomy-luna-sol.md"
       },
       {
         "candidate": "che/aveugle/read-only",
-        "line": 31,
+        "line": 36,
         "referrer": "Docs/reference/autonomy-luna-sol.md"
       },
       {
         "candidate": "origin/main",
-        "line": 49,
+        "line": 54,
         "referrer": "Docs/reference/autonomy-luna-sol.md"
       },
       {
@@ -132440,6 +132452,11 @@
         "referrer": "stories/ORCH-LUNA-SOL-603.md"
       },
       {
+        "candidate": "Luna/Sol",
+        "line": 27,
+        "referrer": "stories/ORCH-LUNA-SOL-603.md"
+      },
+      {
         "candidate": "hotplug/driver",
         "line": 10,
         "referrer": "stories/PERF-030A.md"
@@ -155029,36 +155046,43 @@
         "severity": "hard"
       },
       {
+        "candidate": ".github/workflows/ci-deps-update.yml",
+        "line": 9,
+        "referrer": "Docs/reference/autonomy-luna-sol.md",
+        "resolved": ".github/workflows/ci-deps-update.yml",
+        "severity": "hard"
+      },
+      {
         "candidate": "stories/ORCH-LUNA-SOL-603.md",
-        "line": 13,
+        "line": 18,
         "referrer": "Docs/reference/autonomy-luna-sol.md",
         "resolved": "stories/ORCH-LUNA-SOL-603.md",
         "severity": "hard"
       },
       {
         "candidate": "scripts/governance/validate_authority.py",
-        "line": 46,
+        "line": 51,
         "referrer": "Docs/reference/autonomy-luna-sol.md",
         "resolved": "scripts/governance/validate_authority.py",
         "severity": "hard"
       },
       {
         "candidate": "scripts/governance/state_current.py",
-        "line": 47,
+        "line": 52,
         "referrer": "Docs/reference/autonomy-luna-sol.md",
         "resolved": "scripts/governance/state_current.py",
         "severity": "hard"
       },
       {
         "candidate": "scripts/governance/classify_paths.py",
-        "line": 48,
+        "line": 53,
         "referrer": "Docs/reference/autonomy-luna-sol.md",
         "resolved": "scripts/governance/classify_paths.py",
         "severity": "hard"
       },
       {
         "candidate": "scripts/reviews_gate.py",
-        "line": 49,
+        "line": 54,
         "referrer": "Docs/reference/autonomy-luna-sol.md",
         "resolved": "scripts/reviews_gate.py",
         "severity": "hard"
@@ -184926,7 +184950,7 @@
       "working-sandbox-readme": 1
     },
     "case_collisions_total": 0,
-    "dangling_references_total": 17619,
+    "dangling_references_total": 17621,
     "generated_total": 9,
     "load_bearing_total": 2148,
     "portability_violations_total": 0,
