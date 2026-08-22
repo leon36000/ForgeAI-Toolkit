@@ -27,6 +27,9 @@ Une prétention de scellement future est refusée contre l’horloge de validati
 ne résout l’état Git qu’après la validation locale du triplet reçu/prompt/verdict.
 Cette validation locale compare aussi les métadonnées d’empreinte répétées dans le verdict Sol
 au reçu avant toute résolution d’objet Git.
+Pour distinguer un reçu historique d’un reçu courant, le mode PR vérifie d’abord les dates
+intrinsèques et les futures, classe la liaison via Git, puis applique la fenêtre actuelle au
+reçu courant; l’historique est validé à l’heure de son scellement.
 
 Les limites T3 restent humaines : paiements, secrets de production,
 suppressions définitives et engagements externes. Les états terminaux sont

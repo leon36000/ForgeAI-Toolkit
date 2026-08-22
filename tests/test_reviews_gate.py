@@ -472,7 +472,7 @@ def test_mode_pr_historical_invalid_sol_binding_is_informational(tmp_path):
                 "template_sha256": SOL_TEMPLATE_SHA,
                 "verdict": "APPROVE",
                 "blocking_findings": [],
-                "reviewed_at": "2026-08-22T12:00:00+00:00",
+                "reviewed_at": "2000-01-01T00:00:00+00:00",
             }
         ],
     )
@@ -500,11 +500,11 @@ def test_mode_pr_historical_invalid_sol_binding_is_informational(tmp_path):
                 "reviewers_attendus": ["GPT-5.6-Sol"],
                 "codeur": ["luna_writer"],
                 "resultat": "APPROVE",
-                "reviewed_at": "2026-08-22T12:00:00+00:00",
+                "reviewed_at": "2000-01-01T00:00:00+00:00",
                 "verdict": "APPROVE",
                 "blocking_findings": [],
                 "reviewer_model": "GPT-5.6-Sol",
-                "date_heure": "2026-08-22T12:00:00+00:00",
+                "date_heure": "2000-01-01T00:00:00+00:00",
                 "fenetre_heures": 24,
             }
         ),
@@ -815,6 +815,53 @@ def test_mode_pr_rejette_incoherence_verdict_avant_acces_git(tmp_path):
 
     assert ok is False
     assert any("base_commit du verdict différent" in line for line in report)
+    assert not any(command[:2] == ["git", "merge-base"] for command in commands)
+
+
+def test_mode_pr_rejette_schema_prompt_contradictoire_avant_acces_git(tmp_path):
+    root = tmp_path / "reviews"
+    directory = _make_sol_blind_gate_review(root)
+    prompt_path = directory / "SOL-PROMPT.md"
+    prompt = prompt_path.read_bytes()
+    marker = "conforme à ce\nschéma :\n".encode("utf-8")
+    before, separator, after = prompt.partition(marker)
+    assert separator
+    schema_line, newline, tail = after.partition(b"\n")
+    schema = json.loads(schema_line.decode("utf-8"))
+    schema["base_commit"] = "f" * 40
+    prompt_path.write_bytes(
+        before
+        + separator
+        + json.dumps(schema, ensure_ascii=False, sort_keys=True).encode("utf-8")
+        + newline
+        + tail
+    )
+    receipt_path = directory / "RECU.json"
+    receipt = json.loads(receipt_path.read_text(encoding="utf-8"))
+    receipt["prompt_sha256"] = hashlib.sha256(prompt_path.read_bytes()).hexdigest()
+    receipt_path.write_text(json.dumps(receipt), encoding="utf-8")
+    verdict_path = next(directory.glob("*.verdict.json"))
+    verdict = json.loads(verdict_path.read_text(encoding="utf-8"))
+    verdict["prompt_sha256"] = receipt["prompt_sha256"]
+    verdict_path.write_text(json.dumps(verdict), encoding="utf-8")
+    commands = []
+
+    def recording_runner(command):
+        commands.append(command)
+        return _runner(command)
+
+    ok, report = gate.check(
+        _manifest(tmp_path, [directory.name]),
+        root,
+        exiger_recu_courant=True,
+        base_ref="origin/main",
+        expected_issue=603,
+        runner=recording_runner,
+        now=SOL_NOW,
+    )
+
+    assert ok is False
+    assert any("schéma Sol" in line for line in report)
     assert not any(command[:2] == ["git", "merge-base"] for command in commands)
 
 

@@ -84,7 +84,6 @@ _LUNA_CANONICAL_MODEL = "GPT-5.6 Luna"
 _LUNA_CANONICAL_VENDOR = "openai"
 _LUNA_CANONICAL_PROVIDER_ID = "GPT-5.6-Luna-Writer"
 _LUNA_CANONICAL_STATUS = "actif"
-_SOL_CLOCK_SKEW = timedelta(minutes=5)
 _SOL_MAX_WINDOW_HOURS = 24
 
 REPO = Path(__file__).resolve().parent.parent
@@ -451,6 +450,7 @@ def _sol_expected_from_receipt_shape(
         _validate_sol_freshness(recu, verdicts, now=freshness_now)
 
     prompt = _sol_prompt_bytes(Path(review_dir))
+    prompt_text = prompt.decode("utf-8")
     prompt_sha = hashlib.sha256(prompt).hexdigest()
     if recu["prompt_sha256"] != prompt_sha:
         raise ValueError("prompt_sha256 différent des octets du prompt Sol")
@@ -462,8 +462,38 @@ def _sol_expected_from_receipt_shape(
     ):
         if recu[field] != metadata[field]:
             raise ValueError(f"{field} différent des métadonnées du prompt Sol")
+    response_marker = "conforme à ce\nschéma :\n"
+    response_tail = prompt_text.split(response_marker, 1)
+    if len(response_tail) != 2:
+        raise ValueError("schéma de réponse Sol absent du prompt")
+    response_line = response_tail[1].split("\n", 1)[0]
+    try:
+        response_schema = json.loads(response_line)
+    except json.JSONDecodeError as error:
+        raise ValueError("schéma de réponse Sol invalide") from error
+    if not isinstance(response_schema, dict):
+        raise ValueError("schéma de réponse Sol invalide")
+    response_expectations = {
+        "fresh_context": True,
+        "blind": True,
+        "reviewer_read_only": True,
+        "reviewer_model": _SOL_CANONICAL_PROVIDER_ID,
+        **{
+            field: metadata[field]
+            for field in (
+                "base_commit", "reviewed_head_commit", "reviewed_head_tree",
+                "candidate_diff_digest", "sdd_diff_digest", "mission_diff_digest",
+                "template_sha256",
+            )
+        },
+    }
+    for field, expected_value in response_expectations.items():
+        if response_schema.get(field) != expected_value:
+            raise ValueError(f"{field} différent des métadonnées du schéma Sol")
+    if not isinstance(response_schema.get("prompt_sha256"), str):
+        raise ValueError("prompt_sha256 absent du schéma de réponse Sol")
     story_marker = f"STORY : {recu['story']}\n"
-    if story_marker not in prompt.decode("utf-8"):
+    if story_marker not in prompt_text:
         raise ValueError("story absente du prompt Sol")
     return {
         "candidate_diff_digest": recu["candidate_diff_digest"],
@@ -1122,6 +1152,26 @@ def _validate_sol_freshness(
     now: datetime | None = None,
 ) -> None:
     """Validate current Sol receipt timestamps with an injectable validation clock."""
+    receipt_reviewed_at = _validate_sol_temporal_claim(recu, verdicts, now=now)
+    validation_time = _validation_time(now)
+    window = _sol_window_hours(recu.get("fenetre_heures"), fenetre_heures_defaut)
+    if validation_time - receipt_reviewed_at > timedelta(hours=window):
+        raise ValueError("preuve Sol périmée")
+
+
+def _validate_sol_temporal_claim(
+    recu: dict,
+    verdicts: list[dict],
+    *,
+    now: datetime | None = None,
+) -> datetime:
+    """Validate ordering/future bounds without applying current-age expiration.
+
+    PR mode classifies a receipt as current or historical before deciding which clock applies
+    to its freshness window. This intrinsic pass is safe before Git: it rejects future claims
+    and contradictory timestamps while leaving old sealed archives eligible for seal-time
+    validation.
+    """
     if len(verdicts) != 1 or not isinstance(verdicts[0], dict):
         raise ValueError("sol_blind exige exactement un verdict objet")
     validation_time = _validation_time(now)
@@ -1140,19 +1190,17 @@ def _validate_sol_freshness(
         verdict_date = _aware_timestamp(verdict_date_value)
         if verdict_date is None:
             raise ValueError("date_heure du verdict doit avoir un fuseau")
-    window = _sol_window_hours(recu.get("fenetre_heures"), fenetre_heures_defaut)
     if receipt_reviewed_at > receipt_time:
         raise ValueError("reviewed_at postérieur à date_heure")
     if verdict_date is not None and verdict_date < receipt_reviewed_at:
         raise ValueError("date_heure du verdict antérieure à reviewed_at")
-    if receipt_time > validation_time + _SOL_CLOCK_SKEW:
+    if receipt_time > validation_time:
         raise ValueError("date_heure du reçu futur")
-    if receipt_reviewed_at > validation_time + _SOL_CLOCK_SKEW:
+    if receipt_reviewed_at > validation_time:
         raise ValueError("reviewed_at du verdict futur")
-    if verdict_date is not None and verdict_date > validation_time + _SOL_CLOCK_SKEW:
+    if verdict_date is not None and verdict_date > validation_time:
         raise ValueError("date_heure du verdict futur")
-    if validation_time - receipt_reviewed_at > timedelta(hours=window):
-        raise ValueError("preuve Sol périmée")
+    return receipt_reviewed_at
 
 
 def _sol_expected_from_git(

@@ -260,6 +260,7 @@ def check(
         receipt_mode = receipt.get("mode", "multi_vendor") if isinstance(receipt, dict) else "multi_vendor"
         sol_covers_current = False
         sol_shape_error: Exception | None = None
+        sol_freshness_error: Exception | None = None
         sol_git_error: Exception | None = None
         historical_sol = False
         historical_sol_valid = True
@@ -272,9 +273,9 @@ def check(
                     receipt,
                     verdicts,
                     directory,
-                    enforce_freshness=True,
-                    freshness_now=now,
+                    enforce_freshness=False,
                 )
+                revue._validate_sol_temporal_claim(receipt, verdicts, now=now)
             except (
                 OSError,
                 json.JSONDecodeError,
@@ -297,6 +298,24 @@ def check(
                     historical_sol = not revue._sol_receipt_binding_matches_current(
                         receipt, current_state
                     )
+                    if not historical_sol:
+                        try:
+                            revue._sol_expected_from_receipt_shape(
+                                receipt,
+                                verdicts,
+                                directory,
+                                enforce_freshness=True,
+                                freshness_now=now,
+                            )
+                        except (
+                            OSError,
+                            json.JSONDecodeError,
+                            KeyError,
+                            TypeError,
+                            ValueError,
+                            subprocess.CalledProcessError,
+                        ) as error:
+                            sol_freshness_error = error
         if historical_sol:
             # A historical receipt may stop covering the current diff, but that status must not
             # turn an intrinsically malformed/tampered receipt into informational noise. Validate
@@ -330,16 +349,16 @@ def check(
             try:
                 if sol_shape_error is not None:
                     raise sol_shape_error
+                if sol_freshness_error is not None:
+                    raise sol_freshness_error
                 if sol_git_error is not None:
                     raise sol_git_error
                 if exiger_recu_courant or mode == "archive":
                     # Validate all local receipt/verdict/prompt bindings before touching any
                     # Git object. This keeps malformed claims cheap and deterministic to reject.
-                    freshness_now = (
-                        now
-                        if exiger_recu_courant
-                        else revue._aware_timestamp(receipt.get("date_heure"))
-                    )
+                    freshness_now = revue._aware_timestamp(receipt.get("date_heure"))
+                    if exiger_recu_courant and not historical_sol:
+                        freshness_now = now
                     revue._sol_expected_from_receipt_shape(
                         receipt,
                         verdicts,
