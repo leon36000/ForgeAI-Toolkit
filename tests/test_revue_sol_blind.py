@@ -24,6 +24,8 @@ def _expected() -> dict[str, str]:
         "candidate_diff_digest": DIFF_DIGEST,
         "diff_digest": DIFF_DIGEST,
         "base_commit": BASE_COMMIT,
+        "head_commit": HEAD_COMMIT,
+        "head_tree": HEAD_TREE,
         "reviewed_head_commit": HEAD_COMMIT,
         "reviewed_head_tree": HEAD_TREE,
         "prompt_sha256": PROMPT_SHA,
@@ -66,7 +68,7 @@ def _receipt(**changes) -> dict:
         "reviewed_head_tree": HEAD_TREE,
         "prompt_sha256": PROMPT_SHA,
         "reviewers_attendus": ["GPT-5.6-Sol"],
-        "codeur": ["fable"],
+        "codeur": ["luna_writer"],
         "resultat": "APPROVE",
         "reviewed_at": REVIEWED_AT,
         "verdict": "APPROVE",
@@ -82,7 +84,7 @@ def test_sol_blind_exact_binding_approves_and_receipt_is_accepted():
     verdict = _sol_verdict()
     expected = _expected()
 
-    result = revue.tally_sol_blind([verdict], expected=expected)
+    result = revue.tally_sol_blind([verdict], expected=expected, codeurs=["luna_writer"])
     receipt_result = revue.verifier_recu(_receipt(), [verdict], expected)
 
     assert result["result"] == "APPROVE"
@@ -104,10 +106,77 @@ def test_sol_blind_exact_binding_approves_and_receipt_is_accepted():
     ],
 )
 def test_sol_blind_rejects_each_bypass(change, reason):
-    result = revue.tally_sol_blind([_sol_verdict(**change)], expected=_expected())
+    result = revue.tally_sol_blind(
+        [_sol_verdict(**change)], expected=_expected(), codeurs=["luna_writer"]
+    )
 
     assert result["result"] != "APPROVE"
     assert reason in result["reason"]
+
+
+def test_sol_blind_rejects_codewriter_sol_identity():
+    result = revue.tally_sol_blind(
+        [_sol_verdict()], expected=_expected(), codeurs=["sol"]
+    )
+
+    assert result["result"] != "APPROVE"
+    assert "codeur" in result["reason"] or "auteur" in result["reason"]
+
+
+def test_sol_blind_allows_luna_writer_and_sol_reviewer_same_vendor():
+    result = revue.tally_sol_blind(
+        [_sol_verdict()], expected=_expected(), codeurs=["luna_writer"]
+    )
+
+    assert result["result"] == "APPROVE"
+
+
+def test_sol_blind_fails_closed_when_active_sol_roster_entry_is_unavailable(
+    monkeypatch, tmp_path
+):
+    roles = tmp_path / "roles.yaml"
+    routes = tmp_path / "routes.yaml"
+    roles.write_text(
+        "membres:\n"
+        "  - id: luna_writer\n"
+        "    vendor: openai\n"
+        "    provider_id: GPT-5.6-Luna-Writer\n",
+        encoding="utf-8",
+    )
+    routes.write_text("routes:\n", encoding="utf-8")
+    monkeypatch.setattr(
+        revue,
+        "_vendor_table",
+        lambda: revue._vendor_table(roles_path=roles, routes_path=routes),
+    )
+
+    result = revue.tally_sol_blind(
+        [_sol_verdict()], expected=_expected(), codeurs=["luna_writer"]
+    )
+
+    assert result["result"] != "APPROVE"
+    assert any(
+        marker in result["reason"].lower()
+        for marker in ("sol", "roster", "identit", "reviewer")
+    )
+
+
+def test_sol_blind_receipt_rejects_mismatched_base_without_tally_call():
+    result = revue.verifier_recu(
+        _receipt(base_commit="f" * 40), [_sol_verdict()], _expected()
+    )
+
+    assert result["result"] != "APPROVE"
+    assert "commit" in result["reason"] or "base" in result["reason"]
+
+
+def test_sol_blind_receipt_rejects_mismatched_candidate_digest_without_tally_call():
+    result = revue.verifier_recu(
+        _receipt(candidate_diff_digest="f" * 64), [_sol_verdict()], _expected()
+    )
+
+    assert result["result"] != "APPROVE"
+    assert "diff" in result["reason"] or "digest" in result["reason"]
 
 
 def test_historical_three_vendor_tally_remains_compatible():

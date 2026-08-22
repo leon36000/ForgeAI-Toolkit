@@ -5,8 +5,8 @@ Réutilise le dépouillement déterministe (scripts/revue.py) via scripts/review
 """
 from __future__ import annotations
 
-import importlib.util
 import hashlib
+import importlib.util
 import json
 import subprocess
 from pathlib import Path
@@ -391,7 +391,7 @@ def test_gate_dispatch_sol_blind_receipt_avec_un_seul_verdict(tmp_path):
                 "issue": 603,
                 "round": 1,
                 "reviewers_attendus": ["GPT-5.6-Sol"],
-                "codeur": ["fable"],
+                "codeur": ["luna_writer"],
                 "resultat": "APPROVE",
                 "reviewed_at": "2026-08-22T12:00:00+00:00",
                 "verdict": "APPROVE",
