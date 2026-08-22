@@ -349,9 +349,9 @@ def test_diff_artifact_sol_fige_la_configuration_git():
         runner=lambda commande: commandes_recues.append(commande) or "",
     )
     commande = commandes_recues[0]
+    assert commande[:4] == ["git", "-c", "diff.suppressBlankEmpty=false", "diff"]
     for option in (
         "--no-textconv",
-        "--no-suppress-blank-empty",
         "--full-index",
         "--diff-algorithm=myers",
         "--no-indent-heuristic",

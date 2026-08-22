@@ -359,10 +359,11 @@ def _diff_artifact_canonique(
     return execute(
         [
             "git",
+            "-c",
+            "diff.suppressBlankEmpty=false",
             "diff",
             "--no-ext-diff",
             "--no-textconv",
-            "--no-suppress-blank-empty",
             "--binary",
             "--full-index",
             "--diff-algorithm=myers",
