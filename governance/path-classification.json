@@ -6968,7 +6968,7 @@
         },
         {
           "candidate": "evidence/registres/mission.jsonl",
-          "line": 447,
+          "line": 467,
           "referrer": "scripts/revue.py",
           "resolved": "evidence/registres/mission.jsonl",
           "severity": "hard"
@@ -28589,14 +28589,14 @@
         },
         {
           "candidate": "governance/PATH-CLASSIFICATION.md",
-          "line": 362,
+          "line": 382,
           "referrer": "scripts/revue.py",
           "resolved": "governance/PATH-CLASSIFICATION.md",
           "severity": "hard"
         },
         {
           "candidate": "governance/PATH-CLASSIFICATION.md",
-          "line": 465,
+          "line": 485,
           "referrer": "scripts/revue.py",
           "resolved": "governance/PATH-CLASSIFICATION.md",
           "severity": "hard"
@@ -29763,7 +29763,7 @@
         },
         {
           "candidate": "governance/path-classification-rules.json",
-          "line": 458,
+          "line": 478,
           "referrer": "scripts/revue.py",
           "resolved": "governance/path-classification-rules.json",
           "severity": "hard"
@@ -30155,21 +30155,21 @@
         },
         {
           "candidate": "governance/path-classification.json",
-          "line": 361,
+          "line": 381,
           "referrer": "scripts/revue.py",
           "resolved": "governance/path-classification.json",
           "severity": "hard"
         },
         {
           "candidate": "governance/path-classification.json",
-          "line": 450,
+          "line": 470,
           "referrer": "scripts/revue.py",
           "resolved": "governance/path-classification.json",
           "severity": "hard"
         },
         {
           "candidate": "governance/path-classification.json",
-          "line": 464,
+          "line": 484,
           "referrer": "scripts/revue.py",
           "resolved": "governance/path-classification.json",
           "severity": "hard"
@@ -31435,21 +31435,21 @@
         },
         {
           "candidate": "manifests/roles.yaml",
-          "line": 151,
+          "line": 158,
           "referrer": "scripts/revue.py",
           "resolved": "manifests/roles.yaml",
           "severity": "hard"
         },
         {
           "candidate": "manifests/roles.yaml",
-          "line": 173,
+          "line": 180,
           "referrer": "scripts/revue.py",
           "resolved": "manifests/roles.yaml",
           "severity": "hard"
         },
         {
           "candidate": "manifests/roles.yaml",
-          "line": 1262,
+          "line": 1306,
           "referrer": "scripts/revue.py",
           "resolved": "manifests/roles.yaml",
           "severity": "hard"
@@ -31491,7 +31491,7 @@
         },
         {
           "candidate": "manifests/routes.yaml",
-          "line": 173,
+          "line": 180,
           "referrer": "scripts/revue.py",
           "resolved": "manifests/routes.yaml",
           "severity": "hard"
@@ -32297,7 +32297,7 @@
         },
         {
           "candidate": "scripts/gate_docs.py",
-          "line": 245,
+          "line": 252,
           "referrer": "scripts/revue.py",
           "resolved": "scripts/gate_docs.py",
           "severity": "hard"
@@ -35761,8 +35761,8 @@
         }
       ],
       "rule_id": "governance-scripts-root",
-      "sha256": "d92196c3fff4ee2ce04b6a60e29bc2504cf843859d0909dd48860e959bc5e8e6",
-      "size": 83555,
+      "sha256": "15089d227892e81c52c9a7b8b73c3a84792f27d9c642df741c5937bfe45816b9",
+      "size": 85443,
       "target_path": null,
       "type": "text"
     },
@@ -58433,8 +58433,8 @@
         }
       ],
       "rule_id": "test-suite",
-      "sha256": "981b0f470dd9cc9d4eb00c67d6abd5f34bf62db8e85266368713feb850dd4182",
-      "size": 25830,
+      "sha256": "5d2db002b8ad5e62b4bcbc82a6106783640d24412733bdec9a70992aa0a7f0db",
+      "size": 26001,
       "target_path": null,
       "type": "text"
     },
@@ -58629,8 +58629,8 @@
         }
       ],
       "rule_id": "test-suite",
-      "sha256": "03210b13daa54fee52c220ced2bf332b398fa2ec0d874d052f8e0659b6a11e3a",
-      "size": 21186,
+      "sha256": "986a2f739f360f34af1982e7c8145ded40160b26ecb9bf755a929158f4526205",
+      "size": 23035,
       "target_path": null,
       "type": "text"
     },
@@ -107162,322 +107162,322 @@
       },
       {
         "candidate": "revue-template.md",
-        "line": 73,
-        "referrer": "scripts/revue.py"
-      },
-      {
-        "candidate": "autonomy-policy.json",
-        "line": 74,
-        "referrer": "scripts/revue.py"
-      },
-      {
-        "candidate": "_SEVERITY_RANK/_BLOCKING",
-        "line": 76,
-        "referrer": "scripts/revue.py"
-      },
-      {
-        "candidate": "mineure/majeure/critique",
-        "line": 77,
-        "referrer": "scripts/revue.py"
-      },
-      {
-        "candidate": "critique/eleve/moyen/faible",
-        "line": 78,
-        "referrer": "scripts/revue.py"
-      },
-      {
-        "candidate": "reviews/BINDING.txt",
         "line": 80,
         "referrer": "scripts/revue.py"
       },
       {
+        "candidate": "autonomy-policy.json",
+        "line": 81,
+        "referrer": "scripts/revue.py"
+      },
+      {
+        "candidate": "_SEVERITY_RANK/_BLOCKING",
+        "line": 83,
+        "referrer": "scripts/revue.py"
+      },
+      {
+        "candidate": "mineure/majeure/critique",
+        "line": 84,
+        "referrer": "scripts/revue.py"
+      },
+      {
+        "candidate": "critique/eleve/moyen/faible",
+        "line": 85,
+        "referrer": "scripts/revue.py"
+      },
+      {
+        "candidate": "reviews/BINDING.txt",
+        "line": 87,
+        "referrer": "scripts/revue.py"
+      },
+      {
         "candidate": "roles.yaml",
-        "line": 169,
-        "referrer": "scripts/revue.py"
-      },
-      {
-        "candidate": "routes.yaml",
-        "line": 170,
-        "referrer": "scripts/revue.py"
-      },
-      {
-        "candidate": "introuvable/illisible",
         "line": 176,
         "referrer": "scripts/revue.py"
       },
       {
-        "candidate": "roles.yaml",
-        "line": 201,
+        "candidate": "routes.yaml",
+        "line": 177,
         "referrer": "scripts/revue.py"
       },
       {
         "candidate": "introuvable/illisible",
+        "line": 183,
+        "referrer": "scripts/revue.py"
+      },
+      {
+        "candidate": "roles.yaml",
         "line": 208,
         "referrer": "scripts/revue.py"
       },
       {
+        "candidate": "introuvable/illisible",
+        "line": 215,
+        "referrer": "scripts/revue.py"
+      },
+      {
         "candidate": "newlines/instructions",
-        "line": 323,
+        "line": 330,
         "referrer": "scripts/revue.py"
       },
       {
         "candidate": "evidence/reviews/",
-        "line": 358,
+        "line": 378,
         "referrer": "scripts/revue.py"
       },
       {
         "candidate": ".superpowers/sdd/",
-        "line": 359,
+        "line": 379,
         "referrer": "scripts/revue.py"
       },
       {
         "candidate": "evidence/registres/",
-        "line": 360,
+        "line": 380,
         "referrer": "scripts/revue.py"
       },
       {
         "candidate": ".superpowers/sdd/",
-        "line": 387,
+        "line": 407,
         "referrer": "scripts/revue.py"
       },
       {
         "candidate": "evidence/registres/",
-        "line": 421,
+        "line": 441,
         "referrer": "scripts/revue.py"
       },
       {
         "candidate": "reviews/",
-        "line": 439,
+        "line": 459,
         "referrer": "scripts/revue.py"
       },
       {
         "candidate": "evidence/reviews/",
-        "line": 439,
+        "line": 459,
         "referrer": "scripts/revue.py"
       },
       {
         "candidate": "reviews/",
-        "line": 440,
+        "line": 460,
         "referrer": "scripts/revue.py"
       },
       {
         "candidate": ".superpowers/sdd/",
-        "line": 443,
-        "referrer": "scripts/revue.py"
-      },
-      {
-        "candidate": "evidence/reviews/",
-        "line": 451,
-        "referrer": "scripts/revue.py"
-      },
-      {
-        "candidate": "RECU.json",
-        "line": 451,
-        "referrer": "scripts/revue.py"
-      },
-      {
-        "candidate": "evidence/reviews/",
-        "line": 461,
-        "referrer": "scripts/revue.py"
-      },
-      {
-        "candidate": ".superpowers/sdd/",
-        "line": 462,
-        "referrer": "scripts/revue.py"
-      },
-      {
-        "candidate": "evidence/registres/",
         "line": 463,
         "referrer": "scripts/revue.py"
       },
       {
         "candidate": "evidence/reviews/",
-        "line": 476,
-        "referrer": "scripts/revue.py"
-      },
-      {
-        "candidate": ".verdict.json",
-        "line": 477,
-        "referrer": "scripts/revue.py"
-      },
-      {
-        "candidate": ".superpowers/sdd/",
-        "line": 480,
-        "referrer": "scripts/revue.py"
-      },
-      {
-        "candidate": "governance/path-classification.json/.md",
-        "line": 483,
-        "referrer": "scripts/revue.py"
-      },
-      {
-        "candidate": "classify_paths.py",
-        "line": 484,
-        "referrer": "scripts/revue.py"
-      },
-      {
-        "candidate": "autonomy-policy/1",
-        "line": 751,
-        "referrer": "scripts/revue.py"
-      },
-      {
-        "candidate": "roles.yaml",
-        "line": 786,
-        "referrer": "scripts/revue.py"
-      },
-      {
-        "candidate": "roles.yaml",
-        "line": 826,
-        "referrer": "scripts/revue.py"
-      },
-      {
-        "candidate": "roles.yaml",
-        "line": 844,
-        "referrer": "scripts/revue.py"
-      },
-      {
-        "candidate": "recu-revue/2",
-        "line": 964,
-        "referrer": "scripts/revue.py"
-      },
-      {
-        "candidate": "recu-revue/2",
-        "line": 965,
-        "referrer": "scripts/revue.py"
-      },
-      {
-        "candidate": "SOL-PROMPT.md",
-        "line": 1030,
-        "referrer": "scripts/revue.py"
-      },
-      {
-        "candidate": "current_head/current_tree",
-        "line": 1056,
-        "referrer": "scripts/revue.py"
-      },
-      {
-        "candidate": "base/diff",
-        "line": 1084,
-        "referrer": "scripts/revue.py"
-      },
-      {
-        "candidate": "Sol/openai",
-        "line": 1156,
-        "referrer": "scripts/revue.py"
-      },
-      {
-        "candidate": "APPROVE/REJECT",
-        "line": 1284,
-        "referrer": "scripts/revue.py"
-      },
-      {
-        "candidate": "commit/diff",
-        "line": 1324,
-        "referrer": "scripts/revue.py"
-      },
-      {
-        "candidate": "head_commit/head_tree",
-        "line": 1324,
-        "referrer": "scripts/revue.py"
-      },
-      {
-        "candidate": "revue.py",
-        "line": 1325,
-        "referrer": "scripts/revue.py"
-      },
-      {
-        "candidate": "commit/arbre",
-        "line": 1326,
-        "referrer": "scripts/revue.py"
-      },
-      {
-        "candidate": "head_commit/",
-        "line": 1327,
-        "referrer": "scripts/revue.py"
-      },
-      {
-        "candidate": "reviews/",
-        "line": 1331,
+        "line": 471,
         "referrer": "scripts/revue.py"
       },
       {
         "candidate": "RECU.json",
-        "line": 1353,
-        "referrer": "scripts/revue.py"
-      },
-      {
-        "candidate": "crit/modifi",
-        "line": 1353,
-        "referrer": "scripts/revue.py"
-      },
-      {
-        "candidate": "recu-revue/2",
-        "line": 1419,
-        "referrer": "scripts/revue.py"
-      },
-      {
-        "candidate": "recu-revue/2",
-        "line": 1420,
-        "referrer": "scripts/revue.py"
-      },
-      {
-        "candidate": "Git/prompt",
-        "line": 1476,
-        "referrer": "scripts/revue.py"
-      },
-      {
-        "candidate": "recu-revue/2",
-        "line": 1534,
-        "referrer": "scripts/revue.py"
-      },
-      {
-        "candidate": "recu-revue/2",
-        "line": 1535,
-        "referrer": "scripts/revue.py"
-      },
-      {
-        "candidate": ".verdict.json",
-        "line": 1691,
-        "referrer": "scripts/revue.py"
-      },
-      {
-        "candidate": "reviews/",
-        "line": 1698,
+        "line": 471,
         "referrer": "scripts/revue.py"
       },
       {
         "candidate": "evidence/reviews/",
-        "line": 1698,
+        "line": 481,
+        "referrer": "scripts/revue.py"
+      },
+      {
+        "candidate": ".superpowers/sdd/",
+        "line": 482,
+        "referrer": "scripts/revue.py"
+      },
+      {
+        "candidate": "evidence/registres/",
+        "line": 483,
+        "referrer": "scripts/revue.py"
+      },
+      {
+        "candidate": "evidence/reviews/",
+        "line": 496,
         "referrer": "scripts/revue.py"
       },
       {
         "candidate": ".verdict.json",
-        "line": 1702,
+        "line": 497,
+        "referrer": "scripts/revue.py"
+      },
+      {
+        "candidate": ".superpowers/sdd/",
+        "line": 500,
+        "referrer": "scripts/revue.py"
+      },
+      {
+        "candidate": "governance/path-classification.json/.md",
+        "line": 503,
+        "referrer": "scripts/revue.py"
+      },
+      {
+        "candidate": "classify_paths.py",
+        "line": 504,
+        "referrer": "scripts/revue.py"
+      },
+      {
+        "candidate": "autonomy-policy/1",
+        "line": 791,
+        "referrer": "scripts/revue.py"
+      },
+      {
+        "candidate": "roles.yaml",
+        "line": 830,
+        "referrer": "scripts/revue.py"
+      },
+      {
+        "candidate": "roles.yaml",
+        "line": 870,
+        "referrer": "scripts/revue.py"
+      },
+      {
+        "candidate": "roles.yaml",
+        "line": 888,
         "referrer": "scripts/revue.py"
       },
       {
         "candidate": "recu-revue/2",
-        "line": 1748,
+        "line": 1008,
         "referrer": "scripts/revue.py"
       },
       {
-        "candidate": "recu-revue/1",
-        "line": 1776,
+        "candidate": "recu-revue/2",
+        "line": 1009,
+        "referrer": "scripts/revue.py"
+      },
+      {
+        "candidate": "SOL-PROMPT.md",
+        "line": 1074,
+        "referrer": "scripts/revue.py"
+      },
+      {
+        "candidate": "current_head/current_tree",
+        "line": 1100,
+        "referrer": "scripts/revue.py"
+      },
+      {
+        "candidate": "base/diff",
+        "line": 1128,
+        "referrer": "scripts/revue.py"
+      },
+      {
+        "candidate": "Sol/openai",
+        "line": 1200,
+        "referrer": "scripts/revue.py"
+      },
+      {
+        "candidate": "APPROVE/REJECT",
+        "line": 1328,
+        "referrer": "scripts/revue.py"
+      },
+      {
+        "candidate": "commit/diff",
+        "line": 1368,
+        "referrer": "scripts/revue.py"
+      },
+      {
+        "candidate": "head_commit/head_tree",
+        "line": 1368,
         "referrer": "scripts/revue.py"
       },
       {
         "candidate": "revue.py",
-        "line": 1806,
+        "line": 1369,
+        "referrer": "scripts/revue.py"
+      },
+      {
+        "candidate": "commit/arbre",
+        "line": 1370,
+        "referrer": "scripts/revue.py"
+      },
+      {
+        "candidate": "head_commit/",
+        "line": 1371,
+        "referrer": "scripts/revue.py"
+      },
+      {
+        "candidate": "reviews/",
+        "line": 1375,
+        "referrer": "scripts/revue.py"
+      },
+      {
+        "candidate": "RECU.json",
+        "line": 1397,
+        "referrer": "scripts/revue.py"
+      },
+      {
+        "candidate": "crit/modifi",
+        "line": 1397,
+        "referrer": "scripts/revue.py"
+      },
+      {
+        "candidate": "recu-revue/2",
+        "line": 1463,
+        "referrer": "scripts/revue.py"
+      },
+      {
+        "candidate": "recu-revue/2",
+        "line": 1464,
+        "referrer": "scripts/revue.py"
+      },
+      {
+        "candidate": "Git/prompt",
+        "line": 1520,
+        "referrer": "scripts/revue.py"
+      },
+      {
+        "candidate": "recu-revue/2",
+        "line": 1578,
+        "referrer": "scripts/revue.py"
+      },
+      {
+        "candidate": "recu-revue/2",
+        "line": 1579,
         "referrer": "scripts/revue.py"
       },
       {
         "candidate": ".verdict.json",
-        "line": 1819,
+        "line": 1736,
+        "referrer": "scripts/revue.py"
+      },
+      {
+        "candidate": "reviews/",
+        "line": 1743,
+        "referrer": "scripts/revue.py"
+      },
+      {
+        "candidate": "evidence/reviews/",
+        "line": 1743,
+        "referrer": "scripts/revue.py"
+      },
+      {
+        "candidate": ".verdict.json",
+        "line": 1747,
+        "referrer": "scripts/revue.py"
+      },
+      {
+        "candidate": "recu-revue/2",
+        "line": 1793,
+        "referrer": "scripts/revue.py"
+      },
+      {
+        "candidate": "recu-revue/1",
+        "line": 1821,
+        "referrer": "scripts/revue.py"
+      },
+      {
+        "candidate": "revue.py",
+        "line": 1851,
+        "referrer": "scripts/revue.py"
+      },
+      {
+        "candidate": ".verdict.json",
+        "line": 1864,
         "referrer": "scripts/revue.py"
       },
       {
         "candidate": "test/receipt",
-        "line": 1839,
+        "line": 1884,
         "referrer": "scripts/revue.py"
       },
       {
@@ -143942,217 +143942,217 @@
       },
       {
         "candidate": "recu-revue/1",
-        "line": 86,
+        "line": 88,
         "referrer": "tests/test_reviews_gate.py"
       },
       {
         "candidate": "SOL-PROMPT.md",
-        "line": 137,
-        "referrer": "tests/test_reviews_gate.py"
-      },
-      {
-        "candidate": "recu-revue/2",
         "line": 139,
         "referrer": "tests/test_reviews_gate.py"
       },
       {
+        "candidate": "recu-revue/2",
+        "line": 141,
+        "referrer": "tests/test_reviews_gate.py"
+      },
+      {
         "candidate": "RECU.json",
-        "line": 169,
+        "line": 171,
         "referrer": "tests/test_reviews_gate.py"
       },
       {
         "candidate": "reviews/",
-        "line": 174,
+        "line": 176,
         "referrer": "tests/test_reviews_gate.py"
       },
       {
         "candidate": "evidence/reviews/",
-        "line": 174,
+        "line": 176,
         "referrer": "tests/test_reviews_gate.py"
       },
       {
         "candidate": "evidence/reviews/",
-        "line": 179,
+        "line": 181,
         "referrer": "tests/test_reviews_gate.py"
       },
       {
         "candidate": "../ailleurs",
-        "line": 217,
+        "line": 219,
         "referrer": "tests/test_reviews_gate.py"
       },
       {
         "candidate": "origin/main",
-        "line": 228,
+        "line": 230,
         "referrer": "tests/test_reviews_gate.py"
       },
       {
         "candidate": "RECU.json",
-        "line": 239,
+        "line": 241,
         "referrer": "tests/test_reviews_gate.py"
       },
       {
         "candidate": "origin/main",
-        "line": 244,
+        "line": 246,
         "referrer": "tests/test_reviews_gate.py"
       },
       {
         "candidate": "RECU.json",
-        "line": 256,
+        "line": 258,
         "referrer": "tests/test_reviews_gate.py"
       },
       {
         "candidate": "origin/main",
-        "line": 261,
+        "line": 263,
         "referrer": "tests/test_reviews_gate.py"
       },
       {
         "candidate": "RECU.json",
-        "line": 273,
+        "line": 275,
         "referrer": "tests/test_reviews_gate.py"
       },
       {
         "candidate": "RECU.json",
-        "line": 286,
+        "line": 288,
         "referrer": "tests/test_reviews_gate.py"
       },
       {
         "candidate": "RECU.json",
-        "line": 292,
+        "line": 294,
         "referrer": "tests/test_reviews_gate.py"
       },
       {
         "candidate": "RECU.json",
-        "line": 302,
+        "line": 304,
         "referrer": "tests/test_reviews_gate.py"
       },
       {
         "candidate": "RECU.json",
-        "line": 329,
+        "line": 331,
         "referrer": "tests/test_reviews_gate.py"
       },
       {
         "candidate": "origin/main",
-        "line": 361,
+        "line": 363,
         "referrer": "tests/test_reviews_gate.py"
       },
       {
         "candidate": "deepseek.verdict.json",
-        "line": 371,
+        "line": 373,
         "referrer": "tests/test_reviews_gate.py"
       },
       {
         "candidate": "RECU.json",
-        "line": 383,
+        "line": 385,
         "referrer": "tests/test_reviews_gate.py"
       },
       {
         "candidate": "origin/main",
-        "line": 386,
+        "line": 388,
         "referrer": "tests/test_reviews_gate.py"
       },
       {
         "candidate": "439/PR500",
-        "line": 393,
+        "line": 395,
         "referrer": "tests/test_reviews_gate.py"
       },
       {
         "candidate": "RECU.json",
-        "line": 394,
-        "referrer": "tests/test_reviews_gate.py"
-      },
-      {
-        "candidate": "origin/main",
         "line": 396,
         "referrer": "tests/test_reviews_gate.py"
       },
       {
-        "candidate": "RECU.json",
-        "line": 405,
+        "candidate": "origin/main",
+        "line": 398,
         "referrer": "tests/test_reviews_gate.py"
       },
       {
         "candidate": "RECU.json",
-        "line": 412,
+        "line": 407,
+        "referrer": "tests/test_reviews_gate.py"
+      },
+      {
+        "candidate": "RECU.json",
+        "line": 414,
         "referrer": "tests/test_reviews_gate.py"
       },
       {
         "candidate": "origin/main",
-        "line": 421,
+        "line": 423,
         "referrer": "tests/test_reviews_gate.py"
       },
       {
         "candidate": "SOL-PROMPT.md",
-        "line": 459,
+        "line": 461,
         "referrer": "tests/test_reviews_gate.py"
       },
       {
         "candidate": "RECU.json",
-        "line": 460,
+        "line": 462,
         "referrer": "tests/test_reviews_gate.py"
       },
       {
         "candidate": "recu-revue/2",
-        "line": 463,
+        "line": 465,
         "referrer": "tests/test_reviews_gate.py"
       },
       {
         "candidate": "SOL-PROMPT.md",
-        "line": 519,
+        "line": 521,
         "referrer": "tests/test_reviews_gate.py"
       },
       {
         "candidate": "RECU.json",
-        "line": 520,
+        "line": 522,
         "referrer": "tests/test_reviews_gate.py"
       },
       {
         "candidate": "recu-revue/2",
-        "line": 524,
+        "line": 526,
         "referrer": "tests/test_reviews_gate.py"
       },
       {
         "candidate": "origin/main",
-        "line": 549,
+        "line": 551,
         "referrer": "tests/test_reviews_gate.py"
       },
       {
         "candidate": "RECU.json",
-        "line": 564,
+        "line": 566,
         "referrer": "tests/test_reviews_gate.py"
       },
       {
         "candidate": "RECU.json",
-        "line": 570,
+        "line": 572,
         "referrer": "tests/test_reviews_gate.py"
       },
       {
         "candidate": "origin/main",
-        "line": 581,
+        "line": 583,
         "referrer": "tests/test_reviews_gate.py"
       },
       {
         "candidate": "RECU.json",
-        "line": 599,
+        "line": 601,
         "referrer": "tests/test_reviews_gate.py"
       },
       {
         "candidate": "origin/main",
-        "line": 602,
+        "line": 604,
         "referrer": "tests/test_reviews_gate.py"
       },
       {
         "candidate": "origin/main",
-        "line": 647,
+        "line": 649,
         "referrer": "tests/test_reviews_gate.py"
       },
       {
         "candidate": "origin/main",
-        "line": 665,
+        "line": 667,
         "referrer": "tests/test_reviews_gate.py"
       },
       {
         "candidate": "origin/main",
-        "line": 685,
+        "line": 687,
         "referrer": "tests/test_reviews_gate.py"
       },
       {
@@ -144316,83 +144316,88 @@
         "referrer": "tests/test_revue.py"
       },
       {
+        "candidate": "policy.json",
+        "line": 393,
+        "referrer": "tests/test_revue.py"
+      },
+      {
         "candidate": "reviews/",
-        "line": 367,
+        "line": 429,
         "referrer": "tests/test_revue.py"
       },
       {
         "candidate": "head_commit/head_tree",
-        "line": 367,
+        "line": 429,
         "referrer": "tests/test_revue.py"
       },
       {
         "candidate": "RECU.json",
-        "line": 434,
+        "line": 496,
         "referrer": "tests/test_revue.py"
       },
       {
         "candidate": "attaquant/une",
-        "line": 436,
+        "line": 498,
         "referrer": "tests/test_revue.py"
       },
       {
         "candidate": "revue.py",
-        "line": 462,
+        "line": 524,
         "referrer": "tests/test_revue.py"
       },
       {
         "candidate": "origin/main",
-        "line": 464,
+        "line": 526,
         "referrer": "tests/test_revue.py"
       },
       {
         "candidate": "origin/main",
-        "line": 476,
+        "line": 538,
         "referrer": "tests/test_revue.py"
       },
       {
         "candidate": "revue.py",
-        "line": 488,
+        "line": 550,
         "referrer": "tests/test_revue.py"
       },
       {
         "candidate": "origin/main",
-        "line": 488,
+        "line": 550,
         "referrer": "tests/test_revue.py"
       },
       {
         "candidate": "DeepSeek-V4-Pro.verdict.json",
-        "line": 501,
+        "line": 563,
         "referrer": "tests/test_revue.py"
       },
       {
         "candidate": "Gemini-3.7-Flash.verdict.json",
-        "line": 502,
+        "line": 564,
         "referrer": "tests/test_revue.py"
       },
       {
         "candidate": "LongCat-2.0.verdict.json",
-        "line": 505,
+        "line": 567,
         "referrer": "tests/test_revue.py"
       },
       {
         "candidate": "RECU.json",
-        "line": 510,
+        "line": 572,
         "referrer": "tests/test_revue.py"
       },
       {
         "candidate": "origin/main",
-        "line": 513,
+        "line": 575,
         "referrer": "tests/test_revue.py"
       },
       {
         "candidate": "DeepSeek-V4-Pro.verdict.json",
-        "line": 534,
+        "line": 596,
         "referrer": "tests/test_revue.py"
       },
       {
         "candidate": "origin/main",
-        "line": 541,
+        "line": 603,
         "referrer": "tests/test_revue.py"
       },
       {
@@ -175097,84 +175102,84 @@
       },
       {
         "candidate": "manifests/roles.yaml",
-        "line": 151,
+        "line": 158,
         "referrer": "scripts/revue.py",
         "resolved": "manifests/roles.yaml",
         "severity": "hard"
       },
       {
         "candidate": "manifests/roles.yaml",
-        "line": 173,
+        "line": 180,
         "referrer": "scripts/revue.py",
         "resolved": "manifests/roles.yaml",
         "severity": "hard"
       },
       {
         "candidate": "manifests/routes.yaml",
-        "line": 173,
+        "line": 180,
         "referrer": "scripts/revue.py",
         "resolved": "manifests/routes.yaml",
         "severity": "hard"
       },
       {
         "candidate": "scripts/gate_docs.py",
-        "line": 245,
+        "line": 252,
         "referrer": "scripts/revue.py",
         "resolved": "scripts/gate_docs.py",
         "severity": "hard"
       },
       {
         "candidate": "governance/path-classification.json",
-        "line": 361,
+        "line": 381,
         "referrer": "scripts/revue.py",
         "resolved": "governance/path-classification.json",
         "severity": "hard"
       },
       {
         "candidate": "governance/PATH-CLASSIFICATION.md",
-        "line": 362,
+        "line": 382,
         "referrer": "scripts/revue.py",
         "resolved": "governance/PATH-CLASSIFICATION.md",
         "severity": "hard"
       },
       {
         "candidate": "evidence/registres/mission.jsonl",
-        "line": 447,
+        "line": 467,
         "referrer": "scripts/revue.py",
         "resolved": "evidence/registres/mission.jsonl",
         "severity": "hard"
       },
       {
         "candidate": "governance/path-classification.json",
-        "line": 450,
+        "line": 470,
         "referrer": "scripts/revue.py",
         "resolved": "governance/path-classification.json",
         "severity": "hard"
       },
       {
         "candidate": "governance/path-classification-rules.json",
-        "line": 458,
+        "line": 478,
         "referrer": "scripts/revue.py",
         "resolved": "governance/path-classification-rules.json",
         "severity": "hard"
       },
       {
         "candidate": "governance/path-classification.json",
-        "line": 464,
+        "line": 484,
         "referrer": "scripts/revue.py",
         "resolved": "governance/path-classification.json",
         "severity": "hard"
       },
       {
         "candidate": "governance/PATH-CLASSIFICATION.md",
-        "line": 465,
+        "line": 485,
         "referrer": "scripts/revue.py",
         "resolved": "governance/PATH-CLASSIFICATION.md",
         "severity": "hard"
       },
       {
         "candidate": "manifests/roles.yaml",
-        "line": 1262,
+        "line": 1306,
         "referrer": "scripts/revue.py",
         "resolved": "manifests/roles.yaml",
         "severity": "hard"
@@ -181263,7 +181268,7 @@
       "working-sandbox-readme": 1
     },
     "case_collisions_total": 0,
-    "dangling_references_total": 17439,
+    "dangling_references_total": 17440,
     "generated_total": 9,
     "load_bearing_total": 2144,
     "portability_violations_total": 0,

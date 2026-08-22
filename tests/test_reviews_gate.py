@@ -67,6 +67,8 @@ def _runner(command):
     if command[:2] == ["git", "diff"]:
         return ""
     if command[:2] == ["git", "show"]:
+        if command[-1].endswith(gate._load_revue()._SOL_CANONICAL_STORY_ID):
+            return "# Story\n\n## Critères d’acceptation\n\n- [x] contrat\n\n## Limites\n"
         return gate._load_revue().TEMPLATE.read_text(encoding="utf-8")
     raise AssertionError(command)
 

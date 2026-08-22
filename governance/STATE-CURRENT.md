@@ -774,11 +774,11 @@
     },
     {
       "path": "tests/test_reviews_gate.py",
-      "sha256": "981b0f470dd9cc9d4eb00c67d6abd5f34bf62db8e85266368713feb850dd4182"
+      "sha256": "5d2db002b8ad5e62b4bcbc82a6106783640d24412733bdec9a70992aa0a7f0db"
     },
     {
       "path": "tests/test_revue.py",
-      "sha256": "03210b13daa54fee52c220ced2bf332b398fa2ec0d874d052f8e0659b6a11e3a"
+      "sha256": "986a2f739f360f34af1982e7c8145ded40160b26ecb9bf755a929158f4526205"
     },
     {
       "path": "tests/test_routestore_concurrence.py",
@@ -1003,7 +1003,7 @@
   "tests": {
     "js_files": 3,
     "python_files": 209,
-    "python_functions_declared": 2670
+    "python_functions_declared": 2674
   }
 }
 ```

@@ -54,7 +54,7 @@ _DIGEST = re.compile(r"^[0-9a-f]{64}$")
 _SOL_PROMPT_FILENAME = "SOL-PROMPT.md"
 _SOL_TEMPLATE_PATH = "CANON/revue-template.md"
 _SOL_ARTIFACT_PATH = "canonical-git-diff"
-_SOL_CRITERIA = "(voir story)"
+_SOL_CRITERIA_HEADING = "## Critères d’acceptation"
 _SOL_CANONICAL_ID = "sol"
 _SOL_CANONICAL_MODEL = "GPT-5.6 Sol"
 _SOL_CANONICAL_VENDOR = "openai"
@@ -62,6 +62,13 @@ _SOL_CANONICAL_PROVIDER_ID = "GPT-5.6-Sol"
 _SOL_CANONICAL_STATUS = "actif"
 _SOL_CANONICAL_CODEUR_ID = "luna_writer"
 _SOL_CANONICAL_STORY_ID = "stories/ORCH-LUNA-SOL-603.md"
+_SOL_CANONICAL_DECISION = "D-2026-08-21-autonomie-luna-sol"
+_SOL_CANONICAL_T3_LIMITS = (
+    "payments",
+    "production_secrets",
+    "permanent_deletions",
+    "external_commitments",
+)
 _LUNA_CANONICAL_MODEL = "GPT-5.6 Luna"
 _LUNA_CANONICAL_VENDOR = "openai"
 _LUNA_CANONICAL_PROVIDER_ID = "GPT-5.6-Luna-Writer"
@@ -315,7 +322,7 @@ def _validate_sol_dossier(dossier: object, review_dir: Path | None = None) -> st
     return dossier
 
 
-def _validate_sol_story_id(story: object, issue: object) -> str:
+def _validate_sol_story_id(story: object, issue: object | None = None) -> str:
     """Accept only the immutable story bound to this Sol contract.
 
     The story is copied into the canonical prompt, so accepting an arbitrary receipt-controlled
@@ -329,9 +336,13 @@ def _validate_sol_story_id(story: object, issue: object) -> str:
         raise ValueError("story Sol impossible à lier à la politique") from error
     if story != policy_story:
         raise ValueError("story Sol différente de l'identifiant canonique")
-    expected_issue = int(Path(policy_story).stem.rsplit("-", 1)[-1])
-    if isinstance(issue, bool) or issue != expected_issue:
-        raise ValueError("issue Sol différente de l'identifiant canonique")
+    # `story` identifies the immutable work item; `issue` identifies the PR that
+    # carries the receipt. They are intentionally different namespaces (for example
+    # story #603 may be covered by PR #607).
+    if issue is not None and (
+        isinstance(issue, bool) or not isinstance(issue, int) or issue <= 0
+    ):
+        raise ValueError("issue Sol doit être un numéro positif")
     return policy_story
 
 
@@ -350,7 +361,16 @@ def _diff_artifact_canonique(
             "git",
             "diff",
             "--no-ext-diff",
+            "--no-textconv",
             "--binary",
+            "--full-index",
+            "--diff-algorithm=myers",
+            "--no-indent-heuristic",
+            "--unified=3",
+            "--inter-hunk-context=0",
+            "--no-color",
+            "--no-prefix",
+            "--no-relative",
             "--no-renames",
             f"{base_ref}...{head_ref}",
             "--",
@@ -661,6 +681,25 @@ def _git_blob(execute: GitRunner, commit: str, path: str) -> str:
     return content
 
 
+def _sol_criteria_from_git(execute: GitRunner, commit: str, story_id: str) -> str:
+    """Read only the acceptance section from the story frozen in the reviewed commit."""
+    _validate_sol_story_id(story_id)
+    story = _git_blob(execute, commit, story_id)
+    lines = story.splitlines()
+    try:
+        start = lines.index(_SOL_CRITERIA_HEADING) + 1
+    except ValueError as error:
+        raise ValueError("story Sol sans section Critères d’acceptation") from error
+    end = next(
+        (index for index in range(start, len(lines)) if lines[index].startswith("## ")),
+        len(lines),
+    )
+    criteria = "\n".join(lines[start:end]).strip()
+    if not criteria:
+        raise ValueError("section Critères d’acceptation Sol vide")
+    return criteria
+
+
 def _canonical_sol_prompt(
     story_id: str,
     base_commit: str,
@@ -672,11 +711,12 @@ def _canonical_sol_prompt(
     execute = _default_runner if runner is None else runner
     frozen_base = _resolve_commit(execute, base_commit)
     frozen_head = _resolve_commit(execute, reviewed_head_commit)
+    criteria = _sol_criteria_from_git(execute, frozen_head, story_id)
     template_content = _git_blob(execute, frozen_head, _SOL_TEMPLATE_PATH)
     artifact = _diff_artifact_canonique(frozen_base, frozen_head, runner=execute)
     prompt, prompt_sha = build_prompt(
         story_id,
-        _SOL_CRITERIA,
+        criteria,
         _SOL_ARTIFACT_PATH,
         artifact,
         mode="sol_blind",
@@ -772,6 +812,10 @@ def load_autonomy_policy(path: Path = AUTONOMY_POLICY) -> dict:
             raise ValueError(f"review.{requirement} doit être true")
     if policy.get("terminal_states") != ["DONE_WITH_EVIDENCE", "BLOCKED_WITH_REASON"]:
         raise ValueError("terminal_states de politique d'autonomie invalides")
+    if policy.get("decision") != _SOL_CANONICAL_DECISION:
+        raise ValueError("decision de politique d'autonomie invalide")
+    if policy.get("t3_limits") != list(_SOL_CANONICAL_T3_LIMITS):
+        raise ValueError("t3_limits de politique d'autonomie invalides")
     return policy
 
 
@@ -1661,7 +1705,8 @@ def _cmd_prompt(args) -> int:
         artefact = canonical_artifact
         base_ref = frozen_base
         head_ref = frozen_head
-        criteres = _SOL_CRITERIA
+        _validate_sol_story_id(args.story)
+        criteres = _sol_criteria_from_git(_default_runner, frozen_head, args.story)
         template_content = _git_blob(_default_runner, frozen_head, _SOL_TEMPLATE_PATH)
         artefact_path = _SOL_ARTIFACT_PATH
     else:

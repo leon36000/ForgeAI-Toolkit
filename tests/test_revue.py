@@ -340,6 +340,68 @@ def test_diff_canonique_invoque_git_avec_no_abbrev():
     assert "--no-abbrev" in commandes_recues[0]
 
 
+def test_diff_artifact_sol_fige_la_configuration_git():
+    commandes_recues = []
+
+    revue._diff_artifact_canonique(
+        "base",
+        "HEAD",
+        runner=lambda commande: commandes_recues.append(commande) or "",
+    )
+    commande = commandes_recues[0]
+    for option in (
+        "--no-textconv",
+        "--full-index",
+        "--diff-algorithm=myers",
+        "--no-indent-heuristic",
+        "--unified=3",
+        "--inter-hunk-context=0",
+        "--no-color",
+        "--no-prefix",
+        "--no-relative",
+    ):
+        assert option in commande
+
+
+def test_sol_criteria_lit_la_section_de_la_story_figee():
+    story = "# Story\n\n## Critères d’acceptation\n\n- [x] contrat\n\n## Limites\n"
+
+    def runner(command):
+        assert command[:2] == ["git", "show"]
+        return story
+
+    criteria = revue._sol_criteria_from_git(
+        runner,
+        "b" * 40,
+        revue._SOL_CANONICAL_STORY_ID,
+    )
+    assert criteria == "- [x] contrat"
+
+
+def test_sol_issue_est_le_numero_de_pr_et_non_le_numero_de_story():
+    assert (
+        revue._validate_sol_story_id(revue._SOL_CANONICAL_STORY_ID, 607)
+        == revue._SOL_CANONICAL_STORY_ID
+    )
+    with pytest.raises(ValueError):
+        revue._validate_sol_story_id(revue._SOL_CANONICAL_STORY_ID, 0)
+
+
+def test_politique_sol_verifie_decision_et_frontieres_t3(tmp_path):
+    policy = revue.load_autonomy_policy()
+    policy["decision"] = "arbitrary"
+    path = tmp_path / "policy.json"
+    path.write_text(json.dumps(policy), encoding="utf-8")
+    with pytest.raises(ValueError, match="decision"):
+        revue.load_autonomy_policy(path)
+
+    policy = revue.load_autonomy_policy()
+    policy["t3_limits"] = []
+    path.write_text(json.dumps(policy), encoding="utf-8")
+    with pytest.raises(ValueError, match="t3_limits"):
+        revue.load_autonomy_policy(path)
+
+
 def test_verifier_recu_approve_nominal():
     result = revue.verifier_recu(_recu(), [_v("deepseek"), _v("gemini_flash"), _v("longcat_20")], _etat())
     assert result["result"] == "APPROVE" and "reçu valide" in result["reason"]
