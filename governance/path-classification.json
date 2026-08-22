@@ -1577,8 +1577,8 @@
         }
       ],
       "rule_id": "working-superpowers-sdd",
-      "sha256": "2c5533fe8761ca038eb87b9651f3ad1594b03b9dddac97dc1ece59a8030c201e",
-      "size": 14423,
+      "sha256": "0915ba13ca5302994872612545c278cd422694e4420d85eb8658784b0804edaf",
+      "size": 14762,
       "target_path": null,
       "type": "text"
     },
@@ -1838,6 +1838,19 @@
       "rule_id": "working-superpowers-sdd",
       "sha256": "b5d0bf94e05ade4fa736813c31b8ed3654721273c97b01f7c55d05286352b9ae",
       "size": 2088,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "WORKING",
+      "generated": false,
+      "load_bearing": false,
+      "owner": "working-cockpit",
+      "path": ".superpowers/sdd/2026-08-22-autonomous-luna-sol/task-5-review-round11-report.md",
+      "referenced_by": [],
+      "rule_id": "working-superpowers-sdd",
+      "sha256": "3f46c287c6e8b132ca9e5b4850dc7fd82288a63482a77be07af6619262500b33",
+      "size": 1886,
       "target_path": null,
       "type": "text"
     },
@@ -3524,6 +3537,13 @@
       "owner": "gouvernance-canon",
       "path": "CANON/revue-template.md",
       "referenced_by": [
+        {
+          "candidate": "CANON/revue-template.md",
+          "line": 10,
+          "referrer": ".superpowers/sdd/2026-08-22-autonomous-luna-sol/task-5-review-round11-report.md",
+          "resolved": "CANON/revue-template.md",
+          "severity": "hard"
+        },
         {
           "candidate": "CANON/revue-template.md",
           "line": 21,
@@ -7848,8 +7868,8 @@
         }
       ],
       "rule_id": "evidence-registres-root",
-      "sha256": "e0829fb1265a19b7ef7c4a495d70ab00afe8f21508a68584f5c90dfd3abc3ef2",
-      "size": 426332,
+      "sha256": "4d43e8882864de0b26e39653f92685514eb23c8bc3a295e1a592f5d10f853f41",
+      "size": 427144,
       "target_path": null,
       "type": "text"
     },
@@ -36907,6 +36927,13 @@
         },
         {
           "candidate": "scripts/revue.py",
+          "line": 34,
+          "referrer": ".superpowers/sdd/2026-08-22-autonomous-luna-sol/task-5-review-round11-report.md",
+          "resolved": "scripts/revue.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "scripts/revue.py",
           "line": 114,
           "referrer": "AGENTS.md",
           "resolved": "scripts/revue.py",
@@ -37404,8 +37431,8 @@
         }
       ],
       "rule_id": "governance-scripts-root",
-      "sha256": "3b871fd465146eba40564c71b310495d954a930bb2c1e999c78b4dbde9ac09ca",
-      "size": 83271,
+      "sha256": "87d06a89347663a061d7c98406ff4c1bd75ea4832065298f0df664a7256d33f4",
+      "size": 83253,
       "target_path": null,
       "type": "text"
     },
@@ -60678,6 +60705,13 @@
         },
         {
           "candidate": "tests/test_reviews_gate.py",
+          "line": 33,
+          "referrer": ".superpowers/sdd/2026-08-22-autonomous-luna-sol/task-5-review-round11-report.md",
+          "resolved": "tests/test_reviews_gate.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "tests/test_reviews_gate.py",
           "line": 152,
           "referrer": "Docs/reference/autonomy-luna-sol.md",
           "resolved": "tests/test_reviews_gate.py",
@@ -60862,6 +60896,13 @@
           "candidate": "tests/test_revue.py",
           "line": 31,
           "referrer": ".superpowers/sdd/2026-08-22-autonomous-luna-sol/task-5-review-round10-report.md",
+          "resolved": "tests/test_revue.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "tests/test_revue.py",
+          "line": 33,
+          "referrer": ".superpowers/sdd/2026-08-22-autonomous-luna-sol/task-5-review-round11-report.md",
           "resolved": "tests/test_revue.py",
           "severity": "hard"
         },
@@ -61168,6 +61209,13 @@
         },
         {
           "candidate": "tests/test_revue_sol_blind.py",
+          "line": 33,
+          "referrer": ".superpowers/sdd/2026-08-22-autonomous-luna-sol/task-5-review-round11-report.md",
+          "resolved": "tests/test_revue_sol_blind.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "tests/test_revue_sol_blind.py",
           "line": 151,
           "referrer": "Docs/reference/autonomy-luna-sol.md",
           "resolved": "tests/test_revue_sol_blind.py",
@@ -61357,6 +61405,13 @@
         },
         {
           "candidate": "tests/test_revue_sol_round2.py",
+          "line": 33,
+          "referrer": ".superpowers/sdd/2026-08-22-autonomous-luna-sol/task-5-review-round11-report.md",
+          "resolved": "tests/test_revue_sol_round2.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "tests/test_revue_sol_round2.py",
           "line": 794,
           "referrer": "governance/STATE-CURRENT.json",
           "resolved": "tests/test_revue_sol_round2.py",
@@ -61371,8 +61426,8 @@
         }
       ],
       "rule_id": "test-suite",
-      "sha256": "433c2ac17654e774220ba80a31cec8be1cf4b8036458e1b57df6ce0e89faecd1",
-      "size": 18851,
+      "sha256": "92710a39f8bb86274db8516cf1b925a8512426640759b534a7c71c7aafa15a18",
+      "size": 19603,
       "target_path": null,
       "type": "text"
     },
@@ -148253,53 +148308,58 @@
         "referrer": "tests/test_revue_sol_round2.py"
       },
       {
+        "candidate": "SOL-PROMPT.md",
+        "line": 248,
+        "referrer": "tests/test_revue_sol_round2.py"
+      },
+      {
         "candidate": "origin/main",
-        "line": 261,
+        "line": 286,
         "referrer": "tests/test_revue_sol_round2.py"
       },
       {
         "candidate": "recu-revue/1",
-        "line": 274,
+        "line": 299,
         "referrer": "tests/test_revue_sol_round2.py"
       },
       {
         "candidate": "SOL-PROMPT.md",
-        "line": 278,
+        "line": 303,
         "referrer": "tests/test_revue_sol_round2.py"
       },
       {
         "candidate": "recu-revue/1",
-        "line": 295,
+        "line": 320,
         "referrer": "tests/test_revue_sol_round2.py"
       },
       {
         "candidate": "SOL-PROMPT.md",
-        "line": 455,
+        "line": 480,
         "referrer": "tests/test_revue_sol_round2.py"
       },
       {
         "candidate": "SOL-PROMPT.md",
-        "line": 503,
+        "line": 528,
         "referrer": "tests/test_revue_sol_round2.py"
       },
       {
         "candidate": "SOL-PROMPT.md",
-        "line": 529,
+        "line": 554,
         "referrer": "tests/test_revue_sol_round2.py"
       },
       {
         "candidate": "SOL-PROMPT.md",
-        "line": 549,
+        "line": 574,
         "referrer": "tests/test_revue_sol_round2.py"
       },
       {
         "candidate": "SOL-PROMPT.md",
-        "line": 573,
+        "line": 598,
         "referrer": "tests/test_revue_sol_round2.py"
       },
       {
         "candidate": "SOL-PROMPT.md",
-        "line": 600,
+        "line": 625,
         "referrer": "tests/test_revue_sol_round2.py"
       },
       {
@@ -155914,6 +155974,48 @@
         "line": 34,
         "referrer": ".superpowers/sdd/2026-08-22-autonomous-luna-sol/task-5-review-round10-report.md",
         "resolved": "scripts/ruff_noqa_gate.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "CANON/revue-template.md",
+        "line": 10,
+        "referrer": ".superpowers/sdd/2026-08-22-autonomous-luna-sol/task-5-review-round11-report.md",
+        "resolved": "CANON/revue-template.md",
+        "severity": "hard"
+      },
+      {
+        "candidate": "tests/test_revue_sol_round2.py",
+        "line": 33,
+        "referrer": ".superpowers/sdd/2026-08-22-autonomous-luna-sol/task-5-review-round11-report.md",
+        "resolved": "tests/test_revue_sol_round2.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "tests/test_revue_sol_blind.py",
+        "line": 33,
+        "referrer": ".superpowers/sdd/2026-08-22-autonomous-luna-sol/task-5-review-round11-report.md",
+        "resolved": "tests/test_revue_sol_blind.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "tests/test_reviews_gate.py",
+        "line": 33,
+        "referrer": ".superpowers/sdd/2026-08-22-autonomous-luna-sol/task-5-review-round11-report.md",
+        "resolved": "tests/test_reviews_gate.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "tests/test_revue.py",
+        "line": 33,
+        "referrer": ".superpowers/sdd/2026-08-22-autonomous-luna-sol/task-5-review-round11-report.md",
+        "resolved": "tests/test_revue.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "scripts/revue.py",
+        "line": 34,
+        "referrer": ".superpowers/sdd/2026-08-22-autonomous-luna-sol/task-5-review-round11-report.md",
+        "resolved": "scripts/revue.py",
         "severity": "hard"
       },
       {
@@ -187422,7 +187524,7 @@
       "GOVERNANCE": 217,
       "PRODUCT": 113,
       "TEST": 229,
-      "WORKING": 33
+      "WORKING": 34
     },
     "by_rule": {
       "archive-root": 44,
@@ -187471,14 +187573,14 @@
       "test-suite": 229,
       "working-claude-agents": 9,
       "working-sandbox-readme": 1,
-      "working-superpowers-sdd": 23
+      "working-superpowers-sdd": 24
     },
     "case_collisions_total": 0,
-    "dangling_references_total": 17672,
+    "dangling_references_total": 17673,
     "generated_total": 9,
     "load_bearing_total": 2150,
     "portability_violations_total": 0,
-    "tracked_total": 2328,
+    "tracked_total": 2329,
     "unclassified_total": 0,
     "unicode_anomalies_total": 0
   },

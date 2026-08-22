@@ -5,7 +5,7 @@ import hashlib
 import importlib.util
 import json
 import subprocess
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 import pytest
@@ -233,6 +233,31 @@ def test_current_sol_verifier_rejects_stale_or_future_timestamps(reviewed_at, da
     assert any(
         marker in result["reason"].lower() for marker in ("périm", "timestamp", "futur")
     )
+
+
+def test_current_sol_verifier_rejects_one_second_past_configured_24_hour_window(tmp_path):
+    timestamp = (NOW - timedelta(hours=24, seconds=1)).isoformat()
+    receipt = _receipt(
+        reviewed_at=timestamp,
+        date_heure=timestamp,
+        prompt_sha256=CANONICAL_SHA,
+    )
+    verdict = _verdict(reviewed_at=timestamp, prompt_sha256=CANONICAL_SHA)
+    directory = tmp_path / "S-sol"
+    directory.mkdir()
+    (directory / "SOL-PROMPT.md").write_bytes(CANONICAL_PROMPT)
+
+    result = revue.verifier_recu(
+        receipt,
+        [verdict],
+        _state(),
+        review_dir=directory,
+        runner=_runner,
+        now=NOW,
+    )
+
+    assert result["result"] == "INVALIDE"
+    assert "périm" in result["reason"].lower()
 
 
 @pytest.mark.parametrize(

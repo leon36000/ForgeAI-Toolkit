@@ -946,7 +946,7 @@ def _validate_sol_freshness(
         raise ValueError("reviewed_at du verdict futur")
     if verdict_date is not None and verdict_date > validation_time + _SOL_CLOCK_SKEW:
         raise ValueError("date_heure du verdict futur")
-    if validation_time - receipt_reviewed_at > timedelta(hours=window) + _SOL_CLOCK_SKEW:
+    if validation_time - receipt_reviewed_at > timedelta(hours=window):
         raise ValueError("preuve Sol périmée")
 
 
