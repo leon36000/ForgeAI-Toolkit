@@ -105,13 +105,13 @@
         {
           "topic": "workspace_confinement",
           "position": "repo_plus_external_governance_tooling",
-          "locator": "AGENTS.md:73-76"
+          "locator": "AGENTS.md:130-133"
         }
       ],
       "digest": {
         "policy": "content_sha256",
-        "value": "490eebd6f8aa26b65eb80acfc4e0090bcf5c89b4609e35e1493a436df94454df",
-        "checked_at": "2026-08-16",
+        "value": "e1a396138be1435169bb6ad08267936b0d0d5639048e6ecbe07734fd6424ba9b",
+        "checked_at": "2026-08-22",
         "delegated_to": null
       },
       "retention": "in_force",
@@ -122,7 +122,7 @@
         "mission_seq": null,
         "ref": "issue-487"
       },
-      "notes": "Auto-contradiction interne resolue par #432 (Mission affirme desormais Claude Code Opus, section ORCH-001 remplacee) ; conflit RESIDUEL avec canon.plan-integral (toujours \"Fable orchestrateur unique\", hors perimetre de #432 -- CANON exige son propre circuit de revue) suivi par #487. Empreinte fusionnee (#433 x #437, merge sur main post-9d97b529) : #433 remplace les lignes 49-67 (pointe vers capabilities.py, decale le paragraphe Perimetre a +3 lignes) ; #437 insere un marqueur <!-- state:catalogue.entries_total --> autour du compteur manuel (AGENTS.md:38), sans decalage de lignes. Les deux changements sont sur des zones disjointes du fichier, fusionnes automatiquement par git (aucun conflit textuel) ; seule l'empreinte ci-dessus reflete desormais le contenu final combine. Locator workspace_confinement verifie a AGENTS.md:73-76 apres fusion."
+      "notes": "Auto-contradiction interne resolue par #432 (Mission affirme desormais Claude Code Opus, section ORCH-001 remplacee) ; conflit RESIDUEL avec canon.plan-integral (toujours \"Fable orchestrateur unique\", hors perimetre de #432 -- CANON exige son propre circuit de revue) suivi par #487. Empreinte fusionnee (#433 x #437, merge sur main post-9d97b529) : #433 remplace les lignes 49-67 (pointe vers capabilities.py, decale le paragraphe Perimetre a +3 lignes) ; #437 insere un marqueur <!-- state:catalogue.entries_total --> autour du compteur manuel (AGENTS.md:38), sans decalage de lignes. Les deux changements sont sur des zones disjointes du fichier, fusionnes automatiquement par git (aucun conflit textuel) ; seule l'empreinte ci-dessus reflete desormais le contenu final combine. Locator workspace_confinement pointe maintenant les lignes AGENTS.md:130-133, qui portent la doctrine active « Confinement au repo » et l'outillage de gouvernance autorise."
     },
     {
       "id": "agents-md.orch-001",
@@ -171,13 +171,13 @@
         {
           "topic": "workspace_confinement",
           "position": "repo_plus_external_governance_tooling",
-          "locator": "CLAUDE.md:39"
+          "locator": "CLAUDE.md:44-49"
         }
       ],
       "digest": {
         "policy": "content_sha256",
-        "value": "a5dc93ed5492c490ffc2e70d3c039d6374dd773fbd9126f8ef4670d2b1cd88ef",
-        "checked_at": "2026-08-16",
+        "value": "64b542e7d0ca60e6bd8c47f58018077447f33c16c5772bc614c6654b3530a511",
+        "checked_at": "2026-08-22",
         "delegated_to": null
       },
       "retention": "in_force",
@@ -188,7 +188,7 @@
         "mission_seq": null,
         "ref": "issue-484"
       },
-      "notes": "Le contrat autorise l'outillage de gouvernance externe pendant la construction. Empreinte/locator recalcules par #433 (reecriture complete : distingue capacites toujours disponibles vs outillage externe optionnel, supprime la commande d'extraction de secret docker inspect) -- la position et le statut CONFLICTED envers #484 restent inchanges, #433 ne tranche pas ce conflit."
+      "notes": "Le contrat autorise l'outillage de gouvernance externe pendant la construction. Empreinte/locator recalcules par #433 (reecriture complete : distingue capacites toujours disponibles vs outillage externe optionnel, supprime la commande d'extraction de secret docker inspect) -- la position et le statut CONFLICTED envers #484 restent inchanges, #433 ne tranche pas ce conflit. Locator workspace_confinement verifie maintenant a CLAUDE.md:44-49, qui porte le flux externe optionnel de construction."
     },
     {
       "id": "canon.directives-perimetre",
@@ -598,8 +598,8 @@
       "positions": [],
       "digest": {
         "policy": "content_sha256",
-        "value": "c5c68bd435e9e1da64d52747ffbf044763381e4770099e0c171c02c4d5cfdf00",
-        "checked_at": "2026-08-14",
+        "value": "ce7b4c9abaa253d543bd24c0d08d192847a924cda3e7778ac2cd2963ebcee34f",
+        "checked_at": "2026-08-22",
         "delegated_to": null
       },
       "retention": "in_force",
@@ -797,6 +797,36 @@
         "ref": null
       },
       "notes": "ADR inventorié sous le répertoire canonique des décisions."
+    },
+    {
+      "id": "gov.decision-autonomie-luna-sol",
+      "title": "Décision — contrat d’autonomie Luna/Sol",
+      "path": "governance/decisions/D-2026-08-21-autonomie-luna-sol.md",
+      "anchor": null,
+      "kind": "decision",
+      "scope": "orchestration",
+      "version": "2026-08-21",
+      "version_source": "declared_in_file",
+      "status": "active",
+      "owner": "nathan",
+      "superseded_by": null,
+      "prevails_over": [],
+      "positions": [],
+      "digest": {
+        "policy": "content_sha256",
+        "value": "746d57bf201121f5c9cbd716a5f508a6078eebecb967ab4c4cbcfd71c1023b2b",
+        "checked_at": "2026-08-22",
+        "delegated_to": null
+      },
+      "retention": "in_force",
+      "cleanup_issue": null,
+      "resolution_issue": 603,
+      "decision": {
+        "vision_log_seq": null,
+        "mission_seq": null,
+        "ref": "governance/decisions/D-2026-08-21-autonomie-luna-sol.md"
+      },
+      "notes": "Issue #603 : contrat versionné, plafond de deux writers, revue sol_blind et conservation des identités historiques."
     },
     {
       "id": "adr.trust-019a",

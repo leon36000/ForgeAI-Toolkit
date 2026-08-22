@@ -144,6 +144,24 @@ membres:
     phase_b: Pool rotation reviewers
     contrainte: route instable, journalisée ; pool de rotation uniquement
 
+  - id: luna_writer
+    modele: GPT-5.6 Luna
+    vendor: openai
+    provider_id: GPT-5.6-Luna-Writer
+    statut: actif
+    phase_a: Writer autonome
+    phase_b: Writer autonome
+    contrainte: maximum de deux lanes d’écriture actives ; ne décide pas des frontières T3
+
+  - id: sol
+    modele: GPT-5.6 Sol
+    vendor: openai
+    provider_id: GPT-5.6-Sol
+    statut: actif
+    phase_a: Reviewer aveugle sol_blind
+    phase_b: Reviewer aveugle sol_blind
+    contrainte: contexte frais, lecture seule ; ne review jamais un changement qu’il a écrit
+
   - id: mimo
     modele: MiMo 2.5 Pro
     vendor: xiaomi
