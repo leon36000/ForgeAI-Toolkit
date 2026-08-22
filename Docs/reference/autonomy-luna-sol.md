@@ -4,6 +4,11 @@ Cette phase versionne le noyau du contrat de l’issue #603. La source de vérit
 est `governance/autonomy-policy.json`; la décision associée est
 `governance/decisions/D-2026-08-21-autonomie-luna-sol.md`.
 
+La règle d’absence d’écriture distante s’applique aux workflows du contrat
+Luna/Sol. Les automatisations indépendantes du dépôt, comme
+`.github/workflows/ci-deps-update.yml`, restent hors de son périmètre et suivent
+leur propre politique de permissions.
+
 Le writer actif est `luna_writer` / `GPT-5.6-Luna-Writer`, avec exactement deux
 writer lanes. Le reviewer actif est `sol` / `GPT-5.6-Sol`, en contexte frais,
 aveugle et strictement read-only. `multi_vendor` reste un mode historique

@@ -24,5 +24,8 @@ les archives uniquement.
 ## Limites
 
 Les paiements, secrets de production, suppressions définitives et engagements
-externes restent des décisions T3 humaines. Aucun workflow ne reçoit un droit
-d’écriture distant, ne force-push ou ne s’auto-écrit.
+externes restent des décisions T3 humaines. Aucun workflow du contrat Luna/Sol
+ne reçoit un droit d’écriture distant, ne force-push ou ne s’auto-écrit. Les
+automatisations indépendantes et historiques du dépôt, notamment la mise à jour
+contrôlée du lockfile CI, restent hors de ce contrat et conservent leur propre
+politique de permissions.
