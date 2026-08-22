@@ -776,7 +776,7 @@
       },
       {
         "path": "tests/test_reviews_gate.py",
-        "sha256": "473fd657c2eac8b6ab9fe4e6d7184530d1fc17fc7ca26735f9d57db3c37112e1"
+        "sha256": "ae057285a12a8998458c361ada6707d0d205e5710edfc82008c887f3d098e00e"
       },
       {
         "path": "tests/test_revue.py",
@@ -784,7 +784,7 @@
       },
       {
         "path": "tests/test_revue_sol_blind.py",
-        "sha256": "45d823bf199850c14876b16f332b49ae75ab36926d509870efec620fcf1ddb26"
+        "sha256": "8a0b6c7db65f8baba76d066eb7b2c18db8ba47ca996ff09d8c07082bfb5c2fb2"
       },
       {
         "path": "tests/test_revue_sol_round1.py",
@@ -1017,7 +1017,7 @@
     "tests": {
       "js_files": 3,
       "python_files": 214,
-      "python_functions_declared": 2706
+      "python_functions_declared": 2710
     }
   },
   "observations": [

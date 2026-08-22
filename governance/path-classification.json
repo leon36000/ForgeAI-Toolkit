@@ -1577,8 +1577,8 @@
         }
       ],
       "rule_id": "working-superpowers-sdd",
-      "sha256": "4a58f84dd3fb4abbaa97f3e964ff553971ca6257455adfc43b41585c6a06b82e",
-      "size": 9315,
+      "sha256": "7a2cc685e3b22e4592eaeb696afc104cac6e60ee3112b9209d74f5c77f330cc7",
+      "size": 9685,
       "target_path": null,
       "type": "text"
     },
@@ -1799,6 +1799,19 @@
       "rule_id": "working-superpowers-sdd",
       "sha256": "3959b9c5044489366dcb711e375186c2dae24a4d8d16edd396f733de2abccf9d",
       "size": 2801,
+      "target_path": null,
+      "type": "text"
+    },
+    {
+      "class": "WORKING",
+      "generated": false,
+      "load_bearing": false,
+      "owner": "working-cockpit",
+      "path": ".superpowers/sdd/2026-08-22-autonomous-luna-sol/task-5-review-round1-report.md",
+      "referenced_by": [],
+      "rule_id": "working-superpowers-sdd",
+      "sha256": "bfd00cd88de21279e865de41577abc6c42ed25c74b34121998e1e1a3d49ea458",
+      "size": 1499,
       "target_path": null,
       "type": "text"
     },
@@ -36457,6 +36470,13 @@
         },
         {
           "candidate": "scripts/reviews_gate.py",
+          "line": 21,
+          "referrer": ".superpowers/sdd/2026-08-22-autonomous-luna-sol/task-5-review-round1-report.md",
+          "resolved": "scripts/reviews_gate.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "scripts/reviews_gate.py",
           "line": 115,
           "referrer": "AGENTS.md",
           "resolved": "scripts/reviews_gate.py",
@@ -36648,6 +36668,20 @@
           "candidate": "scripts/revue.py",
           "line": 14,
           "referrer": ".superpowers/sdd/2026-08-22-autonomous-luna-sol/task-3-fix2-report.md",
+          "resolved": "scripts/revue.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "scripts/revue.py",
+          "line": 12,
+          "referrer": ".superpowers/sdd/2026-08-22-autonomous-luna-sol/task-5-review-round1-report.md",
+          "resolved": "scripts/revue.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "scripts/revue.py",
+          "line": 15,
+          "referrer": ".superpowers/sdd/2026-08-22-autonomous-luna-sol/task-5-review-round1-report.md",
           "resolved": "scripts/revue.py",
           "severity": "hard"
         },
@@ -37150,8 +37184,8 @@
         }
       ],
       "rule_id": "governance-scripts-root",
-      "sha256": "64bf4d050e668acfc41902e5224e11c2a2e734ecb52979af881e9158233aa9bf",
-      "size": 63457,
+      "sha256": "6aceb6744a9ac0161477e335fd863e1a9968864da84676078d1fd0b55db77638",
+      "size": 63816,
       "target_path": null,
       "type": "text"
     },
@@ -60263,6 +60297,13 @@
         },
         {
           "candidate": "tests/test_reviews_gate.py",
+          "line": 26,
+          "referrer": ".superpowers/sdd/2026-08-22-autonomous-luna-sol/task-5-review-round1-report.md",
+          "resolved": "tests/test_reviews_gate.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "tests/test_reviews_gate.py",
           "line": 117,
           "referrer": "Docs/reference/autonomy-luna-sol.md",
           "resolved": "tests/test_reviews_gate.py",
@@ -60389,8 +60430,8 @@
         }
       ],
       "rule_id": "test-suite",
-      "sha256": "473fd657c2eac8b6ab9fe4e6d7184530d1fc17fc7ca26735f9d57db3c37112e1",
-      "size": 20594,
+      "sha256": "ae057285a12a8998458c361ada6707d0d205e5710edfc82008c887f3d098e00e",
+      "size": 21920,
       "target_path": null,
       "type": "text"
     },
@@ -60732,6 +60773,13 @@
         },
         {
           "candidate": "tests/test_revue_sol_blind.py",
+          "line": 26,
+          "referrer": ".superpowers/sdd/2026-08-22-autonomous-luna-sol/task-5-review-round1-report.md",
+          "resolved": "tests/test_revue_sol_blind.py",
+          "severity": "hard"
+        },
+        {
+          "candidate": "tests/test_revue_sol_blind.py",
           "line": 116,
           "referrer": "Docs/reference/autonomy-luna-sol.md",
           "resolved": "tests/test_revue_sol_blind.py",
@@ -60802,8 +60850,8 @@
         }
       ],
       "rule_id": "test-suite",
-      "sha256": "45d823bf199850c14876b16f332b49ae75ab36926d509870efec620fcf1ddb26",
-      "size": 7560,
+      "sha256": "8a0b6c7db65f8baba76d066eb7b2c18db8ba47ca996ff09d8c07082bfb5c2fb2",
+      "size": 8624,
       "target_path": null,
       "type": "text"
     },
@@ -64533,6 +64581,16 @@
         "referrer": ".superpowers/sdd/2026-08-22-autonomous-luna-sol/progress.md"
       },
       {
+        "candidate": "gate/verifier",
+        "line": 73,
+        "referrer": ".superpowers/sdd/2026-08-22-autonomous-luna-sol/progress.md"
+      },
+      {
+        "candidate": "prompt/dossier",
+        "line": 73,
+        "referrer": ".superpowers/sdd/2026-08-22-autonomous-luna-sol/progress.md"
+      },
+      {
         "candidate": "SOL-PROMPT.md",
         "line": 13,
         "referrer": ".superpowers/sdd/2026-08-22-autonomous-luna-sol/task-3-fix1-report.md"
@@ -64756,6 +64814,26 @@
         "candidate": "documentation/policy",
         "line": 33,
         "referrer": ".superpowers/sdd/2026-08-22-autonomous-luna-sol/task-4-report.md"
+      },
+      {
+        "candidate": "recu-revue/2",
+        "line": 9,
+        "referrer": ".superpowers/sdd/2026-08-22-autonomous-luna-sol/task-5-review-round1-report.md"
+      },
+      {
+        "candidate": "Sol/review-gate",
+        "line": 25,
+        "referrer": ".superpowers/sdd/2026-08-22-autonomous-luna-sol/task-5-review-round1-report.md"
+      },
+      {
+        "candidate": "prompt/dossier",
+        "line": 28,
+        "referrer": ".superpowers/sdd/2026-08-22-autonomous-luna-sol/task-5-review-round1-report.md"
+      },
+      {
+        "candidate": "prompt/digest",
+        "line": 30,
+        "referrer": ".superpowers/sdd/2026-08-22-autonomous-luna-sol/task-5-review-round1-report.md"
       },
       {
         "candidate": "evidence/registres/",
@@ -110134,57 +110212,57 @@
       },
       {
         "candidate": "recu-revue/2",
-        "line": 1138,
+        "line": 1145,
         "referrer": "scripts/revue.py"
       },
       {
         "candidate": "recu-revue/2",
-        "line": 1139,
+        "line": 1146,
         "referrer": "scripts/revue.py"
       },
       {
         "candidate": ".verdict.json",
-        "line": 1237,
+        "line": 1244,
         "referrer": "scripts/revue.py"
       },
       {
         "candidate": "reviews/",
-        "line": 1244,
+        "line": 1251,
         "referrer": "scripts/revue.py"
       },
       {
         "candidate": "evidence/reviews/",
-        "line": 1244,
+        "line": 1251,
         "referrer": "scripts/revue.py"
       },
       {
         "candidate": ".verdict.json",
-        "line": 1248,
+        "line": 1255,
         "referrer": "scripts/revue.py"
       },
       {
         "candidate": "recu-revue/2",
-        "line": 1280,
+        "line": 1287,
         "referrer": "scripts/revue.py"
       },
       {
         "candidate": "recu-revue/1",
-        "line": 1304,
+        "line": 1311,
         "referrer": "scripts/revue.py"
       },
       {
         "candidate": "revue.py",
-        "line": 1334,
+        "line": 1341,
         "referrer": "scripts/revue.py"
       },
       {
         "candidate": ".verdict.json",
-        "line": 1347,
+        "line": 1354,
         "referrer": "scripts/revue.py"
       },
       {
         "candidate": "test/receipt",
-        "line": 1362,
+        "line": 1369,
         "referrer": "scripts/revue.py"
       },
       {
@@ -146788,183 +146866,193 @@
         "referrer": "tests/test_reviews_gate.py"
       },
       {
-        "candidate": "reviews/",
-        "line": 99,
+        "candidate": "SOL-PROMPT.md",
+        "line": 126,
         "referrer": "tests/test_reviews_gate.py"
       },
       {
-        "candidate": "evidence/reviews/",
-        "line": 99,
-        "referrer": "tests/test_reviews_gate.py"
-      },
-      {
-        "candidate": "evidence/reviews/",
-        "line": 104,
-        "referrer": "tests/test_reviews_gate.py"
-      },
-      {
-        "candidate": "../ailleurs",
-        "line": 142,
-        "referrer": "tests/test_reviews_gate.py"
-      },
-      {
-        "candidate": "origin/main",
-        "line": 153,
+        "candidate": "recu-revue/2",
+        "line": 128,
         "referrer": "tests/test_reviews_gate.py"
       },
       {
         "candidate": "RECU.json",
+        "line": 154,
+        "referrer": "tests/test_reviews_gate.py"
+      },
+      {
+        "candidate": "reviews/",
+        "line": 159,
+        "referrer": "tests/test_reviews_gate.py"
+      },
+      {
+        "candidate": "evidence/reviews/",
+        "line": 159,
+        "referrer": "tests/test_reviews_gate.py"
+      },
+      {
+        "candidate": "evidence/reviews/",
         "line": 164,
         "referrer": "tests/test_reviews_gate.py"
       },
       {
-        "candidate": "origin/main",
-        "line": 169,
-        "referrer": "tests/test_reviews_gate.py"
-      },
-      {
-        "candidate": "RECU.json",
-        "line": 180,
+        "candidate": "../ailleurs",
+        "line": 202,
         "referrer": "tests/test_reviews_gate.py"
       },
       {
         "candidate": "origin/main",
-        "line": 185,
+        "line": 213,
         "referrer": "tests/test_reviews_gate.py"
       },
       {
         "candidate": "RECU.json",
-        "line": 197,
-        "referrer": "tests/test_reviews_gate.py"
-      },
-      {
-        "candidate": "RECU.json",
-        "line": 210,
-        "referrer": "tests/test_reviews_gate.py"
-      },
-      {
-        "candidate": "RECU.json",
-        "line": 216,
-        "referrer": "tests/test_reviews_gate.py"
-      },
-      {
-        "candidate": "RECU.json",
-        "line": 228,
+        "line": 224,
         "referrer": "tests/test_reviews_gate.py"
       },
       {
         "candidate": "origin/main",
-        "line": 260,
+        "line": 229,
         "referrer": "tests/test_reviews_gate.py"
       },
       {
-        "candidate": "deepseek.verdict.json",
+        "candidate": "RECU.json",
+        "line": 240,
+        "referrer": "tests/test_reviews_gate.py"
+      },
+      {
+        "candidate": "origin/main",
+        "line": 245,
+        "referrer": "tests/test_reviews_gate.py"
+      },
+      {
+        "candidate": "RECU.json",
+        "line": 257,
+        "referrer": "tests/test_reviews_gate.py"
+      },
+      {
+        "candidate": "RECU.json",
         "line": 270,
         "referrer": "tests/test_reviews_gate.py"
       },
       {
         "candidate": "RECU.json",
-        "line": 282,
+        "line": 276,
+        "referrer": "tests/test_reviews_gate.py"
+      },
+      {
+        "candidate": "RECU.json",
+        "line": 288,
         "referrer": "tests/test_reviews_gate.py"
       },
       {
         "candidate": "origin/main",
-        "line": 285,
+        "line": 320,
+        "referrer": "tests/test_reviews_gate.py"
+      },
+      {
+        "candidate": "deepseek.verdict.json",
+        "line": 330,
+        "referrer": "tests/test_reviews_gate.py"
+      },
+      {
+        "candidate": "RECU.json",
+        "line": 342,
+        "referrer": "tests/test_reviews_gate.py"
+      },
+      {
+        "candidate": "origin/main",
+        "line": 345,
         "referrer": "tests/test_reviews_gate.py"
       },
       {
         "candidate": "439/PR500",
-        "line": 292,
-        "referrer": "tests/test_reviews_gate.py"
-      },
-      {
-        "candidate": "RECU.json",
-        "line": 293,
-        "referrer": "tests/test_reviews_gate.py"
-      },
-      {
-        "candidate": "origin/main",
-        "line": 295,
-        "referrer": "tests/test_reviews_gate.py"
-      },
-      {
-        "candidate": "RECU.json",
-        "line": 304,
-        "referrer": "tests/test_reviews_gate.py"
-      },
-      {
-        "candidate": "RECU.json",
-        "line": 309,
-        "referrer": "tests/test_reviews_gate.py"
-      },
-      {
-        "candidate": "origin/main",
-        "line": 315,
-        "referrer": "tests/test_reviews_gate.py"
-      },
-      {
-        "candidate": "SOL-PROMPT.md",
-        "line": 348,
-        "referrer": "tests/test_reviews_gate.py"
-      },
-      {
-        "candidate": "RECU.json",
-        "line": 349,
-        "referrer": "tests/test_reviews_gate.py"
-      },
-      {
-        "candidate": "recu-revue/2",
         "line": 352,
         "referrer": "tests/test_reviews_gate.py"
       },
       {
-        "candidate": "SOL-PROMPT.md",
-        "line": 400,
+        "candidate": "RECU.json",
+        "line": 353,
+        "referrer": "tests/test_reviews_gate.py"
+      },
+      {
+        "candidate": "origin/main",
+        "line": 355,
         "referrer": "tests/test_reviews_gate.py"
       },
       {
         "candidate": "RECU.json",
-        "line": 401,
+        "line": 364,
+        "referrer": "tests/test_reviews_gate.py"
+      },
+      {
+        "candidate": "RECU.json",
+        "line": 369,
+        "referrer": "tests/test_reviews_gate.py"
+      },
+      {
+        "candidate": "origin/main",
+        "line": 375,
+        "referrer": "tests/test_reviews_gate.py"
+      },
+      {
+        "candidate": "SOL-PROMPT.md",
+        "line": 408,
+        "referrer": "tests/test_reviews_gate.py"
+      },
+      {
+        "candidate": "RECU.json",
+        "line": 409,
         "referrer": "tests/test_reviews_gate.py"
       },
       {
         "candidate": "recu-revue/2",
-        "line": 405,
-        "referrer": "tests/test_reviews_gate.py"
-      },
-      {
-        "candidate": "origin/main",
-        "line": 427,
-        "referrer": "tests/test_reviews_gate.py"
-      },
-      {
-        "candidate": "RECU.json",
-        "line": 445,
-        "referrer": "tests/test_reviews_gate.py"
-      },
-      {
-        "candidate": "origin/main",
-        "line": 448,
+        "line": 412,
         "referrer": "tests/test_reviews_gate.py"
       },
       {
         "candidate": "SOL-PROMPT.md",
-        "line": 509,
+        "line": 461,
         "referrer": "tests/test_reviews_gate.py"
       },
       {
         "candidate": "RECU.json",
+        "line": 462,
+        "referrer": "tests/test_reviews_gate.py"
+      },
+      {
+        "candidate": "recu-revue/2",
+        "line": 466,
+        "referrer": "tests/test_reviews_gate.py"
+      },
+      {
+        "candidate": "origin/main",
+        "line": 489,
+        "referrer": "tests/test_reviews_gate.py"
+      },
+      {
+        "candidate": "RECU.json",
+        "line": 507,
+        "referrer": "tests/test_reviews_gate.py"
+      },
+      {
+        "candidate": "origin/main",
         "line": 510,
         "referrer": "tests/test_reviews_gate.py"
       },
       {
-        "candidate": "recu-revue/2",
-        "line": 513,
+        "candidate": "origin/main",
+        "line": 555,
         "referrer": "tests/test_reviews_gate.py"
       },
       {
         "candidate": "origin/main",
-        "line": 543,
+        "line": 573,
+        "referrer": "tests/test_reviews_gate.py"
+      },
+      {
+        "candidate": "origin/main",
+        "line": 593,
         "referrer": "tests/test_reviews_gate.py"
       },
       {
@@ -147189,17 +147277,27 @@
       },
       {
         "candidate": "SOL-PROMPT.md",
-        "line": 114,
+        "line": 116,
         "referrer": "tests/test_revue_sol_blind.py"
       },
       {
         "candidate": "roles.yaml",
-        "line": 182,
+        "line": 184,
         "referrer": "tests/test_revue_sol_blind.py"
       },
       {
         "candidate": "routes.yaml",
-        "line": 183,
+        "line": 185,
+        "referrer": "tests/test_revue_sol_blind.py"
+      },
+      {
+        "candidate": "SOL-PROMPT.md",
+        "line": 231,
+        "referrer": "tests/test_revue_sol_blind.py"
+      },
+      {
+        "candidate": "SOL-PROMPT.md",
+        "line": 247,
         "referrer": "tests/test_revue_sol_blind.py"
       },
       {
@@ -154844,6 +154942,41 @@
         "line": 50,
         "referrer": ".superpowers/sdd/2026-08-22-autonomous-luna-sol/task-4-report.md",
         "resolved": "scripts/no_stub_scan.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "scripts/revue.py",
+        "line": 12,
+        "referrer": ".superpowers/sdd/2026-08-22-autonomous-luna-sol/task-5-review-round1-report.md",
+        "resolved": "scripts/revue.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "scripts/revue.py",
+        "line": 15,
+        "referrer": ".superpowers/sdd/2026-08-22-autonomous-luna-sol/task-5-review-round1-report.md",
+        "resolved": "scripts/revue.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "scripts/reviews_gate.py",
+        "line": 21,
+        "referrer": ".superpowers/sdd/2026-08-22-autonomous-luna-sol/task-5-review-round1-report.md",
+        "resolved": "scripts/reviews_gate.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "tests/test_revue_sol_blind.py",
+        "line": 26,
+        "referrer": ".superpowers/sdd/2026-08-22-autonomous-luna-sol/task-5-review-round1-report.md",
+        "resolved": "tests/test_revue_sol_blind.py",
+        "severity": "hard"
+      },
+      {
+        "candidate": "tests/test_reviews_gate.py",
+        "line": 26,
+        "referrer": ".superpowers/sdd/2026-08-22-autonomous-luna-sol/task-5-review-round1-report.md",
+        "resolved": "tests/test_reviews_gate.py",
         "severity": "hard"
       },
       {
@@ -186163,7 +186296,7 @@
       "GOVERNANCE": 217,
       "PRODUCT": 113,
       "TEST": 229,
-      "WORKING": 21
+      "WORKING": 22
     },
     "by_rule": {
       "archive-root": 44,
@@ -186212,14 +186345,14 @@
       "test-suite": 229,
       "working-claude-agents": 9,
       "working-sandbox-readme": 1,
-      "working-superpowers-sdd": 11
+      "working-superpowers-sdd": 12
     },
     "case_collisions_total": 0,
-    "dangling_references_total": 17569,
+    "dangling_references_total": 17579,
     "generated_total": 9,
     "load_bearing_total": 2150,
     "portability_violations_total": 0,
-    "tracked_total": 2316,
+    "tracked_total": 2317,
     "unclassified_total": 0,
     "unicode_anomalies_total": 0
   },
